@@ -17,7 +17,7 @@ import { useMainHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
-import { errorMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { type UpdateOperationDTO } from '../../../backend/types';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
@@ -115,7 +115,7 @@ export function OssFlow() {
       return;
     }
     if (connection.source === connection.target) {
-      toast.error(errorMsg.ossSelfConnection);
+      toast.error(formatLabel(lid.error.ossSelfConnection));
       return;
     }
 
@@ -125,11 +125,11 @@ export function OssFlow() {
       throw new Error('Item not found');
     }
     if (schema.extendedGraph.expandAllOutputs([target.id]).includes(source.id)) {
-      toast.error(errorMsg.ossCycle);
+      toast.error(formatLabel(lid.error.ossCycle));
       return;
     }
     if (schema.graph.hasEdge(source.id, target.id)) {
-      toast.error(errorMsg.connectionExists);
+      toast.error(formatLabel(lid.error.connectionExists));
       return;
     }
 

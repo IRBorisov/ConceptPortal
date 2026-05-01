@@ -4,6 +4,7 @@ import { type Constituenta, CstType, type RSForm } from '@/domain/library';
 import { isBaseSet, isBasicConcept } from '@/domain/library/rsform-api';
 import { labelType } from '@/domain/rslang/labels';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
@@ -50,6 +51,7 @@ export function FormEditCst({
   onClearAttributions,
   fields
 }: FormEditCstProps) {
+  const tx = useTx();
   const [forceComment, setForceComment] = useState(false);
   const { AliasField, TermRawField, DefinitionFormalField, DefinitionRawField, ConventionField } = fields;
   const cst_type = itemData.cst_type ?? CstType.BASE;
@@ -69,7 +71,7 @@ export function FormEditCst({
     <>
       <div className='flex items-center self-center gap-3'>
         <MiniButton
-          title='Ключевая конституента'
+          title={tx('ui.rsform.formEdit.crucialTitle', 'Key constituent')}
           icon={<IconCrucialValue size='1.25rem' value={crucial} />}
           onClick={onToggleCrucial}
         />
@@ -79,7 +81,7 @@ export function FormEditCst({
             <TextInput
               id='dlg_cst_alias'
               dense
-              label='Имя'
+              label={tx('ui.label.name', 'Name')}
               className='w-28'
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}
@@ -95,10 +97,10 @@ export function FormEditCst({
         {field => (
           <RefsInput
             id='dlg_cst_term'
-            label='Термин'
+            label={tx('ui.label.term', 'Term')}
             maxHeight='3.75rem'
             areaClassName='disabled:min-h-9'
-            placeholder='Обозначение для текстовых определений'
+            placeholder={tx('ui.placeholder.termForDefinitions', 'Label for text definitions')}
             schema={schema}
             value={field.state.value ?? ''}
             initialValue={target.term_raw}
@@ -109,14 +111,14 @@ export function FormEditCst({
       </TermRawField>
       {target.cst_type === CstType.NOMINAL || target.attributes.length > 0 ? (
         <div className='flex flex-col gap-1'>
-          <Label text='Атрибутирующие конституенты' />
+          <Label text={tx('ui.label.attributingConstituents', 'Attributing constituents')} />
           <SelectMultiConstituenta
             items={schema.items.filter(item => item.id !== target.id)}
             value={attributions}
             onAdd={onAddAttribution}
             onClear={onClearAttributions}
             onRemove={onRemoveAttribution}
-            placeholder={'Выберите конституенты'}
+            placeholder={tx('ui.placeholder.selectConstituents', 'Select constituents')}
           />
         </div>
       ) : null}
@@ -131,7 +133,7 @@ export function FormEditCst({
           noOutline
           transparent
           readOnly
-          label='Типизация'
+          label={tx('ui.label.typification', 'Typification')}
           value={labelType(target.analysis.type)}
           className='cursor-default'
         />
@@ -163,8 +165,11 @@ export function FormEditCst({
             <RefsInput
               id='dlg_edit_cst_definition_raw'
               schema={schema}
-              label='Текстовое определение'
-              placeholder='Текстовая интерпретация формального выражения'
+              label={tx('ui.label.textDefinition', 'Text definition')}
+              placeholder={tx(
+                'ui.placeholder.textDefinitionHint',
+                'Text interpretation of the formal expression'
+              )}
               maxHeight='3.75rem'
               value={field.state.value ?? ''}
               initialValue={target.definition_raw}
@@ -187,7 +192,7 @@ export function FormEditCst({
           className='self-start cc-label text-primary hover:underline select-none'
           onClick={() => setForceComment(true)}
         >
-          Добавить комментарий
+          {tx('ui.action.addComment', 'Add comment')}
         </button>
       ) : (
         <ConventionField>
@@ -196,8 +201,17 @@ export function FormEditCst({
               id='dlg_edit_cst_convention'
               fitContent
               spellCheck
-              label={isBasic ? 'Конвенция' : 'Комментарий'}
-              placeholder={isBasic ? 'Договоренность об интерпретации базового понятия' : 'Пояснение разработчика'}
+              label={
+                isBasic ? tx('ui.label.convention', 'Convention') : tx('ui.label.developerComment', 'Comment')
+              }
+              placeholder={
+                isBasic
+                  ? tx(
+                      'ui.placeholder.conventionBasic',
+                      'Agreement on interpreting the base concept'
+                    )
+                  : tx('ui.placeholder.developerComment', 'Developer note')
+              }
               areaClassName='max-h-20 disabled:min-h-9'
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}

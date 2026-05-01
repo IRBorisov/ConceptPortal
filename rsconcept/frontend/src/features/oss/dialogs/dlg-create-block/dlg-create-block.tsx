@@ -6,13 +6,14 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { type OssLayout } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
-import { hintMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { type CreateBlockDTO, schemaCreateBlock } from '../../backend/types';
 import { useCreateBlock } from '../../backend/use-create-block';
@@ -40,6 +41,7 @@ const TabID = {
 type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgCreateBlock() {
+  const tx = useTx();
   const { createBlock } = useCreateBlock();
 
   const { ossID, layout, childrenBlocks, childrenOperations, initialParent, onCreate, defaultX, defaultY } =
@@ -86,13 +88,13 @@ export function DlgCreateBlock() {
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
   const { canSubmit, hint } = useMemo(() => {
     if (!title) {
-      return { canSubmit: false, hint: hintMsg.titleEmpty };
+      return { canSubmit: false, hint: formatLabel(lid.hint.titleEmpty) };
     }
     if (manager.oss.blocks.some(block => block.title === title)) {
-      return { canSubmit: false, hint: hintMsg.blockTitleTaken };
+      return { canSubmit: false, hint: formatLabel(lid.hint.blockTitleTaken) };
     }
     if (!schemaCreateBlock.safeParse(values).success) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
+      return { canSubmit: false, hint: formatLabel(lid.hint.formInvalid) };
     }
     return { canSubmit: true, hint: '' };
   }, [title, values, manager.oss.blocks]);
@@ -125,8 +127,8 @@ export function DlgCreateBlock() {
 
   return (
     <ModalForm
-      header='Создание блока'
-      submitText='Создать'
+      header={tx('ui.dlg.createBlock.header', 'Create block')}
+      submitText={tx('ui.action.create', 'Create')}
       canSubmit={canSubmit}
       validationHint={hint}
       onSubmit={event => {
@@ -139,10 +141,17 @@ export function DlgCreateBlock() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='z-pop mx-auto flex border divide-x rounded-none'>
-          <TabLabel title='Основные атрибуты блока' label='Паспорт' />
           <TabLabel
-            title={`Выбор вложенных узлов: [${childrenOperations.length + childrenBlocks.length}]`}
-            label={`Содержимое${childrenOperations.length + childrenBlocks.length > 0 ? '*' : ''}`}
+            title={tx('ui.dlg.createBlock.tabPassport.title', 'Main block attributes')}
+            label={tx('ui.dlg.createBlock.tabPassport.label', 'Passport')}
+          />
+          <TabLabel
+            title={tx('ui.dlg.createBlock.tabChildren.title', 'Nested node pick: [{count}]', {
+              count: childrenOperations.length + childrenBlocks.length
+            })}
+            label={tx('ui.dlg.createBlock.tabChildren.label', 'Contents{mark}', {
+              mark: childrenOperations.length + childrenBlocks.length > 0 ? '*' : ''
+            })}
           />
         </TabList>
 

@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
-import { infoMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import {
   schemaUserInfo,
@@ -46,7 +46,7 @@ export const usersApi = {
       endpoint: '/users/api/signup',
       request: {
         data: data,
-        successMessage: createdUser => infoMsg.newUser(createdUser.username)
+        successMessage: createdUser => formatLabel(lid.info.newUser, { username: createdUser.username })
       }
     }),
 
@@ -56,7 +56,7 @@ export const usersApi = {
       endpoint: '/users/api/profile',
       request: {
         data: data,
-        successMessage: infoMsg.changesSaved
+        successMessage: formatLabel(lid.info.changesSaved)
       }
     })
 } as const;

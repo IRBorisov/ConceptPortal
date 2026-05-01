@@ -6,6 +6,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { LibraryItemType, type RSModel } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useModelEdit } from '@/features/rsmodel/pages/rsmodel-page/model-edit-context';
 import { useSandboxBundle } from '@/features/sandbox/context/bundle-context';
@@ -17,7 +18,7 @@ import { cn } from '@/components/utils';
 import { ValueIcon } from '@/components/view';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
-import { placeholderMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 interface FormSandboxItemProps {
   className?: string;
@@ -36,6 +37,7 @@ function modelDefaults(model: RSModel): UpdateLibraryItemDTO {
 }
 
 export function FormSandboxItem({ className }: FormSandboxItemProps) {
+  const tx = useTx();
   const intl = useIntl();
   const { model } = useModelEdit();
   const { updateLibraryItem } = useSandboxBundle();
@@ -81,13 +83,13 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none font-math'>Песочница</h2>
+      <h2 className='mb-2 select-none font-math'>{tx('ui.page.sandbox', 'Sandbox')}</h2>
       <form.Field name='title'>
         {field => (
           <TextInput
             id='sandbox_model_title'
-            aria-label='Название модели'
-            placeholder='Название модели'
+            aria-label={tx('ui.field.rsmodelTitle', 'Model title')}
+            placeholder={tx('ui.field.rsmodelTitle', 'Model title')}
             className='mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -102,7 +104,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
           <TextInput
             dense
             id='sandbox_model_alias'
-            label='Сокращение'
+            label={tx('ui.label.alias', 'Abbreviation')}
             className='w-full mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -116,8 +118,8 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         {field => (
           <TextArea
             id='sandbox_model_description'
-            label='Описание'
-            placeholder={placeholderMsg.itemDescription}
+            label={tx('ui.label.description', 'Description')}
+            placeholder={formatLabel(lid.placeholder.itemDescription)}
             rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -129,7 +131,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
 
       <div className='mt-3 sm:mb-1 flex justify-between items-center'>
         <ValueIcon
-          title='Дата обновления'
+          title={tx('ui.library.editor.dateUpdated', 'Updated')}
           dense
           icon={<IconDateUpdate size='1.25rem' />}
           value={new Date(model.time_update).toLocaleString(intl.locale, {
@@ -140,7 +142,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         />
 
         <SubmitButton
-          text='Сохранить'
+          text={tx('ui.action.save', 'Save')}
           className='self-center w-40'
           loading={false}
           icon={<IconSave size='1.25rem' />}
@@ -148,7 +150,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         />
 
         <ValueIcon
-          title='Дата создания'
+          title={tx('ui.library.editor.dateCreated', 'Created')}
           dense
           icon={<IconDateCreate size='1.25rem' />}
           value={new Date(model.time_create).toLocaleString(intl.locale, {

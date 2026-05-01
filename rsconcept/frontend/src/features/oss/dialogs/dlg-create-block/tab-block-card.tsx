@@ -6,9 +6,11 @@ import { type OperationSchema } from '@/domain/library';
 import { NodeType } from '@/domain/library';
 import { constructNodeID } from '@/domain/library/oss-api';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { TextArea, TextInput } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
-import { placeholderMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { SelectParent } from '../../components/select-parent';
 
@@ -25,6 +27,7 @@ interface TabBlockCardProps {
 }
 
 export function TabBlockCard({ oss, blocks, fields }: TabBlockCardProps) {
+  const tx = useTx();
   const block_ids = blocks.map(id => constructNodeID(NodeType.BLOCK, id));
   const all_children = [...block_ids, ...oss.hierarchy.expandAllOutputs(block_ids)];
   const { TitleField, ParentField, DescriptionField } = fields;
@@ -35,8 +38,8 @@ export function TabBlockCard({ oss, blocks, fields }: TabBlockCardProps) {
         {field => (
           <TextInput
             id='operation_title'
-            aria-label='Название нового блока'
-            placeholder='Название нового блока'
+            aria-label={tx('ui.oss.newBlockTitle', 'New block title')}
+            placeholder={tx('ui.oss.newBlockTitle', 'New block title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -50,7 +53,7 @@ export function TabBlockCard({ oss, blocks, fields }: TabBlockCardProps) {
           <SelectParent
             items={oss.blocks.filter(block => !all_children.includes(block.nodeID))}
             value={field.state.value ? (oss.blockByID.get(field.state.value) ?? null) : null}
-            placeholder='Родительский блок'
+            placeholder={tx('ui.oss.parentBlock', 'Parent block')}
             onChange={value => field.handleChange(value ? value.id : null)}
           />
         )}
@@ -60,8 +63,8 @@ export function TabBlockCard({ oss, blocks, fields }: TabBlockCardProps) {
         {field => (
           <TextArea
             id='operation_comment'
-            label='Описание'
-            placeholder={placeholderMsg.itemDescription}
+            label={tx('ui.label.description', 'Description')}
+            placeholder={formatLabel(lid.placeholder.itemDescription)}
             noResize
             rows={5}
             value={field.state.value}

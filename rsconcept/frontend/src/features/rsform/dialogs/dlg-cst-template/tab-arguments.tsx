@@ -6,6 +6,8 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { type ArgumentValue, type Constituenta, type RSForm } from '@/domain/library';
 import { isFunctional, isLogical } from '@/domain/library/rsform-api';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { DataTable, type IConditionalStyle } from '@/components/data-table';
 import { IconReset } from '@/components/icons';
@@ -24,6 +26,7 @@ interface TabArgumentsProps {
 }
 
 export function TabArguments({ schema, definition }: TabArgumentsProps) {
+  const tx = useTx();
   const { args, onChangeArguments } = useTemplateContext();
 
   const [selectedCst, setSelectedCst] = useState<Constituenta | null>(null);
@@ -62,22 +65,22 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
   const columns = [
     argumentsHelper.accessor('alias', {
       id: 'alias',
-      header: 'Имя',
+      header: tx('ui.cstTemplate.arguments.column.name', 'Name'),
       size: 40,
       minSize: 40,
       maxSize: 40,
       cell: props => <div className='text-center pr-2'>{props.getValue()}</div>
     }),
-    argumentsHelper.accessor(arg => arg.value || 'свободный аргумент', {
+    argumentsHelper.accessor(arg => arg.value || tx('ui.template.arguments.freeSlot', 'free argument'), {
       id: 'value',
-      header: 'Значение',
+      header: tx('ui.cstTemplate.arguments.column.value', 'Value'),
       size: 200,
       minSize: 200,
       maxSize: 200
     }),
     argumentsHelper.accessor(arg => arg.typification, {
       id: 'type',
-      header: 'Типизация',
+      header: tx('ui.cstTemplate.arguments.column.typification', 'Typification'),
       enableHiding: true,
       cell: props => <div className='w-36 text-sm wrap-break-word'>{props.getValue()}</div>
     }),
@@ -88,7 +91,7 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
         <div className='w-6 flex justify-center'>
           {props.row.original.value ? (
             <MiniButton
-              title='Очистить значение'
+              title={tx('ui.template.arguments.clearValueTitle', 'Clear value')}
               noPadding
               className='align-middle'
               icon={<IconReset size='1rem' className='cc-remove' />}
@@ -116,11 +119,13 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
         data={args}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
-        noDataComponent={<NoData className='min-h-14'>Аргументы отсутствуют</NoData>}
+        noDataComponent={
+          <NoData className='min-h-14'>{tx('ui.template.arguments.empty', 'No arguments')}</NoData>
+        }
         onRowClicked={handleSelectArgument}
       />
 
-      <h2>Конституенты</h2>
+      <h2>{tx('ui.template.arguments.constituentsHeading', 'Constituents')}</h2>
 
       <PickConstituenta
         id='dlg_argument_picker'
@@ -134,7 +139,7 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
         disabled
         portalHoverTooltips
         id='result'
-        placeholder='Итоговое определение'
+        placeholder={tx('ui.template.arguments.placeholderDefinition', 'Resulting definition')}
         className='mt-4'
         height='5.1rem'
         value={definition}

@@ -4,6 +4,8 @@ import { Handle, type NodeProps, Position } from '@xyflow/react';
 
 import { type TypificationNodeData } from '@/domain/rslang';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 
@@ -22,11 +24,14 @@ function getNodeLabel(data: TypificationNodeData) {
 }
 
 export function MGraphNodeComponent(node: NodeProps<MGNode>) {
+  const tx = useTx();
   const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const tooltipText =
     `${node.data.text}` +
     '\n' +
-    (node.data.annotations.length === 0 ? '' : `Конституенты ${node.data.annotations.join(' ')}`);
+    (node.data.annotations.length === 0
+      ? ''
+      : `${tx('ui.node.mgraph.constituentsPrefix', 'Constituents')} ${node.data.annotations.join(' ')}`);
   const nodeLabel = getNodeLabel(node.data);
 
   return (

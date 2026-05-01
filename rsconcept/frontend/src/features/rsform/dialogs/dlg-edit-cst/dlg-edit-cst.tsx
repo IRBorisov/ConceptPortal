@@ -6,13 +6,14 @@ import { type Constituenta, type CstType, type RSForm } from '@/domain/library';
 import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { IconChild, IconRSForm } from '@/components/icons';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
-import { hintMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { withPreventDefault } from '@/utils/utils';
 
 import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../../backend/types';
@@ -30,6 +31,7 @@ export interface DlgEditCstProps {
 }
 
 export function DlgEditCst() {
+  const tx = useTx();
   const { schema, target, onEdit, onEditSource, onAddAttribution, onRemoveAttribution, onClearAttributions } =
     useDialogsStore(state => state.props as DlgEditCstProps);
   const hideDialog = useDialogsStore(state => state.hideDialog);
@@ -119,22 +121,22 @@ export function DlgEditCst() {
 
   return (
     <ModalForm
-      header='Редактирование конституенты'
+      header={tx('ui.dlg.editCst.header', 'Edit constituent')}
       canSubmit={canSubmit}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
-      validationHint={canSubmit ? '' : hintMsg.aliasInvalid}
-      submitText='Сохранить'
+      validationHint={canSubmit ? '' : formatLabel(lid.hint.aliasInvalid)}
+      submitText={tx('ui.action.save', 'Save')}
       className='cc-column w-140 max-h-120 py-2 px-6'
     >
       <div className='cc-icons absolute z-pop left-2 top-2'>
         <MiniButton
-          title='Детальное редактирование'
+          title={tx('ui.dlg.editCst.titleDetailedEdit', 'Detailed editing')}
           noPadding
           icon={<IconRSForm size='1.25rem' className='text-primary' />}
           onClick={navigateToTarget}
         />
         <MiniButton
-          title='Перейти к предку'
+          title={tx('ui.dlg.editCst.titleGoToAncestor', 'Go to ancestor')}
           noPadding
           icon={<IconChild size='1.25rem' className={target.is_inherited ? 'text-primary' : 'text-foreground-muted'} />}
           disabled={!target.is_inherited}

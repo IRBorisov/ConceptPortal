@@ -4,6 +4,7 @@ import { LibraryItemType } from '@/domain/library';
 import { type RSForm } from '@/domain/library';
 import { sortItemsForInlineSynthesis } from '@/domain/library/rsform-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components/pick-schema';
 
@@ -16,6 +17,7 @@ interface TabSourceProps {
 }
 
 export function TabSource({ receiver, sourceID, onChangeSource }: TabSourceProps) {
+  const tx = useTx();
   const { items: libraryItems } = useLibrary();
   const selectedInfo = libraryItems.find(item => item.id === sourceID);
   const sortedItems = sortItemsForInlineSynthesis(receiver, libraryItems);
@@ -32,13 +34,13 @@ export function TabSource({ receiver, sourceID, onChangeSource }: TabSourceProps
       />
 
       <div className='flex items-center gap-6 '>
-        <span className='select-none'>Выбрана</span>
+        <span className='select-none'>{tx('ui.inlineSynthesis.selected', 'Selected')}</span>
         <TextInput
           id='dlg_selected_schema_title'
           disabled
           noBorder
           className='grow'
-          placeholder='Схема не выбрана'
+          placeholder={tx('ui.placeholder.schemaNotSelected', 'No schema selected')}
           value={selectedInfo?.title ?? ''}
           dense
         />

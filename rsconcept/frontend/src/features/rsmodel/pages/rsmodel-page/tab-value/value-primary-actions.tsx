@@ -10,6 +10,7 @@ import { type Value } from '@/domain/rslang';
 import { isSetValue, normalizeValue } from '@/domain/rslang/eval/value-api';
 import { isTypification, TypeID, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { useCstStatus } from '@/features/rsmodel/hooks/use-cst-status';
 import { processBindingData, processValueData } from '@/features/rsmodel/models/data-loading';
@@ -18,7 +19,7 @@ import { TextButton } from '@/components/control/text-button';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { useDialogsStore } from '@/stores/dialogs';
 import { limits } from '@/utils/constants';
-import { errorMsg, infoMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { copyJsonToClipboard, downloadJsonFile, getExportJsonText } from '../export-helpers';
 import { useModelEdit } from '../model-edit-context';
@@ -34,6 +35,7 @@ export interface ValuePrimaryActionsProps {
 }
 
 export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: ValuePrimaryActionsProps) {
+  const tx = useTx();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { engine, isMutable } = useModelEdit();
@@ -104,7 +106,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
         getHeaderText: getHeaderText
       });
     } else if (!cstData) {
-      toast.error(errorMsg.valueNull);
+      toast.error(formatLabel(lid.error.valueNull));
     } else {
       showViewValue({
         value: cstData,
@@ -138,7 +140,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
     } else {
       const randomData = generateRandomValue(type, engine.basics, schema.cstByAlias, RANDOM_SET_APPEND_COUNT);
       if (!randomData) {
-        toast.error(errorMsg.generationMissingBasic);
+        toast.error(formatLabel(lid.error.generationMissingBasic));
         return;
       }
       if (type.typeID === TypeID.collection && Array.isArray(randomData)) {
@@ -159,7 +161,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
   function applyImportedJsonText(text: string) {
     const trimmed = text.trim();
     if (!trimmed) {
-      toast.error(errorMsg.valueNull);
+      toast.error(formatLabel(lid.error.valueNull));
       return;
     }
 
@@ -168,12 +170,12 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       return;
     }
     onChangeValue(processed);
-    toast.success(infoMsg.valueLoadedJson);
+    toast.success(formatLabel(lid.info.valueLoadedJson));
   }
 
   function handleClipboardExport() {
     hideExport();
-    copyJsonToClipboard(getExportJsonText(getExportPayload()), () => toast.success(infoMsg.valueReady));
+    copyJsonToClipboard(getExportJsonText(getExportPayload()), () => toast.success(formatLabel(lid.info.valueReady)));
   }
 
   function handleJSONExport() {
@@ -193,7 +195,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
         applyImportedJsonText(text);
       })
       .catch(() => {
-        toast.error(errorMsg.clipboardRead);
+        toast.error(formatLabel(lid.error.clipboardRead));
       });
   }
 
@@ -214,7 +216,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       return;
     }
     if (file.size > limits.max_json_import_file_size_bytes) {
-      toast.error(errorMsg.fileTooLarge(limits.max_json_import_file_size_mb));
+      toast.error(formatLabel(lid.error.fileTooLarge, { maxMb: limits.max_json_import_file_size_mb }));
       return;
     }
     const reader = new FileReader();
@@ -222,7 +224,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       const result = reader.result as string;
       applyImportedJsonText(result);
     };
-    reader.onerror = () => toast.error(errorMsg.fileRead);
+    reader.onerror = () => toast.error(formatLabel(lid.error.fileRead));
     reader.readAsText(file);
   }
 
@@ -230,17 +232,20 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
     <div className='flex items-center gap-6 text-sm'>
       {showValueButton ? (
         <TextButton
-          text={!cstInferrable && isMutable ? 'Изменить значение' : 'Смотреть значение'}
-          title='Просмотр или
-редактирование значения'
+          text={
+            !cstInferrable && isMutable
+              ? tx('ui.value.editValue', 'Edit value')
+              : tx('ui.eval.viewValue', 'View value')
+          }
+          title={tx('ui.value.viewOrEditTitle', 'View or edit value')}
           onClick={handleValueDialog}
         />
       ) : null}
 
       {showClearButton ? (
         <TextButton
-          text='Очистить значение'
-          title='Сбросить вычисленное значение текущей конституенты'
+          text={tx('ui.value.clearValue', 'Clear value')}
+          title={tx('ui.value.clearValueTitle', 'Reset the computed value of the current constituent')}
           onClick={handleClearValue}
           disabled={isProcessing}
         />
@@ -248,28 +253,42 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
 
       {showExportMenu ? (
         <div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
-          <TextButton text='Экспорт' title='Экспортировать значение' hideTitle={isExportOpen} onClick={toggleExport} />
+          <TextButton
+            text={tx('ui.action.exportShort', 'Export')}
+            title={tx('ui.value.exportValueTitle', 'Export value')}
+            hideTitle={isExportOpen}
+            onClick={toggleExport}
+          />
           <Dropdown isOpen={isExportOpen} margin='mt-1'>
-            <DropdownButton text='Скопировать в буфер' onClick={handleClipboardExport} />
-            <DropdownButton text='Сохранить как JSON' onClick={handleJSONExport} />
+            <DropdownButton text={tx('ui.eval.copyToClipboard', 'Copy to clipboard')} onClick={handleClipboardExport} />
+            <DropdownButton text={tx('ui.eval.saveAsJson', 'Save as JSON')} onClick={handleJSONExport} />
           </Dropdown>
         </div>
       ) : null}
 
       {showImportMenu ? (
         <div ref={importMenuRef} onBlur={handleImportBlur} className='relative'>
-          <TextButton text='Импорт' title='Импортировать значение' hideTitle={isImportOpen} onClick={toggleImport} />
+          <TextButton
+            text={tx('ui.action.importShort', 'Import')}
+            title={tx('ui.value.importValueTitle', 'Import value')}
+            hideTitle={isImportOpen}
+            onClick={toggleImport}
+          />
           <Dropdown isOpen={isImportOpen} margin='mt-1'>
-            <DropdownButton text='Загрузить из буфера' onClick={handleClipboardImport} />
-            <DropdownButton text='Загрузить из JSON' onClick={handleJSONImport} />
+            <DropdownButton text={tx('ui.value.loadFromClipboard', 'Load from clipboard')} onClick={handleClipboardImport} />
+            <DropdownButton text={tx('ui.value.loadFromJson', 'Load from JSON')} onClick={handleJSONImport} />
           </Dropdown>
         </div>
       ) : null}
 
       {showRandomButton ? (
         <TextButton
-          text={typification.typeID === TypeID.collection ? 'Добавить случайные' : 'Случайное значение'}
-          title='Сгенерировать случайные значения для текущей конституенты'
+          text={
+            typification.typeID === TypeID.collection
+              ? tx('ui.value.randomAddMany', 'Add random items')
+              : tx('ui.value.randomSingle', 'Random value')
+          }
+          title={tx('ui.value.randomGenerateTitle', 'Generate random values for the current constituent')}
           onClick={handleAddRandomValues}
           disabled={isProcessing}
         />

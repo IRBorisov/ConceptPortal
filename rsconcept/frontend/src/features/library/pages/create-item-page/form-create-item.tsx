@@ -5,10 +5,11 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/domain/library';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 
 import { Button, MiniButton, SubmitButton } from '@/components/control';
 import { Label, TextArea, TextInput } from '@/components/input';
-import { placeholderMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { type CreateLibraryItemDTO, schemaCreateLibraryItem } from '../../backend/types';
 import { useCreateItem } from '../../backend/use-create-item';
@@ -25,6 +26,7 @@ interface FormCreateItemProps {
 }
 
 export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM }: FormCreateItemProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { createItem, isPending, reset: clearServerError } = useCreateItem();
   const { items } = useLibrary();
@@ -39,7 +41,9 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
     visible: true,
     read_only: false,
     schema: modelFrom,
-    title: schemaItem ? `Модель ${schemaItem.title}` : undefined,
+    title: schemaItem
+      ? tx('ui.library.createItem.modelTitle', 'Model {title}', { title: schemaItem.title })
+      : undefined,
     alias: schemaItem ? `M${schemaItem.alias}` : undefined,
     location: schemaItem
       ? schemaItem.location
@@ -96,17 +100,17 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
     >
       <h1 className='select-none relative'>
         {itemType === LibraryItemType.RSMODEL
-          ? 'Новая концептуальная модель'
+          ? tx('lib.create.pageTitleModel', 'New conceptual model')
           : itemType === LibraryItemType.OSS
-            ? 'Новая операционная схема'
-            : 'Новая концептуальная схема'}
+            ? tx('lib.create.pageTitleOss', 'New operational schema')
+            : tx('lib.create.pageTitleSchema', 'New conceptual schema')}
       </h1>
 
       <form.Field name='title'>
         {field => (
           <TextInput
             id='schema_title'
-            placeholder='Название'
+            placeholder={tx('lib.create.titlePlaceholder', 'Title')}
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -120,7 +124,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
           {field => (
             <TextInput
               id='schema_alias'
-              label='Сокращение'
+              label={tx('lib.create.alias', 'Alias')}
               className='w-84'
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}
@@ -131,7 +135,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
         </form.Field>
 
         <div className='flex flex-col gap-2'>
-          <Label text='Доступ' className='self-center select-none' />
+          <Label text={tx('lib.create.access', 'Access')} className='self-center select-none' />
           <div className='ml-auto cc-icons'>
             <form.Field name='access_policy'>
               {field => (
@@ -145,8 +149,12 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
             <form.Field name='visible'>
               {field => (
                 <MiniButton
-                  title={field.state.value ? 'Библиотека: отображать' : 'Библиотека: скрывать'}
-                  aria-label='Переключатель отображения библиотеки'
+                  title={
+                    field.state.value
+                      ? tx('lib.create.libraryShow', 'Library: show in list')
+                      : tx('lib.create.libraryHide', 'Library: hide from list')
+                  }
+                  aria-label={tx('lib.create.libraryToggleAria', 'Toggle library visibility')}
                   icon={<IconItemVisibility value={field.state.value ?? true} />}
                   onClick={() => field.handleChange(!field.state.value)}
                 />
@@ -158,7 +166,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
 
       {itemType === LibraryItemType.RSMODEL ? (
         <div>
-          <Label text='Концептуальная схема' />
+          <Label text={tx('lib.create.schemaLabel', 'Conceptual schema')} />
           <form.Field name='schema'>
             {field => (
               <PickSchema
@@ -190,8 +198,8 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
         {field => (
           <TextArea
             id='schema_comment'
-            label='Описание'
-            placeholder={placeholderMsg.itemDescription}
+            label={tx('lib.create.description', 'Description')}
+            placeholder={formatLabel(lid.placeholder.itemDescription)}
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}
             rows={5}
@@ -203,11 +211,15 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
 
       <div className='flex justify-around gap-6 py-3'>
         <SubmitButton
-          text={itemType === LibraryItemType.RSMODEL ? 'Создать модель' : 'Создать схему'}
+          text={
+            itemType === LibraryItemType.RSMODEL
+              ? tx('lib.create.submitModel', 'Create model')
+              : tx('lib.create.submitSchema', 'Create schema')
+          }
           loading={isPending}
           className='min-w-40'
         />
-        <Button text='Отмена' className='min-w-40' onClick={handleCancel} />
+        <Button text={tx('lib.create.cancel', 'Cancel')} className='min-w-40' onClick={handleCancel} />
       </div>
     </form>
   );

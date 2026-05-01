@@ -13,7 +13,7 @@ import { IconRemove } from '@/components/icons';
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 import { truncateToLastWord, truncateToSymbol } from '@/utils/format';
-import { placeholderMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { type ValueMatcher } from '../../models/value-matcher';
 
@@ -34,6 +34,8 @@ export interface ColumnServices {
   navigateValue: (path: ValuePath) => void;
   selectElement?: (path: ValuePath | null) => void;
   deleteElement?: (target: number) => void;
+  /** Pass `useTx('ui.value.removeElement', …)` from the editor component. */
+  deleteElementTitle?: string;
 }
 
 interface ColumnState {
@@ -63,7 +65,7 @@ export function createColumnsType(
         size: 0,
         cell: props => (
           <MiniButton
-            title='Удалить элемент'
+            title={services.deleteElementTitle ?? 'Remove element'}
             className='align-middle w-fit'
             noPadding
             icon={<IconRemove size='1.25rem' className='cc-remove' />}
@@ -235,7 +237,7 @@ function BasicCell({
   const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const text =
     prepareValueString(value, type, services.schema, services.basics, services.showDataText) ??
-    placeholderMsg.valueTooLarge;
+    formatLabel(lid.placeholder.valueTooLarge);
   const isSingleColumn = path.length === 0 || (path.length === 1 && !services.isSingleton);
   const needsTooltip = text.length > (isSingleColumn ? VALUE_TRUNCATE_LONG : VALUE_TRUNCATE);
   const isMatch = services.matcher?.match(value, type) ?? false;

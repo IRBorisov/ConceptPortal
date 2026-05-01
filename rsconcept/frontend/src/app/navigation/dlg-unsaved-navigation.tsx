@@ -1,5 +1,7 @@
 'use client';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { Button } from '@/components/control';
 import { ModalView } from '@/components/modal';
 
@@ -20,23 +22,28 @@ export function DlgUnsavedNavigation({
   onContinue,
   onSaveAndContinue
 }: DlgUnsavedNavigationProps) {
+  const tx = useTx();
   if (!open) {
     return null;
   }
 
   return (
     <ModalView
-      header='Есть несохраненные изменения'
+      header={tx('dlg.unsaved.header', 'You have unsaved changes')}
       className='cc-column w-120 max-w-[calc(100svw-2rem)] gap-3 px-6 pb-4'
       noFooterButton
       onHide={onCancel}
     >
-      <p>Продолжить навигацию без сохранения изменений?</p>
+      <p>{tx('dlg.unsaved.body', 'Continue navigating without saving your changes?')}</p>
       <div className='flex flex-wrap gap-3 justify-center'>
-        <Button text='Отмена' className='w-40' onClick={onCancel} disabled={isSaving} />
-        <Button text='Продолжить без сохранения' onClick={onContinue} disabled={isSaving} />
+        <Button text={tx('dlg.unsaved.cancel', 'Cancel')} className='w-40' onClick={onCancel} disabled={isSaving} />
         <Button
-          text='Сохранить и продолжить'
+          text={tx('dlg.unsaved.continue', 'Continue without saving')}
+          onClick={onContinue}
+          disabled={isSaving}
+        />
+        <Button
+          text={tx('dlg.unsaved.saveContinue', 'Save and continue')}
           colorSubmit
           loading={isSaving}
           disabled={!canSave || isSaving}

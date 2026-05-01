@@ -6,6 +6,7 @@ import clsx from 'clsx';
 
 import { Footer } from '@/app/footer';
 import { ToasterThemed } from '@/app/global-toaster';
+import { useTx } from '@/app/i18n/use-tx';
 
 import { ModalLoader } from '@/components/modal';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/app-layout';
@@ -17,6 +18,7 @@ import { GlobalLoader } from './global-loader';
 import { GlobalTooltips } from './global-tooltips';
 
 export function LayoutSandbox() {
+  const tx = useTx();
   const mainHeight = useMainHeight();
   const viewportHeight = useViewportHeight();
   const noNavigation = useAppLayoutStore(state => state.noNavigation);
@@ -29,7 +31,7 @@ export function LayoutSandbox() {
     <div className='min-w-80 antialiased h-full max-w-480 mx-auto'>
       <ToasterThemed
         className={clsx('sm:text-[14px]/[20px] text-[12px]/[16px]', noNavigationAnimation ? 'mt-9' : 'mt-17')}
-        aria-label='Оповещения'
+        aria-label={tx('layout.toast.ariaLabel', 'Notifications')}
         autoClose={3000}
         draggable={false}
         pauseOnFocusLoss={false}

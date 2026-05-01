@@ -4,6 +4,8 @@ import { Suspense } from 'react';
 import { Outlet } from 'react-router';
 import clsx from 'clsx';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { ModalLoader } from '@/components/modal';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -17,6 +19,7 @@ import { MutationErrors } from './mutation-errors';
 import { Navigation } from './navigation';
 
 export function LayoutMain() {
+  const tx = useTx();
   const mainHeight = useMainHeight();
   const viewportHeight = useViewportHeight();
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
@@ -29,7 +32,7 @@ export function LayoutMain() {
     <div className='min-w-80 antialiased h-full max-w-480 mx-auto'>
       <ToasterThemed
         className={clsx('sm:text-[14px]/[20px] text-[12px]/[16px]', noNavigationAnimation ? 'mt-9' : 'mt-17')}
-        aria-label='Оповещения'
+        aria-label={tx('layout.toast.ariaLabel', 'Notifications')}
         autoClose={3000}
         draggable={false}
         pauseOnFocusLoss={false}

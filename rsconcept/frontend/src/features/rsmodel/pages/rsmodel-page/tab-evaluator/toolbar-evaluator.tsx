@@ -1,5 +1,6 @@
 'use client';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
@@ -15,13 +16,14 @@ interface ToolbarEvaluatorProps {
 }
 
 export function ToolbarEvaluator({ className }: ToolbarEvaluatorProps) {
+  const tx = useTx();
   const { engine } = useModelEdit();
 
   return (
     <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>
       <MiniButton
-        title={prepareTooltip('Пересчитать модель', 'Alt + Q')}
-        aria-label='Пересчитать все вычисления'
+        title={prepareTooltip(tx('ui.action.recalculateModel', 'Recalculate model'), tx('ui.hotkey.altQ', 'Alt + Q'))}
+        aria-label={tx('ui.aria.recalculateAll', 'Recalculate all evaluations')}
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
         onClick={() => engine.recalculateAll()}
       />

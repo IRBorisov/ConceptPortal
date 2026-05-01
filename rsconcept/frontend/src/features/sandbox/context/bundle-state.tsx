@@ -18,7 +18,7 @@ import {
   type UpdateCrucialDTO
 } from '@/features/rsform/backend/types';
 
-import { errorMsg, infoMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { type SandboxBundle } from '../models/bundle';
 import { createStarterSandboxBundle } from '../models/bundle-starter';
@@ -65,8 +65,8 @@ export function SandboxState({ children }: React.PropsWithChildren) {
 
   const [engine] = useState(function createEngine() {
     return new RSEngine(model.id, services, {
-      onInvalidSetValue: () => toast.error(errorMsg.invalidSetValue),
-      onCalculationSuccess: timeSpent => toast.success(infoMsg.calculationSuccess(timeSpent)),
+      onInvalidSetValue: () => toast.error(formatLabel(lid.error.invalidSetValue)),
+      onCalculationSuccess: timeSpent => toast.success(formatLabel(lid.info.calculationSuccess, { timeSpent })),
       onEvaluationError: message => toast.error(message)
     });
   });
@@ -78,8 +78,8 @@ export function SandboxState({ children }: React.PropsWithChildren) {
       engine.modelID = model.id;
       engine.updateServices(services);
       engine.updateNotifications({
-        onInvalidSetValue: () => toast.error(errorMsg.invalidSetValue),
-        onCalculationSuccess: timeSpent => toast.success(infoMsg.calculationSuccess(timeSpent)),
+        onInvalidSetValue: () => toast.error(formatLabel(lid.error.invalidSetValue)),
+        onCalculationSuccess: timeSpent => toast.success(formatLabel(lid.info.calculationSuccess, { timeSpent })),
         onEvaluationError: message => toast.error(message)
       });
     },
@@ -106,7 +106,7 @@ export function SandboxState({ children }: React.PropsWithChildren) {
           return;
         }
         console.error(err);
-        toast.error(errorMsg.failedToPersistSandbox);
+        toast.error(formatLabel(lid.error.failedToPersistSandbox));
       });
 
       return function cancelPersist() {

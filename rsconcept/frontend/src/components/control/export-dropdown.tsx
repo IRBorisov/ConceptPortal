@@ -3,7 +3,9 @@
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
-import { errorMsg, infoMsg } from '@/utils/labels';
+import { useTx } from '@/app/i18n/use-tx';
+
+import { formatLabel, lid } from '@/utils/labels';
 import { convertToCSV, convertToJSON } from '@/utils/utils';
 
 import { Dropdown, DropdownButton, useDropdown } from '../dropdown';
@@ -48,11 +50,12 @@ export function ExportDropdown<T extends object = object>({
   jsonConverter = convertToJSON,
   pdfConverter
 }: ExportDropdownProps<T>) {
+  const tx = useTx();
   const { elementRef: ref, isOpen, toggle, handleBlur, hide } = useDropdown();
 
   function handleExport(format: ExportType) {
     if (!data?.length) {
-      toast.error(infoMsg.noDataToExport);
+      toast.error(formatLabel(lid.info.noDataToExport));
       return;
     }
     try {
@@ -69,7 +72,7 @@ export function ExportDropdown<T extends object = object>({
         void pdfConverter(data)
           .then(blob => fileDownload(blob, `${filename}.pdf`, 'application/pdf;charset=utf-8;'))
           .catch(error => {
-            toast.error(errorMsg.pdfError);
+            toast.error(formatLabel(lid.error.pdfError));
             throw error;
           });
       }
@@ -82,7 +85,7 @@ export function ExportDropdown<T extends object = object>({
   return (
     <div className={cn('relative inline-block', className)} tabIndex={0} onBlur={handleBlur}>
       <MiniButton
-        title='Экспортировать данные'
+        title={tx('ui.action.exportData', 'Export data')}
         hideTitle={isOpen}
         className='text-muted-foreground enabled:hover:text-primary'
         icon={<IconDownload size='1.25rem' />}

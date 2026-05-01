@@ -1,5 +1,6 @@
 'use client';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { useAuth } from '@/features/auth/backend/use-auth';
 
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
@@ -13,6 +14,7 @@ import { NavigationButton } from './navigation-button';
 import { useConceptNavigation } from './navigation-context';
 
 export function MenuAI() {
+  const tx = useTx();
   const router = useConceptNavigation();
   const {
     elementRef: menuRef,
@@ -39,7 +41,7 @@ export function MenuAI() {
   return (
     <div ref={menuRef} onBlur={handleMenuBlur} className='flex items-center justify-start relative h-full'>
       <NavigationButton
-        title='ИИ помощник' //
+        title={tx('nav.ai.menuTitle', 'AI assistant')}
         hideTitle={isMenuOpen}
         aria-expanded={isMenuOpen}
         aria-controls={globalIDs.ai_dropdown}
@@ -49,14 +51,18 @@ export function MenuAI() {
 
       <Dropdown id={globalIDs.ai_dropdown} className='min-w-[12ch] max-w-48' stretchLeft isOpen={isMenuOpen}>
         <DropdownButton
-          text='Запрос'
-          title='Создать запрос'
+          text={tx('nav.ai.prompt', 'Prompt')}
+          title={tx('nav.ai.promptTitle', 'Create prompt')}
           icon={<IconChat size='1rem' />}
           onClick={handleCreatePrompt}
         />
         <DropdownButton
-          text='Шаблоны'
-          title={user.id ? 'Шаблоны запросов' : 'Доступно только зарегистрированным пользователям'}
+          text={tx('nav.ai.templates', 'Templates')}
+          title={
+            user.id
+              ? tx('nav.ai.templatesTitleAuth', 'Prompt templates')
+              : tx('nav.ai.templatesTitleAnon', 'Available only to signed-in users')
+          }
           icon={<IconTemplates size='1rem' />}
           onClick={navigateTemplates}
           disabled={!user.id}

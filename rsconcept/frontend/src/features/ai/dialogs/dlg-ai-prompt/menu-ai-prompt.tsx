@@ -3,11 +3,12 @@
 import { toast } from 'react-toastify';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 
 import { MiniButton } from '@/components/control';
 import { IconClipboard, IconEdit } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
-import { infoMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 interface MenuAIPromptProps {
   promptID: number;
@@ -15,6 +16,7 @@ interface MenuAIPromptProps {
 }
 
 export function MenuAIPrompt({ promptID, generatedPrompt }: MenuAIPromptProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
   const hideDialog = useDialogsStore(state => state.hideDialog);
 
@@ -25,13 +27,13 @@ export function MenuAIPrompt({ promptID, generatedPrompt }: MenuAIPromptProps) {
 
   function handleCopyPrompt() {
     void navigator.clipboard.writeText(generatedPrompt);
-    toast.success(infoMsg.promptReady);
+    toast.success(formatLabel(lid.info.promptReady));
   }
 
   return (
     <div className='flex border-r-2 pr-2'>
       <MiniButton
-        title='Редактировать шаблон'
+        title={tx('ui.ai.prompt.editTemplateTitle', 'Edit template')}
         noHover
         noPadding
         icon={<IconEdit size='1.25rem' />}
@@ -39,7 +41,7 @@ export function MenuAIPrompt({ promptID, generatedPrompt }: MenuAIPromptProps) {
         onClick={navigatePrompt}
       />
       <MiniButton
-        title='Скопировать результат в буфер обмена'
+        title={tx('ui.ai.prompt.copyResultTitle', 'Copy result to clipboard')}
         noHover
         noPadding
         icon={<IconClipboard size='1.25rem' />}

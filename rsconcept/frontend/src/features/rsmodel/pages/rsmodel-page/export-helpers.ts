@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 
-import { errorMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 /** Serialize a value for JSON export (clipboard / file). */
 export function getExportJsonText(value: unknown): string {
@@ -14,7 +14,7 @@ export function copyJsonToClipboard(jsonText: string, onSuccess?: () => void): v
       onSuccess?.();
     },
     (error: unknown) => {
-      toast.error(error instanceof Error ? error.message : (errorMsg.clipboardWrite as string));
+      toast.error(error instanceof Error ? error.message : formatLabel(lid.error.clipboardWrite));
       console.error(error);
     }
   );
@@ -31,7 +31,7 @@ export function downloadJsonFile(jsonText: string, filename: string): void {
     anchor.click();
     URL.revokeObjectURL(url);
   } catch (error: unknown) {
-    toast.error(error instanceof Error ? error.message : errorMsg.fileRead);
+    toast.error(error instanceof Error ? error.message : formatLabel(lid.error.fileRead));
     console.error(error);
   }
 }

@@ -7,6 +7,8 @@ import { type Grammeme } from '@/domain/cctext';
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { matchConstituenta } from '@/domain/library/rsform-api';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { IconAccept, IconClose } from '@/components/icons';
 import { SearchBar } from '@/components/input';
@@ -27,6 +29,7 @@ interface InlineEntityEditorProps {
 }
 
 export function InlineEntityEditor({ schema, initial, position, onSave, onCancel }: InlineEntityEditorProps) {
+  const tx = useTx();
   const [entity, setEntity] = useState<string>(initial.entity);
   const [grams, setGrams] = useState<Grammeme[]>(initial.tags);
   const [query, setQuery] = useState(() => prepareSelectionPrompt(initial.query));
@@ -112,13 +115,13 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
         <div className='flex items-center gap-1'>
           <MiniButton
             icon={<IconAccept size='1.5rem' className='icon-green' />}
-            title={prepareTooltip('Сохранить ссылку', isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
+            title={prepareTooltip(tx('ui.refs.inline.saveLink', 'Save reference'), isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
             onClick={handleSave}
             disabled={!canSubmit}
           />
           <MiniButton
             icon={<IconClose size='1.5rem' className='icon-primary' />}
-            title={prepareTooltip('Закрыть', 'Esc')}
+            title={prepareTooltip(tx('modal.close', 'Close'), 'Esc')}
             onClick={onCancel}
           />
           <SearchBar
@@ -126,7 +129,7 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
             query={query}
             onChangeQuery={setQuery}
             noBorder
-            placeholder='Поиск конституенты'
+            placeholder={tx('ui.refs.inline.searchPlaceholder', 'Search constituent')}
             className='text-sm bg-input'
             inputRef={searchBarRef}
           />
@@ -156,7 +159,9 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
               );
             })
           ) : (
-            <div className='px-3 py-2 text-sm text-muted-foreground'>Ничего не найдено</div>
+            <div className='px-3 py-2 text-sm text-muted-foreground'>
+              {tx('ui.refs.inline.noResults', 'Nothing found')}
+            </div>
           )}
         </div>
         <SelectWordForm value={grams} onChange={setGrams} onDoubleClick={handleDoubleClick} />

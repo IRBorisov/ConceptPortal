@@ -6,6 +6,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { LibraryItemType, type RSModel } from '@/domain/library';
 
 import { useConceptNavigation, useRegisterNavigationSave } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
@@ -19,7 +20,7 @@ import { ValueIcon } from '@/components/view';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
-import { placeholderMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
 
 import { useModelEdit } from '../model-edit-context';
@@ -41,6 +42,7 @@ function modelDefaults(model: RSModel): UpdateLibraryItemDTO {
 }
 
 export function FormRSModel({ className }: FormRSModelProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { updateItem } = useUpdateItem();
   const setIsModified = useModificationStore(state => state.setIsModified);
@@ -96,13 +98,13 @@ export function FormRSModel({ className }: FormRSModelProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none font-math'>Концептуальная модель</h2>
+      <h2 className='mb-2 select-none font-math'>{tx('ui.page.rsmodel', 'Conceptual model')}</h2>
       <form.Field name='title'>
         {field => (
           <TextInput
             id='schema_title'
-            aria-label='Название модели'
-            placeholder='Название модели'
+            aria-label={tx('ui.field.rsmodelTitle', 'Model title')}
+            placeholder={tx('ui.field.rsmodelTitle', 'Model title')}
             className='mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -117,7 +119,7 @@ export function FormRSModel({ className }: FormRSModelProps) {
           {field => (
             <TextInput
               id='schema_alias'
-              label='Сокращение'
+              label={tx('ui.label.alias', 'Abbreviation')}
               className='w-64'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -142,8 +144,8 @@ export function FormRSModel({ className }: FormRSModelProps) {
         {field => (
           <TextArea
             id='schema_comment'
-            label='Описание'
-            placeholder={placeholderMsg.itemDescription}
+            label={tx('ui.label.description', 'Description')}
+            placeholder={formatLabel(lid.placeholder.itemDescription)}
             rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -155,8 +157,8 @@ export function FormRSModel({ className }: FormRSModelProps) {
       </form.Field>
       {isMutable || !isDefaultValue ? (
         <SubmitButton
-          text='Сохранить изменения'
-          title={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
+          text={tx('ui.action.saveChanges', 'Save changes')}
+          title={prepareTooltip(tx('ui.action.saveChanges', 'Save changes'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
           className='self-center mt-4'
           loading={isProcessing}
           icon={<IconSave size='1.25rem' />}
@@ -168,7 +170,7 @@ export function FormRSModel({ className }: FormRSModelProps) {
         className='mt-3 -mb-1'
         icon={<IconRSForm size='1.25rem' className='icon-primary' />}
         value={schema.alias}
-        title='Концептуальная схема'
+        title={tx('ui.page.rsform', 'Conceptual schema')}
         onClick={handleNavigateSchema}
         disabled={false}
       />

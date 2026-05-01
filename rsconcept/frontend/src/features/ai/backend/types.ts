@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { limits } from '@/utils/constants';
-import { errorMsg } from '@/utils/labels';
+import { lid } from '@/utils/labels';
 
 /** Represents AI prompt. */
 export type IPromptTemplate = IPromptTemplateDTO;
@@ -37,9 +37,9 @@ const schemaPromptTemplateInput = schemaPromptTemplate
     owner: true
   })
   .extend({
-    label: z.string().max(limits.len_alias, errorMsg.aliasLength).nonempty(errorMsg.requiredField),
-    description: z.string().max(limits.len_description, errorMsg.descriptionLength),
-    text: z.string().max(limits.len_text, errorMsg.textLength)
+    label: z.string().max(limits.len_alias, lid.error.aliasLength).nonempty(lid.error.requiredField),
+    description: z.string().max(limits.len_description, lid.error.descriptionLength),
+    text: z.string().max(limits.len_text, lid.error.textLength)
   });
 
 export const schemaCreatePromptTemplate = schemaPromptTemplateInput.omit({

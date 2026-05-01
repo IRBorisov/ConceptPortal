@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import { type LocationHead } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
@@ -21,6 +22,7 @@ interface LocationBreadcrumbProps {
 }
 
 export function LocationBreadcrumb({ canRename, className, onRenameLocation }: LocationBreadcrumbProps) {
+  const tx = useTx();
   const location = useLibrarySearchStore(state => state.location);
   const setLocation = useLibrarySearchStore(state => state.setLocation);
   const subfolders = useLibrarySearchStore(state => state.subfolders);
@@ -37,17 +39,22 @@ export function LocationBreadcrumb({ canRename, className, onRenameLocation }: L
       <div className='cc-icons'>
         <BadgeHelp topic={HelpTopic.UI_LIBRARY} contentClass='text-sm' offset={5} place='bottom-start' />
         <MiniButton
-          title='Редактирование пути
-Перемещаются только Ваши схемы
-в указанной папке (и подпапках)'
-          aria-label='Редактирование расположения'
+          title={tx(
+            'lib.breadcrumb.editLocationTitle',
+            'Edit path\nOnly your own schemas are moved\nto the selected folder (and subfolders)'
+          )}
+          aria-label={tx('lib.breadcrumb.editLocationAria', 'Edit location')}
           icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
           onClick={onRenameLocation}
           disabled={!canRename}
         />
         <MiniButton
-          title={subfolders ? 'Вложенные папки: Вкл' : 'Вложенные папки: Выкл'}
-          aria-label='Переключатель отображения вложенных папок'
+          title={
+            subfolders
+              ? tx('lib.breadcrumb.subfoldersOn', 'Subfolders: On')
+              : tx('lib.breadcrumb.subfoldersOff', 'Subfolders: Off')
+          }
+          aria-label={tx('lib.breadcrumb.subfoldersAria', 'Toggle subfolder display')}
           icon={<IconShowSubfolders value={subfolders} />}
           onClick={toggleSubfolders}
         />

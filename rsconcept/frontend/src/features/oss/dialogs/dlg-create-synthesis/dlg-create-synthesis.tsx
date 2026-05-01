@@ -7,6 +7,7 @@ import { type OssLayout } from '@/domain/library';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
 import { type Substitution } from '@/domain/library/rsform';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { Loader } from '@/components/loader';
@@ -14,7 +15,7 @@ import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
-import { hintMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { type CreateSynthesisDTO, schemaCreateSynthesis } from '../../backend/types';
 import { useCreateSynthesis } from '../../backend/use-create-synthesis';
@@ -40,6 +41,7 @@ const TabID = {
 type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgCreateSynthesis() {
+  const tx = useTx();
   const { createSynthesis } = useCreateSynthesis();
 
   const { ossID, layout, initialInputs, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
@@ -82,13 +84,13 @@ export function DlgCreateSynthesis() {
   const [activeTab, setActiveTab] = useState<TabID>(TabID.ARGUMENTS);
   const { canSubmit, hint } = useMemo(() => {
     if (!alias) {
-      return { canSubmit: false, hint: hintMsg.aliasEmpty };
+      return { canSubmit: false, hint: formatLabel(lid.hint.aliasEmpty) };
     }
     if (manager.oss.operations.some(operation => operation.alias === alias)) {
-      return { canSubmit: false, hint: hintMsg.schemaAliasTaken };
+      return { canSubmit: false, hint: formatLabel(lid.hint.schemaAliasTaken) };
     }
     if (!schemaCreateSynthesis.safeParse(values).success) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
+      return { canSubmit: false, hint: formatLabel(lid.hint.formInvalid) };
     }
     return { canSubmit: true, hint: '' };
   }, [alias, values, manager.oss.operations]);
@@ -119,8 +121,8 @@ export function DlgCreateSynthesis() {
 
   return (
     <ModalForm
-      header='Создание операции синтеза'
-      submitText='Создать'
+      header={tx('ui.dlg.createSynthesis.header', 'Create synthesis operation')}
+      submitText={tx('ui.action.create', 'Create')}
       canSubmit={canSubmit}
       validationHint={hint}
       onSubmit={event => {
@@ -133,8 +135,14 @@ export function DlgCreateSynthesis() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='z-pop mx-auto flex border divide-x rounded-none'>
-          <TabLabel title='Выбор аргументов операции' label='Аргументы' />
-          <TabLabel title='Таблица отождествлений' label='Отождествления' />
+          <TabLabel
+            title={tx('ui.tab.oss.operationArgumentsTitle', 'Select operation arguments')}
+            label={tx('ui.tab.oss.arguments', 'Arguments')}
+          />
+          <TabLabel
+            title={tx('ui.tab.inlineSynthesis.substitutionsTitle', 'Substitution table')}
+            label={tx('ui.tab.inlineSynthesis.substitutions', 'Substitutions')}
+          />
         </TabList>
         <TabPanel>
           <TabArguments

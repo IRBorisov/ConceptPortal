@@ -4,6 +4,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { OperationType, type OssLayout } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { Checkbox, TextInput } from '@/components/input';
@@ -22,6 +23,7 @@ export interface DlgDeleteOperationProps {
 }
 
 export function DlgDeleteOperation() {
+  const tx = useTx();
   const { ossID, targetID, layout, beforeDelete } = useDialogsStore(state => state.props as DlgDeleteOperationProps);
   const { deleteOperation } = useDeleteOperation();
 
@@ -53,8 +55,8 @@ export function DlgDeleteOperation() {
   return (
     <ModalForm
       overflowVisible
-      header='Удаление операции'
-      submitText='Подтвердить удаление'
+      header={tx('ui.oss.deleteOperation.header', 'Delete operation')}
+      submitText={tx('ui.oss.deleteOperation.submit', 'Confirm deletion')}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
@@ -63,15 +65,22 @@ export function DlgDeleteOperation() {
       className='w-140 pb-3 px-6 cc-column select-none'
       helpTopic={HelpTopic.CC_PROPAGATION}
     >
-      <TextInput disabled dense noBorder id='operation_alias' label='Операция' value={target.alias} />
+      <TextInput
+        disabled
+        dense
+        noBorder
+        id='operation_alias'
+        label={tx('ui.oss.deleteOperation.operationLabel', 'Operation')}
+        value={target.alias}
+      />
       <form.Field name='delete_schema'>
         {field => (
           <Checkbox
-            label='Удалить схему'
+            label={tx('ui.oss.deleteOperation.deleteSchema', 'Delete schema')}
             title={
               (target.operation_type === OperationType.INPUT && target.is_import) || target.result === null
-                ? 'Привязанную схему нельзя удалить'
-                : 'Удалить схему вместе с операцией'
+                ? tx('ui.oss.deleteOperation.deleteSchemaLocked', 'The linked schema cannot be deleted')
+                : tx('ui.oss.deleteOperation.deleteSchemaHint', 'Delete the schema together with the operation')
             }
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
@@ -82,9 +91,11 @@ export function DlgDeleteOperation() {
       <form.Field name='keep_constituents'>
         {field => (
           <Checkbox
-            label='Сохранить наследованные конституенты'
-            title='Наследованные конституенты
-превратятся в дописанные'
+            label={tx('ui.oss.deleteOperation.keepInherited', 'Keep inherited constituents')}
+            title={tx(
+              'ui.oss.deleteOperation.keepInheritedHint',
+              'Inherited constituents\nwill become appended ones'
+            )}
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
             disabled={target.result === null}
@@ -93,7 +104,8 @@ export function DlgDeleteOperation() {
       </form.Field>
       {deleteSchema ? (
         <div className='text-destructive'>
-          <b>Внимание!</b> Будет также удалена связанная схема
+          <b>{tx('ui.oss.deleteOperation.warningAttention', 'Warning!')}</b>{' '}
+          {tx('ui.oss.deleteOperation.warningRelatedSchema', 'The linked schema will also be deleted')}
         </div>
       ) : null}
     </ModalForm>

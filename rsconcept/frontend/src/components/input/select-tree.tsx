@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 
@@ -46,6 +48,7 @@ export function SelectTree<ItemType>({
   prefix,
   ...restProps
 }: SelectTreeProps<ItemType>) {
+  const tx = useTx();
   const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const foldable = new Set(items.filter(item => getParent(item) !== item).map(item => getParent(item)));
   const defaultFolded = items.filter(item => getParent(value) !== item && getParent(getParent(value)) !== item);
@@ -106,7 +109,9 @@ export function SelectTree<ItemType>({
           >
             {foldable.has(item) ? (
               <MiniButton
-                aria-label={!folded.includes(item) ? 'Свернуть' : 'Развернуть'}
+                aria-label={
+                  !folded.includes(item) ? tx('ui.selectTree.fold', 'Collapse') : tx('ui.selectTree.unfold', 'Expand')
+                }
                 className={clsx('absolute left-1 hover:text-primary', !folded.includes(item) ? 'top-1.5' : 'top-1')}
                 noPadding
                 icon={!folded.includes(item) ? <IconDropArrow size='1rem' /> : <IconPageRight size='1.25rem' />}

@@ -6,6 +6,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { type LibraryItem, type OssLayout } from '@/domain/library';
 import { getRelocateCandidates } from '@/domain/library/oss-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { SelectLibraryItem } from '@/features/library/components/select-library-item';
@@ -15,7 +16,7 @@ import { PickMultiConstituenta } from '@/features/rsform/components/pick-multi-c
 import { MiniButton } from '@/components/control';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { hintMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { type RelocateConstituentsDTO, schemaRelocateConstituents } from '../backend/types';
 import { useOss } from '../backend/use-oss';
@@ -30,6 +31,7 @@ export interface DlgRelocateConstituentsProps {
 }
 
 export function DlgRelocateConstituents() {
+  const tx = useTx();
   const { ossID, targetID, layout } = useDialogsStore(state => state.props as DlgRelocateConstituentsProps);
   const { items: libraryItems } = useLibrary();
   const { updateLayout: updatePositions } = useUpdateLayout();
@@ -120,10 +122,10 @@ export function DlgRelocateConstituents() {
 
   return (
     <ModalForm
-      header='Перенос конституент'
-      submitText='Переместить'
+      header={tx('ui.dlg.relocateConstituents.header', 'Relocate constituents')}
+      submitText={tx('ui.action.move', 'Move')}
       canSubmit={canSubmit}
-      validationHint={canSubmit ? '' : hintMsg.relocateEmpty}
+      validationHint={canSubmit ? '' : formatLabel(lid.hint.relocateEmpty)}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
@@ -137,20 +139,20 @@ export function DlgRelocateConstituents() {
           <SelectLibraryItem
             noBorder
             className='w-69'
-            placeholder='Исходная схема'
+            placeholder={tx('ui.placeholder.sourceSchema', 'Source schema')}
             items={sourceSchemas}
             value={source}
             onChange={handleSelectSource}
           />
           <MiniButton
-            title='Направление перемещения'
+            title={tx('ui.title.relocationDirection', 'Relocation direction')}
             icon={<IconRelocationUp value={directionUp} />}
             onClick={toggleDirection}
           />
           <SelectLibraryItem
             noBorder
             className='w-69'
-            placeholder='Целевая схема'
+            placeholder={tx('ui.placeholder.targetSchema', 'Target schema')}
             items={destinationSchemas}
             value={destinationItem}
             onChange={handleSelectDestination}

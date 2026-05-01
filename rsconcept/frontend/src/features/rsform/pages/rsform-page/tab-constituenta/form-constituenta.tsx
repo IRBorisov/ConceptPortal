@@ -11,13 +11,14 @@ import { type AnalysisFull, TypeID } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
 
 import { useRegisterNavigationSave } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { TextButton } from '@/components/control/text-button';
 import { Label, TextArea } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { errorMsg, tooltipText } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { withPreventDefault } from '@/utils/utils';
 
@@ -52,6 +53,7 @@ function constituentaDefaults(activeCst: Constituenta): UpdateConstituentaDTO {
 }
 
 export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdit }: FormConstituentaProps) {
+  const tx = useTx();
   const isModified = useModificationStore(state => state.isModified);
   const setIsModified = useModificationStore(state => state.setIsModified);
   const onModifiedEvent = useEffectEvent(setIsModified);
@@ -142,12 +144,12 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
     event.preventDefault();
 
     if (!definition) {
-      toast.error(errorMsg.typeStructureFailed);
+      toast.error(formatLabel(lid.error.typeStructureFailed));
       return;
     }
     const parse = getAnalysisFor(definition, activeCst.cst_type, schema);
     if (!parse.type || parse.type.typeID === TypeID.logic) {
-      toast.error(errorMsg.typeStructureFailed);
+      toast.error(formatLabel(lid.error.typeStructureFailed));
       return;
     }
     showTypification({ items: [{ alias: activeCst.alias, type: parse.type }] });
@@ -160,7 +162,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
     >
       <div className='flex items-center gap-2 mr-2 font-math font-semibold select-text'>
-        <span>Конституента {activeCst.alias}</span>
+        <span>{tx('ui.rsform.heading.constituenta', 'Constituent {alias}', { alias: activeCst.alias })}</span>
       </div>
       <ConstituentaPrimaryActions className='-mt-1' activeCst={activeCst} schema={schema} />
 
@@ -169,9 +171,15 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
           <div className='relative'>
             {!disabled ? (
               <TextButton
-                text='Изменить словоформы'
+                text={tx('ui.rsform.action.editWordForms', 'Edit word forms')}
                 className='z-pop text-sm absolute top-0 left-19'
-                title={disabled ? undefined : isModified ? tooltipText.unsaved : 'Редактировать словоформы термина'}
+                title={
+                  disabled
+                    ? undefined
+                    : isModified
+                      ? formatLabel(lid.tooltip.unsaved)
+                      : tx('ui.rsform.hint.editTermWordForms', 'Edit term word forms')
+                }
                 onClick={openTermEditor}
                 disabled={isModified}
               />
@@ -179,8 +187,8 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
 
             <RefsInput
               id='cst_term'
-              label='Термин'
-              aria-label='Термин'
+              label={tx('ui.label.term', 'Term')}
+              aria-label={tx('ui.label.term', 'Term')}
               maxHeight='8rem'
               areaClassName={
                 (needsInterpretation && !field.state.value) ||
@@ -188,7 +196,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
                   ? 'cm-error'
                   : ''
               }
-              placeholder={disabled ? '' : 'Обозначение для текстовых определений'}
+              placeholder={disabled ? '' : tx('ui.placeholder.termForDefinitions', 'Label for text definitions')}
               schema={schema}
               onOpenEdit={onOpenEdit}
               value={field.state.value ?? ''}
@@ -199,9 +207,11 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
               error={
                 field.state.meta.errors[0]?.message ??
                 (needsInterpretation && !field.state.value
-                  ? 'Пустой термин'
+                  ? tx('ui.validation.termEmpty', 'Empty term')
                   : activeCst.homonyms.length > 0 && !field.state.meta.isDirty
-                    ? `Термин совпадает с конституентами: ${formatAliasList(activeCst.homonyms, schema)}`
+                    ? tx('ui.validation.termHomonyms', 'Term matches constituents: {aliases}', {
+                        aliases: formatAliasList(activeCst.homonyms, schema)
+                      })
                     : undefined)
               }
             />
@@ -211,7 +221,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
 
       {activeCst.cst_type === CstType.NOMINAL || activeCst.attributes.length > 0 ? (
         <div className='flex flex-col gap-1'>
-          <Label text='Атрибутирующие конституенты' />
+          <Label text={tx('ui.label.attributingConstituents', 'Attributing constituents')} />
           <SelectMultiConstituenta
             items={schema.items.filter(item => item.id !== activeCst.id)}
             value={attributions}
@@ -219,7 +229,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
             onClear={clearAttributions}
             onRemove={removeAttribution}
             disabled={disabled || isModified}
-            placeholder={disabled ? '' : 'Выберите конституенты'}
+            placeholder={disabled ? '' : tx('ui.placeholder.selectConstituents', 'Select constituents')}
           />
         </div>
       ) : null}
@@ -227,7 +237,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       {activeCst.cst_type !== CstType.NOMINAL ? (
         <TextArea
           id='cst_typification'
-          label='Типизация'
+          label={tx('ui.label.typification', 'Typification')}
           fitContent
           dense
           noResize
@@ -271,8 +281,8 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
           {field => (
             <RefsInput
               id='cst_definition'
-              label='Текстовое определение'
-              placeholder={disabled ? '' : 'Текстовая интерпретация формального выражения'}
+              label={tx('ui.label.textDefinition', 'Text definition')}
+              placeholder={disabled ? '' : tx('ui.placeholder.textDefinitionHint', 'Text interpretation of the formal expression')}
               minHeight='3.75rem'
               maxHeight='8rem'
               schema={schema}
@@ -298,9 +308,18 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
                 needsInterpretation && !field.state.value && 'border-destructive! outline-destructive!'
               )}
               spellCheck
-              label={isBasic ? 'Конвенция' : 'Комментарий'}
+              label={
+                isBasic ? tx('ui.label.convention', 'Convention') : tx('ui.label.developerComment', 'Comment')
+              }
               placeholder={
-                disabled ? '' : isBasic ? 'Договоренность об интерпретации базового понятия' : 'Пояснение разработчика'
+                disabled
+                  ? ''
+                  : isBasic
+                    ? tx(
+                        'ui.placeholder.conventionBasic',
+                        'Agreement on interpreting the base concept'
+                      )
+                    : tx('ui.placeholder.developerComment', 'Developer note')
               }
               disabled={disabled || (isBasic && activeCst.is_inherited)}
               value={field.state.value ?? ''}
@@ -308,7 +327,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
               onBlur={field.handleBlur}
               error={
                 field.state.meta.errors[0]?.message ??
-                (needsInterpretation && !field.state.value ? 'Пустая конвенция' : undefined)
+                (needsInterpretation && !field.state.value ? tx('ui.validation.conventionEmpty', 'Empty convention') : undefined)
               }
             />
           )}
@@ -316,7 +335,11 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       ) : null}
 
       {!showConvention && (!disabled || isProcessing) ? (
-        <TextButton text='Добавить комментарий' className='self-start' onClick={() => setForceComment(true)} />
+        <TextButton
+          text={tx('ui.action.addComment', 'Add comment')}
+          className='self-start'
+          onClick={() => setForceComment(true)}
+        />
       ) : null}
     </form>
   );

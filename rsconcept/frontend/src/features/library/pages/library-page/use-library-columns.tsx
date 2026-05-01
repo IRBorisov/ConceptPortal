@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 
 import { type LibraryItem } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { useLabelUser } from '@/features/users';
 
 import { createColumnHelper } from '@/components/data-table';
@@ -15,13 +16,14 @@ const columnHelper = createColumnHelper<RO<LibraryItem>>();
 export function useLibraryColumns() {
   const { isSmall } = useWindowSize();
   const intl = useIntl();
+  const tx = useTx();
 
   const getUserLabel = useLabelUser();
 
   return [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: 'Сокращение',
+      header: tx('lib.col.alias', 'Alias'),
       size: 150,
       minSize: 80,
       maxSize: 150,
@@ -31,7 +33,7 @@ export function useLibraryColumns() {
     }),
     columnHelper.accessor('title', {
       id: 'title',
-      header: 'Название',
+      header: tx('lib.col.title', 'Title'),
       size: 1200,
       minSize: 200,
       maxSize: 1200,
@@ -41,7 +43,7 @@ export function useLibraryColumns() {
     }),
     columnHelper.accessor('owner', {
       id: 'owner',
-      header: 'Владелец',
+      header: tx('lib.col.owner', 'Owner'),
       size: 400,
       minSize: 100,
       maxSize: 400,
@@ -51,7 +53,11 @@ export function useLibraryColumns() {
     }),
     columnHelper.accessor('time_update', {
       id: 'time_update',
-      header: () => <span className='min-w-20'>{isSmall ? 'Дата' : 'Обновлена'}</span>,
+      header: () => (
+        <span className='min-w-20'>
+          {isSmall ? tx('lib.col.dateShort', 'Date') : tx('lib.col.dateLong', 'Updated')}
+        </span>
+      ),
       cell: props => (
         <span className='whitespace-nowrap'>
           {new Date(props.getValue()).toLocaleString(intl.locale, {

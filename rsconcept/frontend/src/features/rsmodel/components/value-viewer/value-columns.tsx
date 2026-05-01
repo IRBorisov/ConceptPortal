@@ -11,7 +11,7 @@ import { cn } from '@/components/utils';
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 import { truncateToLastWord, truncateToSymbol } from '@/utils/format';
-import { placeholderMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { type ValueMatcher } from '../../models/value-matcher';
 
@@ -181,7 +181,7 @@ function BasicCell({
   const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const text =
     prepareValueString(value, type, services.schema, services.basics, services.showDataText) ??
-    placeholderMsg.valueTooLarge;
+    formatLabel(lid.placeholder.valueTooLarge);
   const isSingleColumn = path.length === 0 || (path.length === 1 && !services.isSingleton);
   const needsTooltip = text.length > (isSingleColumn ? VALUE_TRUNCATE_LONG : VALUE_TRUNCATE);
   const isMatch = services.matcher?.match(value, type) ?? false;

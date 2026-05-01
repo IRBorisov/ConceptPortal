@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { AccessPolicy, LocationHead } from '@/domain/library';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { useAuth } from '@/features/auth';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { createSandboxBundleFromRSModel } from '@/features/sandbox/models/bundle-transfer';
@@ -27,12 +28,13 @@ import {
 } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { errorMsg, infoMsg, promptText, tooltipText } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
 import { useModelEdit } from './model-edit-context';
 
 export function MenuMain() {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { model, deleteModel, isMutable, engine } = useModelEdit();
   const { schema, isProcessing } = useSchemaEdit();
@@ -103,18 +105,18 @@ export function MenuMain() {
     if (isModified && !promptUnsaved()) {
       return;
     }
-    if (!window.confirm(promptText.resetSandbox)) {
+    if (!window.confirm(formatLabel(lid.prompt.resetSandbox))) {
       return;
     }
     hideMenu();
     try {
       const nextBundle = createSandboxBundleFromRSModel(schema, model);
       await saveBundle(nextBundle);
-      toast.success(infoMsg.sandboxImportSuccess);
+      toast.success(formatLabel(lid.info.sandboxImportSuccess));
       router.gotoSandboxEditor();
     } catch (error) {
       console.error(error);
-      toast.error(errorMsg.sandboxImportError);
+      toast.error(formatLabel(lid.error.sandboxImportError));
     }
   }
 
@@ -123,7 +125,7 @@ export function MenuMain() {
       <MiniButton
         noHover
         noPadding
-        title='Меню'
+        title={tx('ui.nav.menu', 'Menu')}
         hideTitle={isMenuOpen}
         icon={<IconMenu size='1.25rem' />}
         className='h-full pl-2 text-muted-foreground hover:text-primary cc-animate-color bg-transparent'
@@ -131,40 +133,42 @@ export function MenuMain() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text='Пересчитать модель'
-          aria-label='Пересчитать все вычисления'
+          text={tx('ui.action.recalculateModel', 'Recalculate model')}
+          aria-label={tx('ui.aria.recalculateAll', 'Recalculate all results')}
           icon={<IconCalculateAll size='1rem' className='icon-green' />}
           onClick={handleRecalculate}
         />
         <DropdownButton
-          text='Поделиться'
-          title={tooltipText.shareItem(model.access_policy === AccessPolicy.PUBLIC)}
-          aria-label='Скопировать ссылку в буфер обмена'
+          text={tx('ui.action.share', 'Share')}
+          title={formatLabel(
+            model.access_policy === AccessPolicy.PUBLIC ? lid.tooltip.shareItemPublic : lid.tooltip.shareItemPrivate
+          )}
+          aria-label={tx('ui.aria.copyLinkToClipboard', 'Copy link to clipboard')}
           icon={<IconShare size='1rem' className='icon-primary' />}
           onClick={handleShare}
           disabled={model.access_policy !== AccessPolicy.PUBLIC}
         />
         <DropdownButton
-          text='QR-код'
-          title='Показать QR-код схемы'
+          text={tx('ui.action.qrCode', 'QR code')}
+          title={tx('ui.hint.qrSchemaPage', 'Show schema QR code')}
           icon={<IconQR size='1rem' className='icon-primary' />}
           onClick={handleShowQR}
         />
         {!isAnonymous ? (
           <DropdownButton
-            text='Клонировать'
+            text={tx('ui.action.clone', 'Clone')}
             icon={<IconClone size='1rem' className='icon-green' />}
             onClick={handleClone}
           />
         ) : null}
         <DropdownButton
-          text='Открыть в песочнице'
+          text={tx('ui.action.openInSandbox', 'Open in sandbox')}
           icon={<IconSandbox size='1rem' className='icon-green' />}
           onClick={() => void handleTransferToSandbox()}
         />
         {isMutable ? (
           <DropdownButton
-            text='Удалить модель'
+            text={tx('ui.action.deleteModel', 'Delete model')}
             icon={<IconDestroy size='1rem' className='icon-red' />}
             disabled={isProcessing || role < UserRole.OWNER}
             onClick={handleDelete}
@@ -174,12 +178,12 @@ export function MenuMain() {
         <Divider margins='mx-3 my-1' />
 
         <DropdownButton
-          text='Перейти к схеме'
+          text={tx('ui.nav.gotoSchema', 'Go to schema')}
           icon={<IconRSForm size='1rem' className='icon-primary' />}
           onClick={handleNavigateSchema}
         />
         <DropdownButton
-          text='Библиотека'
+          text={tx('ui.nav.library', 'Library')}
           icon={<IconLibrary size='1rem' className='icon-primary' />}
           onClick={() => router.gotoLibrary()}
         />

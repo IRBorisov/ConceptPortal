@@ -3,6 +3,7 @@
 import { type SubmitEvent, useState } from 'react';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 
 import { isAxiosError } from '@/backend/api-transport';
 import { SubmitButton } from '@/components/control';
@@ -28,6 +29,7 @@ function useTokenValidation(token: string, isPending: boolean) {
 }
 
 export function Component() {
+  const tx = useTx();
   const router = useConceptNavigation();
   const token = useQueryStrings().get('token') ?? '';
 
@@ -62,7 +64,7 @@ export function Component() {
       <TextInput
         id='new_password'
         type='password'
-        label='Новый пароль'
+        label={tx('auth.password.new', 'New password')}
         autoComplete='new-password'
         allowEnter
         value={newPassword}
@@ -73,7 +75,7 @@ export function Component() {
       <TextInput
         id='new_password_repeat'
         type='password'
-        label='Повторите новый'
+        label={tx('auth.password.repeat', 'Repeat new password')}
         autoComplete='new-password'
         allowEnter
         value={newPasswordRepeat}
@@ -82,11 +84,11 @@ export function Component() {
         }}
       />
       {newPasswordRepeat && newPassword !== newPasswordRepeat ? (
-        <div className='text-sm text-destructive'>Пароли не совпадают</div>
+        <div className='text-sm text-destructive'>{tx('auth.password.mismatch', 'Passwords do not match')}</div>
       ) : null}
 
       <SubmitButton
-        text='Установить пароль'
+        text={tx('auth.password.submit', 'Set password')}
         className='self-center w-48 mt-3'
         loading={isPending}
         disabled={!canSubmit}
@@ -98,10 +100,15 @@ export function Component() {
 
 // ====== Internals =========
 function ServerError({ error }: { error: ErrorData }): React.ReactElement {
+  const tx = useTx();
   rethrowIfStaleBundleError(error);
 
   if (isAxiosError(error) && error.response?.status === 404) {
-    return <div className='mx-auto mt-6 text-sm select-text text-destructive'>Данная ссылка не действительна</div>;
+    return (
+      <div className='mx-auto mt-6 text-sm select-text text-destructive'>
+        {tx('auth.password.invalidTokenLink', 'This link is no longer valid.')}
+      </div>
+    );
   }
   return <InfoError error={error} />;
 }

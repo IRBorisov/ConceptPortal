@@ -8,7 +8,7 @@ import { useRSForms } from '@/features/rsform/backend/use-rsforms';
 import { PickSubstitutions } from '@/features/rsform/components/pick-substitutions';
 
 import { TextArea } from '@/components/input';
-import { infoMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 interface TabSubstitutionsProps {
   oss: OperationSchema;
@@ -27,7 +27,7 @@ export function TabSubstitutions({ oss, inputs, substitutions, onChangeSubstitut
   const validator = new SubstitutionValidator(schemas, substitutions);
   const isCorrect = validator.validate();
   const validationMessages = isCorrect
-    ? [infoMsg.substitutionsCorrect]
+    ? [formatLabel(lid.info.substitutionsCorrect)]
     : validator.errors.map(error => describeSubstitutionError(error));
 
   return (

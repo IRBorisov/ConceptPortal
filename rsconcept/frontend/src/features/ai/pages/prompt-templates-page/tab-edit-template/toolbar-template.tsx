@@ -1,6 +1,7 @@
 'use client';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { PromptTabID } from '@/app/navigation/navigation-context';
 import { useDeletePromptTemplate } from '@/features/ai/backend/use-delete-prompt-template';
 import { useMutatingPrompts } from '@/features/ai/backend/use-mutating-prompts';
@@ -10,7 +11,7 @@ import { IconDestroy, IconReset, IconSave } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { prepareTooltip } from '@/utils/format';
-import { promptText } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
 
 interface ToolbarTemplateProps {
@@ -22,13 +23,14 @@ interface ToolbarTemplateProps {
 
 /** Toolbar for prompt template editing. */
 export function ToolbarTemplate({ activeID, onSave, onReset, className }: ToolbarTemplateProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { deletePromptTemplate } = useDeletePromptTemplate();
   const isProcessing = useMutatingPrompts();
   const isModified = useModificationStore(state => state.isModified);
 
   function handleDelete() {
-    if (window.confirm(promptText.deleteTemplate)) {
+    if (window.confirm(formatLabel(lid.prompt.deleteTemplate))) {
       void deletePromptTemplate(activeID).then(() =>
         router.pushAsync({ path: urls.prompt_template(null, PromptTabID.LIST) })
       );
@@ -38,22 +40,22 @@ export function ToolbarTemplate({ activeID, onSave, onReset, className }: Toolba
   return (
     <div className={cn('cc-icons items-start outline-hidden', className)}>
       <MiniButton
-        title={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
-        aria-label='Сохранить изменения'
+        title={prepareTooltip(tx('ui.action.saveChanges', 'Save changes'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+        aria-label={tx('ui.action.saveChanges', 'Save changes')}
         icon={<IconSave size='1.25rem' className='icon-primary' />}
         onClick={onSave}
         disabled={isProcessing || !isModified}
       />
       <MiniButton
-        title='Сбросить изменения'
-        aria-label='Сбросить изменения'
+        title={tx('ui.action.resetEdits', 'Discard changes')}
+        aria-label={tx('ui.aria.resetEdits', 'Discard changes')}
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={onReset}
         disabled={isProcessing || !isModified}
       />
       <MiniButton
-        title='Удалить шаблон'
-        aria-label='Удалить шаблон'
+        title={tx('ui.ai.deleteTemplate', 'Delete template')}
+        aria-label={tx('ui.aria.deleteTemplate', 'Delete template')}
         icon={<IconDestroy size='1.25rem' className='icon-red' />}
         onClick={handleDelete}
         disabled={isProcessing}

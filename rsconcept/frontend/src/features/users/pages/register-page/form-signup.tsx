@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm } from '@tanstack/react-form';
 
 import { urls, useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { isAxiosError } from '@/backend/api-transport';
@@ -20,6 +21,7 @@ import { schemaUserSignup, type UserSignupDTO } from '../../backend/types';
 import { useSignup } from '../../backend/use-signup';
 
 export function FormSignup() {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { signup, isPending, error: serverError, reset: clearServerError } = useSignup();
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
@@ -66,21 +68,24 @@ export function FormSignup() {
       }}
       onChange={resetErrors}
     >
-      <h1>Новый пользователь</h1>
+      <h1>{tx('auth.register.title', 'New user')}</h1>
 
       <div className='flex gap-12'>
         <fieldset className='cc-column w-60'>
-          <legend className='sr-only'>Данные для входа</legend>
+          <legend className='sr-only'>{tx('auth.register.legendLogin', 'Sign-in credentials')}</legend>
 
           <form.Field name='username'>
             {field => (
               <TextInput
                 id='username'
                 autoComplete='username'
-                label='Имя пользователя (логин)'
+                label={tx('auth.register.username', 'Username (login)')}
                 spellCheck={false}
                 pattern={patterns.login}
-                title='Минимум 3 знака. Латинские буквы и цифры. Не может начинаться с цифры'
+                title={tx(
+                  'auth.register.usernameTitle',
+                  'At least 3 characters. Latin letters and digits. Cannot start with a digit'
+                )}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
@@ -94,7 +99,7 @@ export function FormSignup() {
                 id='password'
                 type='password'
                 autoComplete='new-password'
-                label='Пароль'
+                label={tx('auth.register.password', 'Password')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
@@ -108,7 +113,7 @@ export function FormSignup() {
                 id='password2'
                 type='password'
                 autoComplete='new-password'
-                label='Повторите пароль'
+                label={tx('auth.register.password2', 'Repeat password')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
@@ -119,7 +124,7 @@ export function FormSignup() {
         </fieldset>
 
         <fieldset className='cc-column w-60 relative'>
-          <legend className='sr-only'>Информация о пользователе</legend>
+          <legend className='sr-only'>{tx('auth.register.legendProfile', 'User profile')}</legend>
 
           <IconHelp
             id={globalIDs.email_tooltip}
@@ -127,7 +132,7 @@ export function FormSignup() {
             size='1.25rem'
           />
           <Tooltip anchorSelect={`#${globalIDs.email_tooltip}`} offset={6}>
-            электронная почта используется для восстановления пароля
+            {tx('auth.register.emailTooltip', 'Email is used for password recovery')}
           </Tooltip>
           <form.Field name='email'>
             {field => (
@@ -136,8 +141,8 @@ export function FormSignup() {
                 autoComplete='email'
                 required
                 spellCheck={false}
-                label='Электронная почта (email)'
-                title='электронная почта в корректном формате'
+                label={tx('auth.register.email', 'Email address')}
+                title={tx('auth.register.emailTitle', 'Email in a valid format')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
@@ -150,7 +155,7 @@ export function FormSignup() {
               <TextInput
                 id='first_name'
                 autoComplete='given-name'
-                label='Отображаемое имя'
+                label={tx('auth.register.firstName', 'Display first name')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
@@ -163,7 +168,7 @@ export function FormSignup() {
               <TextInput
                 id='last_name'
                 autoComplete='family-name'
-                label='Отображаемая фамилия'
+                label={tx('auth.register.lastName', 'Display last name')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
@@ -175,22 +180,27 @@ export function FormSignup() {
       </div>
 
       <div className='flex gap-1 text-sm'>
-        <Checkbox id='accept_terms' label='Принимаю условия' value={acceptPrivacy} onChange={setAcceptPrivacy} />
-        <TextURL text='обработки персональных данных...' href={urls.help_topic(HelpTopic.INFO_PRIVACY)} />
+        <Checkbox
+          id='accept_terms'
+          label={tx('auth.register.acceptPrivacy', 'I accept the terms of')}
+          value={acceptPrivacy}
+          onChange={setAcceptPrivacy}
+        />
+        <TextURL text={tx('auth.register.linkPrivacy', 'personal data processing…')} href={urls.help_topic(HelpTopic.INFO_PRIVACY)} />
       </div>
       <div className='flex gap-1 text-sm'>
-        <Checkbox id='accept_rules' label='Принимаю ' value={acceptRules} onChange={setAcceptRules} />
-        <TextURL text='правила поведения на Портале...' href={urls.help_topic(HelpTopic.INFO_RULES)} />
+        <Checkbox id='accept_rules' label={tx('auth.register.acceptRules', 'I accept ')} value={acceptRules} onChange={setAcceptRules} />
+        <TextURL text={tx('auth.register.linkRules', 'the portal rules…')} href={urls.help_topic(HelpTopic.INFO_RULES)} />
       </div>
 
       <div className='flex justify-around mt-3'>
         <SubmitButton
-          text='Регистрировать'
+          text={tx('auth.register.submit', 'Register')}
           className='min-w-40'
           loading={isPending}
           disabled={!acceptPrivacy || !acceptRules}
         />
-        <Button text='Назад' className='min-w-40' onClick={() => handleCancel()} />
+        <Button text={tx('auth.register.back', 'Back')} className='min-w-40' onClick={() => handleCancel()} />
       </div>
       {serverError ? <ServerError error={serverError} /> : null}
     </form>

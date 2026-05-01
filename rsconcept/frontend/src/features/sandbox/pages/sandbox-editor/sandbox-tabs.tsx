@@ -4,6 +4,7 @@ import { useEffect, useEffectEvent, useLayoutEffect, useRef } from 'react';
 
 import { isSchemaIssue } from '@/domain/library/rsform-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { TabConstituenta } from '@/features/rsform/pages/rsform-page/tab-constituenta';
@@ -30,6 +31,7 @@ interface SandboxTabsProps {
 }
 
 export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
@@ -46,12 +48,12 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
   useLayoutEffect(
     function updateWindowTitle() {
       const oldTitle = document.title;
-      document.title = `Песочница - ${schema.title}`;
+      document.title = `${tx('nav.bar.sandbox', 'Sandbox')} — ${schema.title}`;
       return function restoreWindowTitle() {
         document.title = oldTitle;
       };
     },
-    [schema.title]
+    [schema.title, tx]
   );
 
   useLayoutEffect(
@@ -160,7 +162,7 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
             icon={<IconStatusError size='0.8rem' />}
             value={countProblematic}
             color='destructive'
-            title={`Проблемных понятий: ${countProblematic}`}
+            title={tx('ui.tabs.problemConceptsTitle', 'Problem concepts: {count}', { count: countProblematic })}
             onClick={onFocusSchemaIssues}
           />
         ) : null}
@@ -170,12 +172,12 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
           <MenuEdit />
         </div>
 
-        <TabLabel label='Паспорт' />
-        <TabLabel label='Список' />
-        <TabLabel label='Понятие' />
-        <TabLabel label='Граф' />
-        <TabLabel label='Данные' />
-        <TabLabel label='Расчет' />
+        <TabLabel label={tx('ui.tabs.passport', 'Passport')} />
+        <TabLabel label={tx('ui.tabs.list', 'List')} />
+        <TabLabel label={tx('ui.tabs.concept', 'Concept')} />
+        <TabLabel label={tx('ui.tabs.graph', 'Graph')} />
+        <TabLabel label={tx('ui.tabs.data', 'Data')} />
+        <TabLabel label={tx('ui.tabs.evaluation', 'Evaluation')} />
       </TabList>
 
       <div ref={containerRef} className='overflow-x-hidden'>

@@ -14,7 +14,7 @@ import { SchemaEditContext } from '@/features/rsform/pages/rsform-page/schema-ed
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { PARAMETER, prefixes } from '@/utils/constants';
-import { errorMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { notImplemented, promptUnsaved } from '@/utils/utils';
 
@@ -286,7 +286,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     }
     if (schema.attribution_graph.hasEdge(sourceID, targetID)) {
       if (targetCst.parent_schema !== null && targetCst.parent_schema === sourceCst.parent_schema) {
-        toast.error(errorMsg.deleteInheritedEdge);
+        toast.error(formatLabel(lid.error.deleteInheritedEdge));
         return;
       }
       deleteAttribution({
@@ -298,7 +298,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     }
     if (schema.graph.hasEdge(sourceID, targetID)) {
       if (targetCst.is_inherited) {
-        toast.error(errorMsg.changeInheritedDefinition);
+        toast.error(formatLabel(lid.error.changeInheritedDefinition));
         return;
       }
       void patchConstituenta({

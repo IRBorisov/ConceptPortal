@@ -4,9 +4,11 @@ import { type ReactNode } from 'react';
 
 import { type OperationSchema } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { Label, TextArea, TextInput } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
-import { placeholderMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { PickMultiOperation } from '../../components/pick-multi-operation';
 import { SelectParent } from '../../components/select-parent';
@@ -26,6 +28,7 @@ interface TabArgumentsProps {
 }
 
 export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
+  const tx = useTx();
   const replicas = oss.replicas
     .filter(item => inputs.includes(item.original))
     .map(item => item.replica)
@@ -39,8 +42,8 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
         {field => (
           <TextInput
             id='operation_title'
-            aria-label='Название новой схемы'
-            placeholder='Название новой схемы'
+            aria-label={tx('ui.oss.newSchemaTitle', 'New schema title')}
+            placeholder={tx('ui.oss.newSchemaTitle', 'New schema title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -54,8 +57,8 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
             {field => (
               <TextInput
                 id='operation_alias'
-                label='Сокращение'
-                placeholder='Введите сокращение'
+                label={tx('ui.label.alias', 'Abbreviation')}
+                placeholder={tx('ui.oss.enterAlias', 'Enter abbreviation')}
                 className='w-80'
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
@@ -69,7 +72,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
               <SelectParent
                 items={oss.blocks}
                 value={field.state.value ? (oss.blockByID.get(field.state.value) ?? null) : null}
-                placeholder='Родительский блок'
+                placeholder={tx('ui.oss.parentBlock', 'Parent block')}
                 onChange={value => field.handleChange(value ? value.id : null)}
               />
             )}
@@ -79,8 +82,8 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
           {field => (
             <TextArea
               id='operation_comment'
-              label='Описание'
-              placeholder={placeholderMsg.itemDescription}
+              label={tx('ui.label.description', 'Description')}
+              placeholder={formatLabel(lid.placeholder.itemDescription)}
               className='w-full'
               noResize
               rows={3}
@@ -94,7 +97,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
       </div>
 
       <div className='cc-column'>
-        <Label text={`Выбор аргументов: [ ${inputs.length} ]`} />
+        <Label text={tx('ui.oss.argumentPickLabel', 'Argument pick: [ {count} ]', { count: inputs.length })} />
         <ArgumentsField>
           {field => (
             <PickMultiOperation

@@ -5,13 +5,14 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { type RSForm } from '@/domain/library';
 import { SubstitutionValidator } from '@/domain/library/oss-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { describeSubstitutionError } from '@/features/oss/labels';
 
 import { ErrorField, TextArea } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { hintMsg, infoMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { schemaSubstitutions, type SubstitutionsDTO } from '../backend/types';
 import { PickSubstitutions } from '../components/pick-substitutions';
@@ -22,6 +23,7 @@ export interface DlgSubstituteCstProps {
 }
 
 export function DlgSubstituteCst() {
+  const tx = useTx();
   const { onSubstitute, schema } = useDialogsStore(state => state.props as DlgSubstituteCstProps);
 
   const defaultValues: SubstitutionsDTO = {
@@ -43,15 +45,15 @@ export function DlgSubstituteCst() {
   const validator = new SubstitutionValidator([schema], substitutions);
   const isCorrect = validator.validate();
   const validationMessages = isCorrect
-    ? [infoMsg.substitutionsCorrect]
+    ? [formatLabel(lid.info.substitutionsCorrect)]
     : validator.errors.map(error => describeSubstitutionError(error));
 
   return (
     <ModalForm
-      header='Отождествление'
-      submitText='Отождествить'
+      header={tx('ui.dlg.substituteCst.header', 'Substitution')}
+      submitText={tx('ui.action.substitute', 'Substitute')}
       canSubmit={isValid}
-      validationHint={isValid ? '' : hintMsg.substitutionsEmpty}
+      validationHint={isValid ? '' : formatLabel(lid.hint.substitutionsEmpty)}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();

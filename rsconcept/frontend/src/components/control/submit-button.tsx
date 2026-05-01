@@ -1,3 +1,7 @@
+'use client';
+
+import { useTx } from '@/app/i18n/use-tx';
+
 import { globalIDs } from '@/utils/constants';
 
 import { type Button } from '../props';
@@ -18,7 +22,7 @@ interface SubmitButtonProps extends Button {
  * Displays submit type button with icon and text.
  */
 export function SubmitButton({
-  text = 'ОК',
+  text,
   icon,
   title,
 
@@ -28,6 +32,8 @@ export function SubmitButton({
   className,
   ...restProps
 }: SubmitButtonProps) {
+  const tx = useTx();
+  const label = text ?? tx('ui.submit.ok', 'OK');
   return (
     <button
       type='submit'
@@ -47,7 +53,7 @@ export function SubmitButton({
       {...restProps}
     >
       {icon ? icon : null}
-      {text ? <span>{text}</span> : null}
+      {label ? <span>{label}</span> : null}
     </button>
   );
 }

@@ -8,6 +8,8 @@ import { convertPathToType, extractValue } from '@/domain/rslang/eval/value-api'
 import { type TypePath } from '@/domain/rslang/semantic/typification';
 import { applyPath } from '@/domain/rslang/semantic/typification-api';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { MiniButton } from '@/components/control';
 import { DataTable } from '@/components/data-table';
 import { IconReset } from '@/components/icons';
@@ -34,6 +36,7 @@ interface ValueEditorProps {
 }
 
 export function ValueViewer({ className, value, rows, perPage = 20, engine, getHeaderText, type }: ValueEditorProps) {
+  const tx = useTx();
   const [path, setPath] = useState<ValuePath>(makeValuePath([]));
   const { filter, setFilter, matcher } = useValueMatcher(engine);
   const { data, typePath, currentType } = resolveState(value, path, type);
@@ -89,19 +92,19 @@ export function ValueViewer({ className, value, rows, perPage = 20, engine, getH
             <Text
               className='font-math font-normal mr-1 select-none'
               text={valueStr}
-              title='Обозначение | Мощность множества'
+              title={tx('ui.value.designationCardinality', 'Designation | set cardinality')}
             />
           ) : null}
           <SearchBar id='dlg_value_search' noBorder query={filter} onChangeQuery={setFilter} />
           <div className='cc-icons'>
             <MiniButton
-              title='Значение целиком'
+              title={tx('ui.value.wholeValue', 'Whole value')}
               icon={<IconReset size='1.25rem' className='icon-primary' />}
               onClick={handleResetView}
               disabled={path.length === 0}
             />
             <MiniButton
-              title='Отображение данных в тексте'
+              title={tx('ui.value.showDataInText', 'Show data as text')}
               icon={<IconShowDataText size='1.25rem' className='hover:text-primary' value={showDataText} />}
               onClick={toggleDataText}
             />

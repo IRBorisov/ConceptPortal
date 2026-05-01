@@ -10,6 +10,7 @@ import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
 
 import { useConceptNavigation, useRegisterNavigationSave } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { type UpdateConstituentaDTO } from '@/features/rsform/backend/types';
 import { EditorRSExpression } from '@/features/rsform/components/editor-rsexpression/editor-rsexpression';
@@ -21,7 +22,7 @@ import { TextButton } from '@/components/control/text-button';
 import { TextArea } from '@/components/input';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
-import { placeholderMsg, tooltipText } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { withPreventDefault } from '@/utils/utils';
 
@@ -42,6 +43,7 @@ interface FormValueProps {
 }
 
 export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { isMutable, engine, schema } = useModelEdit();
   const { patchConstituenta, createCstFromData, openTermEditor, isContentEditable, isProcessing } = useSchemaEdit();
@@ -66,7 +68,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
   const initialValue = isBase ? (engine.basics.get(activeCst.id) ?? {}) : cstData;
 
   const initialStr =
-    prepareValueString(initialValue, typification, schema, engine.basics, showDataText) ?? placeholderMsg.valueTooLarge;
+    prepareValueString(initialValue, typification, schema, engine.basics, showDataText) ?? formatLabel(lid.placeholder.valueTooLarge);
   const valueResetKey = `${activeCst.id}:${toggleReset ? '1' : '0'}`;
   const [valueDraft, setValueDraft] = useState(() => ({
     resetKey: valueResetKey,
@@ -151,7 +153,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       void engine.resetValue(activeCst.id);
     }
     const valueStr =
-      prepareValueString(newValue, typification, schema, engine.basics, showDataText) ?? placeholderMsg.valueTooLarge;
+      prepareValueString(newValue, typification, schema, engine.basics, showDataText) ?? formatLabel(lid.placeholder.valueTooLarge);
     if (isBase) {
       void engine.setBasicValue(activeCst.id, newValue as BasicBinding);
     } else {
@@ -238,7 +240,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       onSubmit={withPreventDefault(() => void handleSubmitAll())}
     >
       <div className='flex items-center gap-2 mr-2 font-math font-semibold select-text'>
-        <span>Конституента {activeCst.alias}</span>
+        <span>{tx('ui.rsform.heading.constituenta', 'Constituent {alias}', { alias: activeCst.alias })}</span>
       </div>
 
       <ValuePrimaryActions activeCst={activeCst} cstData={cstData} onChangeValue={handleSetValue} />
@@ -251,7 +253,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         noOutline
         transparent
         readOnly
-        label='Типизация'
+        label={tx('ui.label.typification', 'Typification')}
         value={labelType(typification)}
         areaClassName='cursor-default'
       />
@@ -259,7 +261,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       {cstInferrable || (activeCst.definition_formal && activeCst.cst_type !== CstType.STRUCTURED) ? (
         <EditorRSExpression
           label={labelRSExpression(activeCst.cst_type)}
-          placeholder='Выражение отсутствует'
+          placeholder={tx('ui.placeholder.expressionMissing', 'No expression')}
           value={formalDraft}
           schema={schema}
           activeCst={activeCst}
@@ -287,8 +289,11 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         isBinding={isBase}
         placeholder={
           !isInterpretable(activeCst.cst_type)
-            ? 'Значение для данного типа не предусмотрено'
-            : 'Значение отсутствует. Используйте "Случайное значение" для генерации примера'
+            ? tx('ui.value.stub.unsupportedType', 'No value for this type')
+            : tx(
+                'ui.value.stub.missingHint',
+                'No value. Use "Random value" to generate an example'
+              )
         }
         onCalculate={cstInferrable ? handleCalculate : undefined}
         onChange={newValue =>
@@ -305,17 +310,19 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       <div className='relative'>
         {!metaFieldsDisabled ? (
           <TextButton
-            text='Изменить словоформы'
+            text={tx('ui.rsform.action.editWordForms', 'Edit word forms')}
             className='z-pop text-sm absolute top-0 left-19'
-            title={isModified ? tooltipText.unsaved : 'Редактировать словоформы термина'}
+            title={
+              isModified ? formatLabel(lid.tooltip.unsaved) : tx('ui.rsform.hint.editTermWordForms', 'Edit term word forms')
+            }
             onClick={openTermEditor}
             disabled={isModified}
           />
         ) : null}
         <RefsInput
           id='cst_term'
-          label='Термин'
-          placeholder='Термин отсутствует'
+          label={tx('ui.label.term', 'Term')}
+          placeholder={tx('ui.placeholder.termMissing', 'No term')}
           schema={schema}
           onOpenEdit={onOpenEdit}
           value={termDraft}
@@ -328,8 +335,12 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
 
       <RefsInput
         id='cst_definition'
-        label='Текстовое определение'
-        placeholder={formalFieldDisabled ? 'Определение отсутствует' : 'Текстовая интерпретация формального выражения'}
+        label={tx('ui.label.textDefinition', 'Text definition')}
+        placeholder={
+          formalFieldDisabled
+            ? tx('ui.placeholder.definitionMissing', 'No definition')
+            : tx('ui.placeholder.textDefinitionHint', 'Text interpretation of the formal expression')
+        }
         maxHeight='6rem'
         schema={schema}
         onOpenEdit={onOpenEdit}

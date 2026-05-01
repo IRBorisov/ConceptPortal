@@ -14,7 +14,7 @@ import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { SchemaEditState } from '@/features/rsform/pages/rsform-page/schema-edit-state';
 import { useRoleStore, UserRole } from '@/features/users';
 
-import { errorMsg, infoMsg, promptText } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { useClearValues } from '../../backend/use-clear-values';
 import { useMutatingRSModel } from '../../backend/use-mutating-rsmodel';
@@ -44,8 +44,8 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
           clearValues
         },
         {
-          onInvalidSetValue: () => toast.error(errorMsg.invalidSetValue),
-          onCalculationSuccess: timeSpent => toast.success(infoMsg.calculationSuccess(timeSpent)),
+          onInvalidSetValue: () => toast.error(formatLabel(lid.error.invalidSetValue)),
+          onCalculationSuccess: timeSpent => toast.success(formatLabel(lid.info.calculationSuccess, { timeSpent })),
           onEvaluationError: message => toast.error(message)
         }
       )
@@ -55,8 +55,8 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
     function syncServices() {
       engine.updateServices({ setCstValue, clearValues });
       engine.updateNotifications({
-        onInvalidSetValue: () => toast.error(errorMsg.invalidSetValue),
-        onCalculationSuccess: timeSpent => toast.success(infoMsg.calculationSuccess(timeSpent)),
+        onInvalidSetValue: () => toast.error(formatLabel(lid.error.invalidSetValue)),
+        onCalculationSuccess: timeSpent => toast.success(formatLabel(lid.info.calculationSuccess, { timeSpent })),
         onEvaluationError: message => toast.error(message)
       });
     },
@@ -91,7 +91,7 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
   );
 
   function deleteModel() {
-    if (!window.confirm(promptText.deleteLibraryItem)) {
+    if (!window.confirm(formatLabel(lid.prompt.deleteLibraryItem))) {
       return;
     }
     void deleteItem({

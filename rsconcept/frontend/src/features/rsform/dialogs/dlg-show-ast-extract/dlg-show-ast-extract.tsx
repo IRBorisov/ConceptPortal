@@ -27,7 +27,7 @@ import { ShowAstSchemaProvider } from '@/features/rsform/dialogs/dlg-show-ast/sh
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
-import { errorMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { type AstNode, findByUid, flattenAst } from '@/utils/parsing';
 
@@ -122,7 +122,7 @@ export function DlgShowAstExtract() {
     const updatedSchema = loadRSForm(updatedSchemaDTO);
     const parse = updatedSchema.analyzer.checkFull(updatedExpression, { annotateTypes: true, annotateErrors: true });
     if (!parse.ast) {
-      toast.error(errorMsg.invalidParse);
+      toast.error(formatLabel(lid.error.invalidParse));
       hideDialog();
       return;
     }

@@ -1,13 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+'use client';
+
+import { useTx } from '@/app/i18n/use-tx';
+
 import * as icons from '@/components/icons';
 
 export function Component() {
+  const tx = useTx();
   const iconsList = Object.keys(icons).filter(key => key.startsWith('Icon'));
   return (
     <div className='flex flex-col items-center px-6 py-3 event'>
-      <h1 className='mb-6'>Всего иконок: {iconsList.length}</h1>
+      <h1 className='mb-6'>{tx('ui.iconsPage.total', 'Total icons: {count}', { count: iconsList.length })}</h1>
       <div className='grid grid-cols-4'>
         {iconsList.map((key, index) => (
           <div key={`icons_list_${index}`} className='flex flex-col items-center px-3 pb-6'>

@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 
 import { type Constituenta, type LibraryItem, type RSForm, type Substitution } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { SelectLibraryItem } from '@/features/library/components/select-library-item';
 
 import { MiniButton } from '@/components/control';
@@ -13,7 +14,7 @@ import { IconAccept, IconPageLeft, IconPageRight, IconRemove, IconReplace } from
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
-import { errorMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { BadgeConstituenta } from './badge-constituenta';
 import { SelectConstituenta } from './select-constituenta';
@@ -52,6 +53,7 @@ export function PickSubstitutions({
   className,
   ...restProps
 }: PickSubstitutionsProps) {
+  const tx = useTx();
   const [leftArgument, setLeftArgument] = useState<LibraryItem | null>(schemas.length === 1 ? schemas[0] : null);
   const [rightArgument, setRightArgument] = useState<LibraryItem | null>(
     schemas.length === 1 && allowSelfSubstitution ? schemas[0] : null
@@ -154,12 +156,12 @@ export function PickSubstitutions({
       toDelete.includes(newSubstitution.substitution) ||
       replacements.includes(newSubstitution.original)
     ) {
-      toast.error(errorMsg.reuseOriginal);
+      toast.error(formatLabel(lid.error.reuseOriginal));
       return;
     }
     if (leftArgument === rightArgument) {
       if ((deleteRight && rightCst?.is_inherited) || (!deleteRight && leftCst?.is_inherited)) {
-        toast.error(errorMsg.substituteInherited);
+        toast.error(formatLabel(lid.error.substituteInherited));
         return;
       }
     }
@@ -216,12 +218,12 @@ export function PickSubstitutions({
         props.row.original.is_suggestion ? (
           <div className='flex max-w-fit'>
             <MiniButton
-              title='Принять предложение'
+              title={tx('ui.substitution.acceptSuggestion', 'Accept suggestion')}
               icon={<IconAccept size='1rem' className='icon-green' />}
               onClick={() => handleAcceptSuggestion(props.row.original)}
             />
             <MiniButton
-              title='Игнорировать предложение'
+              title={tx('ui.substitution.ignoreSuggestion', 'Ignore suggestion')}
               icon={<IconRemove size='1rem' className='icon-red' />}
               onClick={() => handleDeclineSuggestion(props.row.original)}
             />
@@ -229,7 +231,7 @@ export function PickSubstitutions({
         ) : (
           <div className='max-w-fit'>
             <MiniButton
-              title='Удалить'
+              title={tx('ui.action.delete', 'Delete')}
               icon={<IconRemove size='1rem' className='icon-red' />}
               onClick={() => handleDeleteSubstitution(props.row.original)}
             />
@@ -252,7 +254,7 @@ export function PickSubstitutions({
           <SelectLibraryItem
             id='substitute-left-schema'
             noBorder
-            placeholder='Аргумент'
+            placeholder={tx('ui.placeholder.argument', 'Argument')}
             items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== rightArgument?.id)}
             value={leftArgument}
             onChange={onChangeLeftArgument}
@@ -261,7 +263,11 @@ export function PickSubstitutions({
         </div>
         <div className='flex flex-col justify-center gap-1'>
           <MiniButton
-            title={deleteRight ? 'Заменить правую' : 'Заменить левую'}
+            title={
+              deleteRight
+                ? tx('ui.substitution.replaceRight', 'Replace right side')
+                : tx('ui.substitution.replaceLeft', 'Replace left side')
+            }
             onClick={toggleDelete}
             icon={
               deleteRight ? (
@@ -272,7 +278,7 @@ export function PickSubstitutions({
             }
           />
           <MiniButton
-            title='Добавить в таблицу отождествлений'
+            title={tx('ui.substitution.addToTable', 'Add to substitution table')}
             className='grow-0'
             icon={<IconReplace size='1.5rem' className='icon-primary' />}
             onClick={addSubstitution}
@@ -284,7 +290,7 @@ export function PickSubstitutions({
           <SelectLibraryItem
             id='substitute-right-schema'
             noBorder
-            placeholder='Аргумент'
+            placeholder={tx('ui.placeholder.argument', 'Argument')}
             items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== leftArgument?.id)}
             value={rightArgument}
             onChange={onChangeRightArgument}
@@ -304,8 +310,8 @@ export function PickSubstitutions({
         columns={columns}
         noDataComponent={
           <NoData className='min-h-8'>
-            <p>Список пуст</p>
-            <p>Добавьте отождествление</p>
+            <p>{tx('ui.substitution.tableEmpty', 'List is empty')}</p>
+            <p>{tx('ui.substitution.tableEmptyHint', 'Add a substitution')}</p>
           </NoData>
         }
         conditionalRowStyles={conditionalRowStyles}

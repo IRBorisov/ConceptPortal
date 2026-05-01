@@ -7,6 +7,7 @@ import { LibraryItemType } from '@/domain/library';
 import { type OperationSchema } from '@/domain/library';
 
 import { useRegisterNavigationSave } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
@@ -18,7 +19,7 @@ import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
-import { placeholderMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
 
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
@@ -41,6 +42,7 @@ function ossDefaults(schema: OperationSchema): UpdateLibraryItemDTO {
 }
 
 export function FormOSS({ className }: FormOSSProps) {
+  const tx = useTx();
   const { updateItem: updateOss } = useUpdateItem();
   const isModified = useModificationStore(state => state.isModified);
   const setIsModified = useModificationStore(state => state.setIsModified);
@@ -92,13 +94,13 @@ export function FormOSS({ className }: FormOSSProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none font-math'>Операционная система</h2>
+      <h2 className='mb-2 select-none font-math'>{tx('ui.page.oss', 'Operational system')}</h2>
       <form.Field name='title'>
         {field => (
           <TextInput
             id='schema_title'
-            aria-label='Название операционной системы'
-            placeholder='Название операционной системы'
+            aria-label={tx('ui.field.ossTitle', 'Operational system title')}
+            placeholder={tx('ui.field.ossTitle', 'Operational system title')}
             className='mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -113,7 +115,7 @@ export function FormOSS({ className }: FormOSSProps) {
           {field => (
             <TextInput
               id='schema_alias'
-              label='Сокращение'
+              label={tx('ui.label.alias', 'Abbreviation')}
               className='w-64'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -138,8 +140,8 @@ export function FormOSS({ className }: FormOSSProps) {
         {field => (
           <TextArea
             id='schema_comment'
-            label='Описание'
-            placeholder={placeholderMsg.itemDescription}
+            label={tx('ui.label.description', 'Description')}
+            placeholder={formatLabel(lid.placeholder.itemDescription)}
             rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -151,8 +153,8 @@ export function FormOSS({ className }: FormOSSProps) {
       </form.Field>
       {isMutable || isModified ? (
         <SubmitButton
-          text='Сохранить изменения'
-          title={prepareTooltip('Сохранить изменения', isMac() ? 'Cmd + S' : 'Ctrl + S')}
+          text={tx('ui.action.saveChanges', 'Save changes')}
+          title={prepareTooltip(tx('ui.action.saveChanges', 'Save changes'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
           className='self-center mt-4'
           loading={isProcessing}
           icon={<IconSave size='1.25rem' />}

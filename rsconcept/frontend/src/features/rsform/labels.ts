@@ -5,96 +5,98 @@
 import { type Constituenta, CstClass, CstStatus, CstType } from '@/domain/library';
 import { TokenID } from '@/domain/rslang';
 
+import { formatLabel } from '@/app/i18n/labels/format-label';
+import { rsformLid } from '@/app/i18n/labels/rsform-ui';
+
 import { prepareTooltip } from '@/utils/format';
 import { type RO } from '@/utils/meta';
 
 import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores/term-graph';
 
-// --- Records for label/describe functions ---
-const labelCstTypeRecord: Record<CstType, string> = {
-  [CstType.NOMINAL]: 'Номиноид',
-  [CstType.BASE]: 'Базисное множество',
-  [CstType.CONSTANT]: 'Константное множество',
-  [CstType.STRUCTURED]: 'Родовая структура',
-  [CstType.AXIOM]: 'Аксиома',
-  [CstType.TERM]: 'Терм',
-  [CstType.FUNCTION]: 'Терм-функция',
-  [CstType.PREDICATE]: 'Предикат-функция',
-  [CstType.THEOREM]: 'Теорема'
+const CST_TYPE_LID: Record<CstType, string> = {
+  [CstType.NOMINAL]: rsformLid.cstType.nominal,
+  [CstType.BASE]: rsformLid.cstType.basic,
+  [CstType.CONSTANT]: rsformLid.cstType.constant,
+  [CstType.STRUCTURED]: rsformLid.cstType.structure,
+  [CstType.AXIOM]: rsformLid.cstType.axiom,
+  [CstType.TERM]: rsformLid.cstType.term,
+  [CstType.FUNCTION]: rsformLid.cstType.function,
+  [CstType.PREDICATE]: rsformLid.cstType.predicate,
+  [CstType.THEOREM]: rsformLid.cstType.theorem
 };
 
-const labelCstClassRecord: Record<CstClass, string> = {
-  [CstClass.NOMINAL]: 'номинальный',
-  [CstClass.BASIC]: 'базовый',
-  [CstClass.DERIVED]: 'производный',
-  [CstClass.STATEMENT]: 'утверждение',
-  [CstClass.TEMPLATE]: 'шаблон'
+const CST_CLASS_LABEL_LID: Record<CstClass, string> = {
+  [CstClass.NOMINAL]: rsformLid.cstClassLabel.nominal,
+  [CstClass.BASIC]: rsformLid.cstClassLabel.basic,
+  [CstClass.DERIVED]: rsformLid.cstClassLabel.derived,
+  [CstClass.STATEMENT]: rsformLid.cstClassLabel.statement,
+  [CstClass.TEMPLATE]: rsformLid.cstClassLabel.template
 };
 
-const describeCstClassRecord: Record<CstClass, string> = {
-  [CstClass.NOMINAL]: 'номинальная сущность',
-  [CstClass.BASIC]: 'неопределяемое понятие',
-  [CstClass.DERIVED]: 'определяемое понятие',
-  [CstClass.STATEMENT]: 'логическое утверждение',
-  [CstClass.TEMPLATE]: 'шаблон определения'
+const CST_CLASS_DESC_LID: Record<CstClass, string> = {
+  [CstClass.NOMINAL]: rsformLid.cstClassDesc.nominal,
+  [CstClass.BASIC]: rsformLid.cstClassDesc.basic,
+  [CstClass.DERIVED]: rsformLid.cstClassDesc.derived,
+  [CstClass.STATEMENT]: rsformLid.cstClassDesc.statement,
+  [CstClass.TEMPLATE]: rsformLid.cstClassDesc.template
 };
 
-const labelGraphModeRecord: Record<InteractionMode, string> = {
-  explore: 'Режим: Просмотр',
-  edit: 'Режим: Редактор'
+const GRAPH_MODE_LID: Record<InteractionMode, string> = {
+  explore: rsformLid.graphMode.explore,
+  edit: rsformLid.graphMode.edit
 };
 
-const labelColoringRecord: Record<TGColoring, string> = {
-  none: 'Цвет: Моно',
-  status: 'Цвет: Статус',
-  type: 'Цвет: Класс',
-  schemas: 'Цвет: Схемы'
+const COLORING_LID: Record<TGColoring, string> = {
+  none: rsformLid.coloring.none,
+  status: rsformLid.coloring.status,
+  type: rsformLid.coloring.type,
+  schemas: rsformLid.coloring.schemas
 };
 
-const labelGraphTypeRecord: Record<TGEdgeType, string> = {
-  full: 'Связь: Все',
-  definition: 'Связь: Определение',
-  attribution: 'Связь: Атрибутирование'
+const EDGE_TYPE_LID: Record<TGEdgeType, string> = {
+  full: rsformLid.edgeType.full,
+  definition: rsformLid.edgeType.definition,
+  attribution: rsformLid.edgeType.attribution
 };
 
-const labelExpressionStatusRecord: Record<CstStatus, string> = {
-  [CstStatus.VERIFIED]: 'корректно',
-  [CstStatus.INCORRECT]: 'ошибка',
-  [CstStatus.INCALCULABLE]: 'невычислимо',
-  [CstStatus.PROPERTY]: 'неразмерное',
-  [CstStatus.UNKNOWN]: 'не проверено'
+const EXPR_STATUS_LID: Record<CstStatus, string> = {
+  [CstStatus.VERIFIED]: rsformLid.exprStatus.verified,
+  [CstStatus.INCORRECT]: rsformLid.exprStatus.incorrect,
+  [CstStatus.INCALCULABLE]: rsformLid.exprStatus.incalculable,
+  [CstStatus.PROPERTY]: rsformLid.exprStatus.property,
+  [CstStatus.UNKNOWN]: rsformLid.exprStatus.unknown
 };
 
-const describeExpressionStatusRecord: Record<CstStatus, string> = {
-  [CstStatus.VERIFIED]: 'корректно и вычислимо',
-  [CstStatus.INCORRECT]: 'обнаружена ошибка',
-  [CstStatus.INCALCULABLE]: 'интерпретация не вычисляется',
-  [CstStatus.PROPERTY]: 'только проверка принадлежности',
-  [CstStatus.UNKNOWN]: 'требуется проверка'
+const EXPR_STATUS_DESC_LID: Record<CstStatus, string> = {
+  [CstStatus.VERIFIED]: rsformLid.exprStatusDesc.verified,
+  [CstStatus.INCORRECT]: rsformLid.exprStatusDesc.incorrect,
+  [CstStatus.INCALCULABLE]: rsformLid.exprStatusDesc.incalculable,
+  [CstStatus.PROPERTY]: rsformLid.exprStatusDesc.property,
+  [CstStatus.UNKNOWN]: rsformLid.exprStatusDesc.unknown
 };
 
-const labelRSExpressionsRecord: Record<CstType, string> = {
-  [CstType.NOMINAL]: 'Определяющие конституенты',
-  [CstType.BASE]: 'Формальное определение',
-  [CstType.CONSTANT]: 'Формальное определение',
-  [CstType.STRUCTURED]: 'Область определения',
-  [CstType.TERM]: 'Формальное определение',
-  [CstType.THEOREM]: 'Формальное определение',
-  [CstType.AXIOM]: 'Формальное определение',
-  [CstType.FUNCTION]: 'Определение функции',
-  [CstType.PREDICATE]: 'Определение функции'
+const RS_EXPRESSION_LID: Record<CstType, string> = {
+  [CstType.NOMINAL]: rsformLid.rsExpression.nominal,
+  [CstType.BASE]: rsformLid.rsExpression.basic,
+  [CstType.CONSTANT]: rsformLid.rsExpression.constant,
+  [CstType.STRUCTURED]: rsformLid.rsExpression.structure,
+  [CstType.TERM]: rsformLid.rsExpression.term,
+  [CstType.THEOREM]: rsformLid.rsExpression.theorem,
+  [CstType.AXIOM]: rsformLid.rsExpression.axiom,
+  [CstType.FUNCTION]: rsformLid.rsExpression.function,
+  [CstType.PREDICATE]: rsformLid.rsExpression.predicate
 };
 
-const rsDefinitionPlaceholderRecord: Record<CstType, string> = {
-  [CstType.NOMINAL]: 'Например, X1 D1 N1',
-  [CstType.BASE]: 'Не предусмотрено',
-  [CstType.CONSTANT]: 'Не предусмотрено',
-  [CstType.STRUCTURED]: 'Пример: ℬ(X1×D2)',
-  [CstType.TERM]: 'Пример: D{ξ∈S1 | Pr1(ξ)∩Pr2(ξ)=∅}',
-  [CstType.THEOREM]: 'Пример: D11=∅',
-  [CstType.AXIOM]: 'Пример: D11=∅',
-  [CstType.FUNCTION]: 'Пример: [α∈X1, β∈ℬ(X1×X2)] Pr2(Fi1[{α}](β))',
-  [CstType.PREDICATE]: 'Пример: [α∈X1, β∈ℬ(X1)] α∈β & card(β)>1'
+const RS_PLACEHOLDER_LID: Record<CstType, string> = {
+  [CstType.NOMINAL]: rsformLid.rsPlaceholder.nominal,
+  [CstType.BASE]: rsformLid.rsPlaceholder.basic,
+  [CstType.CONSTANT]: rsformLid.rsPlaceholder.constant,
+  [CstType.STRUCTURED]: rsformLid.rsPlaceholder.structure,
+  [CstType.TERM]: rsformLid.rsPlaceholder.term,
+  [CstType.THEOREM]: rsformLid.rsPlaceholder.theorem,
+  [CstType.AXIOM]: rsformLid.rsPlaceholder.axiom,
+  [CstType.FUNCTION]: rsformLid.rsPlaceholder.function,
+  [CstType.PREDICATE]: rsformLid.rsPlaceholder.predicate
 };
 
 const cstTypeShortcutKeyRecord: Record<CstType, string> = {
@@ -109,46 +111,87 @@ const cstTypeShortcutKeyRecord: Record<CstType, string> = {
   [CstType.NOMINAL]: '7'
 };
 
-const describeTokenRecord: Partial<Record<TokenID, string>> = {
-  [TokenID.BOOLEAN]: prepareTooltip('Булеан', 'Alt + E / Shift + B'),
-  [TokenID.DECART]: prepareTooltip('Декартово произведение', 'Alt + Shift + E / Shift + 8'),
-  [TokenID.PUNCTUATION_PL]: prepareTooltip('Скобки () вокруг выражения', 'Alt + Shift + 9'),
-  [TokenID.PUNCTUATION_SL]: prepareTooltip('Скобки [] вокруг выражения', 'Alt + ['),
-  [TokenID.QUANTOR_UNIVERSAL]: prepareTooltip('Квантор всеобщности', '`'),
-  [TokenID.QUANTOR_EXISTS]: prepareTooltip('Квантор существования', 'Shift + `'),
-  [TokenID.LOGIC_NOT]: prepareTooltip('Отрицание', 'Alt + `'),
-  [TokenID.LOGIC_AND]: prepareTooltip('Конъюнкция', 'Alt + 3 ~ Shift + 7'),
-  [TokenID.LOGIC_OR]: prepareTooltip('Дизъюнкция', 'Alt + Shift + 3'),
-  [TokenID.LOGIC_IMPLICATION]: prepareTooltip('Импликация', 'Alt + 4'),
-  [TokenID.LOGIC_EQUIVALENT]: prepareTooltip('Эквивалентность', 'Alt + Shift + 4'),
-  [TokenID.LIT_EMPTYSET]: prepareTooltip('Пустое множество', 'Alt + X'),
-  [TokenID.LIT_WHOLE_NUMBERS]: prepareTooltip('Целые числа', 'Alt + Z'),
-  [TokenID.EQUAL]: prepareTooltip('Равенство'),
-  [TokenID.MULTIPLY]: prepareTooltip('Умножение чисел', 'Alt + 8'),
-  [TokenID.NOTEQUAL]: prepareTooltip('Неравенство', 'Alt + Shift + `'),
-  [TokenID.GREATER_OR_EQ]: prepareTooltip('Больше или равно', 'Alt + Shift + 7'),
-  [TokenID.LESSER_OR_EQ]: prepareTooltip('Меньше или равно', 'Alt + Shift + 8'),
-  [TokenID.SET_IN]: prepareTooltip('Быть элементом (принадлежит)', 'Alt + 1'),
-  [TokenID.SET_NOT_IN]: prepareTooltip('Не принадлежит', 'Alt + Shift + 1'),
-  [TokenID.SUBSET_OR_EQ]: prepareTooltip('Быть частью (нестрогое подмножество)', 'Alt + 2'),
-  [TokenID.SUBSET]: prepareTooltip('Строгое подмножество', 'Alt + 7'),
-  [TokenID.NOT_SUBSET]: prepareTooltip('Не подмножество', 'Alt + Shift + 2'),
-  [TokenID.SET_INTERSECTION]: prepareTooltip('Пересечение', 'Alt + A'),
-  [TokenID.SET_UNION]: prepareTooltip('Объединение', 'Alt + S'),
-  [TokenID.SET_MINUS]: prepareTooltip('Разность множеств', 'Alt + 5'),
-  [TokenID.SET_SYMMETRIC_MINUS]: prepareTooltip('Симметрическая разность', 'Alt + Shift + 5'),
-  [TokenID.NT_DECLARATIVE_EXPR]: prepareTooltip('Декларативное определение', 'Alt + D'),
-  [TokenID.NT_IMPERATIVE_EXPR]: prepareTooltip('Императивное определение', 'Alt + G'),
-  [TokenID.NT_RECURSIVE_FULL]: prepareTooltip('Рекурсивное определение (цикл)', 'Alt + T'),
-  [TokenID.BIGPR]: prepareTooltip('Большая проекция', 'Alt + Q'),
-  [TokenID.SMALLPR]: prepareTooltip('Малая проекция', 'Alt + W'),
-  [TokenID.FILTER]: prepareTooltip('Фильтр', 'Alt + F'),
-  [TokenID.REDUCE]: prepareTooltip('Множество-сумма', 'Alt + R'),
-  [TokenID.CARD]: prepareTooltip('Мощность', 'Alt + C'),
-  [TokenID.BOOL]: prepareTooltip('Синглетон', 'Alt + B'),
-  [TokenID.DEBOOL]: prepareTooltip('Десинглетон', 'Alt + V'),
-  [TokenID.ASSIGN]: prepareTooltip('Присвоение', 'Alt + Shift + 6'),
-  [TokenID.ITERATE]: prepareTooltip('Перебор элементов множества', 'Alt + 6')
+const TOKEN_TITLE_LID: Partial<Record<TokenID, string>> = {
+  [TokenID.BOOLEAN]: rsformLid.token.boolean,
+  [TokenID.DECART]: rsformLid.token.decart,
+  [TokenID.PUNCTUATION_PL]: rsformLid.token.punctuationPl,
+  [TokenID.PUNCTUATION_SL]: rsformLid.token.punctuationSl,
+  [TokenID.QUANTOR_UNIVERSAL]: rsformLid.token.quantorUniversal,
+  [TokenID.QUANTOR_EXISTS]: rsformLid.token.quantorExists,
+  [TokenID.LOGIC_NOT]: rsformLid.token.logicNot,
+  [TokenID.LOGIC_AND]: rsformLid.token.logicAnd,
+  [TokenID.LOGIC_OR]: rsformLid.token.logicOr,
+  [TokenID.LOGIC_IMPLICATION]: rsformLid.token.logicImplication,
+  [TokenID.LOGIC_EQUIVALENT]: rsformLid.token.logicEquivalent,
+  [TokenID.LIT_EMPTYSET]: rsformLid.token.litEmptyset,
+  [TokenID.LIT_WHOLE_NUMBERS]: rsformLid.token.litWholeNumbers,
+  [TokenID.EQUAL]: rsformLid.token.equal,
+  [TokenID.MULTIPLY]: rsformLid.token.multiply,
+  [TokenID.NOTEQUAL]: rsformLid.token.notequal,
+  [TokenID.GREATER_OR_EQ]: rsformLid.token.greaterOrEq,
+  [TokenID.LESSER_OR_EQ]: rsformLid.token.lesserOrEq,
+  [TokenID.SET_IN]: rsformLid.token.setIn,
+  [TokenID.SET_NOT_IN]: rsformLid.token.setNotIn,
+  [TokenID.SUBSET_OR_EQ]: rsformLid.token.subsetOrEq,
+  [TokenID.SUBSET]: rsformLid.token.subset,
+  [TokenID.NOT_SUBSET]: rsformLid.token.notSubset,
+  [TokenID.SET_INTERSECTION]: rsformLid.token.setIntersection,
+  [TokenID.SET_UNION]: rsformLid.token.setUnion,
+  [TokenID.SET_MINUS]: rsformLid.token.setMinus,
+  [TokenID.SET_SYMMETRIC_MINUS]: rsformLid.token.setSymmetricMinus,
+  [TokenID.NT_DECLARATIVE_EXPR]: rsformLid.token.ntDeclarativeExpr,
+  [TokenID.NT_IMPERATIVE_EXPR]: rsformLid.token.ntImperativeExpr,
+  [TokenID.NT_RECURSIVE_FULL]: rsformLid.token.ntRecursiveFull,
+  [TokenID.BIGPR]: rsformLid.token.bigpr,
+  [TokenID.SMALLPR]: rsformLid.token.smallpr,
+  [TokenID.FILTER]: rsformLid.token.filter,
+  [TokenID.REDUCE]: rsformLid.token.reduce,
+  [TokenID.CARD]: rsformLid.token.card,
+  [TokenID.BOOL]: rsformLid.token.bool,
+  [TokenID.DEBOOL]: rsformLid.token.debool,
+  [TokenID.ASSIGN]: rsformLid.token.assign,
+  [TokenID.ITERATE]: rsformLid.token.iterate
+};
+
+const TOKEN_HOTKEY: Partial<Record<TokenID, string>> = {
+  [TokenID.BOOLEAN]: 'Alt + E / Shift + B',
+  [TokenID.DECART]: 'Alt + Shift + E / Shift + 8',
+  [TokenID.PUNCTUATION_PL]: 'Alt + Shift + 9',
+  [TokenID.PUNCTUATION_SL]: 'Alt + [',
+  [TokenID.QUANTOR_UNIVERSAL]: '`',
+  [TokenID.QUANTOR_EXISTS]: 'Shift + `',
+  [TokenID.LOGIC_NOT]: 'Alt + `',
+  [TokenID.LOGIC_AND]: 'Alt + 3 ~ Shift + 7',
+  [TokenID.LOGIC_OR]: 'Alt + Shift + 3',
+  [TokenID.LOGIC_IMPLICATION]: 'Alt + 4',
+  [TokenID.LOGIC_EQUIVALENT]: 'Alt + Shift + 4',
+  [TokenID.LIT_EMPTYSET]: 'Alt + X',
+  [TokenID.LIT_WHOLE_NUMBERS]: 'Alt + Z',
+  [TokenID.MULTIPLY]: 'Alt + 8',
+  [TokenID.NOTEQUAL]: 'Alt + Shift + `',
+  [TokenID.GREATER_OR_EQ]: 'Alt + Shift + 7',
+  [TokenID.LESSER_OR_EQ]: 'Alt + Shift + 8',
+  [TokenID.SET_IN]: 'Alt + 1',
+  [TokenID.SET_NOT_IN]: 'Alt + Shift + 1',
+  [TokenID.SUBSET_OR_EQ]: 'Alt + 2',
+  [TokenID.SUBSET]: 'Alt + 7',
+  [TokenID.NOT_SUBSET]: 'Alt + Shift + 2',
+  [TokenID.SET_INTERSECTION]: 'Alt + A',
+  [TokenID.SET_UNION]: 'Alt + S',
+  [TokenID.SET_MINUS]: 'Alt + 5',
+  [TokenID.SET_SYMMETRIC_MINUS]: 'Alt + Shift + 5',
+  [TokenID.NT_DECLARATIVE_EXPR]: 'Alt + D',
+  [TokenID.NT_IMPERATIVE_EXPR]: 'Alt + G',
+  [TokenID.NT_RECURSIVE_FULL]: 'Alt + T',
+  [TokenID.BIGPR]: 'Alt + Q',
+  [TokenID.SMALLPR]: 'Alt + W',
+  [TokenID.FILTER]: 'Alt + F',
+  [TokenID.REDUCE]: 'Alt + R',
+  [TokenID.CARD]: 'Alt + C',
+  [TokenID.BOOL]: 'Alt + B',
+  [TokenID.DEBOOL]: 'Alt + V',
+  [TokenID.ASSIGN]: 'Alt + Shift + 6',
+  [TokenID.ITERATE]: 'Alt + 6'
 };
 
 /** Generates description for {@link Constituenta}. */
@@ -177,10 +220,10 @@ export function describeConstituenta(cst: RO<Constituenta>): string {
 /** Generates description for term of a given {@link Constituenta}. */
 export function describeConstituentaTerm(cst: RO<Constituenta> | null): string {
   if (!cst) {
-    return '!Конституента отсутствует!';
+    return formatLabel(rsformLid.missing.constituent);
   }
   if (!cst.term_resolved) {
-    return '!Пустой термин!';
+    return formatLabel(rsformLid.missing.termEmpty);
   } else {
     return cst.term_resolved;
   }
@@ -194,60 +237,77 @@ export function labelConstituenta(cst: RO<Constituenta>) {
 /** Return shortcut description for {@link CstType}. */
 export function getCstTypeShortcut(type: CstType) {
   const key = cstTypeShortcutKeyRecord[type];
-  return key ? `${labelCstType(type)} [Alt + ${key}]` : labelCstType(type);
+  const label = labelCstType(type);
+  return key ? formatLabel(rsformLid.shortcutWithKey, { label, key }) : label;
 }
 
 /** Generates label for RS expression based on {@link CstType}. */
 export function labelRSExpression(type: CstType): string {
-  return labelRSExpressionsRecord[type] ?? 'Формальное выражение';
+  const id = RS_EXPRESSION_LID[type];
+  return id ? formatLabel(id) : formatLabel(rsformLid.fallback.formalExpression);
 }
 
 /** Generates placeholder for RS definition based on {@link CstType}. */
 export function getRSDefinitionPlaceholder(type: CstType): string {
-  return rsDefinitionPlaceholderRecord[type] ?? 'Формальное выражение';
+  const id = RS_PLACEHOLDER_LID[type];
+  return id ? formatLabel(id) : formatLabel(rsformLid.fallback.formalExpression);
 }
 
 /** Generates description for {@link TokenID}. */
 export function describeToken(id: TokenID): string {
-  return describeTokenRecord[id] ?? `no description: ${id}`;
+  const titleId = TOKEN_TITLE_LID[id];
+  if (!titleId) {
+    return formatLabel(rsformLid.fallback.noTokenDescription, { id: String(id) });
+  }
+  const title = formatLabel(titleId);
+  const hotkey = TOKEN_HOTKEY[id];
+  return hotkey ? prepareTooltip(title, hotkey) : title;
 }
 
 /** Retrieves label for {@link TGColoring}. */
 export function labelColoring(mode: TGColoring): string {
-  return labelColoringRecord[mode] ?? `UNKNOWN COLORING: ${mode}`;
+  const lidKey = COLORING_LID[mode];
+  return lidKey ? formatLabel(lidKey) : formatLabel(rsformLid.fallback.unknownColoring, { mode: String(mode) });
 }
 
 /** Retrieves label for {@link InteractionMode}. */
 export function labelGraphMode(mode: InteractionMode): string {
-  return labelGraphModeRecord[mode] ?? `UNKNOWN GRAPH MODE: ${mode}`;
+  const lidKey = GRAPH_MODE_LID[mode];
+  return lidKey ? formatLabel(lidKey) : formatLabel(rsformLid.fallback.unknownGraphMode, { mode: String(mode) });
 }
 
 /** Retrieves label for {@link TGEdgeType}. */
 export function labelEdgeType(mode: TGEdgeType): string {
-  return labelGraphTypeRecord[mode] ?? `UNKNOWN GRAPH TYPE: ${mode}`;
+  const lidKey = EDGE_TYPE_LID[mode];
+  return lidKey ? formatLabel(lidKey) : formatLabel(rsformLid.fallback.unknownEdgeType, { mode: String(mode) });
 }
 
 /** Retrieves label for {@link CstStatus}. */
 export function labelExpressionStatus(status: CstStatus): string {
-  return labelExpressionStatusRecord[status] ?? `UNKNOWN EXPRESSION STATUS: ${status}`;
+  const lidKey = EXPR_STATUS_LID[status];
+  return lidKey ? formatLabel(lidKey) : formatLabel(rsformLid.fallback.unknownExprStatus, { status: String(status) });
 }
 
 /** Retrieves description for {@link CstStatus}. */
 export function describeExpressionStatus(status: CstStatus): string {
-  return describeExpressionStatusRecord[status] ?? `UNKNOWN EXPRESSION STATUS: ${status}`;
+  const lidKey = EXPR_STATUS_DESC_LID[status];
+  return lidKey ? formatLabel(lidKey) : formatLabel(rsformLid.fallback.unknownExprStatus, { status: String(status) });
 }
 
 /** Retrieves label for {@link CstType}. */
 export function labelCstType(target: CstType): string {
-  return labelCstTypeRecord[target] ?? `UNKNOWN CST TYPE: ${target}`;
+  const lidKey = CST_TYPE_LID[target];
+  return lidKey ? formatLabel(lidKey) : formatLabel(rsformLid.fallback.unknownCstType, { type: String(target) });
 }
 
 /** Retrieves label for {@link CstClass}. */
 export function labelCstClass(target: CstClass): string {
-  return labelCstClassRecord[target] ?? `UNKNOWN CST CLASS: ${target}`;
+  const lidKey = CST_CLASS_LABEL_LID[target];
+  return lidKey ? formatLabel(lidKey) : formatLabel(rsformLid.fallback.unknownCstClass, { type: String(target) });
 }
 
 /** Retrieves description for {@link CstClass}. */
 export function describeCstClass(target: CstClass): string {
-  return describeCstClassRecord[target] ?? `UNKNOWN CST CLASS: ${target}`;
+  const lidKey = CST_CLASS_DESC_LID[target];
+  return lidKey ? formatLabel(lidKey) : formatLabel(rsformLid.fallback.unknownCstClass, { type: String(target) });
 }

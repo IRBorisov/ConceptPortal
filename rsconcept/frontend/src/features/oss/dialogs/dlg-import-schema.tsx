@@ -7,6 +7,7 @@ import { type LibraryItem, LibraryItemType, type OssLayout } from '@/domain/libr
 import { sortItemsForOSS } from '@/domain/library/oss-api';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components/pick-schema';
@@ -14,7 +15,7 @@ import { PickSchema } from '@/features/library/components/pick-schema';
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { hintMsg, placeholderMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { type ImportSchemaDTO, schemaImportSchema } from '../backend/types';
 import { useImportSchema } from '../backend/use-import-schema';
@@ -31,6 +32,7 @@ export interface DlgImportSchemaProps {
 }
 
 export function DlgImportSchema() {
+  const tx = useTx();
   const { importSchema } = useImportSchema();
 
   const { ossID, layout, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
@@ -76,13 +78,13 @@ export function DlgImportSchema() {
   const clone_source = values.clone_source;
   const { canSubmit, hint } = useMemo(() => {
     if (!alias) {
-      return { canSubmit: false, hint: hintMsg.aliasEmpty };
+      return { canSubmit: false, hint: formatLabel(lid.hint.aliasEmpty) };
     }
     if (manager.oss.operations.some(operation => operation.alias === alias)) {
-      return { canSubmit: false, hint: hintMsg.schemaAliasTaken };
+      return { canSubmit: false, hint: formatLabel(lid.hint.schemaAliasTaken) };
     }
     if (!schemaImportSchema.safeParse(values).success) {
-      return { canSubmit: false, hint: hintMsg.formInvalid };
+      return { canSubmit: false, hint: formatLabel(lid.hint.formInvalid) };
     }
     return { canSubmit: true, hint: '' };
   }, [alias, values, manager.oss.operations]);
@@ -104,8 +106,8 @@ export function DlgImportSchema() {
 
   return (
     <ModalForm
-      header='Создание операции: Загрузка'
-      submitText='Создать'
+      header={tx('ui.dlg.ossOp.importHeader', 'Create operation: import')}
+      submitText={tx('ui.action.create', 'Create')}
       canSubmit={canSubmit}
       validationHint={hint}
       onSubmit={event => {
@@ -131,7 +133,7 @@ export function DlgImportSchema() {
       <form.Field name='clone_source'>
         {field => (
           <Checkbox
-            label='Клонировать схему'
+            label={tx('ui.label.cloneSchema', 'Clone schema')}
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
           />
@@ -141,7 +143,7 @@ export function DlgImportSchema() {
         {field => (
           <TextInput
             id='operation_title'
-            label='Название'
+            label={tx('ui.label.title', 'Title')}
             disabled={!clone_source}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -156,7 +158,7 @@ export function DlgImportSchema() {
             {field => (
               <TextInput
                 id='operation_alias'
-                label='Сокращение'
+                label={tx('ui.label.alias', 'Abbreviation')}
                 className='w-80'
                 disabled={!clone_source}
                 value={field.state.value}
@@ -171,7 +173,7 @@ export function DlgImportSchema() {
               <SelectParent
                 items={manager.oss.blocks}
                 value={field.state.value ? (manager.oss.blockByID.get(field.state.value) ?? null) : null}
-                placeholder='Родительский блок'
+                placeholder={tx('ui.oss.parentBlock', 'Parent block')}
                 onChange={value => field.handleChange(value ? value.id : null)}
               />
             )}
@@ -182,8 +184,8 @@ export function DlgImportSchema() {
             <TextArea
               id='operation_comment'
               className='w-full'
-              aria-label='Описание'
-              placeholder={placeholderMsg.itemDescription}
+              aria-label={tx('ui.label.description', 'Description')}
+              placeholder={formatLabel(lid.placeholder.itemDescription)}
               rows={5}
               disabled={!clone_source}
               value={field.state.value}

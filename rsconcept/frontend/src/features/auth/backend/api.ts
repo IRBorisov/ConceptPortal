@@ -2,7 +2,7 @@ import { queryOptions } from '@tanstack/react-query';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
-import { infoMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import {
   type IChangePasswordDTO,
@@ -43,7 +43,7 @@ export const authApi = {
       endpoint: '/users/api/change-password',
       request: {
         data: data,
-        successMessage: infoMsg.changesSaved
+        successMessage: formatLabel(lid.info.changesSaved)
       }
     }),
   requestPasswordReset: (data: IRequestPasswordDTO) =>

@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { Checkbox, FileInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
-import { hintMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { type RSFormUploadDTO } from '../backend/types';
 
@@ -15,6 +17,7 @@ export interface DlgUploadRSFormProps {
 }
 
 export function DlgUploadRSForm() {
+  const tx = useTx();
   const { onUpload } = useDialogsStore(state => state.props as DlgUploadRSFormProps);
   const [loadMetadata, setLoadMetadata] = useState(false);
   const [file, setFile] = useState<File | null>(null);
@@ -38,22 +41,30 @@ export function DlgUploadRSForm() {
 
   return (
     <ModalForm
-      header='Импорт схемы из Экстеора'
+      header={tx('ui.dlg.uploadRsform.header', 'Import schema from Exteor')}
       canSubmit={!!file}
-      validationHint={!!file ? '' : hintMsg.fileEmpty}
+      validationHint={!!file ? '' : formatLabel(lid.hint.fileEmpty)}
       onSubmit={handleSubmit}
-      submitText='Загрузить'
+      submitText={tx('ui.action.upload', 'Upload')}
       className='w-100 px-6'
     >
-      <FileInput label='Выбрать файл' acceptType={EXTEOR_TRS_FILE} onChange={handleFile} />
+      <FileInput
+        label={tx('ui.dlg.uploadRsform.pickFile', 'Choose file')}
+        acceptType={EXTEOR_TRS_FILE}
+        onChange={handleFile}
+      />
       <Checkbox
-        label='Загружать название и комментарий'
+        label={tx('ui.dlg.uploadRsform.loadMetadata', 'Load title and comment from file')}
         className='py-2'
         value={loadMetadata}
         onChange={value => setLoadMetadata(value)}
       />
       <div className='text-destructive'>
-        <b>Внимание!</b> При загрузке из файла все конституенты текущей КС будут удалены
+        <b>{tx('ui.dlg.uploadRsform.attention', 'Warning!')}</b>{' '}
+        {tx(
+          'ui.dlg.uploadRsform.warningBody',
+          'Loading from a file will remove all constituents of the current conceptual schema.'
+        )}
       </div>
     </ModalForm>
   );

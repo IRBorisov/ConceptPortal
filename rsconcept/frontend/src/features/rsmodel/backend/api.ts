@@ -4,7 +4,7 @@ import { type ConstituentaList } from '@/features/rsform';
 
 import { axiosGet, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
-import { infoMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { type ConstituentaDataDTO, type RSModelDTO, schemaRSModel } from './types';
 
@@ -30,7 +30,7 @@ export const rsmodelApi = {
       endpoint: `/api/models/${itemID}/set-value`,
       request: {
         data: data,
-        successMessage: infoMsg.changesSaved
+        successMessage: formatLabel(lid.info.changesSaved)
       }
     }),
   clearValues: ({ itemID, data }: { itemID: number; data: ConstituentaList }) =>
@@ -38,12 +38,12 @@ export const rsmodelApi = {
       endpoint: `/api/models/${itemID}/clear-values`,
       request: {
         data: data,
-        successMessage: infoMsg.dataCleared(data.items.length)
+        successMessage: formatLabel(lid.info.dataCleared, { count: data.items.length })
       }
     }),
   resetModel: ({ itemID }: { itemID: number }) =>
     axiosPost<undefined>({
       endpoint: `/api/models/${itemID}/reset-all`,
-      request: { successMessage: infoMsg.modelCleared }
+      request: { successMessage: formatLabel(lid.info.modelCleared) }
     })
 } as const;

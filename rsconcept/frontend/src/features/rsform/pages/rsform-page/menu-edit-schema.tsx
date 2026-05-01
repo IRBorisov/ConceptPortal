@@ -4,6 +4,7 @@ import { type Constituenta } from '@/domain/library';
 import { cstCanProduceStructure } from '@/domain/library/rsform-api';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { useAuth } from '@/features/auth';
 
 import { Divider } from '@/components/container';
@@ -31,6 +32,7 @@ import { useSubstituteConstituents } from '../../backend/use-substitute-constitu
 import { useSchemaEdit } from './schema-edit-context';
 
 export function MenuEditSchema() {
+  const tx = useTx();
   const { isAnonymous } = useAuth();
   const isModified = useModificationStore(state => state.isModified);
   const router = useConceptNavigation();
@@ -126,8 +128,10 @@ export function MenuEditSchema() {
     return (
       <MiniButton
         noPadding
-        title='Архив: Редактирование запрещено
-Перейти к актуальной версии'
+        title={tx(
+          'ui.rsform.menu.archiveNoEdit',
+          'Archive: editing disabled\nGo to the current version'
+        )}
         hideTitle={isMenuOpen}
         className='h-full px-3 bg-transparent'
         icon={<IconArchive size='1.25rem' className='icon-primary' />}
@@ -141,7 +145,7 @@ export function MenuEditSchema() {
       <MiniButton
         noHover
         noPadding
-        title='Редактирование'
+        title={tx('ui.rsform.menu.editing', 'Editing')}
         hideTitle={isMenuOpen}
         className='h-full px-3 text-muted-foreground hover:text-primary cc-animate-color'
         icon={<IconEdit2 size='1.25rem' />}
@@ -149,17 +153,22 @@ export function MenuEditSchema() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text='Шаблоны'
-          title='Создать конституенту из шаблона'
+          text={tx('ui.rsform.menu.templates', 'Templates')}
+          title={tx('ui.rsform.menu.templatesTitle', 'Create a constituent from a template')}
           icon={<IconTemplates size='1rem' className='icon-green' />}
           onClick={handleTemplates}
           disabled={!isContentEditable || isProcessing}
         />
         <DropdownButton
-          text='Встраивание'
-          title='Импортировать совокупность
-конституент из другой схемы'
-          aria-label='Импортировать совокупность конституент из другой схемы'
+          text={tx('ui.rsform.menu.embedding', 'Embedding')}
+          title={tx(
+            'ui.rsform.menu.embeddingTitle',
+            'Import a set of\nconstituents from another schema'
+          )}
+          aria-label={tx(
+            'ui.rsform.menu.embeddingAria',
+            'Import a set of constituents from another schema'
+          )}
           icon={<IconInlineSynthesis size='1rem' className='icon-green' />}
           onClick={handleInlineSynthesis}
           disabled={!isContentEditable || isProcessing}
@@ -168,38 +177,57 @@ export function MenuEditSchema() {
         <Divider margins='mx-3 my-1' />
 
         <DropdownButton
-          text='Упорядочить список'
-          title='Упорядочить список, исходя из
-логики типов и связей конституент'
-          aria-label='Упорядочить список, исходя из логики типов и связей конституент'
+          text={tx('ui.rsform.menu.restoreOrder', 'Reorder list')}
+          title={tx(
+            'ui.rsform.menu.restoreOrderTitle',
+            'Reorder the list according to\ntypes logic and constituent links'
+          )}
+          aria-label={tx(
+            'ui.rsform.menu.restoreOrderAria',
+            'Reorder the list according to types logic and constituent links'
+          )}
           icon={<IconSortList size='1rem' className='icon-primary' />}
           onClick={handleRestoreOrder}
           disabled={!isContentEditable || isProcessing}
         />
         <DropdownButton
-          text='Порядковые имена'
-          title='Присвоить порядковые имена
-и обновить выражения'
-          aria-label='Присвоить порядковые имена и обновить выражения'
+          text={tx('ui.rsform.menu.ordinalNames', 'Ordinal names')}
+          title={tx(
+            'ui.rsform.menu.ordinalNamesTitle',
+            'Assign ordinal names\nand refresh expressions'
+          )}
+          aria-label={tx(
+            'ui.rsform.menu.ordinalNamesAria',
+            'Assign ordinal names and refresh expressions'
+          )}
           icon={<IconGenerateNames size='1rem' className='icon-primary' />}
           onClick={handleReindex}
           disabled={!isContentEditable || isProcessing}
         />
         <DropdownButton
-          text='Раскрытие структуры'
-          title='Породить внутренние понятия
-по структуре типизации
-выделенной конституенты'
-          aria-label='Породить внутренние понятия по структуре типизации выделенной конституенты'
+          text={tx('ui.rsform.menu.structureExpansion', 'Structure expansion')}
+          title={tx(
+            'ui.rsform.menu.structureExpansionTitle',
+            'Spawn inner notions\nfrom the typing structure\nof the selected constituent'
+          )}
+          aria-label={tx(
+            'ui.rsform.menu.structureExpansionAria',
+            'Spawn inner notions from the typing structure of the selected constituent'
+          )}
           icon={<IconGenerateStructure size='1rem' className='icon-primary' />}
           onClick={() => handleProduceStructure(activeCst)}
           disabled={isProcessing || !activeCst || (!activeCst.spawner_path && !cstCanProduceStructure(activeCst))}
         />
         <DropdownButton
-          text='Отождествление'
-          title='Заменить вхождения
-одной конституенты на другую'
-          aria-label='Заменить вхождения одной конституенты на другую'
+          text={tx('ui.rsform.menu.substitution', 'Identification')}
+          title={tx(
+            'ui.rsform.menu.substitutionTitle',
+            'Replace occurrences\nof one constituent with another'
+          )}
+          aria-label={tx(
+            'ui.rsform.menu.substitutionAria',
+            'Replace occurrences of one constituent with another'
+          )}
           icon={<IconReplace size='1rem' className='icon-red' />}
           onClick={handleSubstituteCst}
           disabled={!isContentEditable || isProcessing}

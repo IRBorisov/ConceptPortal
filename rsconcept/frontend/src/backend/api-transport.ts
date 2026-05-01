@@ -5,9 +5,11 @@ import { toast } from 'react-toastify';
 import axios, { type AxiosError, type AxiosRequestConfig } from 'axios';
 import { type z, ZodError } from 'zod';
 
+import { formatAppMessage } from '@/app/i18n/format-app-message';
+import { LABEL_DEFAULTS, lid } from '@/app/i18n/labels/catalog';
+
 import { buildConstants } from '@/utils/build-constants';
 import { PARAMETER } from '@/utils/constants';
-import { errorMsg } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { extractErrorMessage } from '@/utils/utils';
 
@@ -152,7 +154,7 @@ function notifySuccess<ResponseData>(
 
 function notifyError(error: Error | AxiosError | ZodError) {
   if (error instanceof ZodError) {
-    toast.error(errorMsg.invalidResponse);
+    toast.error(formatAppMessage(lid.error.invalidResponse, LABEL_DEFAULTS[lid.error.invalidResponse]));
   } else {
     toast.error(extractErrorMessage(error));
   }

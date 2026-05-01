@@ -1,0 +1,259 @@
+import { Grammeme } from '@/domain/cctext/language';
+import { RSErrorCode } from '@/domain/rslang/error';
+
+import { aiLid } from '@/app/i18n/labels/ai-ui';
+import { cctextLid, labelGrammemeMessageId } from '@/app/i18n/labels/cctext-ui';
+import { libraryLid } from '@/app/i18n/labels/library-ui';
+import { ossLid } from '@/app/i18n/labels/oss-ui';
+import { rslangLid } from '@/app/i18n/labels/rslang-ui';
+import { rsmodelLid } from '@/app/i18n/labels/rsmodel-ui';
+import { usersLid } from '@/app/i18n/labels/users-ui';
+
+const GRAMMEME_FR: Record<Grammeme, string> = {
+  [Grammeme.NOUN]: 'POS : nom',
+  [Grammeme.VERB]: 'POS : verbe',
+  [Grammeme.INFN]: 'POS : inf.',
+  [Grammeme.ADJF]: 'POS : adj.',
+  [Grammeme.PRTF]: 'POS : part.',
+  [Grammeme.ADJS]: 'POS : adj. bref',
+  [Grammeme.PRTS]: 'POS : part. bref',
+  [Grammeme.COMP]: 'POS : compar.',
+  [Grammeme.GRND]: 'POS : gérondif',
+  [Grammeme.NUMR]: 'POS : num.',
+  [Grammeme.ADVB]: 'POS : adv.',
+  [Grammeme.NPRO]: 'POS : pron.',
+  [Grammeme.PRED]: 'POS : predic.',
+  [Grammeme.PREP]: 'POS : prép.',
+  [Grammeme.CONJ]: 'POS : conj.',
+  [Grammeme.PRCL]: 'POS : particule',
+  [Grammeme.INTJ]: 'POS : interj.',
+  [Grammeme.Abbr]: 'POS : abrév.',
+  [Grammeme.sing]: 'Nombre : sg',
+  [Grammeme.plur]: 'Nombre : pl',
+  [Grammeme.nomn]: 'Cas : nom.',
+  [Grammeme.gent]: 'Cas : gén.',
+  [Grammeme.datv]: 'Cas : dat.',
+  [Grammeme.accs]: 'Cas : acc.',
+  [Grammeme.ablt]: 'Cas : ins.',
+  [Grammeme.loct]: 'Cas : loc.',
+  [Grammeme.masc]: 'Genre : m',
+  [Grammeme.femn]: 'Genre : f',
+  [Grammeme.neut]: 'Genre : n',
+  [Grammeme.perf]: 'Aspect : perf.',
+  [Grammeme.impf]: 'Aspect : impf.',
+  [Grammeme.tran]: 'Transit. : oui',
+  [Grammeme.intr]: 'Transit. : non',
+  [Grammeme.pres]: 'Temps : prés.',
+  [Grammeme.past]: 'Temps : passé',
+  [Grammeme.futr]: 'Temps : fut.',
+  [Grammeme.per1]: 'Pers. : 1',
+  [Grammeme.per2]: 'Pers. : 2',
+  [Grammeme.per3]: 'Pers. : 3',
+  [Grammeme.impr]: 'Mode : impér.',
+  [Grammeme.indc]: 'Mode : ind.',
+  [Grammeme.incl]: 'Inclus : oui',
+  [Grammeme.excl]: 'Inclus : non',
+  [Grammeme.pssv]: 'Voix : pass.',
+  [Grammeme.actv]: 'Voix : act.',
+  [Grammeme.anim]: 'Animé : oui',
+  [Grammeme.inan]: 'Animé : non',
+  [Grammeme.Infr]: 'Style : familier',
+  [Grammeme.Slng]: 'Style : argot',
+  [Grammeme.Arch]: 'Style : arch.',
+  [Grammeme.Litr]: 'Style : littér.'
+};
+
+const grammemeFrEntries = (Object.keys(GRAMMEME_FR) as Grammeme[]).map(g => [labelGrammemeMessageId(g), GRAMMEME_FR[g]] as const);
+
+/** French overrides for feature UI bundles. */
+export const labelsFeatureUiFr: Record<string, string> = {
+  [libraryLid.location.user]: '/U : personnel',
+  [libraryLid.location.common]: '/S : partagé',
+  [libraryLid.location.library]: '/L : exemples',
+  [libraryLid.location.projects]: '/P : projets',
+  [libraryLid.locationShort.user]: 'Personnel',
+  [libraryLid.locationShort.common]: 'Partagé',
+  [libraryLid.locationShort.library]: 'Exemples',
+  [libraryLid.locationShort.projects]: 'Projets',
+  [libraryLid.locationDesc.user]: 'Schémas privés de l’utilisateur',
+  [libraryLid.locationDesc.common]: 'Répertoire de travail des schémas publics',
+  [libraryLid.locationDesc.library]: 'Catalogue d’exemples immuables',
+  [libraryLid.locationDesc.projects]: 'Répertoire de travail des schémas de projet',
+  [libraryLid.access.private]: 'Privé',
+  [libraryLid.access.protected]: 'Protégé',
+  [libraryLid.access.public]: 'Public',
+  [libraryLid.accessDesc.private]: 'Propriétaire uniquement',
+  [libraryLid.accessDesc.protected]: 'Propriétaire et éditeurs',
+  [libraryLid.accessDesc.public]: 'Accès ouvert',
+  [libraryLid.itemType.rsform]: 'SC',
+  [libraryLid.itemType.oss]: 'OSS',
+  [libraryLid.itemType.rsmodel]: 'Modèle',
+  [libraryLid.itemTypeDesc.rsform]: 'Schéma conceptuel',
+  [libraryLid.itemTypeDesc.oss]: 'Schéma opérationnel de synthèse',
+  [libraryLid.itemTypeDesc.rsmodel]: 'Modèle conceptuel',
+  [libraryLid.version.current]: 'courante',
+
+  [ossLid.operation.input]: 'Chargement',
+  [ossLid.operation.synthesis]: 'Synthèse',
+  [ossLid.operation.replica]: 'Réplication',
+  [ossLid.operationDesc.input]: 'Charger un schéma conceptuel dans l’OSS',
+  [ossLid.operationDesc.synthesis]: 'Synthèse de schémas conceptuels',
+  [ossLid.operationDesc.replica]: 'Créer un lien vers le résultat de l’opération',
+  [ossLid.item.blockTitle]: 'Bloc : {title}',
+  [ossLid.substitution.invalidIDs]: 'Erreur d’identifiants de schémas',
+  [ossLid.substitution.incorrectCst]:
+    'Erreur {from} → {to} : expression de constituante non valide',
+  [ossLid.substitution.invalidBasic]:
+    'Erreur {from} → {to} : remplacer une notion générique par un ensemble de base',
+  [ossLid.substitution.invalidConstant]:
+    'Erreur {from} → {to} : un ensemble constant ne peut remplacer qu’un autre ensemble constant',
+  [ossLid.substitution.invalidNominal]:
+    'Erreur {from} → {to} : un nominal ne peut remplacer qu’un autre nominal',
+  [ossLid.substitution.invalidClasses]: 'Erreur {from} → {to} : classes de constituantes différentes',
+  [ossLid.substitution.typificationCycle]: 'Erreur : cycle de substitutions dans les typifications {detail}',
+  [ossLid.substitution.baseSubstitutionNotSet]:
+    'Erreur : la typification ne fixe pas l’ensemble {from} ∈ {to}',
+  [ossLid.substitution.unequalTypification]:
+    'Erreur {from} → {to} : typifications des opérandes structurels différentes',
+  [ossLid.substitution.unequalArgsCount]: 'Erreur {from} → {to} : nombre d’arguments différent',
+  [ossLid.substitution.unequalArgs]: 'Erreur {from} → {to} : typifications des arguments différentes',
+  [ossLid.substitution.unequalExpressions]:
+    'Avertissement {from} → {to} : définitions des notions différentes',
+  [ossLid.fallback.unknownOperationType]: 'TYPE D’OPÉRATION INCONNU : {type}',
+  [ossLid.fallback.unknownSubstitutionError]: 'ERREUR INCONNUE',
+
+  [rsmodelLid.eval.noEval]: 'Sans évaluation',
+  [rsmodelLid.eval.notProcessed]: 'Non évalué',
+  [rsmodelLid.eval.invalidData]: 'Données invalides',
+  [rsmodelLid.eval.evalFail]: 'Erreur',
+  [rsmodelLid.eval.axiomFalse]: 'Axiome violé',
+  [rsmodelLid.eval.empty]: 'Valeur vide',
+  [rsmodelLid.eval.hasData]: 'OK',
+  [rsmodelLid.evalDesc.noEval]: 'évaluation non requise',
+  [rsmodelLid.evalDesc.notProcessed]: 'évaluation non exécutée',
+  [rsmodelLid.evalDesc.invalidData]: 'données incompatibles avec le type',
+  [rsmodelLid.evalDesc.evalFail]: 'erreur d’évaluation',
+  [rsmodelLid.evalDesc.axiomFalse]: 'valeur de l’axiome fausse',
+  [rsmodelLid.evalDesc.empty]: 'valeur égale à l’ensemble vide',
+  [rsmodelLid.evalDesc.hasData]: 'valeur calculée et non vide',
+  [rsmodelLid.value.na]: 'N/A',
+  [rsmodelLid.value.logicTrue]: 'Vrai',
+  [rsmodelLid.value.logicFalse]: 'Faux',
+  [rsmodelLid.value.singleton]: '1',
+  [rsmodelLid.value.tupleMarker]: 'C',
+  [rsmodelLid.valueDesc.cardinalityPrefix]: 'Cardinalité : {n} | {stub}',
+  [rsmodelLid.fallback.unknownEvalStatus]: 'STATUT D’ÉVALUATION INCONNU : {status}',
+
+  [usersLid.role.reader]: 'Lecteur',
+  [usersLid.role.editor]: 'Éditeur',
+  [usersLid.role.owner]: 'Propriétaire',
+  [usersLid.role.admin]: 'Administrateur',
+  [usersLid.roleDesc.reader]: 'Mode lecteur',
+  [usersLid.roleDesc.editor]: 'Mode édition',
+  [usersLid.roleDesc.owner]: 'Mode propriétaire',
+  [usersLid.roleDesc.admin]: 'Mode administrateur',
+  [usersLid.fallback.unknownRole]: 'RÔLE UTILISATEUR INCONNU : {role}',
+
+  [aiLid.variable.block]: 'Bloc courant du schéma opérationnel',
+  [aiLid.variable.oss]: 'Schéma opérationnel courant',
+  [aiLid.variable.schema]: 'Schéma conceptuel courant',
+  [aiLid.variable.schemaThesaurus]: 'Termes et définitions du schéma conceptuel courant',
+  [aiLid.variable.schemaGraph]: 'Graphe des liens de définition des constituantes',
+  [aiLid.variable.schemaTypeGraph]: 'Graphe des paliers de types du schéma conceptuel',
+  [aiLid.variable.constituenta]: 'Constituante courante',
+  [aiLid.variable.constituentaSyntaxTree]: 'Arbre syntaxique de la constituante',
+  [aiLid.variableMock.block]: 'Ex. : bloc courant du schéma opérationnel',
+  [aiLid.variableMock.oss]: 'Ex. : schéma opérationnel courant',
+  [aiLid.variableMock.schema]: 'Ex. : schéma conceptuel courant',
+  [aiLid.variableMock.schemaThesaurus]: 'Ex.\nTerme1 — Définition1\nTerme2 — Définition2',
+  [aiLid.variableMock.schemaGraph]: 'Ex. : graphe des liens de définition des constituantes',
+  [aiLid.variableMock.schemaTypeGraph]: 'Ex. : graphe des paliers de types du schéma conceptuel',
+  [aiLid.variableMock.constituenta]: 'Ex. : constituante courante',
+  [aiLid.variableMock.constituentaSyntaxTree]: 'Ex. d’arbre syntaxique de constituante',
+  [aiLid.fallback.unknownVariableType]: 'TYPE DE VARIABLE INCONNU : {type}',
+  [aiLid.fallback.unknownVariable]: 'VARIABLE INCONNUE : {name}',
+
+  [cctextLid.grammemeUnknown]: 'Inconnu : {gram}',
+  ...Object.fromEntries(grammemeFrEntries),
+
+  [rslangLid.type.logicName]: 'Logique',
+  [rslangLid.typeClass.logic]: 'Logique',
+  [rslangLid.typeClass.typification]: 'Ensembliste',
+  [rslangLid.typeClass.function]: 'Fonction terme',
+  [rslangLid.typeClass.predicate]: 'Fonction prédicat',
+  [rslangLid.misc.notDefined]: 'non défini',
+  [rslangLid.fallback.unknownRSError]: 'ERREUR INCONNUE',
+  [rslangLid.fallback.unknownNode]: 'INCONNU {id}',
+  [rslangLid.fallback.noTokenLabel]: 'pas d’étiquette : {id}',
+
+  [rslangLid.error[RSErrorCode.unknownSyntax]]: 'Erreur syntaxique indéfinie',
+  [rslangLid.error[RSErrorCode.missingParenthesis]]: "')' manquante",
+  [rslangLid.error[RSErrorCode.missingCurlyBrace]]: "'}' manquant",
+  [rslangLid.error[RSErrorCode.missingSquareBracket]]: "']' manquante",
+  [rslangLid.error[RSErrorCode.bracketMismatch]]:
+    'Parenthèses incohérentes : « {open} » au lieu de « {close} »',
+  [rslangLid.error[RSErrorCode.doubleParenthesis]]:
+    'Les doubles parenthèses externes (( et )) sont interdites',
+  [rslangLid.error[RSErrorCode.missingOpenBracket]]: 'Parenthèse ouvrante « {bracket} » manquante',
+  [rslangLid.error[RSErrorCode.expectedLocal]]: 'Nom de variable attendu',
+  [rslangLid.error[RSErrorCode.expectedType]]: 'Type attendu : {type}',
+  [rslangLid.error[RSErrorCode.localDoubleDeclare]]: 'Déclaration en double : {name}',
+  [rslangLid.error[RSErrorCode.localNotUsed]]: 'Variable inutilisée : {name}',
+  [rslangLid.error[RSErrorCode.localUndeclared]]: 'Variable non déclarée : {name}',
+  [rslangLid.error[RSErrorCode.localShadowing]]: 'Masquage de variable : {name}',
+  [rslangLid.error[RSErrorCode.typesNotEqual]]: 'Typifications différentes : {a} ≠ {b}',
+  [rslangLid.error[RSErrorCode.globalNotTyped]]: 'Pas de typification : {name}',
+  [rslangLid.error[RSErrorCode.invalidDecart]]:
+    'τ(α×b) = 𝔅(𝔇τ(α)×𝔇τ(b)). Argument non valide : {arg}',
+  [rslangLid.error[RSErrorCode.invalidBoolean]]:
+    'τ(ℬ(a)) = 𝔅𝔅𝔇τ(a). Argument non valide : {arg}',
+  [rslangLid.error[RSErrorCode.invalidTypeOperation]]: 'L’argument de l’opération doit être un ensemble : {arg}',
+  [rslangLid.error[RSErrorCode.invalidCard]]: 'Cardinalité réservée aux ensembles : {arg}',
+  [rslangLid.error[RSErrorCode.invalidDebool]]:
+    'τ(debool(a)) = 𝔇τ(a). Argument non valide : {arg}',
+  [rslangLid.error[RSErrorCode.globalFuncWithoutArgs]]: 'Fonction sans arguments : {name}',
+  [rslangLid.error[RSErrorCode.invalidReduce]]:
+    'τ(red(a)) = 𝔅𝔇𝔇τ(a). Argument non valide : {arg}',
+  [rslangLid.error[RSErrorCode.invalidProjectionTuple]]:
+    'Projection réservée au n-uplet : {from} → {to}',
+  [rslangLid.error[RSErrorCode.invalidProjectionSet]]:
+    'τ(Pri(a)) = 𝔅𝒞i𝔇τ(a). Argument non valide : {from} → {to}',
+  [rslangLid.error[RSErrorCode.invalidEnumeration]]:
+    'Typifications des éléments différentes : {a} ≠ {b}',
+  [rslangLid.error[RSErrorCode.invalidCortegeDeclare]]:
+    'Le nombre de variables du n-uplet ne correspond pas à la dimension du produit cartésien',
+  [rslangLid.error[RSErrorCode.localOutOfScope]]:
+    'La variable _{name}_ est hors de la portée de sa définition',
+  [rslangLid.error[RSErrorCode.invalidElementPredicate]]:
+    'Typifications incohérentes : {a}{b}{c}',
+  [rslangLid.error[RSErrorCode.invalidEmptySetUsage]]: 'Usage dénué de sens de l’ensemble vide',
+  [rslangLid.error[RSErrorCode.invalidArgsArity]]: 'Nombre d’arguments incorrect : {a} ≠ {b}',
+  [rslangLid.error[RSErrorCode.invalidArgumentType]]:
+    'Typification de l’argument différente de la déclaration : {expected} != {actual}',
+  [rslangLid.error[RSErrorCode.globalStructure]]:
+    'Domaine de définition de la structure générique non valide',
+  [rslangLid.error[RSErrorCode.radicalUsage]]: 'Radicaux interdits hors déclarations : {name}',
+  [rslangLid.error[RSErrorCode.invalidFilterArgumentType]]:
+    'Typification de l’argument du filtre non valide : {a}({b})',
+  [rslangLid.error[RSErrorCode.invalidFilterArity]]:
+    'Le nombre de paramètres du filtre ne correspond pas au nombre d’indices',
+  [rslangLid.error[RSErrorCode.arithmeticNotSupported]]: 'Type sans arithmétique : {type}',
+  [rslangLid.error[RSErrorCode.typesNotCompatible]]:
+    'Types incompatibles pour l’opération choisie : {a} et {b}',
+  [rslangLid.error[RSErrorCode.orderingNotSupported]]:
+    'Type sans prédicats d’ordre : {type}',
+  [rslangLid.error[RSErrorCode.globalNoValue]]: 'Identifiant non calculable : {name}',
+  [rslangLid.error[RSErrorCode.invalidPropertyUsage]]: 'Ensemble non itérable utilisé comme valeur',
+  [rslangLid.error[RSErrorCode.cstEmptyDerived]]:
+    'Expression vide pour une notion complexe ou un énoncé',
+  [rslangLid.error[RSErrorCode.definitionNotAllowed]]: 'Définition interdite pour le type choisi',
+  [rslangLid.error[RSErrorCode.calcUnknownError]]: 'Erreur d’évaluation inconnue',
+  [rslangLid.error[RSErrorCode.calculationNotSupported]]:
+    'La déclaration de fonction n’implique pas d’évaluation',
+  [rslangLid.error[RSErrorCode.setOverflow]]: 'Limite du nombre d’éléments dépassée : {limit}',
+  [rslangLid.error[RSErrorCode.booleanBaseLimit]]: 'Limite de la base de l’ensemble des parties dépassée : {limit}',
+  [rslangLid.error[RSErrorCode.calcGlobalMissing]]: 'Pas de valeur : {name}',
+  [rslangLid.error[RSErrorCode.iterationsLimit]]: 'Limite d’itérations dépassée : {limit}',
+  [rslangLid.error[RSErrorCode.calcInvalidDebool]]: 'Application debool non valide',
+  [rslangLid.error[RSErrorCode.iterateInfinity]]: 'Itération sur l’infini'
+};

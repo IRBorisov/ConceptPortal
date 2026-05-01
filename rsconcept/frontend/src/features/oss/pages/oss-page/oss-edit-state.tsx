@@ -13,7 +13,7 @@ import { useRoleStore, UserRole } from '@/features/users';
 import { useAdjustRole } from '@/features/users/stores/use-adjust-role';
 
 import { usePreferencesStore } from '@/stores/preferences';
-import { promptText } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { useOss } from '../../backend/use-oss';
 
@@ -114,7 +114,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   );
 
   function deleteSchema() {
-    if (!window.confirm(promptText.deleteOSS)) {
+    if (!window.confirm(formatLabel(lid.prompt.deleteOSS))) {
       return;
     }
     void deleteItem({

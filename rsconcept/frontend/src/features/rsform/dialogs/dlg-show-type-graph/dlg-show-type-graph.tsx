@@ -6,11 +6,12 @@ import { ReactFlowProvider } from '@xyflow/react';
 import { type TypeInfo } from '@/domain/library';
 import { TypificationGraph } from '@/domain/rslang';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { errorMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { MGraphFlow } from './mgraph-flow';
 
@@ -19,6 +20,7 @@ export interface DlgShowTypeGraphProps {
 }
 
 export function DlgShowTypeGraph() {
+  const tx = useTx();
   const { items } = useDialogsStore(state => state.props as DlgShowTypeGraphProps);
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const graph = (() => {
@@ -30,14 +32,14 @@ export function DlgShowTypeGraph() {
   })();
 
   if (graph.nodes.length === 0) {
-    toast.error(errorMsg.typeStructureFailed);
+    toast.error(formatLabel(lid.error.typeStructureFailed));
     hideDialog();
     return null;
   }
 
   return (
     <ModalView
-      header='Граф ступеней'
+      header={tx('ui.dlg.showTypeGraph.header', 'Type tier graph')}
       className='cc-mask-sides flex flex-col justify-stretch w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]'
       fullScreen
       helpTopic={HelpTopic.UI_TYPE_GRAPH}

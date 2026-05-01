@@ -5,6 +5,8 @@ import clsx from 'clsx';
 
 import { OperationType } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { IconConsolidation, IconRSForm } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { Indicator } from '@/components/view';
@@ -20,6 +22,7 @@ import { type OGOperationNode } from './og-models';
 const LONG_LABEL_CHARS = 14;
 
 export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode> }) {
+  const tx = useTx();
   const { selectedItems, schema } = useOssEdit();
   const opType = node.data.operation.operation_type;
 
@@ -44,15 +47,16 @@ export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode> }
       <div className='absolute z-pop top-0 right-0 flex flex-col gap-[4px] p-[2px]'>
         <Indicator
           noPadding
-          title={hasFile ? 'Связанная КС' : 'Нет связанной КС'}
+          title={hasFile ? tx('ui.oss.node.linkedCs', 'Linked CS') : tx('ui.oss.node.noLinkedCs', 'No linked CS')}
           icon={<IconRSForm className={hasFile ? 'text-constructive' : 'text-destructive'} size='12px' />}
         />
         {opType === OperationType.SYNTHESIS && node.data.operation.is_consolidation ? (
           <Indicator
             noPadding
-            title='Внимание!
-Ромбовидный синтез
-Возможны дубликаты конституент'
+            title={tx(
+              'ui.oss.node.rhombusSynthesisWarn',
+              'Warning!\nRhombus synthesis\nDuplicate constituents are possible'
+            )}
             icon={<IconConsolidation className='text-primary' size='12px' />}
           />
         ) : null}

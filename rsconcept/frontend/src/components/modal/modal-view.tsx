@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { useEscapeKey } from '@/hooks/use-escape-key';
@@ -40,6 +41,7 @@ export function ModalView({
   onHide,
   ...restProps
 }: React.PropsWithChildren<ModalViewProps>) {
+  const tx = useTx();
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const handleHide = onHide ?? hideDialog;
   useEscapeKey(handleHide);
@@ -66,8 +68,8 @@ export function ModalView({
         ) : null}
 
         <MiniButton
-          title={prepareTooltip('Закрыть диалоговое окно', 'ESC')}
-          aria-label='Закрыть'
+          title={prepareTooltip(tx('modal.closeDialogTooltip', 'Close dialog'), 'ESC')}
+          aria-label={tx('modal.close', 'Close')}
           noPadding
           icon={<IconClose size='1.25rem' />}
           className='absolute z-pop top-2 right-2'
@@ -102,8 +104,8 @@ export function ModalView({
 
         {noFooterButton ? null : !fullScreen ? (
           <Button
-            text='Закрыть'
-            aria-label='Закрыть'
+            text={tx('modal.close', 'Close')}
+            aria-label={tx('modal.close', 'Close')}
             className={clsx(
               'my-2 mx-auto text-sm min-w-28',
               fullScreen && 'z-pop absolute bottom-0 right-1/2 translate-x-1/2'
@@ -113,7 +115,7 @@ export function ModalView({
         ) : (
           <div className='z-pop absolute bottom-0 right-1/2 translate-x-1/2 p-3 rounded-xl bg-background/90 backdrop-blur-xs'>
             {' '}
-            <Button text='Закрыть' aria-label='Закрыть' className='text-sm min-w-28' onClick={handleHide} />
+            <Button text={tx('modal.close', 'Close')} aria-label={tx('modal.close', 'Close')} className='text-sm min-w-28' onClick={handleHide} />
           </div>
         )}
       </div>

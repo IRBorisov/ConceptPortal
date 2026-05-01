@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import { LibraryItemType } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useAuth } from '@/features/auth';
 
@@ -32,6 +33,7 @@ import { useConceptNavigation } from './navigation-context';
 import { ToggleNavigation } from './toggle-navigation';
 
 export function Navigation() {
+  const tx = useTx();
   const { push } = useConceptNavigation();
   const { isAnonymous } = useAuth();
   const { isSmall } = useWindowSize();
@@ -133,35 +135,47 @@ export function Navigation() {
         <div className='relative z-10 flex gap-2 items-center pr-2 shrink-0'>
           {isAnonymous ? (
             <NavigationButton
-              text='Песочница'
-              title='Демонстрационная среда для незарегистрированных пользователей'
+              text={tx('nav.bar.sandbox', 'Sandbox')}
+              title={tx('nav.bar.sandboxTitle', 'Demo environment for guests')}
               icon={<IconSandbox size='1.25rem' />}
               onClick={navigateSandbox}
             />
           ) : (
             <div ref={createRef} onBlur={handleCreateBlur} className='relative'>
-              <NavigationButton text='Создать' icon={<IconNewItem2 size='1.25rem' />} onClick={toggleCreate} />
+              <NavigationButton
+                text={tx('nav.bar.create', 'Create')}
+                icon={<IconNewItem2 size='1.25rem' />}
+                onClick={toggleCreate}
+              />
               <Dropdown isOpen={isCreateOpen} margin='mt-2'>
                 <DropdownButton
-                  text='Концептуальную схему'
+                  text={tx('nav.bar.createSchema', 'Conceptual schema')}
                   icon={<IconRSForm size='1rem' className='icon-green' />}
                   onClick={navigateCreateSchema}
                 />
                 <DropdownButton
-                  text='Концептуальную модель'
+                  text={tx('nav.bar.createModel', 'Conceptual model')}
                   icon={<IconRSModel size='1rem' className='text-accent-orange' />}
                   onClick={navigateCreateModel}
                 />
                 <DropdownButton
-                  text='Операционную схему'
+                  text={tx('nav.bar.createOss', 'Operational schema')}
                   icon={<IconOSS size='1rem' className='icon-primary' />}
                   onClick={navigateCreateOSS}
                 />
               </Dropdown>
             </div>
           )}
-          <NavigationButton text='Библиотека' icon={<IconLibrary2 size='1.25rem' />} onClick={navigateLibrary} />
-          <NavigationButton text='Справка' icon={<IconManuals size='1.25rem' />} onClick={navigateHelp} />
+          <NavigationButton
+            text={tx('nav.bar.library', 'Library')}
+            icon={<IconLibrary2 size='1.25rem' />}
+            onClick={navigateLibrary}
+          />
+          <NavigationButton
+            text={tx('nav.bar.help', 'Help')}
+            icon={<IconManuals size='1.25rem' />}
+            onClick={navigateHelp}
+          />
 
           <MenuAI />
           <MenuUser />

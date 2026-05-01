@@ -6,12 +6,13 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { type OssLayout } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { placeholderMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 import { schemaUpdateBlock, type UpdateBlockDTO } from '../backend/types';
 import { useOss } from '../backend/use-oss';
@@ -25,6 +26,7 @@ export interface DlgEditBlockProps {
 }
 
 export function DlgEditBlock() {
+  const tx = useTx();
   const { ossID, targetID, layout } = useDialogsStore(state => state.props as DlgEditBlockProps);
   const { updateBlock } = useUpdateBlock();
   const { schema } = useOss({ itemID: ossID });
@@ -59,8 +61,8 @@ export function DlgEditBlock() {
 
   return (
     <ModalForm
-      header='Редактирование блока'
-      submitText='Сохранить'
+      header={tx('ui.dlg.editBlock.header', 'Edit block')}
+      submitText={tx('ui.action.save', 'Save')}
       canSubmit={canSubmit}
       onSubmit={event => {
         event.preventDefault();
@@ -74,8 +76,8 @@ export function DlgEditBlock() {
         {field => (
           <TextInput
             id='operation_title'
-            aria-label='Название блока'
-            placeholder='Название блока'
+            aria-label={tx('ui.oss.blockTitle', 'Block title')}
+            placeholder={tx('ui.oss.blockTitle', 'Block title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -91,7 +93,7 @@ export function DlgEditBlock() {
             <SelectParent
               items={manager.oss.blocks.filter(block => !descendantNodeIDs.includes(block.nodeID))}
               value={field.state.value ? (manager.oss.blockByID.get(field.state.value) ?? null) : null}
-              placeholder='Родительский блок'
+              placeholder={tx('ui.oss.parentBlock', 'Parent block')}
               onChange={value => field.handleChange(value ? value.id : null)}
             />
           );
@@ -102,8 +104,8 @@ export function DlgEditBlock() {
         {field => (
           <TextArea
             id='operation_comment'
-            label='Описание'
-            placeholder={placeholderMsg.itemDescription}
+            label={tx('ui.label.description', 'Description')}
+            placeholder={formatLabel(lid.placeholder.itemDescription)}
             noResize
             rows={5}
             value={field.state.value}

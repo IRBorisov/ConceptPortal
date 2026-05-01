@@ -4,6 +4,7 @@ import { useEffect, useEffectEvent, useLayoutEffect, useRef } from 'react';
 
 import { isSchemaIssue } from '@/domain/library/rsform-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { RSTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 
 import { IconStatusError } from '@/components/icons';
@@ -28,6 +29,7 @@ interface RSFormTabsProps {
 }
 
 export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
 
   const hideFooter = useAppLayoutStore(state => state.hideFooter);
@@ -155,16 +157,16 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
             icon={<IconStatusError size='0.8rem' />}
             value={countProblematic}
             color='destructive'
-            title={`Проблемных понятий: ${countProblematic}`}
+            title={tx('ui.tabs.problemConceptsTitle', 'Problem concepts: {count}', { count: countProblematic })}
             onClick={onFocusSchemaIssues}
           />
         ) : null}
         <MenuGroupSchema />
 
-        <TabLabel label='Паспорт' />
-        <TabLabel label='Список' />
-        <TabLabel label='Понятие' />
-        <TabLabel label='Граф' />
+        <TabLabel label={tx('ui.tabs.passport', 'Passport')} />
+        <TabLabel label={tx('ui.tabs.list', 'List')} />
+        <TabLabel label={tx('ui.tabs.concept', 'Concept')} />
+        <TabLabel label={tx('ui.tabs.graph', 'Graph')} />
       </TabList>
 
       <div ref={containerRef} className='overflow-x-hidden'>

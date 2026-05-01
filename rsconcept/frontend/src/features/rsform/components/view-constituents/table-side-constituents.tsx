@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 
 import { type Constituenta, type RSEngine, type RSForm } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { BadgeEvaluation } from '@/features/rsmodel/components/badge-evaluation';
 
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
@@ -44,6 +45,7 @@ export function TableSideConstituents({
   maxHeight,
   autoScroll = true
 }: TableSideConstituentsProps) {
+  const tx = useTx();
   const items = useFilteredItems(schema, isSchemaIssue, isModelIssue);
   const prevActiveCstID = useRef<number | null>(null);
 
@@ -71,7 +73,7 @@ export function TableSideConstituents({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: () => <span className='pl-3'>Имя</span>,
+      header: () => <span className='pl-3'>{tx('ui.table.header.alias', 'Alias')}</span>,
       size: 65,
       minSize: 65,
       cell: props => <BadgeConstituenta value={props.row.original} prefixID={prefixes.cst_side_table} />
@@ -80,7 +82,7 @@ export function TableSideConstituents({
       ? [
           columnHelper.accessor(cst => cst, {
             id: 'value',
-            header: 'Значение',
+            header: tx('ui.table.header.value', 'Value'),
             size: 60,
             minSize: 60,
             maxSize: 60,
@@ -90,7 +92,7 @@ export function TableSideConstituents({
       : []),
     columnHelper.accessor(cst => describeConstituenta(cst), {
       id: 'description',
-      header: 'Описание',
+      header: tx('ui.table.header.description', 'Description'),
       size: 1000,
       minSize: 250,
       maxSize: 1000,
@@ -132,8 +134,8 @@ export function TableSideConstituents({
       enableHiding
       noDataComponent={
         <NoData className='min-h-20'>
-          <p>Список конституент пуст</p>
-          <p>Измените параметры фильтра или создайте конституенту</p>
+          <p>{tx('ui.table.cstSide.emptyTitle', 'Constituent list is empty')}</p>
+          <p>{tx('ui.table.cstSide.emptyHint', 'Change filter settings or create a constituent')}</p>
         </NoData>
       }
       onRowClicked={onActivate ? cst => onActivate(cst) : undefined}

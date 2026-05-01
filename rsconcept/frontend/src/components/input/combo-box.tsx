@@ -3,7 +3,10 @@
 import { useRef, useState } from 'react';
 import { ChevronDownIcon } from 'lucide-react';
 
-import { IconRemove } from '../icons';
+import { useTx } from '@/app/i18n/use-tx';
+
+import { IconRemove } from '@/components/icons';
+
 import { type Styling } from '../props';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
@@ -45,6 +48,7 @@ export function ComboBox<Option>({
   clearable,
   noSearch
 }: ComboBoxProps<Option>) {
+  const tx = useTx();
   const [open, setOpen] = useState(false);
   const [popoverWidth, setPopoverWidth] = useState<number | undefined>(undefined);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -109,9 +113,9 @@ export function ComboBox<Option>({
       </PopoverTrigger>
       <PopoverContent sideOffset={-1} className='p-0' style={{ width: popoverWidth }}>
         <Command>
-          {!noSearch ? <CommandInput placeholder='Поиск...' className='h-9' /> : null}
+          {!noSearch ? <CommandInput placeholder={tx('ui.combo.searchPlaceholder', 'Search…')} className='h-9' /> : null}
           <CommandList>
-            <CommandEmpty>Список пуст</CommandEmpty>
+            <CommandEmpty>{tx('ui.combo.emptyList', 'No items')}</CommandEmpty>
             <CommandGroup>
               {items?.map(item => (
                 <CommandItem

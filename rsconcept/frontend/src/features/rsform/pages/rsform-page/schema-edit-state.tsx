@@ -19,7 +19,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER, prefixes } from '@/utils/constants';
-import { errorMsg, promptText } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { promptUnsaved } from '@/utils/utils';
 
@@ -136,7 +136,7 @@ export const SchemaEditState = ({
   }
 
   function deleteSchema() {
-    if (!window.confirm(promptText.deleteLibraryItem)) {
+    if (!window.confirm(formatLabel(lid.prompt.deleteLibraryItem))) {
       return;
     }
     const ossID = schema.oss.length > 0 ? schema.oss[0].id : null;
@@ -341,7 +341,7 @@ export const SchemaEditState = ({
     }
     if (schema.attribution_graph.hasEdge(sourceID, targetID)) {
       if (targetCst.parent_schema !== null && targetCst.parent_schema === sourceCst.parent_schema) {
-        toast.error(errorMsg.deleteInheritedEdge);
+        toast.error(formatLabel(lid.error.deleteInheritedEdge));
         return;
       }
       void deleteAttribution({
@@ -353,7 +353,7 @@ export const SchemaEditState = ({
       });
     } else if (schema.graph.hasEdge(sourceID, targetID)) {
       if (targetCst.is_inherited) {
-        toast.error(errorMsg.changeInheritedDefinition);
+        toast.error(formatLabel(lid.error.changeInheritedDefinition));
         return;
       }
       const newExpressions = removeAliasReference(targetCst.definition_formal, sourceCst.alias);

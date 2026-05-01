@@ -12,7 +12,7 @@ import { PickSubstitutions } from '@/features/rsform/components/pick-substitutio
 
 import { TextArea } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
-import { infoMsg } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 export interface DlgCreateSynthesisSubstitutionFields {
   SubstitutionsField: (props: CreateFieldProps<Substitution[]>) => ReactNode;
@@ -35,7 +35,7 @@ export function TabSubstitutions({ oss, inputs, substitutions, fields }: TabSubs
   const validator = new SubstitutionValidator(schemas, substitutions);
   const isCorrect = validator.validate();
   const validationMessages = isCorrect
-    ? [infoMsg.substitutionsCorrect]
+    ? [formatLabel(lid.info.substitutionsCorrect)]
     : validator.errors.map(error => describeSubstitutionError(error));
   const { SubstitutionsField } = fields;
 

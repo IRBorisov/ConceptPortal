@@ -6,6 +6,8 @@ import { Graph } from '@/domain/graph/graph';
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { isBasicConcept, matchConstituenta } from '@/domain/library/rsform-api';
 
+import { useTx } from '@/app/i18n/use-tx';
+
 import { createColumnHelper, DataTable, type RowSelectionState } from '@/components/data-table';
 import { SearchBar } from '@/components/input';
 import { type Styling } from '@/components/props';
@@ -42,6 +44,7 @@ export function PickMultiConstituenta({
   className,
   ...restProps
 }: PickMultiConstituentaProps) {
+  const tx = useTx();
   const [filterText, setFilterText] = useState('');
 
   const filtered = filterText ? items.filter(cst => matchConstituenta(cst, filterText)) : items;
@@ -86,14 +89,14 @@ export function PickMultiConstituenta({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: () => <span className='pl-3'>Имя</span>,
+      header: () => <span className='pl-3'>{tx('ui.table.header.alias', 'Alias')}</span>,
       size: 65,
       cell: props => <BadgeConstituenta value={props.row.original} />
     }),
     columnHelper.accessor(cst => describeConstituenta(cst), {
       id: 'description',
       size: 1000,
-      header: 'Описание'
+      header: tx('ui.table.header.description', 'Description')
     })
   ];
 
@@ -101,7 +104,12 @@ export function PickMultiConstituenta({
     <div className={cn(!noBorder && 'border', className)} {...restProps}>
       <div className='px-3 flex justify-between items-center bg-input border-b rounded-t-md'>
         <div className='w-[24ch] select-none whitespace-nowrap'>
-          {items.length > 0 ? `Выбраны ${value.length} из ${items.length}` : 'Конституенты'}
+          {items.length > 0
+            ? tx('ui.table.pickMulti.selected', 'Selected {selected} of {total}', {
+                selected: value.length,
+                total: items.length
+              })
+            : tx('ui.table.pickMulti.constituentsHeader', 'Constituents')}
         </div>
         <SearchBar
           id='dlg_constituents_search'
@@ -138,7 +146,7 @@ export function PickMultiConstituenta({
         onRowSelectionChange={handleRowSelection}
         noDataComponent={
           <NoData>
-            <p>Список пуст</p>
+            <p>{tx('ui.table.emptyList', 'No items')}</p>
           </NoData>
         }
       />

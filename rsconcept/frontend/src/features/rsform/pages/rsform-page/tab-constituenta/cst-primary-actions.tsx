@@ -3,6 +3,7 @@
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { cstCanProduceStructure } from '@/domain/library/rsform-api';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { TextButton } from '@/components/control/text-button';
@@ -11,7 +12,7 @@ import { cn } from '@/components/utils';
 import { IndicatorPill } from '@/components/view/indicator-pill';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { tooltipText } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 
 export function isConstituentaEditorDisabled(activeCst: Constituenta | null | undefined, isContentEditable: boolean) {
   return !activeCst || !isContentEditable;
@@ -28,6 +29,7 @@ export interface ConstituentaPrimaryActionsProps {
 }
 
 export function ConstituentaPrimaryActions({ className, activeCst, schema }: ConstituentaPrimaryActionsProps) {
+  const tx = useTx();
   const {
     toggleCrucial, //
     patchConstituenta,
@@ -67,8 +69,10 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
       {showCrucialPill ? (
         <IndicatorPill
           className='text-sm font-controls py-0.5 gap-1 -mt-0.5'
-          title={crucial ? 'Снять статус ключевой' : 'Добавить статус ключевой'}
-          value={crucial ? 'ключевая' : 'обычная'}
+          title={
+            crucial ? tx('ui.cst.crucialRemoveTitle', 'Remove key status') : tx('ui.cst.crucialAddTitle', 'Set as key')
+          }
+          value={crucial ? tx('ui.cst.crucialBadgeOn', 'key') : tx('ui.cst.crucialBadgeOff', 'regular')}
           icon={<IconCrucial size='1rem' />}
           color={crucial ? 'teal' : 'muted'}
           onClick={toggleCrucial}
@@ -78,8 +82,8 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
 
       {showRenameButton ? (
         <TextButton
-          text='Переименовать'
-          title={isModified ? tooltipText.unsaved : 'Переименовать конституенту'}
+          text={tx('ui.action.renameCst', 'Rename')}
+          title={isModified ? formatLabel(lid.tooltip.unsaved) : tx('ui.hint.renameCst', 'Rename constituent')}
           onClick={promptRename}
           disabled={isModified}
           className='text-sm'
@@ -88,8 +92,8 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
 
       {showStructureButton ? (
         <TextButton
-          text='Раскрыть структуру'
-          title='Управление структурой понятия'
+          text={tx('ui.action.expandStructure', 'Expand structure')}
+          title={tx('ui.hint.conceptStructure', 'Manage concept structure')}
           onClick={handleStructurePlanner}
           className='text-sm'
         />

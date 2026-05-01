@@ -3,6 +3,7 @@
 import { CstType } from '@/domain/library/rsform';
 
 import { useConceptNavigation } from '@/app';
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
@@ -32,6 +33,7 @@ interface ToolbarSchemaListProps {
 }
 
 export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { elementRef: menuRef, isOpen: isMenuOpen, toggle: toggleMenu, handleBlur: handleMenuBlur } = useDropdown();
   const {
@@ -58,36 +60,36 @@ export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
         />
       ) : null}
       <MiniButton
-        title={prepareTooltip('Сбросить выделение', 'ESC')}
-        aria-label='Сбросить выделение'
+        title={prepareTooltip(tx('ui.toolbar.clearSelection', 'Clear selection'), tx('ui.hotkey.esc', 'ESC'))}
+        aria-label={tx('ui.toolbar.clearSelection', 'Clear selection')}
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={deselectAll}
         disabled={selectedCst.length === 0}
       />
       <MiniButton
-        title={prepareTooltip('Переместить вверх', 'Alt + вверх')}
-        aria-label='Переместить вверх'
+        title={prepareTooltip(tx('ui.toolbar.moveUp', 'Move up'), tx('ui.hotkey.altUp', 'Alt + Up'))}
+        aria-label={tx('ui.toolbar.moveUp', 'Move up')}
         icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
         onClick={moveUp}
         disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
       />
       <MiniButton
-        title={prepareTooltip('Переместить вниз', 'Alt + вниз')}
-        aria-label='Переместить вниз'
+        title={prepareTooltip(tx('ui.toolbar.moveDown', 'Move down'), tx('ui.hotkey.altDown', 'Alt + Down'))}
+        aria-label={tx('ui.toolbar.moveDown', 'Move down')}
         icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
         onClick={moveDown}
         disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
       />
       <MiniButton
-        title='Ключевая конституента'
-        aria-label='Переключатель статуса ключевой конституенты'
+        title={tx('ui.rsform.formEdit.crucialTitle', 'Crucial constituent')}
+        aria-label={tx('ui.cst.crucialToggleAria', 'Toggle crucial constituent status')}
         icon={<IconCrucial size='1.25rem' className='icon-primary' />}
         onClick={toggleCrucial}
         disabled={isProcessing || selectedCst.length === 0}
       />
       <div ref={menuRef} onBlur={handleMenuBlur} className='relative hidden xs:block'>
         <MiniButton
-          title='Добавить пустую конституенту'
+          title={tx('ui.toolbar.addEmptyConstituenta', 'Add empty constituent')}
           hideTitle={isMenuOpen}
           icon={<IconOpenList size='1.25rem' className='icon-green' />}
           onClick={toggleMenu}
@@ -106,23 +108,23 @@ export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
         </Dropdown>
       </div>
       <MiniButton
-        title={prepareTooltip('Добавить новую конституенту...', 'Alt + `')}
-        aria-label='Добавить новую конституенту'
+        title={prepareTooltip(tx('ui.toolbar.addNewConstituenta', 'Add new constituent…'), tx('ui.hotkey.altGrave', 'Alt + `'))}
+        aria-label={tx('ui.aria.addNewConstituenta', 'Add new constituent')}
         icon={<IconNewItem size='1.25rem' className='icon-green' />}
         onClick={() => void promptCreateCst()}
         className='hidden xs:block'
         disabled={isProcessing}
       />
       <MiniButton
-        title={prepareTooltip('Клонировать конституенту', 'Alt + V')}
-        aria-label='Клонировать конституенту'
+        title={prepareTooltip(tx('ui.hint.cloneConstituenta', 'Clone constituent'), tx('ui.hotkey.altV', 'Alt + V'))}
+        aria-label={tx('ui.aria.cloneConstituenta', 'Clone constituent')}
         icon={<IconClone size='1.25rem' className='icon-green' />}
         onClick={() => void cloneCst()}
         disabled={isProcessing || selectedCst.length !== 1}
       />
       <MiniButton
-        title={prepareTooltip('Удалить выбранные', 'Delete')}
-        aria-label='Удалить выбранные'
+        title={prepareTooltip(tx('ui.toolbar.deleteSelected', 'Delete selected'), tx('ui.hotkey.delete', 'Delete'))}
+        aria-label={tx('ui.aria.deleteSelected', 'Delete selected')}
         icon={<IconDestroy size='1.25rem' className='icon-red' />}
         onClick={promptDeleteCst}
         disabled={isProcessing || !canDeleteSelected}

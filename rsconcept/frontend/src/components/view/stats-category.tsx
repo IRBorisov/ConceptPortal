@@ -1,6 +1,10 @@
+'use client';
+
 import { useState } from 'react';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
+
+import { useTx } from '@/app/i18n/use-tx';
 
 import { cn } from '@/components/utils';
 import { globalIDs, PARAMETER } from '@/utils/constants';
@@ -31,6 +35,7 @@ export function StatsCategory({
   secondaryTitle,
   details
 }: StatsCategoryProps) {
+  const tx = useTx();
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isOpenDebounced] = useDebounce(isDetailsOpen, PARAMETER.summaryDuration);
   const hasSecondary = secondaryLabel && typeof secondaryValue === 'number';
@@ -52,7 +57,7 @@ export function StatsCategory({
 
       <details className='group -mt-1' onToggle={handleDetailsToggle}>
         <summary className='text-muted-foreground hover:text-foreground cursor-pointer text-xs select-none'>
-          Подробнее
+          {tx('ui.stats.moreDetails', 'Details')}
         </summary>
         <div className='grid gap-1 pt-1 text-xs'>
           {details.map(detail => (

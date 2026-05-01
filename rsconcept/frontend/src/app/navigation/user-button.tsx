@@ -1,5 +1,6 @@
 'use client';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { useAuth } from '@/features/auth';
 
 import { IconLogin, IconUser2 } from '@/components/icons';
@@ -15,12 +16,13 @@ interface UserButtonProps {
 }
 
 export function UserButton({ onLogin, onClickUser, isOpen }: UserButtonProps) {
+  const tx = useTx();
   const { user, isAnonymous } = useAuth();
   const adminMode = usePreferencesStore(state => state.adminMode);
   if (isAnonymous) {
     return (
       <NavigationButton
-        title='Перейти на страницу логина'
+        title={tx('nav.user.loginTitle', 'Go to login page')}
         icon={<IconLogin size='1.25rem' className='icon-primary' />}
         onClick={onLogin}
       />
@@ -28,7 +30,7 @@ export function UserButton({ onLogin, onClickUser, isOpen }: UserButtonProps) {
   } else {
     return (
       <NavigationButton
-        title='Пользователь'
+        title={tx('nav.user.menuTitle', 'User account')}
         hideTitle={isOpen}
         aria-haspopup='true'
         aria-expanded={isOpen}

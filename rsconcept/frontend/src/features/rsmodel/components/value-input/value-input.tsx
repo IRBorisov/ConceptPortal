@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import { type EvalStatus } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { IconShowDataText } from '@/features/rsmodel/components/icon-show-data-text';
 
 import { MiniButton } from '@/components/control';
@@ -50,20 +51,21 @@ export function ValueInput({
   onCalculate,
   onToggleDataText
 }: ValueInputProps) {
+  const tx = useTx();
   const isTrimmed = value.length > limits.len_data_str;
   return (
     <div className={cn('relative flex flex-col gap-2', className)}>
       <StatusBar className='absolute -top-1 right-1/2 translate-x-1/2' status={status} onCalculate={onCalculate} />
       {onToggleDataText && !isBinding ? (
         <MiniButton
-          title='Отображение данных в тексте'
+          title={tx('ui.value.showDataInText', 'Show data as text')}
           className='absolute top-0 right-0'
           icon={<IconShowDataText size='1.25rem' className='hover:text-primary' value={!!showDataText} />}
           onClick={onToggleDataText}
         />
       ) : null}
 
-      <Label text='Значение' />
+      <Label text={tx('ui.valueInput.labelValue', 'Value')} />
 
       <TextArea
         value={value.slice(0, limits.len_data_str)}
@@ -82,18 +84,18 @@ export function ValueInput({
               <span
                 tabIndex={-1}
                 className='font-math select-none'
-                aria-label='Мощность / значение выражения'
+                aria-label={tx('ui.valueInput.cardinalityExpressionAria', 'Cardinality / expression value')}
                 data-tooltip-id={globalIDs.tooltip}
-                data-tooltip-content='Значение выражения'
+                data-tooltip-content={tx('ui.valueInput.expressionValueTooltip', 'Expression value')}
               >
-                Мощность: {formatInteger(valueLabel)} |
+                {tx('ui.valueInput.cardinalityPrefix', 'Cardinality:')} {formatInteger(valueLabel)} |
               </span>
               <span
                 tabIndex={-1}
                 className='font-math select-text'
-                aria-label='Сокращенное обозначение выражения'
+                aria-label={tx('ui.valueInput.shortFormAria', 'Short form of the expression')}
                 data-tooltip-id={globalIDs.tooltip}
-                data-tooltip-content='Сокращение выражения'
+                data-tooltip-content={tx('ui.valueInput.shortFormTooltip', 'Expression abbreviation')}
               >
                 {stub}
               </span>
@@ -102,9 +104,12 @@ export function ValueInput({
           {value.length > 0 && !disabled ? (
             <div
               className={clsx('ml-auto select-none', isTrimmed && 'text-destructive')}
-              aria-label='Количество символов'
+              aria-label={tx('ui.valueInput.charCountAria', 'Character count')}
               data-tooltip-id={globalIDs.tooltip}
-              data-tooltip-content='Отображаемое количество\nсимволов ограничено'
+              data-tooltip-content={tx(
+                'ui.valueInput.charCountLimitedTooltip',
+                'Displayed character count\nis limited'
+              )}
             >
               {`${formatInteger(value.length)} / ${formatInteger(limits.len_data_str)}`}
             </div>

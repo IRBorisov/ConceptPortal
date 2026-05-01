@@ -7,6 +7,7 @@ import { Case } from '@/domain/cctext/language';
 import { parseGrammemes } from '@/domain/cctext/language-api';
 import { type Constituenta, type RSForm } from '@/domain/library';
 
+import { useTx } from '@/app/i18n/use-tx';
 import { HelpTopic } from '@/features/help';
 
 import { MiniButton } from '@/components/control';
@@ -14,7 +15,7 @@ import { IconMoveDown } from '@/components/icons';
 import { TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { promptText } from '@/utils/labels';
+import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 
 import { type LexemeResponse } from '../backend/cctext/types';
@@ -35,40 +36,25 @@ const FORM_FIELDS = DefaultWordForms.slice(0, 12).map(data => ({
   grams: [...data.grams]
 }));
 
-const CASE_ROWS = [
-  {
-    singularKey: 'sing_nomn',
-    pluralKey: 'plur_nomn',
-    placeholder: 'Именительный: Кто? Что?'
-  },
-  {
-    singularKey: 'sing_gent',
-    pluralKey: 'plur_gent',
-    placeholder: 'Родительный: Кого? Чего?'
-  },
-  {
-    singularKey: 'sing_datv',
-    pluralKey: 'plur_datv',
-    placeholder: 'Дательный: Кому? Чему?'
-  },
-  {
-    singularKey: 'sing_accs',
-    pluralKey: 'plur_accs',
-    placeholder: 'Винительный: Кого? Что?'
-  },
-  {
-    singularKey: 'sing_ablt',
-    pluralKey: 'plur_ablt',
-    placeholder: 'Творительный: Кем? Чем?'
-  },
-  {
-    singularKey: 'sing_loct',
-    pluralKey: 'plur_loct',
-    placeholder: 'Предложный: О ком? О чём?'
-  }
-] as const;
+const CASE_KEYS = ['nomn', 'gent', 'datv', 'accs', 'ablt', 'loct'] as const;
+
+const CASE_ROW_KEYS = CASE_KEYS.map(key => ({
+  key,
+  singularKey: `sing_${key}`,
+  pluralKey: `plur_${key}`
+}));
+
+const CASE_PLACEHOLDER_DEFAULTS: Record<(typeof CASE_KEYS)[number], string> = {
+  nomn: 'Nominative: Who? What?',
+  gent: 'Genitive: Of whom? Of what?',
+  datv: 'Dative: To whom? To what?',
+  accs: 'Accusative: Whom? What?',
+  ablt: 'Instrumental: By whom? With what?',
+  loct: 'Locative: About whom? About what?'
+};
 
 export function DlgEditWordForms() {
+  const tx = useTx();
   const { schema, target, onSave, generateLexeme } = useDialogsStore(state => state.props as DlgEditWordFormsProps);
 
   const isProcessing = useIsProcessingCctext();
@@ -102,7 +88,7 @@ export function DlgEditWordForms() {
     }
 
     if (Object.values(formValues).some(value => value.trim() !== '')) {
-      if (!window.confirm(promptText.generateWordforms)) {
+      if (!window.confirm(formatLabel(lid.prompt.generateWordforms))) {
         return;
       }
     }
@@ -126,8 +112,8 @@ export function DlgEditWordForms() {
 
   return (
     <ModalForm
-      header='Редактирование словоформ'
-      submitText='Сохранить'
+      header={tx('ui.wordForms.edit.header', 'Edit word forms')}
+      submitText={tx('ui.action.save', 'Save')}
       onSubmit={handleSubmit}
       className='flex flex-col w-180 px-6'
       helpTopic={HelpTopic.TERM_CONTROL}
@@ -135,7 +121,7 @@ export function DlgEditWordForms() {
       <div className='flex items-center gap-2 justify-between pt-1'>
         {generateLexeme ? (
           <MiniButton
-            title='Заполнить словоформы'
+            title={tx('ui.wordForms.fillFromLexeme', 'Fill word forms')}
             icon={<IconMoveDown size='1.5rem' className='icon-primary' />}
             onClick={handleGenerateLexeme}
             disabled={isProcessing || nominalResolved.trim() === ''}
@@ -144,8 +130,8 @@ export function DlgEditWordForms() {
         <RefsInput
           id='dlg_edit_wordforms_nominal'
           areaClassName='disabled:min-h-9'
-          aria-label='Начальная форма'
-          placeholder='Начальная форма'
+          aria-label={tx('ui.wordForms.nominalAria', 'Lemma form')}
+          placeholder={tx('ui.wordForms.nominalPlaceholder', 'Lemma form')}
           schema={schema}
           value={nominalRaw}
           initialValue={target.term_raw}
@@ -158,34 +144,44 @@ export function DlgEditWordForms() {
 
       <div className='mt-2 grid grid-cols-2 gap-4 pb-2'>
         <div className='space-y-2'>
-          <div className='text-center text-sm font-controls text-muted-foreground select-none'>Единственное число</div>
-          {CASE_ROWS.map(row => (
-            <TextInput
-              key={row.singularKey}
-              value={formValues[row.singularKey] ?? ''}
-              onChange={event => handleFormChange(row.singularKey, event.target.value)}
-              aria-label={`Единственное число: ${row.placeholder}`}
-              placeholder={row.placeholder}
-              dense
-              noBorder={false}
-              disabled={isProcessing}
-            />
-          ))}
+          <div className='text-center text-sm font-controls text-muted-foreground select-none'>
+            {tx('ui.wordForms.singularHeader', 'Singular')}
+          </div>
+          {CASE_ROW_KEYS.map(row => {
+            const hint = tx(`ui.wordForms.case.${row.key}`, CASE_PLACEHOLDER_DEFAULTS[row.key]);
+            return (
+              <TextInput
+                key={row.singularKey}
+                value={formValues[row.singularKey] ?? ''}
+                onChange={event => handleFormChange(row.singularKey, event.target.value)}
+                aria-label={tx('ui.wordForms.singularAria', 'Singular: {hint}', { hint })}
+                placeholder={hint}
+                dense
+                noBorder={false}
+                disabled={isProcessing}
+              />
+            );
+          })}
         </div>
         <div className='space-y-2'>
-          <div className='text-center text-sm font-controls text-muted-foreground select-none'>Множественное число</div>
-          {CASE_ROWS.map(row => (
-            <TextInput
-              key={row.pluralKey}
-              value={formValues[row.pluralKey] ?? ''}
-              onChange={event => handleFormChange(row.pluralKey, event.target.value)}
-              aria-label={`Множественное число: ${row.placeholder}`}
-              placeholder={row.placeholder}
-              dense
-              noBorder={false}
-              disabled={isProcessing}
-            />
-          ))}
+          <div className='text-center text-sm font-controls text-muted-foreground select-none'>
+            {tx('ui.wordForms.pluralHeader', 'Plural')}
+          </div>
+          {CASE_ROW_KEYS.map(row => {
+            const hint = tx(`ui.wordForms.case.${row.key}`, CASE_PLACEHOLDER_DEFAULTS[row.key]);
+            return (
+              <TextInput
+                key={row.pluralKey}
+                value={formValues[row.pluralKey] ?? ''}
+                onChange={event => handleFormChange(row.pluralKey, event.target.value)}
+                aria-label={tx('ui.wordForms.pluralAria', 'Plural: {hint}', { hint })}
+                placeholder={hint}
+                dense
+                noBorder={false}
+                disabled={isProcessing}
+              />
+            );
+          })}
         </div>
       </div>
     </ModalForm>
