@@ -1,6 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import { type AccessPolicy, type LibraryItem } from '@/domain/library';
+import { formatLabel, lid } from '@/i18n';
 
 import {
   type RSFormDTO,
@@ -11,7 +12,6 @@ import {
 
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
-import { formatLabel, lid } from '@/utils/labels';
 
 import {
   type CloneLibraryItemDTO,

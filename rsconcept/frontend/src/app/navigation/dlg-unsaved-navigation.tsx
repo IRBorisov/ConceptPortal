@@ -1,6 +1,6 @@
 'use client';
 
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { Button } from '@/components/control';
 import { ModalView } from '@/components/modal';

@@ -5,13 +5,12 @@ import { ReactFlowProvider } from '@xyflow/react';
 
 import { type TypeInfo } from '@/domain/library';
 import { TypificationGraph } from '@/domain/rslang';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { MGraphFlow } from './mgraph-flow';
 

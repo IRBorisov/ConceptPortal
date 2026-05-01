@@ -5,10 +5,9 @@
 import { toast } from 'react-toastify';
 import { type AxiosError, type AxiosHeaderValue, type AxiosResponse, isAxiosError } from 'axios';
 
-import { formatAppMessage } from '@/i18n/format-app-message';
+import { formatAppMessage, formatLabel, lid } from '@/i18n';
 
 import { PARAMETER } from './constants';
-import { formatLabel, lid } from './labels';
 
 /**
  * Wrapper class for generalized text matching.

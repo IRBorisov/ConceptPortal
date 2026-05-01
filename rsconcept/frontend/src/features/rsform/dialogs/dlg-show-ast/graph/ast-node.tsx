@@ -7,7 +7,7 @@ import { type RSForm } from '@/domain/library/rsform';
 import { readErrorAnnotation, readTypeAnnotation } from '@/domain/rslang';
 import { describeRSError, labelRSLangNode, labelType } from '@/domain/rslang/labels';
 import { TokenID } from '@/domain/rslang/parser/token';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';

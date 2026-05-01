@@ -9,7 +9,7 @@ import { generateRandomValue, isInferrable, isInterpretable } from '@/domain/lib
 import { type Value } from '@/domain/rslang';
 import { isSetValue, normalizeValue } from '@/domain/rslang/eval/value-api';
 import { isTypification, TypeID, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { useCstStatus } from '@/features/rsmodel/hooks/use-cst-status';
@@ -19,7 +19,6 @@ import { TextButton } from '@/components/control/text-button';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { useDialogsStore } from '@/stores/dialogs';
 import { limits } from '@/utils/constants';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { copyJsonToClipboard, downloadJsonFile, getExportJsonText } from '../export-helpers';
 import { useModelEdit } from '../model-edit-context';

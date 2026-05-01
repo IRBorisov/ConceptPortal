@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useRegisterNavigationSave } from '@/app';
 import { PromptInput } from '@/features/ai/components/prompt-input';

@@ -10,7 +10,7 @@ import {
   type OssLayout
 } from '@/domain/library';
 import { sortItemsForOSS } from '@/domain/library/oss-api';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useLibrary } from '@/features/library/backend/use-library';
 import { PickSchema } from '@/features/library/components/pick-schema';

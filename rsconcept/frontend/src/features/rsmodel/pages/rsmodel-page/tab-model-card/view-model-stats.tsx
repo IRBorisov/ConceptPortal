@@ -1,5 +1,5 @@
 import { type RSModelStats } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { Divider } from '@/components/container';
 import { type Styling } from '@/components/props';

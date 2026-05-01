@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 
 import { LocationHead } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { useCreateFromSandbox } from '@/features/library/backend/use-create-from-sandbox';
@@ -21,7 +21,6 @@ import {
   IconRSModel,
   IconUpload
 } from '@/components/icons';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { useSandboxBundle } from '../../context/bundle-context';
 

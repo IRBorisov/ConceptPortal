@@ -1,7 +1,7 @@
 'use client';
 
 import { type Constituenta } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -13,7 +13,6 @@ import { IconClone, IconDestroy, IconNewItem, IconPredecessor, IconReset, IconSa
 import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { prepareTooltip } from '@/utils/format';
-import { formatLabel, lid } from '@/utils/labels';
 import { isMac } from '@/utils/utils';
 
 import { useSchemaEdit } from '../schema-edit-context';

@@ -2,7 +2,7 @@
 
 import { type RSEngine } from '@/domain/library';
 import { type TypePath, type Typification, type Value } from '@/domain/rslang';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 

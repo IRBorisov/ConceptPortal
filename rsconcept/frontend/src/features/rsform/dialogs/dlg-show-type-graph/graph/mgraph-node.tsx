@@ -3,7 +3,7 @@
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 
 import { type TypificationNodeData } from '@/domain/rslang';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';

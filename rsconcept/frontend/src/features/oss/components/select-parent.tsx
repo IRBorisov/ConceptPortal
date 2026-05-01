@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 
 import { type Block } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { IconConceptBlock } from '@/components/icons';
 import { globalIDs } from '@/utils/constants';

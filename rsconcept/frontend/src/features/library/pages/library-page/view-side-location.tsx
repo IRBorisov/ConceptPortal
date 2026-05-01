@@ -4,10 +4,10 @@ import { toast } from 'react-toastify';
 import clsx from 'clsx';
 
 import { type FolderNode } from '@/domain/library';
+import { formatLabel, lid } from '@/i18n';
 
 import { useMainHeight } from '@/stores/app-layout';
 import { prefixes } from '@/utils/constants';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { SelectLocation } from '../../components/select-location';
 import { useLibrarySearchStore } from '../../stores/library-search';

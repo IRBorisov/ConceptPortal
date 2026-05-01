@@ -3,13 +3,12 @@
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 
 import { Button, MiniButton, SubmitButton } from '@/components/control';
 import { Label, TextArea, TextInput } from '@/components/input';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { type CreateLibraryItemDTO, schemaCreateLibraryItem } from '../../backend/types';
 import { useCreateItem } from '../../backend/use-create-item';

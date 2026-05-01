@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
 import { OperationType, type OssLayout } from '@/domain/library';
+import { lid } from '@/i18n';
 
 import { schemaLibraryItem } from '@/features/library/backend/types';
 import { schemaSubstituteConstituents } from '@/features/rsform/backend/types';
 
 import { limits } from '@/utils/constants';
-import { lid } from '@/utils/labels';
 
 /** Represents {@link Operation} data from server. */
 export type OperationDTO = z.infer<typeof schemaOperation>;

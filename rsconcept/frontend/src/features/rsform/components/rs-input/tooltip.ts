@@ -7,7 +7,7 @@ import { isBasicConcept } from '@/domain/library/rsform-api';
 import { type AnalysisFull, type ExpressionType, readTypeAnnotation, TokenID } from '@/domain/rslang';
 import { type RSErrorDescription } from '@/domain/rslang/error';
 import { describeRSError, labelType } from '@/domain/rslang/labels';
-import { formatAppMessage } from '@/i18n/format-app-message';
+import { formatAppMessage } from '@/i18n';
 
 import { appendBoldTextRow, appendMathBoldLabelParagraph } from '@/utils/format';
 import { type AstNode } from '@/utils/parsing';

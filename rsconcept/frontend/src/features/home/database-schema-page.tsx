@@ -3,7 +3,7 @@
 import { useEffectEvent, useLayoutEffect } from 'react';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useAppLayoutStore, useFitHeight } from '@/stores/app-layout';
 import { resources } from '@/utils/constants';

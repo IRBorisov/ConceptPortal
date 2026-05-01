@@ -3,7 +3,7 @@
 import { toast } from 'react-toastify';
 
 import { AccessPolicy, LocationHead } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';
@@ -28,7 +28,6 @@ import {
 } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { formatLabel, lid } from '@/utils/labels';
 import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
 
 import { useModelEdit } from './model-edit-context';

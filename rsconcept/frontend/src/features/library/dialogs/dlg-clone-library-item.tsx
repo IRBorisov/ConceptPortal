@@ -3,7 +3,7 @@
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { AccessPolicy, type LibraryItem, LibraryItemType } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 
@@ -11,7 +11,6 @@ import { MiniButton } from '@/components/control';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { type CloneLibraryItemDTO, schemaCloneLibraryItem } from '../backend/types';
 import { useCloneItem } from '../backend/use-clone-item';

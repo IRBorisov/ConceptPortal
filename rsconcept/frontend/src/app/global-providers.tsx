@@ -3,7 +3,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { queryClient } from '@/backend/query-client';
 
-import { IntlPreferencesProvider } from './intl-provider';
+import { IntlPreferencesProvider } from '../i18n/intl-provider';
 
 // prettier-ignore
 export function GlobalProviders({ children }: React.PropsWithChildren) {

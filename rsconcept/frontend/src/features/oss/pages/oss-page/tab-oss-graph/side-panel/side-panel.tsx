@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
 import { NodeType, OperationType } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';
 import { IconClose } from '@/components/icons';

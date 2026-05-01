@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 import { isSchemaIssue } from '@/domain/library/rsform-api';
 import { isInferrable, isModelIssue } from '@/domain/library/rsmodel-api';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';

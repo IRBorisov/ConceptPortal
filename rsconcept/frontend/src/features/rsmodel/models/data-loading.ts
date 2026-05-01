@@ -4,8 +4,7 @@ import { type BasicBinding } from '@/domain/library';
 import { toBasicBinding, validateBasicBindingData, validateValueData } from '@/domain/library/rsmodel-api';
 import { type Value } from '@/domain/rslang';
 import { normalizeValue } from '@/domain/rslang/eval/value-api';
-
-import { formatLabel, lid } from '@/utils/labels';
+import { formatLabel, lid } from '@/i18n';
 
 /** Process binding data from string. */
 export function processBindingData(data: string): BasicBinding | null {

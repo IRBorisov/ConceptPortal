@@ -1,5 +1,5 @@
-import { lid } from '@/i18n/labels/catalog';
-import { rsformLid } from '@/i18n/labels/rsform-ui';
+import { lid } from '../../labels/catalog';
+import { rsformLid } from '../../labels/rsform-ui';
 
 import { labelsFeatureUiRu } from './labels-feature-ui.ru';
 

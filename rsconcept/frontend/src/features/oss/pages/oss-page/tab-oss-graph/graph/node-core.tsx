@@ -4,7 +4,7 @@ import { type NodeProps } from '@xyflow/react';
 import clsx from 'clsx';
 
 import { OperationType } from '@/domain/library';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { IconConsolidation, IconRSForm } from '@/components/icons';
 import { cn } from '@/components/utils';

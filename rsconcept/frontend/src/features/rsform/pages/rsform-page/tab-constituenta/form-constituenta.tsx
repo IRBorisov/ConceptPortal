@@ -9,7 +9,7 @@ import { type Constituenta, CstType, type RSForm } from '@/domain/library';
 import { getAnalysisFor, isBaseSet, isBasicConcept, isLogical } from '@/domain/library/rsform-api';
 import { type AnalysisFull, TypeID } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { useRegisterNavigationSave } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -18,7 +18,6 @@ import { TextButton } from '@/components/control/text-button';
 import { Label, TextArea } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { formatLabel, lid } from '@/utils/labels';
 import { type RO } from '@/utils/meta';
 import { withPreventDefault } from '@/utils/utils';
 

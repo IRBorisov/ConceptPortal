@@ -6,7 +6,7 @@ import {
   type SubstitutionErrorDescription,
   SubstitutionErrorType
 } from '@/domain/library';
-import { formatLabel } from '@/i18n/format-app-message';
+import { formatLabel } from '@/i18n';
 import { ossLid } from '@/i18n/labels/oss-ui';
 
 import { type RO } from '@/utils/meta';

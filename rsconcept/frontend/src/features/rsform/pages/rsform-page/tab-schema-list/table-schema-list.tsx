@@ -2,7 +2,7 @@
 
 import { type Constituenta } from '@/domain/library';
 import { labelType } from '@/domain/rslang/labels';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { TextURL } from '@/components/control';
 import { createColumnHelper, DataTable, type RowSelectionState, type VisibilityState } from '@/components/data-table';

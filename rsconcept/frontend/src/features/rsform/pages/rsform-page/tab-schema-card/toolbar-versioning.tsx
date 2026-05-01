@@ -1,6 +1,6 @@
 'use client';
 
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -12,7 +12,6 @@ import { IconNewVersion, IconUpload, IconVersions } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { formatLabel, lid } from '@/utils/labels';
 import { promptUnsaved } from '@/utils/utils';
 
 import { useSchemaEdit } from '../schema-edit-context';

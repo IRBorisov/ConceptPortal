@@ -5,7 +5,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 
 import { type ArgumentValue, type Constituenta, type RSForm } from '@/domain/library';
 import { isFunctional, isLogical } from '@/domain/library/rsform-api';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';
 import { DataTable, type IConditionalStyle } from '@/components/data-table';

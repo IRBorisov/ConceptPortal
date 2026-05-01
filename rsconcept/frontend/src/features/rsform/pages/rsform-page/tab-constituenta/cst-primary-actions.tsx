@@ -2,7 +2,7 @@
 
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { cstCanProduceStructure } from '@/domain/library/rsform-api';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
@@ -12,7 +12,6 @@ import { cn } from '@/components/utils';
 import { IndicatorPill } from '@/components/view/indicator-pill';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { formatLabel, lid } from '@/utils/labels';
 
 export function isConstituentaEditorDisabled(activeCst: Constituenta | null | undefined, isContentEditable: boolean) {
   return !activeCst || !isContentEditable;

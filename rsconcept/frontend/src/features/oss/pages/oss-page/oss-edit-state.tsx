@@ -3,6 +3,7 @@
 import { useEffect, useEffectEvent, useState } from 'react';
 
 import { NodeType, type Operation, OperationType } from '@/domain/library';
+import { formatLabel, lid } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
@@ -13,7 +14,6 @@ import { useRoleStore, UserRole } from '@/features/users';
 import { useAdjustRole } from '@/features/users/stores/use-adjust-role';
 
 import { usePreferencesStore } from '@/stores/preferences';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { useOss } from '../../backend/use-oss';
 

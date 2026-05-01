@@ -5,6 +5,7 @@ import fileDownload from 'js-file-download';
 
 import { NodeType, OperationType, type OssItem } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
+import { formatLabel, lid } from '@/i18n';
 
 import { type UpdateOperationDTO } from '@/features/oss/backend/types';
 
@@ -12,7 +13,6 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLOR_CODES } from '@/styling/colors';
 import { EXPORTS, PARAMETER, REACTFLOW_VIEWPORT } from '@/utils/constants';
-import { formatLabel, lid } from '@/utils/labels';
 import { cleanSvg } from '@/utils/svg';
 import { dataUrlToBlob, withPreventDefault } from '@/utils/utils';
 

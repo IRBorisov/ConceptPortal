@@ -5,6 +5,7 @@ import { type ReactNode } from 'react';
 import { type OperationSchema } from '@/domain/library';
 import { SubstitutionValidator } from '@/domain/library/oss-api';
 import { type Substitution } from '@/domain/library/rsform';
+import { formatLabel, lid } from '@/i18n';
 
 import { describeSubstitutionError } from '@/features/oss/labels';
 import { useRSForms } from '@/features/rsform/backend/use-rsforms';
@@ -12,7 +13,6 @@ import { PickSubstitutions } from '@/features/rsform/components/pick-substitutio
 
 import { TextArea } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
-import { formatLabel, lid } from '@/utils/labels';
 
 export interface DlgCreateSynthesisSubstitutionFields {
   SubstitutionsField: (props: CreateFieldProps<Substitution[]>) => ReactNode;

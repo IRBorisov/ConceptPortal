@@ -4,7 +4,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { isAxiosError } from 'axios';
 import { z } from 'zod';
 
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { PromptTabID } from '@/app/navigation/navigation-context';
 import { routes } from '@/app/urls';

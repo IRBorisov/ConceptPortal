@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';
 import { IconAccept, IconClose, IconPageLeft, IconPageRight } from '@/components/icons';

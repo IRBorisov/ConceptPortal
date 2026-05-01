@@ -6,7 +6,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { type LibraryItem, LibraryItemType, type OssLayout } from '@/domain/library';
 import { sortItemsForOSS } from '@/domain/library/oss-api';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { useLibrary } from '@/features/library/backend/use-library';
@@ -15,7 +15,6 @@ import { PickSchema } from '@/features/library/components/pick-schema';
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { type ImportSchemaDTO, schemaImportSchema } from '../backend/types';
 import { useImportSchema } from '../backend/use-import-schema';

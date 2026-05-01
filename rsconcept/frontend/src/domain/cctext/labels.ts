@@ -1,4 +1,4 @@
-import { formatLabel } from '@/i18n/format-app-message';
+import { formatLabel } from '@/i18n';
 import { labelGrammemeMessageId } from '@/i18n/labels/cctext-ui';
 
 import { type Grammeme } from './language';

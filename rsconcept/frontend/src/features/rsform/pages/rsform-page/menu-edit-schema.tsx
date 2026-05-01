@@ -2,7 +2,7 @@
 
 import { type Constituenta } from '@/domain/library';
 import { cstCanProduceStructure } from '@/domain/library/rsform-api';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';

@@ -1,7 +1,7 @@
 'use client';
 
 import { CstType } from '@/domain/library/rsform';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';

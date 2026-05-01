@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import { NodeType, OperationType } from '@/domain/library';
 import { type Position2D } from '@/domain/library';
 import { GRID_SIZE } from '@/domain/library/oss-layout-api';
+import { formatLabel, lid } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 
@@ -17,7 +18,6 @@ import { useMainHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { type UpdateOperationDTO } from '../../../backend/types';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';

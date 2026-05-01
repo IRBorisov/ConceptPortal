@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { IntlProvider, type IntlShape,useIntl } from 'react-intl';
+import { IntlProvider, type IntlShape, useIntl } from 'react-intl';
 import { Link, pdf, Text, View } from '@react-pdf/renderer';
 
 import { type Constituenta, type RSForm } from '@/domain/library';
@@ -10,11 +10,10 @@ import { getMessagesForLocale } from '@/i18n/messages';
 import { urls } from '@/app';
 
 import { CDocument } from '@/components/pdf/CDocument';
+import { pdfs } from '@/components/pdf/pdf-styles';
 import { usePreferencesStore } from '@/stores/preferences';
 import { external_urls } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
-
-import { pdfs } from '../../../components/pdf/pdf-styles';
 
 import { addSpaces, addSpacesTypification, hyphenateCyrillic, protectShortRussianWords } from './pdf-utils';
 

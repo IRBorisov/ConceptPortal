@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 import { type Operation, OperationType } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
-import { useTx } from '@/i18n/use-tx';
+import { formatLabel, lid,useTx  } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { useLibrary } from '@/features/library/backend/use-library';
@@ -24,7 +24,6 @@ import {
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
-import { formatLabel, lid } from '@/utils/labels';
 
 import { useCloneSchema } from '../../../../backend/use-clone-schema';
 import { useCreateInput } from '../../../../backend/use-create-input';

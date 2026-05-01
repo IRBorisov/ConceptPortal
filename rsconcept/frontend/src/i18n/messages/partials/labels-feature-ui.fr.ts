@@ -1,12 +1,13 @@
 import { Grammeme } from '@/domain/cctext/language';
 import { RSErrorCode } from '@/domain/rslang/error';
-import { aiLid } from '@/i18n/labels/ai-ui';
-import { cctextLid, labelGrammemeMessageId } from '@/i18n/labels/cctext-ui';
-import { libraryLid } from '@/i18n/labels/library-ui';
-import { ossLid } from '@/i18n/labels/oss-ui';
-import { rslangLid } from '@/i18n/labels/rslang-ui';
-import { rsmodelLid } from '@/i18n/labels/rsmodel-ui';
-import { usersLid } from '@/i18n/labels/users-ui';
+
+import { aiLid } from '../../labels/ai-ui';
+import { cctextLid, labelGrammemeMessageId } from '../../labels/cctext-ui';
+import { libraryLid } from '../../labels/library-ui';
+import { ossLid } from '../../labels/oss-ui';
+import { rslangLid } from '../../labels/rslang-ui';
+import { rsmodelLid } from '../../labels/rsmodel-ui';
+import { usersLid } from '../../labels/users-ui';
 
 const GRAMMEME_FR: Record<Grammeme, string> = {
   [Grammeme.NOUN]: 'POS : nom',

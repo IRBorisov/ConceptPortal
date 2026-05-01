@@ -1,10 +1,11 @@
 import { AccessPolicy, type CurrentVersion, LibraryItemType, LocationHead, type VersionInfo } from '@/domain/library';
 import { type FolderNode } from '@/domain/library/folder-tree';
 import { validateLocation } from '@/domain/library/library-api';
-import { formatLabel } from '@/i18n/format-app-message';
-import { libraryLid } from '@/i18n/labels/library-ui';
 
 import { type RO } from '@/utils/meta';
+
+import { formatLabel } from '../../i18n/format-app-message';
+import { libraryLid } from '../../i18n/labels/library-ui';
 
 const LOCATION_LID: Record<LocationHead, string> = {
   [LocationHead.USER]: libraryLid.location.user,

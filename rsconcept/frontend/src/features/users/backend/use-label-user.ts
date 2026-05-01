@@ -1,4 +1,4 @@
-import { formatAppMessage } from '@/i18n/format-app-message';
+import { formatAppMessage } from '@/i18n';
 
 import { useUsers } from './use-users';
 

@@ -4,6 +4,7 @@ import { useEffect, useEffectEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { RSEngine } from '@/domain/library';
+import { formatLabel, lid } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
@@ -13,8 +14,6 @@ import { useDeleteItem } from '@/features/library/backend/use-delete-item';
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { SchemaEditState } from '@/features/rsform/pages/rsform-page/schema-edit-state';
 import { useRoleStore, UserRole } from '@/features/users';
-
-import { formatLabel, lid } from '@/utils/labels';
 
 import { useClearValues } from '../../backend/use-clear-values';
 import { useMutatingRSModel } from '../../backend/use-mutating-rsmodel';

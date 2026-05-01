@@ -2,7 +2,7 @@
 
 import { type Constituenta } from '@/domain/library';
 import { labelType } from '@/domain/rslang/labels';
-import { useTx } from '@/i18n/use-tx';
+import { useTx } from '@/i18n';
 
 import { BadgeConstituenta } from '@/features/rsform/components/badge-constituenta';
 import { BadgeEvaluation } from '@/features/rsmodel/components/badge-evaluation';
