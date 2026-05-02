@@ -3,7 +3,7 @@
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { AccessPolicy, type LibraryItem, LibraryItemType } from '@/domain/library';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 
@@ -71,10 +71,10 @@ export function DlgCloneLibraryItem() {
     <ModalForm
       header={
         base.item_type === LibraryItemType.RSFORM
-          ? tx('ui.dlg.clone.headerRsform', 'Create copy of conceptual schema')
-          : tx('ui.dlg.clone.headerRsmodel', 'Create copy of conceptual model')
+          ? tx('ui.dlg.clone.headerRsform')
+          : tx('ui.dlg.clone.headerRsmodel')
       }
-      submitText={tx('ui.action.create', 'Create')}
+      submitText={tx('ui.action.create')}
       canSubmit={isValid}
       onSubmit={event => {
         event.preventDefault();
@@ -87,11 +87,11 @@ export function DlgCloneLibraryItem() {
         {field => (
           <TextInput
             id='dlg_full_name' //
-            label={tx('ui.label.title', 'Title')}
+            label={tx('ui.label.title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>
@@ -101,17 +101,17 @@ export function DlgCloneLibraryItem() {
           {field => (
             <TextInput
               id='dlg_alias'
-              label={tx('ui.label.alias', 'Abbreviation')}
+              label={tx('ui.label.alias')}
               className='w-64'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={field.state.meta.errors[0]?.message}
+              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
             />
           )}
         </form.Field>
         <div className='flex flex-col gap-2'>
-          <Label text={tx('ui.label.access', 'Access')} className='self-center select-none' />
+          <Label text={tx('ui.label.access')} className='self-center select-none' />
           <div className='ml-auto cc-icons'>
             <form.Field name='item_data.access_policy'>
               {field => (
@@ -127,10 +127,10 @@ export function DlgCloneLibraryItem() {
                 <MiniButton
                   title={
                     field.state.value
-                      ? tx('ui.dlg.clone.libraryShow', 'Library: show')
-                      : tx('ui.dlg.clone.libraryHide', 'Library: hide')
+                      ? tx('ui.dlg.clone.libraryShow')
+                      : tx('ui.dlg.clone.libraryHide')
                   }
-                  aria-label={tx('ui.dlg.clone.libraryToggleAria', 'Toggle library visibility')}
+                  aria-label={tx('ui.dlg.clone.libraryToggleAria')}
                   icon={<IconItemVisibility value={field.state.value ?? true} />}
                   onClick={() => field.handleChange(!(field.state.value ?? false))}
                 />
@@ -146,7 +146,7 @@ export function DlgCloneLibraryItem() {
             value={field.state.value ?? ''}
             rows={2}
             onChange={field.handleChange}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>
@@ -155,13 +155,13 @@ export function DlgCloneLibraryItem() {
         {field => (
           <TextArea
             id='dlg_comment'
-            label={tx('ui.label.description', 'Description')}
+            label={tx('ui.label.description')}
             placeholder={formatLabel(lid.placeholder.itemDescription)}
             rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>
@@ -171,7 +171,7 @@ export function DlgCloneLibraryItem() {
           {field => (
             <Checkbox
               id='dlg_only_selected'
-              label={tx('ui.dlg.createVersion.onlySelected', 'Only selected constituents [{n} of {total}]', {
+              label={tx('ui.dlg.createVersion.onlySelected', {
                 n: selected.length,
                 total: totalCount
               })}

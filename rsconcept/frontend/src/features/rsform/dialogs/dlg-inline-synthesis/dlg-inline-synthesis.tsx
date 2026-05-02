@@ -4,7 +4,7 @@ import { Suspense, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { type RSForm, type Substitution } from '@/domain/library';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
@@ -72,8 +72,8 @@ export function DlgInlineSynthesis() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.inlineSynthesis.header', 'Import conceptual schema')}
-      submitText={tx('ui.action.addConstituents', 'Add constituents')}
+      header={tx('ui.dlg.inlineSynthesis.header')}
+      submitText={tx('ui.action.addConstituents')}
       className='w-160 h-132 px-6'
       canSubmit={canSubmit}
       validationHint={canSubmit ? '' : formatLabel(lid.hint.sourceEmpty)}
@@ -82,24 +82,24 @@ export function DlgInlineSynthesis() {
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
           <TabLabel
-            label={tx('ui.tab.inlineSynthesis.schema', 'Schema')}
-            title={tx('ui.tab.inlineSynthesis.schemaTitle', 'Constituent source')}
+            label={tx('ui.tab.inlineSynthesis.schema')}
+            title={tx('ui.tab.inlineSynthesis.schemaTitle')}
           />
           <TabLabel
-            label={tx('ui.tab.inlineSynthesis.constituents', 'Constituents')}
+            label={tx('ui.tab.inlineSynthesis.constituents')}
             title={
               !sourceID
-                ? tx('ui.tab.inlineSynthesis.selectSchemaFirst', 'Select a schema')
-                : tx('ui.tab.inlineSynthesis.constituentsTitle', 'Constituent list')
+                ? tx('ui.tab.inlineSynthesis.selectSchemaFirst')
+                : tx('ui.tab.inlineSynthesis.constituentsTitle')
             }
             disabled={!sourceID}
           />
           <TabLabel
-            label={tx('ui.tab.inlineSynthesis.substitutions', 'Substitutions')}
+            label={tx('ui.tab.inlineSynthesis.substitutions')}
             title={
               !sourceID
-                ? tx('ui.tab.inlineSynthesis.selectSchemaFirst', 'Select a schema')
-                : tx('ui.tab.inlineSynthesis.substitutionsTitle', 'Substitution table')
+                ? tx('ui.tab.inlineSynthesis.selectSchemaFirst')
+                : tx('ui.tab.inlineSynthesis.substitutionsTitle')
             }
             disabled={!sourceID}
           />

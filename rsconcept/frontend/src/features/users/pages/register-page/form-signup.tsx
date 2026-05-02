@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useForm } from '@tanstack/react-form';
 
-import { useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -69,28 +69,25 @@ export function FormSignup() {
       }}
       onChange={resetErrors}
     >
-      <h1>{tx('auth.register.title', 'New user')}</h1>
+      <h1>{tx('auth.register.title')}</h1>
 
       <div className='flex gap-12'>
         <fieldset className='cc-column w-60'>
-          <legend className='sr-only'>{tx('auth.register.legendLogin', 'Sign-in credentials')}</legend>
+          <legend className='sr-only'>{tx('auth.register.legendLogin')}</legend>
 
           <form.Field name='username'>
             {field => (
               <TextInput
                 id='username'
                 autoComplete='username'
-                label={tx('auth.register.username', 'Username (login)')}
+                label={tx('auth.register.username')}
                 spellCheck={false}
                 pattern={patterns.login}
-                title={tx(
-                  'auth.register.usernameTitle',
-                  'At least 3 characters. Latin letters and digits. Cannot start with a digit'
-                )}
+                title={tx('auth.register.usernameTitle')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
+                error={field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined}
               />
             )}
           </form.Field>
@@ -100,11 +97,11 @@ export function FormSignup() {
                 id='password'
                 type='password'
                 autoComplete='new-password'
-                label={tx('auth.register.password', 'Password')}
+                label={tx('auth.register.password')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
+                error={field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined}
               />
             )}
           </form.Field>
@@ -114,18 +111,18 @@ export function FormSignup() {
                 id='password2'
                 type='password'
                 autoComplete='new-password'
-                label={tx('auth.register.password2', 'Repeat password')}
+                label={tx('auth.register.password2')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
+                error={field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined}
               />
             )}
           </form.Field>
         </fieldset>
 
         <fieldset className='cc-column w-60 relative'>
-          <legend className='sr-only'>{tx('auth.register.legendProfile', 'User profile')}</legend>
+          <legend className='sr-only'>{tx('auth.register.legendProfile')}</legend>
 
           <IconHelp
             id={globalIDs.email_tooltip}
@@ -133,7 +130,7 @@ export function FormSignup() {
             size='1.25rem'
           />
           <Tooltip anchorSelect={`#${globalIDs.email_tooltip}`} offset={6}>
-            {tx('auth.register.emailTooltip', 'Email is used for password recovery')}
+            {tx('auth.register.emailTooltip')}
           </Tooltip>
           <form.Field name='email'>
             {field => (
@@ -142,12 +139,12 @@ export function FormSignup() {
                 autoComplete='email'
                 required
                 spellCheck={false}
-                label={tx('auth.register.email', 'Email address')}
-                title={tx('auth.register.emailTitle', 'Email in a valid format')}
+                label={tx('auth.register.email')}
+                title={tx('auth.register.emailTitle')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
+                error={field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined}
               />
             )}
           </form.Field>
@@ -156,11 +153,11 @@ export function FormSignup() {
               <TextInput
                 id='first_name'
                 autoComplete='given-name'
-                label={tx('auth.register.firstName', 'Display first name')}
+                label={tx('auth.register.firstName')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
+                error={field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined}
               />
             )}
           </form.Field>
@@ -169,11 +166,11 @@ export function FormSignup() {
               <TextInput
                 id='last_name'
                 autoComplete='family-name'
-                label={tx('auth.register.lastName', 'Display last name')}
+                label={tx('auth.register.lastName')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
+                error={field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined}
               />
             )}
           </form.Field>
@@ -183,36 +180,36 @@ export function FormSignup() {
       <div className='flex gap-1 text-sm'>
         <Checkbox
           id='accept_terms'
-          label={tx('auth.register.acceptPrivacy', 'I accept the terms of')}
+          label={tx('auth.register.acceptPrivacy')}
           value={acceptPrivacy}
           onChange={setAcceptPrivacy}
         />
         <TextURL
-          text={tx('auth.register.linkPrivacy', 'personal data processing…')}
+          text={tx('auth.register.linkPrivacy')}
           href={urls.help_topic(HelpTopic.INFO_PRIVACY)}
         />
       </div>
       <div className='flex gap-1 text-sm'>
         <Checkbox
           id='accept_rules'
-          label={tx('auth.register.acceptRules', 'I accept ')}
+          label={tx('auth.register.acceptRules')}
           value={acceptRules}
           onChange={setAcceptRules}
         />
         <TextURL
-          text={tx('auth.register.linkRules', 'the portal rules…')}
+          text={tx('auth.register.linkRules')}
           href={urls.help_topic(HelpTopic.INFO_RULES)}
         />
       </div>
 
       <div className='flex justify-around mt-3'>
         <SubmitButton
-          text={tx('auth.register.submit', 'Register')}
+          text={tx('auth.register.submit')}
           className='min-w-40'
           loading={isPending}
           disabled={!acceptPrivacy || !acceptRules}
         />
-        <Button text={tx('auth.register.back', 'Back')} className='min-w-40' onClick={() => handleCancel()} />
+        <Button text={tx('auth.register.back')} className='min-w-40' onClick={() => handleCancel()} />
       </div>
       {serverError ? <ServerError error={serverError} /> : null}
     </form>

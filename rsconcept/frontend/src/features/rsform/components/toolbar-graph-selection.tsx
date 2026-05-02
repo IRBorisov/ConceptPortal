@@ -113,12 +113,12 @@ export function ToolbarGraphSelection({
     onChange([...value, ...graph.expandAllOutputs(value)]);
   }
 
-  const clearTitle = tx('ui.graphSelection.clear', 'Clear selection');
+  const clearTitle = tx('ui.graphSelection.clear');
 
   return (
     <div className={cn('cc-icons items-center', className)} {...restProps}>
       <MiniButton
-        title={tipHotkeys ? prepareTooltip(clearTitle, tx('ui.hotkey.esc', 'ESC')) : clearTitle}
+        title={tipHotkeys ? prepareTooltip(clearTitle, tx('ui.hotkey.esc')) : clearTitle}
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={handleSelectReset}
         disabled={emptySelection}
@@ -126,7 +126,7 @@ export function ToolbarGraphSelection({
 
       <div ref={selectedElementRef} onBlur={selectedHandleBlur} className='flex items-center relative'>
         <MiniButton
-          title={tx('ui.graphSelection.extendFromSelected', 'Extend from current selection…')}
+          title={tx('ui.graphSelection.extendFromSelected')}
           hideTitle={isSelectedOpen}
           icon={<IconContextSelection size='1.25rem' className='icon-primary' />}
           onClick={toggleSelected}
@@ -134,22 +134,22 @@ export function ToolbarGraphSelection({
         />
         <Dropdown isOpen={isSelectedOpen} className='-translate-x-1/2'>
           <DropdownButton
-            text={tx('ui.graphSelection.suppliers', 'Suppliers')}
+            text={tx('ui.graphSelection.suppliers')}
             title={
               tipHotkeys
-                ? prepareTooltip(tx('ui.graphSelection.suppliersTitle', 'Select suppliers'), '1')
-                : tx('ui.graphSelection.suppliersTitle', 'Select suppliers')
+                ? prepareTooltip(tx('ui.graphSelection.suppliersTitle'), '1')
+                : tx('ui.graphSelection.suppliersTitle')
             }
             icon={<IconGraphInputs size='1.25rem' className='icon-primary' />}
             onClick={handleExpandInputs}
             disabled={emptySelection}
           />
           <DropdownButton
-            text={tx('ui.graphSelection.consumers', 'Consumers')}
+            text={tx('ui.graphSelection.consumers')}
             title={
               tipHotkeys
-                ? prepareTooltip(tx('ui.graphSelection.consumersTitle', 'Select consumers'), '2')
-                : tx('ui.graphSelection.consumersTitle', 'Select consumers')
+                ? prepareTooltip(tx('ui.graphSelection.consumersTitle'), '2')
+                : tx('ui.graphSelection.consumersTitle')
             }
             icon={<IconGraphOutputs size='1.25rem' className='icon-primary' />}
             onClick={handleExpandOutputs}
@@ -157,22 +157,22 @@ export function ToolbarGraphSelection({
           />
 
           <DropdownButton
-            text={tx('ui.graphSelection.influencers', 'Influencers')}
+            text={tx('ui.graphSelection.influencers')}
             title={
               tipHotkeys
-                ? prepareTooltip(tx('ui.graphSelection.influencersTitle', 'Select all influencers'), '3')
-                : tx('ui.graphSelection.influencersTitle', 'Select all influencers')
+                ? prepareTooltip(tx('ui.graphSelection.influencersTitle'), '3')
+                : tx('ui.graphSelection.influencersTitle')
             }
             icon={<IconGraphCollapse size='1.25rem' className='icon-primary' />}
             onClick={handleSelectAllInputs}
             disabled={emptySelection}
           />
           <DropdownButton
-            text={tx('ui.graphSelection.dependents', 'Dependents')}
+            text={tx('ui.graphSelection.dependents')}
             title={
               tipHotkeys
-                ? prepareTooltip(tx('ui.graphSelection.dependentsTitle', 'Select all dependents'), '4')
-                : tx('ui.graphSelection.dependentsTitle', 'Select all dependents')
+                ? prepareTooltip(tx('ui.graphSelection.dependentsTitle'), '4')
+                : tx('ui.graphSelection.dependentsTitle')
             }
             icon={<IconGraphExpand size='1.25rem' className='icon-primary' />}
             onClick={handleSelectAllOutputs}
@@ -180,32 +180,23 @@ export function ToolbarGraphSelection({
           />
 
           <DropdownButton
-            text={tx('ui.graphSelection.maximize', 'Maximize')}
+            text={tx('ui.graphSelection.maximize')}
             title={
               !tipHotkeys
-                ? tx(
-                    'ui.graphSelection.maximizeHintMultiline',
-                    'Maximize:\nextend selection with constituents that depend only on the selection'
-                  )
+                ? tx('ui.graphSelection.maximizeHintMultiline')
                 : prepareTooltip(
-                    tx(
-                      'ui.graphSelection.maximizeHintLine',
-                      'Maximize: extend selection with constituents that depend only on the selection'
-                    ),
+                    tx('ui.graphSelection.maximizeHintLine'),
                     '5'
                   )
             }
-            aria-label={tx(
-              'ui.graphSelection.maximizeAria',
-              'Maximize: extend selection with constituents that depend only on the selection'
-            )}
+            aria-label={tx('ui.graphSelection.maximizeAria')}
             icon={<IconGraphMaximize size='1.25rem' className='icon-primary' />}
             onClick={handleSelectMaximize}
             disabled={emptySelection}
           />
           <DropdownButton
-            text={tx('ui.graphSelection.invert', 'Invert')}
-            title={tipHotkeys ? prepareTooltip(tx('ui.graphSelection.invert', 'Invert'), '6') : undefined}
+            text={tx('ui.graphSelection.invert')}
+            title={tipHotkeys ? prepareTooltip(tx('ui.graphSelection.invert'), '6') : undefined}
             icon={<IconGraphInverse size='1.25rem' className='icon-primary' />}
             onClick={handleSelectInvert}
           />
@@ -214,48 +205,48 @@ export function ToolbarGraphSelection({
 
       <div ref={groupElementRef} onBlur={groupHandleBlur} className='flex items-center relative'>
         <MiniButton
-          title={tx('ui.graphSelection.pickGroup', 'Select group…')}
+          title={tx('ui.graphSelection.pickGroup')}
           hideTitle={isGroupOpen}
           icon={<IconGroupSelection size='1.25rem' className='icon-primary' />}
           onClick={toggleGroup}
         />
         <Dropdown isOpen={isGroupOpen} stretchLeft>
           <DropdownButton
-            text={tx('ui.graphSelection.core', 'core')}
+            text={tx('ui.graphSelection.core')}
             title={
               tipHotkeys
-                ? prepareTooltip(tx('ui.graphSelection.coreTitle', 'Select core'), 'Z')
-                : tx('ui.graphSelection.coreTitle', 'Select core')
+                ? prepareTooltip(tx('ui.graphSelection.coreTitle'), 'Z')
+                : tx('ui.graphSelection.coreTitle')
             }
             icon={<IconGraphCore size='1.25rem' className='icon-primary' />}
             onClick={handleSelectCore}
           />
           <DropdownButton
-            text={tx('ui.graphSelection.crucial', 'crucial')}
+            text={tx('ui.graphSelection.crucial')}
             title={
               tipHotkeys
-                ? prepareTooltip(tx('ui.graphSelection.crucialTitle', 'Select crucial'), 'X')
-                : tx('ui.graphSelection.crucialTitle', 'Select crucial')
+                ? prepareTooltip(tx('ui.graphSelection.crucialTitle'), 'X')
+                : tx('ui.graphSelection.crucialTitle')
             }
             icon={<IconCrucial size='1.25rem' className='icon-primary' />}
             onClick={handleSelectCrucial}
           />
           <DropdownButton
-            text={tx('ui.graphSelection.owned', 'own')}
+            text={tx('ui.graphSelection.owned')}
             title={
               tipHotkeys
-                ? prepareTooltip(tx('ui.graphSelection.ownedTitle', 'Select own'), 'C')
-                : tx('ui.graphSelection.ownedTitle', 'Select own')
+                ? prepareTooltip(tx('ui.graphSelection.ownedTitle'), 'C')
+                : tx('ui.graphSelection.ownedTitle')
             }
             icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
             onClick={handleSelectOwned}
           />
           <DropdownButton
-            text={tx('ui.graphSelection.inherited', 'inherited')}
+            text={tx('ui.graphSelection.inherited')}
             title={
               tipHotkeys
-                ? prepareTooltip(tx('ui.graphSelection.inheritedTitle', 'Select inherited'), 'Y')
-                : tx('ui.graphSelection.inheritedTitle', 'Select inherited')
+                ? prepareTooltip(tx('ui.graphSelection.inheritedTitle'), 'Y')
+                : tx('ui.graphSelection.inheritedTitle')
             }
             icon={<IconChild size='1.25rem' className='icon-primary' />}
             onClick={handleSelectInherited}

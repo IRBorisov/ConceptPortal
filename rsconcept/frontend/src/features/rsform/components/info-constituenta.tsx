@@ -18,7 +18,7 @@ export function InfoConstituenta({ data, className, ...restProps }: InfoConstitu
     <div className={cn('dense min-w-60 wrap-break-word', className)} {...restProps}>
       <h2
         className='cursor-default'
-        title={data.is_inherited ? tx('ui.rsform.cstInfo.inheritedTitle', 'inherited') : undefined}
+        title={data.is_inherited ? tx('ui.rsform.cstInfo.inheritedTitle') : undefined}
       >
         {data.alias}
         {data.is_inherited ? <IconChild size='1rem' className='inline-icon align-middle ml-1 mt-1' /> : null}
@@ -26,35 +26,35 @@ export function InfoConstituenta({ data, className, ...restProps }: InfoConstitu
       </h2>
       {data.term_resolved ? (
         <p>
-          <b>{tx('ui.rsform.cstInfo.termLabel', 'Term: ')}</b>
+          <b>{tx('ui.rsform.cstInfo.termLabel')}</b>
           {data.term_resolved || data.term_raw}
         </p>
       ) : null}
       <p className='break-all'>
-        <b>{tx('ui.rsform.cstInfo.typificationLabel', 'Typification: ')}</b>
+        <b>{tx('ui.rsform.cstInfo.typificationLabel')}</b>
         <span className='font-math'>{labelType(data.analysis?.type ?? null)}</span>
       </p>
       {data.definition_formal ? (
         <p className='break-all'>
-          <b>{tx('ui.rsform.cstInfo.expressionLabel', 'Expression: ')}</b>
+          <b>{tx('ui.rsform.cstInfo.expressionLabel')}</b>
           <span className='font-math'>{data.definition_formal}</span>
         </p>
       ) : null}
       {data.definition_resolved ? (
         <p>
-          <b>{tx('ui.rsform.cstInfo.definitionLabel', 'Definition: ')}</b>
+          <b>{tx('ui.rsform.cstInfo.definitionLabel')}</b>
           {data.definition_resolved}
         </p>
       ) : null}
       {data.spawner_alias ? (
         <p>
-          <b>{tx('ui.rsform.cstInfo.baseLabel', 'Base: ')}</b>
+          <b>{tx('ui.rsform.cstInfo.baseLabel')}</b>
           {data.spawner_alias}
         </p>
       ) : null}
       {data.spawn_alias.length > 0 ? (
         <p>
-          <b>{tx('ui.rsform.cstInfo.generatesLabel', 'Generates: ')}</b>
+          <b>{tx('ui.rsform.cstInfo.generatesLabel')}</b>
           {data.spawn_alias.join(', ')}
         </p>
       ) : null}
@@ -62,8 +62,8 @@ export function InfoConstituenta({ data, className, ...restProps }: InfoConstitu
         <p>
           <b>
             {isBasicConcept(data.cst_type)
-              ? tx('ui.rsform.cstInfo.conventionLabel', 'Convention: ')
-              : tx('ui.rsform.cstInfo.commentLabel', 'Comment: ')}
+              ? tx('ui.rsform.cstInfo.conventionLabel')
+              : tx('ui.rsform.cstInfo.commentLabel')}
           </b>
           {data.convention}
         </p>

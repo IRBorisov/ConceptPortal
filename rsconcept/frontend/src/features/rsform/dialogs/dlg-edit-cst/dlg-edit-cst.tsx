@@ -4,7 +4,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type Constituenta, type CstType, type RSForm } from '@/domain/library';
 import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 
@@ -120,22 +120,22 @@ export function DlgEditCst() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.editCst.header', 'Edit constituent')}
+      header={tx('ui.dlg.editCst.header')}
       canSubmit={canSubmit}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
       validationHint={canSubmit ? '' : formatLabel(lid.hint.aliasInvalid)}
-      submitText={tx('ui.action.save', 'Save')}
+      submitText={tx('ui.action.save')}
       className='cc-column w-140 max-h-120 py-2 px-6'
     >
       <div className='cc-icons absolute z-pop left-2 top-2'>
         <MiniButton
-          title={tx('ui.dlg.editCst.titleDetailedEdit', 'Detailed editing')}
+          title={tx('ui.dlg.editCst.titleDetailedEdit')}
           noPadding
           icon={<IconRSForm size='1.25rem' className='text-primary' />}
           onClick={navigateToTarget}
         />
         <MiniButton
-          title={tx('ui.dlg.editCst.titleGoToAncestor', 'Go to ancestor')}
+          title={tx('ui.dlg.editCst.titleGoToAncestor')}
           noPadding
           icon={<IconChild size='1.25rem' className={target.is_inherited ? 'text-primary' : 'text-foreground-muted'} />}
           disabled={!target.is_inherited}

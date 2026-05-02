@@ -51,8 +51,8 @@ export function DlgDeleteReplica() {
   return (
     <ModalForm
       overflowVisible
-      header={tx('ui.oss.deleteReplica.header', 'Delete replica')}
-      submitText={tx('ui.oss.deleteReplica.submit', 'Confirm deletion')}
+      header={tx('ui.oss.deleteReplica.header')}
+      submitText={tx('ui.oss.deleteReplica.submit')}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
@@ -66,17 +66,14 @@ export function DlgDeleteReplica() {
         dense
         noBorder
         id='operation_alias'
-        label={tx('ui.oss.deleteReplica.operationLabel', 'Operation')}
+        label={tx('ui.oss.deleteReplica.operationLabel')}
         value={target.alias}
       />
       <form.Field name='keep_connections'>
         {field => (
           <Checkbox
-            label={tx('ui.oss.deleteReplica.relinkArgs', 'Reroute links to the original')}
-            title={tx(
-              'ui.oss.deleteReplica.relinkArgsHint',
-              'Argument links will be redirected to the replica original'
-            )}
+            label={tx('ui.oss.deleteReplica.relinkArgs')}
+            title={tx('ui.oss.deleteReplica.relinkArgsHint')}
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
             disabled={target.result === null}
@@ -86,8 +83,8 @@ export function DlgDeleteReplica() {
       <form.Field name='keep_constituents'>
         {field => (
           <Checkbox
-            label={tx('ui.oss.deleteReplica.keepInherited', 'Keep inherited constituents')}
-            title={tx('ui.oss.deleteReplica.keepInheritedHint', 'Inherited constituents\nwill become appended ones')}
+            label={tx('ui.oss.deleteReplica.keepInherited')}
+            title={tx('ui.oss.deleteReplica.keepInheritedHint')}
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
             disabled={target.result === null || keep_connections}

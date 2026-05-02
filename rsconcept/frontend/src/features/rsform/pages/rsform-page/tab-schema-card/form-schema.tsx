@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type CurrentVersion, LibraryItemType } from '@/domain/library';
 import { type RSForm } from '@/domain/library/rsform';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { useConceptNavigation, useRegisterNavigationSave } from '@/app';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
@@ -98,18 +98,18 @@ export function FormSchema({ className }: FormSchemaProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none font-math'>{tx('ui.page.rsform', 'Conceptual schema')}</h2>
+      <h2 className='mb-2 select-none font-math'>{tx('ui.page.rsform')}</h2>
       <form.Field name='title'>
         {field => (
           <TextInput
             id='schema_title'
-            aria-label={tx('ui.field.rsformTitle', 'Schema title')}
-            placeholder={tx('ui.field.rsformTitle', 'Schema title')}
+            aria-label={tx('ui.field.rsformTitle')}
+            placeholder={tx('ui.field.rsformTitle')}
             className='mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
             disabled={!isContentEditable}
           />
         )}
@@ -119,12 +119,12 @@ export function FormSchema({ className }: FormSchemaProps) {
           {field => (
             <TextInput
               id='schema_alias'
-              label={tx('ui.label.alias', 'Abbreviation')}
+              label={tx('ui.label.alias')}
               className='w-64'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={field.state.meta.errors[0]?.message}
+              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
               disabled={!isContentEditable}
             />
           )}
@@ -132,7 +132,7 @@ export function FormSchema({ className }: FormSchemaProps) {
         <div className='relative flex flex-col gap-2'>
           <ToolbarVersioning className='absolute -top-1 right-2' blockReload={schema.oss.length > 0} />
 
-          <Label text={tx('ui.label.version', 'Version')} className='select-none w-fit' />
+          <Label text={tx('ui.label.version')} className='select-none w-fit' />
           <SelectVersion
             disabled={!isContentEditable && schema.versions.length === 0}
             id='schema_version'
@@ -158,13 +158,13 @@ export function FormSchema({ className }: FormSchemaProps) {
           {field => (
             <TextArea
               id='schema_comment'
-              label={tx('ui.label.description', 'Description')}
+              label={tx('ui.label.description')}
               placeholder={formatLabel(lid.placeholder.itemDescription)}
               rows={5}
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={field.state.meta.errors[0]?.message}
+              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
               disabled={!isContentEditable || isProcessing}
             />
           )}
@@ -172,8 +172,8 @@ export function FormSchema({ className }: FormSchemaProps) {
       </div>
       {isContentEditable || !isDefaultValue ? (
         <SubmitButton
-          text={tx('ui.action.saveChanges', 'Save changes')}
-          title={prepareTooltip(tx('ui.action.saveChanges', 'Save changes'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+          text={tx('ui.action.saveChanges')}
+          title={prepareTooltip(tx('ui.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
           className='self-center mt-4'
           loading={isProcessing}
           icon={<IconSave size='1.25rem' />}

@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type OssLayout } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -60,8 +60,8 @@ export function DlgEditBlock() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.editBlock.header', 'Edit block')}
-      submitText={tx('ui.action.save', 'Save')}
+      header={tx('ui.dlg.editBlock.header')}
+      submitText={tx('ui.action.save')}
       canSubmit={canSubmit}
       onSubmit={event => {
         event.preventDefault();
@@ -75,12 +75,12 @@ export function DlgEditBlock() {
         {field => (
           <TextInput
             id='operation_title'
-            aria-label={tx('ui.oss.blockTitle', 'Block title')}
-            placeholder={tx('ui.oss.blockTitle', 'Block title')}
+            aria-label={tx('ui.oss.blockTitle')}
+            placeholder={tx('ui.oss.blockTitle')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>
@@ -92,7 +92,7 @@ export function DlgEditBlock() {
             <SelectParent
               items={manager.oss.blocks.filter(block => !descendantNodeIDs.includes(block.nodeID))}
               value={field.state.value ? (manager.oss.blockByID.get(field.state.value) ?? null) : null}
-              placeholder={tx('ui.oss.parentBlock', 'Parent block')}
+              placeholder={tx('ui.oss.parentBlock')}
               onChange={value => field.handleChange(value ? value.id : null)}
             />
           );
@@ -103,7 +103,7 @@ export function DlgEditBlock() {
         {field => (
           <TextArea
             id='operation_comment'
-            label={tx('ui.label.description', 'Description')}
+            label={tx('ui.label.description')}
             placeholder={formatLabel(lid.placeholder.itemDescription)}
             noResize
             rows={5}

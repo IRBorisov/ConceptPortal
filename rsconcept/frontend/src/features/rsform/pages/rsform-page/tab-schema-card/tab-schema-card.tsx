@@ -60,7 +60,7 @@ export function TabSchemaCard() {
     >
       <div className='relative cc-column mx-0 md:mx-auto'>
         <ButtonSidebar
-          title={tx('ui.schemaCard.toggleStatsTitle', 'Show statistics')}
+          title={tx('ui.schemaCard.toggleStatsTitle')}
           show={showRSFormStats}
           isNarrow={isNarrow}
           onClick={toggleShowRSFormStats}

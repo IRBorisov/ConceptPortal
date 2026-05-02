@@ -20,7 +20,7 @@ interface SelectOperationProps extends Styling {
 
 export function SelectOperation({ items, placeholder, ...restProps }: SelectOperationProps) {
   const tx = useTx();
-  const resolvedPlaceholder = placeholder ?? tx('ui.oss.selectOperation.placeholder', 'Select operation');
+  const resolvedPlaceholder = placeholder ?? tx('ui.oss.selectOperation.placeholder');
   return (
     <ComboBox
       items={items}

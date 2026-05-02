@@ -61,7 +61,7 @@ export function ViewHidden({
       <MiniButton
         className='absolute right-[calc(1rem-4px)] top-3 pointer-events-auto'
         noPadding
-        title={!isFolded ? tx('ui.rsform.termGraph.fold', 'Collapse') : tx('ui.rsform.termGraph.unfold', 'Expand')}
+        title={!isFolded ? tx('ui.rsform.termGraph.fold') : tx('ui.rsform.termGraph.unfold')}
         icon={!isFolded ? <IconDropArrowUp size='1rem' /> : <IconDropArrow size='1rem' />}
         onClick={toggleFolded}
       />
@@ -69,11 +69,11 @@ export function ViewHidden({
       <div className={clsx('py-2 bg-input border-x', isFolded && 'border-b rounded-b-md')}>
         <div className={clsx('w-fit select-none cc-view-hidden-header', !isFolded && 'open')}>
           {localSelected
-            ? tx('ui.rsform.termGraph.hiddenWithCount', 'Hidden [{selected} | {total}]', {
+            ? tx('ui.rsform.termGraph.hiddenWithCount', {
                 selected: localSelected.length,
                 total: items.length
               })
-            : tx('ui.rsform.termGraph.hidden', 'Hidden')}
+            : tx('ui.rsform.termGraph.hidden')}
         </div>
       </div>
 

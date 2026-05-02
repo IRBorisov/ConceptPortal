@@ -1,155 +1,11 @@
-import { AI_UI_DEFAULTS } from './ai-ui';
-import { CCTEXT_UI_DEFAULTS } from './cctext-ui';
-import { LIBRARY_UI_DEFAULTS } from './library-ui';
-import { OSS_UI_DEFAULTS } from './oss-ui';
-import { RSFORM_UI_DEFAULTS } from './rsform-ui';
-import { RSLANG_UI_DEFAULTS } from './rslang-ui';
-import { RSMODEL_UI_DEFAULTS } from './rsmodel-ui';
-import { USERS_UI_DEFAULTS } from './users-ui';
+import { lid } from '../../labels/lid';
 
-/**
- * Central message ids + English defaults for shared UI copy (toasts, hints, Zod, prompts).
- * Russian and French live in `messages/partials/labels.*.ts`.
- */
-export const lid = {
-  error: {
-    astFailed: 'labels.error.astFailed',
-    aliasLength: 'labels.error.aliasLength',
-    emailLength: 'labels.error.emailLength',
-    titleLength: 'labels.error.titleLength',
-    descriptionLength: 'labels.error.descriptionLength',
-    textLength: 'labels.error.textLength',
-    typeStructureFailed: 'labels.error.typeStructureFailed',
-    passwordsMismatch: 'labels.error.passwordsMismatch',
-    passwordsSame: 'labels.error.passwordsSame',
-    imageFailed: 'labels.error.imageFailed',
-    reuseOriginal: 'labels.error.reuseOriginal',
-    substituteInherited: 'labels.error.substituteInherited',
-    inputAlreadyExists: 'labels.error.inputAlreadyExists',
-    requiredField: 'labels.error.requiredField',
-    emailField: 'labels.error.emailField',
-    invalidParse: 'labels.error.invalidParse',
-    rulesNotAccepted: 'labels.error.rulesNotAccepted',
-    privacyNotAccepted: 'labels.error.privacyNotAccepted',
-    loginFormat: 'labels.error.loginFormat',
-    invalidLocation: 'labels.error.invalidLocation',
-    emptySubstitutions: 'labels.error.emptySubstitutions',
-    invalidResponse: 'labels.error.invalidResponse',
-    connectionExists: 'labels.error.connectionExists',
-    cyclingEdge: 'labels.error.cyclingEdge',
-    changeInheritedDefinition: 'labels.error.changeInheritedDefinition',
-    addInheritedEdge: 'labels.error.addInheritedEdge',
-    deleteInheritedEdge: 'labels.error.deleteInheritedEdge',
-    pdfError: 'labels.error.pdfError',
-    ossSelfConnection: 'labels.error.ossSelfConnection',
-    ossCycle: 'labels.error.ossCycle',
-    invalidSetValue: 'labels.error.invalidSetValue',
-    clipboardRead: 'labels.error.clipboardRead',
-    clipboardWrite: 'labels.error.clipboardWrite',
-    fileRead: 'labels.error.fileRead',
-    fileTooLarge: 'labels.error.fileTooLarge',
-    valueNull: 'labels.error.valueNull',
-    sandboxImportError: 'labels.error.sandboxImportError',
-    sandboxBundleNotAvailable: 'labels.error.sandboxBundleNotAvailable',
-    failedToPersistSandbox: 'labels.error.failedToPersistSandbox',
-    cannotExtractNode: 'labels.error.cannotExtractNode',
-    formalDuplicates: 'labels.error.formalDuplicates',
-    sandboxFailedToLoad: 'labels.error.sandboxFailedToLoad',
-    bindingInvalid: 'labels.error.bindingInvalid',
-    valueInvalid: 'labels.error.valueInvalid',
-    generationMissingBasic: 'labels.error.generationMissingBasic'
-  },
-  info: {
-    changesSaved: 'labels.info.changesSaved',
-    pathReady: 'labels.info.pathReady',
-    substituteSingle: 'labels.info.substituteSingle',
-    reorderComplete: 'labels.info.reorderComplete',
-    reindexComplete: 'labels.info.reindexComplete',
-    moveComplete: 'labels.info.moveComplete',
-    linkReady: 'labels.info.linkReady',
-    promptReady: 'labels.info.promptReady',
-    valueReady: 'labels.info.valueReady',
-    versionRestored: 'labels.info.versionRestored',
-    locationRenamed: 'labels.info.locationRenamed',
-    cloneComplete: 'labels.info.cloneComplete',
-    noDataToExport: 'labels.info.noDataToExport',
-    substitutionsCorrect: 'labels.info.substitutionsCorrect',
-    uploadSuccess: 'labels.info.uploadSuccess',
-    inlineSynthesisComplete: 'labels.info.inlineSynthesisComplete',
-    moveSuccess: 'labels.info.moveSuccess',
-    sandboxImportSuccess: 'labels.info.sandboxImportSuccess',
-    valueLoadedJson: 'labels.info.valueLoadedJson',
-    newLibraryItem: 'labels.info.newLibraryItem',
-    addedConstituents: 'labels.info.addedConstituents',
-    newUser: 'labels.info.newUser',
-    newVersion: 'labels.info.newVersion',
-    newConstituent: 'labels.info.newConstituent',
-    newOperation: 'labels.info.newOperation',
-    versionDestroyed: 'labels.info.versionDestroyed',
-    itemDestroyed: 'labels.info.itemDestroyed',
-    operationDestroyed: 'labels.info.operationDestroyed',
-    blockDestroyed: 'labels.info.blockDestroyed',
-    operationExecuted: 'labels.info.operationExecuted',
-    allOperationExecuted: 'labels.info.allOperationExecuted',
-    constituentsDestroyed: 'labels.info.constituentsDestroyed',
-    dataCleared: 'labels.info.dataCleared',
-    modelCleared: 'labels.info.modelCleared',
-    calculationSuccess: 'labels.info.calculationSuccess'
-  },
-  hint: {
-    templateInvalid: 'labels.hint.templateInvalid',
-    formInvalid: 'labels.hint.formInvalid',
-    aliasInvalid: 'labels.hint.aliasInvalid',
-    aliasEmpty: 'labels.hint.aliasEmpty',
-    titleEmpty: 'labels.hint.titleEmpty',
-    blockTitleTaken: 'labels.hint.blockTitleTaken',
-    schemaAliasTaken: 'labels.hint.schemaAliasTaken',
-    versionEmpty: 'labels.hint.versionEmpty',
-    versionTaken: 'labels.hint.versionTaken',
-    relocateEmpty: 'labels.hint.relocateEmpty',
-    substitutionsEmpty: 'labels.hint.substitutionsEmpty',
-    sourceEmpty: 'labels.hint.sourceEmpty',
-    referenceInvalid: 'labels.hint.referenceInvalid',
-    fileEmpty: 'labels.hint.fileEmpty'
-  },
-  tooltip: {
-    unsaved: 'labels.tooltip.unsaved',
-    shareItemPublic: 'labels.tooltip.shareItemPublic',
-    shareItemPrivate: 'labels.tooltip.shareItemPrivate'
-  },
-  prompt: {
-    promptUnsaved: 'labels.prompt.promptUnsaved',
-    resetSandbox: 'labels.prompt.resetSandbox',
-    deleteLibraryItem: 'labels.prompt.deleteLibraryItem',
-    deleteBlock: 'labels.prompt.deleteBlock',
-    deleteArgument: 'labels.prompt.deleteArgument',
-    deleteTemplate: 'labels.prompt.deleteTemplate',
-    deleteOSS: 'labels.prompt.deleteOSS',
-    generateWordforms: 'labels.prompt.generateWordforms',
-    restoreArchive: 'labels.prompt.restoreArchive',
-    ownerChange: 'labels.prompt.ownerChange'
-  },
-  placeholder: {
-    itemDescription: 'labels.placeholder.itemDescription',
-    valueTooLarge: 'labels.placeholder.valueTooLarge'
-  },
-  errorDetail: {
-    noErrors: 'labels.errorDetail.noErrors',
-    validationTitle: 'labels.errorDetail.validationTitle',
-    genericTitle: 'labels.errorDetail.genericTitle',
-    genericDescription: 'labels.errorDetail.genericDescription',
-    noServerResponse: 'labels.errorDetail.noServerResponse',
-    api404: 'labels.errorDetail.api404',
-    csrfLost: 'labels.errorDetail.csrfLost',
-    responseTitle: 'labels.errorDetail.responseTitle',
-    responseDescription: 'labels.errorDetail.responseDescription',
-    contactIntro: 'labels.errorDetail.contactIntro',
-    reloadHint: 'labels.errorDetail.reloadHint'
-  }
-} as const;
+import { labelsFeatureEn } from './labels-feature.en';
 
-/** English defaults keyed by message id (for Zod and `format-app-message` helpers). */
-export const LABEL_DEFAULTS: Record<string, string> = {
+/** English label catalog (toasts, Zod, `formatLabel`, non-React helpers). */
+export const labelsEn: Record<string, string> = {
+  ...labelsFeatureEn,
+
   [lid.error.astFailed]: 'Unable to build parse tree',
   [lid.error.aliasLength]: 'Up to {n} characters',
   [lid.error.emailLength]: 'Up to {n} characters',
@@ -192,8 +48,7 @@ export const LABEL_DEFAULTS: Record<string, string> = {
   [lid.error.cannotExtractNode]: 'Cannot extract the selected node',
   [lid.error.formalDuplicates]: 'Formal expression matches constituents: {aliases}',
   [lid.error.sandboxFailedToLoad]: 'Failed to load sandbox. Initial bundle was loaded.',
-  [lid.error.bindingInvalid]:
-    'Invalid data format. Use JSON like { "1": "value1", "2": "value2", ... }',
+  [lid.error.bindingInvalid]: 'Invalid data format. Use JSON like { "1": "value1", "2": "value2", ... }',
   [lid.error.valueInvalid]: 'Invalid data format. Use JSON containing only numbers and arrays',
   [lid.error.generationMissingBasic]: 'Cannot generate: basic set has no elements',
 
@@ -277,16 +132,6 @@ export const LABEL_DEFAULTS: Record<string, string> = {
   [lid.errorDetail.csrfLost]: 'Server connection lost. Reload the page',
   [lid.errorDetail.responseTitle]: 'Error',
   [lid.errorDetail.responseDescription]: 'Details',
-  [lid.errorDetail.contactIntro]:
-    'Please take a screenshot and send it with a description to portal@acconcept.ru',
-  [lid.errorDetail.reloadHint]: 'Reload the page to continue working',
-
-  ...RSFORM_UI_DEFAULTS,
-  ...LIBRARY_UI_DEFAULTS,
-  ...OSS_UI_DEFAULTS,
-  ...RSMODEL_UI_DEFAULTS,
-  ...USERS_UI_DEFAULTS,
-  ...AI_UI_DEFAULTS,
-  ...CCTEXT_UI_DEFAULTS,
-  ...RSLANG_UI_DEFAULTS
+  [lid.errorDetail.contactIntro]: 'Please take a screenshot and send it with a description to portal@acconcept.ru',
+  [lid.errorDetail.reloadHint]: 'Reload the page to continue working'
 };

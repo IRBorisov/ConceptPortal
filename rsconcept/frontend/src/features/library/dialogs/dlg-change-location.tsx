@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { z } from 'zod';
 
 import { validateLocation } from '@/domain/library/library-api';
-import { lid,useTx  } from '@/i18n';
+import { formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -47,16 +47,12 @@ export function DlgChangeLocation() {
   return (
     <ModalForm
       overflowVisible
-      header={tx('ui.dlg.changeLocation.header', 'Change location')}
-      submitText={tx('ui.action.move', 'Move')}
+      header={tx('ui.dlg.changeLocation.header')}
+      submitText={tx('ui.action.move')}
       validationHint={
         isValid
           ? ''
-          : tx(
-              'ui.dlg.changeLocation.invalidHint',
-              'Letters, digits, underscore, space and "!" allowed. A path segment cannot start or end with a space. Total length (including root) must not exceed {maxLen}',
-              { maxLen: limits.len_location }
-            )
+          : tx('ui.dlg.changeLocation.invalidHint', { maxLen: limits.len_location })
       }
       canSubmit={isValid && !isDefaultValue}
       onSubmit={event => {
@@ -72,7 +68,7 @@ export function DlgChangeLocation() {
             dropdownHeight='h-38' //
             value={field.state.value ?? ''}
             onChange={field.handleChange}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>

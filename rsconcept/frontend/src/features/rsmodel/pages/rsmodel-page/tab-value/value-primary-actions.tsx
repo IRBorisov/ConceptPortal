@@ -9,7 +9,7 @@ import { generateRandomValue, isInferrable, isInterpretable } from '@/domain/lib
 import { type Value } from '@/domain/rslang';
 import { isSetValue, normalizeValue } from '@/domain/rslang/eval/value-api';
 import { isTypification, TypeID, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { useCstStatus } from '@/features/rsmodel/hooks/use-cst-status';
@@ -232,17 +232,17 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       {showValueButton ? (
         <TextButton
           text={
-            !cstInferrable && isMutable ? tx('ui.value.editValue', 'Edit value') : tx('ui.eval.viewValue', 'View value')
+            !cstInferrable && isMutable ? tx('ui.value.editValue') : tx('ui.eval.viewValue')
           }
-          title={tx('ui.value.viewOrEditTitle', 'View or edit value')}
+          title={tx('ui.value.viewOrEditTitle')}
           onClick={handleValueDialog}
         />
       ) : null}
 
       {showClearButton ? (
         <TextButton
-          text={tx('ui.value.clearValue', 'Clear value')}
-          title={tx('ui.value.clearValueTitle', 'Reset the computed value of the current constituent')}
+          text={tx('ui.value.clearValue')}
+          title={tx('ui.value.clearValueTitle')}
           onClick={handleClearValue}
           disabled={isProcessing}
         />
@@ -251,14 +251,14 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       {showExportMenu ? (
         <div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
           <TextButton
-            text={tx('ui.action.exportShort', 'Export')}
-            title={tx('ui.value.exportValueTitle', 'Export value')}
+            text={tx('ui.action.exportShort')}
+            title={tx('ui.value.exportValueTitle')}
             hideTitle={isExportOpen}
             onClick={toggleExport}
           />
           <Dropdown isOpen={isExportOpen} margin='mt-1'>
-            <DropdownButton text={tx('ui.eval.copyToClipboard', 'Copy to clipboard')} onClick={handleClipboardExport} />
-            <DropdownButton text={tx('ui.eval.saveAsJson', 'Save as JSON')} onClick={handleJSONExport} />
+            <DropdownButton text={tx('ui.eval.copyToClipboard')} onClick={handleClipboardExport} />
+            <DropdownButton text={tx('ui.eval.saveAsJson')} onClick={handleJSONExport} />
           </Dropdown>
         </div>
       ) : null}
@@ -266,17 +266,17 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       {showImportMenu ? (
         <div ref={importMenuRef} onBlur={handleImportBlur} className='relative'>
           <TextButton
-            text={tx('ui.action.importShort', 'Import')}
-            title={tx('ui.value.importValueTitle', 'Import value')}
+            text={tx('ui.action.importShort')}
+            title={tx('ui.value.importValueTitle')}
             hideTitle={isImportOpen}
             onClick={toggleImport}
           />
           <Dropdown isOpen={isImportOpen} margin='mt-1'>
             <DropdownButton
-              text={tx('ui.value.loadFromClipboard', 'Load from clipboard')}
+              text={tx('ui.value.loadFromClipboard')}
               onClick={handleClipboardImport}
             />
-            <DropdownButton text={tx('ui.value.loadFromJson', 'Load from JSON')} onClick={handleJSONImport} />
+            <DropdownButton text={tx('ui.value.loadFromJson')} onClick={handleJSONImport} />
           </Dropdown>
         </div>
       ) : null}
@@ -285,10 +285,10 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
         <TextButton
           text={
             typification.typeID === TypeID.collection
-              ? tx('ui.value.randomAddMany', 'Add random items')
-              : tx('ui.value.randomSingle', 'Random value')
+              ? tx('ui.value.randomAddMany')
+              : tx('ui.value.randomSingle')
           }
-          title={tx('ui.value.randomGenerateTitle', 'Generate random values for the current constituent')}
+          title={tx('ui.value.randomGenerateTitle')}
           onClick={handleAddRandomValues}
           disabled={isProcessing}
         />

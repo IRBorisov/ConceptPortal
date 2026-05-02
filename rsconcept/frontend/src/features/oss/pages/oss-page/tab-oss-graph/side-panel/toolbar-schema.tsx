@@ -170,63 +170,57 @@ export function ToolbarSchema({
     <div className={cn('flex gap-0.5', className)}>
       <div ref={elementRef} onBlur={handleBlur} className='flex relative items-center'>
         <MiniButton
-          title={tx('ui.oss.sideToolbar.editSchemaTitle', 'Edit conceptual schema')}
+          title={tx('ui.oss.sideToolbar.editSchemaTitle')}
           hideTitle={isOpen}
           icon={<IconRSForm size='1rem' className='icon-primary' />}
           onClick={toggle}
         />
         <Dropdown isOpen={isOpen} margin='mt-0.5'>
           <DropdownButton
-            text={tx('ui.rsform.menu.restoreOrder', 'Reorder list')}
-            title={tx(
-              'ui.rsform.menu.restoreOrderTitle',
-              'Reorder the list according to\ntypes logic and constituent links'
-            )}
-            aria-label={tx(
-              'ui.rsform.menu.restoreOrderAria',
-              'Reorder the list according to types logic and constituent links'
-            )}
+            text={tx('ui.rsform.menu.restoreOrder')}
+            title={tx('ui.rsform.menu.restoreOrderTitle')}
+            aria-label={tx('ui.rsform.menu.restoreOrderAria')}
             icon={<IconSortList size='1rem' className='icon-primary' />}
             onClick={handleRestoreOrder}
             disabled={!isMutable || isProcessing}
           />
           <DropdownButton
-            text={tx('ui.rsform.menu.ordinalNames', 'Ordinal names')}
-            title={tx('ui.rsform.menu.ordinalNamesTitle', 'Assign ordinal names\nand refresh expressions')}
-            aria-label={tx('ui.rsform.menu.ordinalNamesAria', 'Assign ordinal names and refresh expressions')}
+            text={tx('ui.rsform.menu.ordinalNames')}
+            title={tx('ui.rsform.menu.ordinalNamesTitle')}
+            aria-label={tx('ui.rsform.menu.ordinalNamesAria')}
             icon={<IconGenerateNames size='1rem' className='icon-primary' />}
             onClick={handleReindex}
             disabled={!isMutable || isProcessing}
           />
           <DropdownButton
-            title={tx('ui.oss.sideToolbar.openSchemaTitle', 'Go to conceptual schema')}
-            text={tx('ui.oss.sideToolbar.openSchema', 'Open CS')}
+            title={tx('ui.oss.sideToolbar.openSchemaTitle')}
+            text={tx('ui.oss.sideToolbar.openSchema')}
             icon={<IconRSForm size='1rem' className='icon-primary' />}
             onClick={handleOpenSchema}
           />
         </Dropdown>
       </div>
       <MiniButton
-        title={tx('ui.toolbar.editConstituenta', 'Edit constituent')}
+        title={tx('ui.toolbar.editConstituenta')}
         icon={<IconEdit size='1rem' className='icon-primary' />}
         onClick={onEditActive}
         disabled={!isMutable || isProcessing || !activeCst}
       />
       <MiniButton
-        title={tx('ui.toolbar.createConstituenta', 'Create constituent')}
+        title={tx('ui.toolbar.createConstituenta')}
         icon={<IconNewItem size='1rem' className='icon-green' />}
         onClick={createCst}
         disabled={!isMutable || isProcessing}
       />
       <MiniButton
-        title={tx('ui.toolbar.cloneConstituenta', 'Clone constituent')}
+        title={tx('ui.toolbar.cloneConstituenta')}
         icon={<IconClone size='1rem' className='icon-green' />}
         onClick={cloneCst}
         disabled={!isMutable || !activeCst || isProcessing}
       />
 
       <MiniButton
-        title={tx('ui.toolbar.deleteHighlightedConstituenta', 'Delete selected constituent')}
+        title={tx('ui.toolbar.deleteHighlightedConstituenta')}
         onClick={promptDeleteCst}
         icon={<IconDestroy size='1rem' className='icon-red' />}
         disabled={!isMutable || !activeCst || isProcessing || activeCst?.is_inherited}
@@ -234,12 +228,12 @@ export function ToolbarSchema({
 
       <MiniButton
         icon={<IconTree size='1rem' className='hover:text-primary' />}
-        title={tx('ui.oss.sideToolbar.termGraph', 'Term graph')}
+        title={tx('ui.oss.sideToolbar.termGraph')}
         onClick={handleShowTermGraph}
       />
       <MiniButton
         icon={<IconTypeGraph size='1rem' className='hover:text-primary' />}
-        title={tx('ui.oss.sideToolbar.typeGraph', 'Typing graph')}
+        title={tx('ui.oss.sideToolbar.typeGraph')}
         onClick={handleShowTypeGraph}
       />
 

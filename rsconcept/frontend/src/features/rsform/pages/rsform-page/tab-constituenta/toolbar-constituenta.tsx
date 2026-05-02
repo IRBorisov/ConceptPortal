@@ -1,7 +1,7 @@
 'use client';
 
 import { type Constituenta } from '@/domain/library';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -63,8 +63,8 @@ export function ToolbarConstituenta({
         <MiniButton
           title={
             activeCst.is_inherited
-              ? tx('ui.cst.gotoSourceInOss', 'Go to source constituent in OSS')
-              : tx('ui.cst.noPredecessor', 'Constituent has no predecessor')
+              ? tx('ui.cst.gotoSourceInOss')
+              : tx('ui.cst.noPredecessor')
           }
           onClick={event => openConstituentaPredecessor(activeCst.id, event.ctrlKey || event.metaKey)}
           icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
@@ -74,20 +74,20 @@ export function ToolbarConstituenta({
       {isContentEditable && activeCst ? (
         <>
           <MiniButton
-            title={prepareTooltip(tx('ui.action.saveChanges', 'Save changes'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
-            aria-label={tx('ui.action.saveChanges', 'Save changes')}
+            title={prepareTooltip(tx('ui.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+            aria-label={tx('ui.action.saveChanges')}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             onClick={onSubmit}
             disabled={disabled || !isModified}
           />
           <MiniButton
-            title={tx('ui.hint.resetUnsavedConstituenta', 'Discard unsaved changes')}
+            title={tx('ui.hint.resetUnsavedConstituenta')}
             icon={<IconReset size='1.25rem' className='icon-primary' />}
             onClick={onReset}
             disabled={disabled || !isModified}
           />
           <MiniButton
-            title={tx('ui.action.createConstituenta', 'Create constituent')}
+            title={tx('ui.action.createConstituenta')}
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
             onClick={() => void promptCreateCst(activeCst.cst_type)}
             disabled={!isContentEditable || isProcessing}
@@ -96,15 +96,15 @@ export function ToolbarConstituenta({
             title={
               isModified
                 ? formatLabel(lid.tooltip.unsaved)
-                : prepareTooltip(tx('ui.hint.cloneConstituenta', 'Clone constituent'), 'Alt + V')
+                : prepareTooltip(tx('ui.hint.cloneConstituenta'), 'Alt + V')
             }
-            aria-label={tx('ui.aria.cloneConstituenta', 'Clone constituent')}
+            aria-label={tx('ui.aria.cloneConstituenta')}
             icon={<IconClone size='1.25rem' className='icon-green' />}
             onClick={() => void cloneCst()}
             disabled={disabled || isModified}
           />
           <MiniButton
-            title={tx('ui.action.deleteConstituenta', 'Delete constituent')}
+            title={tx('ui.action.deleteConstituenta')}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
             onClick={promptDeleteSelected}
             disabled={disabled || !canDeleteSelected}

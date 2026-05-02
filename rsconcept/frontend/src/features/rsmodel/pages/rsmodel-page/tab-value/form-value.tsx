@@ -8,7 +8,7 @@ import { isInferrable, isInterpretable, prepareValueString } from '@/domain/libr
 import { type CalculatorResult, TypeID, type Value } from '@/domain/rslang';
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { useConceptNavigation, useRegisterNavigationSave } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -241,7 +241,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       onSubmit={withPreventDefault(() => void handleSubmitAll())}
     >
       <div className='flex items-center gap-2 mr-2 font-math font-semibold select-text'>
-        <span>{tx('ui.rsform.heading.constituenta', 'Constituent {alias}', { alias: activeCst.alias })}</span>
+        <span>{tx('ui.rsform.heading.constituenta', { alias: activeCst.alias })}</span>
       </div>
 
       <ValuePrimaryActions activeCst={activeCst} cstData={cstData} onChangeValue={handleSetValue} />
@@ -254,7 +254,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         noOutline
         transparent
         readOnly
-        label={tx('ui.label.typification', 'Typification')}
+        label={tx('ui.label.typification')}
         value={labelType(typification)}
         areaClassName='cursor-default'
       />
@@ -262,7 +262,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       {cstInferrable || (activeCst.definition_formal && activeCst.cst_type !== CstType.STRUCTURED) ? (
         <EditorRSExpression
           label={labelRSExpression(activeCst.cst_type)}
-          placeholder={tx('ui.placeholder.expressionMissing', 'No expression')}
+          placeholder={tx('ui.placeholder.expressionMissing')}
           value={formalDraft}
           schema={schema}
           activeCst={activeCst}
@@ -290,8 +290,8 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         isBinding={isBase}
         placeholder={
           !isInterpretable(activeCst.cst_type)
-            ? tx('ui.value.stub.unsupportedType', 'No value for this type')
-            : tx('ui.value.stub.missingHint', 'No value. Use "Random value" to generate an example')
+            ? tx('ui.value.stub.unsupportedType')
+            : tx('ui.value.stub.missingHint')
         }
         onCalculate={cstInferrable ? handleCalculate : undefined}
         onChange={newValue =>
@@ -308,12 +308,12 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       <div className='relative'>
         {!metaFieldsDisabled ? (
           <TextButton
-            text={tx('ui.rsform.action.editWordForms', 'Edit word forms')}
+            text={tx('ui.rsform.action.editWordForms')}
             className='z-pop text-sm absolute top-0 left-19'
             title={
               isModified
                 ? formatLabel(lid.tooltip.unsaved)
-                : tx('ui.rsform.hint.editTermWordForms', 'Edit term word forms')
+                : tx('ui.rsform.hint.editTermWordForms')
             }
             onClick={openTermEditor}
             disabled={isModified}
@@ -321,8 +321,8 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         ) : null}
         <RefsInput
           id='cst_term'
-          label={tx('ui.label.term', 'Term')}
-          placeholder={tx('ui.placeholder.termMissing', 'No term')}
+          label={tx('ui.label.term')}
+          placeholder={tx('ui.placeholder.termMissing')}
           schema={schema}
           onOpenEdit={onOpenEdit}
           value={termDraft}
@@ -335,11 +335,11 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
 
       <RefsInput
         id='cst_definition'
-        label={tx('ui.label.textDefinition', 'Text definition')}
+        label={tx('ui.label.textDefinition')}
         placeholder={
           formalFieldDisabled
-            ? tx('ui.placeholder.definitionMissing', 'No definition')
-            : tx('ui.placeholder.textDefinitionHint', 'Text interpretation of the formal expression')
+            ? tx('ui.placeholder.definitionMissing')
+            : tx('ui.placeholder.textDefinitionHint')
         }
         maxHeight='6rem'
         schema={schema}

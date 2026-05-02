@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 import { type Operation, OperationType } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { useLibrary } from '@/features/library/backend/use-library';
@@ -235,16 +235,16 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
     <>
       {operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text={tx('ui.oss.menu.edit', 'Edit')}
-          title={tx('ui.oss.menu.editOperation', 'Edit operation')}
+          text={tx('ui.oss.menu.edit')}
+          title={tx('ui.oss.menu.editOperation')}
           icon={<IconEdit size='1rem' className='icon-primary' />}
           onClick={handleEditOperation}
           disabled={!isMutable || isProcessing}
         />
       ) : (
         <DropdownButton
-          text={tx('ui.oss.menu.original', 'Original')}
-          title={tx('ui.oss.menu.selectOriginal', 'Select original')}
+          text={tx('ui.oss.menu.original')}
+          title={tx('ui.oss.menu.selectOriginal')}
           icon={<IconReference size='1rem' className='icon-primary' />}
           onClick={handleSelectTarget}
         />
@@ -252,12 +252,12 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
       {operation.result ? (
         <DropdownButton
-          text={tx('ui.oss.menu.openSchema', 'Open schema')}
+          text={tx('ui.oss.menu.openSchema')}
           title={prepareTooltip(
-            tx('ui.oss.menu.openLinkedRsform', 'Open linked conceptual schema'),
-            tx('ui.hint.doubleClick', 'Double-click')
+            tx('ui.oss.menu.openLinkedRsform'),
+            tx('ui.hint.doubleClick')
           )}
-          aria-label={tx('ui.oss.menu.openLinkedRsform', 'Open linked conceptual schema')}
+          aria-label={tx('ui.oss.menu.openLinkedRsform')}
           icon={<IconRSForm size='1rem' className='icon-primary' />}
           onClick={handleOpenSchema}
           disabled={isProcessing}
@@ -265,8 +265,8 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       ) : null}
       {isMutable && !operation.result && operation.operation_type === OperationType.INPUT ? (
         <DropdownButton
-          text={tx('ui.oss.menu.createEmptySchema', 'Create schema')}
-          title={tx('ui.oss.menu.createEmptySchemaTitle', 'Create an empty schema')}
+          text={tx('ui.oss.menu.createEmptySchema')}
+          title={tx('ui.oss.menu.createEmptySchemaTitle')}
           icon={<IconNewRSForm size='1rem' className='icon-green' />}
           onClick={handleInputCreate}
           disabled={isProcessing}
@@ -276,10 +276,10 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
         <DropdownButton
           text={
             !operation?.result
-              ? tx('ui.oss.menu.loadSchema', 'Load schema')
-              : tx('ui.oss.menu.changeSchema', 'Change schema')
+              ? tx('ui.oss.menu.loadSchema')
+              : tx('ui.oss.menu.changeSchema')
           }
-          title={tx('ui.oss.menu.pickSchemaTitle', 'Choose a schema to load')}
+          title={tx('ui.oss.menu.pickSchemaTitle')}
           icon={<IconConnect size='1rem' className='icon-primary' />}
           onClick={handleEditSchema}
           disabled={isProcessing}
@@ -290,19 +290,13 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       operation.operation_type === OperationType.SYNTHESIS &&
       operation.arguments.length > 0 ? (
         <DropdownButton
-          text={tx('ui.oss.menu.activateSynthesis', 'Activate synthesis')}
+          text={tx('ui.oss.menu.activateSynthesis')}
           title={
             readyForSynthesis
-              ? tx(
-                  'ui.oss.menu.activateSynthesisReadyTitle',
-                  'Activate the operation\nand obtain the synthesized schema'
-                )
-              : tx('ui.oss.menu.activateSynthesisNeedArgs', 'All arguments must be provided')
+              ? tx('ui.oss.menu.activateSynthesisReadyTitle')
+              : tx('ui.oss.menu.activateSynthesisNeedArgs')
           }
-          aria-label={tx(
-            'ui.oss.menu.activateSynthesisAria',
-            'Activate the operation and obtain the synthesized schema'
-          )}
+          aria-label={tx('ui.oss.menu.activateSynthesisAria')}
           icon={<IconExecute size='1rem' className='icon-green' />}
           onClick={handleOperationExecute}
           disabled={isProcessing || !readyForSynthesis}
@@ -311,9 +305,9 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
       {isMutable && operation.result && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text={tx('ui.tab.inlineSynthesis.constituents', 'Constituents')}
-          title={tx('ui.oss.menu.relocateConstituentsTitle', 'Relocate constituents between schemas')}
-          aria-label={tx('ui.oss.menu.relocateConstituentsAria', 'Relocate constituents between schemas')}
+          text={tx('ui.tab.inlineSynthesis.constituents')}
+          title={tx('ui.oss.menu.relocateConstituentsTitle')}
+          aria-label={tx('ui.oss.menu.relocateConstituentsAria')}
           icon={<IconChild size='1rem' className='icon-green' />}
           onClick={handleRelocateConstituents}
           disabled={isProcessing}
@@ -322,8 +316,8 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
       {isMutable && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text={tx('ui.oss.menu.createReplica', 'Create replica')}
-          title={tx('ui.oss.menu.createReplicaTitle', 'Create a replica of the operation result')}
+          text={tx('ui.oss.menu.createReplica')}
+          title={tx('ui.oss.menu.createReplicaTitle')}
           icon={<IconReference size='1rem' className='icon-green' />}
           onClick={handleCreateReference}
           disabled={isProcessing}
@@ -332,8 +326,8 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
       {isMutable && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text={tx('ui.action.clone', 'Clone')}
-          title={tx('ui.oss.menu.cloneResultSchemaTitle', 'Create and load a copy of the conceptual schema')}
+          text={tx('ui.action.clone')}
+          title={tx('ui.oss.menu.cloneResultSchemaTitle')}
           icon={<IconClone size='1rem' className='icon-green' />}
           onClick={handleClone}
           disabled={isProcessing || !operation?.result}
@@ -341,7 +335,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       ) : null}
 
       <DropdownButton
-        text={tx('ui.oss.menu.deleteOperation', 'Delete operation')}
+        text={tx('ui.oss.menu.deleteOperation')}
         icon={<IconDestroy size='1rem' className='icon-red' />}
         onClick={handleDeleteOperation}
         disabled={!isMutable || isProcessing || !operation || !canDeleteOperation(operation)}

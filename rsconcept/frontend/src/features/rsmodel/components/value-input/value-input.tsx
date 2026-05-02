@@ -58,14 +58,14 @@ export function ValueInput({
       <StatusBar className='absolute -top-1 right-1/2 translate-x-1/2' status={status} onCalculate={onCalculate} />
       {onToggleDataText && !isBinding ? (
         <MiniButton
-          title={tx('ui.value.showDataInText', 'Show data as text')}
+          title={tx('ui.value.showDataInText')}
           className='absolute top-0 right-0'
           icon={<IconShowDataText size='1.25rem' className='hover:text-primary' value={!!showDataText} />}
           onClick={onToggleDataText}
         />
       ) : null}
 
-      <Label text={tx('ui.valueInput.labelValue', 'Value')} />
+      <Label text={tx('ui.valueInput.labelValue')} />
 
       <TextArea
         value={value.slice(0, limits.len_data_str)}
@@ -84,18 +84,18 @@ export function ValueInput({
               <span
                 tabIndex={-1}
                 className='font-math select-none'
-                aria-label={tx('ui.valueInput.cardinalityExpressionAria', 'Cardinality / expression value')}
+                aria-label={tx('ui.valueInput.cardinalityExpressionAria')}
                 data-tooltip-id={globalIDs.tooltip}
-                data-tooltip-content={tx('ui.valueInput.expressionValueTooltip', 'Expression value')}
+                data-tooltip-content={tx('ui.valueInput.expressionValueTooltip')}
               >
-                {tx('ui.valueInput.cardinalityPrefix', 'Cardinality:')} {formatInteger(valueLabel)} |
+                {tx('ui.valueInput.cardinalityPrefix')} {formatInteger(valueLabel)} |
               </span>
               <span
                 tabIndex={-1}
                 className='font-math select-text'
-                aria-label={tx('ui.valueInput.shortFormAria', 'Short form of the expression')}
+                aria-label={tx('ui.valueInput.shortFormAria')}
                 data-tooltip-id={globalIDs.tooltip}
-                data-tooltip-content={tx('ui.valueInput.shortFormTooltip', 'Expression abbreviation')}
+                data-tooltip-content={tx('ui.valueInput.shortFormTooltip')}
               >
                 {stub}
               </span>
@@ -104,12 +104,9 @@ export function ValueInput({
           {value.length > 0 && !disabled ? (
             <div
               className={clsx('ml-auto select-none', isTrimmed && 'text-destructive')}
-              aria-label={tx('ui.valueInput.charCountAria', 'Character count')}
+              aria-label={tx('ui.valueInput.charCountAria')}
               data-tooltip-id={globalIDs.tooltip}
-              data-tooltip-content={tx(
-                'ui.valueInput.charCountLimitedTooltip',
-                'Displayed character count\nis limited'
-              )}
+              data-tooltip-content={tx('ui.valueInput.charCountLimitedTooltip')}
             >
               {`${formatInteger(value.length)} / ${formatInteger(limits.len_data_str)}`}
             </div>

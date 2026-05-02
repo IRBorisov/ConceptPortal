@@ -6,7 +6,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { type LibraryItem, LibraryItemType, type OssLayout } from '@/domain/library';
 import { sortItemsForOSS } from '@/domain/library/oss-api';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { useLibrary } from '@/features/library/backend/use-library';
@@ -105,8 +105,8 @@ export function DlgImportSchema() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.ossOp.importHeader', 'Create operation: import')}
-      submitText={tx('ui.action.create', 'Create')}
+      header={tx('ui.dlg.ossOp.importHeader')}
+      submitText={tx('ui.action.create')}
       canSubmit={canSubmit}
       validationHint={hint}
       onSubmit={event => {
@@ -132,7 +132,7 @@ export function DlgImportSchema() {
       <form.Field name='clone_source'>
         {field => (
           <Checkbox
-            label={tx('ui.label.cloneSchema', 'Clone schema')}
+            label={tx('ui.label.cloneSchema')}
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
           />
@@ -142,12 +142,12 @@ export function DlgImportSchema() {
         {field => (
           <TextInput
             id='operation_title'
-            label={tx('ui.label.title', 'Title')}
+            label={tx('ui.label.title')}
             disabled={!clone_source}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>
@@ -157,13 +157,13 @@ export function DlgImportSchema() {
             {field => (
               <TextInput
                 id='operation_alias'
-                label={tx('ui.label.alias', 'Abbreviation')}
+                label={tx('ui.label.alias')}
                 className='w-80'
                 disabled={!clone_source}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={field.state.meta.errors[0]?.message}
+                error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
               />
             )}
           </form.Field>
@@ -172,7 +172,7 @@ export function DlgImportSchema() {
               <SelectParent
                 items={manager.oss.blocks}
                 value={field.state.value ? (manager.oss.blockByID.get(field.state.value) ?? null) : null}
-                placeholder={tx('ui.oss.parentBlock', 'Parent block')}
+                placeholder={tx('ui.oss.parentBlock')}
                 onChange={value => field.handleChange(value ? value.id : null)}
               />
             )}
@@ -183,7 +183,7 @@ export function DlgImportSchema() {
             <TextArea
               id='operation_comment'
               className='w-full'
-              aria-label={tx('ui.label.description', 'Description')}
+              aria-label={tx('ui.label.description')}
               placeholder={formatLabel(lid.placeholder.itemDescription)}
               rows={5}
               disabled={!clone_source}

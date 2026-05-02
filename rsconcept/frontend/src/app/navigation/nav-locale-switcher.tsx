@@ -25,7 +25,7 @@ export function NavLocaleSwitcher() {
     <div ref={elementRef} onBlur={handleBlur} className='relative -ml-3 flex items-center h-full'>
       <NavigationButton
         text={locale.toUpperCase()}
-        title={tx('nav.language.title', 'Change interface language')}
+        title={tx('nav.language.title')}
         hideTitle={isOpen}
         onClick={toggle}
         aria-haspopup='true'
@@ -34,7 +34,7 @@ export function NavLocaleSwitcher() {
       />
       <Dropdown isOpen={isOpen} stretchLeft margin='mt-1' className='min-w-40'>
         <div className='px-3 py-1 text-muted-foreground border-b text-nowrap'>
-          {tx('nav.language.label', 'Interface language')}
+          {tx('nav.language.label')}
         </div>
         {SUPPORTED_LOCALES.map(option => (
           <DropdownButton

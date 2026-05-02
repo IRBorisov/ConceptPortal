@@ -82,21 +82,21 @@ export function PickContents({
   const columns = [
     columnHelper.accessor(item => item.nodeType === NodeType.OPERATION, {
       id: 'type',
-      header: tx('ui.oss.pickContents.column.kind', 'Kind'),
+      header: tx('ui.oss.pickContents.column.kind'),
       size: 150,
       minSize: 150,
       maxSize: 150,
       cell: props => (
         <div>
           {props.getValue()
-            ? tx('ui.oss.pickContents.kindOperation', 'Operation')
-            : tx('ui.oss.pickContents.kindBlock', 'Block')}
+            ? tx('ui.oss.pickContents.kindOperation')
+            : tx('ui.oss.pickContents.kindBlock')}
         </div>
       )
     }),
     columnHelper.accessor('title', {
       id: 'title',
-      header: tx('ui.label.title', 'Title'),
+      header: tx('ui.label.title'),
       size: 1200,
       minSize: 300,
       maxSize: 1200,
@@ -108,19 +108,19 @@ export function PickContents({
       cell: props => (
         <div className='flex w-fit'>
           <MiniButton
-            title={tx('ui.action.delete', 'Delete')}
+            title={tx('ui.action.delete')}
             className='px-0'
             icon={<IconRemove size='1rem' className='icon-red' />}
             onClick={() => handleDelete(props.row.original)}
           />
           <MiniButton
-            title={tx('ui.list.reorder.moveHigher', 'Move up in list')}
+            title={tx('ui.list.reorder.moveHigher')}
             className='px-0'
             icon={<IconMoveUp size='1rem' className='icon-primary' />}
             onClick={() => handleMoveUp(props.row.original)}
           />
           <MiniButton
-            title={tx('ui.list.reorder.moveLower', 'Move down in list')}
+            title={tx('ui.list.reorder.moveLower')}
             className='px-0'
             icon={<IconMoveDown size='1rem' className='icon-primary' />}
             onClick={() => handleMoveDown(props.row.original)}
@@ -137,7 +137,7 @@ export function PickContents({
         noBorder
         items={items}
         value={lastSelected}
-        placeholder={tx('ui.oss.pickContents.comboPlaceholder', 'Select an operation or block')}
+        placeholder={tx('ui.oss.pickContents.comboPlaceholder')}
         idFunc={item => item.nodeID}
         labelValueFunc={item => labelOssItem(item)}
         labelOptionFunc={item => labelOssItem(item)}
@@ -153,7 +153,7 @@ export function PickContents({
         columns={columns}
         noDataComponent={
           <NoData>
-            <p>{tx('ui.table.emptyList', 'List is empty')}</p>
+            <p>{tx('ui.table.emptyList')}</p>
           </NoData>
         }
       />

@@ -60,36 +60,36 @@ export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
         />
       ) : null}
       <MiniButton
-        title={prepareTooltip(tx('ui.toolbar.clearSelection', 'Clear selection'), tx('ui.hotkey.esc', 'ESC'))}
-        aria-label={tx('ui.toolbar.clearSelection', 'Clear selection')}
+        title={prepareTooltip(tx('ui.toolbar.clearSelection'), tx('ui.hotkey.esc'))}
+        aria-label={tx('ui.toolbar.clearSelection')}
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={deselectAll}
         disabled={selectedCst.length === 0}
       />
       <MiniButton
-        title={prepareTooltip(tx('ui.toolbar.moveUp', 'Move up'), tx('ui.hotkey.altUp', 'Alt + Up'))}
-        aria-label={tx('ui.toolbar.moveUp', 'Move up')}
+        title={prepareTooltip(tx('ui.toolbar.moveUp'), tx('ui.hotkey.altUp'))}
+        aria-label={tx('ui.toolbar.moveUp')}
         icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
         onClick={moveUp}
         disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
       />
       <MiniButton
-        title={prepareTooltip(tx('ui.toolbar.moveDown', 'Move down'), tx('ui.hotkey.altDown', 'Alt + Down'))}
-        aria-label={tx('ui.toolbar.moveDown', 'Move down')}
+        title={prepareTooltip(tx('ui.toolbar.moveDown'), tx('ui.hotkey.altDown'))}
+        aria-label={tx('ui.toolbar.moveDown')}
         icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
         onClick={moveDown}
         disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
       />
       <MiniButton
-        title={tx('ui.rsform.formEdit.crucialTitle', 'Crucial constituent')}
-        aria-label={tx('ui.cst.crucialToggleAria', 'Toggle crucial constituent status')}
+        title={tx('ui.rsform.formEdit.crucialTitle')}
+        aria-label={tx('ui.cst.crucialToggleAria')}
         icon={<IconCrucial size='1.25rem' className='icon-primary' />}
         onClick={toggleCrucial}
         disabled={isProcessing || selectedCst.length === 0}
       />
       <div ref={menuRef} onBlur={handleMenuBlur} className='relative hidden xs:block'>
         <MiniButton
-          title={tx('ui.toolbar.addEmptyConstituenta', 'Add empty constituent')}
+          title={tx('ui.toolbar.addEmptyConstituenta')}
           hideTitle={isMenuOpen}
           icon={<IconOpenList size='1.25rem' className='icon-green' />}
           onClick={toggleMenu}
@@ -109,25 +109,25 @@ export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
       </div>
       <MiniButton
         title={prepareTooltip(
-          tx('ui.toolbar.addNewConstituenta', 'Add new constituent…'),
-          tx('ui.hotkey.altGrave', 'Alt + `')
+          tx('ui.toolbar.addNewConstituenta'),
+          tx('ui.hotkey.altGrave')
         )}
-        aria-label={tx('ui.aria.addNewConstituenta', 'Add new constituent')}
+        aria-label={tx('ui.aria.addNewConstituenta')}
         icon={<IconNewItem size='1.25rem' className='icon-green' />}
         onClick={() => void promptCreateCst()}
         className='hidden xs:block'
         disabled={isProcessing}
       />
       <MiniButton
-        title={prepareTooltip(tx('ui.hint.cloneConstituenta', 'Clone constituent'), tx('ui.hotkey.altV', 'Alt + V'))}
-        aria-label={tx('ui.aria.cloneConstituenta', 'Clone constituent')}
+        title={prepareTooltip(tx('ui.hint.cloneConstituenta'), tx('ui.hotkey.altV'))}
+        aria-label={tx('ui.aria.cloneConstituenta')}
         icon={<IconClone size='1.25rem' className='icon-green' />}
         onClick={() => void cloneCst()}
         disabled={isProcessing || selectedCst.length !== 1}
       />
       <MiniButton
-        title={prepareTooltip(tx('ui.toolbar.deleteSelected', 'Delete selected'), tx('ui.hotkey.delete', 'Delete'))}
-        aria-label={tx('ui.aria.deleteSelected', 'Delete selected')}
+        title={prepareTooltip(tx('ui.toolbar.deleteSelected'), tx('ui.hotkey.delete'))}
+        aria-label={tx('ui.aria.deleteSelected')}
         icon={<IconDestroy size='1.25rem' className='icon-red' />}
         onClick={promptDeleteCst}
         disabled={isProcessing || !canDeleteSelected}

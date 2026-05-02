@@ -4,7 +4,7 @@ import { type ReactNode, useState } from 'react';
 
 import { CstType, type RSForm } from '@/domain/library';
 import { isBaseSet, isBasicConcept } from '@/domain/library/rsform-api';
-import { useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
@@ -52,7 +52,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
     <>
       <div className='flex items-center self-center gap-3'>
         <MiniButton
-          title={tx('ui.form.createCst.crucialTitle', 'Crucial constituent')}
+          title={tx('ui.form.createCst.crucialTitle')}
           icon={<IconCrucialValue size='1.25rem' value={crucial} />}
           onClick={onToggleCrucial}
         />
@@ -62,12 +62,12 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
             <TextInput
               id='dlg_cst_alias'
               dense
-              label={tx('ui.form.createCst.aliasLabel', 'Alias')}
+              label={tx('ui.form.createCst.aliasLabel')}
               className='w-28'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={field.state.meta.errors[0]?.message}
+              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
             />
           )}
         </AliasField>
@@ -78,9 +78,9 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
         {field => (
           <RefsInput
             id='dlg_cst_term'
-            label={tx('ui.form.createCst.termLabel', 'Term')}
+            label={tx('ui.form.createCst.termLabel')}
             maxHeight='3.75rem'
-            placeholder={tx('ui.form.createCst.termPlaceholder', 'Notation for textual definitions')}
+            placeholder={tx('ui.form.createCst.termPlaceholder')}
             schema={schema}
             value={field.state.value ?? ''}
             resolved={field.state.value}
@@ -110,11 +110,8 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
           !!field.state.value || !isElementary ? (
             <RefsInput
               id='dlg_cst_definition'
-              label={tx('ui.form.createCst.textDefinitionLabel', 'Textual definition')}
-              placeholder={tx(
-                'ui.form.createCst.textDefinitionPlaceholder',
-                'Textual interpretation of the formal expression'
-              )}
+              label={tx('ui.form.createCst.textDefinitionLabel')}
+              placeholder={tx('ui.form.createCst.textDefinitionPlaceholder')}
               maxHeight='3.75rem'
               schema={schema}
               resolved={field.state.value}
@@ -129,7 +126,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
 
       {!showConvention ? (
         <TextButton
-          text={tx('ui.form.createCst.addComment', 'Add comment')}
+          text={tx('ui.form.createCst.addComment')}
           className='self-start'
           onClick={() => setForceComment(true)}
         />
@@ -142,13 +139,13 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
               fitContent
               label={
                 isBasic
-                  ? tx('ui.form.createCst.conventionLabel', 'Convention')
-                  : tx('ui.form.createCst.commentLabel', 'Comment')
+                  ? tx('ui.form.createCst.conventionLabel')
+                  : tx('ui.form.createCst.commentLabel')
               }
               placeholder={
                 isBasic
-                  ? tx('ui.form.createCst.conventionPlaceholder', 'Agreement on interpreting the base notion')
-                  : tx('ui.form.createCst.commentPlaceholder', 'Developer note')
+                  ? tx('ui.form.createCst.conventionPlaceholder')
+                  : tx('ui.form.createCst.commentPlaceholder')
               }
               areaClassName='max-h-20'
               value={field.state.value}

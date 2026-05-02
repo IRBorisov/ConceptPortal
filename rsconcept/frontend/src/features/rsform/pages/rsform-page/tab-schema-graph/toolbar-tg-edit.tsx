@@ -37,13 +37,13 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       {schema.oss.length > 0 ? <MiniSelectorOSS items={schema.oss} onSelect={handleSelectOss} /> : null}
       <MiniButton
         icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
-        title={tx('ui.tg.toolbar.echelonGraphTitle', 'Echelon graph of selected constituents')}
+        title={tx('ui.tg.toolbar.echelonGraphTitle')}
         onClick={handleShowTypeGraph}
       />
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip(tx('ui.rsform.formEdit.crucialTitle', 'Crucial constituent'), tx('ui.hotkey.f', 'F'))}
-          aria-label={tx('ui.cst.crucialToggleAria', 'Toggle crucial constituent status')}
+          title={prepareTooltip(tx('ui.rsform.formEdit.crucialTitle'), tx('ui.hotkey.f'))}
+          aria-label={tx('ui.cst.crucialToggleAria')}
           icon={<IconCrucial size='1.25rem' className='icon-primary' />}
           onClick={toggleCrucial}
           disabled={isProcessing || selectedCst.length === 0}
@@ -52,8 +52,8 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       {isContentEditable ? (
         <MiniButton
           title={prepareTooltip(
-            tx('ui.toolbar.deleteSelected', 'Delete selected'),
-            tx('ui.hotkey.deleteBacktick', 'Delete, `')
+            tx('ui.toolbar.deleteSelected'),
+            tx('ui.hotkey.deleteBacktick')
           )}
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
           onClick={handleDeleteSelected}
@@ -62,7 +62,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       ) : null}
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip(tx('ui.toolbar.newConstituenta', 'New constituent'), tx('ui.hotkey.r', 'R'))}
+          title={prepareTooltip(tx('ui.toolbar.newConstituenta'), tx('ui.hotkey.r'))}
           icon={<IconNewItem size='1.25rem' className='icon-green' />}
           onClick={handleCreateCst}
           disabled={isProcessing}
@@ -70,7 +70,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       ) : null}
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip(tx('ui.toolbar.editConstituenta', 'Edit constituent'), tx('ui.hotkey.altV', 'Alt + V'))}
+          title={prepareTooltip(tx('ui.toolbar.editConstituenta'), tx('ui.hotkey.altV'))}
           icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
           onClick={handelFastEdit}
           disabled={isProcessing || selectedCst.length !== 1}

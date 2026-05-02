@@ -2,7 +2,7 @@
 
 import { toast } from 'react-toastify';
 
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 
@@ -33,7 +33,7 @@ export function MenuAIPrompt({ promptID, generatedPrompt }: MenuAIPromptProps) {
   return (
     <div className='flex border-r-2 pr-2'>
       <MiniButton
-        title={tx('ui.ai.prompt.editTemplateTitle', 'Edit template')}
+        title={tx('ui.ai.prompt.editTemplateTitle')}
         noHover
         noPadding
         icon={<IconEdit size='1.25rem' />}
@@ -41,7 +41,7 @@ export function MenuAIPrompt({ promptID, generatedPrompt }: MenuAIPromptProps) {
         onClick={navigatePrompt}
       />
       <MiniButton
-        title={tx('ui.ai.prompt.copyResultTitle', 'Copy result to clipboard')}
+        title={tx('ui.ai.prompt.copyResultTitle')}
         noHover
         noPadding
         icon={<IconClipboard size='1.25rem' />}

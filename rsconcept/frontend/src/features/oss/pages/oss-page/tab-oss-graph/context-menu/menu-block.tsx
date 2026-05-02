@@ -46,14 +46,14 @@ export function MenuBlock({ block, onHide }: MenuBlockProps) {
   return (
     <>
       <DropdownButton
-        text={tx('ui.oss.menu.edit', 'Edit')}
-        title={tx('ui.oss.menu.editBlockTitle', 'Edit block')}
+        text={tx('ui.oss.menu.edit')}
+        title={tx('ui.oss.menu.editBlockTitle')}
         icon={<IconEdit size='1rem' className='icon-primary' />}
         onClick={handleEditBlock}
         disabled={!isMutable || isProcessing}
       />
       <DropdownButton
-        text={tx('ui.oss.menu.deleteBlock', 'Delete block')}
+        text={tx('ui.oss.menu.deleteBlock')}
         icon={<IconDestroy size='1rem' className='icon-red' />}
         onClick={handleDeleteBlock}
         disabled={!isMutable || isProcessing}

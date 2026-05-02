@@ -34,7 +34,6 @@ export interface ColumnServices {
   navigateValue: (path: ValuePath) => void;
   selectElement?: (path: ValuePath | null) => void;
   deleteElement?: (target: number) => void;
-  /** Pass `useTx('ui.value.removeElement', …)` from the editor component. */
   deleteElementTitle?: string;
 }
 

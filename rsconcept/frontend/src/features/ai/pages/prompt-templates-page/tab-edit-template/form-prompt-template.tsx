@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
-import { useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { useRegisterNavigationSave } from '@/app';
 import { PromptInput } from '@/features/ai/components/prompt-input';
@@ -116,11 +116,11 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
         {field => (
           <TextInput
             id='prompt_label'
-            label={tx('ui.label.title', 'Title')}
+            label={tx('ui.label.title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
             disabled={isProcessing || !isMutable}
           />
         )}
@@ -129,11 +129,11 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
         {field => (
           <TextArea
             id='prompt_description'
-            label={tx('ui.label.description', 'Description')}
+            label={tx('ui.label.description')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
             disabled={isProcessing || !isMutable}
           />
         )}
@@ -143,11 +143,8 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
         {field => (
           <PromptInput
             id='prompt_text'
-            label={tx('ui.promptTemplates.form.content', 'Content')}
-            placeholder={tx(
-              'ui.promptTemplates.form.contentPlaceholder',
-              'Example: Suggest a completion for CS {{schema}}'
-            )}
+            label={tx('ui.promptTemplates.form.content')}
+            placeholder={tx('ui.promptTemplates.form.contentPlaceholder')}
             className='disabled:min-h-9 max-h-64'
             value={field.state.value ?? ''}
             onChange={newValue => handleChangeText(newValue, field.handleChange)}
@@ -160,7 +157,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
           {field => (
             <Checkbox
               id='prompt_is_shared'
-              label={tx('ui.promptTemplates.form.sharedCheckbox', 'Shared template')}
+              label={tx('ui.promptTemplates.form.sharedCheckbox')}
               value={field.state.value ?? false}
               onChange={field.handleChange}
               onBlur={field.handleBlur}
@@ -169,7 +166,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
           )}
         </form.Field>
         <MiniButton
-          title={tx('ui.promptTemplates.form.generateSampleTitle', 'Generate sample prompt')}
+          title={tx('ui.promptTemplates.form.generateSampleTitle')}
           icon={<IconSample size='1.25rem' className='icon-primary' />}
           onClick={() => setSampleResult(!!sampleResult ? null : generateSample(text))}
           disabled={!text}
@@ -181,7 +178,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
           fitContent
           className='mt-3'
           areaClassName='max-h-64 min-h-12'
-          label={tx('ui.promptTemplates.form.sampleLabel', 'Sample prompt')}
+          label={tx('ui.promptTemplates.form.sampleLabel')}
           value={sampleResult ?? debouncedResult ?? ''}
           disabled
         />

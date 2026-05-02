@@ -29,9 +29,9 @@ export function Component() {
   if (isCompleted) {
     return (
       <div className='cc-fade-in flex flex-col items-center gap-1 mt-3'>
-        <p>{tx('auth.restore.done', 'Password reset instructions were sent to that address.')}</p>
-        <TextURL text={tx('auth.restore.loginLink', 'Sign in to the portal')} href='/login' />
-        <TextURL text={tx('auth.restore.homeLink', 'Home page')} href='/' />
+        <p>{tx('auth.restore.done')}</p>
+        <TextURL text={tx('auth.restore.loginLink')} href='/login' />
+        <TextURL text={tx('auth.restore.homeLink')} href='/' />
       </div>
     );
   } else {
@@ -43,13 +43,13 @@ export function Component() {
           autoComplete='email'
           required
           allowEnter
-          label={tx('auth.restore.email', 'Email')}
+          label={tx('auth.restore.email')}
           value={email}
           onChange={event => setEmail(event.target.value)}
         />
 
         <SubmitButton
-          text={tx('auth.restore.submit', 'Request password reset')}
+          text={tx('auth.restore.submit')}
           className='self-center w-48 mt-3'
           loading={isPending}
           disabled={!email}
@@ -68,7 +68,7 @@ function ServerError({ error }: { error: ErrorData }): React.ReactElement {
   if (isAxiosError(error) && error.response?.status === 400) {
     return (
       <div className='mx-auto mt-6 text-sm select-text text-destructive'>
-        {tx('auth.restore.emailNotRegistered', 'This email is not registered on the portal.')}
+        {tx('auth.restore.emailNotRegistered')}
       </div>
     );
   }

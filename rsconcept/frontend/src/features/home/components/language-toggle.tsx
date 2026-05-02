@@ -35,7 +35,7 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
           'bg-background/80 text-muted-foreground shadow-sm border backdrop-blur',
           'hover:text-foreground focus-outline'
         )}
-        aria-label={tx('home.language.toggleAria', 'Change interface language')}
+        aria-label={tx('home.language.toggleAria')}
         aria-haspopup='true'
         aria-expanded={isOpen}
       >
@@ -44,7 +44,7 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
       </button>
       <Dropdown isOpen={isOpen} stretchLeft margin='mt-1' className='min-w-40'>
         <div className='px-3 py-1 text-xs text-muted-foreground border-b'>
-          {tx('home.language.groupAria', 'Interface language')}
+          {tx('home.language.groupAria')}
         </div>
         {SUPPORTED_LOCALES.map(option => (
           <DropdownButton

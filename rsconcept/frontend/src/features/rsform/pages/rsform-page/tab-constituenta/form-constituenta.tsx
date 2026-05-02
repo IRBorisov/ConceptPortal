@@ -9,7 +9,7 @@ import { type Constituenta, CstType, type RSForm } from '@/domain/library';
 import { getAnalysisFor, isBaseSet, isBasicConcept, isLogical } from '@/domain/library/rsform-api';
 import { type AnalysisFull, TypeID } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { useRegisterNavigationSave } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -161,7 +161,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
     >
       <div className='flex items-center gap-2 mr-2 font-math font-semibold select-text'>
-        <span>{tx('ui.rsform.heading.constituenta', 'Constituent {alias}', { alias: activeCst.alias })}</span>
+        <span>{tx('ui.rsform.heading.constituenta', { alias: activeCst.alias })}</span>
       </div>
       <ConstituentaPrimaryActions className='-mt-1' activeCst={activeCst} schema={schema} />
 
@@ -170,14 +170,14 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
           <div className='relative'>
             {!disabled ? (
               <TextButton
-                text={tx('ui.rsform.action.editWordForms', 'Edit word forms')}
+                text={tx('ui.rsform.action.editWordForms')}
                 className='z-pop text-sm absolute top-0 left-19'
                 title={
                   disabled
                     ? undefined
                     : isModified
                       ? formatLabel(lid.tooltip.unsaved)
-                      : tx('ui.rsform.hint.editTermWordForms', 'Edit term word forms')
+                      : tx('ui.rsform.hint.editTermWordForms')
                 }
                 onClick={openTermEditor}
                 disabled={isModified}
@@ -186,8 +186,8 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
 
             <RefsInput
               id='cst_term'
-              label={tx('ui.label.term', 'Term')}
-              aria-label={tx('ui.label.term', 'Term')}
+              label={tx('ui.label.term')}
+              aria-label={tx('ui.label.term')}
               maxHeight='8rem'
               areaClassName={
                 (needsInterpretation && !field.state.value) ||
@@ -195,7 +195,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
                   ? 'cm-error'
                   : ''
               }
-              placeholder={disabled ? '' : tx('ui.placeholder.termForDefinitions', 'Label for text definitions')}
+              placeholder={disabled ? '' : tx('ui.placeholder.termForDefinitions')}
               schema={schema}
               onOpenEdit={onOpenEdit}
               value={field.state.value ?? ''}
@@ -204,11 +204,11 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
               onChange={newValue => field.handleChange(newValue)}
               disabled={disabled}
               error={
-                field.state.meta.errors[0]?.message ??
+                formatZodErrorMessage(field.state.meta.errors[0]?.message) ??
                 (needsInterpretation && !field.state.value
-                  ? tx('ui.validation.termEmpty', 'Empty term')
+                  ? tx('ui.validation.termEmpty')
                   : activeCst.homonyms.length > 0 && !field.state.meta.isDirty
-                    ? tx('ui.validation.termHomonyms', 'Term matches constituents: {aliases}', {
+                    ? tx('ui.validation.termHomonyms', {
                         aliases: formatAliasList(activeCst.homonyms, schema)
                       })
                     : undefined)
@@ -220,7 +220,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
 
       {activeCst.cst_type === CstType.NOMINAL || activeCst.attributes.length > 0 ? (
         <div className='flex flex-col gap-1'>
-          <Label text={tx('ui.label.attributingConstituents', 'Attributing constituents')} />
+          <Label text={tx('ui.label.attributingConstituents')} />
           <SelectMultiConstituenta
             items={schema.items.filter(item => item.id !== activeCst.id)}
             value={attributions}
@@ -228,7 +228,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
             onClear={clearAttributions}
             onRemove={removeAttribution}
             disabled={disabled || isModified}
-            placeholder={disabled ? '' : tx('ui.placeholder.selectConstituents', 'Select constituents')}
+            placeholder={disabled ? '' : tx('ui.placeholder.selectConstituents')}
           />
         </div>
       ) : null}
@@ -236,7 +236,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       {activeCst.cst_type !== CstType.NOMINAL ? (
         <TextArea
           id='cst_typification'
-          label={tx('ui.label.typification', 'Typification')}
+          label={tx('ui.label.typification')}
           fitContent
           dense
           noResize
@@ -280,10 +280,8 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
           {field => (
             <RefsInput
               id='cst_definition'
-              label={tx('ui.label.textDefinition', 'Text definition')}
-              placeholder={
-                disabled ? '' : tx('ui.placeholder.textDefinitionHint', 'Text interpretation of the formal expression')
-              }
+              label={tx('ui.label.textDefinition')}
+              placeholder={disabled ? '' : tx('ui.placeholder.textDefinitionHint')}
               minHeight='3.75rem'
               maxHeight='8rem'
               schema={schema}
@@ -309,23 +307,17 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
                 needsInterpretation && !field.state.value && 'border-destructive! outline-destructive!'
               )}
               spellCheck
-              label={isBasic ? tx('ui.label.convention', 'Convention') : tx('ui.label.developerComment', 'Comment')}
+              label={isBasic ? tx('ui.label.convention') : tx('ui.label.developerComment')}
               placeholder={
-                disabled
-                  ? ''
-                  : isBasic
-                    ? tx('ui.placeholder.conventionBasic', 'Agreement on interpreting the base concept')
-                    : tx('ui.placeholder.developerComment', 'Developer note')
+                disabled ? '' : isBasic ? tx('ui.placeholder.conventionBasic') : tx('ui.placeholder.developerComment')
               }
               disabled={disabled || (isBasic && activeCst.is_inherited)}
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
               error={
-                field.state.meta.errors[0]?.message ??
-                (needsInterpretation && !field.state.value
-                  ? tx('ui.validation.conventionEmpty', 'Empty convention')
-                  : undefined)
+                formatZodErrorMessage(field.state.meta.errors[0]?.message) ??
+                (needsInterpretation && !field.state.value ? tx('ui.validation.conventionEmpty') : undefined)
               }
             />
           )}
@@ -333,11 +325,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       ) : null}
 
       {!showConvention && (!disabled || isProcessing) ? (
-        <TextButton
-          text={tx('ui.action.addComment', 'Add comment')}
-          className='self-start'
-          onClick={() => setForceComment(true)}
-        />
+        <TextButton text={tx('ui.action.addComment')} className='self-start' onClick={() => setForceComment(true)} />
       ) : null}
     </form>
   );

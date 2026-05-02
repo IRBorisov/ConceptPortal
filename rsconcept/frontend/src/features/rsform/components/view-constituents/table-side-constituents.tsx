@@ -73,7 +73,7 @@ export function TableSideConstituents({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: () => <span className='pl-3'>{tx('ui.table.header.alias', 'Alias')}</span>,
+      header: () => <span className='pl-3'>{tx('ui.table.header.alias')}</span>,
       size: 65,
       minSize: 65,
       cell: props => <BadgeConstituenta value={props.row.original} prefixID={prefixes.cst_side_table} />
@@ -82,7 +82,7 @@ export function TableSideConstituents({
       ? [
           columnHelper.accessor(cst => cst, {
             id: 'value',
-            header: tx('ui.table.header.value', 'Value'),
+            header: tx('ui.table.header.value'),
             size: 60,
             minSize: 60,
             maxSize: 60,
@@ -92,7 +92,7 @@ export function TableSideConstituents({
       : []),
     columnHelper.accessor(cst => describeConstituenta(cst), {
       id: 'description',
-      header: tx('ui.table.header.description', 'Description'),
+      header: tx('ui.table.header.description'),
       size: 1000,
       minSize: 250,
       maxSize: 1000,
@@ -134,8 +134,8 @@ export function TableSideConstituents({
       enableHiding
       noDataComponent={
         <NoData className='min-h-20'>
-          <p>{tx('ui.table.cstSide.emptyTitle', 'Constituent list is empty')}</p>
-          <p>{tx('ui.table.cstSide.emptyHint', 'Change filter settings or create a constituent')}</p>
+          <p>{tx('ui.table.cstSide.emptyTitle')}</p>
+          <p>{tx('ui.table.cstSide.emptyHint')}</p>
         </NoData>
       }
       onRowClicked={onActivate ? cst => onActivate(cst) : undefined}

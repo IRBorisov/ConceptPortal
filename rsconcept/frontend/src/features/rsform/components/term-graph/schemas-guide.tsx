@@ -29,7 +29,7 @@ export function SchemasGuide({ schema }: SchemasGuideProps) {
         if (item) {
           aliases.push(item.alias);
         } else {
-          aliases.push(tx('ui.rsform.termGraph.schemaAlias', 'Schema {index}', { index: cst.parent_schema_index }));
+          aliases.push(tx('ui.rsform.termGraph.schemaAlias', { index: cst.parent_schema_index }));
         }
         processed.add(cst.parent_schema);
         indexes.push(cst.parent_schema_index);
@@ -53,7 +53,7 @@ export function SchemasGuide({ schema }: SchemasGuideProps) {
       >
         <div className='inline-flex items-center gap-2'>
           <span className='w-3 h-3 border rounded-full' style={{ backgroundColor: colorBgSchemas(0) }} />
-          <span>{tx('ui.rsform.termGraph.currentSchemaBadge', 'Current schema')}</span>
+          <span>{tx('ui.rsform.termGraph.currentSchemaBadge')}</span>
         </div>
         {schemas.map((alias, index) => (
           <div key={`${prefixes.schemas_list}${index}`} className='inline-flex items-center gap-2'>

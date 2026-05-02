@@ -18,7 +18,7 @@ interface SelectLibraryItemProps extends Styling {
 
 export function SelectLibraryItem({ items, placeholder, ...restProps }: SelectLibraryItemProps) {
   const tx = useTx();
-  const resolvedPlaceholder = placeholder ?? tx('ui.library.selectItem.placeholder', 'Select a schema');
+  const resolvedPlaceholder = placeholder ?? tx('ui.library.selectItem.placeholder');
   return (
     <ComboBox
       items={items}

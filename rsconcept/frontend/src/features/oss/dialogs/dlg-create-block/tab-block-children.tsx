@@ -45,7 +45,7 @@ export function TabBlockChildren({
   return (
     <div className='cc-fade-in cc-column -mt-5'>
       <Label
-        text={tx('ui.oss.dlg.block.contentPickLabel', 'Content selection: [ {count} ]', { count: value.length })}
+        text={tx('ui.oss.dlg.block.contentPickLabel', { count: value.length })}
       />
       <PickContents
         schema={oss}

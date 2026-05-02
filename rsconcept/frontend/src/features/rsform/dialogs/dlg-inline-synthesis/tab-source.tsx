@@ -34,13 +34,13 @@ export function TabSource({ receiver, sourceID, onChangeSource }: TabSourceProps
       />
 
       <div className='flex items-center gap-6 '>
-        <span className='select-none'>{tx('ui.inlineSynthesis.selected', 'Selected')}</span>
+        <span className='select-none'>{tx('ui.inlineSynthesis.selected')}</span>
         <TextInput
           id='dlg_selected_schema_title'
           disabled
           noBorder
           className='grow'
-          placeholder={tx('ui.placeholder.schemaNotSelected', 'No schema selected')}
+          placeholder={tx('ui.placeholder.schemaNotSelected')}
           value={selectedInfo?.title ?? ''}
           dense
         />

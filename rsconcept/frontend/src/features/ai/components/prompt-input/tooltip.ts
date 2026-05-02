@@ -69,21 +69,22 @@ function domTooltipVariable(varName: string, isAvailable: boolean): TooltipView 
     'rounded-md shadow-md',
     'cc-scroll-y',
     'text-sm bg-card',
-    'select-none cursor-auto'
+    'select-none cursor-auto',
+    'whitespace-pre-line'
   );
 
-  appendBoldTextRow(dom, formatAppMessage('ui.ai.promptInput.variableTitle', 'Variable {name}', { name: varName }));
+  appendBoldTextRow(dom, formatAppMessage('ui.ai.promptInput.variableTitle', { name: varName }));
 
   const status = document.createElement('p');
   status.className = isAvailable ? 'text-green-700' : 'text-red-700';
   status.innerText = isAvailable
-    ? formatAppMessage('ui.ai.promptInput.available', 'Available to use')
-    : formatAppMessage('ui.ai.promptInput.unavailable', 'Unavailable to use');
+    ? formatAppMessage('ui.ai.promptInput.available')
+    : formatAppMessage('ui.ai.promptInput.unavailable');
   dom.appendChild(status);
 
   const desc = document.createElement('p');
   desc.className = '';
-  desc.innerText = formatAppMessage('ui.ai.promptInput.descriptionPrefix', 'Description: {description}', {
+  desc.innerText = formatAppMessage('ui.ai.promptInput.descriptionPrefix', {
     description: describePromptVariable(varName as PromptVariableType)
   });
   dom.appendChild(desc);

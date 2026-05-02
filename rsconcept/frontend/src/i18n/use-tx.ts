@@ -3,11 +3,11 @@ import { useIntl } from 'react-intl';
 type TxValues = Record<string, string | number | boolean | Date | null | undefined>;
 
 /**
- * Compact UI strings: English `defaultMessage` in source; `fr`/`ru` in message catalogs.
+ * Compact UI strings: copy for `locale` lives in `messages/partials/*.en.ts` / `*.ru.ts` / `*.fr.ts` (same ids).
  */
 export function useTx() {
   const intl = useIntl();
-  return function tx(id: string, defaultMessage: string, values?: TxValues): string {
-    return intl.formatMessage({ id, defaultMessage }, values);
+  return function tx(id: string, values?: TxValues): string {
+    return intl.formatMessage({ id }, values);
   };
 }

@@ -1,0 +1,28 @@
+/** English UI copy. */
+export const navEn: Record<string, string> = {
+  'layout.toast.ariaLabel': 'Notifications',
+  'nav.action.logout': 'Sign out…',
+  'nav.action.logoutTitle': 'Sign out of the application',
+  'nav.admin.off': 'Admin: Off',
+  'nav.admin.on': 'Admin: On',
+  'nav.admin.toggleTitle': 'Admin mode',
+  'nav.help.off': 'Help: Off',
+  'nav.help.on': 'Help: On',
+  'nav.help.toggleTitle': 'Toggle help icons',
+  'nav.language.label': 'Interface language',
+  'nav.language.title': 'Change interface language',
+  'nav.link.database': 'Database',
+  'nav.link.databaseTitle': 'Open database admin',
+  'nav.link.dbStructure': 'DB structure',
+  'nav.link.dbStructureTitle': 'Open database schema page',
+  'nav.link.icons': 'Icons',
+  'nav.link.iconsTitle': 'Open icons page',
+  'nav.link.restApi': 'REST API',
+  'nav.link.restApiTitle': 'Open backend API',
+  'nav.theme.dark': 'Theme: Dark',
+  'nav.theme.light': 'Theme: Light',
+  'nav.theme.toggleTitle': 'Toggle color theme',
+  'nav.toggleNav.hide': 'Hide navigation',
+  'nav.toggleNav.show': 'Show navigation',
+  'nav.user.profileTitle': 'User profile'
+};

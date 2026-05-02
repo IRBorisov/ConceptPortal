@@ -28,15 +28,15 @@ export default function ToolbarGraphFilter() {
   return (
     <div className='flex flex-row gap-2'>
       <MiniButton
-        title={tx('ui.rsform.termGraph.toolbar.fullGraphTitle', 'Entire graph')}
+        title={tx('ui.rsform.termGraph.toolbar.fullGraphTitle')}
         icon={<IconFitImage size='1.25rem' className='icon-primary' />}
         onClick={handleFitView}
       />
       <MiniButton
         title={
           !filter.noText
-            ? tx('ui.rsform.termGraph.toolbar.hideTextTitle', 'Hide text')
-            : tx('ui.rsform.termGraph.toolbar.showTextTitle', 'Show text')
+            ? tx('ui.rsform.termGraph.toolbar.hideTextTitle')
+            : tx('ui.rsform.termGraph.toolbar.showTextTitle')
         }
         icon={
           !filter.noText ? (
@@ -50,8 +50,8 @@ export default function ToolbarGraphFilter() {
       <MiniButton
         title={
           !filter.foldDerived
-            ? tx('ui.rsform.termGraph.toolbar.hideDerivedTitle', 'Hide derived')
-            : tx('ui.rsform.termGraph.toolbar.showDerivedTitle', 'Show derived')
+            ? tx('ui.rsform.termGraph.toolbar.hideDerivedTitle')
+            : tx('ui.rsform.termGraph.toolbar.showDerivedTitle')
         }
         icon={
           !filter.foldDerived ? (

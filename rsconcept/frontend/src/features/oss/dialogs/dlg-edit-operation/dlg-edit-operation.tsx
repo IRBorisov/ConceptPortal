@@ -6,7 +6,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { OperationType, type OssLayout } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
 import { type Substitution } from '@/domain/library/rsform';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -120,8 +120,8 @@ export function DlgEditOperation() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.editOperation.header', 'Edit operation')}
-      submitText={tx('ui.action.save', 'Save')}
+      header={tx('ui.dlg.editOperation.header')}
+      submitText={tx('ui.action.save')}
       canSubmit={canSubmit}
       validationHint={canSubmit ? '' : formatLabel(lid.hint.formInvalid)}
       onSubmit={event => {
@@ -136,17 +136,17 @@ export function DlgEditOperation() {
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto w-fit flex border divide-x rounded-none'>
           <TabLabel
-            title={tx('ui.tab.oss.passportTitle', 'Text fields')}
-            label={tx('ui.tab.oss.passport', 'Passport')}
+            title={tx('ui.tab.oss.passportTitle')}
+            label={tx('ui.tab.oss.passport')}
           />
           <TabLabel
-            title={tx('ui.tab.oss.operationArgumentsTitle', 'Select operation arguments')}
-            label={tx('ui.tab.oss.arguments', 'Arguments')}
+            title={tx('ui.tab.oss.operationArgumentsTitle')}
+            label={tx('ui.tab.oss.arguments')}
             disabled={target.operation_type !== OperationType.SYNTHESIS}
           />
           <TabLabel
-            title={tx('ui.tab.inlineSynthesis.substitutionsTitle', 'Substitution table')}
-            label={tx('ui.tab.inlineSynthesis.substitutions', 'Substitutions')}
+            title={tx('ui.tab.inlineSynthesis.substitutionsTitle')}
+            label={tx('ui.tab.inlineSynthesis.substitutions')}
             disabled={target.operation_type !== OperationType.SYNTHESIS}
           />
         </TabList>

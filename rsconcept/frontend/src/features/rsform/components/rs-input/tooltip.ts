@@ -101,7 +101,8 @@ function createTooltipContainer(): HTMLDivElement {
     'rounded-md shadow-md',
     'cc-scroll-y',
     'text-sm font-main bg-card',
-    'select-none cursor-auto'
+    'select-none cursor-auto',
+    'whitespace-pre-line'
   );
   return dom;
 }
@@ -149,55 +150,43 @@ function domTooltipConstituenta(
 
   if (!cst) {
     const text = document.createElement('p');
-    text.innerText = formatAppMessage('ui.rsform.rsInput.undefinedConstituent', 'Constituent is not defined');
+    text.innerText = formatAppMessage('ui.rsform.rsInput.undefinedConstituent');
     dom.appendChild(text);
   } else {
     appendMathBoldLabelParagraph(dom, `${cst.alias}:`, labelType(cst.analysis.type));
 
     if (cst.term_resolved) {
-      appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.termLabel', 'Term: '), cst.term_resolved);
+      appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.termLabel'), cst.term_resolved);
     }
 
     if (cst.definition_formal) {
-      appendBoldTextRow(
-        dom,
-        formatAppMessage('ui.rsform.cstInfo.expressionLabel', 'Expression: '),
-        cst.definition_formal
-      );
+      appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.expressionLabel'), cst.definition_formal);
     }
 
     if (cst.definition_resolved) {
-      appendBoldTextRow(
-        dom,
-        formatAppMessage('ui.rsform.cstInfo.definitionLabel', 'Definition: '),
-        cst.definition_resolved
-      );
+      appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.definitionLabel'), cst.definition_resolved);
     }
 
     if (cst.convention) {
       if (isBasicConcept(cst.cst_type)) {
-        appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.conventionLabel', 'Convention: '), cst.convention);
+        appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.conventionLabel'), cst.convention);
       } else {
-        appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.commentLabel', 'Comment: '), cst.convention);
+        appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.commentLabel'), cst.convention);
       }
     }
 
     if (cst.spawner_alias) {
-      appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.baseLabel', 'Base: '), cst.spawner_alias);
+      appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.baseLabel'), cst.spawner_alias);
     }
 
     if (cst.spawn_alias.length > 0) {
-      appendBoldTextRow(
-        dom,
-        formatAppMessage('ui.rsform.cstInfo.generatesLabel', 'Generates: '),
-        cst.spawn_alias.join(', ')
-      );
+      appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.generatesLabel'), cst.spawn_alias.join(', '));
     }
 
     if (canClick) {
       const clickTip = document.createElement('p');
       clickTip.className = 'text-center text-xs mt-1';
-      clickTip.innerText = formatAppMessage('ui.rsform.rsInput.ctrlClickToOpen', 'Ctrl + click to open');
+      clickTip.innerText = formatAppMessage('ui.rsform.rsInput.ctrlClickToOpen');
       dom.appendChild(clickTip);
     }
   }

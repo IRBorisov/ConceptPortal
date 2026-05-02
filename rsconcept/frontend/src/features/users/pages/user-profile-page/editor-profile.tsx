@@ -3,7 +3,7 @@
 import { useEffect, useEffectEvent } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { useRegisterNavigationSave } from '@/app';
 
@@ -72,8 +72,8 @@ export function EditorProfile() {
       <TextInput
         id='username'
         disabled
-        label={tx('ui.profile.field.username', 'Username')}
-        title={tx('ui.profile.field.usernameReadonlyTitle', 'Username cannot be changed')}
+        label={tx('ui.profile.field.username')}
+        title={tx('ui.profile.field.usernameReadonlyTitle')}
         value={profile.username}
       />
       <form.Field name='first_name'>
@@ -82,11 +82,11 @@ export function EditorProfile() {
             id='first_name'
             autoComplete='off'
             allowEnter
-            label={tx('ui.users.column.firstName', 'First name')}
+            label={tx('ui.users.column.firstName')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>
@@ -96,11 +96,11 @@ export function EditorProfile() {
             id='last_name'
             autoComplete='off'
             allowEnter
-            label={tx('ui.users.column.lastName', 'Last name')}
+            label={tx('ui.users.column.lastName')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>
@@ -110,18 +110,18 @@ export function EditorProfile() {
             id='email'
             autoComplete='off'
             allowEnter
-            label={tx('ui.profile.field.email', 'Email')}
+            label={tx('ui.profile.field.email')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>
       {serverError ? <ServerError error={serverError} /> : null}
       <SubmitButton
         className='self-center mt-6'
-        text={tx('ui.profile.submit.saveData', 'Save profile')}
+        text={tx('ui.profile.submit.saveData')}
         loading={isPending}
       />
     </form>

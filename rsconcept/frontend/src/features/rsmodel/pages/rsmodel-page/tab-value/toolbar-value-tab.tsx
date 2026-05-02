@@ -1,7 +1,7 @@
 'use client';
 
 import { isInferrable } from '@/domain/library/rsmodel-api';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
@@ -50,31 +50,31 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
   return (
     <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>
       <MiniButton
-        title={prepareTooltip(tx('ui.action.saveChanges', 'Save changes'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
-        aria-label={tx('ui.action.saveChanges', 'Save changes')}
+        title={prepareTooltip(tx('ui.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+        aria-label={tx('ui.action.saveChanges')}
         icon={<IconSave size='1.25rem' className='icon-primary' />}
         onClick={onSubmit}
         disabled={isProcessing || !activeCst || !isModified}
       />
       <MiniButton
-        title={tx('ui.hint.resetUnsavedConstituenta', 'Discard unsaved changes')}
+        title={tx('ui.hint.resetUnsavedConstituenta')}
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={onReset}
         disabled={isProcessing || !activeCst || !isModified}
       />
 
       <MiniButton
-        title={tx('ui.action.recalculateModel', 'Recalculate model')}
-        aria-label={tx('ui.aria.recalculateAll', 'Recalculate all results')}
+        title={tx('ui.action.recalculateModel')}
+        aria-label={tx('ui.aria.recalculateAll')}
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
         onClick={() => engine.recalculateAll()}
       />
       <MiniButton
         title={prepareTooltip(
-          tx('ui.rsmodel.calculateCurrentCst', 'Calculate current constituent'),
+          tx('ui.rsmodel.calculateCurrentCst'),
           isMac() ? 'Cmd + Q' : 'Ctrl + Q'
         )}
-        aria-label={tx('ui.aria.calculateCurrentCst', 'Calculate current constituent')}
+        aria-label={tx('ui.aria.calculateCurrentCst')}
         icon={<IconCalculateOne size='1.25rem' className='icon-green' />}
         onClick={
           activeCst
@@ -88,7 +88,7 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
       {isContentEditable && activeCst ? (
         <>
           <MiniButton
-            title={tx('ui.action.createConstituenta', 'Create constituent')}
+            title={tx('ui.action.createConstituenta')}
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
             onClick={() => void promptCreateCst(activeCst.cst_type)}
             disabled={formDisabled}
@@ -97,9 +97,9 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
             title={
               isModified
                 ? formatLabel(lid.tooltip.unsaved)
-                : prepareTooltip(tx('ui.hint.cloneConstituenta', 'Clone constituent'), 'Alt + V')
+                : prepareTooltip(tx('ui.hint.cloneConstituenta'), 'Alt + V')
             }
-            aria-label={tx('ui.aria.cloneConstituenta', 'Clone constituent')}
+            aria-label={tx('ui.aria.cloneConstituenta')}
             icon={<IconClone size='1.25rem' className='icon-green' />}
             onClick={() => void cloneCst()}
             disabled={formDisabled || isModified}
@@ -109,7 +109,7 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
 
       {isContentEditable && activeCst ? (
         <MiniButton
-          title={tx('ui.action.deleteConstituenta', 'Delete constituent')}
+          title={tx('ui.action.deleteConstituenta')}
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
           onClick={promptDeleteSelected}
           disabled={formDisabled || !canDeleteSelected}

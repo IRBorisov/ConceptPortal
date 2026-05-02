@@ -44,38 +44,3 @@ export const libraryLid = {
     current: 'labels.library.version.current'
   }
 } as const;
-
-export const LIBRARY_UI_DEFAULTS: Record<string, string> = {
-  [libraryLid.location.user]: '/U : personal',
-  [libraryLid.location.common]: '/S : shared',
-  [libraryLid.location.library]: '/L : examples',
-  [libraryLid.location.projects]: '/P : projects',
-
-  [libraryLid.locationShort.user]: 'Personal',
-  [libraryLid.locationShort.common]: 'Shared',
-  [libraryLid.locationShort.library]: 'Examples',
-  [libraryLid.locationShort.projects]: 'Projects',
-
-  [libraryLid.locationDesc.user]: 'User’s private schemas',
-  [libraryLid.locationDesc.common]: 'Working directory of public schemas',
-  [libraryLid.locationDesc.library]: 'Catalog of immutable example schemas',
-  [libraryLid.locationDesc.projects]: 'Working directory of project schemas',
-
-  [libraryLid.access.private]: 'Private',
-  [libraryLid.access.protected]: 'Protected',
-  [libraryLid.access.public]: 'Public',
-
-  [libraryLid.accessDesc.private]: 'Owner only',
-  [libraryLid.accessDesc.protected]: 'Owner and editors',
-  [libraryLid.accessDesc.public]: 'Open access',
-
-  [libraryLid.itemType.rsform]: 'RS',
-  [libraryLid.itemType.oss]: 'OSS',
-  [libraryLid.itemType.rsmodel]: 'Model',
-
-  [libraryLid.itemTypeDesc.rsform]: 'Conceptual schema',
-  [libraryLid.itemTypeDesc.oss]: 'Operational synthesis schema',
-  [libraryLid.itemTypeDesc.rsmodel]: 'Conceptual model',
-
-  [libraryLid.version.current]: 'current'
-};

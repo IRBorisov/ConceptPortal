@@ -46,16 +46,13 @@ export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode> }
       <div className='absolute z-pop top-0 right-0 flex flex-col gap-[4px] p-[2px]'>
         <Indicator
           noPadding
-          title={hasFile ? tx('ui.oss.node.linkedCs', 'Linked CS') : tx('ui.oss.node.noLinkedCs', 'No linked CS')}
+          title={hasFile ? tx('ui.oss.node.linkedCs') : tx('ui.oss.node.noLinkedCs')}
           icon={<IconRSForm className={hasFile ? 'text-constructive' : 'text-destructive'} size='12px' />}
         />
         {opType === OperationType.SYNTHESIS && node.data.operation.is_consolidation ? (
           <Indicator
             noPadding
-            title={tx(
-              'ui.oss.node.rhombusSynthesisWarn',
-              'Warning!\nRhombus synthesis\nDuplicate constituents are possible'
-            )}
+            title={tx('ui.oss.node.rhombusSynthesisWarn')}
             icon={<IconConsolidation className='text-primary' size='12px' />}
           />
         ) : null}

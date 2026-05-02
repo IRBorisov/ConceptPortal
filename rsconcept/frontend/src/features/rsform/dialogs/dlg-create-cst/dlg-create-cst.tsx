@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type CstType, type RSForm } from '@/domain/library';
 import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -87,12 +87,12 @@ export function DlgCreateCst() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.createCst.header', 'Create constituenta')}
+      header={tx('ui.dlg.createCst.header')}
       canSubmit={canSubmit}
       onCancel={onCancel}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
       validationHint={hint}
-      submitText={tx('ui.action.create', 'Create')}
+      submitText={tx('ui.action.create')}
       className='cc-column w-140 max-h-120 py-2 px-6'
     >
       <FormCreateCst

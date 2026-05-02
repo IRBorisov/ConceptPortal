@@ -67,7 +67,7 @@ export function MenuEdit() {
       <MiniButton
         noHover
         noPadding
-        title={tx('ui.sandbox.editMenu.buttonTitle', 'Editing')}
+        title={tx('ui.sandbox.editMenu.buttonTitle')}
         hideTitle={isMenuOpen}
         className='h-full px-3 text-muted-foreground hover:text-primary cc-animate-color'
         icon={<IconEdit2 size='1.25rem' />}
@@ -75,20 +75,20 @@ export function MenuEdit() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('ui.sandbox.editMenu.restoreOrder', 'Reorder list')}
-          title={tx('ui.sandbox.editMenu.restoreOrderHint', 'Restore order by types and links')}
+          text={tx('ui.sandbox.editMenu.restoreOrder')}
+          title={tx('ui.sandbox.editMenu.restoreOrderHint')}
           icon={<IconSortList size='1rem' className='icon-primary' />}
           onClick={handleRestoreOrder}
         />
         <DropdownButton
-          text={tx('ui.sandbox.editMenu.ordinalNames', 'Ordinal names')}
-          title={tx('ui.sandbox.editMenu.ordinalNamesHint', 'Assign names in order and refresh expressions')}
+          text={tx('ui.sandbox.editMenu.ordinalNames')}
+          title={tx('ui.sandbox.editMenu.ordinalNamesHint')}
           icon={<IconGenerateNames size='1rem' className='icon-primary' />}
           onClick={handleResetAliases}
         />
         <DropdownButton
-          text={tx('ui.sandbox.editMenu.substitution', 'Substitution')}
-          title={tx('ui.sandbox.editMenu.substitutionHint', 'Replace some constituents with others')}
+          text={tx('ui.sandbox.editMenu.substitution')}
+          title={tx('ui.sandbox.editMenu.substitutionHint')}
           icon={<IconReplace size='1rem' className='icon-red' />}
           onClick={handleSubstitute}
         />

@@ -1,4 +1,4 @@
-/** Russian UI copy for dialogs and toolbars (`useTx('ui.*', defaultMessage)`). */
+/** Russian UI copy for dialogs and toolbars. */
 export const uiRu: Record<string, string> = {
   'ui.action.create': 'Создать',
   'ui.action.save': 'Сохранить',
@@ -42,8 +42,7 @@ export const uiRu: Record<string, string> = {
   'ui.dlg.uploadRsform.pickFile': 'Выбрать файл',
   'ui.dlg.uploadRsform.loadMetadata': 'Загружать название и комментарий',
   'ui.dlg.uploadRsform.attention': 'Внимание!',
-  'ui.dlg.uploadRsform.warningBody':
-    'При загрузке из файла все конституенты текущей КС будут удалены',
+  'ui.dlg.uploadRsform.warningBody': 'При загрузке из файла все конституенты текущей КС будут удалены',
 
   'ui.dlg.showTypeGraph.header': 'Граф ступеней',
 
@@ -131,8 +130,7 @@ export const uiRu: Record<string, string> = {
   'ui.validation.conventionEmpty': 'Пустая конвенция',
   'ui.placeholder.expressionMissing': 'Выражение отсутствует',
   'ui.value.stub.unsupportedType': 'Значение для данного типа не предусмотрено',
-  'ui.value.stub.missingHint':
-    'Значение отсутствует. Используйте "Случайное значение" для генерации примера',
+  'ui.value.stub.missingHint': 'Значение отсутствует. Используйте "Случайное значение" для генерации примера',
   'ui.placeholder.termMissing': 'Термин отсутствует',
   'ui.placeholder.definitionMissing': 'Определение отсутствует',
 

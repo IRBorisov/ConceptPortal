@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
 import { AccessPolicy, LocationHead } from '@/domain/library';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';
@@ -191,7 +191,7 @@ export function MenuMain() {
       <MiniButton
         noHover
         noPadding
-        title={tx('ui.nav.menu', 'Menu')}
+        title={tx('ui.nav.menu')}
         hideTitle={isMenuOpen}
         icon={<IconMenu size='1.25rem' />}
         className='h-full pl-2 text-muted-foreground hover:text-primary cc-animate-color bg-transparent'
@@ -199,24 +199,24 @@ export function MenuMain() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('ui.action.share', 'Share')}
+          text={tx('ui.action.share')}
           title={formatLabel(
             schema.access_policy === AccessPolicy.PUBLIC ? lid.tooltip.shareItemPublic : lid.tooltip.shareItemPrivate
           )}
-          aria-label={tx('ui.aria.copyLinkToClipboard', 'Copy link to clipboard')}
+          aria-label={tx('ui.aria.copyLinkToClipboard')}
           icon={<IconShare size='1rem' className='icon-primary' />}
           onClick={handleShare}
           disabled={schema.access_policy !== AccessPolicy.PUBLIC}
         />
         <DropdownButton
-          text={tx('ui.action.qrCode', 'QR code')}
-          title={tx('ui.hint.qrSchemaPage', 'Show schema QR code')}
+          text={tx('ui.action.qrCode')}
+          title={tx('ui.hint.qrSchemaPage')}
           icon={<IconQR size='1rem' className='icon-primary' />}
           onClick={handleShowQR}
         />
         {!isAnonymous ? (
           <DropdownButton
-            text={tx('ui.action.clone', 'Clone')}
+            text={tx('ui.action.clone')}
             icon={<IconClone size='1rem' className='icon-green' />}
             disabled={isArchive}
             onClick={handleClone}
@@ -224,30 +224,30 @@ export function MenuMain() {
         ) : null}
         {!isAnonymous ? (
           <DropdownButton
-            text={tx('ui.action.createModel', 'Create model')}
+            text={tx('ui.action.createModel')}
             icon={<IconRSModel size='1rem' className={isArchive ? '' : 'text-accent-orange'} />}
             disabled={isArchive}
             onClick={handleCreateModel}
           />
         ) : null}
         <DropdownButton
-          text={tx('ui.action.openInSandbox', 'Open in sandbox')}
+          text={tx('ui.action.openInSandbox')}
           icon={<IconSandbox size='1rem' className='icon-green' />}
           onClick={() => void handleTransferToSandbox()}
         />
         <DropdownButton
-          text={tx('ui.action.exportPdf', 'Export to PDF')}
+          text={tx('ui.action.exportPdf')}
           icon={<IconPDF size='1rem' className='icon-primary' />}
           onClick={() => void handleSavePDF()}
         />
         <DropdownButton
-          text={tx('ui.action.exportToExteor', 'Export to Exteor')}
+          text={tx('ui.action.exportToExteor')}
           icon={<IconDownload size='1rem' className='icon-primary' />}
           onClick={handleDownload}
         />
         {isContentEditable ? (
           <DropdownButton
-            text={tx('ui.action.importFromExteor', 'Import from Exteor')}
+            text={tx('ui.action.importFromExteor')}
             icon={<IconUpload size='1rem' className='icon-red' />}
             disabled={isProcessing || hasInheritance}
             onClick={handleUpload}
@@ -255,7 +255,7 @@ export function MenuMain() {
         ) : null}
         {isMutable ? (
           <DropdownButton
-            text={tx('ui.action.deleteSchema', 'Delete schema')}
+            text={tx('ui.action.deleteSchema')}
             icon={<IconDestroy size='1rem' className='icon-red' />}
             disabled={isProcessing || role < UserRole.OWNER}
             onClick={handleDelete}
@@ -267,7 +267,7 @@ export function MenuMain() {
         {schema.oss.length > 0 ? (
           <div ref={ossRef} onBlur={handleOssBlur} className='relative w-full'>
             <DropdownButton
-              text={tx('ui.nav.gotoOss', 'Go to OSS')}
+              text={tx('ui.nav.gotoOss')}
               className='w-full'
               icon={<IconOSS size='1rem' className='icon-primary' />}
               onClick={onOssToggle}
@@ -287,7 +287,7 @@ export function MenuMain() {
         {schema.models.length > 0 ? (
           <div ref={modelRef} onBlur={handleModelBlur} className='relative w-full'>
             <DropdownButton
-              text={tx('ui.nav.gotoModel', 'Go to model')}
+              text={tx('ui.nav.gotoModel')}
               className='w-full'
               icon={<IconRSModel size='1rem' className='icon-primary' />}
               onClick={onModelToggle}
@@ -305,7 +305,7 @@ export function MenuMain() {
           </div>
         ) : null}
         <DropdownButton
-          text={tx('ui.nav.library', 'Library')}
+          text={tx('ui.nav.library')}
           icon={<IconLibrary size='1rem' className='icon-primary' />}
           onClick={() => router.gotoLibrary()}
         />

@@ -57,7 +57,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
     }),
     columnHelper.accessor('label', {
       id: 'label',
-      header: tx('ui.promptTemplates.column.title', 'Title'),
+      header: tx('ui.promptTemplates.column.title'),
       size: 200,
       minSize: 200,
       maxSize: 200,
@@ -67,7 +67,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
     }),
     columnHelper.accessor('description', {
       id: 'description',
-      header: tx('ui.promptTemplates.column.description', 'Description'),
+      header: tx('ui.promptTemplates.column.description'),
       size: 1200,
       minSize: 200,
       maxSize: 1200,
@@ -76,7 +76,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
     }),
     columnHelper.accessor('owner', {
       id: 'owner',
-      header: tx('ui.promptTemplates.column.owner', 'Owner'),
+      header: tx('ui.promptTemplates.column.owner'),
       size: 400,
       minSize: 100,
       maxSize: 400,
@@ -106,10 +106,10 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
           <NoData>
-            <p>{tx('ui.table.emptyList', 'List is empty')}</p>
+            <p>{tx('ui.table.emptyList')}</p>
             <p>
               <TextURL
-                text={tx('ui.link.createPromptTemplate', 'Create a prompt template...')}
+                text={tx('ui.link.createPromptTemplate')}
                 onClick={handleCreateNew}
               />
             </p>

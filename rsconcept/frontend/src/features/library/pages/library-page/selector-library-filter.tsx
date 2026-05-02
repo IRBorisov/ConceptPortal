@@ -25,36 +25,36 @@ export function SelectorLibraryFilter({ className }: SelectorLibraryFilterProps)
     <div className={cn('font-controls text-sm opacity-80 transition-opacity hover:opacity-100 select-none', className)}>
       <Select value={value} onValueChange={handleValueChange}>
         <SelectTrigger noBorder className='h-7 pl-2 pr-1 gap-1 pb-0'>
-          <SelectValue placeholder={tx('lib.filter.placeholder', 'Filter')} />
+          <SelectValue placeholder={tx('lib.filter.placeholder')} />
         </SelectTrigger>
         <SelectContent align='start'>
           <SelectItem value='all'>
             <IconFilter size='1rem' className='text-muted-foreground -mt-0.5 -mr-0.75' />
-            {tx('lib.filter.label', 'Filter')}
+            {tx('lib.filter.label')}
           </SelectItem>
           <SelectItem value='owner_me'>
             <IconOwner size='1rem' className='text-primary -mt-0.5 -mr-0.75' />
-            {tx('lib.filter.owner', 'I am owner')}
+            {tx('lib.filter.owner')}
           </SelectItem>
           <SelectItem value='editor_me'>
             <IconEditor size='1rem' className='text-primary -mt-0.5 -mr-0.75' />
-            {tx('lib.filter.editor', 'I am editor')}
+            {tx('lib.filter.editor')}
           </SelectItem>
           <SelectItem value='hidden'>
             <IconHide size='1rem' className='text-destructive -mt-0.5 -mr-0.75' />
-            {tx('lib.filter.hidden', 'Hidden')}
+            {tx('lib.filter.hidden')}
           </SelectItem>
           <SelectItem value='type_rsform'>
             <IconRSForm size='1rem' className='text-primary -mt-0.5 -mr-0.75' />
-            {tx('lib.filter.rsforms', 'Schemas')}
+            {tx('lib.filter.rsforms')}
           </SelectItem>
           <SelectItem value='type_oss'>
             <IconOSS size='1rem' className='text-constructive -mt-0.5 -mr-0.75' />
-            {tx('lib.filter.oss', 'OSS')}
+            {tx('lib.filter.oss')}
           </SelectItem>
           <SelectItem value='type_rsmodel'>
             <IconRSModel size='1rem' className='text-accent-orange -mt-0.5 -mr-0.75' />
-            {tx('lib.filter.rsmodels', 'Models')}
+            {tx('lib.filter.rsmodels')}
           </SelectItem>
         </SelectContent>
       </Select>

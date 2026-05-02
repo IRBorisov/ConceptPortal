@@ -6,7 +6,7 @@ import { Grammeme, type WordForm } from '@/domain/cctext';
 import { Case } from '@/domain/cctext/language';
 import { parseGrammemes } from '@/domain/cctext/language-api';
 import { type Constituenta, type RSForm } from '@/domain/library';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -106,8 +106,8 @@ export function DlgEditWordForms() {
 
   return (
     <ModalForm
-      header={tx('ui.wordForms.edit.header', 'Edit word forms')}
-      submitText={tx('ui.action.save', 'Save')}
+      header={tx('ui.wordForms.edit.header')}
+      submitText={tx('ui.action.save')}
       onSubmit={handleSubmit}
       className='flex flex-col w-180 px-6'
       helpTopic={HelpTopic.TERM_CONTROL}
@@ -115,7 +115,7 @@ export function DlgEditWordForms() {
       <div className='flex items-center gap-2 justify-between pt-1'>
         {generateLexeme ? (
           <MiniButton
-            title={tx('ui.wordForms.fillFromLexeme', 'Fill word forms')}
+            title={tx('ui.wordForms.fillFromLexeme')}
             icon={<IconMoveDown size='1.5rem' className='icon-primary' />}
             onClick={handleGenerateLexeme}
             disabled={isProcessing || nominalResolved.trim() === ''}
@@ -124,8 +124,8 @@ export function DlgEditWordForms() {
         <RefsInput
           id='dlg_edit_wordforms_nominal'
           areaClassName='disabled:min-h-9'
-          aria-label={tx('ui.wordForms.nominalAria', 'Lemma form')}
-          placeholder={tx('ui.wordForms.nominalPlaceholder', 'Lemma form')}
+          aria-label={tx('ui.wordForms.nominalAria')}
+          placeholder={tx('ui.wordForms.nominalPlaceholder')}
           schema={schema}
           value={nominalRaw}
           initialValue={target.term_raw}

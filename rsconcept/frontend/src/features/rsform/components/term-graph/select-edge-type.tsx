@@ -21,7 +21,7 @@ export function SelectEdgeType({ className }: SelectEdgeTypeProps) {
     <div className={cn('relative border select-none bg-input pointer-events-auto', className)}>
       <Select onValueChange={setGraphType} value={graphType}>
         <SelectTrigger noBorder className='w-full'>
-          <SelectValue placeholder={tx('ui.rsform.termGraph.colorSchemePlaceholder', 'Color scheme')} />
+          <SelectValue placeholder={tx('ui.rsform.termGraph.colorSchemePlaceholder')} />
         </SelectTrigger>
         <SelectContent alignOffset={-1} sideOffset={-4}>
           {Object.values(TGEdgeType).map(value => (

@@ -23,7 +23,7 @@ export function UserButton({ onLogin, onClickUser, isOpen }: UserButtonProps) {
   if (isAnonymous) {
     return (
       <NavigationButton
-        title={tx('nav.user.loginTitle', 'Go to login page')}
+        title={tx('nav.user.loginTitle')}
         icon={<IconLogin size='1.25rem' className='icon-primary' />}
         onClick={onLogin}
       />
@@ -31,7 +31,7 @@ export function UserButton({ onLogin, onClickUser, isOpen }: UserButtonProps) {
   } else {
     return (
       <NavigationButton
-        title={tx('nav.user.menuTitle', 'User account')}
+        title={tx('nav.user.menuTitle')}
         hideTitle={isOpen}
         aria-haspopup='true'
         aria-expanded={isOpen}

@@ -24,19 +24,19 @@ export function TableUsers({ items, onDelete, onReset, className, style }: Table
     columnHelper.accessor('last_name', {
       id: 'last_name',
       size: 400,
-      header: tx('ui.users.column.lastName', 'Last name')
+      header: tx('ui.users.column.lastName')
     }),
     columnHelper.accessor('first_name', {
       id: 'first_name',
       size: 400,
-      header: tx('ui.users.column.firstName', 'First name')
+      header: tx('ui.users.column.firstName')
     }),
     columnHelper.display({
       id: 'actions',
       size: 0,
       cell: props => (
         <MiniButton
-          title={tx('ui.users.action.removeFromListTitle', 'Remove from list')}
+          title={tx('ui.users.action.removeFromListTitle')}
           className='align-middle'
           noPadding
           icon={<IconRemove size='1.25rem' className='cc-remove' />}
@@ -50,7 +50,7 @@ export function TableUsers({ items, onDelete, onReset, className, style }: Table
     <div className='relative'>
       {items.length > 0 ? (
         <MiniButton
-          title={tx('ui.users.action.clearListTitle', 'Clear list')}
+          title={tx('ui.users.action.clearListTitle')}
           className='absolute z-pop top-2 right-1 py-0 align-middle'
           icon={<IconReset size='1.25rem' className='cc-remove' />}
           onClick={onReset}

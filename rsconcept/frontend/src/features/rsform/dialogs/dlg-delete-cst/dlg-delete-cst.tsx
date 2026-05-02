@@ -37,36 +37,36 @@ export function DlgDeleteCst() {
 
   return (
     <ModalForm
-      header={tx('ui.rsform.dlg.deleteCst.header', 'Delete constituents')}
+      header={tx('ui.rsform.dlg.deleteCst.header')}
       submitText={
         expandOut
-          ? tx('ui.rsform.dlg.deleteCst.submitWithDeps', 'Delete with dependents')
-          : tx('ui.rsform.dlg.deleteCst.submit', 'Delete')
+          ? tx('ui.rsform.dlg.deleteCst.submitWithDeps')
+          : tx('ui.rsform.dlg.deleteCst.submit')
       }
       onSubmit={handleSubmit}
       className='cc-column max-w-[60vw] min-w-120 px-6'
     >
       <ListConstituents
-        title={tx('ui.rsform.dlg.deleteCst.selectedTitle', 'Marked for deletion')}
+        title={tx('ui.rsform.dlg.deleteCst.selectedTitle')}
         list={selected}
         schema={schema}
         prefix={prefixes.cst_delete_list}
       />
       <ListConstituents
-        title={tx('ui.rsform.dlg.deleteCst.dependentsTitle', 'Dependent constituents')}
+        title={tx('ui.rsform.dlg.deleteCst.dependentsTitle')}
         list={expansion}
         schema={schema}
         prefix={prefixes.cst_dependant_list}
       />
       <Checkbox
-        label={tx('ui.rsform.dlg.deleteCst.expandDepsLabel', 'Delete dependent constituents')}
+        label={tx('ui.rsform.dlg.deleteCst.expandDepsLabel')}
         className='mb-2'
         value={expandOut}
         onChange={value => setExpandOut(value)}
       />
       {hasInherited ? (
         <p className='text-sm clr-text-red'>
-          {tx('ui.rsform.dlg.deleteCst.inheritedWarn', 'Warning: constituents have heirs in the OSS')}
+          {tx('ui.rsform.dlg.deleteCst.inheritedWarn')}
         </p>
       ) : null}
     </ModalForm>

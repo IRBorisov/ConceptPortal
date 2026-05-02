@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { type VersionInfo } from '@/domain/library';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
@@ -56,11 +56,11 @@ export function DlgCreateVersion() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.createVersion.header', 'Create version')}
+      header={tx('ui.dlg.createVersion.header')}
       className='cc-column w-120 py-2 px-6'
       canSubmit={canSubmit}
       validationHint={hint}
-      submitText={tx('ui.action.create', 'Create')}
+      submitText={tx('ui.action.create')}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
@@ -71,12 +71,12 @@ export function DlgCreateVersion() {
         {field => (
           <TextInput
             id='dlg_version'
-            label={tx('ui.label.version', 'Version')}
+            label={tx('ui.label.version')}
             className='w-64'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>
@@ -85,7 +85,7 @@ export function DlgCreateVersion() {
           <TextArea
             id='dlg_description'
             spellCheck
-            label={tx('ui.label.description', 'Description')}
+            label={tx('ui.label.description')}
             rows={3}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -98,7 +98,7 @@ export function DlgCreateVersion() {
           {field => (
             <Checkbox
               id='dlg_only_selected'
-              label={tx('ui.dlg.createVersion.onlySelected', 'Only selected constituents [{n} of {total}]', {
+              label={tx('ui.dlg.createVersion.onlySelected', {
                 n: selected.length,
                 total: totalCount
               })}

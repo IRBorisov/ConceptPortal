@@ -88,14 +88,14 @@ export function PickMultiConstituenta({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: () => <span className='pl-3'>{tx('ui.table.header.alias', 'Alias')}</span>,
+      header: () => <span className='pl-3'>{tx('ui.table.header.alias')}</span>,
       size: 65,
       cell: props => <BadgeConstituenta value={props.row.original} />
     }),
     columnHelper.accessor(cst => describeConstituenta(cst), {
       id: 'description',
       size: 1000,
-      header: tx('ui.table.header.description', 'Description')
+      header: tx('ui.table.header.description')
     })
   ];
 
@@ -104,11 +104,11 @@ export function PickMultiConstituenta({
       <div className='px-3 flex justify-between items-center bg-input border-b rounded-t-md'>
         <div className='w-[24ch] select-none whitespace-nowrap'>
           {items.length > 0
-            ? tx('ui.table.pickMulti.selected', 'Selected {selected} of {total}', {
+            ? tx('ui.table.pickMulti.selected', {
                 selected: value.length,
                 total: items.length
               })
-            : tx('ui.table.pickMulti.constituentsHeader', 'Constituents')}
+            : tx('ui.table.pickMulti.constituentsHeader')}
         </div>
         <SearchBar
           id='dlg_constituents_search'
@@ -145,7 +145,7 @@ export function PickMultiConstituenta({
         onRowSelectionChange={handleRowSelection}
         noDataComponent={
           <NoData>
-            <p>{tx('ui.table.emptyList', 'No items')}</p>
+            <p>{tx('ui.table.emptyList')}</p>
           </NoData>
         }
       />

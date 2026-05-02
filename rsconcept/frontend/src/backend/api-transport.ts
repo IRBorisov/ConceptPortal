@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import axios, { type AxiosError, type AxiosRequestConfig } from 'axios';
 import { type z, ZodError } from 'zod';
 
-import { formatAppMessage , LABEL_DEFAULTS, lid } from '@/i18n';
+import { formatAppMessage, lid } from '@/i18n';
 
 import { buildConstants } from '@/utils/build-constants';
 import { PARAMETER } from '@/utils/constants';
@@ -153,7 +153,7 @@ function notifySuccess<ResponseData>(
 
 function notifyError(error: Error | AxiosError | ZodError) {
   if (error instanceof ZodError) {
-    toast.error(formatAppMessage(lid.error.invalidResponse, LABEL_DEFAULTS[lid.error.invalidResponse]));
+    toast.error(formatAppMessage(lid.error.invalidResponse));
   } else {
     toast.error(extractErrorMessage(error));
   }

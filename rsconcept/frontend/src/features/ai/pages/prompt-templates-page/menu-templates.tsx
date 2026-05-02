@@ -24,7 +24,7 @@ export function MenuTemplates() {
       <MiniButton
         noHover
         noPadding
-        title={tx('ui.promptTemplates.menu.newTemplate', 'New template')}
+        title={tx('ui.promptTemplates.menu.newTemplate')}
         icon={<IconNewItem size='1.25rem' />}
         className='h-full text-muted-foreground hover:text-constructive cc-animate-color bg-transparent'
         onClick={handleNewTemplate}

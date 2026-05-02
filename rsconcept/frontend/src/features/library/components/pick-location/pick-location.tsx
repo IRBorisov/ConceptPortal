@@ -54,7 +54,7 @@ export function PickLocation({
 
       <TextArea
         id='dlg_location'
-        label={tx('ui.library.pickLocation.label', 'Location')}
+        label={tx('ui.library.pickLocation.label')}
         rows={rows}
         value={value.substring(3)}
         className='w-full'

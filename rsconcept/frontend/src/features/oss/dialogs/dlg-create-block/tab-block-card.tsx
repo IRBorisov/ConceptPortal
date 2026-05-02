@@ -5,7 +5,7 @@ import { type ReactNode } from 'react';
 import { type OperationSchema } from '@/domain/library';
 import { NodeType } from '@/domain/library';
 import { constructNodeID } from '@/domain/library/oss-api';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { TextArea, TextInput } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
@@ -36,12 +36,12 @@ export function TabBlockCard({ oss, blocks, fields }: TabBlockCardProps) {
         {field => (
           <TextInput
             id='operation_title'
-            aria-label={tx('ui.oss.newBlockTitle', 'New block title')}
-            placeholder={tx('ui.oss.newBlockTitle', 'New block title')}
+            aria-label={tx('ui.oss.newBlockTitle')}
+            placeholder={tx('ui.oss.newBlockTitle')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </TitleField>
@@ -51,7 +51,7 @@ export function TabBlockCard({ oss, blocks, fields }: TabBlockCardProps) {
           <SelectParent
             items={oss.blocks.filter(block => !all_children.includes(block.nodeID))}
             value={field.state.value ? (oss.blockByID.get(field.state.value) ?? null) : null}
-            placeholder={tx('ui.oss.parentBlock', 'Parent block')}
+            placeholder={tx('ui.oss.parentBlock')}
             onChange={value => field.handleChange(value ? value.id : null)}
           />
         )}
@@ -61,7 +61,7 @@ export function TabBlockCard({ oss, blocks, fields }: TabBlockCardProps) {
         {field => (
           <TextArea
             id='operation_comment'
-            label={tx('ui.label.description', 'Description')}
+            label={tx('ui.label.description')}
             placeholder={formatLabel(lid.placeholder.itemDescription)}
             noResize
             rows={5}

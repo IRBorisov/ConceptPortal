@@ -19,7 +19,7 @@ interface SelectBlockProps extends Styling {
 
 export function SelectBlock({ items, placeholder, ...restProps }: SelectBlockProps) {
   const tx = useTx();
-  const resolvedPlaceholder = placeholder ?? tx('ui.oss.selectBlock.placeholder', 'Select block');
+  const resolvedPlaceholder = placeholder ?? tx('ui.oss.selectBlock.placeholder');
   return (
     <ComboBox
       items={items}

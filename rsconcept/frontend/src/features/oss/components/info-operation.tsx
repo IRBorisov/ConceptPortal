@@ -48,32 +48,32 @@ export function InfoOperation({ operation }: InfoOperationProps) {
       <h2>{operation.alias}</h2>
       <p className='flex justify-between gap-3'>
         <span>
-          <b>{tx('ui.oss.infoOperation.typeLabel', 'Type:')}</b> {labelOperationType(operation.operation_type)}
+          <b>{tx('ui.oss.infoOperation.typeLabel')}</b> {labelOperationType(operation.operation_type)}
         </span>
         <span>
-          <b>{tx('ui.oss.infoOperation.ownAdditionsLabel', 'Own additions:')}</b>{' '}
-          {operation.has_additions ? tx('ui.common.yes', 'Yes') : tx('ui.common.no', 'No')}
+          <b>{tx('ui.oss.infoOperation.ownAdditionsLabel')}</b>{' '}
+          {operation.has_additions ? tx('ui.common.yes') : tx('ui.common.no')}
         </span>
       </p>
       {operation.operation_type === OperationType.INPUT && operation.is_import ? (
         <p>
-          <b>{tx('ui.oss.infoOperation.csNotInOss', 'The conceptual schema is not part of this OSS')}</b>
+          <b>{tx('ui.oss.infoOperation.csNotInOss')}</b>
         </p>
       ) : null}
       {operation.operation_type === OperationType.SYNTHESIS && operation.is_consolidation ? (
         <p>
-          <b>{tx('ui.oss.infoOperation.rhombusSynthesis', 'Rhombus synthesis')}</b>
+          <b>{tx('ui.oss.infoOperation.rhombusSynthesis')}</b>
         </p>
       ) : null}
       {operation.title ? (
         <p>
-          <b>{tx('ui.oss.infoOperation.titleWithColon', 'Title: ')}</b>
+          <b>{tx('ui.oss.infoOperation.titleWithColon')}</b>
           {operation.title}
         </p>
       ) : null}
       {operation.description ? (
         <p>
-          <b>{tx('ui.oss.infoOperation.descriptionWithColon', 'Description: ')}</b>
+          <b>{tx('ui.oss.infoOperation.descriptionWithColon')}</b>
           {operation.description}
         </p>
       ) : null}
@@ -88,8 +88,8 @@ export function InfoOperation({ operation }: InfoOperationProps) {
         />
       ) : operation.operation_type !== OperationType.INPUT ? (
         <p>
-          <b>{tx('ui.oss.infoOperation.substitutionsLabel', 'Substitutions:')}</b>{' '}
-          {tx('ui.oss.infoOperation.substitutionsNone', 'None')}
+          <b>{tx('ui.oss.infoOperation.substitutionsLabel')}</b>{' '}
+          {tx('ui.oss.infoOperation.substitutionsNone')}
         </p>
       ) : null}
     </>

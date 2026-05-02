@@ -3,7 +3,7 @@
 import { type ReactNode } from 'react';
 
 import { type OperationSchema } from '@/domain/library';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { TextArea, TextInput } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
@@ -32,12 +32,12 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
         {field => (
           <TextInput
             id='operation_title'
-            aria-label={tx('ui.oss.operationTitle', 'Operation title')}
-            placeholder={tx('ui.oss.operationTitle', 'Operation title')}
+            aria-label={tx('ui.oss.operationTitle')}
+            placeholder={tx('ui.oss.operationTitle')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </TitleField>
@@ -47,13 +47,13 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
           <TextInput
             id='operation_alias'
             dense
-            label={tx('ui.label.alias', 'Abbreviation')}
-            placeholder={tx('ui.oss.enterAlias', 'Enter abbreviation')}
+            label={tx('ui.label.alias')}
+            placeholder={tx('ui.oss.enterAlias')}
             className='w-full'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </AliasField>
@@ -62,7 +62,7 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
           <SelectParent
             items={oss.blocks}
             value={field.state.value ? (oss.blockByID.get(field.state.value) ?? null) : null}
-            placeholder={tx('ui.oss.parentBlock', 'Parent block')}
+            placeholder={tx('ui.oss.parentBlock')}
             onChange={value => field.handleChange(value ? value.id : null)}
           />
         )}
@@ -72,14 +72,14 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
         {field => (
           <TextArea
             id='operation_comment'
-            label={tx('ui.label.description', 'Description')}
+            label={tx('ui.label.description')}
             placeholder={formatLabel(lid.placeholder.itemDescription)}
             noResize
             rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </DescriptionField>

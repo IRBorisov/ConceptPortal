@@ -9,8 +9,8 @@ export function useLabelUser() {
     const user = users.find(({ id }) => id === userID);
     if (!user || userID === null) {
       return userID
-        ? formatAppMessage('ui.users.anonymousWithId', 'Anonymous {id}', { id: userID.toString() })
-        : formatAppMessage('ui.users.absent', 'Absent');
+        ? formatAppMessage('ui.users.anonymousWithId', { id: userID.toString() })
+        : formatAppMessage('ui.users.absent');
     }
     const hasFirstName = user.first_name !== '';
     const hasLastName = user.last_name !== '';
@@ -23,7 +23,7 @@ export function useLabelUser() {
       }
       return user.last_name + ' ' + user.first_name;
     }
-    return formatAppMessage('ui.users.anonymousWithId', 'Anonymous {id}', { id: userID.toString() });
+    return formatAppMessage('ui.users.anonymousWithId', { id: userID.toString() });
   }
   return getUserLabel;
 }

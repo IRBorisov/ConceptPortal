@@ -45,8 +45,8 @@ export function DlgEditValue() {
   return (
     <ModalForm
       helpTopic={HelpTopic.UI_MODEL_VALUE_EDIT}
-      header={tx('ui.rsmodel.dlg.editValue.header', 'Value editor')}
-      submitText={tx('ui.action.save', 'Save')}
+      header={tx('ui.rsmodel.dlg.editValue.header')}
+      submitText={tx('ui.action.save')}
       canSubmit={value !== initialValue && !!onChange}
       onSubmit={handleSubmit}
       className='w-230 h-145 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6'

@@ -33,7 +33,7 @@ export function SubmitButton({
   ...restProps
 }: SubmitButtonProps) {
   const tx = useTx();
-  const label = text ?? tx('ui.submit.ok', 'OK');
+  const label = text ?? tx('ui.submit.ok');
   return (
     <button
       type='submit'

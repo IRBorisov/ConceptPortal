@@ -96,7 +96,7 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
           <MiniButton
             icon={<IconAccept size='1.5rem' className='icon-green' />}
             title={prepareTooltip(
-              tx('ui.refs.inline.saveLink', 'Save reference'),
+              tx('ui.refs.inline.saveLink'),
               isMac() ? 'Cmd + Enter' : 'Ctrl + Enter'
             )}
             onClick={handleSave}
@@ -104,13 +104,13 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
           />
           <MiniButton
             icon={<IconClose size='1.5rem' className='icon-primary' />}
-            title={prepareTooltip(tx('modal.close', 'Close'), 'Esc')}
+            title={prepareTooltip(tx('modal.close'), 'Esc')}
             onClick={onCancel}
           />
-          <Label text={tx('ui.refs.inline.dependentWord', 'Dependent word')} />
+          <Label text={tx('ui.refs.inline.dependentWord')} />
           <button
             type='button'
-            aria-label={tx('ui.refs.inline.prevRefAria', 'Previous reference')}
+            aria-label={tx('ui.refs.inline.prevRefAria')}
             className={buttonClass}
             onClick={() => setOffset(prev => stepOffset(prev, -1))}
           >
@@ -118,7 +118,7 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
           </button>
           <input
             id='inline_reference_offset'
-            aria-label={tx('ui.refs.inline.offsetAria', 'Base reference offset')}
+            aria-label={tx('ui.refs.inline.offsetAria')}
             className={clsx(
               'w-12 text-center focus-outline rounded-md p-0 border',
               isOffsetValid ? 'border-constructive/50 bg-constructive/5' : 'border-destructive/50 bg-destructive/5'
@@ -128,7 +128,7 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
           />
           <button
             type='button'
-            aria-label={tx('ui.refs.inline.nextRefAria', 'Next reference')}
+            aria-label={tx('ui.refs.inline.nextRefAria')}
             className={buttonClass}
             onClick={() => setOffset(prev => stepOffset(prev, 1))}
           >
@@ -137,8 +137,8 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
         </div>
         <TextInput
           id='inline_reference_nominal'
-          aria-label={tx('ui.refs.inline.lemmaAria', 'Lemma')}
-          placeholder={tx('ui.refs.inline.lemmaPlaceholder', 'Lemma')}
+          aria-label={tx('ui.refs.inline.lemmaAria')}
+          placeholder={tx('ui.refs.inline.lemmaPlaceholder')}
           className='text-sm'
           value={nominal}
           ref={nominalInputRef}

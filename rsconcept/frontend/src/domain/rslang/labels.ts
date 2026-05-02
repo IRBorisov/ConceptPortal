@@ -10,6 +10,7 @@ import { RSErrorCode } from './error';
 
 const INTEGER_TYPE_NAME = 'Z';
 const ANY_TYPE_NAME = 'R0';
+const LOGIC_TYPE_NAME = 'Logic';
 
 const labelTokenRecord: Partial<Record<TokenID, string>> = {
   [TokenID.DECART]: '×',
@@ -221,7 +222,7 @@ export function labelType(type: RO<ExpressionType> | null): string {
     case TypeID.collection:
       return type.base.typeID === TypeID.collection ? `ℬ${labelType(type.base)}` : `ℬ(${labelType(type.base)})`;
     case TypeID.logic:
-      return formatLabel(rslangLid.type.logicName);
+      return LOGIC_TYPE_NAME;
     case TypeID.predicate:
     case TypeID.function:
       const argsText = type.args.map(arg => labelType(arg.type)).join(', ');
@@ -247,7 +248,7 @@ export function normalizeType(type: RO<ExpressionType> | null): string {
     case TypeID.collection:
       return type.base.typeID === TypeID.collection ? `ℬ${normalizeType(type.base)}` : `ℬ(${normalizeType(type.base)})`;
     case TypeID.logic:
-      return formatLabel(rslangLid.type.logicName);
+      return LOGIC_TYPE_NAME;
     case TypeID.predicate:
     case TypeID.function:
       const argsText = type.args.map(arg => normalizeType(arg.type)).join(', ');

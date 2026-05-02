@@ -3,7 +3,7 @@
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/domain/library';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 
@@ -41,7 +41,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
     read_only: false,
     schema: modelFrom,
     title: schemaItem
-      ? tx('ui.library.createItem.modelTitle', 'Model {title}', { title: schemaItem.title })
+      ? tx('ui.library.createItem.modelTitle', { title: schemaItem.title })
       : undefined,
     alias: schemaItem ? `M${schemaItem.alias}` : undefined,
     location: schemaItem
@@ -99,21 +99,21 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
     >
       <h1 className='select-none relative'>
         {itemType === LibraryItemType.RSMODEL
-          ? tx('lib.create.pageTitleModel', 'New conceptual model')
+          ? tx('lib.create.pageTitleModel')
           : itemType === LibraryItemType.OSS
-            ? tx('lib.create.pageTitleOss', 'New operational schema')
-            : tx('lib.create.pageTitleSchema', 'New conceptual schema')}
+            ? tx('lib.create.pageTitleOss')
+            : tx('lib.create.pageTitleSchema')}
       </h1>
 
       <form.Field name='title'>
         {field => (
           <TextInput
             id='schema_title'
-            placeholder={tx('lib.create.titlePlaceholder', 'Title')}
+            placeholder={tx('lib.create.titlePlaceholder')}
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0] ? formatLabel(field.state.meta.errors[0].message) : undefined}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>
@@ -123,18 +123,18 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
           {field => (
             <TextInput
               id='schema_alias'
-              label={tx('lib.create.alias', 'Alias')}
+              label={tx('lib.create.alias')}
               className='w-84'
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={field.state.meta.errors[0] ? formatLabel(field.state.meta.errors[0].message) : undefined}
+              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
             />
           )}
         </form.Field>
 
         <div className='flex flex-col gap-2'>
-          <Label text={tx('lib.create.access', 'Access')} className='self-center select-none' />
+          <Label text={tx('lib.create.access')} className='self-center select-none' />
           <div className='ml-auto cc-icons'>
             <form.Field name='access_policy'>
               {field => (
@@ -150,10 +150,10 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
                 <MiniButton
                   title={
                     field.state.value
-                      ? tx('lib.create.libraryShow', 'Library: show in list')
-                      : tx('lib.create.libraryHide', 'Library: hide from list')
+                      ? tx('lib.create.libraryShow')
+                      : tx('lib.create.libraryHide')
                   }
-                  aria-label={tx('lib.create.libraryToggleAria', 'Toggle library visibility')}
+                  aria-label={tx('lib.create.libraryToggleAria')}
                   icon={<IconItemVisibility value={field.state.value ?? true} />}
                   onClick={() => field.handleChange(!field.state.value)}
                 />
@@ -165,7 +165,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
 
       {itemType === LibraryItemType.RSMODEL ? (
         <div>
-          <Label text={tx('lib.create.schemaLabel', 'Conceptual schema')} />
+          <Label text={tx('lib.create.schemaLabel')} />
           <form.Field name='schema'>
             {field => (
               <PickSchema
@@ -175,7 +175,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
                 onChange={field.handleChange}
                 rows={6}
                 className='mt-2'
-                error={field.state.meta.errors[0] ? formatLabel(field.state.meta.errors[0].message) : undefined}
+                error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
               />
             )}
           </form.Field>
@@ -188,7 +188,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
             value={field.state.value ?? ''}
             rows={2}
             onChange={field.handleChange}
-            error={field.state.meta.errors[0] ? formatLabel(field.state.meta.errors[0].message) : undefined}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>
@@ -197,13 +197,13 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
         {field => (
           <TextArea
             id='schema_comment'
-            label={tx('lib.create.description', 'Description')}
+            label={tx('lib.create.description')}
             placeholder={formatLabel(lid.placeholder.itemDescription)}
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}
             rows={5}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0] ? formatLabel(field.state.meta.errors[0].message) : undefined}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>
@@ -212,13 +212,13 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
         <SubmitButton
           text={
             itemType === LibraryItemType.RSMODEL
-              ? tx('lib.create.submitModel', 'Create model')
-              : tx('lib.create.submitSchema', 'Create schema')
+              ? tx('lib.create.submitModel')
+              : tx('lib.create.submitSchema')
           }
           loading={isPending}
           className='min-w-40'
         />
-        <Button text={tx('lib.create.cancel', 'Cancel')} className='min-w-40' onClick={handleCancel} />
+        <Button text={tx('lib.create.cancel')} className='min-w-40' onClick={handleCancel} />
       </div>
     </form>
   );

@@ -32,7 +32,7 @@ export function TabTemplate({ schema }: TabTemplateProps) {
 
   const { templates } = useTemplatesSuspense();
   const templateOptions = [
-    { ...schema, title: tx('ui.rsform.template.currentSchema', 'Current schema') },
+    { ...schema, title: tx('ui.rsform.template.currentSchema') },
     ...templates
   ];
   const { schema: templateSchema } = useRSForm({ itemID: templateID ?? undefined });
@@ -56,7 +56,7 @@ export function TabTemplate({ schema }: TabTemplateProps) {
           items={templateOptions}
           noBorder
           noSearch
-          placeholder={tx('ui.rsform.template.sourcePlaceholder', 'Source')}
+          placeholder={tx('ui.rsform.template.sourcePlaceholder')}
           className='w-48'
           idFunc={item => String(item.id)}
           labelValueFunc={item => item.title}
@@ -69,7 +69,7 @@ export function TabTemplate({ schema }: TabTemplateProps) {
           noBorder
           noSearch
           clearable
-          placeholder={tx('ui.rsform.template.categoryPlaceholder', 'Category')}
+          placeholder={tx('ui.rsform.template.categoryPlaceholder')}
           className='grow'
           idFunc={cst => String(cst.id)}
           labelValueFunc={cst => cst.term_raw}
@@ -90,7 +90,7 @@ export function TabTemplate({ schema }: TabTemplateProps) {
         id='dlg_template_term'
         disabled
         spellCheck
-        placeholder={tx('ui.rsform.template.notSelectedPlaceholder', 'No constituent template selected')}
+        placeholder={tx('ui.rsform.template.notSelectedPlaceholder')}
         className='my-3'
         rows={2}
         value={prototypeInfo}
@@ -98,7 +98,7 @@ export function TabTemplate({ schema }: TabTemplateProps) {
       <RSInput
         id='dlg_template_expression'
         disabled
-        placeholder={tx('ui.rsform.template.pickFromListPlaceholder', 'Pick a template from the list')}
+        placeholder={tx('ui.rsform.template.pickFromListPlaceholder')}
         height='5.1rem'
         value={prototype?.definition_formal}
       />

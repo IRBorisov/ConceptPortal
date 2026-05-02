@@ -71,14 +71,14 @@ export function PickSchema({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: tx('ui.label.alias', 'Abbreviation'),
+      header: tx('ui.label.alias'),
       size: 150,
       minSize: 80,
       maxSize: 150
     }),
     columnHelper.accessor('title', {
       id: 'title',
-      header: tx('ui.label.title', 'Title'),
+      header: tx('ui.label.title'),
       size: 1200,
       minSize: 200,
       maxSize: 1200,
@@ -86,7 +86,7 @@ export function PickSchema({
     }),
     columnHelper.accessor('time_update', {
       id: 'time_update',
-      header: tx('ui.pick.schema.dateColumn', 'Date'),
+      header: tx('ui.pick.schema.dateColumn'),
       cell: props => (
         <div className='whitespace-nowrap'>
           {new Date(props.getValue()).toLocaleString(intl.locale, {
@@ -124,7 +124,7 @@ export function PickSchema({
         />
         <div className='relative' ref={locationRef} onBlur={handleLocationBlur}>
           <MiniButton
-            title={tx('ui.pick.schema.filterByLocationTitle', 'Filter by location')}
+            title={tx('ui.pick.schema.filterByLocationTitle')}
             icon={<IconFolderTree size='1.25rem' className={!!filterLocation ? 'icon-green' : 'icon-primary'} />}
             className='mt-1'
             onClick={toggleLocation}
@@ -141,7 +141,7 @@ export function PickSchema({
         {filterLocation.length > 0 ? (
           <MiniButton
             icon={<IconClose size='1.25rem' className='icon-red' />}
-            title={tx('ui.pick.schema.resetLocationFilterTitle', 'Reset filter')}
+            title={tx('ui.pick.schema.resetLocationFilterTitle')}
             onClick={() => setFilterLocation('')}
           />
         ) : null}
@@ -158,8 +158,8 @@ export function PickSchema({
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
           <div className='cc-column dense p-3 items-center min-h-24'>
-            <p>{tx('ui.pick.schema.emptyTitle', 'No schemas in the list')}</p>
-            <p>{tx('ui.pick.schema.emptyHint', 'Change filter settings')}</p>
+            <p>{tx('ui.pick.schema.emptyTitle')}</p>
+            <p>{tx('ui.pick.schema.emptyHint')}</p>
           </div>
         }
         onRowClicked={rowData => onChange(rowData.id)}

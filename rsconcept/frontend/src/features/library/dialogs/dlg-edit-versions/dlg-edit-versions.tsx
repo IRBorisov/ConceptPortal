@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
 
@@ -95,7 +95,7 @@ export function DlgEditVersions() {
 
   return (
     <ModalView
-      header={tx('ui.dlg.editVersions.header', 'Edit versions')}
+      header={tx('ui.dlg.editVersions.header')}
       className='flex flex-col w-160 px-6 gap-3 pb-3'
     >
       <TableVersions
@@ -119,25 +119,25 @@ export function DlgEditVersions() {
             <TextInput
               id='dlg_version'
               dense
-              label={tx('ui.label.version', 'Version')}
+              label={tx('ui.label.version')}
               className='w-64 mr-3'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={field.state.meta.errors[0]?.message}
+              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
             />
           )}
         </form.Field>
         <div className='cc-icons h-fit'>
           <MiniButton
             type='submit'
-            title={isValid ? tx('ui.dlg.editVersions.saveChanges', 'Save changes') : formatLabel(lid.hint.versionTaken)}
-            aria-label={tx('ui.dlg.editVersions.saveChanges', 'Save changes')}
+            title={isValid ? tx('ui.dlg.editVersions.saveChanges') : formatLabel(lid.hint.versionTaken)}
+            aria-label={tx('ui.dlg.editVersions.saveChanges')}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             disabled={isDefaultValue || !isValid || isProcessing}
           />
           <MiniButton
-            title={tx('ui.dlg.editVersions.resetChanges', 'Discard unsaved changes')}
+            title={tx('ui.dlg.editVersions.resetChanges')}
             onClick={handleResetClick}
             icon={<IconReset size='1.25rem' className='icon-primary' />}
             disabled={isDefaultValue}
@@ -149,7 +149,7 @@ export function DlgEditVersions() {
           <TextArea
             id='dlg_description'
             spellCheck
-            label={tx('ui.label.description', 'Description')}
+            label={tx('ui.label.description')}
             rows={3}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}

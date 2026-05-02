@@ -55,8 +55,8 @@ export function DlgDeleteOperation() {
   return (
     <ModalForm
       overflowVisible
-      header={tx('ui.oss.deleteOperation.header', 'Delete operation')}
-      submitText={tx('ui.oss.deleteOperation.submit', 'Confirm deletion')}
+      header={tx('ui.oss.deleteOperation.header')}
+      submitText={tx('ui.oss.deleteOperation.submit')}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
@@ -70,17 +70,17 @@ export function DlgDeleteOperation() {
         dense
         noBorder
         id='operation_alias'
-        label={tx('ui.oss.deleteOperation.operationLabel', 'Operation')}
+        label={tx('ui.oss.deleteOperation.operationLabel')}
         value={target.alias}
       />
       <form.Field name='delete_schema'>
         {field => (
           <Checkbox
-            label={tx('ui.oss.deleteOperation.deleteSchema', 'Delete schema')}
+            label={tx('ui.oss.deleteOperation.deleteSchema')}
             title={
               (target.operation_type === OperationType.INPUT && target.is_import) || target.result === null
-                ? tx('ui.oss.deleteOperation.deleteSchemaLocked', 'The linked schema cannot be deleted')
-                : tx('ui.oss.deleteOperation.deleteSchemaHint', 'Delete the schema together with the operation')
+                ? tx('ui.oss.deleteOperation.deleteSchemaLocked')
+                : tx('ui.oss.deleteOperation.deleteSchemaHint')
             }
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
@@ -91,8 +91,8 @@ export function DlgDeleteOperation() {
       <form.Field name='keep_constituents'>
         {field => (
           <Checkbox
-            label={tx('ui.oss.deleteOperation.keepInherited', 'Keep inherited constituents')}
-            title={tx('ui.oss.deleteOperation.keepInheritedHint', 'Inherited constituents\nwill become appended ones')}
+            label={tx('ui.oss.deleteOperation.keepInherited')}
+            title={tx('ui.oss.deleteOperation.keepInheritedHint')}
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
             disabled={target.result === null}
@@ -101,8 +101,8 @@ export function DlgDeleteOperation() {
       </form.Field>
       {deleteSchema ? (
         <div className='text-destructive'>
-          <b>{tx('ui.oss.deleteOperation.warningAttention', 'Warning!')}</b>{' '}
-          {tx('ui.oss.deleteOperation.warningRelatedSchema', 'The linked schema will also be deleted')}
+          <b>{tx('ui.oss.deleteOperation.warningAttention')}</b>{' '}
+          {tx('ui.oss.deleteOperation.warningRelatedSchema')}
         </div>
       ) : null}
     </ModalForm>

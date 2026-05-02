@@ -40,7 +40,7 @@ export function SelectPagination<TData>({
     <Select onValueChange={handlePaginationOptionsChange} value={String(table.getState().pagination.pageSize)}>
       <SelectTrigger
         id={id}
-        aria-label={tx('ui.pagination.rowsPerPageAria', 'Choose rows per page')}
+        aria-label={tx('ui.pagination.rowsPerPageAria')}
         className={cn(
           'px-2 justify-end',
           'bg-transparent cc-hover-text cc-animate-color focus-outline border-0 rounded-md',
@@ -53,7 +53,7 @@ export function SelectPagination<TData>({
       <SelectContent>
         {paginationOptions?.map(option => (
           <SelectItem key={`${prefixes.page_size}${option}`} value={String(option)}>
-            {option} {tx('ui.pagination.perPageSuffix', 'per page')}
+            {option} {tx('ui.pagination.perPageSuffix')}
           </SelectItem>
         ))}
       </SelectContent>

@@ -48,7 +48,7 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
   useLayoutEffect(
     function updateWindowTitle() {
       const oldTitle = document.title;
-      document.title = `${tx('nav.bar.sandbox', 'Sandbox')} — ${schema.title}`;
+      document.title = `${tx('nav.bar.sandbox')} — ${schema.title}`;
       return function restoreWindowTitle() {
         document.title = oldTitle;
       };
@@ -162,7 +162,7 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
             icon={<IconStatusError size='0.8rem' />}
             value={countProblematic}
             color='destructive'
-            title={tx('ui.tabs.problemConceptsTitle', 'Problem concepts: {count}', { count: countProblematic })}
+            title={tx('ui.tabs.problemConceptsTitle', { count: countProblematic })}
             onClick={onFocusSchemaIssues}
           />
         ) : null}
@@ -172,12 +172,12 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
           <MenuEdit />
         </div>
 
-        <TabLabel label={tx('ui.tabs.passport', 'Passport')} />
-        <TabLabel label={tx('ui.tabs.list', 'List')} />
-        <TabLabel label={tx('ui.tabs.concept', 'Concept')} />
-        <TabLabel label={tx('ui.tabs.graph', 'Graph')} />
-        <TabLabel label={tx('ui.tabs.data', 'Data')} />
-        <TabLabel label={tx('ui.tabs.evaluation', 'Evaluation')} />
+        <TabLabel label={tx('ui.tabs.passport')} />
+        <TabLabel label={tx('ui.tabs.list')} />
+        <TabLabel label={tx('ui.tabs.concept')} />
+        <TabLabel label={tx('ui.tabs.graph')} />
+        <TabLabel label={tx('ui.tabs.data')} />
+        <TabLabel label={tx('ui.tabs.evaluation')} />
       </TabList>
 
       <div ref={containerRef} className='overflow-x-hidden'>

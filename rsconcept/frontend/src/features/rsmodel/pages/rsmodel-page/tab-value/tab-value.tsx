@@ -175,16 +175,16 @@ export function TabValue() {
           isContentEditable ? (
             <div className='flex pl-1'>
               <MiniButton
-                title={prepareTooltip(tx('ui.toolbar.moveUp', 'Move up'), tx('ui.hotkey.altUp', 'Alt + Up'))}
-                aria-label={tx('ui.toolbar.moveUp', 'Move up')}
+                title={prepareTooltip(tx('ui.toolbar.moveUp'), tx('ui.hotkey.altUp'))}
+                aria-label={tx('ui.toolbar.moveUp')}
                 className='px-0'
                 icon={<IconMoveUp size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
                 onClick={moveUp}
                 disabled={reorderDisabled}
               />
               <MiniButton
-                title={prepareTooltip(tx('ui.toolbar.moveDown', 'Move down'), tx('ui.hotkey.altDown', 'Alt + Down'))}
-                aria-label={tx('ui.toolbar.moveDown', 'Move down')}
+                title={prepareTooltip(tx('ui.toolbar.moveDown'), tx('ui.hotkey.altDown'))}
+                aria-label={tx('ui.toolbar.moveDown')}
                 className='px-0'
                 icon={<IconMoveDown size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
                 onClick={moveDown}

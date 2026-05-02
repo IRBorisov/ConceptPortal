@@ -114,10 +114,10 @@ export function ComboBox<Option>({
       <PopoverContent sideOffset={-1} className='p-0' style={{ width: popoverWidth }}>
         <Command>
           {!noSearch ? (
-            <CommandInput placeholder={tx('ui.combo.searchPlaceholder', 'Search…')} className='h-9' />
+            <CommandInput placeholder={tx('ui.combo.searchPlaceholder')} className='h-9' />
           ) : null}
           <CommandList>
-            <CommandEmpty>{tx('ui.combo.emptyList', 'No items')}</CommandEmpty>
+            <CommandEmpty>{tx('ui.combo.emptyList')}</CommandEmpty>
             <CommandGroup>
               {items?.map(item => (
                 <CommandItem

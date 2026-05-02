@@ -37,7 +37,7 @@ export function SelectUser({ filter, noAnonymous, placeholder, ...restProps }: S
   const tx = useTx();
   const { users } = useUsers();
   const getUserLabel = useLabelUser();
-  const resolvedPlaceholder = placeholder ?? tx('ui.users.select.placeholder', 'Select user');
+  const resolvedPlaceholder = placeholder ?? tx('ui.users.select.placeholder');
 
   const items = filter ? users.filter(user => filter(user.id)) : users;
   const sorted = [

@@ -37,7 +37,7 @@ export function CurrentTitle({ itemType, title }: SchemaTitleProps) {
         'flex flex-1 items-center gap-2',
         'text-md text-muted-foreground pointer-events-auto'
       )}
-      aria-label={tx('nav.currentItem.titleAria', 'Item title')}
+      aria-label={tx('nav.currentItem.titleAria')}
       data-tooltip-id={globalIDs.value_tooltip}
       onPointerEnter={() => setActiveTooltipText(title)}
     >

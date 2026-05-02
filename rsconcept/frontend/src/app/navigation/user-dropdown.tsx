@@ -92,32 +92,32 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
     <Dropdown id={globalIDs.user_dropdown} className='min-w-[18ch] max-w-48' stretchLeft isOpen={isOpen}>
       <DropdownButton
         text={user.username}
-        title={tx('nav.user.profileTitle', 'User profile')}
+        title={tx('nav.user.profileTitle')}
         icon={<IconUser size='1rem' />}
         onClick={navigateProfile}
       />
       <DropdownButton
-        text={darkMode ? tx('nav.theme.dark', 'Theme: Dark') : tx('nav.theme.light', 'Theme: Light')}
-        title={tx('nav.theme.toggleTitle', 'Toggle color theme')}
+        text={darkMode ? tx('nav.theme.dark') : tx('nav.theme.light')}
+        title={tx('nav.theme.toggleTitle')}
         icon={darkMode ? <IconDarkTheme size='1rem' /> : <IconLightTheme size='1rem' />}
         onClick={handleToggleDarkMode}
       />
       <DropdownButton
-        text={showHelp ? tx('nav.help.on', 'Help: On') : tx('nav.help.off', 'Help: Off')}
-        title={tx('nav.help.toggleTitle', 'Toggle help icons')}
+        text={showHelp ? tx('nav.help.on') : tx('nav.help.off')}
+        title={tx('nav.help.toggleTitle')}
         icon={showHelp ? <IconHelp size='1rem' /> : <IconHelpOff size='1rem' />}
         onClick={toggleShowHelp}
       />
       {user.is_staff ? (
         <DropdownButton
-          text={adminMode ? tx('nav.admin.on', 'Admin: On') : tx('nav.admin.off', 'Admin: Off')}
-          title={tx('nav.admin.toggleTitle', 'Admin mode')}
+          text={adminMode ? tx('nav.admin.on') : tx('nav.admin.off')}
+          title={tx('nav.admin.toggleTitle')}
           icon={adminMode ? <IconAdmin size='1rem' /> : <IconAdminOff size='1rem' />}
           onClick={toggleAdminMode}
         />
       ) : null}
       <div className='px-3 py-1 text-muted-foreground border-t text-nowrap'>
-        {tx('nav.language.label', 'Interface language')}
+        {tx('nav.language.label')}
       </div>
       <DropdownButton
         text={localeLabel('en')}
@@ -146,8 +146,8 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
 
       {user.is_staff ? (
         <DropdownButton
-          text={tx('nav.link.restApi', 'REST API')}
-          title={tx('nav.link.restApiTitle', 'Open backend API')}
+          text={tx('nav.link.restApi')}
+          title={tx('nav.link.restApiTitle')}
           icon={<IconRESTapi size='1rem' />}
           className='border-t'
           onClick={gotoRestApi}
@@ -155,32 +155,32 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
       ) : null}
       {user.is_staff ? (
         <DropdownButton
-          text={tx('nav.link.database', 'Database')}
-          title={tx('nav.link.databaseTitle', 'Open database admin')}
+          text={tx('nav.link.database')}
+          title={tx('nav.link.databaseTitle')}
           icon={<IconDatabase size='1rem' />}
           onClick={gotoAdmin}
         />
       ) : null}
       {user?.is_staff ? (
         <DropdownButton
-          text={tx('nav.link.icons', 'Icons')}
-          title={tx('nav.link.iconsTitle', 'Open icons page')}
+          text={tx('nav.link.icons')}
+          title={tx('nav.link.iconsTitle')}
           icon={<IconImage size='1rem' />}
           onClick={gotoIcons}
         />
       ) : null}
       {user.is_staff ? (
         <DropdownButton
-          text={tx('nav.link.dbStructure', 'DB structure')}
-          title={tx('nav.link.dbStructureTitle', 'Open database schema page')}
+          text={tx('nav.link.dbStructure')}
+          title={tx('nav.link.dbStructureTitle')}
           icon={<IconDBStructure size='1rem' />}
           onClick={gotoDatabaseSchema}
           className='border-b'
         />
       ) : null}
       <DropdownButton
-        text={tx('nav.action.logout', 'Sign out…')}
-        title={tx('nav.action.logoutTitle', 'Sign out of the application')}
+        text={tx('nav.action.logout')}
+        title={tx('nav.action.logoutTitle')}
         className='font-semibold'
         icon={<IconLogout size='1rem' />}
         onClick={logoutAndRedirect}

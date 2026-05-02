@@ -58,7 +58,7 @@ export function TabOssCard() {
     >
       <div className='relative cc-column mx-0 md:mx-auto'>
         <ButtonSidebar
-          title={tx('ui.schemaCard.toggleStatsTitle', 'Show statistics')}
+          title={tx('ui.schemaCard.toggleStatsTitle')}
           show={showOSSStats}
           isNarrow={isNarrow}
           onClick={toggleShowOSSStats}

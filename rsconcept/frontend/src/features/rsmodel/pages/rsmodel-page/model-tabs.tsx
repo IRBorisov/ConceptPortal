@@ -193,7 +193,7 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
             icon={<IconStatusError size='0.8rem' />}
             value={countSchemaIssues}
             color='destructive'
-            title={tx('ui.tabs.schemaErrorsTitle', 'Schema issues: {count}', { count: countSchemaIssues })}
+            title={tx('ui.tabs.schemaErrorsTitle', { count: countSchemaIssues })}
             onClick={onFocusSchemaIssues}
           />
         ) : null}
@@ -203,18 +203,18 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
             icon={<IconStatusIncalculable size='0.8rem' />}
             value={countModelIssues}
             color='orange'
-            title={tx('ui.tabs.modelErrorsTitle', 'Model issues: {count}', { count: countModelIssues })}
+            title={tx('ui.tabs.modelErrorsTitle', { count: countModelIssues })}
             onClick={onFocusModelIssues}
           />
         ) : null}
         <MenuModel />
 
-        <TabLabel label={tx('ui.tabs.passport', 'Passport')} />
-        <TabLabel label={tx('ui.tabs.list', 'List')} />
-        <TabLabel label={tx('ui.tabs.concept', 'Concept')} />
-        <TabLabel label={tx('ui.tabs.graph', 'Graph')} />
-        <TabLabel label={tx('ui.tabs.data', 'Data')} />
-        <TabLabel label={tx('ui.tabs.evaluation', 'Evaluation')} />
+        <TabLabel label={tx('ui.tabs.passport')} />
+        <TabLabel label={tx('ui.tabs.list')} />
+        <TabLabel label={tx('ui.tabs.concept')} />
+        <TabLabel label={tx('ui.tabs.graph')} />
+        <TabLabel label={tx('ui.tabs.data')} />
+        <TabLabel label={tx('ui.tabs.evaluation')} />
       </TabList>
 
       <div ref={containerRef} className='overflow-x-hidden'>

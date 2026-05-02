@@ -136,31 +136,31 @@ export function Navigation() {
         <div className='relative z-10 flex gap-2 items-center shrink-0'>
           {isAnonymous ? (
             <NavigationButton
-              text={tx('nav.bar.sandbox', 'Sandbox')}
-              title={tx('nav.bar.sandboxTitle', 'Demo environment for guests')}
+              text={tx('nav.bar.sandbox')}
+              title={tx('nav.bar.sandboxTitle')}
               icon={<IconSandbox size='1.25rem' />}
               onClick={navigateSandbox}
             />
           ) : (
             <div ref={createRef} onBlur={handleCreateBlur} className='relative'>
               <NavigationButton
-                text={tx('nav.bar.create', 'Create')}
+                text={tx('nav.bar.create')}
                 icon={<IconNewItem2 size='1.25rem' />}
                 onClick={toggleCreate}
               />
               <Dropdown isOpen={isCreateOpen} margin='mt-2'>
                 <DropdownButton
-                  text={tx('nav.bar.createSchema', 'Conceptual schema')}
+                  text={tx('nav.bar.createSchema')}
                   icon={<IconRSForm size='1rem' className='icon-green' />}
                   onClick={navigateCreateSchema}
                 />
                 <DropdownButton
-                  text={tx('nav.bar.createModel', 'Conceptual model')}
+                  text={tx('nav.bar.createModel')}
                   icon={<IconRSModel size='1rem' className='text-accent-orange' />}
                   onClick={navigateCreateModel}
                 />
                 <DropdownButton
-                  text={tx('nav.bar.createOss', 'Operational schema')}
+                  text={tx('nav.bar.createOss')}
                   icon={<IconOSS size='1rem' className='icon-primary' />}
                   onClick={navigateCreateOSS}
                 />
@@ -168,12 +168,12 @@ export function Navigation() {
             </div>
           )}
           <NavigationButton
-            text={tx('nav.bar.library', 'Library')}
+            text={tx('nav.bar.library')}
             icon={<IconLibrary2 size='1.25rem' />}
             onClick={navigateLibrary}
           />
           <NavigationButton
-            text={tx('nav.bar.help', 'Help')}
+            text={tx('nav.bar.help')}
             icon={<IconManuals size='1.25rem' />}
             onClick={navigateHelp}
           />

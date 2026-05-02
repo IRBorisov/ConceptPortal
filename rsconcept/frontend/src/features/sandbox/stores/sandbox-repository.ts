@@ -58,7 +58,7 @@ export function downloadBundle(bundle: SandboxBundle, filename: string = DEFAULT
 function parseBundleJson(raw: unknown): SandboxBundle {
   const parsed = schemaSandboxBundle.safeParse(raw);
   if (!parsed.success) {
-    throw new Error(formatAppMessage('ui.sandbox.invalidBundleFile', 'Invalid sandbox file'));
+    throw new Error(formatAppMessage('ui.sandbox.invalidBundleFile'));
   }
   return parsed.data;
 }

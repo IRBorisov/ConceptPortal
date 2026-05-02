@@ -22,7 +22,7 @@ export function SelectAll<TData>({ table, resetLastSelected }: SelectAllProps<TD
   return (
     <CheckboxTristate
       tabIndex={-1}
-      title={tx('ui.dataTable.selectAllTitle', 'Select all')}
+      title={tx('ui.dataTable.selectAllTitle')}
       value={
         !table.getIsAllPageRowsSelected() && table.getIsSomePageRowsSelected() ? null : table.getIsAllPageRowsSelected()
       }

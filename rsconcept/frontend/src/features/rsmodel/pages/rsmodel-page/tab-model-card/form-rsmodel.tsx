@@ -4,7 +4,7 @@ import { useEffect, useEffectEvent } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { LibraryItemType, type RSModel } from '@/domain/library';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { useConceptNavigation, useRegisterNavigationSave } from '@/app';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
@@ -97,18 +97,18 @@ export function FormRSModel({ className }: FormRSModelProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none font-math'>{tx('ui.page.rsmodel', 'Conceptual model')}</h2>
+      <h2 className='mb-2 select-none font-math'>{tx('ui.page.rsmodel')}</h2>
       <form.Field name='title'>
         {field => (
           <TextInput
             id='schema_title'
-            aria-label={tx('ui.field.rsmodelTitle', 'Model title')}
-            placeholder={tx('ui.field.rsmodelTitle', 'Model title')}
+            aria-label={tx('ui.field.rsmodelTitle')}
+            placeholder={tx('ui.field.rsmodelTitle')}
             className='mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
             disabled={!isMutable}
           />
         )}
@@ -118,12 +118,12 @@ export function FormRSModel({ className }: FormRSModelProps) {
           {field => (
             <TextInput
               id='schema_alias'
-              label={tx('ui.label.alias', 'Abbreviation')}
+              label={tx('ui.label.alias')}
               className='w-64'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={field.state.meta.errors[0]?.message}
+              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
               disabled={!isMutable}
             />
           )}
@@ -143,21 +143,21 @@ export function FormRSModel({ className }: FormRSModelProps) {
         {field => (
           <TextArea
             id='schema_comment'
-            label={tx('ui.label.description', 'Description')}
+            label={tx('ui.label.description')}
             placeholder={formatLabel(lid.placeholder.itemDescription)}
             rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
             disabled={!isMutable || isProcessing}
           />
         )}
       </form.Field>
       {isMutable || !isDefaultValue ? (
         <SubmitButton
-          text={tx('ui.action.saveChanges', 'Save changes')}
-          title={prepareTooltip(tx('ui.action.saveChanges', 'Save changes'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+          text={tx('ui.action.saveChanges')}
+          title={prepareTooltip(tx('ui.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
           className='self-center mt-4'
           loading={isProcessing}
           icon={<IconSave size='1.25rem' />}
@@ -169,7 +169,7 @@ export function FormRSModel({ className }: FormRSModelProps) {
         className='mt-3 -mb-1'
         icon={<IconRSForm size='1.25rem' className='icon-primary' />}
         value={schema.alias}
-        title={tx('ui.page.rsform', 'Conceptual schema')}
+        title={tx('ui.page.rsform')}
         onClick={handleNavigateSchema}
         disabled={false}
       />

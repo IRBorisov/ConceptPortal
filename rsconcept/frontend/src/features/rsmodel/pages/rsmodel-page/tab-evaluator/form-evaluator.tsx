@@ -10,7 +10,7 @@ import { type AnalysisFull, type CalculatorResult } from '@/domain/rslang';
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
 import { isTypification, TypeID, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -139,14 +139,14 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         noOutline
         transparent
         readOnly
-        label={tx('ui.label.typification', 'Typification')}
+        label={tx('ui.label.typification')}
         value={labelType(localParse?.type ?? null)}
         areaClassName='cursor-default'
       />
 
       <EditorRSExpression
-        label={tx('ui.label.expression', 'Expression')}
-        placeholder={tx('ui.placeholder.expressionMissing', 'No expression')}
+        label={tx('ui.label.expression')}
+        placeholder={tx('ui.placeholder.expressionMissing')}
         schema={schema}
         errors={errors}
         value={expression}
@@ -160,11 +160,11 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
       {dialogValue != null ? (
         <div className='flex items-center justify-center gap-6 text-sm pl-6 flex-wrap'>
           <TextButton
-            text={tx('ui.eval.viewValue', 'View value')}
+            text={tx('ui.eval.viewValue')}
             title={
               canOpenValueDialog
-                ? tx('ui.eval.viewValueHint', 'View value')
-                : tx('ui.eval.viewStructuredUnavailable', 'Structured value view is not available for this type')
+                ? tx('ui.eval.viewValueHint')
+                : tx('ui.eval.viewStructuredUnavailable')
             }
             disabled={!canOpenValueDialog}
             onClick={handleViewValue}
@@ -172,17 +172,17 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
           />
           <div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
             <TextButton
-              text={tx('ui.action.exportShort', 'Export')}
-              title={tx('ui.value.exportValueTitle', 'Export value')}
+              text={tx('ui.action.exportShort')}
+              title={tx('ui.value.exportValueTitle')}
               hideTitle={isExportOpen}
               onClick={toggleExport}
             />
             <Dropdown isOpen={isExportOpen} margin='mt-1'>
               <DropdownButton
-                text={tx('ui.eval.copyToClipboard', 'Copy to clipboard')}
+                text={tx('ui.eval.copyToClipboard')}
                 onClick={handleClipboardExport}
               />
-              <DropdownButton text={tx('ui.eval.saveAsJson', 'Save as JSON')} onClick={handleJSONExport} />
+              <DropdownButton text={tx('ui.eval.saveAsJson')} onClick={handleJSONExport} />
             </Dropdown>
           </div>
         </div>
@@ -194,14 +194,14 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         stub={stub}
         valueLabel={labelValue(localEval?.value ?? null, localParse?.type ?? null)}
         status={status}
-        placeholder={tx('ui.placeholder.valueMissing', 'No value')}
+        placeholder={tx('ui.placeholder.valueMissing')}
         onCalculate={handleCalculate}
         onToggleDataText={toggleShowDataText}
         disabled
       />
       {!!localEval?.iterations ? (
         <TextInput
-          label={tx('ui.label.iterationCount', 'Iteration count')}
+          label={tx('ui.label.iterationCount')}
           dense
           disabled
           noBorder

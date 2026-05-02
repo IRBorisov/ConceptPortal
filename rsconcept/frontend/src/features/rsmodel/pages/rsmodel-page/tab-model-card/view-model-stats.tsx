@@ -28,27 +28,27 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
       <StatsCategory
         id='rsmodel-stats-overview'
         className='rounded-t-md'
-        label={tx('ui.stats.section.overview', 'Overall composition')}
-        primaryLabel={tx('ui.stats.primary.constituents', 'Constituents')}
+        label={tx('ui.stats.section.overview')}
+        primaryLabel={tx('ui.stats.primary.constituents')}
         primaryValue={stats.count_all}
-        primaryTitle={tx('ui.stats.title.totalConstituents', 'Total constituent count')}
-        secondaryLabel={stats.count_inherited > 0 ? tx('ui.stats.secondary.owned', 'Own') : undefined}
+        primaryTitle={tx('ui.stats.title.totalConstituents')}
+        secondaryLabel={stats.count_inherited > 0 ? tx('ui.stats.secondary.owned') : undefined}
         secondaryValue={stats.count_inherited > 0 ? countOwned : undefined}
-        secondaryTitle={tx('ui.stats.title.ownedConstituents', 'Number of own constituents')}
+        secondaryTitle={tx('ui.stats.title.ownedConstituents')}
         details={[
-          { label: tx('ui.stats.row.totalConstituents', 'Total constituents'), value: stats.count_all },
+          { label: tx('ui.stats.row.totalConstituents'), value: stats.count_all },
           ...(stats.count_inherited > 0
             ? [
-                { label: tx('ui.stats.row.inherited', 'Inherited'), value: stats.count_inherited },
-                { label: tx('ui.stats.row.owned', 'Own'), value: countOwned }
+                { label: tx('ui.stats.row.inherited'), value: stats.count_inherited },
+                { label: tx('ui.stats.row.owned'), value: countOwned }
               ]
             : []),
-          { label: tx('ui.stats.row.crucial', 'Crucial'), value: stats.count_crucial },
-          { label: tx('ui.stats.row.termLabels', 'Terms'), value: stats.count_term },
-          { label: tx('ui.stats.row.textTerms', 'Text terms'), value: stats.count_text_term },
-          { label: tx('ui.stats.row.definitions', 'Definitions'), value: stats.count_definition },
-          { label: tx('ui.stats.row.conventions', 'Conventions'), value: stats.count_convention },
-          { label: tx('ui.stats.row.comments', 'Comments'), value: stats.count_comment }
+          { label: tx('ui.stats.row.crucial'), value: stats.count_crucial },
+          { label: tx('ui.stats.row.termLabels'), value: stats.count_term },
+          { label: tx('ui.stats.row.textTerms'), value: stats.count_text_term },
+          { label: tx('ui.stats.row.definitions'), value: stats.count_definition },
+          { label: tx('ui.stats.row.conventions'), value: stats.count_convention },
+          { label: tx('ui.stats.row.comments'), value: stats.count_comment }
         ]}
       />
 
@@ -56,25 +56,25 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
 
       <StatsCategory
         id='rsmodel-stats-structures'
-        label={tx('ui.stats.model.schemaProfile', 'Schema profile')}
-        primaryLabel={tx('ui.stats.primary.bases', 'Base items')}
+        label={tx('ui.stats.model.schemaProfile')}
+        primaryLabel={tx('ui.stats.primary.bases')}
         primaryValue={countBase}
-        primaryTitle={tx('ui.stats.title.undefinedConcepts', 'Count of undefined concepts')}
-        secondaryLabel={tx('ui.stats.secondary.complexity', 'Complexity')}
+        primaryTitle={tx('ui.stats.title.undefinedConcepts')}
+        secondaryLabel={tx('ui.stats.secondary.complexity')}
         secondaryValue={stats.step_complexity}
-        secondaryTitle={tx('ui.stats.title.termsForBases', 'Number of terms describing base concepts')}
+        secondaryTitle={tx('ui.stats.title.termsForBases')}
         details={[
-          { label: tx('ui.stats.row.bases', 'Base items'), value: countBase },
-          { label: tx('ui.stats.row.derived', 'Derived'), value: countDerived },
-          { label: tx('ui.stats.row.nominals', 'Nominals'), value: stats.count_nominal },
-          { label: tx('ui.stats.row.baseSets', 'Base sets'), value: stats.count_base },
-          { label: tx('ui.stats.row.constantSets', 'Constant sets'), value: stats.count_constant },
-          { label: tx('ui.stats.row.genericStructures', 'Generic structures'), value: stats.count_structured },
-          { label: tx('ui.stats.row.axioms', 'Axioms'), value: stats.count_axiom },
-          { label: tx('ui.stats.row.terms', 'Terms'), value: stats.count_term },
-          { label: tx('ui.stats.row.termFunctions', 'Term functions'), value: stats.count_function },
-          { label: tx('ui.stats.row.predicateFunctions', 'Predicate functions'), value: stats.count_predicate },
-          { label: tx('ui.stats.row.theorems', 'Theorems'), value: stats.count_theorem }
+          { label: tx('ui.stats.row.bases'), value: countBase },
+          { label: tx('ui.stats.row.derived'), value: countDerived },
+          { label: tx('ui.stats.row.nominals'), value: stats.count_nominal },
+          { label: tx('ui.stats.row.baseSets'), value: stats.count_base },
+          { label: tx('ui.stats.row.constantSets'), value: stats.count_constant },
+          { label: tx('ui.stats.row.genericStructures'), value: stats.count_structured },
+          { label: tx('ui.stats.row.axioms'), value: stats.count_axiom },
+          { label: tx('ui.stats.row.terms'), value: stats.count_term },
+          { label: tx('ui.stats.row.termFunctions'), value: stats.count_function },
+          { label: tx('ui.stats.row.predicateFunctions'), value: stats.count_predicate },
+          { label: tx('ui.stats.row.theorems'), value: stats.count_theorem }
         ]}
       />
 
@@ -82,27 +82,24 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
 
       <StatsCategory
         id='rsmodel-stats-quality'
-        label={tx('ui.stats.section.correctness', 'Correctness')}
-        primaryLabel={tx('ui.stats.primary.problems', 'Issues')}
+        label={tx('ui.stats.section.correctness')}
+        primaryLabel={tx('ui.stats.primary.problems')}
         primaryValue={stats.count_problematic}
-        primaryTitle={tx('ui.stats.title.problemsCount', 'Number of issues including errors, homonyms and duplicates')}
-        secondaryLabel={tx('ui.stats.secondary.errors', 'Errors')}
+        primaryTitle={tx('ui.stats.title.problemsCount')}
+        secondaryLabel={tx('ui.stats.secondary.errors')}
         secondaryValue={countErrors}
-        secondaryTitle={tx(
-          'ui.stats.title.errorDefinitions',
-          'Erroneous definitions, including syntax, semantics and interpretation errors'
-        )}
+        secondaryTitle={tx('ui.stats.title.errorDefinitions')}
         details={[
-          { label: tx('ui.stats.row.homonyms', 'Homonyms'), value: stats.count_homonyms },
-          { label: tx('ui.stats.row.duplicates', 'Duplicates'), value: stats.count_formal_duplicates },
+          { label: tx('ui.stats.row.homonyms'), value: stats.count_homonyms },
+          { label: tx('ui.stats.row.duplicates'), value: stats.count_formal_duplicates },
           {
-            label: tx('ui.stats.row.missingConventionOrTerm', 'Missing convention or term'),
+            label: tx('ui.stats.row.missingConventionOrTerm'),
             value: stats.count_missing_convention
           },
-          { label: tx('ui.stats.row.syntaxErrors', 'Syntax errors'), value: stats.count_failed_parse },
-          { label: tx('ui.stats.row.semanticErrors', 'Semantic errors'), value: stats.count_incorrect },
-          { label: tx('ui.stats.row.nonDimensional', 'Non-dimensional'), value: stats.count_property },
-          { label: tx('ui.stats.row.incalculable', 'Incalculable'), value: stats.count_incalculable }
+          { label: tx('ui.stats.row.syntaxErrors'), value: stats.count_failed_parse },
+          { label: tx('ui.stats.row.semanticErrors'), value: stats.count_incorrect },
+          { label: tx('ui.stats.row.nonDimensional'), value: stats.count_property },
+          { label: tx('ui.stats.row.incalculable'), value: stats.count_incalculable }
         ]}
       />
 
@@ -111,32 +108,26 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
       <StatsCategory
         id='rsmodel-stats-model'
         className='rounded-b-md'
-        label={tx('ui.stats.model.profile', 'Model profile')}
-        primaryLabel={tx('ui.stats.primary.remarks', 'Remarks')}
+        label={tx('ui.stats.model.profile')}
+        primaryLabel={tx('ui.stats.primary.remarks')}
         primaryValue={countModelNotes}
-        primaryTitle={tx(
-          'ui.stats.title.remarksSum',
-          'Sum of remarks on current model data:\nmissing base interpretations, invalid data, failed axioms, calculation errors and empty terms'
-        )}
-        secondaryLabel={tx('ui.stats.secondary.basePower', 'Base')}
+        primaryTitle={tx('ui.stats.title.remarksSum')}
+        secondaryLabel={tx('ui.stats.secondary.basePower')}
         secondaryValue={stats.base_elements}
-        secondaryTitle={tx(
-          'ui.stats.title.baseInterpretationPower',
-          'Total cardinality of interpretations of base concepts'
-        )}
+        secondaryTitle={tx('ui.stats.title.baseInterpretationPower')}
         details={[
-          { label: tx('ui.stats.row.baseCardinality', 'Base cardinality'), value: stats.base_elements },
-          { label: tx('ui.stats.row.invalidData', 'Invalid data'), value: stats.count_invalid_data },
+          { label: tx('ui.stats.row.baseCardinality'), value: stats.base_elements },
+          { label: tx('ui.stats.row.invalidData'), value: stats.count_invalid_data },
           {
-            label: tx('ui.stats.row.missingBaseInterpretation', 'Bases without interpretation'),
+            label: tx('ui.stats.row.missingBaseInterpretation'),
             value: stats.count_missing_base
           },
-          { label: tx('ui.stats.row.violatedAxioms', 'Violated axioms'), value: stats.count_false_axioms },
+          { label: tx('ui.stats.row.violatedAxioms'), value: stats.count_false_axioms },
           {
-            label: tx('ui.stats.row.invalidCalculations', 'Non-calculable expressions'),
+            label: tx('ui.stats.row.invalidCalculations'),
             value: stats.count_invalid_calculations
           },
-          { label: tx('ui.stats.row.emptyTerms', 'Empty terms'), value: stats.count_empty_terms }
+          { label: tx('ui.stats.row.emptyTerms'), value: stats.count_empty_terms }
         ]}
       />
     </aside>

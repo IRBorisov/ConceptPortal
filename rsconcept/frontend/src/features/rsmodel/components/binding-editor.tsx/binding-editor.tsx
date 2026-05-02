@@ -95,7 +95,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
     }),
     columnHelper.accessor('text', {
       id: 'text',
-      header: tx('ui.bindingEditor.column.text', 'Text'),
+      header: tx('ui.bindingEditor.column.text'),
       size: 200,
       minSize: 200,
       maxSize: 200,
@@ -110,7 +110,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
             maxSize: 40,
             cell: props => (
               <MiniButton
-                title={tx('ui.bindingEditor.deleteRowTitle', 'Remove item')}
+                title={tx('ui.bindingEditor.deleteRowTitle')}
                 className='align-middle w-fit -mr-1'
                 noPadding
                 icon={<IconRemove size='1.25rem' className='cc-remove' />}
@@ -133,23 +133,23 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
     <div className={cn('relative w-full flex flex-col', className)}>
       <div className='-mt-1 flex items-center mb-1'>
         <div className='w-26'>
-          <span>{tx('ui.bindingEditor.totalPrefix', 'Total ')}</span>
+          <span>{tx('ui.bindingEditor.totalPrefix')}</span>
           <span className='font-math ml-2'>{Object.keys(value).length}</span>
         </div>
         <SearchBar id='dlg_value_search' noBorder query={filter} onChangeQuery={setFilter} className='-mb-0.5' />
       </div>
       <div className='flex items-center gap-2 mb-3'>
         <MiniButton
-          title={tx('ui.bindingEditor.addElementTitle', 'Add item')}
+          title={tx('ui.bindingEditor.addElementTitle')}
           className=''
           icon={<IconNewItem size='1.25rem' className='icon-green' />}
           onClick={handleAddElement}
           disabled={!isMutable}
         />
         <TextInput
-          label={tx('ui.bindingEditor.valueLabel', 'Value')}
+          label={tx('ui.bindingEditor.valueLabel')}
           dense
-          placeholder={tx('ui.bindingEditor.selectRowPlaceholder', 'Select a row')}
+          placeholder={tx('ui.bindingEditor.selectRowPlaceholder')}
           className='w-full'
           value={selectedValue}
           onChange={event => handleChangeSelected(event.target.value)}
@@ -173,7 +173,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
           conditionalRowStyles={conditionalRowStyles}
           noDataComponent={
             <NoData>
-              <p>{tx('ui.bindingEditor.noValues', 'No values')}</p>
+              <p>{tx('ui.bindingEditor.noValues')}</p>
             </NoData>
           }
         />

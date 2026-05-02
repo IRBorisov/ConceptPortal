@@ -5,7 +5,7 @@ import { ReactFlowProvider } from '@xyflow/react';
 
 import { type TypeInfo } from '@/domain/library';
 import { TypificationGraph } from '@/domain/rslang';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -38,7 +38,7 @@ export function DlgShowTypeGraph() {
 
   return (
     <ModalView
-      header={tx('ui.dlg.showTypeGraph.header', 'Type tier graph')}
+      header={tx('ui.dlg.showTypeGraph.header')}
       className='cc-mask-sides flex flex-col justify-stretch w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]'
       fullScreen
       helpTopic={HelpTopic.UI_TYPE_GRAPH}

@@ -65,7 +65,7 @@ export function Component() {
       <TextInput
         id='new_password'
         type='password'
-        label={tx('auth.password.new', 'New password')}
+        label={tx('auth.password.new')}
         autoComplete='new-password'
         allowEnter
         value={newPassword}
@@ -76,7 +76,7 @@ export function Component() {
       <TextInput
         id='new_password_repeat'
         type='password'
-        label={tx('auth.password.repeat', 'Repeat new password')}
+        label={tx('auth.password.repeat')}
         autoComplete='new-password'
         allowEnter
         value={newPasswordRepeat}
@@ -85,11 +85,11 @@ export function Component() {
         }}
       />
       {newPasswordRepeat && newPassword !== newPasswordRepeat ? (
-        <div className='text-sm text-destructive'>{tx('auth.password.mismatch', 'Passwords do not match')}</div>
+        <div className='text-sm text-destructive'>{tx('auth.password.mismatch')}</div>
       ) : null}
 
       <SubmitButton
-        text={tx('auth.password.submit', 'Set password')}
+        text={tx('auth.password.submit')}
         className='self-center w-48 mt-3'
         loading={isPending}
         disabled={!canSubmit}
@@ -107,7 +107,7 @@ function ServerError({ error }: { error: ErrorData }): React.ReactElement {
   if (isAxiosError(error) && error.response?.status === 404) {
     return (
       <div className='mx-auto mt-6 text-sm select-text text-destructive'>
-        {tx('auth.password.invalidTokenLink', 'This link is no longer valid.')}
+        {tx('auth.password.invalidTokenLink')}
       </div>
     );
   }

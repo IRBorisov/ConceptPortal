@@ -115,7 +115,7 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
           <MiniButton
             icon={<IconAccept size='1.5rem' className='icon-green' />}
             title={prepareTooltip(
-              tx('ui.refs.inline.saveLink', 'Save reference'),
+              tx('ui.refs.inline.saveLink'),
               isMac() ? 'Cmd + Enter' : 'Ctrl + Enter'
             )}
             onClick={handleSave}
@@ -123,7 +123,7 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
           />
           <MiniButton
             icon={<IconClose size='1.5rem' className='icon-primary' />}
-            title={prepareTooltip(tx('modal.close', 'Close'), 'Esc')}
+            title={prepareTooltip(tx('modal.close'), 'Esc')}
             onClick={onCancel}
           />
           <SearchBar
@@ -131,7 +131,7 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
             query={query}
             onChangeQuery={setQuery}
             noBorder
-            placeholder={tx('ui.refs.inline.searchPlaceholder', 'Search constituent')}
+            placeholder={tx('ui.refs.inline.searchPlaceholder')}
             className='text-sm bg-input'
             inputRef={searchBarRef}
           />
@@ -162,7 +162,7 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
             })
           ) : (
             <div className='px-3 py-2 text-sm text-muted-foreground'>
-              {tx('ui.refs.inline.noResults', 'Nothing found')}
+              {tx('ui.refs.inline.noResults')}
             </div>
           )}
         </div>

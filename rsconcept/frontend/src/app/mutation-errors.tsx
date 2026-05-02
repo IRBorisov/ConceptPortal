@@ -37,7 +37,7 @@ export function MutationErrors() {
         )}
         role='alertdialog'
       >
-        <h1 className='py-2 select-none'>{tx('error.mutation.title', 'Processing error')}</h1>
+        <h1 className='py-2 select-none'>{tx('error.mutation.title')}</h1>
         <div
           className={clsx(
             'max-h-full max-w-full',
@@ -48,7 +48,7 @@ export function MutationErrors() {
         >
           <DescribeError error={mutationErrors[0]} />
         </div>
-        <Button onClick={resetErrors} className='w-fit mt-3' text={tx('error.mutation.close', 'Close')} />
+        <Button onClick={resetErrors} className='w-fit mt-3' text={tx('error.mutation.close')} />
       </div>
     </div>
   );

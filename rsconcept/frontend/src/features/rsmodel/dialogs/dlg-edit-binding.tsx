@@ -38,8 +38,8 @@ export function DlgEditBinding() {
     return (
       <ModalForm
         helpTopic={HelpTopic.UI_MODEL_BINDING}
-        header={tx('ui.rsmodel.dlg.editBinding.header', 'Base source editor')}
-        submitText={tx('ui.action.save', 'Save')}
+        header={tx('ui.rsmodel.dlg.editBinding.header')}
+        submitText={tx('ui.action.save')}
         canSubmit={value !== initialValue}
         onSubmit={handleSubmit}
         className={dialogClassName}
@@ -51,7 +51,7 @@ export function DlgEditBinding() {
     return (
       <ModalView
         helpTopic={HelpTopic.UI_MODEL_BINDING}
-        header={tx('ui.rsmodel.dlg.viewBinding.header', 'View base source')}
+        header={tx('ui.rsmodel.dlg.viewBinding.header')}
         noFooterButton
         className={dialogClassName}
       >

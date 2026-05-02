@@ -37,7 +37,7 @@ export function StatusBar({ className, status, onCalculate }: StatusBarProps) {
           colorStatusBar(status)
         )}
         data-tooltip-id={onCalculate ? globalIDs.tooltip : undefined}
-        data-tooltip-content={tx('ui.rsmodel.value.calculateTooltip', 'Calculate value')}
+        data-tooltip-content={tx('ui.rsmodel.value.calculateTooltip')}
         onClick={onCalculate}
       >
         <div className='cc-fade-in flex items-center gap-1'>

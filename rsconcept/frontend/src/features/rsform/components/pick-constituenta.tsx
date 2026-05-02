@@ -95,8 +95,8 @@ export function PickConstituenta({
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
           <NoData className='min-h-24'>
-            <p>{tx('ui.table.cstSide.emptyTitle', 'No constituents in the list')}</p>
-            <p>{tx('ui.table.cstSide.emptyHint', 'Change the filter or create a constituenta')}</p>
+            <p>{tx('ui.table.cstSide.emptyTitle')}</p>
+            <p>{tx('ui.table.cstSide.emptyHint')}</p>
           </NoData>
         }
         onRowClicked={onChange}

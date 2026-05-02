@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type LibraryItem, type OssLayout } from '@/domain/library';
 import { getRelocateCandidates } from '@/domain/library/oss-api';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { useLibrary } from '@/features/library/backend/use-library';
@@ -121,8 +121,8 @@ export function DlgRelocateConstituents() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.relocateConstituents.header', 'Relocate constituents')}
-      submitText={tx('ui.action.move', 'Move')}
+      header={tx('ui.dlg.relocateConstituents.header')}
+      submitText={tx('ui.action.move')}
       canSubmit={canSubmit}
       validationHint={canSubmit ? '' : formatLabel(lid.hint.relocateEmpty)}
       onSubmit={event => {
@@ -138,20 +138,20 @@ export function DlgRelocateConstituents() {
           <SelectLibraryItem
             noBorder
             className='w-69'
-            placeholder={tx('ui.placeholder.sourceSchema', 'Source schema')}
+            placeholder={tx('ui.placeholder.sourceSchema')}
             items={sourceSchemas}
             value={source}
             onChange={handleSelectSource}
           />
           <MiniButton
-            title={tx('ui.title.relocationDirection', 'Relocation direction')}
+            title={tx('ui.title.relocationDirection')}
             icon={<IconRelocationUp value={directionUp} />}
             onClick={toggleDirection}
           />
           <SelectLibraryItem
             noBorder
             className='w-69'
-            placeholder={tx('ui.placeholder.targetSchema', 'Target schema')}
+            placeholder={tx('ui.placeholder.targetSchema')}
             items={destinationSchemas}
             value={destinationItem}
             onChange={handleSelectDestination}

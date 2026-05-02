@@ -13,13 +13,13 @@ export function InfoBlock({ block }: InfoOperationProps) {
     <>
       {block.title ? (
         <p>
-          <b>{tx('ui.oss.infoOperation.titleWithColon', 'Title: ')}</b>
+          <b>{tx('ui.oss.infoOperation.titleWithColon')}</b>
           {block.title}
         </p>
       ) : null}
       {block.description ? (
         <p>
-          <b>{tx('ui.oss.infoOperation.descriptionWithColon', 'Description: ')}</b>
+          <b>{tx('ui.oss.infoOperation.descriptionWithColon')}</b>
           {block.description}
         </p>
       ) : null}

@@ -94,7 +94,7 @@ export function ValueEditor({
     getColumnText: subPath => resolveColumnText(path, subPath, type, getHeaderText),
     selectElement: handleSelectElement,
     deleteElement: handleDeleteElement,
-    deleteElementTitle: tx('ui.value.removeElement', 'Remove element')
+    deleteElementTitle: tx('ui.value.removeElement')
   };
 
   const columns = createColumnsType(currentType, selectedPath, services);
@@ -103,7 +103,7 @@ export function ValueEditor({
     <div className={cn('relative w-full flex flex-col', className)}>
       <div className='flex items-center gap-3'>
         <MiniButton
-          title={tx('ui.value.wholeValue', 'Whole value')}
+          title={tx('ui.value.wholeValue')}
           icon={<IconReset size='1.25rem' className='icon-primary' />}
           onClick={handleResetView}
           disabled={path.length === 0}
@@ -114,7 +114,7 @@ export function ValueEditor({
         <div className='grow min-w-0'>
           <div className='-mt-1 flex justify-between items-center'>
             <MiniButton
-              title={tx('ui.value.addElement', 'Add element')}
+              title={tx('ui.value.addElement')}
               icon={<IconNewItem size='1.25rem' className='icon-green' />}
               onClick={handleAddElement}
               disabled={currentType.typeID !== TypeID.collection && value !== null}
@@ -124,7 +124,7 @@ export function ValueEditor({
               <Text className='font-math font-normal mr-3 select-none' text={valueStr} />
             ) : null}
             <MiniButton
-              title={tx('ui.value.showDataInText', 'Show data as text')}
+              title={tx('ui.value.showDataInText')}
               icon={<IconShowDataText size='1.25rem' className='hover:text-primary' value={showDataText} />}
               onClick={toggleDataText}
             />
@@ -143,7 +143,7 @@ export function ValueEditor({
               paginationOptions={[perPage]}
               noDataComponent={
                 <NoData>
-                  <p>{tx('ui.placeholder.valueMissing', 'No value')}</p>
+                  <p>{tx('ui.placeholder.valueMissing')}</p>
                 </NoData>
               }
             />

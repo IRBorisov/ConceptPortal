@@ -58,7 +58,7 @@ export function MenuMain() {
       <MiniButton
         noHover
         noPadding
-        title={tx('ui.nav.menu', 'Menu')}
+        title={tx('ui.nav.menu')}
         hideTitle={isMenuOpen}
         icon={<IconMenu size='1.25rem' />}
         className='h-full px-2 text-muted-foreground hover:text-primary cc-animate-color'
@@ -66,20 +66,20 @@ export function MenuMain() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('ui.action.share', 'Share')}
-          title={tx('ui.aria.copyLinkToClipboard', 'Copy link to clipboard')}
+          text={tx('ui.action.share')}
+          title={tx('ui.aria.copyLinkToClipboard')}
           icon={<IconShare size='1rem' className='icon-primary' />}
           onClick={handleShare}
         />
         <DropdownButton
-          text={tx('ui.action.qrCode', 'QR code')}
-          title={tx('ui.hint.qrSchemaPage', 'Show schema QR code')}
+          text={tx('ui.action.qrCode')}
+          title={tx('ui.hint.qrSchemaPage')}
           icon={<IconQR size='1rem' className='icon-primary' />}
           onClick={handleShowQR}
         />
         {isMutable ? (
           <DropdownButton
-            text={tx('ui.action.deleteSchema', 'Delete schema')}
+            text={tx('ui.action.deleteSchema')}
             icon={<IconDestroy size='1rem' className='icon-red' />}
             onClick={handleDelete}
             disabled={isProcessing || role < UserRole.OWNER}
@@ -89,7 +89,7 @@ export function MenuMain() {
         <Divider margins='mx-3 my-1' />
 
         <DropdownButton
-          text={tx('ui.nav.library', 'Library')}
+          text={tx('ui.nav.library')}
           icon={<IconLibrary size='1rem' className='icon-primary' />}
           onClick={handleOpenLibrary}
         />

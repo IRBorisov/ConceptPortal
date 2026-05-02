@@ -91,19 +91,19 @@ export function ValueViewer({ className, value, rows, perPage = 20, engine, getH
             <Text
               className='font-math font-normal mr-1 select-none'
               text={valueStr}
-              title={tx('ui.value.designationCardinality', 'Designation | set cardinality')}
+              title={tx('ui.value.designationCardinality')}
             />
           ) : null}
           <SearchBar id='dlg_value_search' noBorder query={filter} onChangeQuery={setFilter} />
           <div className='cc-icons'>
             <MiniButton
-              title={tx('ui.value.wholeValue', 'Whole value')}
+              title={tx('ui.value.wholeValue')}
               icon={<IconReset size='1.25rem' className='icon-primary' />}
               onClick={handleResetView}
               disabled={path.length === 0}
             />
             <MiniButton
-              title={tx('ui.value.showDataInText', 'Show data as text')}
+              title={tx('ui.value.showDataInText')}
               icon={<IconShowDataText size='1.25rem' className='hover:text-primary' value={showDataText} />}
               onClick={toggleDataText}
             />

@@ -6,7 +6,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { type OssLayout } from '@/domain/library';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
 import { type Substitution } from '@/domain/library/rsform';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -120,8 +120,8 @@ export function DlgCreateSynthesis() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.createSynthesis.header', 'Create synthesis operation')}
-      submitText={tx('ui.action.create', 'Create')}
+      header={tx('ui.dlg.createSynthesis.header')}
+      submitText={tx('ui.action.create')}
       canSubmit={canSubmit}
       validationHint={hint}
       onSubmit={event => {
@@ -135,12 +135,12 @@ export function DlgCreateSynthesis() {
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='z-pop mx-auto flex border divide-x rounded-none'>
           <TabLabel
-            title={tx('ui.tab.oss.operationArgumentsTitle', 'Select operation arguments')}
-            label={tx('ui.tab.oss.arguments', 'Arguments')}
+            title={tx('ui.tab.oss.operationArgumentsTitle')}
+            label={tx('ui.tab.oss.arguments')}
           />
           <TabLabel
-            title={tx('ui.tab.inlineSynthesis.substitutionsTitle', 'Substitution table')}
-            label={tx('ui.tab.inlineSynthesis.substitutions', 'Substitutions')}
+            title={tx('ui.tab.inlineSynthesis.substitutionsTitle')}
+            label={tx('ui.tab.inlineSynthesis.substitutions')}
           />
         </TabList>
         <TabPanel>

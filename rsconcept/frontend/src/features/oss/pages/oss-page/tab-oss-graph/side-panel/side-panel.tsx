@@ -57,7 +57,7 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
       style={{ height: sidePanelHeight }}
     >
       <MiniButton
-        title={tx('ui.oss.sidePanel.closeTitle', 'Close panel')}
+        title={tx('ui.oss.sidePanel.closeTitle')}
         noPadding
         icon={<IconClose size='1.25rem' />}
         className={clsx(
@@ -75,18 +75,18 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
             selectedSchema && 'translate-x-20'
           )}
         >
-          {tx('ui.oss.sidePanel.contentsHeading', 'Contents')}
+          {tx('ui.oss.sidePanel.contentsHeading')}
         </div>
       ) : null}
 
       {!selectedOperation ? (
         <div className='text-center text-sm cc-fade-in'>
-          {tx('ui.oss.sidePanel.selectOperationHint', 'Select an operation to inspect')}
+          {tx('ui.oss.sidePanel.selectOperationHint')}
         </div>
       ) : null}
       {selectedOperation && !selectedSchema ? (
         <div className='text-center text-sm cc-fade-in'>
-          {tx('ui.oss.sidePanel.noCsForOperation', 'No conceptual schema for the selected operation')}
+          {tx('ui.oss.sidePanel.noCsForOperation')}
         </div>
       ) : selectedOperation && selectedSchema && debouncedMounted ? (
         <Suspense fallback={<Loader />}>

@@ -2,7 +2,7 @@
 
 import { useForm } from '@tanstack/react-form';
 
-import { useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 
@@ -61,20 +61,20 @@ export function LoginPage() {
       }}
       onChange={resetErrors}
     >
-      <img alt={tx('auth.login.logoAlt', 'Concept Portal')} src={resources.logo} className='max-h-10 min-w-10 mb-3' />
+      <img alt={tx('auth.login.logoAlt')} src={resources.logo} className='max-h-10 min-w-10 mb-3' />
       <form.Field name='username'>
         {field => (
           <TextInput
             id='username'
             autoComplete='username'
-            label={tx('auth.login.username', 'Username or email')}
+            label={tx('auth.login.username')}
             autoFocus
             allowEnter
             spellCheck={false}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
+            error={field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined}
           />
         )}
       </form.Field>
@@ -84,20 +84,20 @@ export function LoginPage() {
             id='password'
             type='password'
             autoComplete='current-password'
-            label={tx('auth.login.password', 'Password')}
+            label={tx('auth.login.password')}
             allowEnter
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
+            error={field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined}
           />
         )}
       </form.Field>
 
-      <SubmitButton text={tx('auth.login.submit', 'Sign in')} className='self-center w-48 mt-3' loading={isPending} />
+      <SubmitButton text={tx('auth.login.submit')} className='self-center w-48 mt-3' loading={isPending} />
       <div className='flex flex-col text-sm'>
-        <TextURL text={tx('auth.login.linkRestore', 'Reset password…')} href='/restore-password' />
-        <TextURL text={tx('auth.login.linkSignup', 'No account? Sign up…')} href='/signup' />
+        <TextURL text={tx('auth.login.linkRestore')} href='/restore-password' />
+        <TextURL text={tx('auth.login.linkSignup')} href='/signup' />
       </div>
       {serverError ? <ServerError error={serverError} /> : null}
     </form>
@@ -112,7 +112,7 @@ function ServerError({ error }: { error: ErrorData }): React.ReactElement | null
   if (isAxiosError(error) && error.response?.status === 400) {
     return (
       <div className='text-sm select-text text-destructive'>
-        {tx('auth.login.badCredentials', 'No account on the portal matches this username and password combination.')}
+        {tx('auth.login.badCredentials')}
       </div>
     );
   }

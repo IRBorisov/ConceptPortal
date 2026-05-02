@@ -12,8 +12,8 @@ export function FocusLabel({ label }: FocusLabelProps) {
   const tx = useTx();
   return (
     <div className={clsx('px-1', 'select-none', 'hover:bg-background', 'text-accent-purple-foreground rounded-md')}>
-      <span aria-label={tx('ui.rsform.termGraph.focus.cstAria', 'Focus constituenta')} className='whitespace-nowrap'>
-        {tx('ui.rsform.termGraph.focus.shortLabel', 'Focus')}
+      <span aria-label={tx('ui.rsform.termGraph.focus.cstAria')} className='whitespace-nowrap'>
+        {tx('ui.rsform.termGraph.focus.shortLabel')}
         <b> {label} </b>
       </span>
     </div>

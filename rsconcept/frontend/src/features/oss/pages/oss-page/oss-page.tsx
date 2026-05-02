@@ -63,17 +63,17 @@ function ProcessError({ error }: FallbackProps): React.ReactElement {
     if (error.response.status === 404) {
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
-          <p>{tx('ui.oss.error.notFound', 'No operational synthesis schema exists with the given identifier')}</p>
+          <p>{tx('ui.oss.error.notFound')}</p>
           <div className='flex justify-center'>
-            <TextURL text={tx('ui.nav.library', 'Library')} href='/library' />
+            <TextURL text={tx('ui.nav.library')} href='/library' />
           </div>
         </div>
       );
     } else if (error.response.status === 403) {
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
-          <p>{tx('ui.rsform.error.forbidden', 'The owner has restricted access to this schema')}</p>
-          <TextURL text={tx('ui.nav.library', 'Library')} href='/library' />
+          <p>{tx('ui.rsform.error.forbidden')}</p>
+          <TextURL text={tx('ui.nav.library')} href='/library' />
         </div>
       );
     }

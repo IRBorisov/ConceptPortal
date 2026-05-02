@@ -80,12 +80,12 @@ export function NavigationSandbox() {
 
         <div className='relative z-10 flex gap-2 items-center shrink-0'>
           <NavigationButton
-            text={tx('nav.bar.library', 'Library')}
+            text={tx('nav.bar.library')}
             icon={<IconLibrary2 size='1.5rem' />}
             onClick={navigateLibrary}
           />
           <NavigationButton
-            text={tx('nav.bar.help', 'Help')}
+            text={tx('nav.bar.help')}
             icon={<IconManuals size='1.5rem' />}
             onClick={navigateHelp}
             className='mr-2'

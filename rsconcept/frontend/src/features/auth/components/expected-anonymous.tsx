@@ -22,21 +22,21 @@ export function ExpectedAnonymous() {
   return (
     <div className='flex flex-col items-center gap-3 py-6'>
       <p className='font-semibold'>
-        {tx('auth.anonymous.signedInAs', 'You are signed in as {username}', { username: user.username })}
+        {tx('auth.anonymous.signedInAs', { username: user.username })}
       </p>
       <div className='flex gap-3'>
-        <TextURL text={tx('auth.anonymous.create', 'Create')} href='/library/create' />
+        <TextURL text={tx('auth.anonymous.create')} href='/library/create' />
         <span> | </span>
-        <TextURL text={tx('ui.nav.library', 'Library')} href='/library' />
+        <TextURL text={tx('ui.nav.library')} href='/library' />
         <span> | </span>
-        <TextURL text={tx('auth.anonymous.manuals', 'Manuals')} href='/manuals' />
+        <TextURL text={tx('auth.anonymous.manuals')} href='/manuals' />
         <span> | </span>
         <span
           className='cursor-pointer hover:underline text-primary'
-          aria-label={tx('auth.anonymous.logoutAria', 'Log out')}
+          aria-label={tx('auth.anonymous.logoutAria')}
           onClick={logoutAndRedirect}
         >
-          {tx('auth.anonymous.logout', 'Log out')}
+          {tx('auth.anonymous.logout')}
         </span>
       </div>
     </div>

@@ -32,12 +32,12 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
   const columns = [
     columnHelper.accessor('version', {
       id: 'version',
-      header: () => <span className='min-w-24'>{tx('ui.label.version', 'Version')}</span>,
+      header: () => <span className='min-w-24'>{tx('ui.label.version')}</span>,
       cell: props => <div className='text-ellipsis'>{props.getValue()}</div>
     }),
     columnHelper.accessor('description', {
       id: 'description',
-      header: tx('ui.label.description', 'Description'),
+      header: tx('ui.label.description'),
       size: 800,
       minSize: 800,
       maxSize: 800,
@@ -45,7 +45,7 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
     }),
     columnHelper.accessor('time_create', {
       id: 'time_create',
-      header: () => <span className='min-w-26'>{tx('ui.library.editor.dateCreated', 'Date created')}</span>,
+      header: () => <span className='min-w-26'>{tx('ui.library.editor.dateCreated')}</span>,
       cell: props => (
         <div className='whitespace-nowrap'>
           {new Date(props.getValue()).toLocaleString(intl.locale, {
@@ -63,7 +63,7 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
       size: 0,
       cell: props => (
         <MiniButton
-          title={tx('ui.versions.deleteVersionTitle', 'Delete version')}
+          title={tx('ui.versions.deleteVersionTitle')}
           className='align-middle'
           noPadding
           icon={<IconRemove size='1.25rem' className='cc-remove' />}

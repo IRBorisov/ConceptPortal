@@ -32,14 +32,14 @@ export function MiniSelectorOSS({ items, onSelect, className, ...restProps }: Mi
   return (
     <div ref={ossRef} onBlur={handleOssBlur} className={clsx('relative flex items-center', className)} {...restProps}>
       <MiniButton
-        title={tx('ui.library.miniOss.title', 'Operational schemas')}
+        title={tx('ui.library.miniOss.title')}
         icon={<IconOSS size='1.25rem' className='icon-primary' />}
         hideTitle={isOssOpen}
         onClick={onToggle}
       />
       {items.length > 1 ? (
         <Dropdown isOpen={isOssOpen} margin='mt-1'>
-          <Label text={tx('ui.library.miniOss.listLabel', 'OSS list')} className='border-b px-3 py-1' />
+          <Label text={tx('ui.library.miniOss.listLabel')} className='border-b px-3 py-1' />
           {items.map((reference, index) => (
             <DropdownButton
               key={`${prefixes.oss_list}${index}`}

@@ -81,7 +81,7 @@ export function ModalForm({
   const tx = useTx();
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
-  const resolvedSubmitText = submitText ?? tx('modal.submitContinue', 'Continue');
+  const resolvedSubmitText = submitText ?? tx('modal.submitContinue');
   const { isTopPlaced, setElement } = useModalPlacement<HTMLFormElement>();
 
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -121,8 +121,8 @@ export function ModalForm({
         ) : null}
 
         <MiniButton
-          title={prepareTooltip(tx('modal.closeDialogTooltip', 'Close dialog'), 'ESC')}
-          aria-label={tx('modal.close', 'Close')}
+          title={prepareTooltip(tx('modal.closeDialogTooltip'), 'ESC')}
+          aria-label={tx('modal.close')}
           noPadding
           icon={<IconClose size='1.25rem' />}
           className='absolute z-pop top-2 right-2'
@@ -167,8 +167,8 @@ export function ModalForm({
             </div>
           ) : null}
           <Button
-            text={tx('modal.cancel', 'Cancel')}
-            aria-label={tx('modal.close', 'Close')}
+            text={tx('modal.cancel')}
+            aria-label={tx('modal.close')}
             className='min-w-28'
             onClick={handleCancel}
           />

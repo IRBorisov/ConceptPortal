@@ -1,8 +1,10 @@
 import { type z } from 'zod';
 
-import { formatAppMessage , LABEL_DEFAULTS, lid } from '@/i18n';
-
 import { limits } from '@/utils/constants';
+
+import { formatAppMessage } from '../format-app-message';
+
+import { lid } from './lid';
 
 const LENGTH_BY_ID: Partial<Record<string, number>> = {
   [lid.error.aliasLength]: limits.len_alias,
@@ -12,16 +14,22 @@ const LENGTH_BY_ID: Partial<Record<string, number>> = {
   [lid.error.textLength]: limits.len_text
 };
 
-/** Turns a Zod issue message (usually a label id) into localized text. */
-export function formatZodIssueMessage(issue: z.core.$ZodIssue): string {
-  const raw = issue.message;
-  const def = LABEL_DEFAULTS[raw];
-  if (def === undefined) {
-    return raw;
+/**
+ * Localizes a Zod custom `message` (a `labels.*` / `lid` id from schemas) for inline field errors.
+ * Interpolates max-length values the same way as {@link formatZodIssueMessage}.
+ */
+export function formatZodErrorMessage(raw: string | undefined): string | undefined {
+  if (raw === undefined || raw === '') {
+    return undefined;
   }
   const n = LENGTH_BY_ID[raw];
   if (n !== undefined) {
-    return formatAppMessage(raw, def, { n });
+    return formatAppMessage(raw, { n });
   }
-  return formatAppMessage(raw, def);
+  return formatAppMessage(raw);
+}
+
+/** Turns a Zod issue message (usually a label id) into localized text. */
+export function formatZodIssueMessage(issue: z.core.$ZodIssue): string {
+  return formatZodErrorMessage(issue.message) ?? issue.message;
 }

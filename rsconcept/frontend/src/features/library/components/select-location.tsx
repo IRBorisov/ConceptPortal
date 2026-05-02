@@ -126,7 +126,7 @@ export function SelectLocation({
                     <IconFolderOpened size='1rem' className='icon-green' />
                   )
                 }
-                aria-label={tx('ui.library.showNestedFoldersAria', 'Show nested folders')}
+                aria-label={tx('ui.library.showNestedFoldersAria')}
                 onClick={event => onClickFold(event, item)}
               />
             ) : (

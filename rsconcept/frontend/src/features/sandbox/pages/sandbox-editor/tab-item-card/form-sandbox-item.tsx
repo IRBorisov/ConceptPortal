@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { LibraryItemType, type RSModel } from '@/domain/library';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useModelEdit } from '@/features/rsmodel/pages/rsmodel-page/model-edit-context';
@@ -82,18 +82,18 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none font-math'>{tx('ui.page.sandbox', 'Sandbox')}</h2>
+      <h2 className='mb-2 select-none font-math'>{tx('ui.page.sandbox')}</h2>
       <form.Field name='title'>
         {field => (
           <TextInput
             id='sandbox_model_title'
-            aria-label={tx('ui.field.rsmodelTitle', 'Model title')}
-            placeholder={tx('ui.field.rsmodelTitle', 'Model title')}
+            aria-label={tx('ui.field.rsmodelTitle')}
+            placeholder={tx('ui.field.rsmodelTitle')}
             className='mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>
@@ -103,12 +103,12 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
           <TextInput
             dense
             id='sandbox_model_alias'
-            label={tx('ui.label.alias', 'Abbreviation')}
+            label={tx('ui.label.alias')}
             className='w-full mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>
@@ -117,20 +117,20 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         {field => (
           <TextArea
             id='sandbox_model_description'
-            label={tx('ui.label.description', 'Description')}
+            label={tx('ui.label.description')}
             placeholder={formatLabel(lid.placeholder.itemDescription)}
             rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>
 
       <div className='mt-3 sm:mb-1 flex justify-between items-center'>
         <ValueIcon
-          title={tx('ui.library.editor.dateUpdated', 'Updated')}
+          title={tx('ui.library.editor.dateUpdated')}
           dense
           icon={<IconDateUpdate size='1.25rem' />}
           value={new Date(model.time_update).toLocaleString(intl.locale, {
@@ -141,7 +141,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         />
 
         <SubmitButton
-          text={tx('ui.action.save', 'Save')}
+          text={tx('ui.action.save')}
           className='self-center w-40'
           loading={false}
           icon={<IconSave size='1.25rem' />}
@@ -149,7 +149,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         />
 
         <ValueIcon
-          title={tx('ui.library.editor.dateCreated', 'Created')}
+          title={tx('ui.library.editor.dateCreated')}
           dense
           icon={<IconDateCreate size='1.25rem' />}
           value={new Date(model.time_create).toLocaleString(intl.locale, {

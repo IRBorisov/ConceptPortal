@@ -163,14 +163,14 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
           isMutable ? (
             <div className='flex pl-1'>
               <MiniButton
-                title={tx('ui.toolbar.moveUp', 'Move up')}
+                title={tx('ui.toolbar.moveUp')}
                 className='px-0'
                 icon={<IconMoveUp size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
                 onClick={handleMoveUp}
                 disabled={!activeCst || isProcessing || schema.items.length < 2 || hasSearch}
               />
               <MiniButton
-                title={tx('ui.toolbar.moveDown', 'Move down')}
+                title={tx('ui.toolbar.moveDown')}
                 className='px-0'
                 icon={<IconMoveDown size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
                 onClick={handleMoveDown}

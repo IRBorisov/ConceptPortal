@@ -3,7 +3,7 @@
 import { type ReactNode } from 'react';
 
 import { type OperationSchema } from '@/domain/library';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { Label, TextArea, TextInput } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
@@ -40,12 +40,12 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
         {field => (
           <TextInput
             id='operation_title'
-            aria-label={tx('ui.oss.newSchemaTitle', 'New schema title')}
-            placeholder={tx('ui.oss.newSchemaTitle', 'New schema title')}
+            aria-label={tx('ui.oss.newSchemaTitle')}
+            placeholder={tx('ui.oss.newSchemaTitle')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </TitleField>
@@ -55,13 +55,13 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
             {field => (
               <TextInput
                 id='operation_alias'
-                label={tx('ui.label.alias', 'Abbreviation')}
-                placeholder={tx('ui.oss.enterAlias', 'Enter abbreviation')}
+                label={tx('ui.label.alias')}
+                placeholder={tx('ui.oss.enterAlias')}
                 className='w-80'
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={field.state.meta.errors[0]?.message}
+                error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
               />
             )}
           </AliasField>
@@ -70,7 +70,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
               <SelectParent
                 items={oss.blocks}
                 value={field.state.value ? (oss.blockByID.get(field.state.value) ?? null) : null}
-                placeholder={tx('ui.oss.parentBlock', 'Parent block')}
+                placeholder={tx('ui.oss.parentBlock')}
                 onChange={value => field.handleChange(value ? value.id : null)}
               />
             )}
@@ -80,7 +80,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
           {field => (
             <TextArea
               id='operation_comment'
-              label={tx('ui.label.description', 'Description')}
+              label={tx('ui.label.description')}
               placeholder={formatLabel(lid.placeholder.itemDescription)}
               className='w-full'
               noResize
@@ -88,14 +88,14 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={field.state.meta.errors[0]?.message}
+              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
             />
           )}
         </DescriptionField>
       </div>
 
       <div className='cc-column'>
-        <Label text={tx('ui.oss.argumentPickLabel', 'Argument pick: [ {count} ]', { count: inputs.length })} />
+        <Label text={tx('ui.oss.argumentPickLabel', { count: inputs.length })} />
         <ArgumentsField>
           {field => (
             <PickMultiOperation

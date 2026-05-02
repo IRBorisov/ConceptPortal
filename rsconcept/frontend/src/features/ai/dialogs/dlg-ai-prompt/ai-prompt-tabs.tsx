@@ -58,9 +58,9 @@ export function AIPromptTabs({ promptID, activeTab, setActiveTab }: AIPromptTabs
       <TabList className='mx-auto w-fit flex border-x border-b divide-x rounded-none'>
         <MenuAIPrompt promptID={promptID} generatedPrompt={generatedPrompt} />
 
-        <TabLabel label={tx('ui.aiPrompt.tab.template', 'Template')} />
-        <TabLabel label={tx('ui.aiPrompt.tab.result', 'Result')} />
-        <TabLabel label={tx('ui.aiPrompt.tab.variables', 'Variables')} />
+        <TabLabel label={tx('ui.aiPrompt.tab.template')} />
+        <TabLabel label={tx('ui.aiPrompt.tab.result')} />
+        <TabLabel label={tx('ui.aiPrompt.tab.variables')} />
       </TabList>
 
       <div className='h-80 flex flex-col gap-2'>

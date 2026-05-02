@@ -82,8 +82,8 @@ export function OssTabs({ activeTab }: OssTabsProps) {
       <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background'>
         <MenuOssTabs />
 
-        <TabLabel label={tx('ui.tabs.passport', 'Passport')} />
-        <TabLabel label={tx('ui.tabs.graph', 'Graph')} />
+        <TabLabel label={tx('ui.tabs.passport')} />
+        <TabLabel label={tx('ui.tabs.graph')} />
       </TabList>
 
       <div ref={containerRef} className='overflow-x-hidden'>

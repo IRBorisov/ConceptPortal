@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { LibraryItemType } from '@/domain/library';
 import { type OperationSchema } from '@/domain/library';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { useRegisterNavigationSave } from '@/app';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
@@ -93,18 +93,18 @@ export function FormOSS({ className }: FormOSSProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none font-math'>{tx('ui.page.oss', 'Operational system')}</h2>
+      <h2 className='mb-2 select-none font-math'>{tx('ui.page.oss')}</h2>
       <form.Field name='title'>
         {field => (
           <TextInput
             id='schema_title'
-            aria-label={tx('ui.field.ossTitle', 'Operational system title')}
-            placeholder={tx('ui.field.ossTitle', 'Operational system title')}
+            aria-label={tx('ui.field.ossTitle')}
+            placeholder={tx('ui.field.ossTitle')}
             className='mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
             disabled={!isMutable}
           />
         )}
@@ -114,12 +114,12 @@ export function FormOSS({ className }: FormOSSProps) {
           {field => (
             <TextInput
               id='schema_alias'
-              label={tx('ui.label.alias', 'Abbreviation')}
+              label={tx('ui.label.alias')}
               className='w-64'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={field.state.meta.errors[0]?.message}
+              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
               disabled={!isMutable}
             />
           )}
@@ -139,21 +139,21 @@ export function FormOSS({ className }: FormOSSProps) {
         {field => (
           <TextArea
             id='schema_comment'
-            label={tx('ui.label.description', 'Description')}
+            label={tx('ui.label.description')}
             placeholder={formatLabel(lid.placeholder.itemDescription)}
             rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
             disabled={!isMutable || isProcessing}
           />
         )}
       </form.Field>
       {isMutable || isModified ? (
         <SubmitButton
-          text={tx('ui.action.saveChanges', 'Save changes')}
-          title={prepareTooltip(tx('ui.action.saveChanges', 'Save changes'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+          text={tx('ui.action.saveChanges')}
+          title={prepareTooltip(tx('ui.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
           className='self-center mt-4'
           loading={isProcessing}
           icon={<IconSave size='1.25rem' />}

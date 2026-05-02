@@ -64,22 +64,22 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
   const columns = [
     argumentsHelper.accessor('alias', {
       id: 'alias',
-      header: tx('ui.cstTemplate.arguments.column.name', 'Name'),
+      header: tx('ui.cstTemplate.arguments.column.name'),
       size: 40,
       minSize: 40,
       maxSize: 40,
       cell: props => <div className='text-center pr-2'>{props.getValue()}</div>
     }),
-    argumentsHelper.accessor(arg => arg.value || tx('ui.template.arguments.freeSlot', 'free argument'), {
+    argumentsHelper.accessor(arg => arg.value || tx('ui.template.arguments.freeSlot'), {
       id: 'value',
-      header: tx('ui.cstTemplate.arguments.column.value', 'Value'),
+      header: tx('ui.cstTemplate.arguments.column.value'),
       size: 200,
       minSize: 200,
       maxSize: 200
     }),
     argumentsHelper.accessor(arg => arg.typification, {
       id: 'type',
-      header: tx('ui.cstTemplate.arguments.column.typification', 'Typification'),
+      header: tx('ui.cstTemplate.arguments.column.typification'),
       enableHiding: true,
       cell: props => <div className='w-36 text-sm wrap-break-word'>{props.getValue()}</div>
     }),
@@ -90,7 +90,7 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
         <div className='w-6 flex justify-center'>
           {props.row.original.value ? (
             <MiniButton
-              title={tx('ui.template.arguments.clearValueTitle', 'Clear value')}
+              title={tx('ui.template.arguments.clearValueTitle')}
               noPadding
               className='align-middle'
               icon={<IconReset size='1rem' className='cc-remove' />}
@@ -118,11 +118,11 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
         data={args}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
-        noDataComponent={<NoData className='min-h-14'>{tx('ui.template.arguments.empty', 'No arguments')}</NoData>}
+        noDataComponent={<NoData className='min-h-14'>{tx('ui.template.arguments.empty')}</NoData>}
         onRowClicked={handleSelectArgument}
       />
 
-      <h2>{tx('ui.template.arguments.constituentsHeading', 'Constituents')}</h2>
+      <h2>{tx('ui.template.arguments.constituentsHeading')}</h2>
 
       <PickConstituenta
         id='dlg_argument_picker'
@@ -136,7 +136,7 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
         disabled
         portalHoverTooltips
         id='result'
-        placeholder={tx('ui.template.arguments.placeholderDefinition', 'Resulting definition')}
+        placeholder={tx('ui.template.arguments.placeholderDefinition')}
         className='mt-4'
         height='5.1rem'
         value={definition}

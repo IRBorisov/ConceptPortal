@@ -21,19 +21,19 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
       <StatsCategory
         id='oss-stats-composition'
         className='rounded-t-md'
-        label={tx('ui.stats.section.overview', 'Overview')}
-        primaryLabel={tx('ui.stats.caption.total', 'Total')}
+        label={tx('ui.stats.section.overview')}
+        primaryLabel={tx('ui.stats.caption.total')}
         primaryValue={stats.count_all}
-        primaryTitle={tx('ui.stats.oss.compositionPrimaryTitle', 'Total number of items in the operational schema')}
-        secondaryLabel={stats.count_block > 0 ? tx('ui.stats.oss.blocks', 'Blocks') : undefined}
+        primaryTitle={tx('ui.stats.oss.compositionPrimaryTitle')}
+        secondaryLabel={stats.count_block > 0 ? tx('ui.stats.oss.blocks') : undefined}
         secondaryValue={stats.count_block > 0 ? stats.count_block : undefined}
-        secondaryTitle={tx('ui.stats.oss.blocksSecondaryTitle', 'Number of nested blocks')}
+        secondaryTitle={tx('ui.stats.oss.blocksSecondaryTitle')}
         details={[
-          { label: tx('ui.stats.caption.total', 'Total'), value: stats.count_all },
-          { label: tx('ui.stats.oss.blocks', 'Blocks'), value: stats.count_block },
-          { label: tx('ui.stats.oss.detail.inputs', 'Input'), value: stats.count_inputs },
-          { label: tx('ui.stats.oss.detail.synthesis', 'Synthesis'), value: stats.count_synthesis },
-          { label: tx('ui.stats.oss.detail.replica', 'Replica'), value: stats.count_references }
+          { label: tx('ui.stats.caption.total'), value: stats.count_all },
+          { label: tx('ui.stats.oss.blocks'), value: stats.count_block },
+          { label: tx('ui.stats.oss.detail.inputs'), value: stats.count_inputs },
+          { label: tx('ui.stats.oss.detail.synthesis'), value: stats.count_synthesis },
+          { label: tx('ui.stats.oss.detail.replica'), value: stats.count_references }
         ]}
       />
 
@@ -42,17 +42,17 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
       <StatsCategory
         id='oss-stats-schemas'
         className='rounded-b-md'
-        label={tx('ui.stats.oss.attachedSection', 'Attached schemas')}
-        primaryLabel={tx('ui.stats.caption.total', 'Total')}
+        label={tx('ui.stats.oss.attachedSection')}
+        primaryLabel={tx('ui.stats.caption.total')}
         primaryValue={stats.count_schemas}
-        primaryTitle={tx('ui.stats.oss.attachedPrimaryTitle', 'Number of operations with an attached RSForm schema')}
-        secondaryLabel={stats.count_schemas > 0 ? tx('ui.stats.secondary.owned', 'Owned') : undefined}
+        primaryTitle={tx('ui.stats.oss.attachedPrimaryTitle')}
+        secondaryLabel={stats.count_schemas > 0 ? tx('ui.stats.secondary.owned') : undefined}
         secondaryValue={stats.count_schemas > 0 ? stats.count_owned : undefined}
-        secondaryTitle={tx('ui.stats.oss.ownedSecondaryTitle', 'Number of owned (non-imported) schemas')}
+        secondaryTitle={tx('ui.stats.oss.ownedSecondaryTitle')}
         details={[
-          { label: tx('ui.stats.oss.detail.attachedSchemas', 'Attached schemas'), value: stats.count_schemas },
-          { label: tx('ui.stats.secondary.owned', 'Owned'), value: stats.count_owned },
-          { label: tx('ui.stats.oss.detail.external', 'External'), value: countImported }
+          { label: tx('ui.stats.oss.detail.attachedSchemas'), value: stats.count_schemas },
+          { label: tx('ui.stats.secondary.owned'), value: stats.count_owned },
+          { label: tx('ui.stats.oss.detail.external'), value: countImported }
         ]}
       />
     </aside>

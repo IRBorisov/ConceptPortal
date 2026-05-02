@@ -2,7 +2,7 @@
 
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { cstCanProduceStructure } from '@/domain/library/rsform-api';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
@@ -69,9 +69,9 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
         <IndicatorPill
           className='text-sm font-controls py-0.5 gap-1 -mt-0.5'
           title={
-            crucial ? tx('ui.cst.crucialRemoveTitle', 'Remove key status') : tx('ui.cst.crucialAddTitle', 'Set as key')
+            crucial ? tx('ui.cst.crucialRemoveTitle') : tx('ui.cst.crucialAddTitle')
           }
-          value={crucial ? tx('ui.cst.crucialBadgeOn', 'key') : tx('ui.cst.crucialBadgeOff', 'regular')}
+          value={crucial ? tx('ui.cst.crucialBadgeOn') : tx('ui.cst.crucialBadgeOff')}
           icon={<IconCrucial size='1rem' />}
           color={crucial ? 'teal' : 'muted'}
           onClick={toggleCrucial}
@@ -81,8 +81,8 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
 
       {showRenameButton ? (
         <TextButton
-          text={tx('ui.action.renameCst', 'Rename')}
-          title={isModified ? formatLabel(lid.tooltip.unsaved) : tx('ui.hint.renameCst', 'Rename constituent')}
+          text={tx('ui.action.renameCst')}
+          title={isModified ? formatLabel(lid.tooltip.unsaved) : tx('ui.hint.renameCst')}
           onClick={promptRename}
           disabled={isModified}
           className='text-sm'
@@ -91,8 +91,8 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
 
       {showStructureButton ? (
         <TextButton
-          text={tx('ui.action.expandStructure', 'Expand structure')}
-          title={tx('ui.hint.conceptStructure', 'Manage concept structure')}
+          text={tx('ui.action.expandStructure')}
+          title={tx('ui.hint.conceptStructure')}
           onClick={handleStructurePlanner}
           className='text-sm'
         />

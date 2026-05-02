@@ -1,6 +1,6 @@
 'use client';
 
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 import { PromptTabID } from '@/app/navigation/navigation-context';
@@ -40,22 +40,22 @@ export function ToolbarTemplate({ activeID, onSave, onReset, className }: Toolba
   return (
     <div className={cn('cc-icons items-start outline-hidden', className)}>
       <MiniButton
-        title={prepareTooltip(tx('ui.action.saveChanges', 'Save changes'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
-        aria-label={tx('ui.action.saveChanges', 'Save changes')}
+        title={prepareTooltip(tx('ui.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+        aria-label={tx('ui.action.saveChanges')}
         icon={<IconSave size='1.25rem' className='icon-primary' />}
         onClick={onSave}
         disabled={isProcessing || !isModified}
       />
       <MiniButton
-        title={tx('ui.action.resetEdits', 'Discard changes')}
-        aria-label={tx('ui.aria.resetEdits', 'Discard changes')}
+        title={tx('ui.action.resetEdits')}
+        aria-label={tx('ui.aria.resetEdits')}
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={onReset}
         disabled={isProcessing || !isModified}
       />
       <MiniButton
-        title={tx('ui.ai.deleteTemplate', 'Delete template')}
-        aria-label={tx('ui.aria.deleteTemplate', 'Delete template')}
+        title={tx('ui.ai.deleteTemplate')}
+        aria-label={tx('ui.aria.deleteTemplate')}
         icon={<IconDestroy size='1.25rem' className='icon-red' />}
         onClick={handleDelete}
         disabled={isProcessing}

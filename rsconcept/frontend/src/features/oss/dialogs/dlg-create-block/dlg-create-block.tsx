@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type OssLayout } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -126,8 +126,8 @@ export function DlgCreateBlock() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.createBlock.header', 'Create block')}
-      submitText={tx('ui.action.create', 'Create')}
+      header={tx('ui.dlg.createBlock.header')}
+      submitText={tx('ui.action.create')}
       canSubmit={canSubmit}
       validationHint={hint}
       onSubmit={event => {
@@ -141,14 +141,14 @@ export function DlgCreateBlock() {
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='z-pop mx-auto flex border divide-x rounded-none'>
           <TabLabel
-            title={tx('ui.dlg.createBlock.tabPassport.title', 'Main block attributes')}
-            label={tx('ui.dlg.createBlock.tabPassport.label', 'Passport')}
+            title={tx('ui.dlg.createBlock.tabPassport.title')}
+            label={tx('ui.dlg.createBlock.tabPassport.label')}
           />
           <TabLabel
-            title={tx('ui.dlg.createBlock.tabChildren.title', 'Nested node pick: [{count}]', {
+            title={tx('ui.dlg.createBlock.tabChildren.title', {
               count: childrenOperations.length + childrenBlocks.length
             })}
-            label={tx('ui.dlg.createBlock.tabChildren.label', 'Contents{mark}', {
+            label={tx('ui.dlg.createBlock.tabChildren.label', {
               mark: childrenOperations.length + childrenBlocks.length > 0 ? '*' : ''
             })}
           />

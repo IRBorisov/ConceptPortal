@@ -23,7 +23,7 @@ export function useLibraryColumns() {
   return [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: tx('lib.col.alias', 'Alias'),
+      header: tx('lib.col.alias'),
       size: 150,
       minSize: 80,
       maxSize: 150,
@@ -33,7 +33,7 @@ export function useLibraryColumns() {
     }),
     columnHelper.accessor('title', {
       id: 'title',
-      header: tx('lib.col.title', 'Title'),
+      header: tx('lib.col.title'),
       size: 1200,
       minSize: 200,
       maxSize: 1200,
@@ -43,7 +43,7 @@ export function useLibraryColumns() {
     }),
     columnHelper.accessor('owner', {
       id: 'owner',
-      header: tx('lib.col.owner', 'Owner'),
+      header: tx('lib.col.owner'),
       size: 400,
       minSize: 100,
       maxSize: 400,
@@ -55,7 +55,7 @@ export function useLibraryColumns() {
       id: 'time_update',
       header: () => (
         <span className='min-w-20'>
-          {isSmall ? tx('lib.col.dateShort', 'Date') : tx('lib.col.dateLong', 'Updated')}
+          {isSmall ? tx('lib.col.dateShort') : tx('lib.col.dateLong')}
         </span>
       ),
       cell: props => (

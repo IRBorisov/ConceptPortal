@@ -50,7 +50,7 @@ export function ToolbarItemAccess({
 
   return (
     <div className={clsx('w-46 flex items-center h-8 select-none', className)}>
-      <Label text={tx('ui.label.access', 'Access')} />
+      <Label text={tx('ui.label.access')} />
       <div className='ml-auto cc-icons'>
         <SelectAccessPolicy
           value={policy}
@@ -60,9 +60,9 @@ export function ToolbarItemAccess({
 
         <MiniButton
           title={
-            visible ? tx('ui.dlg.clone.libraryShow', 'Library: show') : tx('ui.dlg.clone.libraryHide', 'Library: hide')
+            visible ? tx('ui.dlg.clone.libraryShow') : tx('ui.dlg.clone.libraryHide')
           }
-          aria-label={tx('ui.dlg.clone.libraryToggleAria', 'Toggle library visibility')}
+          aria-label={tx('ui.dlg.clone.libraryToggleAria')}
           icon={<IconItemVisibility value={visible} />}
           onClick={toggleVisible}
           disabled={role === UserRole.READER || isProcessing}
@@ -71,10 +71,10 @@ export function ToolbarItemAccess({
         <MiniButton
           title={
             readOnly
-              ? tx('ui.library.toolbar.editForbiddenTitle', 'Editing: forbidden')
-              : tx('ui.library.toolbar.editAllowedTitle', 'Editing: allowed')
+              ? tx('ui.library.toolbar.editForbiddenTitle')
+              : tx('ui.library.toolbar.editAllowedTitle')
           }
-          aria-label={tx('ui.library.toolbar.editModeToggleAria', 'Toggle edit mode')}
+          aria-label={tx('ui.library.toolbar.editModeToggleAria')}
           icon={
             readOnly ? (
               <IconImmutable size='1.25rem' className='text-primary' />

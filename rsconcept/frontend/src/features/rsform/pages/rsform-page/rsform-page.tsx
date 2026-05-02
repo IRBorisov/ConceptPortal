@@ -86,14 +86,14 @@ function ProcessError({
         <div className='flex flex-col items-center p-2 mx-auto'>
           <p>
             {isArchive
-              ? tx('ui.rsform.error.notFoundVersion', 'Conceptual schema with this id and version was not found.')
-              : tx('ui.rsform.error.notFound', 'Conceptual schema with this id was not found.')}
+              ? tx('ui.rsform.error.notFoundVersion')
+              : tx('ui.rsform.error.notFound')}
           </p>
           <div className='flex justify-center'>
-            <TextURL text={tx('ui.nav.library', 'Library')} href='/library' />
+            <TextURL text={tx('ui.nav.library')} href='/library' />
             {isArchive ? <Divider vertical margins='mx-3' /> : null}
             {isArchive ? (
-              <TextURL text={tx('ui.rsform.link.currentVersion', 'Current version')} href={`/rsforms/${itemID}`} />
+              <TextURL text={tx('ui.rsform.link.currentVersion')} href={`/rsforms/${itemID}`} />
             ) : null}
           </div>
         </div>
@@ -101,8 +101,8 @@ function ProcessError({
     } else if (error.response.status === 403) {
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
-          <p>{tx('ui.rsform.error.forbidden', 'The owner has restricted access to this schema.')}</p>
-          <TextURL text={tx('ui.nav.library', 'Library')} href='/library' />
+          <p>{tx('ui.rsform.error.forbidden')}</p>
+          <TextURL text={tx('ui.nav.library')} href='/library' />
         </div>
       );
     }

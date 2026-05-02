@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type OssLayout } from '@/domain/library';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -82,8 +82,8 @@ export function DlgCreateSchema() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.ossOp.newSchemaHeader', 'Create operation: new schema')}
-      submitText={tx('ui.action.create', 'Create')}
+      header={tx('ui.dlg.ossOp.newSchemaHeader')}
+      submitText={tx('ui.action.create')}
       canSubmit={canSubmit}
       validationHint={hint}
       onSubmit={event => {
@@ -98,12 +98,12 @@ export function DlgCreateSchema() {
         {field => (
           <TextInput
             id='operation_title'
-            aria-label={tx('ui.oss.newSchemaTitle', 'New schema title')}
-            placeholder={tx('ui.oss.newSchemaTitle', 'New schema title')}
+            aria-label={tx('ui.oss.newSchemaTitle')}
+            placeholder={tx('ui.oss.newSchemaTitle')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.errors[0]?.message}
+            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
           />
         )}
       </form.Field>
@@ -113,13 +113,13 @@ export function DlgCreateSchema() {
             {field => (
               <TextInput
                 id='operation_alias'
-                label={tx('ui.label.alias', 'Abbreviation')}
+                label={tx('ui.label.alias')}
                 className='w-80'
-                placeholder={tx('ui.oss.enterAlias', 'Enter abbreviation')}
+                placeholder={tx('ui.oss.enterAlias')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={field.state.meta.errors[0]?.message}
+                error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
               />
             )}
           </form.Field>
@@ -128,7 +128,7 @@ export function DlgCreateSchema() {
               <SelectParent
                 items={manager.oss.blocks}
                 value={field.state.value ? (manager.oss.blockByID.get(field.state.value) ?? null) : null}
-                placeholder={tx('ui.oss.parentBlock', 'Parent block')}
+                placeholder={tx('ui.oss.parentBlock')}
                 onChange={value => field.handleChange(value ? value.id : null)}
               />
             )}
@@ -138,7 +138,7 @@ export function DlgCreateSchema() {
           {field => (
             <TextArea
               id='operation_comment'
-              label={tx('ui.label.description', 'Description')}
+              label={tx('ui.label.description')}
               placeholder={formatLabel(lid.placeholder.itemDescription)}
               className='w-full'
               noResize

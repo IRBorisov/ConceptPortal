@@ -144,7 +144,7 @@ export function sharePage() {
 
 /** Show error message about not implemented function. */
 export function notImplemented() {
-  toast.error(formatAppMessage('ui.common.notImplemented', 'Feature is under development'));
+  toast.error(formatAppMessage('ui.common.notImplemented'));
   console.error('Not implemented');
 }
 

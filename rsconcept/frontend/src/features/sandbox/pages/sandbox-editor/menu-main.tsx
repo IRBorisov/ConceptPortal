@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 
 import { LocationHead } from '@/domain/library';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { useCreateFromSandbox } from '@/features/library/backend/use-create-from-sandbox';
@@ -136,7 +136,7 @@ export function MenuMain() {
       <MiniButton
         noHover
         noPadding
-        title={tx('ui.nav.sandboxMenu', 'Sandbox menu')}
+        title={tx('ui.nav.sandboxMenu')}
         hideTitle={isMenuOpen}
         className='h-full pl-2 text-muted-foreground hover:text-primary cc-animate-color bg-transparent'
         icon={<IconMenu size='1.25rem' />}
@@ -151,39 +151,39 @@ export function MenuMain() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('ui.action.recalculateModel', 'Recalculate model')}
-          aria-label={tx('ui.aria.recalculateAll', 'Recalculate all results')}
+          text={tx('ui.action.recalculateModel')}
+          aria-label={tx('ui.aria.recalculateAll')}
           icon={<IconCalculateAll size='1rem' className='icon-green' />}
           onClick={handleRecalculate}
         />
         <DropdownButton
-          text={tx('ui.sandbox.saveToFile', 'Save to file')}
-          title={tx('ui.sandbox.saveToFileHint', 'Download sandbox data as JSON')}
+          text={tx('ui.sandbox.saveToFile')}
+          title={tx('ui.sandbox.saveToFileHint')}
           icon={<IconDownload size='1rem' className='icon-primary' />}
           onClick={handleExport}
         />
         <DropdownButton
-          text={tx('ui.sandbox.loadFromFile', 'Load from file')}
-          title={tx('ui.sandbox.loadFromFileHint', 'Load sandbox data from JSON')}
+          text={tx('ui.sandbox.loadFromFile')}
+          title={tx('ui.sandbox.loadFromFileHint')}
           icon={<IconUpload size='1rem' className='icon-primary' />}
           onClick={handleImportClick}
         />
         <DropdownButton
-          text={tx('ui.sandbox.createSchema', 'Create schema')}
-          title={tx('ui.sandbox.createSchemaHint', 'Create a new conceptual schema from sandbox data')}
+          text={tx('ui.sandbox.createSchema')}
+          title={tx('ui.sandbox.createSchemaHint')}
           icon={<IconRSForm size='1rem' className='icon-green' />}
           onClick={() => void handleCreateRSForm()}
         />
         <DropdownButton
-          text={tx('ui.action.createModel', 'Create model')}
-          title={tx('ui.sandbox.createModelHint', 'Create a new conceptual schema and model from sandbox data')}
+          text={tx('ui.action.createModel')}
+          title={tx('ui.sandbox.createModelHint')}
           icon={<IconRSModel size='1rem' className='text-accent-orange' />}
           onClick={() => void handleCreateRSModel()}
         />
         <Divider margins='mx-3 my-1' />
         <DropdownButton
-          text={tx('ui.sandbox.resetState', 'Reset state')}
-          title={tx('ui.sandbox.resetStateHint', 'Restore initial sandbox data')}
+          text={tx('ui.sandbox.resetState')}
+          title={tx('ui.sandbox.resetStateHint')}
           icon={<IconReset size='1rem' className='icon-red' />}
           onClick={handleReset}
         />

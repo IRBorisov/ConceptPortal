@@ -20,10 +20,10 @@ export function TabPromptEdit({ label, description, text, setText }: TabPromptEd
   return (
     <div className='cc-column'>
       <div className='flex flex-col gap-2'>
-        <TextArea id='prompt-label' label={tx('ui.label.title', 'Title')} value={label} disabled noResize rows={1} />
+        <TextArea id='prompt-label' label={tx('ui.label.title')} value={label} disabled noResize rows={1} />
         <TextArea
           id='prompt-description'
-          label={tx('ui.label.description', 'Description')}
+          label={tx('ui.label.description')}
           value={description}
           disabled
           noResize
@@ -32,7 +32,7 @@ export function TabPromptEdit({ label, description, text, setText }: TabPromptEd
         />
         <PromptInput
           id='prompt-text'
-          label={tx('ui.aiPrompt.edit.templateTextLabel', 'Template text')}
+          label={tx('ui.aiPrompt.edit.templateTextLabel')}
           value={text}
           onChange={setText}
           maxHeight='9.5rem'

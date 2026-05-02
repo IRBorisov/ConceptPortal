@@ -69,8 +69,8 @@ export function ModalView({
         ) : null}
 
         <MiniButton
-          title={prepareTooltip(tx('modal.closeDialogTooltip', 'Close dialog'), 'ESC')}
-          aria-label={tx('modal.close', 'Close')}
+          title={prepareTooltip(tx('modal.closeDialogTooltip'), 'ESC')}
+          aria-label={tx('modal.close')}
           noPadding
           icon={<IconClose size='1.25rem' />}
           className='absolute z-pop top-2 right-2'
@@ -105,8 +105,8 @@ export function ModalView({
 
         {noFooterButton ? null : !fullScreen ? (
           <Button
-            text={tx('modal.close', 'Close')}
-            aria-label={tx('modal.close', 'Close')}
+            text={tx('modal.close')}
+            aria-label={tx('modal.close')}
             className={clsx(
               'my-2 mx-auto text-sm min-w-28',
               fullScreen && 'z-pop absolute bottom-0 right-1/2 translate-x-1/2'
@@ -117,8 +117,8 @@ export function ModalView({
           <div className='z-pop absolute bottom-0 right-1/2 translate-x-1/2 p-3 rounded-xl bg-background/90 backdrop-blur-xs'>
             {' '}
             <Button
-              text={tx('modal.close', 'Close')}
-              aria-label={tx('modal.close', 'Close')}
+              text={tx('modal.close')}
+              aria-label={tx('modal.close')}
               className='text-sm min-w-28'
               onClick={handleHide}
             />

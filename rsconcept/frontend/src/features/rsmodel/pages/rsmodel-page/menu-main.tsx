@@ -3,7 +3,7 @@
 import { toast } from 'react-toastify';
 
 import { AccessPolicy, LocationHead } from '@/domain/library';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';
@@ -124,7 +124,7 @@ export function MenuMain() {
       <MiniButton
         noHover
         noPadding
-        title={tx('ui.nav.menu', 'Menu')}
+        title={tx('ui.nav.menu')}
         hideTitle={isMenuOpen}
         icon={<IconMenu size='1.25rem' />}
         className='h-full pl-2 text-muted-foreground hover:text-primary cc-animate-color bg-transparent'
@@ -132,42 +132,42 @@ export function MenuMain() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('ui.action.recalculateModel', 'Recalculate model')}
-          aria-label={tx('ui.aria.recalculateAll', 'Recalculate all results')}
+          text={tx('ui.action.recalculateModel')}
+          aria-label={tx('ui.aria.recalculateAll')}
           icon={<IconCalculateAll size='1rem' className='icon-green' />}
           onClick={handleRecalculate}
         />
         <DropdownButton
-          text={tx('ui.action.share', 'Share')}
+          text={tx('ui.action.share')}
           title={formatLabel(
             model.access_policy === AccessPolicy.PUBLIC ? lid.tooltip.shareItemPublic : lid.tooltip.shareItemPrivate
           )}
-          aria-label={tx('ui.aria.copyLinkToClipboard', 'Copy link to clipboard')}
+          aria-label={tx('ui.aria.copyLinkToClipboard')}
           icon={<IconShare size='1rem' className='icon-primary' />}
           onClick={handleShare}
           disabled={model.access_policy !== AccessPolicy.PUBLIC}
         />
         <DropdownButton
-          text={tx('ui.action.qrCode', 'QR code')}
-          title={tx('ui.hint.qrSchemaPage', 'Show schema QR code')}
+          text={tx('ui.action.qrCode')}
+          title={tx('ui.hint.qrSchemaPage')}
           icon={<IconQR size='1rem' className='icon-primary' />}
           onClick={handleShowQR}
         />
         {!isAnonymous ? (
           <DropdownButton
-            text={tx('ui.action.clone', 'Clone')}
+            text={tx('ui.action.clone')}
             icon={<IconClone size='1rem' className='icon-green' />}
             onClick={handleClone}
           />
         ) : null}
         <DropdownButton
-          text={tx('ui.action.openInSandbox', 'Open in sandbox')}
+          text={tx('ui.action.openInSandbox')}
           icon={<IconSandbox size='1rem' className='icon-green' />}
           onClick={() => void handleTransferToSandbox()}
         />
         {isMutable ? (
           <DropdownButton
-            text={tx('ui.action.deleteModel', 'Delete model')}
+            text={tx('ui.action.deleteModel')}
             icon={<IconDestroy size='1rem' className='icon-red' />}
             disabled={isProcessing || role < UserRole.OWNER}
             onClick={handleDelete}
@@ -177,12 +177,12 @@ export function MenuMain() {
         <Divider margins='mx-3 my-1' />
 
         <DropdownButton
-          text={tx('ui.nav.gotoSchema', 'Go to schema')}
+          text={tx('ui.nav.gotoSchema')}
           icon={<IconRSForm size='1rem' className='icon-primary' />}
           onClick={handleNavigateSchema}
         />
         <DropdownButton
-          text={tx('ui.nav.library', 'Library')}
+          text={tx('ui.nav.library')}
           icon={<IconLibrary size='1rem' className='icon-primary' />}
           onClick={() => router.gotoLibrary()}
         />

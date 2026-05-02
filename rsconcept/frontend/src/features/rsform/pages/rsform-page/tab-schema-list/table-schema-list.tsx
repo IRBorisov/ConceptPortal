@@ -64,7 +64,7 @@ export function TableSchemaList({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: () => <span className='pl-3 min-w-12'>{tx('ui.table.header.alias', 'Name')}</span>,
+      header: () => <span className='pl-3 min-w-12'>{tx('ui.table.header.alias')}</span>,
       size: 65,
       minSize: 65,
       maxSize: 65,
@@ -72,7 +72,7 @@ export function TableSchemaList({
     }),
     columnHelper.accessor(cst => labelType(cst.analysis.type), {
       id: 'type',
-      header: () => <span className='min-w-40'>{tx('ui.table.header.typification', 'Typification')}</span>,
+      header: () => <span className='min-w-40'>{tx('ui.table.header.typification')}</span>,
       enableHiding: true,
       size: 150,
       minSize: 150,
@@ -83,14 +83,14 @@ export function TableSchemaList({
     }),
     columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {
       id: 'term',
-      header: () => <span className='min-w-30'>{tx('ui.table.header.term', 'Term')}</span>,
+      header: () => <span className='min-w-30'>{tx('ui.table.header.term')}</span>,
       size: 500,
       minSize: 150,
       maxSize: 500
     }),
     columnHelper.accessor('definition_formal', {
       id: 'expression',
-      header: tx('ui.table.header.formalDefinition', 'Formal definition'),
+      header: tx('ui.table.header.formalDefinition'),
       size: 1000,
       minSize: 300,
       maxSize: 1000,
@@ -98,7 +98,7 @@ export function TableSchemaList({
     }),
     columnHelper.accessor(cst => cst.definition_resolved || cst.definition_raw || '', {
       id: 'definition',
-      header: tx('ui.table.header.textDefinition', 'Text definition'),
+      header: tx('ui.table.header.textDefinition'),
       size: 1000,
       minSize: 200,
       maxSize: 1000,
@@ -106,7 +106,7 @@ export function TableSchemaList({
     }),
     columnHelper.accessor('convention', {
       id: 'convention',
-      header: tx('ui.table.header.conventionComment', 'Convention / Comment'),
+      header: tx('ui.table.header.conventionComment'),
       size: 500,
       minSize: 100,
       maxSize: 500,
@@ -138,9 +138,9 @@ export function TableSchemaList({
       onRowSelectionChange={setSelected}
       noDataComponent={
         <NoData>
-          <p>{tx('ui.table.emptyList', 'List is empty')}</p>
+          <p>{tx('ui.table.emptyList')}</p>
           <p>
-            <TextURL text={tx('ui.link.createConstituenta', 'Create a constituenta...')} onClick={onCreateNew} />
+            <TextURL text={tx('ui.link.createConstituenta')} onClick={onCreateNew} />
           </p>
         </NoData>
       }

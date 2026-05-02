@@ -161,7 +161,7 @@ export function DlgStructurePlanner() {
           >
             <RefsInput
               id='dlg_structure_term'
-              placeholder={tx('ui.structurePlanner.termPlaceholder', 'Term not defined')}
+              placeholder={tx('ui.structurePlanner.termPlaceholder')}
               areaClassName='w-120'
               maxHeight='6.75rem'
               portalHoverTooltips
@@ -180,8 +180,8 @@ export function DlgStructurePlanner() {
               <MiniButton
                 title={prepareTooltip(
                   selectedCst
-                    ? tx('ui.structurePlanner.submitUpdate', 'Update term')
-                    : tx('ui.structurePlanner.submitCreate', 'Create constituent'),
+                    ? tx('ui.structurePlanner.submitUpdate')
+                    : tx('ui.structurePlanner.submitCreate'),
                   isMac() ? 'Cmd + Enter' : 'Ctrl + Enter'
                 )}
                 icon={
@@ -195,7 +195,7 @@ export function DlgStructurePlanner() {
                 disabled={!isDirty || term === ''}
               />
               <MiniButton
-                title={tx('ui.structurePlanner.resetTerm', 'Reset term')}
+                title={tx('ui.structurePlanner.resetTerm')}
                 icon={<IconReset size='1.25rem' className='icon-primary' />}
                 onClick={resetTerm}
                 disabled={!isDirty || !selectedCst}

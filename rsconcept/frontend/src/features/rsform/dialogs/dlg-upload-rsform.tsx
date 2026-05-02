@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { Checkbox, FileInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
@@ -40,30 +40,27 @@ export function DlgUploadRSForm() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.uploadRsform.header', 'Import schema from Exteor')}
+      header={tx('ui.dlg.uploadRsform.header')}
       canSubmit={!!file}
       validationHint={!!file ? '' : formatLabel(lid.hint.fileEmpty)}
       onSubmit={handleSubmit}
-      submitText={tx('ui.action.upload', 'Upload')}
+      submitText={tx('ui.action.upload')}
       className='w-100 px-6'
     >
       <FileInput
-        label={tx('ui.dlg.uploadRsform.pickFile', 'Choose file')}
+        label={tx('ui.dlg.uploadRsform.pickFile')}
         acceptType={EXTEOR_TRS_FILE}
         onChange={handleFile}
       />
       <Checkbox
-        label={tx('ui.dlg.uploadRsform.loadMetadata', 'Load title and comment from file')}
+        label={tx('ui.dlg.uploadRsform.loadMetadata')}
         className='py-2'
         value={loadMetadata}
         onChange={value => setLoadMetadata(value)}
       />
       <div className='text-destructive'>
-        <b>{tx('ui.dlg.uploadRsform.attention', 'Warning!')}</b>{' '}
-        {tx(
-          'ui.dlg.uploadRsform.warningBody',
-          'Loading from a file will remove all constituents of the current conceptual schema.'
-        )}
+        <b>{tx('ui.dlg.uploadRsform.attention')}</b>{' '}
+        {tx('ui.dlg.uploadRsform.warningBody')}
       </div>
     </ModalForm>
   );

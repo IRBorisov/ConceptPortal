@@ -110,7 +110,7 @@ export function SelectTree<ItemType>({
             {foldable.has(item) ? (
               <MiniButton
                 aria-label={
-                  !folded.includes(item) ? tx('ui.selectTree.fold', 'Collapse') : tx('ui.selectTree.unfold', 'Expand')
+                  !folded.includes(item) ? tx('ui.selectTree.fold') : tx('ui.selectTree.unfold')
                 }
                 className={clsx('absolute left-1 hover:text-primary', !folded.includes(item) ? 'top-1.5' : 'top-1')}
                 noPadding

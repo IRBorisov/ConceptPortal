@@ -24,7 +24,7 @@ export function InfoUsers({ items, className, prefix, header, ...restProps }: In
         <div key={`${prefix}${index}`}>{getUserLabel(user)}</div>
       ))}
       {items.length === 0 ? (
-        <div className='text-center'>{tx('ui.users.info.noneSelected', 'No users selected')}</div>
+        <div className='text-center'>{tx('ui.users.info.noneSelected')}</div>
       ) : null}
     </div>
   );

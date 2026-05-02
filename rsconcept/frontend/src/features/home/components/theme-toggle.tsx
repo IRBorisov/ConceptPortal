@@ -21,7 +21,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
     <div
       className={cn('rounded-full p-0.5 pointer-events-auto', className)}
       role='group'
-      aria-label={tx('home.theme.groupAria', 'Color theme')}
+      aria-label={tx('home.theme.groupAria')}
     >
       <div className='flex'>
         <button
@@ -33,7 +33,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
             !darkMode ? 'bg-muted/50 text-foreground' : 'text-muted-foreground hover:text-foreground'
           )}
           aria-pressed={!darkMode}
-          aria-label={tx('home.theme.lightAria', 'Light theme')}
+          aria-label={tx('home.theme.lightAria')}
         >
           <IconLightTheme size='0.75rem' aria-hidden />
         </button>
@@ -46,7 +46,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
             darkMode ? 'bg-muted/50 text-foreground' : 'text-muted-foreground hover:text-foreground'
           )}
           aria-pressed={darkMode}
-          aria-label={tx('home.theme.darkAria', 'Dark theme')}
+          aria-label={tx('home.theme.darkAria')}
         >
           <IconDarkTheme size='0.75rem' aria-hidden />
         </button>

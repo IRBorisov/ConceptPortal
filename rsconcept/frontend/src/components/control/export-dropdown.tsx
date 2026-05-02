@@ -3,7 +3,7 @@
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { convertToCSV, convertToJSON } from '@/utils/utils';
 
@@ -84,7 +84,7 @@ export function ExportDropdown<T extends object = object>({
   return (
     <div className={cn('relative inline-block', className)} tabIndex={0} onBlur={handleBlur}>
       <MiniButton
-        title={tx('ui.action.exportData', 'Export data')}
+        title={tx('ui.action.exportData')}
         hideTitle={isOpen}
         className='text-muted-foreground enabled:hover:text-primary'
         icon={<IconDownload size='1.25rem' />}

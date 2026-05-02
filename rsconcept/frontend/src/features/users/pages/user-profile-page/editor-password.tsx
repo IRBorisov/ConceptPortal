@@ -2,7 +2,7 @@
 
 import { useForm } from '@tanstack/react-form';
 
-import { useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 import { type IChangePasswordDTO, schemaChangePassword } from '@/features/auth';
@@ -54,12 +54,12 @@ export function EditorPassword() {
               id='old_password'
               type='password'
               autoComplete='current-password'
-              label={tx('ui.users.password.oldLabel', 'Current password')}
+              label={tx('ui.users.password.oldLabel')}
               allowEnter
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={field.state.meta.errors[0]?.message}
+              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
             />
           )}
         </form.Field>
@@ -69,12 +69,12 @@ export function EditorPassword() {
               id='new_password'
               type='password'
               autoComplete='new-password'
-              label={tx('ui.users.password.newLabel', 'New password')}
+              label={tx('ui.users.password.newLabel')}
               allowEnter
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={field.state.meta.errors[0]?.message}
+              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
             />
           )}
         </form.Field>
@@ -84,24 +84,24 @@ export function EditorPassword() {
               id='new_password2'
               type='password'
               autoComplete='new-password'
-              label={tx('ui.users.password.repeatLabel', 'Repeat new password')}
+              label={tx('ui.users.password.repeatLabel')}
               allowEnter
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={field.state.meta.errors[0]?.message}
+              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
             />
           )}
         </form.Field>
         {serverError ? (
           <ServerError
             error={serverError}
-            wrongOldPasswordLabel={tx('ui.users.password.oldWrong', 'Current password is incorrect')}
+            wrongOldPasswordLabel={tx('ui.users.password.oldWrong')}
           />
         ) : null}
       </div>
       <SubmitButton
-        text={tx('ui.users.password.submit', 'Change password')}
+        text={tx('ui.users.password.submit')}
         className='self-center'
         loading={isPending}
       />

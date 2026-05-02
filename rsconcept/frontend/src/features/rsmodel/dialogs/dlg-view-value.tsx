@@ -26,7 +26,7 @@ export function DlgViewValue() {
     <ModalView
       helpTopic={HelpTopic.UI_MODEL_VALUE_EDIT}
       noFooterButton
-      header={tx('ui.rsmodel.dlg.viewValue.header', 'View value')}
+      header={tx('ui.rsmodel.dlg.viewValue.header')}
       className='w-230 h-180 max-w-[calc(100dvw-3rem)] max-h-[calc(100svh-8rem)] px-6 mb-3'
     >
       <ValueViewer rows={20} type={type} value={value} engine={engine} getHeaderText={getHeaderText} />

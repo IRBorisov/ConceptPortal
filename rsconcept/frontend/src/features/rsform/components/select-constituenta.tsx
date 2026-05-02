@@ -20,7 +20,7 @@ interface SelectConstituentaProps {
 
 export function SelectConstituenta({ items, placeholder, ...restProps }: SelectConstituentaProps) {
   const tx = useTx();
-  const resolvedPlaceholder = placeholder ?? tx('ui.rsform.selectConstituenta.placeholder', 'Select constituenta');
+  const resolvedPlaceholder = placeholder ?? tx('ui.rsform.selectConstituenta.placeholder');
   return (
     <ComboBox
       items={items}

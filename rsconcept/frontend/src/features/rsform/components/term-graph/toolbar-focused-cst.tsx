@@ -23,15 +23,15 @@ export function ToolbarFocusedCst({ resetFocus, className }: ToolbarFocusedCstPr
     <div className={cn('grid', className)}>
       <div className='flex items-center cc-icons'>
         <MiniButton
-          title={tx('ui.rsform.termGraph.focus.resetTitle', 'Reset focus')}
+          title={tx('ui.rsform.termGraph.focus.resetTitle')}
           icon={<IconReset size='1.25rem' className='icon-primary' />}
           onClick={resetFocus}
         />
         <MiniButton
           title={
             filter.focusShowInputs
-              ? tx('ui.rsform.termGraph.focus.hideSuppliersTitle', 'Hide suppliers')
-              : tx('ui.rsform.termGraph.focus.showSuppliersTitle', 'Show suppliers')
+              ? tx('ui.rsform.termGraph.focus.hideSuppliersTitle')
+              : tx('ui.rsform.termGraph.focus.showSuppliersTitle')
           }
           icon={<IconGraphInputs size='1.25rem' className={filter.focusShowInputs ? 'icon-green' : 'icon-primary'} />}
           onClick={toggleFocusInputs}
@@ -39,8 +39,8 @@ export function ToolbarFocusedCst({ resetFocus, className }: ToolbarFocusedCstPr
         <MiniButton
           title={
             filter.focusShowOutputs
-              ? tx('ui.rsform.termGraph.focus.hideConsumersTitle', 'Hide consumers')
-              : tx('ui.rsform.termGraph.focus.showConsumersTitle', 'Show consumers')
+              ? tx('ui.rsform.termGraph.focus.hideConsumersTitle')
+              : tx('ui.rsform.termGraph.focus.showConsumersTitle')
           }
           icon={<IconGraphOutputs size='1.25rem' className={filter.focusShowOutputs ? 'icon-green' : 'icon-primary'} />}
           onClick={toggleFocusOutputs}

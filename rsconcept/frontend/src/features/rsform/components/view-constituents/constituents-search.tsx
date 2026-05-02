@@ -32,7 +32,7 @@ export function ConstituentsSearch({ actions, showModelFilter }: ConstituentsSea
   return (
     <div className='flex items-center border-b bg-input rounded-t-md pl-2 pr-1'>
       <MiniButton
-        title={tx('ui.constituents.search.resetFilterTitle', 'Reset filter')}
+        title={tx('ui.constituents.search.resetFilterTitle')}
         icon={<IconFilterReset size='1.25rem' className='icon-primary -mr-1' />}
         onClick={handleReset}
         disabled={!hasActiveFilter}

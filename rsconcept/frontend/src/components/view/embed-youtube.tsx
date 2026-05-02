@@ -29,7 +29,7 @@ export function EmbedYoutube({ videoID, pxHeight, pxWidth }: EmbedYoutubeProps) 
     >
       <iframe
         allowFullScreen
-        title={tx('ui.embed.youtubeTitle', 'Embedded YouTube video')}
+        title={tx('ui.embed.youtubeTitle')}
         allow='accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
         className='absolute top-0 left-0 border'
         style={{

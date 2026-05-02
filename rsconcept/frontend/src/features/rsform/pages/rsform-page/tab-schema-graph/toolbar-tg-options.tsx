@@ -58,39 +58,39 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
   }
 
   const textToggleTitle = !filter.noText
-    ? tx('ui.tg.toolbar.hideText', 'Hide text')
-    : tx('ui.tg.toolbar.showText', 'Show text');
+    ? tx('ui.tg.toolbar.hideText')
+    : tx('ui.tg.toolbar.showText');
   const derivedToggleTitle = !filter.foldDerived
-    ? tx('ui.tg.toolbar.hideDerived', 'Hide derived')
-    : tx('ui.tg.toolbar.showDerived', 'Show derived');
+    ? tx('ui.tg.toolbar.hideDerived')
+    : tx('ui.tg.toolbar.showDerived');
 
   return (
     <div className={cn('grid grid-cols-2 gap-1 pointer-events-auto', className)}>
       <MiniButton
-        title={prepareTooltip(tx('ui.tg.toolbar.fullGraph', 'Full graph'), tx('ui.hotkey.g', 'G'))}
+        title={prepareTooltip(tx('ui.tg.toolbar.fullGraph'), tx('ui.hotkey.g'))}
         icon={<IconFitImage size='1.25rem' className='icon-primary' />}
         onClick={handleFitView}
       />
 
       <MiniButton
-        title={tx('ui.tg.toolbar.filterSettings', 'Node and edge filter settings')}
+        title={tx('ui.tg.toolbar.filterSettings')}
         icon={<IconFilter size='1.25rem' className='icon-primary' />}
         onClick={showParams}
       />
       <MiniButton
-        title={tx('ui.tg.toolbar.focusCst', 'Focus constituent')}
+        title={tx('ui.tg.toolbar.focusCst')}
         icon={<IconFocus size='1.25rem' className='icon-primary' />}
         disabled={selectedCst.length !== 1}
         onClick={handleSetFocus}
       />
       <MiniButton
-        title={prepareTooltip(textToggleTitle, tx('ui.hotkey.t', 'T'))}
+        title={prepareTooltip(textToggleTitle, tx('ui.hotkey.t'))}
         icon={<IconEnableText value={!filter.noText} size='1.25rem' />}
         onClick={handleToggleText}
       />
       <div ref={exportRef} onBlur={handleExportBlur} className='flex relative'>
         <MiniButton
-          title={tx('ui.tg.toolbar.saveImage', 'Save image')}
+          title={tx('ui.tg.toolbar.saveImage')}
           hideTitle={isExportOpen}
           icon={<IconImage size='1.25rem' className='icon-primary' />}
           onClick={toggleExport}
@@ -99,20 +99,20 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
         <Dropdown isOpen={isExportOpen} className='-translate-x-1/2'>
           <DropdownButton
             icon={<IconPNG size='1.25rem' className='icon-primary' />}
-            text={tx('ui.tg.toolbar.savePng', 'Save PNG')}
+            text={tx('ui.tg.toolbar.savePng')}
             onClick={handleExportPngBtn}
             disabled={isProcessing || isExportingImage}
           />
           <DropdownButton
             icon={<IconSVG size='1.25rem' className='icon-primary' />}
-            text={tx('ui.tg.toolbar.saveSvg', 'Save SVG')}
+            text={tx('ui.tg.toolbar.saveSvg')}
             onClick={handleExportSvgBtn}
             disabled={isProcessing || isExportingImage}
           />
         </Dropdown>
       </div>
       <MiniButton
-        title={prepareTooltip(derivedToggleTitle, tx('ui.hotkey.v', 'V'))}
+        title={prepareTooltip(derivedToggleTitle, tx('ui.hotkey.v'))}
         icon={<IconEnableClustering value={!filter.foldDerived} size='1.25rem' />}
         onClick={handleToggleClustering}
       />

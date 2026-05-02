@@ -1,6 +1,6 @@
 'use client';
 
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -67,12 +67,12 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
           <MiniButton
             title={
               blockReload
-                ? tx('ui.versioning.cannotRevertOss', 'Cannot revert a schema attached to an operational system')
+                ? tx('ui.versioning.cannotRevertOss')
                 : !isContentEditable
-                  ? tx('ui.versioning.revertToVersion', 'Revert to version')
-                  : tx('ui.versioning.switchToStaleVersion', 'Switch to a non-current version')
+                  ? tx('ui.versioning.revertToVersion')
+                  : tx('ui.versioning.switchToStaleVersion')
             }
-            aria-label={tx('ui.versioning.revertSelectedAria', 'Revert to selected version')}
+            aria-label={tx('ui.versioning.revertSelectedAria')}
             onClick={handleRestoreVersion}
             icon={<IconUpload size='1.25rem' className='icon-red' />}
             disabled={isContentEditable || blockReload}
@@ -80,13 +80,13 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
           <MiniButton
             title={
               isContentEditable
-                ? tx('ui.versioning.createVersion', 'Create version')
-                : tx('ui.versioning.switchToLatestVersion', 'Switch to the current version')
+                ? tx('ui.versioning.createVersion')
+                : tx('ui.versioning.switchToLatestVersion')
             }
             aria-label={
               isContentEditable
-                ? tx('ui.versioning.createVersion', 'Create version')
-                : tx('ui.versioning.switchLatestAria', 'Switch to current version')
+                ? tx('ui.versioning.createVersion')
+                : tx('ui.versioning.switchLatestAria')
             }
             onClick={handleCreateVersion}
             icon={<IconNewVersion size='1.25rem' className='icon-green' />}
@@ -95,8 +95,8 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
           <MiniButton
             title={
               schema.versions.length === 0
-                ? tx('ui.versioning.listEmpty', 'Version list is empty')
-                : tx('ui.versioning.editVersions', 'Edit versions')
+                ? tx('ui.versioning.listEmpty')
+                : tx('ui.versioning.editVersions')
             }
             onClick={handleEditVersions}
             icon={<IconVersions size='1.25rem' className='icon-primary' />}

@@ -40,7 +40,7 @@ export function StatusBar({ className, status, onAnalyze }: StatusBarProps) {
         )}
         data-tooltip-id={globalIDs.tooltip}
         data-tooltip-content={prepareTooltip(
-          tx('ui.rsexpr.status.checkDefinition', 'Check definition'),
+          tx('ui.rsexpr.status.checkDefinition'),
           isMac() ? 'Cmd + Q' : 'Ctrl + Q'
         )}
         onClick={onAnalyze}

@@ -94,19 +94,13 @@ function SchemaTitle({ schema }: { schema: RSForm }) {
   return (
     <View style={{ marginBottom: 10 }}>
       <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: '3mm' }}>
-        {intl.formatMessage(
-          { id: 'ui.rsform.pdf.schemaTitle', defaultMessage: 'Conceptual schema {title}' },
-          { title: schema.title }
-        )}
+        {intl.formatMessage({ id: 'ui.rsform.pdf.schemaTitle' }, { title: schema.title })}
       </Text>
       <Text style={{ fontSize: 12 }}>
-        {intl.formatMessage(
-          { id: 'ui.rsform.pdf.aliasLabel', defaultMessage: 'Short name: {alias}' },
-          { alias: schema.alias }
-        )}
+        {intl.formatMessage({ id: 'ui.rsform.pdf.aliasLabel' }, { alias: schema.alias })}
       </Text>
       <Text style={{ fontSize: 12 }}>
-        {intl.formatMessage({ id: 'ui.rsform.pdf.onlineVersion', defaultMessage: 'Online version:' })}{' '}
+        {intl.formatMessage({ id: 'ui.rsform.pdf.onlineVersion' })}{' '}
         <Link src={url} style={{ textDecoration: 'underline' }}>
           {url}
         </Link>
@@ -120,14 +114,11 @@ function SchemaFooter({ schema }: { schema: RSForm }) {
   return (
     <View fixed style={pdfs.footer}>
       <Text>
-        {intl.formatMessage({ id: 'ui.rsform.pdf.footerLine', defaultMessage: 'CS {alias}' }, { alias: schema.alias })}
+        {intl.formatMessage({ id: 'ui.rsform.pdf.footerLine' }, { alias: schema.alias })}
       </Text>
       <Text
         render={({ pageNumber, totalPages }) =>
-          intl.formatMessage(
-            { id: 'ui.rsform.pdf.sheetPages', defaultMessage: 'Sheet {pageNumber} / {totalPages}' },
-            { pageNumber, totalPages }
-          )
+          intl.formatMessage({ id: 'ui.rsform.pdf.sheetPages' }, { pageNumber, totalPages })
         }
       />
     </View>
@@ -143,22 +134,16 @@ function CstTable({ data }: { data: RO<Constituenta[]> }) {
         <View fixed style={pdfs.headerRow}>
           <Text style={{ ...pdfs.cell, width: '13mm' }}>ID</Text>
           <Text style={{ ...pdfs.cell, width: '82mm' }}>
-            {intl.formatMessage({
-              id: 'ui.rsform.pdf.colFormalExpression',
-              defaultMessage: 'Formal expression'
-            })}
+            {intl.formatMessage({ id: 'ui.rsform.pdf.colFormalExpression' })}
           </Text>
           <Text style={{ ...pdfs.cell, width: '38mm' }}>
-            {intl.formatMessage({ id: 'ui.label.typification', defaultMessage: 'Typification' })}
+            {intl.formatMessage({ id: 'ui.label.typification' })}
           </Text>
           <Text style={{ ...pdfs.cell, width: '40mm' }}>
-            {intl.formatMessage({ id: 'ui.label.term', defaultMessage: 'Term' })}
+            {intl.formatMessage({ id: 'ui.label.term' })}
           </Text>
           <Text style={{ ...pdfs.cell, width: '82mm', borderRightWidth: 0 }}>
-            {intl.formatMessage({
-              id: 'ui.rsform.pdf.colSchemaInterpretation',
-              defaultMessage: 'Schema interpretation / Term'
-            })}
+            {intl.formatMessage({ id: 'ui.rsform.pdf.colSchemaInterpretation' })}
           </Text>
         </View>
 
@@ -193,7 +178,7 @@ function getCommentColumnText(cst: RO<Constituenta>, formatMessage: IntlShape['f
     if (result) {
       result += '\n';
     }
-    result += formatMessage({ id: 'ui.rsform.pdf.conventionPrefix', defaultMessage: 'Convention: ' }) + cst.convention;
+    result += formatMessage({ id: 'ui.rsform.pdf.conventionPrefix' }) + cst.convention;
   }
   return result;
 }

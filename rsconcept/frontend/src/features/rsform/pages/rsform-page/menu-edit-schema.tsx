@@ -128,7 +128,7 @@ export function MenuEditSchema() {
     return (
       <MiniButton
         noPadding
-        title={tx('ui.rsform.menu.archiveNoEdit', 'Archive: editing disabled\nGo to the current version')}
+        title={tx('ui.rsform.menu.archiveNoEdit')}
         hideTitle={isMenuOpen}
         className='h-full px-3 bg-transparent'
         icon={<IconArchive size='1.25rem' className='icon-primary' />}
@@ -142,7 +142,7 @@ export function MenuEditSchema() {
       <MiniButton
         noHover
         noPadding
-        title={tx('ui.rsform.menu.editing', 'Editing')}
+        title={tx('ui.rsform.menu.editing')}
         hideTitle={isMenuOpen}
         className='h-full px-3 text-muted-foreground hover:text-primary cc-animate-color'
         icon={<IconEdit2 size='1.25rem' />}
@@ -150,16 +150,16 @@ export function MenuEditSchema() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('ui.rsform.menu.templates', 'Templates')}
-          title={tx('ui.rsform.menu.templatesTitle', 'Create a constituent from a template')}
+          text={tx('ui.rsform.menu.templates')}
+          title={tx('ui.rsform.menu.templatesTitle')}
           icon={<IconTemplates size='1rem' className='icon-green' />}
           onClick={handleTemplates}
           disabled={!isContentEditable || isProcessing}
         />
         <DropdownButton
-          text={tx('ui.rsform.menu.embedding', 'Embedding')}
-          title={tx('ui.rsform.menu.embeddingTitle', 'Import a set of\nconstituents from another schema')}
-          aria-label={tx('ui.rsform.menu.embeddingAria', 'Import a set of constituents from another schema')}
+          text={tx('ui.rsform.menu.embedding')}
+          title={tx('ui.rsform.menu.embeddingTitle')}
+          aria-label={tx('ui.rsform.menu.embeddingAria')}
           icon={<IconInlineSynthesis size='1rem' className='icon-green' />}
           onClick={handleInlineSynthesis}
           disabled={!isContentEditable || isProcessing}
@@ -168,45 +168,33 @@ export function MenuEditSchema() {
         <Divider margins='mx-3 my-1' />
 
         <DropdownButton
-          text={tx('ui.rsform.menu.restoreOrder', 'Reorder list')}
-          title={tx(
-            'ui.rsform.menu.restoreOrderTitle',
-            'Reorder the list according to\ntypes logic and constituent links'
-          )}
-          aria-label={tx(
-            'ui.rsform.menu.restoreOrderAria',
-            'Reorder the list according to types logic and constituent links'
-          )}
+          text={tx('ui.rsform.menu.restoreOrder')}
+          title={tx('ui.rsform.menu.restoreOrderTitle')}
+          aria-label={tx('ui.rsform.menu.restoreOrderAria')}
           icon={<IconSortList size='1rem' className='icon-primary' />}
           onClick={handleRestoreOrder}
           disabled={!isContentEditable || isProcessing}
         />
         <DropdownButton
-          text={tx('ui.rsform.menu.ordinalNames', 'Ordinal names')}
-          title={tx('ui.rsform.menu.ordinalNamesTitle', 'Assign ordinal names\nand refresh expressions')}
-          aria-label={tx('ui.rsform.menu.ordinalNamesAria', 'Assign ordinal names and refresh expressions')}
+          text={tx('ui.rsform.menu.ordinalNames')}
+          title={tx('ui.rsform.menu.ordinalNamesTitle')}
+          aria-label={tx('ui.rsform.menu.ordinalNamesAria')}
           icon={<IconGenerateNames size='1rem' className='icon-primary' />}
           onClick={handleReindex}
           disabled={!isContentEditable || isProcessing}
         />
         <DropdownButton
-          text={tx('ui.rsform.menu.structureExpansion', 'Structure expansion')}
-          title={tx(
-            'ui.rsform.menu.structureExpansionTitle',
-            'Spawn inner notions\nfrom the typing structure\nof the selected constituent'
-          )}
-          aria-label={tx(
-            'ui.rsform.menu.structureExpansionAria',
-            'Spawn inner notions from the typing structure of the selected constituent'
-          )}
+          text={tx('ui.rsform.menu.structureExpansion')}
+          title={tx('ui.rsform.menu.structureExpansionTitle')}
+          aria-label={tx('ui.rsform.menu.structureExpansionAria')}
           icon={<IconGenerateStructure size='1rem' className='icon-primary' />}
           onClick={() => handleProduceStructure(activeCst)}
           disabled={isProcessing || !activeCst || (!activeCst.spawner_path && !cstCanProduceStructure(activeCst))}
         />
         <DropdownButton
-          text={tx('ui.rsform.menu.substitution', 'Identification')}
-          title={tx('ui.rsform.menu.substitutionTitle', 'Replace occurrences\nof one constituent with another')}
-          aria-label={tx('ui.rsform.menu.substitutionAria', 'Replace occurrences of one constituent with another')}
+          text={tx('ui.rsform.menu.substitution')}
+          title={tx('ui.rsform.menu.substitutionTitle')}
+          aria-label={tx('ui.rsform.menu.substitutionAria')}
           icon={<IconReplace size='1rem' className='icon-red' />}
           onClick={handleSubstituteCst}
           disabled={!isContentEditable || isProcessing}

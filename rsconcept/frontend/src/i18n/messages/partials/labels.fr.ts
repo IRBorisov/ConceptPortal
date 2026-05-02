@@ -1,10 +1,11 @@
-import { lid } from '../../labels/catalog';
-import { rsformLid } from '../../labels/rsform-ui';
+import { lid } from '../../labels/lid';
 
-import { labelsFeatureUiFr } from './labels-feature-ui.fr';
+import { labelsFeatureFr } from './labels-feature.fr';
 
 /** French overrides for shared labels (toasts, Zod, hints, prompts). */
 export const labelsFr: Record<string, string> = {
+  ...labelsFeatureFr,
+
   [lid.error.astFailed]: 'Impossible de construire l’arbre d’analyse',
   [lid.error.aliasLength]: 'jusqu’à {n} caractères',
   [lid.error.emailLength]: 'jusqu’à {n} caractères',
@@ -135,125 +136,5 @@ export const labelsFr: Record<string, string> = {
   [lid.errorDetail.responseDescription]: 'Détails',
   [lid.errorDetail.contactIntro]:
     'Veuillez faire une capture d’écran et l’envoyer avec une description à portal@acconcept.ru',
-  [lid.errorDetail.reloadHint]: 'Rechargez la page pour continuer',
-
-  [rsformLid.cstType.nominal]: 'Nominoïde',
-  [rsformLid.cstType.basic]: 'Ensemble de base',
-  [rsformLid.cstType.constant]: 'Ensemble constant',
-  [rsformLid.cstType.structure]: 'Structure générique',
-  [rsformLid.cstType.axiom]: 'Axiome',
-  [rsformLid.cstType.term]: 'Terme',
-  [rsformLid.cstType.function]: 'Fonction terme',
-  [rsformLid.cstType.predicate]: 'Fonction prédicat',
-  [rsformLid.cstType.theorem]: 'Théorème',
-
-  [rsformLid.cstClassLabel.nominal]: 'nominal',
-  [rsformLid.cstClassLabel.basic]: 'de base',
-  [rsformLid.cstClassLabel.derived]: 'dérivé',
-  [rsformLid.cstClassLabel.statement]: 'énoncé',
-  [rsformLid.cstClassLabel.template]: 'modèle',
-
-  [rsformLid.cstClassDesc.nominal]: 'entité nominale',
-  [rsformLid.cstClassDesc.basic]: 'notion non définie',
-  [rsformLid.cstClassDesc.derived]: 'notion définie',
-  [rsformLid.cstClassDesc.statement]: 'énoncé logique',
-  [rsformLid.cstClassDesc.template]: 'modèle de définition',
-
-  [rsformLid.graphMode.explore]: 'Mode : consultation',
-  [rsformLid.graphMode.edit]: 'Mode : édition',
-
-  [rsformLid.coloring.none]: 'Couleur : mono',
-  [rsformLid.coloring.status]: 'Couleur : statut',
-  [rsformLid.coloring.type]: 'Couleur : classe',
-  [rsformLid.coloring.schemas]: 'Couleur : schémas',
-
-  [rsformLid.edgeType.full]: 'Liens : tous',
-  [rsformLid.edgeType.definition]: 'Liens : définition',
-  [rsformLid.edgeType.attribution]: 'Liens : attribution',
-
-  [rsformLid.exprStatus.verified]: 'valide',
-  [rsformLid.exprStatus.incorrect]: 'erreur',
-  [rsformLid.exprStatus.incalculable]: 'non calculable',
-  [rsformLid.exprStatus.property]: 'non mesurable',
-  [rsformLid.exprStatus.unknown]: 'non vérifié',
-
-  [rsformLid.exprStatusDesc.verified]: 'valide et calculable',
-  [rsformLid.exprStatusDesc.incorrect]: 'erreur détectée',
-  [rsformLid.exprStatusDesc.incalculable]: 'l’interprétation ne s’évalue pas',
-  [rsformLid.exprStatusDesc.property]: 'vérification d’appartenance seulement',
-  [rsformLid.exprStatusDesc.unknown]: 'vérification requise',
-
-  [rsformLid.rsExpression.nominal]: 'Constituantes définissantes',
-  [rsformLid.rsExpression.basic]: 'Définition formelle',
-  [rsformLid.rsExpression.constant]: 'Définition formelle',
-  [rsformLid.rsExpression.structure]: 'Domaine de définition',
-  [rsformLid.rsExpression.term]: 'Définition formelle',
-  [rsformLid.rsExpression.theorem]: 'Définition formelle',
-  [rsformLid.rsExpression.axiom]: 'Définition formelle',
-  [rsformLid.rsExpression.function]: 'Définition de fonction',
-  [rsformLid.rsExpression.predicate]: 'Définition de fonction',
-
-  [rsformLid.rsPlaceholder.nominal]: 'p. ex. X1 D1 N1',
-  [rsformLid.rsPlaceholder.basic]: 'Non applicable',
-  [rsformLid.rsPlaceholder.constant]: 'Non applicable',
-  [rsformLid.rsPlaceholder.structure]: 'Ex. : ℬ(X1×D2)',
-  [rsformLid.rsPlaceholder.term]: 'Ex. : D{ξ∈S1 | Pr1(ξ)∩Pr2(ξ)=∅}',
-  [rsformLid.rsPlaceholder.theorem]: 'Ex. : D11=∅',
-  [rsformLid.rsPlaceholder.axiom]: 'Ex. : D11=∅',
-  [rsformLid.rsPlaceholder.function]: 'Ex. : [α∈X1, β∈ℬ(X1×X2)] Pr2(Fi1[{α}](β))',
-  [rsformLid.rsPlaceholder.predicate]: 'Ex. : [α∈X1, β∈ℬ(X1)] α∈β & card(β)>1',
-
-  [rsformLid.token.boolean]: 'Ensemble des parties',
-  [rsformLid.token.decart]: 'Produit cartésien',
-  [rsformLid.token.punctuationPl]: 'Parenthèses () autour de l’expression',
-  [rsformLid.token.punctuationSl]: 'Crochets [] autour de l’expression',
-  [rsformLid.token.quantorUniversal]: 'Quantificateur universel',
-  [rsformLid.token.quantorExists]: 'Quantificateur existentiel',
-  [rsformLid.token.logicNot]: 'Négation',
-  [rsformLid.token.logicAnd]: 'Conjonction',
-  [rsformLid.token.logicOr]: 'Disjonction',
-  [rsformLid.token.logicImplication]: 'Implication',
-  [rsformLid.token.logicEquivalent]: 'Équivalence',
-  [rsformLid.token.litEmptyset]: 'Ensemble vide',
-  [rsformLid.token.litWholeNumbers]: 'Entiers',
-  [rsformLid.token.equal]: 'Égalité',
-  [rsformLid.token.multiply]: 'Multiplication de nombres',
-  [rsformLid.token.notequal]: 'Inégalité',
-  [rsformLid.token.greaterOrEq]: 'Supérieur ou égal',
-  [rsformLid.token.lesserOrEq]: 'Inférieur ou égal',
-  [rsformLid.token.setIn]: 'Appartenance (∈)',
-  [rsformLid.token.setNotIn]: 'Non-appartenance',
-  [rsformLid.token.subsetOrEq]: 'Sous-ensemble (large)',
-  [rsformLid.token.subset]: 'Sous-ensemble strict',
-  [rsformLid.token.notSubset]: 'Pas un sous-ensemble',
-  [rsformLid.token.setIntersection]: 'Intersection',
-  [rsformLid.token.setUnion]: 'Union',
-  [rsformLid.token.setMinus]: 'Différence d’ensembles',
-  [rsformLid.token.setSymmetricMinus]: 'Différence symétrique',
-  [rsformLid.token.ntDeclarativeExpr]: 'Définition déclarative',
-  [rsformLid.token.ntImperativeExpr]: 'Définition impérative',
-  [rsformLid.token.ntRecursiveFull]: 'Définition récursive (cycle)',
-  [rsformLid.token.bigpr]: 'Grande projection',
-  [rsformLid.token.smallpr]: 'Petite projection',
-  [rsformLid.token.filter]: 'Filtre',
-  [rsformLid.token.reduce]: 'Somme d’ensembles',
-  [rsformLid.token.card]: 'Cardinalité',
-  [rsformLid.token.bool]: 'Singleton',
-  [rsformLid.token.debool]: 'Désingleton',
-  [rsformLid.token.assign]: 'Affectation',
-  [rsformLid.token.iterate]: 'Parcourir les éléments de l’ensemble',
-
-  [rsformLid.shortcutWithKey]: '{label} [Alt + {key}]',
-  [rsformLid.missing.constituent]: '!Constituante absente !',
-  [rsformLid.missing.termEmpty]: '!Terme vide !',
-  [rsformLid.fallback.formalExpression]: 'Expression formelle',
-  [rsformLid.fallback.unknownCstType]: 'TYPE DE CONSTITUANTE INCONNU : {type}',
-  [rsformLid.fallback.unknownCstClass]: 'CLASSE DE CONSTITUANTE INCONNUE : {type}',
-  [rsformLid.fallback.unknownColoring]: 'COLORATION INCONNUE : {mode}',
-  [rsformLid.fallback.unknownGraphMode]: 'MODE DE GRAPHE INCONNU : {mode}',
-  [rsformLid.fallback.unknownEdgeType]: 'TYPE DE LIEN INCONNU : {mode}',
-  [rsformLid.fallback.unknownExprStatus]: 'STATUT D’EXPRESSION INCONNU : {status}',
-  [rsformLid.fallback.noTokenDescription]: 'pas de description : {id}',
-
-  ...labelsFeatureUiFr
+  [lid.errorDetail.reloadHint]: 'Rechargez la page pour continuer'
 };

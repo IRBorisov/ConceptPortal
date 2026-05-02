@@ -21,7 +21,7 @@ export function LayoutLanding() {
             <div
               className='flex flex-1 flex-col items-center justify-center gap-2 pt-20'
               aria-busy='true'
-              aria-label={tx('layout.loading.aria', 'Loading')}
+              aria-label={tx('layout.loading.aria')}
             >
               <Loader scale={3} />
             </div>

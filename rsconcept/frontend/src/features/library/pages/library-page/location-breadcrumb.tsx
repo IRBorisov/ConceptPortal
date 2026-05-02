@@ -39,11 +39,8 @@ export function LocationBreadcrumb({ canRename, className, onRenameLocation }: L
       <div className='cc-icons'>
         <BadgeHelp topic={HelpTopic.UI_LIBRARY} contentClass='text-sm' offset={5} place='bottom-start' />
         <MiniButton
-          title={tx(
-            'lib.breadcrumb.editLocationTitle',
-            'Edit path\nOnly your own schemas are moved\nto the selected folder (and subfolders)'
-          )}
-          aria-label={tx('lib.breadcrumb.editLocationAria', 'Edit location')}
+          title={tx('lib.breadcrumb.editLocationTitle')}
+          aria-label={tx('lib.breadcrumb.editLocationAria')}
           icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
           onClick={onRenameLocation}
           disabled={!canRename}
@@ -51,10 +48,10 @@ export function LocationBreadcrumb({ canRename, className, onRenameLocation }: L
         <MiniButton
           title={
             subfolders
-              ? tx('lib.breadcrumb.subfoldersOn', 'Subfolders: On')
-              : tx('lib.breadcrumb.subfoldersOff', 'Subfolders: Off')
+              ? tx('lib.breadcrumb.subfoldersOn')
+              : tx('lib.breadcrumb.subfoldersOff')
           }
-          aria-label={tx('lib.breadcrumb.subfoldersAria', 'Toggle subfolder display')}
+          aria-label={tx('lib.breadcrumb.subfoldersAria')}
           icon={<IconShowSubfolders value={subfolders} />}
           onClick={toggleSubfolders}
         />

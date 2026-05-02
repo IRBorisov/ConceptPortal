@@ -97,17 +97,13 @@ export function TGNodeComponent(node: NodeProps<TGNode>) {
 // ====== INTERNAL ======
 function describeCstNode(
   cst: Constituenta,
-  tx: (
-    id: string,
-    defaultMessage: string,
-    values?: Record<string, string | number | boolean | null | undefined>
-  ) => string
+  tx: (id: string, values?: Record<string, string | number | boolean | Date | null | undefined>) => string
 ) {
   const contents = isBasicConcept(cst.cst_type)
     ? cst.convention
     : cst.definition_resolved || cst.definition_formal || cst.convention;
   const typification = labelType(cst.analysis?.type ?? null);
   return `${cst.alias}: ${cst.term_resolved}\n${
-    cst.analysis ? `${tx('ui.node.tg.typificationPrefix', 'Typification:')} ${typification}\n` : ''
-  }${tx('ui.node.tg.contentsPrefix', 'Content:')} ${contents ? contents : tx('ui.node.tg.contentsMissing', 'missing')}`;
+    cst.analysis ? `${tx('ui.node.tg.typificationPrefix')} ${typification}\n` : ''
+  }${tx('ui.node.tg.contentsPrefix')} ${contents ? contents : tx('ui.node.tg.contentsMissing')}`;
 }

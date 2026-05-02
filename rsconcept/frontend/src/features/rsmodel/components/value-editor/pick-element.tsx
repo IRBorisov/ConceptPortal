@@ -58,7 +58,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
     }),
     columnHelper.accessor(id => id, {
       id: 'elem_text',
-      header: tx('ui.pickElement.headerText', 'Text'),
+      header: tx('ui.pickElement.headerText'),
       size: 180,
       minSize: 180,
       maxSize: 180,
@@ -76,7 +76,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
   if (isInteger) {
     return (
       <TextInput
-        label={tx('ui.pickElement.valueLabel', 'Enter value')}
+        label={tx('ui.pickElement.valueLabel')}
         type='number'
         inputMode='numeric'
         step='1'
@@ -96,7 +96,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
   if (!binding) {
     return (
       <div className={cn('text-muted-foreground', className)}>
-        {tx('ui.pickElement.selectPrompt', 'Select an element to edit')}
+        {tx('ui.pickElement.selectPrompt')}
       </div>
     );
   }

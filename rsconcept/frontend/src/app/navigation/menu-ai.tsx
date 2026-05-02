@@ -42,7 +42,7 @@ export function MenuAI() {
   return (
     <div ref={menuRef} onBlur={handleMenuBlur} className='flex items-center justify-start relative h-full'>
       <NavigationButton
-        title={tx('nav.ai.menuTitle', 'AI assistant')}
+        title={tx('nav.ai.menuTitle')}
         hideTitle={isMenuOpen}
         aria-expanded={isMenuOpen}
         aria-controls={globalIDs.ai_dropdown}
@@ -52,17 +52,17 @@ export function MenuAI() {
 
       <Dropdown id={globalIDs.ai_dropdown} className='min-w-[12ch] max-w-48' stretchLeft isOpen={isMenuOpen}>
         <DropdownButton
-          text={tx('nav.ai.prompt', 'Prompt')}
-          title={tx('nav.ai.promptTitle', 'Create prompt')}
+          text={tx('nav.ai.prompt')}
+          title={tx('nav.ai.promptTitle')}
           icon={<IconChat size='1rem' />}
           onClick={handleCreatePrompt}
         />
         <DropdownButton
-          text={tx('nav.ai.templates', 'Templates')}
+          text={tx('nav.ai.templates')}
           title={
             user.id
-              ? tx('nav.ai.templatesTitleAuth', 'Prompt templates')
-              : tx('nav.ai.templatesTitleAnon', 'Available only to signed-in users')
+              ? tx('nav.ai.templatesTitleAuth')
+              : tx('nav.ai.templatesTitleAnon')
           }
           icon={<IconTemplates size='1rem' />}
           onClick={navigateTemplates}

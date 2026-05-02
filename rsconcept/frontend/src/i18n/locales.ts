@@ -8,7 +8,7 @@ export const SUPPORTED_LOCALES: readonly AppLocale[] = ['en', 'fr', 'ru'] as con
 export const DEFAULT_LOCALE: AppLocale = 'ru';
 
 /** Maps browser language list to a supported locale, or {@link DEFAULT_LOCALE}. */
-export function pickSupportedLocaleFromNavigator(): AppLocale {
+export function inferLocaleFromNavigator(): AppLocale {
   const candidates: string[] = [];
   if (navigator.languages?.length) {
     for (const lang of navigator.languages) {

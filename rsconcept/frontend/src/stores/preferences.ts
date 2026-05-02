@@ -2,7 +2,7 @@ import { flushSync } from 'react-dom';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { type AppLocale, pickSupportedLocaleFromNavigator } from '@/i18n';
+import { type AppLocale, inferLocaleFromNavigator } from '@/i18n';
 
 import { PARAMETER } from '@/utils/constants';
 
@@ -57,7 +57,7 @@ interface PreferencesStore {
 export const usePreferencesStore = create<PreferencesStore>()(
   persist(
     set => ({
-      locale: pickSupportedLocaleFromNavigator(),
+      locale: inferLocaleFromNavigator(),
       setLocale: value =>
         set(state => {
           if (state.locale === value) {

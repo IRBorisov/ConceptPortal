@@ -20,7 +20,7 @@ export function BadgeSharedTemplate({ value }: BadgeSharedTemplateProps) {
       className='pl-2'
       data-tooltip-id={globalIDs.tooltip}
       data-tooltip-content={
-        value ? tx('ui.ai.badge.templateShared', 'Shared') : tx('ui.ai.badge.templatePersonal', 'Personal')
+        value ? tx('ui.ai.badge.templateShared') : tx('ui.ai.badge.templatePersonal')
       }
     >
       <IconSharedTemplate value={value} size='1.25rem' />

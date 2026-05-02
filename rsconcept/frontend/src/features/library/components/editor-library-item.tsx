@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 import { useIntl } from 'react-intl';
 
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { useLabelUser, useRoleStore, UserRole } from '@/features/users';
@@ -97,7 +97,7 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
     <div className='flex flex-col'>
       <div className='relative flex justify-stretch sm:mb-1 max-w-120 gap-3'>
         <MiniButton
-          title={tx('ui.library.editor.openInLibrary', 'Open in library')}
+          title={tx('ui.library.editor.openInLibrary')}
           noPadding
           icon={<IconFolderOpened size='1.25rem' className='icon-primary' />}
           onClick={handleOpenLibrary}
@@ -108,8 +108,8 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
           value={item.location}
           title={
             isProduced
-              ? tx('ui.library.editor.pathInheritedOss', 'Path inherited from OSS')
-              : tx('ui.library.editor.path', 'Path')
+              ? tx('ui.library.editor.pathInheritedOss')
+              : tx('ui.library.editor.path')
           }
           onClick={handleEditLocation}
           disabled={isModified || isProcessing || isProduced || role < UserRole.OWNER}
@@ -130,8 +130,8 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
           value={getUserLabel(item.owner)}
           title={
             isProduced
-              ? tx('ui.library.editor.ownerInheritedOss', 'Owner inherited from OSS')
-              : tx('ui.library.editor.owner', 'Owner')
+              ? tx('ui.library.editor.ownerInheritedOss')
+              : tx('ui.library.editor.owner')
           }
           onClick={toggleOwner}
           disabled={isModified || isProcessing || isProduced || role < UserRole.OWNER}
@@ -152,20 +152,20 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
             <InfoUsers
               items={item.editors}
               prefix={prefixes.user_editors}
-              header={tx('ui.library.editor.editorsHeader', 'Editors')}
+              header={tx('ui.library.editor.editorsHeader')}
             />
           </Suspense>
         </Tooltip>
 
         <ValueIcon
-          title={tx('ui.library.editor.dateUpdated', 'Updated')}
+          title={tx('ui.library.editor.dateUpdated')}
           dense
           icon={<IconDateUpdate size='1.25rem' />}
           value={new Date(item.time_update).toLocaleString(intl.locale)}
         />
 
         <ValueIcon
-          title={tx('ui.library.editor.dateCreated', 'Created')}
+          title={tx('ui.library.editor.dateCreated')}
           dense
           icon={<IconDateCreate size='1.25rem' />}
           value={new Date(item.time_create).toLocaleString(intl.locale, {

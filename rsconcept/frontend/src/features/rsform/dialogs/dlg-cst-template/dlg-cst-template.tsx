@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type CstType, type RSForm } from '@/domain/library';
 import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
-import { formatLabel, lid,useTx  } from '@/i18n';
+import { formatLabel, lid, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -135,8 +135,8 @@ export function DlgCstTemplate() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.cstTemplate.header', 'Create constituenta from template')}
-      submitText={tx('ui.action.create', 'Create')}
+      header={tx('ui.dlg.cstTemplate.header')}
+      submitText={tx('ui.action.create')}
       className='w-172 h-140 px-6'
       canSubmit={canSubmit}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
@@ -146,16 +146,16 @@ export function DlgCstTemplate() {
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
           <TabLabel
-            label={tx('ui.dlg.cstTemplate.tabTemplate.label', 'Template')}
-            title={tx('ui.dlg.cstTemplate.tabTemplate.title', 'Choose expression template')}
+            label={tx('ui.dlg.cstTemplate.tabTemplate.label')}
+            title={tx('ui.dlg.cstTemplate.tabTemplate.title')}
           />
           <TabLabel
-            label={tx('ui.dlg.cstTemplate.tabArgs.label', 'Arguments')}
-            title={tx('ui.dlg.cstTemplate.tabArgs.title', 'Template argument substitution')}
+            label={tx('ui.dlg.cstTemplate.tabArgs.label')}
+            title={tx('ui.dlg.cstTemplate.tabArgs.title')}
           />
           <TabLabel
-            label={tx('ui.dlg.cstTemplate.tabEditor.label', 'Editor')}
-            title={tx('ui.dlg.cstTemplate.tabEditor.title', 'Edit constituenta')}
+            label={tx('ui.dlg.cstTemplate.tabEditor.label')}
+            title={tx('ui.dlg.cstTemplate.tabEditor.title')}
           />
         </TabList>
 
