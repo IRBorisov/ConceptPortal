@@ -6,6 +6,9 @@ import { type AppLocale, pickSupportedLocaleFromNavigator } from '@/i18n';
 
 import { PARAMETER } from '@/utils/constants';
 
+/** localStorage key for {@link usePreferencesStore} persist payload. */
+export const PREFERENCES_STORAGE_KEY = 'portal.preferences';
+
 export const videoPlayerTypes = ['vk', 'youtube'] as const;
 
 /** Represents video player type. */
@@ -125,16 +128,40 @@ export const usePreferencesStore = create<PreferencesStore>()(
     }),
     {
       version: 6,
-      name: 'portal.preferences'
+      name: PREFERENCES_STORAGE_KEY
     }
   )
 );
 
+/** Reads UI locale from persisted preferences JSON (zustand persist shape). */
+export function parsePersistedPreferencesLocale(raw: string | null): AppLocale | null {
+  if (!raw) {
+    return null;
+  }
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') {
+      return null;
+    }
+    const state = (parsed as { state?: unknown }).state;
+    if (!state || typeof state !== 'object') {
+      return null;
+    }
+    const locale = (state as { locale?: unknown }).locale;
+    if (locale === 'en' || locale === 'fr' || locale === 'ru') {
+      return locale;
+    }
+  } catch {
+    // ignore malformed storage
+  }
+  return null;
+}
+
 function initializeDarkMode(): boolean {
   let isDark = false;
-  if ('portal.preferences' in localStorage) {
+  if (PREFERENCES_STORAGE_KEY in localStorage) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const preferences = JSON.parse(localStorage.getItem('portal.preferences') ?? '{}').state as PreferencesStore;
+    const preferences = JSON.parse(localStorage.getItem(PREFERENCES_STORAGE_KEY) ?? '{}').state as PreferencesStore;
     isDark = preferences.darkMode;
   } else if (window.matchMedia) {
     isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;

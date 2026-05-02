@@ -3,11 +3,13 @@
 import { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 
-import { usePreferencesStore } from '@/stores/preferences';
+import { parsePersistedPreferencesLocale, PREFERENCES_STORAGE_KEY, usePreferencesStore } from '@/stores/preferences';
 
 import { AppIntlBridge } from './app-intl-bridge';
 import { type AppLocale, DEFAULT_LOCALE } from './locales';
 import { getMessagesForLocale } from './messages';
+
+const POLL_INTERVAL = 1000;
 
 function handleIntlError(locale: AppLocale, error: unknown) {
   if (locale === 'en' && typeof error === 'object' && error && 'code' in error) {
@@ -31,6 +33,39 @@ export function IntlPreferencesProvider({ children }: React.PropsWithChildren) {
     },
     [locale]
   );
+
+  useEffect(function reloadWhenPersistedLocaleChanges() {
+    let reloadRequested = false;
+
+    function reloadIfPersistedLocaleChanged(raw: string | null) {
+      if (reloadRequested) {
+        return;
+      }
+      const nextLocale = parsePersistedPreferencesLocale(raw);
+      if (nextLocale === null || nextLocale === usePreferencesStore.getState().locale) {
+        return;
+      }
+      reloadRequested = true;
+      window.location.reload();
+    }
+
+    function onPreferencesStorage(event: StorageEvent) {
+      if (event.key === PREFERENCES_STORAGE_KEY) {
+        reloadIfPersistedLocaleChanged(event.newValue);
+      }
+    }
+
+    function pollPreferencesStorage() {
+      reloadIfPersistedLocaleChanged(localStorage.getItem(PREFERENCES_STORAGE_KEY));
+    }
+
+    const intervalId = window.setInterval(pollPreferencesStorage, POLL_INTERVAL);
+    window.addEventListener('storage', onPreferencesStorage);
+    return function removePreferencesStorageListener() {
+      window.clearInterval(intervalId);
+      window.removeEventListener('storage', onPreferencesStorage);
+    };
+  }, []);
 
   return (
     <IntlProvider

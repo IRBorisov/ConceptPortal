@@ -37,6 +37,18 @@ export function pickSupportedLocaleFromNavigator(): AppLocale {
   return DEFAULT_LOCALE;
 }
 
+/** Language name in that language (endonym), for locale pickers — not translated by UI locale. */
+export function localeLabel(locale: AppLocale) {
+  switch (locale) {
+    case 'en':
+      return 'English';
+    case 'fr':
+      return 'Français';
+    case 'ru':
+      return 'Русский';
+  }
+}
+
 // ===== Internals ======
 
 function baseLanguageTag(tag: string): string {

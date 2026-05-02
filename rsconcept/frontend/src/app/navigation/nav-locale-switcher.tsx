@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { APP_LOCALE_OPTIONS, localeLabel, useTx } from '@/i18n';
+import { localeLabel, SUPPORTED_LOCALES, useTx } from '@/i18n';
 
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconLanguage } from '@/components/icons';
@@ -36,10 +36,10 @@ export function NavLocaleSwitcher() {
         <div className='px-3 py-1 text-muted-foreground border-b text-nowrap'>
           {tx('nav.language.label', 'Interface language')}
         </div>
-        {APP_LOCALE_OPTIONS.map(option => (
+        {SUPPORTED_LOCALES.map(option => (
           <DropdownButton
             key={option}
-            text={localeLabel(tx, option)}
+            text={localeLabel(option)}
             icon={<IconLanguage size='1rem' />}
             data-testid={`nav-locale-option-${option}`}
             className={clsx(locale === option && 'bg-accent')}

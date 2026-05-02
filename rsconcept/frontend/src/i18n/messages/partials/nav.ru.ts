@@ -22,9 +22,6 @@ export const navRu: Record<string, string> = {
   'nav.action.logoutTitle': 'Выход из приложения',
   'nav.language.label': 'Язык интерфейса',
   'nav.language.title': 'Изменить язык интерфейса',
-  'nav.locale.en': 'Английский',
-  'nav.locale.fr': 'Французский',
-  'nav.locale.ru': 'Русский',
   'nav.toggleNav.show': 'Показать навигацию',
   'nav.toggleNav.hide': 'Скрыть навигацию',
   'layout.toast.ariaLabel': 'Оповещения'

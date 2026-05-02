@@ -1,6 +1,6 @@
 'use client';
 
-import { useTx } from '@/i18n';
+import { localeLabel, useTx } from '@/i18n';
 
 import { useAuth } from '@/features/auth';
 import { useLogout } from '@/features/auth/backend/use-logout';
@@ -120,24 +120,24 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
         {tx('nav.language.label', 'Interface language')}
       </div>
       <DropdownButton
-        text={tx('nav.locale.en', 'English')}
-        title={tx('nav.locale.en', 'English')}
+        text={localeLabel('en')}
+        title={localeLabel('en')}
         icon={<IconLanguage size='1rem' />}
         data-testid='locale-option-en'
         className={locale === 'en' ? 'bg-accent' : undefined}
         onClick={() => pickLocale('en')}
       />
       <DropdownButton
-        text={tx('nav.locale.fr', 'French')}
-        title={tx('nav.locale.fr', 'French')}
+        text={localeLabel('fr')}
+        title={localeLabel('fr')}
         icon={<IconLanguage size='1rem' />}
         data-testid='locale-option-fr'
         className={locale === 'fr' ? 'bg-accent' : undefined}
         onClick={() => pickLocale('fr')}
       />
       <DropdownButton
-        text={tx('nav.locale.ru', 'Russian')}
-        title={tx('nav.locale.ru', 'Russian')}
+        text={localeLabel('ru')}
+        title={localeLabel('ru')}
         icon={<IconLanguage size='1rem' />}
         data-testid='locale-option-ru'
         className={locale === 'ru' ? 'bg-accent' : undefined}
