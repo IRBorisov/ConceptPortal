@@ -7,6 +7,7 @@ import { LibraryItemType, type RSModel } from '@/domain/library';
 import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
 
 import { useConceptNavigation, useRegisterNavigationSave } from '@/app';
+import { buildModelToSchemaQuery } from '@/app/navigation/cross-rs-query';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
@@ -84,7 +85,7 @@ export function FormRSModel({ className }: FormRSModelProps) {
   );
 
   function handleNavigateSchema() {
-    router.gotoRSForm(model.schema);
+    router.gotoRSForm(model.schema, undefined, undefined, buildModelToSchemaQuery());
   }
 
   return (

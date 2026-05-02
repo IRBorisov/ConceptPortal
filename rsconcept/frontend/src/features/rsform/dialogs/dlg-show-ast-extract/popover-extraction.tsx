@@ -85,12 +85,20 @@ export function PopoverExtraction({
       return;
     }
 
-    if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+    if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
       event.preventDefault();
       event.stopPropagation();
       setOpen(false);
       onSubmit(termText, definition);
     }
+  }
+
+  function submitFromShortcut() {
+    if (disabled) {
+      return;
+    }
+    setOpen(false);
+    onSubmit(termText, definition);
   }
 
   return (
@@ -124,10 +132,7 @@ export function PopoverExtraction({
             <div className='cc-icons mt-1'>
               <MiniButton
                 icon={<IconAccept size='1.25rem' className='icon-green' />}
-                title={prepareTooltip(
-                  tx('ui.ast.extract.confirm'),
-                  isMac() ? 'Cmd + Enter' : 'Ctrl + Enter'
-                )}
+                title={prepareTooltip(tx('ui.ast.extract.confirm'), tx(isMac() ? 'Cmd + S' : 'Ctrl + S'))}
                 onClick={handleSubmit}
                 disabled={disabled}
               />
@@ -151,6 +156,7 @@ export function PopoverExtraction({
               portalHoverTooltips
               maxHeight='5rem'
               disabled={disabled}
+              onModSave={disabled ? undefined : submitFromShortcut}
             />
           </div>
 
@@ -167,6 +173,7 @@ export function PopoverExtraction({
             portalHoverTooltips
             maxHeight='7rem'
             disabled={disabled}
+            onModSave={disabled ? undefined : submitFromShortcut}
           />
         </div>
       ) : null}

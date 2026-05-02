@@ -129,8 +129,8 @@ export const uiRu: Record<string, string> = {
   'ui.validation.termHomonyms': 'Термин совпадает с конституентами: {aliases}',
   'ui.validation.conventionEmpty': 'Пустая конвенция',
   'ui.placeholder.expressionMissing': 'Выражение отсутствует',
-  'ui.value.stub.unsupportedType': 'Значение для данного типа не предусмотрено',
-  'ui.value.stub.missingHint': 'Значение отсутствует. Используйте "Случайное значение" для генерации примера',
+  'ui.value.unsupportedType': 'Значение для данного типа не предусмотрено',
+  'ui.value.missingHint': 'Значение отсутствует. Используйте "Случайное значение" для генерации примера',
   'ui.placeholder.termMissing': 'Термин отсутствует',
   'ui.placeholder.definitionMissing': 'Определение отсутствует',
 
@@ -175,6 +175,7 @@ export const uiRu: Record<string, string> = {
   'ui.action.exportToExteor': 'Выгрузить в Экстеор',
   'ui.action.importFromExteor': 'Загрузить из Экстеор',
   'ui.nav.gotoOss': 'Перейти к ОСС',
+  'ui.nav.currentModel': 'Текущая модель',
   'ui.nav.gotoModel': 'Перейти к модели',
 
   'ui.sandbox.saveToFile': 'Сохранить в файл',

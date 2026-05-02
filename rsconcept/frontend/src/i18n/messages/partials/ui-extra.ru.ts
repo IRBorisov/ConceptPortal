@@ -537,7 +537,7 @@ export const uiExtraRu: Record<string, string> = {
   'ui.oss.dlg.inputSchema.loadingLabel': 'Загружаемая концептуальная схема',
   'ui.oss.dlg.inputSchema.resetTitle': 'Сбросить выбор схемы',
 
-  'ui.rsmodel.value.calculateTooltip': 'Вычислить значение',
+  'ui.rsmodel.value.calculateTooltip': 'Сохранить и вычислить значение',
   'ui.rsmodel.dlg.viewValue.header': 'Просмотр значения',
   'ui.rsmodel.dlg.editValue.header': 'Редактор значения',
   'ui.rsmodel.dlg.editBinding.header': 'Редактор базового источника',

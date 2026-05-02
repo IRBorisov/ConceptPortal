@@ -6,6 +6,7 @@ import { AccessPolicy, LocationHead } from '@/domain/library';
 import { formatLabel, lid, useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
+import { buildModelToSchemaQuery, buildSiblingModelQuery } from '@/app/navigation/cross-rs-query';
 import { useAuth } from '@/features/auth';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { createSandboxBundleFromRSModel } from '@/features/sandbox/models/bundle-transfer';
@@ -23,6 +24,7 @@ import {
   IconMenu,
   IconQR,
   IconRSForm,
+  IconRSModel,
   IconSandbox,
   IconShare
 } from '@/components/icons';
@@ -52,6 +54,14 @@ export function MenuMain() {
     toggle: toggleMenu,
     handleBlur: handleMenuBlur,
     hide: hideMenu
+  } = useDropdown();
+
+  const {
+    elementRef: otherModelsRef,
+    isOpen: isOtherModelsOpen,
+    toggle: toggleOtherModels,
+    handleBlur: handleOtherModelsBlur,
+    hide: hideOtherModels
   } = useDropdown();
 
   function handleDelete() {
@@ -97,7 +107,22 @@ export function MenuMain() {
     hideMenu();
     event.preventDefault();
     event.stopPropagation();
-    router.gotoRSForm(model.schema, undefined, event.ctrlKey || event.metaKey);
+    router.gotoRSForm(model.schema, undefined, event.ctrlKey || event.metaKey, buildModelToSchemaQuery());
+  }
+
+  function onOtherModelsToggle() {
+    if (schema.models.length > 1) {
+      toggleOtherModels();
+    }
+  }
+
+  function handleGotoSiblingModel(modelID: number, event: React.MouseEvent<HTMLButtonElement>) {
+    if (modelID === model.id) {
+      return;
+    }
+    hideMenu();
+    hideOtherModels();
+    router.gotoRSModel(modelID, event.ctrlKey || event.metaKey, buildSiblingModelQuery());
   }
 
   async function handleTransferToSandbox() {
@@ -176,6 +201,32 @@ export function MenuMain() {
 
         <Divider margins='mx-3 my-1' />
 
+        {schema.models.length > 1 ? (
+          <div ref={otherModelsRef} onBlur={handleOtherModelsBlur} className='relative w-full'>
+            <DropdownButton
+              text={tx('ui.nav.gotoModel')}
+              className='w-full'
+              icon={<IconRSModel size='1rem' className='icon-primary' />}
+              onClick={onOtherModelsToggle}
+            />
+            <Dropdown isOpen={isOtherModelsOpen} stretchTop stretchLeft margin='mt-1'>
+              {schema.models.map(reference => {
+                const isCurrent = reference.id === model.id;
+                return (
+                  <DropdownButton
+                    key={reference.id}
+                    text={reference.alias}
+                    className='min-w-30'
+                    title={isCurrent ? tx('ui.nav.currentModel') : undefined}
+                    disabled={isCurrent}
+                    aria-current={isCurrent ? true : undefined}
+                    onClick={event => handleGotoSiblingModel(reference.id, event)}
+                  />
+                );
+              })}
+            </Dropdown>
+          </div>
+        ) : null}
         <DropdownButton
           text={tx('ui.nav.gotoSchema')}
           icon={<IconRSForm size='1rem' className='icon-primary' />}

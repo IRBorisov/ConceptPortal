@@ -280,7 +280,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       ) : null}
 
       <ValueInput
-        areaClassname='max-h-60'
+        areaClassname='max-h-60 min-h-10'
         rows={8}
         value={inputValue}
         stub={valueDirty ? '' : stub}
@@ -290,8 +290,10 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         isBinding={isBase}
         placeholder={
           !isInterpretable(activeCst.cst_type)
-            ? tx('ui.value.stub.unsupportedType')
-            : tx('ui.value.stub.missingHint')
+            ? tx('ui.value.unsupportedType')
+            : !isInferrable(activeCst.cst_type)
+              ? tx('ui.value.missingHint')
+              : undefined
         }
         onCalculate={cstInferrable ? handleCalculate : undefined}
         onChange={newValue =>
@@ -310,11 +312,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
           <TextButton
             text={tx('ui.rsform.action.editWordForms')}
             className='z-pop text-sm absolute top-0 left-19'
-            title={
-              isModified
-                ? formatLabel(lid.tooltip.unsaved)
-                : tx('ui.rsform.hint.editTermWordForms')
-            }
+            title={isModified ? formatLabel(lid.tooltip.unsaved) : tx('ui.rsform.hint.editTermWordForms')}
             onClick={openTermEditor}
             disabled={isModified}
           />
@@ -337,9 +335,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         id='cst_definition'
         label={tx('ui.label.textDefinition')}
         placeholder={
-          formalFieldDisabled
-            ? tx('ui.placeholder.definitionMissing')
-            : tx('ui.placeholder.textDefinitionHint')
+          formalFieldDisabled ? tx('ui.placeholder.definitionMissing') : tx('ui.placeholder.textDefinitionHint')
         }
         maxHeight='6rem'
         schema={schema}

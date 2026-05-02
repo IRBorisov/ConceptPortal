@@ -143,8 +143,7 @@ export const uiExtraFr: Record<string, string> = {
   'ui.tg.toolbar.echelonGraphTitle': 'Graphe des échelons des constituantes sélectionnées',
 
   'ui.page.notFound.title': 'Erreur 404 – Page introuvable',
-  'ui.page.notFound.body':
-    'Cette page n’existe pas ou l’objet demandé est absent de la base de données.',
+  'ui.page.notFound.body': 'Cette page n’existe pas ou l’objet demandé est absent de la base de données.',
   'ui.page.notFound.back': 'Retour au portail',
 
   'ui.structurePlanner.termPlaceholder': 'Terme non défini',
@@ -197,8 +196,7 @@ export const uiExtraFr: Record<string, string> = {
   'ui.stats.mini.total': 'Total',
   'ui.stats.row.incorrect': 'Non valides',
 
-  'ui.rsform.menu.archiveNoEdit':
-    'Archive : modification interdite\nAller à la version actuelle',
+  'ui.rsform.menu.archiveNoEdit': 'Archive : modification interdite\nAller à la version actuelle',
   'ui.rsform.menu.editing': 'Modification',
   'ui.rsform.menu.templates': 'Modèles',
   'ui.rsform.menu.templatesTitle': 'Créer une constituante à partir d’un modèle',
@@ -206,7 +204,8 @@ export const uiExtraFr: Record<string, string> = {
   'ui.rsform.menu.embeddingTitle': 'Importer un ensemble de\nconstituantes d’un autre schéma',
   'ui.rsform.menu.embeddingAria': 'Importer un ensemble de constituantes d’un autre schéma',
   'ui.rsform.menu.restoreOrder': 'Réordonner la liste',
-  'ui.rsform.menu.restoreOrderTitle': 'Réordonner la liste selon\nla logique des types et des liens entre constituantes',
+  'ui.rsform.menu.restoreOrderTitle':
+    'Réordonner la liste selon\nla logique des types et des liens entre constituantes',
   'ui.rsform.menu.restoreOrderAria': 'Réordonner la liste selon la logique des types et des liens entre constituantes',
   'ui.rsform.menu.ordinalNames': 'Noms ordinaux',
   'ui.rsform.menu.ordinalNamesTitle': 'Attribuer des noms ordinaux\net mettre à jour les expressions',
@@ -239,8 +238,7 @@ export const uiExtraFr: Record<string, string> = {
   'ui.termGraph.filter.hideFree': 'Masquer les isolées',
   'ui.termGraph.filter.hideFreeHint': 'Constituantes sans liens',
   'ui.termGraph.filter.hideTemplates': 'Masquer les modèles',
-  'ui.termGraph.filter.hideTemplatesHint':
-    'Fonctions terme et fonctions prédicat\nà arguments paramétrés',
+  'ui.termGraph.filter.hideTemplatesHint': 'Fonctions terme et fonctions prédicat\nà arguments paramétrés',
   'ui.termGraph.filter.transitiveReduction': 'Réduction transitive',
   'ui.termGraph.filter.transitiveReductionHint': 'Supprimer les arêtes formant\ndes chemins transitifs dans le graphe',
 
@@ -294,8 +292,7 @@ export const uiExtraFr: Record<string, string> = {
 
   'ui.oss.node.linkedCs': 'Schéma lié',
   'ui.oss.node.noLinkedCs': 'Pas de schéma lié',
-  'ui.oss.node.rhombusSynthesisWarn':
-    'Attention !\nSynthèse en losange\nDoublons de constituantes possibles',
+  'ui.oss.node.rhombusSynthesisWarn': 'Attention !\nSynthèse en losange\nDoublons de constituantes possibles',
 
   'ui.oss.settings.header': 'Paramètres d’affichage',
   'ui.oss.settings.coordsToggleAria': 'Afficher les coordonnées des nœuds',
@@ -542,7 +539,7 @@ export const uiExtraFr: Record<string, string> = {
   'ui.oss.dlg.inputSchema.loadingLabel': 'Schéma conceptuel à charger',
   'ui.oss.dlg.inputSchema.resetTitle': 'Réinitialiser le choix du schéma',
 
-  'ui.rsmodel.value.calculateTooltip': 'Calculer la valeur',
+  'ui.rsmodel.value.calculateTooltip': 'Enregistrer et calculer la valeur',
   'ui.rsmodel.dlg.viewValue.header': 'Voir la valeur',
   'ui.rsmodel.dlg.editValue.header': 'Éditeur de valeur',
   'ui.rsmodel.dlg.editBinding.header': 'Éditeur de la source de base',

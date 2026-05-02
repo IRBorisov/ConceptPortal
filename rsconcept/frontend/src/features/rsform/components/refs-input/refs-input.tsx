@@ -90,7 +90,7 @@ interface RefsInputInputProps
   portalHoverTooltips?: boolean;
   areaClassName?: string;
   onInputKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
-  onModEnter?: () => void;
+  onModSave?: () => void;
 }
 
 export function RefsInput({
@@ -108,7 +108,7 @@ export function RefsInput({
   className,
   areaClassName,
   onInputKeyDown,
-  onModEnter,
+  onModSave,
   error,
   ref,
   ...restProps
@@ -145,14 +145,14 @@ export function RefsInput({
   });
 
   const editorExtensions = [
-    ...(onModEnter
+    ...(onModSave
       ? [
           Prec.highest(
             keymap.of([
               {
-                key: 'Mod-Enter',
+                key: 'Mod-s',
                 run() {
-                  onModEnter();
+                  onModSave();
                   return true;
                 }
               }

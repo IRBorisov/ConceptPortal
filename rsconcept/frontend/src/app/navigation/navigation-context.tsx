@@ -94,10 +94,15 @@ interface INavigationContext {
   gotoNewModel: (schemaID: number, newTab?: boolean) => void;
 
   /** Navigate to RSForm. */
-  gotoRSForm: (schemaID: number, version?: string | number, newTab?: boolean) => void;
+  gotoRSForm: (
+    schemaID: number,
+    version?: string | number,
+    newTab?: boolean,
+    preserveQuery?: { tab?: number; active?: number }
+  ) => void;
 
   /** Navigate to RSModel. */
-  gotoRSModel: (modelID: number, newTab?: boolean) => void;
+  gotoRSModel: (modelID: number, newTab?: boolean, preserveQuery?: { tab?: number; active?: number }) => void;
 
   /** Navigate to OSS. */
   gotoOss: (ossID: number, newTab?: boolean) => void;
@@ -294,12 +299,39 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     push({ path: urls.library, newTab: newTab });
   }
 
-  function gotoRSForm(schemaID: number, version?: string | number, newTab?: boolean): void {
-    push({ path: urls.schema(schemaID, version), newTab: newTab });
+  function gotoRSForm(
+    schemaID: number,
+    version?: string | number,
+    newTab?: boolean,
+    preserveQuery?: { tab?: number; active?: number }
+  ): void {
+    const basePath = urls.schema(schemaID, version);
+    if (!preserveQuery || (preserveQuery.tab === undefined && preserveQuery.active === undefined)) {
+      push({ path: basePath, newTab: newTab });
+      return;
+    }
+    const url = new URL(basePath, window.location.origin);
+    if (preserveQuery.tab !== undefined) {
+      url.searchParams.set('tab', String(preserveQuery.tab));
+    }
+    if (preserveQuery.active !== undefined) {
+      url.searchParams.set('active', String(preserveQuery.active));
+    }
+    push({ path: url.pathname + url.search + url.hash, newTab: newTab });
   }
 
-  function gotoRSModel(modelID: number, newTab?: boolean): void {
-    push({ path: urls.model(modelID), newTab: newTab });
+  function gotoRSModel(modelID: number, newTab?: boolean, preserveQuery?: { tab?: number; active?: number }): void {
+    if (!preserveQuery || (preserveQuery.tab === undefined && preserveQuery.active === undefined)) {
+      push({ path: urls.model(modelID), newTab: newTab });
+      return;
+    }
+    const tab = preserveQuery.tab ?? RSModelTabID.CARD;
+    const path = urls.model_props({
+      id: modelID,
+      tab,
+      active: preserveQuery.active
+    });
+    push({ path, newTab: newTab });
   }
 
   function gotoOss(ossID: number, newTab?: boolean): void {

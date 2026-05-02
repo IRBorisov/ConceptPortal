@@ -1,3 +1,5 @@
+import { isMac } from '@/utils/utils';
+
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
@@ -31,6 +33,9 @@ export function HelpStructurePlanner() {
       <ul>
         <li>слева — формальное определение выбранного элемента</li>
         <li>в поле термина поддерживаются текстовые отсылки</li>
+        <li>
+          в поле термина: <kbd>{isMac() ? 'Cmd + S' : 'Ctrl + S'}</kbd> — сохранить термин или создать конституенту
+        </li>
       </ul>
     </div>
   );

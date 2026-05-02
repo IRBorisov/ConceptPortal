@@ -130,9 +130,8 @@ export const uiFr: Record<string, string> = {
   'ui.validation.termHomonyms': 'Le terme coïncide avec des constituantes : {aliases}',
   'ui.validation.conventionEmpty': 'Convention vide',
   'ui.placeholder.expressionMissing': 'Expression absente',
-  'ui.value.stub.unsupportedType': 'Aucune valeur prévue pour ce type',
-  'ui.value.stub.missingHint':
-    'Valeur absente. Utilisez « Valeur aléatoire » pour générer un exemple',
+  'ui.value.unsupportedType': 'Aucune valeur prévue pour ce type',
+  'ui.value.missingHint': 'Valeur absente. Utilisez « Valeur aléatoire » pour générer un exemple',
   'ui.placeholder.termMissing': 'Terme absent',
   'ui.placeholder.definitionMissing': 'Définition absente',
 
@@ -177,6 +176,7 @@ export const uiFr: Record<string, string> = {
   'ui.action.exportToExteor': 'Exporter vers Exteor',
   'ui.action.importFromExteor': 'Importer depuis Exteor',
   'ui.nav.gotoOss': 'Aller au SO',
+  'ui.nav.currentModel': 'Modèle actuel',
   'ui.nav.gotoModel': 'Aller au modèle',
 
   'ui.sandbox.saveToFile': 'Enregistrer dans un fichier',

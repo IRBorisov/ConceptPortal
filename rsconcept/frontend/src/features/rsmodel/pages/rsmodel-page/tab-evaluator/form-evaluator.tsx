@@ -130,7 +130,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   }
 
   return (
-    <div tabIndex={-1} id={id} className={cn('cc-column mt-1 pb-1 px-6 h-fit', className)} onKeyDown={handleInput}>
+    <div tabIndex={-1} id={id} className={cn('cc-column mt-2 pb-1 px-6 h-fit', className)} onKeyDown={handleInput}>
       <TextArea
         fitContent
         dense
@@ -161,11 +161,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         <div className='flex items-center justify-center gap-6 text-sm pl-6 flex-wrap'>
           <TextButton
             text={tx('ui.eval.viewValue')}
-            title={
-              canOpenValueDialog
-                ? tx('ui.eval.viewValueHint')
-                : tx('ui.eval.viewStructuredUnavailable')
-            }
+            title={canOpenValueDialog ? tx('ui.eval.viewValueHint') : tx('ui.eval.viewStructuredUnavailable')}
             disabled={!canOpenValueDialog}
             onClick={handleViewValue}
             className='text-sm'
@@ -178,10 +174,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
               onClick={toggleExport}
             />
             <Dropdown isOpen={isExportOpen} margin='mt-1'>
-              <DropdownButton
-                text={tx('ui.eval.copyToClipboard')}
-                onClick={handleClipboardExport}
-              />
+              <DropdownButton text={tx('ui.eval.copyToClipboard')} onClick={handleClipboardExport} />
               <DropdownButton text={tx('ui.eval.saveAsJson')} onClick={handleJSONExport} />
             </Dropdown>
           </div>

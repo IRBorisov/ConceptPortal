@@ -7,6 +7,7 @@ import { AccessPolicy, LocationHead } from '@/domain/library';
 import { formatLabel, lid, useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
+import { buildSchemaToModelQuery } from '@/app/navigation/cross-rs-query';
 import { useAuth } from '@/features/auth';
 import { createSandboxBundleFromRSForm } from '@/features/sandbox/models/bundle-transfer';
 import { saveBundle } from '@/features/sandbox/stores/sandbox-repository';
@@ -182,7 +183,8 @@ export function MenuMain() {
     if (schema.models.length > 1) {
       toggleModel();
     } else {
-      router.gotoRSModel(schema.models[0].id);
+      hideMenu();
+      router.gotoRSModel(schema.models[0].id, undefined, buildSchemaToModelQuery());
     }
   }
 
@@ -298,7 +300,14 @@ export function MenuMain() {
                   key={`${prefixes.oss_list}${index}`}
                   text={reference.alias}
                   className='min-w-30'
-                  onClick={() => router.gotoRSModel(schema.models[index].id)}
+                  onClick={event => {
+                    hideMenu();
+                    router.gotoRSModel(
+                      schema.models[index].id,
+                      event.ctrlKey || event.metaKey,
+                      buildSchemaToModelQuery()
+                    );
+                  }}
                 />
               ))}
             </Dropdown>

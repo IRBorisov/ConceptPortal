@@ -1,4 +1,5 @@
 import { IconNewItem } from '@/components/icons';
+import { isMac } from '@/utils/utils';
 
 export function HelpFormulaTree() {
   return (
@@ -15,6 +16,9 @@ export function HelpFormulaTree() {
         <li>
           <IconNewItem className='inline-icon' size='1rem' /> <kbd>Q</kbd> - обособление выделенного подвыражения в
           новую конституенту
+        </li>
+        <li>
+          в панели обособления: <kbd>{isMac() ? 'Cmd + S' : 'Ctrl + S'}</kbd> — подтвердить обособление
         </li>
       </ul>
 
