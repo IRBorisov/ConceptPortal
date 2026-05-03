@@ -3,7 +3,7 @@
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { AccessPolicy, LibraryItemType, LocationHead } from '@/domain/library';
-import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 
@@ -192,7 +192,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
           <TextArea
             id='schema_comment'
             label={tx('lib.create.description')}
-            placeholder={formatLabel(lid.placeholder.itemDescription)}
+            placeholder={tx('labels.placeholder.itemDescription')}
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}
             rows={5}

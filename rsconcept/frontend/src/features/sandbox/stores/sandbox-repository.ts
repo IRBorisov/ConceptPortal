@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
-import { formatAppMessage , formatLabel, lid } from '@/i18n';
+import { globalTx } from '@/i18n';
 
 import { type SandboxBundle, schemaSandboxBundle } from '../models/bundle';
 import { createStarterSandboxBundle } from '../models/bundle-starter';
@@ -31,7 +31,7 @@ export async function ensureBundleLoaded(): Promise<SandboxBundle> {
     if (parsed.success) {
       return parsed.data;
     } else {
-      toast.error(formatLabel(lid.error.sandboxFailedToLoad));
+      toast.error(globalTx('labels.error.sandboxFailedToLoad'));
     }
   }
   const starter = createStarterSandboxBundle();
@@ -58,7 +58,7 @@ export function downloadBundle(bundle: SandboxBundle, filename: string = DEFAULT
 function parseBundleJson(raw: unknown): SandboxBundle {
   const parsed = schemaSandboxBundle.safeParse(raw);
   if (!parsed.success) {
-    throw new Error(formatAppMessage('ui.sandbox.invalidBundleFile'));
+    throw new Error(globalTx('ui.sandbox.invalidBundleFile'));
   }
   return parsed.data;
 }

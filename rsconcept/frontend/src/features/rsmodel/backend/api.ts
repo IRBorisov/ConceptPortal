@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { formatLabel, lid } from '@/i18n';
+import { globalTx } from '@/i18n';
 
 import { type ConstituentaList } from '@/features/rsform';
 
@@ -31,7 +31,7 @@ export const rsmodelApi = {
       endpoint: `/api/models/${itemID}/set-value`,
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.changesSaved)
+        successMessage: globalTx('labels.info.changesSaved')
       }
     }),
   clearValues: ({ itemID, data }: { itemID: number; data: ConstituentaList }) =>
@@ -39,12 +39,12 @@ export const rsmodelApi = {
       endpoint: `/api/models/${itemID}/clear-values`,
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.dataCleared, { count: data.items.length })
+        successMessage: globalTx('labels.info.dataCleared', { count: data.items.length })
       }
     }),
   resetModel: ({ itemID }: { itemID: number }) =>
     axiosPost<undefined>({
       endpoint: `/api/models/${itemID}/reset-all`,
-      request: { successMessage: formatLabel(lid.info.modelCleared) }
+      request: { successMessage: globalTx('labels.info.modelCleared') }
     })
 } as const;

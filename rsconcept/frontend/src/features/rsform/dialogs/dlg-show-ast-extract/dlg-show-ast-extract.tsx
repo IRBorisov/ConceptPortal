@@ -12,7 +12,7 @@ import { generateAlias } from '@/domain/library/rsform-api';
 import { readTypeAnnotation, TypeID } from '@/domain/rslang';
 import { extractArguments } from '@/domain/rslang/api';
 import { labelType } from '@/domain/rslang/labels';
-import { formatLabel, lid } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { loadRSForm } from '@/features/rsform/backend/rsform-loader';
@@ -49,6 +49,7 @@ export interface DlgShowAstExtractProps {
 }
 
 export function DlgShowAstExtract() {
+  const tx = useTx();
   const hideDialog = useDialogsStore(state => state.hideDialog);
   const { initial, targetID, onCreate, onUpdate } = useDialogsStore(state => state.props as DlgShowAstExtractProps);
 
@@ -122,7 +123,7 @@ export function DlgShowAstExtract() {
     const updatedSchema = loadRSForm(updatedSchemaDTO);
     const parse = updatedSchema.analyzer.checkFull(updatedExpression, { annotateTypes: true, annotateErrors: true });
     if (!parse.ast) {
-      toast.error(formatLabel(lid.error.invalidParse));
+      toast.error(tx('labels.error.invalidParse'));
       hideDialog();
       return;
     }

@@ -1,5 +1,4 @@
-import { formatLabel } from '@/i18n';
-import { rslangLid } from '@/i18n/labels/rslang-ui';
+import { globalTx } from '@/i18n';
 
 import { type RO } from '@/utils/meta';
 import { type AstNodeBase } from '@/utils/parsing';
@@ -11,6 +10,59 @@ import { RSErrorCode } from './error';
 const INTEGER_TYPE_NAME = 'Z';
 const ANY_TYPE_NAME = 'R0';
 const LOGIC_TYPE_NAME = 'Logic';
+
+const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
+  [RSErrorCode.unknownSyntax]: 'labels.rslang.error.unknownSyntax',
+  [RSErrorCode.missingParenthesis]: 'labels.rslang.error.missingParenthesis',
+  [RSErrorCode.missingCurlyBrace]: 'labels.rslang.error.missingCurlyBrace',
+  [RSErrorCode.missingSquareBracket]: 'labels.rslang.error.missingSquareBracket',
+  [RSErrorCode.bracketMismatch]: 'labels.rslang.error.bracketMismatch',
+  [RSErrorCode.doubleParenthesis]: 'labels.rslang.error.doubleParenthesis',
+  [RSErrorCode.missingOpenBracket]: 'labels.rslang.error.missingOpenBracket',
+  [RSErrorCode.expectedLocal]: 'labels.rslang.error.expectedLocal',
+  [RSErrorCode.expectedType]: 'labels.rslang.error.expectedType',
+  [RSErrorCode.localDoubleDeclare]: 'labels.rslang.error.localDoubleDeclare',
+  [RSErrorCode.localNotUsed]: 'labels.rslang.error.localNotUsed',
+  [RSErrorCode.localUndeclared]: 'labels.rslang.error.localUndeclared',
+  [RSErrorCode.localShadowing]: 'labels.rslang.error.localShadowing',
+  [RSErrorCode.typesNotEqual]: 'labels.rslang.error.typesNotEqual',
+  [RSErrorCode.globalNotTyped]: 'labels.rslang.error.globalNotTyped',
+  [RSErrorCode.invalidDecart]: 'labels.rslang.error.invalidDecart',
+  [RSErrorCode.invalidBoolean]: 'labels.rslang.error.invalidBoolean',
+  [RSErrorCode.invalidTypeOperation]: 'labels.rslang.error.invalidTypeOperation',
+  [RSErrorCode.invalidCard]: 'labels.rslang.error.invalidCard',
+  [RSErrorCode.invalidDebool]: 'labels.rslang.error.invalidDebool',
+  [RSErrorCode.globalFuncWithoutArgs]: 'labels.rslang.error.globalFuncWithoutArgs',
+  [RSErrorCode.invalidReduce]: 'labels.rslang.error.invalidReduce',
+  [RSErrorCode.invalidProjectionTuple]: 'labels.rslang.error.invalidProjectionTuple',
+  [RSErrorCode.invalidProjectionSet]: 'labels.rslang.error.invalidProjectionSet',
+  [RSErrorCode.invalidEnumeration]: 'labels.rslang.error.invalidEnumeration',
+  [RSErrorCode.invalidCortegeDeclare]: 'labels.rslang.error.invalidCortegeDeclare',
+  [RSErrorCode.localOutOfScope]: 'labels.rslang.error.localOutOfScope',
+  [RSErrorCode.invalidElementPredicate]: 'labels.rslang.error.invalidElementPredicate',
+  [RSErrorCode.invalidEmptySetUsage]: 'labels.rslang.error.invalidEmptySetUsage',
+  [RSErrorCode.invalidArgsArity]: 'labels.rslang.error.invalidArgsArity',
+  [RSErrorCode.invalidArgumentType]: 'labels.rslang.error.invalidArgumentType',
+  [RSErrorCode.globalStructure]: 'labels.rslang.error.globalStructure',
+  [RSErrorCode.radicalUsage]: 'labels.rslang.error.radicalUsage',
+  [RSErrorCode.invalidFilterArgumentType]: 'labels.rslang.error.invalidFilterArgumentType',
+  [RSErrorCode.invalidFilterArity]: 'labels.rslang.error.invalidFilterArity',
+  [RSErrorCode.arithmeticNotSupported]: 'labels.rslang.error.arithmeticNotSupported',
+  [RSErrorCode.typesNotCompatible]: 'labels.rslang.error.typesNotCompatible',
+  [RSErrorCode.orderingNotSupported]: 'labels.rslang.error.orderingNotSupported',
+  [RSErrorCode.globalNoValue]: 'labels.rslang.error.globalNoValue',
+  [RSErrorCode.invalidPropertyUsage]: 'labels.rslang.error.invalidPropertyUsage',
+  [RSErrorCode.cstEmptyDerived]: 'labels.rslang.error.cstEmptyDerived',
+  [RSErrorCode.definitionNotAllowed]: 'labels.rslang.error.definitionNotAllowed',
+  [RSErrorCode.calcUnknownError]: 'labels.rslang.error.calcUnknownError',
+  [RSErrorCode.calculationNotSupported]: 'labels.rslang.error.calculationNotSupported',
+  [RSErrorCode.setOverflow]: 'labels.rslang.error.setOverflow',
+  [RSErrorCode.booleanBaseLimit]: 'labels.rslang.error.booleanBaseLimit',
+  [RSErrorCode.calcGlobalMissing]: 'labels.rslang.error.calcGlobalMissing',
+  [RSErrorCode.iterationsLimit]: 'labels.rslang.error.iterationsLimit',
+  [RSErrorCode.calcInvalidDebool]: 'labels.rslang.error.calcInvalidDebool',
+  [RSErrorCode.iterateInfinity]: 'labels.rslang.error.iterateInfinity'
+};
 
 const labelTokenRecord: Partial<Record<TokenID, string>> = {
   [TokenID.DECART]: '×',
@@ -57,7 +109,7 @@ const labelTokenRecord: Partial<Record<TokenID, string>> = {
 /** Retrieves label for {@link TokenID}. */
 export function labelToken(id: TokenID): string {
   const text = labelTokenRecord[id];
-  return text ?? formatLabel(rslangLid.fallback.noTokenLabel, { id: String(id) });
+  return text ?? globalTx('labels.rslang.fallback.noTokenLabel', { id: String(id) });
 }
 
 /** Generates label for {@link AstNodeBase}. */
@@ -139,23 +191,23 @@ export function labelRSLangNode(node: RO<AstNodeBase>): string {
   if (node.data.value) {
     return node.data.value as string;
   }
-  return formatLabel(rslangLid.fallback.unknownNode, { id: String(node.typeID) });
+  return globalTx('labels.rslang.fallback.unknownNode', { id: String(node.typeID) });
 }
 
 /** Generates error description for {@link RSErrorCode}. */
 export function describeRSError(code: RSErrorCode, params: readonly string[] = []): string {
-  const id = rslangLid.error[code];
+  const id = RSLANG_ERROR_MESSAGE_ID[code];
   if (id === undefined) {
-    return formatLabel(rslangLid.fallback.unknownRSError);
+    return globalTx('labels.rslang.fallback.unknownRSError');
   }
-  const notDef = () => formatLabel(rslangLid.misc.notDefined);
+  const notDef = () => globalTx('labels.rslang.misc.notDefined');
   switch (code) {
     case RSErrorCode.bracketMismatch:
-      return formatLabel(id, { open: params[0] ?? '', close: params[1] ?? '' });
+      return globalTx(id, { open: params[0] ?? '', close: params[1] ?? '' });
     case RSErrorCode.missingOpenBracket:
-      return formatLabel(id, { bracket: params[0] ?? '' });
+      return globalTx(id, { bracket: params[0] ?? '' });
     case RSErrorCode.expectedType:
-      return formatLabel(id, { type: params[0] ?? '' });
+      return globalTx(id, { type: params[0] ?? '' });
     case RSErrorCode.localDoubleDeclare:
     case RSErrorCode.localNotUsed:
     case RSErrorCode.localUndeclared:
@@ -166,40 +218,40 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
     case RSErrorCode.radicalUsage:
     case RSErrorCode.globalNoValue:
     case RSErrorCode.calcGlobalMissing:
-      return formatLabel(id, { name: params[0] ?? '' });
+      return globalTx(id, { name: params[0] ?? '' });
     case RSErrorCode.typesNotEqual:
     case RSErrorCode.invalidEnumeration:
     case RSErrorCode.invalidArgsArity:
     case RSErrorCode.typesNotCompatible:
-      return formatLabel(id, { a: params[0] ?? '', b: params[1] ?? '' });
+      return globalTx(id, { a: params[0] ?? '', b: params[1] ?? '' });
     case RSErrorCode.invalidDecart:
     case RSErrorCode.invalidBoolean:
     case RSErrorCode.invalidTypeOperation:
     case RSErrorCode.invalidCard:
     case RSErrorCode.invalidDebool:
     case RSErrorCode.invalidReduce:
-      return formatLabel(id, { arg: params[0] ?? '' });
+      return globalTx(id, { arg: params[0] ?? '' });
     case RSErrorCode.arithmeticNotSupported:
     case RSErrorCode.orderingNotSupported:
-      return formatLabel(id, { type: params[0] ?? '' });
+      return globalTx(id, { type: params[0] ?? '' });
     case RSErrorCode.invalidProjectionTuple:
     case RSErrorCode.invalidProjectionSet:
-      return formatLabel(id, {
+      return globalTx(id, {
         from: params[0] ?? '',
         to: params[1] !== undefined && params[1] !== '' ? params[1] : notDef()
       });
     case RSErrorCode.invalidElementPredicate:
-      return formatLabel(id, { a: params[0] ?? '', b: params[1] ?? '', c: params[2] ?? '' });
+      return globalTx(id, { a: params[0] ?? '', b: params[1] ?? '', c: params[2] ?? '' });
     case RSErrorCode.invalidArgumentType:
-      return formatLabel(id, { expected: params[0] ?? '', actual: params[1] ?? '' });
+      return globalTx(id, { expected: params[0] ?? '', actual: params[1] ?? '' });
     case RSErrorCode.invalidFilterArgumentType:
-      return formatLabel(id, { a: params[0] ?? '', b: params[1] ?? '' });
+      return globalTx(id, { a: params[0] ?? '', b: params[1] ?? '' });
     case RSErrorCode.setOverflow:
     case RSErrorCode.booleanBaseLimit:
     case RSErrorCode.iterationsLimit:
-      return formatLabel(id, { limit: params[0] ?? '' });
+      return globalTx(id, { limit: params[0] ?? '' });
     default:
-      return formatLabel(id);
+      return globalTx(id);
   }
 }
 
@@ -260,12 +312,12 @@ export function normalizeType(type: RO<ExpressionType> | null): string {
 export function labelTypeClass(type: TypeClass): string {
   switch (type) {
     case TypeClass.logic:
-      return formatLabel(rslangLid.typeClass.logic);
+      return globalTx('labels.rslang.typeClass.logic');
     case TypeClass.typification:
-      return formatLabel(rslangLid.typeClass.typification);
+      return globalTx('labels.rslang.typeClass.typification');
     case TypeClass.function:
-      return formatLabel(rslangLid.typeClass.function);
+      return globalTx('labels.rslang.typeClass.function');
     case TypeClass.predicate:
-      return formatLabel(rslangLid.typeClass.predicate);
+      return globalTx('labels.rslang.typeClass.predicate');
   }
 }

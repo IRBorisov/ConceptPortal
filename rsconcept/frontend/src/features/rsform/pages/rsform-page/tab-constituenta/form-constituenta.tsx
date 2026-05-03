@@ -9,7 +9,7 @@ import { type Constituenta, CstType, type RSForm } from '@/domain/library';
 import { getAnalysisFor, isBaseSet, isBasicConcept, isLogical } from '@/domain/library/rsform-api';
 import { type AnalysisFull, TypeID } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
-import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { useRegisterNavigationSave } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -143,12 +143,12 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
     event.preventDefault();
 
     if (!definition) {
-      toast.error(formatLabel(lid.error.typeStructureFailed));
+      toast.error(tx('labels.error.typeStructureFailed'));
       return;
     }
     const parse = getAnalysisFor(definition, activeCst.cst_type, schema);
     if (!parse.type || parse.type.typeID === TypeID.logic) {
-      toast.error(formatLabel(lid.error.typeStructureFailed));
+      toast.error(tx('labels.error.typeStructureFailed'));
       return;
     }
     showTypification({ items: [{ alias: activeCst.alias, type: parse.type }] });
@@ -176,7 +176,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
                   disabled
                     ? undefined
                     : isModified
-                      ? formatLabel(lid.tooltip.unsaved)
+                      ? tx('labels.tooltip.unsaved')
                       : tx('ui.rsform.hint.editTermWordForms')
                 }
                 onClick={openTermEditor}

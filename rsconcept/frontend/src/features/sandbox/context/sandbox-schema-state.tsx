@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { generateNominalLexeme } from '@/domain/cctext/language-api';
 import { type Constituenta, CstType } from '@/domain/library/rsform';
 import { generateAlias, removeAliasReference } from '@/domain/library/rsform-api';
-import { formatLabel, lid } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { type ConstituentaCreatedResponse, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
@@ -21,6 +21,7 @@ import { notImplemented, promptUnsaved } from '@/utils/utils';
 import { useSandboxBundle } from './bundle-context';
 
 export function SandboxSchemaState({ children }: React.PropsWithChildren) {
+  const tx = useTx();
   const router = useConceptNavigation();
   const {
     schema,
@@ -286,7 +287,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     }
     if (schema.attribution_graph.hasEdge(sourceID, targetID)) {
       if (targetCst.parent_schema !== null && targetCst.parent_schema === sourceCst.parent_schema) {
-        toast.error(formatLabel(lid.error.deleteInheritedEdge));
+        toast.error(tx('labels.error.deleteInheritedEdge'));
         return;
       }
       deleteAttribution({
@@ -298,7 +299,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     }
     if (schema.graph.hasEdge(sourceID, targetID)) {
       if (targetCst.is_inherited) {
-        toast.error(formatLabel(lid.error.changeInheritedDefinition));
+        toast.error(tx('labels.error.changeInheritedDefinition'));
         return;
       }
       void patchConstituenta({

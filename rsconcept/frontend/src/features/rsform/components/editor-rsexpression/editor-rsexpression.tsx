@@ -8,7 +8,7 @@ import { type Constituenta, CstStatus, type RSForm } from '@/domain/library';
 import { getAnalysisFor, inferStatus } from '@/domain/library/rsform-api';
 import { type AnalysisFull, type ExpressionType, type RSErrorDescription, TokenID } from '@/domain/rslang';
 import { rslangParser } from '@/domain/rslang';
-import { formatLabel, lid } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { type HelpTopic } from '@/features/help';
 import {
@@ -86,6 +86,7 @@ export function EditorRSExpression({
   onUpdateCst,
   ...restProps
 }: EditorRSExpressionProps) {
+  const tx = useTx();
   const [needsAnalyze, setNeedsAnalyze] = useState(false);
   const rsInput = useRef<ReactCodeMirrorRef>(null);
 
@@ -204,7 +205,7 @@ export function EditorRSExpression({
     } else {
       const parse = schema.analyzer.checkFull(value, { annotateTypes: true, annotateErrors: true });
       if (!parse.ast) {
-        toast.error(formatLabel(lid.error.invalidParse));
+        toast.error(tx('labels.error.invalidParse'));
         return;
       }
       if (!parse.ast.hasError && !extractionDisabled && !disabled && activeCst && onCreateCst && onUpdateCst) {
@@ -242,7 +243,7 @@ export function EditorRSExpression({
       targetType = parse.type;
     }
     if (!targetType) {
-      toast.error(formatLabel(lid.error.typeStructureFailed));
+      toast.error(tx('labels.error.typeStructureFailed'));
       return;
     }
     showTypification({ items: [{ alias: activeCst?.alias ?? 'TARGET', type: targetType }] });
@@ -280,7 +281,7 @@ export function EditorRSExpression({
         disabled={disabled}
         errorMessage={
           activeCst && activeCst.formalDuplicates.length > 0 && activeCst.definition_formal === value
-            ? formatLabel(lid.error.formalDuplicates, { aliases: formatAliasList(activeCst.formalDuplicates, schema) })
+            ? tx('labels.error.formalDuplicates', { aliases: formatAliasList(activeCst.formalDuplicates, schema) })
             : undefined
         }
         {...restProps}

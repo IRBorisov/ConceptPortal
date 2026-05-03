@@ -6,7 +6,7 @@ import { prepareValueString } from '@/domain/library/rsmodel-api';
 import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/domain/rslang';
 import { testInvalid, valueStub } from '@/domain/rslang/eval/value-api';
 import { type EchelonCollection, IntegerT } from '@/domain/rslang/semantic/typification';
-import { formatLabel, lid } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { cn } from '@/components/utils';
 import { useValueTooltipStore } from '@/stores/value-tooltip';
@@ -178,10 +178,11 @@ function BasicCell({
   path: ValuePath;
   isInvalid?: boolean;
 }) {
+  const tx = useTx();
   const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const text =
     prepareValueString(value, type, services.schema, services.basics, services.showDataText) ??
-    formatLabel(lid.placeholder.valueTooLarge);
+    tx('labels.placeholder.valueTooLarge');
   const isSingleColumn = path.length === 0 || (path.length === 1 && !services.isSingleton);
   const needsTooltip = text.length > (isSingleColumn ? VALUE_TRUNCATE_LONG : VALUE_TRUNCATE);
   const isMatch = services.matcher?.match(value, type) ?? false;

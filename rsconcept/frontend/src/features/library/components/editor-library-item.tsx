@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 import { useIntl } from 'react-intl';
 
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { useLabelUser, useRoleStore, UserRole } from '@/features/users';
@@ -68,7 +68,7 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
     if (newValue === item.owner) {
       return;
     }
-    if (!window.confirm(formatLabel(lid.prompt.ownerChange))) {
+    if (!window.confirm(tx('labels.prompt.ownerChange'))) {
       return;
     }
     void setOwner({ itemID: item.id, owner: newValue });

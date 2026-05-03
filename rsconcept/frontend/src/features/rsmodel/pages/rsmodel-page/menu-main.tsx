@@ -3,7 +3,7 @@
 import { toast } from 'react-toastify';
 
 import { AccessPolicy, LocationHead } from '@/domain/library';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { buildModelToSchemaQuery, buildSiblingModelQuery } from '@/app/navigation/cross-rs-query';
@@ -129,18 +129,18 @@ export function MenuMain() {
     if (isModified && !promptUnsaved()) {
       return;
     }
-    if (!window.confirm(formatLabel(lid.prompt.resetSandbox))) {
+    if (!window.confirm(tx('labels.prompt.resetSandbox'))) {
       return;
     }
     hideMenu();
     try {
       const nextBundle = createSandboxBundleFromRSModel(schema, model);
       await saveBundle(nextBundle);
-      toast.success(formatLabel(lid.info.sandboxImportSuccess));
+      toast.success(tx('labels.info.sandboxImportSuccess'));
       router.gotoSandboxEditor();
     } catch (error) {
       console.error(error);
-      toast.error(formatLabel(lid.error.sandboxImportError));
+      toast.error(tx('labels.error.sandboxImportError'));
     }
   }
 
@@ -164,8 +164,8 @@ export function MenuMain() {
         />
         <DropdownButton
           text={tx('semantic.action.share')}
-          title={formatLabel(
-            model.access_policy === AccessPolicy.PUBLIC ? lid.tooltip.shareItemPublic : lid.tooltip.shareItemPrivate
+          title={tx(
+            model.access_policy === AccessPolicy.PUBLIC ? 'labels.tooltip.shareItemPublic' : 'labels.tooltip.shareItemPrivate'
           )}
           aria-label={tx('ui.aria.copyLinkToClipboard')}
           icon={<IconShare size='1rem' className='icon-primary' />}

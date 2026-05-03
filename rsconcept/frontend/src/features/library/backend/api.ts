@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import { type AccessPolicy, type LibraryItem } from '@/domain/library';
-import { formatLabel, lid } from '@/i18n';
+import { globalTx } from '@/i18n';
 
 import {
   type RSFormDTO,
@@ -61,7 +61,7 @@ export const libraryApi = {
       endpoint: '/api/library',
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.newLibraryItem)
+        successMessage: globalTx('labels.info.newLibraryItem')
       }
     }),
   createRSFormFromSandbox: (data: CreateRSFormFromSandboxDTO) =>
@@ -70,7 +70,7 @@ export const libraryApi = {
       endpoint: '/api/rsforms/create-from-sandbox',
       request: {
         data,
-        successMessage: formatLabel(lid.info.newLibraryItem)
+        successMessage: globalTx('labels.info.newLibraryItem')
       }
     }),
   createRSModelFromSandbox: (data: CreateRSModelFromSandboxDTO) =>
@@ -79,7 +79,7 @@ export const libraryApi = {
       endpoint: '/api/models/create-from-sandbox',
       request: {
         data,
-        successMessage: formatLabel(lid.info.newLibraryItem)
+        successMessage: globalTx('labels.info.newLibraryItem')
       }
     }),
   updateItem: (data: UpdateLibraryItemDTO) =>
@@ -88,7 +88,7 @@ export const libraryApi = {
       endpoint: `/api/library/${data.id}`,
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.changesSaved)
+        successMessage: globalTx('labels.info.changesSaved')
       }
     }),
   setOwner: ({ itemID, owner }: { itemID: number; owner: number }) =>
@@ -96,7 +96,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/set-owner`,
       request: {
         data: { user: owner },
-        successMessage: formatLabel(lid.info.changesSaved)
+        successMessage: globalTx('labels.info.changesSaved')
       }
     }),
   setLocation: ({ itemID, location }: { itemID: number; location: string }) =>
@@ -104,7 +104,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/set-location`,
       request: {
         data: { location: location },
-        successMessage: formatLabel(lid.info.moveComplete)
+        successMessage: globalTx('labels.info.moveComplete')
       }
     }),
   setAccessPolicy: ({ itemID, policy }: { itemID: number; policy: AccessPolicy }) =>
@@ -112,7 +112,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/set-access-policy`,
       request: {
         data: { access_policy: policy },
-        successMessage: formatLabel(lid.info.changesSaved)
+        successMessage: globalTx('labels.info.changesSaved')
       }
     }),
   setEditors: ({ itemID, editors }: { itemID: number; editors: number[] }) =>
@@ -120,7 +120,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/set-editors`,
       request: {
         data: { users: editors },
-        successMessage: formatLabel(lid.info.changesSaved)
+        successMessage: globalTx('labels.info.changesSaved')
       }
     }),
 
@@ -128,7 +128,7 @@ export const libraryApi = {
     axiosDelete({
       endpoint: `/api/library/${data.target}`,
       request: {
-        successMessage: formatLabel(lid.info.itemDestroyed)
+        successMessage: globalTx('labels.info.itemDestroyed')
       }
     }),
   cloneItem: ({ itemID, data }: { itemID: number; data: CloneLibraryItemDTO }) =>
@@ -137,7 +137,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/clone`,
       request: {
         data: data,
-        successMessage: newSchema => formatLabel(lid.info.cloneComplete, { alias: newSchema.alias })
+        successMessage: newSchema => globalTx('labels.info.cloneComplete', { alias: newSchema.alias })
       }
     }),
   renameLocation: (data: RenameLocationDTO) =>
@@ -145,7 +145,7 @@ export const libraryApi = {
       endpoint: '/api/library/rename-location',
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.locationRenamed)
+        successMessage: globalTx('labels.info.locationRenamed')
       }
     }),
 
@@ -155,7 +155,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/create-version`,
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.newVersion, { version: data.version })
+        successMessage: globalTx('labels.info.newVersion', { version: data.version })
       }
     }),
   restoreVersion: ({ versionID }: { versionID: number }) =>
@@ -163,7 +163,7 @@ export const libraryApi = {
       schema: schemaRSForm,
       endpoint: `/api/versions/${versionID}/restore`,
       request: {
-        successMessage: formatLabel(lid.info.versionRestored)
+        successMessage: globalTx('labels.info.versionRestored')
       }
     }),
   updateVersion: (data: { itemID: number; version: UpdateVersionDTO }) =>
@@ -172,14 +172,14 @@ export const libraryApi = {
       endpoint: `/api/versions/${data.version.id}`,
       request: {
         data: data.version,
-        successMessage: formatLabel(lid.info.changesSaved)
+        successMessage: globalTx('labels.info.changesSaved')
       }
     }),
   deleteVersion: (data: { itemID: number; versionID: number }) =>
     axiosDelete({
       endpoint: `/api/versions/${data.versionID}`,
       request: {
-        successMessage: formatLabel(lid.info.versionDestroyed)
+        successMessage: globalTx('labels.info.versionDestroyed')
       }
     })
 } as const;

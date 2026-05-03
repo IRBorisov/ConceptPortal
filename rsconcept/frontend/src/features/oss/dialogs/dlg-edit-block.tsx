@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type OssLayout } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
-import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -104,7 +104,7 @@ export function DlgEditBlock() {
           <TextArea
             id='operation_comment'
             label={tx('semantic.term.description')}
-            placeholder={formatLabel(lid.placeholder.itemDescription)}
+            placeholder={tx('labels.placeholder.itemDescription')}
             noResize
             rows={5}
             value={field.state.value}

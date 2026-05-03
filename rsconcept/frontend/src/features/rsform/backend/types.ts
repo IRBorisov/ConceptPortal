@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { CstType } from '@/domain/library';
 import { RSErrorCode, TokenID, ValueClass } from '@/domain/rslang';
-import { lid } from '@/i18n';
+import {} from '@/i18n';
 
 import { schemaLibraryItem, schemaVersionInfo } from '@/features/library/backend/types';
 
@@ -63,7 +63,7 @@ export const schemaRSErrorType = z.enum(RSErrorCode);
 
 export const schemaConstituentaBasics = z.strictObject({
   id: z.number(),
-  alias: z.string().nonempty(lid.error.requiredField),
+  alias: z.string().nonempty('labels.error.requiredField'),
   convention: z.string(),
   crucial: z.boolean(),
   cst_type: schemaCstType,
@@ -113,11 +113,11 @@ export const schemaCreateConstituenta = schemaConstituentaBasics
     crucial: true
   })
   .extend({
-    alias: z.string().max(limits.len_alias, lid.error.aliasLength).nonempty(lid.error.requiredField),
-    convention: z.string().max(limits.len_description, lid.error.descriptionLength),
-    definition_formal: z.string().max(limits.len_description, lid.error.descriptionLength),
-    definition_raw: z.string().max(limits.len_description, lid.error.descriptionLength),
-    term_raw: z.string().max(limits.len_description, lid.error.descriptionLength),
+    alias: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField'),
+    convention: z.string().max(limits.len_description, 'labels.error.descriptionLength'),
+    definition_formal: z.string().max(limits.len_description, 'labels.error.descriptionLength'),
+    definition_raw: z.string().max(limits.len_description, 'labels.error.descriptionLength'),
+    term_raw: z.string().max(limits.len_description, 'labels.error.descriptionLength'),
     insert_after: z.number().nullable()
   });
 
@@ -129,18 +129,18 @@ export const schemaConstituentaCreatedResponse = z.strictObject({
 export const schemaUpdateConstituenta = z.strictObject({
   target: z.number(),
   item_data: z.strictObject({
-    alias: z.string().max(limits.len_alias, lid.error.aliasLength).nonempty(lid.error.requiredField).optional(),
+    alias: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField').optional(),
     cst_type: schemaCstType.optional(),
     crucial: z.boolean().optional(),
-    convention: z.string().max(limits.len_description, lid.error.descriptionLength).optional(),
-    definition_formal: z.string().max(limits.len_description, lid.error.descriptionLength).optional(),
-    definition_raw: z.string().max(limits.len_description, lid.error.descriptionLength).optional(),
-    term_raw: z.string().max(limits.len_description, lid.error.descriptionLength).optional(),
+    convention: z.string().max(limits.len_description, 'labels.error.descriptionLength').optional(),
+    definition_formal: z.string().max(limits.len_description, 'labels.error.descriptionLength').optional(),
+    definition_raw: z.string().max(limits.len_description, 'labels.error.descriptionLength').optional(),
+    term_raw: z.string().max(limits.len_description, 'labels.error.descriptionLength').optional(),
     term_forms: z
       .array(
         z.strictObject({
-          text: z.string().max(limits.len_description, lid.error.descriptionLength),
-          tags: z.string().max(limits.len_alias, lid.error.aliasLength)
+          text: z.string().max(limits.len_description, 'labels.error.descriptionLength'),
+          tags: z.string().max(limits.len_alias, 'labels.error.aliasLength')
         })
       )
       .optional()
@@ -158,7 +158,7 @@ export const schemaSubstituteConstituents = z.strictObject({
 });
 
 export const schemaSubstitutions = z.strictObject({
-  substitutions: z.array(schemaSubstituteConstituents).min(1, { message: lid.error.emptySubstitutions })
+  substitutions: z.array(schemaSubstituteConstituents).min(1, { message: 'labels.error.emptySubstitutions' })
 });
 
 export const schemaAttributionTarget = z.strictObject({

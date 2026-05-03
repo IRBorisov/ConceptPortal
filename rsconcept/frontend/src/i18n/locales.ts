@@ -1,8 +1,8 @@
 /** Supported UI locales (BCP-47 base language). */
-export type AppLocale = 'en' | 'fr' | 'ru';
+export type AppLocale = 'ru' | 'en' | 'fr';
 
 /** Supported locales. */
-export const SUPPORTED_LOCALES: readonly AppLocale[] = ['en', 'fr', 'ru'] as const;
+export const SUPPORTED_LOCALES: readonly AppLocale[] = ['ru', 'en', 'fr'] as const;
 
 /** Product default locale. */
 export const DEFAULT_LOCALE: AppLocale = 'ru';

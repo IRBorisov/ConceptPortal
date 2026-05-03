@@ -5,7 +5,7 @@ import fileDownload from 'js-file-download';
 
 import { NodeType, OperationType, type OssItem } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
-import { formatLabel, lid } from '@/i18n';
+import { globalTx } from '@/i18n';
 
 import { type UpdateOperationDTO } from '@/features/oss/backend/types';
 
@@ -187,7 +187,7 @@ export function useHandleActions() {
           });
       }
     } else {
-      if (!window.confirm(formatLabel(lid.prompt.deleteBlock))) {
+      if (!window.confirm(globalTx('labels.prompt.deleteBlock'))) {
         return;
       }
       void deleteBlock({
@@ -209,7 +209,7 @@ export function useHandleActions() {
     ) {
       return;
     }
-    if (!window.confirm(formatLabel(lid.prompt.deleteArgument))) {
+    if (!window.confirm(globalTx('labels.prompt.deleteArgument'))) {
       return;
     }
 

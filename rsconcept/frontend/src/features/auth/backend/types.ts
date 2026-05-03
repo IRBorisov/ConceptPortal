@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { lid } from '@/i18n';
+import {} from '@/i18n';
 
 import { limits } from '@/utils/constants';
 
@@ -37,21 +37,21 @@ export interface IPasswordTokenDTO {
 // ========= SCHEMAS ========
 
 export const schemaUserLogin = z.strictObject({
-  username: z.string().max(limits.len_alias, lid.error.aliasLength).nonempty(lid.error.requiredField),
-  password: z.string().max(limits.len_alias, lid.error.aliasLength).nonempty(lid.error.requiredField)
+  username: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField'),
+  password: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField')
 });
 
 export const schemaChangePassword = z
   .object({
-    old_password: z.string().max(limits.len_alias, lid.error.aliasLength).nonempty(lid.error.requiredField),
-    new_password: z.string().max(limits.len_alias, lid.error.aliasLength).nonempty(lid.error.requiredField),
-    new_password2: z.string().max(limits.len_alias, lid.error.aliasLength).nonempty(lid.error.requiredField)
+    old_password: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField'),
+    new_password: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField'),
+    new_password2: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField')
   })
   .refine(schema => schema.new_password === schema.new_password2, {
     path: ['new_password2'],
-    message: lid.error.passwordsMismatch
+    message: 'labels.error.passwordsMismatch'
   })
   .refine(schema => schema.old_password !== schema.new_password, {
     path: ['new_password'],
-    message: lid.error.passwordsSame
+    message: 'labels.error.passwordsSame'
   });

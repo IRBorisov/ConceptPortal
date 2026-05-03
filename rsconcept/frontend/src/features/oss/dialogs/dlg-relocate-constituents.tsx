@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type LibraryItem, type OssLayout } from '@/domain/library';
 import { getRelocateCandidates } from '@/domain/library/oss-api';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { useLibrary } from '@/features/library/backend/use-library';
@@ -124,7 +124,7 @@ export function DlgRelocateConstituents() {
       header={tx('ui.dlg.relocateConstituents.header')}
       submitText={tx('ui.action.move')}
       canSubmit={canSubmit}
-      validationHint={canSubmit ? '' : formatLabel(lid.hint.relocateEmpty)}
+      validationHint={canSubmit ? '' : tx('labels.hint.relocateEmpty')}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();

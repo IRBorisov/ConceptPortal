@@ -1,7 +1,7 @@
 'use client';
 
 import { isInferrable } from '@/domain/library/rsmodel-api';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
@@ -92,7 +92,7 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
           />
           <MiniButton
             title={
-              isModified ? formatLabel(lid.tooltip.unsaved) : prepareTooltip(tx('ui.hint.cloneConstituenta'), 'Alt + V')
+              isModified ? tx('labels.tooltip.unsaved') : prepareTooltip(tx('ui.hint.cloneConstituenta'), 'Alt + V')
             }
             aria-label={tx('ui.aria.cloneConstituenta')}
             icon={<IconClone size='1.25rem' className='icon-green' />}

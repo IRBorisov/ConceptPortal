@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 
 import { LocationHead } from '@/domain/library';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { useCreateFromSandbox } from '@/features/library/backend/use-create-from-sandbox';
@@ -45,7 +45,7 @@ export function MenuMain() {
 
   function handleReset() {
     hideMenu();
-    if (!window.confirm(formatLabel(lid.prompt.resetSandbox))) {
+    if (!window.confirm(tx('labels.prompt.resetSandbox'))) {
       return;
     }
     resetBundle();
@@ -77,7 +77,7 @@ export function MenuMain() {
       router.gotoRSForm(created.id);
     } catch (error) {
       console.error(error);
-      toast.error(formatLabel(lid.error.sandboxBundleNotAvailable));
+      toast.error(tx('labels.error.sandboxBundleNotAvailable'));
     }
   }
 
@@ -105,7 +105,7 @@ export function MenuMain() {
       router.gotoRSModel(created.id);
     } catch (error) {
       console.error(error);
-      toast.error(formatLabel(lid.error.sandboxBundleNotAvailable));
+      toast.error(tx('labels.error.sandboxBundleNotAvailable'));
     }
   }
 
@@ -124,10 +124,10 @@ export function MenuMain() {
     try {
       const raw = JSON.parse(await file.text()) as unknown;
       await importBundle(raw);
-      toast.success(formatLabel(lid.info.sandboxImportSuccess));
+      toast.success(tx('labels.info.sandboxImportSuccess'));
     } catch (error) {
       console.error(error);
-      toast.error(formatLabel(lid.error.sandboxImportError));
+      toast.error(tx('labels.error.sandboxImportError'));
     }
   }
 

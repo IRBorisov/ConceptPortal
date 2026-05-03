@@ -15,7 +15,7 @@ import {
 import clsx from 'clsx';
 
 import { addAliasReference } from '@/domain/library/rsform-api';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 
@@ -334,15 +334,15 @@ export function TGFlow() {
     const targetCst = schema.cstByID.get(targetID)!;
     if (connectionType === TGEdgeType.definition) {
       if (targetCst.is_inherited) {
-        toast.error(formatLabel(lid.error.changeInheritedDefinition));
+        toast.error(tx('labels.error.changeInheritedDefinition'));
         return;
       }
       if (schema.graph.hasEdge(sourceID, targetID)) {
-        toast.error(formatLabel(lid.error.connectionExists));
+        toast.error(tx('labels.error.connectionExists'));
         return;
       }
       if (schema.graph.isReachable(targetID, sourceID)) {
-        toast.error(formatLabel(lid.error.cyclingEdge));
+        toast.error(tx('labels.error.cyclingEdge'));
         return;
       }
 
@@ -355,15 +355,15 @@ export function TGFlow() {
       });
     } else {
       if (schema.attribution_graph.hasEdge(sourceID, targetID)) {
-        toast.error(formatLabel(lid.error.connectionExists));
+        toast.error(tx('labels.error.connectionExists'));
         return;
       }
       if (schema.attribution_graph.isReachable(targetID, sourceID)) {
-        toast.error(formatLabel(lid.error.cyclingEdge));
+        toast.error(tx('labels.error.cyclingEdge'));
         return;
       }
       if (targetCst.parent_schema !== null && targetCst.parent_schema === sourceCst.parent_schema) {
-        toast.error(formatLabel(lid.error.addInheritedEdge));
+        toast.error(tx('labels.error.addInheritedEdge'));
         return;
       }
 

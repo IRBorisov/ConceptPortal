@@ -1,11 +1,10 @@
 'use client';
 
-import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { type CstType, type RSForm } from '@/domain/library';
 import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -38,15 +37,15 @@ export function DlgCreateCst() {
   const values = useStore(form.store, state => state.values);
   const alias = values.alias;
   const cst_type = values.cst_type;
-  const { canSubmit, hint } = useMemo(() => {
+  const { canSubmit, hint } = (() => {
     if (!validateNewAlias(alias, cst_type, schema)) {
-      return { canSubmit: false, hint: formatLabel(lid.hint.aliasInvalid) };
+      return { canSubmit: false, hint: tx('labels.hint.aliasInvalid') };
     }
     if (!schemaCreateConstituenta.safeParse(values).success) {
-      return { canSubmit: false, hint: formatLabel(lid.hint.formInvalid) };
+      return { canSubmit: false, hint: tx('labels.hint.formInvalid') };
     }
     return { canSubmit: true, hint: '' };
-  }, [alias, cst_type, schema, values]);
+  })();
 
   function AliasField({ children }: CreateFieldProps<string>) {
     return <form.Field name='alias'>{field => children(field as FieldStateData<string>)}</form.Field>;

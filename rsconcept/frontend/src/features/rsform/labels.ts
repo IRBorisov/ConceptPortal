@@ -4,8 +4,7 @@
 
 import { type Constituenta, CstClass, CstStatus, CstType } from '@/domain/library';
 import { TokenID } from '@/domain/rslang';
-import { formatLabel } from '@/i18n';
-import { rsformLid } from '@/i18n/labels/rsform-ui';
+import { globalTx } from '@/i18n';
 
 import { prepareTooltip } from '@/utils/format';
 import { type RO } from '@/utils/meta';
@@ -13,89 +12,89 @@ import { type RO } from '@/utils/meta';
 import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores/term-graph';
 
 const CST_TYPE_LID: Record<CstType, string> = {
-  [CstType.NOMINAL]: rsformLid.cstType.nominal,
-  [CstType.BASE]: rsformLid.cstType.basic,
-  [CstType.CONSTANT]: rsformLid.cstType.constant,
-  [CstType.STRUCTURED]: rsformLid.cstType.structure,
-  [CstType.AXIOM]: rsformLid.cstType.axiom,
-  [CstType.TERM]: rsformLid.cstType.term,
-  [CstType.FUNCTION]: rsformLid.cstType.function,
-  [CstType.PREDICATE]: rsformLid.cstType.predicate,
-  [CstType.THEOREM]: rsformLid.cstType.theorem
+  [CstType.NOMINAL]: 'labels.rsform.cstType.nominal',
+  [CstType.BASE]: 'labels.rsform.cstType.basic',
+  [CstType.CONSTANT]: 'labels.rsform.cstType.constant',
+  [CstType.STRUCTURED]: 'labels.rsform.cstType.structure',
+  [CstType.AXIOM]: 'labels.rsform.cstType.axiom',
+  [CstType.TERM]: 'labels.rsform.cstType.term',
+  [CstType.FUNCTION]: 'labels.rsform.cstType.function',
+  [CstType.PREDICATE]: 'labels.rsform.cstType.predicate',
+  [CstType.THEOREM]: 'labels.rsform.cstType.theorem'
 };
 
 const CST_CLASS_LABEL_LID: Record<CstClass, string> = {
-  [CstClass.NOMINAL]: rsformLid.cstClassLabel.nominal,
-  [CstClass.BASIC]: rsformLid.cstClassLabel.basic,
-  [CstClass.DERIVED]: rsformLid.cstClassLabel.derived,
-  [CstClass.STATEMENT]: rsformLid.cstClassLabel.statement,
-  [CstClass.TEMPLATE]: rsformLid.cstClassLabel.template
+  [CstClass.NOMINAL]: 'labels.rsform.cstClassLabel.nominal',
+  [CstClass.BASIC]: 'labels.rsform.cstClassLabel.basic',
+  [CstClass.DERIVED]: 'labels.rsform.cstClassLabel.derived',
+  [CstClass.STATEMENT]: 'labels.rsform.cstClassLabel.statement',
+  [CstClass.TEMPLATE]: 'labels.rsform.cstClassLabel.template'
 };
 
 const CST_CLASS_DESC_LID: Record<CstClass, string> = {
-  [CstClass.NOMINAL]: rsformLid.cstClassDesc.nominal,
-  [CstClass.BASIC]: rsformLid.cstClassDesc.basic,
-  [CstClass.DERIVED]: rsformLid.cstClassDesc.derived,
-  [CstClass.STATEMENT]: rsformLid.cstClassDesc.statement,
-  [CstClass.TEMPLATE]: rsformLid.cstClassDesc.template
+  [CstClass.NOMINAL]: 'labels.rsform.cstClassDesc.nominal',
+  [CstClass.BASIC]: 'labels.rsform.cstClassDesc.basic',
+  [CstClass.DERIVED]: 'labels.rsform.cstClassDesc.derived',
+  [CstClass.STATEMENT]: 'labels.rsform.cstClassDesc.statement',
+  [CstClass.TEMPLATE]: 'labels.rsform.cstClassDesc.template'
 };
 
 const GRAPH_MODE_LID: Record<InteractionMode, string> = {
-  explore: rsformLid.graphMode.explore,
-  edit: rsformLid.graphMode.edit
+  explore: 'labels.rsform.graphMode.explore',
+  edit: 'labels.rsform.graphMode.edit'
 };
 
 const COLORING_LID: Record<TGColoring, string> = {
-  none: rsformLid.coloring.none,
-  status: rsformLid.coloring.status,
-  type: rsformLid.coloring.type,
-  schemas: rsformLid.coloring.schemas
+  none: 'labels.rsform.coloring.none',
+  status: 'labels.rsform.coloring.status',
+  type: 'labels.rsform.coloring.type',
+  schemas: 'labels.rsform.coloring.schemas'
 };
 
 const EDGE_TYPE_LID: Record<TGEdgeType, string> = {
-  full: rsformLid.edgeType.full,
-  definition: rsformLid.edgeType.definition,
-  attribution: rsformLid.edgeType.attribution
+  full: 'labels.rsform.edgeType.full',
+  definition: 'labels.rsform.edgeType.definition',
+  attribution: 'labels.rsform.edgeType.attribution'
 };
 
 const EXPR_STATUS_LID: Record<CstStatus, string> = {
-  [CstStatus.VERIFIED]: rsformLid.exprStatus.verified,
-  [CstStatus.INCORRECT]: rsformLid.exprStatus.incorrect,
-  [CstStatus.INCALCULABLE]: rsformLid.exprStatus.incalculable,
-  [CstStatus.PROPERTY]: rsformLid.exprStatus.property,
-  [CstStatus.UNKNOWN]: rsformLid.exprStatus.unknown
+  [CstStatus.VERIFIED]: 'labels.rsform.exprStatus.verified',
+  [CstStatus.INCORRECT]: 'labels.rsform.exprStatus.incorrect',
+  [CstStatus.INCALCULABLE]: 'labels.rsform.exprStatus.incalculable',
+  [CstStatus.PROPERTY]: 'labels.rsform.exprStatus.property',
+  [CstStatus.UNKNOWN]: 'labels.rsform.exprStatus.unknown'
 };
 
 const EXPR_STATUS_DESC_LID: Record<CstStatus, string> = {
-  [CstStatus.VERIFIED]: rsformLid.exprStatusDesc.verified,
-  [CstStatus.INCORRECT]: rsformLid.exprStatusDesc.incorrect,
-  [CstStatus.INCALCULABLE]: rsformLid.exprStatusDesc.incalculable,
-  [CstStatus.PROPERTY]: rsformLid.exprStatusDesc.property,
-  [CstStatus.UNKNOWN]: rsformLid.exprStatusDesc.unknown
+  [CstStatus.VERIFIED]: 'labels.rsform.exprStatusDesc.verified',
+  [CstStatus.INCORRECT]: 'labels.rsform.exprStatusDesc.incorrect',
+  [CstStatus.INCALCULABLE]: 'labels.rsform.exprStatusDesc.incalculable',
+  [CstStatus.PROPERTY]: 'labels.rsform.exprStatusDesc.property',
+  [CstStatus.UNKNOWN]: 'labels.rsform.exprStatusDesc.unknown'
 };
 
 const RS_EXPRESSION_LID: Record<CstType, string> = {
-  [CstType.NOMINAL]: rsformLid.rsExpression.nominal,
-  [CstType.BASE]: rsformLid.rsExpression.basic,
-  [CstType.CONSTANT]: rsformLid.rsExpression.constant,
-  [CstType.STRUCTURED]: rsformLid.rsExpression.structure,
-  [CstType.TERM]: rsformLid.rsExpression.term,
-  [CstType.THEOREM]: rsformLid.rsExpression.theorem,
-  [CstType.AXIOM]: rsformLid.rsExpression.axiom,
-  [CstType.FUNCTION]: rsformLid.rsExpression.function,
-  [CstType.PREDICATE]: rsformLid.rsExpression.predicate
+  [CstType.NOMINAL]: 'labels.rsform.rsExpression.nominal',
+  [CstType.BASE]: 'labels.rsform.rsExpression.basic',
+  [CstType.CONSTANT]: 'labels.rsform.rsExpression.constant',
+  [CstType.STRUCTURED]: 'labels.rsform.rsExpression.structure',
+  [CstType.TERM]: 'labels.rsform.rsExpression.term',
+  [CstType.THEOREM]: 'labels.rsform.rsExpression.theorem',
+  [CstType.AXIOM]: 'labels.rsform.rsExpression.axiom',
+  [CstType.FUNCTION]: 'labels.rsform.rsExpression.function',
+  [CstType.PREDICATE]: 'labels.rsform.rsExpression.predicate'
 };
 
 const RS_PLACEHOLDER_LID: Record<CstType, string> = {
-  [CstType.NOMINAL]: rsformLid.rsPlaceholder.nominal,
-  [CstType.BASE]: rsformLid.rsPlaceholder.basic,
-  [CstType.CONSTANT]: rsformLid.rsPlaceholder.constant,
-  [CstType.STRUCTURED]: rsformLid.rsPlaceholder.structure,
-  [CstType.TERM]: rsformLid.rsPlaceholder.term,
-  [CstType.THEOREM]: rsformLid.rsPlaceholder.theorem,
-  [CstType.AXIOM]: rsformLid.rsPlaceholder.axiom,
-  [CstType.FUNCTION]: rsformLid.rsPlaceholder.function,
-  [CstType.PREDICATE]: rsformLid.rsPlaceholder.predicate
+  [CstType.NOMINAL]: 'labels.rsform.rsPlaceholder.nominal',
+  [CstType.BASE]: 'labels.rsform.rsPlaceholder.basic',
+  [CstType.CONSTANT]: 'labels.rsform.rsPlaceholder.constant',
+  [CstType.STRUCTURED]: 'labels.rsform.rsPlaceholder.structure',
+  [CstType.TERM]: 'labels.rsform.rsPlaceholder.term',
+  [CstType.THEOREM]: 'labels.rsform.rsPlaceholder.theorem',
+  [CstType.AXIOM]: 'labels.rsform.rsPlaceholder.axiom',
+  [CstType.FUNCTION]: 'labels.rsform.rsPlaceholder.function',
+  [CstType.PREDICATE]: 'labels.rsform.rsPlaceholder.predicate'
 };
 
 const cstTypeShortcutKeyRecord: Record<CstType, string> = {
@@ -111,45 +110,45 @@ const cstTypeShortcutKeyRecord: Record<CstType, string> = {
 };
 
 const TOKEN_TITLE_LID: Partial<Record<TokenID, string>> = {
-  [TokenID.BOOLEAN]: rsformLid.token.boolean,
-  [TokenID.DECART]: rsformLid.token.decart,
-  [TokenID.PUNCTUATION_PL]: rsformLid.token.punctuationPl,
-  [TokenID.PUNCTUATION_SL]: rsformLid.token.punctuationSl,
-  [TokenID.QUANTOR_UNIVERSAL]: rsformLid.token.quantorUniversal,
-  [TokenID.QUANTOR_EXISTS]: rsformLid.token.quantorExists,
-  [TokenID.LOGIC_NOT]: rsformLid.token.logicNot,
-  [TokenID.LOGIC_AND]: rsformLid.token.logicAnd,
-  [TokenID.LOGIC_OR]: rsformLid.token.logicOr,
-  [TokenID.LOGIC_IMPLICATION]: rsformLid.token.logicImplication,
-  [TokenID.LOGIC_EQUIVALENT]: rsformLid.token.logicEquivalent,
-  [TokenID.LIT_EMPTYSET]: rsformLid.token.litEmptyset,
-  [TokenID.LIT_WHOLE_NUMBERS]: rsformLid.token.litWholeNumbers,
-  [TokenID.EQUAL]: rsformLid.token.equal,
-  [TokenID.MULTIPLY]: rsformLid.token.multiply,
-  [TokenID.NOTEQUAL]: rsformLid.token.notequal,
-  [TokenID.GREATER_OR_EQ]: rsformLid.token.greaterOrEq,
-  [TokenID.LESSER_OR_EQ]: rsformLid.token.lesserOrEq,
-  [TokenID.SET_IN]: rsformLid.token.setIn,
-  [TokenID.SET_NOT_IN]: rsformLid.token.setNotIn,
-  [TokenID.SUBSET_OR_EQ]: rsformLid.token.subsetOrEq,
-  [TokenID.SUBSET]: rsformLid.token.subset,
-  [TokenID.NOT_SUBSET]: rsformLid.token.notSubset,
-  [TokenID.SET_INTERSECTION]: rsformLid.token.setIntersection,
-  [TokenID.SET_UNION]: rsformLid.token.setUnion,
-  [TokenID.SET_MINUS]: rsformLid.token.setMinus,
-  [TokenID.SET_SYMMETRIC_MINUS]: rsformLid.token.setSymmetricMinus,
-  [TokenID.NT_DECLARATIVE_EXPR]: rsformLid.token.ntDeclarativeExpr,
-  [TokenID.NT_IMPERATIVE_EXPR]: rsformLid.token.ntImperativeExpr,
-  [TokenID.NT_RECURSIVE_FULL]: rsformLid.token.ntRecursiveFull,
-  [TokenID.BIGPR]: rsformLid.token.bigpr,
-  [TokenID.SMALLPR]: rsformLid.token.smallpr,
-  [TokenID.FILTER]: rsformLid.token.filter,
-  [TokenID.REDUCE]: rsformLid.token.reduce,
-  [TokenID.CARD]: rsformLid.token.card,
-  [TokenID.BOOL]: rsformLid.token.bool,
-  [TokenID.DEBOOL]: rsformLid.token.debool,
-  [TokenID.ASSIGN]: rsformLid.token.assign,
-  [TokenID.ITERATE]: rsformLid.token.iterate
+  [TokenID.BOOLEAN]: 'labels.rsform.token.boolean',
+  [TokenID.DECART]: 'labels.rsform.token.decart',
+  [TokenID.PUNCTUATION_PL]: 'labels.rsform.token.punctuationPl',
+  [TokenID.PUNCTUATION_SL]: 'labels.rsform.token.punctuationSl',
+  [TokenID.QUANTOR_UNIVERSAL]: 'labels.rsform.token.quantorUniversal',
+  [TokenID.QUANTOR_EXISTS]: 'labels.rsform.token.quantorExists',
+  [TokenID.LOGIC_NOT]: 'labels.rsform.token.logicNot',
+  [TokenID.LOGIC_AND]: 'labels.rsform.token.logicAnd',
+  [TokenID.LOGIC_OR]: 'labels.rsform.token.logicOr',
+  [TokenID.LOGIC_IMPLICATION]: 'labels.rsform.token.logicImplication',
+  [TokenID.LOGIC_EQUIVALENT]: 'labels.rsform.token.logicEquivalent',
+  [TokenID.LIT_EMPTYSET]: 'labels.rsform.token.litEmptyset',
+  [TokenID.LIT_WHOLE_NUMBERS]: 'labels.rsform.token.litWholeNumbers',
+  [TokenID.EQUAL]: 'labels.rsform.token.equal',
+  [TokenID.MULTIPLY]: 'labels.rsform.token.multiply',
+  [TokenID.NOTEQUAL]: 'labels.rsform.token.notequal',
+  [TokenID.GREATER_OR_EQ]: 'labels.rsform.token.greaterOrEq',
+  [TokenID.LESSER_OR_EQ]: 'labels.rsform.token.lesserOrEq',
+  [TokenID.SET_IN]: 'labels.rsform.token.setIn',
+  [TokenID.SET_NOT_IN]: 'labels.rsform.token.setNotIn',
+  [TokenID.SUBSET_OR_EQ]: 'labels.rsform.token.subsetOrEq',
+  [TokenID.SUBSET]: 'labels.rsform.token.subset',
+  [TokenID.NOT_SUBSET]: 'labels.rsform.token.notSubset',
+  [TokenID.SET_INTERSECTION]: 'labels.rsform.token.setIntersection',
+  [TokenID.SET_UNION]: 'labels.rsform.token.setUnion',
+  [TokenID.SET_MINUS]: 'labels.rsform.token.setMinus',
+  [TokenID.SET_SYMMETRIC_MINUS]: 'labels.rsform.token.setSymmetricMinus',
+  [TokenID.NT_DECLARATIVE_EXPR]: 'labels.rsform.token.ntDeclarativeExpr',
+  [TokenID.NT_IMPERATIVE_EXPR]: 'labels.rsform.token.ntImperativeExpr',
+  [TokenID.NT_RECURSIVE_FULL]: 'labels.rsform.token.ntRecursiveFull',
+  [TokenID.BIGPR]: 'labels.rsform.token.bigpr',
+  [TokenID.SMALLPR]: 'labels.rsform.token.smallpr',
+  [TokenID.FILTER]: 'labels.rsform.token.filter',
+  [TokenID.REDUCE]: 'labels.rsform.token.reduce',
+  [TokenID.CARD]: 'labels.rsform.token.card',
+  [TokenID.BOOL]: 'labels.rsform.token.bool',
+  [TokenID.DEBOOL]: 'labels.rsform.token.debool',
+  [TokenID.ASSIGN]: 'labels.rsform.token.assign',
+  [TokenID.ITERATE]: 'labels.rsform.token.iterate'
 };
 
 const TOKEN_HOTKEY: Partial<Record<TokenID, string>> = {
@@ -219,10 +218,10 @@ export function describeConstituenta(cst: RO<Constituenta>): string {
 /** Generates description for term of a given {@link Constituenta}. */
 export function describeConstituentaTerm(cst: RO<Constituenta> | null): string {
   if (!cst) {
-    return formatLabel(rsformLid.missing.constituent);
+    return globalTx('labels.rsform.missing.constituent');
   }
   if (!cst.term_resolved) {
-    return formatLabel(rsformLid.missing.termEmpty);
+    return globalTx('labels.rsform.missing.termEmpty');
   } else {
     return cst.term_resolved;
   }
@@ -237,28 +236,28 @@ export function labelConstituenta(cst: RO<Constituenta>) {
 export function getCstTypeShortcut(type: CstType) {
   const key = cstTypeShortcutKeyRecord[type];
   const label = labelCstType(type);
-  return key ? formatLabel(rsformLid.shortcutWithKey, { label, key }) : label;
+  return key ? globalTx('labels.rsform.shortcutWithKey', { label, key }) : label;
 }
 
 /** Generates label for RS expression based on {@link CstType}. */
 export function labelRSExpression(type: CstType): string {
   const id = RS_EXPRESSION_LID[type];
-  return id ? formatLabel(id) : formatLabel(rsformLid.fallback.formalExpression);
+  return id ? globalTx(id) : globalTx('labels.rsform.fallback.formalExpression');
 }
 
 /** Generates placeholder for RS definition based on {@link CstType}. */
 export function getRSDefinitionPlaceholder(type: CstType): string {
   const id = RS_PLACEHOLDER_LID[type];
-  return id ? formatLabel(id) : formatLabel(rsformLid.fallback.formalExpression);
+  return id ? globalTx(id) : globalTx('labels.rsform.fallback.formalExpression');
 }
 
 /** Generates description for {@link TokenID}. */
 export function describeToken(id: TokenID): string {
   const titleId = TOKEN_TITLE_LID[id];
   if (!titleId) {
-    return formatLabel(rsformLid.fallback.noTokenDescription, { id: String(id) });
+    return globalTx('labels.rsform.fallback.noTokenDescription', { id: String(id) });
   }
-  const title = formatLabel(titleId);
+  const title = globalTx(titleId);
   const hotkey = TOKEN_HOTKEY[id];
   return hotkey ? prepareTooltip(title, hotkey) : title;
 }
@@ -266,47 +265,47 @@ export function describeToken(id: TokenID): string {
 /** Retrieves label for {@link TGColoring}. */
 export function labelColoring(mode: TGColoring): string {
   const lidKey = COLORING_LID[mode];
-  return lidKey ? formatLabel(lidKey) : formatLabel(rsformLid.fallback.unknownColoring, { mode: String(mode) });
+  return lidKey ? globalTx(lidKey) : globalTx('labels.rsform.fallback.unknownColoring', { mode: String(mode) });
 }
 
 /** Retrieves label for {@link InteractionMode}. */
 export function labelGraphMode(mode: InteractionMode): string {
   const lidKey = GRAPH_MODE_LID[mode];
-  return lidKey ? formatLabel(lidKey) : formatLabel(rsformLid.fallback.unknownGraphMode, { mode: String(mode) });
+  return lidKey ? globalTx(lidKey) : globalTx('labels.rsform.fallback.unknownGraphMode', { mode: String(mode) });
 }
 
 /** Retrieves label for {@link TGEdgeType}. */
 export function labelEdgeType(mode: TGEdgeType): string {
   const lidKey = EDGE_TYPE_LID[mode];
-  return lidKey ? formatLabel(lidKey) : formatLabel(rsformLid.fallback.unknownEdgeType, { mode: String(mode) });
+  return lidKey ? globalTx(lidKey) : globalTx('labels.rsform.fallback.unknownEdgeType', { mode: String(mode) });
 }
 
 /** Retrieves label for {@link CstStatus}. */
 export function labelExpressionStatus(status: CstStatus): string {
   const lidKey = EXPR_STATUS_LID[status];
-  return lidKey ? formatLabel(lidKey) : formatLabel(rsformLid.fallback.unknownExprStatus, { status: String(status) });
+  return lidKey ? globalTx(lidKey) : globalTx('labels.rsform.fallback.unknownExprStatus', { status: String(status) });
 }
 
 /** Retrieves description for {@link CstStatus}. */
 export function describeExpressionStatus(status: CstStatus): string {
   const lidKey = EXPR_STATUS_DESC_LID[status];
-  return lidKey ? formatLabel(lidKey) : formatLabel(rsformLid.fallback.unknownExprStatus, { status: String(status) });
+  return lidKey ? globalTx(lidKey) : globalTx('labels.rsform.fallback.unknownExprStatus', { status: String(status) });
 }
 
 /** Retrieves label for {@link CstType}. */
 export function labelCstType(target: CstType): string {
   const lidKey = CST_TYPE_LID[target];
-  return lidKey ? formatLabel(lidKey) : formatLabel(rsformLid.fallback.unknownCstType, { type: String(target) });
+  return lidKey ? globalTx(lidKey) : globalTx('labels.rsform.fallback.unknownCstType', { type: String(target) });
 }
 
 /** Retrieves label for {@link CstClass}. */
 export function labelCstClass(target: CstClass): string {
   const lidKey = CST_CLASS_LABEL_LID[target];
-  return lidKey ? formatLabel(lidKey) : formatLabel(rsformLid.fallback.unknownCstClass, { type: String(target) });
+  return lidKey ? globalTx(lidKey) : globalTx('labels.rsform.fallback.unknownCstClass', { type: String(target) });
 }
 
 /** Retrieves description for {@link CstClass}. */
 export function describeCstClass(target: CstClass): string {
   const lidKey = CST_CLASS_DESC_LID[target];
-  return lidKey ? formatLabel(lidKey) : formatLabel(rsformLid.fallback.unknownCstClass, { type: String(target) });
+  return lidKey ? globalTx(lidKey) : globalTx('labels.rsform.fallback.unknownCstClass', { type: String(target) });
 }

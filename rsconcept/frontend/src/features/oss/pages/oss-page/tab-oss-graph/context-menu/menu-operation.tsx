@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 import { type Operation, OperationType } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { useLibrary } from '@/features/library/backend/use-library';
@@ -153,7 +153,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       return;
     }
     if (libraryItems.find(item => item.alias === operation.alias && item.location === schema.location)) {
-      toast.error(formatLabel(lid.error.inputAlreadyExists));
+      toast.error(tx('labels.error.inputAlreadyExists'));
       return;
     }
     onHide();

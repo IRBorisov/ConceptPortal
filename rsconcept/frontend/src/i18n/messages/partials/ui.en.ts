@@ -116,7 +116,7 @@ export const uiEn: Record<string, string> = {
   'ui.oss.menu.activateSynthesis': 'Activate synthesis',
   'ui.oss.menu.activateSynthesisAria': 'Activate the operation and obtain the synthesized schema',
   'ui.oss.menu.activateSynthesisNeedArgs': 'All arguments must be provided',
-  'ui.oss.menu.activateSynthesisReadyTitle': 'Activate the operationnand obtain the synthesized schema',
+  'ui.oss.menu.activateSynthesisReadyTitle': 'Activate the operation\nand obtain the synthesized schema',
   'ui.oss.menu.changeSchema': 'Change schema',
   'ui.oss.menu.cloneResultSchemaTitle': 'Create and load a copy of the conceptual schema',
   'ui.oss.menu.createEmptySchema': 'Create schema',

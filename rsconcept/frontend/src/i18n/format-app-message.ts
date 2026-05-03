@@ -9,20 +9,10 @@ export function setAppIntl(intl: IntlShape | null) {
   intlRef = intl;
 }
 
-/**
- * Formats a message outside React (toasts, stores, Zod issue text).
- */
-export function formatAppMessage(id: string, values?: MessageValues): string {
+/** Formats a message outside React (toasts, stores, Zod issue text). */
+export function globalTx(id: string, values?: MessageValues): string {
   if (intlRef) {
     return intlRef.formatMessage({ id }, values);
   }
   return id;
-}
-
-/**
- * Resolves a label catalog id (`lid` / feature label ids).
- * Same intl bridge as {@link formatAppMessage}; use in non-React code and plain `.ts` helpers.
- */
-export function formatLabel(id: string, values?: MessageValues): string {
-  return formatAppMessage(id, values);
 }

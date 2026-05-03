@@ -10,7 +10,7 @@ import { type AnalysisFull, type CalculatorResult } from '@/domain/rslang';
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
 import { isTypification, TypeID, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -53,7 +53,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const [localParse, setLocalParse] = useState<RO<AnalysisFull> | null>(null);
   const valueStr =
     prepareValueString(localEval?.value ?? null, localParse?.type ?? null, schema, engine.basics, showDataText) ??
-    formatLabel(lid.placeholder.valueTooLarge);
+    tx('labels.placeholder.valueTooLarge');
   const stub = localEval?.value && localParse?.type?.typeID === TypeID.collection ? valueStub(localEval?.value) : '';
   const isModified = evaluatedExpression !== expression;
   const status = inferEvalStatus(localEval?.value ?? null, CstType.TERM, !isModified);
@@ -91,12 +91,12 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
 
     const endTime = performance.now();
     const timeSpent = ((endTime - startTime) / 1000).toFixed(2);
-    toast.success(formatLabel(lid.info.calculationSuccess, { timeSpent }));
+    toast.success(tx('labels.info.calculationSuccess', { timeSpent }));
   }
 
   function handleViewValue() {
     if (dialogValue == null) {
-      toast.error(formatLabel(lid.error.valueNull));
+      toast.error(tx('labels.error.valueNull'));
       return;
     }
     if (!dialogType || !isTypification(dialogType)) {
@@ -112,7 +112,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
 
   function handleClipboardExport() {
     hideExport();
-    copyJsonToClipboard(getExportJsonText(dialogValue), () => toast.success(formatLabel(lid.info.valueReady)));
+    copyJsonToClipboard(getExportJsonText(dialogValue), () => toast.success(tx('labels.info.valueReady')));
   }
 
   function handleJSONExport() {

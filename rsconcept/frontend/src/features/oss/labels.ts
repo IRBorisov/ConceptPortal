@@ -6,33 +6,32 @@ import {
   type SubstitutionErrorDescription,
   SubstitutionErrorType
 } from '@/domain/library';
-import { formatLabel } from '@/i18n';
-import { ossLid } from '@/i18n/labels/oss-ui';
+import { globalTx } from '@/i18n';
 
 import { type RO } from '@/utils/meta';
 
 const OPERATION_LABEL_LID: Record<OperationType, string> = {
-  [OperationType.INPUT]: ossLid.operation.input,
-  [OperationType.SYNTHESIS]: ossLid.operation.synthesis,
-  [OperationType.REPLICA]: ossLid.operation.replica
+  [OperationType.INPUT]: 'labels.oss.operation.input',
+  [OperationType.SYNTHESIS]: 'labels.oss.operation.synthesis',
+  [OperationType.REPLICA]: 'labels.oss.operation.replica'
 };
 
 const OPERATION_DESC_LID: Record<OperationType, string> = {
-  [OperationType.INPUT]: ossLid.operationDesc.input,
-  [OperationType.SYNTHESIS]: ossLid.operationDesc.synthesis,
-  [OperationType.REPLICA]: ossLid.operationDesc.replica
+  [OperationType.INPUT]: 'labels.oss.operationDesc.input',
+  [OperationType.SYNTHESIS]: 'labels.oss.operationDesc.synthesis',
+  [OperationType.REPLICA]: 'labels.oss.operationDesc.replica'
 };
 
 /** Retrieves label for {@link OperationType}. */
 export function labelOperationType(itemType: OperationType): string {
   const id = OPERATION_LABEL_LID[itemType];
-  return id ? formatLabel(id) : formatLabel(ossLid.fallback.unknownOperationType, { type: String(itemType) });
+  return id ? globalTx(id) : globalTx('labels.oss.fallback.unknownOperationType', { type: String(itemType) });
 }
 
 /** Retrieves description for {@link OperationType}. */
 export function describeOperationType(itemType: OperationType): string {
   const id = OPERATION_DESC_LID[itemType];
-  return id ? formatLabel(id) : formatLabel(ossLid.fallback.unknownOperationType, { type: String(itemType) });
+  return id ? globalTx(id) : globalTx('labels.oss.fallback.unknownOperationType', { type: String(itemType) });
 }
 
 /** Generates error description for {@link SubstitutionErrorDescription}. */
@@ -41,31 +40,31 @@ export function describeSubstitutionError(error: RO<SubstitutionErrorDescription
   const to = error.params[1] ?? '';
   switch (error.errorType) {
     case SubstitutionErrorType.invalidIDs:
-      return formatLabel(ossLid.substitution.invalidIDs);
+      return globalTx('labels.oss.substitution.invalidIDs');
     case SubstitutionErrorType.incorrectCst:
-      return formatLabel(ossLid.substitution.incorrectCst, { from, to });
+      return globalTx('labels.oss.substitution.incorrectCst', { from, to });
     case SubstitutionErrorType.invalidBasic:
-      return formatLabel(ossLid.substitution.invalidBasic, { from, to });
+      return globalTx('labels.oss.substitution.invalidBasic', { from, to });
     case SubstitutionErrorType.invalidConstant:
-      return formatLabel(ossLid.substitution.invalidConstant, { from, to });
+      return globalTx('labels.oss.substitution.invalidConstant', { from, to });
     case SubstitutionErrorType.invalidNominal:
-      return formatLabel(ossLid.substitution.invalidNominal, { from, to });
+      return globalTx('labels.oss.substitution.invalidNominal', { from, to });
     case SubstitutionErrorType.invalidClasses:
-      return formatLabel(ossLid.substitution.invalidClasses, { from, to });
+      return globalTx('labels.oss.substitution.invalidClasses', { from, to });
     case SubstitutionErrorType.typificationCycle:
-      return formatLabel(ossLid.substitution.typificationCycle, { detail: error.params[0] ?? '' });
+      return globalTx('labels.oss.substitution.typificationCycle', { detail: error.params[0] ?? '' });
     case SubstitutionErrorType.baseSubstitutionNotSet:
-      return formatLabel(ossLid.substitution.baseSubstitutionNotSet, { from, to: error.params[1] ?? '' });
+      return globalTx('labels.oss.substitution.baseSubstitutionNotSet', { from, to: error.params[1] ?? '' });
     case SubstitutionErrorType.unequalTypification:
-      return formatLabel(ossLid.substitution.unequalTypification, { from, to });
+      return globalTx('labels.oss.substitution.unequalTypification', { from, to });
     case SubstitutionErrorType.unequalArgsCount:
-      return formatLabel(ossLid.substitution.unequalArgsCount, { from, to });
+      return globalTx('labels.oss.substitution.unequalArgsCount', { from, to });
     case SubstitutionErrorType.unequalArgs:
-      return formatLabel(ossLid.substitution.unequalArgs, { from, to });
+      return globalTx('labels.oss.substitution.unequalArgs', { from, to });
     case SubstitutionErrorType.unequalExpressions:
-      return formatLabel(ossLid.substitution.unequalExpressions, { from, to });
+      return globalTx('labels.oss.substitution.unequalExpressions', { from, to });
     default:
-      return formatLabel(ossLid.fallback.unknownSubstitutionError);
+      return globalTx('labels.oss.fallback.unknownSubstitutionError');
   }
 }
 
@@ -74,6 +73,6 @@ export function labelOssItem(item: RO<OssItem>): string {
   if (item.nodeType === NodeType.OPERATION) {
     return `${(item as Operation).alias}: ${item.title}`;
   } else {
-    return formatLabel(ossLid.item.blockTitle, { title: item.title });
+    return globalTx('labels.oss.item.blockTitle', { title: item.title });
   }
 }

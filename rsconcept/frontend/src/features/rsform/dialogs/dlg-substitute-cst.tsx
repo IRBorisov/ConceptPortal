@@ -4,7 +4,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type RSForm } from '@/domain/library';
 import { SubstitutionValidator } from '@/domain/library/oss-api';
-import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { describeSubstitutionError } from '@/features/oss/labels';
@@ -44,7 +44,7 @@ export function DlgSubstituteCst() {
   const validator = new SubstitutionValidator([schema], substitutions);
   const isCorrect = validator.validate();
   const validationMessages = isCorrect
-    ? [formatLabel(lid.info.substitutionsCorrect)]
+    ? [tx('labels.info.substitutionsCorrect')]
     : validator.errors.map(error => describeSubstitutionError(error));
 
   return (
@@ -52,7 +52,7 @@ export function DlgSubstituteCst() {
       header={tx('ui.dlg.substituteCst.header')}
       submitText={tx('ui.action.substitute')}
       canSubmit={isValid}
-      validationHint={isValid ? '' : formatLabel(lid.hint.substitutionsEmpty)}
+      validationHint={isValid ? '' : tx('labels.hint.substitutionsEmpty')}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();

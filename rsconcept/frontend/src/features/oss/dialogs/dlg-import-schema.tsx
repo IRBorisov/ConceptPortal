@@ -1,12 +1,11 @@
 'use client';
 
-import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { type LibraryItem, LibraryItemType, type OssLayout } from '@/domain/library';
 import { sortItemsForOSS } from '@/domain/library/oss-api';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
-import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { useLibrary } from '@/features/library/backend/use-library';
@@ -75,18 +74,18 @@ export function DlgImportSchema() {
   const values = useStore(form.store, state => state.values);
   const alias = values.item_data.alias;
   const clone_source = values.clone_source;
-  const { canSubmit, hint } = useMemo(() => {
+  const { canSubmit, hint } = (() => {
     if (!alias) {
-      return { canSubmit: false, hint: formatLabel(lid.hint.aliasEmpty) };
+      return { canSubmit: false, hint: tx('labels.hint.aliasEmpty') };
     }
     if (manager.oss.operations.some(operation => operation.alias === alias)) {
-      return { canSubmit: false, hint: formatLabel(lid.hint.schemaAliasTaken) };
+      return { canSubmit: false, hint: tx('labels.hint.schemaAliasTaken') };
     }
     if (!schemaImportSchema.safeParse(values).success) {
-      return { canSubmit: false, hint: formatLabel(lid.hint.formInvalid) };
+      return { canSubmit: false, hint: tx('labels.hint.formInvalid') };
     }
     return { canSubmit: true, hint: '' };
-  }, [alias, values, manager.oss.operations]);
+  })();
 
   function baseFilter(item: LibraryItem) {
     return !manager.oss.schemas.includes(item.id);
@@ -184,7 +183,7 @@ export function DlgImportSchema() {
               id='operation_comment'
               className='w-full'
               aria-label={tx('semantic.term.description')}
-              placeholder={formatLabel(lid.placeholder.itemDescription)}
+              placeholder={tx('labels.placeholder.itemDescription')}
               rows={5}
               disabled={!clone_source}
               value={field.state.value}

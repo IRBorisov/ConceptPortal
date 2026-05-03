@@ -1,30 +1,29 @@
-import { formatLabel } from '@/i18n';
-import { usersLid } from '@/i18n/labels/users-ui';
+import { globalTx } from '@/i18n';
 
 import { UserRole } from './stores/role';
 
 const ROLE_LABEL_LID: Record<UserRole, string> = {
-  [UserRole.READER]: usersLid.role.reader,
-  [UserRole.EDITOR]: usersLid.role.editor,
-  [UserRole.OWNER]: usersLid.role.owner,
-  [UserRole.ADMIN]: usersLid.role.admin
+  [UserRole.READER]: 'labels.users.role.reader',
+  [UserRole.EDITOR]: 'labels.users.role.editor',
+  [UserRole.OWNER]: 'labels.users.role.owner',
+  [UserRole.ADMIN]: 'labels.users.role.admin'
 };
 
 const ROLE_DESC_LID: Record<UserRole, string> = {
-  [UserRole.READER]: usersLid.roleDesc.reader,
-  [UserRole.EDITOR]: usersLid.roleDesc.editor,
-  [UserRole.OWNER]: usersLid.roleDesc.owner,
-  [UserRole.ADMIN]: usersLid.roleDesc.admin
+  [UserRole.READER]: 'labels.users.roleDesc.reader',
+  [UserRole.EDITOR]: 'labels.users.roleDesc.editor',
+  [UserRole.OWNER]: 'labels.users.roleDesc.owner',
+  [UserRole.ADMIN]: 'labels.users.roleDesc.admin'
 };
 
 /** Retrieves label for {@link UserRole}. */
 export function labelUserRole(mode: UserRole): string {
   const id = ROLE_LABEL_LID[mode];
-  return id ? formatLabel(id) : formatLabel(usersLid.fallback.unknownRole, { role: String(mode) });
+  return id ? globalTx(id) : globalTx('labels.users.fallback.unknownRole', { role: String(mode) });
 }
 
 /** Retrieves description for {@link UserRole}. */
 export function describeUserRole(mode: UserRole): string {
   const id = ROLE_DESC_LID[mode];
-  return id ? formatLabel(id) : formatLabel(usersLid.fallback.unknownRole, { role: String(mode) });
+  return id ? globalTx(id) : globalTx('labels.users.fallback.unknownRole', { role: String(mode) });
 }

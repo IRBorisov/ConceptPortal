@@ -1,6 +1,6 @@
 'use client';
 
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -32,7 +32,7 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
   const showEditVersions = useDialogsStore(state => state.showEditVersions);
 
   function handleRestoreVersion() {
-    if (schema.version === 'latest' || !window.confirm(formatLabel(lid.prompt.restoreArchive))) {
+    if (schema.version === 'latest' || !window.confirm(tx('labels.prompt.restoreArchive'))) {
       return;
     }
     void versionRestore({ versionID: schema.version }).then(() => router.gotoRSForm(schema.id));

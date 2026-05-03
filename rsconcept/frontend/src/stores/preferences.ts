@@ -14,8 +14,6 @@ export const videoPlayerTypes = ['vk', 'youtube'] as const;
 /** Represents video player type. */
 export type VideoPlayerType = (typeof videoPlayerTypes)[number];
 
-export type { AppLocale } from '@/i18n';
-
 interface PreferencesStore {
   locale: AppLocale;
   setLocale: (value: AppLocale) => void;

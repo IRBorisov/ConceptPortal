@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
 import { AccessPolicy, LocationHead } from '@/domain/library';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { buildSchemaToModelQuery } from '@/app/navigation/cross-rs-query';
@@ -133,18 +133,18 @@ export function MenuMain() {
     if (isModified && !promptUnsaved()) {
       return;
     }
-    if (!window.confirm(formatLabel(lid.prompt.resetSandbox))) {
+    if (!window.confirm(tx('labels.prompt.resetSandbox'))) {
       return;
     }
     hideMenu();
     try {
       const nextBundle = createSandboxBundleFromRSForm(schema);
       await saveBundle(nextBundle);
-      toast.success(formatLabel(lid.info.sandboxImportSuccess));
+      toast.success(tx('labels.info.sandboxImportSuccess'));
       router.gotoSandboxEditor();
     } catch (error) {
       console.error(error);
-      toast.error(formatLabel(lid.error.sandboxImportError));
+      toast.error(tx('labels.error.sandboxImportError'));
     }
   }
 
@@ -166,7 +166,7 @@ export function MenuMain() {
       const blob = await createSchemaFile(schema);
       fileDownload(blob, `${filename}.pdf`, 'application/pdf;charset=utf-8;');
     } catch (error) {
-      toast.error(formatLabel(lid.error.pdfError));
+      toast.error(tx('labels.error.pdfError'));
       throw error;
     }
   }
@@ -202,8 +202,8 @@ export function MenuMain() {
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
           text={tx('semantic.action.share')}
-          title={formatLabel(
-            schema.access_policy === AccessPolicy.PUBLIC ? lid.tooltip.shareItemPublic : lid.tooltip.shareItemPrivate
+          title={tx(
+            schema.access_policy === AccessPolicy.PUBLIC ? 'labels.tooltip.shareItemPublic' : 'labels.tooltip.shareItemPrivate'
           )}
           aria-label={tx('ui.aria.copyLinkToClipboard')}
           icon={<IconShare size='1rem' className='icon-primary' />}

@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { formatLabel, lid } from '@/i18n';
+import { globalTx } from '@/i18n';
 
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
@@ -47,7 +47,7 @@ export const promptsApi = {
       endpoint: '/api/prompts/',
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.changesSaved)
+        successMessage: globalTx('labels.info.changesSaved')
       }
     }),
 
@@ -57,7 +57,7 @@ export const promptsApi = {
       endpoint: `/api/prompts/${id}/`,
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.changesSaved)
+        successMessage: globalTx('labels.info.changesSaved')
       }
     }),
 
@@ -65,7 +65,7 @@ export const promptsApi = {
     axiosDelete({
       endpoint: `/api/prompts/${id}/`,
       request: {
-        successMessage: formatLabel(lid.info.changesSaved)
+        successMessage: globalTx('labels.info.changesSaved')
       }
     })
 } as const;

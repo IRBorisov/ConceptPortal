@@ -1,12 +1,12 @@
 'use client';
 
-import { Suspense, useMemo, useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { type OssLayout } from '@/domain/library';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
 import { type Substitution } from '@/domain/library/rsform';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -81,18 +81,18 @@ export function DlgCreateSynthesis() {
   const values = useStore(form.store, state => state.values);
   const alias = values.item_data.alias;
   const [activeTab, setActiveTab] = useState<TabID>(TabID.ARGUMENTS);
-  const { canSubmit, hint } = useMemo(() => {
+  const { canSubmit, hint } = (() => {
     if (!alias) {
-      return { canSubmit: false, hint: formatLabel(lid.hint.aliasEmpty) };
+      return { canSubmit: false, hint: tx('labels.hint.aliasEmpty') };
     }
     if (manager.oss.operations.some(operation => operation.alias === alias)) {
-      return { canSubmit: false, hint: formatLabel(lid.hint.schemaAliasTaken) };
+      return { canSubmit: false, hint: tx('labels.hint.schemaAliasTaken') };
     }
     if (!schemaCreateSynthesis.safeParse(values).success) {
-      return { canSubmit: false, hint: formatLabel(lid.hint.formInvalid) };
+      return { canSubmit: false, hint: tx('labels.hint.formInvalid') };
     }
     return { canSubmit: true, hint: '' };
-  }, [alias, values, manager.oss.operations]);
+  })();
 
   function TitleField({ children }: CreateFieldProps<string>) {
     return <form.Field name='item_data.title'>{field => children(field as FieldStateData<string>)}</form.Field>;

@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { NodeType, OperationType } from '@/domain/library';
 import { type Position2D } from '@/domain/library';
 import { GRID_SIZE } from '@/domain/library/oss-layout-api';
-import { formatLabel, lid } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 
@@ -52,6 +52,7 @@ export const flowOptions = {
 } as const;
 
 export function OssFlow() {
+  const tx = useTx();
   const router = useConceptNavigation();
   const mainHeight = useMainHeight();
   const { schema, isMutable } = useOssEdit();
@@ -115,7 +116,7 @@ export function OssFlow() {
       return;
     }
     if (connection.source === connection.target) {
-      toast.error(formatLabel(lid.error.ossSelfConnection));
+      toast.error(tx('labels.error.ossSelfConnection'));
       return;
     }
 
@@ -125,11 +126,11 @@ export function OssFlow() {
       throw new Error('Item not found');
     }
     if (schema.extendedGraph.expandAllOutputs([target.id]).includes(source.id)) {
-      toast.error(formatLabel(lid.error.ossCycle));
+      toast.error(tx('labels.error.ossCycle'));
       return;
     }
     if (schema.graph.hasEdge(source.id, target.id)) {
-      toast.error(formatLabel(lid.error.connectionExists));
+      toast.error(tx('labels.error.connectionExists'));
       return;
     }
 

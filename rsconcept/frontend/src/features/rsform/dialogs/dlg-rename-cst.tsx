@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type Constituenta, type CstType, type RSForm } from '@/domain/library';
 import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
-import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -60,7 +60,7 @@ export function DlgRenameCst() {
       header={tx('ui.dlg.renameCst.header')}
       submitText={tx('ui.action.rename')}
       canSubmit={canSubmit}
-      validationHint={canSubmit ? '' : formatLabel(lid.hint.aliasInvalid)}
+      validationHint={canSubmit ? '' : tx('labels.hint.aliasInvalid')}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
       className='w-120 py-6 pr-3 pl-6 flex gap-3 justify-center items-center'
       helpTopic={HelpTopic.CC_CONSTITUENTA}

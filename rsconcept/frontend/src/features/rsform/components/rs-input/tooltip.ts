@@ -7,7 +7,7 @@ import { isBasicConcept } from '@/domain/library/rsform-api';
 import { type AnalysisFull, type ExpressionType, readTypeAnnotation, TokenID } from '@/domain/rslang';
 import { type RSErrorDescription } from '@/domain/rslang/error';
 import { describeRSError, labelType } from '@/domain/rslang/labels';
-import { formatAppMessage } from '@/i18n';
+import { globalTx } from '@/i18n';
 
 import { appendBoldTextRow, appendMathBoldLabelParagraph } from '@/utils/format';
 import { type AstNode } from '@/utils/parsing';
@@ -150,43 +150,43 @@ function domTooltipConstituenta(
 
   if (!cst) {
     const text = document.createElement('p');
-    text.innerText = formatAppMessage('ui.rsform.rsInput.undefinedConstituent');
+    text.innerText = globalTx('ui.rsform.rsInput.undefinedConstituent');
     dom.appendChild(text);
   } else {
     appendMathBoldLabelParagraph(dom, `${cst.alias}:`, labelType(cst.analysis.type));
 
     if (cst.term_resolved) {
-      appendBoldTextRow(dom, formatAppMessage('semantic.term.term') + ': ', cst.term_resolved);
+      appendBoldTextRow(dom, globalTx('semantic.term.term') + ': ', cst.term_resolved);
     }
 
     if (cst.definition_formal) {
-      appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.expressionLabel'), cst.definition_formal);
+      appendBoldTextRow(dom, globalTx('ui.rsform.cstInfo.expressionLabel'), cst.definition_formal);
     }
 
     if (cst.definition_resolved) {
-      appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.definitionLabel'), cst.definition_resolved);
+      appendBoldTextRow(dom, globalTx('ui.rsform.cstInfo.definitionLabel'), cst.definition_resolved);
     }
 
     if (cst.convention) {
       if (isBasicConcept(cst.cst_type)) {
-        appendBoldTextRow(dom, formatAppMessage('semantic.term.convention') + ': ', cst.convention);
+        appendBoldTextRow(dom, globalTx('semantic.term.convention') + ': ', cst.convention);
       } else {
-        appendBoldTextRow(dom, formatAppMessage('semantic.term.comment') + ': ', cst.convention);
+        appendBoldTextRow(dom, globalTx('semantic.term.comment') + ': ', cst.convention);
       }
     }
 
     if (cst.spawner_alias) {
-      appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.baseLabel'), cst.spawner_alias);
+      appendBoldTextRow(dom, globalTx('ui.rsform.cstInfo.baseLabel'), cst.spawner_alias);
     }
 
     if (cst.spawn_alias.length > 0) {
-      appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.generatesLabel'), cst.spawn_alias.join(', '));
+      appendBoldTextRow(dom, globalTx('ui.rsform.cstInfo.generatesLabel'), cst.spawn_alias.join(', '));
     }
 
     if (canClick) {
       const clickTip = document.createElement('p');
       clickTip.className = 'text-center text-xs mt-1';
-      clickTip.innerText = formatAppMessage('ui.rsform.rsInput.ctrlClickToOpen');
+      clickTip.innerText = globalTx('ui.rsform.rsInput.ctrlClickToOpen');
       dom.appendChild(clickTip);
     }
   }

@@ -4,9 +4,8 @@ import { hoverTooltip, type TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
 import { type EntityReference, type SyntacticReference } from '@/domain/cctext';
-import { labelGrammeme } from '@/domain/cctext/labels';
 import { type Constituenta, type RSForm } from '@/domain/library';
-import { formatAppMessage } from '@/i18n';
+import { globalTx } from '@/i18n';
 
 import { findContainedNodes } from '@/utils/codemirror';
 import { appendBoldTextRow } from '@/utils/format';
@@ -75,7 +74,7 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
     'whitespace-pre-line'
   );
 
-  appendBoldTextRow(dom, formatAppMessage('ui.rsform.refsTooltip.referenceToConstituent'));
+  appendBoldTextRow(dom, globalTx('ui.rsform.refsTooltip.referenceToConstituent'));
 
   appendBoldTextRow(dom, `${ref.entity}:`, describeConstituentaTerm(cst));
 
@@ -86,17 +85,17 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
     gram.id = `tooltip-${gramStr}`;
     gram.className = 'min-w-12 px-1 border rounded-lg text-sm text-center whitespace-nowrap bg-accent';
     gram.style.borderWidth = '1px';
-    gram.innerText = labelGrammeme(gramStr);
+    gram.innerText = globalTx(`labels.cctext.grammeme.${gramStr}`);
     grams.appendChild(gram);
   }
   dom.appendChild(grams);
 
   const controlsTip = document.createElement('p');
   controlsTip.className = 'text-left text-xs mt-1';
-  controlsTip.textContent = formatAppMessage('ui.rsform.refsTooltip.controls');
+  controlsTip.textContent = globalTx('ui.rsform.refsTooltip.controls');
   if (canClick) {
     controlsTip.textContent =
-      `${isMac() ? 'Cmd + click' : 'Ctrl + click'}: ${formatAppMessage('ui.rsform.refsTooltip.toOpen')}\n` +
+      `${isMac() ? 'Cmd + click' : 'Ctrl + click'}: ${globalTx('ui.rsform.refsTooltip.toOpen')}\n` +
       (controlsTip.textContent ?? '');
   }
   dom.appendChild(controlsTip);
@@ -121,19 +120,19 @@ function domTooltipSyntacticReference(
     'whitespace-pre-line'
   );
 
-  appendBoldTextRow(dom, formatAppMessage('ui.rsform.refsTooltip.linkWordBinding'));
-  appendBoldTextRow(dom, formatAppMessage('ui.rsform.refsTooltip.offset'), ref.offset);
+  appendBoldTextRow(dom, globalTx('ui.rsform.refsTooltip.linkWordBinding'));
+  appendBoldTextRow(dom, globalTx('ui.rsform.refsTooltip.offset'), ref.offset);
   appendBoldTextRow(
     dom,
-    formatAppMessage('ui.rsform.refsTooltip.masterReference'),
-    masterRef ?? formatAppMessage('ui.rsform.refsTooltip.notDefined')
+    globalTx('ui.rsform.refsTooltip.masterReference'),
+    masterRef ?? globalTx('ui.rsform.refsTooltip.notDefined')
   );
-  appendBoldTextRow(dom, formatAppMessage('ui.rsform.refsTooltip.nominalForm'), ref.nominal);
+  appendBoldTextRow(dom, globalTx('ui.rsform.refsTooltip.nominalForm'), ref.nominal);
 
   if (canClick) {
     const clickTip = document.createElement('p');
     clickTip.className = 'text-center text-xs mt-1';
-    clickTip.textContent = formatAppMessage('ui.rsform.refsTooltip.editHotkey');
+    clickTip.textContent = globalTx('ui.rsform.refsTooltip.editHotkey');
     dom.appendChild(clickTip);
   }
 

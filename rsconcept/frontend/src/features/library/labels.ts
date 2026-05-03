@@ -4,70 +4,69 @@ import { validateLocation } from '@/domain/library/library-api';
 
 import { type RO } from '@/utils/meta';
 
-import { formatLabel } from '../../i18n/format-app-message';
-import { libraryLid } from '../../i18n/labels/library-ui';
+import { globalTx } from '../../i18n/format-app-message';
 
 const LOCATION_LID: Record<LocationHead, string> = {
-  [LocationHead.USER]: libraryLid.location.user,
-  [LocationHead.COMMON]: libraryLid.location.common,
-  [LocationHead.LIBRARY]: libraryLid.location.library,
-  [LocationHead.PROJECTS]: libraryLid.location.projects
+  [LocationHead.USER]: 'labels.library.location.user',
+  [LocationHead.COMMON]: 'labels.library.location.common',
+  [LocationHead.LIBRARY]: 'labels.library.location.library',
+  [LocationHead.PROJECTS]: 'labels.library.location.projects'
 };
 
 const LOCATION_SHORT_LID: Record<LocationHead, string> = {
-  [LocationHead.USER]: libraryLid.locationShort.user,
-  [LocationHead.COMMON]: libraryLid.locationShort.common,
-  [LocationHead.LIBRARY]: libraryLid.locationShort.library,
-  [LocationHead.PROJECTS]: libraryLid.locationShort.projects
+  [LocationHead.USER]: 'labels.library.locationShort.user',
+  [LocationHead.COMMON]: 'labels.library.locationShort.common',
+  [LocationHead.LIBRARY]: 'labels.library.locationShort.library',
+  [LocationHead.PROJECTS]: 'labels.library.locationShort.projects'
 };
 
 const LOCATION_DESC_LID: Record<LocationHead, string> = {
-  [LocationHead.USER]: libraryLid.locationDesc.user,
-  [LocationHead.COMMON]: libraryLid.locationDesc.common,
-  [LocationHead.LIBRARY]: libraryLid.locationDesc.library,
-  [LocationHead.PROJECTS]: libraryLid.locationDesc.projects
+  [LocationHead.USER]: 'labels.library.locationDesc.user',
+  [LocationHead.COMMON]: 'labels.library.locationDesc.common',
+  [LocationHead.LIBRARY]: 'labels.library.locationDesc.library',
+  [LocationHead.PROJECTS]: 'labels.library.locationDesc.projects'
 };
 
 const ACCESS_LID: Record<AccessPolicy, string> = {
-  [AccessPolicy.PRIVATE]: libraryLid.access.private,
-  [AccessPolicy.PROTECTED]: libraryLid.access.protected,
-  [AccessPolicy.PUBLIC]: libraryLid.access.public
+  [AccessPolicy.PRIVATE]: 'labels.library.access.private',
+  [AccessPolicy.PROTECTED]: 'labels.library.access.protected',
+  [AccessPolicy.PUBLIC]: 'labels.library.access.public'
 };
 
 const ACCESS_DESC_LID: Record<AccessPolicy, string> = {
-  [AccessPolicy.PRIVATE]: libraryLid.accessDesc.private,
-  [AccessPolicy.PROTECTED]: libraryLid.accessDesc.protected,
-  [AccessPolicy.PUBLIC]: libraryLid.accessDesc.public
+  [AccessPolicy.PRIVATE]: 'labels.library.accessDesc.private',
+  [AccessPolicy.PROTECTED]: 'labels.library.accessDesc.protected',
+  [AccessPolicy.PUBLIC]: 'labels.library.accessDesc.public'
 };
 
 const ITEM_TYPE_LID: Record<LibraryItemType, string> = {
-  [LibraryItemType.RSFORM]: libraryLid.itemType.rsform,
-  [LibraryItemType.OSS]: libraryLid.itemType.oss,
-  [LibraryItemType.RSMODEL]: libraryLid.itemType.rsmodel
+  [LibraryItemType.RSFORM]: 'labels.library.itemType.rsform',
+  [LibraryItemType.OSS]: 'labels.library.itemType.oss',
+  [LibraryItemType.RSMODEL]: 'labels.library.itemType.rsmodel'
 };
 
 const ITEM_TYPE_DESC_LID: Record<LibraryItemType, string> = {
-  [LibraryItemType.RSFORM]: libraryLid.itemTypeDesc.rsform,
-  [LibraryItemType.OSS]: libraryLid.itemTypeDesc.oss,
-  [LibraryItemType.RSMODEL]: libraryLid.itemTypeDesc.rsmodel
+  [LibraryItemType.RSFORM]: 'labels.library.itemTypeDesc.rsform',
+  [LibraryItemType.OSS]: 'labels.library.itemTypeDesc.oss',
+  [LibraryItemType.RSMODEL]: 'labels.library.itemTypeDesc.rsmodel'
 };
 
 /** Retrieves label for {@link LocationHead}. */
 export function labelLocationHead(head: LocationHead): string {
   const id = LOCATION_LID[head];
-  return id ? formatLabel(id) : String(head);
+  return id ? globalTx(id) : String(head);
 }
 
 /** Retrieves compact breadcrumb label for {@link LocationHead}. */
 export function labelLocationHeadShort(head: LocationHead): string {
   const id = LOCATION_SHORT_LID[head];
-  return id ? formatLabel(id) : String(head);
+  return id ? globalTx(id) : String(head);
 }
 
 /** Retrieves description for {@link LocationHead}. */
 export function describeLocationHead(head: LocationHead): string {
   const id = LOCATION_DESC_LID[head];
-  return id ? formatLabel(id) : String(head);
+  return id ? globalTx(id) : String(head);
 }
 
 /** Retrieves label for {@link FolderNode}. */
@@ -82,29 +81,29 @@ export function labelFolderNode(node: FolderNode): string {
 /** Retrieves label for {@link AccessPolicy}. */
 export function labelAccessPolicy(policy: AccessPolicy): string {
   const id = ACCESS_LID[policy];
-  return id ? formatLabel(id) : String(policy);
+  return id ? globalTx(id) : String(policy);
 }
 
 /** Retrieves description for {@link AccessPolicy}. */
 export function describeAccessPolicy(policy: AccessPolicy): string {
   const id = ACCESS_DESC_LID[policy];
-  return id ? formatLabel(id) : String(policy);
+  return id ? globalTx(id) : String(policy);
 }
 
 /** Retrieves label for {@link LibraryItemType}. */
 export function labelLibraryItemType(itemType: LibraryItemType): string {
   const id = ITEM_TYPE_LID[itemType];
-  return id ? formatLabel(id) : String(itemType);
+  return id ? globalTx(id) : String(itemType);
 }
 
 /** Retrieves description for {@link LibraryItemType}. */
 export function describeLibraryItemType(itemType: LibraryItemType): string {
   const id = ITEM_TYPE_DESC_LID[itemType];
-  return id ? formatLabel(id) : String(itemType);
+  return id ? globalTx(id) : String(itemType);
 }
 
 /** Generates label for {@link VersionInfo} of {@link RSForm}. */
 export function labelVersion(value: CurrentVersion, items: RO<VersionInfo[]>) {
   const version = items.find(ver => ver.id === value);
-  return version ? version.version : formatLabel(libraryLid.version.current);
+  return version ? version.version : globalTx('labels.library.version.current');
 }

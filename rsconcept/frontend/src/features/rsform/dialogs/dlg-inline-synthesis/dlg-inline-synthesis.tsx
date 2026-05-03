@@ -4,7 +4,7 @@ import { Suspense, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { type RSForm, type Substitution } from '@/domain/library';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
@@ -76,7 +76,7 @@ export function DlgInlineSynthesis() {
       submitText={tx('ui.action.addConstituents')}
       className='w-160 h-132 px-6'
       canSubmit={canSubmit}
-      validationHint={canSubmit ? '' : formatLabel(lid.hint.sourceEmpty)}
+      validationHint={canSubmit ? '' : tx('labels.hint.sourceEmpty')}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>

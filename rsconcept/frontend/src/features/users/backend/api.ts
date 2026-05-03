@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 import { z } from 'zod';
 
-import { formatLabel, lid } from '@/i18n';
+import { globalTx } from '@/i18n';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
@@ -47,7 +47,7 @@ export const usersApi = {
       endpoint: '/users/api/signup',
       request: {
         data: data,
-        successMessage: createdUser => formatLabel(lid.info.newUser, { username: createdUser.username })
+        successMessage: createdUser => globalTx('labels.info.newUser', { username: createdUser.username })
       }
     }),
 
@@ -57,7 +57,7 @@ export const usersApi = {
       endpoint: '/users/api/profile',
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.changesSaved)
+        successMessage: globalTx('labels.info.changesSaved')
       }
     })
 } as const;

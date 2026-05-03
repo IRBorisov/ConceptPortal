@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { OperationType, type OssLayout } from '@/domain/library';
-import { lid } from '@/i18n';
+import {} from '@/i18n';
 
 import { schemaLibraryItem } from '@/features/library/backend/types';
 import { schemaSubstituteConstituents } from '@/features/rsform/backend/types';
@@ -93,13 +93,13 @@ const schemaOperationData = schemaOperation
     parent: true
   })
   .extend({
-    alias: z.string().max(limits.len_alias, lid.error.aliasLength).nonempty(lid.error.requiredField),
-    title: z.string().max(limits.len_title, lid.error.titleLength),
-    description: z.string().max(limits.len_description, lid.error.descriptionLength)
+    alias: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField'),
+    title: z.string().max(limits.len_title, 'labels.error.titleLength'),
+    description: z.string().max(limits.len_description, 'labels.error.descriptionLength')
   });
 
 const schemaBlockData = schemaOperationData.omit({ alias: true }).extend({
-  title: z.string().max(limits.len_alias, lid.error.aliasLength).nonempty(lid.error.requiredField)
+  title: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField')
 });
 
 export const schemaBlock = z.strictObject({

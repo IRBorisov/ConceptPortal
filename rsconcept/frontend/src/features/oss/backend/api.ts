@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import { type OssLayout } from '@/domain/library';
-import { formatLabel, lid } from '@/i18n';
+import { globalTx } from '@/i18n';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
@@ -57,7 +57,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/update-layout`,
       request: {
         data: { data: data },
-        successMessage: isSilent ? undefined : formatLabel(lid.info.changesSaved)
+        successMessage: isSilent ? undefined : globalTx('labels.info.changesSaved')
       }
     }),
 
@@ -67,7 +67,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/create-block`,
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.changesSaved)
+        successMessage: globalTx('labels.info.changesSaved')
       }
     }),
   updateBlock: ({ itemID, data }: { itemID: number; data: UpdateBlockDTO }) =>
@@ -76,7 +76,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/update-block`,
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.changesSaved)
+        successMessage: globalTx('labels.info.changesSaved')
       }
     }),
   deleteBlock: ({ itemID, data }: { itemID: number; data: DeleteBlockDTO; beforeUpdate?: () => void }) =>
@@ -85,7 +85,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/delete-block`,
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.blockDestroyed)
+        successMessage: globalTx('labels.info.blockDestroyed')
       }
     }),
 
@@ -97,7 +97,7 @@ export const ossApi = {
         data: data,
         successMessage: response => {
           const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
-          return formatLabel(lid.info.newOperation, { alias: alias ?? '?' });
+          return globalTx('labels.info.newOperation', { alias: alias ?? '?' });
         }
       }
     }),
@@ -107,7 +107,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/delete-replica`,
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.operationDestroyed)
+        successMessage: globalTx('labels.info.operationDestroyed')
       }
     }),
 
@@ -119,7 +119,7 @@ export const ossApi = {
         data: data,
         successMessage: response => {
           const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
-          return formatLabel(lid.info.newOperation, { alias: alias ?? '?' });
+          return globalTx('labels.info.newOperation', { alias: alias ?? '?' });
         }
       }
     }),
@@ -131,7 +131,7 @@ export const ossApi = {
         data: data,
         successMessage: response => {
           const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
-          return formatLabel(lid.info.newOperation, { alias: alias ?? '?' });
+          return globalTx('labels.info.newOperation', { alias: alias ?? '?' });
         }
       }
     }),
@@ -143,7 +143,7 @@ export const ossApi = {
         data: data,
         successMessage: response => {
           const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
-          return formatLabel(lid.info.newOperation, { alias: alias ?? '?' });
+          return globalTx('labels.info.newOperation', { alias: alias ?? '?' });
         }
       }
     }),
@@ -155,7 +155,7 @@ export const ossApi = {
         data: data,
         successMessage: response => {
           const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
-          return formatLabel(lid.info.newOperation, { alias: alias ?? '?' });
+          return globalTx('labels.info.newOperation', { alias: alias ?? '?' });
         }
       }
     }),
@@ -165,7 +165,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/update-operation`,
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.changesSaved)
+        successMessage: globalTx('labels.info.changesSaved')
       }
     }),
   deleteOperation: ({ itemID, data }: { itemID: number; data: DeleteOperationDTO; beforeUpdate?: () => void }) =>
@@ -174,7 +174,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/delete-operation`,
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.operationDestroyed)
+        successMessage: globalTx('labels.info.operationDestroyed')
       }
     }),
 
@@ -184,7 +184,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/create-input`,
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.newLibraryItem)
+        successMessage: globalTx('labels.info.newLibraryItem')
       }
     }),
   updateInput: ({ itemID, data }: { itemID: number; data: UpdateInputDTO }) =>
@@ -193,7 +193,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/set-input`,
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.changesSaved)
+        successMessage: globalTx('labels.info.changesSaved')
       }
     }),
   executeOperation: ({ itemID, data }: { itemID: number; data: TargetOperation }) =>
@@ -202,7 +202,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/execute-operation`,
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.operationExecuted)
+        successMessage: globalTx('labels.info.operationExecuted')
       }
     }),
 
@@ -212,7 +212,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/move-items`,
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.moveSuccess)
+        successMessage: globalTx('labels.info.moveSuccess')
       }
     }),
 
@@ -221,7 +221,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/relocate-constituents`,
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.changesSaved)
+        successMessage: globalTx('labels.info.changesSaved')
       }
     }),
   getPredecessor: (cstID: number) =>

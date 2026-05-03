@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 
 import { setAppIntl } from '@/i18n';
 
-/** Keeps `formatAppMessage` / `formatLabel` in sync with the active UI locale. */
+/** Keeps `globalTx` in sync with the active UI locale (`react-intl`). */
 export function AppIntlBridge() {
   const intl = useIntl();
   useEffect(

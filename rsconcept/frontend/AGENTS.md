@@ -30,7 +30,7 @@ This file applies to all code under the frontend application directory.
 - `src/backend`: Shared client-side API transport and query setup
 - `src/stores`: Shared Zustand stores
 - `src/utils`: General utility helpers
-- `src/i18n`: Locales, merged message catalogs, `useTx`, `lid` / `formatLabel`
+- `src/i18n`: Locales, merged message catalogs, `useTx`, `globalTx`
 - `tests`: End-to-end and setup files
 - `public`: Static assets
 
@@ -63,12 +63,12 @@ Run from `rsconcept/frontend`:
 
 - **No hardcoded locale-specific strings** in UI code. Use stable message **ids** and ship **en**, **ru**, and **fr** for every id you touch.
 - **In React:** `useTx` from `@/i18n` → `tx('namespace.key', values?)` (react-intl).
-- **Outside React** (stores, toasts, plain `.ts`): `formatAppMessage` or `formatLabel` from `@/i18n` — same ids; the app sets intl via `AppIntlBridge` under `IntlPreferencesProvider`. Persisted locale changes trigger a full reload so catalogs stay aligned.
+- **Outside React** (stores, toasts, plain `.ts`): `globalTx` from `@/i18n` — same ids; the app sets intl via `AppIntlBridge` under `IntlPreferencesProvider`. Persisted locale changes trigger a full reload so catalogs stay aligned.
 - **Catalog layout** (`src/i18n/messages/`):
   - **`en.ts` / `ru.ts` / `fr.ts`** merge all slices; add a new slice file only if you introduce a new module, then import it in all three.
-  - **`partials/`** — `ui`, `ui-extra`, `shell`, `nav`, `library`: general and feature-adjacent UI copy; **`labels.*`** — strings keyed by `lid` from `src/i18n/labels/lid.ts`; **`labels-feature.*`** — ids exported from `src/i18n/labels/*-ui.ts` (and similar) co-located with domains.
+  - **`partials/`** — `ui`, `ui-extra`, `shell`, `nav`, `library`: general and feature-adjacent UI copy; **`labels.*`** — shared toasts, Zod copy, hints (`labels.error.*`, `labels.rsform.*`, …) as string keys; **`labels-feature.*`** — feature-bundled `labels.*` strings merged into `labels.en` / `labels.ru` / `labels.fr`.
   - **`semantic/`** — `terms.*` and `actions.*` merged through `semantic.*.ts` for shared vocabulary / action wording.
-- **Workflow:** pick the right partial (or `semantic/` / `labels` / `labels-feature`); add the id in **all three** locale files for that slice; keep key order consistent with neighbors. For new `lid` or feature label constants, define the id in `src/i18n/labels/` and add the three locale strings (`labels*` partials as appropriate).
+- **Workflow:** pick the right partial (or `semantic/` / `labels` / `labels-feature`); add the same string id in **all three** locale files for that slice; keep key order consistent with neighbors. Use stable ids like `labels.error.*`, `ui.*`, `labels.rsform.*` (see `locale-keys-parity.test.ts`).
 
 ## Edit rules
 

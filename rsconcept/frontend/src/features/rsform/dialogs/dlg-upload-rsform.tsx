@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { Checkbox, FileInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
@@ -42,7 +42,7 @@ export function DlgUploadRSForm() {
     <ModalForm
       header={tx('ui.dlg.uploadRsform.header')}
       canSubmit={!!file}
-      validationHint={!!file ? '' : formatLabel(lid.hint.fileEmpty)}
+      validationHint={!!file ? '' : tx('labels.hint.fileEmpty')}
       onSubmit={handleSubmit}
       submitText={tx('ui.action.upload')}
       className='w-100 px-6'

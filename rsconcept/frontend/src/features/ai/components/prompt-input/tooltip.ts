@@ -3,7 +3,7 @@ import { type EditorState, type Extension } from '@codemirror/state';
 import { hoverTooltip, type TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
-import { formatAppMessage } from '@/i18n';
+import { globalTx } from '@/i18n';
 
 import { findEnvelopingNodes } from '@/utils/codemirror';
 import { appendBoldTextRow } from '@/utils/format';
@@ -73,18 +73,16 @@ function domTooltipVariable(varName: string, isAvailable: boolean): TooltipView 
     'whitespace-pre-line'
   );
 
-  appendBoldTextRow(dom, formatAppMessage('ui.ai.promptInput.variableTitle', { name: varName }));
+  appendBoldTextRow(dom, globalTx('ui.ai.promptInput.variableTitle', { name: varName }));
 
   const status = document.createElement('p');
   status.className = isAvailable ? 'text-green-700' : 'text-red-700';
-  status.innerText = isAvailable
-    ? formatAppMessage('ui.ai.promptInput.available')
-    : formatAppMessage('ui.ai.promptInput.unavailable');
+  status.innerText = isAvailable ? globalTx('ui.ai.promptInput.available') : globalTx('ui.ai.promptInput.unavailable');
   dom.appendChild(status);
 
   const desc = document.createElement('p');
   desc.className = '';
-  desc.innerText = formatAppMessage('ui.ai.promptInput.descriptionPrefix', {
+  desc.innerText = globalTx('ui.ai.promptInput.descriptionPrefix', {
     description: describePromptVariable(varName as PromptVariableType)
   });
   dom.appendChild(desc);

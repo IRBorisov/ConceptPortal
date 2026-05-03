@@ -6,7 +6,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { OperationType, type OssLayout } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
 import { type Substitution } from '@/domain/library/rsform';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -123,7 +123,7 @@ export function DlgEditOperation() {
       header={tx('ui.dlg.editOperation.header')}
       submitText={tx('semantic.action.save')}
       canSubmit={canSubmit}
-      validationHint={canSubmit ? '' : formatLabel(lid.hint.formInvalid)}
+      validationHint={canSubmit ? '' : tx('labels.hint.formInvalid')}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();

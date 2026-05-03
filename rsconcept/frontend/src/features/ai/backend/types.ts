@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { lid } from '@/i18n';
+import {} from '@/i18n';
 
 import { limits } from '@/utils/constants';
 
@@ -38,9 +38,9 @@ const schemaPromptTemplateInput = schemaPromptTemplate
     owner: true
   })
   .extend({
-    label: z.string().max(limits.len_alias, lid.error.aliasLength).nonempty(lid.error.requiredField),
-    description: z.string().max(limits.len_description, lid.error.descriptionLength),
-    text: z.string().max(limits.len_text, lid.error.textLength)
+    label: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField'),
+    description: z.string().max(limits.len_description, 'labels.error.descriptionLength'),
+    text: z.string().max(limits.len_text, 'labels.error.textLength')
   });
 
 export const schemaCreatePromptTemplate = schemaPromptTemplateInput.omit({

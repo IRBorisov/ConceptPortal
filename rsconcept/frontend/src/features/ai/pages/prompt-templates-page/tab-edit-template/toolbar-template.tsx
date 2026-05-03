@@ -1,6 +1,6 @@
 'use client';
 
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 import { PromptTabID } from '@/app/navigation/navigation-context';
@@ -30,7 +30,7 @@ export function ToolbarTemplate({ activeID, onSave, onReset, className }: Toolba
   const isModified = useModificationStore(state => state.isModified);
 
   function handleDelete() {
-    if (window.confirm(formatLabel(lid.prompt.deleteTemplate))) {
+    if (window.confirm(tx('labels.prompt.deleteTemplate'))) {
       void deletePromptTemplate(activeID).then(() =>
         router.pushAsync({ path: urls.prompt_template(null, PromptTabID.LIST) })
       );

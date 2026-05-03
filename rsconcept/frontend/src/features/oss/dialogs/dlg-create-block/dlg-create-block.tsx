@@ -1,11 +1,11 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { type OssLayout } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -85,18 +85,18 @@ export function DlgCreateBlock() {
   const values = useStore(form.store, state => state.values);
   const title = values.item_data.title;
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
-  const { canSubmit, hint } = useMemo(() => {
+  const { canSubmit, hint } = (() => {
     if (!title) {
-      return { canSubmit: false, hint: formatLabel(lid.hint.titleEmpty) };
+      return { canSubmit: false, hint: tx('labels.hint.titleEmpty') };
     }
     if (manager.oss.blocks.some(block => block.title === title)) {
-      return { canSubmit: false, hint: formatLabel(lid.hint.blockTitleTaken) };
+      return { canSubmit: false, hint: tx('labels.hint.blockTitleTaken') };
     }
     if (!schemaCreateBlock.safeParse(values).success) {
-      return { canSubmit: false, hint: formatLabel(lid.hint.formInvalid) };
+      return { canSubmit: false, hint: tx('labels.hint.formInvalid') };
     }
     return { canSubmit: true, hint: '' };
-  }, [title, values, manager.oss.blocks]);
+  })();
 
   function TitleField({ children }: CreateFieldProps<string>) {
     return <form.Field name='item_data.title'>{field => children(field as FieldStateData<string>)}</form.Field>;

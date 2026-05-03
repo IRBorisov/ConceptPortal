@@ -3,7 +3,7 @@
 import { useEffect, useEffectEvent, useState } from 'react';
 
 import { NodeType, type Operation, OperationType } from '@/domain/library';
-import { formatLabel, lid } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
@@ -24,6 +24,7 @@ interface OssEditStateProps {
 }
 
 export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEditStateProps>) => {
+  const tx = useTx();
   const router = useConceptNavigation();
   const adminMode = usePreferencesStore(state => state.adminMode);
 
@@ -114,7 +115,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   );
 
   function deleteSchema() {
-    if (!window.confirm(formatLabel(lid.prompt.deleteOSS))) {
+    if (!window.confirm(tx('labels.prompt.deleteOSS'))) {
       return;
     }
     void deleteItem({

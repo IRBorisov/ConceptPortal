@@ -2,7 +2,7 @@
 
 import { type OperationSchema, type Substitution } from '@/domain/library';
 import { SubstitutionValidator } from '@/domain/library/oss-api';
-import { formatLabel, lid } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { describeSubstitutionError } from '@/features/oss/labels';
 import { useRSForms } from '@/features/rsform/backend/use-rsforms';
@@ -18,6 +18,7 @@ interface TabSubstitutionsProps {
 }
 
 export function TabSubstitutions({ oss, inputs, substitutions, onChangeSubstitutions }: TabSubstitutionsProps) {
+  const tx = useTx();
   const schemasIDs = inputs
     .map(id => oss.operationByID.get(id)!)
     .map(operation => operation.result)
@@ -27,7 +28,7 @@ export function TabSubstitutions({ oss, inputs, substitutions, onChangeSubstitut
   const validator = new SubstitutionValidator(schemas, substitutions);
   const isCorrect = validator.validate();
   const validationMessages = isCorrect
-    ? [formatLabel(lid.info.substitutionsCorrect)]
+    ? [tx('labels.info.substitutionsCorrect')]
     : validator.errors.map(error => describeSubstitutionError(error));
 
   return (

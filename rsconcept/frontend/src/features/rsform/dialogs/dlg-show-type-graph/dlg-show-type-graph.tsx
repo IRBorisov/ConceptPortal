@@ -5,7 +5,7 @@ import { ReactFlowProvider } from '@xyflow/react';
 
 import { type TypeInfo } from '@/domain/library';
 import { TypificationGraph } from '@/domain/rslang';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -31,7 +31,7 @@ export function DlgShowTypeGraph() {
   })();
 
   if (graph.nodes.length === 0) {
-    toast.error(formatLabel(lid.error.typeStructureFailed));
+    toast.error(tx('labels.error.typeStructureFailed'));
     hideDialog();
     return null;
   }

@@ -1,7 +1,7 @@
 'use client';
 
 import { type Constituenta } from '@/domain/library';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -90,7 +90,7 @@ export function ToolbarConstituenta({
           />
           <MiniButton
             title={
-              isModified ? formatLabel(lid.tooltip.unsaved) : prepareTooltip(tx('ui.hint.cloneConstituenta'), 'Alt + V')
+              isModified ? tx('labels.tooltip.unsaved') : prepareTooltip(tx('ui.hint.cloneConstituenta'), 'Alt + V')
             }
             aria-label={tx('ui.aria.cloneConstituenta')}
             icon={<IconClone size='1.25rem' className='icon-green' />}

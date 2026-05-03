@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 import { RSEngine, type RSEngineServices } from '@/domain/library/rsengine';
 import { type Attribution, type Substitution } from '@/domain/library/rsform';
-import { formatLabel, lid } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { type UpdateLibraryItemDTO } from '@/features/library';
 import { loadRSForm } from '@/features/rsform/backend/rsform-loader';
@@ -32,6 +32,7 @@ let initialBundleValue: SandboxBundle | null = null;
 let initialBundlePromise: Promise<SandboxBundle> | null = null;
 
 export function SandboxState({ children }: React.PropsWithChildren) {
+  const tx = useTx();
   const initialBundle = useInitialSandboxBundle();
   const [bundle, setBundleState] = useState(initialBundle);
   const model = bundle.model;
@@ -64,8 +65,8 @@ export function SandboxState({ children }: React.PropsWithChildren) {
 
   const [engine] = useState(function createEngine() {
     return new RSEngine(model.id, services, {
-      onInvalidSetValue: () => toast.error(formatLabel(lid.error.invalidSetValue)),
-      onCalculationSuccess: timeSpent => toast.success(formatLabel(lid.info.calculationSuccess, { timeSpent })),
+      onInvalidSetValue: () => toast.error(tx('labels.error.invalidSetValue')),
+      onCalculationSuccess: timeSpent => toast.success(tx('labels.info.calculationSuccess', { timeSpent })),
       onEvaluationError: message => toast.error(message)
     });
   });
@@ -77,12 +78,12 @@ export function SandboxState({ children }: React.PropsWithChildren) {
       engine.modelID = model.id;
       engine.updateServices(services);
       engine.updateNotifications({
-        onInvalidSetValue: () => toast.error(formatLabel(lid.error.invalidSetValue)),
-        onCalculationSuccess: timeSpent => toast.success(formatLabel(lid.info.calculationSuccess, { timeSpent })),
+        onInvalidSetValue: () => toast.error(tx('labels.error.invalidSetValue')),
+        onCalculationSuccess: timeSpent => toast.success(tx('labels.info.calculationSuccess', { timeSpent })),
         onEvaluationError: message => toast.error(message)
       });
     },
-    [model.id, engine, services]
+    [model.id, engine, services, tx]
   );
 
   useEffect(
@@ -105,14 +106,14 @@ export function SandboxState({ children }: React.PropsWithChildren) {
           return;
         }
         console.error(err);
-        toast.error(formatLabel(lid.error.failedToPersistSandbox));
+        toast.error(tx('labels.error.failedToPersistSandbox'));
       });
 
       return function cancelPersist() {
         isActive = false;
       };
     },
-    [bundle]
+    [bundle, tx]
   );
 
   async function importBundle(raw: unknown) {

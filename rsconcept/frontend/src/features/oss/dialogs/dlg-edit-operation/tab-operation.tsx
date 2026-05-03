@@ -3,7 +3,7 @@
 import { type ReactNode } from 'react';
 
 import { type OperationSchema } from '@/domain/library';
-import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { TextArea, TextInput } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
@@ -73,7 +73,7 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
           <TextArea
             id='operation_comment'
             label={tx('semantic.term.description')}
-            placeholder={formatLabel(lid.placeholder.itemDescription)}
+            placeholder={tx('labels.placeholder.itemDescription')}
             noResize
             rows={5}
             value={field.state.value}

@@ -1,11 +1,10 @@
 'use client';
 
-import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { type OssLayout } from '@/domain/library';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
-import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -67,18 +66,18 @@ export function DlgCreateSchema() {
 
   const values = useStore(form.store, state => state.values);
   const alias = values.item_data.alias;
-  const { canSubmit, hint } = useMemo(() => {
+  const { canSubmit, hint } = (() => {
     if (!alias) {
-      return { canSubmit: false, hint: formatLabel(lid.hint.aliasEmpty) };
+      return { canSubmit: false, hint: tx('labels.hint.aliasEmpty') };
     }
     if (manager.oss.operations.some(operation => operation.alias === alias)) {
-      return { canSubmit: false, hint: formatLabel(lid.hint.schemaAliasTaken) };
+      return { canSubmit: false, hint: tx('labels.hint.schemaAliasTaken') };
     }
     if (!schemaCreateSchema.safeParse(values).success) {
-      return { canSubmit: false, hint: formatLabel(lid.hint.formInvalid) };
+      return { canSubmit: false, hint: tx('labels.hint.formInvalid') };
     }
     return { canSubmit: true, hint: '' };
-  }, [alias, values, manager.oss.operations]);
+  })();
 
   return (
     <ModalForm
@@ -139,7 +138,7 @@ export function DlgCreateSchema() {
             <TextArea
               id='operation_comment'
               label={tx('semantic.term.description')}
-              placeholder={formatLabel(lid.placeholder.itemDescription)}
+              placeholder={tx('labels.placeholder.itemDescription')}
               className='w-full'
               noResize
               rows={5}

@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import clsx from 'clsx';
 
 import { type FolderNode } from '@/domain/library';
-import { formatLabel, lid } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useMainHeight } from '@/stores/app-layout';
 import { prefixes } from '@/utils/constants';
@@ -17,6 +17,7 @@ interface ViewSideLocationProps {
 }
 
 export function ViewSideLocation({ className }: ViewSideLocationProps) {
+  const tx = useTx();
   const location = useLibrarySearchStore(state => state.location);
   const setLocation = useLibrarySearchStore(state => state.setLocation);
 
@@ -29,7 +30,7 @@ export function ViewSideLocation({ className }: ViewSideLocationProps) {
   function handleCopyPath(target: FolderNode) {
     navigator.clipboard
       .writeText(target.getPath())
-      .then(() => toast.success(formatLabel(lid.info.pathReady)))
+      .then(() => toast.success(tx('labels.info.pathReady')))
       .catch(console.error);
   }
 

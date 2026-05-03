@@ -3,61 +3,60 @@ import { type ExpressionType, TypeID, type TypePath, type Typification } from '@
 import { TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE } from '@/domain/rslang/eval/value';
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
-import { formatLabel } from '@/i18n';
-import { rsmodelLid } from '@/i18n/labels/rsmodel-ui';
+import { globalTx } from '@/i18n';
 
 import { type RO } from '@/utils/meta';
 
 const EVAL_LABEL_LID: Record<EvalStatus, string> = {
-  [EvalStatus.NO_EVAL]: rsmodelLid.eval.noEval,
-  [EvalStatus.NOT_PROCESSED]: rsmodelLid.eval.notProcessed,
-  [EvalStatus.INVALID_DATA]: rsmodelLid.eval.invalidData,
-  [EvalStatus.EVAL_FAIL]: rsmodelLid.eval.evalFail,
-  [EvalStatus.AXIOM_FALSE]: rsmodelLid.eval.axiomFalse,
-  [EvalStatus.EMPTY]: rsmodelLid.eval.empty,
-  [EvalStatus.HAS_DATA]: rsmodelLid.eval.hasData
+  [EvalStatus.NO_EVAL]: 'labels.rsmodel.eval.noEval',
+  [EvalStatus.NOT_PROCESSED]: 'labels.rsmodel.eval.notProcessed',
+  [EvalStatus.INVALID_DATA]: 'labels.rsmodel.eval.invalidData',
+  [EvalStatus.EVAL_FAIL]: 'labels.rsmodel.eval.evalFail',
+  [EvalStatus.AXIOM_FALSE]: 'labels.rsmodel.eval.axiomFalse',
+  [EvalStatus.EMPTY]: 'labels.rsmodel.eval.empty',
+  [EvalStatus.HAS_DATA]: 'labels.rsmodel.eval.hasData'
 };
 
 const EVAL_DESC_LID: Record<EvalStatus, string> = {
-  [EvalStatus.NO_EVAL]: rsmodelLid.evalDesc.noEval,
-  [EvalStatus.NOT_PROCESSED]: rsmodelLid.evalDesc.notProcessed,
-  [EvalStatus.INVALID_DATA]: rsmodelLid.evalDesc.invalidData,
-  [EvalStatus.EVAL_FAIL]: rsmodelLid.evalDesc.evalFail,
-  [EvalStatus.AXIOM_FALSE]: rsmodelLid.evalDesc.axiomFalse,
-  [EvalStatus.EMPTY]: rsmodelLid.evalDesc.empty,
-  [EvalStatus.HAS_DATA]: rsmodelLid.evalDesc.hasData
+  [EvalStatus.NO_EVAL]: 'labels.rsmodel.evalDesc.noEval',
+  [EvalStatus.NOT_PROCESSED]: 'labels.rsmodel.evalDesc.notProcessed',
+  [EvalStatus.INVALID_DATA]: 'labels.rsmodel.evalDesc.invalidData',
+  [EvalStatus.EVAL_FAIL]: 'labels.rsmodel.evalDesc.evalFail',
+  [EvalStatus.AXIOM_FALSE]: 'labels.rsmodel.evalDesc.axiomFalse',
+  [EvalStatus.EMPTY]: 'labels.rsmodel.evalDesc.empty',
+  [EvalStatus.HAS_DATA]: 'labels.rsmodel.evalDesc.hasData'
 };
 
 /** Retrieves label for {@link EvalStatus}. */
 export function labelEvalStatus(status: EvalStatus): string {
   const id = EVAL_LABEL_LID[status];
-  return id ? formatLabel(id) : formatLabel(rsmodelLid.fallback.unknownEvalStatus, { status: String(status) });
+  return id ? globalTx(id) : globalTx('labels.rsmodel.fallback.unknownEvalStatus', { status: String(status) });
 }
 
 /** Retrieves description for {@link EvalStatus}. */
 export function describeEvalStatus(status: EvalStatus): string {
   const id = EVAL_DESC_LID[status];
-  return id ? formatLabel(id) : formatLabel(rsmodelLid.fallback.unknownEvalStatus, { status: String(status) });
+  return id ? globalTx(id) : globalTx('labels.rsmodel.fallback.unknownEvalStatus', { status: String(status) });
 }
 
 /** Generates label for {@link Value}. */
 export function labelValue(value: RO<Value | null>, type: ExpressionType | null): string {
   if (value === null || type === null) {
-    return formatLabel(rsmodelLid.value.na);
+    return globalTx('labels.rsmodel.value.na');
   }
   if (type.typeID === TypeID.logic) {
     if (value === VALUE_TRUE) {
-      return formatLabel(rsmodelLid.value.logicTrue);
+      return globalTx('labels.rsmodel.value.logicTrue');
     } else if (value === VALUE_FALSE) {
-      return formatLabel(rsmodelLid.value.logicFalse);
+      return globalTx('labels.rsmodel.value.logicFalse');
     }
   }
   if (!Array.isArray(value)) {
-    return formatLabel(rsmodelLid.value.singleton);
+    return globalTx('labels.rsmodel.value.singleton');
   } else if (value.length === 0) {
     return '∅';
   } else if (value[0] === TUPLE_ID) {
-    return formatLabel(rsmodelLid.value.tupleMarker);
+    return globalTx('labels.rsmodel.value.tupleMarker');
   } else {
     return value.length.toString();
   }
@@ -69,7 +68,7 @@ export function describeValue(data: Value | null, currentType: Typification): st
   if (currentType.typeID !== TypeID.collection) {
     return stub;
   }
-  return formatLabel(rsmodelLid.valueDesc.cardinalityPrefix, {
+  return globalTx('labels.rsmodel.valueDesc.cardinalityPrefix', {
     n: String((data as Value[]).length),
     stub
   });

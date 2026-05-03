@@ -5,6 +5,7 @@ export const uiFr: Record<string, string> = {
   'ui.library.editor.openInLibrary': 'Ouvrir dans la bibliothèque',
   'ui.library.editor.pathInheritedOss': 'Chemin hérité de l’OSS',
   'ui.library.editor.ownerInheritedOss': 'Propriétaire hérité de l’OSS',
+  'ui.library.pickLocation.explorerTitle': 'Explorateur…',
 
   'ui.ai.prompt.editTemplateTitle': 'Modifier le modèle',
   'ui.ai.prompt.copyResultTitle': 'Copier le résultat dans le presse-papiers',

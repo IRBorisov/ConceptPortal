@@ -5,7 +5,7 @@
 import { toast } from 'react-toastify';
 import { type AxiosError, type AxiosHeaderValue, type AxiosResponse, isAxiosError } from 'axios';
 
-import { formatAppMessage, formatLabel, lid } from '@/i18n';
+import { globalTx } from '@/i18n';
 
 import { PARAMETER } from './constants';
 
@@ -55,7 +55,7 @@ export function isResponseHtml(response?: AxiosResponse) {
 
 /** Prompt user of confirming discarding changes before continue. */
 export function promptUnsaved(): boolean {
-  return window.confirm(formatLabel(lid.prompt.promptUnsaved));
+  return window.confirm(globalTx('labels.prompt.promptUnsaved'));
 }
 
 /** Toggle tristate flag: null - true - false. */
@@ -138,13 +138,13 @@ export function sharePage() {
   const url = currentRef.includes('?') ? currentRef + '&share' : currentRef + '?share';
   navigator.clipboard
     .writeText(url)
-    .then(() => toast.success(formatLabel(lid.info.linkReady)))
+    .then(() => toast.success(globalTx('labels.info.linkReady')))
     .catch(console.error);
 }
 
 /** Show error message about not implemented function. */
 export function notImplemented() {
-  toast.error(formatAppMessage('ui.common.notImplemented'));
+  toast.error(globalTx('ui.common.notImplemented'));
   console.error('Not implemented');
 }
 

@@ -4,7 +4,7 @@ import { useEffect, useEffectEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { RSEngine } from '@/domain/library';
-import { formatLabel, lid } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
@@ -27,6 +27,7 @@ interface ModelEditStateProps {
 }
 
 export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<ModelEditStateProps>) => {
+  const tx = useTx();
   const router = useConceptNavigation();
   const { model } = useRSModel({ itemID });
   const { user } = useAuth();
@@ -43,8 +44,8 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
           clearValues
         },
         {
-          onInvalidSetValue: () => toast.error(formatLabel(lid.error.invalidSetValue)),
-          onCalculationSuccess: timeSpent => toast.success(formatLabel(lid.info.calculationSuccess, { timeSpent })),
+          onInvalidSetValue: () => toast.error(tx('labels.error.invalidSetValue')),
+          onCalculationSuccess: timeSpent => toast.success(tx('labels.info.calculationSuccess', { timeSpent })),
           onEvaluationError: message => toast.error(message)
         }
       )
@@ -54,12 +55,12 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
     function syncServices() {
       engine.updateServices({ setCstValue, clearValues });
       engine.updateNotifications({
-        onInvalidSetValue: () => toast.error(formatLabel(lid.error.invalidSetValue)),
-        onCalculationSuccess: timeSpent => toast.success(formatLabel(lid.info.calculationSuccess, { timeSpent })),
+        onInvalidSetValue: () => toast.error(tx('labels.error.invalidSetValue')),
+        onCalculationSuccess: timeSpent => toast.success(tx('labels.info.calculationSuccess', { timeSpent })),
         onEvaluationError: message => toast.error(message)
       });
     },
-    [engine, setCstValue, clearValues]
+    [engine, setCstValue, clearValues, tx]
   );
 
   useEffect(
@@ -90,7 +91,7 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
   );
 
   function deleteModel() {
-    if (!window.confirm(formatLabel(lid.prompt.deleteLibraryItem))) {
+    if (!window.confirm(tx('labels.prompt.deleteLibraryItem'))) {
       return;
     }
     void deleteItem({

@@ -6,7 +6,7 @@ import { Grammeme, type WordForm } from '@/domain/cctext';
 import { Case } from '@/domain/cctext/language';
 import { parseGrammemes } from '@/domain/cctext/language-api';
 import { type Constituenta, type RSForm } from '@/domain/library';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -82,7 +82,7 @@ export function DlgEditWordForms() {
     }
 
     if (Object.values(formValues).some(value => value.trim() !== '')) {
-      if (!window.confirm(formatLabel(lid.prompt.generateWordforms))) {
+      if (!window.confirm(tx('labels.prompt.generateWordforms'))) {
         return;
       }
     }

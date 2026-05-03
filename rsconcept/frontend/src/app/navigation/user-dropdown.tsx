@@ -116,9 +116,15 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
           onClick={toggleAdminMode}
         />
       ) : null}
-      <div className='px-3 py-1 text-muted-foreground border-t text-nowrap'>
-        {tx('nav.language.label')}
-      </div>
+      <div className='px-3 py-1 text-muted-foreground border-t text-nowrap'>{tx('nav.language.label')}</div>
+      <DropdownButton
+        text={localeLabel('ru')}
+        title={localeLabel('ru')}
+        icon={<IconLanguage size='1rem' />}
+        data-testid='locale-option-ru'
+        className={locale === 'ru' ? 'bg-accent' : undefined}
+        onClick={() => pickLocale('ru')}
+      />
       <DropdownButton
         text={localeLabel('en')}
         title={localeLabel('en')}
@@ -134,14 +140,6 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
         data-testid='locale-option-fr'
         className={locale === 'fr' ? 'bg-accent' : undefined}
         onClick={() => pickLocale('fr')}
-      />
-      <DropdownButton
-        text={localeLabel('ru')}
-        title={localeLabel('ru')}
-        icon={<IconLanguage size='1rem' />}
-        data-testid='locale-option-ru'
-        className={locale === 'ru' ? 'bg-accent' : undefined}
-        onClick={() => pickLocale('ru')}
       />
 
       {user.is_staff ? (

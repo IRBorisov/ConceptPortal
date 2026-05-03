@@ -5,6 +5,7 @@ export const uiRu: Record<string, string> = {
   'ui.library.editor.openInLibrary': 'Открыть в библиотеке',
   'ui.library.editor.pathInheritedOss': 'Путь наследуется от ОСС',
   'ui.library.editor.ownerInheritedOss': 'Владелец наследуется от ОСС',
+  'ui.library.pickLocation.explorerTitle': 'Проводник…',
 
   'ui.ai.prompt.editTemplateTitle': 'Редактировать шаблон',
   'ui.ai.prompt.copyResultTitle': 'Скопировать результат в буфер обмена',

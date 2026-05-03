@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { LibraryItemType, type RSModel } from '@/domain/library';
-import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useModelEdit } from '@/features/rsmodel/pages/rsmodel-page/model-edit-context';
@@ -118,7 +118,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
           <TextArea
             id='sandbox_model_description'
             label={tx('semantic.term.description')}
-            placeholder={formatLabel(lid.placeholder.itemDescription)}
+            placeholder={tx('labels.placeholder.itemDescription')}
             rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}

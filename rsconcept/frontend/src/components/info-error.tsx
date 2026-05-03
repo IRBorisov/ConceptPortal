@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import DOMPurify from 'dompurify';
 import { ZodError } from 'zod';
 
-import { formatLabel, formatZodIssueMessage, lid } from '@/i18n';
+import { formatZodIssueMessage, useTx } from '@/i18n';
 
 import { type AxiosError, isAxiosError } from '@/backend/api-transport';
 import { isResponseHtml } from '@/utils/utils';
@@ -16,15 +16,16 @@ interface InfoErrorProps {
 }
 
 export function DescribeError({ error }: { error: ErrorData }) {
+  const tx = useTx();
   if (!error) {
-    return <p>{formatLabel(lid.errorDetail.noErrors)}</p>;
+    return <p>{tx('labels.errorDetail.noErrors')}</p>;
   } else if (typeof error === 'string') {
     return <p>{error}</p>;
   } else if (error instanceof ZodError) {
     const lines = error.issues.map(issue => formatZodIssueMessage(issue));
     return (
       <div>
-        <p>{formatLabel(lid.errorDetail.validationTitle)}</p>
+        <p>{tx('labels.errorDetail.validationTitle')}</p>
         <ul className='list-disc pl-5 mt-2 space-y-1'>
           {lines.map(function lineItem(text, i) {
             return <li key={i}>{text}</li>;
@@ -36,22 +37,22 @@ export function DescribeError({ error }: { error: ErrorData }) {
     return (
       <div>
         <p>
-          <b>{formatLabel(lid.errorDetail.genericTitle)}:</b> {error.name}
+          <b>{tx('labels.errorDetail.genericTitle')}:</b> {error.name}
         </p>
         <p>
-          <b>{formatLabel(lid.errorDetail.genericDescription)}:</b> {error.message}
+          <b>{tx('labels.errorDetail.genericDescription')}:</b> {error.message}
         </p>
         {error.stack && <pre className='whitespace-pre-wrap p-2 overflow-x-auto wrap-break-word'>{error.stack}</pre>}
       </div>
     );
   }
   if (!error?.response) {
-    return <p>{formatLabel(lid.errorDetail.noServerResponse)}</p>;
+    return <p>{tx('labels.errorDetail.noServerResponse')}</p>;
   }
   if (error.response.status === 404) {
     return (
       <div>
-        <p>{formatLabel(lid.errorDetail.api404)}</p>
+        <p>{tx('labels.errorDetail.api404')}</p>
         <PrettyJson data={error} />
       </div>
     );
@@ -59,7 +60,7 @@ export function DescribeError({ error }: { error: ErrorData }) {
   if (error.response.status === 403 && error.message.includes('CSRF')) {
     return (
       <div>
-        <p>{formatLabel(lid.errorDetail.csrfLost)}</p>
+        <p>{tx('labels.errorDetail.csrfLost')}</p>
         <PrettyJson data={error} />
       </div>
     );
@@ -77,11 +78,11 @@ export function DescribeError({ error }: { error: ErrorData }) {
   }
   return (
     <div>
-      <p className='underline'>{formatLabel(lid.errorDetail.responseTitle)}</p>
+      <p className='underline'>{tx('labels.errorDetail.responseTitle')}</p>
       <p>{error.message}</p>
       {error.response.data && (
         <>
-          <p className='mt-2 underline'>{formatLabel(lid.errorDetail.responseDescription)}</p>
+          <p className='mt-2 underline'>{tx('labels.errorDetail.responseDescription')}</p>
           {isHtml && sanitizedHtml ? (
             <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
           ) : typeof error.response.data === 'string' ? (
@@ -96,6 +97,7 @@ export function DescribeError({ error }: { error: ErrorData }) {
 }
 
 export function InfoError({ error }: InfoErrorProps) {
+  const tx = useTx();
   return (
     <div
       className={clsx(
@@ -106,9 +108,9 @@ export function InfoError({ error }: InfoErrorProps) {
       )}
     >
       <div className='font-normal text-foreground mb-6'>
-        <p>{formatLabel(lid.errorDetail.contactIntro)}</p>
+        <p>{tx('labels.errorDetail.contactIntro')}</p>
         <br />
-        <p>{formatLabel(lid.errorDetail.reloadHint)}</p>
+        <p>{tx('labels.errorDetail.reloadHint')}</p>
       </div>
 
       <DescribeError error={error} />

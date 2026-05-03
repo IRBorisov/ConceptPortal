@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { lid } from '@/i18n';
+import {} from '@/i18n';
 
 import { limits, patterns } from '@/utils/constants';
 
@@ -19,9 +19,9 @@ export type UpdateProfileDTO = z.infer<typeof schemaUpdateProfile>;
 // ========= SCHEMAS ========
 export const schemaUser = z.strictObject({
   id: z.number(),
-  username: z.string().nonempty(lid.error.requiredField),
+  username: z.string().nonempty('labels.error.requiredField'),
   is_staff: z.boolean(),
-  email: z.email(lid.error.emailField),
+  email: z.email('labels.error.emailField'),
   first_name: z.string(),
   last_name: z.string()
 });
@@ -33,20 +33,20 @@ export const schemaUserInfo = schemaUser.omit({ username: true, email: true, is_
 const schemaUserInput = z.strictObject({
   username: z
     .string()
-    .nonempty(lid.error.requiredField)
-    .regex(RegExp(patterns.login), lid.error.loginFormat)
-    .max(limits.len_alias, lid.error.aliasLength),
-  email: z.email(lid.error.emailField).max(limits.len_email, lid.error.emailLength),
-  first_name: z.string().max(limits.len_alias, lid.error.aliasLength),
-  last_name: z.string().max(limits.len_alias, lid.error.aliasLength)
+    .nonempty('labels.error.requiredField')
+    .regex(RegExp(patterns.login), 'labels.error.loginFormat')
+    .max(limits.len_alias, 'labels.error.aliasLength'),
+  email: z.email('labels.error.emailField').max(limits.len_email, 'labels.error.emailLength'),
+  first_name: z.string().max(limits.len_alias, 'labels.error.aliasLength'),
+  last_name: z.string().max(limits.len_alias, 'labels.error.aliasLength')
 });
 
 export const schemaUserSignup = schemaUserInput
   .extend({
-    password: z.string().max(limits.len_alias, lid.error.aliasLength).nonempty(lid.error.requiredField),
-    password2: z.string().max(limits.len_alias, lid.error.aliasLength).nonempty(lid.error.requiredField)
+    password: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField'),
+    password2: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField')
   })
-  .refine(schema => schema.password === schema.password2, { path: ['password2'], message: lid.error.passwordsMismatch });
+  .refine(schema => schema.password === schema.password2, { path: ['password2'], message: 'labels.error.passwordsMismatch' });
 
 export const schemaUpdateProfile = schemaUserInput.omit({
   username: true

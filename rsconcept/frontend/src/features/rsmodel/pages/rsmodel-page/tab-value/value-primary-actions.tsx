@@ -9,7 +9,7 @@ import { generateRandomValue, isInferrable, isInterpretable } from '@/domain/lib
 import { type Value } from '@/domain/rslang';
 import { isSetValue, normalizeValue } from '@/domain/rslang/eval/value-api';
 import { isTypification, TypeID, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { useCstStatus } from '@/features/rsmodel/hooks/use-cst-status';
@@ -105,7 +105,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
         getHeaderText: getHeaderText
       });
     } else if (!cstData) {
-      toast.error(formatLabel(lid.error.valueNull));
+      toast.error(tx('labels.error.valueNull'));
     } else {
       showViewValue({
         value: cstData,
@@ -139,7 +139,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
     } else {
       const randomData = generateRandomValue(type, engine.basics, schema.cstByAlias, RANDOM_SET_APPEND_COUNT);
       if (!randomData) {
-        toast.error(formatLabel(lid.error.generationMissingBasic));
+        toast.error(tx('labels.error.generationMissingBasic'));
         return;
       }
       if (type.typeID === TypeID.collection && Array.isArray(randomData)) {
@@ -160,7 +160,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
   function applyImportedJsonText(text: string) {
     const trimmed = text.trim();
     if (!trimmed) {
-      toast.error(formatLabel(lid.error.valueNull));
+      toast.error(tx('labels.error.valueNull'));
       return;
     }
 
@@ -169,12 +169,12 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       return;
     }
     onChangeValue(processed);
-    toast.success(formatLabel(lid.info.valueLoadedJson));
+    toast.success(tx('labels.info.valueLoadedJson'));
   }
 
   function handleClipboardExport() {
     hideExport();
-    copyJsonToClipboard(getExportJsonText(getExportPayload()), () => toast.success(formatLabel(lid.info.valueReady)));
+    copyJsonToClipboard(getExportJsonText(getExportPayload()), () => toast.success(tx('labels.info.valueReady')));
   }
 
   function handleJSONExport() {
@@ -194,7 +194,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
         applyImportedJsonText(text);
       })
       .catch(() => {
-        toast.error(formatLabel(lid.error.clipboardRead));
+        toast.error(tx('labels.error.clipboardRead'));
       });
   }
 
@@ -215,7 +215,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       return;
     }
     if (file.size > limits.max_json_import_file_size_bytes) {
-      toast.error(formatLabel(lid.error.fileTooLarge, { maxMb: limits.max_json_import_file_size_mb }));
+      toast.error(tx('labels.error.fileTooLarge', { maxMb: limits.max_json_import_file_size_mb }));
       return;
     }
     const reader = new FileReader();
@@ -223,7 +223,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       const result = reader.result as string;
       applyImportedJsonText(result);
     };
-    reader.onerror = () => toast.error(formatLabel(lid.error.fileRead));
+    reader.onerror = () => toast.error(tx('labels.error.fileRead'));
     reader.readAsText(file);
   }
 

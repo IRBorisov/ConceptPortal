@@ -3,7 +3,7 @@
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { convertToCSV, convertToJSON } from '@/utils/utils';
 
@@ -54,7 +54,7 @@ export function ExportDropdown<T extends object = object>({
 
   function handleExport(format: ExportType) {
     if (!data?.length) {
-      toast.error(formatLabel(lid.info.noDataToExport));
+      toast.error(tx('labels.info.noDataToExport'));
       return;
     }
     try {
@@ -71,7 +71,7 @@ export function ExportDropdown<T extends object = object>({
         void pdfConverter(data)
           .then(blob => fileDownload(blob, `${filename}.pdf`, 'application/pdf;charset=utf-8;'))
           .catch(error => {
-            toast.error(formatLabel(lid.error.pdfError));
+            toast.error(tx('labels.error.pdfError'));
             throw error;
           });
       }

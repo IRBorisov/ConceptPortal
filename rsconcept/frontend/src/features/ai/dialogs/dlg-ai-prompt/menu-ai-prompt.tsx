@@ -2,7 +2,7 @@
 
 import { toast } from 'react-toastify';
 
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 
@@ -27,7 +27,7 @@ export function MenuAIPrompt({ promptID, generatedPrompt }: MenuAIPromptProps) {
 
   function handleCopyPrompt() {
     void navigator.clipboard.writeText(generatedPrompt);
-    toast.success(formatLabel(lid.info.promptReady));
+    toast.success(tx('labels.info.promptReady'));
   }
 
   return (

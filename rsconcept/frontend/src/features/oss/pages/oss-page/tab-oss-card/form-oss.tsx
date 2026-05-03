@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { LibraryItemType } from '@/domain/library';
 import { type OperationSchema } from '@/domain/library';
-import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { useRegisterNavigationSave } from '@/app';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
@@ -140,7 +140,7 @@ export function FormOSS({ className }: FormOSSProps) {
           <TextArea
             id='schema_comment'
             label={tx('semantic.term.description')}
-            placeholder={formatLabel(lid.placeholder.itemDescription)}
+            placeholder={tx('labels.placeholder.itemDescription')}
             rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}

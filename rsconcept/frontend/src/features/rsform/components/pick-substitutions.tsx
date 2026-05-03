@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { type Constituenta, type LibraryItem, type RSForm, type Substitution } from '@/domain/library';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { SelectLibraryItem } from '@/features/library/components/select-library-item';
 
@@ -155,12 +155,12 @@ export function PickSubstitutions({
       toDelete.includes(newSubstitution.substitution) ||
       replacements.includes(newSubstitution.original)
     ) {
-      toast.error(formatLabel(lid.error.reuseOriginal));
+      toast.error(tx('labels.error.reuseOriginal'));
       return;
     }
     if (leftArgument === rightArgument) {
       if ((deleteRight && rightCst?.is_inherited) || (!deleteRight && leftCst?.is_inherited)) {
-        toast.error(formatLabel(lid.error.substituteInherited));
+        toast.error(tx('labels.error.substituteInherited'));
         return;
       }
     }

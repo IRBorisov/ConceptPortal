@@ -2,7 +2,7 @@
 
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { cstCanProduceStructure } from '@/domain/library/rsform-api';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
@@ -82,7 +82,7 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
       {showRenameButton ? (
         <TextButton
           text={tx('ui.action.renameCst')}
-          title={isModified ? formatLabel(lid.tooltip.unsaved) : tx('ui.hint.renameCst')}
+          title={isModified ? tx('labels.tooltip.unsaved') : tx('ui.hint.renameCst')}
           onClick={promptRename}
           disabled={isModified}
           className='text-sm'

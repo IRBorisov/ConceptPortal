@@ -4,7 +4,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type Constituenta, type CstType, type RSForm } from '@/domain/library';
 import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
-import { formatLabel, lid, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 
@@ -123,7 +123,7 @@ export function DlgEditCst() {
       header={tx('ui.dlg.editCst.header')}
       canSubmit={canSubmit}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
-      validationHint={canSubmit ? '' : formatLabel(lid.hint.aliasInvalid)}
+      validationHint={canSubmit ? '' : tx('labels.hint.aliasInvalid')}
       submitText={tx('semantic.action.save')}
       className='cc-column w-140 max-h-120 py-2 px-6'
     >

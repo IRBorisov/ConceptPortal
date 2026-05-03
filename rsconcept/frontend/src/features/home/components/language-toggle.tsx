@@ -2,12 +2,12 @@
 
 import clsx from 'clsx';
 
-import { localeLabel, SUPPORTED_LOCALES, useTx } from '@/i18n';
+import { type AppLocale, localeLabel, SUPPORTED_LOCALES, useTx } from '@/i18n';
 
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconLanguage } from '@/components/icons';
 import { cn } from '@/components/utils';
-import { type AppLocale, usePreferencesStore } from '@/stores/preferences';
+import { usePreferencesStore } from '@/stores/preferences';
 
 interface LanguageToggleProps {
   className?: string;
@@ -43,9 +43,7 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
         <span className='text-[0.65rem] font-semibold uppercase leading-none'>{locale}</span>
       </button>
       <Dropdown isOpen={isOpen} stretchLeft margin='mt-1' className='min-w-40'>
-        <div className='px-3 py-1 text-xs text-muted-foreground border-b'>
-          {tx('home.language.groupAria')}
-        </div>
+        <div className='px-3 py-1 text-xs text-muted-foreground border-b'>{tx('home.language.groupAria')}</div>
         {SUPPORTED_LOCALES.map(option => (
           <DropdownButton
             key={option}

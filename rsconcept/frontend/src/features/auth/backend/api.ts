@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { formatLabel, lid } from '@/i18n';
+import { globalTx } from '@/i18n';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
@@ -44,7 +44,7 @@ export const authApi = {
       endpoint: '/users/api/change-password',
       request: {
         data: data,
-        successMessage: formatLabel(lid.info.changesSaved)
+        successMessage: globalTx('labels.info.changesSaved')
       }
     }),
   requestPasswordReset: (data: IRequestPasswordDTO) =>

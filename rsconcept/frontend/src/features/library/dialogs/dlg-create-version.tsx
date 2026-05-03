@@ -1,10 +1,9 @@
 'use client';
 
-import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { type VersionInfo } from '@/domain/library';
-import { formatLabel, formatZodErrorMessage, lid, useTx } from '@/i18n';
+import { formatZodErrorMessage, useTx } from '@/i18n';
 
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
@@ -44,15 +43,15 @@ export function DlgCreateVersion() {
   });
 
   const version = useStore(form.store, state => state.values.version);
-  const { canSubmit, hint } = useMemo(() => {
+  const { canSubmit, hint } = (() => {
     if (!version) {
-      return { canSubmit: false, hint: formatLabel(lid.hint.versionEmpty) };
+      return { canSubmit: false, hint: tx('labels.hint.versionEmpty') };
     }
     if (versions.find(ver => ver.version === version)) {
-      return { canSubmit: false, hint: formatLabel(lid.hint.versionTaken) };
+      return { canSubmit: false, hint: tx('labels.hint.versionTaken') };
     }
     return { canSubmit: true, hint: '' };
-  }, [version, versions]);
+  })();
 
   return (
     <ModalForm

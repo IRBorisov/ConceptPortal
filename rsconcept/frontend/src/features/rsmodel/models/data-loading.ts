@@ -4,7 +4,7 @@ import { type BasicBinding } from '@/domain/library';
 import { toBasicBinding, validateBasicBindingData, validateValueData } from '@/domain/library/rsmodel-api';
 import { type Value } from '@/domain/rslang';
 import { normalizeValue } from '@/domain/rslang/eval/value-api';
-import { formatLabel, lid } from '@/i18n';
+import { globalTx } from '@/i18n';
 
 /** Process binding data from string. */
 export function processBindingData(data: string): BasicBinding | null {
@@ -13,7 +13,7 @@ export function processBindingData(data: string): BasicBinding | null {
     if (validateBasicBindingData(value)) {
       return toBasicBinding(value);
     } else {
-      toast.error(formatLabel(lid.error.bindingInvalid));
+      toast.error(globalTx('labels.error.bindingInvalid'));
     }
   } catch (error) {
     toast.error((error as Error).message);
@@ -30,7 +30,7 @@ export function processValueData(data: string): Value | null {
       normalizeValue(value);
       return value;
     } else {
-      toast.error(formatLabel(lid.error.valueInvalid));
+      toast.error(globalTx('labels.error.valueInvalid'));
     }
   } catch (error) {
     toast.error((error as Error).message);
