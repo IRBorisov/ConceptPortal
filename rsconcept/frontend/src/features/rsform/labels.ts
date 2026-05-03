@@ -85,16 +85,16 @@ const RS_EXPRESSION_LID: Record<CstType, string> = {
   [CstType.PREDICATE]: 'labels.rsform.rsExpression.predicate'
 };
 
-const RS_PLACEHOLDER_LID: Record<CstType, string> = {
-  [CstType.NOMINAL]: 'labels.rsform.rsPlaceholder.nominal',
-  [CstType.BASE]: 'labels.rsform.rsPlaceholder.basic',
-  [CstType.CONSTANT]: 'labels.rsform.rsPlaceholder.constant',
-  [CstType.STRUCTURED]: 'labels.rsform.rsPlaceholder.structure',
-  [CstType.TERM]: 'labels.rsform.rsPlaceholder.term',
-  [CstType.THEOREM]: 'labels.rsform.rsPlaceholder.theorem',
-  [CstType.AXIOM]: 'labels.rsform.rsPlaceholder.axiom',
-  [CstType.FUNCTION]: 'labels.rsform.rsPlaceholder.function',
-  [CstType.PREDICATE]: 'labels.rsform.rsPlaceholder.predicate'
+const RS_PLACEHOLDER_EXAMPLE: Record<CstType, string> = {
+  [CstType.NOMINAL]: '',
+  [CstType.BASE]: '',
+  [CstType.CONSTANT]: '',
+  [CstType.STRUCTURED]: 'ℬ(X1×D2)',
+  [CstType.TERM]: 'D{ξ∈S1 | Pr1(ξ)∩Pr2(ξ)=∅}',
+  [CstType.THEOREM]: 'D11=∅',
+  [CstType.AXIOM]: 'D11=∅',
+  [CstType.FUNCTION]: '[α∈X1, β∈ℬ(X1×X2)] Pr2(Fi1[{α}](β))',
+  [CstType.PREDICATE]: '[α∈X1, β∈ℬ(X1)] α∈β & card(β)>1'
 };
 
 const cstTypeShortcutKeyRecord: Record<CstType, string> = {
@@ -247,8 +247,8 @@ export function labelRSExpression(type: CstType): string {
 
 /** Generates placeholder for RS definition based on {@link CstType}. */
 export function getRSDefinitionPlaceholder(type: CstType): string {
-  const id = RS_PLACEHOLDER_LID[type];
-  return id ? globalTx(id) : globalTx('labels.rsform.fallback.formalExpression');
+  const example = RS_PLACEHOLDER_EXAMPLE[type];
+  return !example ? '' : `${globalTx('semantic.example')}: ${example}`;
 }
 
 /** Generates description for {@link TokenID}. */

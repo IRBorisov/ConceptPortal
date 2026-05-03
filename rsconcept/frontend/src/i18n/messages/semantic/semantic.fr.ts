@@ -9,5 +9,6 @@ export const semanticFr: Record<string, string> = {
   'semantic.no': 'Non',
   'semantic.total': 'Total',
   'semantic.on': 'On',
-  'semantic.off': 'Off'
+  'semantic.off': 'Off',
+  'semantic.example': 'Exemple'
 };

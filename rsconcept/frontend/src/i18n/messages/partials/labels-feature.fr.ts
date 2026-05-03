@@ -83,7 +83,6 @@ export const labelsFeatureFr: Record<string, string> = {
   'labels.library.accessDesc.public': 'Accès ouvert',
   'labels.library.itemType.rsform': 'SC',
   'labels.library.itemType.oss': 'OSS',
-  'labels.library.itemType.rsmodel': 'Modèle',
   'labels.library.itemTypeDesc.rsform': 'Schéma conceptuel',
   'labels.library.itemTypeDesc.oss': 'Schéma opérationnel de synthèse',
   'labels.library.itemTypeDesc.rsmodel': 'Modèle conceptuel',
@@ -144,16 +143,6 @@ export const labelsFeatureFr: Record<string, string> = {
   'labels.rsform.rsExpression.axiom': 'Définition formelle',
   'labels.rsform.rsExpression.function': 'Définition de fonction',
   'labels.rsform.rsExpression.predicate': 'Définition de fonction',
-
-  'labels.rsform.rsPlaceholder.nominal': 'p. ex. X1 D1 N1',
-  'labels.rsform.rsPlaceholder.basic': 'Non applicable',
-  'labels.rsform.rsPlaceholder.constant': 'Non applicable',
-  'labels.rsform.rsPlaceholder.structure': 'Ex. : ℬ(X1×D2)',
-  'labels.rsform.rsPlaceholder.term': 'Ex. : D{ξ∈S1 | Pr1(ξ)∩Pr2(ξ)=∅}',
-  'labels.rsform.rsPlaceholder.theorem': 'Ex. : D11=∅',
-  'labels.rsform.rsPlaceholder.axiom': 'Ex. : D11=∅',
-  'labels.rsform.rsPlaceholder.function': 'Ex. : [α∈X1, β∈ℬ(X1×X2)] Pr2(Fi1[{α}](β))',
-  'labels.rsform.rsPlaceholder.predicate': 'Ex. : [α∈X1, β∈ℬ(X1)] α∈β & card(β)>1',
 
   'labels.rsform.token.boolean': 'Ensemble des parties',
   'labels.rsform.token.decart': 'Produit cartésien',
@@ -216,7 +205,8 @@ export const labelsFeatureFr: Record<string, string> = {
   'labels.oss.item.blockTitle': 'Bloc : {title}',
   'labels.oss.substitution.invalidIDs': 'Erreur d’identifiants de schémas',
   'labels.oss.substitution.incorrectCst': 'Erreur {from} → {to} : expression de constituante non valide',
-  'labels.oss.substitution.invalidBasic': 'Erreur {from} → {to} : remplacer une notion générique par un ensemble de base',
+  'labels.oss.substitution.invalidBasic':
+    'Erreur {from} → {to} : remplacer une notion générique par un ensemble de base',
   'labels.oss.substitution.invalidConstant':
     'Erreur {from} → {to} : un ensemble constant ne peut remplacer qu’un autre ensemble constant',
   'labels.oss.substitution.invalidNominal': 'Erreur {from} → {to} : un nominal ne peut remplacer qu’un autre nominal',
@@ -326,10 +316,8 @@ export const labelsFeatureFr: Record<string, string> = {
     'Typification de l’argument différente de la déclaration : {expected} != {actual}',
   'labels.rslang.error.globalStructure': 'Domaine de définition de la structure générique non valide',
   'labels.rslang.error.radicalUsage': 'Radicaux interdits hors déclarations : {name}',
-  'labels.rslang.error.invalidFilterArgumentType':
-    'Typification de l’argument du filtre non valide : {a}({b})',
-  'labels.rslang.error.invalidFilterArity':
-    'Le nombre de paramètres du filtre ne correspond pas au nombre d’indices',
+  'labels.rslang.error.invalidFilterArgumentType': 'Typification de l’argument du filtre non valide : {a}({b})',
+  'labels.rslang.error.invalidFilterArity': 'Le nombre de paramètres du filtre ne correspond pas au nombre d’indices',
   'labels.rslang.error.arithmeticNotSupported': 'Type sans arithmétique : {type}',
   'labels.rslang.error.typesNotCompatible': 'Types incompatibles pour l’opération choisie : {a} et {b}',
   'labels.rslang.error.orderingNotSupported': 'Type sans prédicats d’ordre : {type}',

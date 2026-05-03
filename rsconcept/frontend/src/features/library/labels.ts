@@ -1,10 +1,9 @@
 import { AccessPolicy, type CurrentVersion, LibraryItemType, LocationHead, type VersionInfo } from '@/domain/library';
 import { type FolderNode } from '@/domain/library/folder-tree';
 import { validateLocation } from '@/domain/library/library-api';
+import { globalTx } from '@/i18n';
 
 import { type RO } from '@/utils/meta';
-
-import { globalTx } from '../../i18n/format-app-message';
 
 const LOCATION_LID: Record<LocationHead, string> = {
   [LocationHead.USER]: 'labels.library.location.user',
@@ -42,7 +41,7 @@ const ACCESS_DESC_LID: Record<AccessPolicy, string> = {
 const ITEM_TYPE_LID: Record<LibraryItemType, string> = {
   [LibraryItemType.RSFORM]: 'labels.library.itemType.rsform',
   [LibraryItemType.OSS]: 'labels.library.itemType.oss',
-  [LibraryItemType.RSMODEL]: 'labels.library.itemType.rsmodel'
+  [LibraryItemType.RSMODEL]: 'semantic.term.model'
 };
 
 const ITEM_TYPE_DESC_LID: Record<LibraryItemType, string> = {

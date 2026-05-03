@@ -9,5 +9,6 @@ export const semanticRu: Record<string, string> = {
   'semantic.no': 'Нет',
   'semantic.total': 'Всего',
   'semantic.on': 'Вкл',
-  'semantic.off': 'Выкл'
+  'semantic.off': 'Выкл',
+  'semantic.example': 'Пример'
 };

@@ -89,7 +89,6 @@ export const labelsFeatureEn: Record<string, string> = {
 
   'labels.library.itemType.rsform': 'RS',
   'labels.library.itemType.oss': 'OSS',
-  'labels.library.itemType.rsmodel': 'Model',
 
   'labels.library.itemTypeDesc.rsform': 'Conceptual schema',
   'labels.library.itemTypeDesc.oss': 'Operational synthesis schema',
@@ -152,16 +151,6 @@ export const labelsFeatureEn: Record<string, string> = {
   'labels.rsform.rsExpression.axiom': 'Formal definition',
   'labels.rsform.rsExpression.function': 'Function definition',
   'labels.rsform.rsExpression.predicate': 'Function definition',
-
-  'labels.rsform.rsPlaceholder.nominal': 'e.g. X1 D1 N1',
-  'labels.rsform.rsPlaceholder.basic': 'Not applicable',
-  'labels.rsform.rsPlaceholder.constant': 'Not applicable',
-  'labels.rsform.rsPlaceholder.structure': 'e.g. ℬ(X1×D2)',
-  'labels.rsform.rsPlaceholder.term': 'e.g. D{ξ∈S1 | Pr1(ξ)∩Pr2(ξ)=∅}',
-  'labels.rsform.rsPlaceholder.theorem': 'e.g. D11=∅',
-  'labels.rsform.rsPlaceholder.axiom': 'e.g. D11=∅',
-  'labels.rsform.rsPlaceholder.function': 'e.g. [α∈X1, β∈ℬ(X1×X2)] Pr2(Fi1[{α}](β))',
-  'labels.rsform.rsPlaceholder.predicate': 'e.g. [α∈X1, β∈ℬ(X1)] α∈β & card(β)>1',
 
   'labels.rsform.token.boolean': 'Power set',
   'labels.rsform.token.decart': 'Cartesian product',
@@ -230,7 +219,8 @@ export const labelsFeatureEn: Record<string, string> = {
   'labels.oss.substitution.invalidIDs': 'Schema identifier error',
   'labels.oss.substitution.incorrectCst': 'Error {from} → {to}: invalid constituenta expression',
   'labels.oss.substitution.invalidBasic': 'Error {from} → {to}: replacing a generic notion with a base set',
-  'labels.oss.substitution.invalidConstant': 'Error {from} → {to}: a constant set may only substitute another constant set',
+  'labels.oss.substitution.invalidConstant':
+    'Error {from} → {to}: a constant set may only substitute another constant set',
   'labels.oss.substitution.invalidNominal': 'Error {from} → {to}: a nominal may only substitute another nominal',
   'labels.oss.substitution.invalidClasses': 'Error {from} → {to}: constituenta classes do not match',
   'labels.oss.substitution.typificationCycle': 'Error: substitution cycle in typifications {detail}',
@@ -338,14 +328,12 @@ export const labelsFeatureEn: Record<string, string> = {
   'labels.rslang.error.invalidProjectionTuple': 'Projection only for a tuple: {from} → {to}',
   'labels.rslang.error.invalidProjectionSet': 'τ(Pri(a)) = 𝔅𝒞i𝔇τ(a). Invalid argument: {from} → {to}',
   'labels.rslang.error.invalidEnumeration': 'Element typifications differ: {a} ≠ {b}',
-  'labels.rslang.error.invalidCortegeDeclare':
-    'Tuple variable count does not match Cartesian product dimension',
+  'labels.rslang.error.invalidCortegeDeclare': 'Tuple variable count does not match Cartesian product dimension',
   'labels.rslang.error.localOutOfScope': 'Variable _{name}_ is outside its definition scope',
   'labels.rslang.error.invalidElementPredicate': 'Typification mismatch: {a}{b}{c}',
   'labels.rslang.error.invalidEmptySetUsage': 'Meaningless use of the empty set',
   'labels.rslang.error.invalidArgsArity': 'Wrong number of arguments: {a} ≠ {b}',
-  'labels.rslang.error.invalidArgumentType':
-    'Argument typification does not match declaration: {expected} != {actual}',
+  'labels.rslang.error.invalidArgumentType': 'Argument typification does not match declaration: {expected} != {actual}',
   'labels.rslang.error.globalStructure': 'Generic structure domain of definition is invalid',
   'labels.rslang.error.radicalUsage': 'Radicals are forbidden outside declarations: {name}',
   'labels.rslang.error.invalidFilterArgumentType': 'Filter argument typification invalid: {a}({b})',

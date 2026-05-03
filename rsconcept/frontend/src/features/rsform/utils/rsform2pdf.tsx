@@ -4,8 +4,7 @@ import { Link, pdf, Text, View } from '@react-pdf/renderer';
 
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { labelType } from '@/domain/rslang/labels';
-import { type AppLocale, DEFAULT_LOCALE } from '@/i18n';
-import { getMessagesForLocale } from '@/i18n/messages';
+import { type AppLocale, DEFAULT_LOCALE, getMessagesForLocale } from '@/i18n';
 
 import { urls } from '@/app';
 

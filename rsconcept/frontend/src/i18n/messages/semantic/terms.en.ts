@@ -28,5 +28,6 @@ export const termsEn: Record<string, string> = {
 
   'semantic.term.operation': 'Operation',
   'semantic.term.block': 'Block',
-  'semantic.term.schema': 'Schema'
+  'semantic.term.schema': 'Schema',
+  'semantic.term.model': 'Model'
 };

@@ -847,7 +847,7 @@ export class TypeAuditor {
       ]);
     }
 
-    if (hasGenerics(iterationValue)) {
+    if (hasGenerics(initType)) {
       for (let retries = TypeAuditor.TYPE_DEDUCTION_DEPTH; retries > 0; retries--) {
         this.locals.endScope(node);
         this.locals.clearUnused();
