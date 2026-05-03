@@ -454,7 +454,7 @@ export class RSEngine {
     const changedIDs: number[] = [];
     for (const cst of nextSchema.items) {
       const prev = previousSchema.cstByID.get(cst.id);
-      if (prev && prev.definition_formal !== cst.definition_formal) {
+      if (prev && (prev.definition_formal !== cst.definition_formal || prev.alias !== cst.alias)) {
         changedIDs.push(cst.id);
       }
     }
