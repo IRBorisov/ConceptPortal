@@ -1,7 +1,5 @@
 'use client';
 
-import { useTx } from '@/i18n';
-
 import { globalIDs } from '@/utils/constants';
 
 import { type Button } from '../props';
@@ -32,8 +30,7 @@ export function SubmitButton({
   className,
   ...restProps
 }: SubmitButtonProps) {
-  const tx = useTx();
-  const label = text ?? tx('ui.submit.ok');
+  const label = text ?? 'OK';
   return (
     <button
       type='submit'

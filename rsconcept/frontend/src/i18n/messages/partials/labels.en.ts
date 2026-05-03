@@ -123,12 +123,10 @@ export const labelsEn: Record<string, string> = {
 
   'labels.errorDetail.noErrors': 'No errors',
   'labels.errorDetail.validationTitle': 'Data validation error',
-  'labels.errorDetail.genericTitle': 'Error',
   'labels.errorDetail.genericDescription': 'Description',
   'labels.errorDetail.noServerResponse': 'No response from server',
   'labels.errorDetail.api404': 'Request to a non-existent API',
   'labels.errorDetail.csrfLost': 'Server connection lost. Reload the page',
-  'labels.errorDetail.responseTitle': 'Error',
   'labels.errorDetail.responseDescription': 'Details',
   'labels.errorDetail.contactIntro': 'Please take a screenshot and send it with a description to portal@acconcept.ru',
   'labels.errorDetail.reloadHint': 'Reload the page to continue working'

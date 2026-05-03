@@ -72,11 +72,7 @@ export function HomePage() {
 
       <header className='mx-auto max-w-2xl text-center select-none'>
         <img
-          alt={
-            darkMode
-              ? tx('home.heroLogoAltDark')
-              : tx('home.heroLogoAltLight')
-          }
+          alt={darkMode ? tx('home.heroLogoAltDark') : tx('home.heroLogoAltLight')}
           src={!darkMode ? resources.logo : resources.logo_dark}
           className='mx-auto mb-8 h-11 w-auto opacity-95 dark:opacity-90'
           decoding='async'
@@ -105,7 +101,7 @@ export function HomePage() {
               <CtaButton
                 to={urls.login}
                 variant='default'
-                text={tx('home.login')}
+                text={tx('semantic.action.login')}
                 title={tx('home.loginTitle')}
                 icon={<IconUser2 size='1.25rem' />}
               />
@@ -154,10 +150,7 @@ export function HomePage() {
         <h2 id='home-features-heading' className='sr-only'>
           {tx('home.featuresHeading')}
         </h2>
-        <meta
-          itemProp='name'
-          content={tx('home.featuresMetaName')}
-        />
+        <meta itemProp='name' content={tx('home.featuresMetaName')} />
         <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
           <FeatureTile
             to={urls.library}

@@ -126,11 +126,6 @@ export const uiFr: Record<string, string> = {
   'ui.dlg.changeLocation.invalidHint':
     'Lettres, chiffres, soulignement, espace et « ! » autorisés. Un segment ne peut ni commencer ni se terminer par un espace. La longueur totale (racine incluse) ne doit pas dépasser {maxLen}',
 
-  'ui.page.rsform': 'Schéma conceptuel',
-  'ui.page.rsmodel': 'Modèle conceptuel',
-  'ui.page.oss': 'Système opérationnel',
-  'ui.page.sandbox': 'Bac à sable',
-
   'ui.field.rsformTitle': 'Titre du schéma',
   'ui.field.rsmodelTitle': 'Titre du modèle',
   'ui.field.ossTitle': 'Titre du système opérationnel',
@@ -192,8 +187,7 @@ export const uiFr: Record<string, string> = {
   'ui.cst.noPredecessor': 'La constituante n’a pas d’ancêtre',
   'ui.hint.resetUnsavedConstituenta': 'Annuler les modifications non enregistrées',
   'ui.action.createConstituenta': 'Créer une constituante',
-  'ui.hint.cloneConstituenta': 'Cloner la constituante',
-  'ui.aria.cloneConstituenta': 'Cloner la constituante',
+  'ui.cloneConstituenta': 'Cloner la constituante',
   'ui.action.deleteConstituenta': 'Supprimer la constituante',
 
   'ui.label.expression': 'Expression',

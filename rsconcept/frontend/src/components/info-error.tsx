@@ -37,7 +37,7 @@ export function DescribeError({ error }: { error: ErrorData }) {
     return (
       <div>
         <p>
-          <b>{tx('labels.errorDetail.genericTitle')}:</b> {error.name}
+          <b>{tx('semantic.term.error')}:</b> {error.name}
         </p>
         <p>
           <b>{tx('labels.errorDetail.genericDescription')}:</b> {error.message}
@@ -78,7 +78,7 @@ export function DescribeError({ error }: { error: ErrorData }) {
   }
   return (
     <div>
-      <p className='underline'>{tx('labels.errorDetail.responseTitle')}</p>
+      <p className='underline'>{tx('semantic.term.error')}</p>
       <p>{error.message}</p>
       {error.response.data && (
         <>

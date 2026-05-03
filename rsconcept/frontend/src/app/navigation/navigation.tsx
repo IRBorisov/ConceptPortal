@@ -136,7 +136,7 @@ export function Navigation() {
         <div className='relative z-10 flex gap-2 items-center shrink-0'>
           {isAnonymous ? (
             <NavigationButton
-              text={tx('nav.bar.sandbox')}
+              text={tx('semantic.term.sandbox')}
               title={tx('nav.bar.sandboxTitle')}
               icon={<IconSandbox size='1.25rem' />}
               onClick={navigateSandbox}
@@ -144,7 +144,7 @@ export function Navigation() {
           ) : (
             <div ref={createRef} onBlur={handleCreateBlur} className='relative'>
               <NavigationButton
-                text={tx('nav.bar.create')}
+                text={tx('semantic.action.create')}
                 icon={<IconNewItem2 size='1.25rem' />}
                 onClick={toggleCreate}
               />
@@ -168,7 +168,7 @@ export function Navigation() {
             </div>
           )}
           <NavigationButton
-            text={tx('nav.bar.library')}
+            text={tx('semantic.term.library')}
             icon={<IconLibrary2 size='1.25rem' />}
             onClick={navigateLibrary}
           />

@@ -46,15 +46,15 @@ export function SelectorLibraryFilter({ className }: SelectorLibraryFilterProps)
           </SelectItem>
           <SelectItem value='type_rsform'>
             <IconRSForm size='1rem' className='text-primary -mt-0.5 -mr-0.75' />
-            {tx('lib.filter.rsforms')}
+            {tx('semantic.term.schema.short')}
           </SelectItem>
           <SelectItem value='type_oss'>
             <IconOSS size='1rem' className='text-constructive -mt-0.5 -mr-0.75' />
-            {tx('lib.filter.oss')}
+            {tx('semantic.term.oss.short')}
           </SelectItem>
           <SelectItem value='type_rsmodel'>
             <IconRSModel size='1rem' className='text-accent-orange -mt-0.5 -mr-0.75' />
-            {tx('lib.filter.rsmodels')}
+            {tx('semantic.term.model.short')}
           </SelectItem>
         </SelectContent>
       </Select>

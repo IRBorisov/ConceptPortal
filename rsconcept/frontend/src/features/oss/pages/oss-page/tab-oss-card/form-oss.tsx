@@ -93,7 +93,7 @@ export function FormOSS({ className }: FormOSSProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none font-math'>{tx('ui.page.oss')}</h2>
+      <h2 className='mb-2 select-none font-math'>{tx('semantic.term.oss')}</h2>
       <form.Field name='title'>
         {field => (
           <TextInput

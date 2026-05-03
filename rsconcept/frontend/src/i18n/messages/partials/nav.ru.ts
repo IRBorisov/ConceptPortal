@@ -18,7 +18,6 @@ export const navRu: Record<string, string> = {
   'nav.link.iconsTitle': 'Переход к странице иконок',
   'nav.link.dbStructure': 'Структура БД',
   'nav.link.dbStructureTitle': 'Переход к странице структуры БД',
-  'nav.action.logout': 'Выйти...',
   'nav.action.logoutTitle': 'Выход из приложения',
   'nav.language.label': 'Язык интерфейса',
   'nav.language.title': 'Изменить язык интерфейса',

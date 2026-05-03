@@ -233,7 +233,7 @@ export function ToolbarOssGraph({
                 onClick={handleImportSchema}
               />
               <DropdownButton
-                text={tx('ui.oss.toolbar.synthesisShort')}
+                text={tx('semantic.action.synthesis')}
                 title={prepareTooltip(tx('ui.oss.toolbar.synthesis'), '4')}
                 icon={<IconSynthesis size='1.25rem' className='text-primary' />}
                 onClick={handleCreateSynthesis}

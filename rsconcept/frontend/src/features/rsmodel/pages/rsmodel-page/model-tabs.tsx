@@ -211,7 +211,7 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
 
         <TabLabel label={tx('ui.tabs.passport')} />
         <TabLabel label={tx('ui.tabs.list')} />
-        <TabLabel label={tx('ui.tabs.concept')} />
+        <TabLabel label={tx('semantic.term.concept')} />
         <TabLabel label={tx('ui.tabs.graph')} />
         <TabLabel label={tx('ui.tabs.data')} />
         <TabLabel label={tx('ui.tabs.evaluation')} />

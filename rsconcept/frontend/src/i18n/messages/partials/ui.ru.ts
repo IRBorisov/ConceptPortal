@@ -125,11 +125,6 @@ export const uiRu: Record<string, string> = {
   'ui.dlg.changeLocation.invalidHint':
     'Допустимы буквы, цифры, подчерк, пробел и "!". Сегмент пути не может начинаться и заканчиваться пробелом. Общая длина (с корнем) не должна превышать {maxLen}',
 
-  'ui.page.rsform': 'Концептуальная схема',
-  'ui.page.rsmodel': 'Концептуальная модель',
-  'ui.page.oss': 'Операционная система',
-  'ui.page.sandbox': 'Песочница',
-
   'ui.field.rsformTitle': 'Название схемы',
   'ui.field.rsmodelTitle': 'Название модели',
   'ui.field.ossTitle': 'Название операционной системы',
@@ -191,8 +186,7 @@ export const uiRu: Record<string, string> = {
   'ui.cst.noPredecessor': 'Конституента не имеет предка',
   'ui.hint.resetUnsavedConstituenta': 'Сбросить несохраненные изменения',
   'ui.action.createConstituenta': 'Создать конституенту',
-  'ui.hint.cloneConstituenta': 'Клонировать конституенту',
-  'ui.aria.cloneConstituenta': 'Клонировать конституенту',
+  'ui.cloneConstituenta': 'Клонировать конституенту',
   'ui.action.deleteConstituenta': 'Удалить конституенту',
 
   'ui.label.expression': 'Выражение',

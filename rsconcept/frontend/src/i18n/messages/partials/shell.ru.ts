@@ -1,12 +1,9 @@
 /** App shell: main nav, footer, modals, errors, home, auth forms (Russian). */
 export const shellRu: Record<string, string> = {
-  'nav.bar.sandbox': 'Песочница',
   'nav.bar.sandboxTitle': 'Демонстрационная среда для незарегистрированных пользователей',
-  'nav.bar.create': 'Создать',
   'nav.bar.createSchema': 'Концептуальную схему',
   'nav.bar.createModel': 'Концептуальную модель',
   'nav.bar.createOss': 'Операционную схему',
-  'nav.bar.library': 'Библиотека',
   'nav.user.loginTitle': 'Перейти на страницу логина',
   'nav.user.menuTitle': 'Пользователь',
   'nav.ai.menuTitle': 'ИИ помощник',
@@ -38,7 +35,6 @@ export const shellRu: Record<string, string> = {
   'home.ctaNavAria': 'Основные действия на главной странице',
   'home.try': 'Попробовать',
   'home.tryTitle': 'Открыть песочницу и оценить Портал',
-  'home.login': 'Войти',
   'home.loginTitle': 'Перейти к авторизации',
   'home.study': 'Изучить',
   'home.studyTitle': 'Открыть руководства',

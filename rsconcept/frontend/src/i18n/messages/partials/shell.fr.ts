@@ -1,12 +1,9 @@
 /** App shell: main nav, footer, modals, errors, home, auth forms (French). */
 export const shellFr: Record<string, string> = {
-  'nav.bar.sandbox': 'Bac à sable',
   'nav.bar.sandboxTitle': 'Environnement de démonstration pour les visiteurs non inscrits',
-  'nav.bar.create': 'Créer',
   'nav.bar.createSchema': 'Schéma conceptuel',
   'nav.bar.createModel': 'Modèle conceptuel',
   'nav.bar.createOss': 'Schéma opérationnel',
-  'nav.bar.library': 'Bibliothèque',
   'nav.user.loginTitle': 'Aller à la page de connexion',
   'nav.user.menuTitle': 'Utilisateur',
   'nav.ai.menuTitle': 'Assistant IA',
@@ -38,7 +35,6 @@ export const shellFr: Record<string, string> = {
   'home.ctaNavAria': 'Actions principales sur la page d’accueil',
   'home.try': 'Essayer',
   'home.tryTitle': 'Ouvrir le bac à sable et découvrir le portail',
-  'home.login': 'Connexion',
   'home.loginTitle': 'Aller à l’authentification',
   'home.study': 'Apprendre',
   'home.studyTitle': 'Ouvrir les manuels',

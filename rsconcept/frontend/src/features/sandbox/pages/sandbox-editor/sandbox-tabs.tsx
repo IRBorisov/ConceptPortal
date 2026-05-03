@@ -48,7 +48,7 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
   useLayoutEffect(
     function updateWindowTitle() {
       const oldTitle = document.title;
-      document.title = `${tx('nav.bar.sandbox')} — ${schema.title}`;
+      document.title = `${tx('semantic.term.sandbox')} — ${schema.title}`;
       return function restoreWindowTitle() {
         document.title = oldTitle;
       };
@@ -174,7 +174,7 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
 
         <TabLabel label={tx('ui.tabs.passport')} />
         <TabLabel label={tx('ui.tabs.list')} />
-        <TabLabel label={tx('ui.tabs.concept')} />
+        <TabLabel label={tx('semantic.term.concept')} />
         <TabLabel label={tx('ui.tabs.graph')} />
         <TabLabel label={tx('ui.tabs.data')} />
         <TabLabel label={tx('ui.tabs.evaluation')} />

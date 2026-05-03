@@ -3,9 +3,13 @@ export const termsRu: Record<string, string> = {
   'semantic.term.dateCreated': 'Дата создания',
   'semantic.term.dateUpdated': 'Дата обновления',
   'semantic.term.filter': 'Фильтр',
+  'semantic.term.search': 'Поиск',
+  'semantic.term.error': 'Ошибка',
+  'semantic.term.warning': 'Предупреждение',
 
   'semantic.term.library': 'Библиотека',
   'semantic.term.manual': 'Справка',
+  'semantic.term.sandbox': 'Песочница',
 
   'semantic.term.alias': 'Сокращение',
   'semantic.term.title': 'Название',
@@ -19,15 +23,23 @@ export const termsRu: Record<string, string> = {
   'semantic.term.comment': 'Комментарий',
   'semantic.term.contents': 'Содержание',
 
+  'semantic.term.admin': 'Администратор',
   'semantic.term.owner': 'Владелец',
+  'semantic.term.editor': 'Редактор',
+  'semantic.term.editors': 'Редакторы',
+  'semantic.term.reader': 'Читатель',
+
   'semantic.term.access': 'Доступ',
   'semantic.term.version': 'Версия',
   'semantic.term.path': 'Путь',
-  'semantic.term.editor': 'Редактор',
-  'semantic.term.editors': 'Редакторы',
 
+  'semantic.term.concept': 'Понятие',
   'semantic.term.operation': 'Операция',
   'semantic.term.block': 'Блок',
-  'semantic.term.schema': 'Схема',
-  'semantic.term.model': 'Модель'
+  'semantic.term.schema': 'Концептуальная схема',
+  'semantic.term.schema.short': 'Схема',
+  'semantic.term.model': 'Концептуальная модель',
+  'semantic.term.model.short': 'Модель',
+  'semantic.term.oss': 'Операционная система',
+  'semantic.term.oss.short': 'ОСС'
 };

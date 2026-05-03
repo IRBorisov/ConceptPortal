@@ -42,21 +42,21 @@ export function describeEvalStatus(status: EvalStatus): string {
 /** Generates label for {@link Value}. */
 export function labelValue(value: RO<Value | null>, type: ExpressionType | null): string {
   if (value === null || type === null) {
-    return globalTx('labels.rsmodel.value.na');
+    return 'N/A';
   }
   if (type.typeID === TypeID.logic) {
     if (value === VALUE_TRUE) {
-      return globalTx('labels.rsmodel.value.logicTrue');
+      return globalTx('semantic.true');
     } else if (value === VALUE_FALSE) {
-      return globalTx('labels.rsmodel.value.logicFalse');
+      return globalTx('semantic.false');
     }
   }
   if (!Array.isArray(value)) {
-    return globalTx('labels.rsmodel.value.singleton');
+    return globalTx('1');
   } else if (value.length === 0) {
     return '∅';
   } else if (value[0] === TUPLE_ID) {
-    return globalTx('labels.rsmodel.value.tupleMarker');
+    return globalTx('C');
   } else {
     return value.length.toString();
   }

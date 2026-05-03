@@ -510,7 +510,7 @@ function prepareValueInternal(value: Value, type: ExpressionType, schema: RSForm
       if (Array.isArray(value)) {
         return text(`EXPECTED_LOGIC ${printValue(value)}`);
       }
-      return value === VALUE_TRUE ? text('Истина') : text('Ложь');
+      return value === VALUE_TRUE ? text('True') : text('False');
     case TypeID.tuple:
       if (!Array.isArray(value) || value.length !== type.factors.length + 1 || value[0] !== TUPLE_ID) {
         return text(`EXPECTED_TUPLE ${printValue(value)}`);

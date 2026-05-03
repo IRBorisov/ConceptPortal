@@ -27,9 +27,7 @@ export function ViewErrors({ isOpen, errors, disabled, className, onShowError }:
     >
       <p>
         <span>{tx('ui.rsform.errors.count', { count: errorCount })} </span>
-        {warningsCount > 0 ? (
-          <span>| {tx('ui.rsform.errors.warnings', { count: warningsCount })}</span>
-        ) : null}
+        {warningsCount > 0 ? <span>| {tx('ui.rsform.errors.warnings', { count: warningsCount })}</span> : null}
       </p>
       {errors?.map((error, index) => {
         return (
@@ -40,9 +38,7 @@ export function ViewErrors({ isOpen, errors, disabled, className, onShowError }:
             onClick={disabled || !onShowError ? undefined : () => onShowError(error)}
           >
             <span className='mr-1 font-semibold underline'>
-              {isCritical(error.code)
-                ? tx('ui.rsform.errors.kindError')
-                : tx('ui.rsform.errors.kindWarning')}{' '}
+              {isCritical(error.code) ? tx('semantic.term.error') : tx('semantic.term.warning')}{' '}
               {`${getRSErrorPrefix(error.code)}:`}
             </span>
             <span>{` ${describeRSError(error.code, error.params)}`}</span>

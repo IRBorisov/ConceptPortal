@@ -18,7 +18,6 @@ export const navFr: Record<string, string> = {
   'nav.link.iconsTitle': 'Ouvrir la page des icônes',
   'nav.link.dbStructure': 'Structure de la BD',
   'nav.link.dbStructureTitle': 'Ouvrir le schéma de la base',
-  'nav.action.logout': 'Se déconnecter…',
   'nav.action.logoutTitle': 'Quitter l’application',
   'nav.language.label': 'Langue de l’interface',
   'nav.language.title': 'Changer la langue de l’interface',

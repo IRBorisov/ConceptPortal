@@ -153,17 +153,12 @@ export const uiExtraFr: Record<string, string> = {
   'ui.node.mgraph.constituentsPrefix': 'Constituantes',
   'ui.node.tg.contentsMissing': 'absent',
 
-  'ui.library.createItem.modelTitle': 'Modèle {title}',
-
   'ui.page.databaseSchema.imageAlt': 'Schéma de base de données',
 
   'ui.iconsPage.total': 'Nombre d’icônes : {count}',
 
-  'ui.submit.ok': 'OK',
-
   'ui.tabs.passport': 'Passeport',
   'ui.tabs.list': 'Liste',
-  'ui.tabs.concept': 'Concept',
   'ui.tabs.graph': 'Graphe',
   'ui.tabs.data': 'Données',
   'ui.tabs.evaluation': 'Calcul',
@@ -247,7 +242,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.oss.toolbar.newSchema': 'Nouveau schéma conceptuel',
   'ui.oss.toolbar.importSchemaShort': 'Importer un schéma',
   'ui.oss.toolbar.importSchema': 'Importer un schéma conceptuel',
-  'ui.oss.toolbar.synthesisShort': 'Synthèse',
   'ui.oss.toolbar.synthesis': 'Synthèse de schémas conceptuels',
   'ui.oss.toolbar.filterConstituents': 'Filtrer les constituantes',
   'ui.oss.toolbar.relativizationShort': 'Relativisation',
@@ -299,9 +293,7 @@ export const uiExtraFr: Record<string, string> = {
   'ui.oss.deleteOperation.warningAttention': 'Attention !',
   'ui.oss.deleteOperation.warningRelatedSchema': 'Le schéma associé sera également supprimé',
 
-  'ui.combo.searchPlaceholder': 'Rechercher…',
   'ui.combo.emptyList': 'Liste vide',
-  'ui.search.placeholderDefault': 'Rechercher',
 
   'ui.table.header.formalDefinition': 'Définition formelle',
   'ui.table.header.textDefinition': 'Définition textuelle',
@@ -417,7 +409,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.stats.oss.blocks': 'Blocs',
   'ui.stats.oss.blocksSecondaryTitle': 'Nombre de blocs imbriqués',
   'ui.stats.oss.detail.inputs': 'Chargement',
-  'ui.stats.oss.detail.synthesis': 'Synthèse',
   'ui.stats.oss.detail.replica': 'Réplique',
   'ui.stats.oss.attachedSection': 'Schémas attachés',
   'ui.stats.oss.attachedPrimaryTitle': 'Nombre d’opérations avec un schéma RSForm attaché',
@@ -464,7 +455,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.library.miniOss.title': 'Schémas opérationnels',
   'ui.library.miniOss.listLabel': 'Liste des OSS',
   'ui.library.pickLocation.label': 'Emplacement',
-  'ui.library.explorer.defaultTitle': 'Explorateur...',
 
   'ui.oss.selectOperation.placeholder': 'Choisir une opération',
   'ui.oss.selectBlock.placeholder': 'Choisir un bloc',
@@ -498,12 +488,9 @@ export const uiExtraFr: Record<string, string> = {
   'ui.rsform.template.pickFromListPlaceholder': 'Choisir un modèle dans la liste',
   'ui.rsform.errors.count': 'Erreurs : {count}',
   'ui.rsform.errors.warnings': 'Avertissements : {count}',
-  'ui.rsform.errors.kindError': 'Erreur',
-  'ui.rsform.errors.kindWarning': 'Avertissement',
   'ui.rsform.termGraph.hiddenWithCount': 'Masquées [{selected} | {total}]',
   'ui.rsform.termGraph.hidden': 'Masquées',
   'ui.rsform.termGraph.colorSchemePlaceholder': 'Schéma de couleurs',
-  'ui.rsform.termGraph.schemaAlias': 'Schéma {index}',
   'ui.rsform.termGraph.currentSchemaBadge': 'Schéma courant',
   'ui.rsform.selectConstituenta.placeholder': 'Choisir une constituante',
   'ui.rsform.cstInfo.inheritedTitle': 'héritière',
@@ -535,7 +522,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.rsform.termGraph.focus.cstAria': 'Constituante de focus',
   'ui.rsform.termGraph.focus.shortLabel': 'Focus',
 
-  'ui.rsform.pdf.schemaTitle': 'Schéma conceptuel {title}',
   'ui.rsform.pdf.aliasLabel': 'Nom abrégé : {alias}',
   'ui.rsform.pdf.onlineVersion': 'Version en ligne :',
   'ui.rsform.pdf.footerLine': 'SC {alias}',

@@ -98,7 +98,7 @@ export function FormSchema({ className }: FormSchemaProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none font-math'>{tx('ui.page.rsform')}</h2>
+      <h2 className='mb-2 select-none font-math'>{tx('semantic.term.schema')}</h2>
       <form.Field name='title'>
         {field => (
           <TextInput

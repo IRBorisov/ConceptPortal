@@ -87,13 +87,6 @@ export const labelsFeatureEn: Record<string, string> = {
   'labels.library.accessDesc.protected': 'Owner and editors',
   'labels.library.accessDesc.public': 'Open access',
 
-  'labels.library.itemType.rsform': 'RS',
-  'labels.library.itemType.oss': 'OSS',
-
-  'labels.library.itemTypeDesc.rsform': 'Conceptual schema',
-  'labels.library.itemTypeDesc.oss': 'Operational synthesis schema',
-  'labels.library.itemTypeDesc.rsmodel': 'Conceptual model',
-
   'labels.library.version.current': 'current',
 
   'labels.rsform.cstType.nominal': 'Nominal',
@@ -192,8 +185,6 @@ export const labelsFeatureEn: Record<string, string> = {
   'labels.rsform.token.assign': 'Assignment',
   'labels.rsform.token.iterate': 'Iterate over set elements',
 
-  'labels.rsform.shortcutWithKey': '{label} [Alt + {key}]',
-
   'labels.rsform.missing.constituent': '!Constituent missing!',
   'labels.rsform.missing.termEmpty': '!Empty term!',
 
@@ -207,7 +198,6 @@ export const labelsFeatureEn: Record<string, string> = {
   'labels.rsform.fallback.noTokenDescription': 'no description: {id}',
 
   'labels.oss.operation.input': 'Load',
-  'labels.oss.operation.synthesis': 'Synthesis',
   'labels.oss.operation.replica': 'Replication',
 
   'labels.oss.operationDesc.input': 'Load a conceptual schema into the OSS',
@@ -249,20 +239,9 @@ export const labelsFeatureEn: Record<string, string> = {
   'labels.rsmodel.evalDesc.empty': 'value is the empty set',
   'labels.rsmodel.evalDesc.hasData': 'value computed and non-empty',
 
-  'labels.rsmodel.value.na': 'N/A',
-  'labels.rsmodel.value.logicTrue': 'True',
-  'labels.rsmodel.value.logicFalse': 'False',
-  'labels.rsmodel.value.singleton': '1',
-  'labels.rsmodel.value.tupleMarker': 'C',
-
   'labels.rsmodel.valueDesc.cardinalityPrefix': 'Cardinality: {n} | {stub}',
 
   'labels.rsmodel.fallback.unknownEvalStatus': 'UNKNOWN EVALUATION STATUS: {status}',
-
-  'labels.users.role.reader': 'Reader',
-  'labels.users.role.editor': 'Editor',
-  'labels.users.role.owner': 'Owner',
-  'labels.users.role.admin': 'Administrator',
 
   'labels.users.roleDesc.reader': 'Reader mode',
   'labels.users.roleDesc.editor': 'Edit mode',
