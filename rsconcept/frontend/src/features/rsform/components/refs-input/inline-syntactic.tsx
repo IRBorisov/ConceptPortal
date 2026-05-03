@@ -95,16 +95,13 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
         <div className='mb-2 flex items-center justify-between gap-1'>
           <MiniButton
             icon={<IconAccept size='1.5rem' className='icon-green' />}
-            title={prepareTooltip(
-              tx('ui.refs.inline.saveLink'),
-              isMac() ? 'Cmd + Enter' : 'Ctrl + Enter'
-            )}
+            title={prepareTooltip(tx('ui.refs.inline.saveLink'), isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
             onClick={handleSave}
             disabled={!canSubmit}
           />
           <MiniButton
             icon={<IconClose size='1.5rem' className='icon-primary' />}
-            title={prepareTooltip(tx('modal.close'), 'Esc')}
+            title={prepareTooltip(tx('semantic.action.close'), 'Esc')}
             onClick={onCancel}
           />
           <Label text={tx('ui.refs.inline.dependentWord')} />

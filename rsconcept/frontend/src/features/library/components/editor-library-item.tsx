@@ -106,11 +106,7 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
           className='text-ellipsis grow'
           icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
           value={item.location}
-          title={
-            isProduced
-              ? tx('ui.library.editor.pathInheritedOss')
-              : tx('ui.library.editor.path')
-          }
+          title={isProduced ? tx('ui.library.editor.pathInheritedOss') : tx('semantic.term.path')}
           onClick={handleEditLocation}
           disabled={isModified || isProcessing || isProduced || role < UserRole.OWNER}
         />
@@ -128,11 +124,7 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
           className='sm:mb-1'
           icon={<IconOwner size='1.25rem' className='icon-primary' />}
           value={getUserLabel(item.owner)}
-          title={
-            isProduced
-              ? tx('ui.library.editor.ownerInheritedOss')
-              : tx('ui.library.editor.owner')
-          }
+          title={isProduced ? tx('ui.library.editor.ownerInheritedOss') : tx('semantic.term.owner')}
           onClick={toggleOwner}
           disabled={isModified || isProcessing || isProduced || role < UserRole.OWNER}
         />
@@ -149,23 +141,19 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
         />
         <Tooltip anchorSelect='#editor_stats'>
           <Suspense fallback={<Loader scale={2} />}>
-            <InfoUsers
-              items={item.editors}
-              prefix={prefixes.user_editors}
-              header={tx('ui.library.editor.editorsHeader')}
-            />
+            <InfoUsers items={item.editors} prefix={prefixes.user_editors} header={tx('semantic.term.editors')} />
           </Suspense>
         </Tooltip>
 
         <ValueIcon
-          title={tx('ui.library.editor.dateUpdated')}
+          title={tx('semantic.term.dateUpdated')}
           dense
           icon={<IconDateUpdate size='1.25rem' />}
           value={new Date(item.time_update).toLocaleString(intl.locale)}
         />
 
         <ValueIcon
-          title={tx('ui.library.editor.dateCreated')}
+          title={tx('semantic.term.dateCreated')}
           dense
           icon={<IconDateCreate size='1.25rem' />}
           value={new Date(item.time_create).toLocaleString(intl.locale, {

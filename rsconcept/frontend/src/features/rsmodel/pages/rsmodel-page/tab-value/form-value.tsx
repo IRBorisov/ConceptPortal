@@ -254,7 +254,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         noOutline
         transparent
         readOnly
-        label={tx('ui.label.typification')}
+        label={tx('semantic.term.typification')}
         value={labelType(typification)}
         areaClassName='cursor-default'
       />
@@ -319,7 +319,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         ) : null}
         <RefsInput
           id='cst_term'
-          label={tx('ui.label.term')}
+          label={tx('semantic.term.term')}
           placeholder={tx('ui.placeholder.termMissing')}
           schema={schema}
           onOpenEdit={onOpenEdit}

@@ -48,7 +48,7 @@ export function DlgCreatePromptTemplate() {
   return (
     <ModalForm
       header={tx('ui.promptTemplates.dlg.createHeader')}
-      submitText={tx('ui.action.create')}
+      submitText={tx('semantic.action.create')}
       canSubmit={canSubmit}
       onSubmit={event => {
         event.preventDefault();
@@ -75,7 +75,7 @@ export function DlgCreatePromptTemplate() {
         {field => (
           <TextArea
             id='dlg_prompt_description'
-            label={tx('ui.label.description')}
+            label={tx('semantic.term.description')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}

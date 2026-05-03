@@ -88,14 +88,14 @@ export function PickMultiConstituenta({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: () => <span className='pl-3'>{tx('ui.table.header.alias')}</span>,
+      header: () => <span className='pl-3'>{tx('semantic.term.name')}</span>,
       size: 65,
       cell: props => <BadgeConstituenta value={props.row.original} />
     }),
     columnHelper.accessor(cst => describeConstituenta(cst), {
       id: 'description',
       size: 1000,
-      header: tx('ui.table.header.description')
+      header: tx('semantic.term.description')
     })
   ];
 

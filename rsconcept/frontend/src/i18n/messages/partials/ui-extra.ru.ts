@@ -75,20 +75,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.stats.secondary.functions': 'Функции',
   'ui.stats.title.termAndPredicateFns': 'Количество терм-функций\nи предикат-функций',
 
-  'ui.hotkey.altQ': 'Alt + Q',
-  'ui.hotkey.altGrave': 'Alt + `',
-  'ui.hotkey.altV': 'Alt + V',
-  'ui.hotkey.altUp': 'Alt + вверх',
-  'ui.hotkey.altDown': 'Alt + вниз',
-  'ui.hotkey.delete': 'Delete',
-  'ui.hotkey.deleteBacktick': 'Delete, `',
-  'ui.hotkey.esc': 'ESC',
-  'ui.hotkey.f': 'F',
-  'ui.hotkey.r': 'R',
-  'ui.hotkey.g': 'G',
-  'ui.hotkey.t': 'T',
-  'ui.hotkey.v': 'V',
-
   'ui.toolbar.newConstituenta': 'Новая конституента',
   'ui.toolbar.editConstituenta': 'Редактировать конституенту',
 
@@ -151,7 +137,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.structurePlanner.submitUpdate': 'Обновить термин',
   'ui.structurePlanner.resetTerm': 'Сбросить термин',
 
-  'ui.valueInput.labelValue': 'Значение',
   'ui.valueInput.cardinalityExpressionAria': 'Мощность / значение выражения',
   'ui.valueInput.expressionValueTooltip': 'Значение выражения',
   'ui.valueInput.cardinalityPrefix': 'Мощность:',
@@ -164,16 +149,9 @@ export const uiExtraRu: Record<string, string> = {
   'ui.pickElement.valueLabel': 'Укажите значение',
   'ui.pickElement.selectPrompt': 'Выберите элемент для редактирования',
 
-  'ui.node.ast.typePrefix': 'Тип:',
-  'ui.node.ast.termPrefix': 'Термин:',
   'ui.node.ast.templateParam': 'Шаблонный параметр:',
   'ui.node.mgraph.constituentsPrefix': 'Конституенты',
-  'ui.node.tg.typificationPrefix': 'Типизация:',
-  'ui.node.tg.contentsPrefix': 'Содержание:',
   'ui.node.tg.contentsMissing': 'отсутствует',
-
-  'ui.selectTree.fold': 'Свернуть',
-  'ui.selectTree.unfold': 'Развернуть',
 
   'ui.library.createItem.modelTitle': 'Модель {title}',
 
@@ -193,7 +171,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.tabs.schemaErrorsTitle': 'Схемные ошибки: {count}',
   'ui.tabs.modelErrorsTitle': 'Модельные ошибки: {count}',
 
-  'ui.stats.mini.total': 'Всего',
   'ui.stats.row.incorrect': 'Некорректные',
 
   'ui.rsform.menu.archiveNoEdit': 'Архив: Редактирование запрещено\nПерейти к актуальной версии',
@@ -259,8 +236,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.oss.toolbar.saveImage': 'Сохранить изображение',
   'ui.oss.toolbar.savePng': 'Сохранить PNG',
   'ui.oss.toolbar.saveSvg': 'Сохранить SVG',
-  'ui.oss.toolbar.saveChangesAria': 'Сохранить изменения',
-  'ui.oss.toolbar.saveChanges': 'Сохранить изменения',
   'ui.oss.toolbar.editSelectedAria': 'Редактировать выбранную',
   'ui.oss.toolbar.editSelected': 'Редактировать выбранную',
   'ui.oss.toolbar.rightClickHint': 'Правый клик',
@@ -272,7 +247,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.oss.toolbar.importSchema': 'Импорт концептуальной схемы',
   'ui.oss.toolbar.synthesisShort': 'Синтез',
   'ui.oss.toolbar.synthesis': 'Синтез концептуальных схем',
-  'ui.oss.toolbar.filterShort': 'Фильтр',
   'ui.oss.toolbar.filterConstituents': 'Фильтрация конституент',
   'ui.oss.toolbar.relativizationShort': 'Релятивизация',
   'ui.oss.toolbar.relativization': 'Релятивизация концептуальных схем',
@@ -295,8 +269,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.oss.settings.header': 'Настройки отображения',
   'ui.oss.settings.coordsToggleAria': 'Переключатель отображения координат',
   'ui.oss.settings.coordsLabel': 'Координаты узлов: {state}',
-  'ui.oss.settings.toggleOnShort': 'Вкл',
-  'ui.oss.settings.toggleOffShort': 'Выкл',
   'ui.oss.settings.gridToggleAria': 'Переключатель отображения сетки',
   'ui.oss.settings.gridToggleTitle': 'Переключатель отображения сетки',
   'ui.oss.settings.gridLabel': 'Отображение сетки: {state}',
@@ -310,7 +282,6 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.oss.deleteReplica.header': 'Удаление реплики',
   'ui.oss.deleteReplica.submit': 'Подтвердить удаление',
-  'ui.oss.deleteReplica.operationLabel': 'Операция',
   'ui.oss.deleteReplica.relinkArgs': 'Переадресовать связи на оригинал',
   'ui.oss.deleteReplica.relinkArgsHint': 'Связи аргументов будут перенаправлены на оригинал реплики',
   'ui.oss.deleteReplica.keepInherited': 'Сохранить наследованные конституенты',
@@ -318,7 +289,6 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.oss.deleteOperation.header': 'Удаление операции',
   'ui.oss.deleteOperation.submit': 'Подтвердить удаление',
-  'ui.oss.deleteOperation.operationLabel': 'Операция',
   'ui.oss.deleteOperation.deleteSchema': 'Удалить схему',
   'ui.oss.deleteOperation.deleteSchemaLocked': 'Привязанную схему нельзя удалить',
   'ui.oss.deleteOperation.deleteSchemaHint': 'Удалить схему вместе с операцией',
@@ -331,11 +301,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.combo.emptyList': 'Список пуст',
   'ui.search.placeholderDefault': 'Поиск',
 
-  'ui.table.header.alias': 'Имя',
-  'ui.table.header.value': 'Значение',
-  'ui.table.header.description': 'Описание',
-  'ui.table.header.typification': 'Типизация',
-  'ui.table.header.term': 'Термин',
   'ui.table.header.formalDefinition': 'Формальное определение',
   'ui.table.header.textDefinition': 'Текстовое определение',
   'ui.table.header.conventionComment': 'Конвенция / Комментарий',
@@ -348,7 +313,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.table.cstSide.emptyTitle': 'Список конституент пуст',
   'ui.table.cstSide.emptyHint': 'Измените параметры фильтра или создайте конституенту',
 
-  'ui.filter.placeholder': 'Фильтр',
   'ui.filter.schemaIssuesShort': 'СхемОшибки',
   'ui.filter.schemaIssuesTitle': 'Схемные ошибки',
   'ui.filter.modelIssuesShort': 'МодОшибки',
@@ -367,10 +331,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.template.arguments.freeSlot': 'свободный аргумент',
   'ui.template.arguments.clearValueTitle': 'Очистить значение',
 
-  'ui.promptTemplates.column.title': 'Название',
-  'ui.promptTemplates.column.description': 'Описание',
-  'ui.promptTemplates.column.owner': 'Владелец',
-
   'ui.users.column.lastName': 'Фамилия',
   'ui.users.column.firstName': 'Имя',
   'ui.users.action.removeFromListTitle': 'Удалить из списка',
@@ -378,9 +338,7 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.bindingEditor.column.text': 'Текст',
   'ui.bindingEditor.deleteRowTitle': 'Удалить элемент',
-  'ui.bindingEditor.totalPrefix': 'Всего ',
   'ui.bindingEditor.addElementTitle': 'Добавить элемент',
-  'ui.bindingEditor.valueLabel': 'Значение',
   'ui.bindingEditor.selectRowPlaceholder': 'Выделите строку',
   'ui.bindingEditor.noValues': 'Значения отсутствуют',
 
@@ -391,22 +349,13 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsexpr.toolbar.expressionStructureTitle': 'Структура выражения',
 
   'ui.form.createCst.crucialTitle': 'Ключевая конституента',
-  'ui.form.createCst.aliasLabel': 'Имя',
-  'ui.form.createCst.termLabel': 'Термин',
   'ui.form.createCst.termPlaceholder': 'Обозначение для текстовых определений',
   'ui.form.createCst.textDefinitionLabel': 'Текстовое определение',
   'ui.form.createCst.textDefinitionPlaceholder': 'Текстовая интерпретация формального выражения',
   'ui.form.createCst.addComment': 'Добавить комментарий',
-  'ui.form.createCst.conventionLabel': 'Конвенция',
-  'ui.form.createCst.commentLabel': 'Комментарий',
   'ui.form.createCst.conventionPlaceholder': 'Договоренность об интерпретации базового понятия',
   'ui.form.createCst.commentPlaceholder': 'Пояснение разработчика',
 
-  'ui.cstTemplate.arguments.column.name': 'Имя',
-  'ui.cstTemplate.arguments.column.value': 'Значение',
-  'ui.cstTemplate.arguments.column.typification': 'Типизация',
-
-  'ui.pick.schema.dateColumn': 'Дата',
   'ui.pick.schema.filterByLocationTitle': 'Фильтр по расположению',
   'ui.pick.schema.resetLocationFilterTitle': 'Сбросить фильтр',
   'ui.pick.schema.emptyTitle': 'Список схем пуст',
@@ -415,9 +364,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.list.reorder.moveHigher': 'Переместить выше',
   'ui.list.reorder.moveLower': 'Переместить ниже',
 
-  'ui.oss.pickContents.column.kind': 'Тип',
-  'ui.oss.pickContents.kindOperation': 'Операция',
-  'ui.oss.pickContents.kindBlock': 'Блок',
   'ui.oss.pickContents.comboPlaceholder': 'Выберите операцию или блок',
 
   'ui.versions.deleteVersionTitle': 'Удалить версию',
@@ -430,7 +376,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.promptTemplates.error.notFound': 'Шаблон запроса с указанным идентификатором {itemID} отсутствует',
   'ui.promptTemplates.link.templateList': 'Список шаблонов',
 
-  'ui.promptTemplates.form.content': 'Содержание',
   'ui.promptTemplates.form.contentPlaceholder': 'Пример: Предложи дополнение для КС {{schema}}',
   'ui.promptTemplates.form.sharedCheckbox': 'Общий шаблон',
   'ui.promptTemplates.form.generateSampleTitle': 'Сгенерировать пример запроса',
@@ -444,10 +389,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.aiPrompt.tab.result': 'Результат',
   'ui.aiPrompt.tab.variables': 'Переменные',
 
-  'ui.common.yes': 'Да',
-  'ui.common.no': 'Нет',
-
-  'ui.oss.infoOperation.typeLabel': 'Тип:',
   'ui.oss.infoOperation.ownAdditionsLabel': 'Собственные:',
   'ui.oss.infoOperation.csNotInOss': 'КС не принадлежит ОСС',
   'ui.oss.infoOperation.rhombusSynthesis': 'Ромбовидный синтез',
@@ -467,11 +408,9 @@ export const uiExtraRu: Record<string, string> = {
   'ui.schemaCard.toggleStatsTitle': 'Отображение статистики',
 
   'ui.oss.sidePanel.closeTitle': 'Закрыть панель',
-  'ui.oss.sidePanel.contentsHeading': 'Содержание',
   'ui.oss.sidePanel.selectOperationHint': 'Выделите операцию для просмотра',
   'ui.oss.sidePanel.noCsForOperation': 'Отсутствует концептуальная схема для выбранной операции',
 
-  'ui.stats.caption.total': 'Всего',
   'ui.stats.oss.compositionPrimaryTitle': 'Общее количество элементов в составе операционной схемы',
   'ui.stats.oss.blocks': 'Блоки',
   'ui.stats.oss.blocksSecondaryTitle': 'Количество вложенных блоков',
@@ -494,7 +433,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.pagination.rowsPerPageAria': 'Выбор количества строк на страницу',
   'ui.pagination.perPageSuffix': 'на стр',
 
-  'ui.dataTable.selectAllTitle': 'Выделить все',
   'ui.dataTable.noData': 'Данные отсутствуют',
 
   'ui.promptTemplates.tab.list': 'Список',
@@ -521,7 +459,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.library.editors.saveList': 'Сохранить список',
   'ui.library.editors.addPlaceholder': 'Добавить редактора',
   'ui.library.selectItem.placeholder': 'Выберите схему',
-  'ui.library.accessTitlePrefix': 'Доступ:',
   'ui.library.miniOss.title': 'Операционные схемы',
   'ui.library.miniOss.listLabel': 'Список ОСС',
   'ui.library.pickLocation.label': 'Расположение',
@@ -561,8 +498,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.errors.warnings': 'Предупреждений: {count}',
   'ui.rsform.errors.kindError': 'Ошибка',
   'ui.rsform.errors.kindWarning': 'Предупреждение',
-  'ui.rsform.termGraph.fold': 'Свернуть',
-  'ui.rsform.termGraph.unfold': 'Развернуть',
   'ui.rsform.termGraph.hiddenWithCount': 'Скрытые [{selected} | {total}]',
   'ui.rsform.termGraph.hidden': 'Скрытые',
   'ui.rsform.termGraph.colorSchemePlaceholder': 'Цветовая схема',
@@ -570,14 +505,10 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.termGraph.currentSchemaBadge': 'Текущая схема',
   'ui.rsform.selectConstituenta.placeholder': 'Выбор конституенты',
   'ui.rsform.cstInfo.inheritedTitle': 'наследник',
-  'ui.rsform.cstInfo.termLabel': 'Термин: ',
-  'ui.rsform.cstInfo.typificationLabel': 'Типизация: ',
   'ui.rsform.cstInfo.expressionLabel': 'Выражение: ',
   'ui.rsform.cstInfo.definitionLabel': 'Определение: ',
   'ui.rsform.cstInfo.baseLabel': 'Основание: ',
   'ui.rsform.cstInfo.generatesLabel': 'Порождает: ',
-  'ui.rsform.cstInfo.conventionLabel': 'Конвенция: ',
-  'ui.rsform.cstInfo.commentLabel': 'Комментарий: ',
   'ui.rsform.rsInput.undefinedConstituent': 'Конституента не определена',
   'ui.rsform.rsInput.ctrlClickToOpen': 'Ctrl + клик для перехода',
   'ui.rsform.refsTooltip.referenceToConstituent': 'Ссылка на конституенту',
@@ -609,7 +540,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.pdf.sheetPages': 'Лист {pageNumber} / {totalPages}',
   'ui.rsform.pdf.colFormalExpression': 'Формальное выражение',
   'ui.rsform.pdf.colSchemaInterpretation': 'Схемная интерпретация / Термин',
-  'ui.rsform.pdf.conventionPrefix': 'Конвенция: ',
 
   'ui.oss.menu.editBlockTitle': 'Редактировать блок',
   'ui.oss.menu.deleteBlock': 'Удалить блок',

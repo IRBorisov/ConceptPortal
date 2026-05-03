@@ -119,7 +119,7 @@ export function FormRSModel({ className }: FormRSModelProps) {
           {field => (
             <TextInput
               id='schema_alias'
-              label={tx('ui.label.alias')}
+              label={tx('semantic.term.alias')}
               className='w-64'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -144,7 +144,7 @@ export function FormRSModel({ className }: FormRSModelProps) {
         {field => (
           <TextArea
             id='schema_comment'
-            label={tx('ui.label.description')}
+            label={tx('semantic.term.description')}
             placeholder={formatLabel(lid.placeholder.itemDescription)}
             rows={5}
             value={field.state.value}
@@ -157,8 +157,8 @@ export function FormRSModel({ className }: FormRSModelProps) {
       </form.Field>
       {isMutable || !isDefaultValue ? (
         <SubmitButton
-          text={tx('ui.action.saveChanges')}
-          title={prepareTooltip(tx('ui.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+          text={tx('semantic.action.saveChanges')}
+          title={prepareTooltip(tx('semantic.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
           className='self-center mt-4'
           loading={isProcessing}
           icon={<IconSave size='1.25rem' />}

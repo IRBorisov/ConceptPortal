@@ -103,7 +103,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
           <TextInput
             dense
             id='sandbox_model_alias'
-            label={tx('ui.label.alias')}
+            label={tx('semantic.term.alias')}
             className='w-full mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -117,7 +117,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         {field => (
           <TextArea
             id='sandbox_model_description'
-            label={tx('ui.label.description')}
+            label={tx('semantic.term.description')}
             placeholder={formatLabel(lid.placeholder.itemDescription)}
             rows={5}
             value={field.state.value}
@@ -130,7 +130,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
 
       <div className='mt-3 sm:mb-1 flex justify-between items-center'>
         <ValueIcon
-          title={tx('ui.library.editor.dateUpdated')}
+          title={tx('semantic.term.dateUpdated')}
           dense
           icon={<IconDateUpdate size='1.25rem' />}
           value={new Date(model.time_update).toLocaleString(intl.locale, {
@@ -141,7 +141,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         />
 
         <SubmitButton
-          text={tx('ui.action.save')}
+          text={tx('semantic.action.save')}
           className='self-center w-40'
           loading={false}
           icon={<IconSave size='1.25rem' />}
@@ -149,7 +149,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         />
 
         <ValueIcon
-          title={tx('ui.library.editor.dateCreated')}
+          title={tx('semantic.term.dateCreated')}
           dense
           icon={<IconDateCreate size='1.25rem' />}
           value={new Date(model.time_create).toLocaleString(intl.locale, {

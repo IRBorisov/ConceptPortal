@@ -1,23 +1,10 @@
 /** Russian UI copy for dialogs and toolbars. */
 export const uiRu: Record<string, string> = {
-  'ui.action.create': 'Создать',
-  'ui.action.save': 'Сохранить',
   'ui.action.upload': 'Загрузить',
 
-  'ui.label.version': 'Версия',
-  'ui.label.description': 'Описание',
-  'ui.label.alias': 'Сокращение',
-  'ui.label.title': 'Название',
-  'ui.label.access': 'Доступ',
-
   'ui.library.editor.openInLibrary': 'Открыть в библиотеке',
-  'ui.library.editor.path': 'Путь',
   'ui.library.editor.pathInheritedOss': 'Путь наследуется от ОСС',
-  'ui.library.editor.owner': 'Владелец',
   'ui.library.editor.ownerInheritedOss': 'Владелец наследуется от ОСС',
-  'ui.library.editor.editorsHeader': 'Редакторы',
-  'ui.library.editor.dateUpdated': 'Дата обновления',
-  'ui.library.editor.dateCreated': 'Дата создания',
 
   'ui.ai.prompt.editTemplateTitle': 'Редактировать шаблон',
   'ui.ai.prompt.copyResultTitle': 'Скопировать результат в буфер обмена',
@@ -28,14 +15,12 @@ export const uiRu: Record<string, string> = {
   'ui.dlg.cstTemplate.tabTemplate.title': 'Выбор шаблона выражения',
   'ui.dlg.cstTemplate.tabArgs.label': 'Аргументы',
   'ui.dlg.cstTemplate.tabArgs.title': 'Подстановка аргументов шаблона',
-  'ui.dlg.cstTemplate.tabEditor.label': 'Редактор',
   'ui.dlg.cstTemplate.tabEditor.title': 'Редактирование конституенты',
 
   'ui.dlg.createVersion.header': 'Создание версии',
   'ui.dlg.createVersion.onlySelected': 'Только выбранные конституенты [{n} из {total}]',
 
   'ui.dlg.editVersions.header': 'Редактирование версий',
-  'ui.dlg.editVersions.saveChanges': 'Сохранить изменения',
   'ui.dlg.editVersions.resetChanges': 'Сбросить несохраненные изменения',
 
   'ui.dlg.uploadRsform.header': 'Импорт схемы из Экстеора',
@@ -90,29 +75,23 @@ export const uiRu: Record<string, string> = {
 
   'ui.dlg.renameCst.header': 'Переименование конституенты',
   'ui.action.rename': 'Переименовать',
-  'ui.label.name': 'Имя',
 
   'ui.dlg.editCst.header': 'Редактирование конституенты',
   'ui.dlg.editCst.titleDetailedEdit': 'Детальное редактирование',
   'ui.dlg.editCst.titleGoToAncestor': 'Перейти к предку',
 
   'ui.rsform.formEdit.crucialTitle': 'Ключевая конституента',
-  'ui.label.term': 'Термин',
   'ui.placeholder.termForDefinitions': 'Обозначение для текстовых определений',
   'ui.label.attributingConstituents': 'Атрибутирующие конституенты',
   'ui.placeholder.selectConstituents': 'Выберите конституенты',
-  'ui.label.typification': 'Типизация',
   'ui.label.textDefinition': 'Текстовое определение',
   'ui.placeholder.textDefinitionHint': 'Текстовая интерпретация формального выражения',
   'ui.action.addComment': 'Добавить комментарий',
-  'ui.label.convention': 'Конвенция',
-  'ui.label.developerComment': 'Комментарий',
   'ui.placeholder.conventionBasic': 'Договоренность об интерпретации базового понятия',
   'ui.placeholder.developerComment': 'Пояснение разработчика',
 
   'ui.dlg.inlineSynthesis.header': 'Импорт концептуальной схемы',
   'ui.action.addConstituents': 'Добавить конституенты',
-  'ui.tab.inlineSynthesis.schema': 'Схема',
   'ui.tab.inlineSynthesis.schemaTitle': 'Источник конституент',
   'ui.tab.inlineSynthesis.constituents': 'Конституенты',
   'ui.tab.inlineSynthesis.selectSchemaFirst': 'Выберите схему',
@@ -154,14 +133,10 @@ export const uiRu: Record<string, string> = {
   'ui.field.rsmodelTitle': 'Название модели',
   'ui.field.ossTitle': 'Название операционной системы',
 
-  'ui.action.saveChanges': 'Сохранить изменения',
-
   'ui.nav.menu': 'Меню',
   'ui.nav.sandboxMenu': 'Меню песочницы',
   'ui.action.recalculateModel': 'Пересчитать модель',
   'ui.aria.recalculateAll': 'Пересчитать все вычисления',
-  'ui.action.clone': 'Клонировать',
-  'ui.action.share': 'Поделиться',
   'ui.aria.copyLinkToClipboard': 'Скопировать ссылку в буфер обмена',
   'ui.action.qrCode': 'QR-код',
   'ui.hint.qrSchemaPage': 'Показать QR-код схемы',
@@ -169,7 +144,6 @@ export const uiRu: Record<string, string> = {
   'ui.action.deleteModel': 'Удалить модель',
   'ui.action.deleteSchema': 'Удалить схему',
   'ui.nav.gotoSchema': 'Перейти к схеме',
-  'ui.nav.library': 'Библиотека',
   'ui.action.createModel': 'Создать модель',
   'ui.action.exportPdf': 'Экспорт в PDF',
   'ui.action.exportToExteor': 'Выгрузить в Экстеор',
@@ -200,8 +174,6 @@ export const uiRu: Record<string, string> = {
 
   'ui.action.exportData': 'Экспортировать данные',
 
-  'ui.action.resetEdits': 'Сбросить изменения',
-  'ui.aria.resetEdits': 'Сбросить изменения',
   'ui.ai.deleteTemplate': 'Удалить шаблон',
   'ui.aria.deleteTemplate': 'Удалить шаблон',
 
@@ -235,7 +207,6 @@ export const uiRu: Record<string, string> = {
   'ui.rsmodel.calculateCurrentCst': 'Вычислить текущую конституенту',
   'ui.aria.calculateCurrentCst': 'Вычислить текущую конституенту',
 
-  'ui.oss.menu.edit': 'Редактировать',
   'ui.oss.menu.editOperation': 'Редактировать операцию',
   'ui.oss.menu.original': 'Оригинал',
   'ui.oss.menu.selectOriginal': 'Выделить оригинал',

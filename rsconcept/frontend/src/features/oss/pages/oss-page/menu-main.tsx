@@ -66,7 +66,7 @@ export function MenuMain() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('ui.action.share')}
+          text={tx('semantic.action.share')}
           title={tx('ui.aria.copyLinkToClipboard')}
           icon={<IconShare size='1rem' className='icon-primary' />}
           onClick={handleShare}
@@ -89,7 +89,7 @@ export function MenuMain() {
         <Divider margins='mx-3 my-1' />
 
         <DropdownButton
-          text={tx('ui.nav.library')}
+          text={tx('semantic.term.library')}
           icon={<IconLibrary size='1rem' className='icon-primary' />}
           onClick={handleOpenLibrary}
         />

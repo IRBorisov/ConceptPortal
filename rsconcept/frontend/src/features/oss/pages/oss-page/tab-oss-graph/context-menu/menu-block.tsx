@@ -46,7 +46,7 @@ export function MenuBlock({ block, onHide }: MenuBlockProps) {
   return (
     <>
       <DropdownButton
-        text={tx('ui.oss.menu.edit')}
+        text={tx('semantic.action.edit')}
         title={tx('ui.oss.menu.editBlockTitle')}
         icon={<IconEdit size='1rem' className='icon-primary' />}
         onClick={handleEditBlock}

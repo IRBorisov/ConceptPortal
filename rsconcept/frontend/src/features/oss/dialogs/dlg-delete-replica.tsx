@@ -66,7 +66,7 @@ export function DlgDeleteReplica() {
         dense
         noBorder
         id='operation_alias'
-        label={tx('ui.oss.deleteReplica.operationLabel')}
+        label={tx('semantic.term.operation')}
         value={target.alias}
       />
       <form.Field name='keep_connections'>

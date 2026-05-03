@@ -126,7 +126,8 @@ test('RSModel menu navigates to linked schema', async ({ page }) => {
   await page.getByRole('button', { name: 'Меню' }).click();
   await page.getByRole('button', { name: 'Перейти к схеме' }).click();
 
-  await expect(page).toHaveURL(new RegExp(`/rsforms/${rsformID}$`));
+  // gotoRSForm preserves tab/active via buildModelToSchemaQuery → URL includes ?tab=…
+  await expect(page).toHaveURL(new RegExp(`/rsforms/${rsformID}(?:\\?[^#]*)?$`));
   await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible();
 });
 

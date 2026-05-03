@@ -65,7 +65,7 @@ export function ValueInput({
         />
       ) : null}
 
-      <Label text={tx('ui.valueInput.labelValue')} />
+      <Label text={tx('semantic.term.value')} />
 
       <TextArea
         value={value.slice(0, limits.len_data_str)}

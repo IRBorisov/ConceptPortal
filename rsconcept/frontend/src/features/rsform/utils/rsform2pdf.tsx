@@ -113,9 +113,7 @@ function SchemaFooter({ schema }: { schema: RSForm }) {
   const intl = useIntl();
   return (
     <View fixed style={pdfs.footer}>
-      <Text>
-        {intl.formatMessage({ id: 'ui.rsform.pdf.footerLine' }, { alias: schema.alias })}
-      </Text>
+      <Text>{intl.formatMessage({ id: 'ui.rsform.pdf.footerLine' }, { alias: schema.alias })}</Text>
       <Text
         render={({ pageNumber, totalPages }) =>
           intl.formatMessage({ id: 'ui.rsform.pdf.sheetPages' }, { pageNumber, totalPages })
@@ -137,11 +135,9 @@ function CstTable({ data }: { data: RO<Constituenta[]> }) {
             {intl.formatMessage({ id: 'ui.rsform.pdf.colFormalExpression' })}
           </Text>
           <Text style={{ ...pdfs.cell, width: '38mm' }}>
-            {intl.formatMessage({ id: 'ui.label.typification' })}
+            {intl.formatMessage({ id: 'semantic.term.typification' })}
           </Text>
-          <Text style={{ ...pdfs.cell, width: '40mm' }}>
-            {intl.formatMessage({ id: 'ui.label.term' })}
-          </Text>
+          <Text style={{ ...pdfs.cell, width: '40mm' }}>{intl.formatMessage({ id: 'semantic.term.term' })}</Text>
           <Text style={{ ...pdfs.cell, width: '82mm', borderRightWidth: 0 }}>
             {intl.formatMessage({ id: 'ui.rsform.pdf.colSchemaInterpretation' })}
           </Text>
@@ -178,7 +174,7 @@ function getCommentColumnText(cst: RO<Constituenta>, formatMessage: IntlShape['f
     if (result) {
       result += '\n';
     }
-    result += formatMessage({ id: 'ui.rsform.pdf.conventionPrefix' }) + cst.convention;
+    result += formatMessage({ id: 'semantic.term.convention' }) + ': ' + cst.convention;
   }
   return result;
 }

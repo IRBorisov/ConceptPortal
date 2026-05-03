@@ -118,7 +118,7 @@ export function ToolbarGraphSelection({
   return (
     <div className={cn('cc-icons items-center', className)} {...restProps}>
       <MiniButton
-        title={tipHotkeys ? prepareTooltip(clearTitle, tx('ui.hotkey.esc')) : clearTitle}
+        title={tipHotkeys ? prepareTooltip(clearTitle, 'ESC') : clearTitle}
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={handleSelectReset}
         disabled={emptySelection}

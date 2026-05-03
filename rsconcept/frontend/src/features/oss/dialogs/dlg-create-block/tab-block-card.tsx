@@ -61,7 +61,7 @@ export function TabBlockCard({ oss, blocks, fields }: TabBlockCardProps) {
         {field => (
           <TextArea
             id='operation_comment'
-            label={tx('ui.label.description')}
+            label={tx('semantic.term.description')}
             placeholder={formatLabel(lid.placeholder.itemDescription)}
             noResize
             rows={5}

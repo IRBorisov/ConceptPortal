@@ -62,7 +62,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
             <TextInput
               id='dlg_cst_alias'
               dense
-              label={tx('ui.form.createCst.aliasLabel')}
+              label={tx('semantic.term.name')}
               className='w-28'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -78,7 +78,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
         {field => (
           <RefsInput
             id='dlg_cst_term'
-            label={tx('ui.form.createCst.termLabel')}
+            label={tx('semantic.term.term')}
             maxHeight='3.75rem'
             placeholder={tx('ui.form.createCst.termPlaceholder')}
             schema={schema}
@@ -137,15 +137,9 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
               id='dlg_cst_convention'
               spellCheck
               fitContent
-              label={
-                isBasic
-                  ? tx('ui.form.createCst.conventionLabel')
-                  : tx('ui.form.createCst.commentLabel')
-              }
+              label={isBasic ? tx('semantic.term.convention') : tx('semantic.term.comment')}
               placeholder={
-                isBasic
-                  ? tx('ui.form.createCst.conventionPlaceholder')
-                  : tx('ui.form.createCst.commentPlaceholder')
+                isBasic ? tx('ui.form.createCst.conventionPlaceholder') : tx('ui.form.createCst.commentPlaceholder')
               }
               areaClassName='max-h-20'
               value={field.state.value}

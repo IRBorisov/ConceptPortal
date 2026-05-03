@@ -72,7 +72,7 @@ export function TableSchemaList({
     }),
     columnHelper.accessor(cst => labelType(cst.analysis.type), {
       id: 'type',
-      header: () => <span className='min-w-40'>{tx('ui.table.header.typification')}</span>,
+      header: () => <span className='min-w-40'>{tx('semantic.term.typification')}</span>,
       enableHiding: true,
       size: 150,
       minSize: 150,
@@ -83,7 +83,7 @@ export function TableSchemaList({
     }),
     columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {
       id: 'term',
-      header: () => <span className='min-w-30'>{tx('ui.table.header.term')}</span>,
+      header: () => <span className='min-w-30'>{tx('semantic.term.term')}</span>,
       size: 500,
       minSize: 150,
       maxSize: 500

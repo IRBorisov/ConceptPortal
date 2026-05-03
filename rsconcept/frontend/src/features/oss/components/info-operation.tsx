@@ -48,11 +48,11 @@ export function InfoOperation({ operation }: InfoOperationProps) {
       <h2>{operation.alias}</h2>
       <p className='flex justify-between gap-3'>
         <span>
-          <b>{tx('ui.oss.infoOperation.typeLabel')}</b> {labelOperationType(operation.operation_type)}
+          <b>{tx('semantic.term.type')}: </b> {labelOperationType(operation.operation_type)}
         </span>
         <span>
           <b>{tx('ui.oss.infoOperation.ownAdditionsLabel')}</b>{' '}
-          {operation.has_additions ? tx('ui.common.yes') : tx('ui.common.no')}
+          {operation.has_additions ? tx('semantic.yes') : tx('semantic.no')}
         </span>
       </p>
       {operation.operation_type === OperationType.INPUT && operation.is_import ? (
@@ -88,8 +88,7 @@ export function InfoOperation({ operation }: InfoOperationProps) {
         />
       ) : operation.operation_type !== OperationType.INPUT ? (
         <p>
-          <b>{tx('ui.oss.infoOperation.substitutionsLabel')}</b>{' '}
-          {tx('ui.oss.infoOperation.substitutionsNone')}
+          <b>{tx('ui.oss.infoOperation.substitutionsLabel')}</b> {tx('ui.oss.infoOperation.substitutionsNone')}
         </p>
       ) : null}
     </>

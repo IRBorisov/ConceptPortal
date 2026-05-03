@@ -81,7 +81,7 @@ export function FormEditCst({
             <TextInput
               id='dlg_cst_alias'
               dense
-              label={tx('ui.label.name')}
+              label={tx('semantic.term.name')}
               className='w-28'
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}
@@ -97,7 +97,7 @@ export function FormEditCst({
         {field => (
           <RefsInput
             id='dlg_cst_term'
-            label={tx('ui.label.term')}
+            label={tx('semantic.term.term')}
             maxHeight='3.75rem'
             areaClassName='disabled:min-h-9'
             placeholder={tx('ui.placeholder.termForDefinitions')}
@@ -133,7 +133,7 @@ export function FormEditCst({
           noOutline
           transparent
           readOnly
-          label={tx('ui.label.typification')}
+          label={tx('semantic.term.typification')}
           value={labelType(target.analysis.type)}
           className='cursor-default'
         />
@@ -198,12 +198,8 @@ export function FormEditCst({
               id='dlg_edit_cst_convention'
               fitContent
               spellCheck
-              label={isBasic ? tx('ui.label.convention') : tx('ui.label.developerComment')}
-              placeholder={
-                isBasic
-                  ? tx('ui.placeholder.conventionBasic')
-                  : tx('ui.placeholder.developerComment')
-              }
+              label={isBasic ? tx('semantic.term.convention') : tx('semantic.term.comment')}
+              placeholder={isBasic ? tx('ui.placeholder.conventionBasic') : tx('ui.placeholder.developerComment')}
               areaClassName='max-h-20 disabled:min-h-9'
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}

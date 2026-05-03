@@ -116,7 +116,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
         {field => (
           <TextInput
             id='prompt_label'
-            label={tx('ui.label.title')}
+            label={tx('semantic.term.title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -129,7 +129,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
         {field => (
           <TextArea
             id='prompt_description'
-            label={tx('ui.label.description')}
+            label={tx('semantic.term.description')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -143,7 +143,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
         {field => (
           <PromptInput
             id='prompt_text'
-            label={tx('ui.promptTemplates.form.content')}
+            label={tx('semantic.term.contents')}
             placeholder={tx('ui.promptTemplates.form.contentPlaceholder')}
             className='disabled:min-h-9 max-h-64'
             value={field.state.value ?? ''}

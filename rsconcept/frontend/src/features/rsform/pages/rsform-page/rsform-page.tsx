@@ -84,17 +84,11 @@ function ProcessError({
     if (error.response.status === 404) {
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
-          <p>
-            {isArchive
-              ? tx('ui.rsform.error.notFoundVersion')
-              : tx('ui.rsform.error.notFound')}
-          </p>
+          <p>{isArchive ? tx('ui.rsform.error.notFoundVersion') : tx('ui.rsform.error.notFound')}</p>
           <div className='flex justify-center'>
-            <TextURL text={tx('ui.nav.library')} href='/library' />
+            <TextURL text={tx('semantic.term.library')} href='/library' />
             {isArchive ? <Divider vertical margins='mx-3' /> : null}
-            {isArchive ? (
-              <TextURL text={tx('ui.rsform.link.currentVersion')} href={`/rsforms/${itemID}`} />
-            ) : null}
+            {isArchive ? <TextURL text={tx('ui.rsform.link.currentVersion')} href={`/rsforms/${itemID}`} /> : null}
           </div>
         </div>
       );
@@ -102,7 +96,7 @@ function ProcessError({
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
           <p>{tx('ui.rsform.error.forbidden')}</p>
-          <TextURL text={tx('ui.nav.library')} href='/library' />
+          <TextURL text={tx('semantic.term.library')} href='/library' />
         </div>
       );
     }

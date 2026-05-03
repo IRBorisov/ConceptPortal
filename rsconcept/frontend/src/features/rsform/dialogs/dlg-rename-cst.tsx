@@ -76,7 +76,7 @@ export function DlgRenameCst() {
           <TextInput
             id='dlg_cst_alias'
             dense
-            label={tx('ui.label.name')}
+            label={tx('semantic.term.name')}
             className='w-28'
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}

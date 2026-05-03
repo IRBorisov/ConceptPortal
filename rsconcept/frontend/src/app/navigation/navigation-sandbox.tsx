@@ -85,7 +85,7 @@ export function NavigationSandbox() {
             onClick={navigateLibrary}
           />
           <NavigationButton
-            text={tx('nav.bar.help')}
+            text={tx('semantic.term.manual')}
             icon={<IconManuals size='1.5rem' />}
             onClick={navigateHelp}
             className='mr-2'

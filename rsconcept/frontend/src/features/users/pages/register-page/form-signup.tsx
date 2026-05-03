@@ -87,7 +87,9 @@ export function FormSignup() {
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined}
+                error={
+                  field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined
+                }
               />
             )}
           </form.Field>
@@ -101,7 +103,9 @@ export function FormSignup() {
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined}
+                error={
+                  field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined
+                }
               />
             )}
           </form.Field>
@@ -115,7 +119,9 @@ export function FormSignup() {
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined}
+                error={
+                  field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined
+                }
               />
             )}
           </form.Field>
@@ -144,7 +150,9 @@ export function FormSignup() {
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined}
+                error={
+                  field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined
+                }
               />
             )}
           </form.Field>
@@ -157,7 +165,9 @@ export function FormSignup() {
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined}
+                error={
+                  field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined
+                }
               />
             )}
           </form.Field>
@@ -170,7 +180,9 @@ export function FormSignup() {
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined}
+                error={
+                  field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined
+                }
               />
             )}
           </form.Field>
@@ -184,10 +196,7 @@ export function FormSignup() {
           value={acceptPrivacy}
           onChange={setAcceptPrivacy}
         />
-        <TextURL
-          text={tx('auth.register.linkPrivacy')}
-          href={urls.help_topic(HelpTopic.INFO_PRIVACY)}
-        />
+        <TextURL text={tx('auth.register.linkPrivacy')} href={urls.help_topic(HelpTopic.INFO_PRIVACY)} />
       </div>
       <div className='flex gap-1 text-sm'>
         <Checkbox
@@ -196,10 +205,7 @@ export function FormSignup() {
           value={acceptRules}
           onChange={setAcceptRules}
         />
-        <TextURL
-          text={tx('auth.register.linkRules')}
-          href={urls.help_topic(HelpTopic.INFO_RULES)}
-        />
+        <TextURL text={tx('auth.register.linkRules')} href={urls.help_topic(HelpTopic.INFO_RULES)} />
       </div>
 
       <div className='flex justify-around mt-3'>
@@ -209,7 +215,7 @@ export function FormSignup() {
           loading={isPending}
           disabled={!acceptPrivacy || !acceptRules}
         />
-        <Button text={tx('auth.register.back')} className='min-w-40' onClick={() => handleCancel()} />
+        <Button text={tx('semantic.action.back')} className='min-w-40' onClick={() => handleCancel()} />
       </div>
       {serverError ? <ServerError error={serverError} /> : null}
     </form>

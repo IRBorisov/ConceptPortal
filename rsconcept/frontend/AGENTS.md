@@ -30,6 +30,7 @@ This file applies to all code under the frontend application directory.
 - `src/backend`: Shared client-side API transport and query setup
 - `src/stores`: Shared Zustand stores
 - `src/utils`: General utility helpers
+- `src/i18n`: Locales, merged message catalogs, `useTx`, `lid` / `formatLabel`
 - `tests`: End-to-end and setup files
 - `public`: Static assets
 
@@ -58,19 +59,16 @@ Run from `rsconcept/frontend`:
 - Help content: `src/features/help`
 - Offline sandbox mode: `src/features/sandbox`
 
-## Internationalization (user-visible UI copy)
+## Internationalization (user-visible copy)
 
-- **Do not** introduce or leave user-facing copy as hardcoded Russian (or any single locale) in `.tsx` / `.ts` UI code. Use the compact hook `useTx` from `@/i18n`: `tx('ui.some.key')` or `tx('ui.some.key', { name: value })` — **no** English string at the call site; English lives in `src/i18n/messages/partials/*.en.ts` (same keys as `*.ru.ts` / `*.fr.ts`). After changing locale, the app reloads from `IntlPreferencesProvider` so strings always match the persisted catalog.
-- **When you add, change, or remove** any such string (labels, buttons, placeholders, `title` / `aria-label`, dialog headers, empty states, etc.):
-  1. Use a stable message **id** (prefer the existing `ui.*` namespace for shared chrome, e.g. `ui.action.save`, `ui.nav.library`, or add a new dotted key under `ui.` when it is reusable).
-  2. **Update every locale catalog** that the app ships for those ids. Today that means editing **all three**:
-     - `src/i18n/messages/partials/ui.en.ts` (English)
-     - `src/i18n/messages/partials/ui.ru.ts`
-     - `src/i18n/messages/partials/ui.fr.ts`
-       with the **same keys** (keep keys alphabetically or grouped consistently with neighboring keys). For shell/nav/library/ui-extra keys, edit the matching `*.en.ts` / `*.ru.ts` / `*.fr.ts` partials.
-  3. For non-React copy (`formatAppMessage`, toasts, tooltips), add the English string to the same id in the appropriate partial (or `labels.en.ts` for `lid` / `formatLabel` ids).
-- Message bundles are merged in `src/i18n/messages/en.ts`, `ru.ts`, and `fr.ts` from `partials/`; new partial files must be imported there.
-- **Domain / feature wording** that already goes through `formatLabel` / `labels-*` and backend-driven catalogs: follow the same rule—**any new or changed `lid` / label id** must have matching entries in the relevant label partials for each supported locale (see `src/utils/labels` and `src/**/labels-feature-ui.*`).
+- **No hardcoded locale-specific strings** in UI code. Use stable message **ids** and ship **en**, **ru**, and **fr** for every id you touch.
+- **In React:** `useTx` from `@/i18n` → `tx('namespace.key', values?)` (react-intl).
+- **Outside React** (stores, toasts, plain `.ts`): `formatAppMessage` or `formatLabel` from `@/i18n` — same ids; the app sets intl via `AppIntlBridge` under `IntlPreferencesProvider`. Persisted locale changes trigger a full reload so catalogs stay aligned.
+- **Catalog layout** (`src/i18n/messages/`):
+  - **`en.ts` / `ru.ts` / `fr.ts`** merge all slices; add a new slice file only if you introduce a new module, then import it in all three.
+  - **`partials/`** — `ui`, `ui-extra`, `shell`, `nav`, `library`: general and feature-adjacent UI copy; **`labels.*`** — strings keyed by `lid` from `src/i18n/labels/lid.ts`; **`labels-feature.*`** — ids exported from `src/i18n/labels/*-ui.ts` (and similar) co-located with domains.
+  - **`semantic/`** — `terms.*` and `actions.*` merged through `semantic.*.ts` for shared vocabulary / action wording.
+- **Workflow:** pick the right partial (or `semantic/` / `labels` / `labels-feature`); add the id in **all three** locale files for that slice; keep key order consistent with neighbors. For new `lid` or feature label constants, define the id in `src/i18n/labels/` and add the three locale strings (`labels*` partials as appropriate).
 
 ## Edit rules
 

@@ -41,12 +41,12 @@ export function SelectorCstFilter({ className, showModelFilter }: SelectorCstFil
     <div className={cn('font-controls text-sm opacity-50 hover:opacity-100 transition-opacity select-none', className)}>
       <Select value={filter} onValueChange={setFilter}>
         <SelectTrigger noBorder className='h-8 pl-2 pr-0 gap-1'>
-          <SelectValue placeholder={tx('ui.filter.placeholder')} />
+          <SelectValue placeholder={tx('semantic.term.filter')} />
         </SelectTrigger>
         <SelectContent align='start'>
           <SelectItem value='all'>
             <IconFilter size='1rem' className='text-muted-foreground -mt-0.5 -mr-0.75' />
-            {tx('ui.filter.placeholder')}
+            {tx('semantic.term.filter')}
           </SelectItem>
           <SelectItem value='schema_issues' title={tx('ui.filter.schemaIssuesTitle')}>
             <IconStatusError size='1rem' className='text-destructive -mt-0.5 -mr-0.75' />

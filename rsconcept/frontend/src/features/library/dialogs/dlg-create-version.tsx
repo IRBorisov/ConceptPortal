@@ -60,7 +60,7 @@ export function DlgCreateVersion() {
       className='cc-column w-120 py-2 px-6'
       canSubmit={canSubmit}
       validationHint={hint}
-      submitText={tx('ui.action.create')}
+      submitText={tx('semantic.action.create')}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
@@ -71,7 +71,7 @@ export function DlgCreateVersion() {
         {field => (
           <TextInput
             id='dlg_version'
-            label={tx('ui.label.version')}
+            label={tx('semantic.term.version')}
             className='w-64'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -85,7 +85,7 @@ export function DlgCreateVersion() {
           <TextArea
             id='dlg_description'
             spellCheck
-            label={tx('ui.label.description')}
+            label={tx('semantic.term.description')}
             rows={3}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}

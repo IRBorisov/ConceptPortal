@@ -201,7 +201,7 @@ export function MenuMain() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('ui.action.share')}
+          text={tx('semantic.action.share')}
           title={formatLabel(
             schema.access_policy === AccessPolicy.PUBLIC ? lid.tooltip.shareItemPublic : lid.tooltip.shareItemPrivate
           )}
@@ -218,7 +218,7 @@ export function MenuMain() {
         />
         {!isAnonymous ? (
           <DropdownButton
-            text={tx('ui.action.clone')}
+            text={tx('semantic.action.clone')}
             icon={<IconClone size='1rem' className='icon-green' />}
             disabled={isArchive}
             onClick={handleClone}
@@ -314,7 +314,7 @@ export function MenuMain() {
           </div>
         ) : null}
         <DropdownButton
-          text={tx('ui.nav.library')}
+          text={tx('semantic.term.library')}
           icon={<IconLibrary size='1rem' className='icon-primary' />}
           onClick={() => router.gotoLibrary()}
         />

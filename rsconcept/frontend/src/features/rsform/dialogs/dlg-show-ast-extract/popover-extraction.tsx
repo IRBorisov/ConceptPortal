@@ -138,7 +138,7 @@ export function PopoverExtraction({
               />
               <MiniButton
                 icon={<IconClose size='1.25rem' className='icon-primary' />}
-                title={prepareTooltip(tx('modal.close'), 'Esc')}
+                title={prepareTooltip(tx('semantic.action.close'), 'Esc')}
                 onClick={() => setOpen(false)}
               />
             </div>

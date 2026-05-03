@@ -64,7 +64,7 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
   const columns = [
     argumentsHelper.accessor('alias', {
       id: 'alias',
-      header: tx('ui.cstTemplate.arguments.column.name'),
+      header: tx('semantic.term.name'),
       size: 40,
       minSize: 40,
       maxSize: 40,
@@ -72,14 +72,14 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
     }),
     argumentsHelper.accessor(arg => arg.value || tx('ui.template.arguments.freeSlot'), {
       id: 'value',
-      header: tx('ui.cstTemplate.arguments.column.value'),
+      header: tx('semantic.term.value'),
       size: 200,
       minSize: 200,
       maxSize: 200
     }),
     argumentsHelper.accessor(arg => arg.typification, {
       id: 'type',
-      header: tx('ui.cstTemplate.arguments.column.typification'),
+      header: tx('semantic.term.typification'),
       enableHiding: true,
       cell: props => <div className='w-36 text-sm wrap-break-word'>{props.getValue()}</div>
     }),

@@ -121,7 +121,7 @@ export function DlgCreateSynthesis() {
   return (
     <ModalForm
       header={tx('ui.dlg.createSynthesis.header')}
-      submitText={tx('ui.action.create')}
+      submitText={tx('semantic.action.create')}
       canSubmit={canSubmit}
       validationHint={hint}
       onSubmit={event => {
@@ -134,10 +134,7 @@ export function DlgCreateSynthesis() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='z-pop mx-auto flex border divide-x rounded-none'>
-          <TabLabel
-            title={tx('ui.tab.oss.operationArgumentsTitle')}
-            label={tx('ui.tab.oss.arguments')}
-          />
+          <TabLabel title={tx('ui.tab.oss.operationArgumentsTitle')} label={tx('ui.tab.oss.arguments')} />
           <TabLabel
             title={tx('ui.tab.inlineSynthesis.substitutionsTitle')}
             label={tx('ui.tab.inlineSynthesis.substitutions')}

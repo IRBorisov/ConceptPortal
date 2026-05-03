@@ -119,7 +119,7 @@ export function FormSchema({ className }: FormSchemaProps) {
           {field => (
             <TextInput
               id='schema_alias'
-              label={tx('ui.label.alias')}
+              label={tx('semantic.term.alias')}
               className='w-64'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -132,7 +132,7 @@ export function FormSchema({ className }: FormSchemaProps) {
         <div className='relative flex flex-col gap-2'>
           <ToolbarVersioning className='absolute -top-1 right-2' blockReload={schema.oss.length > 0} />
 
-          <Label text={tx('ui.label.version')} className='select-none w-fit' />
+          <Label text={tx('semantic.term.version')} className='select-none w-fit' />
           <SelectVersion
             disabled={!isContentEditable && schema.versions.length === 0}
             id='schema_version'
@@ -158,7 +158,7 @@ export function FormSchema({ className }: FormSchemaProps) {
           {field => (
             <TextArea
               id='schema_comment'
-              label={tx('ui.label.description')}
+              label={tx('semantic.term.description')}
               placeholder={formatLabel(lid.placeholder.itemDescription)}
               rows={5}
               value={field.state.value}
@@ -172,8 +172,8 @@ export function FormSchema({ className }: FormSchemaProps) {
       </div>
       {isContentEditable || !isDefaultValue ? (
         <SubmitButton
-          text={tx('ui.action.saveChanges')}
-          title={prepareTooltip(tx('ui.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+          text={tx('semantic.action.saveChanges')}
+          title={prepareTooltip(tx('semantic.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
           className='self-center mt-4'
           loading={isProcessing}
           icon={<IconSave size='1.25rem' />}

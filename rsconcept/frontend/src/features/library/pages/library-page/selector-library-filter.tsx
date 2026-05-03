@@ -25,12 +25,12 @@ export function SelectorLibraryFilter({ className }: SelectorLibraryFilterProps)
     <div className={cn('font-controls text-sm opacity-80 transition-opacity hover:opacity-100 select-none', className)}>
       <Select value={value} onValueChange={handleValueChange}>
         <SelectTrigger noBorder className='h-7 pl-2 pr-1 gap-1 pb-0'>
-          <SelectValue placeholder={tx('lib.filter.placeholder')} />
+          <SelectValue placeholder={tx('semantic.term.filter')} />
         </SelectTrigger>
         <SelectContent align='start'>
           <SelectItem value='all'>
             <IconFilter size='1rem' className='text-muted-foreground -mt-0.5 -mr-0.75' />
-            {tx('lib.filter.label')}
+            {tx('semantic.term.filter')}
           </SelectItem>
           <SelectItem value='owner_me'>
             <IconOwner size='1rem' className='text-primary -mt-0.5 -mr-0.75' />

@@ -124,7 +124,7 @@ export function DlgEditCst() {
       canSubmit={canSubmit}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
       validationHint={canSubmit ? '' : formatLabel(lid.hint.aliasInvalid)}
-      submitText={tx('ui.action.save')}
+      submitText={tx('semantic.action.save')}
       className='cc-column w-140 max-h-120 py-2 px-6'
     >
       <div className='cc-icons absolute z-pop left-2 top-2'>

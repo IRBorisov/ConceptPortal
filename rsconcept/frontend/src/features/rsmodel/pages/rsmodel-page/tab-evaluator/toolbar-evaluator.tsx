@@ -23,7 +23,7 @@ export function ToolbarEvaluator({ className }: ToolbarEvaluatorProps) {
   return (
     <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>
       <MiniButton
-        title={prepareTooltip(tx('ui.action.recalculateModel'), tx('ui.hotkey.altQ'))}
+        title={prepareTooltip(tx('ui.action.recalculateModel'), 'Alt + Q')}
         aria-label={tx('ui.aria.recalculateAll')}
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
         onClick={() => engine.recalculateAll()}

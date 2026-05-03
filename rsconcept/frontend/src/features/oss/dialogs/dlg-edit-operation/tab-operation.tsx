@@ -47,7 +47,7 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
           <TextInput
             id='operation_alias'
             dense
-            label={tx('ui.label.alias')}
+            label={tx('semantic.term.alias')}
             placeholder={tx('ui.oss.enterAlias')}
             className='w-full'
             value={field.state.value}
@@ -72,7 +72,7 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
         {field => (
           <TextArea
             id='operation_comment'
-            label={tx('ui.label.description')}
+            label={tx('semantic.term.description')}
             placeholder={formatLabel(lid.placeholder.itemDescription)}
             noResize
             rows={5}

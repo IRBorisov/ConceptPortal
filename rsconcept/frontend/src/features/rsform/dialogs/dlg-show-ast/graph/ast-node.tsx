@@ -68,7 +68,7 @@ function buildTooltip(
   tx: (id: string, values?: Record<string, string | number | boolean | Date | null | undefined>) => string
 ): string {
   const type = readTypeAnnotation(data as AstNode);
-  const typeLine = type ? `${tx('ui.node.ast.typePrefix')} ${labelType(type)}` : '';
+  const typeLine = type ? `${tx('semantic.term.type')}: ${labelType(type)}` : '';
   const errorBlock = errorMessages ? `${errorMessages}` : '';
   const isGlobalId =
     data.typeID === TokenID.ID_GLOBAL || data.typeID === TokenID.ID_FUNCTION || data.typeID === TokenID.ID_PREDICATE;
@@ -79,7 +79,7 @@ function buildTooltip(
       const cst = schema.cstByAlias.get(alias);
       const termText = cst ? (cst.term_resolved || cst.term_raw).trim() : '';
       if (termText) {
-        extra = `${tx('ui.node.ast.termPrefix')} ${termText}`;
+        extra = `${tx('semantic.term.term')}: ${termText}`;
       }
     }
   } else if (data.typeID === TokenID.ID_RADICAL && schema) {

@@ -50,7 +50,7 @@ export function ToolbarItemAccess({
 
   return (
     <div className={clsx('w-46 flex items-center h-8 select-none', className)}>
-      <Label text={tx('ui.label.access')} />
+      <Label text={tx('semantic.term.access')} />
       <div className='ml-auto cc-icons'>
         <SelectAccessPolicy
           value={policy}
@@ -59,9 +59,7 @@ export function ToolbarItemAccess({
         />
 
         <MiniButton
-          title={
-            visible ? tx('ui.dlg.clone.libraryShow') : tx('ui.dlg.clone.libraryHide')
-          }
+          title={visible ? tx('ui.dlg.clone.libraryShow') : tx('ui.dlg.clone.libraryHide')}
           aria-label={tx('ui.dlg.clone.libraryToggleAria')}
           icon={<IconItemVisibility value={visible} />}
           onClick={toggleVisible}
@@ -69,11 +67,7 @@ export function ToolbarItemAccess({
         />
 
         <MiniButton
-          title={
-            readOnly
-              ? tx('ui.library.toolbar.editForbiddenTitle')
-              : tx('ui.library.toolbar.editAllowedTitle')
-          }
+          title={readOnly ? tx('ui.library.toolbar.editForbiddenTitle') : tx('ui.library.toolbar.editAllowedTitle')}
           aria-label={tx('ui.library.toolbar.editModeToggleAria')}
           icon={
             readOnly ? (

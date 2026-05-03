@@ -127,7 +127,7 @@ export function DlgCreateBlock() {
   return (
     <ModalForm
       header={tx('ui.dlg.createBlock.header')}
-      submitText={tx('ui.action.create')}
+      submitText={tx('semantic.action.create')}
       canSubmit={canSubmit}
       validationHint={hint}
       onSubmit={event => {

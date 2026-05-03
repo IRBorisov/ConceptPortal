@@ -57,7 +57,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
     }),
     columnHelper.accessor('label', {
       id: 'label',
-      header: tx('ui.promptTemplates.column.title'),
+      header: tx('semantic.term.title'),
       size: 200,
       minSize: 200,
       maxSize: 200,
@@ -67,7 +67,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
     }),
     columnHelper.accessor('description', {
       id: 'description',
-      header: tx('ui.promptTemplates.column.description'),
+      header: tx('semantic.term.description'),
       size: 1200,
       minSize: 200,
       maxSize: 1200,
@@ -76,7 +76,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
     }),
     columnHelper.accessor('owner', {
       id: 'owner',
-      header: tx('ui.promptTemplates.column.owner'),
+      header: tx('semantic.term.owner'),
       size: 400,
       minSize: 100,
       maxSize: 400,
@@ -108,10 +108,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
           <NoData>
             <p>{tx('ui.table.emptyList')}</p>
             <p>
-              <TextURL
-                text={tx('ui.link.createPromptTemplate')}
-                onClick={handleCreateNew}
-              />
+              <TextURL text={tx('ui.link.createPromptTemplate')} onClick={handleCreateNew} />
             </p>
           </NoData>
         }

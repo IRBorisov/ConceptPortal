@@ -107,7 +107,7 @@ export function DlgEditWordForms() {
   return (
     <ModalForm
       header={tx('ui.wordForms.edit.header')}
-      submitText={tx('ui.action.save')}
+      submitText={tx('semantic.action.save')}
       onSubmit={handleSubmit}
       className='flex flex-col w-180 px-6'
       helpTopic={HelpTopic.TERM_CONTROL}

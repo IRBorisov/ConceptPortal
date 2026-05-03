@@ -68,14 +68,14 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: tx('ui.label.alias'),
+      header: tx('semantic.term.alias'),
       size: 300,
       minSize: 150,
       maxSize: 300
     }),
     columnHelper.accessor('title', {
       id: 'title',
-      header: tx('ui.label.title'),
+      header: tx('semantic.term.title'),
       size: 1200,
       minSize: 300,
       maxSize: 1200,

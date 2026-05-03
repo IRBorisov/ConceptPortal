@@ -94,7 +94,7 @@ export function LoginPage() {
         )}
       </form.Field>
 
-      <SubmitButton text={tx('auth.login.submit')} className='self-center w-48 mt-3' loading={isPending} />
+      <SubmitButton text={tx('semantic.action.login')} className='self-center w-48 mt-3' loading={isPending} />
       <div className='flex flex-col text-sm'>
         <TextURL text={tx('auth.login.linkRestore')} href='/restore-password' />
         <TextURL text={tx('auth.login.linkSignup')} href='/signup' />
@@ -110,11 +110,7 @@ function ServerError({ error }: { error: ErrorData }): React.ReactElement | null
   rethrowIfStaleBundleError(error);
 
   if (isAxiosError(error) && error.response?.status === 400) {
-    return (
-      <div className='text-sm select-text text-destructive'>
-        {tx('auth.login.badCredentials')}
-      </div>
-    );
+    return <div className='text-sm select-text text-destructive'>{tx('auth.login.badCredentials')}</div>;
   }
   throw error as Error;
 }

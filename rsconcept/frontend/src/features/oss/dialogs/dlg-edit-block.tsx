@@ -61,7 +61,7 @@ export function DlgEditBlock() {
   return (
     <ModalForm
       header={tx('ui.dlg.editBlock.header')}
-      submitText={tx('ui.action.save')}
+      submitText={tx('semantic.action.save')}
       canSubmit={canSubmit}
       onSubmit={event => {
         event.preventDefault();
@@ -103,7 +103,7 @@ export function DlgEditBlock() {
         {field => (
           <TextArea
             id='operation_comment'
-            label={tx('ui.label.description')}
+            label={tx('semantic.term.description')}
             placeholder={formatLabel(lid.placeholder.itemDescription)}
             noResize
             rows={5}

@@ -37,7 +37,7 @@ export function MiniRSFormStats({ className, stats }: MiniRSFormStatsProps) {
   return (
     <div className={cn('h-min', 'grid grid-cols-4 gap-1 justify-items-end select-none', className)}>
       <div id='count_all' className='col-span-2 w-fit flex gap-3 hover:cursor-default'>
-        <span>{tx('ui.stats.mini.total')}</span>
+        <span>{tx('semantic.total')}</span>
         <span className='font-math'>{stats.count_all}</span>
       </div>
       <ValueStats

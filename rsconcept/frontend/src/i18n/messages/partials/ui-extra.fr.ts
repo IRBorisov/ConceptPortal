@@ -75,20 +75,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.stats.secondary.functions': 'Fonctions',
   'ui.stats.title.termAndPredicateFns': 'Nombre de fonctions terme\net fonctions prédicat',
 
-  'ui.hotkey.altQ': 'Alt + Q',
-  'ui.hotkey.altGrave': 'Alt + `',
-  'ui.hotkey.altV': 'Alt + V',
-  'ui.hotkey.altUp': 'Alt + ↑',
-  'ui.hotkey.altDown': 'Alt + ↓',
-  'ui.hotkey.delete': 'Suppr.',
-  'ui.hotkey.deleteBacktick': 'Suppr., `',
-  'ui.hotkey.esc': 'Échap',
-  'ui.hotkey.f': 'F',
-  'ui.hotkey.r': 'R',
-  'ui.hotkey.g': 'G',
-  'ui.hotkey.t': 'T',
-  'ui.hotkey.v': 'V',
-
   'ui.toolbar.newConstituenta': 'Nouvelle constituante',
   'ui.toolbar.editConstituenta': 'Modifier la constituante',
 
@@ -151,7 +137,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.structurePlanner.submitUpdate': 'Mettre à jour le terme',
   'ui.structurePlanner.resetTerm': 'Réinitialiser le terme',
 
-  'ui.valueInput.labelValue': 'Valeur',
   'ui.valueInput.cardinalityExpressionAria': 'Cardinalité / valeur de l’expression',
   'ui.valueInput.expressionValueTooltip': 'Valeur de l’expression',
   'ui.valueInput.cardinalityPrefix': 'Cardinalité :',
@@ -164,16 +149,9 @@ export const uiExtraFr: Record<string, string> = {
   'ui.pickElement.valueLabel': 'Saisir la valeur',
   'ui.pickElement.selectPrompt': 'Sélectionnez un élément à modifier',
 
-  'ui.node.ast.typePrefix': 'Type :',
-  'ui.node.ast.termPrefix': 'Terme :',
   'ui.node.ast.templateParam': 'Paramètre de modèle :',
   'ui.node.mgraph.constituentsPrefix': 'Constituantes',
-  'ui.node.tg.typificationPrefix': 'Typage :',
-  'ui.node.tg.contentsPrefix': 'Contenu :',
   'ui.node.tg.contentsMissing': 'absent',
-
-  'ui.selectTree.fold': 'Réduire',
-  'ui.selectTree.unfold': 'Développer',
 
   'ui.library.createItem.modelTitle': 'Modèle {title}',
 
@@ -193,7 +171,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.tabs.schemaErrorsTitle': 'Erreurs de schéma : {count}',
   'ui.tabs.modelErrorsTitle': 'Erreurs de modèle : {count}',
 
-  'ui.stats.mini.total': 'Total',
   'ui.stats.row.incorrect': 'Non valides',
 
   'ui.rsform.menu.archiveNoEdit': 'Archive : modification interdite\nAller à la version actuelle',
@@ -261,8 +238,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.oss.toolbar.saveImage': 'Enregistrer l’image',
   'ui.oss.toolbar.savePng': 'Enregistrer en PNG',
   'ui.oss.toolbar.saveSvg': 'Enregistrer en SVG',
-  'ui.oss.toolbar.saveChangesAria': 'Enregistrer les modifications',
-  'ui.oss.toolbar.saveChanges': 'Enregistrer les modifications',
   'ui.oss.toolbar.editSelectedAria': 'Modifier la sélection',
   'ui.oss.toolbar.editSelected': 'Modifier la sélection',
   'ui.oss.toolbar.rightClickHint': 'Clic droit',
@@ -274,7 +249,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.oss.toolbar.importSchema': 'Importer un schéma conceptuel',
   'ui.oss.toolbar.synthesisShort': 'Synthèse',
   'ui.oss.toolbar.synthesis': 'Synthèse de schémas conceptuels',
-  'ui.oss.toolbar.filterShort': 'Filtre',
   'ui.oss.toolbar.filterConstituents': 'Filtrer les constituantes',
   'ui.oss.toolbar.relativizationShort': 'Relativisation',
   'ui.oss.toolbar.relativization': 'Relativisation des schémas conceptuels',
@@ -297,8 +271,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.oss.settings.header': 'Paramètres d’affichage',
   'ui.oss.settings.coordsToggleAria': 'Afficher les coordonnées des nœuds',
   'ui.oss.settings.coordsLabel': 'Coordonnées des nœuds : {state}',
-  'ui.oss.settings.toggleOnShort': 'Oui',
-  'ui.oss.settings.toggleOffShort': 'Non',
   'ui.oss.settings.gridToggleAria': 'Afficher la grille',
   'ui.oss.settings.gridToggleTitle': 'Afficher la grille',
   'ui.oss.settings.gridLabel': 'Affichage de la grille : {state}',
@@ -312,7 +284,6 @@ export const uiExtraFr: Record<string, string> = {
 
   'ui.oss.deleteReplica.header': 'Supprimer la réplique',
   'ui.oss.deleteReplica.submit': 'Confirmer la suppression',
-  'ui.oss.deleteReplica.operationLabel': 'Opération',
   'ui.oss.deleteReplica.relinkArgs': 'Réacheminer les liens vers l’original',
   'ui.oss.deleteReplica.relinkArgsHint': 'Les liens des arguments seront redirigés vers l’original de la réplique',
   'ui.oss.deleteReplica.keepInherited': 'Conserver les constituantes héritées',
@@ -320,7 +291,6 @@ export const uiExtraFr: Record<string, string> = {
 
   'ui.oss.deleteOperation.header': 'Supprimer l’opération',
   'ui.oss.deleteOperation.submit': 'Confirmer la suppression',
-  'ui.oss.deleteOperation.operationLabel': 'Opération',
   'ui.oss.deleteOperation.deleteSchema': 'Supprimer le schéma',
   'ui.oss.deleteOperation.deleteSchemaLocked': 'Le schéma lié ne peut pas être supprimé',
   'ui.oss.deleteOperation.deleteSchemaHint': 'Supprimer le schéma avec l’opération',
@@ -333,11 +303,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.combo.emptyList': 'Liste vide',
   'ui.search.placeholderDefault': 'Rechercher',
 
-  'ui.table.header.alias': 'Nom',
-  'ui.table.header.value': 'Valeur',
-  'ui.table.header.description': 'Description',
-  'ui.table.header.typification': 'Typage',
-  'ui.table.header.term': 'Terme',
   'ui.table.header.formalDefinition': 'Définition formelle',
   'ui.table.header.textDefinition': 'Définition textuelle',
   'ui.table.header.conventionComment': 'Convention / commentaire',
@@ -350,7 +315,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.table.cstSide.emptyTitle': 'Aucune constituante dans la liste',
   'ui.table.cstSide.emptyHint': 'Modifiez le filtre ou créez une constituante',
 
-  'ui.filter.placeholder': 'Filtre',
   'ui.filter.schemaIssuesShort': 'Erreurs sch.',
   'ui.filter.schemaIssuesTitle': 'Erreurs de schéma',
   'ui.filter.modelIssuesShort': 'Erreurs mod.',
@@ -369,10 +333,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.template.arguments.freeSlot': 'argument libre',
   'ui.template.arguments.clearValueTitle': 'Effacer la valeur',
 
-  'ui.promptTemplates.column.title': 'Titre',
-  'ui.promptTemplates.column.description': 'Description',
-  'ui.promptTemplates.column.owner': 'Propriétaire',
-
   'ui.users.column.lastName': 'Nom',
   'ui.users.column.firstName': 'Prénom',
   'ui.users.action.removeFromListTitle': 'Retirer de la liste',
@@ -380,9 +340,7 @@ export const uiExtraFr: Record<string, string> = {
 
   'ui.bindingEditor.column.text': 'Texte',
   'ui.bindingEditor.deleteRowTitle': 'Supprimer l’élément',
-  'ui.bindingEditor.totalPrefix': 'Total ',
   'ui.bindingEditor.addElementTitle': 'Ajouter un élément',
-  'ui.bindingEditor.valueLabel': 'Valeur',
   'ui.bindingEditor.selectRowPlaceholder': 'Sélectionnez une ligne',
   'ui.bindingEditor.noValues': 'Aucune valeur',
 
@@ -393,22 +351,13 @@ export const uiExtraFr: Record<string, string> = {
   'ui.rsexpr.toolbar.expressionStructureTitle': 'Structure de l’expression',
 
   'ui.form.createCst.crucialTitle': 'Constituante clé',
-  'ui.form.createCst.aliasLabel': 'Nom',
-  'ui.form.createCst.termLabel': 'Terme',
   'ui.form.createCst.termPlaceholder': 'Symbole pour les définitions textuelles',
   'ui.form.createCst.textDefinitionLabel': 'Définition textuelle',
   'ui.form.createCst.textDefinitionPlaceholder': 'Interprétation textuelle de l’expression formelle',
   'ui.form.createCst.addComment': 'Ajouter un commentaire',
-  'ui.form.createCst.conventionLabel': 'Convention',
-  'ui.form.createCst.commentLabel': 'Commentaire',
   'ui.form.createCst.conventionPlaceholder': 'Convention d’interprétation pour une notion de base',
   'ui.form.createCst.commentPlaceholder': 'Note du développeur',
 
-  'ui.cstTemplate.arguments.column.name': 'Nom',
-  'ui.cstTemplate.arguments.column.value': 'Valeur',
-  'ui.cstTemplate.arguments.column.typification': 'Typage',
-
-  'ui.pick.schema.dateColumn': 'Date',
   'ui.pick.schema.filterByLocationTitle': 'Filtrer par emplacement',
   'ui.pick.schema.resetLocationFilterTitle': 'Réinitialiser le filtre',
   'ui.pick.schema.emptyTitle': 'Aucun schéma dans la liste',
@@ -417,9 +366,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.list.reorder.moveHigher': 'Déplacer vers le haut',
   'ui.list.reorder.moveLower': 'Déplacer vers le bas',
 
-  'ui.oss.pickContents.column.kind': 'Type',
-  'ui.oss.pickContents.kindOperation': 'Opération',
-  'ui.oss.pickContents.kindBlock': 'Bloc',
   'ui.oss.pickContents.comboPlaceholder': 'Choisir une opération ou un bloc',
 
   'ui.versions.deleteVersionTitle': 'Supprimer la version',
@@ -432,7 +378,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.promptTemplates.error.notFound': 'Aucun modèle de requête avec l’identifiant {itemID}.',
   'ui.promptTemplates.link.templateList': 'Liste des modèles',
 
-  'ui.promptTemplates.form.content': 'Contenu',
   'ui.promptTemplates.form.contentPlaceholder': 'Ex. : Propose une complétion pour le schéma {{schema}}',
   'ui.promptTemplates.form.sharedCheckbox': 'Modèle partagé',
   'ui.promptTemplates.form.generateSampleTitle': 'Générer un exemple de requête',
@@ -446,10 +391,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.aiPrompt.tab.result': 'Résultat',
   'ui.aiPrompt.tab.variables': 'Variables',
 
-  'ui.common.yes': 'Oui',
-  'ui.common.no': 'Non',
-
-  'ui.oss.infoOperation.typeLabel': 'Type :',
   'ui.oss.infoOperation.ownAdditionsLabel': 'Propres :',
   'ui.oss.infoOperation.csNotInOss': 'Le schéma conceptuel n’appartient pas à l’OSS',
   'ui.oss.infoOperation.rhombusSynthesis': 'Synthèse en losange',
@@ -469,11 +410,9 @@ export const uiExtraFr: Record<string, string> = {
   'ui.schemaCard.toggleStatsTitle': 'Afficher les statistiques',
 
   'ui.oss.sidePanel.closeTitle': 'Fermer le panneau',
-  'ui.oss.sidePanel.contentsHeading': 'Contenu',
   'ui.oss.sidePanel.selectOperationHint': 'Sélectionnez une opération à afficher',
   'ui.oss.sidePanel.noCsForOperation': 'Aucun schéma conceptuel pour l’opération sélectionnée',
 
-  'ui.stats.caption.total': 'Total',
   'ui.stats.oss.compositionPrimaryTitle': 'Nombre total d’éléments dans le schéma opérationnel',
   'ui.stats.oss.blocks': 'Blocs',
   'ui.stats.oss.blocksSecondaryTitle': 'Nombre de blocs imbriqués',
@@ -496,7 +435,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.pagination.rowsPerPageAria': 'Choisir le nombre de lignes par page',
   'ui.pagination.perPageSuffix': 'par page',
 
-  'ui.dataTable.selectAllTitle': 'Tout sélectionner',
   'ui.dataTable.noData': 'Aucune donnée',
 
   'ui.promptTemplates.tab.list': 'Liste',
@@ -523,7 +461,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.library.editors.saveList': 'Enregistrer la liste',
   'ui.library.editors.addPlaceholder': 'Ajouter un éditeur',
   'ui.library.selectItem.placeholder': 'Choisir un schéma',
-  'ui.library.accessTitlePrefix': 'Accès :',
   'ui.library.miniOss.title': 'Schémas opérationnels',
   'ui.library.miniOss.listLabel': 'Liste des OSS',
   'ui.library.pickLocation.label': 'Emplacement',
@@ -563,8 +500,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.rsform.errors.warnings': 'Avertissements : {count}',
   'ui.rsform.errors.kindError': 'Erreur',
   'ui.rsform.errors.kindWarning': 'Avertissement',
-  'ui.rsform.termGraph.fold': 'Réduire',
-  'ui.rsform.termGraph.unfold': 'Développer',
   'ui.rsform.termGraph.hiddenWithCount': 'Masquées [{selected} | {total}]',
   'ui.rsform.termGraph.hidden': 'Masquées',
   'ui.rsform.termGraph.colorSchemePlaceholder': 'Schéma de couleurs',
@@ -572,14 +507,10 @@ export const uiExtraFr: Record<string, string> = {
   'ui.rsform.termGraph.currentSchemaBadge': 'Schéma courant',
   'ui.rsform.selectConstituenta.placeholder': 'Choisir une constituante',
   'ui.rsform.cstInfo.inheritedTitle': 'héritière',
-  'ui.rsform.cstInfo.termLabel': 'Terme : ',
-  'ui.rsform.cstInfo.typificationLabel': 'Typage : ',
   'ui.rsform.cstInfo.expressionLabel': 'Expression : ',
   'ui.rsform.cstInfo.definitionLabel': 'Définition : ',
   'ui.rsform.cstInfo.baseLabel': 'Base : ',
   'ui.rsform.cstInfo.generatesLabel': 'Génère : ',
-  'ui.rsform.cstInfo.conventionLabel': 'Convention : ',
-  'ui.rsform.cstInfo.commentLabel': 'Commentaire : ',
   'ui.rsform.rsInput.undefinedConstituent': 'La constituante n’est pas définie',
   'ui.rsform.rsInput.ctrlClickToOpen': 'Ctrl + clic pour ouvrir',
   'ui.rsform.refsTooltip.referenceToConstituent': 'Référence vers une constituante',
@@ -611,7 +542,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.rsform.pdf.sheetPages': 'Feuille {pageNumber} / {totalPages}',
   'ui.rsform.pdf.colFormalExpression': 'Expression formelle',
   'ui.rsform.pdf.colSchemaInterpretation': 'Interprétation schématique / Terme',
-  'ui.rsform.pdf.conventionPrefix': 'Convention : ',
 
   'ui.oss.menu.editBlockTitle': 'Modifier le bloc',
   'ui.oss.menu.deleteBlock': 'Supprimer le bloc',

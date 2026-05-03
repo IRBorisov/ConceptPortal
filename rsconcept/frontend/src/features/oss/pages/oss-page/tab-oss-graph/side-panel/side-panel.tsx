@@ -75,19 +75,15 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
             selectedSchema && 'translate-x-20'
           )}
         >
-          {tx('ui.oss.sidePanel.contentsHeading')}
+          {tx('semantic.term.contents')}
         </div>
       ) : null}
 
       {!selectedOperation ? (
-        <div className='text-center text-sm cc-fade-in'>
-          {tx('ui.oss.sidePanel.selectOperationHint')}
-        </div>
+        <div className='text-center text-sm cc-fade-in'>{tx('ui.oss.sidePanel.selectOperationHint')}</div>
       ) : null}
       {selectedOperation && !selectedSchema ? (
-        <div className='text-center text-sm cc-fade-in'>
-          {tx('ui.oss.sidePanel.noCsForOperation')}
-        </div>
+        <div className='text-center text-sm cc-fade-in'>{tx('ui.oss.sidePanel.noCsForOperation')}</div>
       ) : selectedOperation && selectedSchema && debouncedMounted ? (
         <Suspense fallback={<Loader />}>
           <ViewSchema

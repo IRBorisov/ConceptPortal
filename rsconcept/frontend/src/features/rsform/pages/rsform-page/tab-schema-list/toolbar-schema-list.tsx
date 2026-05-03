@@ -60,21 +60,21 @@ export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
         />
       ) : null}
       <MiniButton
-        title={prepareTooltip(tx('ui.toolbar.clearSelection'), tx('ui.hotkey.esc'))}
+        title={prepareTooltip(tx('ui.toolbar.clearSelection'), 'ESC')}
         aria-label={tx('ui.toolbar.clearSelection')}
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={deselectAll}
         disabled={selectedCst.length === 0}
       />
       <MiniButton
-        title={prepareTooltip(tx('ui.toolbar.moveUp'), tx('ui.hotkey.altUp'))}
+        title={prepareTooltip(tx('ui.toolbar.moveUp'), 'Alt + ↑')}
         aria-label={tx('ui.toolbar.moveUp')}
         icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
         onClick={moveUp}
         disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
       />
       <MiniButton
-        title={prepareTooltip(tx('ui.toolbar.moveDown'), tx('ui.hotkey.altDown'))}
+        title={prepareTooltip(tx('ui.toolbar.moveDown'), 'Alt + ↓')}
         aria-label={tx('ui.toolbar.moveDown')}
         icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
         onClick={moveDown}
@@ -108,10 +108,7 @@ export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
         </Dropdown>
       </div>
       <MiniButton
-        title={prepareTooltip(
-          tx('ui.toolbar.addNewConstituenta'),
-          tx('ui.hotkey.altGrave')
-        )}
+        title={prepareTooltip(tx('ui.toolbar.addNewConstituenta'), 'Alt + `')}
         aria-label={tx('ui.aria.addNewConstituenta')}
         icon={<IconNewItem size='1.25rem' className='icon-green' />}
         onClick={() => void promptCreateCst()}
@@ -119,14 +116,14 @@ export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
         disabled={isProcessing}
       />
       <MiniButton
-        title={prepareTooltip(tx('ui.hint.cloneConstituenta'), tx('ui.hotkey.altV'))}
+        title={prepareTooltip(tx('ui.hint.cloneConstituenta'), 'Alt + V')}
         aria-label={tx('ui.aria.cloneConstituenta')}
         icon={<IconClone size='1.25rem' className='icon-green' />}
         onClick={() => void cloneCst()}
         disabled={isProcessing || selectedCst.length !== 1}
       />
       <MiniButton
-        title={prepareTooltip(tx('ui.toolbar.deleteSelected'), tx('ui.hotkey.delete'))}
+        title={prepareTooltip(tx('ui.toolbar.deleteSelected'), 'Delete')}
         aria-label={tx('ui.aria.deleteSelected')}
         icon={<IconDestroy size='1.25rem' className='icon-red' />}
         onClick={promptDeleteCst}

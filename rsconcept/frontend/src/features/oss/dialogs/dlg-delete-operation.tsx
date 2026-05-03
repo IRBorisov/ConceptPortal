@@ -70,7 +70,7 @@ export function DlgDeleteOperation() {
         dense
         noBorder
         id='operation_alias'
-        label={tx('ui.oss.deleteOperation.operationLabel')}
+        label={tx('semantic.term.operation')}
         value={target.alias}
       />
       <form.Field name='delete_schema'>
@@ -101,8 +101,7 @@ export function DlgDeleteOperation() {
       </form.Field>
       {deleteSchema ? (
         <div className='text-destructive'>
-          <b>{tx('ui.oss.deleteOperation.warningAttention')}</b>{' '}
-          {tx('ui.oss.deleteOperation.warningRelatedSchema')}
+          <b>{tx('ui.oss.deleteOperation.warningAttention')}</b> {tx('ui.oss.deleteOperation.warningRelatedSchema')}
         </div>
       ) : null}
     </ModalForm>

@@ -106,7 +106,7 @@ export function DlgImportSchema() {
   return (
     <ModalForm
       header={tx('ui.dlg.ossOp.importHeader')}
-      submitText={tx('ui.action.create')}
+      submitText={tx('semantic.action.create')}
       canSubmit={canSubmit}
       validationHint={hint}
       onSubmit={event => {
@@ -142,7 +142,7 @@ export function DlgImportSchema() {
         {field => (
           <TextInput
             id='operation_title'
-            label={tx('ui.label.title')}
+            label={tx('semantic.term.title')}
             disabled={!clone_source}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
@@ -157,7 +157,7 @@ export function DlgImportSchema() {
             {field => (
               <TextInput
                 id='operation_alias'
-                label={tx('ui.label.alias')}
+                label={tx('semantic.term.alias')}
                 className='w-80'
                 disabled={!clone_source}
                 value={field.state.value}
@@ -183,7 +183,7 @@ export function DlgImportSchema() {
             <TextArea
               id='operation_comment'
               className='w-full'
-              aria-label={tx('ui.label.description')}
+              aria-label={tx('semantic.term.description')}
               placeholder={formatLabel(lid.placeholder.itemDescription)}
               rows={5}
               disabled={!clone_source}

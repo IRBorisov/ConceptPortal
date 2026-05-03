@@ -40,9 +40,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
     visible: true,
     read_only: false,
     schema: modelFrom,
-    title: schemaItem
-      ? tx('ui.library.createItem.modelTitle', { title: schemaItem.title })
-      : undefined,
+    title: schemaItem ? tx('ui.library.createItem.modelTitle', { title: schemaItem.title }) : undefined,
     alias: schemaItem ? `M${schemaItem.alias}` : undefined,
     location: schemaItem
       ? schemaItem.location
@@ -109,7 +107,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
         {field => (
           <TextInput
             id='schema_title'
-            placeholder={tx('lib.create.titlePlaceholder')}
+            placeholder={tx('semantic.term.title')}
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -123,7 +121,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
           {field => (
             <TextInput
               id='schema_alias'
-              label={tx('lib.create.alias')}
+              label={tx('semantic.term.alias')}
               className='w-84'
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}
@@ -134,7 +132,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
         </form.Field>
 
         <div className='flex flex-col gap-2'>
-          <Label text={tx('lib.create.access')} className='self-center select-none' />
+          <Label text={tx('semantic.term.access')} className='self-center select-none' />
           <div className='ml-auto cc-icons'>
             <form.Field name='access_policy'>
               {field => (
@@ -148,11 +146,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
             <form.Field name='visible'>
               {field => (
                 <MiniButton
-                  title={
-                    field.state.value
-                      ? tx('lib.create.libraryShow')
-                      : tx('lib.create.libraryHide')
-                  }
+                  title={field.state.value ? tx('lib.create.libraryShow') : tx('lib.create.libraryHide')}
                   aria-label={tx('lib.create.libraryToggleAria')}
                   icon={<IconItemVisibility value={field.state.value ?? true} />}
                   onClick={() => field.handleChange(!field.state.value)}
@@ -210,15 +204,11 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
 
       <div className='flex justify-around gap-6 py-3'>
         <SubmitButton
-          text={
-            itemType === LibraryItemType.RSMODEL
-              ? tx('lib.create.submitModel')
-              : tx('lib.create.submitSchema')
-          }
+          text={itemType === LibraryItemType.RSMODEL ? tx('lib.create.submitModel') : tx('lib.create.submitSchema')}
           loading={isPending}
           className='min-w-40'
         />
-        <Button text={tx('lib.create.cancel')} className='min-w-40' onClick={handleCancel} />
+        <Button text={tx('semantic.action.cancel')} className='min-w-40' onClick={handleCancel} />
       </div>
     </form>
   );

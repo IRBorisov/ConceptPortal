@@ -187,8 +187,8 @@ export function ToolbarOssGraph({
       {isMutable ? (
         <div className='cc-icons items-start'>
           <MiniButton
-            aria-label={tx('ui.oss.toolbar.saveChangesAria')}
-            title={prepareTooltip(tx('ui.oss.toolbar.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+            aria-label={tx('semantic.action.saveChanges')}
+            title={prepareTooltip(tx('semantic.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
             hideTitle={isMenuOpen}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             onClick={handleSavePositions}
@@ -241,7 +241,7 @@ export function ToolbarOssGraph({
               {user.is_staff ? (
                 <DropdownButton
                   disabled
-                  text={tx('ui.oss.toolbar.filterShort')}
+                  text={tx('semantic.term.filter')}
                   title={prepareTooltip(tx('ui.oss.toolbar.filterConstituents'), '5')}
                   icon={<IconFilter size='1.25rem' className='icon-primary' />}
                   onClick={notImplemented}

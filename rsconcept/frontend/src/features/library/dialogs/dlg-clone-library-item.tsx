@@ -70,11 +70,9 @@ export function DlgCloneLibraryItem() {
   return (
     <ModalForm
       header={
-        base.item_type === LibraryItemType.RSFORM
-          ? tx('ui.dlg.clone.headerRsform')
-          : tx('ui.dlg.clone.headerRsmodel')
+        base.item_type === LibraryItemType.RSFORM ? tx('ui.dlg.clone.headerRsform') : tx('ui.dlg.clone.headerRsmodel')
       }
-      submitText={tx('ui.action.create')}
+      submitText={tx('semantic.action.create')}
       canSubmit={isValid}
       onSubmit={event => {
         event.preventDefault();
@@ -87,7 +85,7 @@ export function DlgCloneLibraryItem() {
         {field => (
           <TextInput
             id='dlg_full_name' //
-            label={tx('ui.label.title')}
+            label={tx('semantic.term.title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -101,7 +99,7 @@ export function DlgCloneLibraryItem() {
           {field => (
             <TextInput
               id='dlg_alias'
-              label={tx('ui.label.alias')}
+              label={tx('semantic.term.alias')}
               className='w-64'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -111,7 +109,7 @@ export function DlgCloneLibraryItem() {
           )}
         </form.Field>
         <div className='flex flex-col gap-2'>
-          <Label text={tx('ui.label.access')} className='self-center select-none' />
+          <Label text={tx('semantic.term.access')} className='self-center select-none' />
           <div className='ml-auto cc-icons'>
             <form.Field name='item_data.access_policy'>
               {field => (
@@ -125,11 +123,7 @@ export function DlgCloneLibraryItem() {
             <form.Field name='item_data.visible'>
               {field => (
                 <MiniButton
-                  title={
-                    field.state.value
-                      ? tx('ui.dlg.clone.libraryShow')
-                      : tx('ui.dlg.clone.libraryHide')
-                  }
+                  title={field.state.value ? tx('ui.dlg.clone.libraryShow') : tx('ui.dlg.clone.libraryHide')}
                   aria-label={tx('ui.dlg.clone.libraryToggleAria')}
                   icon={<IconItemVisibility value={field.state.value ?? true} />}
                   onClick={() => field.handleChange(!(field.state.value ?? false))}
@@ -155,7 +149,7 @@ export function DlgCloneLibraryItem() {
         {field => (
           <TextArea
             id='dlg_comment'
-            label={tx('ui.label.description')}
+            label={tx('semantic.term.description')}
             placeholder={formatLabel(lid.placeholder.itemDescription)}
             rows={5}
             value={field.state.value}

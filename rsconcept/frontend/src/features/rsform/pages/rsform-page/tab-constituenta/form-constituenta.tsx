@@ -186,8 +186,8 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
 
             <RefsInput
               id='cst_term'
-              label={tx('ui.label.term')}
-              aria-label={tx('ui.label.term')}
+              label={tx('semantic.term.term')}
+              aria-label={tx('semantic.term.term')}
               maxHeight='8rem'
               areaClassName={
                 (needsInterpretation && !field.state.value) ||
@@ -236,7 +236,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       {activeCst.cst_type !== CstType.NOMINAL ? (
         <TextArea
           id='cst_typification'
-          label={tx('ui.label.typification')}
+          label={tx('semantic.term.typification')}
           fitContent
           dense
           noResize
@@ -307,7 +307,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
                 needsInterpretation && !field.state.value && 'border-destructive! outline-destructive!'
               )}
               spellCheck
-              label={isBasic ? tx('ui.label.convention') : tx('ui.label.developerComment')}
+              label={isBasic ? tx('semantic.term.convention') : tx('semantic.term.comment')}
               placeholder={
                 disabled ? '' : isBasic ? tx('ui.placeholder.conventionBasic') : tx('ui.placeholder.developerComment')
               }

@@ -136,7 +136,7 @@ export function DlgCstTemplate() {
   return (
     <ModalForm
       header={tx('ui.dlg.cstTemplate.header')}
-      submitText={tx('ui.action.create')}
+      submitText={tx('semantic.action.create')}
       className='w-172 h-140 px-6'
       canSubmit={canSubmit}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
@@ -149,14 +149,8 @@ export function DlgCstTemplate() {
             label={tx('ui.dlg.cstTemplate.tabTemplate.label')}
             title={tx('ui.dlg.cstTemplate.tabTemplate.title')}
           />
-          <TabLabel
-            label={tx('ui.dlg.cstTemplate.tabArgs.label')}
-            title={tx('ui.dlg.cstTemplate.tabArgs.title')}
-          />
-          <TabLabel
-            label={tx('ui.dlg.cstTemplate.tabEditor.label')}
-            title={tx('ui.dlg.cstTemplate.tabEditor.title')}
-          />
+          <TabLabel label={tx('ui.dlg.cstTemplate.tabArgs.label')} title={tx('ui.dlg.cstTemplate.tabArgs.title')} />
+          <TabLabel label={tx('semantic.term.editor')} title={tx('ui.dlg.cstTemplate.tabEditor.title')} />
         </TabList>
 
         <TemplateState

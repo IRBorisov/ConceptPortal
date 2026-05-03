@@ -55,7 +55,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
             {field => (
               <TextInput
                 id='operation_alias'
-                label={tx('ui.label.alias')}
+                label={tx('semantic.term.alias')}
                 placeholder={tx('ui.oss.enterAlias')}
                 className='w-80'
                 value={field.state.value}
@@ -80,7 +80,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
           {field => (
             <TextArea
               id='operation_comment'
-              label={tx('ui.label.description')}
+              label={tx('semantic.term.description')}
               placeholder={formatLabel(lid.placeholder.itemDescription)}
               className='w-full'
               noResize

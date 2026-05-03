@@ -139,7 +139,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         noOutline
         transparent
         readOnly
-        label={tx('ui.label.typification')}
+        label={tx('semantic.term.typification')}
         value={labelType(localParse?.type ?? null)}
         areaClassName='cursor-default'
       />

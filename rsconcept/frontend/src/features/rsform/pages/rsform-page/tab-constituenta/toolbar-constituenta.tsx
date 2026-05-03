@@ -61,11 +61,7 @@ export function ToolbarConstituenta({
       ) : null}
       {activeCst && hasInheritance ? (
         <MiniButton
-          title={
-            activeCst.is_inherited
-              ? tx('ui.cst.gotoSourceInOss')
-              : tx('ui.cst.noPredecessor')
-          }
+          title={activeCst.is_inherited ? tx('ui.cst.gotoSourceInOss') : tx('ui.cst.noPredecessor')}
           onClick={event => openConstituentaPredecessor(activeCst.id, event.ctrlKey || event.metaKey)}
           icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
           disabled={!activeCst.is_inherited}
@@ -74,8 +70,8 @@ export function ToolbarConstituenta({
       {isContentEditable && activeCst ? (
         <>
           <MiniButton
-            title={prepareTooltip(tx('ui.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
-            aria-label={tx('ui.action.saveChanges')}
+            title={prepareTooltip(tx('semantic.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+            aria-label={tx('semantic.action.saveChanges')}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             onClick={onSubmit}
             disabled={disabled || !isModified}
@@ -94,9 +90,7 @@ export function ToolbarConstituenta({
           />
           <MiniButton
             title={
-              isModified
-                ? formatLabel(lid.tooltip.unsaved)
-                : prepareTooltip(tx('ui.hint.cloneConstituenta'), 'Alt + V')
+              isModified ? formatLabel(lid.tooltip.unsaved) : prepareTooltip(tx('ui.hint.cloneConstituenta'), 'Alt + V')
             }
             aria-label={tx('ui.aria.cloneConstituenta')}
             icon={<IconClone size='1.25rem' className='icon-green' />}

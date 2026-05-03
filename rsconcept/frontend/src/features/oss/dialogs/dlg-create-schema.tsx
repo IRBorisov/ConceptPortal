@@ -83,7 +83,7 @@ export function DlgCreateSchema() {
   return (
     <ModalForm
       header={tx('ui.dlg.ossOp.newSchemaHeader')}
-      submitText={tx('ui.action.create')}
+      submitText={tx('semantic.action.create')}
       canSubmit={canSubmit}
       validationHint={hint}
       onSubmit={event => {
@@ -113,7 +113,7 @@ export function DlgCreateSchema() {
             {field => (
               <TextInput
                 id='operation_alias'
-                label={tx('ui.label.alias')}
+                label={tx('semantic.term.alias')}
                 className='w-80'
                 placeholder={tx('ui.oss.enterAlias')}
                 value={field.state.value}
@@ -138,7 +138,7 @@ export function DlgCreateSchema() {
           {field => (
             <TextArea
               id='operation_comment'
-              label={tx('ui.label.description')}
+              label={tx('semantic.term.description')}
               placeholder={formatLabel(lid.placeholder.itemDescription)}
               className='w-full'
               noResize

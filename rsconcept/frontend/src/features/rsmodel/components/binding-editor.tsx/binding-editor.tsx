@@ -133,7 +133,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
     <div className={cn('relative w-full flex flex-col', className)}>
       <div className='-mt-1 flex items-center mb-1'>
         <div className='w-26'>
-          <span>{tx('ui.bindingEditor.totalPrefix')}</span>
+          <span>{tx('semantic.total')} </span>
           <span className='font-math ml-2'>{Object.keys(value).length}</span>
         </div>
         <SearchBar id='dlg_value_search' noBorder query={filter} onChangeQuery={setFilter} className='-mb-0.5' />
@@ -147,7 +147,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
           disabled={!isMutable}
         />
         <TextInput
-          label={tx('ui.bindingEditor.valueLabel')}
+          label={tx('semantic.term.value')}
           dense
           placeholder={tx('ui.bindingEditor.selectRowPlaceholder')}
           className='w-full'

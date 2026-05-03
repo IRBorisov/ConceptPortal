@@ -1,23 +1,10 @@
 /** French UI copy for dialogs and toolbars. */
 export const uiFr: Record<string, string> = {
-  'ui.action.create': 'Créer',
-  'ui.action.save': 'Enregistrer',
   'ui.action.upload': 'Téléverser',
 
-  'ui.label.version': 'Version',
-  'ui.label.description': 'Description',
-  'ui.label.alias': 'Abréviation',
-  'ui.label.title': 'Titre',
-  'ui.label.access': 'Accès',
-
   'ui.library.editor.openInLibrary': 'Ouvrir dans la bibliothèque',
-  'ui.library.editor.path': 'Chemin',
   'ui.library.editor.pathInheritedOss': 'Chemin hérité de l’OSS',
-  'ui.library.editor.owner': 'Propriétaire',
   'ui.library.editor.ownerInheritedOss': 'Propriétaire hérité de l’OSS',
-  'ui.library.editor.editorsHeader': 'Éditeurs',
-  'ui.library.editor.dateUpdated': 'Date de mise à jour',
-  'ui.library.editor.dateCreated': 'Date de création',
 
   'ui.ai.prompt.editTemplateTitle': 'Modifier le modèle',
   'ui.ai.prompt.copyResultTitle': 'Copier le résultat dans le presse-papiers',
@@ -28,14 +15,12 @@ export const uiFr: Record<string, string> = {
   'ui.dlg.cstTemplate.tabTemplate.title': 'Choix du modèle d’expression',
   'ui.dlg.cstTemplate.tabArgs.label': 'Arguments',
   'ui.dlg.cstTemplate.tabArgs.title': 'Substitution des arguments du modèle',
-  'ui.dlg.cstTemplate.tabEditor.label': 'Éditeur',
   'ui.dlg.cstTemplate.tabEditor.title': 'Édition de la constituante',
 
   'ui.dlg.createVersion.header': 'Création de version',
   'ui.dlg.createVersion.onlySelected': 'Constituantes sélectionnées uniquement [{n} sur {total}]',
 
   'ui.dlg.editVersions.header': 'Modifier les versions',
-  'ui.dlg.editVersions.saveChanges': 'Enregistrer les modifications',
   'ui.dlg.editVersions.resetChanges': 'Annuler les modifications non enregistrées',
 
   'ui.dlg.uploadRsform.header': 'Importer un schéma depuis Exteor',
@@ -91,29 +76,23 @@ export const uiFr: Record<string, string> = {
 
   'ui.dlg.renameCst.header': 'Renommer la constituante',
   'ui.action.rename': 'Renommer',
-  'ui.label.name': 'Nom',
 
   'ui.dlg.editCst.header': 'Modifier la constituante',
   'ui.dlg.editCst.titleDetailedEdit': 'Édition détaillée',
   'ui.dlg.editCst.titleGoToAncestor': 'Aller à l’ancêtre',
 
   'ui.rsform.formEdit.crucialTitle': 'Constituante clé',
-  'ui.label.term': 'Terme',
   'ui.placeholder.termForDefinitions': 'Libellé pour les définitions textuelles',
   'ui.label.attributingConstituents': 'Constituantes attributives',
   'ui.placeholder.selectConstituents': 'Sélectionner des constituantes',
-  'ui.label.typification': 'Typification',
   'ui.label.textDefinition': 'Définition textuelle',
   'ui.placeholder.textDefinitionHint': 'Interprétation textuelle de l’expression formelle',
   'ui.action.addComment': 'Ajouter un commentaire',
-  'ui.label.convention': 'Convention',
-  'ui.label.developerComment': 'Commentaire',
   'ui.placeholder.conventionBasic': 'Accord sur l’interprétation du concept de base',
   'ui.placeholder.developerComment': 'Note du développeur',
 
   'ui.dlg.inlineSynthesis.header': 'Importer un schéma conceptuel',
   'ui.action.addConstituents': 'Ajouter des constituantes',
-  'ui.tab.inlineSynthesis.schema': 'Schéma',
   'ui.tab.inlineSynthesis.schemaTitle': 'Source des constituantes',
   'ui.tab.inlineSynthesis.constituents': 'Constituantes',
   'ui.tab.inlineSynthesis.selectSchemaFirst': 'Sélectionnez un schéma',
@@ -155,14 +134,10 @@ export const uiFr: Record<string, string> = {
   'ui.field.rsmodelTitle': 'Titre du modèle',
   'ui.field.ossTitle': 'Titre du système opérationnel',
 
-  'ui.action.saveChanges': 'Enregistrer les modifications',
-
   'ui.nav.menu': 'Menu',
   'ui.nav.sandboxMenu': 'Menu du bac à sable',
   'ui.action.recalculateModel': 'Recalculer le modèle',
   'ui.aria.recalculateAll': 'Recalculer tous les résultats',
-  'ui.action.clone': 'Cloner',
-  'ui.action.share': 'Partager',
   'ui.aria.copyLinkToClipboard': 'Copier le lien dans le presse-papiers',
   'ui.action.qrCode': 'Code QR',
   'ui.hint.qrSchemaPage': 'Afficher le code QR du schéma',
@@ -170,7 +145,6 @@ export const uiFr: Record<string, string> = {
   'ui.action.deleteModel': 'Supprimer le modèle',
   'ui.action.deleteSchema': 'Supprimer le schéma',
   'ui.nav.gotoSchema': 'Aller au schéma',
-  'ui.nav.library': 'Bibliothèque',
   'ui.action.createModel': 'Créer un modèle',
   'ui.action.exportPdf': 'Exporter en PDF',
   'ui.action.exportToExteor': 'Exporter vers Exteor',
@@ -201,8 +175,6 @@ export const uiFr: Record<string, string> = {
 
   'ui.action.exportData': 'Exporter les données',
 
-  'ui.action.resetEdits': 'Annuler les modifications',
-  'ui.aria.resetEdits': 'Annuler les modifications',
   'ui.ai.deleteTemplate': 'Supprimer le modèle',
   'ui.aria.deleteTemplate': 'Supprimer le modèle',
 
@@ -236,7 +208,6 @@ export const uiFr: Record<string, string> = {
   'ui.rsmodel.calculateCurrentCst': 'Calculer la constituante courante',
   'ui.aria.calculateCurrentCst': 'Calculer la constituante courante',
 
-  'ui.oss.menu.edit': 'Modifier',
   'ui.oss.menu.editOperation': 'Modifier l’opération',
   'ui.oss.menu.original': 'Original',
   'ui.oss.menu.selectOriginal': 'Sélectionner l’original',

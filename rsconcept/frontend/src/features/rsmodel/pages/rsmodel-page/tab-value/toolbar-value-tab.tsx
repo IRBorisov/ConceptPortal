@@ -50,8 +50,8 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
   return (
     <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>
       <MiniButton
-        title={prepareTooltip(tx('ui.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
-        aria-label={tx('ui.action.saveChanges')}
+        title={prepareTooltip(tx('semantic.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+        aria-label={tx('semantic.action.saveChanges')}
         icon={<IconSave size='1.25rem' className='icon-primary' />}
         onClick={onSubmit}
         disabled={isProcessing || !activeCst || !isModified}
@@ -70,10 +70,7 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
         onClick={() => engine.recalculateAll()}
       />
       <MiniButton
-        title={prepareTooltip(
-          tx('ui.rsmodel.calculateCurrentCst'),
-          isMac() ? 'Cmd + Q' : 'Ctrl + Q'
-        )}
+        title={prepareTooltip(tx('ui.rsmodel.calculateCurrentCst'), isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
         aria-label={tx('ui.aria.calculateCurrentCst')}
         icon={<IconCalculateOne size='1.25rem' className='icon-green' />}
         onClick={
@@ -95,9 +92,7 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
           />
           <MiniButton
             title={
-              isModified
-                ? formatLabel(lid.tooltip.unsaved)
-                : prepareTooltip(tx('ui.hint.cloneConstituenta'), 'Alt + V')
+              isModified ? formatLabel(lid.tooltip.unsaved) : prepareTooltip(tx('ui.hint.cloneConstituenta'), 'Alt + V')
             }
             aria-label={tx('ui.aria.cloneConstituenta')}
             icon={<IconClone size='1.25rem' className='icon-green' />}

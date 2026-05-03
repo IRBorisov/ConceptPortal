@@ -235,7 +235,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
     <>
       {operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text={tx('ui.oss.menu.edit')}
+          text={tx('semantic.action.edit')}
           title={tx('ui.oss.menu.editOperation')}
           icon={<IconEdit size='1rem' className='icon-primary' />}
           onClick={handleEditOperation}
@@ -253,10 +253,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       {operation.result ? (
         <DropdownButton
           text={tx('ui.oss.menu.openSchema')}
-          title={prepareTooltip(
-            tx('ui.oss.menu.openLinkedRsform'),
-            tx('ui.hint.doubleClick')
-          )}
+          title={prepareTooltip(tx('ui.oss.menu.openLinkedRsform'), tx('ui.hint.doubleClick'))}
           aria-label={tx('ui.oss.menu.openLinkedRsform')}
           icon={<IconRSForm size='1rem' className='icon-primary' />}
           onClick={handleOpenSchema}
@@ -274,11 +271,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       ) : null}
       {isMutable && operation?.operation_type === OperationType.INPUT ? (
         <DropdownButton
-          text={
-            !operation?.result
-              ? tx('ui.oss.menu.loadSchema')
-              : tx('ui.oss.menu.changeSchema')
-          }
+          text={!operation?.result ? tx('ui.oss.menu.loadSchema') : tx('ui.oss.menu.changeSchema')}
           title={tx('ui.oss.menu.pickSchemaTitle')}
           icon={<IconConnect size='1rem' className='icon-primary' />}
           onClick={handleEditSchema}
@@ -326,7 +319,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
       {isMutable && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text={tx('ui.action.clone')}
+          text={tx('semantic.action.clone')}
           title={tx('ui.oss.menu.cloneResultSchemaTitle')}
           icon={<IconClone size='1rem' className='icon-green' />}
           onClick={handleClone}

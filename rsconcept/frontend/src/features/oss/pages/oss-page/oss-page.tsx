@@ -65,7 +65,7 @@ function ProcessError({ error }: FallbackProps): React.ReactElement {
         <div className='flex flex-col items-center p-2 mx-auto'>
           <p>{tx('ui.oss.error.notFound')}</p>
           <div className='flex justify-center'>
-            <TextURL text={tx('ui.nav.library')} href='/library' />
+            <TextURL text={tx('semantic.term.library')} href='/library' />
           </div>
         </div>
       );
@@ -73,7 +73,7 @@ function ProcessError({ error }: FallbackProps): React.ReactElement {
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
           <p>{tx('ui.rsform.error.forbidden')}</p>
-          <TextURL text={tx('ui.nav.library')} href='/library' />
+          <TextURL text={tx('semantic.term.library')} href='/library' />
         </div>
       );
     }

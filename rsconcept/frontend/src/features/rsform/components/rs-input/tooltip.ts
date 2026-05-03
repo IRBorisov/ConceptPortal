@@ -156,7 +156,7 @@ function domTooltipConstituenta(
     appendMathBoldLabelParagraph(dom, `${cst.alias}:`, labelType(cst.analysis.type));
 
     if (cst.term_resolved) {
-      appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.termLabel'), cst.term_resolved);
+      appendBoldTextRow(dom, formatAppMessage('semantic.term.term') + ': ', cst.term_resolved);
     }
 
     if (cst.definition_formal) {
@@ -169,9 +169,9 @@ function domTooltipConstituenta(
 
     if (cst.convention) {
       if (isBasicConcept(cst.cst_type)) {
-        appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.conventionLabel'), cst.convention);
+        appendBoldTextRow(dom, formatAppMessage('semantic.term.convention') + ': ', cst.convention);
       } else {
-        appendBoldTextRow(dom, formatAppMessage('ui.rsform.cstInfo.commentLabel'), cst.convention);
+        appendBoldTextRow(dom, formatAppMessage('semantic.term.comment') + ': ', cst.convention);
       }
     }
 

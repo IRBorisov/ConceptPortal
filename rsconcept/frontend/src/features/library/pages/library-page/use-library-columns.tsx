@@ -23,7 +23,7 @@ export function useLibraryColumns() {
   return [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: tx('lib.col.alias'),
+      header: tx('semantic.term.alias'),
       size: 150,
       minSize: 80,
       maxSize: 150,
@@ -33,7 +33,7 @@ export function useLibraryColumns() {
     }),
     columnHelper.accessor('title', {
       id: 'title',
-      header: tx('lib.col.title'),
+      header: tx('semantic.term.title'),
       size: 1200,
       minSize: 200,
       maxSize: 1200,
@@ -43,7 +43,7 @@ export function useLibraryColumns() {
     }),
     columnHelper.accessor('owner', {
       id: 'owner',
-      header: tx('lib.col.owner'),
+      header: tx('semantic.term.owner'),
       size: 400,
       minSize: 100,
       maxSize: 400,
@@ -53,11 +53,7 @@ export function useLibraryColumns() {
     }),
     columnHelper.accessor('time_update', {
       id: 'time_update',
-      header: () => (
-        <span className='min-w-20'>
-          {isSmall ? tx('lib.col.dateShort') : tx('lib.col.dateLong')}
-        </span>
-      ),
+      header: () => <span className='min-w-20'>{isSmall ? tx('semantic.term.date') : tx('lib.col.dateLong')}</span>,
       cell: props => (
         <span className='whitespace-nowrap'>
           {new Date(props.getValue()).toLocaleString(intl.locale, {

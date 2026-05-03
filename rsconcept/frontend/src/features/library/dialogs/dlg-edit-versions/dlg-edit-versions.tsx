@@ -94,10 +94,7 @@ export function DlgEditVersions() {
   }
 
   return (
-    <ModalView
-      header={tx('ui.dlg.editVersions.header')}
-      className='flex flex-col w-160 px-6 gap-3 pb-3'
-    >
+    <ModalView header={tx('ui.dlg.editVersions.header')} className='flex flex-col w-160 px-6 gap-3 pb-3'>
       <TableVersions
         processing={isProcessing}
         items={schema.versions.slice().reverse()}
@@ -119,7 +116,7 @@ export function DlgEditVersions() {
             <TextInput
               id='dlg_version'
               dense
-              label={tx('ui.label.version')}
+              label={tx('semantic.term.version')}
               className='w-64 mr-3'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -131,8 +128,8 @@ export function DlgEditVersions() {
         <div className='cc-icons h-fit'>
           <MiniButton
             type='submit'
-            title={isValid ? tx('ui.dlg.editVersions.saveChanges') : formatLabel(lid.hint.versionTaken)}
-            aria-label={tx('ui.dlg.editVersions.saveChanges')}
+            title={isValid ? tx('semantic.action.saveChanges') : formatLabel(lid.hint.versionTaken)}
+            aria-label={tx('semantic.action.saveChanges')}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             disabled={isDefaultValue || !isValid || isProcessing}
           />
@@ -149,7 +146,7 @@ export function DlgEditVersions() {
           <TextArea
             id='dlg_description'
             spellCheck
-            label={tx('ui.label.description')}
+            label={tx('semantic.term.description')}
             rows={3}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}

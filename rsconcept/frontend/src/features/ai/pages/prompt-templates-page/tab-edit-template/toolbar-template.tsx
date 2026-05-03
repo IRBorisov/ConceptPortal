@@ -40,15 +40,15 @@ export function ToolbarTemplate({ activeID, onSave, onReset, className }: Toolba
   return (
     <div className={cn('cc-icons items-start outline-hidden', className)}>
       <MiniButton
-        title={prepareTooltip(tx('ui.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
-        aria-label={tx('ui.action.saveChanges')}
+        title={prepareTooltip(tx('semantic.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+        aria-label={tx('semantic.action.saveChanges')}
         icon={<IconSave size='1.25rem' className='icon-primary' />}
         onClick={onSave}
         disabled={isProcessing || !isModified}
       />
       <MiniButton
-        title={tx('ui.action.resetEdits')}
-        aria-label={tx('ui.aria.resetEdits')}
+        title={tx('semantic.action.resetChanges')}
+        aria-label={tx('semantic.action.resetChanges')}
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={onReset}
         disabled={isProcessing || !isModified}

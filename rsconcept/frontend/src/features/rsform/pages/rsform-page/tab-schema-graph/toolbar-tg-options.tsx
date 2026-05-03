@@ -57,17 +57,13 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
     void handleExportPNG();
   }
 
-  const textToggleTitle = !filter.noText
-    ? tx('ui.tg.toolbar.hideText')
-    : tx('ui.tg.toolbar.showText');
-  const derivedToggleTitle = !filter.foldDerived
-    ? tx('ui.tg.toolbar.hideDerived')
-    : tx('ui.tg.toolbar.showDerived');
+  const textToggleTitle = !filter.noText ? tx('ui.tg.toolbar.hideText') : tx('ui.tg.toolbar.showText');
+  const derivedToggleTitle = !filter.foldDerived ? tx('ui.tg.toolbar.hideDerived') : tx('ui.tg.toolbar.showDerived');
 
   return (
     <div className={cn('grid grid-cols-2 gap-1 pointer-events-auto', className)}>
       <MiniButton
-        title={prepareTooltip(tx('ui.tg.toolbar.fullGraph'), tx('ui.hotkey.g'))}
+        title={prepareTooltip(tx('ui.tg.toolbar.fullGraph'), 'G')}
         icon={<IconFitImage size='1.25rem' className='icon-primary' />}
         onClick={handleFitView}
       />
@@ -84,7 +80,7 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
         onClick={handleSetFocus}
       />
       <MiniButton
-        title={prepareTooltip(textToggleTitle, tx('ui.hotkey.t'))}
+        title={prepareTooltip(textToggleTitle, 'T')}
         icon={<IconEnableText value={!filter.noText} size='1.25rem' />}
         onClick={handleToggleText}
       />
@@ -112,7 +108,7 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
         </Dropdown>
       </div>
       <MiniButton
-        title={prepareTooltip(derivedToggleTitle, tx('ui.hotkey.v'))}
+        title={prepareTooltip(derivedToggleTitle, 'V')}
         icon={<IconEnableClustering value={!filter.foldDerived} size='1.25rem' />}
         onClick={handleToggleClustering}
       />

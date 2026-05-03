@@ -71,14 +71,14 @@ export function PickSchema({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: tx('ui.label.alias'),
+      header: tx('semantic.term.alias'),
       size: 150,
       minSize: 80,
       maxSize: 150
     }),
     columnHelper.accessor('title', {
       id: 'title',
-      header: tx('ui.label.title'),
+      header: tx('semantic.term.title'),
       size: 1200,
       minSize: 200,
       maxSize: 1200,
@@ -86,7 +86,7 @@ export function PickSchema({
     }),
     columnHelper.accessor('time_update', {
       id: 'time_update',
-      header: tx('ui.pick.schema.dateColumn'),
+      header: tx('semantic.term.date'),
       cell: props => (
         <div className='whitespace-nowrap'>
           {new Date(props.getValue()).toLocaleString(intl.locale, {

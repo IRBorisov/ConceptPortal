@@ -104,6 +104,6 @@ function describeCstNode(
     : cst.definition_resolved || cst.definition_formal || cst.convention;
   const typification = labelType(cst.analysis?.type ?? null);
   return `${cst.alias}: ${cst.term_resolved}\n${
-    cst.analysis ? `${tx('ui.node.tg.typificationPrefix')} ${typification}\n` : ''
-  }${tx('ui.node.tg.contentsPrefix')} ${contents ? contents : tx('ui.node.tg.contentsMissing')}`;
+    cst.analysis ? `${tx('semantic.term.typification')}: ${typification}\n` : ''
+  }${tx('semantic.term.contents')}: ${contents ? contents : tx('ui.node.tg.contentsMissing')}`;
 }

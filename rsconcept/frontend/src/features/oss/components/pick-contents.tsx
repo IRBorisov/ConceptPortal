@@ -82,21 +82,15 @@ export function PickContents({
   const columns = [
     columnHelper.accessor(item => item.nodeType === NodeType.OPERATION, {
       id: 'type',
-      header: tx('ui.oss.pickContents.column.kind'),
+      header: tx('semantic.term.type'),
       size: 150,
       minSize: 150,
       maxSize: 150,
-      cell: props => (
-        <div>
-          {props.getValue()
-            ? tx('ui.oss.pickContents.kindOperation')
-            : tx('ui.oss.pickContents.kindBlock')}
-        </div>
-      )
+      cell: props => <div>{props.getValue() ? tx('semantic.term.operation') : tx('semantic.term.block')}</div>
     }),
     columnHelper.accessor('title', {
       id: 'title',
-      header: tx('ui.label.title'),
+      header: tx('semantic.term.title'),
       size: 1200,
       minSize: 300,
       maxSize: 1200,

@@ -42,7 +42,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       />
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip(tx('ui.rsform.formEdit.crucialTitle'), tx('ui.hotkey.f'))}
+          title={prepareTooltip(tx('ui.rsform.formEdit.crucialTitle'), 'F')}
           aria-label={tx('ui.cst.crucialToggleAria')}
           icon={<IconCrucial size='1.25rem' className='icon-primary' />}
           onClick={toggleCrucial}
@@ -51,10 +51,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       ) : null}
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip(
-            tx('ui.toolbar.deleteSelected'),
-            tx('ui.hotkey.deleteBacktick')
-          )}
+          title={prepareTooltip(tx('ui.toolbar.deleteSelected'), 'Delete, `')}
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
           onClick={handleDeleteSelected}
           disabled={!canDeleteSelected || isProcessing}
@@ -62,7 +59,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       ) : null}
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip(tx('ui.toolbar.newConstituenta'), tx('ui.hotkey.r'))}
+          title={prepareTooltip(tx('ui.toolbar.newConstituenta'), 'R')}
           icon={<IconNewItem size='1.25rem' className='icon-green' />}
           onClick={handleCreateCst}
           disabled={isProcessing}
@@ -70,7 +67,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       ) : null}
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip(tx('ui.toolbar.editConstituenta'), tx('ui.hotkey.altV'))}
+          title={prepareTooltip(tx('ui.toolbar.editConstituenta'), 'Alt + V')}
           icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
           onClick={handelFastEdit}
           disabled={isProcessing || selectedCst.length !== 1}

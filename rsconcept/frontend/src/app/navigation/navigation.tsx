@@ -173,7 +173,7 @@ export function Navigation() {
             onClick={navigateLibrary}
           />
           <NavigationButton
-            text={tx('nav.bar.help')}
+            text={tx('semantic.term.manual')}
             icon={<IconManuals size='1.25rem' />}
             onClick={navigateHelp}
           />
