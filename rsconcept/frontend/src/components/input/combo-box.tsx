@@ -113,9 +113,7 @@ export function ComboBox<Option>({
       </PopoverTrigger>
       <PopoverContent sideOffset={-1} className='p-0' style={{ width: popoverWidth }}>
         <Command>
-          {!noSearch ? (
-            <CommandInput placeholder={tx('ui.combo.searchPlaceholder')} className='h-9' />
-          ) : null}
+          {!noSearch ? <CommandInput placeholder={tx('semantic.term.search') + '...'} className='h-9' /> : null}
           <CommandList>
             <CommandEmpty>{tx('ui.combo.emptyList')}</CommandEmpty>
             <CommandGroup>

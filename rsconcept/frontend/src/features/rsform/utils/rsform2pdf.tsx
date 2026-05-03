@@ -93,7 +93,7 @@ function SchemaTitle({ schema }: { schema: RSForm }) {
   return (
     <View style={{ marginBottom: 10 }}>
       <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: '3mm' }}>
-        {intl.formatMessage({ id: 'ui.rsform.pdf.schemaTitle' }, { title: schema.title })}
+        {intl.formatMessage({ id: 'semantic.term.schema' }) + ' ' + schema.title}
       </Text>
       <Text style={{ fontSize: 12 }}>
         {intl.formatMessage({ id: 'ui.rsform.pdf.aliasLabel' }, { alias: schema.alias })}

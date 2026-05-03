@@ -29,7 +29,7 @@ export function SchemasGuide({ schema }: SchemasGuideProps) {
         if (item) {
           aliases.push(item.alias);
         } else {
-          aliases.push(tx('ui.rsform.termGraph.schemaAlias', { index: cst.parent_schema_index }));
+          aliases.push(tx('semantic.term.schema.short') + ' ' + cst.parent_schema_index);
         }
         processed.add(cst.parent_schema);
         indexes.push(cst.parent_schema_index);

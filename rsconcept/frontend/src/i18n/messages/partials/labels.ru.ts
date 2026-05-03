@@ -44,7 +44,8 @@ export const labelsRu: Record<string, string> = {
   'labels.error.cannotExtractNode': 'Невозможно вынести выбранный узел',
   'labels.error.formalDuplicates': 'Формальное выражение совпадает с конституентами: {aliases}',
   'labels.error.sandboxFailedToLoad': 'Не удалось загрузить песочницу. Загружен начальный набор.',
-  'labels.error.bindingInvalid': 'Некорректный формат данных. Используйте JSON вида { "1": "value1", "2": "value2", ... }',
+  'labels.error.bindingInvalid':
+    'Некорректный формат данных. Используйте JSON вида { "1": "value1", "2": "value2", ... }',
   'labels.error.valueInvalid': 'Некорректный формат данных. Используйте JSON, содержащий только числа и массивы',
   'labels.error.generationMissingBasic': 'Невозможно сгенерировать: в базовом множестве отсутствуют элементы',
 
@@ -111,7 +112,8 @@ export const labelsRu: Record<string, string> = {
   'labels.prompt.deleteTemplate': 'Подтвердите удаление шаблона',
   'labels.prompt.deleteOSS':
     'Внимание!!\nУдаление операционной схемы приведет к удалению всех операций и собственных концептуальных схем.\nДанное действие нельзя отменить.\nВы уверены, что хотите удалить данную ОСС?',
-  'labels.prompt.generateWordforms': 'Данное действие приведет к перезаписи словоформ при совпадении граммем. Продолжить?',
+  'labels.prompt.generateWordforms':
+    'Данное действие приведет к перезаписи словоформ при совпадении граммем. Продолжить?',
   'labels.prompt.restoreArchive': 'При восстановлении архивной версии актуальная схему будет заменена. Продолжить?',
   'labels.prompt.ownerChange':
     'Вы уверены, что хотите изменить владельца? Вы потеряете право управления данной схемой. Данное действие отменить нельзя',
@@ -121,12 +123,10 @@ export const labelsRu: Record<string, string> = {
 
   'labels.errorDetail.noErrors': 'Ошибки отсутствуют',
   'labels.errorDetail.validationTitle': 'Ошибка валидации данных',
-  'labels.errorDetail.genericTitle': 'Ошибка',
   'labels.errorDetail.genericDescription': 'Описание',
   'labels.errorDetail.noServerResponse': 'Нет ответа от сервера',
   'labels.errorDetail.api404': 'Обращение к несуществующему API',
   'labels.errorDetail.csrfLost': 'Соединение с сервером потеряно. Перезагрузите страницу',
-  'labels.errorDetail.responseTitle': 'Ошибка',
   'labels.errorDetail.responseDescription': 'Описание',
   'labels.errorDetail.contactIntro':
     'Пожалуйста сделайте скриншот и отправьте вместе с описанием ситуации на почту portal@acconcept.ru',

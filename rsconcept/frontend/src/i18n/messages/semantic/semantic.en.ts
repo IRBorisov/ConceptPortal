@@ -7,8 +7,11 @@ export const semanticEn: Record<string, string> = {
 
   'semantic.yes': 'Yes',
   'semantic.no': 'No',
-  'semantic.total': 'Total',
   'semantic.on': 'On',
   'semantic.off': 'Off',
+  'semantic.true': 'True',
+  'semantic.false': 'False',
+
+  'semantic.total': 'Total',
   'semantic.example': 'Example'
 };

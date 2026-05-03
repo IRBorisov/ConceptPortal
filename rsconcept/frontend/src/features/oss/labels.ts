@@ -12,7 +12,7 @@ import { type RO } from '@/utils/meta';
 
 const OPERATION_LABEL_LID: Record<OperationType, string> = {
   [OperationType.INPUT]: 'labels.oss.operation.input',
-  [OperationType.SYNTHESIS]: 'labels.oss.operation.synthesis',
+  [OperationType.SYNTHESIS]: 'semantic.action.synthesis',
   [OperationType.REPLICA]: 'labels.oss.operation.replica'
 };
 

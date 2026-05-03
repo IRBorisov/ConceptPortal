@@ -1,7 +1,6 @@
 /** English UI copy. */
 export const navEn: Record<string, string> = {
   'layout.toast.ariaLabel': 'Notifications',
-  'nav.action.logout': 'Sign out…',
   'nav.action.logoutTitle': 'Sign out of the application',
   'nav.admin.off': 'Admin: Off',
   'nav.admin.on': 'Admin: On',

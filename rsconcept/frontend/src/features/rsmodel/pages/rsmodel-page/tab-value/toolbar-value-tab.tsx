@@ -91,10 +91,8 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
             disabled={formDisabled}
           />
           <MiniButton
-            title={
-              isModified ? tx('labels.tooltip.unsaved') : prepareTooltip(tx('ui.hint.cloneConstituenta'), 'Alt + V')
-            }
-            aria-label={tx('ui.aria.cloneConstituenta')}
+            title={isModified ? tx('labels.tooltip.unsaved') : prepareTooltip(tx('ui.cloneConstituenta'), 'Alt + V')}
+            aria-label={tx('ui.cloneConstituenta')}
             icon={<IconClone size='1.25rem' className='icon-green' />}
             onClick={() => void cloneCst()}
             disabled={formDisabled || isModified}

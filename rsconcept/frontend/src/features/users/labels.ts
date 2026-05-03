@@ -3,10 +3,10 @@ import { globalTx } from '@/i18n';
 import { UserRole } from './stores/role';
 
 const ROLE_LABEL_LID: Record<UserRole, string> = {
-  [UserRole.READER]: 'labels.users.role.reader',
-  [UserRole.EDITOR]: 'labels.users.role.editor',
-  [UserRole.OWNER]: 'labels.users.role.owner',
-  [UserRole.ADMIN]: 'labels.users.role.admin'
+  [UserRole.READER]: 'semantic.term.reader',
+  [UserRole.EDITOR]: 'semantic.term.editor',
+  [UserRole.OWNER]: 'semantic.term.owner',
+  [UserRole.ADMIN]: 'semantic.term.admin'
 };
 
 const ROLE_DESC_LID: Record<UserRole, string> = {

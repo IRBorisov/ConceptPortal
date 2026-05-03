@@ -116,8 +116,8 @@ export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
         disabled={isProcessing}
       />
       <MiniButton
-        title={prepareTooltip(tx('ui.hint.cloneConstituenta'), 'Alt + V')}
-        aria-label={tx('ui.aria.cloneConstituenta')}
+        title={prepareTooltip(tx('ui.cloneConstituenta'), 'Alt + V')}
+        aria-label={tx('ui.cloneConstituenta')}
         icon={<IconClone size='1.25rem' className='icon-green' />}
         onClick={() => void cloneCst()}
         disabled={isProcessing || selectedCst.length !== 1}

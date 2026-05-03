@@ -1,4 +1,4 @@
-import { AccessPolicy, type CurrentVersion, LibraryItemType, LocationHead, type VersionInfo } from '@/domain/library';
+import { AccessPolicy, type CurrentVersion, LocationHead, type VersionInfo } from '@/domain/library';
 import { type FolderNode } from '@/domain/library/folder-tree';
 import { validateLocation } from '@/domain/library/library-api';
 import { globalTx } from '@/i18n';
@@ -38,18 +38,6 @@ const ACCESS_DESC_LID: Record<AccessPolicy, string> = {
   [AccessPolicy.PUBLIC]: 'labels.library.accessDesc.public'
 };
 
-const ITEM_TYPE_LID: Record<LibraryItemType, string> = {
-  [LibraryItemType.RSFORM]: 'labels.library.itemType.rsform',
-  [LibraryItemType.OSS]: 'labels.library.itemType.oss',
-  [LibraryItemType.RSMODEL]: 'semantic.term.model'
-};
-
-const ITEM_TYPE_DESC_LID: Record<LibraryItemType, string> = {
-  [LibraryItemType.RSFORM]: 'labels.library.itemTypeDesc.rsform',
-  [LibraryItemType.OSS]: 'labels.library.itemTypeDesc.oss',
-  [LibraryItemType.RSMODEL]: 'labels.library.itemTypeDesc.rsmodel'
-};
-
 /** Retrieves label for {@link LocationHead}. */
 export function labelLocationHead(head: LocationHead): string {
   const id = LOCATION_LID[head];
@@ -87,18 +75,6 @@ export function labelAccessPolicy(policy: AccessPolicy): string {
 export function describeAccessPolicy(policy: AccessPolicy): string {
   const id = ACCESS_DESC_LID[policy];
   return id ? globalTx(id) : String(policy);
-}
-
-/** Retrieves label for {@link LibraryItemType}. */
-export function labelLibraryItemType(itemType: LibraryItemType): string {
-  const id = ITEM_TYPE_LID[itemType];
-  return id ? globalTx(id) : String(itemType);
-}
-
-/** Retrieves description for {@link LibraryItemType}. */
-export function describeLibraryItemType(itemType: LibraryItemType): string {
-  const id = ITEM_TYPE_DESC_LID[itemType];
-  return id ? globalTx(id) : String(itemType);
 }
 
 /** Generates label for {@link VersionInfo} of {@link RSForm}. */

@@ -236,7 +236,7 @@ export function labelConstituenta(cst: RO<Constituenta>) {
 export function getCstTypeShortcut(type: CstType) {
   const key = cstTypeShortcutKeyRecord[type];
   const label = labelCstType(type);
-  return key ? globalTx('labels.rsform.shortcutWithKey', { label, key }) : label;
+  return key ? `${label} [Alt + ${key}]` : label;
 }
 
 /** Generates label for RS expression based on {@link CstType}. */

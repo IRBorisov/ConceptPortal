@@ -6,6 +6,10 @@ export const termsEn: Record<string, string> = {
 
   'semantic.term.library': 'Library',
   'semantic.term.manual': 'Manuals',
+  'semantic.term.sandbox': 'Sandbox',
+  'semantic.term.search': 'Search',
+  'semantic.term.error': 'Error',
+  'semantic.term.warning': 'Warning',
 
   'semantic.term.name': 'Name',
   'semantic.term.alias': 'Alias',
@@ -19,15 +23,23 @@ export const termsEn: Record<string, string> = {
   'semantic.term.comment': 'Comment',
   'semantic.term.contents': 'Contents',
 
+  'semantic.term.admin': 'Administrator',
   'semantic.term.owner': 'Owner',
+  'semantic.term.editor': 'Editor',
+  'semantic.term.editors': 'Editors',
+  'semantic.term.reader': 'Reader',
+
   'semantic.term.access': 'Access',
   'semantic.term.version': 'Version',
   'semantic.term.path': 'Path',
-  'semantic.term.editor': 'Editor',
-  'semantic.term.editors': 'Editors',
 
+  'semantic.term.concept': 'Concept',
   'semantic.term.operation': 'Operation',
   'semantic.term.block': 'Block',
-  'semantic.term.schema': 'Schema',
-  'semantic.term.model': 'Model'
+  'semantic.term.schema': 'Conceptual schema',
+  'semantic.term.schema.short': 'Schema',
+  'semantic.term.model': 'Conceptual model',
+  'semantic.term.model.short': 'Model',
+  'semantic.term.oss': 'Operational system',
+  'semantic.term.oss.short': 'OSS'
 };

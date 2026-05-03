@@ -153,17 +153,12 @@ export const uiExtraRu: Record<string, string> = {
   'ui.node.mgraph.constituentsPrefix': 'Конституенты',
   'ui.node.tg.contentsMissing': 'отсутствует',
 
-  'ui.library.createItem.modelTitle': 'Модель {title}',
-
   'ui.page.databaseSchema.imageAlt': 'Схема базы данных',
 
   'ui.iconsPage.total': 'Всего иконок: {count}',
 
-  'ui.submit.ok': 'ОК',
-
   'ui.tabs.passport': 'Паспорт',
   'ui.tabs.list': 'Список',
-  'ui.tabs.concept': 'Понятие',
   'ui.tabs.graph': 'Граф',
   'ui.tabs.data': 'Данные',
   'ui.tabs.evaluation': 'Расчет',
@@ -245,7 +240,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.oss.toolbar.newSchema': 'Новая концептуальная схема',
   'ui.oss.toolbar.importSchemaShort': 'Импорт КС',
   'ui.oss.toolbar.importSchema': 'Импорт концептуальной схемы',
-  'ui.oss.toolbar.synthesisShort': 'Синтез',
   'ui.oss.toolbar.synthesis': 'Синтез концептуальных схем',
   'ui.oss.toolbar.filterConstituents': 'Фильтрация конституент',
   'ui.oss.toolbar.relativizationShort': 'Релятивизация',
@@ -297,9 +291,7 @@ export const uiExtraRu: Record<string, string> = {
   'ui.oss.deleteOperation.warningAttention': 'Внимание!',
   'ui.oss.deleteOperation.warningRelatedSchema': 'Будет также удалена связанная схема',
 
-  'ui.combo.searchPlaceholder': 'Поиск...',
   'ui.combo.emptyList': 'Список пуст',
-  'ui.search.placeholderDefault': 'Поиск',
 
   'ui.table.header.formalDefinition': 'Формальное определение',
   'ui.table.header.textDefinition': 'Текстовое определение',
@@ -415,7 +407,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.stats.oss.blocks': 'Блоки',
   'ui.stats.oss.blocksSecondaryTitle': 'Количество вложенных блоков',
   'ui.stats.oss.detail.inputs': 'Загрузка',
-  'ui.stats.oss.detail.synthesis': 'Синтез',
   'ui.stats.oss.detail.replica': 'Реплика',
   'ui.stats.oss.attachedSection': 'Прикреплённые схемы',
   'ui.stats.oss.attachedPrimaryTitle': 'Количество операций с прикреплённой схемой RSForm',
@@ -462,7 +453,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.library.miniOss.title': 'Операционные схемы',
   'ui.library.miniOss.listLabel': 'Список ОСС',
   'ui.library.pickLocation.label': 'Расположение',
-  'ui.library.explorer.defaultTitle': 'Проводник...',
 
   'ui.oss.selectOperation.placeholder': 'Выбор операции',
   'ui.oss.selectBlock.placeholder': 'Выбор блока',
@@ -496,12 +486,9 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.template.pickFromListPlaceholder': 'Выберите шаблон из списка',
   'ui.rsform.errors.count': 'Ошибок: {count}',
   'ui.rsform.errors.warnings': 'Предупреждений: {count}',
-  'ui.rsform.errors.kindError': 'Ошибка',
-  'ui.rsform.errors.kindWarning': 'Предупреждение',
   'ui.rsform.termGraph.hiddenWithCount': 'Скрытые [{selected} | {total}]',
   'ui.rsform.termGraph.hidden': 'Скрытые',
   'ui.rsform.termGraph.colorSchemePlaceholder': 'Цветовая схема',
-  'ui.rsform.termGraph.schemaAlias': 'Схема {index}',
   'ui.rsform.termGraph.currentSchemaBadge': 'Текущая схема',
   'ui.rsform.selectConstituenta.placeholder': 'Выбор конституенты',
   'ui.rsform.cstInfo.inheritedTitle': 'наследник',
@@ -533,7 +520,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.termGraph.focus.cstAria': 'Фокус-конституента',
   'ui.rsform.termGraph.focus.shortLabel': 'Фокус',
 
-  'ui.rsform.pdf.schemaTitle': 'Концептуальная схема {title}',
   'ui.rsform.pdf.aliasLabel': 'Сокращенное название: {alias}',
   'ui.rsform.pdf.onlineVersion': 'Онлайн версия:',
   'ui.rsform.pdf.footerLine': 'КС {alias}',

@@ -125,12 +125,10 @@ export const labelsFr: Record<string, string> = {
 
   'labels.errorDetail.noErrors': 'Aucune erreur',
   'labels.errorDetail.validationTitle': 'Erreur de validation des données',
-  'labels.errorDetail.genericTitle': 'Erreur',
   'labels.errorDetail.genericDescription': 'Description',
   'labels.errorDetail.noServerResponse': 'Aucune réponse du serveur',
   'labels.errorDetail.api404': 'Appel à une API inexistante',
   'labels.errorDetail.csrfLost': 'Connexion au serveur perdue. Rechargez la page',
-  'labels.errorDetail.responseTitle': 'Erreur',
   'labels.errorDetail.responseDescription': 'Détails',
   'labels.errorDetail.contactIntro':
     'Veuillez faire une capture d’écran et l’envoyer avec une description à portal@acconcept.ru',

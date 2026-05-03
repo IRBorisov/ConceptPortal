@@ -16,5 +16,7 @@ export const actionsEn: Record<string, string> = {
 
   'semantic.action.edit': 'Edit',
   'semantic.action.clone': 'Clone',
-  'semantic.action.share': 'Share'
+  'semantic.action.share': 'Share',
+
+  'semantic.action.synthesis': 'Synthesis'
 };

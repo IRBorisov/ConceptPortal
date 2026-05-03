@@ -40,7 +40,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
     visible: true,
     read_only: false,
     schema: modelFrom,
-    title: schemaItem ? tx('ui.library.createItem.modelTitle', { title: schemaItem.title }) : undefined,
+    title: schemaItem ? tx('semantic.term.model.short') + ' ' + schemaItem.title : undefined,
     alias: schemaItem ? `M${schemaItem.alias}` : undefined,
     location: schemaItem
       ? schemaItem.location

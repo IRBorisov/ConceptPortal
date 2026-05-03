@@ -7,8 +7,11 @@ export const semanticRu: Record<string, string> = {
 
   'semantic.yes': 'Да',
   'semantic.no': 'Нет',
-  'semantic.total': 'Всего',
   'semantic.on': 'Вкл',
   'semantic.off': 'Выкл',
+  'semantic.true': 'Истина',
+  'semantic.false': 'Ложь',
+
+  'semantic.total': 'Всего',
   'semantic.example': 'Пример'
 };

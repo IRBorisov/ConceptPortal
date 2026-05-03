@@ -81,7 +81,7 @@ export function DlgInlineSynthesis() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
-          <TabLabel label={tx('semantic.term.schema')} title={tx('ui.tab.inlineSynthesis.schemaTitle')} />
+          <TabLabel label={tx('semantic.term.schema.short')} title={tx('ui.tab.inlineSynthesis.schemaTitle')} />
           <TabLabel
             label={tx('ui.tab.inlineSynthesis.constituents')}
             title={

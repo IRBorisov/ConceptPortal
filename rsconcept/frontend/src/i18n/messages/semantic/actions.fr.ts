@@ -16,5 +16,7 @@ export const actionsFr: Record<string, string> = {
 
   'semantic.action.edit': 'Modifier',
   'semantic.action.clone': 'Cloner',
-  'semantic.action.share': 'Partager'
+  'semantic.action.share': 'Partager',
+
+  'semantic.action.synthesis': 'Synthèse'
 };
