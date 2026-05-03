@@ -5,7 +5,7 @@ import { ReactFlowProvider } from '@xyflow/react';
 import clsx from 'clsx';
 
 import { type Constituenta, CstType, type RSForm } from '@/domain/library';
-import { generateAlias } from '@/domain/library/rsform-api';
+import { generateAlias, inferNewSpawnPosition } from '@/domain/library/rsform-api';
 import { type SPNode, StructurePlanner } from '@/domain/library/structure-planner';
 import { useTx } from '@/i18n';
 
@@ -103,10 +103,13 @@ export function DlgStructurePlanner() {
       const nextSchemaDTO = await onUpdate(data);
       setCurrentSchema(loadRSForm(nextSchemaDTO));
     } else {
+      if (!target) {
+        return;
+      }
       const data: CreateConstituentaDTO = {
-        insert_after: target!.id,
-        cst_type: inferDraftType(target!.cst_type),
-        alias: inferAlias(node, currentSchema, target!),
+        insert_after: inferNewSpawnPosition(currentSchema, target.id),
+        cst_type: inferDraftType(target.cst_type),
+        alias: inferAlias(node, currentSchema, target),
         term_raw: term,
         definition_formal: node.definition,
         definition_raw: '',

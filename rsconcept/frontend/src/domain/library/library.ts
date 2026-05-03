@@ -22,8 +22,8 @@ export type AccessPolicy = (typeof AccessPolicy)[keyof typeof AccessPolicy];
 export const LocationHead = {
   USER: '/U',
   COMMON: '/S',
-  PROJECTS: '/P',
-  LIBRARY: '/L'
+  LIBRARY: '/L',
+  PROJECTS: '/P'
 } as const;
 export type LocationHead = (typeof LocationHead)[keyof typeof LocationHead];
 
@@ -59,6 +59,3 @@ export interface VersionInfo {
 
 /** Represents current version */
 export type CurrentVersion = number | 'latest';
-
-/** Represents basic schemas location. */
-export const BASIC_SCHEMAS = LocationHead.LIBRARY + '/Базовые';

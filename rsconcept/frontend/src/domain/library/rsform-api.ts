@@ -17,7 +17,7 @@ import { applyPath } from '@/domain/rslang/semantic/typification-api';
 import { type RO } from '@/utils/meta';
 import { TextMatcher } from '@/utils/utils';
 
-import { BASIC_SCHEMAS, type LibraryItem } from './library';
+import { type LibraryItem } from './library';
 import {
   type ArgumentValue,
   type Constituenta,
@@ -325,16 +325,25 @@ export function generateAlias(type: CstType, schema: RSForm, takenAliases: strin
   return alias;
 }
 
+/**
+ * Id to pass as `insert_after` when creating a new {@link Constituenta} spawned by `targetId`:
+ * after the last existing child of that spawner, or after the spawner itself if none.
+ */
+export function inferNewSpawnPosition(schema: RSForm, targetId: number): number {
+  let last: number | null = null;
+  for (const cst of schema.items) {
+    if (cst.spawner === targetId) {
+      last = cst.id;
+    }
+  }
+  return last ?? targetId;
+}
+
 /** Sorts library items relevant for InlineSynthesis with specified {@link RSForm}. */
 export function sortItemsForInlineSynthesis(receiver: RSForm, items: readonly LibraryItem[]): LibraryItem[] {
   const result = items.filter(item => item.location === receiver.location);
   for (const item of items) {
     if (item.visible && item.owner === item.owner && !result.includes(item)) {
-      result.push(item);
-    }
-  }
-  for (const item of items) {
-    if (!result.includes(item) && item.location.startsWith(BASIC_SCHEMAS)) {
       result.push(item);
     }
   }

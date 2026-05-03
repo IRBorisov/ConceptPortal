@@ -1,7 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import clsx from 'clsx';
+import { useState } from 'react';
 
 import { type FolderNode } from '@/domain/library';
 import { useTx } from '@/i18n';
@@ -36,15 +35,12 @@ export function SelectLocation({
   const { folders } = useFolders();
   const activeNode = folders.at(value);
   const items = folders.getTree();
-  const baseFolded = useMemo(
-    () => items.filter(item => item !== activeNode && !activeNode?.hasPredecessor(item)),
-    [items, activeNode]
-  );
+  const baseFolded = items.filter(item => item !== activeNode && !activeNode?.hasPredecessor(item));
 
   // Manual overrides: true => force folded, false => force unfolded
   const [manualOverrides, setManualOverrides] = useState<Map<FolderNode, boolean>>(new Map());
 
-  const folded = useMemo(() => {
+  const folded = (() => {
     const set = new Set<FolderNode>(baseFolded);
     manualOverrides.forEach((isFolded, node) => {
       if (isFolded) {
@@ -54,7 +50,7 @@ export function SelectLocation({
       }
     });
     return Array.from(set);
-  }, [baseFolded, manualOverrides]);
+  })();
 
   function onFoldItem(target: FolderNode, showChildren: boolean) {
     setManualOverrides(prev => {
@@ -97,7 +93,7 @@ export function SelectLocation({
           <div
             tabIndex={-1}
             key={`${prefix}${index}`}
-            className={clsx(
+            className={cn(
               !dense && (item.parent ? 'min-h-7 sm:min-h-8' : 'min-h-9 sm:min-h-10'),
               item.parent ? 'pr-3 py-1' : 'px-3 py-2',
               'flex items-center gap-2',
@@ -107,7 +103,8 @@ export function SelectLocation({
               'leading-3 sm:leading-4',
               'shrink-0',
               !item.parent && 'font-controls text-muted-foreground',
-              activeNode === item && 'cc-selected'
+              activeNode === item && 'cc-selected',
+              !item.parent && activeNode === item && 'text-foreground'
             )}
             style={{ paddingLeft: `${(item.rank > 5 ? 5 : item.rank) * 0.5 + 0.5}rem` }}
             onClick={event => onClickRow(event, item)}
