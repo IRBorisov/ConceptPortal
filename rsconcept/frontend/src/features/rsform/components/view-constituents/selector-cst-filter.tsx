@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { type ReactNode, useEffect } from 'react';
 
 import { useTx } from '@/i18n';
 
@@ -16,7 +16,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/input/select';
 import { cn } from '@/components/utils';
 
-import { useCstSearchStore } from '../../stores/cst-search';
+import { type CstFilterOption, useCstSearchStore } from '../../stores/cst-search';
 
 interface SelectorCstFilterProps {
   className?: string;
@@ -37,45 +37,56 @@ export function SelectorCstFilter({ className, showModelFilter }: SelectorCstFil
     [filter, setFilter, showModelFilter]
   );
 
+  const items: Record<CstFilterOption, ReactNode> = {
+    all: tx('semantic.term.filter'),
+    schema_issues: tx('ui.filter.schemaIssuesShort'),
+    model_issues: tx('ui.filter.modelIssuesShort'),
+    crucial: tx('ui.filter.crucial'),
+    kernel: tx('ui.filter.basic'),
+    derived: tx('ui.filter.derived'),
+    owned: tx('ui.filter.owned'),
+    inherited: tx('ui.filter.inheritedDescendants')
+  };
+
   return (
     <div className={cn('font-controls text-sm opacity-50 hover:opacity-100 transition-opacity select-none', className)}>
-      <Select value={filter} onValueChange={setFilter}>
+      <Select value={filter} onValueChange={newValue => setFilter(newValue!)} items={items}>
         <SelectTrigger noBorder className='h-8 pl-2 pr-0 gap-1'>
           <SelectValue placeholder={tx('semantic.term.filter')} />
         </SelectTrigger>
         <SelectContent align='start'>
           <SelectItem value='all'>
-            <IconFilter size='1rem' className='text-muted-foreground -mt-0.5 -mr-0.75' />
+            <IconFilter className='text-muted-foreground' />
             {tx('semantic.term.filter')}
           </SelectItem>
           <SelectItem value='schema_issues' title={tx('ui.filter.schemaIssuesTitle')}>
-            <IconStatusError size='1rem' className='text-destructive -mt-0.5 -mr-0.75' />
+            <IconStatusError className='text-destructive' />
             {tx('ui.filter.schemaIssuesShort')}
           </SelectItem>
           {showModelFilter ? (
             <SelectItem value='model_issues' title={tx('ui.filter.modelIssuesTitle')}>
-              <IconStatusIncalculable size='1rem' className='text-destructive -mt-0.5 -mr-0.75' />
+              <IconStatusIncalculable className='text-destructive' />
               {tx('ui.filter.modelIssuesShort')}
             </SelectItem>
           ) : null}
           <SelectItem value='crucial'>
-            <IconCrucial size='1rem' className='text-constructive -mt-0.5 -mr-0.75' />
+            <IconCrucial className='text-constructive' />
             {tx('ui.filter.crucial')}
           </SelectItem>
           <SelectItem value='kernel'>
-            <IconGraphCore size='1rem' className='text-primary -mt-0.5 -mr-0.75' />
+            <IconGraphCore className='text-primary' />
             {tx('ui.filter.basic')}
           </SelectItem>
           <SelectItem value='derived'>
-            <IconGraphCore size='1rem' className='text-muted-foreground -mt-0.5 -mr-0.75' />
+            <IconGraphCore className='text-muted-foreground' />
             {tx('ui.filter.derived')}
           </SelectItem>
           <SelectItem value='owned'>
-            <IconPredecessor size='1rem' className='text-constructive -mt-0.5 -mr-0.75' />
+            <IconPredecessor className='text-constructive' />
             {tx('ui.filter.owned')}
           </SelectItem>
           <SelectItem value='inherited'>
-            <IconChild size='1rem' className='text-primary -mt-0.5 -mr-0.75' />
+            <IconChild className='text-primary' />
             {tx('ui.filter.inheritedDescendants')}
           </SelectItem>
         </SelectContent>

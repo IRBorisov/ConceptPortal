@@ -23,27 +23,36 @@ export function SelectVersion({
   id,
   className,
   disabled,
-  items,
+  items: versionInfos,
   value,
   placeholder,
   onChange,
   ...restProps
 }: SelectVersionProps) {
-  function handleSelect(newValue: string) {
+  function handleSelect(newValue: unknown) {
     if (newValue === 'latest') {
       onChange(newValue);
     } else {
       onChange(Number(newValue));
     }
   }
+
+  const selectItems = [
+    { value: 'latest' as const, label: labelVersion('latest', versionInfos) },
+    ...(versionInfos?.map(version => ({
+      value: String(version.id),
+      label: version.version
+    })) ?? [])
+  ];
+
   return (
-    <Select onValueChange={handleSelect} value={String(value)} disabled={disabled}>
+    <Select items={selectItems} onValueChange={handleSelect} value={String(value)} disabled={disabled}>
       <SelectTrigger id={id} className={cn('min-w-48', className)} {...restProps}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value='latest'>{labelVersion('latest', items)}</SelectItem>
-        {items?.map(version => (
+        <SelectItem value='latest'>{labelVersion('latest', versionInfos)}</SelectItem>
+        {versionInfos?.map(version => (
           <SelectItem key={`version-${version.id}`} value={String(version.id)}>
             {version.version}
           </SelectItem>

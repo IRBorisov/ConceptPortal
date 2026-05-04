@@ -1,5 +1,7 @@
 'use client';
 
+import { type ReactNode } from 'react';
+
 import { useTx } from '@/i18n';
 
 import { IconEditor, IconFilter, IconHide, IconOSS, IconOwner, IconRSForm, IconRSModel } from '@/components/icons';
@@ -17,43 +19,53 @@ export function SelectorLibraryFilter({ className }: SelectorLibraryFilterProps)
   const value = useLibrarySearchStore(state => state.selectorFilter);
   const setSelectorFilter = useLibrarySearchStore(state => state.setSelectorFilter);
 
-  function handleValueChange(next: string) {
+  function handleValueChange(next: unknown) {
     setSelectorFilter(next as LibrarySearchSelectorFilter);
   }
 
+  const items: Record<LibrarySearchSelectorFilter, ReactNode> = {
+    all: tx('semantic.term.filter'),
+    owner_me: tx('lib.filter.owner'),
+    editor_me: tx('lib.filter.editor'),
+    hidden: tx('lib.filter.hidden'),
+    type_rsform: tx('semantic.term.schema.short'),
+    type_oss: tx('semantic.term.oss.short'),
+    type_rsmodel: tx('semantic.term.model.short')
+  };
+
   return (
     <div className={cn('font-controls text-sm opacity-80 transition-opacity hover:opacity-100 select-none', className)}>
-      <Select value={value} onValueChange={handleValueChange}>
+      <Select value={value} onValueChange={handleValueChange} items={items}>
         <SelectTrigger noBorder className='h-7 pl-2 pr-1 gap-1 pb-0'>
           <SelectValue placeholder={tx('semantic.term.filter')} />
         </SelectTrigger>
         <SelectContent align='start'>
           <SelectItem value='all'>
-            <IconFilter size='1rem' className='text-muted-foreground -mt-0.5 -mr-0.75' />
+            <IconFilter className='text-muted-foreground' />
             {tx('semantic.term.filter')}
           </SelectItem>
           <SelectItem value='owner_me'>
-            <IconOwner size='1rem' className='text-primary -mt-0.5 -mr-0.75' />
+            <IconOwner className='text-primary' />
             {tx('lib.filter.owner')}
           </SelectItem>
           <SelectItem value='editor_me'>
-            <IconEditor size='1rem' className='text-primary -mt-0.5 -mr-0.75' />
+            <IconEditor className='text-primary' />
             {tx('lib.filter.editor')}
           </SelectItem>
           <SelectItem value='hidden'>
-            <IconHide size='1rem' className='text-destructive -mt-0.5 -mr-0.75' />
+            <IconHide className='text-destructive' />
             {tx('lib.filter.hidden')}
           </SelectItem>
           <SelectItem value='type_rsform'>
-            <IconRSForm size='1rem' className='text-primary -mt-0.5 -mr-0.75' />
+            <IconRSForm className='text-primary' />
             {tx('semantic.term.schema.short')}
           </SelectItem>
           <SelectItem value='type_oss'>
-            <IconOSS size='1rem' className='text-constructive -mt-0.5 -mr-0.75' />
+            <IconOSS className='text-constructive' />
             {tx('semantic.term.oss.short')}
           </SelectItem>
           <SelectItem value='type_rsmodel'>
-            <IconRSModel size='1rem' className='text-accent-orange -mt-0.5 -mr-0.75' />
+            <IconRSModel className='text-accent-orange' />
             {tx('semantic.term.model.short')}
           </SelectItem>
         </SelectContent>

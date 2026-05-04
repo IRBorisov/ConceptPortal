@@ -24,6 +24,11 @@ export function SelectColoring({ className, schema }: SelectColoringProps) {
   const coloring = useTermGraphStore(state => state.coloring);
   const setColoring = useTermGraphStore(state => state.setColoring);
 
+  const items = Object.fromEntries(Object.values(TGColoring).map(v => [v, labelColoring(v)] as const)) as Record<
+    TGColoring,
+    string
+  >;
+
   return (
     <div className={cn('relative select-none bg-input border pointer-events-auto', className)}>
       <div className='absolute z-pop right-10 h-9 flex items-center'>
@@ -32,7 +37,7 @@ export function SelectColoring({ className, schema }: SelectColoringProps) {
         {coloring === TGColoring.schemas ? <SchemasGuide schema={schema} /> : null}
       </div>
 
-      <Select onValueChange={setColoring} value={coloring}>
+      <Select items={items} onValueChange={newValue => setColoring(newValue!)} value={coloring}>
         <SelectTrigger noBorder className='w-full'>
           <SelectValue placeholder={tx('ui.rsform.termGraph.colorSchemePlaceholder')} />
         </SelectTrigger>

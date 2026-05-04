@@ -16,8 +16,12 @@ interface SelectCstTypeProps extends Styling {
 }
 
 export function SelectCstType({ id, value, onChange, className, disabled = false, ...restProps }: SelectCstTypeProps) {
+  const items = Object.fromEntries(
+    Object.values(CstType).map(typeStr => [typeStr, labelCstType(typeStr)] as const)
+  ) as Record<CstType, string>;
+
   return (
-    <Select onValueChange={onChange} value={value} disabled={disabled}>
+    <Select items={items} onValueChange={newValue => onChange(newValue!)} value={value} disabled={disabled}>
       <SelectTrigger id={id} className={cn('w-66', className)} {...restProps}>
         <SelectValue />
       </SelectTrigger>
@@ -25,7 +29,7 @@ export function SelectCstType({ id, value, onChange, className, disabled = false
         {Object.values(CstType).map(typeStr => (
           <SelectItem key={`csttype-${typeStr}`} value={typeStr}>
             <IconCstType value={typeStr} />
-            <span>{labelCstType(typeStr)}</span>
+            {labelCstType(typeStr)}
           </SelectItem>
         ))}
       </SelectContent>

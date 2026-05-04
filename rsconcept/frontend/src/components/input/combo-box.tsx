@@ -72,45 +72,48 @@ export function ComboBox<Option>({
 
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
-      <PopoverTrigger asChild>
-        <button
-          id={id}
-          ref={triggerRef}
-          role='combobox'
-          aria-expanded={open}
-          className={cn(
-            'relative',
-            'flex gap-2 px-3 py-2 items-center justify-between',
-            'bg-input disabled:opacity-50',
-            'cursor-pointer disabled:cursor-auto',
-            'whitespace-nowrap',
-            'focus-outline',
-            open && 'cursor-auto',
-            !noBorder && 'border',
-            noBorder && 'rounded-md',
-            !value && 'text-muted-foreground',
-            className
-          )}
-          style={style}
-          hidden={hidden && !open}
-        >
-          <span className='truncate'>{value ? labelValueFunc(value) : placeholder}</span>
-          <ChevronDownIcon
+      <PopoverTrigger
+        render={
+          <button
+            type='button'
+            id={id}
+            ref={triggerRef}
+            role='combobox'
+            aria-expanded={open}
             className={cn(
-              'text-muted-foreground cc-hover-pulse hover:text-primary',
-              clearable && !!value && 'opacity-0'
+              'relative',
+              'flex gap-2 px-3 py-2 items-center justify-between',
+              'bg-input disabled:opacity-50',
+              'cursor-pointer disabled:cursor-auto',
+              'whitespace-nowrap',
+              'focus-outline',
+              open && 'cursor-auto',
+              !noBorder && 'border',
+              noBorder && 'rounded-md',
+              !value && 'text-muted-foreground',
+              className
             )}
-          />
-          {clearable && !!value ? (
-            <IconRemove
-              tabIndex={-1}
-              size='1rem'
-              className='cc-remove cc-hover-pulse absolute pointer-events-auto right-3'
-              onClick={handleClear}
+            style={style}
+            hidden={hidden && !open}
+          >
+            <span className='truncate'>{value ? labelValueFunc(value) : placeholder}</span>
+            <ChevronDownIcon
+              className={cn(
+                'text-muted-foreground cc-hover-pulse hover:text-primary',
+                clearable && !!value && 'opacity-0'
+              )}
             />
-          ) : null}
-        </button>
-      </PopoverTrigger>
+            {clearable && !!value ? (
+              <IconRemove
+                tabIndex={-1}
+                size='1rem'
+                className='cc-remove cc-hover-pulse absolute pointer-events-auto right-3'
+                onClick={handleClear}
+              />
+            ) : null}
+          </button>
+        }
+      />
       <PopoverContent sideOffset={-1} className='p-0' style={{ width: popoverWidth }}>
         <Command>
           {!noSearch ? <CommandInput placeholder={tx('semantic.term.search') + '...'} className='h-9' /> : null}

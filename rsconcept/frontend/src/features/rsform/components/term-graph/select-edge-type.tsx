@@ -17,9 +17,14 @@ export function SelectEdgeType({ className }: SelectEdgeTypeProps) {
   const graphType = useTermGraphStore(state => state.filter.graphType);
   const setGraphType = useTermGraphStore(state => state.setGraphType);
 
+  const items = Object.fromEntries(Object.values(TGEdgeType).map(v => [v, labelEdgeType(v)] as const)) as Record<
+    TGEdgeType,
+    string
+  >;
+
   return (
     <div className={cn('relative border select-none bg-input pointer-events-auto', className)}>
-      <Select onValueChange={setGraphType} value={graphType}>
+      <Select items={items} onValueChange={newValue => setGraphType(newValue!)} value={graphType}>
         <SelectTrigger noBorder className='w-full'>
           <SelectValue placeholder={tx('ui.rsform.termGraph.colorSchemePlaceholder')} />
         </SelectTrigger>

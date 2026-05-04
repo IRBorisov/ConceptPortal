@@ -106,62 +106,65 @@ export function ComboMulti<Option>({
 
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
-      <PopoverTrigger asChild>
-        <button
-          id={id}
-          ref={triggerRef}
-          role='combobox'
-          aria-expanded={open}
-          className={cn(
-            'relative h-9',
-            'flex gap-2 px-3 py-2 items-center justify-between',
-            'bg-input disabled:bg-transparent',
-            'cursor-pointer disabled:cursor-auto',
-            'whitespace-nowrap',
-            'focus-outline border',
-            "[&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0",
-            open && 'cursor-auto',
-            !value && 'text-muted-foreground',
-            className
-          )}
-          style={style}
-          disabled={disabled}
-        >
-          <div className='flex flex-wrap gap-2 items-center'>
-            {value.length === 0 ? <div className='text-muted-foreground'>{placeholder}</div> : null}
-            {value.map(item => (
-              <div key={idFunc(item)} className='flex px-1 items-center border rounded-lg bg-accent text-sm'>
-                {labelValueFunc(item)}
-                {!disabled ? (
-                  <IconRemove
-                    tabIndex={-1}
-                    size='1rem'
-                    className='cc-remove cc-hover-pulse'
-                    onClick={
-                      disabled
-                        ? undefined
-                        : event => {
-                            event.stopPropagation();
-                            handleRemoveValue(item);
-                          }
-                    }
-                  />
-                ) : null}
-              </div>
-            ))}
-          </div>
+      <PopoverTrigger
+        render={
+          <button
+            type='button'
+            id={id}
+            ref={triggerRef}
+            role='combobox'
+            aria-expanded={open}
+            className={cn(
+              'relative h-9',
+              'flex gap-2 px-3 py-2 items-center justify-between',
+              'bg-input disabled:bg-transparent',
+              'cursor-pointer disabled:cursor-auto',
+              'whitespace-nowrap',
+              'focus-outline border',
+              "[&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0",
+              open && 'cursor-auto',
+              !value && 'text-muted-foreground',
+              className
+            )}
+            style={style}
+            disabled={disabled}
+          >
+            <div className='flex flex-wrap gap-2 items-center'>
+              {value.length === 0 ? <div className='text-muted-foreground'>{placeholder}</div> : null}
+              {value.map(item => (
+                <div key={idFunc(item)} className='flex px-1 items-center border rounded-lg bg-accent text-sm'>
+                  {labelValueFunc(item)}
+                  {!disabled ? (
+                    <IconRemove
+                      tabIndex={-1}
+                      size='1rem'
+                      className='cc-remove cc-hover-pulse'
+                      onClick={
+                        disabled
+                          ? undefined
+                          : event => {
+                              event.stopPropagation();
+                              handleRemoveValue(item);
+                            }
+                      }
+                    />
+                  ) : null}
+                </div>
+              ))}
+            </div>
 
-          <ChevronDownIcon className={cn('text-muted-foreground', !!value && 'opacity-0')} />
-          {!!value && !disabled ? (
-            <IconRemove
-              tabIndex={-1}
-              size='1rem'
-              className='cc-remove absolute pointer-events-auto right-3 cc-hover-pulse hover:text-primary'
-              onClick={value.length === 0 ? undefined : handleClear}
-            />
-          ) : null}
-        </button>
-      </PopoverTrigger>
+            <ChevronDownIcon className={cn('text-muted-foreground', !!value && 'opacity-0')} />
+            {!!value && !disabled ? (
+              <IconRemove
+                tabIndex={-1}
+                size='1rem'
+                className='cc-remove absolute pointer-events-auto right-3 cc-hover-pulse hover:text-primary'
+                onClick={value.length === 0 ? undefined : handleClear}
+              />
+            ) : null}
+          </button>
+        }
+      />
       <PopoverContent sideOffset={-1} className='p-0' style={{ width: popoverWidth }}>
         <Command>
           {!noSearch ? <CommandInput placeholder={tx('semantic.term.search') + '...'} className='h-9' /> : null}

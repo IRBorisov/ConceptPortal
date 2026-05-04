@@ -28,7 +28,7 @@ export function SelectPagination<TData>({
 }: SelectPaginationProps<TData>) {
   const tx = useTx();
   const handlePaginationOptionsChange = useCallback(
-    (newValue: string) => {
+    (newValue: unknown) => {
       const perPage = Number(newValue);
       table.setPageSize(perPage);
       onChange?.(perPage);
@@ -36,8 +36,21 @@ export function SelectPagination<TData>({
     [table, onChange]
   );
 
+  const selectItems = (paginationOptions ?? []).map(option => ({
+    value: String(option),
+    label: (
+      <>
+        {option} {tx('ui.pagination.perPageSuffix')}
+      </>
+    )
+  }));
+
   return (
-    <Select onValueChange={handlePaginationOptionsChange} value={String(table.getState().pagination.pageSize)}>
+    <Select
+      items={selectItems}
+      onValueChange={handlePaginationOptionsChange}
+      value={String(table.getState().pagination.pageSize)}
+    >
       <SelectTrigger
         id={id}
         aria-label={tx('ui.pagination.rowsPerPageAria')}

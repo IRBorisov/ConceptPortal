@@ -14,6 +14,20 @@ export type LibrarySearchSelectorFilter =
   | 'type_oss'
   | 'type_rsmodel';
 
+const LIBRARY_SELECTOR_FILTERS: readonly LibrarySearchSelectorFilter[] = [
+  'all',
+  'hidden',
+  'owner_me',
+  'editor_me',
+  'type_rsform',
+  'type_oss',
+  'type_rsmodel'
+];
+
+function isLibrarySearchSelectorFilter(value: string): value is LibrarySearchSelectorFilter {
+  return (LIBRARY_SELECTOR_FILTERS as readonly string[]).includes(value);
+}
+
 interface LibrarySearchStore {
   subfolders: boolean;
   toggleSubfolders: () => void;
@@ -67,7 +81,20 @@ export const useLibrarySearchStore = create<LibrarySearchStore>()(
         }))
     }),
     {
-      version: 2,
+      version: 3,
+      migrate: (persisted, fromVersion) => {
+        if (fromVersion >= 3 || persisted == null || typeof persisted !== 'object') {
+          return persisted as LibrarySearchStore;
+        }
+        const record = persisted as { state?: { selectorFilter?: unknown } };
+        const raw = record.state?.selectorFilter;
+        if (typeof raw === 'string') {
+          const normalized = raw.toLowerCase();
+          record.state = record.state ?? {};
+          record.state.selectorFilter = isLibrarySearchSelectorFilter(normalized) ? normalized : 'all';
+        }
+        return persisted as LibrarySearchStore;
+      },
       partialize: state => ({
         subfolders: state.subfolders,
 

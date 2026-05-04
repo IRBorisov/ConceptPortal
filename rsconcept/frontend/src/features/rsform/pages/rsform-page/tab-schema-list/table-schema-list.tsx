@@ -64,7 +64,7 @@ export function TableSchemaList({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: () => <span className='pl-3 min-w-12'>{tx('ui.table.header.alias')}</span>,
+      header: () => <span className='pl-3 min-w-12'>{tx('semantic.term.name')}</span>,
       size: 65,
       minSize: 65,
       maxSize: 65,
