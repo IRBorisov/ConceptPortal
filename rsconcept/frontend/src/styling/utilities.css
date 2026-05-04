@@ -175,6 +175,51 @@
   }
 }
 
+/* Replaces tw-animate-css utilities used in UI primitives. */
+@keyframes cc-enter {
+  from {
+    opacity: var(--tw-enter-opacity, 1);
+    transform: translate3d(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0), 0)
+      scale3d(var(--tw-enter-scale, 1), var(--tw-enter-scale, 1), 1);
+  }
+}
+
+@keyframes cc-exit {
+  to {
+    opacity: var(--tw-exit-opacity, 1);
+    transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0)
+      scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), 1);
+  }
+}
+
+@utility animate-in {
+  animation-name: cc-enter;
+  animation-duration: var(--duration-dropdown);
+  animation-timing-function: var(--ease-bezier);
+}
+
+@utility animate-out {
+  animation-name: cc-exit;
+  animation-duration: var(--duration-dropdown);
+  animation-timing-function: var(--ease-bezier);
+}
+
+@utility fade-in-0 {
+  --tw-enter-opacity: 0;
+}
+
+@utility fade-out-0 {
+  --tw-exit-opacity: 0;
+}
+
+@utility zoom-in-95 {
+  --tw-enter-scale: 0.95;
+}
+
+@utility zoom-out-95 {
+  --tw-exit-scale: 0.95;
+}
+
 @utility cc-animate-sidebar {
   transition-property: max-width, opacity;
   transition-timing-function: var(--ease-in-out);
