@@ -26,66 +26,6 @@ This readme file is used mostly to document project dependencies and conventions
 - to regenerate parsers use 'npm run generate' script
 
 <details>
-  <summary>npm install</summary>
-  <pre>
-  - axios
-  - clsx
-  - dompurify
-  - fast-deep-equal
-  - fflate
-  - html-to-image
-  - react-icons
-  - react-router
-  - react-toastify
-  - react-tabs
-  - react-intl
-  - react-error-boundary
-  - react-tooltip
-  - react-zoom-pan-pinch
-  - react-scan
-  - js-file-download
-  - use-debounce
-  - qrcode.react
-  - zustand
-  - zod
-  - @tanstack/react-table
-  - @tanstack/react-query
-  - @tanstack/react-query-devtools
-  - @tanstack/react-form
-  - @uiw/react-codemirror
-  - @uiw/codemirror-themes
-  - @lezer/lr
-  - @dagrejs/dagre
-  - @xyflow/react
-  - @react-pdf/renderer
-  </pre>
-</details>
-<details>
-  <summary>npm install -D</summary>
-  <pre>
-  - tailwindcss
-  - eslint-plugin-import
-  - eslint-plugin-react-compiler
-  - eslint-plugin-simple-import-sort
-  - eslint-plugin-react-hooks
-  - eslint-plugin-tsdoc
-  - eslint-plugin-playwright
-  - vite
-  - vitest
-  - shadcn
-  - stylelint
-  - stylelint-config-recommended
-  - stylelint-config-standard
-  - stylelint-config-tailwindcss
-  - @vitejs/plugin-react
-  - @types/jest
-  - @lezer/generator
-  - @playwright/test
-  - @rolldown/plugin-babel
-  - rollup-plugin-visualizer
-  </pre>
-</details>
-<details>
   <summary>VS Code plugins</summary>
   <pre>
   - ESLint
@@ -115,30 +55,6 @@ This readme file is used mostly to document project dependencies and conventions
 
 Python dependencies are managed with `uv` in `rsconcept/backend/pyproject.toml` and `rsconcept/backend/uv.lock`.
 
-<details>
-  <summary>requirements</summary>
-  <pre>
-  - django
-  - djangorestframework
-  - django-cors-headers
-  - django-filter
-  - drf-spectacular
-  - tzdata
-  - gunicorn
-  - coreapi
-  - psycopg2-binary
-  - cctext
-  </pre>
-</details>
-<details>
-  <summary>requirements-dev</summary>
-  <pre>
-  - coverage
-  - pylint
-  - mypy
-  - djangorestframework-stubs[compatible-mypy]
-  </pre>
-</details>
 <details>
   <summary>VS Code plugins</summary>
   <pre>

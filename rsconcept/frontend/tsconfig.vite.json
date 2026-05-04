@@ -2,6 +2,7 @@
   "compilerOptions": {
     "composite": true,
     "skipLibCheck": true,
+    "strict": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
@@ -11,5 +12,5 @@
       "@/*": ["*"]
     }
   },
-  "include": ["vite.config.ts", "package.json"]
+  "include": ["vite.config.ts", "vite-plugin-sitemap.ts", "public-sitemap-paths.ts", "package.json"]
 }

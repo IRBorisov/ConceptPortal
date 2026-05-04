@@ -1,40 +1,17 @@
-[Bugs - PENDING]
-- 
-
 [Functionality - PENDING]
-- Export PDF (Items list, Graph)
-- Save react-flow to vector image
-- Landing page
 - Design first user experience
 - Video guides
-- Demo sandbox for anonymous users
-
-- Implement rslang and rsmodel functionality in the frontend
 - Allow manual setup for typification and value class
 
-User profile: 
-- Settings server persistency
+- Profile Settings server persistency
 - Profile pictures (avatars)
 - Custom LibraryItem lists
-- Custom user filters and sharing filters
 
-- Static analyzer for RSForm as a whole: check term duplication and empty conventions
-
-- Focus on codemirror editor when label is clicked (need React 19 ref for clean code solution)
 - Draggable rows in constituents table
-
-- Search functionality for Help Manuals - use google search integration filtered by site?
-- Internationalization - at least english version. Consider react.intl
-- Sitemap for better SEO and crawler optimization
-
-[Functionality - CANCELED]
-- Integrate socials and feedback
-- Content based search in Library
-- Private projects. Consider cooperative editing
 
 
 [Tech]
-- duplicate syntax parsing and type info calculations to client. Consider moving backend to Nodejs or embedding c++ lib
+- django-allauth - consider supporting popular auth providers
 
 
 [Deployment]
@@ -44,14 +21,11 @@ User profile:
 
 [Security]
 - improve nginx config. Consider DDOS and other types of attacks on infrastructure
-- recaptcha for create user and rest password
+- recaptcha for create user and reset password
 https://yandex.cloud/ru/docs/smartcaptcha
 
 
 [Research]
-Research and consider integration
-- django-allauth - consider supporting popular auth providers
-
 - skeleton loading
 https://react.dev/reference/react/Suspense
 
@@ -62,5 +36,4 @@ https://drf-standardized-errors.readthedocs.io/en/latest/error_response.html
 https://stackoverflow.com/questions/28838170/multilevel-json-diff-in-python
 
 - Documentation platform. Consider diplodoc
-
 - nuqs useQueryState

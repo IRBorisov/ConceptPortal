@@ -5,6 +5,8 @@ import { defineConfig, loadEnv } from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { fileURLToPath } from 'url';
 
+import { sitemapPlugin } from './vite-plugin-sitemap';
+
 export default ({ mode }: { mode: string }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return defineConfig({
@@ -21,7 +23,9 @@ export default ({ mode }: { mode: string }) => {
         visualizer({
           filename: 'stats.html',
           template: 'treemap'
-        })
+        }),
+
+      sitemapPlugin()
     ],
     server: {
       port: Number(env.VITE_PORTAL_FRONT_PORT),
