@@ -10,7 +10,6 @@ export const navFr: Record<string, string> = {
   'nav.admin.on': 'Admin : activé',
   'nav.admin.off': 'Admin : désactivé',
   'nav.admin.toggleTitle': 'Mode administrateur',
-  'nav.link.restApi': 'REST API',
   'nav.link.restApiTitle': 'Ouvrir l’API backend',
   'nav.link.database': 'Base de données',
   'nav.link.databaseTitle': 'Ouvrir l’administration de la base',

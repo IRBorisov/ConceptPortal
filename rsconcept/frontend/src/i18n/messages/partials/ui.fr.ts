@@ -95,7 +95,6 @@ export const uiFr: Record<string, string> = {
   'ui.dlg.inlineSynthesis.header': 'Importer un schéma conceptuel',
   'ui.action.addConstituents': 'Ajouter des constituantes',
   'ui.tab.inlineSynthesis.schemaTitle': 'Source des constituantes',
-  'ui.tab.inlineSynthesis.constituents': 'Constituantes',
   'ui.tab.inlineSynthesis.selectSchemaFirst': 'Sélectionnez un schéma',
   'ui.tab.inlineSynthesis.constituentsTitle': 'Liste des constituantes',
   'ui.tab.inlineSynthesis.substitutions': 'Substitutions',
@@ -103,7 +102,6 @@ export const uiFr: Record<string, string> = {
   'ui.inlineSynthesis.selected': 'Sélectionnée',
   'ui.placeholder.schemaNotSelected': 'Aucun schéma sélectionné',
 
-  'ui.rsform.heading.constituenta': 'Constituante {alias}',
   'ui.rsform.action.editWordForms': 'Modifier les formes du mot',
   'ui.rsform.hint.editTermWordForms': 'Éditer les formes du mot du terme',
   'ui.validation.termEmpty': 'Terme vide',

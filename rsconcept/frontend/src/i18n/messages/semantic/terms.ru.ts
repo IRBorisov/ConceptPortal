@@ -6,6 +6,8 @@ export const termsRu: Record<string, string> = {
   'semantic.term.search': 'Поиск',
   'semantic.term.error': 'Ошибка',
   'semantic.term.warning': 'Предупреждение',
+  'semantic.term.password': 'Пароль',
+  'semantic.term.email': 'Электронная почта',
 
   'semantic.term.library': 'Библиотека',
   'semantic.term.manual': 'Справка',
@@ -34,12 +36,16 @@ export const termsRu: Record<string, string> = {
   'semantic.term.path': 'Путь',
 
   'semantic.term.concept': 'Понятие',
+  'semantic.term.constituenta': 'Конституента',
+  'semantic.term.constituents': 'Конституенты',
   'semantic.term.operation': 'Операция',
   'semantic.term.block': 'Блок',
   'semantic.term.schema': 'Концептуальная схема',
   'semantic.term.schema.short': 'Схема',
   'semantic.term.model': 'Концептуальная модель',
   'semantic.term.model.short': 'Модель',
-  'semantic.term.oss': 'Операционная система',
-  'semantic.term.oss.short': 'ОСС'
+  'semantic.term.oss': 'Операционная схема',
+  'semantic.term.oss.short': 'ОСС',
+  'semantic.term.oss.plural': 'Операционные схемы',
+  'semantic.term.templates': 'Шаблоны'
 };

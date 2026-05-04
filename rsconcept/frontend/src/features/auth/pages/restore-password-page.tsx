@@ -43,7 +43,7 @@ export function Component() {
           autoComplete='email'
           required
           allowEnter
-          label={tx('auth.restore.email')}
+          label={tx('semantic.term.email')}
           value={email}
           onChange={event => setEmail(event.target.value)}
         />
@@ -67,9 +67,7 @@ function ServerError({ error }: { error: ErrorData }): React.ReactElement {
 
   if (isAxiosError(error) && error.response?.status === 400) {
     return (
-      <div className='mx-auto mt-6 text-sm select-text text-destructive'>
-        {tx('auth.restore.emailNotRegistered')}
-      </div>
+      <div className='mx-auto mt-6 text-sm select-text text-destructive'>{tx('auth.restore.emailNotRegistered')}</div>
     );
   }
   throw error as Error;

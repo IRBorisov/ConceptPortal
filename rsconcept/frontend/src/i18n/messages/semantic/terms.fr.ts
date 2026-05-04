@@ -6,6 +6,8 @@ export const termsFr: Record<string, string> = {
   'semantic.term.search': 'Recherche',
   'semantic.term.error': 'Erreur',
   'semantic.term.warning': 'Avertissement',
+  'semantic.term.password': 'Mot de passe',
+  'semantic.term.email': 'Adresse e-mail',
 
   'semantic.term.library': 'Bibliothèque',
   'semantic.term.manual': 'Aide',
@@ -34,12 +36,16 @@ export const termsFr: Record<string, string> = {
   'semantic.term.path': 'Chemin',
 
   'semantic.term.concept': 'Concept',
+  'semantic.term.constituenta': 'Constituente',
+  'semantic.term.constituents': 'Constituentes',
   'semantic.term.operation': 'Opération',
   'semantic.term.block': 'Bloc',
   'semantic.term.schema': 'Schéma conceptuel',
   'semantic.term.schema.short': 'Schéma',
   'semantic.term.model': 'Modèle conceptuel',
   'semantic.term.model.short': 'Modèle',
-  'semantic.term.oss': 'Système opérationnel',
-  'semantic.term.oss.short': 'OSS'
+  'semantic.term.oss': 'Schéma opérationnel',
+  'semantic.term.oss.short': 'OSS',
+  'semantic.term.oss.plural': 'Schémas opérationnels',
+  'semantic.term.templates': 'Modèles'
 };

@@ -144,7 +144,7 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
 
       {user.is_staff ? (
         <DropdownButton
-          text={tx('nav.link.restApi')}
+          text='REST API'
           title={tx('nav.link.restApiTitle')}
           icon={<IconRESTapi size='1rem' />}
           className='border-t'

@@ -16,7 +16,6 @@ export const navEn: Record<string, string> = {
   'nav.link.dbStructureTitle': 'Open database schema page',
   'nav.link.icons': 'Icons',
   'nav.link.iconsTitle': 'Open icons page',
-  'nav.link.restApi': 'REST API',
   'nav.link.restApiTitle': 'Open backend API',
   'nav.theme.dark': 'Theme: Dark',
   'nav.theme.light': 'Theme: Light',

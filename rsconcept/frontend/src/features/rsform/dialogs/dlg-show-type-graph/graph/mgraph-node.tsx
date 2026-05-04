@@ -30,7 +30,7 @@ export function MGraphNodeComponent(node: NodeProps<MGNode>) {
     '\n' +
     (node.data.annotations.length === 0
       ? ''
-      : `${tx('ui.node.mgraph.constituentsPrefix')} ${node.data.annotations.join(' ')}`);
+      : `${tx('semantic.term.constituents')} ${node.data.annotations.join(' ')}`);
   const nodeLabel = getNodeLabel(node.data);
 
   return (

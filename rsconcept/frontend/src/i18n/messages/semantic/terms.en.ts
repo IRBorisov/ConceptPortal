@@ -3,13 +3,15 @@ export const termsEn: Record<string, string> = {
   'semantic.term.dateCreated': 'Created',
   'semantic.term.dateUpdated': 'Updated',
   'semantic.term.filter': 'Filter',
+  'semantic.term.search': 'Search',
+  'semantic.term.error': 'Error',
+  'semantic.term.warning': 'Warning',
+  'semantic.term.password': 'Password',
+  'semantic.term.email': 'Email',
 
   'semantic.term.library': 'Library',
   'semantic.term.manual': 'Manuals',
   'semantic.term.sandbox': 'Sandbox',
-  'semantic.term.search': 'Search',
-  'semantic.term.error': 'Error',
-  'semantic.term.warning': 'Warning',
 
   'semantic.term.name': 'Name',
   'semantic.term.alias': 'Alias',
@@ -34,12 +36,16 @@ export const termsEn: Record<string, string> = {
   'semantic.term.path': 'Path',
 
   'semantic.term.concept': 'Concept',
+  'semantic.term.constituenta': 'Constituenta',
+  'semantic.term.constituents': 'Constituents',
   'semantic.term.operation': 'Operation',
   'semantic.term.block': 'Block',
   'semantic.term.schema': 'Conceptual schema',
   'semantic.term.schema.short': 'Schema',
   'semantic.term.model': 'Conceptual model',
   'semantic.term.model.short': 'Model',
-  'semantic.term.oss': 'Operational system',
-  'semantic.term.oss.short': 'OSS'
+  'semantic.term.oss': 'Operational schema',
+  'semantic.term.oss.short': 'OSS',
+  'semantic.term.oss.plural': 'Operational schemas',
+  'semantic.term.templates': 'Templates'
 };

@@ -10,7 +10,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.link.currentVersion': 'Актуальная версия',
 
   'ui.stats.section.overview': 'Общий состав',
-  'ui.stats.primary.constituents': 'Конституенты',
   'ui.stats.title.totalConstituents': 'Общее количество конституент',
   'ui.stats.secondary.owned': 'Собственные',
   'ui.stats.title.ownedConstituents': 'Количество собственных конституент',
@@ -101,9 +100,7 @@ export const uiExtraRu: Record<string, string> = {
   'ui.graphSelection.maximize': 'Максимизация',
   'ui.graphSelection.maximizeHintMultiline':
     'Максимизация \nдополнение выделения конституентами, \nзависимыми только от выделенных',
-  'ui.graphSelection.maximizeHintLine':
-    'Максимизация - дополнение выделения конституентами, зависимыми только от выделенных',
-  'ui.graphSelection.maximizeAria':
+  'ui.graphSelection.maximizeHint':
     'Максимизация - дополнение выделения конституентами, зависимыми только от выделенных',
   'ui.graphSelection.invert': 'Инвертировать',
   'ui.graphSelection.pickGroup': 'Выделить группу...',
@@ -150,7 +147,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.pickElement.selectPrompt': 'Выберите элемент для редактирования',
 
   'ui.node.ast.templateParam': 'Шаблонный параметр:',
-  'ui.node.mgraph.constituentsPrefix': 'Конституенты',
   'ui.node.tg.contentsMissing': 'отсутствует',
 
   'ui.page.databaseSchema.imageAlt': 'Схема базы данных',
@@ -170,7 +166,6 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.rsform.menu.archiveNoEdit': 'Архив: Редактирование запрещено\nПерейти к актуальной версии',
   'ui.rsform.menu.editing': 'Редактирование',
-  'ui.rsform.menu.templates': 'Шаблоны',
   'ui.rsform.menu.templatesTitle': 'Создать конституенту из шаблона',
   'ui.rsform.menu.embedding': 'Встраивание',
   'ui.rsform.menu.embeddingTitle': 'Импортировать совокупность\nконституент из другой схемы',
@@ -224,7 +219,6 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.rsexpr.status.checkDefinition': 'Проверить определение',
 
-  'ui.oss.toolbar.resetChanges': 'Сбросить изменения',
   'ui.oss.toolbar.resetView': 'Сбросить вид',
   'ui.oss.toolbar.contentsPanel': 'Панель содержания',
   'ui.oss.toolbar.displaySettings': 'Настройки отображения',
@@ -362,7 +356,6 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.profile.field.username': 'Логин',
   'ui.profile.field.usernameReadonlyTitle': 'Логин изменить нельзя',
-  'ui.profile.field.email': 'Электронная почта',
   'ui.profile.submit.saveData': 'Сохранить данные',
 
   'ui.promptTemplates.error.notFound': 'Шаблон запроса с указанным идентификатором {itemID} отсутствует',

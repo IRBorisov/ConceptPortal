@@ -161,7 +161,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
     >
       <div className='flex items-center gap-2 mr-2 font-math font-semibold select-text'>
-        <span>{tx('ui.rsform.heading.constituenta', { alias: activeCst.alias })}</span>
+        <span>{tx('semantic.term.constituenta') + ' ' + activeCst.alias}</span>
       </div>
       <ConstituentaPrimaryActions className='-mt-1' activeCst={activeCst} schema={schema} />
 

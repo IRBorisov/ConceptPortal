@@ -53,7 +53,9 @@ export function useLibraryColumns() {
     }),
     columnHelper.accessor('time_update', {
       id: 'time_update',
-      header: () => <span className='min-w-20'>{isSmall ? tx('semantic.term.date') : tx('lib.col.dateLong')}</span>,
+      header: () => (
+        <span className='min-w-20'>{isSmall ? tx('semantic.term.date') : tx('semantic.term.dateUpdated')}</span>
+      ),
       cell: props => (
         <span className='whitespace-nowrap'>
           {new Date(props.getValue()).toLocaleString(intl.locale, {

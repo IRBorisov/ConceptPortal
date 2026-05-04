@@ -241,7 +241,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       onSubmit={withPreventDefault(() => void handleSubmitAll())}
     >
       <div className='flex items-center gap-2 mr-2 font-math font-semibold select-text'>
-        <span>{tx('ui.rsform.heading.constituenta', { alias: activeCst.alias })}</span>
+        <span>{tx('semantic.term.constituenta') + ' ' + activeCst.alias}</span>
       </div>
 
       <ValuePrimaryActions activeCst={activeCst} cstData={cstData} onChangeValue={handleSetValue} />

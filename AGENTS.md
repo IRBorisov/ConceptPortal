@@ -37,7 +37,6 @@
 
 - **Frontend UI strings:** When adding or changing user-visible text or labels in `rsconcept/frontend`, follow the i18n rules in `rsconcept/frontend/AGENTS.md` (Internationalization)—keep `useTx` / message ids and **all** shipped locale files (e.g. `ui.ru.ts` / `ui.fr.ts`) in sync.
 - Keep frontend and backend changes in sync if API contracts change.
-- Prefer focused, localized changes; avoid broad refactors unless directed.
 - Preserve code and work outside your current task scope.
 - When changing arguments of function consider their order. After changing the order check for function calls and update them.
 

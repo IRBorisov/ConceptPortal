@@ -29,7 +29,7 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
         id='rsmodel-stats-overview'
         className='rounded-t-md'
         label={tx('ui.stats.section.overview')}
-        primaryLabel={tx('ui.stats.primary.constituents')}
+        primaryLabel={tx('semantic.term.constituents')}
         primaryValue={stats.count_all}
         primaryTitle={tx('ui.stats.title.totalConstituents')}
         secondaryLabel={stats.count_inherited > 0 ? tx('ui.stats.secondary.owned') : undefined}

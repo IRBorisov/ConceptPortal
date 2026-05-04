@@ -10,7 +10,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.rsform.link.currentVersion': 'Version actuelle',
 
   'ui.stats.section.overview': 'Composition globale',
-  'ui.stats.primary.constituents': 'Constituantes',
   'ui.stats.title.totalConstituents': 'Nombre total de constituantes',
   'ui.stats.secondary.owned': 'Propres',
   'ui.stats.title.ownedConstituents': 'Nombre de constituantes propres',
@@ -101,9 +100,7 @@ export const uiExtraFr: Record<string, string> = {
   'ui.graphSelection.maximize': 'Maximiser',
   'ui.graphSelection.maximizeHintMultiline':
     'Maximisation :\ncompléter la sélection par des constituantes\ndépendant uniquement de la sélection',
-  'ui.graphSelection.maximizeHintLine':
-    'Maximisation : compléter la sélection par des constituantes dépendant uniquement de la sélection',
-  'ui.graphSelection.maximizeAria':
+  'ui.graphSelection.maximizeHint':
     'Maximisation : compléter la sélection par des constituantes dépendant uniquement de la sélection',
   'ui.graphSelection.invert': 'Inverser',
   'ui.graphSelection.pickGroup': 'Sélectionner un groupe…',
@@ -150,7 +147,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.pickElement.selectPrompt': 'Sélectionnez un élément à modifier',
 
   'ui.node.ast.templateParam': 'Paramètre de modèle :',
-  'ui.node.mgraph.constituentsPrefix': 'Constituantes',
   'ui.node.tg.contentsMissing': 'absent',
 
   'ui.page.databaseSchema.imageAlt': 'Schéma de base de données',
@@ -170,7 +166,6 @@ export const uiExtraFr: Record<string, string> = {
 
   'ui.rsform.menu.archiveNoEdit': 'Archive : modification interdite\nAller à la version actuelle',
   'ui.rsform.menu.editing': 'Modification',
-  'ui.rsform.menu.templates': 'Modèles',
   'ui.rsform.menu.templatesTitle': 'Créer une constituante à partir d’un modèle',
   'ui.rsform.menu.embedding': 'Intégration',
   'ui.rsform.menu.embeddingTitle': 'Importer un ensemble de\nconstituantes d’un autre schéma',
@@ -226,7 +221,6 @@ export const uiExtraFr: Record<string, string> = {
 
   'ui.rsexpr.status.checkDefinition': 'Vérifier la définition',
 
-  'ui.oss.toolbar.resetChanges': 'Annuler les modifications',
   'ui.oss.toolbar.resetView': 'Réinitialiser la vue',
   'ui.oss.toolbar.contentsPanel': 'Panneau de contenu',
   'ui.oss.toolbar.displaySettings': 'Paramètres d’affichage',
@@ -364,7 +358,6 @@ export const uiExtraFr: Record<string, string> = {
 
   'ui.profile.field.username': 'Identifiant',
   'ui.profile.field.usernameReadonlyTitle': 'L’identifiant ne peut pas être modifié',
-  'ui.profile.field.email': 'Adresse e-mail',
   'ui.profile.submit.saveData': 'Enregistrer les données',
 
   'ui.promptTemplates.error.notFound': 'Aucun modèle de requête avec l’identifiant {itemID}.',

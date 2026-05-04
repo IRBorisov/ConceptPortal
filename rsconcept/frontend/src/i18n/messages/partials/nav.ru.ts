@@ -10,7 +10,6 @@ export const navRu: Record<string, string> = {
   'nav.admin.on': 'Админ: Вкл',
   'nav.admin.off': 'Админ: Выкл',
   'nav.admin.toggleTitle': 'Работа в режиме администратора',
-  'nav.link.restApi': 'REST API',
   'nav.link.restApiTitle': 'Переход к backend API',
   'nav.link.database': 'База данных',
   'nav.link.databaseTitle': 'Переход к администрированию базы данных',

@@ -110,7 +110,7 @@ export function EditorProfile() {
             id='email'
             autoComplete='off'
             allowEnter
-            label={tx('ui.profile.field.email')}
+            label={tx('semantic.term.email')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -119,11 +119,7 @@ export function EditorProfile() {
         )}
       </form.Field>
       {serverError ? <ServerError error={serverError} /> : null}
-      <SubmitButton
-        className='self-center mt-6'
-        text={tx('ui.profile.submit.saveData')}
-        loading={isPending}
-      />
+      <SubmitButton className='self-center mt-6' text={tx('ui.profile.submit.saveData')} loading={isPending} />
     </form>
   );
 }

@@ -155,7 +155,7 @@ export function HomePage() {
           <FeatureTile
             to={urls.library}
             icon={<IconLibrary size='1.5rem' />}
-            title={tx('home.feature.library.title')}
+            title={tx('semantic.term.library')}
             description={tx('home.feature.library.desc')}
             accentClass='bg-accent-green'
           />
@@ -190,7 +190,7 @@ export function HomePage() {
           <FeatureTile
             to={urls.help_topic(HelpTopic.CC_OSS)}
             icon={<IconOSS size='1.5rem' />}
-            title={tx('home.feature.oss.title')}
+            title={tx('semantic.term.oss.plural')}
             description={tx('home.feature.oss.desc')}
             accentClass='bg-accent-green'
           />

@@ -83,7 +83,7 @@ export function DlgInlineSynthesis() {
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
           <TabLabel label={tx('semantic.term.schema.short')} title={tx('ui.tab.inlineSynthesis.schemaTitle')} />
           <TabLabel
-            label={tx('ui.tab.inlineSynthesis.constituents')}
+            label={tx('semantic.term.constituents')}
             title={
               !sourceID
                 ? tx('ui.tab.inlineSynthesis.selectSchemaFirst')

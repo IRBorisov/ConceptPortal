@@ -184,12 +184,9 @@ export function ToolbarGraphSelection({
             title={
               !tipHotkeys
                 ? tx('ui.graphSelection.maximizeHintMultiline')
-                : prepareTooltip(
-                    tx('ui.graphSelection.maximizeHintLine'),
-                    '5'
-                  )
+                : prepareTooltip(tx('ui.graphSelection.maximizeHint'), '5')
             }
-            aria-label={tx('ui.graphSelection.maximizeAria')}
+            aria-label={tx('ui.graphSelection.maximizeHint')}
             icon={<IconGraphMaximize size='1.25rem' className='icon-primary' />}
             onClick={handleSelectMaximize}
             disabled={emptySelection}
@@ -214,9 +211,7 @@ export function ToolbarGraphSelection({
           <DropdownButton
             text={tx('ui.graphSelection.core')}
             title={
-              tipHotkeys
-                ? prepareTooltip(tx('ui.graphSelection.coreTitle'), 'Z')
-                : tx('ui.graphSelection.coreTitle')
+              tipHotkeys ? prepareTooltip(tx('ui.graphSelection.coreTitle'), 'Z') : tx('ui.graphSelection.coreTitle')
             }
             icon={<IconGraphCore size='1.25rem' className='icon-primary' />}
             onClick={handleSelectCore}
@@ -234,9 +229,7 @@ export function ToolbarGraphSelection({
           <DropdownButton
             text={tx('ui.graphSelection.owned')}
             title={
-              tipHotkeys
-                ? prepareTooltip(tx('ui.graphSelection.ownedTitle'), 'C')
-                : tx('ui.graphSelection.ownedTitle')
+              tipHotkeys ? prepareTooltip(tx('ui.graphSelection.ownedTitle'), 'C') : tx('ui.graphSelection.ownedTitle')
             }
             icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
             onClick={handleSelectOwned}

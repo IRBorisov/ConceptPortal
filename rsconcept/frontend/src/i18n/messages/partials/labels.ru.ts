@@ -2,7 +2,6 @@ import { labelsFeatureUiRu } from './labels-feature.ru';
 
 /** Russian overrides for shared labels (toasts, Zod, hints, prompts). */
 export const labelsRu: Record<string, string> = {
-  'labels.error.astFailed': 'Невозможно построить дерево разбора',
   'labels.error.aliasLength': 'до {n} символов',
   'labels.error.emailLength': 'до {n} символов',
   'labels.error.titleLength': 'до {n} символов',
@@ -11,15 +10,12 @@ export const labelsRu: Record<string, string> = {
   'labels.error.typeStructureFailed': 'Структура отсутствует',
   'labels.error.passwordsMismatch': 'Пароли не совпадают',
   'labels.error.passwordsSame': 'Пароль совпадает со старым',
-  'labels.error.imageFailed': 'Ошибка при создании изображения',
   'labels.error.reuseOriginal': 'Повторное использование удаляемой конституенты при отождествлении',
   'labels.error.substituteInherited': 'Нельзя удалять наследованные конституенты при отождествлении',
   'labels.error.inputAlreadyExists': 'Концептуальная схема с таким именем уже существует',
   'labels.error.requiredField': 'Обязательное поле',
   'labels.error.emailField': 'Введите корректный адрес электронной почты',
   'labels.error.invalidParse': 'Не удалось построить синтаксическое дерево',
-  'labels.error.rulesNotAccepted': 'Примите условия пользования Порталом',
-  'labels.error.privacyNotAccepted': 'Примите политику обработки персональных данных',
   'labels.error.loginFormat': 'Имя пользователя должно содержать только буквы и цифры',
   'labels.error.invalidLocation': 'Некорректный формат пути',
   'labels.error.emptySubstitutions': 'Выберите хотя бы одно отождествление',
@@ -41,7 +37,6 @@ export const labelsRu: Record<string, string> = {
   'labels.error.sandboxImportError': 'Не удалось перенести схему в песочницу',
   'labels.error.sandboxBundleNotAvailable': 'Песочница пуста',
   'labels.error.failedToPersistSandbox': 'Не удалось сохранить песочницу',
-  'labels.error.cannotExtractNode': 'Невозможно вынести выбранный узел',
   'labels.error.formalDuplicates': 'Формальное выражение совпадает с конституентами: {aliases}',
   'labels.error.sandboxFailedToLoad': 'Не удалось загрузить песочницу. Загружен начальный набор.',
   'labels.error.bindingInvalid':
@@ -69,7 +64,6 @@ export const labelsRu: Record<string, string> = {
   'labels.info.sandboxImportSuccess': 'Песочница обновлена успешно',
   'labels.info.valueLoadedJson': 'Значение загружено из JSON-файла',
   'labels.info.newLibraryItem': 'Схема успешно создана',
-  'labels.info.addedConstituents': 'Добавлены конституенты: {count}',
   'labels.info.newUser': 'Пользователь успешно создан: {username}',
   'labels.info.newVersion': 'Версия создана: {version}',
   'labels.info.newConstituent': 'Конституента добавлена: {alias}',
@@ -79,7 +73,6 @@ export const labelsRu: Record<string, string> = {
   'labels.info.operationDestroyed': 'Операция удалена',
   'labels.info.blockDestroyed': 'Блок удален',
   'labels.info.operationExecuted': 'Операция выполнена',
-  'labels.info.allOperationExecuted': 'Все операции выполнены',
   'labels.info.constituentsDestroyed': 'Конституенты удалены: {count}',
   'labels.info.dataCleared': 'Данные очищены: {count}',
   'labels.info.modelCleared': 'Модель очищена',
@@ -97,7 +90,6 @@ export const labelsRu: Record<string, string> = {
   'labels.hint.relocateEmpty': 'Необходимо выбрать хотя бы одну собственную конституенту',
   'labels.hint.substitutionsEmpty': 'Добавьте хотя бы одно отождествление',
   'labels.hint.sourceEmpty': 'Выберите схему источник',
-  'labels.hint.referenceInvalid': 'Выберите тип ссылки и заполните все поля',
   'labels.hint.fileEmpty': 'Выберите файл для загрузки',
 
   'labels.tooltip.unsaved': 'Сохраните или отмените изменения',

@@ -139,7 +139,7 @@ export function ToolbarOssGraph({
     >
       <div className='cc-icons'>
         <MiniButton
-          title={prepareTooltip(tx('ui.oss.toolbar.resetChanges'), 'Z')}
+          title={prepareTooltip(tx('semantic.action.resetChanges'), 'Z')}
           icon={<IconReset size='1.25rem' className='icon-primary' />}
           onClick={handleResetPositions}
         />

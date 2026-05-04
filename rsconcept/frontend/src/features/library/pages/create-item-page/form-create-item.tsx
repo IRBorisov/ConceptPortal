@@ -159,7 +159,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
 
       {itemType === LibraryItemType.RSMODEL ? (
         <div>
-          <Label text={tx('lib.create.schemaLabel')} />
+          <Label text={tx('semantic.term.schema')} />
           <form.Field name='schema'>
             {field => (
               <PickSchema

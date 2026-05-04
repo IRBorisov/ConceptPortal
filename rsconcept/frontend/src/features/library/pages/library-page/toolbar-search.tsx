@@ -51,7 +51,7 @@ export function ToolbarSearch({ className }: ToolbarSearchProps) {
 
       <SearchBar
         id='library_search'
-        placeholder={tx('lib.search.placeholder')}
+        placeholder={tx('semantic.term.search')}
         noBorder
         className='min-w-28 sm:min-w-40 max-w-80 grow'
         query={query}

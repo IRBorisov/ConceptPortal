@@ -94,7 +94,6 @@ export const uiRu: Record<string, string> = {
   'ui.dlg.inlineSynthesis.header': 'Импорт концептуальной схемы',
   'ui.action.addConstituents': 'Добавить конституенты',
   'ui.tab.inlineSynthesis.schemaTitle': 'Источник конституент',
-  'ui.tab.inlineSynthesis.constituents': 'Конституенты',
   'ui.tab.inlineSynthesis.selectSchemaFirst': 'Выберите схему',
   'ui.tab.inlineSynthesis.constituentsTitle': 'Перечень конституент',
   'ui.tab.inlineSynthesis.substitutions': 'Отождествления',
@@ -102,7 +101,6 @@ export const uiRu: Record<string, string> = {
   'ui.inlineSynthesis.selected': 'Выбрана',
   'ui.placeholder.schemaNotSelected': 'Схема не выбрана',
 
-  'ui.rsform.heading.constituenta': 'Конституента {alias}',
   'ui.rsform.action.editWordForms': 'Изменить словоформы',
   'ui.rsform.hint.editTermWordForms': 'Редактировать словоформы термина',
   'ui.validation.termEmpty': 'Пустой термин',

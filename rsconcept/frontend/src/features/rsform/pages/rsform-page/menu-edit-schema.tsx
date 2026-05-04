@@ -150,7 +150,7 @@ export function MenuEditSchema() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('ui.rsform.menu.templates')}
+          text={tx('semantic.term.templates')}
           title={tx('ui.rsform.menu.templatesTitle')}
           icon={<IconTemplates size='1rem' className='icon-green' />}
           onClick={handleTemplates}

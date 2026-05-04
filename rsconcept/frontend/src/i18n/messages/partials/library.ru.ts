@@ -6,7 +6,6 @@ export const libraryRu: Record<string, string> = {
   'lib.breadcrumb.subfoldersOff': 'Вложенные папки: Выкл',
   'lib.breadcrumb.subfoldersAria': 'Переключатель отображения вложенных папок',
   'lib.search.resetTitle': 'Сбросить фильтры',
-  'lib.search.placeholder': 'Поиск',
   'lib.search.ownerAria': 'Поиск по владельцу',
   'lib.search.ownerPlaceholder': 'Поиск по владельцу',
   'lib.table.empty': 'Список схем пуст',
@@ -15,16 +14,13 @@ export const libraryRu: Record<string, string> = {
   'lib.filter.owner': 'Я владелец',
   'lib.filter.editor': 'Я редактор',
   'lib.filter.hidden': 'Скрытые',
-  'lib.col.dateLong': 'Обновлена',
   'lib.create.pageTitleModel': 'Новая концептуальная модель',
   'lib.create.pageTitleOss': 'Новая операционная схема',
   'lib.create.pageTitleSchema': 'Новая концептуальная схема',
   'lib.create.libraryShow': 'Библиотека: отображать',
   'lib.create.libraryHide': 'Библиотека: скрывать',
   'lib.create.libraryToggleAria': 'Переключатель отображения библиотеки',
-  'lib.create.schemaLabel': 'Концептуальная схема',
   'lib.create.description': 'Описание',
   'lib.create.submitModel': 'Создать модель',
-  'lib.create.submitSchema': 'Создать схему',
-  'lib.create.defaultTitleModel': 'Модель {name}'
+  'lib.create.submitSchema': 'Создать схему'
 };

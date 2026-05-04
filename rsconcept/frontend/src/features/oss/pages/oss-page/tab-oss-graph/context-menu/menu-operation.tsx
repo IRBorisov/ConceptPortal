@@ -298,7 +298,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
       {isMutable && operation.result && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text={tx('ui.tab.inlineSynthesis.constituents')}
+          text={tx('semantic.term.constituents')}
           title={tx('ui.oss.menu.relocateConstituentsTitle')}
           aria-label={tx('ui.oss.menu.relocateConstituentsAria')}
           icon={<IconChild size='1rem' className='icon-green' />}

@@ -36,7 +36,7 @@ export function DlgUnsavedNavigation({
     >
       <p>{tx('dlg.unsaved.body')}</p>
       <div className='flex flex-wrap gap-3 justify-center'>
-        <Button text={tx('dlg.unsaved.cancel')} className='w-40' onClick={onCancel} disabled={isSaving} />
+        <Button text={tx('semantic.action.cancel')} className='w-40' onClick={onCancel} disabled={isSaving} />
         <Button text={tx('dlg.unsaved.continue')} onClick={onContinue} disabled={isSaving} />
         <Button
           text={tx('dlg.unsaved.saveContinue')}

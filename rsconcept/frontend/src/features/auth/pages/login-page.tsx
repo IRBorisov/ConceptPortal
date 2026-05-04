@@ -84,7 +84,7 @@ export function LoginPage() {
             id='password'
             type='password'
             autoComplete='current-password'
-            label={tx('auth.login.password')}
+            label={tx('semantic.term.password')}
             allowEnter
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
