@@ -1,20 +1,78 @@
-import { Command as CommandPrimitive } from 'cmdk';
+'use client';
+
+import { createContext, useContext, useEffect, useId, useMemo, useState } from 'react';
 import { SearchIcon } from 'lucide-react';
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 import { cn } from '../utils';
 
-function Command({ className, ...props }: React.ComponentProps<typeof CommandPrimitive>) {
+interface CommandContextValue {
+  query: string;
+  setQuery: (value: string) => void;
+  registerItem: (id: string, visible: boolean) => void;
+  unregisterItem: (id: string) => void;
+  hasVisibleItems: boolean;
+}
+
+const CommandContext = createContext<CommandContextValue | null>(null);
+
+function useCommandContext(componentName: string) {
+  const context = useContext(CommandContext);
+  if (!context) {
+    throw new Error(`${componentName} must be used within Command`);
+  }
+  return context;
+}
+
+function Command({ className, ...props }: React.ComponentProps<'div'>) {
+  const [query, setQuery] = useState('');
+  const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
+
+  function registerItem(id: string, visible: boolean) {
+    setVisibilityMap(previous => {
+      if (previous[id] === visible) {
+        return previous;
+      }
+      return { ...previous, [id]: visible };
+    });
+  }
+
+  function unregisterItem(id: string) {
+    setVisibilityMap(previous => {
+      if (!(id in previous)) {
+        return previous;
+      }
+      const next = { ...previous };
+      delete next[id];
+      return next;
+    });
+  }
+
+  const hasVisibleItems = useMemo(() => Object.values(visibilityMap).some(Boolean), [visibilityMap]);
+
+  const contextValue = useMemo(
+    () => ({
+      query,
+      setQuery,
+      registerItem,
+      unregisterItem,
+      hasVisibleItems
+    }),
+    [query, hasVisibleItems]
+  );
+
   return (
-    <CommandPrimitive
-      data-slot='command'
-      className={cn(
-        'bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md',
-        className
-      )}
-      {...props}
-    />
+    <CommandContext.Provider value={contextValue}>
+      <div
+        data-slot='command'
+        className={cn(
+          'bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md',
+          className
+        )}
+        {...props}
+      />
+    </CommandContext.Provider>
   );
 }
 
@@ -42,25 +100,42 @@ function CommandDialog({
   );
 }
 
-function CommandInput({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Input>) {
+type CommandInputProps = Omit<React.ComponentProps<'input'>, 'onChange'> & {
+  onValueChange?: (value: string) => void;
+};
+
+function CommandInput({ className, onValueChange, value, defaultValue, ...props }: CommandInputProps) {
+  const { query, setQuery } = useCommandContext('CommandInput');
+
+  const resolvedValue = typeof value === 'string' ? value : query;
+
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const nextValue = event.currentTarget.value;
+    setQuery(nextValue);
+    onValueChange?.(nextValue);
+  }
+
   return (
     <div data-slot='command-input-wrapper' className='flex h-9 items-center gap-2 border-b px-3'>
       <SearchIcon className='size-4 shrink-0 opacity-50' />
-      <CommandPrimitive.Input
+      <input
         data-slot='command-input'
         className={cn(
           'placeholder:text-muted-foreground flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50',
           className
         )}
+        value={resolvedValue}
+        defaultValue={defaultValue}
+        onChange={handleChange}
         {...props}
       />
     </div>
   );
 }
 
-function CommandList({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.List>) {
+function CommandList({ className, ...props }: React.ComponentProps<'div'>) {
   return (
-    <CommandPrimitive.List
+    <div
       data-slot='command-list'
       className={cn('max-h-[300px] scroll-py-1 overflow-x-hidden overflow-y-auto', className)}
       {...props}
@@ -68,13 +143,17 @@ function CommandList({ className, ...props }: React.ComponentProps<typeof Comman
   );
 }
 
-function CommandEmpty({ ...props }: React.ComponentProps<typeof CommandPrimitive.Empty>) {
-  return <CommandPrimitive.Empty data-slot='command-empty' className='py-6 text-center text-sm' {...props} />;
+function CommandEmpty({ className, ...props }: React.ComponentProps<'div'>) {
+  const { hasVisibleItems } = useCommandContext('CommandEmpty');
+  if (hasVisibleItems) {
+    return null;
+  }
+  return <div data-slot='command-empty' className={cn('py-6 text-center text-sm', className)} {...props} />;
 }
 
-function CommandGroup({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Group>) {
+function CommandGroup({ className, ...props }: React.ComponentProps<'div'>) {
   return (
-    <CommandPrimitive.Group
+    <div
       data-slot='command-group'
       className={cn(
         'text-foreground **:[[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:py-1.5 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-medium',
@@ -85,26 +164,56 @@ function CommandGroup({ className, ...props }: React.ComponentProps<typeof Comma
   );
 }
 
-function CommandSeparator({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Separator>) {
-  return (
-    <CommandPrimitive.Separator
-      data-slot='command-separator'
-      className={cn('bg-border -mx-1 h-px', className)}
-      {...props}
-    />
-  );
+function CommandSeparator({ className, ...props }: React.ComponentProps<'div'>) {
+  return <div data-slot='command-separator' className={cn('bg-border -mx-1 h-px', className)} {...props} />;
 }
 
-function CommandItem({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Item>) {
+type CommandItemProps = Omit<React.ComponentProps<'button'>, 'value' | 'onSelect'> & {
+  value?: string;
+  onSelect?: (value: string) => void;
+};
+
+function CommandItem({ className, value, disabled, onSelect, onClick, children, ...props }: CommandItemProps) {
+  const { query, registerItem, unregisterItem } = useCommandContext('CommandItem');
+  const itemId = useId();
+  const itemValue = (value ?? '').toLowerCase();
+  const normalizedQuery = query.trim().toLowerCase();
+  const isVisible = !normalizedQuery || itemValue.includes(normalizedQuery);
+
+  useEffect(() => {
+    registerItem(itemId, isVisible);
+    return function cleanup() {
+      unregisterItem(itemId);
+    };
+  }, [itemId, isVisible, registerItem, unregisterItem]);
+
+  function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+    if (disabled) {
+      return;
+    }
+    onClick?.(event);
+    onSelect?.(value ?? '');
+  }
+
+  if (!isVisible) {
+    return null;
+  }
+
   return (
-    <CommandPrimitive.Item
+    <button
+      type='button'
       data-slot='command-item'
+      data-disabled={disabled ? true : undefined}
       className={cn(
-        "data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "[&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 hover:bg-accent hover:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
+      disabled={disabled}
+      onClick={handleClick}
       {...props}
-    />
+    >
+      {children}
+    </button>
   );
 }
 
