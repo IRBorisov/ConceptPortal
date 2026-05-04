@@ -76,7 +76,7 @@ export function TableModelList({
     }),
     columnHelper.accessor(cst => cst, {
       id: 'value',
-      header: tx('ui.table.header.value'),
+      header: tx('semantic.term.value'),
       size: 60,
       minSize: 60,
       maxSize: 60,

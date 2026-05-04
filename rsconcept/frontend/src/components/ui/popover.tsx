@@ -21,11 +21,19 @@ function PopoverContent({
   Pick<React.ComponentProps<typeof PopoverPrimitive.Positioner>, 'align' | 'alignOffset' | 'side' | 'sideOffset'>) {
   return (
     <PopoverPrimitive.Portal>
-      <PopoverPrimitive.Positioner align={align} alignOffset={alignOffset} side={side} sideOffset={sideOffset}>
+      <PopoverPrimitive.Positioner
+        align={align}
+        alignOffset={alignOffset}
+        side={side}
+        sideOffset={sideOffset}
+        className='isolate z-topmost'
+      >
         <PopoverPrimitive.Popup
           data-slot='popover-content'
           className={cn(
-            'z-topmost bg-popover text-popover-foreground w-72 min-w-40 border p-4 shadow-md outline-hidden',
+            'w-72 min-w-40',
+            'border p-4',
+            'bg-popover text-popover-foreground shadow-md outline-hidden',
             'data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 duration-dropdown',
             className
           )}

@@ -52,11 +52,11 @@ export function labelValue(value: RO<Value | null>, type: ExpressionType | null)
     }
   }
   if (!Array.isArray(value)) {
-    return globalTx('1');
+    return '1';
   } else if (value.length === 0) {
     return '∅';
   } else if (value[0] === TUPLE_ID) {
-    return globalTx('C');
+    return 'C';
   } else {
     return value.length.toString();
   }
