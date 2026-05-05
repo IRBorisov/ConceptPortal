@@ -77,7 +77,7 @@ export function ToolbarConstituenta({
             disabled={disabled || !isModified}
           />
           <MiniButton
-            title={tx('ui.hint.resetUnsavedConstituenta')}
+            title={tx('ui.hint.resetUnsavedChanges')}
             icon={<IconReset size='1.25rem' className='icon-primary' />}
             onClick={onReset}
             disabled={disabled || !isModified}

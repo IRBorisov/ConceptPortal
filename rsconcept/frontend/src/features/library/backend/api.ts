@@ -104,7 +104,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/set-location`,
       request: {
         data: { location: location },
-        successMessage: globalTx('labels.info.moveComplete')
+        successMessage: globalTx('labels.info.moveSuccess')
       }
     }),
   setAccessPolicy: ({ itemID, policy }: { itemID: number; policy: AccessPolicy }) =>

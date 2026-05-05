@@ -141,7 +141,7 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
         />
         <Tooltip anchorSelect='#editor_stats'>
           <Suspense fallback={<Loader scale={2} />}>
-            <InfoUsers items={item.editors} prefix={prefixes.user_editors} header={tx('semantic.term.editors')} />
+            <InfoUsers items={item.editors} prefix={prefixes.user_editors} header={tx('semantic.term.editor.plural')} />
           </Suspense>
         </Tooltip>
 

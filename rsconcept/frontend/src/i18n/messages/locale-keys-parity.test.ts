@@ -69,7 +69,8 @@ describe('locale message maps', () => {
 
 // const IGNORE_DUPES = new Set<string>([
 //   'home.create', //
-//   'labels.rsform.token.filter'
+//   'labels.rsform.token.filter',
+//   'semantic.term.firstName'
 // ]);
 
 // it('has no duplicate values in en, ru, or fr catalogs', () => {
@@ -80,15 +81,15 @@ describe('locale message maps', () => {
 //   ] as const) {
 //     const valueToIds: Record<string, string[]> = {};
 //     for (const [key, value] of Object.entries(messages)) {
-//       if (typeof value !== 'string') continue;
+//       if (typeof value !== 'string' || IGNORE_DUPES.has(key)) {
+//         continue;
+//       }
 //       if (!valueToIds[value]) {
 //         valueToIds[value] = [];
 //       }
 //       valueToIds[value].push(key);
 //     }
-//     const dupes = Object.entries(valueToIds).filter(
-//       ([, ids]) => ids.length > 1 && !ids.some(id => IGNORE_DUPES.has(id))
-//     );
+//     const dupes = Object.entries(valueToIds).filter(([, ids]) => ids.length > 1);
 //     expect(dupes).toEqual([]);
 //   }
 // });

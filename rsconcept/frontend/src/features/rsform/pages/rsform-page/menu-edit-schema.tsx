@@ -150,7 +150,7 @@ export function MenuEditSchema() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('semantic.term.templates')}
+          text={tx('semantic.term.template.plural')}
           title={tx('ui.rsform.menu.templatesTitle')}
           icon={<IconTemplates size='1rem' className='icon-green' />}
           onClick={handleTemplates}
@@ -192,7 +192,7 @@ export function MenuEditSchema() {
           disabled={isProcessing || !activeCst || (!activeCst.spawner_path && !cstCanProduceStructure(activeCst))}
         />
         <DropdownButton
-          text={tx('ui.rsform.menu.substitution')}
+          text={tx('semantic.action.substitution')}
           title={tx('ui.rsform.menu.substitutionTitle')}
           aria-label={tx('ui.rsform.menu.substitutionAria')}
           icon={<IconReplace size='1rem' className='icon-red' />}

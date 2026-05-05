@@ -130,14 +130,8 @@ export const labelsFeatureFr: Record<string, string> = {
   'labels.rsform.exprStatusDesc.unknown': 'vérification requise',
 
   'labels.rsform.rsExpression.nominal': 'Constituantes définissantes',
-  'labels.rsform.rsExpression.basic': 'Définition formelle',
-  'labels.rsform.rsExpression.constant': 'Définition formelle',
   'labels.rsform.rsExpression.structure': 'Domaine de définition',
-  'labels.rsform.rsExpression.term': 'Définition formelle',
-  'labels.rsform.rsExpression.theorem': 'Définition formelle',
-  'labels.rsform.rsExpression.axiom': 'Définition formelle',
   'labels.rsform.rsExpression.function': 'Définition de fonction',
-  'labels.rsform.rsExpression.predicate': 'Définition de fonction',
 
   'labels.rsform.token.boolean': 'Ensemble des parties',
   'labels.rsform.token.decart': 'Produit cartésien',
@@ -181,13 +175,6 @@ export const labelsFeatureFr: Record<string, string> = {
 
   'labels.rsform.missing.constituent': '!Constituante absente !',
   'labels.rsform.missing.termEmpty': '!Terme vide !',
-  'labels.rsform.fallback.formalExpression': 'Expression formelle',
-  'labels.rsform.fallback.unknownCstType': 'TYPE DE CONSTITUANTE INCONNU : {type}',
-  'labels.rsform.fallback.unknownCstClass': 'CLASSE DE CONSTITUANTE INCONNUE : {type}',
-  'labels.rsform.fallback.unknownColoring': 'COLORATION INCONNUE : {mode}',
-  'labels.rsform.fallback.unknownGraphMode': 'MODE DE GRAPHE INCONNU : {mode}',
-  'labels.rsform.fallback.unknownEdgeType': 'TYPE DE LIEN INCONNU : {mode}',
-  'labels.rsform.fallback.unknownExprStatus': 'STATUT D’EXPRESSION INCONNU : {status}',
   'labels.rsform.fallback.noTokenDescription': 'pas de description : {id}',
 
   'labels.oss.operation.input': 'Chargement',
@@ -212,11 +199,9 @@ export const labelsFeatureFr: Record<string, string> = {
   'labels.oss.substitution.unequalArgs': 'Erreur {from} → {to} : typifications des arguments différentes',
   'labels.oss.substitution.unequalExpressions': 'Avertissement {from} → {to} : définitions des notions différentes',
   'labels.oss.fallback.unknownOperationType': 'TYPE D’OPÉRATION INCONNU : {type}',
-  'labels.oss.fallback.unknownSubstitutionError': 'ERREUR INCONNUE',
 
   'labels.rsmodel.eval.noEval': 'Sans évaluation',
   'labels.rsmodel.eval.notProcessed': 'Non évalué',
-  'labels.rsmodel.eval.invalidData': 'Données invalides',
   'labels.rsmodel.eval.evalFail': 'Erreur',
   'labels.rsmodel.eval.axiomFalse': 'Axiome violé',
   'labels.rsmodel.eval.empty': 'Valeur vide',
@@ -235,7 +220,6 @@ export const labelsFeatureFr: Record<string, string> = {
   'labels.users.roleDesc.editor': 'Mode édition',
   'labels.users.roleDesc.owner': 'Mode propriétaire',
   'labels.users.roleDesc.admin': 'Mode administrateur',
-  'labels.users.fallback.unknownRole': 'RÔLE UTILISATEUR INCONNU : {role}',
 
   'labels.ai.variable.block': 'Bloc courant du schéma opérationnel',
   'labels.ai.variable.oss': 'Schéma opérationnel courant',
@@ -253,15 +237,12 @@ export const labelsFeatureFr: Record<string, string> = {
   'labels.ai.variableMock.schemaTypeGraph': 'Ex. : graphe des paliers de types du schéma conceptuel',
   'labels.ai.variableMock.constituenta': 'Ex. : constituante courante',
   'labels.ai.variableMock.constituentaSyntaxTree': 'Ex. d’arbre syntaxique de constituante',
-  'labels.ai.fallback.unknownVariableType': 'TYPE DE VARIABLE INCONNU : {type}',
-  'labels.ai.fallback.unknownVariable': 'VARIABLE INCONNUE : {name}',
 
   'labels.rslang.typeClass.logic': 'Logique',
   'labels.rslang.typeClass.typification': 'Ensembliste',
   'labels.rslang.typeClass.function': 'Fonction terme',
   'labels.rslang.typeClass.predicate': 'Fonction prédicat',
   'labels.rslang.misc.notDefined': 'non défini',
-  'labels.rslang.fallback.unknownRSError': 'ERREUR INCONNUE',
   'labels.rslang.fallback.unknownNode': 'INCONNU {id}',
   'labels.rslang.fallback.noTokenLabel': 'pas d’étiquette : {id}',
 

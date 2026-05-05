@@ -13,5 +13,7 @@ export const semanticFr: Record<string, string> = {
   'semantic.false': 'Faux',
 
   'semantic.total': 'Total',
-  'semantic.example': 'Exemple'
+  'semantic.example': 'Exemple',
+
+  'semantic.listIsEmpty': 'Liste vide'
 };

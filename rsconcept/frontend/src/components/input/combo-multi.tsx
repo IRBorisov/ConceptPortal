@@ -169,7 +169,7 @@ export function ComboMulti<Option>({
         <Command>
           {!noSearch ? <CommandInput placeholder={tx('semantic.term.search') + '...'} className='h-9' /> : null}
           <CommandList>
-            <CommandEmpty>{tx('ui.combo.emptyList')}</CommandEmpty>
+            <CommandEmpty>{tx('semantic.listIsEmpty')}</CommandEmpty>
             <CommandGroup>
               {items
                 ?.filter(item => !value.includes(item))

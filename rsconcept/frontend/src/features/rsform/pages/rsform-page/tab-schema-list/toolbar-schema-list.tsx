@@ -81,7 +81,7 @@ export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
         disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
       />
       <MiniButton
-        title={tx('ui.rsform.formEdit.crucialTitle')}
+        title={tx('semantic.term.constituenta.crucial')}
         aria-label={tx('ui.cst.crucialToggleAria')}
         icon={<IconCrucial size='1.25rem' className='icon-primary' />}
         onClick={toggleCrucial}

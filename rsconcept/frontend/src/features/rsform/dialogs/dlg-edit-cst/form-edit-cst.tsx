@@ -71,7 +71,7 @@ export function FormEditCst({
     <>
       <div className='flex items-center self-center gap-3'>
         <MiniButton
-          title={tx('ui.rsform.formEdit.crucialTitle')}
+          title={tx('semantic.term.constituenta.crucial')}
           icon={<IconCrucialValue size='1.25rem' value={crucial} />}
           onClick={onToggleCrucial}
         />
@@ -81,7 +81,7 @@ export function FormEditCst({
             <TextInput
               id='dlg_cst_alias'
               dense
-              label={tx('semantic.term.name')}
+              label={tx('semantic.term.alias.short')}
               className='w-28'
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}
@@ -165,7 +165,7 @@ export function FormEditCst({
             <RefsInput
               id='dlg_edit_cst_definition_raw'
               schema={schema}
-              label={tx('ui.label.textDefinition')}
+              label={tx('semantic.term.definitionTextual')}
               placeholder={tx('ui.placeholder.textDefinitionHint')}
               maxHeight='3.75rem'
               value={field.state.value ?? ''}
@@ -189,7 +189,7 @@ export function FormEditCst({
           className='self-start cc-label text-primary hover:underline select-none'
           onClick={() => setForceComment(true)}
         >
-          {tx('ui.action.addComment')}
+          {tx('semantic.action.add.comment')}
         </button>
       ) : (
         <ConventionField>

@@ -34,9 +34,7 @@ export function TabArguments({ oss, target, args, onChangeArguments, onResetSubs
   return (
     <div className='cc-fade-in cc-column'>
       <>
-        <Label
-          text={tx('ui.oss.dlg.operation.argsPickLabel', { count: args.length })}
-        />
+        <Label text={tx('ui.oss.argumentPickLabel', { count: args.length })} />
         <PickMultiOperation items={filtered} value={args} onChange={handleChangeArguments} rows={8} />
       </>
     </div>

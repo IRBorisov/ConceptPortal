@@ -31,7 +31,7 @@ export function Component() {
       <div className='cc-fade-in flex flex-col items-center gap-1 mt-3'>
         <p>{tx('auth.restore.done')}</p>
         <TextURL text={tx('auth.restore.loginLink')} href='/login' />
-        <TextURL text={tx('auth.restore.homeLink')} href='/' />
+        <TextURL text={tx('semantic.term.home')} href='/' />
       </div>
     );
   } else {

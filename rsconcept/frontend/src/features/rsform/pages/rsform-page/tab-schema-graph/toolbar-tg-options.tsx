@@ -58,7 +58,7 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
   }
 
   const textToggleTitle = !filter.noText ? tx('ui.tg.toolbar.hideText') : tx('ui.tg.toolbar.showText');
-  const derivedToggleTitle = !filter.foldDerived ? tx('ui.tg.toolbar.hideDerived') : tx('ui.tg.toolbar.showDerived');
+  const derivedToggleTitle = !filter.foldDerived ? tx('ui.rsform.hideDerived') : tx('ui.rsform.showDerived');
 
   return (
     <div className={cn('grid grid-cols-2 gap-1 pointer-events-auto', className)}>
@@ -86,7 +86,7 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
       />
       <div ref={exportRef} onBlur={handleExportBlur} className='flex relative'>
         <MiniButton
-          title={tx('ui.tg.toolbar.saveImage')}
+          title={tx('semantic.action.saveImage')}
           hideTitle={isExportOpen}
           icon={<IconImage size='1.25rem' className='icon-primary' />}
           onClick={toggleExport}
@@ -95,13 +95,13 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
         <Dropdown isOpen={isExportOpen} className='-translate-x-1/2'>
           <DropdownButton
             icon={<IconPNG size='1.25rem' className='icon-primary' />}
-            text={tx('ui.tg.toolbar.savePng')}
+            text={tx('semantic.action.save') + ' PNG'}
             onClick={handleExportPngBtn}
             disabled={isProcessing || isExportingImage}
           />
           <DropdownButton
             icon={<IconSVG size='1.25rem' className='icon-primary' />}
-            text={tx('ui.tg.toolbar.saveSvg')}
+            text={tx('semantic.action.save') + ' SVG'}
             onClick={handleExportSvgBtn}
             disabled={isProcessing || isExportingImage}
           />

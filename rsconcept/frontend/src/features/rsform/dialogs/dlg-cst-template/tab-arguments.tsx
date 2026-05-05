@@ -64,7 +64,7 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
   const columns = [
     argumentsHelper.accessor('alias', {
       id: 'alias',
-      header: tx('semantic.term.name'),
+      header: tx('semantic.term.alias.short'),
       size: 40,
       minSize: 40,
       maxSize: 40,
@@ -90,7 +90,7 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
         <div className='w-6 flex justify-center'>
           {props.row.original.value ? (
             <MiniButton
-              title={tx('ui.template.arguments.clearValueTitle')}
+              title={tx('ui.value.clearValue')}
               noPadding
               className='align-middle'
               icon={<IconReset size='1rem' className='cc-remove' />}
@@ -122,7 +122,7 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
         onRowClicked={handleSelectArgument}
       />
 
-      <h2>{tx('ui.template.arguments.constituentsHeading')}</h2>
+      <h2>{tx('semantic.term.constituenta.plural')}</h2>
 
       <PickConstituenta
         id='dlg_argument_picker'

@@ -24,12 +24,12 @@ export function TableUsers({ items, onDelete, onReset, className, style }: Table
     columnHelper.accessor('last_name', {
       id: 'last_name',
       size: 400,
-      header: tx('ui.users.column.lastName')
+      header: tx('semantic.term.lastName')
     }),
     columnHelper.accessor('first_name', {
       id: 'first_name',
       size: 400,
-      header: tx('ui.users.column.firstName')
+      header: tx('semantic.term.firstName')
     }),
     columnHelper.display({
       id: 'actions',

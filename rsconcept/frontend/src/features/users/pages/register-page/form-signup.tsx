@@ -99,7 +99,7 @@ export function FormSignup() {
                 id='password'
                 type='password'
                 autoComplete='new-password'
-                label={tx('auth.register.password')}
+                label={tx('semantic.term.password')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
@@ -145,7 +145,7 @@ export function FormSignup() {
                 autoComplete='email'
                 required
                 spellCheck={false}
-                label={tx('auth.register.email')}
+                label={tx('semantic.term.email')}
                 title={tx('auth.register.emailTitle')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}

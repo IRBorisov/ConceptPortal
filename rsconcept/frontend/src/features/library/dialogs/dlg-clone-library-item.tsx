@@ -123,8 +123,8 @@ export function DlgCloneLibraryItem() {
             <form.Field name='item_data.visible'>
               {field => (
                 <MiniButton
-                  title={field.state.value ? tx('ui.dlg.clone.libraryShow') : tx('ui.dlg.clone.libraryHide')}
-                  aria-label={tx('ui.dlg.clone.libraryToggleAria')}
+                  title={field.state.value ? tx('lib.item.visible.on') : tx('lib.item.visible.off')}
+                  aria-label={tx('lib.item.visible.hint')}
                   icon={<IconItemVisibility value={field.state.value ?? true} />}
                   onClick={() => field.handleChange(!(field.state.value ?? false))}
                 />

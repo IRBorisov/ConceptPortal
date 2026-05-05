@@ -169,7 +169,7 @@ export function MenuMain() {
           onClick={handleImportClick}
         />
         <DropdownButton
-          text={tx('ui.sandbox.createSchema')}
+          text={tx('ui.action.createSchema')}
           title={tx('ui.sandbox.createSchemaHint')}
           icon={<IconRSForm size='1rem' className='icon-green' />}
           onClick={() => void handleCreateRSForm()}

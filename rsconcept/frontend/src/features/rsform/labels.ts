@@ -75,14 +75,14 @@ const EXPR_STATUS_DESC_LID: Record<CstStatus, string> = {
 
 const RS_EXPRESSION_LID: Record<CstType, string> = {
   [CstType.NOMINAL]: 'labels.rsform.rsExpression.nominal',
-  [CstType.BASE]: 'labels.rsform.rsExpression.basic',
-  [CstType.CONSTANT]: 'labels.rsform.rsExpression.constant',
+  [CstType.BASE]: 'semantic.term.definitionFormal',
+  [CstType.CONSTANT]: 'semantic.term.definitionFormal',
   [CstType.STRUCTURED]: 'labels.rsform.rsExpression.structure',
-  [CstType.TERM]: 'labels.rsform.rsExpression.term',
-  [CstType.THEOREM]: 'labels.rsform.rsExpression.theorem',
-  [CstType.AXIOM]: 'labels.rsform.rsExpression.axiom',
+  [CstType.TERM]: 'semantic.term.definitionFormal',
+  [CstType.THEOREM]: 'semantic.term.definitionFormal',
+  [CstType.AXIOM]: 'semantic.term.definitionFormal',
   [CstType.FUNCTION]: 'labels.rsform.rsExpression.function',
-  [CstType.PREDICATE]: 'labels.rsform.rsExpression.predicate'
+  [CstType.PREDICATE]: 'labels.rsform.rsExpression.function'
 };
 
 const RS_PLACEHOLDER_EXAMPLE: Record<CstType, string> = {
@@ -242,7 +242,7 @@ export function getCstTypeShortcut(type: CstType) {
 /** Generates label for RS expression based on {@link CstType}. */
 export function labelRSExpression(type: CstType): string {
   const id = RS_EXPRESSION_LID[type];
-  return id ? globalTx(id) : globalTx('labels.rsform.fallback.formalExpression');
+  return id ? globalTx(id) : globalTx('semantic.term.definitionFormal');
 }
 
 /** Generates placeholder for RS definition based on {@link CstType}. */
@@ -265,47 +265,47 @@ export function describeToken(id: TokenID): string {
 /** Retrieves label for {@link TGColoring}. */
 export function labelColoring(mode: TGColoring): string {
   const lidKey = COLORING_LID[mode];
-  return lidKey ? globalTx(lidKey) : globalTx('labels.rsform.fallback.unknownColoring', { mode: String(mode) });
+  return lidKey ? globalTx(lidKey) : 'UNKNOWN COLORING: ' + String(mode);
 }
 
 /** Retrieves label for {@link InteractionMode}. */
 export function labelGraphMode(mode: InteractionMode): string {
   const lidKey = GRAPH_MODE_LID[mode];
-  return lidKey ? globalTx(lidKey) : globalTx('labels.rsform.fallback.unknownGraphMode', { mode: String(mode) });
+  return lidKey ? globalTx(lidKey) : 'UNKNOWN GRAPH MODE: ' + String(mode);
 }
 
 /** Retrieves label for {@link TGEdgeType}. */
 export function labelEdgeType(mode: TGEdgeType): string {
   const lidKey = EDGE_TYPE_LID[mode];
-  return lidKey ? globalTx(lidKey) : globalTx('labels.rsform.fallback.unknownEdgeType', { mode: String(mode) });
+  return lidKey ? globalTx(lidKey) : 'UNKNOWN GRAPH TYPE: ' + String(mode);
 }
 
 /** Retrieves label for {@link CstStatus}. */
 export function labelExpressionStatus(status: CstStatus): string {
   const lidKey = EXPR_STATUS_LID[status];
-  return lidKey ? globalTx(lidKey) : globalTx('labels.rsform.fallback.unknownExprStatus', { status: String(status) });
+  return lidKey ? globalTx(lidKey) : 'UNKNOWN EXPRESSION STATUS: ' + String(status);
 }
 
 /** Retrieves description for {@link CstStatus}. */
 export function describeExpressionStatus(status: CstStatus): string {
   const lidKey = EXPR_STATUS_DESC_LID[status];
-  return lidKey ? globalTx(lidKey) : globalTx('labels.rsform.fallback.unknownExprStatus', { status: String(status) });
+  return lidKey ? globalTx(lidKey) : 'UNKNOWN EXPRESSION STATUS: ' + String(status);
 }
 
 /** Retrieves label for {@link CstType}. */
 export function labelCstType(target: CstType): string {
   const lidKey = CST_TYPE_LID[target];
-  return lidKey ? globalTx(lidKey) : globalTx('labels.rsform.fallback.unknownCstType', { type: String(target) });
+  return lidKey ? globalTx(lidKey) : 'UNKNOWN CST TYPE: ' + String(target);
 }
 
 /** Retrieves label for {@link CstClass}. */
 export function labelCstClass(target: CstClass): string {
   const lidKey = CST_CLASS_LABEL_LID[target];
-  return lidKey ? globalTx(lidKey) : globalTx('labels.rsform.fallback.unknownCstClass', { type: String(target) });
+  return lidKey ? globalTx(lidKey) : 'UNKNOWN CST CLASS: ' + String(target);
 }
 
 /** Retrieves description for {@link CstClass}. */
 export function describeCstClass(target: CstClass): string {
   const lidKey = CST_CLASS_DESC_LID[target];
-  return lidKey ? globalTx(lidKey) : globalTx('labels.rsform.fallback.unknownCstClass', { type: String(target) });
+  return lidKey ? globalTx(lidKey) : 'UNKNOWN CST CLASS: ' + String(target);
 }

@@ -29,7 +29,7 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
         id='rsmodel-stats-overview'
         className='rounded-t-md'
         label={tx('ui.stats.section.overview')}
-        primaryLabel={tx('semantic.term.constituents')}
+        primaryLabel={tx('semantic.term.constituenta.plural')}
         primaryValue={stats.count_all}
         primaryTitle={tx('ui.stats.title.totalConstituents')}
         secondaryLabel={stats.count_inherited > 0 ? tx('ui.stats.secondary.owned') : undefined}
@@ -117,7 +117,7 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
         secondaryTitle={tx('ui.stats.title.baseInterpretationPower')}
         details={[
           { label: tx('ui.stats.row.baseCardinality'), value: stats.base_elements },
-          { label: tx('ui.stats.row.invalidData'), value: stats.count_invalid_data },
+          { label: tx('semantic.term.data.invalid'), value: stats.count_invalid_data },
           {
             label: tx('ui.stats.row.missingBaseInterpretation'),
             value: stats.count_missing_base

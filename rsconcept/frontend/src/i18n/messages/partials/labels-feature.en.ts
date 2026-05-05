@@ -136,14 +136,8 @@ export const labelsFeatureEn: Record<string, string> = {
   'labels.rsform.exprStatusDesc.unknown': 'verification required',
 
   'labels.rsform.rsExpression.nominal': 'Defining constituents',
-  'labels.rsform.rsExpression.basic': 'Formal definition',
-  'labels.rsform.rsExpression.constant': 'Formal definition',
   'labels.rsform.rsExpression.structure': 'Domain of definition',
-  'labels.rsform.rsExpression.term': 'Formal definition',
-  'labels.rsform.rsExpression.theorem': 'Formal definition',
-  'labels.rsform.rsExpression.axiom': 'Formal definition',
   'labels.rsform.rsExpression.function': 'Function definition',
-  'labels.rsform.rsExpression.predicate': 'Function definition',
 
   'labels.rsform.token.boolean': 'Power set',
   'labels.rsform.token.decart': 'Cartesian product',
@@ -188,13 +182,6 @@ export const labelsFeatureEn: Record<string, string> = {
   'labels.rsform.missing.constituent': '!Constituent missing!',
   'labels.rsform.missing.termEmpty': '!Empty term!',
 
-  'labels.rsform.fallback.formalExpression': 'Formal expression',
-  'labels.rsform.fallback.unknownCstType': 'UNKNOWN CST TYPE: {type}',
-  'labels.rsform.fallback.unknownCstClass': 'UNKNOWN CST CLASS: {type}',
-  'labels.rsform.fallback.unknownColoring': 'UNKNOWN COLORING: {mode}',
-  'labels.rsform.fallback.unknownGraphMode': 'UNKNOWN GRAPH MODE: {mode}',
-  'labels.rsform.fallback.unknownEdgeType': 'UNKNOWN GRAPH TYPE: {mode}',
-  'labels.rsform.fallback.unknownExprStatus': 'UNKNOWN EXPRESSION STATUS: {status}',
   'labels.rsform.fallback.noTokenDescription': 'no description: {id}',
 
   'labels.oss.operation.input': 'Load',
@@ -221,11 +208,9 @@ export const labelsFeatureEn: Record<string, string> = {
   'labels.oss.substitution.unequalExpressions': 'Warning {from} → {to}: notion definitions differ',
 
   'labels.oss.fallback.unknownOperationType': 'UNKNOWN OPERATION TYPE: {type}',
-  'labels.oss.fallback.unknownSubstitutionError': 'UNKNOWN ERROR',
 
   'labels.rsmodel.eval.noEval': 'No evaluation',
   'labels.rsmodel.eval.notProcessed': 'Not evaluated',
-  'labels.rsmodel.eval.invalidData': 'Invalid data',
   'labels.rsmodel.eval.evalFail': 'Error',
   'labels.rsmodel.eval.axiomFalse': 'Axiom violated',
   'labels.rsmodel.eval.empty': 'Empty value',
@@ -248,8 +233,6 @@ export const labelsFeatureEn: Record<string, string> = {
   'labels.users.roleDesc.owner': 'Owner mode',
   'labels.users.roleDesc.admin': 'Administrator mode',
 
-  'labels.users.fallback.unknownRole': 'UNKNOWN USER ROLE: {role}',
-
   'labels.ai.variable.block': 'Current operational-schema block',
   'labels.ai.variable.oss': 'Current operational schema',
   'labels.ai.variable.schema': 'Current conceptual schema',
@@ -268,9 +251,6 @@ export const labelsFeatureEn: Record<string, string> = {
   'labels.ai.variableMock.constituenta': 'Example: current constituenta',
   'labels.ai.variableMock.constituentaSyntaxTree': 'Example constituenta syntax tree',
 
-  'labels.ai.fallback.unknownVariableType': 'UNKNOWN VARIABLE TYPE: {type}',
-  'labels.ai.fallback.unknownVariable': 'UNKNOWN VARIABLE: {name}',
-
   'labels.rslang.typeClass.logic': 'Logical',
   'labels.rslang.typeClass.typification': 'Set-theoretic',
   'labels.rslang.typeClass.function': 'Term function',
@@ -278,7 +258,6 @@ export const labelsFeatureEn: Record<string, string> = {
 
   'labels.rslang.misc.notDefined': 'undefined',
 
-  'labels.rslang.fallback.unknownRSError': 'UNKNOWN ERROR',
   'labels.rslang.fallback.unknownNode': 'UNKNOWN {id}',
   'labels.rslang.fallback.noTokenLabel': 'no label: {id}',
 

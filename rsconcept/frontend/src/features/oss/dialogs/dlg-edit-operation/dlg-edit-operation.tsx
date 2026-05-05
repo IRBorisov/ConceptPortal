@@ -135,15 +135,15 @@ export function DlgEditOperation() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto w-fit flex border divide-x rounded-none'>
-          <TabLabel title={tx('ui.tab.oss.passportTitle')} label={tx('ui.tab.oss.passport')} />
+          <TabLabel title={tx('ui.tab.oss.passportTitle')} label={tx('semantic.term.passport')} />
           <TabLabel
             title={tx('ui.tab.oss.operationArgumentsTitle')}
-            label={tx('ui.tab.oss.arguments')}
+            label={tx('semantic.term.argument.plural')}
             disabled={target.operation_type !== OperationType.SYNTHESIS}
           />
           <TabLabel
             title={tx('ui.tab.inlineSynthesis.substitutionsTitle')}
-            label={tx('ui.tab.inlineSynthesis.substitutions')}
+            label={tx('semantic.action.substitution.plural')}
             disabled={target.operation_type !== OperationType.SYNTHESIS}
           />
         </TabList>

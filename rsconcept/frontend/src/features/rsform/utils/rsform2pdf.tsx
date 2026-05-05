@@ -131,7 +131,7 @@ function CstTable({ data }: { data: RO<Constituenta[]> }) {
         <View fixed style={pdfs.headerRow}>
           <Text style={{ ...pdfs.cell, width: '13mm' }}>ID</Text>
           <Text style={{ ...pdfs.cell, width: '82mm' }}>
-            {intl.formatMessage({ id: 'ui.rsform.pdf.colFormalExpression' })}
+            {intl.formatMessage({ id: 'semantic.term.definitionFormal' })}
           </Text>
           <Text style={{ ...pdfs.cell, width: '38mm' }}>
             {intl.formatMessage({ id: 'semantic.term.typification' })}

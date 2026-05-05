@@ -12,53 +12,39 @@ export const uiFr: Record<string, string> = {
 
   'ui.dlg.createCst.header': 'Création d’une constituante',
   'ui.dlg.cstTemplate.header': 'Création d’une constituante à partir d’un modèle',
-  'ui.dlg.cstTemplate.tabTemplate.label': 'Modèle',
   'ui.dlg.cstTemplate.tabTemplate.title': 'Choix du modèle d’expression',
-  'ui.dlg.cstTemplate.tabArgs.label': 'Arguments',
   'ui.dlg.cstTemplate.tabArgs.title': 'Substitution des arguments du modèle',
-  'ui.dlg.cstTemplate.tabEditor.title': 'Édition de la constituante',
 
   'ui.dlg.createVersion.header': 'Création de version',
   'ui.dlg.createVersion.onlySelected': 'Constituantes sélectionnées uniquement [{n} sur {total}]',
 
   'ui.dlg.editVersions.header': 'Modifier les versions',
-  'ui.dlg.editVersions.resetChanges': 'Annuler les modifications non enregistrées',
 
   'ui.dlg.uploadRsform.header': 'Importer un schéma depuis Exteor',
   'ui.dlg.uploadRsform.pickFile': 'Choisir un fichier',
   'ui.dlg.uploadRsform.loadMetadata': 'Charger le titre et le commentaire',
-  'ui.dlg.uploadRsform.attention': 'Attention !',
   'ui.dlg.uploadRsform.warningBody':
     'En important depuis un fichier, toutes les constituantes du schéma actuel seront supprimées',
-
-  'ui.dlg.showTypeGraph.header': 'Graphe des paliers',
 
   'ui.oss.newBlockTitle': 'Titre du nouveau bloc',
   'ui.oss.newSchemaTitle': 'Titre du nouveau schéma',
   'ui.oss.operationTitle': 'Titre de l’opération',
   'ui.oss.blockTitle': 'Titre du bloc',
   'ui.oss.enterAlias': 'Saisir l’abréviation',
-  'ui.oss.parentBlock': 'Bloc parent',
   'ui.oss.argumentPickLabel': 'Choix des arguments : [ {count} ]',
 
   'ui.dlg.editBlock.header': 'Modifier le bloc',
 
   'ui.dlg.createBlock.header': 'Création de bloc',
   'ui.dlg.createBlock.tabPassport.title': 'Attributs principaux du bloc',
-  'ui.dlg.createBlock.tabPassport.label': 'Passeport',
   'ui.dlg.createBlock.tabChildren.title': 'Nœuds imbriqués : [{count}]',
   'ui.dlg.createBlock.tabChildren.label': 'Contenu{mark}',
 
   'ui.dlg.clone.headerRsform': 'Créer une copie du schéma conceptuel',
   'ui.dlg.clone.headerRsmodel': 'Créer une copie du modèle conceptuel',
-  'ui.dlg.clone.libraryShow': 'Bibliothèque : afficher',
-  'ui.dlg.clone.libraryHide': 'Bibliothèque : masquer',
-  'ui.dlg.clone.libraryToggleAria': 'Basculer la visibilité dans la bibliothèque',
 
   'ui.wordForms.edit.header': 'Modifier les formes du mot',
   'ui.wordForms.fillFromLexeme': 'Remplir les formes du mot',
-  'ui.wordForms.nominalAria': 'Forme initiale',
-  'ui.wordForms.nominalPlaceholder': 'Forme initiale',
 
   'ui.tg.selectionCount': 'Sélection {n} sur {total}',
 
@@ -72,23 +58,16 @@ export const uiFr: Record<string, string> = {
   'ui.placeholder.targetSchema': 'Schéma cible',
   'ui.title.relocationDirection': 'Sens du déplacement',
 
-  'ui.dlg.substituteCst.header': 'Substitution',
-  'ui.action.substitute': 'Substituer',
-
   'ui.dlg.renameCst.header': 'Renommer la constituante',
-  'ui.action.rename': 'Renommer',
 
   'ui.dlg.editCst.header': 'Modifier la constituante',
   'ui.dlg.editCst.titleDetailedEdit': 'Édition détaillée',
   'ui.dlg.editCst.titleGoToAncestor': 'Aller à l’ancêtre',
 
-  'ui.rsform.formEdit.crucialTitle': 'Constituante clé',
   'ui.placeholder.termForDefinitions': 'Libellé pour les définitions textuelles',
   'ui.label.attributingConstituents': 'Constituantes attributives',
   'ui.placeholder.selectConstituents': 'Sélectionner des constituantes',
-  'ui.label.textDefinition': 'Définition textuelle',
   'ui.placeholder.textDefinitionHint': 'Interprétation textuelle de l’expression formelle',
-  'ui.action.addComment': 'Ajouter un commentaire',
   'ui.placeholder.conventionBasic': 'Accord sur l’interprétation du concept de base',
   'ui.placeholder.developerComment': 'Note du développeur',
 
@@ -97,7 +76,6 @@ export const uiFr: Record<string, string> = {
   'ui.tab.inlineSynthesis.schemaTitle': 'Source des constituantes',
   'ui.tab.inlineSynthesis.selectSchemaFirst': 'Sélectionnez un schéma',
   'ui.tab.inlineSynthesis.constituentsTitle': 'Liste des constituantes',
-  'ui.tab.inlineSynthesis.substitutions': 'Substitutions',
   'ui.tab.inlineSynthesis.substitutionsTitle': 'Tableau des substitutions',
   'ui.inlineSynthesis.selected': 'Sélectionnée',
   'ui.placeholder.schemaNotSelected': 'Aucun schéma sélectionné',
@@ -116,9 +94,7 @@ export const uiFr: Record<string, string> = {
   'ui.dlg.createSynthesis.header': 'Création d’opération de synthèse',
   'ui.dlg.editOperation.header': 'Modifier l’opération',
   'ui.tab.oss.passportTitle': 'Champs texte',
-  'ui.tab.oss.passport': 'Passeport',
   'ui.tab.oss.operationArgumentsTitle': 'Choix des arguments de l’opération',
-  'ui.tab.oss.arguments': 'Arguments',
 
   'ui.dlg.changeLocation.header': 'Modifier l’emplacement',
   'ui.dlg.changeLocation.invalidHint':
@@ -151,7 +127,7 @@ export const uiFr: Record<string, string> = {
   'ui.sandbox.saveToFileHint': 'Télécharger les données du bac à sable en JSON',
   'ui.sandbox.loadFromFile': 'Charger depuis un fichier',
   'ui.sandbox.loadFromFileHint': 'Charger les données du bac à sable depuis un JSON',
-  'ui.sandbox.createSchema': 'Créer un schéma',
+  'ui.action.createSchema': 'Créer un schéma',
   'ui.sandbox.createSchemaHint': 'Créer un nouveau schéma conceptuel à partir des données du bac à sable',
   'ui.sandbox.createModelHint': 'Créer un nouveau schéma et modèle conceptuels à partir des données du bac à sable',
   'ui.sandbox.resetState': 'Réinitialiser',
@@ -159,31 +135,26 @@ export const uiFr: Record<string, string> = {
 
   'ui.substitution.acceptSuggestion': 'Accepter la suggestion',
   'ui.substitution.ignoreSuggestion': 'Ignorer la suggestion',
-  'ui.action.delete': 'Supprimer',
   'ui.substitution.replaceRight': 'Remplacer la droite',
   'ui.substitution.replaceLeft': 'Remplacer la gauche',
   'ui.substitution.addToTable': 'Ajouter au tableau des substitutions',
-  'ui.placeholder.argument': 'Argument',
-  'ui.substitution.tableEmpty': 'Liste vide',
   'ui.substitution.tableEmptyHint': 'Ajoutez une substitution',
 
   'ui.action.exportData': 'Exporter les données',
 
   'ui.ai.deleteTemplate': 'Supprimer le modèle',
-  'ui.aria.deleteTemplate': 'Supprimer le modèle',
 
   'ui.cst.crucialRemoveTitle': 'Retirer le statut clé',
   'ui.cst.crucialAddTitle': 'Marquer comme constituante clé',
   'ui.cst.crucialBadgeOn': 'clé',
   'ui.cst.crucialBadgeOff': 'standard',
-  'ui.action.renameCst': 'Renommer',
   'ui.hint.renameCst': 'Renommer la constituante',
   'ui.action.expandStructure': 'Développer la structure',
   'ui.hint.conceptStructure': 'Gérer la structure du concept',
 
   'ui.cst.gotoSourceInOss': 'Aller à la constituante source dans le SO',
   'ui.cst.noPredecessor': 'La constituante n’a pas d’ancêtre',
-  'ui.hint.resetUnsavedConstituenta': 'Annuler les modifications non enregistrées',
+  'ui.hint.resetUnsavedChanges': 'Annuler les modifications non enregistrées',
   'ui.action.createConstituenta': 'Créer une constituante',
   'ui.cloneConstituenta': 'Cloner la constituante',
   'ui.action.deleteConstituenta': 'Supprimer la constituante',
@@ -199,7 +170,6 @@ export const uiFr: Record<string, string> = {
   'ui.placeholder.valueMissing': 'Valeur absente',
   'ui.label.iterationCount': 'Nombre d’itérations',
   'ui.rsmodel.calculateCurrentCst': 'Calculer la constituante courante',
-  'ui.aria.calculateCurrentCst': 'Calculer la constituante courante',
 
   'ui.oss.menu.editOperation': 'Modifier l’opération',
   'ui.oss.menu.original': 'Original',
@@ -207,7 +177,6 @@ export const uiFr: Record<string, string> = {
   'ui.oss.menu.openSchema': 'Ouvrir le schéma',
   'ui.oss.menu.openLinkedRsform': 'Ouvrir le schéma conceptuel lié',
   'ui.hint.doubleClick': 'Double-clic',
-  'ui.oss.menu.createEmptySchema': 'Créer un schéma',
   'ui.oss.menu.createEmptySchemaTitle': 'Créer un schéma vide',
   'ui.oss.menu.loadSchema': 'Charger le schéma',
   'ui.oss.menu.changeSchema': 'Modifier le schéma',

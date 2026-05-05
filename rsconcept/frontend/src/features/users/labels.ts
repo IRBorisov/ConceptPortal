@@ -19,11 +19,11 @@ const ROLE_DESC_LID: Record<UserRole, string> = {
 /** Retrieves label for {@link UserRole}. */
 export function labelUserRole(mode: UserRole): string {
   const id = ROLE_LABEL_LID[mode];
-  return id ? globalTx(id) : globalTx('labels.users.fallback.unknownRole', { role: String(mode) });
+  return id ? globalTx(id) : 'UNKNOWN USER ROLE:' + String(mode);
 }
 
 /** Retrieves description for {@link UserRole}. */
 export function describeUserRole(mode: UserRole): string {
   const id = ROLE_DESC_LID[mode];
-  return id ? globalTx(id) : globalTx('labels.users.fallback.unknownRole', { role: String(mode) });
+  return id ? globalTx(id) : 'UNKNOWN USER ROLE:' + String(mode);
 }

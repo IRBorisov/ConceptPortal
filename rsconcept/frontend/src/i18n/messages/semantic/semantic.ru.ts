@@ -13,5 +13,7 @@ export const semanticRu: Record<string, string> = {
   'semantic.false': 'Ложь',
 
   'semantic.total': 'Всего',
-  'semantic.example': 'Пример'
+  'semantic.example': 'Пример',
+
+  'semantic.listIsEmpty': 'Список пуст'
 };

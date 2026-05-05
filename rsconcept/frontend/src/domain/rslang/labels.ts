@@ -198,7 +198,7 @@ export function labelRSLangNode(node: RO<AstNodeBase>): string {
 export function describeRSError(code: RSErrorCode, params: readonly string[] = []): string {
   const id = RSLANG_ERROR_MESSAGE_ID[code];
   if (id === undefined) {
-    return globalTx('labels.rslang.fallback.unknownRSError');
+    return 'UNKNOWN ERROR';
   }
   const notDef = () => globalTx('labels.rslang.misc.notDefined');
   switch (code) {

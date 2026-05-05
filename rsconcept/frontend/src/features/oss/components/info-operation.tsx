@@ -67,7 +67,7 @@ export function InfoOperation({ operation }: InfoOperationProps) {
       ) : null}
       {operation.title ? (
         <p>
-          <b>{tx('ui.oss.infoOperation.titleWithColon')}</b>
+          <b>{tx('semantic.term.title')}: </b>
           {operation.title}
         </p>
       ) : null}
@@ -88,7 +88,7 @@ export function InfoOperation({ operation }: InfoOperationProps) {
         />
       ) : operation.operation_type !== OperationType.INPUT ? (
         <p>
-          <b>{tx('ui.oss.infoOperation.substitutionsLabel')}</b> {tx('ui.oss.infoOperation.substitutionsNone')}
+          <b>{tx('semantic.action.substitution.plural')}:</b> {tx('ui.oss.infoOperation.substitutionsNone')}
         </p>
       ) : null}
     </>

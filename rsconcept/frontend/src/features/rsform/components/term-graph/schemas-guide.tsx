@@ -53,7 +53,7 @@ export function SchemasGuide({ schema }: SchemasGuideProps) {
       >
         <div className='inline-flex items-center gap-2'>
           <span className='w-3 h-3 border rounded-full' style={{ backgroundColor: colorBgSchemas(0) }} />
-          <span>{tx('ui.rsform.termGraph.currentSchemaBadge')}</span>
+          <span>{tx('semantic.term.schema.current')}</span>
         </div>
         {schemas.map((alias, index) => (
           <div key={`${prefixes.schemas_list}${index}`} className='inline-flex items-center gap-2'>

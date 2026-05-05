@@ -46,7 +46,7 @@ export function DlgOssSettings() {
       <Checkbox
         value={showGrid}
         onChange={toggleShowGrid}
-        aria-label={tx('ui.oss.settings.gridToggleAria')}
+        aria-label={tx('ui.oss.settings.gridToggleTitle')}
         title={prepareTooltip(tx('ui.oss.settings.gridToggleTitle'), 'X')}
         label={tx('ui.oss.settings.gridLabel', {
           state: showGrid ? toggleOnShort : toggleOffShort
@@ -71,7 +71,7 @@ export function DlgOssSettings() {
       <Checkbox
         value={edgeStraight}
         onChange={toggleEdgeStraight}
-        aria-label={tx('ui.oss.settings.edgeShapeAria')}
+        aria-label={tx('ui.oss.settings.edgeShapeTitle')}
         title={prepareTooltip(tx('ui.oss.settings.edgeShapeTitle'), 'T')}
         label={tx('ui.oss.settings.edgeShapeLabel', {
           shape: edgeStraight ? tx('ui.oss.settings.edgeStraight') : tx('ui.oss.settings.edgeBezier')

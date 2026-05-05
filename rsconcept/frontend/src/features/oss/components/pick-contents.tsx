@@ -102,7 +102,7 @@ export function PickContents({
       cell: props => (
         <div className='flex w-fit'>
           <MiniButton
-            title={tx('ui.action.delete')}
+            title={tx('semantic.action.delete')}
             className='px-0'
             icon={<IconRemove size='1rem' className='icon-red' />}
             onClick={() => handleDelete(props.row.original)}
@@ -147,7 +147,7 @@ export function PickContents({
         columns={columns}
         noDataComponent={
           <NoData>
-            <p>{tx('ui.table.emptyList')}</p>
+            <p>{tx('semantic.listIsEmpty')}</p>
           </NoData>
         }
       />

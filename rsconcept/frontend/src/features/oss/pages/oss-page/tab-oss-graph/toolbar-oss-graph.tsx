@@ -160,7 +160,7 @@ export function ToolbarOssGraph({
         />
         <div ref={exportRef} onBlur={handleExportBlur} className='relative flex'>
           <MiniButton
-            title={tx('ui.oss.toolbar.saveImage')}
+            title={tx('semantic.action.saveImage')}
             hideTitle={isExportOpen}
             icon={<IconImage size='1.25rem' className='icon-primary' />}
             onClick={toggleExport}
@@ -169,13 +169,13 @@ export function ToolbarOssGraph({
           <Dropdown isOpen={isExportOpen} className='-translate-x-1/2'>
             <DropdownButton
               icon={<IconPNG size='1.25rem' className='icon-primary' />}
-              text={tx('ui.oss.toolbar.savePng')}
+              text={tx('semantic.action.save') + ' PNG'}
               onClick={handleExportPngBtn}
               disabled={isProcessing || isExportingImage}
             />
             <DropdownButton
               icon={<IconSVG size='1.25rem' className='icon-primary' />}
-              text={tx('ui.oss.toolbar.saveSvg')}
+              text={tx('semantic.action.save') + ' SVG'}
               onClick={handleExportSvgBtn}
               disabled={isProcessing || isExportingImage}
             />
@@ -195,7 +195,7 @@ export function ToolbarOssGraph({
             disabled={isProcessing}
           />
           <MiniButton
-            aria-label={tx('ui.oss.toolbar.editSelectedAria')}
+            aria-label={tx('ui.oss.toolbar.editSelected')}
             title={prepareTooltip(
               tx('ui.oss.toolbar.editSelected'),
               isIOS() ? '' : tx('ui.oss.toolbar.rightClickHint')
@@ -207,7 +207,7 @@ export function ToolbarOssGraph({
           />
           <div ref={menuRef} onBlur={handleMenuBlur} className='relative'>
             <MiniButton
-              title={tx('ui.oss.toolbar.addMenu')}
+              title={tx('semantic.action.add') + '...'}
               hideTitle={isMenuOpen}
               icon={<IconNewItem size='1.25rem' className='icon-green' />}
               onClick={handleMenuToggle}
@@ -222,7 +222,7 @@ export function ToolbarOssGraph({
               />
               <DropdownButton
                 text={tx('ui.oss.toolbar.newSchemaShort')}
-                title={prepareTooltip(tx('ui.oss.toolbar.newSchema'), '2')}
+                title={prepareTooltip(tx('ui.oss.newSchema'), '2')}
                 icon={<IconNewItem size='1.25rem' className='text-constructive' />}
                 onClick={handleCreateSchema}
               />
@@ -259,7 +259,7 @@ export function ToolbarOssGraph({
             </Dropdown>
           </div>
           <MiniButton
-            aria-label={tx('ui.oss.toolbar.deleteSelectedAria')}
+            aria-label={tx('ui.oss.toolbar.deleteSelected')}
             title={prepareTooltip(tx('ui.oss.toolbar.deleteSelected'), 'Delete, `')}
             hideTitle={isMenuOpen}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}

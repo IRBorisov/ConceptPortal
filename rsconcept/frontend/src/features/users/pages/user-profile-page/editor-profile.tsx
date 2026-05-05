@@ -72,7 +72,7 @@ export function EditorProfile() {
       <TextInput
         id='username'
         disabled
-        label={tx('ui.profile.field.username')}
+        label={tx('semantic.term.username.short')}
         title={tx('ui.profile.field.usernameReadonlyTitle')}
         value={profile.username}
       />
@@ -82,7 +82,7 @@ export function EditorProfile() {
             id='first_name'
             autoComplete='off'
             allowEnter
-            label={tx('ui.users.column.firstName')}
+            label={tx('semantic.term.firstName')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -96,7 +96,7 @@ export function EditorProfile() {
             id='last_name'
             autoComplete='off'
             allowEnter
-            label={tx('ui.users.column.lastName')}
+            label={tx('semantic.term.lastName')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}

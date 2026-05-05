@@ -27,7 +27,7 @@ const MOCK_VAR_LID: Record<PromptVariableType, string> = {
 /** Retrieves description for {@link PromptVariableType}. */
 export function describePromptVariable(itemType: PromptVariableType): string {
   const id = DESCRIBE_VAR_LID[itemType];
-  return id ? globalTx(id) : globalTx('labels.ai.fallback.unknownVariableType', { type: String(itemType) });
+  return id ? globalTx(id) : 'UNKNOWN VARIABLE TYPE: ' + String(itemType);
 }
 
 /** Retrieves mock text for {@link PromptVariableType}. */
@@ -36,5 +36,5 @@ export function mockPromptVariable(variable: string): string {
     return variable;
   }
   const id = MOCK_VAR_LID[variable as PromptVariableType];
-  return id ? globalTx(id) : globalTx('labels.ai.fallback.unknownVariable', { name: variable });
+  return id ? globalTx(id) : 'UNKNOWN VARIABLE: ' + variable;
 }

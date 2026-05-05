@@ -10,7 +10,7 @@ import { type RO } from '@/utils/meta';
 const EVAL_LABEL_LID: Record<EvalStatus, string> = {
   [EvalStatus.NO_EVAL]: 'labels.rsmodel.eval.noEval',
   [EvalStatus.NOT_PROCESSED]: 'labels.rsmodel.eval.notProcessed',
-  [EvalStatus.INVALID_DATA]: 'labels.rsmodel.eval.invalidData',
+  [EvalStatus.INVALID_DATA]: 'semantic.term.data.invalid',
   [EvalStatus.EVAL_FAIL]: 'labels.rsmodel.eval.evalFail',
   [EvalStatus.AXIOM_FALSE]: 'labels.rsmodel.eval.axiomFalse',
   [EvalStatus.EMPTY]: 'labels.rsmodel.eval.empty',

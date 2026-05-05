@@ -32,7 +32,7 @@ export function MiniSelectorOSS({ items, onSelect, className, ...restProps }: Mi
   return (
     <div ref={ossRef} onBlur={handleOssBlur} className={clsx('relative flex items-center', className)} {...restProps}>
       <MiniButton
-        title={tx('ui.library.miniOss.title')}
+        title={tx('semantic.term.oss.plural')}
         icon={<IconOSS size='1.25rem' className='icon-primary' />}
         hideTitle={isOssOpen}
         onClick={onToggle}

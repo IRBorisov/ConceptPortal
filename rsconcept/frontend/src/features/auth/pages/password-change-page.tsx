@@ -85,7 +85,7 @@ export function Component() {
         }}
       />
       {newPasswordRepeat && newPassword !== newPasswordRepeat ? (
-        <div className='text-sm text-destructive'>{tx('auth.password.mismatch')}</div>
+        <div className='text-sm text-destructive'>{tx('labels.error.passwordsMismatch')}</div>
       ) : null}
 
       <SubmitButton
@@ -106,9 +106,7 @@ function ServerError({ error }: { error: ErrorData }): React.ReactElement {
 
   if (isAxiosError(error) && error.response?.status === 404) {
     return (
-      <div className='mx-auto mt-6 text-sm select-text text-destructive'>
-        {tx('auth.password.invalidTokenLink')}
-      </div>
+      <div className='mx-auto mt-6 text-sm select-text text-destructive'>{tx('auth.password.invalidTokenLink')}</div>
     );
   }
   return <InfoError error={error} />;

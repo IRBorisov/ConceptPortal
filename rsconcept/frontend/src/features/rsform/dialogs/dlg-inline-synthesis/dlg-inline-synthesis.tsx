@@ -83,7 +83,7 @@ export function DlgInlineSynthesis() {
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
           <TabLabel label={tx('semantic.term.schema.short')} title={tx('ui.tab.inlineSynthesis.schemaTitle')} />
           <TabLabel
-            label={tx('semantic.term.constituents')}
+            label={tx('semantic.term.constituenta.plural')}
             title={
               !sourceID
                 ? tx('ui.tab.inlineSynthesis.selectSchemaFirst')
@@ -92,7 +92,7 @@ export function DlgInlineSynthesis() {
             disabled={!sourceID}
           />
           <TabLabel
-            label={tx('ui.tab.inlineSynthesis.substitutions')}
+            label={tx('semantic.action.substitution.plural')}
             title={
               !sourceID
                 ? tx('ui.tab.inlineSynthesis.selectSchemaFirst')

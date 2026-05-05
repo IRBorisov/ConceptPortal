@@ -142,7 +142,7 @@ export function DlgCreateBlock() {
         <TabList className='z-pop mx-auto flex border divide-x rounded-none'>
           <TabLabel
             title={tx('ui.dlg.createBlock.tabPassport.title')}
-            label={tx('ui.dlg.createBlock.tabPassport.label')}
+            label={tx('semantic.term.passport')}
           />
           <TabLabel
             title={tx('ui.dlg.createBlock.tabChildren.title', {

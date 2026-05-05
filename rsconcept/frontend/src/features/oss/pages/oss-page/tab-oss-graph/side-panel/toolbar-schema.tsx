@@ -207,13 +207,13 @@ export function ToolbarSchema({
         disabled={!isMutable || isProcessing || !activeCst}
       />
       <MiniButton
-        title={tx('ui.toolbar.createConstituenta')}
+        title={tx('ui.action.createConstituenta')}
         icon={<IconNewItem size='1rem' className='icon-green' />}
         onClick={createCst}
         disabled={!isMutable || isProcessing}
       />
       <MiniButton
-        title={tx('ui.toolbar.cloneConstituenta')}
+        title={tx('ui.cloneConstituenta')}
         icon={<IconClone size='1rem' className='icon-green' />}
         onClick={cloneCst}
         disabled={!isMutable || !activeCst || isProcessing}
@@ -228,12 +228,12 @@ export function ToolbarSchema({
 
       <MiniButton
         icon={<IconTree size='1rem' className='hover:text-primary' />}
-        title={tx('ui.oss.sideToolbar.termGraph')}
+        title={tx('semantic.term.termGraph')}
         onClick={handleShowTermGraph}
       />
       <MiniButton
         icon={<IconTypeGraph size='1rem' className='hover:text-primary' />}
-        title={tx('ui.oss.sideToolbar.typeGraph')}
+        title={tx('semantic.term.typeGraph')}
         onClick={handleShowTypeGraph}
       />
 

@@ -134,8 +134,8 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
         </div>
         <TextInput
           id='inline_reference_nominal'
-          aria-label={tx('ui.refs.inline.lemmaAria')}
-          placeholder={tx('ui.refs.inline.lemmaPlaceholder')}
+          aria-label={tx('semantic.term.nominal')}
+          placeholder={tx('semantic.term.nominal')}
           className='text-sm'
           value={nominal}
           ref={nominalInputRef}

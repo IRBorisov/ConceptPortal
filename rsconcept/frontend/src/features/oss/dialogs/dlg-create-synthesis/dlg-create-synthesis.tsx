@@ -83,7 +83,7 @@ export function DlgCreateSynthesis() {
   const [activeTab, setActiveTab] = useState<TabID>(TabID.ARGUMENTS);
   const { canSubmit, hint } = (() => {
     if (!alias) {
-      return { canSubmit: false, hint: tx('labels.hint.aliasEmpty') };
+      return { canSubmit: false, hint: tx('labels.hint.aliasInvalid') };
     }
     if (manager.oss.operations.some(operation => operation.alias === alias)) {
       return { canSubmit: false, hint: tx('labels.hint.schemaAliasTaken') };
@@ -134,10 +134,10 @@ export function DlgCreateSynthesis() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='z-pop mx-auto flex border divide-x rounded-none'>
-          <TabLabel title={tx('ui.tab.oss.operationArgumentsTitle')} label={tx('ui.tab.oss.arguments')} />
+          <TabLabel title={tx('ui.tab.oss.operationArgumentsTitle')} label={tx('semantic.term.argument.plural')} />
           <TabLabel
             title={tx('ui.tab.inlineSynthesis.substitutionsTitle')}
-            label={tx('ui.tab.inlineSynthesis.substitutions')}
+            label={tx('semantic.action.substitution.plural')}
           />
         </TabList>
         <TabPanel>

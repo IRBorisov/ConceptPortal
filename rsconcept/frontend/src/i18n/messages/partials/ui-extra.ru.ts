@@ -61,7 +61,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.stats.secondary.basePower': 'База',
   'ui.stats.title.baseInterpretationPower': 'Суммарная мощность интерпретаций базовых понятий',
   'ui.stats.row.baseCardinality': 'Мощность базы',
-  'ui.stats.row.invalidData': 'Неверные данные',
   'ui.stats.row.missingBaseInterpretation': 'Базовые без интерпретации',
   'ui.stats.row.violatedAxioms': 'Нарушенные аксиомы',
   'ui.stats.row.invalidCalculations': 'Невычислимые выражения',
@@ -118,11 +117,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.tg.toolbar.focusCst': 'Задать фокус конституенту',
   'ui.tg.toolbar.hideText': 'Скрыть текст',
   'ui.tg.toolbar.showText': 'Отобразить текст',
-  'ui.tg.toolbar.saveImage': 'Сохранить изображение',
-  'ui.tg.toolbar.savePng': 'Сохранить PNG',
-  'ui.tg.toolbar.saveSvg': 'Сохранить SVG',
-  'ui.tg.toolbar.hideDerived': 'Скрыть порожденные',
-  'ui.tg.toolbar.showDerived': 'Отобразить порожденные',
   'ui.tg.toolbar.echelonGraphTitle': 'Граф ступеней выделенных конституент',
 
   'ui.page.notFound.title': 'Ошибка 404 – Страница не найдена',
@@ -130,7 +124,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.page.notFound.back': 'Вернуться на Портал',
 
   'ui.structurePlanner.termPlaceholder': 'Термин не определен',
-  'ui.structurePlanner.submitCreate': 'Создать конституенту',
   'ui.structurePlanner.submitUpdate': 'Обновить термин',
   'ui.structurePlanner.resetTerm': 'Сбросить термин',
 
@@ -142,7 +135,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.valueInput.charCountAria': 'Количество символов',
   'ui.valueInput.charCountLimitedTooltip': 'Отображаемое количество\nсимволов ограничено',
 
-  'ui.pickElement.headerText': 'Текст',
   'ui.pickElement.valueLabel': 'Укажите значение',
   'ui.pickElement.selectPrompt': 'Выберите элемент для редактирования',
 
@@ -153,7 +145,6 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.iconsPage.total': 'Всего иконок: {count}',
 
-  'ui.tabs.passport': 'Паспорт',
   'ui.tabs.list': 'Список',
   'ui.tabs.graph': 'Граф',
   'ui.tabs.data': 'Данные',
@@ -180,7 +171,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.menu.structureExpansionTitle':
     'Породить внутренние понятия\nпо структуре типизации\nвыделенной конституенты',
   'ui.rsform.menu.structureExpansionAria': 'Породить внутренние понятия по структуре типизации выделенной конституенты',
-  'ui.rsform.menu.substitution': 'Отождествление',
   'ui.rsform.menu.substitutionTitle': 'Заменить вхождения\nодной конституенты на другую',
   'ui.rsform.menu.substitutionAria': 'Заменить вхождения одной конституенты на другую',
 
@@ -193,12 +183,10 @@ export const uiExtraRu: Record<string, string> = {
   'ui.ast.extract.definitionPlaceholder': 'Определение обособленного выражения',
 
   'ui.termGraph.dialog.title': 'Настройки графа термов',
-  'ui.termGraph.dialog.apply': 'Применить',
   'ui.termGraph.dialog.transforms': 'Преобразования',
   'ui.termGraph.dialog.cstTypes': 'Типы конституент',
   'ui.termGraph.filter.hideText': 'Скрыть текст',
   'ui.termGraph.filter.hideTextHint': 'Не отображать термины',
-  'ui.termGraph.filter.hideDerived': 'Скрыть порожденные',
   'ui.termGraph.filter.hideDerivedHint': 'Не отображать порожденные понятия',
   'ui.termGraph.filter.hideFree': 'Скрыть свободные',
   'ui.termGraph.filter.hideFreeHint': 'Конституенты без связей',
@@ -212,8 +200,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.refs.inline.prevRefAria': 'Предыдущая ссылка',
   'ui.refs.inline.offsetAria': 'Смещение опорной ссылки',
   'ui.refs.inline.nextRefAria': 'Следующая ссылка',
-  'ui.refs.inline.lemmaAria': 'Начальная форма',
-  'ui.refs.inline.lemmaPlaceholder': 'Начальная форма',
   'ui.refs.inline.searchPlaceholder': 'Поиск конституенты',
   'ui.refs.inline.noResults': 'Ничего не найдено',
 
@@ -222,33 +208,23 @@ export const uiExtraRu: Record<string, string> = {
   'ui.oss.toolbar.resetView': 'Сбросить вид',
   'ui.oss.toolbar.contentsPanel': 'Панель содержания',
   'ui.oss.toolbar.displaySettings': 'Настройки отображения',
-  'ui.oss.toolbar.saveImage': 'Сохранить изображение',
-  'ui.oss.toolbar.savePng': 'Сохранить PNG',
-  'ui.oss.toolbar.saveSvg': 'Сохранить SVG',
-  'ui.oss.toolbar.editSelectedAria': 'Редактировать выбранную',
   'ui.oss.toolbar.editSelected': 'Редактировать выбранную',
   'ui.oss.toolbar.rightClickHint': 'Правый клик',
-  'ui.oss.toolbar.addMenu': 'Добавить...',
   'ui.oss.toolbar.newBlock': 'Новый блок',
   'ui.oss.toolbar.newSchemaShort': 'Новая КС',
-  'ui.oss.toolbar.newSchema': 'Новая концептуальная схема',
+  'ui.oss.newSchema': 'Новая концептуальная схема',
   'ui.oss.toolbar.importSchemaShort': 'Импорт КС',
   'ui.oss.toolbar.importSchema': 'Импорт концептуальной схемы',
   'ui.oss.toolbar.synthesis': 'Синтез концептуальных схем',
   'ui.oss.toolbar.filterConstituents': 'Фильтрация конституент',
   'ui.oss.toolbar.relativizationShort': 'Релятивизация',
   'ui.oss.toolbar.relativization': 'Релятивизация концептуальных схем',
-  'ui.oss.toolbar.deleteSelectedAria': 'Удалить выбранную',
   'ui.oss.toolbar.deleteSelected': 'Удалить выбранную',
 
   'ui.oss.sideToolbar.editSchemaTitle': 'Редактирование концептуальной схемы',
   'ui.oss.sideToolbar.openSchema': 'Открыть КС',
   'ui.oss.sideToolbar.openSchemaTitle': 'Перейти к концептуальной схеме',
-  'ui.toolbar.createConstituenta': 'Создать конституенту',
-  'ui.toolbar.cloneConstituenta': 'Клонировать конституенту',
   'ui.toolbar.deleteHighlightedConstituenta': 'Удалить выделенную конституенту',
-  'ui.oss.sideToolbar.termGraph': 'Граф термов',
-  'ui.oss.sideToolbar.typeGraph': 'Граф ступеней',
 
   'ui.oss.node.linkedCs': 'Связанная КС',
   'ui.oss.node.noLinkedCs': 'Нет связанной КС',
@@ -257,42 +233,28 @@ export const uiExtraRu: Record<string, string> = {
   'ui.oss.settings.header': 'Настройки отображения',
   'ui.oss.settings.coordsToggleAria': 'Переключатель отображения координат',
   'ui.oss.settings.coordsLabel': 'Координаты узлов: {state}',
-  'ui.oss.settings.gridToggleAria': 'Переключатель отображения сетки',
   'ui.oss.settings.gridToggleTitle': 'Переключатель отображения сетки',
   'ui.oss.settings.gridLabel': 'Отображение сетки: {state}',
   'ui.oss.settings.edgeAnimateAria': 'Переключатель анимации связей',
   'ui.oss.settings.edgeAnimateLabel': 'Анимация связей: {state}',
-  'ui.oss.settings.edgeShapeAria': 'Переключатель формы связей',
   'ui.oss.settings.edgeShapeTitle': 'Переключатель формы связей',
   'ui.oss.settings.edgeShapeLabel': 'Связи: {shape}',
   'ui.oss.settings.edgeStraight': 'Прямые',
   'ui.oss.settings.edgeBezier': 'Безье',
 
   'ui.oss.deleteReplica.header': 'Удаление реплики',
-  'ui.oss.deleteReplica.submit': 'Подтвердить удаление',
   'ui.oss.deleteReplica.relinkArgs': 'Переадресовать связи на оригинал',
   'ui.oss.deleteReplica.relinkArgsHint': 'Связи аргументов будут перенаправлены на оригинал реплики',
-  'ui.oss.deleteReplica.keepInherited': 'Сохранить наследованные конституенты',
-  'ui.oss.deleteReplica.keepInheritedHint': 'Наследованные конституенты\nпревратятся в дописанные',
+  'ui.oss.keepInherited': 'Сохранить наследованные конституенты',
+  'ui.oss.keepInheritedHint': 'Наследованные конституенты\nпревратятся в дописанные',
 
   'ui.oss.deleteOperation.header': 'Удаление операции',
-  'ui.oss.deleteOperation.submit': 'Подтвердить удаление',
-  'ui.oss.deleteOperation.deleteSchema': 'Удалить схему',
   'ui.oss.deleteOperation.deleteSchemaLocked': 'Привязанную схему нельзя удалить',
   'ui.oss.deleteOperation.deleteSchemaHint': 'Удалить схему вместе с операцией',
-  'ui.oss.deleteOperation.keepInherited': 'Сохранить наследованные конституенты',
-  'ui.oss.deleteOperation.keepInheritedHint': 'Наследованные конституенты\nпревратятся в дописанные',
-  'ui.oss.deleteOperation.warningAttention': 'Внимание!',
   'ui.oss.deleteOperation.warningRelatedSchema': 'Будет также удалена связанная схема',
 
-  'ui.combo.emptyList': 'Список пуст',
-
-  'ui.table.header.formalDefinition': 'Формальное определение',
-  'ui.table.header.textDefinition': 'Текстовое определение',
   'ui.table.header.conventionComment': 'Конвенция / Комментарий',
-  'ui.table.emptyList': 'Список пуст',
   'ui.table.pickMulti.selected': 'Выбраны {selected} из {total}',
-  'ui.table.pickMulti.constituentsHeader': 'Конституенты',
   'ui.link.createConstituenta': 'Создать конституенту...',
   'ui.link.createPromptTemplate': 'Создать шаблон запроса...',
 
@@ -312,39 +274,20 @@ export const uiExtraRu: Record<string, string> = {
   'ui.library.showNestedFoldersAria': 'Отображение вложенных папок',
 
   'ui.template.arguments.empty': 'Аргументы отсутствуют',
-  'ui.template.arguments.constituentsHeading': 'Конституенты',
   'ui.template.arguments.placeholderDefinition': 'Итоговое определение',
   'ui.template.arguments.freeSlot': 'свободный аргумент',
-  'ui.template.arguments.clearValueTitle': 'Очистить значение',
 
-  'ui.users.column.lastName': 'Фамилия',
-  'ui.users.column.firstName': 'Имя',
   'ui.users.action.removeFromListTitle': 'Удалить из списка',
   'ui.users.action.clearListTitle': 'Очистить список',
 
-  'ui.bindingEditor.column.text': 'Текст',
-  'ui.bindingEditor.deleteRowTitle': 'Удалить элемент',
-  'ui.bindingEditor.addElementTitle': 'Добавить элемент',
   'ui.bindingEditor.selectRowPlaceholder': 'Выделите строку',
   'ui.bindingEditor.noValues': 'Значения отсутствуют',
-
-  'ui.constituents.search.resetFilterTitle': 'Сбросить фильтр',
 
   'ui.rsexpr.toolbar.symbolKeyboardTitle': 'Символьная клавиатура',
   'ui.rsexpr.toolbar.typificationStructureTitle': 'Структура типизации',
   'ui.rsexpr.toolbar.expressionStructureTitle': 'Структура выражения',
 
-  'ui.form.createCst.crucialTitle': 'Ключевая конституента',
-  'ui.form.createCst.termPlaceholder': 'Обозначение для текстовых определений',
-  'ui.form.createCst.textDefinitionLabel': 'Текстовое определение',
-  'ui.form.createCst.textDefinitionPlaceholder': 'Текстовая интерпретация формального выражения',
-  'ui.form.createCst.addComment': 'Добавить комментарий',
-  'ui.form.createCst.conventionPlaceholder': 'Договоренность об интерпретации базового понятия',
-  'ui.form.createCst.commentPlaceholder': 'Пояснение разработчика',
-
   'ui.pick.schema.filterByLocationTitle': 'Фильтр по расположению',
-  'ui.pick.schema.resetLocationFilterTitle': 'Сбросить фильтр',
-  'ui.pick.schema.emptyTitle': 'Список схем пуст',
   'ui.pick.schema.emptyHint': 'Измените параметры фильтра',
 
   'ui.list.reorder.moveHigher': 'Переместить выше',
@@ -354,7 +297,6 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.versions.deleteVersionTitle': 'Удалить версию',
 
-  'ui.profile.field.username': 'Логин',
   'ui.profile.field.usernameReadonlyTitle': 'Логин изменить нельзя',
   'ui.profile.submit.saveData': 'Сохранить данные',
 
@@ -370,24 +312,16 @@ export const uiExtraRu: Record<string, string> = {
   'ui.promptTemplates.dlg.uniqueLabelHint': 'Введите уникальное название шаблона',
   'ui.promptTemplates.dlg.labelField': 'Название шаблона',
 
-  'ui.aiPrompt.tab.template': 'Шаблон',
   'ui.aiPrompt.tab.result': 'Результат',
   'ui.aiPrompt.tab.variables': 'Переменные',
 
   'ui.oss.infoOperation.ownAdditionsLabel': 'Собственные:',
   'ui.oss.infoOperation.csNotInOss': 'КС не принадлежит ОСС',
   'ui.oss.infoOperation.rhombusSynthesis': 'Ромбовидный синтез',
-  'ui.oss.infoOperation.titleWithColon': 'Название: ',
   'ui.oss.infoOperation.descriptionWithColon': 'Описание: ',
-  'ui.oss.infoOperation.substitutionsLabel': 'Отождествления:',
   'ui.oss.infoOperation.substitutionsNone': 'Отсутствуют',
 
   'ui.sandbox.editMenu.buttonTitle': 'Редактирование',
-  'ui.sandbox.editMenu.restoreOrder': 'Упорядочить список',
-  'ui.sandbox.editMenu.restoreOrderHint': 'Восстановить порядок по типам и связям',
-  'ui.sandbox.editMenu.ordinalNames': 'Порядковые имена',
-  'ui.sandbox.editMenu.ordinalNamesHint': 'Присвоить имена по порядку и обновить выражения',
-  'ui.sandbox.editMenu.substitution': 'Отождествление',
   'ui.sandbox.editMenu.substitutionHint': 'Заменить одни конституенты другими',
 
   'ui.schemaCard.toggleStatsTitle': 'Отображение статистики',
@@ -397,7 +331,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.oss.sidePanel.noCsForOperation': 'Отсутствует концептуальная схема для выбранной операции',
 
   'ui.stats.oss.compositionPrimaryTitle': 'Общее количество элементов в составе операционной схемы',
-  'ui.stats.oss.blocks': 'Блоки',
   'ui.stats.oss.blocksSecondaryTitle': 'Количество вложенных блоков',
   'ui.stats.oss.detail.inputs': 'Загрузка',
   'ui.stats.oss.detail.replica': 'Реплика',
@@ -419,7 +352,6 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.dataTable.noData': 'Данные отсутствуют',
 
-  'ui.promptTemplates.tab.list': 'Список',
   'ui.promptTemplates.menu.newTemplate': 'Новый шаблон',
 
   'ui.aiPrompt.dlg.header': 'Генератор запросов LLM',
@@ -434,7 +366,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.ai.promptInput.variableTitle': 'Переменная {name}',
   'ui.ai.promptInput.available': 'Доступна для использования',
   'ui.ai.promptInput.unavailable': 'Недоступна для использования',
-  'ui.ai.promptInput.descriptionPrefix': 'Описание: {description}',
 
   'ui.library.toolbar.editForbiddenTitle': 'Изменение: запрещено',
   'ui.library.toolbar.editAllowedTitle': 'Изменение: разрешено',
@@ -442,37 +373,28 @@ export const uiExtraRu: Record<string, string> = {
   'ui.library.editors.dlgHeader': 'Список редакторов — {count}',
   'ui.library.editors.saveList': 'Сохранить список',
   'ui.library.editors.addPlaceholder': 'Добавить редактора',
-  'ui.library.selectItem.placeholder': 'Выберите схему',
-  'ui.library.miniOss.title': 'Операционные схемы',
   'ui.library.miniOss.listLabel': 'Список ОСС',
   'ui.library.pickLocation.label': 'Расположение',
 
   'ui.oss.selectOperation.placeholder': 'Выбор операции',
   'ui.oss.selectBlock.placeholder': 'Выбор блока',
-  'ui.oss.selectParent.tooltip': 'Родительский блок',
-  'ui.oss.dlg.block.contentPickLabel': 'Выбор содержания: [ {count} ]',
-  'ui.oss.dlg.operation.argsPickLabel': 'Выбор аргументов: [ {count} ]',
   'ui.oss.dlg.inputSchema.header': 'Выбор концептуальной схемы',
   'ui.oss.dlg.inputSchema.submit': 'Подтвердить выбор',
   'ui.oss.dlg.inputSchema.loadingLabel': 'Загружаемая концептуальная схема',
   'ui.oss.dlg.inputSchema.resetTitle': 'Сбросить выбор схемы',
 
   'ui.rsmodel.value.calculateTooltip': 'Сохранить и вычислить значение',
-  'ui.rsmodel.dlg.viewValue.header': 'Просмотр значения',
   'ui.rsmodel.dlg.editValue.header': 'Редактор значения',
   'ui.rsmodel.dlg.editBinding.header': 'Редактор базового источника',
   'ui.rsmodel.dlg.viewBinding.header': 'Просмотр базового источника',
 
-  'ui.rsform.termGraph.dlg.header': 'Граф термов',
   'ui.rsform.termGraph.openSchemaTitle': 'Открыть концептуальную схему',
   'ui.rsform.dlg.deleteCst.header': 'Удаление конституент',
-  'ui.rsform.dlg.deleteCst.submit': 'Удалить',
   'ui.rsform.dlg.deleteCst.submitWithDeps': 'Удалить с зависимыми',
   'ui.rsform.dlg.deleteCst.selectedTitle': 'Выбраны к удалению',
   'ui.rsform.dlg.deleteCst.dependentsTitle': 'Зависимые конституенты',
   'ui.rsform.dlg.deleteCst.expandDepsLabel': 'Удалить зависимые конституенты',
   'ui.rsform.dlg.deleteCst.inheritedWarn': 'Внимание! Конституенты имеют наследников в ОСС',
-  'ui.rsform.template.currentSchema': 'Текущая схема',
   'ui.rsform.template.sourcePlaceholder': 'Источник',
   'ui.rsform.template.categoryPlaceholder': 'Категория',
   'ui.rsform.template.notSelectedPlaceholder': 'Шаблон конституенты не выбран',
@@ -482,7 +404,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.termGraph.hiddenWithCount': 'Скрытые [{selected} | {total}]',
   'ui.rsform.termGraph.hidden': 'Скрытые',
   'ui.rsform.termGraph.colorSchemePlaceholder': 'Цветовая схема',
-  'ui.rsform.termGraph.currentSchemaBadge': 'Текущая схема',
   'ui.rsform.selectConstituenta.placeholder': 'Выбор конституенты',
   'ui.rsform.cstInfo.inheritedTitle': 'наследник',
   'ui.rsform.cstInfo.expressionLabel': 'Выражение: ',
@@ -498,13 +419,12 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.refsTooltip.offset': 'Смещение:',
   'ui.rsform.refsTooltip.masterReference': 'Основная ссылка:',
   'ui.rsform.refsTooltip.notDefined': 'не определена',
-  'ui.rsform.refsTooltip.nominalForm': 'Начальная форма:',
   'ui.rsform.refsTooltip.editHotkey': 'Alt + 2: для редактирования',
   'ui.rsform.termGraph.toolbar.fullGraphTitle': 'Граф целиком',
   'ui.rsform.termGraph.toolbar.hideTextTitle': 'Скрыть текст',
   'ui.rsform.termGraph.toolbar.showTextTitle': 'Отобразить текст',
-  'ui.rsform.termGraph.toolbar.hideDerivedTitle': 'Скрыть порожденные',
-  'ui.rsform.termGraph.toolbar.showDerivedTitle': 'Отобразить порожденные',
+  'ui.rsform.hideDerived': 'Скрыть порожденные',
+  'ui.rsform.showDerived': 'Отобразить порожденные',
   'ui.rsform.termGraph.focus.resetTitle': 'Сбросить фокус',
   'ui.rsform.termGraph.focus.hideSuppliersTitle': 'Скрыть поставщиков',
   'ui.rsform.termGraph.focus.showSuppliersTitle': 'Отобразить поставщиков',
@@ -517,7 +437,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.pdf.onlineVersion': 'Онлайн версия:',
   'ui.rsform.pdf.footerLine': 'КС {alias}',
   'ui.rsform.pdf.sheetPages': 'Лист {pageNumber} / {totalPages}',
-  'ui.rsform.pdf.colFormalExpression': 'Формальное выражение',
   'ui.rsform.pdf.colSchemaInterpretation': 'Схемная интерпретация / Термин',
 
   'ui.oss.menu.editBlockTitle': 'Редактировать блок',
@@ -529,8 +448,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.users.anonymousWithId': 'Аноним {id}',
   'ui.users.info.noneSelected': 'Пользователи не выбраны',
   'ui.users.password.oldLabel': 'Старый пароль',
-  'ui.users.password.newLabel': 'Новый пароль',
-  'ui.users.password.repeatLabel': 'Повторите новый',
   'ui.users.password.submit': 'Сменить пароль',
   'ui.users.password.oldWrong': 'Неверно введен старый пароль',
 
@@ -539,6 +456,5 @@ export const uiExtraRu: Record<string, string> = {
   'ui.common.notImplemented': 'Функционал в разработке',
   'ui.sandbox.invalidBundleFile': 'Неверный файл песочницы',
 
-  'ui.ai.badge.templateShared': 'Общий',
-  'ui.ai.badge.templatePersonal': 'Личный'
+  'ui.ai.badge.templateShared': 'Общий'
 };

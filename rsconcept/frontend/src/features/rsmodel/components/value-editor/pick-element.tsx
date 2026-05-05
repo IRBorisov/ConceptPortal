@@ -58,7 +58,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
     }),
     columnHelper.accessor(id => id, {
       id: 'elem_text',
-      header: tx('ui.pickElement.headerText'),
+      header: tx('semantic.term.value'),
       size: 180,
       minSize: 180,
       maxSize: 180,
@@ -94,11 +94,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
   }
 
   if (!binding) {
-    return (
-      <div className={cn('text-muted-foreground', className)}>
-        {tx('ui.pickElement.selectPrompt')}
-      </div>
-    );
+    return <div className={cn('text-muted-foreground', className)}>{tx('ui.pickElement.selectPrompt')}</div>;
   }
 
   return (

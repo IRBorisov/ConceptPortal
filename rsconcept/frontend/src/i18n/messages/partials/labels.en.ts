@@ -50,7 +50,6 @@ export const labelsEn: Record<string, string> = {
   'labels.info.substituteSingle': 'Substitution completed',
   'labels.info.reorderComplete': 'Ordering completed',
   'labels.info.reindexComplete': 'Constituent names updated',
-  'labels.info.moveComplete': 'Move completed',
   'labels.info.linkReady': 'Link copied',
   'labels.info.promptReady': 'Text copied',
   'labels.info.valueReady': 'Value copied',
@@ -82,7 +81,6 @@ export const labelsEn: Record<string, string> = {
   'labels.hint.templateInvalid': 'Select a constituenta template',
   'labels.hint.formInvalid': 'The form is filled incorrectly',
   'labels.hint.aliasInvalid': 'Enter an unused name that matches the type',
-  'labels.hint.aliasEmpty': 'Enter an abbreviation',
   'labels.hint.titleEmpty': 'Enter a title',
   'labels.hint.blockTitleTaken': 'A block with this title already exists',
   'labels.hint.schemaAliasTaken': 'A schema with this name already exists',
@@ -115,7 +113,6 @@ export const labelsEn: Record<string, string> = {
 
   'labels.errorDetail.noErrors': 'No errors',
   'labels.errorDetail.validationTitle': 'Data validation error',
-  'labels.errorDetail.genericDescription': 'Description',
   'labels.errorDetail.noServerResponse': 'No response from server',
   'labels.errorDetail.api404': 'Request to a non-existent API',
   'labels.errorDetail.csrfLost': 'Server connection lost. Reload the page',

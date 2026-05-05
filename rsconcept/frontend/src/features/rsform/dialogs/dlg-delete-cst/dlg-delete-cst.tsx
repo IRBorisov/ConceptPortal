@@ -38,11 +38,7 @@ export function DlgDeleteCst() {
   return (
     <ModalForm
       header={tx('ui.rsform.dlg.deleteCst.header')}
-      submitText={
-        expandOut
-          ? tx('ui.rsform.dlg.deleteCst.submitWithDeps')
-          : tx('ui.rsform.dlg.deleteCst.submit')
-      }
+      submitText={expandOut ? tx('ui.rsform.dlg.deleteCst.submitWithDeps') : tx('semantic.action.delete')}
       onSubmit={handleSubmit}
       className='cc-column max-w-[60vw] min-w-120 px-6'
     >
@@ -64,11 +60,7 @@ export function DlgDeleteCst() {
         value={expandOut}
         onChange={value => setExpandOut(value)}
       />
-      {hasInherited ? (
-        <p className='text-sm clr-text-red'>
-          {tx('ui.rsform.dlg.deleteCst.inheritedWarn')}
-        </p>
-      ) : null}
+      {hasInherited ? <p className='text-sm clr-text-red'>{tx('ui.rsform.dlg.deleteCst.inheritedWarn')}</p> : null}
     </ModalForm>
   );
 }

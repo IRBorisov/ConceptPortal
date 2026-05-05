@@ -57,7 +57,7 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
         disabled={isProcessing || !activeCst || !isModified}
       />
       <MiniButton
-        title={tx('ui.hint.resetUnsavedConstituenta')}
+        title={tx('ui.hint.resetUnsavedChanges')}
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={onReset}
         disabled={isProcessing || !activeCst || !isModified}
@@ -71,7 +71,7 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
       />
       <MiniButton
         title={prepareTooltip(tx('ui.rsmodel.calculateCurrentCst'), isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
-        aria-label={tx('ui.aria.calculateCurrentCst')}
+        aria-label={tx('ui.rsmodel.calculateCurrentCst')}
         icon={<IconCalculateOne size='1.25rem' className='icon-green' />}
         onClick={
           activeCst

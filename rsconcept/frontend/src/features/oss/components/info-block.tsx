@@ -13,7 +13,7 @@ export function InfoBlock({ block }: InfoOperationProps) {
     <>
       {block.title ? (
         <p>
-          <b>{tx('ui.oss.infoOperation.titleWithColon')}</b>
+          <b>{tx('semantic.term.title')}: </b>
           {block.title}
         </p>
       ) : null}

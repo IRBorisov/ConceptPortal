@@ -49,7 +49,6 @@ export const labelsRu: Record<string, string> = {
   'labels.info.substituteSingle': 'Отождествление завершено',
   'labels.info.reorderComplete': 'Упорядочение завершено',
   'labels.info.reindexComplete': 'Имена конституент обновлены',
-  'labels.info.moveComplete': 'Перемещение завершено',
   'labels.info.linkReady': 'Ссылка скопирована',
   'labels.info.promptReady': 'Текст скопирован',
   'labels.info.valueReady': 'Значение скопировано',
@@ -81,7 +80,6 @@ export const labelsRu: Record<string, string> = {
   'labels.hint.templateInvalid': 'Выберите шаблон конституенты',
   'labels.hint.formInvalid': 'Форма заполнена некорректно',
   'labels.hint.aliasInvalid': 'Введите незанятое имя,\nсоответствующее типу',
-  'labels.hint.aliasEmpty': 'Введите сокращение',
   'labels.hint.titleEmpty': 'Введите название',
   'labels.hint.blockTitleTaken': 'Блок с таким названием уже существует',
   'labels.hint.schemaAliasTaken': 'Схема с таким именем уже существует',
@@ -115,11 +113,10 @@ export const labelsRu: Record<string, string> = {
 
   'labels.errorDetail.noErrors': 'Ошибки отсутствуют',
   'labels.errorDetail.validationTitle': 'Ошибка валидации данных',
-  'labels.errorDetail.genericDescription': 'Описание',
   'labels.errorDetail.noServerResponse': 'Нет ответа от сервера',
   'labels.errorDetail.api404': 'Обращение к несуществующему API',
   'labels.errorDetail.csrfLost': 'Соединение с сервером потеряно. Перезагрузите страницу',
-  'labels.errorDetail.responseDescription': 'Описание',
+  'labels.errorDetail.responseDescription': 'Полное описание',
   'labels.errorDetail.contactIntro':
     'Пожалуйста сделайте скриншот и отправьте вместе с описанием ситуации на почту portal@acconcept.ru',
   'labels.errorDetail.reloadHint': 'Для продолжения работы перезагрузите страницу',

@@ -58,7 +58,7 @@ export function DlgRenameCst() {
   return (
     <ModalForm
       header={tx('ui.dlg.renameCst.header')}
-      submitText={tx('ui.action.rename')}
+      submitText={tx('semantic.action.rename')}
       canSubmit={canSubmit}
       validationHint={canSubmit ? '' : tx('labels.hint.aliasInvalid')}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
@@ -76,7 +76,7 @@ export function DlgRenameCst() {
           <TextInput
             id='dlg_cst_alias'
             dense
-            label={tx('semantic.term.name')}
+            label={tx('semantic.term.alias.short')}
             className='w-28'
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}

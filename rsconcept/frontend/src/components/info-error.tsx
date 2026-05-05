@@ -40,7 +40,7 @@ export function DescribeError({ error }: { error: ErrorData }) {
           <b>{tx('semantic.term.error')}:</b> {error.name}
         </p>
         <p>
-          <b>{tx('labels.errorDetail.genericDescription')}:</b> {error.message}
+          <b>{tx('semantic.term.description')}:</b> {error.message}
         </p>
         {error.stack && <pre className='whitespace-pre-wrap p-2 overflow-x-auto wrap-break-word'>{error.stack}</pre>}
       </div>

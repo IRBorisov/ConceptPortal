@@ -52,7 +52,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
     <>
       <div className='flex items-center self-center gap-3'>
         <MiniButton
-          title={tx('ui.form.createCst.crucialTitle')}
+          title={tx('semantic.term.constituenta.crucial')}
           icon={<IconCrucialValue size='1.25rem' value={crucial} />}
           onClick={onToggleCrucial}
         />
@@ -62,7 +62,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
             <TextInput
               id='dlg_cst_alias'
               dense
-              label={tx('semantic.term.name')}
+              label={tx('semantic.term.alias.short')}
               className='w-28'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -80,7 +80,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
             id='dlg_cst_term'
             label={tx('semantic.term.term')}
             maxHeight='3.75rem'
-            placeholder={tx('ui.form.createCst.termPlaceholder')}
+            placeholder={tx('ui.placeholder.termForDefinitions')}
             schema={schema}
             value={field.state.value ?? ''}
             resolved={field.state.value}
@@ -110,8 +110,8 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
           !!field.state.value || !isElementary ? (
             <RefsInput
               id='dlg_cst_definition'
-              label={tx('ui.form.createCst.textDefinitionLabel')}
-              placeholder={tx('ui.form.createCst.textDefinitionPlaceholder')}
+              label={tx('semantic.term.definitionTextual')}
+              placeholder={tx('ui.placeholder.textDefinitionHint')}
               maxHeight='3.75rem'
               schema={schema}
               resolved={field.state.value}
@@ -126,7 +126,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
 
       {!showConvention ? (
         <TextButton
-          text={tx('ui.form.createCst.addComment')}
+          text={tx('semantic.action.add.comment')}
           className='self-start'
           onClick={() => setForceComment(true)}
         />
@@ -138,9 +138,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
               spellCheck
               fitContent
               label={isBasic ? tx('semantic.term.convention') : tx('semantic.term.comment')}
-              placeholder={
-                isBasic ? tx('ui.form.createCst.conventionPlaceholder') : tx('ui.form.createCst.commentPlaceholder')
-              }
+              placeholder={isBasic ? tx('ui.placeholder.conventionBasic') : tx('ui.placeholder.developerComment')}
               areaClassName='max-h-20'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}

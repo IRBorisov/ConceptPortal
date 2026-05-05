@@ -106,7 +106,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
           <NoData>
-            <p>{tx('ui.table.emptyList')}</p>
+            <p>{tx('semantic.listIsEmpty')}</p>
             <p>
               <TextURL text={tx('ui.link.createPromptTemplate')} onClick={handleCreateNew} />
             </p>

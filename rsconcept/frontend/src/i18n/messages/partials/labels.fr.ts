@@ -52,7 +52,6 @@ export const labelsFr: Record<string, string> = {
   'labels.info.substituteSingle': 'Substitution terminée',
   'labels.info.reorderComplete': 'Tri terminé',
   'labels.info.reindexComplete': 'Noms des constituantes mis à jour',
-  'labels.info.moveComplete': 'Déplacement terminé',
   'labels.info.linkReady': 'Lien copié',
   'labels.info.promptReady': 'Texte copié',
   'labels.info.valueReady': 'Valeur copiée',
@@ -84,7 +83,6 @@ export const labelsFr: Record<string, string> = {
   'labels.hint.templateInvalid': 'Sélectionnez un modèle de constituante',
   'labels.hint.formInvalid': 'Le formulaire est rempli incorrectement',
   'labels.hint.aliasInvalid': 'Saisissez un nom libre\nconforme au type',
-  'labels.hint.aliasEmpty': 'Saisissez une abréviation',
   'labels.hint.titleEmpty': 'Saisissez un titre',
   'labels.hint.blockTitleTaken': 'Un bloc avec ce titre existe déjà',
   'labels.hint.schemaAliasTaken': 'Un schéma avec ce nom existe déjà',
@@ -117,7 +115,6 @@ export const labelsFr: Record<string, string> = {
 
   'labels.errorDetail.noErrors': 'Aucune erreur',
   'labels.errorDetail.validationTitle': 'Erreur de validation des données',
-  'labels.errorDetail.genericDescription': 'Description',
   'labels.errorDetail.noServerResponse': 'Aucune réponse du serveur',
   'labels.errorDetail.api404': 'Appel à une API inexistante',
   'labels.errorDetail.csrfLost': 'Connexion au serveur perdue. Rechargez la page',

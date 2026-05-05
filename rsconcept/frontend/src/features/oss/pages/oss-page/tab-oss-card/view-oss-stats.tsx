@@ -25,12 +25,12 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
         primaryLabel={tx('semantic.total')}
         primaryValue={stats.count_all}
         primaryTitle={tx('ui.stats.oss.compositionPrimaryTitle')}
-        secondaryLabel={stats.count_block > 0 ? tx('ui.stats.oss.blocks') : undefined}
+        secondaryLabel={stats.count_block > 0 ? tx('semantic.term.block.plural') : undefined}
         secondaryValue={stats.count_block > 0 ? stats.count_block : undefined}
         secondaryTitle={tx('ui.stats.oss.blocksSecondaryTitle')}
         details={[
           { label: tx('semantic.total'), value: stats.count_all },
-          { label: tx('ui.stats.oss.blocks'), value: stats.count_block },
+          { label: tx('semantic.term.block.plural'), value: stats.count_block },
           { label: tx('ui.stats.oss.detail.inputs'), value: stats.count_inputs },
           { label: tx('semantic.action.synthesis'), value: stats.count_synthesis },
           { label: tx('ui.stats.oss.detail.replica'), value: stats.count_references }

@@ -75,19 +75,19 @@ export function MenuEdit() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('ui.sandbox.editMenu.restoreOrder')}
-          title={tx('ui.sandbox.editMenu.restoreOrderHint')}
+          text={tx('ui.rsform.menu.restoreOrder')}
+          title={tx('ui.rsform.menu.restoreOrderTitle')}
           icon={<IconSortList size='1rem' className='icon-primary' />}
           onClick={handleRestoreOrder}
         />
         <DropdownButton
-          text={tx('ui.sandbox.editMenu.ordinalNames')}
-          title={tx('ui.sandbox.editMenu.ordinalNamesHint')}
+          text={tx('ui.rsform.menu.ordinalNames')}
+          title={tx('ui.rsform.menu.ordinalNamesTitle')}
           icon={<IconGenerateNames size='1rem' className='icon-primary' />}
           onClick={handleResetAliases}
         />
         <DropdownButton
-          text={tx('ui.sandbox.editMenu.substitution')}
+          text={tx('semantic.action.substitution')}
           title={tx('ui.sandbox.editMenu.substitutionHint')}
           icon={<IconReplace size='1rem' className='icon-red' />}
           onClick={handleSubstitute}

@@ -100,7 +100,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
           ? tx('lib.create.pageTitleModel')
           : itemType === LibraryItemType.OSS
             ? tx('lib.create.pageTitleOss')
-            : tx('lib.create.pageTitleSchema')}
+            : tx('ui.oss.newSchema')}
       </h1>
 
       <form.Field name='title'>
@@ -146,8 +146,8 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
             <form.Field name='visible'>
               {field => (
                 <MiniButton
-                  title={field.state.value ? tx('lib.create.libraryShow') : tx('lib.create.libraryHide')}
-                  aria-label={tx('lib.create.libraryToggleAria')}
+                  title={field.state.value ? tx('lib.item.visible.on') : tx('lib.item.visible.off')}
+                  aria-label={tx('lib.item.visible.hint')}
                   icon={<IconItemVisibility value={field.state.value ?? true} />}
                   onClick={() => field.handleChange(!field.state.value)}
                 />
@@ -191,7 +191,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
         {field => (
           <TextArea
             id='schema_comment'
-            label={tx('lib.create.description')}
+            label={tx('semantic.term.description')}
             placeholder={tx('labels.placeholder.itemDescription')}
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}
@@ -204,7 +204,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
 
       <div className='flex justify-around gap-6 py-3'>
         <SubmitButton
-          text={itemType === LibraryItemType.RSMODEL ? tx('lib.create.submitModel') : tx('lib.create.submitSchema')}
+          text={itemType === LibraryItemType.RSMODEL ? tx('ui.action.createModel') : tx('ui.action.createSchema')}
           loading={isPending}
           className='min-w-40'
         />

@@ -230,7 +230,7 @@ export function PickSubstitutions({
         ) : (
           <div className='max-w-fit'>
             <MiniButton
-              title={tx('ui.action.delete')}
+              title={tx('semantic.action.delete')}
               icon={<IconRemove size='1rem' className='icon-red' />}
               onClick={() => handleDeleteSubstitution(props.row.original)}
             />
@@ -253,7 +253,7 @@ export function PickSubstitutions({
           <SelectLibraryItem
             id='substitute-left-schema'
             noBorder
-            placeholder={tx('ui.placeholder.argument')}
+            placeholder={tx('semantic.term.argument')}
             items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== rightArgument?.id)}
             value={leftArgument}
             onChange={onChangeLeftArgument}
@@ -262,11 +262,7 @@ export function PickSubstitutions({
         </div>
         <div className='flex flex-col justify-center gap-1'>
           <MiniButton
-            title={
-              deleteRight
-                ? tx('ui.substitution.replaceRight')
-                : tx('ui.substitution.replaceLeft')
-            }
+            title={deleteRight ? tx('ui.substitution.replaceRight') : tx('ui.substitution.replaceLeft')}
             onClick={toggleDelete}
             icon={
               deleteRight ? (
@@ -289,7 +285,7 @@ export function PickSubstitutions({
           <SelectLibraryItem
             id='substitute-right-schema'
             noBorder
-            placeholder={tx('ui.placeholder.argument')}
+            placeholder={tx('semantic.term.argument')}
             items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== leftArgument?.id)}
             value={rightArgument}
             onChange={onChangeRightArgument}
@@ -309,7 +305,7 @@ export function PickSubstitutions({
         columns={columns}
         noDataComponent={
           <NoData className='min-h-8'>
-            <p>{tx('ui.substitution.tableEmpty')}</p>
+            <p>{tx('semantic.listIsEmpty')}</p>
             <p>{tx('ui.substitution.tableEmptyHint')}</p>
           </NoData>
         }

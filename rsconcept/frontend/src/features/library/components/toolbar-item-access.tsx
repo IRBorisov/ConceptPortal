@@ -59,8 +59,8 @@ export function ToolbarItemAccess({
         />
 
         <MiniButton
-          title={visible ? tx('ui.dlg.clone.libraryShow') : tx('ui.dlg.clone.libraryHide')}
-          aria-label={tx('ui.dlg.clone.libraryToggleAria')}
+          title={visible ? tx('lib.item.visible.on') : tx('lib.item.visible.off')}
+          aria-label={tx('lib.item.visible.hint')}
           icon={<IconItemVisibility value={visible} />}
           onClick={toggleVisible}
           disabled={role === UserRole.READER || isProcessing}

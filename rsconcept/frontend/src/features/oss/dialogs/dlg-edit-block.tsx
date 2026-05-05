@@ -92,7 +92,7 @@ export function DlgEditBlock() {
             <SelectParent
               items={manager.oss.blocks.filter(block => !descendantNodeIDs.includes(block.nodeID))}
               value={field.state.value ? (manager.oss.blockByID.get(field.state.value) ?? null) : null}
-              placeholder={tx('ui.oss.parentBlock')}
+              placeholder={tx('semantic.term.block.parent')}
               onChange={value => field.handleChange(value ? value.id : null)}
             />
           );

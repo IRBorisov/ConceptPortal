@@ -35,7 +35,7 @@ export function DlgShowTermGraph() {
     <ModalView
       className='relative w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]'
       fullScreen
-      header={tx('ui.rsform.termGraph.dlg.header')}
+      header={tx('semantic.term.termGraph')}
     >
       <MiniButton
         title={tx('ui.rsform.termGraph.openSchemaTitle')}

@@ -172,7 +172,7 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
           <MenuEdit />
         </div>
 
-        <TabLabel label={tx('ui.tabs.passport')} />
+        <TabLabel label={tx('semantic.term.passport')} />
         <TabLabel label={tx('ui.tabs.list')} />
         <TabLabel label={tx('semantic.term.concept')} />
         <TabLabel label={tx('ui.tabs.graph')} />

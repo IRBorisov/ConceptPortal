@@ -141,7 +141,7 @@ export function PickSchema({
         {filterLocation.length > 0 ? (
           <MiniButton
             icon={<IconClose size='1.25rem' className='icon-red' />}
-            title={tx('ui.pick.schema.resetLocationFilterTitle')}
+            title={tx('semantic.action.resetFilter')}
             onClick={() => setFilterLocation('')}
           />
         ) : null}
@@ -158,7 +158,7 @@ export function PickSchema({
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
           <div className='cc-column dense p-3 items-center min-h-24'>
-            <p>{tx('ui.pick.schema.emptyTitle')}</p>
+            <p>{tx('semantic.listIsEmpty')}</p>
             <p>{tx('ui.pick.schema.emptyHint')}</p>
           </div>
         }

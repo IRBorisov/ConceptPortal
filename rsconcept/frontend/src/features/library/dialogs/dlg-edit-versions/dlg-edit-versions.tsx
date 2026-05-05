@@ -134,7 +134,7 @@ export function DlgEditVersions() {
             disabled={isDefaultValue || !isValid || isProcessing}
           />
           <MiniButton
-            title={tx('ui.dlg.editVersions.resetChanges')}
+            title={tx('ui.hint.resetUnsavedChanges')}
             onClick={handleResetClick}
             icon={<IconReset size='1.25rem' className='icon-primary' />}
             disabled={isDefaultValue}

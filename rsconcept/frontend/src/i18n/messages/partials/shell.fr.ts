@@ -66,25 +66,20 @@ export const shellFr: Record<string, string> = {
   'auth.restore.emailNotRegistered': 'Cette adresse e-mail n’est pas enregistrée sur le portail.',
   'auth.require.prompt': 'Veuillez vous connecter.',
   'auth.require.signup': 'Créer un compte',
-  'auth.require.home': 'Page d’accueil',
   'auth.anonymous.signedInAs': 'Vous êtes connecté en tant que {username}',
   'auth.restore.submit': 'Demander un mot de passe',
   'auth.restore.done': 'Des instructions de réinitialisation ont été envoyées à cette adresse.',
   'auth.restore.loginLink': 'Se connecter au portail',
-  'auth.restore.homeLink': 'Page d’accueil',
   'auth.password.new': 'Nouveau mot de passe',
   'auth.password.repeat': 'Confirmer le nouveau mot de passe',
   'auth.password.submit': 'Définir le mot de passe',
-  'auth.password.mismatch': 'Les mots de passe ne correspondent pas',
   'auth.register.title': 'Nouvel utilisateur',
   'auth.register.legendLogin': 'Identifiants de connexion',
   'auth.register.legendProfile': 'Informations utilisateur',
   'auth.register.username': 'Nom d’utilisateur (login)',
   'auth.register.usernameTitle':
     'Au moins 3 caractères. Lettres latines et chiffres. Ne peut pas commencer par un chiffre',
-  'auth.register.password': 'Mot de passe',
   'auth.register.password2': 'Confirmer le mot de passe',
-  'auth.register.email': 'Adresse e-mail',
   'auth.register.emailTitle': 'adresse e-mail au format valide',
   'auth.register.emailTooltip': 'l’adresse e-mail sert à la réinitialisation du mot de passe',
   'auth.register.firstName': 'Prénom affiché',
@@ -94,8 +89,7 @@ export const shellFr: Record<string, string> = {
   'auth.register.acceptRules': 'J’accepte ',
   'auth.register.linkRules': 'les règles du portail…',
   'auth.register.submit': 'S’inscrire',
-  'layout.loading.aria': 'Chargement',
 
   'nav.anonymousLoginTitle': 'Mode anonyme\nSe connecter au portail',
-  'nav.userRoleMode': 'Mode : {role}'
+  'nav.userRoleMode': 'Mode: {role}'
 };

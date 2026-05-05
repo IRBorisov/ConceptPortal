@@ -76,7 +76,7 @@ export function DlgImportSchema() {
   const clone_source = values.clone_source;
   const { canSubmit, hint } = (() => {
     if (!alias) {
-      return { canSubmit: false, hint: tx('labels.hint.aliasEmpty') };
+      return { canSubmit: false, hint: tx('ui.oss.enterAlias') };
     }
     if (manager.oss.operations.some(operation => operation.alias === alias)) {
       return { canSubmit: false, hint: tx('labels.hint.schemaAliasTaken') };
@@ -171,7 +171,7 @@ export function DlgImportSchema() {
               <SelectParent
                 items={manager.oss.blocks}
                 value={field.state.value ? (manager.oss.blockByID.get(field.state.value) ?? null) : null}
-                placeholder={tx('ui.oss.parentBlock')}
+                placeholder={tx('semantic.term.block.parent')}
                 onChange={value => field.handleChange(value ? value.id : null)}
               />
             )}

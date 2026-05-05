@@ -95,7 +95,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
     }),
     columnHelper.accessor('text', {
       id: 'text',
-      header: tx('ui.bindingEditor.column.text'),
+      header: tx('semantic.term.value'),
       size: 200,
       minSize: 200,
       maxSize: 200,
@@ -110,7 +110,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
             maxSize: 40,
             cell: props => (
               <MiniButton
-                title={tx('ui.bindingEditor.deleteRowTitle')}
+                title={tx('ui.value.removeElement')}
                 className='align-middle w-fit -mr-1'
                 noPadding
                 icon={<IconRemove size='1.25rem' className='cc-remove' />}
@@ -140,7 +140,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
       </div>
       <div className='flex items-center gap-2 mb-3'>
         <MiniButton
-          title={tx('ui.bindingEditor.addElementTitle')}
+          title={tx('ui.value.addElement')}
           className=''
           icon={<IconNewItem size='1.25rem' className='icon-green' />}
           onClick={handleAddElement}

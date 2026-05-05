@@ -58,7 +58,7 @@ export function MenuAI() {
           onClick={handleCreatePrompt}
         />
         <DropdownButton
-          text={tx('semantic.term.templates')}
+          text={tx('semantic.term.template.plural')}
           title={user.id ? tx('nav.ai.templatesTitleAuth') : tx('nav.ai.templatesTitleAnon')}
           icon={<IconTemplates size='1rem' />}
           onClick={navigateTemplates}

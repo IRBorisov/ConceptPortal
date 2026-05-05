@@ -57,8 +57,8 @@ export function TemplatesTabs({ activeID, tab }: TemplatesTabsProps) {
     <Tabs selectedIndex={tab} onSelect={onSelectTab} className='relative flex flex-col min-w-fit items-center'>
       <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background'>
         <MenuTemplates />
-        <TabLabel label={tx('ui.promptTemplates.tab.list')} />
-        <TabLabel label={tx('ui.aiPrompt.tab.template')} />
+        <TabLabel label={tx('ui.tabs.list')} />
+        <TabLabel label={tx('semantic.term.template')} />
         <TabLabel label={tx('ui.aiPrompt.tab.variables')} />
         <BadgeHelp topic={HelpTopic.ASSISTANT} offset={5} padding='px-2' />
       </TabList>

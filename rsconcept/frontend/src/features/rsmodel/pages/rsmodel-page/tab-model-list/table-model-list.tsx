@@ -68,7 +68,7 @@ export function TableModelList({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: () => <span className='pl-3 min-w-12'>{tx('semantic.term.name')}</span>,
+      header: () => <span className='pl-3 min-w-12'>{tx('semantic.term.alias.short')}</span>,
       size: 65,
       minSize: 65,
       maxSize: 65,
@@ -102,7 +102,7 @@ export function TableModelList({
     }),
     columnHelper.accessor('definition_formal', {
       id: 'expression',
-      header: tx('ui.table.header.formalDefinition'),
+      header: tx('semantic.term.definitionFormal'),
       size: 1000,
       minSize: 300,
       maxSize: 1000,
@@ -110,7 +110,7 @@ export function TableModelList({
     }),
     columnHelper.accessor(cst => cst.definition_resolved || cst.definition_raw || '', {
       id: 'definition',
-      header: tx('ui.table.header.textDefinition'),
+      header: tx('semantic.term.definitionTextual'),
       size: 1000,
       minSize: 200,
       maxSize: 1000,
@@ -150,7 +150,7 @@ export function TableModelList({
       onRowSelectionChange={setSelected}
       noDataComponent={
         <NoData>
-          <p>{tx('ui.table.emptyList')}</p>
+          <p>{tx('semantic.listIsEmpty')}</p>
           <p>
             <TextURL text={tx('ui.link.createConstituenta')} onClick={onCreateNew} />
           </p>

@@ -42,7 +42,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       />
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip(tx('ui.rsform.formEdit.crucialTitle'), 'F')}
+          title={prepareTooltip(tx('semantic.term.constituenta.crucial'), 'F')}
           aria-label={tx('ui.cst.crucialToggleAria')}
           icon={<IconCrucial size='1.25rem' className='icon-primary' />}
           onClick={toggleCrucial}

@@ -124,8 +124,8 @@ export function DlgEditWordForms() {
         <RefsInput
           id='dlg_edit_wordforms_nominal'
           areaClassName='disabled:min-h-9'
-          aria-label={tx('ui.wordForms.nominalAria')}
-          placeholder={tx('ui.wordForms.nominalPlaceholder')}
+          aria-label={tx('semantic.term.nominal')}
+          placeholder={tx('semantic.term.nominal')}
           schema={schema}
           value={nominalRaw}
           initialValue={target.term_raw}

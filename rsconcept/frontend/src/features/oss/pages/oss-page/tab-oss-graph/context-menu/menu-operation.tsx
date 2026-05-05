@@ -262,7 +262,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       ) : null}
       {isMutable && !operation.result && operation.operation_type === OperationType.INPUT ? (
         <DropdownButton
-          text={tx('ui.oss.menu.createEmptySchema')}
+          text={tx('ui.action.createSchema')}
           title={tx('ui.oss.menu.createEmptySchemaTitle')}
           icon={<IconNewRSForm size='1rem' className='icon-green' />}
           onClick={handleInputCreate}
@@ -298,7 +298,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
       {isMutable && operation.result && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text={tx('semantic.term.constituents')}
+          text={tx('semantic.term.constituenta.plural')}
           title={tx('ui.oss.menu.relocateConstituentsTitle')}
           aria-label={tx('ui.oss.menu.relocateConstituentsAria')}
           icon={<IconChild size='1rem' className='icon-green' />}

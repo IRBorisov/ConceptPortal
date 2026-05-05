@@ -48,11 +48,7 @@ export default function ToolbarGraphFilter() {
         onClick={toggleText}
       />
       <MiniButton
-        title={
-          !filter.foldDerived
-            ? tx('ui.rsform.termGraph.toolbar.hideDerivedTitle')
-            : tx('ui.rsform.termGraph.toolbar.showDerivedTitle')
-        }
+        title={!filter.foldDerived ? tx('ui.rsform.hideDerived') : tx('ui.rsform.showDerived')}
         icon={
           !filter.foldDerived ? (
             <IconClustering size='1.25rem' className='icon-green' />

@@ -145,12 +145,9 @@ export function DlgCstTemplate() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
-          <TabLabel
-            label={tx('ui.dlg.cstTemplate.tabTemplate.label')}
-            title={tx('ui.dlg.cstTemplate.tabTemplate.title')}
-          />
-          <TabLabel label={tx('ui.dlg.cstTemplate.tabArgs.label')} title={tx('ui.dlg.cstTemplate.tabArgs.title')} />
-          <TabLabel label={tx('semantic.term.editor')} title={tx('ui.dlg.cstTemplate.tabEditor.title')} />
+          <TabLabel label={tx('semantic.term.template')} title={tx('ui.dlg.cstTemplate.tabTemplate.title')} />
+          <TabLabel label={tx('semantic.term.argument.plural')} title={tx('ui.dlg.cstTemplate.tabArgs.title')} />
+          <TabLabel label={tx('semantic.term.editor')} title={tx('ui.dlg.editCst.header')} />
         </TabList>
 
         <TemplateState

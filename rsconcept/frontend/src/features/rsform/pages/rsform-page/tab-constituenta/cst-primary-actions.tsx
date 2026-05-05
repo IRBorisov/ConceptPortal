@@ -68,9 +68,7 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
       {showCrucialPill ? (
         <IndicatorPill
           className='text-sm font-controls py-0.5 gap-1 -mt-0.5'
-          title={
-            crucial ? tx('ui.cst.crucialRemoveTitle') : tx('ui.cst.crucialAddTitle')
-          }
+          title={crucial ? tx('ui.cst.crucialRemoveTitle') : tx('ui.cst.crucialAddTitle')}
           value={crucial ? tx('ui.cst.crucialBadgeOn') : tx('ui.cst.crucialBadgeOff')}
           icon={<IconCrucial size='1rem' />}
           color={crucial ? 'teal' : 'muted'}
@@ -81,7 +79,7 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
 
       {showRenameButton ? (
         <TextButton
-          text={tx('ui.action.renameCst')}
+          text={tx('semantic.action.rename')}
           title={isModified ? tx('labels.tooltip.unsaved') : tx('ui.hint.renameCst')}
           onClick={promptRename}
           disabled={isModified}

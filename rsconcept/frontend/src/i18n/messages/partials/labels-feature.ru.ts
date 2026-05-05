@@ -130,14 +130,8 @@ export const labelsFeatureUiRu: Record<string, string> = {
   'labels.rsform.exprStatusDesc.unknown': 'требуется проверка',
 
   'labels.rsform.rsExpression.nominal': 'Определяющие конституенты',
-  'labels.rsform.rsExpression.basic': 'Формальное определение',
-  'labels.rsform.rsExpression.constant': 'Формальное определение',
   'labels.rsform.rsExpression.structure': 'Область определения',
-  'labels.rsform.rsExpression.term': 'Формальное определение',
-  'labels.rsform.rsExpression.theorem': 'Формальное определение',
-  'labels.rsform.rsExpression.axiom': 'Формальное определение',
   'labels.rsform.rsExpression.function': 'Определение функции',
-  'labels.rsform.rsExpression.predicate': 'Определение функции',
 
   'labels.rsform.token.boolean': 'Булеан',
   'labels.rsform.token.decart': 'Декартово произведение',
@@ -181,13 +175,6 @@ export const labelsFeatureUiRu: Record<string, string> = {
 
   'labels.rsform.missing.constituent': '!Конституента отсутствует!',
   'labels.rsform.missing.termEmpty': '!Пустой термин!',
-  'labels.rsform.fallback.formalExpression': 'Формальное выражение',
-  'labels.rsform.fallback.unknownCstType': 'UNKNOWN CST TYPE: {type}',
-  'labels.rsform.fallback.unknownCstClass': 'UNKNOWN CST CLASS: {type}',
-  'labels.rsform.fallback.unknownColoring': 'UNKNOWN COLORING: {mode}',
-  'labels.rsform.fallback.unknownGraphMode': 'UNKNOWN GRAPH MODE: {mode}',
-  'labels.rsform.fallback.unknownEdgeType': 'UNKNOWN GRAPH TYPE: {mode}',
-  'labels.rsform.fallback.unknownExprStatus': 'UNKNOWN EXPRESSION STATUS: {status}',
   'labels.rsform.fallback.noTokenDescription': 'no description: {id}',
 
   'labels.oss.operation.input': 'Загрузка',
@@ -211,11 +198,9 @@ export const labelsFeatureUiRu: Record<string, string> = {
   'labels.oss.substitution.unequalArgs': 'Ошибка {from} -> {to}: типизация аргументов не совпадает',
   'labels.oss.substitution.unequalExpressions': 'Предупреждение {from} -> {to}: определения понятий не совпадают',
   'labels.oss.fallback.unknownOperationType': 'UNKNOWN OPERATION TYPE: {type}',
-  'labels.oss.fallback.unknownSubstitutionError': 'UNKNOWN ERROR',
 
   'labels.rsmodel.eval.noEval': 'Без вычисления',
   'labels.rsmodel.eval.notProcessed': 'Не вычислено',
-  'labels.rsmodel.eval.invalidData': 'Неверные данные',
   'labels.rsmodel.eval.evalFail': 'Ошибка',
   'labels.rsmodel.eval.axiomFalse': 'Нарушена аксиома',
   'labels.rsmodel.eval.empty': 'Пустое значение',
@@ -234,7 +219,6 @@ export const labelsFeatureUiRu: Record<string, string> = {
   'labels.users.roleDesc.editor': 'Режим редактирования',
   'labels.users.roleDesc.owner': 'Режим владельца',
   'labels.users.roleDesc.admin': 'Режим администратора',
-  'labels.users.fallback.unknownRole': 'UNKNOWN USER ROLE: {role}',
 
   'labels.ai.variable.block': 'Текущий блок операционной схемы',
   'labels.ai.variable.oss': 'Текущая операционная схема',
@@ -252,15 +236,12 @@ export const labelsFeatureUiRu: Record<string, string> = {
   'labels.ai.variableMock.schemaTypeGraph': 'Пример: Граф ступеней концептуальной схемы',
   'labels.ai.variableMock.constituenta': 'Пример: Текущая конституента',
   'labels.ai.variableMock.constituentaSyntaxTree': 'Пример синтаксического дерева конституенты',
-  'labels.ai.fallback.unknownVariableType': 'UNKNOWN VARIABLE TYPE: {type}',
-  'labels.ai.fallback.unknownVariable': 'UNKNOWN VARIABLE: {name}',
 
   'labels.rslang.typeClass.logic': 'Логический',
   'labels.rslang.typeClass.typification': 'Теоретико-множественный',
   'labels.rslang.typeClass.function': 'Терм-функция',
   'labels.rslang.typeClass.predicate': 'Предикат-функция',
   'labels.rslang.misc.notDefined': 'не определено',
-  'labels.rslang.fallback.unknownRSError': 'UNKNOWN ERROR',
   'labels.rslang.fallback.unknownNode': 'UNKNOWN {id}',
   'labels.rslang.fallback.noTokenLabel': 'no label: {id}',
 

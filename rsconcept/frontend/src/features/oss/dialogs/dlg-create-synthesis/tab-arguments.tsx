@@ -70,7 +70,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
               <SelectParent
                 items={oss.blocks}
                 value={field.state.value ? (oss.blockByID.get(field.state.value) ?? null) : null}
-                placeholder={tx('ui.oss.parentBlock')}
+                placeholder={tx('semantic.term.block.parent')}
                 onChange={value => field.handleChange(value ? value.id : null)}
               />
             )}

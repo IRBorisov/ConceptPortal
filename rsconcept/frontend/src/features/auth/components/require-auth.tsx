@@ -16,7 +16,7 @@ export function RequireAuth({ children }: React.PropsWithChildren) {
         <p className='mb-2'>{tx('auth.require.prompt')}</p>
         <TextURL text={tx('auth.restore.loginLink')} href='/login' />
         <TextURL text={tx('auth.require.signup')} href='/signup' />
-        <TextURL text={tx('auth.require.home')} href='/' />
+        <TextURL text={tx('semantic.term.home')} href='/' />
       </div>
     );
   }

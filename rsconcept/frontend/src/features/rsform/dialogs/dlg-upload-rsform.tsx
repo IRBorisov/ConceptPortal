@@ -47,11 +47,7 @@ export function DlgUploadRSForm() {
       submitText={tx('ui.action.upload')}
       className='w-100 px-6'
     >
-      <FileInput
-        label={tx('ui.dlg.uploadRsform.pickFile')}
-        acceptType={EXTEOR_TRS_FILE}
-        onChange={handleFile}
-      />
+      <FileInput label={tx('ui.dlg.uploadRsform.pickFile')} acceptType={EXTEOR_TRS_FILE} onChange={handleFile} />
       <Checkbox
         label={tx('ui.dlg.uploadRsform.loadMetadata')}
         className='py-2'
@@ -59,8 +55,7 @@ export function DlgUploadRSForm() {
         onChange={value => setLoadMetadata(value)}
       />
       <div className='text-destructive'>
-        <b>{tx('ui.dlg.uploadRsform.attention')}</b>{' '}
-        {tx('ui.dlg.uploadRsform.warningBody')}
+        <b>{tx('semantic.term.attention')}</b> {tx('ui.dlg.uploadRsform.warningBody')}
       </div>
     </ModalForm>
   );

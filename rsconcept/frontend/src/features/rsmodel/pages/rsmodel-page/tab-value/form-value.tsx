@@ -333,7 +333,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
 
       <RefsInput
         id='cst_definition'
-        label={tx('ui.label.textDefinition')}
+        label={tx('semantic.term.definitionTextual')}
         placeholder={
           formalFieldDisabled ? tx('ui.placeholder.definitionMissing') : tx('ui.placeholder.textDefinitionHint')
         }

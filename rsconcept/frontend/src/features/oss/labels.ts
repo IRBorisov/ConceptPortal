@@ -64,7 +64,7 @@ export function describeSubstitutionError(error: RO<SubstitutionErrorDescription
     case SubstitutionErrorType.unequalExpressions:
       return globalTx('labels.oss.substitution.unequalExpressions', { from, to });
     default:
-      return globalTx('labels.oss.fallback.unknownSubstitutionError');
+      return 'UNKNOWN ERROR';
   }
 }
 

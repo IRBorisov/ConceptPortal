@@ -280,7 +280,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
           {field => (
             <RefsInput
               id='cst_definition'
-              label={tx('ui.label.textDefinition')}
+              label={tx('semantic.term.definitionTextual')}
               placeholder={disabled ? '' : tx('ui.placeholder.textDefinitionHint')}
               minHeight='3.75rem'
               maxHeight='8rem'
@@ -325,7 +325,11 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       ) : null}
 
       {!showConvention && (!disabled || isProcessing) ? (
-        <TextButton text={tx('ui.action.addComment')} className='self-start' onClick={() => setForceComment(true)} />
+        <TextButton
+          text={tx('semantic.action.add.comment')}
+          className='self-start'
+          onClick={() => setForceComment(true)}
+        />
       ) : null}
     </form>
   );
