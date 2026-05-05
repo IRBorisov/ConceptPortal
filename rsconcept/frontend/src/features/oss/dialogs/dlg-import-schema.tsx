@@ -76,7 +76,7 @@ export function DlgImportSchema() {
   const clone_source = values.clone_source;
   const { canSubmit, hint } = (() => {
     if (!alias) {
-      return { canSubmit: false, hint: tx('ui.oss.enterAlias') };
+      return { canSubmit: false, hint: tx('tx.validate.alias.empty') };
     }
     if (manager.oss.operations.some(operation => operation.alias === alias)) {
       return { canSubmit: false, hint: tx('labels.hint.schemaAliasTaken') };
@@ -104,7 +104,7 @@ export function DlgImportSchema() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.ossOp.importHeader')}
+      header={tx('tx.lib.input.new.import')}
       submitText={tx('tx.general.create')}
       canSubmit={canSubmit}
       validationHint={hint}
@@ -131,7 +131,7 @@ export function DlgImportSchema() {
       <form.Field name='clone_source'>
         {field => (
           <Checkbox
-            label={tx('ui.label.cloneSchema')}
+            label={tx('tx.lib.input.clone')}
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
           />

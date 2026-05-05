@@ -59,7 +59,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       ) : null}
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip(tx('ui.toolbar.newConstituenta'), 'R')}
+          title={prepareTooltip(tx('tx.lib.cst.new'), 'R')}
           icon={<IconNewItem size='1.25rem' className='icon-green' />}
           onClick={handleCreateCst}
           disabled={isProcessing}
@@ -67,7 +67,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       ) : null}
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip(tx('ui.toolbar.editConstituenta'), 'Alt + V')}
+          title={prepareTooltip(tx('tx.lib.cst.edit'), 'Alt + V')}
           icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
           onClick={handelFastEdit}
           disabled={isProcessing || selectedCst.length !== 1}

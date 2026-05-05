@@ -100,7 +100,7 @@ export function FormEditCst({
             label={tx('tx.lib.term')}
             maxHeight='3.75rem'
             areaClassName='disabled:min-h-9'
-            placeholder={tx('ui.placeholder.termForDefinitions')}
+            placeholder={tx('tx.lib.term.hint')}
             schema={schema}
             value={field.state.value ?? ''}
             initialValue={target.term_raw}
@@ -118,7 +118,7 @@ export function FormEditCst({
             onAdd={onAddAttribution}
             onClear={onClearAttributions}
             onRemove={onRemoveAttribution}
-            placeholder={tx('ui.placeholder.selectConstituents')}
+            placeholder={tx('tx.lib.cst.select.plural.hint')}
           />
         </div>
       ) : null}
@@ -166,7 +166,7 @@ export function FormEditCst({
               id='dlg_edit_cst_definition_raw'
               schema={schema}
               label={tx('tx.lib.definitionTextual')}
-              placeholder={tx('ui.placeholder.textDefinitionHint')}
+              placeholder={tx('tx.lib.definitionTextual.hint')}
               maxHeight='3.75rem'
               value={field.state.value ?? ''}
               initialValue={target.definition_raw}
@@ -199,7 +199,7 @@ export function FormEditCst({
               fitContent
               spellCheck
               label={isBasic ? tx('tx.lib.convention') : tx('tx.lib.comment')}
-              placeholder={isBasic ? tx('ui.placeholder.conventionBasic') : tx('ui.placeholder.developerComment')}
+              placeholder={isBasic ? tx('tx.lib.convention.hint') : tx('tx.lib.comment.hint')}
               areaClassName='max-h-20 disabled:min-h-9'
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}

@@ -85,16 +85,7 @@ export const labelsRu: Record<string, string> = {
   'labels.hint.sourceEmpty': 'Выберите схему источник',
   'labels.hint.fileEmpty': 'Выберите файл для загрузки',
 
-  'labels.tooltip.unsaved': 'Сохраните или отмените изменения',
-  'labels.tooltip.shareItemPublic': 'Поделиться схемой',
-  'labels.tooltip.shareItemPrivate': 'Поделиться можно только \nоткрытой схемой',
-
-  'labels.prompt.promptUnsaved': 'Присутствуют несохраненные изменения. Продолжить без их учета?',
   'labels.prompt.resetSandbox': 'Данное действие приведет к сбросу состояния песочницы. Продолжить?',
-  'labels.prompt.deleteLibraryItem': 'Подтвердите удаление элемента библиотеки',
-  'labels.prompt.deleteBlock': 'Подтвердите удаление блока',
-  'labels.prompt.deleteArgument': 'Подтвердите удаление аргументов операции',
-  'labels.prompt.deleteTemplate': 'Подтвердите удаление шаблона',
   'labels.prompt.deleteOSS':
     'Внимание!!\nУдаление операционной схемы приведет к удалению всех операций и собственных концептуальных схем.\nДанное действие нельзя отменить.\nВы уверены, что хотите удалить данную ОСС?',
   'labels.prompt.generateWordforms':

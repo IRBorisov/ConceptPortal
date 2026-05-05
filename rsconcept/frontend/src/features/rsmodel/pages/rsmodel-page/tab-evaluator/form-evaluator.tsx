@@ -160,22 +160,22 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
       {dialogValue != null ? (
         <div className='flex items-center justify-center gap-6 text-sm pl-6 flex-wrap'>
           <TextButton
-            text={tx('ui.eval.viewValue')}
-            title={canOpenValueDialog ? '' : tx('ui.eval.viewStructuredUnavailable')}
+            text={tx('tx.rslang.value.view')}
+            title={canOpenValueDialog ? '' : tx('tx.rslang.value.view.wrongType')}
             disabled={!canOpenValueDialog}
             onClick={handleViewValue}
             className='text-sm'
           />
           <div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
             <TextButton
-              text={tx('ui.action.exportShort')}
+              text={tx('tx.general.export')}
               title={tx('tx.rslang.value.export')}
               hideTitle={isExportOpen}
               onClick={toggleExport}
             />
             <Dropdown isOpen={isExportOpen} margin='mt-1'>
-              <DropdownButton text={tx('ui.eval.copyToClipboard')} onClick={handleClipboardExport} />
-              <DropdownButton text={tx('ui.eval.saveAsJson')} onClick={handleJSONExport} />
+              <DropdownButton text={tx('tx.general.copy.toClipboard')} onClick={handleClipboardExport} />
+              <DropdownButton text={tx('tx.general.download.json')} onClick={handleJSONExport} />
             </Dropdown>
           </div>
         </div>

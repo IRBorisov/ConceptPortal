@@ -80,7 +80,7 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
       {showRenameButton ? (
         <TextButton
           text={tx('tx.general.rename')}
-          title={isModified ? tx('labels.tooltip.unsaved') : tx('ui.hint.renameCst')}
+          title={isModified ? tx('tx.general.changes.unsaved.hint') : tx('tx.lib.cst.rename')}
           onClick={promptRename}
           disabled={isModified}
           className='text-sm'
@@ -89,8 +89,8 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
 
       {showStructureButton ? (
         <TextButton
-          text={tx('ui.action.expandStructure')}
-          title={tx('ui.hint.conceptStructure')}
+          text={tx('tx.lib.concept.expandStructure')}
+          title={tx('tx.lib.concept.expandStructure.hint')}
           onClick={handleStructurePlanner}
           className='text-sm'
         />

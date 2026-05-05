@@ -57,7 +57,7 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
         disabled={isProcessing || !activeCst || !isModified}
       />
       <MiniButton
-        title={tx('ui.hint.resetUnsavedChanges')}
+        title={tx('tx.general.changes.reset')}
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={onReset}
         disabled={isProcessing || !activeCst || !isModified}
@@ -65,7 +65,7 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
 
       <MiniButton
         title={tx('tx.lib.model.recalculate')}
-        aria-label={tx('ui.aria.recalculateAll')}
+        aria-label={tx('tx.lib.model.recalculate.hint')}
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
         onClick={() => engine.recalculateAll()}
       />
@@ -91,7 +91,9 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
             disabled={formDisabled}
           />
           <MiniButton
-            title={isModified ? tx('labels.tooltip.unsaved') : prepareTooltip(tx('tx.lib.cst.clone'), 'Alt + V')}
+            title={
+              isModified ? tx('tx.general.changes.unsaved.hint') : prepareTooltip(tx('tx.lib.cst.clone'), 'Alt + V')
+            }
             aria-label={tx('tx.lib.cst.clone')}
             icon={<IconClone size='1.25rem' className='icon-green' />}
             onClick={() => void cloneCst()}

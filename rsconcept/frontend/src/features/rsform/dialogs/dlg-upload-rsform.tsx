@@ -40,14 +40,14 @@ export function DlgUploadRSForm() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.uploadRsform.header')}
+      header={tx('tx.lib.schema')}
       canSubmit={!!file}
       validationHint={!!file ? '' : tx('labels.hint.fileEmpty')}
       onSubmit={handleSubmit}
-      submitText={tx('ui.action.upload')}
+      submitText={tx('tx.general.load')}
       className='w-100 px-6'
     >
-      <FileInput label={tx('ui.dlg.uploadRsform.pickFile')} acceptType={EXTEOR_TRS_FILE} onChange={handleFile} />
+      <FileInput label={tx('tx.general.file.choose')} acceptType={EXTEOR_TRS_FILE} onChange={handleFile} />
       <Checkbox
         label={tx('ui.dlg.uploadRsform.loadMetadata')}
         className='py-2'

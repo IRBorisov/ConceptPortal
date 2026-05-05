@@ -312,7 +312,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
           <TextButton
             text={tx('tx.lang.wordform.plural.editing')}
             className='z-pop text-sm absolute top-0 left-19'
-            title={isModified ? tx('labels.tooltip.unsaved') : tx('tx.lang.wordform.plural.editing.hint')}
+            title={isModified ? tx('tx.general.changes.unsaved.hint') : tx('tx.lang.wordform.plural.editing.hint')}
             onClick={openTermEditor}
             disabled={isModified}
           />
@@ -334,9 +334,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       <RefsInput
         id='cst_definition'
         label={tx('tx.lib.definitionTextual')}
-        placeholder={
-          formalFieldDisabled ? tx('ui.placeholder.definitionMissing') : tx('ui.placeholder.textDefinitionHint')
-        }
+        placeholder={formalFieldDisabled ? tx('ui.placeholder.definitionMissing') : tx('tx.lib.definitionTextual.hint')}
         maxHeight='6rem'
         schema={schema}
         onOpenEdit={onOpenEdit}

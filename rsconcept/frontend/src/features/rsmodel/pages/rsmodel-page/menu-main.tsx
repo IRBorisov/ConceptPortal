@@ -158,25 +158,20 @@ export function MenuMain() {
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
           text={tx('tx.lib.model.recalculate')}
-          aria-label={tx('ui.aria.recalculateAll')}
+          aria-label={tx('tx.lib.model.recalculate.hint')}
           icon={<IconCalculateAll size='1rem' className='icon-green' />}
           onClick={handleRecalculate}
         />
         <DropdownButton
           text={tx('tx.general.share')}
-          title={tx(
-            model.access_policy === AccessPolicy.PUBLIC
-              ? 'labels.tooltip.shareItemPublic'
-              : 'labels.tooltip.shareItemPrivate'
-          )}
           aria-label={tx('ui.aria.copyLinkToClipboard')}
           icon={<IconShare size='1rem' className='icon-primary' />}
           onClick={handleShare}
           disabled={model.access_policy !== AccessPolicy.PUBLIC}
         />
         <DropdownButton
-          text={tx('ui.action.qrCode')}
-          title={tx('ui.hint.qrSchemaPage')}
+          text={tx('tx.general.qrCode')}
+          title={tx('tx.general.qrCode.hint')}
           icon={<IconQR size='1rem' className='icon-primary' />}
           onClick={handleShowQR}
         />

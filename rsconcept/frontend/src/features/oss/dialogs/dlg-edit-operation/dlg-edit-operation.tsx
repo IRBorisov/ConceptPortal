@@ -120,7 +120,7 @@ export function DlgEditOperation() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.editOperation.header')}
+      header={tx('tx.lib.operation.edit')}
       submitText={tx('tx.general.save')}
       canSubmit={canSubmit}
       validationHint={canSubmit ? '' : tx('labels.hint.formInvalid')}

@@ -177,17 +177,15 @@ export function ToolbarSchema({
         />
         <Dropdown isOpen={isOpen} margin='mt-0.5'>
           <DropdownButton
-            text={tx('ui.rsform.menu.restoreOrder')}
-            title={tx('ui.rsform.menu.restoreOrderTitle')}
-            aria-label={tx('ui.rsform.menu.restoreOrderAria')}
+            text={tx('tx.lib.schema.order.restore')}
+            title={tx('tx.lib.schema.order.restore.hint')}
             icon={<IconSortList size='1rem' className='icon-primary' />}
             onClick={handleRestoreOrder}
             disabled={!isMutable || isProcessing}
           />
           <DropdownButton
-            text={tx('ui.rsform.menu.ordinalNames')}
-            title={tx('ui.rsform.menu.ordinalNamesTitle')}
-            aria-label={tx('ui.rsform.menu.ordinalNamesAria')}
+            text={tx('tx.lib.schema.order.rename')}
+            title={tx('tx.lib.schema.order.rename.hint')}
             icon={<IconGenerateNames size='1rem' className='icon-primary' />}
             onClick={handleReindex}
             disabled={!isMutable || isProcessing}
@@ -201,7 +199,7 @@ export function ToolbarSchema({
         </Dropdown>
       </div>
       <MiniButton
-        title={tx('ui.toolbar.editConstituenta')}
+        title={tx('tx.lib.cst.edit')}
         icon={<IconEdit size='1rem' className='icon-primary' />}
         onClick={onEditActive}
         disabled={!isMutable || isProcessing || !activeCst}

@@ -173,7 +173,7 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
         </div>
 
         <TabLabel label={tx('tx.lib.item.passport')} />
-        <TabLabel label={tx('ui.tabs.list')} />
+        <TabLabel label={tx('tx.general.list')} />
         <TabLabel label={tx('tx.lib.concept')} />
         <TabLabel label={tx('ui.tabs.graph')} />
         <TabLabel label={tx('ui.tabs.data')} />

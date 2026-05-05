@@ -51,7 +51,7 @@ export function DlgDeleteReplica() {
   return (
     <ModalForm
       overflowVisible
-      header={tx('ui.oss.deleteReplica.header')}
+      header={tx('tx.lib.replica.delete')}
       submitText={tx('tx.general.delete')}
       onSubmit={event => {
         event.preventDefault();

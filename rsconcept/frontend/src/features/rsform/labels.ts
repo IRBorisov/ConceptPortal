@@ -110,45 +110,45 @@ const cstTypeShortcutKeyRecord: Record<CstType, string> = {
 };
 
 const TOKEN_TITLE_LID: Partial<Record<TokenID, string>> = {
-  [TokenID.BOOLEAN]: 'labels.rsform.token.boolean',
-  [TokenID.DECART]: 'labels.rsform.token.decart',
-  [TokenID.PUNCTUATION_PL]: 'labels.rsform.token.punctuationPl',
-  [TokenID.PUNCTUATION_SL]: 'labels.rsform.token.punctuationSl',
-  [TokenID.QUANTOR_UNIVERSAL]: 'labels.rsform.token.quantorUniversal',
-  [TokenID.QUANTOR_EXISTS]: 'labels.rsform.token.quantorExists',
-  [TokenID.LOGIC_NOT]: 'labels.rsform.token.logicNot',
-  [TokenID.LOGIC_AND]: 'labels.rsform.token.logicAnd',
-  [TokenID.LOGIC_OR]: 'labels.rsform.token.logicOr',
-  [TokenID.LOGIC_IMPLICATION]: 'labels.rsform.token.logicImplication',
-  [TokenID.LOGIC_EQUIVALENT]: 'labels.rsform.token.logicEquivalent',
-  [TokenID.LIT_EMPTYSET]: 'labels.rsform.token.litEmptyset',
-  [TokenID.LIT_WHOLE_NUMBERS]: 'labels.rsform.token.litWholeNumbers',
-  [TokenID.EQUAL]: 'labels.rsform.token.equal',
-  [TokenID.MULTIPLY]: 'labels.rsform.token.multiply',
-  [TokenID.NOTEQUAL]: 'labels.rsform.token.notequal',
-  [TokenID.GREATER_OR_EQ]: 'labels.rsform.token.greaterOrEq',
-  [TokenID.LESSER_OR_EQ]: 'labels.rsform.token.lesserOrEq',
-  [TokenID.SET_IN]: 'labels.rsform.token.setIn',
-  [TokenID.SET_NOT_IN]: 'labels.rsform.token.setNotIn',
-  [TokenID.SUBSET_OR_EQ]: 'labels.rsform.token.subsetOrEq',
-  [TokenID.SUBSET]: 'labels.rsform.token.subset',
-  [TokenID.NOT_SUBSET]: 'labels.rsform.token.notSubset',
-  [TokenID.SET_INTERSECTION]: 'labels.rsform.token.setIntersection',
-  [TokenID.SET_UNION]: 'labels.rsform.token.setUnion',
-  [TokenID.SET_MINUS]: 'labels.rsform.token.setMinus',
-  [TokenID.SET_SYMMETRIC_MINUS]: 'labels.rsform.token.setSymmetricMinus',
-  [TokenID.NT_DECLARATIVE_EXPR]: 'labels.rsform.token.ntDeclarativeExpr',
-  [TokenID.NT_IMPERATIVE_EXPR]: 'labels.rsform.token.ntImperativeExpr',
-  [TokenID.NT_RECURSIVE_FULL]: 'labels.rsform.token.ntRecursiveFull',
-  [TokenID.BIGPR]: 'labels.rsform.token.bigpr',
-  [TokenID.SMALLPR]: 'labels.rsform.token.smallpr',
-  [TokenID.FILTER]: 'labels.rsform.token.filter',
-  [TokenID.REDUCE]: 'labels.rsform.token.reduce',
-  [TokenID.CARD]: 'labels.rsform.token.card',
-  [TokenID.BOOL]: 'labels.rsform.token.bool',
-  [TokenID.DEBOOL]: 'labels.rsform.token.debool',
-  [TokenID.ASSIGN]: 'labels.rsform.token.assign',
-  [TokenID.ITERATE]: 'labels.rsform.token.iterate'
+  [TokenID.BOOLEAN]: 'tx.rslang.token.boolean',
+  [TokenID.DECART]: 'tx.rslang.token.decart',
+  [TokenID.PUNCTUATION_PL]: 'tx.rslang.token.punctuationPl',
+  [TokenID.PUNCTUATION_SL]: 'tx.rslang.token.punctuationSl',
+  [TokenID.QUANTOR_UNIVERSAL]: 'tx.rslang.token.quantorUniversal',
+  [TokenID.QUANTOR_EXISTS]: 'tx.rslang.token.quantorExists',
+  [TokenID.LOGIC_NOT]: 'tx.rslang.token.logicNot',
+  [TokenID.LOGIC_AND]: 'tx.rslang.token.logicAnd',
+  [TokenID.LOGIC_OR]: 'tx.rslang.token.logicOr',
+  [TokenID.LOGIC_IMPLICATION]: 'tx.rslang.token.logicImplication',
+  [TokenID.LOGIC_EQUIVALENT]: 'tx.rslang.token.logicEquivalent',
+  [TokenID.LIT_EMPTYSET]: 'tx.rslang.token.litEmptyset',
+  [TokenID.LIT_WHOLE_NUMBERS]: 'tx.rslang.token.litWholeNumbers',
+  [TokenID.EQUAL]: 'tx.rslang.token.equal',
+  [TokenID.MULTIPLY]: 'tx.rslang.token.multiply',
+  [TokenID.NOTEQUAL]: 'tx.rslang.token.notequal',
+  [TokenID.GREATER_OR_EQ]: 'tx.rslang.token.greaterOrEq',
+  [TokenID.LESSER_OR_EQ]: 'tx.rslang.token.lesserOrEq',
+  [TokenID.SET_IN]: 'tx.rslang.token.setIn',
+  [TokenID.SET_NOT_IN]: 'tx.rslang.token.setNotIn',
+  [TokenID.SUBSET_OR_EQ]: 'tx.rslang.token.subsetOrEq',
+  [TokenID.SUBSET]: 'tx.rslang.token.subset',
+  [TokenID.NOT_SUBSET]: 'tx.rslang.token.notSubset',
+  [TokenID.SET_INTERSECTION]: 'tx.rslang.token.setIntersection',
+  [TokenID.SET_UNION]: 'tx.rslang.token.setUnion',
+  [TokenID.SET_MINUS]: 'tx.rslang.token.setMinus',
+  [TokenID.SET_SYMMETRIC_MINUS]: 'tx.rslang.token.setSymmetricMinus',
+  [TokenID.NT_DECLARATIVE_EXPR]: 'tx.rslang.token.ntDeclarativeExpr',
+  [TokenID.NT_IMPERATIVE_EXPR]: 'tx.rslang.token.ntImperativeExpr',
+  [TokenID.NT_RECURSIVE_FULL]: 'tx.rslang.token.ntRecursiveFull',
+  [TokenID.BIGPR]: 'tx.rslang.token.bigpr',
+  [TokenID.SMALLPR]: 'tx.rslang.token.smallpr',
+  [TokenID.FILTER]: 'tx.rslang.token.filter',
+  [TokenID.REDUCE]: 'tx.rslang.token.reduce',
+  [TokenID.CARD]: 'tx.rslang.cardinality',
+  [TokenID.BOOL]: 'tx.rslang.token.bool',
+  [TokenID.DEBOOL]: 'tx.rslang.token.debool',
+  [TokenID.ASSIGN]: 'tx.rslang.token.assign',
+  [TokenID.ITERATE]: 'tx.rslang.token.iterate'
 };
 
 const TOKEN_HOTKEY: Partial<Record<TokenID, string>> = {
@@ -218,10 +218,10 @@ export function describeConstituenta(cst: RO<Constituenta>): string {
 /** Generates description for term of a given {@link Constituenta}. */
 export function describeConstituentaTerm(cst: RO<Constituenta> | null): string {
   if (!cst) {
-    return globalTx('labels.rsform.missing.constituent');
+    return '!MISSING!';
   }
   if (!cst.term_resolved) {
-    return globalTx('labels.rsform.missing.termEmpty');
+    return '!EMPTY!';
   } else {
     return cst.term_resolved;
   }
@@ -255,7 +255,7 @@ export function getRSDefinitionPlaceholder(type: CstType): string {
 export function describeToken(id: TokenID): string {
   const titleId = TOKEN_TITLE_LID[id];
   if (!titleId) {
-    return globalTx('labels.rsform.fallback.noTokenDescription', { id: String(id) });
+    return 'no description: ' + String(id);
   }
   const title = globalTx(titleId);
   const hotkey = TOKEN_HOTKEY[id];

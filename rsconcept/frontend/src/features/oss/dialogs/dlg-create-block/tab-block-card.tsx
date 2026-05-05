@@ -36,8 +36,8 @@ export function TabBlockCard({ oss, blocks, fields }: TabBlockCardProps) {
         {field => (
           <TextInput
             id='operation_title'
-            aria-label={tx('ui.oss.newBlockTitle')}
-            placeholder={tx('ui.oss.newBlockTitle')}
+            aria-label={tx('tx.lib.title')}
+            placeholder={tx('tx.lib.title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}

@@ -202,19 +202,14 @@ export function MenuMain() {
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
           text={tx('tx.general.share')}
-          title={tx(
-            schema.access_policy === AccessPolicy.PUBLIC
-              ? 'labels.tooltip.shareItemPublic'
-              : 'labels.tooltip.shareItemPrivate'
-          )}
           aria-label={tx('ui.aria.copyLinkToClipboard')}
           icon={<IconShare size='1rem' className='icon-primary' />}
           onClick={handleShare}
           disabled={schema.access_policy !== AccessPolicy.PUBLIC}
         />
         <DropdownButton
-          text={tx('ui.action.qrCode')}
-          title={tx('ui.hint.qrSchemaPage')}
+          text={tx('tx.general.qrCode')}
+          title={tx('tx.general.qrCode.hint')}
           icon={<IconQR size='1rem' className='icon-primary' />}
           onClick={handleShowQR}
         />
@@ -240,18 +235,18 @@ export function MenuMain() {
           onClick={() => void handleTransferToSandbox()}
         />
         <DropdownButton
-          text={tx('ui.action.exportPdf')}
+          text={tx('tx.general.download.pdf')}
           icon={<IconPDF size='1rem' className='icon-primary' />}
           onClick={() => void handleSavePDF()}
         />
         <DropdownButton
-          text={tx('ui.action.exportToExteor')}
+          text={tx('tx.general.download.toExteor')}
           icon={<IconDownload size='1rem' className='icon-primary' />}
           onClick={handleDownload}
         />
         {isContentEditable ? (
           <DropdownButton
-            text={tx('ui.action.importFromExteor')}
+            text={tx('tx.general.load.fromExteor')}
             icon={<IconUpload size='1rem' className='icon-red' />}
             disabled={isProcessing || hasInheritance}
             onClick={handleUpload}

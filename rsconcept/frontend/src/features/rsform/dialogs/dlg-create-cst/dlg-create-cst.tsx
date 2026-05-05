@@ -86,7 +86,7 @@ export function DlgCreateCst() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.createCst.header')}
+      header={tx('tx.lib.cst.create')}
       canSubmit={canSubmit}
       onCancel={onCancel}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}

@@ -72,8 +72,8 @@ export function MenuMain() {
           onClick={handleShare}
         />
         <DropdownButton
-          text={tx('ui.action.qrCode')}
-          title={tx('ui.hint.qrSchemaPage')}
+          text={tx('tx.general.qrCode')}
+          title={tx('tx.general.qrCode.hint')}
           icon={<IconQR size='1rem' className='icon-primary' />}
           onClick={handleShowQR}
         />

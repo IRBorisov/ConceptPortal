@@ -75,14 +75,14 @@ export function MenuEdit() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('ui.rsform.menu.restoreOrder')}
-          title={tx('ui.rsform.menu.restoreOrderTitle')}
+          text={tx('tx.lib.schema.order.restore')}
+          title={tx('tx.lib.schema.order.restore.hint')}
           icon={<IconSortList size='1rem' className='icon-primary' />}
           onClick={handleRestoreOrder}
         />
         <DropdownButton
-          text={tx('ui.rsform.menu.ordinalNames')}
-          title={tx('ui.rsform.menu.ordinalNamesTitle')}
+          text={tx('tx.lib.schema.order.rename')}
+          title={tx('tx.lib.schema.order.rename.hint')}
           icon={<IconGenerateNames size='1rem' className='icon-primary' />}
           onClick={handleResetAliases}
         />

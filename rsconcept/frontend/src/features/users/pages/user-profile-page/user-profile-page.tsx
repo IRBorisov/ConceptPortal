@@ -12,7 +12,7 @@ export function UserProfilePage() {
   return (
     <RequireAuth>
       <div className='flex flex-col py-2 mx-auto w-fit'>
-        <h1 className='mb-2 select-none'>{tx('ui.users.profile.title')}</h1>
+        <h1 className='mb-2 select-none'>{tx('tx.general.user.profile')}</h1>
         <div className='flex py-2'>
           <EditorProfile />
           <EditorPassword />

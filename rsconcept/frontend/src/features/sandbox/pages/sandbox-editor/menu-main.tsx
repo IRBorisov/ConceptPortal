@@ -152,18 +152,18 @@ export function MenuMain() {
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
           text={tx('tx.lib.model.recalculate')}
-          aria-label={tx('ui.aria.recalculateAll')}
+          aria-label={tx('tx.lib.model.recalculate.hint')}
           icon={<IconCalculateAll size='1rem' className='icon-green' />}
           onClick={handleRecalculate}
         />
         <DropdownButton
-          text={tx('ui.sandbox.saveToFile')}
+          text={tx('tx.general.download.file')}
           title={tx('ui.sandbox.saveToFileHint')}
           icon={<IconDownload size='1rem' className='icon-primary' />}
           onClick={handleExport}
         />
         <DropdownButton
-          text={tx('ui.sandbox.loadFromFile')}
+          text={tx('tx.general.load.fromFile')}
           title={tx('ui.sandbox.loadFromFileHint')}
           icon={<IconUpload size='1rem' className='icon-primary' />}
           onClick={handleImportClick}

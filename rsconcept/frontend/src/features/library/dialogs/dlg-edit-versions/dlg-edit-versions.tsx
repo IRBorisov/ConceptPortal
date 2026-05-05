@@ -94,7 +94,7 @@ export function DlgEditVersions() {
   }
 
   return (
-    <ModalView header={tx('ui.dlg.editVersions.header')} className='flex flex-col w-160 px-6 gap-3 pb-3'>
+    <ModalView header={tx('tx.lib.version.editList')} className='flex flex-col w-160 px-6 gap-3 pb-3'>
       <TableVersions
         processing={isProcessing}
         items={schema.versions.slice().reverse()}
@@ -134,7 +134,7 @@ export function DlgEditVersions() {
             disabled={isDefaultValue || !isValid || isProcessing}
           />
           <MiniButton
-            title={tx('ui.hint.resetUnsavedChanges')}
+            title={tx('tx.general.changes.reset')}
             onClick={handleResetClick}
             icon={<IconReset size='1.25rem' className='icon-primary' />}
             disabled={isDefaultValue}

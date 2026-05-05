@@ -231,7 +231,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
     <div className='flex items-center gap-6 text-sm'>
       {showValueButton ? (
         <TextButton
-          text={!cstInferrable && isMutable ? tx('tx.rslang.value.edit') : tx('ui.eval.viewValue')}
+          text={!cstInferrable && isMutable ? tx('tx.rslang.value.edit') : tx('tx.rslang.value.view')}
           title={tx('tx.rslang.value.edit.hint')}
           onClick={handleValueDialog}
         />
@@ -249,14 +249,14 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       {showExportMenu ? (
         <div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
           <TextButton
-            text={tx('ui.action.exportShort')}
+            text={tx('tx.general.export')}
             title={tx('tx.rslang.value.export')}
             hideTitle={isExportOpen}
             onClick={toggleExport}
           />
           <Dropdown isOpen={isExportOpen} margin='mt-1'>
-            <DropdownButton text={tx('ui.eval.copyToClipboard')} onClick={handleClipboardExport} />
-            <DropdownButton text={tx('ui.eval.saveAsJson')} onClick={handleJSONExport} />
+            <DropdownButton text={tx('tx.general.copy.toClipboard')} onClick={handleClipboardExport} />
+            <DropdownButton text={tx('tx.general.download.json')} onClick={handleJSONExport} />
           </Dropdown>
         </div>
       ) : null}
@@ -264,7 +264,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       {showImportMenu ? (
         <div ref={importMenuRef} onBlur={handleImportBlur} className='relative'>
           <TextButton
-            text={tx('ui.action.importShort')}
+            text={tx('tx.general.import')}
             title={tx('tx.rslang.value.import')}
             hideTitle={isImportOpen}
             onClick={toggleImport}

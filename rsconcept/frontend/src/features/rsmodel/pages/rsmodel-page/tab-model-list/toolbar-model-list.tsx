@@ -62,7 +62,7 @@ export function ToolbarModelList({ className }: ToolbarModelListProps) {
       />
       <MiniButton
         title={prepareTooltip(tx('tx.lib.model.recalculate'), 'Alt + Q')}
-        aria-label={tx('ui.aria.recalculateAll')}
+        aria-label={tx('tx.lib.model.recalculate.hint')}
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
         onClick={() => engine.recalculateAll()}
       />
@@ -89,7 +89,7 @@ export function ToolbarModelList({ className }: ToolbarModelListProps) {
       />
       <div ref={menuRef} onBlur={handleMenuBlur} className='relative hidden xs:block'>
         <MiniButton
-          title={tx('ui.toolbar.addEmptyConstituenta')}
+          title={tx('tx.lib.cst.create.empty')}
           hideTitle={isMenuOpen}
           icon={<IconOpenList size='1.25rem' className='icon-green' />}
           onClick={toggleMenu}
@@ -108,8 +108,7 @@ export function ToolbarModelList({ className }: ToolbarModelListProps) {
         </Dropdown>
       </div>
       <MiniButton
-        title={prepareTooltip(tx('ui.toolbar.addNewConstituenta'), 'Alt + `')}
-        aria-label={tx('ui.aria.addNewConstituenta')}
+        title={prepareTooltip(tx('tx.lib.cst.new'), 'Alt + `')}
         icon={<IconNewItem size='1.25rem' className='icon-green' />}
         onClick={() => void promptCreateCst()}
         className='hidden xs:block'

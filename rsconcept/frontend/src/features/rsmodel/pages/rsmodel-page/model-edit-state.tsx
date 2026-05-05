@@ -91,7 +91,7 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
   );
 
   function deleteModel() {
-    if (!window.confirm(tx('labels.prompt.deleteLibraryItem'))) {
+    if (!window.confirm(tx('tx.prompt.confirm.delete') + ' ' + model.title)) {
       return;
     }
     void deleteItem({

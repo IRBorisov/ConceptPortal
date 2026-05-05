@@ -87,8 +87,8 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         {field => (
           <TextInput
             id='sandbox_model_title'
-            aria-label={tx('ui.field.rsmodelTitle')}
-            placeholder={tx('ui.field.rsmodelTitle')}
+            aria-label={tx('tx.lib.title')}
+            placeholder={tx('tx.lib.title')}
             className='mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}

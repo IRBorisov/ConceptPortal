@@ -10,10 +10,10 @@ const ROLE_LABEL_LID: Record<UserRole, string> = {
 };
 
 const ROLE_DESC_LID: Record<UserRole, string> = {
-  [UserRole.READER]: 'labels.users.roleDesc.reader',
-  [UserRole.EDITOR]: 'labels.users.roleDesc.editor',
-  [UserRole.OWNER]: 'labels.users.roleDesc.owner',
-  [UserRole.ADMIN]: 'labels.users.roleDesc.admin'
+  [UserRole.READER]: 'tx.general.reader.hint',
+  [UserRole.EDITOR]: 'tx.general.editor.hint',
+  [UserRole.OWNER]: 'tx.general.owner.hint',
+  [UserRole.ADMIN]: 'tx.general.admin.hint'
 };
 
 /** Retrieves label for {@link UserRole}. */

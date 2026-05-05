@@ -47,8 +47,8 @@ export function DlgChangeLocation() {
   return (
     <ModalForm
       overflowVisible
-      header={tx('ui.dlg.changeLocation.header')}
-      submitText={tx('ui.action.move')}
+      header={tx('tx.lib.location.edit')}
+      submitText={tx('tx.general.move')}
       validationHint={isValid ? '' : tx('ui.dlg.changeLocation.invalidHint', { maxLen: limits.len_location })}
       canSubmit={isValid && !isDefaultValue}
       onSubmit={event => {

@@ -68,7 +68,7 @@ export function DlgCreateSchema() {
   const alias = values.item_data.alias;
   const { canSubmit, hint } = (() => {
     if (!alias) {
-      return { canSubmit: false, hint: tx('ui.oss.enterAlias') };
+      return { canSubmit: false, hint: tx('tx.validate.alias.empty') };
     }
     if (manager.oss.operations.some(operation => operation.alias === alias)) {
       return { canSubmit: false, hint: tx('labels.hint.schemaAliasTaken') };
@@ -81,7 +81,7 @@ export function DlgCreateSchema() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.ossOp.newSchemaHeader')}
+      header={tx('tx.lib.input.new.schema')}
       submitText={tx('tx.general.create')}
       canSubmit={canSubmit}
       validationHint={hint}
@@ -97,8 +97,8 @@ export function DlgCreateSchema() {
         {field => (
           <TextInput
             id='operation_title'
-            aria-label={tx('ui.oss.newSchemaTitle')}
-            placeholder={tx('ui.oss.newSchemaTitle')}
+            aria-label={tx('tx.lib.title')}
+            placeholder={tx('tx.lib.title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -114,7 +114,7 @@ export function DlgCreateSchema() {
                 id='operation_alias'
                 label={tx('tx.lib.alias')}
                 className='w-80'
-                placeholder={tx('ui.oss.enterAlias')}
+                placeholder={tx('tx.validate.alias.empty')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}

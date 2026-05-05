@@ -40,8 +40,8 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
         {field => (
           <TextInput
             id='operation_title'
-            aria-label={tx('ui.oss.newSchemaTitle')}
-            placeholder={tx('ui.oss.newSchemaTitle')}
+            aria-label={tx('tx.lib.title')}
+            placeholder={tx('tx.lib.title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -56,7 +56,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
               <TextInput
                 id='operation_alias'
                 label={tx('tx.lib.alias')}
-                placeholder={tx('ui.oss.enterAlias')}
+                placeholder={tx('tx.validate.alias.empty')}
                 className='w-80'
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}

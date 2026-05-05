@@ -53,13 +53,7 @@ export const uiExtraFr: Record<string, string> = {
   'ui.stats.secondary.functions': 'Fonctions',
   'ui.stats.title.termAndPredicateFns': 'Nombre de fonctions terme\net fonctions prédicat',
 
-  'ui.toolbar.newConstituenta': 'Nouvelle constituante',
-  'ui.toolbar.editConstituenta': 'Modifier la constituante',
-
   'ui.cst.crucialToggleAria': 'Basculer le statut de constituante clé',
-  'ui.toolbar.addEmptyConstituenta': 'Ajouter une constituante vide',
-  'ui.toolbar.addNewConstituenta': 'Ajouter une nouvelle constituante…',
-  'ui.aria.addNewConstituenta': 'Ajouter une nouvelle constituante',
 
   'ui.graphSelection.extendFromSelected': 'Étendre à partir de la sélection…',
   'ui.graphSelection.suppliers': 'Fournisseurs',
@@ -93,11 +87,9 @@ export const uiExtraFr: Record<string, string> = {
 
   'ui.structurePlanner.termPlaceholder': 'Terme non défini',
   'ui.structurePlanner.submitUpdate': 'Mettre à jour le terme',
-  'ui.structurePlanner.resetTerm': 'Réinitialiser le terme',
 
   'ui.valueInput.cardinalityExpressionAria': 'Cardinalité / valeur de l’expression',
   'ui.valueInput.expressionValueTooltip': 'Valeur de l’expression',
-  'ui.valueInput.cardinalityPrefix': 'Cardinalité:',
   'ui.valueInput.shortFormAria': 'Forme abrégée de l’expression',
   'ui.valueInput.shortFormTooltip': 'Abréviation de l’expression',
   'ui.valueInput.charCountAria': 'Nombre de caractères',
@@ -113,7 +105,6 @@ export const uiExtraFr: Record<string, string> = {
 
   'ui.iconsPage.total': 'Nombre d’icônes: {count}',
 
-  'ui.tabs.list': 'Liste',
   'ui.tabs.graph': 'Graphe',
   'ui.tabs.data': 'Données',
   'ui.tabs.evaluation': 'Calcul',
@@ -125,23 +116,6 @@ export const uiExtraFr: Record<string, string> = {
 
   'ui.rsform.menu.archiveNoEdit': 'Archive: modification interdite\nAller à la version actuelle',
   'ui.rsform.menu.templatesTitle': 'Créer une constituante à partir d’un modèle',
-  'ui.rsform.menu.embedding': 'Intégration',
-  'ui.rsform.menu.embeddingTitle': 'Importer un ensemble de\nconstituantes d’un autre schéma',
-  'ui.rsform.menu.embeddingAria': 'Importer un ensemble de constituantes d’un autre schéma',
-  'ui.rsform.menu.restoreOrder': 'Réordonner la liste',
-  'ui.rsform.menu.restoreOrderTitle':
-    'Réordonner la liste selon\nla logique des types et des liens entre constituantes',
-  'ui.rsform.menu.restoreOrderAria': 'Réordonner la liste selon la logique des types et des liens entre constituantes',
-  'ui.rsform.menu.ordinalNames': 'Noms ordinaux',
-  'ui.rsform.menu.ordinalNamesTitle': 'Attribuer des noms ordinaux\net mettre à jour les expressions',
-  'ui.rsform.menu.ordinalNamesAria': 'Attribuer des noms ordinaux et mettre à jour les expressions',
-  'ui.rsform.menu.structureExpansion': 'Dépliage de structure',
-  'ui.rsform.menu.structureExpansionTitle':
-    'Générer des notions internes\nselon la structure de typage\nde la constituante sélectionnée',
-  'ui.rsform.menu.structureExpansionAria':
-    'Générer des notions internes selon la structure de typage de la constituante sélectionnée',
-  'ui.rsform.menu.substitutionTitle': 'Remplacer les occurrences\nd’une constituante par une autre',
-  'ui.rsform.menu.substitutionAria': 'Remplacer les occurrences d’une constituante par une autre',
 
   'ui.ast.extract.extract': 'Isoler',
   'ui.ast.extract.title': 'Extraire la sous-expression sélectionnée vers une nouvelle constituante',
@@ -197,7 +171,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.oss.settings.edgeStraight': 'Droits',
   'ui.oss.settings.edgeBezier': 'Bezier',
 
-  'ui.oss.deleteReplica.header': 'Supprimer la réplique',
   'ui.oss.deleteReplica.relinkArgs': 'Réacheminer les liens vers l’original',
   'ui.oss.deleteReplica.relinkArgsHint': 'Les liens des arguments seront redirigés vers l’original de la réplique',
   'ui.oss.keepInherited': 'Conserver les constituantes héritées',
@@ -235,8 +208,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.pick.schema.emptyHint': 'Modifiez les paramètres du filtre',
 
   'ui.oss.pickContents.comboPlaceholder': 'Choisir une opération ou un bloc',
-
-  'ui.versions.deleteVersionTitle': 'Supprimer la version',
 
   'ui.profile.field.usernameReadonlyTitle': 'L’identifiant ne peut pas être modifié',
   'ui.profile.submit.saveData': 'Enregistrer les données',
@@ -285,8 +256,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.pagination.rowsPerPageAria': 'Choisir le nombre de lignes par page',
   'ui.pagination.perPageSuffix': 'par page',
 
-  'ui.dataTable.noData': 'Aucune donnée',
-
   'ui.promptTemplates.menu.newTemplate': 'Nouveau modèle',
 
   'ui.aiPrompt.dlg.header': 'Générateur de requêtes LLM',
@@ -322,7 +291,7 @@ export const uiExtraFr: Record<string, string> = {
   'ui.rsmodel.dlg.viewBinding.header': 'Voir la source de base',
 
   'ui.rsform.termGraph.openSchemaTitle': 'Ouvrir le schéma conceptuel',
-  'ui.rsform.dlg.deleteCst.header': 'Suppression de constituantes',
+  'ui.rsform.refsTooltip.toOpen': 'pour ouvrir',
   'ui.rsform.dlg.deleteCst.submitWithDeps': 'Supprimer avec les dépendantes',
   'ui.rsform.dlg.deleteCst.selectedTitle': 'Sélectionnées pour suppression',
   'ui.rsform.dlg.deleteCst.dependentsTitle': 'Constituantes dépendantes',
@@ -345,11 +314,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.rsform.rsInput.ctrlClickToOpen': 'Ctrl + clic pour ouvrir',
   'ui.rsform.refsTooltip.referenceToConstituent': 'Référence vers une constituante',
   'ui.rsform.refsTooltip.controls': 'Alt + 1 : référence vers une constituante\nAlt + 2 : mot dépendant',
-  'ui.rsform.refsTooltip.toOpen': 'pour ouvrir',
-  'ui.rsform.refsTooltip.linkWordBinding': 'Liaison des mots',
-  'ui.rsform.refsTooltip.offset': 'Décalage :',
-  'ui.rsform.refsTooltip.masterReference': 'Référence principale :',
-  'ui.rsform.refsTooltip.notDefined': 'non définie',
   'ui.rsform.refsTooltip.editHotkey': 'Alt + 2 : modifier',
   'ui.rsform.hideDerived': 'Masquer les dérivées',
   'ui.rsform.showDerived': 'Afficher les dérivées',
@@ -367,13 +331,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.rsform.pdf.sheetPages': 'Feuille {pageNumber} / {totalPages}',
   'ui.rsform.pdf.colSchemaInterpretation': 'Interprétation schématique / Terme',
 
-  'ui.oss.menu.editBlockTitle': 'Modifier le bloc',
-  'ui.oss.menu.deleteBlock': 'Supprimer le bloc',
-
-  'ui.users.profile.title': 'Compte utilisateur',
-  'ui.users.select.placeholder': 'Choisir un utilisateur',
-  'ui.users.absent': 'Absent',
-  'ui.users.anonymousWithId': 'Anonyme {id}',
   'ui.users.info.noneSelected': 'Aucun utilisateur sélectionné',
   'ui.users.password.oldLabel': 'Ancien mot de passe',
   'ui.users.password.submit': 'Changer le mot de passe',

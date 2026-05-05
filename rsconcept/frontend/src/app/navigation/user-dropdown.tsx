@@ -92,31 +92,31 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
     <Dropdown id={globalIDs.user_dropdown} className='min-w-[18ch] max-w-48' stretchLeft isOpen={isOpen}>
       <DropdownButton
         text={user.username}
-        title={tx('nav.user.profileTitle')}
+        title={tx('tx.general.user.profile')}
         icon={<IconUser size='1rem' />}
         onClick={navigateProfile}
       />
       <DropdownButton
-        text={darkMode ? tx('nav.theme.dark') : tx('nav.theme.light')}
-        title={tx('nav.theme.toggleTitle')}
+        text={darkMode ? tx('tx.nav.theme.dark') : tx('tx.nav.theme.light')}
+        title={tx('tx.nav.theme.toggle.hint')}
         icon={darkMode ? <IconDarkTheme size='1rem' /> : <IconLightTheme size='1rem' />}
         onClick={handleToggleDarkMode}
       />
       <DropdownButton
-        text={showHelp ? tx('nav.help.on') : tx('nav.help.off')}
-        title={tx('nav.help.toggleTitle')}
+        text={showHelp ? tx('tx.nav.help.on') : tx('tx.nav.help.off')}
+        title={tx('tx.nav.help.toggle.hint')}
         icon={showHelp ? <IconHelp size='1rem' /> : <IconHelpOff size='1rem' />}
         onClick={toggleShowHelp}
       />
       {user.is_staff ? (
         <DropdownButton
-          text={adminMode ? tx('nav.admin.on') : tx('nav.admin.off')}
-          title={tx('nav.admin.toggleTitle')}
+          text={adminMode ? tx('tx.nav.admin.on') : tx('tx.nav.admin.off')}
+          title={tx('tx.nav.admin.toggle.hint')}
           icon={adminMode ? <IconAdmin size='1rem' /> : <IconAdminOff size='1rem' />}
           onClick={toggleAdminMode}
         />
       ) : null}
-      <div className='px-3 py-1 text-muted-foreground border-t text-nowrap'>{tx('nav.language.label')}</div>
+      <div className='px-3 py-1 text-muted-foreground border-t text-nowrap'>{tx('tx.nav.language.label')}</div>
       <DropdownButton
         text={localeLabel('ru')}
         title={localeLabel('ru')}
@@ -145,7 +145,7 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
       {user.is_staff ? (
         <DropdownButton
           text='REST API'
-          title={tx('nav.link.restApiTitle')}
+          title={tx('tx.nav.link.restApi.hint')}
           icon={<IconRESTapi size='1rem' />}
           className='border-t'
           onClick={gotoRestApi}
@@ -153,24 +153,24 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
       ) : null}
       {user.is_staff ? (
         <DropdownButton
-          text={tx('nav.link.database')}
-          title={tx('nav.link.databaseTitle')}
+          text={tx('tx.nav.link.database')}
+          title={tx('tx.nav.link.database.hint')}
           icon={<IconDatabase size='1rem' />}
           onClick={gotoAdmin}
         />
       ) : null}
       {user?.is_staff ? (
         <DropdownButton
-          text={tx('nav.link.icons')}
-          title={tx('nav.link.iconsTitle')}
+          text={tx('tx.nav.link.icons')}
+          title={tx('tx.nav.link.icons.hint')}
           icon={<IconImage size='1rem' />}
           onClick={gotoIcons}
         />
       ) : null}
       {user.is_staff ? (
         <DropdownButton
-          text={tx('nav.link.dbStructure')}
-          title={tx('nav.link.dbStructureTitle')}
+          text={tx('tx.nav.link.dbStructure')}
+          title={tx('tx.nav.link.dbStructure.hint')}
           icon={<IconDBStructure size='1rem' />}
           onClick={gotoDatabaseSchema}
           className='border-b'
@@ -178,7 +178,7 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
       ) : null}
       <DropdownButton
         text={`${tx('tx.general.logout')}…`}
-        title={tx('nav.action.logoutTitle')}
+        title={tx('tx.general.logout.hint')}
         className='font-semibold'
         icon={<IconLogout size='1rem' />}
         onClick={logoutAndRedirect}

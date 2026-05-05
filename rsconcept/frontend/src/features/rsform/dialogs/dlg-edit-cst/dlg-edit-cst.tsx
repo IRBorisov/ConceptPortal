@@ -120,7 +120,7 @@ export function DlgEditCst() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.editCst.header')}
+      header={tx('tx.lib.cst.edit')}
       canSubmit={canSubmit}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
       validationHint={canSubmit ? '' : tx('labels.hint.aliasInvalid')}

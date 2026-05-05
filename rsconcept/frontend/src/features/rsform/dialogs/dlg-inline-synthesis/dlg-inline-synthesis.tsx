@@ -72,8 +72,8 @@ export function DlgInlineSynthesis() {
 
   return (
     <ModalForm
-      header={tx('tx.lib.schema.merge')}
-      submitText={tx('ui.action.addConstituents')}
+      header={tx('tx.lib.schema.embedding')}
+      submitText={tx('tx.general.execute')}
       className='w-160 h-132 px-6'
       canSubmit={canSubmit}
       validationHint={canSubmit ? '' : tx('labels.hint.sourceEmpty')}

@@ -196,7 +196,7 @@ export function DlgStructurePlanner() {
                 disabled={!isDirty || term === ''}
               />
               <MiniButton
-                title={tx('ui.structurePlanner.resetTerm')}
+                title={tx('tx.general.changes.reset')}
                 icon={<IconReset size='1.25rem' className='icon-primary' />}
                 onClick={resetTerm}
                 disabled={!isDirty || !selectedCst}

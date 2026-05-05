@@ -103,8 +103,8 @@ export function FormSchema({ className }: FormSchemaProps) {
         {field => (
           <TextInput
             id='schema_title'
-            aria-label={tx('ui.field.rsformTitle')}
-            placeholder={tx('ui.field.rsformTitle')}
+            aria-label={tx('tx.lib.title')}
+            placeholder={tx('tx.lib.title')}
             className='mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}

@@ -147,7 +147,7 @@ export function DlgCstTemplate() {
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
           <TabLabel label={tx('tx.domain.template')} title={tx('ui.dlg.cstTemplate.tabTemplate.title')} />
           <TabLabel label={tx('tx.domain.argument.plural')} title={tx('ui.dlg.cstTemplate.tabArgs.title')} />
-          <TabLabel label={tx('tx.general.editor')} title={tx('ui.dlg.editCst.header')} />
+          <TabLabel label={tx('tx.general.editor')} title={tx('tx.lib.cst.edit')} />
         </TabList>
 
         <TemplateState

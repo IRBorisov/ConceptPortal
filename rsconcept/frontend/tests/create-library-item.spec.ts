@@ -38,14 +38,14 @@ test.afterEach(() => {
 test('create item page applies itemType=oss from query', async ({ page }) => {
   await page.goto('/library/create?itemType=oss', { waitUntil: 'domcontentloaded' });
 
-  await expect(page.getByRole('heading', { name: 'Новая операционная схема' })).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole('heading', { name: 'Операционная схема' })).toBeVisible({ timeout: 15000 });
 });
 
 test('create item page applies itemType=rsmodel from query', async ({ page }) => {
   await page.goto('/library/create?itemType=rsmodel', { waitUntil: 'domcontentloaded', timeout: 60000 });
 
-  await expect(page.getByRole('heading', { name: 'Новая концептуальная модель' })).toBeVisible({ timeout: 15000 });
-  await expect(page.getByText('Создать модель')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Концептуальная модель' })).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole('main').getByRole('button', { name: 'Создать', exact: true })).toBeVisible();
 });
 
 test('create item page applies modelFrom parameter and pre-fills fields', async ({ page }) => {
@@ -53,33 +53,23 @@ test('create item page applies modelFrom parameter and pre-fills fields', async 
 
   await page.goto('/library/create?modelFrom=901', { waitUntil: 'domcontentloaded', timeout: 60000 });
 
-  await expect(page.getByRole('heading', { name: 'Новая концептуальная модель' })).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole('heading', { name: 'Концептуальная модель' })).toBeVisible({ timeout: 15000 });
   await expect(page.locator('#schema_title')).toHaveValue('Модель Базовая схема');
   await expect(page.locator('#schema_alias')).toHaveValue('MKS_BASE');
-});
-
-test('create item page uses modelFrom even when itemType is different', async ({ page }) => {
-  dataLibraryItems.push(createLibraryItem(902, 'Схема приоритета', 'KS_PRIORITY'));
-
-  await page.goto('/library/create?itemType=oss&modelFrom=902', { waitUntil: 'domcontentloaded', timeout: 60000 });
-
-  await expect(page.getByRole('heading', { name: 'Новая концептуальная модель' })).toBeVisible({ timeout: 15000 });
-  await expect(page.locator('#schema_title')).toHaveValue('Модель Схема приоритета');
-  await expect(page.locator('#schema_alias')).toHaveValue('MKS_PRIORITY');
 });
 
 test('create item page with unknown modelFrom still opens model form', async ({ page }) => {
   await page.goto('/library/create?modelFrom=9999', { waitUntil: 'domcontentloaded', timeout: 60000 });
 
-  await expect(page.getByRole('heading', { name: 'Новая концептуальная модель' })).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole('heading', { name: 'Концептуальная модель' })).toBeVisible({ timeout: 15000 });
   await expect(page.locator('#schema_title')).toHaveValue('');
   await expect(page.locator('#schema_alias')).toHaveValue('');
 });
 
 test('create item page validates required fields on submit', async ({ page }) => {
-  await page.goto('/library/create', { waitUntil: 'domcontentloaded' });
+  await page.goto('/library/create?itemType=oss', { waitUntil: 'domcontentloaded' });
 
-  await page.getByRole('button', { name: 'Создать схему' }).click();
+  await page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }).click();
 
   await expect(page.getByText('Обязательное поле')).toHaveCount(2);
 });
@@ -104,7 +94,7 @@ test('create item page submits RSForm and redirects to created item', async ({ p
   await page.goto('/library/create', { waitUntil: 'domcontentloaded' });
   await page.locator('#schema_title').fill('Созданная КС');
   await page.locator('#schema_alias').fill('KS_CREATED');
-  await page.getByRole('button', { name: 'Создать схему' }).click();
+  await page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }).click();
 
   await expect(page).toHaveURL(new RegExp(`/rsforms/${createdID}$`), { timeout: 15000 });
   await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible();
@@ -132,7 +122,7 @@ test('create item page shows server error when create request fails', async ({ p
   await page.goto('/library/create', { waitUntil: 'domcontentloaded' });
   await page.locator('#schema_title').fill('Конфликтная КС');
   await page.locator('#schema_alias').fill('KS_CONFLICT');
-  await page.getByRole('button', { name: 'Создать схему' }).click();
+  await page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }).click();
 
   await expect(page.getByText('detail: Схема с таким именем уже существует')).toBeVisible();
   await expect(page).toHaveURL(/\/library\/create$/);

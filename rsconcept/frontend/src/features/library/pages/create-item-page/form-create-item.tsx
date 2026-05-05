@@ -95,12 +95,12 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
       }}
       onChange={resetErrors}
     >
-      <h1 className='select-none relative'>
+      <h1 className='select-none relative font-math'>
         {itemType === LibraryItemType.RSMODEL
-          ? tx('tx.lib.model.new')
+          ? tx('tx.lib.model')
           : itemType === LibraryItemType.OSS
-            ? tx('tx.lib.oss.new')
-            : tx('tx.lib.schema.new')}
+            ? tx('tx.lib.oss')
+            : tx('tx.lib.schema')}
       </h1>
 
       <form.Field name='title'>
@@ -203,11 +203,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
       </form.Field>
 
       <div className='flex justify-around gap-6 py-3'>
-        <SubmitButton
-          text={itemType === LibraryItemType.RSMODEL ? tx('tx.lib.model.create') : tx('tx.lib.schema.create')}
-          loading={isPending}
-          className='min-w-40'
-        />
+        <SubmitButton text={tx('tx.general.create')} loading={isPending} className='min-w-40' />
         <Button text={tx('tx.general.cancel')} className='min-w-40' onClick={handleCancel} />
       </div>
     </form>

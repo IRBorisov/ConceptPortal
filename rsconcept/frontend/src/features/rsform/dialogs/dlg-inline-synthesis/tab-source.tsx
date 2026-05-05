@@ -34,7 +34,7 @@ export function TabSource({ receiver, sourceID, onChangeSource }: TabSourceProps
       />
 
       <div className='flex items-center gap-6 '>
-        <span className='select-none'>{tx('ui.inlineSynthesis.selected')}</span>
+        <span className='select-none'>{tx('tx.general.selection')}</span>
         <TextInput
           id='dlg_selected_schema_title'
           disabled

@@ -8,7 +8,9 @@ export function useLabelUser() {
   function getUserLabel(userID: number | null): string {
     const user = users.find(({ id }) => id === userID);
     if (!user || userID === null) {
-      return userID ? globalTx('ui.users.anonymousWithId', { id: userID.toString() }) : globalTx('ui.users.absent');
+      return userID
+        ? globalTx('tx.general.user.anonymous') + ' ' + userID.toString()
+        : globalTx('tx.general.user.absent');
     }
     const hasFirstName = user.first_name !== '';
     const hasLastName = user.last_name !== '';
@@ -21,7 +23,7 @@ export function useLabelUser() {
       }
       return user.last_name + ' ' + user.first_name;
     }
-    return globalTx('ui.users.anonymousWithId', { id: userID.toString() });
+    return globalTx('tx.general.user.anonymous') + ' ' + userID.toString();
   }
   return getUserLabel;
 }

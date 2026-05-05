@@ -80,12 +80,12 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
           <MiniButton
             title={
               isContentEditable
-                ? tx('ui.versioning.createVersion')
+                ? tx('tx.lib.version.create')
                 : tx('ui.versioning.switchToLatestVersion')
             }
             aria-label={
               isContentEditable
-                ? tx('ui.versioning.createVersion')
+                ? tx('tx.lib.version.create')
                 : tx('ui.versioning.switchLatestAria')
             }
             onClick={handleCreateVersion}
@@ -95,8 +95,8 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
           <MiniButton
             title={
               schema.versions.length === 0
-                ? tx('ui.versioning.listEmpty')
-                : tx('ui.versioning.editVersions')
+                ? tx('tx.general.list.empty')
+                : tx('tx.lib.version.editList')
             }
             onClick={handleEditVersions}
             icon={<IconVersions size='1.25rem' className='icon-primary' />}

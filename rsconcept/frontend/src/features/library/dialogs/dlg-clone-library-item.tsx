@@ -69,9 +69,7 @@ export function DlgCloneLibraryItem() {
 
   return (
     <ModalForm
-      header={
-        base.item_type === LibraryItemType.RSFORM ? tx('ui.dlg.clone.headerRsform') : tx('ui.dlg.clone.headerRsmodel')
-      }
+      header={base.item_type === LibraryItemType.RSFORM ? tx('tx.lib.schema') : tx('tx.lib.model')}
       submitText={tx('tx.general.create')}
       canSubmit={isValid}
       onSubmit={event => {

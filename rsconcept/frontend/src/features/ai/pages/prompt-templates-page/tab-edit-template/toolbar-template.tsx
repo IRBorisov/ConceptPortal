@@ -30,7 +30,7 @@ export function ToolbarTemplate({ activeID, onSave, onReset, className }: Toolba
   const isModified = useModificationStore(state => state.isModified);
 
   function handleDelete() {
-    if (window.confirm(tx('labels.prompt.deleteTemplate'))) {
+    if (window.confirm(tx('tx.prompt.confirm.delete'))) {
       void deletePromptTemplate(activeID).then(() =>
         router.pushAsync({ path: urls.prompt_template(null, PromptTabID.LIST) })
       );

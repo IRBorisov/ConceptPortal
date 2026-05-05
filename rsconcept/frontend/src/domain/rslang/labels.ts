@@ -12,56 +12,56 @@ const ANY_TYPE_NAME = 'R0';
 const LOGIC_TYPE_NAME = 'Logic';
 
 const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
-  [RSErrorCode.unknownSyntax]: 'labels.rslang.error.unknownSyntax',
-  [RSErrorCode.missingParenthesis]: 'labels.rslang.error.missingParenthesis',
-  [RSErrorCode.missingCurlyBrace]: 'labels.rslang.error.missingCurlyBrace',
-  [RSErrorCode.missingSquareBracket]: 'labels.rslang.error.missingSquareBracket',
-  [RSErrorCode.bracketMismatch]: 'labels.rslang.error.bracketMismatch',
-  [RSErrorCode.doubleParenthesis]: 'labels.rslang.error.doubleParenthesis',
-  [RSErrorCode.missingOpenBracket]: 'labels.rslang.error.missingOpenBracket',
-  [RSErrorCode.expectedLocal]: 'labels.rslang.error.expectedLocal',
-  [RSErrorCode.expectedType]: 'labels.rslang.error.expectedType',
-  [RSErrorCode.localDoubleDeclare]: 'labels.rslang.error.localDoubleDeclare',
-  [RSErrorCode.localNotUsed]: 'labels.rslang.error.localNotUsed',
-  [RSErrorCode.localUndeclared]: 'labels.rslang.error.localUndeclared',
-  [RSErrorCode.localShadowing]: 'labels.rslang.error.localShadowing',
-  [RSErrorCode.typesNotEqual]: 'labels.rslang.error.typesNotEqual',
-  [RSErrorCode.globalNotTyped]: 'labels.rslang.error.globalNotTyped',
-  [RSErrorCode.invalidDecart]: 'labels.rslang.error.invalidDecart',
-  [RSErrorCode.invalidBoolean]: 'labels.rslang.error.invalidBoolean',
-  [RSErrorCode.invalidTypeOperation]: 'labels.rslang.error.invalidTypeOperation',
-  [RSErrorCode.invalidCard]: 'labels.rslang.error.invalidCard',
-  [RSErrorCode.invalidDebool]: 'labels.rslang.error.invalidDebool',
-  [RSErrorCode.globalFuncWithoutArgs]: 'labels.rslang.error.globalFuncWithoutArgs',
-  [RSErrorCode.invalidReduce]: 'labels.rslang.error.invalidReduce',
-  [RSErrorCode.invalidProjectionTuple]: 'labels.rslang.error.invalidProjectionTuple',
-  [RSErrorCode.invalidProjectionSet]: 'labels.rslang.error.invalidProjectionSet',
-  [RSErrorCode.invalidEnumeration]: 'labels.rslang.error.invalidEnumeration',
-  [RSErrorCode.invalidCortegeDeclare]: 'labels.rslang.error.invalidCortegeDeclare',
-  [RSErrorCode.localOutOfScope]: 'labels.rslang.error.localOutOfScope',
-  [RSErrorCode.invalidElementPredicate]: 'labels.rslang.error.invalidElementPredicate',
-  [RSErrorCode.invalidEmptySetUsage]: 'labels.rslang.error.invalidEmptySetUsage',
-  [RSErrorCode.invalidArgsArity]: 'labels.rslang.error.invalidArgsArity',
-  [RSErrorCode.invalidArgumentType]: 'labels.rslang.error.invalidArgumentType',
-  [RSErrorCode.globalStructure]: 'labels.rslang.error.globalStructure',
-  [RSErrorCode.radicalUsage]: 'labels.rslang.error.radicalUsage',
-  [RSErrorCode.invalidFilterArgumentType]: 'labels.rslang.error.invalidFilterArgumentType',
-  [RSErrorCode.invalidFilterArity]: 'labels.rslang.error.invalidFilterArity',
-  [RSErrorCode.arithmeticNotSupported]: 'labels.rslang.error.arithmeticNotSupported',
-  [RSErrorCode.typesNotCompatible]: 'labels.rslang.error.typesNotCompatible',
-  [RSErrorCode.orderingNotSupported]: 'labels.rslang.error.orderingNotSupported',
-  [RSErrorCode.globalNoValue]: 'labels.rslang.error.globalNoValue',
-  [RSErrorCode.invalidPropertyUsage]: 'labels.rslang.error.invalidPropertyUsage',
-  [RSErrorCode.cstEmptyDerived]: 'labels.rslang.error.cstEmptyDerived',
-  [RSErrorCode.definitionNotAllowed]: 'labels.rslang.error.definitionNotAllowed',
-  [RSErrorCode.calcUnknownError]: 'labels.rslang.error.calcUnknownError',
-  [RSErrorCode.calculationNotSupported]: 'labels.rslang.error.calculationNotSupported',
-  [RSErrorCode.setOverflow]: 'labels.rslang.error.setOverflow',
-  [RSErrorCode.booleanBaseLimit]: 'labels.rslang.error.booleanBaseLimit',
-  [RSErrorCode.calcGlobalMissing]: 'labels.rslang.error.calcGlobalMissing',
-  [RSErrorCode.iterationsLimit]: 'labels.rslang.error.iterationsLimit',
-  [RSErrorCode.calcInvalidDebool]: 'labels.rslang.error.calcInvalidDebool',
-  [RSErrorCode.iterateInfinity]: 'labels.rslang.error.iterateInfinity'
+  [RSErrorCode.unknownSyntax]: 'tx.rslang.error.unknownSyntax',
+  [RSErrorCode.missingParenthesis]: 'tx.rslang.error.missingParenthesis',
+  [RSErrorCode.missingCurlyBrace]: 'tx.rslang.error.missingCurlyBrace',
+  [RSErrorCode.missingSquareBracket]: 'tx.rslang.error.missingSquareBracket',
+  [RSErrorCode.bracketMismatch]: 'tx.rslang.error.bracketMismatch',
+  [RSErrorCode.doubleParenthesis]: 'tx.rslang.error.doubleParenthesis',
+  [RSErrorCode.missingOpenBracket]: 'tx.rslang.error.missingOpenBracket',
+  [RSErrorCode.expectedLocal]: 'tx.rslang.error.expectedLocal',
+  [RSErrorCode.expectedType]: 'tx.rslang.error.expectedType',
+  [RSErrorCode.localDoubleDeclare]: 'tx.rslang.error.localDoubleDeclare',
+  [RSErrorCode.localNotUsed]: 'tx.rslang.error.localNotUsed',
+  [RSErrorCode.localUndeclared]: 'tx.rslang.error.localUndeclared',
+  [RSErrorCode.localShadowing]: 'tx.rslang.error.localShadowing',
+  [RSErrorCode.typesNotEqual]: 'tx.rslang.error.typesNotEqual',
+  [RSErrorCode.globalNotTyped]: 'tx.rslang.error.globalNotTyped',
+  [RSErrorCode.invalidDecart]: 'tx.rslang.error.invalidDecart',
+  [RSErrorCode.invalidBoolean]: 'tx.rslang.error.invalidBoolean',
+  [RSErrorCode.invalidTypeOperation]: 'tx.rslang.error.invalidTypeOperation',
+  [RSErrorCode.invalidCard]: 'tx.rslang.error.invalidCard',
+  [RSErrorCode.invalidDebool]: 'tx.rslang.error.invalidDebool',
+  [RSErrorCode.globalFuncWithoutArgs]: 'tx.rslang.error.globalFuncWithoutArgs',
+  [RSErrorCode.invalidReduce]: 'tx.rslang.error.invalidReduce',
+  [RSErrorCode.invalidProjectionTuple]: 'tx.rslang.error.invalidProjectionTuple',
+  [RSErrorCode.invalidProjectionSet]: 'tx.rslang.error.invalidProjectionSet',
+  [RSErrorCode.invalidEnumeration]: 'tx.rslang.error.invalidEnumeration',
+  [RSErrorCode.invalidCortegeDeclare]: 'tx.rslang.error.invalidCortegeDeclare',
+  [RSErrorCode.localOutOfScope]: 'tx.rslang.error.localOutOfScope',
+  [RSErrorCode.invalidElementPredicate]: 'tx.rslang.error.invalidElementPredicate',
+  [RSErrorCode.invalidEmptySetUsage]: 'tx.rslang.error.invalidEmptySetUsage',
+  [RSErrorCode.invalidArgsArity]: 'tx.rslang.error.invalidArgsArity',
+  [RSErrorCode.invalidArgumentType]: 'tx.rslang.error.invalidArgumentType',
+  [RSErrorCode.globalStructure]: 'tx.rslang.error.globalStructure',
+  [RSErrorCode.radicalUsage]: 'tx.rslang.error.radicalUsage',
+  [RSErrorCode.invalidFilterArgumentType]: 'tx.rslang.error.invalidFilterArgumentType',
+  [RSErrorCode.invalidFilterArity]: 'tx.rslang.error.invalidFilterArity',
+  [RSErrorCode.arithmeticNotSupported]: 'tx.rslang.error.arithmeticNotSupported',
+  [RSErrorCode.typesNotCompatible]: 'tx.rslang.error.typesNotCompatible',
+  [RSErrorCode.orderingNotSupported]: 'tx.rslang.error.orderingNotSupported',
+  [RSErrorCode.globalNoValue]: 'tx.rslang.error.globalNoValue',
+  [RSErrorCode.invalidPropertyUsage]: 'tx.rslang.error.invalidPropertyUsage',
+  [RSErrorCode.cstEmptyDerived]: 'tx.rslang.error.cstEmptyDerived',
+  [RSErrorCode.definitionNotAllowed]: 'tx.rslang.error.definitionNotAllowed',
+  [RSErrorCode.calcUnknownError]: 'tx.rslang.error.calcUnknownError',
+  [RSErrorCode.calculationNotSupported]: 'tx.rslang.error.calculationNotSupported',
+  [RSErrorCode.setOverflow]: 'tx.rslang.error.setOverflow',
+  [RSErrorCode.booleanBaseLimit]: 'tx.rslang.error.booleanBaseLimit',
+  [RSErrorCode.calcGlobalMissing]: 'tx.rslang.error.calcGlobalMissing',
+  [RSErrorCode.iterationsLimit]: 'tx.rslang.error.iterationsLimit',
+  [RSErrorCode.calcInvalidDebool]: 'tx.rslang.error.calcInvalidDebool',
+  [RSErrorCode.iterateInfinity]: 'tx.rslang.error.iterateInfinity'
 };
 
 const labelTokenRecord: Partial<Record<TokenID, string>> = {
@@ -109,7 +109,7 @@ const labelTokenRecord: Partial<Record<TokenID, string>> = {
 /** Retrieves label for {@link TokenID}. */
 export function labelToken(id: TokenID): string {
   const text = labelTokenRecord[id];
-  return text ?? globalTx('labels.rslang.fallback.noTokenLabel', { id: String(id) });
+  return text ?? 'UNKNOWN TOKEN: ' + String(id);
 }
 
 /** Generates label for {@link AstNodeBase}. */
@@ -200,7 +200,7 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
   if (id === undefined) {
     return 'UNKNOWN ERROR';
   }
-  const notDef = () => globalTx('labels.rslang.misc.notDefined');
+  const notDef = () => 'NOT DEFINED';
   switch (code) {
     case RSErrorCode.bracketMismatch:
       return globalTx(id, { open: params[0] ?? '', close: params[1] ?? '' });

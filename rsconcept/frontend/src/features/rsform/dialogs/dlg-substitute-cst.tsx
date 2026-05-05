@@ -50,7 +50,7 @@ export function DlgSubstituteCst() {
   return (
     <ModalForm
       header={tx('tx.lib.cst.substitution')}
-      submitText={tx('tx.lib.cst.substitute')}
+      submitText={tx('tx.general.execute')}
       canSubmit={isValid}
       validationHint={isValid ? '' : tx('labels.hint.substitutionsEmpty')}
       onSubmit={event => {

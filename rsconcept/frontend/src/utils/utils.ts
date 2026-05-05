@@ -55,7 +55,7 @@ export function isResponseHtml(response?: AxiosResponse) {
 
 /** Prompt user of confirming discarding changes before continue. */
 export function promptUnsaved(): boolean {
-  return window.confirm(globalTx('labels.prompt.promptUnsaved'));
+  return window.confirm(globalTx('tx.prompt.confirm.changes.unsaved'));
 }
 
 /** Toggle tristate flag: null - true - false. */

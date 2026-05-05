@@ -11,15 +11,15 @@ import { globalTx } from '@/i18n';
 import { type RO } from '@/utils/meta';
 
 const OPERATION_LABEL_LID: Record<OperationType, string> = {
-  [OperationType.INPUT]: 'tx.lib.operation.type.input',
-  [OperationType.SYNTHESIS]: 'tx.lib.operation.type.synthesis',
-  [OperationType.REPLICA]: 'tx.lib.operation.type.replica'
+  [OperationType.INPUT]: 'tx.lib.input',
+  [OperationType.SYNTHESIS]: 'tx.lib.synthesis',
+  [OperationType.REPLICA]: 'tx.lib.replica'
 };
 
 const OPERATION_DESC_LID: Record<OperationType, string> = {
-  [OperationType.INPUT]: 'tx.lib.operation.type.input.hint',
-  [OperationType.SYNTHESIS]: 'tx.lib.operation.type.synthesis.hint',
-  [OperationType.REPLICA]: 'tx.lib.operation.type.replica.hint'
+  [OperationType.INPUT]: 'tx.lib.input.hint',
+  [OperationType.SYNTHESIS]: 'tx.lib.synthesis.hint',
+  [OperationType.REPLICA]: 'tx.lib.replica.hint'
 };
 
 /** Retrieves label for {@link OperationType}. */
@@ -73,6 +73,6 @@ export function labelOssItem(item: RO<OssItem>): string {
   if (item.nodeType === NodeType.OPERATION) {
     return `${(item as Operation).alias}: ${item.title}`;
   } else {
-    return globalTx('labels.oss.item.blockTitle', { title: item.title });
+    return globalTx('tx.lib.block') + ': ' + item.title;
   }
 }

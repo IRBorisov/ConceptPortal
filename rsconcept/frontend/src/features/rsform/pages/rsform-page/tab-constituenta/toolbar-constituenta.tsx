@@ -77,7 +77,7 @@ export function ToolbarConstituenta({
             disabled={disabled || !isModified}
           />
           <MiniButton
-            title={tx('ui.hint.resetUnsavedChanges')}
+            title={tx('tx.general.changes.reset')}
             icon={<IconReset size='1.25rem' className='icon-primary' />}
             onClick={onReset}
             disabled={disabled || !isModified}
@@ -89,7 +89,9 @@ export function ToolbarConstituenta({
             disabled={!isContentEditable || isProcessing}
           />
           <MiniButton
-            title={isModified ? tx('labels.tooltip.unsaved') : prepareTooltip(tx('tx.lib.cst.clone'), 'Alt + V')}
+            title={
+              isModified ? tx('tx.general.changes.unsaved.hint') : prepareTooltip(tx('tx.lib.cst.clone'), 'Alt + V')
+            }
             aria-label={tx('tx.lib.cst.clone')}
             icon={<IconClone size='1.25rem' className='icon-green' />}
             onClick={() => void cloneCst()}

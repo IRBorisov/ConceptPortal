@@ -228,13 +228,13 @@ export function ToolbarOssGraph({
               />
               <DropdownButton
                 text={tx('ui.oss.toolbar.importSchemaShort')}
-                title={prepareTooltip(tx('tx.lib.schema.merge'), '3')}
+                title={prepareTooltip(tx('tx.lib.schema.embedding'), '3')}
                 icon={<IconDownload size='1.25rem' className='text-primary' />}
                 onClick={handleImportSchema}
               />
               <DropdownButton
-                text={tx('tx.lib.operation.type.synthesis')}
-                title={prepareTooltip(tx('tx.lib.operation.type.synthesis.hint'), '4')}
+                text={tx('tx.lib.synthesis')}
+                title={prepareTooltip(tx('tx.lib.synthesis.hint'), '4')}
                 icon={<IconSynthesis size='1.25rem' className='text-primary' />}
                 onClick={handleCreateSynthesis}
               />

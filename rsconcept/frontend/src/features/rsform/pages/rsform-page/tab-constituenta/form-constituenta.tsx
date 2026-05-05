@@ -176,7 +176,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
                   disabled
                     ? undefined
                     : isModified
-                      ? tx('labels.tooltip.unsaved')
+                      ? tx('tx.general.changes.unsaved.hint')
                       : tx('tx.lang.wordform.plural.editing.hint')
                 }
                 onClick={openTermEditor}
@@ -195,7 +195,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
                   ? 'cm-error'
                   : ''
               }
-              placeholder={disabled ? '' : tx('ui.placeholder.termForDefinitions')}
+              placeholder={disabled ? '' : tx('tx.lib.term.hint')}
               schema={schema}
               onOpenEdit={onOpenEdit}
               value={field.state.value ?? ''}
@@ -228,7 +228,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
             onClear={clearAttributions}
             onRemove={removeAttribution}
             disabled={disabled || isModified}
-            placeholder={disabled ? '' : tx('ui.placeholder.selectConstituents')}
+            placeholder={disabled ? '' : tx('tx.lib.cst.select.plural.hint')}
           />
         </div>
       ) : null}
@@ -281,7 +281,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
             <RefsInput
               id='cst_definition'
               label={tx('tx.lib.definitionTextual')}
-              placeholder={disabled ? '' : tx('ui.placeholder.textDefinitionHint')}
+              placeholder={disabled ? '' : tx('tx.lib.definitionTextual.hint')}
               minHeight='3.75rem'
               maxHeight='8rem'
               schema={schema}
@@ -308,16 +308,14 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
               )}
               spellCheck
               label={isBasic ? tx('tx.lib.convention') : tx('tx.lib.comment')}
-              placeholder={
-                disabled ? '' : isBasic ? tx('ui.placeholder.conventionBasic') : tx('ui.placeholder.developerComment')
-              }
+              placeholder={disabled ? '' : isBasic ? tx('tx.lib.convention.hint') : tx('tx.lib.comment.hint')}
               disabled={disabled || (isBasic && activeCst.is_inherited)}
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
               error={
                 field.state.meta.errors[0]?.message ??
-                (needsInterpretation && !field.state.value ? tx('ui.validation.conventionEmpty') : undefined)
+                (needsInterpretation && !field.state.value ? tx('tx.validate.convention.empty') : undefined)
               }
             />
           )}

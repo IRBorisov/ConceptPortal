@@ -88,16 +88,7 @@ export const labelsFr: Record<string, string> = {
   'labels.hint.sourceEmpty': 'Sélectionnez le schéma source',
   'labels.hint.fileEmpty': 'Sélectionnez un fichier à téléverser',
 
-  'labels.tooltip.unsaved': 'Enregistrez ou annulez les modifications',
-  'labels.tooltip.shareItemPublic': 'Partager le schéma',
-  'labels.tooltip.shareItemPrivate': 'Seul un schéma ouvert\npeut être partagé',
-
-  'labels.prompt.promptUnsaved': 'Des modifications ne sont pas enregistrées. Continuer sans enregistrer ?',
   'labels.prompt.resetSandbox': 'Cette action réinitialisera le bac à sable. Continuer ?',
-  'labels.prompt.deleteLibraryItem': 'Confirmer la suppression de l’élément de bibliothèque',
-  'labels.prompt.deleteBlock': 'Confirmer la suppression du bloc',
-  'labels.prompt.deleteArgument': 'Confirmer la suppression des arguments de l’opération',
-  'labels.prompt.deleteTemplate': 'Confirmer la suppression du modèle',
   'labels.prompt.deleteOSS':
     'Attention !\nLa suppression du schéma opérationnel supprimera toutes les opérations et les schémas conceptuels propres.\nCette action est irréversible.\nVoulez-vous vraiment supprimer ce SO ?',
   'labels.prompt.generateWordforms': 'Les formes de mots seront écrasées en cas de grammèmes identiques. Continuer ?',

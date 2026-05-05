@@ -84,7 +84,7 @@ export function ExportDropdown<T extends object = object>({
   return (
     <div className={cn('relative inline-block', className)} tabIndex={0} onBlur={handleBlur}>
       <MiniButton
-        title={tx('ui.action.exportData')}
+        title={tx('tx.general.export')}
         hideTitle={isOpen}
         className='text-muted-foreground enabled:hover:text-primary'
         icon={<IconDownload size='1.25rem' />}
@@ -95,12 +95,14 @@ export function ExportDropdown<T extends object = object>({
         <DropdownButton
           icon={<IconCSV size='1rem' className='mr-1 icon-green' />}
           text='CSV'
+          title={tx('tx.general.download.csv')}
           onClick={() => handleExport(ExportType.CSV)}
           className='w-full justify-start'
         />
         <DropdownButton
           icon={<IconJSON size='1rem' className='mr-1 icon-green' />}
           text='JSON'
+          title={tx('tx.general.download.json')}
           onClick={() => handleExport(ExportType.JSON)}
           className='w-full justify-start'
         />
@@ -108,6 +110,7 @@ export function ExportDropdown<T extends object = object>({
           <DropdownButton
             icon={<IconPDF size='1rem' className='mr-1 icon-green' />}
             text='PDF'
+            title={tx('tx.general.download.pdf')}
             onClick={() => handleExport(ExportType.PDF)}
             className='w-full justify-start'
           />

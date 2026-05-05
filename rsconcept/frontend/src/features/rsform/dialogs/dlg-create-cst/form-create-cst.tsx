@@ -80,7 +80,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
             id='dlg_cst_term'
             label={tx('tx.lib.term')}
             maxHeight='3.75rem'
-            placeholder={tx('ui.placeholder.termForDefinitions')}
+            placeholder={tx('tx.lib.term.hint')}
             schema={schema}
             value={field.state.value ?? ''}
             resolved={field.state.value}
@@ -111,7 +111,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
             <RefsInput
               id='dlg_cst_definition'
               label={tx('tx.lib.definitionTextual')}
-              placeholder={tx('ui.placeholder.textDefinitionHint')}
+              placeholder={tx('tx.lib.definitionTextual.hint')}
               maxHeight='3.75rem'
               schema={schema}
               resolved={field.state.value}
@@ -134,7 +134,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
               spellCheck
               fitContent
               label={isBasic ? tx('tx.lib.convention') : tx('tx.lib.comment')}
-              placeholder={isBasic ? tx('ui.placeholder.conventionBasic') : tx('ui.placeholder.developerComment')}
+              placeholder={isBasic ? tx('tx.lib.convention.hint') : tx('tx.lib.comment.hint')}
               areaClassName='max-h-20'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}

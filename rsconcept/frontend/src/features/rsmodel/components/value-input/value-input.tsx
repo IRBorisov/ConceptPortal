@@ -88,7 +88,7 @@ export function ValueInput({
                 data-tooltip-id={globalIDs.tooltip}
                 data-tooltip-content={tx('ui.valueInput.expressionValueTooltip')}
               >
-                {tx('ui.valueInput.cardinalityPrefix')} {formatInteger(valueLabel)} |
+                {tx('tx.rslang.cardinality')}: {formatInteger(valueLabel)} |
               </span>
               <span
                 tabIndex={-1}

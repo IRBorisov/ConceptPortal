@@ -210,7 +210,7 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
         <MenuModel />
 
         <TabLabel label={tx('tx.lib.item.passport')} />
-        <TabLabel label={tx('ui.tabs.list')} />
+        <TabLabel label={tx('tx.general.list')} />
         <TabLabel label={tx('tx.lib.concept')} />
         <TabLabel label={tx('ui.tabs.graph')} />
         <TabLabel label={tx('ui.tabs.data')} />

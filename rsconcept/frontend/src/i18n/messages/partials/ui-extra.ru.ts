@@ -53,13 +53,7 @@ export const uiExtraRu: Record<string, string> = {
   'ui.stats.secondary.functions': 'Функции',
   'ui.stats.title.termAndPredicateFns': 'Количество терм-функций\nи предикат-функций',
 
-  'ui.toolbar.newConstituenta': 'Новая конституента',
-  'ui.toolbar.editConstituenta': 'Редактировать конституенту',
-
   'ui.cst.crucialToggleAria': 'Переключатель статуса ключевой конституенты',
-  'ui.toolbar.addEmptyConstituenta': 'Добавить пустую конституенту',
-  'ui.toolbar.addNewConstituenta': 'Добавить новую конституенту...',
-  'ui.aria.addNewConstituenta': 'Добавить новую конституенту',
 
   'ui.graphSelection.extendFromSelected': 'Выделить на основе выбранных...',
   'ui.graphSelection.suppliers': 'Поставщики',
@@ -93,11 +87,9 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.structurePlanner.termPlaceholder': 'Термин не определен',
   'ui.structurePlanner.submitUpdate': 'Обновить термин',
-  'ui.structurePlanner.resetTerm': 'Сбросить термин',
 
   'ui.valueInput.cardinalityExpressionAria': 'Мощность / значение выражения',
   'ui.valueInput.expressionValueTooltip': 'Значение выражения',
-  'ui.valueInput.cardinalityPrefix': 'Мощность:',
   'ui.valueInput.shortFormAria': 'Сокращенное обозначение выражения',
   'ui.valueInput.shortFormTooltip': 'Сокращение выражения',
   'ui.valueInput.charCountAria': 'Количество символов',
@@ -113,7 +105,6 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.iconsPage.total': 'Всего иконок: {count}',
 
-  'ui.tabs.list': 'Список',
   'ui.tabs.graph': 'Граф',
   'ui.tabs.data': 'Данные',
   'ui.tabs.evaluation': 'Расчет',
@@ -125,21 +116,6 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.rsform.menu.archiveNoEdit': 'Архив: Редактирование запрещено\nПерейти к актуальной версии',
   'ui.rsform.menu.templatesTitle': 'Создать конституенту из шаблона',
-  'ui.rsform.menu.embedding': 'Встраивание',
-  'ui.rsform.menu.embeddingTitle': 'Импортировать совокупность\nконституент из другой схемы',
-  'ui.rsform.menu.embeddingAria': 'Импортировать совокупность конституент из другой схемы',
-  'ui.rsform.menu.restoreOrder': 'Упорядочить список',
-  'ui.rsform.menu.restoreOrderTitle': 'Упорядочить список, исходя из\nлогики типов и связей конституент',
-  'ui.rsform.menu.restoreOrderAria': 'Упорядочить список, исходя из логики типов и связей конституент',
-  'ui.rsform.menu.ordinalNames': 'Порядковые имена',
-  'ui.rsform.menu.ordinalNamesTitle': 'Присвоить порядковые имена\nи обновить выражения',
-  'ui.rsform.menu.ordinalNamesAria': 'Присвоить порядковые имена и обновить выражения',
-  'ui.rsform.menu.structureExpansion': 'Раскрытие структуры',
-  'ui.rsform.menu.structureExpansionTitle':
-    'Породить внутренние понятия\nпо структуре типизации\nвыделенной конституенты',
-  'ui.rsform.menu.structureExpansionAria': 'Породить внутренние понятия по структуре типизации выделенной конституенты',
-  'ui.rsform.menu.substitutionTitle': 'Заменить вхождения\nодной конституенты на другую',
-  'ui.rsform.menu.substitutionAria': 'Заменить вхождения одной конституенты на другую',
 
   'ui.ast.extract.extract': 'Обособить',
   'ui.ast.extract.title': 'Вынести выбранное подвыражение в новую конституенту',
@@ -195,7 +171,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.oss.settings.edgeStraight': 'Прямые',
   'ui.oss.settings.edgeBezier': 'Безье',
 
-  'ui.oss.deleteReplica.header': 'Удаление реплики',
   'ui.oss.deleteReplica.relinkArgs': 'Переадресовать связи на оригинал',
   'ui.oss.deleteReplica.relinkArgsHint': 'Связи аргументов будут перенаправлены на оригинал реплики',
   'ui.oss.keepInherited': 'Сохранить наследованные конституенты',
@@ -233,8 +208,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.pick.schema.emptyHint': 'Измените параметры фильтра',
 
   'ui.oss.pickContents.comboPlaceholder': 'Выберите операцию или блок',
-
-  'ui.versions.deleteVersionTitle': 'Удалить версию',
 
   'ui.profile.field.usernameReadonlyTitle': 'Логин изменить нельзя',
   'ui.profile.submit.saveData': 'Сохранить данные',
@@ -283,8 +256,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.pagination.rowsPerPageAria': 'Выбор количества строк на страницу',
   'ui.pagination.perPageSuffix': 'на стр',
 
-  'ui.dataTable.noData': 'Данные отсутствуют',
-
   'ui.promptTemplates.menu.newTemplate': 'Новый шаблон',
 
   'ui.aiPrompt.dlg.header': 'Генератор запросов LLM',
@@ -320,7 +291,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsmodel.dlg.viewBinding.header': 'Просмотр базового источника',
 
   'ui.rsform.termGraph.openSchemaTitle': 'Открыть концептуальную схему',
-  'ui.rsform.dlg.deleteCst.header': 'Удаление конституент',
   'ui.rsform.dlg.deleteCst.submitWithDeps': 'Удалить с зависимыми',
   'ui.rsform.dlg.deleteCst.selectedTitle': 'Выбраны к удалению',
   'ui.rsform.dlg.deleteCst.dependentsTitle': 'Зависимые конституенты',
@@ -344,10 +314,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.refsTooltip.referenceToConstituent': 'Ссылка на конституенту',
   'ui.rsform.refsTooltip.controls': 'Alt + 1: ссылка на конституенту\nAlt + 2: зависимое слово',
   'ui.rsform.refsTooltip.toOpen': 'для перехода',
-  'ui.rsform.refsTooltip.linkWordBinding': 'Связывание слов',
-  'ui.rsform.refsTooltip.offset': 'Смещение:',
-  'ui.rsform.refsTooltip.masterReference': 'Основная ссылка:',
-  'ui.rsform.refsTooltip.notDefined': 'не определена',
   'ui.rsform.refsTooltip.editHotkey': 'Alt + 2: для редактирования',
   'ui.rsform.hideDerived': 'Скрыть порожденные',
   'ui.rsform.showDerived': 'Отобразить порожденные',
@@ -365,13 +331,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.pdf.sheetPages': 'Лист {pageNumber} / {totalPages}',
   'ui.rsform.pdf.colSchemaInterpretation': 'Схемная интерпретация / Термин',
 
-  'ui.oss.menu.editBlockTitle': 'Редактировать блок',
-  'ui.oss.menu.deleteBlock': 'Удалить блок',
-
-  'ui.users.profile.title': 'Учетные данные пользователя',
-  'ui.users.select.placeholder': 'Выбор пользователя',
-  'ui.users.absent': 'Отсутствует',
-  'ui.users.anonymousWithId': 'Аноним {id}',
   'ui.users.info.noneSelected': 'Пользователи не выбраны',
   'ui.users.password.oldLabel': 'Старый пароль',
   'ui.users.password.submit': 'Сменить пароль',

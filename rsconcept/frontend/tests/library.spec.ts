@@ -34,7 +34,7 @@ test.afterEach(() => {
 test('library page shows empty state and create link', async ({ page }) => {
   await page.goto('/library');
 
-  await expect(page.getByText('Список схем пуст')).toBeVisible();
+  await expect(page.getByText('Список пуст')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Создать схему' })).toBeVisible();
 });
 
@@ -56,7 +56,7 @@ test('library page renders mocked items and supports search', async ({ page }) =
 test('create page opens for authenticated user', async ({ page }) => {
   await page.goto('/library/create');
 
-  await expect(page.getByRole('heading', { name: 'Новая концептуальная схема' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Концептуальная схема' })).toBeVisible();
   await expect(page.locator('#schema_title')).toBeVisible();
   await expect(page.locator('#schema_alias')).toBeVisible();
 });
@@ -81,7 +81,9 @@ test('library page filters items by selected folder with subfolders toggle', asy
   await expect(page.getByText('Вложенная КС')).toHaveCount(0);
   await expect(page.getByText('Другая папка')).toHaveCount(0);
 
-  await page.getByRole('button', { name: 'Переключатель отображения вложенных папок' }).click();
+  await page
+    .locator('button[aria-label="Отображение вложенных папок"][data-tooltip-content^="Вложенные папки"]')
+    .click();
   await expect(page.getByText('Вложенная КС')).toBeVisible();
 });
 

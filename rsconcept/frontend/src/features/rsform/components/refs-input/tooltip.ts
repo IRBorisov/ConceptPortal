@@ -85,7 +85,7 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
     gram.id = `tooltip-${gramStr}`;
     gram.className = 'min-w-12 px-1 border rounded-lg text-sm text-center whitespace-nowrap bg-accent';
     gram.style.borderWidth = '1px';
-    gram.innerText = globalTx(`labels.cctext.grammeme.${gramStr}`);
+    gram.innerText = globalTx(`tx.lang.grammeme.${gramStr}`);
     grams.appendChild(gram);
   }
   dom.appendChild(grams);
@@ -120,13 +120,9 @@ function domTooltipSyntacticReference(
     'whitespace-pre-line'
   );
 
-  appendBoldTextRow(dom, globalTx('ui.rsform.refsTooltip.linkWordBinding'));
-  appendBoldTextRow(dom, globalTx('ui.rsform.refsTooltip.offset'), ref.offset);
-  appendBoldTextRow(
-    dom,
-    globalTx('ui.rsform.refsTooltip.masterReference'),
-    masterRef ?? globalTx('ui.rsform.refsTooltip.notDefined')
-  );
+  appendBoldTextRow(dom, globalTx('tx.lang.reference.syntactic'));
+  appendBoldTextRow(dom, globalTx('tx.lang.reference.offset') + ':', ref.offset);
+  appendBoldTextRow(dom, globalTx('tx.lang.reference.master') + ':', masterRef ?? 'N/A');
   appendBoldTextRow(dom, globalTx('tx.lang.morphology.nominal') + ':', ref.nominal);
 
   if (canClick) {

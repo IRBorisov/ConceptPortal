@@ -3,11 +3,12 @@
 import { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 
-import { parsePersistedPreferencesLocale, PREFERENCES_STORAGE_KEY, usePreferencesStore } from '@/stores/preferences';
+import { usePreferencesStore } from '@/stores/preferences';
 
 import { AppIntlBridge } from './app-intl-bridge';
 import { type AppLocale, DEFAULT_LOCALE } from './locales';
 import { getMessagesForLocale } from './messages';
+import { parsePersistedPreferencesLocale, PREFERENCES_STORAGE_KEY } from './persisted-locale';
 
 const POLL_INTERVAL = 1000;
 

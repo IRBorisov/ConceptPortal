@@ -35,7 +35,7 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
           'bg-background/80 text-muted-foreground shadow-sm border backdrop-blur',
           'hover:text-foreground focus-outline'
         )}
-        aria-label={tx('nav.language.title')}
+        aria-label={tx('tx.nav.language.title')}
         aria-haspopup='true'
         aria-expanded={isOpen}
       >
@@ -43,7 +43,7 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
         <span className='text-[0.65rem] font-semibold uppercase leading-none'>{locale}</span>
       </button>
       <Dropdown isOpen={isOpen} stretchLeft margin='mt-1' className='min-w-40'>
-        <div className='px-3 py-1 text-xs text-muted-foreground border-b'>{tx('nav.language.label')}</div>
+        <div className='px-3 py-1 text-xs text-muted-foreground border-b'>{tx('tx.nav.language.label')}</div>
         {SUPPORTED_LOCALES.map(option => (
           <DropdownButton
             key={option}

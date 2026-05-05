@@ -72,10 +72,10 @@ test('authenticated user can open protected pages', async ({ page }) => {
   });
 
   await page.goto('/library/create');
-  await expect(page.getByRole('heading', { name: 'Новая концептуальная схема' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Концептуальная схема' })).toBeVisible();
 
   await page.goto('/profile');
-  await expect(page.getByRole('heading', { name: 'Учетные данные пользователя' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Профиль пользователя' })).toBeVisible();
 
   await page.goto('/prompt-templates');
   await expect(page.getByRole('button', { name: 'Создать', exact: true })).toBeVisible();

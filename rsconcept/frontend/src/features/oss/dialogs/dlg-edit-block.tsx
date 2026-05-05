@@ -60,7 +60,7 @@ export function DlgEditBlock() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.editBlock.header')}
+      header={tx('tx.lib.block.edit')}
       submitText={tx('tx.general.save')}
       canSubmit={canSubmit}
       onSubmit={event => {
@@ -75,8 +75,8 @@ export function DlgEditBlock() {
         {field => (
           <TextInput
             id='operation_title'
-            aria-label={tx('ui.oss.blockTitle')}
-            placeholder={tx('ui.oss.blockTitle')}
+            aria-label={tx('tx.lib.title')}
+            placeholder={tx('tx.lib.title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}

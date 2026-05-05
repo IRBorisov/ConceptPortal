@@ -187,7 +187,7 @@ export function useHandleActions() {
           });
       }
     } else {
-      if (!window.confirm(globalTx('labels.prompt.deleteBlock'))) {
+      if (!window.confirm(globalTx('tx.prompt.confirm.delete') + ' ' + item.title)) {
         return;
       }
       void deleteBlock({
@@ -209,7 +209,7 @@ export function useHandleActions() {
     ) {
       return;
     }
-    if (!window.confirm(globalTx('labels.prompt.deleteArgument'))) {
+    if (!window.confirm(globalTx('tx.prompt.confirm.delete'))) {
       return;
     }
 

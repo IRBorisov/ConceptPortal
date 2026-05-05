@@ -57,7 +57,7 @@ export function DlgRenameCst() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.renameCst.header')}
+      header={tx('tx.lib.cst.rename')}
       submitText={tx('tx.general.rename')}
       canSubmit={canSubmit}
       validationHint={canSubmit ? '' : tx('labels.hint.aliasInvalid')}

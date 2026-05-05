@@ -73,7 +73,7 @@ export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
         onClick={moveUp}
         disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
       />
-      <MiniButton 
+      <MiniButton
         title={prepareTooltip(tx('tx.general.moveDown'), 'Alt + ↓')}
         aria-label={tx('tx.general.moveDown')}
         icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
@@ -89,7 +89,7 @@ export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
       />
       <div ref={menuRef} onBlur={handleMenuBlur} className='relative hidden xs:block'>
         <MiniButton
-          title={tx('ui.toolbar.addEmptyConstituenta')}
+          title={tx('tx.lib.cst.create.empty')}
           hideTitle={isMenuOpen}
           icon={<IconOpenList size='1.25rem' className='icon-green' />}
           onClick={toggleMenu}
@@ -108,8 +108,7 @@ export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
         </Dropdown>
       </div>
       <MiniButton
-        title={prepareTooltip(tx('ui.toolbar.addNewConstituenta'), 'Alt + `')}
-        aria-label={tx('ui.aria.addNewConstituenta')}
+        title={prepareTooltip(tx('tx.lib.cst.new'), 'Alt + `')}
         icon={<IconNewItem size='1.25rem' className='icon-green' />}
         onClick={() => void promptCreateCst()}
         className='hidden xs:block'

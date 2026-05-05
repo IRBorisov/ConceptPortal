@@ -31,9 +31,9 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
         details={[
           { label: tx('tx.general.total'), value: stats.count_all },
           { label: tx('tx.lib.block.plural'), value: stats.count_block },
-          { label: tx('tx.lib.operation.type.input'), value: stats.count_inputs },
-          { label: tx('tx.lib.operation.type.synthesis'), value: stats.count_synthesis },
-          { label: tx('tx.lib.operation.type.replica'), value: stats.count_references }
+          { label: tx('tx.lib.input'), value: stats.count_inputs },
+          { label: tx('tx.lib.synthesis'), value: stats.count_synthesis },
+          { label: tx('tx.lib.replica'), value: stats.count_references }
         ]}
       />
 

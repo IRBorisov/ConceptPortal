@@ -39,9 +39,8 @@ describe('locale message maps', () => {
 
     const usedIds = new Set<string>();
     for (const g of Object.values(Grammeme)) {
-      usedIds.add(`labels.cctext.grammeme.${g}`);
+      usedIds.add(`tx.lang.grammeme.${g}`);
     }
-    usedIds.add('labels.cctext.grammemeUnknown');
 
     for (const file of codeFiles) {
       const source = readFileSync(file, 'utf8');
@@ -69,12 +68,12 @@ describe('locale message maps', () => {
 
 const IGNORE_DUPES = new Set<string>([
   'home.create', //
-  'labels.rsform.token.filter',
+  'tx.rslang.token.filter',
   'tx.general.firstName',
   'tx.rslang.typeClass.predicate',
   'tx.rslang.typeClass.function',
   'tx.lib.evalStatus.error',
-  'tx.lib.operation.type.input'
+  'tx.lib.input'
 ]);
 
 it('has no duplicate values in en, ru, or fr catalogs', () => {

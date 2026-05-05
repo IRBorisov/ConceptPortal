@@ -102,7 +102,7 @@ test('RSForm menu opens create-model page with prefilled schema data', async ({ 
   await page.getByRole('button', { name: 'Создать модель' }).click();
 
   await expect(page).toHaveURL(new RegExp(`/library/create\\?itemType=rsmodel&modelFrom=${rsformID}`));
-  await expect(page.getByRole('heading', { name: 'Новая концептуальная модель' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Концептуальная модель' })).toBeVisible();
   await expect(page.locator('#schema_title')).toHaveValue(`Модель ${schema.title}`);
   await expect(page.locator('#schema_alias')).toHaveValue(`M${schema.alias}`);
 });
@@ -175,7 +175,7 @@ test('RSForm flow creates model from schema and redirects to new model', async (
   await page.goto(`/rsforms/${rsformID}`, { waitUntil: 'domcontentloaded' });
   await page.getByRole('button', { name: 'Меню' }).click();
   await page.getByRole('button', { name: 'Создать модель' }).click();
-  await page.getByRole('button', { name: 'Создать модель' }).click();
+  await page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }).click();
 
   await expect(page).toHaveURL(new RegExp(`/models/${newModelID}$`));
   await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible();
@@ -214,7 +214,7 @@ test('RSForm create-model flow shows error when API rejects creation', async ({ 
   await page.goto(`/rsforms/${rsformID}`, { waitUntil: 'domcontentloaded' });
   await page.getByRole('button', { name: 'Меню' }).click();
   await page.getByRole('button', { name: 'Создать модель' }).click();
-  await page.getByRole('button', { name: 'Создать модель' }).click();
+  await page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }).click();
 
   await expect(page.getByText('detail: Создание модели запрещено для этой схемы')).toBeVisible();
   await expect(page).toHaveURL(/\/library\/create/);

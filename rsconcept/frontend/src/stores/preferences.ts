@@ -2,12 +2,12 @@ import { flushSync } from 'react-dom';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { type AppLocale, inferLocaleFromNavigator } from '@/i18n';
+import { type AppLocale, inferLocaleFromNavigator } from '@/i18n/locales';
+import { PREFERENCES_STORAGE_KEY } from '@/i18n/persisted-locale';
 
 import { PARAMETER } from '@/utils/constants';
 
-/** localStorage key for {@link usePreferencesStore} persist payload. */
-export const PREFERENCES_STORAGE_KEY = 'portal.preferences';
+export { PREFERENCES_STORAGE_KEY } from '@/i18n/persisted-locale';
 
 export const videoPlayerTypes = ['vk', 'youtube'] as const;
 
@@ -130,30 +130,6 @@ export const usePreferencesStore = create<PreferencesStore>()(
     }
   )
 );
-
-/** Reads UI locale from persisted preferences JSON (zustand persist shape). */
-export function parsePersistedPreferencesLocale(raw: string | null): AppLocale | null {
-  if (!raw) {
-    return null;
-  }
-  try {
-    const parsed: unknown = JSON.parse(raw);
-    if (!parsed || typeof parsed !== 'object') {
-      return null;
-    }
-    const state = (parsed as { state?: unknown }).state;
-    if (!state || typeof state !== 'object') {
-      return null;
-    }
-    const locale = (state as { locale?: unknown }).locale;
-    if (locale === 'en' || locale === 'fr' || locale === 'ru') {
-      return locale;
-    }
-  } catch {
-    // ignore malformed storage
-  }
-  return null;
-}
 
 function initializeDarkMode(): boolean {
   let isDark = false;

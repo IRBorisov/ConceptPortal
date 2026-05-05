@@ -1,7 +1,5 @@
 'use client';
 
-import { type Constituenta } from '@/domain/library';
-import { cstCanProduceStructure } from '@/domain/library/rsform-api';
 import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
@@ -14,7 +12,6 @@ import {
   IconArchive,
   IconEdit2,
   IconGenerateNames,
-  IconGenerateStructure,
   IconInlineSynthesis,
   IconReplace,
   IconSortList,
@@ -43,17 +40,7 @@ export function MenuEditSchema() {
     handleBlur: handleMenuBlur,
     hide: hideMenu
   } = useDropdown();
-  const {
-    schema,
-    activeCst,
-    isArchive,
-    isContentEditable,
-    createCstFromData: createStructurePlannerConstituenta,
-    promptTemplate,
-    patchConstituenta,
-    deselectAll,
-    isProcessing
-  } = useSchemaEdit();
+  const { schema, isArchive, isContentEditable, promptTemplate, deselectAll, isProcessing } = useSchemaEdit();
 
   const { resetAliases } = useResetAliases();
   const { restoreOrder } = useRestoreOrder();
@@ -61,7 +48,6 @@ export function MenuEditSchema() {
   const { substituteConstituents } = useSubstituteConstituents();
 
   const showInlineSynthesis = useDialogsStore(state => state.showInlineSynthesis);
-  const showStructurePlanner = useDialogsStore(state => state.showStructurePlanner);
   const showSubstituteCst = useDialogsStore(state => state.showSubstituteCst);
 
   function handleReindex() {
@@ -90,23 +76,6 @@ export function MenuEditSchema() {
   function handleTemplates() {
     hideMenu();
     promptTemplate();
-  }
-
-  function handleProduceStructure(targetCst: Constituenta | null) {
-    hideMenu();
-    if (!targetCst) {
-      return;
-    }
-    if (isModified && !promptUnsaved()) {
-      return;
-    }
-    showStructurePlanner({
-      schema,
-      targetID: targetCst.spawner_path ? targetCst.spawner! : targetCst.id,
-      isMutable: isContentEditable,
-      onCreate: createStructurePlannerConstituenta,
-      onUpdate: patchConstituenta
-    });
   }
 
   function handleInlineSynthesis() {
@@ -157,9 +126,8 @@ export function MenuEditSchema() {
           disabled={!isContentEditable || isProcessing}
         />
         <DropdownButton
-          text={tx('ui.rsform.menu.embedding')}
-          title={tx('ui.rsform.menu.embeddingTitle')}
-          aria-label={tx('ui.rsform.menu.embeddingAria')}
+          text={tx('tx.lib.schema.embedding')}
+          title={tx('tx.lib.schema.embedding.hint')}
           icon={<IconInlineSynthesis size='1rem' className='icon-green' />}
           onClick={handleInlineSynthesis}
           disabled={!isContentEditable || isProcessing}
@@ -168,33 +136,22 @@ export function MenuEditSchema() {
         <Divider margins='mx-3 my-1' />
 
         <DropdownButton
-          text={tx('ui.rsform.menu.restoreOrder')}
-          title={tx('ui.rsform.menu.restoreOrderTitle')}
-          aria-label={tx('ui.rsform.menu.restoreOrderAria')}
+          text={tx('tx.lib.schema.order.restore')}
+          title={tx('tx.lib.schema.order.restore.hint')}
           icon={<IconSortList size='1rem' className='icon-primary' />}
           onClick={handleRestoreOrder}
           disabled={!isContentEditable || isProcessing}
         />
         <DropdownButton
-          text={tx('ui.rsform.menu.ordinalNames')}
-          title={tx('ui.rsform.menu.ordinalNamesTitle')}
-          aria-label={tx('ui.rsform.menu.ordinalNamesAria')}
+          text={tx('tx.lib.schema.order.rename')}
+          title={tx('tx.lib.schema.order.rename.hint')}
           icon={<IconGenerateNames size='1rem' className='icon-primary' />}
           onClick={handleReindex}
           disabled={!isContentEditable || isProcessing}
         />
         <DropdownButton
-          text={tx('ui.rsform.menu.structureExpansion')}
-          title={tx('ui.rsform.menu.structureExpansionTitle')}
-          aria-label={tx('ui.rsform.menu.structureExpansionAria')}
-          icon={<IconGenerateStructure size='1rem' className='icon-primary' />}
-          onClick={() => handleProduceStructure(activeCst)}
-          disabled={isProcessing || !activeCst || (!activeCst.spawner_path && !cstCanProduceStructure(activeCst))}
-        />
-        <DropdownButton
           text={tx('tx.lib.cst.substitution')}
-          title={tx('ui.rsform.menu.substitutionTitle')}
-          aria-label={tx('ui.rsform.menu.substitutionAria')}
+          title={tx('tx.lib.cst.substitution.hint')}
           icon={<IconReplace size='1rem' className='icon-red' />}
           onClick={handleSubstituteCst}
           disabled={!isContentEditable || isProcessing}

@@ -86,16 +86,7 @@ export const labelsEn: Record<string, string> = {
   'labels.hint.sourceEmpty': 'Select a source schema',
   'labels.hint.fileEmpty': 'Select a file to upload',
 
-  'labels.tooltip.unsaved': 'Save or discard changes',
-  'labels.tooltip.shareItemPublic': 'Share schema',
-  'labels.tooltip.shareItemPrivate': 'Only an open schema\ncan be shared',
-
-  'labels.prompt.promptUnsaved': 'There are unsaved changes. Continue without saving?',
   'labels.prompt.resetSandbox': 'This will reset the sandbox state. Continue?',
-  'labels.prompt.deleteLibraryItem': 'Confirm deleting the library item',
-  'labels.prompt.deleteBlock': 'Confirm deleting the block',
-  'labels.prompt.deleteArgument': 'Confirm deleting operation arguments',
-  'labels.prompt.deleteTemplate': 'Confirm deleting the template',
   'labels.prompt.deleteOSS':
     'Warning!\nDeleting the operational schema will remove all operations and owned conceptual schemas.\nThis cannot be undone.\nAre you sure you want to delete this OSS?',
   'labels.prompt.generateWordforms': 'This will overwrite word forms when grammemes match. Continue?',

@@ -32,8 +32,8 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
         {field => (
           <TextInput
             id='operation_title'
-            aria-label={tx('ui.oss.operationTitle')}
-            placeholder={tx('ui.oss.operationTitle')}
+            aria-label={tx('tx.lib.title')}
+            placeholder={tx('tx.lib.title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -48,7 +48,7 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
             id='operation_alias'
             dense
             label={tx('tx.lib.alias')}
-            placeholder={tx('ui.oss.enterAlias')}
+            placeholder={tx('tx.validate.alias.empty')}
             className='w-full'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}

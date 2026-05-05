@@ -55,7 +55,7 @@ export function DlgCreateVersion() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.createVersion.header')}
+      header={tx('tx.lib.version.create')}
       className='cc-column w-120 py-2 px-6'
       canSubmit={canSubmit}
       validationHint={hint}

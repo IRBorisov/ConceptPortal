@@ -1,6 +1,72 @@
+import { Grammeme } from '@/domain/cctext/language';
+
+const GRAMMEME_RU: Record<Grammeme, string> = {
+  [Grammeme.NOUN]: 'ЧР: сущ',
+  [Grammeme.VERB]: 'ЧР: глагол',
+  [Grammeme.INFN]: 'ЧР: глагол инф',
+  [Grammeme.ADJF]: 'ЧР: прил',
+  [Grammeme.PRTF]: 'ЧР: прич',
+  [Grammeme.ADJS]: 'ЧР: кр прил',
+  [Grammeme.PRTS]: 'ЧР: кр прич',
+  [Grammeme.COMP]: 'ЧР: компаратив',
+  [Grammeme.GRND]: 'ЧР: деепричастие',
+  [Grammeme.NUMR]: 'ЧР: число',
+  [Grammeme.ADVB]: 'ЧР: наречие',
+  [Grammeme.NPRO]: 'ЧР: местоимение',
+  [Grammeme.PRED]: 'ЧР: предикатив',
+  [Grammeme.PREP]: 'ЧР: предлог',
+  [Grammeme.CONJ]: 'ЧР: союз',
+  [Grammeme.PRCL]: 'ЧР: частица',
+  [Grammeme.INTJ]: 'ЧР: междометие',
+  [Grammeme.Abbr]: 'ЧР: аббревиатура',
+  [Grammeme.sing]: 'Число: един',
+  [Grammeme.plur]: 'Число: множ',
+  [Grammeme.nomn]: 'Падеж: имен',
+  [Grammeme.gent]: 'Падеж: род',
+  [Grammeme.datv]: 'Падеж: дат',
+  [Grammeme.accs]: 'Падеж: вин',
+  [Grammeme.ablt]: 'Падеж: твор',
+  [Grammeme.loct]: 'Падеж: пред',
+  [Grammeme.masc]: 'Род: муж',
+  [Grammeme.femn]: 'Род: жен',
+  [Grammeme.neut]: 'Род: ср',
+  [Grammeme.perf]: 'Совершенный: да',
+  [Grammeme.impf]: 'Совершенный: нет',
+  [Grammeme.tran]: 'Переходный: да',
+  [Grammeme.intr]: 'Переходный: нет',
+  [Grammeme.pres]: 'Время: настоящее',
+  [Grammeme.past]: 'Время: прошедшее',
+  [Grammeme.futr]: 'Время: будущее',
+  [Grammeme.per1]: 'Лицо: 1',
+  [Grammeme.per2]: 'Лицо: 2',
+  [Grammeme.per3]: 'Лицо: 3',
+  [Grammeme.impr]: 'Повелительный: да',
+  [Grammeme.indc]: 'Повелительный: нет',
+  [Grammeme.incl]: 'Включающий: да',
+  [Grammeme.excl]: 'Включающий: нет',
+  [Grammeme.pssv]: 'Страдательный: да',
+  [Grammeme.actv]: 'Страдательный: нет',
+  [Grammeme.anim]: 'Одушевленный: да',
+  [Grammeme.inan]: 'Одушевленный: нет',
+  [Grammeme.Infr]: 'Стиль: неформальный',
+  [Grammeme.Slng]: 'Стиль: жаргон',
+  [Grammeme.Arch]: 'Стиль: устаревший',
+  [Grammeme.Litr]: 'Стиль: литературный'
+};
+
+const grammemeRuEntries = (Object.keys(GRAMMEME_RU) as Grammeme[]).map(
+  grammeme => [`tx.lang.grammeme.${grammeme}`, GRAMMEME_RU[grammeme]] as const
+);
+
 export const txLangRu: Record<string, string> = {
+  ...Object.fromEntries(grammemeRuEntries),
+
   'tx.lang.morphology.nominal': 'Начальная форма',
   'tx.lang.wordform.plural.editing': 'Редактирование словоформ',
   'tx.lang.wordform.plural.editing.hint': 'Редактировать словоформы термина',
-  'tx.lang.wordform.plural.generate': 'Генерация словоформ'
+  'tx.lang.wordform.plural.generate': 'Генерация словоформ',
+
+  'tx.lang.reference.syntactic': 'Синтаксическая ссылка',
+  'tx.lang.reference.offset': 'Смещение',
+  'tx.lang.reference.master': 'Основная ссылка'
 };

@@ -55,7 +55,7 @@ export function DlgDeleteOperation() {
   return (
     <ModalForm
       overflowVisible
-      header={tx('tx.lib.operation.deletion')}
+      header={tx('tx.lib.operation.delete')}
       submitText={tx('tx.general.delete')}
       onSubmit={event => {
         event.preventDefault();

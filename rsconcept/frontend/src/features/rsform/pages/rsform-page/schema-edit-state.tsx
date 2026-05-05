@@ -137,7 +137,7 @@ export const SchemaEditState = ({
   }
 
   function deleteSchema() {
-    if (!window.confirm(tx('labels.prompt.deleteLibraryItem'))) {
+    if (!window.confirm(tx('tx.prompt.confirm.delete') + ' ' + schema.title)) {
       return;
     }
     const ossID = schema.oss.length > 0 ? schema.oss[0].id : null;

@@ -27,13 +27,13 @@ export function ToggleNavigation() {
         data-tooltip-id={globalIDs.tooltip}
         data-tooltip-content={
           noNavigationAnimation
-            ? tx('nav.toggleNav.show')
-            : tx('nav.toggleNav.hide')
+            ? tx('tx.nav.toggleNav.show')
+            : tx('tx.nav.toggleNav.hide')
         }
         aria-label={
           noNavigationAnimation
-            ? tx('nav.toggleNav.show')
-            : tx('nav.toggleNav.hide')
+            ? tx('tx.nav.toggleNav.show')
+            : tx('tx.nav.toggleNav.hide')
         }
       >
         {!noNavigationAnimation ? (
@@ -50,8 +50,8 @@ export function ToggleNavigation() {
           className='p-1 cursor-pointer'
           onClick={toggleDarkMode}
           data-tooltip-id={globalIDs.tooltip}
-          data-tooltip-content={darkMode ? tx('nav.theme.dark') : tx('nav.theme.light')}
-          aria-label={darkMode ? tx('nav.theme.dark') : tx('nav.theme.light')}
+          data-tooltip-content={darkMode ? tx('tx.nav.theme.dark') : tx('tx.nav.theme.light')}
+          aria-label={darkMode ? tx('tx.nav.theme.dark') : tx('tx.nav.theme.light')}
         >
           {darkMode ? (
             <IconDarkTheme size='0.75rem' className='hover:text-primary cc-animate-color cc-hover-pulse' />
