@@ -5,9 +5,9 @@ import { describe, expect, it } from 'vitest';
 
 import { Grammeme } from '@/domain/cctext/language';
 
-import { enMessages } from './en';
-import { frMessages } from './fr';
-import { ruMessages } from './ru';
+import { enMessages } from './index.en';
+import { frMessages } from './index.fr';
+import { ruMessages } from './index.ru';
 
 const IGNORE_IDS = new Set<string>([]);
 const MESSAGE_FIRST_SEGMENTS = new Set(Object.keys(enMessages).map(k => k.split('.')[0]));
@@ -67,32 +67,36 @@ describe('locale message maps', () => {
   });
 });
 
-// const IGNORE_DUPES = new Set<string>([
-//   'home.create', //
-//   'labels.rsform.token.filter',
-//   'semantic.term.firstName'
-// ]);
+const IGNORE_DUPES = new Set<string>([
+  'home.create', //
+  'labels.rsform.token.filter',
+  'tx.general.firstName',
+  'tx.rslang.typeClass.predicate',
+  'tx.rslang.typeClass.function',
+  'tx.lib.evalStatus.error',
+  'tx.lib.operation.type.input'
+]);
 
-// it('has no duplicate values in en, ru, or fr catalogs', () => {
-//   for (const [_, messages] of [
-//     ['ru', ruMessages],
-//     ['en', enMessages],
-//     ['fr', frMessages]
-//   ] as const) {
-//     const valueToIds: Record<string, string[]> = {};
-//     for (const [key, value] of Object.entries(messages)) {
-//       if (typeof value !== 'string' || IGNORE_DUPES.has(key)) {
-//         continue;
-//       }
-//       if (!valueToIds[value]) {
-//         valueToIds[value] = [];
-//       }
-//       valueToIds[value].push(key);
-//     }
-//     const dupes = Object.entries(valueToIds).filter(([, ids]) => ids.length > 1);
-//     expect(dupes).toEqual([]);
-//   }
-// });
+it('has no duplicate values in en, ru, or fr catalogs', () => {
+  for (const [_, messages] of [
+    ['ru', ruMessages]
+    //['fr', frMessages],
+    //['en', enMessages]
+  ] as const) {
+    const valueToIds: Record<string, string[]> = {};
+    for (const [key, value] of Object.entries(messages)) {
+      if (typeof value !== 'string' || IGNORE_DUPES.has(key)) {
+        continue;
+      }
+      if (!valueToIds[value]) {
+        valueToIds[value] = [];
+      }
+      valueToIds[value].push(key);
+    }
+    const dupes = Object.entries(valueToIds).filter(([, ids]) => ids.length > 1);
+    expect(dupes).toEqual([]);
+  }
+});
 
 it('has no keys with the same value across en, ru, and fr catalogs', () => {
   // Get intersection of keys present in all catalogs

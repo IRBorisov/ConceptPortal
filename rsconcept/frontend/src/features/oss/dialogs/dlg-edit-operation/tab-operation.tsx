@@ -3,7 +3,7 @@
 import { type ReactNode } from 'react';
 
 import { type OperationSchema } from '@/domain/library';
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { TextArea, TextInput } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
@@ -37,7 +37,7 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </TitleField>
@@ -47,13 +47,13 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
           <TextInput
             id='operation_alias'
             dense
-            label={tx('semantic.term.alias')}
+            label={tx('tx.lib.alias')}
             placeholder={tx('ui.oss.enterAlias')}
             className='w-full'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </AliasField>
@@ -62,7 +62,7 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
           <SelectParent
             items={oss.blocks}
             value={field.state.value ? (oss.blockByID.get(field.state.value) ?? null) : null}
-            placeholder={tx('semantic.term.block.parent')}
+            placeholder={tx('tx.lib.block.parent')}
             onChange={value => field.handleChange(value ? value.id : null)}
           />
         )}
@@ -72,14 +72,14 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
         {field => (
           <TextArea
             id='operation_comment'
-            label={tx('semantic.term.description')}
+            label={tx('tx.lib.description')}
             placeholder={tx('labels.placeholder.itemDescription')}
             noResize
             rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </DescriptionField>

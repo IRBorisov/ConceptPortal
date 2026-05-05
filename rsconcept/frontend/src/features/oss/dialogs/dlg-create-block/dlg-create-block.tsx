@@ -127,7 +127,7 @@ export function DlgCreateBlock() {
   return (
     <ModalForm
       header={tx('ui.dlg.createBlock.header')}
-      submitText={tx('semantic.action.create')}
+      submitText={tx('tx.general.create')}
       canSubmit={canSubmit}
       validationHint={hint}
       onSubmit={event => {
@@ -140,10 +140,7 @@ export function DlgCreateBlock() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='z-pop mx-auto flex border divide-x rounded-none'>
-          <TabLabel
-            title={tx('ui.dlg.createBlock.tabPassport.title')}
-            label={tx('semantic.term.passport')}
-          />
+          <TabLabel title={tx('ui.dlg.createBlock.tabPassport.title')} label={tx('tx.lib.item.passport')} />
           <TabLabel
             title={tx('ui.dlg.createBlock.tabChildren.title', {
               count: childrenOperations.length + childrenBlocks.length

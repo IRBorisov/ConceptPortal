@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import {} from '@/i18n';
+import { globalTx } from '@/i18n';
 
 import { limits } from '@/utils/constants';
 
@@ -37,21 +37,36 @@ export interface IPasswordTokenDTO {
 // ========= SCHEMAS ========
 
 export const schemaUserLogin = z.strictObject({
-  username: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField'),
-  password: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField')
+  username: z
+    .string()
+    .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
+    .nonempty(globalTx('labels.error.requiredField')),
+  password: z
+    .string()
+    .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
+    .nonempty(globalTx('labels.error.requiredField'))
 });
 
 export const schemaChangePassword = z
   .object({
-    old_password: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField'),
-    new_password: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField'),
-    new_password2: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField')
+    old_password: z
+      .string()
+      .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
+      .nonempty(globalTx('labels.error.requiredField')),
+    new_password: z
+      .string()
+      .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
+      .nonempty(globalTx('labels.error.requiredField')),
+    new_password2: z
+      .string()
+      .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
+      .nonempty(globalTx('labels.error.requiredField'))
   })
   .refine(schema => schema.new_password === schema.new_password2, {
     path: ['new_password2'],
-    message: 'labels.error.passwordsMismatch'
+    message: globalTx('labels.error.passwordsMismatch')
   })
   .refine(schema => schema.old_password !== schema.new_password, {
     path: ['new_password'],
-    message: 'labels.error.passwordsSame'
+    message: globalTx('labels.error.passwordsSame')
   });

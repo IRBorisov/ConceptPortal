@@ -101,7 +101,7 @@ export function HomePage() {
               <CtaButton
                 to={urls.login}
                 variant='default'
-                text={tx('semantic.action.login')}
+                text={tx('tx.general.login')}
                 title={tx('home.loginTitle')}
                 icon={<IconUser2 size='1.25rem' />}
               />
@@ -155,7 +155,7 @@ export function HomePage() {
           <FeatureTile
             to={urls.library}
             icon={<IconLibrary size='1.5rem' />}
-            title={tx('semantic.term.library')}
+            title={tx('tx.lib.library')}
             description={tx('home.feature.library.desc')}
             accentClass='bg-accent-green'
           />
@@ -190,7 +190,7 @@ export function HomePage() {
           <FeatureTile
             to={urls.help_topic(HelpTopic.CC_OSS)}
             icon={<IconOSS size='1.5rem' />}
-            title={tx('semantic.term.oss.plural')}
+            title={tx('tx.lib.oss.plural')}
             description={tx('home.feature.oss.desc')}
             accentClass='bg-accent-green'
           />

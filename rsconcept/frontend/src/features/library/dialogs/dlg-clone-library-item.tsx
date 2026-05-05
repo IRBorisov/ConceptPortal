@@ -3,7 +3,7 @@
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { AccessPolicy, type LibraryItem, LibraryItemType } from '@/domain/library';
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 
@@ -72,7 +72,7 @@ export function DlgCloneLibraryItem() {
       header={
         base.item_type === LibraryItemType.RSFORM ? tx('ui.dlg.clone.headerRsform') : tx('ui.dlg.clone.headerRsmodel')
       }
-      submitText={tx('semantic.action.create')}
+      submitText={tx('tx.general.create')}
       canSubmit={isValid}
       onSubmit={event => {
         event.preventDefault();
@@ -85,11 +85,11 @@ export function DlgCloneLibraryItem() {
         {field => (
           <TextInput
             id='dlg_full_name' //
-            label={tx('semantic.term.title')}
+            label={tx('tx.lib.title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </form.Field>
@@ -99,17 +99,17 @@ export function DlgCloneLibraryItem() {
           {field => (
             <TextInput
               id='dlg_alias'
-              label={tx('semantic.term.alias')}
+              label={tx('tx.lib.alias')}
               className='w-64'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+              error={field.state.meta.errors[0]?.message}
             />
           )}
         </form.Field>
         <div className='flex flex-col gap-2'>
-          <Label text={tx('semantic.term.access')} className='self-center select-none' />
+          <Label text={tx('tx.lib.access')} className='self-center select-none' />
           <div className='ml-auto cc-icons'>
             <form.Field name='item_data.access_policy'>
               {field => (
@@ -123,8 +123,8 @@ export function DlgCloneLibraryItem() {
             <form.Field name='item_data.visible'>
               {field => (
                 <MiniButton
-                  title={field.state.value ? tx('lib.item.visible.on') : tx('lib.item.visible.off')}
-                  aria-label={tx('lib.item.visible.hint')}
+                  title={field.state.value ? tx('tx.lib.item.visibility.on') : tx('tx.lib.item.visibility.off')}
+                  aria-label={tx('tx.lib.item.visibility.hint')}
                   icon={<IconItemVisibility value={field.state.value ?? true} />}
                   onClick={() => field.handleChange(!(field.state.value ?? false))}
                 />
@@ -140,7 +140,7 @@ export function DlgCloneLibraryItem() {
             value={field.state.value ?? ''}
             rows={2}
             onChange={field.handleChange}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </form.Field>
@@ -149,13 +149,13 @@ export function DlgCloneLibraryItem() {
         {field => (
           <TextArea
             id='dlg_comment'
-            label={tx('semantic.term.description')}
+            label={tx('tx.lib.description')}
             placeholder={tx('labels.placeholder.itemDescription')}
             rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </form.Field>

@@ -193,8 +193,8 @@ export function ToolbarSchema({
             disabled={!isMutable || isProcessing}
           />
           <DropdownButton
-            title={tx('ui.oss.sideToolbar.openSchemaTitle')}
-            text={tx('ui.oss.sideToolbar.openSchema')}
+            title={tx('tx.lib.schema.goto.hint')}
+            text={tx('tx.lib.schema.goto')}
             icon={<IconRSForm size='1rem' className='icon-primary' />}
             onClick={handleOpenSchema}
           />
@@ -207,20 +207,20 @@ export function ToolbarSchema({
         disabled={!isMutable || isProcessing || !activeCst}
       />
       <MiniButton
-        title={tx('ui.action.createConstituenta')}
+        title={tx('tx.lib.cst.create')}
         icon={<IconNewItem size='1rem' className='icon-green' />}
         onClick={createCst}
         disabled={!isMutable || isProcessing}
       />
       <MiniButton
-        title={tx('ui.cloneConstituenta')}
+        title={tx('tx.lib.cst.clone')}
         icon={<IconClone size='1rem' className='icon-green' />}
         onClick={cloneCst}
         disabled={!isMutable || !activeCst || isProcessing}
       />
 
       <MiniButton
-        title={tx('ui.toolbar.deleteHighlightedConstituenta')}
+        title={tx('tx.general.selection.selected.delete')}
         onClick={promptDeleteCst}
         icon={<IconDestroy size='1rem' className='icon-red' />}
         disabled={!isMutable || !activeCst || isProcessing || activeCst?.is_inherited}
@@ -228,12 +228,12 @@ export function ToolbarSchema({
 
       <MiniButton
         icon={<IconTree size='1rem' className='hover:text-primary' />}
-        title={tx('semantic.term.termGraph')}
+        title={tx('tx.rslang.termGraph')}
         onClick={handleShowTermGraph}
       />
       <MiniButton
         icon={<IconTypeGraph size='1rem' className='hover:text-primary' />}
-        title={tx('semantic.term.typeGraph')}
+        title={tx('tx.rslang.typeGraph')}
         onClick={handleShowTypeGraph}
       />
 

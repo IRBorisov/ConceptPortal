@@ -11,39 +11,20 @@ export const uiExtraFr: Record<string, string> = {
 
   'ui.stats.section.overview': 'Composition globale',
   'ui.stats.title.totalConstituents': 'Nombre total de constituantes',
-  'ui.stats.secondary.owned': 'Propres',
   'ui.stats.title.ownedConstituents': 'Nombre de constituantes propres',
   'ui.stats.row.totalConstituents': 'Total des constituantes',
-  'ui.stats.row.inherited': 'Héritées',
-  'ui.stats.row.owned': 'Propres',
-  'ui.stats.row.crucial': 'Clés',
-  'ui.stats.row.termLabels': 'Termes',
-  'ui.stats.row.textTerms': 'Termes textuels',
   'ui.stats.row.definitions': 'Définitions',
   'ui.stats.row.conventions': 'Conventions',
-  'ui.stats.row.comments': 'Commentaires',
 
   'ui.stats.model.schemaProfile': 'Caractéristiques du schéma',
-  'ui.stats.primary.bases': 'De base',
   'ui.stats.title.undefinedConcepts': 'Nombre de\nnotions non définies',
   'ui.stats.secondary.complexity': 'Complexité',
   'ui.stats.title.termsForBases': 'Nombre de termes\ndécrivant les notions de base',
-  'ui.stats.row.bases': 'De base',
-  'ui.stats.row.derived': 'Dérivées',
   'ui.stats.row.nominals': 'Nominaux',
-  'ui.stats.row.baseSets': 'Ensembles de base',
-  'ui.stats.row.constantSets': 'Ensembles constants',
-  'ui.stats.row.genericStructures': 'Structures génériques',
-  'ui.stats.row.axioms': 'Axiomes',
-  'ui.stats.row.terms': 'Termes (formels)',
-  'ui.stats.row.termFunctions': 'Fonctions terme',
-  'ui.stats.row.predicateFunctions': 'Fonctions prédicat',
-  'ui.stats.row.theorems': 'Théorèmes',
 
   'ui.stats.section.correctness': 'Correction',
   'ui.stats.primary.problems': 'Problèmes',
   'ui.stats.title.problemsCount': 'Nombre de problèmes, y compris erreurs, homonymies et doublons',
-  'ui.stats.secondary.errors': 'Erreurs',
   'ui.stats.title.errorDefinitions':
     'Définitions erronées, y compris erreurs syntaxiques, sémantiques et d’interprétation',
   'ui.stats.row.homonyms': 'Homonymies',
@@ -68,7 +49,6 @@ export const uiExtraFr: Record<string, string> = {
 
   'ui.stats.schema.coreProfile': 'Caractéristiques du noyau',
   'ui.stats.schema.bodyProfile': 'Caractéristiques du corps',
-  'ui.stats.primary.derived': 'Dérivées',
   'ui.stats.title.derivedConcepts': 'Nombre de notions et d’énoncés\ndérivés',
   'ui.stats.secondary.functions': 'Fonctions',
   'ui.stats.title.termAndPredicateFns': 'Nombre de fonctions terme\net fonctions prédicat',
@@ -76,17 +56,11 @@ export const uiExtraFr: Record<string, string> = {
   'ui.toolbar.newConstituenta': 'Nouvelle constituante',
   'ui.toolbar.editConstituenta': 'Modifier la constituante',
 
-  'ui.toolbar.clearSelection': 'Effacer la sélection',
-  'ui.toolbar.moveUp': 'Déplacer vers le haut',
-  'ui.toolbar.moveDown': 'Déplacer vers le bas',
   'ui.cst.crucialToggleAria': 'Basculer le statut de constituante clé',
   'ui.toolbar.addEmptyConstituenta': 'Ajouter une constituante vide',
   'ui.toolbar.addNewConstituenta': 'Ajouter une nouvelle constituante…',
   'ui.aria.addNewConstituenta': 'Ajouter une nouvelle constituante',
-  'ui.toolbar.deleteSelected': 'Supprimer la sélection',
-  'ui.aria.deleteSelected': 'Supprimer la sélection',
 
-  'ui.graphSelection.clear': 'Effacer la sélection',
   'ui.graphSelection.extendFromSelected': 'Étendre à partir de la sélection…',
   'ui.graphSelection.suppliers': 'Fournisseurs',
   'ui.graphSelection.suppliersTitle': 'Sélectionner les fournisseurs',
@@ -101,22 +75,16 @@ export const uiExtraFr: Record<string, string> = {
     'Maximisation:\ncompléter la sélection par des constituantes\ndépendant uniquement de la sélection',
   'ui.graphSelection.maximizeHint':
     'Maximisation: compléter la sélection par des constituantes dépendant uniquement de la sélection',
-  'ui.graphSelection.invert': 'Inverser',
   'ui.graphSelection.pickGroup': 'Sélectionner un groupe…',
   'ui.graphSelection.core': 'noyau',
   'ui.graphSelection.coreTitle': 'Sélectionner le noyau',
-  'ui.graphSelection.crucial': 'clés',
   'ui.graphSelection.crucialTitle': 'Sélectionner les clés',
   'ui.graphSelection.owned': 'propres',
   'ui.graphSelection.ownedTitle': 'Sélectionner les propres',
-  'ui.graphSelection.inherited': 'héritées',
   'ui.graphSelection.inheritedTitle': 'Sélectionner les héritées',
 
-  'ui.tg.toolbar.fullGraph': 'Graphe entier',
   'ui.tg.toolbar.filterSettings': 'Filtrage des nœuds et des liens',
   'ui.tg.toolbar.focusCst': 'Focaliser une constituante',
-  'ui.tg.toolbar.hideText': 'Masquer le texte',
-  'ui.tg.toolbar.showText': 'Afficher le texte',
   'ui.tg.toolbar.echelonGraphTitle': 'Graphe des échelons des constituantes sélectionnées',
 
   'ui.page.notFound.title': 'Erreur 404 – Page introuvable',
@@ -156,7 +124,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.stats.row.incorrect': 'Non valides',
 
   'ui.rsform.menu.archiveNoEdit': 'Archive: modification interdite\nAller à la version actuelle',
-  'ui.rsform.menu.editing': 'Modification',
   'ui.rsform.menu.templatesTitle': 'Créer une constituante à partir d’un modèle',
   'ui.rsform.menu.embedding': 'Intégration',
   'ui.rsform.menu.embeddingTitle': 'Importer un ensemble de\nconstituantes d’un autre schéma',
@@ -187,7 +154,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.termGraph.dialog.title': 'Paramètres du graphe des termes',
   'ui.termGraph.dialog.transforms': 'Transformations',
   'ui.termGraph.dialog.cstTypes': 'Types de constituantes',
-  'ui.termGraph.filter.hideText': 'Masquer le texte',
   'ui.termGraph.filter.hideTextHint': 'Ne pas afficher les termes',
   'ui.termGraph.filter.hideDerivedHint': 'Ne pas afficher les notions dérivées',
   'ui.termGraph.filter.hideFree': 'Masquer les isolées',
@@ -207,32 +173,19 @@ export const uiExtraFr: Record<string, string> = {
 
   'ui.rsexpr.status.checkDefinition': 'Vérifier la définition',
 
-  'ui.oss.toolbar.resetView': 'Réinitialiser la vue',
   'ui.oss.toolbar.contentsPanel': 'Panneau de contenu',
-  'ui.oss.toolbar.displaySettings': 'Paramètres d’affichage',
-  'ui.oss.toolbar.editSelected': 'Modifier la sélection',
   'ui.oss.toolbar.rightClickHint': 'Clic droit',
-  'ui.oss.toolbar.newBlock': 'Nouveau bloc',
-  'ui.oss.toolbar.newSchemaShort': 'Nouveau schéma',
-  'ui.oss.newSchema': 'Nouveau schéma conceptuel',
   'ui.oss.toolbar.importSchemaShort': 'Importer un schéma',
-  'ui.oss.toolbar.importSchema': 'Importer un schéma conceptuel',
-  'ui.oss.toolbar.synthesis': 'Synthèse de schémas conceptuels',
   'ui.oss.toolbar.filterConstituents': 'Filtrer les constituantes',
   'ui.oss.toolbar.relativizationShort': 'Relativisation',
   'ui.oss.toolbar.relativization': 'Relativisation des schémas conceptuels',
-  'ui.oss.toolbar.deleteSelected': 'Supprimer la sélection',
 
   'ui.oss.sideToolbar.editSchemaTitle': 'Modifier le schéma conceptuel',
-  'ui.oss.sideToolbar.openSchema': 'Ouvrir le schéma',
-  'ui.oss.sideToolbar.openSchemaTitle': 'Aller au schéma conceptuel',
-  'ui.toolbar.deleteHighlightedConstituenta': 'Supprimer la constituante sélectionnée',
 
   'ui.oss.node.linkedCs': 'Schéma lié',
   'ui.oss.node.noLinkedCs': 'Pas de schéma lié',
   'ui.oss.node.rhombusSynthesisWarn': 'Attention!\nSynthèse en losange\nDoublons de constituantes possibles',
 
-  'ui.oss.settings.header': 'Paramètres d’affichage',
   'ui.oss.settings.coordsToggleAria': 'Afficher les coordonnées des nœuds',
   'ui.oss.settings.coordsLabel': 'Coordonnées des nœuds: {state}',
   'ui.oss.settings.gridToggleTitle': 'Afficher la grille',
@@ -250,7 +203,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.oss.keepInherited': 'Conserver les constituantes héritées',
   'ui.oss.keepInheritedHint': 'Les constituantes héritées\ndeviendront ajoutées',
 
-  'ui.oss.deleteOperation.header': 'Supprimer l’opération',
   'ui.oss.deleteOperation.deleteSchemaLocked': 'Le schéma lié ne peut pas être supprimé',
   'ui.oss.deleteOperation.deleteSchemaHint': 'Supprimer le schéma avec l’opération',
   'ui.oss.deleteOperation.warningRelatedSchema': 'Le schéma associé sera également supprimé',
@@ -267,20 +219,10 @@ export const uiExtraFr: Record<string, string> = {
   'ui.filter.schemaIssuesTitle': 'Erreurs de schéma',
   'ui.filter.modelIssuesShort': 'Erreurs mod.',
   'ui.filter.modelIssuesTitle': 'Erreurs de modèle',
-  'ui.filter.crucial': 'Clés',
-  'ui.filter.basic': 'De base',
-  'ui.filter.derived': 'Dérivées',
-  'ui.filter.owned': 'Propres',
-  'ui.filter.inheritedDescendants': 'Descendants',
-
-  'ui.library.showNestedFoldersAria': 'Afficher les dossiers imbriqués',
 
   'ui.template.arguments.empty': 'Aucun argument',
   'ui.template.arguments.placeholderDefinition': 'Définition résultante',
   'ui.template.arguments.freeSlot': 'argument libre',
-
-  'ui.users.action.removeFromListTitle': 'Retirer de la liste',
-  'ui.users.action.clearListTitle': 'Vider la liste',
 
   'ui.bindingEditor.selectRowPlaceholder': 'Sélectionnez une ligne',
   'ui.bindingEditor.noValues': 'Aucune valeur',
@@ -291,9 +233,6 @@ export const uiExtraFr: Record<string, string> = {
 
   'ui.pick.schema.filterByLocationTitle': 'Filtrer par emplacement',
   'ui.pick.schema.emptyHint': 'Modifiez les paramètres du filtre',
-
-  'ui.list.reorder.moveHigher': 'Déplacer vers le haut',
-  'ui.list.reorder.moveLower': 'Déplacer vers le bas',
 
   'ui.oss.pickContents.comboPlaceholder': 'Choisir une opération ou un bloc',
 
@@ -320,10 +259,8 @@ export const uiExtraFr: Record<string, string> = {
   'ui.oss.infoOperation.ownAdditionsLabel': 'Propres :',
   'ui.oss.infoOperation.csNotInOss': 'Le schéma conceptuel n’appartient pas à l’OSS',
   'ui.oss.infoOperation.rhombusSynthesis': 'Synthèse en losange',
-  'ui.oss.infoOperation.descriptionWithColon': 'Description : ',
   'ui.oss.infoOperation.substitutionsNone': 'Aucune',
 
-  'ui.sandbox.editMenu.buttonTitle': 'Édition',
   'ui.sandbox.editMenu.substitutionHint': 'Remplacer certaines constituantes par d’autres',
 
   'ui.schemaCard.toggleStatsTitle': 'Afficher les statistiques',
@@ -334,12 +271,8 @@ export const uiExtraFr: Record<string, string> = {
 
   'ui.stats.oss.compositionPrimaryTitle': 'Nombre total d’éléments dans le schéma opérationnel',
   'ui.stats.oss.blocksSecondaryTitle': 'Nombre de blocs imbriqués',
-  'ui.stats.oss.detail.inputs': 'Chargement',
-  'ui.stats.oss.detail.replica': 'Réplique',
-  'ui.stats.oss.attachedSection': 'Schémas attachés',
   'ui.stats.oss.attachedPrimaryTitle': 'Nombre d’opérations avec un schéma RSForm attaché',
   'ui.stats.oss.ownedSecondaryTitle': 'Nombre de schémas propres (non importés)',
-  'ui.stats.oss.detail.attachedSchemas': 'Schémas attachés',
   'ui.stats.oss.detail.external': 'Externes',
 
   'ui.pagination.shownRange': '{start}–{end} sur {total}',
@@ -376,7 +309,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.library.editors.saveList': 'Enregistrer la liste',
   'ui.library.editors.addPlaceholder': 'Ajouter un éditeur',
   'ui.library.miniOss.listLabel': 'Liste des OSS',
-  'ui.library.pickLocation.label': 'Emplacement',
 
   'ui.oss.selectOperation.placeholder': 'Choisir une opération',
   'ui.oss.selectBlock.placeholder': 'Choisir un bloc',
@@ -386,7 +318,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.oss.dlg.inputSchema.resetTitle': 'Réinitialiser le choix du schéma',
 
   'ui.rsmodel.value.calculateTooltip': 'Enregistrer et calculer la valeur',
-  'ui.rsmodel.dlg.editValue.header': 'Éditeur de valeur',
   'ui.rsmodel.dlg.editBinding.header': 'Éditeur de la source de base',
   'ui.rsmodel.dlg.viewBinding.header': 'Voir la source de base',
 
@@ -404,10 +335,8 @@ export const uiExtraFr: Record<string, string> = {
   'ui.rsform.errors.count': 'Erreurs : {count}',
   'ui.rsform.errors.warnings': 'Avertissements : {count}',
   'ui.rsform.termGraph.hiddenWithCount': 'Masquées [{selected} | {total}]',
-  'ui.rsform.termGraph.hidden': 'Masquées',
   'ui.rsform.termGraph.colorSchemePlaceholder': 'Schéma de couleurs',
   'ui.rsform.selectConstituenta.placeholder': 'Choisir une constituante',
-  'ui.rsform.cstInfo.inheritedTitle': 'héritière',
   'ui.rsform.cstInfo.expressionLabel': 'Expression : ',
   'ui.rsform.cstInfo.definitionLabel': 'Définition : ',
   'ui.rsform.cstInfo.baseLabel': 'Base : ',
@@ -422,9 +351,6 @@ export const uiExtraFr: Record<string, string> = {
   'ui.rsform.refsTooltip.masterReference': 'Référence principale :',
   'ui.rsform.refsTooltip.notDefined': 'non définie',
   'ui.rsform.refsTooltip.editHotkey': 'Alt + 2 : modifier',
-  'ui.rsform.termGraph.toolbar.fullGraphTitle': 'Graphe entier',
-  'ui.rsform.termGraph.toolbar.hideTextTitle': 'Masquer le texte',
-  'ui.rsform.termGraph.toolbar.showTextTitle': 'Afficher le texte',
   'ui.rsform.hideDerived': 'Masquer les dérivées',
   'ui.rsform.showDerived': 'Afficher les dérivées',
   'ui.rsform.termGraph.focus.resetTitle': 'Réinitialiser le focus',
@@ -456,7 +382,5 @@ export const uiExtraFr: Record<string, string> = {
   'ui.embed.youtubeTitle': 'Vidéo Youtube intégrée',
   'ui.embed.vkTitle': 'Vidéo VK intégrée',
   'ui.common.notImplemented': 'Fonctionnalité en cours de développement',
-  'ui.sandbox.invalidBundleFile': 'Fichier de bac à sable invalide',
-
-  'ui.ai.badge.templateShared': 'Partagé'
+  'ui.sandbox.invalidBundleFile': 'Fichier de bac à sable invalide'
 };

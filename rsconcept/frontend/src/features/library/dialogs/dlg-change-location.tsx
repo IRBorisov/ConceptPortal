@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { z } from 'zod';
 
 import { validateLocation } from '@/domain/library/library-api';
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { globalTx, useTx } from '@/i18n';
 
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
@@ -14,7 +14,7 @@ import { limits } from '@/utils/constants';
 import { PickLocation } from '../components/pick-location';
 
 const schemaLocation = z.strictObject({
-  location: z.string().refine(data => validateLocation(data), { message: 'labels.error.invalidLocation' })
+  location: z.string().refine(data => validateLocation(data), { message: globalTx('labels.error.invalidLocation') })
 });
 
 type LocationType = z.infer<typeof schemaLocation>;
@@ -49,11 +49,7 @@ export function DlgChangeLocation() {
       overflowVisible
       header={tx('ui.dlg.changeLocation.header')}
       submitText={tx('ui.action.move')}
-      validationHint={
-        isValid
-          ? ''
-          : tx('ui.dlg.changeLocation.invalidHint', { maxLen: limits.len_location })
-      }
+      validationHint={isValid ? '' : tx('ui.dlg.changeLocation.invalidHint', { maxLen: limits.len_location })}
       canSubmit={isValid && !isDefaultValue}
       onSubmit={event => {
         event.preventDefault();
@@ -68,7 +64,7 @@ export function DlgChangeLocation() {
             dropdownHeight='h-38' //
             value={field.state.value ?? ''}
             onChange={field.handleChange}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </form.Field>

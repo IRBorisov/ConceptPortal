@@ -10,16 +10,14 @@ interface BadgeSharedTemplateProps {
   value: boolean;
 }
 
-/**
- * Displays location icon with a full text tooltip.
- */
+/** Displays location icon with a full text tooltip. */
 export function BadgeSharedTemplate({ value }: BadgeSharedTemplateProps) {
   const tx = useTx();
   return (
     <div
       className='pl-2'
       data-tooltip-id={globalIDs.tooltip}
-      data-tooltip-content={value ? tx('ui.ai.badge.templateShared') : tx('labels.library.access.private')}
+      data-tooltip-content={value ? tx('tx.lib.access.public') : tx('tx.lib.access.private')}
     >
       <IconSharedTemplate value={value} size='1.25rem' />
     </div>

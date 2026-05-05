@@ -105,7 +105,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
         getHeaderText: getHeaderText
       });
     } else if (!cstData) {
-      toast.error(tx('labels.error.valueNull'));
+      toast.error(tx('tx.rslang.value.missing'));
     } else {
       showViewValue({
         value: cstData,
@@ -160,7 +160,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
   function applyImportedJsonText(text: string) {
     const trimmed = text.trim();
     if (!trimmed) {
-      toast.error(tx('labels.error.valueNull'));
+      toast.error(tx('tx.rslang.value.missing'));
       return;
     }
 
@@ -231,18 +231,16 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
     <div className='flex items-center gap-6 text-sm'>
       {showValueButton ? (
         <TextButton
-          text={
-            !cstInferrable && isMutable ? tx('ui.value.editValue') : tx('ui.eval.viewValue')
-          }
-          title={tx('ui.value.viewOrEditTitle')}
+          text={!cstInferrable && isMutable ? tx('tx.rslang.value.edit') : tx('ui.eval.viewValue')}
+          title={tx('tx.rslang.value.edit.hint')}
           onClick={handleValueDialog}
         />
       ) : null}
 
       {showClearButton ? (
         <TextButton
-          text={tx('ui.value.clearValue')}
-          title={tx('ui.value.clearValueTitle')}
+          text={tx('tx.rslang.value.reset')}
+          title={tx('tx.rslang.value.reset.hint')}
           onClick={handleClearValue}
           disabled={isProcessing}
         />
@@ -252,7 +250,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
         <div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
           <TextButton
             text={tx('ui.action.exportShort')}
-            title={tx('ui.value.exportValueTitle')}
+            title={tx('tx.rslang.value.export')}
             hideTitle={isExportOpen}
             onClick={toggleExport}
           />
@@ -267,28 +265,21 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
         <div ref={importMenuRef} onBlur={handleImportBlur} className='relative'>
           <TextButton
             text={tx('ui.action.importShort')}
-            title={tx('ui.value.importValueTitle')}
+            title={tx('tx.rslang.value.import')}
             hideTitle={isImportOpen}
             onClick={toggleImport}
           />
           <Dropdown isOpen={isImportOpen} margin='mt-1'>
-            <DropdownButton
-              text={tx('ui.value.loadFromClipboard')}
-              onClick={handleClipboardImport}
-            />
-            <DropdownButton text={tx('ui.value.loadFromJson')} onClick={handleJSONImport} />
+            <DropdownButton text={tx('tx.general.load.fromClipboard')} onClick={handleClipboardImport} />
+            <DropdownButton text={tx('tx.general.load.fromJson')} onClick={handleJSONImport} />
           </Dropdown>
         </div>
       ) : null}
 
       {showRandomButton ? (
         <TextButton
-          text={
-            typification.typeID === TypeID.collection
-              ? tx('ui.value.randomAddMany')
-              : tx('ui.value.randomSingle')
-          }
-          title={tx('ui.value.randomGenerateTitle')}
+          text={tx('tx.rslang.value.add.random')}
+          title={tx('tx.rslang.value.add.random.hint')}
           onClick={handleAddRandomValues}
           disabled={isProcessing}
         />

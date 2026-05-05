@@ -58,14 +58,14 @@ export function ValueInput({
       <StatusBar className='absolute -top-1 right-1/2 translate-x-1/2' status={status} onCalculate={onCalculate} />
       {onToggleDataText && !isBinding ? (
         <MiniButton
-          title={tx('ui.value.showDataInText')}
+          title={tx('tx.rslang.value.element.visibility.hint')}
           className='absolute top-0 right-0'
           icon={<IconShowDataText size='1.25rem' className='hover:text-primary' value={!!showDataText} />}
           onClick={onToggleDataText}
         />
       ) : null}
 
-      <Label text={tx('semantic.term.value')} />
+      <Label text={tx('tx.rslang.value')} />
 
       <TextArea
         value={value.slice(0, limits.len_data_str)}

@@ -121,7 +121,7 @@ export function DlgRelocateConstituents() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.relocateConstituents.header')}
+      header={tx('tx.lib.oss.relocate')}
       submitText={tx('ui.action.move')}
       canSubmit={canSubmit}
       validationHint={canSubmit ? '' : tx('labels.hint.relocateEmpty')}

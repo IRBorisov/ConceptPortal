@@ -42,7 +42,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       />
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip(tx('semantic.term.constituenta.crucial'), 'F')}
+          title={prepareTooltip(tx('tx.lib.cst.crucial'), 'F')}
           aria-label={tx('ui.cst.crucialToggleAria')}
           icon={<IconCrucial size='1.25rem' className='icon-primary' />}
           onClick={toggleCrucial}
@@ -51,7 +51,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       ) : null}
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip(tx('ui.toolbar.deleteSelected'), 'Delete, `')}
+          title={prepareTooltip(tx('tx.general.selection.selected.delete'), 'Delete, `')}
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
           onClick={handleDeleteSelected}
           disabled={!canDeleteSelected || isProcessing}

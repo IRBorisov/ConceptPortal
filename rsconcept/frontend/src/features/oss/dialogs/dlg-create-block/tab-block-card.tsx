@@ -5,7 +5,7 @@ import { type ReactNode } from 'react';
 import { type OperationSchema } from '@/domain/library';
 import { NodeType } from '@/domain/library';
 import { constructNodeID } from '@/domain/library/oss-api';
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { TextArea, TextInput } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
@@ -41,7 +41,7 @@ export function TabBlockCard({ oss, blocks, fields }: TabBlockCardProps) {
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </TitleField>
@@ -51,7 +51,7 @@ export function TabBlockCard({ oss, blocks, fields }: TabBlockCardProps) {
           <SelectParent
             items={oss.blocks.filter(block => !all_children.includes(block.nodeID))}
             value={field.state.value ? (oss.blockByID.get(field.state.value) ?? null) : null}
-            placeholder={tx('semantic.term.block.parent')}
+            placeholder={tx('tx.lib.block.parent')}
             onChange={value => field.handleChange(value ? value.id : null)}
           />
         )}
@@ -61,7 +61,7 @@ export function TabBlockCard({ oss, blocks, fields }: TabBlockCardProps) {
         {field => (
           <TextArea
             id='operation_comment'
-            label={tx('semantic.term.description')}
+            label={tx('tx.lib.description')}
             placeholder={tx('labels.placeholder.itemDescription')}
             noResize
             rows={5}

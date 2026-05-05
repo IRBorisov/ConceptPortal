@@ -4,7 +4,7 @@ import { type ReactNode, useState } from 'react';
 
 import { CstType, type RSForm } from '@/domain/library';
 import { isBaseSet, isBasicConcept } from '@/domain/library/rsform-api';
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
@@ -52,7 +52,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
     <>
       <div className='flex items-center self-center gap-3'>
         <MiniButton
-          title={tx('semantic.term.constituenta.crucial')}
+          title={tx('tx.lib.cst.crucial')}
           icon={<IconCrucialValue size='1.25rem' value={crucial} />}
           onClick={onToggleCrucial}
         />
@@ -62,12 +62,12 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
             <TextInput
               id='dlg_cst_alias'
               dense
-              label={tx('semantic.term.alias.short')}
+              label={tx('tx.lib.alias.short')}
               className='w-28'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+              error={field.state.meta.errors[0]?.message}
             />
           )}
         </AliasField>
@@ -78,7 +78,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
         {field => (
           <RefsInput
             id='dlg_cst_term'
-            label={tx('semantic.term.term')}
+            label={tx('tx.lib.term')}
             maxHeight='3.75rem'
             placeholder={tx('ui.placeholder.termForDefinitions')}
             schema={schema}
@@ -110,7 +110,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
           !!field.state.value || !isElementary ? (
             <RefsInput
               id='dlg_cst_definition'
-              label={tx('semantic.term.definitionTextual')}
+              label={tx('tx.lib.definitionTextual')}
               placeholder={tx('ui.placeholder.textDefinitionHint')}
               maxHeight='3.75rem'
               schema={schema}
@@ -125,11 +125,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
       </DefinitionRawField>
 
       {!showConvention ? (
-        <TextButton
-          text={tx('semantic.action.add.comment')}
-          className='self-start'
-          onClick={() => setForceComment(true)}
-        />
+        <TextButton text={tx('tx.lib.comment.add')} className='self-start' onClick={() => setForceComment(true)} />
       ) : (
         <ConventionField>
           {field => (
@@ -137,7 +133,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
               id='dlg_cst_convention'
               spellCheck
               fitContent
-              label={isBasic ? tx('semantic.term.convention') : tx('semantic.term.comment')}
+              label={isBasic ? tx('tx.lib.convention') : tx('tx.lib.comment')}
               placeholder={isBasic ? tx('ui.placeholder.conventionBasic') : tx('ui.placeholder.developerComment')}
               areaClassName='max-h-20'
               value={field.state.value}

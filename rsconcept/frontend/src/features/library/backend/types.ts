@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { AccessPolicy, type LibraryItem, LibraryItemType } from '@/domain/library';
 import { validateLocation } from '@/domain/library/library-api';
-import {} from '@/i18n';
+import { globalTx } from '@/i18n';
 
 import { limits } from '@/utils/constants';
 
@@ -69,10 +69,18 @@ const schemaInputLibraryItem = schemaLibraryItem
     access_policy: true
   })
   .extend({
-    alias: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField'),
-    title: z.string().max(limits.len_title, 'labels.error.titleLength').nonempty('labels.error.requiredField'),
-    description: z.string().max(limits.len_description, 'labels.error.descriptionLength'),
-    location: z.string().refine(data => validateLocation(data), { message: 'labels.error.invalidLocation' })
+    alias: z
+      .string()
+      .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
+      .nonempty(globalTx('labels.error.requiredField')),
+    title: z
+      .string()
+      .max(limits.len_title, `${globalTx('labels.error.lengthLimit')} (${limits.len_title})`)
+      .nonempty(globalTx('labels.error.requiredField')),
+    description: z
+      .string()
+      .max(limits.len_description, `${globalTx('labels.error.lengthLimit')} (${limits.len_description})`),
+    location: z.string().refine(data => validateLocation(data), { message: globalTx('labels.error.invalidLocation') })
   });
 
 export const schemaCloneLibraryItem = z.strictObject({
@@ -104,22 +112,31 @@ export const schemaCreateRSModelFromSandbox = z.strictObject({
 
 export const schemaCreateLibraryItem = schemaInputLibraryItem
   .extend({
-    alias: z.string().max(limits.len_alias, 'labels.error.aliasLength').optional(),
-    title: z.string().max(limits.len_title, 'labels.error.titleLength').optional(),
-    description: z.string().max(limits.len_description, 'labels.error.descriptionLength').optional(),
+    alias: z
+      .string()
+      .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
+      .optional(),
+    title: z
+      .string()
+      .max(limits.len_title, `${globalTx('labels.error.lengthLimit')} (${limits.len_title})`)
+      .optional(),
+    description: z
+      .string()
+      .max(limits.len_description, `${globalTx('labels.error.lengthLimit')} (${limits.len_description})`)
+      .optional(),
     schema: z.number().optional()
   })
   .refine(data => !!data.alias, {
     path: ['alias'],
-    message: 'labels.error.requiredField'
+    message: globalTx('labels.error.requiredField')
   })
   .refine(data => !!data.title, {
     path: ['title'],
-    message: 'labels.error.requiredField'
+    message: globalTx('labels.error.requiredField')
   })
   .refine(data => data.item_type !== LibraryItemType.RSMODEL || !!data.schema, {
     path: ['schema'],
-    message: 'labels.error.requiredField'
+    message: globalTx('labels.error.requiredField')
   });
 
 export const schemaUpdateLibraryItem = schemaInputLibraryItem
@@ -139,8 +156,13 @@ export const schemaVersionInfo = z.strictObject({
 });
 
 const schemaVersionInput = z.strictObject({
-  version: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField'),
-  description: z.string().max(limits.len_description, 'labels.error.descriptionLength')
+  version: z
+    .string()
+    .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
+    .nonempty(globalTx('labels.error.requiredField')),
+  description: z
+    .string()
+    .max(limits.len_description, `${globalTx('labels.error.lengthLimit')} (${limits.len_description})`)
 });
 
 export const schemaVersionExInfo = schemaVersionInfo.extend({

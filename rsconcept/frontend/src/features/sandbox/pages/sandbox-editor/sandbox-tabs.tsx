@@ -48,7 +48,7 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
   useLayoutEffect(
     function updateWindowTitle() {
       const oldTitle = document.title;
-      document.title = `${tx('semantic.term.sandbox')} — ${schema.title}`;
+      document.title = `${tx('tx.general.sandbox')} — ${schema.title}`;
       return function restoreWindowTitle() {
         document.title = oldTitle;
       };
@@ -172,9 +172,9 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
           <MenuEdit />
         </div>
 
-        <TabLabel label={tx('semantic.term.passport')} />
+        <TabLabel label={tx('tx.lib.item.passport')} />
         <TabLabel label={tx('ui.tabs.list')} />
-        <TabLabel label={tx('semantic.term.concept')} />
+        <TabLabel label={tx('tx.lib.concept')} />
         <TabLabel label={tx('ui.tabs.graph')} />
         <TabLabel label={tx('ui.tabs.data')} />
         <TabLabel label={tx('ui.tabs.evaluation')} />

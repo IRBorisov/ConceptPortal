@@ -72,7 +72,7 @@ export function DlgInlineSynthesis() {
 
   return (
     <ModalForm
-      header={tx('ui.dlg.inlineSynthesis.header')}
+      header={tx('tx.lib.schema.merge')}
       submitText={tx('ui.action.addConstituents')}
       className='w-160 h-132 px-6'
       canSubmit={canSubmit}
@@ -81,9 +81,9 @@ export function DlgInlineSynthesis() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
-          <TabLabel label={tx('semantic.term.schema.short')} title={tx('ui.tab.inlineSynthesis.schemaTitle')} />
+          <TabLabel label={tx('tx.lib.schema.short')} title={tx('ui.tab.inlineSynthesis.schemaTitle')} />
           <TabLabel
-            label={tx('semantic.term.constituenta.plural')}
+            label={tx('tx.lib.cst.plural')}
             title={
               !sourceID
                 ? tx('ui.tab.inlineSynthesis.selectSchemaFirst')
@@ -92,7 +92,7 @@ export function DlgInlineSynthesis() {
             disabled={!sourceID}
           />
           <TabLabel
-            label={tx('semantic.action.substitution.plural')}
+            label={tx('tx.lib.cst.substitution.plural')}
             title={
               !sourceID
                 ? tx('ui.tab.inlineSynthesis.selectSchemaFirst')

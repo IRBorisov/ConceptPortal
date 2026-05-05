@@ -174,16 +174,16 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
           isContentEditable ? (
             <div className='flex pl-1'>
               <MiniButton
-                title={prepareTooltip(tx('ui.toolbar.moveUp'), 'Alt + ↑')}
-                aria-label={tx('ui.toolbar.moveUp')}
+                title={prepareTooltip(tx('tx.general.moveUp'), 'Alt + ↑')}
+                aria-label={tx('tx.general.moveUp')}
                 className='px-0'
                 icon={<IconMoveUp size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
                 onClick={moveUp}
                 disabled={disabled || isModified || schema.items.length < 2}
               />
               <MiniButton
-                title={prepareTooltip(tx('ui.toolbar.moveDown'), 'Alt + ↓')}
-                aria-label={tx('ui.toolbar.moveDown')}
+                title={prepareTooltip(tx('tx.general.moveDown'), 'Alt + ↓')}
+                aria-label={tx('tx.general.moveDown')}
                 className='px-0'
                 icon={<IconMoveDown size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
                 onClick={moveDown}

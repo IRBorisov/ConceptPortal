@@ -61,7 +61,7 @@ export function ViewHidden({
       <MiniButton
         className='absolute right-[calc(1rem-4px)] top-3 pointer-events-auto'
         noPadding
-        title={!isFolded ? tx('semantic.action.fold') : tx('semantic.action.unfold')}
+        title={!isFolded ? tx('tx.general.fold') : tx('tx.general.unfold')}
         icon={!isFolded ? <IconDropArrowUp size='1rem' /> : <IconDropArrow size='1rem' />}
         onClick={toggleFolded}
       />
@@ -73,7 +73,7 @@ export function ViewHidden({
                 selected: localSelected.length,
                 total: items.length
               })
-            : tx('ui.rsform.termGraph.hidden')}
+            : tx('tx.lib.filter.byHidden')}
         </div>
       </div>
 

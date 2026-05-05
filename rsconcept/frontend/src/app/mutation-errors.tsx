@@ -48,7 +48,7 @@ export function MutationErrors() {
         >
           <DescribeError error={mutationErrors[0]} />
         </div>
-        <Button onClick={resetErrors} className='w-fit mt-3' text={tx('semantic.action.close')} />
+        <Button onClick={resetErrors} className='w-fit mt-3' text={tx('tx.general.close')} />
       </div>
     </div>
   );

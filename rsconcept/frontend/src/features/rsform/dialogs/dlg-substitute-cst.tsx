@@ -4,7 +4,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type RSForm } from '@/domain/library';
 import { SubstitutionValidator } from '@/domain/library/oss-api';
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { describeSubstitutionError } from '@/features/oss/labels';
@@ -49,8 +49,8 @@ export function DlgSubstituteCst() {
 
   return (
     <ModalForm
-      header={tx('semantic.action.substitution')}
-      submitText={tx('semantic.action.substitute')}
+      header={tx('tx.lib.cst.substitution')}
+      submitText={tx('tx.lib.cst.substitute')}
       canSubmit={isValid}
       validationHint={isValid ? '' : tx('labels.hint.substitutionsEmpty')}
       onSubmit={event => {
@@ -71,7 +71,7 @@ export function DlgSubstituteCst() {
               rows={6}
               schemas={[schema]}
             />
-            <ErrorField className='-mt-6 px-3' error={formatZodErrorMessage(field.state.meta.errors[0]?.message)} />
+            <ErrorField className='-mt-6 px-3' error={field.state.meta.errors[0]?.message} />
           </>
         )}
       </form.Field>

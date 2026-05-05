@@ -139,12 +139,12 @@ export function ToolbarOssGraph({
     >
       <div className='cc-icons'>
         <MiniButton
-          title={prepareTooltip(tx('semantic.action.resetChanges'), 'Z')}
+          title={prepareTooltip(tx('tx.general.changes.reset'), 'Z')}
           icon={<IconReset size='1.25rem' className='icon-primary' />}
           onClick={handleResetPositions}
         />
         <MiniButton
-          title={prepareTooltip(tx('ui.oss.toolbar.resetView'), 'G')}
+          title={prepareTooltip(tx('tx.general.fitView'), 'G')}
           icon={<IconFitImage size='1.25rem' className='icon-primary' />}
           onClick={handleFitView}
         />
@@ -154,13 +154,13 @@ export function ToolbarOssGraph({
           onClick={handleShowSidePanel}
         />
         <MiniButton
-          title={tx('ui.oss.toolbar.displaySettings')}
+          title={tx('tx.general.settings')}
           icon={<IconSettings size='1.25rem' className='icon-primary' />}
           onClick={handleShowOptions}
         />
         <div ref={exportRef} onBlur={handleExportBlur} className='relative flex'>
           <MiniButton
-            title={tx('semantic.action.saveImage')}
+            title={tx('tx.general.images.save')}
             hideTitle={isExportOpen}
             icon={<IconImage size='1.25rem' className='icon-primary' />}
             onClick={toggleExport}
@@ -169,13 +169,13 @@ export function ToolbarOssGraph({
           <Dropdown isOpen={isExportOpen} className='-translate-x-1/2'>
             <DropdownButton
               icon={<IconPNG size='1.25rem' className='icon-primary' />}
-              text={tx('semantic.action.save') + ' PNG'}
+              text={tx('tx.general.save') + ' PNG'}
               onClick={handleExportPngBtn}
               disabled={isProcessing || isExportingImage}
             />
             <DropdownButton
               icon={<IconSVG size='1.25rem' className='icon-primary' />}
-              text={tx('semantic.action.save') + ' SVG'}
+              text={tx('tx.general.save') + ' SVG'}
               onClick={handleExportSvgBtn}
               disabled={isProcessing || isExportingImage}
             />
@@ -187,17 +187,17 @@ export function ToolbarOssGraph({
       {isMutable ? (
         <div className='cc-icons items-start'>
           <MiniButton
-            aria-label={tx('semantic.action.saveChanges')}
-            title={prepareTooltip(tx('semantic.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+            aria-label={tx('tx.general.changes.save')}
+            title={prepareTooltip(tx('tx.general.changes.save'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
             hideTitle={isMenuOpen}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             onClick={handleSavePositions}
             disabled={isProcessing}
           />
           <MiniButton
-            aria-label={tx('ui.oss.toolbar.editSelected')}
+            aria-label={tx('tx.general.selection.selected.edit')}
             title={prepareTooltip(
-              tx('ui.oss.toolbar.editSelected'),
+              tx('tx.general.selection.selected.edit'),
               isIOS() ? '' : tx('ui.oss.toolbar.rightClickHint')
             )}
             hideTitle={isContextMenuOpen || isMenuOpen}
@@ -207,7 +207,7 @@ export function ToolbarOssGraph({
           />
           <div ref={menuRef} onBlur={handleMenuBlur} className='relative'>
             <MiniButton
-              title={tx('semantic.action.add') + '...'}
+              title={tx('tx.general.add') + '...'}
               hideTitle={isMenuOpen}
               icon={<IconNewItem size='1.25rem' className='icon-green' />}
               onClick={handleMenuToggle}
@@ -215,33 +215,33 @@ export function ToolbarOssGraph({
             />
             <Dropdown isOpen={isMenuOpen} className='-translate-x-1/2'>
               <DropdownButton
-                text={tx('ui.oss.toolbar.newBlock')}
-                title={prepareTooltip(tx('ui.oss.toolbar.newBlock'), '1')}
+                text={tx('tx.lib.block.new')}
+                title={prepareTooltip(tx('tx.lib.block.new'), '1')}
                 icon={<IconConceptBlock size='1.25rem' className='text-constructive' />}
                 onClick={handleCreateBlock}
               />
               <DropdownButton
-                text={tx('ui.oss.toolbar.newSchemaShort')}
-                title={prepareTooltip(tx('ui.oss.newSchema'), '2')}
+                text={tx('tx.lib.schema.new.short')}
+                title={prepareTooltip(tx('tx.lib.schema.new'), '2')}
                 icon={<IconNewItem size='1.25rem' className='text-constructive' />}
                 onClick={handleCreateSchema}
               />
               <DropdownButton
                 text={tx('ui.oss.toolbar.importSchemaShort')}
-                title={prepareTooltip(tx('ui.oss.toolbar.importSchema'), '3')}
+                title={prepareTooltip(tx('tx.lib.schema.merge'), '3')}
                 icon={<IconDownload size='1.25rem' className='text-primary' />}
                 onClick={handleImportSchema}
               />
               <DropdownButton
-                text={tx('semantic.action.synthesis')}
-                title={prepareTooltip(tx('ui.oss.toolbar.synthesis'), '4')}
+                text={tx('tx.lib.operation.type.synthesis')}
+                title={prepareTooltip(tx('tx.lib.operation.type.synthesis.hint'), '4')}
                 icon={<IconSynthesis size='1.25rem' className='text-primary' />}
                 onClick={handleCreateSynthesis}
               />
               {user.is_staff ? (
                 <DropdownButton
                   disabled
-                  text={tx('semantic.term.filter')}
+                  text={tx('tx.general.filter')}
                   title={prepareTooltip(tx('ui.oss.toolbar.filterConstituents'), '5')}
                   icon={<IconFilter size='1.25rem' className='icon-primary' />}
                   onClick={notImplemented}
@@ -259,8 +259,8 @@ export function ToolbarOssGraph({
             </Dropdown>
           </div>
           <MiniButton
-            aria-label={tx('ui.oss.toolbar.deleteSelected')}
-            title={prepareTooltip(tx('ui.oss.toolbar.deleteSelected'), 'Delete, `')}
+            aria-label={tx('tx.general.selection.selected.delete')}
+            title={prepareTooltip(tx('tx.general.selection.selected.delete'), 'Delete, `')}
             hideTitle={isMenuOpen}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
             onClick={handleDeleteSelected}

@@ -31,7 +31,7 @@ export function SelectParent({ fullWidth, ...restProps }: SelectParentProps) {
         size='2rem'
         className='text-primary min-w-8'
         data-tooltip-id={globalIDs.tooltip}
-        data-tooltip-content={tx('semantic.term.block.parent')}
+        data-tooltip-content={tx('tx.lib.block.parent')}
       />
       <SelectBlock className={fullWidth ? 'grow' : 'w-70'} {...restProps} />
     </div>

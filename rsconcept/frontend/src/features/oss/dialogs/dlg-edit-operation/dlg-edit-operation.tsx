@@ -121,7 +121,7 @@ export function DlgEditOperation() {
   return (
     <ModalForm
       header={tx('ui.dlg.editOperation.header')}
-      submitText={tx('semantic.action.save')}
+      submitText={tx('tx.general.save')}
       canSubmit={canSubmit}
       validationHint={canSubmit ? '' : tx('labels.hint.formInvalid')}
       onSubmit={event => {
@@ -135,15 +135,15 @@ export function DlgEditOperation() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto w-fit flex border divide-x rounded-none'>
-          <TabLabel title={tx('ui.tab.oss.passportTitle')} label={tx('semantic.term.passport')} />
+          <TabLabel title={tx('ui.tab.oss.passportTitle')} label={tx('tx.lib.item.passport')} />
           <TabLabel
             title={tx('ui.tab.oss.operationArgumentsTitle')}
-            label={tx('semantic.term.argument.plural')}
+            label={tx('tx.domain.argument.plural')}
             disabled={target.operation_type !== OperationType.SYNTHESIS}
           />
           <TabLabel
             title={tx('ui.tab.inlineSynthesis.substitutionsTitle')}
-            label={tx('semantic.action.substitution.plural')}
+            label={tx('tx.lib.cst.substitution.plural')}
             disabled={target.operation_type !== OperationType.SYNTHESIS}
           />
         </TabList>

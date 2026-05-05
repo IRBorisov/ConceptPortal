@@ -58,7 +58,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
     }),
     columnHelper.accessor(id => id, {
       id: 'elem_text',
-      header: tx('semantic.term.value'),
+      header: tx('tx.rslang.value'),
       size: 180,
       minSize: 180,
       maxSize: 180,

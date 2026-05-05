@@ -8,35 +8,35 @@ import { globalTx } from '@/i18n';
 import { type RO } from '@/utils/meta';
 
 const EVAL_LABEL_LID: Record<EvalStatus, string> = {
-  [EvalStatus.NO_EVAL]: 'labels.rsmodel.eval.noEval',
-  [EvalStatus.NOT_PROCESSED]: 'labels.rsmodel.eval.notProcessed',
-  [EvalStatus.INVALID_DATA]: 'semantic.term.data.invalid',
-  [EvalStatus.EVAL_FAIL]: 'labels.rsmodel.eval.evalFail',
-  [EvalStatus.AXIOM_FALSE]: 'labels.rsmodel.eval.axiomFalse',
-  [EvalStatus.EMPTY]: 'labels.rsmodel.eval.empty',
-  [EvalStatus.HAS_DATA]: 'labels.rsmodel.eval.hasData'
+  [EvalStatus.NO_EVAL]: 'tx.lib.evalStatus.noEval',
+  [EvalStatus.NOT_PROCESSED]: 'tx.lib.evalStatus.notProcessed',
+  [EvalStatus.INVALID_DATA]: 'tx.lib.evalStatus.invalidData',
+  [EvalStatus.EVAL_FAIL]: 'tx.lib.evalStatus.error',
+  [EvalStatus.AXIOM_FALSE]: 'tx.lib.evalStatus.axiomFalse',
+  [EvalStatus.EMPTY]: 'tx.lib.evalStatus.empty',
+  [EvalStatus.HAS_DATA]: 'tx.lib.evalStatus.hasData'
 };
 
 const EVAL_DESC_LID: Record<EvalStatus, string> = {
-  [EvalStatus.NO_EVAL]: 'labels.rsmodel.evalDesc.noEval',
-  [EvalStatus.NOT_PROCESSED]: 'labels.rsmodel.evalDesc.notProcessed',
-  [EvalStatus.INVALID_DATA]: 'labels.rsmodel.evalDesc.invalidData',
-  [EvalStatus.EVAL_FAIL]: 'labels.rsmodel.evalDesc.evalFail',
-  [EvalStatus.AXIOM_FALSE]: 'labels.rsmodel.evalDesc.axiomFalse',
-  [EvalStatus.EMPTY]: 'labels.rsmodel.evalDesc.empty',
-  [EvalStatus.HAS_DATA]: 'labels.rsmodel.evalDesc.hasData'
+  [EvalStatus.NO_EVAL]: 'tx.lib.evalStatus.noEval.hint',
+  [EvalStatus.NOT_PROCESSED]: 'tx.lib.evalStatus.notProcessed.hint',
+  [EvalStatus.INVALID_DATA]: 'tx.lib.evalStatus.invalidData.hint',
+  [EvalStatus.EVAL_FAIL]: 'tx.lib.evalStatus.error.hint',
+  [EvalStatus.AXIOM_FALSE]: 'tx.lib.evalStatus.axiomFalse.hint',
+  [EvalStatus.EMPTY]: 'tx.lib.evalStatus.empty.hint',
+  [EvalStatus.HAS_DATA]: 'tx.lib.evalStatus.hasData.hint'
 };
 
 /** Retrieves label for {@link EvalStatus}. */
 export function labelEvalStatus(status: EvalStatus): string {
   const id = EVAL_LABEL_LID[status];
-  return id ? globalTx(id) : globalTx('labels.rsmodel.fallback.unknownEvalStatus', { status: String(status) });
+  return id ? globalTx(id) : 'UNKNOWN STATUS: ' + String(status);
 }
 
 /** Retrieves description for {@link EvalStatus}. */
 export function describeEvalStatus(status: EvalStatus): string {
   const id = EVAL_DESC_LID[status];
-  return id ? globalTx(id) : globalTx('labels.rsmodel.fallback.unknownEvalStatus', { status: String(status) });
+  return id ? globalTx(id) : 'UNKNOWN STATUS: ' + String(status);
 }
 
 /** Generates label for {@link Value}. */
@@ -46,9 +46,9 @@ export function labelValue(value: RO<Value | null>, type: ExpressionType | null)
   }
   if (type.typeID === TypeID.logic) {
     if (value === VALUE_TRUE) {
-      return globalTx('semantic.true');
+      return globalTx('tx.general.boolean.true');
     } else if (value === VALUE_FALSE) {
-      return globalTx('semantic.false');
+      return globalTx('tx.general.boolean.false');
     }
   }
   if (!Array.isArray(value)) {

@@ -39,7 +39,7 @@ export function DlgEditBinding() {
       <ModalForm
         helpTopic={HelpTopic.UI_MODEL_BINDING}
         header={tx('ui.rsmodel.dlg.editBinding.header')}
-        submitText={tx('semantic.action.save')}
+        submitText={tx('tx.general.save')}
         canSubmit={value !== initialValue}
         onSubmit={handleSubmit}
         className={dialogClassName}

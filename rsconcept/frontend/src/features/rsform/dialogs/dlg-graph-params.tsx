@@ -29,7 +29,7 @@ export function DlgGraphParams() {
     <ModalForm
       header={tx('ui.termGraph.dialog.title')}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
-      submitText={tx('semantic.action.save')}
+      submitText={tx('tx.general.save')}
       className='flex gap-6 justify-between px-6 pb-3 w-120'
     >
       <div className='flex flex-col gap-1'>
@@ -40,7 +40,7 @@ export function DlgGraphParams() {
               value={field.state.value ?? false}
               onChange={field.handleChange}
               onBlur={field.handleBlur}
-              label={tx('ui.termGraph.filter.hideText')}
+              label={tx('tx.general.labels.hide')}
               title={prepareTooltip(tx('ui.termGraph.filter.hideTextHint'), 'T')}
             />
           )}

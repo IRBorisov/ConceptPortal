@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useForm } from '@tanstack/react-form';
 
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -87,9 +87,7 @@ export function FormSignup() {
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={
-                  field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined
-                }
+                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
               />
             )}
           </form.Field>
@@ -99,13 +97,11 @@ export function FormSignup() {
                 id='password'
                 type='password'
                 autoComplete='new-password'
-                label={tx('semantic.term.password')}
+                label={tx('tx.general.password')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={
-                  field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined
-                }
+                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
               />
             )}
           </form.Field>
@@ -119,9 +115,7 @@ export function FormSignup() {
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={
-                  field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined
-                }
+                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
               />
             )}
           </form.Field>
@@ -145,14 +139,12 @@ export function FormSignup() {
                 autoComplete='email'
                 required
                 spellCheck={false}
-                label={tx('semantic.term.email')}
+                label={tx('tx.general.email')}
                 title={tx('auth.register.emailTitle')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={
-                  field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined
-                }
+                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
               />
             )}
           </form.Field>
@@ -165,9 +157,7 @@ export function FormSignup() {
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={
-                  field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined
-                }
+                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
               />
             )}
           </form.Field>
@@ -180,9 +170,7 @@ export function FormSignup() {
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={
-                  field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined
-                }
+                error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
               />
             )}
           </form.Field>
@@ -215,7 +203,7 @@ export function FormSignup() {
           loading={isPending}
           disabled={!acceptPrivacy || !acceptRules}
         />
-        <Button text={tx('semantic.action.back')} className='min-w-40' onClick={() => handleCancel()} />
+        <Button text={tx('tx.general.goBack')} className='min-w-40' onClick={() => handleCancel()} />
       </div>
       {serverError ? <ServerError error={serverError} /> : null}
     </form>

@@ -37,12 +37,12 @@ export function MiniRSFormStats({ className, stats }: MiniRSFormStatsProps) {
   return (
     <div className={cn('h-min', 'grid grid-cols-4 gap-1 justify-items-end select-none', className)}>
       <div id='count_all' className='col-span-2 w-fit flex gap-3 hover:cursor-default'>
-        <span>{tx('semantic.total')}</span>
+        <span>{tx('tx.general.total')}</span>
         <span className='font-math'>{stats.count_all}</span>
       </div>
       <ValueStats
         id='count_owned'
-        title={tx('ui.stats.secondary.owned')}
+        title={tx('tx.lib.concept.original.plural')}
         icon={<IconPredecessor size='1.25rem' />}
         value={stats.count_all - stats.count_inherited}
       />
@@ -50,55 +50,55 @@ export function MiniRSFormStats({ className, stats }: MiniRSFormStatsProps) {
         id='count_inherited'
         icon={<IconChild size='1.25rem' />}
         value={stats.count_inherited}
-        title={tx('ui.stats.row.inherited')}
+        title={tx('tx.lib.concept.inherited.plural')}
       />
 
       <ValueStats
         id='count_base'
-        title={tx('ui.stats.row.baseSets')}
+        title={tx('tx.lib.cst.type.basic')}
         icon={<IconCstBaseSet size='1.25rem' />}
         value={stats.count_base}
       />
       <ValueStats
         id='count_constant'
-        title={tx('ui.stats.row.constantSets')}
+        title={tx('tx.lib.cst.type.constant')}
         icon={<IconCstConstSet size='1.25rem' />}
         value={stats.count_constant}
       />
       <ValueStats
         id='count_structured'
-        title={tx('ui.stats.row.genericStructures')}
+        title={tx('tx.lib.cst.type.structure')}
         icon={<IconCstStructured size='1.25rem' />}
         value={stats.count_structured}
       />
       <ValueStats
         id='count_axiom'
-        title={tx('ui.stats.row.axioms')}
+        title={tx('tx.lib.cst.type.axiom')}
         icon={<IconCstAxiom size='1.25rem' />}
         value={stats.count_axiom}
       />
 
       <ValueStats
         id='count_term'
-        title={tx('ui.stats.row.terms')}
+        title={tx('tx.lib.cst.type.term')}
         icon={<IconCstTerm size='1.25rem' />}
         value={stats.count_term}
       />
       <ValueStats
         id='count_function'
-        title={tx('ui.stats.row.termFunctions')}
+        title={tx('tx.lib.cst.type.function')}
         icon={<IconCstFunction size='1.25rem' />}
         value={stats.count_function}
       />
       <ValueStats
         id='count_predicate'
-        title={tx('ui.stats.row.predicateFunctions')}
+        title={tx('tx.lib.cst.type.predicate')}
         icon={<IconCstPredicate size='1.25rem' />}
         value={stats.count_predicate}
       />
       <ValueStats
         id='count_theorem'
-        title={tx('ui.stats.row.theorems')}
+        title={tx('tx.lib.cst.type.theorem')}
         icon={<IconCstTheorem size='1.25rem' />}
         value={stats.count_theorem}
       />
@@ -132,13 +132,13 @@ export function MiniRSFormStats({ className, stats }: MiniRSFormStatsProps) {
 
       <ValueStats
         id='count_crucial'
-        title={tx('ui.stats.row.crucial')}
+        title={tx('tx.lib.cst.crucial.plural')}
         icon={<IconCrucial size='1.25rem' />}
         value={stats.count_crucial}
       />
       <ValueStats
         id='count_text_term'
-        title={tx('ui.stats.row.termLabels')}
+        title={tx('tx.lib.term.plural')}
         icon={<IconTerminology size='1.25rem' />}
         value={stats.count_text_term}
       />

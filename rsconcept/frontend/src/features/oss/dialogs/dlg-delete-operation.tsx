@@ -55,8 +55,8 @@ export function DlgDeleteOperation() {
   return (
     <ModalForm
       overflowVisible
-      header={tx('ui.oss.deleteOperation.header')}
-      submitText={tx('semantic.action.delete')}
+      header={tx('tx.lib.operation.deletion')}
+      submitText={tx('tx.general.delete')}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
@@ -65,18 +65,11 @@ export function DlgDeleteOperation() {
       className='w-140 pb-3 px-6 cc-column select-none'
       helpTopic={HelpTopic.CC_PROPAGATION}
     >
-      <TextInput
-        disabled
-        dense
-        noBorder
-        id='operation_alias'
-        label={tx('semantic.term.operation')}
-        value={target.alias}
-      />
+      <TextInput disabled dense noBorder id='operation_alias' label={tx('tx.lib.operation')} value={target.alias} />
       <form.Field name='delete_schema'>
         {field => (
           <Checkbox
-            label={tx('ui.action.deleteSchema')}
+            label={tx('tx.lib.schema.delete')}
             title={
               (target.operation_type === OperationType.INPUT && target.is_import) || target.result === null
                 ? tx('ui.oss.deleteOperation.deleteSchemaLocked')
@@ -101,7 +94,7 @@ export function DlgDeleteOperation() {
       </form.Field>
       {deleteSchema ? (
         <div className='text-destructive'>
-          <b>{tx('semantic.term.attention')}</b> {tx('ui.oss.deleteOperation.warningRelatedSchema')}
+          <b>{tx('tx.general.attention')}</b> {tx('ui.oss.deleteOperation.warningRelatedSchema')}
         </div>
       ) : null}
     </ModalForm>

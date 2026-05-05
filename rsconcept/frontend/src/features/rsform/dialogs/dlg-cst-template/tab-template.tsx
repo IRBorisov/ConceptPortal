@@ -31,10 +31,7 @@ export function TabTemplate({ schema }: TabTemplateProps) {
   } = useTemplateContext();
 
   const { templates } = useTemplatesSuspense();
-  const templateOptions = [
-    { ...schema, title: tx('semantic.term.schema.current') },
-    ...templates
-  ];
+  const templateOptions = [{ ...schema, title: tx('tx.lib.schema.current') }, ...templates];
   const { schema: templateSchema } = useRSForm({ itemID: templateID ?? undefined });
   const selectedTemplate = templateOptions.find(item => item.id === templateID);
 

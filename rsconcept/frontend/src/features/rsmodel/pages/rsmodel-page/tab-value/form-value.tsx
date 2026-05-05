@@ -241,7 +241,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       onSubmit={withPreventDefault(() => void handleSubmitAll())}
     >
       <div className='flex items-center gap-2 mr-2 font-math font-semibold select-text'>
-        <span>{tx('semantic.term.constituenta') + ' ' + activeCst.alias}</span>
+        <span>{tx('tx.lib.cst') + ' ' + activeCst.alias}</span>
       </div>
 
       <ValuePrimaryActions activeCst={activeCst} cstData={cstData} onChangeValue={handleSetValue} />
@@ -254,7 +254,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         noOutline
         transparent
         readOnly
-        label={tx('semantic.term.typification')}
+        label={tx('tx.rslang.typification')}
         value={labelType(typification)}
         areaClassName='cursor-default'
       />
@@ -290,9 +290,9 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         isBinding={isBase}
         placeholder={
           !isInterpretable(activeCst.cst_type)
-            ? tx('ui.value.unsupportedType')
+            ? tx('tx.rslang.value.type.error.hint')
             : !isInferrable(activeCst.cst_type)
-              ? tx('ui.value.missingHint')
+              ? tx('tx.rslang.value.missing.hint')
               : undefined
         }
         onCalculate={cstInferrable ? handleCalculate : undefined}
@@ -310,16 +310,16 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       <div className='relative'>
         {!metaFieldsDisabled ? (
           <TextButton
-            text={tx('ui.rsform.action.editWordForms')}
+            text={tx('tx.lang.wordform.plural.editing')}
             className='z-pop text-sm absolute top-0 left-19'
-            title={isModified ? tx('labels.tooltip.unsaved') : tx('ui.rsform.hint.editTermWordForms')}
+            title={isModified ? tx('labels.tooltip.unsaved') : tx('tx.lang.wordform.plural.editing.hint')}
             onClick={openTermEditor}
             disabled={isModified}
           />
         ) : null}
         <RefsInput
           id='cst_term'
-          label={tx('semantic.term.term')}
+          label={tx('tx.lib.term')}
           placeholder={tx('ui.placeholder.termMissing')}
           schema={schema}
           onOpenEdit={onOpenEdit}
@@ -333,7 +333,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
 
       <RefsInput
         id='cst_definition'
-        label={tx('semantic.term.definitionTextual')}
+        label={tx('tx.lib.definitionTextual')}
         placeholder={
           formalFieldDisabled ? tx('ui.placeholder.definitionMissing') : tx('ui.placeholder.textDefinitionHint')
         }

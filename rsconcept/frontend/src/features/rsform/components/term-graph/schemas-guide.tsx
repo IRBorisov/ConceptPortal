@@ -29,7 +29,7 @@ export function SchemasGuide({ schema }: SchemasGuideProps) {
         if (item) {
           aliases.push(item.alias);
         } else {
-          aliases.push(tx('semantic.term.schema.short') + ' ' + cst.parent_schema_index);
+          aliases.push(tx('tx.lib.schema.short') + ' ' + cst.parent_schema_index);
         }
         processed.add(cst.parent_schema);
         indexes.push(cst.parent_schema_index);
@@ -53,7 +53,7 @@ export function SchemasGuide({ schema }: SchemasGuideProps) {
       >
         <div className='inline-flex items-center gap-2'>
           <span className='w-3 h-3 border rounded-full' style={{ backgroundColor: colorBgSchemas(0) }} />
-          <span>{tx('semantic.term.schema.current')}</span>
+          <span>{tx('tx.lib.schema.current')}</span>
         </div>
         {schemas.map((alias, index) => (
           <div key={`${prefixes.schemas_list}${index}`} className='inline-flex items-center gap-2'>

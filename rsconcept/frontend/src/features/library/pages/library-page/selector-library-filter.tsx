@@ -24,49 +24,49 @@ export function SelectorLibraryFilter({ className }: SelectorLibraryFilterProps)
   }
 
   const items: Record<LibrarySearchSelectorFilter, ReactNode> = {
-    all: tx('semantic.term.filter'),
-    owner_me: tx('lib.filter.owner'),
-    editor_me: tx('lib.filter.editor'),
-    hidden: tx('lib.filter.hidden'),
-    type_rsform: tx('semantic.term.schema.short'),
-    type_oss: tx('semantic.term.oss.short'),
-    type_rsmodel: tx('semantic.term.model.short')
+    all: tx('tx.general.filter'),
+    owner_me: tx('tx.lib.filter.byOwnerMe'),
+    editor_me: tx('tx.lib.filter.byEditorMe'),
+    hidden: tx('tx.lib.filter.byHidden'),
+    type_rsform: tx('tx.lib.schema.short'),
+    type_oss: tx('tx.lib.oss.short'),
+    type_rsmodel: tx('tx.lib.model.short')
   };
 
   return (
     <div className={cn('font-controls text-sm opacity-80 transition-opacity hover:opacity-100 select-none', className)}>
       <Select value={value} onValueChange={handleValueChange} items={items}>
         <SelectTrigger noBorder className='h-7 pl-2 pr-1 gap-1 pb-0'>
-          <SelectValue placeholder={tx('semantic.term.filter')} />
+          <SelectValue placeholder={tx('tx.general.filter')} />
         </SelectTrigger>
         <SelectContent align='start'>
           <SelectItem value='all'>
             <IconFilter className='text-muted-foreground' />
-            {tx('semantic.term.filter')}
+            {tx('tx.general.filter')}
           </SelectItem>
           <SelectItem value='owner_me'>
             <IconOwner className='text-primary' />
-            {tx('lib.filter.owner')}
+            {tx('tx.lib.filter.byOwnerMe')}
           </SelectItem>
           <SelectItem value='editor_me'>
             <IconEditor className='text-primary' />
-            {tx('lib.filter.editor')}
+            {tx('tx.lib.filter.byEditorMe')}
           </SelectItem>
           <SelectItem value='hidden'>
             <IconHide className='text-destructive' />
-            {tx('lib.filter.hidden')}
+            {tx('tx.lib.filter.byHidden')}
           </SelectItem>
           <SelectItem value='type_rsform'>
             <IconRSForm className='text-primary' />
-            {tx('semantic.term.schema.short')}
+            {tx('tx.lib.schema.short')}
           </SelectItem>
           <SelectItem value='type_oss'>
             <IconOSS className='text-constructive' />
-            {tx('semantic.term.oss.short')}
+            {tx('tx.lib.oss.short')}
           </SelectItem>
           <SelectItem value='type_rsmodel'>
             <IconRSModel className='text-accent-orange' />
-            {tx('semantic.term.model.short')}
+            {tx('tx.lib.model.short')}
           </SelectItem>
         </SelectContent>
       </Select>

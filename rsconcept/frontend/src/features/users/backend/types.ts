@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import {} from '@/i18n';
+import { globalTx } from '@/i18n';
 
 import { limits, patterns } from '@/utils/constants';
 
@@ -19,9 +19,9 @@ export type UpdateProfileDTO = z.infer<typeof schemaUpdateProfile>;
 // ========= SCHEMAS ========
 export const schemaUser = z.strictObject({
   id: z.number(),
-  username: z.string().nonempty('labels.error.requiredField'),
+  username: z.string().nonempty(globalTx('labels.error.requiredField')),
   is_staff: z.boolean(),
-  email: z.email('labels.error.emailField'),
+  email: z.email(globalTx('labels.error.emailField')),
   first_name: z.string(),
   last_name: z.string()
 });
@@ -33,20 +33,31 @@ export const schemaUserInfo = schemaUser.omit({ username: true, email: true, is_
 const schemaUserInput = z.strictObject({
   username: z
     .string()
-    .nonempty('labels.error.requiredField')
-    .regex(RegExp(patterns.login), 'labels.error.loginFormat')
-    .max(limits.len_alias, 'labels.error.aliasLength'),
-  email: z.email('labels.error.emailField').max(limits.len_email, 'labels.error.emailLength'),
-  first_name: z.string().max(limits.len_alias, 'labels.error.aliasLength'),
-  last_name: z.string().max(limits.len_alias, 'labels.error.aliasLength')
+    .nonempty(globalTx('labels.error.requiredField'))
+    .regex(RegExp(patterns.login), globalTx('labels.error.loginFormat'))
+    .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`),
+  email: z
+    .email(globalTx('labels.error.emailField'))
+    .max(limits.len_email, `${globalTx('labels.error.lengthLimit')} (${limits.len_email})`),
+  first_name: z.string().max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`),
+  last_name: z.string().max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
 });
 
 export const schemaUserSignup = schemaUserInput
   .extend({
-    password: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField'),
-    password2: z.string().max(limits.len_alias, 'labels.error.aliasLength').nonempty('labels.error.requiredField')
+    password: z
+      .string()
+      .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
+      .nonempty(globalTx('labels.error.requiredField')),
+    password2: z
+      .string()
+      .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
+      .nonempty(globalTx('labels.error.requiredField'))
   })
-  .refine(schema => schema.password === schema.password2, { path: ['password2'], message: 'labels.error.passwordsMismatch' });
+  .refine(schema => schema.password === schema.password2, {
+    path: ['password2'],
+    message: globalTx('labels.error.passwordsMismatch')
+  });
 
 export const schemaUpdateProfile = schemaUserInput.omit({
   username: true

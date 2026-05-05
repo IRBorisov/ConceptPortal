@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import DOMPurify from 'dompurify';
 import { ZodError } from 'zod';
 
-import { formatZodIssueMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { type AxiosError, isAxiosError } from '@/backend/api-transport';
 import { isResponseHtml } from '@/utils/utils';
@@ -22,7 +22,7 @@ export function DescribeError({ error }: { error: ErrorData }) {
   } else if (typeof error === 'string') {
     return <p>{error}</p>;
   } else if (error instanceof ZodError) {
-    const lines = error.issues.map(issue => formatZodIssueMessage(issue));
+    const lines = error.issues.map(issue => issue.message);
     return (
       <div>
         <p>{tx('labels.errorDetail.validationTitle')}</p>
@@ -37,10 +37,10 @@ export function DescribeError({ error }: { error: ErrorData }) {
     return (
       <div>
         <p>
-          <b>{tx('semantic.term.error')}:</b> {error.name}
+          <b>{tx('tx.general.error')}:</b> {error.name}
         </p>
         <p>
-          <b>{tx('semantic.term.description')}:</b> {error.message}
+          <b>{tx('tx.lib.description')}:</b> {error.message}
         </p>
         {error.stack && <pre className='whitespace-pre-wrap p-2 overflow-x-auto wrap-break-word'>{error.stack}</pre>}
       </div>
@@ -78,7 +78,7 @@ export function DescribeError({ error }: { error: ErrorData }) {
   }
   return (
     <div>
-      <p className='underline'>{tx('semantic.term.error')}</p>
+      <p className='underline'>{tx('tx.general.error')}</p>
       <p>{error.message}</p>
       {error.response.data && (
         <>

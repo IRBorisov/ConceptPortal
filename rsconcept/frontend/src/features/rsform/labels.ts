@@ -12,15 +12,15 @@ import { type RO } from '@/utils/meta';
 import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores/term-graph';
 
 const CST_TYPE_LID: Record<CstType, string> = {
-  [CstType.NOMINAL]: 'labels.rsform.cstType.nominal',
-  [CstType.BASE]: 'labels.rsform.cstType.basic',
-  [CstType.CONSTANT]: 'labels.rsform.cstType.constant',
-  [CstType.STRUCTURED]: 'labels.rsform.cstType.structure',
-  [CstType.AXIOM]: 'labels.rsform.cstType.axiom',
-  [CstType.TERM]: 'labels.rsform.cstType.term',
-  [CstType.FUNCTION]: 'labels.rsform.cstType.function',
-  [CstType.PREDICATE]: 'labels.rsform.cstType.predicate',
-  [CstType.THEOREM]: 'labels.rsform.cstType.theorem'
+  [CstType.NOMINAL]: 'tx.lib.cst.type.nominal',
+  [CstType.BASE]: 'tx.lib.cst.type.basic',
+  [CstType.CONSTANT]: 'tx.lib.cst.type.constant',
+  [CstType.STRUCTURED]: 'tx.lib.cst.type.structure',
+  [CstType.AXIOM]: 'tx.lib.cst.type.axiom',
+  [CstType.TERM]: 'tx.lib.cst.type.term',
+  [CstType.FUNCTION]: 'tx.lib.cst.type.function',
+  [CstType.PREDICATE]: 'tx.lib.cst.type.predicate',
+  [CstType.THEOREM]: 'tx.lib.cst.type.theorem'
 };
 
 const CST_CLASS_LABEL_LID: Record<CstClass, string> = {
@@ -75,12 +75,12 @@ const EXPR_STATUS_DESC_LID: Record<CstStatus, string> = {
 
 const RS_EXPRESSION_LID: Record<CstType, string> = {
   [CstType.NOMINAL]: 'labels.rsform.rsExpression.nominal',
-  [CstType.BASE]: 'semantic.term.definitionFormal',
-  [CstType.CONSTANT]: 'semantic.term.definitionFormal',
+  [CstType.BASE]: 'tx.lib.definitionFormal',
+  [CstType.CONSTANT]: 'tx.lib.definitionFormal',
   [CstType.STRUCTURED]: 'labels.rsform.rsExpression.structure',
-  [CstType.TERM]: 'semantic.term.definitionFormal',
-  [CstType.THEOREM]: 'semantic.term.definitionFormal',
-  [CstType.AXIOM]: 'semantic.term.definitionFormal',
+  [CstType.TERM]: 'tx.lib.definitionFormal',
+  [CstType.THEOREM]: 'tx.lib.definitionFormal',
+  [CstType.AXIOM]: 'tx.lib.definitionFormal',
   [CstType.FUNCTION]: 'labels.rsform.rsExpression.function',
   [CstType.PREDICATE]: 'labels.rsform.rsExpression.function'
 };
@@ -242,13 +242,13 @@ export function getCstTypeShortcut(type: CstType) {
 /** Generates label for RS expression based on {@link CstType}. */
 export function labelRSExpression(type: CstType): string {
   const id = RS_EXPRESSION_LID[type];
-  return id ? globalTx(id) : globalTx('semantic.term.definitionFormal');
+  return id ? globalTx(id) : globalTx('tx.lib.definitionFormal');
 }
 
 /** Generates placeholder for RS definition based on {@link CstType}. */
 export function getRSDefinitionPlaceholder(type: CstType): string {
   const example = RS_PLACEHOLDER_EXAMPLE[type];
-  return !example ? '' : `${globalTx('semantic.example')}: ${example}`;
+  return !example ? '' : `${globalTx('tx.general.example')}: ${example}`;
 }
 
 /** Generates description for {@link TokenID}. */

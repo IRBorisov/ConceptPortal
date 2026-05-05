@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type Constituenta, type CstType, type RSForm } from '@/domain/library';
 import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -58,7 +58,7 @@ export function DlgRenameCst() {
   return (
     <ModalForm
       header={tx('ui.dlg.renameCst.header')}
-      submitText={tx('semantic.action.rename')}
+      submitText={tx('tx.general.rename')}
       canSubmit={canSubmit}
       validationHint={canSubmit ? '' : tx('labels.hint.aliasInvalid')}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
@@ -76,12 +76,12 @@ export function DlgRenameCst() {
           <TextInput
             id='dlg_cst_alias'
             dense
-            label={tx('semantic.term.alias.short')}
+            label={tx('tx.lib.alias.short')}
             className='w-28'
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </form.Field>

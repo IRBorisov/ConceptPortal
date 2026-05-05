@@ -43,7 +43,7 @@ export function ToolbarSearch({ className }: ToolbarSearchProps) {
       <SelectorLibraryFilter className='mr-1' />
 
       <MiniButton
-        title={tx('semantic.action.resetFilter')}
+        title={tx('tx.general.filter.reset')}
         icon={<IconFilterReset size='1.25rem' className='icon-primary' />}
         onClick={resetFilter}
         disabled={!hasCustomFilter}
@@ -51,15 +51,15 @@ export function ToolbarSearch({ className }: ToolbarSearchProps) {
 
       <SearchBar
         id='library_search'
-        placeholder={tx('semantic.term.search')}
+        placeholder={tx('tx.general.search')}
         noBorder
         className='min-w-28 sm:min-w-40 max-w-80 grow'
         query={query}
         onChangeQuery={setQuery}
       />
       <SelectUser
-        aria-label={tx('lib.search.ownerPlaceholder')}
-        placeholder={tx('lib.search.ownerPlaceholder')}
+        aria-label={tx('tx.lib.search.byOwner')}
+        placeholder={tx('tx.lib.search.byOwner')}
         noBorder
         className='h-7 pr-0 pl-2 max-sm:hidden ml-auto'
         filter={filterNonEmptyUsers}

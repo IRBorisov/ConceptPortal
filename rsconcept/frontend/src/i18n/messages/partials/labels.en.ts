@@ -4,11 +4,7 @@ import { labelsFeatureEn } from './labels-feature.en';
 export const labelsEn: Record<string, string> = {
   ...labelsFeatureEn,
 
-  'labels.error.aliasLength': 'Up to {n} characters',
-  'labels.error.emailLength': 'Up to {n} characters',
-  'labels.error.titleLength': 'Up to {n} characters',
-  'labels.error.descriptionLength': 'Up to {n} characters',
-  'labels.error.textLength': 'Up to {n} characters',
+  'labels.error.lengthLimit': 'Maximum length',
   'labels.error.typeStructureFailed': 'Structure is missing',
   'labels.error.passwordsMismatch': 'Passwords do not match',
   'labels.error.passwordsSame': 'New password matches the old one',
@@ -35,7 +31,6 @@ export const labelsEn: Record<string, string> = {
   'labels.error.clipboardWrite': 'Failed to write to clipboard',
   'labels.error.fileRead': 'Error reading file',
   'labels.error.fileTooLarge': 'File size exceeds {maxMb} MB',
-  'labels.error.valueNull': 'Value is missing',
   'labels.error.sandboxImportError': 'Failed to import schema into sandbox',
   'labels.error.sandboxBundleNotAvailable': 'Sandbox is empty',
   'labels.error.failedToPersistSandbox': 'Failed to save sandbox',

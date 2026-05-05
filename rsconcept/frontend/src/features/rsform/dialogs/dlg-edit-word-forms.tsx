@@ -106,8 +106,8 @@ export function DlgEditWordForms() {
 
   return (
     <ModalForm
-      header={tx('ui.wordForms.edit.header')}
-      submitText={tx('semantic.action.save')}
+      header={tx('tx.lang.wordform.plural.editing')}
+      submitText={tx('tx.general.save')}
       onSubmit={handleSubmit}
       className='flex flex-col w-180 px-6'
       helpTopic={HelpTopic.TERM_CONTROL}
@@ -115,7 +115,7 @@ export function DlgEditWordForms() {
       <div className='flex items-center gap-2 justify-between pt-1'>
         {generateLexeme ? (
           <MiniButton
-            title={tx('ui.wordForms.fillFromLexeme')}
+            title={tx('tx.lang.wordform.plural.generate')}
             icon={<IconMoveDown size='1.5rem' className='icon-primary' />}
             onClick={handleGenerateLexeme}
             disabled={isProcessing || nominalResolved.trim() === ''}
@@ -124,8 +124,8 @@ export function DlgEditWordForms() {
         <RefsInput
           id='dlg_edit_wordforms_nominal'
           areaClassName='disabled:min-h-9'
-          aria-label={tx('semantic.term.nominal')}
-          placeholder={tx('semantic.term.nominal')}
+          aria-label={tx('tx.lang.morphology.nominal')}
+          placeholder={tx('tx.lang.morphology.nominal')}
           schema={schema}
           value={nominalRaw}
           initialValue={target.term_raw}

@@ -91,7 +91,7 @@ export function DlgCreateCst() {
       onCancel={onCancel}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
       validationHint={hint}
-      submitText={tx('semantic.action.create')}
+      submitText={tx('tx.general.create')}
       className='cc-column w-140 max-h-120 py-2 px-6'
     >
       <FormCreateCst

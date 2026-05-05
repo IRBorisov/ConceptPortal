@@ -113,7 +113,7 @@ export function ToolbarGraphSelection({
     onChange([...value, ...graph.expandAllOutputs(value)]);
   }
 
-  const clearTitle = tx('ui.graphSelection.clear');
+  const clearTitle = tx('tx.general.selection.reset');
 
   return (
     <div className={cn('cc-icons items-center', className)} {...restProps}>
@@ -192,8 +192,8 @@ export function ToolbarGraphSelection({
             disabled={emptySelection}
           />
           <DropdownButton
-            text={tx('ui.graphSelection.invert')}
-            title={tipHotkeys ? prepareTooltip(tx('ui.graphSelection.invert'), '6') : undefined}
+            text={tx('tx.general.selection.invert')}
+            title={tipHotkeys ? prepareTooltip(tx('tx.general.selection.invert'), '6') : undefined}
             icon={<IconGraphInverse size='1.25rem' className='icon-primary' />}
             onClick={handleSelectInvert}
           />
@@ -217,7 +217,7 @@ export function ToolbarGraphSelection({
             onClick={handleSelectCore}
           />
           <DropdownButton
-            text={tx('ui.graphSelection.crucial')}
+            text={tx('tx.lib.cst.crucial.plural')}
             title={
               tipHotkeys
                 ? prepareTooltip(tx('ui.graphSelection.crucialTitle'), 'X')
@@ -235,7 +235,7 @@ export function ToolbarGraphSelection({
             onClick={handleSelectOwned}
           />
           <DropdownButton
-            text={tx('ui.graphSelection.inherited')}
+            text={tx('tx.lib.concept.inherited.plural')}
             title={
               tipHotkeys
                 ? prepareTooltip(tx('ui.graphSelection.inheritedTitle'), 'Y')

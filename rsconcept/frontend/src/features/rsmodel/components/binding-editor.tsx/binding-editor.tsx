@@ -95,7 +95,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
     }),
     columnHelper.accessor('text', {
       id: 'text',
-      header: tx('semantic.term.value'),
+      header: tx('tx.rslang.value'),
       size: 200,
       minSize: 200,
       maxSize: 200,
@@ -110,7 +110,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
             maxSize: 40,
             cell: props => (
               <MiniButton
-                title={tx('ui.value.removeElement')}
+                title={tx('tx.rslang.value.element.delete')}
                 className='align-middle w-fit -mr-1'
                 noPadding
                 icon={<IconRemove size='1.25rem' className='cc-remove' />}
@@ -133,21 +133,21 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
     <div className={cn('relative w-full flex flex-col', className)}>
       <div className='-mt-1 flex items-center mb-1'>
         <div className='w-26'>
-          <span>{tx('semantic.total')} </span>
+          <span>{tx('tx.general.total')} </span>
           <span className='font-math ml-2'>{Object.keys(value).length}</span>
         </div>
         <SearchBar id='dlg_value_search' noBorder query={filter} onChangeQuery={setFilter} className='-mb-0.5' />
       </div>
       <div className='flex items-center gap-2 mb-3'>
         <MiniButton
-          title={tx('ui.value.addElement')}
+          title={tx('tx.rslang.value.element.add')}
           className=''
           icon={<IconNewItem size='1.25rem' className='icon-green' />}
           onClick={handleAddElement}
           disabled={!isMutable}
         />
         <TextInput
-          label={tx('semantic.term.value')}
+          label={tx('tx.rslang.value')}
           dense
           placeholder={tx('ui.bindingEditor.selectRowPlaceholder')}
           className='w-full'

@@ -32,12 +32,12 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
   const columns = [
     columnHelper.accessor('version', {
       id: 'version',
-      header: () => <span className='min-w-24'>{tx('semantic.term.version')}</span>,
+      header: () => <span className='min-w-24'>{tx('tx.lib.version')}</span>,
       cell: props => <div className='text-ellipsis'>{props.getValue()}</div>
     }),
     columnHelper.accessor('description', {
       id: 'description',
-      header: tx('semantic.term.description'),
+      header: tx('tx.lib.description'),
       size: 800,
       minSize: 800,
       maxSize: 800,
@@ -45,7 +45,7 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
     }),
     columnHelper.accessor('time_create', {
       id: 'time_create',
-      header: () => <span className='min-w-26'>{tx('semantic.term.dateCreated')}</span>,
+      header: () => <span className='min-w-26'>{tx('tx.general.date.creation')}</span>,
       cell: props => (
         <div className='whitespace-nowrap'>
           {new Date(props.getValue()).toLocaleString(intl.locale, {

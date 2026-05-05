@@ -57,13 +57,13 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
     void handleExportPNG();
   }
 
-  const textToggleTitle = !filter.noText ? tx('ui.tg.toolbar.hideText') : tx('ui.tg.toolbar.showText');
+  const textToggleTitle = !filter.noText ? tx('tx.general.labels.hide') : tx('tx.general.labels.show');
   const derivedToggleTitle = !filter.foldDerived ? tx('ui.rsform.hideDerived') : tx('ui.rsform.showDerived');
 
   return (
     <div className={cn('grid grid-cols-2 gap-1 pointer-events-auto', className)}>
       <MiniButton
-        title={prepareTooltip(tx('ui.tg.toolbar.fullGraph'), 'G')}
+        title={prepareTooltip(tx('tx.general.fitView'), 'G')}
         icon={<IconFitImage size='1.25rem' className='icon-primary' />}
         onClick={handleFitView}
       />
@@ -86,7 +86,7 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
       />
       <div ref={exportRef} onBlur={handleExportBlur} className='flex relative'>
         <MiniButton
-          title={tx('semantic.action.saveImage')}
+          title={tx('tx.general.images.save')}
           hideTitle={isExportOpen}
           icon={<IconImage size='1.25rem' className='icon-primary' />}
           onClick={toggleExport}
@@ -95,13 +95,13 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
         <Dropdown isOpen={isExportOpen} className='-translate-x-1/2'>
           <DropdownButton
             icon={<IconPNG size='1.25rem' className='icon-primary' />}
-            text={tx('semantic.action.save') + ' PNG'}
+            text={tx('tx.general.save') + ' PNG'}
             onClick={handleExportPngBtn}
             disabled={isProcessing || isExportingImage}
           />
           <DropdownButton
             icon={<IconSVG size='1.25rem' className='icon-primary' />}
-            text={tx('semantic.action.save') + ' SVG'}
+            text={tx('tx.general.save') + ' SVG'}
             onClick={handleExportSvgBtn}
             disabled={isProcessing || isExportingImage}
           />

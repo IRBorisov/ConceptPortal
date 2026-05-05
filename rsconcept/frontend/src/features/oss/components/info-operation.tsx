@@ -48,11 +48,11 @@ export function InfoOperation({ operation }: InfoOperationProps) {
       <h2>{operation.alias}</h2>
       <p className='flex justify-between gap-3'>
         <span>
-          <b>{tx('semantic.term.type')}: </b> {labelOperationType(operation.operation_type)}
+          <b>{tx('tx.rslang.type')}: </b> {labelOperationType(operation.operation_type)}
         </span>
         <span>
           <b>{tx('ui.oss.infoOperation.ownAdditionsLabel')}</b>{' '}
-          {operation.has_additions ? tx('semantic.yes') : tx('semantic.no')}
+          {operation.has_additions ? tx('tx.general.yes') : tx('tx.general.no')}
         </span>
       </p>
       {operation.operation_type === OperationType.INPUT && operation.is_import ? (
@@ -67,13 +67,13 @@ export function InfoOperation({ operation }: InfoOperationProps) {
       ) : null}
       {operation.title ? (
         <p>
-          <b>{tx('semantic.term.title')}: </b>
+          <b>{tx('tx.lib.title')}: </b>
           {operation.title}
         </p>
       ) : null}
       {operation.description ? (
         <p>
-          <b>{tx('ui.oss.infoOperation.descriptionWithColon')}</b>
+          <b>{tx('tx.lib.description')}: </b>
           {operation.description}
         </p>
       ) : null}
@@ -88,7 +88,7 @@ export function InfoOperation({ operation }: InfoOperationProps) {
         />
       ) : operation.operation_type !== OperationType.INPUT ? (
         <p>
-          <b>{tx('semantic.action.substitution.plural')}:</b> {tx('ui.oss.infoOperation.substitutionsNone')}
+          <b>{tx('tx.lib.cst.substitution.plural')}:</b> {tx('ui.oss.infoOperation.substitutionsNone')}
         </p>
       ) : null}
     </>

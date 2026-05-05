@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { LibraryItemType } from '@/domain/library';
 import { type OperationSchema } from '@/domain/library';
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useRegisterNavigationSave } from '@/app';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
@@ -93,7 +93,7 @@ export function FormOSS({ className }: FormOSSProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none font-math'>{tx('semantic.term.oss')}</h2>
+      <h2 className='mb-2 select-none font-math'>{tx('tx.lib.oss')}</h2>
       <form.Field name='title'>
         {field => (
           <TextInput
@@ -104,7 +104,7 @@ export function FormOSS({ className }: FormOSSProps) {
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
             disabled={!isMutable}
           />
         )}
@@ -114,12 +114,12 @@ export function FormOSS({ className }: FormOSSProps) {
           {field => (
             <TextInput
               id='schema_alias'
-              label={tx('semantic.term.alias')}
+              label={tx('tx.lib.alias')}
               className='w-64'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+              error={field.state.meta.errors[0]?.message}
               disabled={!isMutable}
             />
           )}
@@ -139,21 +139,21 @@ export function FormOSS({ className }: FormOSSProps) {
         {field => (
           <TextArea
             id='schema_comment'
-            label={tx('semantic.term.description')}
+            label={tx('tx.lib.description')}
             placeholder={tx('labels.placeholder.itemDescription')}
             rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
             disabled={!isMutable || isProcessing}
           />
         )}
       </form.Field>
       {isMutable || isModified ? (
         <SubmitButton
-          text={tx('semantic.action.saveChanges')}
-          title={prepareTooltip(tx('semantic.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+          text={tx('tx.general.changes.save')}
+          title={prepareTooltip(tx('tx.general.changes.save'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
           className='self-center mt-4'
           loading={isProcessing}
           icon={<IconSave size='1.25rem' />}

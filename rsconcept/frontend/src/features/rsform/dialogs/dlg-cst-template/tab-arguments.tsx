@@ -64,7 +64,7 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
   const columns = [
     argumentsHelper.accessor('alias', {
       id: 'alias',
-      header: tx('semantic.term.alias.short'),
+      header: tx('tx.lib.alias.short'),
       size: 40,
       minSize: 40,
       maxSize: 40,
@@ -72,14 +72,14 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
     }),
     argumentsHelper.accessor(arg => arg.value || tx('ui.template.arguments.freeSlot'), {
       id: 'value',
-      header: tx('semantic.term.value'),
+      header: tx('tx.rslang.value'),
       size: 200,
       minSize: 200,
       maxSize: 200
     }),
     argumentsHelper.accessor(arg => arg.typification, {
       id: 'type',
-      header: tx('semantic.term.typification'),
+      header: tx('tx.rslang.typification'),
       enableHiding: true,
       cell: props => <div className='w-36 text-sm wrap-break-word'>{props.getValue()}</div>
     }),
@@ -90,7 +90,7 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
         <div className='w-6 flex justify-center'>
           {props.row.original.value ? (
             <MiniButton
-              title={tx('ui.value.clearValue')}
+              title={tx('tx.rslang.value.reset')}
               noPadding
               className='align-middle'
               icon={<IconReset size='1rem' className='cc-remove' />}
@@ -122,7 +122,7 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
         onRowClicked={handleSelectArgument}
       />
 
-      <h2>{tx('semantic.term.constituenta.plural')}</h2>
+      <h2>{tx('tx.lib.cst.plural')}</h2>
 
       <PickConstituenta
         id='dlg_argument_picker'

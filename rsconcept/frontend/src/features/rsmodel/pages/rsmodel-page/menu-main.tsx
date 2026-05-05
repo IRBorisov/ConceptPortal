@@ -149,7 +149,7 @@ export function MenuMain() {
       <MiniButton
         noHover
         noPadding
-        title={tx('ui.nav.menu')}
+        title={tx('tx.general.menu')}
         hideTitle={isMenuOpen}
         icon={<IconMenu size='1.25rem' />}
         className='h-full pl-2 text-muted-foreground hover:text-primary cc-animate-color bg-transparent'
@@ -157,15 +157,17 @@ export function MenuMain() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('ui.action.recalculateModel')}
+          text={tx('tx.lib.model.recalculate')}
           aria-label={tx('ui.aria.recalculateAll')}
           icon={<IconCalculateAll size='1rem' className='icon-green' />}
           onClick={handleRecalculate}
         />
         <DropdownButton
-          text={tx('semantic.action.share')}
+          text={tx('tx.general.share')}
           title={tx(
-            model.access_policy === AccessPolicy.PUBLIC ? 'labels.tooltip.shareItemPublic' : 'labels.tooltip.shareItemPrivate'
+            model.access_policy === AccessPolicy.PUBLIC
+              ? 'labels.tooltip.shareItemPublic'
+              : 'labels.tooltip.shareItemPrivate'
           )}
           aria-label={tx('ui.aria.copyLinkToClipboard')}
           icon={<IconShare size='1rem' className='icon-primary' />}
@@ -180,7 +182,7 @@ export function MenuMain() {
         />
         {!isAnonymous ? (
           <DropdownButton
-            text={tx('semantic.action.clone')}
+            text={tx('tx.general.clone')}
             icon={<IconClone size='1rem' className='icon-green' />}
             onClick={handleClone}
           />
@@ -192,7 +194,7 @@ export function MenuMain() {
         />
         {isMutable ? (
           <DropdownButton
-            text={tx('ui.action.deleteModel')}
+            text={tx('tx.lib.model.delete')}
             icon={<IconDestroy size='1rem' className='icon-red' />}
             disabled={isProcessing || role < UserRole.OWNER}
             onClick={handleDelete}
@@ -204,7 +206,7 @@ export function MenuMain() {
         {schema.models.length > 1 ? (
           <div ref={otherModelsRef} onBlur={handleOtherModelsBlur} className='relative w-full'>
             <DropdownButton
-              text={tx('ui.nav.gotoModel')}
+              text={tx('tx.lib.model.goto')}
               className='w-full'
               icon={<IconRSModel size='1rem' className='icon-primary' />}
               onClick={onOtherModelsToggle}
@@ -217,7 +219,7 @@ export function MenuMain() {
                     key={reference.id}
                     text={reference.alias}
                     className='min-w-30'
-                    title={isCurrent ? tx('ui.nav.currentModel') : undefined}
+                    title={isCurrent ? tx('tx.lib.model.current') : undefined}
                     disabled={isCurrent}
                     aria-current={isCurrent ? true : undefined}
                     onClick={event => handleGotoSiblingModel(reference.id, event)}
@@ -228,12 +230,12 @@ export function MenuMain() {
           </div>
         ) : null}
         <DropdownButton
-          text={tx('ui.nav.gotoSchema')}
+          text={tx('tx.lib.schema.goto')}
           icon={<IconRSForm size='1rem' className='icon-primary' />}
           onClick={handleNavigateSchema}
         />
         <DropdownButton
-          text={tx('semantic.term.library')}
+          text={tx('tx.lib.library')}
           icon={<IconLibrary size='1rem' className='icon-primary' />}
           onClick={() => router.gotoLibrary()}
         />

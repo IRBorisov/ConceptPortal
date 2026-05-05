@@ -235,7 +235,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
     <>
       {operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text={tx('semantic.action.edit')}
+          text={tx('tx.general.edit')}
           title={tx('ui.oss.menu.editOperation')}
           icon={<IconEdit size='1rem' className='icon-primary' />}
           onClick={handleEditOperation}
@@ -243,7 +243,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
         />
       ) : (
         <DropdownButton
-          text={tx('ui.oss.menu.original')}
+          text={tx('tx.lib.replica.original')}
           title={tx('ui.oss.menu.selectOriginal')}
           icon={<IconReference size='1rem' className='icon-primary' />}
           onClick={handleSelectTarget}
@@ -252,7 +252,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
       {operation.result ? (
         <DropdownButton
-          text={tx('ui.oss.menu.openSchema')}
+          text={tx('tx.lib.schema.goto')}
           title={prepareTooltip(tx('ui.oss.menu.openLinkedRsform'), tx('ui.hint.doubleClick'))}
           aria-label={tx('ui.oss.menu.openLinkedRsform')}
           icon={<IconRSForm size='1rem' className='icon-primary' />}
@@ -262,7 +262,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       ) : null}
       {isMutable && !operation.result && operation.operation_type === OperationType.INPUT ? (
         <DropdownButton
-          text={tx('ui.action.createSchema')}
+          text={tx('tx.lib.schema.create')}
           title={tx('ui.oss.menu.createEmptySchemaTitle')}
           icon={<IconNewRSForm size='1rem' className='icon-green' />}
           onClick={handleInputCreate}
@@ -298,9 +298,9 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
       {isMutable && operation.result && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text={tx('semantic.term.constituenta.plural')}
-          title={tx('ui.oss.menu.relocateConstituentsTitle')}
-          aria-label={tx('ui.oss.menu.relocateConstituentsAria')}
+          text={tx('tx.lib.cst.plural')}
+          title={tx('tx.lib.oss.relocate.hint')}
+          aria-label={tx('tx.lib.oss.relocate')}
           icon={<IconChild size='1rem' className='icon-green' />}
           onClick={handleRelocateConstituents}
           disabled={isProcessing}
@@ -309,8 +309,8 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
       {isMutable && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text={tx('ui.oss.menu.createReplica')}
-          title={tx('ui.oss.menu.createReplicaTitle')}
+          text={tx('tx.lib.replica.create')}
+          title={tx('tx.lib.replica.create.hint')}
           icon={<IconReference size='1rem' className='icon-green' />}
           onClick={handleCreateReference}
           disabled={isProcessing}
@@ -319,7 +319,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
       {isMutable && operation.operation_type !== OperationType.REPLICA ? (
         <DropdownButton
-          text={tx('semantic.action.clone')}
+          text={tx('tx.general.clone')}
           title={tx('ui.oss.menu.cloneResultSchemaTitle')}
           icon={<IconClone size='1rem' className='icon-green' />}
           onClick={handleClone}
@@ -328,7 +328,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       ) : null}
 
       <DropdownButton
-        text={tx('ui.oss.menu.deleteOperation')}
+        text={tx('tx.lib.operation.delete')}
         icon={<IconDestroy size='1rem' className='icon-red' />}
         onClick={handleDeleteOperation}
         disabled={!isMutable || isProcessing || !operation || !canDeleteOperation(operation)}

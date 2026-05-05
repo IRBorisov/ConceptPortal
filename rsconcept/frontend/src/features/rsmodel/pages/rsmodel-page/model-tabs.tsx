@@ -209,9 +209,9 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
         ) : null}
         <MenuModel />
 
-        <TabLabel label={tx('semantic.term.passport')} />
+        <TabLabel label={tx('tx.lib.item.passport')} />
         <TabLabel label={tx('ui.tabs.list')} />
-        <TabLabel label={tx('semantic.term.concept')} />
+        <TabLabel label={tx('tx.lib.concept')} />
         <TabLabel label={tx('ui.tabs.graph')} />
         <TabLabel label={tx('ui.tabs.data')} />
         <TabLabel label={tx('ui.tabs.evaluation')} />

@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
 
@@ -116,20 +116,20 @@ export function DlgEditVersions() {
             <TextInput
               id='dlg_version'
               dense
-              label={tx('semantic.term.version')}
+              label={tx('tx.lib.version')}
               className='w-64 mr-3'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+              error={field.state.meta.errors[0]?.message}
             />
           )}
         </form.Field>
         <div className='cc-icons h-fit'>
           <MiniButton
             type='submit'
-            title={isValid ? tx('semantic.action.saveChanges') : tx('labels.hint.versionTaken')}
-            aria-label={tx('semantic.action.saveChanges')}
+            title={isValid ? tx('tx.general.changes.save') : tx('labels.hint.versionTaken')}
+            aria-label={tx('tx.general.changes.save')}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             disabled={isDefaultValue || !isValid || isProcessing}
           />
@@ -146,7 +146,7 @@ export function DlgEditVersions() {
           <TextArea
             id='dlg_description'
             spellCheck
-            label={tx('semantic.term.description')}
+            label={tx('tx.lib.description')}
             rows={3}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}

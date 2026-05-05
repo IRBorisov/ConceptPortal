@@ -31,7 +31,7 @@ export function UserButton({ onLogin, onClickUser, isOpen }: UserButtonProps) {
   } else {
     return (
       <NavigationButton
-        title={tx('nav.user.menuTitle')}
+        title={tx('tx.general.user')}
         hideTitle={isOpen}
         aria-haspopup='true'
         aria-expanded={isOpen}

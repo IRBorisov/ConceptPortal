@@ -29,11 +29,11 @@ export function DlgOssSettings() {
   const toggleEdgeAnimate = useOSSGraphStore(state => state.toggleEdgeAnimate);
   const toggleEdgeStraight = useOSSGraphStore(state => state.toggleEdgeStraight);
 
-  const toggleOnShort = tx('semantic.on');
-  const toggleOffShort = tx('semantic.off');
+  const toggleOnShort = tx('tx.general.on');
+  const toggleOffShort = tx('tx.general.off');
 
   return (
-    <ModalView header={tx('ui.oss.settings.header')} className='cc-column justify-between px-6 pb-3 w-100'>
+    <ModalView header={tx('tx.general.settings')} className='cc-column justify-between px-6 pb-3 w-100'>
       <Checkbox
         value={showCoordinates}
         onChange={toggleShowCoordinates}

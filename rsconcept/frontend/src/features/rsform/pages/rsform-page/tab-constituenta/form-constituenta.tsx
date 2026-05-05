@@ -9,7 +9,7 @@ import { type Constituenta, CstType, type RSForm } from '@/domain/library';
 import { getAnalysisFor, isBaseSet, isBasicConcept, isLogical } from '@/domain/library/rsform-api';
 import { type AnalysisFull, TypeID } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useRegisterNavigationSave } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -161,7 +161,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
     >
       <div className='flex items-center gap-2 mr-2 font-math font-semibold select-text'>
-        <span>{tx('semantic.term.constituenta') + ' ' + activeCst.alias}</span>
+        <span>{tx('tx.lib.cst') + ' ' + activeCst.alias}</span>
       </div>
       <ConstituentaPrimaryActions className='-mt-1' activeCst={activeCst} schema={schema} />
 
@@ -170,14 +170,14 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
           <div className='relative'>
             {!disabled ? (
               <TextButton
-                text={tx('ui.rsform.action.editWordForms')}
+                text={tx('tx.lang.wordform.plural.editing')}
                 className='z-pop text-sm absolute top-0 left-19'
                 title={
                   disabled
                     ? undefined
                     : isModified
                       ? tx('labels.tooltip.unsaved')
-                      : tx('ui.rsform.hint.editTermWordForms')
+                      : tx('tx.lang.wordform.plural.editing.hint')
                 }
                 onClick={openTermEditor}
                 disabled={isModified}
@@ -186,8 +186,8 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
 
             <RefsInput
               id='cst_term'
-              label={tx('semantic.term.term')}
-              aria-label={tx('semantic.term.term')}
+              label={tx('tx.lib.term')}
+              aria-label={tx('tx.lib.term')}
               maxHeight='8rem'
               areaClassName={
                 (needsInterpretation && !field.state.value) ||
@@ -204,7 +204,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
               onChange={newValue => field.handleChange(newValue)}
               disabled={disabled}
               error={
-                formatZodErrorMessage(field.state.meta.errors[0]?.message) ??
+                field.state.meta.errors[0]?.message ??
                 (needsInterpretation && !field.state.value
                   ? tx('ui.validation.termEmpty')
                   : activeCst.homonyms.length > 0 && !field.state.meta.isDirty
@@ -236,7 +236,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       {activeCst.cst_type !== CstType.NOMINAL ? (
         <TextArea
           id='cst_typification'
-          label={tx('semantic.term.typification')}
+          label={tx('tx.rslang.typification')}
           fitContent
           dense
           noResize
@@ -280,7 +280,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
           {field => (
             <RefsInput
               id='cst_definition'
-              label={tx('semantic.term.definitionTextual')}
+              label={tx('tx.lib.definitionTextual')}
               placeholder={disabled ? '' : tx('ui.placeholder.textDefinitionHint')}
               minHeight='3.75rem'
               maxHeight='8rem'
@@ -307,7 +307,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
                 needsInterpretation && !field.state.value && 'border-destructive! outline-destructive!'
               )}
               spellCheck
-              label={isBasic ? tx('semantic.term.convention') : tx('semantic.term.comment')}
+              label={isBasic ? tx('tx.lib.convention') : tx('tx.lib.comment')}
               placeholder={
                 disabled ? '' : isBasic ? tx('ui.placeholder.conventionBasic') : tx('ui.placeholder.developerComment')
               }
@@ -316,7 +316,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
               error={
-                formatZodErrorMessage(field.state.meta.errors[0]?.message) ??
+                field.state.meta.errors[0]?.message ??
                 (needsInterpretation && !field.state.value ? tx('ui.validation.conventionEmpty') : undefined)
               }
             />
@@ -325,11 +325,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       ) : null}
 
       {!showConvention && (!disabled || isProcessing) ? (
-        <TextButton
-          text={tx('semantic.action.add.comment')}
-          className='self-start'
-          onClick={() => setForceComment(true)}
-        />
+        <TextButton text={tx('tx.lib.comment.add')} className='self-start' onClick={() => setForceComment(true)} />
       ) : null}
     </form>
   );

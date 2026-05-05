@@ -136,7 +136,7 @@ export function Navigation() {
         <div className='relative z-10 flex gap-2 items-center shrink-0'>
           {isAnonymous ? (
             <NavigationButton
-              text={tx('semantic.term.sandbox')}
+              text={tx('tx.general.sandbox')}
               title={tx('nav.bar.sandboxTitle')}
               icon={<IconSandbox size='1.25rem' />}
               onClick={navigateSandbox}
@@ -144,23 +144,23 @@ export function Navigation() {
           ) : (
             <div ref={createRef} onBlur={handleCreateBlur} className='relative'>
               <NavigationButton
-                text={tx('semantic.action.create')}
+                text={tx('tx.general.create')}
                 icon={<IconNewItem2 size='1.25rem' />}
                 onClick={toggleCreate}
               />
               <Dropdown isOpen={isCreateOpen} margin='mt-2'>
                 <DropdownButton
-                  text={tx('nav.bar.createSchema')}
+                  text={tx('tx.lib.schema')}
                   icon={<IconRSForm size='1rem' className='icon-green' />}
                   onClick={navigateCreateSchema}
                 />
                 <DropdownButton
-                  text={tx('nav.bar.createModel')}
+                  text={tx('tx.lib.model')}
                   icon={<IconRSModel size='1rem' className='text-accent-orange' />}
                   onClick={navigateCreateModel}
                 />
                 <DropdownButton
-                  text={tx('nav.bar.createOss')}
+                  text={tx('tx.lib.oss')}
                   icon={<IconOSS size='1rem' className='icon-primary' />}
                   onClick={navigateCreateOSS}
                 />
@@ -168,15 +168,11 @@ export function Navigation() {
             </div>
           )}
           <NavigationButton
-            text={tx('semantic.term.library')}
+            text={tx('tx.lib.library')}
             icon={<IconLibrary2 size='1.25rem' />}
             onClick={navigateLibrary}
           />
-          <NavigationButton
-            text={tx('semantic.term.manual')}
-            icon={<IconManuals size='1.25rem' />}
-            onClick={navigateHelp}
-          />
+          <NavigationButton text={tx('tx.general.help')} icon={<IconManuals size='1.25rem' />} onClick={navigateHelp} />
 
           <MenuAI />
           <MenuUser />

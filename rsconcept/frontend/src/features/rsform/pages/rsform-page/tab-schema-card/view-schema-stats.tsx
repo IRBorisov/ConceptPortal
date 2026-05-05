@@ -23,25 +23,25 @@ export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaSt
         id='stats-overview'
         className='rounded-t-md'
         label={tx('ui.stats.section.overview')}
-        primaryLabel={tx('semantic.term.constituenta.plural')}
+        primaryLabel={tx('tx.lib.cst.plural')}
         primaryValue={stats.count_all}
         primaryTitle={tx('ui.stats.title.totalConstituents')}
-        secondaryLabel={stats.count_inherited > 0 ? tx('ui.stats.secondary.owned') : undefined}
+        secondaryLabel={stats.count_inherited > 0 ? tx('tx.lib.concept.original.plural') : undefined}
         secondaryValue={stats.count_inherited > 0 ? countOwned : undefined}
         secondaryTitle={tx('ui.stats.title.ownedConstituents')}
         details={[
           { label: tx('ui.stats.row.totalConstituents'), value: stats.count_all },
           ...(stats.count_inherited > 0
             ? [
-                { label: tx('ui.stats.row.inherited'), value: stats.count_inherited },
-                { label: tx('ui.stats.row.owned'), value: countOwned }
+                { label: tx('tx.lib.concept.inherited.plural'), value: stats.count_inherited },
+                { label: tx('tx.lib.concept.original.plural'), value: countOwned }
               ]
             : []),
-          { label: tx('ui.stats.row.crucial'), value: stats.count_crucial },
-          { label: tx('ui.stats.row.termLabels'), value: stats.count_term },
+          { label: tx('tx.lib.cst.crucial.plural'), value: stats.count_crucial },
+          { label: tx('tx.lib.term.plural'), value: stats.count_text_term },
           { label: tx('ui.stats.row.definitions'), value: stats.count_definition },
           { label: tx('ui.stats.row.conventions'), value: stats.count_convention },
-          { label: tx('ui.stats.row.comments'), value: stats.count_comment }
+          { label: tx('tx.lib.comment.plural'), value: stats.count_comment }
         ]}
       />
 
@@ -50,7 +50,7 @@ export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaSt
       <StatsCategory
         id='stats-structures'
         label={tx('ui.stats.schema.coreProfile')}
-        primaryLabel={tx('ui.stats.primary.bases')}
+        primaryLabel={tx('tx.lib.concept.basic.plural')}
         primaryValue={countBase}
         primaryTitle={tx('ui.stats.title.undefinedConcepts')}
         secondaryLabel={tx('ui.stats.secondary.complexity')}
@@ -58,10 +58,10 @@ export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaSt
         secondaryTitle={tx('ui.stats.title.termsForBases')}
         details={[
           { label: tx('ui.stats.row.nominals'), value: stats.count_nominal },
-          { label: tx('ui.stats.row.baseSets'), value: stats.count_base },
-          { label: tx('ui.stats.row.constantSets'), value: stats.count_constant },
-          { label: tx('ui.stats.row.genericStructures'), value: stats.count_structured },
-          { label: tx('ui.stats.row.axioms'), value: stats.count_axiom }
+          { label: tx('tx.lib.cst.type.basic'), value: stats.count_base },
+          { label: tx('tx.lib.cst.type.constant'), value: stats.count_constant },
+          { label: tx('tx.lib.cst.type.structure'), value: stats.count_structured },
+          { label: tx('tx.lib.cst.type.axiom'), value: stats.count_axiom }
         ]}
       />
 
@@ -70,17 +70,17 @@ export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaSt
       <StatsCategory
         id='stats-logics'
         label={tx('ui.stats.schema.bodyProfile')}
-        primaryLabel={tx('ui.stats.primary.derived')}
+        primaryLabel={tx('tx.lib.concept.derived.plural')}
         primaryValue={countDerived}
         primaryTitle={tx('ui.stats.title.derivedConcepts')}
         secondaryLabel={tx('ui.stats.secondary.functions')}
         secondaryValue={stats.count_function + stats.count_predicate}
         secondaryTitle={tx('ui.stats.title.termAndPredicateFns')}
         details={[
-          { label: tx('ui.stats.row.terms'), value: stats.count_term },
-          { label: tx('ui.stats.row.termFunctions'), value: stats.count_function },
-          { label: tx('ui.stats.row.predicateFunctions'), value: stats.count_predicate },
-          { label: tx('ui.stats.row.theorems'), value: stats.count_theorem }
+          { label: tx('tx.lib.cst.type.term'), value: stats.count_term },
+          { label: tx('tx.lib.cst.type.function'), value: stats.count_function },
+          { label: tx('tx.lib.cst.type.predicate'), value: stats.count_predicate },
+          { label: tx('tx.lib.cst.type.theorem'), value: stats.count_theorem }
         ]}
       />
 
@@ -93,7 +93,7 @@ export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaSt
         primaryLabel={tx('ui.stats.primary.problems')}
         primaryValue={stats.count_problematic}
         primaryTitle={tx('ui.stats.title.problemsCount')}
-        secondaryLabel={tx('ui.stats.secondary.errors')}
+        secondaryLabel={tx('tx.general.error.plural')}
         secondaryValue={countErrors}
         secondaryTitle={tx('ui.stats.title.errorDefinitions')}
         details={[

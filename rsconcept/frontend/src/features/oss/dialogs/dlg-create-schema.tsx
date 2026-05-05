@@ -4,7 +4,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type OssLayout } from '@/domain/library';
 import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -82,7 +82,7 @@ export function DlgCreateSchema() {
   return (
     <ModalForm
       header={tx('ui.dlg.ossOp.newSchemaHeader')}
-      submitText={tx('semantic.action.create')}
+      submitText={tx('tx.general.create')}
       canSubmit={canSubmit}
       validationHint={hint}
       onSubmit={event => {
@@ -102,7 +102,7 @@ export function DlgCreateSchema() {
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </form.Field>
@@ -112,13 +112,13 @@ export function DlgCreateSchema() {
             {field => (
               <TextInput
                 id='operation_alias'
-                label={tx('semantic.term.alias')}
+                label={tx('tx.lib.alias')}
                 className='w-80'
                 placeholder={tx('ui.oss.enterAlias')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+                error={field.state.meta.errors[0]?.message}
               />
             )}
           </form.Field>
@@ -127,7 +127,7 @@ export function DlgCreateSchema() {
               <SelectParent
                 items={manager.oss.blocks}
                 value={field.state.value ? (manager.oss.blockByID.get(field.state.value) ?? null) : null}
-                placeholder={tx('semantic.term.block.parent')}
+                placeholder={tx('tx.lib.block.parent')}
                 onChange={value => field.handleChange(value ? value.id : null)}
               />
             )}
@@ -137,7 +137,7 @@ export function DlgCreateSchema() {
           {field => (
             <TextArea
               id='operation_comment'
-              label={tx('semantic.term.description')}
+              label={tx('tx.lib.description')}
               placeholder={tx('labels.placeholder.itemDescription')}
               className='w-full'
               noResize

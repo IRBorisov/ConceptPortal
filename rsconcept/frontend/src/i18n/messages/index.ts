@@ -1,8 +1,8 @@
 import { type AppLocale } from '../locales';
 
-import { enMessages } from './en';
-import { frMessages } from './fr';
-import { ruMessages } from './ru';
+import { enMessages } from './index.en';
+import { frMessages } from './index.fr';
+import { ruMessages } from './index.ru';
 
 export function getMessagesForLocale(locale: AppLocale): Record<string, string> {
   switch (locale) {

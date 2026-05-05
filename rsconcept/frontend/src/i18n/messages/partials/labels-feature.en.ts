@@ -64,41 +64,6 @@ export const labelsFeatureEn: Record<string, string> = {
   'labels.cctext.grammemeUnknown': 'Unknown: {gram}',
   ...Object.fromEntries(grammemeEnEntries),
 
-  'labels.library.location.user': '/U : personal',
-  'labels.library.location.common': '/S : shared',
-  'labels.library.location.library': '/L : examples',
-  'labels.library.location.projects': '/P : projects',
-
-  'labels.library.locationShort.user': 'Personal',
-  'labels.library.locationShort.common': 'Shared',
-  'labels.library.locationShort.library': 'Examples',
-  'labels.library.locationShort.projects': 'Projects',
-
-  'labels.library.locationDesc.user': 'User’s private schemas',
-  'labels.library.locationDesc.common': 'Working directory of public schemas',
-  'labels.library.locationDesc.library': 'Catalog of immutable example schemas',
-  'labels.library.locationDesc.projects': 'Working directory of project schemas',
-
-  'labels.library.access.private': 'Private',
-  'labels.library.access.protected': 'Protected',
-  'labels.library.access.public': 'Public',
-
-  'labels.library.accessDesc.private': 'Owner only',
-  'labels.library.accessDesc.protected': 'Owner and editors',
-  'labels.library.accessDesc.public': 'Open access',
-
-  'labels.library.version.current': 'current',
-
-  'labels.rsform.cstType.nominal': 'Nominal',
-  'labels.rsform.cstType.basic': 'Base set',
-  'labels.rsform.cstType.constant': 'Constant set',
-  'labels.rsform.cstType.structure': 'Generic structure',
-  'labels.rsform.cstType.axiom': 'Axiom',
-  'labels.rsform.cstType.term': 'Term',
-  'labels.rsform.cstType.function': 'Term function',
-  'labels.rsform.cstType.predicate': 'Predicate function',
-  'labels.rsform.cstType.theorem': 'Theorem',
-
   'labels.rsform.cstClassLabel.nominal': 'nominal',
   'labels.rsform.cstClassLabel.basic': 'basic',
   'labels.rsform.cstClassLabel.derived': 'derived',
@@ -184,13 +149,6 @@ export const labelsFeatureEn: Record<string, string> = {
 
   'labels.rsform.fallback.noTokenDescription': 'no description: {id}',
 
-  'labels.oss.operation.input': 'Load',
-  'labels.oss.operation.replica': 'Replication',
-
-  'labels.oss.operationDesc.input': 'Load a conceptual schema into the OSS',
-  'labels.oss.operationDesc.synthesis': 'Synthesis of conceptual schemas',
-  'labels.oss.operationDesc.replica': 'Create a link to the operation result',
-
   'labels.oss.item.blockTitle': 'Block: {title}',
 
   'labels.oss.substitution.invalidIDs': 'Schema identifier error',
@@ -207,26 +165,7 @@ export const labelsFeatureEn: Record<string, string> = {
   'labels.oss.substitution.unequalArgs': 'Error {from} → {to}: argument typifications differ',
   'labels.oss.substitution.unequalExpressions': 'Warning {from} → {to}: notion definitions differ',
 
-  'labels.oss.fallback.unknownOperationType': 'UNKNOWN OPERATION TYPE: {type}',
-
-  'labels.rsmodel.eval.noEval': 'No evaluation',
-  'labels.rsmodel.eval.notProcessed': 'Not evaluated',
-  'labels.rsmodel.eval.evalFail': 'Error',
-  'labels.rsmodel.eval.axiomFalse': 'Axiom violated',
-  'labels.rsmodel.eval.empty': 'Empty value',
-  'labels.rsmodel.eval.hasData': 'OK',
-
-  'labels.rsmodel.evalDesc.noEval': 'evaluation not required',
-  'labels.rsmodel.evalDesc.notProcessed': 'evaluation was not run',
-  'labels.rsmodel.evalDesc.invalidData': 'data does not match the type',
-  'labels.rsmodel.evalDesc.evalFail': 'evaluation error',
-  'labels.rsmodel.evalDesc.axiomFalse': 'axiom value is false',
-  'labels.rsmodel.evalDesc.empty': 'value is the empty set',
-  'labels.rsmodel.evalDesc.hasData': 'value computed and non-empty',
-
   'labels.rsmodel.valueDesc.cardinalityPrefix': 'Cardinality: {n} | {stub}',
-
-  'labels.rsmodel.fallback.unknownEvalStatus': 'UNKNOWN EVALUATION STATUS: {status}',
 
   'labels.users.roleDesc.reader': 'Reader mode',
   'labels.users.roleDesc.editor': 'Edit mode',
@@ -251,14 +190,8 @@ export const labelsFeatureEn: Record<string, string> = {
   'labels.ai.variableMock.constituenta': 'Example: current constituenta',
   'labels.ai.variableMock.constituentaSyntaxTree': 'Example constituenta syntax tree',
 
-  'labels.rslang.typeClass.logic': 'Logical',
-  'labels.rslang.typeClass.typification': 'Set-theoretic',
-  'labels.rslang.typeClass.function': 'Term function',
-  'labels.rslang.typeClass.predicate': 'Predicate function',
-
   'labels.rslang.misc.notDefined': 'undefined',
 
-  'labels.rslang.fallback.unknownNode': 'UNKNOWN {id}',
   'labels.rslang.fallback.noTokenLabel': 'no label: {id}',
 
   'labels.rslang.error.unknownSyntax': 'Undefined syntax error',

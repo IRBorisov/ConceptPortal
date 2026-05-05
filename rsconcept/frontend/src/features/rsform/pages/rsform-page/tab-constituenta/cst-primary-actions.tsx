@@ -79,7 +79,7 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
 
       {showRenameButton ? (
         <TextButton
-          text={tx('semantic.action.rename')}
+          text={tx('tx.general.rename')}
           title={isModified ? tx('labels.tooltip.unsaved') : tx('ui.hint.renameCst')}
           onClick={promptRename}
           disabled={isModified}

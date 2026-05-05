@@ -136,7 +136,7 @@ export function DlgCstTemplate() {
   return (
     <ModalForm
       header={tx('ui.dlg.cstTemplate.header')}
-      submitText={tx('semantic.action.create')}
+      submitText={tx('tx.general.create')}
       className='w-172 h-140 px-6'
       canSubmit={canSubmit}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
@@ -145,9 +145,9 @@ export function DlgCstTemplate() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
-          <TabLabel label={tx('semantic.term.template')} title={tx('ui.dlg.cstTemplate.tabTemplate.title')} />
-          <TabLabel label={tx('semantic.term.argument.plural')} title={tx('ui.dlg.cstTemplate.tabArgs.title')} />
-          <TabLabel label={tx('semantic.term.editor')} title={tx('ui.dlg.editCst.header')} />
+          <TabLabel label={tx('tx.domain.template')} title={tx('ui.dlg.cstTemplate.tabTemplate.title')} />
+          <TabLabel label={tx('tx.domain.argument.plural')} title={tx('ui.dlg.cstTemplate.tabArgs.title')} />
+          <TabLabel label={tx('tx.general.editor')} title={tx('ui.dlg.editCst.header')} />
         </TabList>
 
         <TemplateState

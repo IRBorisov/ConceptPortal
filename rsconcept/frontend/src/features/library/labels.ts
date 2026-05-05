@@ -6,36 +6,36 @@ import { globalTx } from '@/i18n';
 import { type RO } from '@/utils/meta';
 
 const LOCATION_LID: Record<LocationHead, string> = {
-  [LocationHead.USER]: 'labels.library.location.user',
-  [LocationHead.COMMON]: 'labels.library.location.common',
-  [LocationHead.LIBRARY]: 'labels.library.location.library',
-  [LocationHead.PROJECTS]: 'labels.library.location.projects'
+  [LocationHead.USER]: 'tx.lib.location.user',
+  [LocationHead.COMMON]: 'tx.lib.location.common',
+  [LocationHead.LIBRARY]: 'tx.lib.location.library',
+  [LocationHead.PROJECTS]: 'tx.lib.location.projects'
 };
 
 const LOCATION_SHORT_LID: Record<LocationHead, string> = {
-  [LocationHead.USER]: 'labels.library.locationShort.user',
-  [LocationHead.COMMON]: 'labels.library.locationShort.common',
-  [LocationHead.LIBRARY]: 'labels.library.locationShort.library',
-  [LocationHead.PROJECTS]: 'labels.library.locationShort.projects'
+  [LocationHead.USER]: 'tx.lib.location.user.short',
+  [LocationHead.COMMON]: 'tx.lib.location.common.short',
+  [LocationHead.LIBRARY]: 'tx.lib.location.library.short',
+  [LocationHead.PROJECTS]: 'tx.lib.location.projects.short'
 };
 
 const LOCATION_DESC_LID: Record<LocationHead, string> = {
-  [LocationHead.USER]: 'labels.library.locationDesc.user',
-  [LocationHead.COMMON]: 'labels.library.locationDesc.common',
-  [LocationHead.LIBRARY]: 'labels.library.locationDesc.library',
-  [LocationHead.PROJECTS]: 'labels.library.locationDesc.projects'
+  [LocationHead.USER]: 'tx.lib.location.user.hint',
+  [LocationHead.COMMON]: 'tx.lib.location.common.hint',
+  [LocationHead.LIBRARY]: 'tx.lib.location.library.hint',
+  [LocationHead.PROJECTS]: 'tx.lib.location.projects.hint'
 };
 
 const ACCESS_LID: Record<AccessPolicy, string> = {
-  [AccessPolicy.PRIVATE]: 'labels.library.access.private',
-  [AccessPolicy.PROTECTED]: 'labels.library.access.protected',
-  [AccessPolicy.PUBLIC]: 'labels.library.access.public'
+  [AccessPolicy.PRIVATE]: 'tx.lib.access.private',
+  [AccessPolicy.PROTECTED]: 'tx.lib.access.protected',
+  [AccessPolicy.PUBLIC]: 'tx.lib.access.public'
 };
 
 const ACCESS_DESC_LID: Record<AccessPolicy, string> = {
-  [AccessPolicy.PRIVATE]: 'labels.library.accessDesc.private',
-  [AccessPolicy.PROTECTED]: 'labels.library.accessDesc.protected',
-  [AccessPolicy.PUBLIC]: 'labels.library.accessDesc.public'
+  [AccessPolicy.PRIVATE]: 'tx.lib.access.private.hint',
+  [AccessPolicy.PROTECTED]: 'tx.lib.access.protected.desc',
+  [AccessPolicy.PUBLIC]: 'tx.lib.access.public.desc'
 };
 
 /** Retrieves label for {@link LocationHead}. */
@@ -80,5 +80,5 @@ export function describeAccessPolicy(policy: AccessPolicy): string {
 /** Generates label for {@link VersionInfo} of {@link RSForm}. */
 export function labelVersion(value: CurrentVersion, items: RO<VersionInfo[]>) {
   const version = items.find(ver => ver.id === value);
-  return version ? version.version : globalTx('labels.library.version.current');
+  return version ? version.version : globalTx('tx.lib.version.current');
 }

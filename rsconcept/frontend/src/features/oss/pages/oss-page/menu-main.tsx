@@ -58,7 +58,7 @@ export function MenuMain() {
       <MiniButton
         noHover
         noPadding
-        title={tx('ui.nav.menu')}
+        title={tx('tx.general.menu')}
         hideTitle={isMenuOpen}
         icon={<IconMenu size='1.25rem' />}
         className='h-full px-2 text-muted-foreground hover:text-primary cc-animate-color'
@@ -66,7 +66,7 @@ export function MenuMain() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('semantic.action.share')}
+          text={tx('tx.general.share')}
           title={tx('ui.aria.copyLinkToClipboard')}
           icon={<IconShare size='1rem' className='icon-primary' />}
           onClick={handleShare}
@@ -79,7 +79,7 @@ export function MenuMain() {
         />
         {isMutable ? (
           <DropdownButton
-            text={tx('ui.action.deleteSchema')}
+            text={tx('tx.lib.schema.delete')}
             icon={<IconDestroy size='1rem' className='icon-red' />}
             onClick={handleDelete}
             disabled={isProcessing || role < UserRole.OWNER}
@@ -89,7 +89,7 @@ export function MenuMain() {
         <Divider margins='mx-3 my-1' />
 
         <DropdownButton
-          text={tx('semantic.term.library')}
+          text={tx('tx.lib.library')}
           icon={<IconLibrary size='1rem' className='icon-primary' />}
           onClick={handleOpenLibrary}
         />

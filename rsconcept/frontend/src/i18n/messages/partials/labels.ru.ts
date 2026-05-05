@@ -2,11 +2,7 @@ import { labelsFeatureUiRu } from './labels-feature.ru';
 
 /** Russian overrides for shared labels (toasts, Zod, hints, prompts). */
 export const labelsRu: Record<string, string> = {
-  'labels.error.aliasLength': 'до {n} символов',
-  'labels.error.emailLength': 'до {n} символов',
-  'labels.error.titleLength': 'до {n} символов',
-  'labels.error.descriptionLength': 'до {n} символов',
-  'labels.error.textLength': 'до {n} символов',
+  'labels.error.lengthLimit': 'Максимальная длина',
   'labels.error.typeStructureFailed': 'Структура отсутствует',
   'labels.error.passwordsMismatch': 'Пароли не совпадают',
   'labels.error.passwordsSame': 'Пароль совпадает со старым',
@@ -33,7 +29,6 @@ export const labelsRu: Record<string, string> = {
   'labels.error.clipboardWrite': 'Не удалось записать в буфер обмена',
   'labels.error.fileRead': 'Ошибка при чтении файла',
   'labels.error.fileTooLarge': 'Размер файла превышает {maxMb} МБ',
-  'labels.error.valueNull': 'Значение отсутствует',
   'labels.error.sandboxImportError': 'Не удалось перенести схему в песочницу',
   'labels.error.sandboxBundleNotAvailable': 'Песочница пуста',
   'labels.error.failedToPersistSandbox': 'Не удалось сохранить песочницу',

@@ -79,12 +79,8 @@ export const shellEn: Record<string, string> = {
   'nav.ai.templatesTitleAnon': 'Available only to signed-in users',
   'nav.ai.templatesTitleAuth': 'Prompt templates',
   'nav.anonymousLoginTitle': 'Anonymous mode\nSign in to the Portal',
-  'nav.bar.createModel': 'Conceptual model',
-  'nav.bar.createOss': 'Operational schema',
-  'nav.bar.createSchema': 'Conceptual schema',
   'nav.bar.sandboxTitle': 'Demo environment for guests',
   'nav.currentItem.titleAria': 'Item title',
   'nav.user.loginTitle': 'Go to login page',
-  'nav.user.menuTitle': 'User account',
   'nav.userRoleMode': 'Role: {role}'
 };

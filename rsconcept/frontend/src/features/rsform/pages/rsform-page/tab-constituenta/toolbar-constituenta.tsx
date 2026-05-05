@@ -70,8 +70,8 @@ export function ToolbarConstituenta({
       {isContentEditable && activeCst ? (
         <>
           <MiniButton
-            title={prepareTooltip(tx('semantic.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
-            aria-label={tx('semantic.action.saveChanges')}
+            title={prepareTooltip(tx('tx.general.changes.save'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+            aria-label={tx('tx.general.changes.save')}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             onClick={onSubmit}
             disabled={disabled || !isModified}
@@ -83,20 +83,20 @@ export function ToolbarConstituenta({
             disabled={disabled || !isModified}
           />
           <MiniButton
-            title={tx('ui.action.createConstituenta')}
+            title={tx('tx.lib.cst.create')}
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
             onClick={() => void promptCreateCst(activeCst.cst_type)}
             disabled={!isContentEditable || isProcessing}
           />
           <MiniButton
-            title={isModified ? tx('labels.tooltip.unsaved') : prepareTooltip(tx('ui.cloneConstituenta'), 'Alt + V')}
-            aria-label={tx('ui.cloneConstituenta')}
+            title={isModified ? tx('labels.tooltip.unsaved') : prepareTooltip(tx('tx.lib.cst.clone'), 'Alt + V')}
+            aria-label={tx('tx.lib.cst.clone')}
             icon={<IconClone size='1.25rem' className='icon-green' />}
             onClick={() => void cloneCst()}
             disabled={disabled || isModified}
           />
           <MiniButton
-            title={tx('ui.action.deleteConstituenta')}
+            title={tx('tx.lib.cst.delete')}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
             onClick={promptDeleteSelected}
             disabled={disabled || !canDeleteSelected}

@@ -31,7 +31,7 @@ export function Component() {
       <div className='cc-fade-in flex flex-col items-center gap-1 mt-3'>
         <p>{tx('auth.restore.done')}</p>
         <TextURL text={tx('auth.restore.loginLink')} href='/login' />
-        <TextURL text={tx('semantic.term.home')} href='/' />
+        <TextURL text={tx('tx.general.home')} href='/' />
       </div>
     );
   } else {
@@ -43,7 +43,7 @@ export function Component() {
           autoComplete='email'
           required
           allowEnter
-          label={tx('semantic.term.email')}
+          label={tx('tx.general.email')}
           value={email}
           onChange={event => setEmail(event.target.value)}
         />

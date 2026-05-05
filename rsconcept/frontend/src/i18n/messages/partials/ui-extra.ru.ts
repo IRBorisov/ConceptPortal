@@ -11,39 +11,20 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.stats.section.overview': 'Общий состав',
   'ui.stats.title.totalConstituents': 'Общее количество конституент',
-  'ui.stats.secondary.owned': 'Собственные',
   'ui.stats.title.ownedConstituents': 'Количество собственных конституент',
   'ui.stats.row.totalConstituents': 'Всего конституент',
-  'ui.stats.row.inherited': 'Наследованные',
-  'ui.stats.row.owned': 'Собственные',
-  'ui.stats.row.crucial': 'Ключевые',
-  'ui.stats.row.termLabels': 'Термины',
-  'ui.stats.row.textTerms': 'Текстовые термины',
   'ui.stats.row.definitions': 'Определения',
   'ui.stats.row.conventions': 'Конвенции',
-  'ui.stats.row.comments': 'Комментарии',
 
   'ui.stats.model.schemaProfile': 'Характеристика схемы',
-  'ui.stats.primary.bases': 'Базовые',
   'ui.stats.title.undefinedConcepts': 'Количество\nнеопределяемых понятий',
   'ui.stats.secondary.complexity': 'Сложность',
   'ui.stats.title.termsForBases': 'Количество терминов,\nхарактеризующих базовые понятия',
-  'ui.stats.row.bases': 'Базовые',
-  'ui.stats.row.derived': 'Выводимые',
   'ui.stats.row.nominals': 'Номиноиды',
-  'ui.stats.row.baseSets': 'Базисные множества',
-  'ui.stats.row.constantSets': 'Константные множества',
-  'ui.stats.row.genericStructures': 'Родовые структуры',
-  'ui.stats.row.axioms': 'Аксиомы',
-  'ui.stats.row.terms': 'Термы',
-  'ui.stats.row.termFunctions': 'Терм-функции',
-  'ui.stats.row.predicateFunctions': 'Предикат-функции',
-  'ui.stats.row.theorems': 'Теоремы',
 
   'ui.stats.section.correctness': 'Корректность',
   'ui.stats.primary.problems': 'Проблемы',
   'ui.stats.title.problemsCount': 'Количество проблем, включая ошибки, омонимы и дубликаты',
-  'ui.stats.secondary.errors': 'Ошибки',
   'ui.stats.title.errorDefinitions':
     'Ошибочные определения, включая синтаксические, семантические и интерпретационные ошибки',
   'ui.stats.row.homonyms': 'Омонимы',
@@ -68,7 +49,6 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.stats.schema.coreProfile': 'Характеристика ядра',
   'ui.stats.schema.bodyProfile': 'Характеристика тела',
-  'ui.stats.primary.derived': 'Производные',
   'ui.stats.title.derivedConcepts': 'Количество выводимых\nпонятий и утверждений',
   'ui.stats.secondary.functions': 'Функции',
   'ui.stats.title.termAndPredicateFns': 'Количество терм-функций\nи предикат-функций',
@@ -76,17 +56,11 @@ export const uiExtraRu: Record<string, string> = {
   'ui.toolbar.newConstituenta': 'Новая конституента',
   'ui.toolbar.editConstituenta': 'Редактировать конституенту',
 
-  'ui.toolbar.clearSelection': 'Сбросить выделение',
-  'ui.toolbar.moveUp': 'Переместить вверх',
-  'ui.toolbar.moveDown': 'Переместить вниз',
   'ui.cst.crucialToggleAria': 'Переключатель статуса ключевой конституенты',
   'ui.toolbar.addEmptyConstituenta': 'Добавить пустую конституенту',
   'ui.toolbar.addNewConstituenta': 'Добавить новую конституенту...',
   'ui.aria.addNewConstituenta': 'Добавить новую конституенту',
-  'ui.toolbar.deleteSelected': 'Удалить выбранные',
-  'ui.aria.deleteSelected': 'Удалить выбранные',
 
-  'ui.graphSelection.clear': 'Сбросить выделение',
   'ui.graphSelection.extendFromSelected': 'Выделить на основе выбранных...',
   'ui.graphSelection.suppliers': 'Поставщики',
   'ui.graphSelection.suppliersTitle': 'Выделить поставщиков',
@@ -101,22 +75,16 @@ export const uiExtraRu: Record<string, string> = {
     'Максимизация \nдополнение выделения конституентами, \nзависимыми только от выделенных',
   'ui.graphSelection.maximizeHint':
     'Максимизация - дополнение выделения конституентами, зависимыми только от выделенных',
-  'ui.graphSelection.invert': 'Инвертировать',
   'ui.graphSelection.pickGroup': 'Выделить группу...',
   'ui.graphSelection.core': 'ядро',
   'ui.graphSelection.coreTitle': 'Выделить ядро',
-  'ui.graphSelection.crucial': 'ключевые',
   'ui.graphSelection.crucialTitle': 'Выделить ключевые',
   'ui.graphSelection.owned': 'собственные',
   'ui.graphSelection.ownedTitle': 'Выделить собственные',
-  'ui.graphSelection.inherited': 'наследники',
   'ui.graphSelection.inheritedTitle': 'Выделить наследников',
 
-  'ui.tg.toolbar.fullGraph': 'Граф целиком',
   'ui.tg.toolbar.filterSettings': 'Настройки фильтрации узлов и связей',
   'ui.tg.toolbar.focusCst': 'Задать фокус конституенту',
-  'ui.tg.toolbar.hideText': 'Скрыть текст',
-  'ui.tg.toolbar.showText': 'Отобразить текст',
   'ui.tg.toolbar.echelonGraphTitle': 'Граф ступеней выделенных конституент',
 
   'ui.page.notFound.title': 'Ошибка 404 – Страница не найдена',
@@ -156,7 +124,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.stats.row.incorrect': 'Некорректные',
 
   'ui.rsform.menu.archiveNoEdit': 'Архив: Редактирование запрещено\nПерейти к актуальной версии',
-  'ui.rsform.menu.editing': 'Редактирование',
   'ui.rsform.menu.templatesTitle': 'Создать конституенту из шаблона',
   'ui.rsform.menu.embedding': 'Встраивание',
   'ui.rsform.menu.embeddingTitle': 'Импортировать совокупность\nконституент из другой схемы',
@@ -185,7 +152,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.termGraph.dialog.title': 'Настройки графа термов',
   'ui.termGraph.dialog.transforms': 'Преобразования',
   'ui.termGraph.dialog.cstTypes': 'Типы конституент',
-  'ui.termGraph.filter.hideText': 'Скрыть текст',
   'ui.termGraph.filter.hideTextHint': 'Не отображать термины',
   'ui.termGraph.filter.hideDerivedHint': 'Не отображать порожденные понятия',
   'ui.termGraph.filter.hideFree': 'Скрыть свободные',
@@ -205,32 +171,19 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.rsexpr.status.checkDefinition': 'Проверить определение',
 
-  'ui.oss.toolbar.resetView': 'Сбросить вид',
   'ui.oss.toolbar.contentsPanel': 'Панель содержания',
-  'ui.oss.toolbar.displaySettings': 'Настройки отображения',
-  'ui.oss.toolbar.editSelected': 'Редактировать выбранную',
   'ui.oss.toolbar.rightClickHint': 'Правый клик',
-  'ui.oss.toolbar.newBlock': 'Новый блок',
-  'ui.oss.toolbar.newSchemaShort': 'Новая КС',
-  'ui.oss.newSchema': 'Новая концептуальная схема',
   'ui.oss.toolbar.importSchemaShort': 'Импорт КС',
-  'ui.oss.toolbar.importSchema': 'Импорт концептуальной схемы',
-  'ui.oss.toolbar.synthesis': 'Синтез концептуальных схем',
   'ui.oss.toolbar.filterConstituents': 'Фильтрация конституент',
   'ui.oss.toolbar.relativizationShort': 'Релятивизация',
   'ui.oss.toolbar.relativization': 'Релятивизация концептуальных схем',
-  'ui.oss.toolbar.deleteSelected': 'Удалить выбранную',
 
   'ui.oss.sideToolbar.editSchemaTitle': 'Редактирование концептуальной схемы',
-  'ui.oss.sideToolbar.openSchema': 'Открыть КС',
-  'ui.oss.sideToolbar.openSchemaTitle': 'Перейти к концептуальной схеме',
-  'ui.toolbar.deleteHighlightedConstituenta': 'Удалить выделенную конституенту',
 
   'ui.oss.node.linkedCs': 'Связанная КС',
   'ui.oss.node.noLinkedCs': 'Нет связанной КС',
   'ui.oss.node.rhombusSynthesisWarn': 'Внимание!\nРомбовидный синтез\nВозможны дубликаты конституент',
 
-  'ui.oss.settings.header': 'Настройки отображения',
   'ui.oss.settings.coordsToggleAria': 'Переключатель отображения координат',
   'ui.oss.settings.coordsLabel': 'Координаты узлов: {state}',
   'ui.oss.settings.gridToggleTitle': 'Переключатель отображения сетки',
@@ -248,7 +201,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.oss.keepInherited': 'Сохранить наследованные конституенты',
   'ui.oss.keepInheritedHint': 'Наследованные конституенты\nпревратятся в дописанные',
 
-  'ui.oss.deleteOperation.header': 'Удаление операции',
   'ui.oss.deleteOperation.deleteSchemaLocked': 'Привязанную схему нельзя удалить',
   'ui.oss.deleteOperation.deleteSchemaHint': 'Удалить схему вместе с операцией',
   'ui.oss.deleteOperation.warningRelatedSchema': 'Будет также удалена связанная схема',
@@ -265,20 +217,10 @@ export const uiExtraRu: Record<string, string> = {
   'ui.filter.schemaIssuesTitle': 'Схемные ошибки',
   'ui.filter.modelIssuesShort': 'МодОшибки',
   'ui.filter.modelIssuesTitle': 'Модельные ошибки',
-  'ui.filter.crucial': 'Ключевые',
-  'ui.filter.basic': 'Базовые',
-  'ui.filter.derived': 'Производные',
-  'ui.filter.owned': 'Собственные',
-  'ui.filter.inheritedDescendants': 'Наследники',
-
-  'ui.library.showNestedFoldersAria': 'Отображение вложенных папок',
 
   'ui.template.arguments.empty': 'Аргументы отсутствуют',
   'ui.template.arguments.placeholderDefinition': 'Итоговое определение',
   'ui.template.arguments.freeSlot': 'свободный аргумент',
-
-  'ui.users.action.removeFromListTitle': 'Удалить из списка',
-  'ui.users.action.clearListTitle': 'Очистить список',
 
   'ui.bindingEditor.selectRowPlaceholder': 'Выделите строку',
   'ui.bindingEditor.noValues': 'Значения отсутствуют',
@@ -289,9 +231,6 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.pick.schema.filterByLocationTitle': 'Фильтр по расположению',
   'ui.pick.schema.emptyHint': 'Измените параметры фильтра',
-
-  'ui.list.reorder.moveHigher': 'Переместить выше',
-  'ui.list.reorder.moveLower': 'Переместить ниже',
 
   'ui.oss.pickContents.comboPlaceholder': 'Выберите операцию или блок',
 
@@ -318,10 +257,8 @@ export const uiExtraRu: Record<string, string> = {
   'ui.oss.infoOperation.ownAdditionsLabel': 'Собственные:',
   'ui.oss.infoOperation.csNotInOss': 'КС не принадлежит ОСС',
   'ui.oss.infoOperation.rhombusSynthesis': 'Ромбовидный синтез',
-  'ui.oss.infoOperation.descriptionWithColon': 'Описание: ',
   'ui.oss.infoOperation.substitutionsNone': 'Отсутствуют',
 
-  'ui.sandbox.editMenu.buttonTitle': 'Редактирование',
   'ui.sandbox.editMenu.substitutionHint': 'Заменить одни конституенты другими',
 
   'ui.schemaCard.toggleStatsTitle': 'Отображение статистики',
@@ -332,12 +269,8 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.stats.oss.compositionPrimaryTitle': 'Общее количество элементов в составе операционной схемы',
   'ui.stats.oss.blocksSecondaryTitle': 'Количество вложенных блоков',
-  'ui.stats.oss.detail.inputs': 'Загрузка',
-  'ui.stats.oss.detail.replica': 'Реплика',
-  'ui.stats.oss.attachedSection': 'Прикреплённые схемы',
   'ui.stats.oss.attachedPrimaryTitle': 'Количество операций с прикреплённой схемой RSForm',
   'ui.stats.oss.ownedSecondaryTitle': 'Количество собственных (не импортированных) схем',
-  'ui.stats.oss.detail.attachedSchemas': 'Прикрепленные схемы',
   'ui.stats.oss.detail.external': 'Внешние',
 
   'ui.pagination.shownRange': '{start}–{end} из {total}',
@@ -374,7 +307,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.library.editors.saveList': 'Сохранить список',
   'ui.library.editors.addPlaceholder': 'Добавить редактора',
   'ui.library.miniOss.listLabel': 'Список ОСС',
-  'ui.library.pickLocation.label': 'Расположение',
 
   'ui.oss.selectOperation.placeholder': 'Выбор операции',
   'ui.oss.selectBlock.placeholder': 'Выбор блока',
@@ -384,7 +316,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.oss.dlg.inputSchema.resetTitle': 'Сбросить выбор схемы',
 
   'ui.rsmodel.value.calculateTooltip': 'Сохранить и вычислить значение',
-  'ui.rsmodel.dlg.editValue.header': 'Редактор значения',
   'ui.rsmodel.dlg.editBinding.header': 'Редактор базового источника',
   'ui.rsmodel.dlg.viewBinding.header': 'Просмотр базового источника',
 
@@ -402,10 +333,8 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.errors.count': 'Ошибок: {count}',
   'ui.rsform.errors.warnings': 'Предупреждений: {count}',
   'ui.rsform.termGraph.hiddenWithCount': 'Скрытые [{selected} | {total}]',
-  'ui.rsform.termGraph.hidden': 'Скрытые',
   'ui.rsform.termGraph.colorSchemePlaceholder': 'Цветовая схема',
   'ui.rsform.selectConstituenta.placeholder': 'Выбор конституенты',
-  'ui.rsform.cstInfo.inheritedTitle': 'наследник',
   'ui.rsform.cstInfo.expressionLabel': 'Выражение: ',
   'ui.rsform.cstInfo.definitionLabel': 'Определение: ',
   'ui.rsform.cstInfo.baseLabel': 'Основание: ',
@@ -420,9 +349,6 @@ export const uiExtraRu: Record<string, string> = {
   'ui.rsform.refsTooltip.masterReference': 'Основная ссылка:',
   'ui.rsform.refsTooltip.notDefined': 'не определена',
   'ui.rsform.refsTooltip.editHotkey': 'Alt + 2: для редактирования',
-  'ui.rsform.termGraph.toolbar.fullGraphTitle': 'Граф целиком',
-  'ui.rsform.termGraph.toolbar.hideTextTitle': 'Скрыть текст',
-  'ui.rsform.termGraph.toolbar.showTextTitle': 'Отобразить текст',
   'ui.rsform.hideDerived': 'Скрыть порожденные',
   'ui.rsform.showDerived': 'Отобразить порожденные',
   'ui.rsform.termGraph.focus.resetTitle': 'Сбросить фокус',
@@ -454,7 +380,5 @@ export const uiExtraRu: Record<string, string> = {
   'ui.embed.youtubeTitle': 'Встроенное видео Youtube',
   'ui.embed.vkTitle': 'Встроенное видео ВКонтакте',
   'ui.common.notImplemented': 'Функционал в разработке',
-  'ui.sandbox.invalidBundleFile': 'Неверный файл песочницы',
-
-  'ui.ai.badge.templateShared': 'Общий'
+  'ui.sandbox.invalidBundleFile': 'Неверный файл песочницы'
 };

@@ -38,7 +38,7 @@ export function DlgDeleteCst() {
   return (
     <ModalForm
       header={tx('ui.rsform.dlg.deleteCst.header')}
-      submitText={expandOut ? tx('ui.rsform.dlg.deleteCst.submitWithDeps') : tx('semantic.action.delete')}
+      submitText={expandOut ? tx('ui.rsform.dlg.deleteCst.submitWithDeps') : tx('tx.general.delete')}
       onSubmit={handleSubmit}
       className='cc-column max-w-[60vw] min-w-120 px-6'
     >

@@ -88,14 +88,14 @@ export function PickMultiConstituenta({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: () => <span className='pl-3'>{tx('semantic.term.alias.short')}</span>,
+      header: () => <span className='pl-3'>{tx('tx.lib.alias.short')}</span>,
       size: 65,
       cell: props => <BadgeConstituenta value={props.row.original} />
     }),
     columnHelper.accessor(cst => describeConstituenta(cst), {
       id: 'description',
       size: 1000,
-      header: tx('semantic.term.description')
+      header: tx('tx.lib.description')
     })
   ];
 
@@ -108,7 +108,7 @@ export function PickMultiConstituenta({
                 selected: value.length,
                 total: items.length
               })
-            : tx('semantic.term.constituenta.plural')}
+            : tx('tx.lib.cst.plural')}
         </div>
         <SearchBar
           id='dlg_constituents_search'
@@ -145,7 +145,7 @@ export function PickMultiConstituenta({
         onRowSelectionChange={handleRowSelection}
         noDataComponent={
           <NoData>
-            <p>{tx('semantic.listIsEmpty')}</p>
+            <p>{tx('tx.general.list.empty')}</p>
           </NoData>
         }
       />

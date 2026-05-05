@@ -38,26 +38,26 @@ export function SelectorCstFilter({ className, showModelFilter }: SelectorCstFil
   );
 
   const items: Record<CstFilterOption, ReactNode> = {
-    all: tx('semantic.term.filter'),
+    all: tx('tx.general.filter'),
     schema_issues: tx('ui.filter.schemaIssuesShort'),
     model_issues: tx('ui.filter.modelIssuesShort'),
-    crucial: tx('ui.filter.crucial'),
-    kernel: tx('ui.filter.basic'),
-    derived: tx('ui.filter.derived'),
-    owned: tx('ui.filter.owned'),
-    inherited: tx('ui.filter.inheritedDescendants')
+    crucial: tx('tx.lib.cst.crucial.plural'),
+    kernel: tx('tx.lib.concept.basic.plural'),
+    derived: tx('tx.lib.concept.derived.plural'),
+    owned: tx('tx.lib.concept.original.plural'),
+    inherited: tx('tx.lib.concept.inherited.plural')
   };
 
   return (
     <div className={cn('font-controls text-sm opacity-50 hover:opacity-100 transition-opacity select-none', className)}>
       <Select value={filter} onValueChange={newValue => setFilter(newValue!)} items={items}>
         <SelectTrigger noBorder className='h-8 pl-2 pr-0 gap-1'>
-          <SelectValue placeholder={tx('semantic.term.filter')} />
+          <SelectValue placeholder={tx('tx.general.filter')} />
         </SelectTrigger>
         <SelectContent align='start'>
           <SelectItem value='all'>
             <IconFilter className='text-muted-foreground' />
-            {tx('semantic.term.filter')}
+            {tx('tx.general.filter')}
           </SelectItem>
           <SelectItem value='schema_issues' title={tx('ui.filter.schemaIssuesTitle')}>
             <IconStatusError className='text-destructive' />
@@ -71,23 +71,23 @@ export function SelectorCstFilter({ className, showModelFilter }: SelectorCstFil
           ) : null}
           <SelectItem value='crucial'>
             <IconCrucial className='text-constructive' />
-            {tx('ui.filter.crucial')}
+            {tx('tx.lib.cst.crucial.plural')}
           </SelectItem>
           <SelectItem value='kernel'>
             <IconGraphCore className='text-primary' />
-            {tx('ui.filter.basic')}
+            {tx('tx.lib.concept.basic.plural')}
           </SelectItem>
           <SelectItem value='derived'>
             <IconGraphCore className='text-muted-foreground' />
-            {tx('ui.filter.derived')}
+            {tx('tx.lib.concept.derived.plural')}
           </SelectItem>
           <SelectItem value='owned'>
             <IconPredecessor className='text-constructive' />
-            {tx('ui.filter.owned')}
+            {tx('tx.lib.concept.original.plural')}
           </SelectItem>
           <SelectItem value='inherited'>
             <IconChild className='text-primary' />
-            {tx('ui.filter.inheritedDescendants')}
+            {tx('tx.lib.concept.inherited.plural')}
           </SelectItem>
         </SelectContent>
       </Select>

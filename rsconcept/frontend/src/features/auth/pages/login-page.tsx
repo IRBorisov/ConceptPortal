@@ -2,7 +2,7 @@
 
 import { useForm } from '@tanstack/react-form';
 
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 
@@ -74,7 +74,7 @@ export function LoginPage() {
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined}
+            error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
           />
         )}
       </form.Field>
@@ -84,17 +84,17 @@ export function LoginPage() {
             id='password'
             type='password'
             autoComplete='current-password'
-            label={tx('semantic.term.password')}
+            label={tx('tx.general.password')}
             allowEnter
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={field.state.meta.isTouched ? formatZodErrorMessage(field.state.meta.errors[0]?.message) : undefined}
+            error={field.state.meta.isTouched ? field.state.meta.errors[0]?.message : undefined}
           />
         )}
       </form.Field>
 
-      <SubmitButton text={tx('semantic.action.login')} className='self-center w-48 mt-3' loading={isPending} />
+      <SubmitButton text={tx('tx.general.login')} className='self-center w-48 mt-3' loading={isPending} />
       <div className='flex flex-col text-sm'>
         <TextURL text={tx('auth.login.linkRestore')} href='/restore-password' />
         <TextURL text={tx('auth.login.linkSignup')} href='/signup' />

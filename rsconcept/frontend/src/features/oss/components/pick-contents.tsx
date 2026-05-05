@@ -82,15 +82,15 @@ export function PickContents({
   const columns = [
     columnHelper.accessor(item => item.nodeType === NodeType.OPERATION, {
       id: 'type',
-      header: tx('semantic.term.type'),
+      header: tx('tx.rslang.type'),
       size: 150,
       minSize: 150,
       maxSize: 150,
-      cell: props => <div>{props.getValue() ? tx('semantic.term.operation') : tx('semantic.term.block')}</div>
+      cell: props => <div>{props.getValue() ? tx('tx.lib.operation') : tx('tx.lib.block')}</div>
     }),
     columnHelper.accessor('title', {
       id: 'title',
-      header: tx('semantic.term.title'),
+      header: tx('tx.lib.title'),
       size: 1200,
       minSize: 300,
       maxSize: 1200,
@@ -102,19 +102,19 @@ export function PickContents({
       cell: props => (
         <div className='flex w-fit'>
           <MiniButton
-            title={tx('semantic.action.delete')}
+            title={tx('tx.general.delete')}
             className='px-0'
             icon={<IconRemove size='1rem' className='icon-red' />}
             onClick={() => handleDelete(props.row.original)}
           />
           <MiniButton
-            title={tx('ui.list.reorder.moveHigher')}
+            title={tx('tx.general.moveUp')}
             className='px-0'
             icon={<IconMoveUp size='1rem' className='icon-primary' />}
             onClick={() => handleMoveUp(props.row.original)}
           />
           <MiniButton
-            title={tx('ui.list.reorder.moveLower')}
+            title={tx('tx.general.moveDown')}
             className='px-0'
             icon={<IconMoveDown size='1rem' className='icon-primary' />}
             onClick={() => handleMoveDown(props.row.original)}
@@ -147,7 +147,7 @@ export function PickContents({
         columns={columns}
         noDataComponent={
           <NoData>
-            <p>{tx('semantic.listIsEmpty')}</p>
+            <p>{tx('tx.general.list.empty')}</p>
           </NoData>
         }
       />

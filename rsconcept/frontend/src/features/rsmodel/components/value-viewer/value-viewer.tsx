@@ -91,19 +91,19 @@ export function ValueViewer({ className, value, rows, perPage = 20, engine, getH
             <Text
               className='font-math font-normal mr-1 select-none'
               text={valueStr}
-              title={tx('ui.value.designationCardinality')}
+              title={tx('tx.rslang.value.stub.hint')}
             />
           ) : null}
           <SearchBar id='dlg_value_search' noBorder query={filter} onChangeQuery={setFilter} />
           <div className='cc-icons'>
             <MiniButton
-              title={tx('ui.value.wholeValue')}
+              title={tx('tx.rslang.value.view.reset')}
               icon={<IconReset size='1.25rem' className='icon-primary' />}
               onClick={handleResetView}
               disabled={path.length === 0}
             />
             <MiniButton
-              title={tx('ui.value.showDataInText')}
+              title={tx('tx.rslang.value.element.visibility.hint')}
               icon={<IconShowDataText size='1.25rem' className='hover:text-primary' value={showDataText} />}
               onClick={toggleDataText}
             />

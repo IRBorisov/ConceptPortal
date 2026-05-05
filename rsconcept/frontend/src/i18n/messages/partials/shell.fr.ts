@@ -1,11 +1,7 @@
 /** App shell: main nav, footer, modals, errors, home, auth forms (French). */
 export const shellFr: Record<string, string> = {
   'nav.bar.sandboxTitle': 'Environnement de démonstration pour les visiteurs non inscrits',
-  'nav.bar.createSchema': 'Schéma conceptuel',
-  'nav.bar.createModel': 'Modèle conceptuel',
-  'nav.bar.createOss': 'Schéma opérationnel',
   'nav.user.loginTitle': 'Aller à la page de connexion',
-  'nav.user.menuTitle': 'Utilisateur',
   'nav.ai.menuTitle': 'Assistant IA',
   'nav.ai.prompt': 'Requête',
   'nav.ai.promptTitle': 'Créer une requête',

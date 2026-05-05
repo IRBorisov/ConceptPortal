@@ -19,8 +19,8 @@ export function Footer() {
       )}
     >
       <nav className='flex gap-3' aria-label={tx('footer.navAria')}>
-        <TextURL text={tx('semantic.term.library')} href='/library' color='hover:text-foreground' />
-        <TextURL text={tx('semantic.term.manual')} href='/manuals' color='hover:text-foreground' />
+        <TextURL text={tx('tx.lib.library')} href='/library' color='hover:text-foreground' />
+        <TextURL text={tx('tx.general.help')} href='/manuals' color='hover:text-foreground' />
         <TextURL text={tx('footer.link.conceptCenter')} href={external_urls.concept} color='hover:text-foreground' />
       </nav>
 

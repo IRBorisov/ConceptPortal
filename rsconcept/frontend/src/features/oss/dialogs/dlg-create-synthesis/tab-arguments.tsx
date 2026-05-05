@@ -3,7 +3,7 @@
 import { type ReactNode } from 'react';
 
 import { type OperationSchema } from '@/domain/library';
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { Label, TextArea, TextInput } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
@@ -45,7 +45,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </TitleField>
@@ -55,13 +55,13 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
             {field => (
               <TextInput
                 id='operation_alias'
-                label={tx('semantic.term.alias')}
+                label={tx('tx.lib.alias')}
                 placeholder={tx('ui.oss.enterAlias')}
                 className='w-80'
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
-                error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+                error={field.state.meta.errors[0]?.message}
               />
             )}
           </AliasField>
@@ -70,7 +70,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
               <SelectParent
                 items={oss.blocks}
                 value={field.state.value ? (oss.blockByID.get(field.state.value) ?? null) : null}
-                placeholder={tx('semantic.term.block.parent')}
+                placeholder={tx('tx.lib.block.parent')}
                 onChange={value => field.handleChange(value ? value.id : null)}
               />
             )}
@@ -80,7 +80,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
           {field => (
             <TextArea
               id='operation_comment'
-              label={tx('semantic.term.description')}
+              label={tx('tx.lib.description')}
               placeholder={tx('labels.placeholder.itemDescription')}
               className='w-full'
               noResize
@@ -88,7 +88,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+              error={field.state.meta.errors[0]?.message}
             />
           )}
         </DescriptionField>

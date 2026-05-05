@@ -55,7 +55,7 @@ export function DlgUploadRSForm() {
         onChange={value => setLoadMetadata(value)}
       />
       <div className='text-destructive'>
-        <b>{tx('semantic.term.attention')}</b> {tx('ui.dlg.uploadRsform.warningBody')}
+        <b>{tx('tx.general.attention')}</b> {tx('ui.dlg.uploadRsform.warningBody')}
       </div>
     </ModalForm>
   );

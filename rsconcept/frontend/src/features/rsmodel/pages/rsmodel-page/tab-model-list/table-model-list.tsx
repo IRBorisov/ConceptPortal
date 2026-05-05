@@ -68,7 +68,7 @@ export function TableModelList({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: () => <span className='pl-3 min-w-12'>{tx('semantic.term.alias.short')}</span>,
+      header: () => <span className='pl-3 min-w-12'>{tx('tx.lib.alias.short')}</span>,
       size: 65,
       minSize: 65,
       maxSize: 65,
@@ -76,7 +76,7 @@ export function TableModelList({
     }),
     columnHelper.accessor(cst => cst, {
       id: 'value',
-      header: tx('semantic.term.value'),
+      header: tx('tx.rslang.value'),
       size: 60,
       minSize: 60,
       maxSize: 60,
@@ -84,7 +84,7 @@ export function TableModelList({
     }),
     columnHelper.accessor(cst => labelType(cst.analysis.type), {
       id: 'type',
-      header: () => <span className='min-w-40'>{tx('semantic.term.typification')}</span>,
+      header: () => <span className='min-w-40'>{tx('tx.rslang.typification')}</span>,
       enableHiding: true,
       size: 150,
       minSize: 150,
@@ -95,14 +95,14 @@ export function TableModelList({
     }),
     columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {
       id: 'term',
-      header: () => <span className='min-w-30'>{tx('semantic.term.term')}</span>,
+      header: () => <span className='min-w-30'>{tx('tx.lib.term')}</span>,
       size: 500,
       minSize: 150,
       maxSize: 500
     }),
     columnHelper.accessor('definition_formal', {
       id: 'expression',
-      header: tx('semantic.term.definitionFormal'),
+      header: tx('tx.lib.definitionFormal'),
       size: 1000,
       minSize: 300,
       maxSize: 1000,
@@ -110,7 +110,7 @@ export function TableModelList({
     }),
     columnHelper.accessor(cst => cst.definition_resolved || cst.definition_raw || '', {
       id: 'definition',
-      header: tx('semantic.term.definitionTextual'),
+      header: tx('tx.lib.definitionTextual'),
       size: 1000,
       minSize: 200,
       maxSize: 1000,
@@ -150,7 +150,7 @@ export function TableModelList({
       onRowSelectionChange={setSelected}
       noDataComponent={
         <NoData>
-          <p>{tx('semantic.listIsEmpty')}</p>
+          <p>{tx('tx.general.list.empty')}</p>
           <p>
             <TextURL text={tx('ui.link.createConstituenta')} onClick={onCreateNew} />
           </p>

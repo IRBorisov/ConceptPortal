@@ -93,7 +93,7 @@ function SchemaTitle({ schema }: { schema: RSForm }) {
   return (
     <View style={{ marginBottom: 10 }}>
       <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: '3mm' }}>
-        {intl.formatMessage({ id: 'semantic.term.schema' }) + ' ' + schema.title}
+        {intl.formatMessage({ id: 'tx.lib.schema' }) + ' ' + schema.title}
       </Text>
       <Text style={{ fontSize: 12 }}>
         {intl.formatMessage({ id: 'ui.rsform.pdf.aliasLabel' }, { alias: schema.alias })}
@@ -131,12 +131,10 @@ function CstTable({ data }: { data: RO<Constituenta[]> }) {
         <View fixed style={pdfs.headerRow}>
           <Text style={{ ...pdfs.cell, width: '13mm' }}>ID</Text>
           <Text style={{ ...pdfs.cell, width: '82mm' }}>
-            {intl.formatMessage({ id: 'semantic.term.definitionFormal' })}
+            {intl.formatMessage({ id: 'tx.lib.definitionFormal' })}
           </Text>
-          <Text style={{ ...pdfs.cell, width: '38mm' }}>
-            {intl.formatMessage({ id: 'semantic.term.typification' })}
-          </Text>
-          <Text style={{ ...pdfs.cell, width: '40mm' }}>{intl.formatMessage({ id: 'semantic.term.term' })}</Text>
+          <Text style={{ ...pdfs.cell, width: '38mm' }}>{intl.formatMessage({ id: 'tx.rslang.typification' })}</Text>
+          <Text style={{ ...pdfs.cell, width: '40mm' }}>{intl.formatMessage({ id: 'tx.lib.term' })}</Text>
           <Text style={{ ...pdfs.cell, width: '82mm', borderRightWidth: 0 }}>
             {intl.formatMessage({ id: 'ui.rsform.pdf.colSchemaInterpretation' })}
           </Text>
@@ -173,7 +171,7 @@ function getCommentColumnText(cst: RO<Constituenta>, formatMessage: IntlShape['f
     if (result) {
       result += '\n';
     }
-    result += formatMessage({ id: 'semantic.term.convention' }) + ': ' + cst.convention;
+    result += formatMessage({ id: 'tx.lib.convention' }) + ': ' + cst.convention;
   }
   return result;
 }

@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type OssLayout } from '@/domain/library';
 import { LayoutManager } from '@/domain/library/oss-layout-api';
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 
@@ -61,7 +61,7 @@ export function DlgEditBlock() {
   return (
     <ModalForm
       header={tx('ui.dlg.editBlock.header')}
-      submitText={tx('semantic.action.save')}
+      submitText={tx('tx.general.save')}
       canSubmit={canSubmit}
       onSubmit={event => {
         event.preventDefault();
@@ -80,7 +80,7 @@ export function DlgEditBlock() {
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </form.Field>
@@ -92,7 +92,7 @@ export function DlgEditBlock() {
             <SelectParent
               items={manager.oss.blocks.filter(block => !descendantNodeIDs.includes(block.nodeID))}
               value={field.state.value ? (manager.oss.blockByID.get(field.state.value) ?? null) : null}
-              placeholder={tx('semantic.term.block.parent')}
+              placeholder={tx('tx.lib.block.parent')}
               onChange={value => field.handleChange(value ? value.id : null)}
             />
           );
@@ -103,7 +103,7 @@ export function DlgEditBlock() {
         {field => (
           <TextArea
             id='operation_comment'
-            label={tx('semantic.term.description')}
+            label={tx('tx.lib.description')}
             placeholder={tx('labels.placeholder.itemDescription')}
             noResize
             rows={5}

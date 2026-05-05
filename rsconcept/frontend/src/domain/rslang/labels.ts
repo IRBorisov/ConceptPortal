@@ -191,7 +191,7 @@ export function labelRSLangNode(node: RO<AstNodeBase>): string {
   if (node.data.value) {
     return node.data.value as string;
   }
-  return globalTx('labels.rslang.fallback.unknownNode', { id: String(node.typeID) });
+  return 'UNKNOWN NODE: ' + String(node.typeID);
 }
 
 /** Generates error description for {@link RSErrorCode}. */
@@ -312,12 +312,12 @@ export function normalizeType(type: RO<ExpressionType> | null): string {
 export function labelTypeClass(type: TypeClass): string {
   switch (type) {
     case TypeClass.logic:
-      return globalTx('labels.rslang.typeClass.logic');
+      return globalTx('tx.rslang.typeClass.logic');
     case TypeClass.typification:
-      return globalTx('labels.rslang.typeClass.typification');
+      return globalTx('tx.rslang.typeClass.typification');
     case TypeClass.function:
-      return globalTx('labels.rslang.typeClass.function');
+      return globalTx('tx.rslang.typeClass.function');
     case TypeClass.predicate:
-      return globalTx('labels.rslang.typeClass.predicate');
+      return globalTx('tx.rslang.typeClass.predicate');
   }
 }

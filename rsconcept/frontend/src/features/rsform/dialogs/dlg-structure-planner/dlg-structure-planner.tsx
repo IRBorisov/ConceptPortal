@@ -182,7 +182,7 @@ export function DlgStructurePlanner() {
             <div className={clsx('cc-icons pt-5 pb-3.25 rounded-br-2xl rounded-tr-2xl', blurClass)}>
               <MiniButton
                 title={prepareTooltip(
-                  selectedCst ? tx('ui.structurePlanner.submitUpdate') : tx('ui.action.createConstituenta'),
+                  selectedCst ? tx('ui.structurePlanner.submitUpdate') : tx('tx.lib.cst.create'),
                   tx(isMac() ? 'Cmd + S' : 'Ctrl + S')
                 )}
                 icon={

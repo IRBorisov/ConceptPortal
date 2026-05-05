@@ -39,19 +39,15 @@ export function LocationBreadcrumb({ canRename, className, onRenameLocation }: L
       <div className='cc-icons'>
         <BadgeHelp topic={HelpTopic.UI_LIBRARY} contentClass='text-sm' offset={5} place='bottom-start' />
         <MiniButton
-          title={tx('lib.breadcrumb.editLocationTitle')}
-          aria-label={tx('lib.breadcrumb.editLocationAria')}
+          title={tx('tx.lib.location.edit.hint')}
+          aria-label={tx('tx.lib.location.edit')}
           icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
           onClick={onRenameLocation}
           disabled={!canRename}
         />
         <MiniButton
-          title={
-            subfolders
-              ? tx('lib.breadcrumb.subfoldersOn')
-              : tx('lib.breadcrumb.subfoldersOff')
-          }
-          aria-label={tx('lib.breadcrumb.subfoldersAria')}
+          title={subfolders ? tx('tx.lib.subfolder.visibility.on') : tx('tx.lib.subfolder.visibility.off')}
+          aria-label={tx('tx.lib.subfolder.visibility.hint')}
           icon={<IconShowSubfolders value={subfolders} />}
           onClick={toggleSubfolders}
         />

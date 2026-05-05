@@ -73,7 +73,7 @@ export function TableSideConstituents({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: () => <span className='pl-3'>{tx('semantic.term.alias.short')}</span>,
+      header: () => <span className='pl-3'>{tx('tx.lib.alias.short')}</span>,
       size: 65,
       minSize: 65,
       cell: props => <BadgeConstituenta value={props.row.original} prefixID={prefixes.cst_side_table} />
@@ -82,7 +82,7 @@ export function TableSideConstituents({
       ? [
           columnHelper.accessor(cst => cst, {
             id: 'value',
-            header: tx('semantic.term.value'),
+            header: tx('tx.rslang.value'),
             size: 60,
             minSize: 60,
             maxSize: 60,
@@ -92,7 +92,7 @@ export function TableSideConstituents({
       : []),
     columnHelper.accessor(cst => describeConstituenta(cst), {
       id: 'description',
-      header: tx('semantic.term.description'),
+      header: tx('tx.lib.description'),
       size: 1000,
       minSize: 250,
       maxSize: 1000,

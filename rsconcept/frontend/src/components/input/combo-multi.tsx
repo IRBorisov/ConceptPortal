@@ -167,9 +167,9 @@ export function ComboMulti<Option>({
       />
       <PopoverContent sideOffset={-1} className='p-0' style={{ width: popoverWidth }}>
         <Command>
-          {!noSearch ? <CommandInput placeholder={tx('semantic.term.search') + '...'} className='h-9' /> : null}
+          {!noSearch ? <CommandInput placeholder={tx('tx.general.search') + '...'} className='h-9' /> : null}
           <CommandList>
-            <CommandEmpty>{tx('semantic.listIsEmpty')}</CommandEmpty>
+            <CommandEmpty>{tx('tx.general.list.empty')}</CommandEmpty>
             <CommandGroup>
               {items
                 ?.filter(item => !value.includes(item))

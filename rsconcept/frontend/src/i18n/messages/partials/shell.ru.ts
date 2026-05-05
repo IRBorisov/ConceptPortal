@@ -1,11 +1,7 @@
 /** App shell: main nav, footer, modals, errors, home, auth forms (Russian). */
 export const shellRu: Record<string, string> = {
   'nav.bar.sandboxTitle': 'Демонстрационная среда для незарегистрированных пользователей',
-  'nav.bar.createSchema': 'Концептуальную схему',
-  'nav.bar.createModel': 'Концептуальную модель',
-  'nav.bar.createOss': 'Операционную схему',
   'nav.user.loginTitle': 'Перейти на страницу логина',
-  'nav.user.menuTitle': 'Пользователь',
   'nav.ai.menuTitle': 'ИИ помощник',
   'nav.ai.prompt': 'Запрос',
   'nav.ai.promptTitle': 'Создать запрос',

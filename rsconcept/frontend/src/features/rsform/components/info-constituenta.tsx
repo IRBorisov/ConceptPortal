@@ -16,19 +16,19 @@ export function InfoConstituenta({ data, className, ...restProps }: InfoConstitu
   const tx = useTx();
   return (
     <div className={cn('dense min-w-60 wrap-break-word', className)} {...restProps}>
-      <h2 className='cursor-default' title={data.is_inherited ? tx('ui.rsform.cstInfo.inheritedTitle') : undefined}>
+      <h2 className='cursor-default' title={data.is_inherited ? tx('tx.lib.concept.inheritor') : undefined}>
         {data.alias}
         {data.is_inherited ? <IconChild size='1rem' className='inline-icon align-middle ml-1 mt-1' /> : null}
         {data.crucial ? <IconCrucial size='1rem' className='inline-icon align-middle mt-1' /> : null}
       </h2>
       {data.term_resolved ? (
         <p>
-          <b>{tx('semantic.term.term')}: </b>
+          <b>{tx('tx.lib.term')}: </b>
           {data.term_resolved || data.term_raw}
         </p>
       ) : null}
       <p className='break-all'>
-        <b>{tx('semantic.term.typification')}: </b>
+        <b>{tx('tx.rslang.typification')}: </b>
         <span className='font-math'>{labelType(data.analysis?.type ?? null)}</span>
       </p>
       {data.definition_formal ? (
@@ -57,9 +57,7 @@ export function InfoConstituenta({ data, className, ...restProps }: InfoConstitu
       ) : null}
       {data.convention ? (
         <p>
-          <b>
-            {isBasicConcept(data.cst_type) ? tx('semantic.term.convention') + ': ' : tx('semantic.term.comment') + ': '}
-          </b>
+          <b>{isBasicConcept(data.cst_type) ? tx('tx.lib.convention') + ': ' : tx('tx.lib.comment') + ': '}</b>
           {data.convention}
         </p>
       ) : null}

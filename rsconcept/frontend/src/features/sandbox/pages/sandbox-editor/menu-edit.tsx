@@ -67,7 +67,7 @@ export function MenuEdit() {
       <MiniButton
         noHover
         noPadding
-        title={tx('ui.sandbox.editMenu.buttonTitle')}
+        title={tx('tx.general.editing')}
         hideTitle={isMenuOpen}
         className='h-full px-3 text-muted-foreground hover:text-primary cc-animate-color'
         icon={<IconEdit2 size='1.25rem' />}
@@ -87,7 +87,7 @@ export function MenuEdit() {
           onClick={handleResetAliases}
         />
         <DropdownButton
-          text={tx('semantic.action.substitution')}
+          text={tx('tx.lib.cst.substitution')}
           title={tx('ui.sandbox.editMenu.substitutionHint')}
           icon={<IconReplace size='1rem' className='icon-red' />}
           onClick={handleSubstitute}

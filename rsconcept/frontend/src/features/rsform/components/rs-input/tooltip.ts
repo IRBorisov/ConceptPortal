@@ -156,7 +156,7 @@ function domTooltipConstituenta(
     appendMathBoldLabelParagraph(dom, `${cst.alias}:`, labelType(cst.analysis.type));
 
     if (cst.term_resolved) {
-      appendBoldTextRow(dom, globalTx('semantic.term.term') + ': ', cst.term_resolved);
+      appendBoldTextRow(dom, globalTx('tx.lib.term') + ': ', cst.term_resolved);
     }
 
     if (cst.definition_formal) {
@@ -169,9 +169,9 @@ function domTooltipConstituenta(
 
     if (cst.convention) {
       if (isBasicConcept(cst.cst_type)) {
-        appendBoldTextRow(dom, globalTx('semantic.term.convention') + ': ', cst.convention);
+        appendBoldTextRow(dom, globalTx('tx.lib.convention') + ': ', cst.convention);
       } else {
-        appendBoldTextRow(dom, globalTx('semantic.term.comment') + ': ', cst.convention);
+        appendBoldTextRow(dom, globalTx('tx.lib.comment') + ': ', cst.convention);
       }
     }
 

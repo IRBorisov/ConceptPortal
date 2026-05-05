@@ -38,7 +38,7 @@ export function ViewErrors({ isOpen, errors, disabled, className, onShowError }:
             onClick={disabled || !onShowError ? undefined : () => onShowError(error)}
           >
             <span className='mr-1 font-semibold underline'>
-              {isCritical(error.code) ? tx('semantic.term.error') : tx('semantic.term.warning')}{' '}
+              {isCritical(error.code) ? tx('tx.general.error') : tx('tx.general.warning')}{' '}
               {`${getRSErrorPrefix(error.code)}:`}
             </span>
             <span>{` ${describeRSError(error.code, error.params)}`}</span>

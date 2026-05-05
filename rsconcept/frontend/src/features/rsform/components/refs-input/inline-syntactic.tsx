@@ -101,7 +101,7 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
           />
           <MiniButton
             icon={<IconClose size='1.5rem' className='icon-primary' />}
-            title={prepareTooltip(tx('semantic.action.close'), 'Esc')}
+            title={prepareTooltip(tx('tx.general.close'), 'Esc')}
             onClick={onCancel}
           />
           <Label text={tx('ui.refs.inline.dependentWord')} />
@@ -134,8 +134,8 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
         </div>
         <TextInput
           id='inline_reference_nominal'
-          aria-label={tx('semantic.term.nominal')}
-          placeholder={tx('semantic.term.nominal')}
+          aria-label={tx('tx.lang.morphology.nominal')}
+          placeholder={tx('tx.lang.morphology.nominal')}
           className='text-sm'
           value={nominal}
           ref={nominalInputRef}

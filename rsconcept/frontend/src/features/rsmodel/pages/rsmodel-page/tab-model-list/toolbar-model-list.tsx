@@ -54,34 +54,34 @@ export function ToolbarModelList({ className }: ToolbarModelListProps) {
   return (
     <div className={cn('cc-icons items-start outline-hidden', className)}>
       <MiniButton
-        title={prepareTooltip(tx('ui.toolbar.clearSelection'), 'ESC')}
-        aria-label={tx('ui.toolbar.clearSelection')}
+        title={prepareTooltip(tx('tx.general.selection.reset'), 'ESC')}
+        aria-label={tx('tx.general.selection.reset')}
         icon={<IconReset size='1.25rem' className='icon-primary' />}
         onClick={deselectAll}
         disabled={selectedCst.length === 0}
       />
       <MiniButton
-        title={prepareTooltip(tx('ui.action.recalculateModel'), 'Alt + Q')}
+        title={prepareTooltip(tx('tx.lib.model.recalculate'), 'Alt + Q')}
         aria-label={tx('ui.aria.recalculateAll')}
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
         onClick={() => engine.recalculateAll()}
       />
       <MiniButton
-        title={prepareTooltip(tx('ui.toolbar.moveUp'), 'Alt + ↑')}
-        aria-label={tx('ui.toolbar.moveUp')}
+        title={prepareTooltip(tx('tx.general.moveUp'), 'Alt + ↑')}
+        aria-label={tx('tx.general.moveUp')}
         icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
         onClick={moveUp}
         disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
       />
       <MiniButton
-        title={prepareTooltip(tx('ui.toolbar.moveDown'), 'Alt + ↓')}
-        aria-label={tx('ui.toolbar.moveDown')}
+        title={prepareTooltip(tx('tx.general.moveDown'), 'Alt + ↓')}
+        aria-label={tx('tx.general.moveDown')}
         icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
         onClick={moveDown}
         disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
       />
       <MiniButton
-        title={tx('semantic.term.constituenta.crucial')}
+        title={tx('tx.lib.cst.crucial')}
         aria-label={tx('ui.cst.crucialToggleAria')}
         icon={<IconCrucial size='1.25rem' className='icon-primary' />}
         onClick={toggleCrucial}
@@ -116,15 +116,15 @@ export function ToolbarModelList({ className }: ToolbarModelListProps) {
         disabled={isProcessing}
       />
       <MiniButton
-        title={prepareTooltip(tx('ui.cloneConstituenta'), 'Alt + V')}
-        aria-label={tx('ui.cloneConstituenta')}
+        title={prepareTooltip(tx('tx.lib.cst.clone'), 'Alt + V')}
+        aria-label={tx('tx.lib.cst.clone')}
         icon={<IconClone size='1.25rem' className='icon-green' />}
         onClick={() => void cloneCst()}
         disabled={isProcessing || selectedCst.length !== 1}
       />
       <MiniButton
-        title={prepareTooltip(tx('ui.toolbar.deleteSelected'), 'Delete')}
-        aria-label={tx('ui.aria.deleteSelected')}
+        title={prepareTooltip(tx('tx.general.selection.selected.delete'), 'Delete')}
+        aria-label={tx('tx.general.selection.selected.delete')}
         icon={<IconDestroy size='1.25rem' className='icon-red' />}
         onClick={promptDeleteCst}
         disabled={isProcessing || !canDeleteSelected}

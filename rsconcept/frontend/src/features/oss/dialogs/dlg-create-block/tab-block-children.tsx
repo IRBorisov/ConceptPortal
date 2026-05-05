@@ -44,7 +44,7 @@ export function TabBlockChildren({
 
   return (
     <div className='cc-fade-in cc-column -mt-5'>
-      <Label text={tx('semantic.term.contents') + ': [ ' + value.length + ' ]'} />
+      <Label text={tx('tx.lib.contents') + ': [ ' + value.length + ' ]'} />
       <PickContents
         schema={oss}
         exclude={exclude}

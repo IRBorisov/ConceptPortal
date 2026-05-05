@@ -11,27 +11,27 @@ import { globalTx } from '@/i18n';
 import { type RO } from '@/utils/meta';
 
 const OPERATION_LABEL_LID: Record<OperationType, string> = {
-  [OperationType.INPUT]: 'labels.oss.operation.input',
-  [OperationType.SYNTHESIS]: 'semantic.action.synthesis',
-  [OperationType.REPLICA]: 'labels.oss.operation.replica'
+  [OperationType.INPUT]: 'tx.lib.operation.type.input',
+  [OperationType.SYNTHESIS]: 'tx.lib.operation.type.synthesis',
+  [OperationType.REPLICA]: 'tx.lib.operation.type.replica'
 };
 
 const OPERATION_DESC_LID: Record<OperationType, string> = {
-  [OperationType.INPUT]: 'labels.oss.operationDesc.input',
-  [OperationType.SYNTHESIS]: 'labels.oss.operationDesc.synthesis',
-  [OperationType.REPLICA]: 'labels.oss.operationDesc.replica'
+  [OperationType.INPUT]: 'tx.lib.operation.type.input.hint',
+  [OperationType.SYNTHESIS]: 'tx.lib.operation.type.synthesis.hint',
+  [OperationType.REPLICA]: 'tx.lib.operation.type.replica.hint'
 };
 
 /** Retrieves label for {@link OperationType}. */
 export function labelOperationType(itemType: OperationType): string {
   const id = OPERATION_LABEL_LID[itemType];
-  return id ? globalTx(id) : globalTx('labels.oss.fallback.unknownOperationType', { type: String(itemType) });
+  return id ? globalTx(id) : 'UNKNOWN OPERATION TYPE: ' + String(itemType);
 }
 
 /** Retrieves description for {@link OperationType}. */
 export function describeOperationType(itemType: OperationType): string {
   const id = OPERATION_DESC_LID[itemType];
-  return id ? globalTx(id) : globalTx('labels.oss.fallback.unknownOperationType', { type: String(itemType) });
+  return id ? globalTx(id) : 'UNKNOWN OPERATION TYPE: ' + String(itemType);
 }
 
 /** Generates error description for {@link SubstitutionErrorDescription}. */

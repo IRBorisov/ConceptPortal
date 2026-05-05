@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { type CurrentVersion, LibraryItemType } from '@/domain/library';
 import { type RSForm } from '@/domain/library/rsform';
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useConceptNavigation, useRegisterNavigationSave } from '@/app';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
@@ -98,7 +98,7 @@ export function FormSchema({ className }: FormSchemaProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none font-math'>{tx('semantic.term.schema')}</h2>
+      <h2 className='mb-2 select-none font-math'>{tx('tx.lib.schema')}</h2>
       <form.Field name='title'>
         {field => (
           <TextInput
@@ -109,7 +109,7 @@ export function FormSchema({ className }: FormSchemaProps) {
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
             disabled={!isContentEditable}
           />
         )}
@@ -119,12 +119,12 @@ export function FormSchema({ className }: FormSchemaProps) {
           {field => (
             <TextInput
               id='schema_alias'
-              label={tx('semantic.term.alias')}
+              label={tx('tx.lib.alias')}
               className='w-64'
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+              error={field.state.meta.errors[0]?.message}
               disabled={!isContentEditable}
             />
           )}
@@ -132,7 +132,7 @@ export function FormSchema({ className }: FormSchemaProps) {
         <div className='relative flex flex-col gap-2'>
           <ToolbarVersioning className='absolute -top-1 right-2' blockReload={schema.oss.length > 0} />
 
-          <Label text={tx('semantic.term.version')} className='select-none w-fit' />
+          <Label text={tx('tx.lib.version')} className='select-none w-fit' />
           <SelectVersion
             disabled={!isContentEditable && schema.versions.length === 0}
             id='schema_version'
@@ -158,13 +158,13 @@ export function FormSchema({ className }: FormSchemaProps) {
           {field => (
             <TextArea
               id='schema_comment'
-              label={tx('semantic.term.description')}
+              label={tx('tx.lib.description')}
               placeholder={tx('labels.placeholder.itemDescription')}
               rows={5}
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+              error={field.state.meta.errors[0]?.message}
               disabled={!isContentEditable || isProcessing}
             />
           )}
@@ -172,8 +172,8 @@ export function FormSchema({ className }: FormSchemaProps) {
       </div>
       {isContentEditable || !isDefaultValue ? (
         <SubmitButton
-          text={tx('semantic.action.saveChanges')}
-          title={prepareTooltip(tx('semantic.action.saveChanges'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+          text={tx('tx.general.changes.save')}
+          title={prepareTooltip(tx('tx.general.changes.save'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
           className='self-center mt-4'
           loading={isProcessing}
           icon={<IconSave size='1.25rem' />}

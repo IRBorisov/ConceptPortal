@@ -4,11 +4,7 @@ import { labelsFeatureFr } from './labels-feature.fr';
 export const labelsFr: Record<string, string> = {
   ...labelsFeatureFr,
 
-  'labels.error.aliasLength': 'jusqu’à {n} caractères',
-  'labels.error.emailLength': 'jusqu’à {n} caractères',
-  'labels.error.titleLength': 'jusqu’à {n} caractères',
-  'labels.error.descriptionLength': 'jusqu’à {n} caractères',
-  'labels.error.textLength': 'jusqu’à {n} caractères',
+  'labels.error.lengthLimit': 'Longueur maximale',
   'labels.error.typeStructureFailed': 'Structure absente',
   'labels.error.passwordsMismatch': 'Les mots de passe ne correspondent pas',
   'labels.error.passwordsSame': 'Le nouveau mot de passe est identique à l’ancien',
@@ -35,7 +31,6 @@ export const labelsFr: Record<string, string> = {
   'labels.error.clipboardWrite': 'Échec de l’écriture dans le presse-papiers',
   'labels.error.fileRead': 'Erreur lors de la lecture du fichier',
   'labels.error.fileTooLarge': 'La taille du fichier dépasse {maxMb} Mo',
-  'labels.error.valueNull': 'Valeur absente',
   'labels.error.sandboxImportError': 'Échec de l’import du schéma dans le bac à sable',
   'labels.error.sandboxBundleNotAvailable': 'Le bac à sable est vide',
   'labels.error.failedToPersistSandbox': 'Échec de l’enregistrement du bac à sable',

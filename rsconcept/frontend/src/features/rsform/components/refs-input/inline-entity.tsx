@@ -120,7 +120,7 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
           />
           <MiniButton
             icon={<IconClose size='1.5rem' className='icon-primary' />}
-            title={prepareTooltip(tx('semantic.action.close'), 'Esc')}
+            title={prepareTooltip(tx('tx.general.close'), 'Esc')}
             onClick={onCancel}
           />
           <SearchBar

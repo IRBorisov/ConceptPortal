@@ -71,14 +71,14 @@ export function PickSchema({
   const columns = [
     columnHelper.accessor('alias', {
       id: 'alias',
-      header: tx('semantic.term.alias'),
+      header: tx('tx.lib.alias'),
       size: 150,
       minSize: 80,
       maxSize: 150
     }),
     columnHelper.accessor('title', {
       id: 'title',
-      header: tx('semantic.term.title'),
+      header: tx('tx.lib.title'),
       size: 1200,
       minSize: 200,
       maxSize: 1200,
@@ -86,7 +86,7 @@ export function PickSchema({
     }),
     columnHelper.accessor('time_update', {
       id: 'time_update',
-      header: tx('semantic.term.date'),
+      header: tx('tx.general.date'),
       cell: props => (
         <div className='whitespace-nowrap'>
           {new Date(props.getValue()).toLocaleString(intl.locale, {
@@ -141,7 +141,7 @@ export function PickSchema({
         {filterLocation.length > 0 ? (
           <MiniButton
             icon={<IconClose size='1.25rem' className='icon-red' />}
-            title={tx('semantic.action.resetFilter')}
+            title={tx('tx.general.filter.reset')}
             onClick={() => setFilterLocation('')}
           />
         ) : null}
@@ -158,7 +158,7 @@ export function PickSchema({
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
           <div className='cc-column dense p-3 items-center min-h-24'>
-            <p>{tx('semantic.listIsEmpty')}</p>
+            <p>{tx('tx.general.list.empty')}</p>
             <p>{tx('ui.pick.schema.emptyHint')}</p>
           </div>
         }

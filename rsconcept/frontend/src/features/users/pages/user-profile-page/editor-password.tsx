@@ -2,7 +2,7 @@
 
 import { useForm } from '@tanstack/react-form';
 
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 import { type IChangePasswordDTO, schemaChangePassword } from '@/features/auth';
@@ -59,7 +59,7 @@ export function EditorPassword() {
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+              error={field.state.meta.errors[0]?.message}
             />
           )}
         </form.Field>
@@ -74,7 +74,7 @@ export function EditorPassword() {
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+              error={field.state.meta.errors[0]?.message}
             />
           )}
         </form.Field>
@@ -89,7 +89,7 @@ export function EditorPassword() {
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+              error={field.state.meta.errors[0]?.message}
             />
           )}
         </form.Field>

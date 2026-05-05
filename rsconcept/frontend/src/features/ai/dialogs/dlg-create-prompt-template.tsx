@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useAuth } from '@/features/auth';
 import { HelpTopic } from '@/features/help';
@@ -48,7 +48,7 @@ export function DlgCreatePromptTemplate() {
   return (
     <ModalForm
       header={tx('ui.promptTemplates.dlg.createHeader')}
-      submitText={tx('semantic.action.create')}
+      submitText={tx('tx.general.create')}
       canSubmit={canSubmit}
       onSubmit={event => {
         event.preventDefault();
@@ -67,7 +67,7 @@ export function DlgCreatePromptTemplate() {
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </form.Field>
@@ -75,11 +75,11 @@ export function DlgCreatePromptTemplate() {
         {field => (
           <TextArea
             id='dlg_prompt_description'
-            label={tx('semantic.term.description')}
+            label={tx('tx.lib.description')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </form.Field>

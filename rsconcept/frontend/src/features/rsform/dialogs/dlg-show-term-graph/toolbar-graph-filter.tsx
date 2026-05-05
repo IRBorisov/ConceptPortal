@@ -28,16 +28,12 @@ export default function ToolbarGraphFilter() {
   return (
     <div className='flex flex-row gap-2'>
       <MiniButton
-        title={tx('ui.rsform.termGraph.toolbar.fullGraphTitle')}
+        title={tx('tx.general.fitView')}
         icon={<IconFitImage size='1.25rem' className='icon-primary' />}
         onClick={handleFitView}
       />
       <MiniButton
-        title={
-          !filter.noText
-            ? tx('ui.rsform.termGraph.toolbar.hideTextTitle')
-            : tx('ui.rsform.termGraph.toolbar.showTextTitle')
-        }
+        title={!filter.noText ? tx('tx.general.labels.hide') : tx('tx.general.labels.show')}
         icon={
           !filter.noText ? (
             <IconText size='1.25rem' className='icon-green' />

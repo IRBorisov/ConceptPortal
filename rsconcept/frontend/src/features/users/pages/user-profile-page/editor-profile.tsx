@@ -3,7 +3,7 @@
 import { useEffect, useEffectEvent } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useRegisterNavigationSave } from '@/app';
 
@@ -72,7 +72,7 @@ export function EditorProfile() {
       <TextInput
         id='username'
         disabled
-        label={tx('semantic.term.username.short')}
+        label={tx('tx.general.username.short')}
         title={tx('ui.profile.field.usernameReadonlyTitle')}
         value={profile.username}
       />
@@ -82,11 +82,11 @@ export function EditorProfile() {
             id='first_name'
             autoComplete='off'
             allowEnter
-            label={tx('semantic.term.firstName')}
+            label={tx('tx.general.firstName')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </form.Field>
@@ -96,11 +96,11 @@ export function EditorProfile() {
             id='last_name'
             autoComplete='off'
             allowEnter
-            label={tx('semantic.term.lastName')}
+            label={tx('tx.general.lastName')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </form.Field>
@@ -110,11 +110,11 @@ export function EditorProfile() {
             id='email'
             autoComplete='off'
             allowEnter
-            label={tx('semantic.term.email')}
+            label={tx('tx.general.email')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </form.Field>

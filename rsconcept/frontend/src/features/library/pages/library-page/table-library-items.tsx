@@ -71,10 +71,10 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
       style={{ maxHeight: tableHeight }}
       noDataComponent={
         <div className='cc-column dense p-3 items-center min-h-24'>
-          <p>{tx('semantic.listIsEmpty')}</p>
+          <p>{tx('tx.general.list.empty')}</p>
           <p className='flex gap-6'>
-            <TextURL text={tx('ui.action.createSchema')} href='/library/create' />
-            <TextURL text={tx('semantic.action.resetFilter')} onClick={resetFilter} />
+            <TextURL text={tx('tx.lib.schema.create')} href='/library/create' />
+            <TextURL text={tx('tx.general.filter.reset')} onClick={resetFilter} />
           </p>
         </div>
       }

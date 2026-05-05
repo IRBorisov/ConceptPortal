@@ -3,7 +3,7 @@ import { type ReactNode, useState } from 'react';
 import { type Constituenta, CstType, type RSForm } from '@/domain/library';
 import { isBaseSet, isBasicConcept } from '@/domain/library/rsform-api';
 import { labelType } from '@/domain/rslang/labels';
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
@@ -71,7 +71,7 @@ export function FormEditCst({
     <>
       <div className='flex items-center self-center gap-3'>
         <MiniButton
-          title={tx('semantic.term.constituenta.crucial')}
+          title={tx('tx.lib.cst.crucial')}
           icon={<IconCrucialValue size='1.25rem' value={crucial} />}
           onClick={onToggleCrucial}
         />
@@ -81,12 +81,12 @@ export function FormEditCst({
             <TextInput
               id='dlg_cst_alias'
               dense
-              label={tx('semantic.term.alias.short')}
+              label={tx('tx.lib.alias.short')}
               className='w-28'
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+              error={field.state.meta.errors[0]?.message}
             />
           )}
         </AliasField>
@@ -97,7 +97,7 @@ export function FormEditCst({
         {field => (
           <RefsInput
             id='dlg_cst_term'
-            label={tx('semantic.term.term')}
+            label={tx('tx.lib.term')}
             maxHeight='3.75rem'
             areaClassName='disabled:min-h-9'
             placeholder={tx('ui.placeholder.termForDefinitions')}
@@ -133,7 +133,7 @@ export function FormEditCst({
           noOutline
           transparent
           readOnly
-          label={tx('semantic.term.typification')}
+          label={tx('tx.rslang.typification')}
           value={labelType(target.analysis.type)}
           className='cursor-default'
         />
@@ -165,7 +165,7 @@ export function FormEditCst({
             <RefsInput
               id='dlg_edit_cst_definition_raw'
               schema={schema}
-              label={tx('semantic.term.definitionTextual')}
+              label={tx('tx.lib.definitionTextual')}
               placeholder={tx('ui.placeholder.textDefinitionHint')}
               maxHeight='3.75rem'
               value={field.state.value ?? ''}
@@ -189,7 +189,7 @@ export function FormEditCst({
           className='self-start cc-label text-primary hover:underline select-none'
           onClick={() => setForceComment(true)}
         >
-          {tx('semantic.action.add.comment')}
+          {tx('tx.lib.comment.add')}
         </button>
       ) : (
         <ConventionField>
@@ -198,13 +198,13 @@ export function FormEditCst({
               id='dlg_edit_cst_convention'
               fitContent
               spellCheck
-              label={isBasic ? tx('semantic.term.convention') : tx('semantic.term.comment')}
+              label={isBasic ? tx('tx.lib.convention') : tx('tx.lib.comment')}
               placeholder={isBasic ? tx('ui.placeholder.conventionBasic') : tx('ui.placeholder.developerComment')}
               areaClassName='max-h-20 disabled:min-h-9'
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
-              error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+              error={field.state.meta.errors[0]?.message}
               disabled={isBasic && target.is_inherited}
             />
           )}

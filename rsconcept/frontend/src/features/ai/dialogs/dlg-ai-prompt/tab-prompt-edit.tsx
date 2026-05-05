@@ -20,10 +20,10 @@ export function TabPromptEdit({ label, description, text, setText }: TabPromptEd
   return (
     <div className='cc-column'>
       <div className='flex flex-col gap-2'>
-        <TextArea id='prompt-label' label={tx('semantic.term.title')} value={label} disabled noResize rows={1} />
+        <TextArea id='prompt-label' label={tx('tx.lib.title')} value={label} disabled noResize rows={1} />
         <TextArea
           id='prompt-description'
-          label={tx('semantic.term.description')}
+          label={tx('tx.lib.description')}
           value={description}
           disabled
           noResize

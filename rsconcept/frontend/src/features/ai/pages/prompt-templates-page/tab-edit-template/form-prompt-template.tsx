@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { useRegisterNavigationSave } from '@/app';
 import { PromptInput } from '@/features/ai/components/prompt-input';
@@ -116,11 +116,11 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
         {field => (
           <TextInput
             id='prompt_label'
-            label={tx('semantic.term.title')}
+            label={tx('tx.lib.title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
             disabled={isProcessing || !isMutable}
           />
         )}
@@ -129,11 +129,11 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
         {field => (
           <TextArea
             id='prompt_description'
-            label={tx('semantic.term.description')}
+            label={tx('tx.lib.description')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
             disabled={isProcessing || !isMutable}
           />
         )}
@@ -143,7 +143,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
         {field => (
           <PromptInput
             id='prompt_text'
-            label={tx('semantic.term.contents')}
+            label={tx('tx.lib.contents')}
             placeholder={tx('ui.promptTemplates.form.contentPlaceholder')}
             className='disabled:min-h-9 max-h-64'
             value={field.state.value ?? ''}

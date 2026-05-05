@@ -28,9 +28,7 @@ export function MGraphNodeComponent(node: NodeProps<MGNode>) {
   const tooltipText =
     `${node.data.text}` +
     '\n' +
-    (node.data.annotations.length === 0
-      ? ''
-      : `${tx('semantic.term.constituenta.plural')} ${node.data.annotations.join(' ')}`);
+    (node.data.annotations.length === 0 ? '' : `${tx('tx.lib.cst.plural')} ${node.data.annotations.join(' ')}`);
   const nodeLabel = getNodeLabel(node.data);
 
   return (

@@ -142,7 +142,7 @@ export function MenuEditSchema() {
       <MiniButton
         noHover
         noPadding
-        title={tx('ui.rsform.menu.editing')}
+        title={tx('tx.general.editing')}
         hideTitle={isMenuOpen}
         className='h-full px-3 text-muted-foreground hover:text-primary cc-animate-color'
         icon={<IconEdit2 size='1.25rem' />}
@@ -150,7 +150,7 @@ export function MenuEditSchema() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('semantic.term.template.plural')}
+          text={tx('tx.domain.template.plural')}
           title={tx('ui.rsform.menu.templatesTitle')}
           icon={<IconTemplates size='1rem' className='icon-green' />}
           onClick={handleTemplates}
@@ -192,7 +192,7 @@ export function MenuEditSchema() {
           disabled={isProcessing || !activeCst || (!activeCst.spawner_path && !cstCanProduceStructure(activeCst))}
         />
         <DropdownButton
-          text={tx('semantic.action.substitution')}
+          text={tx('tx.lib.cst.substitution')}
           title={tx('ui.rsform.menu.substitutionTitle')}
           aria-label={tx('ui.rsform.menu.substitutionAria')}
           icon={<IconReplace size='1rem' className='icon-red' />}

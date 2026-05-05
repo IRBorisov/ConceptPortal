@@ -82,7 +82,7 @@ function domTooltipVariable(varName: string, isAvailable: boolean): TooltipView 
 
   const desc = document.createElement('p');
   desc.className = '';
-  desc.innerText = globalTx('semantic.term.description') + ': ' + describePromptVariable(varName as PromptVariableType);
+  desc.innerText = globalTx('tx.lib.description') + ': ' + describePromptVariable(varName as PromptVariableType);
   dom.appendChild(desc);
 
   return { dom: dom };

@@ -23,18 +23,18 @@ export function ExpectedAnonymous() {
     <div className='flex flex-col items-center gap-3 py-6'>
       <p className='font-semibold'>{tx('auth.anonymous.signedInAs', { username: user.username })}</p>
       <div className='flex gap-3'>
-        <TextURL text={tx('semantic.action.create')} href='/library/create' />
+        <TextURL text={tx('tx.general.create')} href='/library/create' />
         <span> | </span>
-        <TextURL text={tx('semantic.term.library')} href='/library' />
+        <TextURL text={tx('tx.lib.library')} href='/library' />
         <span> | </span>
-        <TextURL text={tx('semantic.term.manual')} href='/manuals' />
+        <TextURL text={tx('tx.general.help')} href='/manuals' />
         <span> | </span>
         <span
           className='cursor-pointer hover:underline text-primary'
-          aria-label={tx('semantic.action.logout')}
+          aria-label={tx('tx.general.logout')}
           onClick={logoutAndRedirect}
         >
-          {tx('semantic.action.logout')}
+          {tx('tx.general.logout')}
         </span>
       </div>
     </div>

@@ -82,7 +82,7 @@ export function OssTabs({ activeTab }: OssTabsProps) {
       <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background'>
         <MenuOssTabs />
 
-        <TabLabel label={tx('semantic.term.passport')} />
+        <TabLabel label={tx('tx.lib.item.passport')} />
         <TabLabel label={tx('ui.tabs.graph')} />
       </TabList>
 

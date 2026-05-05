@@ -177,7 +177,7 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
         />
       ) : null}
       <DropdownButton
-        text={`${tx('semantic.action.logout')}…`}
+        text={`${tx('tx.general.logout')}…`}
         title={tx('nav.action.logoutTitle')}
         className='font-semibold'
         icon={<IconLogout size='1rem' />}

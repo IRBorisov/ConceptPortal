@@ -22,18 +22,18 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
         id='oss-stats-composition'
         className='rounded-t-md'
         label={tx('ui.stats.section.overview')}
-        primaryLabel={tx('semantic.total')}
+        primaryLabel={tx('tx.general.total')}
         primaryValue={stats.count_all}
         primaryTitle={tx('ui.stats.oss.compositionPrimaryTitle')}
-        secondaryLabel={stats.count_block > 0 ? tx('semantic.term.block.plural') : undefined}
+        secondaryLabel={stats.count_block > 0 ? tx('tx.lib.block.plural') : undefined}
         secondaryValue={stats.count_block > 0 ? stats.count_block : undefined}
         secondaryTitle={tx('ui.stats.oss.blocksSecondaryTitle')}
         details={[
-          { label: tx('semantic.total'), value: stats.count_all },
-          { label: tx('semantic.term.block.plural'), value: stats.count_block },
-          { label: tx('ui.stats.oss.detail.inputs'), value: stats.count_inputs },
-          { label: tx('semantic.action.synthesis'), value: stats.count_synthesis },
-          { label: tx('ui.stats.oss.detail.replica'), value: stats.count_references }
+          { label: tx('tx.general.total'), value: stats.count_all },
+          { label: tx('tx.lib.block.plural'), value: stats.count_block },
+          { label: tx('tx.lib.operation.type.input'), value: stats.count_inputs },
+          { label: tx('tx.lib.operation.type.synthesis'), value: stats.count_synthesis },
+          { label: tx('tx.lib.operation.type.replica'), value: stats.count_references }
         ]}
       />
 
@@ -42,16 +42,16 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
       <StatsCategory
         id='oss-stats-schemas'
         className='rounded-b-md'
-        label={tx('ui.stats.oss.attachedSection')}
-        primaryLabel={tx('semantic.total')}
+        label={tx('tx.lib.oss.attachedSchema.plural')}
+        primaryLabel={tx('tx.general.total')}
         primaryValue={stats.count_schemas}
         primaryTitle={tx('ui.stats.oss.attachedPrimaryTitle')}
-        secondaryLabel={stats.count_schemas > 0 ? tx('ui.stats.secondary.owned') : undefined}
+        secondaryLabel={stats.count_schemas > 0 ? tx('tx.lib.concept.original.plural') : undefined}
         secondaryValue={stats.count_schemas > 0 ? stats.count_owned : undefined}
         secondaryTitle={tx('ui.stats.oss.ownedSecondaryTitle')}
         details={[
-          { label: tx('ui.stats.oss.detail.attachedSchemas'), value: stats.count_schemas },
-          { label: tx('ui.stats.secondary.owned'), value: stats.count_owned },
+          { label: tx('tx.lib.oss.attachedSchema.plural'), value: stats.count_schemas },
+          { label: tx('tx.lib.concept.original.plural'), value: stats.count_owned },
           { label: tx('ui.stats.oss.detail.external'), value: countImported }
         ]}
       />

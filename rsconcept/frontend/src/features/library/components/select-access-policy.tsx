@@ -43,7 +43,7 @@ export function SelectAccessPolicy({
   return (
     <div ref={elementRef} onBlur={handleBlur} className={clsx('relative', className)} {...restProps}>
       <MiniButton
-        title={`${tx('semantic.term.access')}: ${labelAccessPolicy(value)}`}
+        title={`${tx('tx.lib.access')}: ${labelAccessPolicy(value)}`}
         hideTitle={isOpen}
         className='h-full'
         icon={<IconAccessPolicy value={value} size='1.25rem' />}

@@ -136,7 +136,7 @@ export function MenuMain() {
       <MiniButton
         noHover
         noPadding
-        title={tx('ui.nav.sandboxMenu')}
+        title={tx('tx.general.menu')}
         hideTitle={isMenuOpen}
         className='h-full pl-2 text-muted-foreground hover:text-primary cc-animate-color bg-transparent'
         icon={<IconMenu size='1.25rem' />}
@@ -151,7 +151,7 @@ export function MenuMain() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('ui.action.recalculateModel')}
+          text={tx('tx.lib.model.recalculate')}
           aria-label={tx('ui.aria.recalculateAll')}
           icon={<IconCalculateAll size='1rem' className='icon-green' />}
           onClick={handleRecalculate}
@@ -169,20 +169,20 @@ export function MenuMain() {
           onClick={handleImportClick}
         />
         <DropdownButton
-          text={tx('ui.action.createSchema')}
+          text={tx('tx.lib.schema.create')}
           title={tx('ui.sandbox.createSchemaHint')}
           icon={<IconRSForm size='1rem' className='icon-green' />}
           onClick={() => void handleCreateRSForm()}
         />
         <DropdownButton
-          text={tx('ui.action.createModel')}
+          text={tx('tx.lib.model.create')}
           title={tx('ui.sandbox.createModelHint')}
           icon={<IconRSModel size='1rem' className='text-accent-orange' />}
           onClick={() => void handleCreateRSModel()}
         />
         <Divider margins='mx-3 my-1' />
         <DropdownButton
-          text={tx('ui.sandbox.resetState')}
+          text={tx('tx.general.resetAll')}
           title={tx('ui.sandbox.resetStateHint')}
           icon={<IconReset size='1rem' className='icon-red' />}
           onClick={handleReset}

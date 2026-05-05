@@ -230,7 +230,7 @@ export function PickSubstitutions({
         ) : (
           <div className='max-w-fit'>
             <MiniButton
-              title={tx('semantic.action.delete')}
+              title={tx('tx.general.delete')}
               icon={<IconRemove size='1rem' className='icon-red' />}
               onClick={() => handleDeleteSubstitution(props.row.original)}
             />
@@ -253,7 +253,7 @@ export function PickSubstitutions({
           <SelectLibraryItem
             id='substitute-left-schema'
             noBorder
-            placeholder={tx('semantic.term.argument')}
+            placeholder={tx('tx.domain.argument')}
             items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== rightArgument?.id)}
             value={leftArgument}
             onChange={onChangeLeftArgument}
@@ -285,7 +285,7 @@ export function PickSubstitutions({
           <SelectLibraryItem
             id='substitute-right-schema'
             noBorder
-            placeholder={tx('semantic.term.argument')}
+            placeholder={tx('tx.domain.argument')}
             items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== leftArgument?.id)}
             value={rightArgument}
             onChange={onChangeRightArgument}
@@ -305,7 +305,7 @@ export function PickSubstitutions({
         columns={columns}
         noDataComponent={
           <NoData className='min-h-8'>
-            <p>{tx('semantic.listIsEmpty')}</p>
+            <p>{tx('tx.general.list.empty')}</p>
             <p>{tx('ui.substitution.tableEmptyHint')}</p>
           </NoData>
         }

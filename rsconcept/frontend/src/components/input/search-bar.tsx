@@ -47,7 +47,7 @@ export function SearchBar({
   ...restProps
 }: SearchBarProps) {
   const tx = useTx();
-  const resolvedPlaceholder = placeholder ?? tx('semantic.term.search');
+  const resolvedPlaceholder = placeholder ?? tx('tx.general.search');
 
   return (
     <div className={cn('group relative flex items-center grow', className)} {...restProps}>

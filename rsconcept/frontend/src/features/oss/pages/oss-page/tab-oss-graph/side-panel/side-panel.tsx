@@ -75,7 +75,7 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
             selectedSchema && 'translate-x-20'
           )}
         >
-          {tx('semantic.term.contents')}
+          {tx('tx.lib.contents')}
         </div>
       ) : null}
 

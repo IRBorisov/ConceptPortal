@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { LibraryItemType, type RSModel } from '@/domain/library';
-import { formatZodErrorMessage, useTx } from '@/i18n';
+import { useTx } from '@/i18n';
 
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useModelEdit } from '@/features/rsmodel/pages/rsmodel-page/model-edit-context';
@@ -82,7 +82,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none font-math'>{tx('semantic.term.sandbox')}</h2>
+      <h2 className='mb-2 select-none font-math'>{tx('tx.general.sandbox')}</h2>
       <form.Field name='title'>
         {field => (
           <TextInput
@@ -93,7 +93,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </form.Field>
@@ -103,12 +103,12 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
           <TextInput
             dense
             id='sandbox_model_alias'
-            label={tx('semantic.term.alias')}
+            label={tx('tx.lib.alias')}
             className='w-full mb-3'
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </form.Field>
@@ -117,20 +117,20 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         {field => (
           <TextArea
             id='sandbox_model_description'
-            label={tx('semantic.term.description')}
+            label={tx('tx.lib.description')}
             placeholder={tx('labels.placeholder.itemDescription')}
             rows={5}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
-            error={formatZodErrorMessage(field.state.meta.errors[0]?.message)}
+            error={field.state.meta.errors[0]?.message}
           />
         )}
       </form.Field>
 
       <div className='mt-3 sm:mb-1 flex justify-between items-center'>
         <ValueIcon
-          title={tx('semantic.term.dateUpdated')}
+          title={tx('tx.general.date.updated')}
           dense
           icon={<IconDateUpdate size='1.25rem' />}
           value={new Date(model.time_update).toLocaleString(intl.locale, {
@@ -141,7 +141,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         />
 
         <SubmitButton
-          text={tx('semantic.action.save')}
+          text={tx('tx.general.save')}
           className='self-center w-40'
           loading={false}
           icon={<IconSave size='1.25rem' />}
@@ -149,7 +149,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         />
 
         <ValueIcon
-          title={tx('semantic.term.dateCreated')}
+          title={tx('tx.general.date.creation')}
           dense
           icon={<IconDateCreate size='1.25rem' />}
           value={new Date(model.time_create).toLocaleString(intl.locale, {

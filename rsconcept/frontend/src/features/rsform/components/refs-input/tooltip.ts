@@ -127,7 +127,7 @@ function domTooltipSyntacticReference(
     globalTx('ui.rsform.refsTooltip.masterReference'),
     masterRef ?? globalTx('ui.rsform.refsTooltip.notDefined')
   );
-  appendBoldTextRow(dom, globalTx('semantic.term.nominal') + ':', ref.nominal);
+  appendBoldTextRow(dom, globalTx('tx.lang.morphology.nominal') + ':', ref.nominal);
 
   if (canClick) {
     const clickTip = document.createElement('p');

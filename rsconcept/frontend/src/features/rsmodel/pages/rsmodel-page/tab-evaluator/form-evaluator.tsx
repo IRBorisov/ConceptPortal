@@ -96,7 +96,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
 
   function handleViewValue() {
     if (dialogValue == null) {
-      toast.error(tx('labels.error.valueNull'));
+      toast.error(tx('tx.rslang.value.missing'));
       return;
     }
     if (!dialogType || !isTypification(dialogType)) {
@@ -139,13 +139,13 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         noOutline
         transparent
         readOnly
-        label={tx('semantic.term.typification')}
+        label={tx('tx.rslang.typification')}
         value={labelType(localParse?.type ?? null)}
         areaClassName='cursor-default'
       />
 
       <EditorRSExpression
-        label={tx('ui.label.expression')}
+        label={tx('tx.lib.definitionFormal')}
         placeholder={tx('ui.placeholder.expressionMissing')}
         schema={schema}
         errors={errors}
@@ -161,7 +161,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         <div className='flex items-center justify-center gap-6 text-sm pl-6 flex-wrap'>
           <TextButton
             text={tx('ui.eval.viewValue')}
-            title={canOpenValueDialog ? tx('ui.eval.viewValueHint') : tx('ui.eval.viewStructuredUnavailable')}
+            title={canOpenValueDialog ? '' : tx('ui.eval.viewStructuredUnavailable')}
             disabled={!canOpenValueDialog}
             onClick={handleViewValue}
             className='text-sm'
@@ -169,7 +169,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
           <div ref={exportMenuRef} onBlur={handleExportBlur} className='relative'>
             <TextButton
               text={tx('ui.action.exportShort')}
-              title={tx('ui.value.exportValueTitle')}
+              title={tx('tx.rslang.value.export')}
               hideTitle={isExportOpen}
               onClick={toggleExport}
             />
@@ -187,14 +187,14 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         stub={stub}
         valueLabel={labelValue(localEval?.value ?? null, localParse?.type ?? null)}
         status={status}
-        placeholder={tx('ui.placeholder.valueMissing')}
+        placeholder={tx('tx.rslang.value.missing')}
         onCalculate={handleCalculate}
         onToggleDataText={toggleShowDataText}
         disabled
       />
       {!!localEval?.iterations ? (
         <TextInput
-          label={tx('ui.label.iterationCount')}
+          label={tx('tx.rslang.eval.iterationCount')}
           dense
           disabled
           noBorder
