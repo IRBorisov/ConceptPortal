@@ -30,15 +30,15 @@ test('anonymous user is prompted to login on protected routes', async ({ page })
   });
 
   await page.goto('/library/create');
-  await expect(page.getByText('Пожалуйста войдите в систему')).toBeVisible();
+  await expect(page.getByText('Доступно только зарегистрированным пользователям')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Войти в Портал' })).toBeVisible();
 
   await page.goto('/profile');
-  await expect(page.getByText('Пожалуйста войдите в систему')).toBeVisible();
+  await expect(page.getByText('Доступно только зарегистрированным пользователям')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Зарегистрироваться' })).toBeVisible();
 
   await page.goto('/prompt-templates');
-  await expect(page.getByText('Пожалуйста войдите в систему')).toBeVisible();
+  await expect(page.getByText('Доступно только зарегистрированным пользователям')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Начальная страница' })).toBeVisible();
 });
 

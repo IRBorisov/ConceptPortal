@@ -94,7 +94,7 @@ export function ValueEditor({
     getColumnText: subPath => resolveColumnText(path, subPath, type, getHeaderText),
     selectElement: handleSelectElement,
     deleteElement: handleDeleteElement,
-    deleteElementTitle: tx('tx.rslang.value.element.delete')
+    deleteElementTitle: tx('tx.general.delete')
   };
 
   const columns = createColumnsType(currentType, selectedPath, services);

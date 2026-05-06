@@ -1,7 +1,7 @@
 import { createIntl, createIntlCache, type IntlShape } from 'react-intl';
 
 import { type AppLocale, DEFAULT_LOCALE } from './locales';
-import { getMessagesForLocale } from './messages';
+import { getMessageMapForLocale } from './map';
 import { getInitialAppLocale } from './persisted-locale';
 
 type MessageValues = Record<string, string | number | boolean | Date | null | undefined>;
@@ -29,7 +29,7 @@ function createAppIntl(locale: AppLocale): IntlShape {
     {
       locale,
       defaultLocale: DEFAULT_LOCALE,
-      messages: getMessagesForLocale(locale)
+      messages: getMessageMapForLocale(locale)
     },
     intlCache
   );

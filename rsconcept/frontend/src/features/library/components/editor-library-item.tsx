@@ -124,7 +124,7 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
           className='sm:mb-1'
           icon={<IconOwner size='1.25rem' className='icon-primary' />}
           value={getUserLabel(item.owner)}
-          title={isProduced ? tx('ui.library.editor.ownerInheritedOss') : tx('tx.general.owner')}
+          title={isProduced ? tx('ui.library.editor.ownerInheritedOss') : tx('tx.general.role.owner')}
           onClick={toggleOwner}
           disabled={isModified || isProcessing || isProduced || role < UserRole.OWNER}
         />
@@ -141,7 +141,11 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
         />
         <Tooltip anchorSelect='#editor_stats'>
           <Suspense fallback={<Loader scale={2} />}>
-            <InfoUsers items={item.editors} prefix={prefixes.user_editors} header={tx('tx.general.editor.plural')} />
+            <InfoUsers
+              items={item.editors}
+              prefix={prefixes.user_editors}
+              header={tx('tx.general.role.editor.plural')}
+            />
           </Suspense>
         </Tooltip>
 

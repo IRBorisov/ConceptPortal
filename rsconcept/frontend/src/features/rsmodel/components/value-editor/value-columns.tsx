@@ -34,7 +34,7 @@ export interface ColumnServices {
   navigateValue: (path: ValuePath) => void;
   selectElement?: (path: ValuePath | null) => void;
   deleteElement?: (target: number) => void;
-  deleteElementTitle?: string;
+  deleteElementTitle: string;
 }
 
 interface ColumnState {
@@ -64,7 +64,7 @@ export function createColumnsType(
         size: 0,
         cell: props => (
           <MiniButton
-            title={services.deleteElementTitle ?? 'Remove element'}
+            title={services.deleteElementTitle}
             className='align-middle w-fit'
             noPadding
             icon={<IconRemove size='1.25rem' className='cc-remove' />}

@@ -63,7 +63,7 @@ export function TableVersions({ processing, items, onDelete, selected, onSelect 
       size: 0,
       cell: props => (
         <MiniButton
-          title={tx('tx.lib.version.delete')}
+          title={tx('tx.general.delete')}
           className='align-middle'
           noPadding
           icon={<IconRemove size='1.25rem' className='cc-remove' />}

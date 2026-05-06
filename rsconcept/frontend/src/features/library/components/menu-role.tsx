@@ -42,7 +42,7 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
     return (
       <MiniButton
         noPadding
-        title={tx('nav.anonymousLoginTitle')}
+        title={tx('tx.general.login.hint')}
         hideTitle={isAccessOpen}
         className='h-full pr-2 pl-3 bg-transparent'
         icon={<IconAlert size='1.25rem' className='icon-red' />}
@@ -56,7 +56,7 @@ export function MenuRole({ isOwned, isEditor }: MenuRoleProps) {
       <MiniButton
         noHover
         noPadding
-        title={tx('nav.userRoleMode', { role: labelUserRole(role) })}
+        title={tx('tx.general.role') + ': ' + labelUserRole(role)}
         hideTitle={isAccessOpen}
         className='h-full pr-2 text-muted-foreground hover:text-primary cc-animate-color'
         icon={<IconRole value={role} size='1.25rem' className='' />}

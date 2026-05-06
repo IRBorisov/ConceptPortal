@@ -37,7 +37,7 @@ export function HomePage() {
     <main
       className='relative isolate mx-auto h-full w-full max-w-6xl px-4 pb-24 pt-10 sm:px-6 sm:pt-16'
       role='main'
-      aria-label={tx('home.mainAria')}
+      aria-label={tx('tx.home.header')}
       itemScope
       itemType='https://schema.org/WebPage'
     >
@@ -72,7 +72,7 @@ export function HomePage() {
 
       <header className='mx-auto max-w-2xl text-center select-none'>
         <img
-          alt={darkMode ? tx('home.heroLogoAltDark') : tx('home.heroLogoAltLight')}
+          alt={darkMode ? tx('tx.shell.logo.alt.dark') : tx('tx.shell.logo.alt.light')}
           src={!darkMode ? resources.logo : resources.logo_dark}
           className='mx-auto mb-8 h-11 w-auto opacity-95 dark:opacity-90'
           decoding='async'
@@ -80,36 +80,33 @@ export function HomePage() {
         />
         {/* SEO: Hero copy as h1 */}
         <h1 className={clsx('hidden xs:block mx-auto max-w-xl', 'text-lg font-medium', 'leading-snug text-nowrap')}>
-          {tx('home.heroLine1')}
+          {tx('tx.home.hero1')}
           <br />
-          {tx('home.heroLine2')}
+          {tx('tx.home.hero2')}
         </h1>
 
-        <nav
-          className='mt-12 flex flex-wrap items-center justify-center gap-4 sm:gap-6'
-          aria-label={tx('home.ctaNavAria')}
-        >
+        <nav className='mt-12 flex flex-wrap items-center justify-center gap-4 sm:gap-6' aria-label={tx('tx.home.cta')}>
           {isAnonymous ? (
             <>
               <CtaButton
                 to={urls.sandbox}
                 variant='primary'
-                text={tx('home.try')}
-                title={tx('home.tryTitle')}
+                text={tx('tx.home.cta.trySandbox')}
+                title={tx('tx.home.cta.trySandbox.hint')}
                 icon={<IconSandbox2 size='1.25rem' />}
               />
               <CtaButton
                 to={urls.login}
                 variant='default'
                 text={tx('tx.general.login')}
-                title={tx('home.loginTitle')}
+                title={tx('tx.general.login.hint')}
                 icon={<IconUser2 size='1.25rem' />}
               />
               <CtaButton
                 to={urls.manuals}
                 variant='default'
-                text={tx('home.study')}
-                title={tx('home.studyTitle')}
+                text={tx('tx.home.cta.learn')}
+                title={tx('tx.home.cta.learn.hint')}
                 icon={<IconManuals size='1.25rem' />}
               />
             </>
@@ -118,22 +115,22 @@ export function HomePage() {
               <CtaButton
                 to={urls.sandbox}
                 variant='default'
-                text={tx('home.try')}
-                title={tx('home.tryTitle')}
+                text={tx('tx.home.cta.trySandbox')}
+                title={tx('tx.home.cta.trySandbox.hint')}
                 icon={<IconSandbox2 size='1.25rem' />}
               />
               <CtaButton
                 to={urls.create_item}
                 variant='primary'
-                text={tx('home.create')}
-                title={tx('home.createTitle')}
+                text={tx('tx.home.cta.create')}
+                title={tx('tx.home.cta.create.title')}
                 icon={<IconNewItem2 size='1.25rem' />}
               />
               <CtaButton
                 to={urls.manuals}
                 variant='default'
-                text={tx('home.study')}
-                title={tx('home.studyTitle')}
+                text={tx('tx.home.cta.learn')}
+                title={tx('tx.home.cta.learn.hint')}
                 icon={<IconManuals size='1.25rem' />}
               />
             </>
@@ -148,50 +145,50 @@ export function HomePage() {
         itemType='https://schema.org/ItemList'
       >
         <h2 id='home-features-heading' className='sr-only'>
-          {tx('home.featuresHeading')}
+          {tx('tx.home.features')}
         </h2>
-        <meta itemProp='name' content={tx('home.featuresMetaName')} />
+        <meta itemProp='name' content={tx('tx.home.features.hint')} />
         <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
           <FeatureTile
             to={urls.library}
             icon={<IconLibrary size='1.5rem' />}
             title={tx('tx.lib.library')}
-            description={tx('home.feature.library.desc')}
+            description={tx('tx.home.feature.library.intro')}
             accentClass='bg-accent-green'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.RSLANG)}
             icon={<IconFormula size='1.5rem' />}
-            title={tx('home.feature.rslang.title')}
-            description={tx('home.feature.rslang.desc')}
+            title={tx('tx.rslang')}
+            description={tx('tx.home.feature.rslang.intro')}
             accentClass='bg-accent-blue'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.ASSISTANT)}
             icon={<IconRobot size='1.5rem' />}
-            title={tx('home.feature.assistant.title')}
-            description={tx('home.feature.assistant.desc')}
+            title={tx('tx.ai')}
+            description={tx('tx.home.feature.ai.intro')}
             accentClass='bg-accent-teal/70'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.CC_SYSTEM)}
             icon={<IconRSForm size='1.5rem' />}
-            title={tx('home.feature.rsform.title')}
-            description={tx('home.feature.rsform.desc')}
+            title={tx('tx.lib.concept.system')}
+            description={tx('tx.home.feature.rsform.intro')}
             accentClass='bg-accent-purple'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.CC_RSMODEL)}
             icon={<IconRSModel size='1.5rem' />}
-            title={tx('home.feature.rsmodel.title')}
-            description={tx('home.feature.rsmodel.desc')}
+            title={tx('tx.lib.model.plural')}
+            description={tx('tx.home.feature.rsmodel.intro')}
             accentClass='bg-accent-orange'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.CC_OSS)}
             icon={<IconOSS size='1.5rem' />}
             title={tx('tx.lib.oss.plural')}
-            description={tx('home.feature.oss.desc')}
+            description={tx('tx.home.feature.oss.intro')}
             accentClass='bg-accent-green'
           />
         </div>

@@ -145,9 +145,9 @@ export function DlgCstTemplate() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
-          <TabLabel label={tx('tx.domain.template')} title={tx('ui.dlg.cstTemplate.tabTemplate.title')} />
-          <TabLabel label={tx('tx.domain.argument.plural')} title={tx('ui.dlg.cstTemplate.tabArgs.title')} />
-          <TabLabel label={tx('tx.general.editor')} title={tx('tx.lib.cst.edit')} />
+          <TabLabel label={tx('tx.lib.cst.template.short')} title={tx('ui.dlg.cstTemplate.tabTemplate.title')} />
+          <TabLabel label={tx('tx.lib.cst.template.argument.plural')} title={tx('ui.dlg.cstTemplate.tabArgs.title')} />
+          <TabLabel label={tx('tx.general.role.editor')} title={tx('tx.lib.cst.edit')} />
         </TabList>
 
         <TemplateState

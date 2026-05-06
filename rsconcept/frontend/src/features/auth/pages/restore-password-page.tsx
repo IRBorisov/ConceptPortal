@@ -29,8 +29,8 @@ export function Component() {
   if (isCompleted) {
     return (
       <div className='cc-fade-in flex flex-col items-center gap-1 mt-3'>
-        <p>{tx('auth.restore.done')}</p>
-        <TextURL text={tx('auth.restore.loginLink')} href='/login' />
+        <p>{tx('tx.shell.auth.restore.done')}</p>
+        <TextURL text={tx('tx.general.login.hint')} href='/login' />
         <TextURL text={tx('tx.general.home')} href='/' />
       </div>
     );
@@ -49,7 +49,7 @@ export function Component() {
         />
 
         <SubmitButton
-          text={tx('auth.restore.submit')}
+          text={tx('tx.shell.auth.restore.submit')}
           className='self-center w-48 mt-3'
           loading={isPending}
           disabled={!email}
@@ -67,7 +67,7 @@ function ServerError({ error }: { error: ErrorData }): React.ReactElement {
 
   if (isAxiosError(error) && error.response?.status === 400) {
     return (
-      <div className='mx-auto mt-6 text-sm select-text text-destructive'>{tx('auth.restore.emailNotRegistered')}</div>
+      <div className='mx-auto mt-6 text-sm select-text text-destructive'>{tx('tx.shell.auth.validation.email')}</div>
     );
   }
   throw error as Error;

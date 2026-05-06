@@ -96,9 +96,9 @@ test('profile page shows error when old password is wrong', async ({ page }) => 
   await page.locator('#old_password').fill('wrong');
   await page.locator('#new_password').fill('newpass1');
   await page.locator('#new_password2').fill('newpass1');
-  await page.getByRole('button', { name: 'Сменить пароль' }).click();
+  await page.getByRole('button', { name: 'Установить пароль' }).click();
 
-  await expect(page.getByText('Неверно введен старый пароль')).toBeVisible();
+  await expect(page.getByText('Неверный пароль')).toBeVisible();
 });
 
 test('profile page redirects to login after successful password change', async ({ page }) => {
@@ -136,8 +136,8 @@ test('profile page redirects to login after successful password change', async (
   await page.locator('#old_password').fill('password');
   await page.locator('#new_password').fill('newpass1');
   await page.locator('#new_password2').fill('newpass1');
-  await page.getByRole('button', { name: 'Сменить пароль' }).click();
+  await page.getByRole('button', { name: 'Установить пароль' }).click();
 
   await expect(page).toHaveURL(/\/login$/);
-  await expect(page.getByRole('button', { name: 'Войти' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Войти', exact: true })).toBeVisible();
 });

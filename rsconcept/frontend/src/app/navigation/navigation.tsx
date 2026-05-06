@@ -136,8 +136,8 @@ export function Navigation() {
         <div className='relative z-10 flex gap-2 items-center shrink-0'>
           {isAnonymous ? (
             <NavigationButton
-              text={tx('tx.general.sandbox')}
-              title={tx('nav.bar.sandboxTitle')}
+              text={tx('tx.sandbox')}
+              title={tx('tx.sandbox.hint')}
               icon={<IconSandbox size='1.25rem' />}
               onClick={navigateSandbox}
             />

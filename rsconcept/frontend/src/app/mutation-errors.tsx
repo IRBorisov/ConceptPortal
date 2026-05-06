@@ -37,7 +37,7 @@ export function MutationErrors() {
         )}
         role='alertdialog'
       >
-        <h1 className='py-2 select-none'>{tx('error.mutation.title')}</h1>
+        <h1 className='py-2 select-none'>{tx('tx.shell.error.mutation.header')}</h1>
         <div
           className={clsx(
             'max-h-full max-w-full',

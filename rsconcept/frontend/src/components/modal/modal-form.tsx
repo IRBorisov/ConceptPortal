@@ -121,7 +121,7 @@ export function ModalForm({
         ) : null}
 
         <MiniButton
-          title={prepareTooltip(tx('modal.closeDialogTooltip'), 'ESC')}
+          title={prepareTooltip(tx('tx.shell.modal.close.hint'), 'ESC')}
           aria-label={tx('tx.general.close')}
           noPadding
           icon={<IconClose size='1.25rem' />}

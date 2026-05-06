@@ -4,7 +4,7 @@ import { Link, pdf, Text, View } from '@react-pdf/renderer';
 
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { labelType } from '@/domain/rslang/labels';
-import { type AppLocale, DEFAULT_LOCALE, getMessagesForLocale } from '@/i18n';
+import { type AppLocale, DEFAULT_LOCALE, getMessageMapForLocale } from '@/i18n';
 
 import { urls } from '@/app';
 
@@ -28,7 +28,7 @@ function handleIntlError(locale: AppLocale, error: unknown) {
 
 function PdfIntlRoot({ children }: { children: ReactNode }) {
   const locale = usePreferencesStore.getState().locale;
-  const messages = getMessagesForLocale(locale);
+  const messages = getMessageMapForLocale(locale);
   return (
     <IntlProvider
       locale={locale}
@@ -130,9 +130,7 @@ function CstTable({ data }: { data: RO<Constituenta[]> }) {
         {/* Table Header */}
         <View fixed style={pdfs.headerRow}>
           <Text style={{ ...pdfs.cell, width: '13mm' }}>ID</Text>
-          <Text style={{ ...pdfs.cell, width: '82mm' }}>
-            {intl.formatMessage({ id: 'tx.lib.definitionFormal' })}
-          </Text>
+          <Text style={{ ...pdfs.cell, width: '82mm' }}>{intl.formatMessage({ id: 'tx.lib.definitionFormal' })}</Text>
           <Text style={{ ...pdfs.cell, width: '38mm' }}>{intl.formatMessage({ id: 'tx.rslang.typification' })}</Text>
           <Text style={{ ...pdfs.cell, width: '40mm' }}>{intl.formatMessage({ id: 'tx.lib.term' })}</Text>
           <Text style={{ ...pdfs.cell, width: '82mm', borderRightWidth: 0 }}>

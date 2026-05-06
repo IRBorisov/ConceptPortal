@@ -54,7 +54,7 @@ export function EditorPassword() {
               id='old_password'
               type='password'
               autoComplete='current-password'
-              label={tx('ui.users.password.oldLabel')}
+              label={tx('tx.general.password.current')}
               allowEnter
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -69,7 +69,7 @@ export function EditorPassword() {
               id='new_password'
               type='password'
               autoComplete='new-password'
-              label={tx('auth.password.new')}
+              label={tx('tx.general.password.new')}
               allowEnter
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -84,7 +84,7 @@ export function EditorPassword() {
               id='new_password2'
               type='password'
               autoComplete='new-password'
-              label={tx('auth.password.repeat')}
+              label={tx('tx.general.password.repeat')}
               allowEnter
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
@@ -94,10 +94,10 @@ export function EditorPassword() {
           )}
         </form.Field>
         {serverError ? (
-          <ServerError error={serverError} wrongOldPasswordLabel={tx('ui.users.password.oldWrong')} />
+          <ServerError error={serverError} wrongOldPasswordLabel={tx('tx.general.password.invalid')} />
         ) : null}
       </div>
-      <SubmitButton text={tx('ui.users.password.submit')} className='self-center' loading={isPending} />
+      <SubmitButton text={tx('tx.general.password.submit')} className='self-center' loading={isPending} />
     </form>
   );
 }
