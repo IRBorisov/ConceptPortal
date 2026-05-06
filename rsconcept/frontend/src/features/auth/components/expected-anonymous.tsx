@@ -21,7 +21,7 @@ export function ExpectedAnonymous() {
 
   return (
     <div className='flex flex-col items-center gap-3 py-6'>
-      <p className='font-semibold'>{tx('auth.anonymous.signedInAs', { username: user.username })}</p>
+      <p className='font-semibold'>{tx('tx.shell.auth.signedInAs', { username: user.username })}</p>
       <div className='flex gap-3'>
         <TextURL text={tx('tx.general.create')} href='/library/create' />
         <span> | </span>

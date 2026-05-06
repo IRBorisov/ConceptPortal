@@ -43,7 +43,7 @@ export function useLibraryColumns() {
     }),
     columnHelper.accessor('owner', {
       id: 'owner',
-      header: tx('tx.general.owner'),
+      header: tx('tx.general.role.owner'),
       size: 400,
       minSize: 100,
       maxSize: 400,

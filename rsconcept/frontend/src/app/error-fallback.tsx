@@ -28,16 +28,16 @@ export function ErrorFallback() {
   if (isStaleBundleError(error)) {
     return (
       <div className='flex flex-col gap-3 my-3 items-center antialiased' role='alert'>
-        <h1 className='my-2'>{tx('error.stale.title')}</h1>
-        <p>{tx('error.stale.body')}</p>
+        <h1 className='my-2'>{tx('tx.shell.updater.header')}</h1>
+        <p>{tx('tx.shell.updater.body')}</p>
       </div>
     );
   }
 
   return (
     <div className='flex flex-col gap-3 my-3 mx-6 antialiased' role='alert'>
-      <h1 className='my-2'>{tx('error.generic.title')}</h1>
-      <Button onClick={resetErrorBoundary} className='w-fit mx-auto' text={tx('error.generic.home')} />
+      <h1 className='my-2'>{tx('tx.shell.error.header')}</h1>
+      <Button onClick={resetErrorBoundary} className='w-fit mx-auto' text={tx('tx.shell.error.home')} />
       <div className='max-w-[100vws] overflow-auto'>
         <InfoError error={error as Error} />
       </div>

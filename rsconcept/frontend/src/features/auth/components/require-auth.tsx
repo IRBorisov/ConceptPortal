@@ -13,9 +13,9 @@ export function RequireAuth({ children }: React.PropsWithChildren) {
   if (isAnonymous) {
     return (
       <div key='auth-no-user' className='flex flex-col items-center gap-1 mt-2'>
-        <p className='mb-2'>{tx('auth.require.prompt')}</p>
-        <TextURL text={tx('auth.restore.loginLink')} href='/login' />
-        <TextURL text={tx('auth.require.signup')} href='/signup' />
+        <p className='mb-2'>{tx('tx.shell.auth.required')}</p>
+        <TextURL text={tx('tx.general.login.hint')} href='/login' />
+        <TextURL text={tx('tx.shell.signup')} href='/signup' />
         <TextURL text={tx('tx.general.home')} href='/' />
       </div>
     );

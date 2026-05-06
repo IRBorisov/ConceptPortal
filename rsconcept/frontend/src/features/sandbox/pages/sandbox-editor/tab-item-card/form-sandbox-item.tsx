@@ -82,7 +82,7 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none font-math'>{tx('tx.general.sandbox')}</h2>
+      <h2 className='mb-2 select-none font-math'>{tx('tx.sandbox')}</h2>
       <form.Field name='title'>
         {field => (
           <TextInput

@@ -138,7 +138,7 @@ export function DlgEditOperation() {
           <TabLabel title={tx('ui.tab.oss.passportTitle')} label={tx('tx.lib.item.passport')} />
           <TabLabel
             title={tx('ui.tab.oss.operationArgumentsTitle')}
-            label={tx('tx.domain.argument.plural')}
+            label={tx('tx.lib.operation.argument.plural')}
             disabled={target.operation_type !== OperationType.SYNTHESIS}
           />
           <TabLabel

@@ -69,21 +69,21 @@ export function FormSignup() {
       }}
       onChange={resetErrors}
     >
-      <h1>{tx('auth.register.title')}</h1>
+      <h1 className='select-none font-math'>{tx('tx.general.user.new')}</h1>
 
       <div className='flex gap-12'>
         <fieldset className='cc-column w-60'>
-          <legend className='sr-only'>{tx('auth.register.legendLogin')}</legend>
+          <legend className='sr-only'>{tx('tx.shell.signup.login.legend')}</legend>
 
           <form.Field name='username'>
             {field => (
               <TextInput
                 id='username'
                 autoComplete='username'
-                label={tx('auth.register.username')}
+                label={tx('tx.general.username')}
                 spellCheck={false}
                 pattern={patterns.login}
-                title={tx('auth.register.usernameTitle')}
+                title={tx('tx.general.username.validate')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
@@ -111,7 +111,7 @@ export function FormSignup() {
                 id='password2'
                 type='password'
                 autoComplete='new-password'
-                label={tx('auth.register.password2')}
+                label={tx('tx.general.password.repeat')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
@@ -122,7 +122,7 @@ export function FormSignup() {
         </fieldset>
 
         <fieldset className='cc-column w-60 relative'>
-          <legend className='sr-only'>{tx('auth.register.legendProfile')}</legend>
+          <legend className='sr-only'>{tx('tx.shell.signup.profile.legend')}</legend>
 
           <IconHelp
             id={globalIDs.email_tooltip}
@@ -130,7 +130,7 @@ export function FormSignup() {
             size='1.25rem'
           />
           <Tooltip anchorSelect={`#${globalIDs.email_tooltip}`} offset={6}>
-            {tx('auth.register.emailTooltip')}
+            {tx('tx.general.email.hint')}
           </Tooltip>
           <form.Field name='email'>
             {field => (
@@ -140,7 +140,7 @@ export function FormSignup() {
                 required
                 spellCheck={false}
                 label={tx('tx.general.email')}
-                title={tx('auth.register.emailTitle')}
+                title={tx('tx.general.email.validate')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
@@ -153,7 +153,7 @@ export function FormSignup() {
               <TextInput
                 id='first_name'
                 autoComplete='given-name'
-                label={tx('auth.register.firstName')}
+                label={tx('tx.general.firstName.public')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
@@ -166,7 +166,7 @@ export function FormSignup() {
               <TextInput
                 id='last_name'
                 autoComplete='family-name'
-                label={tx('auth.register.lastName')}
+                label={tx('tx.general.lastName.public')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
@@ -178,27 +178,17 @@ export function FormSignup() {
       </div>
 
       <div className='flex gap-1 text-sm'>
-        <Checkbox
-          id='accept_terms'
-          label={tx('auth.register.acceptPrivacy')}
-          value={acceptPrivacy}
-          onChange={setAcceptPrivacy}
-        />
-        <TextURL text={tx('auth.register.linkPrivacy')} href={urls.help_topic(HelpTopic.INFO_PRIVACY)} />
+        <Checkbox id='accept_terms' value={acceptPrivacy} onChange={setAcceptPrivacy} />
+        <TextURL text={tx('tx.shell.signup.acceptPrivacy')} href={urls.help_topic(HelpTopic.INFO_PRIVACY)} />
       </div>
       <div className='flex gap-1 text-sm'>
-        <Checkbox
-          id='accept_rules'
-          label={tx('auth.register.acceptRules')}
-          value={acceptRules}
-          onChange={setAcceptRules}
-        />
-        <TextURL text={tx('auth.register.linkRules')} href={urls.help_topic(HelpTopic.INFO_RULES)} />
+        <Checkbox id='accept_rules' value={acceptRules} onChange={setAcceptRules} />
+        <TextURL text={tx('tx.shell.signup.acceptRules')} href={urls.help_topic(HelpTopic.INFO_RULES)} />
       </div>
 
       <div className='flex justify-around mt-3'>
         <SubmitButton
-          text={tx('auth.register.submit')}
+          text={tx('tx.shell.signup')}
           className='min-w-40'
           loading={isPending}
           disabled={!acceptPrivacy || !acceptRules}

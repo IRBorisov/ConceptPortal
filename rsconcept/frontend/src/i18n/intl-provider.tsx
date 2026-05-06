@@ -7,7 +7,7 @@ import { usePreferencesStore } from '@/stores/preferences';
 
 import { AppIntlBridge } from './app-intl-bridge';
 import { type AppLocale, DEFAULT_LOCALE } from './locales';
-import { getMessagesForLocale } from './messages';
+import { getMessageMapForLocale } from './map';
 import { parsePersistedPreferencesLocale, PREFERENCES_STORAGE_KEY } from './persisted-locale';
 
 const POLL_INTERVAL = 1000;
@@ -26,7 +26,7 @@ function handleIntlError(locale: AppLocale, error: unknown) {
 export function IntlPreferencesProvider({ children }: React.PropsWithChildren) {
   const locale = usePreferencesStore(state => state.locale);
 
-  const messages = getMessagesForLocale(locale);
+  const messages = getMessageMapForLocale(locale);
 
   useEffect(
     function syncDocumentLang() {

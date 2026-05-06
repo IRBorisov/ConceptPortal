@@ -110,7 +110,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
             maxSize: 40,
             cell: props => (
               <MiniButton
-                title={tx('tx.rslang.value.element.delete')}
+                title={tx('tx.general.delete')}
                 className='align-middle w-fit -mr-1'
                 noPadding
                 icon={<IconRemove size='1.25rem' className='cc-remove' />}

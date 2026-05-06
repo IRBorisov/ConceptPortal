@@ -23,7 +23,7 @@ export function UserButton({ onLogin, onClickUser, isOpen }: UserButtonProps) {
   if (isAnonymous) {
     return (
       <NavigationButton
-        title={tx('nav.user.loginTitle')}
+        title={tx('tx.general.login.hint')}
         icon={<IconLogin size='1.25rem' className='icon-primary' />}
         onClick={onLogin}
       />

@@ -134,7 +134,7 @@ export function DlgCreateSynthesis() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='z-pop mx-auto flex border divide-x rounded-none'>
-          <TabLabel title={tx('ui.tab.oss.operationArgumentsTitle')} label={tx('tx.domain.argument.plural')} />
+          <TabLabel title={tx('ui.tab.oss.operationArgumentsTitle')} label={tx('tx.lib.operation.argument.plural')} />
           <TabLabel
             title={tx('ui.tab.inlineSynthesis.substitutionsTitle')}
             label={tx('tx.lib.cst.substitution.plural')}

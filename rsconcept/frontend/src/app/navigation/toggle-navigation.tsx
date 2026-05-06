@@ -25,16 +25,8 @@ export function ToggleNavigation() {
         className='p-1 cursor-pointer self-start'
         onClick={toggleNoNavigation}
         data-tooltip-id={globalIDs.tooltip}
-        data-tooltip-content={
-          noNavigationAnimation
-            ? tx('tx.nav.toggleNav.show')
-            : tx('tx.nav.toggleNav.hide')
-        }
-        aria-label={
-          noNavigationAnimation
-            ? tx('tx.nav.toggleNav.show')
-            : tx('tx.nav.toggleNav.hide')
-        }
+        data-tooltip-content={noNavigationAnimation ? tx('tx.shell.visibility.show') : tx('tx.shell.visibility.hide')}
+        aria-label={noNavigationAnimation ? tx('tx.shell.visibility.show') : tx('tx.shell.visibility.hide')}
       >
         {!noNavigationAnimation ? (
           <IconPin size='0.75rem' className='hover:text-primary cc-animate-color cc-hover-pulse' />
@@ -50,8 +42,8 @@ export function ToggleNavigation() {
           className='p-1 cursor-pointer'
           onClick={toggleDarkMode}
           data-tooltip-id={globalIDs.tooltip}
-          data-tooltip-content={darkMode ? tx('tx.nav.theme.dark') : tx('tx.nav.theme.light')}
-          aria-label={darkMode ? tx('tx.nav.theme.dark') : tx('tx.nav.theme.light')}
+          data-tooltip-content={darkMode ? tx('tx.shell.theme.dark') : tx('tx.shell.theme.light')}
+          aria-label={darkMode ? tx('tx.shell.theme.dark') : tx('tx.shell.theme.light')}
         >
           {darkMode ? (
             <IconDarkTheme size='0.75rem' className='hover:text-primary cc-animate-color cc-hover-pulse' />

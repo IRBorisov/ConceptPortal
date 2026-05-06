@@ -61,13 +61,13 @@ export function LoginPage() {
       }}
       onChange={resetErrors}
     >
-      <img alt={tx('auth.login.logoAlt')} src={resources.logo} className='max-h-10 min-w-10 mb-3' />
+      <img alt={tx('tx.shell.logo.alt')} src={resources.logo} className='max-h-10 min-w-10 mb-3' />
       <form.Field name='username'>
         {field => (
           <TextInput
             id='username'
             autoComplete='username'
-            label={tx('auth.login.username')}
+            label={tx('tx.shell.auth.username')}
             autoFocus
             allowEnter
             spellCheck={false}
@@ -96,8 +96,8 @@ export function LoginPage() {
 
       <SubmitButton text={tx('tx.general.login')} className='self-center w-48 mt-3' loading={isPending} />
       <div className='flex flex-col text-sm'>
-        <TextURL text={tx('auth.login.linkRestore')} href='/restore-password' />
-        <TextURL text={tx('auth.login.linkSignup')} href='/signup' />
+        <TextURL text={tx('tx.shell.auth.restore.hint')} href='/restore-password' />
+        <TextURL text={tx('tx.shell.signup.hint')} href='/signup' />
       </div>
       {serverError ? <ServerError error={serverError} /> : null}
     </form>
@@ -110,7 +110,7 @@ function ServerError({ error }: { error: ErrorData }): React.ReactElement | null
   rethrowIfStaleBundleError(error);
 
   if (isAxiosError(error) && error.response?.status === 400) {
-    return <div className='text-sm select-text text-destructive'>{tx('auth.login.badCredentials')}</div>;
+    return <div className='text-sm select-text text-destructive'>{tx('tx.shell.auth.validation.password')}</div>;
   }
   throw error as Error;
 }

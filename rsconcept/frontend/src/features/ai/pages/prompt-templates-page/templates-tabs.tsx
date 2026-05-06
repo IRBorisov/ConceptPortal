@@ -58,7 +58,7 @@ export function TemplatesTabs({ activeID, tab }: TemplatesTabsProps) {
       <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background'>
         <MenuTemplates />
         <TabLabel label={tx('tx.general.list')} />
-        <TabLabel label={tx('tx.domain.template')} />
+        <TabLabel label={tx('tx.ai.template')} />
         <TabLabel label={tx('ui.aiPrompt.tab.variables')} />
         <BadgeHelp topic={HelpTopic.ASSISTANT} offset={5} padding='px-2' />
       </TabList>

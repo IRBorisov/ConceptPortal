@@ -1,0 +1,87 @@
+export const txShellEn: Record<string, string> = {
+  'tx.shell.theme': 'Theme',
+  'tx.shell.theme.dark': 'Theme: Dark',
+  'tx.shell.theme.light': 'Theme: Light',
+  'tx.shell.theme.toggle.hint': 'Toggle color theme',
+  'tx.shell.help.on': 'Help: On',
+  'tx.shell.help.off': 'Help: Off',
+  'tx.shell.help.toggle.hint': 'Toggle help icons',
+  'tx.shell.admin.on': 'Admin: On',
+  'tx.shell.admin.off': 'Admin: Off',
+  'tx.shell.admin.toggle.hint': 'Admin mode',
+
+  'tx.shell.language': 'Interface language',
+  'tx.shell.language.hint': 'Change interface language',
+  'tx.shell.visibility.show': 'Show navigation',
+  'tx.shell.visibility.hide': 'Hide navigation',
+
+  'tx.shell.link.restApi.hint': 'Open backend API',
+  'tx.shell.link.database': 'Database',
+  'tx.shell.link.database.hint': 'Open database admin',
+  'tx.shell.link.icons': 'Icons',
+  'tx.shell.link.icons.hint': 'Open icons page',
+  'tx.shell.link.dbStructure': 'DB structure',
+  'tx.shell.link.dbStructure.hint': 'Open database schema page',
+
+  'tx.shell.logo.alt': 'Concept Portal logo',
+  'tx.shell.logo.alt.light': 'Concept Portal logo (light)',
+  'tx.shell.logo.alt.dark': 'Concept Portal logo (dark)',
+  'tx.shell.activeItem.hint': 'Item title',
+
+  'tx.shell.error.header': 'Something went wrong',
+  'tx.shell.error.home': 'Back to home',
+  'tx.shell.error.mutation.header': 'Processing error',
+
+  'tx.shell.unsaved.header': 'You have unsaved changes',
+  'tx.shell.unsaved.body': 'Continue navigating without saving your changes?',
+  'tx.shell.unsaved.continue': 'Continue without saving',
+  'tx.shell.unsaved.saveContinue': 'Save and continue',
+
+  'tx.shell.updater.header': 'Page update...',
+  'tx.shell.updater.body': 'Obsolete version detected. Page reload...',
+
+  'tx.shell.modal.close.hint': 'Close dialog',
+
+  'tx.shell.footer': 'Secondary navigation',
+  'tx.shell.footer.conceptCenter': 'Concept Center',
+  'tx.shell.footer.copyright': '© 2026 CIHT CONCEPT',
+
+  'tx.shell.auth.username': 'Username or email',
+  'tx.shell.auth.required': 'Accessible only to registered users',
+  'tx.shell.auth.validation.password': 'This username and password combination is not known on the portal.',
+  'tx.shell.auth.validation.email': 'This email is not registered on the portal.',
+  'tx.shell.auth.signedInAs': 'You are signed in as {username}',
+
+  'tx.shell.auth.restore.hint': 'Reset password…',
+  'tx.shell.auth.restore.submit': 'Request password reset',
+  'tx.shell.auth.restore.done': 'Password reset instructions were sent to that address.',
+  'tx.shell.auth.restore.token.validation': 'This link is no longer valid.',
+
+  'tx.shell.signup': 'Sign up',
+  'tx.shell.signup.hint': 'No account? Sign up…',
+  'tx.shell.signup.login.legend': 'Login data',
+  'tx.shell.signup.profile.legend': 'User information',
+  'tx.shell.signup.acceptPrivacy': 'I accept the privacy conditions…',
+  'tx.shell.signup.acceptRules': 'I accept the rules of behavior on the portal…',
+
+  'tx.home.cta': 'Primary actions on the home page',
+  'tx.home.cta.create': 'Create',
+  'tx.home.cta.create.title': 'Create a new schema or model in the library',
+  'tx.home.feature.ai.intro': 'AI prompt templates and hints to speed up modeling and domain analysis',
+  'tx.home.feature.library.intro':
+    'Catalog of conceptual schemas and models. Editing, versioning and access control. Flexible filtering and search',
+  'tx.home.feature.oss.intro': 'Operations on conceptual schemas, subject-matter blocks and cross-cutting changes',
+  'tx.home.feature.rsform.intro':
+    'Conceptual schema, linkage graph and rigorous conceptual apparatus in complex domains',
+  'tx.home.feature.rslang.intro': 'Formal logic. Structuring, correctness, and evaluation of concept definitions',
+  'tx.home.feature.rsmodel.intro': 'Domain data sources, interpretation of definitions and value computation',
+  'tx.home.features': 'Portal features',
+  'tx.home.features.hint': 'Portal features — model catalog and system design',
+  'tx.home.hero1': 'Design complex systems: analysis and synthesis',
+  'tx.home.hero2': 'Concepts, processes, data, decisions, documents',
+  'tx.home.header': 'Portal home page',
+  'tx.home.cta.learn': 'Learn',
+  'tx.home.cta.learn.hint': 'Open the manuals',
+  'tx.home.cta.trySandbox': 'Try it',
+  'tx.home.cta.trySandbox.hint': 'Open the sandbox and explore the portal'
+};

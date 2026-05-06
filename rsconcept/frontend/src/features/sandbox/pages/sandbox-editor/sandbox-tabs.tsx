@@ -48,7 +48,7 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
   useLayoutEffect(
     function updateWindowTitle() {
       const oldTitle = document.title;
-      document.title = `${tx('tx.general.sandbox')} — ${schema.title}`;
+      document.title = `${tx('tx.sandbox')} — ${schema.title}`;
       return function restoreWindowTitle() {
         document.title = oldTitle;
       };

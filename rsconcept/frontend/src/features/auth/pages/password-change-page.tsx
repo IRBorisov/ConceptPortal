@@ -65,7 +65,7 @@ export function Component() {
       <TextInput
         id='new_password'
         type='password'
-        label={tx('auth.password.new')}
+        label={tx('tx.general.password.new')}
         autoComplete='new-password'
         allowEnter
         value={newPassword}
@@ -76,7 +76,7 @@ export function Component() {
       <TextInput
         id='new_password_repeat'
         type='password'
-        label={tx('auth.password.repeat')}
+        label={tx('tx.general.password.repeat')}
         autoComplete='new-password'
         allowEnter
         value={newPasswordRepeat}
@@ -89,7 +89,7 @@ export function Component() {
       ) : null}
 
       <SubmitButton
-        text={tx('auth.password.submit')}
+        text={tx('tx.general.password.submit')}
         className='self-center w-48 mt-3'
         loading={isPending}
         disabled={!canSubmit}
@@ -106,7 +106,9 @@ function ServerError({ error }: { error: ErrorData }): React.ReactElement {
 
   if (isAxiosError(error) && error.response?.status === 404) {
     return (
-      <div className='mx-auto mt-6 text-sm select-text text-destructive'>{tx('auth.password.invalidTokenLink')}</div>
+      <div className='mx-auto mt-6 text-sm select-text text-destructive'>
+        {tx('tx.shell.auth.restore.token.validation')}
+      </div>
     );
   }
   return <InfoError error={error} />;

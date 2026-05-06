@@ -54,8 +54,8 @@ export function ToolbarTemplate({ activeID, onSave, onReset, className }: Toolba
         disabled={isProcessing || !isModified}
       />
       <MiniButton
-        title={tx('ui.ai.deleteTemplate')}
-        aria-label={tx('ui.ai.deleteTemplate')}
+        title={tx('tx.ai.template.delete')}
+        aria-label={tx('tx.ai.template.delete')}
         icon={<IconDestroy size='1.25rem' className='icon-red' />}
         onClick={handleDelete}
         disabled={isProcessing}
