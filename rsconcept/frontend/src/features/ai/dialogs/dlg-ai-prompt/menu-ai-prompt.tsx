@@ -33,7 +33,7 @@ export function MenuAIPrompt({ promptID, generatedPrompt }: MenuAIPromptProps) {
   return (
     <div className='flex border-r-2 pr-2'>
       <MiniButton
-        title={tx('ui.ai.prompt.editTemplateTitle')}
+        title={tx('tx.ai.template.edit')}
         noHover
         noPadding
         icon={<IconEdit size='1.25rem' />}

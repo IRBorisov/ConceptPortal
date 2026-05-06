@@ -209,7 +209,6 @@ export const uiExtraRu: Record<string, string> = {
 
   'ui.oss.pickContents.comboPlaceholder': 'Выберите операцию или блок',
 
-  'ui.profile.field.usernameReadonlyTitle': 'Логин изменить нельзя',
   'ui.profile.submit.saveData': 'Сохранить данные',
 
   'ui.promptTemplates.error.notFound': 'Шаблон запроса с указанным идентификатором {itemID} отсутствует',

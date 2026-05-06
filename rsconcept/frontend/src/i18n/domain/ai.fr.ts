@@ -7,5 +7,6 @@ export const txAiFr: Record<string, string> = {
   'tx.ai.template': 'Modèle',
   'tx.ai.template.plural': 'Modèles de requêtes',
   'tx.ai.template.plural.short': 'Modèles',
+  'tx.ai.template.edit': 'Modifier le modèle',
   'tx.ai.template.delete': 'Supprimer le modèle'
 };

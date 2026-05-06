@@ -146,7 +146,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
 
       <EditorRSExpression
         label={tx('tx.lib.definitionFormal')}
-        placeholder={tx('ui.placeholder.expressionMissing')}
+        placeholder={tx('tx.lib.definitionFormal.validate.empty')}
         schema={schema}
         errors={errors}
         value={expression}

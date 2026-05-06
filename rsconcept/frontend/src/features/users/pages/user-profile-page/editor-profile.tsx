@@ -73,7 +73,7 @@ export function EditorProfile() {
         id='username'
         disabled
         label={tx('tx.general.username.short')}
-        title={tx('ui.profile.field.usernameReadonlyTitle')}
+        title={tx('tx.general.username.readonly')}
         value={profile.username}
       />
       <form.Field name='first_name'>

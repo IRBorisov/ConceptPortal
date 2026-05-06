@@ -206,9 +206,9 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
               error={
                 field.state.meta.errors[0]?.message ??
                 (needsInterpretation && !field.state.value
-                  ? tx('ui.validation.termEmpty')
+                  ? tx('tx.lib.term.validate.empty')
                   : activeCst.homonyms.length > 0 && !field.state.meta.isDirty
-                    ? tx('ui.validation.termHomonyms', {
+                    ? tx('tx.lib.term.validate.homonyms', {
                         aliases: formatAliasList(activeCst.homonyms, schema)
                       })
                     : undefined)

@@ -122,7 +122,6 @@ export const uiExtraEn: Record<string, string> = {
   'ui.pick.schema.filterByLocationTitle': 'Filter by location',
   'ui.pickElement.selectPrompt': 'Select an element to edit',
   'ui.pickElement.valueLabel': 'Enter value',
-  'ui.profile.field.usernameReadonlyTitle': 'Username cannot be changed',
   'ui.profile.submit.saveData': 'Save profile',
   'ui.promptTemplates.dlg.createHeader': 'Create template',
   'ui.promptTemplates.dlg.labelField': 'Template title',

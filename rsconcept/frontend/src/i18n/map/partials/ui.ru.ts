@@ -5,7 +5,6 @@ export const uiRu: Record<string, string> = {
   'ui.library.editor.ownerInheritedOss': 'Владелец наследуется от ОСС',
   'ui.library.pickLocation.explorerTitle': 'Проводник…',
 
-  'ui.ai.prompt.editTemplateTitle': 'Редактировать шаблон',
   'ui.ai.prompt.copyResultTitle': 'Скопировать результат в буфер обмена',
 
   'ui.dlg.cstTemplate.header': 'Создание конституенты из шаблона',
@@ -21,12 +20,7 @@ export const uiRu: Record<string, string> = {
 
   'ui.dlg.createBlock.tabChildren.title': 'Выбор вложенных узлов: [{count}]',
 
-  'ui.placeholder.sourceSchema': 'Исходная схема',
-  'ui.placeholder.targetSchema': 'Целевая схема',
-  'ui.title.relocationDirection': 'Направление перемещения',
-
   'ui.dlg.editCst.titleDetailedEdit': 'Детальное редактирование',
-  'ui.dlg.editCst.titleGoToAncestor': 'Перейти к предку',
 
   'ui.label.attributingConstituents': 'Атрибутирующие конституенты',
 
@@ -36,20 +30,8 @@ export const uiRu: Record<string, string> = {
   'ui.tab.inlineSynthesis.substitutionsTitle': 'Таблица отождествлений',
   'ui.placeholder.schemaNotSelected': 'Схема не выбрана',
 
-  'ui.validation.termEmpty': 'Пустой термин',
-  'ui.validation.termHomonyms': 'Термин совпадает с конституентами: {aliases}',
-  'ui.placeholder.expressionMissing': 'Выражение отсутствует',
-  'ui.placeholder.termMissing': 'Термин отсутствует',
-  'ui.placeholder.definitionMissing': 'Определение отсутствует',
-
-  'ui.dlg.createSynthesis.header': 'Создание операции синтеза',
-  'ui.tab.oss.passportTitle': 'Текстовые поля',
   'ui.tab.oss.operationArgumentsTitle': 'Выбор аргументов операции',
 
-  'ui.dlg.changeLocation.invalidHint':
-    'Допустимы буквы, цифры, подчерк, пробел и "!". Сегмент пути не может начинаться и заканчиваться пробелом. Общая длина (с корнем) не должна превышать {maxLen}',
-
-  'ui.aria.copyLinkToClipboard': 'Скопировать ссылку в буфер обмена',
   'ui.action.openInSandbox': 'Открыть в песочнице',
 
   'ui.sandbox.saveToFileHint': 'Скачать текущие данные песочницы в JSON',
@@ -70,8 +52,6 @@ export const uiRu: Record<string, string> = {
   'ui.cst.crucialBadgeOn': 'ключевая',
   'ui.cst.crucialBadgeOff': 'обычная',
 
-  'ui.cst.gotoSourceInOss': 'Перейти к исходной конституенте в ОСС',
-  'ui.cst.noPredecessor': 'Конституента не имеет предка',
   'ui.rsmodel.calculateCurrentCst': 'Вычислить текущую конституенту',
 
   'ui.oss.menu.selectOriginal': 'Выделить оригинал',

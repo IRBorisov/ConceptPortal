@@ -23,6 +23,7 @@ export const txGeneralFr: Record<string, string> = {
   'tx.general.username': 'Identifiant (login)',
   'tx.general.username.validate':
     'Minimum 3 caractères. Lettres latines et chiffres. Ne peut pas commencer par un chiffre',
+  'tx.general.username.readonly': 'L’identifiant ne peut pas être modifié',
   'tx.general.firstName': 'Nom',
   'tx.general.firstName.public': 'Nom public',
   'tx.general.lastName': 'Prénom',
@@ -97,6 +98,7 @@ export const txGeneralFr: Record<string, string> = {
   'tx.general.edit': 'Modifier',
   'tx.general.editing': 'Modification',
   'tx.general.share': 'Partager',
+  'tx.general.share.link.clipboard': 'Copier le lien dans le presse-papiers',
   'tx.general.rename': 'Renommer',
   'tx.general.clone': 'Cloner',
   'tx.general.export': 'Exporter',
