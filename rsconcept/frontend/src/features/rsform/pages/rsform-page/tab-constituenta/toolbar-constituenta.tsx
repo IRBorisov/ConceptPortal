@@ -61,7 +61,7 @@ export function ToolbarConstituenta({
       ) : null}
       {activeCst && hasInheritance ? (
         <MiniButton
-          title={activeCst.is_inherited ? tx('ui.cst.gotoSourceInOss') : tx('ui.cst.noPredecessor')}
+          title={activeCst.is_inherited ? tx('tx.lib.cst.origin.goto.hint') : tx('tx.lib.cst.origin.null')}
           onClick={event => openConstituentaPredecessor(activeCst.id, event.ctrlKey || event.metaKey)}
           icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
           disabled={!activeCst.is_inherited}

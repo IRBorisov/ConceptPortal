@@ -67,7 +67,7 @@ export function MenuMain() {
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
           text={tx('tx.general.share')}
-          title={tx('ui.aria.copyLinkToClipboard')}
+          title={tx('tx.general.share.link.clipboard')}
           icon={<IconShare size='1rem' className='icon-primary' />}
           onClick={handleShare}
         />

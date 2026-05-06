@@ -262,7 +262,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       {cstInferrable || (activeCst.definition_formal && activeCst.cst_type !== CstType.STRUCTURED) ? (
         <EditorRSExpression
           label={labelRSExpression(activeCst.cst_type)}
-          placeholder={tx('ui.placeholder.expressionMissing')}
+          placeholder={tx('tx.lib.definitionFormal.validate.empty')}
           value={formalDraft}
           schema={schema}
           activeCst={activeCst}
@@ -320,7 +320,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         <RefsInput
           id='cst_term'
           label={tx('tx.lib.term')}
-          placeholder={tx('ui.placeholder.termMissing')}
+          placeholder={tx('tx.lib.term.validate.empty')}
           schema={schema}
           onOpenEdit={onOpenEdit}
           value={termDraft}
@@ -334,7 +334,9 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       <RefsInput
         id='cst_definition'
         label={tx('tx.lib.definitionTextual')}
-        placeholder={formalFieldDisabled ? tx('ui.placeholder.definitionMissing') : tx('tx.lib.definitionTextual.hint')}
+        placeholder={
+          formalFieldDisabled ? tx('tx.lib.definitionTextual.validate.empty') : tx('tx.lib.definitionTextual.hint')
+        }
         maxHeight='6rem'
         schema={schema}
         onOpenEdit={onOpenEdit}

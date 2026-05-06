@@ -135,7 +135,7 @@ export function DlgEditCst() {
           onClick={navigateToTarget}
         />
         <MiniButton
-          title={tx('ui.dlg.editCst.titleGoToAncestor')}
+          title={tx('tx.lib.cst.origin.goto.hint')}
           noPadding
           icon={<IconChild size='1.25rem' className={target.is_inherited ? 'text-primary' : 'text-foreground-muted'} />}
           disabled={!target.is_inherited}

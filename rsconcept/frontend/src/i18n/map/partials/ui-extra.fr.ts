@@ -209,7 +209,6 @@ export const uiExtraFr: Record<string, string> = {
 
   'ui.oss.pickContents.comboPlaceholder': 'Choisir une opération ou un bloc',
 
-  'ui.profile.field.usernameReadonlyTitle': 'L’identifiant ne peut pas être modifié',
   'ui.profile.submit.saveData': 'Enregistrer les données',
 
   'ui.promptTemplates.error.notFound': 'Aucun modèle de requête avec l’identifiant {itemID}.',

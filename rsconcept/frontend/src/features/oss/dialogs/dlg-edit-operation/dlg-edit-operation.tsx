@@ -135,7 +135,7 @@ export function DlgEditOperation() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto w-fit flex border divide-x rounded-none'>
-          <TabLabel title={tx('ui.tab.oss.passportTitle')} label={tx('tx.lib.item.passport')} />
+          <TabLabel label={tx('tx.lib.item.passport')} />
           <TabLabel
             title={tx('ui.tab.oss.operationArgumentsTitle')}
             label={tx('tx.lib.operation.argument.plural')}

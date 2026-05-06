@@ -138,20 +138,20 @@ export function DlgRelocateConstituents() {
           <SelectLibraryItem
             noBorder
             className='w-69'
-            placeholder={tx('ui.placeholder.sourceSchema')}
+            placeholder={tx('tx.lib.oss.relocate.source')}
             items={sourceSchemas}
             value={source}
             onChange={handleSelectSource}
           />
           <MiniButton
-            title={tx('ui.title.relocationDirection')}
+            title={tx('tx.lib.oss.relocate.direction')}
             icon={<IconRelocationUp value={directionUp} />}
             onClick={toggleDirection}
           />
           <SelectLibraryItem
             noBorder
             className='w-69'
-            placeholder={tx('ui.placeholder.targetSchema')}
+            placeholder={tx('tx.lib.oss.relocate.target')}
             items={destinationSchemas}
             value={destinationItem}
             onChange={handleSelectDestination}

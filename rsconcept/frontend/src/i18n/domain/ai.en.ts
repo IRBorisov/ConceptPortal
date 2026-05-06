@@ -7,5 +7,6 @@ export const txAiEn: Record<string, string> = {
   'tx.ai.template': 'Template',
   'tx.ai.template.plural': 'Prompt templates',
   'tx.ai.template.plural.short': 'Templates',
+  'tx.ai.template.edit': 'Edit template',
   'tx.ai.template.delete': 'Delete template'
 };

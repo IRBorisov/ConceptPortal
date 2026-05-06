@@ -49,7 +49,7 @@ export function DlgChangeLocation() {
       overflowVisible
       header={tx('tx.lib.location.edit')}
       submitText={tx('tx.general.move')}
-      validationHint={isValid ? '' : tx('ui.dlg.changeLocation.invalidHint', { maxLen: limits.len_location })}
+      validationHint={isValid ? '' : tx('tx.lib.location.validate', { maxLen: limits.len_location })}
       canSubmit={isValid && !isDefaultValue}
       onSubmit={event => {
         event.preventDefault();
