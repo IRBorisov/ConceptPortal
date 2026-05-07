@@ -105,7 +105,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
         getHeaderText: getHeaderText
       });
     } else if (!cstData) {
-      toast.error(tx('tx.rslang.value.missing'));
+      toast.error(tx('tx.rslang.value.none'));
     } else {
       showViewValue({
         value: cstData,
@@ -160,7 +160,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
   function applyImportedJsonText(text: string) {
     const trimmed = text.trim();
     if (!trimmed) {
-      toast.error(tx('tx.rslang.value.missing'));
+      toast.error(tx('tx.rslang.value.none'));
       return;
     }
 

@@ -18,15 +18,23 @@ export const txShellFr: Record<string, string> = {
   'tx.shell.link.restApi.hint': 'Ouvrir l’API backend',
   'tx.shell.link.database': 'Base de données',
   'tx.shell.link.database.hint': 'Ouvrir l’administration de la base',
-  'tx.shell.link.icons': 'Icônes',
-  'tx.shell.link.icons.hint': 'Ouvrir la page des icônes',
-  'tx.shell.link.dbStructure': 'Structure de la BD',
+  'tx.shell.link.icon.plural': 'Icônes',
+  'tx.shell.link.icon.plural.hint': 'Ouvrir la page des icônes',
+  'tx.shell.link.dbStructure': 'Structure de la base de données',
+  'tx.shell.link.dbStructure.short': 'Structure de la BD',
   'tx.shell.link.dbStructure.hint': 'Ouvrir le schéma de la base',
 
+  'tx.shell.icon.total': 'Total des icônes : {count}',
   'tx.shell.logo.alt': 'Logo Concept Portal',
   'tx.shell.logo.alt.light': 'Logo Concept Portal (clair)',
   'tx.shell.logo.alt.dark': 'Logo Concept Portal (sombre)',
   'tx.shell.activeItem.hint': 'Titre de l’élément',
+
+  'tx.shell.notImplemented': 'Fonctionnalité en développement',
+
+  'tx.shell.404.header': 'Erreur 404 – Page non trouvée',
+  'tx.shell.404.body': 'Cette page n’existe pas ou l’objet demandé est absent de la base de données.',
+  'tx.shell.404.back': 'Retour au portail',
 
   'tx.shell.error.header': 'Une erreur s’est produite',
   'tx.shell.error.home': 'Retour à l’accueil',
@@ -41,6 +49,16 @@ export const txShellFr: Record<string, string> = {
   'tx.shell.updater.body': 'Version obsolète détectée. Rechargement de la page...',
 
   'tx.shell.modal.close.hint': 'Fermer la boîte de dialogue',
+
+  'tx.shell.pagination.range': '{start}–{end} sur {total}',
+  'tx.shell.pagination.first': 'Première page',
+  'tx.shell.pagination.prev': 'Page précédente',
+  'tx.shell.pagination.page.input': 'Numéro de page',
+  'tx.shell.pagination.page.input.hint': 'Numéro de page. Sélectionnez pour saisir manuellement',
+  'tx.shell.pagination.next': 'Page suivante',
+  'tx.shell.pagination.last': 'Dernière page',
+  'tx.shell.pagination.perPage': 'par page',
+  'tx.shell.pagination.perPage.hint': 'Choisir le nombre de lignes par page',
 
   'tx.shell.footer': 'Navigation secondaire',
   'tx.shell.footer.conceptCenter': 'Centre Concept',
@@ -85,5 +103,8 @@ export const txShellFr: Record<string, string> = {
   'tx.home.feature.rsform.intro':
     'Schéma conceptuel, graphe de liens, appareil conceptuel strict dans les domaines complexes',
   'tx.home.feature.rsmodel.intro': 'Sources de données, interprétation des définitions et calcul des valeurs',
-  'tx.home.feature.oss.intro': 'Opérations sur les schémas conceptuels, blocs de contenu et changements transverses'
+  'tx.home.feature.oss.intro': 'Opérations sur les schémas conceptuels, blocs de contenu et changements transverses',
+
+  'tx.shell.embed.youtube': 'Vidéo Youtube intégrée',
+  'tx.shell.embed.vk': 'Vidéo VK intégrée'
 };

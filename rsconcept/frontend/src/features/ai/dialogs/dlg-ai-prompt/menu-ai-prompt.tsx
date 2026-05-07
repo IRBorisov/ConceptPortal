@@ -41,7 +41,7 @@ export function MenuAIPrompt({ promptID, generatedPrompt }: MenuAIPromptProps) {
         onClick={navigatePrompt}
       />
       <MiniButton
-        title={tx('ui.ai.prompt.copyResultTitle')}
+        title={tx('tx.ai.generated.copy')}
         noHover
         noPadding
         icon={<IconClipboard size='1.25rem' />}

@@ -40,7 +40,7 @@ export function TabSource({ receiver, sourceID, onChangeSource }: TabSourceProps
           disabled
           noBorder
           className='grow'
-          placeholder={tx('ui.placeholder.schemaNotSelected')}
+          placeholder={tx('tx.schema.noneSelected')}
           value={selectedInfo?.title ?? ''}
           dense
         />

@@ -126,7 +126,7 @@ export function ToolbarGraphSelection({
 
       <div ref={selectedElementRef} onBlur={selectedHandleBlur} className='flex items-center relative'>
         <MiniButton
-          title={tx('ui.graphSelection.extendFromSelected')}
+          title={tx('tx.graph.select.expand')}
           hideTitle={isSelectedOpen}
           icon={<IconContextSelection size='1.25rem' className='icon-primary' />}
           onClick={toggleSelected}
@@ -134,22 +134,18 @@ export function ToolbarGraphSelection({
         />
         <Dropdown isOpen={isSelectedOpen} className='-translate-x-1/2'>
           <DropdownButton
-            text={tx('ui.graphSelection.suppliers')}
+            text={tx('tx.graph.node.parent.plural')}
             title={
-              tipHotkeys
-                ? prepareTooltip(tx('ui.graphSelection.suppliersTitle'), '1')
-                : tx('ui.graphSelection.suppliersTitle')
+              tipHotkeys ? prepareTooltip(tx('tx.graph.node.parent.plural'), '1') : tx('tx.graph.node.parent.plural')
             }
             icon={<IconGraphInputs size='1.25rem' className='icon-primary' />}
             onClick={handleExpandInputs}
             disabled={emptySelection}
           />
           <DropdownButton
-            text={tx('ui.graphSelection.consumers')}
+            text={tx('tx.graph.node.child.plural')}
             title={
-              tipHotkeys
-                ? prepareTooltip(tx('ui.graphSelection.consumersTitle'), '2')
-                : tx('ui.graphSelection.consumersTitle')
+              tipHotkeys ? prepareTooltip(tx('tx.graph.node.child.plural'), '2') : tx('tx.graph.node.child.plural')
             }
             icon={<IconGraphOutputs size='1.25rem' className='icon-primary' />}
             onClick={handleExpandOutputs}
@@ -157,22 +153,22 @@ export function ToolbarGraphSelection({
           />
 
           <DropdownButton
-            text={tx('ui.graphSelection.influencers')}
+            text={tx('tx.graph.node.ancestor.plural')}
             title={
               tipHotkeys
-                ? prepareTooltip(tx('ui.graphSelection.influencersTitle'), '3')
-                : tx('ui.graphSelection.influencersTitle')
+                ? prepareTooltip(tx('tx.graph.node.ancestor.plural'), '3')
+                : tx('tx.graph.node.ancestor.plural')
             }
             icon={<IconGraphCollapse size='1.25rem' className='icon-primary' />}
             onClick={handleSelectAllInputs}
             disabled={emptySelection}
           />
           <DropdownButton
-            text={tx('ui.graphSelection.dependents')}
+            text={tx('tx.graph.node.descendant.plural')}
             title={
               tipHotkeys
-                ? prepareTooltip(tx('ui.graphSelection.dependentsTitle'), '4')
-                : tx('ui.graphSelection.dependentsTitle')
+                ? prepareTooltip(tx('tx.graph.node.descendant.plural'), '4')
+                : tx('tx.graph.node.descendant.plural')
             }
             icon={<IconGraphExpand size='1.25rem' className='icon-primary' />}
             onClick={handleSelectAllOutputs}
@@ -180,13 +176,13 @@ export function ToolbarGraphSelection({
           />
 
           <DropdownButton
-            text={tx('ui.graphSelection.maximize')}
+            text={tx('tx.graph.select.maximize')}
             title={
               !tipHotkeys
-                ? tx('ui.graphSelection.maximizeHintMultiline')
-                : prepareTooltip(tx('ui.graphSelection.maximizeHint'), '5')
+                ? tx('tx.graph.select.maximize.hint')
+                : prepareTooltip(tx('tx.graph.select.maximize.hint'), '5')
             }
-            aria-label={tx('ui.graphSelection.maximizeHint')}
+            aria-label={tx('tx.graph.select.maximize.hint')}
             icon={<IconGraphMaximize size='1.25rem' className='icon-primary' />}
             onClick={handleSelectMaximize}
             disabled={emptySelection}
@@ -202,44 +198,40 @@ export function ToolbarGraphSelection({
 
       <div ref={groupElementRef} onBlur={groupHandleBlur} className='flex items-center relative'>
         <MiniButton
-          title={tx('ui.graphSelection.pickGroup')}
+          title={tx('tx.graph.select.group')}
           hideTitle={isGroupOpen}
           icon={<IconGroupSelection size='1.25rem' className='icon-primary' />}
           onClick={toggleGroup}
         />
         <Dropdown isOpen={isGroupOpen} stretchLeft>
           <DropdownButton
-            text={tx('ui.graphSelection.core')}
+            text={tx('tx.concept.system.core.short')}
             title={
-              tipHotkeys ? prepareTooltip(tx('ui.graphSelection.coreTitle'), 'Z') : tx('ui.graphSelection.coreTitle')
+              tipHotkeys
+                ? prepareTooltip(tx('tx.concept.system.core.select'), 'Z')
+                : tx('tx.concept.system.core.select')
             }
             icon={<IconGraphCore size='1.25rem' className='icon-primary' />}
             onClick={handleSelectCore}
           />
           <DropdownButton
-            text={tx('tx.lib.cst.crucial.plural')}
-            title={
-              tipHotkeys
-                ? prepareTooltip(tx('ui.graphSelection.crucialTitle'), 'X')
-                : tx('ui.graphSelection.crucialTitle')
-            }
+            text={tx('tx.cst.crucial.plural')}
+            title={tipHotkeys ? prepareTooltip(tx('tx.cst.crucial.select'), 'X') : tx('tx.cst.crucial.select')}
             icon={<IconCrucial size='1.25rem' className='icon-primary' />}
             onClick={handleSelectCrucial}
           />
           <DropdownButton
-            text={tx('ui.graphSelection.owned')}
+            text={tx('tx.concept.original.plural')}
             title={
-              tipHotkeys ? prepareTooltip(tx('ui.graphSelection.ownedTitle'), 'C') : tx('ui.graphSelection.ownedTitle')
+              tipHotkeys ? prepareTooltip(tx('tx.concept.original.select'), 'C') : tx('tx.concept.original.select')
             }
             icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
             onClick={handleSelectOwned}
           />
           <DropdownButton
-            text={tx('tx.lib.concept.inherited.plural')}
+            text={tx('tx.concept.inherited.plural')}
             title={
-              tipHotkeys
-                ? prepareTooltip(tx('ui.graphSelection.inheritedTitle'), 'Y')
-                : tx('ui.graphSelection.inheritedTitle')
+              tipHotkeys ? prepareTooltip(tx('tx.concept.inherited.select'), 'Y') : tx('tx.concept.inherited.select')
             }
             icon={<IconChild size='1.25rem' className='icon-primary' />}
             onClick={handleSelectInherited}

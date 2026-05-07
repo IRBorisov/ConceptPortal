@@ -19,15 +19,23 @@ export const txShellRu: Record<string, string> = {
   'tx.shell.link.restApi.hint': 'Переход к backend API',
   'tx.shell.link.database': 'База данных',
   'tx.shell.link.database.hint': 'Переход к администрированию базы данных',
-  'tx.shell.link.icons': 'Иконки',
-  'tx.shell.link.icons.hint': 'Переход к странице иконок',
-  'tx.shell.link.dbStructure': 'Структура БД',
+  'tx.shell.link.icon.plural': 'Иконки',
+  'tx.shell.link.icon.plural.hint': 'Переход к странице иконок',
+  'tx.shell.link.dbStructure': 'Схема базы данных',
+  'tx.shell.link.dbStructure.short': 'Схема БД',
   'tx.shell.link.dbStructure.hint': 'Переход к странице структуры БД',
 
+  'tx.shell.icon.total': 'Всего иконок: {count}',
   'tx.shell.logo.alt': 'Логотип Концепт Портал',
   'tx.shell.logo.alt.light': 'Логотип Концепт Портал (светлый)',
   'tx.shell.logo.alt.dark': 'Логотип Концепт Портал (темный)',
   'tx.shell.activeItem.hint': 'Название элемента',
+
+  'tx.shell.notImplemented': 'Функция находится в разработке',
+
+  'tx.shell.404.header': 'Ошибка 404 – Страница не найдена',
+  'tx.shell.404.body': 'Данная страница не существует или запрашиваемый объект отсутствует в базе данных',
+  'tx.shell.404.back': 'Вернуться на Портал',
 
   'tx.shell.error.header': 'Что-то пошло не так!',
   'tx.shell.error.home': 'Вернуться на главную',
@@ -42,6 +50,16 @@ export const txShellRu: Record<string, string> = {
   'tx.shell.updater.body': 'Обнаружена устаревшая версия приложения. Перезагрузка страницы...',
 
   'tx.shell.modal.close.hint': 'Закрыть диалоговое окно',
+
+  'tx.shell.pagination.range': '{start}–{end} из {total}',
+  'tx.shell.pagination.first': 'Первая страница',
+  'tx.shell.pagination.prev': 'Предыдущая страница',
+  'tx.shell.pagination.page.input': 'Номер страницы',
+  'tx.shell.pagination.page.input.hint': 'Номер страницы. Выделите для ручного ввода',
+  'tx.shell.pagination.next': 'Следующая страница',
+  'tx.shell.pagination.last': 'Последняя страница',
+  'tx.shell.pagination.perPage': 'на стр',
+  'tx.shell.pagination.perPage.hint': 'Выбор количества строк на страницу',
 
   'tx.shell.footer': 'Вторичная навигация',
   'tx.shell.footer.conceptCenter': 'Центр Концепт',
@@ -86,5 +104,9 @@ export const txShellRu: Record<string, string> = {
   'tx.home.feature.rsform.intro':
     'Концептуальная схема, граф вязей, строгий понятийный аппарат в сложных предметных областях',
   'tx.home.feature.rsmodel.intro': 'Предметные источники данных, интерпретация определений и вычисление значений',
-  'tx.home.feature.oss.intro': 'Операции над концептуальными схемами, блоки предметного содержания и сквозные изменения'
+  'tx.home.feature.oss.intro':
+    'Операции над концептуальными схемами, блоки предметного содержания и сквозные изменения',
+
+  'tx.shell.embed.youtube': 'Встроенное видео Youtube',
+  'tx.shell.embed.vk': 'Встроенное видео ВКонтакте'
 };

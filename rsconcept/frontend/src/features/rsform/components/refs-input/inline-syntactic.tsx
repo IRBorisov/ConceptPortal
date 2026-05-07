@@ -95,7 +95,7 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
         <div className='mb-2 flex items-center justify-between gap-1'>
           <MiniButton
             icon={<IconAccept size='1.5rem' className='icon-green' />}
-            title={prepareTooltip(tx('ui.refs.inline.saveLink'), isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
+            title={prepareTooltip(tx('tx.lang.reference.save'), isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
             onClick={handleSave}
             disabled={!canSubmit}
           />
@@ -104,10 +104,10 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
             title={prepareTooltip(tx('tx.general.close'), 'Esc')}
             onClick={onCancel}
           />
-          <Label text={tx('ui.refs.inline.dependentWord')} />
+          <Label text={tx('tx.lang.reference.dependent')} />
           <button
             type='button'
-            aria-label={tx('ui.refs.inline.prevRefAria')}
+            aria-label={tx('tx.lang.reference.prev')}
             className={buttonClass}
             onClick={() => setOffset(prev => stepOffset(prev, -1))}
           >
@@ -115,7 +115,7 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
           </button>
           <input
             id='inline_reference_offset'
-            aria-label={tx('ui.refs.inline.offsetAria')}
+            aria-label={tx('tx.lang.reference.offset')}
             className={clsx(
               'w-12 text-center focus-outline rounded-md p-0 border',
               isOffsetValid ? 'border-constructive/50 bg-constructive/5' : 'border-destructive/50 bg-destructive/5'
@@ -125,7 +125,7 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
           />
           <button
             type='button'
-            aria-label={tx('ui.refs.inline.nextRefAria')}
+            aria-label={tx('tx.lang.reference.next')}
             className={buttonClass}
             onClick={() => setOffset(prev => stepOffset(prev, 1))}
           >

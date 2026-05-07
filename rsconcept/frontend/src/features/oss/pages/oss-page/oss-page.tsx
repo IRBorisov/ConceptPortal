@@ -63,7 +63,7 @@ function ProcessError({ error }: FallbackProps): React.ReactElement {
     if (error.response.status === 404) {
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
-          <p>{tx('ui.oss.error.notFound')}</p>
+          <p>{tx('tx.oss.notFound')}</p>
           <div className='flex justify-center'>
             <TextURL text={tx('tx.lib.library')} href='/library' />
           </div>
@@ -72,7 +72,7 @@ function ProcessError({ error }: FallbackProps): React.ReactElement {
     } else if (error.response.status === 403) {
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
-          <p>{tx('ui.rsform.error.forbidden')}</p>
+          <p>{tx('tx.lib.access.forbidden')}</p>
           <TextURL text={tx('tx.lib.library')} href='/library' />
         </div>
       );

@@ -32,7 +32,7 @@ export function TabPromptEdit({ label, description, text, setText }: TabPromptEd
         />
         <PromptInput
           id='prompt-text'
-          label={tx('ui.aiPrompt.edit.templateTextLabel')}
+          label={tx('tx.ai.template.text')}
           value={text}
           onChange={setText}
           maxHeight='9.5rem'

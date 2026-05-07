@@ -51,7 +51,7 @@ export function DlgDeleteReplica() {
   return (
     <ModalForm
       overflowVisible
-      header={tx('tx.lib.replica.delete')}
+      header={tx('tx.oss.replica.delete')}
       submitText={tx('tx.general.delete')}
       onSubmit={event => {
         event.preventDefault();
@@ -61,7 +61,7 @@ export function DlgDeleteReplica() {
       className='w-140 pb-3 px-6 cc-column select-none'
       helpTopic={HelpTopic.CC_PROPAGATION}
     >
-      <TextInput disabled dense noBorder id='operation_alias' label={tx('tx.lib.operation')} value={target.alias} />
+      <TextInput disabled dense noBorder id='operation_alias' label={tx('tx.operation')} value={target.alias} />
       <form.Field name='keep_connections'>
         {field => (
           <Checkbox

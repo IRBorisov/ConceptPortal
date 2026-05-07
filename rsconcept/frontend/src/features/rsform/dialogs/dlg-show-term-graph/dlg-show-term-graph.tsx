@@ -32,13 +32,9 @@ export function DlgShowTermGraph() {
   }
 
   return (
-    <ModalView
-      className='relative w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]'
-      fullScreen
-      header={tx('tx.rslang.termGraph')}
-    >
+    <ModalView className='relative w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]' fullScreen header={tx('tx.termGraph')}>
       <MiniButton
-        title={tx('ui.rsform.termGraph.openSchemaTitle')}
+        title={tx('tx.schema.goto')}
         noPadding
         className='absolute z-pop top-2 left-2'
         icon={<IconRSForm size='1.25rem' className='text-primary' />}

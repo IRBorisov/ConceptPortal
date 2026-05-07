@@ -59,8 +59,8 @@ export function DlgChangeInputSchema() {
   return (
     <ModalForm
       overflowVisible
-      header={tx('ui.oss.dlg.inputSchema.header')}
-      submitText={tx('ui.oss.dlg.inputSchema.submit')}
+      header={tx('tx.schema.select')}
+      submitText={tx('tx.general.changes.save')}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
@@ -70,9 +70,9 @@ export function DlgChangeInputSchema() {
     >
       <div className='flex justify-between gap-3 items-center'>
         <div className='flex gap-3'>
-          <Label text={tx('ui.oss.dlg.inputSchema.loadingLabel')} />
+          <Label text={tx('tx.schema.select')} />
           <MiniButton
-            title={tx('ui.oss.dlg.inputSchema.resetTitle')}
+            title={tx('tx.general.selection.reset')}
             noPadding
             icon={<IconReset size='1.25rem' className='icon-primary' />}
             onClick={() => form.setFieldValue('input', null)}

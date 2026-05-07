@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect, useEffectEvent, useLayoutEffect, useRef } from 'react';
+import { useEffect, useEffectEvent, useLayoutEffect, useRef, useSyncExternalStore } from 'react';
 
+import { type Constituenta, type RSEngine } from '@/domain/library';
 import { isSchemaIssue } from '@/domain/library/rsform-api';
+import { isModelIssue } from '@/domain/library/rsmodel-api';
 import { useTx } from '@/i18n';
 
 import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
@@ -10,11 +12,12 @@ import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-c
 import { TabConstituenta } from '@/features/rsform/pages/rsform-page/tab-constituenta';
 import { TabSchemaGraph } from '@/features/rsform/pages/rsform-page/tab-schema-graph';
 import { useCstSearchStore } from '@/features/rsform/stores/cst-search';
+import { useModelEdit } from '@/features/rsmodel/pages/rsmodel-page/model-edit-context';
 import { TabEvaluator } from '@/features/rsmodel/pages/rsmodel-page/tab-evaluator';
 import { TabModelList } from '@/features/rsmodel/pages/rsmodel-page/tab-model-list';
 import { TabValue } from '@/features/rsmodel/pages/rsmodel-page/tab-value';
 
-import { IconStatusError } from '@/components/icons';
+import { IconStatusError, IconStatusIncalculable } from '@/components/icons';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { IndicatorPill } from '@/components/view/indicator-pill';
 import { useResetAttribute } from '@/hooks/use-reset-attribute';
@@ -38,12 +41,22 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
   const onHideFooterEvent = useEffectEvent(hideFooter);
 
   const focusSchemaIssues = useCstSearchStore(state => state.focusSchemaIssues);
+  const focusModelIssues = useCstSearchStore(state => state.focusModelIssues);
   const setIsModified = useModificationStore(state => state.setIsModified);
   const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll, pendingActiveID, clearPendingActiveID } =
     useSchemaEdit();
 
+  const { engine } = useModelEdit();
+  const engineGeneration = useSyncExternalStore(
+    onStoreChange => engine.subscribeChanges(onStoreChange),
+    () => engine.getChangeGeneration()
+  );
+
   const problemItems = schema.items.filter(cst => isSchemaIssue(cst));
   const countProblematic = problemItems.length;
+
+  const modelIssues = getEvalIssueItems(schema.items, engine, engineGeneration);
+  const countModelIssues = modelIssues.length;
 
   useLayoutEffect(
     function updateWindowTitle() {
@@ -145,6 +158,19 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
     }
   }
 
+  function onFocusModelIssues(event: React.MouseEvent<HTMLDivElement>) {
+    focusModelIssues();
+    if (modelIssues.length === 0) {
+      return;
+    }
+    if (event.ctrlKey || event.metaKey) {
+      setSelectedCst(modelIssues.map(cst => cst.id));
+    } else {
+      clearPendingActiveID();
+      router.gotoActiveValue(modelIssues[0].id);
+    }
+  }
+
   const containerRef = useRef<HTMLDivElement>(null);
   useResetAttribute(containerRef, 'data-tooltip-id');
 
@@ -162,8 +188,18 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
             icon={<IconStatusError size='0.8rem' />}
             value={countProblematic}
             color='destructive'
-            title={tx('ui.tabs.problemConceptsTitle', { count: countProblematic })}
+            title={tx('tx.schema.issue.plural')}
             onClick={onFocusSchemaIssues}
+          />
+        ) : null}
+        {countModelIssues > 0 ? (
+          <IndicatorPill
+            className='absolute top-1.5 -right-1.5 translate-x-full hidden xs:inline-flex'
+            icon={<IconStatusIncalculable size='0.8rem' />}
+            value={countModelIssues}
+            color='orange'
+            title={tx('tx.model.issue.plural')}
+            onClick={onFocusModelIssues}
           />
         ) : null}
 
@@ -173,11 +209,11 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
         </div>
 
         <TabLabel label={tx('tx.lib.item.passport')} />
-        <TabLabel label={tx('tx.general.list')} />
-        <TabLabel label={tx('tx.lib.concept')} />
-        <TabLabel label={tx('ui.tabs.graph')} />
-        <TabLabel label={tx('ui.tabs.data')} />
-        <TabLabel label={tx('ui.tabs.evaluation')} />
+        <TabLabel label={tx('tx.list')} />
+        <TabLabel label={tx('tx.concept')} />
+        <TabLabel label={tx('tx.graph')} />
+        <TabLabel label={tx('tx.general.data')} />
+        <TabLabel label={tx('tx.general.evaluation')} />
       </TabList>
 
       <div ref={containerRef} className='overflow-x-hidden'>
@@ -207,4 +243,8 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
       </div>
     </Tabs>
   );
+}
+
+function getEvalIssueItems(items: Constituenta[], engine: RSEngine, _engineGeneration: number) {
+  return items.filter(cst => isModelIssue(engine, cst));
 }

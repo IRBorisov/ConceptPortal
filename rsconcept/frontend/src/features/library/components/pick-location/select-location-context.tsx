@@ -29,7 +29,7 @@ export function SelectLocationContext({
 }: SelectLocationContextProps) {
   const tx = useTx();
   const { elementRef, handleBlur, isOpen, toggle, hide } = useDropdown();
-  const explorerTitle = title ?? tx('ui.library.pickLocation.explorerTitle');
+  const explorerTitle = title ?? tx('tx.lib.location.select');
 
   function handleClick(newValue: string) {
     hide();

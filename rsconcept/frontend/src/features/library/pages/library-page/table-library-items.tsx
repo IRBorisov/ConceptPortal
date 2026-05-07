@@ -42,7 +42,7 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
       className: 'text-accent-orange-foreground'
     }
   ];
-  const tableHeight = useFitHeight('5rem');
+  const tableHeight = useFitHeight('4.8rem');
 
   function handleOpenItem(item: LibraryItem, event: React.MouseEvent<Element>) {
     const selection = window.getSelection();
@@ -71,9 +71,9 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
       style={{ maxHeight: tableHeight }}
       noDataComponent={
         <div className='cc-column dense p-3 items-center min-h-24'>
-          <p>{tx('tx.general.list.empty')}</p>
+          <p>{tx('tx.list.empty')}</p>
           <p className='flex gap-6'>
-            <TextURL text={tx('tx.lib.schema.create')} href='/library/create' />
+            <TextURL text={tx('tx.schema.create')} href='/library/create' />
             <TextURL text={tx('tx.general.filter.reset')} onClick={resetFilter} />
           </p>
         </div>

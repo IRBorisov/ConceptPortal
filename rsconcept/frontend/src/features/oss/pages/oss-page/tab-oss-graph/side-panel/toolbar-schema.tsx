@@ -170,48 +170,48 @@ export function ToolbarSchema({
     <div className={cn('flex gap-0.5', className)}>
       <div ref={elementRef} onBlur={handleBlur} className='flex relative items-center'>
         <MiniButton
-          title={tx('ui.oss.sideToolbar.editSchemaTitle')}
+          title={tx('tx.schema.edit')}
           hideTitle={isOpen}
           icon={<IconRSForm size='1rem' className='icon-primary' />}
           onClick={toggle}
         />
         <Dropdown isOpen={isOpen} margin='mt-0.5'>
           <DropdownButton
-            text={tx('tx.lib.schema.order.restore')}
-            title={tx('tx.lib.schema.order.restore.hint')}
+            text={tx('tx.schema.order.restore')}
+            title={tx('tx.schema.order.restore.hint')}
             icon={<IconSortList size='1rem' className='icon-primary' />}
             onClick={handleRestoreOrder}
             disabled={!isMutable || isProcessing}
           />
           <DropdownButton
-            text={tx('tx.lib.schema.order.rename')}
-            title={tx('tx.lib.schema.order.rename.hint')}
+            text={tx('tx.schema.order.rename')}
+            title={tx('tx.schema.order.rename.hint')}
             icon={<IconGenerateNames size='1rem' className='icon-primary' />}
             onClick={handleReindex}
             disabled={!isMutable || isProcessing}
           />
           <DropdownButton
-            title={tx('tx.lib.schema.goto.hint')}
-            text={tx('tx.lib.schema.goto')}
+            title={tx('tx.schema.goto.hint')}
+            text={tx('tx.schema.goto')}
             icon={<IconRSForm size='1rem' className='icon-primary' />}
             onClick={handleOpenSchema}
           />
         </Dropdown>
       </div>
       <MiniButton
-        title={tx('tx.lib.cst.edit')}
+        title={tx('tx.cst.edit')}
         icon={<IconEdit size='1rem' className='icon-primary' />}
         onClick={onEditActive}
         disabled={!isMutable || isProcessing || !activeCst}
       />
       <MiniButton
-        title={tx('tx.lib.cst.create')}
+        title={tx('tx.cst.create')}
         icon={<IconNewItem size='1rem' className='icon-green' />}
         onClick={createCst}
         disabled={!isMutable || isProcessing}
       />
       <MiniButton
-        title={tx('tx.lib.cst.clone')}
+        title={tx('tx.cst.clone')}
         icon={<IconClone size='1rem' className='icon-green' />}
         onClick={cloneCst}
         disabled={!isMutable || !activeCst || isProcessing}
@@ -226,12 +226,12 @@ export function ToolbarSchema({
 
       <MiniButton
         icon={<IconTree size='1rem' className='hover:text-primary' />}
-        title={tx('tx.rslang.termGraph')}
+        title={tx('tx.termGraph')}
         onClick={handleShowTermGraph}
       />
       <MiniButton
         icon={<IconTypeGraph size='1rem' className='hover:text-primary' />}
-        title={tx('tx.rslang.typeGraph')}
+        title={tx('tx.typeGraph')}
         onClick={handleShowTypeGraph}
       />
 

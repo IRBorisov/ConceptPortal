@@ -121,7 +121,7 @@ export function DlgRelocateConstituents() {
 
   return (
     <ModalForm
-      header={tx('tx.lib.oss.relocate')}
+      header={tx('tx.oss.relocate')}
       submitText={tx('tx.general.move')}
       canSubmit={canSubmit}
       validationHint={canSubmit ? '' : tx('labels.hint.relocateEmpty')}
@@ -138,20 +138,20 @@ export function DlgRelocateConstituents() {
           <SelectLibraryItem
             noBorder
             className='w-69'
-            placeholder={tx('tx.lib.oss.relocate.source')}
+            placeholder={tx('tx.oss.relocate.source')}
             items={sourceSchemas}
             value={source}
             onChange={handleSelectSource}
           />
           <MiniButton
-            title={tx('tx.lib.oss.relocate.direction')}
+            title={tx('tx.oss.relocate.direction')}
             icon={<IconRelocationUp value={directionUp} />}
             onClick={toggleDirection}
           />
           <SelectLibraryItem
             noBorder
             className='w-69'
-            placeholder={tx('tx.lib.oss.relocate.target')}
+            placeholder={tx('tx.oss.relocate.target')}
             items={destinationSchemas}
             value={destinationItem}
             onChange={handleSelectDestination}

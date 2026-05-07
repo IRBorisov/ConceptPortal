@@ -157,16 +157,16 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
             icon={<IconStatusError size='0.8rem' />}
             value={countProblematic}
             color='destructive'
-            title={tx('ui.tabs.problemConceptsTitle', { count: countProblematic })}
+            title={tx('tx.schema.issue.plural', { count: countProblematic })}
             onClick={onFocusSchemaIssues}
           />
         ) : null}
         <MenuGroupSchema />
 
         <TabLabel label={tx('tx.lib.item.passport')} />
-        <TabLabel label={tx('tx.general.list')} />
-        <TabLabel label={tx('tx.lib.concept')} />
-        <TabLabel label={tx('ui.tabs.graph')} />
+        <TabLabel label={tx('tx.list')} />
+        <TabLabel label={tx('tx.concept')} />
+        <TabLabel label={tx('tx.graph')} />
       </TabList>
 
       <div ref={containerRef} className='overflow-x-hidden'>

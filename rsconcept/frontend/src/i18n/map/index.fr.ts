@@ -8,7 +8,6 @@ import { txRslangFr } from '../domain/rslang.fr';
 import { txSandboxFr } from '../domain/sandbox.fr';
 
 import { labelsFr } from './partials/labels.fr';
-import { uiFr } from './partials/ui.fr';
 import { uiExtraFr } from './partials/ui-extra.fr';
 
 export const frMessages: Record<string, string> = {
@@ -21,6 +20,5 @@ export const frMessages: Record<string, string> = {
   ...txAiFr,
   ...txSandboxFr,
   ...labelsFr,
-  ...uiFr,
   ...uiExtraFr
 };

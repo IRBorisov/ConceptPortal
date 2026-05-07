@@ -71,7 +71,7 @@ export function FormEditCst({
     <>
       <div className='flex items-center self-center gap-3'>
         <MiniButton
-          title={tx('tx.lib.cst.crucial')}
+          title={tx('tx.cst.crucial')}
           icon={<IconCrucialValue size='1.25rem' value={crucial} />}
           onClick={onToggleCrucial}
         />
@@ -97,10 +97,10 @@ export function FormEditCst({
         {field => (
           <RefsInput
             id='dlg_cst_term'
-            label={tx('tx.lib.term')}
+            label={tx('tx.lang.term')}
             maxHeight='3.75rem'
             areaClassName='disabled:min-h-9'
-            placeholder={tx('tx.lib.term.hint')}
+            placeholder={tx('tx.lang.term.hint')}
             schema={schema}
             value={field.state.value ?? ''}
             initialValue={target.term_raw}
@@ -111,14 +111,14 @@ export function FormEditCst({
       </TermRawField>
       {target.cst_type === CstType.NOMINAL || target.attributes.length > 0 ? (
         <div className='flex flex-col gap-1'>
-          <Label text={tx('ui.label.attributingConstituents')} />
+          <Label text={tx('tx.attribution.attribute.plural')} />
           <SelectMultiConstituenta
             items={schema.items.filter(item => item.id !== target.id)}
             value={attributions}
             onAdd={onAddAttribution}
             onClear={onClearAttributions}
             onRemove={onRemoveAttribution}
-            placeholder={tx('tx.lib.cst.select.plural.hint')}
+            placeholder={tx('tx.cst.select.multiple')}
           />
         </div>
       ) : null}

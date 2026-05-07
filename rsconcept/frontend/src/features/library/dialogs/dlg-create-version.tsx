@@ -97,7 +97,7 @@ export function DlgCreateVersion() {
           {field => (
             <Checkbox
               id='dlg_only_selected'
-              label={tx('ui.dlg.createVersion.onlySelected', {
+              label={tx('tx.cst.onlySelected', {
                 n: selected.length,
                 total: totalCount
               })}

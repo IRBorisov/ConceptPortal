@@ -29,7 +29,7 @@ export function EmbedVKVideo({ videoID, pxHeight, pxWidth }: EmbedVKVideoProps) 
     >
       <iframe
         allowFullScreen
-        title={tx('ui.embed.vkTitle')}
+        title={tx('tx.shell.embed.vk')}
         allow='autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;'
         className='absolute top-0 left-0 border'
         style={{

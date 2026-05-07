@@ -73,11 +73,11 @@ function domTooltipVariable(varName: string, isAvailable: boolean): TooltipView 
     'whitespace-pre-line'
   );
 
-  appendBoldTextRow(dom, globalTx('ui.ai.promptInput.variableTitle', { name: varName }));
+  appendBoldTextRow(dom, globalTx('tx.ai.variable') + ' ' + varName);
 
   const status = document.createElement('p');
   status.className = isAvailable ? 'text-green-700' : 'text-red-700';
-  status.innerText = isAvailable ? globalTx('ui.ai.promptInput.available') : globalTx('ui.ai.promptInput.unavailable');
+  status.innerText = isAvailable ? globalTx('tx.ai.variable.available') : globalTx('tx.ai.variable.unavailable');
   dom.appendChild(status);
 
   const desc = document.createElement('p');

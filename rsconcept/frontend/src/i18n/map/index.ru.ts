@@ -8,7 +8,6 @@ import { txRslangRu } from '../domain/rslang.ru';
 import { txSandboxRu } from '../domain/sandbox.ru';
 
 import { labelsRu } from './partials/labels.ru';
-import { uiRu } from './partials/ui.ru';
 import { uiExtraRu } from './partials/ui-extra.ru';
 
 export const ruMessages: Record<string, string> = {
@@ -21,6 +20,5 @@ export const ruMessages: Record<string, string> = {
   ...txAiRu,
   ...txSandboxRu,
   ...labelsRu,
-  ...uiRu,
   ...uiExtraRu
 };

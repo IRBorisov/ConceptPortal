@@ -23,8 +23,8 @@ export function ToolbarEvaluator({ className }: ToolbarEvaluatorProps) {
   return (
     <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>
       <MiniButton
-        title={prepareTooltip(tx('tx.lib.model.recalculate'), 'Alt + Q')}
-        aria-label={tx('tx.lib.model.recalculate.hint')}
+        title={prepareTooltip(tx('tx.model.recalculate'), 'Alt + Q')}
+        aria-label={tx('tx.model.recalculate.hint')}
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
         onClick={() => engine.recalculateAll()}
       />

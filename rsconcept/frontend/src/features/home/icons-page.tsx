@@ -12,7 +12,7 @@ export function Component() {
   const iconsList = Object.keys(icons).filter(key => key.startsWith('Icon'));
   return (
     <div className='flex flex-col items-center px-6 py-3 event'>
-      <h1 className='mb-6'>{tx('ui.iconsPage.total', { count: iconsList.length })}</h1>
+      <h1 className='mb-6'>{tx('tx.shell.icon.total', { count: iconsList.length })}</h1>
       <div className='grid grid-cols-4'>
         {iconsList.map((key, index) => (
           <div key={`icons_list_${index}`} className='flex flex-col items-center px-3 pb-6'>

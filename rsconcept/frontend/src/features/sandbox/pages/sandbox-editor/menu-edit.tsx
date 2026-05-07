@@ -75,20 +75,20 @@ export function MenuEdit() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('tx.lib.schema.order.restore')}
-          title={tx('tx.lib.schema.order.restore.hint')}
+          text={tx('tx.schema.order.restore')}
+          title={tx('tx.schema.order.restore.hint')}
           icon={<IconSortList size='1rem' className='icon-primary' />}
           onClick={handleRestoreOrder}
         />
         <DropdownButton
-          text={tx('tx.lib.schema.order.rename')}
-          title={tx('tx.lib.schema.order.rename.hint')}
+          text={tx('tx.schema.order.rename')}
+          title={tx('tx.schema.order.rename.hint')}
           icon={<IconGenerateNames size='1rem' className='icon-primary' />}
           onClick={handleResetAliases}
         />
         <DropdownButton
-          text={tx('tx.lib.cst.substitution')}
-          title={tx('ui.sandbox.editMenu.substitutionHint')}
+          text={tx('tx.substitution')}
+          title={tx('tx.substitution.hint')}
           icon={<IconReplace size='1rem' className='icon-red' />}
           onClick={handleSubstitute}
         />

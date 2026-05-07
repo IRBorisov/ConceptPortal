@@ -1,4 +1,6 @@
 export const txGeneralRu: Record<string, string> = {
+  'tx.general.colon': ': ',
+
   'tx.general.date': 'Дата',
   'tx.general.date.creation': 'Дата создания',
   'tx.general.date.updated': 'Дата обновления',
@@ -10,9 +12,12 @@ export const txGeneralRu: Record<string, string> = {
   'tx.general.error.plural': 'Ошибки',
   'tx.general.notification': 'Уведомление',
   'tx.general.warning': 'Предупреждение',
+  'tx.general.warning.plural': 'Предупреждения',
+  'tx.general.issue.plural': 'Проблемы',
+  'tx.general.none': 'отсутствует',
   'tx.general.labels.show': 'Показать подписи',
   'tx.general.labels.hide': 'Скрыть подписи',
-  'tx.general.fitView': 'Вписать в экран',
+  'tx.general.details': 'Подробнее',
 
   'tx.general.user': 'Пользователь',
   'tx.general.user.new': 'Новый пользователь',
@@ -44,10 +49,14 @@ export const txGeneralRu: Record<string, string> = {
 
   'tx.general.menu': 'Меню',
   'tx.general.home': 'Начальная страница',
-  'tx.general.settings': 'Настройки',
+  'tx.general.data': 'Данные',
+  'tx.general.evaluation': 'Расчет',
   'tx.general.help': 'Справка',
   'tx.general.qrCode': 'QR-код',
   'tx.general.qrCode.hint': 'Показать QR-код страницы',
+
+  'tx.general.settings': 'Настройки',
+  'tx.general.view.settings': 'Настройки отображения',
 
   'tx.general.role': 'Роль',
   'tx.general.role.admin': 'Администратор',
@@ -57,6 +66,8 @@ export const txGeneralRu: Record<string, string> = {
   'tx.general.role.editor': 'Редактор',
   'tx.general.role.editor.hint': 'Режим редактирования',
   'tx.general.role.editor.plural': 'Редакторы',
+  'tx.general.role.editor.list': 'Список редакторов',
+  'tx.general.role.editor.add': 'Добавить редактора',
   'tx.general.role.reader': 'Читатель',
   'tx.general.role.reader.hint': 'Режим читателя',
 
@@ -105,13 +116,14 @@ export const txGeneralRu: Record<string, string> = {
   'tx.general.resetAll': 'Сбросить все',
 
   'tx.general.selection': 'Выбор',
-  'tx.general.selection.status': 'Выбор {n} из {total}',
+  'tx.general.selection.status': 'Выбраны {selected} из {total}',
   'tx.general.selection.reset': 'Сбросить выделение',
   'tx.general.selection.invert': 'Инвертировать выделение',
   'tx.general.selection.selected.delete': 'Удалить выделенные',
   'tx.general.selection.selected.edit': 'Редактировать выделенные',
   'tx.general.selection.selectAll': 'Выделить все',
 
+  'tx.general.rightClick': 'Правый клик',
   'tx.general.doubleClick': 'Двойной клик',
   'tx.general.yes': 'Да',
   'tx.general.no': 'Нет',
@@ -121,7 +133,39 @@ export const txGeneralRu: Record<string, string> = {
   'tx.general.boolean.false': 'Ложь',
   'tx.general.total': 'Всего',
   'tx.general.example': 'Пример',
+  'tx.general.symbol.count': 'Количество символов',
+  'tx.general.symbol.count.limited': 'Отображаемое количество символов ограничено',
 
-  'tx.general.list': 'Список',
-  'tx.general.list.empty': 'Список пуст'
+  'tx.list': 'Список',
+  'tx.list.empty': 'Список пуст',
+
+  'tx.graph': 'Граф',
+  'tx.graph.node.parent.plural': 'Поставщики',
+  'tx.graph.node.parent.show': 'Показать поставщиков',
+  'tx.graph.node.parent.hide': 'Скрыть поставщиков',
+  'tx.graph.node.child.plural': 'Потребители',
+  'tx.graph.node.child.show': 'Показать потребителей',
+  'tx.graph.node.child.hide': 'Скрыть потребителей',
+  'tx.graph.node.ancestor.plural': 'Влияющие',
+  'tx.graph.node.descendant.plural': 'Зависимые',
+  'tx.graph.node.isolated.hide': 'Скрыть изолированные',
+  'tx.graph.node.isolated.hide.hint': 'Скрывать узлы без связей',
+  'tx.graph.select.group': 'Выделить группу...',
+  'tx.graph.select.expand': 'Выделить на основе выбранных...',
+  'tx.graph.select.maximize': 'Максимизация',
+  'tx.graph.select.maximize.hint': 'Максимизация дополнение выделения конституентами, зависимыми только от выделенных',
+  'tx.graph.transitiveReduction': 'Транзитивная редукция',
+  'tx.graph.transitiveReduction.hint': 'Удалить связи, образующие\nтранзитивные пути в графе',
+
+  'tx.flow.fitView': 'Вписать в экран',
+  'tx.flow.edge.plural': 'Связи',
+  'tx.flow.edge.shape.toggle': 'Переключатель формы связей',
+  'tx.flow.edge.shape.straight': 'Прямые',
+  'tx.flow.edge.shape.bezier': 'Безье',
+  'tx.flow.animation': 'Анимация',
+  'tx.flow.animation.toggle': 'Переключатель анимации',
+  'tx.flow.grid': 'Сетка',
+  'tx.flow.grid.toggle': 'Переключатель отображения сетки',
+  'tx.flow.coordinates': 'Координаты',
+  'tx.flow.coordinates.toggle': 'Переключатель отображения координат'
 };

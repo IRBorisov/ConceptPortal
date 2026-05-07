@@ -128,7 +128,7 @@ export function PickMultiOperation({ rows, items, value, onChange, className, ..
         columns={columns}
         noDataComponent={
           <NoData>
-            <p>{tx('tx.general.list.empty')}</p>
+            <p>{tx('tx.list.empty')}</p>
           </NoData>
         }
       />

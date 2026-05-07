@@ -20,14 +20,16 @@ interface SelectConstituentaProps {
 
 export function SelectConstituenta({ items, placeholder, ...restProps }: SelectConstituentaProps) {
   const tx = useTx();
-  const resolvedPlaceholder = placeholder ?? tx('ui.rsform.selectConstituenta.placeholder');
+  const resolvedPlaceholder = placeholder ?? tx('tx.cst.select');
   return (
     <ComboBox
       items={items}
       placeholder={resolvedPlaceholder}
       idFunc={cst => String(cst.id)}
-      labelValueFunc={cst => `${cst.alias}: ${describeConstituentaTerm(cst)}`}
-      labelOptionFunc={cst => `${cst.alias}${cst.is_inherited ? '*' : ''}: ${describeConstituenta(cst)}`}
+      labelValueFunc={cst => `${cst.alias}${tx('tx.general.colon')}${describeConstituentaTerm(cst)}`}
+      labelOptionFunc={cst =>
+        `${cst.alias}${cst.is_inherited ? '*' : ''}${tx('tx.general.colon')}${describeConstituenta(cst)}`
+      }
       {...restProps}
     />
   );

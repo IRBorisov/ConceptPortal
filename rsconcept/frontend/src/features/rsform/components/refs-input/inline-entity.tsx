@@ -114,7 +114,7 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
         <div className='flex items-center gap-1'>
           <MiniButton
             icon={<IconAccept size='1.5rem' className='icon-green' />}
-            title={prepareTooltip(tx('ui.refs.inline.saveLink'), isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
+            title={prepareTooltip(tx('tx.lang.reference.save'), isMac() ? 'Cmd + Enter' : 'Ctrl + Enter')}
             onClick={handleSave}
             disabled={!canSubmit}
           />
@@ -128,7 +128,7 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
             query={query}
             onChangeQuery={setQuery}
             noBorder
-            placeholder={tx('ui.refs.inline.searchPlaceholder')}
+            placeholder={tx('tx.general.search')}
             className='text-sm bg-input'
             inputRef={searchBarRef}
           />
@@ -158,7 +158,7 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
               );
             })
           ) : (
-            <div className='px-3 py-2 text-sm text-muted-foreground'>{tx('ui.refs.inline.noResults')}</div>
+            <div className='px-3 py-2 text-sm text-muted-foreground'>{tx('tx.list.empty')}</div>
           )}
         </div>
         <SelectWordForm value={grams} onChange={setGrams} onDoubleClick={handleDoubleClick} />

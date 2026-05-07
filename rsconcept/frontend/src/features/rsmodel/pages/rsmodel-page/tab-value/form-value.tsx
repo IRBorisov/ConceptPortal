@@ -241,7 +241,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       onSubmit={withPreventDefault(() => void handleSubmitAll())}
     >
       <div className='flex items-center gap-2 mr-2 font-math font-semibold select-text'>
-        <span>{tx('tx.lib.cst') + ' ' + activeCst.alias}</span>
+        <span>{tx('tx.cst') + ' ' + activeCst.alias}</span>
       </div>
 
       <ValuePrimaryActions activeCst={activeCst} cstData={cstData} onChangeValue={handleSetValue} />
@@ -292,7 +292,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
           !isInterpretable(activeCst.cst_type)
             ? tx('tx.rslang.value.type.error.hint')
             : !isInferrable(activeCst.cst_type)
-              ? tx('tx.rslang.value.missing.hint')
+              ? tx('tx.rslang.value.none.hint')
               : undefined
         }
         onCalculate={cstInferrable ? handleCalculate : undefined}
@@ -319,8 +319,8 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         ) : null}
         <RefsInput
           id='cst_term'
-          label={tx('tx.lib.term')}
-          placeholder={tx('tx.lib.term.validate.empty')}
+          label={tx('tx.lang.term')}
+          placeholder={tx('tx.lang.term.validate.empty')}
           schema={schema}
           onOpenEdit={onOpenEdit}
           value={termDraft}

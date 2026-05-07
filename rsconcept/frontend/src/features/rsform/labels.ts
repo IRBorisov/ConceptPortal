@@ -12,77 +12,77 @@ import { type RO } from '@/utils/meta';
 import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores/term-graph';
 
 const CST_TYPE_LID: Record<CstType, string> = {
-  [CstType.NOMINAL]: 'tx.lib.cst.type.nominal',
-  [CstType.BASE]: 'tx.lib.cst.type.basic',
-  [CstType.CONSTANT]: 'tx.lib.cst.type.constant',
-  [CstType.STRUCTURED]: 'tx.lib.cst.type.structure',
-  [CstType.AXIOM]: 'tx.lib.cst.type.axiom',
-  [CstType.TERM]: 'tx.lib.cst.type.term',
-  [CstType.FUNCTION]: 'tx.lib.cst.type.function',
-  [CstType.PREDICATE]: 'tx.lib.cst.type.predicate',
-  [CstType.THEOREM]: 'tx.lib.cst.type.theorem'
+  [CstType.NOMINAL]: 'tx.cst.type.nominal',
+  [CstType.BASE]: 'tx.cst.type.basic',
+  [CstType.CONSTANT]: 'tx.cst.type.constant',
+  [CstType.STRUCTURED]: 'tx.cst.type.structure',
+  [CstType.AXIOM]: 'tx.cst.type.axiom',
+  [CstType.TERM]: 'tx.cst.type.term',
+  [CstType.FUNCTION]: 'tx.cst.type.function',
+  [CstType.PREDICATE]: 'tx.cst.type.predicate',
+  [CstType.THEOREM]: 'tx.cst.type.theorem'
 };
 
 const CST_CLASS_LABEL_LID: Record<CstClass, string> = {
-  [CstClass.NOMINAL]: 'labels.rsform.cstClassLabel.nominal',
-  [CstClass.BASIC]: 'labels.rsform.cstClassLabel.basic',
-  [CstClass.DERIVED]: 'labels.rsform.cstClassLabel.derived',
-  [CstClass.STATEMENT]: 'labels.rsform.cstClassLabel.statement',
-  [CstClass.TEMPLATE]: 'labels.rsform.cstClassLabel.template'
+  [CstClass.NOMINAL]: 'tx.cst.class.nominal.short',
+  [CstClass.BASIC]: 'tx.cst.class.basic.short',
+  [CstClass.DERIVED]: 'tx.cst.class.derived.short',
+  [CstClass.STATEMENT]: 'tx.cst.class.statement.short',
+  [CstClass.TEMPLATE]: 'tx.cst.class.template.short'
 };
 
 const CST_CLASS_DESC_LID: Record<CstClass, string> = {
-  [CstClass.NOMINAL]: 'labels.rsform.cstClassDesc.nominal',
-  [CstClass.BASIC]: 'labels.rsform.cstClassDesc.basic',
-  [CstClass.DERIVED]: 'labels.rsform.cstClassDesc.derived',
-  [CstClass.STATEMENT]: 'labels.rsform.cstClassDesc.statement',
-  [CstClass.TEMPLATE]: 'labels.rsform.cstClassDesc.template'
+  [CstClass.NOMINAL]: 'tx.cst.class.nominal',
+  [CstClass.BASIC]: 'tx.cst.class.basic',
+  [CstClass.DERIVED]: 'tx.cst.class.derived',
+  [CstClass.STATEMENT]: 'tx.cst.class.statement',
+  [CstClass.TEMPLATE]: 'tx.cst.class.template'
 };
 
 const GRAPH_MODE_LID: Record<InteractionMode, string> = {
-  explore: 'labels.rsform.graphMode.explore',
-  edit: 'labels.rsform.graphMode.edit'
+  explore: 'tx.termGraph.mode.explore',
+  edit: 'tx.termGraph.mode.edit'
 };
 
 const COLORING_LID: Record<TGColoring, string> = {
-  none: 'labels.rsform.coloring.none',
-  status: 'labels.rsform.coloring.status',
-  type: 'labels.rsform.coloring.type',
-  schemas: 'labels.rsform.coloring.schemas'
+  none: 'tx.termGraph.coloring.none',
+  status: 'tx.termGraph.coloring.status',
+  type: 'tx.termGraph.coloring.type',
+  schemas: 'tx.termGraph.coloring.schemas'
 };
 
 const EDGE_TYPE_LID: Record<TGEdgeType, string> = {
-  full: 'labels.rsform.edgeType.full',
-  definition: 'labels.rsform.edgeType.definition',
-  attribution: 'labels.rsform.edgeType.attribution'
+  full: 'tx.termGraph.edgeType.full',
+  definition: 'tx.termGraph.edgeType.definition',
+  attribution: 'tx.termGraph.edgeType.attribution'
 };
 
 const EXPR_STATUS_LID: Record<CstStatus, string> = {
-  [CstStatus.VERIFIED]: 'labels.rsform.exprStatus.verified',
-  [CstStatus.INCORRECT]: 'labels.rsform.exprStatus.incorrect',
-  [CstStatus.INCALCULABLE]: 'labels.rsform.exprStatus.incalculable',
-  [CstStatus.PROPERTY]: 'labels.rsform.exprStatus.property',
-  [CstStatus.UNKNOWN]: 'labels.rsform.exprStatus.unknown'
+  [CstStatus.VERIFIED]: 'tx.schema.expression.status.verified',
+  [CstStatus.INCORRECT]: 'tx.schema.expression.status.incorrect',
+  [CstStatus.INCALCULABLE]: 'tx.schema.expression.status.incalculable',
+  [CstStatus.PROPERTY]: 'tx.schema.expression.status.property',
+  [CstStatus.UNKNOWN]: 'tx.schema.expression.status.unknown'
 };
 
 const EXPR_STATUS_DESC_LID: Record<CstStatus, string> = {
-  [CstStatus.VERIFIED]: 'labels.rsform.exprStatusDesc.verified',
-  [CstStatus.INCORRECT]: 'labels.rsform.exprStatusDesc.incorrect',
-  [CstStatus.INCALCULABLE]: 'labels.rsform.exprStatusDesc.incalculable',
-  [CstStatus.PROPERTY]: 'labels.rsform.exprStatusDesc.property',
-  [CstStatus.UNKNOWN]: 'labels.rsform.exprStatusDesc.unknown'
+  [CstStatus.VERIFIED]: 'tx.schema.expression.status.verified.hint',
+  [CstStatus.INCORRECT]: 'tx.schema.expression.status.incorrect.hint',
+  [CstStatus.INCALCULABLE]: 'tx.schema.expression.status.incalculable.hint',
+  [CstStatus.PROPERTY]: 'tx.schema.expression.status.property.hint',
+  [CstStatus.UNKNOWN]: 'tx.schema.expression.status.unknown.hint'
 };
 
 const RS_EXPRESSION_LID: Record<CstType, string> = {
-  [CstType.NOMINAL]: 'labels.rsform.rsExpression.nominal',
+  [CstType.NOMINAL]: 'tx.lib.definitionFormal.nominal',
   [CstType.BASE]: 'tx.lib.definitionFormal',
   [CstType.CONSTANT]: 'tx.lib.definitionFormal',
-  [CstType.STRUCTURED]: 'labels.rsform.rsExpression.structure',
+  [CstType.STRUCTURED]: 'tx.lib.definitionFormal.structure',
   [CstType.TERM]: 'tx.lib.definitionFormal',
   [CstType.THEOREM]: 'tx.lib.definitionFormal',
   [CstType.AXIOM]: 'tx.lib.definitionFormal',
-  [CstType.FUNCTION]: 'labels.rsform.rsExpression.function',
-  [CstType.PREDICATE]: 'labels.rsform.rsExpression.function'
+  [CstType.FUNCTION]: 'tx.lib.definitionFormal.function',
+  [CstType.PREDICATE]: 'tx.lib.definitionFormal.function'
 };
 
 const RS_PLACEHOLDER_EXAMPLE: Record<CstType, string> = {
@@ -248,7 +248,7 @@ export function labelRSExpression(type: CstType): string {
 /** Generates placeholder for RS definition based on {@link CstType}. */
 export function getRSDefinitionPlaceholder(type: CstType): string {
   const example = RS_PLACEHOLDER_EXAMPLE[type];
-  return !example ? '' : `${globalTx('tx.general.example')}: ${example}`;
+  return !example ? '' : `${globalTx('tx.general.example')}${globalTx('tx.general.colon')}${example}`;
 }
 
 /** Generates description for {@link TokenID}. */

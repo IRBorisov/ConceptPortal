@@ -21,19 +21,19 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
       <StatsCategory
         id='oss-stats-composition'
         className='rounded-t-md'
-        label={tx('ui.stats.section.overview')}
+        label={tx('tx.lib.contents')}
         primaryLabel={tx('tx.general.total')}
         primaryValue={stats.count_all}
-        primaryTitle={tx('ui.stats.oss.compositionPrimaryTitle')}
-        secondaryLabel={stats.count_block > 0 ? tx('tx.lib.block.plural') : undefined}
+        primaryTitle={tx('tx.oss.items.total.hint')}
+        secondaryLabel={stats.count_block > 0 ? tx('tx.oss.block.plural') : undefined}
         secondaryValue={stats.count_block > 0 ? stats.count_block : undefined}
-        secondaryTitle={tx('ui.stats.oss.blocksSecondaryTitle')}
+        secondaryTitle={tx('tx.oss.block.plural')}
         details={[
           { label: tx('tx.general.total'), value: stats.count_all },
-          { label: tx('tx.lib.block.plural'), value: stats.count_block },
-          { label: tx('tx.lib.input'), value: stats.count_inputs },
-          { label: tx('tx.lib.synthesis'), value: stats.count_synthesis },
-          { label: tx('tx.lib.replica'), value: stats.count_references }
+          { label: tx('tx.oss.block.plural'), value: stats.count_block },
+          { label: tx('tx.oss.input'), value: stats.count_inputs },
+          { label: tx('tx.synthesis'), value: stats.count_synthesis },
+          { label: tx('tx.oss.replica'), value: stats.count_references }
         ]}
       />
 
@@ -42,17 +42,17 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
       <StatsCategory
         id='oss-stats-schemas'
         className='rounded-b-md'
-        label={tx('tx.lib.oss.attachedSchema.plural')}
+        label={tx('tx.operation.attachment.plural')}
         primaryLabel={tx('tx.general.total')}
         primaryValue={stats.count_schemas}
-        primaryTitle={tx('ui.stats.oss.attachedPrimaryTitle')}
-        secondaryLabel={stats.count_schemas > 0 ? tx('tx.lib.concept.original.plural') : undefined}
+        primaryTitle={tx('tx.operation.attachment.hint')}
+        secondaryLabel={stats.count_schemas > 0 ? tx('tx.operation.attachment.original.short') : undefined}
         secondaryValue={stats.count_schemas > 0 ? stats.count_owned : undefined}
-        secondaryTitle={tx('ui.stats.oss.ownedSecondaryTitle')}
+        secondaryTitle={tx('tx.operation.attachment.original.hint')}
         details={[
-          { label: tx('tx.lib.oss.attachedSchema.plural'), value: stats.count_schemas },
-          { label: tx('tx.lib.concept.original.plural'), value: stats.count_owned },
-          { label: tx('ui.stats.oss.detail.external'), value: countImported }
+          { label: tx('tx.operation.attachment.plural'), value: stats.count_schemas },
+          { label: tx('tx.operation.attachment.original.plural'), value: stats.count_owned },
+          { label: tx('tx.oss.input.import'), value: countImported }
         ]}
       />
     </aside>

@@ -1,9 +1,4 @@
-import { labelsFeatureEn } from './labels-feature.en';
-
-/** English label catalog (toasts, Zod, `globalTx`, non-React helpers). */
 export const labelsEn: Record<string, string> = {
-  ...labelsFeatureEn,
-
   'labels.error.lengthLimit': 'Maximum length',
   'labels.error.typeStructureFailed': 'Structure is missing',
   'labels.error.passwordsMismatch': 'Passwords do not match',

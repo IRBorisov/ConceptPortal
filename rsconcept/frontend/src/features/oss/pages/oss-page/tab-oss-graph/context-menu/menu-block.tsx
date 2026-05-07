@@ -47,13 +47,13 @@ export function MenuBlock({ block, onHide }: MenuBlockProps) {
     <>
       <DropdownButton
         text={tx('tx.general.edit')}
-        title={tx('tx.lib.block.edit')}
+        title={tx('tx.oss.block.edit')}
         icon={<IconEdit size='1rem' className='icon-primary' />}
         onClick={handleEditBlock}
         disabled={!isMutable || isProcessing}
       />
       <DropdownButton
-        text={tx('tx.lib.block.delete')}
+        text={tx('tx.oss.block.delete')}
         icon={<IconDestroy size='1rem' className='icon-red' />}
         onClick={handleDeleteBlock}
         disabled={!isMutable || isProcessing}

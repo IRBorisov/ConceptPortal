@@ -3,25 +3,25 @@ import { globalTx } from '@/i18n';
 import { PromptVariableType } from './models/prompting';
 
 const DESCRIBE_VAR_LID: Record<PromptVariableType, string> = {
-  [PromptVariableType.BLOCK]: 'labels.ai.variable.block',
-  [PromptVariableType.OSS]: 'labels.ai.variable.oss',
-  [PromptVariableType.SCHEMA]: 'labels.ai.variable.schema',
-  [PromptVariableType.SCHEMA_THESAURUS]: 'labels.ai.variable.schemaThesaurus',
-  [PromptVariableType.SCHEMA_GRAPH]: 'labels.ai.variable.schemaGraph',
-  [PromptVariableType.SCHEMA_TYPE_GRAPH]: 'labels.ai.variable.schemaTypeGraph',
-  [PromptVariableType.CONSTITUENTA]: 'labels.ai.variable.constituenta',
-  [PromptVariableType.CONSTITUENTA_SYNTAX_TREE]: 'labels.ai.variable.constituentaSyntaxTree'
+  [PromptVariableType.BLOCK]: 'tx.ai.variable.block',
+  [PromptVariableType.OSS]: 'tx.ai.variable.oss',
+  [PromptVariableType.SCHEMA]: 'tx.ai.variable.schema',
+  [PromptVariableType.SCHEMA_THESAURUS]: 'tx.ai.variable.schema.thesaurus',
+  [PromptVariableType.SCHEMA_GRAPH]: 'tx.ai.variable.schema.graph',
+  [PromptVariableType.SCHEMA_TYPE_GRAPH]: 'tx.ai.variable.schema.typeGraph',
+  [PromptVariableType.CONSTITUENTA]: 'tx.ai.variable.constituenta',
+  [PromptVariableType.CONSTITUENTA_SYNTAX_TREE]: 'tx.ai.variable.constituenta.ast'
 };
 
 const MOCK_VAR_LID: Record<PromptVariableType, string> = {
-  [PromptVariableType.BLOCK]: 'labels.ai.variableMock.block',
-  [PromptVariableType.OSS]: 'labels.ai.variableMock.oss',
-  [PromptVariableType.SCHEMA]: 'labels.ai.variableMock.schema',
-  [PromptVariableType.SCHEMA_THESAURUS]: 'labels.ai.variableMock.schemaThesaurus',
-  [PromptVariableType.SCHEMA_GRAPH]: 'labels.ai.variableMock.schemaGraph',
-  [PromptVariableType.SCHEMA_TYPE_GRAPH]: 'labels.ai.variableMock.schemaTypeGraph',
-  [PromptVariableType.CONSTITUENTA]: 'labels.ai.variableMock.constituenta',
-  [PromptVariableType.CONSTITUENTA_SYNTAX_TREE]: 'labels.ai.variableMock.constituentaSyntaxTree'
+  [PromptVariableType.BLOCK]: 'tx.ai.variable.block.mock',
+  [PromptVariableType.OSS]: 'tx.ai.variable.oss.mock',
+  [PromptVariableType.SCHEMA]: 'tx.ai.variable.schema.mock',
+  [PromptVariableType.SCHEMA_THESAURUS]: 'tx.ai.variable.schema.thesaurus.mock',
+  [PromptVariableType.SCHEMA_GRAPH]: 'tx.ai.variable.schema.graph.mock',
+  [PromptVariableType.SCHEMA_TYPE_GRAPH]: 'tx.ai.variable.schema.typeGraph.mock',
+  [PromptVariableType.CONSTITUENTA]: 'tx.ai.variable.constituenta.mock',
+  [PromptVariableType.CONSTITUENTA_SYNTAX_TREE]: 'tx.ai.variable.constituenta.ast.mock'
 };
 
 /** Retrieves description for {@link PromptVariableType}. */

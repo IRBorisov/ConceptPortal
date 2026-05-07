@@ -66,9 +66,8 @@ Run from `rsconcept/frontend`:
 - **Outside React** (stores, toasts, plain `.ts`): `globalTx` from `@/i18n` — same ids; the app sets intl via `AppIntlBridge` under `IntlPreferencesProvider`. Persisted locale changes trigger a full reload so catalogs stay aligned.
 - **Catalog layout** (`src/i18n/messages/`):
   - **`en.ts` / `ru.ts` / `fr.ts`** merge all slices; add a new slice file only if you introduce a new module, then import it in all three.
-  - **`partials/`** — `ui`, `ui-extra`, `shell`, `nav`, `library`: general and feature-adjacent UI copy; **`labels.*`** — shared toasts, Zod copy, hints (`labels.error.*`, `labels.rsform.*`, …) as string keys; **`labels-feature.*`** — feature-bundled `labels.*` strings merged into `labels.en` / `labels.ru` / `labels.fr`.
-  - **`semantic/`** — `terms.*` and `actions.*` merged through `semantic.*.ts` for shared vocabulary / action wording.
-- **Workflow:** pick the right partial (or `semantic/` / `labels` / `labels-feature`); add the same string id in **all three** locale files for that slice; keep key order consistent with neighbors. Use stable ids like `labels.error.*`, `ui.*`, `labels.rsform.*` (see `locale-keys-parity.test.ts`).
+  - **`domain/` and `app/`** — shared copy should use `tx.*` ids (for example `tx.lib.*`, `tx.general.*`, `tx.msg.*`, `tx.shell.*`) and live in the corresponding `domain/*.ts` or `app/*.ts` locale files.
+- **Workflow:** pick the right slice (`domain/`, `app/`), add the same string id in **all three** locale files for that slice, and keep key order consistent with neighbors. Use stable ids like `tx.lib.*`, `tx.general.*` (see `locale-keys-parity.test.ts`).
 
 ## Edit rules
 

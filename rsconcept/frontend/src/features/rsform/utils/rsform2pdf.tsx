@@ -93,7 +93,7 @@ function SchemaTitle({ schema }: { schema: RSForm }) {
   return (
     <View style={{ marginBottom: 10 }}>
       <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: '3mm' }}>
-        {intl.formatMessage({ id: 'tx.lib.schema' }) + ' ' + schema.title}
+        {intl.formatMessage({ id: 'tx.schema' }) + ' ' + schema.title}
       </Text>
       <Text style={{ fontSize: 12 }}>
         {intl.formatMessage({ id: 'ui.rsform.pdf.aliasLabel' }, { alias: schema.alias })}
@@ -132,7 +132,7 @@ function CstTable({ data }: { data: RO<Constituenta[]> }) {
           <Text style={{ ...pdfs.cell, width: '13mm' }}>ID</Text>
           <Text style={{ ...pdfs.cell, width: '82mm' }}>{intl.formatMessage({ id: 'tx.lib.definitionFormal' })}</Text>
           <Text style={{ ...pdfs.cell, width: '38mm' }}>{intl.formatMessage({ id: 'tx.rslang.typification' })}</Text>
-          <Text style={{ ...pdfs.cell, width: '40mm' }}>{intl.formatMessage({ id: 'tx.lib.term' })}</Text>
+          <Text style={{ ...pdfs.cell, width: '40mm' }}>{intl.formatMessage({ id: 'tx.lang.term' })}</Text>
           <Text style={{ ...pdfs.cell, width: '82mm', borderRightWidth: 0 }}>
             {intl.formatMessage({ id: 'ui.rsform.pdf.colSchemaInterpretation' })}
           </Text>

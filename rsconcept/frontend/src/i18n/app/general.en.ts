@@ -1,4 +1,6 @@
 export const txGeneralEn: Record<string, string> = {
+  'tx.general.colon': ': ',
+
   'tx.general.date': 'Date',
   'tx.general.date.creation': 'Created',
   'tx.general.date.updated': 'Updated',
@@ -9,10 +11,13 @@ export const txGeneralEn: Record<string, string> = {
   'tx.general.error': 'Error',
   'tx.general.error.plural': 'Errors',
   'tx.general.warning': 'Warning',
+  'tx.general.warning.plural': 'Warnings',
+  'tx.general.issue.plural': 'Issues',
+  'tx.general.none': 'missing',
   'tx.general.notification': 'Notification',
   'tx.general.labels.show': 'Show labels',
   'tx.general.labels.hide': 'Hide labels',
-  'tx.general.fitView': 'Fit view',
+  'tx.general.details': 'Details',
 
   'tx.general.user': 'User',
   'tx.general.user.new': 'New user',
@@ -44,10 +49,14 @@ export const txGeneralEn: Record<string, string> = {
 
   'tx.general.menu': 'Menu',
   'tx.general.home': 'Home page',
-  'tx.general.settings': 'Settings',
+  'tx.general.data': 'Data',
+  'tx.general.evaluation': 'Evaluation',
   'tx.general.help': 'Manuals',
   'tx.general.qrCode': 'QR code',
   'tx.general.qrCode.hint': 'Show QR code of the page',
+
+  'tx.general.settings': 'Settings',
+  'tx.general.view.settings': 'View settings',
 
   'tx.general.role': 'Role',
   'tx.general.role.admin': 'Administrator',
@@ -57,6 +66,8 @@ export const txGeneralEn: Record<string, string> = {
   'tx.general.role.editor': 'Editor',
   'tx.general.role.editor.hint': 'Editor mode',
   'tx.general.role.editor.plural': 'Editors',
+  'tx.general.role.editor.list': 'Editor list',
+  'tx.general.role.editor.add': 'Add editor',
   'tx.general.role.reader': 'Reader',
   'tx.general.role.reader.hint': 'Reader mode',
 
@@ -105,13 +116,14 @@ export const txGeneralEn: Record<string, string> = {
   'tx.general.resetAll': 'Reset all',
 
   'tx.general.selection': 'Selection',
-  'tx.general.selection.status': 'Selection {n} of {total}',
+  'tx.general.selection.status': 'Selection {selected} of {total}',
   'tx.general.selection.reset': 'Reset selection',
   'tx.general.selection.invert': 'Invert selection',
   'tx.general.selection.selected.delete': 'Delete selected',
   'tx.general.selection.selected.edit': 'Edit selected',
   'tx.general.selection.selectAll': 'Select all',
 
+  'tx.general.rightClick': 'Right-click',
   'tx.general.doubleClick': 'Double-click',
   'tx.general.yes': 'Yes',
   'tx.general.no': 'No',
@@ -121,7 +133,39 @@ export const txGeneralEn: Record<string, string> = {
   'tx.general.boolean.false': 'False',
   'tx.general.total': 'Total',
   'tx.general.example': 'Example',
+  'tx.general.symbol.count': 'Symbol count',
+  'tx.general.symbol.count.limited': 'The displayed symbol count is limited',
 
-  'tx.general.list': 'List',
-  'tx.general.list.empty': 'List is empty'
+  'tx.list': 'List',
+  'tx.list.empty': 'List is empty',
+
+  'tx.graph': 'Graph',
+  'tx.graph.node.parent.plural': 'Suppliers',
+  'tx.graph.node.parent.show': 'Show suppliers',
+  'tx.graph.node.parent.hide': 'Hide suppliers',
+  'tx.graph.node.child.plural': 'Consumers',
+  'tx.graph.node.child.show': 'Show consumers',
+  'tx.graph.node.child.hide': 'Hide consumers',
+  'tx.graph.node.ancestor.plural': 'Influencers',
+  'tx.graph.node.descendant.plural': 'Dependents',
+  'tx.graph.node.isolated.hide': 'Hide isolated',
+  'tx.graph.node.isolated.hide.hint': 'Hide nodes without links',
+  'tx.graph.select.group': 'Select group...',
+  'tx.graph.select.expand': 'Expand from selection...',
+  'tx.graph.select.maximize': 'Maximize',
+  'tx.graph.select.maximize.hint': 'Maximize: extend selection with constituents that depend only on the selection',
+  'tx.graph.transitiveReduction': 'Transitive reduction',
+  'tx.graph.transitiveReduction.hint': 'Remove edges that form\ntransitive paths in the graph',
+
+  'tx.flow.fitView': 'Fit view',
+  'tx.flow.edge.plural': 'Edges',
+  'tx.flow.edge.shape.toggle': 'Edge shape',
+  'tx.flow.edge.shape.straight': 'Straight',
+  'tx.flow.edge.shape.bezier': 'Bezier',
+  'tx.flow.animation': 'Animation',
+  'tx.flow.animation.toggle': 'Toggle animation of edges',
+  'tx.flow.grid': 'Grid',
+  'tx.flow.grid.toggle': 'Toggle grid visibility',
+  'tx.flow.coordinates': 'Coordinates',
+  'tx.flow.coordinates.toggle': 'Toggle coordinates visibility'
 };

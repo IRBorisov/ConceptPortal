@@ -26,8 +26,10 @@ export function ViewErrors({ isOpen, errors, disabled, className, onShowError }:
       className={cn('cc-parsing-result text-sm border dense cc-scroll-y', isOpen && 'open', className)}
     >
       <p>
-        <span>{tx('ui.rsform.errors.count', { count: errorCount })} </span>
-        {warningsCount > 0 ? <span>| {tx('ui.rsform.errors.warnings', { count: warningsCount })}</span> : null}
+        <span>{tx('tx.general.error.plural') + tx('tx.general.colon') + errorCount}</span>
+        {warningsCount > 0 ? (
+          <span>| {tx('tx.general.warning.plural') + tx('tx.general.colon') + warningsCount}</span>
+        ) : null}
       </p>
       {errors?.map((error, index) => {
         return (

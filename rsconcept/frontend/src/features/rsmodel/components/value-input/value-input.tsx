@@ -65,7 +65,7 @@ export function ValueInput({
         />
       ) : null}
 
-      <Label text={tx('tx.rslang.value')} />
+      <Label text={tx('tx.rslang.value.short')} />
 
       <TextArea
         value={value.slice(0, limits.len_data_str)}
@@ -84,18 +84,18 @@ export function ValueInput({
               <span
                 tabIndex={-1}
                 className='font-math select-none'
-                aria-label={tx('ui.valueInput.cardinalityExpressionAria')}
+                aria-label={tx('tx.rslang.value')}
                 data-tooltip-id={globalIDs.tooltip}
-                data-tooltip-content={tx('ui.valueInput.expressionValueTooltip')}
+                data-tooltip-content={tx('tx.rslang.value')}
               >
                 {tx('tx.rslang.cardinality')}: {formatInteger(valueLabel)} |
               </span>
               <span
                 tabIndex={-1}
                 className='font-math select-text'
-                aria-label={tx('ui.valueInput.shortFormAria')}
+                aria-label={tx('tx.rslang.value.stub')}
                 data-tooltip-id={globalIDs.tooltip}
-                data-tooltip-content={tx('ui.valueInput.shortFormTooltip')}
+                data-tooltip-content={tx('tx.rslang.value.stub')}
               >
                 {stub}
               </span>
@@ -104,9 +104,9 @@ export function ValueInput({
           {value.length > 0 && !disabled ? (
             <div
               className={clsx('ml-auto select-none', isTrimmed && 'text-destructive')}
-              aria-label={tx('ui.valueInput.charCountAria')}
+              aria-label={tx('tx.general.symbol.count')}
               data-tooltip-id={globalIDs.tooltip}
-              data-tooltip-content={tx('ui.valueInput.charCountLimitedTooltip')}
+              data-tooltip-content={tx('tx.general.symbol.count.limited')}
             >
               {`${formatInteger(value.length)} / ${formatInteger(limits.len_data_str)}`}
             </div>

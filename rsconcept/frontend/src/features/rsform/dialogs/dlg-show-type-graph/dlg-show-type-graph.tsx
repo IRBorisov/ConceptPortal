@@ -38,7 +38,7 @@ export function DlgShowTypeGraph() {
 
   return (
     <ModalView
-      header={tx('tx.rslang.typeGraph')}
+      header={tx('tx.typeGraph')}
       className='cc-mask-sides flex flex-col justify-stretch w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]'
       fullScreen
       helpTopic={HelpTopic.UI_TYPE_GRAPH}

@@ -61,7 +61,7 @@ export function ToolbarConstituenta({
       ) : null}
       {activeCst && hasInheritance ? (
         <MiniButton
-          title={activeCst.is_inherited ? tx('tx.lib.cst.origin.goto.hint') : tx('tx.lib.cst.origin.null')}
+          title={activeCst.is_inherited ? tx('tx.cst.origin.goto.hint') : tx('tx.cst.origin.null')}
           onClick={event => openConstituentaPredecessor(activeCst.id, event.ctrlKey || event.metaKey)}
           icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
           disabled={!activeCst.is_inherited}
@@ -83,22 +83,20 @@ export function ToolbarConstituenta({
             disabled={disabled || !isModified}
           />
           <MiniButton
-            title={tx('tx.lib.cst.create')}
+            title={tx('tx.cst.create')}
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
             onClick={() => void promptCreateCst(activeCst.cst_type)}
             disabled={!isContentEditable || isProcessing}
           />
           <MiniButton
-            title={
-              isModified ? tx('tx.general.changes.unsaved.hint') : prepareTooltip(tx('tx.lib.cst.clone'), 'Alt + V')
-            }
-            aria-label={tx('tx.lib.cst.clone')}
+            title={isModified ? tx('tx.general.changes.unsaved.hint') : prepareTooltip(tx('tx.cst.clone'), 'Alt + V')}
+            aria-label={tx('tx.cst.clone')}
             icon={<IconClone size='1.25rem' className='icon-green' />}
             onClick={() => void cloneCst()}
             disabled={disabled || isModified}
           />
           <MiniButton
-            title={tx('tx.lib.cst.delete')}
+            title={tx('tx.cst.delete')}
             icon={<IconDestroy size='1.25rem' className='icon-red' />}
             onClick={promptDeleteSelected}
             disabled={disabled || !canDeleteSelected}

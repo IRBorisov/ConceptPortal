@@ -94,7 +94,7 @@ export function DlgEditVersions() {
   }
 
   return (
-    <ModalView header={tx('tx.lib.version.editList')} className='flex flex-col w-160 px-6 gap-3 pb-3'>
+    <ModalView header={tx('tx.lib.version.list.edit')} className='flex flex-col w-160 px-6 gap-3 pb-3'>
       <TableVersions
         processing={isProcessing}
         items={schema.versions.slice().reverse()}

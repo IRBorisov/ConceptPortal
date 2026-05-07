@@ -98,7 +98,7 @@ export function FormRSModel({ className }: FormRSModelProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none font-math'>{tx('tx.lib.model')}</h2>
+      <h2 className='mb-2 select-none font-math'>{tx('tx.model')}</h2>
       <form.Field name='title'>
         {field => (
           <TextInput
@@ -170,7 +170,7 @@ export function FormRSModel({ className }: FormRSModelProps) {
         className='mt-3 -mb-1'
         icon={<IconRSForm size='1.25rem' className='icon-primary' />}
         value={schema.alias}
-        title={tx('tx.lib.schema')}
+        title={tx('tx.schema')}
         onClick={handleNavigateSchema}
         disabled={false}
       />

@@ -81,7 +81,7 @@ export function DlgCreateSchema() {
 
   return (
     <ModalForm
-      header={tx('tx.lib.input.new.schema')}
+      header={tx('tx.oss.input.create.schema')}
       submitText={tx('tx.general.create')}
       canSubmit={canSubmit}
       validationHint={hint}
@@ -127,7 +127,7 @@ export function DlgCreateSchema() {
               <SelectParent
                 items={manager.oss.blocks}
                 value={field.state.value ? (manager.oss.blockByID.get(field.state.value) ?? null) : null}
-                placeholder={tx('tx.lib.block.parent')}
+                placeholder={tx('tx.oss.block.parent')}
                 onChange={value => field.handleChange(value ? value.id : null)}
               />
             )}

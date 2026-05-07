@@ -41,11 +41,11 @@ export function SelectorCstFilter({ className, showModelFilter }: SelectorCstFil
     all: tx('tx.general.filter'),
     schema_issues: tx('ui.filter.schemaIssuesShort'),
     model_issues: tx('ui.filter.modelIssuesShort'),
-    crucial: tx('tx.lib.cst.crucial.plural'),
-    kernel: tx('tx.lib.concept.basic.plural'),
-    derived: tx('tx.lib.concept.derived.plural'),
-    owned: tx('tx.lib.concept.original.plural'),
-    inherited: tx('tx.lib.concept.inherited.plural')
+    crucial: tx('tx.cst.crucial.plural'),
+    kernel: tx('tx.concept.basic.plural'),
+    derived: tx('tx.concept.derived.plural'),
+    owned: tx('tx.concept.original.plural'),
+    inherited: tx('tx.concept.inherited.plural')
   };
 
   return (
@@ -59,35 +59,35 @@ export function SelectorCstFilter({ className, showModelFilter }: SelectorCstFil
             <IconFilter className='text-muted-foreground' />
             {tx('tx.general.filter')}
           </SelectItem>
-          <SelectItem value='schema_issues' title={tx('ui.filter.schemaIssuesTitle')}>
+          <SelectItem value='schema_issues' title={tx('tx.schema.issue.plural')}>
             <IconStatusError className='text-destructive' />
             {tx('ui.filter.schemaIssuesShort')}
           </SelectItem>
           {showModelFilter ? (
-            <SelectItem value='model_issues' title={tx('ui.filter.modelIssuesTitle')}>
+            <SelectItem value='model_issues' title={tx('tx.model.issue.plural')}>
               <IconStatusIncalculable className='text-destructive' />
               {tx('ui.filter.modelIssuesShort')}
             </SelectItem>
           ) : null}
           <SelectItem value='crucial'>
             <IconCrucial className='text-constructive' />
-            {tx('tx.lib.cst.crucial.plural')}
+            {tx('tx.cst.crucial.plural')}
           </SelectItem>
           <SelectItem value='kernel'>
             <IconGraphCore className='text-primary' />
-            {tx('tx.lib.concept.basic.plural')}
+            {tx('tx.concept.basic.plural')}
           </SelectItem>
           <SelectItem value='derived'>
             <IconGraphCore className='text-muted-foreground' />
-            {tx('tx.lib.concept.derived.plural')}
+            {tx('tx.concept.derived.plural')}
           </SelectItem>
           <SelectItem value='owned'>
             <IconPredecessor className='text-constructive' />
-            {tx('tx.lib.concept.original.plural')}
+            {tx('tx.concept.original.plural')}
           </SelectItem>
           <SelectItem value='inherited'>
             <IconChild className='text-primary' />
-            {tx('tx.lib.concept.inherited.plural')}
+            {tx('tx.concept.inherited.plural')}
           </SelectItem>
         </SelectContent>
       </Select>

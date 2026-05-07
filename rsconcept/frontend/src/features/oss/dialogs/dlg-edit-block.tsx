@@ -60,7 +60,7 @@ export function DlgEditBlock() {
 
   return (
     <ModalForm
-      header={tx('tx.lib.block.edit')}
+      header={tx('tx.oss.block.edit')}
       submitText={tx('tx.general.save')}
       canSubmit={canSubmit}
       onSubmit={event => {
@@ -92,7 +92,7 @@ export function DlgEditBlock() {
             <SelectParent
               items={manager.oss.blocks.filter(block => !descendantNodeIDs.includes(block.nodeID))}
               value={field.state.value ? (manager.oss.blockByID.get(field.state.value) ?? null) : null}
-              placeholder={tx('tx.lib.block.parent')}
+              placeholder={tx('tx.oss.block.parent')}
               onChange={value => field.handleChange(value ? value.id : null)}
             />
           );

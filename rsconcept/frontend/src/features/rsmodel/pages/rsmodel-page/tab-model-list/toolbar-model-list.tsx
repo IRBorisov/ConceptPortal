@@ -61,8 +61,8 @@ export function ToolbarModelList({ className }: ToolbarModelListProps) {
         disabled={selectedCst.length === 0}
       />
       <MiniButton
-        title={prepareTooltip(tx('tx.lib.model.recalculate'), 'Alt + Q')}
-        aria-label={tx('tx.lib.model.recalculate.hint')}
+        title={prepareTooltip(tx('tx.model.recalculate'), 'Alt + Q')}
+        aria-label={tx('tx.model.recalculate.hint')}
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
         onClick={() => engine.recalculateAll()}
       />
@@ -81,15 +81,15 @@ export function ToolbarModelList({ className }: ToolbarModelListProps) {
         disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
       />
       <MiniButton
-        title={tx('tx.lib.cst.crucial')}
-        aria-label={tx('ui.cst.crucialToggleAria')}
+        title={tx('tx.cst.crucial')}
+        aria-label={tx('tx.cst.crucial.toggle')}
         icon={<IconCrucial size='1.25rem' className='icon-primary' />}
         onClick={toggleCrucial}
         disabled={isProcessing || selectedCst.length === 0}
       />
       <div ref={menuRef} onBlur={handleMenuBlur} className='relative hidden xs:block'>
         <MiniButton
-          title={tx('tx.lib.cst.create.empty')}
+          title={tx('tx.cst.create.clean')}
           hideTitle={isMenuOpen}
           icon={<IconOpenList size='1.25rem' className='icon-green' />}
           onClick={toggleMenu}
@@ -108,15 +108,15 @@ export function ToolbarModelList({ className }: ToolbarModelListProps) {
         </Dropdown>
       </div>
       <MiniButton
-        title={prepareTooltip(tx('tx.lib.cst.new'), 'Alt + `')}
+        title={prepareTooltip(tx('tx.cst.new'), 'Alt + `')}
         icon={<IconNewItem size='1.25rem' className='icon-green' />}
         onClick={() => void promptCreateCst()}
         className='hidden xs:block'
         disabled={isProcessing}
       />
       <MiniButton
-        title={prepareTooltip(tx('tx.lib.cst.clone'), 'Alt + V')}
-        aria-label={tx('tx.lib.cst.clone')}
+        title={prepareTooltip(tx('tx.cst.clone'), 'Alt + V')}
+        aria-label={tx('tx.cst.clone')}
         icon={<IconClone size='1.25rem' className='icon-green' />}
         onClick={() => void cloneCst()}
         disabled={isProcessing || selectedCst.length !== 1}

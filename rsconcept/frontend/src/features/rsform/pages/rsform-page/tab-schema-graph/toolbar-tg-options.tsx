@@ -58,23 +58,23 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
   }
 
   const textToggleTitle = !filter.noText ? tx('tx.general.labels.hide') : tx('tx.general.labels.show');
-  const derivedToggleTitle = !filter.foldDerived ? tx('ui.rsform.hideDerived') : tx('ui.rsform.showDerived');
+  const derivedToggleTitle = !filter.foldDerived ? tx('tx.cst.spawned.hide') : tx('tx.cst.spawned.show');
 
   return (
     <div className={cn('grid grid-cols-2 gap-1 pointer-events-auto', className)}>
       <MiniButton
-        title={prepareTooltip(tx('tx.general.fitView'), 'G')}
+        title={prepareTooltip(tx('tx.flow.fitView'), 'G')}
         icon={<IconFitImage size='1.25rem' className='icon-primary' />}
         onClick={handleFitView}
       />
 
       <MiniButton
-        title={tx('ui.tg.toolbar.filterSettings')}
+        title={tx('tx.general.view.settings')}
         icon={<IconFilter size='1.25rem' className='icon-primary' />}
         onClick={showParams}
       />
       <MiniButton
-        title={tx('ui.tg.toolbar.focusCst')}
+        title={tx('tx.termGraph.focus.hint')}
         icon={<IconFocus size='1.25rem' className='icon-primary' />}
         disabled={selectedCst.length !== 1}
         onClick={handleSetFocus}

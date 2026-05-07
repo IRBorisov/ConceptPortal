@@ -104,11 +104,11 @@ export function PickMultiConstituenta({
       <div className='px-3 flex justify-between items-center bg-input border-b rounded-t-md'>
         <div className='w-[24ch] select-none whitespace-nowrap'>
           {items.length > 0
-            ? tx('ui.table.pickMulti.selected', {
+            ? tx('tx.general.selection.status', {
                 selected: value.length,
                 total: items.length
               })
-            : tx('tx.lib.cst.plural')}
+            : tx('tx.cst.plural')}
         </div>
         <SearchBar
           id='dlg_constituents_search'
@@ -145,7 +145,7 @@ export function PickMultiConstituenta({
         onRowSelectionChange={handleRowSelection}
         noDataComponent={
           <NoData>
-            <p>{tx('tx.general.list.empty')}</p>
+            <p>{tx('tx.list.empty')}</p>
           </NoData>
         }
       />

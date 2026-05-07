@@ -70,9 +70,9 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
       maxSize: 40,
       cell: props => <div className='text-center pr-2'>{props.getValue()}</div>
     }),
-    argumentsHelper.accessor(arg => arg.value || tx('ui.template.arguments.freeSlot'), {
+    argumentsHelper.accessor(arg => arg.value || tx('tx.cst.template.argument.unbound'), {
       id: 'value',
-      header: tx('tx.rslang.value'),
+      header: tx('tx.rslang.value.short'),
       size: 200,
       minSize: 200,
       maxSize: 200
@@ -118,11 +118,11 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
         data={args}
         columns={columns}
         conditionalRowStyles={conditionalRowStyles}
-        noDataComponent={<NoData className='min-h-14'>{tx('ui.template.arguments.empty')}</NoData>}
+        noDataComponent={<NoData className='min-h-14'>{tx('tx.cst.template.argument.empty')}</NoData>}
         onRowClicked={handleSelectArgument}
       />
 
-      <h2>{tx('tx.lib.cst.plural')}</h2>
+      <h2>{tx('tx.cst.plural')}</h2>
 
       <PickConstituenta
         id='dlg_argument_picker'
@@ -136,7 +136,7 @@ export function TabArguments({ schema, definition }: TabArgumentsProps) {
         disabled
         portalHoverTooltips
         id='result'
-        placeholder={tx('ui.template.arguments.placeholderDefinition')}
+        placeholder={tx('tx.cst.template.result')}
         className='mt-4'
         height='5.1rem'
         value={definition}

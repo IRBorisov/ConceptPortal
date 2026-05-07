@@ -29,37 +29,31 @@ export function DlgOssSettings() {
   const toggleEdgeAnimate = useOSSGraphStore(state => state.toggleEdgeAnimate);
   const toggleEdgeStraight = useOSSGraphStore(state => state.toggleEdgeStraight);
 
-  const toggleOnShort = tx('tx.general.on');
-  const toggleOffShort = tx('tx.general.off');
+  const toggleOn = tx('tx.general.on');
+  const toggleOff = tx('tx.general.off');
 
   return (
     <ModalView header={tx('tx.general.settings')} className='cc-column justify-between px-6 pb-3 w-100'>
       <Checkbox
         value={showCoordinates}
         onChange={toggleShowCoordinates}
-        aria-label={tx('ui.oss.settings.coordsToggleAria')}
-        label={tx('ui.oss.settings.coordsLabel', {
-          state: showCoordinates ? toggleOnShort : toggleOffShort
-        })}
+        aria-label={tx('tx.flow.coordinates.toggle')}
+        label={`${tx('tx.flow.coordinates')}${tx('tx.general.colon')}${showCoordinates ? toggleOn : toggleOff}`}
         customIcon={checked => <IconCoordinates size={ICON_SIZE} className={checked ? 'icon-green' : 'icon-primary'} />}
       />
       <Checkbox
         value={showGrid}
         onChange={toggleShowGrid}
-        aria-label={tx('ui.oss.settings.gridToggleTitle')}
-        title={prepareTooltip(tx('ui.oss.settings.gridToggleTitle'), 'X')}
-        label={tx('ui.oss.settings.gridLabel', {
-          state: showGrid ? toggleOnShort : toggleOffShort
-        })}
+        aria-label={tx('tx.flow.grid.toggle')}
+        title={prepareTooltip(tx('tx.flow.grid.toggle'), 'X')}
+        label={`${tx('tx.flow.grid')}${tx('tx.general.colon')}${showGrid ? toggleOn : toggleOff}`}
         customIcon={checked => <IconGrid size={ICON_SIZE} className={checked ? 'icon-green' : 'icon-primary'} />}
       />
       <Checkbox
         value={edgeAnimate}
         onChange={toggleEdgeAnimate}
-        aria-label={tx('ui.oss.settings.edgeAnimateAria')}
-        label={tx('ui.oss.settings.edgeAnimateLabel', {
-          state: edgeAnimate ? toggleOnShort : toggleOffShort
-        })}
+        aria-label={tx('tx.flow.animation.toggle')}
+        label={`${tx('tx.flow.animation')}${tx('tx.general.colon')}${edgeAnimate ? toggleOn : toggleOff}`}
         customIcon={checked =>
           checked ? (
             <IconAnimation size={ICON_SIZE} className='icon-primary' />
@@ -71,11 +65,9 @@ export function DlgOssSettings() {
       <Checkbox
         value={edgeStraight}
         onChange={toggleEdgeStraight}
-        aria-label={tx('ui.oss.settings.edgeShapeTitle')}
-        title={prepareTooltip(tx('ui.oss.settings.edgeShapeTitle'), 'T')}
-        label={tx('ui.oss.settings.edgeShapeLabel', {
-          shape: edgeStraight ? tx('ui.oss.settings.edgeStraight') : tx('ui.oss.settings.edgeBezier')
-        })}
+        aria-label={tx('tx.flow.edge.shape.toggle')}
+        title={prepareTooltip(tx('tx.flow.edge.shape.toggle'), 'T')}
+        label={`${tx('tx.flow.edge.plural')}${tx('tx.general.colon')}${edgeStraight ? tx('tx.flow.edge.shape.straight') : tx('tx.flow.edge.shape.bezier')}`}
         customIcon={checked =>
           checked ? (
             <IconLineStraight size={ICON_SIZE} className='icon-primary' />

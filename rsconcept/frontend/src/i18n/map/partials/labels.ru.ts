@@ -1,6 +1,3 @@
-import { labelsFeatureUiRu } from './labels-feature.ru';
-
-/** Russian overrides for shared labels (toasts, Zod, hints, prompts). */
 export const labelsRu: Record<string, string> = {
   'labels.error.lengthLimit': 'Максимальная длина',
   'labels.error.typeStructureFailed': 'Структура отсутствует',
@@ -105,7 +102,5 @@ export const labelsRu: Record<string, string> = {
   'labels.errorDetail.responseDescription': 'Полное описание',
   'labels.errorDetail.contactIntro':
     'Пожалуйста сделайте скриншот и отправьте вместе с описанием ситуации на почту portal@acconcept.ru',
-  'labels.errorDetail.reloadHint': 'Для продолжения работы перезагрузите страницу',
-
-  ...labelsFeatureUiRu
+  'labels.errorDetail.reloadHint': 'Для продолжения работы перезагрузите страницу'
 };

@@ -61,12 +61,27 @@ const grammemeFrEntries = (Object.keys(GRAMMEME_FR) as Grammeme[]).map(
 export const txLangFr: Record<string, string> = {
   ...Object.fromEntries(grammemeFrEntries),
 
+  'tx.lang.term': 'Terme',
+  'tx.lang.term.hint': 'Abréviation pour les définitions textuelles',
+  'tx.lang.term.validate.empty': 'Terme absent',
+  'tx.lang.term.plural': 'Termes',
+  'tx.lang.term.new': 'Nouveau terme',
+
+  'tx.lang.definition': 'Définition',
+
   'tx.lang.morphology.nominal': 'Forme nominale',
   'tx.lang.wordform.plural.editing': 'Édition des formes de mots',
   'tx.lang.wordform.plural.editing.hint': 'Éditer les formes du mot',
   'tx.lang.wordform.plural.generate': 'Génération des formes de mots',
 
   'tx.lang.reference.syntactic': 'Référence syntaxique',
-  'tx.lang.reference.offset': 'Décalage',
-  'tx.lang.reference.master': 'Référence principale'
+  'tx.lang.reference.offset': 'Décalage de la référence de base',
+  'tx.lang.reference.offset.short': 'Décalage',
+  'tx.lang.reference.master': 'Référence de base',
+  'tx.lang.reference.dependent': 'Mot dépendant',
+  'tx.lang.reference.next': 'Référence suivante',
+  'tx.lang.reference.prev': 'Référence précédente',
+  'tx.lang.reference.save': 'Enregistrer la référence',
+
+  'tx.lang.reference.entity': 'Référence à la constituante'
 };

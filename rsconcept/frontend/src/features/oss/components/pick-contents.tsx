@@ -86,7 +86,7 @@ export function PickContents({
       size: 150,
       minSize: 150,
       maxSize: 150,
-      cell: props => <div>{props.getValue() ? tx('tx.lib.operation') : tx('tx.lib.block')}</div>
+      cell: props => <div>{props.getValue() ? tx('tx.operation') : tx('tx.oss.block')}</div>
     }),
     columnHelper.accessor('title', {
       id: 'title',
@@ -131,7 +131,7 @@ export function PickContents({
         noBorder
         items={items}
         value={lastSelected}
-        placeholder={tx('ui.oss.pickContents.comboPlaceholder')}
+        placeholder={tx('tx.operation.or.block.select')}
         idFunc={item => item.nodeID}
         labelValueFunc={item => labelOssItem(item)}
         labelOptionFunc={item => labelOssItem(item)}
@@ -147,7 +147,7 @@ export function PickContents({
         columns={columns}
         noDataComponent={
           <NoData>
-            <p>{tx('tx.general.list.empty')}</p>
+            <p>{tx('tx.list.empty')}</p>
           </NoData>
         }
       />

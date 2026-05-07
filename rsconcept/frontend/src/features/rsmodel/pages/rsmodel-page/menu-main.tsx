@@ -157,8 +157,8 @@ export function MenuMain() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('tx.lib.model.recalculate')}
-          aria-label={tx('tx.lib.model.recalculate.hint')}
+          text={tx('tx.model.recalculate')}
+          aria-label={tx('tx.model.recalculate.hint')}
           icon={<IconCalculateAll size='1rem' className='icon-green' />}
           onClick={handleRecalculate}
         />
@@ -183,13 +183,13 @@ export function MenuMain() {
           />
         ) : null}
         <DropdownButton
-          text={tx('ui.action.openInSandbox')}
+          text={tx('tx.sandbox.open')}
           icon={<IconSandbox size='1rem' className='icon-green' />}
           onClick={() => void handleTransferToSandbox()}
         />
         {isMutable ? (
           <DropdownButton
-            text={tx('tx.lib.model.delete')}
+            text={tx('tx.model.delete')}
             icon={<IconDestroy size='1rem' className='icon-red' />}
             disabled={isProcessing || role < UserRole.OWNER}
             onClick={handleDelete}
@@ -201,7 +201,7 @@ export function MenuMain() {
         {schema.models.length > 1 ? (
           <div ref={otherModelsRef} onBlur={handleOtherModelsBlur} className='relative w-full'>
             <DropdownButton
-              text={tx('tx.lib.model.goto')}
+              text={tx('tx.model.goto')}
               className='w-full'
               icon={<IconRSModel size='1rem' className='icon-primary' />}
               onClick={onOtherModelsToggle}
@@ -214,7 +214,7 @@ export function MenuMain() {
                     key={reference.id}
                     text={reference.alias}
                     className='min-w-30'
-                    title={isCurrent ? tx('tx.lib.model.current') : undefined}
+                    title={isCurrent ? tx('tx.model.current') : undefined}
                     disabled={isCurrent}
                     aria-current={isCurrent ? true : undefined}
                     onClick={event => handleGotoSiblingModel(reference.id, event)}
@@ -225,7 +225,7 @@ export function MenuMain() {
           </div>
         ) : null}
         <DropdownButton
-          text={tx('tx.lib.schema.goto')}
+          text={tx('tx.schema.goto')}
           icon={<IconRSForm size='1rem' className='icon-primary' />}
           onClick={handleNavigateSchema}
         />

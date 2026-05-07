@@ -72,11 +72,12 @@ const IGNORE_DUPES = new Set<string>([
   'tx.general.firstName',
   'tx.rslang.typeClass.predicate',
   'tx.rslang.typeClass.function',
-  'tx.lib.evalStatus.error',
-  'tx.lib.input',
+  'tx.eval.status.error',
+  'tx.oss.input',
   'tx.ai.template',
-  'tx.lib.operation.argument',
-  'tx.lib.operation.argument.plural'
+  'tx.operation.argument',
+  'tx.operation.argument.plural',
+  'tx.concept.original.plural'
 ]);
 
 it('has no duplicate values in en, ru, or fr catalogs', () => {

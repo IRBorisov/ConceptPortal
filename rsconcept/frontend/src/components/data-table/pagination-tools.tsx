@@ -29,7 +29,7 @@ export function PaginationTools<TData>({
   const rowCount = table.getFilteredRowModel().rows.length;
   const start = rowCount === 0 ? 0 : pageIndex * pageSize + 1;
   const end = Math.min(rowCount, (pageIndex + 1) * pageSize);
-  const rangeLabel = tx('ui.pagination.shownRange', { start, end, total: rowCount });
+  const rangeLabel = tx('tx.shell.pagination.range', { start, end, total: rowCount });
 
   const buttonClass = clsx(
     '-my-1',
@@ -45,7 +45,7 @@ export function PaginationTools<TData>({
         <div className='flex'>
           <button
             type='button'
-            aria-label={tx('ui.pagination.firstPageAria')}
+            aria-label={tx('tx.shell.pagination.first')}
             className={buttonClass}
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
@@ -54,7 +54,7 @@ export function PaginationTools<TData>({
           </button>
           <button
             type='button'
-            aria-label={tx('ui.pagination.prevPageAria')}
+            aria-label={tx('tx.shell.pagination.prev')}
             className={buttonClass}
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
@@ -63,8 +63,8 @@ export function PaginationTools<TData>({
           </button>
           <input
             id={id ? `${id}__page` : undefined}
-            title={tx('ui.pagination.pageInputTitle')}
-            aria-label={tx('ui.pagination.pageInputAria')}
+            title={tx('tx.shell.pagination.page.input.hint')}
+            aria-label={tx('tx.shell.pagination.page.input')}
             className='w-6 text-center bg-transparent focus-outline rounded-md p-0'
             value={table.getState().pagination.pageIndex + 1}
             onChange={event => {
@@ -76,7 +76,7 @@ export function PaginationTools<TData>({
           />
           <button
             type='button'
-            aria-label={tx('ui.pagination.nextPageAria')}
+            aria-label={tx('tx.shell.pagination.next')}
             className={buttonClass}
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
@@ -85,7 +85,7 @@ export function PaginationTools<TData>({
           </button>
           <button
             type='button'
-            aria-label={tx('ui.pagination.lastPageAria')}
+            aria-label={tx('tx.shell.pagination.last')}
             className={buttonClass}
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}

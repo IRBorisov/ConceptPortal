@@ -61,12 +61,27 @@ const grammemeRuEntries = (Object.keys(GRAMMEME_RU) as Grammeme[]).map(
 export const txLangRu: Record<string, string> = {
   ...Object.fromEntries(grammemeRuEntries),
 
+  'tx.lang.term': 'Термин',
+  'tx.lang.term.hint': 'Обозначение для текстовых определений',
+  'tx.lang.term.validate.empty': 'Термин отсутствует',
+  'tx.lang.term.plural': 'Термины',
+  'tx.lang.term.new': 'Новый термин',
+
+  'tx.lang.definition': 'Определение',
+
   'tx.lang.morphology.nominal': 'Начальная форма',
   'tx.lang.wordform.plural.editing': 'Редактирование словоформ',
   'tx.lang.wordform.plural.editing.hint': 'Редактировать словоформы термина',
   'tx.lang.wordform.plural.generate': 'Генерация словоформ',
 
   'tx.lang.reference.syntactic': 'Синтаксическая ссылка',
-  'tx.lang.reference.offset': 'Смещение',
-  'tx.lang.reference.master': 'Основная ссылка'
+  'tx.lang.reference.offset': 'Смещение опорной ссылки',
+  'tx.lang.reference.offset.short': 'Смещение',
+  'tx.lang.reference.master': 'Опорная ссылка',
+  'tx.lang.reference.dependent': 'Зависимое слово',
+  'tx.lang.reference.next': 'Следующая ссылка',
+  'tx.lang.reference.prev': 'Предыдущая ссылка',
+  'tx.lang.reference.save': 'Сохранить ссылку',
+
+  'tx.lang.reference.entity': 'Ссылка на конституенту'
 };

@@ -23,11 +23,7 @@ export function Component() {
     <div className='relative w-full' style={{ height: panelHeight }}>
       <TransformWrapper>
         <TransformComponent wrapperClass='!w-full !h-full' contentClass='flex justify-center items-center'>
-          <img
-            alt={tx('ui.page.databaseSchema.imageAlt')}
-            src={resources.db_schema}
-            className='w-fit h-fit'
-          />
+          <img alt={tx('tx.shell.link.dbStructure')} src={resources.db_schema} className='w-fit h-fit' />
         </TransformComponent>
       </TransformWrapper>
     </div>

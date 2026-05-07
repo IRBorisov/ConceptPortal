@@ -161,7 +161,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
     >
       <div className='flex items-center gap-2 mr-2 font-math font-semibold select-text'>
-        <span>{tx('tx.lib.cst') + ' ' + activeCst.alias}</span>
+        <span>{tx('tx.cst') + ' ' + activeCst.alias}</span>
       </div>
       <ConstituentaPrimaryActions className='-mt-1' activeCst={activeCst} schema={schema} />
 
@@ -186,8 +186,8 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
 
             <RefsInput
               id='cst_term'
-              label={tx('tx.lib.term')}
-              aria-label={tx('tx.lib.term')}
+              label={tx('tx.lang.term')}
+              aria-label={tx('tx.lang.term')}
               maxHeight='8rem'
               areaClassName={
                 (needsInterpretation && !field.state.value) ||
@@ -195,7 +195,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
                   ? 'cm-error'
                   : ''
               }
-              placeholder={disabled ? '' : tx('tx.lib.term.hint')}
+              placeholder={disabled ? '' : tx('tx.lang.term.hint')}
               schema={schema}
               onOpenEdit={onOpenEdit}
               value={field.state.value ?? ''}
@@ -206,9 +206,9 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
               error={
                 field.state.meta.errors[0]?.message ??
                 (needsInterpretation && !field.state.value
-                  ? tx('tx.lib.term.validate.empty')
+                  ? tx('tx.lang.term.validate.empty')
                   : activeCst.homonyms.length > 0 && !field.state.meta.isDirty
-                    ? tx('tx.lib.term.validate.homonyms', {
+                    ? tx('tx.concept.homonym.validate', {
                         aliases: formatAliasList(activeCst.homonyms, schema)
                       })
                     : undefined)
@@ -220,7 +220,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
 
       {activeCst.cst_type === CstType.NOMINAL || activeCst.attributes.length > 0 ? (
         <div className='flex flex-col gap-1'>
-          <Label text={tx('ui.label.attributingConstituents')} />
+          <Label text={tx('tx.attribution.attribute.plural')} />
           <SelectMultiConstituenta
             items={schema.items.filter(item => item.id !== activeCst.id)}
             value={attributions}
@@ -228,7 +228,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
             onClear={clearAttributions}
             onRemove={removeAttribution}
             disabled={disabled || isModified}
-            placeholder={disabled ? '' : tx('tx.lib.cst.select.plural.hint')}
+            placeholder={disabled ? '' : tx('tx.cst.select.multiple')}
           />
         </div>
       ) : null}

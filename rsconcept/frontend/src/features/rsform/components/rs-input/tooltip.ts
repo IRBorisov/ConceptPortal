@@ -150,37 +150,45 @@ function domTooltipConstituenta(
 
   if (!cst) {
     const text = document.createElement('p');
-    text.innerText = globalTx('ui.rsform.rsInput.undefinedConstituent');
+    text.innerText = globalTx('tx.cst.undefined');
     dom.appendChild(text);
   } else {
     appendMathBoldLabelParagraph(dom, `${cst.alias}:`, labelType(cst.analysis.type));
 
     if (cst.term_resolved) {
-      appendBoldTextRow(dom, globalTx('tx.lib.term') + ': ', cst.term_resolved);
+      appendBoldTextRow(dom, globalTx('tx.lang.term') + globalTx('tx.general.colon'), cst.term_resolved);
     }
 
     if (cst.definition_formal) {
-      appendBoldTextRow(dom, globalTx('ui.rsform.cstInfo.expressionLabel'), cst.definition_formal);
+      appendBoldTextRow(dom, globalTx('tx.rslang.expression') + globalTx('tx.general.colon'), cst.definition_formal);
     }
 
     if (cst.definition_resolved) {
-      appendBoldTextRow(dom, globalTx('ui.rsform.cstInfo.definitionLabel'), cst.definition_resolved);
+      appendBoldTextRow(dom, globalTx('tx.lang.definition') + globalTx('tx.general.colon'), cst.definition_resolved);
     }
 
     if (cst.convention) {
       if (isBasicConcept(cst.cst_type)) {
-        appendBoldTextRow(dom, globalTx('tx.lib.convention') + ': ', cst.convention);
+        appendBoldTextRow(dom, globalTx('tx.lib.convention') + globalTx('tx.general.colon'), cst.convention);
       } else {
-        appendBoldTextRow(dom, globalTx('tx.lib.comment') + ': ', cst.convention);
+        appendBoldTextRow(dom, globalTx('tx.lib.comment') + globalTx('tx.general.colon'), cst.convention);
       }
     }
 
     if (cst.spawner_alias) {
-      appendBoldTextRow(dom, globalTx('ui.rsform.cstInfo.baseLabel'), cst.spawner_alias);
+      appendBoldTextRow(
+        dom, //
+        globalTx('tx.cst.spawner') + globalTx('tx.general.colon'),
+        cst.spawner_alias
+      );
     }
 
     if (cst.spawn_alias.length > 0) {
-      appendBoldTextRow(dom, globalTx('ui.rsform.cstInfo.generatesLabel'), cst.spawn_alias.join(', '));
+      appendBoldTextRow(
+        dom,
+        globalTx('tx.cst.spawned.plural.short') + globalTx('tx.general.colon'),
+        cst.spawn_alias.join(', ')
+      );
     }
 
     if (canClick) {

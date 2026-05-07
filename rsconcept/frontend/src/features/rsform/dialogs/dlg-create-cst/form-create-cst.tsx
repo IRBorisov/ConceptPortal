@@ -52,7 +52,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
     <>
       <div className='flex items-center self-center gap-3'>
         <MiniButton
-          title={tx('tx.lib.cst.crucial')}
+          title={tx('tx.cst.crucial')}
           icon={<IconCrucialValue size='1.25rem' value={crucial} />}
           onClick={onToggleCrucial}
         />
@@ -78,9 +78,9 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
         {field => (
           <RefsInput
             id='dlg_cst_term'
-            label={tx('tx.lib.term')}
+            label={tx('tx.lang.term')}
             maxHeight='3.75rem'
-            placeholder={tx('tx.lib.term.hint')}
+            placeholder={tx('tx.lang.term.hint')}
             schema={schema}
             value={field.state.value ?? ''}
             resolved={field.state.value}

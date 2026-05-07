@@ -39,10 +39,7 @@ export function StatusBar({ className, status, onAnalyze }: StatusBarProps) {
           colorStatusBar(status)
         )}
         data-tooltip-id={globalIDs.tooltip}
-        data-tooltip-content={prepareTooltip(
-          tx('ui.rsexpr.status.checkDefinition'),
-          isMac() ? 'Cmd + Q' : 'Ctrl + Q'
-        )}
+        data-tooltip-content={prepareTooltip(tx('tx.rslang.expression.analyze'), isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
         onClick={onAnalyze}
       >
         <div className='cc-fade-in flex items-center gap-1'>

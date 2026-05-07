@@ -28,25 +28,25 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
       <StatsCategory
         id='rsmodel-stats-overview'
         className='rounded-t-md'
-        label={tx('ui.stats.section.overview')}
-        primaryLabel={tx('tx.lib.cst.plural')}
+        label={tx('tx.lib.contents')}
+        primaryLabel={tx('tx.cst.plural')}
         primaryValue={stats.count_all}
-        primaryTitle={tx('ui.stats.title.totalConstituents')}
-        secondaryLabel={stats.count_inherited > 0 ? tx('tx.lib.concept.original.plural') : undefined}
+        primaryTitle={tx('tx.schema.items.total.hint')}
+        secondaryLabel={stats.count_inherited > 0 ? tx('tx.concept.original.plural') : undefined}
         secondaryValue={stats.count_inherited > 0 ? countOwned : undefined}
-        secondaryTitle={tx('ui.stats.title.ownedConstituents')}
+        secondaryTitle={tx('tx.concept.original.hint')}
         details={[
-          { label: tx('ui.stats.row.totalConstituents'), value: stats.count_all },
+          { label: tx('tx.general.total'), value: stats.count_all },
           ...(stats.count_inherited > 0
             ? [
-                { label: tx('tx.lib.concept.inherited.plural'), value: stats.count_inherited },
-                { label: tx('tx.lib.concept.original.plural'), value: countOwned }
+                { label: tx('tx.concept.inherited.plural'), value: stats.count_inherited },
+                { label: tx('tx.concept.original.plural'), value: countOwned }
               ]
             : []),
-          { label: tx('tx.lib.cst.crucial.plural'), value: stats.count_crucial },
-          { label: tx('tx.lib.term.plural'), value: stats.count_text_term },
-          { label: tx('ui.stats.row.definitions'), value: stats.count_definition },
-          { label: tx('ui.stats.row.conventions'), value: stats.count_convention },
+          { label: tx('tx.cst.crucial.plural'), value: stats.count_crucial },
+          { label: tx('tx.lang.term.plural'), value: stats.count_text_term },
+          { label: tx('tx.lib.definitionTextual.plural'), value: stats.count_definition },
+          { label: tx('tx.lib.convention.plural'), value: stats.count_convention },
           { label: tx('tx.lib.comment.plural'), value: stats.count_comment }
         ]}
       />
@@ -55,25 +55,25 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
 
       <StatsCategory
         id='rsmodel-stats-structures'
-        label={tx('ui.stats.model.schemaProfile')}
-        primaryLabel={tx('tx.lib.concept.basic.plural')}
+        label={tx('tx.schema.short')}
+        primaryLabel={tx('tx.concept.basic.plural')}
         primaryValue={countBase}
         primaryTitle={tx('ui.stats.title.undefinedConcepts')}
         secondaryLabel={tx('ui.stats.secondary.complexity')}
         secondaryValue={stats.step_complexity}
         secondaryTitle={tx('ui.stats.title.termsForBases')}
         details={[
-          { label: tx('tx.lib.concept.basic.plural'), value: countBase },
-          { label: tx('tx.lib.concept.derived.plural'), value: countDerived },
-          { label: tx('ui.stats.row.nominals'), value: stats.count_nominal },
-          { label: tx('tx.lib.cst.type.basic'), value: stats.count_base },
-          { label: tx('tx.lib.cst.type.constant'), value: stats.count_constant },
-          { label: tx('tx.lib.cst.type.structure'), value: stats.count_structured },
-          { label: tx('tx.lib.cst.type.axiom'), value: stats.count_axiom },
-          { label: tx('tx.lib.cst.type.term'), value: stats.count_term },
-          { label: tx('tx.lib.cst.type.function'), value: stats.count_function },
-          { label: tx('tx.lib.cst.type.predicate'), value: stats.count_predicate },
-          { label: tx('tx.lib.cst.type.theorem'), value: stats.count_theorem }
+          { label: tx('tx.concept.basic.plural'), value: countBase },
+          { label: tx('tx.concept.derived.plural'), value: countDerived },
+          { label: tx('tx.cst.type.nominal.plural'), value: stats.count_nominal },
+          { label: tx('tx.cst.type.basic'), value: stats.count_base },
+          { label: tx('tx.cst.type.constant'), value: stats.count_constant },
+          { label: tx('tx.cst.type.structure'), value: stats.count_structured },
+          { label: tx('tx.cst.type.axiom'), value: stats.count_axiom },
+          { label: tx('tx.cst.type.term'), value: stats.count_term },
+          { label: tx('tx.cst.type.function'), value: stats.count_function },
+          { label: tx('tx.cst.type.predicate'), value: stats.count_predicate },
+          { label: tx('tx.cst.type.theorem'), value: stats.count_theorem }
         ]}
       />
 
@@ -81,16 +81,16 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
 
       <StatsCategory
         id='rsmodel-stats-quality'
-        label={tx('ui.stats.section.correctness')}
-        primaryLabel={tx('ui.stats.primary.problems')}
+        label={tx('tx.concept.system.correctness.short')}
+        primaryLabel={tx('tx.general.issue.plural')}
         primaryValue={stats.count_problematic}
-        primaryTitle={tx('ui.stats.title.problemsCount')}
+        primaryTitle={tx('tx.schema.issue.hint')}
         secondaryLabel={tx('tx.general.error.plural')}
         secondaryValue={countErrors}
         secondaryTitle={tx('ui.stats.title.errorDefinitions')}
         details={[
-          { label: tx('ui.stats.row.homonyms'), value: stats.count_homonyms },
-          { label: tx('ui.stats.row.duplicates'), value: stats.count_formal_duplicates },
+          { label: tx('tx.concept.homonym.plural'), value: stats.count_homonyms },
+          { label: tx('tx.concept.duplicate.plural'), value: stats.count_formal_duplicates },
           {
             label: tx('ui.stats.row.missingConventionOrTerm'),
             value: stats.count_missing_convention
@@ -107,16 +107,16 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
       <StatsCategory
         id='rsmodel-stats-model'
         className='rounded-b-md'
-        label={tx('ui.stats.model.profile')}
-        primaryLabel={tx('ui.stats.primary.remarks')}
+        label={tx('tx.model.short')}
+        primaryLabel={tx('tx.general.issue.plural')}
         primaryValue={countModelNotes}
-        primaryTitle={tx('ui.stats.title.remarksSum')}
+        primaryTitle={tx('tx.model.issue.hint')}
         secondaryLabel={tx('ui.stats.secondary.basePower')}
         secondaryValue={stats.base_elements}
         secondaryTitle={tx('ui.stats.title.baseInterpretationPower')}
         details={[
           { label: tx('ui.stats.row.baseCardinality'), value: stats.base_elements },
-          { label: tx('tx.lib.evalStatus.invalidData'), value: stats.count_invalid_data },
+          { label: tx('tx.eval.status.invalidData'), value: stats.count_invalid_data },
           {
             label: tx('ui.stats.row.missingBaseInterpretation'),
             value: stats.count_missing_base

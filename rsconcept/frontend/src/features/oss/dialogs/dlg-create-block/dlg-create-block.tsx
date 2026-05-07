@@ -45,7 +45,7 @@ export function DlgCreateBlock() {
 
   const { ossID, layout, childrenBlocks, childrenOperations, initialParent, onCreate, defaultX, defaultY } =
     useDialogsStore(state => state.props as DlgCreateBlockProps);
-
+  const childrenCount = childrenOperations.length + childrenBlocks.length;
   const { schema } = useOss({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);
 
@@ -126,7 +126,7 @@ export function DlgCreateBlock() {
 
   return (
     <ModalForm
-      header={tx('tx.lib.block.create')}
+      header={tx('tx.oss.block.create')}
       submitText={tx('tx.general.create')}
       canSubmit={canSubmit}
       validationHint={hint}
@@ -142,10 +142,8 @@ export function DlgCreateBlock() {
         <TabList className='z-pop mx-auto flex border divide-x rounded-none'>
           <TabLabel label={tx('tx.lib.item.passport')} />
           <TabLabel
-            title={tx('ui.dlg.createBlock.tabChildren.title', {
-              count: childrenOperations.length + childrenBlocks.length
-            })}
-            label={tx('tx.lib.contents') + (childrenOperations.length + childrenBlocks.length > 0 ? '*' : '')}
+            title={`${tx('tx.oss.block.selectChildren')}${tx('tx.general.colon')}[${childrenCount}]`}
+            label={tx('tx.lib.contents') + (childrenCount > 0 ? '*' : '')}
           />
         </TabList>
 

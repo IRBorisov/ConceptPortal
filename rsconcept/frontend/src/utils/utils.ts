@@ -144,7 +144,7 @@ export function sharePage() {
 
 /** Show error message about not implemented function. */
 export function notImplemented() {
-  toast.error(globalTx('ui.common.notImplemented'));
+  toast.error(globalTx('tx.shell.notImplemented'));
   console.error('Not implemented');
 }
 

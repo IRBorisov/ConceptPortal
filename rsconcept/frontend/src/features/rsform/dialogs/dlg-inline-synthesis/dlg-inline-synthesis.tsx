@@ -72,7 +72,7 @@ export function DlgInlineSynthesis() {
 
   return (
     <ModalForm
-      header={tx('tx.lib.schema.embedding')}
+      header={tx('tx.schema.embed')}
       submitText={tx('tx.general.execute')}
       className='w-160 h-132 px-6'
       canSubmit={canSubmit}
@@ -81,23 +81,15 @@ export function DlgInlineSynthesis() {
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
-          <TabLabel label={tx('tx.lib.schema.short')} title={tx('ui.tab.inlineSynthesis.schemaTitle')} />
+          <TabLabel label={tx('tx.schema.short')} title={tx('tx.synthesis.inline.source')} />
           <TabLabel
-            label={tx('tx.lib.cst.plural')}
-            title={
-              !sourceID
-                ? tx('ui.tab.inlineSynthesis.selectSchemaFirst')
-                : tx('ui.tab.inlineSynthesis.constituentsTitle')
-            }
+            label={tx('tx.cst.plural')}
+            title={!sourceID ? tx('tx.synthesis.inline.source.select') : tx('tx.cst.list')}
             disabled={!sourceID}
           />
           <TabLabel
-            label={tx('tx.lib.cst.substitution.plural')}
-            title={
-              !sourceID
-                ? tx('ui.tab.inlineSynthesis.selectSchemaFirst')
-                : tx('ui.tab.inlineSynthesis.substitutionsTitle')
-            }
+            label={tx('tx.substitution.plural')}
+            title={!sourceID ? tx('tx.synthesis.inline.source.select') : tx('tx.substitution.table')}
             disabled={!sourceID}
           />
         </TabList>

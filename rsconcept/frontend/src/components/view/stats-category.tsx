@@ -57,7 +57,7 @@ export function StatsCategory({
 
       <details className='group -mt-1' onToggle={handleDetailsToggle}>
         <summary className='text-muted-foreground hover:text-foreground cursor-pointer text-xs select-none'>
-          {tx('ui.stats.moreDetails')}
+          {tx('tx.general.details')}
         </summary>
         <div className='grid gap-1 pt-1 text-xs'>
           {details.map(detail => (

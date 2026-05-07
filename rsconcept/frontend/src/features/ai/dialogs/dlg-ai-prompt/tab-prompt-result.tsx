@@ -12,9 +12,9 @@ export function TabPromptResult({ prompt }: TabPromptResultProps) {
   const tx = useTx();
   return (
     <TextArea
-      aria-label={tx('ui.aiPrompt.result.ariaLabel')}
+      aria-label={tx('tx.ai.generated.hint')}
       value={prompt}
-      placeholder={tx('ui.aiPrompt.result.emptyPlaceholder')}
+      placeholder={tx('tx.ai.template.validate.empty')}
       disabled
       areaClassName='w-full h-88'
     />

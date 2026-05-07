@@ -1,4 +1,6 @@
 export const txGeneralFr: Record<string, string> = {
+  'tx.general.colon': ' : ',
+
   'tx.general.date': 'Date',
   'tx.general.date.creation': 'Créé',
   'tx.general.date.updated': 'Mis à jour',
@@ -9,10 +11,13 @@ export const txGeneralFr: Record<string, string> = {
   'tx.general.error': 'Erreur',
   'tx.general.error.plural': 'Erreurs',
   'tx.general.warning': 'Avertissement',
+  'tx.general.warning.plural': 'Avertissements',
+  'tx.general.issue.plural': 'Problèmes',
   'tx.general.notification': 'Notification',
+  'tx.general.none': 'absent',
   'tx.general.labels.show': 'Afficher les labels',
   'tx.general.labels.hide': 'Masquer les labels',
-  'tx.general.fitView': 'Ajuster la vue',
+  'tx.general.details': 'Détails',
 
   'tx.general.user': 'Utilisateur',
   'tx.general.user.new': 'Nouvel utilisateur',
@@ -45,10 +50,14 @@ export const txGeneralFr: Record<string, string> = {
 
   'tx.general.menu': 'Menu',
   'tx.general.home': 'Page d’accueil',
-  'tx.general.settings': 'Paramètres',
+  'tx.general.data': 'Données',
+  'tx.general.evaluation': 'Évaluation',
   'tx.general.help': 'Aide',
   'tx.general.qrCode': 'Code QR',
   'tx.general.qrCode.hint': 'Afficher le code QR de la page',
+
+  'tx.general.settings': 'Paramètres',
+  'tx.general.view.settings': 'Paramètres de vue',
 
   'tx.general.role': 'Rôle',
   'tx.general.role.admin': 'Administrateur',
@@ -58,6 +67,8 @@ export const txGeneralFr: Record<string, string> = {
   'tx.general.role.editor': 'Éditeur',
   'tx.general.role.editor.hint': 'Mode édition',
   'tx.general.role.editor.plural': 'Éditeurs',
+  'tx.general.role.editor.list': 'Liste des éditeurs',
+  'tx.general.role.editor.add': 'Ajouter un éditeur',
   'tx.general.role.reader': 'Lecteur',
   'tx.general.role.reader.hint': 'Mode lecture',
 
@@ -106,13 +117,14 @@ export const txGeneralFr: Record<string, string> = {
   'tx.general.resetAll': 'Réinitialiser tout',
 
   'tx.general.selection': 'Sélection',
-  'tx.general.selection.status': 'Sélection {n} sur {total}',
+  'tx.general.selection.status': 'Sélection {selected} sur {total}',
   'tx.general.selection.reset': 'Effacer la sélection',
   'tx.general.selection.invert': 'Inverser la sélection',
   'tx.general.selection.selected.delete': 'Supprimer les sélectionnés',
   'tx.general.selection.selected.edit': 'Modifier les sélectionnés',
   'tx.general.selection.selectAll': 'Tout sélectionner',
 
+  'tx.general.rightClick': 'Click droit',
   'tx.general.doubleClick': 'Double-clic',
   'tx.general.yes': 'Oui',
   'tx.general.no': 'Non',
@@ -122,7 +134,40 @@ export const txGeneralFr: Record<string, string> = {
   'tx.general.boolean.false': 'Faux',
   'tx.general.total': 'Total',
   'tx.general.example': 'Exemple',
+  'tx.general.symbol.count': 'Nombre de symboles',
+  'tx.general.symbol.count.limited': 'Le nombre de symboles affichés est limité',
 
-  'tx.general.list': 'Liste',
-  'tx.general.list.empty': 'Liste vide'
+  'tx.list': 'Liste',
+  'tx.list.empty': 'Liste vide',
+
+  'tx.graph': 'Graphe',
+  'tx.graph.node.parent.plural': 'Fournisseurs',
+  'tx.graph.node.parent.show': 'Afficher les fournisseurs',
+  'tx.graph.node.parent.hide': 'Masquer les fournisseurs',
+  'tx.graph.node.child.plural': 'Consommateurs',
+  'tx.graph.node.child.show': 'Afficher les consommateurs',
+  'tx.graph.node.child.hide': 'Masquer les consommateurs',
+  'tx.graph.node.ancestor.plural': 'Influents',
+  'tx.graph.node.descendant.plural': 'Dépendants',
+  'tx.graph.node.isolated.hide': 'Masquer les isolés',
+  'tx.graph.node.isolated.hide.hint': 'Masquer les nœuds sans liens',
+  'tx.graph.select.group': 'Sélectionner un groupe...',
+  'tx.graph.select.expand': 'Étendre à partir de la sélection...',
+  'tx.graph.select.maximize': 'Maximiser',
+  'tx.graph.select.maximize.hint':
+    'Maximiser: compléter la sélection par des constituantes dépendant uniquement de la sélection',
+  'tx.graph.transitiveReduction': 'Réduction transitive',
+  'tx.graph.transitiveReduction.hint': 'Supprimer les arêtes formant\ndes chemins transitifs dans le graphe',
+
+  'tx.flow.fitView': 'Ajuster la vue',
+  'tx.flow.edge.plural': 'Liens',
+  'tx.flow.edge.shape.toggle': 'Forme des liens',
+  'tx.flow.edge.shape.straight': 'Droits',
+  'tx.flow.edge.shape.bezier': 'Bezier',
+  'tx.flow.animation': 'Animation',
+  'tx.flow.animation.toggle': ' Animation des liens',
+  'tx.flow.grid': 'Grille',
+  'tx.flow.grid.toggle': 'Affichage de la grille',
+  'tx.flow.coordinates': 'Coordonnées',
+  'tx.flow.coordinates.toggle': 'Afficher les coordonnées des nœuds'
 };

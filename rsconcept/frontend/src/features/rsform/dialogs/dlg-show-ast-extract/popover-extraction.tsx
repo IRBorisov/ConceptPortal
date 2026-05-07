@@ -106,8 +106,8 @@ export function PopoverExtraction({
       {!popoverInDom ? (
         <Button
           icon={<IconNewItem size='1.1rem' className='icon-primary' />}
-          text={tx('ui.ast.extract.extract')}
-          title={tx('ui.ast.extract.title')}
+          text={tx('tx.rslang.expression.extract')}
+          title={tx('tx.rslang.expression.extract.hint')}
           className={clsx(
             'font-controls font-bold text-sm text-primary/75',
             'bg-background/90 backdrop-blur-3xl cc-fade-in',
@@ -132,7 +132,7 @@ export function PopoverExtraction({
             <div className='cc-icons mt-1'>
               <MiniButton
                 icon={<IconAccept size='1.25rem' className='icon-green' />}
-                title={prepareTooltip(tx('ui.ast.extract.confirm'), tx(isMac() ? 'Cmd + S' : 'Ctrl + S'))}
+                title={prepareTooltip(tx('tx.rslang.expression.extract.confirm'), tx(isMac() ? 'Cmd + S' : 'Ctrl + S'))}
                 onClick={handleSubmit}
                 disabled={disabled}
               />
@@ -147,8 +147,8 @@ export function PopoverExtraction({
               id='dlg_show_ast_extract_term'
               className='w-full'
               areaClassName='text-sm'
-              aria-label={tx('ui.ast.extract.termAria')}
-              placeholder={tx('ui.ast.extract.termPlaceholder')}
+              aria-label={tx('tx.lang.term.new')}
+              placeholder={tx('tx.lang.term.new')}
               value={termText}
               resolved={termText}
               onChange={setTermText}
@@ -164,8 +164,8 @@ export function PopoverExtraction({
             id='dlg_show_ast_extract_definition'
             className='w-96'
             areaClassName='text-sm'
-            aria-label={tx('ui.ast.extract.definitionAria')}
-            placeholder={tx('ui.ast.extract.definitionPlaceholder')}
+            aria-label={tx('tx.lib.definitionTextual.new')}
+            placeholder={tx('tx.lib.definitionTextual.new')}
             value={definition}
             resolved={definition}
             onChange={setDefinition}

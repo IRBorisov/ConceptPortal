@@ -8,7 +8,6 @@ import { txRslangEn } from '../domain/rslang.en';
 import { txSandboxEn } from '../domain/sandbox.en';
 
 import { labelsEn } from './partials/labels.en';
-import { uiEn } from './partials/ui.en';
 import { uiExtraEn } from './partials/ui-extra.en';
 
 export const enMessages: Record<string, string> = {
@@ -21,6 +20,5 @@ export const enMessages: Record<string, string> = {
   ...txAiEn,
   ...txSandboxEn,
   ...labelsEn,
-  ...uiEn,
   ...uiExtraEn
 };

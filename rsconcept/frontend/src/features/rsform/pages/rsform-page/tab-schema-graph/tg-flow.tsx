@@ -388,7 +388,7 @@ export function TGFlow() {
         <ToolbarTGEdit className='pr-1 w-fit whitespace-nowrap backdrop-blur-xs rounded-xl' graph={filteredGraph} />
         <div className='px-2 py-1 select-none whitespace-nowrap backdrop-blur-xs rounded-xl w-fit'>
           {tx('tx.general.selection.status', {
-            n: selectedCst.length,
+            selected: selectedCst.length,
             total: schema.items.length
           })}
         </div>

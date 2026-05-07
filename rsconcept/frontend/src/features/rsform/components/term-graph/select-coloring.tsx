@@ -39,7 +39,7 @@ export function SelectColoring({ className, schema }: SelectColoringProps) {
 
       <Select items={items} onValueChange={newValue => setColoring(newValue!)} value={coloring}>
         <SelectTrigger noBorder className='w-full'>
-          <SelectValue placeholder={tx('ui.rsform.termGraph.colorSchemePlaceholder')} />
+          <SelectValue placeholder={tx('tx.termGraph.coloring')} />
         </SelectTrigger>
         <SelectContent alignOffset={-1} sideOffset={-4}>
           {Object.values(TGColoring).map(value => (

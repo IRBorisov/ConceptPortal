@@ -5,21 +5,28 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.typeClass.function': 'Fonction terme',
   'tx.rslang.typeClass.predicate': 'Fonction prédicat',
 
-  'tx.rslang.type': 'Type',
+  'tx.rslang.expression': 'Expression',
+  'tx.rslang.expression.extract': 'Isoler',
+  'tx.rslang.expression.extract.hint': 'Extraire la sous-expression sélectionnée vers une nouvelle constituante',
+  'tx.rslang.expression.extract.confirm': 'Confirmer l’isolement de la sous-expression sélectionnée',
+  'tx.rslang.expression.analyze': 'Vérifier l’expression',
+  'tx.rslang.expression.saveAndCalculate': 'Enregistrer et calculer',
+  'tx.rslang.expression.keyboard': 'Clavier de symboles',
+  'tx.rslang.expression.ast': 'Arbre de syntaxe abstraite',
 
+  'tx.rslang.type': 'Type',
   'tx.rslang.typification': 'Typification',
   'tx.rslang.cardinality': 'Cardinalité',
-
-  'tx.rslang.termGraph': 'Graphe des termes',
-
-  'tx.rslang.typeGraph': 'Graphe des échelons',
+  'tx.rslang.template.parameter': 'Paramètre de modèle',
 
   'tx.rslang.eval.iterationCount': 'Nombre d’itérations',
 
-  'tx.rslang.value': 'Valeur',
+  'tx.rslang.value': 'Valeur d’expression',
+  'tx.rslang.value.short': 'Valeur',
   'tx.rslang.value.type.error.hint': 'Aucune valeur prévue pour ce type',
-  'tx.rslang.value.missing': 'Valeur absente',
-  'tx.rslang.value.missing.hint': 'Valeur absente. Utilisez « Valeur aléatoire » pour générer un exemple',
+  'tx.rslang.value.input.hint': 'Entrez une valeur',
+  'tx.rslang.value.none': 'Valeur absente',
+  'tx.rslang.value.none.hint': 'Valeur absente. Utilisez « Valeur aléatoire » pour générer un exemple',
   'tx.rslang.value.view': 'Consulter la valeur',
   'tx.rslang.value.view.wrongType': 'Consulter la valeur n’est pas disponible pour ce type',
   'tx.rslang.value.view.reset': 'Valeur entière',
@@ -33,9 +40,13 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.value.add.random': 'Ajouter des valeurs aléatoires',
   'tx.rslang.value.add.random.hint': 'Générer des valeurs aléatoires pour la constituante courante',
 
+  'tx.rslang.value.stub': 'Abréviation de la valeur',
+  'tx.rslang.value.stub.hint': 'Libellé | cardinalité',
+  'tx.rslang.value.stub.status': 'Cardinalité : {n} | {stub}',
+
   'tx.rslang.value.element.add': 'Ajouter un élément',
   'tx.rslang.value.element.visibility.hint': 'Afficher les données en texte',
-  'tx.rslang.value.stub.hint': 'Libellé | cardinalité',
+  'tx.rslang.value.element.edit.hint': 'Sélectionner un élément à modifier',
 
   'tx.rslang.token.boolean': 'Ensemble des parties',
   'tx.rslang.token.decart': 'Produit cartésien',

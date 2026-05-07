@@ -55,7 +55,7 @@ export function DlgDeleteOperation() {
   return (
     <ModalForm
       overflowVisible
-      header={tx('tx.lib.operation.delete')}
+      header={tx('tx.operation.delete')}
       submitText={tx('tx.general.delete')}
       onSubmit={event => {
         event.preventDefault();
@@ -65,11 +65,11 @@ export function DlgDeleteOperation() {
       className='w-140 pb-3 px-6 cc-column select-none'
       helpTopic={HelpTopic.CC_PROPAGATION}
     >
-      <TextInput disabled dense noBorder id='operation_alias' label={tx('tx.lib.operation')} value={target.alias} />
+      <TextInput disabled dense noBorder id='operation_alias' label={tx('tx.operation')} value={target.alias} />
       <form.Field name='delete_schema'>
         {field => (
           <Checkbox
-            label={tx('tx.lib.schema.delete')}
+            label={tx('tx.schema.delete')}
             title={
               (target.operation_type === OperationType.INPUT && target.is_import) || target.result === null
                 ? tx('ui.oss.deleteOperation.deleteSchemaLocked')

@@ -23,7 +23,7 @@ export function InfoUsers({ items, className, prefix, header, ...restProps }: In
       {items.map((user, index) => (
         <div key={`${prefix}${index}`}>{getUserLabel(user)}</div>
       ))}
-      {items.length === 0 ? <div className='text-center'>{tx('tx.general.list.empty')}</div> : null}
+      {items.length === 0 ? <div className='text-center'>{tx('tx.list.empty')}</div> : null}
     </div>
   );
 }

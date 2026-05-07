@@ -223,14 +223,14 @@ export function MenuMain() {
         ) : null}
         {!isAnonymous ? (
           <DropdownButton
-            text={tx('tx.lib.model.create')}
+            text={tx('tx.model.create')}
             icon={<IconRSModel size='1rem' className={isArchive ? '' : 'text-accent-orange'} />}
             disabled={isArchive}
             onClick={handleCreateModel}
           />
         ) : null}
         <DropdownButton
-          text={tx('ui.action.openInSandbox')}
+          text={tx('tx.sandbox.open')}
           icon={<IconSandbox size='1rem' className='icon-green' />}
           onClick={() => void handleTransferToSandbox()}
         />
@@ -254,7 +254,7 @@ export function MenuMain() {
         ) : null}
         {isMutable ? (
           <DropdownButton
-            text={tx('tx.lib.schema.delete')}
+            text={tx('tx.schema.delete')}
             icon={<IconDestroy size='1rem' className='icon-red' />}
             disabled={isProcessing || role < UserRole.OWNER}
             onClick={handleDelete}
@@ -266,7 +266,7 @@ export function MenuMain() {
         {schema.oss.length > 0 ? (
           <div ref={ossRef} onBlur={handleOssBlur} className='relative w-full'>
             <DropdownButton
-              text={tx('tx.lib.oss.goto')}
+              text={tx('tx.oss.goto')}
               className='w-full'
               icon={<IconOSS size='1rem' className='icon-primary' />}
               onClick={onOssToggle}
@@ -286,7 +286,7 @@ export function MenuMain() {
         {schema.models.length > 0 ? (
           <div ref={modelRef} onBlur={handleModelBlur} className='relative w-full'>
             <DropdownButton
-              text={tx('tx.lib.model.goto')}
+              text={tx('tx.model.goto')}
               className='w-full'
               icon={<IconRSModel size='1rem' className='icon-primary' />}
               onClick={onModelToggle}

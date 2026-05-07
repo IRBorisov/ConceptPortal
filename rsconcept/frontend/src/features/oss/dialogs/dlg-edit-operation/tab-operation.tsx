@@ -62,7 +62,7 @@ export function TabOperation({ oss, fields }: TabOperationProps) {
           <SelectParent
             items={oss.blocks}
             value={field.state.value ? (oss.blockByID.get(field.state.value) ?? null) : null}
-            placeholder={tx('tx.lib.block.parent')}
+            placeholder={tx('tx.oss.block.parent')}
             onChange={value => field.handleChange(value ? value.id : null)}
           />
         )}

@@ -67,37 +67,25 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
           <MiniButton
             title={
               blockReload
-                ? tx('ui.versioning.cannotRevertOss')
+                ? tx('tx.lib.version.revert.validate.oss')
                 : !isContentEditable
-                  ? tx('ui.versioning.revertToVersion')
-                  : tx('ui.versioning.switchToStaleVersion')
+                  ? tx('tx.lib.version.revert')
+                  : tx('tx.lib.version.switch.stale')
             }
-            aria-label={tx('ui.versioning.revertSelectedAria')}
+            aria-label={tx('tx.lib.version.revert.hint')}
             onClick={handleRestoreVersion}
             icon={<IconUpload size='1.25rem' className='icon-red' />}
             disabled={isContentEditable || blockReload}
           />
           <MiniButton
-            title={
-              isContentEditable
-                ? tx('tx.lib.version.create')
-                : tx('ui.versioning.switchToLatestVersion')
-            }
-            aria-label={
-              isContentEditable
-                ? tx('tx.lib.version.create')
-                : tx('ui.versioning.switchLatestAria')
-            }
+            title={isContentEditable ? tx('tx.lib.version.create') : tx('tx.lib.version.switch.latest')}
+            aria-label={isContentEditable ? tx('tx.lib.version.create') : tx('tx.lib.version.switch.latest')}
             onClick={handleCreateVersion}
             icon={<IconNewVersion size='1.25rem' className='icon-green' />}
             disabled={!isContentEditable}
           />
           <MiniButton
-            title={
-              schema.versions.length === 0
-                ? tx('tx.general.list.empty')
-                : tx('tx.lib.version.editList')
-            }
+            title={schema.versions.length === 0 ? tx('tx.list.empty') : tx('tx.lib.version.list.edit')}
             onClick={handleEditVersions}
             icon={<IconVersions size='1.25rem' className='icon-primary' />}
             disabled={schema.versions.length === 0}

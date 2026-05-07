@@ -95,7 +95,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
     }),
     columnHelper.accessor('text', {
       id: 'text',
-      header: tx('tx.rslang.value'),
+      header: tx('tx.rslang.value.short'),
       size: 200,
       minSize: 200,
       maxSize: 200,
@@ -147,9 +147,9 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
           disabled={!isMutable}
         />
         <TextInput
-          label={tx('tx.rslang.value')}
+          label={tx('tx.rslang.value.short')}
           dense
-          placeholder={tx('ui.bindingEditor.selectRowPlaceholder')}
+          placeholder={tx('tx.rslang.value.element.edit.hint')}
           className='w-full'
           value={selectedValue}
           onChange={event => handleChangeSelected(event.target.value)}
@@ -173,7 +173,7 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
           conditionalRowStyles={conditionalRowStyles}
           noDataComponent={
             <NoData>
-              <p>{tx('ui.bindingEditor.noValues')}</p>
+              <p>{tx('tx.rslang.value.none')}</p>
             </NoData>
           }
         />

@@ -97,7 +97,7 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
     <div className='flex flex-col'>
       <div className='relative flex justify-stretch sm:mb-1 max-w-120 gap-3'>
         <MiniButton
-          title={tx('ui.library.editor.openInLibrary')}
+          title={tx('tx.lib.location.open')}
           noPadding
           icon={<IconFolderOpened size='1.25rem' className='icon-primary' />}
           onClick={handleOpenLibrary}
@@ -106,7 +106,7 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
           className='text-ellipsis grow'
           icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
           value={item.location}
-          title={isProduced ? tx('ui.library.editor.pathInheritedOss') : tx('tx.lib.location')}
+          title={isProduced ? tx('tx.schema.inherit.location') : tx('tx.lib.location')}
           onClick={handleEditLocation}
           disabled={isModified || isProcessing || isProduced || role < UserRole.OWNER}
         />
@@ -124,7 +124,7 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
           className='sm:mb-1'
           icon={<IconOwner size='1.25rem' className='icon-primary' />}
           value={getUserLabel(item.owner)}
-          title={isProduced ? tx('ui.library.editor.ownerInheritedOss') : tx('tx.general.role.owner')}
+          title={isProduced ? tx('tx.schema.inherit.owner') : tx('tx.general.role.owner')}
           onClick={toggleOwner}
           disabled={isModified || isProcessing || isProduced || role < UserRole.OWNER}
         />

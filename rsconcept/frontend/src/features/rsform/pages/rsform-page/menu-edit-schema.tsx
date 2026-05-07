@@ -97,7 +97,7 @@ export function MenuEditSchema() {
     return (
       <MiniButton
         noPadding
-        title={tx('ui.rsform.menu.archiveNoEdit')}
+        title={tx('tx.lib.version.archive.readOnly')}
         hideTitle={isMenuOpen}
         className='h-full px-3 bg-transparent'
         icon={<IconArchive size='1.25rem' className='icon-primary' />}
@@ -119,15 +119,15 @@ export function MenuEditSchema() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('tx.lib.cst.template.plural')}
-          title={tx('ui.rsform.menu.templatesTitle')}
+          text={tx('tx.cst.template.plural')}
+          title={tx('tx.cst.template.select')}
           icon={<IconTemplates size='1rem' className='icon-green' />}
           onClick={handleTemplates}
           disabled={!isContentEditable || isProcessing}
         />
         <DropdownButton
-          text={tx('tx.lib.schema.embedding')}
-          title={tx('tx.lib.schema.embedding.hint')}
+          text={tx('tx.schema.embed')}
+          title={tx('tx.schema.embed.hint')}
           icon={<IconInlineSynthesis size='1rem' className='icon-green' />}
           onClick={handleInlineSynthesis}
           disabled={!isContentEditable || isProcessing}
@@ -136,22 +136,22 @@ export function MenuEditSchema() {
         <Divider margins='mx-3 my-1' />
 
         <DropdownButton
-          text={tx('tx.lib.schema.order.restore')}
-          title={tx('tx.lib.schema.order.restore.hint')}
+          text={tx('tx.schema.order.restore')}
+          title={tx('tx.schema.order.restore.hint')}
           icon={<IconSortList size='1rem' className='icon-primary' />}
           onClick={handleRestoreOrder}
           disabled={!isContentEditable || isProcessing}
         />
         <DropdownButton
-          text={tx('tx.lib.schema.order.rename')}
-          title={tx('tx.lib.schema.order.rename.hint')}
+          text={tx('tx.schema.order.rename')}
+          title={tx('tx.schema.order.rename.hint')}
           icon={<IconGenerateNames size='1rem' className='icon-primary' />}
           onClick={handleReindex}
           disabled={!isContentEditable || isProcessing}
         />
         <DropdownButton
-          text={tx('tx.lib.cst.substitution')}
-          title={tx('tx.lib.cst.substitution.hint')}
+          text={tx('tx.substitution')}
+          title={tx('tx.substitution.hint')}
           icon={<IconReplace size='1rem' className='icon-red' />}
           onClick={handleSubstituteCst}
           disabled={!isContentEditable || isProcessing}

@@ -51,15 +51,12 @@ function ProcessError({ error, itemID }: { error: ErrorData; itemID?: number | n
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
           <p>
-            {tx('ui.promptTemplates.error.notFound', {
+            {tx('tx.ai.template.notFound', {
               itemID: itemID ?? ''
             })}
           </p>
           <div className='flex justify-center'>
-            <TextURL
-              text={tx('ui.promptTemplates.link.templateList')}
-              href={`/${routes.prompt_templates}`}
-            />
+            <TextURL text={tx('tx.ai.template.plural')} href={`/${routes.prompt_templates}`} />
           </div>
         </div>
       );

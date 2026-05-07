@@ -5,21 +5,28 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.typeClass.function': 'Term function',
   'tx.rslang.typeClass.predicate': 'Predicate function',
 
-  'tx.rslang.type': 'Type',
+  'tx.rslang.expression': 'Expression',
+  'tx.rslang.expression.extract': 'Extract',
+  'tx.rslang.expression.extract.hint': 'Extract the selected subexpression to a new constituent',
+  'tx.rslang.expression.extract.confirm': 'Confirm extracting the selected subexpression',
+  'tx.rslang.expression.analyze': 'Analyze expression',
+  'tx.rslang.expression.saveAndCalculate': 'Save and calculate',
+  'tx.rslang.expression.keyboard': 'Symbol keyboard',
+  'tx.rslang.expression.ast': 'Expression syntax tree',
 
+  'tx.rslang.type': 'Type',
   'tx.rslang.typification': 'Typification',
   'tx.rslang.cardinality': 'Cardinality',
-
-  'tx.rslang.termGraph': 'Term graph',
-
-  'tx.rslang.typeGraph': 'Echelon graph',
+  'tx.rslang.template.parameter': 'Template parameter',
 
   'tx.rslang.eval.iterationCount': 'Iteration count',
 
-  'tx.rslang.value': 'Value',
+  'tx.rslang.value': 'Expression value',
+  'tx.rslang.value.short': 'Value',
   'tx.rslang.value.type.error.hint': 'No value for this type',
-  'tx.rslang.value.missing': 'Value missing',
-  'tx.rslang.value.missing.hint': 'No value. Use "Random value" to generate an example',
+  'tx.rslang.value.input.hint': 'Enter a value',
+  'tx.rslang.value.none': 'Value missing',
+  'tx.rslang.value.none.hint': 'No value. Use "Random value" to generate an example',
   'tx.rslang.value.view': 'View value',
   'tx.rslang.value.view.wrongType': 'View value is not available for this type',
   'tx.rslang.value.view.reset': 'Whole value',
@@ -33,9 +40,13 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.value.add.random': 'Add random items',
   'tx.rslang.value.add.random.hint': 'Generate random values for the current constituent',
 
+  'tx.rslang.value.stub': 'Value abbreviation',
+  'tx.rslang.value.stub.hint': 'Designation | set cardinality',
+  'tx.rslang.value.stub.status': 'Cardinality: {n} | {stub}',
+
   'tx.rslang.value.element.add': 'Add element',
   'tx.rslang.value.element.visibility.hint': 'Show data as text',
-  'tx.rslang.value.stub.hint': 'Designation | set cardinality',
+  'tx.rslang.value.element.edit.hint': 'Select element to edit',
 
   'tx.rslang.token.boolean': 'Power set',
   'tx.rslang.token.decart': 'Cartesian product',

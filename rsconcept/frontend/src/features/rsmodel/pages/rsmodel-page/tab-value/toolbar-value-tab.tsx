@@ -64,14 +64,14 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
       />
 
       <MiniButton
-        title={tx('tx.lib.model.recalculate')}
-        aria-label={tx('tx.lib.model.recalculate.hint')}
+        title={tx('tx.model.recalculate')}
+        aria-label={tx('tx.model.recalculate.hint')}
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
         onClick={() => engine.recalculateAll()}
       />
       <MiniButton
-        title={prepareTooltip(tx('ui.rsmodel.calculateCurrentCst'), isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
-        aria-label={tx('ui.rsmodel.calculateCurrentCst')}
+        title={prepareTooltip(tx('tx.model.calculate.cst'), isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
+        aria-label={tx('tx.model.calculate.cst')}
         icon={<IconCalculateOne size='1.25rem' className='icon-green' />}
         onClick={
           activeCst
@@ -85,16 +85,14 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
       {isContentEditable && activeCst ? (
         <>
           <MiniButton
-            title={tx('tx.lib.cst.create')}
+            title={tx('tx.cst.create')}
             icon={<IconNewItem size='1.25rem' className='icon-green' />}
             onClick={() => void promptCreateCst(activeCst.cst_type)}
             disabled={formDisabled}
           />
           <MiniButton
-            title={
-              isModified ? tx('tx.general.changes.unsaved.hint') : prepareTooltip(tx('tx.lib.cst.clone'), 'Alt + V')
-            }
-            aria-label={tx('tx.lib.cst.clone')}
+            title={isModified ? tx('tx.general.changes.unsaved.hint') : prepareTooltip(tx('tx.cst.clone'), 'Alt + V')}
+            aria-label={tx('tx.cst.clone')}
             icon={<IconClone size='1.25rem' className='icon-green' />}
             onClick={() => void cloneCst()}
             disabled={formDisabled || isModified}
@@ -104,7 +102,7 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
 
       {isContentEditable && activeCst ? (
         <MiniButton
-          title={tx('tx.lib.cst.delete')}
+          title={tx('tx.cst.delete')}
           icon={<IconDestroy size='1.25rem' className='icon-red' />}
           onClick={promptDeleteSelected}
           disabled={formDisabled || !canDeleteSelected}

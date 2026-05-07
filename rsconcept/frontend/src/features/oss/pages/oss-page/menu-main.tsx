@@ -79,7 +79,7 @@ export function MenuMain() {
         />
         {isMutable ? (
           <DropdownButton
-            text={tx('tx.lib.schema.delete')}
+            text={tx('tx.schema.delete')}
             icon={<IconDestroy size='1rem' className='icon-red' />}
             onClick={handleDelete}
             disabled={isProcessing || role < UserRole.OWNER}

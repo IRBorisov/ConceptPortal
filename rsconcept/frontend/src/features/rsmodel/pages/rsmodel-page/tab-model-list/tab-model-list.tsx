@@ -128,7 +128,7 @@ export function TabModelList() {
       <div className={clsx('flex items-center border-b', !isContentEditable && 'justify-center pl-10')}>
         {isContentEditable ? (
           <div className='px-2'>
-            {tx('ui.table.pickMulti.selected', {
+            {tx('tx.general.selection.status', {
               selected: selectedCst.length,
               total: schema.items.length
             })}

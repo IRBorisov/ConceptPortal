@@ -144,7 +144,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
           <PromptInput
             id='prompt_text'
             label={tx('tx.lib.contents')}
-            placeholder={tx('ui.promptTemplates.form.contentPlaceholder')}
+            placeholder={tx('tx.ai.prompt.sample.hint')}
             className='disabled:min-h-9 max-h-64'
             value={field.state.value ?? ''}
             onChange={newValue => handleChangeText(newValue, field.handleChange)}
@@ -157,7 +157,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
           {field => (
             <Checkbox
               id='prompt_is_shared'
-              label={tx('ui.promptTemplates.form.sharedCheckbox')}
+              label={tx('tx.ai.template.shared')}
               value={field.state.value ?? false}
               onChange={field.handleChange}
               onBlur={field.handleBlur}
@@ -166,7 +166,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
           )}
         </form.Field>
         <MiniButton
-          title={tx('ui.promptTemplates.form.generateSampleTitle')}
+          title={tx('tx.ai.prompt.sample.generate')}
           icon={<IconSample size='1.25rem' className='icon-primary' />}
           onClick={() => setSampleResult(!!sampleResult ? null : generateSample(text))}
           disabled={!text}
@@ -178,7 +178,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
           fitContent
           className='mt-3'
           areaClassName='max-h-64 min-h-12'
-          label={tx('ui.promptTemplates.form.sampleLabel')}
+          label={tx('tx.ai.prompt.sample')}
           value={sampleResult ?? debouncedResult ?? ''}
           disabled
         />

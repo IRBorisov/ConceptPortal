@@ -59,7 +59,7 @@ export function HelpSchemaMenu() {
               <IconShare className='inline-icon' /> Поделиться – скопировать ссылку на схему
             </li>
             <li>
-              <IconQR className='inline-icon' /> Отобразить QR-код схемы
+              <IconQR className='inline-icon' /> Показать QR-код схемы
             </li>
             <li>
               <IconClone className='inline-icon icon-green' /> Клонировать – создать копию схемы

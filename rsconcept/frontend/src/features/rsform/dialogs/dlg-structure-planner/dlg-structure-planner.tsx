@@ -164,7 +164,7 @@ export function DlgStructurePlanner() {
           >
             <RefsInput
               id='dlg_structure_term'
-              placeholder={tx('ui.structurePlanner.termPlaceholder')}
+              placeholder={tx('tx.lang.term.validate.empty')}
               areaClassName='w-120'
               maxHeight='6.75rem'
               portalHoverTooltips
@@ -182,7 +182,7 @@ export function DlgStructurePlanner() {
             <div className={clsx('cc-icons pt-5 pb-3.25 rounded-br-2xl rounded-tr-2xl', blurClass)}>
               <MiniButton
                 title={prepareTooltip(
-                  selectedCst ? tx('ui.structurePlanner.submitUpdate') : tx('tx.lib.cst.create'),
+                  selectedCst ? tx('tx.general.changes.save') : tx('tx.cst.create'),
                   tx(isMac() ? 'Cmd + S' : 'Ctrl + S')
                 )}
                 icon={

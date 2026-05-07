@@ -36,7 +36,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
   const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const [filter, setFilter] = useState('');
   const [filterDebounced] = useDebounce(filter, PARAMETER.searchDebounce);
-  const labelText = term ? `${alias}: ${term}` : alias || 'N/A';
+  const labelText = term ? `${alias}${tx('tx.general.colon')}${term}` : alias || 'N/A';
   const matcher = new TextMatcher(filterDebounced);
 
   const filteredIDs = !binding
@@ -58,7 +58,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
     }),
     columnHelper.accessor(id => id, {
       id: 'elem_text',
-      header: tx('tx.rslang.value'),
+      header: tx('tx.rslang.value.short'),
       size: 180,
       minSize: 180,
       maxSize: 180,
@@ -76,7 +76,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
   if (isInteger) {
     return (
       <TextInput
-        label={tx('ui.pickElement.valueLabel')}
+        label={tx('tx.rslang.value.input.hint')}
         type='number'
         inputMode='numeric'
         step='1'
@@ -94,7 +94,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
   }
 
   if (!binding) {
-    return <div className={cn('text-muted-foreground', className)}>{tx('ui.pickElement.selectPrompt')}</div>;
+    return <div className={cn('text-muted-foreground', className)}>{tx('tx.rslang.value.element.edit.hint')}</div>;
   }
 
   return (

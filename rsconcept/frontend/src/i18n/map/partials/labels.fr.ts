@@ -1,9 +1,4 @@
-import { labelsFeatureFr } from './labels-feature.fr';
-
-/** French overrides for shared labels (toasts, Zod, hints, prompts). */
 export const labelsFr: Record<string, string> = {
-  ...labelsFeatureFr,
-
   'labels.error.lengthLimit': 'Longueur maximale',
   'labels.error.typeStructureFailed': 'Structure absente',
   'labels.error.passwordsMismatch': 'Les mots de passe ne correspondent pas',

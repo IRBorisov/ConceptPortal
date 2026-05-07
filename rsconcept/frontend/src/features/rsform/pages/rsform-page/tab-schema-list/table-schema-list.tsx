@@ -83,7 +83,7 @@ export function TableSchemaList({
     }),
     columnHelper.accessor(cst => cst.term_resolved || cst.term_raw || '', {
       id: 'term',
-      header: () => <span className='min-w-30'>{tx('tx.lib.term')}</span>,
+      header: () => <span className='min-w-30'>{tx('tx.lang.term')}</span>,
       size: 500,
       minSize: 150,
       maxSize: 500
@@ -106,7 +106,7 @@ export function TableSchemaList({
     }),
     columnHelper.accessor('convention', {
       id: 'convention',
-      header: tx('ui.table.header.conventionComment'),
+      header: `${tx('tx.lib.convention')} / ${tx('tx.lib.comment')}`,
       size: 500,
       minSize: 100,
       maxSize: 500,
@@ -138,9 +138,9 @@ export function TableSchemaList({
       onRowSelectionChange={setSelected}
       noDataComponent={
         <NoData>
-          <p>{tx('tx.general.list.empty')}</p>
+          <p>{tx('tx.list.empty')}</p>
           <p>
-            <TextURL text={tx('ui.link.createConstituenta')} onClick={onCreateNew} />
+            <TextURL text={tx('tx.cst.create')} onClick={onCreateNew} />
           </p>
         </NoData>
       }

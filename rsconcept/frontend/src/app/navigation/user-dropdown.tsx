@@ -161,15 +161,15 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
       ) : null}
       {user?.is_staff ? (
         <DropdownButton
-          text={tx('tx.shell.link.icons')}
-          title={tx('tx.shell.link.icons.hint')}
+          text={tx('tx.shell.link.icon.plural')}
+          title={tx('tx.shell.link.icon.plural.hint')}
           icon={<IconImage size='1rem' />}
           onClick={gotoIcons}
         />
       ) : null}
       {user.is_staff ? (
         <DropdownButton
-          text={tx('tx.shell.link.dbStructure')}
+          text={tx('tx.shell.link.dbStructure.short')}
           title={tx('tx.shell.link.dbStructure.hint')}
           icon={<IconDBStructure size='1rem' />}
           onClick={gotoDatabaseSchema}

@@ -18,15 +18,23 @@ export const txShellEn: Record<string, string> = {
   'tx.shell.link.restApi.hint': 'Open backend API',
   'tx.shell.link.database': 'Database',
   'tx.shell.link.database.hint': 'Open database admin',
-  'tx.shell.link.icons': 'Icons',
-  'tx.shell.link.icons.hint': 'Open icons page',
-  'tx.shell.link.dbStructure': 'DB structure',
+  'tx.shell.link.icon.plural': 'Icons',
+  'tx.shell.link.icon.plural.hint': 'Open icons page',
+  'tx.shell.link.dbStructure': 'Database structure',
+  'tx.shell.link.dbStructure.short': 'DB structure',
   'tx.shell.link.dbStructure.hint': 'Open database schema page',
 
+  'tx.shell.icon.total': 'Total icons: {count}',
   'tx.shell.logo.alt': 'Concept Portal logo',
   'tx.shell.logo.alt.light': 'Concept Portal logo (light)',
   'tx.shell.logo.alt.dark': 'Concept Portal logo (dark)',
   'tx.shell.activeItem.hint': 'Item title',
+
+  'tx.shell.notImplemented': 'Feature is under development',
+
+  'tx.shell.404.header': 'Error 404 – Page not found',
+  'tx.shell.404.body': 'This page does not exist or the requested object is missing from the database.',
+  'tx.shell.404.back': 'Return to the portal',
 
   'tx.shell.error.header': 'Something went wrong',
   'tx.shell.error.home': 'Back to home',
@@ -41,6 +49,16 @@ export const txShellEn: Record<string, string> = {
   'tx.shell.updater.body': 'Obsolete version detected. Page reload...',
 
   'tx.shell.modal.close.hint': 'Close dialog',
+
+  'tx.shell.pagination.range': '{start}–{end} of {total}',
+  'tx.shell.pagination.first': 'First page',
+  'tx.shell.pagination.prev': 'Previous page',
+  'tx.shell.pagination.page.input': 'Page number',
+  'tx.shell.pagination.page.input.hint': 'Page number. Select to type manually',
+  'tx.shell.pagination.next': 'Next page',
+  'tx.shell.pagination.last': 'Last page',
+  'tx.shell.pagination.perPage': 'per page',
+  'tx.shell.pagination.perPage.hint': 'Choose rows per page',
 
   'tx.shell.footer': 'Secondary navigation',
   'tx.shell.footer.conceptCenter': 'Concept Center',
@@ -83,5 +101,8 @@ export const txShellEn: Record<string, string> = {
   'tx.home.cta.learn': 'Learn',
   'tx.home.cta.learn.hint': 'Open the manuals',
   'tx.home.cta.trySandbox': 'Try it',
-  'tx.home.cta.trySandbox.hint': 'Open the sandbox and explore the portal'
+  'tx.home.cta.trySandbox.hint': 'Open the sandbox and explore the portal',
+
+  'tx.shell.embed.youtube': 'Embedded YouTube video',
+  'tx.shell.embed.vk': 'Embedded VK video'
 };

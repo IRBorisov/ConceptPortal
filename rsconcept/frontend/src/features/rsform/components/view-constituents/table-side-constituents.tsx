@@ -82,7 +82,7 @@ export function TableSideConstituents({
       ? [
           columnHelper.accessor(cst => cst, {
             id: 'value',
-            header: tx('tx.rslang.value'),
+            header: tx('tx.rslang.value.short'),
             size: 60,
             minSize: 60,
             maxSize: 60,
@@ -134,8 +134,7 @@ export function TableSideConstituents({
       enableHiding
       noDataComponent={
         <NoData className='min-h-20'>
-          <p>{tx('ui.table.cstSide.emptyTitle')}</p>
-          <p>{tx('ui.table.cstSide.emptyHint')}</p>
+          <p>{tx('tx.list.empty')}</p>
         </NoData>
       }
       onRowClicked={onActivate ? cst => onActivate(cst) : undefined}

@@ -143,7 +143,7 @@ export function ValueEditor({
               paginationOptions={[perPage]}
               noDataComponent={
                 <NoData>
-                  <p>{tx('tx.rslang.value.missing')}</p>
+                  <p>{tx('tx.rslang.value.none')}</p>
                 </NoData>
               }
             />

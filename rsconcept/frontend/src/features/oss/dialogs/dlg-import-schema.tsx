@@ -104,7 +104,7 @@ export function DlgImportSchema() {
 
   return (
     <ModalForm
-      header={tx('tx.lib.input.new.import')}
+      header={tx('tx.oss.input.create.import')}
       submitText={tx('tx.general.create')}
       canSubmit={canSubmit}
       validationHint={hint}
@@ -131,7 +131,7 @@ export function DlgImportSchema() {
       <form.Field name='clone_source'>
         {field => (
           <Checkbox
-            label={tx('tx.lib.input.clone')}
+            label={tx('tx.oss.input.clone')}
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
           />
@@ -171,7 +171,7 @@ export function DlgImportSchema() {
               <SelectParent
                 items={manager.oss.blocks}
                 value={field.state.value ? (manager.oss.blockByID.get(field.state.value) ?? null) : null}
-                placeholder={tx('tx.lib.block.parent')}
+                placeholder={tx('tx.oss.block.parent')}
                 onChange={value => field.handleChange(value ? value.id : null)}
               />
             )}

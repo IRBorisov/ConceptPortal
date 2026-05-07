@@ -68,7 +68,7 @@ function buildTooltip(
   tx: (id: string, values?: Record<string, string | number | boolean | Date | null | undefined>) => string
 ): string {
   const type = readTypeAnnotation(data as AstNode);
-  const typeLine = type ? `${tx('tx.rslang.type')}: ${labelType(type)}` : '';
+  const typeLine = type ? `${tx('tx.rslang.type')}${tx('tx.general.colon')}${labelType(type)}` : '';
   const errorBlock = errorMessages ? `${errorMessages}` : '';
   const isGlobalId =
     data.typeID === TokenID.ID_GLOBAL || data.typeID === TokenID.ID_FUNCTION || data.typeID === TokenID.ID_PREDICATE;
@@ -79,11 +79,11 @@ function buildTooltip(
       const cst = schema.cstByAlias.get(alias);
       const termText = cst ? (cst.term_resolved || cst.term_raw).trim() : '';
       if (termText) {
-        extra = `${tx('tx.lib.term')}: ${termText}`;
+        extra = `${tx('tx.lang.term')}${tx('tx.general.colon')}${termText}`;
       }
     }
   } else if (data.typeID === TokenID.ID_RADICAL && schema) {
-    extra = `${tx('ui.node.ast.templateParam')} ${alias}`;
+    extra = `${tx('tx.rslang.template.parameter')}${tx('tx.general.colon')}${alias}`;
   }
 
   const parts = [typeLine, errorBlock, extra].filter(Boolean);

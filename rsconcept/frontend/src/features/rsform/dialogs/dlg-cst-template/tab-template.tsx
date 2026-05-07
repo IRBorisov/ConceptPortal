@@ -31,7 +31,7 @@ export function TabTemplate({ schema }: TabTemplateProps) {
   } = useTemplateContext();
 
   const { templates } = useTemplatesSuspense();
-  const templateOptions = [{ ...schema, title: tx('tx.lib.schema.current') }, ...templates];
+  const templateOptions = [{ ...schema, title: tx('tx.schema.current') }, ...templates];
   const { schema: templateSchema } = useRSForm({ itemID: templateID ?? undefined });
   const selectedTemplate = templateOptions.find(item => item.id === templateID);
 
@@ -53,7 +53,7 @@ export function TabTemplate({ schema }: TabTemplateProps) {
           items={templateOptions}
           noBorder
           noSearch
-          placeholder={tx('ui.rsform.template.sourcePlaceholder')}
+          placeholder={tx('tx.cst.template.source')}
           className='w-48'
           idFunc={item => String(item.id)}
           labelValueFunc={item => item.title}
@@ -66,7 +66,7 @@ export function TabTemplate({ schema }: TabTemplateProps) {
           noBorder
           noSearch
           clearable
-          placeholder={tx('ui.rsform.template.categoryPlaceholder')}
+          placeholder={tx('tx.cst.template.category')}
           className='grow'
           idFunc={cst => String(cst.id)}
           labelValueFunc={cst => cst.term_raw}
@@ -83,19 +83,11 @@ export function TabTemplate({ schema }: TabTemplateProps) {
         rows={8}
       />
 
-      <TextArea
-        id='dlg_template_term'
-        disabled
-        spellCheck
-        placeholder={tx('ui.rsform.template.notSelectedPlaceholder')}
-        className='my-3'
-        rows={2}
-        value={prototypeInfo}
-      />
+      <TextArea id='dlg_template_term' disabled spellCheck className='my-3' rows={2} value={prototypeInfo} />
       <RSInput
         id='dlg_template_expression'
         disabled
-        placeholder={tx('ui.rsform.template.pickFromListPlaceholder')}
+        placeholder={tx('tx.cst.template.select')}
         height='5.1rem'
         value={prototype?.definition_formal}
       />

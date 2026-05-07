@@ -42,8 +42,8 @@ export function DlgEditEditors() {
 
   return (
     <ModalForm
-      header={tx('ui.library.editors.dlgHeader', { count: selected.length })}
-      submitText={tx('ui.library.editors.saveList')}
+      header={tx('tx.general.role.editor.list') + ' — ' + selected.length}
+      submitText={tx('tx.general.save')}
       className='flex flex-col w-140 px-6 pb-3'
       onSubmit={handleSubmit}
     >
@@ -54,7 +54,7 @@ export function DlgEditEditors() {
         className='rounded-b-none border-b-0'
       />
       <SelectUser
-        placeholder={tx('ui.library.editors.addPlaceholder')}
+        placeholder={tx('tx.general.role.editor.add')}
         filter={id => !selected.includes(id)} //
         value={null}
         noAnonymous

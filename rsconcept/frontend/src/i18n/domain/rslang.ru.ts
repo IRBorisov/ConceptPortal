@@ -5,21 +5,28 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.typeClass.function': 'Терм-функция',
   'tx.rslang.typeClass.predicate': 'Предикат-функция',
 
-  'tx.rslang.type': 'Тип',
+  'tx.rslang.expression': 'Выражение',
+  'tx.rslang.expression.extract': 'Обособить',
+  'tx.rslang.expression.extract.hint': 'Вынести выбранное подвыражение в новую конституенту',
+  'tx.rslang.expression.extract.confirm': 'Подтвердить обособление выбранного подвыражения',
+  'tx.rslang.expression.analyze': 'Проверить выражение',
+  'tx.rslang.expression.saveAndCalculate': 'Сохранить и вычислить',
+  'tx.rslang.expression.keyboard': 'Символьная клавиатура',
+  'tx.rslang.expression.ast': 'Дерево разбора выражения',
 
+  'tx.rslang.type': 'Тип',
   'tx.rslang.typification': 'Типизация',
   'tx.rslang.cardinality': 'Мощность',
-
-  'tx.rslang.termGraph': 'Граф термов',
-
-  'tx.rslang.typeGraph': 'Граф ступеней',
+  'tx.rslang.template.parameter': 'Шаблонный параметр',
 
   'tx.rslang.eval.iterationCount': 'Количество итераций',
 
-  'tx.rslang.value': 'Значение',
+  'tx.rslang.value': 'Значение выражения',
+  'tx.rslang.value.short': 'Значение',
   'tx.rslang.value.type.error.hint': 'Значение для данного типа не предусмотрено',
-  'tx.rslang.value.missing': 'Значение отсутствует',
-  'tx.rslang.value.missing.hint': 'Значение отсутствует. Используйте "Случайное значение" для генерации примера',
+  'tx.rslang.value.input.hint': 'Укажите значение',
+  'tx.rslang.value.none': 'Значение отсутствует',
+  'tx.rslang.value.none.hint': 'Значение отсутствует. Используйте "Случайное значение" для генерации примера',
   'tx.rslang.value.view': 'Просмотр значения',
   'tx.rslang.value.view.wrongType': 'Просмотр значения конституенты недоступен для этого типа',
   'tx.rslang.value.view.reset': 'Значение целиком',
@@ -33,9 +40,13 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.value.add.random': 'Добавить случайные',
   'tx.rslang.value.add.random.hint': 'Сгенерировать случайные значения для текущей конституенты',
 
+  'tx.rslang.value.stub': 'Сокращенное обозначение значения',
+  'tx.rslang.value.stub.hint': 'Обозначение | Мощность множества',
+  'tx.rslang.value.stub.status': 'Мощность: {n} | {stub}',
+
   'tx.rslang.value.element.add': 'Добавить элемент',
   'tx.rslang.value.element.visibility.hint': 'Отображение данных в тексте',
-  'tx.rslang.value.stub.hint': 'Обозначение | Мощность множества',
+  'tx.rslang.value.element.edit.hint': 'Выберите элемент для редактирования',
 
   'tx.rslang.token.boolean': 'Булеан',
   'tx.rslang.token.decart': 'Декартово произведение',

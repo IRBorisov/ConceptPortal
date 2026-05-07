@@ -124,7 +124,7 @@ export function PickSchema({
         />
         <div className='relative' ref={locationRef} onBlur={handleLocationBlur}>
           <MiniButton
-            title={tx('ui.pick.schema.filterByLocationTitle')}
+            title={tx('tx.lib.filter.byLocation')}
             icon={<IconFolderTree size='1.25rem' className={!!filterLocation ? 'icon-green' : 'icon-primary'} />}
             className='mt-1'
             onClick={toggleLocation}
@@ -158,8 +158,7 @@ export function PickSchema({
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
           <div className='cc-column dense p-3 items-center min-h-24'>
-            <p>{tx('tx.general.list.empty')}</p>
-            <p>{tx('ui.pick.schema.emptyHint')}</p>
+            <p>{tx('tx.list.empty')}</p>
           </div>
         }
         onRowClicked={rowData => onChange(rowData.id)}

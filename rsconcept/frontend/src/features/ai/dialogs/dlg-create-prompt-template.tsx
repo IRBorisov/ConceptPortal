@@ -47,7 +47,7 @@ export function DlgCreatePromptTemplate() {
 
   return (
     <ModalForm
-      header={tx('ui.promptTemplates.dlg.createHeader')}
+      header={tx('tx.ai.template.create')}
       submitText={tx('tx.general.create')}
       canSubmit={canSubmit}
       onSubmit={event => {
@@ -55,7 +55,7 @@ export function DlgCreatePromptTemplate() {
         event.stopPropagation();
         void form.handleSubmit();
       }}
-      validationHint={canSubmit ? '' : tx('ui.promptTemplates.dlg.uniqueLabelHint')}
+      validationHint={canSubmit ? '' : tx('tx.ai.template.title.hint')}
       className='cc-column w-140 max-h-120 py-2 px-6'
       helpTopic={HelpTopic.ASSISTANT}
     >
@@ -63,7 +63,7 @@ export function DlgCreatePromptTemplate() {
         {field => (
           <TextInput
             id='dlg_prompt_label'
-            label={tx('ui.promptTemplates.dlg.labelField')}
+            label={tx('tx.ai.template.title')}
             value={field.state.value}
             onChange={event => field.handleChange(event.target.value)}
             onBlur={field.handleBlur}
@@ -88,7 +88,7 @@ export function DlgCreatePromptTemplate() {
           {field => (
             <Checkbox
               id='dlg_prompt_is_shared'
-              label={tx('ui.promptTemplates.form.sharedCheckbox')}
+              label={tx('tx.ai.template.shared')}
               value={field.state.value ?? false}
               onChange={(v: boolean) => field.handleChange(v)}
               onBlur={field.handleBlur}

@@ -150,17 +150,17 @@ export function Navigation() {
               />
               <Dropdown isOpen={isCreateOpen} margin='mt-2'>
                 <DropdownButton
-                  text={tx('tx.lib.schema')}
+                  text={tx('tx.schema')}
                   icon={<IconRSForm size='1rem' className='icon-green' />}
                   onClick={navigateCreateSchema}
                 />
                 <DropdownButton
-                  text={tx('tx.lib.model')}
+                  text={tx('tx.model')}
                   icon={<IconRSModel size='1rem' className='text-accent-orange' />}
                   onClick={navigateCreateModel}
                 />
                 <DropdownButton
-                  text={tx('tx.lib.oss')}
+                  text={tx('tx.oss')}
                   icon={<IconOSS size='1rem' className='icon-primary' />}
                   onClick={navigateCreateOSS}
                 />

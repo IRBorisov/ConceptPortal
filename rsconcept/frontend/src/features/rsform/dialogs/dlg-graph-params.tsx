@@ -27,13 +27,12 @@ export function DlgGraphParams() {
 
   return (
     <ModalForm
-      header={tx('ui.termGraph.dialog.title')}
+      header={tx('tx.general.view.settings')}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
       submitText={tx('tx.general.save')}
       className='flex gap-6 justify-between px-6 pb-3 w-120'
     >
       <div className='flex flex-col gap-1'>
-        <h1 className='mb-2'>{tx('ui.termGraph.dialog.transforms')}</h1>
         <form.Field name='noText'>
           {field => (
             <Checkbox
@@ -41,7 +40,7 @@ export function DlgGraphParams() {
               onChange={field.handleChange}
               onBlur={field.handleBlur}
               label={tx('tx.general.labels.hide')}
-              title={prepareTooltip(tx('ui.termGraph.filter.hideTextHint'), 'T')}
+              title={prepareTooltip(tx('tx.general.labels.hide'), 'T')}
             />
           )}
         </form.Field>
@@ -51,8 +50,8 @@ export function DlgGraphParams() {
               value={field.state.value ?? false}
               onChange={field.handleChange}
               onBlur={field.handleBlur}
-              label={tx('ui.rsform.hideDerived')}
-              title={prepareTooltip(tx('ui.termGraph.filter.hideDerivedHint'), 'B')}
+              label={tx('tx.cst.spawned.hide')}
+              title={prepareTooltip(tx('tx.cst.spawned.hide'), 'B')}
             />
           )}
         </form.Field>
@@ -62,8 +61,8 @@ export function DlgGraphParams() {
               value={field.state.value ?? false}
               onChange={field.handleChange}
               onBlur={field.handleBlur}
-              label={tx('ui.termGraph.filter.hideFree')}
-              title={prepareTooltip(tx('ui.termGraph.filter.hideFreeHint'), 'H')}
+              label={tx('tx.graph.node.isolated.hide')}
+              title={prepareTooltip(tx('tx.graph.node.isolated.hide.hint'), 'H')}
             />
           )}
         </form.Field>
@@ -84,14 +83,13 @@ export function DlgGraphParams() {
               value={field.state.value ?? false}
               onChange={field.handleChange}
               onBlur={field.handleBlur}
-              label={tx('ui.termGraph.filter.transitiveReduction')}
-              title={tx('ui.termGraph.filter.transitiveReductionHint')}
+              label={tx('tx.graph.transitiveReduction')}
+              title={tx('tx.graph.transitiveReduction.hint')}
             />
           )}
         </form.Field>
       </div>
       <div className='flex flex-col items-center gap-1'>
-        <h1 className='mb-1'>{tx('ui.termGraph.dialog.cstTypes')}</h1>
         <div className='grid grid-cols-3'>
           {Object.values(CstType).map(cstType => {
             const fieldName = cstTypeToFilterKey[cstType];

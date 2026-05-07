@@ -28,7 +28,7 @@ export default function ToolbarGraphFilter() {
   return (
     <div className='flex flex-row gap-2'>
       <MiniButton
-        title={tx('tx.general.fitView')}
+        title={tx('tx.flow.fitView')}
         icon={<IconFitImage size='1.25rem' className='icon-primary' />}
         onClick={handleFitView}
       />
@@ -44,7 +44,7 @@ export default function ToolbarGraphFilter() {
         onClick={toggleText}
       />
       <MiniButton
-        title={!filter.foldDerived ? tx('ui.rsform.hideDerived') : tx('ui.rsform.showDerived')}
+        title={!filter.foldDerived ? tx('tx.cst.spawned.hide') : tx('tx.cst.spawned.show')}
         icon={
           !filter.foldDerived ? (
             <IconClustering size='1.25rem' className='icon-green' />

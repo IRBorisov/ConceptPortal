@@ -5,7 +5,6 @@ import React from 'react';
 import { NodeType } from '@/domain/library';
 import { useTx } from '@/i18n';
 
-import { useAuth } from '@/features/auth/backend/use-auth';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar';
@@ -13,12 +12,10 @@ import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
-  IconClustering,
   IconConceptBlock,
   IconDestroy,
   IconDownload,
   IconEdit2,
-  IconFilter,
   IconFitImage,
   IconImage,
   IconNewItem,
@@ -33,7 +30,7 @@ import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
 import { prepareTooltip } from '@/utils/format';
-import { isIOS, isMac, notImplemented } from '@/utils/utils';
+import { isIOS, isMac } from '@/utils/utils';
 
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useOssEdit } from '../oss-edit-context';
@@ -59,7 +56,6 @@ export function ToolbarOssGraph({
   const { selectedItems, isMutable, canDeleteSelected } = useOssEdit();
   const isProcessing = useMutatingOss();
   const { nodes } = useOssFlow();
-  const { user } = useAuth();
 
   const {
     elementRef: menuRef, //
@@ -144,12 +140,12 @@ export function ToolbarOssGraph({
           onClick={handleResetPositions}
         />
         <MiniButton
-          title={prepareTooltip(tx('tx.general.fitView'), 'G')}
+          title={prepareTooltip(tx('tx.flow.fitView'), 'G')}
           icon={<IconFitImage size='1.25rem' className='icon-primary' />}
           onClick={handleFitView}
         />
         <MiniButton
-          title={prepareTooltip(tx('ui.oss.toolbar.contentsPanel'), 'V')}
+          title={prepareTooltip(tx('tx.oss.sidebar.contents'), 'V')}
           icon={<IconShowSidebar value={showSidePanel} isBottom={false} size='1.25rem' />}
           onClick={handleShowSidePanel}
         />
@@ -196,10 +192,7 @@ export function ToolbarOssGraph({
           />
           <MiniButton
             aria-label={tx('tx.general.selection.selected.edit')}
-            title={prepareTooltip(
-              tx('tx.general.selection.selected.edit'),
-              isIOS() ? '' : tx('ui.oss.toolbar.rightClickHint')
-            )}
+            title={prepareTooltip(tx('tx.general.selection.selected.edit'), isIOS() ? '' : tx('tx.general.rightClick'))}
             hideTitle={isContextMenuOpen || isMenuOpen}
             icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
             onClick={handleEditItem}
@@ -215,47 +208,29 @@ export function ToolbarOssGraph({
             />
             <Dropdown isOpen={isMenuOpen} className='-translate-x-1/2'>
               <DropdownButton
-                text={tx('tx.lib.block.new')}
-                title={prepareTooltip(tx('tx.lib.block.new'), '1')}
+                text={tx('tx.oss.block.new')}
+                title={prepareTooltip(tx('tx.oss.block.new'), '1')}
                 icon={<IconConceptBlock size='1.25rem' className='text-constructive' />}
                 onClick={handleCreateBlock}
               />
               <DropdownButton
-                text={tx('tx.lib.schema.new.short')}
-                title={prepareTooltip(tx('tx.lib.schema.new'), '2')}
+                text={tx('tx.schema.new.short')}
+                title={prepareTooltip(tx('tx.schema.new'), '2')}
                 icon={<IconNewItem size='1.25rem' className='text-constructive' />}
                 onClick={handleCreateSchema}
               />
               <DropdownButton
-                text={tx('ui.oss.toolbar.importSchemaShort')}
-                title={prepareTooltip(tx('tx.lib.schema.embedding'), '3')}
+                text={tx('tx.oss.input.import')}
+                title={prepareTooltip(tx('tx.schema.embed'), '3')}
                 icon={<IconDownload size='1.25rem' className='text-primary' />}
                 onClick={handleImportSchema}
               />
               <DropdownButton
-                text={tx('tx.lib.synthesis')}
-                title={prepareTooltip(tx('tx.lib.synthesis.hint'), '4')}
+                text={tx('tx.synthesis')}
+                title={prepareTooltip(tx('tx.synthesis.hint'), '4')}
                 icon={<IconSynthesis size='1.25rem' className='text-primary' />}
                 onClick={handleCreateSynthesis}
               />
-              {user.is_staff ? (
-                <DropdownButton
-                  disabled
-                  text={tx('tx.general.filter')}
-                  title={prepareTooltip(tx('ui.oss.toolbar.filterConstituents'), '5')}
-                  icon={<IconFilter size='1.25rem' className='icon-primary' />}
-                  onClick={notImplemented}
-                />
-              ) : null}
-              {user.is_staff ? (
-                <DropdownButton
-                  disabled
-                  text={tx('ui.oss.toolbar.relativizationShort')}
-                  title={prepareTooltip(tx('ui.oss.toolbar.relativization'), '6')}
-                  icon={<IconClustering size='1.25rem' className='icon-primary' />}
-                  onClick={notImplemented}
-                />
-              ) : null}
             </Dropdown>
           </div>
           <MiniButton

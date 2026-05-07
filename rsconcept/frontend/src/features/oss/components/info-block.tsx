@@ -13,13 +13,13 @@ export function InfoBlock({ block }: InfoOperationProps) {
     <>
       {block.title ? (
         <p>
-          <b>{tx('tx.lib.title')}: </b>
+          <b>{tx('tx.lib.title') + tx('tx.general.colon')}</b>
           {block.title}
         </p>
       ) : null}
       {block.description ? (
         <p>
-          <b>{tx('tx.lib.description')}: </b>
+          <b>{tx('tx.lib.description') + tx('tx.general.colon')}</b>
           {block.description}
         </p>
       ) : null}

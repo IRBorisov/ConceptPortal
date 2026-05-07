@@ -173,21 +173,21 @@ export function HomePage() {
           <FeatureTile
             to={urls.help_topic(HelpTopic.CC_SYSTEM)}
             icon={<IconRSForm size='1.5rem' />}
-            title={tx('tx.lib.concept.system')}
+            title={tx('tx.concept.system')}
             description={tx('tx.home.feature.rsform.intro')}
             accentClass='bg-accent-purple'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.CC_RSMODEL)}
             icon={<IconRSModel size='1.5rem' />}
-            title={tx('tx.lib.model.plural')}
+            title={tx('tx.model.plural')}
             description={tx('tx.home.feature.rsmodel.intro')}
             accentClass='bg-accent-orange'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.CC_OSS)}
             icon={<IconOSS size='1.5rem' />}
-            title={tx('tx.lib.oss.plural')}
+            title={tx('tx.oss.plural')}
             description={tx('tx.home.feature.oss.intro')}
             accentClass='bg-accent-green'
           />

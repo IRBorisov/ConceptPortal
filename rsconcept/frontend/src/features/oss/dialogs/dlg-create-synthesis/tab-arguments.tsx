@@ -70,7 +70,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
               <SelectParent
                 items={oss.blocks}
                 value={field.state.value ? (oss.blockByID.get(field.state.value) ?? null) : null}
-                placeholder={tx('tx.lib.block.parent')}
+                placeholder={tx('tx.oss.block.parent')}
                 onChange={value => field.handleChange(value ? value.id : null)}
               />
             )}
@@ -95,7 +95,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
       </div>
 
       <div className='cc-column'>
-        <Label text={tx('ui.oss.argumentPickLabel', { count: inputs.length })} />
+        <Label text={`${tx('tx.operation.argument.select.short')}${tx('tx.general.colon')}[${inputs.length}]`} />
         <ArgumentsField>
           {field => (
             <PickMultiOperation

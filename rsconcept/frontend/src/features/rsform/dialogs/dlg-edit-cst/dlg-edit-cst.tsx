@@ -120,7 +120,7 @@ export function DlgEditCst() {
 
   return (
     <ModalForm
-      header={tx('tx.lib.cst.edit')}
+      header={tx('tx.cst.edit')}
       canSubmit={canSubmit}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
       validationHint={canSubmit ? '' : tx('labels.hint.aliasInvalid')}
@@ -129,13 +129,13 @@ export function DlgEditCst() {
     >
       <div className='cc-icons absolute z-pop left-2 top-2'>
         <MiniButton
-          title={tx('ui.dlg.editCst.titleDetailedEdit')}
+          title={tx('tx.schema.goto.hint')}
           noPadding
           icon={<IconRSForm size='1.25rem' className='text-primary' />}
           onClick={navigateToTarget}
         />
         <MiniButton
-          title={tx('tx.lib.cst.origin.goto.hint')}
+          title={tx('tx.cst.origin.goto.hint')}
           noPadding
           icon={<IconChild size='1.25rem' className={target.is_inherited ? 'text-primary' : 'text-foreground-muted'} />}
           disabled={!target.is_inherited}

@@ -28,9 +28,9 @@ export function SelectorLibraryFilter({ className }: SelectorLibraryFilterProps)
     owner_me: tx('tx.lib.filter.byOwnerMe'),
     editor_me: tx('tx.lib.filter.byEditorMe'),
     hidden: tx('tx.lib.filter.byHidden'),
-    type_rsform: tx('tx.lib.schema.short'),
-    type_oss: tx('tx.lib.oss.short'),
-    type_rsmodel: tx('tx.lib.model.short')
+    type_rsform: tx('tx.schema.short'),
+    type_oss: tx('tx.oss.short'),
+    type_rsmodel: tx('tx.model.short')
   };
 
   return (
@@ -58,15 +58,15 @@ export function SelectorLibraryFilter({ className }: SelectorLibraryFilterProps)
           </SelectItem>
           <SelectItem value='type_rsform'>
             <IconRSForm className='text-primary' />
-            {tx('tx.lib.schema.short')}
+            {tx('tx.schema.short')}
           </SelectItem>
           <SelectItem value='type_oss'>
             <IconOSS className='text-constructive' />
-            {tx('tx.lib.oss.short')}
+            {tx('tx.oss.short')}
           </SelectItem>
           <SelectItem value='type_rsmodel'>
             <IconRSModel className='text-accent-orange' />
-            {tx('tx.lib.model.short')}
+            {tx('tx.model.short')}
           </SelectItem>
         </SelectContent>
       </Select>

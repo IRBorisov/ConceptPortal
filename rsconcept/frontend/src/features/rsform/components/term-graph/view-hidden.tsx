@@ -69,7 +69,7 @@ export function ViewHidden({
       <div className={clsx('py-2 bg-input border-x', isFolded && 'border-b rounded-b-md')}>
         <div className={clsx('w-fit select-none cc-view-hidden-header', !isFolded && 'open')}>
           {localSelected
-            ? tx('ui.rsform.termGraph.hiddenWithCount', {
+            ? tx('tx.termGraph.hidden.status', {
                 selected: localSelected.length,
                 total: items.length
               })

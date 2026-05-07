@@ -40,7 +40,7 @@ export function SelectPagination<TData>({
     value: String(option),
     label: (
       <>
-        {option} {tx('ui.pagination.perPageSuffix')}
+        {option} {tx('tx.shell.pagination.perPage')}
       </>
     )
   }));
@@ -53,7 +53,7 @@ export function SelectPagination<TData>({
     >
       <SelectTrigger
         id={id}
-        aria-label={tx('ui.pagination.rowsPerPageAria')}
+        aria-label={tx('tx.shell.pagination.perPage.hint')}
         className={cn(
           'px-2 justify-end',
           'bg-transparent cc-hover-text cc-animate-color focus-outline border-0 rounded-md',
@@ -66,7 +66,7 @@ export function SelectPagination<TData>({
       <SelectContent>
         {paginationOptions?.map(option => (
           <SelectItem key={`${prefixes.page_size}${option}`} value={String(option)}>
-            {option} {tx('ui.pagination.perPageSuffix')}
+            {option} {tx('tx.shell.pagination.perPage')}
           </SelectItem>
         ))}
       </SelectContent>

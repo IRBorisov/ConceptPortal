@@ -40,7 +40,7 @@ export function DlgUploadRSForm() {
 
   return (
     <ModalForm
-      header={tx('tx.lib.schema')}
+      header={tx('tx.schema')}
       canSubmit={!!file}
       validationHint={!!file ? '' : tx('labels.hint.fileEmpty')}
       onSubmit={handleSubmit}
@@ -49,13 +49,13 @@ export function DlgUploadRSForm() {
     >
       <FileInput label={tx('tx.general.file.choose')} acceptType={EXTEOR_TRS_FILE} onChange={handleFile} />
       <Checkbox
-        label={tx('ui.dlg.uploadRsform.loadMetadata')}
+        label={tx('tx.schema.upload.attributes')}
         className='py-2'
         value={loadMetadata}
         onChange={value => setLoadMetadata(value)}
       />
       <div className='text-destructive'>
-        <b>{tx('tx.general.attention')}</b> {tx('ui.dlg.uploadRsform.warningBody')}
+        <b>{tx('tx.general.attention')}</b> {tx('tx.schema.upload.constituents')}
       </div>
     </ModalForm>
   );

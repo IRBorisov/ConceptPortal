@@ -40,7 +40,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
     visible: true,
     read_only: false,
     schema: modelFrom,
-    title: schemaItem ? tx('tx.lib.model.short') + ' ' + schemaItem.title : undefined,
+    title: schemaItem ? tx('tx.model.short') + ' ' + schemaItem.title : undefined,
     alias: schemaItem ? `M${schemaItem.alias}` : undefined,
     location: schemaItem
       ? schemaItem.location
@@ -97,10 +97,10 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
     >
       <h1 className='select-none relative font-math'>
         {itemType === LibraryItemType.RSMODEL
-          ? tx('tx.lib.model')
+          ? tx('tx.model')
           : itemType === LibraryItemType.OSS
-            ? tx('tx.lib.oss')
-            : tx('tx.lib.schema')}
+            ? tx('tx.oss')
+            : tx('tx.schema')}
       </h1>
 
       <form.Field name='title'>
@@ -159,7 +159,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
 
       {itemType === LibraryItemType.RSMODEL ? (
         <div>
-          <Label text={tx('tx.lib.schema')} />
+          <Label text={tx('tx.schema')} />
           <form.Field name='schema'>
             {field => (
               <PickSchema

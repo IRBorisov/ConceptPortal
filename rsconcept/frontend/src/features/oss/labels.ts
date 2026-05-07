@@ -11,15 +11,15 @@ import { globalTx } from '@/i18n';
 import { type RO } from '@/utils/meta';
 
 const OPERATION_LABEL_LID: Record<OperationType, string> = {
-  [OperationType.INPUT]: 'tx.lib.input',
-  [OperationType.SYNTHESIS]: 'tx.lib.synthesis',
-  [OperationType.REPLICA]: 'tx.lib.replica'
+  [OperationType.INPUT]: 'tx.oss.input',
+  [OperationType.SYNTHESIS]: 'tx.synthesis',
+  [OperationType.REPLICA]: 'tx.oss.replica'
 };
 
 const OPERATION_DESC_LID: Record<OperationType, string> = {
-  [OperationType.INPUT]: 'tx.lib.input.hint',
-  [OperationType.SYNTHESIS]: 'tx.lib.synthesis.hint',
-  [OperationType.REPLICA]: 'tx.lib.replica.hint'
+  [OperationType.INPUT]: 'tx.oss.input.hint',
+  [OperationType.SYNTHESIS]: 'tx.synthesis.hint',
+  [OperationType.REPLICA]: 'tx.oss.replica.hint'
 };
 
 /** Retrieves label for {@link OperationType}. */
@@ -40,29 +40,29 @@ export function describeSubstitutionError(error: RO<SubstitutionErrorDescription
   const to = error.params[1] ?? '';
   switch (error.errorType) {
     case SubstitutionErrorType.invalidIDs:
-      return globalTx('labels.oss.substitution.invalidIDs');
+      return globalTx('tx.substitution.error.invalidIDs');
     case SubstitutionErrorType.incorrectCst:
-      return globalTx('labels.oss.substitution.incorrectCst', { from, to });
+      return globalTx('tx.substitution.error.incorrectCst', { from, to });
     case SubstitutionErrorType.invalidBasic:
-      return globalTx('labels.oss.substitution.invalidBasic', { from, to });
+      return globalTx('tx.substitution.error.invalidBasic', { from, to });
     case SubstitutionErrorType.invalidConstant:
-      return globalTx('labels.oss.substitution.invalidConstant', { from, to });
+      return globalTx('tx.substitution.error.invalidConstant', { from, to });
     case SubstitutionErrorType.invalidNominal:
-      return globalTx('labels.oss.substitution.invalidNominal', { from, to });
+      return globalTx('tx.substitution.error.invalidNominal', { from, to });
     case SubstitutionErrorType.invalidClasses:
-      return globalTx('labels.oss.substitution.invalidClasses', { from, to });
+      return globalTx('tx.substitution.error.invalidClasses', { from, to });
     case SubstitutionErrorType.typificationCycle:
-      return globalTx('labels.oss.substitution.typificationCycle', { detail: error.params[0] ?? '' });
+      return globalTx('tx.substitution.error.typificationCycle', { detail: error.params[0] ?? '' });
     case SubstitutionErrorType.baseSubstitutionNotSet:
-      return globalTx('labels.oss.substitution.baseSubstitutionNotSet', { from, to: error.params[1] ?? '' });
+      return globalTx('tx.substitution.error.baseSubstitutionNotSet', { from, to: error.params[1] ?? '' });
     case SubstitutionErrorType.unequalTypification:
-      return globalTx('labels.oss.substitution.unequalTypification', { from, to });
+      return globalTx('tx.substitution.error.unequalTypification', { from, to });
     case SubstitutionErrorType.unequalArgsCount:
-      return globalTx('labels.oss.substitution.unequalArgsCount', { from, to });
+      return globalTx('tx.substitution.error.unequalArgsCount', { from, to });
     case SubstitutionErrorType.unequalArgs:
-      return globalTx('labels.oss.substitution.unequalArgs', { from, to });
+      return globalTx('tx.substitution.error.unequalArgs', { from, to });
     case SubstitutionErrorType.unequalExpressions:
-      return globalTx('labels.oss.substitution.unequalExpressions', { from, to });
+      return globalTx('tx.substitution.error.unequalExpressions', { from, to });
     default:
       return 'UNKNOWN ERROR';
   }
@@ -71,8 +71,8 @@ export function describeSubstitutionError(error: RO<SubstitutionErrorDescription
 /** Retrieves label for {@link OssItem}. */
 export function labelOssItem(item: RO<OssItem>): string {
   if (item.nodeType === NodeType.OPERATION) {
-    return `${(item as Operation).alias}: ${item.title}`;
+    return `${(item as Operation).alias}${globalTx('tx.general.colon')}${item.title}`;
   } else {
-    return globalTx('tx.lib.block') + ': ' + item.title;
+    return globalTx('tx.oss.block') + ': ' + item.title;
   }
 }

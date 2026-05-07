@@ -48,7 +48,7 @@ export function InfoOperation({ operation }: InfoOperationProps) {
       <h2>{operation.alias}</h2>
       <p className='flex justify-between gap-3'>
         <span>
-          <b>{tx('tx.rslang.type')}: </b> {labelOperationType(operation.operation_type)}
+          <b>{tx('tx.rslang.type') + tx('tx.general.colon')}</b> {labelOperationType(operation.operation_type)}
         </span>
         <span>
           <b>{tx('ui.oss.infoOperation.ownAdditionsLabel')}</b>{' '}
@@ -62,18 +62,18 @@ export function InfoOperation({ operation }: InfoOperationProps) {
       ) : null}
       {operation.operation_type === OperationType.SYNTHESIS && operation.is_consolidation ? (
         <p>
-          <b>{tx('ui.oss.infoOperation.rhombusSynthesis')}</b>
+          <b>{tx('tx.synthesis.rhombus')}</b>
         </p>
       ) : null}
       {operation.title ? (
         <p>
-          <b>{tx('tx.lib.title')}: </b>
+          <b>{tx('tx.lib.title') + tx('tx.general.colon')}</b>
           {operation.title}
         </p>
       ) : null}
       {operation.description ? (
         <p>
-          <b>{tx('tx.lib.description')}: </b>
+          <b>{tx('tx.lib.description') + tx('tx.general.colon')}</b>
           {operation.description}
         </p>
       ) : null}
@@ -86,10 +86,6 @@ export function InfoOperation({ operation }: InfoOperationProps) {
           data={operation.substitutions}
           columns={columns}
         />
-      ) : operation.operation_type !== OperationType.INPUT ? (
-        <p>
-          <b>{tx('tx.lib.cst.substitution.plural')}:</b> {tx('ui.oss.infoOperation.substitutionsNone')}
-        </p>
       ) : null}
     </>
   );

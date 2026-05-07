@@ -37,13 +37,13 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       {schema.oss.length > 0 ? <MiniSelectorOSS items={schema.oss} onSelect={handleSelectOss} /> : null}
       <MiniButton
         icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}
-        title={tx('ui.tg.toolbar.echelonGraphTitle')}
+        title={tx('tx.typeGraph.fromSelected')}
         onClick={handleShowTypeGraph}
       />
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip(tx('tx.lib.cst.crucial'), 'F')}
-          aria-label={tx('ui.cst.crucialToggleAria')}
+          title={prepareTooltip(tx('tx.cst.crucial'), 'F')}
+          aria-label={tx('tx.cst.crucial.toggle')}
           icon={<IconCrucial size='1.25rem' className='icon-primary' />}
           onClick={toggleCrucial}
           disabled={isProcessing || selectedCst.length === 0}
@@ -59,7 +59,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       ) : null}
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip(tx('tx.lib.cst.new'), 'R')}
+          title={prepareTooltip(tx('tx.cst.new'), 'R')}
           icon={<IconNewItem size='1.25rem' className='icon-green' />}
           onClick={handleCreateCst}
           disabled={isProcessing}
@@ -67,7 +67,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
       ) : null}
       {isContentEditable ? (
         <MiniButton
-          title={prepareTooltip(tx('tx.lib.cst.edit'), 'Alt + V')}
+          title={prepareTooltip(tx('tx.cst.edit'), 'Alt + V')}
           icon={<IconEdit2 size='1.25rem' className='icon-primary' />}
           onClick={handelFastEdit}
           disabled={isProcessing || selectedCst.length !== 1}

@@ -22,7 +22,7 @@ export function DlgAIPromptDialog() {
 
   return (
     <ModalView
-      header={tx('ui.aiPrompt.dlg.header')}
+      header={tx('tx.ai.generator')}
       className='w-100 sm:w-160 px-6 flex flex-col h-110'
       helpTopic={HelpTopic.ASSISTANT}
     >
@@ -34,7 +34,7 @@ export function DlgAIPromptDialog() {
         idFunc={item => String(item.id)}
         labelValueFunc={item => item.label}
         labelOptionFunc={item => item.label}
-        placeholder={tx('ui.aiPrompt.dlg.selectTemplatePlaceholder')}
+        placeholder={tx('tx.ai.template.select.hint')}
         className='w-full'
       />
       <Suspense fallback={<Loader />}>

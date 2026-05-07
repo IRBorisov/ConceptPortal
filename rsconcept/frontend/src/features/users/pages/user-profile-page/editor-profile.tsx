@@ -119,7 +119,7 @@ export function EditorProfile() {
         )}
       </form.Field>
       {serverError ? <ServerError error={serverError} /> : null}
-      <SubmitButton className='self-center mt-6' text={tx('ui.profile.submit.saveData')} loading={isPending} />
+      <SubmitButton className='self-center mt-6' text={tx('tx.general.changes.save')} loading={isPending} />
     </form>
   );
 }

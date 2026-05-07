@@ -151,39 +151,39 @@ export function MenuMain() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
-          text={tx('tx.lib.model.recalculate')}
-          aria-label={tx('tx.lib.model.recalculate.hint')}
+          text={tx('tx.model.recalculate')}
+          aria-label={tx('tx.model.recalculate.hint')}
           icon={<IconCalculateAll size='1rem' className='icon-green' />}
           onClick={handleRecalculate}
         />
         <DropdownButton
           text={tx('tx.general.download.file')}
-          title={tx('ui.sandbox.saveToFileHint')}
+          title={tx('tx.sandbox.bundle.save')}
           icon={<IconDownload size='1rem' className='icon-primary' />}
           onClick={handleExport}
         />
         <DropdownButton
           text={tx('tx.general.load.fromFile')}
-          title={tx('ui.sandbox.loadFromFileHint')}
+          title={tx('tx.sandbox.bundle.load')}
           icon={<IconUpload size='1rem' className='icon-primary' />}
           onClick={handleImportClick}
         />
         <DropdownButton
-          text={tx('tx.lib.schema.create')}
-          title={tx('ui.sandbox.createSchemaHint')}
+          text={tx('tx.schema.create')}
+          title={tx('tx.sandbox.output.schema')}
           icon={<IconRSForm size='1rem' className='icon-green' />}
           onClick={() => void handleCreateRSForm()}
         />
         <DropdownButton
-          text={tx('tx.lib.model.create')}
-          title={tx('ui.sandbox.createModelHint')}
+          text={tx('tx.model.create')}
+          title={tx('tx.sandbox.output.model')}
           icon={<IconRSModel size='1rem' className='text-accent-orange' />}
           onClick={() => void handleCreateRSModel()}
         />
         <Divider margins='mx-3 my-1' />
         <DropdownButton
           text={tx('tx.general.resetAll')}
-          title={tx('ui.sandbox.resetStateHint')}
+          title={tx('tx.sandbox.reset')}
           icon={<IconReset size='1rem' className='icon-red' />}
           onClick={handleReset}
         />

@@ -96,7 +96,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
 
   function handleViewValue() {
     if (dialogValue == null) {
-      toast.error(tx('tx.rslang.value.missing'));
+      toast.error(tx('tx.rslang.value.none'));
       return;
     }
     if (!dialogType || !isTypification(dialogType)) {
@@ -187,7 +187,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         stub={stub}
         valueLabel={labelValue(localEval?.value ?? null, localParse?.type ?? null)}
         status={status}
-        placeholder={tx('tx.rslang.value.missing')}
+        placeholder={tx('tx.rslang.value.none')}
         onCalculate={handleCalculate}
         onToggleDataText={toggleShowDataText}
         disabled

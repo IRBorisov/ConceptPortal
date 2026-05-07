@@ -74,7 +74,7 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
     'whitespace-pre-line'
   );
 
-  appendBoldTextRow(dom, globalTx('ui.rsform.refsTooltip.referenceToConstituent'));
+  appendBoldTextRow(dom, globalTx('tx.lang.reference.entity'));
 
   appendBoldTextRow(dom, `${ref.entity}:`, describeConstituentaTerm(cst));
 
@@ -95,7 +95,7 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
   controlsTip.textContent = globalTx('ui.rsform.refsTooltip.controls');
   if (canClick) {
     controlsTip.textContent =
-      `${isMac() ? 'Cmd + click' : 'Ctrl + click'}: ${globalTx('ui.rsform.refsTooltip.toOpen')}\n` +
+      `${isMac() ? 'Cmd + click' : 'Ctrl + click'}${globalTx('tx.general.colon')}${globalTx('ui.rsform.refsTooltip.toOpen')}\n` +
       (controlsTip.textContent ?? '');
   }
   dom.appendChild(controlsTip);
@@ -121,7 +121,7 @@ function domTooltipSyntacticReference(
   );
 
   appendBoldTextRow(dom, globalTx('tx.lang.reference.syntactic'));
-  appendBoldTextRow(dom, globalTx('tx.lang.reference.offset') + ':', ref.offset);
+  appendBoldTextRow(dom, globalTx('tx.lang.reference.offset.short') + ':', ref.offset);
   appendBoldTextRow(dom, globalTx('tx.lang.reference.master') + ':', masterRef ?? 'N/A');
   appendBoldTextRow(dom, globalTx('tx.lang.morphology.nominal') + ':', ref.nominal);
 

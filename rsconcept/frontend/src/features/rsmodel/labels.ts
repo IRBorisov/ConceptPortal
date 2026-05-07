@@ -8,23 +8,23 @@ import { globalTx } from '@/i18n';
 import { type RO } from '@/utils/meta';
 
 const EVAL_LABEL_LID: Record<EvalStatus, string> = {
-  [EvalStatus.NO_EVAL]: 'tx.lib.evalStatus.noEval',
-  [EvalStatus.NOT_PROCESSED]: 'tx.lib.evalStatus.notProcessed',
-  [EvalStatus.INVALID_DATA]: 'tx.lib.evalStatus.invalidData',
-  [EvalStatus.EVAL_FAIL]: 'tx.lib.evalStatus.error',
-  [EvalStatus.AXIOM_FALSE]: 'tx.lib.evalStatus.axiomFalse',
-  [EvalStatus.EMPTY]: 'tx.lib.evalStatus.empty',
-  [EvalStatus.HAS_DATA]: 'tx.lib.evalStatus.hasData'
+  [EvalStatus.NO_EVAL]: 'tx.eval.status.noEval',
+  [EvalStatus.NOT_PROCESSED]: 'tx.eval.status.notProcessed',
+  [EvalStatus.INVALID_DATA]: 'tx.eval.status.invalidData',
+  [EvalStatus.EVAL_FAIL]: 'tx.eval.status.error',
+  [EvalStatus.AXIOM_FALSE]: 'tx.eval.status.axiomFalse',
+  [EvalStatus.EMPTY]: 'tx.eval.status.empty',
+  [EvalStatus.HAS_DATA]: 'tx.eval.status.hasData'
 };
 
 const EVAL_DESC_LID: Record<EvalStatus, string> = {
-  [EvalStatus.NO_EVAL]: 'tx.lib.evalStatus.noEval.hint',
-  [EvalStatus.NOT_PROCESSED]: 'tx.lib.evalStatus.notProcessed.hint',
-  [EvalStatus.INVALID_DATA]: 'tx.lib.evalStatus.invalidData.hint',
-  [EvalStatus.EVAL_FAIL]: 'tx.lib.evalStatus.error.hint',
-  [EvalStatus.AXIOM_FALSE]: 'tx.lib.evalStatus.axiomFalse.hint',
-  [EvalStatus.EMPTY]: 'tx.lib.evalStatus.empty.hint',
-  [EvalStatus.HAS_DATA]: 'tx.lib.evalStatus.hasData.hint'
+  [EvalStatus.NO_EVAL]: 'tx.eval.status.noEval.hint',
+  [EvalStatus.NOT_PROCESSED]: 'tx.eval.status.notProcessed.hint',
+  [EvalStatus.INVALID_DATA]: 'tx.eval.status.invalidData.hint',
+  [EvalStatus.EVAL_FAIL]: 'tx.eval.status.error.hint',
+  [EvalStatus.AXIOM_FALSE]: 'tx.eval.status.axiomFalse.hint',
+  [EvalStatus.EMPTY]: 'tx.eval.status.empty.hint',
+  [EvalStatus.HAS_DATA]: 'tx.eval.status.hasData.hint'
 };
 
 /** Retrieves label for {@link EvalStatus}. */
@@ -68,7 +68,7 @@ export function describeValue(data: Value | null, currentType: Typification): st
   if (currentType.typeID !== TypeID.collection) {
     return stub;
   }
-  return globalTx('labels.rsmodel.valueDesc.cardinalityPrefix', {
+  return globalTx('tx.rslang.value.stub.status', {
     n: String((data as Value[]).length),
     stub
   });

@@ -68,8 +68,8 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
       {showCrucialPill ? (
         <IndicatorPill
           className='text-sm font-controls py-0.5 gap-1 -mt-0.5'
-          title={crucial ? tx('ui.cst.crucialRemoveTitle') : tx('ui.cst.crucialAddTitle')}
-          value={crucial ? tx('ui.cst.crucialBadgeOn') : tx('ui.cst.crucialBadgeOff')}
+          title={crucial ? tx('tx.cst.crucial.disable') : tx('tx.cst.crucial.enable')}
+          value={crucial ? tx('tx.cst.crucial.badgeOn') : tx('tx.cst.crucial.badgeOff')}
           icon={<IconCrucial size='1rem' />}
           color={crucial ? 'teal' : 'muted'}
           onClick={toggleCrucial}
@@ -80,7 +80,7 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
       {showRenameButton ? (
         <TextButton
           text={tx('tx.general.rename')}
-          title={isModified ? tx('tx.general.changes.unsaved.hint') : tx('tx.lib.cst.rename')}
+          title={isModified ? tx('tx.general.changes.unsaved.hint') : tx('tx.cst.rename')}
           onClick={promptRename}
           disabled={isModified}
           className='text-sm'
@@ -89,8 +89,8 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
 
       {showStructureButton ? (
         <TextButton
-          text={tx('tx.lib.concept.expandStructure')}
-          title={tx('tx.lib.concept.expandStructure.hint')}
+          text={tx('tx.concept.expandStructure')}
+          title={tx('tx.concept.expandStructure.hint')}
           onClick={handleStructurePlanner}
           className='text-sm'
         />

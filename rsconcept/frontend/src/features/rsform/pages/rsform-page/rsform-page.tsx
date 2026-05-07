@@ -84,18 +84,18 @@ function ProcessError({
     if (error.response.status === 404) {
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
-          <p>{isArchive ? tx('ui.rsform.error.notFoundVersion') : tx('ui.rsform.error.notFound')}</p>
+          <p>{tx('tx.schema.notFound')}</p>
           <div className='flex justify-center'>
             <TextURL text={tx('tx.lib.library')} href='/library' />
             {isArchive ? <Divider vertical margins='mx-3' /> : null}
-            {isArchive ? <TextURL text={tx('ui.rsform.link.currentVersion')} href={`/rsforms/${itemID}`} /> : null}
+            {isArchive ? <TextURL text={tx('tx.lib.version.latest')} href={`/rsforms/${itemID}`} /> : null}
           </div>
         </div>
       );
     } else if (error.response.status === 403) {
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
-          <p>{tx('ui.rsform.error.forbidden')}</p>
+          <p>{tx('tx.lib.access.forbidden')}</p>
           <TextURL text={tx('tx.lib.library')} href='/library' />
         </div>
       );

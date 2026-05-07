@@ -65,7 +65,7 @@ function ProcessError({ error }: { error: ErrorData }): React.ReactElement | nul
     if (error.response.status === 404) {
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
-          <p>{tx('ui.rsmodel.error.notFound')}</p>
+          <p>{tx('tx.model.notFound')}</p>
           <div className='flex justify-center'>
             <TextURL text={tx('tx.lib.library')} href='/library' />
           </div>
@@ -74,7 +74,7 @@ function ProcessError({ error }: { error: ErrorData }): React.ReactElement | nul
     } else if (error.response.status === 403) {
       return (
         <div className='flex flex-col items-center p-2 mx-auto'>
-          <p>{tx('ui.rsform.error.forbidden')}</p>
+          <p>{tx('tx.lib.access.forbidden')}</p>
           <TextURL text={tx('tx.lib.library')} href='/library' />
         </div>
       );

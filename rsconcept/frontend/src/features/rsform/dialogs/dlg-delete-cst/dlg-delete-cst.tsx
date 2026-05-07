@@ -37,30 +37,30 @@ export function DlgDeleteCst() {
 
   return (
     <ModalForm
-      header={tx('tx.lib.cst.delete')}
-      submitText={expandOut ? tx('ui.rsform.dlg.deleteCst.submitWithDeps') : tx('tx.general.delete')}
+      header={tx('tx.cst.delete')}
+      submitText={tx('tx.general.delete')}
       onSubmit={handleSubmit}
       className='cc-column max-w-[60vw] min-w-120 px-6'
     >
       <ListConstituents
-        title={tx('ui.rsform.dlg.deleteCst.selectedTitle')}
+        title={tx('tx.cst.delete.list')}
         list={selected}
         schema={schema}
         prefix={prefixes.cst_delete_list}
       />
       <ListConstituents
-        title={tx('ui.rsform.dlg.deleteCst.dependentsTitle')}
+        title={tx('tx.cst.dependant.plural')}
         list={expansion}
         schema={schema}
         prefix={prefixes.cst_dependant_list}
       />
       <Checkbox
-        label={tx('ui.rsform.dlg.deleteCst.expandDepsLabel')}
+        label={tx('tx.cst.delete.dependant')}
         className='mb-2'
         value={expandOut}
         onChange={value => setExpandOut(value)}
       />
-      {hasInherited ? <p className='text-sm clr-text-red'>{tx('ui.rsform.dlg.deleteCst.inheritedWarn')}</p> : null}
+      {hasInherited ? <p className='text-sm clr-text-red'>{tx('tx.cst.delete.warnInherited')}</p> : null}
     </ModalForm>
   );
 }

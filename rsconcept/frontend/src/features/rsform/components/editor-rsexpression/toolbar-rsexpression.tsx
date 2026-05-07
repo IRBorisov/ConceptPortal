@@ -38,18 +38,18 @@ export function ToolbarRSExpression({
       {helpTopic ? <BadgeHelp topic={helpTopic} offset={4} /> : null}
       {!disabled || isProcessing ? (
         <MiniButton
-          title={tx('ui.rsexpr.toolbar.symbolKeyboardTitle')}
+          title={tx('tx.rslang.expression.keyboard')}
           icon={<IconShowKeyboard value={showControls} size='1.25rem' className='hover:text-primary' />}
           onClick={toggleControls}
         />
       ) : null}
       <MiniButton
-        title={tx('ui.rsexpr.toolbar.typificationStructureTitle')}
+        title={tx('tx.typeGraph.fromExpression')}
         icon={<IconTypeGraph size='1.25rem' className='hover:text-primary' />}
         onClick={showTypeGraph}
       />
       <MiniButton
-        title={tx('ui.rsexpr.toolbar.expressionStructureTitle')}
+        title={tx('tx.rslang.expression.ast')}
         onClick={showAST}
         icon={<IconTree size='1.25rem' className='hover:text-primary' />}
       />

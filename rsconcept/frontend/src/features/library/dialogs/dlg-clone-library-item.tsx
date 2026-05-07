@@ -69,7 +69,7 @@ export function DlgCloneLibraryItem() {
 
   return (
     <ModalForm
-      header={base.item_type === LibraryItemType.RSFORM ? tx('tx.lib.schema') : tx('tx.lib.model')}
+      header={base.item_type === LibraryItemType.RSFORM ? tx('tx.schema') : tx('tx.model')}
       submitText={tx('tx.general.create')}
       canSubmit={isValid}
       onSubmit={event => {
@@ -163,7 +163,7 @@ export function DlgCloneLibraryItem() {
           {field => (
             <Checkbox
               id='dlg_only_selected'
-              label={tx('ui.dlg.createVersion.onlySelected', {
+              label={tx('tx.cst.onlySelected', {
                 n: selected.length,
                 total: totalCount
               })}

@@ -95,8 +95,7 @@ export function PickConstituenta({
         conditionalRowStyles={conditionalRowStyles}
         noDataComponent={
           <NoData className='min-h-24'>
-            <p>{tx('ui.table.cstSide.emptyTitle')}</p>
-            <p>{tx('ui.table.cstSide.emptyHint')}</p>
+            <p>{tx('tx.list.empty')}</p>
           </NoData>
         }
         onRowClicked={onChange}

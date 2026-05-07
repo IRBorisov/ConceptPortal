@@ -217,12 +217,12 @@ export function PickSubstitutions({
         props.row.original.is_suggestion ? (
           <div className='flex max-w-fit'>
             <MiniButton
-              title={tx('ui.substitution.acceptSuggestion')}
+              title={tx('tx.substitution.suggestion.accept')}
               icon={<IconAccept size='1rem' className='icon-green' />}
               onClick={() => handleAcceptSuggestion(props.row.original)}
             />
             <MiniButton
-              title={tx('ui.substitution.ignoreSuggestion')}
+              title={tx('tx.substitution.suggestion.decline')}
               icon={<IconRemove size='1rem' className='icon-red' />}
               onClick={() => handleDeclineSuggestion(props.row.original)}
             />
@@ -253,7 +253,7 @@ export function PickSubstitutions({
           <SelectLibraryItem
             id='substitute-left-schema'
             noBorder
-            placeholder={tx('tx.lib.operation.argument')}
+            placeholder={tx('tx.operation.argument')}
             items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== rightArgument?.id)}
             value={leftArgument}
             onChange={onChangeLeftArgument}
@@ -262,7 +262,7 @@ export function PickSubstitutions({
         </div>
         <div className='flex flex-col justify-center gap-1'>
           <MiniButton
-            title={deleteRight ? tx('ui.substitution.replaceRight') : tx('ui.substitution.replaceLeft')}
+            title={deleteRight ? tx('tx.substitution.replaceRight') : tx('tx.substitution.replaceLeft')}
             onClick={toggleDelete}
             icon={
               deleteRight ? (
@@ -273,7 +273,7 @@ export function PickSubstitutions({
             }
           />
           <MiniButton
-            title={tx('ui.substitution.addToTable')}
+            title={tx('tx.substitution.add.hint')}
             className='grow-0'
             icon={<IconReplace size='1.5rem' className='icon-primary' />}
             onClick={addSubstitution}
@@ -285,7 +285,7 @@ export function PickSubstitutions({
           <SelectLibraryItem
             id='substitute-right-schema'
             noBorder
-            placeholder={tx('tx.lib.operation.argument')}
+            placeholder={tx('tx.operation.argument')}
             items={allowSelfSubstitution ? schemas : schemas.filter(item => item.id !== leftArgument?.id)}
             value={rightArgument}
             onChange={onChangeRightArgument}
@@ -305,8 +305,8 @@ export function PickSubstitutions({
         columns={columns}
         noDataComponent={
           <NoData className='min-h-8'>
-            <p>{tx('tx.general.list.empty')}</p>
-            <p>{tx('ui.substitution.tableEmptyHint')}</p>
+            <p>{tx('tx.list.empty')}</p>
+            <p>{tx('tx.substitution.add')}</p>
           </NoData>
         }
         conditionalRowStyles={conditionalRowStyles}
