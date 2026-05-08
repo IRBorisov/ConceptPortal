@@ -124,7 +124,7 @@ export function DlgRelocateConstituents() {
       header={tx('tx.oss.relocate')}
       submitText={tx('tx.general.move')}
       canSubmit={canSubmit}
-      validationHint={canSubmit ? '' : tx('labels.hint.relocateEmpty')}
+      validationHint={canSubmit ? '' : tx('tx.oss.relocate.validate')}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();

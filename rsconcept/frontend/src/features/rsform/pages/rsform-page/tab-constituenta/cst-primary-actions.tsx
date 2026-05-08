@@ -69,7 +69,11 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
         <IndicatorPill
           className='text-sm font-controls py-0.5 gap-1 -mt-0.5'
           title={crucial ? tx('tx.cst.crucial.disable') : tx('tx.cst.crucial.enable')}
-          value={crucial ? tx('tx.cst.crucial.badgeOn') : tx('tx.cst.crucial.badgeOff')}
+          value={
+            crucial
+              ? tx('tx.cst.crucial.badgeOn').toLocaleLowerCase()
+              : tx('tx.cst.crucial.badgeOff').toLocaleLowerCase()
+          }
           icon={<IconCrucial size='1rem' />}
           color={crucial ? 'teal' : 'muted'}
           onClick={toggleCrucial}

@@ -13,13 +13,20 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.expression.saveAndCalculate': 'Enregistrer et calculer',
   'tx.rslang.expression.keyboard': 'Clavier de symboles',
   'tx.rslang.expression.ast': 'Arbre de syntaxe abstraite',
+  'tx.rslang.expression.ast.fail': 'Impossible de construire l’arbre de syntaxe',
 
   'tx.rslang.type': 'Type',
   'tx.rslang.typification': 'Typification',
   'tx.rslang.cardinality': 'Cardinalité',
   'tx.rslang.template.parameter': 'Paramètre de modèle',
 
+  'tx.rslang.eval.success': 'Calculs terminés en {timeSpent} s',
   'tx.rslang.eval.iterationCount': 'Nombre d’itérations',
+
+  'tx.rslang.binding.view': 'Consulter l’interprétation de base',
+  'tx.rslang.binding.edit': 'Éditeur de l’interprétation de base',
+  'tx.rslang.binding.load.validate':
+    'Format de données invalide. Utilisez JSON de la forme { "1": "value1", "2": "value2", ... }',
 
   'tx.rslang.value': 'Valeur d’expression',
   'tx.rslang.value.short': 'Valeur',
@@ -27,18 +34,25 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.value.input.hint': 'Entrez une valeur',
   'tx.rslang.value.none': 'Valeur absente',
   'tx.rslang.value.none.hint': 'Valeur absente. Utilisez « Valeur aléatoire » pour générer un exemple',
+  'tx.rslang.value.render.tooLarge.hint': 'Valeur trop volumineuse — utilisez « Consulter la valeur »',
   'tx.rslang.value.view': 'Consulter la valeur',
   'tx.rslang.value.view.wrongType': 'Consulter la valeur n’est pas disponible pour ce type',
   'tx.rslang.value.view.reset': 'Valeur entière',
   'tx.rslang.value.edit': 'Modifier la valeur',
   'tx.rslang.value.edit.hint': 'Consulter ou\nmodifier la valeur',
+  'tx.rslang.value.edit.fail': 'Impossible de modifier la valeur',
   'tx.rslang.value.editor': 'Éditeur de valeur',
+  'tx.rslang.value.load.validate':
+    'Format de données invalide. Utilisez JSON contenant uniquement des nombres et des tableaux',
+  'tx.rslang.value.load.success': 'Valeur chargée',
   'tx.rslang.value.reset': 'Réinitialiser la valeur',
   'tx.rslang.value.reset.hint': 'Réinitialiser la valeur de la constituante',
+  'tx.rslang.value.reset.success': 'Données réinitialisées',
   'tx.rslang.value.export': 'Exporter la valeur',
   'tx.rslang.value.import': 'Importer une valeur',
   'tx.rslang.value.add.random': 'Ajouter des valeurs aléatoires',
   'tx.rslang.value.add.random.hint': 'Générer des valeurs aléatoires pour la constituante courante',
+  'tx.rslang.value.add.random.fail': 'Impossible de générer des valeurs aléatoires',
 
   'tx.rslang.value.stub': 'Abréviation de la valeur',
   'tx.rslang.value.stub.hint': 'Libellé | cardinalité',

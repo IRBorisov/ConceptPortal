@@ -87,13 +87,13 @@ export function DlgCreateBlock() {
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
   const { canSubmit, hint } = (() => {
     if (!title) {
-      return { canSubmit: false, hint: tx('labels.hint.titleEmpty') };
+      return { canSubmit: false, hint: tx('tx.lib.title') };
     }
     if (manager.oss.blocks.some(block => block.title === title)) {
-      return { canSubmit: false, hint: tx('labels.hint.blockTitleTaken') };
+      return { canSubmit: false, hint: tx('tx.oss.block.validate.titleTaken') };
     }
     if (!schemaCreateBlock.safeParse(values).success) {
-      return { canSubmit: false, hint: tx('labels.hint.formInvalid') };
+      return { canSubmit: false, hint: tx('tx.general.form.invalid') };
     }
     return { canSubmit: true, hint: '' };
   })();

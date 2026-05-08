@@ -45,7 +45,7 @@ export function MenuMain() {
 
   function handleReset() {
     hideMenu();
-    if (!window.confirm(tx('labels.prompt.resetSandbox'))) {
+    if (!window.confirm(tx('tx.sandbox.reset.confirm'))) {
       return;
     }
     resetBundle();
@@ -77,7 +77,7 @@ export function MenuMain() {
       router.gotoRSForm(created.id);
     } catch (error) {
       console.error(error);
-      toast.error(tx('labels.error.sandboxBundleNotAvailable'));
+      toast.error(tx('tx.sandbox.export.schema.fail'));
     }
   }
 
@@ -105,7 +105,7 @@ export function MenuMain() {
       router.gotoRSModel(created.id);
     } catch (error) {
       console.error(error);
-      toast.error(tx('labels.error.sandboxBundleNotAvailable'));
+      toast.error(tx('tx.sandbox.export.model.fail'));
     }
   }
 
@@ -124,10 +124,10 @@ export function MenuMain() {
     try {
       const raw = JSON.parse(await file.text()) as unknown;
       await importBundle(raw);
-      toast.success(tx('labels.info.sandboxImportSuccess'));
+      toast.success(tx('tx.sandbox.import.success'));
     } catch (error) {
       console.error(error);
-      toast.error(tx('labels.error.sandboxImportError'));
+      toast.error(tx('tx.sandbox.import.fail'));
     }
   }
 
@@ -158,25 +158,25 @@ export function MenuMain() {
         />
         <DropdownButton
           text={tx('tx.general.download.file')}
-          title={tx('tx.sandbox.bundle.save')}
+          title={tx('tx.sandbox.bundle.save.file')}
           icon={<IconDownload size='1rem' className='icon-primary' />}
           onClick={handleExport}
         />
         <DropdownButton
           text={tx('tx.general.load.fromFile')}
-          title={tx('tx.sandbox.bundle.load')}
+          title={tx('tx.sandbox.bundle.load.file')}
           icon={<IconUpload size='1rem' className='icon-primary' />}
           onClick={handleImportClick}
         />
         <DropdownButton
           text={tx('tx.schema.create')}
-          title={tx('tx.sandbox.output.schema')}
+          title={tx('tx.sandbox.export.schema')}
           icon={<IconRSForm size='1rem' className='icon-green' />}
           onClick={() => void handleCreateRSForm()}
         />
         <DropdownButton
           text={tx('tx.model.create')}
-          title={tx('tx.sandbox.output.model')}
+          title={tx('tx.sandbox.export.model')}
           icon={<IconRSModel size='1rem' className='text-accent-orange' />}
           onClick={() => void handleCreateRSModel()}
         />

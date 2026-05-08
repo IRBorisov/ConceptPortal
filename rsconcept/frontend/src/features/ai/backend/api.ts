@@ -47,7 +47,7 @@ export const promptsApi = {
       endpoint: '/api/prompts/',
       request: {
         data: data,
-        successMessage: globalTx('labels.info.changesSaved')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     }),
 
@@ -57,7 +57,7 @@ export const promptsApi = {
       endpoint: `/api/prompts/${id}/`,
       request: {
         data: data,
-        successMessage: globalTx('labels.info.changesSaved')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     }),
 
@@ -65,7 +65,7 @@ export const promptsApi = {
     axiosDelete({
       endpoint: `/api/prompts/${id}/`,
       request: {
-        successMessage: globalTx('labels.info.changesSaved')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     })
 } as const;

@@ -80,5 +80,5 @@ export function describeAccessPolicy(policy: AccessPolicy): string {
 /** Generates label for {@link VersionInfo} of {@link RSForm}. */
 export function labelVersion(value: CurrentVersion, items: RO<VersionInfo[]>) {
   const version = items.find(ver => ver.id === value);
-  return version ? version.version : globalTx('tx.lib.version.latest.short');
+  return version ? version.version : globalTx('tx.lib.version.latest.short').toLocaleLowerCase();
 }

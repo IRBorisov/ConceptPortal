@@ -68,13 +68,13 @@ export function DlgCreateSchema() {
   const alias = values.item_data.alias;
   const { canSubmit, hint } = (() => {
     if (!alias) {
-      return { canSubmit: false, hint: tx('tx.validate.alias.empty') };
+      return { canSubmit: false, hint: tx('tx.lib.alias.validate.empty') };
     }
     if (manager.oss.operations.some(operation => operation.alias === alias)) {
-      return { canSubmit: false, hint: tx('labels.hint.schemaAliasTaken') };
+      return { canSubmit: false, hint: tx('tx.lib.alias.validate.taken') };
     }
     if (!schemaCreateSchema.safeParse(values).success) {
-      return { canSubmit: false, hint: tx('labels.hint.formInvalid') };
+      return { canSubmit: false, hint: tx('tx.general.form.invalid') };
     }
     return { canSubmit: true, hint: '' };
   })();
@@ -114,7 +114,7 @@ export function DlgCreateSchema() {
                 id='operation_alias'
                 label={tx('tx.lib.alias')}
                 className='w-80'
-                placeholder={tx('tx.validate.alias.empty')}
+                placeholder={tx('tx.lib.alias.validate.empty')}
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
@@ -138,7 +138,7 @@ export function DlgCreateSchema() {
             <TextArea
               id='operation_comment'
               label={tx('tx.lib.description')}
-              placeholder={tx('labels.placeholder.itemDescription')}
+              placeholder={tx('tx.lib.description.hint')}
               className='w-full'
               noResize
               rows={5}

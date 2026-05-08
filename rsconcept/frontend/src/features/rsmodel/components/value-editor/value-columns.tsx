@@ -237,7 +237,7 @@ function BasicCell({
   const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const text =
     prepareValueString(value, type, services.schema, services.basics, services.showDataText) ??
-    tx('labels.placeholder.valueTooLarge');
+    tx('tx.rslang.value.render.tooLarge.hint');
   const isSingleColumn = path.length === 0 || (path.length === 1 && !services.isSingleton);
   const needsTooltip = text.length > (isSingleColumn ? VALUE_TRUNCATE_LONG : VALUE_TRUNCATE);
   const isMatch = services.matcher?.match(value, type) ?? false;

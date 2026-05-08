@@ -48,16 +48,17 @@ export function InfoOperation({ operation }: InfoOperationProps) {
       <h2>{operation.alias}</h2>
       <p className='flex justify-between gap-3'>
         <span>
-          <b>{tx('tx.rslang.type') + tx('tx.general.colon')}</b> {labelOperationType(operation.operation_type)}
+          <b>{tx('tx.rslang.type') + tx('tx.general.colon')}</b>
+          {labelOperationType(operation.operation_type)}
         </span>
         <span>
-          <b>{tx('ui.oss.infoOperation.ownAdditionsLabel')}</b>{' '}
+          <b>{tx('tx.cst.original.plural') + tx('tx.general.colon')}</b>
           {operation.has_additions ? tx('tx.general.yes') : tx('tx.general.no')}
         </span>
       </p>
       {operation.operation_type === OperationType.INPUT && operation.is_import ? (
         <p>
-          <b>{tx('ui.oss.infoOperation.csNotInOss')}</b>
+          <b>{tx('tx.oss.input.import')}</b>
         </p>
       ) : null}
       {operation.operation_type === OperationType.SYNTHESIS && operation.is_consolidation ? (

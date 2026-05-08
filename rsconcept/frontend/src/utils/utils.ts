@@ -55,7 +55,7 @@ export function isResponseHtml(response?: AxiosResponse) {
 
 /** Prompt user of confirming discarding changes before continue. */
 export function promptUnsaved(): boolean {
-  return window.confirm(globalTx('tx.prompt.confirm.changes.unsaved'));
+  return window.confirm(globalTx('tx.general.changes.unsaved.confirm'));
 }
 
 /** Toggle tristate flag: null - true - false. */
@@ -138,8 +138,11 @@ export function sharePage() {
   const url = currentRef.includes('?') ? currentRef + '&share' : currentRef + '?share';
   navigator.clipboard
     .writeText(url)
-    .then(() => toast.success(globalTx('labels.info.linkReady')))
-    .catch(console.error);
+    .then(() => toast.success(globalTx('tx.general.copy.toClipboard.success')))
+    .catch(error => {
+      toast.error(error instanceof Error ? error.message : globalTx('tx.general.copy.toClipboard.fail'));
+      console.error(error);
+    });
 }
 
 /** Show error message about not implemented function. */

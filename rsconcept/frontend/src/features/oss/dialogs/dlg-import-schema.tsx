@@ -76,13 +76,13 @@ export function DlgImportSchema() {
   const clone_source = values.clone_source;
   const { canSubmit, hint } = (() => {
     if (!alias) {
-      return { canSubmit: false, hint: tx('tx.validate.alias.empty') };
+      return { canSubmit: false, hint: tx('tx.lib.alias.validate.empty') };
     }
     if (manager.oss.operations.some(operation => operation.alias === alias)) {
-      return { canSubmit: false, hint: tx('labels.hint.schemaAliasTaken') };
+      return { canSubmit: false, hint: tx('tx.lib.alias.validate.taken') };
     }
     if (!schemaImportSchema.safeParse(values).success) {
-      return { canSubmit: false, hint: tx('labels.hint.formInvalid') };
+      return { canSubmit: false, hint: tx('tx.general.form.invalid') };
     }
     return { canSubmit: true, hint: '' };
   })();
@@ -183,7 +183,7 @@ export function DlgImportSchema() {
               id='operation_comment'
               className='w-full'
               aria-label={tx('tx.lib.description')}
-              placeholder={tx('labels.placeholder.itemDescription')}
+              placeholder={tx('tx.lib.description.hint')}
               rows={5}
               disabled={!clone_source}
               value={field.state.value}

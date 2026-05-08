@@ -31,7 +31,7 @@ export function DlgShowTypeGraph() {
   })();
 
   if (graph.nodes.length === 0) {
-    toast.error(tx('labels.error.typeStructureFailed'));
+    toast.error(tx('tx.typeGraph.fromExpression.fail'));
     hideDialog();
     return null;
   }

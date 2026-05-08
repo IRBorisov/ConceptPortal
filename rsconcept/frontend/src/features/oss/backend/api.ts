@@ -57,7 +57,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/update-layout`,
       request: {
         data: { data: data },
-        successMessage: isSilent ? undefined : globalTx('labels.info.changesSaved')
+        successMessage: isSilent ? undefined : globalTx('tx.general.changes.save.success')
       }
     }),
 
@@ -67,7 +67,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/create-block`,
       request: {
         data: data,
-        successMessage: globalTx('labels.info.changesSaved')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     }),
   updateBlock: ({ itemID, data }: { itemID: number; data: UpdateBlockDTO }) =>
@@ -76,7 +76,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/update-block`,
       request: {
         data: data,
-        successMessage: globalTx('labels.info.changesSaved')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     }),
   deleteBlock: ({ itemID, data }: { itemID: number; data: DeleteBlockDTO; beforeUpdate?: () => void }) =>
@@ -85,7 +85,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/delete-block`,
       request: {
         data: data,
-        successMessage: globalTx('labels.info.blockDestroyed')
+        successMessage: globalTx('tx.general.delete.success')
       }
     }),
 
@@ -97,7 +97,7 @@ export const ossApi = {
         data: data,
         successMessage: response => {
           const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
-          return globalTx('labels.info.newOperation', { alias: alias ?? '?' });
+          return globalTx('tx.operation.create.success', { alias: alias ?? '?' });
         }
       }
     }),
@@ -107,7 +107,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/delete-replica`,
       request: {
         data: data,
-        successMessage: globalTx('labels.info.operationDestroyed')
+        successMessage: globalTx('tx.general.delete.success')
       }
     }),
 
@@ -119,7 +119,7 @@ export const ossApi = {
         data: data,
         successMessage: response => {
           const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
-          return globalTx('labels.info.newOperation', { alias: alias ?? '?' });
+          return globalTx('tx.operation.create.success', { alias: alias ?? '?' });
         }
       }
     }),
@@ -131,7 +131,7 @@ export const ossApi = {
         data: data,
         successMessage: response => {
           const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
-          return globalTx('labels.info.newOperation', { alias: alias ?? '?' });
+          return globalTx('tx.operation.create.success', { alias: alias ?? '?' });
         }
       }
     }),
@@ -143,7 +143,7 @@ export const ossApi = {
         data: data,
         successMessage: response => {
           const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
-          return globalTx('labels.info.newOperation', { alias: alias ?? '?' });
+          return globalTx('tx.operation.create.success', { alias: alias ?? '?' });
         }
       }
     }),
@@ -155,7 +155,7 @@ export const ossApi = {
         data: data,
         successMessage: response => {
           const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
-          return globalTx('labels.info.newOperation', { alias: alias ?? '?' });
+          return globalTx('tx.operation.create.success', { alias: alias ?? '?' });
         }
       }
     }),
@@ -165,7 +165,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/update-operation`,
       request: {
         data: data,
-        successMessage: globalTx('labels.info.changesSaved')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     }),
   deleteOperation: ({ itemID, data }: { itemID: number; data: DeleteOperationDTO; beforeUpdate?: () => void }) =>
@@ -174,7 +174,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/delete-operation`,
       request: {
         data: data,
-        successMessage: globalTx('labels.info.operationDestroyed')
+        successMessage: globalTx('tx.general.delete.success')
       }
     }),
 
@@ -184,7 +184,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/create-input`,
       request: {
         data: data,
-        successMessage: globalTx('labels.info.newLibraryItem')
+        successMessage: globalTx('tx.lib.item.create.success')
       }
     }),
   updateInput: ({ itemID, data }: { itemID: number; data: UpdateInputDTO }) =>
@@ -193,7 +193,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/set-input`,
       request: {
         data: data,
-        successMessage: globalTx('labels.info.changesSaved')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     }),
   executeOperation: ({ itemID, data }: { itemID: number; data: TargetOperation }) =>
@@ -202,7 +202,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/execute-operation`,
       request: {
         data: data,
-        successMessage: globalTx('labels.info.operationExecuted')
+        successMessage: globalTx('tx.operation.execute.success')
       }
     }),
 
@@ -212,7 +212,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/move-items`,
       request: {
         data: data,
-        successMessage: globalTx('labels.info.moveSuccess')
+        successMessage: globalTx('tx.oss.item.parent.edit.success')
       }
     }),
 
@@ -221,7 +221,7 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/relocate-constituents`,
       request: {
         data: data,
-        successMessage: globalTx('labels.info.changesSaved')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     }),
   getPredecessor: (cstID: number) =>

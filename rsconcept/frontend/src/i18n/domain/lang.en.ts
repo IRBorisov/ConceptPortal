@@ -1,7 +1,7 @@
 import { Grammeme } from '@/domain/cctext/language';
 
 /** English defaults for grammeme tooltips (compact UI). */
-const GRAMMEME_EN: Record<Grammeme, string> = {
+const GRAMMEME_EN: Record<string, string> = {
   [Grammeme.NOUN]: 'POS: noun',
   [Grammeme.VERB]: 'POS: verb',
   [Grammeme.INFN]: 'POS: infinitive',
@@ -27,32 +27,7 @@ const GRAMMEME_EN: Record<Grammeme, string> = {
   [Grammeme.datv]: 'Case: dat',
   [Grammeme.accs]: 'Case: acc',
   [Grammeme.ablt]: 'Case: ins',
-  [Grammeme.loct]: 'Case: loc',
-  [Grammeme.masc]: 'Gender: m',
-  [Grammeme.femn]: 'Gender: f',
-  [Grammeme.neut]: 'Gender: n',
-  [Grammeme.perf]: 'Aspect: perf',
-  [Grammeme.impf]: 'Aspect: impf',
-  [Grammeme.tran]: 'Trans: yes',
-  [Grammeme.intr]: 'Trans: no',
-  [Grammeme.pres]: 'Tense: pres',
-  [Grammeme.past]: 'Tense: past',
-  [Grammeme.futr]: 'Tense: fut',
-  [Grammeme.per1]: 'Person: 1',
-  [Grammeme.per2]: 'Person: 2',
-  [Grammeme.per3]: 'Person: 3',
-  [Grammeme.impr]: 'Mood: impr',
-  [Grammeme.indc]: 'Mood: ind',
-  [Grammeme.incl]: 'Incl: yes',
-  [Grammeme.excl]: 'Incl: no',
-  [Grammeme.pssv]: 'Voice: pass',
-  [Grammeme.actv]: 'Voice: act',
-  [Grammeme.anim]: 'Anim: yes',
-  [Grammeme.inan]: 'Anim: no',
-  [Grammeme.Infr]: 'Style: informal',
-  [Grammeme.Slng]: 'Style: slang',
-  [Grammeme.Arch]: 'Style: archaic',
-  [Grammeme.Litr]: 'Style: literary'
+  [Grammeme.loct]: 'Case: loc'
 };
 
 const grammemeEnEntries = (Object.keys(GRAMMEME_EN) as Grammeme[]).map(
@@ -74,6 +49,7 @@ export const txLangEn: Record<string, string> = {
   'tx.lang.wordform.plural.editing': 'Editing word forms',
   'tx.lang.wordform.plural.editing.hint': 'Edit term word forms',
   'tx.lang.wordform.plural.generate': 'Generating word forms',
+  'tx.lang.wordform.plural.generate.confirm': 'Generating word forms will overwrite existing forms. Continue?',
 
   'tx.lang.reference.syntactic': 'Syntactic reference',
   'tx.lang.reference.offset': 'Base reference offset',

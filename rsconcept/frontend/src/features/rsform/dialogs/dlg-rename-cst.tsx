@@ -60,7 +60,7 @@ export function DlgRenameCst() {
       header={tx('tx.cst.rename')}
       submitText={tx('tx.general.rename')}
       canSubmit={canSubmit}
-      validationHint={canSubmit ? '' : tx('labels.hint.aliasInvalid')}
+      validationHint={canSubmit ? '' : tx('tx.cst.alias.validate')}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
       className='w-120 py-6 pr-3 pl-6 flex gap-3 justify-center items-center'
       helpTopic={HelpTopic.CC_CONSTITUENTA}

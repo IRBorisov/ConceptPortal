@@ -155,12 +155,12 @@ export function PickSubstitutions({
       toDelete.includes(newSubstitution.substitution) ||
       replacements.includes(newSubstitution.original)
     ) {
-      toast.error(tx('labels.error.reuseOriginal'));
+      toast.error(tx('tx.substitution.error.reuseOriginal'));
       return;
     }
     if (leftArgument === rightArgument) {
       if ((deleteRight && rightCst?.is_inherited) || (!deleteRight && leftCst?.is_inherited)) {
-        toast.error(tx('labels.error.substituteInherited'));
+        toast.error(tx('tx.substitution.error.substituteInherited'));
         return;
       }
     }

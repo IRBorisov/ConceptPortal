@@ -68,7 +68,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
 
   const initialStr =
     prepareValueString(initialValue, typification, schema, engine.basics, showDataText) ??
-    tx('labels.placeholder.valueTooLarge');
+    tx('tx.rslang.value.render.tooLarge.hint');
   const valueResetKey = `${activeCst.id}:${toggleReset ? '1' : '0'}`;
   const [valueDraft, setValueDraft] = useState(() => ({
     resetKey: valueResetKey,
@@ -154,7 +154,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
     }
     const valueStr =
       prepareValueString(newValue, typification, schema, engine.basics, showDataText) ??
-      tx('labels.placeholder.valueTooLarge');
+      tx('tx.rslang.value.render.tooLarge.hint');
     if (isBase) {
       void engine.setBasicValue(activeCst.id, newValue as BasicBinding);
     } else {
@@ -262,7 +262,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       {cstInferrable || (activeCst.definition_formal && activeCst.cst_type !== CstType.STRUCTURED) ? (
         <EditorRSExpression
           label={labelRSExpression(activeCst.cst_type)}
-          placeholder={tx('tx.lib.definitionFormal.validate.empty')}
+          placeholder={tx('tx.lib.defineFormal.validate.empty')}
           value={formalDraft}
           schema={schema}
           activeCst={activeCst}
@@ -333,10 +333,8 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
 
       <RefsInput
         id='cst_definition'
-        label={tx('tx.lib.definitionTextual')}
-        placeholder={
-          formalFieldDisabled ? tx('tx.lib.definitionTextual.validate.empty') : tx('tx.lib.definitionTextual.hint')
-        }
+        label={tx('tx.lib.defineText')}
+        placeholder={formalFieldDisabled ? tx('tx.lib.defineText.validate.empty') : tx('tx.lib.defineText.hint')}
         maxHeight='6rem'
         schema={schema}
         onOpenEdit={onOpenEdit}

@@ -139,7 +139,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
     } else {
       const randomData = generateRandomValue(type, engine.basics, schema.cstByAlias, RANDOM_SET_APPEND_COUNT);
       if (!randomData) {
-        toast.error(tx('labels.error.generationMissingBasic'));
+        toast.error(tx('tx.rslang.value.add.random.fail'));
         return;
       }
       if (type.typeID === TypeID.collection && Array.isArray(randomData)) {
@@ -169,17 +169,19 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       return;
     }
     onChangeValue(processed);
-    toast.success(tx('labels.info.valueLoadedJson'));
+    toast.success(tx('tx.rslang.value.load.success'));
   }
 
   function handleClipboardExport() {
     hideExport();
-    copyJsonToClipboard(getExportJsonText(getExportPayload()), () => toast.success(tx('labels.info.valueReady')));
+    const jsonText = getExportJsonText(getExportPayload());
+    copyJsonToClipboard(jsonText, () => toast.success(tx('tx.general.copy.toClipboard.success')));
   }
 
   function handleJSONExport() {
     hideExport();
-    downloadJsonFile(getExportJsonText(getExportPayload()), `${activeCst.alias}_${VALUE_FILENAME}`);
+    const jsonText = getExportJsonText(getExportPayload());
+    downloadJsonFile(jsonText, `${activeCst.alias}_${VALUE_FILENAME}`);
   }
 
   function handleClipboardImport() {
@@ -190,11 +192,10 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
     }
     navigator.clipboard
       .readText()
-      .then(text => {
-        applyImportedJsonText(text);
-      })
-      .catch(() => {
-        toast.error(tx('labels.error.clipboardRead'));
+      .then(text => applyImportedJsonText(text))
+      .catch(error => {
+        toast.error(error instanceof Error ? error.message : tx('tx.general.load.fromClipboard.fail'));
+        console.error(error);
       });
   }
 
@@ -215,7 +216,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       return;
     }
     if (file.size > limits.max_json_import_file_size_bytes) {
-      toast.error(tx('labels.error.fileTooLarge', { maxMb: limits.max_json_import_file_size_mb }));
+      toast.error(tx('tx.general.file.error.maxSize', { maxMb: limits.max_json_import_file_size_mb }));
       return;
     }
     const reader = new FileReader();
@@ -223,7 +224,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       const result = reader.result as string;
       applyImportedJsonText(result);
     };
-    reader.onerror = () => toast.error(tx('labels.error.fileRead'));
+    reader.onerror = () => toast.error(tx('tx.general.file.error.read'));
     reader.readAsText(file);
   }
 

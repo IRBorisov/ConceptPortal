@@ -13,7 +13,7 @@ export function processBindingData(data: string): BasicBinding | null {
     if (validateBasicBindingData(value)) {
       return toBasicBinding(value);
     } else {
-      toast.error(globalTx('labels.error.bindingInvalid'));
+      toast.error(globalTx('tx.rslang.binding.load.validate'));
     }
   } catch (error) {
     toast.error((error as Error).message);
@@ -30,7 +30,7 @@ export function processValueData(data: string): Value | null {
       normalizeValue(value);
       return value;
     } else {
-      toast.error(globalTx('labels.error.valueInvalid'));
+      toast.error(globalTx('tx.rslang.value.load.validate'));
     }
   } catch (error) {
     toast.error((error as Error).message);

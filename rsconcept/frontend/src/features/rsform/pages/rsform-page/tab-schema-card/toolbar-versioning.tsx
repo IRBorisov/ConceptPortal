@@ -32,7 +32,7 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
   const showEditVersions = useDialogsStore(state => state.showEditVersions);
 
   function handleRestoreVersion() {
-    if (schema.version === 'latest' || !window.confirm(tx('labels.prompt.restoreArchive'))) {
+    if (schema.version === 'latest' || !window.confirm(tx('tx.lib.version.revert.confirm'))) {
       return;
     }
     void versionRestore({ versionID: schema.version }).then(() => router.gotoRSForm(schema.id));

@@ -92,11 +92,23 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
 
   const controlsTip = document.createElement('p');
   controlsTip.className = 'text-left text-xs mt-1';
-  controlsTip.textContent = globalTx('ui.rsform.refsTooltip.controls');
+  controlsTip.textContent =
+    'Alt + 1' +
+    globalTx('tx.general.colon') +
+    globalTx('tx.lang.reference.entity') +
+    '\nAlt + 2' +
+    globalTx('tx.general.colon') +
+    globalTx('tx.lang.reference.syntactic');
+
   if (canClick) {
     controlsTip.textContent =
-      `${isMac() ? 'Cmd + click' : 'Ctrl + click'}${globalTx('tx.general.colon')}${globalTx('ui.rsform.refsTooltip.toOpen')}\n` +
-      (controlsTip.textContent ?? '');
+      (isMac() ? 'Cmd + ' : 'Ctrl + ') +
+      globalTx('tx.general.click') +
+      ' ' +
+      globalTx('tx.general.colon') +
+      globalTx('ui.rsform.refsTooltip.toOpen') +
+      '\n' +
+      controlsTip.textContent;
   }
   dom.appendChild(controlsTip);
 
@@ -128,7 +140,7 @@ function domTooltipSyntacticReference(
   if (canClick) {
     const clickTip = document.createElement('p');
     clickTip.className = 'text-center text-xs mt-1';
-    clickTip.textContent = globalTx('ui.rsform.refsTooltip.editHotkey');
+    clickTip.textContent = 'Alt + 2' + globalTx('tx.general.colon') + globalTx('tx.shell.hotkey.toEdit');
     dom.appendChild(clickTip);
   }
 

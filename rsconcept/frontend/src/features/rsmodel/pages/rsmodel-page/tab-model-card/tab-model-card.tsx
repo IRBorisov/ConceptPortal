@@ -4,15 +4,12 @@ import { useSyncExternalStore } from 'react';
 import clsx from 'clsx';
 
 import { calculateModelStats } from '@/domain/library/rsmodel-api';
-import { useTx } from '@/i18n';
 
-import { ButtonSidebar } from '@/features/library/components/button-sidebar';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
-import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
 import { useModelEdit } from '../model-edit-context';
@@ -23,13 +20,10 @@ import { ViewModelStats } from './view-model-stats';
 const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
 export function TabModelCard() {
-  const tx = useTx();
   const { model, engine, schema } = useModelEdit();
   const isModified = useModificationStore(state => state.isModified);
   const windowSize = useWindowSize();
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
-  const showStats = usePreferencesStore(state => state.showRSModelStats);
-  const toggleShowStats = usePreferencesStore(state => state.toggleShowRSModelStats);
 
   const engineGeneration = useSyncExternalStore(
     onStoreChange => engine.subscribeChanges(onStoreChange),
@@ -65,25 +59,13 @@ export function TabModelCard() {
       )}
     >
       <div className='relative cc-column mx-0 md:mx-auto'>
-        <ButtonSidebar
-          title={tx('ui.schemaCard.toggleStatsTitle')}
-          show={showStats}
-          isNarrow={isNarrow}
-          onClick={toggleShowStats}
-          className='absolute top-0.5 -right-2'
-        />
-
         <FormRSModel key={model.id} className='min-w-88 sm:w-120' />
         <EditorLibraryItem item={model} isProduced={false} />
       </div>
 
       <ViewModelStats
         stats={stats}
-        className={clsx(
-          'w-80 md:w-56 md:mt-9 mx-auto',
-          'cc-animate-sidebar',
-          showStats ? 'max-w-full' : 'opacity-0 max-w-0'
-        )}
+        className='w-80 md:w-56 md:mt-9 mx-auto max-w-full'
         style={{ maxHeight: sideBarHeight }}
       />
     </div>

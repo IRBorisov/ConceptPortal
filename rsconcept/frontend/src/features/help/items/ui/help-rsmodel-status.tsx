@@ -37,7 +37,7 @@ export function HelpRSModelStatus() {
               {labelEvalStatus(status)}
             </span>
             <span> - </span>
-            <span>{describeEvalStatus(status)}</span>
+            <span>{describeEvalStatus(status).toLocaleLowerCase()}</span>
           </p>
         ))}
       </div>

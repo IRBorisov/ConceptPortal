@@ -142,7 +142,6 @@ export interface RSFormStats {
   count_missing_convention: number;
 
   count_incorrect: number;
-  count_failed_parse: number;
   count_property: number;
   count_incalculable: number;
   count_inherited: number;

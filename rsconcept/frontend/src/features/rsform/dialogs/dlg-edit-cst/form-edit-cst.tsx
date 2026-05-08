@@ -165,8 +165,8 @@ export function FormEditCst({
             <RefsInput
               id='dlg_edit_cst_definition_raw'
               schema={schema}
-              label={tx('tx.lib.definitionTextual')}
-              placeholder={tx('tx.lib.definitionTextual.hint')}
+              label={tx('tx.lib.defineText')}
+              placeholder={tx('tx.lib.defineText.hint')}
               maxHeight='3.75rem'
               value={field.state.value ?? ''}
               initialValue={target.definition_raw}

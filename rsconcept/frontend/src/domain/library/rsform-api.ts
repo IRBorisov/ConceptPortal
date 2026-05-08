@@ -444,7 +444,6 @@ export function calculateSchemaStats(target: RSForm): RSFormStats {
     count_missing_convention: items.reduce((sum, cst) => sum + (isMissingConvention(cst) ? 1 : 0), 0),
 
     count_incorrect: items.reduce((sum, cst) => sum + (cst.status === CstStatus.INCORRECT ? 1 : 0), 0),
-    count_failed_parse: items.reduce((sum, cst) => sum + (!cst.analysis?.success ? 1 : 0), 0),
     count_property: items.reduce((sum, cst) => sum + (cst.analysis?.valueClass === ValueClass.PROPERTY ? 1 : 0), 0),
     count_incalculable: items.reduce(
       (sum, cst) => sum + (cst.analysis?.success && cst.analysis.valueClass === null ? 1 : 0),

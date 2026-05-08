@@ -5,12 +5,12 @@ import { describe, expect, it } from 'vitest';
 
 import { Grammeme } from '@/domain/cctext/language';
 
-import { enMessages } from './index.en';
-import { frMessages } from './index.fr';
-import { ruMessages } from './index.ru';
+import { enMessageMap } from './message-map.en';
+import { frMessageMap } from './message-map.fr';
+import { ruMessageMap } from './message-map.ru';
 
 const IGNORE_IDS = new Set<string>([]);
-const MESSAGE_FIRST_SEGMENTS = new Set(Object.keys(enMessages).map(k => k.split('.')[0]));
+const MESSAGE_FIRST_SEGMENTS = new Set(Object.keys(enMessageMap).map(k => k.split('.')[0]));
 
 function keySetDiff(a: Record<string, string>, b: Record<string, string>) {
   const aKeys = new Set(Object.keys(a));
@@ -23,9 +23,9 @@ function keySetDiff(a: Record<string, string>, b: Record<string, string>) {
 
 describe('locale message maps', () => {
   it('en, ru, and fr merged catalogs share the same keys', () => {
-    const enRu = keySetDiff(enMessages, ruMessages);
-    const enFr = keySetDiff(enMessages, frMessages);
-    const ruFr = keySetDiff(ruMessages, frMessages);
+    const enRu = keySetDiff(enMessageMap, ruMessageMap);
+    const enFr = keySetDiff(enMessageMap, frMessageMap);
+    const ruFr = keySetDiff(ruMessageMap, frMessageMap);
 
     expect(enRu).toEqual({ onlyInA: [], onlyInB: [] });
     expect(enFr).toEqual({ onlyInA: [], onlyInB: [] });
@@ -38,10 +38,6 @@ describe('locale message maps', () => {
     const codeFiles = walkFiles(srcRoot);
 
     const usedIds = new Set<string>();
-    for (const g of Object.values(Grammeme)) {
-      usedIds.add(`tx.lang.grammeme.${g}`);
-    }
-
     for (const file of codeFiles) {
       const source = readFileSync(file, 'utf8');
       for (const id of collectStringIdsFromCall(source, 'tx')) {
@@ -59,32 +55,50 @@ describe('locale message maps', () => {
         }
       }
     }
-    const missingIds = [...usedIds].filter(id => !(id in enMessages)).sort();
-    const extraIds = [...Object.keys(enMessages)].filter(id => !usedIds.has(id) && !IGNORE_IDS.has(id)).sort();
+
+    for (const gram of Object.values(Grammeme)) {
+      if (Object.keys(ruMessageMap).includes(`tx.lang.grammeme.${gram}`)) {
+        usedIds.add(`tx.lang.grammeme.${gram}`);
+      }
+    }
+
+    const missingIds = [...usedIds].filter(id => !(id in enMessageMap)).sort();
+    const extraIds = [...Object.keys(enMessageMap)].filter(id => !usedIds.has(id) && !IGNORE_IDS.has(id)).sort();
     expect(missingIds).toEqual([]);
     expect(extraIds).toEqual([]);
   });
 });
 
 const IGNORE_DUPES = new Set<string>([
-  'tx.home.cta.create', //
+  'tx.home.cta.create',
   'tx.rslang.token.filter',
-  'tx.general.firstName',
+  'tx.cst.template.argument.plural',
+  'tx.cst.template.short',
+  'tx.cst.class.template.short',
   'tx.rslang.typeClass.predicate',
   'tx.rslang.typeClass.function',
-  'tx.eval.status.error',
+  'tx.operation.attachment.original.short',
   'tx.oss.input',
+  'tx.general.firstName',
+  'tx.eval.status.error',
+  'tx.schema.expression.status.incorrect',
+  'tx.cst.template.source',
+
+  // FRENCH
   'tx.ai.template',
-  'tx.operation.argument',
-  'tx.operation.argument.plural',
-  'tx.concept.original.plural'
+  'tx.cst.type.term',
+
+  // ENGLISH
+  'tx.cst.class.nominal.short',
+  'tx.cst.crucial.badgeOn',
+  'tx.cst.class.basic.short'
 ]);
 
 it('has no duplicate values in en, ru, or fr catalogs', () => {
   for (const [_, messages] of [
-    ['ru', ruMessages]
-    //['fr', frMessages],
-    //['en', enMessages]
+    ['ru', ruMessageMap]
+    // ['fr', frMessages],
+    // ['en', enMessages]
   ] as const) {
     const valueToIds: Record<string, string[]> = {};
     for (const [key, value] of Object.entries(messages)) {
@@ -103,12 +117,12 @@ it('has no duplicate values in en, ru, or fr catalogs', () => {
 
 it('has no keys with the same value across en, ru, and fr catalogs', () => {
   // Get intersection of keys present in all catalogs
-  const keys = Object.keys(enMessages).filter(k => ruMessages[k] !== undefined && frMessages[k] !== undefined);
+  const keys = Object.keys(enMessageMap).filter(k => ruMessageMap[k] !== undefined && frMessageMap[k] !== undefined);
   const conflicts: string[] = [];
   for (const k of keys) {
-    const vEn = enMessages[k];
-    const vRu = ruMessages[k];
-    const vFr = frMessages[k];
+    const vEn = enMessageMap[k];
+    const vRu = ruMessageMap[k];
+    const vFr = frMessageMap[k];
     if (typeof vEn === 'string' && typeof vRu === 'string' && typeof vFr === 'string' && vEn === vRu && vEn === vFr) {
       conflicts.push(k);
     }

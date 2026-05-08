@@ -30,8 +30,11 @@ export function ViewSideLocation({ className }: ViewSideLocationProps) {
   function handleCopyPath(target: FolderNode) {
     navigator.clipboard
       .writeText(target.getPath())
-      .then(() => toast.success(tx('labels.info.pathReady')))
-      .catch(console.error);
+      .then(() => toast.success(tx('tx.general.copy.toClipboard.success')))
+      .catch(error => {
+        toast.error(error instanceof Error ? error.message : tx('tx.general.copy.toClipboard.fail'));
+        console.error(error);
+      });
   }
 
   return (

@@ -34,6 +34,6 @@ describe('globalTx', () => {
     expect(messages).toContain('Required field');
     expect(messages).toContain('Enter a valid email address');
     expect(messages).toContain('Passwords do not match');
-    expect(messages).not.toContain('labels.error.requiredField');
+    expect(messages).not.toContain('tx.general.field.required');
   });
 });

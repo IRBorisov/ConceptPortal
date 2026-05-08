@@ -28,7 +28,7 @@ export function TabSubstitutions({ oss, inputs, substitutions, onChangeSubstitut
   const validator = new SubstitutionValidator(schemas, substitutions);
   const isCorrect = validator.validate();
   const validationMessages = isCorrect
-    ? [tx('labels.info.substitutionsCorrect')]
+    ? [tx('tx.substitution.table.validate.success')]
     : validator.errors.map(error => describeSubstitutionError(error));
 
   return (

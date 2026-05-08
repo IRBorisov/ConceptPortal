@@ -2,15 +2,11 @@
 
 import clsx from 'clsx';
 
-import { useTx } from '@/i18n';
-
-import { ButtonSidebar } from '@/features/library/components/button-sidebar';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
-import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
 import { useOssEdit } from '../oss-edit-context';
@@ -21,11 +17,8 @@ import { ViewOssStats } from './view-oss-stats';
 const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
 export function TabOssCard() {
-  const tx = useTx();
   const { schema } = useOssEdit();
   const isModified = useModificationStore(state => state.isModified);
-  const showOSSStats = usePreferencesStore(state => state.showOSSStats);
-  const toggleShowOSSStats = usePreferencesStore(state => state.toggleShowOSSStats);
   const windowSize = useWindowSize();
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
 
@@ -57,24 +50,12 @@ export function TabOssCard() {
       )}
     >
       <div className='relative cc-column mx-0 md:mx-auto'>
-        <ButtonSidebar
-          title={tx('ui.schemaCard.toggleStatsTitle')}
-          show={showOSSStats}
-          isNarrow={isNarrow}
-          onClick={toggleShowOSSStats}
-          className='absolute top-0.5 -right-2'
-        />
-
         <FormOSS key={schema.id} className='min-w-88 sm:w-120' />
         <EditorLibraryItem item={schema} isProduced={false} />
       </div>
 
       <ViewOssStats
-        className={clsx(
-          'w-80 md:w-56 md:mt-9 mx-auto',
-          'cc-animate-sidebar',
-          showOSSStats ? 'max-w-full' : 'opacity-0 max-w-0'
-        )}
+        className='w-80 md:w-56 md:mt-9 mx-auto max-w-full'
         style={{ maxHeight: sideBarHeight }}
         stats={schema.stats}
       />

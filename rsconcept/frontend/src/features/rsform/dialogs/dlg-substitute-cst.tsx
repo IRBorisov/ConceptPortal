@@ -44,7 +44,7 @@ export function DlgSubstituteCst() {
   const validator = new SubstitutionValidator([schema], substitutions);
   const isCorrect = validator.validate();
   const validationMessages = isCorrect
-    ? [tx('labels.info.substitutionsCorrect')]
+    ? [tx('tx.substitution.table.validate.success')]
     : validator.errors.map(error => describeSubstitutionError(error));
 
   return (
@@ -52,7 +52,7 @@ export function DlgSubstituteCst() {
       header={tx('tx.substitution')}
       submitText={tx('tx.general.execute')}
       canSubmit={isValid}
-      validationHint={isValid ? '' : tx('labels.hint.substitutionsEmpty')}
+      validationHint={isValid ? '' : tx('tx.substitution.table.empty')}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();

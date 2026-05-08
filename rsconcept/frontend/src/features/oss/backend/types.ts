@@ -95,19 +95,19 @@ const schemaOperationData = schemaOperation
   .extend({
     alias: z
       .string()
-      .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
-      .nonempty(globalTx('labels.error.requiredField')),
-    title: z.string().max(limits.len_title, `${globalTx('labels.error.lengthLimit')} (${limits.len_title})`),
+      .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
+      .nonempty(globalTx('tx.general.field.required')),
+    title: z.string().max(limits.len_title, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_title})`),
     description: z
       .string()
-      .max(limits.len_description, `${globalTx('labels.error.lengthLimit')} (${limits.len_description})`)
+      .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`)
   });
 
 const schemaBlockData = schemaOperationData.omit({ alias: true }).extend({
   title: z
     .string()
-    .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
-    .nonempty(globalTx('labels.error.requiredField'))
+    .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
+    .nonempty(globalTx('tx.general.field.required'))
 });
 
 export const schemaBlock = z.strictObject({

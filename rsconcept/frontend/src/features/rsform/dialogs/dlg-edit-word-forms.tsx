@@ -82,7 +82,7 @@ export function DlgEditWordForms() {
     }
 
     if (Object.values(formValues).some(value => value.trim() !== '')) {
-      if (!window.confirm(tx('labels.prompt.generateWordforms'))) {
+      if (!window.confirm(tx('tx.lang.wordform.plural.generate.confirm'))) {
         return;
       }
     }

@@ -128,7 +128,7 @@ export function DlgEditVersions() {
         <div className='cc-icons h-fit'>
           <MiniButton
             type='submit'
-            title={isValid ? tx('tx.general.changes.save') : tx('labels.hint.versionTaken')}
+            title={isValid ? tx('tx.general.changes.save') : tx('tx.lib.version.validate.aliasTaken')}
             aria-label={tx('tx.general.changes.save')}
             icon={<IconSave size='1.25rem' className='icon-primary' />}
             disabled={isDefaultValue || !isValid || isProcessing}

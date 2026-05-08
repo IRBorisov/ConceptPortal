@@ -54,7 +54,7 @@ export function ExportDropdown<T extends object = object>({
 
   function handleExport(format: ExportType) {
     if (!data?.length) {
-      toast.error(tx('labels.info.noDataToExport'));
+      toast.error(tx('tx.general.export.validate.noData'));
       return;
     }
     try {
@@ -71,7 +71,7 @@ export function ExportDropdown<T extends object = object>({
         void pdfConverter(data)
           .then(blob => fileDownload(blob, `${filename}.pdf`, 'application/pdf;charset=utf-8;'))
           .catch(error => {
-            toast.error(tx('labels.error.pdfError'));
+            toast.error(tx('tx.general.download.pdf.fail'));
             throw error;
           });
       }

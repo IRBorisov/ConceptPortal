@@ -123,7 +123,7 @@ export function DlgEditOperation() {
       header={tx('tx.operation.edit')}
       submitText={tx('tx.general.save')}
       canSubmit={canSubmit}
-      validationHint={canSubmit ? '' : tx('labels.hint.formInvalid')}
+      validationHint={canSubmit ? '' : tx('tx.general.form.invalid')}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();

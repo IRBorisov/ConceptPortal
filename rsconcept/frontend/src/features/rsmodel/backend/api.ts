@@ -31,7 +31,7 @@ export const rsmodelApi = {
       endpoint: `/api/models/${itemID}/set-value`,
       request: {
         data: data,
-        successMessage: globalTx('labels.info.changesSaved')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     }),
   clearValues: ({ itemID, data }: { itemID: number; data: ConstituentaList }) =>
@@ -39,12 +39,7 @@ export const rsmodelApi = {
       endpoint: `/api/models/${itemID}/clear-values`,
       request: {
         data: data,
-        successMessage: globalTx('labels.info.dataCleared', { count: data.items.length })
+        successMessage: globalTx('tx.rslang.value.reset.success')
       }
-    }),
-  resetModel: ({ itemID }: { itemID: number }) =>
-    axiosPost<undefined>({
-      endpoint: `/api/models/${itemID}/reset-all`,
-      request: { successMessage: globalTx('labels.info.modelCleared') }
     })
 } as const;

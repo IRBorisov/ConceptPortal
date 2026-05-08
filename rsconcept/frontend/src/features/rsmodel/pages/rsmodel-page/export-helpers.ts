@@ -9,15 +9,13 @@ export function getExportJsonText(value: unknown): string {
 
 /** Copy JSON text to the clipboard; reports failures via toast and console. */
 export function copyJsonToClipboard(jsonText: string, onSuccess?: () => void): void {
-  void navigator.clipboard.writeText(jsonText).then(
-    () => {
-      onSuccess?.();
-    },
-    (error: unknown) => {
-      toast.error(error instanceof Error ? error.message : globalTx('labels.error.clipboardWrite'));
+  navigator.clipboard
+    .writeText(jsonText)
+    .then(() => onSuccess?.())
+    .catch(error => {
+      toast.error(error instanceof Error ? error.message : globalTx('tx.general.copy.toClipboard.fail'));
       console.error(error);
-    }
-  );
+    });
 }
 
 /** Trigger a download of JSON text; reports failures via toast and console. */
@@ -31,7 +29,7 @@ export function downloadJsonFile(jsonText: string, filename: string): void {
     anchor.click();
     URL.revokeObjectURL(url);
   } catch (error: unknown) {
-    toast.error(error instanceof Error ? error.message : globalTx('labels.error.fileRead'));
+    toast.error(error instanceof Error ? error.message : globalTx('tx.general.file.error.read'));
     console.error(error);
   }
 }

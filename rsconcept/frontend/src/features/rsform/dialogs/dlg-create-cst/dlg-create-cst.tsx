@@ -39,10 +39,10 @@ export function DlgCreateCst() {
   const cst_type = values.cst_type;
   const { canSubmit, hint } = (() => {
     if (!validateNewAlias(alias, cst_type, schema)) {
-      return { canSubmit: false, hint: tx('labels.hint.aliasInvalid') };
+      return { canSubmit: false, hint: tx('tx.cst.alias.validate') };
     }
     if (!schemaCreateConstituenta.safeParse(values).success) {
-      return { canSubmit: false, hint: tx('labels.hint.formInvalid') };
+      return { canSubmit: false, hint: tx('tx.general.form.invalid') };
     }
     return { canSubmit: true, hint: '' };
   })();

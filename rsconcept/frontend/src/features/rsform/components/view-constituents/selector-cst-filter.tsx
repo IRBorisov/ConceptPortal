@@ -39,12 +39,12 @@ export function SelectorCstFilter({ className, showModelFilter }: SelectorCstFil
 
   const items: Record<CstFilterOption, ReactNode> = {
     all: tx('tx.general.filter'),
-    schema_issues: tx('ui.filter.schemaIssuesShort'),
-    model_issues: tx('ui.filter.modelIssuesShort'),
+    schema_issues: tx('tx.schema.issue.short'),
+    model_issues: tx('tx.model.issue.plural.short'),
     crucial: tx('tx.cst.crucial.plural'),
     kernel: tx('tx.concept.basic.plural'),
     derived: tx('tx.concept.derived.plural'),
-    owned: tx('tx.concept.original.plural'),
+    owned: tx('tx.cst.original.plural.short'),
     inherited: tx('tx.concept.inherited.plural')
   };
 
@@ -61,12 +61,12 @@ export function SelectorCstFilter({ className, showModelFilter }: SelectorCstFil
           </SelectItem>
           <SelectItem value='schema_issues' title={tx('tx.schema.issue.plural')}>
             <IconStatusError className='text-destructive' />
-            {tx('ui.filter.schemaIssuesShort')}
+            {tx('tx.schema.issue.short')}
           </SelectItem>
           {showModelFilter ? (
             <SelectItem value='model_issues' title={tx('tx.model.issue.plural')}>
               <IconStatusIncalculable className='text-destructive' />
-              {tx('ui.filter.modelIssuesShort')}
+              {tx('tx.model.issue.plural.short')}
             </SelectItem>
           ) : null}
           <SelectItem value='crucial'>
@@ -83,7 +83,7 @@ export function SelectorCstFilter({ className, showModelFilter }: SelectorCstFil
           </SelectItem>
           <SelectItem value='owned'>
             <IconPredecessor className='text-constructive' />
-            {tx('tx.concept.original.plural')}
+            {tx('tx.cst.original.plural.short')}
           </SelectItem>
           <SelectItem value='inherited'>
             <IconChild className='text-primary' />

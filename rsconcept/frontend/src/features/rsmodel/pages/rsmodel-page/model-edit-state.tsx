@@ -44,8 +44,8 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
           clearValues
         },
         {
-          onInvalidSetValue: () => toast.error(tx('labels.error.invalidSetValue')),
-          onCalculationSuccess: timeSpent => toast.success(tx('labels.info.calculationSuccess', { timeSpent })),
+          onInvalidSetValue: () => toast.error(tx('tx.rslang.value.edit.fail')),
+          onCalculationSuccess: timeSpent => toast.success(tx('tx.rslang.eval.success', { timeSpent })),
           onEvaluationError: message => toast.error(message)
         }
       )
@@ -55,8 +55,8 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
     function syncServices() {
       engine.updateServices({ setCstValue, clearValues });
       engine.updateNotifications({
-        onInvalidSetValue: () => toast.error(tx('labels.error.invalidSetValue')),
-        onCalculationSuccess: timeSpent => toast.success(tx('labels.info.calculationSuccess', { timeSpent })),
+        onInvalidSetValue: () => toast.error(tx('tx.rslang.value.edit.fail')),
+        onCalculationSuccess: timeSpent => toast.success(tx('tx.rslang.eval.success', { timeSpent })),
         onEvaluationError: message => toast.error(message)
       });
     },
@@ -91,7 +91,7 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
   );
 
   function deleteModel() {
-    if (!window.confirm(tx('tx.prompt.confirm.delete') + ' ' + model.title)) {
+    if (!window.confirm(tx('tx.general.delete.confirm') + ' ' + model.title)) {
       return;
     }
     void deleteItem({

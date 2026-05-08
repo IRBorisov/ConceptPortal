@@ -85,7 +85,7 @@ export function Component() {
         }}
       />
       {newPasswordRepeat && newPassword !== newPasswordRepeat ? (
-        <div className='text-sm text-destructive'>{tx('labels.error.passwordsMismatch')}</div>
+        <div className='text-sm text-destructive'>{tx('tx.general.password.repeat.validate')}</div>
       ) : null}
 
       <SubmitButton

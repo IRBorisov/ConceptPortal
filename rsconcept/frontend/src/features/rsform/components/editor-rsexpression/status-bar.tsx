@@ -44,7 +44,7 @@ export function StatusBar({ className, status, onAnalyze }: StatusBarProps) {
       >
         <div className='cc-fade-in flex items-center gap-1'>
           <IconExpressionStatus size='1rem' value={status} />
-          <span className='font-controls pr-1 text-sm'>{labelExpressionStatus(status)}</span>
+          <span className='font-controls pr-1 text-sm'>{labelExpressionStatus(status).toLocaleLowerCase()}</span>
         </div>
       </div>
     </div>

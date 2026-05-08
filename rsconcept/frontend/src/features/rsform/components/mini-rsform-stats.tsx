@@ -42,7 +42,7 @@ export function MiniRSFormStats({ className, stats }: MiniRSFormStatsProps) {
       </div>
       <ValueStats
         id='count_owned'
-        title={tx('tx.concept.original.plural')}
+        title={tx('tx.cst.original.plural.short')}
         icon={<IconPredecessor size='1.25rem' />}
         value={stats.count_all - stats.count_inherited}
       />
@@ -105,23 +105,21 @@ export function MiniRSFormStats({ className, stats }: MiniRSFormStatsProps) {
 
       <ValueStats
         id='count_property'
-        title={tx('ui.stats.row.nonDimensional')}
+        title={tx('tx.schema.expression.status.property.hint')}
         icon={<IconStatusProperty size='1.25rem' />}
         value={stats.count_property}
       />
       <ValueStats
         id='count_incalculable'
-        title={tx('ui.stats.row.incalculable')}
+        title={tx('tx.schema.expression.status.incalculable.hint')}
         icon={<IconStatusIncalculable size='1.25rem' />}
         value={stats.count_incalculable}
       />
       <ValueStats
-        id='count_failed_parse '
-        title={tx('ui.stats.row.incorrect')}
-        icon={
-          <IconStatusError size='1.25rem' className={stats.count_failed_parse > 0 ? 'text-destructive' : undefined} />
-        }
-        value={stats.count_failed_parse}
+        id='count_incorrect '
+        title={tx('tx.schema.expression.status.incorrect.hint')}
+        icon={<IconStatusError size='1.25rem' className={stats.count_incorrect > 0 ? 'text-destructive' : undefined} />}
+        value={stats.count_incorrect}
       />
       <ValueStats
         id='count_nominal'
@@ -144,7 +142,7 @@ export function MiniRSFormStats({ className, stats }: MiniRSFormStatsProps) {
       />
       <ValueStats
         id='count_definition'
-        title={tx('tx.lib.definitionTextual.plural')}
+        title={tx('tx.lib.defineText.plural')}
         icon={<IconDefinition size='1.25rem' />}
         value={stats.count_definition}
       />

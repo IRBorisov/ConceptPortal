@@ -65,8 +65,8 @@ export function DlgDeleteReplica() {
       <form.Field name='keep_connections'>
         {field => (
           <Checkbox
-            label={tx('ui.oss.deleteReplica.relinkArgs')}
-            title={tx('ui.oss.deleteReplica.relinkArgsHint')}
+            label={tx('tx.oss.replica.delete.keepConnections')}
+            title={tx('tx.oss.replica.delete.keepConnections.hint')}
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
             disabled={target.result === null}
@@ -76,8 +76,8 @@ export function DlgDeleteReplica() {
       <form.Field name='keep_constituents'>
         {field => (
           <Checkbox
-            label={tx('ui.oss.keepInherited')}
-            title={tx('ui.oss.keepInheritedHint')}
+            label={tx('tx.operation.delete.keepInherited')}
+            title={tx('tx.operation.delete.keepInherited.hint')}
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
             disabled={target.result === null || keep_connections}

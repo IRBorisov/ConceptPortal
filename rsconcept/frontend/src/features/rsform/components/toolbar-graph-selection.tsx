@@ -221,10 +221,8 @@ export function ToolbarGraphSelection({
             onClick={handleSelectCrucial}
           />
           <DropdownButton
-            text={tx('tx.concept.original.plural')}
-            title={
-              tipHotkeys ? prepareTooltip(tx('tx.concept.original.select'), 'C') : tx('tx.concept.original.select')
-            }
+            text={tx('tx.cst.original.plural.short')}
+            title={tipHotkeys ? prepareTooltip(tx('tx.cst.original.select'), 'C') : tx('tx.cst.original.select')}
             icon={<IconPredecessor size='1.25rem' className='icon-primary' />}
             onClick={handleSelectOwned}
           />

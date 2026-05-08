@@ -56,7 +56,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
               <TextInput
                 id='operation_alias'
                 label={tx('tx.lib.alias')}
-                placeholder={tx('tx.validate.alias.empty')}
+                placeholder={tx('tx.lib.alias.validate.empty')}
                 className='w-80'
                 value={field.state.value}
                 onChange={event => field.handleChange(event.target.value)}
@@ -81,7 +81,7 @@ export function TabArguments({ oss, inputs, fields }: TabArgumentsProps) {
             <TextArea
               id='operation_comment'
               label={tx('tx.lib.description')}
-              placeholder={tx('labels.placeholder.itemDescription')}
+              placeholder={tx('tx.lib.description.hint')}
               className='w-full'
               noResize
               rows={3}

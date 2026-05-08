@@ -159,7 +159,7 @@ export function FormSchema({ className }: FormSchemaProps) {
             <TextArea
               id='schema_comment'
               label={tx('tx.lib.description')}
-              placeholder={tx('labels.placeholder.itemDescription')}
+              placeholder={tx('tx.lib.description.hint')}
               rows={5}
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}

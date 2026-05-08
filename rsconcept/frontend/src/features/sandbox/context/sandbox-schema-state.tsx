@@ -287,7 +287,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     }
     if (schema.attribution_graph.hasEdge(sourceID, targetID)) {
       if (targetCst.parent_schema !== null && targetCst.parent_schema === sourceCst.parent_schema) {
-        toast.error(tx('labels.error.deleteInheritedEdge'));
+        toast.error(tx('tx.termGraph.edit.validate.inheritedEdge'));
         return;
       }
       deleteAttribution({
@@ -299,7 +299,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     }
     if (schema.graph.hasEdge(sourceID, targetID)) {
       if (targetCst.is_inherited) {
-        toast.error(tx('labels.error.changeInheritedDefinition'));
+        toast.error(tx('tx.concept.inherited.definition.readOnly'));
         return;
       }
       void patchConstituenta({

@@ -31,7 +31,7 @@ export async function ensureBundleLoaded(): Promise<SandboxBundle> {
     if (parsed.success) {
       return parsed.data;
     } else {
-      toast.error(globalTx('labels.error.sandboxFailedToLoad'));
+      toast.error(globalTx('tx.sandbox.bundle.load.fail.recover'));
     }
   }
   const starter = createStarterSandboxBundle();
@@ -58,7 +58,7 @@ export function downloadBundle(bundle: SandboxBundle, filename: string = DEFAULT
 function parseBundleJson(raw: unknown): SandboxBundle {
   const parsed = schemaSandboxBundle.safeParse(raw);
   if (!parsed.success) {
-    throw new Error(globalTx('tx.sandbox.bundle.load.invalid'));
+    throw new Error(globalTx('tx.sandbox.bundle.load.file.invalid'));
   }
   return parsed.data;
 }

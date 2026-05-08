@@ -164,8 +164,8 @@ export function PopoverExtraction({
             id='dlg_show_ast_extract_definition'
             className='w-96'
             areaClassName='text-sm'
-            aria-label={tx('tx.lib.definitionTextual.new')}
-            placeholder={tx('tx.lib.definitionTextual.new')}
+            aria-label={tx('tx.lib.defineText.new')}
+            placeholder={tx('tx.lib.defineText.new')}
             value={definition}
             resolved={definition}
             onChange={setDefinition}

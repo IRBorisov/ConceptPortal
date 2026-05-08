@@ -67,8 +67,8 @@ export function ToolbarItemAccess({
         />
 
         <MiniButton
-          title={readOnly ? tx('ui.library.toolbar.editForbiddenTitle') : tx('ui.library.toolbar.editAllowedTitle')}
-          aria-label={tx('ui.library.toolbar.editModeToggleAria')}
+          title={readOnly ? tx('tx.lib.readOnly.on') : tx('tx.lib.readOnly.off')}
+          aria-label={tx('tx.lib.readOnly.toggle')}
           icon={
             readOnly ? (
               <IconImmutable size='1.25rem' className='text-primary' />

@@ -72,8 +72,8 @@ export function DlgDeleteOperation() {
             label={tx('tx.schema.delete')}
             title={
               (target.operation_type === OperationType.INPUT && target.is_import) || target.result === null
-                ? tx('ui.oss.deleteOperation.deleteSchemaLocked')
-                : tx('ui.oss.deleteOperation.deleteSchemaHint')
+                ? tx('tx.operation.delete.attached.blocked')
+                : tx('tx.operation.delete.attached')
             }
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
@@ -84,8 +84,8 @@ export function DlgDeleteOperation() {
       <form.Field name='keep_constituents'>
         {field => (
           <Checkbox
-            label={tx('ui.oss.keepInherited')}
-            title={tx('ui.oss.keepInheritedHint')}
+            label={tx('tx.operation.delete.keepInherited')}
+            title={tx('tx.operation.delete.keepInherited.hint')}
             value={field.state.value ?? false}
             onChange={(v: boolean) => field.handleChange(v)}
             disabled={target.result === null}
@@ -94,7 +94,7 @@ export function DlgDeleteOperation() {
       </form.Field>
       {deleteSchema ? (
         <div className='text-destructive'>
-          <b>{tx('tx.general.attention')}</b> {tx('ui.oss.deleteOperation.warningRelatedSchema')}
+          <b>{tx('tx.general.attention')}</b> {tx('tx.operation.delete.attached.hint')}
         </div>
       ) : null}
     </ModalForm>

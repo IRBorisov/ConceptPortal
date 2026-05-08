@@ -47,7 +47,7 @@ export const usersApi = {
       endpoint: '/users/api/signup',
       request: {
         data: data,
-        successMessage: createdUser => globalTx('labels.info.newUser', { username: createdUser.username })
+        successMessage: createdUser => globalTx('tx.general.user.create.success', { username: createdUser.username })
       }
     }),
 
@@ -57,7 +57,7 @@ export const usersApi = {
       endpoint: '/users/api/profile',
       request: {
         data: data,
-        successMessage: globalTx('labels.info.changesSaved')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     })
 } as const;

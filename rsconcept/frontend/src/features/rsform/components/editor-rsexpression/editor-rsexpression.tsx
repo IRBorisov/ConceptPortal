@@ -205,7 +205,7 @@ export function EditorRSExpression({
     } else {
       const parse = schema.analyzer.checkFull(value, { annotateTypes: true, annotateErrors: true });
       if (!parse.ast) {
-        toast.error(tx('labels.error.invalidParse'));
+        toast.error(tx('tx.rslang.expression.ast.fail'));
         return;
       }
       if (!parse.ast.hasError && !extractionDisabled && !disabled && activeCst && onCreateCst && onUpdateCst) {
@@ -243,7 +243,7 @@ export function EditorRSExpression({
       targetType = parse.type;
     }
     if (!targetType) {
-      toast.error(tx('labels.error.typeStructureFailed'));
+      toast.error(tx('tx.typeGraph.fromExpression.fail'));
       return;
     }
     showTypification({ items: [{ alias: activeCst?.alias ?? 'TARGET', type: targetType }] });
@@ -281,7 +281,9 @@ export function EditorRSExpression({
         disabled={disabled}
         errorMessage={
           activeCst && activeCst.formalDuplicates.length > 0 && activeCst.definition_formal === value
-            ? tx('labels.error.formalDuplicates', { aliases: formatAliasList(activeCst.formalDuplicates, schema) })
+            ? tx('tx.lib.defineFormal.validate.duplicate', {
+                aliases: formatAliasList(activeCst.formalDuplicates, schema)
+              })
             : undefined
         }
         {...restProps}

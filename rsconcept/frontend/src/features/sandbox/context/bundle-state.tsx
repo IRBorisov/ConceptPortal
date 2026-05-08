@@ -65,8 +65,8 @@ export function SandboxState({ children }: React.PropsWithChildren) {
 
   const [engine] = useState(function createEngine() {
     return new RSEngine(model.id, services, {
-      onInvalidSetValue: () => toast.error(tx('labels.error.invalidSetValue')),
-      onCalculationSuccess: timeSpent => toast.success(tx('labels.info.calculationSuccess', { timeSpent })),
+      onInvalidSetValue: () => toast.error(tx('tx.rslang.value.edit.fail')),
+      onCalculationSuccess: timeSpent => toast.success(tx('tx.rslang.eval.success', { timeSpent })),
       onEvaluationError: message => toast.error(message)
     });
   });
@@ -78,8 +78,8 @@ export function SandboxState({ children }: React.PropsWithChildren) {
       engine.modelID = model.id;
       engine.updateServices(services);
       engine.updateNotifications({
-        onInvalidSetValue: () => toast.error(tx('labels.error.invalidSetValue')),
-        onCalculationSuccess: timeSpent => toast.success(tx('labels.info.calculationSuccess', { timeSpent })),
+        onInvalidSetValue: () => toast.error(tx('tx.rslang.value.edit.fail')),
+        onCalculationSuccess: timeSpent => toast.success(tx('tx.rslang.eval.success', { timeSpent })),
         onEvaluationError: message => toast.error(message)
       });
     },
@@ -106,7 +106,7 @@ export function SandboxState({ children }: React.PropsWithChildren) {
           return;
         }
         console.error(err);
-        toast.error(tx('labels.error.failedToPersistSandbox'));
+        toast.error(tx('tx.sandbox.bundle.save.local.fail'));
       });
 
       return function cancelPersist() {

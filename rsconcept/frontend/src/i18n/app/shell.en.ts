@@ -8,7 +8,7 @@ export const txShellEn: Record<string, string> = {
   'tx.shell.help.toggle.hint': 'Toggle help icons',
   'tx.shell.admin.on': 'Admin: On',
   'tx.shell.admin.off': 'Admin: Off',
-  'tx.shell.admin.toggle.hint': 'Admin mode',
+  'tx.shell.admin.toggle.hint': 'Toggle admin mode',
 
   'tx.shell.language': 'Interface language',
   'tx.shell.language.hint': 'Change interface language',
@@ -36,9 +36,20 @@ export const txShellEn: Record<string, string> = {
   'tx.shell.404.body': 'This page does not exist or the requested object is missing from the database.',
   'tx.shell.404.back': 'Return to the portal',
 
+  'tx.shell.hotkey.toOpen': 'for opening',
+  'tx.shell.hotkey.toEdit': 'for editing',
+
   'tx.shell.error.header': 'Something went wrong',
   'tx.shell.error.home': 'Back to home',
   'tx.shell.error.mutation.header': 'Processing error',
+  'tx.shell.error.none': 'No errors',
+  'tx.shell.error.reload.hint': 'Reload the page to continue',
+  'tx.shell.error.dataValidation': 'Data validation error',
+  'tx.shell.error.noServerResponse': 'No response from server',
+  'tx.shell.error.invalidResponse': 'Invalid server response',
+  'tx.shell.error.api404': 'Request to a non-existent API',
+  'tx.shell.error.csrfLost': 'Server connection lost. Reload the page',
+  'tx.shell.error.contactIntro': 'Please take a screenshot and send it with a description to portal@acconcept.ru',
 
   'tx.shell.unsaved.header': 'You have unsaved changes',
   'tx.shell.unsaved.body': 'Continue navigating without saving your changes?',
@@ -102,6 +113,25 @@ export const txShellEn: Record<string, string> = {
   'tx.home.cta.learn.hint': 'Open the manuals',
   'tx.home.cta.trySandbox': 'Try it',
   'tx.home.cta.trySandbox.hint': 'Open the sandbox and explore the portal',
+
+  'tx.sandbox': 'Sandbox',
+  'tx.sandbox.hint': 'Demo environment for guests and local experiments',
+  'tx.sandbox.reset': 'Restore initial sandbox data',
+  'tx.sandbox.reset.confirm': 'This action will reset the sandbox state. Continue?',
+
+  'tx.sandbox.import': 'Open in sandbox',
+  'tx.sandbox.import.fail': 'Failed to open sandbox',
+  'tx.sandbox.import.success': 'Sandbox opened',
+  'tx.sandbox.export.schema': 'Create a new conceptual schema from sandbox data',
+  'tx.sandbox.export.schema.fail': 'Failed to create conceptual schema',
+  'tx.sandbox.export.model': 'Create a new conceptual schema and model from sandbox data',
+  'tx.sandbox.export.model.fail': 'Failed to create conceptual model',
+
+  'tx.sandbox.bundle.save.local.fail': 'Failed to save sandbox',
+  'tx.sandbox.bundle.load.fail.recover': 'Failed to load sandbox. Initial data was restored.',
+  'tx.sandbox.bundle.save.file': 'Download sandbox data as JSON',
+  'tx.sandbox.bundle.load.file': 'Load sandbox data from JSON',
+  'tx.sandbox.bundle.load.file.invalid': 'Invalid sandbox file',
 
   'tx.shell.embed.youtube': 'Embedded YouTube video',
   'tx.shell.embed.vk': 'Embedded VK video'

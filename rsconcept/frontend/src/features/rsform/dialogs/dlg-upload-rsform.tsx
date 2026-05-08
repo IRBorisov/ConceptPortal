@@ -42,7 +42,7 @@ export function DlgUploadRSForm() {
     <ModalForm
       header={tx('tx.schema')}
       canSubmit={!!file}
-      validationHint={!!file ? '' : tx('labels.hint.fileEmpty')}
+      validationHint={!!file ? '' : tx('tx.general.file.choose.hint')}
       onSubmit={handleSubmit}
       submitText={tx('tx.general.load')}
       className='w-100 px-6'

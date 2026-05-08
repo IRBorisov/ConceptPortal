@@ -27,10 +27,10 @@ export function InfoCstStatus({ title }: InfoCstStatusProps) {
             )}
             style={{ backgroundColor: colorBgCstStatus(status) }}
           >
-            {labelExpressionStatus(status)}
+            {labelExpressionStatus(status).toLocaleLowerCase()}
           </span>
           <span> - </span>
-          <span>{describeExpressionStatus(status)}</span>
+          <span>{describeExpressionStatus(status).toLocaleLowerCase()}</span>
         </p>
       ))}
     </div>

@@ -1,87 +1,79 @@
 # AGENTS.md
 
-Frontend guidance for AI coding agents working in `rsconcept/frontend`.
+Rules for agents in `rsconcept/frontend`.
 
 ## Scope
 
-This file applies to all code under the frontend application directory.
+Applies to all frontend files.
 
 ## Stack
 
-- Vite
-- React 19
-- React Compiler
-- Tailwind CSS
-- TypeScript
-- React Router
-- TanStack Query
-- TanStack Forms
-- Zustand
-- Vitest
-- Playwright
-- ESLint + Stylelint
+Vite, React 19 + Compiler, Tailwind CSS, TypeScript, React Router, TanStack Query/Forms, Zustand, Vitest, Playwright, ESLint, Stylelint.
 
-## File structure overview
+## Structure
 
-- `src/app`: Application bootstrapping, layout, routing, and global providers
-- `src/domain`: Shared domain abstractions
-- `src/features`: Feature-level UI, data hooks, dialogs, pages
-- `src/components`: Reusable UI building blocks and shared controls
-- `src/backend`: Shared client-side API transport and query setup
-- `src/stores`: Shared Zustand stores
-- `src/utils`: General utility helpers
-- `src/i18n`: Locales, merged message catalogs, `useTx`, `globalTx`
-- `tests`: End-to-end and setup files
+- `src/app`: bootstrap, layout, routes, providers
+- `src/domain`: shared domain abstractions
+- `src/features`: feature UI, hooks, dialogs, pages
+- `src/components`: shared UI blocks/controls
+- `src/backend`: API transport/query setup
+- `src/stores`: shared Zustand stores
+- `src/utils`: utilities
+- `src/i18n`: locales, maps, `useTx`, `globalTx`
+- `tests`: E2E/setup files
 - `public`: Static assets
 
-## Common commands
+## Commands
 
 Run from `rsconcept/frontend`:
 
-- Install dependencies: `npm install`
-- Start dev server (**assume already running**): `npm run dev`
+- Install: `npm install`
+- Dev server: `npm run dev` (assume already running)
 - Build: `npm run build`
-- Unit tests: `npm test`
+- Unit test: `npm test`
 - E2E tests: `npm run test:e2e`
-- Lint (runs slowly—prefer checking specific files): `npm run lint`
+- Lint: `npm run lint` (slow; prefer targeted checks)
 - Regenerate parsers: `npm run generate`
 
-## File hints
+## Feature Paths
 
-- Routing & app shell: `src/app`
-- Auth flows: `src/features/auth`
-- AI UI and prompts: `src/features/ai`
-- Library flows: `src/features/library`
-- RSForm flows: `src/features/rsform`
-- RSModel flows: `src/features/rsmodel`
-- OSS flows: `src/features/oss`
-- User management: `src/features/users`
-- Help content: `src/features/help`
-- Offline sandbox mode: `src/features/sandbox`
+- App shell/routes: `src/app`
+- Auth: `src/features/auth`
+- AI/prompts: `src/features/ai`
+- Library: `src/features/library`
+- RSForm: `src/features/rsform`
+- RSModel: `src/features/rsmodel`
+- OSS: `src/features/oss`
+- Users: `src/features/users`
+- Help: `src/features/help`
+- Sandbox: `src/features/sandbox`
 
-## Internationalization (user-visible copy)
+## Internationalization
 
-- **No hardcoded locale-specific strings** in UI code. Use stable message **ids** and ship **en**, **ru**, and **fr** for every id you touch.
-- **In React:** `useTx` from `@/i18n` → `tx('namespace.key', values?)` (react-intl).
-- **Outside React** (stores, toasts, plain `.ts`): `globalTx` from `@/i18n` — same ids; the app sets intl via `AppIntlBridge` under `IntlPreferencesProvider`. Persisted locale changes trigger a full reload so catalogs stay aligned.
-- **Catalog layout** (`src/i18n/messages/`):
-  - **`en.ts` / `ru.ts` / `fr.ts`** merge all slices; add a new slice file only if you introduce a new module, then import it in all three.
-  - **`domain/` and `app/`** — shared copy should use `tx.*` ids (for example `tx.lib.*`, `tx.general.*`, `tx.msg.*`, `tx.shell.*`) and live in the corresponding `domain/*.ts` or `app/*.ts` locale files.
-- **Workflow:** pick the right slice (`domain/`, `app/`), add the same string id in **all three** locale files for that slice, and keep key order consistent with neighbors. Use stable ids like `tx.lib.*`, `tx.general.*` (see `locale-keys-parity.test.ts`).
+- No hardcoded locale text. Use stable ids; update `en`, `ru`, `fr` for each id touched.
+- React: `useTx` from `@/i18n`, then `tx('tx.*', values?)`.
+- Non-React: `globalTx('tx.*', values?)` from `@/i18n`.
+- Runtime maps: `src/i18n/map/message-map.{en,ru,fr}.ts`; merge only.
+- Edit strings in `src/i18n/app/*.{en,ru,fr}.ts` or `src/i18n/domain/*.{en,ru,fr}.ts`.
+- `app/`: global UI copy (actions, shell/nav, errors, auth shell, pagination, graph/flow controls, reusable UI chrome).
+- `domain/`: domain copy (library/schema, language/grammar, structural language, AI prompt tooling, business concepts).
+- Ids: dotted `tx.*`; choose namespace by meaning, not render component. Reuse roots: `tx.general.*`, `tx.shell.*`, `tx.lib.*`, `tx.lang.*`, `tx.rslang.*`, `tx.ai.*`.
+- Keep ids semantic/reusable (`tx.general.save`); add context only when copy is context-specific.
+- Suffixes: `.hint` tooltips/help, `.short` compact, `.plural` plural, `.validate.*` validation, `.success`/`.fail` outcomes, `.confirm` confirmations.
+- Values: use ICU placeholders (`{count}`); keep placeholder names identical across locales.
+- Workflow: choose `app/` or `domain/`; add same id at same relative place in all 3 locale files; keep order. New slice -> create all 3 locale files and spread into all 3 runtime maps. `locale-keys-parity.test.ts` enforces parity/usage.
 
 ## Edit rules
 
-- Prefer editing within relevant feature folders before adding new shared abstractions.
-- Keep components small and colocate feature-specific helpers when possible.
-- Preserve established naming and folder structure under `src/features`.
-- Avoid using useMemo and useCallback - we compile with React 19 Compiler.
-- Update or add tests when behavior changes in parsing, evaluation, or critical UI.
-- Reuse existing hooks, dialogs, and components when extending behavior.
-- Keep API-facing types and hooks consistent with backend contract/types.
-- If you change a grammar file, regenerate parsers using the provided script.
-- Tailwind CSS customizations are under `src/styles`, including `tailwind.config.ts` and global styles.
-- When composing >4 Tailwind/utility classes of different semantic meaning, group them by purpose (layout, color, animation) using `clsx` or `cn`. Use `clsx` for class composition when props are not involved.
-- In `useEffect` hooks and `setTimeout` calls, use named function expressions instead of anonymous arrow callbacks.
+- Keep components small; colocate feature helpers.
+- Preserve `src/features` naming/folder patterns.
+- Avoid `useMemo`/`useCallback`; React Compiler handles memoization.
 - Prefer `useEffectEvent` over `useCallback` for handlers used inside `useEffect`.
-- When adding or renaming Help manuals topics/pages under `src/features/help`, always update the help repository index wiring in the same change: `src/features/help/pages/manuals-page/topic-page.tsx` (topic -> component mapping)
-- In extracted/reusable components, keep positioning/layout classes (for example `absolute`, `relative`, `top-*`, `left-*`, `right-*`, `bottom-*`, margins) out of the component itself. Pass these via `className` from the parent context where the component is placed.
+- In `useEffect`/`setTimeout`, use named function expressions, not anonymous arrows.
+- Reuse existing hooks, dialogs, components.
+- Keep API types/hooks synced with backend contracts.
+- Add/update tests for parser, evaluation, or critical UI behavior changes.
+- Tailwind config/styles live in `src/styles`.
+- Long mixed-purpose class strings: group by purpose (layout/color/animation) via `clsx`/`cn`; use `clsx` when no prop merge needed.
+- Help manuals: when adding/renaming topics/pages in `src/features/help`, update `src/features/help/pages/manuals-page/topic-page.tsx`.
+- Reusable components: keep positioning (`absolute`, `relative`, `top-*`, margins, etc.) out; pass via parent `className`.

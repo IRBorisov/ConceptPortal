@@ -1,6 +1,6 @@
 import { Grammeme } from '@/domain/cctext/language';
 
-const GRAMMEME_RU: Record<Grammeme, string> = {
+const GRAMMEME_RU: Record<string, string> = {
   [Grammeme.NOUN]: 'ЧР: сущ',
   [Grammeme.VERB]: 'ЧР: глагол',
   [Grammeme.INFN]: 'ЧР: глагол инф',
@@ -26,32 +26,7 @@ const GRAMMEME_RU: Record<Grammeme, string> = {
   [Grammeme.datv]: 'Падеж: дат',
   [Grammeme.accs]: 'Падеж: вин',
   [Grammeme.ablt]: 'Падеж: твор',
-  [Grammeme.loct]: 'Падеж: пред',
-  [Grammeme.masc]: 'Род: муж',
-  [Grammeme.femn]: 'Род: жен',
-  [Grammeme.neut]: 'Род: ср',
-  [Grammeme.perf]: 'Совершенный: да',
-  [Grammeme.impf]: 'Совершенный: нет',
-  [Grammeme.tran]: 'Переходный: да',
-  [Grammeme.intr]: 'Переходный: нет',
-  [Grammeme.pres]: 'Время: настоящее',
-  [Grammeme.past]: 'Время: прошедшее',
-  [Grammeme.futr]: 'Время: будущее',
-  [Grammeme.per1]: 'Лицо: 1',
-  [Grammeme.per2]: 'Лицо: 2',
-  [Grammeme.per3]: 'Лицо: 3',
-  [Grammeme.impr]: 'Повелительный: да',
-  [Grammeme.indc]: 'Повелительный: нет',
-  [Grammeme.incl]: 'Включающий: да',
-  [Grammeme.excl]: 'Включающий: нет',
-  [Grammeme.pssv]: 'Страдательный: да',
-  [Grammeme.actv]: 'Страдательный: нет',
-  [Grammeme.anim]: 'Одушевленный: да',
-  [Grammeme.inan]: 'Одушевленный: нет',
-  [Grammeme.Infr]: 'Стиль: неформальный',
-  [Grammeme.Slng]: 'Стиль: жаргон',
-  [Grammeme.Arch]: 'Стиль: устаревший',
-  [Grammeme.Litr]: 'Стиль: литературный'
+  [Grammeme.loct]: 'Падеж: пред'
 };
 
 const grammemeRuEntries = (Object.keys(GRAMMEME_RU) as Grammeme[]).map(
@@ -73,6 +48,8 @@ export const txLangRu: Record<string, string> = {
   'tx.lang.wordform.plural.editing': 'Редактирование словоформ',
   'tx.lang.wordform.plural.editing.hint': 'Редактировать словоформы термина',
   'tx.lang.wordform.plural.generate': 'Генерация словоформ',
+  'tx.lang.wordform.plural.generate.confirm':
+    'Генерация словоформ приведет к перезаписи существующих словоформ. Продолжить?',
 
   'tx.lang.reference.syntactic': 'Синтаксическая ссылка',
   'tx.lang.reference.offset': 'Смещение опорной ссылки',

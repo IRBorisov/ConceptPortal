@@ -72,8 +72,8 @@ export function DlgGraphParams() {
               value={field.state.value ?? false}
               onChange={field.handleChange}
               onBlur={field.handleBlur}
-              label={tx('ui.termGraph.filter.hideTemplates')}
-              title={tx('ui.termGraph.filter.hideTemplatesHint')}
+              label={tx('tx.cst.class.template.hide')}
+              title={tx('tx.cst.class.template.hint')}
             />
           )}
         </form.Field>

@@ -26,8 +26,13 @@ export function MenuAIPrompt({ promptID, generatedPrompt }: MenuAIPromptProps) {
   }
 
   function handleCopyPrompt() {
-    void navigator.clipboard.writeText(generatedPrompt);
-    toast.success(tx('labels.info.promptReady'));
+    navigator.clipboard
+      .writeText(generatedPrompt)
+      .then(() => toast.success(tx('tx.general.copy.toClipboard.success')))
+      .catch(error => {
+        toast.error(error instanceof Error ? error.message : tx('tx.general.copy.toClipboard.fail'));
+        console.error(error);
+      });
   }
 
   return (

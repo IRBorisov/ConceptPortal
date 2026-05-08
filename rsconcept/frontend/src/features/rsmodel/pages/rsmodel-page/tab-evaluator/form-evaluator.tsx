@@ -53,7 +53,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const [localParse, setLocalParse] = useState<RO<AnalysisFull> | null>(null);
   const valueStr =
     prepareValueString(localEval?.value ?? null, localParse?.type ?? null, schema, engine.basics, showDataText) ??
-    tx('labels.placeholder.valueTooLarge');
+    tx('tx.rslang.value.render.tooLarge.hint');
   const stub = localEval?.value && localParse?.type?.typeID === TypeID.collection ? valueStub(localEval?.value) : '';
   const isModified = evaluatedExpression !== expression;
   const status = inferEvalStatus(localEval?.value ?? null, CstType.TERM, !isModified);
@@ -91,7 +91,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
 
     const endTime = performance.now();
     const timeSpent = ((endTime - startTime) / 1000).toFixed(2);
-    toast.success(tx('labels.info.calculationSuccess', { timeSpent }));
+    toast.success(tx('tx.rslang.eval.success', { timeSpent }));
   }
 
   function handleViewValue() {
@@ -112,7 +112,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
 
   function handleClipboardExport() {
     hideExport();
-    copyJsonToClipboard(getExportJsonText(dialogValue), () => toast.success(tx('labels.info.valueReady')));
+    copyJsonToClipboard(getExportJsonText(dialogValue), () => toast.success(tx('tx.general.copy.toClipboard.success')));
   }
 
   function handleJSONExport() {
@@ -145,8 +145,8 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
       />
 
       <EditorRSExpression
-        label={tx('tx.lib.definitionFormal')}
-        placeholder={tx('tx.lib.definitionFormal.validate.empty')}
+        label={tx('tx.lib.defineFormal')}
+        placeholder={tx('tx.lib.defineFormal.validate.empty')}
         schema={schema}
         errors={errors}
         value={expression}

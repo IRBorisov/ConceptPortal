@@ -63,7 +63,7 @@ export const schemaRSErrorType = z.enum(RSErrorCode);
 
 export const schemaConstituentaBasics = z.strictObject({
   id: z.number(),
-  alias: z.string().nonempty(globalTx('labels.error.requiredField')),
+  alias: z.string().nonempty(globalTx('tx.general.field.required')),
   convention: z.string(),
   crucial: z.boolean(),
   cst_type: schemaCstType,
@@ -115,20 +115,20 @@ export const schemaCreateConstituenta = schemaConstituentaBasics
   .extend({
     alias: z
       .string()
-      .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
-      .nonempty(globalTx('labels.error.requiredField')),
+      .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
+      .nonempty(globalTx('tx.general.field.required')),
     convention: z
       .string()
-      .max(limits.len_description, `${globalTx('labels.error.lengthLimit')} (${limits.len_description})`),
+      .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`),
     definition_formal: z
       .string()
-      .max(limits.len_description, `${globalTx('labels.error.lengthLimit')} (${limits.len_description})`),
+      .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`),
     definition_raw: z
       .string()
-      .max(limits.len_description, `${globalTx('labels.error.lengthLimit')} (${limits.len_description})`),
+      .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`),
     term_raw: z
       .string()
-      .max(limits.len_description, `${globalTx('labels.error.lengthLimit')} (${limits.len_description})`),
+      .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`),
     insert_after: z.number().nullable()
   });
 
@@ -142,34 +142,34 @@ export const schemaUpdateConstituenta = z.strictObject({
   item_data: z.strictObject({
     alias: z
       .string()
-      .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
-      .nonempty(globalTx('labels.error.requiredField'))
+      .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
+      .nonempty(globalTx('tx.general.field.required'))
       .optional(),
     cst_type: schemaCstType.optional(),
     crucial: z.boolean().optional(),
     convention: z
       .string()
-      .max(limits.len_description, `${globalTx('labels.error.lengthLimit')} (${limits.len_description})`)
+      .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`)
       .optional(),
     definition_formal: z
       .string()
-      .max(limits.len_description, `${globalTx('labels.error.lengthLimit')} (${limits.len_description})`)
+      .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`)
       .optional(),
     definition_raw: z
       .string()
-      .max(limits.len_description, `${globalTx('labels.error.lengthLimit')} (${limits.len_description})`)
+      .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`)
       .optional(),
     term_raw: z
       .string()
-      .max(limits.len_description, `${globalTx('labels.error.lengthLimit')} (${limits.len_description})`)
+      .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`)
       .optional(),
     term_forms: z
       .array(
         z.strictObject({
           text: z
             .string()
-            .max(limits.len_description, `${globalTx('labels.error.lengthLimit')} (${limits.len_description})`),
-          tags: z.string().max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
+            .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`),
+          tags: z.string().max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
         })
       )
       .optional()
@@ -187,7 +187,7 @@ export const schemaSubstituteConstituents = z.strictObject({
 });
 
 export const schemaSubstitutions = z.strictObject({
-  substitutions: z.array(schemaSubstituteConstituents).min(1, { message: globalTx('labels.error.emptySubstitutions') })
+  substitutions: z.array(schemaSubstituteConstituents).min(1, { message: globalTx('tx.substitution.table.empty') })
 });
 
 export const schemaAttributionTarget = z.strictObject({

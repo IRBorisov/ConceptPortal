@@ -153,7 +153,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       return;
     }
     if (libraryItems.find(item => item.alias === operation.alias && item.location === schema.location)) {
-      toast.error(tx('labels.error.inputAlreadyExists'));
+      toast.error(tx('tx.oss.input.create.schema.validate'));
       return;
     }
     onHide();
@@ -282,9 +282,9 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       operation.operation_type === OperationType.SYNTHESIS &&
       operation.arguments.length > 0 ? (
         <DropdownButton
-          text={tx('tx.synthesis.execute')}
-          title={readyForSynthesis ? tx('tx.synthesis.execute.hint') : tx('tx.synthesis.execute.needArgs')}
-          aria-label={tx('tx.synthesis.execute.hint')}
+          text={tx('tx.operation.execute')}
+          title={readyForSynthesis ? tx('tx.operation.execute.hint') : tx('tx.operation.execute.needArgs')}
+          aria-label={tx('tx.operation.execute.hint')}
           icon={<IconExecute size='1rem' className='icon-green' />}
           onClick={handleOperationExecute}
           disabled={isProcessing || !readyForSynthesis}

@@ -334,15 +334,15 @@ export function TGFlow() {
     const targetCst = schema.cstByID.get(targetID)!;
     if (connectionType === TGEdgeType.definition) {
       if (targetCst.is_inherited) {
-        toast.error(tx('labels.error.changeInheritedDefinition'));
+        toast.error(tx('tx.concept.inherited.definition.readOnly'));
         return;
       }
       if (schema.graph.hasEdge(sourceID, targetID)) {
-        toast.error(tx('labels.error.connectionExists'));
+        toast.error(tx('tx.graph.validate.edgeExists'));
         return;
       }
       if (schema.graph.isReachable(targetID, sourceID)) {
-        toast.error(tx('labels.error.cyclingEdge'));
+        toast.error(tx('tx.graph.validate.preventCycle'));
         return;
       }
 
@@ -355,15 +355,15 @@ export function TGFlow() {
       });
     } else {
       if (schema.attribution_graph.hasEdge(sourceID, targetID)) {
-        toast.error(tx('labels.error.connectionExists'));
+        toast.error(tx('tx.graph.validate.edgeExists'));
         return;
       }
       if (schema.attribution_graph.isReachable(targetID, sourceID)) {
-        toast.error(tx('labels.error.cyclingEdge'));
+        toast.error(tx('tx.graph.validate.preventCycle'));
         return;
       }
       if (targetCst.parent_schema !== null && targetCst.parent_schema === sourceCst.parent_schema) {
-        toast.error(tx('labels.error.addInheritedEdge'));
+        toast.error(tx('tx.termGraph.edit.validate.inheritedEdge'));
         return;
       }
 

@@ -104,7 +104,7 @@ export function DlgEditBlock() {
           <TextArea
             id='operation_comment'
             label={tx('tx.lib.description')}
-            placeholder={tx('labels.placeholder.itemDescription')}
+            placeholder={tx('tx.lib.description.hint')}
             noResize
             rows={5}
             value={field.state.value}

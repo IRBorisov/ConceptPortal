@@ -11,6 +11,7 @@ import { globalTx } from '@/i18n';
 
 import { appendBoldTextRow, appendMathBoldLabelParagraph } from '@/utils/format';
 import { type AstNode } from '@/utils/parsing';
+import { isMac } from '@/utils/utils';
 
 import { Local } from './parse/parser.terms';
 import { findAliasAt } from './utils';
@@ -194,7 +195,8 @@ function domTooltipConstituenta(
     if (canClick) {
       const clickTip = document.createElement('p');
       clickTip.className = 'text-center text-xs mt-1';
-      clickTip.innerText = globalTx('ui.rsform.rsInput.ctrlClickToOpen');
+      clickTip.innerText =
+        (isMac() ? 'Cmd + ' : 'Ctrl + ') + globalTx('tx.general.click') + ' ' + globalTx('tx.shell.hotkey.toOpen');
       dom.appendChild(clickTip);
     }
   }

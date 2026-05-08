@@ -145,7 +145,7 @@ test('library page renames current location and refreshes filtered items', async
   await page.locator('#dlg_location').fill('team-renamed');
   await page.getByRole('button', { name: 'Переместить' }).click();
 
-  await expect(page.getByText('Ваши схемы перемещены')).toBeVisible();
+  await expect(page.getByText('Изменения сохранены')).toBeVisible();
   await expect(page.getByRole('button', { name: 'team-renamed' })).toBeVisible();
   await expect(page.getByText('Схема в папке team')).toBeVisible();
   await expect(page.getByText('Схема в подпапке team')).toBeVisible();

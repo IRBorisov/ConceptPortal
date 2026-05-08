@@ -143,12 +143,12 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
     event.preventDefault();
 
     if (!definition) {
-      toast.error(tx('labels.error.typeStructureFailed'));
+      toast.error(tx('tx.typeGraph.fromExpression.fail'));
       return;
     }
     const parse = getAnalysisFor(definition, activeCst.cst_type, schema);
     if (!parse.type || parse.type.typeID === TypeID.logic) {
-      toast.error(tx('labels.error.typeStructureFailed'));
+      toast.error(tx('tx.typeGraph.fromExpression.fail'));
       return;
     }
     showTypification({ items: [{ alias: activeCst.alias, type: parse.type }] });
@@ -280,8 +280,8 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
           {field => (
             <RefsInput
               id='cst_definition'
-              label={tx('tx.lib.definitionTextual')}
-              placeholder={disabled ? '' : tx('tx.lib.definitionTextual.hint')}
+              label={tx('tx.lib.defineText')}
+              placeholder={disabled ? '' : tx('tx.lib.defineText.hint')}
               minHeight='3.75rem'
               maxHeight='8rem'
               schema={schema}
@@ -315,7 +315,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
               onBlur={field.handleBlur}
               error={
                 field.state.meta.errors[0]?.message ??
-                (needsInterpretation && !field.state.value ? tx('tx.validate.convention.empty') : undefined)
+                (needsInterpretation && !field.state.value ? tx('tx.lib.convention.validate.empty') : undefined)
               }
             />
           )}

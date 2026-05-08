@@ -137,7 +137,7 @@ export const SchemaEditState = ({
   }
 
   function deleteSchema() {
-    if (!window.confirm(tx('tx.prompt.confirm.delete') + ' ' + schema.title)) {
+    if (!window.confirm(tx('tx.general.delete.confirm') + ' ' + schema.title)) {
       return;
     }
     const ossID = schema.oss.length > 0 ? schema.oss[0].id : null;
@@ -342,7 +342,7 @@ export const SchemaEditState = ({
     }
     if (schema.attribution_graph.hasEdge(sourceID, targetID)) {
       if (targetCst.parent_schema !== null && targetCst.parent_schema === sourceCst.parent_schema) {
-        toast.error(tx('labels.error.deleteInheritedEdge'));
+        toast.error(tx('tx.termGraph.edit.validate.inheritedEdge'));
         return;
       }
       void deleteAttribution({
@@ -354,7 +354,7 @@ export const SchemaEditState = ({
       });
     } else if (schema.graph.hasEdge(sourceID, targetID)) {
       if (targetCst.is_inherited) {
-        toast.error(tx('labels.error.changeInheritedDefinition'));
+        toast.error(tx('tx.concept.inherited.definition.readOnly'));
         return;
       }
       const newExpressions = removeAliasReference(targetCst.definition_formal, sourceCst.alias);

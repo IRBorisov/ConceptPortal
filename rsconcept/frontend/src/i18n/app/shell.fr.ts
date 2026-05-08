@@ -39,6 +39,15 @@ export const txShellFr: Record<string, string> = {
   'tx.shell.error.header': 'Une erreur s’est produite',
   'tx.shell.error.home': 'Retour à l’accueil',
   'tx.shell.error.mutation.header': 'Erreur de traitement',
+  'tx.shell.error.none': 'Aucune erreur',
+  'tx.shell.error.reload.hint': 'Rechargez la page pour continuer',
+  'tx.shell.error.dataValidation': 'Erreur de validation des données',
+  'tx.shell.error.noServerResponse': 'Aucune réponse du serveur',
+  'tx.shell.error.invalidResponse': 'Réponse du serveur non valide',
+  'tx.shell.error.api404': 'Appel à une API inexistante',
+  'tx.shell.error.csrfLost': 'Connexion au serveur perdue. Rechargez la page',
+  'tx.shell.error.contactIntro':
+    'Veuillez faire une capture d’écran et l’envoyer avec une description à portal@acconcept.ru',
 
   'tx.shell.unsaved.header': 'Modifications non enregistrées',
   'tx.shell.unsaved.body': 'Poursuivre la navigation sans enregistrer ?',
@@ -63,6 +72,9 @@ export const txShellFr: Record<string, string> = {
   'tx.shell.footer': 'Navigation secondaire',
   'tx.shell.footer.conceptCenter': 'Centre Concept',
   'tx.shell.footer.copyright': '© 2026 CIHT CONCEPT',
+
+  'tx.shell.hotkey.toOpen': 'pour ouvrir',
+  'tx.shell.hotkey.toEdit': 'pour éditer',
 
   'tx.shell.auth.username': 'Identifiant ou e-mail',
   'tx.shell.auth.required': 'Accessible uniquement aux utilisateurs enregistrés',
@@ -104,6 +116,26 @@ export const txShellFr: Record<string, string> = {
     'Schéma conceptuel, graphe de liens, appareil conceptuel strict dans les domaines complexes',
   'tx.home.feature.rsmodel.intro': 'Sources de données, interprétation des définitions et calcul des valeurs',
   'tx.home.feature.oss.intro': 'Opérations sur les schémas conceptuels, blocs de contenu et changements transverses',
+
+  'tx.sandbox': 'Sandbox',
+  'tx.sandbox.hint': 'Environnement de démonstration pour les invités et les expériences locales',
+  'tx.sandbox.reset': 'Restaurer les données initiales du bac à sable',
+  'tx.sandbox.reset.confirm': 'Cette action réinitialisera le bac à sable. Continuer ?',
+
+  'tx.sandbox.import': 'Ouvrir dans le bac à sable',
+  'tx.sandbox.import.fail': 'Impossible de ouvrir le bac à sable',
+  'tx.sandbox.import.success': 'Bac à sable ouvert',
+  'tx.sandbox.export.schema': 'Créer un nouveau schéma conceptuel à partir des données du bac à sable',
+  'tx.sandbox.export.schema.fail': 'Impossible de créer le schéma conceptuel',
+  'tx.sandbox.export.model': 'Créer un nouveau schéma et modèle conceptuels à partir des données du bac à sable',
+  'tx.sandbox.export.model.fail': 'Impossible de créer le modèle conceptuel',
+
+  'tx.sandbox.bundle.save.local.fail': 'Impossible de sauvegarder le bac à sable',
+  'tx.sandbox.bundle.load.fail.recover':
+    'Impossible de charger le bac à sable. Les données initiales ont été restaurées.',
+  'tx.sandbox.bundle.save.file': 'Télécharger les données du bac à sable en JSON',
+  'tx.sandbox.bundle.load.file': 'Charger les données du bac à sable depuis un JSON',
+  'tx.sandbox.bundle.load.file.invalid': 'Fichier de bac à sable invalide',
 
   'tx.shell.embed.youtube': 'Vidéo Youtube intégrée',
   'tx.shell.embed.vk': 'Vidéo VK intégrée'

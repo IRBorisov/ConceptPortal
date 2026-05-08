@@ -40,6 +40,15 @@ export const txShellRu: Record<string, string> = {
   'tx.shell.error.header': 'Что-то пошло не так!',
   'tx.shell.error.home': 'Вернуться на главную',
   'tx.shell.error.mutation.header': 'Ошибка при обработке',
+  'tx.shell.error.none': 'Ошибки отсутствуют',
+  'tx.shell.error.reload.hint': 'Перезагрузите страницу для продолжения работы',
+  'tx.shell.error.dataValidation': 'Ошибка валидации данных',
+  'tx.shell.error.noServerResponse': 'Нет ответа от сервера',
+  'tx.shell.error.invalidResponse': 'Некорректный ответ сервера',
+  'tx.shell.error.api404': 'Запрашиваемый API не существует',
+  'tx.shell.error.csrfLost': 'Соединение с сервером потеряно. Перезагрузите страницу',
+  'tx.shell.error.contactIntro':
+    'Пожалуйста сделайте скриншот и отправьте вместе с описанием ситуации на почту portal@acconcept.ru',
 
   'tx.shell.unsaved.header': 'Есть несохраненные изменения',
   'tx.shell.unsaved.body': 'Продолжить навигацию без сохранения изменений?',
@@ -64,6 +73,9 @@ export const txShellRu: Record<string, string> = {
   'tx.shell.footer': 'Вторичная навигация',
   'tx.shell.footer.conceptCenter': 'Центр Концепт',
   'tx.shell.footer.copyright': '© 2026 ЦИВТ КОНЦЕПТ',
+
+  'tx.shell.hotkey.toOpen': 'для перехода',
+  'tx.shell.hotkey.toEdit': 'для редактирования',
 
   'tx.shell.auth.username': 'Логин или email',
   'tx.shell.auth.required': 'Доступно только зарегистрированным пользователям',
@@ -106,6 +118,25 @@ export const txShellRu: Record<string, string> = {
   'tx.home.feature.rsmodel.intro': 'Предметные источники данных, интерпретация определений и вычисление значений',
   'tx.home.feature.oss.intro':
     'Операции над концептуальными схемами, блоки предметного содержания и сквозные изменения',
+
+  'tx.sandbox': 'Песочница',
+  'tx.sandbox.hint': 'Демонстрационная среда для незарегистрированных пользователей и локальных экспериментов',
+  'tx.sandbox.reset': 'Восстановить стартовые данные песочницы',
+  'tx.sandbox.reset.confirm': 'Данное действие приведет к сбросу состояния песочницы. Продолжить?',
+
+  'tx.sandbox.import': 'Открыть в песочнице',
+  'tx.sandbox.import.fail': 'Перенос в песочницу не удался',
+  'tx.sandbox.import.success': 'Песочница обновлена',
+  'tx.sandbox.export.model': 'Создать новую концептуальную схему и модель из текущих данных песочницы',
+  'tx.sandbox.export.model.fail': 'Не удалось создать концептуальную модель',
+  'tx.sandbox.export.schema': 'Создать новую концептуальную схему из текущих данных песочницы',
+  'tx.sandbox.export.schema.fail': 'Не удалось создать концептуальную схему',
+
+  'tx.sandbox.bundle.save.local.fail': 'Не удалось сохранить песочницу',
+  'tx.sandbox.bundle.load.fail.recover': 'Не удалось загрузить песочницу. Восстановлен начальный набор данных.',
+  'tx.sandbox.bundle.save.file': 'Скачать текущие данные песочницы в JSON',
+  'tx.sandbox.bundle.load.file': 'Загрузить данные песочницы из JSON',
+  'tx.sandbox.bundle.load.file.invalid': 'Неверный файл песочницы',
 
   'tx.shell.embed.youtube': 'Встроенное видео Youtube',
   'tx.shell.embed.vk': 'Встроенное видео ВКонтакте'

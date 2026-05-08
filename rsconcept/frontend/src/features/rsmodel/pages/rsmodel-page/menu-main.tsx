@@ -129,18 +129,18 @@ export function MenuMain() {
     if (isModified && !promptUnsaved()) {
       return;
     }
-    if (!window.confirm(tx('labels.prompt.resetSandbox'))) {
+    if (!window.confirm(tx('tx.sandbox.reset.confirm'))) {
       return;
     }
     hideMenu();
     try {
       const nextBundle = createSandboxBundleFromRSModel(schema, model);
       await saveBundle(nextBundle);
-      toast.success(tx('labels.info.sandboxImportSuccess'));
+      toast.success(tx('tx.sandbox.import.success'));
       router.gotoSandboxEditor();
     } catch (error) {
       console.error(error);
-      toast.error(tx('labels.error.sandboxImportError'));
+      toast.error(tx('tx.sandbox.import.fail'));
     }
   }
 
@@ -183,7 +183,7 @@ export function MenuMain() {
           />
         ) : null}
         <DropdownButton
-          text={tx('tx.sandbox.open')}
+          text={tx('tx.sandbox.import')}
           icon={<IconSandbox size='1rem' className='icon-green' />}
           onClick={() => void handleTransferToSandbox()}
         />

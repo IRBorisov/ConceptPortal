@@ -14,7 +14,7 @@ import { limits } from '@/utils/constants';
 import { PickLocation } from '../components/pick-location';
 
 const schemaLocation = z.strictObject({
-  location: z.string().refine(data => validateLocation(data), { message: globalTx('labels.error.invalidLocation') })
+  location: z.string().refine(data => validateLocation(data), { message: globalTx('tx.lib.location.validate') })
 });
 
 type LocationType = z.infer<typeof schemaLocation>;
@@ -49,7 +49,7 @@ export function DlgChangeLocation() {
       overflowVisible
       header={tx('tx.lib.location.edit')}
       submitText={tx('tx.general.move')}
-      validationHint={isValid ? '' : tx('tx.lib.location.validate', { maxLen: limits.len_location })}
+      validationHint={isValid ? '' : tx('tx.lib.location.validate.hint', { maxLen: limits.len_location })}
       canSubmit={isValid && !isDefaultValue}
       onSubmit={event => {
         event.preventDefault();

@@ -115,7 +115,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   );
 
   function deleteSchema() {
-    if (!window.confirm(tx('labels.prompt.deleteOSS'))) {
+    if (!window.confirm(tx('tx.oss.delete.confirm'))) {
       return;
     }
     void deleteItem({

@@ -39,34 +39,34 @@ export interface IPasswordTokenDTO {
 export const schemaUserLogin = z.strictObject({
   username: z
     .string()
-    .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
-    .nonempty(globalTx('labels.error.requiredField')),
+    .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
+    .nonempty(globalTx('tx.general.field.required')),
   password: z
     .string()
-    .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
-    .nonempty(globalTx('labels.error.requiredField'))
+    .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
+    .nonempty(globalTx('tx.general.field.required'))
 });
 
 export const schemaChangePassword = z
   .object({
     old_password: z
       .string()
-      .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
-      .nonempty(globalTx('labels.error.requiredField')),
+      .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
+      .nonempty(globalTx('tx.general.field.required')),
     new_password: z
       .string()
-      .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
-      .nonempty(globalTx('labels.error.requiredField')),
+      .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
+      .nonempty(globalTx('tx.general.field.required')),
     new_password2: z
       .string()
-      .max(limits.len_alias, `${globalTx('labels.error.lengthLimit')} (${limits.len_alias})`)
-      .nonempty(globalTx('labels.error.requiredField'))
+      .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
+      .nonempty(globalTx('tx.general.field.required'))
   })
   .refine(schema => schema.new_password === schema.new_password2, {
     path: ['new_password2'],
-    message: globalTx('labels.error.passwordsMismatch')
+    message: globalTx('tx.general.password.repeat.validate')
   })
   .refine(schema => schema.old_password !== schema.new_password, {
     path: ['new_password'],
-    message: globalTx('labels.error.passwordsSame')
+    message: globalTx('tx.general.password.new.validate')
   });

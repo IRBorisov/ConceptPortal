@@ -45,10 +45,10 @@ export function DlgCreateVersion() {
   const version = useStore(form.store, state => state.values.version);
   const { canSubmit, hint } = (() => {
     if (!version) {
-      return { canSubmit: false, hint: tx('labels.hint.versionEmpty') };
+      return { canSubmit: false, hint: tx('tx.lib.version.alias') };
     }
     if (versions.find(ver => ver.version === version)) {
-      return { canSubmit: false, hint: tx('labels.hint.versionTaken') };
+      return { canSubmit: false, hint: tx('tx.lib.version.validate.aliasTaken') };
     }
     return { canSubmit: true, hint: '' };
   })();

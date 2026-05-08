@@ -96,10 +96,10 @@ function SchemaTitle({ schema }: { schema: RSForm }) {
         {intl.formatMessage({ id: 'tx.schema' }) + ' ' + schema.title}
       </Text>
       <Text style={{ fontSize: 12 }}>
-        {intl.formatMessage({ id: 'ui.rsform.pdf.aliasLabel' }, { alias: schema.alias })}
+        {intl.formatMessage({ id: 'tx.lib.alias' }) + intl.formatMessage({ id: 'tx.general.colon' }) + schema.alias}
       </Text>
       <Text style={{ fontSize: 12 }}>
-        {intl.formatMessage({ id: 'ui.rsform.pdf.onlineVersion' })}{' '}
+        {intl.formatMessage({ id: 'tx.general.source' }) + intl.formatMessage({ id: 'tx.general.colon' })}
         <Link src={url} style={{ textDecoration: 'underline' }}>
           {url}
         </Link>
@@ -112,10 +112,10 @@ function SchemaFooter({ schema }: { schema: RSForm }) {
   const intl = useIntl();
   return (
     <View fixed style={pdfs.footer}>
-      <Text>{intl.formatMessage({ id: 'ui.rsform.pdf.footerLine' }, { alias: schema.alias })}</Text>
+      <Text>{schema.alias}</Text>
       <Text
         render={({ pageNumber, totalPages }) =>
-          intl.formatMessage({ id: 'ui.rsform.pdf.sheetPages' }, { pageNumber, totalPages })
+          intl.formatMessage({ id: 'tx.general.page.short' }) + ' ' + pageNumber + ' / ' + totalPages
         }
       />
     </View>
@@ -130,11 +130,11 @@ function CstTable({ data }: { data: RO<Constituenta[]> }) {
         {/* Table Header */}
         <View fixed style={pdfs.headerRow}>
           <Text style={{ ...pdfs.cell, width: '13mm' }}>ID</Text>
-          <Text style={{ ...pdfs.cell, width: '82mm' }}>{intl.formatMessage({ id: 'tx.lib.definitionFormal' })}</Text>
+          <Text style={{ ...pdfs.cell, width: '82mm' }}>{intl.formatMessage({ id: 'tx.lib.defineFormal' })}</Text>
           <Text style={{ ...pdfs.cell, width: '38mm' }}>{intl.formatMessage({ id: 'tx.rslang.typification' })}</Text>
           <Text style={{ ...pdfs.cell, width: '40mm' }}>{intl.formatMessage({ id: 'tx.lang.term' })}</Text>
           <Text style={{ ...pdfs.cell, width: '82mm', borderRightWidth: 0 }}>
-            {intl.formatMessage({ id: 'ui.rsform.pdf.colSchemaInterpretation' })}
+            {`${intl.formatMessage({ id: 'tx.lib.defineText' })} / ${intl.formatMessage({ id: 'tx.lang.term' })}`}
           </Text>
         </View>
 

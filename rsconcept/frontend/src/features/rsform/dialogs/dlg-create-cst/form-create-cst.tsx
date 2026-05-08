@@ -110,8 +110,8 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
           !!field.state.value || !isElementary ? (
             <RefsInput
               id='dlg_cst_definition'
-              label={tx('tx.lib.definitionTextual')}
-              placeholder={tx('tx.lib.definitionTextual.hint')}
+              label={tx('tx.lib.defineText')}
+              placeholder={tx('tx.lib.defineText.hint')}
               maxHeight='3.75rem'
               schema={schema}
               resolved={field.state.value}

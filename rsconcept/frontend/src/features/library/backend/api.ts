@@ -61,7 +61,7 @@ export const libraryApi = {
       endpoint: '/api/library',
       request: {
         data: data,
-        successMessage: globalTx('labels.info.newLibraryItem')
+        successMessage: globalTx('tx.lib.item.create.success')
       }
     }),
   createRSFormFromSandbox: (data: CreateRSFormFromSandboxDTO) =>
@@ -70,7 +70,7 @@ export const libraryApi = {
       endpoint: '/api/rsforms/create-from-sandbox',
       request: {
         data,
-        successMessage: globalTx('labels.info.newLibraryItem')
+        successMessage: globalTx('tx.lib.item.create.success')
       }
     }),
   createRSModelFromSandbox: (data: CreateRSModelFromSandboxDTO) =>
@@ -79,7 +79,7 @@ export const libraryApi = {
       endpoint: '/api/models/create-from-sandbox',
       request: {
         data,
-        successMessage: globalTx('labels.info.newLibraryItem')
+        successMessage: globalTx('tx.lib.item.create.success')
       }
     }),
   updateItem: (data: UpdateLibraryItemDTO) =>
@@ -88,7 +88,7 @@ export const libraryApi = {
       endpoint: `/api/library/${data.id}`,
       request: {
         data: data,
-        successMessage: globalTx('labels.info.changesSaved')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     }),
   setOwner: ({ itemID, owner }: { itemID: number; owner: number }) =>
@@ -96,7 +96,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/set-owner`,
       request: {
         data: { user: owner },
-        successMessage: globalTx('labels.info.changesSaved')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     }),
   setLocation: ({ itemID, location }: { itemID: number; location: string }) =>
@@ -104,7 +104,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/set-location`,
       request: {
         data: { location: location },
-        successMessage: globalTx('labels.info.moveSuccess')
+        successMessage: globalTx('tx.lib.location.edit.success')
       }
     }),
   setAccessPolicy: ({ itemID, policy }: { itemID: number; policy: AccessPolicy }) =>
@@ -112,7 +112,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/set-access-policy`,
       request: {
         data: { access_policy: policy },
-        successMessage: globalTx('labels.info.changesSaved')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     }),
   setEditors: ({ itemID, editors }: { itemID: number; editors: number[] }) =>
@@ -120,7 +120,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/set-editors`,
       request: {
         data: { users: editors },
-        successMessage: globalTx('labels.info.changesSaved')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     }),
 
@@ -128,7 +128,7 @@ export const libraryApi = {
     axiosDelete({
       endpoint: `/api/library/${data.target}`,
       request: {
-        successMessage: globalTx('labels.info.itemDestroyed')
+        successMessage: globalTx('tx.general.delete.success')
       }
     }),
   cloneItem: ({ itemID, data }: { itemID: number; data: CloneLibraryItemDTO }) =>
@@ -137,7 +137,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/clone`,
       request: {
         data: data,
-        successMessage: newSchema => globalTx('labels.info.cloneComplete', { alias: newSchema.alias })
+        successMessage: newSchema => globalTx('tx.general.clone.success', { alias: newSchema.alias })
       }
     }),
   renameLocation: (data: RenameLocationDTO) =>
@@ -145,7 +145,7 @@ export const libraryApi = {
       endpoint: '/api/library/rename-location',
       request: {
         data: data,
-        successMessage: globalTx('labels.info.locationRenamed')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     }),
 
@@ -155,7 +155,7 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/create-version`,
       request: {
         data: data,
-        successMessage: globalTx('labels.info.newVersion', { version: data.version })
+        successMessage: globalTx('tx.lib.version.create.success', { version: data.version })
       }
     }),
   restoreVersion: ({ versionID }: { versionID: number }) =>
@@ -163,7 +163,7 @@ export const libraryApi = {
       schema: schemaRSForm,
       endpoint: `/api/versions/${versionID}/restore`,
       request: {
-        successMessage: globalTx('labels.info.versionRestored')
+        successMessage: globalTx('tx.lib.version.revert.success')
       }
     }),
   updateVersion: (data: { itemID: number; version: UpdateVersionDTO }) =>
@@ -172,14 +172,14 @@ export const libraryApi = {
       endpoint: `/api/versions/${data.version.id}`,
       request: {
         data: data.version,
-        successMessage: globalTx('labels.info.changesSaved')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     }),
   deleteVersion: (data: { itemID: number; versionID: number }) =>
     axiosDelete({
       endpoint: `/api/versions/${data.versionID}`,
       request: {
-        successMessage: globalTx('labels.info.versionDestroyed')
+        successMessage: globalTx('tx.general.delete.success')
       }
     })
 } as const;

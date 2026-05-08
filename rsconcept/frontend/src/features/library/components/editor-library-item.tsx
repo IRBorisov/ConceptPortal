@@ -68,7 +68,7 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
     if (newValue === item.owner) {
       return;
     }
-    if (!window.confirm(tx('labels.prompt.ownerChange'))) {
+    if (!window.confirm(tx('tx.lib.item.owner.edit.confirm'))) {
       return;
     }
     void setOwner({ itemID: item.id, owner: newValue });

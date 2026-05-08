@@ -116,7 +116,7 @@ export function OssFlow() {
       return;
     }
     if (connection.source === connection.target) {
-      toast.error(tx('labels.error.ossSelfConnection'));
+      toast.error(tx('tx.graph.validate.preventCycle'));
       return;
     }
 
@@ -126,11 +126,11 @@ export function OssFlow() {
       throw new Error('Item not found');
     }
     if (schema.extendedGraph.expandAllOutputs([target.id]).includes(source.id)) {
-      toast.error(tx('labels.error.ossCycle'));
+      toast.error(tx('tx.graph.validate.preventCycle'));
       return;
     }
     if (schema.graph.hasEdge(source.id, target.id)) {
-      toast.error(tx('labels.error.connectionExists'));
+      toast.error(tx('tx.graph.validate.edgeExists'));
       return;
     }
 

@@ -105,5 +105,5 @@ function describeCstNode(
   const typification = labelType(cst.analysis?.type ?? null);
   return `${cst.alias}${tx('tx.general.colon')}${cst.term_resolved}\n${
     cst.analysis ? `${tx('tx.rslang.typification')}${tx('tx.general.colon')}${typification}\n` : ''
-  }${tx('tx.lib.contents')}${tx('tx.general.colon')}${contents ? contents : tx('tx.general.none')}`;
+  }${tx('tx.lib.contents')}${tx('tx.general.colon')}${contents ? contents : tx('tx.general.none').toLocaleLowerCase()}`;
 }

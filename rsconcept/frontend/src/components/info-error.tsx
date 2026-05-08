@@ -18,14 +18,14 @@ interface InfoErrorProps {
 export function DescribeError({ error }: { error: ErrorData }) {
   const tx = useTx();
   if (!error) {
-    return <p>{tx('labels.errorDetail.noErrors')}</p>;
+    return <p>{tx('tx.shell.error.none')}</p>;
   } else if (typeof error === 'string') {
     return <p>{error}</p>;
   } else if (error instanceof ZodError) {
     const lines = error.issues.map(issue => issue.message);
     return (
       <div>
-        <p>{tx('labels.errorDetail.validationTitle')}</p>
+        <p>{tx('tx.shell.error.dataValidation')}</p>
         <ul className='list-disc pl-5 mt-2 space-y-1'>
           {lines.map(function lineItem(text, i) {
             return <li key={i}>{text}</li>;
@@ -47,12 +47,12 @@ export function DescribeError({ error }: { error: ErrorData }) {
     );
   }
   if (!error?.response) {
-    return <p>{tx('labels.errorDetail.noServerResponse')}</p>;
+    return <p>{tx('tx.shell.error.noServerResponse')}</p>;
   }
   if (error.response.status === 404) {
     return (
       <div>
-        <p>{tx('labels.errorDetail.api404')}</p>
+        <p>{tx('tx.shell.error.api404')}</p>
         <PrettyJson data={error} />
       </div>
     );
@@ -60,7 +60,7 @@ export function DescribeError({ error }: { error: ErrorData }) {
   if (error.response.status === 403 && error.message.includes('CSRF')) {
     return (
       <div>
-        <p>{tx('labels.errorDetail.csrfLost')}</p>
+        <p>{tx('tx.shell.error.csrfLost')}</p>
         <PrettyJson data={error} />
       </div>
     );
@@ -82,7 +82,7 @@ export function DescribeError({ error }: { error: ErrorData }) {
       <p>{error.message}</p>
       {error.response.data && (
         <>
-          <p className='mt-2 underline'>{tx('labels.errorDetail.responseDescription')}</p>
+          <p className='mt-2 underline'>{tx('tx.general.details')}</p>
           {isHtml && sanitizedHtml ? (
             <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
           ) : typeof error.response.data === 'string' ? (
@@ -108,9 +108,9 @@ export function InfoError({ error }: InfoErrorProps) {
       )}
     >
       <div className='font-normal text-foreground mb-6'>
-        <p>{tx('labels.errorDetail.contactIntro')}</p>
+        <p>{tx('tx.shell.error.contactIntro')}</p>
         <br />
-        <p>{tx('labels.errorDetail.reloadHint')}</p>
+        <p>{tx('tx.shell.error.reload.hint')}</p>
       </div>
 
       <DescribeError error={error} />

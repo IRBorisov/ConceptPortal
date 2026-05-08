@@ -90,7 +90,7 @@ export function TableSchemaList({
     }),
     columnHelper.accessor('definition_formal', {
       id: 'expression',
-      header: tx('tx.lib.definitionFormal'),
+      header: tx('tx.lib.defineFormal'),
       size: 1000,
       minSize: 300,
       maxSize: 1000,
@@ -98,7 +98,7 @@ export function TableSchemaList({
     }),
     columnHelper.accessor(cst => cst.definition_resolved || cst.definition_raw || '', {
       id: 'definition',
-      header: tx('tx.lib.definitionTextual'),
+      header: tx('tx.lib.defineText'),
       size: 1000,
       minSize: 200,
       maxSize: 1000,

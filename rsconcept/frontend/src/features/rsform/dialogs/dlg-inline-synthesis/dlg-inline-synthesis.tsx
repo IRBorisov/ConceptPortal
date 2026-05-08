@@ -76,7 +76,7 @@ export function DlgInlineSynthesis() {
       submitText={tx('tx.general.execute')}
       className='w-160 h-132 px-6'
       canSubmit={canSubmit}
-      validationHint={canSubmit ? '' : tx('labels.hint.sourceEmpty')}
+      validationHint={canSubmit ? '' : tx('tx.synthesis.inline.source.validate')}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>

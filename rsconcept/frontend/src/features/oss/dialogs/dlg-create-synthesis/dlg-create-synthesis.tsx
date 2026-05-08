@@ -83,13 +83,13 @@ export function DlgCreateSynthesis() {
   const [activeTab, setActiveTab] = useState<TabID>(TabID.ARGUMENTS);
   const { canSubmit, hint } = (() => {
     if (!alias) {
-      return { canSubmit: false, hint: tx('labels.hint.aliasInvalid') };
+      return { canSubmit: false, hint: tx('tx.cst.alias.validate') };
     }
     if (manager.oss.operations.some(operation => operation.alias === alias)) {
-      return { canSubmit: false, hint: tx('labels.hint.schemaAliasTaken') };
+      return { canSubmit: false, hint: tx('tx.lib.alias.validate.taken') };
     }
     if (!schemaCreateSynthesis.safeParse(values).success) {
-      return { canSubmit: false, hint: tx('labels.hint.formInvalid') };
+      return { canSubmit: false, hint: tx('tx.general.form.invalid') };
     }
     return { canSubmit: true, hint: '' };
   })();

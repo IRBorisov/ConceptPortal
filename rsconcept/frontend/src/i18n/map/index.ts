@@ -1,18 +1,18 @@
 import { type AppLocale } from '../locales';
 
-import { enMessages } from './index.en';
-import { frMessages } from './index.fr';
-import { ruMessages } from './index.ru';
+import { enMessageMap } from './message-map.en';
+import { frMessageMap } from './message-map.fr';
+import { ruMessageMap } from './message-map.ru';
 
 export function getMessageMapForLocale(locale: AppLocale): Record<string, string> {
   switch (locale) {
     case 'en':
-      return enMessages;
+      return enMessageMap;
     case 'fr':
-      return frMessages;
+      return frMessageMap;
     case 'ru':
-      return ruMessages;
+      return ruMessageMap;
     default:
-      return ruMessages;
+      return ruMessageMap;
   }
 }

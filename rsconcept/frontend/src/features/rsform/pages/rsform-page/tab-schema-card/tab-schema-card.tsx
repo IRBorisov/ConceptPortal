@@ -3,15 +3,12 @@
 import clsx from 'clsx';
 
 import { calculateSchemaStats } from '@/domain/library/rsform-api';
-import { useTx } from '@/i18n';
 
-import { ButtonSidebar } from '@/features/library/components/button-sidebar';
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
-import { usePreferencesStore } from '@/stores/preferences';
 import { globalIDs } from '@/utils/constants';
 
 import { useSchemaEdit } from '../schema-edit-context';
@@ -22,11 +19,8 @@ import { ViewSchemaStats } from './view-schema-stats';
 const SIDELIST_LAYOUT_THRESHOLD = 768; // px
 
 export function TabSchemaCard() {
-  const tx = useTx();
   const { schema } = useSchemaEdit();
   const isModified = useModificationStore(state => state.isModified);
-  const showRSFormStats = usePreferencesStore(state => state.showRSFormStats);
-  const toggleShowRSFormStats = usePreferencesStore(state => state.toggleShowRSFormStats);
   const windowSize = useWindowSize();
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
   const stats = calculateSchemaStats(schema);
@@ -59,25 +53,13 @@ export function TabSchemaCard() {
       )}
     >
       <div className='relative cc-column mx-0 md:mx-auto'>
-        <ButtonSidebar
-          title={tx('ui.schemaCard.toggleStatsTitle')}
-          show={showRSFormStats}
-          isNarrow={isNarrow}
-          onClick={toggleShowRSFormStats}
-          className='absolute top-0.5 -right-2'
-        />
-
         <FormSchema key={schema.id} className='min-w-88 sm:w-120' />
         <EditorLibraryItem item={schema} isProduced={schema.is_produced} />
       </div>
 
       <ViewSchemaStats
         stats={stats}
-        className={clsx(
-          'h-min w-80 md:w-56 md:mt-9 mx-auto overflow-y-auto',
-          'cc-animate-sidebar',
-          showRSFormStats ? 'max-w-full' : 'opacity-0 max-w-0'
-        )}
+        className='h-min w-80 md:w-56 md:mt-9 mx-auto overflow-y-auto max-w-full'
         style={{ maxHeight: sideBarHeight }}
       />
     </div>

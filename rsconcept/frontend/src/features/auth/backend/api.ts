@@ -44,7 +44,7 @@ export const authApi = {
       endpoint: '/users/api/change-password',
       request: {
         data: data,
-        successMessage: globalTx('labels.info.changesSaved')
+        successMessage: globalTx('tx.general.changes.save.success')
       }
     }),
   requestPasswordReset: (data: IRequestPasswordDTO) =>

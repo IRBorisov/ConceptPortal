@@ -192,7 +192,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
           <TextArea
             id='schema_comment'
             label={tx('tx.lib.description')}
-            placeholder={tx('labels.placeholder.itemDescription')}
+            placeholder={tx('tx.lib.description.hint')}
             value={field.state.value ?? ''}
             onChange={event => field.handleChange(event.target.value)}
             rows={5}

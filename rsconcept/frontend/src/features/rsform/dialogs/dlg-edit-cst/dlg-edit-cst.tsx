@@ -123,7 +123,7 @@ export function DlgEditCst() {
       header={tx('tx.cst.edit')}
       canSubmit={canSubmit}
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
-      validationHint={canSubmit ? '' : tx('labels.hint.aliasInvalid')}
+      validationHint={canSubmit ? '' : tx('tx.cst.alias.validate')}
       submitText={tx('tx.general.save')}
       className='cc-column w-140 max-h-120 py-2 px-6'
     >

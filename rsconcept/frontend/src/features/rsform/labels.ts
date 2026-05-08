@@ -74,15 +74,15 @@ const EXPR_STATUS_DESC_LID: Record<CstStatus, string> = {
 };
 
 const RS_EXPRESSION_LID: Record<CstType, string> = {
-  [CstType.NOMINAL]: 'tx.lib.definitionFormal.nominal',
-  [CstType.BASE]: 'tx.lib.definitionFormal',
-  [CstType.CONSTANT]: 'tx.lib.definitionFormal',
-  [CstType.STRUCTURED]: 'tx.lib.definitionFormal.structure',
-  [CstType.TERM]: 'tx.lib.definitionFormal',
-  [CstType.THEOREM]: 'tx.lib.definitionFormal',
-  [CstType.AXIOM]: 'tx.lib.definitionFormal',
-  [CstType.FUNCTION]: 'tx.lib.definitionFormal.function',
-  [CstType.PREDICATE]: 'tx.lib.definitionFormal.function'
+  [CstType.NOMINAL]: 'tx.lib.defineFormal.nominal',
+  [CstType.BASE]: 'tx.lib.defineFormal',
+  [CstType.CONSTANT]: 'tx.lib.defineFormal',
+  [CstType.STRUCTURED]: 'tx.lib.defineFormal.structure',
+  [CstType.TERM]: 'tx.lib.defineFormal',
+  [CstType.THEOREM]: 'tx.lib.defineFormal',
+  [CstType.AXIOM]: 'tx.lib.defineFormal',
+  [CstType.FUNCTION]: 'tx.lib.defineFormal.function',
+  [CstType.PREDICATE]: 'tx.lib.defineFormal.function'
 };
 
 const RS_PLACEHOLDER_EXAMPLE: Record<CstType, string> = {
@@ -242,7 +242,7 @@ export function getCstTypeShortcut(type: CstType) {
 /** Generates label for RS expression based on {@link CstType}. */
 export function labelRSExpression(type: CstType): string {
   const id = RS_EXPRESSION_LID[type];
-  return id ? globalTx(id) : globalTx('tx.lib.definitionFormal');
+  return id ? globalTx(id) : globalTx('tx.lib.defineFormal');
 }
 
 /** Generates placeholder for RS definition based on {@link CstType}. */
@@ -301,7 +301,7 @@ export function labelCstType(target: CstType): string {
 /** Retrieves label for {@link CstClass}. */
 export function labelCstClass(target: CstClass): string {
   const lidKey = CST_CLASS_LABEL_LID[target];
-  return lidKey ? globalTx(lidKey) : 'UNKNOWN CST CLASS: ' + String(target);
+  return lidKey ? globalTx(lidKey).toLocaleLowerCase() : 'UNKNOWN CST CLASS: ' + String(target);
 }
 
 /** Retrieves description for {@link CstClass}. */

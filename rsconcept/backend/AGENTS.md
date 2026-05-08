@@ -1,83 +1,53 @@
 # AGENTS.md
 
-Backend guidance for AI coding agents working in `rsconcept/backend`.
+Rules for agents in `rsconcept/backend`.
 
 ## Scope
 
-This file applies to the Django backend in this directory tree.
+Applies to backend files.
 
 ## Stack
 
-- Django
-- Django REST Framework
-- PostgreSQL or SQLite for local contexts
-- MyPy
-- Pylint
-- Coverage
+Django, Django REST Framework, PostgreSQL/SQLite local, MyPy, Pylint, Coverage.
 
-## Backend map
+## Structure
 
-- `manage.py` is the entry point for Django management commands.
-- `project` contains settings, root URLs, and WSGI configuration.
-- `apps` contains domain apps:
-  - `users`
-  - `library`
-  - `rsform`
-  - `oss`
-  - `rsmodel`
-  - `prompt`
-- `shared` contains common serializers, permissions, throttling, utilities, and test helpers.
-- `fixtures` contains initial data.
-- `templates` contains backend-served templates such as robots or mail views.
+- `manage.py`: Django commands
+- `project`: settings, root URLs, WSGI
+- `apps`: domain apps (`users`, `library`, `rsform`, `oss`, `rsmodel`, `prompt`)
+- `shared`: serializers, permissions, throttling, utils, test helpers
+- `fixtures`: initial data
+- `templates`: backend-served robots/mail views
 
-## Working style
-
-- Keep changes inside the owning Django app unless logic is clearly shared.
-- Reuse `shared` helpers before duplicating serializer, permission, or testing utilities.
-- Check `project/settings.py` when behavior depends on auth, CORS, debug, or environment flags.
-- Treat API contract changes as cross-cutting and verify frontend impact.
-
-## Common commands
+## Commands
 
 Run from `rsconcept/backend`:
 
-- Sync dependencies: `uv sync --frozen`
-- Update packages: `uv lock --upgrade && uv sync`
-- Django checks: `uv run python manage.py check`
-- Run tests: `uv run python manage.py test`
-- Run server: `uv run python manage.py runserver`
+- Sync deps: `uv sync --frozen`
+- Upgrade deps: `uv lock --upgrade && uv sync`
+- Check: `uv run python manage.py check`
+- Test: `uv run python manage.py test`
+- Server: `uv run python manage.py runserver`
 - Pylint: `uv run pylint project apps`
 - MyPy: `uv run mypy project apps --show-traceback`
 
-From repository root you can also use:
+Repo root scripts: `powershell -File scripts/dev/RunTests.ps1`, `powershell -File scripts/dev/RunLint.ps1`.
 
-- `powershell -File scripts/dev/RunTests.ps1`
-- `powershell -File scripts/dev/RunLint.ps1`
+## File Hints
 
-## File hints
-
-- Global settings and environment behavior: `project/settings.py`
-- Root URL wiring: `project/urls.py`
-- App URLs and views: `apps/*/urls.py`, `apps/*/views`
+- Settings/env behavior: `project/settings.py`
+- Root URLs: `project/urls.py`
+- App URLs/views: `apps/*/urls.py`, `apps/*/views`
 - Models: `apps/*/models`
-- Serializers: `apps/*/serializers` and `shared/serializers.py`
-- Cross-app helpers: `shared`
+- Serializers: `apps/*/serializers`, `shared/serializers.py`
+- Shared helpers: `shared`
 - Tests: `apps/*/tests`
 
-## Edit rules
+## Edit Rules
 
-- Keep business logic close to the app that owns the data model.
-- Prefer additive migrations and avoid editing old migrations unless explicitly required.
-- Update tests when serializers, permissions, model behavior, or endpoints change.
-- Be careful with auth, throttling, and settings defaults because they affect multiple endpoints.
-- When introducing environment-sensitive behavior, make the local-safe path explicit.
-
-## Backend-specific rules to extend
-
-Add your own instructions here, for example:
-
-- Apps that require extra review
-- Migration approval rules
-- Serializer or viewset conventions
-- Test coverage expectations
-- Restrictions around auth, mail, or production settings
+- Keep logic in owning app; move to `shared` only when clearly cross-app.
+- Reuse `shared` before duplicating serializers, permissions, tests, utils.
+- Treat API contract changes as cross-cutting; verify frontend impact.
+- Check `project/settings.py` for auth/CORS/debug/env-dependent behavior.
+- Prefer additive migrations; edit old migrations only when explicitly required.
+- Update tests for serializers, permissions, model behavior, endpoints.

@@ -23,7 +23,7 @@ export function InfoCstClass({ header }: InfoCstClassProps) {
               {labelCstClass(cstClass)}
             </span>
             <span> - </span>
-            <span>{describeCstClass(cstClass)}</span>
+            <span>{describeCstClass(cstClass).toLocaleLowerCase()}</span>
           </p>
         );
       })}

@@ -153,7 +153,7 @@ function notifySuccess<ResponseData>(
 
 function notifyError(error: Error | AxiosError | ZodError) {
   if (error instanceof ZodError) {
-    toast.error(globalTx('labels.error.invalidResponse'));
+    toast.error(globalTx('tx.shell.error.invalidResponse'));
   } else {
     toast.error(extractErrorMessage(error));
   }

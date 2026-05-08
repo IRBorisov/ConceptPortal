@@ -24,7 +24,7 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
         label={tx('tx.lib.contents')}
         primaryLabel={tx('tx.general.total')}
         primaryValue={stats.count_all}
-        primaryTitle={tx('tx.oss.items.total.hint')}
+        primaryTitle={tx('tx.oss.item.total.hint')}
         secondaryLabel={stats.count_block > 0 ? tx('tx.oss.block.plural') : undefined}
         secondaryValue={stats.count_block > 0 ? stats.count_block : undefined}
         secondaryTitle={tx('tx.oss.block.plural')}
