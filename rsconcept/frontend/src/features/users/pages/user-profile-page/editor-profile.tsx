@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { useTx } from '@/i18n';
 
-import { useRegisterNavigationSave } from '@/app';
+import { useRegisterUnsavedSave } from '@/app';
 
 import { isAxiosError } from '@/backend/api-transport';
 import { SubmitButton } from '@/components/control';
@@ -38,7 +38,7 @@ export function EditorProfile() {
   });
 
   const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
-  useRegisterNavigationSave(() => form.handleSubmit(), !isDefaultValue);
+  useRegisterUnsavedSave(() => form.handleSubmit(), !isDefaultValue);
 
   const onResetEvent = useEffectEvent((next: UpdateProfileDTO) => {
     form.reset(next);

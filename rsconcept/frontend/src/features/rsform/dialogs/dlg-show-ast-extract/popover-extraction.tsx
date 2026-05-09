@@ -132,7 +132,7 @@ export function PopoverExtraction({
             <div className='cc-icons mt-1'>
               <MiniButton
                 icon={<IconAccept size='1.25rem' className='icon-green' />}
-                title={prepareTooltip(tx('tx.rslang.expression.extract.confirm'), tx(isMac() ? 'Cmd + S' : 'Ctrl + S'))}
+                title={prepareTooltip(tx('tx.rslang.expression.extract.confirm'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
                 onClick={handleSubmit}
                 disabled={disabled}
               />

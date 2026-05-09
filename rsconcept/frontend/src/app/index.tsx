@@ -1,5 +1,5 @@
-export { useConceptNavigation } from './navigation/navigation-context';
-export { useRegisterNavigationSave } from './navigation/navigation-context';
+export { type UnsavedPromptResult, type UnsavedSaveHandler, useUnsavedChanges } from './changes/use-unsaved-changes';
+export { useConceptNavigation, useRegisterUnsavedSave } from './navigation/navigation-context';
 export { urls } from './urls';
 import { RouterProvider } from 'react-router';
 

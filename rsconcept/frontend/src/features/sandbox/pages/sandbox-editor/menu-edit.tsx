@@ -2,6 +2,7 @@
 
 import { useTx } from '@/i18n';
 
+import { useUnsavedChanges } from '@/app';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { MiniButton } from '@/components/control';
@@ -9,12 +10,12 @@ import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconEdit2, IconGenerateNames, IconReplace, IconSortList } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { promptUnsaved } from '@/utils/utils';
 
 import { useSandboxBundle } from '../../context/bundle-context';
 
 export function MenuEdit() {
   const tx = useTx();
+  const { promptUnsaved } = useUnsavedChanges();
   const isModified = useModificationStore(state => state.isModified);
   const { resetAliases, restoreOrder, substituteConstituents } = useSandboxBundle();
   const { schema } = useSchemaEdit();
@@ -28,24 +29,25 @@ export function MenuEdit() {
 
   const showSubstituteCst = useDialogsStore(state => state.showSubstituteCst);
 
-  function requireSavedChanges(): boolean {
+  async function requireUnsavedResolved(): Promise<boolean> {
     if (!isModified) {
       return true;
     }
-    return promptUnsaved();
+    const outcome = await promptUnsaved();
+    return outcome !== 'cancel';
   }
 
-  function handleResetAliases() {
+  async function handleResetAliases() {
     hideMenu();
-    if (!requireSavedChanges()) {
+    if (!(await requireUnsavedResolved())) {
       return;
     }
     resetAliases();
   }
 
-  function handleSubstitute() {
+  async function handleSubstitute() {
     hideMenu();
-    if (!requireSavedChanges()) {
+    if (!(await requireUnsavedResolved())) {
       return;
     }
     showSubstituteCst({
@@ -54,9 +56,9 @@ export function MenuEdit() {
     });
   }
 
-  function handleRestoreOrder() {
+  async function handleRestoreOrder() {
     hideMenu();
-    if (!requireSavedChanges()) {
+    if (!(await requireUnsavedResolved())) {
       return;
     }
     restoreOrder();
@@ -78,19 +80,19 @@ export function MenuEdit() {
           text={tx('tx.schema.order.restore')}
           title={tx('tx.schema.order.restore.hint')}
           icon={<IconSortList size='1rem' className='icon-primary' />}
-          onClick={handleRestoreOrder}
+          onClick={() => void handleRestoreOrder()}
         />
         <DropdownButton
           text={tx('tx.schema.order.rename')}
           title={tx('tx.schema.order.rename.hint')}
           icon={<IconGenerateNames size='1rem' className='icon-primary' />}
-          onClick={handleResetAliases}
+          onClick={() => void handleResetAliases()}
         />
         <DropdownButton
           text={tx('tx.substitution')}
           title={tx('tx.substitution.hint')}
           icon={<IconReplace size='1rem' className='icon-red' />}
-          onClick={handleSubstitute}
+          onClick={() => void handleSubstitute()}
         />
       </Dropdown>
     </div>

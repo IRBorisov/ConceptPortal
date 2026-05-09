@@ -52,7 +52,6 @@ export const txShellEn: Record<string, string> = {
   'tx.shell.error.contactIntro': 'Please take a screenshot and send it with a description to portal@acconcept.ru',
 
   'tx.shell.unsaved.header': 'You have unsaved changes',
-  'tx.shell.unsaved.body': 'Continue navigating without saving your changes?',
   'tx.shell.unsaved.continue': 'Continue without saving',
   'tx.shell.unsaved.saveContinue': 'Save and continue',
 

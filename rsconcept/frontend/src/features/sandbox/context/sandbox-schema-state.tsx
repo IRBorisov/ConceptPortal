@@ -8,7 +8,7 @@ import { type Constituenta, CstType } from '@/domain/library/rsform';
 import { generateAlias, removeAliasReference } from '@/domain/library/rsform-api';
 import { useTx } from '@/i18n';
 
-import { useConceptNavigation } from '@/app';
+import { type UnsavedSaveHandler, useConceptNavigation, useUnsavedChanges } from '@/app';
 import { type ConstituentaCreatedResponse, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
 import { SchemaEditContext } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
@@ -16,13 +16,14 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
-import { notImplemented, promptUnsaved } from '@/utils/utils';
+import { notImplemented } from '@/utils/utils';
 
 import { useSandboxBundle } from './bundle-context';
 
 export function SandboxSchemaState({ children }: React.PropsWithChildren) {
   const tx = useTx();
   const router = useConceptNavigation();
+  const { promptUnsaved } = useUnsavedChanges();
   const {
     schema,
     moveConstituents,
@@ -224,12 +225,15 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     });
   }
 
-  function openTermEditor() {
+  async function openTermEditor(onSave?: UnsavedSaveHandler) {
     if (!activeCst) {
       return;
     }
-    if (isModified && !promptUnsaved()) {
-      return;
+    if (isModified) {
+      const outcome = await promptUnsaved({ onSave });
+      if (outcome === 'cancel') {
+        return;
+      }
     }
     showEditTerm({
       schema: schema,
@@ -325,9 +329,12 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     }
   }
 
-  function promptTemplate() {
-    if (isModified && !promptUnsaved()) {
-      return;
+  async function promptTemplate() {
+    if (isModified) {
+      const outcome = await promptUnsaved();
+      if (outcome === 'cancel') {
+        return;
+      }
     }
     showCstTemplate({
       schema,
@@ -370,7 +377,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
         deleteSchema: notImplemented,
 
         patchConstituenta,
-        openTermEditor,
+        openTermEditor: (onSave?: UnsavedSaveHandler) => void openTermEditor(onSave),
         promptRename,
         addAttribution,
         removeAttribution,
@@ -402,7 +409,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
         promptCreateCst,
         cloneCst,
         promptDeleteSelected,
-        promptTemplate
+        promptTemplate: () => void promptTemplate()
       }}
     >
       {children}

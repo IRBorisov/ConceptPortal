@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 
-import { LayoutSandbox } from '@/app/layout-sandbox';
+import { LayoutSandbox } from '@/app/layout/layout-sandbox';
 import { prefetchAvailableTemplates } from '@/features/ai/backend/use-available-templates';
 import { prefetchAuth } from '@/features/auth/backend/use-auth';
 import { LoginPage } from '@/features/auth/pages/login-page';
@@ -17,10 +17,10 @@ import { prefetchUsers } from '@/features/users/backend/use-users';
 
 import { Loader } from '@/components/loader';
 
+import { LayoutLanding } from './layout/layout-landing';
+import { LayoutMain } from './layout/layout-main';
+import { LayoutRoot } from './layout/layout-root';
 import { ErrorFallback } from './error-fallback';
-import { LayoutLanding } from './layout-landing';
-import { LayoutMain } from './layout-main';
-import { LayoutRoot } from './layout-root';
 import { routes } from './urls';
 
 export const Router = createBrowserRouter([

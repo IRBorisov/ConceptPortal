@@ -53,11 +53,6 @@ export function isResponseHtml(response?: AxiosResponse) {
   return header.includes('text/html');
 }
 
-/** Prompt user of confirming discarding changes before continue. */
-export function promptUnsaved(): boolean {
-  return window.confirm(globalTx('tx.general.changes.unsaved.confirm'));
-}
-
 /** Toggle tristate flag: null - true - false. */
 export function toggleTristateFlag(prev: boolean | null): boolean | null {
   if (prev === null) {

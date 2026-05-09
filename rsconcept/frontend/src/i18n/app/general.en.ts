@@ -87,7 +87,6 @@ export const txGeneralEn: Record<string, string> = {
   'tx.general.changes.save.success': 'Changes saved',
   'tx.general.changes.reset': 'Reset changes',
   'tx.general.changes.unsaved.hint': 'Save or discard changes',
-  'tx.general.changes.unsaved.confirm': 'Confirm discarding unsaved changes',
 
   'tx.general.load': 'Load',
   'tx.general.load.fromFile': 'Load from file',

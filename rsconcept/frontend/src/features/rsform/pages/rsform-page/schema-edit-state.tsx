@@ -7,7 +7,7 @@ import { type Constituenta, CstType } from '@/domain/library';
 import { generateAlias, removeAliasReference } from '@/domain/library/rsform-api';
 import { useTx } from '@/i18n';
 
-import { urls, useConceptNavigation } from '@/app';
+import { type UnsavedSaveHandler, urls, useConceptNavigation, useUnsavedChanges } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useAuth } from '@/features/auth';
 import { useLibrarySearchStore } from '@/features/library';
@@ -21,7 +21,6 @@ import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
-import { promptUnsaved } from '@/utils/utils';
 
 import { useGenerateLexeme } from '../../backend/cctext/use-generate-lexeme';
 import {
@@ -59,6 +58,7 @@ export const SchemaEditState = ({
 }: React.PropsWithChildren<SchemaEditStateProps>) => {
   const tx = useTx();
   const router = useConceptNavigation();
+  const { promptUnsaved } = useUnsavedChanges();
   const adminMode = usePreferencesStore(state => state.adminMode);
   const role = useRoleStore(state => state.role);
   const setSearchLocation = useLibrarySearchStore(state => state.setLocation);
@@ -372,9 +372,12 @@ export const SchemaEditState = ({
     }
   }
 
-  function promptTemplate() {
-    if (isModified && !promptUnsaved()) {
-      return;
+  async function promptTemplate() {
+    if (isModified) {
+      const outcome = await promptUnsaved();
+      if (outcome === 'cancel') {
+        return;
+      }
     }
     showCstTemplate({
       schema: schema,
@@ -410,12 +413,15 @@ export const SchemaEditState = ({
     return updateConstituenta({ itemID: schema.id, data });
   }
 
-  function openTermEditor() {
+  async function openTermEditor(onSave?: UnsavedSaveHandler) {
     if (!activeCst) {
       return;
     }
-    if (isModified && !promptUnsaved()) {
-      return;
+    if (isModified) {
+      const outcome = await promptUnsaved({ onSave });
+      if (outcome === 'cancel') {
+        return;
+      }
     }
     showEditTerm({
       schema: schema,
@@ -497,7 +503,7 @@ export const SchemaEditState = ({
 
         patchConstituenta,
         createCstFromData,
-        openTermEditor,
+        openTermEditor: (onSave?: UnsavedSaveHandler) => void openTermEditor(onSave),
         promptRename,
         addAttribution,
         removeAttribution,
@@ -521,8 +527,7 @@ export const SchemaEditState = ({
         cloneCst,
         promptDeleteSelected,
 
-        promptTemplate,
-
+        promptTemplate: () => void promptTemplate(),
         gotoPredecessor: gotoPredecessor
       }}
     >
