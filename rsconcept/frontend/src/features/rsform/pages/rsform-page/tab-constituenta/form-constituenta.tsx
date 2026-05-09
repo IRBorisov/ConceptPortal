@@ -11,7 +11,7 @@ import { type AnalysisFull, TypeID } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
 import { useTx } from '@/i18n';
 
-import { useRegisterNavigationSave } from '@/app';
+import { useRegisterUnsavedSave } from '@/app';
 import { HelpTopic } from '@/features/help';
 
 import { TextButton } from '@/components/control/text-button';
@@ -91,7 +91,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
 
   const definition = useStore(form.store, state => state.values.item_data.definition_formal);
   const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
-  useRegisterNavigationSave(() => form.handleSubmit(), !isDefaultValue);
+  useRegisterUnsavedSave(() => form.handleSubmit(), !isDefaultValue);
 
   const [forceComment, setForceComment] = useState(false);
   const [localParse, setLocalParse] = useState<RO<AnalysisFull> | null>(null);
@@ -177,8 +177,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
                       ? tx('tx.general.changes.unsaved.hint')
                       : tx('tx.lang.wordform.plural.editing.hint')
                 }
-                onClick={openTermEditor}
-                disabled={isModified}
+                onClick={() => openTermEditor(() => form.handleSubmit())}
               />
             ) : null}
 

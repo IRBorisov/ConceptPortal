@@ -4,6 +4,8 @@ import { createContext, use } from 'react';
 
 import { type Constituenta, type CstType, type RSForm } from '@/domain/library';
 
+import { type UnsavedSaveHandler } from '@/app';
+
 import { type RO } from '@/utils/meta';
 
 import {
@@ -51,7 +53,7 @@ interface ISchemaEditContext {
   removeAttribution: (attribute: Constituenta) => void;
   clearAttributions: () => void;
 
-  openTermEditor: () => void;
+  openTermEditor: (onSave?: UnsavedSaveHandler) => void;
   promptCreateCst: (type?: CstType, definition?: string) => Promise<number | null>;
   promptRename: () => void;
   gotoPredecessor: (target: number, newTab?: boolean) => void;

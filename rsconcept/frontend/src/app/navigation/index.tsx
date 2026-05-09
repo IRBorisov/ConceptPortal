@@ -1,2 +1,2 @@
 export { Navigation } from './navigation';
-export { NavigationState } from './navigation-context';
+export { NavigationState } from './navigation-state';

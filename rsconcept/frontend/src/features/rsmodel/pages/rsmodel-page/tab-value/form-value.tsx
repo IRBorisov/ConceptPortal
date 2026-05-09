@@ -10,7 +10,7 @@ import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
 import { useTx } from '@/i18n';
 
-import { useConceptNavigation, useRegisterNavigationSave } from '@/app';
+import { useConceptNavigation, useRegisterUnsavedSave } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { type UpdateConstituentaDTO } from '@/features/rsform/backend/types';
 import { EditorRSExpression } from '@/features/rsform/components/editor-rsexpression/editor-rsexpression';
@@ -207,7 +207,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
     }
   }
 
-  useRegisterNavigationSave(handleSubmitAll, isDirty);
+  useRegisterUnsavedSave(handleSubmitAll, isDirty);
 
   function handleCalculate(event: React.MouseEvent<Element>) {
     event.preventDefault();
@@ -310,8 +310,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
             text={tx('tx.lang.wordform.plural.editing')}
             className='z-pop text-sm absolute top-0 left-19'
             title={isModified ? tx('tx.general.changes.unsaved.hint') : tx('tx.lang.wordform.plural.editing.hint')}
-            onClick={openTermEditor}
-            disabled={isModified}
+            onClick={() => openTermEditor(() => handleSubmitAll())}
           />
         ) : null}
         <RefsInput

@@ -6,7 +6,7 @@ import fileDownload from 'js-file-download';
 import { AccessPolicy, LocationHead } from '@/domain/library';
 import { useTx } from '@/i18n';
 
-import { useConceptNavigation } from '@/app';
+import { useConceptNavigation, useUnsavedChanges } from '@/app';
 import { buildSchemaToModelQuery } from '@/app/navigation/cross-rs-query';
 import { useAuth } from '@/features/auth';
 import { createSandboxBundleFromRSForm } from '@/features/sandbox/models/bundle-transfer';
@@ -33,7 +33,7 @@ import {
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE, prefixes } from '@/utils/constants';
-import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
+import { generatePageQR, sharePage } from '@/utils/utils';
 
 import { useUploadTRS } from '../../backend/use-upload-trs';
 import { prepareTRSFile } from '../../models/trs-file';
@@ -43,6 +43,7 @@ import { useSchemaEdit } from './schema-edit-context';
 export function MenuMain() {
   const tx = useTx();
   const router = useConceptNavigation();
+  const { promptUnsaved } = useUnsavedChanges();
   const { schema, selectedCst, deleteSchema, isArchive, isMutable, isContentEditable, isProcessing } = useSchemaEdit();
 
   const { user, isAnonymous } = useAuth();
@@ -92,10 +93,13 @@ export function MenuMain() {
     deleteSchema();
   }
 
-  function handleDownload() {
+  async function handleDownload() {
     hideMenu();
-    if (isModified && !promptUnsaved()) {
-      return;
+    if (isModified) {
+      const outcome = await promptUnsaved();
+      if (outcome === 'cancel') {
+        return;
+      }
     }
     const fileName = (schema.alias ?? 'Schema') + EXTEOR_TRS_FILE;
     try {
@@ -116,10 +120,13 @@ export function MenuMain() {
     });
   }
 
-  function handleClone() {
+  async function handleClone() {
     hideMenu();
-    if (isModified && !promptUnsaved()) {
-      return;
+    if (isModified) {
+      const outcome = await promptUnsaved();
+      if (outcome === 'cancel') {
+        return;
+      }
     }
     showClone({
       base: schema,
@@ -130,8 +137,11 @@ export function MenuMain() {
   }
 
   async function handleTransferToSandbox() {
-    if (isModified && !promptUnsaved()) {
-      return;
+    if (isModified) {
+      const outcome = await promptUnsaved();
+      if (outcome === 'cancel') {
+        return;
+      }
     }
     if (!window.confirm(tx('tx.sandbox.reset.confirm'))) {
       return;
@@ -218,7 +228,7 @@ export function MenuMain() {
             text={tx('tx.general.clone')}
             icon={<IconClone size='1rem' className='icon-green' />}
             disabled={isArchive}
-            onClick={handleClone}
+            onClick={() => void handleClone()}
           />
         ) : null}
         {!isAnonymous ? (
@@ -242,7 +252,7 @@ export function MenuMain() {
         <DropdownButton
           text={tx('tx.general.download.toExteor')}
           icon={<IconDownload size='1rem' className='icon-primary' />}
-          onClick={handleDownload}
+          onClick={() => void handleDownload()}
         />
         {isContentEditable ? (
           <DropdownButton

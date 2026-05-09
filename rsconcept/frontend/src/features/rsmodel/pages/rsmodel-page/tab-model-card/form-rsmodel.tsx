@@ -6,7 +6,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 import { LibraryItemType, type RSModel } from '@/domain/library';
 import { useTx } from '@/i18n';
 
-import { useConceptNavigation, useRegisterNavigationSave } from '@/app';
+import { useConceptNavigation, useRegisterUnsavedSave } from '@/app';
 import { buildModelToSchemaQuery } from '@/app/navigation/cross-rs-query';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
@@ -64,7 +64,7 @@ export function FormRSModel({ className }: FormRSModelProps) {
   const visible = useStore(form.store, state => state.values.visible);
   const readOnly = useStore(form.store, state => state.values.read_only);
   const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
-  useRegisterNavigationSave(() => form.handleSubmit(), !isDefaultValue);
+  useRegisterUnsavedSave(() => form.handleSubmit(), !isDefaultValue);
 
   const onResetEvent = useEffectEvent((next: UpdateLibraryItemDTO) => {
     form.reset(next);

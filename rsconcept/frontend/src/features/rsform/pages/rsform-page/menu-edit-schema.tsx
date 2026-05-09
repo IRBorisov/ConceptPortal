@@ -2,7 +2,7 @@
 
 import { useTx } from '@/i18n';
 
-import { useConceptNavigation } from '@/app';
+import { useConceptNavigation, useUnsavedChanges } from '@/app';
 import { useAuth } from '@/features/auth';
 
 import { Divider } from '@/components/container';
@@ -19,7 +19,6 @@ import {
 } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { promptUnsaved } from '@/utils/utils';
 
 import { useInlineSynthesis } from '../../backend/use-inline-synthesis';
 import { useResetAliases } from '../../backend/use-reset-aliases';
@@ -33,6 +32,7 @@ export function MenuEditSchema() {
   const { isAnonymous } = useAuth();
   const isModified = useModificationStore(state => state.isModified);
   const router = useConceptNavigation();
+  const { promptUnsaved } = useUnsavedChanges();
   const {
     elementRef: menuRef,
     isOpen: isMenuOpen,
@@ -60,10 +60,13 @@ export function MenuEditSchema() {
     void restoreOrder({ itemID: schema.id });
   }
 
-  function handleSubstituteCst() {
+  async function handleSubstituteCst() {
     hideMenu();
-    if (isModified && !promptUnsaved()) {
-      return;
+    if (isModified) {
+      const outcome = await promptUnsaved();
+      if (outcome === 'cancel') {
+        return;
+      }
     }
     showSubstituteCst({
       schema: schema,
@@ -78,10 +81,13 @@ export function MenuEditSchema() {
     promptTemplate();
   }
 
-  function handleInlineSynthesis() {
+  async function handleInlineSynthesis() {
     hideMenu();
-    if (isModified && !promptUnsaved()) {
-      return;
+    if (isModified) {
+      const outcome = await promptUnsaved();
+      if (outcome === 'cancel') {
+        return;
+      }
     }
     showInlineSynthesis({
       receiver: schema,
@@ -129,7 +135,7 @@ export function MenuEditSchema() {
           text={tx('tx.schema.embed')}
           title={tx('tx.schema.embed.hint')}
           icon={<IconInlineSynthesis size='1rem' className='icon-green' />}
-          onClick={handleInlineSynthesis}
+          onClick={() => void handleInlineSynthesis()}
           disabled={!isContentEditable || isProcessing}
         />
 
@@ -153,7 +159,7 @@ export function MenuEditSchema() {
           text={tx('tx.substitution')}
           title={tx('tx.substitution.hint')}
           icon={<IconReplace size='1rem' className='icon-red' />}
-          onClick={handleSubstituteCst}
+          onClick={() => void handleSubstituteCst()}
           disabled={!isContentEditable || isProcessing}
         />
       </Dropdown>

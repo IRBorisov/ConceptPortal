@@ -50,7 +50,7 @@ export const txShellFr: Record<string, string> = {
     'Veuillez faire une capture d’écran et l’envoyer avec une description à portal@acconcept.ru',
 
   'tx.shell.unsaved.header': 'Modifications non enregistrées',
-  'tx.shell.unsaved.body': 'Poursuivre la navigation sans enregistrer ?',
+  'tx.shell.unsaved.body': 'Poursuivre sans enregistrer ?',
   'tx.shell.unsaved.continue': 'Continuer sans enregistrer',
   'tx.shell.unsaved.saveContinue': 'Enregistrer et continuer',
 

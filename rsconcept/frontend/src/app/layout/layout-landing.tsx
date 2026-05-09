@@ -7,7 +7,7 @@ import { useTx } from '@/i18n';
 
 import { Loader } from '@/components/loader';
 
-import { GlobalTooltips } from './global-tooltips';
+import { GlobalTooltips } from '../global-tooltips';
 
 /** Minimal shell for the marketing landing and sandbox. */
 export function LayoutLanding() {

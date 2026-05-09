@@ -7,7 +7,7 @@ import { useDebounce } from 'use-debounce';
 
 import { useTx } from '@/i18n';
 
-import { useRegisterNavigationSave } from '@/app';
+import { useRegisterUnsavedSave } from '@/app';
 import { PromptInput } from '@/features/ai/components/prompt-input';
 import { useAuth } from '@/features/auth';
 
@@ -73,7 +73,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
 
   const text = useStore(form.store, state => state.values.text);
   const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
-  useRegisterNavigationSave(() => form.handleSubmit(), !isDefaultValue);
+  useRegisterUnsavedSave(() => form.handleSubmit(), !isDefaultValue);
 
   const prevReset = useRef(toggleReset);
   const prevTemplate = useRef(promptTemplate);

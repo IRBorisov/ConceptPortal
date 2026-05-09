@@ -50,8 +50,8 @@ export const txShellRu: Record<string, string> = {
   'tx.shell.error.contactIntro':
     'Пожалуйста сделайте скриншот и отправьте вместе с описанием ситуации на почту portal@acconcept.ru',
 
-  'tx.shell.unsaved.header': 'Есть несохраненные изменения',
-  'tx.shell.unsaved.body': 'Продолжить навигацию без сохранения изменений?',
+  'tx.shell.unsaved.header': 'Остались несохраненные изменения',
+  'tx.shell.unsaved.body': 'Продолжить без сохранения изменений?',
   'tx.shell.unsaved.continue': 'Продолжить без сохранения',
   'tx.shell.unsaved.saveContinue': 'Сохранить и продолжить',
 

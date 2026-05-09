@@ -9,6 +9,7 @@ import { generateAlias, inferNewSpawnPosition } from '@/domain/library/rsform-ap
 import { type SPNode, StructurePlanner } from '@/domain/library/structure-planner';
 import { useTx } from '@/i18n';
 
+import { useUnsavedChanges } from '@/app';
 import { HelpTopic } from '@/features/help';
 
 import { MiniButton } from '@/components/control';
@@ -19,7 +20,7 @@ import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 import { type RO } from '@/utils/meta';
-import { isMac, promptUnsaved } from '@/utils/utils';
+import { isMac } from '@/utils/utils';
 
 import { loadRSForm } from '../../backend/rsform-loader';
 import {
@@ -45,6 +46,7 @@ export interface DlgStructurePlannerProps {
 
 export function DlgStructurePlanner() {
   const tx = useTx();
+  const { promptUnsaved } = useUnsavedChanges();
   const { schema, targetID, isMutable, onCreate, onUpdate } = useDialogsStore(
     state => state.props as DlgStructurePlannerProps
   );
@@ -71,13 +73,18 @@ export function DlgStructurePlanner() {
   const selectedCst = selectedNode?.existing;
   const isDirty = (selectedCst && term !== selectedCst?.term_raw) || (!selectedCst && term !== '');
 
-  function handleSelectNode(nextKey: string) {
+  async function handleSelectNode(nextKey: string) {
     const node = items.find(item => item.key === nextKey);
     if (!node || node.key === selectedNode?.key) {
       return;
     }
-    if (isDirty && !promptUnsaved()) {
-      return;
+    if (isDirty) {
+      const outcome = await promptUnsaved({
+        onSave: () => saveTerm(selectedNode)
+      });
+      if (outcome === 'cancel') {
+        return;
+      }
     }
     setSelectedKey(node.key);
     setTerm(node.existing?.term_raw ?? '');
@@ -183,7 +190,7 @@ export function DlgStructurePlanner() {
               <MiniButton
                 title={prepareTooltip(
                   selectedCst ? tx('tx.general.changes.save') : tx('tx.cst.create'),
-                  tx(isMac() ? 'Cmd + S' : 'Ctrl + S')
+                  isMac() ? 'Cmd + S' : 'Ctrl + S'
                 )}
                 icon={
                   selectedCst ? (
@@ -210,7 +217,7 @@ export function DlgStructurePlanner() {
             items={items}
             rootType={target.analysis.type}
             selected={selectedKey}
-            setSelected={handleSelectNode}
+            setSelected={key => void handleSelectNode(key)}
           />
         </ReactFlowProvider>
       </div>

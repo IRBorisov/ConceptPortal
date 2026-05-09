@@ -6,24 +6,24 @@ import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 
+import { Footer } from '@/app/footer';
+import { ToasterThemed } from '@/app/global-toaster';
+
 import { ModalLoader } from '@/components/modal';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
 
-import { Footer } from './footer';
-import { GlobalDialogs } from './global-dialogs';
-import { GlobalLoader } from './global-loader';
-import { ToasterThemed } from './global-toaster';
-import { GlobalTooltips } from './global-tooltips';
-import { MutationErrors } from './mutation-errors';
-import { Navigation } from './navigation';
+import { GlobalDialogs } from '../global-dialogs';
+import { GlobalLoader } from '../global-loader';
+import { GlobalTooltips } from '../global-tooltips';
+import { NavigationSandbox } from '../navigation/navigation-sandbox';
 
-export function LayoutMain() {
+export function LayoutSandbox() {
   const tx = useTx();
   const mainHeight = useMainHeight();
   const viewportHeight = useViewportHeight();
-  const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
   const noNavigation = useAppLayoutStore(state => state.noNavigation);
+  const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
   const toastBottom = useAppLayoutStore(state => state.toastBottom);
   const noFooter = useAppLayoutStore(state => state.noFooter);
   const activeDialog = useDialogsStore(state => state.active);
@@ -45,12 +45,11 @@ export function LayoutMain() {
       </Suspense>
       <GlobalTooltips />
 
-      <Navigation />
+      <NavigationSandbox />
 
       <div className='overflow-x-auto max-w-dvw' style={{ maxHeight: viewportHeight }} inert={activeDialog !== null}>
         <main className='cc-scroll-y overflow-y-auto' style={{ height: mainHeight }}>
           <GlobalLoader />
-          <MutationErrors />
           <Outlet />
         </main>
         {!noNavigation && !noFooter ? <Footer /> : null}

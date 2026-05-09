@@ -2,7 +2,7 @@
 
 import { useTx } from '@/i18n';
 
-import { useConceptNavigation } from '@/app';
+import { useConceptNavigation, useUnsavedChanges } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { useRestoreVersion } from '@/features/library/backend/use-restore-version';
@@ -12,7 +12,6 @@ import { IconNewVersion, IconUpload, IconVersions } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { promptUnsaved } from '@/utils/utils';
 
 import { useSchemaEdit } from '../schema-edit-context';
 
@@ -24,6 +23,7 @@ interface ToolbarVersioningProps {
 export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningProps) {
   const tx = useTx();
   const router = useConceptNavigation();
+  const { promptUnsaved } = useUnsavedChanges();
   const isModified = useModificationStore(state => state.isModified);
   const { restoreVersion: versionRestore } = useRestoreVersion();
   const { schema, isMutable, isContentEditable, activeVersion, selectedCst } = useSchemaEdit();
@@ -38,9 +38,12 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
     void versionRestore({ versionID: schema.version }).then(() => router.gotoRSForm(schema.id));
   }
 
-  function handleCreateVersion() {
-    if (isModified && !promptUnsaved()) {
-      return;
+  async function handleCreateVersion() {
+    if (isModified) {
+      const outcome = await promptUnsaved();
+      if (outcome === 'cancel') {
+        return;
+      }
     }
     showCreateVersion({
       itemID: schema.id,
@@ -80,7 +83,7 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
           <MiniButton
             title={isContentEditable ? tx('tx.lib.version.create') : tx('tx.lib.version.switch.latest')}
             aria-label={isContentEditable ? tx('tx.lib.version.create') : tx('tx.lib.version.switch.latest')}
-            onClick={handleCreateVersion}
+            onClick={() => void handleCreateVersion()}
             icon={<IconNewVersion size='1.25rem' className='icon-green' />}
             disabled={!isContentEditable}
           />

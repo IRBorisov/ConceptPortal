@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { AccessPolicy, LocationHead } from '@/domain/library';
 import { useTx } from '@/i18n';
 
-import { useConceptNavigation } from '@/app';
+import { useConceptNavigation, useUnsavedChanges } from '@/app';
 import { buildModelToSchemaQuery, buildSiblingModelQuery } from '@/app/navigation/cross-rs-query';
 import { useAuth } from '@/features/auth';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
@@ -30,13 +30,14 @@ import {
 } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { generatePageQR, promptUnsaved, sharePage } from '@/utils/utils';
+import { generatePageQR, sharePage } from '@/utils/utils';
 
 import { useModelEdit } from './model-edit-context';
 
 export function MenuMain() {
   const tx = useTx();
   const router = useConceptNavigation();
+  const { promptUnsaved } = useUnsavedChanges();
   const { model, deleteModel, isMutable, engine } = useModelEdit();
   const { schema, isProcessing } = useSchemaEdit();
   const isModified = useModificationStore(state => state.isModified);
@@ -126,8 +127,11 @@ export function MenuMain() {
   }
 
   async function handleTransferToSandbox() {
-    if (isModified && !promptUnsaved()) {
-      return;
+    if (isModified) {
+      const outcome = await promptUnsaved();
+      if (outcome === 'cancel') {
+        return;
+      }
     }
     if (!window.confirm(tx('tx.sandbox.reset.confirm'))) {
       return;
