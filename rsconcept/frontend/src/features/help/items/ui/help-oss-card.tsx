@@ -1,12 +1,4 @@
-import {
-  IconDestroy,
-  IconEditor,
-  IconFolderEdit,
-  IconLeftOpen,
-  IconOwner,
-  IconSave,
-  IconShare
-} from '@/components/icons';
+import { IconDestroy, IconEditor, IconFolderEdit, IconOwner, IconSave, IconShare } from '@/components/icons';
 import { isMac } from '@/utils/utils';
 
 import { LinkTopic } from '../../components/link-topic';
@@ -56,9 +48,6 @@ export function HelpOssCard() {
         </li>
         <li>
           <IconDestroy className='inline-icon icon-red' /> удалить из базы Портала
-        </li>
-        <li>
-          <IconLeftOpen className='inline-icon' /> открыть статистику
         </li>
         <li>
           <IconFolderEdit className='inline-icon' /> редактировать расположение

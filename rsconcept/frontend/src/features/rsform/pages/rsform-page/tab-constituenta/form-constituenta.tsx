@@ -160,9 +160,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       className='cc-column mt-1 gap-3 px-6 pb-3'
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
     >
-      <div className='flex items-center gap-2 mr-2 font-math font-semibold select-text'>
-        <span>{tx('tx.cst') + ' ' + activeCst.alias}</span>
-      </div>
+      <h2 className='text-left w-fit'>{tx('tx.cst') + ' ' + activeCst.alias}</h2>
       <ConstituentaPrimaryActions className='-mt-1' activeCst={activeCst} schema={schema} />
 
       <form.Field name='item_data.term_raw'>

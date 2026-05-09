@@ -98,7 +98,7 @@ export function FormSchema({ className }: FormSchemaProps) {
         void form.handleSubmit();
       }}
     >
-      <h2 className='mb-2 select-none font-math'>{tx('tx.schema')}</h2>
+      <h2 className='mb-2 select-none'>{tx('tx.schema')}</h2>
       <form.Field name='title'>
         {field => (
           <TextInput

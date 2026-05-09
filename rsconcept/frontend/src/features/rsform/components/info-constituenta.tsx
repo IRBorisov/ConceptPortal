@@ -23,7 +23,7 @@ export function InfoConstituenta({ data, className, ...restProps }: InfoConstitu
       </h2>
       {data.term_resolved ? (
         <p>
-          <b>{tx('tx.lang.term')} + tx('tx.general.colon')</b>
+          <b>{tx('tx.lang.term') + tx('tx.general.colon')}</b>
           {data.term_resolved || data.term_raw}
         </p>
       ) : null}

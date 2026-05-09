@@ -29,7 +29,7 @@ export function HelpRSModelEvaluator() {
         </li>
         <li>
           <IconTypeGraph className='inline-icon' /> отображение{' '}
-          <LinkTopic text='графа ступеней типизации' topic={HelpTopic.UI_TYPE_GRAPH} />
+          <LinkTopic text='графа ступеней' topic={HelpTopic.UI_TYPE_GRAPH} />
         </li>
         <li>
           <IconTree className='inline-icon' /> отображение{' '}

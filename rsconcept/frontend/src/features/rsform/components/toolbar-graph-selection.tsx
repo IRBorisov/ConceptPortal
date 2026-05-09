@@ -132,7 +132,7 @@ export function ToolbarGraphSelection({
           onClick={toggleSelected}
           disabled={emptySelection}
         />
-        <Dropdown isOpen={isSelectedOpen} className='-translate-x-1/2'>
+        <Dropdown isOpen={isSelectedOpen} stretchLeft>
           <DropdownButton
             text={tx('tx.graph.node.parent.plural')}
             title={

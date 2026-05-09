@@ -38,7 +38,7 @@ export function HelpSchemaGraph() {
     <div className='flex flex-col'>
       <h1>Граф термов</h1>
       <div className='flex flex-col sm:flex-row'>
-        <div className='sm:w-60'>
+        <div className='sm:w-75'>
           <h2>Настройка графа</h2>
           <ul>
             <li>Цвет – покраска узлов</li>
@@ -72,7 +72,7 @@ export function HelpSchemaGraph() {
 
         <Divider vertical margins='mx-3 mt-3' className='hidden sm:block' />
 
-        <div className='sm:w-80'>
+        <div className='sm:w-75'>
           <h2>Изменение узлов</h2>
           <ul>
             <li>Клик на узел – выделение</li>
@@ -84,7 +84,7 @@ export function HelpSchemaGraph() {
               <IconEdit className='inline-icon' /> Двойной клик – редактирование
             </li>
             <li>
-              <IconCrucialValue value={true} className='inline-icon' /> <kbd>F</kbd> – переключение статуса ключевой
+              <IconCrucialValue value={true} className='inline-icon' /> <kbd>F</kbd> – статус ключевая
             </li>
             <li>
               <IconDestroy className='inline-icon icon-red' /> <kbd>Delete</kbd> – удалить выбранные
@@ -99,7 +99,7 @@ export function HelpSchemaGraph() {
       <Divider margins='my-3' className='hidden sm:block' />
 
       <div className='flex flex-col-reverse mb-3 sm:flex-row'>
-        <div className='sm:w-60'>
+        <div className='sm:w-75'>
           <h2>Общие</h2>
           <ul>
             <li>
@@ -128,7 +128,7 @@ export function HelpSchemaGraph() {
 
         <Divider vertical margins='mx-3' className='hidden sm:block' />
 
-        <div className='dense w-84'>
+        <div className='dense w-75'>
           <h2>Выделение</h2>
           <ul>
             <li>

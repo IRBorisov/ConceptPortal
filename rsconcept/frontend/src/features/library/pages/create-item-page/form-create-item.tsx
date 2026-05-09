@@ -95,7 +95,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
       }}
       onChange={resetErrors}
     >
-      <h1 className='select-none relative font-math'>
+      <h1 className='select-none relative'>
         {itemType === LibraryItemType.RSMODEL
           ? tx('tx.model')
           : itemType === LibraryItemType.OSS

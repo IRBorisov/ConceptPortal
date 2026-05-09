@@ -2,7 +2,6 @@ import {
   IconDestroy,
   IconEditor,
   IconFolderEdit,
-  IconLeftOpen,
   IconOwner,
   IconRSForm,
   IconSave,
@@ -24,9 +23,6 @@ export function HelpRSModelCard() {
         </li>
         <li>
           <IconShare className='inline-icon' /> копировать ссылку
-        </li>
-        <li>
-          <IconLeftOpen className='inline-icon' /> статистика модели
         </li>
         <li>
           <IconDestroy className='inline-icon icon-red' /> удалить из базы Портала

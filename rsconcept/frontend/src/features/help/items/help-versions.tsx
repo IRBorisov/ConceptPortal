@@ -2,7 +2,7 @@ import { IconEditor, IconNewVersion, IconShare, IconUpload, IconVersions } from 
 
 export function HelpVersions() {
   return (
-    <div className=''>
+    <div className='dense'>
       <h1>Версионирование схем</h1>
       <p>
         Версионирование доступно <IconEditor size='1rem' className='inline-icon' /> Редакторам.

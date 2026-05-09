@@ -36,10 +36,9 @@ export function TabConstituents({
     <PickMultiConstituenta
       schema={schema}
       items={schema.items}
-      rows={13}
+      rows={12}
       value={selectedItems}
       onChange={handleSelectItems}
-      className='w-xl'
     />
   );
 }

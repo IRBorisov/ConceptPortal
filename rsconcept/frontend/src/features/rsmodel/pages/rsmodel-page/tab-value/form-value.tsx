@@ -240,10 +240,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       onKeyDown={handleInput}
       onSubmit={withPreventDefault(() => void handleSubmitAll())}
     >
-      <div className='flex items-center gap-2 mr-2 font-math font-semibold select-text'>
-        <span>{tx('tx.cst') + ' ' + activeCst.alias}</span>
-      </div>
-
+      <h2 className='text-left w-fit'>{tx('tx.cst') + ' ' + activeCst.alias}</h2>
       <ValuePrimaryActions activeCst={activeCst} cstData={cstData} onChangeValue={handleSetValue} />
 
       <TextArea

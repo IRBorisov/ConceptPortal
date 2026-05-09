@@ -1,13 +1,4 @@
-import {
-  IconDestroy,
-  IconEditor,
-  IconFolderEdit,
-  IconLeftOpen,
-  IconOSS,
-  IconOwner,
-  IconSave,
-  IconShare
-} from '@/components/icons';
+import { IconDestroy, IconEditor, IconFolderEdit, IconOSS, IconOwner, IconSave, IconShare } from '@/components/icons';
 import { isMac } from '@/utils/utils';
 
 import { LinkTopic } from '../../components/link-topic';
@@ -16,9 +7,9 @@ import { HelpTopic } from '../../models/help-topic';
 export function HelpSchemaCard() {
   return (
     <div className='dense'>
-      <h1>Паспорт схемы</h1>
+      <h1>Паспорт концептуальной схемы</h1>
 
-      <p>Паспорт содержит информацию о схеме и её статистику.</p>
+      <p>Паспорт содержит информацию о концептуальной схеме и её статистику.</p>
       <p>
         Позволяет управлять атрибутами и <LinkTopic text='версиями' topic={HelpTopic.VERSIONS} />.
       </p>
@@ -42,9 +33,6 @@ export function HelpSchemaCard() {
         </li>
         <li>
           <IconDestroy className='inline-icon icon-red' /> удалить схему
-        </li>
-        <li>
-          <IconLeftOpen className='inline-icon' /> статистика схемы
         </li>
         <li>
           <IconFolderEdit className='inline-icon' /> изменить расположение

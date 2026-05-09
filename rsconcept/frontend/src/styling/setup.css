@@ -102,6 +102,7 @@
   }
 
   h1 {
+    font-family: var(--font-math);
     font-weight: 600;
     font-size: 1.125rem;
     line-height: 1.75rem;
@@ -109,6 +110,7 @@
   }
 
   h2 {
+    font-family: var(--font-math);
     font-weight: 600;
     text-align: center;
 

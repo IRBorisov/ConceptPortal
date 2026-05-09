@@ -69,7 +69,7 @@ export function FormSignup() {
       }}
       onChange={resetErrors}
     >
-      <h1 className='select-none font-math'>{tx('tx.general.user.new')}</h1>
+      <h1 className='select-none'>{tx('tx.general.user.new')}</h1>
 
       <div className='flex gap-12'>
         <fieldset className='cc-column w-60'>
