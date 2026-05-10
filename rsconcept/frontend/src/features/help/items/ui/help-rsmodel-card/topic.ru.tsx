@@ -1,0 +1,48 @@
+import { useTx } from '@/i18n';
+
+import {
+  IconDestroy,
+  IconEditor,
+  IconFolderEdit,
+  IconOwner,
+  IconRSForm,
+  IconSave,
+  IconShare
+} from '@/components/icons';
+import { isMac } from '@/utils/utils';
+
+export function HelpRSModelCardRu() {
+  const tx = useTx();
+  return (
+    <>
+      <h1>{tx('tx.model.passport')}</h1>
+      <p>Содержит основную информацию и статистику по модели.</p>
+      <p>Название и атрибуты исходной концептуальной схемы здесь не редактируются.</p>
+
+      <h2>{tx('tx.general.controls')}</h2>
+      <ul>
+        <li>
+          <IconSave className='inline-icon' /> сохранить: <kbd>{isMac() ? 'Cmd + S' : 'Ctrl + S'}</kbd>
+        </li>
+        <li>
+          <IconShare className='inline-icon' /> копировать ссылку
+        </li>
+        <li>
+          <IconDestroy className='inline-icon icon-red' /> удалить из базы Портала
+        </li>
+        <li>
+          <IconFolderEdit className='inline-icon' /> изменить расположение
+        </li>
+        <li>
+          <IconEditor className='inline-icon' /> редакторы модели
+        </li>
+        <li>
+          <IconOwner className='inline-icon' /> изменить владельца
+        </li>
+        <li>
+          <IconRSForm className='inline-icon' /> перейти к концептуальной схеме
+        </li>
+      </ul>
+    </>
+  );
+}

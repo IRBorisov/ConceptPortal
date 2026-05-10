@@ -41,7 +41,7 @@ export const txRslangEn: Record<string, string> = {
   'tx.rsexpression.saveAndCalculate': 'Save and calculate',
   'tx.rsexpression.keyboard': 'Symbol keyboard',
   'tx.rsexpression.ast': 'Syntax tree',
-  'tx.rsexpression.ast.hint': 'Viewing the syntax tree of a structural expression',
+  'tx.rsexpression.ast.hint': 'Viewing the syntax tree\nof a structural expression',
   'tx.rsexpression.ast.fail': 'Failed to build syntax tree',
 
   'tx.rsexpression.class.logic': 'Logical',

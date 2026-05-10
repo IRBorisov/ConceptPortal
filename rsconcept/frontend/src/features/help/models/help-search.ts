@@ -1,6 +1,8 @@
+import type { AppLocale } from '@/i18n/locales';
+
 import { labelHelpTopic } from '../labels';
 
-import { type HelpSearchDocument, helpSearchDocuments } from './help-registry';
+import { getHelpSearchDocuments,type HelpSearchDocument } from './help-registry';
 import { type HelpTopic, topicParent } from './help-topic';
 
 export interface HelpSearchResult extends HelpSearchDocument {
@@ -58,13 +60,18 @@ function scoreDocument(document: HelpSearchDocument, query: string, currentTopic
   return score;
 }
 
-export function searchHelpTopics(query: string, currentTopic: HelpTopic, limit = 12): HelpSearchResult[] {
+export function searchHelpTopics(
+  query: string,
+  currentTopic: HelpTopic,
+  locale: AppLocale,
+  limit = 12
+): HelpSearchResult[] {
   const normalizedQuery = normalizeHelpSearchText(query);
   if (!normalizedQuery) {
     return [];
   }
 
-  return helpSearchDocuments
+  return getHelpSearchDocuments(locale)
     .map(document => ({ ...document, score: scoreDocument(document, normalizedQuery, currentTopic) }))
     .filter(document => document.score > 0)
     .sort((left, right) => {

@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { useTx } from '@/i18n/use-tx';
 
 import { type Styling } from '@/components/props';
+import { usePreferencesStore } from '@/stores/preferences';
 
 import { labelHelpTopic } from '../../labels';
 import { searchHelpTopics } from '../../models/help-search';
@@ -19,7 +20,8 @@ interface TopicSearchResultsProps extends Styling {
 
 export function TopicSearchResults({ activeTopic, query, onSelectTopic, className, style }: TopicSearchResultsProps) {
   const deferredQuery = useDeferredValue(query);
-  const results = (() => searchHelpTopics(deferredQuery, activeTopic))();
+  const locale = usePreferencesStore(state => state.locale);
+  const results = (() => searchHelpTopics(deferredQuery, activeTopic, locale))();
   const tx = useTx();
 
   if (!query.trim()) {
