@@ -183,7 +183,6 @@ export const txLibraryRu: Record<string, string> = {
   'tx.cst.list': 'Перечень конституент',
   'tx.cst.new': 'Новая конституента',
   'tx.cst.alias.validate': 'Введите незанятое имя,\nсоответствующее типу',
-  'tx.cst.original.plural': 'Собственные понятия',
   'tx.cst.original.plural.short': 'Собственные',
   'tx.cst.original.hint': 'Понятия, добавленные в данной схеме (не наследованные)',
   'tx.cst.original.select': 'Выделить собственные',
@@ -356,6 +355,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.operation.attachment.original.hint':
     'Схемы, созданные и изменяемые в данной операционной схеме (не импортированные)',
   'tx.operation.attachment.original.plural': 'Собственные схемы',
+  'tx.operation.attachment.validate.noOriginalCst': 'Нет собственных конституент',
   'tx.operation.argument': 'Аргумент',
   'tx.operation.argument.plural': 'Аргументы',
   'tx.operation.argument.select': 'Выбор аргументов операции',

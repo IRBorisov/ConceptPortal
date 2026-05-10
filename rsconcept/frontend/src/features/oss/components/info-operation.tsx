@@ -7,6 +7,7 @@ import { useTx } from '@/i18n';
 
 import { DataTable } from '@/components/data-table';
 import { IconPageRight } from '@/components/icons';
+import { truncateToLastWord } from '@/utils/format';
 
 import { labelOperationType } from '../labels';
 
@@ -14,6 +15,7 @@ interface InfoOperationProps {
   operation: Operation;
 }
 
+const MAX_DESCRIPTION_LENGTH = 250;
 const columnHelper = createColumnHelper<CstSubstituteInfo>();
 
 export function InfoOperation({ operation }: InfoOperationProps) {
@@ -44,17 +46,11 @@ export function InfoOperation({ operation }: InfoOperationProps) {
   ];
 
   return (
-    <>
-      <h2>{operation.alias}</h2>
-      <p className='flex justify-between gap-3'>
-        <span>
-          <b>{tx('tx.rslang.type') + tx('tx.general.colon')}</b>
-          {labelOperationType(operation.operation_type)}
-        </span>
-        <span>
-          <b>{tx('tx.cst.original.plural') + tx('tx.general.colon')}</b>
-          {operation.has_additions ? tx('tx.general.yes') : tx('tx.general.no')}
-        </span>
+    <div className='dense'>
+      <h2 className='mb-2'>{operation.alias}</h2>
+      <p>
+        <b>{tx('tx.rslang.type') + tx('tx.general.colon')}</b>
+        {labelOperationType(operation.operation_type)}
       </p>
       {operation.operation_type === OperationType.INPUT && operation.is_import ? (
         <p>
@@ -72,10 +68,13 @@ export function InfoOperation({ operation }: InfoOperationProps) {
           {operation.title}
         </p>
       ) : null}
+      {!operation.has_additions && operation.operation_type === OperationType.SYNTHESIS ? (
+        <p className='text-destructive'>{tx('tx.operation.attachment.validate.noOriginalCst')}</p>
+      ) : null}
       {operation.description ? (
         <p>
           <b>{tx('tx.lib.description') + tx('tx.general.colon')}</b>
-          {operation.description}
+          {truncateToLastWord(operation.description, MAX_DESCRIPTION_LENGTH)}
         </p>
       ) : null}
       {operation.operation_type === OperationType.SYNTHESIS && operation.substitutions.length > 0 ? (
@@ -88,6 +87,6 @@ export function InfoOperation({ operation }: InfoOperationProps) {
           columns={columns}
         />
       ) : null}
-    </>
+    </div>
   );
 }

@@ -237,10 +237,18 @@
   transition-timing-function: var(--transition-bezier);
   transition-duration: var(--duration-select);
 
+  &.destructive {
+    border-color: var(--color-destructive);
+  }
+
   .selected & {
     outline-offset: 4px;
     outline-color: var(--color-graph-selected);
     border-color: var(--color-foreground);
+
+    &.destructive {
+      border-color: var(--color-destructive);
+    }
   }
 
   .cursor-relocate .dragging & {

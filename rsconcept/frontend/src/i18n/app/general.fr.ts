@@ -147,8 +147,6 @@ export const txGeneralFr: Record<string, string> = {
   'tx.general.click': 'clic',
   'tx.general.rightClick': 'Click droit',
   'tx.general.doubleClick': 'Double-clic',
-  'tx.general.yes': 'Oui',
-  'tx.general.no': 'Non',
   'tx.general.on': 'On',
   'tx.general.off': 'Off',
   'tx.general.boolean.true': 'Vrai',

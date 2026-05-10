@@ -40,6 +40,7 @@ export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode> }
         'cc-node-operation h-[40px] w-[150px]',
         'relative flex items-center justify-center p-[2px]',
         opType === OperationType.REPLICA && 'border-dashed',
+        !isChild && opType === OperationType.SYNTHESIS && !node.data.operation.has_additions && 'destructive',
         isChild && 'border-accent-orange'
       )}
     >

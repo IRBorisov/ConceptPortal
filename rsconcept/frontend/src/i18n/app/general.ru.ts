@@ -146,8 +146,6 @@ export const txGeneralRu: Record<string, string> = {
   'tx.general.click': 'клик',
   'tx.general.rightClick': 'Правый клик',
   'tx.general.doubleClick': 'Двойной клик',
-  'tx.general.yes': 'Да',
-  'tx.general.no': 'Нет',
   'tx.general.on': 'Вкл',
   'tx.general.off': 'Выкл',
   'tx.general.boolean.true': 'Истина',
