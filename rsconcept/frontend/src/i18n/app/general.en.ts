@@ -132,6 +132,7 @@ export const txGeneralEn: Record<string, string> = {
   'tx.general.export': 'Export',
   'tx.general.export.validate.noData': 'No data to export',
   'tx.general.import': 'Import',
+  'tx.general.discard': 'Discard',
   'tx.general.resetAll': 'Reset all',
 
   'tx.general.selection': 'Selection',

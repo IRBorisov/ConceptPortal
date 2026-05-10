@@ -22,16 +22,16 @@ export function DlgUnsavedChanges({ open, isSaving, onCancel, onContinue, onSave
   return (
     <ModalView
       header={tx('tx.shell.unsaved.header')}
-      className='z-topmost cc-column w-120 max-w-[calc(100svw-2rem)] gap-3 px-6 pb-4'
+      className='z-topmost max-w-[calc(100svw-2rem)] flex flex-col px-6 pb-3'
       noFooterButton
       onHide={onCancel}
     >
-      <div className='grid gap-3 justify-center mx-auto'>
-        <Button text={tx('tx.general.cancel')} className='w-80' onClick={onCancel} disabled={isSaving} />
-        <Button text={tx('tx.shell.unsaved.continue')} onClick={onContinue} disabled={isSaving} />
+      <div className='grid grid-cols-3 gap-6 py-1'>
         {onSaveAndContinue ? (
-          <Button text={tx('tx.shell.unsaved.saveContinue')} disabled={isSaving} onClick={onSaveAndContinue} />
+          <Button text={tx('tx.general.save')} disabled={isSaving} onClick={onSaveAndContinue} colorSubmit />
         ) : null}
+        <Button text={tx('tx.general.goBack')} onClick={onCancel} disabled={isSaving} />
+        <Button text={tx('tx.general.discard')} onClick={onContinue} disabled={isSaving} />
       </div>
     </ModalView>
   );

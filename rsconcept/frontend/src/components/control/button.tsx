@@ -45,11 +45,12 @@ export function Button({
         'font-medium select-none disabled:cursor-auto',
         'cc-animate-color',
         !colorSubmit ? 'bg-secondary text-secondary-foreground cc-hover-bg' : 'cc-btn-primary',
-        !colorSubmit ? 'disabled:opacity-75' : 'disabled:opacity-50',
+        !colorSubmit ? 'focus-visible:not-disabled:bg-selected' : '',
+        !colorSubmit ? 'disabled:opacity-60' : 'disabled:opacity-50',
         dense ? 'px-1' : 'px-3 py-1',
         loading ? 'cursor-progress' : 'cursor-pointer',
-        !colorSubmit ? (noOutline ? 'outline-hidden focus-visible:bg-selected' : 'focus-outline') : '',
-        !noBorder && 'border rounded-sm',
+        noOutline ? 'outline-hidden' : 'focus-outline',
+        !noBorder && 'border rounded-md',
         className
       )}
       data-tooltip-id={!!title ? globalIDs.tooltip : undefined}

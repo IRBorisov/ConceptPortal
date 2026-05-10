@@ -132,6 +132,7 @@ export const txGeneralRu: Record<string, string> = {
   'tx.general.export': 'Экспорт',
   'tx.general.export.validate.noData': 'Нет данных для экспорта',
   'tx.general.import': 'Импорт',
+  'tx.general.discard': 'Сбросить',
   'tx.general.resetAll': 'Сбросить все',
 
   'tx.general.selection': 'Выбор',

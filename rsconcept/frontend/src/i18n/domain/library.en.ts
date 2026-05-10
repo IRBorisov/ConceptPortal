@@ -46,7 +46,7 @@ export const txLibraryEn: Record<string, string> = {
   'tx.lib.convention.validate.empty': 'Empty convention',
   'tx.lib.contents': 'Contents',
 
-  'tx.lib.location': 'Path',
+  'tx.lib.location': 'Location',
   'tx.lib.location.select': 'Select location',
   'tx.lib.location.edit': 'Edit location',
   'tx.lib.location.edit.hint': 'Edit path\nOnly your own schemas are moved\nto the selected folder and subfolders',

@@ -133,6 +133,7 @@ export const txGeneralFr: Record<string, string> = {
   'tx.general.export': 'Exporter',
   'tx.general.export.validate.noData': 'Aucune donnée à exporter',
   'tx.general.import': 'Importer',
+  'tx.general.discard': 'Rejeter',
   'tx.general.resetAll': 'Réinitialiser tout',
 
   'tx.general.selection': 'Sélection',

@@ -45,7 +45,7 @@ export const txLibraryFr: Record<string, string> = {
   'tx.lib.convention.validate.empty': 'Convention vide',
   'tx.lib.contents': 'Contenu',
 
-  'tx.lib.location': 'Chemin',
+  'tx.lib.location': 'Emplacement',
   'tx.lib.alias.validate.empty': 'Saisir un abréviation',
   'tx.lib.alias.validate.taken': 'Abréviation utilisée',
   'tx.lib.location.select': 'Choix de l’emplacement',

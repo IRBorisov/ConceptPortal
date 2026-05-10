@@ -8,7 +8,7 @@ import { useTx } from '@/i18n';
 
 import { useAuth } from '@/features/auth';
 
-import { ErrorField, TextArea } from '@/components/input';
+import { ErrorField, Label, TextArea } from '@/components/input';
 import { type Styling } from '@/components/props';
 
 import { SelectLocationHead } from '../select-location-head';
@@ -37,7 +37,7 @@ export function PickLocation({
   const { user } = useAuth();
 
   return (
-    <div className={clsx('flex relative', className)} {...restProps}>
+    <div className={clsx('flex flex-col relative', className)} {...restProps}>
       <SelectLocationHead
         className='absolute right-0 top-0'
         value={value.substring(0, 2) as LocationHead}
@@ -45,16 +45,12 @@ export function PickLocation({
         excluded={!user.is_staff ? [LocationHead.LIBRARY] : []}
       />
 
-      <SelectLocationContext
-        className='absolute left-28 -top-1'
-        dropdownHeight={dropdownHeight}
-        value={value}
-        onChange={onChange}
-      />
-
+      <div className='relative flex gap-2 items-end h-6 mb-2 -mt-1'>
+        <Label text={tx('tx.lib.location')} htmlFor='dlg_location' />
+        <SelectLocationContext dropdownHeight={dropdownHeight} value={value} onChange={onChange} />
+      </div>
       <TextArea
         id='dlg_location'
-        label={tx('tx.lib.location')}
         rows={rows}
         value={value.substring(3)}
         className='w-full'

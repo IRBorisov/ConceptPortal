@@ -4,14 +4,21 @@
 
 @utility cc-btn-primary {
   color: var(--color-foreground);
-  background-color: var(--color-selected);
+  background-color: color-mix(in oklab, var(--clr-sec-200) 90%, transparent);
   border-color: var(--color-primary-border);
+
+  &:is(.dark *) {
+    background-color: color-mix(in oklab, var(--clr-sec-200) 60%, transparent);
+  }
 
   &:focus-visible,
   &:hover:not(:disabled) {
-    color: var(--color-primary-foreground);
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
+    background-color: color-mix(in oklab, var(--color-accent-green) 30%, transparent);
+    border-color: var(--color-accent-green);
+
+    &:is(.dark *) {
+      background-color: color-mix(in oklab, var(--color-accent-green) 40%, transparent);
+    }
   }
 }
 

@@ -47,7 +47,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.lib.convention.validate.empty': 'Пустая конвенция',
   'tx.lib.contents': 'Содержание',
 
-  'tx.lib.location': 'Путь',
+  'tx.lib.location': 'Расположение',
   'tx.lib.location.select': 'Выбор расположения',
   'tx.lib.location.edit': 'Редактирование расположения',
   'tx.lib.location.edit.hint':

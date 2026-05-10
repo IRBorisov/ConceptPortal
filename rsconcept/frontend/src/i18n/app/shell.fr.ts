@@ -50,8 +50,6 @@ export const txShellFr: Record<string, string> = {
     'Veuillez faire une capture d’écran et l’envoyer avec une description à portal@acconcept.ru',
 
   'tx.shell.unsaved.header': 'Modifications non enregistrées',
-  'tx.shell.unsaved.continue': 'Continuer sans enregistrer',
-  'tx.shell.unsaved.saveContinue': 'Enregistrer et continuer',
 
   'tx.shell.updater.header': 'Mise à jour de la page...',
   'tx.shell.updater.body': 'Version obsolète détectée. Rechargement de la page...',

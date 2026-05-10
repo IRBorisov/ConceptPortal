@@ -51,8 +51,6 @@ export const txShellRu: Record<string, string> = {
     'Пожалуйста сделайте скриншот и отправьте вместе с описанием ситуации на почту portal@acconcept.ru',
 
   'tx.shell.unsaved.header': 'Остались несохраненные изменения',
-  'tx.shell.unsaved.continue': 'Продолжить без сохранения',
-  'tx.shell.unsaved.saveContinue': 'Сохранить и продолжить',
 
   'tx.shell.updater.header': 'Обновление страницы...',
   'tx.shell.updater.body': 'Обнаружена устаревшая версия приложения. Перезагрузка страницы...',

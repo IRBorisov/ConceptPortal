@@ -38,7 +38,7 @@ export function SubmitButton({
         'px-3 py-1 flex gap-2 items-center justify-center',
         'border',
         'font-medium',
-        'cc-btn-primary disabled:opacity-50 cc-animate-color',
+        'cc-btn-primary disabled:opacity-60 cc-animate-color',
         'select-none cursor-pointer disabled:cursor-auto',
         loading && 'cursor-progress',
         className
