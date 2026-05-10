@@ -42,6 +42,7 @@ export function HelpMain() {
             HelpTopic.ACCESS,
             HelpTopic.VERSIONS,
             HelpTopic.INFO,
+            HelpTopic.CONTRIBUTORS,
             HelpTopic.EXTEOR
           ].map(topic => (
             <TopicItem key={`${prefixes.topic_item}${topic}`} topic={topic} />
@@ -70,7 +71,7 @@ export function HelpMain() {
       <h2 className='mt-2'>Поддержка</h2>
       <p>
         Портал разрабатывается <TextURL text='Центром Концепт' href={external_urls.concept} /> и вобрал в себя{' '}
-        <LinkTopic text='многолетнюю работу' topic={HelpTopic.INFO_CONTRIB} /> над средствами экспликации концептуальных
+        <LinkTopic text='многолетнюю работу' topic={HelpTopic.CONTRIBUTORS} /> над средствами экспликации концептуальных
         схем.
       </p>
       <p>Портал поддерживает актуальные версии браузеров Chrome, Firefox, Safari, включая мобильные устройства.</p>

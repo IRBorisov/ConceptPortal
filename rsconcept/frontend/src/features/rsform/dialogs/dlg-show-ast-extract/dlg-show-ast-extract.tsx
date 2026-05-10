@@ -123,7 +123,7 @@ export function DlgShowAstExtract() {
     const updatedSchema = loadRSForm(updatedSchemaDTO);
     const parse = updatedSchema.analyzer.checkFull(updatedExpression, { annotateTypes: true, annotateErrors: true });
     if (!parse.ast) {
-      toast.error(tx('tx.rslang.expression.ast.fail'));
+      toast.error(tx('tx.rsexpression.ast.fail'));
       hideDialog();
       return;
     }

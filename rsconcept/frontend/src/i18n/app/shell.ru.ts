@@ -1,4 +1,9 @@
 export const txShellRu: Record<string, string> = {
+  'tx.shell.app': 'Портал',
+  'tx.shell.app.hint': 'Веб-приложение Концепт Портал',
+  'tx.shell.app.exteor': 'Экстеор',
+  'tx.shell.app.exteor.hint': 'Работа с концептуальными схемами в приложении Экстеор для Windows',
+
   'tx.shell.theme': 'Тема оформления',
   'tx.shell.theme.dark': 'Тема: Темная',
   'tx.shell.theme.light': 'Тема: Светлая',
@@ -89,8 +94,12 @@ export const txShellRu: Record<string, string> = {
   'tx.shell.signup.hint': 'Нет аккаунта? Зарегистрируйтесь...',
   'tx.shell.signup.login.legend': 'Данные для входа',
   'tx.shell.signup.profile.legend': 'Информация о пользователе',
-  'tx.shell.signup.acceptPrivacy': 'Принимаю условия обработки персональных данных...',
-  'tx.shell.signup.acceptRules': 'Принимаю правила поведения на Портале...',
+  'tx.shell.privacy': 'Обработка данных',
+  'tx.shell.privacy.hint': 'Политика обработки\nперсональных данных',
+  'tx.shell.privacy.accept': 'Принимаю условия обработки персональных данных...',
+  'tx.shell.rules': 'Правила',
+  'tx.shell.rules.hint': 'Правила пользования Порталом',
+  'tx.shell.rules.accept': 'Принимаю правила поведения на Портале...',
 
   'tx.home.header': 'Главная страница портала',
   'tx.home.hero1': 'Проектируйте сложные системы: Анализ и Синтез',

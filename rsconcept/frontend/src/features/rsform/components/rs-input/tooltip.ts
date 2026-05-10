@@ -161,7 +161,7 @@ function domTooltipConstituenta(
     }
 
     if (cst.definition_formal) {
-      appendBoldTextRow(dom, globalTx('tx.rslang.expression') + globalTx('tx.general.colon'), cst.definition_formal);
+      appendBoldTextRow(dom, globalTx('tx.rsexpression') + globalTx('tx.general.colon'), cst.definition_formal);
     }
 
     if (cst.definition_resolved) {

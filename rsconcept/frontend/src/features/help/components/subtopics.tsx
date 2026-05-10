@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n/use-tx';
+
 import { prefixes } from '@/utils/constants';
 
 import { HelpTopic, topicParent } from '../models/help-topic';
@@ -9,9 +11,10 @@ interface SubtopicsProps {
 }
 
 export function Subtopics({ headTopic }: SubtopicsProps) {
+  const tx = useTx();
   return (
     <details>
-      <summary className='text-center font-semibold'>Содержание раздела</summary>
+      <summary className='text-center font-semibold'>{tx('tx.general.chapter.content')}</summary>
       {Object.values(HelpTopic)
         .filter(topic => topic !== headTopic && topicParent.get(topic) === headTopic)
         .map(topic => (

@@ -5,9 +5,9 @@ import { describe, expect, it } from 'vitest';
 
 import { Grammeme } from '@/domain/cctext/language';
 
-import { enMessageMap } from './message-map.en';
-import { frMessageMap } from './message-map.fr';
-import { ruMessageMap } from './message-map.ru';
+import { enMessageMap } from './map/message-map.en';
+import { frMessageMap } from './map/message-map.fr';
+import { ruMessageMap } from './map/message-map.ru';
 
 const IGNORE_IDS = new Set<string>([]);
 const MESSAGE_FIRST_SEGMENTS = new Set(Object.keys(enMessageMap).map(k => k.split('.')[0]));
@@ -34,7 +34,7 @@ describe('locale message maps', () => {
 
   it('en catalog contains all message ids used by useTx/globalTx callsites and not extra', () => {
     const thisFile = fileURLToPath(import.meta.url);
-    const srcRoot = join(dirname(thisFile), '..', '..');
+    const srcRoot = join(dirname(thisFile), '..');
     const codeFiles = walkFiles(srcRoot);
 
     const usedIds = new Set<string>();
@@ -75,13 +75,13 @@ const IGNORE_DUPES = new Set<string>([
   'tx.cst.template.argument.plural',
   'tx.cst.template.short',
   'tx.cst.class.template.short',
-  'tx.rslang.typeClass.predicate',
-  'tx.rslang.typeClass.function',
+  'tx.rsexpression.class.predicate',
+  'tx.rsexpression.class.function',
   'tx.operation.attachment.original.short',
   'tx.oss.input',
   'tx.general.firstName',
-  'tx.eval.status.error',
-  'tx.schema.expression.status.incorrect',
+  'tx.evaluation.status.error',
+  'tx.parse.status.incorrect',
   'tx.cst.template.source',
 
   // FRENCH

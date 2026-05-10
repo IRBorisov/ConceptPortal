@@ -1,28 +1,61 @@
 export const txRslangFr: Record<string, string> = {
   'tx.rslang': 'Langage des genres de structures',
-  'tx.rslang.typeClass.logic': 'Logique',
-  'tx.rslang.typeClass.typification': 'Ensembliste',
-  'tx.rslang.typeClass.function': 'Fonction terme',
-  'tx.rslang.typeClass.predicate': 'Fonction prédicat',
+  'tx.rslang.short': 'Explication',
+  'tx.rslang.hint': 'Langage des genres de structures et son usage',
 
-  'tx.rslang.expression': 'Expression',
-  'tx.rslang.expression.extract': 'Isoler',
-  'tx.rslang.expression.extract.hint': 'Extraire la sous-expression sélectionnée vers une nouvelle constituante',
-  'tx.rslang.expression.extract.confirm': 'Confirmer l’isolement de la sous-expression sélectionnée',
-  'tx.rslang.expression.analyze': 'Vérifier l’expression',
-  'tx.rslang.expression.saveAndCalculate': 'Enregistrer et calculer',
-  'tx.rslang.expression.keyboard': 'Clavier de symboles',
-  'tx.rslang.expression.ast': 'Arbre de syntaxe abstraite',
-  'tx.rslang.expression.ast.fail': 'Impossible de construire l’arbre de syntaxe',
+  'tx.rsexpression': 'Expression',
+  'tx.rsexpression.templateBank': 'Banque d’expressions',
+  'tx.rsexpression.templateBank.hint': 'Collection de modèles paramétrés utilisés comme modèles',
+
+  'tx.rsexpression.logic': 'Expressions logiques',
+  'tx.rsexpression.logic.hint':
+    'Expressions utilisant des connecteurs logiques et des quantificateurs, dont les valeurs sont VRAI ou FAUX',
+  'tx.rsexpression.set': 'Opérations sur les ensembles',
+  'tx.rsexpression.set.hint': 'Opérations d’union, intersection, différence et différence symétrique des ensembles',
+  'tx.rsexpression.structure': 'Expressions structurelles',
+  'tx.rsexpression.structure.hint': 'Opérations sur la structure des éléments, transformations de typifications',
+  'tx.rsexpression.arithmetic': 'Arithmétique',
+  'tx.rsexpression.arithmetic.hint': 'Expressions arithmétiques, opérations sur les nombres entiers',
+  'tx.rsexpression.quantifier': 'Formes quantifiées',
+  'tx.rsexpression.quantifier.hint': 'Expressions utilisant des déclarations quantifiées de variables locales',
+  'tx.rsexpression.declarative': 'Expressions déclaratives',
+  'tx.rsexpression.declarative.hint':
+    'Expressions de termes, produisant un sous-ensemble des éléments d’un ensemble par une condition logique',
+  'tx.rsexpression.imperative': 'Expressions impératives',
+  'tx.rsexpression.imperative.hint':
+    'Expressions permettant de construire des éléments d’un ensemble par des parcours successifs, des affectations et des vérifications de conditions',
+  'tx.rsexpression.recursive': 'Expressions récursives',
+  'tx.rsexpression.recursive.hint':
+    'Expressions permettant de construire des éléments d’un ensemble par des calculs cycliques',
+  'tx.rsexpression.parameter': 'Expressions paramétrées',
+  'tx.rsexpression.parameter.hint': 'Expressions utilisant des paramètres externes',
+
+  'tx.rsexpression.extract': 'Isoler',
+  'tx.rsexpression.extract.hint': 'Extraire la sous-expression sélectionnée vers une nouvelle constituante',
+  'tx.rsexpression.extract.confirm': 'Confirmer l’isolement de la sous-expression sélectionnée',
+  'tx.rsexpression.analyze': 'Vérifier l’expression',
+  'tx.rsexpression.saveAndCalculate': 'Enregistrer et calculer',
+  'tx.rsexpression.keyboard': 'Clavier de symboles',
+  'tx.rsexpression.ast': 'Arbre de syntaxe',
+  'tx.rsexpression.ast.hint': 'Consultation de l’arbre de syntaxe d’une expression structurelle',
+  'tx.rsexpression.ast.fail': 'Impossible de construire l’arbre de syntaxe',
+
+  'tx.rsexpression.class.logic': 'Logique',
+  'tx.rsexpression.class.typification': 'Ensembliste',
+  'tx.rsexpression.class.function': 'Fonction terme',
+  'tx.rsexpression.class.predicate': 'Fonction prédicat',
 
   'tx.rslang.type': 'Type',
   'tx.rslang.typification': 'Typification',
+  'tx.rslang.typification.hint': 'Système de types dans l’explication structurelle',
   'tx.rslang.cardinality': 'Cardinalité',
   'tx.rslang.template.parameter': 'Paramètre de modèle',
 
   'tx.rslang.eval.success': 'Calculs terminés en {timeSpent} s',
   'tx.rslang.eval.iterationCount': 'Nombre d’itérations',
 
+  'tx.rslang.binding': 'Interprétation de base',
+  'tx.rslang.binding.hint': 'Édition de l’interprétation de base du modèle',
   'tx.rslang.binding.view': 'Consulter l’interprétation de base',
   'tx.rslang.binding.edit': 'Éditeur de l’interprétation de base',
   'tx.rslang.binding.load.validate':
@@ -39,7 +72,7 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.value.view.wrongType': 'Consulter la valeur n’est pas disponible pour ce type',
   'tx.rslang.value.view.reset': 'Valeur entière',
   'tx.rslang.value.edit': 'Modifier la valeur',
-  'tx.rslang.value.edit.hint': 'Consulter ou\nmodifier la valeur',
+  'tx.rslang.value.edit.hint': 'Vue structurée et édition d’une valeur unique',
   'tx.rslang.value.edit.fail': 'Impossible de modifier la valeur',
   'tx.rslang.value.editor': 'Éditeur de valeur',
   'tx.rslang.value.load.validate':
@@ -152,5 +185,8 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.calcGlobalMissing': 'Pas de valeur : {name}',
   'tx.rslang.error.iterationsLimit': 'Limite d’itérations dépassée : {limit}',
   'tx.rslang.error.calcInvalidDebool': 'Application debool non valide',
-  'tx.rslang.error.iterateInfinity': 'Itération sur l’infini'
+  'tx.rslang.error.iterateInfinity': 'Itération sur l’infini',
+
+  'tx.rslang.identifiers': 'Identificateurs',
+  'tx.rslang.identifiers.hint': 'Désignations des constituantes, variables locales et littéraux'
 };

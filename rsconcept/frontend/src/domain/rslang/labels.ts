@@ -312,12 +312,12 @@ export function normalizeType(type: RO<ExpressionType> | null): string {
 export function labelTypeClass(type: TypeClass): string {
   switch (type) {
     case TypeClass.logic:
-      return globalTx('tx.rslang.typeClass.logic');
+      return globalTx('tx.rsexpression.class.logic');
     case TypeClass.typification:
-      return globalTx('tx.rslang.typeClass.typification');
+      return globalTx('tx.rsexpression.class.typification');
     case TypeClass.function:
-      return globalTx('tx.rslang.typeClass.function');
+      return globalTx('tx.rsexpression.class.function');
     case TypeClass.predicate:
-      return globalTx('tx.rslang.typeClass.predicate');
+      return globalTx('tx.rsexpression.class.predicate');
   }
 }

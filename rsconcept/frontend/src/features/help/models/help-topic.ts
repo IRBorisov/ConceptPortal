@@ -66,10 +66,10 @@ export const HelpTopic = {
 
   INFO: 'documentation',
   INFO_RULES: 'rules',
-  INFO_CONTRIB: 'contributors',
   INFO_PRIVACY: 'privacy',
   INFO_API: 'api',
 
+  CONTRIBUTORS: 'contributors',
   EXTEOR: 'exteor'
 } as const;
 
@@ -142,9 +142,9 @@ export const topicParent = new Map<HelpTopic, HelpTopic>([
 
   [HelpTopic.INFO, HelpTopic.INFO],
   [HelpTopic.INFO_RULES, HelpTopic.INFO],
-  [HelpTopic.INFO_CONTRIB, HelpTopic.INFO],
   [HelpTopic.INFO_PRIVACY, HelpTopic.INFO],
   [HelpTopic.INFO_API, HelpTopic.INFO],
 
+  [HelpTopic.CONTRIBUTORS, HelpTopic.CONTRIBUTORS],
   [HelpTopic.EXTEOR, HelpTopic.EXTEOR]
 ]);

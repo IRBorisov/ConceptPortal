@@ -179,11 +179,11 @@ export function FormSignup() {
 
       <div className='flex gap-1 text-sm'>
         <Checkbox id='accept_terms' value={acceptPrivacy} onChange={setAcceptPrivacy} />
-        <TextURL text={tx('tx.shell.signup.acceptPrivacy')} href={urls.help_topic(HelpTopic.INFO_PRIVACY)} />
+        <TextURL text={tx('tx.shell.privacy.accept')} href={urls.help_topic(HelpTopic.INFO_PRIVACY)} />
       </div>
       <div className='flex gap-1 text-sm'>
         <Checkbox id='accept_rules' value={acceptRules} onChange={setAcceptRules} />
-        <TextURL text={tx('tx.shell.signup.acceptRules')} href={urls.help_topic(HelpTopic.INFO_RULES)} />
+        <TextURL text={tx('tx.shell.rules.accept')} href={urls.help_topic(HelpTopic.INFO_RULES)} />
       </div>
 
       <div className='flex justify-around mt-3'>

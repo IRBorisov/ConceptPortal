@@ -58,19 +58,19 @@ const EDGE_TYPE_LID: Record<TGEdgeType, string> = {
 };
 
 const EXPR_STATUS_LID: Record<CstStatus, string> = {
-  [CstStatus.VERIFIED]: 'tx.schema.expression.status.verified',
-  [CstStatus.INCORRECT]: 'tx.schema.expression.status.incorrect',
-  [CstStatus.INCALCULABLE]: 'tx.schema.expression.status.incalculable',
-  [CstStatus.PROPERTY]: 'tx.schema.expression.status.property',
-  [CstStatus.UNKNOWN]: 'tx.schema.expression.status.unknown'
+  [CstStatus.VERIFIED]: 'tx.parse.status.verified',
+  [CstStatus.INCORRECT]: 'tx.parse.status.incorrect',
+  [CstStatus.INCALCULABLE]: 'tx.parse.status.incalculable',
+  [CstStatus.PROPERTY]: 'tx.parse.status.property',
+  [CstStatus.UNKNOWN]: 'tx.parse.status.unknown'
 };
 
 const EXPR_STATUS_DESC_LID: Record<CstStatus, string> = {
-  [CstStatus.VERIFIED]: 'tx.schema.expression.status.verified.hint',
-  [CstStatus.INCORRECT]: 'tx.schema.expression.status.incorrect.hint',
-  [CstStatus.INCALCULABLE]: 'tx.schema.expression.status.incalculable.hint',
-  [CstStatus.PROPERTY]: 'tx.schema.expression.status.property.hint',
-  [CstStatus.UNKNOWN]: 'tx.schema.expression.status.unknown.hint'
+  [CstStatus.VERIFIED]: 'tx.parse.status.verified.hint',
+  [CstStatus.INCORRECT]: 'tx.parse.status.incorrect.hint',
+  [CstStatus.INCALCULABLE]: 'tx.parse.status.incalculable.hint',
+  [CstStatus.PROPERTY]: 'tx.parse.status.property.hint',
+  [CstStatus.UNKNOWN]: 'tx.parse.status.unknown.hint'
 };
 
 const RS_EXPRESSION_LID: Record<CstType, string> = {

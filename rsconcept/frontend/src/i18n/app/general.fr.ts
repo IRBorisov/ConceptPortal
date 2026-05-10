@@ -23,6 +23,7 @@ export const txGeneralFr: Record<string, string> = {
 
   'tx.general.field.required': 'Champ obligatoire',
   'tx.general.form.invalid': 'Le formulaire est rempli incorrectement',
+  'tx.general.chapter.content': 'Contenu du chapitre',
 
   'tx.general.user': 'Utilisateur',
   'tx.general.user.new': 'Nouvel utilisateur',
@@ -60,11 +61,19 @@ export const txGeneralFr: Record<string, string> = {
   'tx.general.data': 'Données',
   'tx.general.evaluation': 'Évaluation',
   'tx.general.help': 'Aide',
+  'tx.general.ui': 'Interface',
+  'tx.general.ui.hint': 'Description de l’interface utilisateur',
+  'tx.general.restApi': 'API REST',
+  'tx.general.restApi.hint': 'Interface destinée aux développeurs',
   'tx.general.qrCode': 'Code QR',
   'tx.general.qrCode.hint': 'Afficher le code QR de la page',
-
+  'tx.general.documentation': 'Documents',
+  'tx.general.documentation.hint': 'Documents de référence, normatifs\net techniques',
+  'tx.general.developer.plural': 'Développeurs',
+  'tx.general.developer.hint': 'Reconnaissance des contributions à la création de l’application',
   'tx.general.settings': 'Paramètres',
   'tx.general.view.settings': 'Paramètres de vue',
+  'tx.general.video.watch': 'Regarder la vidéo',
 
   'tx.general.role': 'Rôle',
   'tx.general.role.admin': 'Administrateur',

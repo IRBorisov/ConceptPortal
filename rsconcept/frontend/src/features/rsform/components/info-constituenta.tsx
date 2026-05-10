@@ -33,7 +33,7 @@ export function InfoConstituenta({ data, className, ...restProps }: InfoConstitu
       </p>
       {data.definition_formal ? (
         <p className='break-all'>
-          <b>{tx('tx.rslang.expression') + tx('tx.general.colon')}</b>
+          <b>{tx('tx.rsexpression') + tx('tx.general.colon')}</b>
           <span className='font-math'>{data.definition_formal}</span>
         </p>
       ) : null}

@@ -38,7 +38,7 @@ export function ToolbarRSExpression({
       {helpTopic ? <BadgeHelp topic={helpTopic} offset={4} /> : null}
       {!disabled || isProcessing ? (
         <MiniButton
-          title={tx('tx.rslang.expression.keyboard')}
+          title={tx('tx.rsexpression.keyboard')}
           icon={<IconShowKeyboard value={showControls} size='1.25rem' className='hover:text-primary' />}
           onClick={toggleControls}
         />
@@ -49,7 +49,7 @@ export function ToolbarRSExpression({
         onClick={showTypeGraph}
       />
       <MiniButton
-        title={tx('tx.rslang.expression.ast')}
+        title={tx('tx.rsexpression.ast.hint')}
         onClick={showAST}
         icon={<IconTree size='1.25rem' className='hover:text-primary' />}
       />

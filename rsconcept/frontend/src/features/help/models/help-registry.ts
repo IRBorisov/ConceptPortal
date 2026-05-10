@@ -100,7 +100,13 @@ const topicSearchOverrides: Record<HelpTopicValue, HelpSearchOverride> = {
     searchText: 'Статусы вычисления. Обозначения состояний расчета, ошибки, вычисления и служебные статусы.'
   },
   [HelpTopic.UI_MODEL_BINDING]: {
-    keywords: ['базовая интерпретация', 'редактор базовой интерпретации', 'базисное множество', 'модель', 'поиск по тексту'],
+    keywords: [
+      'базовая интерпретация',
+      'редактор базовой интерпретации',
+      'базисное множество',
+      'модель',
+      'поиск по тексту'
+    ],
     searchText:
       'Редактор базовой интерпретации. Таблица значений для неопределяемых понятий, поиск по тексту элемента, добавление и удаление строк модели.'
   },
@@ -324,7 +330,7 @@ const topicSearchOverrides: Record<HelpTopicValue, HelpSearchOverride> = {
     searchText:
       'Правила поведения участников Портала. Ожидаемое поведение, неприемлемое поведение, нормы взаимодействия и ответственность.'
   },
-  [HelpTopic.INFO_CONTRIB]: {
+  [HelpTopic.CONTRIBUTORS]: {
     keywords: ['благодарности', 'разработчики', 'исследователи', 'авторы', 'вклад'],
     searchText:
       'Благодарности разработчикам и исследователям. Участники проекта, вклад в развитие Портала и признание авторов.'
@@ -360,14 +366,14 @@ function splitTopicTokens(topic: HelpTopicValue): string[] {
 function buildSearchText(topic: HelpTopicValue): string {
   const override = topicSearchOverrides[topic];
   const title = removeTags(labelHelpTopic(topic));
-  const description = removeTags(describeHelpTopic(topic));
+  const description = describeHelpTopic(topic);
   return [title, description, override.searchText].filter(Boolean).join(' ');
 }
 
 function buildKeywords(topic: HelpTopicValue): string[] {
   const override = topicSearchOverrides[topic];
   const title = removeTags(labelHelpTopic(topic));
-  const description = removeTags(describeHelpTopic(topic));
+  const description = describeHelpTopic(topic);
   return uniqueValues([
     ...splitTopicTokens(topic),
     ...title.split(/\s+/),
@@ -380,7 +386,7 @@ export const helpSearchDocuments: HelpSearchDocument[] = Object.values(HelpTopic
   topic,
   section: topicParent.get(topic) ?? topic,
   title: removeTags(labelHelpTopic(topic)),
-  description: removeTags(describeHelpTopic(topic)),
+  description: describeHelpTopic(topic),
   keywords: buildKeywords(topic),
   searchText: buildSearchText(topic)
 }));

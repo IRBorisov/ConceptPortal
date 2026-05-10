@@ -1,7 +1,9 @@
 'use client';
 
-import { useDeferredValue, useMemo } from 'react';
+import { useDeferredValue } from 'react';
 import clsx from 'clsx';
+
+import { useTx } from '@/i18n/use-tx';
 
 import { type Styling } from '@/components/props';
 
@@ -17,7 +19,8 @@ interface TopicSearchResultsProps extends Styling {
 
 export function TopicSearchResults({ activeTopic, query, onSelectTopic, className, style }: TopicSearchResultsProps) {
   const deferredQuery = useDeferredValue(query);
-  const results = useMemo(() => searchHelpTopics(deferredQuery, activeTopic), [activeTopic, deferredQuery]);
+  const results = (() => searchHelpTopics(deferredQuery, activeTopic))();
+  const tx = useTx();
 
   if (!query.trim()) {
     return null;
@@ -45,7 +48,7 @@ export function TopicSearchResults({ activeTopic, query, onSelectTopic, classNam
           </button>
         ))
       ) : (
-        <div className='px-3 py-2 text-xs opacity-70'>No matching topics</div>
+        <div className='px-3 py-2 text-xs opacity-70'>{tx('tx.list.empty')}</div>
       )}
     </div>
   );

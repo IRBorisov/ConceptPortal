@@ -60,5 +60,10 @@ export const txLangFr: Record<string, string> = {
   'tx.lang.reference.prev': 'Référence précédente',
   'tx.lang.reference.save': 'Enregistrer la référence',
 
-  'tx.lang.reference.entity': 'Référence à la constituante'
+  'tx.lang.reference.entity': 'Référence à la constituante',
+
+  'tx.lang.thesaurus': 'Thésaurus',
+  'tx.lang.thesaurus.hint': 'Terminologie du portail',
+  'tx.lang.terminologyControl': 'Contrôle terminologique',
+  'tx.lang.terminologyControl.hint': 'Contrôle des termes et des renvois textuels'
 };

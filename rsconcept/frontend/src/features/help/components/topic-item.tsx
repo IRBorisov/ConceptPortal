@@ -1,5 +1,3 @@
-import { removeTags } from '@/utils/format';
-
 import { describeHelpTopic, labelHelpTopic } from '../labels';
 import { type HelpTopic } from '../models/help-topic';
 
@@ -10,9 +8,13 @@ interface TopicItemProps {
 }
 
 export function TopicItem({ topic }: TopicItemProps) {
+  const description = describeHelpTopic(topic);
+  const formattedDescription =
+    description.length > 0 ? description.charAt(0).toLowerCase() + description.slice(1) : description;
+
   return (
     <li>
-      <LinkTopic text={labelHelpTopic(topic)} topic={topic} /> – {removeTags(describeHelpTopic(topic))}
+      <LinkTopic text={labelHelpTopic(topic)} topic={topic} /> – {formattedDescription}
     </li>
   );
 }

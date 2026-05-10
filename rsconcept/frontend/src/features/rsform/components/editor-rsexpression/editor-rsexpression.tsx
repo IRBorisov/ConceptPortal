@@ -205,7 +205,7 @@ export function EditorRSExpression({
     } else {
       const parse = schema.analyzer.checkFull(value, { annotateTypes: true, annotateErrors: true });
       if (!parse.ast) {
-        toast.error(tx('tx.rslang.expression.ast.fail'));
+        toast.error(tx('tx.rsexpression.ast.fail'));
         return;
       }
       if (!parse.ast.hasError && !extractionDisabled && !disabled && activeCst && onCreateCst && onUpdateCst) {

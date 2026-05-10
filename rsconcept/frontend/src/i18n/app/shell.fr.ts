@@ -1,8 +1,14 @@
 export const txShellFr: Record<string, string> = {
+  'tx.shell.app': 'Portail',
+  'tx.shell.app.hint': 'Application web Portail Concept',
+  'tx.shell.app.exteor': 'Exteor',
+  'tx.shell.app.exteor.hint': 'Travail avec des schémas conceptuels dans l’application Exteor pour Windows',
+
   'tx.shell.theme': 'Thème',
   'tx.shell.theme.dark': 'Thème : sombre',
   'tx.shell.theme.light': 'Thème : clair',
   'tx.shell.theme.toggle.hint': 'Changer le thème',
+
   'tx.shell.help.on': 'Aide : activée',
   'tx.shell.help.off': 'Aide : désactivée',
   'tx.shell.help.toggle.hint': 'Afficher les icônes d’aide',
@@ -88,8 +94,12 @@ export const txShellFr: Record<string, string> = {
   'tx.shell.signup.hint': 'Pas de compte ? Inscrivez-vous…',
   'tx.shell.signup.login.legend': 'Données d’identification',
   'tx.shell.signup.profile.legend': 'Informations sur l’utilisateur',
-  'tx.shell.signup.acceptPrivacy': 'J’accepte les conditions de traitement des données personnelles…',
-  'tx.shell.signup.acceptRules': 'J’accepte les règles de comportement sur le portail…',
+  'tx.shell.privacy': 'Traitement des données',
+  'tx.shell.privacy.hint': 'Politique de traitement des données personnelles',
+  'tx.shell.privacy.accept': 'J’accepte les conditions de traitement des données personnelles…',
+  'tx.shell.rules': 'Règles',
+  'tx.shell.rules.hint': 'Règles d’utilisation du portail',
+  'tx.shell.rules.accept': 'J’accepte les règles de comportement sur le portail…',
 
   'tx.home.header': 'Page d’accueil du portail',
   'tx.home.hero1': 'Concevez des systèmes complexes : analyse et synthèse',

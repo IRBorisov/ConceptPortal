@@ -141,7 +141,6 @@ export function TopicPage({ topic }: TopicPageProps) {
 
   if (topic === HelpTopic.INFO) return <HelpInfo />;
   if (topic === HelpTopic.INFO_RULES) return <HelpRules />;
-  if (topic === HelpTopic.INFO_CONTRIB) return <HelpContributors />;
   if (topic === HelpTopic.INFO_PRIVACY)
     return (
       <HelpPrivacy
@@ -151,6 +150,7 @@ export function TopicPage({ topic }: TopicPageProps) {
     );
   if (topic === HelpTopic.INFO_API) return <HelpAPI />;
 
+  if (topic === HelpTopic.CONTRIBUTORS) return <HelpContributors />;
   if (topic === HelpTopic.EXTEOR) return <HelpExteor />;
   return null;
 }

@@ -1,5 +1,6 @@
 export const txAiEn: Record<string, string> = {
   'tx.ai': 'AI assistant',
+  'tx.ai.hint': 'AI assistant features',
   'tx.ai.generator': 'LLM prompt generator',
 
   'tx.ai.prompt': 'Prompt',

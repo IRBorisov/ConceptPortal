@@ -44,7 +44,7 @@ export function HelpRSLang() {
       <Subtopics headTopic={HelpTopic.RSLANG} />
 
       <div className='dense'>
-        <p>Для глубокого ознакомления с основами родов структур можно использовать следующие материалы:</p>
+        <p>Материалы для ознакомления с основами языка родов структур:</p>
         <p>
           1. <BadgeVideo className='inline-icon' video={videos.explication} /> Видео: Краткое введение в мат. аппарат
         </p>

@@ -2,6 +2,8 @@
 
 import React, { Suspense } from 'react';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { type PlacesType, Tooltip } from '@/components/container';
 import { TextURL } from '@/components/control';
 import { IconHelp } from '@/components/icons';
@@ -49,6 +51,7 @@ export function BadgeHelp({
   ...restProps
 }: BadgeHelpProps) {
   const showHelp = usePreferencesStore(state => state.showHelp);
+  const tx = useTx();
 
   if (!showHelp) {
     return null;
@@ -77,7 +80,7 @@ export function BadgeHelp({
         >
           <div className='cc-fade-in'>
             <div className='absolute right-2 text-sm top-1' onClick={event => event.stopPropagation()}>
-              <TextURL text='Справка' href={`/manuals?topic=${topic}`} />
+              <TextURL text={tx('tx.general.help')} href={`/manuals?topic=${topic}`} />
             </div>
             <TopicPage topic={topic} />
           </div>

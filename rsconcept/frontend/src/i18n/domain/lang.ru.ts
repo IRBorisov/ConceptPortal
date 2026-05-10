@@ -60,5 +60,10 @@ export const txLangRu: Record<string, string> = {
   'tx.lang.reference.prev': 'Предыдущая ссылка',
   'tx.lang.reference.save': 'Сохранить ссылку',
 
-  'tx.lang.reference.entity': 'Ссылка на конституенту'
+  'tx.lang.reference.entity': 'Ссылка на конституенту',
+
+  'tx.lang.thesaurus': 'Тезаурус',
+  'tx.lang.thesaurus.hint': 'Термины Портала',
+  'tx.lang.terminologyControl': 'Терминологизация',
+  'tx.lang.terminologyControl.hint': 'Контроль терминов и текстовых отсылок'
 };

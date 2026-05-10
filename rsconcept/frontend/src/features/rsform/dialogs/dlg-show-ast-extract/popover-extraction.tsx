@@ -106,8 +106,8 @@ export function PopoverExtraction({
       {!popoverInDom ? (
         <Button
           icon={<IconNewItem size='1.1rem' className='icon-primary' />}
-          text={tx('tx.rslang.expression.extract')}
-          title={tx('tx.rslang.expression.extract.hint')}
+          text={tx('tx.rsexpression.extract')}
+          title={tx('tx.rsexpression.extract.hint')}
           className={clsx(
             'font-controls font-bold text-sm text-primary/75',
             'bg-background/90 backdrop-blur-3xl cc-fade-in',
@@ -132,7 +132,7 @@ export function PopoverExtraction({
             <div className='cc-icons mt-1'>
               <MiniButton
                 icon={<IconAccept size='1.25rem' className='icon-green' />}
-                title={prepareTooltip(tx('tx.rslang.expression.extract.confirm'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+                title={prepareTooltip(tx('tx.rsexpression.extract.confirm'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
                 onClick={handleSubmit}
                 disabled={disabled}
               />

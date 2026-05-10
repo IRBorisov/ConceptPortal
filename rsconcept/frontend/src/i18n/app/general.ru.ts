@@ -23,6 +23,7 @@ export const txGeneralRu: Record<string, string> = {
 
   'tx.general.field.required': 'Обязательное поле',
   'tx.general.form.invalid': 'Форма заполнена некорректно',
+  'tx.general.chapter.content': 'Содержание раздела',
 
   'tx.general.user': 'Пользователь',
   'tx.general.user.new': 'Новый пользователь',
@@ -59,11 +60,19 @@ export const txGeneralRu: Record<string, string> = {
   'tx.general.data': 'Данные',
   'tx.general.evaluation': 'Расчет',
   'tx.general.help': 'Справка',
+  'tx.general.ui': 'Интерфейс',
+  'tx.general.ui.hint': 'Описание интерфейса пользователя',
+  'tx.general.restApi': 'REST API',
+  'tx.general.restApi.hint': 'Интерфейс для разработчиков',
   'tx.general.qrCode': 'QR-код',
   'tx.general.qrCode.hint': 'Показать QR-код страницы',
-
+  'tx.general.documentation': 'Документы',
+  'tx.general.documentation.hint': 'Справочные, нормативные\nи технические документы',
+  'tx.general.developer.plural': 'Разработчики',
+  'tx.general.developer.hint': 'Признание вклада в создание приложения',
   'tx.general.settings': 'Настройки',
   'tx.general.view.settings': 'Настройки отображения',
+  'tx.general.video.watch': 'Просмотр видео',
 
   'tx.general.role': 'Роль',
   'tx.general.role.admin': 'Администратор',

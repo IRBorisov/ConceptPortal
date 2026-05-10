@@ -1,8 +1,14 @@
 export const txShellEn: Record<string, string> = {
+  'tx.shell.app': 'Portal',
+  'tx.shell.app.hint': 'Concept Portal web application',
+  'tx.shell.app.exteor': 'Exteor',
+  'tx.shell.app.exteor.hint': 'Working with conceptual schemas in the Exteor application for Windows',
+
   'tx.shell.theme': 'Theme',
   'tx.shell.theme.dark': 'Theme: Dark',
   'tx.shell.theme.light': 'Theme: Light',
   'tx.shell.theme.toggle.hint': 'Toggle color theme',
+
   'tx.shell.help.on': 'Help: On',
   'tx.shell.help.off': 'Help: Off',
   'tx.shell.help.toggle.hint': 'Toggle help icons',
@@ -87,8 +93,12 @@ export const txShellEn: Record<string, string> = {
   'tx.shell.signup.hint': 'No account? Sign up…',
   'tx.shell.signup.login.legend': 'Login data',
   'tx.shell.signup.profile.legend': 'User information',
-  'tx.shell.signup.acceptPrivacy': 'I accept the privacy conditions…',
-  'tx.shell.signup.acceptRules': 'I accept the rules of behavior on the portal…',
+  'tx.shell.privacy': 'Data processing',
+  'tx.shell.privacy.hint': 'Personal data processing policy',
+  'tx.shell.privacy.accept': 'I accept the privacy conditions…',
+  'tx.shell.rules': 'Rules',
+  'tx.shell.rules.hint': 'Portal usage rules',
+  'tx.shell.rules.accept': 'I accept the rules of behavior on the portal…',
 
   'tx.home.cta': 'Primary actions on the home page',
   'tx.home.cta.create': 'Create',

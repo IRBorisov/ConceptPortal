@@ -8,23 +8,23 @@ import { globalTx } from '@/i18n';
 import { type RO } from '@/utils/meta';
 
 const EVAL_LABEL_LID: Record<EvalStatus, string> = {
-  [EvalStatus.NO_EVAL]: 'tx.eval.status.noEval',
-  [EvalStatus.NOT_PROCESSED]: 'tx.eval.status.notProcessed',
-  [EvalStatus.INVALID_DATA]: 'tx.eval.status.invalidData',
-  [EvalStatus.EVAL_FAIL]: 'tx.eval.status.error',
-  [EvalStatus.AXIOM_FALSE]: 'tx.eval.status.axiomFalse',
-  [EvalStatus.EMPTY]: 'tx.eval.status.empty',
-  [EvalStatus.HAS_DATA]: 'tx.eval.status.hasData'
+  [EvalStatus.NO_EVAL]: 'tx.evaluation.status.noEval',
+  [EvalStatus.NOT_PROCESSED]: 'tx.evaluation.status.notProcessed',
+  [EvalStatus.INVALID_DATA]: 'tx.evaluation.status.invalidData',
+  [EvalStatus.EVAL_FAIL]: 'tx.evaluation.status.error',
+  [EvalStatus.AXIOM_FALSE]: 'tx.evaluation.status.axiomFalse',
+  [EvalStatus.EMPTY]: 'tx.evaluation.status.empty',
+  [EvalStatus.HAS_DATA]: 'tx.evaluation.status.hasData'
 };
 
 const EVAL_DESC_LID: Record<EvalStatus, string> = {
-  [EvalStatus.NO_EVAL]: 'tx.eval.status.noEval.hint',
-  [EvalStatus.NOT_PROCESSED]: 'tx.eval.status.notProcessed.hint',
-  [EvalStatus.INVALID_DATA]: 'tx.eval.status.invalidData.hint',
-  [EvalStatus.EVAL_FAIL]: 'tx.eval.status.error.hint',
-  [EvalStatus.AXIOM_FALSE]: 'tx.eval.status.axiomFalse.hint',
-  [EvalStatus.EMPTY]: 'tx.eval.status.empty.hint',
-  [EvalStatus.HAS_DATA]: 'tx.eval.status.hasData.hint'
+  [EvalStatus.NO_EVAL]: 'tx.evaluation.status.noEval.hint',
+  [EvalStatus.NOT_PROCESSED]: 'tx.evaluation.status.notProcessed.hint',
+  [EvalStatus.INVALID_DATA]: 'tx.evaluation.status.invalidData.hint',
+  [EvalStatus.EVAL_FAIL]: 'tx.evaluation.status.error.hint',
+  [EvalStatus.AXIOM_FALSE]: 'tx.evaluation.status.axiomFalse.hint',
+  [EvalStatus.EMPTY]: 'tx.evaluation.status.empty.hint',
+  [EvalStatus.HAS_DATA]: 'tx.evaluation.status.hasData.hint'
 };
 
 /** Retrieves label for {@link EvalStatus}. */

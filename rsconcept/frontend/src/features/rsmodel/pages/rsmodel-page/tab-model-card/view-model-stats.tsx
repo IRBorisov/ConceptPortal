@@ -95,9 +95,9 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
             label: tx('tx.concept.basic.validate.noConvention'),
             value: stats.count_missing_convention
           },
-          { label: tx('tx.schema.expression.status.incorrect.plural'), value: stats.count_incorrect },
-          { label: tx('tx.schema.expression.status.property.plural'), value: stats.count_property },
-          { label: tx('tx.schema.expression.status.incalculable.plural'), value: stats.count_incalculable }
+          { label: tx('tx.parse.status.incorrect.plural'), value: stats.count_incorrect },
+          { label: tx('tx.parse.status.property.plural'), value: stats.count_property },
+          { label: tx('tx.parse.status.incalculable.plural'), value: stats.count_incalculable }
         ]}
       />
 
@@ -115,14 +115,14 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
         secondaryTitle={tx('tx.model.base.cardinality.hint')}
         details={[
           { label: tx('tx.model.base.cardinality'), value: stats.base_elements },
-          { label: tx('tx.eval.status.invalidData'), value: stats.count_invalid_data },
+          { label: tx('tx.evaluation.status.invalidData'), value: stats.count_invalid_data },
           {
             label: tx('tx.concept.basic.validate.noInterpretation'),
             value: stats.count_missing_base
           },
-          { label: tx('tx.eval.status.axiomFalse.plural'), value: stats.count_false_axioms },
+          { label: tx('tx.evaluation.status.axiomFalse.plural'), value: stats.count_false_axioms },
           {
-            label: tx('tx.eval.status.error.hint'),
+            label: tx('tx.evaluation.status.error.hint'),
             value: stats.count_invalid_calculations
           },
           { label: tx('tx.cst.type.term.validate.emptyValue'), value: stats.count_empty_terms }

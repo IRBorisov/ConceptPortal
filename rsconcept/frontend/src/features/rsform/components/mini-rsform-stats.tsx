@@ -105,19 +105,19 @@ export function MiniRSFormStats({ className, stats }: MiniRSFormStatsProps) {
 
       <ValueStats
         id='count_property'
-        title={tx('tx.schema.expression.status.property.hint')}
+        title={tx('tx.parse.status.property.hint')}
         icon={<IconStatusProperty size='1.25rem' />}
         value={stats.count_property}
       />
       <ValueStats
         id='count_incalculable'
-        title={tx('tx.schema.expression.status.incalculable.hint')}
+        title={tx('tx.parse.status.incalculable.hint')}
         icon={<IconStatusIncalculable size='1.25rem' />}
         value={stats.count_incalculable}
       />
       <ValueStats
         id='count_incorrect '
-        title={tx('tx.schema.expression.status.incorrect.hint')}
+        title={tx('tx.parse.status.incorrect.hint')}
         icon={<IconStatusError size='1.25rem' className={stats.count_incorrect > 0 ? 'text-destructive' : undefined} />}
         value={stats.count_incorrect}
       />

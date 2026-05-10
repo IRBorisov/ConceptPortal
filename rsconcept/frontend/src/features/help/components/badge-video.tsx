@@ -1,5 +1,7 @@
 'use client';
 
+import { useTx } from '@/i18n/use-tx';
+
 import { IconVideo } from '@/components/icons';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
@@ -13,6 +15,7 @@ interface BadgeVideoProps extends Styling {
 /** Displays a badge with a video icon to click and open the video. */
 export function BadgeVideo({ video, className, ...restProps }: BadgeVideoProps) {
   const showVideo = useDialogsStore(state => state.showVideo);
+  const tx = useTx();
 
   function handleShowExplication() {
     showVideo({ video: video });
@@ -23,7 +26,7 @@ export function BadgeVideo({ video, className, ...restProps }: BadgeVideoProps) 
       className={cn('cursor-pointer', className)}
       onClick={handleShowExplication}
       data-tooltip-id={globalIDs.tooltip}
-      data-tooltip-content='Просмотр видео'
+      data-tooltip-content={tx('tx.general.video.watch')}
       {...restProps}
     />
   );

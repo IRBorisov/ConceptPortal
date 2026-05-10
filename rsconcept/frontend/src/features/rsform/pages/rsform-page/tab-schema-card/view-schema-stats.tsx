@@ -103,9 +103,9 @@ export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaSt
             label: tx('tx.concept.basic.validate.noConvention'),
             value: stats.count_missing_convention
           },
-          { label: tx('tx.schema.expression.status.incorrect.plural'), value: stats.count_incorrect },
-          { label: tx('tx.schema.expression.status.property.plural'), value: stats.count_property },
-          { label: tx('tx.schema.expression.status.incalculable.plural'), value: stats.count_incalculable }
+          { label: tx('tx.parse.status.incorrect.plural'), value: stats.count_incorrect },
+          { label: tx('tx.parse.status.property.plural'), value: stats.count_property },
+          { label: tx('tx.parse.status.incalculable.plural'), value: stats.count_incalculable }
         ]}
       />
     </aside>

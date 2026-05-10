@@ -56,11 +56,19 @@ export const txGeneralEn: Record<string, string> = {
   'tx.general.data': 'Data',
   'tx.general.evaluation': 'Evaluation',
   'tx.general.help': 'Manuals',
+  'tx.general.ui': 'Interface',
+  'tx.general.ui.hint': 'Description of the user interface',
+  'tx.general.restApi': 'REST API',
+  'tx.general.restApi.hint': 'Developer-facing interface',
   'tx.general.qrCode': 'QR code',
   'tx.general.qrCode.hint': 'Show QR code of the page',
-
+  'tx.general.documentation': 'Documents',
+  'tx.general.documentation.hint': 'Reference, regulatory and technical documents',
+  'tx.general.developer.plural': 'Developers',
+  'tx.general.developer.hint': 'Acknowledging contributions to building the application',
   'tx.general.settings': 'Settings',
   'tx.general.view.settings': 'View settings',
+  'tx.general.video.watch': 'Watch video',
 
   'tx.general.role': 'Role',
   'tx.general.role.admin': 'Administrator',
@@ -77,6 +85,7 @@ export const txGeneralEn: Record<string, string> = {
 
   'tx.general.field.required': 'Required field',
   'tx.general.form.invalid': 'The form is filled incorrectly',
+  'tx.general.chapter.content': 'Chapter content',
 
   'tx.general.file.choose': 'Choose file',
   'tx.general.file.choose.hint': 'Choose a file to load',

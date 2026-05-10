@@ -1,28 +1,59 @@
 export const txRslangRu: Record<string, string> = {
   'tx.rslang': 'Язык родов структур',
-  'tx.rslang.typeClass.logic': 'Логический',
-  'tx.rslang.typeClass.typification': 'Теоретико-множественный',
-  'tx.rslang.typeClass.function': 'Терм-функция',
-  'tx.rslang.typeClass.predicate': 'Предикат-функция',
+  'tx.rslang.short': 'Экспликация',
+  'tx.rslang.hint': 'Язык родов структур и его применение',
 
-  'tx.rslang.expression': 'Выражение',
-  'tx.rslang.expression.extract': 'Обособить',
-  'tx.rslang.expression.extract.hint': 'Вынести выбранное подвыражение в новую конституенту',
-  'tx.rslang.expression.extract.confirm': 'Подтвердить обособление выбранного подвыражения',
-  'tx.rslang.expression.analyze': 'Проверить выражение',
-  'tx.rslang.expression.saveAndCalculate': 'Сохранить и вычислить',
-  'tx.rslang.expression.keyboard': 'Символьная клавиатура',
-  'tx.rslang.expression.ast': 'Дерево разбора выражения',
-  'tx.rslang.expression.ast.fail': 'Не удалось построить дерево разбора',
+  'tx.rsexpression': 'Выражение',
+  'tx.rsexpression.templateBank': 'Банк выражений',
+  'tx.rsexpression.templateBank.hint':
+    'Совокупность типовых параметризованных выражений, используемых в качестве шаблонов',
+  'tx.rsexpression.logic': 'Логические выражения',
+  'tx.rsexpression.logic.hint': 'Выражения, использующие логические связки, значения которых ИСТИНА или ЛОЖЬ',
+  'tx.rsexpression.set': 'Операции с множествами',
+  'tx.rsexpression.set.hint': 'Операции объединения, пересечения, разности и симметрической разности множеств',
+  'tx.rsexpression.structure': 'Структурные выражения',
+  'tx.rsexpression.structure.hint': 'Операции со структурой элементов, преобразования типизаций',
+  'tx.rsexpression.arithmetic': 'Арифметика',
+  'tx.rsexpression.arithmetic.hint': 'Арифметические выражения, операции с целыми числами',
+  'tx.rsexpression.quantifier': 'Кванторные конструкции',
+  'tx.rsexpression.quantifier.hint': 'Выражения, использующие кванторные декларации локальных идентификаторов',
+  'tx.rsexpression.declarative': 'Декларативные',
+  'tx.rsexpression.declarative.hint':
+    'Выражения термов, производящие отбор из множества элементов по логическому условию',
+  'tx.rsexpression.imperative': 'Императивные',
+  'tx.rsexpression.imperative.hint':
+    'Выражения, позволяющие строить элементы множества путем последовательных переборов, присвоений и проверки условий',
+  'tx.rsexpression.recursive': 'Рекурсивные',
+  'tx.rsexpression.recursive.hint': 'Выражения, позволяющие строить элементы множества путем циклических вычислений',
+  'tx.rsexpression.parameter': 'Параметризованные',
+  'tx.rsexpression.parameter.hint': 'Выражения, использующие внешние параметры',
+
+  'tx.rsexpression.class.logic': 'Логический',
+  'tx.rsexpression.class.typification': 'Теоретико-множественный',
+  'tx.rsexpression.class.function': 'Терм-функция',
+  'tx.rsexpression.class.predicate': 'Предикат-функция',
+
+  'tx.rsexpression.extract': 'Обособить',
+  'tx.rsexpression.extract.hint': 'Вынести выбранное подвыражение в новую конституенту',
+  'tx.rsexpression.extract.confirm': 'Подтвердить обособление выбранного подвыражения',
+  'tx.rsexpression.analyze': 'Проверить выражение',
+  'tx.rsexpression.saveAndCalculate': 'Сохранить и вычислить',
+  'tx.rsexpression.keyboard': 'Символьная клавиатура',
+  'tx.rsexpression.ast': 'Дерево разбора',
+  'tx.rsexpression.ast.hint': 'Просмотр дерева разбора\nродоструктурного выражения',
+  'tx.rsexpression.ast.fail': 'Не удалось построить дерево разбора',
 
   'tx.rslang.type': 'Тип',
   'tx.rslang.typification': 'Типизация',
+  'tx.rslang.typification.hint': 'Система типов в родоструктурной экспликации',
   'tx.rslang.cardinality': 'Мощность',
   'tx.rslang.template.parameter': 'Шаблонный параметр',
 
   'tx.rslang.eval.success': 'Вычисления завершены за {timeSpent} секунд',
   'tx.rslang.eval.iterationCount': 'Количество итераций',
 
+  'tx.rslang.binding': 'Базовая интерпретация',
+  'tx.rslang.binding.hint': 'Редактирование базовой интерпретации модели',
   'tx.rslang.binding.view': 'Просмотр базовой интерпретации',
   'tx.rslang.binding.edit': 'Редактор базовой интерпретации',
   'tx.rslang.binding.load.validate':
@@ -39,7 +70,7 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.value.view.wrongType': 'Просмотр значения конституенты недоступен для этого типа',
   'tx.rslang.value.view.reset': 'Значение целиком',
   'tx.rslang.value.edit': 'Изменить значение',
-  'tx.rslang.value.edit.hint': 'Просмотр или редактирование значения',
+  'tx.rslang.value.edit.hint': 'Структурный просмотр и редактирование отдельного значения',
   'tx.rslang.value.edit.fail': 'Не удалось изменить значение',
   'tx.rslang.value.editor': 'Редактор значения',
   'tx.rslang.value.load.validate': 'Некорректный формат данных. Используйте JSON, содержащий только числа и массивы',
@@ -150,5 +181,8 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.calcGlobalMissing': 'Нет значения: {name}',
   'tx.rslang.error.iterationsLimit': 'Превышен лимит итераций {limit}',
   'tx.rslang.error.calcInvalidDebool': 'Некорректное взятие debool',
-  'tx.rslang.error.iterateInfinity': 'Итерация по бесконечности'
+  'tx.rslang.error.iterateInfinity': 'Итерация по бесконечности',
+
+  'tx.rslang.identifiers': 'Идентификаторы',
+  'tx.rslang.identifiers.hint': 'Обозначения конституент,\nлокальных переменных и литералов'
 };
