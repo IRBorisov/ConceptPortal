@@ -1,7 +1,10 @@
+import { useTx } from '@/i18n';
+
 export function HelpRSLangTypification() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Типизация</h1>
+    <>
+      <h1>{tx('tx.rslang.typification')}</h1>
       <ul>
         Родоструктурное выражение <code>ξ</code> обладает типизацией (структурой), если выполнено ξ∈H,
         <br />
@@ -38,6 +41,6 @@ export function HelpRSLangTypification() {
         Шаблонные параметризованные выражения могут содержать обозначения <code>R1,...Ri</code>, соответствующие
         произвольным ступеням, определяемым исходя из типизации аргументов по месту использования выражения.
       </p>
-    </div>
+    </>
   );
 }

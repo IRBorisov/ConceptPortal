@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import {
   IconDarkTheme,
   IconHelp,
@@ -15,9 +17,10 @@ import { Subtopics } from '../components/subtopics';
 import { HelpTopic } from '../models/help-topic';
 
 export function HelpInterface() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Пользовательский интерфейс</h1>
+    <>
+      <h1>{tx('tx.general.ui')}</h1>
 
       <p>
         Интерфейс построен на основе динамических компонент с использованием рендеринга графики в браузере.
@@ -36,7 +39,7 @@ export function HelpInterface() {
         работы Портала. Просмотр видео доступен на Youtube и ВКонтакте.
       </p>
 
-      <h2>Навигация и настройки</h2>
+      <h2>{tx('tx.general.navigation')}</h2>
       <ul>
         <li>
           <kbd>{isMac() ? 'Cmd + клик' : 'Ctrl + клик'}</kbd> на объект навигации откроет новую вкладку
@@ -67,6 +70,6 @@ export function HelpInterface() {
       </ul>
 
       <Subtopics headTopic={HelpTopic.INTERFACE} />
-    </div>
+    </>
   );
 }

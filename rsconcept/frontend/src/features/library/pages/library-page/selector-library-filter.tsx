@@ -29,7 +29,7 @@ export function SelectorLibraryFilter({ className }: SelectorLibraryFilterProps)
     editor_me: tx('tx.lib.filter.byEditorMe'),
     hidden: tx('tx.lib.filter.byHidden'),
     type_rsform: tx('tx.schema.short'),
-    type_oss: tx('tx.oss.short'),
+    type_oss: tx('tx.oss.abbr'),
     type_rsmodel: tx('tx.model.short')
   };
 
@@ -62,7 +62,7 @@ export function SelectorLibraryFilter({ className }: SelectorLibraryFilterProps)
           </SelectItem>
           <SelectItem value='type_oss'>
             <IconOSS className='text-constructive' />
-            {tx('tx.oss.short')}
+            {tx('tx.oss.abbr')}
           </SelectItem>
           <SelectItem value='type_rsmodel'>
             <IconRSModel className='text-accent-orange' />

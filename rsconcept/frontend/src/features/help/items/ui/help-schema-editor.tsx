@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import {
   IconChild,
   IconClone,
@@ -25,13 +27,14 @@ import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpSchemaEditor() {
+  const tx = useTx();
   return (
-    <div className='dense'>
-      <h1>Редактор конституенты</h1>
+    <>
+      <h1>{tx('tx.cst.edit.ui')}</h1>
 
       <div className='flex flex-col sm:flex-row sm:gap-3'>
         <div>
-          <h2>Управление</h2>
+          <h2>{tx('tx.general.controls')}</h2>
           <ul>
             <li>
               <IconCrucial className='inline-icon' /> статус ключевой
@@ -135,6 +138,6 @@ export function HelpSchemaEditor() {
           <kbd>Alt + 2</kbd> редактирование связанных слов
         </li>
       </ul>
-    </div>
+    </>
   );
 }

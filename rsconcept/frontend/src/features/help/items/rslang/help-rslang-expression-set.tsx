@@ -1,7 +1,10 @@
+import { useTx } from '@/i18n';
+
 export function HelpRSLangExpressionSet() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Теоретико-множественные выражения</h1>
+    <>
+      <h1>{tx('tx.rsexpression.set')}</h1>
       <p>
         Теоретико-множественные выражения (ТМВ) в языке родов структур используются для задания и преобразования
         множеств. Сложные конструкции теоретико-множественных выражений выделены в индивидуальные разделы справочника.
@@ -28,7 +31,7 @@ export function HelpRSLangExpressionSet() {
         </li>
       </ul>
 
-      <h2>Примеры</h2>
+      <h2>{tx('tx.general.example')}</h2>
       <ul>
         <li>
           <code>{`{1,2} ∪ {2,3} = {1,2,3}`}</code>
@@ -40,6 +43,6 @@ export function HelpRSLangExpressionSet() {
           <code>{`{1,2,3} \\ {2} = {1,3}`}</code>
         </li>
       </ul>
-    </div>
+    </>
   );
 }

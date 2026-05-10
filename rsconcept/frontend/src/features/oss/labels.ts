@@ -12,13 +12,13 @@ import { type RO } from '@/utils/meta';
 
 const OPERATION_LABEL_LID: Record<OperationType, string> = {
   [OperationType.INPUT]: 'tx.oss.input',
-  [OperationType.SYNTHESIS]: 'tx.synthesis',
+  [OperationType.SYNTHESIS]: 'tx.synthesis.short',
   [OperationType.REPLICA]: 'tx.oss.replica'
 };
 
 const OPERATION_DESC_LID: Record<OperationType, string> = {
   [OperationType.INPUT]: 'tx.oss.input.hint',
-  [OperationType.SYNTHESIS]: 'tx.synthesis.hint',
+  [OperationType.SYNTHESIS]: 'tx.synthesis',
   [OperationType.REPLICA]: 'tx.oss.replica.hint'
 };
 

@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import { Divider } from '@/components/container';
 import {
   IconAnimation,
@@ -29,9 +31,10 @@ import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpOssGraph() {
+  const tx = useTx();
   return (
-    <div className='flex flex-col'>
-      <h1 className='sm:pr-24'>Операционная схема</h1>
+    <>
+      <h1 className='sm:pr-24'>{tx('tx.oss')}</h1>
       <div className='flex flex-col sm:flex-row'>
         <div className='sm:w-64'>
           <h2>Настройка графа</h2>
@@ -164,6 +167,6 @@ export function HelpOssGraph() {
           </ul>
         </div>
       </div>
-    </div>
+    </>
   );
 }

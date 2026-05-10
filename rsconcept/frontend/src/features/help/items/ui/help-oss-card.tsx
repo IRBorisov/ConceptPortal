@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import { IconDestroy, IconEditor, IconFolderEdit, IconOwner, IconSave, IconShare } from '@/components/icons';
 import { isMac } from '@/utils/utils';
 
@@ -5,9 +7,10 @@ import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpOssCard() {
+  const tx = useTx();
   return (
-    <div className='dense'>
-      <h1>Паспорт ОСС</h1>
+    <>
+      <h1>{tx('tx.oss.passport')}</h1>
 
       <p>Паспорт содержит сведения об операционной схеме синтеза в библиотеке и сводную статистику по операциям.</p>
       <p>
@@ -32,7 +35,7 @@ export function HelpOssCard() {
         </li>
       </ul>
 
-      <h2>Управление</h2>
+      <h2>{tx('tx.general.controls')}</h2>
       <ul>
         <li>
           <IconSave className='inline-icon' /> сохранить: <kbd>{isMac() ? 'Cmd + S' : 'Ctrl + S'}</kbd>
@@ -53,6 +56,6 @@ export function HelpOssCard() {
           <IconFolderEdit className='inline-icon' /> редактировать расположение
         </li>
       </ul>
-    </div>
+    </>
   );
 }

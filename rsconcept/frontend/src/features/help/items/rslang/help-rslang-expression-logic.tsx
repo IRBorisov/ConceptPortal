@@ -1,7 +1,10 @@
+import { useTx } from '@/i18n';
+
 export function HelpRSLangExpressionLogic() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Логические выражения</h1>
+    <>
+      <h1>{tx('tx.rsexpression.logic')}</h1>
       <p>
         Пропозициональные формулы в языке родов структур — это логические выражения, построенные из предикатов
         (логических выражений) и переменных с помощью связок. Константы ИСТИНА И ЛОЖЬ не используются в экспликации
@@ -74,7 +77,7 @@ export function HelpRSLangExpressionLogic() {
         </li>
       </ul>
 
-      <h2>Примеры</h2>
+      <h2>{tx('tx.general.example')}</h2>
       <ul>
         <li>
           <code>¬α∈S1</code>
@@ -86,6 +89,6 @@ export function HelpRSLangExpressionLogic() {
           <code>{`D1⊆D2 ⇔ ∀x∈D1 x∈D2`}</code>
         </li>
       </ul>
-    </div>
+    </>
   );
 }

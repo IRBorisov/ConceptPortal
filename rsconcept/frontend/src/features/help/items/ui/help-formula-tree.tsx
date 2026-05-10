@@ -1,10 +1,13 @@
+import { useTx } from '@/i18n';
+
 import { IconNewItem } from '@/components/icons';
 import { isMac } from '@/utils/utils';
 
 export function HelpFormulaTree() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Дерево разбора выражения</h1>
+    <>
+      <h1>{tx('tx.rsexpression.ast')}</h1>
       <p>Дерево синтаксического разбора отражает структуру выражения.</p>
 
       <ul>
@@ -47,6 +50,6 @@ export function HelpFormulaTree() {
         <span className='cc-sample-color bg-secondary' />
         составные выражения
       </p>
-    </div>
+    </>
   );
 }

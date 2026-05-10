@@ -1,5 +1,8 @@
+import { useTx } from '@/i18n';
+
 import { InfoCstStatus } from '../../components/info-cst-status';
 
 export function HelpCstStatus() {
-  return <InfoCstStatus title='Статус конституенты' />;
+  const tx = useTx();
+  return <InfoCstStatus title={tx('tx.parse.status')} />;
 }

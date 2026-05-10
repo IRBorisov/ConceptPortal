@@ -1,10 +1,13 @@
+import { useTx } from '@/i18n';
+
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpRSLangExpressionDeclarative() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Декларативные выражения</h1>
+    <>
+      <h1>{tx('tx.rsexpression.declarative')}</h1>
       <p>
         Декларативная конструкция, также известная как схема ограниченного выделения, в языке родов структур задает
         множество через перебираемое множество и проверяемое условие. С точки зрения определения понятий такие выражения
@@ -15,7 +18,7 @@ export function HelpRSLangExpressionDeclarative() {
         из которого происходит отбор.
       </p>
 
-      <h2>Синтаксис</h2>
+      <h2>{tx('tx.general.syntax')}</h2>
       <ul>
         <li>
           <code>D{'{ξ∈ТМВ | ЛВ(ξ)}'}</code>
@@ -28,18 +31,18 @@ export function HelpRSLangExpressionDeclarative() {
         </li>
       </ul>
 
-      <h2>Семантика</h2>
+      <h2>{tx('tx.general.semantics')}</h2>
       <p>
         Локальные переменные перебирают свою область определения. Если для текущего значения переменной логическое
         выражение справа истинно, то это значение (или кортеж значений) включается в результирующее множество.
       </p>
 
-      <h2>Пример</h2>
+      <h2>{tx('tx.general.example')}</h2>
       <p>
         <code>
           D{'{ξ∈{1, 2, 3, 4, 5, 6} | ∃σ∈{10, 11, 12} (σ = 2 ∗ ξ)}'} = {'{5, 6}'}
         </code>
       </p>
-    </div>
+    </>
   );
 }

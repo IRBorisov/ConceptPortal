@@ -1,10 +1,13 @@
+import { useTx } from '@/i18n';
+
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpTypeGraph() {
+  const tx = useTx();
   return (
-    <div className='dense'>
-      <h1>Граф ступеней</h1>
+    <>
+      <h1>{tx('tx.typeGraph')}</h1>
       <p>
         Граф связей между ступенями, используемыми в выражении или{' '}
         <LinkTopic text='схеме' topic={HelpTopic.CC_SYSTEM} />.
@@ -14,7 +17,7 @@ export function HelpTypeGraph() {
         компонент произведения.
       </p>
 
-      <h2>Обозначения</h2>
+      <h2>{tx('tx.general.notation')}</h2>
 
       <ul>
         <li>
@@ -36,6 +39,6 @@ export function HelpTypeGraph() {
         <li>ступень терм-функции - произведение ступеней результата и аргументов</li>
         <li>ступень предикат-функции - произведение ступеней аргументов</li>
       </ul>
-    </div>
+    </>
   );
 }

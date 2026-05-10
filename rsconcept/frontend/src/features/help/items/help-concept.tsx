@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import { TextURL } from '@/components/control';
 import { external_urls } from '@/utils/constants';
 
@@ -5,9 +7,10 @@ import { Subtopics } from '../components/subtopics';
 import { HelpTopic } from '../models/help-topic';
 
 export function HelpConcept() {
+  const tx = useTx();
   return (
-    <div className='text-justify'>
-      <h1>Концептуализация</h1>
+    <>
+      <h1>{tx('tx.concept.framework')}</h1>
       <p>
         Сложные предметные области требуют применения специальных подходов к их пониманию и описанию.{' '}
         <b>Системный подход</b> заключается в установлении границы системы, выделении отдельных подсистем и установления
@@ -40,6 +43,6 @@ export function HelpConcept() {
       </p>
 
       <Subtopics headTopic={HelpTopic.CONCEPTUAL} />
-    </div>
+    </>
   );
 }

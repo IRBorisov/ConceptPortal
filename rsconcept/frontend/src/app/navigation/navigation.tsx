@@ -160,7 +160,7 @@ export function Navigation() {
                   onClick={navigateCreateModel}
                 />
                 <DropdownButton
-                  text={tx('tx.oss')}
+                  text={tx('tx.oss.short')}
                   icon={<IconOSS size='1rem' className='icon-primary' />}
                   onClick={navigateCreateOSS}
                 />

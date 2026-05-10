@@ -1,7 +1,10 @@
+import { useTx } from '@/i18n';
+
 export function HelpRSLangExpressionArithmetic() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Арифметические выражения</h1>
+    <>
+      <h1>{tx('tx.rsexpression.arithmetic')}</h1>
       <p>Арифметические выражения в языке родов структур предназначены для работы с целыми числами.</p>
 
       <h2>Основные операции</h2>
@@ -58,6 +61,6 @@ export function HelpRSLangExpressionArithmetic() {
           <code>x ≤ y + 1</code>
         </li>
       </ul>
-    </div>
+    </>
   );
 }

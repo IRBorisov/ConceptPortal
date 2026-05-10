@@ -1,10 +1,13 @@
+import { useTx } from '@/i18n';
+
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpRSLangInterpret() {
+  const tx = useTx();
   return (
-    <div className='text-justify'>
-      <h1>Интерпретируемость</h1>
+    <>
+      <h1>{tx('tx.concept.system.evaluability')}</h1>
       <p>
         Практическое применение концептуальным схем основано на <b>интерпретации</b> - соотнесении предметного
         содержания и схемных терминов и определений. Для этого в соответствии с{' '}
@@ -38,6 +41,6 @@ export function HelpRSLangInterpret() {
         Конституенты, чьи выражения не позволяют проверить принадлежность за полиномиальное время, называются{' '}
         <b>Невычислимыми</b>.
       </p>
-    </div>
+    </>
   );
 }

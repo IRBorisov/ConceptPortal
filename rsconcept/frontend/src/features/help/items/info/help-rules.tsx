@@ -1,12 +1,15 @@
+import { useTx } from '@/i18n';
+
 import { urls } from '@/app';
 
 import { TextURL } from '@/components/control';
 import { external_urls } from '@/utils/constants';
 
 export function HelpRules() {
+  const tx = useTx();
   return (
-    <div className='text-justify'>
-      <h1>Правила поведения участников Портала</h1>
+    <>
+      <h1>{tx('tx.shell.rules.hint')}</h1>
 
       <p>
         Мы стремимся предоставить возможность участия в работе Портала как можно большему количеству людей. Мы считаем,
@@ -52,6 +55,6 @@ export function HelpRules() {
         </li>
         <li>нарушение работоспособности Портала, в том числе путем использования уязвимостей и ошибок в коде.</li>
       </ul>
-    </div>
+    </>
   );
 }

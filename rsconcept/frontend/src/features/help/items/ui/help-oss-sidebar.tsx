@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import {
   IconClone,
   IconDestroy,
@@ -17,9 +19,10 @@ import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpOssSidebar() {
+  const tx = useTx();
   return (
-    <div className='flex flex-col'>
-      <h1>Боковая панель</h1>
+    <>
+      <h1>{tx('tx.oss.sidebar.contents')}</h1>
       <p className='m-0'>
         <IconLeftOpen className='inline-icon' />
         {'\u2009'} Боковая панель операционной схемы позволяет оперативно редактировать содержание{' '}
@@ -66,6 +69,6 @@ export function HelpOssSidebar() {
           <LinkTopic text='граф ступеней' topic={HelpTopic.UI_TYPE_GRAPH} />
         </li>
       </ul>
-    </div>
+    </>
   );
 }

@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import {
   IconDestroy,
   IconEditor,
@@ -10,13 +12,14 @@ import {
 import { isMac } from '@/utils/utils';
 
 export function HelpRSModelCard() {
+  const tx = useTx();
   return (
-    <div className='dense'>
-      <h1>Паспорт модели</h1>
+    <>
+      <h1>{tx('tx.model.passport')}</h1>
       <p>Содержит основную информацию и статистику по модели.</p>
       <p>Название и атрибуты исходной концептуальной схемы здесь не редактируются.</p>
 
-      <h2>Управление</h2>
+      <h2>{tx('tx.general.controls')}</h2>
       <ul>
         <li>
           <IconSave className='inline-icon' /> сохранить: <kbd>{isMac() ? 'Cmd + S' : 'Ctrl + S'}</kbd>
@@ -40,6 +43,6 @@ export function HelpRSModelCard() {
           <IconRSForm className='inline-icon' /> перейти к концептуальной схеме
         </li>
       </ul>
-    </div>
+    </>
   );
 }

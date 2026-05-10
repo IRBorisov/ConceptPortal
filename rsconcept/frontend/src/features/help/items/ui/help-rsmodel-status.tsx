@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 
 import { EvalStatus } from '@/domain/library';
+import { useTx } from '@/i18n';
 
 import { colorBgEvalStatus } from '@/features/rsmodel/colors';
 import { describeEvalStatus, labelEvalStatus } from '@/features/rsmodel/labels';
@@ -18,9 +19,10 @@ const statusOrder = [
 ] as const;
 
 export function HelpRSModelStatus() {
+  const tx = useTx();
   return (
-    <div className='dense mb-2'>
-      <h1>Статусы вычисления</h1>
+    <>
+      <h1>{tx('tx.evaluation.status')}</h1>
       <div className='flex flex-col gap-1 dense'>
         {statusOrder.map(status => (
           <p key={`${prefixes.eval_status_list}${status}`}>
@@ -41,6 +43,6 @@ export function HelpRSModelStatus() {
           </p>
         ))}
       </div>
-    </div>
+    </>
   );
 }

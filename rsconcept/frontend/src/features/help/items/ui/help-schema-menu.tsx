@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import { Divider } from '@/components/container';
 import {
   IconAdmin,
@@ -23,15 +25,16 @@ import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpSchemaMenu() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Редактирование схемы</h1>
+    <>
+      <h1>{tx('tx.schema.edit')}</h1>
       <p>
         При переходе к отображению отдельной концептуальной схемы сверху появляется меню, содержащее кнопки с
         выпадающими меню и ряд вкладок. Вид и количество кнопок зависит от выбранного режима работы.
       </p>
 
-      <h2>Вкладки</h2>
+      <h2>{tx('tx.general.tab.plural')}</h2>
       <ul>
         <li>
           <LinkTopic text='Паспорт' topic={HelpTopic.UI_SCHEMA_CARD} /> – редактирование атрибутов схемы и версии
@@ -50,7 +53,7 @@ export function HelpSchemaMenu() {
 
       <div className='flex my-3'>
         <div>
-          <h2>Меню схемы</h2>
+          <h2>{tx('tx.schema.menu')}</h2>
           <ul>
             <li>
               <IconMenu size='1.25rem' className='inline-icon' /> Меню схемы – выпадающее меню с общими функциями
@@ -89,7 +92,7 @@ export function HelpSchemaMenu() {
         <Divider vertical margins='mx-3' />
 
         <div className='w-72'>
-          <h2>Режимы работы</h2>
+          <h2>{tx('tx.general.role.plural')}</h2>
           <ul>
             <li>
               <IconAlert size='1.25rem' className='inline-icon icon-red' /> работа в анонимном режиме. Переход на
@@ -121,6 +124,6 @@ export function HelpSchemaMenu() {
         <IconEdit2 size='1.25rem' className='inline-icon icon-green' /> операции над концептуальной схемой описаны в{' '}
         <LinkTopic text='разделе Экспликация' topic={HelpTopic.RSL_OPERATIONS} />.
       </p>
-    </div>
+    </>
   );
 }

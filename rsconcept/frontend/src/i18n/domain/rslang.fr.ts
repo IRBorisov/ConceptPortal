@@ -9,25 +9,31 @@ export const txRslangFr: Record<string, string> = {
 
   'tx.rsexpression.logic': 'Expressions logiques',
   'tx.rsexpression.logic.hint':
-    'Expressions utilisant des connecteurs logiques et des quantificateurs, dont les valeurs sont VRAI ou FAUX',
-  'tx.rsexpression.set': 'Opérations sur les ensembles',
+    'Expressions utilisant des prédicats, connecteurs logiques et des quantificateurs, dont les valeurs sont VRAI ou FAUX',
+  'tx.rsexpression.set': 'Expressions ensemblistes',
+  'tx.rsexpression.set.short': 'Opérations sur les ensembles',
   'tx.rsexpression.set.hint': 'Opérations d’union, intersection, différence et différence symétrique des ensembles',
   'tx.rsexpression.structure': 'Expressions structurelles',
   'tx.rsexpression.structure.hint': 'Opérations sur la structure des éléments, transformations de typifications',
-  'tx.rsexpression.arithmetic': 'Arithmétique',
+  'tx.rsexpression.arithmetic': 'Expressions arithmétiques',
+  'tx.rsexpression.arithmetic.short': 'Arithmétique',
   'tx.rsexpression.arithmetic.hint': 'Expressions arithmétiques, opérations sur les nombres entiers',
   'tx.rsexpression.quantifier': 'Formes quantifiées',
   'tx.rsexpression.quantifier.hint': 'Expressions utilisant des déclarations quantifiées de variables locales',
   'tx.rsexpression.declarative': 'Expressions déclaratives',
+  'tx.rsexpression.declarative.short': 'Expressions déclaratives',
   'tx.rsexpression.declarative.hint':
     'Expressions de termes, produisant un sous-ensemble des éléments d’un ensemble par une condition logique',
   'tx.rsexpression.imperative': 'Expressions impératives',
+  'tx.rsexpression.imperative.short': 'Expressions impératives',
   'tx.rsexpression.imperative.hint':
     'Expressions permettant de construire des éléments d’un ensemble par des parcours successifs, des affectations et des vérifications de conditions',
-  'tx.rsexpression.recursive': 'Expressions récursives',
+  'tx.rsexpression.recursive': 'Expressions cycliques (récursives)',
+  'tx.rsexpression.recursive.short': 'Expressions récursives',
   'tx.rsexpression.recursive.hint':
     'Expressions permettant de construire des éléments d’un ensemble par des calculs cycliques',
   'tx.rsexpression.parameter': 'Expressions paramétrées',
+  'tx.rsexpression.parameter.short': 'Paramétrées',
   'tx.rsexpression.parameter.hint': 'Expressions utilisant des paramètres externes',
 
   'tx.rsexpression.extract': 'Isoler',

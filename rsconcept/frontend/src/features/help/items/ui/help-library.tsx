@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n/use-tx';
+
 import {
   IconAnimationOff,
   IconDownload,
@@ -22,9 +24,10 @@ import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpLibrary() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Библиотека</h1>
+    <>
+      <h1>{tx('tx.lib.library')}</h1>
       <ul>
         <li>
           <span className='text-accent-green-foreground'>зеленым </span> выделены{' '}
@@ -66,7 +69,7 @@ export function HelpLibrary() {
         </li>
       </ul>
 
-      <h2>Проводник</h2>
+      <h2>{tx('tx.lib.location.explorer')}</h2>
       <ul>
         <li>
           <kbd>клик</kbd> по папке разворачивает дерево проводника
@@ -106,6 +109,6 @@ export function HelpLibrary() {
           <IconFolderOpened className='inline-icon icon-green' /> развернутая папка
         </li>
       </ul>
-    </div>
+    </>
   );
 }

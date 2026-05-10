@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import { TextURL } from '@/components/control';
 import { external_urls, prefixes } from '@/utils/constants';
 
@@ -6,9 +8,10 @@ import { TopicItem } from '../components/topic-item';
 import { HelpTopic } from '../models/help-topic';
 
 export function HelpMain() {
+  const tx = useTx();
   return (
-    <div className='text-justify'>
-      <h1>Портал</h1>
+    <>
+      <h1>{tx('tx.shell.app')}</h1>
       <p>
         Портал предоставляет мощные инструменты для формального анализа и моделирования предметных областей, обеспечивая
         структурированное описание и глубокую проработку понятий с помощью{' '}
@@ -68,7 +71,7 @@ export function HelpMain() {
         </ul>
       </details>
 
-      <h2 className='mt-2'>Поддержка</h2>
+      <h2 className='mt-2'>{tx('tx.general.support')}</h2>
       <p>
         Портал разрабатывается <TextURL text='Центром Концепт' href={external_urls.concept} /> и вобрал в себя{' '}
         <LinkTopic text='многолетнюю работу' topic={HelpTopic.CONTRIBUTORS} /> над средствами экспликации концептуальных
@@ -79,6 +82,6 @@ export function HelpMain() {
         Ваши пожелания по доработке, найденные ошибки и иные предложения направляйте на email:{' '}
         <TextURL href={external_urls.mail_portal} text='portal@acconcept.ru' />
       </p>
-    </div>
+    </>
   );
 }

@@ -13,7 +13,7 @@ interface SubtopicsProps {
 export function Subtopics({ headTopic }: SubtopicsProps) {
   const tx = useTx();
   return (
-    <details>
+    <details className='text-left open:mb-3'>
       <summary className='text-center font-semibold'>{tx('tx.general.chapter.content')}</summary>
       {Object.values(HelpTopic)
         .filter(topic => topic !== headTopic && topicParent.get(topic) === headTopic)

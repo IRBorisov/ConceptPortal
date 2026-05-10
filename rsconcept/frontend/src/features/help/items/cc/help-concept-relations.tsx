@@ -1,10 +1,13 @@
+import { useTx } from '@/i18n';
+
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpConceptRelations() {
+  const tx = useTx();
   return (
-    <div className='text-justify'>
-      <h1>Связи между конституентами</h1>
+    <>
+      <h1>{tx('tx.concept.relation.plural')}</h1>
       <p>
         Наиболее общей связью между конституентами является ассоциация, устанавливаемая между номиноидом и относимыми к
         нему другими конституентами. Такая связь задается до установления точных определений и применяется для
@@ -40,6 +43,6 @@ export function HelpConceptRelations() {
         <b>Родо-видовое отношение</b> между понятиями формализуется с помощью определения, где из элементов множества,
         соответствующего родовому понятию формируются элементы видового понятия путем отбора по условию.
       </p>
-    </div>
+    </>
   );
 }

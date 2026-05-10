@@ -1,13 +1,16 @@
+import { useTx } from '@/i18n';
+
 export function HelpRSLangExpressionQuantor() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Кванторные выражения</h1>
+    <>
+      <h1>{tx('tx.rsexpression.quantifier')}</h1>
       <p>
         Кванторные выражения в языке родов структур используются для формулировки утверждений о всех или некоторых
         элементах множества.
       </p>
 
-      <h2>Синтаксис</h2>
+      <h2>{tx('tx.general.syntax')}</h2>
       <ul>
         <li>
           <b>Всеобщность</b>: <code>∀ξ∈ТМВ (ЛВ(ξ))</code>
@@ -24,7 +27,7 @@ export function HelpRSLangExpressionQuantor() {
         <li>Скобки вокруг ЛВ могут быть опущены для атомарных логических выражений.</li>
       </ul>
 
-      <h2>Семантика</h2>
+      <h2>{tx('tx.general.semantics')}</h2>
       <ul>
         <li>
           <b>Всеобщность</b>: выражение истинно, если для всех значений <code>ξ</code> из области определения
@@ -42,12 +45,12 @@ export function HelpRSLangExpressionQuantor() {
         </li>
       </ul>
 
-      <h2>Пример</h2>
+      <h2>{tx('tx.general.example')}</h2>
       <ul>
         <li>
           <code>∀x∈D1 ∃y∈D2 (x,y)∈S1 & (x,x)∈S1</code>
         </li>
       </ul>
-    </div>
+    </>
   );
 }

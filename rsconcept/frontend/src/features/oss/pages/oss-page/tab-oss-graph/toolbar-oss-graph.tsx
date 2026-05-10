@@ -226,8 +226,8 @@ export function ToolbarOssGraph({
                 onClick={handleImportSchema}
               />
               <DropdownButton
-                text={tx('tx.synthesis')}
-                title={prepareTooltip(tx('tx.synthesis.hint'), '4')}
+                text={tx('tx.synthesis.short')}
+                title={prepareTooltip(tx('tx.synthesis'), '4')}
                 icon={<IconSynthesis size='1.25rem' className='text-primary' />}
                 onClick={handleCreateSynthesis}
               />

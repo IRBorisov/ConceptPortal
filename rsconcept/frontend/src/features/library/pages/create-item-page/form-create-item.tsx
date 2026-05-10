@@ -99,7 +99,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
         {itemType === LibraryItemType.RSMODEL
           ? tx('tx.model')
           : itemType === LibraryItemType.OSS
-            ? tx('tx.oss')
+            ? tx('tx.oss.short')
             : tx('tx.schema')}
       </h1>
 

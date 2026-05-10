@@ -1,10 +1,13 @@
+import { useTx } from '@/i18n';
+
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpRSLangLiterals() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Идентификаторы и литералы</h1>
+    <>
+      <h1>{tx('tx.rslang.identifiers')}</h1>
       <p>
         В языке родов структур идентификаторы и литералы имеют строгие правила записи, определяющие их роль в выражениях
         и обеспечивающие однозначность интерпретации.
@@ -47,7 +50,7 @@ export function HelpRSLangLiterals() {
         </li>
       </ul>
 
-      <h2>Примеры</h2>
+      <h2>{tx('tx.general.example')}</h2>
       <p>
         Пример использования переменной и понятия: <code>x ∈ X1</code>, где <code>x</code> — переменная, а{' '}
         <code>X1</code> — понятие.
@@ -55,6 +58,6 @@ export function HelpRSLangLiterals() {
       <p>
         Пример с литералами: <code>card(X1) = 5</code>.
       </p>
-    </div>
+    </>
   );
 }

@@ -1,12 +1,15 @@
+import { useTx } from '@/i18n';
+
 import { IconMoveDown, IconMoveUp, IconOSS, IconPredecessor } from '@/components/icons';
 
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpRelocateCst() {
+  const tx = useTx();
   return (
-    <div className='text-justify'>
-      <h1>Перенос конституент</h1>
+    <>
+      <h1>{tx('tx.oss.relocate')}</h1>
       <p>
         Перенос конституент – операция, при которой выбранные конституенты переносятся из текущей КС (источника) в
         другую КС (целевую) в рамках одной <IconOSS size='1rem' className='inline-icon' />{' '}
@@ -35,6 +38,6 @@ export function HelpRelocateCst() {
           наследников
         </li>
       </ul>
-    </div>
+    </>
   );
 }
