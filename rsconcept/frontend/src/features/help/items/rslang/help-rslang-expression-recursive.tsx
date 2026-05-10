@@ -1,7 +1,10 @@
+import { useTx } from '@/i18n';
+
 export function HelpRSLangExpressionRecursive() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Циклические конструкции</h1>
+    <>
+      <h1>{tx('tx.rsexpression.recursive')}</h1>
       <p>Циклическая (рекурсивная) конструкция является теоретико-множественным выражением.</p>
 
       <h2>Синтаксис</h2>
@@ -47,12 +50,12 @@ export function HelpRSLangExpressionRecursive() {
         переменной (или кортежа переменных) рекурсии.
       </p>
 
-      <h2>Пример</h2>
+      <h2>{tx('tx.general.example')}</h2>
       <p>
         Вычисление степеней двойки:
         <br />
         <code>{'R{(ξ,σ) ≔ (1, 0) | σ<5 | (2∗ξ, σ+1)} = 32'}</code>
       </p>
-    </div>
+    </>
   );
 }

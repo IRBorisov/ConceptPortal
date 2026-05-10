@@ -8,8 +8,8 @@ interface HelpPrivacyProps {
 
 export function HelpPrivacy({ offsetXpx, minWidth }: HelpPrivacyProps) {
   return (
-    <div>
+    <>
       <PDFViewer file={resources.privacy_policy} offsetXpx={offsetXpx} minWidth={minWidth} />
-    </div>
+    </>
   );
 }

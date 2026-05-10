@@ -1,10 +1,13 @@
+import { useTx } from '@/i18n';
+
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpCstAttributes() {
+  const tx = useTx();
   return (
-    <div className='dense'>
-      <h1>Атрибуты конституенты</h1>
+    <>
+      <h1>{tx('tx.cst.attribute.plural')}</h1>
       <p>
         <b>Термин</b> может быть присвоен любой конституенте. Он используется в других Терминах и в Текстовых
         определениях
@@ -61,6 +64,6 @@ export function HelpCstAttributes() {
         <br />
         Предикат-функции определяются параметризованным логическим Формальным определением
       </p>
-    </div>
+    </>
   );
 }

@@ -1,10 +1,13 @@
+import { useTx } from '@/i18n';
+
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpRSLangExpressionImperative() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Императивные выражения</h1>
+    <>
+      <h1>{tx('tx.rsexpression.imperative')}</h1>
       <p>
         Императивная конструкция в языке родов структур является теоретико-множественным выражением, построенным с
         помощью блоков и правил вычисления.
@@ -16,7 +19,7 @@ export function HelpRSLangExpressionImperative() {
         действий по перебору и присвоению значений.
       </p>
 
-      <h2>Синтаксис</h2>
+      <h2>{tx('tx.general.syntax')}</h2>
       <ul>
         <li>
           <code>I{'{ТМВ(ξ1, ξ2) | ξ1∶∈ТМВ1; ξ2≔ТМВ2; ξk∶∈ТМВk; ЛВ(ξ1,ξ2); ...}'}</code>
@@ -51,19 +54,19 @@ export function HelpRSLangExpressionImperative() {
         </li>
       </ul>
 
-      <h2>Семантика</h2>
+      <h2>{tx('tx.general.semantics')}</h2>
       <p>
         Для каждого набора значений перебираемых и определяемых переменных вычисляется значение{' '}
         <code>ТМВ(ξ1, ..., ξk)</code>. Этот результат включается в итоговое множество, если все логические выражения
         истинны.
       </p>
 
-      <h2>Пример</h2>
+      <h2>{tx('tx.general.example')}</h2>
       <p>
         <code>
           I{'{(ξ1,ξ2) | ξ1∶∈{1, 2, 3}; ξ2≔ξ1+1; ∃σ∈{4, 5, 6} (σ=2∗ξ2)}'} = {'{(1, 2), (2, 3)}'}
         </code>
       </p>
-    </div>
+    </>
   );
 }

@@ -1,10 +1,13 @@
+import { useTx } from '@/i18n';
+
 import { TextURL } from '@/components/control';
 import { external_urls, PARAMETER } from '@/utils/constants';
 
 export function HelpExteor() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Экстеор</h1>
+    <>
+      <h1>{tx('tx.shell.app.exteor')}</h1>
       <p>Экстеор 4.9 — редактор текстов систем понятий эксплицированных в родах структур.</p>
       <p>
         Портал превосходит Экстеор в части редактирования экспликаций, но вычисление интерпретации доступно только в
@@ -37,6 +40,6 @@ export function HelpExteor() {
         <li>Выгрузка концептуальных схем в Word</li>
         <li>Импорт/экспорт интерпретаций через Excel</li>
       </ul>
-    </div>
+    </>
   );
 }

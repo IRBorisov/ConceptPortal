@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import {
   IconAxiomFalse,
   IconChild,
@@ -39,9 +41,10 @@ import { LinkTopic } from '../components/link-topic';
 import { HelpTopic } from '../models/help-topic';
 
 export function HelpThesaurus() {
+  const tx = useTx();
   return (
-    <div className='text-justify'>
-      <h1>Тезаурус</h1>
+    <>
+      <h1>{tx('tx.lang.thesaurus')}</h1>
       <p>
         Данный раздел содержит основные термины и определения, используемые в работе с Порталом. Термины сгруппированы
         по ключевым сущностям. Дополнительные сведения о связях между терминами представлены в других разделах справки и
@@ -49,7 +52,7 @@ export function HelpThesaurus() {
         идентификации соответствующих сущностей.
       </p>
 
-      <h2>Концептуальная схема</h2>
+      <h2>{tx('tx.schema')}</h2>
       <p>
         <IconRSForm className='inline-icon' />
         {'\u2009'}
@@ -92,7 +95,7 @@ export function HelpThesaurus() {
         </li>
       </ul>
 
-      <h2>Конституента</h2>
+      <h2>{tx('tx.cst')}</h2>
       <p>
         Конституента – часть КС, являющаяся отдельным понятием, схемой построения понятия, либо утверждением,
         связывающим введенные понятия. <LinkTopic text='Аттрибутами конституенты' topic={HelpTopic.CC_CONSTITUENTA} /> в
@@ -255,7 +258,7 @@ export function HelpThesaurus() {
         </li>
       </ul>
 
-      <h2>Операционная схема синтеза</h2>
+      <h2>{tx('tx.oss')}</h2>
       <p>
         <IconOSS className='inline-icon' />
         {'\u2009'}
@@ -298,7 +301,7 @@ export function HelpThesaurus() {
         </li>
       </ul>
 
-      <h2>Концептуальная модель</h2>
+      <h2>{tx('tx.model')}</h2>
       <p>
         <IconRSModel className='inline-icon' />
         {'\u2009'}
@@ -327,6 +330,6 @@ export function HelpThesaurus() {
         {'\u2009'}Пустые термы - термы, текущие значения которых равны пустому множеству. Термы, используемые для
         управления и выработки решений не должны быть пустыми.
       </p>
-    </div>
+    </>
   );
 }

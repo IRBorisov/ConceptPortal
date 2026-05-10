@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import { Divider } from '@/components/container';
 import {
   IconAdmin,
@@ -20,9 +22,10 @@ import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpRSModelMenu() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Редактирование модели</h1>
+    <>
+      <h1>{tx('tx.model.edit')}</h1>
       <p>
         При переходе к отдельной концептуальной модели сверху отображается меню модели и набор вкладок для просмотра
         атрибутов, состава и данных. Доступные команды зависят от прав пользователя, режима доступа и состояния модели.
@@ -30,7 +33,7 @@ export function HelpRSModelMenu() {
 
       <p>Некоторые действия могут быть недоступны в анонимном режиме или при отсутствии прав на редактирование.</p>
 
-      <h2>Вкладки</h2>
+      <h2>{tx('tx.general.tab.plural')}</h2>
       <ul>
         <li>
           <LinkTopic text='Паспорт' topic={HelpTopic.UI_MODEL_CARD} /> - атрибуты модели и связь с концептуальной схемой
@@ -56,7 +59,7 @@ export function HelpRSModelMenu() {
 
       <div className='flex my-3'>
         <div>
-          <h2>Меню модели</h2>
+          <h2>{tx('tx.model.menu')}</h2>
           <ul>
             <li>
               <IconMenu size='1.25rem' className='inline-icon' /> Меню модели - выпадающее меню с общими функциями
@@ -91,7 +94,7 @@ export function HelpRSModelMenu() {
         <Divider vertical margins='mx-3' />
 
         <div className='w-72'>
-          <h2>Режимы работы</h2>
+          <h2>{tx('tx.general.role.plural')}</h2>
           <ul>
             <li>
               <IconAlert size='1.25rem' className='inline-icon icon-red' /> работа в анонимном режиме. Переход на
@@ -112,6 +115,6 @@ export function HelpRSModelMenu() {
           </ul>
         </div>
       </div>
-    </div>
+    </>
   );
 }

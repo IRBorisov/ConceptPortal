@@ -1,13 +1,16 @@
+import { useTx } from '@/i18n';
+
 import { IconNewItem, IconRemove, IconReset, IconText } from '@/components/icons';
 
 export function HelpRSModelValueEdit() {
+  const tx = useTx();
   return (
-    <div className='dense'>
-      <h1>Диалог значения</h1>
+    <>
+      <h1>{tx('tx.rslang.value.editor')}</h1>
       <p>Этот диалог открывает отдельное значение в структурированном виде</p>
       <p>Единовременно отображаются элементы только одной структуры, вложенные подмножества раскрываются по клику</p>
 
-      <h2>Управление</h2>
+      <h2>{tx('tx.general.controls')}</h2>
       <ul>
         <li>заголовки и подписи помогают ориентироваться по вложенным компонентам значения</li>
         <li>кликните на значение для его редактирования</li>
@@ -30,6 +33,6 @@ export function HelpRSModelValueEdit() {
           <IconRemove className='inline-icon icon-red' /> удалить элемент из текущего множества
         </li>
       </ul>
-    </div>
+    </>
   );
 }

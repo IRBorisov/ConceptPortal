@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import {
   IconCalculateAll,
   IconCalculateOne,
@@ -17,15 +19,16 @@ import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpRSModelValue() {
+  const tx = useTx();
   return (
-    <div className='dense'>
-      <h1>Данные модели</h1>
+    <>
+      <h1>{tx('tx.model.data')}</h1>
       <p>Здесь можно просмотреть и изменить значение конституенты</p>
       <p>
         Чтобы вычислить значение, нажмите на <LinkTopic text='статус' topic={HelpTopic.UI_EVAL_STATUS} />
       </p>
 
-      <h2>Управление</h2>
+      <h2>{tx('tx.general.controls')}</h2>
       <ul>
         <li>
           <IconCalculateOne className='inline-icon icon-green' /> вычислить текущую конституенту:{' '}
@@ -64,6 +67,6 @@ export function HelpRSModelValue() {
           <IconText className='inline-icon' /> отображение текста или идентификаторов
         </li>
       </ul>
-    </div>
+    </>
   );
 }

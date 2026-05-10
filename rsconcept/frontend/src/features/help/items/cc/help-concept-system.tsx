@@ -1,10 +1,13 @@
+import { useTx } from '@/i18n';
+
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpConceptSystem() {
+  const tx = useTx();
   return (
-    <div className='text-justify'>
-      <h1>Концептуальная схема – Система определений</h1>
+    <>
+      <h1>{tx('tx.schema.hint')}</h1>
       <p>
         Данный раздел вводит <b>систему определений</b> как предмет концептуализации предметных областей. Под системой
         определений понимается совокупность отдельных понятий и утверждений, а также связей между ними, задаваемых
@@ -58,6 +61,6 @@ export function HelpConceptSystem() {
         Более подробно различные отношения между понятиями и способы построения систем определений раскрываются в
         разделе <LinkTopic text='Связи понятий' topic={HelpTopic.CC_RELATIONS} />.
       </p>
-    </div>
+    </>
   );
 }

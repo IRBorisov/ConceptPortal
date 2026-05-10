@@ -32,7 +32,7 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
           { label: tx('tx.general.total'), value: stats.count_all },
           { label: tx('tx.oss.block.plural'), value: stats.count_block },
           { label: tx('tx.oss.input'), value: stats.count_inputs },
-          { label: tx('tx.synthesis'), value: stats.count_synthesis },
+          { label: tx('tx.synthesis.short'), value: stats.count_synthesis },
           { label: tx('tx.oss.replica'), value: stats.count_references }
         ]}
       />

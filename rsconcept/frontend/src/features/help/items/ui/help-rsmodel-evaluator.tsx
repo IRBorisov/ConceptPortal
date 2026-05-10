@@ -1,19 +1,22 @@
+import { useTx } from '@/i18n';
+
 import { IconCalculateAll, IconStatusOK, IconText, IconTree, IconTypeGraph } from '@/components/icons';
 
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpRSModelEvaluator() {
+  const tx = useTx();
   return (
-    <div className='dense'>
-      <h1>Расчет выражения</h1>
+    <>
+      <h1>{tx('tx.evaluation')}</h1>
       <p>
         Вкладка позволяет проверять и вычислять произвольные выражения в контексте текущей модели без изменения
         конституент и их интерпретаций. Это удобно для отладки формул, проверки типизации и просмотра промежуточных
         результатов
       </p>
 
-      <h2>Управление</h2>
+      <h2>{tx('tx.general.controls')}</h2>
       <ul>
         <li>в верхнем поле задается родоструктурное выражение</li>
         <li>ниже отображаются типизация, ошибки разбора и вычисленное значение</li>
@@ -39,6 +42,6 @@ export function HelpRSModelEvaluator() {
           <IconText className='inline-icon' /> отображение текста или идентификаторов
         </li>
       </ul>
-    </div>
+    </>
   );
 }

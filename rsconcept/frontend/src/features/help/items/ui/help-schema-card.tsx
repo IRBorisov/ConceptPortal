@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import { IconDestroy, IconEditor, IconFolderEdit, IconOSS, IconOwner, IconSave, IconShare } from '@/components/icons';
 import { isMac } from '@/utils/utils';
 
@@ -5,16 +7,17 @@ import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpSchemaCard() {
+  const tx = useTx();
   return (
-    <div className='dense'>
-      <h1>Паспорт концептуальной схемы</h1>
+    <>
+      <h1>{tx('tx.schema.passport')}</h1>
 
       <p>Паспорт содержит информацию о концептуальной схеме и её статистику.</p>
       <p>
         Позволяет управлять атрибутами и <LinkTopic text='версиями' topic={HelpTopic.VERSIONS} />.
       </p>
 
-      <h2>Управление</h2>
+      <h2>{tx('tx.general.controls')}</h2>
       <ul>
         <li>
           <IconOSS className='inline-icon' /> связанная <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />
@@ -38,6 +41,6 @@ export function HelpSchemaCard() {
           <IconFolderEdit className='inline-icon' /> изменить расположение
         </li>
       </ul>
-    </div>
+    </>
   );
 }

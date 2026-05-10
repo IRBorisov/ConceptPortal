@@ -120,7 +120,7 @@ export function DlgCreateSynthesis() {
 
   return (
     <ModalForm
-      header={tx('tx.synthesis')}
+      header={tx('tx.synthesis.short')}
       submitText={tx('tx.general.create')}
       canSubmit={canSubmit}
       validationHint={hint}

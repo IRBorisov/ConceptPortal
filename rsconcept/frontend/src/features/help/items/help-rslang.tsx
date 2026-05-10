@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import { external_urls, videos } from '@/utils/constants';
 
 import { BadgeVideo } from '../components/badge-video';
@@ -6,9 +8,10 @@ import { Subtopics } from '../components/subtopics';
 import { HelpTopic } from '../models/help-topic';
 
 export function HelpRSLang() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Родоструктурная экспликация</h1>
+    <>
+      <h1>{tx('tx.rslang.short')}</h1>
       <p>
         Формальная запись (<i>экспликация</i>) концептуальных схем осуществляется с помощью языка родов структур (далее
         – Язык). В данном разделе поясняются основные понятия и формальные конструкции Языка. В своей основе Язык
@@ -61,6 +64,6 @@ export function HelpRSLang() {
           </a>
         </p>
       </div>
-    </div>
+    </>
   );
 }

@@ -1,10 +1,13 @@
+import { useTx } from '@/i18n';
+
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpRSLangExpressionStructure() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Структурные выражения</h1>
+    <>
+      <h1>{tx('tx.rsexpression.structure')}</h1>
       <p>
         Структурные выражения в языке родов структур используются для преобразований, меняющий{' '}
         <LinkTopic topic={HelpTopic.RSL_TYPIFICATION} text='типизацию' /> аргументов, позволяя порождать структурно
@@ -70,7 +73,7 @@ export function HelpRSLangExpressionStructure() {
         </li>
       </ul>
 
-      <h2>Фильтр</h2>
+      <h2>{tx('tx.rslang.token.filter')}</h2>
       <ul>
         <li>
           <b>Фильтр</b>: <code>Fi1[D1](S1)</code> — подмножество <code>S1</code>, в котором для каждого элемента первая
@@ -90,7 +93,7 @@ export function HelpRSLangExpressionStructure() {
         </li>
       </ul>
 
-      <h2>Примеры</h2>
+      <h2>{tx('tx.general.example')}</h2>
       <ul>
         <li>
           <code>{`ℬ(2) = {{}, {1}, {2}, {1, 2}}`}</code>
@@ -118,6 +121,6 @@ export function HelpRSLangExpressionStructure() {
           <code>{`Fi2[{2, 4}]({((1, 2), (3, 4), (5, 6))}) = {((1, 2), (3, 4))}`}</code>
         </li>
       </ul>
-    </div>
+    </>
   );
 }

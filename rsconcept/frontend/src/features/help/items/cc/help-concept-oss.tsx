@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import {
   IconConsolidation,
   IconDownload,
@@ -12,9 +14,10 @@ import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpConceptOSS() {
+  const tx = useTx();
   return (
-    <div className='text-justify'>
-      <h1>Операционная схема синтеза</h1>
+    <>
+      <h1>{tx('tx.oss')}</h1>
       <p>
         Работа со сложными предметными областями требует многократного{' '}
         <LinkTopic text='синтеза' topic={HelpTopic.CC_SYNTHESIS} /> для построения целевых понятий. Последовательность
@@ -67,6 +70,6 @@ export function HelpConceptOSS() {
         неоднозначности в результате. Необходимо внимательно формировать таблицу отождествлений, добавляя дублирующиеся
         понятия из синтезируемых схем.
       </p>
-    </div>
+    </>
   );
 }

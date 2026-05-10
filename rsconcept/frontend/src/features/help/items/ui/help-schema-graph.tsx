@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import { IconCrucialValue } from '@/features/rsform/components/icon-crucial-value';
 import { IconEdgeType } from '@/features/rsform/components/icon-edge-type';
 import { IconGraphMode } from '@/features/rsform/components/icon-graph-mode';
@@ -34,9 +36,10 @@ import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpSchemaGraph() {
+  const tx = useTx();
   return (
-    <div className='flex flex-col'>
-      <h1>Граф термов</h1>
+    <>
+      <h1>{tx('tx.termGraph')}</h1>
       <div className='flex flex-col sm:flex-row'>
         <div className='sm:w-75'>
           <h2>Настройка графа</h2>
@@ -169,6 +172,6 @@ export function HelpSchemaGraph() {
           </ul>
         </div>
       </div>
-    </div>
+    </>
   );
 }

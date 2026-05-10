@@ -1,10 +1,15 @@
+import { useTx } from '@/i18n';
+
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpRSLangCorrect() {
+  const tx = useTx();
   return (
-    <div className='text-justify'>
-      <h1>Переносимость и корректность</h1>
+    <>
+      <h1>
+        {tx('tx.concept.system.portability')} & {tx('tx.concept.system.correctness')}
+      </h1>
       <p>
         <b>Биективная переносимость выражений</b> заключается в независимости значений определений от биективной замены
         интерпретаций неопределяемых понятий. Она основана на принципиальной не сравнимости элементов базисных множеств.
@@ -30,6 +35,6 @@ export function HelpRSLangCorrect() {
         Редактор выражений на Портале оснащен инструментами проверки выражений и вычисления их типизации. Найденные
         ошибки диагностируются и выводится соответствующее сообщение об ошибке.
       </p>
-    </div>
+    </>
   );
 }

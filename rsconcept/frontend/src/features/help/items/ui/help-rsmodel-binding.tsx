@@ -1,9 +1,12 @@
+import { useTx } from '@/i18n';
+
 import { IconNewItem, IconRemove, IconSearch } from '@/components/icons';
 
 export function HelpRSModelBinding() {
+  const tx = useTx();
   return (
-    <div className='dense'>
-      <h1>Редактор базовой интерпретации</h1>
+    <>
+      <h1>{tx('tx.rslang.binding')}</h1>
       <p>Диалог задаёт таблицу значений элементов для неопределяемого понятия (базисного множества) в модели</p>
 
       <ul>
@@ -18,6 +21,6 @@ export function HelpRSModelBinding() {
           <IconRemove className='inline-icon icon-red' /> удалить строку из модели
         </li>
       </ul>
-    </div>
+    </>
   );
 }

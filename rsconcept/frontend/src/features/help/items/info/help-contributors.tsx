@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import { TextURL } from '@/components/control';
 import { external_urls } from '@/utils/constants';
 
@@ -5,9 +7,10 @@ import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpContributors() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Благодарности разработчикам и исследователям</h1>
+    <>
+      <h1>{tx('tx.general.developer.acknowledgements')}</h1>
       <p>
         История инструментов работы с концептуальными схемами начинается с 1970-х годов и продолжается в настоящее
         время. Здесь представлена скромная попытка перечислить вклад различных людей в развитие инструментов и
@@ -295,6 +298,6 @@ export function HelpContributors() {
           <i> Визуализации смешанных представлений концептуальной схемы.</i>
         </li>
       </ul>
-    </div>
+    </>
   );
 }

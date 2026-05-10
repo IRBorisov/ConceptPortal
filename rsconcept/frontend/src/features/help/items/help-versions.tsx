@@ -1,9 +1,12 @@
+import { useTx } from '@/i18n/use-tx';
+
 import { IconEditor, IconNewVersion, IconShare, IconUpload, IconVersions } from '@/components/icons';
 
 export function HelpVersions() {
+  const tx = useTx();
   return (
-    <div className='dense'>
-      <h1>Версионирование схем</h1>
+    <>
+      <h1>{tx('tx.lib.versioning')}</h1>
       <p>
         Версионирование доступно <IconEditor size='1rem' className='inline-icon' /> Редакторам.
       </p>
@@ -26,6 +29,6 @@ export function HelpVersions() {
           <IconVersions className='inline-icon' /> Редактировать атрибуты версий
         </li>
       </ul>
-    </div>
+    </>
   );
 }

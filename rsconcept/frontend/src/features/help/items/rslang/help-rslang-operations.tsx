@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import {
   IconGenerateNames,
   IconGenerateStructure,
@@ -11,13 +13,14 @@ import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpRSLangOperations() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Операции над концептуальными схемами</h1>
+    <>
+      <h1>{tx('tx.schema.operation.hint')}</h1>
       <p>В данном разделе поясняются различные операции над концептуальными схемами.</p>
 
       <h2>
-        <IconSortList size='1.25rem' className='inline-icon' /> Упорядочение
+        <IconSortList size='1.25rem' className='inline-icon' /> {tx('tx.schema.order.restore.short')}
       </h2>
       <ul>
         Упорядочение списка конституент по следующим правилам
@@ -35,7 +38,7 @@ export function HelpRSLangOperations() {
       </ul>
 
       <h2>
-        <IconGenerateNames size='1.25rem' className='inline-icon' /> Порядковые имена
+        <IconGenerateNames size='1.25rem' className='inline-icon' /> {tx('tx.schema.order.rename')}
       </h2>
       <p>
         Генерация имен конституент таким образом, чтобы порядок на индексах соответствовал порядка объявления
@@ -43,7 +46,7 @@ export function HelpRSLangOperations() {
       </p>
 
       <h2>
-        <IconGenerateStructure size='1.25rem' className='inline-icon' /> Раскрытие структуры
+        <IconGenerateStructure size='1.25rem' className='inline-icon' /> {tx('tx.concept.expandStructure.noun')}
       </h2>
       <p>
         Порождение полной совокупности термов, раскрывающих структуру выбранной конституенты. Операция применима к
@@ -54,7 +57,7 @@ export function HelpRSLangOperations() {
       </p>
 
       <h2>
-        <IconReplace size='1.25rem' className='inline-icon' /> Отождествление
+        <IconReplace size='1.25rem' className='inline-icon' /> {tx('tx.substitution')}
       </h2>
       <p>
         Формирование таблицы отождествлений и ее применение к текущей схеме. В результате будет удален ряд конституент и
@@ -70,13 +73,13 @@ export function HelpRSLangOperations() {
       </p>
 
       <h2>
-        <IconInlineSynthesis size='1.25rem' className='inline-icon' /> Встраивание
+        <IconInlineSynthesis size='1.25rem' className='inline-icon' /> {tx('tx.schema.embed')}
       </h2>
       <p>
         Реализация операции синтеза концептуальных схем в рамках одной концептуальной схемы. Операции заключается в
         копировании выбранного подмножества конституент из схемы-источника в текущую схему. Также задается Таблица
         отождествлений, позволяющая связать добавляемые конституенты с текущей схемой.
       </p>
-    </div>
+    </>
   );
 }

@@ -82,7 +82,7 @@ export function BadgeHelp({
             <div className='absolute right-2 text-sm top-1' onClick={event => event.stopPropagation()}>
               <TextURL text={tx('tx.general.help')} href={`/manuals?topic=${topic}`} />
             </div>
-            <TopicPage topic={topic} />
+            <TopicPage topic={topic} popover />
           </div>
         </Suspense>
       </Tooltip>

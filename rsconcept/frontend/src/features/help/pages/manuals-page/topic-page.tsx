@@ -73,11 +73,19 @@ const MIN_SIZE_LARGE = 600;
 
 interface TopicPageProps {
   topic: HelpTopic;
+  popover?: boolean;
 }
 
-export function TopicPage({ topic }: TopicPageProps) {
+export function TopicPage({ topic, popover }: TopicPageProps) {
   const size = useWindowSize();
+  return (
+    <div className={popover ? 'dense mb-2' : 'text-justify'}>
+      <TopicPageContent topic={topic} isSmall={size.isSmall} />
+    </div>
+  );
+}
 
+function TopicPageContent({ topic, isSmall }: { topic: HelpTopic; isSmall: boolean }) {
   if (topic === HelpTopic.MAIN) return <HelpMain />;
   if (topic === HelpTopic.THESAURUS) return <HelpThesaurus />;
 
@@ -144,8 +152,8 @@ export function TopicPage({ topic }: TopicPageProps) {
   if (topic === HelpTopic.INFO_PRIVACY)
     return (
       <HelpPrivacy
-        offsetXpx={size.isSmall ? OFFSET_X_SMALL : OFFSET_X_LARGE}
-        minWidth={size.isSmall ? MIN_SIZE_SMALL : MIN_SIZE_LARGE}
+        offsetXpx={isSmall ? OFFSET_X_SMALL : OFFSET_X_LARGE}
+        minWidth={isSmall ? MIN_SIZE_SMALL : MIN_SIZE_LARGE}
       />
     );
   if (topic === HelpTopic.INFO_API) return <HelpAPI />;

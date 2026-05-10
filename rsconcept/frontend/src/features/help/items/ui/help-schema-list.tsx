@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import { Divider } from '@/components/container';
 import {
   IconAlias,
@@ -17,9 +19,10 @@ import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpSchemaList() {
+  const tx = useTx();
   return (
-    <div className='dense'>
-      <h1>Список конституент</h1>
+    <>
+      <h1>{tx('tx.schema.list')}</h1>
       <ul>
         <li>
           <IconAlias className='inline-icon' />
@@ -31,7 +34,7 @@ export function HelpSchemaList() {
         </li>
       </ul>
 
-      <h2>Управление списком</h2>
+      <h2>{tx('tx.general.controls')}</h2>
       <ul>
         <li>
           <IconOSS className='inline-icon' /> переход к связанной <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />
@@ -74,6 +77,6 @@ export function HelpSchemaList() {
       <Divider margins='my-2' />
 
       <InfoCstStatus title='Статусы' />
-    </div>
+    </>
   );
 }

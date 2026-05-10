@@ -1,9 +1,12 @@
+import { useTx } from '@/i18n/use-tx';
+
 import { IconHide, IconImmutable, IconPrivate, IconProtected, IconPublic } from '@/components/icons';
 
 export function HelpAccess() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Организация доступов</h1>
+    <>
+      <h1>{tx('tx.lib.access.plural')}</h1>
       <p>Редактирование контента осуществляется Редакторами и Владельцом.</p>
       <p>Редактирование прав и доступов осуществляется Владельцом.</p>
       <p>
@@ -22,13 +25,13 @@ export function HelpAccess() {
           <IconPrivate className='inline-icon icon-red' /> личная политика оставляет доступ к объекту только владельцу
         </li>
         <li>
-          <IconHide className='inline-icon' /> режим скрытия объекта из списка в библиотеке не ограничивает доступ к нему по
-          прямой ссылке
+          <IconHide className='inline-icon' /> режим скрытия объекта из списка в библиотеке не ограничивает доступ к
+          нему по прямой ссылке
         </li>
         <li>
           <IconImmutable className='inline-icon' /> режим защиты от редактирования предохраняет от случайных изменений
         </li>
       </ul>
-    </div>
+    </>
   );
 }

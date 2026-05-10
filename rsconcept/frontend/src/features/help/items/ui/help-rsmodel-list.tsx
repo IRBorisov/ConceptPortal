@@ -1,3 +1,5 @@
+import { useTx } from '@/i18n';
+
 import {
   IconCalculateAll,
   IconClone,
@@ -14,9 +16,10 @@ import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpRSModelList() {
+  const tx = useTx();
   return (
-    <div className='dense'>
-      <h1>Список конституент модели</h1>
+    <>
+      <h1>{tx('tx.model.list')}</h1>
       <p>Интерфейс позволяет работать со списком конституент модели.</p>
       <p>
         Для редактирования определений и терминов переходите к{' '}
@@ -27,7 +30,7 @@ export function HelpRSModelList() {
         .
       </p>
 
-      <h2>Управление</h2>
+      <h2>{tx('tx.general.controls')}</h2>
       <ul>
         <li>
           <IconReset className='inline-icon' /> снять выделение: <kbd>ESC</kbd>
@@ -55,6 +58,6 @@ export function HelpRSModelList() {
           <IconDestroy className='inline-icon icon-red' /> удаление выбранных конституент
         </li>
       </ul>
-    </div>
+    </>
   );
 }

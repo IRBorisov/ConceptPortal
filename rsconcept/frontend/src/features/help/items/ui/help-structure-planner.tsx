@@ -1,12 +1,15 @@
+import { useTx } from '@/i18n';
+
 import { isMac } from '@/utils/utils';
 
 import { LinkTopic } from '../../components/link-topic';
 import { HelpTopic } from '../../models/help-topic';
 
 export function HelpStructurePlanner() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Планировщик структуры</h1>
+    <>
+      <h1>{tx('tx.concept.expandStructure.noun')}</h1>
       <p>
         Полноэкранный диалог для работы со структурой типизации выбранной{' '}
         <LinkTopic text='конституенты' topic={HelpTopic.CC_CONSTITUENTA} />. По дереву типизации строится граф операций
@@ -18,7 +21,7 @@ export function HelpStructurePlanner() {
         схемы по команде «Порождение структуры».
       </p>
 
-      <h2>Граф</h2>
+      <h2>{tx('tx.graph')}</h2>
       <ul>
         <li>клик по узлу выбирает элемент структуры</li>
         <li>если для него уже есть конституента — она подставляется, иначе предлагается имя для новой</li>
@@ -37,6 +40,6 @@ export function HelpStructurePlanner() {
           в поле термина: <kbd>{isMac() ? 'Cmd + S' : 'Ctrl + S'}</kbd> — сохранить термин или создать конституенту
         </li>
       </ul>
-    </div>
+    </>
   );
 }

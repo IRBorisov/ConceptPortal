@@ -1,7 +1,10 @@
+import { useTx } from '@/i18n';
+
 export function HelpRSLangTemplates() {
+  const tx = useTx();
   return (
-    <div>
-      <h1>Шаблоны</h1>
+    <>
+      <h1>{tx('tx.rsexpression.templateBank')}</h1>
       <p>
         Портал предоставляет быстрый доступ к часто используемым выражениям с помощью функции создания конституенты из
         шаблона
@@ -23,6 +26,6 @@ export function HelpRSLangTemplates() {
           Кнопка <b>Создать</b> инициирует добавление выбранной конституенты в схему
         </li>
       </ul>
-    </div>
+    </>
   );
 }
