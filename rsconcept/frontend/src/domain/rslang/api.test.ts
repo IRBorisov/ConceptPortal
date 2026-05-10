@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { applyTypificationMapping, extractGlobals, isSimpleExpression, splitTemplateDefinition } from './api';
+import {
+  applyTypificationMapping,
+  extractGlobals,
+  isSetTypification,
+  isSimpleExpression,
+  splitTemplateDefinition
+} from './api';
 
 const globalsData: [string, string][] = [
   ['', ''],
@@ -76,6 +82,35 @@ describe('Testing typification mapping', () => {
     it(`Apply typification mapping: ${original} -> ${replacement} in "${input}"`, () => {
       const result = applyTypificationMapping(input, { [original]: replacement });
       expect(result).toBe(expected);
+    });
+  });
+});
+describe('Testing isSetTypification', () => {
+  const isSetTypificationData: [string, boolean][] = [
+    ['ℬ(X1)', true],
+    ['ℬ(C1)', true],
+    ['ℬ(Z)', true],
+    ['ℬ(ℬ(X1))', true],
+    ['ℬ(X1×X2)', true],
+    ['ℬ(X1×Z)', true],
+    ['ℬ(X1×C1)', true],
+    ['ℬℬ(X1×X2)', true],
+    ['ℬℬ(ℬ(X1×X2)×ℬ(X2))', true],
+    ['ℬ(ℬ(X1×X2)×ℬ(X2))', true],
+    ['ℬ(ℬℬ(X1×X2)×ℬ(X2))', true],
+    ['Z', false],
+    ['С1', false],
+    ['X1', false],
+    ['X1×X2', false],
+    ['ℬ(', false],
+    ['ℬX1', false],
+    ['', false],
+    ['ℬ(ℬ(X1×X2)×ℬ(X2)×X42)', true]
+  ];
+
+  isSetTypificationData.forEach(([input, expected]) => {
+    it(`isSetTypification("${input}") should be ${expected}`, () => {
+      expect(isSetTypification(input)).toBe(expected);
     });
   });
 });

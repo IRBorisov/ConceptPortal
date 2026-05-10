@@ -14,7 +14,7 @@ export type AliasMapping = Record<string, string>;
 const LOCALS_REGEXP = /[_a-zα-ω][a-zα-ω]*\d*/g;
 const GLOBALS_REGEXP = /[XCSADFPTN]\d+/g;
 const COMPLEX_SYMBOLS_REGEXP = /[∀∃×ℬ;|:]/g;
-const TYPIFICATION_SET = /^ℬ+\([ℬ\(X\d+\)×]*\)$/g;
+const TYPIFICATION_SET = /^ℬ+\([ℬ\(((X|C)\d+|Z)\)×]*\)$/g;
 // cspell:enable
 
 /** Extract arguments from AST. */
