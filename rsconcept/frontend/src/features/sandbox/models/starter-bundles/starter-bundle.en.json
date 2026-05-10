@@ -1,0 +1,524 @@
+{
+  "formatVersion": 2,
+  "meta": {
+    "nextId": 27938,
+    "updatedAt": "2000-01-01T00:00:00.000Z"
+  },
+  "schema": {
+    "id": 1,
+    "item_type": "rsform",
+    "alias": "Demo",
+    "title": "Demo schema",
+    "description": "",
+    "visible": true,
+    "read_only": false,
+    "location": "/U",
+    "access_policy": "public",
+    "time_create": "2000-01-01T00:00:00.000Z",
+    "time_update": "2000-01-01T00:00:00.000Z",
+    "owner": null,
+    "is_produced": false,
+    "editors": [],
+    "version": 2,
+    "versions": [],
+    "items": [
+      {
+        "id": 27848,
+        "alias": "X1",
+        "convention": "Employees of an organization on the reference date",
+        "crucial": false,
+        "cst_type": "basic",
+        "definition_formal": "",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "employees",
+        "term_resolved": "employees",
+        "term_forms": []
+      },
+      {
+        "id": 27849,
+        "alias": "X2",
+        "convention": "Professional skills that can be objectively verified",
+        "crucial": false,
+        "cst_type": "basic",
+        "definition_formal": "",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "competencies",
+        "term_resolved": "competencies",
+        "term_forms": []
+      },
+      {
+        "id": 27850,
+        "alias": "S1",
+        "convention": "Organizational reporting hierarchy according to an approved internal policy document",
+        "crucial": false,
+        "cst_type": "structure",
+        "definition_formal": "ℬ(X1×X1)",
+        "definition_raw": "set of supervisor–subordinate pairs",
+        "definition_resolved": "set of supervisor–subordinate pairs",
+        "term_raw": "subordination",
+        "term_resolved": "subordination",
+        "term_forms": []
+      },
+      {
+        "id": 27852,
+        "alias": "D1",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "term",
+        "definition_formal": "Pr1(S1)",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "supervisors",
+        "term_resolved": "supervisors",
+        "term_forms": []
+      },
+      {
+        "id": 27853,
+        "alias": "D2",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "term",
+        "definition_formal": "Pr2(S1)",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "subordinates",
+        "term_resolved": "subordinates",
+        "term_forms": []
+      },
+      {
+        "id": 27920,
+        "alias": "D3",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "term",
+        "definition_formal": "D1\\D2",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "top-level supervisors",
+        "term_resolved": "top-level supervisors",
+        "term_forms": []
+      },
+      {
+        "id": 27917,
+        "alias": "F1",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "function",
+        "definition_formal": "[α∈ℬ(X1)] Pr2(Fi1[α](S1))",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "direct subordinates of the given set @{X1|plur,gent}",
+        "term_resolved": "direct subordinates of the given set of employees",
+        "term_forms": []
+      },
+      {
+        "id": 27918,
+        "alias": "F2",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "function",
+        "definition_formal": "[α∈ℬ(X1)] R{ξ:=α | ξ∪F1[ξ]}\\α",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "all subordinates of the given set @{X1|plur,gent}",
+        "term_resolved": "all subordinates of the given set of employees",
+        "term_forms": []
+      },
+      {
+        "id": 27921,
+        "alias": "A1",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "axiom",
+        "definition_formal": "card(Pr1(S1))=card(D2)",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "single-leader principle",
+        "term_resolved": "single-leader principle",
+        "term_forms": []
+      },
+      {
+        "id": 27851,
+        "alias": "S2",
+        "convention": "Data from employee records, verified by approved methods depending on the specific competency",
+        "crucial": false,
+        "cst_type": "structure",
+        "definition_formal": "ℬ(X1×X2)",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "employee has competency",
+        "term_resolved": "employee has competency",
+        "term_forms": []
+      },
+      {
+        "id": 27855,
+        "alias": "D4",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "term",
+        "definition_formal": "Pr2(S2)",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "available competencies",
+        "term_resolved": "available competencies",
+        "term_forms": []
+      },
+      {
+        "id": 27854,
+        "alias": "D5",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "term",
+        "definition_formal": "Pr1(S2)",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "employees who have competencies",
+        "term_resolved": "employees who have competencies",
+        "term_forms": []
+      },
+      {
+        "id": 27922,
+        "alias": "D6",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "term",
+        "definition_formal": "X1\\D5",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "@{X1|plur,nomn}, lacking @{X2|plur,gent}",
+        "term_resolved": "employees lacking competencies",
+        "term_forms": []
+      },
+      {
+        "id": 27919,
+        "alias": "F3",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "function",
+        "definition_formal": "[α∈ℬ(X1)] Pr2(Fi1[α](S2))",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "personal competencies of the given set @{X1|plur,gent}",
+        "term_resolved": "personal competencies of the given set of employees",
+        "term_forms": []
+      },
+      {
+        "id": 27928,
+        "alias": "F5",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "function",
+        "definition_formal": "[α∈X1] Pr2(Fi1[{α}](S2))",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "personal competencies of the given @{X1|sing,gent}",
+        "term_resolved": "personal competencies of the given employee",
+        "term_forms": []
+      },
+      {
+        "id": 27923,
+        "alias": "F4",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "function",
+        "definition_formal": "[α∈X1] F3[{α}∪F2[{α}]]",
+        "definition_raw": "competencies of a person and their direct subordinates",
+        "definition_resolved": "competencies of a person and their direct subordinates",
+        "term_raw": "direct competencies of the given person",
+        "term_resolved": "direct competencies of the given person",
+        "term_forms": []
+      },
+      {
+        "id": 27925,
+        "alias": "D8",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "term",
+        "definition_formal": "D{(ξ1,ξ2)∈X1×X1 | F5[ξ2]⊆F5[ξ1]}",
+        "definition_raw": "partial non-strict order on personal competencies: one employee has every competency of another",
+        "definition_resolved": "partial non-strict order on personal competencies: one employee has every competency of another",
+        "term_raw": "employee dominance by competencies",
+        "term_resolved": "employee dominance by competencies",
+        "term_forms": []
+      },
+      {
+        "id": 27929,
+        "alias": "D9",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "term",
+        "definition_formal": "S1∩D8",
+        "definition_raw": "subordinations where the supervisor has all competencies of the subordinate",
+        "definition_resolved": "subordinations where the supervisor has all competencies of the subordinate",
+        "term_raw": "competence-dominating subordinations",
+        "term_resolved": "competence-dominating subordinations",
+        "term_forms": []
+      },
+      {
+        "id": 27931,
+        "alias": "D11",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "term",
+        "definition_formal": "S1∩Pr2,1(D8)",
+        "definition_raw": "subordinations where the subordinate has all competencies of the supervisor",
+        "definition_resolved": "subordinations where the subordinate has all competencies of the supervisor",
+        "term_raw": "competence-dominated subordinations",
+        "term_resolved": "competence-dominated subordinations",
+        "term_forms": []
+      },
+      {
+        "id": 27930,
+        "alias": "D10",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "term",
+        "definition_formal": "D{(ξ1,ξ2)∈S1 | F5[ξ1]∩F5[ξ2]=∅}",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "subordinations disjoint by competencies",
+        "term_resolved": "subordinations disjoint by competencies",
+        "term_forms": []
+      },
+      {
+        "id": 27932,
+        "alias": "S3",
+        "convention": "number of employees a given competency can effectively manage, per statistical data",
+        "crucial": false,
+        "cst_type": "structure",
+        "definition_formal": "ℬ(X2×Z)",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "managerial competency capacity",
+        "term_resolved": "managerial competency capacity",
+        "term_forms": []
+      },
+      {
+        "id": 27933,
+        "alias": "D12",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "term",
+        "definition_formal": "Pr1(S3)",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "managerial competencies",
+        "term_resolved": "managerial competencies",
+        "term_forms": []
+      },
+      {
+        "id": 27936,
+        "alias": "F6",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "function",
+        "definition_formal": "[σ∈ℬ(Z)] debool(D{ξ∈σ | ∀α∈σ α ≥ ξ} ∪ I{0 | σ=∅})",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "minimum of a set of numbers",
+        "term_resolved": "minimum of a set of numbers",
+        "term_forms": []
+      },
+      {
+        "id": 27935,
+        "alias": "F7",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "function",
+        "definition_formal": "[α∈X1] debool(I{γ | ω:=F5[α]; σ:=Fi1[ω](S3); γ:=F6[Pr2(σ)]})",
+        "definition_raw": "minimum of the capacities of personal managerial competencies of the given employee",
+        "definition_resolved": "minimum of the capacities of personal managerial competencies of the given employee",
+        "term_raw": "leadership potential of the given @{X1|sing,gent}",
+        "term_resolved": "leadership potential of the given employee",
+        "term_forms": []
+      },
+      {
+        "id": 27937,
+        "alias": "D13",
+        "convention": "",
+        "crucial": false,
+        "cst_type": "term",
+        "definition_formal": "I{(σ, F7[σ]) | σ:∈X1}",
+        "definition_raw": "",
+        "definition_resolved": "",
+        "term_raw": "employees’ leadership potentials",
+        "term_resolved": "employees’ leadership potentials",
+        "term_forms": []
+      }
+    ],
+    "attribution": [],
+    "inheritance": [],
+    "oss": [],
+    "models": [
+      {
+        "id": 2,
+        "alias": "MDemo"
+      }
+    ]
+  },
+  "model": {
+    "id": 2,
+    "item_type": "rsmodel",
+    "alias": "MDemo",
+    "title": "Demo model",
+    "description": "",
+    "visible": true,
+    "read_only": false,
+    "location": "/U",
+    "access_policy": "public",
+    "time_create": "2000-01-01T00:00:00.000Z",
+    "time_update": "2000-01-01T00:00:00.000Z",
+    "owner": 2,
+    "editors": [],
+    "schema": 1,
+    "items": [
+      {
+        "id": 27932,
+        "type": "ℬ(X1×X1)",
+        "value": [
+          [
+            -111,
+            1,
+            3
+          ],
+          [
+            -111,
+            2,
+            5
+          ]
+        ]
+      },
+      {
+        "id": 27848,
+        "type": "basic",
+        "value": {
+          "1": "Vasily",
+          "2": "Peter",
+          "3": "Svetlana",
+          "4": "Olga",
+          "5": "Ivan",
+          "6": "Pafnuty",
+          "7": "Dmitry",
+          "8": "Irina"
+        }
+      },
+      {
+        "id": 27851,
+        "type": "ℬ(X1×X1)",
+        "value": [
+          [
+            -111,
+            1,
+            1
+          ],
+          [
+            -111,
+            1,
+            4
+          ],
+          [
+            -111,
+            2,
+            3
+          ],
+          [
+            -111,
+            2,
+            4
+          ],
+          [
+            -111,
+            3,
+            1
+          ],
+          [
+            -111,
+            3,
+            5
+          ],
+          [
+            -111,
+            5,
+            2
+          ],
+          [
+            -111,
+            5,
+            4
+          ],
+          [
+            -111,
+            6,
+            2
+          ],
+          [
+            -111,
+            7,
+            1
+          ],
+          [
+            -111,
+            7,
+            2
+          ],
+          [
+            -111,
+            8,
+            1
+          ],
+          [
+            -111,
+            8,
+            6
+          ]
+        ]
+      },
+      {
+        "id": 27849,
+        "type": "basic",
+        "value": {
+          "1": "Define tasks",
+          "2": "Run subtasks",
+          "3": "Spin",
+          "4": "Roll",
+          "5": "Haul",
+          "6": "Assemble",
+          "7": "Disassemble"
+        }
+      },
+      {
+        "id": 27850,
+        "type": "ℬ(X1×X1)",
+        "value": [
+          [
+            -111,
+            1,
+            7
+          ],
+          [
+            -111,
+            6,
+            4
+          ],
+          [
+            -111,
+            7,
+            1
+          ],
+          [
+            -111,
+            7,
+            3
+          ],
+          [
+            -111,
+            8,
+            7
+          ]
+        ]
+      }
+    ]
+  }
+}

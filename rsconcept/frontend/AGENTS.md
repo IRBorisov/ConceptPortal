@@ -50,7 +50,22 @@ Run from `rsconcept/frontend`:
 
 ## Internationalization
 
-- No hardcoded locale text. Use stable ids; update `en`, `ru`, `fr` for each id touched.
+**What belongs in message maps (`src/i18n`, `tx.*`)** — short, reusable copy only:
+
+- **UI**: labels, buttons, nav, errors, toasts, empty states, validation, tooltips, pagination, shared controls.
+- **Domain entities** (at catalog granularity): schema/library field names, rslang/grammar labels, AI shell strings, and similar **concise** product vocabulary.
+
+**What does not belong in message maps** — keep these **out of** `app/*.ts`, `domain/*.ts`, and merged maps:
+
+- Long-form content: **help manuals / topic bodies**, walkthrough prose, large markdown-like blocks.
+- **Sample or seed data**: demo bundles, fixtures, synthetic datasets, evaluation examples.
+- Any blob that would **bloat** catalogs, churn unrelated keys in `locale-keys-parity`, or mix documentation with UI strings.
+
+For those, use **per-locale copies** colocated with the feature (for example `*.en.tsx` / `*.ru.tsx` / `*.fr.tsx`, or `*.en.json` beside the feature), import or switch by `AppLocale` / `useIntl`, and **do not** add `tx.*` ids for that text. Example: sandbox starter data in `src/features/sandbox/models/starter-bundles/*.json`.
+
+---
+
+- No hardcoded locale text in **UI** that should live in catalogs: use stable ids; update `en`, `ru`, `fr` for each id touched.
 - React: `useTx` from `@/i18n`, then `tx('tx.*', values?)`.
 - Non-React: `globalTx('tx.*', values?)` from `@/i18n`.
 - Runtime maps: `src/i18n/map/message-map.{en,ru,fr}.ts`; merge only.
@@ -75,5 +90,5 @@ Run from `rsconcept/frontend`:
 - Add/update tests for parser, evaluation, or critical UI behavior changes.
 - Tailwind config/styles live in `src/styles`.
 - Long mixed-purpose class strings: group by purpose (layout/color/animation) via `clsx`/`cn`; use `clsx` when no prop merge needed.
-- Help manuals: when adding/renaming topics/pages in `src/features/help`, update `src/features/help/pages/manuals-page/topic-page.tsx`.
+- Help manuals: when adding/renaming topics/pages in `src/features/help`, update `src/features/help/pages/manuals-page/topic-page.tsx`. Topic **content** stays in per-locale topic modules (or other feature-local copies), not in `src/i18n` message maps.
 - Reusable components: keep positioning (`absolute`, `relative`, `top-*`, margins, etc.) out; pass via parent `className`.

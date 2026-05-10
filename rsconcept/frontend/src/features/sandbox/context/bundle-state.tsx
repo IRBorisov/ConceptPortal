@@ -1,6 +1,7 @@
 'use client';
 
 import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useIntl } from 'react-intl';
 import { toast } from 'react-toastify';
 
 import { RSEngine, type RSEngineServices } from '@/domain/library/rsengine';
@@ -20,7 +21,7 @@ import {
 } from '@/features/rsform/backend/types';
 
 import { type SandboxBundle } from '../models/bundle';
-import { createStarterSandboxBundle } from '../models/bundle-starter';
+import { createStarterSandboxBundle, resolveStarterLocale } from '../models/bundle-starter';
 import { sbApi } from '../stores/sandbox-mutations';
 import { downloadBundle, ensureBundleLoaded, importBundleFromJson, saveBundle } from '../stores/sandbox-repository';
 
@@ -32,6 +33,7 @@ let initialBundleValue: SandboxBundle | null = null;
 let initialBundlePromise: Promise<SandboxBundle> | null = null;
 
 export function SandboxState({ children }: React.PropsWithChildren) {
+  const intl = useIntl();
   const tx = useTx();
   const initialBundle = useInitialSandboxBundle();
   const [bundle, setBundleState] = useState(initialBundle);
@@ -198,7 +200,7 @@ export function SandboxState({ children }: React.PropsWithChildren) {
         model,
         engine,
         resetBundle: function resetBundle() {
-          commitBundle(createStarterSandboxBundle());
+          commitBundle(createStarterSandboxBundle(resolveStarterLocale(intl.locale)));
         },
         importBundle,
         exportBundle: () => downloadBundle(bundle),

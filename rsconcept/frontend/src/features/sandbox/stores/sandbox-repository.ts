@@ -2,6 +2,7 @@ import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
 import { globalTx } from '@/i18n';
+import { getInitialAppLocale } from '@/i18n/persisted-locale';
 
 import { type SandboxBundle, schemaSandboxBundle } from '../models/bundle';
 import { createStarterSandboxBundle } from '../models/bundle-starter';
@@ -34,7 +35,7 @@ export async function ensureBundleLoaded(): Promise<SandboxBundle> {
       toast.error(globalTx('tx.sandbox.bundle.load.fail.recover'));
     }
   }
-  const starter = createStarterSandboxBundle();
+  const starter = createStarterSandboxBundle(getInitialAppLocale());
   await saveBundle(starter);
   return starter;
 }
