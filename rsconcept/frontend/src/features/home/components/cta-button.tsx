@@ -27,8 +27,8 @@ export function CtaButton({ to, text, variant = 'default', icon, title, classNam
         'items-center justify-center gap-2 px-6 py-3',
         'rounded-2xl border-2',
         'font-medium tracking-tight font-ui select-none',
-        'focus-outline backdrop-blur-md',
-        'transition-all duration-200',
+        'outline-hidden focus-visible:outline-2 focus-visible:outline-ring focus-visible:border-ring backdrop-blur-md',
+        'transition-[background-color,border-color,color,box-shadow] duration-fade',
         'shadow-[0_6px_16px_-12px_rgb(15_23_42/0.55)] dark:shadow-[0_8px_24px_-14px_rgb(130_141_159/0.60)]',
         'hover:shadow-none dark:hover:shadow-none',
         variant === 'default' &&
