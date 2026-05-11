@@ -27,7 +27,7 @@ export function ErrorFallback() {
 
   if (isStaleBundleError(error)) {
     return (
-      <div className='flex flex-col gap-3 my-3 items-center antialiased' role='alert'>
+      <div className='h-full flex flex-col justify-center gap-3 items-center antialiased' role='alert'>
         <h1 className='my-2'>{tx('tx.shell.updater.header')}</h1>
         <p>{tx('tx.shell.updater.body')}</p>
       </div>

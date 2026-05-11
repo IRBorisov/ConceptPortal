@@ -97,6 +97,7 @@
     "codemirror",
     "Constituenta",
     "corsheaders",
+    "csrf",
     "csrftoken",
     "cstlist",
     "csttype",
@@ -214,6 +215,7 @@
     "Wordforms",
     "XCSDATN",
     "xyflow",
+    "youtube",
     "Айзенштат",
     "Акименков",
     "Астрина",
@@ -299,6 +301,6 @@
     "Экстеоре",
     "Юдкин"
   ],
-  "cSpell.language": "en,ru",
+  "cSpell.language": "en,ru,fr",
   "cSpell.ignorePaths": ["node_modules/**", "*.json"]
 }

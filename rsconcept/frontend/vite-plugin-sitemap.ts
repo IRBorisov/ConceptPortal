@@ -8,6 +8,7 @@ import { loadEnv } from 'vite';
 import { PUBLIC_SITEMAP_PATHS } from './public-sitemap-paths';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const SUPPORTED_LOCALES = ['ru', 'en', 'fr'] as const;
 
 function escapeXml(text: string): string {
   return text
@@ -28,18 +29,35 @@ function locationForPath(origin: string, pathname: string): string {
   return `${origin}${pathname}`;
 }
 
+function localizedPath(locale: (typeof SUPPORTED_LOCALES)[number], pathname: string): string {
+  if (pathname === '/') {
+    return `/${locale}/`;
+  }
+  return `/${locale}${pathname}`;
+}
+
 function buildSitemapXml(origin: string, lastmod: string): string {
-  const body = PUBLIC_SITEMAP_PATHS.map(p => {
-    const loc = locationForPath(origin, p);
-    return `  <url>
+  const body = PUBLIC_SITEMAP_PATHS.flatMap(publicPath =>
+    SUPPORTED_LOCALES.map(locale => {
+      const loc = locationForPath(origin, localizedPath(locale, publicPath));
+      const alternates = SUPPORTED_LOCALES.map(altLocale => {
+        const altLoc = locationForPath(origin, localizedPath(altLocale, publicPath));
+        return `    <xhtml:link rel="alternate" hreflang="${altLocale}" href="${escapeXml(altLoc)}" />`;
+      }).join('\n');
+      const xDefault = locationForPath(origin, publicPath);
+
+      return `  <url>
     <loc>${escapeXml(loc)}</loc>
+${alternates}
+    <xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(xDefault)}" />
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
   </url>`;
-  }).join('\n');
+    })
+  ).join('\n');
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${body}
 </urlset>
 `;
