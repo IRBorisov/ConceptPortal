@@ -15,6 +15,7 @@ import { HelpTopic } from '@/features/help';
 import { type UpdateConstituentaDTO } from '@/features/rsform/backend/types';
 import { EditorRSExpression } from '@/features/rsform/components/editor-rsexpression/editor-rsexpression';
 import { RefsInput } from '@/features/rsform/components/refs-input';
+import { TypificationInput } from '@/features/rsform/components/typification-input';
 import { labelRSExpression } from '@/features/rsform/labels';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
@@ -46,7 +47,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
   const router = useConceptNavigation();
   const { isMutable, engine, schema } = useModelEdit();
   const { patchConstituenta, createCstFromData, openTermEditor, isContentEditable, isProcessing } = useSchemaEdit();
-  const typification = activeCst.analysis.type;
+  const typification = activeCst.effectiveType;
 
   const isModified = useModificationStore(state => state.isModified);
   const setIsModified = useModificationStore(state => state.setIsModified);
@@ -79,6 +80,14 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
   const [termDraft, setTermDraft] = useState(activeCst.term_raw);
   const [formalDraft, setFormalDraft] = useState(activeCst.definition_formal);
   const [rawDraft, setRawDraft] = useState(activeCst.definition_raw);
+  const [manualTypificationDraft, setManualTypificationDraft] = useState(activeCst.typification_manual);
+  const [manualTypificationOpen, setManualTypificationOpen] = useState(!!activeCst.typification_manual);
+
+  const hasManualDraft = !!manualTypificationDraft;
+  const allowManualTypification =
+    activeCst.cst_type !== CstType.NOMINAL &&
+    (activeCst.analysis.type == null || hasManualDraft || !!activeCst.typification_manual);
+  const showManualTypificationField = allowManualTypification && (manualTypificationOpen || hasManualDraft);
 
   const hasDraftForCurrentCst = valueDraft.resetKey === valueResetKey;
   const inputValue = hasDraftForCurrentCst ? valueDraft.draft : initialStr;
@@ -86,7 +95,8 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
   const metaDirty =
     termDraft !== activeCst.term_raw ||
     formalDraft !== activeCst.definition_formal ||
-    rawDraft !== activeCst.definition_raw;
+    rawDraft !== activeCst.definition_raw ||
+    manualTypificationDraft !== activeCst.typification_manual;
   const isDirty = valueDirty || metaDirty;
 
   const metaFieldsDisabled = !isContentEditable || isProcessing;
@@ -105,10 +115,19 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         setTermDraft(activeCst.term_raw);
         setFormalDraft(activeCst.definition_formal);
         setRawDraft(activeCst.definition_raw);
+        setManualTypificationDraft(activeCst.typification_manual);
+        setManualTypificationOpen(!!activeCst.typification_manual);
       }, 0);
       return () => clearTimeout(timeoutId);
     },
-    [activeCst.id, activeCst.term_raw, activeCst.definition_formal, activeCst.definition_raw, toggleReset]
+    [
+      activeCst.id,
+      activeCst.term_raw,
+      activeCst.definition_formal,
+      activeCst.definition_raw,
+      activeCst.typification_manual,
+      toggleReset
+    ]
   );
 
   useEffect(
@@ -191,6 +210,9 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
     if (rawDraft !== activeCst.definition_raw) {
       item_data.definition_raw = rawDraft;
     }
+    if (manualTypificationDraft !== activeCst.typification_manual) {
+      item_data.typification_manual = manualTypificationDraft;
+    }
     if (Object.keys(item_data).length === 0) {
       return;
     }
@@ -243,6 +265,18 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       <h2 className='text-left w-fit'>{tx('tx.cst') + ' ' + activeCst.alias}</h2>
       <ValuePrimaryActions activeCst={activeCst} cstData={cstData} onChangeValue={handleSetValue} />
 
+      {showManualTypificationField ? (
+        <TypificationInput
+          label={tx('tx.rslang.typification.manual')}
+          placeholder={metaFieldsDisabled ? '' : tx('tx.rslang.typification.manual.hint')}
+          value={manualTypificationDraft}
+          disabled={metaFieldsDisabled || activeCst.is_inherited}
+          onChange={setManualTypificationDraft}
+          areaClassName={activeCst.is_type_mismatch ? 'cm-error' : undefined}
+          error={activeCst.is_type_mismatch ? tx('tx.rslang.typification.manual.validate') : undefined}
+        />
+      ) : null}
+
       <TextArea
         fitContent
         dense
@@ -263,7 +297,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
           value={formalDraft}
           schema={schema}
           activeCst={activeCst}
-          expressionType={activeCst.analysis.type}
+          expressionType={activeCst.effectiveType}
           errors={localEval?.errors ?? null}
           helpTopic={HelpTopic.UI_EVAL_STATUS}
           isProcessing={isProcessing}

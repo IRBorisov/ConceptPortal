@@ -47,6 +47,7 @@ class TestConstituenta(TestCase):
         self.assertEqual(cst.term_forms, [])
         self.assertEqual(cst.definition_resolved, '')
         self.assertEqual(cst.definition_raw, '')
+        self.assertEqual(cst.typification_manual, '')
 
 
     def test_extract_references(self):

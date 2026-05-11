@@ -82,7 +82,7 @@ export function TableModelList({
       maxSize: 60,
       cell: props => <BadgeEvaluation cst={props.row.original} engine={engine} />
     }),
-    columnHelper.accessor(cst => labelType(cst.analysis.type), {
+    columnHelper.accessor(cst => labelType(cst.effectiveType), {
       id: 'type',
       header: () => <span className='min-w-40'>{tx('tx.rslang.typification')}</span>,
       enableHiding: true,

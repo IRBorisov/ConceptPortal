@@ -63,7 +63,7 @@ export function DlgStructurePlanner() {
   );
   const isMultiline = term.length > TERM_CHARS_PER_LINE || term.includes('\n');
 
-  if (!target?.analysis.type || items.length === 0) {
+  if (!target?.effectiveType || items.length === 0) {
     console.error('Structure planner error input', target, items);
     hideDialog();
     return null;
@@ -118,6 +118,7 @@ export function DlgStructurePlanner() {
         cst_type: inferDraftType(target.cst_type),
         alias: inferAlias(node, currentSchema, target),
         term_raw: term,
+        typification_manual: '',
         definition_formal: node.definition,
         definition_raw: '',
         convention: '',
@@ -215,7 +216,7 @@ export function DlgStructurePlanner() {
         <ReactFlowProvider>
           <StructureFlow
             items={items}
-            rootType={target.analysis.type}
+            rootType={target.effectiveType}
             selected={selectedKey}
             setSelected={key => void handleSelectNode(key)}
           />

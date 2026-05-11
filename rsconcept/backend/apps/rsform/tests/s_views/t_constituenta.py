@@ -44,7 +44,7 @@ class TestConstituentaAPI(EndpointTester):
 
     @decl_endpoint('/api/rsforms/{item}/update-cst', method='patch')
     def test_partial_update(self):
-        data = {'target': self.x1.pk, 'item_data': {'convention': 'tt'}}
+        data = {'target': self.x1.pk, 'item_data': {'convention': 'tt', 'typification_manual': 'ℬ(X1)'}}
         self.executeForbidden(data, item=self.unowned_id)
 
         self.logout()
@@ -54,6 +54,7 @@ class TestConstituentaAPI(EndpointTester):
         self.executeOK(data)
         self.x1.refresh_from_db()
         self.assertEqual(self.x1.convention, 'tt')
+        self.assertEqual(self.x1.typification_manual, 'ℬ(X1)')
 
         self.executeOK(data)
 
@@ -160,6 +161,7 @@ class TestConstituentaAPI(EndpointTester):
             'term_raw': 'test',
             'term_forms': [{'text': 'form1', 'tags': 'sing,datv'}],
             'definition_formal': 'invalid',
+            'typification_manual': 'ℬ(X1)',
             'crucial': True
         }
         response = self.executeCreated(data)
@@ -169,6 +171,7 @@ class TestConstituentaAPI(EndpointTester):
         self.assertEqual(x4.term_raw, data['term_raw'])
         self.assertEqual(x4.term_forms, data['term_forms'])
         self.assertEqual(x4.definition_formal, data['definition_formal'])
+        self.assertEqual(x4.typification_manual, data['typification_manual'])
         self.assertEqual(x4.crucial, data['crucial'])
 
 

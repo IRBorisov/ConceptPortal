@@ -134,7 +134,7 @@ export function FormEditCst({
           transparent
           readOnly
           label={tx('tx.rslang.typification')}
-          value={labelType(target.analysis.type)}
+          value={labelType(target.effectiveType)}
           className='cursor-default'
         />
       ) : null}

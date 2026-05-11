@@ -14,12 +14,14 @@ import {
   typeClassForCstType
 } from '@/domain/library/rsform-api';
 import { type AnalysisFast, makeTypePath, RSLangAnalyzer, TokenID, TypeID, type TypePath } from '@/domain/rslang';
+import { parseTypeText } from '@/domain/rslang';
 import {
   extractGlobals,
   generateExpressionFromAst,
   isSimpleExpression,
   splitTemplateDefinition
 } from '@/domain/rslang/api';
+import { labelType } from '@/domain/rslang/labels';
 import { type ExpressionType } from '@/domain/rslang/semantic/typification';
 
 import { type RO } from '@/utils/meta';
@@ -107,6 +109,7 @@ export class RSFormLoader {
       cst.spawn = [];
       cst.attributes = [];
       cst.spawn_alias = [];
+      cst.typification_manual = cst.typification_manual ?? '';
       cst.parent_schema = schemaByCst.get(cst.id) ?? null;
       cst.parent_schema_index = cst.parent_schema ? parents.indexOf(cst.parent_schema) + 1 : 0;
       cst.is_inherited = inherit_children.has(cst.id);
@@ -131,6 +134,25 @@ export class RSFormLoader {
         type: parse.type,
         valueClass: parse.valueClass
       };
+
+      const manual = parseTypeText(cst.typification_manual);
+      const manualType = manual.type;
+      const hasComputed = parse.success && parse.type != null;
+      const hasValidManual = manualType != null;
+      const isManualMismatch =
+        hasComputed && !!cst.typification_manual && labelType(parse.type) !== labelType(manualType);
+
+      let effectiveType: ExpressionType | null = null;
+      if (hasValidManual && (!hasComputed || isManualMismatch)) {
+        effectiveType = manualType;
+      } else if (hasComputed) {
+        effectiveType = parse.type;
+      } else {
+        effectiveType = null;
+      }
+      cst.effectiveType = effectiveType;
+      cst.is_type_mismatch = isManualMismatch;
+      this.analyzer.setGlobal(cst.alias, effectiveType, parse.valueClass);
       if (!isBasicConcept(cst.cst_type) || cst.cst_type === CstType.AXIOM) {
         let normalized = '';
         if (parse.ast && !parse.ast.hasError) {
@@ -152,7 +174,8 @@ export class RSFormLoader {
         const spawner = this.inferParent(cst);
         const parents = this.graph.expandInputs([cstID]);
         const parent = this.cstByID.get(parents.at(-1)!);
-        const path = parent ? extractTypePath(parse.ast, parent.analysis.type!) : null;
+        const parentType = parent?.effectiveType;
+        const path = parent && parentType ? extractTypePath(parse.ast, parentType) : null;
         if (path && parent) {
           cst.spawner = spawner;
           if (spawner !== parent.id) {
@@ -321,7 +344,6 @@ function parseCst(target: Constituenta, analyzer: RSLangAnalyzer): AnalysisFast 
       expected: typeClassForCstType(cType),
       isDomain: cType === CstType.STRUCTURED
     });
-    analyzer.setGlobal(target.alias, parse.type, parse.valueClass);
     return parse;
   }
 }

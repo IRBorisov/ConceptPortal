@@ -70,7 +70,7 @@ export function TableSchemaList({
       maxSize: 65,
       cell: props => <BadgeConstituenta value={props.row.original} prefixID={prefixes.cst_list} />
     }),
-    columnHelper.accessor(cst => labelType(cst.analysis.type), {
+    columnHelper.accessor(cst => labelType(cst.effectiveType), {
       id: 'type',
       header: () => <span className='min-w-40'>{tx('tx.rslang.typification')}</span>,
       enableHiding: true,

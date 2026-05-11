@@ -46,7 +46,8 @@ export function isSchemaIssue(cst: Constituenta): boolean {
     cst.homonyms.length > 0 ||
     cst.formalDuplicates.length > 0 ||
     cst.status === CstStatus.INCORRECT ||
-    cst.status === CstStatus.INCALCULABLE
+    cst.status === CstStatus.INCALCULABLE ||
+    cst.is_type_mismatch
   ) {
     return true;
   }
@@ -258,17 +259,17 @@ export function cstCanProduceStructure(cst: RO<Constituenta>): boolean {
     case CstType.PREDICATE:
       return false;
   }
-  if (!cst.analysis?.type) {
+  if (!cst.effectiveType) {
     return false;
   }
   if (cst.cst_type === CstType.FUNCTION) {
-    const result = (cst.analysis.type as EchelonFunctional).result;
+    const result = (cst.effectiveType as EchelonFunctional).result;
     return typeCanProduceStructure(result);
   }
-  if (!isTypification(cst.analysis.type)) {
+  if (!isTypification(cst.effectiveType)) {
     return false;
   }
-  return typeCanProduceStructure(cst.analysis.type as Typification);
+  return typeCanProduceStructure(cst.effectiveType as Typification);
 }
 
 /** Evaluate if {@link Typification} can be used to produce structure. */
@@ -442,6 +443,7 @@ export function calculateSchemaStats(target: RSForm): RSFormStats {
     count_homonyms: items.reduce((sum, cst) => sum + (cst.homonyms.length > 0 ? 1 : 0), 0),
     count_formal_duplicates: items.reduce((sum, cst) => sum + (cst.formalDuplicates.length > 0 ? 1 : 0), 0),
     count_missing_convention: items.reduce((sum, cst) => sum + (isMissingConvention(cst) ? 1 : 0), 0),
+    count_type_mismatch: items.reduce((sum, cst) => sum + (cst.is_type_mismatch ? 1 : 0), 0),
 
     count_incorrect: items.reduce((sum, cst) => sum + (cst.status === CstStatus.INCORRECT ? 1 : 0), 0),
     count_property: items.reduce((sum, cst) => sum + (cst.analysis?.valueClass === ValueClass.PROPERTY ? 1 : 0), 0),
@@ -486,10 +488,10 @@ export function getStructureName(schema: RSForm, target: Constituenta, path: Typ
   if (representation) {
     return `${representation.alias}: ${representation.term_resolved}`;
   }
-  if (!isTypification(target.analysis.type)) {
+  if (!isTypification(target.effectiveType)) {
     return '';
   }
-  const type = applyPath(target.analysis.type as Typification, path);
+  const type = applyPath(target.effectiveType as Typification, path);
   if (type?.typeID === TypeID.basic) {
     const cst = schema.cstByAlias.get(type.baseID);
     if (cst?.term_resolved) {
@@ -504,11 +506,11 @@ function calculateStepComplexity(cst: Constituenta): number {
   if (cst.cst_type === CstType.AXIOM || cst.cst_type === CstType.NOMINAL || !isBasicConcept(cst.cst_type)) {
     return 0;
   }
-  if (cst.cst_type === CstType.BASE || cst.cst_type === CstType.CONSTANT || !cst.analysis?.type) {
+  if (cst.cst_type === CstType.BASE || cst.cst_type === CstType.CONSTANT || !cst.effectiveType) {
     return 1;
   }
 
-  const type = cst.analysis.type as Typification;
+  const type = cst.effectiveType as Typification;
   return calculateTypificationComplexity(type) + 1;
 }
 

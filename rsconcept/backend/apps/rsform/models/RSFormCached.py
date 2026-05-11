@@ -84,6 +84,7 @@ class RSFormCached:
             crucial=data.get('crucial', False),
             convention=data.get('convention', ''),
             definition_formal=data.get('definition_formal', ''),
+            typification_manual=data.get('typification_manual', ''),
             term_forms=data.get('term_forms', []),
             term_raw=data.get('term_raw', ''),
             definition_raw=data.get('definition_raw', '')
@@ -175,7 +176,7 @@ class RSFormCached:
         self.cache.insert_multi(new_constituents)
         return new_constituents
 
-    # pylint: disable=too-many-branches
+    # pylint: disable=too-many-branches,too-many-statements
     def update_cst(self, target: int, data: dict) -> dict:
         ''' Update persistent attributes of a given constituenta. Return old values. '''
         self.cache.ensure_loaded_terms()
@@ -200,6 +201,12 @@ class RSFormCached:
             else:
                 old_data['definition_formal'] = cst.definition_formal
                 cst.definition_formal = data['definition_formal']
+        if 'typification_manual' in data:
+            if cst.typification_manual == data['typification_manual']:
+                del data['typification_manual']
+            else:
+                old_data['typification_manual'] = cst.typification_manual
+                cst.typification_manual = data['typification_manual']
         if 'term_forms' in data:
             term_changed = True
             old_data['term_forms'] = cst.term_forms
@@ -325,7 +332,13 @@ class RSFormCached:
             if cst.pk in target:
                 if cst.apply_mapping(mapping):
                     update_list.append(cst)
-        Constituenta.objects.bulk_update(update_list, ['definition_formal', 'term_raw', 'definition_raw'])
+        Constituenta.objects.bulk_update(
+            update_list, [
+                'definition_formal',
+                'typification_manual',
+                'term_raw',
+                'definition_raw'
+            ])
 
     def resolve_all_text(self) -> None:
         ''' Trigger reference resolution for all texts. '''
@@ -382,6 +395,7 @@ class _RSFormCache:
                     'alias',
                     'cst_type',
                     'definition_formal',
+                    'typification_manual',
                     'term_raw',
                     'definition_raw'
                 ).order_by('order')
@@ -399,6 +413,7 @@ class _RSFormCache:
                     'alias',
                     'cst_type',
                     'definition_formal',
+                    'typification_manual',
                     'term_raw',
                     'definition_raw',
                     'term_forms',

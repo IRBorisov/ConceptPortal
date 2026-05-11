@@ -76,6 +76,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
       cst_type: targetType,
       alias: generateAlias(targetType, schema),
       term_raw: source?.term_raw ?? '',
+      typification_manual: source?.typification_manual ?? '',
       definition_formal: options?.definition ?? source?.definition_formal ?? '',
       definition_raw: source?.definition_raw ?? '',
       convention: source?.convention ?? '',

@@ -53,6 +53,11 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.type': 'Тип',
   'tx.rslang.typification': 'Типизация',
   'tx.rslang.typification.hint': 'Система типов в родоструктурной экспликации',
+  'tx.rslang.typification.manual': 'Ручная типизация',
+  'tx.rslang.typification.manual.add': 'Добавить ручную типизацию',
+  'tx.rslang.typification.manual.hint': 'Задайте типизацию в формате [X1, B(X1)] -> Z*C1',
+  'tx.rslang.typification.manual.validate':
+    'Ручная типизация не совпадает с типизацией, выводимой из формального определения',
   'tx.rslang.cardinality': 'Мощность',
   'tx.rslang.template.parameter': 'Шаблонный параметр',
 

@@ -154,7 +154,7 @@ function domTooltipConstituenta(
     text.innerText = globalTx('tx.cst.undefined');
     dom.appendChild(text);
   } else {
-    appendMathBoldLabelParagraph(dom, `${cst.alias}:`, labelType(cst.analysis.type));
+    appendMathBoldLabelParagraph(dom, `${cst.alias}:`, labelType(cst.effectiveType));
 
     if (cst.term_resolved) {
       appendBoldTextRow(dom, globalTx('tx.lang.term') + globalTx('tx.general.colon'), cst.term_resolved);

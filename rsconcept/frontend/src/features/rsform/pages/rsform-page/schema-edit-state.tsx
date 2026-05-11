@@ -229,6 +229,7 @@ export const SchemaEditState = ({
       term_raw: '',
       definition_formal: definition ?? '',
       definition_raw: '',
+      typification_manual: '',
       convention: '',
       crucial: false,
       term_forms: []
@@ -256,6 +257,7 @@ export const SchemaEditState = ({
       alias: generateAlias(targetType, schema),
       term_raw: '',
       definition_formal: definition ?? '',
+      typification_manual: '',
       definition_raw: '',
       convention: '',
       crucial: false,
@@ -278,6 +280,7 @@ export const SchemaEditState = ({
         cst_type: activeCst.cst_type,
         alias: generateAlias(activeCst.cst_type, schema),
         term_raw: activeCst.term_raw,
+        typification_manual: activeCst.typification_manual,
         definition_formal: activeCst.definition_formal,
         definition_raw: activeCst.definition_raw,
         convention: activeCst.convention,

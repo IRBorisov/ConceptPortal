@@ -185,11 +185,11 @@ export class RSEngine {
       return;
     }
 
-    const typeStr = cst.analysis.type ? normalizeType(cst.analysis.type) : INVALID_TYPE_MARKER;
+    const typeStr = cst.effectiveType ? normalizeType(cst.effectiveType) : INVALID_TYPE_MARKER;
     const payload = [{ target: cstID, type: typeStr, data }];
     await this.services.setCstValue({ itemID: this.modelID, data: payload });
 
-    if (!cst.analysis.type || !this.calculator.validate(data, cst.analysis.type)) {
+    if (!cst.effectiveType || !this.calculator.validate(data, cst.effectiveType)) {
       this.invalidData.add(cstID);
     } else {
       this.invalidData.delete(cstID);
@@ -218,14 +218,14 @@ export class RSEngine {
       const dependencies = this.schema.graph.expandAllOutputs([cstID]);
       for (const childID of dependencies) {
         const child = this.schema.cstByID.get(childID)!;
-        if (child.cst_type === CstType.STRUCTURED && !!child.analysis.type) {
+        if (child.cst_type === CstType.STRUCTURED && !!child.effectiveType) {
           const value = this.calculator.getValue(child.alias);
           if (value !== null) {
-            const fix = tryFixValue(value, child.analysis.type, cst.alias, newValue);
+            const fix = tryFixValue(value, child.effectiveType, cst.alias, newValue);
             if (fix === null) {
               resetList.push(childID);
             } else if (fix === true) {
-              const typeStr = normalizeType(child.analysis.type);
+              const typeStr = normalizeType(child.effectiveType);
               updateList.push({ target: childID, type: typeStr, data: [...(value as Value[])] });
             }
           }
@@ -429,7 +429,7 @@ export class RSEngine {
       const cst = this.schema!.cstByID.get(item.id)!;
       if (item.type !== TYPE_BASIC) {
         this.calculator.setValue(cst.alias, item.value as Value);
-        if (!cst.analysis.type || !this.calculator.validate(item.value as Value, cst.analysis.type)) {
+        if (!cst.effectiveType || !this.calculator.validate(item.value as Value, cst.effectiveType)) {
           this.invalidData.add(item.id);
         }
       }

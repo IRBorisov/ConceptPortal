@@ -81,6 +81,7 @@ export interface Constituenta {
   convention: string;
   cst_type: CstType;
   definition_formal: string;
+  typification_manual: string;
   definition_raw: string;
   definition_resolved: string;
   term_raw: string;
@@ -91,6 +92,14 @@ export interface Constituenta {
   homonyms: number[];
   formalDuplicates: number[];
   analysis: RO<AnalysisBase>;
+  /** Typification used for dependents, model values, and display (manual when it overrides computed). */
+  effectiveType: ExpressionType | null;
+
+  /**
+   * True when manual typification is non-empty, parses to a type, and its label differs from the
+   * typification inferred from the formal definition ({@link Constituenta.analysis}.type).
+   */
+  is_type_mismatch: boolean;
 
   /** Identifier of {@link LibraryItem} containing this {@link Constituenta}. */
   schema: number;
@@ -133,13 +142,20 @@ export interface Constituenta {
 export interface RSFormStats {
   step_complexity: number;
 
+  /** Total number of constituents in the RSForm. */
   count_all: number;
+  /** Number of crucial constituents in the RSForm. */
   count_crucial: number;
 
   count_problematic: number;
+  /** Constituents that have same term. */
   count_homonyms: number;
+  /** Constituents that have same formal definition and term. */
   count_formal_duplicates: number;
+  /** Base constituents with no convention and alias. */
   count_missing_convention: number;
+  /** Constituents with non-empty manual typification that disagrees with inferred typification. */
+  count_type_mismatch: number;
 
   count_incorrect: number;
   count_property: number;

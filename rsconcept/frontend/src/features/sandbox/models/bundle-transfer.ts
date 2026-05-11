@@ -82,6 +82,7 @@ function prepareRSForm(schema: RSForm, model: RSModel): RSFormDTO {
       crucial: item.crucial,
       cst_type: item.cst_type,
       definition_formal: item.definition_formal,
+      typification_manual: item.typification_manual ?? '',
       definition_raw: item.definition_raw,
       definition_resolved: item.definition_resolved,
       term_raw: item.term_raw,

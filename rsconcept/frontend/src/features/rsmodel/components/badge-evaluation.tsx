@@ -27,7 +27,7 @@ export function BadgeEvaluation({ engine, cst }: BadgeEvaluationProps) {
       data-tooltip-id={globalIDs.tooltip}
       data-tooltip-content={labelEvalStatus(status)}
     >
-      {labelValue(value, cst.analysis.type)}
+      {labelValue(value, cst.effectiveType)}
     </div>
   );
 }

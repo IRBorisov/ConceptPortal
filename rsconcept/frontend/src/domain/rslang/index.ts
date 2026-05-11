@@ -24,5 +24,6 @@ export {
   type TypePath,
   type Typification
 } from './semantic/typification';
+export { applyAsciiTypeSubstitutions, parseTypeText } from './semantic/typification-parser';
 export { ValueClass } from './semantic/value-class';
 export { TypificationGraph, type TypificationNodeData } from './typification-graph';

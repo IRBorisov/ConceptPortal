@@ -83,6 +83,11 @@ class Constituenta(Model):
         default='',
         blank=True
     )
+    typification_manual = TextField(
+        verbose_name='Ручная типизация',
+        default='',
+        blank=True
+    )
     crucial = BooleanField(
         verbose_name='Ключевая',
         default=False
@@ -110,6 +115,10 @@ class Constituenta(Model):
         if expression != self.definition_formal:
             modified = True
             self.definition_formal = expression
+        typification = replace_globals(self.typification_manual, mapping)
+        if typification != self.typification_manual:
+            modified = True
+            self.typification_manual = typification
         term = replace_entities(self.term_raw, mapping)
         if term != self.term_raw:
             modified = True
@@ -123,6 +132,7 @@ class Constituenta(Model):
     def extract_references(self) -> set[str]:
         ''' Extract all references from term and definition. '''
         result: set[str] = extract_globals(self.definition_formal)
+        result.update(extract_globals(self.typification_manual))
         result.update(extract_entities(self.term_raw))
         result.update(extract_entities(self.definition_raw))
         return result
