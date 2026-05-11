@@ -14,3 +14,5 @@ docker compose --file "${COMPOSE_FILE}" restart nginx
 
 # Use this command to restart containers if something went wrong
 # docker compose --file "docker-compose-prod.yml" restart
+
+echo "Update finished at: $(date '+%Y-%m-%d %H:%M:%S %Z')"
