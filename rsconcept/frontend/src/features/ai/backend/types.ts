@@ -7,8 +7,6 @@ import { limits } from '@/utils/constants';
 /** Represents AI prompt. */
 export type IPromptTemplate = IPromptTemplateDTO;
 
-export type IPromptTemplateInfo = z.infer<typeof schemaPromptTemplateInfo>;
-
 /** Full prompt template as returned by backend. */
 export type IPromptTemplateDTO = z.infer<typeof schemaPromptTemplate>;
 

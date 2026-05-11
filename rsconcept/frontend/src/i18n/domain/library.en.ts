@@ -431,7 +431,6 @@ export const txLibraryEn: Record<string, string> = {
   'tx.operation.or.block.select': 'Select an operation or block',
 
   'tx.oss.replica': 'Replica',
-  'tx.oss.replica.hint': 'Create a link to the operation result',
   'tx.oss.replica.original': 'Original',
   'tx.oss.replica.findOriginal': 'Select original',
   'tx.oss.replica.create': 'Create replica',
@@ -441,7 +440,6 @@ export const txLibraryEn: Record<string, string> = {
   'tx.oss.replica.delete.keepConnections.hint': 'Arguments links will be redirected to the original of the replica',
 
   'tx.oss.input': 'Input',
-  'tx.oss.input.hint': 'Load a conceptual schema into the OSS',
   'tx.oss.input.import': 'Import schema',
   'tx.oss.input.create.import': 'Create operation: Import',
   'tx.oss.input.create.schema': 'Create operation: New schema',

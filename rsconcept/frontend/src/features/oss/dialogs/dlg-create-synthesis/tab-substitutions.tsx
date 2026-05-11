@@ -14,7 +14,7 @@ import { PickSubstitutions } from '@/features/rsform/components/pick-substitutio
 import { TextArea } from '@/components/input';
 import { type CreateFieldProps } from '@/utils/forms';
 
-export interface DlgCreateSynthesisSubstitutionFields {
+interface DlgCreateSynthesisSubstitutionFields {
   SubstitutionsField: (props: CreateFieldProps<Substitution[]>) => ReactNode;
 }
 

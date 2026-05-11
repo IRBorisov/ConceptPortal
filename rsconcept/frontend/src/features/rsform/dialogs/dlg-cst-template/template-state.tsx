@@ -8,7 +8,7 @@ import { TypeID } from '@/domain/rslang';
 import { type AliasMapping, substituteTemplateArgs } from '@/domain/rslang/api';
 import { labelType } from '@/domain/rslang/labels';
 
-import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
+import { useTemplates } from '@/features/library/backend/use-templates';
 
 import { useDialogsStore } from '@/stores/dialogs';
 
@@ -32,7 +32,7 @@ export const TemplateState = ({
   onDefinitionRawChange
 }: TemplateStateProps) => {
   const { schema } = useDialogsStore(state => state.props as DlgCstTemplateProps);
-  const { templates } = useTemplatesSuspense();
+  const { templates } = useTemplates();
 
   const [templateID, setTemplateID] = useState<number | null>(templates.length > 0 ? templates[0].id : null);
   const [args, setArguments] = useState<ArgumentValue[]>([]);
@@ -64,10 +64,7 @@ export const TemplateState = ({
     const effectiveType = newPrototype.effectiveType;
     if (!effectiveType) {
       setArguments([]);
-    } else if (
-      effectiveType.typeID === TypeID.function ||
-      effectiveType.typeID === TypeID.predicate
-    ) {
+    } else if (effectiveType.typeID === TypeID.function || effectiveType.typeID === TypeID.predicate) {
       setArguments(
         effectiveType.args.map(arg => ({
           alias: arg.alias,

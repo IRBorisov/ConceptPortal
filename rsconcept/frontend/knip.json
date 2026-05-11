@@ -1,0 +1,4 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignore": ["src/**/parser.terms.ts", "src/components/ui/**", "src/components/input/select.tsx"]
+}

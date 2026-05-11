@@ -5,6 +5,5 @@ export {
   supportedGrammemes,
   type SyntacticReference,
   type TermContext,
-  type TermContextItem,
   type WordForm
 } from './language';

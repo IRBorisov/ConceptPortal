@@ -15,7 +15,7 @@ export const NodeType = {
 export type NodeType = (typeof NodeType)[keyof typeof NodeType];
 
 /** Represents OSS graph node. */
-export interface OssNode extends NodePosition {
+interface OssNode extends NodePosition {
   nodeType: NodeType;
   parent: number | null;
 }
@@ -42,7 +42,7 @@ export interface CstSubstituteInfo {
 }
 
 /** Represents Operation common attributes. */
-export interface OperationBase extends OssNode {
+interface OperationBase extends OssNode {
   id: number;
   alias: string;
   title: string;
@@ -60,7 +60,7 @@ export interface OperationInput extends OperationBase {
 }
 
 /** Represents Replica Operation. */
-export interface OperationReplica extends OperationBase {
+interface OperationReplica extends OperationBase {
   operation_type: typeof OperationType.REPLICA;
   target: number;
 }

@@ -17,7 +17,7 @@ export type UserSignupDTO = z.infer<typeof schemaUserSignup>;
 export type UpdateProfileDTO = z.infer<typeof schemaUpdateProfile>;
 
 // ========= SCHEMAS ========
-export const schemaUser = z.strictObject({
+const schemaUser = z.strictObject({
   id: z.number(),
   username: z.string().nonempty(globalTx('tx.general.field.required')),
   is_staff: z.boolean(),

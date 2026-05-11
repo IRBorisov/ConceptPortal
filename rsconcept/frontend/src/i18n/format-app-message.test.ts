@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-const PREFERENCES_STORAGE_KEY = 'portal.preferences';
+import { localStorageKeys } from '@/utils/constants';
 
 describe('globalTx', () => {
   afterEach(() => {
@@ -11,7 +11,7 @@ describe('globalTx', () => {
   it('formats Zod schema messages before the React Intl bridge mounts', async () => {
     vi.stubGlobal('localStorage', {
       getItem: vi.fn((key: string) =>
-        key === PREFERENCES_STORAGE_KEY ? JSON.stringify({ state: { locale: 'en' } }) : null
+        key === localStorageKeys.preferences ? JSON.stringify({ state: { locale: 'en' } }) : null
       )
     });
 

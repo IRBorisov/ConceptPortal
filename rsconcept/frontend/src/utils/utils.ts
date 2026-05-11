@@ -53,22 +53,6 @@ export function isResponseHtml(response?: AxiosResponse) {
   return header.includes('text/html');
 }
 
-/** Toggle tristate flag: null - true - false. */
-export function toggleTristateFlag(prev: boolean | null): boolean | null {
-  if (prev === null) {
-    return true;
-  }
-  return prev ? false : null;
-}
-
-/** Toggle tristate color: gray - green - red . */
-export function tripleToggleColor(value: boolean | null): string | undefined {
-  if (value === null) {
-    return '';
-  }
-  return value ? 'text-constructive' : 'text-destructive';
-}
-
 /** Extract error message from error object. */
 export function extractErrorMessage(error: Error | AxiosError): string {
   if (isAxiosError(error)) {

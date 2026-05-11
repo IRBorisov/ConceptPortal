@@ -1,11 +1,7 @@
 import { z } from 'zod';
 
-import { schemaRSForm } from '@/features/rsform/backend/types';
-import { schemaRSModel } from '@/features/rsmodel/backend/types';
-
-export const STARTER_SCHEMA_ID = 1;
-export const STARTER_MODEL_ID = 2;
-export const STARTER_CST_ID = 1;
+import { schemaRSForm } from '@/features/rsform';
+import { schemaRSModel } from '@/features/rsmodel';
 
 export const SANDBOX_BUNDLE_FORMAT_VERSION = 2 as const;
 

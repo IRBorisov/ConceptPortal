@@ -10,7 +10,7 @@ import { ComboBox } from '@/components/input/combo-box';
 import { Loader } from '@/components/loader';
 import { ModalView } from '@/components/modal';
 
-import { useAvailableTemplatesSuspense } from '../../backend/use-available-templates';
+import { useAvailableTemplates } from '../../backend/use-available-templates';
 
 import { AIPromptTabs, TabID } from './ai-prompt-tabs';
 
@@ -18,7 +18,7 @@ export function DlgAIPromptDialog() {
   const tx = useTx();
   const [activeTab, setActiveTab] = useState<number>(TabID.TEMPLATE);
   const [selected, setSelected] = useState<number | null>(null);
-  const { items: prompts } = useAvailableTemplatesSuspense();
+  const { items: prompts } = useAvailableTemplates();
 
   return (
     <ModalView

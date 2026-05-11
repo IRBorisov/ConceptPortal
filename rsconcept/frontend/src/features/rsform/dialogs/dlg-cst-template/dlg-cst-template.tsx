@@ -150,35 +150,35 @@ export function DlgCstTemplate() {
           <TabLabel label={tx('tx.general.role.editor')} title={tx('tx.cst.edit')} />
         </TabList>
 
-        <TemplateState
-          onDefinitionFormalChange={handleDefinitionFormalChange}
-          onCstTypeChange={handleTemplateCstTypeChange}
-          onAliasChange={handleAliasChange}
-          onTermRawChange={handleTermRawChange}
-          onDefinitionRawChange={handleDefinitionRawChange}
-        >
-          <TabPanel>
-            <Suspense fallback={<Loader />}>
+        <Suspense fallback={<Loader />}>
+          <TemplateState
+            onDefinitionFormalChange={handleDefinitionFormalChange}
+            onCstTypeChange={handleTemplateCstTypeChange}
+            onAliasChange={handleAliasChange}
+            onTermRawChange={handleTermRawChange}
+            onDefinitionRawChange={handleDefinitionRawChange}
+          >
+            <TabPanel>
               <TabTemplate schema={schema} />
-            </Suspense>
-          </TabPanel>
+            </TabPanel>
 
-          <TabPanel>
-            <TabArguments schema={schema} definition={values.definition_formal} />
-          </TabPanel>
+            <TabPanel>
+              <TabArguments schema={schema} definition={values.definition_formal} />
+            </TabPanel>
 
-          <TabPanel>
-            <div className='cc-fade-in cc-column'>
-              <FormCreateCst
-                schema={schema}
-                values={values}
-                fields={cstFields}
-                onChangeCstType={handleChangeCstType}
-                onToggleCrucial={handleToggleCrucial}
-              />
-            </div>
-          </TabPanel>
-        </TemplateState>
+            <TabPanel>
+              <div className='cc-fade-in cc-column'>
+                <FormCreateCst
+                  schema={schema}
+                  values={values}
+                  fields={cstFields}
+                  onChangeCstType={handleChangeCstType}
+                  onToggleCrucial={handleToggleCrucial}
+                />
+              </div>
+            </TabPanel>
+          </TemplateState>
+        </Suspense>
       </Tabs>
     </ModalForm>
   );

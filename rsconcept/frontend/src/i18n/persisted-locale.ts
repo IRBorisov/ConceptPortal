@@ -1,7 +1,6 @@
-import { type AppLocale, DEFAULT_LOCALE, inferLocaleFromNavigator } from './locales';
+import { localStorageKeys } from '@/utils/constants';
 
-/** localStorage key for persisted UI preferences. */
-export const PREFERENCES_STORAGE_KEY = 'portal.preferences';
+import { type AppLocale, DEFAULT_LOCALE, inferLocaleFromNavigator } from './locales';
 
 /** Reads UI locale from persisted preferences JSON (zustand persist shape). */
 export function parsePersistedPreferencesLocale(raw: string | null): AppLocale | null {
@@ -43,7 +42,7 @@ function readPersistedLocale(): AppLocale | null {
     return null;
   }
   try {
-    return parsePersistedPreferencesLocale(localStorage.getItem(PREFERENCES_STORAGE_KEY));
+    return parsePersistedPreferencesLocale(localStorage.getItem(localStorageKeys.preferences));
   } catch {
     return null;
   }

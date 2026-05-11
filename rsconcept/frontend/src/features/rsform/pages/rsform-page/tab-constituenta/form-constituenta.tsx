@@ -29,7 +29,7 @@ import { TypificationInput } from '../../../components/typification-input';
 import { getRSDefinitionPlaceholder, labelRSExpression } from '../../../labels';
 import { useSchemaEdit } from '../schema-edit-context';
 
-import { ConstituentaPrimaryActions, isConstituentaEditorDisabled } from './cst-primary-actions';
+import { ConstituentaPrimaryActions } from './cst-primary-actions';
 
 interface FormConstituentaProps {
   id?: string;
@@ -69,7 +69,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
     isContentEditable
   } = useSchemaEdit();
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
-  const disabled = isConstituentaEditorDisabled(activeCst, isContentEditable);
+  const disabled = !activeCst || !isContentEditable;
 
   function handleAddAttribution(attribute: Constituenta) {
     addAttribution(activeCst.id, attribute.id);

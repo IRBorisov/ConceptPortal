@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { cn } from '@/components/utils';
 import { globalIDs } from '@/utils/constants';
 
-export type CtaVariant = 'default' | 'primary';
+type CtaVariant = 'default' | 'primary';
 
 interface CtaButtonProps {
   to: string;

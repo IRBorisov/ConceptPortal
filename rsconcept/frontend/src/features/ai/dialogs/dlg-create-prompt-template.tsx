@@ -14,7 +14,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { type RO } from '@/utils/meta';
 
 import { type ICreatePromptTemplateDTO, type IPromptTemplateDTO, schemaCreatePromptTemplate } from '../backend/types';
-import { useAvailableTemplatesSuspense } from '../backend/use-available-templates';
+import { useAvailableTemplates } from '../backend/use-available-templates';
 import { useCreatePromptTemplate } from '../backend/use-create-prompt-template';
 
 export interface DlgCreatePromptTemplateProps {
@@ -25,7 +25,7 @@ export function DlgCreatePromptTemplate() {
   const tx = useTx();
   const { onCreate } = useDialogsStore(state => state.props as DlgCreatePromptTemplateProps);
   const { createPromptTemplate } = useCreatePromptTemplate();
-  const { items: templates } = useAvailableTemplatesSuspense();
+  const { items: templates } = useAvailableTemplates();
   const { user } = useAuth();
 
   const defaultValues: ICreatePromptTemplateDTO = {

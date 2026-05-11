@@ -3,8 +3,6 @@
 import { type ReactNode, useState } from 'react';
 import { Background, type Edge, type Node, ReactFlow, type ReactFlowProps } from '@xyflow/react';
 
-export { useReactFlow, useStoreApi } from '@xyflow/react';
-
 import { useTooltipsStore } from '@/stores/tooltips';
 import { withPreventDefault } from '@/utils/utils';
 

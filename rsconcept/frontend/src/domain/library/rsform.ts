@@ -68,7 +68,7 @@ export interface Substitution {
 }
 
 /** Represents word form for natural language. */
-export interface TermForm {
+interface TermForm {
   text: string;
   tags: string;
 }
@@ -179,7 +179,7 @@ export interface RSFormStats {
 }
 
 /** Represents inheritance data for {@link RSForm}. */
-export interface InheritanceInfo {
+interface InheritanceInfo {
   child: number;
   child_source: number;
   parent: number;

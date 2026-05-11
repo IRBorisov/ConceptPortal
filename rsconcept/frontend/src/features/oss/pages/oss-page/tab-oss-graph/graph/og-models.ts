@@ -5,13 +5,13 @@ import { type Block, type Operation } from '@/domain/library';
 export type OperationNodeType = 'input' | 'synthesis' | 'replica';
 
 /** Represents graph OSS {@link Operation} node data. */
-export interface OperationNodeData extends Record<string, unknown> {
+interface OperationNodeData extends Record<string, unknown> {
   label: string;
   operation: Operation;
 }
 
 /** Represents graph OSS {@link Block} node data. */
-export interface BlockNodeData extends Record<string, unknown> {
+interface BlockNodeData extends Record<string, unknown> {
   label: string;
   block: Block;
 }

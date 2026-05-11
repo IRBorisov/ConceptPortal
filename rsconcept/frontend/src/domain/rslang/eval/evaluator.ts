@@ -34,7 +34,7 @@ import {
 } from './value-api';
 
 /** Maximum iterations to prevent infinite loops (recursion, quantifiers, etc.). */
-export const MAX_ITERATIONS = 1_000_000;
+const MAX_ITERATIONS = 1_000_000;
 
 const TICK_PER_FUNCTION = 10;
 const TICK_PER_RECURSION = 5;

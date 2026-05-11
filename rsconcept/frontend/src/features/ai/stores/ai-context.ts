@@ -61,30 +61,6 @@ export const useAIStore = create<AIContextStore>()(set => ({
   setConstituenta: value => set({ constituenta: value })
 }));
 
-/** Returns a selector function for Zustand based on variable type */
-export function makeVariableSelector(variableType: PromptVariableType) {
-  switch (variableType) {
-    case PromptVariableType.OSS:
-      return (state: AIContextStore) => ({ oss: state.oss });
-
-    case PromptVariableType.SCHEMA:
-    case PromptVariableType.SCHEMA_THESAURUS:
-      return (state: AIContextStore) => ({ schema: state.schema });
-
-    case PromptVariableType.BLOCK:
-      return (state: AIContextStore) => ({ block: state.block, oss: state.oss });
-
-    case PromptVariableType.CONSTITUENTA:
-      return (state: AIContextStore) => ({ constituenta: state.constituenta });
-
-    case PromptVariableType.CONSTITUENTA_SYNTAX_TREE:
-      return (state: AIContextStore) => ({
-        constituenta: state.constituenta,
-        schema: state.schema
-      });
-  }
-}
-
 /** Evaluates a prompt variable */
 export function evaluatePromptVariable(variableType: PromptVariableType, context: Partial<AIContextStore>): string {
   switch (variableType) {

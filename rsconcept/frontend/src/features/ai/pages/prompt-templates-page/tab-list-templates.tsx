@@ -12,7 +12,7 @@ import { NoData } from '@/components/view';
 import { useDialogsStore } from '@/stores/dialogs';
 import { type RO } from '@/utils/meta';
 
-import { useAvailableTemplatesSuspense } from '../../backend/use-available-templates';
+import { useAvailableTemplates } from '../../backend/use-available-templates';
 import { BadgeSharedTemplate } from '../../components/badge-shared-template';
 const columnHelper = createColumnHelper<RO<IPromptTemplate>>();
 
@@ -23,7 +23,7 @@ interface TabListTemplatesProps {
 export function TabListTemplates({ activeID }: TabListTemplatesProps) {
   const tx = useTx();
   const router = useConceptNavigation();
-  const { items } = useAvailableTemplatesSuspense();
+  const { items } = useAvailableTemplates();
   const showCreatePromptTemplate = useDialogsStore(state => state.showCreatePromptTemplate);
   const getUserLabel = useLabelUser();
 

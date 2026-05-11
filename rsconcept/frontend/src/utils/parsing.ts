@@ -7,7 +7,7 @@ import { type TreeCursor } from '@lezer/common';
 export const TOKEN_ERROR = 0;
 
 /** Represents AST node data. */
-export interface AstNodeData extends Record<string, unknown> {
+interface AstNodeData extends Record<string, unknown> {
   dataType: string;
   value: unknown;
 }

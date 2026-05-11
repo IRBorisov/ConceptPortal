@@ -1,7 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { queryClient } from '@/backend/query-client';
-
 import { promptsApi } from './api';
 
 export function usePromptTemplate(id: number) {
@@ -9,8 +7,4 @@ export function usePromptTemplate(id: number) {
     ...promptsApi.getPromptTemplateQueryOptions(id)
   });
   return { promptTemplate: data };
-}
-
-export function prefetchPromptTemplate({ itemID }: { itemID: number }) {
-  return queryClient.prefetchQuery(promptsApi.getPromptTemplateQueryOptions(itemID));
 }

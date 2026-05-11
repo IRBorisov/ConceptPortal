@@ -8,12 +8,6 @@ import { schemaSubstituteConstituents } from '@/features/rsform/backend/types';
 
 import { limits } from '@/utils/constants';
 
-/** Represents {@link Operation} data from server. */
-export type OperationDTO = z.infer<typeof schemaOperation>;
-
-/** Represents {@link Block} data from server. */
-export type BlockDTO = z.infer<typeof schemaBlock>;
-
 /** Represents backend data for {@link OperationSchema}. */
 export type OperationSchemaDTO = z.infer<typeof schemaOperationSchema>;
 

@@ -73,6 +73,11 @@ export const resources = {
   db_schema: '/db_schema.svg'
 } as const;
 
+/** localStorage key for persisted UI preferences. */
+export const localStorageKeys = {
+  preferences: 'portal.preferences'
+} as const;
+
 /** External URLs. */
 export const external_urls = {
   portal: 'https://portal.acconcept.ru',
