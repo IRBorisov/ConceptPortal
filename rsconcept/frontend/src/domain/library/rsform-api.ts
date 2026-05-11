@@ -272,21 +272,6 @@ export function cstCanProduceStructure(cst: RO<Constituenta>): boolean {
   return typeCanProduceStructure(cst.effectiveType as Typification);
 }
 
-/** Evaluate if {@link Typification} can be used to produce structure. */
-export function typeCanProduceStructure(type: Typification): boolean {
-  if (type.typeID === TypeID.basic || type.typeID === TypeID.integer || type.typeID === TypeID.anyTypification) {
-    return false;
-  } else if (type.typeID === TypeID.tuple) {
-    return true;
-  } else {
-    return (
-      type.base.typeID !== TypeID.basic &&
-      type.base.typeID !== TypeID.integer &&
-      type.base.typeID !== TypeID.anyTypification
-    );
-  }
-}
-
 /** Validate new alias against {@link CstType} and {@link RSForm}. */
 export function validateNewAlias(alias: string, type: CstType, schema: RSForm): boolean {
   if (alias.length < 2) {
@@ -545,4 +530,19 @@ function isMissingConvention(cst: Constituenta): boolean {
     }
   }
   return false;
+}
+
+/** Evaluate if {@link Typification} can be used to produce structure. */
+function typeCanProduceStructure(type: Typification): boolean {
+  if (type.typeID === TypeID.basic || type.typeID === TypeID.integer || type.typeID === TypeID.anyTypification) {
+    return false;
+  } else if (type.typeID === TypeID.tuple) {
+    return true;
+  } else {
+    return (
+      type.base.typeID !== TypeID.basic &&
+      type.base.typeID !== TypeID.integer &&
+      type.base.typeID !== TypeID.anyTypification
+    );
+  }
 }

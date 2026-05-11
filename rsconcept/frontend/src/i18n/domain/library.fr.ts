@@ -434,7 +434,6 @@ export const txLibraryFr: Record<string, string> = {
   'tx.operation.or.block.select': 'Choisir une opération ou un bloc',
 
   'tx.oss.replica': 'Réplication',
-  'tx.oss.replica.hint': 'Créer un lien vers le résultat de l’opération',
   'tx.oss.replica.original': 'Original',
   'tx.oss.replica.findOriginal': 'Sélectionner l’original',
   'tx.oss.replica.create': 'Créer une réplique',
@@ -445,7 +444,6 @@ export const txLibraryFr: Record<string, string> = {
     'Les liens des arguments seront redirigés vers l’original de la réplique',
 
   'tx.oss.input': 'Chargement',
-  'tx.oss.input.hint': 'Charger un schéma conceptuel dans l’OSS',
   'tx.oss.input.import': 'Importer le schéma',
   'tx.oss.input.create.import': 'Création d’opération : Import',
   'tx.oss.input.create.schema': 'Création d’opération : Nouveau schéma',

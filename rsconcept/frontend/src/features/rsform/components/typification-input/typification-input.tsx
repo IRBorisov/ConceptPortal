@@ -1,11 +1,11 @@
 'use client';
 
-import { applyAsciiTypeSubstitutions } from '@/domain/rslang/semantic/typification-parser';
+import { applyAsciiTypeSubstitutions } from '@/domain/rslang';
 
 import { TextArea } from '@/components/input';
 import { type Styling } from '@/components/props';
 
-export interface TypificationInputProps extends Styling {
+interface TypificationInputProps extends Styling {
   id?: string;
   label: string;
   placeholder?: string;

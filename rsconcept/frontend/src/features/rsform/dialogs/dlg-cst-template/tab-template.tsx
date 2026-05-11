@@ -4,7 +4,7 @@ import { CstType, type RSForm } from '@/domain/library';
 import { applyFilterCategory, isTemplateCst } from '@/domain/library/rsform-api';
 import { useTx } from '@/i18n';
 
-import { useTemplatesSuspense } from '@/features/library/backend/use-templates';
+import { useTemplates } from '@/features/library/backend/use-templates';
 
 import { TextArea } from '@/components/input';
 import { ComboBox } from '@/components/input/combo-box';
@@ -30,7 +30,7 @@ export function TabTemplate({ schema }: TabTemplateProps) {
     onChangeFilterCategory
   } = useTemplateContext();
 
-  const { templates } = useTemplatesSuspense();
+  const { templates } = useTemplates();
   const templateOptions = [{ ...schema, title: tx('tx.schema.current') }, ...templates];
   const { schema: templateSchema } = useRSForm({ itemID: templateID ?? undefined });
   const selectedTemplate = templateOptions.find(item => item.id === templateID);

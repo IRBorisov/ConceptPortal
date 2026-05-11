@@ -1,1 +1,1 @@
-export { TypificationInput, type TypificationInputProps } from './typification-input';
+export { TypificationInput } from './typification-input';

@@ -5,5 +5,3 @@
  */
 
 export const PUBLIC_SITEMAP_PATHS = ['/', '/library', '/manuals', '/manuals?topic=thesaurus', '/sandbox'] as const;
-
-export type PublicSitemapPath = (typeof PUBLIC_SITEMAP_PATHS)[number];

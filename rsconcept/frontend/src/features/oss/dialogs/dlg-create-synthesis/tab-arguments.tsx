@@ -11,7 +11,7 @@ import { type CreateFieldProps } from '@/utils/forms';
 import { PickMultiOperation } from '../../components/pick-multi-operation';
 import { SelectParent } from '../../components/select-parent';
 
-export interface DlgCreateSynthesisArgumentFields {
+interface DlgCreateSynthesisArgumentFields {
   TitleField: (props: CreateFieldProps<string>) => ReactNode;
   AliasField: (props: CreateFieldProps<string>) => ReactNode;
   ParentField: (props: CreateFieldProps<number | null>) => ReactNode;

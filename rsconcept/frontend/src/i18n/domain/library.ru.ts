@@ -437,7 +437,6 @@ export const txLibraryRu: Record<string, string> = {
   'tx.operation.or.block.select': 'Выберите операцию или блок',
 
   'tx.oss.replica': 'Репликация',
-  'tx.oss.replica.hint': 'Создание ссылки на результат операции',
   'tx.oss.replica.original': 'Оригинал',
   'tx.oss.replica.findOriginal': 'Выделить оригинал',
   'tx.oss.replica.create': 'Создать реплику',
@@ -447,7 +446,6 @@ export const txLibraryRu: Record<string, string> = {
   'tx.oss.replica.delete.keepConnections.hint': 'Связи аргументов будут перенаправлены на оригинал реплики',
 
   'tx.oss.input': 'Загрузка',
-  'tx.oss.input.hint': 'Загрузка концептуальной схемы в ОСС',
   'tx.oss.input.import': 'Импорт схемы',
   'tx.oss.input.create.import': 'Создание операции: Импорт',
   'tx.oss.input.create.schema': 'Создание операции: Новая схема',

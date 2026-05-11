@@ -19,7 +19,7 @@ import { InteractionMode, useTermGraphStore, useTGConnectionStore } from '../../
 import { useSchemaEdit } from '../schema-edit-context';
 
 /** Options for graph fit view. */
-export const fitViewOptions = { padding: 0.3, duration: PARAMETER.zoomDuration };
+const fitViewOptions = { padding: 0.3, duration: PARAMETER.zoomDuration };
 
 const IMAGE_PADDING_HORIZONTAL = 75;
 const IMAGE_PADDING_VERTICAL = 20;

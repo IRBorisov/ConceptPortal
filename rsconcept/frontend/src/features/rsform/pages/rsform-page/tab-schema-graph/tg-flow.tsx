@@ -10,7 +10,8 @@ import {
   type OnConnectStartParams,
   useEdgesState,
   useNodesState,
-  useOnSelectionChange
+  useOnSelectionChange,
+  useReactFlow
 } from '@xyflow/react';
 import clsx from 'clsx';
 
@@ -19,7 +20,7 @@ import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 
-import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
+import { DiagramFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';

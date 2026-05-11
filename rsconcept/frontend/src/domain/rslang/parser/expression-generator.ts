@@ -2,7 +2,7 @@ import { type AstNode, getNodeIndices, getNodeText } from '@/utils/parsing';
 
 import { TokenID } from './token';
 
-export interface ExpressionGeneratorOptions {
+interface ExpressionGeneratorOptions {
   normalize?: boolean;
 }
 

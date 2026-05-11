@@ -8,7 +8,7 @@ export const SUPPORTED_LOCALES: readonly AppLocale[] = ['ru', 'en', 'fr'] as con
 export const DEFAULT_LOCALE: AppLocale = 'ru';
 
 /** Product fallback UI locale. */
-export const FALLBACK_LOCALE: AppLocale = 'en';
+const FALLBACK_LOCALE: AppLocale = 'en';
 
 /** Maps browser language list to a supported locale, or {@link DEFAULT_LOCALE}. */
 export function inferLocaleFromNavigator(): AppLocale {

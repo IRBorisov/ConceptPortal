@@ -6,15 +6,12 @@ import {
   Case,
   type EntityReference,
   Grammeme,
-  GrammemeGroups,
   type IReference,
-  NounGrams,
   Plurality,
   ReferenceType,
   type SyntacticReference,
   type TermContext,
   type TermContextItem,
-  VerbGrams,
   type WordForm
 } from './language';
 
@@ -50,21 +47,6 @@ export function wordFormEquals(left: WordForm, right: WordForm): boolean {
   return true;
 }
 
-/** Compares {@link Grammeme} based on Grammeme enum and alpha order for strings. */
-export function grammemeCompare(left: Grammeme, right: Grammeme): number {
-  const indexLeft = Object.values(Grammeme).findIndex(gram => gram === left);
-  const indexRight = Object.values(Grammeme).findIndex(gram => gram === right);
-  if (indexLeft === -1 && indexRight === -1) {
-    return left.localeCompare(right);
-  } else if (indexLeft === -1 && indexRight !== -1) {
-    return 1;
-  } else if (indexLeft !== -1 && indexRight === -1) {
-    return -1;
-  } else {
-    return indexLeft - indexRight;
-  }
-}
-
 /** Transforms {@link Grammeme} enumeration to {@link Grammeme}. */
 export function parseGrammemes(termForm: string): Grammeme[] {
   const result: Grammeme[] = [];
@@ -75,35 +57,6 @@ export function parseGrammemes(termForm: string): Grammeme[] {
     }
   }
   return result.sort(grammemeCompare);
-}
-
-/** Creates a list of compatible {@link Grammeme}s. */
-export function getCompatibleGrams(input: Grammeme[]): Grammeme[] {
-  let result: Grammeme[] = [];
-  for (const gram of input) {
-    if (!result.includes(gram)) {
-      if (NounGrams.includes(gram)) {
-        result.push(...NounGrams);
-      }
-      if (VerbGrams.includes(gram)) {
-        result.push(...VerbGrams);
-      }
-    }
-  }
-
-  for (const gram of input) {
-    for (const group of GrammemeGroups) {
-      if (group.includes(gram)) {
-        result = result.filter(item => !group.includes(item));
-      }
-    }
-  }
-
-  if (result.length === 0) {
-    return [...new Set<Grammeme>([...VerbGrams, ...NounGrams])];
-  } else {
-    return result;
-  }
 }
 
 /** Generates all supported noun forms using nominal text for every form. */
@@ -231,6 +184,21 @@ export function referenceToString(ref: IReference): string {
 }
 
 // ===== Internals =======
+
+/** Compares {@link Grammeme} based on Grammeme enum and alpha order for strings. */
+function grammemeCompare(left: Grammeme, right: Grammeme): number {
+  const indexLeft = Object.values(Grammeme).findIndex(gram => gram === left);
+  const indexRight = Object.values(Grammeme).findIndex(gram => gram === right);
+  if (indexLeft === -1 && indexRight === -1) {
+    return left.localeCompare(right);
+  } else if (indexLeft === -1 && indexRight !== -1) {
+    return 1;
+  } else if (indexLeft !== -1 && indexRight === -1) {
+    return -1;
+  } else {
+    return indexLeft - indexRight;
+  }
+}
 
 function parseReferences(text: string): ResolvedReference[] {
   const result: ResolvedReference[] = [];

@@ -22,7 +22,7 @@ export {
   type SubstitutionErrorDescription,
   SubstitutionErrorType
 } from './oss';
-export { type NodePosition, type OssLayout, type Position2D } from './oss-layout';
+export { type OssLayout, type Position2D } from './oss-layout';
 export { RSEngine } from './rsengine';
 export {
   type ArgumentValue,

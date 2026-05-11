@@ -2,12 +2,9 @@ import { flushSync } from 'react-dom';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { type AppLocale, inferLocaleFromNavigator } from '@/i18n/locales';
-import { PREFERENCES_STORAGE_KEY } from '@/i18n/persisted-locale';
+import { type AppLocale, inferLocaleFromNavigator } from '@/i18n';
 
-import { PARAMETER } from '@/utils/constants';
-
-export { PREFERENCES_STORAGE_KEY } from '@/i18n/persisted-locale';
+import { localStorageKeys, PARAMETER } from '@/utils/constants';
 
 export const videoPlayerTypes = ['vk', 'youtube'] as const;
 
@@ -108,17 +105,29 @@ export const usePreferencesStore = create<PreferencesStore>()(
     }),
     {
       version: 6,
-      name: PREFERENCES_STORAGE_KEY
+      name: localStorageKeys.preferences
     }
   )
 );
 
 function initializeDarkMode(): boolean {
   let isDark = false;
-  if (PREFERENCES_STORAGE_KEY in localStorage) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const preferences = JSON.parse(localStorage.getItem(PREFERENCES_STORAGE_KEY) ?? '{}').state as PreferencesStore;
-    isDark = preferences.darkMode;
+  if (localStorageKeys.preferences in localStorage) {
+    const storageItem = localStorage.getItem(localStorageKeys.preferences);
+    try {
+      const parsed: unknown = JSON.parse(storageItem ?? '{}');
+      if (typeof parsed === 'object' && parsed) {
+        const state = (parsed as { state?: unknown }).state;
+        if (state && typeof state === 'object') {
+          const darkMode = (state as { darkMode?: unknown }).darkMode;
+          if (typeof darkMode === 'boolean') {
+            isDark = darkMode;
+          }
+        }
+      }
+    } catch {
+      // Malformed localStorage item: keep default and don't block app startup.
+    }
   } else if (window.matchMedia) {
     isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   }

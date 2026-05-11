@@ -4,11 +4,12 @@ import { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 
 import { usePreferencesStore } from '@/stores/preferences';
+import { localStorageKeys } from '@/utils/constants';
 
 import { AppIntlBridge } from './app-intl-bridge';
 import { type AppLocale, DEFAULT_LOCALE } from './locales';
 import { getMessageMapForLocale } from './map';
-import { parsePersistedPreferencesLocale, PREFERENCES_STORAGE_KEY } from './persisted-locale';
+import { parsePersistedPreferencesLocale } from './persisted-locale';
 
 const POLL_INTERVAL = 1000;
 
@@ -51,13 +52,13 @@ export function IntlPreferencesProvider({ children }: React.PropsWithChildren) {
     }
 
     function onPreferencesStorage(event: StorageEvent) {
-      if (event.key === PREFERENCES_STORAGE_KEY) {
+      if (event.key === localStorageKeys.preferences) {
         reloadIfPersistedLocaleChanged(event.newValue);
       }
     }
 
     function pollPreferencesStorage() {
-      reloadIfPersistedLocaleChanged(localStorage.getItem(PREFERENCES_STORAGE_KEY));
+      reloadIfPersistedLocaleChanged(localStorage.getItem(localStorageKeys.preferences));
     }
 
     const intervalId = window.setInterval(pollPreferencesStorage, POLL_INTERVAL);

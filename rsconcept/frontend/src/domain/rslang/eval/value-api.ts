@@ -1,5 +1,5 @@
 import { type RO } from '@/utils/meta';
-import { applyHash_fnv1a } from '@/utils/utils';
+import { generateStub } from '@/utils/utils';
 
 import { type ExpressionType, TypeID, type TypePath, type Typification } from '../semantic/typification';
 
@@ -262,8 +262,7 @@ export function valueStub(value: RO<Value> | null): string {
     return '';
   }
   const str = printValue(value);
-  const hash = applyHash_fnv1a(str);
-  return hash.toString(16).padStart(8, '0').slice(0, 8);
+  return generateStub(str);
 }
 
 /** Checks if value is a set representation, not a tuple representation. */

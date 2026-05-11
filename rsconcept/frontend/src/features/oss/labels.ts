@@ -16,21 +16,9 @@ const OPERATION_LABEL_LID: Record<OperationType, string> = {
   [OperationType.REPLICA]: 'tx.oss.replica'
 };
 
-const OPERATION_DESC_LID: Record<OperationType, string> = {
-  [OperationType.INPUT]: 'tx.oss.input.hint',
-  [OperationType.SYNTHESIS]: 'tx.synthesis',
-  [OperationType.REPLICA]: 'tx.oss.replica.hint'
-};
-
 /** Retrieves label for {@link OperationType}. */
 export function labelOperationType(itemType: OperationType): string {
   const id = OPERATION_LABEL_LID[itemType];
-  return id ? globalTx(id) : 'UNKNOWN OPERATION TYPE: ' + String(itemType);
-}
-
-/** Retrieves description for {@link OperationType}. */
-export function describeOperationType(itemType: OperationType): string {
-  const id = OPERATION_DESC_LID[itemType];
   return id ? globalTx(id) : 'UNKNOWN OPERATION TYPE: ' + String(itemType);
 }
 

@@ -1,11 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { Case, Grammeme, NounGrams, Plurality, VerbGrams } from './language';
+import { Grammeme } from './language';
 import {
   extractEntities,
   generateNominalLexeme,
-  getCompatibleGrams,
-  grammemeCompare,
   parseEntityReference,
   parseGrammemes,
   parseReference,
@@ -48,28 +46,6 @@ describe('Testing wordform equality', () => {
   });
 });
 
-describe('Testing grammeme ordering', () => {
-  it('regular grammemes', () => {
-    expect(grammemeCompare('NOUN', 'NOUN')).toEqual(0);
-    expect(grammemeCompare('NOUN', Grammeme.NOUN)).toEqual(0);
-
-    expect(grammemeCompare(Grammeme.sing, Grammeme.plur)).toBeLessThan(0);
-    expect(grammemeCompare('sing', 'plur')).toBeLessThan(0);
-    expect(grammemeCompare('plur', 'sing')).toBeGreaterThan(0);
-
-    expect(grammemeCompare('NOUN', 'ADJF')).toBeLessThan(0);
-    expect(grammemeCompare('ADJF', 'NOUN')).toBeGreaterThan(0);
-    expect(grammemeCompare('ADJS', 'NOUN')).toBeGreaterThan(0);
-    expect(grammemeCompare('ADJS', 'ADJF')).toBeGreaterThan(0);
-
-    expect(grammemeCompare('loct', 'ablt')).toBeGreaterThan(0);
-    expect(grammemeCompare('ablt', 'accs')).toBeGreaterThan(0);
-    expect(grammemeCompare('accs', 'datv')).toBeGreaterThan(0);
-    expect(grammemeCompare('datv', 'gent')).toBeGreaterThan(0);
-    expect(grammemeCompare('gent', 'nomn')).toBeGreaterThan(0);
-  });
-});
-
 describe('Testing grammeme parsing', () => {
   it('empty input', () => {
     expect(parseGrammemes('')).toStrictEqual([]);
@@ -78,7 +54,6 @@ describe('Testing grammeme parsing', () => {
   });
 
   it('regular grammemes', () => {
-    expect(parseGrammemes('NOUN')).toStrictEqual([Grammeme.NOUN]);
     expect(parseGrammemes('sing,nomn')).toStrictEqual([Grammeme.sing, Grammeme.nomn]);
     expect(parseGrammemes('nomn,sing')).toStrictEqual([Grammeme.sing, Grammeme.nomn]);
   });
@@ -86,16 +61,6 @@ describe('Testing grammeme parsing', () => {
   it('custom grammemes', () => {
     expect(parseGrammemes('nomn,invalid,sing')).toStrictEqual([Grammeme.sing, Grammeme.nomn, 'invalid']);
     expect(parseGrammemes('invalid,test')).toStrictEqual(['invalid', 'test']);
-  });
-});
-
-describe('Testing grammeme compatibility', () => {
-  it('empty input', () => {
-    expect(getCompatibleGrams([])).toStrictEqual([...VerbGrams, ...NounGrams]);
-  });
-
-  it('regular grammemes', () => {
-    expect(getCompatibleGrams([Grammeme.NOUN])).toStrictEqual([...Case, ...Plurality]);
   });
 });
 
@@ -122,9 +87,9 @@ describe('Testing nominal lexeme generation', () => {
 
 describe('Testing reference parsing', () => {
   it('entity reference', () => {
-    expect(parseEntityReference('@{ X1 | NOUN,sing }')).toStrictEqual({ entity: 'X1', tags: ['NOUN', 'sing'] });
-    expect(parseEntityReference('@{X1|NOUN,sing}')).toStrictEqual({ entity: 'X1', tags: ['NOUN', 'sing'] });
-    expect(parseEntityReference('@{X111|NOUN,sing}')).toStrictEqual({ entity: 'X111', tags: ['NOUN', 'sing'] });
+    expect(parseEntityReference('@{ X1 | nomn,sing }')).toStrictEqual({ entity: 'X1', tags: ['sing', 'nomn'] });
+    expect(parseEntityReference('@{X1|nomn,sing}')).toStrictEqual({ entity: 'X1', tags: ['sing', 'nomn'] });
+    expect(parseEntityReference('@{X111|nomn,sing}')).toStrictEqual({ entity: 'X111', tags: ['sing', 'nomn'] });
   });
 
   it('syntactic reference', () => {
@@ -135,9 +100,9 @@ describe('Testing reference parsing', () => {
   });
 
   it('validated reference', () => {
-    expect(parseReference('@{X1|NOUN, sing}')).toStrictEqual({
+    expect(parseReference('@{X1|nomn, sing}')).toStrictEqual({
       type: 'entity',
-      data: { entity: 'X1', tags: ['NOUN', 'sing'] }
+      data: { entity: 'X1', tags: ['sing', 'nomn'] }
     });
     expect(parseReference('@{-1|derived term}')).toStrictEqual({
       type: 'syntax',

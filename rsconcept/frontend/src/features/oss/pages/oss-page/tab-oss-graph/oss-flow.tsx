@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { type Connection } from '@xyflow/react';
+import { type Connection, useReactFlow } from '@xyflow/react';
 import clsx from 'clsx';
 
 import { NodeType, OperationType } from '@/domain/library';
@@ -12,7 +12,7 @@ import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 
-import { DiagramFlow, useReactFlow } from '@/components/flow/diagram-flow';
+import { DiagramFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
 import { useMainHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';

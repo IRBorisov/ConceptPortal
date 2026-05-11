@@ -5,7 +5,7 @@ import { type RSModelDTO } from '@/features/rsmodel/backend/types';
 
 import { nowIso } from '@/utils/format';
 
-import { SANDBOX_BUNDLE_FORMAT_VERSION, type SandboxBundle, STARTER_MODEL_ID } from './bundle';
+import { SANDBOX_BUNDLE_FORMAT_VERSION, type SandboxBundle } from './bundle';
 
 export function createSandboxBundleFromRSForm(schema: RSForm): SandboxBundle {
   const model = createEmptyModel(schema);
@@ -39,7 +39,7 @@ function getNextConstituentaId(schema: RSForm): number {
 
 function createEmptyModel(schema: RSForm): RSModelDTO {
   return {
-    id: STARTER_MODEL_ID,
+    id: schema.id + 1,
     item_type: LibraryItemType.RSMODEL,
     alias: schema.alias,
     title: schema.title,

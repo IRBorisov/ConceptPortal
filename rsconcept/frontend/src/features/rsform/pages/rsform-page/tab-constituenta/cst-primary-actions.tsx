@@ -13,14 +13,6 @@ import { IndicatorPill } from '@/components/view/indicator-pill';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 
-export function isConstituentaEditorDisabled(activeCst: Constituenta | null | undefined, isContentEditable: boolean) {
-  return !activeCst || !isContentEditable;
-}
-
-export function canConstituentaOpenStructure(activeCst: Constituenta) {
-  return !!activeCst.spawner_path || cstCanProduceStructure(activeCst);
-}
-
 export interface ConstituentaPrimaryActionsProps {
   className?: string;
   activeCst: Constituenta;
@@ -40,9 +32,9 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
   const showStructurePlanner = useDialogsStore(state => state.showStructurePlanner);
   const isModified = useModificationStore(state => state.isModified);
 
-  const disabled = isConstituentaEditorDisabled(activeCst, isContentEditable);
+  const disabled = !activeCst || !isContentEditable;
   const crucial = activeCst.crucial;
-  const canOpenStructure = canConstituentaOpenStructure(activeCst);
+  const canOpenStructure = !!activeCst.spawner_path || cstCanProduceStructure(activeCst);
 
   const showCrucialPill = !disabled || crucial;
   const showRenameButton = !disabled;

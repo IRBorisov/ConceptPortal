@@ -5,13 +5,13 @@ import { type SandboxBundle } from '../models/bundle';
 const DB_NAME = 'portal_sandbox';
 const STORE_VERSION = 1;
 
-export interface SandboxBundleRow {
+interface SandboxBundleRow {
   id: 'current';
   bundle: SandboxBundle;
 }
 
-/** IndexedDB store for the single active sandbox bundle (MVP). */
-export class SandboxDB extends Dexie {
+/** IndexedDB store for the single active sandbox bundle. */
+class SandboxDB extends Dexie {
   bundle!: Table<SandboxBundleRow, 'current'>;
 
   constructor() {
