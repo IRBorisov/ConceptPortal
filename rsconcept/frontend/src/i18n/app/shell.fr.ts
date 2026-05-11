@@ -4,6 +4,19 @@ export const txShellFr: Record<string, string> = {
   'tx.shell.app.exteor': 'Exteor',
   'tx.shell.app.exteor.hint': 'Travail avec des schémas conceptuels dans l’application Exteor pour Windows',
 
+  'tx.shell.seo.title': 'Portail Concept',
+  'tx.shell.seo.description':
+    'Conceptualisation des domaines. Bibliothèque de schémas et modèles conceptuels. Schémas opérationnels de synthèse. Modélisation de systèmes de gestion complexes',
+  'tx.shell.seo.library.title': 'Bibliothèque - Portail Concept',
+  'tx.shell.seo.library.description':
+    'Bibliothèque de schémas et modèles conceptuels avec versions, contrôle d’accès, filtrage et recherche.',
+  'tx.shell.seo.manuals.title': 'Manuels - Portail Concept',
+  'tx.shell.seo.manuals.description':
+    'Guides méthodologiques et manuels utilisateur pour la modélisation conceptuelle, l’analyse et la synthèse.',
+  'tx.shell.seo.sandbox.title': 'Sandbox - Portail Concept',
+  'tx.shell.seo.sandbox.description':
+    'Essayez Portail Concept dans un sandbox de démonstration pour des expériences locales sans inscription.',
+
   'tx.shell.theme': 'Thème',
   'tx.shell.theme.dark': 'Thème : sombre',
   'tx.shell.theme.light': 'Thème : clair',
@@ -119,9 +132,9 @@ export const txShellFr: Record<string, string> = {
     'Logique formelle. Structure, correction et calcul des valeurs des définitions de concepts',
   'tx.home.feature.ai.intro':
     'Modèles de requêtes IA et aides pour accélérer la modélisation et l’analyse des domaines',
-  'tx.home.feature.rsform.intro':
+  'tx.home.feature.schema.intro':
     'Schéma conceptuel, graphe de liens, appareil conceptuel strict dans les domaines complexes',
-  'tx.home.feature.rsmodel.intro': 'Sources de données, interprétation des définitions et calcul des valeurs',
+  'tx.home.feature.model.intro': 'Sources de données, interprétation des définitions et calcul des valeurs',
   'tx.home.feature.oss.intro': 'Opérations sur les schémas conceptuels, blocs de contenu et changements transverses',
 
   'tx.sandbox': 'Sandbox',

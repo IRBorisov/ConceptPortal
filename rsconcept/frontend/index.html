@@ -34,7 +34,34 @@
     <div id="root"></div>
     <script>
       try {
-        const preferences = JSON.parse(localStorage.getItem('portal.preferences') || '{}').state;
+        const preferencesStorageKey = 'portal.preferences';
+        const supportedLocales = new Set(['ru', 'en', 'fr']);
+        const storedEnvelope = JSON.parse(localStorage.getItem(preferencesStorageKey) || '{}');
+        const storedState =
+          storedEnvelope && typeof storedEnvelope === 'object' && storedEnvelope.state && typeof storedEnvelope.state === 'object'
+            ? storedEnvelope.state
+            : {};
+        const currentPathname = window.location.pathname;
+        const pathParts = currentPathname.split('/');
+        const localeFromPath = pathParts[1];
+
+        if (supportedLocales.has(localeFromPath)) {
+          const normalizedPath = `/${pathParts.slice(2).join('/')}`.replace(/\/+$/, '') || '/';
+          history.replaceState(history.state, '', `${normalizedPath}${window.location.search}${window.location.hash}`);
+          storedState.locale = localeFromPath;
+          localStorage.setItem(
+            preferencesStorageKey,
+            JSON.stringify({
+              ...(storedEnvelope && typeof storedEnvelope === 'object' ? storedEnvelope : {}),
+              state: storedState
+            })
+          );
+          document.documentElement.setAttribute('lang', localeFromPath);
+        } else if (typeof storedState.locale === 'string' && supportedLocales.has(storedState.locale)) {
+          document.documentElement.setAttribute('lang', storedState.locale);
+        }
+
+        const preferences = storedState;
         const isDark = preferences ? preferences.darkMode : window.matchMedia('(prefers-color-scheme: dark)').matches;
         if (isDark) {
           document.documentElement.classList.add('dark');

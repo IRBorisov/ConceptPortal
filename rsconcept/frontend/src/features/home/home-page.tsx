@@ -174,14 +174,14 @@ export function HomePage() {
             to={urls.help_topic(HelpTopic.CC_SYSTEM)}
             icon={<IconRSForm size='1.5rem' />}
             title={tx('tx.concept.system')}
-            description={tx('tx.home.feature.rsform.intro')}
+            description={tx('tx.home.feature.schema.intro')}
             accentClass='bg-accent-purple'
           />
           <FeatureTile
             to={urls.help_topic(HelpTopic.CC_RSMODEL)}
             icon={<IconRSModel size='1.5rem' />}
             title={tx('tx.model.plural')}
-            description={tx('tx.home.feature.rsmodel.intro')}
+            description={tx('tx.home.feature.model.intro')}
             accentClass='bg-accent-orange'
           />
           <FeatureTile

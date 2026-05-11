@@ -3,6 +3,18 @@ export const txShellEn: Record<string, string> = {
   'tx.shell.app.hint': 'Concept Portal web application',
   'tx.shell.app.exteor': 'Exteor',
   'tx.shell.app.exteor.hint': 'Working with conceptual schemas in the Exteor application for Windows',
+  'tx.shell.seo.title': 'Concept Portal',
+  'tx.shell.seo.description':
+    'Conceptualization of subject domains. Library of conceptual schemas and models. Operational synthesis schemes. Modeling of complex management systems',
+  'tx.shell.seo.library.title': 'Library - Concept Portal',
+  'tx.shell.seo.library.description':
+    'Library of conceptual schemas and models with versioning, access control, filtering, and search.',
+  'tx.shell.seo.manuals.title': 'Manuals - Concept Portal',
+  'tx.shell.seo.manuals.description':
+    'Methodology and user manuals for conceptual modeling, analysis, and synthesis in Concept Portal.',
+  'tx.shell.seo.sandbox.title': 'Sandbox - Concept Portal',
+  'tx.shell.seo.sandbox.description':
+    'Try Concept Portal in a demo sandbox and run local experiments without registration.',
 
   'tx.shell.theme': 'Theme',
   'tx.shell.theme.dark': 'Theme: Dark',
@@ -107,10 +119,10 @@ export const txShellEn: Record<string, string> = {
   'tx.home.feature.library.intro':
     'Catalog of conceptual schemas and models. Editing, versioning and access control. Flexible filtering and search',
   'tx.home.feature.oss.intro': 'Operations on conceptual schemas, subject-matter blocks and cross-cutting changes',
-  'tx.home.feature.rsform.intro':
+  'tx.home.feature.schema.intro':
     'Conceptual schema, linkage graph and rigorous conceptual apparatus in complex domains',
   'tx.home.feature.rslang.intro': 'Formal logic. Structuring, correctness, and evaluation of concept definitions',
-  'tx.home.feature.rsmodel.intro': 'Domain data sources, interpretation of definitions and value computation',
+  'tx.home.feature.model.intro': 'Domain data sources, interpretation of definitions and value computation',
   'tx.home.features': 'Portal features',
   'tx.home.features.hint': 'Portal features — model catalog and system design',
   'tx.home.hero1': 'Design complex systems: analysis and synthesis',
