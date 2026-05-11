@@ -11,14 +11,25 @@ import { IconCstType } from './icon-cst-type';
 interface SelectCstTypeProps extends Styling {
   id?: string;
   disabled?: boolean;
+  excludeNominal?: boolean;
   value: CstType;
   onChange: (newValue: CstType) => void;
 }
 
-export function SelectCstType({ id, value, onChange, className, disabled = false, ...restProps }: SelectCstTypeProps) {
-  const items = Object.fromEntries(
-    Object.values(CstType).map(typeStr => [typeStr, labelCstType(typeStr)] as const)
-  ) as Record<CstType, string>;
+export function SelectCstType({
+  id,
+  value,
+  onChange,
+  className,
+  disabled,
+  excludeNominal,
+  ...restProps
+}: SelectCstTypeProps) {
+  const visibleTypes = Object.values(CstType).filter(typeStr => !excludeNominal || typeStr !== CstType.NOMINAL);
+  const items = Object.fromEntries(visibleTypes.map(typeStr => [typeStr, labelCstType(typeStr)] as const)) as Record<
+    CstType,
+    string
+  >;
 
   return (
     <Select items={items} onValueChange={newValue => onChange(newValue!)} value={value} disabled={disabled}>
@@ -26,7 +37,7 @@ export function SelectCstType({ id, value, onChange, className, disabled = false
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        {Object.values(CstType).map(typeStr => (
+        {visibleTypes.map(typeStr => (
           <SelectItem key={`csttype-${typeStr}`} value={typeStr}>
             <IconCstType value={typeStr} />
             {labelCstType(typeStr)}

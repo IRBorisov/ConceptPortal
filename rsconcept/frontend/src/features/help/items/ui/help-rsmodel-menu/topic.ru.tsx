@@ -1,21 +1,29 @@
+import { CstType } from '@/domain/library';
 import { useTx } from '@/i18n';
 
-import { Divider } from '@/components/container';
+import { IconCstType } from '@/features/rsform/components/icon-cst-type';
+
 import {
   IconAdmin,
   IconAlert,
   IconCalculateAll,
   IconClone,
   IconDestroy,
+  IconEdit2,
   IconEditor,
+  IconGenerateNames,
+  IconInlineSynthesis,
   IconLibrary,
   IconMenu,
   IconOwner,
   IconQR,
   IconReader,
+  IconReplace,
   IconRSForm,
   IconSandbox,
-  IconShare
+  IconShare,
+  IconSortList,
+  IconTemplates
 } from '@/components/icons';
 
 import { LinkTopic } from '../../../components/link-topic';
@@ -57,64 +65,82 @@ export function HelpRSModelMenuRu() {
         </li>
       </ul>
 
-      <div className='flex my-3'>
-        <div>
-          <h2>{tx('tx.model.menu')}</h2>
-          <ul>
-            <li>
-              <IconMenu size='1.25rem' className='inline-icon' /> Меню модели - выпадающее меню с общими функциями
-            </li>
-            <li>
-              <IconCalculateAll className='inline-icon icon-green' /> Пересчитать модель - пересчет всех вычислений
-            </li>
-            <li>
-              <IconShare className='inline-icon icon-primary' /> Поделиться - копирование публичной ссылки на модель
-            </li>
-            <li>
-              <IconQR className='inline-icon icon-primary' /> QR-код - показать QR-код страницы модели
-            </li>
-            <li>
-              <IconClone className='inline-icon icon-green' /> Клонировать - создать копию модели
-            </li>
-            <li>
-              <IconSandbox className='inline-icon icon-green' /> Открыть в песочнице - дублировать модель в песочницу
-            </li>
-            <li>
-              <IconDestroy className='inline-icon icon-red' /> Удалить модель - удаление модели из библиотеки
-            </li>
-            <li>
-              <IconRSForm className='inline-icon icon-primary' /> Перейти к схеме - переход к концептуальной схеме
-            </li>
-            <li>
-              <IconLibrary className='inline-icon icon-primary' /> Библиотека - переход в библиотеку
-            </li>
-          </ul>
-        </div>
+      <h2>{tx('tx.model.menu')}</h2>
+      <ul>
+        <li>
+          <IconMenu size='1.25rem' className='inline-icon' /> Меню модели - выпадающее меню с общими функциями
+        </li>
+        <li>
+          <IconCalculateAll className='inline-icon icon-green' /> Пересчитать модель - пересчет всех вычислений
+        </li>
+        <li>
+          <IconShare className='inline-icon icon-primary' /> Поделиться - копирование публичной ссылки на модель
+        </li>
+        <li>
+          <IconQR className='inline-icon icon-primary' /> QR-код - показать QR-код страницы модели
+        </li>
+        <li>
+          <IconClone className='inline-icon icon-green' /> Клонировать - создать копию модели
+        </li>
+        <li>
+          <IconSandbox className='inline-icon icon-green' /> Открыть в песочнице - дублировать модель в песочницу
+        </li>
+        <li>
+          <IconDestroy className='inline-icon icon-red' /> Удалить модель - удаление модели из библиотеки
+        </li>
+        <li>
+          <IconRSForm className='inline-icon icon-primary' /> Перейти к схеме - переход к концептуальной схеме
+        </li>
+        <li>
+          <IconLibrary className='inline-icon icon-primary' /> Библиотека - переход в библиотеку
+        </li>
+      </ul>
 
-        <Divider vertical margins='mx-3' />
+      <h2>{tx('tx.general.editing')}</h2>
+      <ul>
+        <li>
+          <IconEdit2 size='1.25rem' className='inline-icon' /> Операции описаны подробно в{' '}
+          <LinkTopic text='разделе Экспликация' topic={HelpTopic.RSL_OPERATIONS} />.
+        </li>
+        <li>
+          <IconTemplates size='1.25rem' className='inline-icon' /> Генерация конституент из шаблонов выражений
+        </li>
+        <li>
+          <IconInlineSynthesis size='1.25rem' className='inline-icon' /> Вставка конституент из другой схемы
+        </li>
+        <li>
+          <IconCstType value={CstType.NOMINAL} size='1.25rem' className='inline-icon' /> Включение формы атрибутирования
+        </li>
+        <li>
+          <IconSortList size='1.25rem' className='inline-icon' /> Упорядочить список конституент
+        </li>
+        <li>
+          <IconGenerateNames size='1.25rem' className='inline-icon' /> Перенумеровать конституенты в порядке объявления
+        </li>
+        <li>
+          <IconReplace size='1.25rem' className='inline-icon' /> Отождествление конституент текущей схемы
+        </li>
+      </ul>
 
-        <div className='w-72'>
-          <h2>{tx('tx.general.role.plural')}</h2>
-          <ul>
-            <li>
-              <IconAlert size='1.25rem' className='inline-icon icon-red' /> работа в анонимном режиме. Переход на
-              страницу логина
-            </li>
-            <li>
-              <IconReader size='1.25rem' className='inline-icon' /> режим Читатель
-            </li>
-            <li>
-              <IconEditor size='1.25rem' className='inline-icon' /> режим Редактор
-            </li>
-            <li>
-              <IconOwner size='1.25rem' className='inline-icon' /> режим Владелец
-            </li>
-            <li>
-              <IconAdmin size='1.25rem' className='inline-icon' /> режим Администратор
-            </li>
-          </ul>
-        </div>
-      </div>
+      <h2>{tx('tx.general.role.plural')}</h2>
+      <ul>
+        <li>
+          <IconAlert size='1.25rem' className='inline-icon icon-red' /> работа в анонимном режиме. Переход на страницу
+          логина
+        </li>
+        <li>
+          <IconReader size='1.25rem' className='inline-icon' /> режим Читатель
+        </li>
+        <li>
+          <IconEditor size='1.25rem' className='inline-icon' /> режим Редактор
+        </li>
+        <li>
+          <IconOwner size='1.25rem' className='inline-icon' /> режим Владелец
+        </li>
+        <li>
+          <IconAdmin size='1.25rem' className='inline-icon' /> режим Администратор
+        </li>
+      </ul>
     </>
   );
 }

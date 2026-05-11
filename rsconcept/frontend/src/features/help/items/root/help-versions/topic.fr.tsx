@@ -15,7 +15,7 @@ export function HelpVersionsFr() {
       </p>
       <p>Après création, le contenu d&apos;une version ne peut plus être modifié.</p>
 
-      <h2>Actions</h2>
+      <h2>{tx('tx.general.controls')}</h2>
       <ul>
         <li>
           <IconShare className='inline-icon' /> Partager inclut la version dans le lien
@@ -24,8 +24,8 @@ export function HelpVersionsFr() {
           <IconUpload className='inline-icon icon-red' /> Charger une version dans le schéma actuel
         </li>
         <li>
-          <IconNewVersion className='inline-icon icon-green' /> Une version ne peut être créée qu&apos;à partir du schéma
-          actuel
+          <IconNewVersion className='inline-icon icon-green' /> Une version ne peut être créée qu&apos;à partir du
+          schéma actuel
         </li>
 
         <li>

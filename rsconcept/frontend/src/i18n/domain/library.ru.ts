@@ -294,6 +294,8 @@ export const txLibraryRu: Record<string, string> = {
   'tx.cst.template.validate': 'Выберите шаблон конституенты',
   'tx.cst.template.result': 'Итоговое определение',
 
+  'tx.attribution': 'Атрибутирование',
+  'tx.attribution.hint': 'Включить номиноиды и отношение атрибутирования в схему',
   'tx.attribution.attribute.plural': 'Атрибутирующие конституенты',
 
   'tx.substitution': 'Отождествление',

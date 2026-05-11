@@ -13,7 +13,7 @@ export function HelpVersionsEn() {
       <p>Versioning saves the current state of a scheme under a specific name (version) with link-based access.</p>
       <p>Once a version is created, its content cannot be changed.</p>
 
-      <h2>Actions</h2>
+      <h2>{tx('tx.general.controls')}</h2>
       <ul>
         <li>
           <IconShare className='inline-icon' /> Share embeds the version in the URL

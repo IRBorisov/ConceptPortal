@@ -67,6 +67,9 @@ export function TGFlow() {
 
   const setConnectionStart = useTGConnectionStore(state => state.setStart);
   const connectionType = useTGConnectionStore(state => state.connectionType);
+  const setConnectionType = useTGConnectionStore(state => state.setConnectionType);
+  const setGraphType = useTermGraphStore(state => state.setGraphType);
+
   useEffect(
     function initConnectionStart() {
       return setConnectionStart(null);
@@ -88,6 +91,16 @@ export function TGFlow() {
     patchConstituenta,
     addAttribution
   } = useSchemaEdit();
+
+  useEffect(
+    function enforceConnectionType() {
+      if (!schema.is_attributive) {
+        setConnectionType(TGEdgeType.definition);
+        setGraphType(TGEdgeType.full);
+      }
+    },
+    [schema.is_attributive, setConnectionType, setGraphType]
+  );
 
   const [nodes, setNodes, onNodesChange] = useNodesState<TGNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -328,11 +341,13 @@ export function TGFlow() {
       return;
     }
 
+    const effectiveConnectionType = schema.is_attributive ? connectionType : TGEdgeType.definition;
+
     const sourceID = Number(connection.source);
     const targetID = Number(connection.target);
     const sourceCst = schema.cstByID.get(sourceID)!;
     const targetCst = schema.cstByID.get(targetID)!;
-    if (connectionType === TGEdgeType.definition) {
+    if (effectiveConnectionType === TGEdgeType.definition) {
       if (targetCst.is_inherited) {
         toast.error(tx('tx.concept.inherited.definition.readOnly'));
         return;
@@ -395,7 +410,7 @@ export function TGFlow() {
         <div className='flex'>
           <div className='flex flex-col w-54'>
             <SelectColoring className='rounded-b-none' schema={schema} />
-            <SelectEdgeType className='rounded-none border-t-0' />
+            {schema.is_attributive ? <SelectEdgeType className='rounded-none border-t-0' /> : null}
 
             <ViewHidden
               items={hidden}

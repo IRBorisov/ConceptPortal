@@ -1,5 +1,6 @@
 'use client';
 
+import { CstType } from '@/domain/library';
 import { useTx } from '@/i18n';
 
 import { useConceptNavigation, useUnsavedChanges } from '@/app';
@@ -24,6 +25,7 @@ import { useInlineSynthesis } from '../../backend/use-inline-synthesis';
 import { useResetAliases } from '../../backend/use-reset-aliases';
 import { useRestoreOrder } from '../../backend/use-restore-order';
 import { useSubstituteConstituents } from '../../backend/use-substitute-constituents';
+import { IconCstType } from '../../components/icon-cst-type';
 
 import { useSchemaEdit } from './schema-edit-context';
 
@@ -40,7 +42,8 @@ export function MenuEditSchema() {
     handleBlur: handleMenuBlur,
     hide: hideMenu
   } = useDropdown();
-  const { schema, isArchive, isContentEditable, promptTemplate, deselectAll, isProcessing } = useSchemaEdit();
+  const { schema, isArchive, isContentEditable, promptTemplate, deselectAll, isProcessing, createCst } =
+    useSchemaEdit();
 
   const { resetAliases } = useResetAliases();
   const { restoreOrder } = useRestoreOrder();
@@ -79,6 +82,11 @@ export function MenuEditSchema() {
   function handleTemplates() {
     hideMenu();
     promptTemplate();
+  }
+
+  function handleEnableAttribution() {
+    hideMenu();
+    void createCst(CstType.NOMINAL);
   }
 
   async function handleInlineSynthesis() {
@@ -138,6 +146,15 @@ export function MenuEditSchema() {
           onClick={() => void handleInlineSynthesis()}
           disabled={!isContentEditable || isProcessing}
         />
+        {!schema.is_attributive ? (
+          <DropdownButton
+            text={tx('tx.attribution')}
+            title={tx('tx.attribution.hint')}
+            icon={<IconCstType value={CstType.NOMINAL} size='1rem' className='icon-green' />}
+            onClick={handleEnableAttribution}
+            disabled={!isContentEditable || isProcessing}
+          />
+        ) : null}
 
         <Divider margins='mx-3 my-1' />
 

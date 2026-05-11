@@ -172,20 +172,36 @@ export interface InheritanceInfo {
 
 /** Represents formal explication for set of concepts. */
 export interface RSForm extends LibraryItem {
+  /** Whether this RSForm was produced (vs imported or inherited) */
   is_produced: boolean;
+  /** Whether this RSForm has attribution feature */
+  is_attributive: boolean;
+  /** List of user IDs who can edit this RSForm */
   editors: number[];
+  /** Information about the current version of this RSForm */
   version: CurrentVersion;
+  /** Full version history of this RSForm */
   versions: VersionInfo[];
 
+  /** Full list of constituents in the RSForm */
   items: Constituenta[];
+  /** List of inheritance relationships between constituents */
   inheritance: InheritanceInfo[];
+  /** List of constituent attribution relationships */
   attribution: Attribution[];
+  /** References to Operational Schemes/Systems associated with the RSForm */
   oss: LibraryItemReference[];
+  /** References to conceptual models associated with the RSForm */
   models: LibraryItemReference[];
 
+  /** Analyzer instance for RS language features and validation */
   analyzer: RSLangAnalyzer;
+  /** Graph structure representing formal dependencies between constituents */
   graph: Graph;
+  /** Graph structure representing attribution relationships */
   attribution_graph: Graph;
+  /** Map for quick lookup of constituents by alias */
   cstByAlias: Map<string, Constituenta>;
+  /** Map for quick lookup of constituents by ID */
   cstByID: Map<number, Constituenta>;
 }

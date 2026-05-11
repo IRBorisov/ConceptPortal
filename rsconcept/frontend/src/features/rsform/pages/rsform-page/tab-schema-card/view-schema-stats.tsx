@@ -37,11 +37,11 @@ export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaSt
                 { label: tx('tx.cst.original.plural.short'), value: countOwned }
               ]
             : []),
-          { label: tx('tx.cst.crucial.plural'), value: stats.count_crucial },
+          ...(stats.count_crucial > 0 ? [{ label: tx('tx.cst.crucial.plural'), value: stats.count_crucial }] : []),
           { label: tx('tx.lang.term.plural'), value: stats.count_text_term },
           { label: tx('tx.lib.defineText.plural'), value: stats.count_definition },
           { label: tx('tx.lib.convention.plural'), value: stats.count_convention },
-          { label: tx('tx.lib.comment.plural'), value: stats.count_comment }
+          ...(stats.count_comment > 0 ? [{ label: tx('tx.lib.comment.plural'), value: stats.count_comment }] : [])
         ]}
       />
 
@@ -57,9 +57,9 @@ export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaSt
         secondaryValue={stats.step_complexity}
         secondaryTitle={tx('tx.concept.system.complexity.hint')}
         details={[
-          { label: tx('tx.cst.type.nominal.plural'), value: stats.count_nominal },
+          ...(stats.count_nominal > 0 ? [{ label: tx('tx.cst.type.nominal.plural'), value: stats.count_nominal }] : []),
           { label: tx('tx.cst.type.basic'), value: stats.count_base },
-          { label: tx('tx.cst.type.constant'), value: stats.count_constant },
+          ...(stats.count_constant > 0 ? [{ label: tx('tx.cst.type.constant'), value: stats.count_constant }] : []),
           { label: tx('tx.cst.type.structure'), value: stats.count_structured },
           { label: tx('tx.cst.type.axiom'), value: stats.count_axiom }
         ]}
@@ -80,7 +80,7 @@ export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaSt
           { label: tx('tx.cst.type.term'), value: stats.count_term },
           { label: tx('tx.cst.type.function'), value: stats.count_function },
           { label: tx('tx.cst.type.predicate'), value: stats.count_predicate },
-          { label: tx('tx.cst.type.theorem'), value: stats.count_theorem }
+          ...(stats.count_theorem > 0 ? [{ label: tx('tx.cst.type.theorem'), value: stats.count_theorem }] : [])
         ]}
       />
 

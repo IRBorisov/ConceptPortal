@@ -237,7 +237,6 @@ export const SchemaEditState = ({
       showCreateCst({
         schema: schema,
         initial: data,
-
         onCreate: (createData: CreateConstituentaDTO) =>
           void cstCreate({ itemID: schema.id, data: createData }).then(response => {
             const newCst = response.new_cst;

@@ -62,7 +62,7 @@ export function ToolbarSchemaGraph({ className, graph }: ToolbarSchemaGraphProps
             }
           />
         ) : null}
-        {isContentEditable ? (
+        {isContentEditable && schema.is_attributive ? (
           <MiniButton
             title={prepareTooltip(labelEdgeType(edgeType), 'E')}
             onClick={handleToggleEdgeType}

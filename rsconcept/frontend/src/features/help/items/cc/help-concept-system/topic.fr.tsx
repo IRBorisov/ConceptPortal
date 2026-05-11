@@ -47,6 +47,12 @@ export function HelpConceptSystemFr() {
       </p>
 
       <p>
+        Le Portail prend également en charge la forme d'attribution, où des relations d'attribution sont établies entre
+        les entités nommées (nominoïdes). Il est possible de combiner les deux formes d'explication dans un seul schéma
+        conceptuel.
+      </p>
+
+      <p>
         Le <b>noyau</b> d'un schéma conceptuel est l'ensemble des concepts de base, des axiomes et des concepts dérivés
         intermédiaires nécessaires pour former les expressions des axiomes. Les autres concepts appartiennent au{' '}
         <b>corps</b> du schéma conceptuel.
@@ -63,8 +69,7 @@ export function HelpConceptSystemFr() {
 
       <p>
         Les diverses relations entre les concepts et les méthodes de construction des systèmes de définitions sont
-        explorées en détail dans la section{' '}
-        <LinkTopic text='Relations conceptuelles' topic={HelpTopic.CC_RELATIONS} />.
+        explorées en détail dans la section <LinkTopic text='Relations conceptuelles' topic={HelpTopic.CC_RELATIONS} />.
       </p>
     </>
   );
