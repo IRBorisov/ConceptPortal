@@ -47,6 +47,7 @@ function prepareTRSData(schema: RSForm) {
         },
         definition: {
           formal: cst.definition_formal,
+          typification_manual: cst.typification_manual,
           text: {
             raw: cst.definition_raw,
             resolved: cst.definition_resolved

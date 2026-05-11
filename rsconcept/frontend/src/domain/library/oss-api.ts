@@ -248,10 +248,10 @@ export class SubstitutionValidator {
           continue;
         }
         graph.addNode(cst.id);
-        if (cst.analysis.type === null) {
+        if (cst.effectiveType === null) {
           continue;
         }
-        const parents = extractBases(cst.analysis.type);
+        const parents = extractBases(cst.effectiveType);
         if (parents.size === 0) {
           continue;
         }
@@ -310,11 +310,11 @@ export class SubstitutionValidator {
       }
 
       const originalType = applyTypificationMapping(
-        applyAliasMapping(labelType(original.analysis.type), baseMappings.get(original.schema)!),
+        applyAliasMapping(labelType(original.effectiveType), baseMappings.get(original.schema)!),
         typeMappings
       );
       const substitutionType = applyTypificationMapping(
-        applyAliasMapping(labelType(substitution.analysis.type), baseMappings.get(substitution.schema)!),
+        applyAliasMapping(labelType(substitution.effectiveType), baseMappings.get(substitution.schema)!),
         typeMappings
       );
       if (originalType !== substitutionType) {
@@ -356,10 +356,10 @@ export class SubstitutionValidator {
 
       const substitution = this.cstByID.get(item.substitution)!;
       let substitutionText = '';
-      if (substitution.cst_type === original.cst_type || !substitution.analysis.type) {
+      if (substitution.cst_type === original.cst_type || !substitution.effectiveType) {
         substitutionText = baseMappings.get(substitution.schema)![substitution.alias];
       } else {
-        const typeText = labelType(substitution.analysis.type);
+        const typeText = labelType(substitution.effectiveType);
         substitutionText = applyAliasMapping(typeText, baseMappings.get(substitution.schema)!);
         substitutionText = applyTypificationMapping(substitutionText, result);
         if (!isSetTypification(substitutionText)) {

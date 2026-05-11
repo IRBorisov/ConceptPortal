@@ -25,6 +25,7 @@ import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../../../b
 import { EditorRSExpression } from '../../../components/editor-rsexpression';
 import { RefsInput } from '../../../components/refs-input';
 import { SelectMultiConstituenta } from '../../../components/select-multi-constituenta';
+import { TypificationInput } from '../../../components/typification-input';
 import { getRSDefinitionPlaceholder, labelRSExpression } from '../../../labels';
 import { useSchemaEdit } from '../schema-edit-context';
 
@@ -46,7 +47,8 @@ function constituentaDefaults(activeCst: Constituenta): UpdateConstituentaDTO {
       convention: activeCst.convention,
       term_raw: activeCst.term_raw,
       definition_raw: activeCst.definition_raw,
-      definition_formal: activeCst.definition_formal
+      definition_formal: activeCst.definition_formal,
+      typification_manual: activeCst.typification_manual
     }
   };
 }
@@ -95,8 +97,18 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
 
   const [forceComment, setForceComment] = useState(false);
   const [localParse, setLocalParse] = useState<RO<AnalysisFull> | null>(null);
+  const [manualTypificationOpen, setManualTypificationOpen] = useState(!!activeCst.typification_manual);
 
-  const typification = localParse ? labelType(localParse.type) : labelType(activeCst.analysis.type);
+  const typification = localParse ? labelType(localParse.type) : labelType(activeCst.effectiveType);
+
+  const manualDraft = useStore(form.store, state => state.values.item_data.typification_manual ?? '');
+  const hasManualDraft = !!manualDraft;
+
+  const allowManualTypification =
+    activeCst.cst_type !== CstType.NOMINAL &&
+    (activeCst.analysis.type == null || hasManualDraft || !!activeCst.typification_manual);
+  const showManualTypificationField = allowManualTypification && (manualTypificationOpen || hasManualDraft);
+  const showManualTypificationButton = allowManualTypification && !showManualTypificationField;
 
   const attributions = activeCst.attributes.map(id => schema.cstByID.get(id)!);
 
@@ -125,10 +137,11 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       const timeoutId = setTimeout(function resetConstituentaUIState() {
         setForceComment(false);
         setLocalParse(null);
+        setManualTypificationOpen(!!(activeCst.typification_manual ?? '').trim());
       }, 0);
       return () => clearTimeout(timeoutId);
     },
-    [activeCst.id, toggleReset, schema]
+    [activeCst.id, activeCst.typification_manual, toggleReset, schema]
   );
 
   useEffect(
@@ -231,19 +244,47 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       ) : null}
 
       {activeCst.cst_type !== CstType.NOMINAL ? (
-        <TextArea
-          id='cst_typification'
-          label={tx('tx.rslang.typification')}
-          fitContent
-          dense
-          noResize
-          noBorder
-          noOutline
-          transparent
-          readOnly
-          value={typification}
-          className='cursor-default'
-        />
+        <div className='relative flex flex-col gap-3'>
+          {showManualTypificationField ? (
+            <form.Field name='item_data.typification_manual'>
+              {field => (
+                <TypificationInput
+                  id='cst_typification_manual'
+                  label={tx('tx.rslang.typification.manual')}
+                  placeholder={disabled ? '' : tx('tx.rslang.typification.manual.hint')}
+                  disabled={disabled || activeCst.is_inherited}
+                  value={field.state.value ?? ''}
+                  onChange={field.handleChange}
+                  onBlur={field.handleBlur}
+                  error={
+                    field.state.meta.errors[0]?.message ??
+                    (activeCst.is_type_mismatch ? tx('tx.rslang.typification.manual.validate') : undefined)
+                  }
+                />
+              )}
+            </form.Field>
+          ) : null}
+          <TextArea
+            id='cst_typification'
+            label={tx('tx.rslang.typification')}
+            fitContent
+            dense
+            noResize
+            noBorder
+            noOutline
+            transparent
+            readOnly
+            value={typification}
+            className='cursor-default'
+          />
+          {showManualTypificationButton && !disabled ? (
+            <TextButton
+              text={tx('tx.rslang.typification.manual.add')}
+              className='absolute top-0 right-0'
+              onClick={() => setManualTypificationOpen(true)}
+            />
+          ) : null}
+        </div>
       ) : null}
 
       {!!activeCst.definition_formal || !isElementary ? (

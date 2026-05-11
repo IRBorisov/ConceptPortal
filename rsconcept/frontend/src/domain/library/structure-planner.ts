@@ -24,15 +24,18 @@ export class StructurePlanner {
   private rootType: Typification;
 
   constructor(schema: RSForm, target: Constituenta) {
-    if (!isTypification(target.analysis.type) && target.cst_type !== CstType.FUNCTION) {
+    const eff = target.effectiveType;
+    if (eff == null) {
       throw new Error('Invalid typification for target');
     }
     this.schema = schema;
     this.target = target;
-    if (target.cst_type === CstType.FUNCTION) {
-      this.rootType = (target.analysis.type as EchelonFunctional).result;
+    if (target.cst_type === CstType.FUNCTION && !isTypification(eff)) {
+      this.rootType = (eff as EchelonFunctional).result;
+    } else if (isTypification(eff)) {
+      this.rootType = eff as Typification;
     } else {
-      this.rootType = target.analysis.type as Typification;
+      throw new Error('Invalid typification for target');
     }
   }
 
@@ -42,7 +45,7 @@ export class StructurePlanner {
       path: makeTypePath([]),
       type: this.rootType,
       parent: null,
-      definition: labelType(this.target.analysis.type),
+      definition: labelType(this.target.effectiveType),
       existing: this.target
     });
     this.visit(this.rootType, this.rootType.typeID === TypeID.collection ? [0] : [], 0);
@@ -99,8 +102,13 @@ function produceDefinition(target: Constituenta, rootType: Typification, path: T
   let prefix = '';
   if (target.cst_type === CstType.FUNCTION) {
     prefix = `[${splitTemplateDefinition(target.definition_formal).head}] `;
-    const args = (target.analysis.type as EchelonFunctional).args;
-    expression = `${expression}[${args.map(arg => arg.alias).join(', ')}]`;
+    const funcType =
+      target.effectiveType && !isTypification(target.effectiveType)
+        ? (target.effectiveType as EchelonFunctional)
+        : null;
+    if (funcType) {
+      expression = `${expression}[${funcType.args.map(arg => arg.alias).join(', ')}]`;
+    }
   }
 
   while (index < path.length) {

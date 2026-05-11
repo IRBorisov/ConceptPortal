@@ -98,6 +98,7 @@ export function DlgShowAstExtract() {
     const response = await onCreate({
       alias: data.alias,
       cst_type: data.cstType,
+      typification_manual: '',
       definition_formal: data.definition,
       definition_raw: definitionText.trim(),
       term_raw: term.trim(),

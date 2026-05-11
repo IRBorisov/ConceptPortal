@@ -46,12 +46,14 @@ export function TextArea({
           <Label text={label} htmlFor={id} />
           <textarea
             id={id}
+            aria-invalid={!!error}
             className={cn(
               'min-h-0 grow max-w-full',
               'px-3',
               'leading-tight',
               'overflow-x-hidden overflow-y-auto',
               !noBorder && 'border py-2',
+              !noBorder && !!error && 'border-destructive',
               fitContent && 'field-sizing-content',
               noResize && 'resize-none',
               transparent || disabled ? 'bg-transparent' : 'bg-input',

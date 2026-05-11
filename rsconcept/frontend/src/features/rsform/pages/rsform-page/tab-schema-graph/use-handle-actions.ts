@@ -64,10 +64,10 @@ export function useHandleActions(graph: Graph<number>) {
     const items =
       selectedCst.length === 0 ? schema.items : schema.items.filter(item => selectedCst.find(id => id === item.id));
     const typeInfo = items
-      .filter(item => !!item.analysis?.type)
+      .filter(item => !!item.effectiveType)
       .map(item => ({
         alias: item.alias,
-        type: item.analysis.type!
+        type: item.effectiveType!
       }));
     showTypeGraph({ items: typeInfo });
   }

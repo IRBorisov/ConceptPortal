@@ -148,7 +148,7 @@ function CstTable({ data }: { data: RO<Constituenta[]> }) {
               {addSpaces(cst.definition_formal)}
             </Text>
             <Text style={{ ...pdfs.cell, width: '38mm', fontFamily: 'CodeMath' }} hyphenationCallback={word => [word]}>
-              {addSpacesTypification(labelType(cst.analysis.type))}
+              {addSpacesTypification(labelType(cst.effectiveType))}
             </Text>
             <Text style={{ ...pdfs.cell, width: '40mm' }} hyphenationCallback={hyphenateCyrillic}>
               {protectShortRussianWords(cst.term_resolved)}

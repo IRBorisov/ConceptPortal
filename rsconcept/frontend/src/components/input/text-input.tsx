@@ -69,11 +69,13 @@ export function TextInput({
         <Label text={label} htmlFor={id} />
         <input
           id={id}
+          aria-invalid={!!error}
           className={clsx(
             'h-9 min-w-0',
             'leading-tight truncate hover:text-clip',
             transparent || disabled ? 'bg-transparent' : 'bg-input',
             !noBorder && 'border py-2',
+            !noBorder && !!error && 'border-destructive',
             !noOutline && 'focus-outline',
             (!noBorder || !disabled) && 'px-3',
             !!label && 'mt-2'

@@ -91,6 +91,14 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
         details={[
           { label: tx('tx.concept.homonym.plural'), value: stats.count_homonyms },
           { label: tx('tx.concept.duplicate.plural'), value: stats.count_formal_duplicates },
+          ...(stats.count_type_mismatch > 0
+            ? [
+                {
+                  label: tx('tx.schema.issue.typeMismatch'),
+                  value: stats.count_type_mismatch
+                }
+              ]
+            : []),
           {
             label: tx('tx.concept.basic.validate.noConvention'),
             value: stats.count_missing_convention

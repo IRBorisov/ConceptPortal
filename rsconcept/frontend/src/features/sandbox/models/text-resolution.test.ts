@@ -14,6 +14,7 @@ function row(
     crucial: false,
     cst_type: 'term',
     definition_formal: '',
+    typification_manual: '',
     definition_raw: data.definition_raw ?? '',
     definition_resolved: data.definition_resolved ?? '',
     term_raw: data.term_raw ?? data.alias,

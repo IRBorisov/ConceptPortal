@@ -52,6 +52,11 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.type': 'Type',
   'tx.rslang.typification': 'Typification',
   'tx.rslang.typification.hint': 'Type system in structural explication',
+  'tx.rslang.typification.manual': 'Manual typification',
+  'tx.rslang.typification.manual.add': 'Add manual typification',
+  'tx.rslang.typification.manual.hint': 'Set manual typification in the format [X1, B(X1)] -> Z*C1',
+  'tx.rslang.typification.manual.validate':
+    'Manual typification does not match the typification inferred from the formal definition (same shape when compared by label).',
   'tx.rslang.cardinality': 'Cardinality',
   'tx.rslang.template.parameter': 'Template parameter',
 

@@ -61,6 +61,12 @@ export const schemaValueClass = z.enum(Object.values(ValueClass) as [ValueClass,
 export const schemaTokenID = z.enum(TokenID);
 export const schemaRSErrorType = z.enum(RSErrorCode);
 
+/** Older API payloads, sandbox bundles, and exports may omit this field — treat as empty. */
+export const schemaTypificationManualPersisted = z.preprocess(
+  (val: unknown) => (typeof val === 'string' ? val : ''),
+  z.string()
+);
+
 export const schemaConstituentaBasics = z.strictObject({
   id: z.number(),
   alias: z.string().nonempty(globalTx('tx.general.field.required')),
@@ -68,6 +74,7 @@ export const schemaConstituentaBasics = z.strictObject({
   crucial: z.boolean(),
   cst_type: schemaCstType,
   definition_formal: z.string(),
+  typification_manual: schemaTypificationManualPersisted,
   definition_raw: z.string(),
   definition_resolved: z.string(),
   term_raw: z.string(),
@@ -123,6 +130,9 @@ export const schemaCreateConstituenta = schemaConstituentaBasics
     definition_formal: z
       .string()
       .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`),
+    typification_manual: z
+      .string()
+      .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`),
     definition_raw: z
       .string()
       .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`),
@@ -152,6 +162,10 @@ export const schemaUpdateConstituenta = z.strictObject({
       .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`)
       .optional(),
     definition_formal: z
+      .string()
+      .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`)
+      .optional(),
+    typification_manual: z
       .string()
       .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`)
       .optional(),

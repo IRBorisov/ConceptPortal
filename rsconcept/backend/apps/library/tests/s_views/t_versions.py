@@ -181,6 +181,28 @@ class TestVersionViews(EndpointTester):
         self.assertEqual(response.data['items'][2]['alias'], 'D1')
         self.assertEqual(response.data['items'][2]['term_raw'], 'TestTerm')
 
+    @decl_endpoint('/api/versions/{version}/restore', method='patch')
+    def test_restore_version_legacy_items_without_typification_manual(self):
+        ''' Version snapshots saved before typification_manual must restore without error. '''
+        data = {'version': '1.0.0', 'description': 'pre-typification_manual field'}
+        version_id = self._create_version(data)
+        version = Version.objects.get(pk=version_id)
+        snapshot = dict(version.data)
+        legacy_items: list[dict] = []
+        for item in snapshot['items']:
+            row = {key: value for key, value in item.items() if key != 'typification_manual'}
+            legacy_items.append(row)
+        snapshot['items'] = legacy_items
+        version.data = snapshot
+        version.save(update_fields=['data'])
+
+        self.x1.typification_manual = 'ℬ(X1)'
+        self.x1.save()
+
+        response = self.executeOK(version=version_id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.x1.refresh_from_db()
+        self.assertEqual(self.x1.typification_manual, '')
 
     def _create_version(self, data) -> int:
         response = self.client.post(

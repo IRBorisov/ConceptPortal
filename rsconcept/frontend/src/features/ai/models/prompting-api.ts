@@ -42,7 +42,7 @@ export function varSchema(schema: RSForm): string {
   let result = stringifySchemaIntro(schema);
   result += '\n\nКонституенты:';
   for (const item of schema.items) {
-    result += `\n${item.alias} - "${labelType(item.analysis.type)}" - "${item.term_resolved}" - "${
+    result += `\n${item.alias} - "${labelType(item.effectiveType)}" - "${item.term_resolved}" - "${
       item.definition_formal
     }" - "${item.definition_resolved}" - "${item.convention}"`;
   }
@@ -107,8 +107,8 @@ export function varSchemaGraph(schema: RSForm): string {
 export function varSchemaTypeGraph(schema: RSForm): string {
   const graph = new TypificationGraph();
   for (const item of schema.items) {
-    if (item.analysis.type !== null && isTypification(item.analysis.type)) {
-      graph.addElement(item.alias, item.analysis.type);
+    if (item.effectiveType !== null && isTypification(item.effectiveType)) {
+      graph.addElement(item.alias, item.effectiveType);
     }
   }
 

@@ -191,7 +191,10 @@ export const txLibraryFr: Record<string, string> = {
   'tx.schema.issue.short': 'Erreurs sch.',
   'tx.schema.issue.plural': 'Erreurs de schéma',
   'tx.schema.issue.hint':
-    'Problèmes avec les constituantes du schéma, y compris les erreurs dans les définitions, les conventions manquantes, les homonymes et les doublons',
+    'Problèmes avec les constituantes du schéma, y compris les erreurs dans les définitions, les conventions manquantes, les homonymes, les doublons et une typification manuelle incompatible avec la définition formelle',
+  'tx.schema.issue.typeMismatch': 'Typif. manuelle vs formelle',
+  'tx.schema.issue.typeMismatch.hint':
+    'Constituantes dont la typification manuelle ne correspond pas à la typification déduite de la définition formelle',
 
   'tx.parse.status': 'Statut de la constituante',
   'tx.parse.status.hint': 'Notation du statut de la constituante',

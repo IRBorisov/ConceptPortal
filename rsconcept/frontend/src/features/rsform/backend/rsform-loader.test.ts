@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { AccessPolicy, CstStatus, CstType, LibraryItemType } from '@/domain/library';
+import { calculateSchemaStats, isSchemaIssue } from '@/domain/library/rsform-api';
 
 import { RSFormLoader } from './rsform-loader';
 import { type ConstituentaBasicsDTO, type RSFormDTO } from './types';
@@ -44,6 +45,7 @@ describe('RSFormLoader', () => {
       alias: alias,
       cst_type: type,
       definition_formal: definition,
+      typification_manual: '',
       convention: '',
       definition_raw: '',
       term_raw: '',
@@ -76,6 +78,7 @@ describe('RSFormLoader', () => {
       definition_formal: '',
       convention: 't1',
       definition_raw: 't2',
+      typification_manual: 'X1',
       term_raw: 't3',
       term_forms: [],
       term_resolved: 't4',
@@ -87,20 +90,21 @@ describe('RSFormLoader', () => {
     const rsform = loader.produceRSForm();
     expect(rsform.cstByAlias.get(item.alias)).toEqual(expect.objectContaining({ id: item.id }));
     expect(rsform.cstByID.get(item.id)).toEqual(expect.objectContaining({ alias: item.alias }));
-    const cst = rsform.cstByAlias.get('X1');
+    const cst = rsform.cstByAlias.get('X1')!;
     expect(cst).toBeDefined();
-    expect(cst!.id).toBe(item.id);
-    expect(cst!.alias).toBe(item.alias);
-    expect(cst!.cst_type).toBe(item.cst_type);
-    expect(cst!.definition_formal).toBe(item.definition_formal);
-    expect(cst!.convention).toBe(item.convention);
-    expect(cst!.definition_raw).toBe(item.definition_raw);
-    expect(cst!.term_raw).toBe(item.term_raw);
-    expect(cst!.term_forms).toEqual(item.term_forms);
-    expect(cst!.term_resolved).toBe(item.term_resolved);
-    expect(cst!.definition_resolved).toBe(item.definition_resolved);
-    expect(cst!.crucial).toBe(item.crucial);
-    expect(cst!.homonyms).toEqual([]);
+    expect(cst.id).toBe(item.id);
+    expect(cst.alias).toBe(item.alias);
+    expect(cst.cst_type).toBe(item.cst_type);
+    expect(cst.definition_formal).toBe(item.definition_formal);
+    expect(cst.convention).toBe(item.convention);
+    expect(cst.definition_raw).toBe(item.definition_raw);
+    expect(cst.term_raw).toBe(item.term_raw);
+    expect(cst.term_forms).toEqual(item.term_forms);
+    expect(cst.term_resolved).toBe(item.term_resolved);
+    expect(cst.definition_resolved).toBe(item.definition_resolved);
+    expect(cst.crucial).toBe(item.crucial);
+    expect(cst.homonyms).toEqual([]);
+    expect(cst.typification_manual).toBe(item.typification_manual);
   });
 
   it('should set isHomonym when multiple constituents share a non-empty term_resolved', () => {
@@ -112,6 +116,19 @@ describe('RSFormLoader', () => {
     expect(rsform.cstByID.get(1)!.homonyms.map(item => rsform.cstByID.get(item)!.alias)).toEqual(['X2']);
     expect(rsform.cstByID.get(2)!.homonyms.map(item => rsform.cstByID.get(item)!.alias)).toEqual(['X1']);
     expect(rsform.cstByID.get(3)!.homonyms).toEqual([]);
+  });
+
+  it('should set is_type_mismatch when manual typification label differs from computed', () => {
+    const x1 = createCst(1, 'X1', CstType.BASE, '', 'base');
+    const s1 = createCst(2, 'S1', CstType.STRUCTURED, 'ℬ(X1×X1)', 'struct');
+    s1.typification_manual = 'X1';
+    const dto = createMinimalDTO({ items: [x1, s1] });
+    const rsform = new RSFormLoader(dto).produceRSForm();
+    const loaded = rsform.cstByAlias.get('S1')!;
+    expect(loaded.analysis.type).not.toBeNull();
+    expect(loaded.is_type_mismatch).toBe(true);
+    expect(isSchemaIssue(loaded)).toBe(true);
+    expect(calculateSchemaStats(rsform).count_type_mismatch).toBe(1);
   });
 
   it('should not mark homonyms for empty or whitespace-only term_resolved', () => {
@@ -132,33 +149,33 @@ describe('RSFormLoader', () => {
     const dto = createMinimalDTO({ items: [x1raw, s1raw, d1raw, f1raw, f2raw] });
     const loader = new RSFormLoader(dto);
     const rsform = loader.produceRSForm();
-    const x1 = rsform.cstByAlias.get('X1');
+    const x1 = rsform.cstByAlias.get('X1')!;
     expect(x1).toBeDefined();
-    const s1 = rsform.cstByAlias.get('S1');
+    const s1 = rsform.cstByAlias.get('S1')!;
     expect(s1).toBeDefined();
-    const d1 = rsform.cstByAlias.get('D1');
+    const d1 = rsform.cstByAlias.get('D1')!;
     expect(d1).toBeDefined();
-    expect(s1!.analysis.success).toBe(true);
-    expect(s1!.status).toBe(CstStatus.VERIFIED);
-    expect(d1!.analysis.success).toBe(true);
-    expect(d1!.status).toBe(CstStatus.VERIFIED);
-    expect(d1!.is_simple_expression).toBe(true);
-    expect(d1!.spawner).toBe(s1!.id);
-    expect(d1!.spawner_alias).toBe('S1');
-    expect(d1!.spawner_path).toEqual([0, 0, 1]);
+    expect(s1.analysis.success).toBe(true);
+    expect(s1.status).toBe(CstStatus.VERIFIED);
+    expect(d1.analysis.success).toBe(true);
+    expect(d1.status).toBe(CstStatus.VERIFIED);
+    expect(d1.is_simple_expression).toBe(true);
+    expect(d1.spawner).toBe(s1.id);
+    expect(d1.spawner_alias).toBe('S1');
+    expect(d1.spawner_path).toEqual([0, 0, 1]);
 
-    const f1 = rsform.cstByAlias.get('F1');
+    const f1 = rsform.cstByAlias.get('F1')!;
     expect(f1).toBeDefined();
-    const f2 = rsform.cstByAlias.get('F2');
+    const f2 = rsform.cstByAlias.get('F2')!;
     expect(f2).toBeDefined();
-    expect(f1!.analysis.success).toBe(true);
-    expect(f1!.status).toBe(CstStatus.VERIFIED);
-    expect(f2!.analysis.success).toBe(true);
-    expect(f2!.status).toBe(CstStatus.VERIFIED);
-    expect(f2!.is_simple_expression).toBe(true);
-    expect(f2!.spawner).toBe(f1!.id);
-    expect(f2!.spawner_alias).toBe('F1');
-    expect(f2!.spawner_path).toEqual([0, 1]);
+    expect(f1.analysis.success).toBe(true);
+    expect(f1.status).toBe(CstStatus.VERIFIED);
+    expect(f2.analysis.success).toBe(true);
+    expect(f2.status).toBe(CstStatus.VERIFIED);
+    expect(f2.is_simple_expression).toBe(true);
+    expect(f2.spawner).toBe(f1.id);
+    expect(f2.spawner_alias).toBe('F1');
+    expect(f2.spawner_path).toEqual([0, 1]);
   });
 
   it('should mark formal duplicates using normalized definitions', () => {

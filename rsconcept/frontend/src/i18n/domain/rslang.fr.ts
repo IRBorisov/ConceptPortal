@@ -54,6 +54,11 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.type': 'Type',
   'tx.rslang.typification': 'Typification',
   'tx.rslang.typification.hint': 'Système de types dans l’explication structurelle',
+  'tx.rslang.typification.manual': 'Typification manuelle',
+  'tx.rslang.typification.manual.add': 'Ajouter une typification manuelle',
+  'tx.rslang.typification.manual.hint': 'Définissez une typification manuelle dans le format [X1, B(X1)] -> Z*C1',
+  'tx.rslang.typification.manual.validate':
+    'La typification manuelle ne correspond pas à la typification déduite de la définition formelle',
   'tx.rslang.cardinality': 'Cardinalité',
   'tx.rslang.template.parameter': 'Paramètre de modèle',
 

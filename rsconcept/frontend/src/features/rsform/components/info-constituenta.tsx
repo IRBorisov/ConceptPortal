@@ -29,7 +29,7 @@ export function InfoConstituenta({ data, className, ...restProps }: InfoConstitu
       ) : null}
       <p className='break-all'>
         <b>{tx('tx.rslang.typification') + tx('tx.general.colon')}</b>
-        <span className='font-math'>{labelType(data.analysis?.type ?? null)}</span>
+        <span className='font-math'>{labelType(data.effectiveType)}</span>
       </p>
       {data.definition_formal ? (
         <p className='break-all'>

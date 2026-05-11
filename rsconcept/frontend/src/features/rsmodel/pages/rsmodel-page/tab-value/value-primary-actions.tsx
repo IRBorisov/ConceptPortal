@@ -45,7 +45,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
   const showViewValue = useDialogsStore(state => state.showModelViewValue);
   const showEditBinding = useDialogsStore(state => state.showModelEditBinding);
 
-  const typification = activeCst.analysis.type;
+  const typification = activeCst.effectiveType;
   const isBase = isBaseSet(activeCst.cst_type);
   const cstInferrable = isInferrable(activeCst.cst_type);
   const isImportDisabled = !isMutable || cstInferrable || !isInterpretable(activeCst.cst_type);
@@ -94,7 +94,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
       });
       return;
     }
-    const type = activeCst.analysis.type as Typification;
+    const type = activeCst.effectiveType as Typification;
     const getHeaderText = (path: TypePath) => getStructureName(schema, activeCst, path);
     if (!cstInferrable && isMutable) {
       showEditValue({

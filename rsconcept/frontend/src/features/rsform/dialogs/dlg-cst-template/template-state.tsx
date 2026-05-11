@@ -61,10 +61,10 @@ export const TemplateState = ({
 
   function onChangePrototype(newPrototype: Constituenta) {
     setPrototype(newPrototype);
-    const typeID = newPrototype.analysis.type!.typeID;
+    const typeID = newPrototype.effectiveType!.typeID;
     if (typeID === TypeID.function || typeID === TypeID.predicate) {
       setArguments(
-        newPrototype.analysis.type!.args.map(arg => ({
+        newPrototype.effectiveType!.args.map(arg => ({
           alias: arg.alias,
           typification: labelType(arg.type),
           value: ''

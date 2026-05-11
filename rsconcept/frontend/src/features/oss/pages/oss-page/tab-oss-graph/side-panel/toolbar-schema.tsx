@@ -87,6 +87,7 @@ export function ToolbarSchema({
       cst_type: targetType,
       alias: generateAlias(targetType, schema),
       term_raw: '',
+      typification_manual: '',
       definition_formal: '',
       definition_raw: '',
       convention: '',
@@ -114,6 +115,7 @@ export function ToolbarSchema({
         term_raw: activeCst.term_raw,
         definition_formal: activeCst.definition_formal,
         definition_raw: activeCst.definition_raw,
+        typification_manual: activeCst.typification_manual,
         convention: activeCst.convention,
         term_forms: activeCst.term_forms
       }
@@ -138,10 +140,10 @@ export function ToolbarSchema({
 
   function handleShowTypeGraph() {
     const typeInfo = schema.items
-      .filter(item => item.analysis.type !== null)
+      .filter(item => item.effectiveType !== null)
       .map(item => ({
         alias: item.alias,
-        type: item.analysis.type!
+        type: item.effectiveType!
       }));
     showTypeGraph({ items: typeInfo });
   }

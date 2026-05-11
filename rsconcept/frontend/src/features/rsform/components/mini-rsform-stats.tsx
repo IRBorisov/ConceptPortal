@@ -15,7 +15,6 @@ import {
   IconCstPredicate,
   IconCstStructured,
   IconCstTerm,
-  IconCstTheorem,
   IconDefinition,
   IconPredecessor,
   IconStatusError,
@@ -54,6 +53,13 @@ export function MiniRSFormStats({ className, stats }: MiniRSFormStatsProps) {
       />
 
       <ValueStats
+        id='count_nominal'
+        title={tx('tx.cst.type.nominal.plural')}
+        icon={<IconCstNominal size='1.25rem' className={stats.count_nominal > 0 ? 'text-destructive' : undefined} />}
+        value={stats.count_nominal}
+      />
+
+      <ValueStats
         id='count_base'
         title={tx('tx.cst.type.basic')}
         icon={<IconCstBaseSet size='1.25rem' />}
@@ -71,13 +77,13 @@ export function MiniRSFormStats({ className, stats }: MiniRSFormStatsProps) {
         icon={<IconCstStructured size='1.25rem' />}
         value={stats.count_structured}
       />
+
       <ValueStats
         id='count_axiom'
         title={tx('tx.cst.type.axiom')}
         icon={<IconCstAxiom size='1.25rem' />}
         value={stats.count_axiom}
       />
-
       <ValueStats
         id='count_term'
         title={tx('tx.cst.type.term')}
@@ -95,12 +101,6 @@ export function MiniRSFormStats({ className, stats }: MiniRSFormStatsProps) {
         title={tx('tx.cst.type.predicate')}
         icon={<IconCstPredicate size='1.25rem' />}
         value={stats.count_predicate}
-      />
-      <ValueStats
-        id='count_theorem'
-        title={tx('tx.cst.type.theorem')}
-        icon={<IconCstTheorem size='1.25rem' />}
-        value={stats.count_theorem}
       />
 
       <ValueStats
@@ -122,10 +122,12 @@ export function MiniRSFormStats({ className, stats }: MiniRSFormStatsProps) {
         value={stats.count_incorrect}
       />
       <ValueStats
-        id='count_nominal'
-        title={tx('tx.cst.type.nominal.plural')}
-        icon={<IconCstNominal size='1.25rem' className={stats.count_nominal > 0 ? 'text-destructive' : undefined} />}
-        value={stats.count_nominal}
+        id='count_type_mismatch'
+        title={tx('tx.schema.issue.typeMismatch.hint')}
+        icon={
+          <IconStatusError size='1.25rem' className={stats.count_type_mismatch > 0 ? 'text-destructive' : undefined} />
+        }
+        value={stats.count_type_mismatch}
       />
 
       <ValueStats

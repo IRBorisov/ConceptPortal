@@ -188,7 +188,10 @@ export const txLibraryEn: Record<string, string> = {
   'tx.schema.issue.short': 'Erreurs sch.',
   'tx.schema.issue.plural': 'Schema issues',
   'tx.schema.issue.hint':
-    'Issues with the constituents of the schema, including errors in definitions, missing conventions, homonyms and duplicates',
+    'Issues with the constituents of the schema, including errors in definitions, missing conventions, homonyms, duplicates, and manual typification that disagrees with the formal definition',
+  'tx.schema.issue.typeMismatch': 'Manual vs formal typification',
+  'tx.schema.issue.typeMismatch.hint':
+    'Constituents whose manual typification does not match the typification inferred from the formal definition',
 
   'tx.parse.status': 'Constituent status',
   'tx.parse.status.hint': 'Notation for formal definition status',
