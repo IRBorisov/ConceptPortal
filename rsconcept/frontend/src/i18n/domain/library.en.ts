@@ -185,7 +185,7 @@ export const txLibraryEn: Record<string, string> = {
   'tx.schema.order.rename.success': 'Ordinal names assigned',
   'tx.schema.noneSelected': 'No schema selected',
   'tx.schema.item.total.hint': 'Total number of constituents in the schema',
-  'tx.schema.issue.short': 'Erreurs sch.',
+  'tx.schema.issue.short': 'Sch. issues',
   'tx.schema.issue.plural': 'Schema issues',
   'tx.schema.issue.hint':
     'Issues with the constituents of the schema, including errors in definitions, missing conventions, homonyms, duplicates, and manual typification that disagrees with the formal definition',

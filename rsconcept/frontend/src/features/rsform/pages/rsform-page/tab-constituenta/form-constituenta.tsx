@@ -137,7 +137,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       const timeoutId = setTimeout(function resetConstituentaUIState() {
         setForceComment(false);
         setLocalParse(null);
-        setManualTypificationOpen(!!(activeCst.typification_manual ?? '').trim());
+        setManualTypificationOpen(!!activeCst.typification_manual);
       }, 0);
       return () => clearTimeout(timeoutId);
     },

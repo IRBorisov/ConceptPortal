@@ -25,7 +25,7 @@ export function parseTypeText(input: string): TypificationParseResult {
 
 /** ASCII substitutions while editing typification text */
 export function applyAsciiTypeSubstitutions(raw: string): string {
-  return raw.replaceAll('->', '→').replace('*', '×').replace('B', 'ℬ');
+  return raw.replaceAll('->', '→').replaceAll('*', '×').replaceAll('B', 'ℬ');
 }
 
 class TypificationParser {

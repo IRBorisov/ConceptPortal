@@ -176,7 +176,7 @@ class RSFormCached:
         self.cache.insert_multi(new_constituents)
         return new_constituents
 
-    # pylint: disable=too-many-branches
+    # pylint: disable=too-many-branches,too-many-statements
     def update_cst(self, target: int, data: dict) -> dict:
         ''' Update persistent attributes of a given constituenta. Return old values. '''
         self.cache.ensure_loaded_terms()
@@ -332,7 +332,13 @@ class RSFormCached:
             if cst.pk in target:
                 if cst.apply_mapping(mapping):
                     update_list.append(cst)
-        Constituenta.objects.bulk_update(update_list, ['definition_formal', 'typification_manual', 'term_raw', 'definition_raw'])
+        Constituenta.objects.bulk_update(
+            update_list, [
+                'definition_formal',
+                'typification_manual',
+                'term_raw',
+                'definition_raw'
+            ])
 
     def resolve_all_text(self) -> None:
         ''' Trigger reference resolution for all texts. '''
