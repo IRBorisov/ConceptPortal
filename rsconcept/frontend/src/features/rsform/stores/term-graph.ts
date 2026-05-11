@@ -120,7 +120,8 @@ export const useTermGraphStore = create<TermGraphStore>()(
         allowNominal: true
       },
       setFilter: value => set({ filter: value }),
-      setGraphType: value => set(state => ({ filter: { ...state.filter, graphType: value } })),
+      setGraphType: value =>
+        set(state => (state.filter.graphType !== value ? { filter: { ...state.filter, graphType: value } } : state)),
       toggleFocusInputs: () =>
         set(state => ({ filter: { ...state.filter, focusShowInputs: !state.filter.focusShowInputs } })),
       toggleFocusOutputs: () =>
@@ -145,10 +146,10 @@ export const useTermGraphStore = create<TermGraphStore>()(
       toggleFoldHidden: () => set(state => ({ foldHidden: !state.foldHidden })),
 
       coloring: 'type',
-      setColoring: value => set({ coloring: value }),
+      setColoring: value => set(state => (state.coloring !== value ? { coloring: value } : state)),
 
       mode: InteractionMode.explore,
-      setMode: value => set({ mode: value }),
+      setMode: value => set(state => (state.mode !== value ? { mode: value } : state)),
       toggleMode: () =>
         set(state => ({
           mode: state.mode === InteractionMode.explore ? InteractionMode.edit : InteractionMode.explore
@@ -163,7 +164,7 @@ export const useTermGraphStore = create<TermGraphStore>()(
 
 export const useTGConnectionStore = create<TGConnectionStore>()(set => ({
   connectionType: TGEdgeType.attribution,
-  setConnectionType: value => set({ connectionType: value }),
+  setConnectionType: value => set(state => (state.connectionType !== value ? { connectionType: value } : state)),
   toggleConnectionType: () =>
     set(state => ({
       connectionType: state.connectionType === TGEdgeType.attribution ? TGEdgeType.definition : TGEdgeType.attribution

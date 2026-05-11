@@ -290,6 +290,8 @@ export const txLibraryEn: Record<string, string> = {
   'tx.cst.template.validate': 'Choose a constituenta template',
   'tx.cst.template.result': 'Resulting definition',
 
+  'tx.attribution': 'Attribution',
+  'tx.attribution.hint': 'Enable attribution form',
   'tx.attribution.attribute.plural': 'Attributing constituents',
 
   'tx.substitution': 'Substitution',

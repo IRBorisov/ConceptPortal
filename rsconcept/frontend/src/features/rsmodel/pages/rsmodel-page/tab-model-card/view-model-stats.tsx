@@ -26,7 +26,7 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
   return (
     <aside className={cn('h-fit flex flex-col border select-none', className)} {...restProps}>
       <StatsCategory
-        id='rsmodel-stats-overview'
+        id='model-stats-overview'
         className='rounded-t-md'
         label={tx('tx.lib.contents')}
         primaryLabel={tx('tx.cst.plural')}
@@ -43,7 +43,7 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
                 { label: tx('tx.cst.original.plural.short'), value: countOwned }
               ]
             : []),
-          { label: tx('tx.cst.crucial.plural'), value: stats.count_crucial },
+          ...(stats.count_crucial > 0 ? [{ label: tx('tx.cst.crucial.plural'), value: stats.count_crucial }] : []),
           { label: tx('tx.lang.term.plural'), value: stats.count_text_term },
           { label: tx('tx.lib.defineText.plural'), value: stats.count_definition },
           { label: tx('tx.lib.convention.plural'), value: stats.count_convention },
@@ -54,7 +54,7 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
       <Divider margins='mx-3' />
 
       <StatsCategory
-        id='rsmodel-stats-structures'
+        id='model-stats-structures'
         label={tx('tx.schema.short')}
         primaryLabel={tx('tx.concept.basic.plural')}
         primaryValue={countBase}
@@ -65,22 +65,22 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
         details={[
           { label: tx('tx.concept.basic.plural'), value: countBase },
           { label: tx('tx.concept.derived.plural'), value: countDerived },
-          { label: tx('tx.cst.type.nominal.plural'), value: stats.count_nominal },
+          ...(stats.count_nominal > 0 ? [{ label: tx('tx.cst.type.nominal.plural'), value: stats.count_nominal }] : []),
           { label: tx('tx.cst.type.basic'), value: stats.count_base },
-          { label: tx('tx.cst.type.constant'), value: stats.count_constant },
+          ...(stats.count_constant > 0 ? [{ label: tx('tx.cst.type.constant'), value: stats.count_constant }] : []),
           { label: tx('tx.cst.type.structure'), value: stats.count_structured },
           { label: tx('tx.cst.type.axiom'), value: stats.count_axiom },
           { label: tx('tx.cst.type.term'), value: stats.count_term },
           { label: tx('tx.cst.type.function'), value: stats.count_function },
           { label: tx('tx.cst.type.predicate'), value: stats.count_predicate },
-          { label: tx('tx.cst.type.theorem'), value: stats.count_theorem }
+          ...(stats.count_theorem > 0 ? [{ label: tx('tx.cst.type.theorem'), value: stats.count_theorem }] : [])
         ]}
       />
 
       <Divider margins='mx-3' />
 
       <StatsCategory
-        id='rsmodel-stats-quality'
+        id='model-stats-quality'
         label={tx('tx.concept.system.correctness')}
         primaryLabel={tx('tx.general.issue.plural')}
         primaryValue={stats.count_problematic}
@@ -104,7 +104,7 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
       <Divider margins='mx-3' />
 
       <StatsCategory
-        id='rsmodel-stats-model'
+        id='model-stats-model'
         className='rounded-b-md'
         label={tx('tx.model.short')}
         primaryLabel={tx('tx.general.issue.plural')}

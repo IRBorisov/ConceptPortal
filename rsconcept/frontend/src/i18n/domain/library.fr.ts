@@ -293,6 +293,8 @@ export const txLibraryFr: Record<string, string> = {
   'tx.cst.template.validate': 'Choisir un modèle de constituante',
   'tx.cst.template.result': 'Définition résultante',
 
+  'tx.attribution': 'Attribution',
+  'tx.attribution.hint': 'Activer la forme d’attribution',
   'tx.attribution.attribute.plural': 'Constituantes attributives',
 
   'tx.substitution': 'Identification',

@@ -61,6 +61,7 @@ export class RSFormLoader {
     result.cstByAlias = this.cstByAlias;
     result.cstByID = this.cstByID;
     result.attribution_graph = this.association_graph;
+    result.is_attributive = result.attribution.length > 0 || result.items.some(cst => cst.cst_type === CstType.NOMINAL);
     return result;
   }
 

@@ -27,8 +27,8 @@ export function HelpConceptSystemEn() {
       </p>
 
       <p>
-        A system of definitions is built upon <b>undefined concepts</b>, which are given an informal definition called
-        a <b>convention</b> — a commonly understood agreement among participants about relating undefined concepts to
+        A system of definitions is built upon <b>undefined concepts</b>, which are given an informal definition called a{' '}
+        <b>convention</b> — a commonly understood agreement among participants about relating undefined concepts to
         entities or objects in the subject domain. In addition to the convention, a number of assertions relating the
         undefined concepts, called <b>axioms</b>, are often specified.
       </p>
@@ -44,18 +44,23 @@ export function HelpConceptSystemEn() {
       </p>
 
       <p>
+        The Portal also supports the attribution form, where attribution relations are established between named
+        entities (nominoids). It is possible to combine both forms of explication in a single conceptual schema.
+      </p>
+
+      <p>
         The <b>core</b> of a conceptual schema is the set of base concepts, axioms, and intermediate derived concepts
-        needed to form the expressions of the axioms. The remaining concepts belong to the <b>body</b> of the
-        conceptual schema.
+        needed to form the expressions of the axioms. The remaining concepts belong to the <b>body</b> of the conceptual
+        schema.
       </p>
 
       <p>
         To achieve the required expressive capability, a conceptual schema identifies "key" concepts that are
         deductively derived from the base concepts through sequential derivation of intermediate concepts. This activity
-        is called <b>unfolding</b> the terms (the body of the theory). The formal apparatus employed allows, in
-        addition to key concepts, the full variety of concepts to be formed from the bases identified during the
-        construction of the key terms. Such constructed varieties can be used to formulate solutions, particularly in
-        regulatory contexts.
+        is called <b>unfolding</b> the terms (the body of the theory). The formal apparatus employed allows, in addition
+        to key concepts, the full variety of concepts to be formed from the bases identified during the construction of
+        the key terms. Such constructed varieties can be used to formulate solutions, particularly in regulatory
+        contexts.
       </p>
 
       <p>

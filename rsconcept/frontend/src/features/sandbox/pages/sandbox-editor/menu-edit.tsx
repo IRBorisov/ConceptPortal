@@ -1,8 +1,10 @@
 'use client';
 
+import { CstType } from '@/domain/library';
 import { useTx } from '@/i18n';
 
 import { useUnsavedChanges } from '@/app';
+import { IconCstType } from '@/features/rsform/components/icon-cst-type';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { MiniButton } from '@/components/control';
@@ -18,7 +20,7 @@ export function MenuEdit() {
   const { promptUnsaved } = useUnsavedChanges();
   const isModified = useModificationStore(state => state.isModified);
   const { resetAliases, restoreOrder, substituteConstituents } = useSandboxBundle();
-  const { schema } = useSchemaEdit();
+  const { schema, createCst } = useSchemaEdit();
   const {
     elementRef: menuRef,
     isOpen: isMenuOpen,
@@ -64,6 +66,11 @@ export function MenuEdit() {
     restoreOrder();
   }
 
+  function handleEnableAttribution() {
+    hideMenu();
+    void createCst(CstType.NOMINAL);
+  }
+
   return (
     <div ref={menuRef} onBlur={handleMenuBlur} className='relative'>
       <MiniButton
@@ -94,6 +101,14 @@ export function MenuEdit() {
           icon={<IconReplace size='1rem' className='icon-red' />}
           onClick={() => void handleSubstitute()}
         />
+        {!schema.is_attributive ? (
+          <DropdownButton
+            text={tx('tx.attribution')}
+            title={tx('tx.attribution.hint')}
+            icon={<IconCstType value={CstType.NOMINAL} size='1rem' className='icon-green' />}
+            onClick={handleEnableAttribution}
+          />
+        ) : null}
       </Dropdown>
     </div>
   );

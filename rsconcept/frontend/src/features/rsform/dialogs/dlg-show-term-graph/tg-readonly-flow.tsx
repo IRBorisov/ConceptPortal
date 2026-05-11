@@ -25,7 +25,7 @@ import { SelectColoring } from '../../components/term-graph/select-coloring';
 import { SelectEdgeType } from '../../components/term-graph/select-edge-type';
 import { ToolbarFocusedCst } from '../../components/term-graph/toolbar-focused-cst';
 import { ViewHidden } from '../../components/term-graph/view-hidden';
-import { useTermGraphStore } from '../../stores/term-graph';
+import { TGEdgeType, useTermGraphStore } from '../../stores/term-graph';
 
 import ToolbarGraphFilter from './toolbar-graph-filter';
 
@@ -51,6 +51,7 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
   useContinuousPan(flowRef);
 
   const filter = useTermGraphStore(state => state.filter);
+  const setGraphType = useTermGraphStore(state => state.setGraphType);
   const filteredGraph = produceFilteredGraph(schema, filter, focusCst);
   const hidden = schema.items.filter(cst => !filteredGraph.hasNode(cst.id)).map(cst => cst.id);
   const hiddenHeight = useFitHeight('15.5rem + 2px', '4rem');
@@ -58,6 +59,15 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<TGNode>([]);
   const [edges, setEdges] = useEdgesState<Edge>([]);
   const { fitView, viewportInitialized } = useReactFlow();
+
+  useEffect(
+    function enforceConnectionType() {
+      if (!schema.is_attributive) {
+        setGraphType(TGEdgeType.full);
+      }
+    },
+    [schema.is_attributive, setGraphType]
+  );
 
   useEffect(
     function updateGraph() {
@@ -157,7 +167,7 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
       </div>
       <div className='absolute z-pop top-24 sm:top-16 left-2 sm:left-3 w-54 flex flex-col pointer-events-none'>
         <SelectColoring className='rounded-b-none' schema={schema} />
-        <SelectEdgeType className='rounded-none border-t-0' />
+        {schema.is_attributive ? <SelectEdgeType className='rounded-none border-t-0' /> : null}
         <ViewHidden items={hidden} listHeight={hiddenHeight} schema={schema} setFocus={setFocusCst} />
       </div>
 
