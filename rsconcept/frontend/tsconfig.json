@@ -24,13 +24,12 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    "baseUrl": "./src/",
     "paths": {
-      "@/i18n/*": ["i18n/*"],
-      "@/*": ["*"]
-    }
+      "@/*": ["./src/*"]
+    },
+
+    "types": ["vite/client", "node"]
   },
-  "types": ["vite/client"],
   "include": ["src"],
   "references": [{ "path": "./tsconfig.vite.json" }]
 }

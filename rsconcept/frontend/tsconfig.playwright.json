@@ -11,9 +11,8 @@
     "noFallthroughCasesInSwitch": true,
     "isolatedModules": false,
 
-    "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
     "types": ["playwright", "node"]
   },
