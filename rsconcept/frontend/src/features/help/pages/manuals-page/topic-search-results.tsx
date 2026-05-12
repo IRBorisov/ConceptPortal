@@ -36,8 +36,10 @@ export function TopicSearchResults({ activeTopic, query, onSelectTopic, classNam
             key={result.topic}
             type='button'
             className={clsx(
-              'w-full px-3 py-2 text-left border-b cc-hover-bg',
-              'flex flex-col gap-1',
+              'w-full px-3 py-1',
+              'flex flex-col',
+              'text-left border-b cc-hover-bg',
+              'cursor-pointer',
               result.topic === activeTopic && 'cc-selected'
             )}
             onClick={() => onSelectTopic(result.topic)}
@@ -45,7 +47,9 @@ export function TopicSearchResults({ activeTopic, query, onSelectTopic, classNam
             <span className='truncate'>{result.title}</span>
             <span className='text-xs opacity-75'>{result.description}</span>
             {result.section !== result.topic ? (
-              <span className='text-[0.7rem] uppercase tracking-wide opacity-60'>{labelHelpTopic(result.section)}</span>
+              <span className='text-[0.7rem] uppercase tracking-wide opacity-60 mt-1'>
+                {labelHelpTopic(result.section)}
+              </span>
             ) : null}
           </button>
         ))

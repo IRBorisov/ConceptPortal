@@ -35,7 +35,7 @@ export function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) 
         'min-w-60 max-w-60',
         'self-start',
         'border-x border-t rounded-none',
-        'bg-secondary',
+        'bg-input',
         'select-none'
       )}
       style={{ maxHeight: topicsHeight }}

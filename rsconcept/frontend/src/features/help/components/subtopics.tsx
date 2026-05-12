@@ -14,7 +14,7 @@ export function Subtopics({ headTopic }: SubtopicsProps) {
   const tx = useTx();
   return (
     <details className='text-left open:mb-3'>
-      <summary className='text-center font-semibold'>{tx('tx.general.chapter.content')}</summary>
+      <summary className='text-center font-semibold font-math'>{tx('tx.general.chapter.content')}</summary>
       {Object.values(HelpTopic)
         .filter(topic => topic !== headTopic && topicParent.get(topic) === headTopic)
         .map(topic => (

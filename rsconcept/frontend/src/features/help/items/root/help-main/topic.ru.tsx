@@ -34,7 +34,7 @@ export function HelpMainRu() {
       </p>
 
       <details>
-        <summary className='text-center font-semibold'>Разделы Справки</summary>
+        <summary className='text-center font-semibold font-math'>Разделы Справки</summary>
         <ul>
           {[
             HelpTopic.THESAURUS,

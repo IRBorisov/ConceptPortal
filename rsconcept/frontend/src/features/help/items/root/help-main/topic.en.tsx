@@ -14,13 +14,12 @@ export function HelpMainEn() {
       <h1>{tx('tx.shell.app')}</h1>
       <p>
         The Portal provides powerful tools for formal analysis and modeling of subject domains, supporting structured
-        descriptions and in-depth concept work using{' '}
-        <LinkTopic text='Genera of structures' topic={HelpTopic.RSLANG} />.
+        descriptions and in-depth concept work using <LinkTopic text='Genera of structures' topic={HelpTopic.RSLANG} />.
       </p>
       <p>
-        Build <LinkTopic text='Conceptual schemes' topic={HelpTopic.CC_SYSTEM} /> — definition systems made of individual{' '}
-        <LinkTopic text='Constituents' topic={HelpTopic.CC_CONSTITUENTA} /> with precise formal definitions and
-        structure. Visualize and explore definition structure and the concept relation graph.
+        Build <LinkTopic text='Conceptual schemes' topic={HelpTopic.CC_SYSTEM} /> — definition systems made of
+        individual <LinkTopic text='Constituents' topic={HelpTopic.CC_CONSTITUENTA} /> with precise formal definitions
+        and structure. Visualize and explore definition structure and the concept relation graph.
       </p>
       <p>
         Combine separate schemes into large-scale{' '}
@@ -33,7 +32,7 @@ export function HelpMainEn() {
       </p>
 
       <details>
-        <summary className='text-center font-semibold'>Help sections</summary>
+        <summary className='text-center font-semibold font-math'>Help sections</summary>
         <ul>
           {[
             HelpTopic.THESAURUS,
@@ -57,12 +56,10 @@ export function HelpMainEn() {
         <ul>
           <li>Portal users retain copyright in the content they create</li>
           <li>
-            The data processing policy is available via this{' '}
-            <LinkTopic text='link' topic={HelpTopic.INFO_PRIVACY} />
+            The data processing policy is available via this <LinkTopic text='link' topic={HelpTopic.INFO_PRIVACY} />
           </li>
           <li>
-            The Portal is an open-source project on{' '}
-            <TextURL text='GitHub' href={external_urls.git_portal} />
+            The Portal is an open-source project on <TextURL text='GitHub' href={external_urls.git_portal} />
           </li>
           <li>
             This site uses the domain name and server capacity of{' '}

@@ -19,8 +19,9 @@ export function HelpMainFr() {
       </p>
       <p>
         Créez des <LinkTopic text='Schémas conceptuels' topic={HelpTopic.CC_SYSTEM} /> — des systèmes de définitions
-        composés de <LinkTopic text='Constituants' topic={HelpTopic.CC_CONSTITUENTA} /> aux définitions formelles et à la
-        structure explicites. Visualisez et explorez la structure des définitions et le graphe des liens entre concepts.
+        composés de <LinkTopic text='Constituants' topic={HelpTopic.CC_CONSTITUENTA} /> aux définitions formelles et à
+        la structure explicites. Visualisez et explorez la structure des définitions et le graphe des liens entre
+        concepts.
       </p>
       <p>
         Rassemblez des schémas séparés en{' '}
@@ -34,7 +35,7 @@ export function HelpMainFr() {
       </p>
 
       <details>
-        <summary className='text-center font-semibold'>Sections d&apos;aide</summary>
+        <summary className='text-center font-semibold font-math'>Sections d&apos;aide</summary>
         <ul>
           {[
             HelpTopic.THESAURUS,
@@ -58,7 +59,8 @@ export function HelpMainFr() {
         <ul>
           <li>Les utilisateurs du portail conservent les droits d&apos;auteur sur le contenu qu&apos;ils créent</li>
           <li>
-            La politique de traitement des données est disponible via ce <LinkTopic text='lien' topic={HelpTopic.INFO_PRIVACY} />
+            La politique de traitement des données est disponible via ce{' '}
+            <LinkTopic text='lien' topic={HelpTopic.INFO_PRIVACY} />
           </li>
           <li>
             Le portail est un projet open source sur <TextURL text='GitHub' href={external_urls.git_portal} />
@@ -77,7 +79,8 @@ export function HelpMainFr() {
         d&apos;explicitation des schémas conceptuels.
       </p>
       <p>
-        Les navigateurs pris en charge incluent les versions récentes de Chrome, Firefox et Safari, y compris sur mobile.
+        Les navigateurs pris en charge incluent les versions récentes de Chrome, Firefox et Safari, y compris sur
+        mobile.
       </p>
       <p>
         Pour les demandes d&apos;évolution, les anomalies et autres suggestions, écrivez à{' '}

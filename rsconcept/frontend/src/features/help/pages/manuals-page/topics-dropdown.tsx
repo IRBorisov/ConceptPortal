@@ -37,10 +37,10 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
       ref={elementRef}
       onBlur={handleBlur}
       className={clsx(
-        'absolute left-0 w-54', //
+        'z-topmost',
+        'absolute left-0 w-54',
         noNavigation ? 'top-0' : 'top-12',
         'flex flex-col',
-        'z-topmost',
         'text-xs sm:text-sm',
         'select-none'
       )}
@@ -55,7 +55,7 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
       />
       <div
         className={clsx(
-          'cc-topic-dropdown border-r border-t rounded-none bg-secondary overflow-hidden',
+          'cc-topic-dropdown border-r border-t rounded-none bg-input overflow-hidden',
           isOpen && 'open',
           'flex flex-col'
         )}
