@@ -81,7 +81,6 @@ export interface Constituenta {
   convention: string;
   cst_type: CstType;
   definition_formal: string;
-  typification_manual: string;
   definition_raw: string;
   definition_resolved: string;
   term_raw: string;
@@ -89,9 +88,16 @@ export interface Constituenta {
   term_forms: TermForm[];
   attributes: number[];
 
+  /** Manual typification of the constituent */
+  typification_manual: string;
+
+  /** Controls whether base concepts expose property values or full values */
+  value_is_property: boolean;
+
   homonyms: number[];
   formalDuplicates: number[];
   analysis: RO<AnalysisBase>;
+
   /** Typification used for dependents, model values, and display (manual when it overrides computed). */
   effectiveType: ExpressionType | null;
 

@@ -48,8 +48,7 @@ export function HelpRSModelValueEn() {
           <LinkTopic text='typification step graph' topic={HelpTopic.UI_TYPE_GRAPH} />
         </li>
         <li>
-          <IconTree className='inline-icon' /> display{' '}
-          <LinkTopic text='parse tree' topic={HelpTopic.UI_FORMULA_TREE} />
+          <IconTree className='inline-icon' /> display <LinkTopic text='parse tree' topic={HelpTopic.UI_FORMULA_TREE} />
         </li>
         <li>
           <IconSave className='inline-icon' /> save value: <kbd>{isMac() ? 'Cmd + S' : 'Ctrl + S'}</kbd>

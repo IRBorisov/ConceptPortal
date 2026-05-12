@@ -98,6 +98,13 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.value.add.random.hint': 'Générer des valeurs aléatoires pour la constituante courante',
   'tx.rslang.value.add.random.fail': 'Impossible de générer des valeurs aléatoires',
 
+  'tx.rslang.valueClass.full': 'Valeur entière',
+  'tx.rslang.valueClass.full.hint':
+    'Interprétation itérable et de puissance\nCliquez pour passer à la "non dimensionnelle"',
+  'tx.rslang.valueClass.property': 'Valeur non dimensionnelle',
+  'tx.rslang.valueClass.property.hint':
+    'Interprétation non itérable, vérification d’appartenance\nCliquez pour passer à la "valeur entière"',
+
   'tx.rslang.value.stub': 'Abréviation de la valeur',
   'tx.rslang.value.stub.hint': 'Libellé | cardinalité',
   'tx.rslang.value.stub.status': 'Cardinalité : {n} | {stub}',

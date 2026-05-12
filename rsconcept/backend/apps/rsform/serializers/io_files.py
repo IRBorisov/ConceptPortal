@@ -208,6 +208,7 @@ class RSFormSandboxImportSerializer(StrictSerializer):
             convention = serializers.CharField(required=False, allow_blank=True, default='')
             crucial = serializers.BooleanField(required=False, default=False)
             cst_type = serializers.ChoiceField(choices=CstType.choices)
+            value_is_property = serializers.BooleanField(required=False, default=False)
             definition_formal = serializers.CharField(required=False, allow_blank=True, default='')
             definition_raw = serializers.CharField(required=False, allow_blank=True, default='')
             definition_resolved = serializers.CharField(required=False, allow_blank=True, default='')
@@ -279,6 +280,7 @@ def create_rsform_from_sandbox_data(
             cst_type=item['cst_type'],
             convention=item.get('convention', ''),
             crucial=item.get('crucial', False),
+            value_is_property=item.get('value_is_property', False),
             definition_formal=item.get('definition_formal', ''),
             definition_raw=item.get('definition_raw', ''),
             definition_resolved=item.get('definition_resolved', ''),

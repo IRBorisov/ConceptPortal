@@ -220,6 +220,7 @@ function createConstituenta(
     cst_type: data.cst_type,
     definition_formal: data.definition_formal,
     typification_manual: data.typification_manual,
+    value_is_property: data.value_is_property ?? false,
     definition_raw: data.definition_raw,
     definition_resolved: '',
     term_raw: data.term_raw,
@@ -280,6 +281,7 @@ function updateConstituenta(bundle: SandboxBundle, data: UpdateConstituentaDTO):
     ...(patch.convention !== undefined ? { convention: patch.convention } : {}),
     ...(patch.definition_formal !== undefined ? { definition_formal: patch.definition_formal } : {}),
     ...(patch.typification_manual !== undefined ? { typification_manual: patch.typification_manual } : {}),
+    ...(patch.value_is_property !== undefined ? { value_is_property: patch.value_is_property } : {}),
     ...(patch.definition_raw !== undefined ? { definition_raw: patch.definition_raw } : {}),
     ...(patch.term_raw !== undefined ? { term_raw: patch.term_raw } : {}),
     ...(patch.term_forms !== undefined ? { term_forms: patch.term_forms } : {})

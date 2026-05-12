@@ -67,6 +67,11 @@ export const schemaTypificationManualPersisted = z.preprocess(
   z.string()
 );
 
+/** Older payloads/snapshots may omit this field — treat as `false` (full value). */
+export const schemaValueIsPropertyPersisted = z
+  .preprocess((val: unknown) => (typeof val === 'boolean' ? val : undefined), z.boolean().optional())
+  .default(false);
+
 export const schemaConstituentaBasics = z.strictObject({
   id: z.number(),
   alias: z.string().nonempty(globalTx('tx.general.field.required')),
@@ -75,6 +80,7 @@ export const schemaConstituentaBasics = z.strictObject({
   cst_type: schemaCstType,
   definition_formal: z.string(),
   typification_manual: schemaTypificationManualPersisted,
+  value_is_property: schemaValueIsPropertyPersisted,
   definition_raw: z.string(),
   definition_resolved: z.string(),
   term_raw: z.string(),
@@ -133,6 +139,7 @@ export const schemaCreateConstituenta = schemaConstituentaBasics
     typification_manual: z
       .string()
       .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`),
+    value_is_property: z.boolean(),
     definition_raw: z
       .string()
       .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`),
@@ -169,6 +176,7 @@ export const schemaUpdateConstituenta = z.strictObject({
       .string()
       .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`)
       .optional(),
+    value_is_property: z.boolean().optional(),
     definition_raw: z
       .string()
       .max(limits.len_description, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_description})`)

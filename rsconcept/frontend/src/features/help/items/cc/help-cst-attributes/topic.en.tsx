@@ -17,7 +17,8 @@ export function HelpCstAttributesEn() {
       </p>
       <p>
         <b>Typification</b> is computed automatically based on the Formal definition and reflects the structure of the
-        elements of the set defined by that definition.
+        elements of the set defined by that definition. It can also be entered manually for constituents whose
+        definition has not yet been entered.
       </p>
       <p>
         <b>Textual definition</b> is provided for constituents that have a Formal definition or a Domain. It is a
@@ -34,16 +35,17 @@ export function HelpCstAttributesEn() {
       <h2>Undefined concepts</h2>
       <p>
         <code>X1, C1</code> — Basis sets and Constant sets have no complex structure and are defined by Convention.
-        Elements of Constant sets participate in arithmetic operations and ordinal predicates alongside set cardinalities.
+        Elements of Constant sets participate in arithmetic operations and ordinal predicates alongside set
+        cardinalities.
       </p>
       <p>
-        <code>S1 :∈ ℬ(X1)</code> — Genus structures are defined by a Domain, Convention, and a set of Axioms, along
-        with a Term. According to the Convention, elements of the genus structure are populated from the Domain such
-        that the Axioms are satisfied. A genus structure may be a set, an element, or a tuple.
+        <code>S1 :∈ ℬ(X1)</code> — Genus structures are defined by a Domain, Convention, and a set of Axioms, along with
+        a Term. According to the Convention, elements of the genus structure are populated from the Domain such that the
+        Axioms are satisfied. A genus structure may be a set, an element, or a tuple.
       </p>
       <p>
-        <code>A1 :== ∀(α,β)∈S1 (β,α)∈S1</code> — Axioms are defined by a logical Formal definition and, if necessary,
-        a Convention.
+        <code>A1 :== ∀(α,β)∈S1 (β,α)∈S1</code> — Axioms are defined by a logical Formal definition and, if necessary, a
+        Convention.
       </p>
       <h2>Derived concepts</h2>
       <p>

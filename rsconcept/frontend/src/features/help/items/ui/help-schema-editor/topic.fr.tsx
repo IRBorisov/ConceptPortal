@@ -4,6 +4,7 @@ import {
   IconChild,
   IconClone,
   IconCrucial,
+  IconDatabase,
   IconDestroy,
   IconFilterReset,
   IconGraphCore,
@@ -38,6 +39,10 @@ export function HelpSchemaEditorFr() {
           <ul>
             <li>
               <IconCrucial className='inline-icon' /> statut clé
+            </li>
+            <li>
+              <IconDatabase className='inline-icon' /> classe{' '}
+              <LinkTopic text='interprétabilité' topic={HelpTopic.RSL_INTERPRET} />
             </li>
             <li>
               <IconOSS className='inline-icon' /> accéder au <LinkTopic text='SOS' topic={HelpTopic.CC_OSS} />

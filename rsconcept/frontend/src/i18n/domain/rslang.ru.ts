@@ -96,6 +96,13 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.value.add.random.hint': 'Сгенерировать случайные значения для текущей конституенты',
   'tx.rslang.value.add.random.fail': 'Невозможно сгенерировать: в базовом множестве отсутствуют элементы',
 
+  'tx.rslang.valueClass.full': 'Полное значение',
+  'tx.rslang.valueClass.full.hint':
+    'Интерпретация итерируема и имеет мощность\nНажмите для переключения на "неразмерное"',
+  'tx.rslang.valueClass.property': 'Неразмерное значение',
+  'tx.rslang.valueClass.property.hint':
+    'Интерпретация не итерируема, можно проверить принадлежность\nНажмите для переключения на "полное значение"',
+
   'tx.rslang.value.stub': 'Сокращенное обозначение значения',
   'tx.rslang.value.stub.hint': 'Обозначение | Мощность множества',
   'tx.rslang.value.stub.status': 'Мощность: {n} | {stub}',

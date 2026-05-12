@@ -88,6 +88,7 @@ export function ToolbarSchema({
       alias: generateAlias(targetType, schema),
       term_raw: '',
       typification_manual: '',
+      value_is_property: false,
       definition_formal: '',
       definition_raw: '',
       convention: '',
@@ -116,6 +117,7 @@ export function ToolbarSchema({
         definition_formal: activeCst.definition_formal,
         definition_raw: activeCst.definition_raw,
         typification_manual: activeCst.typification_manual,
+        value_is_property: activeCst.value_is_property,
         convention: activeCst.convention,
         term_forms: activeCst.term_forms
       }

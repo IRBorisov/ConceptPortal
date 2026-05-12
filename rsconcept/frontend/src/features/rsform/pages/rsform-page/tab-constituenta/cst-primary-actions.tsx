@@ -1,17 +1,18 @@
 'use client';
 
-import { type Constituenta, type RSForm } from '@/domain/library';
+import { type Constituenta, CstType, type RSForm } from '@/domain/library';
 import { cstCanProduceStructure } from '@/domain/library/rsform-api';
 import { useTx } from '@/i18n';
 
-import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
+import { PillValueClass } from '@/features/rsform/components/pill-valueClass';
 
 import { TextButton } from '@/components/control/text-button';
-import { IconCrucial } from '@/components/icons';
 import { cn } from '@/components/utils';
-import { IndicatorPill } from '@/components/view/indicator-pill';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
+
+import { PillCrucial } from '../../../components/pill-crucial';
+import { useSchemaEdit } from '../schema-edit-context';
 
 export interface ConstituentaPrimaryActionsProps {
   className?: string;
@@ -23,6 +24,7 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
   const tx = useTx();
   const {
     toggleCrucial, //
+    toggleValueClass,
     patchConstituenta,
     createCstFromData,
     promptRename,
@@ -40,7 +42,13 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
   const showRenameButton = !disabled;
   const showStructureButton = canOpenStructure;
 
-  const hasPrimaryActions = showCrucialPill || showRenameButton || showStructureButton;
+  const isProperty = activeCst.value_is_property;
+  const showValueClassPill =
+    activeCst.cst_type === CstType.BASE ||
+    activeCst.cst_type === CstType.CONSTANT ||
+    activeCst.cst_type === CstType.STRUCTURED;
+
+  const hasPrimaryActions = showCrucialPill || showRenameButton || showStructureButton || showValueClassPill;
   if (!hasPrimaryActions) {
     return null;
   }
@@ -57,20 +65,24 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
 
   return (
     <div className={cn('flex flex-wrap items-center gap-6', className)}>
-      {showCrucialPill ? (
-        <IndicatorPill
-          className='text-sm font-controls py-0.5 gap-1 -mt-0.5'
-          title={crucial ? tx('tx.cst.crucial.disable') : tx('tx.cst.crucial.enable')}
-          value={
-            crucial
-              ? tx('tx.cst.crucial.badgeOn').toLocaleLowerCase()
-              : tx('tx.cst.crucial.badgeOff').toLocaleLowerCase()
-          }
-          icon={<IconCrucial size='1rem' />}
-          color={crucial ? 'teal' : 'muted'}
-          onClick={toggleCrucial}
-          disabled={disabled || isProcessing || isModified}
-        />
+      {showCrucialPill || showValueClassPill ? (
+        <div className='flex gap-3'>
+          {showCrucialPill ? (
+            <PillCrucial
+              value={crucial}
+              toggleValue={toggleCrucial}
+              disabled={disabled || isProcessing || isModified}
+            />
+          ) : null}
+
+          {showValueClassPill ? (
+            <PillValueClass
+              value={!isProperty}
+              toggleValue={toggleValueClass}
+              disabled={disabled || isProcessing || isModified || activeCst.is_inherited}
+            />
+          ) : null}
+        </div>
       ) : null}
 
       {showRenameButton ? (

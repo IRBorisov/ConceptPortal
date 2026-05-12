@@ -3,7 +3,7 @@
 import { Suspense, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { type CstType, type RSForm } from '@/domain/library';
+import { CstType, type RSForm } from '@/domain/library';
 import { generateAlias, validateNewAlias } from '@/domain/library/rsform-api';
 import { useTx } from '@/i18n';
 
@@ -40,18 +40,22 @@ export function DlgCstTemplate() {
   const tx = useTx();
   const { schema, onCreate, insertAfter } = useDialogsStore(state => state.props as DlgCstTemplateProps);
 
+  const defaultValues: CreateConstituentaDTO = {
+    insert_after: insertAfter ?? null,
+    crucial: false,
+    cst_type: CstType.TERM,
+    alias: '',
+    convention: '',
+    definition_formal: '',
+    definition_raw: '',
+    term_raw: '',
+    term_forms: [],
+    value_is_property: false,
+    typification_manual: ''
+  };
+
   const form = useForm({
-    defaultValues: {
-      insert_after: insertAfter ?? null,
-      crucial: false,
-      cst_type: undefined,
-      alias: '',
-      convention: '',
-      definition_formal: '',
-      definition_raw: '',
-      term_raw: '',
-      term_forms: []
-    } as unknown as CreateConstituentaDTO,
+    defaultValues,
     validators: {
       onChange: schemaCreateConstituenta
     },

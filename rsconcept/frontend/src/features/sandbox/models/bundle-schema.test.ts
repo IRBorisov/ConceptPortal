@@ -35,6 +35,24 @@ describe('sandbox bundle / DTO migration for typification_manual', () => {
     expect(parsed.typification_manual).toBe('');
   });
 
+  it('schemaConstituentaBasics coerces missing value_is_property to false', () => {
+    const parsed = schemaConstituentaBasics.parse({
+      id: 1,
+      alias: 'X1',
+      convention: '',
+      crucial: false,
+      cst_type: CstType.BASE,
+      definition_formal: '',
+      typification_manual: '',
+      definition_raw: '',
+      definition_resolved: '',
+      term_raw: '',
+      term_resolved: '',
+      term_forms: []
+    });
+    expect(parsed.value_is_property).toBe(false);
+  });
+
   it('schemaConstituentaBasics coerces null typification_manual to empty string', () => {
     const parsed = schemaConstituentaBasics.parse({
       id: 1,

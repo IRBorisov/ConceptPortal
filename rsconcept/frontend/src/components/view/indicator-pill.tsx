@@ -45,7 +45,7 @@ export function IndicatorPill({
         'min-h-4.5 min-w-5',
         'inline-flex items-center justify-center gap-0.5 pl-1 pr-1.5',
         'border rounded-full select-none',
-        'text-[0.6875rem] font-semibold',
+        'text-[0.6875rem] font-semibold font-math',
         onClick && !disabled && 'cursor-pointer',
         getPillColor(color),
         className

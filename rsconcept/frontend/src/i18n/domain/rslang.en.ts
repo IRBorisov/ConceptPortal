@@ -57,8 +57,8 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.typification.manual.hint': 'Set manual typification in the format [X1, B(X1)] -> Z*C1',
   'tx.rslang.typification.manual.validate':
     'Manual typification does not match the typification inferred from the formal definition (same shape when compared by label).',
-  'tx.rslang.cardinality': 'Cardinality',
   'tx.rslang.template.parameter': 'Template parameter',
+  'tx.rslang.cardinality': 'Cardinality',
 
   'tx.rslang.eval.success': 'Calculations finished in {timeSpent} s',
   'tx.rslang.eval.iterationCount': 'Iteration count',
@@ -93,6 +93,12 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.value.add.random': 'Add random items',
   'tx.rslang.value.add.random.hint': 'Generate random values for the current constituent',
   'tx.rslang.value.add.random.fail': 'Failed to generate random values',
+
+  'tx.rslang.valueClass.full': 'Full value',
+  'tx.rslang.valueClass.property': 'Non-dimensionable value',
+  'tx.rslang.valueClass.full.hint': 'Iterable interpretation with cardinality\nClick to switch to "non-dimensionable"',
+  'tx.rslang.valueClass.property.hint':
+    'Non-iterable interpretation, membership check is available\nClick to switch to "full value"',
 
   'tx.rslang.value.stub': 'Value abbreviation',
   'tx.rslang.value.stub.hint': 'Designation | set cardinality',

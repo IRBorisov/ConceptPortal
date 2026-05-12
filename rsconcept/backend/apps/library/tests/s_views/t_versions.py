@@ -188,7 +188,7 @@ class TestVersionViews(EndpointTester):
         version_id = self._create_version(data)
         version = Version.objects.get(pk=version_id)
         snapshot = dict(version.data)
-        legacy_items: list[dict] = []
+        legacy_items = []
         for item in snapshot['items']:
             row = {key: value for key, value in item.items() if key != 'typification_manual'}
             legacy_items.append(row)
