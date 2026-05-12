@@ -4,6 +4,7 @@ import {
   IconChild,
   IconClone,
   IconCrucial,
+  IconDatabase,
   IconDestroy,
   IconFilterReset,
   IconGraphCore,
@@ -38,6 +39,10 @@ export function HelpSchemaEditorRu() {
           <ul>
             <li>
               <IconCrucial className='inline-icon' /> статус ключевой
+            </li>
+            <li>
+              <IconDatabase className='inline-icon' /> класс{' '}
+              <LinkTopic text='интерпретируемости' topic={HelpTopic.RSL_INTERPRET} />
             </li>
             <li>
               <IconOSS className='inline-icon' /> переход к <LinkTopic text='ОСС' topic={HelpTopic.CC_OSS} />

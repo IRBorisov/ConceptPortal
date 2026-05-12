@@ -4,6 +4,7 @@ import {
   IconChild,
   IconClone,
   IconCrucial,
+  IconDatabase,
   IconDestroy,
   IconFilterReset,
   IconGraphCore,
@@ -38,6 +39,10 @@ export function HelpSchemaEditorEn() {
           <ul>
             <li>
               <IconCrucial className='inline-icon' /> key status
+            </li>
+            <li>
+              <LinkTopic text='interpretability' topic={HelpTopic.RSL_INTERPRET} />
+              <IconDatabase className='inline-icon' /> value class
             </li>
             <li>
               <IconOSS className='inline-icon' /> navigate to <LinkTopic text='OSS' topic={HelpTopic.CC_OSS} />
@@ -117,8 +122,7 @@ export function HelpSchemaEditorEn() {
           <LinkTopic text='typification step graph' topic={HelpTopic.UI_TYPE_GRAPH} />
         </li>
         <li>
-          <IconTree className='inline-icon' /> display{' '}
-          <LinkTopic text='parse tree' topic={HelpTopic.UI_FORMULA_TREE} />
+          <IconTree className='inline-icon' /> display <LinkTopic text='parse tree' topic={HelpTopic.UI_FORMULA_TREE} />
         </li>
         <li>
           <kbd>{isMac() ? 'Cmd + Space' : 'Ctrl + Space'}</kbd> insert unused name / replace projection

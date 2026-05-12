@@ -13,7 +13,15 @@ import {
   isFunctional,
   typeClassForCstType
 } from '@/domain/library/rsform-api';
-import { type AnalysisFast, makeTypePath, RSLangAnalyzer, TokenID, TypeID, type TypePath } from '@/domain/rslang';
+import {
+  type AnalysisFast,
+  makeTypePath,
+  RSLangAnalyzer,
+  TokenID,
+  TypeID,
+  type TypePath,
+  ValueClass
+} from '@/domain/rslang';
 import { parseTypeText } from '@/domain/rslang';
 import {
   extractGlobals,
@@ -110,6 +118,7 @@ export class RSFormLoader {
       cst.attributes = [];
       cst.spawn_alias = [];
       cst.typification_manual = cst.typification_manual ?? '';
+      cst.value_is_property = cst.value_is_property ?? false;
       cst.parent_schema = schemaByCst.get(cst.id) ?? null;
       cst.parent_schema_index = cst.parent_schema ? parents.indexOf(cst.parent_schema) + 1 : 0;
       cst.is_inherited = inherit_children.has(cst.id);
@@ -337,13 +346,18 @@ function parseCst(target: Constituenta, analyzer: RSLangAnalyzer): AnalysisFast 
     return { success: false, type: null, valueClass: null, ast: null };
   }
   if (cType === CstType.BASE || cType === CstType.CONSTANT) {
-    analyzer.addBase(target.alias, cType === CstType.CONSTANT);
+    const valueClass = target.value_is_property ? ValueClass.PROPERTY : ValueClass.VALUE;
+    analyzer.addBase(target.alias, cType === CstType.CONSTANT, valueClass);
     return analyzer.checkFast(target.alias);
   } else {
     const parse = analyzer.checkFast(target.definition_formal, {
       expected: typeClassForCstType(cType),
       isDomain: cType === CstType.STRUCTURED
     });
+    if (parse.success && cType === CstType.STRUCTURED && target.value_is_property) {
+      // `isDomain` currently forces `ValueClass.VALUE`, but base concept selector can override it.
+      parse.valueClass = ValueClass.PROPERTY;
+    }
     return parse;
   }
 }

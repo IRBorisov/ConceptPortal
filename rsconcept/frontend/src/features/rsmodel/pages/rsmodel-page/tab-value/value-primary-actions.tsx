@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 
-import { type BasicBinding, type Constituenta, EvalStatus } from '@/domain/library';
+import { type BasicBinding, type Constituenta, CstType, EvalStatus } from '@/domain/library';
 import { getStructureName, isBaseSet } from '@/domain/library/rsform-api';
 import { generateRandomValue, isInferrable, isInterpretable } from '@/domain/library/rsmodel-api';
 import { type Value } from '@/domain/rslang';
@@ -11,6 +11,7 @@ import { isSetValue, normalizeValue } from '@/domain/rslang/eval/value-api';
 import { isTypification, TypeID, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
 import { useTx } from '@/i18n';
 
+import { PillValueClass } from '@/features/rsform/components/pill-valueClass';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { useCstStatus } from '@/features/rsmodel/hooks/use-cst-status';
 import { processBindingData, processValueData } from '@/features/rsmodel/models/data-loading';
@@ -18,6 +19,7 @@ import { processBindingData, processValueData } from '@/features/rsmodel/models/
 import { TextButton } from '@/components/control/text-button';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { useDialogsStore } from '@/stores/dialogs';
+import { useModificationStore } from '@/stores/modification';
 import { limits } from '@/utils/constants';
 
 import { copyJsonToClipboard, downloadJsonFile, getExportJsonText } from '../export-helpers';
@@ -38,7 +40,8 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { engine, isMutable } = useModelEdit();
-  const { schema, isProcessing } = useSchemaEdit();
+  const { schema, isProcessing, isContentEditable, toggleValueClass } = useSchemaEdit();
+  const isModified = useModificationStore(state => state.isModified);
   const cstStatus = useCstStatus(engine, activeCst);
 
   const showEditValue = useDialogsStore(state => state.showModelEditValue);
@@ -81,7 +84,16 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
   const showClearButton =
     isMutable && !cstInferrable && valuePayload !== null && !(Array.isArray(valuePayload) && valuePayload.length === 0);
 
-  const hasPrimaryActions = showValueButton || showExportMenu || showImportMenu || showRandomButton || showClearButton;
+  const isProperty = activeCst.value_is_property;
+  const showValueClassPill =
+    activeCst.cst_type === CstType.BASE ||
+    activeCst.cst_type === CstType.CONSTANT ||
+    activeCst.cst_type === CstType.STRUCTURED;
+
+  const metaFieldsDisabled = !isContentEditable || isProcessing;
+
+  const hasPrimaryActions =
+    showValueButton || showExportMenu || showImportMenu || showRandomButton || showClearButton || showValueClassPill;
   if (!hasPrimaryActions) {
     return null;
   }
@@ -229,7 +241,15 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
   }
 
   return (
-    <div className='flex items-center gap-6 text-sm'>
+    <div className='flex flex-wrap items-center gap-6 text-sm'>
+      {showValueClassPill ? (
+        <PillValueClass
+          value={!isProperty}
+          toggleValue={toggleValueClass}
+          disabled={metaFieldsDisabled || isModified || activeCst.is_inherited}
+        />
+      ) : null}
+
       {showValueButton ? (
         <TextButton
           text={!cstInferrable && isMutable ? tx('tx.rslang.value.edit') : tx('tx.rslang.value.view')}

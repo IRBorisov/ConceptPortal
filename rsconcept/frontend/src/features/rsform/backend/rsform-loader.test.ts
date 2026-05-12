@@ -46,6 +46,7 @@ describe('RSFormLoader', () => {
       cst_type: type,
       definition_formal: definition,
       typification_manual: '',
+      value_is_property: false,
       convention: '',
       definition_raw: '',
       term_raw: '',
@@ -79,6 +80,7 @@ describe('RSFormLoader', () => {
       convention: 't1',
       definition_raw: 't2',
       typification_manual: 'X1',
+      value_is_property: false,
       term_raw: 't3',
       term_forms: [],
       term_resolved: 't4',
@@ -105,6 +107,7 @@ describe('RSFormLoader', () => {
     expect(cst.crucial).toBe(item.crucial);
     expect(cst.homonyms).toEqual([]);
     expect(cst.typification_manual).toBe(item.typification_manual);
+    expect(cst.value_is_property).toBe(item.value_is_property);
   });
 
   it('should set isHomonym when multiple constituents share a non-empty term_resolved', () => {

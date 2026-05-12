@@ -48,7 +48,8 @@ function constituentaDefaults(activeCst: Constituenta): UpdateConstituentaDTO {
       term_raw: activeCst.term_raw,
       definition_raw: activeCst.definition_raw,
       definition_formal: activeCst.definition_formal,
-      typification_manual: activeCst.typification_manual
+      typification_manual: activeCst.typification_manual,
+      value_is_property: activeCst.value_is_property
     }
   };
 }
@@ -115,7 +116,6 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
   const isBasic = isBasicConcept(activeCst.cst_type);
   const isElementary = isBaseSet(activeCst.cst_type);
   const showConvention = !!activeCst.convention || forceComment || isBasic;
-
   const needsInterpretation = isBasic && !isLogical(activeCst.cst_type);
 
   useLayoutEffect(

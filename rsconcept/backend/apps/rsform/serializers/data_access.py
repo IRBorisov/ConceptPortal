@@ -90,14 +90,14 @@ class CstUpdateSerializer(StrictSerializer):
             ''' serializer metadata. '''
             model = Constituenta
             fields = 'alias', 'cst_type', 'convention', 'crucial', 'definition_formal', \
-                'definition_raw', 'term_raw', 'term_forms', 'typification_manual'
+                'definition_raw', 'term_raw', 'term_forms', 'typification_manual', 'value_is_property'
 
     target = PKField(
         many=False,
         queryset=Constituenta.objects.all().only(
             'schema_id',
             'alias', 'cst_type', 'convention', 'crucial',
-            'definition_formal', 'definition_raw', 'term_raw', 'typification_manual'
+            'definition_formal', 'definition_raw', 'term_raw', 'typification_manual', 'value_is_property'
         )
     )
     item_data = ConstituentaUpdateData()
@@ -169,7 +169,7 @@ class CstCreateSerializer(StrictModelSerializer):
         fields = \
             'alias', 'cst_type', 'convention', 'crucial', \
             'term_raw', 'definition_raw', 'definition_formal', \
-            'insert_after', 'term_forms', 'typification_manual'
+            'insert_after', 'term_forms', 'typification_manual', 'value_is_property'
 
     def validate(self, attrs):
         schema = cast(LibraryItem, self.context['schema'])
@@ -284,6 +284,8 @@ class RSFormSerializer(StrictModelSerializer):
         for cst_data in items:
             if 'typification_manual' not in cst_data:
                 cst_data['typification_manual'] = ''
+            if 'value_is_property' not in cst_data:
+                cst_data['value_is_property'] = False
         stored_ids: list[int] = [item['id'] for item in items]
         id_map: dict[int, int] = {}
 

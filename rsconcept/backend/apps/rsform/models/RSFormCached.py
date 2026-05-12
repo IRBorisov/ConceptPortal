@@ -2,7 +2,7 @@
 # pylint: disable=duplicate-code
 
 from copy import deepcopy
-from typing import Iterable, Optional, cast
+from typing import Any, Iterable, Optional, cast
 
 from cctext import Entity, Resolver
 from django.core.exceptions import ValidationError
@@ -85,6 +85,7 @@ class RSFormCached:
             convention=data.get('convention', ''),
             definition_formal=data.get('definition_formal', ''),
             typification_manual=data.get('typification_manual', ''),
+            value_is_property=data.get('value_is_property', False),
             term_forms=data.get('term_forms', []),
             term_raw=data.get('term_raw', ''),
             definition_raw=data.get('definition_raw', '')
@@ -184,7 +185,7 @@ class RSFormCached:
         if cst is None:
             raise ValidationError(msg.constituentaNotInRSform(str(target)))
 
-        old_data = {}
+        old_data: dict[str, Any] = {}
         term_changed = False
         if 'convention' in data:
             if cst.convention == data['convention']:
@@ -207,6 +208,12 @@ class RSFormCached:
             else:
                 old_data['typification_manual'] = cst.typification_manual
                 cst.typification_manual = data['typification_manual']
+        if 'value_is_property' in data:
+            if cst.value_is_property == data['value_is_property']:
+                del data['value_is_property']
+            else:
+                old_data['value_is_property'] = cst.value_is_property
+                cst.value_is_property = data['value_is_property']
         if 'term_forms' in data:
             term_changed = True
             old_data['term_forms'] = cst.term_forms

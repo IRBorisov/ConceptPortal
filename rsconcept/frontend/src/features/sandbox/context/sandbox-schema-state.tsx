@@ -77,6 +77,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
       alias: generateAlias(targetType, schema),
       term_raw: source?.term_raw ?? '',
       typification_manual: source?.typification_manual ?? '',
+      value_is_property: source?.value_is_property ?? false,
       definition_formal: options?.definition ?? source?.definition_formal ?? '',
       definition_raw: source?.definition_raw ?? '',
       convention: source?.convention ?? '',
@@ -197,6 +198,18 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     updateCrucial({
       target: selectedCstInSchema,
       value: !activeCst.crucial
+    });
+  }
+
+  function toggleValueClass() {
+    if (!activeCst) {
+      return;
+    }
+    void patchConstituenta({
+      target: activeCst.id,
+      item_data: {
+        value_is_property: !activeCst.value_is_property
+      }
     });
   }
 
@@ -405,6 +418,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
         moveUp,
         moveDown,
         toggleCrucial,
+        toggleValueClass,
         createCst,
         createCstFromData: createConstituenta,
         promptCreateCst,

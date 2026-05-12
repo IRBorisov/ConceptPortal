@@ -45,6 +45,7 @@ interface ISchemaEditContext {
   moveUp: () => void;
   moveDown: () => void;
   toggleCrucial: () => void;
+  toggleValueClass: () => void;
   createCst: (type?: CstType, definition?: string) => Promise<number>;
   createCstFromData: (data: CreateConstituentaDTO) => Promise<RO<ConstituentaCreatedResponse>>;
   cloneCst: () => Promise<number>;

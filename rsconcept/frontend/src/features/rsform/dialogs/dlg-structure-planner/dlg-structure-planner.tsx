@@ -119,6 +119,7 @@ export function DlgStructurePlanner() {
         alias: inferAlias(node, currentSchema, target),
         term_raw: term,
         typification_manual: '',
+        value_is_property: false,
         definition_formal: node.definition,
         definition_raw: '',
         convention: '',

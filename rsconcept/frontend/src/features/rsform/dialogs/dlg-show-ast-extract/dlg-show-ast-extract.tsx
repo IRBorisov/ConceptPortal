@@ -99,6 +99,7 @@ export function DlgShowAstExtract() {
       alias: data.alias,
       cst_type: data.cstType,
       typification_manual: '',
+      value_is_property: false,
       definition_formal: data.definition,
       definition_raw: definitionText.trim(),
       term_raw: term.trim(),

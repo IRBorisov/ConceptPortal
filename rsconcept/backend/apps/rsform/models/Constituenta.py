@@ -88,6 +88,10 @@ class Constituenta(Model):
         default='',
         blank=True
     )
+    value_is_property = BooleanField(
+        verbose_name='Ручной класс значения (свойство)',
+        default=False
+    )
     crucial = BooleanField(
         verbose_name='Ключевая',
         default=False

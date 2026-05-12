@@ -18,7 +18,8 @@ export function HelpCstAttributesFr() {
       </p>
       <p>
         <b>Typification</b> est calculée automatiquement sur la base de la définition formelle et reflète la structure
-        des éléments de l'ensemble défini par cette définition.
+        des éléments de l'ensemble défini par cette définition. Elle peut également être saisie manuellement pour les
+        constituants dont la définition n'a pas encore été saisie.
       </p>
       <p>
         <b>Définition textuelle</b> est fournie pour les constituants possédant une définition formelle ou un domaine.

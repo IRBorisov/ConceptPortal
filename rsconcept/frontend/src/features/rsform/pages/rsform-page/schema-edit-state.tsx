@@ -230,6 +230,7 @@ export const SchemaEditState = ({
       definition_formal: definition ?? '',
       definition_raw: '',
       typification_manual: '',
+      value_is_property: false,
       convention: '',
       crucial: false,
       term_forms: []
@@ -258,6 +259,7 @@ export const SchemaEditState = ({
       term_raw: '',
       definition_formal: definition ?? '',
       typification_manual: '',
+      value_is_property: false,
       definition_raw: '',
       convention: '',
       crucial: false,
@@ -281,6 +283,7 @@ export const SchemaEditState = ({
         alias: generateAlias(activeCst.cst_type, schema),
         term_raw: activeCst.term_raw,
         typification_manual: activeCst.typification_manual,
+        value_is_property: activeCst.value_is_property,
         definition_formal: activeCst.definition_formal,
         definition_raw: activeCst.definition_raw,
         convention: activeCst.convention,
@@ -407,6 +410,21 @@ export const SchemaEditState = ({
     });
   }
 
+  function toggleValueClass() {
+    if (!activeCst) {
+      return;
+    }
+    void updateConstituenta({
+      itemID: schema.id,
+      data: {
+        target: activeCst.id,
+        item_data: {
+          value_is_property: !activeCst.value_is_property
+        }
+      }
+    });
+  }
+
   async function createCstFromData(data: CreateConstituentaDTO): Promise<RO<ConstituentaCreatedResponse>> {
     return cstCreate({ itemID: schema.id, data });
   }
@@ -524,6 +542,7 @@ export const SchemaEditState = ({
         moveUp,
         moveDown,
         toggleCrucial,
+        toggleValueClass,
         createCst,
         promptCreateCst,
         cloneCst,

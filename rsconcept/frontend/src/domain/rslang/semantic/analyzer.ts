@@ -51,13 +51,13 @@ export class RSLangAnalyzer {
   private typeAuditor: TypeAuditor = new TypeAuditor(this.typeContext);
   private valueAuditor: ValueAuditor = new ValueAuditor(this.valueContext);
 
-  public addBase(alias: string, isNumeric: boolean = false): void {
+  public addBase(alias: string, isNumeric: boolean = false, valueClass: ValueClass = ValueClass.VALUE): void {
     if (isNumeric) {
       this.typeContext.set(alias, bool(constant(alias)));
-      this.valueContext.set(alias, ValueClass.VALUE);
+      this.valueContext.set(alias, valueClass);
     } else {
       this.typeContext.set(alias, bool(basic(alias)));
-      this.valueContext.set(alias, ValueClass.VALUE);
+      this.valueContext.set(alias, valueClass);
     }
   }
 
