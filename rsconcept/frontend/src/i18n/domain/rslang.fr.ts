@@ -153,9 +153,9 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.token.iterate': 'Parcourir les éléments de l’ensemble',
 
   'tx.rslang.error.unknownSyntax': 'Erreur syntaxique indéfinie',
-  'tx.rslang.error.missingParenthesis': "')' manquante",
-  'tx.rslang.error.missingCurlyBrace': "'}' manquant",
-  'tx.rslang.error.missingSquareBracket': "']' manquante",
+  'tx.rslang.error.missingParenthesis': "'')'' manquante",
+  'tx.rslang.error.missingCurlyBrace': "''}'' manquant",
+  'tx.rslang.error.missingSquareBracket': "'']'' manquante",
   'tx.rslang.error.bracketMismatch': 'Parenthèses incohérentes : « {open} » au lieu de « {close} »',
   'tx.rslang.error.doubleParenthesis': 'Les doubles parenthèses externes (( et )) sont interdites',
   'tx.rslang.error.missingOpenBracket': 'Parenthèse ouvrante « {bracket} » manquante',
