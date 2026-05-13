@@ -3,7 +3,7 @@
 import { useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
 
 import { type BasicBinding, type Constituenta, CstType } from '@/domain/library';
-import { isBaseSet } from '@/domain/library/rsform-api';
+import { isBaseSet, isFunctional } from '@/domain/library/rsform-api';
 import { isInferrable, isInterpretable, prepareValueString } from '@/domain/library/rsmodel-api';
 import { type CalculatorResult, TypeID, type Value } from '@/domain/rslang';
 import { valueStub } from '@/domain/rslang/eval/value-api';
@@ -290,7 +290,9 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         areaClassName='cursor-default'
       />
 
-      {cstInferrable || (activeCst.definition_formal && activeCst.cst_type !== CstType.STRUCTURED) ? (
+      {cstInferrable ||
+      isFunctional(activeCst.cst_type) ||
+      (activeCst.definition_formal && activeCst.cst_type !== CstType.STRUCTURED) ? (
         <EditorRSExpression
           label={labelRSExpression(activeCst.cst_type)}
           placeholder={tx('tx.lib.defineFormal.validate.empty')}

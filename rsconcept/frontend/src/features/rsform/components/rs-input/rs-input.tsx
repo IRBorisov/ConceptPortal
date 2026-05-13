@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { startTransition, useEffect, useRef, useState } from 'react';
 import { type Extension } from '@codemirror/state';
 import { EditorView, tooltips } from '@codemirror/view';
 import { tags } from '@lezer/highlight';
@@ -110,12 +110,36 @@ export function RSInput({
   const internalRef = useRef<ReactCodeMirrorRef>(null);
   const thisRef = !ref || typeof ref === 'function' ? internalRef : ref;
   const isFirstParse = useRef(true);
+  const parseTimerRef = useRef<number | undefined>(undefined);
   const [localParse, setLocalParse] = useState<AnalysisFull | null>(null);
 
   const effectiveErrors = errors == null ? (localParse?.errors ?? null) : errors;
 
+  function clearScheduledParse() {
+    if (parseTimerRef.current !== undefined) {
+      window.clearTimeout(parseTimerRef.current);
+      parseTimerRef.current = undefined;
+    }
+  }
+
+  useEffect(
+    function resetFirstParseOnSchemaChange() {
+      isFirstParse.current = true;
+    },
+    [schema]
+  );
+
   useEffect(
     function scheduleLocalParse() {
+      clearScheduledParse();
+
+      if (errors != null) {
+        startTransition(function clearStaleLocalWhenExternalErrors() {
+          setLocalParse(null);
+        });
+        return;
+      }
+
       if (noAutoCheck || !schema) {
         return;
       }
@@ -124,6 +148,7 @@ export function RSInput({
       const text = value ?? '';
 
       function runLocalParse() {
+        parseTimerRef.current = undefined;
         const nextParse = currentSchema.analyzer.checkFull(text, {
           annotateTypes: true,
           annotateErrors: true
@@ -131,21 +156,19 @@ export function RSInput({
         setLocalParse(nextParse);
       }
 
-      let timerID: number | undefined;
       if (isFirstParse.current) {
         isFirstParse.current = false;
         runLocalParse();
-      } else {
-        timerID = window.setTimeout(runLocalParse, PARAMETER.rsInputAutoCheckDelay);
+        return;
       }
 
-      return function clearScheduledParse() {
-        if (timerID !== undefined) {
-          window.clearTimeout(timerID);
-        }
-      };
+      setLocalParse(null);
+
+      parseTimerRef.current = window.setTimeout(runLocalParse, PARAMETER.rsInputAutoCheckDelay);
+
+      return clearScheduledParse;
     },
-    [noAutoCheck, value, schema]
+    [noAutoCheck, value, schema, errors]
   );
 
   function prepareParse(value: string): AnalysisFull | null {
