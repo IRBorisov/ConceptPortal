@@ -57,7 +57,7 @@ export function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) 
           getParent={item => topicParent.get(item) ?? item}
           getLabel={labelHelpTopic}
           getDescription={describeHelpTopic}
-          className='cc-scroll-y flex-1 text-xs sm:text-sm'
+          className='cc-scroll-left cc-scroll-stable cc-scroll-y flex-1 text-xs sm:text-sm'
         />
       )}
     </div>

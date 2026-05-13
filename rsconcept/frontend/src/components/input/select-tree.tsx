@@ -100,7 +100,7 @@ export function SelectTree<ItemType>({
             key={`${prefix}${index}`}
             className={clsx(
               'cc-tree-item relative cc-scroll-row cc-hover-bg',
-              isActive ? 'max-h-7 py-1 border-b' : 'max-h-0 opacity-0 pointer-events-none',
+              isActive ? 'max-h-7 py-1' : 'max-h-0 opacity-0 pointer-events-none',
               value === item && 'cc-selected'
             )}
             data-tooltip-id={description ? globalIDs.value_tooltip : undefined}

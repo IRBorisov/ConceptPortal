@@ -119,8 +119,9 @@ export function TabModelList() {
         <ToolbarModelList
           className={clsx(
             'cc-tab-tools',
-            'right-4 md:right-1/2 -translate-x-1/2 md:translate-x-0',
-            'cc-animate-position'
+            'right-4 lg:right-1/2 -translate-x-1/2 lg:translate-x-0',
+            'cc-animate-position',
+            'mx-8'
           )}
         />
       ) : null}
@@ -146,7 +147,7 @@ export function TabModelList() {
       <ExportDropdown
         data={filtered}
         filename={schema.alias}
-        className='absolute z-pop right-4 hidden sm:block top-18'
+        className='absolute z-pop right-4 hidden sm:block top-9'
         disabled={filtered.length === 0}
         pdfConverter={createPDFList}
       />
