@@ -45,7 +45,7 @@ export function PickLocation({
         excluded={!user.is_staff ? [LocationHead.LIBRARY] : []}
       />
 
-      <div className='relative flex gap-2 items-end h-6 mb-2 -mt-1'>
+      <div className='relative flex gap-2 items-end h-6 mb-2 -mt-1 w-fit'>
         <Label text={tx('tx.lib.location')} htmlFor='dlg_location' />
         <SelectLocationContext dropdownHeight={dropdownHeight} value={value} onChange={onChange} />
       </div>

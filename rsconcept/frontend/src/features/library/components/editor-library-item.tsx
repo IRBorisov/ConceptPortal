@@ -32,6 +32,7 @@ import { type LibraryItemData } from '../backend/types';
 import { useMutatingLibrary } from '../backend/use-mutating-library';
 import { useSetLocation } from '../backend/use-set-location';
 import { useSetOwner } from '../backend/use-set-owner';
+import { labelLibraryLocationPath } from '../labels';
 import { useLibrarySearchStore } from '../stores/library-search';
 
 interface EditorLibraryItemProps {
@@ -105,7 +106,7 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
         <ValueIcon
           className='text-ellipsis grow'
           icon={<IconFolderEdit size='1.25rem' className='icon-primary' />}
-          value={item.location}
+          value={labelLibraryLocationPath(item.location)}
           title={isProduced ? tx('tx.schema.inherit.location') : tx('tx.lib.location')}
           onClick={handleEditLocation}
           disabled={isModified || isProcessing || isProduced || role < UserRole.OWNER}

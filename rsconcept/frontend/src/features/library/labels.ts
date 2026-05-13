@@ -56,6 +56,23 @@ export function describeLocationHead(head: LocationHead): string {
   return id ? globalTx(id) : String(head);
 }
 
+/** Display label for one library path segment (first segment uses head short label when valid). */
+export function labelLibraryLocationSegment(segment: string, segmentIndex: number): string {
+  if (segmentIndex === 0 && validateLocation(`/${segment}`)) {
+    return labelLocationHeadShort(`/${segment}` as LocationHead);
+  }
+  return segment;
+}
+
+/** Full library location for display; substitutes the root head like {@link labelFolderNode}. */
+export function labelLibraryLocationPath(location: string): string {
+  const segments = location.trim().split('/').filter(Boolean);
+  if (segments.length === 0) {
+    return '';
+  }
+  return segments.map((segment, index) => labelLibraryLocationSegment(segment, index)).join(' / ');
+}
+
 /** Retrieves label for {@link FolderNode}. */
 export function labelFolderNode(node: FolderNode): string {
   if (node.parent || !validateLocation('/' + node.text)) {

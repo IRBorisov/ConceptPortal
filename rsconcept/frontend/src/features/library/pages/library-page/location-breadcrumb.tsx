@@ -2,7 +2,6 @@
 
 import clsx from 'clsx';
 
-import { type LocationHead } from '@/domain/library';
 import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
@@ -12,7 +11,7 @@ import { MiniButton } from '@/components/control';
 import { IconFolderEdit } from '@/components/icons';
 
 import { IconShowSubfolders } from '../../components/icon-show-subfolders';
-import { labelLocationHeadShort } from '../../labels';
+import { labelLibraryLocationSegment } from '../../labels';
 import { useLibrarySearchStore } from '../../stores/library-search';
 
 interface LocationBreadcrumbProps {
@@ -30,7 +29,7 @@ export function LocationBreadcrumb({ canRename, className, onRenameLocation }: L
 
   const segments = location.split('/').filter(Boolean);
   const crumbs = segments.map((segment, index) => ({
-    label: index === 0 ? labelLocationHeadShort(('/' + segment) as LocationHead) : segment,
+    label: labelLibraryLocationSegment(segment, index),
     path: '/' + segments.slice(0, index + 1).join('/')
   }));
 
