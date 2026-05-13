@@ -248,9 +248,10 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
   function handleCalculate(event: React.MouseEvent<Element>) {
     event.preventDefault();
     event.stopPropagation();
-    void onSaveMetaFields();
-    const result = engine.calculateCst(activeCst.id);
-    setLocalEval(result);
+    void onSaveMetaFields().then(() => {
+      const result = engine.calculateCst(activeCst.id);
+      setLocalEval(result);
+    });
   }
 
   function handleNavigateCst(cstID: number) {
