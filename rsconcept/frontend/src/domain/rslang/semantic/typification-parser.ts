@@ -121,8 +121,12 @@ class TypificationParser {
         this.expect(')');
         return bool(base);
       }
-      const base = this.parseTypificationAtom();
-      return bool(base);
+      this.skipSpaces();
+      if (this.input.startsWith('ℬ', this.index)) {
+        const base = this.parseTypification();
+        return bool(base);
+      }
+      throw new Error('Expected "(" after "ℬ"');
     }
     const first = this.parseTypificationAtom();
     const factors: Typification[] = [first];
@@ -141,6 +145,9 @@ class TypificationParser {
 
   private parseTypificationAtom(): Typification {
     this.skipSpaces();
+    if (this.input.startsWith('ℬ', this.index)) {
+      return this.parseTypification();
+    }
     if (this.peek() === '(') {
       this.next();
       const wrapped = this.parseTypification();

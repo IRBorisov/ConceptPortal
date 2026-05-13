@@ -10,6 +10,9 @@ describe('parseTypeText', () => {
     expect(labelType(parseTypeText('X1').type)).toBe('X1');
     expect(labelType(parseTypeText('ℬ(X1×X2)').type)).toBe('ℬ(X1×X2)');
     expect(labelType(parseTypeText('Z').type)).toBe('Z');
+    expect(labelType(parseTypeText('ℬℬ(X1)').type)).toBe('ℬℬ(X1)');
+    expect(labelType(parseTypeText('ℬ(ℬ(X1))').type)).toBe('ℬℬ(X1)');
+    expect(labelType(parseTypeText('X1×ℬ(X2)').type)).toBe('X1×ℬ(X2)');
   });
 
   it('parses function typification with unicode and ascii arrows', () => {
@@ -35,6 +38,8 @@ describe('parseTypeText', () => {
   it('rejects invalid typification strings', () => {
     expect(parseTypeText('[X1, ] → X2').type).toBeNull();
     expect(parseTypeText('ℬ(X1').type).toBeNull();
+    expect(parseTypeText('ℬX1').type).toBeNull();
+    expect(parseTypeText('ℬX1×X2').type).toBeNull();
     expect(parseTypeText('').error).toBeNull();
   });
 
