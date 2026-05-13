@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
+import clsx from 'clsx';
 
 import { type BasicBinding, type Constituenta, CstType } from '@/domain/library';
-import { isBaseSet, isFunctional } from '@/domain/library/rsform-api';
+import { isBaseSet, isBasicConcept, isFunctional, isLogical } from '@/domain/library/rsform-api';
 import { isInferrable, isInterpretable, prepareValueString } from '@/domain/library/rsmodel-api';
 import { type CalculatorResult, TypeID, type Value } from '@/domain/rslang';
 import { valueStub } from '@/domain/rslang/eval/value-api';
@@ -82,12 +83,18 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
   const [rawDraft, setRawDraft] = useState(activeCst.definition_raw);
   const [manualTypificationDraft, setManualTypificationDraft] = useState(activeCst.typification_manual);
   const [manualTypificationOpen, setManualTypificationOpen] = useState(!!activeCst.typification_manual);
+  const [conventionDraft, setConventionDraft] = useState(activeCst.convention);
+  const [forceComment, setForceComment] = useState(false);
 
   const hasManualDraft = !!manualTypificationDraft;
   const allowManualTypification =
     activeCst.cst_type !== CstType.NOMINAL &&
     (activeCst.analysis.type == null || hasManualDraft || !!activeCst.typification_manual);
   const showManualTypificationField = allowManualTypification && (manualTypificationOpen || hasManualDraft);
+
+  const isBasic = isBasicConcept(activeCst.cst_type);
+  const showConvention = !!activeCst.convention || forceComment || isBasic;
+  const needsInterpretation = isBasic && !isLogical(activeCst.cst_type);
 
   const hasDraftForCurrentCst = valueDraft.resetKey === valueResetKey;
   const inputValue = hasDraftForCurrentCst ? valueDraft.draft : initialStr;
@@ -96,7 +103,8 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
     termDraft !== activeCst.term_raw ||
     formalDraft !== activeCst.definition_formal ||
     rawDraft !== activeCst.definition_raw ||
-    manualTypificationDraft !== activeCst.typification_manual;
+    manualTypificationDraft !== activeCst.typification_manual ||
+    conventionDraft !== activeCst.convention;
   const isDirty = valueDirty || metaDirty;
 
   const metaFieldsDisabled = !isContentEditable || isProcessing;
@@ -117,6 +125,8 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         setRawDraft(activeCst.definition_raw);
         setManualTypificationDraft(activeCst.typification_manual);
         setManualTypificationOpen(!!activeCst.typification_manual);
+        setConventionDraft(activeCst.convention);
+        setForceComment(false);
       }, 0);
       return () => clearTimeout(timeoutId);
     },
@@ -126,6 +136,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       activeCst.definition_formal,
       activeCst.definition_raw,
       activeCst.typification_manual,
+      activeCst.convention,
       toggleReset
     ]
   );
@@ -212,6 +223,9 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
     }
     if (manualTypificationDraft !== activeCst.typification_manual) {
       item_data.typification_manual = manualTypificationDraft;
+    }
+    if (conventionDraft !== activeCst.convention) {
+      item_data.convention = conventionDraft;
     }
     if (Object.keys(item_data).length === 0) {
       return;
@@ -376,6 +390,28 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         onChange={setRawDraft}
         disabled={formalFieldDisabled}
       />
+
+      {showConvention ? (
+        <TextArea
+          id='cst_convention'
+          fitContent
+          areaClassName={clsx(
+            'disabled:min-h-9 max-h-32',
+            needsInterpretation && !conventionDraft && 'border-destructive! outline-destructive!'
+          )}
+          spellCheck
+          label={isBasic ? tx('tx.lib.convention') : tx('tx.lib.comment')}
+          placeholder={metaFieldsDisabled ? '' : isBasic ? tx('tx.lib.convention.hint') : tx('tx.lib.comment.hint')}
+          disabled={metaFieldsDisabled || (isBasic && activeCst.is_inherited)}
+          value={conventionDraft}
+          onChange={event => setConventionDraft(event.target.value)}
+          error={needsInterpretation && !conventionDraft ? tx('tx.lib.convention.validate.empty') : undefined}
+        />
+      ) : null}
+
+      {!showConvention && (isContentEditable || isProcessing) ? (
+        <TextButton text={tx('tx.lib.comment.add')} className='self-start' onClick={() => setForceComment(true)} />
+      ) : null}
     </form>
   );
 }
