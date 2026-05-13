@@ -15,5 +15,5 @@ export function SelectRow<TData>({ row, onChangeLastSelected }: SelectRowProps<T
     row.toggleSelected(value);
   }
 
-  return <Checkbox tabIndex={-1} value={row.getIsSelected()} onChange={handleChange} />;
+  return <Checkbox tabIndex={-1} value={row.getIsSelected()} onChange={handleChange} ignoreShiftClick />;
 }

@@ -13,6 +13,9 @@ interface CheckboxTristateProps extends Omit<CheckboxProps, 'value' | 'onChange'
 
   /** Callback to set the `value`. */
   onChange?: (newValue: boolean | null) => void;
+
+  /** Ignore shift click. */
+  ignoreShiftClick?: boolean;
 }
 
 /**
@@ -27,12 +30,16 @@ export function CheckboxTristate({
   className,
   value,
   onChange,
+  ignoreShiftClick,
   ...restProps
 }: CheckboxTristateProps) {
   const cursor = disabled ? 'cursor-arrow' : onChange ? 'cursor-pointer' : '';
 
   function handleClick(event: React.MouseEvent<Element>): void {
     event.preventDefault();
+    if (ignoreShiftClick && event.shiftKey) {
+      return;
+    }
     event.stopPropagation();
     if (disabled || !onChange) {
       return;

@@ -21,6 +21,9 @@ export interface CheckboxProps extends Omit<Button, 'value' | 'onClick' | 'onCha
 
   /** Custom icon to display next instead of checkbox. */
   customIcon?: (checked?: boolean) => React.ReactNode;
+
+  /** Ignore shift click. */
+  ignoreShiftClick?: boolean;
 }
 
 /**
@@ -36,12 +39,16 @@ export function Checkbox({
   value,
   customIcon,
   onChange,
+  ignoreShiftClick,
   ...restProps
 }: CheckboxProps) {
   const cursor = disabled ? 'cursor-arrow' : onChange ? 'cursor-pointer' : '';
 
   function handleClick(event: React.MouseEvent<Element>): void {
     event.preventDefault();
+    if (ignoreShiftClick && event.shiftKey) {
+      return;
+    }
     event.stopPropagation();
     if (disabled || !onChange) {
       return;
