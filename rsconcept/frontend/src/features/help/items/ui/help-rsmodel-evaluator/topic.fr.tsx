@@ -25,6 +25,10 @@ export function HelpRSModelEvaluatorFr() {
           au centre
         </li>
         <li>
+          après le calcul, les nombres d'itérations et de hits de cache s'affichent en dessous (information pour le
+          débogage)
+        </li>
+        <li>
           <IconStatusOK className='inline-icon' /> le résultat peut être ouvert dans le dialogue de visualisation de
           valeur
         </li>

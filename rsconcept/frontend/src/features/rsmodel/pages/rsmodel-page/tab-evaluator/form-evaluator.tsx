@@ -19,10 +19,11 @@ import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-c
 
 import { TextButton } from '@/components/control/text-button';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import { TextArea, TextInput } from '@/components/input';
+import { TextArea } from '@/components/input';
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
+import { formatInteger } from '@/utils/format';
 import { type RO } from '@/utils/meta';
 
 import { ValueInput } from '../../../components/value-input';
@@ -192,15 +193,15 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         onToggleDataText={toggleShowDataText}
         disabled
       />
-      {!!localEval?.iterations ? (
-        <TextInput
-          label={tx('tx.rslang.eval.iterationCount')}
-          dense
-          disabled
-          noBorder
-          className='mt-6 text-muted-foreground'
-          value={String(localEval.iterations)}
-        />
+      {localEval ? (
+        <div className='-mt-2 font-math text-muted-foreground select-none'>
+          {tx('tx.rslang.eval.iterationCount')}: {formatInteger(localEval.iterations)}
+        </div>
+      ) : null}
+      {localEval ? (
+        <div className='-mt-2 font-math text-muted-foreground select-none'>
+          {tx('tx.rslang.eval.cacheHits')}: {formatInteger(localEval.cacheHits)}
+        </div>
       ) : null}
     </div>
   );

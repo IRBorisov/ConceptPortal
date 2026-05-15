@@ -25,6 +25,9 @@ export function HelpRSModelEvaluatorEn() {
           centre
         </li>
         <li>
+          after the calculation, the number of iterations and cache hits are displayed below (information for debugging)
+        </li>
+        <li>
           <IconStatusOK className='inline-icon' /> the result can be opened in the value viewer dialog
         </li>
         <li>

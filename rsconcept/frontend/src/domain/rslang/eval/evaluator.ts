@@ -8,6 +8,7 @@ import { annotateError } from '../ast-annotations';
 import { type ErrorReporter, RSErrorCode } from '../error';
 import { TokenID } from '../parser/token';
 
+import { EvaluationCache, EvaluationMetadata } from './evaluation-cache';
 import {
   BOOL_INFINITY,
   compare,
@@ -45,15 +46,23 @@ const TICK_PER_QUANTIFIER = 1;
 /** AST context. */
 export type ASTContext = Map<string, AstNode>;
 
-/** AST calculator - evaluates RS expressions via visitor pattern and provides updates via listeners. */
+/** AST calculator - evaluates RS expressions via visitor pattern and provides updates via listeners.
+ * Not safe for concurrent {@link run} calls on the same instance; use separate evaluators instead. */
 export class Evaluator {
   private reporter?: ErrorReporter;
   private annotateErrors = false;
   private locals: LocalContext = new LocalContext();
+  private nodeMetadata: EvaluationMetadata = new EvaluationMetadata();
+  private evalCache: EvaluationCache = new EvaluationCache();
   private context: ValueContext;
   private treeContext: ASTContext;
 
   public iterationCounter = 0;
+
+  /** Cache hits in the current evaluation run (for tests/diagnostics). */
+  public get cacheHits(): number {
+    return this.evalCache.hits;
+  }
 
   constructor(context: ValueContext, astContext: ASTContext) {
     this.treeContext = astContext;
@@ -72,6 +81,7 @@ export class Evaluator {
 
   private clear(): void {
     this.locals = new LocalContext();
+    this.evalCache.clear();
     this.iterationCounter = 0;
   }
 
@@ -115,6 +125,26 @@ export class Evaluator {
   }
 
   private dispatchVisit(node: AstNode): Value | null {
+    const info = this.nodeMetadata.get(node);
+    let stamp: string | null = null;
+    if (info.cacheable) {
+      stamp = this.locals.buildDependencyStamp(info.reads);
+      if (stamp !== null) {
+        const cached = this.evalCache.lookup(info.structuralKey, stamp);
+        if (cached !== undefined) {
+          return cached;
+        }
+      }
+    }
+
+    const result = this.dispatchVisitImpl(node);
+    if (result !== null && info.cacheable && stamp !== null) {
+      this.evalCache.store(info.structuralKey, stamp, result);
+    }
+    return result;
+  }
+
+  private dispatchVisitImpl(node: AstNode): Value | null {
     switch (node.typeID) {
       case TokenID.ID_GLOBAL:
         return this.visitGlobal(node);
@@ -826,14 +856,22 @@ interface IterationFrame {
   valueID: number;
 }
 
+/** Local variable binding with version for cache invalidation. */
+interface LocalBinding {
+  id: number;
+  version: number;
+  value: Value;
+}
+
 /** Local variables context. */
 class LocalContext {
-  private data: ValueContext = new Map<string, Value>();
-  private callStack: ValueContext[] = [];
+  private nextBindingId = 1;
+  private data = new Map<string, LocalBinding>();
+  private callStack: Map<string, LocalBinding>[] = [];
 
   startScope(): void {
     this.callStack.push(this.data);
-    this.data = new Map<string, Value>();
+    this.data = new Map();
   }
 
   endScope(): void {
@@ -841,14 +879,35 @@ class LocalContext {
   }
 
   setLocal(alias: string, value: Value): void {
-    this.data.set(alias, value);
+    const existing = this.data.get(alias);
+    if (existing) {
+      existing.value = value;
+      existing.version++;
+    } else {
+      this.data.set(alias, { id: this.nextBindingId++, version: 0, value });
+    }
   }
 
   getLocal(alias: string): Value {
-    const local = this.data.get(alias);
-    if (local === undefined) {
+    const binding = this.data.get(alias);
+    if (binding === undefined) {
       throw new Error(`Local variable "${alias}" not found`);
     }
-    return local;
+    return binding.value;
+  }
+
+  buildDependencyStamp(reads: ReadonlySet<string>): string | null {
+    if (reads.size === 0) {
+      return '';
+    }
+    const parts: string[] = [];
+    for (const alias of [...reads].sort()) {
+      const binding = this.data.get(alias);
+      if (binding === undefined) {
+        return null;
+      }
+      parts.push(`${binding.id}:${binding.version}`);
+    }
+    return parts.join('|');
   }
 }

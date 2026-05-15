@@ -63,7 +63,8 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.template.parameter': 'Paramètre de modèle',
 
   'tx.rslang.eval.success': 'Calculs terminés en {timeSpent} s',
-  'tx.rslang.eval.iterationCount': 'Nombre d’itérations',
+  'tx.rslang.eval.iterationCount': 'Itérations',
+  'tx.rslang.eval.cacheHits': 'Hits de cache',
 
   'tx.rslang.binding': 'Interprétation de base',
   'tx.rslang.binding.hint': 'Édition de l’interprétation de base du modèle',

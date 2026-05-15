@@ -80,10 +80,9 @@ export function ValueInput({
       {stub || (value.length > 0 && !disabled) ? (
         <div className='flex'>
           {stub ? (
-            <div className='flex gap-2 text-muted-foreground'>
+            <div className='flex gap-2 font-math text-muted-foreground' tabIndex={-1}>
               <span
-                tabIndex={-1}
-                className='font-math select-none'
+                className='select-none'
                 aria-label={tx('tx.rslang.value')}
                 data-tooltip-id={globalIDs.tooltip}
                 data-tooltip-content={tx('tx.rslang.value')}
@@ -91,8 +90,7 @@ export function ValueInput({
                 {tx('tx.rslang.cardinality')}: {formatInteger(valueLabel)} |
               </span>
               <span
-                tabIndex={-1}
-                className='font-math select-text'
+                className='select-text'
                 aria-label={tx('tx.rslang.value.stub')}
                 data-tooltip-id={globalIDs.tooltip}
                 data-tooltip-content={tx('tx.rslang.value.stub')}
