@@ -260,7 +260,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
 
       {showClearButton ? (
         <TextButton
-          text={tx('tx.rslang.value.reset')}
+          text={tx('tx.general.discard')}
           title={tx('tx.rslang.value.reset.hint')}
           onClick={handleClearValue}
           disabled={isProcessing}

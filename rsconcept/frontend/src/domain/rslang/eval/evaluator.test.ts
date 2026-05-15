@@ -6,6 +6,7 @@ import { RSErrorCode, type RSErrorDescription } from '../error';
 import { normalizeAST } from '../parser/normalize';
 import { parser as rslangParser } from '../parser/parser';
 
+import { EvaluationMetadata } from './evaluation-cache';
 import { type ASTContext, Evaluator } from './evaluator';
 import { BOOL_INFINITY, TUPLE_ID, type ValueContext } from './value';
 import { printValue } from './value-api';
@@ -261,5 +262,38 @@ describe('Calculator', () => {
     const funcAst = buildAST('[a∈ℬ(R1), b∈Z] a\\a');
     treeContext.set('F1', funcAst);
     expectValue('F1[F1[X1, 0], 1]', '{}');
+  });
+
+  describe('evaluation cache', () => {
+    beforeEach(() => {
+      treeContext.set('F9', buildAST('[a∈ℬ(X1)] a'));
+    });
+
+    function runWithHits(input: string): { value: string; hits: number } {
+      const ast = buildAST(input);
+      expect(ast.hasError).toBe(false);
+      errors = [];
+      const result = calculator.run(ast, error => errors.push(error));
+      expect(errors.length).toBe(0);
+      return { value: printValue(result), hits: calculator.cacheHits };
+    }
+
+    it('reuses cached subexpression while loop variables are unchanged', () => {
+      const { hits } = runWithHits('I{a | a:∈S1; u:=F9[a]; v:=F9[a]}');
+      expect(hits).toBe(2);
+    });
+
+    it('recomputes when a dependency changes across iterations', () => {
+      const { value, hits } = runWithHits('I{a | a:∈X1; t:=F9[a]}');
+      expect(value).toBe('{1, 2, 3}');
+      expect(hits).toBe(0);
+    });
+
+    it('shares cache between structurally identical call sites', () => {
+      const metadata = new EvaluationMetadata();
+      const callA = buildAST('F9[X1]');
+      const callB = buildAST('F9[X1]');
+      expect(metadata.get(callA).structuralKey).toBe(metadata.get(callB).structuralKey);
+    });
   });
 });

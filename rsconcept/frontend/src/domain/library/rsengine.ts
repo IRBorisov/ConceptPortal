@@ -297,6 +297,7 @@ export class RSEngine {
       return {
         value: null,
         iterations: 0,
+        cacheHits: 0,
         errors: []
       };
     }
@@ -306,7 +307,7 @@ export class RSEngine {
   public calculateCst(cstID: number): CalculatorResult {
     const cst = this.schema?.cstByID.get(cstID);
     if (!cst || !this.schema) {
-      return { value: null, iterations: 0, errors: [] };
+      return { value: null, iterations: 0, errors: [], cacheHits: 0 };
     }
 
     if (!this.calculatedSet.has(cstID)) {
@@ -551,6 +552,7 @@ function getEvaluationFor(
     return {
       value: null,
       iterations: 0,
+      cacheHits: 0,
       errors: parse.errors
     };
   } else {
@@ -559,6 +561,7 @@ function getEvaluationFor(
       return {
         value: result.value,
         iterations: result.iterations,
+        cacheHits: result.cacheHits,
         errors: [...parse.errors, ...result.errors]
       };
     } catch (error) {
@@ -567,6 +570,7 @@ function getEvaluationFor(
       return {
         value: null,
         iterations: 0,
+        cacheHits: 0,
         errors: []
       };
     }

@@ -62,7 +62,8 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.template.parameter': 'Шаблонный параметр',
 
   'tx.rslang.eval.success': 'Вычисления завершены за {timeSpent} секунд',
-  'tx.rslang.eval.iterationCount': 'Количество итераций',
+  'tx.rslang.eval.iterationCount': 'Итерации',
+  'tx.rslang.eval.cacheHits': 'Кэш-попадания',
 
   'tx.rslang.binding': 'Базовая интерпретация',
   'tx.rslang.binding.hint': 'Редактирование базовой интерпретации модели',

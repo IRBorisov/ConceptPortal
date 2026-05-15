@@ -52,7 +52,7 @@ export function labelValue(value: RO<Value | null>, type: ExpressionType | null)
     }
   }
   if (!Array.isArray(value)) {
-    return '1';
+    return 'E';
   } else if (value.length === 0) {
     return '∅';
   } else if (value[0] === TUPLE_ID) {

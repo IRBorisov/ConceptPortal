@@ -17,6 +17,7 @@ import { validateValue } from './value-api';
 export interface CalculatorResult {
   value: Value | null;
   iterations: number;
+  cacheHits: number;
   errors: RSErrorDescription[];
 }
 
@@ -92,7 +93,7 @@ export class RSCalculator {
     };
 
     if (ast.hasError) {
-      return { value: null, iterations: 0, errors };
+      return { value: null, iterations: 0, cacheHits: 0, errors };
     }
 
     const value = this.evaluator.run(ast, reporter, options?.annotateErrors ?? false);
@@ -105,6 +106,7 @@ export class RSCalculator {
     return {
       value,
       iterations: this.evaluator.iterationCounter,
+      cacheHits: this.evaluator.cacheHits,
       errors
     };
   }

@@ -61,7 +61,8 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.cardinality': 'Cardinality',
 
   'tx.rslang.eval.success': 'Calculations finished in {timeSpent} s',
-  'tx.rslang.eval.iterationCount': 'Iteration count',
+  'tx.rslang.eval.iterationCount': 'Iterations',
+  'tx.rslang.eval.cacheHits': 'Cache hits',
 
   'tx.rslang.binding': 'Base interpretation',
   'tx.rslang.binding.hint': 'Editing the base interpretation of the model',
