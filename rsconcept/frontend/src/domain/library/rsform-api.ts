@@ -28,6 +28,32 @@ import {
   type RSFormStats
 } from './rsform';
 
+/** Record of {@link CstType} prefixes. */
+const CST_TYPE_PREFIX: Record<CstType, string> = {
+  [CstType.NOMINAL]: 'N',
+  [CstType.BASE]: 'X',
+  [CstType.CONSTANT]: 'C',
+  [CstType.STRUCTURED]: 'S',
+  [CstType.AXIOM]: 'A',
+  [CstType.TERM]: 'D',
+  [CstType.FUNCTION]: 'F',
+  [CstType.PREDICATE]: 'P',
+  [CstType.THEOREM]: 'T'
+};
+
+/** Record of {@link CstType} to {@link CstClass} mapping. */
+const CST_TYPE_TO_CLASS: Record<CstType, CstClass> = {
+  [CstType.NOMINAL]: CstClass.NOMINAL,
+  [CstType.BASE]: CstClass.BASIC,
+  [CstType.CONSTANT]: CstClass.BASIC,
+  [CstType.STRUCTURED]: CstClass.BASIC,
+  [CstType.TERM]: CstClass.DERIVED,
+  [CstType.FUNCTION]: CstClass.DERIVED,
+  [CstType.AXIOM]: CstClass.STATEMENT,
+  [CstType.PREDICATE]: CstClass.DERIVED,
+  [CstType.THEOREM]: CstClass.STATEMENT
+};
+
 /** Checks if a given target {@link Constituenta} matches the specified query. */
 export function matchConstituenta(target: RO<Constituenta>, query: string): boolean {
   const matcher = new TextMatcher(query);
@@ -59,18 +85,7 @@ export function isSchemaIssue(cst: Constituenta): boolean {
   return false;
 }
 
-/**
- * Infers the status of an expression based on parsing and value information.
- *
- * @param parse - parsing status of the expression.
- * @param value - value class of the expression.
- *
- * @returns The inferred expression status:
- * - `ExpressionStatus.INCORRECT` if parsing failed.
- * - `ExpressionStatus.INCALCULABLE` if value is `ValueClass.INVALID`.
- * - `ExpressionStatus.PROPERTY` if value is `ValueClass.PROPERTY`.
- * - `ExpressionStatus.VERIFIED` if both parsing and value are valid.
- */
+/** Infers the status of an expression based on parsing and value information. */
 export function inferStatus(parse: boolean, value?: ValueClass | null): CstStatus {
   if (!parse) {
     return CstStatus.INCORRECT;
@@ -101,34 +116,12 @@ export function inferTemplate(expression: string): boolean {
   return (match && match?.length > 0) ?? false;
 }
 
-/**
- * Infers the {@link CstClass} based on the provided {@link CstType} and template status.
- *
- * @param type - The CstType representing the type of the Constituenta.
- * @param isTemplate - A boolean indicating whether the Constituenta is a template.
- *
- * @returns The inferred CstClass based on the combination of CstType and template status:
- * - `CstClass.TEMPLATE` if the Constituenta is a template.
- * - `CstClass.BASIC` if the CstType is BASE, CONSTANT, or STRUCTURED.
- * - `CstClass.DERIVED` if the CstType is TERM, FUNCTION, or PREDICATE.
- * - `CstClass.STATEMENT` if the CstType is AXIOM or THEOREM.
- */
+/** Infers the {@link CstClass} based on the provided {@link CstType} and template status. */
 export function inferClass(type: CstType, isTemplate: boolean = false): CstClass {
   if (isTemplate) {
     return CstClass.TEMPLATE;
   }
-  // prettier-ignore
-  switch (type) {
-    case CstType.NOMINAL: return CstClass.NOMINAL;
-    case CstType.BASE: return CstClass.BASIC;
-    case CstType.CONSTANT: return CstClass.BASIC;
-    case CstType.STRUCTURED: return CstClass.BASIC;
-    case CstType.TERM: return CstClass.DERIVED;
-    case CstType.FUNCTION: return CstClass.DERIVED;
-    case CstType.AXIOM: return CstClass.STATEMENT;
-    case CstType.PREDICATE: return CstClass.DERIVED;
-    case CstType.THEOREM: return CstClass.STATEMENT;
-  }
+  return CST_TYPE_TO_CLASS[type];
 }
 
 /** Check if {@link Constituenta} is a template or a category. */
@@ -147,109 +140,98 @@ export function applyFilterCategory(start: Constituenta, items: Constituenta[]):
   return items.filter((_, index) => index >= startIndex && (nextCategoryIndex === -1 || index < nextCategoryIndex));
 }
 
-const cstTypePrefixRecord: Record<CstType, string> = {
-  [CstType.NOMINAL]: 'N',
-  [CstType.BASE]: 'X',
-  [CstType.CONSTANT]: 'C',
-  [CstType.STRUCTURED]: 'S',
-  [CstType.AXIOM]: 'A',
-  [CstType.TERM]: 'D',
-  [CstType.FUNCTION]: 'F',
-  [CstType.PREDICATE]: 'P',
-  [CstType.THEOREM]: 'T'
-};
-
 /** Prefix for alias indicating {@link CstType}. */
 export function getCstTypePrefix(type: CstType): string {
-  return cstTypePrefixRecord[type];
+  return CST_TYPE_PREFIX[type];
 }
 
 /** Guess {@link CstType} from user input hint. */
-export function guessCstType(hint: string, defaultType: CstType = CstType.TERM): CstType {
+export function guessCstType(hint: string): CstType | null {
   if (hint.length !== 1) {
-    return defaultType;
+    return null;
   }
-  // prettier-ignore
-  switch (hint) {
-    case 'N': return CstType.NOMINAL;
-    case 'X': return CstType.BASE;
-    case 'C': return CstType.CONSTANT;
-    case 'S': return CstType.STRUCTURED;
-    case 'A': return CstType.AXIOM;
-    case 'D': return CstType.TERM;
-    case 'F': return CstType.FUNCTION;
-    case 'P': return CstType.PREDICATE;
-    case 'T': return CstType.THEOREM;
+  for (const [type, prefix] of Object.entries(CST_TYPE_PREFIX)) {
+    if (hint === prefix) {
+      return type as CstType;
+    }
   }
-  return defaultType;
+  return null;
 }
 
 /** Evaluate if {@link CstType} is basic concept. */
 export function isBasicConcept(type: CstType): boolean {
-  // prettier-ignore
   switch (type) {
-    case CstType.NOMINAL: return true;
-    case CstType.BASE: return true;
-    case CstType.CONSTANT: return true;
-    case CstType.STRUCTURED: return true;
-    case CstType.AXIOM: return true;
-    case CstType.TERM: return false;
-    case CstType.FUNCTION: return false;
-    case CstType.PREDICATE: return false;
-    case CstType.THEOREM: return false;
+    case CstType.NOMINAL:
+    case CstType.BASE:
+    case CstType.CONSTANT:
+    case CstType.STRUCTURED:
+    case CstType.AXIOM:
+      return true;
+
+    case CstType.TERM:
+    case CstType.FUNCTION:
+    case CstType.PREDICATE:
+    case CstType.THEOREM:
+      return false;
   }
 }
 
 /** Evaluate if {@link CstType} is base set or constant set. */
 export function isBaseSet(type: CstType): boolean {
-  // prettier-ignore
   switch (type) {
-    case CstType.NOMINAL: return false;
-    case CstType.BASE: return true;
-    case CstType.CONSTANT: return true;
-    case CstType.STRUCTURED: return false;
-    case CstType.AXIOM: return false;
-    case CstType.TERM: return false;
-    case CstType.FUNCTION: return false;
-    case CstType.PREDICATE: return false;
-    case CstType.THEOREM: return false;
+    case CstType.BASE:
+    case CstType.CONSTANT:
+      return true;
+
+    case CstType.NOMINAL:
+    case CstType.STRUCTURED:
+    case CstType.AXIOM:
+    case CstType.TERM:
+    case CstType.FUNCTION:
+    case CstType.PREDICATE:
+    case CstType.THEOREM:
+      return false;
   }
 }
 
 /** Evaluate if {@link CstType} is a function. */
 export function isFunctional(type: CstType): boolean {
-  // prettier-ignore
   switch (type) {
-    case CstType.NOMINAL: return false;
-    case CstType.BASE: return false;
-    case CstType.CONSTANT: return false;
-    case CstType.STRUCTURED: return false;
-    case CstType.AXIOM: return false;
-    case CstType.TERM: return false;
-    case CstType.FUNCTION: return true;
-    case CstType.PREDICATE: return true;
-    case CstType.THEOREM: return false;
+    case CstType.FUNCTION:
+    case CstType.PREDICATE:
+      return true;
+
+    case CstType.NOMINAL:
+    case CstType.BASE:
+    case CstType.CONSTANT:
+    case CstType.STRUCTURED:
+    case CstType.AXIOM:
+    case CstType.TERM:
+    case CstType.THEOREM:
+      return false;
   }
 }
 
 /** Evaluate if {@link CstType} is logical. */
 export function isLogical(type: CstType): boolean {
-  // prettier-ignore
   switch (type) {
-    case CstType.NOMINAL: return false;
-    case CstType.BASE: return false;
-    case CstType.CONSTANT: return false;
-    case CstType.STRUCTURED: return false;
-    case CstType.AXIOM: return true;
-    case CstType.TERM: return false;
-    case CstType.FUNCTION: return false;
-    case CstType.PREDICATE: return false;
-    case CstType.THEOREM: return true;
+    case CstType.AXIOM:
+    case CstType.THEOREM:
+      return true;
+
+    case CstType.NOMINAL:
+    case CstType.BASE:
+    case CstType.CONSTANT:
+    case CstType.STRUCTURED:
+    case CstType.TERM:
+    case CstType.FUNCTION:
+    case CstType.PREDICATE:
+      return false;
   }
 }
 
 /** Evaluate if {@link Constituenta} can be used produce structure. */
-export function cstCanProduceStructure(cst: RO<Constituenta>): boolean {
+export function canProduceStructure(cst: RO<Constituenta>): boolean {
   switch (cst.cst_type) {
     case CstType.NOMINAL:
     case CstType.BASE:
@@ -270,6 +252,24 @@ export function cstCanProduceStructure(cst: RO<Constituenta>): boolean {
     return false;
   }
   return typeCanProduceStructure(cst.effectiveType as Typification);
+}
+
+/** Evaluate if {@link CstType} can have manual typification. */
+export function canHaveManualTypification(type: CstType): boolean {
+  switch (type) {
+    case CstType.STRUCTURED:
+    case CstType.TERM:
+    case CstType.FUNCTION:
+    case CstType.PREDICATE:
+      return true;
+
+    case CstType.NOMINAL:
+    case CstType.BASE:
+    case CstType.CONSTANT:
+    case CstType.AXIOM:
+    case CstType.THEOREM:
+      return false;
+  }
 }
 
 /** Validate new alias against {@link CstType} and {@link RSForm}. */

@@ -12,8 +12,8 @@ import CodeMirror, {
 } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 
-import { type RSForm } from '@/domain/library';
-import { generateAlias, getCstTypePrefix, guessCstType } from '@/domain/library/rsform-api';
+import { CstType, type RSForm } from '@/domain/library';
+import { generateAlias, guessCstType } from '@/domain/library/rsform-api';
 import { type AnalysisFull, type RSErrorDescription } from '@/domain/rslang';
 import { extractGlobals } from '@/domain/rslang/api';
 
@@ -242,11 +242,11 @@ export function RSInput({
     }
     const hint = text.getText(selection.from - 1, selection.from);
     const type = guessCstType(hint);
-    if (hint === getCstTypePrefix(type)) {
+    if (type !== null) {
       text.setSelection(selection.from - 1, selection.from);
     }
     const takenAliases = [...extractGlobals(thisRef.current?.view?.state.doc.toString() ?? '')];
-    const newAlias = generateAlias(type, schema, takenAliases);
+    const newAlias = generateAlias(type ?? CstType.TERM, schema, takenAliases);
     text.replaceWith(newAlias);
     return true;
   }

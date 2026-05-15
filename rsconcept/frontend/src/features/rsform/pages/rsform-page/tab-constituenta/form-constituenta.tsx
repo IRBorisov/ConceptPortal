@@ -6,7 +6,13 @@ import { useForm, useStore } from '@tanstack/react-form';
 import clsx from 'clsx';
 
 import { type Constituenta, CstType, type RSForm } from '@/domain/library';
-import { getAnalysisFor, isBaseSet, isBasicConcept, isLogical } from '@/domain/library/rsform-api';
+import {
+  canHaveManualTypification,
+  getAnalysisFor,
+  isBaseSet,
+  isBasicConcept,
+  isLogical
+} from '@/domain/library/rsform-api';
 import { type AnalysisFull, TypeID } from '@/domain/rslang';
 import { labelType } from '@/domain/rslang/labels';
 import { useTx } from '@/i18n';
@@ -97,19 +103,14 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
   useRegisterUnsavedSave(() => form.handleSubmit(), !isDefaultValue);
 
   const [forceComment, setForceComment] = useState(false);
+  const [forceManualType, setForceManualType] = useState(!!activeCst.typification_manual);
   const [localParse, setLocalParse] = useState<RO<AnalysisFull> | null>(null);
-  const [manualTypificationOpen, setManualTypificationOpen] = useState(!!activeCst.typification_manual);
-
   const typification = localParse ? labelType(localParse.type) : labelType(activeCst.effectiveType);
 
   const manualDraft = useStore(form.store, state => state.values.item_data.typification_manual ?? '');
-  const hasManualDraft = !!manualDraft;
-
-  const allowManualTypification =
-    activeCst.cst_type !== CstType.NOMINAL &&
-    (activeCst.analysis.type == null || hasManualDraft || !!activeCst.typification_manual);
-  const showManualTypificationField = allowManualTypification && (manualTypificationOpen || hasManualDraft);
-  const showManualTypificationButton = allowManualTypification && !showManualTypificationField;
+  const canManualType = canHaveManualTypification(activeCst.cst_type);
+  const showManualType = !!manualDraft || !!activeCst.typification_manual || (canManualType && forceManualType);
+  const showManualTypeBtn = canManualType && !showManualType && activeCst.analysis.type === null;
 
   const attributions = activeCst.attributes.map(id => schema.cstByID.get(id)!);
 
@@ -137,7 +138,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       const timeoutId = setTimeout(function resetConstituentaUIState() {
         setForceComment(false);
         setLocalParse(null);
-        setManualTypificationOpen(!!activeCst.typification_manual);
+        setForceManualType(!!activeCst.typification_manual);
       }, 0);
       return () => clearTimeout(timeoutId);
     },
@@ -245,7 +246,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
 
       {activeCst.cst_type !== CstType.NOMINAL ? (
         <div className='relative flex flex-col gap-3'>
-          {showManualTypificationField ? (
+          {showManualType ? (
             <form.Field name='item_data.typification_manual'>
               {field => (
                 <TypificationInput
@@ -275,13 +276,13 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
             transparent
             readOnly
             value={typification}
-            className='cursor-default'
+            className='cursor-default w-fit'
           />
-          {showManualTypificationButton && !disabled ? (
+          {showManualTypeBtn && !disabled ? (
             <TextButton
               text={tx('tx.rslang.typification.manual.add')}
               className='absolute top-0 right-0'
-              onClick={() => setManualTypificationOpen(true)}
+              onClick={() => setForceManualType(true)}
             />
           ) : null}
         </div>

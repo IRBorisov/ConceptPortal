@@ -4,7 +4,13 @@ import { useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
 
 import { type BasicBinding, type Constituenta, CstType } from '@/domain/library';
-import { isBaseSet, isBasicConcept, isFunctional, isLogical } from '@/domain/library/rsform-api';
+import {
+  canHaveManualTypification,
+  isBaseSet,
+  isBasicConcept,
+  isFunctional,
+  isLogical
+} from '@/domain/library/rsform-api';
 import { isInferrable, isInterpretable, prepareValueString } from '@/domain/library/rsmodel-api';
 import { type CalculatorResult, TypeID, type Value } from '@/domain/rslang';
 import { valueStub } from '@/domain/rslang/eval/value-api';
@@ -82,15 +88,13 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
   const [formalDraft, setFormalDraft] = useState(activeCst.definition_formal);
   const [rawDraft, setRawDraft] = useState(activeCst.definition_raw);
   const [manualTypificationDraft, setManualTypificationDraft] = useState(activeCst.typification_manual);
-  const [manualTypificationOpen, setManualTypificationOpen] = useState(!!activeCst.typification_manual);
+  const [forceManualType, setForceManualType] = useState(!!activeCst.typification_manual);
   const [conventionDraft, setConventionDraft] = useState(activeCst.convention);
   const [forceComment, setForceComment] = useState(false);
 
-  const hasManualDraft = !!manualTypificationDraft;
-  const allowManualTypification =
-    activeCst.cst_type !== CstType.NOMINAL &&
-    (activeCst.analysis.type == null || hasManualDraft || !!activeCst.typification_manual);
-  const showManualTypificationField = allowManualTypification && (manualTypificationOpen || hasManualDraft);
+  const canManualType = canHaveManualTypification(activeCst.cst_type);
+  const showManualType =
+    !!manualTypificationDraft || !!activeCst.typification_manual || (canManualType && forceManualType);
 
   const isBasic = isBasicConcept(activeCst.cst_type);
   const showConvention = !!activeCst.convention || forceComment || isBasic;
@@ -124,7 +128,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         setFormalDraft(activeCst.definition_formal);
         setRawDraft(activeCst.definition_raw);
         setManualTypificationDraft(activeCst.typification_manual);
-        setManualTypificationOpen(!!activeCst.typification_manual);
+        setForceManualType(!!activeCst.typification_manual);
         setConventionDraft(activeCst.convention);
         setForceComment(false);
       }, 0);
@@ -280,7 +284,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       <h2 className='text-left w-fit'>{tx('tx.cst') + ' ' + activeCst.alias}</h2>
       <ValuePrimaryActions activeCst={activeCst} cstData={cstData} onChangeValue={handleSetValue} />
 
-      {showManualTypificationField ? (
+      {showManualType ? (
         <TypificationInput
           label={tx('tx.rslang.typification.manual')}
           placeholder={metaFieldsDisabled ? '' : tx('tx.rslang.typification.manual.hint')}

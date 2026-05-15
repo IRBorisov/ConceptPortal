@@ -1,7 +1,7 @@
 'use client';
 
 import { type Constituenta, CstType, type RSForm } from '@/domain/library';
-import { cstCanProduceStructure } from '@/domain/library/rsform-api';
+import { canProduceStructure } from '@/domain/library/rsform-api';
 import { useTx } from '@/i18n';
 
 import { PillValueClass } from '@/features/rsform/components/pill-valueClass';
@@ -36,7 +36,7 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
 
   const disabled = !activeCst || !isContentEditable;
   const crucial = activeCst.crucial;
-  const canOpenStructure = !!activeCst.spawner_path || cstCanProduceStructure(activeCst);
+  const canOpenStructure = !!activeCst.spawner_path || canProduceStructure(activeCst);
 
   const showCrucialPill = !disabled || crucial;
   const showRenameButton = !disabled;
