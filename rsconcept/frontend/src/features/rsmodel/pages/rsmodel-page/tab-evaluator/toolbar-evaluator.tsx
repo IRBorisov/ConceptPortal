@@ -4,10 +4,12 @@ import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
+import { IconEvaluatorCache } from '@/features/rsmodel/components/icon-evaluator-cache';
 
 import { MiniButton } from '@/components/control';
 import { IconCalculateAll } from '@/components/icons';
 import { cn } from '@/components/utils';
+import { usePreferencesStore } from '@/stores/preferences';
 import { prepareTooltip } from '@/utils/format';
 
 import { useModelEdit } from '../model-edit-context';
@@ -19,9 +21,16 @@ interface ToolbarEvaluatorProps {
 export function ToolbarEvaluator({ className }: ToolbarEvaluatorProps) {
   const tx = useTx();
   const { engine } = useModelEdit();
+  const disableCache = usePreferencesStore(state => state.disableCache);
+  const toggleDisableCache = usePreferencesStore(state => state.toggleDisableCache);
 
   return (
     <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>
+      <MiniButton
+        title={tx('tx.rslang.eval.disableCache.hint')}
+        icon={<IconEvaluatorCache value={!disableCache} size='1.25rem' className='hover:text-primary' />}
+        onClick={toggleDisableCache}
+      />
       <MiniButton
         title={prepareTooltip(tx('tx.model.recalculate'), 'Alt + Q')}
         aria-label={tx('tx.model.recalculate.hint')}

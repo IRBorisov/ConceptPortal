@@ -21,7 +21,7 @@ import {
 } from './value';
 
 /** Cartesian product of factor sets. */
-export function decartian(factors: Value[][]): Value[] | null {
+export function cartesianProduct(factors: Value[][]): Value[] | null {
   const cardinality = factors.reduce((acc, f) => acc * f.length, 1);
   if (cardinality > SET_INFINITY) {
     return null;

@@ -269,11 +269,11 @@ describe('Calculator', () => {
       treeContext.set('F9', buildAST('[a∈ℬ(X1)] a'));
     });
 
-    function runWithHits(input: string): { value: string; hits: number } {
+    function runWithHits(input: string, disableCache: boolean = false): { value: string; hits: number } {
       const ast = buildAST(input);
       expect(ast.hasError).toBe(false);
       errors = [];
-      const result = calculator.run(ast, error => errors.push(error));
+      const result = calculator.run(ast, error => errors.push(error), false, disableCache);
       expect(errors.length).toBe(0);
       return { value: printValue(result), hits: calculator.cacheHits };
     }
@@ -294,6 +294,12 @@ describe('Calculator', () => {
       const callA = buildAST('F9[X1]');
       const callB = buildAST('F9[X1]');
       expect(metadata.get(callA).structuralKey).toBe(metadata.get(callB).structuralKey);
+    });
+
+    it('disables cache when disableCache is true', () => {
+      const { value, hits } = runWithHits('I{a | a:∈X1; t:=F9[a]}', true);
+      expect(value).toBe('{1, 2, 3}');
+      expect(hits).toBe(0);
     });
   });
 });

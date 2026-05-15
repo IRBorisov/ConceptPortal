@@ -65,6 +65,7 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.eval.success': 'Calculs terminés en {timeSpent} s',
   'tx.rslang.eval.iterationCount': 'Itérations',
   'tx.rslang.eval.cacheHits': 'Hits de cache',
+  'tx.rslang.eval.disableCache.hint': 'Désactiver le cache d’évaluation',
 
   'tx.rslang.binding': 'Interprétation de base',
   'tx.rslang.binding.hint': 'Édition de l’interprétation de base du modèle',

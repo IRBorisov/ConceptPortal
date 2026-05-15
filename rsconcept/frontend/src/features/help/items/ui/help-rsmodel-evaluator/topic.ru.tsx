@@ -1,6 +1,6 @@
 import { useTx } from '@/i18n';
 
-import { IconCalculateAll, IconStatusOK, IconText, IconTree, IconTypeGraph } from '@/components/icons';
+import { IconCalculateAll, IconDatabaseOff, IconStatusOK, IconText, IconTree, IconTypeGraph } from '@/components/icons';
 
 import { LinkTopic } from '../../../components/link-topic';
 import { HelpTopic } from '../../../models/help-topic';
@@ -30,6 +30,9 @@ export function HelpRSModelEvaluatorRu() {
         </li>
         <li>
           <IconStatusOK className='inline-icon' /> результат можно открыть в диалоге просмотра значения
+        </li>
+        <li>
+          <IconDatabaseOff className='inline-icon' /> кнопка на панели отключает кэш вычислений
         </li>
         <li>
           <IconCalculateAll className='inline-icon icon-green' /> кнопка на панели пересчитывает модель целиком

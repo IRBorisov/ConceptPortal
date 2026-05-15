@@ -46,6 +46,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
 
   const showDataText = usePreferencesStore(state => state.showDataText);
   const toggleShowDataText = usePreferencesStore(state => state.toggleShowDataText);
+  const disableCache = usePreferencesStore(state => state.disableCache);
   const showViewValue = useDialogsStore(state => state.showModelViewValue);
 
   const [evaluatedExpression, setEvaluatedExpression] = useState<string>('');
@@ -87,7 +88,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
     }
 
     const startTime = performance.now();
-    const evaluation = engine.evaluateAst(parse.ast, { annotateErrors: true });
+    const evaluation = engine.evaluateAst(parse.ast, { annotateErrors: true, disableCache: disableCache });
     setLocalEval(evaluation);
 
     const endTime = performance.now();

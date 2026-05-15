@@ -107,7 +107,7 @@
     "datv",
     "Debool",
     "Decart",
-    "Decartian",
+    "cartesianProduct",
     "Dexie",
     "djangorestframework",
     "Downvote",

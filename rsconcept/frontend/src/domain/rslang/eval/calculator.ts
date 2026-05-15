@@ -24,6 +24,7 @@ export interface CalculatorResult {
 /** Options for {@link RSCalculator.evaluateFull}. */
 export interface CalculatorEvaluateOptions {
   annotateErrors?: boolean;
+  disableCache?: boolean;
 }
 
 type Listener = () => void;
@@ -96,7 +97,7 @@ export class RSCalculator {
       return { value: null, iterations: 0, cacheHits: 0, errors };
     }
 
-    const value = this.evaluator.run(ast, reporter, options?.annotateErrors ?? false);
+    const value = this.evaluator.run(ast, reporter, options?.annotateErrors ?? false, options?.disableCache ?? false);
     if (value === null && errors.length === 0) {
       errors.push({ code: RSErrorCode.calcUnknownError, from: 0, to: 0 });
       if (options?.annotateErrors) {

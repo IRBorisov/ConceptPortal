@@ -36,6 +36,9 @@ interface PreferencesStore {
   showOssSidePanel: boolean;
   toggleShowOssSidePanel: () => void;
 
+  disableCache: boolean;
+  toggleDisableCache: () => void;
+
   preferredPlayer: VideoPlayerType;
   setPreferredPlayer: (value: VideoPlayerType) => void;
 }
@@ -100,11 +103,14 @@ export const usePreferencesStore = create<PreferencesStore>()(
       showOssSidePanel: true,
       toggleShowOssSidePanel: () => set(state => ({ showOssSidePanel: !state.showOssSidePanel })),
 
+      disableCache: false,
+      toggleDisableCache: () => set(state => ({ disableCache: !state.disableCache })),
+
       preferredPlayer: 'vk',
       setPreferredPlayer: value => set(state => (state.preferredPlayer === value ? state : { preferredPlayer: value }))
     }),
     {
-      version: 6,
+      version: 7,
       name: localStorageKeys.preferences
     }
   )

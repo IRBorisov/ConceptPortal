@@ -64,6 +64,7 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.eval.success': 'Вычисления завершены за {timeSpent} секунд',
   'tx.rslang.eval.iterationCount': 'Итерации',
   'tx.rslang.eval.cacheHits': 'Кэш-попадания',
+  'tx.rslang.eval.disableCache.hint': 'Отключить кэш вычислений',
 
   'tx.rslang.binding': 'Базовая интерпретация',
   'tx.rslang.binding.hint': 'Редактирование базовой интерпретации модели',

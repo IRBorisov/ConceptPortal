@@ -23,8 +23,8 @@ import {
 } from './value';
 import {
   boolean,
+  cartesianProduct,
   contains,
-  decartian,
   isSubsetOrEq,
   projection,
   reduce,
@@ -37,8 +37,8 @@ import {
 /** Maximum iterations to prevent infinite loops (recursion, quantifiers, etc.). */
 const MAX_ITERATIONS = 1_000_000;
 
-const TICK_PER_FUNCTION = 10;
-const TICK_PER_RECURSION = 5;
+const TICK_PER_FUNCTION = 3;
+const TICK_PER_RECURSION = 3;
 const TICK_PER_IMPERATIVE = 1;
 const TICK_PER_DECLARATIVE = 1;
 const TICK_PER_QUANTIFIER = 1;
@@ -51,6 +51,7 @@ export type ASTContext = Map<string, AstNode>;
 export class Evaluator {
   private reporter?: ErrorReporter;
   private annotateErrors = false;
+  private disableCache = false;
   private locals: LocalContext = new LocalContext();
   private nodeMetadata: EvaluationMetadata = new EvaluationMetadata();
   private evalCache: EvaluationCache = new EvaluationCache();
@@ -69,12 +70,18 @@ export class Evaluator {
     this.context = context;
   }
 
-  public run(ast: AstNode, reporter?: ErrorReporter, annotateErrors: boolean = false): Value | null {
+  public run(
+    ast: AstNode,
+    reporter?: ErrorReporter,
+    annotateErrors: boolean = false,
+    disableCache: boolean = false
+  ): Value | null {
     if (ast.hasError) {
       return null;
     }
     this.reporter = reporter;
     this.annotateErrors = annotateErrors;
+    this.disableCache = disableCache;
     this.clear();
     return this.dispatchVisit(ast);
   }
@@ -127,7 +134,7 @@ export class Evaluator {
   private dispatchVisit(node: AstNode): Value | null {
     const info = this.nodeMetadata.get(node);
     let stamp: string | null = null;
-    if (info.cacheable) {
+    if (info.cacheable && !this.disableCache) {
       stamp = this.locals.buildDependencyStamp(info.reads);
       if (stamp !== null) {
         const cached = this.evalCache.lookup(info.structuralKey, stamp);
@@ -138,7 +145,7 @@ export class Evaluator {
     }
 
     const result = this.dispatchVisitImpl(node);
-    if (result !== null && info.cacheable && stamp !== null) {
+    if (!this.disableCache && result !== null && info.cacheable && stamp !== null) {
       this.evalCache.store(info.structuralKey, stamp, result);
     }
     return result;
@@ -527,7 +534,7 @@ export class Evaluator {
       }
       args.push(component);
     }
-    const result = decartian(args as Value[][]);
+    const result = cartesianProduct(args as Value[][]);
     if (result === null) {
       this.onError(RSErrorCode.setOverflow, node, [String(SET_INFINITY)]);
       return null;

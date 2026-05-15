@@ -28,7 +28,7 @@ export function ViewErrors({ isOpen, errors, disabled, className, onShowError }:
       <p>
         <span>{tx('tx.general.error.plural') + tx('tx.general.colon') + errorCount}</span>
         {warningsCount > 0 ? (
-          <span>| {tx('tx.general.warning.plural') + tx('tx.general.colon') + warningsCount}</span>
+          <span> | {tx('tx.general.warning.plural') + tx('tx.general.colon') + warningsCount}</span>
         ) : null}
       </p>
       {errors?.map((error, index) => {

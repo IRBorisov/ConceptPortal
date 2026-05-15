@@ -120,6 +120,7 @@ export { TbTopologyRing   as IconConsolidation }  from 'react-icons/tb';
 export { BiSpa            as IconPredecessor }    from 'react-icons/bi';
 export { LuArchive        as IconArchive }        from 'react-icons/lu';
 export { LuDatabase       as IconDatabase }       from 'react-icons/lu';
+export { TbDatabaseOff     as IconDatabaseOff }    from 'react-icons/tb';
 export { LuView           as IconDBStructure }    from 'react-icons/lu';  
 export { LuPlaneTakeoff   as IconRESTapi }        from 'react-icons/lu';
 export { LuImage          as IconImage }          from 'react-icons/lu';

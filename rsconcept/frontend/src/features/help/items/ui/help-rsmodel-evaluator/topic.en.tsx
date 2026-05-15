@@ -1,6 +1,6 @@
 import { useTx } from '@/i18n';
 
-import { IconCalculateAll, IconStatusOK, IconText, IconTree, IconTypeGraph } from '@/components/icons';
+import { IconCalculateAll, IconDatabaseOff, IconStatusOK, IconText, IconTree, IconTypeGraph } from '@/components/icons';
 
 import { LinkTopic } from '../../../components/link-topic';
 import { HelpTopic } from '../../../models/help-topic';
@@ -32,6 +32,9 @@ export function HelpRSModelEvaluatorEn() {
         </li>
         <li>
           <IconCalculateAll className='inline-icon icon-green' /> the panel button recomputes the entire model
+        </li>
+        <li>
+          <IconDatabaseOff className='inline-icon' /> the panel button disables the calculation cache
         </li>
         <li>
           <IconTypeGraph className='inline-icon' /> display{' '}
