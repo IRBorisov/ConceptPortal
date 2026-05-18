@@ -39,9 +39,9 @@ export function HelpConceptSystemFr() {
         Les autres concepts reçoivent des définitions formelles selon une méthode d'explication uniformément comprise
         par tous les participants. Le Portail prend en charge l'
         <LinkTopic text='explication en genres de structures' topic={HelpTopic.RSLANG} />. Des assertions
-        supplémentaires au-delà des axiomes, appelées <b>théorèmes</b>, peuvent également être énoncées. Les concepts
-        qui reçoivent des définitions formelles sont appelés <b>dérivés</b>. Il convient de noter que dans l'explication
-        en genres de structures, les axiomes incluent également les relations de{' '}
+        supplémentaires au-delà des axiomes, appelées <b>enoncés</b>, peuvent également être énoncées. Les concepts qui
+        reçoivent des définitions formelles sont appelés <b>dérivés</b>. Il convient de noter que dans l'explication en
+        genres de structures, les axiomes incluent également les relations de{' '}
         <LinkTopic text='typification' topic={HelpTopic.RSL_TYPIFICATION} />, et les concepts dérivés comprennent les
         termes, les fonctions-terme et les fonctions-prédicat.
       </p>

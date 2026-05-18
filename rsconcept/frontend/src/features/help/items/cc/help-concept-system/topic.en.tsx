@@ -37,7 +37,7 @@ export function HelpConceptSystemEn() {
         The remaining concepts are given formal definitions using some method of explication that is uniformly
         understood by all participants. The Portal supports{' '}
         <LinkTopic text='explication in genus structures' topic={HelpTopic.RSLANG} />. Additional assertions beyond
-        axioms, called <b>theorems</b>, may also be stated. Concepts that receive formal definitions are called{' '}
+        axioms, called <b>statements</b>, may also be stated. Concepts that receive formal definitions are called{' '}
         <b>derived</b>. It should be noted that in genus-structure explication, axioms also include{' '}
         <LinkTopic text='typification' topic={HelpTopic.RSL_TYPIFICATION} /> relations, and the derived concepts include
         terms, term-functions, and predicate-functions.

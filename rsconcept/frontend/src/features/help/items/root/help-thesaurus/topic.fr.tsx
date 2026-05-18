@@ -140,13 +140,12 @@ export function HelpThesaurusFr() {
         <li>
           <IconCstStructured className='inline-icon' />
           {'\u2009'}Structure de genre (S#) — concept non défini structuré sur ensembles de base et constants. Le
-          contenu est formé par la <LinkTopic text='relation de typage' topic={HelpTopic.RSL_TYPIFICATION} />, les axiomes
-          et la convention.
+          contenu est formé par la <LinkTopic text='relation de typage' topic={HelpTopic.RSL_TYPIFICATION} />, les axiomes et la convention.
         </li>
         <li>
           <IconCstAxiom className='inline-icon' />
           {'\u2009'}Axiome (A#) — assertion limitant concepts non définis et termes dérivés. Chaque axiome doit valoir
-          vrai pour que le SD soit une théorie du domaine.
+          vrai pour que le schéma soit une théorie du domaine.
         </li>
         <li>
           <IconCstTerm className='inline-icon' />
@@ -162,7 +161,8 @@ export function HelpThesaurusFr() {
         </li>
         <li>
           <IconCstTheorem className='inline-icon' />
-          {'\u2009'}Théorème (T#) — assertion matériellement significative, vraie ou fausse.
+          {'\u2009'}Énoncé (T#) — assertion matériellement significative, pouvant être vraie ou fausse selon
+          l&apos;interprétation des concepts non définis.
         </li>
       </ul>
 

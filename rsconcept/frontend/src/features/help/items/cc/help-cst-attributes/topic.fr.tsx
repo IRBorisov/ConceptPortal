@@ -55,7 +55,7 @@ export function HelpCstAttributesFr() {
         <code>D1 :== Pr1(S1)</code> — Les termes sont définis par une définition formelle typée.
       </p>
       <p>
-        <code>T1 :== Pr1(S1)=Pr2(S1)</code> — Les théorèmes sont définis par une définition formelle logique.
+        <code>T1 :== Pr1(S1)=Pr2(S1)</code> — Les énoncés sont définis par une définition formelle logique.
       </p>
       <p>
         <code>F1 :== [σ∈ℬ(X1×X1)] Pr1(σ)\Pr2(σ)</code>

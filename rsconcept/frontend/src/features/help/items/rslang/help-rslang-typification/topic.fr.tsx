@@ -28,7 +28,7 @@ export function HelpRSLangTypificationFr() {
         notations supplémentaires sont introduites.
       </p>
       <p>
-        Les expressions logiques (axiomes, théorèmes) prenant les valeurs VRAI ou FAUX appartiennent à la typification{' '}
+        Les expressions logiques (axiomes, énoncés) prenant les valeurs VRAI ou FAUX appartiennent à la typification{' '}
         <b>Logic</b>.
       </p>
       <p>

@@ -28,7 +28,7 @@ export function HelpRSLangTypificationEn() {
         notations are introduced.
       </p>
       <p>
-        Logical expressions (axioms, theorems) that take the values TRUE or FALSE belong to typification <b>Logic</b>.
+        Logical expressions (axioms, statements) that take the values TRUE or FALSE belong to typification <b>Logic</b>.
       </p>
       <p>
         Parameterised expressions (term-functions, predicate-functions) belong to typification <br />

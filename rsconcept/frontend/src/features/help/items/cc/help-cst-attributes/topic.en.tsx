@@ -52,7 +52,7 @@ export function HelpCstAttributesEn() {
         <code>D1 :== Pr1(S1)</code> — Terms are defined by a typed Formal definition.
       </p>
       <p>
-        <code>T1 :== Pr1(S1)=Pr2(S1)</code> — Theorems are defined by a logical Formal definition.
+        <code>T1 :== Pr1(S1)=Pr2(S1)</code> — Statements are defined by a logical Formal definition.
       </p>
       <p>
         <code>F1 :== [σ∈ℬ(X1×X1)] Pr1(σ)\Pr2(σ)</code>

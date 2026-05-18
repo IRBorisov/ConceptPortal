@@ -263,7 +263,7 @@ export const txLibraryEn: Record<string, string> = {
   'tx.cst.type.term.validate.emptyValue': 'Empty term value',
   'tx.cst.type.function': 'Term function',
   'tx.cst.type.predicate': 'Predicate function',
-  'tx.cst.type.theorem': 'Theorem',
+  'tx.cst.type.theorem': 'Statement',
 
   'tx.cst.class': 'Constituent class',
   'tx.cst.class.hint': 'Classification of constituents by role in the schema',

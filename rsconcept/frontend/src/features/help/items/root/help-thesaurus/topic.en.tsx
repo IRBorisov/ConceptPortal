@@ -101,8 +101,8 @@ export function HelpThesaurusEn() {
         Convention, Typing (Structure), Formal definition, Text definition, Comment.
       </p>
       <p>
-        <IconCrucial className='inline-icon' /> A crucial constituent marks substantively important constituents. Crucial
-        constituents are highlighted visually and used in filtering.
+        <IconCrucial className='inline-icon' /> A crucial constituent marks substantively important constituents.
+        Crucial constituents are highlighted visually and used in filtering.
       </p>
 
       <br />
@@ -134,8 +134,8 @@ export function HelpThesaurusEn() {
         </li>
         <li>
           <IconCstConstSet className='inline-icon' />
-          {'\u2009'}Constant set (C#) — undefined concept modeled by a set-theory term that supports formal operations on
-          its elements.
+          {'\u2009'}Constant set (C#) — undefined concept modeled by a set-theory term that supports formal operations
+          on its elements.
         </li>
         <li>
           <IconCstStructured className='inline-icon' />
@@ -144,8 +144,8 @@ export function HelpThesaurusEn() {
         </li>
         <li>
           <IconCstAxiom className='inline-icon' />
-          {'\u2009'}Axiom (A#) — an assertion constraining undefined concepts and derived terms. Every axiom must evaluate
-          to true for the DS to be a theory of the domain.
+          {'\u2009'}Axiom (A#) — an assertion constraining undefined concepts and derived terms. Every axiom must
+          evaluate to true for the scheme to be a theory of the domain.
         </li>
         <li>
           <IconCstTerm className='inline-icon' />
@@ -163,7 +163,8 @@ export function HelpThesaurusEn() {
         </li>
         <li>
           <IconCstTheorem className='inline-icon' />
-          {'\u2009'}Theorem (T#) — a materially significant assertion that may be true or false.
+          {'\u2009'}Statement (T#) — a materially significant assertion that may be true or false depending on
+          interpretation of undefined concepts.
         </li>
       </ul>
 
