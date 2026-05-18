@@ -187,6 +187,8 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.arithmeticNotSupported': 'Type does not support arithmetic: {type}',
   'tx.rslang.error.typesNotCompatible': 'Types are incompatible for the chosen operation: {a} and {b}',
   'tx.rslang.error.orderingNotSupported': 'Type does not support order predicates: {type}',
+  'tx.rslang.error.expectedLogic': 'Logical expression expected, got: {type}',
+  'tx.rslang.error.expectedSetexpr': 'Set-theoretic expression expected, got: {type}',
   'tx.rslang.error.globalNoValue': 'Non-computable identifier: {name}',
   'tx.rslang.error.invalidPropertyUsage': 'Non-iterable set used as a value',
   'tx.rslang.error.cstEmptyDerived': 'Empty expression for a complex notion or statement',
