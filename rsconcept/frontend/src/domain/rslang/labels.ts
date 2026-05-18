@@ -52,6 +52,7 @@ const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
   [RSErrorCode.orderingNotSupported]: 'tx.rslang.error.orderingNotSupported',
   [RSErrorCode.expectedLogic]: 'tx.rslang.error.expectedLogic',
   [RSErrorCode.expectedSetexpr]: 'tx.rslang.error.expectedSetexpr',
+  [RSErrorCode.invalidArgumentCortegeDeclare]: 'tx.rslang.error.invalidArgumentCortegeDeclare',
   [RSErrorCode.globalNoValue]: 'tx.rslang.error.globalNoValue',
   [RSErrorCode.invalidPropertyUsage]: 'tx.rslang.error.invalidPropertyUsage',
   [RSErrorCode.cstEmptyDerived]: 'tx.rslang.error.cstEmptyDerived',

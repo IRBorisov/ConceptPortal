@@ -412,6 +412,10 @@ export class TypeAuditor {
   }
 
   private visitArgument(node: AstNode): ExpressionType | null {
+    const variable = node.children[0];
+    if (variable.typeID === TokenID.NT_TUPLE_DECL) {
+      return this.onError(RSErrorCode.invalidArgumentCortegeDeclare, variable);
+    }
     const domain = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation);
     if (domain === null) {
       return null;

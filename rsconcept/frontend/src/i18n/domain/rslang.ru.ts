@@ -193,6 +193,8 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.orderingNotSupported': 'Тип не поддерживает предикаты порядка: {type}',
   'tx.rslang.error.expectedLogic': 'Ожидалось логическое выражение, получено: {type}',
   'tx.rslang.error.expectedSetexpr': 'Ожидалось теоретико-множественное выражение, получено: {type}',
+  'tx.rslang.error.invalidArgumentCortegeDeclare':
+    'Связанная декларация в аргументах функции не допускается; используйте проекции или объявите переменные отдельно',
   'tx.rslang.error.globalNoValue': 'Невычислимый идентификатор: {name}',
   'tx.rslang.error.invalidPropertyUsage': 'Неитерируемое множество в качестве значения',
   'tx.rslang.error.cstEmptyDerived': 'Пустое выражение для сложного понятия или утверждения',

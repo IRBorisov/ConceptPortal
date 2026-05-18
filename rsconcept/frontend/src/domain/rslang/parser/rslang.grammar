@@ -109,7 +109,7 @@ Arguments {
   Arguments "," Declaration
 }
 Declaration {
-  Local "∈" expr_atom
+  Variable "∈" expr_atom
 }
 Variable {
   Local |
