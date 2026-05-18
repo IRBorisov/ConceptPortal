@@ -123,6 +123,7 @@ export const txLibraryEn: Record<string, string> = {
   'tx.concept.expandStructure.noun': 'Structure expansion',
   'tx.concept.homonym.plural': 'Homonyms',
   'tx.concept.homonym.validate': 'Term matches constituents: {aliases}',
+  'tx.concept.homonym.confirm': 'Term matches constituents: {aliases}. Create anyway?',
   'tx.concept.duplicate.plural': 'Duplicates',
 
   'tx.concept.relation.plural': 'Concept relations',

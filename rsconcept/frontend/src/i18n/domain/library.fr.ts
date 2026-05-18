@@ -125,6 +125,7 @@ export const txLibraryFr: Record<string, string> = {
   'tx.concept.expandStructure.noun': 'Développement de structure',
   'tx.concept.homonym.plural': 'Homonymes',
   'tx.concept.homonym.validate': 'Terme coïncide avec des constituantes : {aliases}',
+  'tx.concept.homonym.confirm': 'Terme coïncide avec des constituantes : {aliases}. Créer ?',
   'tx.concept.duplicate.plural': 'Doublons',
 
   'tx.concept.relation.plural': 'Liens entre notions',

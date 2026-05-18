@@ -126,6 +126,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.concept.expandStructure.noun': 'Раскрытие структуры',
   'tx.concept.homonym.plural': 'Омонимы',
   'tx.concept.homonym.validate': 'Термин совпадает с конституентами: {aliases}',
+  'tx.concept.homonym.confirm': 'Термин совпадает с конституентами: {aliases}. Создать?',
   'tx.concept.duplicate.plural': 'Дубликаты',
 
   'tx.concept.relation.plural': 'Связи понятий',

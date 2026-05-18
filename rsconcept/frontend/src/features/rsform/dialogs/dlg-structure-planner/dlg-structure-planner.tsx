@@ -71,7 +71,8 @@ export function DlgStructurePlanner() {
 
   const selectedNode = items.find(node => node.key === selectedKey) ?? items[0];
   const selectedCst = selectedNode?.existing;
-  const isDirty = (selectedCst && term !== selectedCst?.term_raw) || (!selectedCst && term !== '');
+  const isDirty = isMutable && ((selectedCst && term !== selectedCst?.term_raw) || (!selectedCst && term !== ''));
+  const canSaveDirty = isDirty && term !== '';
 
   async function handleSelectNode(nextKey: string) {
     const node = items.find(item => item.key === nextKey);
@@ -80,7 +81,7 @@ export function DlgStructurePlanner() {
     }
     if (isDirty) {
       const outcome = await promptUnsaved({
-        onSave: () => saveTerm(selectedNode)
+        onSave: canSaveDirty ? () => saveTerm(selectedNode) : undefined
       });
       if (outcome === 'cancel') {
         return;
@@ -95,10 +96,24 @@ export function DlgStructurePlanner() {
   }
 
   function submitSelectedNode() {
-    if (!isMutable || !isDirty || term === '') {
+    if (!canSaveDirty) {
       return;
     }
     void saveTerm(selectedNode);
+  }
+
+  async function handleHide() {
+    if (!isDirty) {
+      hideDialog();
+      return;
+    }
+
+    const outcome = await promptUnsaved({
+      onSave: canSaveDirty ? () => saveTerm(selectedNode) : undefined
+    });
+    if (outcome !== 'cancel') {
+      hideDialog();
+    }
   }
 
   async function saveTerm(node: SPNode): Promise<void> {
@@ -112,6 +127,15 @@ export function DlgStructurePlanner() {
     } else {
       if (!target) {
         return;
+      }
+      const homonyms = currentSchema.items.filter(
+        item => item.term_raw.trim().toLocaleLowerCase() === term.trim().toLocaleLowerCase()
+      );
+      if (homonyms.length > 0) {
+        const aliases = homonyms.map(cst => cst.alias).join(', ');
+        if (!window.confirm(tx('tx.concept.homonym.confirm', { aliases }))) {
+          return;
+        }
       }
       const data: CreateConstituentaDTO = {
         insert_after: inferNewSpawnPosition(currentSchema, target.id),
@@ -141,6 +165,7 @@ export function DlgStructurePlanner() {
       fullScreen
       noFooterButton
       helpTopic={HelpTopic.UI_STRUCTURE_PLANNER}
+      onHide={() => void handleHide()}
     >
       <div className='relative flex flex-col h-full'>
         <div className={clsx('z-modal-pop', 'absolute top-0 right-1/2 translate-x-1/2 mr-12', 'flex px-6 items-start')}>
@@ -202,7 +227,7 @@ export function DlgStructurePlanner() {
                   )
                 }
                 onClick={submitSelectedNode}
-                disabled={!isDirty || term === ''}
+                disabled={!canSaveDirty}
               />
               <MiniButton
                 title={tx('tx.general.changes.reset')}

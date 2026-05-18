@@ -126,7 +126,7 @@ export function ModalForm({
           noPadding
           icon={<IconClose size='1.25rem' />}
           className='absolute z-pop top-2 right-2'
-          onClick={hideDialog}
+          onClick={handleCancel}
         />
 
         {header ? (
