@@ -50,6 +50,8 @@ const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
   [RSErrorCode.arithmeticNotSupported]: 'tx.rslang.error.arithmeticNotSupported',
   [RSErrorCode.typesNotCompatible]: 'tx.rslang.error.typesNotCompatible',
   [RSErrorCode.orderingNotSupported]: 'tx.rslang.error.orderingNotSupported',
+  [RSErrorCode.expectedLogic]: 'tx.rslang.error.expectedLogic',
+  [RSErrorCode.expectedSetexpr]: 'tx.rslang.error.expectedSetexpr',
   [RSErrorCode.globalNoValue]: 'tx.rslang.error.globalNoValue',
   [RSErrorCode.invalidPropertyUsage]: 'tx.rslang.error.invalidPropertyUsage',
   [RSErrorCode.cstEmptyDerived]: 'tx.rslang.error.cstEmptyDerived',
@@ -233,6 +235,9 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
       return globalTx(id, { arg: params[0] ?? '' });
     case RSErrorCode.arithmeticNotSupported:
     case RSErrorCode.orderingNotSupported:
+    case RSErrorCode.expectedSetexpr:
+      return globalTx(id, { type: params[0] ?? '' });
+    case RSErrorCode.expectedLogic:
       return globalTx(id, { type: params[0] ?? '' });
     case RSErrorCode.invalidProjectionTuple:
     case RSErrorCode.invalidProjectionSet:

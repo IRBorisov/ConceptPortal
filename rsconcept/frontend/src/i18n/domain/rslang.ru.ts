@@ -191,6 +191,8 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.arithmeticNotSupported': 'Тип не поддерживает арифметику: {type}',
   'tx.rslang.error.typesNotCompatible': 'Типы не совместимы для выбранной операции: {a} и {b}',
   'tx.rslang.error.orderingNotSupported': 'Тип не поддерживает предикаты порядка: {type}',
+  'tx.rslang.error.expectedLogic': 'Ожидалось логическое выражение, получено: {type}',
+  'tx.rslang.error.expectedSetexpr': 'Ожидалось теоретико-множественное выражение, получено: {type}',
   'tx.rslang.error.globalNoValue': 'Невычислимый идентификатор: {name}',
   'tx.rslang.error.invalidPropertyUsage': 'Неитерируемое множество в качестве значения',
   'tx.rslang.error.cstEmptyDerived': 'Пустое выражение для сложного понятия или утверждения',

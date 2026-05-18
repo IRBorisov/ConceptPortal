@@ -68,6 +68,8 @@ export const RSErrorCode = {
   arithmeticNotSupported: 0x8824, // 34852
   typesNotCompatible: 0x8825, // 34853
   orderingNotSupported: 0x8826, // 34854
+  expectedLogic: 0x8827, // 34855
+  expectedSetexpr: 0x8828, // 34856
 
   globalNoValue: 0x8840, // 34880
   invalidPropertyUsage: 0x8841, // 34881

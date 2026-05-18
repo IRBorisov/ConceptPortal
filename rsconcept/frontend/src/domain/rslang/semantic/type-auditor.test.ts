@@ -233,7 +233,11 @@ const errorData = [
   ['D{t ∈ X1 | ∀t∈X1 t=t}', { code: RSErrorCode.localShadowing, from: 12, to: 13, params: ['t'] }],
   // Error popup
   ['1<card(X42)', { code: RSErrorCode.globalNotTyped, from: 7, to: 10, params: ['X42'] }],
-  ['X42=X1', { code: RSErrorCode.globalNotTyped, from: 0, to: 3, params: ['X42'] }]
+  ['X42=X1', { code: RSErrorCode.globalNotTyped, from: 0, to: 3, params: ['X42'] }],
+  // Logic vs setexpr discrimination
+  ['D{α∈X1|F1[X1,X1]}', { code: RSErrorCode.expectedLogic, from: 7, to: 16, params: ['ℬ(X1)'] }],
+  ['F1[1=1,X1]', { code: RSErrorCode.expectedSetexpr, from: 3, to: 6, params: ['Logic'] }],
+  ['∀a∈(1=1) a=a', { code: RSErrorCode.expectedSetexpr, from: 3, to: 8, params: ['Logic'] }]
 ];
 
 describe('TypeAuditor', () => {

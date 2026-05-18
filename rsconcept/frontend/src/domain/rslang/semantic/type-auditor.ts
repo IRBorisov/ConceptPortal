@@ -277,11 +277,26 @@ export class TypeAuditor {
 
   private childTypification(node: AstNode, index: number): Typification | null {
     const result = this.visitChild(node, index);
-    if (result === null || !isTypification(result)) {
+    if (result === null) {
       return null;
-    } else {
-      return result as Typification;
     }
+    if (!isTypification(result)) {
+      this.onError(RSErrorCode.expectedSetexpr, node.children[index], [labelType(result)]);
+      return null;
+    }
+    return result as Typification;
+  }
+
+  private childLogic(node: AstNode, index: number): boolean {
+    const result = this.visitChild(node, index);
+    if (result === null) {
+      return false;
+    }
+    if (result.typeID !== TypeID.logic) {
+      this.onError(RSErrorCode.expectedLogic, node.children[index], [labelType(result)]);
+      return false;
+    }
+    return true;
   }
 
   private childTypeDebool(node: AstNode, index: number, errorCode: RSErrorCode): Typification | null {
@@ -469,7 +484,7 @@ export class TypeAuditor {
       return null;
     } else if (!this.visitChildDeclaration(node, 0, domain)) {
       return null;
-    } else if (!this.visitChild(node, 2)) {
+    } else if (!this.childLogic(node, 2)) {
       return null;
     }
 
@@ -774,7 +789,7 @@ export class TypeAuditor {
       return null;
     } else if (!this.visitChildDeclaration(node, 0, domain)) {
       return null;
-    } else if (!this.visitChild(node, 2)) {
+    } else if (!this.childLogic(node, 2)) {
       return null;
     }
 
@@ -786,7 +801,7 @@ export class TypeAuditor {
     this.locals.startScope();
 
     for (let child = 1; child < node.children.length; child++) {
-      if (this.visitChild(node, child) === null) {
+      if (!this.childLogic(node, child)) {
         return null;
       }
     }
@@ -867,7 +882,7 @@ export class TypeAuditor {
     }
 
     if (isFull) {
-      if (!this.visitChild(node, 2)) {
+      if (!this.childLogic(node, 2)) {
         return null;
       }
     }

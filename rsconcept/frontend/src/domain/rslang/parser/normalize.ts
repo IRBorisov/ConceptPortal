@@ -38,6 +38,7 @@ import {
   Red,
   Setexpr,
   Setexpr_binary,
+  Setexpr_enum_logic_min2,
   Setexpr_enum_min2,
   SmallPr,
   Tuple,
@@ -164,6 +165,7 @@ function normalizeNode(node: AstNode, input: string) {
       return;
 
     case Setexpr_enum_min2:
+    case Setexpr_enum_logic_min2:
       processLeftEnum(node);
       return;
 
@@ -431,7 +433,7 @@ function processTextFunction(node: AstNode) {
   if (node.children[0].typeID === TokenID.ID_FUNCTION || node.children[0].typeID === TokenID.ID_PREDICATE) {
     node.typeID = TokenID.NT_FUNC_CALL;
     clearData(node);
-    if (node.children[2].typeID === Setexpr_enum_min2) {
+    if (node.children[2].typeID === Setexpr_enum_logic_min2) {
       for (const child of node.children[2].children) {
         child.parent = node;
       }

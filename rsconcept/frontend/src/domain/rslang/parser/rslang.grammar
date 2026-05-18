@@ -108,7 +108,7 @@ Arguments {
   Arguments "," Declaration
 }
 Declaration {
-  Local "∈" Setexpr
+  Local "∈" logic_or_setexpr
 }
 Variable {
   Local |
@@ -129,8 +129,8 @@ Logic {
 }
 
 Logic_predicates {
-  Variable ":∈" Setexpr |
-  Variable ":=" Setexpr |
+  Variable ":∈" logic_or_setexpr |
+  Variable ":=" logic_or_setexpr |
   Setexpr "∈" Setexpr |
   Setexpr "∉" Setexpr |
   Setexpr "⊆" Setexpr |
@@ -146,13 +146,13 @@ Logic_predicates {
 
 Logic_unary {
   !not "¬" Logic |
-  Predicate "[" setexpr_enum "]" |
+  Predicate "[" setexpr_enum_logic "]" |
   Logic_quantor
 }
 
 Logic_quantor {
-  "∀" Variable_pack "∈" Setexpr !quant Logic |
-  "∃" Variable_pack "∈" Setexpr !quant Logic
+  "∀" Variable_pack "∈" logic_or_setexpr !quant Logic |
+  "∃" Variable_pack "∈" logic_or_setexpr !quant Logic
 }
 
 Logic_binary {
@@ -169,7 +169,7 @@ Setexpr {
   identifier |
   Setexpr_binary |
   setexpr_generators |
-  Function "[" setexpr_enum "]" |
+  Function "[" setexpr_enum_logic "]" |
   textFunction "(" Setexpr ")"
 }
 textFunction {
@@ -186,6 +186,13 @@ setexpr_enum {
 }
 Setexpr_enum_min2 {
   setexpr_enum "," Setexpr
+}
+setexpr_enum_logic {
+  logic_or_setexpr |
+  Setexpr_enum_logic_min2
+}
+Setexpr_enum_logic_min2 {
+  setexpr_enum_logic "," logic_or_setexpr
 }
 
 literal {
@@ -235,16 +242,16 @@ Filter_expression {
 }
 
 Declarative {
-  "{" Local "∈" Setexpr "|" Logic "}" |
-  PrefixD "{" Variable "∈" Setexpr "|" Logic "}"
+  "{" Local "∈" Setexpr "|" logic_or_setexpr "}" |
+  PrefixD "{" Variable "∈" Setexpr "|" logic_or_setexpr "}"
 }
 Recursion {
-  PrefixR "{" Variable ":=" Setexpr ("|" Logic)? "|" Setexpr "}"
+  PrefixR "{" Variable ":=" Setexpr ("|" logic_or_setexpr)? "|" Setexpr "}"
 }
 Imperative {
   PrefixI "{" Setexpr "|" Imp_blocks "}"
 }
 Imp_blocks {
-  Logic |
-  Imp_blocks ";" Logic
+  logic_or_setexpr |
+  Imp_blocks ";" logic_or_setexpr
 }
