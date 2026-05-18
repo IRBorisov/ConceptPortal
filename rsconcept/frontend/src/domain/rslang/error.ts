@@ -70,6 +70,7 @@ export const RSErrorCode = {
   orderingNotSupported: 0x8826, // 34854
   expectedLogic: 0x8827, // 34855
   expectedSetexpr: 0x8828, // 34856
+  invalidArgumentCortegeDeclare: 0x8829, // 34857
 
   globalNoValue: 0x8840, // 34880
   invalidPropertyUsage: 0x8841, // 34881

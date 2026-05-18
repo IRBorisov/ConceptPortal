@@ -196,6 +196,8 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.orderingNotSupported': 'Type sans prédicats d’ordre : {type}',
   'tx.rslang.error.expectedLogic': 'Expression logique attendue, obtenu : {type}',
   'tx.rslang.error.expectedSetexpr': 'Expression ensembliste attendue, obtenu : {type}',
+  'tx.rslang.error.invalidArgumentCortegeDeclare':
+    'La déclaration liée dans les arguments de fonction n’est pas autorisée ; utilisez des projections ou déclarez les variables séparément',
   'tx.rslang.error.globalNoValue': 'Identifiant non calculable : {name}',
   'tx.rslang.error.invalidPropertyUsage': 'Ensemble non itérable utilisé comme valeur',
   'tx.rslang.error.cstEmptyDerived': 'Expression vide pour une notion complexe ou un énoncé',

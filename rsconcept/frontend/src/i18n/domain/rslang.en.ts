@@ -189,6 +189,8 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.orderingNotSupported': 'Type does not support order predicates: {type}',
   'tx.rslang.error.expectedLogic': 'Logical expression expected, got: {type}',
   'tx.rslang.error.expectedSetexpr': 'Set-theoretic expression expected, got: {type}',
+  'tx.rslang.error.invalidArgumentCortegeDeclare':
+    'Linked declaration is not allowed in function arguments; use projections or declare variables separately',
   'tx.rslang.error.globalNoValue': 'Non-computable identifier: {name}',
   'tx.rslang.error.invalidPropertyUsage': 'Non-iterable set used as a value',
   'tx.rslang.error.cstEmptyDerived': 'Empty expression for a complex notion or statement',

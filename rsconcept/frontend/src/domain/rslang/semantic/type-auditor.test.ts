@@ -240,7 +240,8 @@ const errorData = [
   ['∀a∈(1=1) a=a', { code: RSErrorCode.expectedSetexpr, from: 3, to: 8, params: ['Logic'] }],
   ['∀a∈X1 F1[{a},X1]', { code: RSErrorCode.expectedLogic, from: 6, to: 16, params: ['ℬ(X1)'] }],
   ['(1=1)∪X1', { code: RSErrorCode.expectedSetexpr, from: 0, to: 5, params: ['Logic'] }],
-  ['X1 & 1=1', { code: RSErrorCode.expectedLogic, from: 0, to: 2, params: ['ℬ(X1)'] }]
+  ['X1 & 1=1', { code: RSErrorCode.expectedLogic, from: 0, to: 2, params: ['ℬ(X1)'] }],
+  ['[(a,b)∈S1] (a,b)', { code: RSErrorCode.invalidArgumentCortegeDeclare, from: 1, to: 6 }]
 ];
 
 describe('TypeAuditor', () => {

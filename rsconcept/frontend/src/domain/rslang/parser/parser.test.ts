@@ -32,7 +32,11 @@ const testSuccess = [
   ['P2[S1]', '[Expression[Logic[Logic_unary[Predicate][[][Setexpr[Global]][]]]]]'],
   [
     '[σ∈R1×R1] F6[σ]',
-    '[Expression[Function_decl[[][Arguments[Declaration[Local][∈][Setexpr[Setexpr_binary[Setexpr[Radical]][×][Setexpr[Radical]]]]]][]][Setexpr[Function][[][Setexpr[Local]][]]]]]'
+    '[Expression[Function_decl[[][Arguments[Declaration[Variable[Local]][∈][Setexpr[Setexpr_binary[Setexpr[Radical]][×][Setexpr[Radical]]]]]][]][Setexpr[Function][[][Setexpr[Local]][]]]]]'
+  ],
+  [
+    '[(α,β)∈Z×X1] (α,β)',
+    '[Expression[Function_decl[[][Arguments[Declaration[Variable[Tuple[(][Expr_enum_min2[Setexpr[Local]][,][Setexpr[Local]]][)]]][∈][Setexpr[Setexpr_binary[Setexpr[IntegerSet]][×][Setexpr[Global]]]]]][]][Setexpr[Tuple[(][Expr_enum_min2[Setexpr[Local]][,][Setexpr[Local]]][)]]]]]'
   ],
   [
     'D{ξ∈red(S1) | ξ=ξ}',
