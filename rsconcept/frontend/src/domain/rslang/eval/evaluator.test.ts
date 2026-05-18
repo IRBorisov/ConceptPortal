@@ -1,10 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { buildTree } from '@/utils/parsing';
+import { type AstNode, buildTree, visitAstDFS } from '@/utils/parsing';
 
+import { readErrorAnnotation } from '../ast-annotations';
 import { RSErrorCode, type RSErrorDescription } from '../error';
 import { normalizeAST } from '../parser/normalize';
 import { parser as rslangParser } from '../parser/parser';
+import { TokenID } from '../parser/token';
 
 import { EvaluationMetadata } from './evaluation-cache';
 import { type ASTContext, Evaluator } from './evaluator';
@@ -30,6 +32,16 @@ function setupValueContext(context: ValueContext): void {
 
 function setupTreeContext(treeContext: ASTContext): void {
   treeContext.set('F1', buildAST('[a∈ℬ(R1), b∈ℬ(R1×R2)] a∩Pr1(b)'));
+}
+
+function findFirstNode(ast: AstNode, typeID: number): AstNode | null {
+  let found: AstNode | null = null;
+  visitAstDFS(ast, node => {
+    if (found === null && node.typeID === typeID) {
+      found = node;
+    }
+  });
+  return found;
 }
 
 const correctValuesData = [
@@ -262,6 +274,42 @@ describe('Calculator', () => {
     const funcAst = buildAST('[a∈ℬ(R1), b∈Z] a\\a');
     treeContext.set('F1', funcAst);
     expectValue('F1[F1[X1, 0], 1]', '{}');
+  });
+
+  describe('error annotation', () => {
+    it('attributes evaluation errors inside a function body to the call site in the main expression', () => {
+      const funcAst = buildAST('[a∈X1] ∀b∈Z b=b');
+      treeContext.set('F9', funcAst);
+      const mainAst = buildAST('F9[X1]');
+      const callSite = findFirstNode(mainAst, TokenID.NT_FUNC_CALL);
+      expect(callSite).not.toBeNull();
+
+      const funcExpr = '[a∈X1] ∀b∈Z b=b';
+      const zOffset = funcExpr.indexOf('Z');
+      let innerErrorNode: AstNode | null = null;
+      visitAstDFS(funcAst, node => {
+        if (
+          innerErrorNode === null &&
+          node.typeID === TokenID.LIT_WHOLE_NUMBERS &&
+          node.from === zOffset &&
+          node.to === zOffset + 1
+        ) {
+          innerErrorNode = node;
+        }
+      });
+      expect(innerErrorNode).not.toBeNull();
+
+      calculator.run(mainAst, error => errors.push(error), true);
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toMatchObject({
+        code: RSErrorCode.iterateInfinity,
+        from: callSite!.from,
+        to: callSite!.to
+      });
+      expect(readErrorAnnotation(callSite!)).toMatchObject({ code: RSErrorCode.iterateInfinity });
+      expect(readErrorAnnotation(innerErrorNode!)).toBeNull();
+    });
   });
 
   describe('evaluation cache', () => {

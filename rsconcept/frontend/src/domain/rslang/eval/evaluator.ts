@@ -55,6 +55,7 @@ export class Evaluator {
   private locals: LocalContext = new LocalContext();
   private nodeMetadata: EvaluationMetadata = new EvaluationMetadata();
   private evalCache: EvaluationCache = new EvaluationCache();
+  private callSiteStack: AstNode[] = [];
   private context: ValueContext;
   private treeContext: ASTContext;
 
@@ -89,13 +90,22 @@ export class Evaluator {
   private clear(): void {
     this.locals = new LocalContext();
     this.evalCache.clear();
+    this.callSiteStack = [];
     this.iterationCounter = 0;
   }
 
+  private errorNode(node: AstNode): AstNode {
+    if (this.callSiteStack.length > 0) {
+      return this.callSiteStack[this.callSiteStack.length - 1];
+    }
+    return node;
+  }
+
   private onError(code: RSErrorCode, node: AstNode, params?: string[]): null {
-    this.reporter?.({ code, from: node.from, to: node.to, params });
+    const target = this.errorNode(node);
+    this.reporter?.({ code, from: target.from, to: target.to, params });
     if (this.annotateErrors) {
-      annotateError(node, code, params);
+      annotateError(target, code, params);
     }
     return null;
   }
@@ -306,7 +316,13 @@ export class Evaluator {
     for (let i = 0; i < args.length; i++) {
       this.dispatchDeclare(ast.children[0].children[i], args[i]);
     }
-    const result = this.visitChild(ast, 1);
+    this.callSiteStack.push(node);
+    let result: Value | null;
+    try {
+      result = this.visitChild(ast, 1);
+    } finally {
+      this.callSiteStack.pop();
+    }
     this.locals.endScope();
     return result;
   }
