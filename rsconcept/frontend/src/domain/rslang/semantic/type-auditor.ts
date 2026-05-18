@@ -493,11 +493,17 @@ export class TypeAuditor {
   }
 
   private visitNegation(node: AstNode): ExpressionType | null {
-    return this.visitAllAndReturn(node, LogicT);
+    if (!this.childLogic(node, 0)) {
+      return null;
+    }
+    return LogicT;
   }
 
   private visitLogicBinary(node: AstNode): ExpressionType | null {
-    return this.visitAllAndReturn(node, LogicT);
+    if (!this.childLogic(node, 0) || !this.childLogic(node, 1)) {
+      return null;
+    }
+    return LogicT;
   }
 
   private visitEquals(node: AstNode): ExpressionType | null {

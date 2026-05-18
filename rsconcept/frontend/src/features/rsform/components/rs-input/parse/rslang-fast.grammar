@@ -93,15 +93,15 @@
 
 // ------------------------- Language Expression ------------------------------
 @top Expression {
-  logic_or_setexpr |
+  expr_atom |
   function_decl
 }
-logic_or_setexpr	{
+expr_atom	{
   logic |
   setexpr
 }
 function_decl {
-  "[" arguments "]" logic_or_setexpr
+  "[" arguments "]" expr_atom
 }
 
 

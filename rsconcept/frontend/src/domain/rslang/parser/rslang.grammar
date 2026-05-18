@@ -7,19 +7,18 @@
 // ------------- Precedence Definitions --------------------
 ///////////////////////////////////////////////////////////
 @precedence {
+  decl @cut,
+  set_bool @right,
+  times @left,
+  plus @left minus @left,
+  set_decart @left set_union @left set_intersect @left set_minus @left set_symminus @left,
+  expr_pred @left,
+  not @right,
   quant @right,
-  not @right
-
   log_and @left,
   log_or @left,
   log_impl @left,
-  log_equiv @left,
-
-  times @left,
-  plus @left minus @left,
-
-  set_decart @left set_union @left set_intersect @left set_minus @left set_symminus @left,
-  set_bool @right  
+  log_equiv @left
 }
 
 ///////////////////////////////////////////////////////////
@@ -90,15 +89,17 @@
 
 // ------------------------- Language Expression ------------------------------
 @top Expression {
-  logic_or_setexpr |
+  expr_atom |
   Function_decl
 }
-logic_or_setexpr	{
+
+expr_atom	{
   Logic |
   Setexpr
 }
+
 Function_decl {
-  "[" Arguments "]" logic_or_setexpr
+  "[" Arguments "]" expr_atom
 }
 
 
@@ -108,7 +109,7 @@ Arguments {
   Arguments "," Declaration
 }
 Declaration {
-  Local "∈" logic_or_setexpr
+  Local "∈" expr_atom
 }
 Variable {
   Local |
@@ -129,37 +130,37 @@ Logic {
 }
 
 Logic_predicates {
-  Variable ":∈" logic_or_setexpr |
-  Variable ":=" logic_or_setexpr |
-  Setexpr "∈" Setexpr |
-  Setexpr "∉" Setexpr |
-  Setexpr "⊆" Setexpr |
-  Setexpr "⊄" Setexpr |
-  Setexpr "⊂" Setexpr |
-  Setexpr ">" Setexpr |
-  Setexpr "≥" Setexpr |
-  Setexpr "<" Setexpr |
-  Setexpr "≤" Setexpr |
-  Setexpr "≠" Setexpr |
-  Setexpr "=" Setexpr
+  Variable ":∈" expr_atom |
+  Variable ":=" expr_atom |
+  expr_atom !expr_pred "∈" expr_atom |
+  expr_atom !expr_pred "∉" expr_atom |
+  expr_atom !expr_pred "⊆" expr_atom |
+  expr_atom !expr_pred "⊄" expr_atom |
+  expr_atom !expr_pred "⊂" expr_atom |
+  expr_atom !expr_pred ">" expr_atom |
+  expr_atom !expr_pred "≥" expr_atom |
+  expr_atom !expr_pred "<" expr_atom |
+  expr_atom !expr_pred "≤" expr_atom |
+  expr_atom !expr_pred "≠" expr_atom |
+  expr_atom !expr_pred "=" expr_atom
 }
 
 Logic_unary {
-  !not "¬" Logic |
-  Predicate "[" setexpr_enum_logic "]" |
+  !not "¬" expr_atom |
+  Predicate "[" expr_enum "]" |
   Logic_quantor
 }
 
 Logic_quantor {
-  "∀" Variable_pack "∈" logic_or_setexpr !quant Logic |
-  "∃" Variable_pack "∈" logic_or_setexpr !quant Logic
+  "∀" Variable_pack "∈" expr_atom !quant expr_atom |
+  "∃" Variable_pack "∈" expr_atom !quant expr_atom
 }
 
 Logic_binary {
-  Logic !log_equiv "⇔" Logic |
-  Logic !log_impl "⇒" Logic |
-  Logic !log_or "∨" Logic |
-  Logic !log_and "&" Logic
+  expr_atom !log_equiv "⇔" expr_atom |
+  expr_atom !log_impl "⇒" expr_atom |
+  expr_atom !log_or "∨" expr_atom |
+  expr_atom !log_and "&" expr_atom
 }
 
 
@@ -169,8 +170,8 @@ Setexpr {
   identifier |
   Setexpr_binary |
   setexpr_generators |
-  Function "[" setexpr_enum_logic "]" |
-  textFunction "(" Setexpr ")"
+  Function "[" expr_enum "]" |
+  textFunction "(" expr_atom ")"
 }
 textFunction {
   BigPr |
@@ -180,19 +181,12 @@ textFunction {
   Debool |
   Red
 }
-setexpr_enum {
-  Setexpr |
-  Setexpr_enum_min2
+expr_enum {
+  expr_atom |
+  Expr_enum_min2
 }
-Setexpr_enum_min2 {
-  setexpr_enum "," Setexpr
-}
-setexpr_enum_logic {
-  logic_or_setexpr |
-  Setexpr_enum_logic_min2
-}
-Setexpr_enum_logic_min2 {
-  setexpr_enum_logic "," logic_or_setexpr
+Expr_enum_min2 {
+  expr_enum "," expr_atom
 }
 
 literal {
@@ -201,20 +195,20 @@ literal {
   IntegerSet
 }
 identifier {
-  Local |
+  Local ~local_decl |
   Global |
   Radical
 }
 
 Setexpr_binary {
-  Setexpr !times "*" Setexpr |
-  Setexpr !plus "+" Setexpr |
-  Setexpr !minus "-" Setexpr |
-  Setexpr !set_union "∪" Setexpr |
-  Setexpr !set_minus "\\" Setexpr |
-  Setexpr !set_symminus "∆" Setexpr |
-  Setexpr !set_intersect "∩" Setexpr |
-  Setexpr !set_decart "×" Setexpr |
+  expr_atom !times "*" expr_atom |
+  expr_atom !plus "+" expr_atom |
+  expr_atom !minus "-" expr_atom |
+  expr_atom !set_union "∪" expr_atom |
+  expr_atom !set_minus "\\" expr_atom |
+  expr_atom !set_symminus "∆" expr_atom |
+  expr_atom !set_intersect "∩" expr_atom |
+  expr_atom !set_decart "×" expr_atom |
   "(" Setexpr_binary ")"
 }
 
@@ -228,30 +222,30 @@ setexpr_generators {
   Recursion
 }
 Enumeration {
-  "{" setexpr_enum "}"
+  "{" expr_enum "}"
 }
 Tuple {
-  "(" Setexpr_enum_min2 ")"
+  "(" Expr_enum_min2 ")"
 }
 Boolean {
-  !set_bool "ℬ" "(" Setexpr ")" |
+  !set_bool "ℬ" "(" expr_atom ")" |
   !set_bool "ℬ" Boolean
 }
 Filter_expression {
-  Filter "[" setexpr_enum "]" "(" Setexpr ")"
+  Filter "[" expr_enum "]" "(" expr_atom ")"
 }
 
 Declarative {
-  "{" Local "∈" Setexpr "|" logic_or_setexpr "}" |
-  PrefixD "{" Variable "∈" Setexpr "|" logic_or_setexpr "}"
+  "{" Local ~local_decl "∈" expr_atom "|" expr_atom "}" |
+  PrefixD "{" Variable "∈" expr_atom "|" expr_atom "}"
 }
 Recursion {
-  PrefixR "{" Variable ":=" Setexpr ("|" logic_or_setexpr)? "|" Setexpr "}"
+  PrefixR "{" Variable ":=" expr_atom ("|" expr_atom)? "|" expr_atom "}"
 }
 Imperative {
-  PrefixI "{" Setexpr "|" Imp_blocks "}"
+  PrefixI "{" expr_atom "|" Imp_blocks "}"
 }
 Imp_blocks {
-  logic_or_setexpr |
-  Imp_blocks ";" logic_or_setexpr
+  expr_atom |
+  Imp_blocks ";" expr_atom
 }

@@ -237,7 +237,10 @@ const errorData = [
   // Logic vs setexpr discrimination
   ['D{α∈X1|F1[X1,X1]}', { code: RSErrorCode.expectedLogic, from: 7, to: 16, params: ['ℬ(X1)'] }],
   ['F1[1=1,X1]', { code: RSErrorCode.expectedSetexpr, from: 3, to: 6, params: ['Logic'] }],
-  ['∀a∈(1=1) a=a', { code: RSErrorCode.expectedSetexpr, from: 3, to: 8, params: ['Logic'] }]
+  ['∀a∈(1=1) a=a', { code: RSErrorCode.expectedSetexpr, from: 3, to: 8, params: ['Logic'] }],
+  ['∀a∈X1 F1[{a},X1]', { code: RSErrorCode.expectedLogic, from: 6, to: 16, params: ['ℬ(X1)'] }],
+  ['(1=1)∪X1', { code: RSErrorCode.expectedSetexpr, from: 0, to: 5, params: ['Logic'] }],
+  ['X1 & 1=1', { code: RSErrorCode.expectedLogic, from: 0, to: 2, params: ['ℬ(X1)'] }]
 ];
 
 describe('TypeAuditor', () => {

@@ -26,7 +26,7 @@ const testSuccess = [
   ['debool(X1)', '[Expression[Setexpr[Debool][(][Setexpr[Global]][)]]]'],
   [
     'Fi1,2[ξ, ξ](ξ)',
-    '[Expression[Setexpr[Filter_expression[Filter][[][Setexpr_enum_min2[Setexpr[Local]][,][Setexpr[Local]]][]][(][Setexpr[Local]][)]]]]'
+    '[Expression[Setexpr[Filter_expression[Filter][[][Expr_enum_min2[Setexpr[Local]][,][Setexpr[Local]]][]][(][Setexpr[Local]][)]]]]'
   ],
   ['ℬℬ(X1)', '[Expression[Setexpr[Boolean[ℬ][Boolean[ℬ][(][Setexpr[Global]][)]]]]]'],
   ['P2[S1]', '[Expression[Logic[Logic_unary[Predicate][[][Setexpr[Global]][]]]]]'],
@@ -40,7 +40,7 @@ const testSuccess = [
   ],
   [
     'I{(σ, γ) | σ:∈X1; γ:=F1[σ]; P1[σ, γ]}',
-    '[Expression[Setexpr[Imperative[PrefixI][{][Setexpr[Tuple[(][Setexpr_enum_min2[Setexpr[Local]][,][Setexpr[Local]]][)]]][|][Imp_blocks[Imp_blocks[Imp_blocks[Logic[Logic_predicates[Variable[Local]][:∈][Setexpr[Global]]]]][;][Logic[Logic_predicates[Variable[Local]][:=][Setexpr[Function][[][Setexpr[Local]][]]]]]][;][Logic[Logic_unary[Predicate][[][Setexpr_enum_logic_min2[Setexpr[Local]][,][Setexpr[Local]]][]]]]][}]]]]'
+    '[Expression[Setexpr[Imperative[PrefixI][{][Setexpr[Tuple[(][Expr_enum_min2[Setexpr[Local]][,][Setexpr[Local]]][)]]][|][Imp_blocks[Imp_blocks[Imp_blocks[Logic[Logic_predicates[Variable[Local]][:∈][Setexpr[Global]]]]][;][Logic[Logic_predicates[Variable[Local]][:=][Setexpr[Function][[][Setexpr[Local]][]]]]]][;][Logic[Logic_unary[Predicate][[][Expr_enum_min2[Setexpr[Local]][,][Setexpr[Local]]][]]]]][}]]]]'
   ],
   [
     'R{ξ:=D1 | F1[ξ]≠∅ | ξ∪F1[ξ]}',
@@ -62,11 +62,7 @@ const testSuccess = [
 
 const testError = [
   ['', '[Expression[⚠]]'],
-  ['!', '[Expression[⚠]]'],
-  [
-    '∀a∈X1 D{b∈S1| 1=1}',
-    '[Expression[Logic[Logic_unary[Logic_quantor[∀][Variable_pack[Variable[Local]]][∈][Setexpr[Global]][Logic[Logic_predicates[Setexpr[Declarative[PrefixD][{][Variable[Local]][∈][Setexpr[Global]][|][Logic[Logic_predicates[Setexpr[Integer]][=][Setexpr[Integer]]]][}]]][⚠]]]]]]]'
-  ]
+  ['!', '[Expression[⚠]]']
 ];
 
 const testErrorData = [
