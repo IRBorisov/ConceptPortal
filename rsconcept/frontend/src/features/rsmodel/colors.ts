@@ -1,4 +1,6 @@
 import { EvalStatus } from '@/domain/library';
+import { type ExpressionType, TypeID, type Value } from '@/domain/rslang';
+import { VALUE_FALSE } from '@/domain/rslang/eval/value';
 
 import { APP_COLORS } from '@/styling/colors';
 
@@ -17,7 +19,13 @@ export function colorBgEvalStatus(status: EvalStatus): string {
 }
 
 /** Determines foreground color for {@link EvalStatus}. */
-export function colorFgEvalStatus(status: EvalStatus): string {
+export function colorFgEvalStatus(value: Value | null, type: ExpressionType | null, status: EvalStatus): string {
+  if (type?.typeID === TypeID.logic) {
+    if (value === VALUE_FALSE && status === EvalStatus.HAS_DATA) {
+      return APP_COLORS.fgTeal;
+    }
+  }
+
   // prettier-ignore
   switch (status) {
     case EvalStatus.NO_EVAL: return APP_COLORS.fgDefault;

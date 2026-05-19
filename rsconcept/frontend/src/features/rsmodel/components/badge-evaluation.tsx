@@ -22,7 +22,7 @@ export function BadgeEvaluation({ engine, cst }: BadgeEvaluationProps) {
     <div
       className='font-math text-md'
       style={{
-        color: colorFgEvalStatus(status)
+        color: colorFgEvalStatus(value, cst.effectiveType, status)
       }}
       data-tooltip-id={globalIDs.tooltip}
       data-tooltip-content={labelEvalStatus(status)}
