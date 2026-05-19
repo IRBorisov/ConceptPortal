@@ -126,7 +126,7 @@ export function TableSideConstituents({
     <DataTable
       dense
       noFooter
-      className='text-sm select-none cc-scroll-y [&_thead_th]:py-1'
+      className='text-sm select-none cc-scroll-y [&_thead_th]:py-1 cc-fade-in'
       style={maxHeight ? { maxHeight: maxHeight } : {}}
       data={items}
       columns={columns}
