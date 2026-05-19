@@ -18,7 +18,7 @@ export const CstType = {
   FUNCTION: 'function',
   PREDICATE: 'predicate',
   CONSTANT: 'constant',
-  THEOREM: 'theorem'
+  STATEMENT: 'statement'
 } as const;
 export type CstType = (typeof CstType)[keyof typeof CstType];
 
@@ -180,7 +180,7 @@ export interface RSFormStats {
   count_term: number;
   count_function: number;
   count_predicate: number;
-  count_theorem: number;
+  count_statement: number;
   count_nominal: number;
 }
 

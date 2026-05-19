@@ -12,9 +12,9 @@ import {
   IconCstFunction,
   IconCstNominal,
   IconCstPredicate,
+  IconCstStatement,
   IconCstStructured,
   IconCstTerm,
-  IconCstTheorem,
   IconDownload,
   IconEmptyTerm,
   IconGraphCollapse,
@@ -165,7 +165,7 @@ export function HelpThesaurusRu() {
           заданные аргументы на соответствие некоторому условию.
         </li>
         <li>
-          <IconCstTheorem className='inline-icon' />
+          <IconCstStatement className='inline-icon' />
           {'\u2009'}Высказывание (T#) – предметно значимое утверждение, которое может быть как истинным так и ложным в
           зависимости от интерпретации неопределяемых понятий.
         </li>

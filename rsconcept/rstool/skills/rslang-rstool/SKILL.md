@@ -66,7 +66,7 @@ MCP/HTTP adapters in rstool are **not implemented**; use library API or stdio/cl
 | `nominal` | `S1` | Allowed (naming) |
 | `structure` | structured genus | Allowed |
 | `term` | `D1` | Allowed (set-theoretic / term) |
-| `axiom`, `theorem` | `A1`, `T1` | Logical (`Logic` typification) |
+| `axiom`, `statement` | `A1`, `T1` | Logical (`Logic` typification) |
 | `function` | `F1` | Parameterized |
 | `predicate` | `P1` | Parameterized |
 

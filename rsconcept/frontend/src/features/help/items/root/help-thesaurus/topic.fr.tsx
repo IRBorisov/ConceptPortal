@@ -12,9 +12,9 @@ import {
   IconCstFunction,
   IconCstNominal,
   IconCstPredicate,
+  IconCstStatement,
   IconCstStructured,
   IconCstTerm,
-  IconCstTheorem,
   IconDownload,
   IconEmptyTerm,
   IconGraphCollapse,
@@ -160,7 +160,7 @@ export function HelpThesaurusFr() {
           {'\u2009'}Fonction-prédicat (P#) — concept dérivé agissant comme expression logique testant les arguments.
         </li>
         <li>
-          <IconCstTheorem className='inline-icon' />
+          <IconCstStatement className='inline-icon' />
           {'\u2009'}Énoncé (T#) — assertion matériellement significative, pouvant être vraie ou fausse selon
           l&apos;interprétation des concepts non définis.
         </li>

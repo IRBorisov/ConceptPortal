@@ -73,7 +73,7 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
           { label: tx('tx.cst.type.term'), value: stats.count_term },
           { label: tx('tx.cst.type.function'), value: stats.count_function },
           { label: tx('tx.cst.type.predicate'), value: stats.count_predicate },
-          ...(stats.count_theorem > 0 ? [{ label: tx('tx.cst.type.theorem'), value: stats.count_theorem }] : [])
+          ...(stats.count_statement > 0 ? [{ label: tx('tx.cst.type.statement'), value: stats.count_statement }] : [])
         ]}
       />
 

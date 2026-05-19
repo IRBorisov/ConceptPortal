@@ -267,7 +267,7 @@ export const txLibraryFr: Record<string, string> = {
   'tx.cst.type.term.validate.emptyValue': 'Valeur de terme vide',
   'tx.cst.type.function': 'Fonction terme',
   'tx.cst.type.predicate': 'Fonction prédicat',
-  'tx.cst.type.theorem': 'Énoncé',
+  'tx.cst.type.statement': 'Énoncé',
 
   'tx.cst.class': 'Classe de la constituante',
   'tx.cst.class.hint': 'Notation de la classe de la constituante',

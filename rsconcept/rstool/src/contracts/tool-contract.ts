@@ -1,4 +1,4 @@
-export const CONTRACT_VERSION = '1.0.0';
+export const CONTRACT_VERSION = '1.1.0';
 export const RSToolErrorCode = {
   formalDefinitionNotAllowed: 0x8862
 } as const;
@@ -12,7 +12,7 @@ export const CstType = {
   FUNCTION: 'function',
   PREDICATE: 'predicate',
   CONSTANT: 'constant',
-  THEOREM: 'theorem'
+  STATEMENT: 'statement'
 } as const;
 export type CstType = (typeof CstType)[keyof typeof CstType];
 

@@ -15,6 +15,23 @@ _TRS_VERSION_MIN = 16
 _TRS_VERSION = 16
 _TRS_HEADER = 'Exteor 4.8.13.1000 - 30/05/2022'
 
+# Legacy TRS file format value for statement constituents (unchanged on disk).
+_CST_TYPE_TRS_STATEMENT = 'theorem'
+
+
+def _cst_type_from_trs(trs_value: str) -> str:
+    ''' Normalize TRS cstType to domain cst_type. '''
+    if trs_value == _CST_TYPE_TRS_STATEMENT:
+        return CstType.STATEMENT
+    return trs_value
+
+
+def _cst_type_to_trs(domain_value: str) -> str:
+    ''' Convert domain cst_type to TRS cstType wire value. '''
+    if domain_value == CstType.STATEMENT:
+        return _CST_TYPE_TRS_STATEMENT
+    return domain_value
+
 
 class FileSerializer(StrictSerializer):
     ''' Serializer: File input. '''
@@ -48,7 +65,7 @@ class RSFormTRSSerializer(serializers.Serializer):
             result['items'].append({
                 'entityUID': cst['id'],
                 'type': _ENTITY_CONSTITUENTA,
-                'cstType': cst['cst_type'],
+                'cstType': _cst_type_to_trs(cst['cst_type']),
                 'alias': cst['alias'],
                 'convention': cst['convention'],
                 'term': {
@@ -115,7 +132,7 @@ class RSFormTRSSerializer(serializers.Serializer):
                 alias=cst_data['alias'],
                 schema_id=self.instance.pk,
                 order=order,
-                cst_type=cst_data['cstType'],
+                cst_type=_cst_type_from_trs(cst_data['cstType']),
             )
             self._load_cst_texts(cst, cst_data)
             cst.save()
@@ -142,7 +159,7 @@ class RSFormTRSSerializer(serializers.Serializer):
                 cst: Constituenta = prev_constituents.get(pk=uid)
                 cst.order = order
                 cst.alias = cst_data['alias']
-                cst.cst_type = cst_data['cstType']
+                cst.cst_type = _cst_type_from_trs(cst_data['cstType'])
                 self._load_cst_texts(cst, cst_data)
                 cst.save()
             else:
@@ -150,7 +167,7 @@ class RSFormTRSSerializer(serializers.Serializer):
                     alias=cst_data['alias'],
                     schema_id=instance.pk,
                     order=order,
-                    cst_type=cst_data['cstType'],
+                    cst_type=_cst_type_from_trs(cst_data['cstType']),
                 )
                 self._load_cst_texts(cst, cst_data)
                 cst.save()
@@ -277,7 +294,7 @@ def create_rsform_from_sandbox_data(
             schema_id=instance.pk,
             order=order,
             alias=item['alias'],
-            cst_type=item['cst_type'],
+            cst_type=_cst_type_from_trs(item['cst_type']),
             convention=item.get('convention', ''),
             crucial=item.get('crucial', False),
             value_is_property=item.get('value_is_property', False),

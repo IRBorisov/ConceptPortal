@@ -3,7 +3,7 @@
 ## rstool contract
 
 - Package: `rsconcept/rstool` (`@rsconcept/rstool`, private)
-- Contract version: `1.0.0` (`CONTRACT_VERSION`)
+- Contract version: `1.1.0` (`CONTRACT_VERSION`)
 - Core class: `RSFormAgentTool` — `src/index.ts`
 - Types: `src/contracts/tool-contract.ts`
 
@@ -40,7 +40,7 @@ Omitted text fields default to `''` in stored state.
 
 Process: `npm run wrapper` → `tsx src/wrapper/stdio-wrapper.ts`
 
-1. **Ready** (no request): `{"id":null,"ok":true,"result":{"ready":true,"wrapper":"rstool-stdio","contractVersion":"1.0.0"}}`
+1. **Ready** (no request): `{"id":null,"ok":true,"result":{"ready":true,"wrapper":"rstool-stdio","contractVersion":"1.1.0"}}`
 2. **Request**: `{"id":"<unique>","method":"<name>","params":{...}}`
 3. **Response**: `{"id":"<same>","ok":true,"result":...}` or `{"id":"...","ok":false,"error":{"code":"...","message":"..."}}`
 

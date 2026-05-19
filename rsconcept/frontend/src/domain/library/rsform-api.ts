@@ -38,7 +38,7 @@ const CST_TYPE_PREFIX: Record<CstType, string> = {
   [CstType.TERM]: 'D',
   [CstType.FUNCTION]: 'F',
   [CstType.PREDICATE]: 'P',
-  [CstType.THEOREM]: 'T'
+  [CstType.STATEMENT]: 'T'
 };
 
 /** Record of {@link CstType} to {@link CstClass} mapping. */
@@ -51,7 +51,7 @@ const CST_TYPE_TO_CLASS: Record<CstType, CstClass> = {
   [CstType.FUNCTION]: CstClass.DERIVED,
   [CstType.AXIOM]: CstClass.STATEMENT,
   [CstType.PREDICATE]: CstClass.DERIVED,
-  [CstType.THEOREM]: CstClass.STATEMENT
+  [CstType.STATEMENT]: CstClass.STATEMENT
 };
 
 /** Checks if a given target {@link Constituenta} matches the specified query. */
@@ -126,7 +126,7 @@ export function inferClass(type: CstType, isTemplate: boolean = false): CstClass
 
 /** Check if {@link Constituenta} is a template or a category. */
 export function isTemplateCst(cst: Constituenta): boolean {
-  return cst.cst_type === CstType.FUNCTION || cst.cst_type === CstType.PREDICATE || cst.cst_type === CstType.THEOREM;
+  return cst.cst_type === CstType.FUNCTION || cst.cst_type === CstType.PREDICATE || cst.cst_type === CstType.STATEMENT;
 }
 
 /** Apply filter based on start {@link Constituenta} type. */
@@ -135,7 +135,7 @@ export function applyFilterCategory(start: Constituenta, items: Constituenta[]):
   if (startIndex === -1) {
     return [];
   }
-  const nextCategoryIndex = items.findIndex((cst, index) => index > startIndex && cst.cst_type === CstType.THEOREM);
+  const nextCategoryIndex = items.findIndex((cst, index) => index > startIndex && cst.cst_type === CstType.STATEMENT);
 
   return items.filter((_, index) => index >= startIndex && (nextCategoryIndex === -1 || index < nextCategoryIndex));
 }
@@ -171,7 +171,7 @@ export function isBasicConcept(type: CstType): boolean {
     case CstType.TERM:
     case CstType.FUNCTION:
     case CstType.PREDICATE:
-    case CstType.THEOREM:
+    case CstType.STATEMENT:
       return false;
   }
 }
@@ -189,7 +189,7 @@ export function isBaseSet(type: CstType): boolean {
     case CstType.TERM:
     case CstType.FUNCTION:
     case CstType.PREDICATE:
-    case CstType.THEOREM:
+    case CstType.STATEMENT:
       return false;
   }
 }
@@ -207,7 +207,7 @@ export function isFunctional(type: CstType): boolean {
     case CstType.STRUCTURED:
     case CstType.AXIOM:
     case CstType.TERM:
-    case CstType.THEOREM:
+    case CstType.STATEMENT:
       return false;
   }
 }
@@ -216,7 +216,7 @@ export function isFunctional(type: CstType): boolean {
 export function isLogical(type: CstType): boolean {
   switch (type) {
     case CstType.AXIOM:
-    case CstType.THEOREM:
+    case CstType.STATEMENT:
       return true;
 
     case CstType.NOMINAL:
@@ -237,7 +237,7 @@ export function canProduceStructure(cst: RO<Constituenta>): boolean {
     case CstType.BASE:
     case CstType.CONSTANT:
     case CstType.AXIOM:
-    case CstType.THEOREM:
+    case CstType.STATEMENT:
     case CstType.PREDICATE:
       return false;
   }
@@ -267,7 +267,7 @@ export function canHaveManualTypification(type: CstType): boolean {
     case CstType.BASE:
     case CstType.CONSTANT:
     case CstType.AXIOM:
-    case CstType.THEOREM:
+    case CstType.STATEMENT:
       return false;
   }
 }
@@ -371,7 +371,7 @@ export function typeClassForCstType(cstType: CstType): TypeClass {
     case CstType.PREDICATE:
       return TypeClass.predicate;
     case CstType.AXIOM:
-    case CstType.THEOREM:
+    case CstType.STATEMENT:
       return TypeClass.logic;
   }
 }
@@ -450,7 +450,7 @@ export function calculateSchemaStats(target: RSForm): RSFormStats {
     count_term: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.TERM ? 1 : 0), 0),
     count_function: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.FUNCTION ? 1 : 0), 0),
     count_predicate: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.PREDICATE ? 1 : 0), 0),
-    count_theorem: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.THEOREM ? 1 : 0), 0),
+    count_statement: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.STATEMENT ? 1 : 0), 0),
     count_nominal: items.reduce((sum, cst) => sum + (cst.cst_type === CstType.NOMINAL ? 1 : 0), 0)
   };
 }

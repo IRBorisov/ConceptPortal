@@ -24,7 +24,7 @@ class CstType(TextChoices):
     TERM = 'term'
     FUNCTION = 'function'
     PREDICATE = 'predicate'
-    THEOREM = 'theorem'
+    STATEMENT = 'statement'
 
 
 class Constituenta(Model):

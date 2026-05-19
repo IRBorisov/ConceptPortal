@@ -110,7 +110,7 @@ function toFrontendCstType(cstType: ConstituentaDraft['cstType']): CstType {
       return CstType.PREDICATE;
     case PublicCstType.AXIOM:
       return CstType.AXIOM;
-    case PublicCstType.THEOREM:
-      return CstType.THEOREM;
+    case PublicCstType.STATEMENT:
+      return CstType.STATEMENT;
   }
 }

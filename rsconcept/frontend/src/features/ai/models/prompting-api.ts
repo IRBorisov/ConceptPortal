@@ -65,7 +65,7 @@ export function varSchemaThesaurus(schema: RSForm): string {
   let result = stringifySchemaIntro(schema);
   result += '\n\nТермины:';
   for (const item of schema.items) {
-    if (item.cst_type === CstType.AXIOM || item.cst_type === CstType.THEOREM) {
+    if (item.cst_type === CstType.AXIOM || item.cst_type === CstType.STATEMENT) {
       continue;
     }
     if (isBasicConcept(item.cst_type)) {
