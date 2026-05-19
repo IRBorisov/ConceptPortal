@@ -2,6 +2,10 @@
 
 Library-first implementation for LLM agents that incrementally build RSForm and validate expressions using existing frontend RSLang domain code.
 
+## Agent skill
+
+RS language + rstool workflows for agents: `skills/rslang-rstool/` (`SKILL.md`, `REFERENCE.md`, `EXAMPLES.md`). Install into Cursor via `skills/README.md` (copy to `.agents/skills/rslang-rstool/`).
+
 ## Scope
 
 - Session-based incremental editing of constituents.

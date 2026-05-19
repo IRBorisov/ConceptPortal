@@ -1,0 +1,312 @@
+{
+  "contractVersion": "1.0.0",
+  "state": {
+    "sessionId": "2b7ee5a6-a411-4de5-9492-e2749c75b697",
+    "createdAt": "2026-05-19T05:17:15.027Z",
+    "updatedAt": "2026-05-19T05:17:15.052Z",
+    "revisions": [
+      {
+        "revisionId": "5e69bd03-e391-45dc-a512-f2c1c8fbad12",
+        "at": "2026-05-19T05:17:15.052Z",
+        "message": "КС «родственные отношения»: F6 «дети», рефакторинг Pr2(Fi1[·](S1))"
+      }
+    ],
+    "items": [
+      {
+        "id": 1,
+        "alias": "X1",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "люди",
+        "convention": "Базисное множество людей предметной области «родственные отношения».",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 2,
+        "alias": "S1",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X1×X1)",
+        "term": "родитель-ребенок",
+        "convention": "Элементы — пары (p, c): p — родитель, c — ребёнок; p, c ∈ X1. Отношение задаётся конвенцией на предметной области.",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 3,
+        "alias": "D1",
+        "cstType": "term",
+        "definitionFormal": "Pr1(S1)",
+        "term": "родители",
+        "definitionText": "Множество людей, выступающих в роли родителя хотя бы для одного ребёнка.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 4,
+        "alias": "F1",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] Pr1(Fi2[{ξ}](S1))",
+        "term": "родители данного человека",
+        "definitionText": "Для человека ξ — множество его родителей (первая проекция пар из S1, у которых вторая проекция равна ξ).",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 10,
+        "alias": "F6",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(X1)] Pr2(Fi1[σ](S1))",
+        "term": "дети",
+        "definitionText": "Прямые дети людей из σ: вторая проекция пар из S1, у которых родитель (первая проекция) лежит в σ. Для одного человека ξ используют F6[{ξ}].",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "X1"
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
+        "alias": "D2",
+        "cstType": "term",
+        "definitionFormal": "Pr2(S1)",
+        "term": "потомки",
+        "definitionText": "Множество людей, выступающих ребёнком хотя бы в одной паре из S1 (симметрично терму «родители»).",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 6,
+        "alias": "F2",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] R{ρ:=F6[{ξ}] | ρ≠∅ | ρ∪F6[ρ]}",
+        "term": "потомки данного человека",
+        "definitionText": "Для человека ξ — транзитивное замыкание отношения «ребёнок»: прямые дети, внуки и все последующие поколения.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 7,
+        "alias": "F3",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] D{μ∈X1 | ∃p∈F1[ξ] μ∈F1[p] & μ≠ξ}",
+        "term": "братья и сестры данного человека",
+        "definitionText": "Люди μ ≠ ξ, у которых есть общий с ξ родитель (в т.ч. сводные братья и сестры при одном общем родителе).",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 8,
+        "alias": "F4",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] D{κ∈X1 | ∃μ∈F3[ξ] κ∈F6[{μ}] & κ∉F2[ξ]}",
+        "term": "племянники данного человека",
+        "definitionText": "Прямые дети братьев и сестёр ξ, не входящие в множество потомков самого ξ.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 9,
+        "alias": "F5",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] D{ν∈X1 | ∃κ∈F4[ξ] ν∈F6[{κ}]}",
+        "term": "внучатые племянники данного человека",
+        "definitionText": "Прямые дети племянников ξ: потомки братьев/сестёр на два поколения ниже (ребёнок племянника или племянницы).",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      }
+    ]
+  },
+  "diagnostics": []
+}

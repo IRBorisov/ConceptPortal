@@ -1,0 +1,75 @@
+# AGENTS.md
+
+Rules for agents in `rsconcept/rstool`.
+
+## Scope
+
+Applies to all files under `rsconcept/rstool`.
+
+## Structure
+
+- `src/contracts/tool-contract.ts` — public contract (`CONTRACT_VERSION`, types, `RSFormAgentToolContract`)
+- `src/index.ts` — `RSFormAgentTool` implementation
+- `src/wrapper/stdio-wrapper.ts` — stdio JSON-RPC-style transport (`METHODS` must match contract)
+- `src/wrapper/client.ts` — `RSToolWrapperClient` for spawned wrapper
+- `src/mappers/` — bridge to frontend `rslang` / RSForm analysis
+- `tests/` — contract and behavior tests
+- `examples/` — runnable agent workflows and sample session JSON
+- `README.md` — setup, stdio protocol, scripts
+- `skills/rslang-rstool/` — **versioned** agent skill (source of truth in git)
+
+Agent-facing docs (keep in sync with contract changes):
+
+- `skills/rslang-rstool/SKILL.md` — primary skill entry
+- `skills/rslang-rstool/REFERENCE.md` — API, stdio, error codes
+- `skills/rslang-rstool/EXAMPLES.md` — worked examples and pitfalls
+
+After editing the skill, sync to local Cursor: copy `skills/rslang-rstool/` → `.agents/skills/rslang-rstool/` (see `skills/README.md`; `.agents/` is gitignored).
+
+## Commands
+
+Run from `rsconcept/rstool`:
+
+- Typecheck: `npm run typecheck`
+- Tests: `npm test`
+- Stdio wrapper: `npm run wrapper`
+- Examples: `npm run example:client`, `npm run example:build-sample`; other scripts under `examples/` as added to `package.json`
+
+## Edit rules
+
+- Contract surface changes live in `tool-contract.ts` first; implement in `index.ts` and wire stdio in `stdio-wrapper.ts`.
+- Analyzer / RSLang behavior: prefer changes in `rsconcept/frontend/src/domain/rslang` and adapt via `src/mappers/frontend-domain-adapter.ts` — do not fork language rules in rstool.
+- New or renamed public methods: update `METHODS` in `stdio-wrapper.ts`, tests, `README.md`, and the skill (see checklist below).
+- Function arg order changes: update all callsites (wrapper, client, examples, tests).
+
+## Contract changes — update the skill
+
+Whenever you change the **agent contract** (not internal refactors), update documentation in the same PR / change set. Do not leave the skill stale.
+
+**Counts as a contract change:**
+
+- `CONTRACT_VERSION` bump
+- New/removed/renamed methods on `RSFormAgentTool` or stdio `method` names
+- Changes to request/response shapes (`ConstituentaDraft`, `SessionState`, `AnalysisResult`, filters, export JSON)
+- New `CstType` values or validation rules agents must follow (e.g. empty formal on `basic` / `constant`)
+- New exported error codes in `RSToolErrorCode` that agents should handle
+- Stdio protocol (ready handshake, error `code` strings, param field names)
+
+**Sync checklist** (tick all that apply):
+
+- [ ] `src/contracts/tool-contract.ts`
+- [ ] `src/index.ts` + `src/wrapper/stdio-wrapper.ts` (`METHODS` + handlers)
+- [ ] `tests/rsform-agent-tool.test.ts` (and any new tests)
+- [ ] `README.md` (methods list, examples, contract version if documented)
+- [ ] `skills/rslang-rstool/SKILL.md` — workflow, `cstType` table, triggers if behavior changed
+- [ ] `skills/rslang-rstool/REFERENCE.md` — method table, types, stdio examples, version string
+- [ ] `skills/rslang-rstool/EXAMPLES.md` — if examples or common mistakes changed
+- [ ] Copy updated skill to `.agents/skills/rslang-rstool/` for local Cursor (not committed)
+- [ ] `examples/*.ts` and sample JSON under `examples/` when the happy path changes
+
+**Language-only changes** (grammar, new `RSErrorCode` in frontend, help text): update skill only if agents need new guidance (operators, declaration order, diagnostic handling). Reference `REFERENCE.md` help map and `rsconcept/frontend/src/domain/rslang/error.ts`; do not duplicate full grammar in the skill.
+
+## Versioning
+
+- Bump `CONTRACT_VERSION` in `tool-contract.ts` for breaking agent-visible changes.
+- Mention the new version in `REFERENCE.md` and anywhere the skill quotes `1.0.0` explicitly.

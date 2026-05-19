@@ -5,7 +5,7 @@ Workspace rules for agents.
 ## Scope
 
 - Applies repo-wide unless nearer `AGENTS.md` exists.
-- Read nearest rules before editing: `rsconcept/frontend/AGENTS.md`, `rsconcept/backend/AGENTS.md`.
+- Read nearest rules before editing: `rsconcept/frontend/AGENTS.md`, `rsconcept/backend/AGENTS.md`, `rsconcept/rstool/AGENTS.md`.
 
 ## Structure
 
