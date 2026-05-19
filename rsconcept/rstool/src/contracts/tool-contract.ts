@@ -38,12 +38,24 @@ export interface SessionRevision {
 
 export interface ConstituentaDraft {
   id: number;
+  /** Alias */
   alias: string;
+  /** CST type */
   cstType: CstType;
+  /** Formal definition */
   definitionFormal: string;
+  /** Natural-language term */
+  term?: string;
+  /** Natural-language definition */
+  definitionText?: string;
+  /** Convention or comment */
+  convention?: string;
 }
 
-export interface ConstituentaState extends ConstituentaDraft {
+export interface ConstituentaState extends Omit<ConstituentaDraft, 'term' | 'definitionText' | 'convention'> {
+  term: string;
+  definitionText: string;
+  convention: string;
   analysis: AnalysisResult;
 }
 

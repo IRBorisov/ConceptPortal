@@ -52,7 +52,11 @@ async function run() {
         sessionId: session.sessionId,
         input
       });
-      console.log(`Added ${input.draft.alias}:`, (result as { diagnostics?: unknown[] }).diagnostics?.length ?? 0, 'diagnostics');
+      console.log(
+        `Added ${input.draft.alias}:`,
+        (result as { diagnostics?: unknown[] }).diagnostics?.length ?? 0,
+        'diagnostics'
+      );
     }
 
     await client.call('commitStep', {

@@ -26,7 +26,10 @@ export class RSFormAgentTool implements RSFormAgentToolContract {
     return this.sessions.create(initial, this.contractVersion);
   }
 
-  public addOrUpdateConstituenta(sessionId: string, input: AddOrUpdateConstituentaInput): AddOrUpdateConstituentaResult {
+  public addOrUpdateConstituenta(
+    sessionId: string,
+    input: AddOrUpdateConstituentaInput
+  ): AddOrUpdateConstituentaResult {
     const envelope = this.sessions.get(sessionId);
     const { result, diagnostics } = this.adapter.analyzeAgainstSession(envelope.state, input.draft);
     const state = this.adapter.mergeStateWithDraft(envelope.state, input.draft, result);

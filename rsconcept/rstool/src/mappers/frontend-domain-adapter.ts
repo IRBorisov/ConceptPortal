@@ -13,7 +13,10 @@ import {
 import { toPublicAnalysis, toPublicError } from './types';
 
 export class FrontendDomainAdapter {
-  public analyzeAgainstSession(session: SessionState, draft: ConstituentaDraft): { result: AnalysisResult; diagnostics: DiagnosticRecord[] } {
+  public analyzeAgainstSession(
+    session: SessionState,
+    draft: ConstituentaDraft
+  ): { result: AnalysisResult; diagnostics: DiagnosticRecord[] } {
     const analyzer = this.buildAnalyzer(session);
     const schema = this.toPseudoRSFormState(session, analyzer);
     const analysis = getAnalysisFor(
@@ -39,9 +42,16 @@ export class FrontendDomainAdapter {
     };
   }
 
-  public mergeStateWithDraft(session: SessionState, draft: ConstituentaDraft, analysis: AnalysisResult): ConstituentaState {
+  public mergeStateWithDraft(
+    session: SessionState,
+    draft: ConstituentaDraft,
+    analysis: AnalysisResult
+  ): ConstituentaState {
     const state: ConstituentaState = {
       ...draft,
+      term: draft.term ?? '',
+      definitionText: draft.definitionText ?? '',
+      convention: draft.convention ?? '',
       analysis
     };
     const index = session.items.findIndex(item => item.id === draft.id);
@@ -54,7 +64,10 @@ export class FrontendDomainAdapter {
     return state;
   }
 
-  public toPseudoRSFormState(session: SessionState, analyzer: RSLangAnalyzer): Pick<RSForm, 'items' | 'cstByAlias' | 'analyzer'> {
+  public toPseudoRSFormState(
+    session: SessionState,
+    analyzer: RSLangAnalyzer
+  ): Pick<RSForm, 'items' | 'cstByAlias' | 'analyzer'> {
     const cstByAlias = new Map(session.items.map(item => [item.alias, item]));
     return {
       items: session.items as unknown as RSForm['items'],

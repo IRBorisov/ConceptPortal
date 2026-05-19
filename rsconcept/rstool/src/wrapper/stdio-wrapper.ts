@@ -67,7 +67,11 @@ function handleRequest(request: StdioRequest): StdioResponse {
       case 'methods':
         return { id: request.id, ok: true, result: METHODS };
       case 'createSession':
-        return { id: request.id, ok: true, result: tool.createSession(params.initial as never) };
+        return {
+          id: request.id,
+          ok: true,
+          result: tool.createSession(params.initial as never)
+        };
       case 'addOrUpdateConstituenta':
         return {
           id: request.id,
@@ -81,7 +85,11 @@ function handleRequest(request: StdioRequest): StdioResponse {
           result: tool.analyzeExpression(requiredString(params, 'sessionId'), params.input as never)
         };
       case 'getFormState':
-        return { id: request.id, ok: true, result: tool.getFormState(requiredString(params, 'sessionId')) };
+        return {
+          id: request.id,
+          ok: true,
+          result: tool.getFormState(requiredString(params, 'sessionId'))
+        };
       case 'listDiagnostics':
         return {
           id: request.id,
@@ -95,9 +103,17 @@ function handleRequest(request: StdioRequest): StdioResponse {
           result: tool.commitStep(requiredString(params, 'sessionId'), params.message as string | undefined)
         };
       case 'exportSession':
-        return { id: request.id, ok: true, result: tool.exportSession(requiredString(params, 'sessionId')) };
+        return {
+          id: request.id,
+          ok: true,
+          result: tool.exportSession(requiredString(params, 'sessionId'))
+        };
       case 'importSession':
-        return { id: request.id, ok: true, result: tool.importSession(requiredString(params, 'payload')) };
+        return {
+          id: request.id,
+          ok: true,
+          result: tool.importSession(requiredString(params, 'payload'))
+        };
       default:
         return {
           id: request.id ?? null,

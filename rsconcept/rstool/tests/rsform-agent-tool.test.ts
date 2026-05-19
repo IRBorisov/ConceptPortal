@@ -79,6 +79,57 @@ describe('RSFormAgentTool', () => {
     expect(result.state.analysis.valueClass).toBe('value');
   });
 
+  it('persists term, definitionText, and convention in session state', () => {
+    const tool = new RSFormAgentTool();
+    const session = tool.createSession();
+    const result = tool.addOrUpdateConstituenta(session.sessionId, {
+      draft: {
+        id: 15,
+        alias: 'D2',
+        cstType: CstType.TERM,
+        definitionFormal: '1',
+        term: 'natural number',
+        definitionText: 'A positive integer',
+        convention: 'Standard arithmetic'
+      }
+    });
+    expect(result.state.term).toBe('natural number');
+    expect(result.state.definitionText).toBe('A positive integer');
+    expect(result.state.convention).toBe('Standard arithmetic');
+
+    const form = tool.getFormState(session.sessionId);
+    expect(form.items[0]).toMatchObject({
+      term: 'natural number',
+      definitionText: 'A positive integer',
+      convention: 'Standard arithmetic'
+    });
+
+    const exported = tool.exportSession(session.sessionId);
+    const imported = tool.importSession(exported);
+    const restored = tool.getFormState(imported.sessionId);
+    expect(restored.items[0]).toMatchObject({
+      term: 'natural number',
+      definitionText: 'A positive integer',
+      convention: 'Standard arithmetic'
+    });
+  });
+
+  it('defaults missing text fields to empty strings', () => {
+    const tool = new RSFormAgentTool();
+    const session = tool.createSession();
+    const result = tool.addOrUpdateConstituenta(session.sessionId, {
+      draft: {
+        id: 16,
+        alias: 'D3',
+        cstType: CstType.TERM,
+        definitionFormal: '2'
+      }
+    });
+    expect(result.state.term).toBe('');
+    expect(result.state.definitionText).toBe('');
+    expect(result.state.convention).toBe('');
+  });
+
   it('returns known analysis for empty constant definition', () => {
     const tool = new RSFormAgentTool();
     const session = tool.createSession();
