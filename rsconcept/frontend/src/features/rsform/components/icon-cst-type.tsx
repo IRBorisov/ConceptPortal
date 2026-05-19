@@ -7,9 +7,9 @@ import {
   IconCstConstSet,
   IconCstFunction,
   IconCstPredicate,
+  IconCstStatement,
   IconCstStructured,
-  IconCstTerm,
-  IconCstTheorem
+  IconCstTerm
 } from '@/components/icons';
 
 /** Icon for constituenta type. */
@@ -31,7 +31,7 @@ export function IconCstType({ value, size = '1.25rem', className }: DomIconProps
       return <IconCstFunction size={size} className={className ?? 'text-primary'} />;
     case CstType.PREDICATE:
       return <IconCstPredicate size={size} className={className ?? 'text-destructive'} />;
-    case CstType.THEOREM:
-      return <IconCstTheorem size={size} className={className ?? 'text-destructive'} />;
+    case CstType.STATEMENT:
+      return <IconCstStatement size={size} className={className ?? 'text-destructive'} />;
   }
 }

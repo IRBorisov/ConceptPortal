@@ -12,9 +12,9 @@ import {
   IconCstFunction,
   IconCstNominal,
   IconCstPredicate,
+  IconCstStatement,
   IconCstStructured,
   IconCstTerm,
-  IconCstTheorem,
   IconDownload,
   IconEmptyTerm,
   IconGraphCollapse,
@@ -162,7 +162,7 @@ export function HelpThesaurusEn() {
           condition.
         </li>
         <li>
-          <IconCstTheorem className='inline-icon' />
+          <IconCstStatement className='inline-icon' />
           {'\u2009'}Statement (T#) — a materially significant assertion that may be true or false depending on
           interpretation of undefined concepts.
         </li>
@@ -310,7 +310,7 @@ export function HelpThesaurusEn() {
       </p>
       <p>
         Interpretation assigns a value to a constituent in the model. For base and constant sets and genus structures,
-        interpretation is entered by the user; for axioms, terms, and theorems it may be computed from the formal
+        interpretation is entered by the user; for axioms, terms, and statements it may be computed from the formal
         definition using values already fixed.
       </p>
       <p>

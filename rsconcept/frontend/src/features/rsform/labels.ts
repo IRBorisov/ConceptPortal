@@ -20,7 +20,7 @@ const CST_TYPE_LID: Record<CstType, string> = {
   [CstType.TERM]: 'tx.cst.type.term',
   [CstType.FUNCTION]: 'tx.cst.type.function',
   [CstType.PREDICATE]: 'tx.cst.type.predicate',
-  [CstType.THEOREM]: 'tx.cst.type.theorem'
+  [CstType.STATEMENT]: 'tx.cst.type.statement'
 };
 
 const CST_CLASS_LABEL_LID: Record<CstClass, string> = {
@@ -79,7 +79,7 @@ const RS_EXPRESSION_LID: Record<CstType, string> = {
   [CstType.CONSTANT]: 'tx.lib.defineFormal',
   [CstType.STRUCTURED]: 'tx.lib.defineFormal.structure',
   [CstType.TERM]: 'tx.lib.defineFormal',
-  [CstType.THEOREM]: 'tx.lib.defineFormal',
+  [CstType.STATEMENT]: 'tx.lib.defineFormal',
   [CstType.AXIOM]: 'tx.lib.defineFormal',
   [CstType.FUNCTION]: 'tx.lib.defineFormal.function',
   [CstType.PREDICATE]: 'tx.lib.defineFormal.function'
@@ -91,7 +91,7 @@ const RS_PLACEHOLDER_EXAMPLE: Record<CstType, string> = {
   [CstType.CONSTANT]: '',
   [CstType.STRUCTURED]: 'ℬ(X1×D2)',
   [CstType.TERM]: 'D{ξ∈S1 | Pr1(ξ)∩Pr2(ξ)=∅}',
-  [CstType.THEOREM]: 'D11=∅',
+  [CstType.STATEMENT]: 'D11=∅',
   [CstType.AXIOM]: 'D11=∅',
   [CstType.FUNCTION]: '[α∈X1, β∈ℬ(X1×X2)] Pr2(Fi1[{α}](β))',
   [CstType.PREDICATE]: '[α∈X1, β∈ℬ(X1)] α∈β & card(β)>1'
@@ -105,7 +105,7 @@ const cstTypeShortcutKeyRecord: Record<CstType, string> = {
   [CstType.FUNCTION]: 'W',
   [CstType.PREDICATE]: 'E',
   [CstType.CONSTANT]: '5',
-  [CstType.THEOREM]: '6',
+  [CstType.STATEMENT]: '6',
   [CstType.NOMINAL]: '7'
 };
 

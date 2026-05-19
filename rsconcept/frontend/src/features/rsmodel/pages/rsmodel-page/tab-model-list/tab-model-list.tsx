@@ -105,7 +105,7 @@ export function TabModelList() {
       case 'KeyW': void createCst(CstType.FUNCTION); return true;
       case 'KeyE': void createCst(CstType.PREDICATE); return true;
       case 'Digit5': void createCst(CstType.CONSTANT); return true;
-      case 'Digit6': void createCst(CstType.THEOREM); return true;
+      case 'Digit6': void createCst(CstType.STATEMENT); return true;
       case 'Digit7': void createCst(CstType.NOMINAL); return true;
     }
     return false;

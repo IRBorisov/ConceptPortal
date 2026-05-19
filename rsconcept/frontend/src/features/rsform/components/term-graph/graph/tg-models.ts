@@ -108,7 +108,7 @@ export function produceFilteredGraph(
     if (params.allowFunction) result.push(CstType.FUNCTION);
     if (params.allowPredicate) result.push(CstType.PREDICATE);
     if (params.allowConstant) result.push(CstType.CONSTANT);
-    if (params.allowTheorem) result.push(CstType.THEOREM);
+    if (params.allowStatement) result.push(CstType.STATEMENT);
     if (params.allowNominal) result.push(CstType.NOMINAL);
     return result;
   })();

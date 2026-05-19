@@ -105,7 +105,7 @@ export { TbHexagonLetterA as IconCstAxiom }       from 'react-icons/tb';
 export { TbHexagonLetterD as IconCstTerm }        from 'react-icons/tb';
 export { TbHexagonLetterF as IconCstFunction }    from 'react-icons/tb';
 export { TbHexagonLetterP as IconCstPredicate }   from 'react-icons/tb';
-export { TbHexagonLetterT as IconCstTheorem }     from 'react-icons/tb';
+export { TbHexagonLetterT as IconCstStatement }     from 'react-icons/tb';
 export { PiArrowsMergeFill as IconSynthesis }     from 'react-icons/pi';
 export { VscReferences    as IconReference }      from 'react-icons/vsc';
 export { LuNewspaper      as IconDefinition }     from 'react-icons/lu';

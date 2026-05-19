@@ -224,7 +224,7 @@ function prepareExtraction(selectedNode: AstNode, schema: RSForm, expression: st
   const cstType = isLogic
     ? args.length > 0
       ? CstType.PREDICATE
-      : CstType.THEOREM
+      : CstType.STATEMENT
     : args.length > 0
       ? CstType.FUNCTION
       : CstType.TERM;

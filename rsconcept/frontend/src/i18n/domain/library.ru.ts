@@ -268,7 +268,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.cst.type.term.validate.emptyValue': 'Пустое значение терма',
   'tx.cst.type.function': 'Терм-функция',
   'tx.cst.type.predicate': 'Предикат-функция',
-  'tx.cst.type.theorem': 'Высказывание',
+  'tx.cst.type.statement': 'Высказывание',
 
   'tx.cst.class': 'Класс конституенты',
   'tx.cst.class.hint': 'Классификация конституент по роли в схеме',

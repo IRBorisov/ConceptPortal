@@ -195,8 +195,8 @@ export class SubstitutionValidator {
         }
 
         case CstType.AXIOM:
-        case CstType.THEOREM: {
-          if (original.cst_type !== CstType.AXIOM && original.cst_type !== CstType.THEOREM) {
+        case CstType.STATEMENT: {
+          if (original.cst_type !== CstType.AXIOM && original.cst_type !== CstType.STATEMENT) {
             return this.reportError(SubstitutionErrorType.invalidClasses, [substitution.alias, original.alias]);
           }
           break;

@@ -12,6 +12,9 @@ const TRS_HEADER = 'Exteor 4.8.13.1000 - 30/05/2022';
 const TRS_INNER_FILENAME = 'document.json';
 const TRS_VERSION = 16;
 
+/** Legacy TRS file format value for statement constituents. */
+const TRS_CST_STATEMENT = 'theorem' as const;
+
 /** Create `.trs` archive blob from {@link RSForm}. */
 export function prepareTRSFile(schema: RSForm): Blob {
   const json = JSON.stringify(prepareTRSData(schema), null, 4);
@@ -37,7 +40,7 @@ function prepareTRSData(schema: RSForm) {
       .map(cst => ({
         entityUID: cst.id,
         type: TRS_ENTITY_CONSTITUENTA,
-        cstType: cst.cst_type,
+        cstType: cstTypeToTrs(cst.cst_type),
         alias: cst.alias,
         convention: cst.convention,
         term: {
@@ -59,4 +62,13 @@ function prepareTRSData(schema: RSForm) {
     version: TRS_VERSION,
     versionInfo: TRS_HEADER
   };
+}
+
+// ========= Internals =========
+
+function cstTypeToTrs(cstType: CstType): string {
+  if (cstType === CstType.STATEMENT) {
+    return TRS_CST_STATEMENT;
+  }
+  return cstType;
 }

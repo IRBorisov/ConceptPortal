@@ -47,7 +47,7 @@ export interface GraphFilterParams {
   allowFunction: boolean;
   allowPredicate: boolean;
   allowConstant: boolean;
-  allowTheorem: boolean;
+  allowStatement: boolean;
   allowNominal: boolean;
 }
 
@@ -59,7 +59,7 @@ export const cstTypeToFilterKey: Record<CstType, keyof GraphFilterParams> = {
   [CstType.FUNCTION]: 'allowFunction',
   [CstType.PREDICATE]: 'allowPredicate',
   [CstType.CONSTANT]: 'allowConstant',
-  [CstType.THEOREM]: 'allowTheorem',
+  [CstType.STATEMENT]: 'allowStatement',
   [CstType.NOMINAL]: 'allowNominal'
 };
 
@@ -116,7 +116,7 @@ export const useTermGraphStore = create<TermGraphStore>()(
         allowFunction: true,
         allowPredicate: true,
         allowConstant: true,
-        allowTheorem: true,
+        allowStatement: true,
         allowNominal: true
       },
       setFilter: value => set({ filter: value }),
@@ -156,8 +156,19 @@ export const useTermGraphStore = create<TermGraphStore>()(
         }))
     }),
     {
-      version: 5,
-      name: 'portal.termGraph'
+      version: 6,
+      name: 'portal.termGraph',
+      migrate: (persisted, version) => {
+        if (version < 6 && persisted && typeof persisted === 'object' && 'filter' in persisted) {
+          const state = persisted as { filter: Record<string, unknown> };
+          const filter = state.filter;
+          if ('allowTheorem' in filter && !('allowStatement' in filter)) {
+            filter.allowStatement = filter.allowTheorem;
+            delete filter.allowTheorem;
+          }
+        }
+        return persisted as TermGraphStore;
+      }
     }
   )
 );

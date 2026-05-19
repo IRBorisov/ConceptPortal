@@ -36,14 +36,15 @@ export function TabTemplate({ schema }: TabTemplateProps) {
   const selectedTemplate = templateOptions.find(item => item.id === templateID);
 
   const constituents = templateSchema?.items.filter(isTemplateCst) ?? [];
-
   const filteredData = !filterCategory ? constituents : applyFilterCategory(filterCategory, constituents);
 
   const prototypeInfo = !prototype
     ? ''
     : `${prototype?.term_raw}${prototype?.definition_raw ? ` — ${prototype?.definition_raw}` : ''}`;
 
-  const categorySelector = !templateSchema ? [] : templateSchema.items.filter(cst => cst.cst_type === CstType.THEOREM);
+  const categorySelector = !templateSchema
+    ? []
+    : templateSchema.items.filter(cst => cst.cst_type === CstType.STATEMENT);
 
   return (
     <div className='cc-fade-in'>

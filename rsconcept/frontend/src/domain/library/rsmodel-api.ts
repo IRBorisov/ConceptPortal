@@ -148,48 +148,36 @@ export function isModelIssue(engine: RSEngine, cst: Constituenta): boolean {
 /** Evaluate if {@link CstType} is interpretable. */
 export function isInterpretable(type: CstType): boolean {
   switch (type) {
-    case CstType.NOMINAL:
-      return false;
     case CstType.BASE:
-      return true;
     case CstType.CONSTANT:
-      return true;
     case CstType.STRUCTURED:
-      return true;
     case CstType.AXIOM:
-      return true;
     case CstType.TERM:
+    case CstType.STATEMENT:
       return true;
+
+    case CstType.NOMINAL:
     case CstType.FUNCTION:
-      return false;
     case CstType.PREDICATE:
       return false;
-    case CstType.THEOREM:
-      return true;
   }
 }
 
 /** Evaluate if {@link CstType} is inferrable. */
 export function isInferrable(type: CstType): boolean {
   switch (type) {
-    case CstType.NOMINAL:
-      return false;
-    case CstType.BASE:
-      return false;
-    case CstType.CONSTANT:
-      return false;
-    case CstType.STRUCTURED:
-      return false;
     case CstType.AXIOM:
-      return true;
+    case CstType.STATEMENT:
     case CstType.TERM:
       return true;
+
+    case CstType.NOMINAL:
+    case CstType.BASE:
+    case CstType.CONSTANT:
+    case CstType.STRUCTURED:
     case CstType.FUNCTION:
-      return false;
     case CstType.PREDICATE:
       return false;
-    case CstType.THEOREM:
-      return true;
   }
 }
 
