@@ -12,6 +12,14 @@ export interface ICurrentUser {
   editor: number[];
 }
 
+/** Logged-out user payload returned by `/users/api/auth`. */
+export const anonymousCurrentUser = {
+  id: null,
+  username: '',
+  is_staff: false,
+  editor: []
+} satisfies ICurrentUser;
+
 /** Represents login data, used to authenticate users. */
 export type IUserLoginDTO = z.infer<typeof schemaUserLogin>;
 
