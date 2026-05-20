@@ -167,12 +167,12 @@ describe('RSFormAgentTool modeling and evaluation', () => {
     expect(model.items).toEqual([]);
   });
 
-  it('sets base constituenta binding', () => {
+  it('sets base constituenta binding', async () => {
     const tool = new RSFormAgentTool();
     const session = tool.createSession();
     buildSampleForm(tool, session.sessionId);
 
-    const model = tool.setConstituentaValue(session.sessionId, {
+    const model = await tool.setConstituentaValue(session.sessionId, {
       target: 1,
       value: { 0: 'zero', 1: 'one' }
     });
@@ -184,17 +184,17 @@ describe('RSFormAgentTool modeling and evaluation', () => {
     });
   });
 
-  it('rejects setting inferrable term directly', () => {
+  it('rejects setting inferrable term directly', async () => {
     const tool = new RSFormAgentTool();
     const session = tool.createSession();
     buildSampleForm(tool, session.sessionId);
 
-    expect(() =>
+    await expect(
       tool.setConstituentaValue(session.sessionId, {
         target: 2,
         value: 3
       })
-    ).toThrow(/inferrable/);
+    ).rejects.toThrow(/inferrable/);
   });
 
   it('evaluates expression against session context', () => {
@@ -247,20 +247,20 @@ describe('RSFormAgentTool modeling and evaluation', () => {
     expect(a1?.status).toBe(EvalStatus.HAS_DATA);
   });
 
-  it('clears model values', () => {
+  it('clears model values', async () => {
     const tool = new RSFormAgentTool();
     const session = tool.createSession();
     buildSampleForm(tool, session.sessionId);
-    tool.setConstituentaValue(session.sessionId, {
+    await tool.setConstituentaValue(session.sessionId, {
       target: 1,
       value: { 0: 'a' }
     });
 
-    const model = tool.clearConstituentaValues(session.sessionId, { items: [1] });
+    const model = await tool.clearConstituentaValues(session.sessionId, { items: [1] });
     expect(model.items).toHaveLength(0);
   });
 
-  it('batch sets model values', () => {
+  it('batch sets model values', async () => {
     const tool = new RSFormAgentTool();
     const session = tool.createSession();
     tool.addOrUpdateConstituenta(session.sessionId, {
@@ -270,7 +270,7 @@ describe('RSFormAgentTool modeling and evaluation', () => {
       draft: { id: 2, alias: 'C1', cstType: CstType.CONSTANT, definitionFormal: '' }
     });
 
-    const model = tool.setConstituentaValues(session.sessionId, {
+    const model = await tool.setConstituentaValues(session.sessionId, {
       items: [
         { target: 1, value: { 0: 'a', 1: 'b' } },
         { target: 2, value: { 0: 'c' } }
@@ -279,11 +279,11 @@ describe('RSFormAgentTool modeling and evaluation', () => {
     expect(model.items).toHaveLength(2);
   });
 
-  it('exports and imports model state', () => {
+  it('exports and imports model state', async () => {
     const tool = new RSFormAgentTool();
     const session = tool.createSession();
     buildSampleForm(tool, session.sessionId);
-    tool.setConstituentaValue(session.sessionId, {
+    await tool.setConstituentaValue(session.sessionId, {
       target: 1,
       value: { 0: 'zero' }
     });
@@ -291,8 +291,9 @@ describe('RSFormAgentTool modeling and evaluation', () => {
     const exported = tool.exportSession(session.sessionId);
     expect(exported).toContain('"model"');
 
-    const imported = tool.importSession(exported);
-    const model = tool.getModelState(imported.sessionId);
+    const newTool = new RSFormAgentTool();
+    const imported = newTool.importSession(exported);
+    const model = newTool.getModelState(imported.sessionId);
     expect(model.items).toHaveLength(1);
     expect(model.items[0]?.value).toEqual({ 0: 'zero' });
   });

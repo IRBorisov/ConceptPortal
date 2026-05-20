@@ -36,6 +36,7 @@ const S1_VALUE = [
 ] as const;
 
 const D3_ID = 11;
+const A1_ID = 12;
 
 async function run() {
   const client = new RSToolWrapperClient({
@@ -73,8 +74,14 @@ async function run() {
       input: { constituentId: D3_ID }
     });
 
+    const a1Eval = await client.call<{ success: boolean; value: unknown; status: number }>('evaluateConstituenta', {
+      sessionId: imported.sessionId,
+      input: { constituentId: A1_ID }
+    });
+
     console.log('D3 recalculate:', d3);
     console.log('D3 evaluate:', d3Eval);
+    console.log('A1 evaluate:', a1Eval);
 
     if (
       !d3Eval.success ||
@@ -83,12 +90,17 @@ async function run() {
       d3Eval.value.length === 0
     ) {
       console.error('Expected non-empty D3; got', d3Eval);
-      process.exit(1);
+      throw new Error(`Expected non-empty D3; got ${JSON.stringify(d3Eval)}`);
+    }
+
+    if (!a1Eval.success || a1Eval.status === EvalStatus.AXIOM_FALSE || a1Eval.value !== 1) {
+      console.error('Expected A1 card(X1)≤10 to hold; got', a1Eval);
+      throw new Error(`Expected A1 card(X1)≤10 to hold; got ${JSON.stringify(a1Eval)}`);
     }
 
     await client.call('commitStep', {
       sessionId: imported.sessionId,
-      message: 'Модель kinship: пример с непустым D3 «внучатые племянники»'
+      message: 'Модель kinship: D3 непуст; A1 card(X1)≤10 выполняется'
     });
 
     const exported = await client.call<string>('exportSession', {

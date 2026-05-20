@@ -13,7 +13,8 @@
     "example:build-schema": "tsx examples/build-sample-rsform.ts",
     "example:build-rsmodel": "tsx examples/build-sample-rsmodel.ts",
     "example:build-kinship-schema": "tsx examples/build-kinship-rsform.ts",
-    "example:build-kinship-rsmodel": "tsx examples/build-kinship-rsmodel.ts"
+    "example:build-kinship-rsmodel": "tsx examples/build-kinship-rsmodel.ts",
+    "kinship:cli": "tsx examples/kinship/cli.ts"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

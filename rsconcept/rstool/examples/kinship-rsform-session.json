@@ -1,14 +1,14 @@
 {
   "contractVersion": "1.2.0",
   "state": {
-    "sessionId": "b68c1623-8214-48d4-82fe-7366b0700d87",
-    "createdAt": "2026-05-20T10:45:46.234Z",
-    "updatedAt": "2026-05-20T10:45:46.273Z",
+    "sessionId": "e051ecdf-02d0-4c01-97d0-3e23a4ec0f8d",
+    "createdAt": "2026-05-20T12:01:07.249Z",
+    "updatedAt": "2026-05-20T12:01:07.288Z",
     "revisions": [
       {
-        "revisionId": "8fd5c82e-fe6f-412c-abf8-da547c78e7dc",
-        "at": "2026-05-20T10:45:46.273Z",
-        "message": "КС «родственные отношения»: D3 «внучатые племянники», F6 «дети»"
+        "revisionId": "00b42c51-3472-4dc2-b478-955fd3058ce5",
+        "at": "2026-05-20T12:01:07.288Z",
+        "message": "КС «родственные отношения»: D3 «внучатые племянники», F6 «дети», A1 «не более 10 человек»"
       }
     ],
     "items": [
@@ -322,6 +322,23 @@
               "typeID": 3,
               "baseID": "X1"
             }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 12,
+        "alias": "A1",
+        "cstType": "axiom",
+        "definitionFormal": "card(X1)≤10",
+        "term": "не более десяти человек",
+        "definitionText": "В предметной области не более десяти человек: мощность X1 не превышает 10.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
           },
           "valueClass": "value",
           "diagnostics": []
