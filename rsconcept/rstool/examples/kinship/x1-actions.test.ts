@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { TUPLE_ID } from '../examples/kinship/constants';
+import { TUPLE_ID } from './constants';
 import {
   addPerson,
   A1_MAX_PEOPLE,
@@ -11,7 +11,7 @@ import {
   setX1List,
   satisfiesA1MaxPeople,
   x1Cardinality
-} from '../examples/kinship/x1-actions';
+} from './x1-actions';
 
 const SAMPLE_BINDING = {
   0: 'Иван',
@@ -38,6 +38,12 @@ describe('kinship x1-actions', () => {
     expect(next[2]).toBe('Петр');
   });
 
+  it('rejects blank names on add and rename', () => {
+    expect(() => addPerson(SAMPLE_BINDING, '   ')).toThrow(/пустым/);
+    expect(() => renamePerson(SAMPLE_BINDING, '   ', 'Петр')).toThrow(/пустым/);
+    expect(() => renamePerson(SAMPLE_BINDING, 'Пётр', '   ')).toThrow(/пустым/);
+  });
+
   it('removes person and reindexes binding and S1', () => {
     const { binding, s1 } = removePerson(SAMPLE_BINDING, SAMPLE_S1, 'Мария');
     expect(binding).toEqual({ 0: 'Иван', 1: 'Пётр', 2: 'Анна' });
@@ -54,6 +60,15 @@ describe('kinship x1-actions', () => {
     expect(nextS1).toEqual([
       [TUPLE_ID, 1, 2],
       [TUPLE_ID, 2, 0]
+    ]);
+  });
+
+  it('remaps S1 using actual binding indices, not list position', () => {
+    const sparseBinding = { 0: 'Иван', 5: 'Пётр', 9: 'Анна' };
+    const nextS1 = remapS1ByNames(SAMPLE_BINDING, sparseBinding, SAMPLE_S1);
+    expect(nextS1).toEqual([
+      [TUPLE_ID, 0, 5],
+      [TUPLE_ID, 5, 9]
     ]);
   });
 

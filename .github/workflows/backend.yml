@@ -12,6 +12,12 @@ on:
       - .github/workflows/backend.yml
   pull_request:
     branches: ["main"]
+    paths:
+      - rsconcept/backend/**
+      - .github/workflows/backend.yml
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -43,6 +49,7 @@ jobs:
           uv run python manage.py check
           uv run python manage.py test
   notify-failure:
+    permissions: {}
     runs-on: ubuntu-latest
     needs: build
     if: failure()

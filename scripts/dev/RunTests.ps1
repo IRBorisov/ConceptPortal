@@ -2,10 +2,12 @@
 
 $backend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\backend"
 $frontend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\frontend"
+$rstool = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\rstool"
 
 function RunTests() {
   TestBackend
   TestFrontend
+  TestRstool
 }
 
 function TestBackend() {
@@ -18,6 +20,12 @@ function TestBackend() {
 
 function TestFrontend() {
   Set-Location $frontend
+  & npm test
+}
+
+function TestRstool() {
+  Set-Location $rstool
+  & npm run typecheck
   & npm test
 }
 

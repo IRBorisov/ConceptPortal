@@ -13,8 +13,8 @@ Applies to all files under `rsconcept/rstool`.
 - `src/wrapper/stdio-wrapper.ts` — stdio JSON-RPC-style transport (`METHODS` must match contract)
 - `src/wrapper/client.ts` — `RSToolWrapperClient` for spawned wrapper
 - `src/mappers/` — bridge to frontend `rslang` / RSForm analysis and evaluation (`schema-adapter.ts`, `model-adapter.ts`)
-- `tests/` — contract and behavior tests
-- `examples/` — runnable agent workflows and sample session JSON
+- `tests/` — package-level contract and core behavior tests (e.g. `rsform-agent-tool.test.ts`)
+- `examples/` — runnable agent workflows and sample session JSON; **colocate** `*.test.ts` with the example they cover (e.g. `examples/kinship/x1-actions.test.ts`, not under `tests/`)
 - `README.md` — setup, stdio protocol, scripts
 - `skills/rslang-rstool/` — **versioned** agent skill (source of truth in git)
 
@@ -28,10 +28,12 @@ After editing the skill, sync to local Cursor: copy `skills/rslang-rstool/` → 
 
 ## Commands
 
-Run from `rsconcept/rstool`:
+Run from `rsconcept/rstool` (install frontend deps first — typecheck resolves `@/*` into `rsconcept/frontend/src`):
 
+- `npm ci` in `rsconcept/frontend`, then `npm ci` in `rsconcept/rstool`
 - Typecheck: `npm run typecheck`
 - Tests: `npm test`
+- All packages (backend, frontend, rstool): `powershell -File scripts/dev/RunTests.ps1` from repo root
 - Stdio wrapper: `npm run wrapper`
 - Examples: `npm run example:client`, `npm run example:build-schema`, `npm run example:build-rsmodel`; other scripts under `examples/` as added to `package.json`
 
@@ -42,6 +44,7 @@ Run from `rsconcept/rstool`:
 - Evaluation / modeling: reuse frontend `RSEngine`, `RSCalculator`, `rsmodel-api` via `src/mappers/model-adapter.ts`; keep interpretation in-memory unless backend persistence is explicitly added.
 - New or renamed public methods: update `METHODS` in `stdio-wrapper.ts`, tests, `README.md`, and the skill (see checklist below).
 - Function arg order changes: update all callsites (wrapper, client, examples, tests).
+- Tests for code under `examples/<name>/`: add or update `*.test.ts` in that same folder; do not put example-specific tests in `tests/`. Package-wide rstool tests stay in `tests/`.
 
 ## Contract changes — update the skill
 

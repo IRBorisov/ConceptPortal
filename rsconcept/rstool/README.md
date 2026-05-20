@@ -29,6 +29,8 @@ const result = tool.analyzeExpression(session.sessionId, {
 
 ## Scripts
 
+Prerequisite: `npm ci` in `rsconcept/frontend` (rstool typecheck imports frontend domain code via `@/*`).
+
 - `npm run typecheck`
 - `npm test`
 - `npm run wrapper`
