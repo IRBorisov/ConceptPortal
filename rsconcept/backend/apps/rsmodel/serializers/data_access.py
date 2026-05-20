@@ -40,7 +40,7 @@ class RSModelSerializer(StrictModelSerializer):
         model = LibraryItem
         fields = '__all__'
 
-    def get_schema(self, instance: LibraryItem):
+    def get_schema(self, instance: LibraryItem) -> int | None:
         model = RSModel.objects.get(model=instance)
         return model.schema_id
 
@@ -85,13 +85,13 @@ class RSModelSandboxImportSerializer(StrictSerializer):
     class ModelDataSerializer(StrictSerializer):
         ''' Serializer: RSModel value bindings for sandbox import. '''
 
-        class ItemSerializer(StrictSerializer):
+        class ModelBindingItemSerializer(StrictSerializer):
             ''' Serializer: One RSModel value binding item. '''
             id = serializers.IntegerField()
             type = serializers.CharField()
             value = serializers.JSONField()  # type: ignore
 
-        items = ItemSerializer(many=True)
+        items = ModelBindingItemSerializer(many=True)
 
     item_data = ItemDataSerializer()
     schema_data = SchemaDataSerializer()

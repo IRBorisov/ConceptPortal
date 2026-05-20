@@ -38,8 +38,8 @@ export const useSetAccessPolicy = () => {
         return;
       }
 
-      const rsKey = KEYS.composite.schema({ itemID: variables.itemID });
-      client.setQueryData(rsKey, (prev: { raw: RSFormDTO; transformed: RSForm } | undefined) =>
+      const rsFormKey = [KEYS.rsform, 'item', variables.itemID];
+      client.setQueriesData({ queryKey: rsFormKey }, (prev: { raw: RSFormDTO; transformed: RSForm } | undefined) =>
         !prev
           ? undefined
           : {
@@ -47,6 +47,7 @@ export const useSetAccessPolicy = () => {
               transformed: { ...prev.transformed, access_policy: variables.policy }
             }
       );
+
       const modelKey = KEYS.composite.model({ itemID: variables.itemID });
       client.setQueryData(modelKey, (prev: RSModelDTO | undefined) =>
         !prev ? undefined : { ...prev, access_policy: variables.policy }

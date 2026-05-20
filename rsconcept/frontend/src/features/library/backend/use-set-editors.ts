@@ -34,8 +34,8 @@ export const useSetEditors = () => {
         return;
       }
 
-      const rsKey = KEYS.composite.schema({ itemID: variables.itemID });
-      client.setQueryData(rsKey, (prev: { raw: RSFormDTO; transformed: RSForm } | undefined) =>
+      const rsFormKey = [KEYS.rsform, 'item', variables.itemID];
+      client.setQueriesData({ queryKey: rsFormKey }, (prev: { raw: RSFormDTO; transformed: RSForm } | undefined) =>
         !prev
           ? undefined
           : {

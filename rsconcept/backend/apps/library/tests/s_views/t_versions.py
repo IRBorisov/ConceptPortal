@@ -6,7 +6,7 @@ from zipfile import ZipFile
 
 from rest_framework import status
 
-from apps.library.models import Version
+from apps.library.models import AccessPolicy, Version
 from apps.rsform.models import Constituenta, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
@@ -132,6 +132,26 @@ class TestVersionViews(EndpointTester):
         response = self.get()
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+
+    @decl_endpoint('/api/library/{schema}/versions/{version}', method='get')
+    def test_retrieve_version_forbidden_when_not_readable(self):
+        version_id = self._create_version({'version': '1.0.0', 'description': 'test'})
+        self.owned.model.access_policy = AccessPolicy.PRIVATE
+        self.owned.model.save()
+        self.logout()
+        self.executeForbidden(schema=self.owned_id, version=version_id)
+        self.client.force_authenticate(user=self.user)
+        self.executeOK(schema=self.owned_id, version=version_id)
+
+    @decl_endpoint('/api/versions/{version}/export-file', method='get')
+    def test_export_version_forbidden_when_not_readable(self):
+        version_id = self._create_version({'version': '1.0.0', 'description': 'test'})
+        self.owned.model.access_policy = AccessPolicy.PROTECTED
+        self.owned.model.save()
+        self.logout()
+        self.executeForbidden(version=version_id)
+        self.client.force_authenticate(user=self.user)
+        self.executeOK(version=version_id)
 
     @decl_endpoint('/api/versions/{version}/export-file', method='get')
     def test_export_version(self):

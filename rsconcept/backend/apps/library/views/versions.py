@@ -10,6 +10,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from apps.rsform import utils
 from apps.rsform.models import RSForm
@@ -18,6 +19,16 @@ from shared import permissions, utility
 
 from .. import models as m
 from .. import serializers as s
+
+_item_read_permission = permissions.ItemAnyone()
+_permission_view_stub = APIView()
+
+
+def _forbid_unless_version_item_readable(request: Request, version: m.Version) -> Response | None:
+    ''' Enforce the same library read rules as ``LibraryViewSet`` (``ItemAnyone``). '''
+    if not _item_read_permission.has_object_permission(request, _permission_view_stub, version):
+        return Response(status=c.HTTP_403_FORBIDDEN)
+    return None
 
 
 @extend_schema(tags=['Version'])
@@ -71,6 +82,9 @@ def export_file(request: Request, pk: int) -> HttpResponse:
         version = m.Version.objects.get(pk=pk)
     except m.Version.DoesNotExist:
         return Response(status=c.HTTP_404_NOT_FOUND)
+    denied = _forbid_unless_version_item_readable(request, version)
+    if denied:
+        return denied
     data = RSFormTRSSerializer.load_versioned_data(version.data)
     file = utility.write_zipped_json(data, utils.EXTEOR_INNER_FILENAME)
     filename = utils.filename_for_schema(data['alias'])
@@ -145,6 +159,10 @@ def retrieve_version(request: Request, pk_item: int, pk_version: int) -> HttpRes
         return Response(status=c.HTTP_404_NOT_FOUND)
     if version.item != item:
         return Response(status=c.HTTP_404_NOT_FOUND)
+
+    denied = _forbid_unless_version_item_readable(request, version)
+    if denied:
+        return denied
 
     data = RSFormParseSerializer(item).from_versioned_data(version.pk, version.data)
     return Response(
