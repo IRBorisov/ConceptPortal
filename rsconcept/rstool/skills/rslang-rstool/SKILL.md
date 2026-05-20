@@ -1,117 +1,108 @@
 ---
 name: rslang-rstool
-description: Explains RS language (formal explication for conceptual schemes) and how AI agents build and validate RSForm incrementally via rsconcept/rstool. Use when writing formal definitions, constituents, RSLang expressions, typification, diagnostics, or integrating the RSForm agent tool.
+description: RS language/rsconcept/rstool for AI agents—incremental RSForm construction, formal definitions, typification, diagnostics.
 ---
 
-# RS language and rstool (agents)
+# RS Language & rstool — Compact Guide for Agents
 
-## What this is
+**RS language** is a formal scheme notation for concepts, relations, operations—extends FOL, core: membership `x∈y`; typification via set-theoretic/logical expressions.
 
-**RS language** (родоструктурная экспликация) is Portal’s formal notation for concepts, relations, and operations in conceptual schemes. It extends first-order logic; membership `x∈y` is central. Set-theoretic expressions denote elements of a **grade** (typification); logical expressions denote `TRUE` / `FALSE`.
+**rstool** is the agent API for sessions, upserts, analysis, diagnostics, (de)serialization.
 
-**rstool** (`rsconcept/rstool`) is the agent-facing API: session state, constituent upserts, expression analysis, diagnostics, export/import. It reuses the same analyzer as the frontend (`rsconcept/frontend/src/domain/rslang`).
+- Library: `rsconcept/rstool`
+- Analyzer: shared with frontend
+- Domain: see `CONTEXT.md`
 
-Domain vocabulary: `CONTEXT.md` (RS language, typification, constituenta, RSForm).
+## Docs/Hints Reference
 
-## When to read more
+| Info                   | Location                                                          |
+| :--------------------- | :---------------------------------------------------------------- |
+| Operators, API, errors | [REFERENCE.md](REFERENCE.md)                                      |
+| Examples, typification | `frontend/src/features/help/items/rslang/` & `/root/help-rslang/` |
+| Code samples           | `rstool/examples/`, `rstool/README.md`                            |
 
-| Need | Open |
-|------|------|
-| Operators, grammar tokens, full API, error codes | [REFERENCE.md](REFERENCE.md) |
-| Human-oriented help (examples, typification rules) | `rsconcept/frontend/src/features/help/items/rslang/` and `.../root/help-rslang/` |
-| Runnable examples | `rsconcept/rstool/examples/`, `rsconcept/rstool/README.md` |
+## Protocol Summary
 
-## Agent workflow (rstool)
+1. **Start session**: `createSession`
+2. **Add bases/constants**: type `basic` (`X*`), `constant` (`C*`) — `definitionFormal: ''`
+3. **Add derived**: terms, axioms, etc.—only after dependencies present
+4. **Analyze scratch**: `analyzeExpression`
+5. **Process diagnostics**: check `analysis.diagnostics`/`listDiagnostics`; fix by range
+6. **Checkpoint**: `commitStep` (message optional)
+7. **Export/import**: persist with `exportSession`/`importSession`
 
-1. **Create session** — `createSession` (or `RSFormAgentTool.createSession()` in-process).
-2. **Declare bases first** — `basic` (`X*`) and `constant` (`C*`) with **empty** `definitionFormal`.
-3. **Add derived constituents** — terms, axioms, functions, etc., in **dependency order** (each alias must refer only to constituents already in the session).
-4. **Probe expressions** — `analyzeExpression` for scratch checks without adding a row.
-5. **Fix from diagnostics** — `listDiagnostics`; each error has `code`, `from`, `to`, optional `params`.
-6. **Checkpoint** — `commitStep` with a short message.
-7. **Persist** — `exportSession` JSON; resume with `importSession`.
+**Clients**:
 
-Run from `rsconcept/rstool`:
+- Node: use `RSToolWrapperClient`
+- Stdio process: `npm run wrapper` — JSON per line
 
-```bash
-npm test
-npm run example:client
-npm run example:build-sample
-```
+## API/REST
 
-**Stdio wrapper** (long-lived process): `npm run wrapper` — one JSON request per line, one JSON response per line; first line is `{ "ok": true, "result": { "ready": true, ... } }`.
+- **Portal UI**: `https://portal.acconcept.ru`
+- **API**: `https://api.portal.acconcept.ru`
+- Main endpoints:
+  - RSForm meta: `GET /api/rsforms/{id}`
+  - RSForm details: `GET /api/rsforms/{id}/details`
+  - Saved version: `GET /api/library/{id}/versions/{v}`
+  - OSS/RSModel: `GET /api/oss/{id}`, `GET /api/models/{id}`
+  - OpenAPI: `GET /schema`
+- Local: paths `/api/...`, base from `VITE_PORTAL_BACKEND`
+- Don't scrape SPA or use UI query params (`tab=`, etc.)
 
-**Typed client** (spawn wrapper from Node):
+## Constituent Types (`cstType`)
 
-```ts
-import { CstType, RSToolWrapperClient } from '@rsconcept/rstool';
+| cstType   | Example | Formal    | Notes                |
+| :-------- | :------ | :-------- | :------------------- |
+| basic     | X1      | **empty** | Required             |
+| constant  | C1      | **empty** | Required             |
+| nominal   | S1      | allowed   | Naming               |
+| structure | custom  | allowed   | Structured genus     |
+| term      | D1      | allowed   | Set/term             |
+| axiom     | A1      | allowed   | Logical (type=Logic) |
+| statement | T1      | allowed   | Logical (type=Logic) |
+| function  | F1      | allowed   | Parameterized        |
+| predicate | P1      | allowed   | Parameterized        |
 
-const client = new RSToolWrapperClient({ cwd: 'D:/DEV/WORK/Portal/rsconcept/rstool' });
-await client.waitUntilReady();
-const { sessionId } = await client.call<{ sessionId: string }>('createSession');
-await client.call('addOrUpdateConstituenta', {
-  sessionId,
-  input: { draft: { id: 1, alias: 'X1', cstType: CstType.BASE, definitionFormal: '' } }
-});
-```
+- Non-empty formal for `basic`/`constant` ⇒ error `0x8862` (`formalDefinitionNotAllowed`)
+- Empty `basic`/`constant` always typified
 
-MCP/HTTP adapters in rstool are **not implemented**; use library API or stdio/client.
+## Syntax
 
-## Constituent types (`cstType`)
+- **Globals**: `X1`, `C1`, `D1`, `F1`, `P1`, `A1`, `R1`
+- **Locals**: `x`, `ξ`, `μ2`
+- **Literals**: `42`, `Z`, `∅`
+- Grammar: `frontend/src/domain/rslang/parser/rslang.grammar`
 
-| `cstType` | Alias pattern (typical) | Formal definition |
-|-----------|-------------------------|-------------------|
-| `basic` | `X1`, `X2` | Must be **empty** |
-| `constant` | `C1` | Must be **empty** |
-| `nominal` | `S1` | Allowed (naming) |
-| `structure` | structured genus | Allowed |
-| `term` | `D1` | Allowed (set-theoretic / term) |
-| `axiom`, `statement` | `A1`, `T1` | Logical (`Logic` typification) |
-| `function` | `F1` | Parameterized |
-| `predicate` | `P1` | Parameterized |
+## Expression Types
 
-Empty `basic` / `constant` still get typification analysis (success with a base type). Non-empty formal on `basic` / `constant` → error `0x8862` (`formalDefinitionNotAllowed`).
+- **Set-theoretic**: `∪`, `∩`, `\`, `∆`, `×`, `∈`, `⊆`, `ℬ(...)`, tuples
+- **Logical**: `¬`, `&`, `∨`, `⇒`, `⇔`, `∀`, `∃`, comparisons `=`, `≠`, `<`
+- **Parameterized**: `[arg1∈H1, arg2∈H2] body`
+- Advanced: see `help-rslang-expression-*`
 
-## Identifiers (minimal)
+Always set `cstType` in upserts/analysis to true role.
 
-- **Concepts (globals)**: uppercase Latin + digits by role — `X1` (base), `C1` (constant), `D1` (term), `F1` / `P1` (function/predicate), `A1` (axiom), `R1` (radical in templates).
-- **Locals**: lowercase Greek/Latin + optional digits — `x`, `ξ`, `μ2`.
-- **Literals**: non-negative integers (`42`), `Z`, `∅`.
+## Diagnostics Loop
 
-Grammar source: `rsconcept/frontend/src/domain/rslang/parser/rslang.grammar`.
+1. Check `analysis.success`
+2. If not, see `analysis.diagnostics` / `listDiagnostics`
+3. Map `code` to message via frontend (`RSErrorCode`, `tx.rslang.error.*`)
+4. Use `from`, `to` to patch `definitionFormal`; re-send
 
-## Expression families
+Don’t infer types—always read tool output.
 
-- **Set-theoretic**: `∪` `∩` `\` `∆` `×`, `∈` `⊆` `ℬ(...)`, tuples `(H1×...×Hn)`.
-- **Logical**: `¬` `&` `∨` `⇒` `⇔`, `∀` `∃`, comparisons `=` `≠` `<` …
-- **Parameterized**: `[arg1∈H1, arg2∈H2] body` on functions/predicates.
-- Advanced: declarative, imperative, recursive — see help subtopics under `help-rslang-expression-*`.
+## Declaration Order
 
-Always set `cstType` on `analyzeExpression` / upsert to match the constituent role (e.g. `term` for `D1`, `axiom` for `A1`).
-
-## Diagnostic loop
-
-1. After upsert or analyze, check `analysis.success`.
-2. If false, read `analysis.diagnostics` or `listDiagnostics`.
-3. Map `error.code` to human text via frontend `RSErrorCode` / `tx.rslang.error.*` (`rsconcept/frontend/src/domain/rslang/error.ts`, `labels.ts`).
-4. Fix spans `[from, to)` in `definitionFormal`; re-upsert or re-analyze.
-
-Do not guess types — use tool output (`type`, `valueClass`: `value` | `property`).
-
-## Declaration order
-
-Match frontend schema ordering when possible:
-
-1. All `basic` and `constant`
-2. Core / crucial constituents before dependents
-3. Topological order: if `D2` uses `D1`, declare `D1` first
-4. Derived terms immediately after their sources when expanding structure
+1. All `basic`, `constant`
+2. Core/critical first
+3. Topological: dependencies before dependents (e.g. `D1` before `D2` if `D2` refers to `D1`)
+4. Derived right after their sources
 
 ## Checklist
 
-- [ ] Session created; `sessionId` tracked for all calls
-- [ ] Bases/constants added with empty formal definitions
-- [ ] Dependents added only after referenced aliases exist
-- [ ] `cstType` matches constituent role
-- [ ] Diagnostics resolved before `commitStep` / export
-- [ ] For deep syntax/semantics questions, consult help topics or [REFERENCE.md](REFERENCE.md)
+- [ ] `sessionId` obtained & tracked
+- [ ] Bases/constants are empty formal
+- [ ] All dependencies exist before upsert
+- [ ] Matching `cstType`
+- [ ] Diagnostics handled before commit/export
+- [ ] For other details, check help topics or [REFERENCE.md](REFERENCE.md)
