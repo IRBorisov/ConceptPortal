@@ -85,7 +85,14 @@ function assertPersonExists(binding: BasicBinding, name: string): number {
   return index;
 }
 
+function assertNonBlankName(name: string): void {
+  if (!name.trim()) {
+    throw new Error('Имя не может быть пустым');
+  }
+}
+
 export function addPerson(binding: BasicBinding, name: string): BasicBinding {
+  assertNonBlankName(name);
   assertUniqueName(binding, name);
   const indices = Object.keys(binding).map(Number);
   const nextIndex = indices.length === 0 ? 0 : Math.max(...indices) + 1;
@@ -95,6 +102,8 @@ export function addPerson(binding: BasicBinding, name: string): BasicBinding {
 }
 
 export function renamePerson(binding: BasicBinding, oldName: string, newName: string): BasicBinding {
+  assertNonBlankName(oldName);
+  assertNonBlankName(newName);
   const index = assertPersonExists(binding, oldName);
   if (oldName !== newName) {
     assertUniqueName(binding, newName);
@@ -106,9 +115,7 @@ export function setX1List(names: string[]): BasicBinding {
   const seen = new Set<string>();
   const binding: BasicBinding = {};
   for (const name of names) {
-    if (!name.trim()) {
-      throw new Error('Имя не может быть пустым');
-    }
+    assertNonBlankName(name);
     if (seen.has(name)) {
       throw new Error(`Дубликат имени: «${name}»`);
     }
@@ -146,7 +153,7 @@ export function remapS1AfterRemove(s1: S1Value, removedIndex: number): S1Value {
 }
 
 export function remapS1ByNames(oldBinding: BasicBinding, newBinding: BasicBinding, s1: S1Value): S1Value {
-  const newIndexByName = new Map(listNames(newBinding).map((name, index) => [name, index]));
+  const newIndexByName = new Map(bindingEntries(newBinding).map(entry => [entry.name, entry.index]));
   const result: S1Value = [];
 
   for (const tuple of s1) {

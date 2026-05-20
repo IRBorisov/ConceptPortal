@@ -39,6 +39,13 @@ interface CliOptions {
   args: string[];
 }
 
+function failCli(message: string): never {
+  console.error(message);
+  console.error('');
+  console.error(HELP);
+  process.exit(1);
+}
+
 function parseArgs(argv: string[]): CliOptions {
   const options: CliOptions = {
     sessionPath: DEFAULT_SESSION_PATH,
@@ -49,7 +56,14 @@ function parseArgs(argv: string[]): CliOptions {
   for (let index = 0; index < argv.length; index += 1) {
     const token = argv[index];
     if (token === '--session') {
-      options.sessionPath = argv[index + 1] ?? DEFAULT_SESSION_PATH;
+      const value = argv[index + 1];
+      if (value === undefined) {
+        failCli('Ошибка: после --session требуется путь к файлу сессии.');
+      }
+      if (value.startsWith('-')) {
+        failCli(`Ошибка: недопустимое значение для --session: «${value}».`);
+      }
+      options.sessionPath = value;
       index += 1;
       continue;
     }
