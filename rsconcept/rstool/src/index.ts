@@ -4,13 +4,22 @@ import {
   type AddOrUpdateConstituentaResult,
   type AnalyzeExpressionInput,
   type AnalysisResult,
+  type ClearConstituentaValuesInput,
+  type EvaluateConstituentaInput,
+  type EvaluateExpressionInput,
+  type EvaluationResult,
   type ListDiagnosticsFilters,
+  type RecalculateModelResult,
   type RSFormAgentToolContract,
   type SessionHandle,
+  type SessionModelState,
   type SessionRevision,
-  type SessionState
+  type SessionState,
+  type SetConstituentaValueInput,
+  type SetConstituentaValuesInput
 } from './contracts/tool-contract';
-import { FrontendDomainAdapter } from './mappers/frontend-domain-adapter';
+import { ModelAdapter } from './mappers/model-adapter';
+import { SchemaAdapter } from './mappers/schema-adapter';
 import { SessionStore } from './session/session-store';
 
 export * from './contracts/tool-contract';
@@ -20,7 +29,8 @@ export * from './wrapper/client';
 export class RSFormAgentTool implements RSFormAgentToolContract {
   public readonly contractVersion = CONTRACT_VERSION;
   private readonly sessions = new SessionStore();
-  private readonly adapter = new FrontendDomainAdapter();
+  private readonly adapter = new SchemaAdapter();
+  private readonly evaluation = new ModelAdapter();
 
   public createSession(initial?: Partial<SessionState>): SessionHandle {
     return this.sessions.create(initial, this.contractVersion);
@@ -85,6 +95,44 @@ export class RSFormAgentTool implements RSFormAgentToolContract {
     const parsed = JSON.parse(payload) as {
       state: SessionState;
     };
+    if (!parsed.state.model) {
+      parsed.state.model = { items: [] };
+    }
     return this.sessions.create(parsed.state, this.contractVersion);
+  }
+
+  public setConstituentaValue(sessionId: string, input: SetConstituentaValueInput): SessionModelState {
+    const envelope = this.sessions.get(sessionId);
+    return this.evaluation.setConstituentaValue(envelope.state, input);
+  }
+
+  public setConstituentaValues(sessionId: string, input: SetConstituentaValuesInput): SessionModelState {
+    const envelope = this.sessions.get(sessionId);
+    return this.evaluation.setConstituentaValues(envelope.state, input);
+  }
+
+  public clearConstituentaValues(sessionId: string, input: ClearConstituentaValuesInput): SessionModelState {
+    const envelope = this.sessions.get(sessionId);
+    return this.evaluation.clearConstituentaValues(envelope.state, input.items);
+  }
+
+  public getModelState(sessionId: string): SessionModelState {
+    const envelope = this.sessions.get(sessionId);
+    return structuredClone(envelope.state.model);
+  }
+
+  public evaluateExpression(sessionId: string, input: EvaluateExpressionInput): EvaluationResult {
+    const envelope = this.sessions.get(sessionId);
+    return this.evaluation.evaluateExpression(envelope.state, input.expression, input.cstType);
+  }
+
+  public evaluateConstituenta(sessionId: string, input: EvaluateConstituentaInput): EvaluationResult {
+    const envelope = this.sessions.get(sessionId);
+    return this.evaluation.evaluateConstituenta(envelope.state, input.constituentId);
+  }
+
+  public recalculateModel(sessionId: string): RecalculateModelResult {
+    const envelope = this.sessions.get(sessionId);
+    return this.evaluation.recalculateModel(envelope.state);
   }
 }

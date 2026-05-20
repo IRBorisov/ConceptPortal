@@ -12,7 +12,7 @@ Applies to all files under `rsconcept/rstool`.
 - `src/index.ts` — `RSFormAgentTool` implementation
 - `src/wrapper/stdio-wrapper.ts` — stdio JSON-RPC-style transport (`METHODS` must match contract)
 - `src/wrapper/client.ts` — `RSToolWrapperClient` for spawned wrapper
-- `src/mappers/` — bridge to frontend `rslang` / RSForm analysis
+- `src/mappers/` — bridge to frontend `rslang` / RSForm analysis and evaluation (`schema-adapter.ts`, `model-adapter.ts`)
 - `tests/` — contract and behavior tests
 - `examples/` — runnable agent workflows and sample session JSON
 - `README.md` — setup, stdio protocol, scripts
@@ -33,12 +33,13 @@ Run from `rsconcept/rstool`:
 - Typecheck: `npm run typecheck`
 - Tests: `npm test`
 - Stdio wrapper: `npm run wrapper`
-- Examples: `npm run example:client`, `npm run example:build-sample`; other scripts under `examples/` as added to `package.json`
+- Examples: `npm run example:client`, `npm run example:build-schema`, `npm run example:build-rsmodel`; other scripts under `examples/` as added to `package.json`
 
 ## Edit rules
 
 - Contract surface changes live in `tool-contract.ts` first; implement in `index.ts` and wire stdio in `stdio-wrapper.ts`.
-- Analyzer / RSLang behavior: prefer changes in `rsconcept/frontend/src/domain/rslang` and adapt via `src/mappers/frontend-domain-adapter.ts` — do not fork language rules in rstool.
+- Analyzer / RSLang behavior: prefer changes in `rsconcept/frontend/src/domain/rslang` and adapt via `src/mappers/schema-adapter.ts` — do not fork language rules in rstool.
+- Evaluation / modeling: reuse frontend `RSEngine`, `RSCalculator`, `rsmodel-api` via `src/mappers/model-adapter.ts`; keep interpretation in-memory unless backend persistence is explicitly added.
 - New or renamed public methods: update `METHODS` in `stdio-wrapper.ts`, tests, `README.md`, and the skill (see checklist below).
 - Function arg order changes: update all callsites (wrapper, client, examples, tests).
 
@@ -50,15 +51,16 @@ Whenever you change the **agent contract** (not internal refactors), update docu
 
 - `CONTRACT_VERSION` bump
 - New/removed/renamed methods on `RSFormAgentTool` or stdio `method` names
-- Changes to request/response shapes (`ConstituentaDraft`, `SessionState`, `AnalysisResult`, filters, export JSON)
+- Changes to request/response shapes (`ConstituentaDraft`, `SessionState`, `SessionModelState`, `AnalysisResult`, `EvaluationResult`, filters, export JSON)
 - New `CstType` values or validation rules agents must follow (e.g. empty formal on `basic` / `constant`)
-- New exported error codes in `RSToolErrorCode` that agents should handle
+- New exported error codes in `RSErrorCode` that agents should handle
 - Stdio protocol (ready handshake, error `code` strings, param field names)
 
 **Sync checklist** (tick all that apply):
 
 - [ ] `src/contracts/tool-contract.ts`
 - [ ] `src/index.ts` + `src/wrapper/stdio-wrapper.ts` (`METHODS` + handlers)
+- [ ] `src/mappers/model-adapter.ts` (when evaluation/modeling behavior changes)
 - [ ] `tests/rsform-agent-tool.test.ts` (and any new tests)
 - [ ] `README.md` (methods list, examples, contract version if documented)
 - [ ] `skills/rslang-rstool/SKILL.md` — workflow, `cstType` table, triggers if behavior changed

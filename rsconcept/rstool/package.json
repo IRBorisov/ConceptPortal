@@ -10,7 +10,10 @@
     "test": "vitest run",
     "wrapper": "tsx src/wrapper/stdio-wrapper.ts",
     "example:client": "tsx examples/agent-client.ts",
-    "example:build-sample": "tsx examples/build-sample-rsform.ts"
+    "example:build-schema": "tsx examples/build-sample-rsform.ts",
+    "example:build-rsmodel": "tsx examples/build-sample-rsmodel.ts",
+    "example:build-kinship-schema": "tsx examples/build-kinship-rsform.ts",
+    "example:build-kinship-rsmodel": "tsx examples/build-kinship-rsmodel.ts"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

@@ -1,0 +1,131 @@
+{
+  "contractVersion": "1.2.0",
+  "state": {
+    "sessionId": "8359513a-3d62-4f0a-b980-b0a33f63ff49",
+    "createdAt": "2026-05-20T10:35:40.100Z",
+    "updatedAt": "2026-05-20T10:35:40.130Z",
+    "revisions": [
+      {
+        "revisionId": "5846ca66-62c0-4c81-8056-46bc8310a61e",
+        "at": "2026-05-20T10:35:40.130Z",
+        "message": "Built sample RSModel"
+      }
+    ],
+    "items": [
+      {
+        "id": 1,
+        "alias": "X1",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 2,
+        "alias": "C1",
+        "cstType": "constant",
+        "definitionFormal": "",
+        "term": "",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "C1",
+              "isOrdered": true,
+              "isArithmetic": true,
+              "isIntegerCompatible": true
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 3,
+        "alias": "D1",
+        "cstType": "term",
+        "definitionFormal": "X1×X1",
+        "term": "",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 4,
+        "alias": "A1",
+        "cstType": "axiom",
+        "definitionFormal": "1=1",
+        "term": "",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      }
+    ],
+    "model": {
+      "items": [
+        {
+          "id": 1,
+          "type": "basic",
+          "value": {
+            "0": "alice",
+            "1": "bob"
+          }
+        },
+        {
+          "id": 2,
+          "type": "basic",
+          "value": {
+            "0": "zero",
+            "1": "one",
+            "2": "two"
+          }
+        }
+      ]
+    }
+  },
+  "diagnostics": []
+}

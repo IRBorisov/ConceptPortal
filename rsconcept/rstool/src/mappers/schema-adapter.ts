@@ -6,13 +6,12 @@ import {
   type AnalysisResult,
   type ConstituentaDraft,
   type ConstituentaState,
-  CstType as PublicCstType,
   type DiagnosticRecord,
   type SessionState
 } from '../contracts/tool-contract';
 import { toPublicAnalysis, toPublicError } from './types';
 
-export class FrontendDomainAdapter {
+export class SchemaAdapter {
   public analyzeAgainstSession(
     session: SessionState,
     draft: ConstituentaDraft
@@ -21,7 +20,7 @@ export class FrontendDomainAdapter {
     const schema = this.toPseudoRSFormState(session, analyzer);
     const analysis = getAnalysisFor(
       draft.definitionFormal,
-      toFrontendCstType(draft.cstType),
+      draft.cstType,
       schema as unknown as RSForm,
       draft.alias
     );
@@ -79,7 +78,7 @@ export class FrontendDomainAdapter {
   private buildAnalyzer(session: SessionState): RSLangAnalyzer {
     const analyzer = new RSLangAnalyzer();
     for (const item of session.items) {
-      if (item.cstType === PublicCstType.BASE) {
+      if (item.cstType === CstType.BASE) {
         analyzer.addBase(item.alias);
       }
       analyzer.setGlobal(
@@ -89,28 +88,5 @@ export class FrontendDomainAdapter {
       );
     }
     return analyzer;
-  }
-}
-
-function toFrontendCstType(cstType: ConstituentaDraft['cstType']): CstType {
-  switch (cstType) {
-    case PublicCstType.NOMINAL:
-      return CstType.NOMINAL;
-    case PublicCstType.BASE:
-      return CstType.BASE;
-    case PublicCstType.CONSTANT:
-      return CstType.CONSTANT;
-    case PublicCstType.STRUCTURED:
-      return CstType.STRUCTURED;
-    case PublicCstType.TERM:
-      return CstType.TERM;
-    case PublicCstType.FUNCTION:
-      return CstType.FUNCTION;
-    case PublicCstType.PREDICATE:
-      return CstType.PREDICATE;
-    case PublicCstType.AXIOM:
-      return CstType.AXIOM;
-    case PublicCstType.STATEMENT:
-      return CstType.STATEMENT;
   }
 }

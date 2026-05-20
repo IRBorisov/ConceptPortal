@@ -1,22 +1,15 @@
-export const CONTRACT_VERSION = '1.1.0';
-export const RSToolErrorCode = {
-  formalDefinitionNotAllowed: 0x8862
-} as const;
+import { CstType } from '@/domain/library/rsform';
+import { EvalStatus, type BasicBinding } from '@/domain/library/rsmodel';
+import { ValueClass } from '@/domain/rslang';
+import { RSErrorCode } from '@/domain/rslang/error';
 
-export const CstType = {
-  NOMINAL: 'nominal',
-  BASE: 'basic',
-  STRUCTURED: 'structure',
-  TERM: 'term',
-  AXIOM: 'axiom',
-  FUNCTION: 'function',
-  PREDICATE: 'predicate',
-  CONSTANT: 'constant',
-  STATEMENT: 'statement'
-} as const;
-export type CstType = (typeof CstType)[keyof typeof CstType];
+export const CONTRACT_VERSION = '1.2.0';
 
-export type RSToolValueClass = 'value' | 'property';
+export { CstType, EvalStatus, RSErrorCode, ValueClass };
+export type { BasicBinding };
+
+/** Runtime evaluation value: number, nested array (set/tuple), or boolean 0/1. */
+export type RSToolValue = number | RSToolValue[];
 
 export interface RSToolErrorDescription {
   code: number;
@@ -59,12 +52,24 @@ export interface ConstituentaState extends Omit<ConstituentaDraft, 'term' | 'def
   analysis: AnalysisResult;
 }
 
+export interface ModelValueState {
+  id: number;
+  /** Frontend type string: `basic` or normalized effective typification. */
+  type: string;
+  value: RSToolValue | BasicBinding;
+}
+
+export interface SessionModelState {
+  items: ModelValueState[];
+}
+
 export interface SessionState {
   sessionId: string;
   createdAt: string;
   updatedAt: string;
   revisions: SessionRevision[];
   items: ConstituentaState[];
+  model: SessionModelState;
 }
 
 export interface DiagnosticRecord {
@@ -82,8 +87,45 @@ export interface AnalyzeExpressionInput {
 export interface AnalysisResult {
   success: boolean;
   type: Record<string, unknown> | null;
-  valueClass: RSToolValueClass | null;
+  valueClass: ValueClass | null;
   diagnostics: RSToolErrorDescription[];
+}
+
+export interface EvaluationResult {
+  success: boolean;
+  value: RSToolValue | BasicBinding | null;
+  status: EvalStatus;
+  iterations: number;
+  cacheHits: number;
+  diagnostics: RSToolErrorDescription[];
+}
+
+export interface EvaluateExpressionInput {
+  expression: string;
+  cstType: CstType;
+}
+
+export interface EvaluateConstituentaInput {
+  constituentId: number;
+}
+
+export interface SetConstituentaValueInput {
+  target: number;
+  /** Optional type override; inferred from schema when omitted. */
+  type?: string;
+  value: RSToolValue | BasicBinding;
+}
+
+export interface SetConstituentaValuesInput {
+  items: SetConstituentaValueInput[];
+}
+
+export interface ClearConstituentaValuesInput {
+  items: number[];
+}
+
+export interface RecalculateModelResult {
+  items: Array<{ id: number; alias: string; value: RSToolValue | null; status: EvalStatus }>;
 }
 
 export interface AddOrUpdateConstituentaInput {
@@ -109,4 +151,11 @@ export interface RSFormAgentToolContract {
   commitStep(sessionId: string, message?: string): SessionRevision;
   exportSession(sessionId: string): string;
   importSession(payload: string): SessionHandle;
+  setConstituentaValue(sessionId: string, input: SetConstituentaValueInput): SessionModelState;
+  setConstituentaValues(sessionId: string, input: SetConstituentaValuesInput): SessionModelState;
+  clearConstituentaValues(sessionId: string, input: ClearConstituentaValuesInput): SessionModelState;
+  getModelState(sessionId: string): SessionModelState;
+  evaluateExpression(sessionId: string, input: EvaluateExpressionInput): EvaluationResult;
+  evaluateConstituenta(sessionId: string, input: EvaluateConstituentaInput): EvaluationResult;
+  recalculateModel(sessionId: string): RecalculateModelResult;
 }

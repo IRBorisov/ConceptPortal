@@ -118,6 +118,17 @@ async function run() {
           definitionText:
             'Прямые дети племянников ξ: потомки братьев/сестёр на два поколения ниже (ребёнок племянника или племянницы).'
         }
+      },
+      {
+        draft: {
+          id: 11,
+          alias: 'D3',
+          cstType: CstType.TERM,
+          definitionFormal: 'D{ν∈X1 | ∃ξ∈X1 ν∈F5[ξ]}',
+          term: 'внучатые племянники',
+          definitionText:
+            'Множество людей, являющихся внучатыми племянниками или племянницами хотя бы одного человека из X1 (объединение значений F5 по всем ξ).'
+        }
       }
     ];
 
@@ -141,7 +152,7 @@ async function run() {
 
     await client.call('commitStep', {
       sessionId: session.sessionId,
-      message: 'КС «родственные отношения»: F6 «дети», рефакторинг Pr2(Fi1[·](S1))'
+      message: 'КС «родственные отношения»: D3 «внучатые племянники», F6 «дети»'
     });
 
     const exported = await client.call<string>('exportSession', {

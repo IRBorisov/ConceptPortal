@@ -1,11 +1,11 @@
 import { CONTRACT_VERSION, type AnalyzeExpressionInput, type AnalysisResult } from '../contracts/tool-contract';
-import { FrontendDomainAdapter } from '../mappers/frontend-domain-adapter';
+import { SchemaAdapter } from '../mappers/schema-adapter';
 import { SessionStore } from '../session/session-store';
 
 export class AnalyzerFacade {
   public constructor(
     private readonly sessions: SessionStore,
-    private readonly adapter: FrontendDomainAdapter
+    private readonly adapter: SchemaAdapter
   ) {}
 
   public analyzeExpression(sessionId: string, input: AnalyzeExpressionInput): AnalysisResult {
