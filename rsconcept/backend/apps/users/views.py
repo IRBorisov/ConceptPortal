@@ -1,10 +1,21 @@
 ''' REST API: User profile and Authorization. '''
+from datetime import timedelta
+
+from django.conf import settings
 from django.contrib.auth import login, logout
-from django_rest_passwordreset.views import ResetPasswordConfirm  # type: ignore
+from django.contrib.auth.password_validation import get_password_validators, validate_password
+from django.core.exceptions import ValidationError
+from django.db import transaction
+from django.http import Http404
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+from django_rest_passwordreset.models import ResetPasswordToken, get_password_reset_token_expiry_time
+from django_rest_passwordreset.serializers import PasswordTokenSerializer
+from django_rest_passwordreset.signals import post_password_reset, pre_password_reset
 from django_rest_passwordreset.views import ResetPasswordRequestToken  # type: ignore
 from django_rest_passwordreset.views import ResetPasswordValidateToken  # type: ignore
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from rest_framework import generics, permissions
+from rest_framework import exceptions, generics, permissions
 from rest_framework import status as c
 from rest_framework import views
 from rest_framework.response import Response
@@ -140,6 +151,64 @@ class PasswordResetValidateAPIView(ResetPasswordValidateToken):
     throttle_classes = (PasswordResetRateThrottle,)
 
 
-class PasswordResetConfirmAPIView(ResetPasswordConfirm):
-    ''' Throttled password reset confirm endpoint. '''
+class PasswordResetConfirmAPIView(generics.GenericAPIView):
+    '''
+    Throttled password reset confirm endpoint.
+
+    Base behaviour aligns with django-rest-passwordreset ResetPasswordConfirm, but confirms the
+    token under ``select_for_update()`` so concurrent double-submits cannot both apply.
+    '''
+
     throttle_classes = (PasswordResetRateThrottle,)
+    permission_classes = ()
+    serializer_class = PasswordTokenSerializer
+    authentication_classes = ()
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        password = serializer.validated_data['password']
+        token_key = serializer.validated_data['token']
+
+        with transaction.atomic():
+            reset_password_token = (
+                ResetPasswordToken.objects.select_for_update().filter(key=token_key).first()
+            )
+            if not reset_password_token:
+                raise Http404(_('The OTP password entered is not valid. Please check and try again.'))
+
+            expiry_date = reset_password_token.created_at + timedelta(
+                hours=get_password_reset_token_expiry_time()
+            )
+
+            if timezone.now() > expiry_date:
+                reset_password_token.delete()
+                raise Http404(_('The token has expired'))
+
+            if reset_password_token.user.eligible_for_reset():
+                pre_password_reset.send(
+                    sender=self.__class__,
+                    user=reset_password_token.user,
+                    reset_password_token=reset_password_token,
+                )
+                try:
+                    validate_password(
+                        password,
+                        user=reset_password_token.user,
+                        password_validators=get_password_validators(settings.AUTH_PASSWORD_VALIDATORS),
+                    )
+                except ValidationError as errors:
+                    raise exceptions.ValidationError({'password': errors.messages}) from errors
+
+                reset_password_token.user.set_password(password)
+                reset_password_token.user.save()
+
+                post_password_reset.send(
+                    sender=self.__class__,
+                    user=reset_password_token.user,
+                    reset_password_token=reset_password_token,
+                )
+
+            ResetPasswordToken.objects.filter(user=reset_password_token.user).delete()
+
+        return Response({'status': 'OK'})

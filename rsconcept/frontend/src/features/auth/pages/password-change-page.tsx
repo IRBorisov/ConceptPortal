@@ -1,6 +1,6 @@
 'use client';
 
-import { type SubmitEvent, useState } from 'react';
+import { type SubmitEvent, useLayoutEffect, useState } from 'react';
 
 import { useTx } from '@/i18n';
 
@@ -11,10 +11,24 @@ import { SubmitButton } from '@/components/control';
 import { type ErrorData, InfoError } from '@/components/info-error';
 import { TextInput } from '@/components/input';
 import { Loader } from '@/components/loader';
-import { useQueryStrings } from '@/hooks/use-query-strings';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { useResetPassword } from '../backend/use-reset-password';
+
+/** Survives React Strict Mode remount after stripping `?token=` from the address bar (dev only). */
+const PASSWORD_RESET_TOKEN_STORAGE_KEY = 'rsconcept:password-reset-token-query';
+
+function readResetToken(): string {
+  const fromQuery = new URLSearchParams(window.location.search).get('token') ?? '';
+  if (fromQuery) {
+    return fromQuery;
+  }
+  try {
+    return sessionStorage.getItem(PASSWORD_RESET_TOKEN_STORAGE_KEY) ?? '';
+  } catch {
+    return '';
+  }
+}
 
 function useTokenValidation(token: string, isPending: boolean) {
   const { validateToken } = useResetPassword();
@@ -32,10 +46,32 @@ function useTokenValidation(token: string, isPending: boolean) {
 export function Component() {
   const tx = useTx();
   const router = useConceptNavigation();
-  const token = useQueryStrings().get('token') ?? '';
+  const [resetToken] = useState(() => readResetToken());
+
+  useLayoutEffect(
+    function stripResetTokenQuery() {
+      const url = new URL(window.location.href);
+      if (!url.searchParams.has('token')) {
+        return;
+      }
+      const raw = url.searchParams.get('token') ?? '';
+      try {
+        if (raw) {
+          sessionStorage.setItem(PASSWORD_RESET_TOKEN_STORAGE_KEY, raw);
+        }
+      } catch {
+        // ignore quota / privacy mode
+      }
+      url.searchParams.delete('token');
+      const search = url.searchParams.toString();
+      const nextPath = `${url.pathname}${search ? `?${search}` : ''}${url.hash}`;
+      router.replace({ path: nextPath, force: true });
+    },
+    [router]
+  );
 
   const { resetPassword, isPending, error: serverError } = useResetPassword();
-  const { isTokenValidating, validate } = useTokenValidation(token, isPending);
+  const { isTokenValidating, validate } = useTokenValidation(resetToken, isPending);
 
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
@@ -47,8 +83,15 @@ export function Component() {
     if (!isPending) {
       void resetPassword({
         password: newPassword,
-        token: token
-      }).then(() => router.replace({ path: urls.login }));
+        token: resetToken
+      }).then(() => {
+        try {
+          sessionStorage.removeItem(PASSWORD_RESET_TOKEN_STORAGE_KEY);
+        } catch {
+          // ignore
+        }
+        router.replace({ path: urls.login });
+      });
     }
   }
 

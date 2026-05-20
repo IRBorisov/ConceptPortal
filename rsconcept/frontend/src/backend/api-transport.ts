@@ -22,15 +22,18 @@ const defaultOptions = {
   withCredentials: true
 };
 
+const SAFE_HTTP_METHODS = new Set(['get', 'head', 'options']);
+
 const axiosInstance = axios.create(defaultOptions);
 axiosInstance.interceptors.request.use(config => {
+  const method = (config.method ?? 'get').toLowerCase();
   const token = document.cookie
     .split('; ')
     .find(row => row.startsWith('csrftoken='))
     ?.split('=')[1];
 
-  if (!token && config.method !== 'get') {
-    console.warn('CSRF token not found for non-GET request');
+  if (!SAFE_HTTP_METHODS.has(method) && !token) {
+    return Promise.reject(new Error(globalTx('tx.shell.error.csrfLost')));
   }
 
   if (token) {

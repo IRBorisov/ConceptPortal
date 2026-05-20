@@ -1,5 +1,6 @@
 ''' Testing API: users. '''
 from django.core.cache import cache
+from django_rest_passwordreset.models import ResetPasswordToken
 from rest_framework import status
 
 from shared.EndpointTester import EndpointTester, decl_endpoint
@@ -164,6 +165,33 @@ class TestUserUserProfileAPIView(EndpointTester):
             self.executeOK({'email': self.user.email})
         response = self.execute({'email': self.user.email})
         self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
+
+    def test_password_reset_confirm_invalidates_token(self):
+        ''' Second confirm with the same token must fail after a successful reset. '''
+        cache.clear()
+        self.logout()
+
+        self.assertEqual(self.client.post('/users/api/password-reset', {'email': self.user.email}, format='json').status_code,
+                         status.HTTP_200_OK)
+
+        token_row = ResetPasswordToken.objects.filter(user=self.user).get()
+        token_key = token_row.key
+
+        payload = {'token': token_key, 'password': 'StrongPass@@123'}
+        self.assertEqual(
+            self.client.post('/users/api/password-reset/confirm', payload, format='json').status_code,
+            status.HTTP_200_OK
+        )
+
+        self.assertFalse(
+            ResetPasswordToken.objects.filter(key=token_key).exists(),
+            msg='Consumed reset token rows should be cleared after confirm.'
+        )
+
+        self.assertEqual(
+            self.client.post('/users/api/password-reset/confirm', payload, format='json').status_code,
+            status.HTTP_404_NOT_FOUND
+        )
 
 
 class TestSignupAPIView(EndpointTester):
