@@ -440,6 +440,18 @@ class TestInlineSynthesis(EndpointTester):
         self.logout()
         self.executeForbidden(data)
 
+    def test_inline_synthesis_forbidden_without_source_read(self):
+        private_source = RSForm.create(title='PrivSrc', alias='PS', owner=self.user2)
+        private_source.model.access_policy = AccessPolicy.PRIVATE
+        private_source.model.save()
+        data = {
+            'receiver': self.schema1.model.pk,
+            'source': private_source.model.pk,
+            'items': [],
+            'substitutions': []
+        }
+        self.executeForbidden(data)
+
 
     def test_inline_synthesis(self):
         ks1_x1 = self.schema1.insert_last('X1', term_raw='KS1X1')  # -> delete

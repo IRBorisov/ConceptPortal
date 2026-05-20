@@ -471,3 +471,11 @@ class TestLibraryViewset(EndpointTester):
         clone_model = RSModel.objects.get(model_id=response.data['id'])
         self.assertEqual(clone_model.schema_id, self.owned.pk)
         self.assertEqual(ConstituentData.objects.filter(model_id=response.data['id']).count(), 2)
+
+    @decl_endpoint('/api/library/{item}/clone', method='post')
+    def test_clone_forbidden_without_read_access(self):
+        private_other = RSForm.create(title='PrivateClone', alias='PC', owner=self.user2)
+        private_other.model.access_policy = AccessPolicy.PRIVATE
+        private_other.model.save()
+        data = {'item_data': {'title': 'Copy attempt'}, 'items': []}
+        self.executeForbidden(data, item=private_other.model.pk)

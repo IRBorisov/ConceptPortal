@@ -8,6 +8,7 @@ from rest_framework import generics
 from rest_framework import status as c
 from rest_framework import viewsets
 from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
@@ -574,6 +575,8 @@ def inline_synthesis(request: Request) -> HttpResponse:
     item = cast(LibraryItem, serializer.validated_data['receiver'])
     target_cst = cast(list[m.Constituenta], serializer.validated_data['items'])
     source = cast(LibraryItem, serializer.validated_data['source'])
+    if not permissions.can_read_library_item(request.user, source):
+        raise PermissionDenied()
     target_ids = [item.pk for item in target_cst] if target_cst else None
 
     with transaction.atomic():

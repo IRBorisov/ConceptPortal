@@ -32,6 +32,24 @@ def _extract_item(obj: Any) -> LibraryItem:
     })
 
 
+def can_read_library_item(user: Any, item: LibraryItem) -> bool:
+    ''' Whether *user* may read *item*. '''
+    if user.is_anonymous:
+        return item.access_policy == AccessPolicy.PUBLIC
+    if hasattr(user, 'is_staff') and user.is_staff:
+        return True
+    if item.access_policy == AccessPolicy.PUBLIC:
+        return True
+    if item.owner_id == user.pk:
+        return True
+    if Editor.objects.filter(
+        item=item,
+        editor=cast(User, user)
+    ).exists() and item.access_policy != AccessPolicy.PRIVATE:
+        return True
+    return False
+
+
 def can_edit_item(user, obj: Any) -> bool:
     if user.is_anonymous:
         return False

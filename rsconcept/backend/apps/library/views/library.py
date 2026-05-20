@@ -167,6 +167,8 @@ class LibraryViewSet(viewsets.ModelViewSet):
     def clone(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Create deep copy of library item. '''
         item = self._get_item()
+        if not permissions.can_read_library_item(request.user, item):
+            raise PermissionDenied()
         if item.item_type not in [m.LibraryItemType.RSFORM, m.LibraryItemType.RSMODEL]:
             return Response(status=c.HTTP_400_BAD_REQUEST)
 
