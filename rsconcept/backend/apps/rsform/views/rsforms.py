@@ -518,16 +518,18 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         request=s.TextSerializer,
         responses={
             c.HTTP_200_OK: s.ResolverSerializer,
+            c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None
         }
     )
     @action(detail=True, methods=['post'], url_path='resolve')
     def resolve(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Resolve references in text against Schema terms context. '''
+        item = self._get_item()
         serializer = s.TextSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         text = serializer.validated_data['text']
-        resolver = m.RSForm.resolver_from_schema(pk)
+        resolver = m.RSForm.resolver_from_schema(item.pk)
         resolver.resolve(text)
         return Response(
             status=c.HTTP_200_OK,

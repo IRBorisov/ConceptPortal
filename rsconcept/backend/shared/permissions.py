@@ -128,7 +128,7 @@ class EditorMixin(APIView):
     def get_permissions(self):
         result = super().get_permissions()
         if self.request.method.upper() == 'GET':
-            result.append(Anyone())
+            result.append(ItemAnyone())
         else:
             result.append(ItemEditor())
         return result

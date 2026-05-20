@@ -195,6 +195,15 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(response.data['refs'][1]['pos_output']['start'], 7)
         self.assertEqual(response.data['refs'][1]['pos_output']['finish'], 19)
 
+    @decl_endpoint('/api/rsforms/{item}/resolve', method='post')
+    def test_resolve_forbidden(self):
+        ''' ItemAnyone object checks must run (uses get_object), not pk alone. '''
+        self.private.insert_last(alias='X1', term_resolved='секрет')
+        data = {'text': '@{X1}'}
+        self.executeForbidden(data, item=self.private_id)
+        self.logout()
+        self.executeForbidden(data, item=self.private_id)
+        self.executeOK(data, item=self.unowned_id)
 
     @decl_endpoint('/api/rsforms/{item}/substitute', method='patch')
     def test_substitute_multiple(self):

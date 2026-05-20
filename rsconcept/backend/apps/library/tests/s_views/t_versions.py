@@ -99,6 +99,16 @@ class TestVersionViews(EndpointTester):
 
 
     @decl_endpoint('/api/versions/{version}', method='get')
+    def test_access_version_not_readable(self):
+        version_id = self._create_version({'version': '1.0.0', 'description': 'test'})
+        self.owned.model.access_policy = AccessPolicy.PRIVATE
+        self.owned.model.save()
+        self.logout()
+        self.executeForbidden(version=version_id)
+        self.client.force_authenticate(user=self.user)
+        self.executeOK(version=version_id)
+
+    @decl_endpoint('/api/versions/{version}', method='get')
     def test_access_version(self):
         data = {'version': '1.0.0', 'description': 'test'}
         version_id = self._create_version(data)
