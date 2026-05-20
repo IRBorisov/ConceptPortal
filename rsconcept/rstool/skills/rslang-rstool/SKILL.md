@@ -1,13 +1,13 @@
 ---
 name: rslang-rstool
-description: RS language/rsconcept/rstool for AI agents—incremental RSForm construction, formal definitions, typification, diagnostics.
+description: RS language/rsconcept/rstool for AI agents—incremental RSForm construction, formal definitions, typification, diagnostics, modeling, evaluation.
 ---
 
 # RS Language & rstool — Compact Guide for Agents
 
 **RS language** is a formal scheme notation for concepts, relations, operations—extends FOL, core: membership `x∈y`; typification via set-theoretic/logical expressions.
 
-**rstool** is the agent API for sessions, upserts, analysis, diagnostics, (de)serialization.
+**rstool** is the agent API for sessions, upserts, analysis, diagnostics, modeling/evaluation, (de)serialization.
 
 - Library: `rsconcept/rstool`
 - Analyzer: shared with frontend
@@ -29,7 +29,9 @@ description: RS language/rsconcept/rstool for AI agents—incremental RSForm con
 4. **Analyze scratch**: `analyzeExpression`
 5. **Process diagnostics**: check `analysis.diagnostics`/`listDiagnostics`; fix by range
 6. **Checkpoint**: `commitStep` (message optional)
-7. **Export/import**: persist with `exportSession`/`importSession`
+7. **Model values**: `setConstituentaValue` / `setConstituentaValues` for base bindings (`{0:"a",1:"b"}`) or structured values; `getModelState`
+8. **Evaluate**: `evaluateExpression` (scratch) or `evaluateConstituenta` / `recalculateModel` (stored definitions)
+9. **Export/import**: persist with `exportSession`/`importSession` (includes `state.model`)
 
 **Clients**:
 
@@ -63,8 +65,10 @@ description: RS language/rsconcept/rstool for AI agents—incremental RSForm con
 | function  | F1      | allowed   | Parameterized        |
 | predicate | P1      | allowed   | Parameterized        |
 
-- Non-empty formal for `basic`/`constant` ⇒ error `0x8862` (`formalDefinitionNotAllowed`)
+- Non-empty formal for `basic`/`constant` ⇒ error `0x8862` (`definitionNotAllowed`)
 - Empty `basic`/`constant` always typified
+- **Interpretable** (can set value): `basic`, `constant`, `structure`, `axiom`, `term`, `statement`
+- **Inferrable** (computed, do not set directly): `term`, `axiom`, `statement`
 
 ## Syntax
 
@@ -105,4 +109,6 @@ Don’t infer types—always read tool output.
 - [ ] All dependencies exist before upsert
 - [ ] Matching `cstType`
 - [ ] Diagnostics handled before commit/export
+- [ ] Base bindings set before evaluating expressions that reference base elements
+- [ ] Do not call `setConstituentaValue` on inferrable terms/axioms/statements
 - [ ] For other details, check help topics or [REFERENCE.md](REFERENCE.md)

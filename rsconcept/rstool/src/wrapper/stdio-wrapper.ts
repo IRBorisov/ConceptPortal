@@ -29,7 +29,14 @@ const METHODS = [
   'listDiagnostics',
   'commitStep',
   'exportSession',
-  'importSession'
+  'importSession',
+  'setConstituentaValue',
+  'setConstituentaValues',
+  'clearConstituentaValues',
+  'getModelState',
+  'evaluateExpression',
+  'evaluateConstituenta',
+  'recalculateModel'
 ] as const;
 
 function writeResponse(response: StdioResponse): void {
@@ -113,6 +120,48 @@ function handleRequest(request: StdioRequest): StdioResponse {
           id: request.id,
           ok: true,
           result: tool.importSession(requiredString(params, 'payload'))
+        };
+      case 'setConstituentaValue':
+        return {
+          id: request.id,
+          ok: true,
+          result: tool.setConstituentaValue(requiredString(params, 'sessionId'), params.input as never)
+        };
+      case 'setConstituentaValues':
+        return {
+          id: request.id,
+          ok: true,
+          result: tool.setConstituentaValues(requiredString(params, 'sessionId'), params.input as never)
+        };
+      case 'clearConstituentaValues':
+        return {
+          id: request.id,
+          ok: true,
+          result: tool.clearConstituentaValues(requiredString(params, 'sessionId'), params.input as never)
+        };
+      case 'getModelState':
+        return {
+          id: request.id,
+          ok: true,
+          result: tool.getModelState(requiredString(params, 'sessionId'))
+        };
+      case 'evaluateExpression':
+        return {
+          id: request.id,
+          ok: true,
+          result: tool.evaluateExpression(requiredString(params, 'sessionId'), params.input as never)
+        };
+      case 'evaluateConstituenta':
+        return {
+          id: request.id,
+          ok: true,
+          result: tool.evaluateConstituenta(requiredString(params, 'sessionId'), params.input as never)
+        };
+      case 'recalculateModel':
+        return {
+          id: request.id,
+          ok: true,
+          result: tool.recalculateModel(requiredString(params, 'sessionId'))
         };
       default:
         return {

@@ -24,7 +24,8 @@ export class SessionStore {
       createdAt: initial?.createdAt ?? now,
       updatedAt: now,
       revisions: initial?.revisions ?? [],
-      items: initial?.items ?? []
+      items: initial?.items ?? [],
+      model: initial?.model ?? { items: [] }
     };
     this.sessions.set(sessionId, {
       state,

@@ -27,6 +27,17 @@ tool.analyzeExpression(sessionId, {
   expression: '(',
   cstType: CstType.TERM
 }); // success: false, syntax diagnostics
+
+// Set base binding and evaluate a term
+tool.setConstituentaValue(sessionId, {
+  target: 1,
+  value: { 0: 'zero', 1: 'one' }
+});
+const evalResult = tool.evaluateExpression(sessionId, {
+  expression: '1+2',
+  cstType: CstType.TERM
+});
+console.log(evalResult.success, evalResult.value); // true, 3
 ```
 
 ## Wrapper client
@@ -40,12 +51,22 @@ Equivalent flow in `examples/agent-client.ts`: ready → createSession → upser
 ## Build a small RSForm file
 
 ```bash
-npm run example:build-sample
+npm run example:build-schema
 ```
 
 Writes `examples/sample-rsform-session.json` with `X1`, `C1`, `D1` (`X1×X1`), `A1` (`1=1`).
 
-Larger domain example: `examples/build-kinship-rsform.ts` → `examples/kinship-rsform-session.json`.
+## Build a sample RSModel session
+
+```bash
+npm run example:build-rsmodel
+```
+
+Builds the same schema, sets base bindings on `X1` and `C1`, evaluates `D1` and `A1`, recalculates the model, and writes `examples/sample-rsmodel-session.json` (includes `state.model.items`).
+
+Larger domain example: `examples/build-kinship-rsform.ts` → `examples/kinship-rsform-session.json` (includes term `D3` — внучатые племянники).
+
+Kinship RSModel with non-empty `D3`: `npm run example:build-kinship-rsmodel` → `examples/kinship-rsmodel-session.json` (sets `X1`/`S1`, then `recalculateModel`).
 
 ## Manual stdio (PowerShell)
 
@@ -59,19 +80,21 @@ npm run wrapper
 Paste lines (after ready line appears):
 
 ```json
-{"id":"1","method":"createSession","params":{}}
+{ "id": "1", "method": "createSession", "params": {} }
 ```
 
 Use returned `sessionId` in subsequent lines.
 
 ## Common mistakes
 
-| Mistake | Symptom |
-|---------|---------|
-| `definitionFormal: 'Z'` on `X1` (`basic`) | `0x8862` formalDefinitionNotAllowed |
-| `D1` uses `D2` before `D2` exists | globalNotTyped / undeclared global |
-| `analyzeExpression` with wrong `cstType` | Role-specific semantic errors |
-| Non-empty formal on `C1` (`constant`) | Same as basic — definition not allowed |
+| Mistake                                            | Symptom                                          |
+| -------------------------------------------------- | ------------------------------------------------ |
+| `definitionFormal: 'Z'` on `X1` (`basic`)          | `0x8862` definitionNotAllowed                    |
+| `D1` uses `D2` before `D2` exists                  | globalNotTyped / undeclared global               |
+| `analyzeExpression` with wrong `cstType`           | Role-specific semantic errors                    |
+| Non-empty formal on `C1` (`constant`)              | Same as basic — definition not allowed           |
+| `setConstituentaValue` on inferrable `D1` (`term`) | Error: inferrable and cannot be set directly     |
+| Evaluating before base binding set                 | May fail or return empty depending on expression |
 
 ## Fixing a syntax error
 

@@ -1,4 +1,6 @@
-import { type AnalysisResult, type RSToolErrorDescription, type RSToolValueClass } from '../contracts/tool-contract';
+import { type ValueClass } from '@/domain/rslang';
+
+import { type AnalysisResult, type RSToolErrorDescription } from '../contracts/tool-contract';
 
 export interface DomainErrorLike {
   code: number;
@@ -10,7 +12,7 @@ export interface DomainErrorLike {
 export interface DomainAnalysisLike {
   success: boolean;
   type: Record<string, unknown> | null;
-  valueClass: string | null;
+  valueClass: ValueClass | null;
   errors: DomainErrorLike[];
 }
 
@@ -27,14 +29,7 @@ export function toPublicAnalysis(analysis: DomainAnalysisLike): AnalysisResult {
   return {
     success: analysis.success,
     type: analysis.type,
-    valueClass: toPublicValueClass(analysis.valueClass),
+    valueClass: analysis.valueClass,
     diagnostics: analysis.errors.map(toPublicError)
   };
-}
-
-function toPublicValueClass(valueClass: string | null): RSToolValueClass | null {
-  if (valueClass === 'value' || valueClass === 'property') {
-    return valueClass;
-  }
-  return null;
 }

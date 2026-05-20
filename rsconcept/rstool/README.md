@@ -10,6 +10,7 @@ RS language + rstool workflows for agents: `skills/rslang-rstool/` (`SKILL.md`, 
 
 - Session-based incremental editing of constituents.
 - Parse/syntax/semantic/type analysis for expressions.
+- In-memory modeling: set base bindings and structured values; evaluate expressions and constituents.
 - Deterministic diagnostics and export/import for reproducible agent workflows.
 - Transport-neutral contract with future MCP/HTTP adapter layers.
 
@@ -32,6 +33,8 @@ const result = tool.analyzeExpression(session.sessionId, {
 - `npm test`
 - `npm run wrapper`
 - `npm run example:client`
+- `npm run example:build-schema`
+- `npm run example:build-rsmodel`
 
 ## Agent Wrapper (stdio)
 
@@ -57,17 +60,24 @@ Supported methods:
 - `commitStep`
 - `exportSession`
 - `importSession`
+- `setConstituentaValue`
+- `setConstituentaValues`
+- `clearConstituentaValues`
+- `getModelState`
+- `evaluateExpression`
+- `evaluateConstituenta`
+- `recalculateModel`
 
 Example request:
 
 ```json
-{"id":"1","method":"createSession","params":{}}
+{ "id": "1", "method": "createSession", "params": {} }
 ```
 
 Example response:
 
 ```json
-{"id":"1","ok":true,"result":{"sessionId":"...","contractVersion":"1.0.0"}}
+{ "id": "1", "ok": true, "result": { "sessionId": "...", "contractVersion": "1.2.0" } }
 ```
 
 ## Typed client example
@@ -87,6 +97,7 @@ What it demonstrates:
 - creates a session
 - upserts a constituent
 - runs expression analysis
+- sets base binding and evaluates a term
 - fetches diagnostics
 
 ## Importable wrapper client
