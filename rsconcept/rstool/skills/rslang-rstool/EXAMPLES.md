@@ -68,6 +68,18 @@ Larger domain example: `examples/build-kinship-rsform.ts` → `examples/kinship-
 
 Kinship RSModel with non-empty `D3`: `npm run example:build-kinship-rsmodel` → `examples/kinship-rsmodel-session.json` (sets `X1`/`S1`, then `recalculateModel`).
 
+Kinship X1 editing CLI (`examples/kinship/`):
+
+```bash
+npm run kinship:cli -- list
+npm run kinship:cli -- add Кирилл
+npm run kinship:cli -- remove Пётр
+npm run kinship:cli -- rename Пётр Петр
+npm run kinship:cli -- set Иван Мария Пётр Анна
+npm run kinship:cli -- clear
+npm run kinship:cli                    # interactive REPL
+```
+
 ## Manual stdio (PowerShell)
 
 Start wrapper in one terminal:

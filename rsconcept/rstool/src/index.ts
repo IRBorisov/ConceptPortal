@@ -101,17 +101,26 @@ export class RSFormAgentTool implements RSFormAgentToolContract {
     return this.sessions.create(parsed.state, this.contractVersion);
   }
 
-  public setConstituentaValue(sessionId: string, input: SetConstituentaValueInput): SessionModelState {
+  public async setConstituentaValue(
+    sessionId: string,
+    input: SetConstituentaValueInput
+  ): Promise<SessionModelState> {
     const envelope = this.sessions.get(sessionId);
     return this.evaluation.setConstituentaValue(envelope.state, input);
   }
 
-  public setConstituentaValues(sessionId: string, input: SetConstituentaValuesInput): SessionModelState {
+  public async setConstituentaValues(
+    sessionId: string,
+    input: SetConstituentaValuesInput
+  ): Promise<SessionModelState> {
     const envelope = this.sessions.get(sessionId);
     return this.evaluation.setConstituentaValues(envelope.state, input);
   }
 
-  public clearConstituentaValues(sessionId: string, input: ClearConstituentaValuesInput): SessionModelState {
+  public async clearConstituentaValues(
+    sessionId: string,
+    input: ClearConstituentaValuesInput
+  ): Promise<SessionModelState> {
     const envelope = this.sessions.get(sessionId);
     return this.evaluation.clearConstituentaValues(envelope.state, input.items);
   }

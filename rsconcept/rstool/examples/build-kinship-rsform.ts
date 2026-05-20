@@ -129,6 +129,16 @@ async function run() {
           definitionText:
             'Множество людей, являющихся внучатыми племянниками или племянницами хотя бы одного человека из X1 (объединение значений F5 по всем ξ).'
         }
+      },
+      {
+        draft: {
+          id: 12,
+          alias: 'A1',
+          cstType: CstType.AXIOM,
+          definitionFormal: 'card(X1)≤10',
+          term: 'не более десяти человек',
+          definitionText: 'В предметной области не более десяти человек: мощность X1 не превышает 10.'
+        }
       }
     ];
 
@@ -146,13 +156,15 @@ async function run() {
       if (!ok) {
         const diags = await client.call('listDiagnostics', { sessionId: session.sessionId });
         console.log(JSON.stringify(diags, null, 2));
-        process.exit(1);
+        throw new Error(
+          `${input.draft.alias}: analysis failed (${diagCount} diagnostics): ${JSON.stringify(diags)}`
+        );
       }
     }
 
     await client.call('commitStep', {
       sessionId: session.sessionId,
-      message: 'КС «родственные отношения»: D3 «внучатые племянники», F6 «дети»'
+      message: 'КС «родственные отношения»: D3 «внучатые племянники», F6 «дети», A1 «не более 10 человек»'
     });
 
     const exported = await client.call<string>('exportSession', {

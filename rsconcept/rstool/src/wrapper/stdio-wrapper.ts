@@ -65,7 +65,7 @@ function requiredString(input: Record<string, unknown>, key: string): string {
   return value;
 }
 
-function handleRequest(request: StdioRequest): StdioResponse {
+async function handleRequest(request: StdioRequest): Promise<StdioResponse> {
   try {
     const params = asObject(request.params);
     switch (request.method) {
@@ -125,19 +125,19 @@ function handleRequest(request: StdioRequest): StdioResponse {
         return {
           id: request.id,
           ok: true,
-          result: tool.setConstituentaValue(requiredString(params, 'sessionId'), params.input as never)
+          result: await tool.setConstituentaValue(requiredString(params, 'sessionId'), params.input as never)
         };
       case 'setConstituentaValues':
         return {
           id: request.id,
           ok: true,
-          result: tool.setConstituentaValues(requiredString(params, 'sessionId'), params.input as never)
+          result: await tool.setConstituentaValues(requiredString(params, 'sessionId'), params.input as never)
         };
       case 'clearConstituentaValues':
         return {
           id: request.id,
           ok: true,
-          result: tool.clearConstituentaValues(requiredString(params, 'sessionId'), params.input as never)
+          result: await tool.clearConstituentaValues(requiredString(params, 'sessionId'), params.input as never)
         };
       case 'getModelState':
         return {
@@ -210,7 +210,7 @@ input.on('line', line => {
     if (!('id' in request) || !('method' in request)) {
       throw new Error('Request must include "id" and "method"');
     }
-    writeResponse(handleRequest(request));
+    void handleRequest(request).then(writeResponse);
   } catch (error) {
     writeResponse({
       id: null,

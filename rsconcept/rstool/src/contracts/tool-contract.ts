@@ -151,9 +151,9 @@ export interface RSFormAgentToolContract {
   commitStep(sessionId: string, message?: string): SessionRevision;
   exportSession(sessionId: string): string;
   importSession(payload: string): SessionHandle;
-  setConstituentaValue(sessionId: string, input: SetConstituentaValueInput): SessionModelState;
-  setConstituentaValues(sessionId: string, input: SetConstituentaValuesInput): SessionModelState;
-  clearConstituentaValues(sessionId: string, input: ClearConstituentaValuesInput): SessionModelState;
+  setConstituentaValue(sessionId: string, input: SetConstituentaValueInput): Promise<SessionModelState>;
+  setConstituentaValues(sessionId: string, input: SetConstituentaValuesInput): Promise<SessionModelState>;
+  clearConstituentaValues(sessionId: string, input: ClearConstituentaValuesInput): Promise<SessionModelState>;
   getModelState(sessionId: string): SessionModelState;
   evaluateExpression(sessionId: string, input: EvaluateExpressionInput): EvaluationResult;
   evaluateConstituenta(sessionId: string, input: EvaluateConstituentaInput): EvaluationResult;

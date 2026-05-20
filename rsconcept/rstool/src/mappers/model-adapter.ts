@@ -26,7 +26,10 @@ import { toPublicError } from './types';
 const SESSION_MODEL_ID = 0;
 
 export class ModelAdapter {
-  public setConstituentaValue(session: SessionState, input: SetConstituentaValueInput): SessionModelState {
+  public async setConstituentaValue(
+    session: SessionState,
+    input: SetConstituentaValueInput
+  ): Promise<SessionModelState> {
     this.validateSetInput(session, input);
     const engine = this.createEngine(session);
     const cst = session.items.find(item => item.id === input.target)!;
@@ -34,30 +37,30 @@ export class ModelAdapter {
 
     if (isBaseSet(frontendType)) {
       const binding = toBasicBinding(input.value as Record<string | number, string>);
-      void engine.setBasicValue(input.target, binding);
+      await engine.setBasicValue(input.target, binding);
     } else {
-      void engine.setStructureValue(input.target, input.value as Value);
+      await engine.setStructureValue(input.target, input.value as Value);
     }
     session.updatedAt = new Date().toISOString();
     return structuredClone(session.model);
   }
 
-  public setConstituentaValues(
+  public async setConstituentaValues(
     session: SessionState,
     input: { items: SetConstituentaValueInput[] }
-  ): SessionModelState {
+  ): Promise<SessionModelState> {
     for (const item of input.items) {
-      this.setConstituentaValue(session, item);
+      await this.setConstituentaValue(session, item);
     }
     return structuredClone(session.model);
   }
 
-  public clearConstituentaValues(session: SessionState, ids: number[]): SessionModelState {
+  public async clearConstituentaValues(session: SessionState, ids: number[]): Promise<SessionModelState> {
     const engine = this.createEngine(session);
     for (const id of ids) {
-      void engine.resetValue(id);
+      await engine.resetValue(id);
+      session.updatedAt = new Date().toISOString();
     }
-    session.updatedAt = new Date().toISOString();
     return structuredClone(session.model);
   }
 
