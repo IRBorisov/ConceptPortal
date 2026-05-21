@@ -2,7 +2,7 @@
  * Module: generic API for backend REST communications using axios library.
  */
 import { toast } from 'react-toastify';
-import axios, { type AxiosError, type AxiosRequestConfig } from 'axios';
+import axios, { type AxiosError, type AxiosRequestConfig, type InternalAxiosRequestConfig } from 'axios';
 import { type z, ZodError } from 'zod';
 
 import { globalTx } from '@/i18n';
@@ -12,8 +12,13 @@ import { PARAMETER } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
 import { extractErrorMessage } from '@/utils/utils';
 
+import { CSRF_CLIENT_MISSING, isCsrfAxiosFailure, readCsrfTokenFromCookie, refreshCsrfToken } from './csrf-token';
+
+export { isCsrfAxiosFailure } from './csrf-token';
 export { AxiosError } from 'axios';
 export const isAxiosError = axios.isAxiosError;
+
+const CSRF_AUTH_ENDPOINT = '/users/api/auth';
 
 const defaultOptions = {
   xsrfCookieName: 'csrftoken',
@@ -24,23 +29,60 @@ const defaultOptions = {
 
 const SAFE_HTTP_METHODS = new Set(['get', 'head', 'options']);
 
+interface CsrfAwareAxiosRequestConfig extends InternalAxiosRequestConfig {
+  _csrfRetried?: boolean;
+}
+
 const axiosInstance = axios.create(defaultOptions);
-axiosInstance.interceptors.request.use(config => {
+
+function attachCsrfHeader(config: InternalAxiosRequestConfig, token: string): void {
+  config.headers['x-csrftoken'] = token;
+}
+
+function fetchCsrfAuth(): Promise<unknown> {
+  return axiosInstance.get(CSRF_AUTH_ENDPOINT);
+}
+
+function csrfMissingError(): Error {
+  return new Error(globalTx('tx.shell.error.csrfLost'), { cause: CSRF_CLIENT_MISSING });
+}
+
+axiosInstance.interceptors.request.use(async config => {
   const method = (config.method ?? 'get').toLowerCase();
-  const token = document.cookie
-    .split('; ')
-    .find(row => row.startsWith('csrftoken='))
-    ?.split('=')[1];
-
-  if (!SAFE_HTTP_METHODS.has(method) && !token) {
-    return Promise.reject(new Error(globalTx('tx.shell.error.csrfLost')));
+  if (SAFE_HTTP_METHODS.has(method)) {
+    return config;
   }
 
-  if (token) {
-    config.headers['x-csrftoken'] = token;
+  let token = readCsrfTokenFromCookie();
+  if (!token) {
+    token = await refreshCsrfToken(fetchCsrfAuth);
   }
+  if (!token) {
+    return Promise.reject(csrfMissingError());
+  }
+
+  attachCsrfHeader(config, token);
   return config;
 });
+
+axiosInstance.interceptors.response.use(
+  response => response,
+  async (error: AxiosError) => {
+    const config = error.config as CsrfAwareAxiosRequestConfig | undefined;
+    if (!config || config._csrfRetried || !isCsrfAxiosFailure(error)) {
+      return Promise.reject(error);
+    }
+
+    const token = await refreshCsrfToken(fetchCsrfAuth);
+    if (!token) {
+      return Promise.reject(error);
+    }
+
+    config._csrfRetried = true;
+    attachCsrfHeader(config, token);
+    return axiosInstance.request(config);
+  }
+);
 
 // ================ Data transfer types ================
 interface IFrontRequest<RequestData, ResponseData> {

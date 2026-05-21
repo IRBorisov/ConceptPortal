@@ -4,7 +4,7 @@ import { ZodError } from 'zod';
 
 import { useTx } from '@/i18n';
 
-import { type AxiosError, isAxiosError } from '@/backend/api-transport';
+import { type AxiosError, isAxiosError, isCsrfAxiosFailure } from '@/backend/api-transport';
 import { isResponseHtml } from '@/utils/utils';
 
 import { PrettyJson } from './view';
@@ -57,7 +57,7 @@ export function DescribeError({ error }: { error: ErrorData }) {
       </div>
     );
   }
-  if (error.response.status === 403 && error.message.includes('CSRF')) {
+  if (isCsrfAxiosFailure(error)) {
     return (
       <div>
         <p>{tx('tx.shell.error.csrfLost')}</p>
