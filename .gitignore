@@ -1,6 +1,3 @@
-# Local agent data
-.agents/
-
 # SECURITY SENSITIVE FILES
 secrets/
 nginx/cert/*.pem

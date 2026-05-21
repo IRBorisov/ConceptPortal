@@ -24,7 +24,7 @@ Agent-facing docs (keep in sync with contract changes):
 - `skills/rslang-rstool/REFERENCE.md` — API, stdio, error codes
 - `skills/rslang-rstool/EXAMPLES.md` — worked examples and pitfalls
 
-After editing the skill, sync to local Cursor: copy `skills/rslang-rstool/` → `.agents/skills/rslang-rstool/` (see `skills/README.md`; `.agents/` is gitignored).
+After editing the skill, update the duplicate under `.agents/skills/rslang-rstool/` in the same change set (see `skills/README.md`).
 
 ## Commands
 
@@ -69,7 +69,7 @@ Whenever you change the **agent contract** (not internal refactors), update docu
 - [ ] `skills/rslang-rstool/SKILL.md` — workflow, `cstType` table, triggers if behavior changed
 - [ ] `skills/rslang-rstool/REFERENCE.md` — method table, types, stdio examples, version string
 - [ ] `skills/rslang-rstool/EXAMPLES.md` — if examples or common mistakes changed
-- [ ] Copy updated skill to `.agents/skills/rslang-rstool/` for local Cursor (not committed)
+- [ ] `.agents/skills/rslang-rstool/` — same edits as `skills/rslang-rstool/` (keep copies identical)
 - [ ] `examples/*.ts` and sample JSON under `examples/` when the happy path changes
 
 **Language-only changes** (grammar, new `RSErrorCode` in frontend, help text): update skill only if agents need new guidance (operators, declaration order, diagnostic handling). Reference `REFERENCE.md` help map and `rsconcept/frontend/src/domain/rslang/error.ts`; do not duplicate full grammar in the skill.

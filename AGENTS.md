@@ -16,6 +16,7 @@ Workspace rules for agents.
 - `scripts/prod`: deploy scripts
 - `nginx`: reverse proxy/deploy config
 - `docker-compose-*.yml`: containers
+- `.agents/skills/`: project agent skills for Cursor (see [Agent skills](#agent-skills))
 
 ## Portal URLs → REST API
 
@@ -48,3 +49,7 @@ Locally, the **path prefix stays `/api/...`**; the API base URL comes from `VITE
 ## Agent skills
 
 - Domain docs: `CONTEXT.md`.
+- **Project skills (git):** `.agents/skills/<name>/` — shared Portal workflows (`i18n-extract`, `diagnose`, `triage`, etc.). Edit and commit here.
+- **`rslang-rstool` (two copies, keep identical):** `rsconcept/rstool/skills/rslang-rstool/` and `.agents/skills/rslang-rstool/`. When you change either, update the other in the same change set (see `rsconcept/rstool/AGENTS.md` checklist).
+- **User-global skills:** `~/.cursor/skills-cursor/` — not in this repo.
+- Index: `.agents/skills/README.md`; rstool notes: `rsconcept/rstool/skills/README.md`.

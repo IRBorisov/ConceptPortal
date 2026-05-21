@@ -4,7 +4,7 @@ Library-first implementation for LLM agents that incrementally build RSForm and 
 
 ## Agent skill
 
-RS language + rstool workflows for agents: `skills/rslang-rstool/` (`SKILL.md`, `REFERENCE.md`, `EXAMPLES.md`). Install into Cursor via `skills/README.md` (copy to `.agents/skills/rslang-rstool/`).
+RS language + rstool workflows for agents: `skills/rslang-rstool/` (`SKILL.md`, `REFERENCE.md`, `EXAMPLES.md`). Cursor copy: `.agents/skills/rslang-rstool/` — keep both in sync (`skills/README.md`).
 
 ## Scope
 
