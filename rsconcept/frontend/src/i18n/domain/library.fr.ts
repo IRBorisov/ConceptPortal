@@ -377,6 +377,10 @@ export const txLibraryFr: Record<string, string> = {
   'tx.oss.delete.confirm':
     'Attention!!\nLa suppression du schéma opérationnel supprimera toutes les opérations et les schémas conceptuels propres.\nCette action est irréversible.\nVoulez-vous vraiment supprimer ce SO ?',
   'tx.oss.goto': 'Aller au SO',
+  'tx.oss.clone': 'Cloner le SO',
+  'tx.oss.clone.hint':
+    'Créer une copie du schéma opérationnel et de tous les schémas attachés dans un autre dossier',
+  'tx.oss.clone.location.validate': 'Choisissez un dossier différent de celui du SO source',
   'tx.oss.notFound': 'Schéma opérationnel avec l’identifiant spécifié non trouvé',
   'tx.oss.relocate': 'Déplacer les constituantes',
   'tx.oss.relocate.hint': 'Déplacer les constituantes entre schémas',

@@ -145,6 +145,7 @@ REST_FRAMEWORK = {
         'login': '5/minute',
         'signup': '3/hour',
         'password_reset': '5/hour',
+        'oss_clone': '2/hour',
     }
 }
 

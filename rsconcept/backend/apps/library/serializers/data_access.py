@@ -7,7 +7,7 @@ from apps.rsform.models import Constituenta
 from shared import messages
 from shared.serializers import StrictModelSerializer, StrictSerializer
 
-from ..models import LibraryItem, LibraryItemType, Version
+from ..models import LibraryItem, LibraryItemType, LocationHead, Version
 
 
 class LibraryItemBaseSerializer(StrictModelSerializer):
@@ -81,11 +81,30 @@ class LibraryItemCloneSerializer(StrictSerializer):
 
     def validate_items(self, value):
         target = self.context.get('target')
+        if target.item_type == LibraryItemType.OPERATION_SCHEMA and value:
+            raise serializers.ValidationError('OSS clone does not support constituent selection')
         if target.item_type == LibraryItemType.RSFORM:
             invalid = [item.pk for item in value if item.schema_id != target.pk]
             if invalid:
                 raise serializers.ValidationError(messages.constituentsInvalid(invalid))
         return value
+
+    def validate(self, attrs):
+        target = self.context.get('target')
+        if target.item_type != LibraryItemType.OPERATION_SCHEMA:
+            return attrs
+        location = attrs['item_data'].get('location', '')
+        if location == target.location:
+            raise serializers.ValidationError({
+                'item_data': {'location': 'Clone target folder must differ from the source OSS location'}
+            })
+        if location.startswith(LocationHead.LIBRARY):
+            request = self.context.get('request')
+            if request is None or not request.user.is_staff:
+                raise serializers.ValidationError({
+                    'item_data': {'location': 'Only staff may clone into the shared library'}
+                })
+        return attrs
 
 
 class VersionSerializer(StrictModelSerializer):

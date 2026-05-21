@@ -33,6 +33,7 @@ export function DlgCloneLibraryItem() {
   );
   const router = useConceptNavigation();
   const { cloneItem } = useCloneItem();
+  const isOss = base.item_type === LibraryItemType.OSS;
 
   const defaultValues: CloneLibraryItemDTO = {
     item_data: {
@@ -51,25 +52,31 @@ export function DlgCloneLibraryItem() {
       onChange: schemaCloneLibraryItem
     },
     onSubmit: async ({ value }) => {
-      await cloneItem({
-        itemID: base.id,
-        data: value
-      }).then(newItem => {
-        const path =
-          'item_type' in newItem && newItem.item_type === LibraryItemType.RSMODEL
-            ? urls.model(newItem.id)
+      const newItem = await cloneItem({ itemID: base.id, data: value });
+      const path =
+        newItem.item_type === LibraryItemType.RSMODEL
+          ? urls.model(newItem.id)
+          : newItem.item_type === LibraryItemType.OSS
+            ? urls.oss(newItem.id)
             : urls.schema(newItem.id);
-        return router.pushAsync({ path, force: true });
-      });
+      return router.pushAsync({ path, force: true });
     }
   });
 
   const values = useStore(form.store, state => state.values);
-  const isValid = schemaCloneLibraryItem.safeParse(values).success;
+  const parsed = schemaCloneLibraryItem.safeParse(values);
+  const locationDiffers = !isOss || values.item_data.location !== base.location;
+  const isValid = parsed.success && locationDiffers;
+  const header =
+    base.item_type === LibraryItemType.RSFORM
+      ? tx('tx.schema')
+      : base.item_type === LibraryItemType.OSS
+        ? tx('tx.oss')
+        : tx('tx.model');
 
   return (
     <ModalForm
-      header={base.item_type === LibraryItemType.RSFORM ? tx('tx.schema') : tx('tx.model')}
+      header={header}
       submitText={tx('tx.general.create')}
       canSubmit={isValid}
       onSubmit={event => {
@@ -138,7 +145,10 @@ export function DlgCloneLibraryItem() {
             value={field.state.value ?? ''}
             rows={2}
             onChange={field.handleChange}
-            error={field.state.meta.errors[0]?.message}
+            error={
+              field.state.meta.errors[0]?.message ??
+              (isOss && field.state.value === base.location ? tx('tx.oss.clone.location.validate') : undefined)
+            }
           />
         )}
       </form.Field>
