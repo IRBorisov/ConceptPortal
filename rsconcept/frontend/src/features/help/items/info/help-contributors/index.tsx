@@ -1,4 +1,4 @@
-﻿import { HelpTopicByLocale } from '@/features/help/components/help-topic-by-locale';
+import { HelpTopicByLocale } from '@/features/help/components/help-topic-by-locale';
 
 import { HelpContributorsEn } from './topic.en';
 import { HelpContributorsFr } from './topic.fr';
