@@ -2,15 +2,23 @@
 
 $backend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\backend"
 $frontend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\frontend"
+$rstool = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\rstool"
 $envPath = "$backend\.venv"
 
 function LocalDevelopmentSetup() {
     FrontendSetup
+    RstoolSetup
     BackendSetup
 }
 
 function FrontendSetup() {
     Set-Location $frontend
+    & npm install
+}
+
+function RstoolSetup() {
+    Set-Location $rstool
+    Write-Host "Installing rstool dependencies (requires frontend deps)`n" -ForegroundColor DarkGreen
     & npm install
 }
 

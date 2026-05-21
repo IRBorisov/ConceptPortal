@@ -110,5 +110,4 @@ Don’t infer types—always read tool output.
 - [ ] Matching `cstType`
 - [ ] Diagnostics handled before commit/export
 - [ ] Base bindings set before evaluating expressions that reference base elements
-- [ ] Do not call `setConstituentaValue` on inferrable terms/axioms/statements
 - [ ] For other details, check help topics or [REFERENCE.md](REFERENCE.md)
