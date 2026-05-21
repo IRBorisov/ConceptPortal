@@ -371,9 +371,13 @@ export const txLibraryEn: Record<string, string> = {
   'tx.oss.passport.hint': 'General OSS attributes, access and operation statistics',
   'tx.oss.graph.hint': 'Graphical view of the synthesis operational schema',
   'tx.oss.list': 'OSS list',
+  'tx.oss.delete': 'Delete OSS',
   'tx.oss.delete.confirm':
     'Warning!\nDeleting the operational schema will remove all operations and owned conceptual schemas.\nThis cannot be undone.\nAre you sure you want to delete this OSS?',
   'tx.oss.goto': 'Go to OSS',
+  'tx.oss.clone': 'Clone OSS',
+  'tx.oss.clone.hint': 'Create a copy of the operational schema and all attached schemas in another folder',
+  'tx.oss.clone.location.validate': 'Choose a different folder than the source OSS',
   'tx.oss.notFound': 'Operational schema with the specified identifier not found',
   'tx.oss.relocate': 'Relocate constituents',
   'tx.oss.relocate.hint': 'Relocate constituents\nbetween schemas',

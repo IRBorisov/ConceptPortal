@@ -1,5 +1,4 @@
 ''' Endpoints for library. '''
-from copy import deepcopy
 from typing import cast
 
 from django.db import transaction
@@ -15,13 +14,14 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from apps.oss.models import Layout, Operation, OperationSchema, PropagationFacade
-from apps.rsform.models import RSFormCached
-from apps.rsmodel.models import ConstituentData, RSModel
+from apps.rsmodel.models import RSModel
 from apps.users.models import User
 from shared import permissions
+from shared.throttling import OssCloneRateThrottle
 
 from .. import models as m
 from .. import serializers as s
+from ..services.clone import clone_library_item
 
 
 @extend_schema(tags=['Library'])
@@ -89,6 +89,11 @@ class LibraryViewSet(viewsets.ModelViewSet):
             super().perform_destroy(instance)
         else:
             super().perform_destroy(instance)
+
+    def get_throttles(self):
+        if self.action == 'clone':
+            return [OssCloneRateThrottle()]
+        return super().get_throttles()
 
     def get_permissions(self):
         if self.action in ['update', 'partial_update']:
@@ -169,39 +174,27 @@ class LibraryViewSet(viewsets.ModelViewSet):
         item = self._get_item()
         if not permissions.can_read_library_item(request.user, item):
             raise PermissionDenied()
-        if item.item_type not in [m.LibraryItemType.RSFORM, m.LibraryItemType.RSMODEL]:
+        if item.item_type not in [
+            m.LibraryItemType.RSFORM,
+            m.LibraryItemType.RSMODEL,
+            m.LibraryItemType.OPERATION_SCHEMA
+        ]:
             return Response(status=c.HTTP_400_BAD_REQUEST)
 
-        serializer = s.LibraryItemCloneSerializer(data=request.data, context={'target': item})
+        serializer = s.LibraryItemCloneSerializer(
+            data=request.data,
+            context={'target': item, 'request': request}
+        )
         serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data['item_data']
-        with transaction.atomic():
-            clone = deepcopy(item)
-            clone.pk = None
-            clone.owner = cast(User, self.request.user)
-            clone.title = data['title']
-            clone.alias = data.get('alias', '')
-            clone.description = data.get('description', '')
-            clone.visible = data.get('visible', True)
-            clone.read_only = False
-            clone.access_policy = data.get('access_policy', m.AccessPolicy.PUBLIC)
-            clone.location = data.get('location', m.LocationHead.USER)
-            clone.save()
-            if item.item_type == m.LibraryItemType.RSFORM:
-                RSFormCached(clone.pk).insert_from(item.pk, request.data['items'] if 'items' in request.data else None)
-            else:
-                model_binding = RSModel.objects.get(model=item)
-                RSModel.objects.create(model=clone, schema=model_binding.schema)
-                value_bindings = ConstituentData.objects.filter(model=item)
-                ConstituentData.objects.bulk_create([
-                    ConstituentData(
-                        model=clone,
-                        constituent_id=binding_item.constituent_id,
-                        type=binding_item.type,
-                        data=binding_item.data
-                    )
-                    for binding_item in value_bindings
-                ])
+        items_list = None
+        if 'items' in serializer.validated_data:
+            items_list = [item.pk for item in serializer.validated_data['items']]
+        clone = clone_library_item(
+            item,
+            cast(User, self.request.user),
+            serializer.validated_data['item_data'],
+            items_list=items_list
+        )
 
         return Response(status=c.HTTP_201_CREATED, data=(
             s.LibraryItemSerializer(clone).data

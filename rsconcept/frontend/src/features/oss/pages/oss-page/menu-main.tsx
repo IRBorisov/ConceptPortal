@@ -1,14 +1,16 @@
 'use client';
 
+import { LocationHead } from '@/domain/library';
 import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
+import { useAuth } from '@/features/auth';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { Divider } from '@/components/container';
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import { IconDestroy, IconLibrary, IconMenu, IconQR, IconShare } from '@/components/icons';
+import { IconClone, IconDestroy, IconLibrary, IconMenu, IconQR, IconShare } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { generatePageQR, sharePage } from '@/utils/utils';
 
@@ -19,12 +21,14 @@ import { useOssEdit } from './oss-edit-context';
 export function MenuMain() {
   const tx = useTx();
   const router = useConceptNavigation();
-  const { isMutable, deleteSchema } = useOssEdit();
+  const { schema, isMutable, deleteSchema } = useOssEdit();
   const isProcessing = useMutatingOss();
+  const { user, isAnonymous } = useAuth();
 
   const role = useRoleStore(state => state.role);
 
   const showQR = useDialogsStore(state => state.showQR);
+  const showClone = useDialogsStore(state => state.showCloneLibraryItem);
 
   const {
     elementRef: menuRef,
@@ -53,6 +57,32 @@ export function MenuMain() {
     showQR({ target: generatePageQR() });
   }
 
+  function calculateCloneLocation() {
+    const location = schema.location;
+    const head = location.substring(0, 2) as LocationHead;
+    if (head === LocationHead.LIBRARY) {
+      return user.is_staff ? location : LocationHead.USER;
+    }
+    if (schema.owner === user.id) {
+      return location;
+    }
+    return head === LocationHead.USER ? LocationHead.USER : location;
+  }
+
+  function handleClone() {
+    hideMenu();
+    const fallback = schema.location.startsWith(LocationHead.USER)
+      ? `${LocationHead.USER}/clone`
+      : `${schema.location}/clone`;
+    const initialLocation = calculateCloneLocation();
+    showClone({
+      base: schema,
+      initialLocation: initialLocation === schema.location ? fallback : initialLocation,
+      selected: [],
+      totalCount: 0
+    });
+  }
+
   return (
     <div ref={menuRef} onBlur={handleMenuBlur} className='relative'>
       <MiniButton
@@ -77,9 +107,18 @@ export function MenuMain() {
           icon={<IconQR size='1rem' className='icon-primary' />}
           onClick={handleShowQR}
         />
+        {!isAnonymous ? (
+          <DropdownButton
+            text={tx('tx.oss.clone')}
+            title={tx('tx.oss.clone.hint')}
+            icon={<IconClone size='1rem' className='icon-green' />}
+            onClick={handleClone}
+            disabled={isProcessing}
+          />
+        ) : null}
         {isMutable ? (
           <DropdownButton
-            text={tx('tx.schema.delete')}
+            text={tx('tx.oss.delete')}
             icon={<IconDestroy size='1rem' className='icon-red' />}
             onClick={handleDelete}
             disabled={isProcessing || role < UserRole.OWNER}
