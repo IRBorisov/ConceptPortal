@@ -51,7 +51,10 @@ export function InfoConstituenta({ data, className, ...restProps }: InfoConstitu
       ) : null}
       {data.spawn_alias.length > 0 ? (
         <p>
-          <b>{tx('tx.cst.spawned.plural.short')}</b>
+          <b>
+            {tx('tx.cst.spawned.plural.short')}
+            {tx('tx.general.colon')}{' '}
+          </b>
           {data.spawn_alias.join(', ')}
         </p>
       ) : null}
