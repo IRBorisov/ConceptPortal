@@ -68,7 +68,7 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
       />
 
       {!selectedSchema ? (
-        <div
+        <h2
           className={clsx(
             'mt-0 mb-1',
             'font-medium text-sm select-none self-center',
@@ -76,7 +76,7 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
           )}
         >
           {tx('tx.lib.contents')}
-        </div>
+        </h2>
       ) : null}
 
       {!selectedOperation ? (
