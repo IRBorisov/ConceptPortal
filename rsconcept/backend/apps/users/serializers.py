@@ -1,6 +1,7 @@
 ''' Serializers: User profile and Authorization. '''
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
+from django.middleware.csrf import get_token
 from rest_framework import serializers
 
 from apps.library.models import Editor
@@ -61,7 +62,7 @@ class AuthSerializer(StrictSerializer):
     username = serializers.CharField()
     is_staff = serializers.BooleanField()
 
-    def to_representation(self, instance: models.User) -> dict:
+    def _auth_payload(self, instance: models.User) -> dict:
         if instance.is_anonymous:
             return {
                 'id': None,
@@ -69,13 +70,19 @@ class AuthSerializer(StrictSerializer):
                 'is_staff': False,
                 'editor': []
             }
-        else:
-            return {
-                'id': instance.pk,
-                'username': instance.username,
-                'is_staff': instance.is_staff,
-                'editor': [edit.item.pk for edit in Editor.objects.filter(editor=instance)]
-            }
+        return {
+            'id': instance.pk,
+            'username': instance.username,
+            'is_staff': instance.is_staff,
+            'editor': [edit.item.pk for edit in Editor.objects.filter(editor=instance)]
+        }
+
+    def to_representation(self, instance: models.User) -> dict:
+        data = self._auth_payload(instance)
+        request = self.context.get('request')
+        if request is not None:
+            data['csrfToken'] = get_token(request)
+        return data
 
 
 class UserSerializer(StrictModelSerializer):

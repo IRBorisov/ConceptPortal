@@ -10,6 +10,8 @@ export interface ICurrentUser {
   username: string;
   is_staff: boolean;
   editor: number[];
+  /** Present on `GET /users/api/auth`; used when `csrftoken` is not readable from `document.cookie`. */
+  csrfToken?: string;
 }
 
 /** Logged-out user payload returned by `/users/api/auth`. */

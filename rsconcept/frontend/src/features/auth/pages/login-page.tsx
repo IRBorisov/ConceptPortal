@@ -6,7 +6,8 @@ import { useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 
-import { isAxiosError } from '@/backend/api-transport';
+import { isAxiosError, isCsrfAxiosFailure } from '@/backend/api-transport';
+import { isCsrfMissingClientError } from '@/backend/csrf-token';
 import { SubmitButton, TextURL } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
 import { TextInput } from '@/components/input';
@@ -109,6 +110,9 @@ function ServerError({ error }: { error: ErrorData }): React.ReactElement | null
   const tx = useTx();
   rethrowIfStaleBundleError(error);
 
+  if (isCsrfMissingClientError(error) || (isAxiosError(error) && isCsrfAxiosFailure(error))) {
+    return <div className='text-sm select-text text-destructive'>{tx('tx.shell.error.csrfLost')}</div>;
+  }
   if (isAxiosError(error) && error.response?.status === 400) {
     return <div className='text-sm select-text text-destructive'>{tx('tx.shell.auth.validation.password')}</div>;
   }

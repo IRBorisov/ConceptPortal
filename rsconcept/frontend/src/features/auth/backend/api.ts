@@ -4,6 +4,7 @@ import { globalTx } from '@/i18n';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
+import { cacheCsrfFromAuth } from '@/backend/csrf-token';
 
 import {
   type IChangePasswordDTO,
@@ -28,6 +29,9 @@ export const authApi = {
         axiosGet<ICurrentUser>({
           endpoint: '/users/api/auth',
           options: { signal: meta.signal }
+        }).then(user => {
+          cacheCsrfFromAuth(user);
+          return user;
         })
     });
   },

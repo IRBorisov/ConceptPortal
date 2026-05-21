@@ -57,6 +57,7 @@ class TestUserAPIViews(EndpointTester):
         self.assertEqual(response.data['username'], self.user.username)
         self.assertEqual(response.data['is_staff'], self.user.is_staff)
         self.assertEqual(response.data['editor'], [])
+        self.assertTrue(response.data['csrfToken'])
 
         self.logout()
         response = self.executeOK()
@@ -64,6 +65,7 @@ class TestUserAPIViews(EndpointTester):
         self.assertEqual(response.data['username'], '')
         self.assertEqual(response.data['is_staff'], False)
         self.assertEqual(response.data['editor'], [])
+        self.assertTrue(response.data['csrfToken'])
 
 
 class TestUserUserProfileAPIView(EndpointTester):

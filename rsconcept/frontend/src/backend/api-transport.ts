@@ -12,7 +12,13 @@ import { PARAMETER } from '@/utils/constants';
 import { type RO } from '@/utils/meta';
 import { extractErrorMessage } from '@/utils/utils';
 
-import { CSRF_CLIENT_MISSING, isCsrfAxiosFailure, readCsrfTokenFromCookie, refreshCsrfToken } from './csrf-token';
+import {
+  cacheCsrfFromAuth,
+  CSRF_CLIENT_MISSING,
+  getCsrfToken,
+  isCsrfAxiosFailure,
+  refreshCsrfToken
+} from './csrf-token';
 
 export { isCsrfAxiosFailure } from './csrf-token';
 export { AxiosError } from 'axios';
@@ -40,7 +46,10 @@ function attachCsrfHeader(config: InternalAxiosRequestConfig, token: string): vo
 }
 
 function fetchCsrfAuth(): Promise<unknown> {
-  return axiosInstance.get(CSRF_AUTH_ENDPOINT);
+  return axiosInstance.get(CSRF_AUTH_ENDPOINT).then(response => {
+    cacheCsrfFromAuth(response.data);
+    return response.data as unknown;
+  });
 }
 
 function csrfMissingError(): Error {
@@ -53,7 +62,7 @@ axiosInstance.interceptors.request.use(async config => {
     return config;
   }
 
-  let token = readCsrfTokenFromCookie();
+  let token = getCsrfToken();
   if (!token) {
     token = await refreshCsrfToken(fetchCsrfAuth);
   }
@@ -73,7 +82,7 @@ axiosInstance.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    const token = await refreshCsrfToken(fetchCsrfAuth);
+    const token = await refreshCsrfToken(fetchCsrfAuth, { resetCookie: true });
     if (!token) {
       return Promise.reject(error);
     }
