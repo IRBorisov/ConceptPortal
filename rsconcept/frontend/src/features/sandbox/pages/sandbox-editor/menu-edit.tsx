@@ -1,15 +1,19 @@
 'use client';
 
+import { toast } from 'react-toastify';
+
 import { CstType } from '@/domain/library';
 import { useTx } from '@/i18n';
 
 import { useUnsavedChanges } from '@/app';
+import { rsformsApi } from '@/features/rsform/backend/api';
 import { IconCstType } from '@/features/rsform/components/icon-cst-type';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
+import { queryClient } from '@/backend/query-client';
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import { IconEdit2, IconGenerateNames, IconReplace, IconSortList } from '@/components/icons';
+import { IconEdit2, IconGenerateNames, IconInlineSynthesis, IconReplace, IconSortList } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 
@@ -19,8 +23,8 @@ export function MenuEdit() {
   const tx = useTx();
   const { promptUnsaved } = useUnsavedChanges();
   const isModified = useModificationStore(state => state.isModified);
-  const { resetAliases, restoreOrder, substituteConstituents } = useSandboxBundle();
-  const { schema, createCst } = useSchemaEdit();
+  const { resetAliases, restoreOrder, substituteConstituents, inlineSynthesis } = useSandboxBundle();
+  const { schema, createCst, deselectAll } = useSchemaEdit();
   const {
     elementRef: menuRef,
     isOpen: isMenuOpen,
@@ -30,6 +34,7 @@ export function MenuEdit() {
   } = useDropdown();
 
   const showSubstituteCst = useDialogsStore(state => state.showSubstituteCst);
+  const showInlineSynthesis = useDialogsStore(state => state.showInlineSynthesis);
 
   async function requireUnsavedResolved(): Promise<boolean> {
     if (!isModified) {
@@ -55,6 +60,26 @@ export function MenuEdit() {
     showSubstituteCst({
       schema,
       onSubstitute: data => substituteConstituents(data.substitutions)
+    });
+  }
+
+  async function handleInlineSynthesis() {
+    hideMenu();
+    if (!(await requireUnsavedResolved())) {
+      return;
+    }
+    showInlineSynthesis({
+      receiver: schema,
+      onSynthesis: data => {
+        if (data.source === null) {
+          return;
+        }
+        void queryClient.fetchQuery(rsformsApi.getRSFormQueryOptions({ itemID: data.source })).then(result => {
+          inlineSynthesis(data, result.raw);
+          deselectAll();
+          toast.success(tx('tx.synthesis.inline.success'));
+        });
+      }
     });
   }
 
@@ -100,6 +125,12 @@ export function MenuEdit() {
           title={tx('tx.substitution.hint')}
           icon={<IconReplace size='1rem' className='icon-red' />}
           onClick={() => void handleSubstitute()}
+        />
+        <DropdownButton
+          text={tx('tx.schema.embed')}
+          title={tx('tx.schema.embed.hint')}
+          icon={<IconInlineSynthesis size='1rem' className='icon-green' />}
+          onClick={() => void handleInlineSynthesis()}
         />
         {!schema.is_attributive ? (
           <DropdownButton

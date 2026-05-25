@@ -18,12 +18,7 @@ export class SchemaAdapter {
   ): { result: AnalysisResult; diagnostics: DiagnosticRecord[] } {
     const analyzer = this.buildAnalyzer(session);
     const schema = this.toPseudoRSFormState(session, analyzer);
-    const analysis = getAnalysisFor(
-      draft.definitionFormal,
-      draft.cstType,
-      schema as unknown as RSForm,
-      draft.alias
-    );
+    const analysis = getAnalysisFor(draft.definitionFormal, draft.cstType, schema as unknown as RSForm, draft.alias);
     const result = toPublicAnalysis({
       success: analysis.success,
       type: analysis.type as Record<string, unknown> | null,

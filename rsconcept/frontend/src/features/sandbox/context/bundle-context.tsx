@@ -7,6 +7,7 @@ import {
   type AttributionTargetDTO,
   type ConstituentaCreatedResponse,
   type CreateConstituentaDTO,
+  type InlineSynthesisDTO,
   type MoveConstituentsDTO,
   type RSFormDTO,
   type UpdateConstituentaDTO,
@@ -39,6 +40,7 @@ interface IBundleContext {
   restoreOrder: () => void;
   resetAliases: () => void;
   substituteConstituents: (substitutions: Substitution[]) => void;
+  inlineSynthesis: (data: InlineSynthesisDTO, source: RO<RSFormDTO>) => void;
 }
 
 export const BundleContext = createContext<IBundleContext | null>(null);

@@ -7,13 +7,16 @@ import {
   type AttributionTargetDTO,
   type ConstituentaBasicsDTO,
   type CreateConstituentaDTO,
+  type InlineSynthesisDTO,
   type MoveConstituentsDTO,
+  type RSFormDTO,
   type UpdateConstituentaDTO,
   type UpdateCrucialDTO
 } from '@/features/rsform/backend/types';
 import { type ConstituentaDataDTO, type ConstituentaValue, type RSModelDTO } from '@/features/rsmodel/backend/types';
 
 import { nowIso } from '@/utils/format';
+import { type RO } from '@/utils/meta';
 
 import { type SandboxBundle } from '../models/bundle';
 import { bumpBundle, cloneBundle } from '../models/bundle-api';
@@ -26,6 +29,7 @@ export const sbApi = {
   restoreOrder,
   resetAliases,
   substituteConstituents,
+  inlineSynthesis,
   createConstituenta,
   deleteConstituents,
   updateConstituenta,
@@ -200,6 +204,88 @@ function substituteConstituents(bundle: SandboxBundle, substitutions: Substituti
   resolveAllConstituentTexts(next.schema.items);
   bumpBundle(next);
   return next;
+}
+
+function inlineSynthesis(bundle: SandboxBundle, data: InlineSynthesisDTO, source: RO<RSFormDTO>): SandboxBundle {
+  if (data.source === null) {
+    return bundle;
+  }
+
+  const sourceItems =
+    data.items.length > 0 ? source.items.filter(cst => data.items.includes(cst.id)) : [...source.items];
+  if (sourceItems.length === 0) {
+    return bundle;
+  }
+
+  const next = cloneBundle(bundle);
+  const receiverWasEmpty = next.schema.items.length === 0;
+  const mappingAlias: Record<string, string> = {};
+
+  if (!receiverWasEmpty) {
+    const counts: Record<string, number> = {};
+    for (const value of Object.values(CstType)) {
+      counts[value] = maxAliasIndex(next.schema.items, value);
+    }
+    for (const cst of sourceItems) {
+      counts[cst.cst_type] += 1;
+      mappingAlias[cst.alias] = `${getCstTypePrefix(cst.cst_type)}${counts[cst.cst_type]}`;
+    }
+  }
+
+  const mappingId: Record<number, number> = {};
+  const inserted: ConstituentaBasicsDTO[] = [];
+  const sourceIdSet = new Set(sourceItems.map(cst => cst.id));
+
+  for (const cst of sourceItems) {
+    const newId = next.meta.nextId;
+    next.meta.nextId += 1;
+    mappingId[cst.id] = newId;
+
+    const cloned = structuredClone(cst) as ConstituentaBasicsDTO;
+    cloned.id = newId;
+    if (!receiverWasEmpty) {
+      cloned.alias = mappingAlias[cst.alias];
+      applyMappingToConstituents([cloned], mappingAlias, false);
+    }
+    inserted.push(cloned);
+  }
+
+  const seenAttribution = new Set(next.schema.attribution.map(attr => `${attr.container}:${attr.attribute}`));
+  for (const attr of source.attribution) {
+    if (!sourceIdSet.has(attr.container) || !sourceIdSet.has(attr.attribute)) {
+      continue;
+    }
+    const containerID = mappingId[attr.container];
+    const attributeID = mappingId[attr.attribute];
+    if (containerID === attributeID) {
+      continue;
+    }
+    const key = `${containerID}:${attributeID}`;
+    if (seenAttribution.has(key)) {
+      continue;
+    }
+    seenAttribution.add(key);
+    next.schema.attribution.push({ container: containerID, attribute: attributeID });
+  }
+
+  next.schema.items = next.schema.items.concat(inserted);
+  resolveAllConstituentTexts(next.schema.items);
+
+  if (data.substitutions.length === 0) {
+    bumpBundle(next);
+    return next;
+  }
+
+  const remapped: Substitution[] = [];
+  for (const sub of data.substitutions) {
+    if (sourceIdSet.has(sub.original)) {
+      remapped.push({ original: mappingId[sub.original], substitution: sub.substitution });
+    } else {
+      remapped.push({ original: sub.original, substitution: mappingId[sub.substitution] });
+    }
+  }
+
+  return substituteConstituents(next, remapped);
 }
 
 function createConstituenta(
@@ -404,4 +490,16 @@ function clearModelValues(bundle: SandboxBundle, cstIDs: number[]): SandboxBundl
   next.model.items = next.model.items.filter(v => !drop.has(v.id));
   bumpBundle(next);
   return next;
+}
+
+function maxAliasIndex(items: ConstituentaBasicsDTO[], type: CstType): number {
+  const prefix = getCstTypePrefix(type);
+  return items.reduce((max, cst) => {
+    if (cst.cst_type !== type) {
+      return max;
+    }
+    const suffix = cst.alias.slice(prefix.length);
+    const index = Number(suffix);
+    return Number.isFinite(index) ? Math.max(max, index) : max;
+  }, 0);
 }

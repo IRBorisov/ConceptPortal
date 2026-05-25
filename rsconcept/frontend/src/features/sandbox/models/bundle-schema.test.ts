@@ -82,4 +82,89 @@ describe('sandbox mutations', () => {
     });
     expect(bundle.schema.items.find(c => c.id === target.id)!.typification_manual).toBe('ℬ(X1)');
   });
+
+  it('inlineSynthesis inserts source constituents with remapped aliases', () => {
+    let bundle = createStarterSandboxBundle('en');
+    const receiverCount = bundle.schema.items.length;
+    const source: typeof bundle.schema = {
+      ...bundle.schema,
+      id: 99_001,
+      items: [
+        {
+          id: 10,
+          alias: 'X9',
+          convention: '',
+          crucial: false,
+          cst_type: CstType.BASE,
+          definition_formal: '',
+          typification_manual: '',
+          value_is_property: false,
+          definition_raw: '',
+          definition_resolved: '',
+          term_raw: 'source term',
+          term_resolved: 'source term',
+          term_forms: []
+        }
+      ],
+      attribution: []
+    };
+
+    bundle = sbApi.inlineSynthesis(
+      bundle,
+      {
+        receiver: bundle.schema.id,
+        source: source.id,
+        items: [10],
+        substitutions: []
+      },
+      source
+    );
+
+    expect(bundle.schema.items).toHaveLength(receiverCount + 1);
+    const inserted = bundle.schema.items.at(-1)!;
+    expect(inserted.term_raw).toBe('source term');
+    expect(inserted.alias).not.toBe('X9');
+    expect(inserted.alias.startsWith('X')).toBe(true);
+  });
+
+  it('inlineSynthesis applies substitutions after insert', () => {
+    let bundle = createStarterSandboxBundle('en');
+    const receiver = bundle.schema.items[0];
+    const source: typeof bundle.schema = {
+      ...bundle.schema,
+      id: 99_002,
+      items: [
+        {
+          id: 20,
+          alias: 'Y1',
+          convention: '',
+          crucial: false,
+          cst_type: CstType.TERM,
+          definition_formal: 'Y1',
+          typification_manual: '',
+          value_is_property: false,
+          definition_raw: '',
+          definition_resolved: '',
+          term_raw: 'imported',
+          term_resolved: 'imported',
+          term_forms: []
+        }
+      ],
+      attribution: []
+    };
+
+    bundle = sbApi.inlineSynthesis(
+      bundle,
+      {
+        receiver: bundle.schema.id,
+        source: source.id,
+        items: [20],
+        substitutions: [{ original: 20, substitution: receiver.id }]
+      },
+      source
+    );
+
+    expect(bundle.schema.items.some(c => c.term_raw === 'imported')).toBe(false);
+    expect(bundle.schema.items.find(c => c.id === receiver.id)).toBeDefined();
+  });
 });

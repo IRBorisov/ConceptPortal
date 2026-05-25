@@ -14,11 +14,14 @@ import {
   type AttributionTargetDTO,
   type ConstituentaCreatedResponse,
   type CreateConstituentaDTO,
+  type InlineSynthesisDTO,
   type MoveConstituentsDTO,
   type RSFormDTO,
   type UpdateConstituentaDTO,
   type UpdateCrucialDTO
 } from '@/features/rsform/backend/types';
+
+import { type RO } from '@/utils/meta';
 
 import { type SandboxBundle } from '../models/bundle';
 import { createStarterSandboxBundle, resolveStarterLocale } from '../models/bundle-starter';
@@ -192,6 +195,10 @@ export function SandboxState({ children }: React.PropsWithChildren) {
     commitBundle(prev => sbApi.substituteConstituents(prev, substitutions));
   }
 
+  function inlineSynthesis(data: InlineSynthesisDTO, source: RO<RSFormDTO>) {
+    commitBundle(prev => sbApi.inlineSynthesis(prev, data, source));
+  }
+
   return (
     <BundleContext
       value={{
@@ -216,7 +223,8 @@ export function SandboxState({ children }: React.PropsWithChildren) {
         deleteConstituents,
         restoreOrder,
         resetAliases,
-        substituteConstituents
+        substituteConstituents,
+        inlineSynthesis
       }}
     >
       {children}
