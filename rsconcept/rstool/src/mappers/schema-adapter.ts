@@ -8,7 +8,7 @@ import {
   type ConstituentaState,
   type DiagnosticRecord,
   type SessionState
-} from '../contracts/tool-contract';
+} from '../models';
 import { toPublicAnalysis, toPublicError } from './types';
 
 export class SchemaAdapter {

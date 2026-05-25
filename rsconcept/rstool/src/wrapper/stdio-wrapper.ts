@@ -1,6 +1,6 @@
 import readline from 'node:readline';
 
-import { RSFormAgentTool } from '../index';
+import { RSToolAgent } from '../models/rstool-agent';
 
 interface StdioRequest {
   id: string | number;
@@ -19,7 +19,7 @@ interface StdioResponse {
   };
 }
 
-const tool = new RSFormAgentTool();
+const tool = new RSToolAgent();
 
 const METHODS = [
   'createSession',

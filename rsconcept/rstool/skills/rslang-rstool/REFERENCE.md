@@ -4,8 +4,8 @@
 
 - Package: `rsconcept/rstool` (`@rsconcept/rstool`, private)
 - Contract version: `1.2.0` (`CONTRACT_VERSION`)
-- Core class: `RSFormAgentTool` — `src/index.ts`
-- Types: `src/contracts/tool-contract.ts`
+- Core class: `RSToolAgent`
+- Types: `src/models/` (entity-split; `src/models/tool-contract.ts` holds `CONTRACT_VERSION` and `RSToolAgentContract`)
 
 ### Methods
 
@@ -173,7 +173,7 @@ Categories:
 | rstool analysis adapter   | `rsconcept/rstool/src/mappers/schema-adapter.ts`                         |
 | rstool evaluation adapter | `rsconcept/rstool/src/mappers/model-adapter.ts`                          |
 | Frontend evaluator        | `rsconcept/frontend/src/domain/library/rsengine.ts`                      |
-| Tests                     | `rsconcept/rstool/tests/rsform-agent-tool.test.ts`                       |
+| Tests                     | `rsconcept/rstool/src/models/rstool-agent.test.ts` (colocated)           |
 | Sample export             | `rsconcept/rstool/examples/sample-rsform-session.json`                   |
 | Sample model export       | `rsconcept/rstool/examples/sample-rsmodel-session.json`                  |
 

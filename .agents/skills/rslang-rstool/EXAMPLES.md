@@ -5,9 +5,9 @@ Run all commands from `rsconcept/rstool`.
 ## In-process (Vitest-style)
 
 ```ts
-import { CstType, RSFormAgentTool } from '../src';
+import { CstType, RSToolAgent } from '../src';
 
-const tool = new RSFormAgentTool();
+const tool = new RSToolAgent();
 const { sessionId } = tool.createSession();
 
 // Base set — formal must be empty

@@ -6,7 +6,7 @@ import {
   type SessionHandle,
   type SessionRevision,
   type SessionState
-} from '../contracts/tool-contract';
+} from '../models';
 
 interface SessionEnvelope {
   state: SessionState;

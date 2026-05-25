@@ -20,7 +20,7 @@ import {
   type SessionModelState,
   type SessionState,
   type SetConstituentaValueInput
-} from '../contracts/tool-contract';
+} from '../models';
 import { toPublicError } from './types';
 
 const SESSION_MODEL_ID = 0;

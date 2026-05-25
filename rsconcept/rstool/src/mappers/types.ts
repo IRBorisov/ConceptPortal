@@ -1,6 +1,6 @@
 import { type ValueClass } from '@/domain/rslang';
 
-import { type AnalysisResult, type RSToolErrorDescription } from '../contracts/tool-contract';
+import { type AnalysisResult, type RSToolErrorDescription } from '../models';
 
 export interface DomainErrorLike {
   code: number;

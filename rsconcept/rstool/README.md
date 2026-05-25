@@ -12,14 +12,14 @@ RS language + rstool workflows for agents: `skills/rslang-rstool/` (`SKILL.md`, 
 - Parse/syntax/semantic/type analysis for expressions.
 - In-memory modeling: set base bindings and structured values; evaluate expressions and constituents.
 - Deterministic diagnostics and export/import for reproducible agent workflows.
-- Transport-neutral contract with future MCP/HTTP adapter layers.
+- Library API + stdio JSON wrapper as the only supported transports.
 
 ## Quick Use
 
 ```ts
-import { CstType, RSFormAgentTool } from './src';
+import { CstType, RSToolAgent } from './src';
 
-const tool = new RSFormAgentTool();
+const tool = new RSToolAgent();
 const session = tool.createSession();
 const result = tool.analyzeExpression(session.sessionId, {
   expression: '1+2',
