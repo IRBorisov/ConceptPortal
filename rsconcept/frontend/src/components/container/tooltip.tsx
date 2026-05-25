@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { type ITooltip, Tooltip as TooltipImpl } from 'react-tooltip';
 
@@ -17,6 +17,14 @@ interface TooltipProps extends Omit<ITooltip, 'variant'> {
 
   /** Classname for z-index */
   layer?: string;
+
+  /**
+   * While the tooltip is already visible, `delayShow` is treated as 0 so anchors
+   * sharing the same `id` can switch without waiting again. Pair with `delayHide`
+   * long enough to cover pointer travel between nearby anchors. With `float`, pointer
+   * position is tracked so the tooltip repositions immediately on anchor change.
+   */
+  instantWhenOpen?: boolean;
 }
 
 /**
@@ -28,17 +36,59 @@ export function Tooltip({
   layer = 'z-tooltip',
   place = 'bottom',
   className,
+  instantWhenOpen,
+  delayShow,
+  afterShow,
+  afterHide,
+  float,
+  position,
   ...restProps
 }: TooltipProps) {
+  const [open, setOpen] = useState(false);
+  const [pointer, setPointer] = useState<{ x: number; y: number } | null>(null);
+  const trackPointerForFloat = Boolean(instantWhenOpen && float);
   const tooltipsEnabled = useTooltipsStore(state => state.tooltipsEnabled);
   const darkMode = usePreferencesStore(state => state.darkMode);
+
+  useEffect(() => {
+    if (!trackPointerForFloat) {
+      return;
+    }
+    function syncPointer(event: PointerEvent) {
+      setPointer({ x: event.clientX, y: event.clientY });
+    }
+    document.addEventListener('pointermove', syncPointer, { passive: true });
+    document.addEventListener('pointerover', syncPointer, { passive: true });
+    return () => {
+      document.removeEventListener('pointermove', syncPointer);
+      document.removeEventListener('pointerover', syncPointer);
+    };
+  }, [trackPointerForFloat]);
+
   if (typeof window === 'undefined') {
     return null;
   }
+
+  const resolvedDelayShow = instantWhenOpen && open ? 0 : delayShow;
+  const resolvedPosition = trackPointerForFloat && open && pointer ? pointer : position;
+
+  function handleAfterShow(...args: Parameters<NonNullable<ITooltip['afterShow']>>) {
+    if (instantWhenOpen) {
+      setOpen(true);
+    }
+    afterShow?.(...args);
+  }
+
+  function handleAfterHide(...args: Parameters<NonNullable<ITooltip['afterHide']>>) {
+    if (instantWhenOpen) {
+      setOpen(false);
+      setPointer(null);
+    }
+    afterHide?.(...args);
+  }
+
   return createPortal(
     <TooltipImpl
-      delayShow={750}
-      delayHide={100}
       opacity={1}
       className={cn(
         'relative',
@@ -53,10 +103,15 @@ export function Tooltip({
       classNameArrow={layer}
       variant={darkMode ? 'dark' : 'light'}
       place={place}
+      delayShow={resolvedDelayShow}
+      afterShow={instantWhenOpen ? handleAfterShow : afterShow}
+      afterHide={instantWhenOpen ? handleAfterHide : afterHide}
+      float={float}
+      position={resolvedPosition}
       {...restProps}
     >
       {text ? text : null}
-      {children as ReactNode}
+      {children}
     </TooltipImpl>,
     document.body
   );

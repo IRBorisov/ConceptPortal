@@ -17,6 +17,9 @@ export function OperationTooltip() {
   return (
     <Tooltip
       clickable
+      instantWhenOpen
+      delayShow={500}
+      delayHide={300}
       id={globalIDs.operation_tooltip}
       layer='z-topmost'
       className='max-w-100 lg:max-w-140 dense max-h-80 lg:max-h-120! overflow-y-auto!'

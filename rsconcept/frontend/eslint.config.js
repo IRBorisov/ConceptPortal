@@ -3,7 +3,6 @@ import typescriptPlugin from 'typescript-eslint';
 import typescriptParser from '@typescript-eslint/parser';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
-import importPlugin from 'eslint-plugin-import';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import playwright from 'eslint-plugin-playwright';
 
@@ -31,8 +30,7 @@ const basicRules = {
     }
   ],
 
-  'simple-import-sort/exports': 'error',
-  'import/no-duplicates': 'warn'
+  'simple-import-sort/exports': 'error'
 };
 
 export default [
@@ -67,8 +65,7 @@ export default [
     plugins: {
       'react': reactPlugin,
       'react-hooks': reactHooksPlugin,
-      'simple-import-sort': simpleImportSort,
-      'import': importPlugin
+      'simple-import-sort': simpleImportSort
     },
     settings: { react: { version: 'detect' } },
     rules: {
@@ -111,8 +108,7 @@ export default [
 
     plugins: {
       'playwright': playwright,
-      'simple-import-sort': simpleImportSort,
-      'import': importPlugin
+      'simple-import-sort': simpleImportSort
     },
 
     rules: {

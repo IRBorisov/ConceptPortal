@@ -65,6 +65,7 @@ export function BadgeHelp({
     >
       <IconHelp size={size} className='text-muted-foreground hover:text-primary cc-animate-color' />
       <Tooltip
+        delayShow={500}
         clickable
         anchorSelect={`#help-${topic}`}
         layer='z-topmost'

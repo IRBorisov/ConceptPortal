@@ -10,6 +10,9 @@ export const GlobalTooltips = () => {
     <>
       <Tooltip
         float
+        instantWhenOpen
+        delayShow={300}
+        delayHide={200}
         id={globalIDs.tooltip}
         layer='z-topmost'
         place='bottom-start'
@@ -18,6 +21,7 @@ export const GlobalTooltips = () => {
       />
       <Tooltip
         float
+        delayShow={500}
         id={globalIDs.value_tooltip}
         layer='z-topmost'
         className='max-w-[calc(min(40rem,100dvw-2rem))] text-justify'
