@@ -157,7 +157,7 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.doubleParenthesis': 'Double outer parentheses (( and )) are not allowed',
   'tx.rslang.error.missingOpenBracket': "Missing opening bracket ''{bracket}''",
   'tx.rslang.error.expectedLocal': 'Variable name expected',
-  'tx.rslang.error.expectedType': 'Type expected: {type}',
+  'tx.rslang.error.expectedType': 'Expression type does not match the constituent',
   'tx.rslang.error.localDoubleDeclare': 'Duplicate declaration: {name}',
   'tx.rslang.error.localNotUsed': 'Unused variable: {name}',
   'tx.rslang.error.localUndeclared': 'Undeclared variable: {name}',

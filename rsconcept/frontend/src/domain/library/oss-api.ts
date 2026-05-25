@@ -2,10 +2,10 @@
  * Module: API for OperationSystem.
  */
 
-import { Graph } from '@/domain/graph';
-import { type AliasMapping, applyAliasMapping, applyTypificationMapping, isSetTypification } from '@/domain/rslang/api';
-import { labelType } from '@/domain/rslang/labels';
-import { extractBases } from '@/domain/rslang/semantic/typification-api';
+import { Graph } from '../graph';
+import { type AliasMapping, applyAliasMapping, applyTypificationMapping, isSetTypification } from '../rslang/api';
+import { labelType } from '../rslang/labels';
+import { extractBases } from '../rslang/semantic/typification-api';
 
 import { type LibraryItem } from './library';
 import { NodeType, type OperationSchema, type SubstitutionErrorDescription, SubstitutionErrorType } from './oss';

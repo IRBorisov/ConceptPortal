@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { type AstNode, buildTree, visitAstDFS } from '@/utils/parsing';
-
+import { type AstNode, buildTree, visitAstDFS } from '../../parsing';
 import { readErrorAnnotation } from '../ast-annotations';
 import { RSErrorCode, type RSErrorDescription } from '../error';
 import { normalizeAST } from '../parser/normalize';

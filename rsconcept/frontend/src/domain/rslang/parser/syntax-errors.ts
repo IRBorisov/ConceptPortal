@@ -2,8 +2,7 @@
  * Module: Syntactic errors reporting.
  */
 
-import { type AstNode, visitAstDFS } from '@/utils/parsing';
-
+import { type AstNode, visitAstDFS } from '../../parsing';
 import { annotateError } from '../ast-annotations';
 import { type ErrorReporter, RSErrorCode, type RSErrorDescription } from '../error';
 

@@ -28,7 +28,7 @@ export function createSandboxBundleFromRSModel(schema: RSForm, model: RSModel): 
       updatedAt: nowIso()
     },
     schema: prepareRSForm(schema, model),
-    model: structuredClone(model) as RSModelDTO
+    model: structuredClone(model)
   };
 }
 

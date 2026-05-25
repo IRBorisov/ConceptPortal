@@ -2,7 +2,7 @@
  * Module: Structured data for RSLang expression evaluation.
  */
 
-import { type Branded } from '@/utils/meta';
+import { type Branded } from '../../shared';
 
 import { printValue } from './value-api';
 

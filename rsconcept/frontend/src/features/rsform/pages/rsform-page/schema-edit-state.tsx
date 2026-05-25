@@ -20,7 +20,6 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER, prefixes } from '@/utils/constants';
-import { type RO } from '@/utils/meta';
 
 import { useGenerateLexeme } from '../../backend/cctext/use-generate-lexeme';
 import {
@@ -156,7 +155,7 @@ export const SchemaEditState = ({
     });
   }
 
-  function onCreateCst(newCst: RO<ConstituentaBasicsDTO>) {
+  function onCreateCst(newCst: ConstituentaBasicsDTO) {
     setPendingActiveID(newCst.id);
     setSelectedCst([newCst.id]);
     router.changeActive(newCst.id);
@@ -425,11 +424,11 @@ export const SchemaEditState = ({
     });
   }
 
-  async function createCstFromData(data: CreateConstituentaDTO): Promise<RO<ConstituentaCreatedResponse>> {
+  async function createCstFromData(data: CreateConstituentaDTO): Promise<ConstituentaCreatedResponse> {
     return cstCreate({ itemID: schema.id, data });
   }
 
-  async function patchConstituenta(data: UpdateConstituentaDTO): Promise<RO<RSFormDTO>> {
+  async function patchConstituenta(data: UpdateConstituentaDTO): Promise<RSFormDTO> {
     return updateConstituenta({ itemID: schema.id, data });
   }
 

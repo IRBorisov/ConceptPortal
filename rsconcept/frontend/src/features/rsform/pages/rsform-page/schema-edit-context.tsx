@@ -6,8 +6,6 @@ import { type Constituenta, type CstType, type RSForm } from '@/domain/library';
 
 import { type UnsavedSaveHandler } from '@/app';
 
-import { type RO } from '@/utils/meta';
-
 import {
   type ConstituentaCreatedResponse,
   type CreateConstituentaDTO,
@@ -47,9 +45,9 @@ interface ISchemaEditContext {
   toggleCrucial: () => void;
   toggleValueClass: () => void;
   createCst: (type?: CstType, definition?: string) => Promise<number>;
-  createCstFromData: (data: CreateConstituentaDTO) => Promise<RO<ConstituentaCreatedResponse>>;
+  createCstFromData: (data: CreateConstituentaDTO) => Promise<ConstituentaCreatedResponse>;
   cloneCst: () => Promise<number>;
-  patchConstituenta: (data: UpdateConstituentaDTO) => Promise<RO<RSFormDTO>>;
+  patchConstituenta: (data: UpdateConstituentaDTO) => Promise<RSFormDTO>;
   addAttribution: (containerID: number, attributeID: number) => void;
   removeAttribution: (attribute: Constituenta) => void;
   clearAttributions: () => void;

@@ -24,7 +24,6 @@ import { TextButton } from '@/components/control/text-button';
 import { Label, TextArea } from '@/components/input';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { type RO } from '@/utils/meta';
 import { withPreventDefault } from '@/utils/utils';
 
 import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../../../backend/types';
@@ -104,7 +103,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
 
   const [forceComment, setForceComment] = useState(false);
   const [forceManualType, setForceManualType] = useState(!!activeCst.typification_manual);
-  const [localParse, setLocalParse] = useState<RO<AnalysisFull> | null>(null);
+  const [localParse, setLocalParse] = useState<AnalysisFull | null>(null);
   const typification = localParse ? labelType(localParse.type) : labelType(activeCst.effectiveType);
 
   const manualDraft = useStore(form.store, state => state.values.item_data.typification_manual ?? '');

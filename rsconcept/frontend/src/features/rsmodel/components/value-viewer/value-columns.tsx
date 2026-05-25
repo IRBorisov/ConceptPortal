@@ -2,18 +2,18 @@ import { type ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import clsx from 'clsx';
 
 import { type BasicsContext, type RSForm } from '@/domain/library';
-import { prepareValueString } from '@/domain/library/rsmodel-api';
 import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/domain/rslang';
 import { testInvalid, valueStub } from '@/domain/rslang/eval/value-api';
 import { type EchelonCollection, IntegerT } from '@/domain/rslang/semantic/typification';
 import { useTx } from '@/i18n';
+import { type ValueMatcher } from '@/services/search';
 
 import { cn } from '@/components/utils';
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 import { truncateToLastWord, truncateToSymbol } from '@/utils/format';
 
-import { type ValueMatcher } from '../../models/value-matcher';
+import { prepareValueString } from '../../labels';
 
 const HEADER_TRUNCATE = 40;
 const VALUE_TRUNCATE = 50;

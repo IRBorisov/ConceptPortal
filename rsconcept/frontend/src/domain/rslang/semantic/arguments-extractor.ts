@@ -2,8 +2,7 @@
  * Module: Type auditor for AST type checking.
  */
 
-import { type AstNode, getNodeText } from '@/utils/parsing';
-
+import { type AstNode, getNodeText } from '../../parsing';
 import { readTypeAnnotation } from '../ast-annotations';
 import { TokenID } from '../parser/token';
 

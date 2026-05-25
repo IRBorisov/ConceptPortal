@@ -15,7 +15,6 @@ import { SchemaEditContext } from '@/features/rsform/pages/rsform-page/schema-ed
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { PARAMETER, prefixes } from '@/utils/constants';
-import { type RO } from '@/utils/meta';
 import { notImplemented } from '@/utils/utils';
 
 import { useSandboxBundle } from './bundle-context';
@@ -86,7 +85,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     };
   }
 
-  function onCreateCst(newCst: RO<ConstituentaCreatedResponse['new_cst']>) {
+  function onCreateCst(newCst: ConstituentaCreatedResponse['new_cst']) {
     setPendingActiveID(newCst.id);
     setSelectedCst([newCst.id]);
     router.changeActive(newCst.id);

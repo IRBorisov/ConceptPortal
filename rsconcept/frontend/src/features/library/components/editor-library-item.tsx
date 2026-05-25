@@ -26,7 +26,6 @@ import { ValueIcon } from '@/components/view';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { prefixes } from '@/utils/constants';
-import { type RO } from '@/utils/meta';
 
 import { type LibraryItemData } from '../backend/types';
 import { useMutatingLibrary } from '../backend/use-mutating-library';
@@ -36,7 +35,7 @@ import { labelLibraryLocationPath } from '../labels';
 import { useLibrarySearchStore } from '../stores/library-search';
 
 interface EditorLibraryItemProps {
-  item: RO<LibraryItemData>;
+  item: LibraryItemData;
   isProduced: boolean;
 }
 

@@ -2,11 +2,10 @@
  * Module: Models for formal representation for systems of concepts.
  */
 
-import { type Graph } from '@/domain/graph';
-import { type CurrentVersion, type LibraryItem, type LibraryItemReference, type VersionInfo } from '@/domain/library';
-import { type AnalysisBase, type ExpressionType, type RSLangAnalyzer, type TypePath } from '@/domain/rslang';
+import { type Graph } from '../graph';
+import { type AnalysisBase, type ExpressionType, type RSLangAnalyzer, type TypePath } from '../rslang';
 
-import { type RO } from '@/utils/meta';
+import { type CurrentVersion, type LibraryItem, type LibraryItemReference, type VersionInfo } from './library';
 
 /** Represents {@link Constituenta} type. */
 export const CstType = {
@@ -96,7 +95,7 @@ export interface Constituenta {
 
   homonyms: number[];
   formalDuplicates: number[];
-  analysis: RO<AnalysisBase>;
+  analysis: AnalysisBase;
 
   /** Typification used for dependents, model values, and display (manual when it overrides computed). */
   effectiveType: ExpressionType | null;

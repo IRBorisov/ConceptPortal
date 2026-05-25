@@ -1,9 +1,8 @@
 import { AccessPolicy, type CurrentVersion, LocationHead, type VersionInfo } from '@/domain/library';
 import { type FolderNode } from '@/domain/library/folder-tree';
-import { validateLocation } from '@/domain/library/library-api';
 import { globalTx } from '@/i18n';
 
-import { type RO } from '@/utils/meta';
+import { validateLocation } from './models/utils';
 
 const LOCATION_LID: Record<LocationHead, string> = {
   [LocationHead.USER]: 'tx.lib.location.user',
@@ -95,7 +94,7 @@ export function describeAccessPolicy(policy: AccessPolicy): string {
 }
 
 /** Generates label for {@link VersionInfo} of {@link RSForm}. */
-export function labelVersion(value: CurrentVersion, items: RO<VersionInfo[]>) {
+export function labelVersion(value: CurrentVersion, items: VersionInfo[]) {
   const version = items.find(ver => ver.id === value);
   return version ? version.version : globalTx('tx.lib.version.latest.short').toLocaleLowerCase();
 }

@@ -2,7 +2,7 @@
  * Module: Transforming AST to a simple form.
  */
 
-import { type AstNode, visitAstDFS } from '@/utils/parsing';
+import { type AstNode, visitAstDFS } from '../../parsing';
 
 import {
   Arguments,

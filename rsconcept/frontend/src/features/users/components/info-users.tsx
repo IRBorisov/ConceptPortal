@@ -4,12 +4,11 @@ import { useTx } from '@/i18n';
 
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
-import { type RO } from '@/utils/meta';
 
 import { useLabelUser } from '../backend/use-label-user';
 
 interface InfoUsersProps extends Styling {
-  items: RO<number[]>;
+  items: number[];
   prefix: string;
   header?: string;
 }

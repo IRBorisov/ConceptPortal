@@ -1,6 +1,5 @@
 import {
   NodeType,
-  type Operation,
   OperationType,
   type OssItem,
   type SubstitutionErrorDescription,
@@ -8,7 +7,6 @@ import {
 } from '@/domain/library';
 import { globalTx } from '@/i18n';
 
-import { type RO } from '@/utils/meta';
 
 const OPERATION_LABEL_LID: Record<OperationType, string> = {
   [OperationType.INPUT]: 'tx.oss.input',
@@ -23,7 +21,7 @@ export function labelOperationType(itemType: OperationType): string {
 }
 
 /** Generates error description for {@link SubstitutionErrorDescription}. */
-export function describeSubstitutionError(error: RO<SubstitutionErrorDescription>): string {
+export function describeSubstitutionError(error: SubstitutionErrorDescription): string {
   const from = error.params[0] ?? '';
   const to = error.params[1] ?? '';
   switch (error.errorType) {
@@ -57,9 +55,9 @@ export function describeSubstitutionError(error: RO<SubstitutionErrorDescription
 }
 
 /** Retrieves label for {@link OssItem}. */
-export function labelOssItem(item: RO<OssItem>): string {
+export function labelOssItem(item: OssItem): string {
   if (item.nodeType === NodeType.OPERATION) {
-    return `${(item as Operation).alias}${globalTx('tx.general.colon')}${item.title}`;
+    return `${item.alias}${globalTx('tx.general.colon')}${item.title}`;
   } else {
     return globalTx('tx.oss.block') + ': ' + item.title;
   }

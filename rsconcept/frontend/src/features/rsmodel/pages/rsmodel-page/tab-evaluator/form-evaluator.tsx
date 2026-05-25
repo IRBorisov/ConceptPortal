@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 import { CstType } from '@/domain/library';
 import { getStructureName } from '@/domain/library/rsform-api';
-import { inferEvalStatus, prepareValueString } from '@/domain/library/rsmodel-api';
+import { inferEvalStatus } from '@/domain/library/rsmodel-api';
 import { type AnalysisFull, type CalculatorResult } from '@/domain/rslang';
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
@@ -24,10 +24,9 @@ import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { formatInteger } from '@/utils/format';
-import { type RO } from '@/utils/meta';
 
 import { ValueInput } from '../../../components/value-input';
-import { labelValue } from '../../../labels';
+import { labelValue, prepareValueString } from '../../../labels';
 import { copyJsonToClipboard, downloadJsonFile, getExportJsonText } from '../export-helpers';
 import { useModelEdit } from '../model-edit-context';
 
@@ -51,8 +50,8 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
 
   const [evaluatedExpression, setEvaluatedExpression] = useState<string>('');
   const [expression, setExpression] = useState<string>(activeCst?.definition_formal ?? '');
-  const [localEval, setLocalEval] = useState<RO<CalculatorResult> | null>(null);
-  const [localParse, setLocalParse] = useState<RO<AnalysisFull> | null>(null);
+  const [localEval, setLocalEval] = useState<CalculatorResult | null>(null);
+  const [localParse, setLocalParse] = useState<AnalysisFull | null>(null);
   const valueStr =
     prepareValueString(localEval?.value ?? null, localParse?.type ?? null, schema, engine.basics, showDataText) ??
     tx('tx.rslang.value.render.tooLarge.hint');

@@ -10,12 +10,9 @@ import {
   type TypePath,
   type Typification,
   ValueClass
-} from '@/domain/rslang';
-import { basic, bool, constant, type EchelonFunctional, isTypification } from '@/domain/rslang/semantic/typification';
-import { applyPath } from '@/domain/rslang/semantic/typification-api';
-
-import { type RO } from '@/utils/meta';
-import { TextMatcher } from '@/utils/utils';
+} from '../rslang';
+import { basic, bool, constant, type EchelonFunctional, isTypification } from '../rslang/semantic/typification';
+import { applyPath } from '../rslang/semantic/typification-api';
 
 import { type LibraryItem } from './library';
 import {
@@ -54,18 +51,6 @@ const CST_TYPE_TO_CLASS: Record<CstType, CstClass> = {
   [CstType.STATEMENT]: CstClass.STATEMENT
 };
 
-/** Checks if a given target {@link Constituenta} matches the specified query. */
-export function matchConstituenta(target: RO<Constituenta>, query: string): boolean {
-  const matcher = new TextMatcher(query);
-  return (
-    matcher.test(target.alias) ||
-    matcher.test(target.term_resolved) ||
-    matcher.test(target.definition_formal) ||
-    matcher.test(target.definition_resolved) ||
-    matcher.test(target.convention)
-  );
-}
-
 /** Checks if {@link Constituenta} is a schema issue. */
 export function isSchemaIssue(cst: Constituenta): boolean {
   if (
@@ -100,7 +85,7 @@ export function inferStatus(parse: boolean, value?: ValueClass | null): CstStatu
 }
 
 /** Infers type of constituent for a given template and arguments. */
-export function inferTemplatedType(templateType: CstType, args: RO<ArgumentValue[]>): CstType {
+export function inferTemplatedType(templateType: CstType, args: ArgumentValue[]): CstType {
   if (args.length === 0 || args.some(arg => !arg.value)) {
     return templateType;
   } else if (templateType === CstType.PREDICATE) {
@@ -231,7 +216,7 @@ export function isLogical(type: CstType): boolean {
 }
 
 /** Evaluate if {@link Constituenta} can be used produce structure. */
-export function canProduceStructure(cst: RO<Constituenta>): boolean {
+export function canProduceStructure(cst: Constituenta): boolean {
   switch (cst.cst_type) {
     case CstType.NOMINAL:
     case CstType.BASE:

@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { printTree } from '@/utils/codemirror';
-import { buildTree } from '@/utils/parsing';
-
+import { buildTree, printTree } from '../../parsing';
 import { RSErrorCode, type RSErrorDescription } from '../error';
 
 import { parser } from './parser';

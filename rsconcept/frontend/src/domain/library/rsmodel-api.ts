@@ -1,22 +1,12 @@
-import { type ExpressionType, TypeID, type Typification, type Value } from '@/domain/rslang';
-import { compare, tuple, TUPLE_ID, VALUE_TRUE, type ValuePath } from '@/domain/rslang/eval/value';
-import {
-  extractValue,
-  isTupleValue,
-  makeDefaultValue,
-  printValue,
-  setNestedValue
-} from '@/domain/rslang/eval/value-api';
-import { type EchelonCollection } from '@/domain/rslang/semantic/typification';
-
-import { limits } from '@/utils/constants';
-import { type RO } from '@/utils/meta';
-import { concat, type Doc, group, indent, join, line, render, text } from '@/utils/text-printer';
+import { type ExpressionType, TypeID, type Typification, type Value } from '../rslang';
+import { compare, tuple, TUPLE_ID, VALUE_TRUE, type ValuePath } from '../rslang/eval/value';
+import { extractValue, isTupleValue, makeDefaultValue, setNestedValue } from '../rslang/eval/value-api';
+import { type EchelonCollection } from '../rslang/semantic/typification';
 
 import { type RSEngine } from './rsengine';
 import { type Constituenta, CstType, type RSForm } from './rsform';
 import { calculateSchemaStats, isBaseSet, isBasicConcept } from './rsform-api';
-import { type BasicBinding, type BasicsContext, EvalStatus, type RSModelStats } from './rsmodel';
+import { type BasicBinding, EvalStatus, type RSModelStats } from './rsmodel';
 
 const RANDOM_INTEGER_MIN = -100;
 const RANDOM_INTEGER_MAX = 100;
@@ -183,7 +173,7 @@ export function isInferrable(type: CstType): boolean {
 
 /** Infers status of a given {@link Value} and {@link CstType}. */
 export function inferEvalStatus(
-  value: RO<Value | null>,
+  value: Value | null,
   cstType: CstType,
   wasCalculated: boolean = true,
   isInvalid: boolean = false
@@ -298,34 +288,6 @@ export function tryFixValue(
   }
 }
 
-/**
- * Prepares string representation for {@link Value}.
- *
- * @returns `null` when the value structure exceeds size limits (caller should show a short UI hint instead
- *   of calling {@link JSON.stringify} / pretty-print, which can overflow the stack).
- */
-export function prepareValueString(
-  value: RO<Value | null | BasicBinding>,
-  type: ExpressionType | null,
-  schema: RSForm,
-  dataContext: BasicsContext,
-  dataText: boolean
-): string | null {
-  if (value === null) {
-    return '';
-  }
-  if (valuePrepareExceedsLimits(value, type, dataText)) {
-    return null;
-  }
-  if (!dataText || type === null || (value !== null && typeof value === 'object' && !Array.isArray(value))) {
-    return JSON.stringify(value, null, 2).replace(
-      /\[\s*((?:\[\]|-?\d+(?:\.\d+)?)(?:,\s*(?:\[\]|-?\d+(?:\.\d+)?))*)\s*\]/g,
-      (_match: string, inner: string) => `[${inner.replace(/\s+/g, ' ')}]`
-    );
-  }
-  return render(prepareValueInternal(value as Value, type, schema, dataContext), limits.data_line_width);
-}
-
 export function updateValueElement(value: Value | null, path: ValuePath, newValue: number): Value | null {
   return setNestedValue(value, path, newValue);
 }
@@ -375,163 +337,4 @@ function countBaseElements(cst: Constituenta, engine: RSEngine): number {
     return 1;
   }
   return value.length;
-}
-
-/** Iterative walk: same branching as {@link prepareValueInternal} without building docs (avoids stack overflow). */
-function valuePrepareExceedsLimits(
-  value: RO<Value | null | BasicBinding>,
-  type: ExpressionType | null,
-  dataText: boolean
-): boolean {
-  if (!dataText || type === null || (value !== null && typeof value === 'object' && !Array.isArray(value))) {
-    return jsonTreeExceedsPrepareLimits(value);
-  }
-  return typedValuePrepareExceedsLimits(value as Value, type);
-}
-
-function jsonTreeExceedsPrepareLimits(root: unknown): boolean {
-  const maxDepth = limits.value_render_max_depth;
-  const maxNodes = limits.value_render_max_nodes;
-  if (root === null || typeof root !== 'object') {
-    return false;
-  }
-  const stack: { v: unknown; depth: number }[] = [{ v: root, depth: 0 }];
-  let nodes = 0;
-  while (stack.length > 0) {
-    const { v, depth } = stack.pop()!;
-    if (++nodes > maxNodes || depth > maxDepth) {
-      return true;
-    }
-    if (Array.isArray(v)) {
-      for (let i = v.length - 1; i >= 0; i--) {
-        const el = v[i] as unknown;
-        if (el !== null && typeof el === 'object') {
-          stack.push({ v: el, depth: depth + 1 });
-        } else if (depth + 1 > maxDepth || ++nodes > maxNodes) {
-          return true;
-        }
-      }
-    } else {
-      for (const key of Object.keys(v as object)) {
-        const el = (v as Record<string, unknown>)[key];
-        if (el !== null && typeof el === 'object') {
-          stack.push({ v: el, depth: depth + 1 });
-        } else if (depth + 1 > maxDepth || ++nodes > maxNodes) {
-          return true;
-        }
-      }
-    }
-  }
-  return false;
-}
-
-function typedValuePrepareExceedsLimits(root: Value, rootType: ExpressionType): boolean {
-  const maxDepth = limits.value_render_max_depth;
-  const maxNodes = limits.value_render_max_nodes;
-  const stack: { value: Value; type: ExpressionType; depth: number }[] = [{ value: root, type: rootType, depth: 0 }];
-  let nodes = 0;
-  while (stack.length > 0) {
-    const frame = stack.pop()!;
-    if (++nodes > maxNodes || frame.depth > maxDepth) {
-      return true;
-    }
-    const { value, type, depth } = frame;
-    switch (type.typeID) {
-      case TypeID.integer:
-      case TypeID.basic:
-      case TypeID.logic:
-        break;
-      case TypeID.tuple: {
-        if (!Array.isArray(value) || value.length !== type.factors.length + 1 || value[0] !== TUPLE_ID) {
-          break;
-        }
-        const nextDepth = depth + 1;
-        for (let i = type.factors.length - 1; i >= 0; i--) {
-          stack.push({ value: value[i + 1], type: type.factors[i], depth: nextDepth });
-        }
-        break;
-      }
-      case TypeID.collection: {
-        if (!Array.isArray(value) || (value.length > 1 && value[0] === TUPLE_ID)) {
-          break;
-        }
-        const nextDepth = depth + 1;
-        for (let i = value.length - 1; i >= 0; i--) {
-          stack.push({ value: value[i], type: type.base, depth: nextDepth });
-        }
-        break;
-      }
-      case TypeID.anyTypification:
-      case TypeID.predicate:
-      case TypeID.function:
-        break;
-      default:
-        break;
-    }
-  }
-  return false;
-}
-
-function prepareValueInternal(value: Value, type: ExpressionType, schema: RSForm, dataContext: BasicsContext): Doc {
-  switch (type.typeID) {
-    case TypeID.integer:
-      return text(String(value));
-    case TypeID.basic:
-      const cst = schema.cstByAlias.get(type.baseID);
-      if (!cst) {
-        return text(`UNKNOWN_ALIAS ${type.baseID}`);
-      }
-      if (typeof value !== 'number') {
-        return text(`EXPECTED_BASIC ${printValue(value)}`);
-      }
-      const binding = dataContext.get(cst.id);
-      if (!binding) {
-        return text(`NO BINDING FOR ${cst.alias}`);
-      }
-      if (value in binding) {
-        const basicValue = binding[value];
-        return text(basicValue);
-      } else {
-        return text(`NO_ELEM ${value}`);
-      }
-    case TypeID.logic:
-      if (Array.isArray(value)) {
-        return text(`EXPECTED_LOGIC ${printValue(value)}`);
-      }
-      return value === VALUE_TRUE ? text('True') : text('False');
-    case TypeID.tuple:
-      if (!Array.isArray(value) || value.length !== type.factors.length + 1 || value[0] !== TUPLE_ID) {
-        return text(`EXPECTED_TUPLE ${printValue(value)}`);
-      }
-      const components: Doc[] = [];
-      for (let i = 0; i < type.factors.length; i++) {
-        components.push(prepareValueInternal(value[i + 1], type.factors[i], schema, dataContext));
-      }
-      return tupleDoc(components);
-    case TypeID.collection:
-      if (!Array.isArray(value) || (value.length > 1 && value[0] === TUPLE_ID)) {
-        return text(`EXPECTED_COLLECTION ${printValue(value)}`);
-      }
-      const elements: Doc[] = [];
-      for (const item of value) {
-        elements.push(prepareValueInternal(item, type.base, schema, dataContext));
-      }
-      return collectionDoc(elements);
-
-    case TypeID.anyTypification:
-    case TypeID.predicate:
-    case TypeID.function:
-      return text('UNEXPECTED_TYPE');
-  }
-}
-
-function tupleDoc(elements: Doc[]): Doc {
-  return group(concat(text('('), indent(concat(line, join(concat(text(','), line), elements))), line, text(')')));
-}
-
-function collectionDoc(elements: Doc[]): Doc {
-  if (elements.length === 0) {
-    return text('{}');
-  }
-  return group(concat(text('{'), indent(concat(line, join(concat(text(','), line), elements))), line, text('}')));
 }

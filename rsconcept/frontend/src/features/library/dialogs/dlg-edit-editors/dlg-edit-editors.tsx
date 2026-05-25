@@ -10,13 +10,12 @@ import { TableUsers } from '@/features/users/components/table-users';
 
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { type RO } from '@/utils/meta';
 
 import { useSetEditors } from '../../backend/use-set-editors';
 
 export interface DlgEditEditorsProps {
   itemID: number;
-  initialEditors: RO<number[]>;
+  initialEditors: number[];
 }
 
 export function DlgEditEditors() {

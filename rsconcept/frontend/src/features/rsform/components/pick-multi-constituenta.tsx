@@ -4,8 +4,9 @@ import { useState } from 'react';
 
 import { Graph } from '@/domain/graph/graph';
 import { type Constituenta, type RSForm } from '@/domain/library';
-import { isBasicConcept, matchConstituenta } from '@/domain/library/rsform-api';
+import { isBasicConcept } from '@/domain/library/rsform-api';
 import { useTx } from '@/i18n';
+import { matchConstituenta } from '@/services/search';
 
 import { createColumnHelper, DataTable, type RowSelectionState } from '@/components/data-table';
 import { SearchBar } from '@/components/input';

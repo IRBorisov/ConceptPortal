@@ -10,11 +10,10 @@ import { TextURL } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { NoData } from '@/components/view';
 import { useDialogsStore } from '@/stores/dialogs';
-import { type RO } from '@/utils/meta';
 
 import { useAvailableTemplates } from '../../backend/use-available-templates';
 import { BadgeSharedTemplate } from '../../components/badge-shared-template';
-const columnHelper = createColumnHelper<RO<IPromptTemplate>>();
+const columnHelper = createColumnHelper<IPromptTemplate>();
 
 interface TabListTemplatesProps {
   activeID: number | null;
@@ -27,13 +26,13 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
   const showCreatePromptTemplate = useDialogsStore(state => state.showCreatePromptTemplate);
   const getUserLabel = useLabelUser();
 
-  function handleRowDoubleClicked(row: RO<IPromptTemplate>, event: React.MouseEvent<Element>) {
+  function handleRowDoubleClicked(row: IPromptTemplate, event: React.MouseEvent<Element>) {
     event.preventDefault();
     event.stopPropagation();
     router.gotoPromptEdit(row.id, event.ctrlKey || event.metaKey);
   }
 
-  function handleRowClicked(row: RO<IPromptTemplate>, event: React.MouseEvent<Element>) {
+  function handleRowClicked(row: IPromptTemplate, event: React.MouseEvent<Element>) {
     if (row.id === activeID) {
       return;
     }
@@ -86,9 +85,9 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
     })
   ];
 
-  const conditionalRowStyles: IConditionalStyle<RO<IPromptTemplate>>[] = [
+  const conditionalRowStyles: IConditionalStyle<IPromptTemplate>[] = [
     {
-      when: (template: RO<IPromptTemplate>) => template.id === activeID,
+      when: (template: IPromptTemplate) => template.id === activeID,
       className: 'bg-selected'
     }
   ];

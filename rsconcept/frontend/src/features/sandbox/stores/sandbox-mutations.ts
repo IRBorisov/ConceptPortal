@@ -16,7 +16,6 @@ import {
 import { type ConstituentaDataDTO, type ConstituentaValue, type RSModelDTO } from '@/features/rsmodel/backend/types';
 
 import { nowIso } from '@/utils/format';
-import { type RO } from '@/utils/meta';
 
 import { type SandboxBundle } from '../models/bundle';
 import { bumpBundle, cloneBundle } from '../models/bundle-api';
@@ -206,7 +205,7 @@ function substituteConstituents(bundle: SandboxBundle, substitutions: Substituti
   return next;
 }
 
-function inlineSynthesis(bundle: SandboxBundle, data: InlineSynthesisDTO, source: RO<RSFormDTO>): SandboxBundle {
+function inlineSynthesis(bundle: SandboxBundle, data: InlineSynthesisDTO, source: RSFormDTO): SandboxBundle {
   if (data.source === null) {
     return bundle;
   }
@@ -241,7 +240,7 @@ function inlineSynthesis(bundle: SandboxBundle, data: InlineSynthesisDTO, source
     next.meta.nextId += 1;
     mappingId[cst.id] = newId;
 
-    const cloned = structuredClone(cst) as ConstituentaBasicsDTO;
+    const cloned = structuredClone(cst);
     cloned.id = newId;
     if (!receiverWasEmpty) {
       cloned.alias = mappingAlias[cst.alias];

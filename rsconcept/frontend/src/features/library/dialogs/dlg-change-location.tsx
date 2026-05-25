@@ -4,7 +4,6 @@ import { useMemo } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 import { z } from 'zod';
 
-import { validateLocation } from '@/domain/library/library-api';
 import { globalTx, useTx } from '@/i18n';
 
 import { ModalForm } from '@/components/modal';
@@ -12,6 +11,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { limits } from '@/utils/constants';
 
 import { PickLocation } from '../components/pick-location';
+import { validateLocation } from '../models/utils';
 
 const schemaLocation = z.strictObject({
   location: z.string().refine(data => validateLocation(data), { message: globalTx('tx.lib.location.validate') })

@@ -2,8 +2,7 @@
  * Module: Dependency metadata and per-run memoization for RSLang evaluation.
  */
 
-import { type AstNode, getNodeIndices, getNodeText } from '@/utils/parsing';
-
+import { type AstNode, getNodeIndices, getNodeText } from '../../parsing';
 import { TokenID } from '../parser/token';
 
 import { type Value } from './value';

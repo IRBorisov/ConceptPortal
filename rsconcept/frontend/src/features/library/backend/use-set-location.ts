@@ -7,7 +7,6 @@ import { type RSFormDTO } from '@/features/rsform';
 import { type RSModelDTO } from '@/features/rsmodel';
 
 import { KEYS } from '@/backend/configuration';
-import { type RO } from '@/utils/meta';
 
 import { libraryApi } from './api';
 import { useLibraryListKey } from './use-library';
@@ -51,7 +50,7 @@ export const useSetLocation = () => {
       client.setQueryData(modelKey, (prev: RSModelDTO | undefined) =>
         !prev ? undefined : { ...prev, location: variables.location }
       );
-      client.setQueryData(libraryKey, (prev: RO<LibraryItem[]> | undefined) =>
+      client.setQueryData(libraryKey, (prev: LibraryItem[] | undefined) =>
         prev?.map(item => (item.id === variables.itemID ? { ...item, location: variables.location } : item))
       );
     },

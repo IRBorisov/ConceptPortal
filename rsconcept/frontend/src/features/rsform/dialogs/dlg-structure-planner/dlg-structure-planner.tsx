@@ -19,7 +19,6 @@ import { useDialogsStore } from '@/stores/dialogs';
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
-import { type RO } from '@/utils/meta';
 import { isMac } from '@/utils/utils';
 
 import { loadRSForm } from '../../backend/rsform-loader';
@@ -40,8 +39,8 @@ export interface DlgStructurePlannerProps {
   schema: RSForm;
   targetID: number;
   isMutable: boolean;
-  onCreate: (data: CreateConstituentaDTO) => Promise<RO<ConstituentaCreatedResponse>>;
-  onUpdate: (data: UpdateConstituentaDTO) => Promise<RO<RSFormDTO>>;
+  onCreate: (data: CreateConstituentaDTO) => Promise<ConstituentaCreatedResponse>;
+  onUpdate: (data: UpdateConstituentaDTO) => Promise<RSFormDTO>;
 }
 
 export function DlgStructurePlanner() {

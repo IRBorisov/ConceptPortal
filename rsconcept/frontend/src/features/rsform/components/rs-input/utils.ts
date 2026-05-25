@@ -1,7 +1,9 @@
 import { syntaxTree } from '@codemirror/language';
 import { type EditorState } from '@uiw/react-codemirror';
 
-import { type CMSyntaxNode, findEnvelopingNodes } from '@/utils/codemirror';
+import { type CMSyntaxNode } from '@/domain/parsing';
+
+import { findEnvelopingNodes } from '@/utils/codemirror';
 
 import { IdentifierTokens } from './parse';
 

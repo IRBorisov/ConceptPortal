@@ -1,5 +1,6 @@
 import { type Constituenta, type RSForm } from '@/domain/library';
-import { isBasicConcept, matchConstituenta } from '@/domain/library/rsform-api';
+import { isBasicConcept } from '@/domain/library/rsform-api';
+import { matchConstituenta } from '@/services/search';
 
 import { useCstSearchStore } from '../../stores/cst-search';
 

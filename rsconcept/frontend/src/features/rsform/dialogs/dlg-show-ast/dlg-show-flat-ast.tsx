@@ -6,13 +6,12 @@ import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
 import { type RSForm } from '@/domain/library/rsform';
+import { type FlatAST } from '@/domain/parsing';
 
 import { HelpTopic } from '@/features/help';
 
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { type RO } from '@/utils/meta';
-import { type FlatAST } from '@/utils/parsing';
 
 import { ASTFlow } from './ast-flow';
 import { ShowAstSchemaProvider } from './show-ast-schema-context';
@@ -20,7 +19,7 @@ import { ShowAstSchemaProvider } from './show-ast-schema-context';
 const NODE_POPUP_DELAY = 100;
 
 export interface DlgShowFlatAstProps {
-  ast: RO<FlatAST>;
+  ast: FlatAST;
   expression: string;
   schema: RSForm;
 }

@@ -2,8 +2,7 @@
  * Module: AST evaluation - visitor-pattern evaluator for RS expressions.
  */
 
-import { type AstNode, getNodeIndices, getNodeText } from '@/utils/parsing';
-
+import { type AstNode, getNodeIndices, getNodeText } from '../../parsing';
 import { annotateError } from '../ast-annotations';
 import { type ErrorReporter, RSErrorCode } from '../error';
 import { TokenID } from '../parser/token';

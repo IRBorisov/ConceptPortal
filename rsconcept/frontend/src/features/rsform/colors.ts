@@ -1,9 +1,9 @@
 import { type Constituenta, CstClass, CstStatus } from '@/domain/library';
+import { type FlatAstNode } from '@/domain/parsing';
 import { TokenID } from '@/domain/rslang';
 import { type TypificationNodeData } from '@/domain/rslang/typification-graph';
 
 import { APP_COLORS } from '@/styling/colors';
-import { type FlatAstNode } from '@/utils/parsing';
 
 import { type SPFlowNodeData } from './dialogs/dlg-structure-planner/graph/sp-models';
 import { TGColoring, TGEdgeType } from './stores/term-graph';

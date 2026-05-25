@@ -3,9 +3,9 @@
 import { useEffect } from 'react';
 import { type Edge, MarkerType, type Node, useEdgesState, useNodesState, useOnSelectionChange } from '@xyflow/react';
 
+import { type FlatAST } from '@/domain/parsing';
+
 import { DiagramFlow } from '@/components/flow/diagram-flow';
-import { type RO } from '@/utils/meta';
-import { type FlatAST } from '@/utils/parsing';
 
 import { ASTEdgeTypes } from './graph/ast-edge-types';
 import { applyLayout } from './graph/ast-layout';
@@ -23,7 +23,7 @@ const flowOptions = {
 } as const;
 
 interface ASTFlowProps {
-  data: RO<FlatAST>;
+  data: FlatAST;
   onSelectedChange?: (ids: number[]) => void;
   onNodeEnter: (node: AstGraphNode) => void;
   onNodeLeave: (node: AstGraphNode) => void;

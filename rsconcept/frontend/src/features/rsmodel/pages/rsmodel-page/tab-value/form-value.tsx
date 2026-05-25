@@ -11,7 +11,7 @@ import {
   isFunctional,
   isLogical
 } from '@/domain/library/rsform-api';
-import { isInferrable, isInterpretable, prepareValueString } from '@/domain/library/rsmodel-api';
+import { isInferrable, isInterpretable } from '@/domain/library/rsmodel-api';
 import { type CalculatorResult, TypeID, type Value } from '@/domain/rslang';
 import { valueStub } from '@/domain/rslang/eval/value-api';
 import { labelType } from '@/domain/rslang/labels';
@@ -30,13 +30,12 @@ import { TextButton } from '@/components/control/text-button';
 import { TextArea } from '@/components/input';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
-import { type RO } from '@/utils/meta';
 import { withPreventDefault } from '@/utils/utils';
 
 import { ValueInput } from '../../../components/value-input';
 import { useCstStatus } from '../../../hooks/use-cst-status';
 import { useCstValue } from '../../../hooks/use-cst-value';
-import { labelValue } from '../../../labels';
+import { labelValue, prepareValueString } from '../../../labels';
 import { processBindingData, processValueData } from '../../../models/data-loading';
 import { useModelEdit } from '../model-edit-context';
 
@@ -67,7 +66,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
   const isValueEditable =
     !isMutable || cstInferrable || !isInterpretable(activeCst.cst_type) || (showDataText && !isBase);
   const status = useCstStatus(engine, activeCst);
-  const [localEval, setLocalEval] = useState<RO<CalculatorResult> | null>(null);
+  const [localEval, setLocalEval] = useState<CalculatorResult | null>(null);
 
   const cstData = useCstValue(engine, activeCst);
   const stub = cstData && typification?.typeID === TypeID.collection ? valueStub(cstData) : '';

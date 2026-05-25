@@ -5,8 +5,8 @@ import clsx from 'clsx';
 
 import { type Grammeme } from '@/domain/cctext';
 import { type Constituenta, type RSForm } from '@/domain/library';
-import { matchConstituenta } from '@/domain/library/rsform-api';
 import { useTx } from '@/i18n';
+import { matchConstituenta } from '@/services/search';
 
 import { MiniButton } from '@/components/control';
 import { IconAccept, IconClose } from '@/components/icons';

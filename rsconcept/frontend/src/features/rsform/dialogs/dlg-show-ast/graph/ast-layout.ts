@@ -1,8 +1,9 @@
 import dagre from '@dagrejs/dagre';
 import { type Edge, type Node } from '@xyflow/react';
 
+import { type FlatAstNode } from '@/domain/parsing';
+
 import { PARAMETER } from '@/utils/constants';
-import { type FlatAstNode } from '@/utils/parsing';
 
 export function applyLayout(nodes: Node<FlatAstNode>[], edges: Edge[]) {
   const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));

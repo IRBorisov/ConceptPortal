@@ -160,7 +160,7 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.doubleParenthesis': 'Двойные обрамляющие скобки (( и )) не допускаются',
   'tx.rslang.error.missingOpenBracket': "Пропущена открывающая скобка ''{bracket}''",
   'tx.rslang.error.expectedLocal': 'Ожидалось имя переменной',
-  'tx.rslang.error.expectedType': 'Ожидался тип: {type}',
+  'tx.rslang.error.expectedType': 'Тип выражения не соответствует конституенте',
   'tx.rslang.error.localDoubleDeclare': 'Повторное объявление: {name}',
   'tx.rslang.error.localNotUsed': 'Неиспользованная переменная: {name}',
   'tx.rslang.error.localUndeclared': 'Необъявленная переменная: {name}',

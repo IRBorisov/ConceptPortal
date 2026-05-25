@@ -1,6 +1,4 @@
-import { type Value } from '@/domain/rslang';
-
-import { type RO } from '@/utils/meta';
+import { type Value } from '../rslang';
 
 import { type LibraryItem } from './library';
 import { type RSFormStats } from './rsform';
@@ -39,7 +37,7 @@ interface RSModelData extends LibraryItem {
 }
 
 /** Represents {@link RSModel} structured data. */
-export type RSModel = RO<RSModelData>;
+export type RSModel = RSModelData;
 
 /** Represents {@link RSModel} statistics. */
 export interface RSModelStats extends RSFormStats {

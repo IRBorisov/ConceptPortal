@@ -7,7 +7,6 @@ import { globalTx } from '@/i18n';
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { queryClient } from '@/backend/query-client';
-import { type RO } from '@/utils/meta';
 
 import { loadRSForm } from './rsform-loader';
 import {
@@ -26,7 +25,7 @@ import {
   type UpdateCrucialDTO
 } from './types';
 
-export function updateRSForm(data: RO<RSFormDTO>, client: QueryClient) {
+export function updateRSForm(data: RSFormDTO, client: QueryClient) {
   const queryKey = rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey;
   client.setQueryData(queryKey, old => {
     if (!old || equal(old.raw, data)) {

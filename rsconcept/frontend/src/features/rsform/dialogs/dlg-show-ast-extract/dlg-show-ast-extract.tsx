@@ -9,6 +9,7 @@ import { useDebounce } from 'use-debounce';
 
 import { CstType, type RSForm } from '@/domain/library/rsform';
 import { generateAlias } from '@/domain/library/rsform-api';
+import { type AstNode, findByUid, flattenAst } from '@/domain/parsing';
 import { readTypeAnnotation, TypeID } from '@/domain/rslang';
 import { extractArguments } from '@/domain/rslang/api';
 import { labelType } from '@/domain/rslang/labels';
@@ -28,8 +29,6 @@ import { ShowAstSchemaProvider } from '@/features/rsform/dialogs/dlg-show-ast/sh
 import { ModalView } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
-import { type RO } from '@/utils/meta';
-import { type AstNode, findByUid, flattenAst } from '@/utils/parsing';
 
 import { type AstGraphNode } from '../dlg-show-ast/graph/ast-models';
 
@@ -44,8 +43,8 @@ export interface DlgShowAstExtractProps {
     schema: RSForm;
   };
   targetID: number;
-  onCreate: (data: CreateConstituentaDTO) => Promise<RO<ConstituentaCreatedResponse>>;
-  onUpdate: (data: UpdateConstituentaDTO) => Promise<RO<RSFormDTO>>;
+  onCreate: (data: CreateConstituentaDTO) => Promise<ConstituentaCreatedResponse>;
+  onUpdate: (data: UpdateConstituentaDTO) => Promise<RSFormDTO>;
 }
 
 export function DlgShowAstExtract() {

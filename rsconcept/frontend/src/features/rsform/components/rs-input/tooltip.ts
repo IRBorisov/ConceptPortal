@@ -4,14 +4,16 @@ import clsx from 'clsx';
 
 import { type Constituenta, type RSForm } from '@/domain/library';
 import { isBasicConcept } from '@/domain/library/rsform-api';
+import { type AstNode } from '@/domain/parsing';
 import { type AnalysisFull, type ExpressionType, readTypeAnnotation, TokenID } from '@/domain/rslang';
 import { type RSErrorDescription } from '@/domain/rslang/error';
-import { describeRSError, labelType } from '@/domain/rslang/labels';
+import { labelType } from '@/domain/rslang/labels';
 import { globalTx } from '@/i18n';
 
 import { appendBoldTextRow, appendMathBoldLabelParagraph } from '@/utils/format';
-import { type AstNode } from '@/utils/parsing';
 import { isMac } from '@/utils/utils';
+
+import { describeRSError } from '../../labels';
 
 import { Local } from './parse/parser.terms';
 import { findAliasAt } from './utils';

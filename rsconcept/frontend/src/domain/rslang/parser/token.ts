@@ -1,4 +1,4 @@
-import { TOKEN_ERROR } from '@/utils/parsing';
+import { TOKEN_ERROR } from '../../parsing';
 
 /** Represents RSLang token types. */
 export const TokenID = {

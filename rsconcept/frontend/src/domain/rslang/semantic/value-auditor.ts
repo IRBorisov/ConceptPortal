@@ -5,8 +5,7 @@
  * or a property (e.g., depends on a quantified variable).
  */
 
-import { type AstNode, getNodeText } from '@/utils/parsing';
-
+import { type AstNode, getNodeText } from '../../parsing';
 import { annotateError } from '../ast-annotations';
 import { type ErrorReporter, RSErrorCode } from '../error';
 import { TokenID } from '../parser/token';

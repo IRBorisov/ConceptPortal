@@ -14,8 +14,6 @@ import {
 } from '@/domain/library';
 import { constructNodeID } from '@/domain/library/oss-api';
 
-import { type RO } from '@/utils/meta';
-
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../pages/oss-page/tab-oss-graph/graph/block-node';
 
 import { type OperationSchemaDTO } from './types';
@@ -31,7 +29,7 @@ export class OssLoader {
   private schemaIDs: number[] = [];
   private extendedGraph = new Graph();
 
-  constructor(input: RO<OperationSchemaDTO>) {
+  constructor(input: OperationSchemaDTO) {
     this.oss = structuredClone(input) as unknown as OperationSchema;
   }
 
