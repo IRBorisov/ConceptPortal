@@ -2,7 +2,7 @@
  * Module: Typification for RSLang.
  */
 
-import { type Branded } from '@/utils/meta';
+import { type Branded } from '../../shared';
 
 /** Typification structure enumeration. */
 export const TypeID = {

@@ -2,9 +2,7 @@
  * Module: API for calculations.
  */
 
-import { type RO } from '@/utils/meta';
-import { type AstNode } from '@/utils/parsing';
-
+import { type AstNode } from '../../parsing';
 import { annotateError } from '../ast-annotations';
 import { RSErrorCode, type RSErrorDescription } from '../error';
 import { type ExpressionType } from '../semantic/typification';
@@ -76,7 +74,7 @@ export class RSCalculator {
     this.treeContext.set(alias, ast);
   }
 
-  public validate(value: RO<Value>, type: ExpressionType): boolean {
+  public validate(value: Value, type: ExpressionType): boolean {
     return validateValue(value, type, this.context);
   }
 

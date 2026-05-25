@@ -12,7 +12,6 @@ import { CDocument } from '@/components/pdf/CDocument';
 import { pdfs } from '@/components/pdf/pdf-styles';
 import { usePreferencesStore } from '@/stores/preferences';
 import { external_urls } from '@/utils/constants';
-import { type RO } from '@/utils/meta';
 
 import { addSpaces, addSpacesTypification, hyphenateCyrillic, protectShortRussianWords } from './pdf-utils';
 
@@ -44,7 +43,7 @@ function PdfIntlRoot({ children }: { children: ReactNode }) {
 /** Renders a PDF file with a list of Constituenta.
  * WARNING! Large library load, use lazy loading.
  */
-export function cstListToFile(data: RO<Constituenta[]>): Promise<Blob> {
+export function cstListToFile(data: Constituenta[]): Promise<Blob> {
   return pdf(
     <PdfIntlRoot>
       <CstListDocument data={data} />
@@ -63,7 +62,7 @@ export function createSchemaFile(data: RSForm): Promise<Blob> {
   ).toBlob();
 }
 
-function CstListDocument({ data }: { data: RO<Constituenta[]> }) {
+function CstListDocument({ data }: { data: Constituenta[] }) {
   return (
     <CDocument>
       <CstTable data={data} />
@@ -122,7 +121,7 @@ function SchemaFooter({ schema }: { schema: RSForm }) {
   );
 }
 
-function CstTable({ data }: { data: RO<Constituenta[]> }) {
+function CstTable({ data }: { data: Constituenta[] }) {
   const intl = useIntl();
   return (
     <>
@@ -163,7 +162,7 @@ function CstTable({ data }: { data: RO<Constituenta[]> }) {
   );
 }
 
-function getCommentColumnText(cst: RO<Constituenta>, formatMessage: IntlShape['formatMessage']) {
+function getCommentColumnText(cst: Constituenta, formatMessage: IntlShape['formatMessage']) {
   let result = cst.definition_resolved;
   if (cst.convention) {
     if (result) {

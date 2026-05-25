@@ -9,34 +9,6 @@ import { globalTx } from '@/i18n';
 
 import { PARAMETER } from './constants';
 
-/**
- * Wrapper class for generalized text matching.
- *
- * If possible create regexp, otherwise use symbol matching.
- */
-export class TextMatcher {
-  protected query: RegExp | string;
-
-  constructor(query: string, isPlainText?: boolean, isCaseSensitive?: boolean) {
-    if (isPlainText) {
-      query = query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-    }
-    try {
-      this.query = new RegExp(query, isCaseSensitive ? '' : 'i');
-    } catch (_exception: unknown) {
-      this.query = query;
-    }
-  }
-
-  test(text: string): boolean {
-    if (typeof this.query === 'string') {
-      return text.includes(this.query);
-    } else {
-      return !!text.match(this.query);
-    }
-  }
-}
-
 /** Check if Axios response is html. */
 export function isResponseHtml(response?: AxiosResponse) {
   if (!response) {
@@ -170,22 +142,4 @@ export function dataUrlToBlob(dataUrl: string): Blob {
     u8arr[n] = binary.charCodeAt(n);
   }
   return new Blob([u8arr], { type: mime });
-}
-
-/** 32-bit FNV-1a hash */
-export function applyHash_fnv1a(str: string): number {
-  let hash = 0x811c9dc5;
-
-  for (let i = 0; i < str.length; i++) {
-    hash ^= str.charCodeAt(i);
-    hash = Math.imul(hash, 0x01000193);
-  }
-
-  return hash >>> 0;
-}
-
-/** Generates stub ID for text. */
-export function generateStub(text: string): string {
-  const hash = applyHash_fnv1a(text);
-  return hash.toString(16).padStart(8, '0').slice(0, 8);
 }

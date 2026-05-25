@@ -21,8 +21,6 @@ import {
   type UpdateCrucialDTO
 } from '@/features/rsform/backend/types';
 
-import { type RO } from '@/utils/meta';
-
 import { type SandboxBundle } from '../models/bundle';
 import { createStarterSandboxBundle, resolveStarterLocale } from '../models/bundle-starter';
 import { sbApi } from '../stores/sandbox-mutations';
@@ -195,7 +193,7 @@ export function SandboxState({ children }: React.PropsWithChildren) {
     commitBundle(prev => sbApi.substituteConstituents(prev, substitutions));
   }
 
-  function inlineSynthesis(data: InlineSynthesisDTO, source: RO<RSFormDTO>) {
+  function inlineSynthesis(data: InlineSynthesisDTO, source: RSFormDTO) {
     commitBundle(prev => sbApi.inlineSynthesis(prev, data, source));
   }
 

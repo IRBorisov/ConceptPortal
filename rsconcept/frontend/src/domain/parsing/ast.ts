@@ -1,8 +1,4 @@
-/**
- * Module: Parsing utilities.
- */
-
-import { type TreeCursor } from '@lezer/common';
+import { type TreeCursor } from './lezer-tree';
 
 export const TOKEN_ERROR = 0;
 

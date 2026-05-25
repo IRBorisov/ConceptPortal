@@ -30,7 +30,6 @@ import {
 import { cn } from '@/components/utils';
 import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER, prefixes } from '@/utils/constants';
-import { type RO } from '@/utils/meta';
 
 interface ToolbarSchemaProps {
   schema: RSForm;
@@ -65,7 +64,7 @@ export function ToolbarSchema({
   const { resetAliases } = useResetAliases();
   const { restoreOrder } = useRestoreOrder();
 
-  function onCreateCst(newCst: RO<ConstituentaBasicsDTO>) {
+  function onCreateCst(newCst: ConstituentaBasicsDTO) {
     setActive(newCst.id);
     setTimeout(function scrollToCreatedConstituenta() {
       const element = document.getElementById(`${prefixes.cst_list}${newCst.id}`);

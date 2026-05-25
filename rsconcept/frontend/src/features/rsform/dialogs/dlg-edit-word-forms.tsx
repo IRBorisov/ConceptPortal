@@ -15,7 +15,6 @@ import { IconMoveDown } from '@/components/icons';
 import { TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { type RO } from '@/utils/meta';
 
 import { type LexemeResponse } from '../backend/cctext/types';
 import { useIsProcessingCctext } from '../backend/cctext/use-is-processing-cctext';
@@ -31,7 +30,7 @@ export interface DlgEditWordFormsProps {
   schema: RSForm;
   target: Constituenta;
   onSave: (data: UpdateConstituentaDTO) => void;
-  generateLexeme?: (data: { text: string }) => Promise<RO<LexemeResponse>>;
+  generateLexeme?: (data: { text: string }) => Promise<LexemeResponse>;
 }
 
 const FORM_FIELDS = WORD_FORM_ROW_DEFS.map(row => ({

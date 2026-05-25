@@ -1,13 +1,12 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { queryClient } from '@/backend/query-client';
-import { type RO } from '@/utils/meta';
 
 import { ossApi } from './api';
 import { OssLoader } from './oss-loader';
 import { type OperationSchemaDTO } from './types';
 
-const selectOSS = (data: RO<OperationSchemaDTO>) => new OssLoader(data).produceOSS();
+const selectOSS = (data: OperationSchemaDTO) => new OssLoader(data).produceOSS();
 
 export function useOss({ itemID }: { itemID: number }) {
   const { data: schema } = useSuspenseQuery({

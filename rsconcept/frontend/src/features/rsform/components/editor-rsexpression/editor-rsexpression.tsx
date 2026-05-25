@@ -6,6 +6,7 @@ import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { type Constituenta, CstStatus, type RSForm } from '@/domain/library';
 import { getAnalysisFor, inferStatus } from '@/domain/library/rsform-api';
+import { buildTree, flattenAst } from '@/domain/parsing';
 import { type AnalysisFull, type ExpressionType, type RSErrorDescription, TokenID } from '@/domain/rslang';
 import { rslangParser } from '@/domain/rslang';
 import { useTx } from '@/i18n';
@@ -22,8 +23,6 @@ import { cn } from '@/components/utils';
 import { useResetOnChange } from '@/hooks/use-reset-on-change';
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
-import { type RO } from '@/utils/meta';
-import { buildTree, flattenAst } from '@/utils/parsing';
 
 import { RSInput } from '../rs-input';
 import { RSTextWrapper } from '../rs-input/text-editing';
@@ -46,8 +45,8 @@ interface EditorRSExpressionProps {
   disabled?: boolean;
   isProcessing?: boolean;
   toggleReset?: boolean;
-  errors?: RO<RSErrorDescription[] | null>;
-  analysis?: RO<AnalysisFull> | null;
+  errors?: RSErrorDescription[] | null;
+  analysis?: AnalysisFull | null;
   status?: CstStatus;
   showStatus?: boolean;
   helpTopic?: HelpTopic;
@@ -55,11 +54,11 @@ interface EditorRSExpressionProps {
   extractionDisabled?: boolean;
 
   onAnalyze?: (event: React.MouseEvent<Element> | null) => void;
-  onAnalysis?: (typification: RO<AnalysisFull> | null) => void;
+  onAnalysis?: (typification: AnalysisFull | null) => void;
   onOpenEdit: (cstID: number) => void;
   onShowTypeGraph?: (event: React.MouseEvent<Element>) => void;
-  onCreateCst?: (data: CreateConstituentaDTO) => Promise<RO<ConstituentaCreatedResponse>>;
-  onUpdateCst?: (data: UpdateConstituentaDTO) => Promise<RO<RSFormDTO>>;
+  onCreateCst?: (data: CreateConstituentaDTO) => Promise<ConstituentaCreatedResponse>;
+  onUpdateCst?: (data: UpdateConstituentaDTO) => Promise<RSFormDTO>;
 }
 
 export function EditorRSExpression({
@@ -94,7 +93,7 @@ export function EditorRSExpression({
   const showFlatAst = useDialogsStore(state => state.showShowFlatAst);
   const showAstExtract = useDialogsStore(state => state.showShowAstExtract);
   const showTypification = useDialogsStore(state => state.showShowTypeGraph);
-  const [errors, setErrors] = useState<RO<RSErrorDescription[] | null>>(analysis?.errors ?? null);
+  const [errors, setErrors] = useState<RSErrorDescription[] | null>(analysis?.errors ?? null);
 
   function resetHandler() {
     setNeedsAnalyze(false);
@@ -137,7 +136,7 @@ export function EditorRSExpression({
 
   function handleCheckExpression(
     event: React.MouseEvent<Element> | null,
-    callback?: (parse: RO<AnalysisFull>) => void
+    callback?: (parse: AnalysisFull) => void
   ) {
     event?.preventDefault();
     event?.stopPropagation();
@@ -165,7 +164,7 @@ export function EditorRSExpression({
     }
   }
 
-  function handleShowError(error: RO<RSErrorDescription>) {
+  function handleShowError(error: RSErrorDescription) {
     if (!rsInput.current) {
       return;
     }

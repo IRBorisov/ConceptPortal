@@ -14,8 +14,6 @@ import {
   type UpdateCrucialDTO
 } from '@/features/rsform/backend/types';
 
-import { type RO } from '@/utils/meta';
-
 import { type SandboxBundle } from '../models/bundle';
 
 interface IBundleContext {
@@ -31,8 +29,8 @@ interface IBundleContext {
 
   moveConstituents: (data: MoveConstituentsDTO) => void;
   updateCrucial: (data: UpdateCrucialDTO) => void;
-  patchConstituenta: (data: UpdateConstituentaDTO) => Promise<RO<RSFormDTO>>;
-  createConstituenta: (data: CreateConstituentaDTO) => Promise<RO<ConstituentaCreatedResponse>>;
+  patchConstituenta: (data: UpdateConstituentaDTO) => Promise<RSFormDTO>;
+  createConstituenta: (data: CreateConstituentaDTO) => Promise<ConstituentaCreatedResponse>;
   createAttribution: (attr: Attribution) => void;
   deleteAttribution: (attr: Attribution) => void;
   clearAttributions: (data: AttributionTargetDTO) => void;
@@ -40,7 +38,7 @@ interface IBundleContext {
   restoreOrder: () => void;
   resetAliases: () => void;
   substituteConstituents: (substitutions: Substitution[]) => void;
-  inlineSynthesis: (data: InlineSynthesisDTO, source: RO<RSFormDTO>) => void;
+  inlineSynthesis: (data: InlineSynthesisDTO, source: RSFormDTO) => void;
 }
 
 export const BundleContext = createContext<IBundleContext | null>(null);

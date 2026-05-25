@@ -1,4 +1,4 @@
-import { matchLibraryItem, matchLibraryItemLocation } from '@/domain/library/library-api';
+import { matchLibraryItem, matchLibraryItemLocation } from '@/services/search';
 
 import { useAuth } from '@/features/auth';
 

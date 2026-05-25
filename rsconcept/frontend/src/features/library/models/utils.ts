@@ -3,6 +3,9 @@
  */
 
 import { type LibraryItem } from '@/domain/library';
+import { validateLocationFormat } from '@/domain/library/library-api';
+
+import { limits } from '@/utils/constants';
 
 /** Generate title for clone {@link LibraryItem}. */
 export function cloneTitle(target: LibraryItem): string {
@@ -24,4 +27,9 @@ export function nextVersion(version: string): string {
     return version;
   }
   return `${version.substring(0, dot)}.${lastNumber + 1}`;
+}
+
+/** Validate location format. */
+export function validateLocation(location: string): boolean {
+  return location.length <= limits.len_location && validateLocationFormat(location);
 }

@@ -5,6 +5,7 @@ import { useDebounce } from 'use-debounce';
 
 import { type BasicBinding, DEFAULT_VALUE_TEXT } from '@/domain/library';
 import { useTx } from '@/i18n';
+import { filterBindingByQuery } from '@/services/search';
 
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
@@ -13,7 +14,6 @@ import { SearchBar, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
 import { NoData } from '@/components/view';
 import { PARAMETER } from '@/utils/constants';
-import { TextMatcher } from '@/utils/utils';
 
 interface BindingEditorProps {
   className?: string;
@@ -36,13 +36,10 @@ export function BindingEditor({ className, rows, value, onChange }: BindingEdito
   const [selected, setSelected] = useState<number | null>(null);
   const selectedValue = selected === null ? '' : value[selected];
   const [debouncedFilter] = useDebounce(filter, PARAMETER.searchDebounce);
-  const matcher = debouncedFilter ? new TextMatcher(debouncedFilter) : null;
   const isMutable = !!onChange;
 
-  const dataRows: BindingValue[] = Object.entries(value)
-    .filter(entry => !matcher || matcher.test(entry[1]) || Number(entry[0]) === selected)
-    .map(entry => ({ id: Number(entry[0]), text: entry[1] }))
-    .reverse();
+  const ids = filterBindingByQuery(value, debouncedFilter, selected !== null ? [selected] : undefined);
+  const dataRows: BindingValue[] = ids.map(id => ({ id, text: value[id] })).reverse();
 
   function handleAddElement() {
     if (!onChange) {

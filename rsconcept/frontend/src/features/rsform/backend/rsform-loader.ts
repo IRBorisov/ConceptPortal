@@ -13,6 +13,7 @@ import {
   isFunctional,
   typeClassForCstType
 } from '@/domain/library/rsform-api';
+import { type AstNode, getNodeIndices } from '@/domain/parsing';
 import {
   type AnalysisFast,
   makeTypePath,
@@ -32,13 +33,10 @@ import {
 import { labelType } from '@/domain/rslang/labels';
 import { type ExpressionType } from '@/domain/rslang/semantic/typification';
 
-import { type RO } from '@/utils/meta';
-import { type AstNode, getNodeIndices } from '@/utils/parsing';
-
 import { type RSFormDTO } from './types';
 
 /** Loads data into an {@link RSForm} based on {@link RSFormDTO}. */
-export function loadRSForm(data: RO<RSFormDTO>) {
+export function loadRSForm(data: RSFormDTO) {
   return new RSFormLoader(data).produceRSForm();
 }
 
@@ -52,7 +50,7 @@ export class RSFormLoader {
   private normalizedDefinitions = new Map<number, string>();
   private analyzer = new RSLangAnalyzer();
 
-  constructor(input: RO<RSFormDTO>) {
+  constructor(input: RSFormDTO) {
     this.schema = structuredClone(input) as unknown as RSForm;
     this.schema.version = input.version ?? 'latest';
   }

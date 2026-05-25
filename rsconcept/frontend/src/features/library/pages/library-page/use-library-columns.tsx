@@ -9,9 +9,8 @@ import { useLabelUser } from '@/features/users';
 
 import { createColumnHelper } from '@/components/data-table';
 import { useWindowSize } from '@/hooks/use-window-size';
-import { type RO } from '@/utils/meta';
 
-const columnHelper = createColumnHelper<RO<LibraryItem>>();
+const columnHelper = createColumnHelper<LibraryItem>();
 
 export function useLibraryColumns() {
   const { isSmall } = useWindowSize();

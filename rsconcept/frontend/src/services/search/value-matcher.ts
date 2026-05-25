@@ -1,7 +1,7 @@
 import { type RSEngine } from '@/domain/library';
 import { TypeID, type Typification, type Value } from '@/domain/rslang';
 
-import { TextMatcher } from '@/utils/utils';
+import { TextMatcher } from './text-matcher';
 
 /** Utility for matching Values against a query. */
 export class ValueMatcher {

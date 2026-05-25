@@ -162,7 +162,7 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.doubleParenthesis': 'Les doubles parenthèses externes (( et )) sont interdites',
   'tx.rslang.error.missingOpenBracket': 'Parenthèse ouvrante « {bracket} » manquante',
   'tx.rslang.error.expectedLocal': 'Nom de variable attendu',
-  'tx.rslang.error.expectedType': 'Type attendu : {type}',
+  'tx.rslang.error.expectedType': 'Type d’expression non conforme à la constitution',
   'tx.rslang.error.localDoubleDeclare': 'Déclaration en double : {name}',
   'tx.rslang.error.localNotUsed': 'Variable inutilisée : {name}',
   'tx.rslang.error.localUndeclared': 'Variable non déclarée : {name}',

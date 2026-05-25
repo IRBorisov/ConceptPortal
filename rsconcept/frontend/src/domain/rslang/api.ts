@@ -1,8 +1,7 @@
 /**
  * Module: API for RSLanguage.
  */
-import { type RO } from '@/utils/meta';
-import { type AstNode } from '@/utils/parsing';
+import { type AstNode } from '../parsing';
 
 import { ArgumentsExtractor, type ArgumentsType } from './semantic/arguments-extractor';
 export { generateExpressionFromAst } from './parser/expression-generator';
@@ -102,12 +101,12 @@ export function substituteTemplateArgs(expression: string, mapping: AliasMapping
 }
 
 /** Apply alias mapping. */
-export function applyAliasMapping(target: string, mapping: RO<AliasMapping>): string {
+export function applyAliasMapping(target: string, mapping: AliasMapping): string {
   return applyPattern(target, mapping, GLOBALS_REGEXP);
 }
 
 /** Apply alias typification mapping. */
-export function applyTypificationMapping(target: string, mapping: RO<AliasMapping>): string {
+export function applyTypificationMapping(target: string, mapping: AliasMapping): string {
   const modified = applyAliasMapping(target, mapping);
   if (modified === target) {
     return target;

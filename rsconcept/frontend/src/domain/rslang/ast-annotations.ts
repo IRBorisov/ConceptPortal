@@ -1,6 +1,6 @@
 /** Module: AST annotations. */
 
-import { type AstNode } from '@/utils/parsing';
+import { type AstNode } from '../parsing';
 
 import { type ExpressionType } from './semantic/typification';
 import { type RSErrorCode, type RSErrorInfo } from './error';

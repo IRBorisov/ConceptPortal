@@ -7,7 +7,6 @@ import { type RSFormDTO } from '@/features/rsform';
 import { type RSModelDTO } from '@/features/rsmodel';
 
 import { KEYS } from '@/backend/configuration';
-import { type RO } from '@/utils/meta';
 
 import { libraryApi } from './api';
 import { useLibraryListKey } from './use-library';
@@ -25,7 +24,7 @@ export const useUpdateItem = () => {
           : data.item_type === LibraryItemType.OSS
             ? KEYS.composite.oss({ itemID: data.id })
             : KEYS.composite.model({ itemID: data.id });
-      client.setQueryData(libraryKey, (prev: RO<LibraryItem[]> | undefined) =>
+      client.setQueryData(libraryKey, (prev: LibraryItem[] | undefined) =>
         prev?.map(item => (item.id === data.id ? data : item))
       );
       if (data.item_type === LibraryItemType.RSFORM) {

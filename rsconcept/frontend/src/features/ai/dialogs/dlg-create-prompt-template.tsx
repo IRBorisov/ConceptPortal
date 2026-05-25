@@ -11,14 +11,13 @@ import { HelpTopic } from '@/features/help';
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';
-import { type RO } from '@/utils/meta';
 
 import { type ICreatePromptTemplateDTO, type IPromptTemplateDTO, schemaCreatePromptTemplate } from '../backend/types';
 import { useAvailableTemplates } from '../backend/use-available-templates';
 import { useCreatePromptTemplate } from '../backend/use-create-prompt-template';
 
 export interface DlgCreatePromptTemplateProps {
-  onCreate?: (data: RO<IPromptTemplateDTO>) => void;
+  onCreate?: (data: IPromptTemplateDTO) => void;
 }
 
 export function DlgCreatePromptTemplate() {

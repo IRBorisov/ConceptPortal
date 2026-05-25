@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { RSErrorCode, type RSErrorDescription } from '../error';
-import { labelType, labelTypeClass } from '../labels';
+import { labelType } from '../labels';
 
 import { type AnalysisOptions, RSLangAnalyzer } from './analyzer';
 import { basic, bool, tuple, TypeClass } from './typification';
@@ -45,31 +45,11 @@ describe('RSLang analyzer', () => {
   });
 
   it('Expected type', () => {
-    expectError(
-      'X1',
-      { expected: TypeClass.logic },
-      { code: RSErrorCode.expectedType, from: 0, to: 2, params: [labelTypeClass(TypeClass.logic)] }
-    );
-    expectError(
-      '1=1',
-      { expected: TypeClass.typification },
-      { code: RSErrorCode.expectedType, from: 0, to: 3, params: [labelTypeClass(TypeClass.typification)] }
-    );
-    expectError(
-      '1=1',
-      { expected: TypeClass.function },
-      { code: RSErrorCode.expectedType, from: 0, to: 3, params: [labelTypeClass(TypeClass.function)] }
-    );
-    expectError(
-      '[a ∈ X1] a=a',
-      { expected: TypeClass.function },
-      { code: RSErrorCode.expectedType, from: 0, to: 12, params: [labelTypeClass(TypeClass.function)] }
-    );
-    expectError(
-      '[a ∈ X1] a',
-      { expected: TypeClass.predicate },
-      { code: RSErrorCode.expectedType, from: 0, to: 10, params: [labelTypeClass(TypeClass.predicate)] }
-    );
+    expectError('X1', { expected: TypeClass.logic }, { code: RSErrorCode.expectedType, from: 0, to: 2 });
+    expectError('1=1', { expected: TypeClass.typification }, { code: RSErrorCode.expectedType, from: 0, to: 3 });
+    expectError('1=1', { expected: TypeClass.function }, { code: RSErrorCode.expectedType, from: 0, to: 3 });
+    expectError('[a ∈ X1] a=a', { expected: TypeClass.function }, { code: RSErrorCode.expectedType, from: 0, to: 12 });
+    expectError('[a ∈ X1] a', { expected: TypeClass.predicate }, { code: RSErrorCode.expectedType, from: 0, to: 10 });
   });
 
   it('Reports analyzer-level ranges for whole-expression errors', () => {

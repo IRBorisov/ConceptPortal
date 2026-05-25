@@ -1,17 +1,17 @@
 'use client';
 
 import { getRSErrorPrefix, isCritical, type RSErrorDescription } from '@/domain/rslang/error';
-import { describeRSError } from '@/domain/rslang/labels';
 import { useTx } from '@/i18n';
 
 import { cn } from '@/components/utils';
-import { type RO } from '@/utils/meta';
+
+import { describeRSError } from '../labels';
 
 interface ViewErrorsProps {
-  errors: RO<RSErrorDescription[]> | null;
+  errors: RSErrorDescription[] | null;
   disabled?: boolean;
   isOpen: boolean;
-  onShowError?: (error: RO<RSErrorDescription>) => void;
+  onShowError?: (error: RSErrorDescription) => void;
   className?: string;
 }
 

@@ -1,14 +1,7 @@
-import {
-  type CalculatorEvaluateOptions,
-  type CalculatorResult,
-  RSCalculator,
-  TypeID,
-  type Value
-} from '@/domain/rslang';
-import { compare } from '@/domain/rslang/eval/value';
-import { normalizeType } from '@/domain/rslang/labels';
-
-import { type AstNode } from '@/utils/parsing';
+import { type AstNode } from '../parsing';
+import { type CalculatorEvaluateOptions, type CalculatorResult, RSCalculator, TypeID, type Value } from '../rslang';
+import { compare } from '../rslang/eval/value';
+import { normalizeType } from '../rslang/labels';
 
 import { CstType, type RSForm } from './rsform';
 import { getAnalysisFor, isBaseSet, isBasicConcept, isFunctional } from './rsform-api';

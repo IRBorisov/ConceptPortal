@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { buildTree } from '@/utils/parsing';
-
+import { buildTree } from '../../parsing';
 import { RSErrorCode, type RSErrorDescription } from '../error';
 import { labelType } from '../labels';
 import { normalizeAST } from '../parser/normalize';

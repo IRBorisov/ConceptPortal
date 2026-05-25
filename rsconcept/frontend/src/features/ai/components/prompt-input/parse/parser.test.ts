@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { printTree } from '@/utils/codemirror';
+import { printTree } from '@/domain/parsing';
 
 import { parser } from './parser';
 

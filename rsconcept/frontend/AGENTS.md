@@ -14,6 +14,7 @@ Vite, React 19 + Compiler, Tailwind CSS, TypeScript, React Router, TanStack Quer
 
 - `src/app`: bootstrap, layout, routes, providers
 - `src/domain`: shared domain abstractions
+- `src/services`: domain-neutral service layer (search, etc.) consumable by `domain` and `features`
 - `src/features`: feature UI, hooks, dialogs, pages
 - `src/components`: shared UI blocks/controls
 - `src/backend`: API transport/query setup

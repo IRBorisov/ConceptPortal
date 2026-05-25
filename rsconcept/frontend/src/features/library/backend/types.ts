@@ -1,10 +1,11 @@
 import { z } from 'zod';
 
 import { AccessPolicy, type LibraryItem, LibraryItemType } from '@/domain/library';
-import { validateLocation } from '@/domain/library/library-api';
 import { globalTx } from '@/i18n';
 
 import { limits } from '@/utils/constants';
+
+import { validateLocation } from '../models/utils';
 
 /** Represents {@link LibraryItem} data loaded for both OSS and RSForm. */
 export interface LibraryItemData extends LibraryItem {

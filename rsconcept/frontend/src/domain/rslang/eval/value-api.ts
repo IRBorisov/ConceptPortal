@@ -1,6 +1,4 @@
-import { type RO } from '@/utils/meta';
-import { generateStub } from '@/utils/utils';
-
+import { generateStub } from '../../shared';
 import { type ExpressionType, TypeID, type TypePath, type Typification } from '../semantic/typification';
 
 import {
@@ -235,7 +233,7 @@ export function projection(target: Value[][], indices: number[]): Value[] {
 }
 
 /** Condensed string representation. */
-export function printValue(data: RO<Value> | null): string {
+export function printValue(data: Value | null): string {
   if (!Array.isArray(data)) {
     return String(data);
   }
@@ -250,15 +248,15 @@ export function printValue(data: RO<Value> | null): string {
   let result = isTuple ? '(' : '{';
   for (let i = start; i < len; i++) {
     if (i > start) result += ', ';
-    result += printValue(data[i] as RO<Value>);
+    result += printValue(data[i]);
   }
   result += isTuple ? ')' : '}';
   return result;
 }
 
 /** Generates stub ID for value. */
-export function valueStub(value: RO<Value> | null): string {
-  if (!value) {
+export function valueStub(value: Value | null): string {
+  if (value == null) {
     return '';
   }
   const str = printValue(value);
@@ -266,12 +264,12 @@ export function valueStub(value: RO<Value> | null): string {
 }
 
 /** Checks if value is a set representation, not a tuple representation. */
-export function isSetValue(data: RO<Value> | null): data is Value[] {
+export function isSetValue(data: Value | null): data is Value[] {
   return Array.isArray(data) && (data.length === 0 || data[0] !== TUPLE_ID);
 }
 
 /** Checks if value is a tuple representation. */
-export function isTupleValue(data: RO<Value> | null): data is Value[] {
+export function isTupleValue(data: Value | null): data is Value[] {
   return Array.isArray(data) && data.length > 1 && data[0] === TUPLE_ID;
 }
 
@@ -304,7 +302,7 @@ export function normalizeValue(data: Value): void {
 }
 
 /** Validates value for {@link ExpressionType} and value of basic sets. */
-export function validateValue(value: RO<Value>, type: RO<ExpressionType>, basics: ValueContext): boolean {
+export function validateValue(value: Value, type: ExpressionType, basics: ValueContext): boolean {
   switch (type.typeID) {
     case TypeID.integer:
       return typeof value === 'number';
@@ -327,7 +325,7 @@ export function validateValue(value: RO<Value>, type: RO<ExpressionType>, basics
         return false;
       }
       for (let i = 0; i < type.factors.length; i++) {
-        if (!validateValue(value[i + 1] as RO<Value>, type.factors[i], basics)) {
+        if (!validateValue(value[i + 1], type.factors[i], basics)) {
           return false;
         }
       }

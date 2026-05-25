@@ -1,4 +1,4 @@
-import { type AstNode, getNodeIndices, getNodeText } from '@/utils/parsing';
+import { type AstNode, getNodeIndices, getNodeText } from '../../parsing';
 
 import { TokenID } from './token';
 

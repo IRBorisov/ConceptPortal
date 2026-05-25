@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { type LibraryItem, type LibraryItemType } from '@/domain/library';
-import { matchLibraryItem } from '@/domain/library/library-api';
 import { useTx } from '@/i18n';
+import { matchLibraryItem } from '@/services/search';
 
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
@@ -15,7 +15,6 @@ import { ErrorField, SearchBar } from '@/components/input';
 import { type ErrorProcessing, type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
-import { type RO } from '@/utils/meta';
 
 import { SelectLocation } from './select-location';
 
@@ -27,7 +26,7 @@ interface PickSchemaProps extends Styling, ErrorProcessing {
   initialFilter?: string;
   rows?: number;
 
-  items: RO<LibraryItem[]>;
+  items: LibraryItem[];
   itemType: LibraryItemType;
   baseFilter?: (target: LibraryItem) => boolean;
 }

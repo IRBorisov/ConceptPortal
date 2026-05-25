@@ -6,6 +6,7 @@ import { useDebounce } from 'use-debounce';
 
 import { type BasicBinding } from '@/domain/library';
 import { useTx } from '@/i18n';
+import { filterBindingByQuery } from '@/services/search';
 
 import { DataTable, type IConditionalStyle } from '@/components/data-table';
 import { SearchBar, TextInput } from '@/components/input';
@@ -13,7 +14,6 @@ import { cn } from '@/components/utils';
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs, PARAMETER } from '@/utils/constants';
 import { truncateToLastWord } from '@/utils/format';
-import { TextMatcher } from '@/utils/utils';
 
 const VALUE_TRUNCATE = 40;
 
@@ -37,14 +37,8 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
   const [filter, setFilter] = useState('');
   const [filterDebounced] = useDebounce(filter, PARAMETER.searchDebounce);
   const labelText = term ? `${alias}${tx('tx.general.colon')}${term}` : alias || 'N/A';
-  const matcher = new TextMatcher(filterDebounced);
 
-  const filteredIDs = !binding
-    ? []
-    : Object.entries(binding)
-        .filter(entry => matcher.test(entry[1]))
-        .map(entry => Number(entry[0]))
-        .filter(id => id !== value);
+  const filteredIDs = binding ? filterBindingByQuery(binding, filterDebounced).filter(id => id !== value) : [];
   const filtered = [...(value === null ? [] : [value]), ...filteredIDs];
 
   const columns = [
