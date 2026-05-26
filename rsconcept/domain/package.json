@@ -6,7 +6,7 @@
   "author": "IRBorisov",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/IRBorisov/ConceptPortal.git",
+    "url": "git+https://github.com/IRBorisov/ConceptPortal/tree/main/rsconcept/domain",
     "directory": "rsconcept/domain"
   },
   "homepage": "https://portal.acconcept.ru",

@@ -6,9 +6,8 @@ import clsx from 'clsx';
 import { useTx } from '@/i18n';
 import { type RSForm } from '@rsconcept/domain/library/rsform';
 import { type AstNode, type FlatAstNode } from '@rsconcept/domain/parsing';
-import { readErrorAnnotation, readTypeAnnotation } from '@rsconcept/domain/rslang';
+import { readErrorAnnotation, readTypeAnnotation, TokenID } from '@rsconcept/domain/rslang';
 import { labelRSLangNode, labelType } from '@rsconcept/domain/rslang/labels';
-import { TokenID } from '@rsconcept/domain/rslang/parser/token';
 
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';

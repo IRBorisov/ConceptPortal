@@ -1,6 +1,3 @@
-# Build, typecheck, lint, and test the frontend Vite app + Playwright e2e.
-# Runs from the monorepo root so npm workspaces resolve @rsconcept/domain locally.
-
 name: Frontend CI
 
 on:
@@ -45,8 +42,6 @@ jobs:
           cache: "npm"
       - name: Install workspaces (root)
         run: npm ci
-      - name: Build domain
-        run: npm run build -w @rsconcept/domain
       - name: Build frontend
         working-directory: rsconcept/frontend
         run: npm run build --if-present

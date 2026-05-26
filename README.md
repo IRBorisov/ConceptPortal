@@ -8,19 +8,20 @@
 <br />
 
 [![Backend CI](https://github.com/IRBorisov/ConceptPortal/actions/workflows/backend.yml/badge.svg?branch=main)](https://github.com/IRBorisov/ConceptPortal/actions/workflows/backend.yml)
+[![Domain CI](https://github.com/IRBorisov/ConceptPortal/actions/workflows/domain.yml/badge.svg?branch=main)](https://github.com/IRBorisov/ConceptPortal/actions/workflows/domain.yml)
 [![Frontend CI](https://github.com/IRBorisov/ConceptPortal/actions/workflows/frontend.yml/badge.svg?branch=main)](https://github.com/IRBorisov/ConceptPortal/actions/workflows/frontend.yml)
 [![RSTool CI](https://github.com/IRBorisov/ConceptPortal/actions/workflows/rstool.yml/badge.svg?branch=main)](https://github.com/IRBorisov/ConceptPortal/actions/workflows/rstool.yml)
 [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m797659312-8ab26c72de49d8d92eccc06e?label=Live%20Server)](https://portal.acconcept.ru)
 
 **Concept Portal** is a web application for editing RSForm schemas. The UI is built with React (Vite); the API runs on Django.
 
-The repository is an **npm workspaces monorepo** with four TypeScript packages:
+The repository is an **npm workspaces monorepo** for the Portal app and agent packages, plus a standalone domain package in `rsconcept/domain`:
 
-| Workspace              | npm package                                     | What it is                                                                                                   |
+| Path / workspace       | npm package                                     | What it is                                                                                                   |
 | ---------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `rsconcept/domain`     | [`@rsconcept/domain`](rsconcept/domain)         | Shared TypeScript domain for RS language, RSForm, RSModel, RSEngine, OSS, and cctext. Published to npm.      |
-| `rsconcept/frontend`   | (internal)                                      | The Portal Vite/React SPA. Consumes `@rsconcept/domain` via npm workspaces.                                  |
-| `rsconcept/rstool`     | [`@rsconcept/rstool`](rsconcept/rstool)         | Agent-facing library and stdio wrapper. Published to npm, depends only on `@rsconcept/domain`.               |
+| `rsconcept/domain`     | [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) | Shared TypeScript domain. Developed in-repo; **frontend and rstool install it from npm** (`^1.0.0`). |
+| `rsconcept/frontend`   | (internal workspace)                            | The Portal Vite/React SPA. Depends on `@rsconcept/domain` from the registry.                                 |
+| `rsconcept/rstool`     | [`@rsconcept/rstool`](rsconcept/rstool)         | Agent-facing library and stdio wrapper. Published to npm, depends on `@rsconcept/domain` from the registry. |
 | `rsconcept/rstool-mcp` | [`@rsconcept/rstool-mcp`](rsconcept/rstool-mcp) | Model Context Protocol (MCP) adapter over `@rsconcept/rstool` for Cursor / Claude Desktop. Published to npm. |
 
 External agents can use rstool standalone: `npm install @rsconcept/rstool`. For MCP-capable hosts, use `npm install -g @rsconcept/rstool-mcp` and point your client at the `rstool-mcp` bin. See [`rsconcept/rstool/README.md`](rsconcept/rstool/README.md) and [`rsconcept/rstool-mcp/README.md`](rsconcept/rstool-mcp/README.md).
@@ -40,20 +41,29 @@ Before you open a pull request:
 From the repo root:
 
 ```bash
-npm install                                    # install all workspaces (single root lockfile)
-npm run typecheck                              # typecheck all packages
-npm test                                       # test all packages
-npm run build                                  # build all packages
-npm run build -w @rsconcept/domain             # build only the domain package
+npm install                                    # install workspaces + @rsconcept/domain from npm
+npm run typecheck                              # typecheck workspace packages
+npm test                                       # test workspace packages
+npm run build                                  # build workspace packages
 npm test -w @rsconcept/rstool                  # test only the rstool package
 ```
 
-## Frontend (Vite + React + TypeScript)
-
-After you change RSLang grammar files, regenerate the parser from `rsconcept/domain`:
+Domain package (separate install in `rsconcept/domain`):
 
 ```bash
-npm run generate -w @rsconcept/domain
+cd rsconcept/domain && npm install
+npm run generate                               # after editing rslang.grammar
+npm run build && npm test
+```
+
+To try unpublished domain changes with frontend or rstool before a release: `npm run build` in `rsconcept/domain`, then `npm link` there and `npm link @rsconcept/domain` in the consumer workspace.
+
+## Frontend (Vite + React + TypeScript)
+
+After you change RSLang grammar files, publish a new `@rsconcept/domain` (or use `npm link` locally), bump the `^` pin in `rsconcept/frontend/package.json` if needed, then regenerate any frontend-local grammars if applicable. Grammar source lives in `rsconcept/domain`:
+
+```bash
+cd rsconcept/domain && npm run generate
 ```
 
 <details>

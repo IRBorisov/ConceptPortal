@@ -39,12 +39,6 @@ jobs:
           cache-dependency-path: package-lock.json
       - name: Install workspaces (root)
         run: npm ci
-      - name: Typecheck domain
-        run: npm run typecheck -w @rsconcept/domain
-      - name: Test domain
-        run: npm test -w @rsconcept/domain
-      - name: Build domain
-        run: npm run build -w @rsconcept/domain
       - name: Typecheck rstool
         run: npm run typecheck -w @rsconcept/rstool
       - name: Test rstool

@@ -4,7 +4,6 @@
   "description": "Concept Portal monorepo: domain (shared TS), frontend (Vite), rstool (agent library).",
   "private": true,
   "workspaces": [
-    "rsconcept/domain",
     "rsconcept/frontend",
     "rsconcept/rstool",
     "rsconcept/rstool-mcp"

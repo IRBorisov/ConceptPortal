@@ -12,9 +12,7 @@
     "isolatedModules": false,
 
     "paths": {
-      "@/*": ["./src/*"],
-      "@rsconcept/domain": ["../domain/src/index.ts"],
-      "@rsconcept/domain/*": ["../domain/src/*"]
+      "@/*": ["./src/*"]
     },
     "types": ["playwright", "node"]
   },

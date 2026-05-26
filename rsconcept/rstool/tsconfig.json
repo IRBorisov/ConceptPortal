@@ -10,12 +10,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "declaration": true,
-    "types": ["node", "vitest/globals"],
-    "baseUrl": ".",
-    "paths": {
-      "@rsconcept/domain": ["../domain/src/index.ts"],
-      "@rsconcept/domain/*": ["../domain/src/*"]
-    }
+    "types": ["node", "vitest/globals"]
   },
   "include": ["src/**/*.ts", "examples/**/*.ts"]
 }

@@ -28,7 +28,7 @@ After editing the skill, update the duplicate under `.agents/skills/rslang-rstoo
 
 ## Commands
 
-Run from the repo root (npm workspaces hoist deps for `@rsconcept/domain`, `@rsconcept/rstool`, `frontend`):
+Run from the repo root (`@rsconcept/domain` comes from npm; workspaces: `frontend`, `@rsconcept/rstool`, `@rsconcept/rstool-mcp`):
 
 - Install: `npm install` (root)
 - Typecheck: `npm run typecheck -w @rsconcept/rstool`
