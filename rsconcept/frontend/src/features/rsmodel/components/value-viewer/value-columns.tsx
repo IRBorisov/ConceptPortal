@@ -1,10 +1,10 @@
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import clsx from 'clsx';
 
-import { type BasicsContext, type RSForm } from '@/domain/library';
-import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/domain/rslang';
-import { testInvalid, valueStub } from '@/domain/rslang/eval/value-api';
-import { type EchelonCollection, IntegerT } from '@/domain/rslang/semantic/typification';
+import { type BasicsContext, type RSForm } from '@rsconcept/domain/library';
+import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@rsconcept/domain/rslang';
+import { testInvalid, valueStub } from '@rsconcept/domain/rslang/eval/value-api';
+import { type EchelonCollection, IntegerT } from '@rsconcept/domain/rslang/semantic/typification';
 import { useTx } from '@/i18n';
 import { type ValueMatcher } from '@/services/search';
 

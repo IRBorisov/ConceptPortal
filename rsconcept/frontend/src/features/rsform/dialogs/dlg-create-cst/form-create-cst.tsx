@@ -2,8 +2,8 @@
 
 import { type ReactNode, useState } from 'react';
 
-import { CstType, type RSForm } from '@/domain/library';
-import { isBaseSet, isBasicConcept } from '@/domain/library/rsform-api';
+import { CstType, type RSForm } from '@rsconcept/domain/library';
+import { isBaseSet, isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';

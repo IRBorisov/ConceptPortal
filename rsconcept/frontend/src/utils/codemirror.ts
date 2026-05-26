@@ -5,7 +5,7 @@ import { syntaxTree } from '@codemirror/language';
 import { type Tree } from '@lezer/common';
 import { type ReactCodeMirrorRef, type SelectionRange } from '@uiw/react-codemirror';
 
-import { type CMSyntaxNode } from '@/domain/parsing';
+import { type CMSyntaxNode } from '@rsconcept/domain/parsing';
 
 /** Retrieves a list of all nodes, containing given range and corresponding to a filter. */
 export function findEnvelopingNodes(from: number, to: number, tree: Tree, filter?: readonly number[]): CMSyntaxNode[] {

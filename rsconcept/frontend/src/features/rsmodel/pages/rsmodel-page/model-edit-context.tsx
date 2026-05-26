@@ -2,7 +2,7 @@
 
 import { createContext, use } from 'react';
 
-import { type RSEngine, type RSForm, type RSModel } from '@/domain/library';
+import { type RSEngine, type RSForm, type RSModel } from '@rsconcept/domain/library';
 
 interface IModelEditContext {
   model: RSModel;

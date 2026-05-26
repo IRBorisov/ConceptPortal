@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { type LibraryItem, type OssLayout } from '@/domain/library';
-import { getRelocateCandidates } from '@/domain/library/oss-api';
+import { type LibraryItem, type OssLayout } from '@rsconcept/domain/library';
+import { getRelocateCandidates } from '@rsconcept/domain/library/oss-api';
 import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';

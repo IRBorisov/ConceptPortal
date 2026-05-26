@@ -2,7 +2,7 @@
  * Module: Internal navigation constants.
  */
 
-import { LibraryItemType } from '@/domain/library';
+import { LibraryItemType } from '@rsconcept/domain/library';
 
 import { buildConstants } from '@/utils/build-constants';
 

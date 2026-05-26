@@ -2,7 +2,7 @@
  * Module: Models for LibraryItem.
  */
 
-import { type LibraryItemType } from '@/domain/library';
+import { type LibraryItemType } from '@rsconcept/domain/library';
 
 /** Represents Library filter parameters. */
 export interface LibraryFilter {

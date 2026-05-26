@@ -7,12 +7,12 @@ import { ReactFlowProvider } from '@xyflow/react';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
-import { CstType, type RSForm } from '@/domain/library/rsform';
-import { generateAlias } from '@/domain/library/rsform-api';
-import { type AstNode, findByUid, flattenAst } from '@/domain/parsing';
-import { readTypeAnnotation, TypeID } from '@/domain/rslang';
-import { extractArguments } from '@/domain/rslang/api';
-import { labelType } from '@/domain/rslang/labels';
+import { CstType, type RSForm } from '@rsconcept/domain/library/rsform';
+import { generateAlias } from '@rsconcept/domain/library/rsform-api';
+import { type AstNode, findByUid, flattenAst } from '@rsconcept/domain/parsing';
+import { readTypeAnnotation, TypeID } from '@rsconcept/domain/rslang';
+import { extractArguments } from '@rsconcept/domain/rslang/api';
+import { labelType } from '@rsconcept/domain/rslang/labels';
 import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';

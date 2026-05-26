@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 
-import { type RSEngine } from '@/domain/library';
-import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/domain/rslang';
-import { convertPathToType, extractValue } from '@/domain/rslang/eval/value-api';
-import { type TypePath } from '@/domain/rslang/semantic/typification';
-import { applyPath } from '@/domain/rslang/semantic/typification-api';
+import { type RSEngine } from '@rsconcept/domain/library';
+import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@rsconcept/domain/rslang';
+import { convertPathToType, extractValue } from '@rsconcept/domain/rslang/eval/value-api';
+import { type TypePath } from '@rsconcept/domain/rslang/semantic/typification';
+import { applyPath } from '@rsconcept/domain/rslang/semantic/typification-api';
 import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';

@@ -2,7 +2,7 @@
  * Module: OSS data loading and processing.
  */
 
-import { Graph } from '@/domain/graph/graph';
+import { Graph } from '@rsconcept/domain/graph/graph';
 import {
   type Block,
   NodeType,
@@ -11,8 +11,8 @@ import {
   type OperationSchemaStats,
   OperationType,
   type OssItem
-} from '@/domain/library';
-import { constructNodeID } from '@/domain/library/oss-api';
+} from '@rsconcept/domain/library';
+import { constructNodeID } from '@rsconcept/domain/library/oss-api';
 
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../pages/oss-page/tab-oss-graph/graph/block-node';
 

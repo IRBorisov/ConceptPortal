@@ -1,6 +1,6 @@
 'use client';
 
-import { NodeType } from '@/domain/library';
+import { NodeType } from '@rsconcept/domain/library';
 
 import { Tooltip } from '@/components/container';
 import { globalIDs } from '@/utils/constants';

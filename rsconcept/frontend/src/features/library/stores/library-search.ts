@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { LibraryItemType } from '@/domain/library';
+import { LibraryItemType } from '@rsconcept/domain/library';
 
 import { type LibraryFilter } from '../models/library-filter';
 

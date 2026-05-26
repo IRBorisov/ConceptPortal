@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { type OssItem } from '@/domain/library';
+import { type OssItem } from '@rsconcept/domain/library';
 
 interface OperationTooltipStore {
   hoverItem: OssItem | null;

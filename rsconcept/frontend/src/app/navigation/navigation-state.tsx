@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { type LibraryItemType } from '@/domain/library';
+import { type LibraryItemType } from '@rsconcept/domain/library';
 
 import { useTooltipsStore } from '@/stores/tooltips';
 

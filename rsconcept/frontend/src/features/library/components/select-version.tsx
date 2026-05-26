@@ -1,6 +1,6 @@
 'use client';
 
-import { type CurrentVersion, type VersionInfo } from '@/domain/library';
+import { type CurrentVersion, type VersionInfo } from '@rsconcept/domain/library';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/input/select';
 import { type Styling } from '@/components/props';

@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 
-import { LocationHead } from '@/domain/library';
-import { combineLocation } from '@/domain/library/library-api';
+import { LocationHead } from '@rsconcept/domain/library';
+import { combineLocation } from '@rsconcept/domain/library/library-api';
 import { useTx } from '@/i18n';
 
 import { useAuth } from '@/features/auth';

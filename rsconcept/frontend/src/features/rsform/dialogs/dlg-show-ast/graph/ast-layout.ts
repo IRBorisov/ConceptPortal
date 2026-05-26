@@ -1,7 +1,7 @@
 import dagre from '@dagrejs/dagre';
 import { type Edge, type Node } from '@xyflow/react';
 
-import { type FlatAstNode } from '@/domain/parsing';
+import { type FlatAstNode } from '@rsconcept/domain/parsing';
 
 import { PARAMETER } from '@/utils/constants';
 

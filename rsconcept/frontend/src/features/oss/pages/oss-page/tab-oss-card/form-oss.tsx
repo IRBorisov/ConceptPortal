@@ -3,8 +3,8 @@
 import { useEffect, useEffectEvent } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { LibraryItemType } from '@/domain/library';
-import { type OperationSchema } from '@/domain/library';
+import { LibraryItemType } from '@rsconcept/domain/library';
+import { type OperationSchema } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { useRegisterUnsavedSave } from '@/app';

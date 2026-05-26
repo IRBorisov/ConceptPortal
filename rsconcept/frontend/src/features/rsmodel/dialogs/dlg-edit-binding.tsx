@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { type BasicBinding } from '@/domain/library';
+import { type BasicBinding } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';

@@ -3,14 +3,18 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "lib": ["ES2022"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
+    "isolatedModules": true,
+    "declaration": true,
     "types": ["node", "vitest/globals"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["../frontend/src/*"]
+      "@rsconcept/domain": ["../domain/src/index.ts"],
+      "@rsconcept/domain/*": ["../domain/src/*"]
     }
   },
   "include": ["src/**/*.ts", "examples/**/*.ts"]

@@ -5,16 +5,16 @@ import { toast } from 'react-toastify';
 import { useForm, useStore } from '@tanstack/react-form';
 import clsx from 'clsx';
 
-import { type Constituenta, CstType, type RSForm } from '@/domain/library';
+import { type Constituenta, CstType, type RSForm } from '@rsconcept/domain/library';
 import {
   canHaveManualTypification,
   getAnalysisFor,
   isBaseSet,
   isBasicConcept,
   isLogical
-} from '@/domain/library/rsform-api';
-import { type AnalysisFull, TypeID } from '@/domain/rslang';
-import { labelType } from '@/domain/rslang/labels';
+} from '@rsconcept/domain/library/rsform-api';
+import { type AnalysisFull, TypeID } from '@rsconcept/domain/rslang';
+import { labelType } from '@rsconcept/domain/rslang/labels';
 import { useTx } from '@/i18n';
 
 import { useRegisterUnsavedSave } from '@/app';

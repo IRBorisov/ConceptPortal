@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { CstStatus } from '@/domain/library';
+import { CstStatus } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { cn } from '@/components/utils';

@@ -2,7 +2,7 @@
 
 import { type ReactCodeMirrorRef, type SelectionRange } from '@uiw/react-codemirror';
 
-import { TokenID } from '@/domain/rslang';
+import { TokenID } from '@rsconcept/domain/rslang';
 
 import { CodeMirrorWrapper } from '@/utils/codemirror';
 

@@ -1,8 +1,8 @@
 'use client';
 
-import { LibraryItemType } from '@/domain/library';
-import { type RSForm } from '@/domain/library';
-import { sortItemsForInlineSynthesis } from '@/domain/library/rsform-api';
+import { LibraryItemType } from '@rsconcept/domain/library';
+import { type RSForm } from '@rsconcept/domain/library';
+import { sortItemsForInlineSynthesis } from '@rsconcept/domain/library/rsform-api';
 import { useTx } from '@/i18n';
 
 import { useLibrary } from '@/features/library/backend/use-library';

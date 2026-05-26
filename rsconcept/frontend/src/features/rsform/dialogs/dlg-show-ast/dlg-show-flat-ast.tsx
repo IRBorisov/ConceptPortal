@@ -5,8 +5,8 @@ import { ReactFlowProvider } from '@xyflow/react';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
-import { type RSForm } from '@/domain/library/rsform';
-import { type FlatAST } from '@/domain/parsing';
+import { type RSForm } from '@rsconcept/domain/library/rsform';
+import { type FlatAST } from '@rsconcept/domain/parsing';
 
 import { HelpTopic } from '@/features/help';
 

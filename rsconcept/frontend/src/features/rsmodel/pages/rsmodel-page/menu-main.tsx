@@ -2,7 +2,7 @@
 
 import { toast } from 'react-toastify';
 
-import { AccessPolicy, LocationHead } from '@/domain/library';
+import { AccessPolicy, LocationHead } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { useConceptNavigation, useUnsavedChanges } from '@/app';

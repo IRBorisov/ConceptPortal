@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@rsconcept/domain": ["../domain/src/index.ts"],
+      "@rsconcept/domain/*": ["../domain/src/*"],
+      "@rsconcept/rstool": ["../rstool/src/index.ts"],
+      "@rsconcept/rstool/*": ["../rstool/src/*"]
+    }
+  },
+  "include": ["src/**/*.ts"]
+}

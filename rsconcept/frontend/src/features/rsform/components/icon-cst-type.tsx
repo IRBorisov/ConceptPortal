@@ -1,4 +1,4 @@
-import { CstType } from '@/domain/library';
+import { CstType } from '@rsconcept/domain/library';
 
 import { type DomIconProps, IconCstNominal } from '@/components/icons';
 import {

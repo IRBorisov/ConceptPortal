@@ -25,7 +25,9 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@rsconcept/domain": ["../domain/src/index.ts"],
+      "@rsconcept/domain/*": ["../domain/src/*"]
     },
 
     "types": ["vite/client", "node"]

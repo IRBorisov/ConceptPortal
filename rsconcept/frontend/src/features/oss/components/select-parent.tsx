@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { type Block } from '@/domain/library';
+import { type Block } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { IconConceptBlock } from '@/components/icons';

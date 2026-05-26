@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { TokenID } from '@/domain/rslang';
+import { TokenID } from '@rsconcept/domain/rslang';
 
 import { type Styling, type Titled } from '@/components/props';
 import { globalIDs } from '@/utils/constants';

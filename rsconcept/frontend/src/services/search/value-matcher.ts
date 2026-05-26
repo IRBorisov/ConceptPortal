@@ -1,5 +1,5 @@
-import { type RSEngine } from '@/domain/library';
-import { TypeID, type Typification, type Value } from '@/domain/rslang';
+import { type RSEngine } from '@rsconcept/domain/library';
+import { TypeID, type Typification, type Value } from '@rsconcept/domain/rslang';
 
 import { TextMatcher } from './text-matcher';
 

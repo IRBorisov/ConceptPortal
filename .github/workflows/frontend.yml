@@ -1,11 +1,7 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+# Build, typecheck, lint, and test the frontend Vite app + Playwright e2e.
+# Runs from the monorepo root so npm workspaces resolve @rsconcept/domain locally.
 
 name: Frontend CI
-
-defaults:
-  run:
-    working-directory: rsconcept/frontend
 
 on:
   push:
@@ -13,12 +9,18 @@ on:
     paths:
       - rsconcept/frontend/**
       - rsconcept/backend/**
+      - rsconcept/domain/**
+      - package.json
+      - package-lock.json
       - .github/workflows/frontend.yml
   pull_request:
     branches: ["main"]
     paths:
       - rsconcept/frontend/**
       - rsconcept/backend/**
+      - rsconcept/domain/**
+      - package.json
+      - package-lock.json
       - .github/workflows/frontend.yml
 
 permissions:
@@ -39,33 +41,38 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache-dependency-path: rsconcept/frontend/package-lock.json
+          cache-dependency-path: package-lock.json
           cache: "npm"
-      - name: Build
-        run: |
-          npm install -g typescript vite vitest playwright
-          npm ci
-          npx playwright install --with-deps
-          npm run build --if-present
-      - name: Run CI
-        run: |
-          npm run lint
-          npm test
-          npm run test:e2e:ci
+      - name: Install workspaces (root)
+        run: npm ci
+      - name: Build domain
+        run: npm run build -w @rsconcept/domain
+      - name: Build frontend
+        working-directory: rsconcept/frontend
+        run: npm run build --if-present
+      - name: Install Playwright browsers
+        working-directory: rsconcept/frontend
+        run: npx playwright install --with-deps
+      - name: Lint
+        working-directory: rsconcept/frontend
+        run: npm run lint
+      - name: Unit tests
+        working-directory: rsconcept/frontend
+        run: npm test
+      - name: E2E tests
+        working-directory: rsconcept/frontend
+        run: npm run test:e2e:ci
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
-          path: playwright-report/
+          path: rsconcept/frontend/playwright-report/
           retention-days: 30
   notify-failure:
     permissions: {}
     runs-on: ubuntu-latest
     needs: build
     if: failure()
-    defaults:
-      run:
-        working-directory: .
     steps:
       - name: Send Telegram Notification
         run: |

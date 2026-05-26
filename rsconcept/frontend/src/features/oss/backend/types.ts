@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { OperationType, type OssLayout } from '@/domain/library';
+import { OperationType, type OssLayout } from '@rsconcept/domain/library';
 import { globalTx } from '@/i18n';
 
 import { schemaLibraryItem } from '@/features/library/backend/types';

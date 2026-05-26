@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { printTree } from '@/domain/parsing';
+import { printTree } from '@rsconcept/domain/parsing';
 
 import { parser } from './parser';
 

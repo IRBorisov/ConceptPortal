@@ -2,8 +2,8 @@
  * Module: API for Library entities and Users.
  */
 
-import { type LibraryItem } from '@/domain/library';
-import { validateLocationFormat } from '@/domain/library/library-api';
+import { type LibraryItem } from '@rsconcept/domain/library';
+import { validateLocationFormat } from '@rsconcept/domain/library/library-api';
 
 import { limits } from '@/utils/constants';
 

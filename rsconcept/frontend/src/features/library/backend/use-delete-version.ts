@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { type RSForm } from '@/domain/library';
+import { type RSForm } from '@rsconcept/domain/library';
 
 import { KEYS } from '@/backend/configuration';
 

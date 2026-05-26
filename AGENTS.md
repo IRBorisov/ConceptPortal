@@ -5,13 +5,17 @@ Workspace rules for agents.
 ## Scope
 
 - Applies repo-wide unless nearer `AGENTS.md` exists.
-- Read nearest rules before editing: `rsconcept/frontend/AGENTS.md`, `rsconcept/backend/AGENTS.md`, `rsconcept/rstool/AGENTS.md`.
+- Read nearest rules before editing: `rsconcept/domain/AGENTS.md`, `rsconcept/frontend/AGENTS.md`, `rsconcept/backend/AGENTS.md`, `rsconcept/rstool/AGENTS.md`.
 
 ## Structure
 
 - `README.md`: setup/conventions/run docs
+- `package.json`: npm workspaces root for `rsconcept/*` packages
+- `rsconcept/domain`: published TypeScript domain package (`@rsconcept/domain`) shared by frontend and rstool
 - `rsconcept/frontend`: Vite React TS app
 - `rsconcept/backend`: Django backend
+- `rsconcept/rstool`: published agent library (`@rsconcept/rstool`) and stdio wrapper
+- `rsconcept/rstool-mcp`: published MCP adapter (`@rsconcept/rstool-mcp`) wrapping `rstool` for Cursor/Claude
 - `scripts/dev`: local lint/test/start scripts
 - `scripts/prod`: deploy scripts
 - `nginx`: reverse proxy/deploy config

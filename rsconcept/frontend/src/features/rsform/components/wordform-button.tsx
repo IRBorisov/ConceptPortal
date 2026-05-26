@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { type Grammeme } from '@/domain/cctext';
+import { type Grammeme } from '@rsconcept/domain/cctext';
 
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';

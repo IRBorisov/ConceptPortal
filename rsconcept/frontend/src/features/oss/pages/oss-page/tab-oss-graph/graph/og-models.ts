@@ -1,6 +1,6 @@
 import { type Node } from '@xyflow/react';
 
-import { type Block, type Operation } from '@/domain/library';
+import { type Block, type Operation } from '@rsconcept/domain/library';
 
 export type OperationNodeType = 'input' | 'synthesis' | 'replica';
 

@@ -2,8 +2,8 @@
  * Generates description for {@link Constituenta}.
  */
 
-import { type Constituenta, CstClass, CstStatus, CstType } from '@/domain/library';
-import { RSErrorCode, TokenID, TypeClass } from '@/domain/rslang';
+import { type Constituenta, CstClass, CstStatus, CstType } from '@rsconcept/domain/library';
+import { RSErrorCode, TokenID, TypeClass } from '@rsconcept/domain/rslang';
 import { globalTx } from '@/i18n';
 
 import { prepareTooltip } from '@/utils/format';

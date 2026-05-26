@@ -1,9 +1,9 @@
-import { type Graph } from '@/domain/graph';
-import { type Block, type Constituenta, CstType, NodeType, type OperationSchema, type RSForm } from '@/domain/library';
-import { isBasicConcept } from '@/domain/library/rsform-api';
-import { TypificationGraph } from '@/domain/rslang';
-import { labelType } from '@/domain/rslang/labels';
-import { isTypification } from '@/domain/rslang/semantic/typification';
+import { type Graph } from '@rsconcept/domain/graph';
+import { type Block, type Constituenta, CstType, NodeType, type OperationSchema, type RSForm } from '@rsconcept/domain/library';
+import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
+import { TypificationGraph } from '@rsconcept/domain/rslang';
+import { labelType } from '@rsconcept/domain/rslang/labels';
+import { isTypification } from '@rsconcept/domain/rslang/semantic/typification';
 
 import { PARAMETER } from '@/utils/constants';
 

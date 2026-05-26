@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { AccessPolicy, type LibraryItem, LibraryItemType, LocationHead } from '@/domain/library';
+import { AccessPolicy, type LibraryItem, LibraryItemType, LocationHead } from '@rsconcept/domain/library';
 
 import { matchLibraryItem } from './library-search';
 

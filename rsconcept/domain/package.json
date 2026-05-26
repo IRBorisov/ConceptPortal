@@ -1,0 +1,174 @@
+{
+  "name": "@rsconcept/domain",
+  "version": "1.0.0",
+  "description": "Shared TypeScript domain for RS language, RSForm, RSModel, RSEngine, OSS, and concept-text helpers.",
+  "license": "MIT",
+  "author": "IRBorisov",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IRBorisov/ConceptPortal.git",
+    "directory": "rsconcept/domain"
+  },
+  "homepage": "https://portal.acconcept.ru",
+  "keywords": [
+    "rslang",
+    "rsform",
+    "rsmodel",
+    "rsengine",
+    "conceptualization",
+    "formal-language",
+    "set-theory"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./rslang": {
+      "types": "./dist/rslang/index.d.ts",
+      "import": "./dist/rslang/index.js"
+    },
+    "./rslang/api": {
+      "types": "./dist/rslang/api.d.ts",
+      "import": "./dist/rslang/api.js"
+    },
+    "./rslang/error": {
+      "types": "./dist/rslang/error.d.ts",
+      "import": "./dist/rslang/error.js"
+    },
+    "./rslang/labels": {
+      "types": "./dist/rslang/labels.d.ts",
+      "import": "./dist/rslang/labels.js"
+    },
+    "./rslang/eval/value": {
+      "types": "./dist/rslang/eval/value.d.ts",
+      "import": "./dist/rslang/eval/value.js"
+    },
+    "./rslang/eval/value-api": {
+      "types": "./dist/rslang/eval/value-api.d.ts",
+      "import": "./dist/rslang/eval/value-api.js"
+    },
+    "./rslang/semantic/typification": {
+      "types": "./dist/rslang/semantic/typification.d.ts",
+      "import": "./dist/rslang/semantic/typification.js"
+    },
+    "./rslang/semantic/typification-api": {
+      "types": "./dist/rslang/semantic/typification-api.d.ts",
+      "import": "./dist/rslang/semantic/typification-api.js"
+    },
+    "./library": {
+      "types": "./dist/library/index.d.ts",
+      "import": "./dist/library/index.js"
+    },
+    "./library/library": {
+      "types": "./dist/library/library.d.ts",
+      "import": "./dist/library/library.js"
+    },
+    "./library/library-api": {
+      "types": "./dist/library/library-api.d.ts",
+      "import": "./dist/library/library-api.js"
+    },
+    "./library/folder-tree": {
+      "types": "./dist/library/folder-tree.d.ts",
+      "import": "./dist/library/folder-tree.js"
+    },
+    "./library/rsform": {
+      "types": "./dist/library/rsform.d.ts",
+      "import": "./dist/library/rsform.js"
+    },
+    "./library/rsform-api": {
+      "types": "./dist/library/rsform-api.d.ts",
+      "import": "./dist/library/rsform-api.js"
+    },
+    "./library/rsmodel": {
+      "types": "./dist/library/rsmodel.d.ts",
+      "import": "./dist/library/rsmodel.js"
+    },
+    "./library/rsmodel-api": {
+      "types": "./dist/library/rsmodel-api.d.ts",
+      "import": "./dist/library/rsmodel-api.js"
+    },
+    "./library/rsengine": {
+      "types": "./dist/library/rsengine.d.ts",
+      "import": "./dist/library/rsengine.js"
+    },
+    "./library/structure-planner": {
+      "types": "./dist/library/structure-planner.d.ts",
+      "import": "./dist/library/structure-planner.js"
+    },
+    "./library/oss": {
+      "types": "./dist/library/oss.d.ts",
+      "import": "./dist/library/oss.js"
+    },
+    "./library/oss-api": {
+      "types": "./dist/library/oss-api.d.ts",
+      "import": "./dist/library/oss-api.js"
+    },
+    "./library/oss-layout": {
+      "types": "./dist/library/oss-layout.d.ts",
+      "import": "./dist/library/oss-layout.js"
+    },
+    "./library/oss-layout-api": {
+      "types": "./dist/library/oss-layout-api.d.ts",
+      "import": "./dist/library/oss-layout-api.js"
+    },
+    "./graph": {
+      "types": "./dist/graph/index.d.ts",
+      "import": "./dist/graph/index.js"
+    },
+    "./graph/graph": {
+      "types": "./dist/graph/graph.d.ts",
+      "import": "./dist/graph/graph.js"
+    },
+    "./parsing": {
+      "types": "./dist/parsing/index.d.ts",
+      "import": "./dist/parsing/index.js"
+    },
+    "./cctext": {
+      "types": "./dist/cctext/index.d.ts",
+      "import": "./dist/cctext/index.js"
+    },
+    "./cctext/language": {
+      "types": "./dist/cctext/language.d.ts",
+      "import": "./dist/cctext/language.js"
+    },
+    "./cctext/language-api": {
+      "types": "./dist/cctext/language-api.d.ts",
+      "import": "./dist/cctext/language-api.js"
+    },
+    "./shared": {
+      "types": "./dist/shared/index.d.ts",
+      "import": "./dist/shared/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "generate": "lezer-generator src/rslang/parser/rslang.grammar -o src/rslang/parser/parser.ts",
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@lezer/common": "^1.5.2",
+    "@lezer/lr": "^1.4.10"
+  },
+  "devDependencies": {
+    "@lezer/generator": "^1.8.0",
+    "@types/node": "^24.0.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.5"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

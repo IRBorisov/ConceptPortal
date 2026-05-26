@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { AccessPolicy, CstStatus, CstType, LibraryItemType } from '@/domain/library';
-import { calculateSchemaStats, isSchemaIssue } from '@/domain/library/rsform-api';
+import { AccessPolicy, CstStatus, CstType, LibraryItemType } from '@rsconcept/domain/library';
+import { calculateSchemaStats, isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
 
 import { RSFormLoader } from './rsform-loader';
 import { type ConstituentaBasicsDTO, type RSFormDTO } from './types';

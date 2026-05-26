@@ -4,7 +4,7 @@ import { useEffect, useEffectEvent } from 'react';
 import { useIntl } from 'react-intl';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { LibraryItemType, type RSModel } from '@/domain/library';
+import { LibraryItemType, type RSModel } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';

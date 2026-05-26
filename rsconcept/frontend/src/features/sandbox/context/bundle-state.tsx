@@ -4,8 +4,8 @@ import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { toast } from 'react-toastify';
 
-import { RSEngine, type RSEngineServices } from '@/domain/library/rsengine';
-import { type Attribution, type Substitution } from '@/domain/library/rsform';
+import { RSEngine, type RSEngineServices } from '@rsconcept/domain/library/rsengine';
+import { type Attribution, type Substitution } from '@rsconcept/domain/library/rsform';
 import { useTx } from '@/i18n';
 
 import { type UpdateLibraryItemDTO } from '@/features/library';

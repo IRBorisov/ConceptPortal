@@ -1,5 +1,5 @@
-import { AccessPolicy, type CurrentVersion, LocationHead, type VersionInfo } from '@/domain/library';
-import { type FolderNode } from '@/domain/library/folder-tree';
+import { AccessPolicy, type CurrentVersion, LocationHead, type VersionInfo } from '@rsconcept/domain/library';
+import { type FolderNode } from '@rsconcept/domain/library/folder-tree';
 import { globalTx } from '@/i18n';
 
 import { validateLocation } from './models/utils';

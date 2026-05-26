@@ -2,8 +2,8 @@
 
 import { toast } from 'react-toastify';
 
-import { type Operation, OperationType } from '@/domain/library';
-import { LayoutManager } from '@/domain/library/oss-layout-api';
+import { type Operation, OperationType } from '@rsconcept/domain/library';
+import { LayoutManager } from '@rsconcept/domain/library/oss-layout-api';
 import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';

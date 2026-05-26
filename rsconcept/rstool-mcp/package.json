@@ -1,0 +1,64 @@
+{
+  "name": "@rsconcept/rstool-mcp",
+  "version": "0.1.0",
+  "description": "Model Context Protocol (MCP) adapter that exposes the @rsconcept/rstool RSToolAgent contract over MCP stdio. Works with Cursor, Claude Desktop, and any MCP-capable host.",
+  "license": "MIT",
+  "author": "IRBorisov",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IRBorisov/ConceptPortal.git",
+    "directory": "rsconcept/rstool-mcp"
+  },
+  "homepage": "https://portal.acconcept.ru",
+  "keywords": [
+    "rslang",
+    "rsform",
+    "rstool",
+    "mcp",
+    "model-context-protocol",
+    "agent",
+    "llm",
+    "cursor",
+    "claude"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "rstool-mcp": "./dist/bin/server.js"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "start": "tsx src/bin/server.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.21.1",
+    "@rsconcept/rstool": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsup": "^8.5.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.5"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

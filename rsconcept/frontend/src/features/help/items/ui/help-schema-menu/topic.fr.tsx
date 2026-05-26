@@ -1,4 +1,4 @@
-import { CstType } from '@/domain/library';
+import { CstType } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { IconCstType } from '@/features/rsform/components/icon-cst-type';

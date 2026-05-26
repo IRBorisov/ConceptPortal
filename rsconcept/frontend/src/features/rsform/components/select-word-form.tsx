@@ -1,6 +1,6 @@
 'use client';
 
-import { Grammeme, supportedGrammemes } from '@/domain/cctext';
+import { Grammeme, supportedGrammemes } from '@rsconcept/domain/cctext';
 
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';

@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 
-import { Graph } from '@/domain/graph/graph';
-import { type Constituenta, type RSForm } from '@/domain/library';
-import { isBasicConcept } from '@/domain/library/rsform-api';
+import { Graph } from '@rsconcept/domain/graph/graph';
+import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
+import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 import { useTx } from '@/i18n';
 import { matchConstituenta } from '@/services/search';
 

@@ -3,9 +3,9 @@
 import { Suspense, useMemo, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { OperationType, type OssLayout } from '@/domain/library';
-import { LayoutManager } from '@/domain/library/oss-layout-api';
-import { type Substitution } from '@/domain/library/rsform';
+import { OperationType, type OssLayout } from '@rsconcept/domain/library';
+import { LayoutManager } from '@rsconcept/domain/library/oss-layout-api';
+import { type Substitution } from '@rsconcept/domain/library/rsform';
 import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';

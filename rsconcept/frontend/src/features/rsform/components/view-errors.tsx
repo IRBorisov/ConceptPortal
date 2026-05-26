@@ -1,6 +1,6 @@
 'use client';
 
-import { getRSErrorPrefix, isCritical, type RSErrorDescription } from '@/domain/rslang/error';
+import { getRSErrorPrefix, isCritical, type RSErrorDescription } from '@rsconcept/domain/rslang/error';
 import { useTx } from '@/i18n';
 
 import { cn } from '@/components/utils';

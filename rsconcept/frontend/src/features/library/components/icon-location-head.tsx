@@ -1,4 +1,4 @@
-import { LocationHead } from '@/domain/library';
+import { LocationHead } from '@rsconcept/domain/library';
 
 import { type DomIconProps, IconBusiness, IconPublic, IconTemplates, IconUser } from '@/components/icons';
 

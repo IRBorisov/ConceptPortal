@@ -1,4 +1,4 @@
-import { type Graph } from '@/domain/graph/graph';
+import { type Graph } from '@rsconcept/domain/graph/graph';
 import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';

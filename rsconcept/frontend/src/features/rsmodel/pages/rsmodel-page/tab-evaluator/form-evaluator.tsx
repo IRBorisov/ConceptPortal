@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { CstType } from '@/domain/library';
-import { getStructureName } from '@/domain/library/rsform-api';
-import { inferEvalStatus } from '@/domain/library/rsmodel-api';
-import { type AnalysisFull, type CalculatorResult } from '@/domain/rslang';
-import { valueStub } from '@/domain/rslang/eval/value-api';
-import { labelType } from '@/domain/rslang/labels';
-import { isTypification, TypeID, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
+import { CstType } from '@rsconcept/domain/library';
+import { getStructureName } from '@rsconcept/domain/library/rsform-api';
+import { inferEvalStatus } from '@rsconcept/domain/library/rsmodel-api';
+import { type AnalysisFull, type CalculatorResult } from '@rsconcept/domain/rslang';
+import { valueStub } from '@rsconcept/domain/rslang/eval/value-api';
+import { labelType } from '@rsconcept/domain/rslang/labels';
+import { isTypification, TypeID, type TypePath, type Typification } from '@rsconcept/domain/rslang/semantic/typification';
 import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';

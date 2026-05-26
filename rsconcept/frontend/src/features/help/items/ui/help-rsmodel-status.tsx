@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { EvalStatus } from '@/domain/library';
+import { EvalStatus } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { colorBgEvalStatus } from '@/features/rsmodel/colors';

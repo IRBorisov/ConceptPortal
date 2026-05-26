@@ -1,6 +1,6 @@
 'use client';
 
-import { type OperationSchemaStats } from '@/domain/library';
+import { type OperationSchemaStats } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { Divider } from '@/components/container';

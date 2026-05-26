@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { type AccessPolicy, type LibraryItem } from '@/domain/library';
+import { type AccessPolicy, type LibraryItem } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';

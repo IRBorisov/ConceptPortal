@@ -1,6 +1,6 @@
 'use client';
 
-import { LocationHead } from '@/domain/library';
+import { LocationHead } from '@rsconcept/domain/library';
 
 import { SelectorButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';

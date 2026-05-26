@@ -2,7 +2,7 @@
 
 import { useIntl } from 'react-intl';
 
-import { type LibraryItem } from '@/domain/library';
+import { type LibraryItem } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { useLabelUser } from '@/features/users';

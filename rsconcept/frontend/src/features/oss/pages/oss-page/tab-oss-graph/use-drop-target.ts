@@ -1,6 +1,6 @@
 import { useReactFlow } from '@xyflow/react';
 
-import { NodeType } from '@/domain/library';
+import { NodeType } from '@rsconcept/domain/library';
 
 import { useDraggingStore } from '@/stores/dragging';
 

@@ -1,7 +1,7 @@
 import { syntaxTree } from '@codemirror/language';
 import { type EditorState } from '@uiw/react-codemirror';
 
-import { parseEntityReference, parseSyntacticReference } from '@/domain/cctext/language-api';
+import { parseEntityReference, parseSyntacticReference } from '@rsconcept/domain/cctext/language-api';
 
 import { findEnvelopingNodes } from '@/utils/codemirror';
 

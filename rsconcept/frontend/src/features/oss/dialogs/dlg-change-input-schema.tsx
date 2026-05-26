@@ -8,8 +8,8 @@ import {
   type Operation,
   type OperationSchema,
   type OssLayout
-} from '@/domain/library';
-import { sortItemsForOSS } from '@/domain/library/oss-api';
+} from '@rsconcept/domain/library';
+import { sortItemsForOSS } from '@rsconcept/domain/library/oss-api';
 import { useTx } from '@/i18n';
 
 import { useLibrary } from '@/features/library/backend/use-library';

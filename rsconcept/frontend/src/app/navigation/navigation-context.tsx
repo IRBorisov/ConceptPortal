@@ -1,6 +1,6 @@
 import { createContext, use, useEffect, useEffectEvent } from 'react';
 
-import { type LibraryItemType } from '@/domain/library';
+import { type LibraryItemType } from '@rsconcept/domain/library';
 
 import { type UnsavedSaveHandler } from '../changes/use-unsaved-changes';
 

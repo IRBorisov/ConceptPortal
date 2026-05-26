@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 
-import { NodeType, type OssItem } from '@/domain/library';
+import { NodeType, type OssItem } from '@rsconcept/domain/library';
 
 import { Dropdown } from '@/components/dropdown';
 

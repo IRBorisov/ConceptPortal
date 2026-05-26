@@ -1,7 +1,7 @@
 import { type Node, useReactFlow } from '@xyflow/react';
 
-import { type OperationSchema, type OssLayout, type Position2D } from '@/domain/library';
-import { OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
+import { type OperationSchema, type OssLayout, type Position2D } from '@rsconcept/domain/library';
+import { OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@rsconcept/domain/library/oss-layout-api';
 
 import { useOssEdit } from '../oss-edit-context';
 

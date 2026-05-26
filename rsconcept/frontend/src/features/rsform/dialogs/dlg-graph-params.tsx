@@ -2,7 +2,7 @@
 
 import { useForm } from '@tanstack/react-form';
 
-import { CstType } from '@/domain/library';
+import { CstType } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';

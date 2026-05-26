@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { CstStatus } from '@/domain/library';
+import { CstStatus } from '@rsconcept/domain/library';
 
 import { colorBgCstStatus } from '@/features/rsform/colors';
 import { describeExpressionStatus, labelExpressionStatus } from '@/features/rsform/labels';

@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { type Constituenta, type RSForm } from '@/domain/library';
+import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';

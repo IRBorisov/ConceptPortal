@@ -4,7 +4,7 @@ import {
   type OssItem,
   type SubstitutionErrorDescription,
   SubstitutionErrorType
-} from '@/domain/library';
+} from '@rsconcept/domain/library';
 import { globalTx } from '@/i18n';
 
 

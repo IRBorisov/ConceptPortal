@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { NodeType, type OperationSchema, type OssItem } from '@/domain/library';
+import { NodeType, type OperationSchema, type OssItem } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';

@@ -2,7 +2,7 @@
 
 import { toast } from 'react-toastify';
 
-import { CstType } from '@/domain/library';
+import { CstType } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { useUnsavedChanges } from '@/app';

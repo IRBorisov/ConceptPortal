@@ -2,7 +2,7 @@
 
 import { type ReactNode } from 'react';
 
-import { type Constituenta, type RSEngine, type RSForm } from '@/domain/library';
+import { type Constituenta, type RSEngine, type RSForm } from '@rsconcept/domain/library';
 
 import { cn } from '@/components/utils';
 

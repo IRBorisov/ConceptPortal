@@ -2,12 +2,12 @@ import { type Extension } from '@codemirror/state';
 import { hoverTooltip, type TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
-import { type Constituenta, type RSForm } from '@/domain/library';
-import { isBasicConcept } from '@/domain/library/rsform-api';
-import { type AstNode } from '@/domain/parsing';
-import { type AnalysisFull, type ExpressionType, readTypeAnnotation, TokenID } from '@/domain/rslang';
-import { type RSErrorDescription } from '@/domain/rslang/error';
-import { labelType } from '@/domain/rslang/labels';
+import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
+import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
+import { type AstNode } from '@rsconcept/domain/parsing';
+import { type AnalysisFull, type ExpressionType, readTypeAnnotation, TokenID } from '@rsconcept/domain/rslang';
+import { type RSErrorDescription } from '@rsconcept/domain/rslang/error';
+import { labelType } from '@rsconcept/domain/rslang/labels';
 import { globalTx } from '@/i18n';
 
 import { appendBoldTextRow, appendMathBoldLabelParagraph } from '@/utils/format';

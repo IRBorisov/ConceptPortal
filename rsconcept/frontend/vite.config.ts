@@ -36,7 +36,8 @@ export default ({ mode }: { mode: string }) => {
     publicDir: 'public',
     resolve: {
       alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url))
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
+        '@rsconcept/domain': fileURLToPath(new URL('../domain/src', import.meta.url))
       }
     },
     build: {

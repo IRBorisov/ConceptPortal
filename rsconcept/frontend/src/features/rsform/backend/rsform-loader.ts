@@ -2,8 +2,8 @@
  * Module: RSForm data loading and processing.
  */
 
-import { Graph } from '@/domain/graph/graph';
-import { type Constituenta, CstStatus, CstType, type RSForm } from '@/domain/library';
+import { Graph } from '@rsconcept/domain/graph/graph';
+import { type Constituenta, CstStatus, CstType, type RSForm } from '@rsconcept/domain/library';
 import {
   inferClass,
   inferStatus,
@@ -12,8 +12,8 @@ import {
   isBasicConcept,
   isFunctional,
   typeClassForCstType
-} from '@/domain/library/rsform-api';
-import { type AstNode, getNodeIndices } from '@/domain/parsing';
+} from '@rsconcept/domain/library/rsform-api';
+import { type AstNode, getNodeIndices } from '@rsconcept/domain/parsing';
 import {
   type AnalysisFast,
   makeTypePath,
@@ -22,16 +22,16 @@ import {
   TypeID,
   type TypePath,
   ValueClass
-} from '@/domain/rslang';
-import { parseTypeText } from '@/domain/rslang';
+} from '@rsconcept/domain/rslang';
+import { parseTypeText } from '@rsconcept/domain/rslang';
 import {
   extractGlobals,
   generateExpressionFromAst,
   isSimpleExpression,
   splitTemplateDefinition
-} from '@/domain/rslang/api';
-import { labelType } from '@/domain/rslang/labels';
-import { type ExpressionType } from '@/domain/rslang/semantic/typification';
+} from '@rsconcept/domain/rslang/api';
+import { labelType } from '@rsconcept/domain/rslang/labels';
+import { type ExpressionType } from '@rsconcept/domain/rslang/semantic/typification';
 
 import { type RSFormDTO } from './types';
 

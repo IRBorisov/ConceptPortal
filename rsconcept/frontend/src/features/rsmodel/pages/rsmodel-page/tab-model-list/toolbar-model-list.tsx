@@ -1,6 +1,6 @@
 'use client';
 
-import { CstType } from '@/domain/library';
+import { CstType } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';

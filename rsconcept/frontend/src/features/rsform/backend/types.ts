@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-import { CstType } from '@/domain/library';
-import { RSErrorCode, TokenID, ValueClass } from '@/domain/rslang';
+import { CstType } from '@rsconcept/domain/library';
+import { RSErrorCode, TokenID, ValueClass } from '@rsconcept/domain/rslang';
 import { globalTx } from '@/i18n';
 
 import { schemaLibraryItem, schemaVersionInfo } from '@/features/library/backend/types';

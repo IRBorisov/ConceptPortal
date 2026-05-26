@@ -2,8 +2,8 @@
 
 import { useStoreApi } from '@xyflow/react';
 
-import { type Graph } from '@/domain/graph/graph';
-import { isBasicConcept } from '@/domain/library/rsform-api';
+import { type Graph } from '@rsconcept/domain/graph/graph';
+import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';

@@ -3,7 +3,7 @@
 import { toast } from 'react-toastify';
 import clsx from 'clsx';
 
-import { type FolderNode } from '@/domain/library';
+import { type FolderNode } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { useMainHeight } from '@/stores/app-layout';

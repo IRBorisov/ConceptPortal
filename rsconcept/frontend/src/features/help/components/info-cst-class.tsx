@@ -1,4 +1,4 @@
-import { CstClass } from '@/domain/library';
+import { CstClass } from '@rsconcept/domain/library';
 
 import { colorBgCstClass } from '@/features/rsform/colors';
 import { describeCstClass, labelCstClass } from '@/features/rsform/labels';

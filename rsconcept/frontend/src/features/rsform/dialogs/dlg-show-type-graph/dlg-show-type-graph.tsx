@@ -3,8 +3,8 @@
 import { toast } from 'react-toastify';
 import { ReactFlowProvider } from '@xyflow/react';
 
-import { type TypeInfo } from '@/domain/library';
-import { TypificationGraph } from '@/domain/rslang';
+import { type TypeInfo } from '@rsconcept/domain/library';
+import { TypificationGraph } from '@rsconcept/domain/rslang';
 import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';

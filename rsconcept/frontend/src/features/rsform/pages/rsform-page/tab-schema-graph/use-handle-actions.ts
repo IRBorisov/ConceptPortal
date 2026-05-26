@@ -3,9 +3,9 @@ import { useReactFlow } from '@xyflow/react';
 import { toPng, toSvg } from 'html-to-image';
 import fileDownload from 'js-file-download';
 
-import { type Graph } from '@/domain/graph/graph';
-import { CstType } from '@/domain/library/rsform';
-import { isBasicConcept } from '@/domain/library/rsform-api';
+import { type Graph } from '@rsconcept/domain/graph/graph';
+import { CstType } from '@rsconcept/domain/library/rsform';
+import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 
 import { useScrollToNode } from '@/components/flow/use-scroll-to-node';
 import { useDialogsStore } from '@/stores/dialogs';

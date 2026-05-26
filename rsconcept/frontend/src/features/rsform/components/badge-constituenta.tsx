@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { type Constituenta } from '@/domain/library';
+import { type Constituenta } from '@rsconcept/domain/library';
 
 import { globalIDs } from '@/utils/constants';
 

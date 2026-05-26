@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { type OssLayout } from '@/domain/library';
+import { type OssLayout } from '@rsconcept/domain/library';
 import { globalTx } from '@/i18n';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';

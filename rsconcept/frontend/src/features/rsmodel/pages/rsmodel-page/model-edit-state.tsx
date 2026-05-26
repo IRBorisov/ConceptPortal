@@ -3,7 +3,7 @@
 import { useEffect, useEffectEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { RSEngine } from '@/domain/library';
+import { RSEngine } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';

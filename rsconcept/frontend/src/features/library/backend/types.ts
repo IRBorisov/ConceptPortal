@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { AccessPolicy, type LibraryItem, LibraryItemType } from '@/domain/library';
+import { AccessPolicy, type LibraryItem, LibraryItemType } from '@rsconcept/domain/library';
 import { globalTx } from '@/i18n';
 
 import { limits } from '@/utils/constants';

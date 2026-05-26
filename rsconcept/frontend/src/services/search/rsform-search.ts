@@ -1,4 +1,4 @@
-import { type Constituenta } from '@/domain/library';
+import { type Constituenta } from '@rsconcept/domain/library';
 
 import { TextMatcher } from './text-matcher';
 

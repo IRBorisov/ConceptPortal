@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 
-import { type LibraryItem } from '@/domain/library';
+import { type LibraryItem } from '@rsconcept/domain/library';
 
 import { useLibraryListKey } from './use-library';
 

@@ -2,8 +2,8 @@
 
 import { useEffect, useEffectEvent, useState } from 'react';
 
-import { type Constituenta } from '@/domain/library';
-import { calculateSchemaStats, isSchemaIssue } from '@/domain/library/rsform-api';
+import { type Constituenta } from '@rsconcept/domain/library';
+import { calculateSchemaStats, isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
 import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';

@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 
-import { LocationHead } from '@/domain/library';
+import { LocationHead } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';

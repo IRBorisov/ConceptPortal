@@ -1,6 +1,6 @@
 import { type Page } from '@playwright/test';
 
-import { AccessPolicy, LibraryItemType } from '../../src/domain/library';
+import { AccessPolicy, LibraryItemType } from '@rsconcept/domain/library';
 import { type OperationSchemaDTO } from '../../src/features/oss/backend/types';
 import { type RSFormDTO } from '../../src/features/rsform/backend/types';
 import { type RSModelDTO } from '../../src/features/rsmodel/backend/types';

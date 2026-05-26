@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { type Constituenta } from '@/domain/library';
+import { type Constituenta } from '@rsconcept/domain/library';
 
 interface CstTooltipStore {
   activeCst: Constituenta | null;

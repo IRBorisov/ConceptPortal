@@ -2,9 +2,9 @@
 
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { type LibraryItem, LibraryItemType, type OssLayout } from '@/domain/library';
-import { sortItemsForOSS } from '@/domain/library/oss-api';
-import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@/domain/library/oss-layout-api';
+import { type LibraryItem, LibraryItemType, type OssLayout } from '@rsconcept/domain/library';
+import { sortItemsForOSS } from '@rsconcept/domain/library/oss-api';
+import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@rsconcept/domain/library/oss-layout-api';
 import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';

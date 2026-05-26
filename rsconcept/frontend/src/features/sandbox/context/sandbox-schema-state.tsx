@@ -3,9 +3,9 @@
 import { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { generateNominalLexeme } from '@/domain/cctext/language-api';
-import { type Constituenta, CstType } from '@/domain/library/rsform';
-import { generateAlias, removeAliasReference } from '@/domain/library/rsform-api';
+import { generateNominalLexeme } from '@rsconcept/domain/cctext/language-api';
+import { type Constituenta, CstType } from '@rsconcept/domain/library/rsform';
+import { generateAlias, removeAliasReference } from '@rsconcept/domain/library/rsform-api';
 import { useTx } from '@/i18n';
 
 import { type UnsavedSaveHandler, useConceptNavigation, useUnsavedChanges } from '@/app';

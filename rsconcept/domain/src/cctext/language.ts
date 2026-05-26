@@ -2,8 +2,6 @@
  * Module: Natural language model declarations.
  */
 
-import { z } from 'zod';
-
 /** Represents single unit of language Morphology. */
 // prettier-ignore
 export const Grammeme = {
@@ -15,7 +13,6 @@ export const Grammeme = {
   accs: 'accs', ablt: 'ablt', loct: 'loct',
 } as const;
 export type Grammeme = (typeof Grammeme)[keyof typeof Grammeme];
-export const schemaGrammeme = z.enum(Object.values(Grammeme) as [Grammeme, ...Grammeme[]]);
 
 /** Represents case language concept. */
 export const Case: Grammeme[] = [
@@ -76,15 +73,8 @@ export interface SyntacticReference {
   nominal: string;
 }
 
-export const schemaReferenceType = z.enum(Object.values(ReferenceType) as [ReferenceType, ...ReferenceType[]]);
-
-export const schemaReference = z.strictObject({
-  type: schemaReferenceType,
-  data: z.union([
-    z.strictObject({ entity: z.string(), tags: z.array(schemaGrammeme) }),
-    z.strictObject({ offset: z.number(), nominal: z.string() })
-  ])
-});
-
 /** Represents abstract reference data. */
-export type IReference = z.infer<typeof schemaReference>;
+export interface IReference {
+  type: ReferenceType;
+  data: EntityReference | SyntacticReference;
+}

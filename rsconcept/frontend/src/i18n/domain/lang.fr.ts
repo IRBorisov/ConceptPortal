@@ -1,4 +1,4 @@
-import { Grammeme } from '@/domain/cctext/language';
+import { Grammeme } from '@rsconcept/domain/cctext/language';
 
 const GRAMMEME_FR: Record<string, string> = {
   [Grammeme.sing]: 'Nombre : sg',

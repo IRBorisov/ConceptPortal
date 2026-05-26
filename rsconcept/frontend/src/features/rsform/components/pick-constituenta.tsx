@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { type Constituenta } from '@/domain/library';
+import { type Constituenta } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 import { matchConstituenta } from '@/services/search';
 

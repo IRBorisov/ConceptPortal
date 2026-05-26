@@ -1,7 +1,7 @@
 'use client';
 
-import { type Constituenta } from '@/domain/library';
-import { labelType } from '@/domain/rslang/labels';
+import { type Constituenta } from '@rsconcept/domain/library';
+import { labelType } from '@rsconcept/domain/rslang/labels';
 import { useTx } from '@/i18n';
 
 import { TextURL } from '@/components/control';

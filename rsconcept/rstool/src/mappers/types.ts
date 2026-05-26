@@ -1,4 +1,4 @@
-import { type ValueClass } from '@/domain/rslang';
+import { type ValueClass } from '@rsconcept/domain/rslang';
 
 import { type AnalysisResult, type RSToolErrorDescription } from '../models';
 

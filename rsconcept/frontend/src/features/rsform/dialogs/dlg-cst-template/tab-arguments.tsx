@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { createColumnHelper } from '@tanstack/react-table';
 
-import { type ArgumentValue, type Constituenta, type RSForm } from '@/domain/library';
-import { isFunctional, isLogical } from '@/domain/library/rsform-api';
+import { type ArgumentValue, type Constituenta, type RSForm } from '@rsconcept/domain/library';
+import { isFunctional, isLogical } from '@rsconcept/domain/library/rsform-api';
 import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';

@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { LibraryItemType } from '@/domain/library';
+import { LibraryItemType } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { IconOSS, IconRSForm, IconRSModel } from '@/components/icons';

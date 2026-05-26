@@ -3,12 +3,12 @@
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 
-import { type BasicBinding, type Constituenta, CstType, EvalStatus } from '@/domain/library';
-import { getStructureName, isBaseSet } from '@/domain/library/rsform-api';
-import { generateRandomValue, isInferrable, isInterpretable } from '@/domain/library/rsmodel-api';
-import { type Value } from '@/domain/rslang';
-import { isSetValue, normalizeValue } from '@/domain/rslang/eval/value-api';
-import { isTypification, TypeID, type TypePath, type Typification } from '@/domain/rslang/semantic/typification';
+import { type BasicBinding, type Constituenta, CstType, EvalStatus } from '@rsconcept/domain/library';
+import { getStructureName, isBaseSet } from '@rsconcept/domain/library/rsform-api';
+import { generateRandomValue, isInferrable, isInterpretable } from '@rsconcept/domain/library/rsmodel-api';
+import { type Value } from '@rsconcept/domain/rslang';
+import { isSetValue, normalizeValue } from '@rsconcept/domain/rslang/eval/value-api';
+import { isTypification, TypeID, type TypePath, type Typification } from '@rsconcept/domain/rslang/semantic/typification';
 import { useTx } from '@/i18n';
 
 import { PillValueClass } from '@/features/rsform/components/pill-valueClass';

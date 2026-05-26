@@ -2,9 +2,9 @@
 
 import { type ReactNode } from 'react';
 
-import { type OperationSchema } from '@/domain/library';
-import { NodeType } from '@/domain/library';
-import { constructNodeID } from '@/domain/library/oss-api';
+import { type OperationSchema } from '@rsconcept/domain/library';
+import { NodeType } from '@rsconcept/domain/library';
+import { constructNodeID } from '@rsconcept/domain/library/oss-api';
 import { useTx } from '@/i18n';
 
 import { TextArea, TextInput } from '@/components/input';

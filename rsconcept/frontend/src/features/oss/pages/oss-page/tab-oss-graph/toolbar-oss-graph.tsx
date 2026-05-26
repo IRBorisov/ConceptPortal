@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { NodeType } from '@/domain/library';
+import { NodeType } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';

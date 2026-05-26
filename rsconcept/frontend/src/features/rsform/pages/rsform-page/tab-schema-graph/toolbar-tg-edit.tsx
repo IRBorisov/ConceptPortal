@@ -1,7 +1,7 @@
 'use client';
 
-import { type Graph } from '@/domain/graph/graph';
-import { type LibraryItemReference } from '@/domain/library';
+import { type Graph } from '@rsconcept/domain/graph/graph';
+import { type LibraryItemReference } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';

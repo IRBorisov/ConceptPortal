@@ -2,7 +2,7 @@
 
 import { useEffect, useEffectEvent, useLayoutEffect, useRef } from 'react';
 
-import { isSchemaIssue } from '@/domain/library/rsform-api';
+import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
 import { useTx } from '@/i18n';
 
 import { RSTabID, useConceptNavigation } from '@/app/navigation/navigation-context';

@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "generate": "lezer-generator src/features/rsform/components/rs-input/parse/rslang-fast.grammar -o src/features/rsform/components/rs-input/parse/parser.ts && lezer-generator src/domain/rslang/parser/rslang.grammar -o src/domain/rslang/parser/parser.ts && lezer-generator src/features/rsform/components/refs-input/parse/refs-text.grammar -o src/features/rsform/components/refs-input/parse/parser.ts && lezer-generator src/features/ai/components/prompt-input/parse/prompt-text.grammar -o src/features/ai/components/prompt-input/parse/parser.ts",
+    "generate": "lezer-generator src/features/rsform/components/rs-input/parse/rslang-fast.grammar -o src/features/rsform/components/rs-input/parse/parser.ts && lezer-generator src/features/rsform/components/refs-input/parse/refs-text.grammar -o src/features/rsform/components/refs-input/parse/parser.ts && lezer-generator src/features/ai/components/prompt-input/parse/prompt-text.grammar -o src/features/ai/components/prompt-input/parse/parser.ts",
+    "typecheck": "tsc --noEmit",
     "test": "vitest",
     "pretest:e2e": "playwright install",
     "test:e2e": "playwright test",
@@ -19,6 +20,7 @@
     "preview": "vite preview --port 3000"
   },
   "dependencies": {
+    "@rsconcept/domain": "*",
     "@base-ui/react": "^1.5.0",
     "@codemirror/autocomplete": "^6.20.2",
     "@codemirror/language": "^6.12.3",

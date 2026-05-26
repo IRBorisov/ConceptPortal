@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { type FolderNode } from '@/domain/library';
+import { type FolderNode } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';

@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { calculateSchemaStats } from '@/domain/library/rsform-api';
+import { calculateSchemaStats } from '@rsconcept/domain/library/rsform-api';
 
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
-import { type TokenID } from '@/domain/rslang';
-import { labelToken } from '@/domain/rslang/labels';
+import { type TokenID } from '@rsconcept/domain/rslang';
+import { labelToken } from '@rsconcept/domain/rslang/labels';
 
 import { globalIDs } from '@/utils/constants';
 

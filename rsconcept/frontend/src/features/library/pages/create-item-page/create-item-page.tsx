@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { LibraryItemType } from '@/domain/library';
+import { LibraryItemType } from '@rsconcept/domain/library';
 
 import { RequireAuth } from '@/features/auth/components/require-auth';
 

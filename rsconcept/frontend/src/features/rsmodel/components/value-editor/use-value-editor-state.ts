@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 
-import { type Constituenta, type RSEngine } from '@/domain/library';
-import { addValueElement, deleteValueElement, updateValueElement } from '@/domain/library/rsmodel-api';
-import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/domain/rslang';
-import { convertPathToType, extractValue } from '@/domain/rslang/eval/value-api';
-import { applyPath } from '@/domain/rslang/semantic/typification-api';
+import { type Constituenta, type RSEngine } from '@rsconcept/domain/library';
+import { addValueElement, deleteValueElement, updateValueElement } from '@rsconcept/domain/library/rsmodel-api';
+import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@rsconcept/domain/rslang';
+import { convertPathToType, extractValue } from '@rsconcept/domain/rslang/eval/value-api';
+import { applyPath } from '@rsconcept/domain/rslang/semantic/typification-api';
 
 export function useValueEditorState(
   engine: RSEngine,

@@ -13,9 +13,9 @@ import CodeMirror, {
 } from '@uiw/react-codemirror';
 import { useDebounce } from 'use-debounce';
 
-import { type Grammeme, ReferenceType, supportedGrammemes } from '@/domain/cctext';
-import { parseEntityReference, parseSyntacticReference, referenceToString } from '@/domain/cctext/language-api';
-import { type RSForm } from '@/domain/library';
+import { type Grammeme, ReferenceType, supportedGrammemes } from '@rsconcept/domain/cctext';
+import { parseEntityReference, parseSyntacticReference, referenceToString } from '@rsconcept/domain/cctext/language-api';
+import { type RSForm } from '@rsconcept/domain/library';
 
 import { ErrorField, Label } from '@/components/input';
 import { type ErrorProcessing } from '@/components/props';

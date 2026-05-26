@@ -1,11 +1,54 @@
 {
   "name": "@rsconcept/rstool",
   "version": "0.1.0",
-  "private": true,
+  "description": "Agent-facing library for incremental RSForm construction, RSLang analysis, diagnostics, modeling, and evaluation. Wraps @rsconcept/domain with a deterministic session contract and stdio wrapper.",
+  "license": "MIT",
+  "author": "IRBorisov",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IRBorisov/ConceptPortal.git",
+    "directory": "rsconcept/rstool"
+  },
+  "homepage": "https://portal.acconcept.ru",
+  "keywords": [
+    "rslang",
+    "rsform",
+    "rstool",
+    "agent",
+    "llm",
+    "mcp",
+    "formal-language",
+    "set-theory"
+  ],
   "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./wrapper": {
+      "types": "./dist/wrapper/client.d.ts",
+      "import": "./dist/wrapper/client.js"
+    },
+    "./skills/rslang-rstool/*": "./skills/rslang-rstool/*",
+    "./docs/*": "./docs/*",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "rstool-wrapper": "./dist/wrapper/stdio-wrapper.js"
+  },
+  "files": [
+    "dist",
+    "src",
+    "skills",
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
+    "build": "tsup",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "wrapper": "tsx src/wrapper/stdio-wrapper.ts",
@@ -14,12 +57,20 @@
     "example:build-rsmodel": "tsx examples/build-sample-rsmodel.ts",
     "example:build-kinship-schema": "tsx examples/build-kinship-rsform.ts",
     "example:build-kinship-rsmodel": "tsx examples/build-kinship-rsmodel.ts",
-    "kinship:cli": "tsx examples/kinship/cli.ts"
+    "kinship:cli": "tsx examples/kinship/cli.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@rsconcept/domain": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
+    "tsup": "^8.5.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vitest": "^4.1.5"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

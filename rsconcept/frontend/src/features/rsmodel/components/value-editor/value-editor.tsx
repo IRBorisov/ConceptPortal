@@ -1,9 +1,9 @@
 'use client';
 
-import { type RSEngine } from '@/domain/library';
-import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@/domain/rslang';
-import { convertPathToType } from '@/domain/rslang/eval/value-api';
-import { type TypePath } from '@/domain/rslang/semantic/typification';
+import { type RSEngine } from '@rsconcept/domain/library';
+import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@rsconcept/domain/rslang';
+import { convertPathToType } from '@rsconcept/domain/rslang/eval/value-api';
+import { type TypePath } from '@rsconcept/domain/rslang/semantic/typification';
 import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';

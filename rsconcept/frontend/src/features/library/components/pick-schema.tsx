@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { type LibraryItem, type LibraryItemType } from '@/domain/library';
+import { type LibraryItem, type LibraryItemType } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 import { matchLibraryItem } from '@/services/search';
 

@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 
-import { type Grammeme } from '@/domain/cctext';
-import { type Constituenta, type RSForm } from '@/domain/library';
+import { type Grammeme } from '@rsconcept/domain/cctext';
+import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 import { matchConstituenta } from '@/services/search';
 

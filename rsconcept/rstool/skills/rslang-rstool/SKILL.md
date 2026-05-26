@@ -9,17 +9,26 @@ description: RS language/rsconcept/rstool for AI agents—incremental RSForm con
 
 **rstool** is the agent API for sessions, upserts, analysis, diagnostics, modeling/evaluation, (de)serialization.
 
-- Library: `rsconcept/rstool`
-- Analyzer: shared with frontend
-- Domain: see `CONTEXT.md`
+- Library: `@rsconcept/rstool` (npm) — also vendored in this repo at `rsconcept/rstool`
+- Analyzer: `@rsconcept/domain` (shared between rstool and the Portal frontend)
+- Domain glossary: `docs/DOMAIN.md` (English) / `CONTEXT.md` (Russian, canonical)
 
 ## Docs/Hints Reference
 
-| Info                   | Location                                                          |
-| :--------------------- | :---------------------------------------------------------------- |
-| Operators, API, errors | [REFERENCE.md](REFERENCE.md)                                      |
-| Examples, typification | `frontend/src/features/help/items/rslang/` & `/root/help-rslang/` |
-| Code samples           | `rstool/examples/`, `rstool/README.md`                            |
+| Info                                      | Location                                                          |
+| :---------------------------------------- | :---------------------------------------------------------------- |
+| rstool API, methods, error codes          | [REFERENCE.md](REFERENCE.md)                                      |
+| Worked examples, common mistakes          | [EXAMPLES.md](EXAMPLES.md)                                        |
+| Domain vocabulary (English)               | `docs/DOMAIN.md` (bundled with the npm package)                   |
+| Constituenta fields, validation, ordering | `docs/CONSTITUENTA.md`                                            |
+| RSLang syntax (operators, quantifiers)    | `docs/SYNTAX.md`                                                  |
+| Typification grades, radicals             | `docs/TYPIFICATION.md`                                            |
+| Diagnostic code → fix table               | `docs/DIAGNOSTICS.md`                                             |
+| Portal REST API (live data)               | `docs/PORTAL-API.md`                                              |
+| Lezer grammar pointers                    | `docs/GRAMMAR-REF.md` (full grammar lives in `@rsconcept/domain`) |
+| Code samples                              | `rsconcept/rstool/examples/`, `rsconcept/rstool/README.md`        |
+
+If you installed `@rsconcept/rstool` from npm, the same `docs/*.md` ship inside `node_modules/@rsconcept/rstool/docs/`.
 
 ## Protocol Summary
 
@@ -40,16 +49,14 @@ description: RS language/rsconcept/rstool for AI agents—incremental RSForm con
 
 ## API/REST
 
+For full reference see `docs/PORTAL-API.md`. Short form:
+
 - **Portal UI**: `https://portal.acconcept.ru`
 - **API**: `https://api.portal.acconcept.ru`
-- Main endpoints:
-  - RSForm meta: `GET /api/rsforms/{id}`
-  - RSForm details: `GET /api/rsforms/{id}/details`
-  - Saved version: `GET /api/library/{id}/versions/{v}`
-  - OSS/RSModel: `GET /api/oss/{id}`, `GET /api/models/{id}`
-  - OpenAPI: `GET /schema`
-- Local: paths `/api/...`, base from `VITE_PORTAL_BACKEND`
-- Don't scrape SPA or use UI query params (`tab=`, etc.)
+- Endpoints: `GET /api/rsforms/{id}`, `GET /api/rsforms/{id}/details`, `GET /api/library/{id}/versions/{v}`, `GET /api/oss/{id}`, `GET /api/models/{id}`, OpenAPI at `GET /schema`.
+- Local: paths `/api/...`, base from `VITE_PORTAL_BACKEND`.
+- Don't scrape SPA or use UI query params (`tab=`, etc.).
+- rstool itself never calls the REST API; bring data in via `addOrUpdateConstituenta` after fetching.
 
 ## Constituent Types (`cstType`)
 
@@ -75,14 +82,15 @@ description: RS language/rsconcept/rstool for AI agents—incremental RSForm con
 - **Globals**: `X1`, `C1`, `D1`, `F1`, `P1`, `A1`, `R1`
 - **Locals**: `x`, `ξ`, `μ2`
 - **Literals**: `42`, `Z`, `∅`
-- Grammar: `frontend/src/domain/rslang/parser/rslang.grammar`
+- Full operator + precedence table: `docs/SYNTAX.md`
+- Grammar source: `@rsconcept/domain/src/rslang/parser/rslang.grammar` (token pointers: `docs/GRAMMAR-REF.md`)
 
 ## Expression Types
 
 - **Set-theoretic**: `∪`, `∩`, `\`, `∆`, `×`, `∈`, `⊆`, `ℬ(...)`, tuples
 - **Logical**: `¬`, `&`, `∨`, `⇒`, `⇔`, `∀`, `∃`, comparisons `=`, `≠`, `<`
 - **Parameterized**: `[arg1∈H1, arg2∈H2] body`
-- Advanced: see `help-rslang-expression-*`
+- Detailed semantics in `docs/SYNTAX.md`; typification grades and radicals in `docs/TYPIFICATION.md`.
 
 Always set `cstType` in upserts/analysis to true role.
 
@@ -90,7 +98,7 @@ Always set `cstType` in upserts/analysis to true role.
 
 1. Check `analysis.success`
 2. If not, see `analysis.diagnostics` / `listDiagnostics`
-3. Map `code` to message via frontend (`RSErrorCode`, `tx.rslang.error.*`)
+3. Map `code` → cause → fix via `docs/DIAGNOSTICS.md` (or `getRSErrorPrefix` from `@rsconcept/domain`)
 4. Use `from`, `to` to patch `definitionFormal`; re-send
 
 Don’t infer types—always read tool output.

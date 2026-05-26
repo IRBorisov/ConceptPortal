@@ -3,18 +3,18 @@
 import { useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
 
-import { type BasicBinding, type Constituenta, CstType } from '@/domain/library';
+import { type BasicBinding, type Constituenta, CstType } from '@rsconcept/domain/library';
 import {
   canHaveManualTypification,
   isBaseSet,
   isBasicConcept,
   isFunctional,
   isLogical
-} from '@/domain/library/rsform-api';
-import { isInferrable, isInterpretable } from '@/domain/library/rsmodel-api';
-import { type CalculatorResult, TypeID, type Value } from '@/domain/rslang';
-import { valueStub } from '@/domain/rslang/eval/value-api';
-import { labelType } from '@/domain/rslang/labels';
+} from '@rsconcept/domain/library/rsform-api';
+import { isInferrable, isInterpretable } from '@rsconcept/domain/library/rsmodel-api';
+import { type CalculatorResult, TypeID, type Value } from '@rsconcept/domain/rslang';
+import { valueStub } from '@rsconcept/domain/rslang/eval/value-api';
+import { labelType } from '@rsconcept/domain/rslang/labels';
 import { useTx } from '@/i18n';
 
 import { useConceptNavigation, useRegisterUnsavedSave } from '@/app';

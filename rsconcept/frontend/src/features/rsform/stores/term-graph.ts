@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { CstType } from '@/domain/library';
+import { CstType } from '@rsconcept/domain/library';
 
 /** Represents graph editing mode mode. */
 export const InteractionMode = {

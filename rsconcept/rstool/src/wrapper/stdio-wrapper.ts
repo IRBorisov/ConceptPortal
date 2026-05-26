@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import readline from 'node:readline';
 
 import { RSToolAgent } from '../models/rstool-agent';

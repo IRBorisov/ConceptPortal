@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 
-import { type ArgumentValue, type Constituenta } from '@/domain/library';
-import { generateAlias, inferTemplatedType } from '@/domain/library/rsform-api';
-import { TypeID } from '@/domain/rslang';
-import { type AliasMapping, substituteTemplateArgs } from '@/domain/rslang/api';
-import { labelType } from '@/domain/rslang/labels';
+import { type ArgumentValue, type Constituenta } from '@rsconcept/domain/library';
+import { generateAlias, inferTemplatedType } from '@rsconcept/domain/library/rsform-api';
+import { TypeID } from '@rsconcept/domain/rslang';
+import { type AliasMapping, substituteTemplateArgs } from '@rsconcept/domain/rslang/api';
+import { labelType } from '@rsconcept/domain/rslang/labels';
 
 import { useTemplates } from '@/features/library/backend/use-templates';
 

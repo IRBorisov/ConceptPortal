@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useDebounce } from 'use-debounce';
 
-import { type BasicBinding } from '@/domain/library';
+import { type BasicBinding } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 import { filterBindingByQuery } from '@/services/search';
 

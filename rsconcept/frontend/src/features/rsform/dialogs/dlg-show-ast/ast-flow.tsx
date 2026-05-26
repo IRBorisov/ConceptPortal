@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { type Edge, MarkerType, type Node, useEdgesState, useNodesState, useOnSelectionChange } from '@xyflow/react';
 
-import { type FlatAST } from '@/domain/parsing';
+import { type FlatAST } from '@rsconcept/domain/parsing';
 
 import { DiagramFlow } from '@/components/flow/diagram-flow';
 

@@ -1,4 +1,4 @@
-import { type Position2D } from '@/domain/library/oss-layout';
+import { type Position2D } from '@rsconcept/domain/library/oss-layout';
 
 import { cn } from '@/components/utils';
 

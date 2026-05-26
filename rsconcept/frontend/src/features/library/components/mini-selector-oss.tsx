@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { type LibraryItemReference } from '@/domain/library';
+import { type LibraryItemReference } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';

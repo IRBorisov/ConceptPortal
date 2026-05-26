@@ -1,4 +1,4 @@
-import { applyAliasMapping } from '@/domain/rslang/api';
+import { applyAliasMapping } from '@rsconcept/domain/rslang/api';
 
 import { type ConstituentaBasicsDTO } from '@/features/rsform/backend/types';
 

@@ -1,4 +1,4 @@
-import { EvalStatus } from '@/domain/library';
+import { EvalStatus } from '@rsconcept/domain/library';
 
 import {
   type DomIconProps,

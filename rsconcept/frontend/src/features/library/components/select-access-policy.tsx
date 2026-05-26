@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 
-import { AccessPolicy } from '@/domain/library';
+import { AccessPolicy } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';

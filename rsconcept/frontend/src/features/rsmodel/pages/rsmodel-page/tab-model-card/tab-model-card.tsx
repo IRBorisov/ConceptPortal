@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from 'react';
 import clsx from 'clsx';
 
-import { calculateModelStats } from '@/domain/library/rsmodel-api';
+import { calculateModelStats } from '@rsconcept/domain/library/rsmodel-api';
 
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 

@@ -12,10 +12,10 @@ import CodeMirror, {
 } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 
-import { CstType, type RSForm } from '@/domain/library';
-import { generateAlias, guessCstType } from '@/domain/library/rsform-api';
-import { type AnalysisFull, type RSErrorDescription } from '@/domain/rslang';
-import { extractGlobals } from '@/domain/rslang/api';
+import { CstType, type RSForm } from '@rsconcept/domain/library';
+import { generateAlias, guessCstType } from '@rsconcept/domain/library/rsform-api';
+import { type AnalysisFull, type RSErrorDescription } from '@rsconcept/domain/rslang';
+import { extractGlobals } from '@rsconcept/domain/rslang/api';
 
 import { ErrorField, Label } from '@/components/input';
 import { usePreferencesStore } from '@/stores/preferences';

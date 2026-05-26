@@ -1,4 +1,4 @@
-import { type RSModelStats } from '@/domain/library';
+import { type RSModelStats } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { Divider } from '@/components/container';

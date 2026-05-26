@@ -1,6 +1,6 @@
-import { LibraryItemType } from '@/domain/library';
-import { type Attribution, CstType, type RSForm, type Substitution } from '@/domain/library/rsform';
-import { getCstTypePrefix } from '@/domain/library/rsform-api';
+import { LibraryItemType } from '@rsconcept/domain/library';
+import { type Attribution, CstType, type RSForm, type Substitution } from '@rsconcept/domain/library/rsform';
+import { getCstTypePrefix } from '@rsconcept/domain/library/rsform-api';
 
 import { type UpdateLibraryItemDTO } from '@/features/library/backend/types';
 import {

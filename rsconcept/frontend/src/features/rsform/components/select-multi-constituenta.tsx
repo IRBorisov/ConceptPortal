@@ -1,4 +1,4 @@
-import { type Constituenta } from '@/domain/library';
+import { type Constituenta } from '@rsconcept/domain/library';
 
 import { ComboMulti } from '@/components/input/combo-multi';
 import { type Styling } from '@/components/props';

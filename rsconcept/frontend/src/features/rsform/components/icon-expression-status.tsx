@@ -1,4 +1,4 @@
-import { CstStatus } from '@/domain/library';
+import { CstStatus } from '@rsconcept/domain/library';
 
 import {
   type DomIconProps,

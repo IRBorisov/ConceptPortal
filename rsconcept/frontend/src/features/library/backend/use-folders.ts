@@ -1,4 +1,4 @@
-import { FolderTree, LocationHead } from '@/domain/library';
+import { FolderTree, LocationHead } from '@rsconcept/domain/library';
 
 import { useLibrary } from './use-library';
 

@@ -1,4 +1,4 @@
-import { type LibraryItem } from '@/domain/library';
+import { type LibraryItem } from '@rsconcept/domain/library';
 
 import { TextMatcher } from './text-matcher';
 

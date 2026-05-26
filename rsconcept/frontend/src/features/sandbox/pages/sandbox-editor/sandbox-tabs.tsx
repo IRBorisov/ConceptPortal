@@ -2,9 +2,9 @@
 
 import { useEffect, useEffectEvent, useLayoutEffect, useRef, useSyncExternalStore } from 'react';
 
-import { type Constituenta, type RSEngine } from '@/domain/library';
-import { isSchemaIssue } from '@/domain/library/rsform-api';
-import { isModelIssue } from '@/domain/library/rsmodel-api';
+import { type Constituenta, type RSEngine } from '@rsconcept/domain/library';
+import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
+import { isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
 import { useTx } from '@/i18n';
 
 import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-context';

@@ -1,23 +1,23 @@
-# RSForm Agent Tool
+# @rsconcept/rstool
 
-Library-first implementation for LLM agents that incrementally build RSForm and validate expressions using existing frontend RSLang domain code.
+Agent-facing library for **incremental RSForm construction**, **RSLang expression analysis**, **diagnostics**, **modeling**, and **evaluation**. It wraps [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) with a deterministic session contract and a stdio JSON wrapper that LLM agents and Cursor/Claude clients can call directly.
 
 ## Agent skill
 
-RS language + rstool workflows for agents: `skills/rslang-rstool/` (`SKILL.md`, `REFERENCE.md`, `EXAMPLES.md`). Cursor copy: `.agents/skills/rslang-rstool/` — keep both in sync (`skills/README.md`).
+RS language + rstool workflows for agents: `skills/rslang-rstool/` (`SKILL.md`, `REFERENCE.md`, `EXAMPLES.md`). The companion language reference in `docs/` (`DOMAIN.md`, `SYNTAX.md`, `TYPIFICATION.md`, `CONSTITUENTA.md`, `DIAGNOSTICS.md`, `PORTAL-API.md`, `GRAMMAR-REF.md`) is distilled from the Portal manuals and ships with the npm package, so standalone agents never need to read the Portal frontend source.
 
-## Scope
+## Install
 
-- Session-based incremental editing of constituents.
-- Parse/syntax/semantic/type analysis for expressions.
-- In-memory modeling: set base bindings and structured values; evaluate expressions and constituents.
-- Deterministic diagnostics and export/import for reproducible agent workflows.
-- Library API + stdio JSON wrapper as the only supported transports.
+```bash
+npm install @rsconcept/rstool
+```
 
-## Quick Use
+`@rsconcept/domain` is a peer-of-dependency installed automatically. No Portal checkout is required.
+
+## Quick use (library)
 
 ```ts
-import { CstType, RSToolAgent } from './src';
+import { CstType, RSToolAgent } from '@rsconcept/rstool';
 
 const tool = new RSToolAgent();
 const session = tool.createSession();
@@ -27,30 +27,50 @@ const result = tool.analyzeExpression(session.sessionId, {
 });
 ```
 
-## Scripts
+## Quick use (stdio wrapper)
 
-Prerequisite: `npm ci` in `rsconcept/frontend` (rstool typecheck imports frontend domain code via `@/*`).
+```bash
+npx rstool-wrapper      # one JSON request per line on stdin, one JSON response per line on stdout
+```
 
-- `npm run typecheck`
-- `npm test`
-- `npm run wrapper`
-- `npm run example:client`
-- `npm run example:build-schema`
-- `npm run example:build-rsmodel`
+Or run it as a child process from your own code:
 
-## Agent Wrapper (stdio)
+```ts
+import { RSToolWrapperClient } from '@rsconcept/rstool/wrapper';
 
-Run:
+const client = new RSToolWrapperClient(); // spawns `rstool-wrapper` by default
+await client.waitUntilReady();
+const session = await client.call<{ sessionId: string }>('createSession');
+await client.close();
+```
 
-`npm run wrapper`
+## Scope
 
-Protocol:
+- Session-based incremental editing of constituents.
+- Parse / syntax / semantic / type analysis for expressions.
+- In-memory modeling: set base bindings and structured values; evaluate expressions and constituents.
+- Deterministic diagnostics and export/import for reproducible agent workflows.
+- Library API + stdio JSON wrapper as the only supported transports (MCP adapter lives in [`@rsconcept/rstool-mcp`](../rstool-mcp/)).
 
-- input: one JSON request per line
-- output: one JSON response per line
-- wrapper keeps state in memory while process is alive
+## Repo scripts
 
-Supported methods:
+This package is part of the [Concept Portal](https://github.com/IRBorisov/ConceptPortal) npm workspaces. From the repo root:
+
+- `npm install` — install all workspaces (`@rsconcept/domain`, `frontend`, `@rsconcept/rstool`)
+- `npm run typecheck -w @rsconcept/rstool`
+- `npm test -w @rsconcept/rstool`
+- `npm run build -w @rsconcept/rstool` — produce `dist/` via tsup
+- `npm run wrapper -w @rsconcept/rstool` — dev stdio wrapper via `tsx`
+- `npm run example:client -w @rsconcept/rstool`, `npm run example:build-schema -w @rsconcept/rstool`, `npm run example:build-rsmodel -w @rsconcept/rstool`
+
+## Stdio protocol
+
+- Input: one JSON request per line.
+- Output: one JSON response per line.
+- The wrapper keeps state in memory while the process is alive.
+- On startup, a ready handshake is printed.
+
+Supported methods (current contract version: see [`CONTRACT_VERSION`](src/models/tool-contract.ts)):
 
 - `ping`
 - `methods`
@@ -86,34 +106,35 @@ Example response:
 
 Run:
 
-`npm run example:client`
+```bash
+npm run example:client -w @rsconcept/rstool
+```
 
-File:
+File: [`examples/agent-client.ts`](examples/agent-client.ts)
 
-- `examples/agent-client.ts`
-
-What it demonstrates:
+The example:
 
 - starts the stdio wrapper as a child process
-- waits for ready handshake
+- waits for the ready handshake
 - creates a session
 - upserts a constituent
 - runs expression analysis
-- sets base binding and evaluates a term
+- sets a base binding and evaluates a term
 - fetches diagnostics
 
-## Importable wrapper client
+## Installing the skill into an agent host
 
-You can import the wrapper client and use it in your own agent code:
+The package ships the skill files in `skills/rslang-rstool/`. After install, copy or symlink them into your agent host's skill directory:
 
-```ts
-import { RSToolWrapperClient } from '@rsconcept/rstool';
+```bash
+# Cursor (per-project skills)
+cp -r node_modules/@rsconcept/rstool/skills/rslang-rstool .agents/skills/rslang-rstool
 
-const client = new RSToolWrapperClient({
-  cwd: 'D:/DEV/WORK/Portal/rsconcept/rstool'
-});
-
-await client.waitUntilReady();
-const session = await client.call<{ sessionId: string }>('createSession');
-await client.close();
+# Claude Code or other hosts: consult host-specific docs
 ```
+
+The skill defers to the bundled `docs/*.md` for language reference, so the install above is self-contained.
+
+## License
+
+MIT

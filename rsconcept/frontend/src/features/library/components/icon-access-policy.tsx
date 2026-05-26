@@ -1,4 +1,4 @@
-import { AccessPolicy } from '@/domain/library';
+import { AccessPolicy } from '@rsconcept/domain/library';
 
 import { type DomIconProps, IconPrivate, IconProtected, IconPublic } from '@/components/icons';
 

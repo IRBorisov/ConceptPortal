@@ -1,4 +1,4 @@
-import { type Grammeme } from '@/domain/cctext/language';
+import { type Grammeme } from '@rsconcept/domain/cctext/language';
 
 /** UI coordinates for inline editors rendered in a portal. */
 export interface InlinePosition {

@@ -1,4 +1,4 @@
-import { AccessPolicy, LibraryItemType, LocationHead, type RSForm, type RSModel } from '@/domain/library';
+import { AccessPolicy, LibraryItemType, LocationHead, type RSForm, type RSModel } from '@rsconcept/domain/library';
 
 import { type RSFormDTO } from '@/features/rsform/backend/types';
 import { type RSModelDTO } from '@/features/rsmodel/backend/types';

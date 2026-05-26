@@ -2,12 +2,12 @@ import { fileURLToPath } from 'node:url';
 
 import { defineConfig } from 'vitest/config';
 
-const frontendSrc = fileURLToPath(new URL('../frontend/src', import.meta.url));
+const domainSrc = fileURLToPath(new URL('../domain/src', import.meta.url));
 
 export default defineConfig({
   resolve: {
     alias: {
-      '@': frontendSrc
+      '@rsconcept/domain': domainSrc
     }
   },
   test: {

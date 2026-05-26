@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { ReactFlowProvider } from '@xyflow/react';
 import clsx from 'clsx';
 
-import { type Constituenta, CstType, type RSForm } from '@/domain/library';
-import { generateAlias, inferNewSpawnPosition } from '@/domain/library/rsform-api';
-import { type SPNode, StructurePlanner } from '@/domain/library/structure-planner';
+import { type Constituenta, CstType, type RSForm } from '@rsconcept/domain/library';
+import { generateAlias, inferNewSpawnPosition } from '@rsconcept/domain/library/rsform-api';
+import { type SPNode, StructurePlanner } from '@rsconcept/domain/library/structure-planner';
 import { useTx } from '@/i18n';
 
 import { useUnsavedChanges } from '@/app';

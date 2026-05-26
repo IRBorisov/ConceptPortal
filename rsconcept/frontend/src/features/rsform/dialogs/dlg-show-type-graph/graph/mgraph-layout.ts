@@ -1,7 +1,7 @@
 import dagre from '@dagrejs/dagre';
 import { type Edge, type Node } from '@xyflow/react';
 
-import { type TypificationNodeData } from '@/domain/rslang';
+import { type TypificationNodeData } from '@rsconcept/domain/rslang';
 
 const NODE_WIDTH = 44;
 const NODE_HEIGHT = 44;

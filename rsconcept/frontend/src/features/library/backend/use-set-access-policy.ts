@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { type LibraryItem, type RSForm } from '@/domain/library';
+import { type LibraryItem, type RSForm } from '@rsconcept/domain/library';
 
 import { type OperationSchemaDTO } from '@/features/oss';
 import { type RSFormDTO } from '@/features/rsform';

@@ -2,7 +2,7 @@
 
 import { createContext, type ReactNode, useContext } from 'react';
 
-import { type RSForm } from '@/domain/library/rsform';
+import { type RSForm } from '@rsconcept/domain/library/rsform';
 
 const ShowAstSchemaContext = createContext<RSForm | null>(null);
 

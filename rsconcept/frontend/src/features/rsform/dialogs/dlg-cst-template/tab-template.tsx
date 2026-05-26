@@ -1,7 +1,7 @@
 'use client';
 
-import { CstType, type RSForm } from '@/domain/library';
-import { applyFilterCategory, isTemplateCst } from '@/domain/library/rsform-api';
+import { CstType, type RSForm } from '@rsconcept/domain/library';
+import { applyFilterCategory, isTemplateCst } from '@rsconcept/domain/library/rsform-api';
 import { useTx } from '@/i18n';
 
 import { useTemplates } from '@/features/library/backend/use-templates';

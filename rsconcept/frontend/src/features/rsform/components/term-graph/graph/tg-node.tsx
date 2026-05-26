@@ -3,9 +3,9 @@
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 import clsx from 'clsx';
 
-import { type Constituenta } from '@/domain/library';
-import { isBasicConcept } from '@/domain/library/rsform-api';
-import { labelType } from '@/domain/rslang/labels';
+import { type Constituenta } from '@rsconcept/domain/library';
+import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
+import { labelType } from '@rsconcept/domain/rslang/labels';
 import { useTx } from '@/i18n';
 
 import { useValueTooltipStore } from '@/stores/value-tooltip';

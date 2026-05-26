@@ -1,4 +1,4 @@
-import { Grammeme } from '@/domain/cctext/language';
+import { Grammeme } from '@rsconcept/domain/cctext/language';
 
 /** English defaults for grammeme tooltips (compact UI). */
 const GRAMMEME_EN: Record<string, string> = {

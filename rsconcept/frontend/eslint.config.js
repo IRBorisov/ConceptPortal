@@ -81,7 +81,7 @@ export default [
             // Packages. `react` related packages come first.
             ['^react', '^@?\\w'],
             // Domain packages
-            ['^(@/domain|@/i18n|@/services)(/.*|$)'],
+            ['^(@rsconcept/domain|@/i18n|@/services)(/.*|$)'],
             // Global app and features
             ['^(@/app|@/features)(/.*|$)'],
             // Internal packages.

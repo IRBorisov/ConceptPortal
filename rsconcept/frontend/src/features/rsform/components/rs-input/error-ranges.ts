@@ -1,7 +1,7 @@
 import { RangeSetBuilder } from '@codemirror/state';
 import { Decoration, type DecorationSet, EditorView, ViewPlugin, type ViewUpdate } from '@codemirror/view';
 
-import { type RSErrorDescription } from '@/domain/rslang';
+import { type RSErrorDescription } from '@rsconcept/domain/rslang';
 
 import { APP_COLORS } from '@/styling/colors';
 

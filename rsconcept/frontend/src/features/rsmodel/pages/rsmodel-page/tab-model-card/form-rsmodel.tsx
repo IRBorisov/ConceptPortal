@@ -3,7 +3,7 @@
 import { useEffect, useEffectEvent } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { LibraryItemType, type RSModel } from '@/domain/library';
+import { LibraryItemType, type RSModel } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { useConceptNavigation, useRegisterUnsavedSave } from '@/app';

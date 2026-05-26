@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { type LibraryItem } from '@/domain/library';
+import { type LibraryItem } from '@rsconcept/domain/library';
 
 import { useUpdateTimestamp } from '@/features/library/backend/use-update-timestamp';
 

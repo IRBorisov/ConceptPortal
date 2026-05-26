@@ -2,7 +2,7 @@
 
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { AccessPolicy, LibraryItemType, LocationHead } from '@/domain/library';
+import { AccessPolicy, LibraryItemType, LocationHead } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';

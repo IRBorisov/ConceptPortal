@@ -1,17 +1,17 @@
-import { Graph } from '@/domain/graph/graph';
-import { extractGlobals } from '@/domain/rslang/api';
-import { type ExpressionType, RSLangAnalyzer, type Value, type ValueClass } from '@/domain/rslang';
-import { isBaseSet } from '@/domain/library/rsform-api';
-import { type Constituenta, CstType, type RSForm } from '@/domain/library/rsform';
-import { RSEngine, type RSEngineServices } from '@/domain/library/rsengine';
-import { type BasicBinding, EvalStatus, type RSModel } from '@/domain/library/rsmodel';
+import { Graph } from '@rsconcept/domain/graph/graph';
+import { extractGlobals } from '@rsconcept/domain/rslang/api';
+import { type ExpressionType, RSLangAnalyzer, type Value, type ValueClass } from '@rsconcept/domain/rslang';
+import { isBaseSet } from '@rsconcept/domain/library/rsform-api';
+import { type Constituenta, CstType, type RSForm } from '@rsconcept/domain/library/rsform';
+import { RSEngine, type RSEngineServices } from '@rsconcept/domain/library/rsengine';
+import { type BasicBinding, EvalStatus, type RSModel } from '@rsconcept/domain/library/rsmodel';
 import {
   isInferrable,
   isInterpretable,
   toBasicBinding,
   validateBasicBindingData,
   validateValueData
-} from '@/domain/library/rsmodel-api';
+} from '@rsconcept/domain/library/rsmodel-api';
 
 import {
   type ConstituentaState,

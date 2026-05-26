@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 
-import { isSchemaIssue } from '@/domain/library/rsform-api';
-import { isModelIssue } from '@/domain/library/rsmodel-api';
+import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
+import { isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
 
 import { useConceptNavigation } from '@/app';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';

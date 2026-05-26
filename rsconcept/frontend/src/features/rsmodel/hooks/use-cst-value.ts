@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react';
 
-import { type Constituenta, type RSEngine } from '@/domain/library';
-import { type Value } from '@/domain/rslang';
+import { type Constituenta, type RSEngine } from '@rsconcept/domain/library';
+import { type Value } from '@rsconcept/domain/rslang';
 
 const noop: () => void = () => undefined;
 

@@ -7,7 +7,7 @@ import {
   type OperationSchema,
   type RSForm,
   type RSModel
-} from '@/domain/library';
+} from '@rsconcept/domain/library';
 
 import { PromptVariableType } from '../models/prompting';
 import {

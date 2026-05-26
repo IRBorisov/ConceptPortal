@@ -4,7 +4,7 @@ import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { type Edge, MarkerType, type Node, useEdgesState, useNodesState, useReactFlow } from '@xyflow/react';
 import clsx from 'clsx';
 
-import { type Constituenta, type RSForm } from '@/domain/library';
+import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
 
 import { DiagramFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';

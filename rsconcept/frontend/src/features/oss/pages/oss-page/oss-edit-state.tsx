@@ -2,7 +2,7 @@
 
 import { useEffect, useEffectEvent, useState } from 'react';
 
-import { NodeType, type Operation, OperationType } from '@/domain/library';
+import { NodeType, type Operation, OperationType } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';

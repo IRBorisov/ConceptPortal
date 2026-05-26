@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useEdgesState, useNodesState } from '@xyflow/react';
 
-import { type TypificationGraph } from '@/domain/rslang';
+import { type TypificationGraph } from '@rsconcept/domain/rslang';
 
 import { DiagramFlow } from '@/components/flow/diagram-flow';
 

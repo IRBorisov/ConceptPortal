@@ -1,4 +1,4 @@
-import { AccessPolicy, LibraryItemType } from '../src/domain/library';
+import { AccessPolicy, LibraryItemType } from '@rsconcept/domain/library';
 import { authAdmin, authAnonymous, authUser } from './mocks/auth';
 import { BACKEND_URL } from './mocks/constants';
 import { dataLibraryItems } from './mocks/library';

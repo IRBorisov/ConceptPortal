@@ -1,6 +1,6 @@
-import { RSLangAnalyzer, type AnalysisFull, type ValueClass } from '@/domain/rslang';
-import { getAnalysisFor } from '@/domain/library/rsform-api';
-import { CstType, type RSForm } from '@/domain/library/rsform';
+import { RSLangAnalyzer, type AnalysisFull, type ValueClass } from '@rsconcept/domain/rslang';
+import { getAnalysisFor } from '@rsconcept/domain/library/rsform-api';
+import { CstType, type RSForm } from '@rsconcept/domain/library/rsform';
 
 import {
   type AnalysisResult,

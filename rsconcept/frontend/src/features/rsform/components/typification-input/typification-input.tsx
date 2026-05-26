@@ -1,6 +1,6 @@
 'use client';
 
-import { applyAsciiTypeSubstitutions } from '@/domain/rslang';
+import { applyAsciiTypeSubstitutions } from '@rsconcept/domain/rslang';
 
 import { TextArea } from '@/components/input';
 import { type Styling } from '@/components/props';

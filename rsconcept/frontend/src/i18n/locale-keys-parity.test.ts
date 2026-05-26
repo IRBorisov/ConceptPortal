@@ -3,7 +3,7 @@ import { dirname, extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-import { Grammeme } from '@/domain/cctext/language';
+import { Grammeme } from '@rsconcept/domain/cctext/language';
 
 import { enMessageMap } from './map/message-map.en';
 import { frMessageMap } from './map/message-map.fr';

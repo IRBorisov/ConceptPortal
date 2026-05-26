@@ -2,7 +2,7 @@
 
 import { createContext, use } from 'react';
 
-import { type Constituenta, type CstType, type RSForm } from '@/domain/library';
+import { type Constituenta, type CstType, type RSForm } from '@rsconcept/domain/library';
 
 import { type UnsavedSaveHandler } from '@/app';
 

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { type Constituenta, type LibraryItem, type RSForm, type Substitution } from '@/domain/library';
+import { type Constituenta, type LibraryItem, type RSForm, type Substitution } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { SelectLibraryItem } from '@/features/library/components/select-library-item';

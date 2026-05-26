@@ -1,6 +1,6 @@
 'use client';
 
-import { type RSForm } from '@/domain/library';
+import { type RSForm } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { useLibrary } from '@/features/library/backend/use-library';

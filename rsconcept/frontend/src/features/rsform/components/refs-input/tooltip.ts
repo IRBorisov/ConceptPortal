@@ -3,8 +3,8 @@ import { type Extension } from '@codemirror/state';
 import { hoverTooltip, type TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
-import { type EntityReference, type SyntacticReference } from '@/domain/cctext';
-import { type Constituenta, type RSForm } from '@/domain/library';
+import { type EntityReference, type SyntacticReference } from '@rsconcept/domain/cctext';
+import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
 import { globalTx } from '@/i18n';
 
 import { findContainedNodes } from '@/utils/codemirror';

@@ -3,9 +3,9 @@
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import clsx from 'clsx';
 
-import { type RSEngine } from '@/domain/library';
-import { isSchemaIssue } from '@/domain/library/rsform-api';
-import { isModelIssue } from '@/domain/library/rsmodel-api';
+import { type RSEngine } from '@rsconcept/domain/library';
+import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
+import { isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
 import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';

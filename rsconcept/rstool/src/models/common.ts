@@ -1,7 +1,7 @@
-import { CstType } from '@/domain/library/rsform';
-import { EvalStatus, type BasicBinding } from '@/domain/library/rsmodel';
-import { ValueClass } from '@/domain/rslang';
-import { RSErrorCode } from '@/domain/rslang/error';
+import { CstType } from '@rsconcept/domain/library/rsform';
+import { EvalStatus, type BasicBinding } from '@rsconcept/domain/library/rsmodel';
+import { ValueClass } from '@rsconcept/domain/rslang';
+import { RSErrorCode } from '@rsconcept/domain/rslang/error';
 
 export { CstType, EvalStatus, RSErrorCode, ValueClass };
 export type { BasicBinding };

@@ -1,4 +1,4 @@
-import { type LibraryItem } from '@/domain/library';
+import { type LibraryItem } from '@rsconcept/domain/library';
 
 import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';

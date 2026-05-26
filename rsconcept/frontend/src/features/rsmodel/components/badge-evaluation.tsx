@@ -1,6 +1,6 @@
 'use client';
 
-import { type Constituenta, type RSEngine } from '@/domain/library';
+import { type Constituenta, type RSEngine } from '@rsconcept/domain/library';
 
 import { globalIDs } from '@/utils/constants';
 

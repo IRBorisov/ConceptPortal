@@ -3,8 +3,8 @@ import { useReactFlow, useStoreApi } from '@xyflow/react';
 import { toPng, toSvg } from 'html-to-image';
 import fileDownload from 'js-file-download';
 
-import { NodeType, OperationType, type OssItem } from '@/domain/library';
-import { LayoutManager } from '@/domain/library/oss-layout-api';
+import { NodeType, OperationType, type OssItem } from '@rsconcept/domain/library';
+import { LayoutManager } from '@rsconcept/domain/library/oss-layout-api';
 import { globalTx } from '@/i18n';
 
 import { type UpdateOperationDTO } from '@/features/oss/backend/types';

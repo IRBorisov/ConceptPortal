@@ -2,7 +2,7 @@
 
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { type OssLayout } from '@/domain/library';
+import { type OssLayout } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';

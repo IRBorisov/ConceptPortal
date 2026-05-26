@@ -4,7 +4,7 @@
 
 - Package: `rsconcept/rstool` (`@rsconcept/rstool`, private)
 - Contract version: `1.2.0` (`CONTRACT_VERSION`)
-- Core class: `RSToolAgent` — `src/models/rstool-agent.ts` (re-exported from `src/index.ts`)
+- Core class: `RSToolAgent`
 - Types: `src/models/` (entity-split; `src/models/tool-contract.ts` holds `CONTRACT_VERSION` and `RSToolAgentContract`)
 
 ### Methods
@@ -97,7 +97,7 @@ Example chain:
 interface AnalysisResult {
   success: boolean;
   type: Record<string, unknown> | null; // typification tree from frontend
-  valueClass: "value" | "property" | null;
+  valueClass: 'value' | 'property' | null;
   diagnostics: { code: number; from: number; to: number; params?: string[] }[];
 }
 ```
@@ -126,35 +126,35 @@ From `rslang.grammar`:
 | Ops                    | `Pr`, `pr`, `Fi`, `card`, `bool`, `debool`, `red`          |
 | Literals               | digits, `Z`, `∅`                                           |
 
-Full grammar: `rsconcept/frontend/src/domain/rslang/parser/rslang.grammar`.
+Full grammar: `@rsconcept/domain/src/rslang/parser/rslang.grammar` (when installed from npm: `node_modules/@rsconcept/domain/src/rslang/parser/rslang.grammar`).
 
-## Help topic map (English sources)
+## Help topic map (companion docs)
 
-Agents explaining syntax to users should align with in-app help:
+Standalone agents should consult the bundled distilled docs (`docs/*.md` inside `@rsconcept/rstool`):
 
-| Topic folder                         | Subject                              |
-| ------------------------------------ | ------------------------------------ |
-| `help-rslang-literals`               | Identifiers, literals                |
-| `help-rslang-typification`           | Grades, `Logic`, parameterized types |
-| `help-rslang-expression-logic`       | Logical expressions                  |
-| `help-rslang-expression-set`         | Union, intersection, difference      |
-| `help-rslang-expression-arithmetic`  | Integer arithmetic                   |
-| `help-rslang-expression-structure`   | Structural / typification reshaping  |
-| `help-rslang-expression-quantor`     | Quantifiers                          |
-| `help-rslang-expression-declarative` | Declarative set comprehension        |
-| `help-rslang-expression-imperative`  | Imperative construction              |
-| `help-rslang-expression-recursive`   | Recursive / cyclic                   |
-| `help-rslang-expression-parameter`   | Parameterized functions              |
-| `help-rslang-templates`              | Expression templates                 |
-| `help-rslang-correct`                | Correctness / validation mindset     |
+| Topic                                | Bundled doc                                |
+| ------------------------------------ | ------------------------------------------ |
+| Identifiers, literals                | `docs/SYNTAX.md` § *Identifier rules*      |
+| Grades, `Logic`, parameterized types | `docs/TYPIFICATION.md`                     |
+| Logical expressions                  | `docs/SYNTAX.md` § *Logical expressions*   |
+| Set operators                        | `docs/SYNTAX.md` § *Set-theoretic*         |
+| Integer arithmetic                   | `docs/SYNTAX.md` § *Arithmetic*            |
+| Structural / typification reshaping  | `docs/TYPIFICATION.md` § *Forming/derived* |
+| Quantifiers                          | `docs/SYNTAX.md` § *Quantifiers*           |
+| Parameterized functions, templates   | `docs/SYNTAX.md` § *Parameterised*         |
+| Correctness / validation mindset     | `docs/SYNTAX.md` § *Correctness model*     |
+| Domain vocabulary                    | `docs/DOMAIN.md`                           |
+| Constituent fields and ordering      | `docs/CONSTITUENTA.md`                     |
+| Portal REST API                      | `docs/PORTAL-API.md`                       |
+| Grammar tokens / precedence          | `docs/GRAMMAR-REF.md`                      |
 
-Root overview: `rsconcept/frontend/src/features/help/items/root/help-rslang/topic.en.tsx`.
+For Portal contributors, the original in-app HTML help lives under `rsconcept/frontend/src/features/help/items/rslang/help-rslang-*` and is the source from which `docs/*.md` is distilled.
 
 ## Error codes (rstool-relevant)
 
 rstool re-exports `RSErrorCode.definitionNotAllowed` (`0x8862`) for base/constant violations.
 
-Full enum: `rsconcept/frontend/src/domain/rslang/error.ts` (`RSErrorCode`). User-facing strings: `tx.rslang.error.*` in `rsconcept/frontend/src/i18n/domain/rslang.en.ts` (and ru/fr).
+Full enum: `@rsconcept/domain/src/rslang/error.ts` (`RSErrorCode`). Categories and per-code fix guidance: `docs/DIAGNOSTICS.md`.
 
 Categories:
 
@@ -166,16 +166,16 @@ Categories:
 
 ## Source map for code changes
 
-| Area                      | Path                                                                     |
-| ------------------------- | ------------------------------------------------------------------------ |
-| Analyzer                  | `rsconcept/frontend/src/domain/rslang/semantic/analyzer.ts`              |
-| RSForm analysis entry     | `rsconcept/frontend/src/domain/library/rsform-api.ts` (`getAnalysisFor`) |
-| rstool analysis adapter   | `rsconcept/rstool/src/mappers/schema-adapter.ts`                         |
-| rstool evaluation adapter | `rsconcept/rstool/src/mappers/model-adapter.ts`                          |
-| Frontend evaluator        | `rsconcept/frontend/src/domain/library/rsengine.ts`                      |
-| Tests                     | `rsconcept/rstool/src/models/rstool-agent.test.ts` (colocated)           |
-| Sample export             | `rsconcept/rstool/examples/sample-rsform-session.json`                   |
-| Sample model export       | `rsconcept/rstool/examples/sample-rsmodel-session.json`                  |
+| Area                      | Path                                                            |
+| ------------------------- | --------------------------------------------------------------- |
+| Analyzer                  | `rsconcept/domain/src/rslang/semantic/analyzer.ts`              |
+| RSForm analysis entry     | `rsconcept/domain/src/library/rsform-api.ts` (`getAnalysisFor`) |
+| rstool analysis adapter   | `rsconcept/rstool/src/mappers/schema-adapter.ts`                |
+| rstool evaluation adapter | `rsconcept/rstool/src/mappers/model-adapter.ts`                 |
+| Domain evaluator          | `rsconcept/domain/src/library/rsengine.ts`                      |
+| Tests                     | `rsconcept/rstool/src/models/rstool-agent.test.ts` (colocated)  |
+| Sample export             | `rsconcept/rstool/examples/sample-rsform-session.json`          |
+| Sample model export       | `rsconcept/rstool/examples/sample-rsmodel-session.json`         |
 
 ## Sample session shape
 

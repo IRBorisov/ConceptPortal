@@ -1,6 +1,6 @@
-import { EvalStatus } from '@/domain/library';
-import { type ExpressionType, TypeID, type Value } from '@/domain/rslang';
-import { VALUE_FALSE } from '@/domain/rslang/eval/value';
+import { EvalStatus } from '@rsconcept/domain/library';
+import { type ExpressionType, TypeID, type Value } from '@rsconcept/domain/rslang';
+import { VALUE_FALSE } from '@rsconcept/domain/rslang/eval/value';
 
 import { APP_COLORS } from '@/styling/colors';
 
