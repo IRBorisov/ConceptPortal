@@ -3,9 +3,9 @@
 import { useEffect, useEffectEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { useTx } from '@/i18n';
 import { type Constituenta, CstType } from '@rsconcept/domain/library';
 import { generateAlias, removeAliasReference } from '@rsconcept/domain/library/rsform-api';
-import { useTx } from '@/i18n';
 
 import { type UnsavedSaveHandler, urls, useConceptNavigation, useUnsavedChanges } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';

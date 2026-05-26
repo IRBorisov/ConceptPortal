@@ -5,8 +5,8 @@ import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
-import { type RSForm } from '@rsconcept/domain/library/rsform';
 import { useTx } from '@/i18n';
+import { type RSForm } from '@rsconcept/domain/library/rsform';
 
 import { RefsInput } from '@/features/rsform/components/refs-input/refs-input';
 

@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 
-import { type LibraryItemReference } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type LibraryItemReference } from '@rsconcept/domain/library';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';

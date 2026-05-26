@@ -39,6 +39,8 @@ jobs:
         run: npm ci
       - name: Typecheck
         run: npm run typecheck -w @rsconcept/domain
+      - name: Lint
+        run: npm run lint -w @rsconcept/domain
       - name: Test
         run: npm test -w @rsconcept/domain
       - name: Build

@@ -2,8 +2,8 @@
 
 import { useEffect, useEffectEvent, useState } from 'react';
 
-import { NodeType, type Operation, OperationType } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { NodeType, type Operation, OperationType } from '@rsconcept/domain/library';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';

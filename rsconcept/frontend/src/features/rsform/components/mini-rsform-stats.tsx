@@ -1,7 +1,7 @@
 'use client';
 
-import { type RSFormStats } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type RSFormStats } from '@rsconcept/domain/library';
 
 import {
   IconChild,

@@ -1,7 +1,7 @@
 'use client';
 
-import { type Block } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type Block } from '@rsconcept/domain/library';
 
 import { DropdownButton } from '@/components/dropdown';
 import { IconDestroy, IconEdit } from '@/components/icons';

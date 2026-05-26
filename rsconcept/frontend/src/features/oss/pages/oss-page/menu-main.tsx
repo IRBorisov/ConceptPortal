@@ -1,7 +1,7 @@
 'use client';
 
-import { LocationHead } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { LocationHead } from '@rsconcept/domain/library';
 
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth';

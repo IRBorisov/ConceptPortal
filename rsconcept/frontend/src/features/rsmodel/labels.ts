@@ -1,9 +1,9 @@
+import { globalTx } from '@/i18n';
 import { type BasicBinding, type BasicsContext, EvalStatus, type RSForm } from '@rsconcept/domain/library';
 import { type ExpressionType, printValue, TypeID, type TypePath, type Typification } from '@rsconcept/domain/rslang';
 import { TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE } from '@rsconcept/domain/rslang/eval/value';
 import { valueStub } from '@rsconcept/domain/rslang/eval/value-api';
 import { labelType } from '@rsconcept/domain/rslang/labels';
-import { globalTx } from '@/i18n';
 
 import { limits } from '@/utils/constants';
 import { concat, type Doc, group, indent, join, line, render, text } from '@/utils/text-printer';

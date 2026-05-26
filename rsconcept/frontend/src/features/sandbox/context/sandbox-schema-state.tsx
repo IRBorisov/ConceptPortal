@@ -3,10 +3,10 @@
 import { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { useTx } from '@/i18n';
 import { generateNominalLexeme } from '@rsconcept/domain/cctext/language-api';
 import { type Constituenta, CstType } from '@rsconcept/domain/library/rsform';
 import { generateAlias, removeAliasReference } from '@rsconcept/domain/library/rsform-api';
-import { useTx } from '@/i18n';
 
 import { type UnsavedSaveHandler, useConceptNavigation, useUnsavedChanges } from '@/app';
 import { type ConstituentaCreatedResponse, type CreateConstituentaDTO } from '@/features/rsform/backend/types';

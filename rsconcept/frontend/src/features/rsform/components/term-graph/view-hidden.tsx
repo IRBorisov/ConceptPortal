@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 
-import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
 
 import { MiniButton } from '@/components/control';
 import { IconDropArrow, IconDropArrowUp } from '@/components/icons';

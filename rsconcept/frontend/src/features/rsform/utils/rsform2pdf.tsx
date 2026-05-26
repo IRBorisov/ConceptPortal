@@ -2,9 +2,9 @@ import type { ReactNode } from 'react';
 import { IntlProvider, type IntlShape, useIntl } from 'react-intl';
 import { Link, pdf, Text, View } from '@react-pdf/renderer';
 
+import { type AppLocale, DEFAULT_LOCALE, getMessageMapForLocale } from '@/i18n';
 import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
 import { labelType } from '@rsconcept/domain/rslang/labels';
-import { type AppLocale, DEFAULT_LOCALE, getMessageMapForLocale } from '@/i18n';
 
 import { urls } from '@/app';
 

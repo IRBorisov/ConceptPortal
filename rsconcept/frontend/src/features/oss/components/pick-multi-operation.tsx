@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 
-import { type Operation } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type Operation } from '@rsconcept/domain/library';
 
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable } from '@/components/data-table';

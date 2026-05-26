@@ -1,7 +1,7 @@
 'use client';
 
-import { isInferrable } from '@rsconcept/domain/library/rsmodel-api';
 import { useTx } from '@/i18n';
+import { isInferrable } from '@rsconcept/domain/library/rsmodel-api';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';

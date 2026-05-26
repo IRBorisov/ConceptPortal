@@ -2,8 +2,8 @@
 
 import { useIntl } from 'react-intl';
 
-import { type VersionInfo } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type VersionInfo } from '@rsconcept/domain/library';
 
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';

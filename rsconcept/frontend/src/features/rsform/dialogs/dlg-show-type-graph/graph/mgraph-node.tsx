@@ -2,8 +2,8 @@
 
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 
-import { type TypificationNodeData } from '@rsconcept/domain/rslang';
 import { useTx } from '@/i18n';
+import { type TypificationNodeData } from '@rsconcept/domain/rslang';
 
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';

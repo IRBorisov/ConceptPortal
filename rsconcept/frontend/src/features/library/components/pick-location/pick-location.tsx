@@ -2,9 +2,9 @@
 
 import clsx from 'clsx';
 
+import { useTx } from '@/i18n';
 import { LocationHead } from '@rsconcept/domain/library';
 import { combineLocation } from '@rsconcept/domain/library/library-api';
-import { useTx } from '@/i18n';
 
 import { useAuth } from '@/features/auth';
 

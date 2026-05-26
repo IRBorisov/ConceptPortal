@@ -1,7 +1,7 @@
 'use client';
 
-import { type Constituenta } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type Constituenta } from '@rsconcept/domain/library';
 
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';

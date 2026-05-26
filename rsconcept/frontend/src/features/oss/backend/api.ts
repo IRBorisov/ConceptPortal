@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { type OssLayout } from '@rsconcept/domain/library';
 import { globalTx } from '@/i18n';
+import { type OssLayout } from '@rsconcept/domain/library';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';

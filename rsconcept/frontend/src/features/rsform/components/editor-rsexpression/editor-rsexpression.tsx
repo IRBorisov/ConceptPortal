@@ -4,12 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
+import { useTx } from '@/i18n';
 import { type Constituenta, CstStatus, type RSForm } from '@rsconcept/domain/library';
 import { getAnalysisFor, inferStatus } from '@rsconcept/domain/library/rsform-api';
 import { buildTree, flattenAst } from '@rsconcept/domain/parsing';
 import { type AnalysisFull, type ExpressionType, type RSErrorDescription, TokenID } from '@rsconcept/domain/rslang';
 import { rslangParser } from '@rsconcept/domain/rslang';
-import { useTx } from '@/i18n';
 
 import { type HelpTopic } from '@/features/help';
 import {

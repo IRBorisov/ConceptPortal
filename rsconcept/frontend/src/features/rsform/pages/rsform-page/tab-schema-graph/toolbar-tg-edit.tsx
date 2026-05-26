@@ -1,8 +1,8 @@
 'use client';
 
+import { useTx } from '@/i18n';
 import { type Graph } from '@rsconcept/domain/graph/graph';
 import { type LibraryItemReference } from '@rsconcept/domain/library';
-import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';

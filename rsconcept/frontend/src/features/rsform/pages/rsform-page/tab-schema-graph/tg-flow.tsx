@@ -15,8 +15,8 @@ import {
 } from '@xyflow/react';
 import clsx from 'clsx';
 
-import { addAliasReference } from '@rsconcept/domain/library/rsform-api';
 import { useTx } from '@/i18n';
+import { addAliasReference } from '@rsconcept/domain/library/rsform-api';
 
 import { useConceptNavigation } from '@/app';
 

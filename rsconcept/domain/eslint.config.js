@@ -1,10 +1,7 @@
 import globals from 'globals';
 import typescriptPlugin from 'typescript-eslint';
 import typescriptParser from '@typescript-eslint/parser';
-import reactPlugin from 'eslint-plugin-react';
-import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
-import playwright from 'eslint-plugin-playwright';
 
 const basicRules = {
   'no-console': 'off',
@@ -34,19 +31,17 @@ const basicRules = {
 };
 
 export default [
-  reactHooksPlugin.configs.flat.recommended,
   ...typescriptPlugin.configs.recommendedTypeChecked,
   ...typescriptPlugin.configs.stylisticTypeChecked,
   {
     ignores: [
       '**/parser.ts',
+      '**/parser.terms.ts',
       '**/node_modules/**',
-      '**/public/**',
       '**/dist/**',
-      'vite.config.ts',
       'vitest.config.ts',
-      'eslint.config.js',
-      'playwright.config.ts'
+      'tsup.config.ts',
+      'eslint.config.js'
     ]
   },
   {
@@ -55,67 +50,33 @@ export default [
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
-        globals: { ...globals.browser, ...globals.es2020, ...globals.jest },
-        project: ['./tsconfig.json', './tsconfig.vite.json', './tsconfig.playwright.json'],
+        globals: { ...globals.node, ...globals.es2020 },
+        project: ['./tsconfig.json'],
         tsconfigRootDir: import.meta.dirname
       }
     }
   },
   {
-    files: ['src/**/*.ts', 'src/**/*.tsx'],
+    files: ['src/**/*.ts'],
     plugins: {
-      'react': reactPlugin,
-      'react-hooks': reactHooksPlugin,
       'simple-import-sort': simpleImportSort
     },
-    settings: { react: { version: 'detect' } },
     rules: {
       ...basicRules,
       'simple-import-sort/imports': [
         'warn',
         {
           groups: [
-            // Node.js builtins.
             [
               '^(assert|buffer|child_process|cluster|console|constants|crypto|dgram|dns|domain|events|fs|http|https|module|net|os|path|punycode|querystring|readline|repl|stream|string_decoder|sys|timers|tls|tty|url|util|vm|zlib|freelist|v8|process|async_hooks|http2|perf_hooks)(/.*|$)'
             ],
-            // Packages. `react` related packages come first.
-            ['^react', '^@?\\w'],
-            // Domain packages
-            ['^(@rsconcept/domain|@/i18n|@/services)(/.*|$)'],
-            // Global app and features
-            ['^(@/app|@/features)(/.*|$)'],
-            // Internal packages.
-            ['^(@)(/.*|$)'],
-            // Side effect imports.
+            ['^@?\\w'],
             ['^\\u0000'],
-            // Parent imports. Put `..` last.
             ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
-            // Other relative imports. Put same-folder imports and `.` last.
-            ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
-            // Style imports.
-            ['^.+\\.s?css$']
+            ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$']
           ]
         }
-      ],
-
-      ...reactHooksPlugin.configs.recommended.rules
-    }
-  },
-  {
-    ...playwright.configs['flat/recommended'],
-
-    files: ['tests/**/*.ts'],
-
-    plugins: {
-      'playwright': playwright,
-      'simple-import-sort': simpleImportSort
-    },
-
-    rules: {
-      ...basicRules,
-      ...playwright.configs['flat/recommended'].rules,
-      'simple-import-sort/imports': 'warn'
+      ]
     }
   }
 ];

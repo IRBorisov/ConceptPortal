@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 
-import { type FolderNode } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type FolderNode } from '@rsconcept/domain/library';
 
 import { MiniButton } from '@/components/control';
 import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '@/components/icons';

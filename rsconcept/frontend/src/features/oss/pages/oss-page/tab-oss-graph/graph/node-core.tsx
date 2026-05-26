@@ -3,8 +3,8 @@
 import { type NodeProps } from '@xyflow/react';
 import clsx from 'clsx';
 
-import { OperationType } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { OperationType } from '@rsconcept/domain/library';
 
 import { IconConsolidation, IconRSForm } from '@/components/icons';
 import { cn } from '@/components/utils';

@@ -2,8 +2,8 @@
 
 import { useForm } from '@tanstack/react-form';
 
-import { CstType } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { CstType } from '@rsconcept/domain/library';
 
 import { MiniButton } from '@/components/control';
 import { Checkbox } from '@/components/input';

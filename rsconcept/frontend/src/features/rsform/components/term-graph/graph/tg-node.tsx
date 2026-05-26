@@ -3,10 +3,10 @@
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 import clsx from 'clsx';
 
+import { useTx } from '@/i18n';
 import { type Constituenta } from '@rsconcept/domain/library';
 import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 import { labelType } from '@rsconcept/domain/rslang/labels';
-import { useTx } from '@/i18n';
 
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { APP_COLORS } from '@/styling/colors';

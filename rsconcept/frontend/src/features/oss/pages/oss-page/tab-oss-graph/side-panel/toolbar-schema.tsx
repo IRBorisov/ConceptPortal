@@ -1,8 +1,8 @@
 'use client';
 
+import { useTx } from '@/i18n';
 import { type Constituenta, CstType, type RSForm } from '@rsconcept/domain/library';
 import { generateAlias } from '@rsconcept/domain/library/rsform-api';
-import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';

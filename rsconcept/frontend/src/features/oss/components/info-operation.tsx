@@ -2,8 +2,8 @@
 
 import { createColumnHelper } from '@tanstack/react-table';
 
-import { type CstSubstituteInfo, type Operation, OperationType } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type CstSubstituteInfo, type Operation, OperationType } from '@rsconcept/domain/library';
 
 import { DataTable } from '@/components/data-table';
 import { IconPageRight } from '@/components/icons';

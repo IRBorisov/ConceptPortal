@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 
-import { type Block } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type Block } from '@rsconcept/domain/library';
 
 import { IconConceptBlock } from '@/components/icons';
 import { globalIDs } from '@/utils/constants';

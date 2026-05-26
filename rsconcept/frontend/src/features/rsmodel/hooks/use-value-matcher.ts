@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
-import { type RSEngine } from '@rsconcept/domain/library';
 import { ValueMatcher } from '@/services/search';
+import { type RSEngine } from '@rsconcept/domain/library';
 
 import { PARAMETER } from '@/utils/constants';
 

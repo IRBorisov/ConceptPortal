@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 
-import { CstStatus } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { CstStatus } from '@rsconcept/domain/library';
 
 import { cn } from '@/components/utils';
 import { globalIDs } from '@/utils/constants';

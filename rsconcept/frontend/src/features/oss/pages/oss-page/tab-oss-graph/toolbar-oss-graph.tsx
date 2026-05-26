@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-import { NodeType } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { NodeType } from '@rsconcept/domain/library';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';

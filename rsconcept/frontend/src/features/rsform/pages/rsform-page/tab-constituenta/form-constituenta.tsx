@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useForm, useStore } from '@tanstack/react-form';
 import clsx from 'clsx';
 
+import { useTx } from '@/i18n';
 import { type Constituenta, CstType, type RSForm } from '@rsconcept/domain/library';
 import {
   canHaveManualTypification,
@@ -15,7 +16,6 @@ import {
 } from '@rsconcept/domain/library/rsform-api';
 import { type AnalysisFull, TypeID } from '@rsconcept/domain/rslang';
 import { labelType } from '@rsconcept/domain/rslang/labels';
-import { useTx } from '@/i18n';
 
 import { useRegisterUnsavedSave } from '@/app';
 import { HelpTopic } from '@/features/help';

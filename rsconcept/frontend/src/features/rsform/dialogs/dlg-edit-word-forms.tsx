@@ -2,11 +2,11 @@
 
 import { type SubmitEvent, useState } from 'react';
 
+import { useTx } from '@/i18n';
 import { Grammeme, type WordForm } from '@rsconcept/domain/cctext';
 import { Case } from '@rsconcept/domain/cctext/language';
 import { parseGrammemes } from '@rsconcept/domain/cctext/language-api';
 import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
-import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 

@@ -3,9 +3,9 @@ import { type Extension } from '@codemirror/state';
 import { hoverTooltip, type TooltipView } from '@codemirror/view';
 import clsx from 'clsx';
 
+import { globalTx } from '@/i18n';
 import { type EntityReference, type SyntacticReference } from '@rsconcept/domain/cctext';
 import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
-import { globalTx } from '@/i18n';
 
 import { findContainedNodes } from '@/utils/codemirror';
 import { appendBoldTextRow } from '@/utils/format';

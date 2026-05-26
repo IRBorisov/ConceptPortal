@@ -2,8 +2,8 @@
 
 import { useIntl } from 'react-intl';
 
-import { type LibraryItem } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type LibraryItem } from '@rsconcept/domain/library';
 
 import { useLabelUser } from '@/features/users';
 

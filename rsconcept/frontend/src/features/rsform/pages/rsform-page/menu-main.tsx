@@ -3,8 +3,8 @@
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
-import { AccessPolicy, LocationHead } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { AccessPolicy, LocationHead } from '@rsconcept/domain/library';
 
 import { useConceptNavigation, useUnsavedChanges } from '@/app';
 import { buildSchemaToModelQuery } from '@/app/navigation/cross-rs-query';

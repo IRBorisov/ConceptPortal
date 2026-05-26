@@ -2,9 +2,9 @@
 
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { useTx } from '@/i18n';
 import { type CstType, type RSForm } from '@rsconcept/domain/library';
 import { generateAlias, validateNewAlias } from '@rsconcept/domain/library/rsform-api';
-import { useTx } from '@/i18n';
 
 import { ModalForm } from '@/components/modal';
 import { useDialogsStore } from '@/stores/dialogs';

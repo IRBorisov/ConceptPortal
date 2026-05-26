@@ -2,8 +2,8 @@
 
 import { ReactFlowProvider } from '@xyflow/react';
 
-import { type RSForm } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type RSForm } from '@rsconcept/domain/library';
 
 import { useConceptNavigation } from '@/app';
 

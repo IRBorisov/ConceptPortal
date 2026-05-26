@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 
-import { type BasicBinding } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type BasicBinding } from '@rsconcept/domain/library';
 
 import { HelpTopic } from '@/features/help';
 

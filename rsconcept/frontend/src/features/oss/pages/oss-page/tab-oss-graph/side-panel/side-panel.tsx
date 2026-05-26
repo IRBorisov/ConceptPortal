@@ -4,8 +4,8 @@ import { Suspense, useEffect, useEffectEvent } from 'react';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
-import { NodeType, OperationType } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { NodeType, OperationType } from '@rsconcept/domain/library';
 
 import { MiniButton } from '@/components/control';
 import { IconClose } from '@/components/icons';

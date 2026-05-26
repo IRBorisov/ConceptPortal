@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 
-import { type AccessPolicy, type LibraryItem } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type AccessPolicy, type LibraryItem } from '@rsconcept/domain/library';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';

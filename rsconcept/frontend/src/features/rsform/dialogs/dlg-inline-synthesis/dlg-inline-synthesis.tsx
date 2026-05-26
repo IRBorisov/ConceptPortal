@@ -3,8 +3,8 @@
 import { Suspense, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { type RSForm, type Substitution } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type RSForm, type Substitution } from '@rsconcept/domain/library';
 
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
