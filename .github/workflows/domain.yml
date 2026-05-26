@@ -33,18 +33,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
-          cache-dependency-path: package-lock.json
-      - name: Install workspaces (root)
-        run: npm ci
+      - name: Install dependencies
+        working-directory: rsconcept/domain
+        run: npm install
       - name: Typecheck
-        run: npm run typecheck -w @rsconcept/domain
+        working-directory: rsconcept/domain
+        run: npm run typecheck
       - name: Lint
-        run: npm run lint -w @rsconcept/domain
+        working-directory: rsconcept/domain
+        run: npm run lint
       - name: Test
-        run: npm test -w @rsconcept/domain
+        working-directory: rsconcept/domain
+        run: npm test
       - name: Build
-        run: npm run build -w @rsconcept/domain
+        working-directory: rsconcept/domain
+        run: npm run build
   notify-failure:
     permissions: {}
     runs-on: ubuntu-latest
