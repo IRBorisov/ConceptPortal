@@ -23,14 +23,14 @@ The root entry (`@rsconcept/domain`) re-exports the most common names. Subpath i
 
 ## Contents
 
-| Subpath | Surface |
-|---------|---------|
-| `rslang` | Lezer parser, semantic analyzer, evaluator, calculator, type system, value system, error codes |
-| `library` | `RSForm`, `RSModel`, `RSEngine`, OSS, library item metadata, structure planner |
-| `graph` | Generic directed-graph utilities used for dependency tracking |
-| `parsing` | Lezer AST helpers shared by all parsers |
-| `cctext` | Russian/multilingual grammemes for concept-text references |
-| `shared` | `Branded<T>` types, FNV-1a hash, stub id generation |
+| Subpath   | Surface                                                                                        |
+| --------- | ---------------------------------------------------------------------------------------------- |
+| `rslang`  | Lezer parser, semantic analyzer, evaluator, calculator, type system, value system, error codes |
+| `library` | `RSForm`, `RSModel`, `RSEngine`, OSS, library item metadata, structure planner                 |
+| `graph`   | Generic directed-graph utilities used for dependency tracking                                  |
+| `parsing` | Lezer AST helpers shared by all parsers                                                        |
+| `cctext`  | Russian/multilingual grammemes for concept-text references                                     |
+| `shared`  | `Branded<T>` types, FNV-1a hash, stub id generation                                            |
 
 ## Build
 
@@ -39,6 +39,9 @@ npm run generate    # regenerates Lezer parser from rslang.grammar
 npm run build       # produces ./dist via tsup
 npm test            # vitest run
 npm run typecheck   # tsc --noEmit
+npm run lint        # ESLint (TypeScript; same core rules as frontend, no React)
+npm run lintFix     # ESLint --fix
+npm run format:check
 ```
 
 After editing `src/rslang/parser/rslang.grammar`, always run `npm run generate` before committing.

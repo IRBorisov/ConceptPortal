@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 
-import { LibraryItemType } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { LibraryItemType } from '@rsconcept/domain/library';
 
 import { IconOSS, IconRSForm, IconRSModel } from '@/components/icons';
 import { useValueTooltipStore } from '@/stores/value-tooltip';

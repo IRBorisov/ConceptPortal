@@ -2,8 +2,8 @@
 
 import clsx from 'clsx';
 
-import { type EvalStatus } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type EvalStatus } from '@rsconcept/domain/library';
 
 import { IconShowDataText } from '@/features/rsmodel/components/icon-show-data-text';
 

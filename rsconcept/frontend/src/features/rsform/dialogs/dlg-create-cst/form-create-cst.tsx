@@ -2,9 +2,9 @@
 
 import { type ReactNode, useState } from 'react';
 
+import { useTx } from '@/i18n';
 import { CstType, type RSForm } from '@rsconcept/domain/library';
 import { isBaseSet, isBasicConcept } from '@rsconcept/domain/library/rsform-api';
-import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';

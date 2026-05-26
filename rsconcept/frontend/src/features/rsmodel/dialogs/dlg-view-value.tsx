@@ -1,8 +1,8 @@
 'use client';
 
+import { useTx } from '@/i18n';
 import { type RSEngine } from '@rsconcept/domain/library';
 import { type TypePath, type Typification, type Value } from '@rsconcept/domain/rslang';
-import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 

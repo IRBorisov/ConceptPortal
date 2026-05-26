@@ -1,8 +1,8 @@
 'use client';
 
+import { useTx } from '@/i18n';
 import { type Constituenta } from '@rsconcept/domain/library';
 import { labelType } from '@rsconcept/domain/rslang/labels';
-import { useTx } from '@/i18n';
 
 import { TextURL } from '@/components/control';
 import { createColumnHelper, DataTable, type RowSelectionState, type VisibilityState } from '@/components/data-table';

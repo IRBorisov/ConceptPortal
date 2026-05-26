@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
-import { CstType } from '@rsconcept/domain/library/rsform';
 import { useTx } from '@/i18n';
 import { matchConstituenta } from '@/services/search';
+import { CstType } from '@rsconcept/domain/library/rsform';
 
 import { useConceptNavigation } from '@/app';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';

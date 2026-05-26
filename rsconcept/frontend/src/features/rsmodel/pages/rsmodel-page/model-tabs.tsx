@@ -3,10 +3,10 @@
 import { useEffect, useEffectEvent, useLayoutEffect, useRef, useSyncExternalStore } from 'react';
 import clsx from 'clsx';
 
+import { useTx } from '@/i18n';
 import { type Constituenta, type RSEngine } from '@rsconcept/domain/library';
 import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
 import { isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
-import { useTx } from '@/i18n';
 
 import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';

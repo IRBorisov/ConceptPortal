@@ -1,8 +1,8 @@
 'use client';
 
+import { useTx } from '@/i18n';
 import { type OperationSchema, type Substitution } from '@rsconcept/domain/library';
 import { SubstitutionValidator } from '@rsconcept/domain/library/oss-api';
-import { useTx } from '@/i18n';
 
 import { describeSubstitutionError } from '@/features/oss/labels';
 import { useRSForms } from '@/features/rsform/backend/use-rsforms';

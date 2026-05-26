@@ -2,8 +2,8 @@
 
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { type VersionInfo } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type VersionInfo } from '@rsconcept/domain/library';
 
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';

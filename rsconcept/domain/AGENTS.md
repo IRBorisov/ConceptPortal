@@ -25,6 +25,9 @@ Run from `rsconcept/domain`:
 - `npm run build` — produce `dist/` via tsup (ESM + `.d.ts` + sourcemaps)
 - `npm run typecheck` — `tsc --noEmit`
 - `npm test` — `vitest run`
+- `npm run lint` — ESLint (TypeScript rules aligned with frontend, no React)
+- `npm run lintFix` — ESLint with `--fix`
+- `npm run format` / `npm run format:check` — Prettier on `src/**/*.ts`
 
 Always run `npm run generate` after editing `rslang.grammar`. The build is reproduced as part of `npm run build`.
 

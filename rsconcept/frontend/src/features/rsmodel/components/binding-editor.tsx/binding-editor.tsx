@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
-import { type BasicBinding, DEFAULT_VALUE_TEXT } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 import { filterBindingByQuery } from '@/services/search';
+import { type BasicBinding, DEFAULT_VALUE_TEXT } from '@rsconcept/domain/library';
 
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';

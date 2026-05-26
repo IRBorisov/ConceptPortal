@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 
+import { useTx } from '@/i18n';
+import { matchConstituenta } from '@/services/search';
 import { Graph } from '@rsconcept/domain/graph/graph';
 import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
 import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
-import { useTx } from '@/i18n';
-import { matchConstituenta } from '@/services/search';
 
 import { createColumnHelper, DataTable, type RowSelectionState } from '@/components/data-table';
 import { SearchBar } from '@/components/input';

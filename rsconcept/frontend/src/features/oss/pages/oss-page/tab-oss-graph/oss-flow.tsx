@@ -5,10 +5,10 @@ import { toast } from 'react-toastify';
 import { type Connection, useReactFlow } from '@xyflow/react';
 import clsx from 'clsx';
 
+import { useTx } from '@/i18n';
 import { NodeType, OperationType } from '@rsconcept/domain/library';
 import { type Position2D } from '@rsconcept/domain/library';
 import { GRID_SIZE } from '@rsconcept/domain/library/oss-layout-api';
-import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 

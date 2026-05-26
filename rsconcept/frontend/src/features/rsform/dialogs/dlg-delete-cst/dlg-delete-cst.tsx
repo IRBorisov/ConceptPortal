@@ -2,8 +2,8 @@
 
 import { type SubmitEvent, useState } from 'react';
 
-import { type RSForm } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type RSForm } from '@rsconcept/domain/library';
 
 import { Checkbox } from '@/components/input';
 import { ModalForm } from '@/components/modal';

@@ -1,7 +1,7 @@
 'use client';
 
-import { CstType } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { CstType } from '@rsconcept/domain/library';
 
 import { useConceptNavigation, useUnsavedChanges } from '@/app';
 import { useAuth } from '@/features/auth';

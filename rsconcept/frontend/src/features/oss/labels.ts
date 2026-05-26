@@ -1,3 +1,4 @@
+import { globalTx } from '@/i18n';
 import {
   NodeType,
   OperationType,
@@ -5,7 +6,6 @@ import {
   type SubstitutionErrorDescription,
   SubstitutionErrorType
 } from '@rsconcept/domain/library';
-import { globalTx } from '@/i18n';
 
 
 const OPERATION_LABEL_LID: Record<OperationType, string> = {

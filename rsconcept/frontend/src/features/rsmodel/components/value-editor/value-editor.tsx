@@ -1,10 +1,10 @@
 'use client';
 
+import { useTx } from '@/i18n';
 import { type RSEngine } from '@rsconcept/domain/library';
 import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } from '@rsconcept/domain/rslang';
 import { convertPathToType } from '@rsconcept/domain/rslang/eval/value-api';
 import { type TypePath } from '@rsconcept/domain/rslang/semantic/typification';
-import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';
 import { DataTable } from '@/components/data-table';

@@ -2,9 +2,9 @@
 
 import { useForm, useStore } from '@tanstack/react-form';
 
+import { useTx } from '@/i18n';
 import { type RSForm } from '@rsconcept/domain/library';
 import { SubstitutionValidator } from '@rsconcept/domain/library/oss-api';
-import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { describeSubstitutionError } from '@/features/oss/labels';

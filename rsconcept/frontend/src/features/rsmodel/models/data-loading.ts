@@ -1,10 +1,10 @@
 import { toast } from 'react-toastify';
 
+import { globalTx } from '@/i18n';
 import { type BasicBinding } from '@rsconcept/domain/library';
 import { toBasicBinding, validateBasicBindingData, validateValueData } from '@rsconcept/domain/library/rsmodel-api';
 import { type Value } from '@rsconcept/domain/rslang';
 import { normalizeValue } from '@rsconcept/domain/rslang/eval/value-api';
-import { globalTx } from '@/i18n';
 
 /** Process binding data from string. */
 export function processBindingData(data: string): BasicBinding | null {

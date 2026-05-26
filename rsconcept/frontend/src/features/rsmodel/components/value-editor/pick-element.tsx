@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useDebounce } from 'use-debounce';
 
-import { type BasicBinding } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 import { filterBindingByQuery } from '@/services/search';
+import { type BasicBinding } from '@rsconcept/domain/library';
 
 import { DataTable, type IConditionalStyle } from '@/components/data-table';
 import { SearchBar, TextInput } from '@/components/input';

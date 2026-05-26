@@ -1,8 +1,8 @@
 'use client';
 
+import { useTx } from '@/i18n';
 import { type Constituenta } from '@rsconcept/domain/library';
 import { labelType } from '@rsconcept/domain/rslang/labels';
-import { useTx } from '@/i18n';
 
 import { BadgeConstituenta } from '@/features/rsform/components/badge-constituenta';
 import { BadgeEvaluation } from '@/features/rsmodel/components/badge-evaluation';

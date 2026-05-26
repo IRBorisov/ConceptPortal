@@ -1,7 +1,7 @@
 'use client';
 
-import { type Operation } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type Operation } from '@rsconcept/domain/library';
 
 import { ComboBox } from '@/components/input/combo-box';
 import { type Styling } from '@/components/props';

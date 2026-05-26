@@ -1,8 +1,8 @@
 'use client';
 
+import { useTx } from '@/i18n';
 import { type Constituenta, CstType, type RSForm } from '@rsconcept/domain/library';
 import { canProduceStructure } from '@rsconcept/domain/library/rsform-api';
-import { useTx } from '@/i18n';
 
 import { PillValueClass } from '@/features/rsform/components/pill-valueClass';
 

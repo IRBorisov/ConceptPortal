@@ -1,7 +1,7 @@
 'use client';
 
-import { type OperationInput, type OperationSchema, type OperationSynthesis } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { type OperationInput, type OperationSchema, type OperationSynthesis } from '@rsconcept/domain/library';
 
 import { Label } from '@/components/input';
 

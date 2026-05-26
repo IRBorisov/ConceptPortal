@@ -2,9 +2,9 @@
 
 import { useEffect, useEffectEvent, useState } from 'react';
 
+import { useTx } from '@/i18n';
 import { type Constituenta } from '@rsconcept/domain/library';
 import { calculateSchemaStats, isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
-import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';

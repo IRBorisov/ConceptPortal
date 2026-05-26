@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 
-import { type Constituenta } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
 import { matchConstituenta } from '@/services/search';
+import { type Constituenta } from '@rsconcept/domain/library';
 
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { SearchBar } from '@/components/input';

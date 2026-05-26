@@ -1,9 +1,9 @@
 'use client';
 
+import { useTx } from '@/i18n';
 import { type Constituenta } from '@rsconcept/domain/library';
 import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 import { labelType } from '@rsconcept/domain/rslang/labels';
-import { useTx } from '@/i18n';
 
 import { IconChild, IconCrucial } from '@/components/icons';
 import { cn } from '@/components/utils';

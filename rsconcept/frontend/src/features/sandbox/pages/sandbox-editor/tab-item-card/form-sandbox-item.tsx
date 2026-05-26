@@ -4,8 +4,8 @@ import { useEffect, useEffectEvent } from 'react';
 import { useIntl } from 'react-intl';
 import { useForm, useStore } from '@tanstack/react-form';
 
-import { LibraryItemType, type RSModel } from '@rsconcept/domain/library';
 import { useTx } from '@/i18n';
+import { LibraryItemType, type RSModel } from '@rsconcept/domain/library';
 
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useModelEdit } from '@/features/rsmodel/pages/rsmodel-page/model-edit-context';
