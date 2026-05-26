@@ -1,4 +1,4 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from 'tsdown';
 
 const entryFiles = [
   'src/index.ts',
@@ -26,9 +26,9 @@ export default defineConfig({
   dts: true,
   sourcemap: true,
   clean: true,
-  splitting: false,
   treeshake: false,
   target: 'es2022',
   outDir: 'dist',
-  external: ['@rsconcept/domain']
+  external: ['@rsconcept/domain'],
+  outExtensions: () => ({ js: '.js', dts: '.d.ts' })
 });

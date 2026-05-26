@@ -1,4 +1,4 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from 'tsdown';
 
 export default defineConfig({
   entry: ['src/index.ts', 'src/bin/server.ts'],
@@ -9,5 +9,6 @@ export default defineConfig({
   splitting: false,
   target: 'es2022',
   outDir: 'dist',
-  external: ['@modelcontextprotocol/sdk', '@rsconcept/rstool', '@rsconcept/domain']
+  external: ['@modelcontextprotocol/sdk', '@rsconcept/rstool', '@rsconcept/domain'],
+  outExtensions: () => ({ js: '.js', dts: '.d.ts' })
 });

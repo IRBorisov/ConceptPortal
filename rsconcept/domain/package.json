@@ -152,7 +152,7 @@
   ],
   "scripts": {
     "generate": "lezer-generator src/rslang/parser/rslang.grammar -o src/rslang/parser/parser.ts",
-    "build": "tsup",
+    "build": "tsdown",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
@@ -173,7 +173,7 @@
     "eslint-plugin-simple-import-sort": "^13.0.0",
     "globals": "^17.6.0",
     "prettier": "^3.8.3",
-    "tsup": "^8.5.0",
+    "tsdown": "^0.22.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.4",
     "vitest": "^4.1.5"

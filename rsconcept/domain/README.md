@@ -36,7 +36,7 @@ The root entry (`@rsconcept/domain`) re-exports the most common names. Subpath i
 
 ```bash
 npm run generate    # regenerates Lezer parser from rslang.grammar
-npm run build       # produces ./dist via tsup
+npm run build       # produces ./dist via tsdown
 npm test            # vitest run
 npm run typecheck   # tsc --noEmit
 npm run lint        # ESLint (TypeScript; same core rules as frontend, no React)

@@ -1,4 +1,4 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from 'tsdown';
 
 const entryFiles = [
   'src/index.ts',
@@ -60,8 +60,9 @@ export default defineConfig({
   dts: true,
   sourcemap: true,
   clean: true,
-  splitting: false,
   treeshake: false,
   target: 'es2022',
-  outDir: 'dist'
+  outDir: 'dist',
+  // package.json "exports" use .js / .d.ts (not tsdown's default .mjs / .d.mts for "type": "module")
+  outExtensions: () => ({ js: '.js', dts: '.d.ts' })
 });

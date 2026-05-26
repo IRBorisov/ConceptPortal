@@ -33,7 +33,7 @@ Run from the repo root (`@rsconcept/domain` comes from npm; workspaces: `fronten
 - Install: `npm install` (root)
 - Typecheck: `npm run typecheck -w @rsconcept/rstool`
 - Tests: `npm test -w @rsconcept/rstool`
-- Build: `npm run build -w @rsconcept/rstool` (tsup → `dist/`)
+- Build: `npm run build -w @rsconcept/rstool` (tsdown → `dist/`)
 - All packages (backend, domain, frontend, rstool): `powershell -File scripts/dev/RunTests.ps1` from repo root
 - Stdio wrapper (dev): `npm run wrapper -w @rsconcept/rstool` (uses `tsx`)
 - Stdio wrapper (built): `node ./rsconcept/rstool/dist/wrapper/stdio-wrapper.js` or `npx rstool-wrapper` once installed
@@ -41,7 +41,7 @@ Run from the repo root (`@rsconcept/domain` comes from npm; workspaces: `fronten
 
 ## Edit rules
 
-- Contract surface changes live in `src/models/` first (put request/response shapes in the matching entity file; add the method to `models/tool-contract.ts`); implement in `models/rstool-agent.ts` and wire stdio in `wrapper/stdio-wrapper.ts`. Re-export new types from `src/models/index.ts`. Update `tsup.config.ts` `entryFiles` when adding a new top-level module.
+- Contract surface changes live in `src/models/` first (put request/response shapes in the matching entity file; add the method to `models/tool-contract.ts`); implement in `models/rstool-agent.ts` and wire stdio in `wrapper/stdio-wrapper.ts`. Re-export new types from `src/models/index.ts`. Update `tsdown.config.ts` `entryFiles` when adding a new top-level module.
 - Analyzer / RSLang behavior: prefer changes in `@rsconcept/domain` (`rsconcept/domain/src/rslang/`) and adapt via `src/mappers/schema-adapter.ts` — do not fork language rules in rstool.
 - Evaluation / modeling: reuse `RSEngine`, `RSCalculator`, `rsmodel-api` from `@rsconcept/domain/library/*` via `src/mappers/model-adapter.ts`; keep interpretation in-memory unless backend persistence is explicitly added.
 - New or renamed public methods: update `METHODS` in `stdio-wrapper.ts`, tests, `README.md`, and the skill (see checklist below).

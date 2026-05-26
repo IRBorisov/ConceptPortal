@@ -40,7 +40,7 @@ export default [
       '**/node_modules/**',
       '**/dist/**',
       'vitest.config.ts',
-      'tsup.config.ts',
+      'tsdown.config.ts',
       'eslint.config.js'
     ]
   },

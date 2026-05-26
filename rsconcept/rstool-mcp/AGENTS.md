@@ -32,7 +32,7 @@ From the repo root:
 - **No business logic**: validation, error mapping, and session bookkeeping belong in `@rsconcept/rstool`. The adapter only marshals JSON.
 - **Permissive schemas**: prefer `additionalProperties: true` for structurally rich payloads; let rstool throw and surface the message through `isError: true` text content.
 - **Tool naming**: use `snake_case` for MCP tool names (idiomatic for MCP), even though the underlying rstool methods are camelCase.
-- **Shebang**: `src/bin/server.ts` must keep the `#!/usr/bin/env node` shebang at the top — `tsup` preserves it in the built bin.
+- **Shebang**: `src/bin/server.ts` must keep the `#!/usr/bin/env node` shebang at the top — `tsdown` preserves it in the built bin.
 
 ## Versioning
 

@@ -22,7 +22,7 @@ Applies to all files under `rsconcept/domain`. This package is the shared TypeSc
 Run from `rsconcept/domain`:
 
 - `npm run generate` — regenerate the Lezer parser from `src/rslang/parser/rslang.grammar`
-- `npm run build` — produce `dist/` via tsup (ESM + `.d.ts` + sourcemaps)
+- `npm run build` — produce `dist/` via [tsdown](https://tsdown.dev) (ESM + `.d.ts` + sourcemaps)
 - `npm run typecheck` — `tsc --noEmit`
 - `npm test` — `vitest run`
 - `npm run lint` — ESLint (TypeScript rules aligned with frontend, no React)
@@ -38,7 +38,7 @@ Always run `npm run generate` after editing `rslang.grammar`. The build is repro
 - Keep all language rules (grammar, parser, semantic analyzer, evaluator) in this package. Consumers must not fork them.
 - Function arg order changes: update all callsites (frontend, rstool, examples).
 - Barrel files (`src/index.ts`, sub-barrels): list **concrete** named re-exports. Do **not** use `export * from '...'`.
-- New subpath: also add an `"exports"` entry in `package.json` and an `entry` in `tsup.config.ts`.
+- New subpath: also add an `"exports"` entry in `package.json` and an `entry` in `tsdown.config.ts`.
 - Tests live colocated as `*.test.ts` next to the module they cover.
 
 ## Publishing

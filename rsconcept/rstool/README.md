@@ -59,7 +59,7 @@ This package is part of the [Concept Portal](https://github.com/IRBorisov/Concep
 - `npm install` — install all workspaces (`@rsconcept/domain`, `frontend`, `@rsconcept/rstool`)
 - `npm run typecheck -w @rsconcept/rstool`
 - `npm test -w @rsconcept/rstool`
-- `npm run build -w @rsconcept/rstool` — produce `dist/` via tsup
+- `npm run build -w @rsconcept/rstool` — produce `dist/` via tsdown
 - `npm run wrapper -w @rsconcept/rstool` — dev stdio wrapper via `tsx`
 - `npm run example:client -w @rsconcept/rstool`, `npm run example:build-schema -w @rsconcept/rstool`, `npm run example:build-rsmodel -w @rsconcept/rstool`
 
