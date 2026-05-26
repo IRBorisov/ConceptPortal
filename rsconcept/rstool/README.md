@@ -4,7 +4,7 @@ Agent-facing library for **incremental RSForm construction**, **RSLang expressio
 
 ## Agent skill
 
-RS language + rstool workflows for agents: `skills/rslang-rstool/` (`SKILL.md`, `REFERENCE.md`, `EXAMPLES.md`). The companion language reference in `docs/` (`DOMAIN.md`, `SYNTAX.md`, `TYPIFICATION.md`, `CONSTITUENTA.md`, `DIAGNOSTICS.md`, `PORTAL-API.md`, `GRAMMAR-REF.md`) is distilled from the Portal manuals and ships with the npm package, so standalone agents never need to read the Portal frontend source.
+RS language + rstool workflows for agents: `skills/rstool-helper/` (`SKILL.md`, `REFERENCE.md`, `EXAMPLES.md`). The companion language reference in `docs/` (`DOMAIN.md`, `SYNTAX.md`, `TYPIFICATION.md`, `CONSTITUENTA.md`, `DIAGNOSTICS.md`, `PORTAL-API.md`, `GRAMMAR-REF.md`) is distilled from the Portal manuals and ships with the npm package, so standalone agents never need to read the Portal frontend source.
 
 ## Install
 
@@ -124,16 +124,26 @@ The example:
 
 ## Installing the skill into an agent host
 
-The package ships the skill files in `skills/rslang-rstool/`. After install, copy or symlink them into your agent host's skill directory:
+The package ships the skill files in `skills/rstool-helper/`. After install, copy or symlink them into your agent host's skill directory:
 
 ```bash
 # Cursor (per-project skills)
-cp -r node_modules/@rsconcept/rstool/skills/rslang-rstool .agents/skills/rslang-rstool
+mkdir -p .agents/skills
+cp -r node_modules/@rsconcept/rstool/skills/rstool-helper .agents/skills/rstool-helper
+cp -r node_modules/@rsconcept/rstool/docs .agents/skills/rstool-helper/docs
 
 # Claude Code or other hosts: consult host-specific docs
 ```
 
-The skill defers to the bundled `docs/*.md` for language reference, so the install above is self-contained.
+PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force .agents/skills
+Copy-Item -Recurse -Force node_modules/@rsconcept/rstool/skills/rstool-helper .agents/skills/rstool-helper
+Copy-Item -Recurse -Force node_modules/@rsconcept/rstool/docs .agents/skills/rstool-helper/docs
+```
+
+The skill defers to the bundled `docs/*.md` for language reference. Copying both the skill and docs makes the installed agent skill self-contained.
 
 ## License
 

@@ -114,7 +114,7 @@ const server = buildRSToolMcpServer({ tool, name: 'my-rstool-mcp', version: '0.2
 
 ## Companion docs
 
-For RS language, the rstool contract, error codes, and common workflows, agents should read [`@rsconcept/rstool/docs`](https://www.npmjs.com/package/@rsconcept/rstool#agent-skill) and the bundled `rslang-rstool` skill that ships with `@rsconcept/rstool`.
+For RS language, the rstool contract, error codes, and common workflows, agents should read [`@rsconcept/rstool/docs`](https://www.npmjs.com/package/@rsconcept/rstool#agent-skill) and the bundled `rstool-helper` skill that ships with `@rsconcept/rstool`.
 
 ## License
 

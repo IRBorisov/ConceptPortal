@@ -6,7 +6,7 @@
   "author": "IRBorisov",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/IRBorisov/ConceptPortal.git",
+    "url": "git+https://github.com/IRBorisov/ConceptPortal",
     "directory": "rsconcept/rstool"
   },
   "homepage": "https://portal.acconcept.ru",
@@ -32,7 +32,7 @@
       "types": "./dist/wrapper/client.d.ts",
       "import": "./dist/wrapper/client.js"
     },
-    "./skills/rslang-rstool/*": "./skills/rslang-rstool/*",
+    "./skills/rstool-helper/*": "./skills/rstool-helper/*",
     "./docs/*": "./docs/*",
     "./package.json": "./package.json"
   },

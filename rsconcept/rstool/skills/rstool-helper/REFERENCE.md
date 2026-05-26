@@ -2,10 +2,10 @@
 
 ## rstool contract
 
-- Package: `rsconcept/rstool` (`@rsconcept/rstool`, private)
+- Package: `@rsconcept/rstool`
 - Contract version: `1.2.0` (`CONTRACT_VERSION`)
 - Core class: `RSToolAgent`
-- Types: `src/models/` (entity-split; `src/models/tool-contract.ts` holds `CONTRACT_VERSION` and `RSToolAgentContract`)
+- Public imports: `@rsconcept/rstool` and `@rsconcept/rstool/wrapper`
 
 ### Methods
 
@@ -67,7 +67,7 @@ Base/constant bindings use `type: "basic"` and `value: { "0": "label", … }`. S
 
 ### Stdio protocol
 
-Process: `npm run wrapper` → `tsx src/wrapper/stdio-wrapper.ts`
+Process: `npx rstool-wrapper`
 
 1. **Ready** (no request): `{"id":null,"ok":true,"result":{"ready":true,"wrapper":"rstool-stdio","contractVersion":"1.2.0"}}`
 2. **Request**: `{"id":"<unique>","method":"<name>","params":{...}}`
@@ -89,22 +89,20 @@ Example chain:
 {"id":"9","method":"evaluateConstituenta","params":{"sessionId":"…","input":{"constituentId":3}}}
 ```
 
-`RSToolWrapperClient`: spawns `npm run wrapper`, implements `waitUntilReady()`, `call(method, params)`, `close()`.
+`RSToolWrapperClient`: spawns `rstool-wrapper` by default and implements `waitUntilReady()`, `call(method, params)`, `close()`.
 
 ### Analysis result
 
 ```ts
 interface AnalysisResult {
   success: boolean;
-  type: Record<string, unknown> | null; // typification tree from frontend
+  type: Record<string, unknown> | null; // typification tree
   valueClass: 'value' | 'property' | null;
   diagnostics: { code: number; from: number; to: number; params?: string[] }[];
 }
 ```
 
 ## RS language — conceptual model
-
-From product domain (`CONTEXT.md`):
 
 - **Typification**: computed structure type from a formal definition; grades include elements (`Xi`, `Ci`), `Z`, tuples `(H1×…×Hn)`, sets `ℬ(H)`, logic `Logic`, parameterized `Hr 🠔 [H1,…,Hi]`.
 - **Term graph**: directed dependencies between constituenta via alias references in definitions.
@@ -126,7 +124,7 @@ From `rslang.grammar`:
 | Ops                    | `Pr`, `pr`, `Fi`, `card`, `bool`, `debool`, `red`          |
 | Literals               | digits, `Z`, `∅`                                           |
 
-Full grammar: `@rsconcept/domain/src/rslang/parser/rslang.grammar` (when installed from npm: `node_modules/@rsconcept/domain/src/rslang/parser/rslang.grammar`).
+Full grammar pointers and precedence notes: `docs/GRAMMAR-REF.md`.
 
 ## Help topic map (companion docs)
 
@@ -148,13 +146,11 @@ Standalone agents should consult the bundled distilled docs (`docs/*.md` inside 
 | Portal REST API                      | `docs/PORTAL-API.md`                       |
 | Grammar tokens / precedence          | `docs/GRAMMAR-REF.md`                      |
 
-For Portal contributors, the original in-app HTML help lives under `rsconcept/frontend/src/features/help/items/rslang/help-rslang-*` and is the source from which `docs/*.md` is distilled.
-
 ## Error codes (rstool-relevant)
 
 rstool re-exports `RSErrorCode.definitionNotAllowed` (`0x8862`) for base/constant violations.
 
-Full enum: `@rsconcept/domain/src/rslang/error.ts` (`RSErrorCode`). Categories and per-code fix guidance: `docs/DIAGNOSTICS.md`.
+Categories and per-code fix guidance: `docs/DIAGNOSTICS.md`.
 
 Categories:
 
@@ -164,19 +160,10 @@ Categories:
 - `0x886x` — constituent-level (empty derived, definition not allowed)
 - `0x81xx` — evaluation (runtime; returned by `evaluateExpression` / `evaluateConstituenta`)
 
-## Source map for code changes
+## Exported session shape
 
-| Area                      | Path                                                            |
-| ------------------------- | --------------------------------------------------------------- |
-| Analyzer                  | `rsconcept/domain/src/rslang/semantic/analyzer.ts`              |
-| RSForm analysis entry     | `rsconcept/domain/src/library/rsform-api.ts` (`getAnalysisFor`) |
-| rstool analysis adapter   | `rsconcept/rstool/src/mappers/schema-adapter.ts`                |
-| rstool evaluation adapter | `rsconcept/rstool/src/mappers/model-adapter.ts`                 |
-| Domain evaluator          | `rsconcept/domain/src/library/rsengine.ts`                      |
-| Tests                     | `rsconcept/rstool/src/models/rstool-agent.test.ts` (colocated)  |
-| Sample export             | `rsconcept/rstool/examples/sample-rsform-session.json`          |
-| Sample model export       | `rsconcept/rstool/examples/sample-rsmodel-session.json`         |
+`exportSession(sessionId)` returns a JSON string with `{ contractVersion, state, diagnostics }`.
 
-## Sample session shape
-
-After `npm run example:build-schema`, export contains `state.items[]` each with `alias`, `cstType`, `definitionFormal`, and nested `analysis`, plus `state.model.items[]` when values are set — use as a golden pattern for agent-generated JSON.
+- `state.items[]` contains each constituent with `id`, `alias`, `cstType`, `definitionFormal`, optional text fields, and nested analysis output.
+- `state.model.items[]` is present when interpretation values have been set.
+- `diagnostics[]` contains accumulated diagnostics with offsets and codes.

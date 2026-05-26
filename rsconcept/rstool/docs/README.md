@@ -12,4 +12,4 @@ Standalone English reference distilled from the Portal manuals and `CONTEXT.md`.
 | [`PORTAL-API.md`](PORTAL-API.md) | You need to fetch an existing RSForm/OSS/RSModel from the live Portal REST API. |
 | [`GRAMMAR-REF.md`](GRAMMAR-REF.md) | You need a compact token / precedence table; the full grammar lives in `@rsconcept/domain`. |
 
-For the rstool agent contract itself (methods, types, stdio protocol) see [`../skills/rslang-rstool/REFERENCE.md`](../skills/rslang-rstool/REFERENCE.md).
+For the rstool agent contract itself (methods, types, stdio protocol) see [`../skills/rstool-helper/REFERENCE.md`](../skills/rstool-helper/REFERENCE.md).

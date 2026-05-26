@@ -46,10 +46,6 @@ npm run format:check
 
 After editing `src/rslang/parser/rslang.grammar`, always run `npm run generate` before committing.
 
-## Server-side mirrors
-
-Some helpers in this package are duplicated in the Concept Portal Django backend (`api_RSLanguage.py`, `graph.py`, `SemanticInfo.py`). Those Python mirrors implement a narrow subset for ORM-level operations and are maintained separately. Parsing and evaluation only run in TypeScript.
-
 ## License
 
 MIT

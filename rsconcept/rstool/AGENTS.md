@@ -16,15 +16,15 @@ Applies to all files under `rsconcept/rstool`.
 - `examples/` — runnable agent workflows and sample session JSON; colocate `*.test.ts` with the example they cover (e.g. `examples/kinship/x1-actions.test.ts`)
 - `docs/` — distilled agent-facing language reference (domain, syntax, typification, constituenta, diagnostics, portal API, grammar pointers)
 - `README.md` — setup, stdio protocol, scripts
-- `skills/rslang-rstool/` — **versioned** agent skill (source of truth in git)
+- `skills/rstool-helper/` — **versioned** agent skill (source of truth in git)
 
 Agent-facing docs (keep in sync with contract changes):
 
-- `skills/rslang-rstool/SKILL.md` — primary skill entry
-- `skills/rslang-rstool/REFERENCE.md` — API, stdio, error codes
-- `skills/rslang-rstool/EXAMPLES.md` — worked examples and pitfalls
+- `skills/rstool-helper/SKILL.md` — primary skill entry
+- `skills/rstool-helper/REFERENCE.md` — API, stdio, error codes
+- `skills/rstool-helper/EXAMPLES.md` — worked examples and pitfalls
 
-After editing the skill, update the duplicate under `.agents/skills/rslang-rstool/` in the same change set (see `skills/README.md`).
+After editing the skill, update the duplicate under `.agents/skills/rstool-helper/` in the same change set (see `skills/README.md`).
 
 ## Commands
 
@@ -73,10 +73,10 @@ Whenever you change the **agent contract** (not internal refactors), update docu
 - [ ] `src/mappers/model-adapter.ts` (when evaluation/modeling behavior changes)
 - [ ] `src/models/rstool-agent.test.ts` (and any new colocated `*.test.ts`)
 - [ ] `README.md` (methods list, examples, contract version if documented)
-- [ ] `skills/rslang-rstool/SKILL.md` — workflow, `cstType` table, triggers if behavior changed
-- [ ] `skills/rslang-rstool/REFERENCE.md` — method table, types, stdio examples, version string
-- [ ] `skills/rslang-rstool/EXAMPLES.md` — if examples or common mistakes changed
-- [ ] `.agents/skills/rslang-rstool/` — same edits as `skills/rslang-rstool/` (keep copies identical)
+- [ ] `skills/rstool-helper/SKILL.md` — workflow, `cstType` table, triggers if behavior changed
+- [ ] `skills/rstool-helper/REFERENCE.md` — method table, types, stdio examples, version string
+- [ ] `skills/rstool-helper/EXAMPLES.md` — if examples or common mistakes changed
+- [ ] `.agents/skills/rstool-helper/` — same edits as `skills/rstool-helper/` (keep copies identical)
 - [ ] `examples/*.ts` and sample JSON under `examples/` when the happy path changes
 
 **Language-only changes** (grammar, new `RSErrorCode` in domain, help text): update skill only if agents need new guidance (operators, declaration order, diagnostic handling). Reference `REFERENCE.md` help map and `rsconcept/domain/src/rslang/error.ts`; do not duplicate full grammar in the skill.

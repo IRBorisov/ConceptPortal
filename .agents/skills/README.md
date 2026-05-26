@@ -2,9 +2,9 @@
 
 Skills in this folder are **versioned in git** and loaded by Cursor from `.agents/skills/<name>/SKILL.md`.
 
-## `rslang-rstool` (duplicate copy)
+## `rstool-helper` (duplicate copy)
 
-Also lives at `rsconcept/rstool/skills/rslang-rstool/`. **Keep both copies identical** when editing (same PR / change set). Agents and humans should update both paths; do not let them drift.
+Also lives at `rsconcept/rstool/skills/rstool-helper/`. **Keep both copies identical** when editing (same PR / change set). Agents and humans should update both paths; do not let them drift.
 
 ## Other skills
 

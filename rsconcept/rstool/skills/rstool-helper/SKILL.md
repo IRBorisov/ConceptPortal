@@ -1,6 +1,6 @@
 ---
-name: rslang-rstool
-description: RS language/rsconcept/rstool for AI agents—incremental RSForm construction, formal definitions, typification, diagnostics, modeling, evaluation.
+name: rstool-helper
+description: RS language and @rsconcept/rstool for AI agents: incremental RSForm construction, formal definitions, typification, diagnostics, modeling, evaluation.
 ---
 
 # RS Language & rstool — Compact Guide for Agents
@@ -9,9 +9,37 @@ description: RS language/rsconcept/rstool for AI agents—incremental RSForm con
 
 **rstool** is the agent API for sessions, upserts, analysis, diagnostics, modeling/evaluation, (de)serialization.
 
-- Library: `@rsconcept/rstool` (npm) — also vendored in this repo at `rsconcept/rstool`
-- Analyzer: `@rsconcept/domain` (shared between rstool and the Portal frontend)
-- Domain glossary: `docs/DOMAIN.md` (English) / `CONTEXT.md` (Russian, canonical)
+- Library: `@rsconcept/rstool` (npm)
+- Analyzer: `@rsconcept/domain` (installed automatically as a dependency)
+- Language and API reference: bundled `docs/*.md` copied into this skill during installation
+
+## Installing This Skill
+
+After installing the package in an agent project:
+
+```bash
+npm install @rsconcept/rstool
+```
+
+copy the skill into your agent host's skill directory.
+
+Cursor per-project skills:
+
+```bash
+mkdir -p .agents/skills
+cp -R node_modules/@rsconcept/rstool/skills/rstool-helper .agents/skills/rstool-helper
+cp -R node_modules/@rsconcept/rstool/docs .agents/skills/rstool-helper/docs
+```
+
+PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force .agents/skills
+Copy-Item -Recurse -Force node_modules/@rsconcept/rstool/skills/rstool-helper .agents/skills/rstool-helper
+Copy-Item -Recurse -Force node_modules/@rsconcept/rstool/docs .agents/skills/rstool-helper/docs
+```
+
+This makes the skill self-contained for hosts that only read files under the skill directory.
 
 ## Docs/Hints Reference
 
@@ -26,9 +54,9 @@ description: RS language/rsconcept/rstool for AI agents—incremental RSForm con
 | Diagnostic code → fix table               | `docs/DIAGNOSTICS.md`                                             |
 | Portal REST API (live data)               | `docs/PORTAL-API.md`                                              |
 | Lezer grammar pointers                    | `docs/GRAMMAR-REF.md` (full grammar lives in `@rsconcept/domain`) |
-| Code samples                              | `rsconcept/rstool/examples/`, `rsconcept/rstool/README.md`        |
+| Code samples                              | [EXAMPLES.md](EXAMPLES.md), package README                        |
 
-If you installed `@rsconcept/rstool` from npm, the same `docs/*.md` ship inside `node_modules/@rsconcept/rstool/docs/`.
+If you installed `@rsconcept/rstool` from npm, the source docs ship inside `node_modules/@rsconcept/rstool/docs/`; the install commands above copy them into this skill folder.
 
 ## Protocol Summary
 
@@ -45,7 +73,7 @@ If you installed `@rsconcept/rstool` from npm, the same `docs/*.md` ship inside 
 **Clients**:
 
 - Node: use `RSToolWrapperClient`
-- Stdio process: `npm run wrapper` — JSON per line
+- Stdio process: `npx rstool-wrapper` — JSON per line
 
 ## API/REST
 
@@ -54,7 +82,6 @@ For full reference see `docs/PORTAL-API.md`. Short form:
 - **Portal UI**: `https://portal.acconcept.ru`
 - **API**: `https://api.portal.acconcept.ru`
 - Endpoints: `GET /api/rsforms/{id}`, `GET /api/rsforms/{id}/details`, `GET /api/library/{id}/versions/{v}`, `GET /api/oss/{id}`, `GET /api/models/{id}`, OpenAPI at `GET /schema`.
-- Local: paths `/api/...`, base from `VITE_PORTAL_BACKEND`.
 - Don't scrape SPA or use UI query params (`tab=`, etc.).
 - rstool itself never calls the REST API; bring data in via `addOrUpdateConstituenta` after fetching.
 
@@ -83,7 +110,7 @@ For full reference see `docs/PORTAL-API.md`. Short form:
 - **Locals**: `x`, `ξ`, `μ2`
 - **Literals**: `42`, `Z`, `∅`
 - Full operator + precedence table: `docs/SYNTAX.md`
-- Grammar source: `@rsconcept/domain/src/rslang/parser/rslang.grammar` (token pointers: `docs/GRAMMAR-REF.md`)
+- Grammar pointers: `docs/GRAMMAR-REF.md`
 
 ## Expression Types
 
@@ -98,7 +125,7 @@ Always set `cstType` in upserts/analysis to true role.
 
 1. Check `analysis.success`
 2. If not, see `analysis.diagnostics` / `listDiagnostics`
-3. Map `code` → cause → fix via `docs/DIAGNOSTICS.md` (or `getRSErrorPrefix` from `@rsconcept/domain`)
+3. Map `code` → cause → fix via `docs/DIAGNOSTICS.md`
 4. Use `from`, `to` to patch `definitionFormal`; re-send
 
 Don’t infer types—always read tool output.
