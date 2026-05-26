@@ -16,14 +16,14 @@ Applies to all files under `rsconcept/rstool-mcp`. The package is a **thin adapt
 
 ## Commands
 
-From the repo root:
+From `rsconcept/rstool-mcp` (`@rsconcept/rstool` comes from npm unless you `npm link` a local build):
 
 - Install: `npm install`
-- Typecheck: `npm run typecheck -w @rsconcept/rstool-mcp`
-- Tests: `npm test -w @rsconcept/rstool-mcp`
-- Build: `npm run build -w @rsconcept/rstool-mcp`
-- Run (dev): `npm run start -w @rsconcept/rstool-mcp`
-- Run (built bin): `node ./rsconcept/rstool-mcp/dist/bin/server.js` or `npx rstool-mcp`
+- Typecheck: `npm run typecheck`
+- Tests: `npm test`
+- Build: `npm run build`
+- Run (dev): `npm run start`
+- Run (built bin): `node dist/bin/server.js` or `npx rstool-mcp`
 
 ## Edit rules
 
@@ -37,5 +37,5 @@ From the repo root:
 ## Versioning
 
 - `CONTRACT_VERSION` lives in `@rsconcept/rstool`; bump there for contract changes.
-- This package's `package.json` `version` follows its own semver; bump on tool catalog changes or transport-level changes.
+- This package's `package.json` `version` follows its own semver; bump on tool catalog changes or transport-level changes. Release steps: `PUBLISHING.md`.
 - `@rsconcept/rstool` is pinned with a `^` range — bumping the rstool version requires re-running tests and updating the smoke test if tool names changed.

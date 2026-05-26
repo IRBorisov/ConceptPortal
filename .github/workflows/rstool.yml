@@ -6,16 +6,12 @@ on:
     paths:
       - rsconcept/rstool/**
       - rsconcept/domain/**
-      - package.json
-      - package-lock.json
       - .github/workflows/rstool.yml
   pull_request:
     branches: ["main"]
     paths:
       - rsconcept/rstool/**
       - rsconcept/domain/**
-      - package.json
-      - package-lock.json
       - .github/workflows/rstool.yml
 
 permissions:
@@ -36,15 +32,19 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-          cache-dependency-path: package-lock.json
-      - name: Install workspaces (root)
+          cache-dependency-path: rsconcept/rstool/package-lock.json
+      - name: Install dependencies
+        working-directory: rsconcept/rstool
         run: npm ci
       - name: Typecheck rstool
-        run: npm run typecheck -w @rsconcept/rstool
+        working-directory: rsconcept/rstool
+        run: npm run typecheck
       - name: Test rstool
-        run: npm test -w @rsconcept/rstool
+        working-directory: rsconcept/rstool
+        run: npm test
       - name: Build rstool
-        run: npm run build -w @rsconcept/rstool
+        working-directory: rsconcept/rstool
+        run: npm run build
   notify-failure:
     permissions: {}
     runs-on: ubuntu-latest

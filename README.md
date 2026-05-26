@@ -15,14 +15,14 @@
 
 **Concept Portal** is a web application for editing RSForm schemas. The UI is built with React (Vite); the API runs on Django.
 
-The repository is an **npm workspaces monorepo** for the Portal app and agent packages, plus a standalone domain package in `rsconcept/domain`:
+The repository groups several **independently installable** npm packages (each has its own `package.json` and `package-lock.json`):
 
-| Path / workspace       | npm package                                                            | What it is                                                                                                   |
+| Path                   | npm package                                                            | What it is                                                                                                   |
 | ---------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `rsconcept/domain`     | [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) | Shared TypeScript domain. Developed in-repo; **frontend and rstool install it from npm** (`^1.0.0`).         |
-| `rsconcept/frontend`   | (internal workspace)                                                   | The Portal Vite/React SPA. Depends on `@rsconcept/domain` from the registry.                                 |
-| `rsconcept/rstool`     | [`@rsconcept/rstool`](rsconcept/rstool)                                | Agent-facing library and stdio wrapper. Published to npm, depends on `@rsconcept/domain` from the registry.  |
-| `rsconcept/rstool-mcp` | [`@rsconcept/rstool-mcp`](rsconcept/rstool-mcp)                        | Model Context Protocol (MCP) adapter over `@rsconcept/rstool` for Cursor / Claude Desktop. Published to npm. |
+| `rsconcept/domain`     | [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) | Shared TypeScript domain. Developed in-repo; **frontend and rstool install it from npm** (`^1.0.0`). [Publishing](rsconcept/domain/PUBLISHING.md) |
+| `rsconcept/frontend`   | `frontend` (private)                                                   | The Portal Vite/React SPA. Depends on `@rsconcept/domain` from the registry.                                 |
+| `rsconcept/rstool`     | [`@rsconcept/rstool`](rsconcept/rstool)                                | Agent-facing library and stdio wrapper. [Publishing](rsconcept/rstool/PUBLISHING.md) |
+| `rsconcept/rstool-mcp` | [`@rsconcept/rstool-mcp`](rsconcept/rstool-mcp)                        | MCP adapter over `@rsconcept/rstool`. [Publishing](rsconcept/rstool-mcp/PUBLISHING.md) |
 
 External agents can use rstool standalone: `npm install @rsconcept/rstool`. For MCP-capable hosts, use `npm install -g @rsconcept/rstool-mcp` and point your client at the `rstool-mcp` bin. See [`rsconcept/rstool/README.md`](rsconcept/rstool/README.md) and [`rsconcept/rstool-mcp/README.md`](rsconcept/rstool-mcp/README.md).
 
@@ -36,26 +36,24 @@ Before you open a pull request:
 - Rely on GitHub Actions for linting and CI builds on push.
 - Use the [commit conventions](#commit-conventions) below in commit messages.
 
-## Monorepo basics
+## npm packages (independent installs)
 
-From the repo root:
-
-```bash
-npm install                                    # install workspaces + @rsconcept/domain from npm
-npm run typecheck                              # typecheck workspace packages
-npm test                                       # test workspace packages
-npm run build                                  # build workspace packages
-```
-
-Domain package (separate install in `rsconcept/domain`):
+Install and run commands **inside each package directory** (or use `scripts/dev/*.ps1` from the repo root on Windows):
 
 ```bash
-cd rsconcept/domain && npm install
-npm run generate                               # after editing rslang.grammar
-npm run build && npm test
+cd rsconcept/domain && npm ci && npm test && npm run build
+cd rsconcept/frontend && npm ci && npm test && npm run build
+cd rsconcept/rstool && npm ci && npm test && npm run build
+cd rsconcept/rstool-mcp && npm ci && npm test && npm run build
 ```
 
-To try unpublished domain changes with frontend or rstool before a release: `npm run build` in `rsconcept/domain`, then `npm link` there and `npm link @rsconcept/domain` in the consumer workspace.
+Domain grammar regeneration (after editing `rslang.grammar`):
+
+```bash
+cd rsconcept/domain && npm run generate
+```
+
+To try unpublished domain or rstool changes before a release: `npm run build` in the source package, then `npm link` there and `npm link @rsconcept/domain` (or `@rsconcept/rstool`) in the consumer package directory.
 
 ## Frontend (Vite + React + TypeScript)
 
@@ -133,7 +131,7 @@ Prefix commits with a short type marker:
 
 **Prerequisites:** Docker Desktop, Python 3.12, [uv](https://docs.astral.sh/uv/), Node.js, and VS Code (or another IDE that can use `.vscode/launch.json`).
 
-1. Run the setup script (installs frontend, rstool, and backend dependencies):
+1. Run the setup script (installs domain, frontend, rstool, rstool-mcp, and backend dependencies):
 
    ```powershell
    .\scripts\dev\LocalDevSetup.ps1
@@ -210,102 +208,12 @@ docker compose -f docker-compose-prod.yml up --build -d
 bash scripts/prod/UpdateProd.sh
 ```
 
-## Publishing to npm (manual)
+## Publishing npm libraries
 
-`@rsconcept/domain`, `@rsconcept/rstool`, and `@rsconcept/rstool-mcp` are published manually from a local checkout. CI does **not** publish; it only typechecks, tests, and builds. Run releases from a clean `main` with a clean working tree.
+`@rsconcept/domain`, `@rsconcept/rstool`, and `@rsconcept/rstool-mcp` are published manually from this repo (CI does not publish). Per-package guides:
 
-### One-time setup
+- [Domain](rsconcept/domain/PUBLISHING.md)
+- [RSTool](rsconcept/rstool/PUBLISHING.md)
+- [RSTool MCP](rsconcept/rstool-mcp/PUBLISHING.md)
 
-1. Be a member of the `@rsconcept` npm scope with publish rights.
-2. Log in once on the machine you publish from:
-
-   ```bash
-   npm login
-   ```
-
-   (or set `NPM_TOKEN` and use `npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN` in CI-like environments).
-
-3. Verify access:
-
-   ```bash
-   npm whoami
-   npm access list packages @rsconcept
-   ```
-
-### Release checklist
-
-For the package you are releasing:
-
-1. **Sync `main`** and make sure the tree is clean: `git status`.
-2. **Install** dependencies:
-   - `@rsconcept/domain` (not a root workspace): `cd rsconcept/domain && npm install`
-   - `@rsconcept/rstool` / `@rsconcept/rstool-mcp`: from repo root, `npm install` (refreshes the root lockfile)
-3. **Test + typecheck + build** the target package:
-
-   ```bash
-   cd rsconcept/domain && npm run typecheck && npm test && npm run build
-   ```
-
-   Workspace packages (from repo root):
-
-   ```bash
-   npm run typecheck -w @rsconcept/rstool && npm test -w @rsconcept/rstool && npm run build -w @rsconcept/rstool
-   # or
-   npm run typecheck -w @rsconcept/rstool-mcp && npm test -w @rsconcept/rstool-mcp && npm run build -w @rsconcept/rstool-mcp
-   ```
-
-   When publishing `@rsconcept/rstool`, build `@rsconcept/domain` first (`cd rsconcept/domain && npm run build`) so the consumed `dist/` is fresh—or publish a new domain version and bump the pin in `rsconcept/rstool/package.json`. When publishing `@rsconcept/rstool-mcp`, ensure both domain and rstool are built or published as needed.
-
-4. **Bump the version** in the target `package.json`. Use semver:
-   - patch: bug fixes / internal refactors
-   - minor: additive, backwards-compatible changes
-   - major: breaking changes (also bump `CONTRACT_VERSION` for rstool)
-
-   ```bash
-   cd rsconcept/domain && npm version patch
-   # or from repo root: npm version 1.2.0 -w @rsconcept/rstool
-   ```
-
-   This creates a commit and a git tag `v<version>` in that package directory; rename the tag if you maintain per-package tags (e.g. `git tag domain-v1.0.0 && git tag -d v1.0.0`).
-
-5. **Dry-run** the publish to inspect the tarball contents:
-
-   ```bash
-   cd rsconcept/domain && npm publish --dry-run --access public
-   # or from repo root: npm publish --dry-run -w @rsconcept/rstool --access public
-   ```
-
-   Verify that only `dist/`, `src/`, `README.md`, `LICENSE`, etc. are included (per the package's `files` array). Bail out and fix `.npmignore` / `files` if anything sensitive leaks.
-
-6. **Publish**:
-
-   ```bash
-   cd rsconcept/domain && npm publish --access public
-   # or from repo root: npm publish -w @rsconcept/rstool --access public
-   ```
-
-   First-time publication of a scoped public package requires `--access public`; subsequent releases inherit it.
-
-7. **Push** the version-bump commit + tag(s):
-
-   ```bash
-   git push && git push --tags
-   ```
-
-8. **Smoke-test** the published artifact in a throwaway folder:
-
-   ```bash
-   mkdir /tmp/rstool-smoke && cd /tmp/rstool-smoke
-   npm init -y && npm install @rsconcept/rstool
-   node -e "import('@rsconcept/rstool').then(m => console.log(Object.keys(m)))"
-   ```
-
-### Order of releases
-
-Dependencies form a chain: `@rsconcept/domain` → `@rsconcept/rstool` → `@rsconcept/rstool-mcp` (each pinned with a `^` range on the previous). When you change something low in the chain, publish from the bottom up:
-
-1. Publish `@rsconcept/domain`.
-2. Bump the `^` pin in `rsconcept/rstool/package.json` `dependencies."@rsconcept/domain"`, run install + tests, publish `@rsconcept/rstool`.
-3. Bump the `^` pin in `rsconcept/rstool-mcp/package.json` `dependencies."@rsconcept/rstool"`, run install + tests, publish `@rsconcept/rstool-mcp`.
-
-You can stop at any step if the higher-level packages don't need the change.
+When dependencies change, release in order: **domain → rstool → rstool-mcp**.

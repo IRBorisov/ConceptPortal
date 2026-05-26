@@ -1,0 +1,49 @@
+name: RSTool MCP CI
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - rsconcept/rstool-mcp/**
+      - rsconcept/rstool/**
+      - rsconcept/domain/**
+      - .github/workflows/rstool-mcp.yml
+  pull_request:
+    branches: ["main"]
+    paths:
+      - rsconcept/rstool-mcp/**
+      - rsconcept/rstool/**
+      - rsconcept/domain/**
+      - .github/workflows/rstool-mcp.yml
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    strategy:
+      matrix:
+        node-version: [24.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: rsconcept/rstool-mcp/package-lock.json
+      - name: Install dependencies
+        working-directory: rsconcept/rstool-mcp
+        run: npm ci
+      - name: Typecheck
+        working-directory: rsconcept/rstool-mcp
+        run: npm run typecheck
+      - name: Test
+        working-directory: rsconcept/rstool-mcp
+        run: npm test
+      - name: Build
+        working-directory: rsconcept/rstool-mcp
+        run: npm run build

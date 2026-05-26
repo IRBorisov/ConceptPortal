@@ -5,15 +5,11 @@ on:
     branches: ["main"]
     paths:
       - rsconcept/domain/**
-      - package.json
-      - package-lock.json
       - .github/workflows/domain.yml
   pull_request:
     branches: ["main"]
     paths:
       - rsconcept/domain/**
-      - package.json
-      - package-lock.json
       - .github/workflows/domain.yml
 
 permissions:
@@ -33,9 +29,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: rsconcept/domain/package-lock.json
       - name: Install dependencies
         working-directory: rsconcept/domain
-        run: npm install
+        run: npm ci
       - name: Typecheck
         working-directory: rsconcept/domain
         run: npm run typecheck

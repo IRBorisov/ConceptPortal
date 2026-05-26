@@ -52,16 +52,20 @@ await client.close();
 - Deterministic diagnostics and export/import for reproducible agent workflows.
 - Library API + stdio JSON wrapper as the only supported transports (MCP adapter lives in [`@rsconcept/rstool-mcp`](../rstool-mcp/)).
 
+## Publishing
+
+Maintainers: see [PUBLISHING.md](./PUBLISHING.md) for npm release steps.
+
 ## Repo scripts
 
-This package is part of the [Concept Portal](https://github.com/IRBorisov/ConceptPortal) npm workspaces. From the repo root:
+From `rsconcept/rstool` (or run `powershell -File scripts/dev/LocalDevSetup.ps1` from the repo root on Windows):
 
-- `npm install` — install all workspaces (`@rsconcept/domain`, `frontend`, `@rsconcept/rstool`)
-- `npm run typecheck -w @rsconcept/rstool`
-- `npm test -w @rsconcept/rstool`
-- `npm run build -w @rsconcept/rstool` — produce `dist/` via tsdown
-- `npm run wrapper -w @rsconcept/rstool` — dev stdio wrapper via `tsx`
-- `npm run example:client -w @rsconcept/rstool`, `npm run example:build-schema -w @rsconcept/rstool`, `npm run example:build-rsmodel -w @rsconcept/rstool`
+- `npm install` / `npm ci`
+- `npm run typecheck`
+- `npm test`
+- `npm run build` — produce `dist/` via tsdown
+- `npm run wrapper` — dev stdio wrapper via `tsx`
+- `npm run example:client`, `npm run example:build-schema`, `npm run example:build-rsmodel`
 
 ## Stdio protocol
 
@@ -107,7 +111,7 @@ Example response:
 Run:
 
 ```bash
-npm run example:client -w @rsconcept/rstool
+npm run example:client
 ```
 
 File: [`examples/agent-client.ts`](examples/agent-client.ts)

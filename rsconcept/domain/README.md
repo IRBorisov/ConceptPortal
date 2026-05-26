@@ -46,6 +46,10 @@ npm run format:check
 
 After editing `src/rslang/parser/rslang.grammar`, always run `npm run generate` before committing.
 
+## Publishing
+
+Maintainers: see [PUBLISHING.md](./PUBLISHING.md) for npm release steps.
+
 ## License
 
 MIT

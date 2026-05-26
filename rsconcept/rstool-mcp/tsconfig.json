@@ -10,14 +10,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "declaration": true,
-    "types": ["node"],
-    "baseUrl": ".",
-    "paths": {
-      "@rsconcept/domain": ["../domain/src/index.ts"],
-      "@rsconcept/domain/*": ["../domain/src/*"],
-      "@rsconcept/rstool": ["../rstool/src/index.ts"],
-      "@rsconcept/rstool/*": ["../rstool/src/*"]
-    }
+    "types": ["node"]
   },
   "include": ["src/**/*.ts"]
 }

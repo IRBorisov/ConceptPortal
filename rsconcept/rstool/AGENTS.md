@@ -28,16 +28,16 @@ After editing the skill, update the duplicate under `.agents/skills/rstool-helpe
 
 ## Commands
 
-Run from the repo root (`@rsconcept/domain` comes from npm; workspaces: `frontend`, `@rsconcept/rstool`, `@rsconcept/rstool-mcp`):
+Run from `rsconcept/rstool` (`@rsconcept/domain` comes from npm unless you `npm link` a local build):
 
-- Install: `npm install` (root)
-- Typecheck: `npm run typecheck -w @rsconcept/rstool`
-- Tests: `npm test -w @rsconcept/rstool`
-- Build: `npm run build -w @rsconcept/rstool` (tsdown → `dist/`)
-- All packages (backend, domain, frontend, rstool): `powershell -File scripts/dev/RunTests.ps1` from repo root
-- Stdio wrapper (dev): `npm run wrapper -w @rsconcept/rstool` (uses `tsx`)
-- Stdio wrapper (built): `node ./rsconcept/rstool/dist/wrapper/stdio-wrapper.js` or `npx rstool-wrapper` once installed
-- Examples: `npm run example:client -w @rsconcept/rstool`, `npm run example:build-schema -w @rsconcept/rstool`, `npm run example:build-rsmodel -w @rsconcept/rstool`; other scripts under `examples/` as added to `package.json`
+- Install: `npm install`
+- Typecheck: `npm run typecheck`
+- Tests: `npm test`
+- Build: `npm run build` (tsdown → `dist/`)
+- All packages (backend, domain, frontend, rstool, rstool-mcp): `powershell -File scripts/dev/RunTests.ps1` from repo root
+- Stdio wrapper (dev): `npm run wrapper` (uses `tsx`)
+- Stdio wrapper (built): `node dist/wrapper/stdio-wrapper.js` or `npx rstool-wrapper` once installed
+- Examples: `npm run example:client`, `npm run example:build-schema`, `npm run example:build-rsmodel`; other scripts under `examples/` as added to `package.json`
 
 ## Edit rules
 
@@ -85,5 +85,5 @@ Whenever you change the **agent contract** (not internal refactors), update docu
 
 - Bump `CONTRACT_VERSION` in `src/models/tool-contract.ts` for breaking agent-visible changes.
 - Mention the new version in `REFERENCE.md` and anywhere the skill quotes `1.0.0` explicitly.
-- `package.json` `version` is the npm-published semver; bump per release (`prepublishOnly` runs `npm run build`).
+- `package.json` `version` is the npm-published semver; bump per release (`prepublishOnly` runs `npm run build`). Release steps: `PUBLISHING.md`.
 - The `@rsconcept/domain` pin is a `^` range; bumping the domain version requires re-testing and may require a contract bump too.

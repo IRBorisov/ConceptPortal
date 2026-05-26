@@ -43,6 +43,6 @@ Always run `npm run generate` after editing `rslang.grammar`. The build is repro
 
 ## Publishing
 
-- Public package `@rsconcept/domain` on npm.
+- Public package `@rsconcept/domain` on npm; release steps in `PUBLISHING.md`.
 - Bump `version` in `package.json` per semver. Breaking changes for **any** consumer (frontend or rstool) require a major bump.
 - `prepublishOnly` runs `npm run build`; only `dist/`, `src/`, `README.md`, and `LICENSE` are shipped.

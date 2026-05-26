@@ -4,12 +4,14 @@ $backend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\backend"
 $domain = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\domain"
 $frontend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\frontend"
 $rstool = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\rstool"
+$rstoolMcp = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\rstool-mcp"
 
 function RunTests() {
   TestBackend
   TestDomain
   TestFrontend
   TestRstool
+  TestRstoolMcp
 }
 
 function TestBackend() {
@@ -34,6 +36,12 @@ function TestFrontend() {
 
 function TestRstool() {
   Set-Location $rstool
+  & npm run typecheck
+  & npm test
+}
+
+function TestRstoolMcp() {
+  Set-Location $rstoolMcp
   & npm run typecheck
   & npm test
 }
