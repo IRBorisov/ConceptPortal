@@ -1,10 +1,16 @@
-# Project agent skills (Cursor)
+# Project agent skills
 
-Skills in this folder are **versioned in git** and loaded by Cursor from `.agents/skills/<name>/SKILL.md`.
+Skills in this folder are versioned in git. Each host loads `SKILL.md` from its configured project skills path (here: `.agents/skills/<name>/SKILL.md`).
 
-## `rstool-helper` (duplicate copy)
+## `rstool-helper`
 
-Also lives at `rsconcept/rstool/skills/rstool-helper/`. **Keep both copies identical** when editing (same PR / change set). Agents and humans should update both paths; do not let them drift.
+Entry skill only (`.agents/skills/rstool-helper/SKILL.md`). Canonical content:
+
+- `rsconcept/rstool/skills/rstool-helper/GUIDE.md` — start here
+- `rsconcept/rstool/skills/rstool-helper/REFERENCE.md`, `EXAMPLES.md`
+- `rsconcept/rstool/docs/*.md`
+
+npm consumers install a different entry stub from `@rsconcept/rstool` — see `rsconcept/rstool/skills/INSTALL.md`.
 
 ## Other skills
 

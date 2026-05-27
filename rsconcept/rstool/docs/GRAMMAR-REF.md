@@ -1,79 +1,79 @@
 # Grammar reference (pointers)
 
-The full Lezer grammar ships inside `@rsconcept/domain` at `node_modules/@rsconcept/domain/src/rslang/parser/rslang.grammar`. The generated parser is `parser.ts` in the same folder. Below is a compact token map agents can use without opening the grammar.
+Below is a compact token map agents can use without opening the grammar. For full grammar see `@rsconcept/domain` package.
 
 ## Token classes
 
-| Class | Tokens / examples |
-|-------|-------------------|
-| Whitespace | space, tab, newline |
-| Integer literal | `0`, `42` |
-| Empty set | `∅` |
-| Integer set | `Z` |
-| Globals | `X#`, `C#`, `S#`, `D#`, `F#`, `P#`, `A#`, `T#`, `N#`, `R#` |
-| Locals | `x`, `ξ`, `μ2`, `y1` |
-| Punctuation | `(`, `)`, `[`, `]`, `{`, `}`, `,`, `;` |
-| Comment | none — RSLang has no comments inside formal expressions |
+| Class           | Tokens / examples                                          |
+| --------------- | ---------------------------------------------------------- |
+| Whitespace      | space, tab, newline                                        |
+| Integer literal | `0`, `42`                                                  |
+| Empty set       | `∅`                                                        |
+| Integer set     | `Z`                                                        |
+| Globals         | `X#`, `C#`, `S#`, `D#`, `F#`, `P#`, `A#`, `T#`, `N#`, `R#` |
+| Locals          | `x`, `ξ`, `μ2`, `y1`                                       |
+| Punctuation     | `(`, `)`, `[`, `]`, `{`, `}`, `,`, `;`                     |
+| Comment         | none — RSLang has no comments inside formal expressions    |
 
 ## Set / structural operators
 
-| Token | Symbol |
-|-------|--------|
-| Union | `∪` |
-| Intersection | `∩` |
-| Difference | `\` |
-| Symmetric difference | `∆` |
-| Cartesian product | `×` |
-| Boolean | `ℬ` |
-| Sum set | `red` |
-| Singleton | `bool` |
-| Desingleton | `debool` |
-| Small projection | `pr1`, `pr1,3`, … |
-| Large projection | `Pr1`, `Pr2,4`, … |
-| Filter | `Fi1[D](S)`, `Fi1,2[D](S)` |
-| Cardinality | `card` |
+| Token                | Symbol                     |
+| -------------------- | -------------------------- |
+| Union                | `∪`                        |
+| Intersection         | `∩`                        |
+| Difference           | `\`                        |
+| Symmetric difference | `∆`                        |
+| Cartesian product    | `×`                        |
+| Boolean              | `ℬ`                        |
+| Sum set              | `red`                      |
+| Singleton            | `bool`                     |
+| Desingleton          | `debool`                   |
+| Small projection     | `pr1`, `pr1,3`, …          |
+| Large projection     | `Pr1`, `Pr2,4`, …          |
+| Filter               | `Fi1[D](S)`, `Fi1,2[D](S)` |
+| Cardinality          | `card`                     |
 
 ## Predicates
 
-| Token | Symbol |
-|-------|--------|
-| Membership | `∈` |
-| Non-membership | `∉` |
-| Inclusion | `⊆` |
-| Strict inclusion | `⊂` |
-| Non-inclusion | `⊄` |
-| Equality | `=` |
-| Inequality | `≠` |
-| Less | `<` |
-| Less-or-equal | `≤` |
-| Greater | `>` |
-| Greater-or-equal | `≥` |
+| Token            | Symbol |
+| ---------------- | ------ |
+| Membership       | `∈`    |
+| Non-membership   | `∉`    |
+| Inclusion        | `⊆`    |
+| Strict inclusion | `⊂`    |
+| Non-inclusion    | `⊄`    |
+| Equality         | `=`    |
+| Inequality       | `≠`    |
+| Less             | `<`    |
+| Less-or-equal    | `≤`    |
+| Greater          | `>`    |
+| Greater-or-equal | `≥`    |
 
 ## Logical connectives
 
-| Token | Symbol |
-|-------|--------|
-| Negation | `¬` |
-| Conjunction | `&` |
-| Disjunction | `∨` |
-| Implication | `⇒` |
-| Equivalence | `⇔` |
+| Token       | Symbol |
+| ----------- | ------ |
+| Negation    | `¬`    |
+| Conjunction | `&`    |
+| Disjunction | `∨`    |
+| Implication | `⇒`    |
+| Equivalence | `⇔`    |
 
 ## Quantifiers
 
-| Token | Symbol |
-|-------|--------|
-| Universal | `∀` |
-| Existential | `∃` |
+| Token       | Symbol |
+| ----------- | ------ |
+| Universal   | `∀`    |
+| Existential | `∃`    |
 
 ## Declarators
 
-| Token | Form |
-|-------|------|
-| Function declaration | `F# ::= [<params>] <body STE>` |
-| Predicate declaration | `P# ::= [<params>] <body LE>` |
+| Token                 | Form                                              |
+| --------------------- | ------------------------------------------------- |
+| Function declaration  | `F# ::= [<params>] <body STE>`                    |
+| Predicate declaration | `P# ::= [<params>] <body LE>`                     |
 | Parameter declaration | `α ∈ <STE>` (commas separate; commas inside `[]`) |
-| Function call | `F#[<arg1>, <arg2>, …]` |
+| Function call         | `F#[<arg1>, <arg2>, …]`                           |
 
 ## Precedence (from highest to lowest)
 

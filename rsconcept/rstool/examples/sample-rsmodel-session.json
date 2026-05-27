@@ -1,13 +1,13 @@
 {
   "contractVersion": "1.2.0",
   "state": {
-    "sessionId": "8359513a-3d62-4f0a-b980-b0a33f63ff49",
-    "createdAt": "2026-05-20T10:35:40.100Z",
-    "updatedAt": "2026-05-20T10:35:40.130Z",
+    "sessionId": "3026929f-c091-4bed-8fb7-fffd913c49bd",
+    "createdAt": "2026-05-27T07:22:37.637Z",
+    "updatedAt": "2026-05-27T07:22:37.665Z",
     "revisions": [
       {
-        "revisionId": "5846ca66-62c0-4c81-8056-46bc8310a61e",
-        "at": "2026-05-20T10:35:40.130Z",
+        "revisionId": "af453320-14f6-4ea8-abd2-f03201cec00d",
+        "at": "2026-05-27T07:22:37.665Z",
         "message": "Built sample RSModel"
       }
     ],
@@ -59,12 +59,12 @@
       },
       {
         "id": 3,
-        "alias": "D1",
-        "cstType": "term",
-        "definitionFormal": "X1×X1",
+        "alias": "S1",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X1×X1)",
+        "convention": "Pairs (parent, child) over X1.",
         "term": "",
         "definitionText": "",
-        "convention": "",
         "analysis": {
           "success": true,
           "type": {
@@ -89,6 +89,27 @@
       },
       {
         "id": 4,
+        "alias": "D1",
+        "cstType": "term",
+        "definitionFormal": "Pr1(S1)",
+        "term": "",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
         "alias": "A1",
         "cstType": "axiom",
         "definitionFormal": "1=1",
@@ -123,6 +144,17 @@
             "1": "one",
             "2": "two"
           }
+        },
+        {
+          "id": 3,
+          "type": "ℬ(X1×X1)",
+          "value": [
+            [
+              -111,
+              0,
+              1
+            ]
+          ]
         }
       ]
     }

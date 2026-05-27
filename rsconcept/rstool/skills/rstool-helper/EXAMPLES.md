@@ -6,6 +6,10 @@ Install first:
 npm install @rsconcept/rstool
 ```
 
+## Kinship-lite: structure vs term
+
+`S1` carries **typification** `ℬ(X1×X1)` (pairs over people); `D1` is a **definition** `Pr1(S1)` (parents). Do not put `X1×X1` on a `term` — that is the full Cartesian product.
+
 ## In-process
 
 ```ts
@@ -19,9 +23,20 @@ tool.addOrUpdateConstituenta(sessionId, {
   draft: { id: 1, alias: 'X1', cstType: CstType.BASE, definitionFormal: '' }
 });
 
-// Term referencing base
+// Structure: typification of parent–child pairs (undefined; convention in real schemas)
+tool.addOrUpdateConstituenta(sessionId, {
+  draft: {
+    id: 2,
+    alias: 'S1',
+    cstType: CstType.STRUCTURED,
+    definitionFormal: 'ℬ(X1×X1)',
+    convention: 'Elements are (parent, child) pairs with parent, child ∈ X1.'
+  }
+});
+
+// Term: derived definition — first projection of S1
 const { state, diagnostics } = tool.addOrUpdateConstituenta(sessionId, {
-  draft: { id: 2, alias: 'D1', cstType: CstType.TERM, definitionFormal: 'X1×X1' }
+  draft: { id: 3, alias: 'D1', cstType: CstType.TERM, definitionFormal: 'Pr1(S1)' }
 });
 
 console.log(state.analysis.success, diagnostics.length);
@@ -32,7 +47,7 @@ tool.analyzeExpression(sessionId, {
   cstType: CstType.TERM
 }); // success: false, syntax diagnostics
 
-// Set base binding and evaluate a term
+// Set base binding and evaluate a scratch arithmetic term
 tool.setConstituentaValue(sessionId, {
   target: 1,
   value: { 0: 'zero', 1: 'one' }
@@ -60,11 +75,21 @@ await client.call('addOrUpdateConstituenta', {
     draft: { id: 1, alias: 'X1', cstType: CstType.BASE, definitionFormal: '' }
   }
 });
-
 await client.call('addOrUpdateConstituenta', {
   sessionId,
   input: {
-    draft: { id: 2, alias: 'D1', cstType: CstType.TERM, definitionFormal: 'X1×X1' }
+    draft: {
+      id: 2,
+      alias: 'S1',
+      cstType: CstType.STRUCTURED,
+      definitionFormal: 'ℬ(X1×X1)'
+    }
+  }
+});
+await client.call('addOrUpdateConstituenta', {
+  sessionId,
+  input: {
+    draft: { id: 3, alias: 'D1', cstType: CstType.TERM, definitionFormal: 'Pr1(S1)' }
   }
 });
 
@@ -92,8 +117,9 @@ Use the returned `sessionId` in subsequent lines:
 
 ```json
 { "id": "2", "method": "addOrUpdateConstituenta", "params": { "sessionId": "...", "input": { "draft": { "id": 1, "alias": "X1", "cstType": "basic", "definitionFormal": "" } } } }
-{ "id": "3", "method": "addOrUpdateConstituenta", "params": { "sessionId": "...", "input": { "draft": { "id": 2, "alias": "D1", "cstType": "term", "definitionFormal": "X1×X1" } } } }
-{ "id": "4", "method": "listDiagnostics", "params": { "sessionId": "..." } }
+{ "id": "3", "method": "addOrUpdateConstituenta", "params": { "sessionId": "...", "input": { "draft": { "id": 2, "alias": "S1", "cstType": "structure", "definitionFormal": "ℬ(X1×X1)" } } } }
+{ "id": "4", "method": "addOrUpdateConstituenta", "params": { "sessionId": "...", "input": { "draft": { "id": 3, "alias": "D1", "cstType": "term", "definitionFormal": "Pr1(S1)" } } } }
+{ "id": "5", "method": "listDiagnostics", "params": { "sessionId": "..." } }
 ```
 
 ## Export a small RSForm session
@@ -111,10 +137,19 @@ tool.addOrUpdateConstituenta(sessionId, {
   draft: { id: 2, alias: 'C1', cstType: CstType.CONSTANT, definitionFormal: '' }
 });
 tool.addOrUpdateConstituenta(sessionId, {
-  draft: { id: 3, alias: 'D1', cstType: CstType.TERM, definitionFormal: 'X1×X1' }
+  draft: {
+    id: 3,
+    alias: 'S1',
+    cstType: CstType.STRUCTURED,
+    definitionFormal: 'ℬ(X1×X1)',
+    convention: 'Pairs (parent, child) over X1.'
+  }
 });
 tool.addOrUpdateConstituenta(sessionId, {
-  draft: { id: 4, alias: 'A1', cstType: CstType.AXIOM, definitionFormal: '1=1' }
+  draft: { id: 4, alias: 'D1', cstType: CstType.TERM, definitionFormal: 'Pr1(S1)' }
+});
+tool.addOrUpdateConstituenta(sessionId, {
+  draft: { id: 5, alias: 'A1', cstType: CstType.AXIOM, definitionFormal: '1=1' }
 });
 
 const payload = tool.exportSession(sessionId);
@@ -123,6 +158,10 @@ console.log(payload);
 
 ## Model and evaluation
 
+Full kinship modeling (`S1` values as tuples, `Pr1(S1)`, …): `examples/build-kinship-rsmodel.ts`.
+
+Minimal evaluation after bindings:
+
 ```ts
 tool.setConstituentaValue(sessionId, {
   target: 1,
@@ -130,7 +169,7 @@ tool.setConstituentaValue(sessionId, {
 });
 
 const evaluated = tool.evaluateConstituenta(sessionId, {
-  constituentId: 3
+  constituentId: 4 // D1 = Pr1(S1); needs S1 interpreted — see kinship example
 });
 console.log(evaluated.success, evaluated.value);
 ```
@@ -143,6 +182,8 @@ console.log(evaluated.success, evaluated.value);
 | `D1` uses `D2` before `D2` exists                  | globalNotTyped / undeclared global               |
 | `analyzeExpression` with wrong `cstType`           | Role-specific semantic errors                    |
 | Non-empty formal on `C1` (`constant`)              | Same as basic — definition not allowed           |
+| `term` with `X1×X1` when modeling a **relation**   | Full Cartesian product instead of typed pairs in `S#` |
+| `structure` with `Pr1(S1)` instead of a grade      | Wrong role — projections belong on `term` / `F#`   |
 | `setConstituentaValue` on inferrable `D1` (`term`) | Error: inferrable and cannot be set directly     |
 | Evaluating before base binding set                 | May fail or return empty depending on expression |
 

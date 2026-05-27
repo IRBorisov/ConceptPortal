@@ -4,14 +4,14 @@ Distilled from `help-rslang-typification`, `help-rslang-expression-structure`, a
 
 ## Grades
 
-A genus-structure expression `ξ` has typification (a *structure*) if `ξ ∈ H` holds, where `H` is a valid **grade**. Grades are built recursively:
+A genus-structure expression `ξ` has typification (a _structure_) if `ξ ∈ H` holds, where `H` is a valid **grade**. Grades are built recursively:
 
-| Grade | Form | Notes |
-|-------|------|-------|
-| Element | `Xi`, `Ci` | grade of an undefined concept's elements |
-| Integer | `Z` | grade of integer arithmetic results |
-| Tuple of arity n | `(H1 × H2 × … × Hn)` | ordered structured grade |
-| Set | `ℬ(H)` | set of values of grade `H` |
+| Grade            | Form                 | Notes                                    |
+| ---------------- | -------------------- | ---------------------------------------- |
+| Element          | `Xi`, `Ci`           | grade of an undefined concept's elements |
+| Integer          | `Z`                  | grade of integer arithmetic results      |
+| Tuple of arity n | `(H1 × H2 × … × Hn)` | ordered structured grade                 |
+| Set              | `ℬ(H)`               | set of values of grade `H`               |
 
 The empty set `∅` has typification `ℬ(R0)` — a set with arbitrary element structure. The radical `R0` ensures it conforms to any element grade in context.
 
@@ -41,7 +41,6 @@ Template parameterised expressions may contain notations `R1, R2, …` (and `R0`
 The contract exposes `type: Record<string, unknown> | null` because typifications are JSON-encoded by the analyzer. Useful properties exposed by `@rsconcept/domain` helpers:
 
 - `TypeID` enum: `Element`, `Integer`, `Tuple`, `Boolean`, `Logic`, `Functional` — discriminates the top-level shape.
-- `TypeClass` enum: `Element`, `Integer`, `Logic`, `Functional`, `Collection` (set / tuple), `Other`.
 - `TypePath` (sequence of indices) addresses positions inside a tuple-of-sets-of-tuples structure; use `makeTypePath` to construct.
 - `parseTypeText(...)` parses an ASCII representation `B(X1)`, `(X1×X2)`, etc., into a `Typification`.
 
@@ -50,6 +49,13 @@ For agents inspecting types from rstool output:
 1. Check `analysis.success === true` and `analysis.type !== null`.
 2. Use `analysis.type` (object) only as opaque input to `@rsconcept/domain` helpers — do not pattern-match it manually.
 3. The `valueClass` companion indicates `Value`, `Property` (non-computable membership only), or `Invalid`.
+
+## Typification on `S#` vs definition on `D#`
+
+- On a **`structure`** (`S#`), `definitionFormal` is read as **typification**. Subexpressions such as `X1×X1` describe **element shape** (here: one pair of base elements).
+- On a **`term`** (`D#`), the same token sequence is a **definition** evaluated in the model. `X1×X1` alone is the Cartesian product — all ordered pairs from `X1` — not the typification of a relation stored in `S#`.
+
+Prefer `S#` with `ℬ(X1×X1)` plus `convention` for relations; derive `D#` with `Pr*`, `Fi*`, filters, etc.
 
 ## Forming structures vs. derived structures
 
@@ -72,7 +78,6 @@ Derived structures consume a grade:
 
 - Negative integer literals do not exist — use `0 - n`.
 - `debool(S)` fails if `S` is not a singleton.
-- `red(S)` fails unless `S : ℬ(ℬ(H))`.
 - Tuple projections require the argument to be a tuple of sufficient arity; `pr3((a, b))` is an error.
 - Filter parameter list arity must match the multi-index in `Fi[...]`.
 - A radical in the **result expression** of a template is a hard error (`radicalUsage`).

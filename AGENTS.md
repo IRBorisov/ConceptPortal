@@ -53,6 +53,6 @@ Locally, the **path prefix stays `/api/...`**; the API base URL comes from `VITE
 
 - Domain docs: `CONTEXT.md`.
 - **Project skills (git):** `.agents/skills/<name>/` — shared Portal workflows (`i18n-extract`, `diagnose`, `triage`, etc.). Edit and commit here.
-- **`rstool-helper` (two copies, keep identical):** `rsconcept/rstool/skills/rstool-helper/` and `.agents/skills/rstool-helper/`. When you change either, update the other in the same change set (see `rsconcept/rstool/AGENTS.md` checklist).
+- **`rstool-helper`:** canonical guide in `rsconcept/rstool/skills/rstool-helper/` + `rsconcept/rstool/docs/`; workspace entry skill only in `.agents/skills/rstool-helper/SKILL.md` (not shipped from the npm package). No duplicate GUIDE/docs under `.agents/`.
 - **User-global skills:** `~/.cursor/skills-cursor/` — not in this repo.
 - Index: `.agents/skills/README.md`; rstool notes: `rsconcept/rstool/skills/README.md`.

@@ -29,6 +29,8 @@ export default defineConfig({
   treeshake: false,
   target: 'es2022',
   outDir: 'dist',
-  external: ['@rsconcept/domain'],
+  deps: {
+    neverBundle: ['@rsconcept/domain']
+  },
   outExtensions: () => ({ js: '.js', dts: '.d.ts' })
 });

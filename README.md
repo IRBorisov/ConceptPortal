@@ -17,14 +17,14 @@
 
 The repository groups several **independently installable** npm packages (each has its own `package.json` and `package-lock.json`):
 
-| Path                   | npm package                                                            | What it is                                                                                                   |
-| ---------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Path                   | npm package                                                            | What it is                                                                                                                                        |
+| ---------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `rsconcept/domain`     | [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) | Shared TypeScript domain. Developed in-repo; **frontend and rstool install it from npm** (`^1.0.0`). [Publishing](rsconcept/domain/PUBLISHING.md) |
-| `rsconcept/frontend`   | `frontend` (private)                                                   | The Portal Vite/React SPA. Depends on `@rsconcept/domain` from the registry.                                 |
-| `rsconcept/rstool`     | [`@rsconcept/rstool`](rsconcept/rstool)                                | Agent-facing library and stdio wrapper. [Publishing](rsconcept/rstool/PUBLISHING.md) |
-| `rsconcept/rstool-mcp` | [`@rsconcept/rstool-mcp`](rsconcept/rstool-mcp)                        | MCP adapter over `@rsconcept/rstool`. [Publishing](rsconcept/rstool-mcp/PUBLISHING.md) |
+| `rsconcept/frontend`   | `frontend` (private)                                                   | The Portal Vite/React SPA. Depends on `@rsconcept/domain` from the registry.                                                                      |
+| `rsconcept/rstool`     | [`@rsconcept/rstool`](rsconcept/rstool)                                | Agent-facing library and stdio wrapper. [Publishing](rsconcept/rstool/PUBLISHING.md)                                                              |
+| `rsconcept/rstool-mcp` | [`@rsconcept/rstool-mcp`](rsconcept/rstool-mcp)                        | MCP adapter over `@rsconcept/rstool`. [Publishing](rsconcept/rstool-mcp/PUBLISHING.md)                                                            |
 
-External agents can use rstool standalone: `npm install @rsconcept/rstool`. For MCP-capable hosts, use `npm install -g @rsconcept/rstool-mcp` and point your client at the `rstool-mcp` bin. See [`rsconcept/rstool/README.md`](rsconcept/rstool/README.md) and [`rsconcept/rstool-mcp/README.md`](rsconcept/rstool-mcp/README.md).
+External agents can use rstool standalone: `npm install @rsconcept/rstool`, then ask the agent to install the skill per [`skills/INSTALL.md`](rsconcept/rstool/skills/INSTALL.md). For MCP-capable hosts, use `npm install -g @rsconcept/rstool-mcp` and point your client at the `rstool-mcp` bin. See [`rsconcept/rstool/README.md`](rsconcept/rstool/README.md) and [`rsconcept/rstool-mcp/README.md`](rsconcept/rstool-mcp/README.md).
 
 ## Contributing
 

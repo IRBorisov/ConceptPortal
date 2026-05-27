@@ -1,12 +1,12 @@
 {
   "name": "@rsconcept/rstool",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Agent-facing library for incremental RSForm construction, RSLang analysis, diagnostics, modeling, and evaluation. Wraps @rsconcept/domain with a deterministic session contract and stdio wrapper.",
   "license": "MIT",
   "author": "IRBorisov",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/IRBorisov/ConceptPortal",
+    "url": "git+https://github.com/IRBorisov/ConceptPortal.git",
     "directory": "rsconcept/rstool"
   },
   "homepage": "https://portal.acconcept.ru",
@@ -33,11 +33,12 @@
       "import": "./dist/wrapper/client.js"
     },
     "./skills/rstool-helper/*": "./skills/rstool-helper/*",
+    "./skills/INSTALL.md": "./skills/INSTALL.md",
     "./docs/*": "./docs/*",
     "./package.json": "./package.json"
   },
   "bin": {
-    "rstool-wrapper": "./dist/wrapper/stdio-wrapper.js"
+    "rstool-wrapper": "dist/wrapper/stdio-wrapper.js"
   },
   "files": [
     "dist",
@@ -64,10 +65,10 @@
     "@rsconcept/domain": "^1.0.0"
   },
   "devDependencies": {
-    "@types/node": "^24.0.0",
+    "@types/node": "^25.9.1",
     "tsdown": "^0.22.0",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "vitest": "^4.1.5"
   },
   "publishConfig": {

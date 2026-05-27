@@ -33,7 +33,7 @@
 {
   id: number;           // stable id within session
   alias: string;        // e.g. "D1", "X1"
-  cstType: CstType;     // see SKILL.md table
+  cstType: CstType;     // see GUIDE.md table
   definitionFormal: string;
   term?: string;
   definitionText?: string;
@@ -79,7 +79,8 @@ Example chain:
 
 ```json
 {"id":"1","method":"createSession","params":{}}
-{"id":"2","method":"addOrUpdateConstituenta","params":{"sessionId":"…","input":{"draft":{"id":3,"alias":"D1","cstType":"term","definitionFormal":"X1×X1"}}}}
+{"id":"2","method":"addOrUpdateConstituenta","params":{"sessionId":"…","input":{"draft":{"id":2,"alias":"S1","cstType":"structure","definitionFormal":"ℬ(X1×X1)"}}}}
+{"id":"2b","method":"addOrUpdateConstituenta","params":{"sessionId":"…","input":{"draft":{"id":3,"alias":"D1","cstType":"term","definitionFormal":"Pr1(S1)"}}}}
 {"id":"3","method":"analyzeExpression","params":{"sessionId":"…","input":{"expression":"1+2","cstType":"term"}}}
 {"id":"4","method":"listDiagnostics","params":{"sessionId":"…"}}
 {"id":"5","method":"commitStep","params":{"sessionId":"…","message":"checkpoint"}}
@@ -104,8 +105,9 @@ interface AnalysisResult {
 
 ## RS language — conceptual model
 
-- **Typification**: computed structure type from a formal definition; grades include elements (`Xi`, `Ci`), `Z`, tuples `(H1×…×Hn)`, sets `ℬ(H)`, logic `Logic`, parameterized `Hr 🠔 [H1,…,Hi]`.
+- **Typification**: structure type of an expression; grades include elements (`Xi`, `Ci`), `Z`, tuples `(H1×…×Hn)`, sets `ℬ(H)`, logic `Logic`, parameterized `Hr 🠔 [H1,…,Hi]`. On `structure` (`S#`), `definitionFormal` **is** the typification. On `term` (`D#`), typification is **inferred from** the definition.
 - **Term graph**: directed dependencies between constituenta via alias references in definitions.
+- **`S#` vs `D#`**: same `×` token — in `ℬ(X1×X1)` on `S#` it forms a **grade** (pair type); in `X1×X1` on `D#` it is the **Cartesian product** (all pairs). Relations: `S#` + `convention`, then derived `D#` (`Pr1(S1)`, …).
 
 Intro (help): language is FOL-based; set vs logic expression split; parameterized templates for term/predicate functions; structural expressions reshape stages.
 

@@ -6,19 +6,16 @@ When an agent needs to **inspect existing** RSForms, OSS, or RSModels persisted 
 
 - **UI:** `https://portal.acconcept.ru/`
 - **REST API:** `https://api.portal.acconcept.ru/`
-- **Local dev:** path prefix `/api/...`, base URL from `VITE_PORTAL_BACKEND`.
 
 ## Path rewrite rules
 
-Drop UI hash query params (`?tab=`, etc.). Keep numeric ids exactly as the UI shows them.
-
-| Portal UI path | REST target |
-|----------------|-------------|
-| `/rsforms/:id` | `GET /api/rsforms/:id` (metadata: owner, titles) |
-| `/rsforms/:id` (full payload) | `GET /api/rsforms/:id/details` |
-| `/rsforms/:id` (a saved version) | `GET /api/library/:id/versions/:version` |
-| `/oss/:id` | `GET /api/oss/:id` (and the sibling OSS viewset routes) |
-| `/models/:id` | `GET /api/models/:id` (RSModel router) |
+| Portal UI path                   | REST target                                             |
+| -------------------------------- | ------------------------------------------------------- |
+| `/rsforms/:id`                   | `GET /api/rsforms/:id` (metadata: owner, titles)        |
+| `/rsforms/:id` (full payload)    | `GET /api/rsforms/:id/details`                          |
+| `/rsforms/:id` (a saved version) | `GET /api/library/:id/versions/:version`                |
+| `/oss/:id`                       | `GET /api/oss/:id` (and the sibling OSS viewset routes) |
+| `/models/:id`                    | `GET /api/models/:id` (RSModel router)                  |
 
 ## OpenAPI
 

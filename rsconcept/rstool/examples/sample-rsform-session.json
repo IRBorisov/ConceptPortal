@@ -1,13 +1,13 @@
 {
-  "contractVersion": "1.1.0",
+  "contractVersion": "1.2.0",
   "state": {
-    "sessionId": "6ad89de9-b4f6-4865-a067-4be1dd38b9cc",
-    "createdAt": "2026-04-28T10:55:08.449Z",
-    "updatedAt": "2026-04-28T10:55:08.464Z",
+    "sessionId": "2d99e61f-79aa-471f-aaed-6965538e6fc8",
+    "createdAt": "2026-05-27T07:22:35.861Z",
+    "updatedAt": "2026-05-27T07:22:35.880Z",
     "revisions": [
       {
-        "revisionId": "c03c829b-2383-40ff-a54a-08fced47b9a9",
-        "at": "2026-04-28T10:55:08.464Z",
+        "revisionId": "14a15ffa-87c1-4ed7-bcf1-b8e6367fbd6d",
+        "at": "2026-05-27T07:22:35.880Z",
         "message": "Built sample RSForm"
       }
     ],
@@ -17,6 +17,9 @@
         "alias": "X1",
         "cstType": "basic",
         "definitionFormal": "",
+        "term": "",
+        "definitionText": "",
+        "convention": "",
         "analysis": {
           "success": true,
           "type": {
@@ -35,6 +38,9 @@
         "alias": "C1",
         "cstType": "constant",
         "definitionFormal": "",
+        "term": "",
+        "definitionText": "",
+        "convention": "",
         "analysis": {
           "success": true,
           "type": {
@@ -53,9 +59,12 @@
       },
       {
         "id": 3,
-        "alias": "D1",
-        "cstType": "term",
-        "definitionFormal": "X1×X1",
+        "alias": "S1",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X1×X1)",
+        "convention": "Pairs (parent, child) over X1.",
+        "term": "",
+        "definitionText": "",
         "analysis": {
           "success": true,
           "type": {
@@ -80,9 +89,33 @@
       },
       {
         "id": 4,
+        "alias": "D1",
+        "cstType": "term",
+        "definitionFormal": "Pr1(S1)",
+        "term": "",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
         "alias": "A1",
         "cstType": "axiom",
         "definitionFormal": "1=1",
+        "term": "",
+        "definitionText": "",
+        "convention": "",
         "analysis": {
           "success": true,
           "type": {
@@ -92,7 +125,10 @@
           "diagnostics": []
         }
       }
-    ]
+    ],
+    "model": {
+      "items": []
+    }
   },
   "diagnostics": []
 }

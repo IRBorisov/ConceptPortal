@@ -23,15 +23,17 @@ Constituent aliases follow a strict prefix scheme:
 | `N#` | Nominoid | Free vocabulary item, no formal definition |
 | `X#` | Base set | Undefined concept, set of distinguishable elements |
 | `C#` | Constant set | Undefined concept, set-theoretic constant with operations |
-| `S#` | Structured concept | Undefined concept with explicit typification, axioms, convention |
-| `D#` | Term | Derived concept (set / value) defined by a formal expression |
+| `S#` | Structured concept (**genus structure**) | Undefined concept; `definitionFormal` gives **typification**; meaning via `convention` / axioms |
+| `D#` | Term | Derived concept; `definitionFormal` is the **definition**; value computed in a model |
 | `F#` | Term-function | Parameterised derived concept yielding an STE |
 | `P#` | Predicate-function | Parameterised derived concept yielding a logical expression |
 | `A#` | Axiom | Logical statement asserting requirements |
 | `T#` | Statement | Logical assertion about the model |
 | `R#` | Radical | Template placeholder for arbitrary typification |
 
-**Undefined concepts** (`X#`, `C#`, `S#`) are introduced by conventions (and optional axioms); they have **no formal definition**. **Derived concepts** (`D#`, `F#`, `P#`, `A#`, `T#`) carry a formal expression and must follow declaration order — every referenced constituent must already exist.
+**Undefined concepts** (`X#`, `C#`, `S#`) are introduced by conventions (and optional axioms). For `S#`, the formal field states **typification** (the grade of elements), not a defining construction. **Derived concepts** (`D#`, `F#`, `P#`, `A#`, `T#`) carry a formal **definition** and must follow declaration order — every referenced constituent must already exist; their model values are obtained by evaluation.
+
+**Structure vs term:** `S#` with `ℬ(X1×X1)` declares “elements are pairs over `X1`”; the actual pairs come from interpretation. `D#` with `X1×X1` as the whole expression denotes the **full Cartesian product** (all pairs), which is a computed set — use `S#` + projections when modeling a relation.
 
 A **crucial constituent** is marked as content-bearing for filtering / focus; it has no semantic effect on the formal calculus.
 

@@ -32,7 +32,7 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "rstool-mcp": "./dist/bin/server.js"
+    "rstool-mcp": "dist/bin/server.js"
   },
   "files": [
     "dist",

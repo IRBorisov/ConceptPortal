@@ -32,14 +32,23 @@ async function run() {
       {
         draft: {
           id: 3,
-          alias: 'D1',
-          cstType: CstType.TERM,
-          definitionFormal: 'X1×X1'
+          alias: 'S1',
+          cstType: CstType.STRUCTURED,
+          definitionFormal: 'ℬ(X1×X1)',
+          convention: 'Pairs (parent, child) over X1.'
         }
       },
       {
         draft: {
           id: 4,
+          alias: 'D1',
+          cstType: CstType.TERM,
+          definitionFormal: 'Pr1(S1)'
+        }
+      },
+      {
+        draft: {
+          id: 5,
           alias: 'A1',
           cstType: CstType.AXIOM,
           definitionFormal: '1=1'

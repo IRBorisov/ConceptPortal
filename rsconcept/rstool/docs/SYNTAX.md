@@ -1,6 +1,6 @@
 # RSLang syntax reference
 
-Distilled from the Portal help topics under `help-rslang-*`. Use this when constructing or repairing RSLang expressions. For full grammar tokens see `GRAMMAR-REF.md`. For typification rules see `TYPIFICATION.md`.
+Use this when constructing or repairing RSLang expressions. For full grammar tokens see `GRAMMAR-REF.md`. For typification rules see `TYPIFICATION.md`.
 
 ## Identifier rules
 
@@ -17,22 +17,22 @@ Distilled from the Portal help topics under `help-rslang-*`. Use this when const
 
 ## Set-theoretic expressions
 
-| Construct | Syntax | Notes |
-|-----------|--------|-------|
-| Union | `D1 ∪ D2` | |
-| Intersection | `D1 ∩ D2` | |
-| Difference | `D1 \ D2` | |
-| Symmetric difference | `D1 ∆ D2` | |
-| Cartesian product | `X1 × X2` | typification: tuple |
-| Boolean / power set | `ℬ(X1)` | set of all subsets |
-| Tuple | `(a, b, c)` | ordered, n ≥ 2 |
-| Enumeration | `{a, b, c}` | unordered, n ≥ 1 |
-| Singleton | `bool(a)` ≡ `{a}` | |
-| Desingleton | `debool({a})` ≡ `a` | only for one-element sets |
-| Sum set | `red(S1)` | union of inner sets; `S1` must be a set of sets |
-| Small projection | `pr1((a1, …, an))` | returns `a1` |
-| Large projection | `Pr1(S1)` | set of first components of tuples in `S1` |
-| Filter | `Fi1[D1](S1)` | subset of `S1` whose first projection ∈ `D1` |
+| Construct            | Syntax              | Notes                                           |
+| -------------------- | ------------------- | ----------------------------------------------- |
+| Union                | `D1 ∪ D2`           |                                                 |
+| Intersection         | `D1 ∩ D2`           |                                                 |
+| Difference           | `D1 \ D2`           |                                                 |
+| Symmetric difference | `D1 ∆ D2`           |                                                 |
+| Cartesian product    | `X1 × X2`           | typification: tuple                             |
+| Boolean / power set  | `ℬ(X1)`             | set of all subsets                              |
+| Tuple                | `(a, b, c)`         | ordered, n ≥ 2                                  |
+| Enumeration          | `{a, b, c}`         | unordered, n ≥ 1                                |
+| Singleton            | `bool(a)` ≡ `{a}`   |                                                 |
+| Desingleton          | `debool({a})` ≡ `a` | only for one-element sets                       |
+| Sum set              | `red(S1)`           | union of inner sets; `S1` must be a set of sets |
+| Small projection     | `pr1((a1, …, an))`  | returns `a1`                                    |
+| Large projection     | `Pr1(S1)`           | set of first components of tuples in `S1`       |
+| Filter               | `Fi1[D1](S1)`       | subset of `S1` whose first projection ∈ `D1`    |
 
 Indices `1` may be any natural number or comma-separated multi-index (`pr1,3((a1, a2, a3, a4)) = (a1, a3)`, `Fi1,2[D1](S1)`).
 
@@ -40,15 +40,15 @@ Indices `1` may be any natural number or comma-separated multi-index (`pr1,3((a1
 
 ### Set-theoretic predicates
 
-| Predicate | Syntax |
-|-----------|--------|
-| Membership | `ξ ∈ S` |
-| Non-membership | `ξ ∉ S` |
-| Set equality | `S1 = S2` |
-| Set inequality | `S1 ≠ S2` |
-| Inclusion | `S1 ⊆ S2` |
+| Predicate        | Syntax    |
+| ---------------- | --------- |
+| Membership       | `ξ ∈ S`   |
+| Non-membership   | `ξ ∉ S`   |
+| Set equality     | `S1 = S2` |
+| Set inequality   | `S1 ≠ S2` |
+| Inclusion        | `S1 ⊆ S2` |
 | Strict inclusion | `S1 ⊂ S2` |
-| Non-inclusion | `S1 ⊄ S2` |
+| Non-inclusion    | `S1 ⊄ S2` |
 
 ### Arithmetic predicates (typification `Logic`)
 
@@ -56,9 +56,9 @@ Indices `1` may be any natural number or comma-separated multi-index (`pr1,3((a1
 
 ### Connectives
 
-| Connective | Syntax |
-|------------|--------|
-| Negation | `¬A` |
+| Connective  | Syntax  |
+| ----------- | ------- |
+| Negation    | `¬A`    |
 | Conjunction | `A & B` |
 | Disjunction | `A ∨ B` |
 | Implication | `A ⇒ B` |
@@ -68,10 +68,10 @@ The constants `TRUE` and `FALSE` are **not** used inside schema explications.
 
 ## Quantifiers
 
-| Form | Syntax |
-|------|--------|
-| Universal | `∀ξ∈STE (LE(ξ))` |
-| Existential | `∃ξ∈STE (LE(ξ))` |
+| Form          | Syntax                       |
+| ------------- | ---------------------------- |
+| Universal     | `∀ξ∈STE (LE(ξ))`             |
+| Existential   | `∃ξ∈STE (LE(ξ))`             |
 | Tuple binding | `∀(ξ1, ξ2)∈STE (LE(ξ1, ξ2))` |
 | Variable list | `∀ξ1, ξ2 ∈ STE (LE(ξ1, ξ2))` |
 

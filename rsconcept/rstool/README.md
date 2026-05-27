@@ -1,10 +1,10 @@
 # @rsconcept/rstool
 
-Agent-facing library for **incremental RSForm construction**, **RSLang expression analysis**, **diagnostics**, **modeling**, and **evaluation**. It wraps [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) with a deterministic session contract and a stdio JSON wrapper that LLM agents and Cursor/Claude clients can call directly.
+Agent-facing library for **incremental RSForm construction**, **RSLang expression analysis**, **diagnostics**, **modeling**, and **evaluation**. It wraps [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) with a deterministic session contract and a stdio JSON wrapper that LLM agents and MCP clients can call directly.
 
 ## Agent skill
 
-RS language + rstool workflows for agents: `skills/rstool-helper/` (`SKILL.md`, `REFERENCE.md`, `EXAMPLES.md`). The companion language reference in `docs/` (`DOMAIN.md`, `SYNTAX.md`, `TYPIFICATION.md`, `CONSTITUENTA.md`, `DIAGNOSTICS.md`, `PORTAL-API.md`, `GRAMMAR-REF.md`) is distilled from the Portal manuals and ships with the npm package, so standalone agents never need to read the Portal frontend source.
+RS language + rstool workflows for agents: `skills/rstool-helper/` (`GUIDE.md`, `REFERENCE.md`, `EXAMPLES.md`) and `docs/` (`DOMAIN.md`, `SYNTAX.md`, …). A **thin** entry skill is installed into the project’s agent skills folder; see [Installing the agent skill](#installing-the-agent-skill) below.
 
 ## Install
 
@@ -126,28 +126,19 @@ The example:
 - sets a base binding and evaluates a term
 - fetches diagnostics
 
-## Installing the skill into an agent host
+## Installing the agent skill
 
-The package ships the skill files in `skills/rstool-helper/`. After install, copy or symlink them into your agent host's skill directory:
+After `npm install @rsconcept/rstool`, **you do not copy files yourself**. Ask your agent, for example:
 
-```bash
-# Cursor (per-project skills)
-mkdir -p .agents/skills
-cp -r node_modules/@rsconcept/rstool/skills/rstool-helper .agents/skills/rstool-helper
-cp -r node_modules/@rsconcept/rstool/docs .agents/skills/rstool-helper/docs
+> Install the rstool agent skill according to the package instructions.
 
-# Claude Code or other hosts: consult host-specific docs
-```
+The agent should read and follow:
 
-PowerShell:
+`node_modules/@rsconcept/rstool/skills/INSTALL.md`
 
-```powershell
-New-Item -ItemType Directory -Force .agents/skills
-Copy-Item -Recurse -Force node_modules/@rsconcept/rstool/skills/rstool-helper .agents/skills/rstool-helper
-Copy-Item -Recurse -Force node_modules/@rsconcept/rstool/docs .agents/skills/rstool-helper/docs
-```
+That copies `skills/rstool-helper/SKILL.md` from the package into your host’s project skills directory (for example `.agents/skills/rstool-helper/SKILL.md`). Full guidance stays in the package (`skills/rstool-helper/GUIDE.md`, `docs/*.md`) and is read from `node_modules` when needed.
 
-The skill defers to the bundled `docs/*.md` for language reference. Copying both the skill and docs makes the installed agent skill self-contained.
+Details: `skills/README.md`.
 
 ## License
 
