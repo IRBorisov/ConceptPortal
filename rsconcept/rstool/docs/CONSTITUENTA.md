@@ -16,6 +16,13 @@ Use this when upserting constituents via `addOrUpdateConstituenta`.
 
 Omitted text fields default to `''` in stored state.
 
+## Language of text fields
+
+The natural-language fields `term`, `definitionText`, and `convention` should be written in **one consistent language**:
+
+- When editing/extending an existing schema, keep the **same language** that is already used in the schema’s text fields.
+- When creating a new schema from scratch, use the **language of the user’s request**.
+
 ## `cstType` table
 
 | `cstType` (value) | Prefix | Formal definition         | Notes                                                                                             |

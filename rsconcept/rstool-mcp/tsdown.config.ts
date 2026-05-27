@@ -9,6 +9,8 @@ export default defineConfig({
   splitting: false,
   target: 'es2022',
   outDir: 'dist',
-  external: ['@modelcontextprotocol/sdk', '@rsconcept/rstool', '@rsconcept/domain'],
+  deps: {
+    neverBundle: ['@modelcontextprotocol/sdk', '@rsconcept/rstool', '@rsconcept/domain']
+  },
   outExtensions: () => ({ js: '.js', dts: '.d.ts' })
 });

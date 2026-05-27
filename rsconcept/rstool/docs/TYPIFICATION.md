@@ -6,12 +6,12 @@ Distilled from `help-rslang-typification`, `help-rslang-expression-structure`, a
 
 A genus-structure expression `ξ` has typification (a _structure_) if `ξ ∈ H` holds, where `H` is a valid **grade**. Grades are built recursively:
 
-| Grade            | Form                 | Notes                                    |
-| ---------------- | -------------------- | ---------------------------------------- |
-| Element          | `Xi`, `Ci`           | grade of an undefined concept's elements |
-| Integer          | `Z`                  | grade of integer arithmetic results      |
-| Tuple of arity n | `(H1 × H2 × … × Hn)` | ordered structured grade                 |
-| Set              | `ℬ(H)`               | set of values of grade `H`               |
+| Grade            | Form                 | Notes                                |
+| ---------------- | -------------------- | ------------------------------------ |
+| Element          | `Xi`, `Ci`           | grade of a basic concept's elements  |
+| Integer          | `Z`                  | grade of integer                     |
+| Tuple of arity n | `(H1 × H2 × … × Hn)` | ordered structured grade             |
+| Set              | `ℬ(H)`               | unordered set of values of grade `H` |
 
 The empty set `∅` has typification `ℬ(R0)` — a set with arbitrary element structure. The radical `R0` ensures it conforms to any element grade in context.
 

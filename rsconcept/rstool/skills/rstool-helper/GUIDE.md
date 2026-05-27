@@ -17,6 +17,7 @@ Paths below are relative to **this file** (`skills/rstool-helper/GUIDE.md`).
 | rstool API, methods, error codes | [REFERENCE.md](REFERENCE.md) |
 | Worked examples, common mistakes | [EXAMPLES.md](EXAMPLES.md) |
 | Domain vocabulary (English) | [../../docs/DOMAIN.md](../../docs/DOMAIN.md) |
+| Designing/reviewing conceptual schemas (agent recommendations) | [../../docs/CONCEPTUAL-SCHEMA.md](../../docs/CONCEPTUAL-SCHEMA.md) |
 | Constituenta fields, validation, ordering | [../../docs/CONSTITUENTA.md](../../docs/CONSTITUENTA.md) |
 | RSLang syntax (operators, quantifiers) | [../../docs/SYNTAX.md](../../docs/SYNTAX.md) |
 | Typification grades, radicals | [../../docs/TYPIFICATION.md](../../docs/TYPIFICATION.md) |
@@ -121,6 +122,13 @@ Don't infer types—always read tool output.
 2. Core/critical first
 3. Topological: dependencies before dependents (e.g. `D1` before `D2` if `D2` refers to `D1`)
 4. Derived right after their sources
+
+## Natural-language fields: keep one language
+
+When you create new constituents (concepts) or build a schema from scratch, the fields `term`, `definitionText`, and `convention` must be written **in one consistent natural language**:
+
+- If you are extending an existing schema/session, write these fields in the **same language that is already used** in the schema’s text fields.
+- If you are creating a new schema from zero, write these fields in the **language of the user’s request**.
 
 ## Checklist
 

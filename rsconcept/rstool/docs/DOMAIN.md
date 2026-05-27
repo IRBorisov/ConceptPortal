@@ -18,18 +18,18 @@ A **constituent** is the atomic building block of a conceptual schema. Each cons
 
 Constituent aliases follow a strict prefix scheme:
 
-| Alias prefix | Role | Notes |
-|-----|------|-------|
-| `N#` | Nominoid | Free vocabulary item, no formal definition |
-| `X#` | Base set | Undefined concept, set of distinguishable elements |
-| `C#` | Constant set | Undefined concept, set-theoretic constant with operations |
-| `S#` | Structured concept (**genus structure**) | Undefined concept; `definitionFormal` gives **typification**; meaning via `convention` / axioms |
-| `D#` | Term | Derived concept; `definitionFormal` is the **definition**; value computed in a model |
-| `F#` | Term-function | Parameterised derived concept yielding an STE |
-| `P#` | Predicate-function | Parameterised derived concept yielding a logical expression |
-| `A#` | Axiom | Logical statement asserting requirements |
-| `T#` | Statement | Logical assertion about the model |
-| `R#` | Radical | Template placeholder for arbitrary typification |
+| Alias prefix | Role                                     | Notes                                                                                           |
+| ------------ | ---------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `N#`         | Nominoid                                 | Free vocabulary item, no formal definition                                                      |
+| `X#`         | Base set                                 | Undefined concept, set of elements                                                              |
+| `C#`         | Constant set                             | Undefined concept, set of elements, allows arithmetic predicates and operations                 |
+| `S#`         | Structured concept (**genus structure**) | Undefined concept; `definitionFormal` gives **typification**; meaning via `convention` / axioms |
+| `D#`         | Term                                     | Derived concept; `definitionFormal` is the **definition**; value computed in a model            |
+| `F#`         | Term-function                            | Parameterised derived concept yielding an STE                                                   |
+| `P#`         | Predicate-function                       | Parameterised derived concept yielding a logical expression                                     |
+| `A#`         | Axiom                                    | Logical statement asserting requirements                                                        |
+| `T#`         | Statement                                | Logical assertion about the model                                                               |
+| `R#`         | Radical                                  | Template placeholder for arbitrary typification                                                 |
 
 **Undefined concepts** (`X#`, `C#`, `S#`) are introduced by conventions (and optional axioms). For `S#`, the formal field states **typification** (the grade of elements), not a defining construction. **Derived concepts** (`D#`, `F#`, `P#`, `A#`, `T#`) carry a formal **definition** and must follow declaration order — every referenced constituent must already exist; their model values are obtained by evaluation.
 
@@ -41,27 +41,27 @@ A **crucial constituent** is marked as content-bearing for filtering / focus; it
 
 Each constituent has one of the following correctness statuses:
 
-| Status | Meaning |
-|--------|---------|
-| Unknown | Not yet validated |
-| OK | Validated as correct |
-| Error | Validation failed |
-| Property | Defines a non-computable set; only membership tests are admissible |
-| Incalculable | Cannot be evaluated directly (e.g. expected exponential blow-up) |
+| Status       | Meaning                                                            |
+| ------------ | ------------------------------------------------------------------ |
+| Unknown      | Not yet validated                                                  |
+| OK           | Validated as correct                                               |
+| Error        | Validation failed                                                  |
+| Property     | Defines a non-computable set; only membership tests are admissible |
+| Incalculable | Cannot be evaluated directly (e.g. expected exponential blow-up)   |
 
 ## RSModel evaluation states
 
 In a conceptual model each item has one of the following evaluation statuses:
 
-| Status | Meaning |
-|--------|---------|
-| `NO_EVAL` (1) | Not evaluated (definition is not interpretable) |
-| `NOT_PROCESSED` (2) | Interpretation has not been computed yet |
-| `INVALID_DATA` (3) | Provided data is invalid |
-| `EVAL_FAIL` (4) | Evaluation raised an error |
-| `AXIOM_FALSE` (5) | Axiom evaluated to FALSE |
-| `EMPTY` (6) | Result is the empty set |
-| `HAS_DATA` (7) | Interpretation computed and non-empty |
+| Status              | Meaning                                         |
+| ------------------- | ----------------------------------------------- |
+| `NO_EVAL` (1)       | Not evaluated (definition is not interpretable) |
+| `NOT_PROCESSED` (2) | Interpretation has not been computed yet        |
+| `INVALID_DATA` (3)  | Provided data is invalid                        |
+| `EVAL_FAIL` (4)     | Evaluation raised an error                      |
+| `AXIOM_FALSE` (5)   | Axiom evaluated to FALSE                        |
+| `EMPTY` (6)         | Result is the empty set                         |
+| `HAS_DATA` (7)      | Interpretation computed and non-empty           |
 
 ## Synthesis and OSS
 

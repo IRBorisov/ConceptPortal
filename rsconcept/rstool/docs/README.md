@@ -5,6 +5,7 @@ Standalone English reference distilled from the Portal manuals and `CONTEXT.md`.
 | File | Read when |
 |------|-----------|
 | [`DOMAIN.md`](DOMAIN.md) | You need the Concept Portal vocabulary (constituenta, conceptual schema/model, OSS, synthesis). |
+| [`CONCEPTUAL-SCHEMA.md`](CONCEPTUAL-SCHEMA.md) | You are designing/reviewing a conceptual schema as a system (thesaurus value, closed-world text definitions, genus structures, axioms). |
 | [`CONSTITUENTA.md`](CONSTITUENTA.md) | You are upserting constituents — fields, `cstType` table, validation rules, recommended order. |
 | [`SYNTAX.md`](SYNTAX.md) | You are constructing RSLang expressions — operators, quantifiers, parameterised functions, examples. |
 | [`TYPIFICATION.md`](TYPIFICATION.md) | You are interpreting `AnalysisResult.type` / `valueClass` or constructing template expressions with radicals. |
