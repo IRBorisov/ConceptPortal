@@ -13,6 +13,8 @@ import {
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 
+import { type LibraryContextSearchField } from '../models/library-context-search';
+
 import {
   type CloneLibraryItemDTO,
   type CreateLibraryItemDTO,
@@ -63,7 +65,7 @@ export const libraryApi = {
     signal
   }: {
     query: string;
-    fields: string[];
+    fields: LibraryContextSearchField[];
     isAdmin: boolean;
     signal?: AbortSignal;
   }) =>

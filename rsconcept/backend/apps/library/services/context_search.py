@@ -84,8 +84,12 @@ def search_library_context(
             model_id__in=accessible_ids,
             schema_id__isnull=False
         ).values_list('schema_id', flat=True)
+        accessible_linked_schema_ids = accessible.filter(
+            item_type=LibraryItemType.RSFORM,
+            pk__in=linked_schema_ids
+        ).values_list('pk', flat=True)
         matched_schema_ids = _collect_matching_ids(
-            Constituenta.objects.filter(schema_id__in=linked_schema_ids),
+            Constituenta.objects.filter(schema_id__in=accessible_linked_schema_ids),
             cst_text_fields,
             normalized_query,
             'schema_id'

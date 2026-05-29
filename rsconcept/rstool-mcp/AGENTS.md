@@ -8,7 +8,7 @@ Applies to all files under `rsconcept/rstool-mcp`. The package is a **thin adapt
 
 ## Structure
 
-- `src/server.ts` — builds a low-level MCP `Server` and registers tool handlers using `TOOL_DEFINITIONS`.
+- `src/server.ts` — builds an MCP `McpServer` and registers tool handlers on `server.server` using `TOOL_DEFINITIONS`.
 - `src/tools.ts` — single source of truth: tool name → description → JSON input schema → invocation onto `RSToolAgent`.
 - `src/bin/server.ts` — stdio bin entry (`#!/usr/bin/env node`). Wraps the server with `StdioServerTransport`.
 - `src/server.test.ts` — smoke tests over the tool catalog.

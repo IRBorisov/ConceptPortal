@@ -2,6 +2,7 @@
 from apps.library.models import AccessPolicy, LibraryItem, LibraryItemType, LocationHead
 from apps.oss.models import Block, Operation, OperationType
 from apps.rsform.models import Constituenta
+from apps.rsmodel.models import RSModel
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
 
@@ -108,6 +109,33 @@ class TestLibraryContextSearch(EndpointTester):
     def test_search_empty_query(self):
         response = self._search(q='   ')
         self.assertEqual(response.data['ids'], [])
+
+    @decl_endpoint('/api/library/context-search', method='get')
+    def test_search_does_not_leak_linked_private_schema(self):
+        private_schema = LibraryItem.objects.create(
+            title='Private schema',
+            alias='PRV',
+            owner=self.user2,
+            access_policy=AccessPolicy.PRIVATE,
+            location=LocationHead.USER
+        )
+        Constituenta.objects.create(
+            schema=private_schema,
+            alias='S1',
+            term_resolved='SecretLinkedTerm',
+        )
+        public_model = LibraryItem.objects.create(
+            item_type=LibraryItemType.RSMODEL,
+            title='Public model',
+            alias='MOD',
+            owner=self.user,
+            access_policy=AccessPolicy.PUBLIC,
+            location=LocationHead.COMMON
+        )
+        RSModel.objects.create(model=public_model, schema=private_schema)
+
+        response = self._search(q='SecretLinkedTerm')
+        self.assertNotIn(public_model.pk, response.data['ids'])
 
     @decl_endpoint('/api/library/context-search', method='get')
     def test_search_anonymous_only_public(self):

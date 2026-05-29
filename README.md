@@ -13,132 +13,46 @@
 [![RSTool CI](https://github.com/IRBorisov/ConceptPortal/actions/workflows/rstool.yml/badge.svg?branch=main)](https://github.com/IRBorisov/ConceptPortal/actions/workflows/rstool.yml)
 [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m797659312-8ab26c72de49d8d92eccc06e?label=Live%20Server)](https://portal.acconcept.ru)
 
-**Concept Portal** is a web application for editing RSForm schemas. The UI is built with React (Vite); the API runs on Django.
+**Concept Portal** is a web application for editing RSForm schemas. The UI is a Vite React app; the API is a Django service backed by PostgreSQL.
 
-The repository groups several **independently installable** npm packages (each has its own `package.json` and `package-lock.json`):
+## Repository Layout
 
-| Path                   | npm package                                                            | What it is                                                                                                                                        |
-| ---------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `rsconcept/domain`     | [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) | Shared TypeScript domain. Developed in-repo; **frontend and rstool install it from npm** (`^1.0.0`). [Publishing](rsconcept/domain/PUBLISHING.md) |
-| `rsconcept/frontend`   | `frontend` (private)                                                   | The Portal Vite/React SPA. Depends on `@rsconcept/domain` from the registry.                                                                      |
-| `rsconcept/rstool`     | [`@rsconcept/rstool`](rsconcept/rstool)                                | Agent-facing library and stdio wrapper. [Publishing](rsconcept/rstool/PUBLISHING.md)                                                              |
-| `rsconcept/rstool-mcp` | [`@rsconcept/rstool-mcp`](rsconcept/rstool-mcp)                        | MCP adapter over `@rsconcept/rstool`. [Publishing](rsconcept/rstool-mcp/PUBLISHING.md)                                                            |
+| Path                   | Purpose                                                                 |
+| ---------------------- | ----------------------------------------------------------------------- |
+| `rsconcept/frontend`   | Portal UI. Installs `@rsconcept/domain` from npm.                       |
+| `rsconcept/backend`    | Django API. Python dependencies are managed by `uv`.                    |
+| `rsconcept/domain`     | Shared TypeScript domain package.                                       |
+| `rsconcept/rstool`     | Agent-facing library and stdio wrapper.                                 |
+| `rsconcept/rstool-mcp` | MCP adapter over `rstool`.                                              |
+| `scripts/dev`          | Local setup, sample data, and development helpers.                      |
+| `scripts/prod`         | Production update helpers.                                              |
+| `nginx`                | Local and production reverse proxy configuration.                       |
 
-External agents can use rstool standalone: `npm install @rsconcept/rstool`, then ask the agent to install the skill per [`skills/INSTALL.md`](rsconcept/rstool/skills/INSTALL.md). For MCP-capable hosts, use `npm install -g @rsconcept/rstool-mcp` and point your client at the `rstool-mcp` bin. See [`rsconcept/rstool/README.md`](rsconcept/rstool/README.md) and [`rsconcept/rstool-mcp/README.md`](rsconcept/rstool-mcp/README.md).
+The npm packages in `domain`, `rstool`, and `rstool-mcp` are independently installable and have their own `package.json` and lockfile.
 
-## Contributing
+## Local Development
 
-We welcome issues, discussions, and direct feedback to the maintainer.
+**Prerequisites:** Docker Desktop, Python 3.12, [uv](https://docs.astral.sh/uv/), Node.js, PowerShell, and VS Code or another IDE that can use [`.vscode/launch.json`](.vscode/launch.json).
 
-Before you open a pull request:
-
-- Run tests from the **Test** configurations in [`.vscode/launch.json`](.vscode/launch.json).
-- Rely on GitHub Actions for linting and CI builds on push.
-- Use the [commit conventions](#commit-conventions) below in commit messages.
-
-## Frontend (Vite + React + TypeScript)
-
-After you change RSLang grammar files, publish a new `@rsconcept/domain` (or use `npm link` locally), bump the `^` pin in `rsconcept/frontend/package.json` if needed, then regenerate any frontend-local grammars if applicable. Grammar source lives in `rsconcept/domain`:
-
-```bash
-cd rsconcept/domain && npm run generate
-```
-
-<details>
-  <summary>Recommended VS Code extensions</summary>
-  <pre>
-  - ESLint
-  - Oklch Color Preview
-  - Tailwind CSS IntelliSense
-  - Code Spell Checker (eng + rus + fr)
-  - Backticks
-  - Svg Preview
-  - TODO Highlight v2
-  - Prettier
-  - PowerShell (for Windows dev env)
-  </pre>
-</details>
-<details>
-  <summary>Google fonts used in the UI</summary>
-  <pre>
-  - Fira Code
-  - Rubik
-  - Alegreya Sans SC
-  - Noto Sans Math
-  - Noto Sans Symbol
-  - Noto Color Emoji
-  </pre>
-</details>
-
-## Backend (Django + PostgreSQL)
-
-Python dependencies are managed with [uv](https://docs.astral.sh/uv/) via `rsconcept/backend/pyproject.toml` and `rsconcept/backend/uv.lock`.
-
-<details>
-  <summary>Recommended VS Code extensions</summary>
-  <pre>
-  - Pylance
-  - Pylint
-  - autopep8
-  - isort
-  - Django
-  - SQLite
-  - Playwright
-  </pre>
-</details>
-
-## DevOps tooling
-
-Typical stack for running and deploying the portal:
-
-- Docker Compose
-- PowerShell (Windows scripts under `scripts/`)
-- Certbot (TLS in production)
-- Docker extension for VS Code
-
-# Developer guide
-
-## Commit conventions
-
-Prefix commits with a short type marker:
-
-- 🚀 **F** — new feature
-- 🔥 **B** — bug fix
-- 🚑 **M** — small fix
-- 🔧 **R** — refactor or code cleanup
-- 📝 **D** — documentation only
-
-## Local setup (Windows 10+)
-
-**Prerequisites:** Docker Desktop, Python 3.12, [uv](https://docs.astral.sh/uv/), Node.js, and VS Code (or another IDE that can use `.vscode/launch.json`).
-
-1. Run the setup script (installs domain, frontend, rstool, rstool-mcp, and backend dependencies):
+1. Install dependencies:
 
    ```powershell
    .\scripts\dev\LocalDevSetup.ps1
    ```
 
-2. Use [`.vscode/launch.json`](.vscode/launch.json) to start the app, run tests, and attach debuggers.
+2. Start the local debug stack:
 
-3. If you edit grammars, run `npm run generate` in `rsconcept/frontend` (see **Frontend** above).
+   ```bash
+   docker compose -f docker-compose-dev.yml up --build -d
+   ```
 
-## Local debug build
+3. Load sample data when needed:
 
-Best for day-to-day development: no HTTPS or nginx in front of the services.
+   ```powershell
+   .\scripts\dev\PopulateDevData.ps1
+   ```
 
-- Full-stack debugging (backend + frontend).
-- Frontend hot module replacement (HMR).
-- Start containers:
-
-  ```bash
-  docker compose -f docker-compose-dev.yml up --build -d
-  ```
-
-- Load sample data:
-
-  ```powershell
-  .\scripts\dev\PopulateDevData.ps1
-  ```
+Use [`.vscode/launch.json`](.vscode/launch.json) to start app configurations, run tests, and attach debuggers. GitHub Actions run linting and CI builds on push.
 
 ## Local production-like build
 
@@ -152,6 +66,28 @@ Mirrors production layout on `localhost`, without production secrets.
    ```bash
    docker compose -f docker-compose-prod-local.yml up --build -d
    ```
+
+## Grammar and npm Packages
+
+RSLang grammar source lives in `rsconcept/domain`. After changing grammar files, regenerate the domain package output:
+
+```bash
+cd rsconcept/domain && npm run generate
+```
+
+Then publish a new `@rsconcept/domain` version or use `npm link` locally. If the frontend or `rstool` depends on the changed contract, update its package pin and local generated artifacts as needed.
+
+The npm packages are published manually from this repo:
+
+| Package                 | Guide                                         |
+| ----------------------- | --------------------------------------------- |
+| `@rsconcept/domain`     | [`PUBLISHING.md`](rsconcept/domain/PUBLISHING.md) |
+| `@rsconcept/rstool`     | [`PUBLISHING.md`](rsconcept/rstool/PUBLISHING.md) |
+| `@rsconcept/rstool-mcp` | [`PUBLISHING.md`](rsconcept/rstool-mcp/PUBLISHING.md) |
+
+When dependencies change, release in order: **domain -> rstool -> rstool-mcp**.
+
+External agents can install `@rsconcept/rstool` and follow [`skills/INSTALL.md`](rsconcept/rstool/skills/INSTALL.md). MCP-capable hosts can install `@rsconcept/rstool-mcp` globally and point the client at the `rstool-mcp` binary.
 
 ## Production deployment
 
@@ -183,18 +119,20 @@ docker compose -f docker-compose-prod.yml run --rm certbot certonly \
 docker compose -f docker-compose-prod.yml up --build -d
 ```
 
-**Update an existing deployment:**
+**Update:**
 
 ```bash
 bash scripts/prod/UpdateProd.sh
 ```
 
-## Publishing npm libraries
+## Contributing
 
-`@rsconcept/domain`, `@rsconcept/rstool`, and `@rsconcept/rstool-mcp` are published manually from this repo (CI does not publish). Per-package guides:
+We welcome issues, discussions, and direct feedback to the maintainer.
 
-- [Domain](rsconcept/domain/PUBLISHING.md)
-- [RSTool](rsconcept/rstool/PUBLISHING.md)
-- [RSTool MCP](rsconcept/rstool-mcp/PUBLISHING.md)
+Before opening a pull request, run the relevant **Test** configurations from [`.vscode/launch.json`](.vscode/launch.json) and use a short commit type marker:
 
-When dependencies change, release in order: **domain → rstool → rstool-mcp**.
+- 🚀 **F** — new feature
+- 🔥 **B** — bug fix
+- 🚑 **M** — small fix
+- 🔧 **R** — refactor or code cleanup
+- 📝 **D** — documentation only

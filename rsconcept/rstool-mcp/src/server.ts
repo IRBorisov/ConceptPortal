@@ -1,4 +1,4 @@
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema
@@ -18,7 +18,7 @@ export interface BuildRSToolMcpServerOptions {
 }
 
 /**
- * Build a low-level MCP `Server` instance that exposes the `@rsconcept/rstool` contract.
+ * Build an MCP `McpServer` instance that exposes the `@rsconcept/rstool` contract.
  *
  * The returned server is not yet connected to a transport. Wrap it with a
  * `StdioServerTransport` (for local subprocess hosts like Cursor and Claude Desktop) or
@@ -33,9 +33,9 @@ export interface BuildRSToolMcpServerOptions {
  * await server.connect(new StdioServerTransport());
  * ```
  */
-export function buildRSToolMcpServer(options: BuildRSToolMcpServerOptions = {}): Server {
+export function buildRSToolMcpServer(options: BuildRSToolMcpServerOptions = {}): McpServer {
   const tool = options.tool ?? new RSToolAgent();
-  const server = new Server(
+  const server = new McpServer(
     {
       name: options.name ?? 'rstool-mcp',
       version: options.version ?? '0.1.0'
@@ -51,7 +51,7 @@ export function buildRSToolMcpServer(options: BuildRSToolMcpServerOptions = {}):
     TOOL_DEFINITIONS.map(definition => [definition.name, definition])
   );
 
-  server.setRequestHandler(ListToolsRequestSchema, () =>
+  server.server.setRequestHandler(ListToolsRequestSchema, () =>
     Promise.resolve({
       tools: TOOL_DEFINITIONS.map(definition => ({
         name: definition.name,
@@ -61,7 +61,7 @@ export function buildRSToolMcpServer(options: BuildRSToolMcpServerOptions = {}):
     })
   );
 
-  server.setRequestHandler(CallToolRequestSchema, async request => {
+  server.server.setRequestHandler(CallToolRequestSchema, async request => {
     const definition = definitionByName.get(request.params.name);
     if (!definition) {
       return {
