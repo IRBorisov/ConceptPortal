@@ -36,25 +36,6 @@ Before you open a pull request:
 - Rely on GitHub Actions for linting and CI builds on push.
 - Use the [commit conventions](#commit-conventions) below in commit messages.
 
-## npm packages (independent installs)
-
-Install and run commands **inside each package directory** (or use `scripts/dev/*.ps1` from the repo root on Windows):
-
-```bash
-cd rsconcept/domain && npm ci && npm test && npm run build
-cd rsconcept/frontend && npm ci && npm test && npm run build
-cd rsconcept/rstool && npm ci && npm test && npm run build
-cd rsconcept/rstool-mcp && npm ci && npm test && npm run build
-```
-
-Domain grammar regeneration (after editing `rslang.grammar`):
-
-```bash
-cd rsconcept/domain && npm run generate
-```
-
-To try unpublished domain or rstool changes before a release: `npm run build` in the source package, then `npm link` there and `npm link @rsconcept/domain` (or `@rsconcept/rstool`) in the consumer package directory.
-
 ## Frontend (Vite + React + TypeScript)
 
 After you change RSLang grammar files, publish a new `@rsconcept/domain` (or use `npm link` locally), bump the `^` pin in `rsconcept/frontend/package.json` if needed, then regenerate any frontend-local grammars if applicable. Grammar source lives in `rsconcept/domain`:
