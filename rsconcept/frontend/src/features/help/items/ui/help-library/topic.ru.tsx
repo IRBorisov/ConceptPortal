@@ -2,7 +2,9 @@ import { useTx } from '@/i18n/use-tx';
 
 import {
   IconAnimationOff,
+  IconContextSelection,
   IconDownload,
+  IconFilter,
   IconFilterReset,
   IconFolder,
   IconFolderClosed,
@@ -55,9 +57,6 @@ export function HelpLibraryRu() {
           <IconUserSearch className='inline-icon' /> фильтр по пользователю
         </li>
         <li>
-          <IconSearch className='inline-icon' /> фильтр по названию и сокращению
-        </li>
-        <li>
           <IconFilterReset className='inline-icon' /> сбросить фильтры
         </li>
         <li>
@@ -66,6 +65,22 @@ export function HelpLibraryRu() {
         </li>
         <li>
           <IconDownload className='inline-icon' /> выгрузка таблицы в файл
+        </li>
+      </ul>
+
+      <h2>{tx('tx.general.search')}</h2>
+      <ul>
+        <li>
+          <IconSearch className='inline-icon' /> режим «Метаданные» — поиск по сокращению, названию и описанию элемента
+          библиотеки
+        </li>
+        <li>
+          <IconContextSelection className='inline-icon' /> режим «Контекстный поиск» — поиск по тексту внутри схем,
+          моделей и ОСС: термины, определения, комментарии, операции и блоки
+        </li>
+        <li>
+          <IconFilter className='inline-icon' /> в контекстном режиме — выбор атрибутов для поиска; по умолчанию
+          используются все поля
         </li>
       </ul>
 

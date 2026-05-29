@@ -2,7 +2,9 @@ import { useTx } from '@/i18n/use-tx';
 
 import {
   IconAnimationOff,
+  IconContextSelection,
   IconDownload,
+  IconFilter,
   IconFilterReset,
   IconFolder,
   IconFolderClosed,
@@ -55,9 +57,6 @@ export function HelpLibraryEn() {
           <IconUserSearch className='inline-icon' /> filter by user
         </li>
         <li>
-          <IconSearch className='inline-icon' /> filter by title and alias
-        </li>
-        <li>
           <IconFilterReset className='inline-icon' /> reset filters
         </li>
         <li>
@@ -66,6 +65,22 @@ export function HelpLibraryEn() {
         </li>
         <li>
           <IconDownload className='inline-icon' /> export table to file
+        </li>
+      </ul>
+
+      <h2>{tx('tx.general.search')}</h2>
+      <ul>
+        <li>
+          <IconSearch className='inline-icon' /> Metadata mode — search by alias, title, and description of a library
+          item
+        </li>
+        <li>
+          <IconContextSelection className='inline-icon' /> Context search mode — search inside schemas, models, and OSS:
+          terms, definitions, comments, operations, and blocks
+        </li>
+        <li>
+          <IconFilter className='inline-icon' /> in context mode — choose which attributes to search; all fields are
+          enabled by default
         </li>
       </ul>
 

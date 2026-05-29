@@ -6,7 +6,7 @@ import { type LibraryFilter } from '../models/library-filter';
 
 import { useLibrary } from './use-library';
 
-export function useApplyLibraryFilter(filter: LibraryFilter) {
+export function useApplyLibraryFilter(filter: LibraryFilter, contextMatchIds: number[] | null) {
   const { items } = useLibrary();
   const { user } = useAuth();
 
@@ -39,7 +39,14 @@ export function useApplyLibraryFilter(filter: LibraryFilter) {
     result = result.filter(item => matchLibraryItemLocation(item, filter.path));
   }
   if (filter.query) {
-    result = result.filter(item => matchLibraryItem(item, filter.query));
+    if (filter.searchMode === 'context') {
+      if (contextMatchIds !== null) {
+        const matches = new Set(contextMatchIds);
+        result = result.filter(item => matches.has(item.id));
+      }
+    } else {
+      result = result.filter(item => matchLibraryItem(item, filter.query));
+    }
   }
 
   return { filtered: result };

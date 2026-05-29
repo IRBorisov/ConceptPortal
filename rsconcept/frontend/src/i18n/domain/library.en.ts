@@ -88,6 +88,10 @@ export const txLibraryEn: Record<string, string> = {
   'tx.lib.readOnly.off': 'Editing: allowed',
 
   'tx.lib.search.byOwner': 'Search by owner',
+  'tx.lib.search.mode.metadata': 'Metadata',
+  'tx.lib.search.mode.context': 'Context search',
+  'tx.lib.search.context.fields': 'Search in',
+  'tx.lib.search.context.fields.reset': 'Search everywhere',
   'tx.lib.filter.byOwnerMe': 'I am owner',
   'tx.lib.filter.byEditorMe': 'I am editor',
   'tx.lib.filter.byHidden': 'Hidden',

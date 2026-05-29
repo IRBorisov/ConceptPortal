@@ -8,3 +8,8 @@ class NewVersionResponse(StrictSerializer):
     ''' Serializer: Create version response. '''
     version = serializers.IntegerField()
     schema = serializers.JSONField()
+
+
+class LibraryContextSearchResponseSerializer(StrictSerializer):
+    ''' Serializer: library context search response. '''
+    ids = serializers.ListField(child=serializers.IntegerField())

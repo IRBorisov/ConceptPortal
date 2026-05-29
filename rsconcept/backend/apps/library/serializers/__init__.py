@@ -1,6 +1,11 @@
 ''' REST API: Serializers. '''
 
-from .basics import AccessPolicySerializer, LocationSerializer, RenameLocationSerializer
+from .basics import (
+    AccessPolicySerializer,
+    LibraryContextSearchSerializer,
+    LocationSerializer,
+    RenameLocationSerializer
+)
 from .data_access import (
     LibraryItemBaseNonStrictSerializer,
     LibraryItemBaseSerializer,
@@ -14,4 +19,4 @@ from .data_access import (
     VersionCreateSerializer,
     VersionSerializer
 )
-from .responses import NewVersionResponse
+from .responses import LibraryContextSearchResponseSerializer, NewVersionResponse
