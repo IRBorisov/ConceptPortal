@@ -13,9 +13,9 @@ interface ViewModelStatsProps extends Styling {
 export function ViewModelStats({ className, stats, ...restProps }: ViewModelStatsProps) {
   const tx = useTx();
   const countOwned = stats.count_all - stats.count_inherited;
-  const countBase = stats.count_structured + stats.count_base;
+  const countBase = stats.count_structured + stats.count_base + stats.count_constant + stats.count_axiom;
   const countErrors = stats.count_incorrect + stats.count_incalculable;
-  const countDerived = stats.count_all - stats.count_base - stats.count_nominal;
+  const countDerived = stats.count_all - countBase - stats.count_nominal;
   const countModelNotes =
     stats.count_missing_base +
     stats.count_false_axioms +

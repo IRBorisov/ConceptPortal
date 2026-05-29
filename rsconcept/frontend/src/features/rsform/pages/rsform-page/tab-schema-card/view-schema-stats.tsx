@@ -13,9 +13,9 @@ interface ViewSchemaStatsProps extends Styling {
 export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaStatsProps) {
   const tx = useTx();
   const countOwned = stats.count_all - stats.count_inherited;
-  const countBase = stats.count_structured + stats.count_base;
+  const countBase = stats.count_structured + stats.count_base + stats.count_constant + stats.count_axiom;
   const countErrors = stats.count_incorrect + stats.count_incalculable;
-  const countDerived = stats.count_all - stats.count_base - stats.count_nominal;
+  const countDerived = stats.count_all - countBase - stats.count_nominal;
 
   return (
     <aside className={cn('h-fit flex flex-col border select-none', className)} {...restProps}>
