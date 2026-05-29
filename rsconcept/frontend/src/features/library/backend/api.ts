@@ -20,6 +20,7 @@ import {
   type CreateRSModelFromSandboxDTO,
   type CreateVersionDTO,
   type RenameLocationDTO,
+  schemaContextSearchResponse,
   schemaLibraryItem,
   schemaLibraryItemArray,
   schemaVersionExInfo,
@@ -31,6 +32,7 @@ import {
 export const libraryApi = {
   baseKey: KEYS.library,
   libraryListKey: KEYS.composite.libraryList,
+  contextSearchKey: [KEYS.library, 'context-search'] as const,
 
   getLibraryQueryOptions: ({ isAdmin }: { isAdmin: boolean }) =>
     queryOptions({
@@ -53,6 +55,29 @@ export const libraryApi = {
           endpoint: '/api/library/templates',
           options: { signal: meta.signal }
         })
+    }),
+  contextSearch: ({
+    query,
+    fields,
+    isAdmin,
+    signal
+  }: {
+    query: string;
+    fields: string[];
+    isAdmin: boolean;
+    signal?: AbortSignal;
+  }) =>
+    axiosGet<{ ids: number[] }>({
+      schema: schemaContextSearchResponse,
+      endpoint: '/api/library/context-search',
+      options: {
+        signal,
+        params: {
+          q: query,
+          search_fields: fields.join(','),
+          ...(isAdmin ? { admin: '1' } : {})
+        }
+      }
     }),
 
   createItem: (data: CreateLibraryItemDTO) =>

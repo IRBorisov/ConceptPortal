@@ -2,7 +2,9 @@ import { useTx } from '@/i18n/use-tx';
 
 import {
   IconAnimationOff,
+  IconContextSelection,
   IconDownload,
+  IconFilter,
   IconFilterReset,
   IconFolder,
   IconFolderClosed,
@@ -55,9 +57,6 @@ export function HelpLibraryFr() {
           <IconUserSearch className='inline-icon' /> filtre par utilisateur
         </li>
         <li>
-          <IconSearch className='inline-icon' /> filtre par titre et alias
-        </li>
-        <li>
           <IconFilterReset className='inline-icon' /> réinitialiser les filtres
         </li>
         <li>
@@ -66,6 +65,22 @@ export function HelpLibraryFr() {
         </li>
         <li>
           <IconDownload className='inline-icon' /> exporter le tableau dans un fichier
+        </li>
+      </ul>
+
+      <h2>{tx('tx.general.search')}</h2>
+      <ul>
+        <li>
+          <IconSearch className='inline-icon' /> mode Métadonnées — recherche par abréviation, titre et description de
+          l'élément de bibliothèque
+        </li>
+        <li>
+          <IconContextSelection className='inline-icon' /> mode Recherche contextuelle — recherche dans les schémas,
+          modèles et OSS : termes, définitions, commentaires, opérations et blocs
+        </li>
+        <li>
+          <IconFilter className='inline-icon' /> en mode contextuel — choix des attributs à rechercher ; tous les champs
+          sont activés par défaut
         </li>
       </ul>
 

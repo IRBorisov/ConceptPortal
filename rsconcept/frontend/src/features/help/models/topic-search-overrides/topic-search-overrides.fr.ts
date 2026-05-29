@@ -19,9 +19,21 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
       'Interface utilisateur du Portail. Navigation, réglages, thème clair et sombre, aide contextuelle, icônes, vidéo et menu utilisateur.'
   },
   [HelpTopic.UI_LIBRARY]: {
-    keywords: ['bibliothèque', 'schémas', 'recherche', 'filtre', 'dossiers', 'explorateur', 'tri'],
+    keywords: [
+      'bibliothèque',
+      'schémas',
+      'recherche',
+      'recherche contextuelle',
+      'métadonnées',
+      'termes',
+      'définitions',
+      'filtre',
+      'dossiers',
+      'explorateur',
+      'tri'
+    ],
     searchText:
-      'Bibliothèque de schémas. Recherche par nom et abréviation, filtres, tri, explorateur de dossiers, consultation des schémas conceptuels, OSS et modèles.'
+      'Bibliothèque de schémas. Recherche par métadonnées et recherche contextuelle dans les termes, définitions et commentaires, filtres, tri, explorateur de dossiers, consultation des schémas conceptuels, OSS et modèles.'
   },
   [HelpTopic.UI_SCHEMA_MENU]: {
     keywords: ['menu schéma', 'édition schéma', 'onglets', 'actions', 'commandes'],
@@ -106,7 +118,8 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
   },
   [HelpTopic.UI_TYPE_GRAPH]: {
     keywords: ['graphe des niveaux', 'graphe des types', 'niveaux', 'types', 'couleurs nœuds'],
-    searchText: 'Graphe des niveaux. Couleurs des nœuds, commandes du graphe, consultation des niveaux et des relations entre types.'
+    searchText:
+      'Graphe des niveaux. Couleurs des nœuds, commandes du graphe, consultation des niveaux et des relations entre types.'
   },
   [HelpTopic.UI_CST_STATUS]: {
     keywords: ['statut constituant', 'statut', 'notation', 'constituant'],
@@ -249,12 +262,12 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
   },
   [HelpTopic.RSL_EXPRESSION_DECLARATIVE]: {
     keywords: ['expressions déclaratives', 'déclaratif', 'description', 'déclaration'],
-    searchText: 'Expressions déclaratives. Syntaxe, sémantique et modes de description déclarative des objets et propriétés.'
+    searchText:
+      'Expressions déclaratives. Syntaxe, sémantique et modes de description déclarative des objets et propriétés.'
   },
   [HelpTopic.RSL_EXPRESSION_IMPERATIVE]: {
     keywords: ['expressions impératives', 'actions', 'blocs d’actions', 'commandes', 'séquence'],
-    searchText:
-      'Expressions impératives. Syntaxe, blocs d’actions, séquence d’opérations et contrôle d’exécution.'
+    searchText: 'Expressions impératives. Syntaxe, blocs d’actions, séquence d’opérations et contrôle d’exécution.'
   },
   [HelpTopic.RSL_EXPRESSION_RECURSIVE]: {
     keywords: ['constructions itératives', 'récursion', 'boucle', 'itération', 'répétition'],
@@ -297,7 +310,8 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
   },
   [HelpTopic.VERSIONS]: {
     keywords: ['versions', 'versionnement', 'historique', 'restauration', 'changements', 'révisions'],
-    searchText: 'Versionnement des schémas. Historique des changements, actions sur les versions, restauration et gestion des révisions.'
+    searchText:
+      'Versionnement des schémas. Historique des changements, actions sur les versions, restauration et gestion des révisions.'
   },
   [HelpTopic.ASSISTANT]: {
     keywords: ['assistant ia', 'assistant', 'intelligence artificielle', 'prompt', 'requêtes', 'suggestions'],

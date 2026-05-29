@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { useTx } from '@/i18n';
 
 import { IconSearch } from '@/components/icons';
+import { Loader } from '@/components/loader';
 import { type Styling } from '@/components/props';
 
 import { cn } from '../utils';
@@ -28,6 +29,9 @@ interface SearchBarProps extends Styling {
   /** Disable border. */
   noBorder?: boolean;
 
+  /** Show loader instead of the search icon. */
+  loading?: boolean;
+
   /** Input ref object. */
   inputRef?: React.Ref<HTMLInputElement>;
 }
@@ -41,6 +45,7 @@ export function SearchBar({
   noIcon,
   onChangeQuery,
   noBorder,
+  loading,
   className,
   placeholder,
   inputRef,
@@ -52,15 +57,28 @@ export function SearchBar({
   return (
     <div className={cn('group relative flex items-center grow', className)} {...restProps}>
       {!noIcon ? (
-        <IconSearch
-          className={clsx(
-            'absolute -top-0.5 left-2 translate-y-1/2',
-            'pointer-events-none ',
-            'bg-transparent text-muted-foreground',
-            'group-focus-within:text-primary'
-          )}
-          size='1.25rem'
-        />
+        loading ? (
+          <span
+            className={clsx(
+              'absolute -top-0.5 left-2 translate-y-1/2',
+              'pointer-events-none',
+              'text-muted-foreground group-focus-within:text-primary'
+            )}
+            aria-hidden
+          >
+            <Loader variant='ring' scale={1} />
+          </span>
+        ) : (
+          <IconSearch
+            className={clsx(
+              'absolute -top-0.5 left-2 translate-y-1/2',
+              'pointer-events-none ',
+              'bg-transparent text-muted-foreground',
+              'group-focus-within:text-primary'
+            )}
+            size='1.25rem'
+          />
+        )
       ) : null}
       <input
         id={id}
@@ -76,6 +94,7 @@ export function SearchBar({
         value={query}
         onChange={event => onChangeQuery?.(event.target.value)}
         placeholder={resolvedPlaceholder}
+        aria-busy={loading}
       />
     </div>
   );

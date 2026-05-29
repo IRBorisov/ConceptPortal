@@ -91,6 +91,10 @@ export const txLibraryRu: Record<string, string> = {
   'tx.lib.readOnly.off': 'Изменение: разрешено',
 
   'tx.lib.search.byOwner': 'Поиск по владельцу',
+  'tx.lib.search.mode.metadata': 'Метаданные',
+  'tx.lib.search.mode.context': 'Контекстный поиск',
+  'tx.lib.search.context.fields': 'Искать в',
+  'tx.lib.search.context.fields.reset': 'Искать везде',
   'tx.lib.filter.byOwnerMe': 'Я владелец',
   'tx.lib.filter.byEditorMe': 'Я редактор',
   'tx.lib.filter.byHidden': 'Скрытые',

@@ -5,6 +5,7 @@ from shared import messages as msg
 from shared.serializers import StrictSerializer
 
 from ..models import AccessPolicy, validate_location
+from ..services.context_search import ALL_CONTEXT_FIELDS
 
 
 class LocationSerializer(StrictSerializer):
@@ -49,3 +50,28 @@ class AccessPolicySerializer(StrictSerializer):
                 'access_policy': msg.invalidEnum(attrs['access_policy'])
             })
         return attrs
+
+
+class LibraryContextSearchSerializer(StrictSerializer):
+    ''' Serializer: library context search query parameters. '''
+    q = serializers.CharField(required=False, allow_blank=True, default='')
+    search_fields = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        help_text='Comma-separated field names'
+    )
+    admin = serializers.BooleanField(required=False, default=False)
+
+    def validate_q(self, value: str) -> str:
+        return value.strip()
+
+    def validate_search_fields(self, value: str) -> list[str] | None:
+        if not value or not value.strip():
+            return None
+        parts = [part.strip() for part in value.split(',') if part.strip()]
+        unknown = [part for part in parts if part not in ALL_CONTEXT_FIELDS]
+        if unknown:
+            raise serializers.ValidationError(
+                f'Unknown fields: {", ".join(unknown)}'
+            )
+        return parts

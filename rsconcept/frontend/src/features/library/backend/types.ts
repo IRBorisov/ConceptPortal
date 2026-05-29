@@ -177,3 +177,7 @@ export const schemaUpdateVersion = schemaVersionInput.extend({
 export const schemaCreateVersion = schemaVersionInput.extend({
   items: z.array(z.number())
 });
+
+export const schemaContextSearchResponse = z.object({
+  ids: z.array(z.number())
+});

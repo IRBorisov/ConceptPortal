@@ -90,6 +90,10 @@ export const txLibraryFr: Record<string, string> = {
   'tx.lib.readOnly.off': 'Modification : autorisée',
 
   'tx.lib.search.byOwner': 'Recherche par propriétaire',
+  'tx.lib.search.mode.metadata': 'Métadonnées',
+  'tx.lib.search.mode.context': 'Recherche contextuelle',
+  'tx.lib.search.context.fields': 'Rechercher dans',
+  'tx.lib.search.context.fields.reset': 'Rechercher partout',
   'tx.lib.filter.byOwnerMe': 'Je suis propriétaire',
   'tx.lib.filter.byEditorMe': 'Je suis éditeur',
   'tx.lib.filter.byHidden': 'Masqués',

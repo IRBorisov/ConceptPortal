@@ -3,7 +3,14 @@ import { persist } from 'zustand/middleware';
 
 import { LibraryItemType } from '@rsconcept/domain/library';
 
-import { type LibraryFilter } from '../models/library-filter';
+import {
+  DEFAULT_LIBRARY_CONTEXT_SEARCH_FIELDS,
+  isDefaultContextSearchFields,
+  type LibraryContextSearchField,
+  type LibraryContextSearchFields,
+  normalizeContextSearchFields
+} from '../models/library-context-search';
+import { type LibraryFilter, type LibrarySearchMode } from '../models/library-filter';
 
 export type LibrarySearchSelectorFilter =
   | 'all'
@@ -35,6 +42,13 @@ interface LibrarySearchStore {
   query: string;
   setQuery: (value: string) => void;
 
+  searchMode: LibrarySearchMode;
+  setSearchMode: (value: LibrarySearchMode) => void;
+
+  contextFields: LibraryContextSearchFields;
+  setContextField: (field: LibraryContextSearchField, enabled: boolean) => void;
+  resetContextFields: () => void;
+
   path: string;
   setPath: (value: string) => void;
 
@@ -59,6 +73,16 @@ export const useLibrarySearchStore = create<LibrarySearchStore>()(
       query: '',
       setQuery: value => set({ query: value }),
 
+      searchMode: 'metadata',
+      setSearchMode: value => set({ searchMode: value }),
+
+      contextFields: { ...DEFAULT_LIBRARY_CONTEXT_SEARCH_FIELDS },
+      setContextField: (field, enabled) =>
+        set(state => ({
+          contextFields: { ...state.contextFields, [field]: enabled }
+        })),
+      resetContextFields: () => set({ contextFields: { ...DEFAULT_LIBRARY_CONTEXT_SEARCH_FIELDS } }),
+
       path: '',
       setPath: value => set({ path: value }),
 
@@ -77,30 +101,40 @@ export const useLibrarySearchStore = create<LibrarySearchStore>()(
           path: '',
           location: '',
           selectorFilter: 'all',
-          filterUser: null
+          filterUser: null,
+          searchMode: 'metadata',
+          contextFields: { ...DEFAULT_LIBRARY_CONTEXT_SEARCH_FIELDS }
         }))
     }),
     {
-      version: 3,
+      version: 4,
       migrate: (persisted, fromVersion) => {
-        if (fromVersion >= 3 || persisted == null || typeof persisted !== 'object') {
+        if (persisted == null || typeof persisted !== 'object') {
           return persisted as LibrarySearchStore;
         }
-        const record = persisted as { state?: { selectorFilter?: unknown } };
-        const raw = record.state?.selectorFilter;
-        if (typeof raw === 'string') {
-          const normalized = raw.toLowerCase();
-          record.state = record.state ?? {};
-          record.state.selectorFilter = isLibrarySearchSelectorFilter(normalized) ? normalized : 'all';
+        const record = persisted as { state?: Partial<LibrarySearchStore> };
+        record.state = record.state ?? {};
+
+        if (fromVersion < 3) {
+          const raw = record.state.selectorFilter;
+          if (typeof raw === 'string') {
+            const normalized = raw.toLowerCase();
+            record.state.selectorFilter = isLibrarySearchSelectorFilter(normalized) ? normalized : 'all';
+          }
+        }
+        if (fromVersion < 4) {
+          record.state.searchMode = 'metadata';
+          record.state.contextFields = normalizeContextSearchFields(record.state.contextFields);
         }
         return persisted as LibrarySearchStore;
       },
       partialize: state => ({
         subfolders: state.subfolders,
-
         location: state.location,
         selectorFilter: state.selectorFilter,
-        filterUser: state.filterUser
+        filterUser: state.filterUser,
+        searchMode: state.searchMode,
+        contextFields: state.contextFields
       }),
       name: 'portal.library.search'
     }
@@ -114,12 +148,24 @@ export function useHasCustomFilter(): boolean {
   const selectorFilter = useLibrarySearchStore(state => state.selectorFilter);
   const filterUser = useLibrarySearchStore(state => state.filterUser);
   const location = useLibrarySearchStore(state => state.location);
-  return !!path || !!query || !!location || selectorFilter !== 'all' || filterUser !== null;
+  const searchMode = useLibrarySearchStore(state => state.searchMode);
+  const contextFields = useLibrarySearchStore(state => state.contextFields);
+  return (
+    !!path ||
+    !!query ||
+    !!location ||
+    selectorFilter !== 'all' ||
+    filterUser !== null ||
+    searchMode !== 'metadata' ||
+    !isDefaultContextSearchFields(contextFields)
+  );
 }
 
 /** Utility function that returns the current library filter. */
 export function useCreateLibraryFilter(): LibraryFilter {
   const query = useLibrarySearchStore(state => state.query);
+  const searchMode = useLibrarySearchStore(state => state.searchMode);
+  const contextFields = useLibrarySearchStore(state => state.contextFields);
   const selectorFilter = useLibrarySearchStore(state => state.selectorFilter);
   const subfolders = useLibrarySearchStore(state => state.subfolders);
   const location = useLibrarySearchStore(state => state.location);
@@ -146,6 +192,8 @@ export function useCreateLibraryFilter(): LibraryFilter {
 
   return {
     query: query,
+    searchMode: searchMode,
+    contextFields: contextFields,
     itemType: itemType,
     isEditor: isEditor,
     isOwned: isOwned,

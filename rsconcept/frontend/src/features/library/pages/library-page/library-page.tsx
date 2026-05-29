@@ -7,6 +7,7 @@ import { useDialogsStore } from '@/stores/dialogs';
 
 import { useApplyLibraryFilter } from '../../backend/use-apply-library-filter';
 import { useLibrary } from '../../backend/use-library';
+import { useLibraryContextSearch } from '../../backend/use-library-context-search';
 import { useRenameLocation } from '../../backend/use-rename-location';
 import { useCreateLibraryFilter, useLibrarySearchStore } from '../../stores/library-search';
 
@@ -24,7 +25,12 @@ export function LibraryPage() {
   const setLocation = useLibrarySearchStore(state => state.setLocation);
 
   const filter = useCreateLibraryFilter();
-  const { filtered } = useApplyLibraryFilter(filter);
+  const { matchIds } = useLibraryContextSearch({
+    query: filter.query,
+    contextFields: filter.contextFields,
+    enabled: filter.searchMode === 'context'
+  });
+  const { filtered } = useApplyLibraryFilter(filter, matchIds);
 
   const showChangeLocation = useDialogsStore(state => state.showChangeLocation);
   const canRename = (() => {

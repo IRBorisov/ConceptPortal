@@ -10,9 +10,12 @@ import { SearchBar } from '@/components/input';
 import { cn } from '@/components/utils';
 
 import { useLibrary } from '../../backend/use-library';
+import { useLibraryContextSearch } from '../../backend/use-library-context-search';
 import { useHasCustomFilter, useLibrarySearchStore } from '../../stores/library-search';
 
+import { PopoverContextFields } from './popover-context-fields';
 import { SelectorLibraryFilter } from './selector-library-filter';
+import { SelectorSearchMode } from './selector-search-mode';
 
 interface ToolbarSearchProps {
   className?: string;
@@ -24,7 +27,14 @@ export function ToolbarSearch({ className }: ToolbarSearchProps) {
 
   const query = useLibrarySearchStore(state => state.query);
   const setQuery = useLibrarySearchStore(state => state.setQuery);
+  const searchMode = useLibrarySearchStore(state => state.searchMode);
+  const contextFields = useLibrarySearchStore(state => state.contextFields);
   const filterUser = useLibrarySearchStore(state => state.filterUser);
+  const { isPending: contextSearchPending } = useLibraryContextSearch({
+    query,
+    contextFields,
+    enabled: searchMode === 'context'
+  });
   const setFilterUser = useLibrarySearchStore(state => state.setFilterUser);
 
   const resetFilter = useLibrarySearchStore(state => state.resetFilter);
@@ -41,6 +51,8 @@ export function ToolbarSearch({ className }: ToolbarSearchProps) {
   return (
     <div className={cn('flex text-sm items-center pl-1.5', className)}>
       <SelectorLibraryFilter className='mr-1' />
+      <SelectorSearchMode className='mr-1 max-sm:hidden' />
+      {searchMode === 'context' ? <PopoverContextFields className='mr-1 max-sm:hidden' /> : null}
 
       <MiniButton
         title={tx('tx.general.filter.reset')}
@@ -53,6 +65,7 @@ export function ToolbarSearch({ className }: ToolbarSearchProps) {
         id='library_search'
         placeholder={tx('tx.general.search')}
         noBorder
+        loading={contextSearchPending}
         className='min-w-28 sm:min-w-40 max-w-80 grow'
         query={query}
         onChangeQuery={setQuery}

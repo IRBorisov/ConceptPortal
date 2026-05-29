@@ -19,9 +19,21 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
       'Portal user interface. Navigation, settings, light and dark theme, contextual help, icons, video, and user menu.'
   },
   [HelpTopic.UI_LIBRARY]: {
-    keywords: ['library', 'schemas', 'search', 'filter', 'folders', 'explorer', 'sorting'],
+    keywords: [
+      'library',
+      'schemas',
+      'search',
+      'context search',
+      'metadata',
+      'terms',
+      'definitions',
+      'filter',
+      'folders',
+      'explorer',
+      'sorting'
+    ],
     searchText:
-      'Schema library. Search by name and abbreviation, filters, sorting, folder explorer, viewing conceptual schemas, OSS, and models.'
+      'Schema library. Metadata and context search across terms, definitions, and comments, filters, sorting, folder explorer, viewing conceptual schemas, OSS, and models.'
   },
   [HelpTopic.UI_SCHEMA_MENU]: {
     keywords: ['schema menu', 'schema editing', 'tabs', 'actions', 'commands'],
