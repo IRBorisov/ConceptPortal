@@ -1,98 +1,47 @@
-# Grammar reference (pointers)
+# Грамматика: короткая карта
 
-Below is a compact token map agents can use without opening the grammar. For full grammar see `@rsconcept/domain` package.
+Этого обычно достаточно агенту. Полная грамматика живет в `@rsconcept/domain`.
 
-## Token classes
+## Токены
 
-| Class           | Tokens / examples                                          |
-| --------------- | ---------------------------------------------------------- |
-| Whitespace      | space, tab, newline                                        |
-| Integer literal | `0`, `42`                                                  |
-| Empty set       | `∅`                                                        |
-| Integer set     | `Z`                                                        |
-| Globals         | `X#`, `C#`, `S#`, `D#`, `F#`, `P#`, `A#`, `T#`, `N#`, `R#` |
-| Locals          | `x`, `ξ`, `μ2`, `y1`                                       |
-| Punctuation     | `(`, `)`, `[`, `]`, `{`, `}`, `,`, `;`                     |
-| Comment         | none — RSLang has no comments inside formal expressions    |
+- Литералы: `0`, `42`, `Z`, `∅`.
+- Алиасы: `X#`, `C#`, `S#`, `D#`, `F#`, `P#`, `A#`, `T#`, `R#`.
+- Локальные переменные: `x`, `ξ`, `μ2`, `y1`.
+- Скобки и разделители: `()`, `[]`, `{}`, `,`, `;`.
+- Комментариев в формальных выражениях нет.
 
-## Set / structural operators
+## Операторы
 
-| Token                | Symbol                     |
-| -------------------- | -------------------------- |
-| Union                | `∪`                        |
-| Intersection         | `∩`                        |
-| Difference           | `\`                        |
-| Symmetric difference | `∆`                        |
-| Cartesian product    | `×`                        |
-| Boolean              | `ℬ`                        |
-| Sum set              | `red`                      |
-| Singleton            | `bool`                     |
-| Desingleton          | `debool`                   |
-| Small projection     | `pr1`, `pr1,3`, …          |
-| Large projection     | `Pr1`, `Pr2,4`, …          |
-| Filter               | `Fi1[D](S)`, `Fi1,2[D](S)` |
-| Cardinality          | `card`                     |
+- Множества: `∪`, `∩`, `\`, `∆`, `×`, `ℬ`.
+- Структуры: `red`, `bool`, `debool`, `pr1`, `Pr1`, `Fi1[D](S)`, `card`.
+- Предикаты: `∈`, `∉`, `⊆`, `⊂`, `⊄`, `=`, `≠`, `<`, `≤`, `>`, `≥`.
+- Связки: `¬`, `&`, `∨`, `⇒`, `⇔`.
+- Кванторы: `∀`, `∃`.
 
-## Predicates
+Мультииндексы парсятся как список натуральных чисел: `pr1,3`, `Pr2,4`, `Fi1,2[D](S)`.
 
-| Token            | Symbol |
-| ---------------- | ------ |
-| Membership       | `∈`    |
-| Non-membership   | `∉`    |
-| Inclusion        | `⊆`    |
-| Strict inclusion | `⊂`    |
-| Non-inclusion    | `⊄`    |
-| Equality         | `=`    |
-| Inequality       | `≠`    |
-| Less             | `<`    |
-| Less-or-equal    | `≤`    |
-| Greater          | `>`    |
-| Greater-or-equal | `≥`    |
+## Декларации
 
-## Logical connectives
+- Терм-функция: `F# ::= [<params>] <body STE>`.
+- Предикат-функция: `P# ::= [<params>] <body LE>`.
+- Параметр: `α ∈ <STE>`.
+- Вызов: `F#[<arg1>, <arg2>]`.
 
-| Token       | Symbol |
-| ----------- | ------ |
-| Negation    | `¬`    |
-| Conjunction | `&`    |
-| Disjunction | `∨`    |
-| Implication | `⇒`    |
-| Equivalence | `⇔`    |
+## Приоритеты
 
-## Quantifiers
+1. Вызовы функций, проекции, `ℬ`, `bool`, `debool`, `red`, `card`.
+2. `×`.
+3. `*`.
+4. `+`, `-`.
+5. `∪`, `∩`, `\`, `∆`.
+6. Предикаты: `∈`, `=`, `<`, ...
+7. `¬`.
+8. `&`.
+9. `∨`.
+10. `⇒`.
+11. `⇔`.
 
-| Token       | Symbol |
-| ----------- | ------ |
-| Universal   | `∀`    |
-| Existential | `∃`    |
+## Когда читать исходники
 
-## Declarators
-
-| Token                 | Form                                              |
-| --------------------- | ------------------------------------------------- |
-| Function declaration  | `F# ::= [<params>] <body STE>`                    |
-| Predicate declaration | `P# ::= [<params>] <body LE>`                     |
-| Parameter declaration | `α ∈ <STE>` (commas separate; commas inside `[]`) |
-| Function call         | `F#[<arg1>, <arg2>, …]`                           |
-
-## Precedence (from highest to lowest)
-
-1. Function calls, projections, boolean
-2. Cartesian product `×`
-3. Multiplicative `*`
-4. Additive `+`, `-`
-5. Set operators `∪`, `∩`, `\`, `∆`
-6. Predicates (`∈`, `=`, `<`, …)
-7. Negation `¬`
-8. Conjunction `&`
-9. Disjunction `∨`
-10. Implication `⇒`
-11. Equivalence `⇔`
-
-Multi-index tokens inside projections / filters are parsed as a comma-separated list of natural numbers.
-
-## When to consult the full grammar
-
-- Grammar conflicts or surprising error positions — read `rslang.grammar` directly.
-- Adding new operators or precedence rules — must be done in the domain package, not in rstool.
-- Lezer terms / token IDs — see `@rsconcept/domain/src/rslang/parser/token.ts` and `parser.terms.ts`.
+- Позиция ошибки неожиданная.
+- Нужны Lezer terms/token IDs: `@rsconcept/domain/src/rslang/parser/token.ts`, `parser.terms.ts`.

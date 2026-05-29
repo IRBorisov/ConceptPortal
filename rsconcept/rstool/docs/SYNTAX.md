@@ -1,139 +1,84 @@
-# RSLang syntax reference
+# Синтаксис RSLang
 
-Use this when constructing or repairing RSLang expressions. For full grammar tokens see `GRAMMAR-REF.md`. For typification rules see `TYPIFICATION.md`.
+Читай, когда строишь или исправляешь `definitionFormal`. Токены и приоритеты — в `GRAMMAR-REF.md`, типизация — в `TYPIFICATION.md`.
 
-## Identifier rules
+## Имена и литералы
 
-- **Globals** (concept aliases): uppercase Latin letter + digits — `X1`, `C2`, `S3`, `D11`, `F7`, `P4`, `A6`, `T9`, `N12`. The leading letter must match the constituent's role.
-- **Radicals**: identifiers starting with `R` — used inside template parameterised expressions to denote arbitrary typifications (`R1`, `R2`).
-- **Locals** (bound variables): lowercase Latin or Greek letter, optionally with digits — `x`, `ξ`, `μ2`, `y1`.
-- **Special identifiers** — reserved tokens (`Z`, `∅`, operators).
+- Глобальные алиасы: `X1`, `C2`, `S3`, `D11`, `F7`, `P4`, `A6`, `T9`; буква совпадает с ролью.
+- Радикалы: `R1`, `R2` — шаблонные ступени в параметрах.
+- Локальные переменные: `x`, `ξ`, `μ2`, `y1`.
+- Целые: `0`, `42`; отрицательного литерала нет, пиши `0 - 5`.
+- `Z` — множество целых, `∅` — пустое множество с типизацией `ℬ(R0)`.
 
-## Literals
+## Теоретико-множественные выражения (STE)
 
-- **Integers**: digit sequence, no negative literal: `0`, `42`. Negation is a binary subtraction `0 - n`.
-- **Integer set**: `Z`.
-- **Empty set**: `∅` (typification `ℬ(R0)` — set of arbitrary element structure).
+- `D1 ∪ D2`, `D1 ∩ D2`, `D1 \ D2`, `D1 ∆ D2` — операции над множествами.
+- `X1 × X2` — декартово произведение.
+- `ℬ(X1)` — булеан, множество всех подмножеств.
+- `(a, b, c)` — кортеж, арность минимум 2.
+- `{a, b, c}` — перечисление.
+- `bool(a)` — синглетон, `debool(S)` — извлечение единственного элемента.
+- `red(S)` — суммарное множество; `S` должно иметь ступень `ℬ(ℬ(H))`.
+- `pr1(tuple)` — малая проекция кортежа.
+- `Pr1(S)` — большая проекция множества кортежей.
+- `Fi1[D](S)` — фильтр по принадлежности выбранной проекции в `D`.
 
-## Set-theoretic expressions
+Мультииндексы разрешены: `pr1,3(...)`, `Pr2,4(S1)`, `Fi1,2[D1](S1)`.
 
-| Construct            | Syntax              | Notes                                           |
-| -------------------- | ------------------- | ----------------------------------------------- |
-| Union                | `D1 ∪ D2`           |                                                 |
-| Intersection         | `D1 ∩ D2`           |                                                 |
-| Difference           | `D1 \ D2`           |                                                 |
-| Symmetric difference | `D1 ∆ D2`           |                                                 |
-| Cartesian product    | `X1 × X2`           | typification: tuple                             |
-| Boolean / power set  | `ℬ(X1)`             | set of all subsets                              |
-| Tuple                | `(a, b, c)`         | ordered, n ≥ 2                                  |
-| Enumeration          | `{a, b, c}`         | unordered, n ≥ 1                                |
-| Singleton            | `bool(a)` ≡ `{a}`   |                                                 |
-| Desingleton          | `debool({a})` ≡ `a` | only for one-element sets                       |
-| Sum set              | `red(S1)`           | union of inner sets; `S1` must be a set of sets |
-| Small projection     | `pr1((a1, …, an))`  | returns `a1`                                    |
-| Large projection     | `Pr1(S1)`           | set of first components of tuples in `S1`       |
-| Filter               | `Fi1[D1](S1)`       | subset of `S1` whose first projection ∈ `D1`    |
+## Логические выражения (LE)
 
-Indices `1` may be any natural number or comma-separated multi-index (`pr1,3((a1, a2, a3, a4)) = (a1, a3)`, `Fi1,2[D1](S1)`).
+- Предикаты множеств: `ξ ∈ S`, `ξ ∉ S`, `S1 = S2`, `S1 ≠ S2`, `S1 ⊆ S2`, `S1 ⊂ S2`, `S1 ⊄ S2`.
+- Арифметические предикаты: `=`, `≠`, `<`, `≤`, `>`, `≥` над `Z`.
+- Связки: `¬A`, `A & B`, `A ∨ B`, `A ⇒ B`, `A ⇔ B`.
 
-## Logical expressions
+`TRUE` и `FALSE` в экспликации КС не используют.
 
-### Set-theoretic predicates
+## Кванторы
 
-| Predicate        | Syntax    |
-| ---------------- | --------- |
-| Membership       | `ξ ∈ S`   |
-| Non-membership   | `ξ ∉ S`   |
-| Set equality     | `S1 = S2` |
-| Set inequality   | `S1 ≠ S2` |
-| Inclusion        | `S1 ⊆ S2` |
-| Strict inclusion | `S1 ⊂ S2` |
-| Non-inclusion    | `S1 ⊄ S2` |
+- `∀ξ∈D1 (LE(ξ))` — всеобщность.
+- `∃ξ∈D1 (LE(ξ))` — существование.
+- `∀(ξ1, ξ2)∈S1 (LE(ξ1, ξ2))` — объявление кортежа.
+- `∀ξ1, ξ2∈D1 (LE(ξ1, ξ2))` — сокращение вложенных кванторов.
 
-### Arithmetic predicates (typification `Logic`)
+Скобки вокруг `LE` можно опустить для атомарного логического выражения.
 
-`a = b`, `a ≠ b`, `a < b`, `a ≤ b`, `a > b`, `a ≥ b`.
+## Арифметика
 
-### Connectives
+`a + b`, `a - b`, `a * b` дают `Z`. `card(S)` возвращает мощность конечного множества.
 
-| Connective  | Syntax  |
-| ----------- | ------- |
-| Negation    | `¬A`    |
-| Conjunction | `A & B` |
-| Disjunction | `A ∨ B` |
-| Implication | `A ⇒ B` |
-| Equivalence | `A ⇔ B` |
+## Параметризованные выражения
 
-The constants `TRUE` and `FALSE` are **not** used inside schema explications.
-
-## Quantifiers
-
-| Form          | Syntax                       |
-| ------------- | ---------------------------- |
-| Universal     | `∀ξ∈STE (LE(ξ))`             |
-| Existential   | `∃ξ∈STE (LE(ξ))`             |
-| Tuple binding | `∀(ξ1, ξ2)∈STE (LE(ξ1, ξ2))` |
-| Variable list | `∀ξ1, ξ2 ∈ STE (LE(ξ1, ξ2))` |
-
-Parentheses around `LE` may be omitted for atomic logical expressions.
-
-## Arithmetic
-
-Operations `a + b`, `a - b`, `a * b` form set-theoretic expressions with typification `Z`. Negative numbers are computed, never literal.
-
-`card(S)` returns the integer cardinality of `S` (always finite in practice).
-
-## Parameterised expressions
-
-### Term-function declaration
-
-```
+```text
 F1 ::= [α1∈STE1, α2∈STE2(α1)] STE(α1, α2)
-```
-
-- Inside `[]` is an ordered list of parameter declarations separated by commas.
-- A parameter is declared with `∈`: `local_var ∈ domain`.
-- A declared variable can appear in subsequent parameter domains and in the result STE.
-
-### Predicate-function declaration
-
-```
 P1 ::= [α1∈STE1, α2∈STE2(α1)] LE(α1, α2)
 ```
 
-The only difference from a term-function is that the body is a logical expression.
+- В `[]` идут параметры через `∈`.
+- Параметр доступен в следующих доменах и теле.
+- Вызов позиционный: `F1[ξ1, S1]`, `P1[ξ1\ξ2, ξ3]`.
+- `F#` возвращает теоретико-множественное выражение, `P#` — логическое.
 
-### Calling parameterised functions
+## Радикалы
 
-`F1[ξ1, S1]`, `P1[ξ1\ξ2, ξ3]` — arguments are positional and listed in square brackets after the function name. Argument typifications are checked against parameter typifications. Result is an STE (term-function) or LE (predicate-function).
-
-### Template expressions
-
-Functions that use radicals as parameter typifications are templates:
-
-```
+```text
 F2 ::= [α1∈R1×R2, α2∈R1] α2 = pr1(α1)
 ```
 
-- Radical values are **inferred** from the call-site argument typifications. All inferred values for the same radical index must agree.
-- Different radical indices are independent.
-- Radicals may only appear in parameter domains — never in the result expression.
+- `R#` выводится по типизациям аргументов в месте вызова.
+- Все вхождения одного `R#` должны совпасть.
+- Радикалы допустимы только в доменах параметров.
 
-## Examples
+## Примеры
 
 - `¬α ∈ S1`
-- `D1 ∈ S1 ⇒ 2 + 2 = 5`
 - `D1 ⊆ D2 ⇔ ∀x∈D1 x∈D2`
 - `∀x∈D1 ∃y∈D2 (x, y)∈S1 & (x, x)∈S1`
 - `(4 + 5) * 3`, `card(X1) > 5`
-- `ℬ(2) = {{}, {1}, {2}, {1, 2}}`
 - `pr2((5, 4, 3, 2, 1)) = 4`
 - `red({{1, 2, 3}, {3, 4}}) = {1, 2, 3, 4}`
-- `Fi2[{2, 4}]({((1, 2), (3, 4), (5, 6))}) = {((1, 2), (3, 4))}`
 
-## Correctness model
+## Корректность
 
-- Expression checking happens in the **global context**: known typifications and bijective portability of every referenced identifier. Unknown identifiers are errors.
-- Set-theoretic rules follow from bijective portability of the membership predicate — an element must match the typification of the set it is tested against.
-- Logical consistency cannot generally be checked automatically. The existence of an interpretation example in a conceptual model is a basis for accepting consistency.
-- All formal definitions must be **bijectively portable**: values are independent of any bijective replacement of undefined-concept interpretations.
+- Анализ идет в глобальном контексте: все алиасы должны быть известны и типизированы.
+- Формальные определения должны быть биективно переносимыми (гарантируется семантическим анализатором).
+- Логическая непротиворечивость проверяется примером интерпретации в модели.

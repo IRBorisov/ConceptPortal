@@ -4,11 +4,15 @@ import { TUPLE_ID } from './constants';
 import {
   addPerson,
   A1_MAX_PEOPLE,
+  deriveGenderSets,
   formatX1,
+  parseAddPersonArgs,
+  parseGenderToken,
   removePerson,
   renamePerson,
   remapS1ByNames,
   setX1List,
+  setX1WithGender,
   satisfiesA1MaxPeople,
   x1Cardinality
 } from './x1-actions';
@@ -27,30 +31,67 @@ const SAMPLE_S1 = [
 ];
 
 describe('kinship x1-actions', () => {
-  it('adds person with next index', () => {
-    const next = addPerson(SAMPLE_BINDING, 'Олег');
+  it('parses gender tokens', () => {
+    expect(parseGenderToken('м')).toBe('m');
+    expect(parseGenderToken('F')).toBe('f');
+    expect(parseGenderToken('unknown')).toBeNull();
+  });
+
+  it('parses add args as gender then name', () => {
+    expect(parseAddPersonArgs(['м', 'Олег'])).toEqual({ gender: 'm', name: 'Олег' });
+    expect(parseAddPersonArgs(['ж', 'Anna', 'Maria'])).toEqual({ gender: 'f', name: 'Anna Maria' });
+  });
+
+  it('adds person with next index and records gender', () => {
+    const genderByName: Record<string, 'm' | 'f'> = { Иван: 'm', Мария: 'f', Пётр: 'm', Анна: 'f' };
+    const next = addPerson(SAMPLE_BINDING, 'Олег', 'm', genderByName);
     expect(next[4]).toBe('Олег');
-    expect(formatX1(next)).toContain('4: Олег');
+    expect(genderByName.Олег).toBe('m');
+    expect(formatX1(next, genderByName)).toContain('4: Олег (м)');
+    const { s2, s3 } = deriveGenderSets(next, genderByName);
+    expect(s2).toContain(4);
+    expect(s3).not.toContain(4);
   });
 
   it('renames person in place', () => {
-    const next = renamePerson(SAMPLE_BINDING, 'Пётр', 'Петр');
+    const genderByName: Record<string, 'm' | 'f'> = { Иван: 'm', Мария: 'f', Пётр: 'm', Анна: 'f' };
+    const next = renamePerson(SAMPLE_BINDING, 'Пётр', 'Петр', genderByName);
     expect(next[2]).toBe('Петр');
+    expect(genderByName.Петр).toBe('m');
+    expect(genderByName.Пётр).toBeUndefined();
   });
 
   it('rejects blank names on add and rename', () => {
-    expect(() => addPerson(SAMPLE_BINDING, '   ')).toThrow(/пустым/);
-    expect(() => renamePerson(SAMPLE_BINDING, '   ', 'Петр')).toThrow(/пустым/);
-    expect(() => renamePerson(SAMPLE_BINDING, 'Пётр', '   ')).toThrow(/пустым/);
+    const genderByName: Record<string, 'm' | 'f'> = {};
+    expect(() => addPerson(SAMPLE_BINDING, '   ', 'm', genderByName)).toThrow(/пустым/);
+    expect(() => parseAddPersonArgs(['м'])).toThrow(/пол и имя/);
+    expect(() => renamePerson(SAMPLE_BINDING, '   ', 'Петр', genderByName)).toThrow(/пустым/);
+    expect(() => renamePerson(SAMPLE_BINDING, 'Пётр', '   ', genderByName)).toThrow(/пустым/);
   });
 
   it('removes person and reindexes binding and S1', () => {
-    const { binding, s1 } = removePerson(SAMPLE_BINDING, SAMPLE_S1, 'Мария');
+    const genderByName: Record<string, 'm' | 'f'> = {
+      Иван: 'm',
+      Мария: 'f',
+      Пётр: 'm',
+      Анна: 'f'
+    };
+    const { binding, s1 } = removePerson(SAMPLE_BINDING, SAMPLE_S1, 'Мария', genderByName);
     expect(binding).toEqual({ 0: 'Иван', 1: 'Пётр', 2: 'Анна' });
     expect(s1).toEqual([
       [TUPLE_ID, 0, 1],
       [TUPLE_ID, 1, 2]
     ]);
+    expect(genderByName.Мария).toBeUndefined();
+  });
+
+  it('sets X1 with explicit gender pairs', () => {
+    const { binding, genderByName } = setX1WithGender([
+      { gender: 'f', name: 'Анна' },
+      { gender: 'm', name: 'Иван' }
+    ]);
+    expect(binding).toEqual({ 0: 'Анна', 1: 'Иван' });
+    expect(deriveGenderSets(binding, genderByName)).toEqual({ s2: [1], s3: [0] });
   });
 
   it('replaces X1 list and remaps S1 by names', () => {
@@ -74,11 +115,12 @@ describe('kinship x1-actions', () => {
 
   it('rejects add when A1 would be violated', () => {
     let binding: Record<number, string> = {};
+    const genderByName: Record<string, 'm' | 'f'> = {};
     for (let index = 0; index < A1_MAX_PEOPLE; index += 1) {
-      binding = addPerson(binding, `P${index}`);
+      binding = addPerson(binding, `P${index}`, index % 2 === 0 ? 'm' : 'f', genderByName);
     }
     expect(x1Cardinality(binding)).toBe(A1_MAX_PEOPLE);
-    expect(() => addPerson(binding, 'Лишний')).toThrow(/A1/);
+    expect(() => addPerson(binding, 'Лишний', 'm', genderByName)).toThrow(/A1/);
   });
 
   it('rejects set when A1 would be violated', () => {

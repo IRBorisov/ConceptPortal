@@ -1,16 +1,17 @@
-# rstool docs
+# Документация rstool
 
-Standalone English reference distilled from the Portal manuals and `CONTEXT.md`. Bundled with `@rsconcept/rstool` so external agents never need to read the Portal frontend source tree.
+Краткая русская справка для агентов.
 
-| File | Read when |
-|------|-----------|
-| [`DOMAIN.md`](DOMAIN.md) | You need the Concept Portal vocabulary (constituenta, conceptual schema/model, OSS, synthesis). |
-| [`CONCEPTUAL-SCHEMA.md`](CONCEPTUAL-SCHEMA.md) | You are designing/reviewing a conceptual schema as a system (thesaurus value, closed-world text definitions, genus structures, axioms). |
-| [`CONSTITUENTA.md`](CONSTITUENTA.md) | You are upserting constituents — fields, `cstType` table, validation rules, recommended order. |
-| [`SYNTAX.md`](SYNTAX.md) | You are constructing RSLang expressions — operators, quantifiers, parameterised functions, examples. |
-| [`TYPIFICATION.md`](TYPIFICATION.md) | You are interpreting `AnalysisResult.type` / `valueClass` or constructing template expressions with radicals. |
-| [`DIAGNOSTICS.md`](DIAGNOSTICS.md) | You received `analysis.diagnostics` and need to map error codes to fixes. |
-| [`PORTAL-API.md`](PORTAL-API.md) | You need to fetch an existing RSForm/OSS/RSModel from the live Portal REST API. |
-| [`GRAMMAR-REF.md`](GRAMMAR-REF.md) | You need a compact token / precedence table; the full grammar lives in `@rsconcept/domain`. |
+## Какой файл читать
 
-For the rstool agent contract itself (methods, types, stdio protocol) see [`../skills/rstool-helper/REFERENCE.md`](../skills/rstool-helper/REFERENCE.md).
+- **DOMAIN.md** — термины Portal: конституента, концептуальная схема/модель, ОСС, синтез.
+- **CONCEPTUAL-SCHEMA.md** — проектирование и ревью концептуальных схем.
+- **CONSTITUENTA.md** — структура и правила конституент.
+- **SYNTAX.md** — операторы, кванторы, функции и примеры выражений.
+- **TYPIFICATION.md** — типизация (`AnalysisResult.type`, `valueClass`).
+- **MODEL-TESTING.md** — проверка семантики определений на маленьких концептуальных моделях.
+- **DIAGNOSTICS.md** — диагностики анализа и способы исправления ошибок.
+- **PORTAL-API.md** — объекты REST API Portal.
+- **GRAMMAR-REF.md** — краткая карта токенов и приоритетов.
+
+Контракт агента `rstool` см. в `../skills/rstool-helper/REFERENCE.md`.

@@ -1,16 +1,10 @@
-# rstool — worked examples
+# rstool Examples
 
-Install first:
+Short examples for agents. For full scripts, see `../../examples/`.
 
-```bash
-npm install @rsconcept/rstool
-```
+## Minimal Session
 
-## Kinship-lite: structure vs term
-
-`S1` carries **typification** `ℬ(X1×X1)` (pairs over people); `D1` is a **definition** `Pr1(S1)` (parents). Do not put `X1×X1` on a `term` — that is the full Cartesian product.
-
-## In-process
+`S1` carries typification `ℬ(X1×X1)` for relation pairs. `D1` computes `Pr1(S1)`. Do not put bare `X1×X1` on a `term` when you mean a relation structure.
 
 ```ts
 import { CstType, RSToolAgent } from '@rsconcept/rstool';
@@ -18,12 +12,10 @@ import { CstType, RSToolAgent } from '@rsconcept/rstool';
 const tool = new RSToolAgent();
 const { sessionId } = tool.createSession();
 
-// Base set — formal must be empty
 tool.addOrUpdateConstituenta(sessionId, {
   draft: { id: 1, alias: 'X1', cstType: CstType.BASE, definitionFormal: '' }
 });
 
-// Structure: typification of parent–child pairs (undefined; convention in real schemas)
 tool.addOrUpdateConstituenta(sessionId, {
   draft: {
     id: 2,
@@ -34,32 +26,33 @@ tool.addOrUpdateConstituenta(sessionId, {
   }
 });
 
-// Term: derived definition — first projection of S1
 const { state, diagnostics } = tool.addOrUpdateConstituenta(sessionId, {
   draft: { id: 3, alias: 'D1', cstType: CstType.TERM, definitionFormal: 'Pr1(S1)' }
 });
 
 console.log(state.analysis.success, diagnostics.length);
-
-// Scratch check
-tool.analyzeExpression(sessionId, {
-  expression: '(',
-  cstType: CstType.TERM
-}); // success: false, syntax diagnostics
-
-// Set base binding and evaluate a scratch arithmetic term
-tool.setConstituentaValue(sessionId, {
-  target: 1,
-  value: { 0: 'zero', 1: 'one' }
-});
-const evalResult = tool.evaluateExpression(sessionId, {
-  expression: '1+2',
-  cstType: CstType.TERM
-});
-console.log(evalResult.success, evalResult.value); // true, 3
 ```
 
-## Wrapper client
+## Analyze Before Upsert
+
+Use scratch analysis when syntax or `cstType` is uncertain.
+
+```ts
+const analysis = tool.analyzeExpression(sessionId, {
+  expression: 'Pr1(S1)',
+  cstType: CstType.TERM
+});
+
+if (!analysis.success) {
+  console.log(analysis.diagnostics.map(({ code, from, to }) => ({ code, from, to })));
+}
+```
+
+Fix the reported `from` / `to` range, then re-run analysis. Do not retry unchanged input.
+
+## Wrapper Client
+
+Use the wrapper when the agent talks to a separate `rstool-wrapper` process.
 
 ```ts
 import { CstType } from '@rsconcept/rstool';
@@ -69,27 +62,11 @@ const client = new RSToolWrapperClient();
 await client.waitUntilReady();
 
 const { sessionId } = await client.call<{ sessionId: string }>('createSession');
+
 await client.call('addOrUpdateConstituenta', {
   sessionId,
   input: {
     draft: { id: 1, alias: 'X1', cstType: CstType.BASE, definitionFormal: '' }
-  }
-});
-await client.call('addOrUpdateConstituenta', {
-  sessionId,
-  input: {
-    draft: {
-      id: 2,
-      alias: 'S1',
-      cstType: CstType.STRUCTURED,
-      definitionFormal: 'ℬ(X1×X1)'
-    }
-  }
-});
-await client.call('addOrUpdateConstituenta', {
-  sessionId,
-  input: {
-    draft: { id: 3, alias: 'D1', cstType: CstType.TERM, definitionFormal: 'Pr1(S1)' }
   }
 });
 
@@ -99,68 +76,23 @@ console.log(diagnostics);
 await client.close();
 ```
 
-## Manual stdio
+Manual stdio is one JSON request per line:
 
-Start wrapper in one terminal:
-
-```bash
-npx rstool-wrapper
-```
-
-Paste one JSON request per line after the ready line appears:
-
-```json
+```jsonl
 { "id": "1", "method": "createSession", "params": {} }
-```
-
-Use the returned `sessionId` in subsequent lines:
-
-```json
 { "id": "2", "method": "addOrUpdateConstituenta", "params": { "sessionId": "...", "input": { "draft": { "id": 1, "alias": "X1", "cstType": "basic", "definitionFormal": "" } } } }
-{ "id": "3", "method": "addOrUpdateConstituenta", "params": { "sessionId": "...", "input": { "draft": { "id": 2, "alias": "S1", "cstType": "structure", "definitionFormal": "ℬ(X1×X1)" } } } }
-{ "id": "4", "method": "addOrUpdateConstituenta", "params": { "sessionId": "...", "input": { "draft": { "id": 3, "alias": "D1", "cstType": "term", "definitionFormal": "Pr1(S1)" } } } }
-{ "id": "5", "method": "listDiagnostics", "params": { "sessionId": "..." } }
 ```
 
-## Export a small RSForm session
+## Export / Import
 
 ```ts
-import { CstType, RSToolAgent } from '@rsconcept/rstool';
-
-const tool = new RSToolAgent();
-const { sessionId } = tool.createSession();
-
-tool.addOrUpdateConstituenta(sessionId, {
-  draft: { id: 1, alias: 'X1', cstType: CstType.BASE, definitionFormal: '' }
-});
-tool.addOrUpdateConstituenta(sessionId, {
-  draft: { id: 2, alias: 'C1', cstType: CstType.CONSTANT, definitionFormal: '' }
-});
-tool.addOrUpdateConstituenta(sessionId, {
-  draft: {
-    id: 3,
-    alias: 'S1',
-    cstType: CstType.STRUCTURED,
-    definitionFormal: 'ℬ(X1×X1)',
-    convention: 'Pairs (parent, child) over X1.'
-  }
-});
-tool.addOrUpdateConstituenta(sessionId, {
-  draft: { id: 4, alias: 'D1', cstType: CstType.TERM, definitionFormal: 'Pr1(S1)' }
-});
-tool.addOrUpdateConstituenta(sessionId, {
-  draft: { id: 5, alias: 'A1', cstType: CstType.AXIOM, definitionFormal: '1=1' }
-});
-
 const payload = tool.exportSession(sessionId);
-console.log(payload);
+const restored = tool.importSession(payload);
 ```
 
-## Model and evaluation
+Export includes session state and model values.
 
-Full kinship modeling (`S1` values as tuples, `Pr1(S1)`, …): `examples/build-kinship-rsmodel.ts`.
-
-Minimal evaluation after bindings:
+## Evaluation
 
 ```ts
 tool.setConstituentaValue(sessionId, {
@@ -168,28 +100,73 @@ tool.setConstituentaValue(sessionId, {
   value: { 0: 'zero', 1: 'one' }
 });
 
-const evaluated = tool.evaluateConstituenta(sessionId, {
-  constituentId: 4 // D1 = Pr1(S1); needs S1 interpreted — see kinship example
+const scratch = tool.evaluateExpression(sessionId, {
+  expression: '1+2',
+  cstType: CstType.TERM
 });
-console.log(evaluated.success, evaluated.value);
+
+console.log(scratch.success, scratch.value); // true, 3
 ```
+
+For stored definitions, set values for `basic`, `constant`, and `structure`, then call `evaluateConstituenta` or `recalculateModel`.
+
+## Semantic Smoke Test
+
+When syntax is valid but meaning is uncertain, build a tiny model and assert the value.
+
+```ts
+import { CstType, EvalStatus, RSToolAgent } from '@rsconcept/rstool';
+
+const TUPLE_ID = -111;
+const tool = new RSToolAgent();
+const { sessionId } = tool.createSession();
+
+tool.addOrUpdateConstituenta(sessionId, {
+  draft: { id: 1, alias: 'X1', cstType: CstType.BASE, definitionFormal: '' }
+});
+tool.addOrUpdateConstituenta(sessionId, {
+  draft: { id: 2, alias: 'S1', cstType: CstType.STRUCTURED, definitionFormal: 'ℬ(X1×X1)' }
+});
+tool.addOrUpdateConstituenta(sessionId, {
+  draft: { id: 3, alias: 'D1', cstType: CstType.TERM, definitionFormal: 'Pr1(S1)' }
+});
+
+tool.setConstituentaValues(sessionId, {
+  items: [
+    { target: 1, value: { 0: 'ann', 1: 'bob', 2: 'cat' } },
+    {
+      target: 2,
+      value: [
+        [TUPLE_ID, 0, 1],
+        [TUPLE_ID, 0, 2]
+      ]
+    }
+  ]
+});
+
+const result = tool.evaluateConstituenta(sessionId, { constituentId: 3 });
+
+if (!result.success || result.status !== EvalStatus.HAS_DATA || JSON.stringify(result.value) !== '[0]') {
+  throw new Error(`Expected Pr1(S1) to select the first coordinate; got ${JSON.stringify(result)}`);
+}
+```
+
+Use this pattern for tests that protect important definitions. Full kinship model: `../../examples/build-kinship-rsmodel.ts`. More notes: `../../docs/MODEL-TESTING.md`.
 
 ## Common mistakes
 
-| Mistake                                            | Symptom                                          |
-| -------------------------------------------------- | ------------------------------------------------ |
-| `definitionFormal: 'Z'` on `X1` (`basic`)          | `0x8862` definitionNotAllowed                    |
-| `D1` uses `D2` before `D2` exists                  | globalNotTyped / undeclared global               |
-| `analyzeExpression` with wrong `cstType`           | Role-specific semantic errors                    |
-| Non-empty formal on `C1` (`constant`)              | Same as basic — definition not allowed           |
-| `term` with `X1×X1` when modeling a **relation**   | Full Cartesian product instead of typed pairs in `S#` |
-| `structure` with `Pr1(S1)` instead of a grade      | Wrong role — projections belong on `term` / `F#`   |
-| `setConstituentaValue` on inferrable `D1` (`term`) | Error: inferrable and cannot be set directly     |
-| Evaluating before base binding set                 | May fail or return empty depending on expression |
+- `definitionFormal: 'Z'` on `basic` / `constant` → `definitionNotAllowed`.
+- `D1` uses `D2` before `D2` exists → global not typed / undeclared.
+- Wrong `cstType` in `analyzeExpression` → role-specific errors.
+- `term` with `X1×X1` for a relation → full Cartesian product, not relation typification.
+- `structure` with `Pr1(S1)` → wrong role; projections belong on `term` / `function`.
+- `setConstituentaValue` on `term`, `axiom`, or `statement` → cannot set computed constituents directly.
+- Evaluation before base bindings → missing value, empty result, or evaluation failure.
 
-## Fixing a syntax error
+## Fix Syntax
 
 1. `analyzeExpression` with the broken fragment and correct `cstType`.
-2. Read first diagnostic `{ from, to, code }`.
-3. Edit substring of `definitionFormal` at those offsets.
-4. `addOrUpdateConstituenta` again with the same `id` / `alias`.
+2. Read `{ code, from, to, params }`.
+3. Edit the substring of `definitionFormal` at those offsets.
+4. Re-run analysis.
+5. Upsert with the same `id` / `alias`.

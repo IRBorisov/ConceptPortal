@@ -6,16 +6,24 @@ import { RSToolWrapperClient } from '../../src';
 
 import { DEFAULT_SESSION_PATH } from './constants';
 import { KinshipModelSession } from './session';
-import { formatS1, formatX1, formatA1Status } from './x1-actions';
+import {
+  formatS1,
+  formatX1,
+  formatA1Status,
+  genderLabel,
+  parseAddPersonArgs,
+  parseSetPersonArgs
+} from './x1-actions';
 
 const HELP = `
 Команды изменения X1 (люди):
 
   list                         показать X1 и связи S1
-  add <имя>                    добавить человека
+  add <м|ж> <имя>              добавить человека (пол: м, ж, m, f)
   remove <имя>                 удалить человека (с пересчётом индексов и очисткой S1)
   rename <старое> <новое>      переименовать
-  set <имя1> <имя2> ...       заменить весь список людей (S1 сохраняется по именам)
+  set <м|ж> <имя> ...         заменить X1 (пары пол+имя; S1 по именам)
+  set <имя1> <имя2> ...       то же, если пол уже известен из сессии / примера
   clear                        очистить X1 и S1
   save [путь]                  сохранить сессию (по умолчанию — исходный файл)
   help                         эта справка
@@ -84,8 +92,9 @@ function parseArgs(argv: string[]): CliOptions {
 async function printModel(session: KinshipModelSession): Promise<void> {
   const binding = await session.getX1Binding();
   const s1 = await session.getS1Value();
+  const genderByName = session.getGenderByName();
   console.log('X1 (люди):');
-  console.log(formatX1(binding));
+  console.log(formatX1(binding, genderByName));
   console.log('');
   console.log(formatA1Status(binding));
   console.log('');
@@ -106,13 +115,10 @@ async function runCommand(session: KinshipModelSession, command: string, args: s
       return true;
 
     case 'add': {
-      const name = args.join(' ').trim();
-      if (!name) {
-        throw new Error('Укажите имя: add <имя>');
-      }
-      await session.addPerson(name);
-      await session.commitStep(`X1: добавлен «${name}»`);
-      console.log(`Добавлен: ${name}`);
+      const { gender, name } = parseAddPersonArgs(args);
+      await session.addPerson(name, gender);
+      await session.commitStep(`X1: добавлен «${name}» (${genderLabel(gender)})`);
+      console.log(`Добавлен: ${name} (${genderLabel(gender)})`);
       await printModel(session);
       return true;
     }
@@ -144,13 +150,11 @@ async function runCommand(session: KinshipModelSession, command: string, args: s
     }
 
     case 'set': {
-      const names = args.map(name => name.trim()).filter(Boolean);
-      if (names.length === 0) {
-        throw new Error('Укажите имена: set <имя1> <имя2> ...');
-      }
-      await session.setX1List(names);
-      await session.commitStep(`X1: задан список (${names.length})`);
-      console.log(`Задан X1: ${names.join(', ')}`);
+      const { specs } = parseSetPersonArgs(args, session.getGenderByName());
+      await session.setX1People(specs);
+      await session.commitStep(`X1: задан список (${specs.length})`);
+      const summary = specs.map(spec => `${spec.name} (${genderLabel(spec.gender)})`).join(', ');
+      console.log(`Задан X1: ${summary}`);
       await printModel(session);
       return true;
     }

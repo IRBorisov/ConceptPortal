@@ -3,6 +3,8 @@ import { resolve } from 'node:path';
 
 import { EvalStatus, RSToolWrapperClient } from '../src';
 
+import { A1_ID, D3_ID, S2_ID, S3_ID } from './kinship/constants';
+
 /** Tuple marker in structured values (see frontend `TUPLE_ID`). */
 const TUPLE_ID = -111;
 
@@ -35,8 +37,9 @@ const S1_VALUE = [
   [TUPLE_ID, 5, 6]
 ] as const;
 
-const D3_ID = 11;
-const A1_ID = 12;
+/** Indices of men and women in the sample family (Иван, Пётр, Олег, Семён — м; остальные — ж). */
+const S2_VALUE = [0, 2, 4, 6] as const;
+const S3_VALUE = [1, 3, 5] as const;
 
 async function run() {
   const client = new RSToolWrapperClient({
@@ -57,7 +60,9 @@ async function run() {
       input: {
         items: [
           { target: 1, value: X1_BINDING },
-          { target: 2, value: S1_VALUE }
+          { target: 2, value: S1_VALUE },
+          { target: S2_ID, value: S2_VALUE },
+          { target: S3_ID, value: S3_VALUE }
         ]
       }
     });

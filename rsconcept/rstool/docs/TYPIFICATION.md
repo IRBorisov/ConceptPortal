@@ -1,84 +1,65 @@
-# Typification reference
+# Типизация
 
-Distilled from `help-rslang-typification`, `help-rslang-expression-structure`, and `help-rslang-expression-parameter`. Agents must understand grades to interpret `AnalysisResult.type` and to construct correct expressions.
+Читай, когда разбираешь `AnalysisResult.type`, `valueClass` или радикалы.
 
-## Grades
+## Ступени
 
-A genus-structure expression `ξ` has typification (a _structure_) if `ξ ∈ H` holds, where `H` is a valid **grade**. Grades are built recursively:
+Выражение типизировано, если его значения принадлежат ступени `H`.
 
-| Grade            | Form                 | Notes                                |
-| ---------------- | -------------------- | ------------------------------------ |
-| Element          | `Xi`, `Ci`           | grade of a basic concept's elements  |
-| Integer          | `Z`                  | grade of integer                     |
-| Tuple of arity n | `(H1 × H2 × … × Hn)` | ordered structured grade             |
-| Set              | `ℬ(H)`               | unordered set of values of grade `H` |
+- `Xi`, `Ci` — элемент базисного или константного множества.
+- `Z` — целое число.
+- `(H1 × H2 × ... × Hn)` — кортеж.
+- `ℬ(H)` — множество значений ступени `H`.
 
-The empty set `∅` has typification `ℬ(R0)` — a set with arbitrary element structure. The radical `R0` ensures it conforms to any element grade in context.
+`∅` имеет типизацию `ℬ(R0)`: пустое множество подстраивается под контекст.
 
-## Extended typifications
+## Дополнительные типизации
 
-Beyond set-theoretic grades, RSLang uses two additional grade-like markers:
+- `Logic` — логические выражения: аксиомы, высказывания, тела предикат-функций.
+- `Hr <- [H1, H2, ..., Hi]` — параметризованная типизация функций: результат и аргументы.
 
-- **Logic** — typification of logical expressions (axioms, statements, predicate bodies) that evaluate to TRUE or FALSE.
-- **Parameterised** — typification of term-functions and predicate-functions:
+## Радикалы
 
-  ```
-  Hr 🠔 [H1, H2, …, Hi]
-  ```
+`R1`, `R2`, ... — шаблонные ступени.
 
-  where `Hr` is the result typification (an STE grade or `Logic`) and `H1 … Hi` are the argument typifications.
+- Значение `R#` выводится по аргументам в месте вызова.
+- Все вхождения одного `R#` должны дать одну ступень.
+- Разные `R#` независимы.
+- Радикалы можно писать только в доменах параметров; в теле результата будет `radicalUsage`.
 
-## Radicals
+## `AnalysisResult.type`
 
-Template parameterised expressions may contain notations `R1, R2, …` (and `R0` for `∅`). Each radical corresponds to an arbitrary grade that is **inferred** from the typifications of the arguments at the point of use.
+`type` приходит как JSON анализатора: `Record<string, unknown> | null`.
 
-- All occurrences of the same radical index must resolve to the same grade.
-- Radicals with different indices are independent.
-- Radicals may only appear in parameter domains, **not in the result expression**.
+Правила:
 
-## Encoded shape in `AnalysisResult.type`
+1. Сначала проверь `analysis.success === true` и `analysis.type !== null`.
+2. Не разбирай объект вручную; используй helpers из `@rsconcept/domain`.
+3. `valueClass` уточняет вычислимость: `Value`, `Property`, `Invalid`.
 
-The contract exposes `type: Record<string, unknown> | null` because typifications are JSON-encoded by the analyzer. Useful properties exposed by `@rsconcept/domain` helpers:
+Полезные API: `TypeID`, `TypePath`, `makeTypePath`, `parseTypeText(...)`.
 
-- `TypeID` enum: `Element`, `Integer`, `Tuple`, `Boolean`, `Logic`, `Functional` — discriminates the top-level shape.
-- `TypePath` (sequence of indices) addresses positions inside a tuple-of-sets-of-tuples structure; use `makeTypePath` to construct.
-- `parseTypeText(...)` parses an ASCII representation `B(X1)`, `(X1×X2)`, etc., into a `Typification`.
+## `S#` и `D#`
 
-For agents inspecting types from rstool output:
+- У `structure` (`S#`) `definitionFormal` читается как типизация. `ℬ(X1×X1)` описывает множество пар.
+- У `term` (`D#`) `definitionFormal` читается как определение. `X1×X1` строит декартов продукт.
 
-1. Check `analysis.success === true` and `analysis.type !== null`.
-2. Use `analysis.type` (object) only as opaque input to `@rsconcept/domain` helpers — do not pattern-match it manually.
-3. The `valueClass` companion indicates `Value`, `Property` (non-computable membership only), or `Invalid`.
+Для отношений предпочитай `S#` с `ℬ(X1×X1)` и конвенцией; выводимые понятия делай через `Pr*`, `Fi*`, фильтры и функции.
 
-## Typification on `S#` vs definition on `D#`
+## Операции
 
-- On a **`structure`** (`S#`), `definitionFormal` is read as **typification**. Subexpressions such as `X1×X1` describe **element shape** (here: one pair of base elements).
-- On a **`term`** (`D#`), the same token sequence is a **definition** evaluated in the model. `X1×X1` alone is the Cartesian product — all ordered pairs from `X1` — not the typification of a relation stored in `S#`.
+Создают ступень: `ℬ(H)`, `H1 × H2`, `(a, b)`, `{a, b}`, `bool(a)`.
 
-Prefer `S#` with `ℬ(X1×X1)` plus `convention` for relations; derive `D#` with `Pr*`, `Fi*`, filters, etc.
+Требуют подходящую ступень:
 
-## Forming structures vs. derived structures
+- `red(S)` — нужно `S : ℬ(ℬ(H))`.
+- `debool(S)` — нужно одноэлементное множество.
+- `pr1(tuple)`, `Pr1(S)` — нужна достаточная арность.
+- `Fi1[D](S)` — `D` должен соответствовать выбранной проекции.
 
-Forming operations build a new grade:
+## Частые ошибки
 
-- `ℬ(H)` — power set
-- `H1 × H2` — Cartesian product
-- `(a, b, c)` — tuple
-- `{a, b, c}` — enumeration
-- `bool(a)` — singleton
-
-Derived structures consume a grade:
-
-- `red(S)` — union of inner sets; requires `S : ℬ(ℬ(H))`
-- `debool({a})` — extracts the single element of a singleton
-- `pr1((a1, …, an))`, `Pr1(S)` — projections (multi-indices allowed: `pr1,3`, `Pr2,4`)
-- `Fi1[D](S)` — filters by membership in `D`; multi-index variants must match parameter arity
-
-## Common typification pitfalls
-
-- Negative integer literals do not exist — use `0 - n`.
-- `debool(S)` fails if `S` is not a singleton.
-- Tuple projections require the argument to be a tuple of sufficient arity; `pr3((a, b))` is an error.
-- Filter parameter list arity must match the multi-index in `Fi[...]`.
-- A radical in the **result expression** of a template is a hard error (`radicalUsage`).
-- An `axiom` or `statement` must have typification `Logic`; non-logical formal definitions raise `expectedLogic`.
+- `debool(S)` без гарантии синглетона.
+- `pr3((a, b))`: индекс вне арности.
+- `Fi1,2[D](S)`: параметр `D` не совпал с двумя проекциями.
+- `A#` и `T#` не имеют `Logic`: будет `expectedLogic`.

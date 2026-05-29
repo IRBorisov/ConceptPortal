@@ -143,6 +143,7 @@ Standalone agents should consult the bundled distilled docs (`docs/*.md` inside 
 | Quantifiers                          | `docs/SYNTAX.md` § *Quantifiers*           |
 | Parameterized functions, templates   | `docs/SYNTAX.md` § *Parameterised*         |
 | Correctness / validation mindset     | `docs/SYNTAX.md` § *Correctness model*     |
+| Definition semantic tests            | `docs/MODEL-TESTING.md`                    |
 | Domain vocabulary                    | `docs/DOMAIN.md`                           |
 | Constituent fields and ordering      | `docs/CONSTITUENTA.md`                     |
 | Portal REST API                      | `docs/PORTAL-API.md`                       |

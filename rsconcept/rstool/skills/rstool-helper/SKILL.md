@@ -20,13 +20,11 @@ Then continue with the canonical files below.
 
 ## Canonical files (read before rstool work)
 
-| What | Path |
-| :--- | :--- |
-| **Start here** — workflow, cstType, S# vs D# | `node_modules/@rsconcept/rstool/skills/rstool-helper/GUIDE.md` |
-| API, stdio, contract | `node_modules/@rsconcept/rstool/skills/rstool-helper/REFERENCE.md` |
-| Examples, pitfalls | `node_modules/@rsconcept/rstool/skills/rstool-helper/EXAMPLES.md` |
-| Language / domain docs | `node_modules/@rsconcept/rstool/docs/*.md` |
-| Install procedure | `node_modules/@rsconcept/rstool/skills/INSTALL.md` |
+- **Start here** — workflow: `node_modules/@rsconcept/rstool/skills/rstool-helper/GUIDE.md`
+- API, stdio, contract: `node_modules/@rsconcept/rstool/skills/rstool-helper/REFERENCE.md`
+- Examples, pitfalls: `node_modules/@rsconcept/rstool/skills/rstool-helper/EXAMPLES.md`
+- Language / domain docs: `node_modules/@rsconcept/rstool/docs/*.md`
+- Install procedure: `node_modules/@rsconcept/rstool/skills/INSTALL.md`
 
 Always open **GUIDE.md** first when starting a rstool task, then **REFERENCE.md** / **EXAMPLES.md** / relevant `docs/*.md` as needed.
 
@@ -34,4 +32,3 @@ Always open **GUIDE.md** first when starting a rstool task, then **REFERENCE.md*
 
 - Package: `@rsconcept/rstool`; wrapper: `npx rstool-wrapper`
 - `@rsconcept/domain` is installed as a dependency (analyzer, errors in `src/rslang/error.ts`)
-- Do not copy GUIDE, REFERENCE, EXAMPLES, or `docs/` into the project skills folder — read them from `node_modules` paths above

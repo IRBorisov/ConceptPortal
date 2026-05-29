@@ -4,14 +4,12 @@ Each skill lives in its own subdirectory: `skills/<skill-name>/SKILL.md` (plus r
 
 ## Layout
 
-| Path | Role |
-| :--- | :--- |
-| `INSTALL.md` | **Agent procedure** after `npm install` |
-| `rstool-helper/SKILL.md` | Thin **entry** skill — copy into the project’s agent skills folder (see `INSTALL.md`) |
-| `rstool-helper/GUIDE.md` | Canonical workflow and language primer |
-| `rstool-helper/REFERENCE.md` | API, stdio, contract |
-| `rstool-helper/EXAMPLES.md` | Worked examples and pitfalls |
-| `../docs/*.md` | Language reference (DOMAIN, SYNTAX, DIAGNOSTICS, …) |
+- `INSTALL.md`: agent procedure after `npm install`
+- `rstool-helper/SKILL.md`: thin entry skill — copy into the project’s agent skills folder (see `INSTALL.md`)
+- `rstool-helper/GUIDE.md`: canonical workflow and language primer
+- `rstool-helper/REFERENCE.md`: API, stdio, contract
+- `rstool-helper/EXAMPLES.md`: worked examples and pitfalls
+- `../docs/*.md`: language reference (DOMAIN, SYNTAX, DIAGNOSTICS, …)
 
 ## npm workflow
 

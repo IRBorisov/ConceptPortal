@@ -132,6 +132,286 @@ async function run() {
       },
       {
         draft: {
+          id: 13,
+          alias: 'S2',
+          cstType: CstType.STRUCTURED,
+          definitionFormal: 'ℬ(X1)',
+          term: 'мужчины',
+          convention: 'Пол устанавливается по документам; каждый индивид из X1 входит ровно в одно из множеств S2 или S3.'
+        }
+      },
+      {
+        draft: {
+          id: 14,
+          alias: 'S3',
+          cstType: CstType.STRUCTURED,
+          definitionFormal: 'ℬ(X1)',
+          term: 'женщины',
+          convention: 'Пол устанавливается по документам; каждый индивид из X1 входит ровно в одно из множеств S2 или S3.'
+        }
+      },
+      {
+        draft: {
+          id: 15,
+          alias: 'A2',
+          cstType: CstType.AXIOM,
+          definitionFormal: 'S2∪S3=X1 & S2∩S3=∅',
+          term: 'разбиение людей по полу',
+          definitionText: 'Каждый человек — мужчина или женщина, но не оба сразу: S2 и S3 образуют разбиение X1.'
+        }
+      },
+      {
+        draft: {
+          id: 16,
+          alias: 'F7',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F1[ξ]∩S2',
+          term: 'отцы данного человека',
+          definitionText: 'Родители ξ, являющиеся мужчинами.'
+        }
+      },
+      {
+        draft: {
+          id: 17,
+          alias: 'F8',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F1[ξ]∩S3',
+          term: 'матери данного человека',
+          definitionText: 'Родители ξ, являющиеся женщинами.'
+        }
+      },
+      {
+        draft: {
+          id: 18,
+          alias: 'A3',
+          cstType: CstType.AXIOM,
+          definitionFormal: '∀ξ∈X1 (card(F7[ξ])≤1 & card(F8[ξ])≤1)',
+          term: 'не более одного отца и одной матери',
+          definitionText: 'У каждого человека не более одного отца и не более одной матери.'
+        }
+      },
+      {
+        draft: {
+          id: 19,
+          alias: 'F9',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F3[ξ]∩S2',
+          term: 'братья данного человека',
+          definitionText: 'Братья и сёстры ξ (F3), являющиеся мужчинами.'
+        }
+      },
+      {
+        draft: {
+          id: 20,
+          alias: 'F10',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F3[ξ]∩S3',
+          term: 'сёстры данного человека',
+          definitionText: 'Братья и сёстры ξ (F3), являющиеся женщинами.'
+        }
+      },
+      {
+        draft: {
+          id: 21,
+          alias: 'F11',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] D{μ∈F3[ξ] | F1[ξ]=F1[μ]}',
+          term: 'полнородные братья и сёстры',
+          definitionText: 'Сиблинги с полностью совпадающими множествами родителей.'
+        }
+      },
+      {
+        draft: {
+          id: 22,
+          alias: 'F12',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F11[ξ]∩S2',
+          term: 'полнородные братья',
+          definitionText: 'Полнородные сиблинги ξ, являющиеся мужчинами.'
+        }
+      },
+      {
+        draft: {
+          id: 23,
+          alias: 'F13',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F11[ξ]∩S3',
+          term: 'полнородные сёстры',
+          definitionText: 'Полнородные сиблинги ξ, являющиеся женщинами.'
+        }
+      },
+      {
+        draft: {
+          id: 24,
+          alias: 'F14',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] D{μ∈F3[ξ] | F7[ξ]=F7[μ] & F8[ξ]≠F8[μ]}',
+          term: 'единокровные братья и сёстры',
+          definitionText: 'Сиблинги с общим отцом и разными матерями.'
+        }
+      },
+      {
+        draft: {
+          id: 25,
+          alias: 'F15',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F14[ξ]∩S2',
+          term: 'единокровные братья',
+          definitionText: 'Единокровные сиблинги ξ, являющиеся мужчинами.'
+        }
+      },
+      {
+        draft: {
+          id: 26,
+          alias: 'F16',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F14[ξ]∩S3',
+          term: 'единокровные сёстры',
+          definitionText: 'Единокровные сиблинги ξ, являющиеся женщинами.'
+        }
+      },
+      {
+        draft: {
+          id: 27,
+          alias: 'F17',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] D{μ∈F3[ξ] | F7[ξ]≠F7[μ] & F8[ξ]=F8[μ]}',
+          term: 'единоутробные братья и сёстры',
+          definitionText: 'Сиблинги с общей матерью и разными отцами.'
+        }
+      },
+      {
+        draft: {
+          id: 28,
+          alias: 'F18',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F17[ξ]∩S2',
+          term: 'единоутробные братья',
+          definitionText: 'Единоутробные сиблинги ξ, являющиеся мужчинами.'
+        }
+      },
+      {
+        draft: {
+          id: 29,
+          alias: 'F19',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F17[ξ]∩S3',
+          term: 'единоутробные сёстры',
+          definitionText: 'Единоутробные сиблинги ξ, являющиеся женщинами.'
+        }
+      },
+      {
+        draft: {
+          id: 30,
+          alias: 'F20',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F6[{ξ}]∩S2',
+          term: 'сыновья данного человека',
+          definitionText: 'Прямые дети ξ, являющиеся мужчинами.'
+        }
+      },
+      {
+        draft: {
+          id: 31,
+          alias: 'F21',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F6[{ξ}]∩S3',
+          term: 'дочери данного человека',
+          definitionText: 'Прямые дети ξ, являющиеся женщинами.'
+        }
+      },
+      {
+        draft: {
+          id: 32,
+          alias: 'F22',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F6[F6[{ξ}]]∩S2',
+          term: 'внуки данного человека',
+          definitionText: 'Внуки-мужчины: мужчины среди детей детей ξ.'
+        }
+      },
+      {
+        draft: {
+          id: 33,
+          alias: 'F23',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F6[F6[{ξ}]]∩S3',
+          term: 'внучки данного человека',
+          definitionText: 'Внучки: женщины среди детей детей ξ.'
+        }
+      },
+      {
+        draft: {
+          id: 34,
+          alias: 'F24',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] D{μ∈X1 | ∃p∈F1[ξ] μ∈F7[p]}',
+          term: 'дедушки данного человека',
+          definitionText: 'Отцы родителей ξ.'
+        }
+      },
+      {
+        draft: {
+          id: 35,
+          alias: 'F25',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] D{μ∈X1 | ∃p∈F1[ξ] μ∈F8[p]}',
+          term: 'бабушки данного человека',
+          definitionText: 'Матери родителей ξ.'
+        }
+      },
+      {
+        draft: {
+          id: 36,
+          alias: 'F26',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F4[ξ]∩S2',
+          term: 'племянники данного человека (мужчины)',
+          definitionText: 'Племянники ξ (F4), являющиеся мужчинами.'
+        }
+      },
+      {
+        draft: {
+          id: 37,
+          alias: 'F27',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F4[ξ]∩S3',
+          term: 'племянницы данного человека',
+          definitionText: 'Племянники ξ (F4), являющиеся женщинами.'
+        }
+      },
+      {
+        draft: {
+          id: 38,
+          alias: 'F28',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] D{ν∈X1 | ∃p∈F1[ξ] ∃κ∈F3[p] ν∈F6[{κ}]}',
+          term: 'двоюродные братья и сёстры',
+          definitionText: 'Дети братьев и сестёр родителей ξ.'
+        }
+      },
+      {
+        draft: {
+          id: 39,
+          alias: 'F29',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F28[ξ]∩S2',
+          term: 'двоюродные братья',
+          definitionText: 'Двоюродные сиблинги ξ, являющиеся мужчинами.'
+        }
+      },
+      {
+        draft: {
+          id: 40,
+          alias: 'F30',
+          cstType: CstType.FUNCTION,
+          definitionFormal: '[ξ∈X1] F28[ξ]∩S3',
+          term: 'двоюродные сёстры',
+          definitionText: 'Двоюродные сиблинги ξ, являющиеся женщинами.'
+        }
+      },
+      {
+        draft: {
           id: 12,
           alias: 'A1',
           cstType: CstType.AXIOM,
@@ -164,7 +444,8 @@ async function run() {
 
     await client.call('commitStep', {
       sessionId: session.sessionId,
-      message: 'КС «родственные отношения»: D3 «внучатые племянники», F6 «дети», A1 «не более 10 человек»'
+      message:
+        'КС «родственные отношения»: пол (S2/S3), отцы/матери, разновидности сиблингов, внуки, дедушки/бабушки, двоюродные'
     });
 
     const exported = await client.call<string>('exportSession', {
