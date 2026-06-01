@@ -7,7 +7,7 @@ import { type Constituenta, type RSEngine, type RSForm } from '@rsconcept/domain
 
 import { BadgeEvaluation } from '@/features/rsmodel/components/badge-evaluation';
 
-import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
+import { createColumnHelper, DataTable, type DataTableRowDrop, type IConditionalStyle } from '@/components/data-table';
 import { NoData, TextContent } from '@/components/view';
 import { PARAMETER, prefixes } from '@/utils/constants';
 
@@ -28,6 +28,9 @@ interface TableSideConstituentsProps {
   onActivate?: (cst: Constituenta) => void;
   onDoubleClick?: (cst: Constituenta) => void;
 
+  enableRowReordering?: boolean;
+  onMoveAfter?: (afterCst: Constituenta | null, items: Constituenta[]) => void;
+
   maxHeight?: string;
   autoScroll?: boolean;
 }
@@ -42,6 +45,8 @@ export function TableSideConstituents({
   isModelIssue,
   onActivate,
   onDoubleClick,
+  enableRowReordering,
+  onMoveAfter,
   maxHeight,
   autoScroll = true
 }: TableSideConstituentsProps) {
@@ -122,6 +127,10 @@ export function TableSideConstituents({
     }
   ];
 
+  function handleRowsReordered(event: DataTableRowDrop<Constituenta>) {
+    onMoveAfter?.(event.afterRow ?? null, event.draggedRows);
+  }
+
   return (
     <DataTable
       dense
@@ -132,6 +141,8 @@ export function TableSideConstituents({
       columns={columns}
       conditionalRowStyles={conditionalRowStyles}
       enableHiding
+      enableRowReordering={enableRowReordering}
+      onRowsReordered={onMoveAfter ? handleRowsReordered : undefined}
       noDataComponent={
         <NoData className='min-h-20'>
           <p>{tx('tx.list.empty')}</p>

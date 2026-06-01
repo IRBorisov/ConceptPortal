@@ -144,14 +144,23 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     return response.new_cst.id;
   }
 
-  function moveSelected(target: number) {
-    if (selectedCstInSchema.length === 0) {
+  function moveToIndex(target: number, selected = selectedCstInSchema) {
+    if (selected.length === 0) {
       return;
     }
     moveConstituents({
-      items: selectedCstInSchema,
+      items: selected,
       move_to: target
     });
+  }
+
+  function moveAfter(afterID: number | null, selected = selectedCstInSchema) {
+    const remaining = schema.items.filter(cst => !selected.includes(cst.id));
+    const afterIndex = afterID === null ? -1 : remaining.findIndex(cst => cst.id === afterID);
+    if (afterID !== null && afterIndex === -1) {
+      return;
+    }
+    moveToIndex(afterIndex + 1, selected);
   }
 
   function moveUp() {
@@ -168,7 +177,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
       return Math.min(prev, index);
     }, -1);
     const target = Math.max(0, currentIndex - 1);
-    moveSelected(target);
+    moveToIndex(target);
   }
 
   function moveDown() {
@@ -187,7 +196,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
       return Math.max(prev, index);
     }, -1);
     const target = Math.min(schema.items.length - 1, currentIndex - count + 2);
-    moveSelected(target);
+    moveToIndex(target);
   }
 
   function toggleCrucial() {
@@ -416,6 +425,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
 
         moveUp,
         moveDown,
+        moveAfter,
         toggleCrucial,
         toggleValueClass,
         createCst,

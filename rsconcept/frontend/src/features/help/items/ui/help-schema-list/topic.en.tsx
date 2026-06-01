@@ -37,14 +37,18 @@ export function HelpSchemaListEn() {
       <h2>{tx('tx.general.controls')}</h2>
       <ul>
         <li>
-          <IconOSS className='inline-icon' /> navigate to the associated <LinkTopic text='OSS' topic={HelpTopic.CC_OSS} />
+          <IconOSS className='inline-icon' /> navigate to the associated{' '}
+          <LinkTopic text='OSS' topic={HelpTopic.CC_OSS} />
         </li>
         <li>
           <IconReset className='inline-icon' /> clear selection: <kbd>ESC</kbd>
         </li>
-        <li>Click on a row to select it</li>
+        <li>drag a row – reorder</li>
         <li>
-          <kbd>Shift + click</kbd> to select multiple rows
+          <kbd>Click</kbd> – select a row
+        </li>
+        <li>
+          <kbd>Shift + click</kbd> – extend selection
         </li>
         <li>
           <kbd>Alt + click</kbd> – open Editor

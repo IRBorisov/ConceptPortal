@@ -42,9 +42,12 @@ export function HelpSchemaListRu() {
         <li>
           <IconReset className='inline-icon' /> сбросить выделение: <kbd>ESC</kbd>
         </li>
-        <li>Клик на строку – выделение</li>
+        <li>перетаскивание строки – изменить порядок</li>
         <li>
-          <kbd>Shift + клик</kbd> – выделение нескольких
+          <kbd>Клик</kbd> – выделение строки
+        </li>
+        <li>
+          <kbd>Shift + клик</kbd> – расширить выделение
         </li>
         <li>
           <kbd>Alt + клик</kbd> – Редактор
@@ -54,7 +57,7 @@ export function HelpSchemaListRu() {
         </li>
         <li>
           <IconMoveUp className='inline-icon' />
-          <IconMoveDown className='inline-icon' /> <kbd>Alt + вверх/вниз</kbd> – перемещение
+          <IconMoveDown className='inline-icon' /> <kbd>Alt + вверх/вниз</kbd> – переместить
         </li>
 
         <li>

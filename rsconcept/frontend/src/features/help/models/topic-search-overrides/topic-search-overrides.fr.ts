@@ -58,14 +58,14 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
       'Passeport du schéma conceptuel. Attributs principaux, gestion, propriétés, description, statistiques et autres métadonnées.'
   },
   [HelpTopic.UI_SCHEMA_LIST]: {
-    keywords: ['liste constituants', 'tableau', 'constituants', 'liste schéma', 'lignes'],
+    keywords: ['liste constituants', 'tableau', 'constituants', 'liste schéma', 'lignes', 'glisser', 'ordre'],
     searchText:
-      'Liste des constituants du schéma. Vue tabulaire, gestion de la liste, sélection de lignes, consultation et navigation parmi les constituants.'
+      'Liste des constituants du schéma. Vue tabulaire, sélection Ctrl/Cmd, réordonnancement par glisser-déposer, sélection de lignes, navigation parmi les constituants.'
   },
   [HelpTopic.UI_SCHEMA_EDITOR]: {
-    keywords: ['éditeur constituant', 'éditeur', 'constituant', 'attributs', 'liste constituants'],
+    keywords: ['éditeur constituant', 'éditeur', 'constituant', 'attributs', 'liste constituants', 'panneau latéral'],
     searchText:
-      'Éditeur de constituant. Modification des attributs, travail avec la liste des constituants, commandes de gestion, édition des concepts et propriétés.'
+      'Éditeur de constituant. Modification des attributs, liste latérale avec glisser-déposer, commandes de gestion, édition des concepts et propriétés.'
   },
   [HelpTopic.UI_MODEL_CARD]: {
     keywords: ['passeport modèle', 'fiche modèle', 'attributs modèle', 'modèle'],

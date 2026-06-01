@@ -71,9 +71,11 @@ export function HelpSchemaEditorFr() {
         <div>
           <h2>Liste des constituants</h2>
           <ul>
+            <li>glisser une ligne – modifier l'ordre</li>
+            <li>clic sur une ligne – ouvrir le constituant</li>
             <li>
               <IconMoveDown className='inline-icon' />
-              <IconMoveUp className='inline-icon' /> <kbd>Alt + Haut/Bas</kbd>
+              <IconMoveUp className='inline-icon' /> <kbd>Alt + Haut/Bas</kbd> – déplacer
             </li>
             <li>
               <IconFilterReset className='inline-icon' /> effacer le filtre
