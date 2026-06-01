@@ -42,10 +42,14 @@ export function HelpSchemaListFr() {
         <li>
           <IconReset className='inline-icon' /> désélectionner : <kbd>ESC</kbd>
         </li>
-        <li>Clic sur une ligne pour la sélectionner</li>
+        <li>glisser une ligne – réordonner</li>
         <li>
-          <kbd>Shift + clic</kbd> pour sélectionner plusieurs lignes
+          <kbd>Clic</kbd> – sélectionner une ligne
         </li>
+        <li>
+          <kbd>Shift + clic</kbd> – étendre la sélection
+        </li>
+
         <li>
           <kbd>Alt + clic</kbd> – Éditeur
         </li>
@@ -54,7 +58,7 @@ export function HelpSchemaListFr() {
         </li>
         <li>
           <IconMoveUp className='inline-icon' />
-          <IconMoveDown className='inline-icon' /> <kbd>Alt + Haut/Bas</kbd> – déplacer
+          <IconMoveDown className='inline-icon' /> <kbd>Alt + Haut/Bas</kbd> – déplacer la sélection
         </li>
 
         <li>

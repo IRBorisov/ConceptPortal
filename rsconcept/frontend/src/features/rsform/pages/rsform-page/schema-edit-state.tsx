@@ -171,6 +171,28 @@ export const SchemaEditState = ({
     }, PARAMETER.refreshTimeout);
   }
 
+  function moveToIndex(targetIndex: number, selected = selectedCst) {
+    if (selected.length === 0) {
+      return;
+    }
+    void cstMove({
+      itemID: itemID,
+      data: {
+        items: selected,
+        move_to: targetIndex
+      }
+    });
+  }
+
+  function moveAfter(afterID: number | null, selected = selectedCst) {
+    const remaining = schema.items.filter(cst => !selected.includes(cst.id));
+    const afterIndex = afterID === null ? -1 : remaining.findIndex(cst => cst.id === afterID);
+    if (afterID !== null && afterIndex === -1) {
+      return;
+    }
+    moveToIndex(afterIndex + 1, selected);
+  }
+
   function moveUp() {
     if (selectedCst.length === 0) {
       return;
@@ -184,13 +206,7 @@ export const SchemaEditState = ({
       return Math.min(prev, index);
     }, -1);
     const target = Math.max(0, currentIndex - 1);
-    void cstMove({
-      itemID: itemID,
-      data: {
-        items: selectedCst,
-        move_to: target
-      }
-    });
+    moveToIndex(target);
   }
 
   function moveDown() {
@@ -210,13 +226,7 @@ export const SchemaEditState = ({
       }
     }, -1);
     const target = Math.min(schema.items.length - 1, currentIndex - count + 2);
-    void cstMove({
-      itemID: itemID,
-      data: {
-        items: selectedCst,
-        move_to: target
-      }
-    });
+    moveToIndex(target);
   }
 
   function promptCreateCst(type?: CstType, definition?: string): Promise<number | null> {
@@ -540,6 +550,7 @@ export const SchemaEditState = ({
 
         moveUp,
         moveDown,
+        moveAfter,
         toggleCrucial,
         toggleValueClass,
         createCst,

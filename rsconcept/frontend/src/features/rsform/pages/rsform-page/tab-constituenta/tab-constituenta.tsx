@@ -4,7 +4,7 @@ import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
-import { type RSEngine } from '@rsconcept/domain/library';
+import { type Constituenta, type RSEngine } from '@rsconcept/domain/library';
 import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
 import { isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
 
@@ -45,6 +45,7 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
     clearPendingActiveID,
     moveUp,
     moveDown,
+    moveAfter,
     cloneCst
   } = useSchemaEdit();
   const windowSize = useWindowSize();
@@ -56,6 +57,7 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
   const [toggleReset, setToggleReset] = useState(false);
 
   const disabled = !activeCst || !isContentEditable || isProcessing;
+  const canReorderConstituents = isContentEditable && !isProcessing && !isModified;
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
 
   const role = useRoleStore(state => state.role);
@@ -110,6 +112,11 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
       case 'KeyV': void cloneCst(); return true;
     }
     return false;
+  }
+
+  function handleMoveConstituentRows(afterCst: Constituenta | null, items: Constituenta[]) {
+    const movedIDs = items.map(cst => cst.id);
+    moveAfter(afterCst?.id ?? null, movedIDs);
   }
 
   return (
@@ -168,6 +175,8 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
           clearPendingActiveID();
           router.changeActive(cst.id);
         }}
+        enableRowReordering={canReorderConstituents}
+        onMoveAfter={handleMoveConstituentRows}
         maxListHeight={listHeight}
         autoScroll={!isNarrow}
         sidebarActions={

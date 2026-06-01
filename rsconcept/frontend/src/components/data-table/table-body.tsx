@@ -1,9 +1,10 @@
 'use no memo';
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { type Row, type Table } from '@tanstack/react-table';
 
+import { type DataTableRowDrop } from './data-table';
 import { TableRow } from './table-row';
 import { type IConditionalStyle } from './use-data-table';
 
@@ -19,6 +20,8 @@ interface TableBodyProps<TData> {
 
   onRowClicked?: (rowData: TData, event: React.MouseEvent<Element>) => void;
   onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element>) => void;
+  enableRowReordering?: boolean;
+  onRowsReordered?: (event: DataTableRowDrop<TData>) => void;
 }
 
 export function TableBody<TData>({
@@ -30,8 +33,12 @@ export function TableBody<TData>({
   lastSelected,
   onChangeLastSelected,
   onRowClicked,
-  onRowDoubleClicked
+  onRowDoubleClicked,
+  enableRowReordering,
+  onRowsReordered
 }: TableBodyProps<TData>) {
+  const [draggingRowID, setDraggingRowID] = useState<string | null>(null);
+
   const getRowStyles = useCallback(
     (row: Row<TData>) =>
       conditionalRowStyles
@@ -69,6 +76,10 @@ export function TableBody<TData>({
           onChangeLastSelected={onChangeLastSelected}
           onRowClicked={onRowClicked}
           onRowDoubleClicked={onRowDoubleClicked}
+          enableRowReordering={enableRowReordering}
+          onRowsReordered={onRowsReordered}
+          draggingRowID={draggingRowID}
+          onChangeDraggingRowID={setDraggingRowID}
         />
       ))}
     </tbody>

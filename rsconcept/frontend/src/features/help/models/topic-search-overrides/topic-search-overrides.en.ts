@@ -58,14 +58,14 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
       'Conceptual schema passport. Core attributes, management, properties, description, statistics, and other metadata.'
   },
   [HelpTopic.UI_SCHEMA_LIST]: {
-    keywords: ['constituent list', 'table', 'constituents', 'schema list', 'rows'],
+    keywords: ['constituent list', 'table', 'constituents', 'schema list', 'rows', 'drag', 'reorder', 'selection'],
     searchText:
-      'Schema constituent list. Table view, list management, row selection, browsing and navigating constituents.'
+      'Schema constituent list. Table view, Ctrl/Cmd selection, drag-and-drop reordering, row selection, browsing and navigating constituents.'
   },
   [HelpTopic.UI_SCHEMA_EDITOR]: {
-    keywords: ['constituent editor', 'editor', 'constituent', 'attributes', 'constituent list'],
+    keywords: ['constituent editor', 'editor', 'constituent', 'attributes', 'constituent list', 'sidebar', 'drag'],
     searchText:
-      'Constituent editor. Editing attributes, working with the constituent list, management commands, editing concepts and properties.'
+      'Constituent editor. Editing attributes, sidebar list with drag reordering, management commands, editing concepts and properties.'
   },
   [HelpTopic.UI_MODEL_CARD]: {
     keywords: ['model passport', 'model card', 'model attributes', 'model'],

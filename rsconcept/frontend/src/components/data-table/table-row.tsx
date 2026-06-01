@@ -7,6 +7,7 @@ import clsx from 'clsx';
 
 import { cn } from '../utils';
 
+import { type DataTableRowDrop } from './data-table';
 import { SelectRow } from './select-row';
 
 interface TableRowProps<TData> {
@@ -25,6 +26,11 @@ interface TableRowProps<TData> {
 
   onRowClicked?: (rowData: TData, event: React.MouseEvent<Element>) => void;
   onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element>) => void;
+
+  enableRowReordering?: boolean;
+  onRowsReordered?: (event: DataTableRowDrop<TData>) => void;
+  draggingRowID: string | null;
+  onChangeDraggingRowID: (newValue: string | null) => void;
 }
 
 export function TableRow<TData>({
@@ -38,9 +44,15 @@ export function TableRow<TData>({
   lastSelected,
   onChangeLastSelected,
   onRowClicked,
-  onRowDoubleClicked
+  onRowDoubleClicked,
+  enableRowReordering,
+  onRowsReordered,
+  draggingRowID,
+  onChangeDraggingRowID
 }: TableRowProps<TData>) {
   const hasBG = className?.includes('bg-') ?? false;
+  const canReorder = !!enableRowReordering && !!onRowsReordered;
+  const isDragging = draggingRowID !== null;
 
   const handleRowClicked = useCallback(
     (target: Row<TData>, event: React.MouseEvent<Element>) => {
@@ -69,6 +81,77 @@ export function TableRow<TData>({
     [table, lastSelected, onChangeLastSelected, onRowClicked]
   );
 
+  function isDropAfterTarget(event: React.DragEvent<Element>): boolean {
+    const { top, height } = event.currentTarget.getBoundingClientRect();
+    return event.clientY >= top + height / 2;
+  }
+
+  function getDraggedRows(draggedRowID: string): Row<TData>[] {
+    const rows = table.getRowModel().rows;
+    const draggedRow = rows.find(current => current.id === draggedRowID);
+    if (!draggedRow) {
+      return [];
+    }
+    if (!table.options.enableRowSelection) {
+      return [draggedRow];
+    }
+    if (!draggedRow.getIsSelected()) {
+      return [draggedRow];
+    }
+    return rows.filter(current => current.getIsSelected());
+  }
+
+  function handleDragStart(event: React.DragEvent<HTMLTableRowElement>) {
+    if (!canReorder) {
+      return;
+    }
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/plain', row.id);
+    onChangeDraggingRowID(row.id);
+  }
+
+  function handleDragOver(event: React.DragEvent<HTMLTableRowElement>) {
+    if (!canReorder) {
+      return;
+    }
+    const draggedRowID = draggingRowID;
+    if (!draggedRowID) {
+      return;
+    }
+    const draggedRows = getDraggedRows(draggedRowID);
+    if (draggedRows.some(current => current.id === row.id)) {
+      return;
+    }
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }
+
+  function handleDrop(event: React.DragEvent<HTMLTableRowElement>) {
+    if (!canReorder) {
+      return;
+    }
+    const draggedRowID = draggingRowID ?? event.dataTransfer.getData('text/plain');
+    const draggedRows = getDraggedRows(draggedRowID);
+    if (draggedRows.length === 0 || draggedRows.some(current => current.id === row.id)) {
+      return;
+    }
+    event.preventDefault();
+    const remainingRows = table
+      .getRowModel()
+      .rows.filter(current => !draggedRows.some(dragged => dragged.id === current.id));
+    const targetIndex = remainingRows.findIndex(current => current.id === row.id);
+    const afterRow = isDropAfterTarget(event) ? row : (remainingRows[targetIndex - 1] ?? null);
+    onRowsReordered?.({
+      draggedRows: draggedRows.map(current => current.original),
+      afterRow: afterRow?.original ?? null
+    });
+    onChangeDraggingRowID(null);
+  }
+
+  function handleDragEnd() {
+    onChangeDraggingRowID(null);
+  }
+
   return (
     <tr
       className={cn(
@@ -80,11 +163,17 @@ export function TableRow<TData>({
           : !hasBG
             ? 'odd:bg-secondary even:bg-background'
             : '',
-        className
+        className,
+        canReorder && isDragging && 'cursor-move'
       )}
       style={style}
+      draggable={canReorder}
       onClick={event => handleRowClicked(row, event)}
       onDoubleClick={event => onRowDoubleClicked?.(row.original, event)}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+      onDragEnd={handleDragEnd}
     >
       {table.options.enableRowSelection ? (
         <td key={`select-${row.id}`} className='pl-2 border-y'>
@@ -97,7 +186,11 @@ export function TableRow<TData>({
           className={clsx(
             'px-2 align-middle border-y',
             dense ? 'py-1' : 'py-2',
-            onRowClicked || onRowDoubleClicked ? 'cursor-pointer' : 'cursor-auto'
+            canReorder && isDragging
+              ? 'cursor-move'
+              : onRowClicked || onRowDoubleClicked
+                ? 'cursor-pointer'
+                : 'cursor-auto'
           )}
           style={{
             width:

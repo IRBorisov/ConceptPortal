@@ -71,9 +71,11 @@ export function HelpSchemaEditorEn() {
         <div>
           <h2>Constituent list</h2>
           <ul>
+            <li>drag a row – change order</li>
+            <li>click on a row – open the constituent</li>
             <li>
               <IconMoveDown className='inline-icon' />
-              <IconMoveUp className='inline-icon' /> <kbd>Alt + Up/Down</kbd>
+              <IconMoveUp className='inline-icon' /> <kbd>Alt + Up/Down</kbd> – move
             </li>
             <li>
               <IconFilterReset className='inline-icon' /> clear filter

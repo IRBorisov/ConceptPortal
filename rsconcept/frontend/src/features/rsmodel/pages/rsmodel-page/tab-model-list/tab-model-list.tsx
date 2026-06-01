@@ -35,6 +35,7 @@ export function TabModelList() {
     promptCreateCst,
     moveUp,
     moveDown,
+    moveAfter,
     cloneCst,
     promptDeleteSelected
   } = useSchemaEdit();
@@ -56,6 +57,11 @@ export function TabModelList() {
       }
     });
     setSelectedCst(prev => [...prev.filter(cst_id => !filtered.find(cst => cst.id === cst_id)), ...newSelection]);
+  }
+
+  function handleMoveRows(rows: typeof schema.items, afterID: number | null) {
+    const movedIDs = rows.map(cst => cst.id);
+    moveAfter(afterID, movedIDs);
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
@@ -158,8 +164,10 @@ export function TabModelList() {
         enableSelection={isContentEditable}
         selected={rowSelection}
         setSelected={handleRowSelection}
+        enableRowReordering={isContentEditable && !isProcessing && schema.items.length > 1}
         onEdit={cstID => router.gotoActiveValue(cstID)}
         onCreateNew={() => void promptCreateCst()}
+        onMoveRows={handleMoveRows}
       />
     </div>
   );

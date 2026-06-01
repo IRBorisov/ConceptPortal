@@ -23,6 +23,11 @@ import { type IConditionalStyle, useDataTable } from './use-data-table';
 
 export { createColumnHelper, type RowSelectionState, type VisibilityState };
 
+export interface DataTableRowDrop<TData extends RowData> {
+  draggedRows: TData[];
+  afterRow: TData | null;
+}
+
 export interface DataTableProps<TData extends RowData>
   extends Styling, Pick<TableOptions<TData>, 'data' | 'columns' | 'onRowSelectionChange' | 'onColumnVisibilityChange'> {
   /** Id of the component. */
@@ -57,6 +62,12 @@ export interface DataTableProps<TData extends RowData>
 
   /** Callback to be called when a row is double clicked. */
   onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element>) => void;
+
+  /** Enable drag and drop row reordering. Requires onRowsReordered. */
+  enableRowReordering?: boolean;
+
+  /** Callback to be called when rows are dropped on another row. */
+  onRowsReordered?: (event: DataTableRowDrop<TData>) => void;
 
   /** Enable row selection. */
   enableRowSelection?: boolean;
@@ -106,6 +117,8 @@ export function DataTable<TData extends RowData>({
   noHeader,
   onRowClicked,
   onRowDoubleClicked,
+  enableRowReordering,
+  onRowsReordered,
   noDataComponent,
 
   onChangePaginationOption,
@@ -168,6 +181,8 @@ export function DataTable<TData extends RowData>({
           onChangeLastSelected={setLastSelected}
           onRowClicked={onRowClicked}
           onRowDoubleClicked={onRowDoubleClicked}
+          enableRowReordering={enableRowReordering}
+          onRowsReordered={onRowsReordered}
         />
 
         {!noFooter ? <TableFooter table={table} /> : null}

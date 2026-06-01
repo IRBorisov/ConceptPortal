@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
+import { type Constituenta } from '@rsconcept/domain/library';
 import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
 import { isInferrable, isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
 
@@ -41,6 +42,7 @@ export function TabValue() {
     isProcessing,
     moveUp,
     moveDown,
+    moveAfter,
     cloneCst
   } = useSchemaEdit();
   const { engine } = useModelEdit();
@@ -49,7 +51,8 @@ export function TabValue() {
   const mainHeight = useMainHeight();
   const [toggleReset, setToggleReset] = useState(false);
 
-  const reorderDisabled = !activeCst || !isContentEditable || isProcessing || isModified || schema.items.length < 2;
+  const canReorderConstituents = isContentEditable && !isProcessing && !isModified && schema.items.length > 1;
+  const reorderDisabled = !activeCst || !canReorderConstituents;
 
   const cloneDisabled = !activeCst || !isContentEditable || isProcessing || isModified;
 
@@ -121,6 +124,11 @@ export function TabValue() {
     router.changeActive(cstID);
   }
 
+  function handleMoveConstituentRows(afterCst: Constituenta | null, items: Constituenta[]) {
+    const movedIDs = items.map(cst => cst.id);
+    moveAfter(afterCst?.id ?? null, movedIDs);
+  }
+
   return (
     <div
       tabIndex={-1}
@@ -169,6 +177,8 @@ export function TabValue() {
           clearPendingActiveID();
           router.changeActive(cst.id);
         }}
+        enableRowReordering={canReorderConstituents}
+        onMoveAfter={handleMoveConstituentRows}
         maxListHeight={listHeight}
         autoScroll={!isNarrow}
         sidebarActions={

@@ -138,6 +138,24 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
     });
   }
 
+  function handleMoveAfter(afterCst: Constituenta | null, items: Constituenta[]) {
+    const selected = items.map(cst => cst.id);
+    const remaining = schema.items.filter(cst => !selected.includes(cst.id));
+    const afterIndex = afterCst === null ? -1 : remaining.findIndex(cst => cst.id === afterCst.id);
+    if (afterCst !== null && afterIndex === -1) {
+      return;
+    }
+    void moveConstituents({
+      itemID: schema.id,
+      data: {
+        items: selected,
+        move_to: afterIndex + 1
+      }
+    });
+  }
+
+  const canReorderConstituents = isMutable && !isProcessing && schema.items.length > 1 && !hasSearch;
+
   return (
     <div className='grid h-full relative cc-fade-in mt-5' style={{ gridTemplateRows: '1fr auto' }}>
       <ToolbarSchema
@@ -157,6 +175,8 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
         activeCst={activeCst}
         isSchemaIssue={isSchemaIssue}
         onActivate={cst => setActiveID(cst.id)}
+        enableRowReordering={canReorderConstituents}
+        onMoveAfter={handleMoveAfter}
         maxListHeight={listHeight}
         onDoubleClick={isMutable ? handleEditCst : undefined}
         sidebarActions={
@@ -167,14 +187,14 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
                 className='px-0'
                 icon={<IconMoveUp size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
                 onClick={handleMoveUp}
-                disabled={!activeCst || isProcessing || schema.items.length < 2 || hasSearch}
+                disabled={!activeCst || !canReorderConstituents}
               />
               <MiniButton
                 title={tx('tx.general.moveDown')}
                 className='px-0'
                 icon={<IconMoveDown size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
                 onClick={handleMoveDown}
-                disabled={!activeCst || isProcessing || schema.items.length < 2 || hasSearch}
+                disabled={!activeCst || !canReorderConstituents}
               />
             </div>
           ) : null

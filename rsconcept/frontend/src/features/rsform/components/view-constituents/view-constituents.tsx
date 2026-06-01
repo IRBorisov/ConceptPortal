@@ -18,6 +18,8 @@ interface ViewConstituentsProps {
 
   onActivate?: (cst: Constituenta) => void;
   onDoubleClick?: (cst: Constituenta) => void;
+  enableRowReordering?: boolean;
+  onMoveAfter?: (target: Constituenta | null, items: Constituenta[]) => void;
 
   className?: string;
   maxListHeight?: string;
@@ -35,6 +37,8 @@ export function ViewConstituents({
 
   onActivate,
   onDoubleClick,
+  enableRowReordering,
+  onMoveAfter,
 
   className,
   maxListHeight,
@@ -52,6 +56,8 @@ export function ViewConstituents({
         isSchemaIssue={isSchemaIssue}
         isModelIssue={isModelIssue}
         onActivate={onActivate}
+        enableRowReordering={enableRowReordering}
+        onMoveAfter={onMoveAfter}
         maxHeight={maxListHeight}
         autoScroll={autoScroll}
         onDoubleClick={onDoubleClick}

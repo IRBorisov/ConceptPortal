@@ -42,6 +42,7 @@ interface ISchemaEditContext {
 
   moveUp: () => void;
   moveDown: () => void;
+  moveAfter: (afterID: number | null, selected?: number[]) => void;
   toggleCrucial: () => void;
   toggleValueClass: () => void;
   createCst: (type?: CstType, definition?: string) => Promise<number>;

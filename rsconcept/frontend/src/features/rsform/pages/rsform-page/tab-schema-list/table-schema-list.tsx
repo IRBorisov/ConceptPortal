@@ -5,7 +5,13 @@ import { type Constituenta } from '@rsconcept/domain/library';
 import { labelType } from '@rsconcept/domain/rslang/labels';
 
 import { TextURL } from '@/components/control';
-import { createColumnHelper, DataTable, type RowSelectionState, type VisibilityState } from '@/components/data-table';
+import {
+  createColumnHelper,
+  DataTable,
+  type DataTableRowDrop,
+  type RowSelectionState,
+  type VisibilityState
+} from '@/components/data-table';
 import { NoData, TextContent } from '@/components/view';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { prefixes } from '@/utils/constants';
@@ -19,9 +25,11 @@ interface TableSchemaListProps {
   maxHeight?: string;
   selected: RowSelectionState;
   setSelected: React.Dispatch<React.SetStateAction<RowSelectionState>>;
+  enableRowReordering?: boolean;
 
   onEdit: (cstID: number) => void;
   onCreateNew: () => void;
+  onMoveRows?: (rows: Constituenta[], afterID: number | null) => void;
 }
 
 // Window width cutoff for columns
@@ -43,8 +51,10 @@ export function TableSchemaList({
   enableSelection,
   selected,
   setSelected,
+  enableRowReordering,
   onEdit,
-  onCreateNew
+  onCreateNew,
+  onMoveRows
 }: TableSchemaListProps) {
   const tx = useTx();
   const windowSize = useWindowSize();
@@ -59,6 +69,10 @@ export function TableSchemaList({
   function handleRowDoubleClicked(cst: Constituenta, event: React.MouseEvent<Element>) {
     event.preventDefault();
     onEdit(cst.id);
+  }
+
+  function handleRowsReordered(event: DataTableRowDrop<Constituenta>) {
+    onMoveRows?.(event.draggedRows, event.afterRow?.id ?? null);
   }
 
   const columns = [
@@ -136,6 +150,8 @@ export function TableSchemaList({
       enableRowSelection={enableSelection}
       rowSelection={selected}
       onRowSelectionChange={setSelected}
+      enableRowReordering={enableRowReordering}
+      onRowsReordered={onMoveRows ? handleRowsReordered : undefined}
       noDataComponent={
         <NoData>
           <p>{tx('tx.list.empty')}</p>

@@ -89,7 +89,7 @@ export function useDataTable<TData extends RowData>({
     state: {
       pagination: pagination,
       sorting: sorting,
-      rowSelection: rowSelection,
+      ...(enableRowSelection ? { rowSelection: rowSelection ?? {} } : {}),
       columnVisibility: columnVisibility
     },
 
@@ -104,8 +104,8 @@ export function useDataTable<TData extends RowData>({
     autoResetPageIndex: autoResetPageIndex,
 
     enableHiding: enableHiding,
-    enableMultiRowSelection: enableRowSelection,
-    enableRowSelection: enableRowSelection,
+    enableMultiRowSelection: !!enableRowSelection,
+    enableRowSelection: !!enableRowSelection,
     ...restProps
   });
   return table;

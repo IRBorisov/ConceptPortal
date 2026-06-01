@@ -71,9 +71,11 @@ export function HelpSchemaEditorRu() {
         <div>
           <h2>Список конституент</h2>
           <ul>
+            <li>перетаскивание строки – изменить порядок</li>
+            <li>клик по строке – открыть конституенту</li>
             <li>
               <IconMoveDown className='inline-icon' />
-              <IconMoveUp className='inline-icon' /> <kbd>Alt + вверх/вниз</kbd>
+              <IconMoveUp className='inline-icon' /> <kbd>Alt + вверх/вниз</kbd> – переместить
             </li>
             <li>
               <IconFilterReset className='inline-icon' /> сбросить фильтр
