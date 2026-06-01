@@ -4,6 +4,7 @@
 
 import { toast } from 'react-toastify';
 import { type AxiosError, type AxiosHeaderValue, type AxiosResponse, isAxiosError } from 'axios';
+import type z from 'zod';
 
 import { globalTx } from '@/i18n';
 
@@ -75,6 +76,12 @@ export function convertToCSV(targetObj: readonly object[]): Blob {
 export function convertToJSON(targetObj: unknown): Blob {
   const jsonString = JSON.stringify(targetObj, null, PARAMETER.indentJSON);
   return new Blob([jsonString], { type: 'application/json;charset=utf-8;' });
+}
+
+/** Read JSON file and parse it with Zod schema. */
+export async function readJsonFile<T>(file: File, schema: z.ZodType<T>): Promise<T> {
+  const payload = JSON.parse(await file.text()) as unknown;
+  return schema.parse(payload);
 }
 
 /** Generates a QR code for the current page. */

@@ -17,6 +17,7 @@ import {
   type InlineSynthesisDTO,
   type MoveConstituentsDTO,
   type RSFormDTO,
+  type RSFormImportJsonDTO,
   type RSFormUploadDTO,
   schemaConstituentaCreatedResponse,
   schemaRSForm,
@@ -71,6 +72,16 @@ export const rsformsApi = {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
+      }
+    }),
+
+  uploadJson: ({ itemID, data }: { itemID: number; data: RSFormImportJsonDTO }) =>
+    axiosPatch<RSFormImportJsonDTO, RSFormDTO>({
+      schema: schemaRSForm,
+      endpoint: `/api/rsforms/${itemID}/load-json`,
+      request: {
+        data: data,
+        successMessage: globalTx('tx.schema.upload.success')
       }
     }),
 

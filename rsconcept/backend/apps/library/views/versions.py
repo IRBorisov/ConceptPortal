@@ -8,13 +8,16 @@ from rest_framework import generics
 from rest_framework import status as c
 from rest_framework import viewsets
 from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.exceptions import ValidationError
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.oss.models import Inheritance, PropagationFacade
 from apps.rsform import utils
-from apps.rsform.models import RSForm
+from apps.rsform.models import RSForm, RSFormCached
 from apps.rsform.serializers import RSFormParseSerializer, RSFormSerializer, RSFormTRSSerializer
+from shared import messages as msg
 from shared import permissions, utility
 
 from .. import models as m
@@ -56,8 +59,16 @@ class VersionViewset(
         ''' Restore version data into current item. '''
         version = cast(m.Version, self.get_object())
         item = version.item
+        if Inheritance.objects.filter(child__schema_id=item.pk).exists():
+            raise ValidationError({
+                'data': msg.importIntoInherited()
+            })
         with transaction.atomic():
+            PropagationFacade().before_delete_schema(item.pk)
             RSFormSerializer(item).restore_from_version(version.data)
+            PropagationFacade().after_create_cst(
+                list(RSFormCached(item.pk).constituentsQ().order_by('order'))
+            )
             item.save(update_fields=['time_update'])
         return Response(
             status=c.HTTP_200_OK,

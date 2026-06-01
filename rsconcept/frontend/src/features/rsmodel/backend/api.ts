@@ -4,10 +4,10 @@ import { globalTx } from '@/i18n';
 
 import { type ConstituentaList } from '@/features/rsform';
 
-import { axiosGet, axiosPost } from '@/backend/api-transport';
+import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 
-import { type ConstituentaDataDTO, type RSModelDTO, schemaRSModel } from './types';
+import { type ConstituentaDataDTO, type RSModelDTO, type RSModelJsonDTO, schemaRSModel } from './types';
 
 export const rsmodelApi = {
   baseKey: KEYS.rsmodel,
@@ -32,6 +32,15 @@ export const rsmodelApi = {
       request: {
         data: data,
         successMessage: globalTx('tx.general.changes.save.success')
+      }
+    }),
+  uploadJson: ({ itemID, data }: { itemID: number; data: RSModelJsonDTO }) =>
+    axiosPatch<RSModelJsonDTO, RSModelDTO>({
+      schema: schemaRSModel,
+      endpoint: `/api/models/${itemID}/load-json`,
+      request: {
+        data: data,
+        successMessage: globalTx('tx.model.upload.success')
       }
     }),
   clearValues: ({ itemID, data }: { itemID: number; data: ConstituentaList }) =>

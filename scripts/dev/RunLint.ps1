@@ -7,11 +7,11 @@ $rstool = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\rstool"
 $rstoolMcp = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\rstool-mcp"
 
 function RunLinters() {
-  LintBackend
   LintDomain
-  LintFrontend
   LintRstool
   LintRstoolMcp
+  LintBackend
+  LintFrontend
 }
 
 function LintBackend() {

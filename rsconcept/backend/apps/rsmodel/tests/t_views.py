@@ -3,6 +3,7 @@ from apps.library.models import AccessPolicy, LibraryItem, LocationHead
 from apps.rsform.models import CstType, RSForm
 from apps.rsmodel.models import ConstituentData, RSModel
 from shared.EndpointTester import EndpointTester, decl_endpoint
+from shared.portal_json import PORTAL_JSON_CONTRACT_VERSION
 
 
 class TestRSModelViewset(EndpointTester):
@@ -130,6 +131,55 @@ class TestRSModelViewset(EndpointTester):
         cdata_refreshed = ConstituentData.objects.get(model=self.rsmodel.model, constituent=x1)
         self.assertEqual(cdata_refreshed.type, 'basic')
         self.assertEqual(cdata_refreshed.data, updated_data)
+
+
+    @decl_endpoint('/api/models/{item}/load-json', method='patch')
+    def test_load_json(self):
+        x1 = self.schema.insert_last(alias='X1')
+        x2 = self.schema.insert_last(alias='X2')
+        ConstituentData.objects.create(
+            model=self.rsmodel.model,
+            constituent=x2,
+            type='basic',
+            data={'old': 'value'},
+        )
+        data = {
+            'contract_version': PORTAL_JSON_CONTRACT_VERSION,
+            'title': 'Imported model',
+            'alias': 'IMP_M',
+            'description': 'Model description',
+            'items': [{
+                'id': x1.pk,
+                'type': 'basic',
+                'value': {'1': 'Петя'}
+            }]
+        }
+
+        response = self.executeOK(item=self.model_id, data=data)
+        self.assertEqual(response.data['title'], 'Imported model')
+        self.assertEqual(response.data['alias'], 'IMP_M')
+        self.assertEqual(response.data['description'], 'Model description')
+        self.assertEqual(response.data['items'], [{
+            'id': x1.pk,
+            'type': 'basic',
+            'value': {'1': 'Петя'}
+        }])
+
+        self.rsmodel.model.refresh_from_db()
+        self.assertEqual(self.rsmodel.model.title, 'Imported model')
+        self.assertEqual(self.rsmodel.model.alias, 'IMP_M')
+        self.assertEqual(self.rsmodel.model.description, 'Model description')
+
+        self.assertFalse(ConstituentData.objects.filter(model=self.rsmodel.model, constituent=x2).exists())
+        loaded = ConstituentData.objects.get(model=self.rsmodel.model, constituent=x1)
+        self.assertEqual(loaded.data, {'1': 'Петя'})
+
+        self.executeNotFound(item=self.invalid_id, data=data)
+        self.executeBadData(item=self.model_id, data={'items': [{'id': self.invalid_id, 'type': 'basic', 'value': []}]})
+
+        self.login2()
+        self.executeForbidden(item=self.model_id, data=data)
+
 
     @decl_endpoint('/api/models/{item}/clear-values', method='post')
     def test_clear_values(self):

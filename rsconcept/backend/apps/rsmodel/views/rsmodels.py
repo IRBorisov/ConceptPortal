@@ -9,9 +9,10 @@ from rest_framework import viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.serializers import ValidationError
 
 from apps.library.models import LibraryItem, LibraryItemType
-from apps.library.serializers import LibraryItemSerializer
+from apps.library.serializers import LibraryItemBaseNonStrictSerializer, LibraryItemSerializer
 from apps.rsform.models import Constituenta
 from apps.rsform.serializers import CstListSerializer
 from apps.users.models import User
@@ -37,6 +38,7 @@ class RSModelViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Ret
     def get_permissions(self):
         ''' Determine permission class. '''
         if self.action in [
+            'load_json',
             'set_value',
             'clear_values',
             'reset_all'
@@ -64,6 +66,74 @@ class RSModelViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Ret
         return Response(
             status=c.HTTP_200_OK,
             data=serializer.data
+        )
+
+    @extend_schema(
+        summary='load JSON data into an existing model',
+        tags=['RSModel'],
+        request=s.RSModelImportJsonSerializer,
+        responses={
+            c.HTTP_200_OK: s.RSModelSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='load-json')
+    def load_json(self, request: Request, pk) -> Response:
+        ''' Endpoint: Load JSON into the current model. '''
+        item = self._get_item()
+        schema = self._get_schema()
+        serializer = s.RSModelImportJsonSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        validated = serializer.validated_data
+
+        cst_ids = [binding['id'] for binding in validated['items']]
+        valid_ids = set(
+            Constituenta.objects
+            .filter(schema=schema, pk__in=cst_ids)
+            .values_list('pk', flat=True)
+        )
+        invalid_ids = sorted(set(cst_ids) - valid_ids)
+        if invalid_ids:
+            raise ValidationError({
+                'items': f'Constituents do not belong to this model schema: {invalid_ids}'
+            })
+
+        seen: set[int] = set()
+        bindings: list[m.ConstituentData] = []
+        for binding in validated['items']:
+            if binding['id'] in seen:
+                continue
+            seen.add(binding['id'])
+            bindings.append(m.ConstituentData(
+                model=item,
+                constituent_id=binding['id'],
+                type=binding['type'],
+                data=binding['value']
+            ))
+
+        with transaction.atomic():
+            item_data = LibraryItemBaseNonStrictSerializer(
+                instance=item,
+                data={
+                    'title': validated['title'],
+                    'alias': validated['alias'],
+                    'description': validated['description'],
+                },
+                partial=True
+            )
+            item_data.is_valid(raise_exception=True)
+            item_data.save()
+
+            m.ConstituentData.objects.filter(model=item).delete()
+            if bindings:
+                m.ConstituentData.objects.bulk_create(bindings)
+            item.save(update_fields=['time_update'])
+
+        return Response(
+            status=c.HTTP_200_OK,
+            data=s.RSModelSerializer(item).data
         )
 
     @extend_schema(

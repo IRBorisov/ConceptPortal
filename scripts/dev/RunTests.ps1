@@ -7,11 +7,11 @@ $rstool = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\rstool"
 $rstoolMcp = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\rstool-mcp"
 
 function RunTests() {
-  TestBackend
   TestDomain
-  TestFrontend
   TestRstool
   TestRstoolMcp
+  TestBackend
+  TestFrontend
 }
 
 function TestBackend() {

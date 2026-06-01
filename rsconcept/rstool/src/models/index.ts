@@ -28,6 +28,14 @@ export {
   type SetConstituentaValueInput,
   type SetConstituentaValuesInput
 } from './model-value';
+export {
+  PORTAL_JSON_CONTRACT_VERSION,
+  type PortalImportMetadata,
+  type PortalModelImportData,
+  type PortalSchemaConstituenta,
+  type PortalSchemaImportData,
+  type PortalTermForm
+} from './portal-json';
 export { RSToolAgent } from './rstool-agent';
 export { type SessionHandle, type SessionRevision, type SessionState } from './session';
 export { CONTRACT_VERSION, type RSToolAgentContract } from './tool-contract';

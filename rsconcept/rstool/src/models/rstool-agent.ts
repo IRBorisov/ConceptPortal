@@ -19,8 +19,40 @@ import {
   type SetConstituentaValueInput,
   type SetConstituentaValuesInput
 } from './model-value';
+import {
+  PORTAL_JSON_CONTRACT_VERSION,
+  type PortalModelImportData,
+  type PortalSchemaImportData
+} from './portal-json';
 import { type SessionHandle, type SessionRevision, type SessionState } from './session';
 import { CONTRACT_VERSION, type RSToolAgentContract } from './tool-contract';
+
+function normalizeImportedState(state: SessionState): SessionState {
+  return {
+    ...state,
+    alias: state.alias ?? '',
+    title: state.title ?? '',
+    comment: state.comment ?? '',
+    model: state.model ?? { items: [] }
+  };
+}
+
+function portalImportMetadata(
+  session: SessionState,
+  kind: 'schema' | 'model'
+): Pick<PortalSchemaImportData, 'title' | 'alias' | 'description'> {
+  const defaults =
+    kind === 'schema'
+      ? { title: 'Conceptual schema', alias: 'SCHEMA' }
+      : { title: 'Conceptual model', alias: 'MODEL' };
+  const title = session.title.trim();
+  const alias = session.alias.trim();
+  return {
+    title: title.length > 0 ? title : defaults.title,
+    alias: alias.length > 0 ? alias : defaults.alias,
+    description: session.comment.trim()
+  };
+}
 
 export class RSToolAgent implements RSToolAgentContract {
   public readonly contractVersion = CONTRACT_VERSION;
@@ -87,14 +119,50 @@ export class RSToolAgent implements RSToolAgentContract {
     );
   }
 
+  public exportPortalSchema(sessionId: string): string {
+    const envelope = this.sessions.get(sessionId);
+    const payload: PortalSchemaImportData = {
+      contract_version: PORTAL_JSON_CONTRACT_VERSION,
+      ...portalImportMetadata(envelope.state, 'schema'),
+      items: envelope.state.items.map(item => ({
+        id: item.id,
+        alias: item.alias,
+        convention: item.convention,
+        crucial: false,
+        cst_type: item.cstType,
+        definition_formal: item.definitionFormal,
+        typification_manual: '',
+        value_is_property: false,
+        definition_raw: item.definitionText,
+        definition_resolved: item.definitionText,
+        term_raw: item.term,
+        term_resolved: item.term,
+        term_forms: []
+      })),
+      attribution: []
+    };
+    return JSON.stringify(payload, null, 2);
+  }
+
+  public exportPortalModel(sessionId: string): string {
+    const envelope = this.sessions.get(sessionId);
+    const payload: PortalModelImportData = {
+      contract_version: PORTAL_JSON_CONTRACT_VERSION,
+      ...portalImportMetadata(envelope.state, 'model'),
+      items: envelope.state.model.items.map(item => ({
+        id: item.id,
+        type: item.type,
+        value: item.value
+      }))
+    };
+    return JSON.stringify(payload, null, 2);
+  }
+
   public importSession(payload: string): SessionHandle {
     const parsed = JSON.parse(payload) as {
       state: SessionState;
     };
-    if (!parsed.state.model) {
-      parsed.state.model = { items: [] };
-    }
-    return this.sessions.create(parsed.state, this.contractVersion);
+    return this.sessions.create(normalizeImportedState(parsed.state), this.contractVersion);
   }
 
   public async setConstituentaValue(

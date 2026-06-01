@@ -21,6 +21,9 @@ export class SessionStore {
     const sessionId = initial?.sessionId ?? randomUUID();
     const state: SessionState = {
       sessionId,
+      alias: initial?.alias ?? '',
+      title: initial?.title ?? '',
+      comment: initial?.comment ?? '',
       createdAt: initial?.createdAt ?? now,
       updatedAt: now,
       revisions: initial?.revisions ?? [],

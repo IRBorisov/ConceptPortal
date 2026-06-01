@@ -8,6 +8,7 @@ from apps.library.models import AccessPolicy, LibraryItem, LibraryItemType, Loca
 from apps.oss.models import Operation, OperationType
 from apps.rsform.models import Constituenta, CstType, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
+from shared.portal_json import PORTAL_JSON_CONTRACT_VERSION
 from shared.testing_utils import response_contains
 
 
@@ -153,6 +154,54 @@ class TestRSFormViewset(EndpointTester):
         self.executeOK(item=self.owned_id)
         self.executeOK(item=self.unowned_id)
         self.executeForbidden(item=self.private_id)
+
+
+    @decl_endpoint('/api/rsforms/{item}/load-json', method='patch')
+    def test_load_json(self):
+        x1 = self.owned.insert_last(alias='X1')
+        data = {
+            'contract_version': PORTAL_JSON_CONTRACT_VERSION,
+            'title': 'Imported title',
+            'alias': 'IMP',
+            'description': 'Imported description',
+            'items': [{
+                'id': x1.pk,
+                'alias': 'X2',
+                'convention': 'loaded',
+                'crucial': True,
+                'cst_type': CstType.BASE,
+                'definition_formal': '',
+                'typification_manual': '',
+                'value_is_property': False,
+                'definition_raw': '',
+                'definition_resolved': '',
+                'term_raw': 'entity',
+                'term_resolved': 'entity',
+                'term_forms': []
+            }],
+            'attribution': []
+        }
+
+        response = self.executeOK(item=self.owned_id, data=data)
+        self.assertEqual(response.data['title'], 'Imported title')
+        self.assertEqual(response.data['alias'], 'IMP')
+        self.assertEqual(response.data['description'], 'Imported description')
+        self.assertEqual(response.data['items'][0]['alias'], 'X2')
+        self.assertEqual(response.data['items'][0]['convention'], 'loaded')
+
+        self.owned.model.refresh_from_db()
+        self.assertEqual(self.owned.model.title, 'Imported title')
+        self.assertEqual(self.owned.model.alias, 'IMP')
+        self.assertEqual(self.owned.model.description, 'Imported description')
+
+        x1.refresh_from_db()
+        self.assertEqual(x1.alias, 'X2')
+        self.assertTrue(x1.crucial)
+
+        self.executeForbidden(item=self.unowned_id, data=data)
+        self.executeBadData(item=self.owned_id, data={'items': [{}]})
+        bad_version = {**data, 'contract_version': '0.0.0'}
+        self.executeBadData(item=self.owned_id, data=bad_version)
 
 
     @decl_endpoint('/api/rsforms/{item}/details', method='get')

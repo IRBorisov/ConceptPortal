@@ -85,6 +85,8 @@ Supported methods (current contract version: see [`CONTRACT_VERSION`](src/models
 - `listDiagnostics`
 - `commitStep`
 - `exportSession`
+- `exportPortalSchema`
+- `exportPortalModel`
 - `importSession`
 - `setConstituentaValue`
 - `setConstituentaValues`
@@ -103,7 +105,7 @@ Example request:
 Example response:
 
 ```json
-{ "id": "1", "ok": true, "result": { "sessionId": "...", "contractVersion": "1.2.0" } }
+{ "id": "1", "ok": true, "result": { "sessionId": "...", "contractVersion": "1.4.0" } }
 ```
 
 ## Typed client example
