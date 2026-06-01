@@ -15,7 +15,11 @@ from apps.library.serializers import (
 )
 from apps.oss.models import Inheritance, Operation, OperationType
 from shared import messages as msg
-from shared.serializers import StrictModelSerializer, StrictSerializer
+from shared.serializers import (
+    PortalImportJsonMetadataSerializer,
+    StrictModelSerializer,
+    StrictSerializer,
+)
 
 from ..models import Attribution, Constituenta, CstType, RSForm
 from .basics import CstParseSerializer, InheritanceDataSerializer
@@ -80,6 +84,29 @@ class CstInfoSerializer(StrictModelSerializer):
         ''' serializer metadata. '''
         model = Constituenta
         exclude = ('order', 'schema')
+
+
+class CstImportJsonSerializer(StrictSerializer):
+    ''' Serializer: One versioned constituenta import item. '''
+    id = serializers.IntegerField()
+    alias = serializers.CharField()
+    convention = serializers.CharField(allow_blank=True)
+    crucial = serializers.BooleanField()
+    cst_type = serializers.ChoiceField(choices=CstType.choices)
+    definition_formal = serializers.CharField(allow_blank=True)
+    typification_manual = serializers.CharField(allow_blank=True, required=False, default='')
+    value_is_property = serializers.BooleanField(required=False, default=False)
+    definition_raw = serializers.CharField(allow_blank=True)
+    definition_resolved = serializers.CharField(allow_blank=True)
+    term_raw = serializers.CharField(allow_blank=True)
+    term_resolved = serializers.CharField(allow_blank=True)
+    term_forms = serializers.ListField(child=serializers.DictField())
+
+
+class RSFormImportJsonSerializer(PortalImportJsonMetadataSerializer):
+    ''' Serializer: versioned RSForm data for importing into an existing schema. '''
+    items = CstImportJsonSerializer(many=True)
+    attribution = AttributionSerializer(many=True, required=False)
 
 
 class CstUpdateSerializer(StrictSerializer):

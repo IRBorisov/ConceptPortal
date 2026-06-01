@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { schemaLibraryItem } from '@/features/library/backend/types';
+import { schemaPortalImportMetadata } from '@/features/library/models/portal-import-json';
 
 /** Represents data for {@link RSModel} provided by backend. */
 export type RSModelDTO = z.infer<typeof schemaRSModel>;
@@ -10,6 +11,9 @@ export type ConstituentaValue = z.infer<typeof schemaConstituentaValue>;
 
 /** Represents data for {@link Constituenta} provided to backend. */
 export type ConstituentaDataDTO = z.infer<typeof schemaUpdateValues>;
+
+/** Represents JSON data imported into an existing {@link RSModel}. */
+export type RSModelJsonDTO = z.infer<typeof schemaRSModelJsonImport>;
 
 // ========= SCHEMAS ========
 
@@ -22,6 +26,10 @@ export const schemaConstituentaValue = z.strictObject({
   id: z.number(),
   type: z.string(),
   value: z.union([z.record(z.number(), z.string()), z.number(), RecursiveArraySchema])
+});
+
+export const schemaRSModelJsonImport = schemaPortalImportMetadata.extend({
+  items: z.array(schemaConstituentaValue)
 });
 
 export const schemaConstituentaData = z.strictObject({

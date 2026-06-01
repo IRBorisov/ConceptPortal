@@ -5,16 +5,15 @@ Workspace rules for agents.
 ## Scope
 
 - Applies repo-wide unless nearer `AGENTS.md` exists.
-- Read nearest rules before editing: `rsconcept/domain/AGENTS.md`, `rsconcept/frontend/AGENTS.md`, `rsconcept/backend/AGENTS.md`, `rsconcept/rstool/AGENTS.md`, `rsconcept/rstool-mcp/AGENTS.md`.
 
 ## Structure
 
 - `README.md`: setup/conventions/run docs
-- `rsconcept/domain`: published TypeScript domain package (`@rsconcept/domain`); own `package.json` / `package-lock.json`
-- `rsconcept/frontend`: Vite React TS app; own `package.json` / `package-lock.json`
+- `rsconcept/domain`: published TypeScript domain package (`@rsconcept/domain`)
+- `rsconcept/frontend`: Vite React TS app
 - `rsconcept/backend`: Django backend
-- `rsconcept/rstool`: published agent library (`@rsconcept/rstool`) and stdio wrapper; own lockfile
-- `rsconcept/rstool-mcp`: published MCP adapter (`@rsconcept/rstool-mcp`) wrapping `rstool` for Cursor/Claude; own lockfile
+- `rsconcept/rstool`: published agent library (`@rsconcept/rstool`) and stdio wrapper
+- `rsconcept/rstool-mcp`: published MCP adapter (`@rsconcept/rstool-mcp`) wrapping `rstool` for Cursor/Claude
 - `scripts/dev`: local lint/test/start scripts
 - `scripts/prod`: deploy scripts
 - `nginx`: reverse proxy/deploy config
@@ -30,11 +29,9 @@ The portal UI and the API are on **different hosts** in production (see `nginx/p
 
 **Rewrite rules (keep `id` numeric; drop hash-style UI query params like `?tab=` unless the backend documents them):**
 
-| Portal path | Typical REST target on API host |
-|-------------|--------------------------------|
-| `/rsforms/:id` … | `GET /api/rsforms/:id` — library item metadata (`owner`, titles, etc.). For the full RSForm payload the SPA uses `GET /api/rsforms/:id/details` (or `GET /api/library/:id/versions/:version` when a version is selected). |
-| `/oss/:id` … | `GET /api/oss/:id` (and sibling routes on the OSS viewset). |
-| `/models/:id` … | `GET /api/models/:id` (RSModel router). |
+- `/rsforms/:id` → `GET /api/rsforms/:id` (library item metadata). Full RSForm payload: `GET /api/rsforms/:id/details` or `GET /api/library/:id/versions/:version`.
+- `/oss/:id` → `GET /api/oss/:id` (and related OSS endpoints).
+- `/models/:id` → `GET /api/models/:id` (RSModel router).
 
 **Machine-readable OpenAPI:** `GET https://api.portal.acconcept.ru/schema` (Swagger UI root on the API host is separate; prefer `/schema` for JSON).
 
@@ -46,13 +43,9 @@ Locally, the **path prefix stays `/api/...`**; the API base URL comes from `VITE
 - Backend API/models/serializers/permissions/settings -> `rsconcept/backend`.
 - Frontend UI text: follow frontend i18n rules; keep `useTx`/`globalTx` ids and `en`/`ru`/`fr` slices synced.
 - API contract changes: sync frontend/backend.
-- Preserve code and work outside your current task scope.
-- Function arg order changes: update all callsites.
 
 ## Agent skills
 
 - Domain docs: `CONTEXT.md`.
-- **Project skills (git):** `.agents/skills/<name>/` — shared Portal workflows (`i18n-extract`, `diagnose`, `triage`, etc.). Edit and commit here.
-- **`rstool-helper`:** canonical guide in `rsconcept/rstool/skills/rstool-helper/` + `rsconcept/rstool/docs/`; workspace entry skill only in `.agents/skills/rstool-helper/SKILL.md` (not shipped from the npm package). No duplicate GUIDE/docs under `.agents/`.
-- **User-global skills:** `~/.cursor/skills-cursor/` — not in this repo.
-- Index: `.agents/skills/README.md`; rstool notes: `rsconcept/rstool/skills/README.md`.
+- **Project skills:** `.agents/skills/<name>/`
+- **`rstool-helper`:** canonical guide in `rsconcept/rstool/skills/rstool-helper/` + `rsconcept/rstool/docs/`; workspace entry skill `.agents/skills/rstool-helper/SKILL.md`.

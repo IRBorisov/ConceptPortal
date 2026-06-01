@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
@@ -33,9 +34,12 @@ import {
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE, prefixes } from '@/utils/constants';
-import { generatePageQR, sharePage } from '@/utils/utils';
+import { convertToJSON, generatePageQR, readJsonFile, sharePage } from '@/utils/utils';
 
+import { schemaRSFormImportJson } from '../../backend/types';
+import { useUploadRSFormJson } from '../../backend/use-upload-json';
 import { useUploadTRS } from '../../backend/use-upload-trs';
+import { toRSFormImportJson } from '../../models/json-file';
 import { prepareTRSFile } from '../../models/trs-file';
 
 import { useSchemaEdit } from './schema-edit-context';
@@ -53,6 +57,8 @@ export function MenuMain() {
   const isModified = useModificationStore(state => state.isModified);
 
   const { upload } = useUploadTRS();
+  const { uploadJson } = useUploadRSFormJson();
+  const jsonInputRef = useRef<HTMLInputElement | null>(null);
 
   const showQR = useDialogsStore(state => state.showQR);
   const showClone = useDialogsStore(state => state.showCloneLibraryItem);
@@ -109,6 +115,22 @@ export function MenuMain() {
     }
   }
 
+  async function handleDownloadJson() {
+    hideMenu();
+    if (isModified) {
+      const outcome = await promptUnsaved();
+      if (outcome === 'cancel') {
+        return;
+      }
+    }
+    try {
+      const payload = toRSFormImportJson(schema);
+      fileDownload(convertToJSON(payload), `${schema.alias ?? 'Schema'}.json`, 'application/json;charset=utf-8;');
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   function handleUpload() {
     hideMenu();
     showUpload({
@@ -118,6 +140,41 @@ export function MenuMain() {
           data: data
         })
     });
+  }
+
+  function handleUploadJson() {
+    hideMenu();
+    jsonInputRef.current?.click();
+  }
+
+  async function handleJsonFile(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null;
+    event.target.value = '';
+    if (!file) {
+      return;
+    }
+    if (isModified) {
+      const outcome = await promptUnsaved();
+      if (outcome === 'cancel') {
+        return;
+      }
+    }
+    if (!window.confirm(`${tx('tx.general.attention')} ${tx('tx.schema.upload.constituents')}`)) {
+      return;
+    }
+    let data;
+    try {
+      data = await readJsonFile(file, schemaRSFormImportJson);
+    } catch (error) {
+      toast.error((error as Error).message);
+      console.error(error);
+      return;
+    }
+    try {
+      await uploadJson({ itemID: schema.id, data });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async function handleClone() {
@@ -209,6 +266,13 @@ export function MenuMain() {
         className='h-full pl-2 text-muted-foreground hover:text-primary cc-animate-color bg-transparent'
         onClick={toggleMenu}
       />
+      <input
+        ref={jsonInputRef}
+        type='file'
+        accept='application/json,.json'
+        className='hidden'
+        onChange={event => void handleJsonFile(event)}
+      />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
           text={tx('tx.general.share')}
@@ -254,12 +318,25 @@ export function MenuMain() {
           icon={<IconDownload size='1rem' className='icon-primary' />}
           onClick={() => void handleDownload()}
         />
+        <DropdownButton
+          text={tx('tx.general.download.json')}
+          icon={<IconDownload size='1rem' className='icon-primary' />}
+          onClick={() => void handleDownloadJson()}
+        />
         {isContentEditable ? (
           <DropdownButton
             text={tx('tx.general.load.fromExteor')}
             icon={<IconUpload size='1rem' className='icon-red' />}
             disabled={isProcessing || hasInheritance}
             onClick={handleUpload}
+          />
+        ) : null}
+        {isContentEditable ? (
+          <DropdownButton
+            text={tx('tx.general.load.fromJson')}
+            icon={<IconUpload size='1rem' className='icon-red' />}
+            disabled={isProcessing || hasInheritance}
+            onClick={handleUploadJson}
           />
         ) : null}
         {isMutable ? (

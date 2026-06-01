@@ -1,6 +1,8 @@
 'use client';
 
+import { useRef } from 'react';
 import { toast } from 'react-toastify';
+import fileDownload from 'js-file-download';
 
 import { useTx } from '@/i18n';
 import { AccessPolicy, LocationHead } from '@rsconcept/domain/library';
@@ -20,17 +22,23 @@ import {
   IconCalculateAll,
   IconClone,
   IconDestroy,
+  IconDownload,
   IconLibrary,
   IconMenu,
   IconQR,
   IconRSForm,
   IconRSModel,
   IconSandbox,
-  IconShare
+  IconShare,
+  IconUpload
 } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
-import { generatePageQR, sharePage } from '@/utils/utils';
+import { convertToJSON, generatePageQR, readJsonFile, sharePage } from '@/utils/utils';
+
+import { schemaRSModelJsonImport } from '../../backend/types';
+import { useUploadRSModelJson } from '../../backend/use-upload-json';
+import { toRSModelImportJson } from '../../models/json-file';
 
 import { useModelEdit } from './model-edit-context';
 
@@ -48,6 +56,8 @@ export function MenuMain() {
 
   const showQR = useDialogsStore(state => state.showQR);
   const showClone = useDialogsStore(state => state.showCloneLibraryItem);
+  const { uploadJson } = useUploadRSModelJson();
+  const jsonInputRef = useRef<HTMLInputElement | null>(null);
 
   const {
     elementRef: menuRef,
@@ -102,6 +112,51 @@ export function MenuMain() {
       selected: [],
       totalCount: schema.items.length
     });
+  }
+
+  async function handleDownloadJson() {
+    hideMenu();
+    if (isModified) {
+      const outcome = await promptUnsaved();
+      if (outcome === 'cancel') {
+        return;
+      }
+    }
+    try {
+      const payload = toRSModelImportJson(schema, model, engine);
+      fileDownload(convertToJSON(payload), `${model.alias ?? 'Model'}.json`, 'application/json;charset=utf-8;');
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function handleUploadJson() {
+    hideMenu();
+    jsonInputRef.current?.click();
+  }
+
+  async function handleJsonFile(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null;
+    event.target.value = '';
+    if (!file) {
+      return;
+    }
+    if (isModified) {
+      const outcome = await promptUnsaved();
+      if (outcome === 'cancel') {
+        return;
+      }
+    }
+    if (!window.confirm(`${tx('tx.general.attention')} ${tx('tx.model.upload.values')}`)) {
+      return;
+    }
+    try {
+      const data = await readJsonFile(file, schemaRSModelJsonImport);
+      await uploadJson({ itemID: model.id, data });
+    } catch (error) {
+      toast.error((error as Error).message);
+      console.error(error);
+    }
   }
 
   function handleNavigateSchema(event: React.MouseEvent<HTMLButtonElement>) {
@@ -159,6 +214,13 @@ export function MenuMain() {
         className='h-full pl-2 text-muted-foreground hover:text-primary cc-animate-color bg-transparent'
         onClick={toggleMenu}
       />
+      <input
+        ref={jsonInputRef}
+        type='file'
+        accept='application/json,.json'
+        className='hidden'
+        onChange={event => void handleJsonFile(event)}
+      />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
           text={tx('tx.model.recalculate')}
@@ -184,6 +246,19 @@ export function MenuMain() {
             text={tx('tx.general.clone')}
             icon={<IconClone size='1rem' className='icon-green' />}
             onClick={handleClone}
+          />
+        ) : null}
+        <DropdownButton
+          text={tx('tx.general.download.json')}
+          icon={<IconDownload size='1rem' className='icon-primary' />}
+          onClick={() => void handleDownloadJson()}
+        />
+        {isMutable ? (
+          <DropdownButton
+            text={tx('tx.general.load.fromJson')}
+            icon={<IconUpload size='1rem' className='icon-red' />}
+            disabled={isProcessing}
+            onClick={handleUploadJson}
           />
         ) : null}
         <DropdownButton

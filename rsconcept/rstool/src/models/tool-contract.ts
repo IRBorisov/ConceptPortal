@@ -25,7 +25,7 @@ import {
   type SessionState
 } from './session';
 
-export const CONTRACT_VERSION = '1.2.0';
+export const CONTRACT_VERSION = '1.4.0';
 
 export interface RSToolAgentContract {
   readonly contractVersion: string;
@@ -36,6 +36,8 @@ export interface RSToolAgentContract {
   listDiagnostics(sessionId: string, filters?: ListDiagnosticsFilters): DiagnosticRecord[];
   commitStep(sessionId: string, message?: string): SessionRevision;
   exportSession(sessionId: string): string;
+  exportPortalSchema(sessionId: string): string;
+  exportPortalModel(sessionId: string): string;
   importSession(payload: string): SessionHandle;
   setConstituentaValue(sessionId: string, input: SetConstituentaValueInput): Promise<SessionModelState>;
   setConstituentaValues(sessionId: string, input: SetConstituentaValuesInput): Promise<SessionModelState>;

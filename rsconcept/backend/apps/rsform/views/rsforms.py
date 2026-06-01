@@ -38,6 +38,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     def get_permissions(self):
         ''' Determine permission class. '''
         if self.action in [
+            'load_json',
             'load_trs',
             'create_cst',
             'update_cst',
@@ -62,6 +63,50 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         else:
             permission_list = [permissions.Anyone]
         return [permission() for permission in permission_list]
+
+    @extend_schema(
+        summary='load JSON data into an existing RSForm',
+        tags=['RSForm'],
+        request=s.RSFormImportJsonSerializer,
+        responses={
+            c.HTTP_200_OK: s.RSFormParseSerializer,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='load-json')
+    def load_json(self, request: Request, pk) -> HttpResponse:
+        ''' Endpoint: Load JSON into the current schema. '''
+        item = self._get_item()
+        if Inheritance.objects.filter(child__schema_id=item.pk).exists():
+            raise ValidationError({
+                'data': msg.importIntoInherited()
+            })
+        serializer = s.RSFormImportJsonSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        with transaction.atomic():
+            validated = serializer.validated_data
+            version_data = {
+                'title': validated['title'],
+                'alias': validated['alias'],
+                'description': validated['description'],
+                'items': validated['items'],
+                'attribution': validated.get('attribution', []),
+            }
+            data = s.RSFormSerializer(item).to_versioned_data() | version_data
+            PropagationFacade().before_delete_schema(item.pk)
+            s.RSFormSerializer(item).restore_from_version(data)
+            PropagationFacade().after_create_cst(
+                list(m.RSFormCached(item.pk).constituentsQ().order_by('order'))
+            )
+            item.save(update_fields=['time_update'])
+
+        return Response(
+            status=c.HTTP_200_OK,
+            data=s.RSFormParseSerializer(item).data
+        )
 
     @extend_schema(
         summary='create constituenta',

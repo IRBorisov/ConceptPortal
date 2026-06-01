@@ -336,6 +336,8 @@ export const txLibraryEn: Record<string, string> = {
   'tx.model.create': 'Create model',
   'tx.model.edit': 'Edit model',
   'tx.model.delete': 'Delete model',
+  'tx.model.upload.values': 'Loading from JSON will replace all current model values.',
+  'tx.model.upload.success': 'Model loaded',
   'tx.model.calculate.cst': 'Calculate constituent',
   'tx.model.recalculate': 'Recalculate model',
   'tx.model.recalculate.hint': 'Recalculate all calculations in the model',

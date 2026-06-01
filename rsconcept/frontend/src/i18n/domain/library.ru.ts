@@ -340,6 +340,8 @@ export const txLibraryRu: Record<string, string> = {
   'tx.model.create': 'Создать модель',
   'tx.model.edit': 'Редактирование модели',
   'tx.model.delete': 'Удалить модель',
+  'tx.model.upload.values': 'При загрузке из JSON все текущие значения модели будут заменены',
+  'tx.model.upload.success': 'Модель загружена',
   'tx.model.calculate.cst': 'Вычислить конституенту',
   'tx.model.recalculate': 'Пересчитать модель',
   'tx.model.recalculate.hint': 'Пересчитать все вычисления в модели',

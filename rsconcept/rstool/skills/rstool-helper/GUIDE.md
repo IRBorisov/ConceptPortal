@@ -39,6 +39,7 @@ Paths are relative to this file.
 8. Set base/model values with `setConstituentaValue(s)`.
 9. Evaluate with `evaluateExpression`, `evaluateConstituenta`, or `recalculateModel`.
 10. Persist with `exportSession` / `importSession`.
+11. For user-uploadable Portal files, use `exportPortalSchema` for schema JSON or `exportPortalModel` for model JSON.
 
 ## Portal REST
 

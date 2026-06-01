@@ -5,6 +5,7 @@ import { CstType } from '@rsconcept/domain/library';
 import { RSErrorCode, TokenID, ValueClass } from '@rsconcept/domain/rslang';
 
 import { schemaLibraryItem, schemaVersionInfo } from '@/features/library/backend/types';
+import { schemaPortalImportMetadata } from '@/features/library/models/portal-import-json';
 
 import { limits } from '@/utils/constants';
 
@@ -19,6 +20,9 @@ export interface RSFormUploadDTO {
   load_metadata: boolean;
   file: File;
 }
+
+/** Represents versioned JSON data imported into an existing {@link RSForm}. */
+export type RSFormImportJsonDTO = z.infer<typeof schemaRSFormImportJson>;
 
 /** Represents {@link Constituenta} data, used in creation process. */
 export type CreateConstituentaDTO = z.infer<typeof schemaCreateConstituenta>;
@@ -91,6 +95,11 @@ export const schemaConstituentaBasics = z.strictObject({
 export const schemaAttribution = z.strictObject({
   container: z.number(),
   attribute: z.number()
+});
+
+export const schemaRSFormImportJson = schemaPortalImportMetadata.extend({
+  items: z.array(schemaConstituentaBasics),
+  attribution: z.array(schemaAttribution).optional()
 });
 
 export const schemaRSForm = schemaLibraryItem.extend({

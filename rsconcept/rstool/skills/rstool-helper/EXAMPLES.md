@@ -92,6 +92,15 @@ const restored = tool.importSession(payload);
 
 Export includes session state and model values.
 
+To create files the user can upload to an existing Portal object:
+
+```ts
+const schemaJson = tool.exportPortalSchema(sessionId);
+const modelJson = tool.exportPortalModel(sessionId);
+```
+
+Use `schemaJson` on a schema page and `modelJson` on a model page via **Load from JSON**.
+
 ## Evaluation
 
 ```ts

@@ -1,3 +1,8 @@
 ''' REST API: Serializers. '''
 
-from .data_access import CstDataUpdateSerializer, RSModelSandboxImportSerializer, RSModelSerializer
+from .data_access import (
+    CstDataUpdateSerializer,
+    RSModelImportJsonSerializer,
+    RSModelSandboxImportSerializer,
+    RSModelSerializer
+)

@@ -126,6 +126,104 @@ describe('RSToolAgent', () => {
     });
   });
 
+  it('stores and exports session metadata', () => {
+    const tool = new RSToolAgent();
+    const session = tool.createSession({
+      alias: 'KIN',
+      title: 'Kinship',
+      comment: 'Example schema'
+    });
+
+    expect(tool.getFormState(session.sessionId)).toMatchObject({
+      alias: 'KIN',
+      title: 'Kinship',
+      comment: 'Example schema'
+    });
+
+    const exported = JSON.parse(tool.exportPortalSchema(session.sessionId)) as {
+      title: string;
+      alias: string;
+      description: string;
+    };
+    expect(exported).toMatchObject({
+      title: 'Kinship',
+      alias: 'KIN',
+      description: 'Example schema'
+    });
+  });
+
+  it('exports schema data for Portal JSON import', () => {
+    const tool = new RSToolAgent();
+    const session = tool.createSession();
+    tool.addOrUpdateConstituenta(session.sessionId, {
+      draft: {
+        id: 15,
+        alias: 'D2',
+        cstType: CstType.TERM,
+        definitionFormal: '1',
+        term: 'natural number',
+        definitionText: 'A positive integer',
+        convention: 'Standard arithmetic'
+      }
+    });
+
+    const exported = JSON.parse(tool.exportPortalSchema(session.sessionId)) as {
+      contract_version: string;
+      title: string;
+      alias: string;
+      description: string;
+      items: Array<Record<string, unknown>>;
+      attribution: unknown[];
+    };
+
+    expect(exported.contract_version).toBe('1.0.0');
+    expect(exported.title).toBe('Conceptual schema');
+    expect(exported.alias).toBe('SCHEMA');
+    expect(exported.description).toBe('');
+
+    expect(exported.items[0]).toMatchObject({
+      id: 15,
+      alias: 'D2',
+      cst_type: CstType.TERM,
+      definition_formal: '1',
+      definition_raw: 'A positive integer',
+      term_raw: 'natural number',
+      convention: 'Standard arithmetic',
+      crucial: false
+    });
+    expect(exported.attribution).toEqual([]);
+  });
+
+  it('exports model data for Portal JSON import', async () => {
+    const tool = new RSToolAgent();
+    const session = tool.createSession();
+    buildSampleForm(tool, session.sessionId);
+    await tool.setConstituentaValue(session.sessionId, {
+      target: 1,
+      value: { 1: 'Alice' }
+    });
+
+    const exported = JSON.parse(tool.exportPortalModel(session.sessionId)) as {
+      contract_version: string;
+      title: string;
+      alias: string;
+      description: string;
+      items: Array<Record<string, unknown>>;
+    };
+
+    expect(exported.contract_version).toBe('1.0.0');
+    expect(exported.title).toBe('Conceptual model');
+    expect(exported.alias).toBe('MODEL');
+
+    expect(exported.items).toEqual([
+      {
+        id: 1,
+        type: 'basic',
+        value: { 1: 'Alice' }
+      }
+    ]);
+  });
+
   it('defaults missing text fields to empty strings', () => {
     const tool = new RSToolAgent();
     const session = tool.createSession();

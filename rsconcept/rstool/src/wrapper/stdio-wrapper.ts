@@ -30,6 +30,8 @@ const METHODS = [
   'listDiagnostics',
   'commitStep',
   'exportSession',
+  'exportPortalSchema',
+  'exportPortalModel',
   'importSession',
   'setConstituentaValue',
   'setConstituentaValues',
@@ -115,6 +117,18 @@ async function handleRequest(request: StdioRequest): Promise<StdioResponse> {
           id: request.id,
           ok: true,
           result: tool.exportSession(requiredString(params, 'sessionId'))
+        };
+      case 'exportPortalSchema':
+        return {
+          id: request.id,
+          ok: true,
+          result: tool.exportPortalSchema(requiredString(params, 'sessionId'))
+        };
+      case 'exportPortalModel':
+        return {
+          id: request.id,
+          ok: true,
+          result: tool.exportPortalModel(requiredString(params, 'sessionId'))
         };
       case 'importSession':
         return {

@@ -3,7 +3,7 @@
 ## rstool contract
 
 - Package: `@rsconcept/rstool`
-- Contract version: `1.2.0` (`CONTRACT_VERSION`)
+- Contract version: `1.4.0` (`CONTRACT_VERSION`)
 - Core class: `RSToolAgent`
 - Public imports: `@rsconcept/rstool` and `@rsconcept/rstool/wrapper`
 
@@ -18,6 +18,8 @@
 | `listDiagnostics(sessionId, filters?)`                      | Accumulated diagnostics; optional `constituentId` filter           |
 | `commitStep(sessionId, message?)`                           | Record revision checkpoint                                         |
 | `exportSession(sessionId)`                                  | JSON string `{ contractVersion, state, diagnostics }`              |
+| `exportPortalSchema(sessionId)`                             | Portal schema import JSON string using versioned schema shape      |
+| `exportPortalModel(sessionId)`                              | Portal model import JSON string using versioned model values shape |
 | `importSession(payload)`                                    | New session from export                                            |
 | `setConstituentaValue(sessionId, { target, type?, value })` | Set one base binding or structured value → `SessionModelState`     |
 | `setConstituentaValues(sessionId, { items })`               | Batch set values → `SessionModelState`                             |
@@ -42,6 +44,20 @@
 ```
 
 Omitted text fields default to `''` in stored state.
+
+### `SessionState` metadata
+
+Set on `createSession(initial?)` or via `importSession`:
+
+```ts
+{
+  alias: string; // library item alias
+  title: string; // display title
+  comment: string; // developer notes
+}
+```
+
+All default to `''` when omitted.
 
 ### Model and evaluation types
 
@@ -69,7 +85,7 @@ Base/constant bindings use `type: "basic"` and `value: { "0": "label", … }`. S
 
 Process: `npx rstool-wrapper`
 
-1. **Ready** (no request): `{"id":null,"ok":true,"result":{"ready":true,"wrapper":"rstool-stdio","contractVersion":"1.2.0"}}`
+1. **Ready** (no request): `{"id":null,"ok":true,"result":{"ready":true,"wrapper":"rstool-stdio","contractVersion":"1.4.0"}}`
 2. **Request**: `{"id":"<unique>","method":"<name>","params":{...}}`
 3. **Response**: `{"id":"<same>","ok":true,"result":...}` or `{"id":"...","ok":false,"error":{"code":"...","message":"..."}}`
 
@@ -85,6 +101,8 @@ Example chain:
 {"id":"4","method":"listDiagnostics","params":{"sessionId":"…"}}
 {"id":"5","method":"commitStep","params":{"sessionId":"…","message":"checkpoint"}}
 {"id":"6","method":"exportSession","params":{"sessionId":"…"}}
+{"id":"6a","method":"exportPortalSchema","params":{"sessionId":"…"}}
+{"id":"6b","method":"exportPortalModel","params":{"sessionId":"…"}}
 {"id":"7","method":"setConstituentaValue","params":{"sessionId":"…","input":{"target":1,"value":{"0":"a","1":"b"}}}}
 {"id":"8","method":"evaluateExpression","params":{"sessionId":"…","input":{"expression":"1+2","cstType":"term"}}}
 {"id":"9","method":"evaluateConstituenta","params":{"sessionId":"…","input":{"constituentId":3}}}
@@ -109,7 +127,7 @@ interface AnalysisResult {
 - **Term graph**: directed dependencies between constituenta via alias references in definitions.
 - **`S#` vs `D#`**: same `×` token — in `ℬ(X1×X1)` on `S#` it forms a **grade** (pair type); in `X1×X1` on `D#` it is the **Cartesian product** (all pairs). Relations: `S#` + `convention`, then derived `D#` (`Pr1(S1)`, …).
 
-Intro (help): language is FOL-based; set vs logic expression split; parameterized templates for term/predicate functions; structural expressions reshape stages.
+Intro (help): language is FOL-based; set vs logic expression split; parameterized templates for term/predicate functions.
 
 ## Grammar tokens (selected)
 
@@ -134,15 +152,15 @@ Standalone agents should consult the bundled distilled docs (`docs/*.md` inside 
 
 | Topic                                | Bundled doc                                |
 | ------------------------------------ | ------------------------------------------ |
-| Identifiers, literals                | `docs/SYNTAX.md` § *Identifier rules*      |
+| Identifiers, literals                | `docs/SYNTAX.md` § _Identifier rules_      |
 | Grades, `Logic`, parameterized types | `docs/TYPIFICATION.md`                     |
-| Logical expressions                  | `docs/SYNTAX.md` § *Logical expressions*   |
-| Set operators                        | `docs/SYNTAX.md` § *Set-theoretic*         |
-| Integer arithmetic                   | `docs/SYNTAX.md` § *Arithmetic*            |
-| Structural / typification reshaping  | `docs/TYPIFICATION.md` § *Forming/derived* |
-| Quantifiers                          | `docs/SYNTAX.md` § *Quantifiers*           |
-| Parameterized functions, templates   | `docs/SYNTAX.md` § *Parameterised*         |
-| Correctness / validation mindset     | `docs/SYNTAX.md` § *Correctness model*     |
+| Logical expressions                  | `docs/SYNTAX.md` § _Logical expressions_   |
+| Set operators                        | `docs/SYNTAX.md` § _Set-theoretic_         |
+| Integer arithmetic                   | `docs/SYNTAX.md` § _Arithmetic_            |
+| Structural / typification reshaping  | `docs/TYPIFICATION.md` § _Forming/derived_ |
+| Quantifiers                          | `docs/SYNTAX.md` § _Quantifiers_           |
+| Parameterized functions, templates   | `docs/SYNTAX.md` § _Parameterised_         |
+| Correctness / validation mindset     | `docs/SYNTAX.md` § _Correctness model_     |
 | Definition semantic tests            | `docs/MODEL-TESTING.md`                    |
 | Domain vocabulary                    | `docs/DOMAIN.md`                           |
 | Constituent fields and ordering      | `docs/CONSTITUENTA.md`                     |
@@ -167,6 +185,19 @@ Categories:
 
 `exportSession(sessionId)` returns a JSON string with `{ contractVersion, state, diagnostics }`.
 
+- `state.alias`, `state.title`, `state.comment` — library-item metadata for Portal export (`comment` → JSON `description`).
 - `state.items[]` contains each constituent with `id`, `alias`, `cstType`, `definitionFormal`, optional text fields, and nested analysis output.
 - `state.model.items[]` is present when interpretation values have been set.
 - `diagnostics[]` contains accumulated diagnostics with offsets and codes.
+
+## Portal import JSON
+
+For **Load from JSON** on an existing Portal schema or model:
+
+- `exportPortalSchema(sessionId)` — schema file
+- `exportPortalModel(sessionId)` — model file
+
+Both return `contract_version` `1.0.0` plus required `title`, `alias`, `description`, and `items`. Schema files may include `attribution`. Values come from `state.title`, `state.alias`, and `state.comment` (empty fields fall back to `Conceptual schema` / `SCHEMA` or `Conceptual model` / `MODEL` and `""`).
+
+- Schema `items[]`: versioned constituent fields (`cst_type`, `definition_formal`, `term_raw`, …).
+- Model `items[]`: `{ id, type, value }` per binding.
