@@ -54,6 +54,12 @@ The npm packages in `domain`, `rstool`, and `rstool-mcp` are independently insta
 
 Use [`.vscode/launch.json`](.vscode/launch.json) to start app configurations, run tests, and attach debuggers. GitHub Actions run linting and CI builds on push.
 
+To update dependencies across all `rsconcept` projects in one shot:
+
+```powershell
+.\scripts\dev\UpdateDependencies.ps1
+```
+
 ## Local production-like build
 
 Mirrors production layout on `localhost`, without production secrets.

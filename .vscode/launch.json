@@ -37,6 +37,14 @@
       "args": []
     },
     {
+      // Update backend and npm dependencies
+      "name": "Update Dependencies",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${workspaceFolder}/scripts/dev/UpdateDependencies.ps1",
+      "args": []
+    },
+    {
       // Run Tests for backend for current file in Debug mode
       "name": "BE-DebugTestFile",
       "type": "debugpy",

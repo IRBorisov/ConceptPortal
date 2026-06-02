@@ -4,7 +4,7 @@ Agent-facing library for **incremental RSForm construction**, **RSLang expressio
 
 ## Agent skill
 
-RS language + rstool workflows for agents: `skills/rstool-helper/` (`GUIDE.md`, `REFERENCE.md`, `EXAMPLES.md`) and `docs/` (`DOMAIN.md`, `SYNTAX.md`, …). A **thin** entry skill is installed into the project’s agent skills folder; see [Installing the agent skill](#installing-the-agent-skill) below.
+RS language + rstool workflows for agents: `skills/rstool-helper/` (`GUIDE.md`, `REFERENCE.md`, `EXAMPLES.md`) and `docs/` (`DOMAIN.md`, `CONCEPTUAL-SCHEMA.md` for relation-first KS design, `SYNTAX.md`, …). A **thin** entry skill is installed into the project’s agent skills folder; see [Installing the agent skill](#installing-the-agent-skill) below.
 
 ## Install
 

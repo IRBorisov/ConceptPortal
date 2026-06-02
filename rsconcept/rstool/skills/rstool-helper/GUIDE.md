@@ -29,6 +29,8 @@ Paths are relative to this file.
 
 ## Workflow
 
+Use this when editing or checking schemas and models.
+
 1. `createSession`.
 2. Add `basic` (`X#`) and `constant` (`C#`) with `definitionFormal: ''`.
 3. Add dependencies before dependents.
@@ -40,26 +42,6 @@ Paths are relative to this file.
 9. Evaluate with `evaluateExpression`, `evaluateConstituenta`, or `recalculateModel`.
 10. Persist with `exportSession` / `importSession`.
 11. For user-uploadable Portal files, use `exportPortalSchema` for schema JSON or `exportPortalModel` for model JSON.
-
-## Portal REST
-
-rstool never calls Portal REST itself. Fetch live data outside rstool, then import constituents with `addOrUpdateConstituenta`.
-
-- UI host: `https://portal.acconcept.ru`.
-- API host: `https://api.portal.acconcept.ru`.
-- Useful reads: `/api/rsforms/{id}`, `/api/rsforms/{id}/details`, `/api/library/{id}/versions/{v}`, `/api/oss/{id}`, `/api/models/{id}`, `/schema`.
-- Do not scrape SPA HTML or reuse UI query params like `?tab=`.
-
-## Syntax Cheatsheet
-
-- Globals: `X1`, `C1`, `S1`, `D1`, `F1`, `P1`, `A1`, `T1`, `N1`, `R1`.
-- Locals: `x`, `ξ`, `μ2`.
-- Literals: `42`, `Z`, `∅`.
-- Set expressions: `∪`, `∩`, `\`, `∆`, `×`, `ℬ(...)`, tuples, `Pr*`, `Fi*`.
-- Logic: `¬`, `&`, `∨`, `⇒`, `⇔`, `∀`, `∃`, `=`, `≠`, `<`, `∈`, `⊆`.
-- Parameterized expressions: `[arg1∈H1, arg2∈H2] body`.
-
-Read tool output; do not infer types by inspection.
 
 ## Diagnostics Loop
 
@@ -76,19 +58,11 @@ Read tool output; do not infer types by inspection.
 3. Derived constituents in topological order.
 4. Axioms and statements after their references.
 
-## Natural-Language Fields
-
-Keep `term`, `definitionText`, and `convention` in one language.
-
-- Extending a schema: use the schema's existing language.
-- New schema: use the user's request language.
-
 ## Checklist
 
 - [ ] `sessionId` tracked.
-- [ ] `basic` / `constant` formals are empty.
-- [ ] Dependencies exist before upsert.
 - [ ] `cstType` matches the role.
+- [ ] Check schema and fix errors before showing result.
 - [ ] Diagnostics handled before commit/export.
-- [ ] Ambiguous semantics checked on a small model when data examples are available.
+- [ ] Ambiguous semantics checked on a small model.
 - [ ] Base values set before evaluation.

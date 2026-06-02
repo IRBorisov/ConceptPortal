@@ -82,6 +82,8 @@ Whenever you change the **agent contract** (not internal refactors), update docu
 
 **Language-only changes** (grammar, new `RSErrorCode` in domain, help text): update skill only if agents need new guidance (operators, declaration order, diagnostic handling). Reference `REFERENCE.md` help map and `rsconcept/domain/src/rslang/error.ts`; do not duplicate full grammar in the skill.
 
+**Schema-design guidance**: update `docs/CONCEPTUAL-SCHEMA.md`, `skills/rstool-helper/GUIDE.md`, and `skills/rstool-helper/EXAMPLES.md` together; keep `docs/README.md` index line in sync.
+
 ## Versioning
 
 - Bump `CONTRACT_VERSION` in `src/models/tool-contract.ts` for breaking agent-visible changes.
