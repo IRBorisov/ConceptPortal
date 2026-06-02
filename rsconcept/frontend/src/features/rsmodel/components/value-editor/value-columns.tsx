@@ -68,7 +68,9 @@ export function createColumnsType(
             className='align-middle w-fit'
             noPadding
             icon={<IconRemove size='1.25rem' className='cc-remove' />}
-            onClick={() => services.deleteElement!(props.row.index)}
+            onClick={() =>
+              services.deleteElement!(services.indexMap.get(props.row.index) ?? props.row.index)
+            }
           />
         )
       })
