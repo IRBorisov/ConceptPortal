@@ -13,6 +13,7 @@ import { useDropTarget } from './use-drop-target';
 import { useGetLayout } from './use-get-layout';
 
 const DRAG_THROTTLE_DELAY = 50; // ms
+type NodeDragEvent = MouseEvent | TouchEvent;
 
 interface DraggingProps {
   hideContextMenu: () => void;
@@ -42,8 +43,8 @@ export function useDragging({ hideContextMenu }: DraggingProps) {
     );
   }
 
-  function handleDragStart(event: React.MouseEvent, target: Node) {
-    if (event.shiftKey) {
+  function handleDragStart(event: NodeDragEvent, target: Node) {
+    if (!('touches' in event) && event.shiftKey) {
       setContainMovement(true);
       applyContainMovement([target.id, ...selected], true);
     } else {
@@ -53,20 +54,24 @@ export function useDragging({ hideContextMenu }: DraggingProps) {
     hideContextMenu();
   }
 
-  const handleDrag = useThrottleCallback((event: React.MouseEvent) => {
-    if (containMovement) {
+  const handleDrag = useThrottleCallback((event: NodeDragEvent) => {
+    if (containMovement || 'touches' in event) {
       return;
     }
     setIsDragging(true);
     dropTarget.update(event);
   }, DRAG_THROTTLE_DELAY);
 
-  function handleDragStop(event: React.MouseEvent, target: Node) {
+  function handleDragStop(event: NodeDragEvent, target: Node) {
     if (containMovement) {
       applyContainMovement([target.id, ...selected], false);
     } else {
-      event.preventDefault();
-      event.stopPropagation();
+      if ('preventDefault' in event) {
+        event.preventDefault();
+      }
+      if ('stopPropagation' in event) {
+        event.stopPropagation();
+      }
 
       if (isDragging) {
         setIsDragging(false);

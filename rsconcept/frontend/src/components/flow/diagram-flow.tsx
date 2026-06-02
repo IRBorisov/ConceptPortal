@@ -1,7 +1,14 @@
 'use client';
 
 import { type ReactNode, useState } from 'react';
-import { Background, type Edge, type Node, ReactFlow, type ReactFlowProps } from '@xyflow/react';
+import {
+  Background,
+  type Edge,
+  type Node,
+  type OnNodeDrag,
+  ReactFlow,
+  type ReactFlowProps
+} from '@xyflow/react';
 
 import { useTooltipsStore } from '@/stores/tooltips';
 import { withPreventDefault } from '@/utils/utils';
@@ -75,15 +82,15 @@ export function DiagramFlow<NodeType extends Node = Node, EdgeType extends Edge 
     onContextMenu?.(event);
   }
 
-  function handleNodeDragStart(event: React.MouseEvent<Element>, node: NodeType, nodes: NodeType[]) {
+  const handleNodeDragStart: OnNodeDrag<NodeType> = (event, node, nodes) => {
     hideTooltips();
     onNodeDragStart?.(event, node, nodes);
-  }
+  };
 
-  function handleNodeDragStop(event: React.MouseEvent<Element>, node: NodeType, nodes: NodeType[]) {
+  const handleNodeDragStop: OnNodeDrag<NodeType> = (event, node, nodes) => {
     showTooltips();
     onNodeDragStop?.(event, node, nodes);
-  }
+  };
 
   return (
     <div

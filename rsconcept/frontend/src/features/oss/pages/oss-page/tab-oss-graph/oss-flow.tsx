@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { type Connection, useReactFlow } from '@xyflow/react';
+import { type Connection, type OnNodeDrag, useReactFlow } from '@xyflow/react';
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
@@ -75,6 +75,9 @@ export function OssFlow() {
   const showEditBlock = useDialogsStore(state => state.showEditBlock);
   const { isOpen: isContextMenuOpen, menuProps, openContextMenu, hideContextMenu } = useContextMenu();
   const { handleDragStart, handleDrag, handleDragStop } = useDragging({ hideContextMenu });
+  const handleNodeDragStart: OnNodeDrag<OGNode> = (event, node) => handleDragStart(event, node);
+  const handleNodeDrag: OnNodeDrag<OGNode> = event => handleDrag(event);
+  const handleNodeDragStop: OnNodeDrag<OGNode> = (event, node) => handleDragStop(event, node);
   const { handleKeyDown } = useHandleActions();
 
   function handleNodeDoubleClick(event: React.MouseEvent<Element>, node: OGNode) {
@@ -185,9 +188,9 @@ export function OssFlow() {
         onNodeDoubleClick={handleNodeDoubleClick}
         onNodeContextMenu={handleNodeContextMenu}
         onContextMenu={hideContextMenu}
-        onNodeDragStart={handleDragStart}
-        onNodeDrag={handleDrag}
-        onNodeDragStop={handleDragStop}
+        onNodeDragStart={handleNodeDragStart}
+        onNodeDrag={handleNodeDrag}
+        onNodeDragStop={handleNodeDragStop}
         connectionLineComponent={OgConnectionLine}
         // onConnectStart={handleConnectStart}
         // onConnectEnd={handleConnectEnd}
