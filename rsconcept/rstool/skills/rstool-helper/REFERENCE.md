@@ -34,8 +34,8 @@
 ```ts
 {
   id: number;           // stable id within session
-  alias: string;        // e.g. "D1", "X1"
-  cstType: CstType;     // see GUIDE.md table
+  alias: string;
+  cstType: CstType;
   definitionFormal: string;
   term?: string;
   definitionText?: string;
@@ -62,7 +62,7 @@ All default to `''` when omitted.
 ### Model and evaluation types
 
 ```ts
-type RSToolValue = number | RSToolValue[]; // runtime value (sets, tuples, logic 0/1)
+type RSToolValue = number | RSToolValue[]; // runtime value
 type BasicBinding = Record<number, string>; // base-set element labels
 
 interface SessionModelState {
@@ -115,34 +115,32 @@ Example chain:
 ```ts
 interface AnalysisResult {
   success: boolean;
-  type: Record<string, unknown> | null; // typification tree
+  type: Record<string, unknown> | null;
   valueClass: 'value' | 'property' | null;
   diagnostics: { code: number; from: number; to: number; params?: string[] }[];
 }
 ```
 
-## RS language — conceptual model
-
-- **Typification**: structure type of an expression; grades include elements (`Xi`, `Ci`), `Z`, tuples `(H1×…×Hn)`, sets `ℬ(H)`, logic `Logic`, parameterized `Hr 🠔 [H1,…,Hi]`. On `structure` (`S#`), `definitionFormal` **is** the typification. On `term` (`D#`), typification is **inferred from** the definition.
-- **Term graph**: directed dependencies between constituenta via alias references in definitions.
-- **`S#` vs `D#`**: same `×` token — in `ℬ(X1×X1)` on `S#` it forms a **grade** (pair type); in `X1×X1` on `D#` it is the **Cartesian product** (all pairs). Relations: `S#` + `convention`, then derived `D#` (`Pr1(S1)`, …).
+## RS language
 
 Intro (help): language is FOL-based; set vs logic expression split; parameterized templates for term/predicate functions.
 
-## Grammar tokens (selected)
+- **Typification**: structure type of an expression; grades include elements (`Xi`, `Ci`), `Z`, tuples `(H1×…×Hn)`, sets `ℬ(H)`, logic `Logic`, parameterized `Hr 🠔 [H1,…,Hi]`. On `structure` (`S#`), `definitionFormal` **is** the typification. On `term` (`D#`), typification is **inferred from** the definition.
+
+## Grammar tokens
 
 From `rslang.grammar`:
 
-| Category               | Tokens / forms                                             |
-| ---------------------- | ---------------------------------------------------------- |
-| Globals                | `X`, `C`, `S`, `D`, `A`, `T`, `N` + digits (`Global` rule) |
-| Functions / predicates | `F<n>`, `P<n>`                                             |
-| Radicals               | `R<n>`                                                     |
-| Locals                 | `_a-zα-ω` + optional digits                                |
-| Logic                  | `¬` `∀` `∃` `⇔` `⇒` `∨` `&`                                |
-| Sets                   | `ℬ` `∪` `\` `∆` `∩` `×` `∈` `∉` `⊆` `⊂` …                  |
-| Ops                    | `Pr`, `pr`, `Fi`, `card`, `bool`, `debool`, `red`          |
-| Literals               | digits, `Z`, `∅`                                           |
+| Category               | Tokens / forms                                        |
+| ---------------------- | ----------------------------------------------------- |
+| Globals                | `X`, `C`, `S`, `D`, `A`, `T` + digits (`Global` rule) |
+| Functions / predicates | `F<n>`, `P<n>`                                        |
+| Radicals               | `R<n>`                                                |
+| Locals                 | `_a-zα-ω` + optional digits                           |
+| Logic                  | `¬` `∀` `∃` `⇔` `⇒` `∨` `&`                           |
+| Sets                   | `ℬ` `∪` `\` `∆` `∩` `×` `∈` `∉` `⊆` `⊂` …             |
+| Ops                    | `Pr`, `pr`, `Fi`, `card`, `bool`, `debool`, `red`     |
+| Literals               | digits, `Z`, `∅`                                      |
 
 Full grammar pointers and precedence notes: `docs/GRAMMAR-REF.md`.
 
@@ -167,7 +165,7 @@ Standalone agents should consult the bundled distilled docs (`docs/*.md` inside 
 | Portal REST API                      | `docs/PORTAL-API.md`                       |
 | Grammar tokens / precedence          | `docs/GRAMMAR-REF.md`                      |
 
-## Error codes (rstool-relevant)
+## Error codes
 
 rstool re-exports `RSErrorCode.definitionNotAllowed` (`0x8862`) for base/constant violations.
 
@@ -196,8 +194,6 @@ For **Load from JSON** on an existing Portal schema or model:
 
 - `exportPortalSchema(sessionId)` — schema file
 - `exportPortalModel(sessionId)` — model file
-
-Both return `contract_version` `1.0.0` plus required `title`, `alias`, `description`, and `items`. Schema files may include `attribution`. Values come from `state.title`, `state.alias`, and `state.comment` (empty fields fall back to `Conceptual schema` / `SCHEMA` or `Conceptual model` / `MODEL` and `""`).
 
 - Schema `items[]`: versioned constituent fields (`cst_type`, `definition_formal`, `term_raw`, …).
 - Model `items[]`: `{ id, type, value }` per binding.

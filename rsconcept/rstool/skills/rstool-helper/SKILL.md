@@ -1,12 +1,10 @@
 ---
 name: rstool-helper
 description: >-
-  RS language and @rsconcept/rstool for agents. After npm install, read GUIDE and
-  docs from node_modules. If the entry skill is not installed in the project yet,
-  follow skills/INSTALL.md in this package.
+  RS language, formal definitions and conceptual schema design for agents. Read GUIDE and docs from node_modules.
 ---
 
-# rstool-helper (npm install)
+# rstool-helper
 
 Thin **entry** skill. Full guide and docs stay in the package — use the Read tool on the paths below (from the project root).
 

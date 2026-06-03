@@ -4,7 +4,7 @@ Agent-facing library for **incremental RSForm construction**, **RSLang expressio
 
 ## Agent skill
 
-RS language + rstool workflows for agents: `skills/rstool-helper/` (`GUIDE.md`, `REFERENCE.md`, `EXAMPLES.md`) and `docs/` (`DOMAIN.md`, `CONCEPTUAL-SCHEMA.md` for relation-first KS design, `SYNTAX.md`, …). A **thin** entry skill is installed into the project’s agent skills folder; see [Installing the agent skill](#installing-the-agent-skill) below.
+RS language + rstool workflows for agents: `skills/rstool-helper/` (`GUIDE.md`, `REFERENCE.md`, `EXAMPLES.md`) and `docs/` (`DOMAIN.md`, `CONCEPTUAL-SCHEMA.md`, `SYNTAX.md`, …). A **thin** entry skill is installed into the project’s agent skills folder; see [Installing the agent skill](#installing-the-agent-skill) below.
 
 ## Install
 
@@ -12,7 +12,21 @@ RS language + rstool workflows for agents: `skills/rstool-helper/` (`GUIDE.md`, 
 npm install @rsconcept/rstool
 ```
 
-`@rsconcept/domain` is a peer-of-dependency installed automatically. No Portal checkout is required.
+`@rsconcept/domain` is a peer-of-dependency installed automatically.
+
+## Installing the agent skill
+
+After `npm install @rsconcept/rstool`, **you do not copy files yourself**. Ask your agent, for example:
+
+> Install the rstool agent skill according to the package instructions.
+
+The agent should read and follow:
+
+`node_modules/@rsconcept/rstool/skills/INSTALL.md`
+
+That copies `skills/rstool-helper/SKILL.md` from the package into your host’s project skills directory (for example `.agents/skills/rstool-helper/SKILL.md`). Full guidance stays in the package (`skills/rstool-helper/GUIDE.md`, `docs/*.md`) and is read from `node_modules` when needed.
+
+Details: `skills/README.md`.
 
 ## Quick use (library)
 
@@ -50,7 +64,6 @@ await client.close();
 - Parse / syntax / semantic / type analysis for expressions.
 - In-memory modeling: set base bindings and structured values; evaluate expressions and constituents.
 - Deterministic diagnostics and export/import for reproducible agent workflows.
-- Library API + stdio JSON wrapper as the only supported transports (MCP adapter lives in [`@rsconcept/rstool-mcp`](../rstool-mcp/)).
 
 ## Publishing
 
@@ -127,20 +140,6 @@ The example:
 - runs expression analysis
 - sets a base binding and evaluates a term
 - fetches diagnostics
-
-## Installing the agent skill
-
-After `npm install @rsconcept/rstool`, **you do not copy files yourself**. Ask your agent, for example:
-
-> Install the rstool agent skill according to the package instructions.
-
-The agent should read and follow:
-
-`node_modules/@rsconcept/rstool/skills/INSTALL.md`
-
-That copies `skills/rstool-helper/SKILL.md` from the package into your host’s project skills directory (for example `.agents/skills/rstool-helper/SKILL.md`). Full guidance stays in the package (`skills/rstool-helper/GUIDE.md`, `docs/*.md`) and is read from `node_modules` when needed.
-
-Details: `skills/README.md`.
 
 ## License
 

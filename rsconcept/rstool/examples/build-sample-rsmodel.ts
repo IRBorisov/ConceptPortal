@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 
 import { CstType, RSToolWrapperClient, type AddOrUpdateConstituentaInput } from '../src';
 
-/** Tuple marker in structured values (see frontend `TUPLE_ID`). */
+/** Tuple marker in structured values. */
 const TUPLE_ID = -111;
 
 async function run() {

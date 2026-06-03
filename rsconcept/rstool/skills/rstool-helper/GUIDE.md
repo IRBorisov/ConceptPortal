@@ -32,16 +32,18 @@ Paths are relative to this file.
 Use this when editing or checking schemas and models.
 
 1. `createSession`.
-2. Add `basic` (`X#`) and `constant` (`C#`) with `definitionFormal: ''`.
+2. Develop schema - add constituents with proper type and attributes.
 3. Add dependencies before dependents.
 4. Use `analyzeExpression` before upsert when unsure.
-5. When unsure about semantics, build a tiny conceptual model and evaluate test data.
-6. Fix diagnostics by `from` / `to` range in `definitionFormal`.
+5. Fix diagnostics by `from` / `to` range in `definitionFormal`.
+6. When unsure about semantics, build a tiny conceptual model and evaluate test data.
+
+- Set base/model values with `setConstituentaValue(s)`.
+- Evaluate with `evaluateExpression`, `evaluateConstituenta`, or `recalculateModel`.
+
 7. `commitStep` when the state is coherent.
-8. Set base/model values with `setConstituentaValue(s)`.
-9. Evaluate with `evaluateExpression`, `evaluateConstituenta`, or `recalculateModel`.
-10. Persist with `exportSession` / `importSession`.
-11. For user-uploadable Portal files, use `exportPortalSchema` for schema JSON or `exportPortalModel` for model JSON.
+8. Persist with `exportSession` / `importSession`.
+9. For user-uploadable Portal files, use `exportPortalSchema` for schema JSON or `exportPortalModel` for model JSON.
 
 ## Diagnostics Loop
 
@@ -64,5 +66,3 @@ Use this when editing or checking schemas and models.
 - [ ] `cstType` matches the role.
 - [ ] Check schema and fix errors before showing result.
 - [ ] Diagnostics handled before commit/export.
-- [ ] Ambiguous semantics checked on a small model.
-- [ ] Base values set before evaluation.

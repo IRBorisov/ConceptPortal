@@ -5,7 +5,7 @@ import { EvalStatus, RSToolWrapperClient } from '../src';
 
 import { A1_ID, D3_ID, S2_ID, S3_ID } from './kinship/constants';
 
-/** Tuple marker in structured values (see frontend `TUPLE_ID`). */
+/** Tuple marker in structured values. */
 const TUPLE_ID = -111;
 
 /**
