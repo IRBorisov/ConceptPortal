@@ -275,7 +275,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
             transparent
             readOnly
             value={typification}
-            className='cursor-default w-fit'
+            className='cursor-default w-fit wrap-anywhere max-w-full'
           />
           {showManualTypeBtn && !disabled ? (
             <TextButton

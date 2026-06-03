@@ -98,7 +98,7 @@ export function TableModelList({
     }),
     columnHelper.accessor(cst => labelType(cst.effectiveType), {
       id: 'type',
-      header: () => <span className='min-w-40'>{tx('tx.rslang.typification')}</span>,
+      header: () => <span className='min-w-40 wrap-anywhere'>{tx('tx.rslang.typification')}</span>,
       enableHiding: true,
       size: 150,
       minSize: 150,

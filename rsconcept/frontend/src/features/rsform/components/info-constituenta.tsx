@@ -15,7 +15,7 @@ interface InfoConstituentaProps extends React.ComponentProps<'div'> {
 export function InfoConstituenta({ data, className, ...restProps }: InfoConstituentaProps) {
   const tx = useTx();
   return (
-    <div className={cn('dense min-w-60 wrap-break-word', className)} {...restProps}>
+    <div className={cn('dense min-w-60 max-w-full', className)} {...restProps}>
       <h2 className='cursor-default' title={data.is_inherited ? tx('tx.concept.inheritor') : undefined}>
         {data.alias}
         {data.is_inherited ? <IconChild size='1rem' className='inline-icon align-middle ml-1 mt-1' /> : null}
@@ -27,14 +27,14 @@ export function InfoConstituenta({ data, className, ...restProps }: InfoConstitu
           {data.term_resolved || data.term_raw}
         </p>
       ) : null}
-      <p className='break-all'>
+      <p>
         <b>{tx('tx.rslang.typification') + tx('tx.general.colon')}</b>
-        <span className='font-math'>{labelType(data.effectiveType)}</span>
+        <span className='font-math wrap-anywhere'>{labelType(data.effectiveType)}</span>
       </p>
       {data.definition_formal ? (
-        <p className='break-all'>
+        <p>
           <b>{tx('tx.rsexpression') + tx('tx.general.colon')}</b>
-          <span className='font-math'>{data.definition_formal}</span>
+          <span className='font-math wrap-anywhere'>{data.definition_formal}</span>
         </p>
       ) : null}
       {data.definition_resolved ? (

@@ -10,7 +10,12 @@ import { inferEvalStatus } from '@rsconcept/domain/library/rsmodel-api';
 import { type AnalysisFull, type CalculatorResult } from '@rsconcept/domain/rslang';
 import { valueStub } from '@rsconcept/domain/rslang/eval/value-api';
 import { labelType } from '@rsconcept/domain/rslang/labels';
-import { isTypification, TypeID, type TypePath, type Typification } from '@rsconcept/domain/rslang/semantic/typification';
+import {
+  isTypification,
+  TypeID,
+  type TypePath,
+  type Typification
+} from '@rsconcept/domain/rslang/semantic/typification';
 
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
@@ -142,7 +147,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
         readOnly
         label={tx('tx.rslang.typification')}
         value={labelType(localParse?.type ?? null)}
-        areaClassName='cursor-default'
+        areaClassName='cursor-default wrap-anywhere'
       />
 
       <EditorRSExpression
