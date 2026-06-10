@@ -4,89 +4,59 @@ Rules for agents in `rsconcept/rstool`.
 
 ## Scope
 
-Applies to all files under `rsconcept/rstool`.
+Applies to all files under `rsconcept/rstool`. Published as `@rsconcept/rstool` with stdio bin `rstool-wrapper`.
+
+## Agent docs (read before RS work)
+
+Start at `skills/rstool-helper/GUIDE.md`, then `REFERENCE.md`, `EXAMPLES.md`, and `docs/*.md` as needed. Workspace skill entry: `.agents/skills/rstool-helper/SKILL.md`. Keep these in sync when the agent contract changes (see below).
 
 ## Structure
 
-- `src/models/` — public surface split by entity (`common.ts`, `diagnostic.ts`, `analysis.ts`, `evaluation.ts`, `constituenta.ts`, `model-value.ts`, `session.ts`); `tool-contract.ts` holds `CONTRACT_VERSION` + `RSToolAgentContract`; `rstool-agent.ts` holds the `RSToolAgent` implementation class; `index.ts` is the barrel re-exporting everything
-- `src/index.ts` — top-level package barrel
-- `src/wrapper/stdio-wrapper.ts` — stdio JSON-RPC-style transport (`METHODS` must match contract); shebang `#!/usr/bin/env node` keeps it executable as the `rstool-wrapper` bin
-- `src/wrapper/client.ts` — `RSToolWrapperClient` for spawned wrapper
-- `src/mappers/` — bridge from session state to `@rsconcept/domain` (rslang / RSForm analysis and evaluation): `schema-adapter.ts`, `model-adapter.ts`
-- `examples/` — runnable agent workflows and sample session JSON; colocate `*.test.ts` with the example they cover (e.g. `examples/kinship/x1-actions.test.ts`)
-- `docs/` — distilled agent-facing language reference (domain, syntax, typification, constituenta, diagnostics, portal API, grammar pointers)
-- `README.md` — setup, stdio protocol, scripts
-- `skills/rstool-helper/` — **canonical** agent guide (`GUIDE.md`, `REFERENCE.md`, `EXAMPLES.md`)
-- `skills/rstool-helper/SKILL.md` — thin entry skill for npm consumers (installed via `skills/INSTALL.md`)
-- `skills/INSTALL.md` — agent procedure after `npm install`
+- `src/models/` — contract types (`tool-contract.ts`, `CONTRACT_VERSION`), entity files, `RSToolAgent` in `rstool-agent.ts`, explicit barrel `index.ts`
+- `src/session/` — in-memory session store
+- `src/mappers/` — bridge to `@rsconcept/domain`: `schema-adapter.ts` (analysis), `model-adapter.ts` (evaluation/modeling)
+- `src/wrapper/` — stdio JSON-RPC (`stdio-wrapper.ts`; `METHODS` must match contract) + `RSToolWrapperClient`
+- `src/index.ts` — package barrel
+- `examples/` — runnable workflows + sample session JSON
+- `docs/` — language reference index
+- `skills/rstool-helper/` — canonical guide (`GUIDE.md`, `REFERENCE.md`, `EXAMPLES.md`, `SKILL.md`)
+- `README.md` — setup, stdio protocol
 
-Agent-facing docs (keep in sync with contract changes):
-
-- `skills/rstool-helper/GUIDE.md` — workflow, `cstType`, language primer
-- `skills/rstool-helper/REFERENCE.md` — API, stdio, error codes
-- `skills/rstool-helper/EXAMPLES.md` — worked examples and pitfalls
+Transports: library API (`RSToolAgent`) and stdio wrapper.
 
 ## Commands
 
-Run from `rsconcept/rstool` (`@rsconcept/domain` comes from npm unless you `npm link` a local build):
+From `rsconcept/rstool` (`@rsconcept/domain` from npm unless `npm link` to `rsconcept/domain`):
 
 - Install: `npm install`
 - Typecheck: `npm run typecheck`
-- Tests: `npm test`
-- Build: `npm run build` (tsdown → `dist/`)
-- All packages (backend, domain, frontend, rstool, rstool-mcp): `powershell -File scripts/dev/RunTests.ps1` from repo root
-- Stdio wrapper (dev): `npm run wrapper` (uses `tsx`)
-- Stdio wrapper (built): `node dist/wrapper/stdio-wrapper.js` or `npx rstool-wrapper` once installed
-- Examples: `npm run example:client`, `npm run example:build-schema`, `npm run example:build-rsmodel`; other scripts under `examples/` as added to `package.json`
+- Tests: `npm test` (discovers `src/**/*.test.ts`, `examples/**/*.test.ts`)
+- Build: `npm run build`
+- Stdio (dev): `npm run wrapper`
+- Stdio (built): `npx rstool-wrapper`
+- Examples: `npm run example:client`, `example:build-schema`, `example:build-rsmodel` (+ kinship scripts in `package.json`)
 
 ## Edit rules
 
-- Contract surface changes live in `src/models/` first (put request/response shapes in the matching entity file; add the method to `models/tool-contract.ts`); implement in `models/rstool-agent.ts` and wire stdio in `wrapper/stdio-wrapper.ts`. Re-export new types from `src/models/index.ts`. Update `tsdown.config.ts` `entryFiles` when adding a new top-level module.
-- Analyzer / RSLang behavior: prefer changes in `@rsconcept/domain` (`rsconcept/domain/src/rslang/`) and adapt via `src/mappers/schema-adapter.ts` — do not fork language rules in rstool.
-- Evaluation / modeling: reuse `RSEngine`, `RSCalculator`, `rsmodel-api` from `@rsconcept/domain/library/*` via `src/mappers/model-adapter.ts`; keep interpretation in-memory unless backend persistence is explicitly added.
-- New or renamed public methods: update `METHODS` in `stdio-wrapper.ts`, tests, `README.md`, and the skill (see checklist below).
-- Function arg order changes: update all callsites (wrapper, client, examples, tests).
-- **Colocate** module tests with the module they cover (e.g. `src/models/rstool-agent.test.ts` next to `src/models/rstool-agent.ts`; `examples/kinship/x1-actions.test.ts` next to its example). Do **not** introduce a separate top-level `tests/` folder — vitest discovers `src/**/*.test.ts` and `examples/**/*.test.ts` directly. If you need to move or rename a test, keep it beside the file it covers.
-- Barrel files (`src/index.ts`, `src/models/index.ts`): list **concrete** named re-exports. Do **not** use `export * from '...'` — keeping the public surface explicit makes additions reviewable and prevents accidental leakage from internal modules.
+- **Contract surface**: entity file in `src/models/` → `tool-contract.ts` → `rstool-agent.ts` → `stdio-wrapper.ts` → re-export from `src/models/index.ts`. New top-level module: `tsdown.config.ts` `entryFiles`.
+- **RSLang / analysis**: change `rsconcept/domain/src/rslang/`, adapt in `schema-adapter.ts` — do not fork language rules here.
+- **Evaluation / modeling**: reuse domain `RSEngine`, `RSCalculator`, `rsmodel-api` via `model-adapter.ts`; in-memory only unless persistence is explicitly added.
+- **Tests**: colocate `*.test.ts` beside the module; no top-level `tests/` folder.
+- **Barrels**: named re-exports only in `src/index.ts` and `src/models/index.ts` — no `export *`.
+- **Method add/rename**: also `README.md` and skill docs.
 
-## Transports
+## Contract changes
 
-- Supported transports: library API (`RSToolAgent`) and stdio JSON wrapper (`src/wrapper/stdio-wrapper.ts`).
+Update code and docs in the **same change set**. Internal refactors do not count.
 
-## Contract changes — update the skill
+**Triggers:** `CONTRACT_VERSION` bump; method add/remove/rename (library or stdio); request/response shape changes; new `CstType` or agent-facing validation rules; new exported `RSErrorCode` agents must handle; stdio protocol changes.
 
-Whenever you change the **agent contract** (not internal refactors), update documentation in the same PR / change set. Do not leave the skill stale.
+**Sync:** `src/models/` + `stdio-wrapper.ts` + `model-adapter.ts` (if modeling) + colocated tests; `README.md`; `skills/rstool-helper/{GUIDE,REFERENCE,EXAMPLES}.md` (+ `SKILL.md` / `skills/INSTALL.md` if install flow changes); `examples/` when the happy path changes. Schema-design: `docs/CONCEPTUAL-SCHEMA.md` + GUIDE + EXAMPLES; keep `docs/README.md` index in sync.
 
-**Counts as a contract change:**
-
-- `CONTRACT_VERSION` bump
-- New/removed/renamed methods on `RSToolAgent` or stdio `method` names
-- Changes to request/response shapes (`ConstituentaDraft`, `SessionState`, `SessionModelState`, `AnalysisResult`, `EvaluationResult`, filters, export JSON)
-- New `CstType` values or validation rules agents must follow (e.g. empty formal on `basic` / `constant`)
-- New exported error codes in `RSErrorCode` that agents should handle
-- Stdio protocol (ready handshake, error `code` strings, param field names)
-
-**Sync checklist** (tick all that apply):
-
-- [ ] `src/models/` (entity files + `tool-contract.ts` + `rstool-agent.ts` + `index.ts` barrel)
-- [ ] `src/wrapper/stdio-wrapper.ts` (`METHODS` + handlers)
-- [ ] `src/mappers/model-adapter.ts` (when evaluation/modeling behavior changes)
-- [ ] `src/models/rstool-agent.test.ts` (and any new colocated `*.test.ts`)
-- [ ] `README.md` (methods list, examples, contract version if documented)
-- [ ] `skills/rstool-helper/GUIDE.md` — workflow, `cstType` table, triggers if behavior changed
-- [ ] `skills/rstool-helper/REFERENCE.md` — method table, types, stdio examples, version string
-- [ ] `skills/rstool-helper/EXAMPLES.md` — if examples or common mistakes changed
-- [ ] `skills/rstool-helper/SKILL.md` — if npm entry paths or install flow changed
-- [ ] `skills/INSTALL.md` — if agent install steps changed
-- [ ] `examples/*.ts` and sample JSON under `examples/` when the happy path changes
-
-**Language-only changes** (grammar, new `RSErrorCode` in domain, help text): update skill only if agents need new guidance (operators, declaration order, diagnostic handling). Reference `REFERENCE.md` help map and `rsconcept/domain/src/rslang/error.ts`; do not duplicate full grammar in the skill.
-
-**Schema-design guidance**: update `docs/CONCEPTUAL-SCHEMA.md`, `skills/rstool-helper/GUIDE.md`, and `skills/rstool-helper/EXAMPLES.md` together; keep `docs/README.md` index line in sync.
+**Language-only** (grammar, domain errors, help text): update skill only when agents need new guidance; point to `REFERENCE.md` help map and `rsconcept/domain/src/rslang/error.ts` — do not duplicate grammar in the skill.
 
 ## Versioning
 
-- Bump `CONTRACT_VERSION` in `src/models/tool-contract.ts` for breaking agent-visible changes.
-- Mention the new version in `REFERENCE.md` and anywhere the skill quotes `1.0.0` explicitly.
-- `package.json` `version` is the npm-published semver; bump per release (`prepublishOnly` runs `npm run build`). Release steps: `PUBLISHING.md`.
-- The `@rsconcept/domain` pin is a `^` range; bumping the domain version requires re-testing and may require a contract bump too.
+- Agent-visible breaks: bump `CONTRACT_VERSION` in `src/models/tool-contract.ts`; mention in `REFERENCE.md`.
+- npm `package.json` `version`: per release (`PUBLISHING.md`; `prepublishOnly` runs build).
+- `@rsconcept/domain` `^` pin: re-test on bump; may require a contract bump.

@@ -334,7 +334,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.model.data': 'Данные модели',
   'tx.model.data.hint': 'Ввод, просмотр и редактирование значений конституент модели',
   'tx.model.base': 'Базис',
-  'tx.model.base.cardinality': 'Мощность базиса',
+  'tx.model.base.cardinality': 'Мощность базы',
   'tx.model.base.cardinality.hint': 'Суммарная мощность интерпретаций базовых понятий',
   'tx.model.plural': 'Концептуальные модели',
   'tx.model.create': 'Создать модель',

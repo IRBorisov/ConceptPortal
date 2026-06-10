@@ -51,7 +51,8 @@ async function run() {
           cstType: CstType.FUNCTION,
           definitionFormal: '[ξ∈X1] Pr1(Fi2[{ξ}](S1))',
           term: 'родители данного человека',
-          definitionText: 'Для человека ξ — множество его родителей (первая проекция пар из S1, у которых вторая проекция равна ξ).'
+          definitionText:
+            'Для человека ξ — множество его родителей (первая проекция пар из S1, у которых вторая проекция равна ξ).'
         }
       },
       {
@@ -137,7 +138,8 @@ async function run() {
           cstType: CstType.STRUCTURED,
           definitionFormal: 'ℬ(X1)',
           term: 'мужчины',
-          convention: 'Пол устанавливается по документам; каждый индивид из X1 входит ровно в одно из множеств S2 или S3.'
+          convention:
+            'Пол устанавливается по документам; каждый индивид из X1 входит ровно в одно из множеств S2 или S3.'
         }
       },
       {
@@ -147,7 +149,8 @@ async function run() {
           cstType: CstType.STRUCTURED,
           definitionFormal: 'ℬ(X1)',
           term: 'женщины',
-          convention: 'Пол устанавливается по документам; каждый индивид из X1 входит ровно в одно из множеств S2 или S3.'
+          convention:
+            'Пол устанавливается по документам; каждый индивид из X1 входит ровно в одно из множеств S2 или S3.'
         }
       },
       {
@@ -436,9 +439,7 @@ async function run() {
       if (!ok) {
         const diags = await client.call('listDiagnostics', { sessionId: session.sessionId });
         console.log(JSON.stringify(diags, null, 2));
-        throw new Error(
-          `${input.draft.alias}: analysis failed (${diagCount} diagnostics): ${JSON.stringify(diags)}`
-        );
+        throw new Error(`${input.draft.alias}: analysis failed (${diagCount} diagnostics): ${JSON.stringify(diags)}`);
       }
     }
 

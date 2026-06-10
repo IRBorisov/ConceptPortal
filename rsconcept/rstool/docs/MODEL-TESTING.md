@@ -16,7 +16,7 @@
 1. Создай отдельную `createSession` или изолированную копию текущей сессии.
 2. Добавь только нужные поставщики: `X#`, `C#`, `S#` и проверяемые `D#` / `F#` / `P#` / `A#`.
 3. Проверь формулы через `analyzeExpression` и `addOrUpdateConstituenta`.
-4. Задай значения базисов и структур через `setConstituentaValue` или `setConstituentaValues`.
+4. Задай значения базовых понятий через `setConstituentaValue` или `setConstituentaValues`.
 5. Вычисли проверяемую формулу через `evaluateExpression` или сохраненную конституенту через `evaluateConstituenta`.
 6. Сравни результат с ожидаемым значением; если есть несколько зависимых определений, запусти `recalculateModel`.
 
@@ -32,7 +32,13 @@ const TUPLE_ID = -111;
 tool.setConstituentaValues(sessionId, {
   items: [
     { target: 1, value: { 0: 'ann', 1: 'bob', 2: 'cat' } },
-    { target: 2, value: [[TUPLE_ID, 0, 1], [TUPLE_ID, 0, 2]] }
+    {
+      target: 2,
+      value: [
+        [TUPLE_ID, 0, 1],
+        [TUPLE_ID, 0, 2]
+      ]
+    }
   ]
 });
 ```
