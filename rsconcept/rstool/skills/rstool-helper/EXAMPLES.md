@@ -1,8 +1,8 @@
-# rstool Examples
+# Примеры rstool
 
-Short examples for agents. For full scripts, see `../../examples/`.
+Короткие примеры для агентов. Полные скрипты — `../../examples/`. Воркфлоу — [GUIDE.md](GUIDE.md).
 
-## Minimal Session
+## Минимальная сессия
 
 ```ts
 import { CstType, RSToolAgent } from '@rsconcept/rstool';
@@ -20,7 +20,7 @@ tool.addOrUpdateConstituenta(sessionId, {
     alias: 'S1',
     cstType: CstType.STRUCTURED,
     definitionFormal: 'ℬ(X1×X1)',
-    convention: 'Elements are (parent, child) pairs with parent, child ∈ X1.'
+    convention: 'Элементы — пары (родитель, потомок); родитель, потомок ∈ X1.'
   }
 });
 
@@ -31,9 +31,9 @@ const { state, diagnostics } = tool.addOrUpdateConstituenta(sessionId, {
 console.log(state.analysis.success, diagnostics.length);
 ```
 
-## Analyze Before Upsert
+## Анализ перед upsert
 
-Use scratch analysis when syntax or `cstType` is uncertain.
+Черновой анализ, когда синтаксис или `cstType` под вопросом.
 
 ```ts
 const analysis = tool.analyzeExpression(sessionId, {
@@ -46,9 +46,9 @@ if (!analysis.success) {
 }
 ```
 
-Fix the reported `from` / `to` range, then re-run analysis. Maybe rethink the whole definition or split into multiple constituents
+Исправь диапазон `from` / `to` из отчёта и повтори анализ. При необходимости пересмотри определение целиком или разбей на несколько конституент.
 
-## Evaluation
+## Вычисление
 
 ```ts
 tool.setConstituentaValue(sessionId, {
@@ -64,11 +64,11 @@ const scratch = tool.evaluateExpression(sessionId, {
 console.log(scratch.success, scratch.value); // true, 3
 ```
 
-For stored definitions, set values for `basic`, `constant`, and `structure`, then call `evaluateConstituenta` or `recalculateModel`.
+Для сохранённых определений задай значения `basic`, `constant` и `structure`, затем вызови `evaluateConstituenta` или `recalculateModel`.
 
-## Semantic Smoke Test
+## Семантический smoke-тест
 
-When syntax is valid but meaning is uncertain, build a tiny model and assert the value.
+Синтаксис верен, но смысл неочевиден — собери маленькую модель и проверь значение.
 
 ```ts
 import { CstType, EvalStatus, RSToolAgent } from '@rsconcept/rstool';
@@ -103,15 +103,15 @@ tool.setConstituentaValues(sessionId, {
 const result = tool.evaluateConstituenta(sessionId, { constituentId: 3 });
 
 if (!result.success || result.status !== EvalStatus.HAS_DATA || JSON.stringify(result.value) !== '[0]') {
-  throw new Error(`Expected Pr1(S1) to select the first coordinate; got ${JSON.stringify(result)}`);
+  throw new Error(`Ожидалось Pr1(S1) = первая координата; получено ${JSON.stringify(result)}`);
 }
 ```
 
-Use this pattern for tests that protect important definitions. Full kinship model: `../../examples/build-kinship-rsmodel.ts`. More notes: `../../docs/MODEL-TESTING.md`.
+Подробнее: `../../docs/MODEL-TESTING.md`.
 
-## Wrapper Client
+## Клиент обёртки
 
-Use the wrapper when the agent talks to a separate `rstool-wrapper` process.
+Когда агент общается с отдельным процессом `rstool-wrapper`.
 
 ```ts
 import { CstType } from '@rsconcept/rstool';
@@ -135,36 +135,27 @@ console.log(diagnostics);
 await client.close();
 ```
 
-Manual stdio is one JSON request per line:
+Ручной stdio — один JSON-запрос на строку:
 
 ```jsonl
 { "id": "1", "method": "createSession", "params": {} }
 { "id": "2", "method": "addOrUpdateConstituenta", "params": { "sessionId": "...", "input": { "draft": { "id": 1, "alias": "X1", "cstType": "basic", "definitionFormal": "" } } } }
 ```
 
-## Export / Import
+## Экспорт / импорт
 
 ```ts
 const payload = tool.exportSession(sessionId);
 const restored = tool.importSession(payload);
 ```
 
-Export includes session state and model values.
+Экспорт включает состояние сессии и значения модели.
 
-To create files the user can upload to an existing Portal object:
+Файлы для загрузки пользователем в существующий объект Portal:
 
 ```ts
 const schemaJson = tool.exportPortalSchema(sessionId);
 const modelJson = tool.exportPortalModel(sessionId);
 ```
 
-Use `schemaJson` on a schema page and `modelJson` on a model page via **Load from JSON**.
-
-## Common mistakes
-
-- Wrong `cstType` in `analyzeExpression` → role-specific errors.
-- `term` with `X1×X1` for a relation → full Cartesian product, not relation typification.
-- `structure` with `Pr1(S1)` → wrong role; projections belong on `term` / `function`.
-- Same long `∃d1…∃dn` chain in many `D#` → define one central `D#` and use `Pr*` / `F#`.
-- `setConstituentaValue` on `term`, `axiom`, or `statement` → cannot set computed constituents directly.
-- Evaluation before base bindings → missing value, empty result, or evaluation failure.
+`schemaJson` — на странице схемы, `modelJson` — на странице модели, через **Load from JSON**.

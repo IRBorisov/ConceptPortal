@@ -19,7 +19,7 @@ Start at `skills/rstool-helper/GUIDE.md`, then `REFERENCE.md`, `EXAMPLES.md`, an
 - `src/index.ts` — package barrel
 - `examples/` — runnable workflows + sample session JSON
 - `docs/` — language reference index
-- `skills/rstool-helper/` — canonical guide (`GUIDE.md`, `REFERENCE.md`, `EXAMPLES.md`, `SKILL.md`)
+- `skills/rstool-helper/` — гайд агента на русском (`GUIDE.md`, `REFERENCE.md`, `EXAMPLES.md`, `SKILL.md`)
 - `README.md` — setup, stdio protocol
 
 Transports: library API (`RSToolAgent`) and stdio wrapper.

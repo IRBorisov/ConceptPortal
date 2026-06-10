@@ -14,9 +14,9 @@ Paths are from the **workspace root**.
 
 | What                                         | Path                                                 |
 | :------------------------------------------- | :--------------------------------------------------- |
-| **Start here** — workflow, cstType, S# vs D# | `rsconcept/rstool/skills/rstool-helper/GUIDE.md`     |
-| API, stdio, contract                         | `rsconcept/rstool/skills/rstool-helper/REFERENCE.md` |
-| Examples, pitfalls                           | `rsconcept/rstool/skills/rstool-helper/EXAMPLES.md`  |
+| **Start here** — воркфлоу, чеклисты, cstType, S# vs D# | `rsconcept/rstool/skills/rstool-helper/GUIDE.md`     |
+| API, stdio, контракт                         | `rsconcept/rstool/skills/rstool-helper/REFERENCE.md` |
+| Примеры, типичные ошибки                     | `rsconcept/rstool/skills/rstool-helper/EXAMPLES.md`  |
 | Language / domain docs                       | `rsconcept/rstool/docs/*.md`                         |
 | Package agent rules                          | `rsconcept/rstool/AGENTS.md`                         |
 

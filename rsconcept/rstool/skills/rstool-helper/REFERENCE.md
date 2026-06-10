@@ -1,39 +1,39 @@
-# RS language and rstool — reference
+# RSLang и rstool — справочник
 
-## rstool contract
+## Контракт rstool
 
-- Package: `@rsconcept/rstool`
-- Contract version: `1.4.0` (`CONTRACT_VERSION`)
-- Core class: `RSToolAgent`
-- Public imports: `@rsconcept/rstool` and `@rsconcept/rstool/wrapper`
+- Пакет: `@rsconcept/rstool`
+- Версия контракта: `1.4.0` (`CONTRACT_VERSION`)
+- Основной класс: `RSToolAgent`
+- Публичные импорты: `@rsconcept/rstool` и `@rsconcept/rstool/wrapper`
 
-### Methods
+### Методы
 
-| Method                                                      | Purpose                                                            |
-| ----------------------------------------------------------- | ------------------------------------------------------------------ |
-| `createSession(initial?)`                                   | New in-memory session → `{ sessionId, contractVersion }`           |
-| `addOrUpdateConstituenta(sessionId, { draft })`             | Merge draft; analyze in session context → `{ state, diagnostics }` |
-| `analyzeExpression(sessionId, { expression, cstType })`     | Parse/typecheck snippet without persisting a constituent           |
-| `getFormState(sessionId)`                                   | Clone of full session state                                        |
-| `listDiagnostics(sessionId, filters?)`                      | Accumulated diagnostics; optional `constituentId` filter           |
-| `commitStep(sessionId, message?)`                           | Record revision checkpoint                                         |
-| `exportSession(sessionId)`                                  | JSON string `{ contractVersion, state, diagnostics }`              |
-| `exportPortalSchema(sessionId)`                             | Portal schema import JSON string using versioned schema shape      |
-| `exportPortalModel(sessionId)`                              | Portal model import JSON string using versioned model values shape |
-| `importSession(payload)`                                    | New session from export                                            |
-| `setConstituentaValue(sessionId, { target, type?, value })` | Set one base binding or structured value → `SessionModelState`     |
-| `setConstituentaValues(sessionId, { items })`               | Batch set values → `SessionModelState`                             |
-| `clearConstituentaValues(sessionId, { items })`             | Clear values by constituent id → `SessionModelState`               |
-| `getModelState(sessionId)`                                  | Clone of session interpretation state                              |
-| `evaluateExpression(sessionId, { expression, cstType })`    | Evaluate snippet in session context → `EvaluationResult`           |
-| `evaluateConstituenta(sessionId, { constituentId })`        | Evaluate stored definition → `EvaluationResult`                    |
-| `recalculateModel(sessionId)`                               | Recalculate all inferrable constituents → `{ items[] }`            |
+| Метод                                                       | Назначение                                                                    |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `createSession(initial?)`                                   | Новая in-memory сессия → `{ sessionId, contractVersion }`                     |
+| `addOrUpdateConstituenta(sessionId, { draft })`             | Слияние черновика; анализ в контексте сессии → `{ state, diagnostics }`       |
+| `analyzeExpression(sessionId, { expression, cstType })`     | Разбор/типизация фрагмента без сохранения конституенты                        |
+| `getFormState(sessionId)`                                   | Клон полного состояния сессии                                                 |
+| `listDiagnostics(sessionId, filters?)`                      | Накопленные диагностики; опциональный фильтр `constituentId`                  |
+| `commitStep(sessionId, message?)`                           | Зафиксировать контрольную точку ревизии                                       |
+| `exportSession(sessionId)`                                  | JSON-строка `{ contractVersion, state, diagnostics }`                         |
+| `exportPortalSchema(sessionId)`                             | JSON импорта схемы Portal                                                     |
+| `exportPortalModel(sessionId)`                              | JSON импорта модели Portal                                                    |
+| `importSession(payload)`                                    | Новая сессия из экспорта                                                      |
+| `setConstituentaValue(sessionId, { target, type?, value })` | Одна привязка базового понятия или структурное значение → `SessionModelState` |
+| `setConstituentaValues(sessionId, { items })`               | Пакетная установка значений → `SessionModelState`                             |
+| `clearConstituentaValues(sessionId, { items })`             | Очистка значений по id конституент → `SessionModelState`                      |
+| `getModelState(sessionId)`                                  | Клон состояния интерпретации сессии                                           |
+| `evaluateExpression(sessionId, { expression, cstType })`    | Вычисление фрагмента в контексте сессии → `EvaluationResult`                  |
+| `evaluateConstituenta(sessionId, { constituentId })`        | Вычисление сохранённого определения → `EvaluationResult`                      |
+| `recalculateModel(sessionId)`                               | Пересчёт всех выводимых конституент → `{ items[] }`                           |
 
 ### `ConstituentaDraft`
 
 ```ts
 {
-  id: number;           // stable id within session
+  id: number;           // стабильный id внутри сессии
   alias: string;
   cstType: CstType;
   definitionFormal: string;
@@ -43,27 +43,27 @@
 }
 ```
 
-Omitted text fields default to `''` in stored state.
+Пропущенные текстовые поля в сохранённом состоянии по умолчанию `''`.
 
-### `SessionState` metadata
+### Метаданные `SessionState`
 
-Set on `createSession(initial?)` or via `importSession`:
+Задаются в `createSession(initial?)` или через `importSession`:
 
 ```ts
 {
-  alias: string; // library item alias
-  title: string; // display title
-  comment: string; // developer notes
+  alias: string; // alias объекта библиотеки
+  title: string; // отображаемое название
+  comment: string; // заметки разработчика
 }
 ```
 
-All default to `''` when omitted.
+При опускании все поля по умолчанию `''`.
 
-### Model and evaluation types
+### Типы модели и вычисления
 
 ```ts
-type RSToolValue = number | RSToolValue[]; // runtime value
-type BasicBinding = Record<number, string>; // base-set element labels
+type RSToolValue = number | RSToolValue[]; // значение во время выполнения
+type BasicBinding = Record<number, string>; // подписи элементов базового множества
 
 interface SessionModelState {
   items: { id: number; type: string; value: RSToolValue | BasicBinding }[];
@@ -79,19 +79,19 @@ interface EvaluationResult {
 }
 ```
 
-Base/constant bindings use `type: "basic"` and `value: { "0": "label", … }`. Structured values use normalized typification as `type` and nested arrays for sets/tuples.
+Привязки `basic`/`constant` используют `type: "basic"` и `value: { "0": "label", … }`. Структурные значения — нормализованная типизация в `type` и вложенные массивы для множеств/кортежей.
 
-### Stdio protocol
+### Протокол stdio
 
-Process: `npx rstool-wrapper`
+Процесс: `npx rstool-wrapper`
 
-1. **Ready** (no request): `{"id":null,"ok":true,"result":{"ready":true,"wrapper":"rstool-stdio","contractVersion":"1.4.0"}}`
-2. **Request**: `{"id":"<unique>","method":"<name>","params":{...}}`
-3. **Response**: `{"id":"<same>","ok":true,"result":...}` or `{"id":"...","ok":false,"error":{"code":"...","message":"..."}}`
+1. **Ready** (без запроса): `{"id":null,"ok":true,"result":{"ready":true,"wrapper":"rstool-stdio","contractVersion":"1.4.0"}}`
+2. **Запрос**: `{"id":"<unique>","method":"<name>","params":{...}}`
+3. **Ответ**: `{"id":"<same>","ok":true,"result":...}` или `{"id":"...","ok":false,"error":{"code":"...","message":"..."}}`
 
-Extra methods: `ping`, `methods`.
+Дополнительные методы: `ping`, `methods`.
 
-Example chain:
+Пример цепочки:
 
 ```json
 {"id":"1","method":"createSession","params":{}}
@@ -108,9 +108,9 @@ Example chain:
 {"id":"9","method":"evaluateConstituenta","params":{"sessionId":"…","input":{"constituentId":3}}}
 ```
 
-`RSToolWrapperClient`: spawns `rstool-wrapper` by default and implements `waitUntilReady()`, `call(method, params)`, `close()`.
+`RSToolWrapperClient`: по умолчанию запускает `rstool-wrapper`; методы `waitUntilReady()`, `call(method, params)`, `close()`.
 
-### Analysis result
+### Результат анализа
 
 ```ts
 interface AnalysisResult {
@@ -121,79 +121,77 @@ interface AnalysisResult {
 }
 ```
 
-## RS language
+## RSLang
 
-Intro (help): language is FOL-based; set vs logic expression split; parameterized templates for term/predicate functions.
+Кратко: язык на базе логики первого порядка; разделение множественных и логических выражений; параметризованные шаблоны для функций и предикатов.
 
-- **Typification**: structure type of an expression; grades include elements (`Xi`, `Ci`), `Z`, tuples `(H1×…×Hn)`, sets `ℬ(H)`, logic `Logic`, parameterized `Hr 🠔 [H1,…,Hi]`. On `structure` (`S#`), `definitionFormal` **is** the typification. On `term` (`D#`), typification is **inferred from** the definition.
+- **Типизация**: структурный тип выражения; ступени включают элементы (`Xi`, `Ci`), `Z`, кортежи `(H1×…×Hn)`, множества `ℬ(H)`, логику `Logic`, параметризованные `Hr 🠔 [H1,…,Hi]`. У `structure` (`S#`) поле `definitionFormal` **задаёт** типизацию. У `term` (`D#`) типизация **выводится** из определения.
 
-## Grammar tokens
+## Токены грамматики
 
-From `rslang.grammar`:
+Из `rslang.grammar`:
 
-| Category               | Tokens / forms                                        |
-| ---------------------- | ----------------------------------------------------- |
-| Globals                | `X`, `C`, `S`, `D`, `A`, `T` + digits (`Global` rule) |
-| Functions / predicates | `F<n>`, `P<n>`                                        |
-| Radicals               | `R<n>`                                                |
-| Locals                 | `_a-zα-ω` + optional digits                           |
-| Logic                  | `¬` `∀` `∃` `⇔` `⇒` `∨` `&`                           |
-| Sets                   | `ℬ` `∪` `\` `∆` `∩` `×` `∈` `∉` `⊆` `⊂` …             |
-| Ops                    | `Pr`, `pr`, `Fi`, `card`, `bool`, `debool`, `red`     |
-| Literals               | digits, `Z`, `∅`                                      |
+| Категория           | Токены / формы                                          |
+| ------------------- | ------------------------------------------------------- |
+| Глобальные          | `X`, `C`, `S`, `D`, `A`, `T` + цифры (правило `Global`) |
+| Функции / предикаты | `F<n>`, `P<n>`                                          |
+| Радикалы            | `R<n>`                                                  |
+| Локальные           | `_a-zα-ω` + опциональные цифры                          |
+| Логика              | `¬` `∀` `∃` `⇔` `⇒` `∨` `&`                             |
+| Множества           | `ℬ` `∪` `\` `∆` `∩` `×` `∈` `∉` `⊆` `⊂` …               |
+| Операции            | `Pr`, `pr`, `Fi`, `card`, `bool`, `debool`, `red`       |
+| Литералы            | цифры, `Z`, `∅`                                         |
 
-Full grammar pointers and precedence notes: `docs/GRAMMAR-REF.md`.
+Полная грамматика и приоритеты: `docs/GRAMMAR-REF.md`.
 
-## Help topic map (companion docs)
+## Документация
 
-Standalone agents should consult the bundled distilled docs (`docs/*.md` inside `@rsconcept/rstool`):
+| Тема                                     | Документ                                                     |
+| ---------------------------------------- | ------------------------------------------------------------ |
+| Идентификаторы, литералы                 | `docs/SYNTAX.md` § «Имена и литералы»                        |
+| Ступени, `Logic`, параметризованные типы | `docs/TYPIFICATION.md` § «Ступени»                           |
+| Логические выражения                     | `docs/SYNTAX.md` § «Логические выражения (LE)»               |
+| Операторы над множествами                | `docs/SYNTAX.md` § «Теоретико-множественные выражения (STE)» |
+| Целочисленная арифметика                 | `docs/SYNTAX.md` § «Арифметика»                              |
+| Дополнительные и производные типизации   | `docs/TYPIFICATION.md` § «Дополнительные типизации»          |
+| Кванторы                                 | `docs/SYNTAX.md` § «Кванторы»                                |
+| Параметризованные функции, шаблоны       | `docs/SYNTAX.md` § «Параметризованные выражения»             |
+| Модель корректности / валидация          | `docs/SYNTAX.md` § «Корректность»                            |
+| Семантические тесты определений          | `docs/MODEL-TESTING.md`                                      |
+| Словарь предметной области               | `docs/DOMAIN.md`                                             |
+| Поля конституент и порядок               | `docs/CONSTITUENTA.md`                                       |
+| REST API Portal                          | `docs/PORTAL-API.md`                                         |
+| Токены грамматики / приоритеты           | `docs/GRAMMAR-REF.md`                                        |
 
-| Topic                                | Bundled doc                                |
-| ------------------------------------ | ------------------------------------------ |
-| Identifiers, literals                | `docs/SYNTAX.md` § _Identifier rules_      |
-| Grades, `Logic`, parameterized types | `docs/TYPIFICATION.md`                     |
-| Logical expressions                  | `docs/SYNTAX.md` § _Logical expressions_   |
-| Set operators                        | `docs/SYNTAX.md` § _Set-theoretic_         |
-| Integer arithmetic                   | `docs/SYNTAX.md` § _Arithmetic_            |
-| Structural / typification reshaping  | `docs/TYPIFICATION.md` § _Forming/derived_ |
-| Quantifiers                          | `docs/SYNTAX.md` § _Quantifiers_           |
-| Parameterized functions, templates   | `docs/SYNTAX.md` § _Parameterised_         |
-| Correctness / validation mindset     | `docs/SYNTAX.md` § _Correctness model_     |
-| Definition semantic tests            | `docs/MODEL-TESTING.md`                    |
-| Domain vocabulary                    | `docs/DOMAIN.md`                           |
-| Constituent fields and ordering      | `docs/CONSTITUENTA.md`                     |
-| Portal REST API                      | `docs/PORTAL-API.md`                       |
-| Grammar tokens / precedence          | `docs/GRAMMAR-REF.md`                      |
+Воркфлоу и чеклисты — `skills/rstool-helper/GUIDE.md`.
 
-## Error codes
+## Коды ошибок
 
-rstool re-exports `RSErrorCode.definitionNotAllowed` (`0x8862`) for base/constant violations.
+Категории и исправления по коду: `docs/DIAGNOSTICS.md`.
 
-Categories and per-code fix guidance: `docs/DIAGNOSTICS.md`.
+Категории:
 
-Categories:
+- `0x84xx` — синтаксис / разбор
+- `0x28xx` — предупреждения локальных объявлений
+- `0x88xx` — семантика / типы
+- `0x886x` — уровень конституент (пустая производная, запрещённое определение)
+- `0x81xx` — вычисление (runtime; из `evaluateExpression` / `evaluateConstituenta`)
 
-- `0x84xx` — syntax / parse
-- `0x28xx` — local declaration warnings
-- `0x88xx` — semantic / type
-- `0x886x` — constituent-level (empty derived, definition not allowed)
-- `0x81xx` — evaluation (runtime; returned by `evaluateExpression` / `evaluateConstituenta`)
+## Форма экспорта сессии
 
-## Exported session shape
+`exportSession(sessionId)` возвращает JSON-строку `{ contractVersion, state, diagnostics }`.
 
-`exportSession(sessionId)` returns a JSON string with `{ contractVersion, state, diagnostics }`.
+- `state.alias`, `state.title`, `state.comment` — метаданные объекта библиотеки для экспорта в Portal (`comment` → JSON `description`).
+- `state.items[]` — каждая конституента с `id`, `alias`, `cstType`, `definitionFormal`, опциональными текстовыми полями и вложенным результатом анализа.
+- `state.model.items[]` — присутствует, если заданы значения интерпретации.
+- `diagnostics[]` — накопленные диагностики со смещениями и кодами.
 
-- `state.alias`, `state.title`, `state.comment` — library-item metadata for Portal export (`comment` → JSON `description`).
-- `state.items[]` contains each constituent with `id`, `alias`, `cstType`, `definitionFormal`, optional text fields, and nested analysis output.
-- `state.model.items[]` is present when interpretation values have been set.
-- `diagnostics[]` contains accumulated diagnostics with offsets and codes.
+## JSON импорта Portal
 
-## Portal import JSON
+Для **Load from JSON** на существующей схеме или модели Portal:
 
-For **Load from JSON** on an existing Portal schema or model:
+- `exportPortalSchema(sessionId)` — файл схемы
+- `exportPortalModel(sessionId)` — файл модели
 
-- `exportPortalSchema(sessionId)` — schema file
-- `exportPortalModel(sessionId)` — model file
-
-- Schema `items[]`: versioned constituent fields (`cst_type`, `definition_formal`, `term_raw`, …).
-- Model `items[]`: `{ id, type, value }` per binding.
+- Схема `items[]`: поля конституент (`cst_type`, `definition_formal`, `term_raw`, …).
+- Модель `items[]`: `{ id, type, value }` на каждую привязку.

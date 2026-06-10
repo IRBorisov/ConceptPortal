@@ -18,9 +18,9 @@ Then continue with the canonical files below.
 
 ## Canonical files (read before rstool work)
 
-- **Start here** — workflow: `node_modules/@rsconcept/rstool/skills/rstool-helper/GUIDE.md`
-- API, stdio, contract: `node_modules/@rsconcept/rstool/skills/rstool-helper/REFERENCE.md`
-- Examples, pitfalls: `node_modules/@rsconcept/rstool/skills/rstool-helper/EXAMPLES.md`
+- **Start here** — воркфлоу и чеклисты: `node_modules/@rsconcept/rstool/skills/rstool-helper/GUIDE.md`
+- API, stdio, контракт: `node_modules/@rsconcept/rstool/skills/rstool-helper/REFERENCE.md`
+- Примеры, типичные ошибки: `node_modules/@rsconcept/rstool/skills/rstool-helper/EXAMPLES.md`
 - Language / domain docs: `node_modules/@rsconcept/rstool/docs/*.md`
 - Install procedure: `node_modules/@rsconcept/rstool/skills/INSTALL.md`
 

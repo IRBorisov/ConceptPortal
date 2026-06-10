@@ -1,68 +1,122 @@
-# RS Language & rstool
+# RSLang и rstool
 
-Compact entry guide for agents. Keep details in linked docs.
+Краткий входной гайд для агентов. Детали — в связанных документах.
 
-**RSLang** is a formal notation for conceptual schemas: concepts, relations, operations, assertions. Core ideas: membership `x∈y`, set-theoretic expressions, logical expressions, typification.
+**RSLang** — формальная нотация концептуальных схем: понятия, отношения, операции, утверждения. Основа: принадлежность `x∈y`, теоретико-множественные и логические выражения, типизация.
 
-**rstool** is the agent API for sessions, upserts, analysis, diagnostics, model values, evaluation, export/import.
+**rstool** — API агента для сессий, upsert, анализа, диагностик, значений модели, вычисления, экспорта/импорта.
 
-- Library: `@rsconcept/rstool`.
-- Analyzer: `@rsconcept/domain`.
-- Stdio wrapper: `npx rstool-wrapper`, JSON per line.
-- Node client: `RSToolWrapperClient`.
+- Библиотека: `@rsconcept/rstool`.
+- Анализатор: `@rsconcept/domain`.
+- Stdio-обёртка: `npx rstool-wrapper`, JSON построчно.
+- Node-клиент: `RSToolWrapperClient`.
 
-## What to Read
+## Что читать
 
-Paths are relative to this file.
+Пути — относительно этого файла.
 
-- API, methods, stdio, error codes: [REFERENCE.md](REFERENCE.md).
-- Worked examples and pitfalls: [EXAMPLES.md](EXAMPLES.md).
-- Domain terms: [../../docs/DOMAIN.md](../../docs/DOMAIN.md).
-- Schema design rules: [../../docs/CONCEPTUAL-SCHEMA.md](../../docs/CONCEPTUAL-SCHEMA.md).
-- Constituents and validation: [../../docs/CONSTITUENTA.md](../../docs/CONSTITUENTA.md).
-- Syntax: [../../docs/SYNTAX.md](../../docs/SYNTAX.md).
-- Typification: [../../docs/TYPIFICATION.md](../../docs/TYPIFICATION.md).
-- Definition testing with small conceptual models: [../../docs/MODEL-TESTING.md](../../docs/MODEL-TESTING.md).
-- Diagnostics: [../../docs/DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md).
-- Portal REST reads: [../../docs/PORTAL-API.md](../../docs/PORTAL-API.md).
-- Grammar pointers: [../../docs/GRAMMAR-REF.md](../../docs/GRAMMAR-REF.md).
+- API, методы, stdio, коды ошибок: [REFERENCE.md](REFERENCE.md).
+- Примеры: [EXAMPLES.md](EXAMPLES.md).
+- Термины предметной области: [../../docs/DOMAIN.md](../../docs/DOMAIN.md).
+- Концептуализация, создание схемы: [../../docs/CONCEPTUAL-SCHEMA.md](../../docs/CONCEPTUAL-SCHEMA.md).
+- Конституенты и валидация: [../../docs/CONSTITUENTA.md](../../docs/CONSTITUENTA.md).
+- Синтаксис: [../../docs/SYNTAX.md](../../docs/SYNTAX.md).
+- Типизация: [../../docs/TYPIFICATION.md](../../docs/TYPIFICATION.md).
+- Проверка определений на КМ: [../../docs/MODEL-TESTING.md](../../docs/MODEL-TESTING.md).
+- Диагностики: [../../docs/DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md).
+- Грамматика: [../../docs/GRAMMAR-REF.md](../../docs/GRAMMAR-REF.md).
+- REST Portal: [../../docs/PORTAL-API.md](../../docs/PORTAL-API.md).
 
-## Workflow
+## Воркфлоу
 
-Use this when editing or checking schemas and models.
+Все пошаговые сценарии собраны здесь. Справочные документы дают правила и детали.
 
-1. `createSession`.
-2. Develop schema - add constituents with proper type and attributes.
-3. Add dependencies before dependents.
-4. Use `analyzeExpression` before upsert when unsure.
-5. Fix diagnostics by `from` / `to` range in `definitionFormal`.
-6. When unsure about semantics, build a tiny conceptual model and evaluate test data.
+### Редактирование и проверка схемы
 
-- Set base/model values with `setConstituentaValue(s)`.
-- Evaluate with `evaluateExpression`, `evaluateConstituenta`, or `recalculateModel`.
+Когда схема уже есть и нужны точечные правки, новые конституенты или проверка формул.
 
-7. `commitStep` when the state is coherent.
-8. Persist with `exportSession` / `importSession`.
-9. For user-uploadable Portal files, use `exportPortalSchema` for schema JSON or `exportPortalModel` for model JSON.
+1. `createSession` (или продолжить существующую сессию).
+2. Развивай схему — добавляй конституенты с корректным `cstType` и атрибутами.
+3. Добавляй поставщиков раньше потребителей (см. [порядок объявления](#порядок-объявления-конституент)).
+4. Перед upsert при сомнении вызывай `analyzeExpression`.
+5. Исправляй диагностики по диапазону `from` / `to` в `definitionFormal` ([DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md)).
+6. При сомнении в семантике собери маленькую КМ и проверь тестовые данные ([цикл КМ](#проверка-на-маленькой-км)).
+7. Задай базовые/модельные значения: `setConstituentaValue(s)`; вычисли: `evaluateExpression`, `evaluateConstituenta`, `recalculateModel`.
+8. `commitStep`, когда состояние согласовано.
+9. Сохрани: `exportSession` / `importSession`.
+10. Для загрузки в Portal: `exportPortalSchema` (схема) или `exportPortalModel` (модель).
 
-## Diagnostics Loop
+### Концептуализация (КС из содержания источника)
 
-1. Check `analysis.success`.
-2. If false, read `analysis.diagnostics` or `listDiagnostics`.
-3. Map `code` to a fix in `DIAGNOSTICS.md`.
-4. Patch the reported `from` / `to` range.
-5. Re-run only after changing input.
+Когда нужно построить или существенно развить КС по тексту ПО, требованиям или предметному описанию. Правила редукции, слоёв и паттернов — [CONCEPTUAL-SCHEMA.md](../../docs/CONCEPTUAL-SCHEMA.md).
 
-## Declaration Order
+1. Собери словарь: базовые понятия, ключевые отношения, сценарий синтеза.
+2. Добавь `X#`, `C#` с конвенциями из источника (не копируй дословно).
+3. Добавь базовые `S#`: трансформация, перевод, допускание, выбор, цели, субъекты.
+4. Проверь независимость базовых понятий — они не выводятся друг из друга.
+5. Добавь `A#` на структуры: `card`, покрытие `Pr1,2(S#)=…`, принадлежность выбора.
+6. Введи `F#` для типовых запросов.
+7. Производные понятия строй через `Pr*`, `Fi*`, `F#` от центрального `D#` и базовых `S#`.
+8. Перед каждым upsert — `analyzeExpression`; при ошибках — [цикл диагностик](#цикл-диагностик).
+9. Сомнительную семантику проверь на маленькой КМ ([цикл КМ](#проверка-на-маленькой-км), [MODEL-TESTING.md](../../docs/MODEL-TESTING.md)).
+10. Перед показом результата пройди [чеклист ревью КС](#ревью-концептуальной-схемы).
+
+Дальше — обычное [редактирование и проверка](#редактирование-и-проверка-схемы): commit, export.
+
+### Цикл диагностик
+
+Когда `analysis.success === false` или `listDiagnostics` не пуст. Коды и типичные ошибки — [DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md).
+
+1. Запусти `analyzeExpression` (черновик без сохранения).
+2. Прочитай `code`, `from`, `to`, `params` в `analysis.diagnostics` или через `listDiagnostics`.
+3. Сопоставь `code` с исправлением в [DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md).
+4. Исправь именно диапазон в `definitionFormal`.
+5. Не повторяй вызов без изменения ввода.
+6. После успеха — `addOrUpdateConstituenta`.
+
+### Проверка на маленькой КМ
+
+Когда синтаксис верен, но смысл формулы неочевиден. Подробности и форма данных — [MODEL-TESTING.md](../../docs/MODEL-TESTING.md).
+
+1. Отдельная `createSession` или изолированная копия текущей сессии.
+2. Только нужные поставщики: `X#`, `C#`, `S#` и проверяемые `D#` / `F#` / `P#` / `A#`.
+3. `analyzeExpression` и `addOrUpdateConstituenta`.
+4. Значения базовых понятий: `setConstituentaValue` / `setConstituentaValues`.
+5. `evaluateExpression` или `evaluateConstituenta`; сравни с ожидаемым `value`.
+6. При нескольких зависимых определениях — `recalculateModel`.
+
+Для регрессий вынеси проверку в скрипт или colocated `*.test.ts` (см. [MODEL-TESTING.md](../../docs/MODEL-TESTING.md)).
+
+### Порядок объявления конституент
 
 1. `basic`, `constant`.
-2. Core structures and key concepts.
-3. Derived constituents in topological order.
-4. Axioms and statements after their references.
+2. Базовые структуры и ключевые понятия.
+3. Производные конституенты в топологическом порядке.
+4. Аксиомы и утверждения после всех ссылок.
 
-## Checklist
+Правила валидации по типам — [CONSTITUENTA.md](../../docs/CONSTITUENTA.md).
 
-- [ ] `sessionId` tracked.
-- [ ] `cstType` matches the role.
-- [ ] Check schema and fix errors before showing result.
-- [ ] Diagnostics handled before commit/export.
+## Чеклисты
+
+### Сессия и rstool
+
+- [ ] Отслеживается `sessionId`.
+- [ ] `cstType` соответствует роли конституенты.
+- [ ] Поставщики добавлены раньше потребителей.
+
+### Перед показом, commit и export
+
+- [ ] Схема проверена; ошибки исправлены.
+- [ ] Диагностики обработаны до `commitStep` и экспорта.
+
+### Ревью концептуальной схемы
+
+Перед завершением концептуализации или крупного изменения. Правила — [CONCEPTUAL-SCHEMA.md](../../docs/CONCEPTUAL-SCHEMA.md).
+
+- [ ] Атрибутивная и родоструктурная экспликации не смешаны без явного запроса.
+- [ ] Нет избыточной проверки принадлежности к собственной типизации (`x∈X1`, если `x` уже в `X1`).
+- [ ] Базовые понятия независимы, введены необходимые по смысле аксиомы.
+- [ ] Покрыты главные сущности, роли, отношения, утверждения.
+- [ ] В текстовых определениях используются только понятия из схемы.
+- [ ] Повторяющиеся части формальных определений вынесены в производные понятия `D#` и `F#`.
+- [ ] Сомнительная семантика проверена на маленькой КМ при наличии тестовых данных.

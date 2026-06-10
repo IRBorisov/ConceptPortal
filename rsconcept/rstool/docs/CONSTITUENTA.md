@@ -51,5 +51,3 @@
 3. Все глобальные ссылки уже есть в сессии.
 4. `axiom` и `statement` имеют типизацию `Logic`, иначе `expectedLogic`.
 5. Выводимая конституента с пустой формулой дает `cstEmptyDerived`.
-
-Цикл: `analyzeExpression` на черновике → исправить `diagnostics[].from/to` → `addOrUpdateConstituenta`.
