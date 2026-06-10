@@ -1,6 +1,6 @@
 {
   "name": "@rsconcept/rstool",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "Agent-facing library for incremental RSForm construction, RSLang analysis, diagnostics, modeling, and evaluation. Wraps @rsconcept/domain with a deterministic session contract and stdio wrapper.",
   "license": "MIT",
   "author": "IRBorisov",
@@ -35,6 +35,7 @@
     "./skills/rstool-helper/*": "./skills/rstool-helper/*",
     "./skills/INSTALL.md": "./skills/INSTALL.md",
     "./docs/*": "./docs/*",
+    "./examples/*": "./examples/*",
     "./package.json": "./package.json"
   },
   "bin": {
@@ -45,6 +46,7 @@
     "src",
     "skills",
     "docs",
+    "examples",
     "README.md",
     "LICENSE"
   ],

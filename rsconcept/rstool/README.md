@@ -78,7 +78,7 @@ From `rsconcept/rstool` (or run `powershell -File scripts/dev/LocalDevSetup.ps1`
 - `npm test`
 - `npm run build` — produce `dist/` via tsdown
 - `npm run wrapper` — dev stdio wrapper via `tsx`
-- `npm run example:client`, `npm run example:build-schema`, `npm run example:build-rsmodel`
+- `npm run example:client`, `npm run example:build-schema`, `npm run example:build-rsmodel` — see [`examples/README.md`](examples/README.md) for the full list (kinship scripts, session JSON)
 
 ## Stdio protocol
 

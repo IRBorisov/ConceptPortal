@@ -37,7 +37,7 @@ Run from a clean `main` with a clean working tree.
    npm publish --dry-run --access public
    ```
 
-   Confirm the tarball only includes intended paths (`dist/`, `src/`, `skills/`, `docs/`, `README.md`, `LICENSE`, etc.).
+   Confirm the tarball only includes intended paths (`dist/`, `src/`, `skills/`, `docs/`, `examples/`, `README.md`, `LICENSE`, etc.).
 
 6. **Publish**:
 
