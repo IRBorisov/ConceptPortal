@@ -1,4 +1,5 @@
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, type LoaderFunctionArgs } from 'react-router';
+import * as Sentry from '@sentry/react';
 
 import { LayoutSandbox } from '@/app/layout/layout-sandbox';
 import { prefetchAvailableTemplates } from '@/features/ai/backend/use-available-templates';
@@ -23,7 +24,9 @@ import { LayoutRoot } from './layout/layout-root';
 import { ErrorFallback } from './error-fallback';
 import { routes } from './urls';
 
-export const Router = createBrowserRouter([
+const createRouter = Sentry.wrapCreateBrowserRouterV7(createBrowserRouter);
+
+export const Router = createRouter([
   {
     path: '/',
     element: <LayoutRoot />,
@@ -91,17 +94,17 @@ export const Router = createBrowserRouter([
           },
           {
             path: `${routes.rsforms}/:id`,
-            loader: data => prefetchRSForm(parseRSFormURL(data.params.id, data.request.url)),
+            loader: (data: LoaderFunctionArgs) => prefetchRSForm(parseRSFormURL(data.params.id, data.request.url)),
             lazy: () => import('@/features/rsform/pages/rsform-page')
           },
           {
             path: `${routes.models}/:id`,
-            loader: data => prefetchRSModel(parseRSModelURL(data.params.id)),
+            loader: (data: LoaderFunctionArgs) => prefetchRSModel(parseRSModelURL(data.params.id)),
             lazy: () => import('@/features/rsmodel/pages/rsmodel-page')
           },
           {
             path: `${routes.oss}/:id`,
-            loader: data => prefetchOSS(parseOssURL(data.params.id)),
+            loader: (data: LoaderFunctionArgs) => prefetchOSS(parseOssURL(data.params.id)),
             lazy: () => import('@/features/oss/pages/oss-page')
           },
           {
@@ -109,12 +112,16 @@ export const Router = createBrowserRouter([
             lazy: () => import('@/features/help/pages/manuals-page')
           },
           {
-            path: `${routes.icons}`,
+            path: routes.icons,
             lazy: () => import('@/features/home/icons-page')
           },
           {
-            path: `${routes.database_schema}`,
+            path: routes.database_schema,
             lazy: () => import('@/features/home/database-schema-page')
+          },
+          {
+            path: routes.sentry_test,
+            lazy: () => import('@/features/home/sentry-test-page')
           },
           {
             path: routes.prompt_templates,

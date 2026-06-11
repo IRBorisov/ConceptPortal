@@ -23,6 +23,7 @@ export const routes = {
   models: 'models',
   icons: 'icons',
   database_schema: 'database-schema',
+  sentry_test: 'sentry-test',
   prompt_templates: 'prompt-templates',
   sandbox: 'sandbox'
 } as const;
@@ -39,6 +40,7 @@ export const urls = {
   profile: `/${routes.profile}`,
   icons: `/${routes.icons}`,
   database_schema: `/${routes.database_schema}`,
+  sentry_test: `/${routes.sentry_test}`,
   signup: `/${routes.signup}`,
   library: `/${routes.library}`,
   library_filter: (strategy: string) => `/library?filter=${strategy}`,

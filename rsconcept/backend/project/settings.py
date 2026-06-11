@@ -15,6 +15,7 @@ import os
 import sys
 from pathlib import Path
 
+from corsheaders.defaults import default_headers
 from django.core.exceptions import ImproperlyConfigured
 
 
@@ -152,6 +153,11 @@ REST_FRAMEWORK = {
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = _get_list('CORS_ALLOWED_ORIGINS', 'http://localhost:3000')
+CORS_ALLOW_HEADERS = (
+    *default_headers,
+    'sentry-trace',
+    'baggage',
+)
 CSRF_TRUSTED_ORIGINS = _get_list('CSRF_TRUSTED_ORIGINS', 'http://localhost:3000')
 CSRF_COOKIE_AGE = 365 * 24 * 60 * 60
 SESSION_COOKIE_AGE = 365 * 24 * 60 * 60 * 2

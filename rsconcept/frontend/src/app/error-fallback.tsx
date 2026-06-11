@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useNavigate, useRouteError } from 'react-router';
 
 import { useTx } from '@/i18n';
+import { isSentryEnabled, Sentry } from '@/services/sentry';
 
 import { Button } from '@/components/control';
 import { InfoError } from '@/components/info-error';
@@ -17,6 +18,16 @@ export function ErrorFallback() {
   useEffect(
     function reloadOnStaleError() {
       handleStaleBundleError(error);
+    },
+    [error]
+  );
+
+  useEffect(
+    function reportRouteError() {
+      if (!isSentryEnabled() || !error || isStaleBundleError(error)) {
+        return;
+      }
+      Sentry.captureException(error);
     },
     [error]
   );
