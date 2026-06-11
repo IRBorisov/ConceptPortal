@@ -9,6 +9,7 @@ import { Dropdown, DropdownButton } from '@/components/dropdown';
 import {
   IconAdmin,
   IconAdminOff,
+  IconAlert,
   IconDarkTheme,
   IconDatabase,
   IconDBStructure,
@@ -76,6 +77,11 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
   function gotoDatabaseSchema(event: React.MouseEvent<Element>) {
     hideDropdown();
     router.push({ path: urls.database_schema, newTab: event.ctrlKey || event.metaKey });
+  }
+
+  function gotoSentryTest(event: React.MouseEvent<Element>) {
+    hideDropdown();
+    router.push({ path: urls.sentry_test, newTab: event.ctrlKey || event.metaKey });
   }
 
   function handleToggleDarkMode() {
@@ -173,6 +179,14 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
           title={tx('tx.shell.link.dbStructure.hint')}
           icon={<IconDBStructure size='1rem' />}
           onClick={gotoDatabaseSchema}
+        />
+      ) : null}
+      {user.is_staff ? (
+        <DropdownButton
+          text={tx('tx.shell.link.sentryTest')}
+          title={tx('tx.shell.link.sentryTest.hint')}
+          icon={<IconAlert size='1rem' />}
+          onClick={gotoSentryTest}
           className='border-b'
         />
       ) : null}
