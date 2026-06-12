@@ -1,6 +1,6 @@
 {
   "name": "@rsconcept/rstool-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Model Context Protocol (MCP) adapter that exposes the @rsconcept/rstool RSToolAgent contract over MCP stdio. Works with Cursor, Claude Desktop, and any MCP-capable host.",
   "license": "MIT",
   "author": "IRBorisov",
