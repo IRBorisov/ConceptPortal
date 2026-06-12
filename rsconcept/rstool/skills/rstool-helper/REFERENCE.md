@@ -186,6 +186,10 @@ interface AnalysisResult {
 - `state.model.items[]` — присутствует, если заданы значения интерпретации.
 - `diagnostics[]` — накопленные диагностики со смещениями и кодами.
 
+`importSession(payload)` принимает только этот формат `exportSession`. JSON Portal из
+`GET /api/rsforms/:id/details` сначала переноси в сессию через `createSession` и
+`addOrUpdateConstituenta`; поля и REST-пути описаны в `docs/PORTAL-API.md`.
+
 ## JSON импорта Portal
 
 Для **Load from JSON** на существующей схеме или модели Portal:

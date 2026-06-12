@@ -46,6 +46,21 @@
 9. Сохрани: `exportSession` / `importSession`.
 10. Для загрузки в Portal: `exportPortalSchema` (схема) или `exportPortalModel` (модель).
 
+### Оценка или правка КС из Portal
+
+Когда пользователь даёт UI-ссылку вида `https://portal.acconcept.ru/rsforms/:id`,
+не открывай SPA и не парси HTML. Преобразуй ссылку в REST API по правилам
+[PORTAL-API.md](../../docs/PORTAL-API.md): метаданные `GET /api/rsforms/:id`,
+полная КС `GET /api/rsforms/:id/details`, версия `GET /api/library/:id/versions/:version`.
+
+Portal JSON из `/details` не является форматом `exportSession` и не передаётся в
+`importSession` напрямую. Создай `createSession({ title, alias, comment: description })`
+и перенеси `items[]` через `addOrUpdateConstituenta`, сохраняя raw-поля:
+`cst_type → cstType`, `definition_formal → definitionFormal`,
+`term_raw → term`, `definition_raw → definitionText`, `convention → convention`.
+После переноса запусти `listDiagnostics`; для результата в Portal используй
+`exportPortalSchema`, а для локального снапшота — `exportSession`.
+
 ### Концептуализация (КС из содержания источника)
 
 Когда нужно построить или существенно развить КС по тексту ПО, требованиям или предметному описанию. Правила редукции, слоёв и паттернов — [CONCEPTUAL-SCHEMA.md](../../docs/CONCEPTUAL-SCHEMA.md).
