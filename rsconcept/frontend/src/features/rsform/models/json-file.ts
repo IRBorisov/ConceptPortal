@@ -1,4 +1,6 @@
-import { type RSForm } from '@rsconcept/domain/library';
+import { globalTx } from '@/i18n';
+import { type CstType, type RSForm } from '@rsconcept/domain/library';
+import { validateAliasFormat } from '@rsconcept/domain/library/rsform-api';
 
 import { PORTAL_JSON_CONTRACT_VERSION } from '@/features/library/models/portal-import-json';
 
@@ -28,4 +30,24 @@ export function toRSFormImportJson(schema: RSForm): RSFormImportJsonDTO {
     })),
     attribution: schema.attribution.map(({ container, attribute }) => ({ container, attribute }))
   };
+}
+
+interface ImportConstituenta {
+  alias: string;
+  cst_type: CstType;
+}
+
+/** Return a user-facing error when imported constituents have invalid or duplicate aliases. */
+export function validateImportedAliases(items: readonly ImportConstituenta[]): string | null {
+  const seen = new Set<string>();
+  for (const item of items) {
+    if (seen.has(item.alias)) {
+      return globalTx('tx.cst.alias.validate.import.duplicate', { alias: item.alias });
+    }
+    seen.add(item.alias);
+    if (!validateAliasFormat(item.alias, item.cst_type)) {
+      return globalTx('tx.cst.alias.validate.import.format', { alias: item.alias });
+    }
+  }
+  return null;
 }

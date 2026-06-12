@@ -9,6 +9,8 @@ import { schemaPortalImportMetadata } from '@/features/library/models/portal-imp
 
 import { limits } from '@/utils/constants';
 
+import { validateImportedAliases } from '../models/json-file';
+
 /** Represents Constituenta basic persistent data. */
 export type ConstituentaBasicsDTO = z.infer<typeof schemaConstituentaBasics>;
 
@@ -97,10 +99,17 @@ export const schemaAttribution = z.strictObject({
   attribute: z.number()
 });
 
-export const schemaRSFormImportJson = schemaPortalImportMetadata.extend({
-  items: z.array(schemaConstituentaBasics),
-  attribution: z.array(schemaAttribution).optional()
-});
+export const schemaRSFormImportJson = schemaPortalImportMetadata
+  .extend({
+    items: z.array(schemaConstituentaBasics),
+    attribution: z.array(schemaAttribution).optional()
+  })
+  .superRefine((data, ctx) => {
+    const error = validateImportedAliases(data.items);
+    if (error) {
+      ctx.addIssue({ code: 'custom', message: error });
+    }
+  });
 
 export const schemaRSForm = schemaLibraryItem.extend({
   is_produced: z.boolean(),

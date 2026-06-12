@@ -228,6 +228,8 @@ export const txLibraryRu: Record<string, string> = {
   'tx.cst.new': 'Новая конституента',
   'tx.cst.attribute.plural': 'Атрибуты конституенты',
   'tx.cst.alias.validate': 'Введите незанятое имя,\nсоответствующее типу',
+  'tx.cst.alias.validate.import.format': 'Имя конституенты не соответствует типу: {alias}',
+  'tx.cst.alias.validate.import.duplicate': 'Повторяющееся имя конституенты: {alias}',
   'tx.cst.original.plural.short': 'Собственные',
   'tx.cst.original.hint': 'Понятия, добавленные в данной схеме (не наследованные)',
   'tx.cst.original.select': 'Выделить собственные',

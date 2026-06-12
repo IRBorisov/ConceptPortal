@@ -227,6 +227,8 @@ export const txLibraryFr: Record<string, string> = {
   'tx.cst.new': 'Nouvelle constituante',
   'tx.cst.attribute.plural': 'Attributs de la constituante',
   'tx.cst.alias.validate': 'Entrez un nom non utilisé qui correspond au type',
+  'tx.cst.alias.validate.import.format': "L'abréviation de la constituante ne correspond pas au type : {alias}",
+  'tx.cst.alias.validate.import.duplicate': 'Abréviation de constituante en double : {alias}',
   'tx.cst.original.plural.short': 'Originales',
   'tx.cst.original.hint': 'Concepts ajoutés dans ce schéma (non hérités)',
   'tx.cst.original.select': 'Sélectionner les originales',

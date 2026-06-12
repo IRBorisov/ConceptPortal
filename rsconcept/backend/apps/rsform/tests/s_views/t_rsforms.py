@@ -90,6 +90,33 @@ class TestRSFormViewset(EndpointTester):
         Attribution = created.constituentsQ().model._meta.apps.get_model('rsform', 'Attribution')
         self.assertEqual(Attribution.objects.filter(container__schema_id=created.model.pk).count(), 1)
 
+    @decl_endpoint('/api/rsforms/create-from-sandbox', method='post')
+    def test_create_rsform_from_sandbox_rejects_invalid_alias(self):
+        data = {
+            'item_data': {
+                'title': 'Sandbox schema',
+                'alias': 'SB2',
+                'description': '',
+            },
+            'schema_data': {
+                'items': [{
+                    'id': 201,
+                    'alias': 'D1',
+                    'convention': '',
+                    'crucial': False,
+                    'cst_type': CstType.BASE,
+                    'definition_formal': '',
+                    'definition_raw': '',
+                    'definition_resolved': '',
+                    'term_raw': '',
+                    'term_resolved': '',
+                    'term_forms': []
+                }],
+                'attribution': []
+            }
+        }
+        self.executeBadData(data)
+
 
     @decl_endpoint('/api/rsforms', method='get')
     def test_list_rsforms(self):
@@ -202,6 +229,12 @@ class TestRSFormViewset(EndpointTester):
         self.executeBadData(item=self.owned_id, data={'items': [{}]})
         bad_version = {**data, 'contract_version': '0.0.0'}
         self.executeBadData(item=self.owned_id, data=bad_version)
+
+        bad_alias = {
+            **data,
+            'items': [{**data['items'][0], 'alias': 'D1'}]
+        }
+        self.executeBadData(item=self.owned_id, data=bad_alias)
 
 
     @decl_endpoint('/api/rsforms/{item}/details', method='get')

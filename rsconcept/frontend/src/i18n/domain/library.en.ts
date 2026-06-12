@@ -224,6 +224,8 @@ export const txLibraryEn: Record<string, string> = {
   'tx.cst.new': 'New constituent',
   'tx.cst.attribute.plural': 'Attributes of a constituenta',
   'tx.cst.alias.validate': 'Enter an unused name that matches the type',
+  'tx.cst.alias.validate.import.format': 'Constituent alias does not match type: {alias}',
+  'tx.cst.alias.validate.import.duplicate': 'Duplicate constituent alias: {alias}',
   'tx.cst.original.plural.short': 'Original',
   'tx.cst.original.hint': 'Concepts added in this schema (not inherited)',
   'tx.cst.original.select': 'Select original',
