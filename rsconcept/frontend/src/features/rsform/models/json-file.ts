@@ -1,19 +1,27 @@
 import { globalTx } from '@/i18n';
-import { type CstType, type RSForm } from '@rsconcept/domain/library';
+import { type CstType } from '@rsconcept/domain/library';
 import { validateAliasFormat } from '@rsconcept/domain/library/rsform-api';
 
 import { PORTAL_JSON_CONTRACT_VERSION } from '@/features/library/models/portal-import-json';
 
-import { type RSFormImportJsonDTO } from '../backend/types';
+import { type ConstituentaBasicsDTO, type RSFormImportJsonDTO } from '../backend/types';
 
-/** Build Portal schema JSON import payload from the current schema state. */
-export function toRSFormImportJson(schema: RSForm): RSFormImportJsonDTO {
+interface RSFormImportContent {
+  title: string;
+  alias: string;
+  description: string;
+  items: readonly ConstituentaBasicsDTO[];
+  attribution: readonly { container: number; attribute: number }[];
+}
+
+/** Build Portal schema JSON import payload from schema content. */
+export function rsFormContentToImportJson(content: RSFormImportContent): RSFormImportJsonDTO {
   return {
     contract_version: PORTAL_JSON_CONTRACT_VERSION,
-    title: schema.title,
-    alias: schema.alias,
-    description: schema.description,
-    items: schema.items.map(cst => ({
+    title: content.title,
+    alias: content.alias,
+    description: content.description,
+    items: content.items.map(cst => ({
       id: cst.id,
       alias: cst.alias,
       convention: cst.convention,
@@ -28,7 +36,7 @@ export function toRSFormImportJson(schema: RSForm): RSFormImportJsonDTO {
       term_resolved: cst.term_resolved,
       term_forms: cst.term_forms
     })),
-    attribution: schema.attribution.map(({ container, attribute }) => ({ container, attribute }))
+    attribution: content.attribution.map(({ container, attribute }) => ({ container, attribute }))
   };
 }
 

@@ -117,6 +117,45 @@ class TestRSFormViewset(EndpointTester):
         }
         self.executeBadData(data)
 
+    @decl_endpoint('/api/rsforms/create-from-sandbox', method='post')
+    def test_create_rsform_from_sandbox_rejects_duplicate_alias(self):
+        duplicate_alias = 'X1'
+        base_item = {
+            'convention': '',
+            'crucial': False,
+            'definition_formal': '',
+            'definition_raw': '',
+            'definition_resolved': '',
+            'term_raw': '',
+            'term_resolved': '',
+            'term_forms': []
+        }
+        data = {
+            'item_data': {
+                'title': 'Sandbox schema',
+                'alias': 'SB3',
+                'description': '',
+            },
+            'schema_data': {
+                'items': [
+                    {
+                        **base_item,
+                        'id': 301,
+                        'alias': duplicate_alias,
+                        'cst_type': CstType.BASE,
+                    },
+                    {
+                        **base_item,
+                        'id': 302,
+                        'alias': duplicate_alias,
+                        'cst_type': CstType.BASE,
+                    }
+                ],
+                'attribution': []
+            }
+        }
+        self.executeBadData(data)
+
 
     @decl_endpoint('/api/rsforms', method='get')
     def test_list_rsforms(self):
@@ -235,6 +274,36 @@ class TestRSFormViewset(EndpointTester):
             'items': [{**data['items'][0], 'alias': 'D1'}]
         }
         self.executeBadData(item=self.owned_id, data=bad_alias)
+
+    @decl_endpoint('/api/rsforms/{item}/load-json', method='patch')
+    def test_load_json_rejects_duplicate_alias(self):
+        duplicate_alias = 'X1'
+        x1 = self.owned.insert_last(alias='X1')
+        x2 = self.owned.insert_last(alias='X2')
+        base_item = {
+            'convention': '',
+            'crucial': False,
+            'definition_formal': '',
+            'typification_manual': '',
+            'value_is_property': False,
+            'definition_raw': '',
+            'definition_resolved': '',
+            'term_raw': '',
+            'term_resolved': '',
+            'term_forms': []
+        }
+        data = {
+            'contract_version': PORTAL_JSON_CONTRACT_VERSION,
+            'title': 'Imported title',
+            'alias': 'IMP',
+            'description': 'Imported description',
+            'items': [
+                {**base_item, 'id': x1.pk, 'alias': duplicate_alias, 'cst_type': CstType.BASE},
+                {**base_item, 'id': x2.pk, 'alias': duplicate_alias, 'cst_type': CstType.BASE},
+            ],
+            'attribution': []
+        }
+        self.executeBadData(item=self.owned_id, data=data)
 
 
     @decl_endpoint('/api/rsforms/{item}/details', method='get')

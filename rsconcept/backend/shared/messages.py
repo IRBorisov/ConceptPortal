@@ -55,7 +55,7 @@ def blockCyclicHierarchy() -> str:
 
 
 def childNotInOSS() -> str:
-    return f'Дочерний элемент блок не принадлежит ОСС'
+    return 'Дочерний элемент блок не принадлежит ОСС'
 
 
 def missingArguments() -> str:

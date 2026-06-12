@@ -162,6 +162,7 @@ export const txLibraryEn: Record<string, string> = {
   'tx.schema.select': 'Select schema',
   'tx.schema.upload.attributes': 'Load title and comment from file',
   'tx.schema.upload.constituents': 'Loading from a file will remove all constituents of the current conceptual schema.',
+  'tx.schema.upload.json.invalid': 'File is not a valid schema or sandbox JSON export.',
   'tx.schema.upload.success': 'Schema loaded',
   'tx.schema.inherit.owner': 'Owner inherited from OSS',
   'tx.schema.inherit.location': 'Path inherited from OSS',
