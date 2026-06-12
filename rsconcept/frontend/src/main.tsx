@@ -4,6 +4,7 @@ import { reactErrorHandler } from '@sentry/react';
 import { initSentry } from '@/services/sentry';
 
 import { GlobalProviders } from './app/global-providers';
+import { handleViewTransitionAbortError } from './app/navigation/view-transition-error';
 import { handleStaleBundleError } from './utils/stale-bundle-error';
 import { App } from './app';
 
@@ -25,7 +26,7 @@ if (typeof window !== 'undefined') {
   });
 
   window.addEventListener('unhandledrejection', (event: PromiseRejectionEvent) => {
-    if (handleStaleBundleError(event.reason)) {
+    if (handleStaleBundleError(event.reason) || handleViewTransitionAbortError(event.reason)) {
       event.preventDefault();
     }
   });

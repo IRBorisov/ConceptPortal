@@ -37,11 +37,16 @@ export function StatsCategory({
 }: StatsCategoryProps) {
   const tx = useTx();
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [fadeInCards, setFadeInCards] = useState(false);
   const [isOpenDebounced] = useDebounce(isDetailsOpen, PARAMETER.summaryDuration);
   const hasSecondary = secondaryLabel && typeof secondaryValue === 'number';
 
   function handleDetailsToggle(event: React.SyntheticEvent<HTMLDetailsElement>) {
-    setIsDetailsOpen(event.currentTarget.open);
+    const open = event.currentTarget.open;
+    setIsDetailsOpen(open);
+    if (!open) {
+      setFadeInCards(true);
+    }
   }
 
   return (
@@ -49,7 +54,7 @@ export function StatsCategory({
       {label ? <h3 className='text-sm font-medium leading-none mt-1'>{label}</h3> : null}
 
       {!isDetailsOpen && !isOpenDebounced ? (
-        <div className={clsx('grid gap-3 cc-fade-in', hasSecondary ? 'grid-cols-2' : 'grid-cols-1')}>
+        <div className={clsx('grid gap-3', fadeInCards && 'cc-fade-in', hasSecondary ? 'grid-cols-2' : 'grid-cols-1')}>
           <ValueCard label={primaryLabel} title={primaryTitle} value={primaryValue} />
           {hasSecondary ? <ValueCard label={secondaryLabel} title={secondaryTitle} value={secondaryValue} /> : null}
         </div>
