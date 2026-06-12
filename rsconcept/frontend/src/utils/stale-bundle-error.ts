@@ -1,5 +1,14 @@
 /** Error text produced by dynamic import failures when client bundle becomes stale. */
-const STALE_BUNDLE_MESSAGE = 'Failed to fetch dynamically imported module';
+const STALE_BUNDLE_MESSAGES = [
+  'Failed to fetch dynamically imported module', // Chrome, Edge
+  'Importing a module script failed', // Safari
+  'error loading dynamically imported module' // Firefox
+] as const;
+
+function matchesStaleBundleMessage(message: string): boolean {
+  const normalized = message.toLowerCase();
+  return STALE_BUNDLE_MESSAGES.some(fragment => normalized.includes(fragment.toLowerCase()));
+}
 
 /**
  * Check if error is stale bundle error.
@@ -9,10 +18,10 @@ export function isStaleBundleError(error: unknown): boolean {
     return false;
   }
   if (error instanceof Error) {
-    return error.message.includes(STALE_BUNDLE_MESSAGE);
+    return matchesStaleBundleMessage(error.message);
   }
   if (typeof error === 'string') {
-    return error.includes(STALE_BUNDLE_MESSAGE);
+    return matchesStaleBundleMessage(error);
   }
   return false;
 }
