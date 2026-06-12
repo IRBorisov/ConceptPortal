@@ -257,8 +257,8 @@ export function canHaveManualTypification(type: CstType): boolean {
   }
 }
 
-/** Validate new alias against {@link CstType} and {@link RSForm}. */
-export function validateNewAlias(alias: string, type: CstType, schema: RSForm): boolean {
+/** Validate alias format for a given {@link CstType} (prefix + digits, min length 2). */
+export function validateAliasFormat(alias: string, type: CstType): boolean {
   if (alias.length < 2) {
     return false;
   }
@@ -266,10 +266,18 @@ export function validateNewAlias(alias: string, type: CstType, schema: RSForm): 
   if (!alias.startsWith(prefix)) {
     return false;
   }
-  if (schema.cstByAlias.has(alias)) {
+  if (!/^\d+$/.exec(alias.substring(prefix.length))) {
     return false;
   }
-  if (!/^\d+$/.exec(alias.substring(prefix.length))) {
+  return true;
+}
+
+/** Validate new alias against {@link CstType} and {@link RSForm}. */
+export function validateNewAlias(alias: string, type: CstType, schema: RSForm): boolean {
+  if (!validateAliasFormat(alias, type)) {
+    return false;
+  }
+  if (schema.cstByAlias.has(alias)) {
     return false;
   }
   return true;
