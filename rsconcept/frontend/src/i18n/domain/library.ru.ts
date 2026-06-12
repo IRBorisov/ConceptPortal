@@ -166,6 +166,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.schema.select': 'Выбор схемы',
   'tx.schema.upload.attributes': 'Загружать название и комментарий',
   'tx.schema.upload.constituents': 'При загрузке из файла все конституенты текущей КС будут удалены',
+  'tx.schema.upload.json.invalid': 'Файл не является корректной выгрузкой схемы или песочницы в JSON.',
   'tx.schema.upload.success': 'Схема загружена',
   'tx.schema.inherit.owner': 'Владелец наследуется от ОСС',
   'tx.schema.inherit.location': 'Путь наследуется от ОСС',

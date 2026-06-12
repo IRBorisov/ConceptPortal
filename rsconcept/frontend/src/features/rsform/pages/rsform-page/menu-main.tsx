@@ -34,12 +34,12 @@ import {
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE, prefixes } from '@/utils/constants';
-import { convertToJSON, generatePageQR, readJsonFile, sharePage } from '@/utils/utils';
+import { convertToJSON, generatePageQR, sharePage } from '@/utils/utils';
 
-import { schemaRSFormImportJson } from '../../backend/types';
 import { useUploadRSFormJson } from '../../backend/use-upload-json';
 import { useUploadTRS } from '../../backend/use-upload-trs';
-import { toRSFormImportJson } from '../../models/json-file';
+import { rsFormContentToImportJson } from '../../models/json-file';
+import { readRSFormImportJsonFile } from '../../models/parse-import-json';
 import { prepareTRSFile } from '../../models/trs-file';
 
 import { useSchemaEdit } from './schema-edit-context';
@@ -124,7 +124,7 @@ export function MenuMain() {
       }
     }
     try {
-      const payload = toRSFormImportJson(schema);
+      const payload = rsFormContentToImportJson(schema);
       fileDownload(convertToJSON(payload), `${schema.alias ?? 'Schema'}.json`, 'application/json;charset=utf-8;');
     } catch (error) {
       console.error(error);
@@ -164,7 +164,7 @@ export function MenuMain() {
     }
     let data;
     try {
-      data = await readJsonFile(file, schemaRSFormImportJson);
+      data = await readRSFormImportJsonFile(file);
     } catch (error) {
       toast.error((error as Error).message);
       console.error(error);

@@ -165,6 +165,7 @@ export const txLibraryFr: Record<string, string> = {
   'tx.schema.upload.attributes': 'Charger le titre et le commentaire',
   'tx.schema.upload.constituents':
     'En important depuis un fichier, toutes les constituantes du schéma actuel seront supprimées',
+  'tx.schema.upload.json.invalid': 'Le fichier n’est pas une exportation JSON valide de schéma ou de bac à sable.',
   'tx.schema.upload.success': 'Schéma chargé',
   'tx.schema.inherit.owner': 'Propriétaire hérité de l’OSS',
   'tx.schema.inherit.location': 'Chemin hérité de l’OSS',
