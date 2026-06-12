@@ -19,24 +19,29 @@ function UpdateBackend() {
   & uv sync --upgrade
 }
 
+function UpdateNpmProject() {
+  param([string]$Path)
+  Set-Location $Path
+  # --save: bump direct dependency versions in package.json within existing semver ranges
+  & npm update --save
+}
+
 function UpdateDomain() {
-  Set-Location $domain
-  & npm update
+  UpdateNpmProject $domain
 }
 
 function UpdateFrontend() {
-  Set-Location $frontend
-  & npm update
+  UpdateNpmProject $frontend
 }
 
 function UpdateRstool() {
-  Set-Location $rstool
-  & npm update
+  UpdateNpmProject $rstool
 }
 
 function UpdateRstoolMcp() {
-  Set-Location $rstoolMcp
-  & npm update
+  UpdateNpmProject $rstoolMcp
 }
 
 UpdateDependencies
+
+Read-Host "Press Enter to close"

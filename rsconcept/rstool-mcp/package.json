@@ -48,15 +48,15 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.21.1",
-    "@rsconcept/rstool": "^0.4.0"
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@rsconcept/rstool": "^0.6.1"
   },
   "devDependencies": {
-    "@types/node": "^25.9.1",
-    "tsdown": "^0.22.0",
-    "tsx": "^4.21.0",
+    "@types/node": "^25.9.3",
+    "tsdown": "^0.22.2",
+    "tsx": "^4.22.4",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.8"
   },
   "publishConfig": {
     "access": "public"
