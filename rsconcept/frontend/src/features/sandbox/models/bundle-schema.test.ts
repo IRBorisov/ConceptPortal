@@ -9,6 +9,15 @@ import starterEn from './starter-bundles/starter-bundle.en.json';
 import { schemaSandboxBundle } from './bundle';
 import { createStarterSandboxBundle } from './bundle-starter';
 
+describe('sandbox bundle / constituent alias validation', () => {
+  it('rejects bundle with alias that does not match cst_type', () => {
+    const invalid = structuredClone(starterEn);
+    invalid.schema.items[0] = { ...invalid.schema.items[0], alias: 'D1', cst_type: CstType.BASE };
+    const parsed = schemaSandboxBundle.safeParse(invalid);
+    expect(parsed.success).toBe(false);
+  });
+});
+
 describe('sandbox bundle / DTO migration for typification_manual', () => {
   it('parses starter locale JSON (items omit typification_manual)', () => {
     const bundle = schemaSandboxBundle.parse(starterEn);

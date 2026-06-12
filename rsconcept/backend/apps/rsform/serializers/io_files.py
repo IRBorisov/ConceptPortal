@@ -7,6 +7,7 @@ from shared import messages as msg
 from shared.serializers import StrictSerializer
 
 from ..models import Attribution, Constituenta, CstType, RSFormCached
+from ..models.api_RSLanguage import find_import_alias_error
 from ..utils import fix_old_references
 
 _ENTITY_CONSTITUENTA = 'constituenta'
@@ -258,6 +259,10 @@ class RSFormSandboxImportSerializer(StrictSerializer):
                 raise serializers.ValidationError({
                     'schema_data': 'Attributions must reference imported constituents'
                 })
+
+        alias_error = find_import_alias_error(attrs['schema_data']['items'])
+        if alias_error:
+            raise serializers.ValidationError({'schema_data': alias_error})
         return attrs
 
     @transaction.atomic

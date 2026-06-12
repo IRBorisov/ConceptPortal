@@ -3,6 +3,8 @@ import re
 from enum import IntEnum, unique
 from typing import cast
 
+from shared import messages as msg
+
 from .Constituenta import CstType
 
 _RE_TEMPLATE = r'R\d+'
@@ -69,6 +71,30 @@ def guess_type(alias: str) -> CstType:
         if prefix == get_type_prefix(value):
             return cast(CstType, value)
     return CstType.BASE
+
+
+def validate_alias_format(alias: str, cst_type: str) -> bool:
+    ''' Check alias matches CstType naming rules (prefix + digits, min length 2). '''
+    if len(alias) < 2:
+        return False
+    prefix = get_type_prefix(cst_type)
+    if not alias.startswith(prefix):
+        return False
+    suffix = alias[len(prefix):]
+    return suffix.isdigit()
+
+
+def find_import_alias_error(items: list[dict]) -> str | None:
+    ''' Return first alias validation error for imported constituents, or None. '''
+    seen: set[str] = set()
+    for item in items:
+        alias = item['alias']
+        if alias in seen:
+            return msg.aliasDuplicate(alias)
+        seen.add(alias)
+        if not validate_alias_format(alias, item['cst_type']):
+            return msg.aliasInvalidFormat(alias)
+    return None
 
 
 def infer_template(expression: str) -> bool:

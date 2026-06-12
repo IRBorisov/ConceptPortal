@@ -127,7 +127,8 @@ export function MenuMain() {
       toast.success(tx('tx.sandbox.import.success'));
     } catch (error) {
       console.error(error);
-      toast.error(tx('tx.sandbox.import.fail'));
+      const message = error instanceof Error ? error.message : tx('tx.sandbox.import.fail');
+      toast.error(message);
     }
   }
 

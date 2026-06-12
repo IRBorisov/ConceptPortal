@@ -18,10 +18,11 @@ from shared import messages as msg
 from shared.serializers import (
     PortalImportJsonMetadataSerializer,
     StrictModelSerializer,
-    StrictSerializer,
+    StrictSerializer
 )
 
 from ..models import Attribution, Constituenta, CstType, RSForm
+from ..models.api_RSLanguage import find_import_alias_error
 from .basics import CstParseSerializer, InheritanceDataSerializer
 
 
@@ -107,6 +108,13 @@ class RSFormImportJsonSerializer(PortalImportJsonMetadataSerializer):
     ''' Serializer: versioned RSForm data for importing into an existing schema. '''
     items = CstImportJsonSerializer(many=True)
     attribution = AttributionSerializer(many=True, required=False)
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        alias_error = find_import_alias_error(attrs['items'])
+        if alias_error:
+            raise serializers.ValidationError({'items': alias_error})
+        return attrs
 
 
 class CstUpdateSerializer(StrictSerializer):
