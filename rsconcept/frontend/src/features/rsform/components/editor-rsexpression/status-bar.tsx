@@ -42,7 +42,7 @@ export function StatusBar({ className, status, onAnalyze }: StatusBarProps) {
         data-tooltip-content={prepareTooltip(tx('tx.rsexpression.analyze'), isMac() ? 'Cmd + Q' : 'Ctrl + Q')}
         onClick={onAnalyze}
       >
-        <div className='cc-fade-in flex items-center gap-1'>
+        <div className='flex items-center gap-1'>
           <IconExpressionStatus size='1rem' value={status} />
           <span className='font-controls pr-1 text-sm'>{labelExpressionStatus(status).toLocaleLowerCase()}</span>
         </div>
