@@ -58,7 +58,7 @@ export class SubstitutionValidator {
   constructor(schemas: RSForm[], substitutions: Substitution[]) {
     this.schemas = schemas;
     this.substitutions = substitutions;
-    if (schemas.length === 0 || substitutions.length === 0) {
+    if (schemas.length === 0) {
       return;
     }
 
@@ -69,6 +69,9 @@ export class SubstitutionValidator {
         this.cstByID.set(item.id, item);
         this.schemaByCst.set(item.id, schema);
       }
+    }
+    if (substitutions.length === 0) {
+      return;
     }
     let index = STARTING_SUB_INDEX;
     for (const item of substitutions) {
