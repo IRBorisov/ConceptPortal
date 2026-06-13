@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from 'react-router';
 import * as Sentry from '@sentry/react';
 
+import { isViewTransitionAbortError } from '@/app/navigation/view-transition-error';
+
 import { buildConstants } from '@/utils/build-constants';
 
 function resolveTracePropagationTargets(): (string | RegExp)[] {
@@ -42,7 +44,13 @@ export function initSentry(): boolean {
     tracePropagationTargets: resolveTracePropagationTargets(),
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1,
-    enableLogs: true
+    enableLogs: true,
+    beforeSend(event, hint) {
+      if (isViewTransitionAbortError(hint.originalException) || isViewTransitionAbortEvent(event)) {
+        return null;
+      }
+      return event;
+    }
   });
 
   return true;
@@ -53,3 +61,11 @@ export function isSentryEnabled(): boolean {
 }
 
 export { Sentry };
+
+function isViewTransitionAbortEvent(event: Sentry.Event): boolean {
+  const exceptionText = event.exception?.values
+    ?.map(value => [value.type, value.value].filter(Boolean).join(': '))
+    .join('\n');
+
+  return isViewTransitionAbortError([event.message, exceptionText].filter(Boolean).join('\n'));
+}

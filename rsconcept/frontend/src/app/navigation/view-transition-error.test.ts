@@ -8,6 +8,11 @@ describe('isViewTransitionAbortError', () => {
     expect(isViewTransitionAbortError(error)).toBe(true);
   });
 
+  it('matches invalid state aborts wrapped as plain errors', () => {
+    const error = new Error('InvalidStateError: Transition was aborted because of invalid state');
+    expect(isViewTransitionAbortError(error)).toBe(true);
+  });
+
   it('matches timeout aborts', () => {
     const error = new Error('Transition was aborted because of timeout in DOM update');
     error.name = 'TimeoutError';
@@ -49,6 +54,12 @@ describe('isViewTransitionAbortError', () => {
 
   it('matches string errors with both transition signals', () => {
     expect(isViewTransitionAbortError('Transition was aborted during view transition')).toBe(true);
+  });
+
+  it('matches string errors with abort type and transition-aborted text', () => {
+    expect(
+      isViewTransitionAbortError('Error: InvalidStateError: Transition was aborted because of invalid state')
+    ).toBe(true);
   });
 });
 

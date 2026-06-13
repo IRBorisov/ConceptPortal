@@ -6,20 +6,28 @@ function mentionsViewTransition(text: string): boolean {
   return text.toLowerCase().includes('view transition');
 }
 
+function mentionsAbortErrorName(text: string): boolean {
+  return Array.from(ABORT_ERROR_NAMES).some(name => text.includes(name));
+}
+
 function hasTransitionAbortContext(text: string): boolean {
   return text.includes(TRANSITION_ABORTED) || mentionsViewTransition(text);
+}
+
+function hasWrappedTransitionAbortContext(text: string): boolean {
+  return text.includes(TRANSITION_ABORTED) && mentionsAbortErrorName(text);
 }
 
 /** View Transitions API errors that are expected during navigation and should not be reported. */
 export function isViewTransitionAbortError(error: unknown): boolean {
   if (typeof error === 'string') {
-    return error.includes(TRANSITION_ABORTED) && mentionsViewTransition(error);
+    return (error.includes(TRANSITION_ABORTED) && mentionsViewTransition(error)) || hasWrappedTransitionAbortContext(error);
   }
   if (!(error instanceof Error)) {
     return false;
   }
   if (!ABORT_ERROR_NAMES.has(error.name)) {
-    return false;
+    return hasWrappedTransitionAbortContext(error.message);
   }
   if (error.name === 'AbortError') {
     return mentionsViewTransition(error.message);
