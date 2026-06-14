@@ -64,7 +64,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@rsconcept/domain": "^1.0.0"
+    "@rsconcept/domain": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",

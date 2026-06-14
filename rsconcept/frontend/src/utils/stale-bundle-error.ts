@@ -2,6 +2,8 @@
 const STALE_BUNDLE_MESSAGES = [
   'Failed to fetch dynamically imported module', // Chrome, Edge
   'Importing a module script failed', // Safari
+  'not a valid JavaScript MIME type', // Safari when stale chunk returns index.html
+  'Expected a JavaScript module script but the server responded with a MIME type of', // Chrome
   'error loading dynamically imported module' // Firefox
 ] as const;
 

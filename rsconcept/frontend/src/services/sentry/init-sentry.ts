@@ -5,6 +5,7 @@ import * as Sentry from '@sentry/react';
 import { isViewTransitionAbortError } from '@/app/navigation/view-transition-error';
 
 import { buildConstants } from '@/utils/build-constants';
+import { isStaleBundleError } from '@/utils/stale-bundle-error';
 
 function resolveTracePropagationTargets(): (string | RegExp)[] {
   const targets: (string | RegExp)[] = [/^\//];
@@ -49,6 +50,9 @@ export function initSentry(): boolean {
       if (isViewTransitionAbortError(hint.originalException) || isViewTransitionAbortEvent(event)) {
         return null;
       }
+      if (isStaleBundleError(hint.originalException) || isStaleBundleSentryEvent(event)) {
+        return null;
+      }
       return event;
     }
   });
@@ -68,4 +72,12 @@ function isViewTransitionAbortEvent(event: Sentry.Event): boolean {
     .join('\n');
 
   return isViewTransitionAbortError([event.message, exceptionText].filter(Boolean).join('\n'));
+}
+
+function isStaleBundleSentryEvent(event: Sentry.Event): boolean {
+  const exceptionText = event.exception?.values
+    ?.map(value => [value.type, value.value].filter(Boolean).join(': '))
+    .join('\n');
+
+  return isStaleBundleError([event.message, exceptionText].filter(Boolean).join('\n'));
 }
