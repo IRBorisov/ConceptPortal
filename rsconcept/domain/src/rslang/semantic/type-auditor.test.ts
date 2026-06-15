@@ -306,10 +306,17 @@ describe('TypeAuditor', () => {
       args: [{ alias: 'a', type: bool(AnyTypificationT) }]
     });
     expectType('F3[∅]', 'ℬ(R0)');
-    expect(() => {
-      const ast = buildAST('F3[X1]');
-      auditor.run(ast, false, error => errors.push(error));
-    }).not.toThrow();
+    expectType('F3[X1]', 'ℬ(R0)');
+  });
+
+  it('Templated function with bare R0 argument', () => {
+    typeContext.set('F4', {
+      typeID: TypeID.function,
+      result: bool(basic('X1')),
+      args: [{ alias: 'a', type: AnyTypificationT }]
+    });
+    expectType('F4[X1]', 'ℬ(X1)');
+    expectType('F4[Z]', 'ℬ(X1)');
   });
 
   it('Templated nesting', () => {

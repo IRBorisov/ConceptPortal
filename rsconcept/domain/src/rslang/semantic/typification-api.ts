@@ -196,7 +196,7 @@ export function compareTemplated(
       return true;
     }
   }
-  if (value.typeID === TypeID.anyTypification) {
+  if (arg.typeID === TypeID.anyTypification || value.typeID === TypeID.anyTypification) {
     return true;
   }
   if (

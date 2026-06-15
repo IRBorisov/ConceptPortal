@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import type { TypePath } from './typification';
-import { AnyTypificationT, basic, bool, IntegerT, tuple } from './typification';
-import { applyPath } from './typification-api';
+import { AnyTypificationT, basic, bool, IntegerT, tuple, type Typification } from './typification';
+import { applyPath, compareTemplated } from './typification-api';
 
 describe('applyPath', () => {
   function typePath(path: number[]): TypePath {
@@ -42,5 +42,14 @@ describe('applyPath', () => {
     expect(applyPath(nested, typePath([1, 2]))).toBe(f2);
     expect(applyPath(nested, typePath([1, 3]))).toBeNull();
     expect(applyPath(nested, typePath([2, 1]))).toBeNull();
+  });
+});
+
+describe('compareTemplated', () => {
+  it('accepts R0 on either side', () => {
+    const substitutes = new Map<string, Typification>();
+    expect(compareTemplated(substitutes, AnyTypificationT, basic('X1'))).toBe(true);
+    expect(compareTemplated(substitutes, bool(basic('X1')), AnyTypificationT)).toBe(true);
+    expect(compareTemplated(substitutes, AnyTypificationT, AnyTypificationT)).toBe(true);
   });
 });
