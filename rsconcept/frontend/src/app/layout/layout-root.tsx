@@ -5,6 +5,8 @@ import { Outlet, useLocation } from 'react-router';
 
 import { type AppLocale, SUPPORTED_LOCALES, useTx } from '@/i18n';
 
+import { useAuthSync } from '@/features/auth/backend/use-auth-sync';
+
 import { useBrowserNavigation } from '@/hooks/use-browser-navigation';
 import { usePreferencesStore } from '@/stores/preferences';
 
@@ -17,6 +19,7 @@ export function LayoutRoot() {
   const location = useLocation();
 
   useBrowserNavigation();
+  useAuthSync();
   useEffect(
     function syncSeoHead() {
       const pathname = removeLocalePrefix(window.location.pathname);

@@ -155,3 +155,9 @@ function applyDarkMode(isDark: boolean) {
   root.setAttribute('data-color-scheme', !isDark ? 'light' : 'dark');
   return { darkMode: isDark };
 }
+
+/** Re-read persisted preferences from localStorage and sync document theme. */
+export async function rehydratePreferencesFromStorage(): Promise<void> {
+  await usePreferencesStore.persist.rehydrate();
+  applyDarkMode(usePreferencesStore.getState().darkMode);
+}
