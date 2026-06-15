@@ -3,12 +3,20 @@ import tailwindcss from '@tailwindcss/vite';
 import react, { reactCompilerPreset } from '@vitejs/plugin-react';
 import { defineConfig, loadEnv } from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'url';
 
 import { sitemapPlugin } from './vite-plugin-sitemap';
 
+function getPackageVersion(): string {
+  const packageJsonPath = fileURLToPath(new URL('./package.json', import.meta.url));
+  const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as { version: string };
+  return packageJson.version;
+}
+
 export default ({ mode }: { mode: string }) => {
   const env = loadEnv(mode, process.cwd(), '');
+  const release = `frontend@${getPackageVersion()}`;
   return defineConfig({
     appType: 'spa',
 
@@ -43,6 +51,9 @@ export default ({ mode }: { mode: string }) => {
       chunkSizeWarningLimit: 2000, // KB
       target: 'es2022',
       sourcemap: false
+    },
+    define: {
+      'import.meta.env.VITE_SENTRY_RELEASE': JSON.stringify(release)
     }
   });
 };
