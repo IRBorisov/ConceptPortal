@@ -7,7 +7,7 @@ import { normalizeAST } from '../parser/normalize';
 import { parser as rslangParser } from '../parser/parser';
 
 import { TypeAuditor } from './type-auditor';
-import { basic, bool, constant, LogicT, tuple, type TypeContext, TypeID } from './typification';
+import { AnyTypificationT, basic, bool, constant, LogicT, tuple, type TypeContext, TypeID } from './typification';
 
 // Helper to build AST
 function buildAST(expression: string) {
@@ -297,6 +297,19 @@ describe('TypeAuditor', () => {
       to: 12,
       params: ['b∈R1F2', 'ℬℬ(X1)']
     });
+  });
+
+  it('Templated function with R0 typification', () => {
+    typeContext.set('F3', {
+      typeID: TypeID.function,
+      result: bool(AnyTypificationT),
+      args: [{ alias: 'a', type: bool(AnyTypificationT) }]
+    });
+    expectType('F3[∅]', 'ℬ(R0)');
+    expect(() => {
+      const ast = buildAST('F3[X1]');
+      auditor.run(ast, false, error => errors.push(error));
+    }).not.toThrow();
   });
 
   it('Templated nesting', () => {

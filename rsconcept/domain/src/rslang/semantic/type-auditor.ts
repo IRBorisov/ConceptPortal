@@ -943,7 +943,8 @@ export class TypeAuditor {
 function mangleRadicals(funcName: string, type: Typification): Typification {
   switch (type.typeID) {
     default:
-      throw new Error(`Unexpected type: ${type.typeID}`);
+      throw new Error(`Unexpected type: ${JSON.stringify(type)}`);
+    case TypeID.anyTypification:
     case TypeID.integer:
       return type;
     case TypeID.basic: {
