@@ -37,8 +37,7 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
   },
   [HelpTopic.UI_SCHEMA_MENU]: {
     keywords: ['schema menu', 'schema editing', 'tabs', 'actions', 'commands'],
-    searchText:
-      'Schema editing. Tabs, schema menu, schema actions, switching modes, and editing commands.'
+    searchText: 'Schema editing. Tabs, schema menu, schema actions, switching modes, and editing commands.'
   },
   [HelpTopic.UI_MODEL_MENU]: {
     keywords: ['model menu', 'model editing', 'model tabs', 'model actions', 'model commands'],
@@ -73,8 +72,7 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
   },
   [HelpTopic.UI_MODEL_LIST]: {
     keywords: ['model list', 'model constituents', 'model table', 'model elements'],
-    searchText:
-      'Model constituent list. Tabular work with model composition, row management, viewing model data.'
+    searchText: 'Model constituent list. Tabular work with model composition, row management, viewing model data.'
   },
   [HelpTopic.UI_MODEL_VALUE]: {
     keywords: ['model data', 'values', 'data entry', 'editing values', 'value table'],
@@ -83,8 +81,7 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
   },
   [HelpTopic.UI_MODEL_VALUE_EDIT]: {
     keywords: ['value dialog', 'value', 'value editor', 'value view', 'value structure'],
-    searchText:
-      'Value dialog. Structural view and edit of a single value, detailed work with a data element.'
+    searchText: 'Value dialog. Structural view and edit of a single value, detailed work with a data element.'
   },
   [HelpTopic.UI_MODEL_EVALUATOR]: {
     keywords: ['expression evaluation', 'calculation', 'calculator', 'expression check', 'evaluation'],
@@ -96,20 +93,13 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
     searchText: 'Evaluation statuses. Notation for calculation states, errors, runs, and service statuses.'
   },
   [HelpTopic.UI_MODEL_BINDING]: {
-    keywords: [
-      'base interpretation',
-      'base interpretation editor',
-      'base set',
-      'model',
-      'text search'
-    ],
+    keywords: ['base interpretation', 'base interpretation editor', 'base set', 'model', 'text search'],
     searchText:
       'Base interpretation editor. Value table for primitive concepts, text search on elements, add and remove model rows.'
   },
   [HelpTopic.UI_GRAPH_TERM]: {
     keywords: ['term graph', 'graph', 'terms', 'nodes', 'edges', 'layout'],
-    searchText:
-      'Term graph. Graph setup, editing nodes, edges, navigating the graph, and visual structure analysis.'
+    searchText: 'Term graph. Graph setup, editing nodes, edges, navigating the graph, and visual structure analysis.'
   },
   [HelpTopic.UI_FORMULA_TREE]: {
     keywords: ['parse tree', 'formula', 'syntax tree', 'expression nodes', 'ast'],
@@ -139,21 +129,13 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
       'Operational schema sidebar. Edit the content of the selected operation, view parameters and operation details.'
   },
   [HelpTopic.UI_OSS_CARD]: {
-    keywords: [
-      'oss passport',
-      'oss card',
-      'operational schema',
-      'oss attributes',
-      'metadata',
-      'operation statistics'
-    ],
+    keywords: ['oss passport', 'oss card', 'operational schema', 'oss attributes', 'metadata', 'operation statistics'],
     searchText:
       'OSS passport. Name, abbreviation, description, access and library location, operation statistics by type and attached schemas.'
   },
   [HelpTopic.UI_SUBSTITUTIONS]: {
     keywords: ['identifications', 'identification table', 'substitutions', 'matching', 'constituents'],
-    searchText:
-      'Identification table. Match and identify constituents, manage substitutions and links.'
+    searchText: 'Identification table. Match and identify constituents, manage substitutions and links.'
   },
   [HelpTopic.UI_RELOCATE_CST]: {
     keywords: ['move constituents', 'reorder', 'up', 'down', 'oss', 'constituents'],
@@ -176,8 +158,7 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
   },
   [HelpTopic.CONCEPTUAL]: {
     keywords: ['conceptualization', 'theory', 'concepts', 'domain', 'schema'],
-    searchText:
-      'Conceptualization. Portal foundations, domain concepts, schemas, models, and synthesis operations.'
+    searchText: 'Conceptualization. Portal foundations, domain concepts, schemas, models, and synthesis operations.'
   },
   [HelpTopic.CC_SYSTEM]: {
     keywords: ['conceptual schema', 'system of definitions', 'definitions', 'concepts', 'cs'],
@@ -226,13 +207,11 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
   },
   [HelpTopic.RSL_LITERALS]: {
     keywords: ['identifiers', 'literals', 'names', 'numbers', 'strings', 'naming rules'],
-    searchText:
-      'Identifiers and literals. Identifier rules, literals, naming entities, and basic language elements.'
+    searchText: 'Identifiers and literals. Identifier rules, literals, naming entities, and basic language elements.'
   },
   [HelpTopic.RSL_TYPIFICATION]: {
     keywords: ['typing', 'types', 'genera', 'levels', 'type system'],
-    searchText:
-      'Typing. Type system in genus-structure explication, levels, compatibility rules, and describing types.'
+    searchText: 'Typing. Type system in genus-structure explication, levels, compatibility rules, and describing types.'
   },
   [HelpTopic.RSL_EXPRESSION_LOGIC]: {
     keywords: ['logical expressions', 'predicates', 'logic', 'truth', 'conditions', 'boolean'],
@@ -241,8 +220,7 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
   },
   [HelpTopic.RSL_EXPRESSION_SET]: {
     keywords: ['set-theoretic expressions', 'sets', 'union', 'intersection', 'membership'],
-    searchText:
-      'Set-theoretic expressions. Basic set operations, membership, union, intersection, and examples.'
+    searchText: 'Set-theoretic expressions. Basic set operations, membership, union, intersection, and examples.'
   },
   [HelpTopic.RSL_EXPRESSION_STRUCTURE]: {
     keywords: ['structural expressions', 'structures', 'tuples', 'fields', 'building structures'],
@@ -256,8 +234,7 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
   },
   [HelpTopic.RSL_EXPRESSION_QUANTOR]: {
     keywords: ['quantified expressions', 'quantifiers', 'forall', 'exists', 'variables'],
-    searchText:
-      'Quantified expressions. Quantifier syntax and semantics, forall and exists constructs, variable scope.'
+    searchText: 'Quantified expressions. Quantifier syntax and semantics, forall and exists constructs, variable scope.'
   },
   [HelpTopic.RSL_EXPRESSION_DECLARATIVE]: {
     keywords: ['declarative expressions', 'declarative', 'description', 'declaration'],
@@ -265,8 +242,7 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
   },
   [HelpTopic.RSL_EXPRESSION_IMPERATIVE]: {
     keywords: ['imperative expressions', 'actions', 'action blocks', 'commands', 'sequence'],
-    searchText:
-      'Imperative expressions. Syntax, action blocks, operation sequences, and execution control.'
+    searchText: 'Imperative expressions. Syntax, action blocks, operation sequences, and execution control.'
   },
   [HelpTopic.RSL_EXPRESSION_RECURSIVE]: {
     keywords: ['iterative constructs', 'recursion', 'loop', 'iteration', 'repetition'],
@@ -275,8 +251,7 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
   },
   [HelpTopic.RSL_EXPRESSION_PARAMETER]: {
     keywords: ['parameterized expressions', 'parameters', 'term function', 'predicate function', 'arguments'],
-    searchText:
-      'Parameterized expressions. Declaring term and predicate functions, parameters, arguments, and reuse.'
+    searchText: 'Parameterized expressions. Declaring term and predicate functions, parameters, arguments, and reuse.'
   },
   [HelpTopic.RSL_CORRECT]: {
     keywords: ['portability', 'correctness', 'validity', 'compatibility', 'checking'],
@@ -285,8 +260,7 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
   },
   [HelpTopic.RSL_INTERPRET]: {
     keywords: ['interpretability', 'interpretation', 'expression meaning', 'semantics'],
-    searchText:
-      'Interpretability. Interpreting definitions and claims, expression semantics, and ties to the domain.'
+    searchText: 'Interpretability. Interpreting definitions and claims, expression semantics, and ties to the domain.'
   },
   [HelpTopic.RSL_OPERATIONS]: {
     keywords: ['schema operations', 'operations', 'schemas', 'transformations', 'schema actions'],
@@ -304,17 +278,27 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
   },
   [HelpTopic.ACCESS]: {
     keywords: ['access', 'permissions', 'roles', 'owner', 'editor', 'rights'],
-    searchText:
-      'Access management. User rights, owner and editor roles, permission setup, and collaboration.'
+    searchText: 'Access management. User rights, owner and editor roles, permission setup, and collaboration.'
   },
   [HelpTopic.VERSIONS]: {
     keywords: ['versions', 'versioning', 'history', 'restore', 'changes', 'revisions'],
     searchText: 'Schema versioning. Change history, version actions, restore, and revision management.'
   },
   [HelpTopic.ASSISTANT]: {
-    keywords: ['ai assistant', 'assistant', 'artificial intelligence', 'prompt', 'queries', 'hints'],
+    keywords: [
+      'ai assistant',
+      'assistant',
+      'artificial intelligence',
+      'prompt',
+      'queries',
+      'hints',
+      'rstool',
+      'mcp',
+      'ai agent',
+      'agent'
+    ],
     searchText:
-      'AI assistant. Working with the intelligent assistant, queries, hint generation, and AI in the Portal UI.'
+      'AI assistant. Working with the intelligent assistant, queries, hint generation, rstool and MCP for external AI agents.'
   },
   [HelpTopic.INFO]: {
     keywords: ['documentation', 'reference', 'documents', 'rules', 'api', 'policy'],

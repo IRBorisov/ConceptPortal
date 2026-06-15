@@ -93,6 +93,8 @@ export const external_urls = {
   git_portal: 'https://github.com/IRBorisov/ConceptPortal',
   git_core: 'https://github.com/IRBorisov/ConceptCore',
   git_cctext: 'https://github.com/IRBorisov/cctext',
+  git_rstool: 'https://github.com/IRBorisov/ConceptPortal/blob/main/rsconcept/rstool/README.md',
+  git_rstool_mcp: 'https://github.com/IRBorisov/ConceptPortal/blob/main/rsconcept/rstool-mcp/README.md',
   mail_portal: 'mailto:portal@acconcept.ru',
   restAPI: 'https://api.portal.acconcept.ru'
 } as const;

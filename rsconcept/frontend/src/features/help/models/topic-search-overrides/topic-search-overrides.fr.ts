@@ -314,9 +314,20 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
       'Versionnement des schémas. Historique des changements, actions sur les versions, restauration et gestion des révisions.'
   },
   [HelpTopic.ASSISTANT]: {
-    keywords: ['assistant ia', 'assistant', 'intelligence artificielle', 'prompt', 'requêtes', 'suggestions'],
+    keywords: [
+      'assistant ia',
+      'assistant',
+      'intelligence artificielle',
+      'prompt',
+      'requêtes',
+      'suggestions',
+      'rstool',
+      'mcp',
+      'agent ia',
+      'agent'
+    ],
     searchText:
-      'Assistant IA. Travail avec l’assistant intelligent, requêtes, génération de suggestions et usage de l’IA dans l’interface du Portail.'
+      'Assistant IA. Travail avec l’assistant intelligent, requêtes, génération de suggestions, rstool et MCP pour agents IA externes.'
   },
   [HelpTopic.INFO]: {
     keywords: ['documentation', 'informations', 'documents', 'règles', 'api', 'politique'],

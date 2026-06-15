@@ -5,9 +5,9 @@ import { useTx } from '@/i18n';
 import { useAuth } from '@/features/auth/backend/use-auth';
 
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import { IconAssistant, IconChat, IconTemplates } from '@/components/icons';
+import { IconAssistant, IconChat, IconRobot, IconTemplates } from '@/components/icons';
 import { useDialogsStore } from '@/stores/dialogs';
-import { globalIDs } from '@/utils/constants';
+import { external_urls, globalIDs } from '@/utils/constants';
 
 import { urls } from '../urls';
 
@@ -26,6 +26,11 @@ export function MenuAI() {
   } = useDropdown();
   const { user } = useAuth();
   const showAIPrompt = useDialogsStore(state => state.showAIPrompt);
+
+  function openRstoolReadme() {
+    hideMenu();
+    window.open(external_urls.git_rstool, '_blank', 'noopener,noreferrer');
+  }
 
   function navigateTemplates(event: React.MouseEvent<Element>) {
     hideMenu();
@@ -51,6 +56,12 @@ export function MenuAI() {
       />
 
       <Dropdown id={globalIDs.ai_dropdown} className='min-w-[12ch] max-w-48' stretchLeft isOpen={isMenuOpen}>
+        <DropdownButton
+          text={tx('tx.ai.agent')}
+          title={tx('tx.ai.agent.hint')}
+          icon={<IconRobot size='1rem' />}
+          onClick={openRstoolReadme}
+        />
         <DropdownButton
           text={tx('tx.ai.prompt')}
           title={tx('tx.ai.prompt.create')}

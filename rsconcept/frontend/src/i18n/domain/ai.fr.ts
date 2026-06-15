@@ -1,6 +1,8 @@
 export const txAiFr: Record<string, string> = {
   'tx.ai': 'Assistant IA',
   'tx.ai.hint': 'Fonctionnalités de l’assistant IA',
+  'tx.ai.agent': 'Agent IA',
+  'tx.ai.agent.hint': 'Documentation @rsconcept/rstool pour les agents IA externes',
   'tx.ai.generator': 'Générateur de requêtes LLM',
 
   'tx.ai.prompt': 'Requête',
