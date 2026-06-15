@@ -4,14 +4,10 @@ import { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 
 import { usePreferencesStore } from '@/stores/preferences';
-import { localStorageKeys } from '@/utils/constants';
 
 import { AppIntlBridge } from './app-intl-bridge';
 import { type AppLocale, DEFAULT_LOCALE } from './locales';
 import { getMessageMapForLocale } from './map';
-import { parsePersistedPreferencesLocale } from './persisted-locale';
-
-const POLL_INTERVAL = 1000;
 
 function handleIntlError(locale: AppLocale, error: unknown) {
   if (locale === 'en' && typeof error === 'object' && error && 'code' in error) {
@@ -26,7 +22,6 @@ function handleIntlError(locale: AppLocale, error: unknown) {
 /** Binds React Intl to persisted UI locale and message catalogs. */
 export function IntlPreferencesProvider({ children }: React.PropsWithChildren) {
   const locale = usePreferencesStore(state => state.locale);
-
   const messages = getMessageMapForLocale(locale);
 
   useEffect(
@@ -35,39 +30,6 @@ export function IntlPreferencesProvider({ children }: React.PropsWithChildren) {
     },
     [locale]
   );
-
-  useEffect(function reloadWhenPersistedLocaleChanges() {
-    let reloadRequested = false;
-
-    function reloadIfPersistedLocaleChanged(raw: string | null) {
-      if (reloadRequested) {
-        return;
-      }
-      const nextLocale = parsePersistedPreferencesLocale(raw);
-      if (nextLocale === null || nextLocale === usePreferencesStore.getState().locale) {
-        return;
-      }
-      reloadRequested = true;
-      window.location.reload();
-    }
-
-    function onPreferencesStorage(event: StorageEvent) {
-      if (event.key === localStorageKeys.preferences) {
-        reloadIfPersistedLocaleChanged(event.newValue);
-      }
-    }
-
-    function pollPreferencesStorage() {
-      reloadIfPersistedLocaleChanged(localStorage.getItem(localStorageKeys.preferences));
-    }
-
-    const intervalId = window.setInterval(pollPreferencesStorage, POLL_INTERVAL);
-    window.addEventListener('storage', onPreferencesStorage);
-    return function removePreferencesStorageListener() {
-      window.clearInterval(intervalId);
-      window.removeEventListener('storage', onPreferencesStorage);
-    };
-  }, []);
 
   return (
     <IntlProvider
