@@ -109,11 +109,12 @@ interface IAxiosGetRequest {
   endpoint: string;
   options?: AxiosRequestConfig;
   signal?: AbortSignal;
+  notifyOnError?: boolean;
   schema?: z.ZodType;
 }
 
 // ================ Transport API calls ================
-export function axiosGet<ResponseData>({ endpoint, options, schema }: IAxiosGetRequest) {
+export function axiosGet<ResponseData>({ endpoint, options, notifyOnError = true, schema }: IAxiosGetRequest) {
   return axiosInstance
     .get<ResponseData>(endpoint, options)
     .then(response => {
@@ -122,7 +123,7 @@ export function axiosGet<ResponseData>({ endpoint, options, schema }: IAxiosGetR
     })
     .catch((error: Error | AxiosError) => {
       // Note: Ignore cancellation errors
-      if (error.name !== 'CanceledError') {
+      if (notifyOnError && error.name !== 'CanceledError') {
         notifyError(error);
         console.error(error);
       }

@@ -5,8 +5,10 @@ import { globalTx } from '@/i18n';
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { cacheCsrfFromAuth } from '@/backend/csrf-token';
+import { getRetryDelay, isTransientNetworkError } from '@/backend/query-client';
 
 import {
+  anonymousCurrentUser,
   type IChangePasswordDTO,
   type ICurrentUser,
   type IPasswordTokenDTO,
@@ -15,9 +17,7 @@ import {
   type IUserLoginDTO
 } from './types';
 
-/**
- * Authentication API.
- */
+/** Authentication API. */
 export const authApi = {
   baseKey: KEYS.auth,
 
@@ -25,11 +25,10 @@ export const authApi = {
     return queryOptions({
       queryKey: [authApi.baseKey, 'user'],
       staleTime: DELAYS.staleLong,
+      refetchOnWindowFocus: 'always',
+      refetchOnReconnect: 'always',
       queryFn: meta =>
-        axiosGet<ICurrentUser>({
-          endpoint: '/users/api/auth',
-          options: { signal: meta.signal }
-        }).then(user => {
+        getCurrentUserOrAnonymous(meta.signal).then(user => {
           cacheCsrfFromAuth(user);
           return user;
         })
@@ -67,3 +66,33 @@ export const authApi = {
       request: { data: data }
     })
 } as const;
+
+// ======= Internal =========
+
+async function getCurrentUserOrAnonymous(signal: AbortSignal | undefined): Promise<ICurrentUser> {
+  for (let attemptIndex = 0; attemptIndex < 3; attemptIndex += 1) {
+    try {
+      return await axiosGet<ICurrentUser>({
+        endpoint: '/users/api/auth',
+        options: { signal },
+        notifyOnError: false
+      });
+    } catch (error) {
+      if (!isTransientNetworkError(error) || attemptIndex === 2) {
+        if (isTransientNetworkError(error)) {
+          return anonymousCurrentUser;
+        }
+        throw error;
+      }
+      await delay(getRetryDelay(attemptIndex));
+    }
+  }
+
+  return anonymousCurrentUser;
+}
+
+function delay(milliseconds: number): Promise<void> {
+  return new Promise(resolve => {
+    setTimeout(resolve, milliseconds);
+  });
+}
