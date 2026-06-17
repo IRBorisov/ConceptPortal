@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Collaborative Schema Editing Plan</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f7f8fb;
+        --fg: #18202a;
+        --muted: #5e6b7a;
+        --card: #ffffff;
+        --border: #d9e0ea;
+        --accent: #2454c6;
+        --accent-soft: #e9eefc;
+        --warn: #8a5b00;
+        --warn-soft: #fff4d5;
+        --ok: #17633a;
+        --ok-soft: #e6f5ec;
+        --code: #edf1f7;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f141b;
+          --fg: #e7edf5;
+          --muted: #a7b2c0;
+          --card: #161d27;
+          --border: #2d3948;
+          --accent: #8fb0ff;
+          --accent-soft: #1f2d4d;
+          --warn: #ffd27a;
+          --warn-soft: #3c2d10;
+          --ok: #8ee0b0;
+          --ok-soft: #153321;
+          --code: #202a36;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.55;
+      }
+
+      main {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 48px 24px 72px;
+      }
+
+      header {
+        margin-bottom: 32px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.2;
+        margin: 0;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 5vw, 4rem);
+        letter-spacing: -0.04em;
+      }
+
+      h2 {
+        margin-top: 44px;
+        font-size: 1.65rem;
+      }
+
+      h3 {
+        margin-top: 0;
+        font-size: 1.05rem;
+      }
+
+      p {
+        margin: 12px 0 0;
+      }
+
+      ul,
+      ol {
+        margin: 12px 0 0;
+        padding-left: 1.25rem;
+      }
+
+      li + li {
+        margin-top: 6px;
+      }
+
+      code {
+        background: var(--code);
+        border-radius: 6px;
+        padding: 0.1rem 0.35rem;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 0.92em;
+      }
+
+      .subtitle {
+        max-width: 760px;
+        color: var(--muted);
+        font-size: 1.1rem;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--card);
+        padding: 6px 12px;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--card);
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(15, 20, 27, 0.06);
+      }
+
+      .callout {
+        border-left: 4px solid var(--accent);
+        border-radius: 14px;
+        background: var(--accent-soft);
+        padding: 16px 18px;
+        margin-top: 18px;
+      }
+
+      .warning {
+        border-left-color: var(--warn);
+        background: var(--warn-soft);
+      }
+
+      .success {
+        border-left-color: var(--ok);
+        background: var(--ok-soft);
+      }
+
+      .diagram {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .lane {
+        display: grid;
+        grid-template-columns: 170px 1fr;
+        align-items: stretch;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: var(--card);
+      }
+
+      .lane-label {
+        display: flex;
+        align-items: center;
+        padding: 14px 16px;
+        background: var(--code);
+        font-weight: 700;
+      }
+
+      .lane-body {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        padding: 14px 16px;
+      }
+
+      .step {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 7px 11px;
+        background: var(--bg);
+        font-size: 0.92rem;
+      }
+
+      .arrow {
+        color: var(--muted);
+      }
+
+      table {
+        width: 100%;
+        margin-top: 18px;
+        border-collapse: collapse;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: var(--card);
+      }
+
+      th,
+      td {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--code);
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .small {
+        color: var(--muted);
+        font-size: 0.94rem;
+      }
+
+      @media (max-width: 820px) {
+        .grid,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+
+        .lane {
+          grid-template-columns: 1fr;
+        }
+
+        .lane-body {
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Collaborative Schema Editing Plan</h1>
+        <p class="subtitle">
+          Plan for multiple users editing the same Portal schema with synced
+          changes, visible presence, soft locks, conflict detection, and chat
+          scoped to a schema.
+        </p>
+        <div class="meta">
+          <span class="pill">Target: RSForm schema editor first</span>
+          <span class="pill">Editing model: presence + soft locks</span>
+          <span class="pill">Chat access: anyone who can read</span>
+          <span class="pill">Transport: websocket channel per schema</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>Current Baseline</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>What exists</h3>
+            <ul>
+              <li>
+                RSForm data is loaded through REST endpoints such as
+                <code>/api/rsforms/:id/details</code>.
+              </li>
+              <li>
+                Edits are granular REST mutations, and successful responses
+                replace TanStack Query cache through <code>updateRSForm</code>.
+              </li>
+              <li>
+                Access control already distinguishes owners, editors, readers,
+                and admins via <code>LibraryItem</code> and <code>Editor</code>.
+              </li>
+              <li>
+                Explicit versions exist as manual snapshots, not as an operation
+                history.
+              </li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>What is missing</h3>
+            <ul>
+              <li>
+                No websocket, Server-Sent Events, or collaborative transport
+                exists today.
+              </li>
+              <li>
+                No optimistic concurrency: concurrent REST writes are
+                effectively last-write-wins.
+              </li>
+              <li>
+                No presence, active editor list, field locks, or edit-session
+                heartbeat.
+              </li>
+              <li>No schema-scoped chat model or message APIs.</li>
+            </ul>
+          </article>
+        </div>
+        <div class="callout warning">
+          First release should avoid CRDT/OT character-level merging. The
+          existing editor saves meaningful schema operations, so collaboration
+          should start at operation and constituent scope with conflict
+          prevention and clear recovery.
+        </div>
+      </section>
+
+      <section>
+        <h2>Product Shape</h2>
+        <div class="grid-3">
+          <article class="card">
+            <h3>Presence</h3>
+            <p>
+              Show who is viewing the schema, who is editing, and which
+              constituent or tab they are focused on.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Soft Locks</h3>
+            <p>
+              When an editor starts editing a constituent or metadata form,
+              other users see that area as occupied and can choose to wait or
+              override.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Synced Changes</h3>
+            <p>
+              After a mutation commits, other connected clients receive the
+              updated revision and refresh or patch their local schema cache.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Conflict Detection</h3>
+            <p>
+              Each write carries a base revision. Stale writes are rejected or
+              require an explicit reload/override flow.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Schema Chat</h3>
+            <p>
+              Readers and editors can send messages in a schema room, optionally
+              linked to a constituent or current revision.
+            </p>
+          </article>
+          <article class="card">
+            <h3>History</h3>
+            <p>
+              Chat history is persisted. Schema operation history can be added
+              later, separate from existing manual versions.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>Target Architecture</h2>
+        <div class="diagram" aria-label="Target architecture diagram">
+          <div class="lane">
+            <div class="lane-label">Frontend</div>
+            <div class="lane-body">
+              <span class="step">SchemaEditState</span>
+              <span class="arrow">-></span>
+              <span class="step">CollaborationProvider</span>
+              <span class="arrow">-></span>
+              <span class="step">Presence, Locks, Chat UI</span>
+            </div>
+          </div>
+          <div class="lane">
+            <div class="lane-label">Realtime</div>
+            <div class="lane-body">
+              <span class="step">schema:{itemId} websocket room</span>
+              <span class="arrow">-></span>
+              <span class="step">events: presence, lock, mutation, chat</span>
+            </div>
+          </div>
+          <div class="lane">
+            <div class="lane-label">Backend</div>
+            <div class="lane-body">
+              <span class="step">RSForm REST mutations</span>
+              <span class="arrow">-></span>
+              <span class="step">revision check</span>
+              <span class="arrow">-></span>
+              <span class="step">broadcast committed changes</span>
+            </div>
+          </div>
+          <div class="lane">
+            <div class="lane-label">Storage</div>
+            <div class="lane-body">
+              <span class="step">LibraryItem.revision</span>
+              <span class="step">EditSession</span>
+              <span class="step">SchemaChatMessage</span>
+              <span class="step">optional SchemaOperation</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Backend Plan</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Change</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Realtime transport</td>
+              <td>
+                Add ASGI and Django Channels, with websocket rooms keyed by
+                <code>schema:{library_item_id}</code>.
+              </td>
+              <td>
+                Production will need nginx websocket proxying and a channel
+                layer. Redis is the usual choice.
+              </td>
+            </tr>
+            <tr>
+              <td>Revisioning</td>
+              <td>
+                Add a monotonic <code>revision</code> integer to
+                <code>LibraryItem</code> or a schema-specific state table.
+              </td>
+              <td>
+                All mutating RSForm endpoints should require or accept
+                <code>base_revision</code>.
+              </td>
+            </tr>
+            <tr>
+              <td>Conflict checks</td>
+              <td>
+                Inside existing <code>transaction.atomic()</code> mutations,
+                compare request base revision with current revision.
+              </td>
+              <td>
+                If stale, return <code>409 Conflict</code> with current revision
+                and a summary of changed areas.
+              </td>
+            </tr>
+            <tr>
+              <td>Presence</td>
+              <td>
+                Create ephemeral sessions with heartbeat: user, schema item,
+                tab, selected constituent, editing scope, last seen.
+              </td>
+              <td>
+                May live in channel memory/Redis first; persist only if needed
+                for audit.
+              </td>
+            </tr>
+            <tr>
+              <td>Soft locks</td>
+              <td>
+                Create lock records for scopes like
+                <code>schema:metadata</code>, <code>cst:{id}</code>,
+                <code>attribution:{id}</code>.
+              </td>
+              <td>
+                Locks expire automatically. Override should be logged and
+                broadcast.
+              </td>
+            </tr>
+            <tr>
+              <td>Chat</td>
+              <td>
+                Add <code>SchemaChatMessage</code>: schema item, author, body,
+                created time, optional constituent, optional revision.
+              </td>
+              <td>
+                Read permission follows schema read access. Writing chat also
+                follows read access.
+              </td>
+            </tr>
+            <tr>
+              <td>Permissions</td>
+              <td>
+                Reuse existing <code>can_read_library_item</code> for chat and
+                presence visibility, and <code>ItemEditor</code> for edit locks.
+              </td>
+              <td>
+                Also enforce <code>read_only</code> server-side before accepting
+                schema mutations.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Frontend Plan</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Collaboration Provider</h3>
+            <p>
+              Add a provider mounted inside RSForm pages, connected to the
+              active schema id and current user. It owns websocket lifecycle,
+              reconnects, room membership, and event dispatch.
+            </p>
+            <p class="small">
+              Initial integration points: <code>schema-edit-state.tsx</code>,
+              <code>schema-edit-context.tsx</code>, and
+              <code>updateRSForm()</code>.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Cache Updates</h3>
+            <p>
+              Remote committed mutation events should update or invalidate the
+              schema query. If the user has unsaved local changes, show a
+              non-destructive conflict banner instead of replacing the draft.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Lock UX</h3>
+            <p>
+              Forms request soft locks when they become dirty. Other editors see
+              badges and disabled or warning states on the same constituent or
+              metadata section.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Chat Panel</h3>
+            <p>
+              Add a right-side panel or tab for schema chat. Messages can
+              reference the active constituent and revision so discussion
+              remains tied to schema context.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>Event Contract</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Direction</th>
+              <th>Payload</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>presence.joined</code>, <code>presence.updated</code>,
+                <code>presence.left</code>
+              </td>
+              <td>Server to clients</td>
+              <td>
+                User id/name, schema id, selected tab, selected constituent,
+                editing scope.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>lock.request</code>, <code>lock.granted</code>,
+                <code>lock.released</code>, <code>lock.overridden</code>
+              </td>
+              <td>Both</td>
+              <td>
+                Lock scope, owner, expiry, reason, optional override metadata.
+              </td>
+            </tr>
+            <tr>
+              <td><code>schema.mutation_committed</code></td>
+              <td>Server to clients</td>
+              <td>
+                Schema id, mutation kind, changed scopes, new revision, optional
+                full RSForm DTO.
+              </td>
+            </tr>
+            <tr>
+              <td><code>schema.conflict</code></td>
+              <td>Server to client</td>
+              <td>
+                Submitted base revision, current revision, changed scopes,
+                suggested recovery action.
+              </td>
+            </tr>
+            <tr>
+              <td><code>chat.message_created</code></td>
+              <td>Both</td>
+              <td>
+                Message id, author, body, created time, schema id, optional
+                constituent id and revision.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Phased Delivery</h2>
+        <ol>
+          <li>
+            <strong>Foundation:</strong> add server-side
+            <code>read_only</code> enforcement, schema revisioning, and
+            stale-write <code>409 Conflict</code> responses for RSForm
+            mutations.
+          </li>
+          <li>
+            <strong>Realtime shell:</strong> introduce websocket room auth,
+            connect/disconnect, heartbeat, and presence display without changing
+            edit behavior.
+          </li>
+          <li>
+            <strong>Synced commits:</strong> broadcast successful schema
+            mutations and refresh other clients through the existing query cache
+            path.
+          </li>
+          <li>
+            <strong>Soft locks:</strong> add editing scope locks, expiry,
+            override, and frontend badges/warnings on metadata and constituents.
+          </li>
+          <li>
+            <strong>Schema chat:</strong> persist chat messages, load history
+            over REST, send new messages over websocket, and attach messages to
+            optional constituent context.
+          </li>
+          <li>
+            <strong>Broaden coverage:</strong> extend the same collaboration
+            shell to RSModel and OSS editing surfaces after RSForm behavior is
+            stable.
+          </li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Risks And Decisions</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Main Risks</h3>
+            <ul>
+              <li>
+                Propagation from RSForm edits into OSS may require broadcasting
+                affected downstream items.
+              </li>
+              <li>
+                Full DTO refreshes are simple but may feel heavy if schema
+                documents are large.
+              </li>
+              <li>
+                Soft locks prevent most conflicts, but override flows must be
+                explicit and auditable.
+              </li>
+              <li>
+                Websocket auth must align with existing session-cookie and CSRF
+                assumptions.
+              </li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Recommended Defaults</h3>
+            <ul>
+              <li>
+                Use full-schema refresh after remote commits for v1, then
+                optimize to scoped patches later.
+              </li>
+              <li>
+                Make locks advisory but visible, with auto-expiry and
+                owner/editor/admin override.
+              </li>
+              <li>
+                Allow chat for anyone who can read the schema, matching the
+                selected product scope.
+              </li>
+              <li>
+                Keep chat history separate from schema versions, but store
+                message revision for context.
+              </li>
+            </ul>
+          </article>
+        </div>
+        <div class="callout success">
+          The lowest-risk v1 is not simultaneous text merging. It is realtime
+          awareness, server-side stale-write protection, fast propagation of
+          committed edits, and a schema room where users can coordinate work.
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
