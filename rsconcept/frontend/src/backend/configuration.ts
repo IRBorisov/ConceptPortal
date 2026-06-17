@@ -5,7 +5,9 @@ export const DELAYS = {
 
   staleShort: 5 * 60 * 1000,
   staleMedium: 1 * 60 * 60 * 1000,
-  staleLong: 24 * 60 * 60 * 1000
+  staleLong: 24 * 60 * 60 * 1000,
+  queryRetryBase: 500,
+  queryRetryMax: 2000
 } as const;
 
 /** API keys for local cache. */
