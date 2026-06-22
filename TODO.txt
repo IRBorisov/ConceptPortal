@@ -1,39 +1,30 @@
-[Functionality - PENDING]
-- Design first user experience
-- Video guides
-- Allow manual setup for typification and value class
+Concept Portal — maintainer backlog (informal; not linked from README or CI)
+Last reviewed: 2026-06-22
 
-- Profile Settings server persistency
-- Profile pictures (avatars)
-- Custom LibraryItem lists
+Legend: [ ] open   [~] partial   [x] done — remove when shipped
 
-- Draggable rows in constituents table
+## Product / UX
+[ ] First-run / onboarding experience (help manual exists; no guided first-use flow)
+[~] Video guides — help topics embed YouTube/VK clips; expand topic coverage and walkthroughs
+[ ] Custom library item lists (saved filters / personal collections)
+[ ] User avatars / profile pictures
 
+## Account & preferences
+[~] Persist UI preferences server-side
+    - Done: account profile (name, email, password) via PATCH /users/api/profile
+    - Open: locale, theme, library pagination, editor toggles — localStorage only (stores/preferences.ts)
 
-[Tech]
-- django-allauth - consider supporting popular auth providers
+## Auth
+[ ] Social / OIDC login providers — evaluate django-allauth or similar (email + password only today)
 
+## Security / ops
+[~] Harden nginx for abuse resistance
+    - Done: HTTPS redirect, server_tokens off, sentry-tunnel rate limit (nginx/production.conf)
+    - Open: broader rate limits, connection limits, upstream timeouts; edge WAF/CDN for DDoS
+[ ] CAPTCHA on registration and password reset
+    - Yandex SmartCaptcha: https://yandex.cloud/ru/docs/smartcaptcha
 
-[Deployment]
-- logs collection
-- status dashboard for servers
-
-
-[Security]
-- improve nginx config. Consider DDOS and other types of attacks on infrastructure
-- recaptcha for create user and reset password
-https://yandex.cloud/ru/docs/smartcaptcha
-
-
-[Research]
-- skeleton loading
-https://react.dev/reference/react/Suspense
-
-- drf-messages
-https://drf-standardized-errors.readthedocs.io/en/latest/error_response.html
-
-- semantic json diff
-https://stackoverflow.com/questions/28838170/multilevel-json-diff-in-python
-
-- Documentation platform. Consider diplodoc
-- nuqs useQueryState
+## Engineering
+[~] Playwright E2E coverage — CI runs test:e2e:ci; specs for auth, profile, library, create-item, rsform, oss, rsmodel
+[ ] Semantic JSON diff (schema / version comparison)
+    - Research: https://stackoverflow.com/questions/28838170/multilevel-json-diff-in-python
