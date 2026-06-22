@@ -42,7 +42,7 @@
 2. `S1` — `definitionFormal: 'ℬ(X1×X1)'`; конвенция объясняет порядок пары.
 3. `D#` — проекции и фильтры: `Pr1(S1)`, `Pr2(S1)`, `Fi1[D1](S1)`.
 
-Пример: `examples/build-kinship-rsform.ts`.
+Пример: `examples/kinship/build-rsform.ts`.
 
 ## Валидация
 

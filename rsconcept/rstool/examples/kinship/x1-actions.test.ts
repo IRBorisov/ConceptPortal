@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { TUPLE_ID } from './constants';
+import { TUPLE_ID } from '@rsconcept/domain';
+
 import {
   addPerson,
   A1_MAX_PEOPLE,

@@ -1,0 +1,832 @@
+{
+  "contractVersion": "1.4.0",
+  "state": {
+    "sessionId": "322363ff-2e38-4656-8b26-4238b3260a65",
+    "alias": "",
+    "title": "",
+    "comment": "",
+    "createdAt": "2026-06-22T10:30:43.022Z",
+    "updatedAt": "2026-06-22T10:30:44.668Z",
+    "revisions": [
+      {
+        "revisionId": "640a498f-ac43-40ae-b134-c81aaa5b79c7",
+        "at": "2026-06-22T10:30:43.053Z",
+        "message": "КС «МОВД» (rsforms/838): Pr1,2, Fi1,2, pr1,2 на ℬ(X3×X1×X2) и ℬ(X3×X1×X4)"
+      },
+      {
+        "revisionId": "6eef276f-4ef2-4f65-b777-42d6a4e969f8",
+        "at": "2026-06-22T10:30:44.668Z",
+        "message": "Модель МОВД: Алиса, переговоры, стол значим, выбор «выйти»"
+      }
+    ],
+    "items": [
+      {
+        "id": 1,
+        "alias": "X1",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "ситуации",
+        "convention": "Различимые ситуации, рассматриваемые как единицы анализа",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 2,
+        "alias": "X2",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "элементы ситуации",
+        "convention": "Различимые элементы, которые могут входить в состав ситуаций",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 3,
+        "alias": "X3",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "субъекты",
+        "convention": "Различимые субъекты, осуществляющие ориентировку в ситуации",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X3"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 4,
+        "alias": "X4",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "действия",
+        "convention": "Различимые действия, рассматриваемые субъектом как возможные в ситуации",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X4"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
+        "alias": "S1",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X1×X2)",
+        "term": "состав ситуации",
+        "convention": "Соотносит ситуацию с элементами, входящими в её состав",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 6,
+        "alias": "S2",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X3×X1×X2)",
+        "term": "выделение значимого",
+        "convention": "Соотносит субъекта, ситуацию и элемент ситуации, выделяемый субъектом как значимый",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X3"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 7,
+        "alias": "S3",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X3×X1×X4)",
+        "term": "рассмотрение действия",
+        "convention": "Соотносит субъекта, ситуацию и действие, рассматриваемое как возможное",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X3"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X4"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 8,
+        "alias": "S4",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X3×X1×X4)",
+        "term": "выбор действия",
+        "convention": "Соотносит субъекта, ситуацию и действие, выбранное субъектом",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X3"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X4"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 9,
+        "alias": "D1",
+        "cstType": "term",
+        "definitionFormal": "Pr1(S1)",
+        "term": "структурированные ситуации",
+        "definitionText": "Ситуации, для которых задан хотя бы один элемент состава",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 10,
+        "alias": "D2",
+        "cstType": "term",
+        "definitionFormal": "Pr2(S1)",
+        "term": "элементы состава ситуации",
+        "definitionText": "Элементы, входящие в состав хотя бы одной ситуации",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 11,
+        "alias": "F1",
+        "cstType": "function",
+        "definitionFormal": "[α∈X1] Pr2(Fi1[{α}](S1))",
+        "term": "состав заданной ситуации",
+        "definitionText": "Элементы, входящие в состав заданной ситуации",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X2"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 12,
+        "alias": "D3",
+        "cstType": "term",
+        "definitionFormal": "Pr1(S2)",
+        "term": "ориентирующиеся субъекты",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X3"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 13,
+        "alias": "D4",
+        "cstType": "term",
+        "definitionFormal": "Pr2(S2)",
+        "term": "ситуации ориентировки",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 14,
+        "alias": "D5",
+        "cstType": "term",
+        "definitionFormal": "Pr3(S2)",
+        "term": "значимые элементы",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 15,
+        "alias": "D6",
+        "cstType": "term",
+        "definitionFormal": "Pr1,2(S2)",
+        "term": "эпизоды ориентировки",
+        "definitionText": "Пары субъект — ситуация, в которых субъект выделяет значимый элемент",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X3"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 16,
+        "alias": "F2",
+        "cstType": "function",
+        "definitionFormal": "[α∈X3, β∈X1] Pr3(Fi2,1[{(β,α)}](S2))",
+        "term": "значимые элементы субъекта в ситуации",
+        "definitionText": "Элементы, выделяемые субъектом как значимые в заданной ситуации",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X2"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X3"
+                }
+              },
+              {
+                "alias": "β",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 17,
+        "alias": "A1",
+        "cstType": "axiom",
+        "definitionFormal": "∀α∈X3 ∀β∈X1 F2[α,β]⊆F1[β]",
+        "term": "значимые элементы входят в состав ситуации",
+        "definitionText": "Элементы, выделяемые субъектом как значимые, входят в состав этой ситуации",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 18,
+        "alias": "D7",
+        "cstType": "term",
+        "definitionFormal": "Pr1(S3)",
+        "term": "рассматривающие субъекты",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X3"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 19,
+        "alias": "D8",
+        "cstType": "term",
+        "definitionFormal": "Pr2(S3)",
+        "term": "ситуации рассмотрения действий",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 20,
+        "alias": "D9",
+        "cstType": "term",
+        "definitionFormal": "Pr3(S3)",
+        "term": "рассматриваемые действия",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X4"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 21,
+        "alias": "F3",
+        "cstType": "function",
+        "definitionFormal": "[α∈X3, β∈X1] Pr3(Fi2[{β}](Fi1[{α}](S3)))",
+        "term": "пространство действий субъекта в ситуации",
+        "definitionText": "Действия, рассматриваемые субъектом как возможные в ситуации",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X4"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X3"
+                }
+              },
+              {
+                "alias": "β",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 22,
+        "alias": "A2",
+        "cstType": "axiom",
+        "definitionFormal": "∀α∈X3 ∀β∈X1 (F3[α,β]≠∅ ⇒ F2[α,β]≠∅)",
+        "term": "пространство действий требует ориентировки",
+        "definitionText": "Если субъект рассматривает действия в ситуации, у него есть значимые элементы",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 23,
+        "alias": "D10",
+        "cstType": "term",
+        "definitionFormal": "Pr1,2(S3)",
+        "term": "эпизоды рассмотрения",
+        "definitionText": "Пары субъект — ситуация, в которых рассматриваются действия",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X3"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 24,
+        "alias": "F5",
+        "cstType": "function",
+        "definitionFormal": "[ρ∈S3] pr1,2(ρ)",
+        "term": "субъект и ситуация рассмотрения",
+        "definitionText": "Пара субъект — ситуация для эпизода рассмотрения действия",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X3"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              ]
+            },
+            "args": [
+              {
+                "alias": "ρ",
+                "type": {
+                  "typeID": 4,
+                  "factors": [
+                    {
+                      "typeID": 3,
+                      "baseID": "X3"
+                    },
+                    {
+                      "typeID": 3,
+                      "baseID": "X1"
+                    },
+                    {
+                      "typeID": 3,
+                      "baseID": "X4"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 25,
+        "alias": "F4",
+        "cstType": "function",
+        "definitionFormal": "[α∈X3, β∈X1] debool(Pr3(Fi2[{β}](Fi1[{α}](S4))))",
+        "term": "выбранное действие субъекта в ситуации",
+        "definitionText": "Действие, выбранное субъектом в ситуации",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 3,
+              "baseID": "X4"
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X3"
+                }
+              },
+              {
+                "alias": "β",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 26,
+        "alias": "A3",
+        "cstType": "axiom",
+        "definitionFormal": "∀(α,β)∈Pr1,2(S4) card(Pr3(Fi2[{β}](Fi1[{α}](S4))))=1",
+        "term": "единственность выбранного действия",
+        "definitionText": "У каждой пары субъект — ситуация в структуре выбора ровно одно действие",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 27,
+        "alias": "A4",
+        "cstType": "axiom",
+        "definitionFormal": "∀(α,β)∈Pr1,2(S4) F4[α,β]∈F3[α,β]",
+        "term": "выбранное действие принадлежит пространству действий",
+        "definitionText": "Выбранное действие входит в число рассматриваемых субъектом в этой ситуации",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      }
+    ],
+    "model": {
+      "items": [
+        {
+          "id": 1,
+          "type": "basic",
+          "value": {
+            "0": "переговоры"
+          }
+        },
+        {
+          "id": 2,
+          "type": "basic",
+          "value": {
+            "0": "стол",
+            "1": "дверь"
+          }
+        },
+        {
+          "id": 3,
+          "type": "basic",
+          "value": {
+            "0": "Алиса"
+          }
+        },
+        {
+          "id": 4,
+          "type": "basic",
+          "value": {
+            "0": "выйти",
+            "1": "остаться"
+          }
+        },
+        {
+          "id": 5,
+          "type": "ℬ(X1×X1)",
+          "value": [
+            [
+              -111,
+              0,
+              0
+            ],
+            [
+              -111,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "id": 6,
+          "type": "ℬ(X1×X1×X1)",
+          "value": [
+            [
+              -111,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "id": 7,
+          "type": "ℬ(X1×X1×X1)",
+          "value": [
+            [
+              -111,
+              0,
+              0,
+              0
+            ],
+            [
+              -111,
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "id": 8,
+          "type": "ℬ(X1×X1×X1)",
+          "value": [
+            [
+              -111,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  "diagnostics": []
+}

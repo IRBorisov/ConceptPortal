@@ -1,6 +1,6 @@
 {
   "name": "@rsconcept/rstool",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Agent-facing library for incremental RSForm construction, RSLang analysis, diagnostics, modeling, and evaluation. Wraps @rsconcept/domain with a deterministic session contract and stdio wrapper.",
   "license": "MIT",
   "author": "IRBorisov",
@@ -56,15 +56,21 @@
     "test": "vitest run",
     "wrapper": "tsx src/wrapper/stdio-wrapper.ts",
     "example:client": "tsx examples/agent-client.ts",
-    "example:build-schema": "tsx examples/build-sample-rsform.ts",
-    "example:build-rsmodel": "tsx examples/build-sample-rsmodel.ts",
-    "example:build-kinship-schema": "tsx examples/build-kinship-rsform.ts",
-    "example:build-kinship-rsmodel": "tsx examples/build-kinship-rsmodel.ts",
+    "example:build-schema": "tsx examples/sample/build-rsform.ts",
+    "example:build-rsmodel": "tsx examples/sample/build-rsmodel.ts",
+    "example:build-kinship-schema": "tsx examples/kinship/build-rsform.ts",
+    "example:build-kinship-rsmodel": "tsx examples/kinship/build-rsmodel.ts",
+    "example:build-chocolate-nim-schema": "tsx examples/chocolate-nim/build-rsform.ts",
+    "example:build-chocolate-nim-rsmodel": "tsx examples/chocolate-nim/build-rsmodel.ts",
+    "example:build-movd-schema": "tsx examples/movd/build-rsform.ts",
+    "example:build-movd-rsmodel": "tsx examples/movd/build-rsmodel.ts",
+    "example:build-expression-bank-schema": "tsx examples/expression-bank/build-rsform.ts",
+    "example:build-template-apply-schema": "tsx examples/template-apply/build-rsform.ts",
     "kinship:cli": "tsx examples/kinship/cli.ts",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@rsconcept/domain": "^1.4.0"
+    "@rsconcept/domain": "^1.4.1"
   },
   "devDependencies": {
     "@types/node": "^25.9.4",

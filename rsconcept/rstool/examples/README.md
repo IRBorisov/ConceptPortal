@@ -9,7 +9,7 @@
 ```bash
 npm install
 npm run build          # обёртка для скриптов
-npm run example:client # и остальные example:* / kinship:cli — см. ниже
+npm run example:client # минимальный цикл API; схемы — см. таблицу ниже
 ```
 
 **После `npm install @rsconcept/rstool`** (нужен `tsx` или аналог):
@@ -18,42 +18,65 @@ npm run example:client # и остальные example:* / kinship:cli — см.
 npx tsx node_modules/@rsconcept/rstool/examples/agent-client.ts
 ```
 
-Скрипты пишут JSON рядом с собой в `examples/`; запускайте из корня пакета (каталог, где лежит `package.json` rstool).
+Скрипты пишут JSON в `examples/<topic>/`; запускайте из корня пакета (каталог с `package.json` rstool).
 
-## Скрипты
+## Макет папки темы
 
-| Файл | npm-скрипт | Назначение |
-|------|------------|------------|
-| [`agent-client.ts`](agent-client.ts) | `example:client` | Минимальный цикл: сессия, upsert, анализ, значения, диагностики через stdio |
-| [`build-sample-rsform.ts`](build-sample-rsform.ts) | `example:build-schema` | Собрать учебную RSForm (X1, S1, D1) и сохранить сессию |
-| [`build-sample-rsmodel.ts`](build-sample-rsmodel.ts) | `example:build-rsmodel` | RSForm + привязки + вычисления → учебная RSModel |
-| [`build-kinship-rsform.ts`](build-kinship-rsform.ts) | `example:build-kinship-schema` | Полная концептуальная схема «родственные отношения» (много конституент) |
-| [`build-kinship-rsmodel.ts`](build-kinship-rsmodel.ts) | `example:build-kinship-rsmodel` | Загрузить kinship RSForm, задать семью, вычислить модель (в т.ч. D3) |
-| [`kinship/cli.ts`](kinship/cli.ts) | `kinship:cli` | Интерактивное редактирование людей (X1) и связей (S1) в kinship-модели |
+У `sample/`, `chocolate-nim/` и `movd/` одинаковая структура:
 
-## JSON-сессии
+| Файл               | Роль                                            |
+| ------------------ | ----------------------------------------------- |
+| `constants.ts`     | Id конституент и пути к JSON-сессиям            |
+| `build-rsform.ts`  | Сборка RSForm → `rsform-session.json`           |
+| `build-rsmodel.ts` | Демо-модель и проверки → `rsmodel-session.json` |
 
-Готовые снимки `exportSession` — для `importSession`, тестов и CLI:
+Готовые `*-session.json` — снимки `exportSession` для `importSession` и тестов. Пересобрать: соответствующий `build-*.ts` перезапишет файл рядом с собой.
 
-| Файл | Содержимое |
-|------|------------|
-| [`sample-rsform-session.json`](sample-rsform-session.json) | Учебная RSForm (результат `build-sample-rsform`) |
-| [`sample-rsmodel-session.json`](sample-rsmodel-session.json) | Учебная RSModel с вычисленными значениями |
-| [`kinship-rsform-session.json`](kinship-rsform-session.json) | Схема родства без привязок |
-| [`kinship-rsmodel-session.json`](kinship-rsmodel-session.json) | Kinship-модель с примерной семьёй (по умолчанию для `kinship:cli`) |
+## Темы и npm-скрипты
 
-Пересобрать JSON: соответствующий `build-*.ts` перезапишет файл в `examples/`.
+- **[`sample/`](sample/):**
+  - Минимальная учебная схема: `X1`, `C1`, `S1`, `D1`, `A1`
+  - `build-rsform` скрипт: `example:build-schema`
+  - `build-rsmodel` скрипт: `example:build-rsmodel`
+
+- **[`kinship/`](kinship/):**
+  - «Родственные отношения» — развёрнутая предметная схема
+  - `build-rsform` скрипт: `example:build-kinship-schema`
+  - `build-rsmodel` скрипт: `example:build-kinship-rsmodel`
+
+- **[`chocolate-nim/`](chocolate-nim/):**
+  - «Шоколадный Ним» — пример математической схемы без `X#`
+  - `build-rsform` скрипт: `example:build-chocolate-nim-schema`
+  - `build-rsmodel` скрипт: `example:build-chocolate-nim-rsmodel`
+
+- **[`movd/`](movd/):**
+  - «МОВД» — пример предметной схемы со сложными `S#`, мультипроекциями и фильтрами
+  - `build-rsform` скрипт: `example:build-movd-schema`
+  - `build-rsmodel` скрипт: `example:build-movd-rsmodel`
+
+- **[`expression-bank/`](expression-bank/):**
+  - «Банк выражений» (Portal rsforms/42) — шаблоны T1–T10 на радикалах `R1`–`R3` без `X#`
+  - `build-rsform` скрипт: `example:build-expression-bank-schema`
+  - только `rsform-session.json` (без модели)
+
+- **[`template-apply/`](template-apply/):**
+  - Небольшая предметная схема: подстановка `R1→X1`, `R2→X2` для шаблонов БВ (F6, F20, P5)
+  - `build-rsform` скрипт: `example:build-template-apply-schema` (сборка + проверка на модели в скрипте)
+  - только `rsform-session.json`
+
+В корне: [`agent-client.ts`](agent-client.ts) (`example:client`) — минимальный цикл через stdio без привязки к теме.
 
 ## Папка `kinship/`
 
-Вспомогательный код для сценария «родственные отношения», не отдельный пакет:
+Тот же макет, плюс интерактивное редактирование модели:
 
-| Файл | Роль |
-|------|------|
-| [`constants.ts`](kinship/constants.ts) | Id конституент (X1, S1, D3, A1, …) и путь сессии по умолчанию |
-| [`session.ts`](kinship/session.ts) | Обёртка над сессией: загрузка/сохранение, команды над X1 и S1 |
-| [`x1-actions.ts`](kinship/x1-actions.ts) | Парсинг и применение изменений списка людей |
-| [`x1-actions.test.ts`](kinship/x1-actions.test.ts) | Тесты логики X1 (`npm test`) |
-| [`cli.ts`](kinship/cli.ts) | REPL: `list`, `add`, `remove`, `rename`, `set`, `save`, … |
+| Файл                                               | Роль                                                                      |
+| -------------------------------------------------- | ------------------------------------------------------------------------- |
+| [`session.ts`](kinship/session.ts)                 | Обёртка: загрузка/сохранение, команды над `X1` и `S1`                     |
+| [`x1-actions.ts`](kinship/x1-actions.ts)           | Парсинг и применение изменений списка людей                               |
+| [`x1-actions.test.ts`](kinship/x1-actions.test.ts) | Тесты логики `X1` (`npm test`)                                            |
+| [`cli.ts`](kinship/cli.ts)                         | REPL (`kinship:cli`): `list`, `add`, `remove`, `rename`, `set`, `save`, … |
 
-См. также [`../docs/CONSTITUENTA.md`](../docs/CONSTITUENTA.md) (разбор kinship-схемы) и [`../docs/MODEL-TESTING.md`](../docs/MODEL-TESTING.md).
+По умолчанию CLI читает [`kinship/rsmodel-session.json`](kinship/rsmodel-session.json).
+
+См. также [`../docs/CONSTITUENTA.md`](../docs/CONSTITUENTA.md) и [`../docs/MODEL-TESTING.md`](../docs/MODEL-TESTING.md).

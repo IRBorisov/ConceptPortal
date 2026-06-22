@@ -1,10 +1,9 @@
 import { writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import { CstType, RSToolWrapperClient, type AddOrUpdateConstituentaInput } from '../src';
+import { TUPLE_ID } from '@rsconcept/domain';
 
-/** Tuple marker in structured values. */
-const TUPLE_ID = -111;
+import { CstType, RSToolWrapperClient, type AddOrUpdateConstituentaInput } from '../../src';
 
 async function run() {
   const client = new RSToolWrapperClient({
@@ -92,7 +91,7 @@ async function run() {
     const exported = await client.call<string>('exportSession', {
       sessionId: session.sessionId
     });
-    const outputPath = resolve(process.cwd(), 'examples', 'sample-rsmodel-session.json');
+    const outputPath = resolve(process.cwd(), 'examples', 'sample', 'rsmodel-session.json');
     await writeFile(outputPath, exported, 'utf8');
     console.log(`Sample RSModel exported: ${outputPath}`);
   } finally {
