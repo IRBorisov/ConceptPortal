@@ -7,7 +7,6 @@ import { dataLibraryItems } from './mocks/library';
 import { expect, test } from './setup';
 
 test.describe.configure({ mode: 'serial' });
-test.setTimeout(90000);
 
 test.beforeEach(() => {
   authAdmin();
@@ -26,10 +25,10 @@ test('RSForm page loads and renders base tabs', async ({ page }) => {
 
   await page.goto(`/rsforms/${rsformID}`, { waitUntil: 'domcontentloaded' });
 
-  await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible({ timeout: 15000 });
-  await expect(page.getByRole('tab', { name: 'Список' })).toBeVisible({ timeout: 15000 });
-  await expect(page.getByRole('tab', { name: 'Понятие' })).toBeVisible({ timeout: 15000 });
-  await expect(page.getByRole('tab', { name: 'Граф' })).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible();
+  await expect(page.getByRole('tab', { name: 'Список' })).toBeVisible();
+  await expect(page.getByRole('tab', { name: 'Понятие' })).toBeVisible();
+  await expect(page.getByRole('tab', { name: 'Граф' })).toBeVisible();
 });
 
 test('RSForm allows switching active tab', async ({ page }) => {
@@ -69,13 +68,13 @@ test('RSForm opens version route when v query parameter is present', async ({ pa
   await page.goto(`/rsforms/${rsformID}?v=2`, { waitUntil: 'domcontentloaded' });
 
   await expect(page).toHaveURL(new RegExp(`/rsforms/${rsformID}\\?v=2`));
-  await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible();
 });
 
 test('RSForm shows 404 fallback when schema is missing', async ({ page }) => {
   await page.goto('/rsforms/999999', { waitUntil: 'domcontentloaded' });
 
-  await expect(page.getByText(/отсутствует/i).first()).toBeVisible({ timeout: 15000 });
+  await expect(page.getByText(/отсутствует/i).first()).toBeVisible();
   await expect(page.getByRole('link', { name: 'Библиотека' }).first()).toBeVisible();
 });
 

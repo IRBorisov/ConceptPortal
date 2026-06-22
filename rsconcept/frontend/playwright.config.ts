@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
+import { E2E_TIMEOUTS } from './tests/timeouts';
+
 const runAllBrowsers = !!process.env.CI || process.env.PLAYWRIGHT_ALL_BROWSERS === '1';
 
 /** Presets include `locale: en-US`, which wins over top-level `use` and yields English UI; specs assert Russian. */
@@ -9,6 +11,10 @@ const safari = { ...devices['Desktop Safari'], locale: 'ru-RU' as const };
 
 export default defineConfig({
   testDir: 'tests',
+  timeout: E2E_TIMEOUTS.test,
+  expect: {
+    timeout: E2E_TIMEOUTS.expect
+  },
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: 'list',
@@ -23,7 +29,9 @@ export default defineConfig({
       ]
     : [{ name: 'Desktop Chrome', use: chrome }],
   use: {
+    actionTimeout: E2E_TIMEOUTS.action,
     baseURL: 'http://localhost:3000',
+    navigationTimeout: E2E_TIMEOUTS.navigation,
     trace: 'on-first-retry'
   },
   webServer: {

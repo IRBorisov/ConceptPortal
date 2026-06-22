@@ -6,7 +6,6 @@ import { BACKEND_URL } from './mocks/constants';
 import { expect, test } from './setup';
 
 test.describe.configure({ mode: 'serial' });
-test.setTimeout(90000);
 
 test.beforeEach(() => {
   authAdmin();
@@ -26,12 +25,12 @@ test('RSModel page loads and renders model tabs', async ({ page }) => {
 
   await page.goto(`/models/${modelID}`, { waitUntil: 'domcontentloaded' });
 
-  await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible({ timeout: 15000 });
-  await expect(page.getByRole('tab', { name: 'Список' })).toBeVisible({ timeout: 15000 });
-  await expect(page.getByRole('tab', { name: 'Понятие' })).toBeVisible({ timeout: 15000 });
-  await expect(page.getByRole('tab', { name: 'Граф' })).toBeVisible({ timeout: 15000 });
-  await expect(page.getByRole('tab', { name: 'Данные' })).toBeVisible({ timeout: 15000 });
-  await expect(page.getByRole('tab', { name: 'Расчет' })).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible();
+  await expect(page.getByRole('tab', { name: 'Список' })).toBeVisible();
+  await expect(page.getByRole('tab', { name: 'Понятие' })).toBeVisible();
+  await expect(page.getByRole('tab', { name: 'Граф' })).toBeVisible();
+  await expect(page.getByRole('tab', { name: 'Данные' })).toBeVisible();
+  await expect(page.getByRole('tab', { name: 'Расчет' })).toBeVisible();
 });
 
 test('RSModel allows switching to data tab', async ({ page }) => {

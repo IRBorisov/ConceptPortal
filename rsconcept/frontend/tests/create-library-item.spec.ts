@@ -7,7 +7,6 @@ import { dataLibraryItems } from './mocks/library';
 import { expect, test } from './setup';
 
 test.describe.configure({ mode: 'serial' });
-test.setTimeout(90000);
 
 function createLibraryItem(id: number, title: string, alias: string) {
   return {
@@ -39,30 +38,30 @@ test.afterEach(() => {
 test('create item page applies itemType=oss from query', async ({ page }) => {
   await page.goto('/library/create?itemType=oss', { waitUntil: 'domcontentloaded' });
 
-  await expect(page.getByRole('heading', { name: 'Операционная схема' })).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole('heading', { name: 'Операционная схема' })).toBeVisible();
 });
 
 test('create item page applies itemType=rsmodel from query', async ({ page }) => {
-  await page.goto('/library/create?itemType=rsmodel', { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.goto('/library/create?itemType=rsmodel', { waitUntil: 'domcontentloaded' });
 
-  await expect(page.getByRole('heading', { name: 'Концептуальная модель' })).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole('heading', { name: 'Концептуальная модель' })).toBeVisible();
   await expect(page.getByRole('main').getByRole('button', { name: 'Создать', exact: true })).toBeVisible();
 });
 
 test('create item page applies modelFrom parameter and pre-fills fields', async ({ page }) => {
   dataLibraryItems.push(createLibraryItem(901, 'Базовая схема', 'KS_BASE'));
 
-  await page.goto('/library/create?modelFrom=901', { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.goto('/library/create?modelFrom=901', { waitUntil: 'domcontentloaded' });
 
-  await expect(page.getByRole('heading', { name: 'Концептуальная модель' })).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole('heading', { name: 'Концептуальная модель' })).toBeVisible();
   await expect(page.locator('#schema_title')).toHaveValue('Модель Базовая схема');
   await expect(page.locator('#schema_alias')).toHaveValue('MKS_BASE');
 });
 
 test('create item page with unknown modelFrom still opens model form', async ({ page }) => {
-  await page.goto('/library/create?modelFrom=9999', { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.goto('/library/create?modelFrom=9999', { waitUntil: 'domcontentloaded' });
 
-  await expect(page.getByRole('heading', { name: 'Концептуальная модель' })).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole('heading', { name: 'Концептуальная модель' })).toBeVisible();
   await expect(page.locator('#schema_title')).toHaveValue('');
   await expect(page.locator('#schema_alias')).toHaveValue('');
 });
@@ -97,7 +96,7 @@ test('create item page submits RSForm and redirects to created item', async ({ p
   await page.locator('#schema_alias').fill('KS_CREATED');
   await page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }).click();
 
-  await expect(page).toHaveURL(new RegExp(`/rsforms/${createdID}$`), { timeout: 15000 });
+  await expect(page).toHaveURL(new RegExp(`/rsforms/${createdID}$`));
   await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible();
   expect(requestPayload).toMatchObject({
     item_type: LibraryItemType.RSFORM,

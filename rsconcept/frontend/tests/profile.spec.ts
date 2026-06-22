@@ -38,7 +38,7 @@ test('profile page saves name and shows success toast', async ({ page }) => {
   await page.locator('#first_name').fill('НовоеИмя');
   await page.getByRole('button', { name: 'Сохранить изменения' }).click();
 
-  await expect(page.getByText('Изменения сохранены')).toBeVisible({ timeout: 5000 });
+  await expect(page.getByText('Изменения сохранены')).toBeVisible();
   await expect(page.locator('#first_name')).toHaveValue('НовоеИмя');
 });
 
