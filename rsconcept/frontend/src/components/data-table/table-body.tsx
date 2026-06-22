@@ -1,8 +1,10 @@
 'use no memo';
 'use client';
 
-import { useCallback, useState } from 'react';
+import { type RefObject, useCallback, useState } from 'react';
 import { type Row, type Table } from '@tanstack/react-table';
+
+import { useDragAutoScroll } from '@/hooks/use-drag-auto-scroll';
 
 import { type DataTableRowDrop } from './data-table';
 import { TableRow } from './table-row';
@@ -22,6 +24,7 @@ interface TableBodyProps<TData> {
   onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element>) => void;
   enableRowReordering?: boolean;
   onRowsReordered?: (event: DataTableRowDrop<TData>) => void;
+  scrollContainerRef: RefObject<HTMLElement | null>;
 }
 
 export function TableBody<TData>({
@@ -35,9 +38,13 @@ export function TableBody<TData>({
   onRowClicked,
   onRowDoubleClicked,
   enableRowReordering,
-  onRowsReordered
+  onRowsReordered,
+  scrollContainerRef
 }: TableBodyProps<TData>) {
   const [draggingRowID, setDraggingRowID] = useState<string | null>(null);
+  const canReorder = !!enableRowReordering && !!onRowsReordered;
+
+  useDragAutoScroll(scrollContainerRef, canReorder && draggingRowID !== null);
 
   const getRowStyles = useCallback(
     (row: Row<TData>) =>
