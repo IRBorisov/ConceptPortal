@@ -1,12 +1,19 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import { EvalStatus, RSToolWrapperClient } from '../src';
+import { TUPLE_ID } from '@rsconcept/domain';
 
-import { A1_ID, D3_ID, S2_ID, S3_ID } from './kinship/constants';
+import { EvalStatus, RSToolWrapperClient } from '../../src';
 
-/** Tuple marker in structured values. */
-const TUPLE_ID = -111;
+import {
+  A1_ID,
+  D3_ID,
+  DEFAULT_RSFORM_SESSION_PATH,
+  DEFAULT_RSMODEL_SESSION_PATH,
+  S2_ID,
+  S3_ID,
+  S4_ID
+} from './constants';
 
 /**
  * Minimal family so D3 (внучатые племянники) is non-empty:
@@ -37,6 +44,9 @@ const S1_VALUE = [
   [TUPLE_ID, 5, 6]
 ] as const;
 
+/** S4: браки (муж, жена) — Иван (0) и Мария (1). */
+const S4_VALUE = [[TUPLE_ID, 0, 1]] as const;
+
 /** Indices of men and women in the sample family (Иван, Пётр, Олег, Семён — м; остальные — ж). */
 const S2_VALUE = [0, 2, 4, 6] as const;
 const S3_VALUE = [1, 3, 5] as const;
@@ -48,7 +58,7 @@ async function run() {
 
   try {
     await client.waitUntilReady();
-    const kinshipPath = resolve(process.cwd(), 'examples', 'kinship-rsform-session.json');
+    const kinshipPath = resolve(process.cwd(), DEFAULT_RSFORM_SESSION_PATH);
     const kinshipJson = await readFile(kinshipPath, 'utf8');
 
     const imported = await client.call<{ sessionId: string }>('importSession', {
@@ -62,7 +72,8 @@ async function run() {
           { target: 1, value: X1_BINDING },
           { target: 2, value: S1_VALUE },
           { target: S2_ID, value: S2_VALUE },
-          { target: S3_ID, value: S3_VALUE }
+          { target: S3_ID, value: S3_VALUE },
+          { target: S4_ID, value: S4_VALUE }
         ]
       }
     });
@@ -111,7 +122,7 @@ async function run() {
     const exported = await client.call<string>('exportSession', {
       sessionId: imported.sessionId
     });
-    const outputPath = resolve(process.cwd(), 'examples', 'kinship-rsmodel-session.json');
+    const outputPath = resolve(process.cwd(), DEFAULT_RSMODEL_SESSION_PATH);
     await writeFile(outputPath, exported, 'utf8');
     console.log(`Exported: ${outputPath}`);
   } finally {

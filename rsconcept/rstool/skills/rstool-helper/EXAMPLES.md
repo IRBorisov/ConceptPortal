@@ -20,7 +20,7 @@ tool.addOrUpdateConstituenta(sessionId, {
     alias: 'S1',
     cstType: CstType.STRUCTURED,
     definitionFormal: 'ℬ(X1×X1)',
-    convention: 'Элементы — пары (родитель, потомок); родитель, потомок ∈ X1.'
+    convention: 'Множество пар: родитель и его ребёнок из людей. Порядок в паре задаётся конвенцией.'
   }
 });
 
@@ -71,9 +71,9 @@ console.log(scratch.success, scratch.value); // true, 3
 Синтаксис верен, но смысл неочевиден — собери маленькую модель и проверь значение.
 
 ```ts
+import { TUPLE_ID } from '@rsconcept/domain';
 import { CstType, EvalStatus, RSToolAgent } from '@rsconcept/rstool';
 
-const TUPLE_ID = -111;
 const tool = new RSToolAgent();
 const { sessionId } = tool.createSession();
 

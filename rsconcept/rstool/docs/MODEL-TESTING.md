@@ -18,7 +18,7 @@
 Пример формы данных:
 
 ```ts
-const TUPLE_ID = -111;
+import { TUPLE_ID } from '@rsconcept/domain';
 
 tool.setConstituentaValues(sessionId, {
   items: [

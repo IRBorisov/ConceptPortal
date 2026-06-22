@@ -1,0 +1,778 @@
+{
+  "contractVersion": "1.4.0",
+  "state": {
+    "sessionId": "c92d105d-6c5c-4260-ae15-2d09025792f2",
+    "alias": "",
+    "title": "",
+    "comment": "",
+    "createdAt": "2026-06-22T09:59:13.240Z",
+    "updatedAt": "2026-06-22T09:59:13.269Z",
+    "revisions": [
+      {
+        "revisionId": "a493ce48-f8e8-47cd-91cc-361b245b9965",
+        "at": "2026-06-22T09:59:13.269Z",
+        "message": "КС «шоколадный Ним» (rsforms/825): Z×Z, pr, P#, T#, арифметика, радикал R1"
+      }
+    ],
+    "items": [
+      {
+        "id": 1,
+        "alias": "S1",
+        "cstType": "structure",
+        "definitionFormal": "Z×Z",
+        "term": "шоколадка",
+        "convention": "Первая проекция — ширина, вторая — длина",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 4,
+            "factors": [
+              {
+                "typeID": 2,
+                "isOrdered": true,
+                "isArithmetic": true,
+                "isIntegerCompatible": true
+              },
+              {
+                "typeID": 2,
+                "isOrdered": true,
+                "isArithmetic": true,
+                "isIntegerCompatible": true
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 2,
+        "alias": "D1",
+        "cstType": "term",
+        "definitionFormal": "pr1(S1)",
+        "term": "ширина шоколадки",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 2,
+            "isOrdered": true,
+            "isArithmetic": true,
+            "isIntegerCompatible": true
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 3,
+        "alias": "D2",
+        "cstType": "term",
+        "definitionFormal": "pr2(S1)",
+        "term": "длина шоколадки",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 2,
+            "isOrdered": true,
+            "isArithmetic": true,
+            "isIntegerCompatible": true
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 4,
+        "alias": "S2",
+        "cstType": "structure",
+        "definitionFormal": "Z×Z",
+        "term": "отравленная долька",
+        "convention": "Координаты отравленной дольки: первая проекция по ширине, вторая — по длине",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 4,
+            "factors": [
+              {
+                "typeID": 2,
+                "isOrdered": true,
+                "isArithmetic": true,
+                "isIntegerCompatible": true
+              },
+              {
+                "typeID": 2,
+                "isOrdered": true,
+                "isArithmetic": true,
+                "isIntegerCompatible": true
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
+        "alias": "D3",
+        "cstType": "term",
+        "definitionFormal": "pr1(S2)",
+        "term": "расположение отравленной дольки по ширине",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 2,
+            "isOrdered": true,
+            "isArithmetic": true,
+            "isIntegerCompatible": true
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 6,
+        "alias": "D4",
+        "cstType": "term",
+        "definitionFormal": "pr2(S2)",
+        "term": "расположение отравленной дольки по длине",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 2,
+            "isOrdered": true,
+            "isArithmetic": true,
+            "isIntegerCompatible": true
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 7,
+        "alias": "A1",
+        "cstType": "axiom",
+        "definitionFormal": "(1≤D3)&(D3≤D1)&(1≤D4)&(D4≤D2)",
+        "term": "отравленная долька в шоколадке",
+        "definitionText": "Координаты отравленной дольки лежат в пределах шоколадки",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 8,
+        "alias": "P1",
+        "cstType": "predicate",
+        "definitionFormal": "[α∈Z] R{ξ:=α | ξ≥2 | ξ-2}=0",
+        "term": "чётное?",
+        "convention": "Для малых аргументов — прямое вычитание двойки; для больших нужно двоичное представление",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 9,
+        "alias": "F1",
+        "cstType": "function",
+        "definitionFormal": "[α∈Z, σ∈ℬ(Z×R1)] debool(Pr2(Fi1[{α}](σ)))",
+        "term": "значение элемента последовательности с данным номером",
+        "definitionText": "Значение пары с заданным номером в последовательности пар",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 3,
+              "baseID": "R1"
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 2,
+                        "isOrdered": true,
+                        "isArithmetic": true,
+                        "isIntegerCompatible": true
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 10,
+        "alias": "F2",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(Z)] debool(D{ξ∈σ | ∀α∈σ α≤ξ})",
+        "term": "максимум набора чисел",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 2,
+              "isOrdered": true,
+              "isArithmetic": true,
+              "isIntegerCompatible": true
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 2,
+                    "isOrdered": true,
+                    "isArithmetic": true,
+                    "isIntegerCompatible": true
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 11,
+        "alias": "F4",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(Z)] D{ξ∈σ | ∀α∈σ α≤ξ}",
+        "term": "верхние границы набора чисел",
+        "definitionText": "Множество элементов набора, не меньших всех остальных",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 2,
+                "isOrdered": true,
+                "isArithmetic": true,
+                "isIntegerCompatible": true
+              }
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 2,
+                    "isOrdered": true,
+                    "isArithmetic": true,
+                    "isIntegerCompatible": true
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 12,
+        "alias": "F5",
+        "cstType": "function",
+        "definitionFormal": "[α∈Z, β∈Z] debool(I{(α,0) | α<β} ∪ I{(α-β,1) | α≥β})",
+        "term": "деление с остатком на степень двойки",
+        "convention": "Предполагается, что удвоенный делитель больше делимого",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                },
+                {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              ]
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              },
+              {
+                "alias": "β",
+                "type": {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 13,
+        "alias": "F6",
+        "cstType": "function",
+        "definitionFormal": "[α∈Z, β∈Z] pr1(F5[α, β])",
+        "term": "остаток",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 2,
+              "isOrdered": true,
+              "isArithmetic": true,
+              "isIntegerCompatible": true
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              },
+              {
+                "alias": "β",
+                "type": {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 14,
+        "alias": "F7",
+        "cstType": "function",
+        "definitionFormal": "[α∈Z, β∈Z] pr2(F5[α, β])",
+        "term": "целая часть",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 2,
+              "isOrdered": true,
+              "isArithmetic": true,
+              "isIntegerCompatible": true
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              },
+              {
+                "alias": "β",
+                "type": {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 15,
+        "alias": "D5",
+        "cstType": "term",
+        "definitionFormal": "{(0, D3-1), (1, D4-1), (2, D1-D3), (3, D2-D4)}",
+        "term": "шоколадка как кучки Ним",
+        "definitionText": "Четыре кучки камней после разреза по отравленной дольке: слева, сверху, справа и снизу",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                },
+                {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 16,
+        "alias": "D6",
+        "cstType": "term",
+        "definitionFormal": "card(D5)",
+        "term": "количество кучек",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 2,
+            "isOrdered": true,
+            "isArithmetic": true,
+            "isIntegerCompatible": true
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 17,
+        "alias": "D7",
+        "cstType": "term",
+        "definitionFormal": "Pr1(D5)",
+        "term": "номера кучек",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 2,
+              "isOrdered": true,
+              "isArithmetic": true,
+              "isIntegerCompatible": true
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 18,
+        "alias": "D8",
+        "cstType": "term",
+        "definitionFormal": "Pr2(D5)",
+        "term": "размеры кучек",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 2,
+              "isOrdered": true,
+              "isArithmetic": true,
+              "isIntegerCompatible": true
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 19,
+        "alias": "A2",
+        "cstType": "axiom",
+        "definitionFormal": "card(D5)=card(D7)",
+        "term": "однозначность количества камней в кучках",
+        "definitionText": "У каждой кучки ровно один номер",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 20,
+        "alias": "A3",
+        "cstType": "axiom",
+        "definitionFormal": "∀α∈D5 (pr1(α)<D6 & pr1(α)≥0)",
+        "term": "последовательная нумерация кучек",
+        "definitionText": "Номера кучек — целые от нуля до количества кучек минус один",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 21,
+        "alias": "F8",
+        "cstType": "function",
+        "definitionFormal": "[α∈Z] F1[α,D5]",
+        "term": "количество камней в данной кучке",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 2,
+              "baseID": "R1F1",
+              "isOrdered": true,
+              "isArithmetic": true,
+              "isIntegerCompatible": true
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 22,
+        "alias": "D9",
+        "cstType": "term",
+        "definitionFormal": "Pr1(Fi2[{0}](D5))",
+        "term": "пустые кучки",
+        "definitionText": "Номера кучек с нулевым размером",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 2,
+              "isOrdered": true,
+              "isArithmetic": true,
+              "isIntegerCompatible": true
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 23,
+        "alias": "D10",
+        "cstType": "term",
+        "definitionFormal": "D7\\D9",
+        "term": "непустые кучки",
+        "definitionText": "Номера кучек с положительным размером",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 2,
+              "isOrdered": true,
+              "isArithmetic": true,
+              "isIntegerCompatible": true
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 24,
+        "alias": "T1",
+        "cstType": "statement",
+        "definitionFormal": "D8={0}",
+        "term": "игра закончена",
+        "definitionText": "Во всех кучках не осталось камней",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 25,
+        "alias": "T2",
+        "cstType": "statement",
+        "definitionFormal": "card(D10)=1",
+        "term": "существует выигрышный ход",
+        "definitionText": "Осталась ровно одна непустая кучка",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 26,
+        "alias": "F10",
+        "cstType": "function",
+        "definitionFormal": "[σ∈D7×Z] debool(I{ pr2(σ)*D2 | P1[pr1(σ)]} ∪ I{ pr2(σ)*D1 | ¬P1[pr1(σ)]})",
+        "term": "оценка хода Ним",
+        "definitionText": "Стоимость хода в дольках шоколадки: для чётного номера кучки — размер, умноженный на длину, иначе — на ширину",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 2,
+              "isOrdered": true,
+              "isArithmetic": true,
+              "isIntegerCompatible": true
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 4,
+                  "factors": [
+                    {
+                      "typeID": 2,
+                      "isOrdered": true,
+                      "isArithmetic": true,
+                      "isIntegerCompatible": true
+                    },
+                    {
+                      "typeID": 2,
+                      "isOrdered": true,
+                      "isArithmetic": true,
+                      "isIntegerCompatible": true
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      }
+    ],
+    "model": {
+      "items": []
+    }
+  },
+  "diagnostics": []
+}

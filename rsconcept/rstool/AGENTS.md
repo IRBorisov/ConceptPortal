@@ -34,7 +34,7 @@ From `rsconcept/rstool` (`@rsconcept/domain` from npm unless `npm link` to `rsco
 - Build: `npm run build`
 - Stdio (dev): `npm run wrapper`
 - Stdio (built): `npx rstool-wrapper`
-- Examples: `npm run example:client`, `example:build-schema`, `example:build-rsmodel` (+ kinship scripts in `package.json`)
+- Examples: `npm run example:client`, `example:build-schema`, `example:build-rsmodel` (+ kinship, chocolate-nim, movd — см. `package.json` и `examples/README.md`)
 
 ## Edit rules
 

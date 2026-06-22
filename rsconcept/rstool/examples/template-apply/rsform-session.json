@@ -1,0 +1,333 @@
+{
+  "contractVersion": "1.4.0",
+  "state": {
+    "sessionId": "04678669-0343-4a1c-8238-3f0de2fc12f7",
+    "alias": "",
+    "title": "",
+    "comment": "",
+    "createdAt": "2026-06-22T11:29:09.607Z",
+    "updatedAt": "2026-06-22T11:29:09.628Z",
+    "revisions": [
+      {
+        "revisionId": "b577a24d-20ff-4056-992e-7662cb2e56cf",
+        "at": "2026-06-22T11:29:09.628Z",
+        "message": "Применение шаблонов БВ: сотрудники, проекты, F6/F9/F20/P5"
+      }
+    ],
+    "items": [
+      {
+        "id": 1,
+        "alias": "T1",
+        "cstType": "statement",
+        "definitionFormal": "1=1",
+        "term": "Применение шаблонов банка выражений",
+        "convention": "Подстановка радикалов БВ: R1→X1, R2→X2. Отношение σ→S1 или S2. Примеры: БВ F6→F_IMAGE, БВ F20→F_SOURCES, БВ P5→P_FUNCTION",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 2,
+        "alias": "X1",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "сотрудники",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 3,
+        "alias": "X2",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "проекты",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 4,
+        "alias": "S1",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X1×X2)",
+        "term": "назначение на проект",
+        "convention": "σ в шаблонах БВ для бинарных отношений двух множеств",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
+        "alias": "S2",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X1×X1)",
+        "term": "подчинённость",
+        "convention": "σ в шаблонах БВ для бинарных отношений на одном множестве",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 6,
+        "alias": "F_IMAGE",
+        "cstType": "function",
+        "definitionFormal": "[α∈X1, σ∈ℬ(X1×X2)] Pr2(Fi1[{α}](σ))",
+        "term": "проекты сотрудника",
+        "convention": "БВ F6: R1→X1, R2→X2",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X2"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "X1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "X2"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 7,
+        "alias": "F_SOURCES",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(X1×X1)] Pr1(σ) \\ Pr2(σ)",
+        "term": "вершины без предшественников",
+        "convention": "БВ F20 (истоки графа подчинённости)",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "X1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "X1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 8,
+        "alias": "P_FUNCTION",
+        "cstType": "predicate",
+        "definitionFormal": "[α∈ℬ(X1), σ∈ℬ(X1×X2)] card(Pr1(σ)) = card(σ) & Pr1(σ) = α",
+        "term": "тотальная функция X1→X2",
+        "convention": "БВ P5",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "X1"
+                  }
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "X1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "X2"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 9,
+        "alias": "D1",
+        "cstType": "term",
+        "definitionFormal": "Pr2(Fi1[X1](S1))",
+        "term": "все назначенные проекты",
+        "convention": "БВ F9: образ множества X1 по S1",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 10,
+        "alias": "D2",
+        "cstType": "term",
+        "definitionFormal": "Pr1(S2) \\ Pr2(S2)",
+        "term": "глава иерархии",
+        "convention": "БВ F20: применение к S2 (развёрнуто в D2, т.к. вызов F# в терме не анализируется)",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      }
+    ],
+    "model": {
+      "items": []
+    }
+  },
+  "diagnostics": []
+}

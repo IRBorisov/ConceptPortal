@@ -1,18 +1,21 @@
 {
-  "contractVersion": "1.3.0",
+  "contractVersion": "1.4.0",
   "state": {
-    "sessionId": "44c92f6d-b409-4c19-86b0-6d93f6e7e616",
-    "createdAt": "2026-05-29T09:15:19.322Z",
-    "updatedAt": "2026-05-29T09:15:22.196Z",
+    "sessionId": "fe79bda6-827d-4f0c-9a6d-7f0469f300de",
+    "alias": "",
+    "title": "",
+    "comment": "",
+    "createdAt": "2026-06-22T10:16:00.268Z",
+    "updatedAt": "2026-06-22T10:16:01.883Z",
     "revisions": [
       {
-        "revisionId": "3090701f-00b6-4e15-948b-3062139a30ab",
-        "at": "2026-05-29T09:15:19.400Z",
-        "message": "КС «родственные отношения»: пол (S2/S3), отцы/матери, разновидности сиблингов, внуки, дедушки/бабушки, двоюродные"
+        "revisionId": "23e7d0ed-6d48-4f08-9aaf-f27c24b7715c",
+        "at": "2026-06-22T10:16:00.318Z",
+        "message": "КС «родственные отношения»: браки, пол, сиблинги; ∆ ⊆ ⊂ ⊄ ∨ ⇒ ⇔ bool red Pr1,2 Fi1,2 pr1,2, упакованные кванторы"
       },
       {
-        "revisionId": "a4dd1506-616f-4546-8e44-421c32bcbb62",
-        "at": "2026-05-29T09:15:22.196Z",
+        "revisionId": "4a1c87ed-480f-4976-bbfe-9f27d04f5f5a",
+        "at": "2026-06-22T10:16:01.883Z",
         "message": "Модель kinship: D3 непуст; A1 card(X1)≤10 выполняется"
       }
     ],
@@ -44,7 +47,7 @@
         "cstType": "structure",
         "definitionFormal": "ℬ(X1×X1)",
         "term": "родитель-ребенок",
-        "convention": "Элементы — пары (p, c): p — родитель, c — ребёнок; p, c ∈ X1. Отношение задаётся конвенцией на предметной области.",
+        "convention": "Множество пар: родитель и его ребёнок. Порядок в паре задаётся конвенцией на предметной области.",
         "definitionText": "",
         "analysis": {
           "success": true,
@@ -95,7 +98,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] Pr1(Fi2[{ξ}](S1))",
         "term": "родители данного человека",
-        "definitionText": "Для человека ξ — множество его родителей (первая проекция пар из S1, у которых вторая проекция равна ξ).",
+        "definitionText": "",
         "convention": "",
         "analysis": {
           "success": true,
@@ -128,7 +131,7 @@
         "cstType": "function",
         "definitionFormal": "[σ∈ℬ(X1)] Pr2(Fi1[σ](S1))",
         "term": "дети",
-        "definitionText": "Прямые дети людей из σ: вторая проекция пар из S1, у которых родитель (первая проекция) лежит в σ. Для одного человека ξ используют F6[{ξ}].",
+        "definitionText": "Совокупность детей людей, одним из родителей которых является человек из данной группы людей",
         "convention": "",
         "analysis": {
           "success": true,
@@ -164,7 +167,7 @@
         "cstType": "term",
         "definitionFormal": "Pr2(S1)",
         "term": "потомки",
-        "definitionText": "Множество людей, выступающих ребёнком хотя бы в одной паре из S1 (симметрично терму «родители»).",
+        "definitionText": "Люди, являющиеся ребёнком хотя бы в одном отношении родитель — ребёнок",
         "convention": "",
         "analysis": {
           "success": true,
@@ -185,7 +188,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] R{ρ:=F6[{ξ}] | ρ≠∅ | ρ∪F6[ρ]}",
         "term": "потомки данного человека",
-        "definitionText": "Для человека ξ — транзитивное замыкание отношения «ребёнок»: прямые дети, внуки и все последующие поколения.",
+        "definitionText": "Дети людей данного человека или дети людей его потомков",
         "convention": "",
         "analysis": {
           "success": true,
@@ -216,9 +219,9 @@
         "id": 7,
         "alias": "F3",
         "cstType": "function",
-        "definitionFormal": "[ξ∈X1] D{μ∈X1 | ∃p∈F1[ξ] μ∈F1[p] & μ≠ξ}",
+        "definitionFormal": "[ξ∈X1] Pr2(Fi1[F1[ξ]](S1))\\{ξ}",
         "term": "братья и сестры данного человека",
-        "definitionText": "Люди μ ≠ ξ, у которых есть общий с ξ родитель (в т.ч. сводные братья и сестры при одном общем родителе).",
+        "definitionText": "Дети людей родителей данного человека за исключением его самого",
         "convention": "",
         "analysis": {
           "success": true,
@@ -251,7 +254,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] D{κ∈X1 | ∃μ∈F3[ξ] κ∈F6[{μ}] & κ∉F2[ξ]}",
         "term": "племянники данного человека",
-        "definitionText": "Прямые дети братьев и сестёр ξ, не входящие в множество потомков самого ξ.",
+        "definitionText": "Прямые дети братьев и сестёр данного человека, не являющиеся его потомками",
         "convention": "",
         "analysis": {
           "success": true,
@@ -284,7 +287,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] D{ν∈X1 | ∃κ∈F4[ξ] ν∈F6[{κ}]}",
         "term": "внучатые племянники данного человека",
-        "definitionText": "Прямые дети племянников ξ: потомки братьев/сестёр на два поколения ниже (ребёнок племянника или племянницы).",
+        "definitionText": "Прямые дети племянников и племянниц данного человека",
         "convention": "",
         "analysis": {
           "success": true,
@@ -315,9 +318,9 @@
         "id": 11,
         "alias": "D3",
         "cstType": "term",
-        "definitionFormal": "D{ν∈X1 | ∃ξ∈X1 ν∈F5[ξ]}",
+        "definitionFormal": "I{ν | ξ:∈X1; ν:∈F5[ξ]}",
         "term": "внучатые племянники",
-        "definitionText": "Множество людей, являющихся внучатыми племянниками или племянницами хотя бы одного человека из X1 (объединение значений F5 по всем ξ).",
+        "definitionText": "Люди, являющиеся внучатыми племянниками или племянницами хотя бы одного человека",
         "convention": "",
         "analysis": {
           "success": true,
@@ -338,7 +341,7 @@
         "cstType": "structure",
         "definitionFormal": "ℬ(X1)",
         "term": "мужчины",
-        "convention": "Пол устанавливается по документам; каждый индивид из X1 входит ровно в одно из множеств S2 или S3.",
+        "convention": "Пол человека устанавливается в соответствии с документами",
         "definitionText": "",
         "analysis": {
           "success": true,
@@ -359,7 +362,7 @@
         "cstType": "structure",
         "definitionFormal": "ℬ(X1)",
         "term": "женщины",
-        "convention": "Пол устанавливается по документам; каждый индивид из X1 входит ровно в одно из множеств S2 или S3.",
+        "convention": "Пол человека устанавливается в соответствии с документами",
         "definitionText": "",
         "analysis": {
           "success": true,
@@ -380,7 +383,416 @@
         "cstType": "axiom",
         "definitionFormal": "S2∪S3=X1 & S2∩S3=∅",
         "term": "разбиение людей по полу",
-        "definitionText": "Каждый человек — мужчина или женщина, но не оба сразу: S2 и S3 образуют разбиение X1.",
+        "definitionText": "Каждый человек является либо мужчиной, либо женщиной",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 41,
+        "alias": "S4",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(S2×S3)",
+        "term": "браки",
+        "convention": "Действующие браки",
+        "definitionText": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 42,
+        "alias": "D4",
+        "cstType": "term",
+        "definitionFormal": "Pr1(S4)",
+        "term": "мужья",
+        "definitionText": "Мужчины, состоящие в браке",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 43,
+        "alias": "D5",
+        "cstType": "term",
+        "definitionFormal": "Pr2(S4)",
+        "term": "жены",
+        "definitionText": "Женщины, состоящие в браке",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 44,
+        "alias": "D6",
+        "cstType": "term",
+        "definitionFormal": "Pr1(S4)∪Pr2(S4)",
+        "term": "супруги",
+        "definitionText": "Люди, состоящие в браке",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 45,
+        "alias": "F31",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(X1)] Pr1(Fi2[σ](S4))",
+        "term": "мужья группы людей",
+        "definitionText": "Мужья людей из данной группы людей",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "X1"
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 46,
+        "alias": "F32",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(X1)] Pr2(Fi1[σ](S4))",
+        "term": "жены группы людей",
+        "definitionText": "Жёны людей из данной группы людей",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "X1"
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 47,
+        "alias": "F33",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(X1)] F31[σ]∪F32[σ]",
+        "term": "супруги группы людей",
+        "definitionText": "Супруги людей из данной группы людей",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "X1"
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 48,
+        "alias": "F34",
+        "cstType": "function",
+        "definitionFormal": "[α∈D5] debool(F31[{α}])",
+        "term": "муж жены",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 3,
+              "baseID": "X1"
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 49,
+        "alias": "F35",
+        "cstType": "function",
+        "definitionFormal": "[α∈D4] debool(F32[{α}])",
+        "term": "жена мужа",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 3,
+              "baseID": "X1"
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 50,
+        "alias": "A4",
+        "cstType": "axiom",
+        "definitionFormal": "card(S4)=card(D4) & card(S4)=card(D5)",
+        "term": "единственность браков",
+        "definitionText": "Каждый человек может состоять только в одном браке",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 51,
+        "alias": "D7",
+        "cstType": "term",
+        "definitionFormal": "D{ξ∈X1 | card(F33[{ξ}]\\{ξ})>1}",
+        "term": "люди в нескольких браках",
+        "definitionText": "Люди, у которых больше одного супруга",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 55,
+        "alias": "D10",
+        "cstType": "term",
+        "definitionFormal": "D{ξ∈D2 | F33[F1[ξ]]=F1[ξ]}",
+        "term": "законные дети",
+        "definitionText": "Дети людей, родители которых состоят в браке",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 56,
+        "alias": "D11",
+        "cstType": "term",
+        "definitionFormal": "D2\\D10",
+        "term": "бастарды",
+        "definitionText": "Дети людей, родители которых не состоят в браке",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 54,
+        "alias": "D9",
+        "cstType": "term",
+        "definitionFormal": "I{(σ, γ) | σ:∈D4; γ:=F35[σ]}",
+        "term": "пары муж — жена",
+        "definitionText": "Множество пар, состоящих из мужа и его жены",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 53,
+        "alias": "D8",
+        "cstType": "term",
+        "definitionFormal": "X1\\D2",
+        "term": "бездетные люди",
+        "definitionText": "Люди, не являющиеся детьми людей",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 52,
+        "alias": "A5",
+        "cstType": "axiom",
+        "definitionFormal": "∀ξ∈X1 ξ∉F2[ξ]",
+        "term": "ацикличность родства",
+        "definitionText": "Человек не может быть своим потомком",
         "convention": "",
         "analysis": {
           "success": true,
@@ -397,7 +809,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F1[ξ]∩S2",
         "term": "отцы данного человека",
-        "definitionText": "Родители ξ, являющиеся мужчинами.",
+        "definitionText": "",
         "convention": "",
         "analysis": {
           "success": true,
@@ -430,7 +842,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F1[ξ]∩S3",
         "term": "матери данного человека",
-        "definitionText": "Родители ξ, являющиеся женщинами.",
+        "definitionText": "",
         "convention": "",
         "analysis": {
           "success": true,
@@ -463,7 +875,7 @@
         "cstType": "axiom",
         "definitionFormal": "∀ξ∈X1 (card(F7[ξ])≤1 & card(F8[ξ])≤1)",
         "term": "не более одного отца и одной матери",
-        "definitionText": "У каждого человека не более одного отца и не более одной матери.",
+        "definitionText": "У ребёнка людей может быть максимум один отец и одна мать",
         "convention": "",
         "analysis": {
           "success": true,
@@ -480,7 +892,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F3[ξ]∩S2",
         "term": "братья данного человека",
-        "definitionText": "Братья и сёстры ξ (F3), являющиеся мужчинами.",
+        "definitionText": "Братья и сёстры данного человека, являющиеся мужчинами",
         "convention": "",
         "analysis": {
           "success": true,
@@ -513,7 +925,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F3[ξ]∩S3",
         "term": "сёстры данного человека",
-        "definitionText": "Братья и сёстры ξ (F3), являющиеся женщинами.",
+        "definitionText": "Братья и сёстры данного человека, являющиеся женщинами",
         "convention": "",
         "analysis": {
           "success": true,
@@ -546,7 +958,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] D{μ∈F3[ξ] | F1[ξ]=F1[μ]}",
         "term": "полнородные братья и сёстры",
-        "definitionText": "Сиблинги с полностью совпадающими множествами родителей.",
+        "definitionText": "Сиблинги данного человека, родители которых полностью совпадают с его родителями",
         "convention": "",
         "analysis": {
           "success": true,
@@ -579,7 +991,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F11[ξ]∩S2",
         "term": "полнородные братья",
-        "definitionText": "Полнородные сиблинги ξ, являющиеся мужчинами.",
+        "definitionText": "Полнородные сиблинги данного человека, являющиеся мужчинами",
         "convention": "",
         "analysis": {
           "success": true,
@@ -612,7 +1024,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F11[ξ]∩S3",
         "term": "полнородные сёстры",
-        "definitionText": "Полнородные сиблинги ξ, являющиеся женщинами.",
+        "definitionText": "Полнородные сиблинги данного человека, являющиеся женщинами",
         "convention": "",
         "analysis": {
           "success": true,
@@ -645,7 +1057,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] D{μ∈F3[ξ] | F7[ξ]=F7[μ] & F8[ξ]≠F8[μ]}",
         "term": "единокровные братья и сёстры",
-        "definitionText": "Сиблинги с общим отцом и разными матерями.",
+        "definitionText": "Сиблинги, у которых общий отец, но разные матери",
         "convention": "",
         "analysis": {
           "success": true,
@@ -678,7 +1090,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F14[ξ]∩S2",
         "term": "единокровные братья",
-        "definitionText": "Единокровные сиблинги ξ, являющиеся мужчинами.",
+        "definitionText": "Единокровные сиблинги данного человека, являющиеся мужчинами",
         "convention": "",
         "analysis": {
           "success": true,
@@ -711,7 +1123,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F14[ξ]∩S3",
         "term": "единокровные сёстры",
-        "definitionText": "Единокровные сиблинги ξ, являющиеся женщинами.",
+        "definitionText": "Единокровные сиблинги данного человека, являющиеся женщинами",
         "convention": "",
         "analysis": {
           "success": true,
@@ -744,7 +1156,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] D{μ∈F3[ξ] | F7[ξ]≠F7[μ] & F8[ξ]=F8[μ]}",
         "term": "единоутробные братья и сёстры",
-        "definitionText": "Сиблинги с общей матерью и разными отцами.",
+        "definitionText": "Сиблинги, у которых общая мать, но разные отцы",
         "convention": "",
         "analysis": {
           "success": true,
@@ -777,7 +1189,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F17[ξ]∩S2",
         "term": "единоутробные братья",
-        "definitionText": "Единоутробные сиблинги ξ, являющиеся мужчинами.",
+        "definitionText": "Единоутробные сиблинги данного человека, являющиеся мужчинами",
         "convention": "",
         "analysis": {
           "success": true,
@@ -810,7 +1222,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F17[ξ]∩S3",
         "term": "единоутробные сёстры",
-        "definitionText": "Единоутробные сиблинги ξ, являющиеся женщинами.",
+        "definitionText": "Единоутробные сиблинги данного человека, являющиеся женщинами",
         "convention": "",
         "analysis": {
           "success": true,
@@ -843,7 +1255,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F6[{ξ}]∩S2",
         "term": "сыновья данного человека",
-        "definitionText": "Прямые дети ξ, являющиеся мужчинами.",
+        "definitionText": "Дети людей данного человека, являющиеся мужчинами",
         "convention": "",
         "analysis": {
           "success": true,
@@ -876,7 +1288,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F6[{ξ}]∩S3",
         "term": "дочери данного человека",
-        "definitionText": "Прямые дети ξ, являющиеся женщинами.",
+        "definitionText": "Дети людей данного человека, являющиеся женщинами",
         "convention": "",
         "analysis": {
           "success": true,
@@ -909,7 +1321,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F6[F6[{ξ}]]∩S2",
         "term": "внуки данного человека",
-        "definitionText": "Внуки-мужчины: мужчины среди детей детей ξ.",
+        "definitionText": "Сыновья детей данного человека",
         "convention": "",
         "analysis": {
           "success": true,
@@ -940,9 +1352,9 @@
         "id": 33,
         "alias": "F23",
         "cstType": "function",
-        "definitionFormal": "[ξ∈X1] F6[F6[{ξ}]]∩S3",
+        "definitionFormal": "[ξ∈X1] F6[F6[bool(ξ)]]∩S3",
         "term": "внучки данного человека",
-        "definitionText": "Внучки: женщины среди детей детей ξ.",
+        "definitionText": "Дочери детей данного человека",
         "convention": "",
         "analysis": {
           "success": true,
@@ -975,7 +1387,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] D{μ∈X1 | ∃p∈F1[ξ] μ∈F7[p]}",
         "term": "дедушки данного человека",
-        "definitionText": "Отцы родителей ξ.",
+        "definitionText": "Отцы родителей данного человека",
         "convention": "",
         "analysis": {
           "success": true,
@@ -1008,7 +1420,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] D{μ∈X1 | ∃p∈F1[ξ] μ∈F8[p]}",
         "term": "бабушки данного человека",
-        "definitionText": "Матери родителей ξ.",
+        "definitionText": "Матери родителей данного человека",
         "convention": "",
         "analysis": {
           "success": true,
@@ -1041,7 +1453,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F4[ξ]∩S2",
         "term": "племянники данного человека (мужчины)",
-        "definitionText": "Племянники ξ (F4), являющиеся мужчинами.",
+        "definitionText": "Племянники данного человека, являющиеся мужчинами",
         "convention": "",
         "analysis": {
           "success": true,
@@ -1074,7 +1486,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F4[ξ]∩S3",
         "term": "племянницы данного человека",
-        "definitionText": "Племянники ξ (F4), являющиеся женщинами.",
+        "definitionText": "Племянницы данного человека",
         "convention": "",
         "analysis": {
           "success": true,
@@ -1107,7 +1519,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] D{ν∈X1 | ∃p∈F1[ξ] ∃κ∈F3[p] ν∈F6[{κ}]}",
         "term": "двоюродные братья и сёстры",
-        "definitionText": "Дети братьев и сестёр родителей ξ.",
+        "definitionText": "Дети людей сиблингов родителей данного человека",
         "convention": "",
         "analysis": {
           "success": true,
@@ -1140,7 +1552,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F28[ξ]∩S2",
         "term": "двоюродные братья",
-        "definitionText": "Двоюродные сиблинги ξ, являющиеся мужчинами.",
+        "definitionText": "Двоюродные сиблинги данного человека, являющиеся мужчинами",
         "convention": "",
         "analysis": {
           "success": true,
@@ -1173,7 +1585,7 @@
         "cstType": "function",
         "definitionFormal": "[ξ∈X1] F28[ξ]∩S3",
         "term": "двоюродные сёстры",
-        "definitionText": "Двоюродные сиблинги ξ, являющиеся женщинами.",
+        "definitionText": "Двоюродные сиблинги данного человека, являющиеся женщинами",
         "convention": "",
         "analysis": {
           "success": true,
@@ -1201,12 +1613,164 @@
         }
       },
       {
+        "id": 57,
+        "alias": "D12",
+        "cstType": "term",
+        "definitionFormal": "S2∆S3",
+        "term": "люди",
+        "definitionText": "Совокупность мужчин и женщин как симметрическая разность разбиения по полу",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 58,
+        "alias": "F36",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] red({F7[ξ], F8[ξ]})",
+        "term": "родители данного человека (через red)",
+        "definitionText": "Объединение множеств отца и матери данного человека",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 59,
+        "alias": "D13",
+        "cstType": "term",
+        "definitionFormal": "Pr2,1(S1)",
+        "term": "пары ребёнок — родитель",
+        "definitionText": "Все отношения ребёнок — родитель как пары людей",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 64,
+        "alias": "A6",
+        "cstType": "axiom",
+        "definitionFormal": "(S2⊆X1 & S3⊆X1 & S2∩S3=∅) ⇔ S2∪S3=X1",
+        "term": "эквивалентность разбиения по полу",
+        "definitionText": "Мужчины и женщины образуют разбиение множества людей",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 65,
+        "alias": "A7",
+        "cstType": "axiom",
+        "definitionFormal": "∀ξ∈X1 (ξ∈S2 ∨ ξ∈S3)",
+        "term": "каждый человек — мужчина или женщина",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 67,
+        "alias": "T1",
+        "cstType": "statement",
+        "definitionFormal": "∀(μ,ν)∈S1 μ∉F2[ν]",
+        "term": "родитель не потомок ребёнка",
+        "definitionText": "В каждой паре родитель — ребёнок родитель не является потомком ребёнка",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 69,
+        "alias": "T2",
+        "cstType": "statement",
+        "definitionFormal": "S2⊄S3",
+        "term": "не все мужчины — женщины",
+        "definitionText": "Множество мужчин не содержится в множестве женщин",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
         "id": 12,
         "alias": "A1",
         "cstType": "axiom",
         "definitionFormal": "card(X1)≤10",
         "term": "не более десяти человек",
-        "definitionText": "В предметной области не более десяти человек: мощность X1 не превышает 10.",
+        "definitionText": "В предметной области не более десяти человек",
         "convention": "",
         "analysis": {
           "success": true,
@@ -1237,24 +1801,72 @@
           "id": 2,
           "type": "ℬ(X1×X1)",
           "value": [
-            [-111, 0, 2],
-            [-111, 1, 2],
-            [-111, 0, 3],
-            [-111, 1, 3],
-            [-111, 2, 4],
-            [-111, 3, 5],
-            [-111, 5, 6]
+            [
+              -111,
+              0,
+              2
+            ],
+            [
+              -111,
+              1,
+              2
+            ],
+            [
+              -111,
+              0,
+              3
+            ],
+            [
+              -111,
+              1,
+              3
+            ],
+            [
+              -111,
+              2,
+              4
+            ],
+            [
+              -111,
+              3,
+              5
+            ],
+            [
+              -111,
+              5,
+              6
+            ]
           ]
         },
         {
           "id": 13,
           "type": "ℬ(X1)",
-          "value": [0, 2, 4, 6]
+          "value": [
+            0,
+            2,
+            4,
+            6
+          ]
         },
         {
           "id": 14,
           "type": "ℬ(X1)",
-          "value": [1, 3, 5]
+          "value": [
+            1,
+            3,
+            5
+          ]
+        },
+        {
+          "id": 41,
+          "type": "ℬ(X1×X1)",
+          "value": [
+            [
+              -111,
+              0,
+              1
+            ]
+          ]
         }
       ]
     }
