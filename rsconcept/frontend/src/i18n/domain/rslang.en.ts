@@ -202,6 +202,7 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.calcGlobalMissing': 'No value: {name}',
   'tx.rslang.error.iterationsLimit': 'Iteration limit exceeded: {limit}',
   'tx.rslang.error.calcInvalidDebool': 'Invalid debool application',
+  'tx.rslang.error.calcInvalidData': 'Invalid data operation: incompatible values {a} and {b}',
   'tx.rslang.error.iterateInfinity': 'Iteration over infinity',
 
   'tx.rslang.identifiers': 'Identifiers',

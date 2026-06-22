@@ -45,8 +45,7 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
         },
         {
           onInvalidSetValue: () => toast.error(tx('tx.rslang.value.edit.fail')),
-          onCalculationSuccess: timeSpent => toast.success(tx('tx.rslang.eval.success', { timeSpent })),
-          onEvaluationError: message => toast.error(message)
+          onCalculationSuccess: timeSpent => toast.success(tx('tx.rslang.eval.success', { timeSpent }))
         }
       )
   );
@@ -56,8 +55,7 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
       engine.updateServices({ setCstValue, clearValues });
       engine.updateNotifications({
         onInvalidSetValue: () => toast.error(tx('tx.rslang.value.edit.fail')),
-        onCalculationSuccess: timeSpent => toast.success(tx('tx.rslang.eval.success', { timeSpent })),
-        onEvaluationError: message => toast.error(message)
+        onCalculationSuccess: timeSpent => toast.success(tx('tx.rslang.eval.success', { timeSpent }))
       });
     },
     [engine, setCstValue, clearValues, tx]

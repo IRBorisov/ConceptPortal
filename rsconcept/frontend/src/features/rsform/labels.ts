@@ -63,6 +63,7 @@ const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
   [RSErrorCode.calcGlobalMissing]: 'tx.rslang.error.calcGlobalMissing',
   [RSErrorCode.iterationsLimit]: 'tx.rslang.error.iterationsLimit',
   [RSErrorCode.calcInvalidDebool]: 'tx.rslang.error.calcInvalidDebool',
+  [RSErrorCode.calcInvalidData]: 'tx.rslang.error.calcInvalidData',
   [RSErrorCode.iterateInfinity]: 'tx.rslang.error.iterateInfinity'
 };
 
@@ -392,6 +393,7 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
     case RSErrorCode.invalidEnumeration:
     case RSErrorCode.invalidArgsArity:
     case RSErrorCode.typesNotCompatible:
+    case RSErrorCode.calcInvalidData:
       return globalTx(id, { a: params[0] ?? '', b: params[1] ?? '' });
     case RSErrorCode.invalidDecart:
     case RSErrorCode.invalidBoolean:

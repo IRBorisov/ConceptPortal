@@ -52,8 +52,8 @@
     "@rsconcept/rstool": "^0.7.1"
   },
   "devDependencies": {
-    "@types/node": "^25.9.3",
-    "tsdown": "^0.22.2",
+    "@types/node": "^25.9.4",
+    "tsdown": "^0.22.3",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
     "vitest": "^4.1.9"

@@ -69,8 +69,7 @@ export function SandboxState({ children }: React.PropsWithChildren) {
   const [engine] = useState(function createEngine() {
     return new RSEngine(model.id, services, {
       onInvalidSetValue: () => toast.error(tx('tx.rslang.value.edit.fail')),
-      onCalculationSuccess: timeSpent => toast.success(tx('tx.rslang.eval.success', { timeSpent })),
-      onEvaluationError: message => toast.error(message)
+      onCalculationSuccess: timeSpent => toast.success(tx('tx.rslang.eval.success', { timeSpent }))
     });
   });
 
@@ -82,8 +81,7 @@ export function SandboxState({ children }: React.PropsWithChildren) {
       engine.updateServices(services);
       engine.updateNotifications({
         onInvalidSetValue: () => toast.error(tx('tx.rslang.value.edit.fail')),
-        onCalculationSuccess: timeSpent => toast.success(tx('tx.rslang.eval.success', { timeSpent })),
-        onEvaluationError: message => toast.error(message)
+        onCalculationSuccess: timeSpent => toast.success(tx('tx.rslang.eval.success', { timeSpent }))
       });
     },
     [model.id, engine, services, tx]

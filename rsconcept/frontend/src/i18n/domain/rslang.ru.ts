@@ -206,6 +206,7 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.calcGlobalMissing': 'Нет значения: {name}',
   'tx.rslang.error.iterationsLimit': 'Превышен лимит итераций {limit}',
   'tx.rslang.error.calcInvalidDebool': 'Некорректное взятие debool',
+  'tx.rslang.error.calcInvalidData': 'Некорректная операция с данными: несовместимые значения {a} и {b}',
   'tx.rslang.error.iterateInfinity': 'Итерация по бесконечности',
 
   'tx.rslang.identifiers': 'Идентификаторы',
