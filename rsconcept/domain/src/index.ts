@@ -72,7 +72,7 @@ export { type CMSyntaxNode, printTree } from './parsing/lezer-tree';
 export { readErrorAnnotation, readTypeAnnotation } from './rslang/ast-annotations';
 export { RSErrorCode, type RSErrorDescription } from './rslang/error';
 export { type CalculatorEvaluateOptions, type CalculatorResult, RSCalculator } from './rslang/eval/calculator';
-export { makeValuePath, type Value, type ValuePath } from './rslang/eval/value';
+export { makeValuePath, TUPLE_ID, type Value, type ValuePath } from './rslang/eval/value';
 export { printValue } from './rslang/eval/value-api';
 export { parser as rslangParser } from './rslang/parser/parser';
 export { TokenID } from './rslang/parser/token';
