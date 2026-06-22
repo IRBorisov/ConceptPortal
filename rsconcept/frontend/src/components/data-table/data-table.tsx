@@ -1,7 +1,7 @@
 'use client';
 'use no memo';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   type ColumnSort,
   createColumnHelper,
@@ -129,6 +129,7 @@ export function DataTable<TData extends RowData>({
 }: DataTableProps<TData>) {
   const table = useDataTable({ paginationPerPage, ...restProps });
   const [lastSelected, setLastSelected] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const isEmpty = table.getRowModel().rows.length === 0;
   const fixedHeight = useMemo(() => {
@@ -157,6 +158,7 @@ export function DataTable<TData extends RowData>({
 
   return (
     <div
+      ref={containerRef}
       tabIndex={-1}
       id={id}
       className={cn('table-auto', className)}
@@ -183,6 +185,7 @@ export function DataTable<TData extends RowData>({
           onRowDoubleClicked={onRowDoubleClicked}
           enableRowReordering={enableRowReordering}
           onRowsReordered={onRowsReordered}
+          scrollContainerRef={containerRef}
         />
 
         {!noFooter ? <TableFooter table={table} /> : null}
