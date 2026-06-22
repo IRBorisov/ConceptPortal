@@ -17,16 +17,16 @@
 
 ## Repository Layout
 
-| Path                   | Purpose                                                                 |
-| ---------------------- | ----------------------------------------------------------------------- |
-| `rsconcept/frontend`   | Portal UI. Installs `@rsconcept/domain` from npm.                       |
-| `rsconcept/backend`    | Django API. Python dependencies are managed by `uv`.                    |
-| `rsconcept/domain`     | Shared TypeScript domain package.                                       |
-| `rsconcept/rstool`     | Agent-facing library and stdio wrapper.                                 |
-| `rsconcept/rstool-mcp` | MCP adapter over `rstool`.                                              |
-| `scripts/dev`          | Local setup, sample data, and development helpers.                      |
-| `scripts/prod`         | Production update helpers.                                              |
-| `nginx`                | Local and production reverse proxy configuration.                       |
+| Path                   | Purpose                                              |
+| ---------------------- | ---------------------------------------------------- |
+| `rsconcept/frontend`   | Portal UI. Installs `@rsconcept/domain` from npm.    |
+| `rsconcept/backend`    | Django API. Python dependencies are managed by `uv`. |
+| `rsconcept/domain`     | Shared TypeScript domain package.                    |
+| `rsconcept/rstool`     | Agent-facing library and stdio wrapper.              |
+| `rsconcept/rstool-mcp` | MCP adapter over `rstool`.                           |
+| `scripts/dev`          | Local setup, sample data, and development helpers.   |
+| `scripts/prod`         | Production update helpers.                           |
+| `nginx`                | Local and production reverse proxy configuration.    |
 
 The npm packages in `domain`, `rstool`, and `rstool-mcp` are independently installable and have their own `package.json` and lockfile.
 
@@ -85,10 +85,10 @@ Then publish a new `@rsconcept/domain` version or use `npm link` locally. If the
 
 The npm packages are published manually from this repo:
 
-| Package                 | Guide                                         |
-| ----------------------- | --------------------------------------------- |
-| `@rsconcept/domain`     | [`PUBLISHING.md`](rsconcept/domain/PUBLISHING.md) |
-| `@rsconcept/rstool`     | [`PUBLISHING.md`](rsconcept/rstool/PUBLISHING.md) |
+| Package                 | Guide                                                 |
+| ----------------------- | ----------------------------------------------------- |
+| `@rsconcept/domain`     | [`PUBLISHING.md`](rsconcept/domain/PUBLISHING.md)     |
+| `@rsconcept/rstool`     | [`PUBLISHING.md`](rsconcept/rstool/PUBLISHING.md)     |
 | `@rsconcept/rstool-mcp` | [`PUBLISHING.md`](rsconcept/rstool-mcp/PUBLISHING.md) |
 
 When dependencies change, release in order: **domain -> rstool -> rstool-mcp**.
@@ -142,3 +142,4 @@ Before opening a pull request, run the relevant **Test** configurations from [`.
 - 🚑 **M** — small fix
 - 🔧 **R** — refactor or code cleanup
 - 📝 **D** — documentation only
+- 💬 **I** — infrastructure changes

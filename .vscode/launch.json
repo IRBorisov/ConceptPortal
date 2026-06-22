@@ -55,13 +55,13 @@
       "django": true
     },
     {
-      // Run Vitest Tests for frontend for current file in Debug mode
+      // Run Vitest Tests for current frontend/domain file in Debug mode
       "name": "VT-DebugTestFile",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceFolder}/rsconcept/frontend/node_modules/vitest/vitest.mjs",
-      "args": ["run", "${file}"],
-      "cwd": "${workspaceFolder}/rsconcept/frontend",
+      "program": "${workspaceFolder}/scripts/dev/DebugVitestFile.mjs",
+      "args": ["${file}"],
+      "cwd": "${workspaceFolder}",
       "autoAttachChildProcesses": true,
       "console": "integratedTerminal"
     },
