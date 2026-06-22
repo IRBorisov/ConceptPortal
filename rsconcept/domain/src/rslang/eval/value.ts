@@ -41,6 +41,19 @@ export function makeValuePath(path: number[]): ValuePath {
 /** Empty set ∅. */
 export const EmptySetV = [];
 
+/** Thrown when a runtime value operation cannot be applied to the given operands. */
+export class CalcInvalidDataError extends Error {
+  readonly left: string;
+  readonly right: string;
+
+  constructor(left: string, right: string) {
+    super(`Cannot compare different types ${left} and ${right}`);
+    this.name = 'CalcInvalidDataError';
+    this.left = left;
+    this.right = right;
+  }
+}
+
 /** Compare two structured data without recursive calls. */
 export function compare(v1: Value, v2: Value): number {
   const stack1: Value[] = [v1];
@@ -64,7 +77,7 @@ export function compare(v1: Value, v2: Value): number {
     const isArray1 = Array.isArray(el1);
     const isArray2 = Array.isArray(el2);
     if (!isArray1 || !isArray2) {
-      throw new Error(`Cannot compare different types ${printValue(el1!)} and ${printValue(el2!)}`);
+      throw new CalcInvalidDataError(printValue(el1!), printValue(el2!));
     }
 
     const arr1 = el1;

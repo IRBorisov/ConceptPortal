@@ -10,6 +10,7 @@ import { TokenID } from '../parser/token';
 import { EvaluationCache, EvaluationMetadata } from './evaluation-cache';
 import {
   BOOL_INFINITY,
+  CalcInvalidDataError,
   compare,
   EmptySetV,
   set,
@@ -153,11 +154,19 @@ export class Evaluator {
       }
     }
 
-    const result = this.dispatchVisitImpl(node);
-    if (!this.disableCache && result !== null && info.cacheable && stamp !== null) {
-      this.evalCache.store(info.structuralKey, stamp, result);
+    try {
+      const result = this.dispatchVisitImpl(node);
+      if (!this.disableCache && result !== null && info.cacheable && stamp !== null) {
+        this.evalCache.store(info.structuralKey, stamp, result);
+      }
+      return result;
+    } catch (error) {
+      if (error instanceof CalcInvalidDataError) {
+        return this.onError(RSErrorCode.calcInvalidData, node, [error.left, error.right]);
+      }
+      this.onError(RSErrorCode.calcUnknownError, node);
+      return null;
     }
-    return result;
   }
 
   private dispatchVisitImpl(node: AstNode): Value | null {
@@ -280,8 +289,8 @@ export class Evaluator {
 
   private visitGlobal(node: AstNode): Value | null {
     const alias = getNodeText(node);
-    const value = this.context.get(alias);
-    if (value === undefined) {
+    const value = this.context.get(alias) ?? null;
+    if (value === null) {
       return this.onError(RSErrorCode.calcGlobalMissing, node, [alias]);
     }
     return value;
@@ -289,7 +298,11 @@ export class Evaluator {
 
   private visitLocal(node: AstNode): Value | null {
     const alias = getNodeText(node);
-    return this.locals.getLocal(alias);
+    const value = this.locals.findLocal(alias);
+    if (value === null) {
+      return this.onError(RSErrorCode.localUndeclared, node, [alias]);
+    }
+    return value;
   }
 
   private visitFunctionCall(node: AstNode): Value | null {
@@ -910,12 +923,8 @@ class LocalContext {
     }
   }
 
-  getLocal(alias: string): Value {
-    const binding = this.data.get(alias);
-    if (binding === undefined) {
-      throw new Error(`Local variable "${alias}" not found`);
-    }
-    return binding.value;
+  findLocal(alias: string): Value | null {
+    return this.data.get(alias)?.value ?? null;
   }
 
   buildDependencyStamp(reads: ReadonlySet<string>): string | null {

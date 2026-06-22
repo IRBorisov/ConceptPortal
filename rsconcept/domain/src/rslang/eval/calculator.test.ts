@@ -73,6 +73,14 @@ describe('RSCalculator', () => {
     expectCalcFull('X11', { expectErrorCode: RSErrorCode.calcGlobalMissing });
   });
 
+  it('returns error for undeclared local variable', () => {
+    expectCalcFull('∀a∈X1 b=b', { expectErrorCode: RSErrorCode.localUndeclared });
+  });
+
+  it('returns error for incompatible value comparison', () => {
+    expectCalcFull('X1=1', { expectErrorCode: RSErrorCode.calcInvalidData });
+  });
+
   it('returns error for infinite quantifier', () => {
     expectCalcFull('∀a∈Z a=a', { expectErrorCode: RSErrorCode.iterateInfinity });
   });

@@ -192,6 +192,7 @@ const correctValuesData = [
 const errorData = [
   ['[a∈ℬ(R1)] a=a', { code: RSErrorCode.calculationNotSupported, from: 0, to: 13 }],
   ['debool(X1)', { code: RSErrorCode.calcInvalidDebool, from: 7, to: 9 }],
+  ['Pr1(1)', { code: RSErrorCode.calcUnknownError, from: 0, to: 6 }],
   ['∀a∈Z a=a', { code: RSErrorCode.iterateInfinity, from: 3, to: 4 }],
   ['ℬℬ({1,2,3,4,5})', { code: RSErrorCode.booleanBaseLimit, from: 1, to: 15, params: [String(BOOL_INFINITY)] }],
   ['X1\\D1', { code: RSErrorCode.calcGlobalMissing, from: 3, to: 5, params: ['D1'] }],
@@ -227,7 +228,10 @@ const errorData = [
   ['R{a:=X1 | D1=D1 | a∪X1}', { code: RSErrorCode.calcGlobalMissing, from: 10, to: 12, params: ['D1'] }],
   ['I{(a,b) | a:∈D1; b:=a; b≠a}', { code: RSErrorCode.calcGlobalMissing, from: 13, to: 15, params: ['D1'] }],
   ['I{(a,b) | a:∈X1; b:=a; b≠D1}', { code: RSErrorCode.calcGlobalMissing, from: 25, to: 27, params: ['D1'] }],
-  ['I{(a,b) | a:∈X1; b:=D1; b≠a}', { code: RSErrorCode.calcGlobalMissing, from: 20, to: 22, params: ['D1'] }]
+  ['I{(a,b) | a:∈X1; b:=D1; b≠a}', { code: RSErrorCode.calcGlobalMissing, from: 20, to: 22, params: ['D1'] }],
+  ['∀a∈X1 b=b', { code: RSErrorCode.localUndeclared, from: 6, to: 7, params: ['b'] }],
+  ['X1=1', { code: RSErrorCode.calcInvalidData, from: 0, to: 4, params: ['{1, 2, 3}', '1'] }],
+  ['X1=1 & 1=1', { code: RSErrorCode.calcInvalidData, from: 0, to: 4, params: ['{1, 2, 3}', '1'] }]
 ];
 
 describe('Calculator', () => {

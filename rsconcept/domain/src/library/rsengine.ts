@@ -23,7 +23,6 @@ export interface RSEngineServices {
 export interface RSEngineNotifications {
   onInvalidSetValue: () => void;
   onCalculationSuccess: (timeSpent: string) => void;
-  onEvaluationError: (message: string) => void;
 }
 
 /** Calculation engine for {@link RSModel}. */
@@ -274,26 +273,12 @@ export class RSEngine {
 
   /** Evaluates expression for {@link RSEngine}. */
   public evaluateExpression(expression: string, cstType: CstType): CalculatorResult {
-    return getEvaluationFor(expression, cstType, this.schema!, this.calculator, message =>
-      this.notifications?.onEvaluationError(message)
-    );
+    return getEvaluationFor(expression, cstType, this.schema!, this.calculator);
   }
 
   /** Evaluates AST for {@link RSEngine}. */
   public evaluateAst(ast: AstNode, options?: CalculatorEvaluateOptions): CalculatorResult {
-    try {
-      const evaluation = this.calculator.evaluateFull(ast, options);
-      return evaluation;
-    } catch (error) {
-      this.notifications?.onEvaluationError((error as Error).message);
-      console.error(error);
-      return {
-        value: null,
-        iterations: 0,
-        cacheHits: 0,
-        errors: []
-      };
-    }
+    return this.calculator.evaluateFull(ast, options);
   }
 
   /** Calculates value for {@link Constituenta}. */
@@ -307,9 +292,7 @@ export class RSEngine {
       const predecessors = this.schema.graph.expandAllInputs([cstID]);
       this.prepareEvaluation(predecessors);
     }
-    const result = getEvaluationFor(cst.definition_formal, cst.cst_type, this.schema, this.calculator, message =>
-      this.notifications?.onEvaluationError(message)
-    );
+    const result = getEvaluationFor(cst.definition_formal, cst.cst_type, this.schema, this.calculator);
 
     if (result.value === null) {
       this.calculator.resetValue(cst.alias);
@@ -492,9 +475,7 @@ export class RSEngine {
       if (dependencies.includes(cstID)) {
         const cst = this.schema!.cstByID.get(cstID)!;
         if (isInferrable(cst.cst_type)) {
-          const value = fastEvaluation(cst.definition_formal, cst.cst_type, this.schema!, this.calculator, message =>
-            this.notifications?.onEvaluationError(message)
-          );
+          const value = fastEvaluation(cst.definition_formal, cst.cst_type, this.schema!, this.calculator);
           if (value !== null) {
             this.calculator.setValue(cst.alias, value);
           } else {
@@ -537,8 +518,7 @@ function getEvaluationFor(
   expression: string,
   cstType: CstType,
   schema: RSForm,
-  calculator: RSCalculator,
-  onEvaluationError?: (message: string) => void
+  calculator: RSCalculator
 ): CalculatorResult {
   const parse = getAnalysisFor(expression, cstType, schema);
   if (!parse.success || !parse.ast) {
@@ -548,46 +528,21 @@ function getEvaluationFor(
       cacheHits: 0,
       errors: parse.errors
     };
-  } else {
-    try {
-      const result = calculator.evaluateFull(parse.ast);
-      return {
-        value: result.value,
-        iterations: result.iterations,
-        cacheHits: result.cacheHits,
-        errors: [...parse.errors, ...result.errors]
-      };
-    } catch (error) {
-      onEvaluationError?.((error as Error).message);
-      console.error(expression, error);
-      return {
-        value: null,
-        iterations: 0,
-        cacheHits: 0,
-        errors: []
-      };
-    }
   }
+  const result = calculator.evaluateFull(parse.ast);
+  return {
+    value: result.value,
+    iterations: result.iterations,
+    cacheHits: result.cacheHits,
+    errors: [...parse.errors, ...result.errors]
+  };
 }
 
 /** Evaluates expression for {@link RSModel}. */
-function fastEvaluation(
-  expression: string,
-  cstType: CstType,
-  schema: RSForm,
-  calculator: RSCalculator,
-  onEvaluationError?: (message: string) => void
-): Value | null {
+function fastEvaluation(expression: string, cstType: CstType, schema: RSForm, calculator: RSCalculator): Value | null {
   const parse = getAnalysisFor(expression, cstType, schema);
   if (!parse.success || !parse.ast) {
     return null;
-  } else {
-    try {
-      return calculator.evaluateFast(parse.ast);
-    } catch (error) {
-      onEvaluationError?.((error as Error).message);
-      console.error(expression, error);
-      return null;
-    }
   }
+  return calculator.evaluateFast(parse.ast);
 }
