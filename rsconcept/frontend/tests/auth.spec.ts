@@ -1,4 +1,5 @@
 import { authAdmin, setupLogin, setupLogout } from './mocks/auth';
+import { clickAndWaitForURL, waitForAppURL } from './navigation';
 import { expect, test } from './setup';
 
 test('should display error message when login with wrong credentials', async ({ page }) => {
@@ -33,6 +34,7 @@ test('logout procedure and consequence', async ({ page }) => {
   await page.getByRole('button', { name: 'Пользователь' }).click();
   await page.getByRole('button', { name: 'Выход из приложения' }).click();
 
-  await page.getByRole('button', { name: 'Войти в Портал' }).click();
+  await waitForAppURL(page, /\/login/);
+  await clickAndWaitForURL(page, page.getByRole('button', { name: 'Войти в Портал' }), /\/login/);
   await expect(page.getByRole('button', { name: 'Войти', exact: true })).toBeVisible();
 });

@@ -4,6 +4,7 @@ import { authAdmin, authAnonymous } from './mocks/auth';
 import { createRSFormMock, dataRSForms } from './mocks/concepts';
 import { BACKEND_URL } from './mocks/constants';
 import { dataLibraryItems } from './mocks/library';
+import { clickAndWaitForURL } from './navigation';
 import { expect, test } from './setup';
 
 test.describe.configure({ mode: 'serial' });
@@ -94,9 +95,11 @@ test('create item page submits RSForm and redirects to created item', async ({ p
   await page.goto('/library/create', { waitUntil: 'domcontentloaded' });
   await page.locator('#schema_title').fill('Созданная КС');
   await page.locator('#schema_alias').fill('KS_CREATED');
-  await page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }).click();
-
-  await expect(page).toHaveURL(new RegExp(`/rsforms/${createdID}$`));
+  await clickAndWaitForURL(
+    page,
+    page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }),
+    new RegExp(`/rsforms/${createdID}$`)
+  );
   await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible();
   expect(requestPayload).toMatchObject({
     item_type: LibraryItemType.RSFORM,

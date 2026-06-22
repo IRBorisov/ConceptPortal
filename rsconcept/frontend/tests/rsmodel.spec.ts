@@ -3,6 +3,7 @@ import { AccessPolicy, LibraryItemType } from '@rsconcept/domain/library';
 import { authAdmin, authAnonymous } from './mocks/auth';
 import { createRSFormMock, createRSModelMock, dataRSForms, dataRSModels, resetConceptMocks } from './mocks/concepts';
 import { BACKEND_URL } from './mocks/constants';
+import { clickAndWaitForURL } from './navigation';
 import { expect, test } from './setup';
 
 test.describe.configure({ mode: 'serial' });
@@ -124,10 +125,9 @@ test('RSModel menu navigates to linked schema', async ({ page }) => {
 
   await page.goto(`/models/${modelID}`, { waitUntil: 'domcontentloaded' });
   await page.getByRole('button', { name: 'Меню' }).click();
-  await page.getByRole('button', { name: 'Перейти к схеме' }).click();
-
-  // gotoRSForm preserves tab/active via buildModelToSchemaQuery → URL includes ?tab=…
-  await expect(page).toHaveURL(new RegExp(`/rsforms/${rsformID}(?:\\?[^#]*)?$`));
+  const gotoSchema = page.getByRole('button', { name: 'Перейти к схеме' });
+  await expect(gotoSchema).toBeVisible();
+  await clickAndWaitForURL(page, gotoSchema, new RegExp(`/rsforms/${rsformID}(?:\\?[^#]*)?$`));
   await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible();
 });
 

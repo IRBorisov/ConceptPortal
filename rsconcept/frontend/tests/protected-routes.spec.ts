@@ -77,7 +77,11 @@ test('authenticated user can open protected pages', async ({ page }) => {
   await page.goto('/profile');
   await expect(page.getByRole('heading', { name: 'Профиль пользователя' })).toBeVisible();
 
+  const promptsLoaded = page.waitForResponse(
+    response => response.url().includes('/api/prompts/available/') && response.ok()
+  );
   await page.goto('/prompt-templates');
+  await promptsLoaded;
   await expect(page.getByRole('button', { name: 'Создать', exact: true })).toBeVisible();
   await expect(page.getByText('Базовый шаблон')).toBeVisible();
 });

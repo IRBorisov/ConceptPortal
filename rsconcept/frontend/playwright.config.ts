@@ -1,3 +1,5 @@
+/// <reference types="node" />
+
 import { defineConfig, devices } from '@playwright/test';
 
 import { E2E_TIMEOUTS } from './tests/timeouts';
@@ -18,8 +20,8 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: 'list',
-  /** Vite `webServer` is one process; many parallel tabs cause flaky navigations and Russian copy assertions to miss. */
-  workers: process.env.CI ? 2 : 2,
+  /** Vite `webServer` is one process; parallel tabs cause flaky navigations, especially on WebKit in CI. */
+  workers: process.env.CI ? 1 : 2,
   fullyParallel: true,
   projects: runAllBrowsers
     ? [

@@ -1,10 +1,12 @@
-import { test as base } from '@playwright/test';
+import { expect as baseExpect, test as base } from '@playwright/test';
 
 import { setupAuth } from './mocks/auth';
 import { setupConcepts } from './mocks/concepts';
 import { setupLibrary } from './mocks/library';
 import { setupUsers } from './mocks/users';
-export { expect } from '@playwright/test';
+import { E2E_TIMEOUTS } from './timeouts';
+
+export const expect = baseExpect.configure({ timeout: E2E_TIMEOUTS.expect });
 
 function seedDefaultLocale() {
   if (localStorage.getItem('portal.preferences')) {
