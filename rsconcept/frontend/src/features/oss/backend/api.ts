@@ -46,7 +46,8 @@ export const ossApi = {
         axiosGet<OperationSchemaDTO>({
           schema: schemaOperationSchema,
           endpoint: `/api/oss/${itemID}/details`,
-          options: { signal: meta.signal }
+          options: { signal: meta.signal },
+          notifyOnError: false
         }),
       enabled: !!itemID
     });

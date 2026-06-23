@@ -20,7 +20,8 @@ export const rsmodelApi = {
         axiosGet<RSModelDTO>({
           schema: schemaRSModel,
           endpoint: `/api/models/${itemID}/details`,
-          options: { signal: meta.signal }
+          options: { signal: meta.signal },
+          notifyOnError: false
         }),
       enabled: !!itemID
     });

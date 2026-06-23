@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "1.1.2",
+  "version": "1.1.3",
   "type": "module",
   "scripts": {
     "generate": "lezer-generator src/features/rsform/components/rs-input/parse/rslang-fast.grammar -o src/features/rsform/components/rs-input/parse/parser.ts && lezer-generator src/features/rsform/components/refs-input/parse/refs-text.grammar -o src/features/rsform/components/refs-input/parse/parser.ts && lezer-generator src/features/ai/components/prompt-input/parse/prompt-text.grammar -o src/features/ai/components/prompt-input/parse/parser.ts",

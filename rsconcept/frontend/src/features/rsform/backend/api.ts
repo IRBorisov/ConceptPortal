@@ -48,7 +48,8 @@ export const rsformsApi = {
         const raw = await axiosGet<RSFormDTO>({
           schema: schemaRSForm,
           endpoint: version ? `/api/library/${itemID}/versions/${version}` : `/api/rsforms/${itemID}/details`,
-          options: { signal: meta.signal }
+          options: { signal: meta.signal },
+          notifyOnError: false
         });
         const previous = queryClient.getQueryData<{ raw: RSFormDTO; transformed: RSForm }>(queryKey);
         if (previous && equal(previous.raw, raw)) {
