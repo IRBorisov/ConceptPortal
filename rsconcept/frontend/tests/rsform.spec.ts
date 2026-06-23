@@ -4,7 +4,7 @@ import { authAdmin, authAnonymous } from './mocks/auth';
 import { createRSFormMock, dataRSForms, resetConceptMocks } from './mocks/concepts';
 import { BACKEND_URL } from './mocks/constants';
 import { dataLibraryItems } from './mocks/library';
-import { clickAndWaitForURL } from './navigation';
+import { clickAndWaitForURL, submitAndWaitForURL } from './navigation';
 import { expect, test } from './setup';
 
 test.describe.configure({ mode: 'serial' });
@@ -102,11 +102,7 @@ test('RSForm menu opens create-model page with prefilled schema data', async ({ 
   await page.getByRole('button', { name: 'Меню' }).click();
   const createModel = page.getByRole('button', { name: 'Создать модель' });
   await expect(createModel).toBeVisible();
-  await clickAndWaitForURL(
-    page,
-    createModel,
-    new RegExp(`/library/create\\?itemType=rsmodel&modelFrom=${rsformID}`)
-  );
+  await clickAndWaitForURL(page, createModel, new RegExp(`/library/create\\?itemType=rsmodel&modelFrom=${rsformID}`));
   await expect(page.getByRole('heading', { name: 'Концептуальная модель' })).toBeVisible();
   await expect(page.locator('#schema_title')).toHaveValue(`Модель ${schema.title}`);
   await expect(page.locator('#schema_alias')).toHaveValue(`M${schema.alias}`);
@@ -182,11 +178,11 @@ test('RSForm flow creates model from schema and redirects to new model', async (
   const createModel = page.getByRole('button', { name: 'Создать модель' });
   await expect(createModel).toBeVisible();
   await clickAndWaitForURL(page, createModel, /\/library\/create/);
-  await clickAndWaitForURL(
-    page,
-    page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }),
-    new RegExp(`/models/${newModelID}$`)
-  );
+  await submitAndWaitForURL(page, page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }), {
+    url: new RegExp(`/models/${newModelID}$`),
+    api: { url: `${BACKEND_URL}/api/library`, method: 'POST' },
+    pageApi: { url: new RegExp(`${BACKEND_URL}/api/models/${newModelID}/details`), method: 'GET' }
+  });
   await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible();
 });
 

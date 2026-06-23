@@ -1,5 +1,6 @@
 import { authAdmin, setupLogin, setupLogout } from './mocks/auth';
-import { clickAndWaitForURL, waitForAppURL } from './navigation';
+import { BACKEND_URL } from './mocks/constants';
+import { clickAndWaitForURL, submitAndWaitForURL, waitForAppURL } from './navigation';
 import { expect, test } from './setup';
 
 test('should display error message when login with wrong credentials', async ({ page }) => {
@@ -19,9 +20,12 @@ test('should login as admin successfully', async ({ page }) => {
   await page.goto('/login');
   await page.getByRole('textbox', { name: 'Логин или email' }).fill('admin');
   await page.getByRole('textbox', { name: 'Пароль' }).fill('password');
-  await page.getByRole('button', { name: 'Войти', exact: true }).click();
+  await submitAndWaitForURL(page, page.getByRole('button', { name: 'Войти', exact: true }), {
+    url: /\/library/,
+    api: { url: `${BACKEND_URL}/users/api/login`, method: 'POST' }
+  });
 
-  await expect(page.getByText('Вы вошли в систему как admin')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Пользователь' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Войти', exact: true })).toHaveCount(0);
 });
 

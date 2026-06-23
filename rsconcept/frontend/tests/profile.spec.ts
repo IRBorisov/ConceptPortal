@@ -1,6 +1,7 @@
 import { type UserProfile } from '../src/features/users/backend/types';
 import { authAdmin, authAnonymous } from './mocks/auth';
 import { BACKEND_URL } from './mocks/constants';
+import { waitForApiResponse } from './navigation';
 import { expect, test } from './setup';
 
 test.beforeEach(() => {
@@ -36,7 +37,10 @@ test('profile page saves name and shows success toast', async ({ page }) => {
   await page.goto('/profile');
 
   await page.locator('#first_name').fill('НовоеИмя');
-  await page.getByRole('button', { name: 'Сохранить изменения' }).click();
+  await Promise.all([
+    waitForApiResponse(page, { url: `${BACKEND_URL}/users/api/profile`, method: 'PATCH' }),
+    page.getByRole('button', { name: 'Сохранить изменения' }).click()
+  ]);
 
   await expect(page.getByText('Изменения сохранены')).toBeVisible();
   await expect(page.locator('#first_name')).toHaveValue('НовоеИмя');

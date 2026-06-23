@@ -3,6 +3,7 @@ import { AccessPolicy, LibraryItemType } from '@rsconcept/domain/library';
 import { authAdmin, authAnonymous, authUser } from './mocks/auth';
 import { BACKEND_URL } from './mocks/constants';
 import { dataLibraryItems } from './mocks/library';
+import { waitForApiResponse } from './navigation';
 import { expect, test } from './setup';
 
 function createLibraryItem(id: number, title: string) {
@@ -144,7 +145,10 @@ test('library page renames current location and refreshes filtered items', async
   await page.goto('/library');
   await page.getByRole('button', { name: 'Редактирование расположения' }).click();
   await page.locator('#dlg_location').fill('team-renamed');
-  await page.getByRole('button', { name: 'Переместить' }).click();
+  await Promise.all([
+    waitForApiResponse(page, { url: `${BACKEND_URL}/api/library/rename-location`, method: 'PATCH' }),
+    page.getByRole('button', { name: 'Переместить' }).click()
+  ]);
 
   await expect(page.getByText('Изменения сохранены')).toBeVisible();
   await expect(page.getByRole('button', { name: 'team-renamed' })).toBeVisible();

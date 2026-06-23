@@ -4,7 +4,7 @@ import { authAdmin, authAnonymous } from './mocks/auth';
 import { createRSFormMock, dataRSForms } from './mocks/concepts';
 import { BACKEND_URL } from './mocks/constants';
 import { dataLibraryItems } from './mocks/library';
-import { clickAndWaitForURL } from './navigation';
+import { submitAndWaitForURL } from './navigation';
 import { expect, test } from './setup';
 
 test.describe.configure({ mode: 'serial' });
@@ -95,11 +95,11 @@ test('create item page submits RSForm and redirects to created item', async ({ p
   await page.goto('/library/create', { waitUntil: 'domcontentloaded' });
   await page.locator('#schema_title').fill('Созданная КС');
   await page.locator('#schema_alias').fill('KS_CREATED');
-  await clickAndWaitForURL(
-    page,
-    page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }),
-    new RegExp(`/rsforms/${createdID}$`)
-  );
+  await submitAndWaitForURL(page, page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }), {
+    url: new RegExp(`/rsforms/${createdID}$`),
+    api: { url: `${BACKEND_URL}/api/library`, method: 'POST' },
+    pageApi: { url: new RegExp(`${BACKEND_URL}/api/rsforms/${createdID}/details`), method: 'GET' }
+  });
   await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible();
   expect(requestPayload).toMatchObject({
     item_type: LibraryItemType.RSFORM,
