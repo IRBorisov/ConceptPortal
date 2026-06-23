@@ -41,7 +41,7 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
       className: 'text-accent-orange-foreground'
     }
   ];
-  const tableHeight = useFitHeight('4.8rem');
+  const tableHeight = useFitHeight('4.25rem');
 
   function handleOpenItem(item: LibraryItem, event: React.MouseEvent<Element>) {
     const selection = window.getSelection();

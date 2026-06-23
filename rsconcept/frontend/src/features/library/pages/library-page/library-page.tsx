@@ -58,7 +58,7 @@ export function LibraryPage() {
 
       <div className='grow min-w-0 flex flex-col'>
         <LocationBreadcrumb
-          className='h-10 bg-input'
+          className='bg-input'
           canRename={canRename}
           onRenameLocation={() => showChangeLocation({ initial: location, onChangeLocation: handleRenameLocation })}
         />

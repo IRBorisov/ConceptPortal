@@ -34,7 +34,7 @@ export function LocationBreadcrumb({ canRename, className, onRenameLocation }: L
   }));
 
   return (
-    <div className={clsx('flex items-center gap-6 pl-2 pr-5', className)}>
+    <div className={clsx('flex items-center gap-3 pl-2 pr-5 pt-1', className)}>
       <div className='cc-icons'>
         <BadgeHelp topic={HelpTopic.UI_LIBRARY} contentClass='text-sm' offset={5} place='bottom-start' />
         <MiniButton
@@ -54,7 +54,7 @@ export function LocationBreadcrumb({ canRename, className, onRenameLocation }: L
 
       <div
         className={clsx(
-          'min-w-0 flex-1 truncate',
+          'min-w-0 flex-1 pt-1 truncate',
           'whitespace-nowrap overflow-hidden',
           'select-none font-math font-semibold'
         )}
