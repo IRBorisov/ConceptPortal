@@ -1,17 +1,18 @@
 import { Document, Font, Page } from '@react-pdf/renderer';
 
+import { pdfFontSrc } from './pdf-font-path';
 import { pdfs } from './pdf-styles';
 
 Font.register({
   family: 'ConceptText',
   fonts: [
-    { src: '/fonts/ConceptText-Regular.ttf', fontWeight: 'normal' },
-    { src: '/fonts/ConceptText-Bold.ttf', fontWeight: 'bold' }
+    { src: pdfFontSrc('ConceptText-Regular.ttf'), fontWeight: 'normal' },
+    { src: pdfFontSrc('ConceptText-Bold.ttf'), fontWeight: 'bold' }
   ]
 });
 Font.register({
   family: 'CodeMath',
-  fonts: [{ src: '/fonts/ConceptMath-Regular.ttf' }]
+  fonts: [{ src: pdfFontSrc('ConceptMath-Regular.ttf') }]
 });
 
 const documentMetadata = {

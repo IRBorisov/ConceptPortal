@@ -1,19 +1,25 @@
 import type { ReactNode } from 'react';
-import { IntlProvider, type IntlShape, useIntl } from 'react-intl';
+import { IntlProvider } from 'react-intl';
 import { Link, pdf, Text, View } from '@react-pdf/renderer';
 
-import { type AppLocale, DEFAULT_LOCALE, getMessageMapForLocale } from '@/i18n';
+import { type AppLocale, DEFAULT_LOCALE, getMessageMapForLocale, useTx } from '@/i18n';
 import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
 import { labelType } from '@rsconcept/domain/rslang/labels';
 
-import { urls } from '@/app';
+import { urls } from '@/app/urls';
 
 import { CDocument } from '@/components/pdf/CDocument';
 import { pdfs } from '@/components/pdf/pdf-styles';
 import { usePreferencesStore } from '@/stores/preferences';
 import { external_urls } from '@/utils/constants';
 
-import { addSpaces, addSpacesTypification, hyphenateCyrillic, protectShortRussianWords } from './pdf-utils';
+import {
+  addSpaces,
+  addSpacesTypification,
+  formatPdfPageRange,
+  hyphenateCyrillic,
+  protectShortRussianWords
+} from './pdf-utils';
 
 function handleIntlError(locale: AppLocale, error: unknown) {
   if (locale === 'en' && typeof error === 'object' && error && 'code' in error) {
@@ -69,7 +75,7 @@ function CstListDocument({ data }: { data: Constituenta[] }) {
       <Text
         fixed
         style={{ ...pdfs.footer, textAlign: 'center' }}
-        render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
+        render={({ pageNumber, totalPages }) => formatPdfPageRange(pageNumber, totalPages)}
       />
     </CDocument>
   );
@@ -87,18 +93,16 @@ function SchemaDocument({ data }: { data: RSForm }) {
 
 // ======== Internal components ========
 function SchemaTitle({ schema }: { schema: RSForm }) {
-  const intl = useIntl();
+  const tx = useTx();
   const url = `${external_urls.portal}${urls.schema(schema.id)}`;
   return (
     <View style={{ marginBottom: 10 }}>
       <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: '3mm' }}>
-        {intl.formatMessage({ id: 'tx.schema' }) + ' ' + schema.title}
+        {tx('tx.schema') + ' ' + schema.title}
       </Text>
+      <Text style={{ fontSize: 12 }}>{tx('tx.lib.alias') + tx('tx.general.colon') + schema.alias}</Text>
       <Text style={{ fontSize: 12 }}>
-        {intl.formatMessage({ id: 'tx.lib.alias' }) + intl.formatMessage({ id: 'tx.general.colon' }) + schema.alias}
-      </Text>
-      <Text style={{ fontSize: 12 }}>
-        {intl.formatMessage({ id: 'tx.general.source' }) + intl.formatMessage({ id: 'tx.general.colon' })}
+        {tx('tx.general.source') + tx('tx.general.colon')}
         <Link src={url} style={{ textDecoration: 'underline' }}>
           {url}
         </Link>
@@ -108,32 +112,36 @@ function SchemaTitle({ schema }: { schema: RSForm }) {
 }
 
 function SchemaFooter({ schema }: { schema: RSForm }) {
-  const intl = useIntl();
+  const tx = useTx();
   return (
     <View fixed style={pdfs.footer}>
       <Text>{schema.alias}</Text>
       <Text
-        render={({ pageNumber, totalPages }) =>
-          intl.formatMessage({ id: 'tx.general.page.short' }) + ' ' + pageNumber + ' / ' + totalPages
-        }
+        render={({ pageNumber, totalPages }) => {
+          const range = formatPdfPageRange(pageNumber, totalPages);
+          if (!range) {
+            return '';
+          }
+          return tx('tx.general.page.short') + ' ' + range;
+        }}
       />
     </View>
   );
 }
 
 function CstTable({ data }: { data: Constituenta[] }) {
-  const intl = useIntl();
+  const tx = useTx();
   return (
     <>
       <View style={{ flex: 1 }}>
         {/* Table Header */}
         <View fixed style={pdfs.headerRow}>
           <Text style={{ ...pdfs.cell, width: '13mm' }}>ID</Text>
-          <Text style={{ ...pdfs.cell, width: '82mm' }}>{intl.formatMessage({ id: 'tx.lib.defineFormal' })}</Text>
-          <Text style={{ ...pdfs.cell, width: '38mm' }}>{intl.formatMessage({ id: 'tx.rslang.typification' })}</Text>
-          <Text style={{ ...pdfs.cell, width: '40mm' }}>{intl.formatMessage({ id: 'tx.lang.term' })}</Text>
+          <Text style={{ ...pdfs.cell, width: '82mm' }}>{tx('tx.lib.defineFormal')}</Text>
+          <Text style={{ ...pdfs.cell, width: '38mm' }}>{tx('tx.rslang.typification')}</Text>
+          <Text style={{ ...pdfs.cell, width: '40mm' }}>{tx('tx.lang.term')}</Text>
           <Text style={{ ...pdfs.cell, width: '82mm', borderRightWidth: 0 }}>
-            {`${intl.formatMessage({ id: 'tx.lib.defineText' })} / ${intl.formatMessage({ id: 'tx.lang.term' })}`}
+            {`${tx('tx.lib.defineText')} / ${tx('tx.lang.term')}`}
           </Text>
         </View>
 
@@ -153,7 +161,7 @@ function CstTable({ data }: { data: Constituenta[] }) {
               {protectShortRussianWords(cst.term_resolved)}
             </Text>
             <Text style={{ ...pdfs.cell, width: '82mm', borderRightWidth: 0 }} hyphenationCallback={hyphenateCyrillic}>
-              {protectShortRussianWords(getCommentColumnText(cst, intl.formatMessage))}
+              {protectShortRussianWords(getCommentColumnText(cst, tx))}
             </Text>
           </View>
         ))}
@@ -162,13 +170,13 @@ function CstTable({ data }: { data: Constituenta[] }) {
   );
 }
 
-function getCommentColumnText(cst: Constituenta, formatMessage: IntlShape['formatMessage']) {
+function getCommentColumnText(cst: Constituenta, tx: (id: string) => string) {
   let result = cst.definition_resolved;
   if (cst.convention) {
     if (result) {
       result += '\n';
     }
-    result += formatMessage({ id: 'tx.lib.convention' }) + ': ' + cst.convention;
+    result += tx('tx.lib.convention') + ': ' + cst.convention;
   }
   return result;
 }
