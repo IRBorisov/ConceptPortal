@@ -15,9 +15,10 @@ import { SelectorCstFilter } from './selector-cst-filter';
 interface ConstituentsSearchProps {
   actions?: ReactNode;
   showModelFilter?: boolean;
+  stopSearchKeyPropagation?: boolean;
 }
 
-export function ConstituentsSearch({ actions, showModelFilter }: ConstituentsSearchProps) {
+export function ConstituentsSearch({ actions, showModelFilter, stopSearchKeyPropagation }: ConstituentsSearchProps) {
   const tx = useTx();
   const query = useCstSearchStore(state => state.query);
   const setQuery = useCstSearchStore(state => state.setQuery);
@@ -37,7 +38,14 @@ export function ConstituentsSearch({ actions, showModelFilter }: ConstituentsSea
         onClick={handleReset}
         disabled={!hasActiveFilter}
       />
-      <SearchBar id='constituents_search' noBorder className='min-w-24 grow' query={query} onChangeQuery={setQuery} />
+      <SearchBar
+        id='constituents_search'
+        noBorder
+        className='min-w-24 grow'
+        query={query}
+        onChangeQuery={setQuery}
+        stopKeyPropagation={stopSearchKeyPropagation}
+      />
       <SelectorCstFilter showModelFilter={showModelFilter} />
       {actions ? actions : null}
     </div>

@@ -178,6 +178,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
         enableRowReordering={canReorderConstituents}
         onMoveAfter={handleMoveAfter}
         maxListHeight={listHeight}
+        stopSearchKeyPropagation
         onDoubleClick={isMutable ? handleEditCst : undefined}
         sidebarActions={
           isMutable ? (

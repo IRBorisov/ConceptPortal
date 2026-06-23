@@ -7,6 +7,7 @@ import { useTx } from '@/i18n';
 import { IconSearch } from '@/components/icons';
 import { Loader } from '@/components/loader';
 import { type Styling } from '@/components/props';
+import { isPlainTextKey } from '@/utils/utils';
 
 import { cn } from '../utils';
 
@@ -34,6 +35,9 @@ interface SearchBarProps extends Styling {
 
   /** Input ref object. */
   inputRef?: React.Ref<HTMLInputElement>;
+
+  /** Prevent search keystrokes from triggering parent hotkey handlers. */
+  stopKeyPropagation?: boolean;
 }
 
 /**
@@ -49,10 +53,17 @@ export function SearchBar({
   className,
   placeholder,
   inputRef,
+  stopKeyPropagation,
   ...restProps
 }: SearchBarProps) {
   const tx = useTx();
   const resolvedPlaceholder = placeholder ?? tx('tx.general.search');
+
+  function handleKeyDownCapture(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (stopKeyPropagation && isPlainTextKey(event)) {
+      event.stopPropagation();
+    }
+  }
 
   return (
     <div className={cn('group relative flex items-center grow', className)} {...restProps}>
@@ -93,6 +104,7 @@ export function SearchBar({
         )}
         value={query}
         onChange={event => onChangeQuery?.(event.target.value)}
+        onKeyDownCapture={handleKeyDownCapture}
         placeholder={resolvedPlaceholder}
         aria-busy={loading}
       />

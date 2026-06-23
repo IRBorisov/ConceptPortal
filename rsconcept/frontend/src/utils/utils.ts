@@ -118,6 +118,22 @@ export function withPreventDefault<T extends React.SyntheticEvent>(handler: (eve
   };
 }
 
+/** Interface for keyboard event-like objects. */
+export interface KeyboardEventLike {
+  key: string;
+  altKey: boolean;
+  ctrlKey: boolean;
+  metaKey: boolean;
+}
+
+/** Returns true for plain text input keystrokes that should not trigger parent hotkeys. */
+export function isPlainTextKey(event: KeyboardEventLike): boolean {
+  if (event.altKey || event.ctrlKey || event.metaKey) {
+    return false;
+  }
+  return event.key.length === 1 || event.key === 'Shift';
+}
+
 /** Utility to detect iOS/iPadOS. */
 export function isIOS(): boolean {
   if (typeof navigator === 'undefined') {

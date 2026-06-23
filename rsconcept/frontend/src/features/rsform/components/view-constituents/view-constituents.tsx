@@ -26,6 +26,7 @@ interface ViewConstituentsProps {
   noBorder?: boolean;
   autoScroll?: boolean;
   sidebarActions?: ReactNode;
+  stopSearchKeyPropagation?: boolean;
 }
 
 export function ViewConstituents({
@@ -44,11 +45,16 @@ export function ViewConstituents({
   maxListHeight,
   noBorder,
   autoScroll,
-  sidebarActions
+  sidebarActions,
+  stopSearchKeyPropagation
 }: ViewConstituentsProps) {
   return (
     <div className={cn(!noBorder && 'border', className)}>
-      <ConstituentsSearch actions={sidebarActions} showModelFilter={!!isModelIssue} />
+      <ConstituentsSearch
+        actions={sidebarActions}
+        showModelFilter={!!isModelIssue}
+        stopSearchKeyPropagation={stopSearchKeyPropagation}
+      />
       <TableSideConstituents
         schema={schema}
         engine={engine}
