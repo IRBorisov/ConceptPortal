@@ -6,14 +6,20 @@ import { type AppLocale, DEFAULT_LOCALE, getMessageMapForLocale } from '@/i18n';
 import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
 import { labelType } from '@rsconcept/domain/rslang/labels';
 
-import { urls } from '@/app';
+import { urls } from '@/app/urls';
 
 import { CDocument } from '@/components/pdf/CDocument';
 import { pdfs } from '@/components/pdf/pdf-styles';
 import { usePreferencesStore } from '@/stores/preferences';
 import { external_urls } from '@/utils/constants';
 
-import { addSpaces, addSpacesTypification, hyphenateCyrillic, protectShortRussianWords } from './pdf-utils';
+import {
+  addSpaces,
+  addSpacesTypification,
+  formatPdfPageRange,
+  hyphenateCyrillic,
+  protectShortRussianWords
+} from './pdf-utils';
 
 function handleIntlError(locale: AppLocale, error: unknown) {
   if (locale === 'en' && typeof error === 'object' && error && 'code' in error) {
@@ -69,7 +75,7 @@ function CstListDocument({ data }: { data: Constituenta[] }) {
       <Text
         fixed
         style={{ ...pdfs.footer, textAlign: 'center' }}
-        render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
+        render={({ pageNumber, totalPages }) => formatPdfPageRange(pageNumber, totalPages)}
       />
     </CDocument>
   );
@@ -113,9 +119,13 @@ function SchemaFooter({ schema }: { schema: RSForm }) {
     <View fixed style={pdfs.footer}>
       <Text>{schema.alias}</Text>
       <Text
-        render={({ pageNumber, totalPages }) =>
-          intl.formatMessage({ id: 'tx.general.page.short' }) + ' ' + pageNumber + ' / ' + totalPages
-        }
+        render={({ pageNumber, totalPages }) => {
+          const range = formatPdfPageRange(pageNumber, totalPages);
+          if (!range) {
+            return '';
+          }
+          return intl.formatMessage({ id: 'tx.general.page.short' }) + ' ' + range;
+        }}
       />
     </View>
   );

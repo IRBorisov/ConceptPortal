@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { addSpaces, hyphenateCyrillic, protectShortRussianWords } from './pdf-utils';
+import { addSpaces, formatPdfPageRange, hyphenateCyrillic, protectShortRussianWords } from './pdf-utils';
 
 describe('pdf-utils', () => {
   it('keeps formal expression spacing readable after removing soft wrap points', () => {
@@ -23,5 +23,18 @@ describe('pdf-utils', () => {
   it('never returns one-letter fragments for Cyrillic hyphenation', () => {
     expect(hyphenateCyrillic('индексация').every(part => part.length >= 2)).toBe(true);
     expect(hyphenateCyrillic('область').every(part => part.length >= 2)).toBe(true);
+  });
+
+  it('formats valid PDF page ranges', () => {
+    expect(formatPdfPageRange(1, 3)).toBe('1 / 3');
+    expect(formatPdfPageRange(3, 3)).toBe('3 / 3');
+  });
+
+  it('hides react-pdf layout placeholder page numbers', () => {
+    expect(formatPdfPageRange(-1, 5)).toBe('');
+    expect(formatPdfPageRange(0, 5)).toBe('');
+    expect(formatPdfPageRange(6, 5)).toBe('');
+    expect(formatPdfPageRange(1, 0)).toBe('');
+    expect(formatPdfPageRange(Number.NaN, 2)).toBe('');
   });
 });
