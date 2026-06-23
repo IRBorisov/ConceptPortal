@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 
+import { syncSentryUser } from '@/services/sentry';
+
 import { queryClient } from '@/backend/query-client';
 
 import { authApi } from './api';
@@ -12,6 +14,7 @@ export function useAuthSync() {
     return subscribeAuthSync(function handleAuthSync(event) {
       if (event === 'logout') {
         queryClient.setQueryData(authApi.getAuthQueryOptions().queryKey, anonymousCurrentUser);
+        syncSentryUser(anonymousCurrentUser);
       } else if (event === 'login') {
         void queryClient.invalidateQueries({ queryKey: [authApi.baseKey] });
       }

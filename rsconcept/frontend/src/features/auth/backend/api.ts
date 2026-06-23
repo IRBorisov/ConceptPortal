@@ -1,6 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import { globalTx } from '@/i18n';
+import { syncSentryUser } from '@/services/sentry';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
@@ -30,6 +31,7 @@ export const authApi = {
       queryFn: meta =>
         getCurrentUserOrAnonymous(meta.signal).then(user => {
           cacheCsrfFromAuth(user);
+          syncSentryUser(user);
           return user;
         })
     });
