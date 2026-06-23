@@ -55,6 +55,21 @@ export function protectShortRussianWords(text: string): string {
 }
 
 /**
+ * Formats a page range for @react-pdf Text `render` callbacks.
+ * react-pdf may invoke the callback with placeholder values (-1, 0, totalPages + 1)
+ * during layout passes; those must not be written into the final PDF.
+ */
+export function formatPdfPageRange(pageNumber: number, totalPages: number): string {
+  if (!Number.isFinite(pageNumber) || !Number.isFinite(totalPages)) {
+    return '';
+  }
+  if (pageNumber < 1 || totalPages < 1 || pageNumber > totalPages) {
+    return '';
+  }
+  return `${pageNumber} / ${totalPages}`;
+}
+
+/**
  * Gives @react-pdf conservative hyphenation points for Cyrillic words.
  */
 export function hyphenateCyrillic(word: string): string[] {

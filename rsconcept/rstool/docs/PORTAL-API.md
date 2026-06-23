@@ -102,6 +102,26 @@ for (const item of portal.items) {
   а не alias `curl` (`Invoke-WebRequest`), если нужен CLI-синтаксис curl.
 - Сначала бери метаданные, если нужно только название или доступность схемы.
 
+### Windows: кодировка в скриптах пайплайна
+
+На Windows консоль по умолчанию часто **cp1251**; Python `print` падает с `UnicodeEncodeError`
+на символах вне этой таблицы (стрелки `→`, математика в логах и т.п.). Если `print` стоит
+**до** следующего шага пайплайна (например вызова `npx tsx`), скрипт оборвётся и артефакт
+не обновится.
+
+- **Запись JSON** — всегда UTF-8; для RSLang-символов в формулах не экранируй Unicode в JSON:
+
+```python
+path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
+```
+
+- **Чтение** — `encoding='utf-8'`; для fetch API предпочитай `urllib` / `requests`, не
+  `Out-File` без явной UTF-8 в PowerShell.
+- **Логи в `print`** — ASCII (`->`, `...`) или только id/alias без математики; не полагайся
+  на то, что консоль UTF-8.
+- При необходимости Unicode в stdout: `PYTHONIOENCODING=utf-8` или `sys.stdout.reconfigure(encoding='utf-8')`
+  (Python 3.7+), но для агентских скриптов проще держать вывод в ASCII.
+
 ## Не делай
 
 - Не парси HTML SPA.
