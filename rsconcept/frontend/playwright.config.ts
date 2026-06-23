@@ -19,7 +19,7 @@ export default defineConfig({
   },
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  reporter: 'list',
+  reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : 'list',
   /** Vite `webServer` is one process; parallel tabs cause flaky navigations, especially on WebKit in CI. */
   workers: process.env.CI ? 1 : 2,
   fullyParallel: true,

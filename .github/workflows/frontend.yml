@@ -29,9 +29,9 @@ jobs:
         node-version: [24.x]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node-version }}
           cache-dependency-path: rsconcept/frontend/package-lock.json
@@ -54,11 +54,12 @@ jobs:
       - name: E2E tests
         working-directory: rsconcept/frontend
         run: npm run test:e2e:ci
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
           path: rsconcept/frontend/playwright-report/
+          if-no-files-found: ignore
           retention-days: 30
   notify-failure:
     permissions: {}
