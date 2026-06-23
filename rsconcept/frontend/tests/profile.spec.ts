@@ -88,7 +88,7 @@ test('profile page shows error when old password is wrong', async ({ page }) => 
   });
 
   await page.route(`${BACKEND_URL}/users/api/change-password`, async route => {
-    await route.fulfill({ status: 400, json: { detail: 'bad' } });
+    await route.fulfill({ status: 400, json: { old_password: ['Wrong password.'] } });
   });
 
   await page.goto('/profile');
