@@ -4,6 +4,8 @@ import { globalTx } from '@/i18n';
 
 import { limits } from '@/utils/constants';
 
+import { schemaPassword } from './password-validation';
+
 /** Represents CurrentUser information. */
 export interface ICurrentUser {
   id: number | null;
@@ -63,10 +65,7 @@ export const schemaChangePassword = z
       .string()
       .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
       .nonempty(globalTx('tx.general.field.required')),
-    new_password: z
-      .string()
-      .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
-      .nonempty(globalTx('tx.general.field.required')),
+    new_password: schemaPassword,
     new_password2: z
       .string()
       .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)

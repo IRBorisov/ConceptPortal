@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 import { globalTx } from '@/i18n';
 
+import { isPasswordTooSimilar, schemaPassword } from '@/features/auth/backend/password-validation';
+
 import { limits, patterns } from '@/utils/constants';
 
 /** Represents user profile for viewing and editing. */
@@ -45,15 +47,20 @@ const schemaUserInput = z.strictObject({
 
 export const schemaUserSignup = schemaUserInput
   .extend({
-    password: z
-      .string()
-      .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
-      .nonempty(globalTx('tx.general.field.required')),
+    password: schemaPassword,
     password2: z
       .string()
       .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
       .nonempty(globalTx('tx.general.field.required'))
   })
+  .refine(
+    schema =>
+      !isPasswordTooSimilar(schema.password, [schema.username, schema.email, schema.first_name, schema.last_name]),
+    {
+      path: ['password'],
+      message: globalTx('tx.general.password.validate.similar')
+    }
+  )
   .refine(schema => schema.password === schema.password2, {
     path: ['password2'],
     message: globalTx('tx.general.password.repeat.validate')

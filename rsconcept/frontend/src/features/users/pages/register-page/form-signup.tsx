@@ -14,9 +14,9 @@ import { Button, SubmitButton, TextURL } from '@/components/control';
 import { IconHelp } from '@/components/icons';
 import { type ErrorData } from '@/components/info-error';
 import { Checkbox, TextInput } from '@/components/input';
-import { PrettyJson } from '@/components/view';
 import { globalIDs, patterns } from '@/utils/constants';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
+import { extractErrorMessage } from '@/utils/utils';
 
 import { schemaUserSignup, type UserSignupDTO } from '../../backend/types';
 import { useSignup } from '../../backend/use-signup';
@@ -217,8 +217,8 @@ function ServerError({ error }: { error: ErrorData }): React.ReactElement {
       );
     } else {
       return (
-        <div className='mx-auto text-sm select-text text-destructive'>
-          <PrettyJson data={error.response} />
+        <div className='mx-auto text-sm select-text whitespace-pre-line text-destructive'>
+          {extractErrorMessage(error)}
         </div>
       );
     }

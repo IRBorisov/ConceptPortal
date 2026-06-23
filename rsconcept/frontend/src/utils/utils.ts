@@ -31,16 +31,23 @@ export function extractErrorMessage(error: Error | AxiosError): string {
   if (isAxiosError(error)) {
     if (error.response?.status === 400) {
       const data = error.response.data as Record<string, unknown>;
-      const keys = Object.keys(data);
-      if (keys.length === 1) {
-        const value = data[keys[0]];
-        if (typeof value === 'string') {
-          return `${keys[0]}: ${value}`;
-        }
+      const messages = Object.entries(data).flatMap(([key, value]) => formatApiFieldError(key, value));
+      if (messages.length > 0) {
+        return messages.join('\n');
       }
     }
   }
   return error.message;
+}
+
+function formatApiFieldError(key: string, value: unknown): string[] {
+  if (typeof value === 'string') {
+    return [`${key}: ${value}`];
+  }
+  if (Array.isArray(value)) {
+    return value.filter((item): item is string => typeof item === 'string').map(message => `${key}: ${message}`);
+  }
+  return [];
 }
 
 /** Convert array of objects to CSV Blob. */

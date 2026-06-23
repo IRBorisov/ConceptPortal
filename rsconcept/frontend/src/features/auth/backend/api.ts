@@ -42,11 +42,11 @@ export const authApi = {
       endpoint: '/users/api/login',
       request: { data: data }
     }),
-  changePassword: (data: IChangePasswordDTO) =>
+  changePassword: ({ old_password, new_password }: IChangePasswordDTO) =>
     axiosPatch({
       endpoint: '/users/api/change-password',
       request: {
-        data: data,
+        data: { old_password, new_password },
         successMessage: globalTx('tx.general.changes.save.success')
       }
     }),

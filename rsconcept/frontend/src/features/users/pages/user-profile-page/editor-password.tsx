@@ -13,6 +13,7 @@ import { SubmitButton } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
 import { TextInput } from '@/components/input';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
+import { extractErrorMessage } from '@/utils/utils';
 
 export function EditorPassword() {
   const tx = useTx();
@@ -113,7 +114,10 @@ function ServerError({
   rethrowIfStaleBundleError(error);
 
   if (isAxiosError(error) && error.response?.status === 400) {
-    return <div className='text-sm select-text text-destructive'>{wrongOldPasswordLabel}</div>;
+    if ('old_password' in error.response.data) {
+      return <div className='text-sm select-text text-destructive'>{wrongOldPasswordLabel}</div>;
+    }
+    return <div className='text-sm select-text whitespace-pre-line text-destructive'>{extractErrorMessage(error)}</div>;
   }
   throw error as Error;
 }
