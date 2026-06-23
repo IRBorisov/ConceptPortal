@@ -42,7 +42,7 @@ export function ViewSideLocation({ className }: ViewSideLocationProps) {
       className={clsx(
         'relative',
         'border-r border-b bg-input',
-        'flex flex-col text:xs sm:text-sm select-none',
+        'flex flex-col text-xs sm:text-sm select-none',
         className
       )}
     >
