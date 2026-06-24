@@ -190,7 +190,7 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.invalidFilterArity': 'Количество параметров фильтра не соответствует количеству индексов',
   'tx.rslang.error.arithmeticNotSupported': 'Тип не поддерживает арифметику: {type}',
   'tx.rslang.error.typesNotCompatible': 'Типы не совместимы для выбранной операции: {a} и {b}',
-  'tx.rslang.error.orderingNotSupported': 'Тип не поддерживает предикаты порядка: {type}',
+  'tx.rslang.error.orderingNotSupported': 'Тип {type} не поддерживает оператор "{operator}"',
   'tx.rslang.error.expectedLogic': 'Ожидалось логическое выражение, получено: {type}',
   'tx.rslang.error.expectedSetexpr': 'Ожидалось теоретико-множественное выражение, получено: {type}',
   'tx.rslang.error.invalidArgumentCortegeDeclare':

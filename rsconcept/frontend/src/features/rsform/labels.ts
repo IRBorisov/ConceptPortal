@@ -403,9 +403,10 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
     case RSErrorCode.invalidReduce:
       return globalTx(id, { arg: params[0] ?? '' });
     case RSErrorCode.arithmeticNotSupported:
-    case RSErrorCode.orderingNotSupported:
     case RSErrorCode.expectedSetexpr:
       return globalTx(id, { type: params[0] ?? '' });
+    case RSErrorCode.orderingNotSupported:
+      return globalTx(id, { type: params[0] ?? '', operator: params[1] ?? '' });
     case RSErrorCode.expectedLogic:
       return globalTx(id, { type: params[0] ?? '' });
     case RSErrorCode.invalidProjectionTuple:

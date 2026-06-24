@@ -193,7 +193,7 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.invalidFilterArity': 'Le nombre de paramètres du filtre ne correspond pas au nombre d’indices',
   'tx.rslang.error.arithmeticNotSupported': 'Type sans arithmétique : {type}',
   'tx.rslang.error.typesNotCompatible': 'Types incompatibles pour l’opération choisie : {a} et {b}',
-  'tx.rslang.error.orderingNotSupported': 'Type sans prédicats d’ordre : {type}',
+  'tx.rslang.error.orderingNotSupported': 'Le type {type} ne prend pas en charge l’opérateur « {operator} »',
   'tx.rslang.error.expectedLogic': 'Expression logique attendue, obtenu : {type}',
   'tx.rslang.error.expectedSetexpr': 'Expression ensembliste attendue, obtenu : {type}',
   'tx.rslang.error.invalidArgumentCortegeDeclare':

@@ -186,7 +186,7 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.invalidFilterArity': 'Filter parameter count does not match index count',
   'tx.rslang.error.arithmeticNotSupported': 'Type does not support arithmetic: {type}',
   'tx.rslang.error.typesNotCompatible': 'Types are incompatible for the chosen operation: {a} and {b}',
-  'tx.rslang.error.orderingNotSupported': 'Type does not support order predicates: {type}',
+  'tx.rslang.error.orderingNotSupported': 'Type {type} does not support operator "{operator}"',
   'tx.rslang.error.expectedLogic': 'Logical expression expected, got: {type}',
   'tx.rslang.error.expectedSetexpr': 'Set-theoretic expression expected, got: {type}',
   'tx.rslang.error.invalidArgumentCortegeDeclare':

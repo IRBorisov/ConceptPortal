@@ -173,8 +173,8 @@ const errorData = [
   ['debool(X1)+1', { code: RSErrorCode.arithmeticNotSupported, from: 0, to: 10, params: ['X1'] }],
   ['1+debool(X1)', { code: RSErrorCode.arithmeticNotSupported, from: 2, to: 12, params: ['X1'] }],
   // Logical
-  ['debool(X1)<1', { code: RSErrorCode.orderingNotSupported, from: 0, to: 10, params: ['X1'] }],
-  ['1<debool(X1)', { code: RSErrorCode.orderingNotSupported, from: 2, to: 12, params: ['X1'] }],
+  ['debool(X1)<1', { code: RSErrorCode.orderingNotSupported, from: 0, to: 10, params: ['X1', '<'] }],
+  ['1<debool(X1)', { code: RSErrorCode.orderingNotSupported, from: 2, to: 12, params: ['X1', '<'] }],
   ['debool(X1)=1', { code: RSErrorCode.typesNotCompatible, from: 0, to: 12, params: ['X1', 'Z'] }],
   ['1=debool(X1)', { code: RSErrorCode.typesNotCompatible, from: 0, to: 12, params: ['Z', 'X1'] }],
   ['S1=S2', { code: RSErrorCode.typesNotCompatible, from: 0, to: 5, params: ['ℬ(X1×X1)', 'ℬℬ(X1)'] }],

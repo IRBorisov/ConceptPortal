@@ -457,12 +457,13 @@ export class TypeAuditor {
   }
 
   private visitIntegerPredicate(node: AstNode): ExpressionType | null {
+    const operator = labelRSLangNode(node);
     const type1 = this.childTypification(node, 0);
     if (type1 === null) {
       return null;
     }
     if (!('isOrdered' in type1 && type1.isOrdered)) {
-      return this.onError(RSErrorCode.orderingNotSupported, node.children[0], [labelType(type1)]);
+      return this.onError(RSErrorCode.orderingNotSupported, node.children[0], [labelType(type1), operator]);
     }
 
     const type2 = this.childTypification(node, 1);
@@ -470,7 +471,7 @@ export class TypeAuditor {
       return null;
     }
     if (!('isOrdered' in type2 && type2.isOrdered)) {
-      return this.onError(RSErrorCode.orderingNotSupported, node.children[1], [labelType(type2)]);
+      return this.onError(RSErrorCode.orderingNotSupported, node.children[1], [labelType(type2), operator]);
     }
 
     if (!checkCompatibility(type1, type2)) {
