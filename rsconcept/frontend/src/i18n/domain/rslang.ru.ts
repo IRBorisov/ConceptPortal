@@ -165,7 +165,7 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.localNotUsed': 'Неиспользованная переменная: {name}',
   'tx.rslang.error.localUndeclared': 'Необъявленная переменная: {name}',
   'tx.rslang.error.localShadowing': 'Повторное объявление переменной: {name}',
-  'tx.rslang.error.typesNotEqual': 'Типы {a} и {b} не совместимы для оператора "{operator}"',
+  'tx.rslang.error.typesNotEqual': 'Типы {a} и {b} должны быть равны для оператора "{operator}"',
   'tx.rslang.error.globalNotTyped': 'Нет типизации: {name}',
   'tx.rslang.error.invalidDecart': 'τ(α×b) = 𝔅(𝔇τ(α)×𝔇τ(b)). Некорректный аргумент: {arg}',
   'tx.rslang.error.invalidBoolean': 'τ(ℬ(a)) = 𝔅𝔅𝔇τ(a). Некорректный аргумент: {arg}',

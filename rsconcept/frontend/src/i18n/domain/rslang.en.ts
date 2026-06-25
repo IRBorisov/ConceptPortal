@@ -162,7 +162,7 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.localNotUsed': 'Unused variable: {name}',
   'tx.rslang.error.localUndeclared': 'Undeclared variable: {name}',
   'tx.rslang.error.localShadowing': 'Variable shadowing: {name}',
-  'tx.rslang.error.typesNotEqual': 'Types {a} and {b} are incompatible for operator "{operator}"',
+  'tx.rslang.error.typesNotEqual': 'Types {a} and {b} must be equal for operator "{operator}"',
   'tx.rslang.error.globalNotTyped': 'No typification: {name}',
   'tx.rslang.error.invalidDecart': 'τ(α×b) = 𝔅(𝔇τ(α)×𝔇τ(b)). Invalid argument: {arg}',
   'tx.rslang.error.invalidBoolean': 'τ(ℬ(a)) = 𝔅𝔅𝔇τ(a). Invalid argument: {arg}',

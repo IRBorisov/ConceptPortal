@@ -167,7 +167,7 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.localNotUsed': 'Variable inutilisée : {name}',
   'tx.rslang.error.localUndeclared': 'Variable non déclarée : {name}',
   'tx.rslang.error.localShadowing': 'Masquage de variable : {name}',
-  'tx.rslang.error.typesNotEqual': 'Les types {a} et {b} sont incompatibles pour l’opérateur « {operator} »',
+  'tx.rslang.error.typesNotEqual': 'Les types {a} et {b} doivent être égaux pour l’opérateur « {operator} »',
   'tx.rslang.error.globalNotTyped': 'Pas de typification : {name}',
   'tx.rslang.error.invalidDecart': 'τ(α×b) = 𝔅(𝔇τ(α)×𝔇τ(b)). Argument non valide : {arg}',
   'tx.rslang.error.invalidBoolean': 'τ(ℬ(a)) = 𝔅𝔅𝔇τ(a). Argument non valide : {arg}',
