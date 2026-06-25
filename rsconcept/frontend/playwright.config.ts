@@ -37,8 +37,11 @@ export default defineConfig({
     trace: 'on-first-retry'
   },
   webServer: {
-    command: 'npm run dev',
+    // Dev server (HMR, unbundled modules, sourcemaps) is heavy and crashes WebKit under CI load.
+    // Serve the optimized production build instead; CI already runs `npm run build` beforehand.
+    command: process.env.CI ? 'npm run preview' : 'npm run dev',
     port: 3000,
-    reuseExistingServer: !process.env.CI
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000
   }
 });

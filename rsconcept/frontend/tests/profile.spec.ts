@@ -1,7 +1,7 @@
 import { type UserProfile } from '../src/features/users/backend/types';
 import { authAdmin, authAnonymous } from './mocks/auth';
 import { BACKEND_URL } from './mocks/constants';
-import { waitForApiResponse } from './navigation';
+import { clickAndWaitForApi, waitForApiResponse } from './navigation';
 import { expect, test } from './setup';
 
 test.beforeEach(() => {
@@ -73,7 +73,11 @@ test('profile page shows server error when email is rejected', async ({ page }) 
   await page.goto('/profile');
 
   await page.locator('#email').fill('taken@example.com');
-  await page.getByRole('button', { name: 'Сохранить изменения' }).click();
+  await clickAndWaitForApi(page, page.getByRole('button', { name: 'Сохранить изменения' }), {
+    url: `${BACKEND_URL}/users/api/profile`,
+    method: 'PATCH',
+    ok: false
+  });
 
   await expect(page.getByText('Этот адрес уже используется.')).toBeVisible();
 });
@@ -100,7 +104,11 @@ test('profile page shows error when old password is wrong', async ({ page }) => 
   await page.locator('#old_password').fill('wrong');
   await page.locator('#new_password').fill('newpass1');
   await page.locator('#new_password2').fill('newpass1');
-  await page.getByRole('button', { name: 'Установить пароль' }).click();
+  await clickAndWaitForApi(page, page.getByRole('button', { name: 'Установить пароль' }), {
+    url: `${BACKEND_URL}/users/api/change-password`,
+    method: 'PATCH',
+    ok: false
+  });
 
   await expect(page.getByText('Неверный пароль')).toBeVisible();
 });
