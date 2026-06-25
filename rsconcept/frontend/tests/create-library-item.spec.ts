@@ -4,7 +4,7 @@ import { authAdmin, authAnonymous } from './mocks/auth';
 import { createRSFormMock, dataRSForms } from './mocks/concepts';
 import { BACKEND_URL } from './mocks/constants';
 import { dataLibraryItems } from './mocks/library';
-import { submitAndWaitForURL } from './navigation';
+import { clickAndWaitForApi, submitAndWaitForURL } from './navigation';
 import { expect, test } from './setup';
 
 test.describe.configure({ mode: 'serial' });
@@ -125,7 +125,11 @@ test('create item page shows server error when create request fails', async ({ p
   await page.goto('/library/create', { waitUntil: 'domcontentloaded' });
   await page.locator('#schema_title').fill('Конфликтная КС');
   await page.locator('#schema_alias').fill('KS_CONFLICT');
-  await page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }).click();
+  await clickAndWaitForApi(page, page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }), {
+    url: `${BACKEND_URL}/api/library`,
+    method: 'POST',
+    ok: false
+  });
 
   await expect(page.getByText('detail: Схема с таким именем уже существует')).toBeVisible();
   await expect(page).toHaveURL(/\/library\/create$/);

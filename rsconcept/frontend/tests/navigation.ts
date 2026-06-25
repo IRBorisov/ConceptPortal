@@ -31,6 +31,11 @@ export function waitForApiResponse(page: Page, options: ApiResponseWaitOptions):
   );
 }
 
+/** Race click with API completion (stable on WebKit for non-navigating submits). */
+export async function clickAndWaitForApi(page: Page, locator: Locator, options: ApiResponseWaitOptions) {
+  await Promise.all([waitForApiResponse(page, options), locator.click()]);
+}
+
 /** Race submit click with API completion and client-router navigation (stable on WebKit). */
 export async function submitAndWaitForURL(
   page: Page,

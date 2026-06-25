@@ -4,7 +4,7 @@ import { authAdmin, authAnonymous } from './mocks/auth';
 import { createRSFormMock, dataRSForms, resetConceptMocks } from './mocks/concepts';
 import { BACKEND_URL } from './mocks/constants';
 import { dataLibraryItems } from './mocks/library';
-import { clickAndWaitForURL, submitAndWaitForURL } from './navigation';
+import { clickAndWaitForApi, clickAndWaitForURL, submitAndWaitForURL } from './navigation';
 import { expect, test } from './setup';
 
 test.describe.configure({ mode: 'serial' });
@@ -221,7 +221,11 @@ test('RSForm create-model flow shows error when API rejects creation', async ({ 
   const createModel = page.getByRole('button', { name: 'Создать модель' });
   await expect(createModel).toBeVisible();
   await clickAndWaitForURL(page, createModel, /\/library\/create/);
-  await page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }).click();
+  await clickAndWaitForApi(page, page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }), {
+    url: `${BACKEND_URL}/api/library`,
+    method: 'POST',
+    ok: false
+  });
 
   await expect(page.getByText('detail: Создание модели запрещено для этой схемы')).toBeVisible();
   await expect(page).toHaveURL(/\/library\/create/);
@@ -244,8 +248,13 @@ test('RSForm passport save shows error when update is rejected', async ({ page }
   });
 
   await page.goto(`/rsforms/${rsformID}`, { waitUntil: 'domcontentloaded' });
+  await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible();
   await page.locator('#schema_alias').fill('KS_CONFLICT');
-  await page.getByRole('button', { name: 'Сохранить изменения' }).click();
+  await clickAndWaitForApi(page, page.getByRole('button', { name: 'Сохранить изменения' }), {
+    url: new RegExp(`${BACKEND_URL}/api/library/${rsformID}$`),
+    method: 'PATCH',
+    ok: false
+  });
 
   await expect(page.getByText('alias: Сокращение уже занято')).toBeVisible();
   await expect(page).toHaveURL(new RegExp(`/rsforms/${rsformID}$`));

@@ -3,7 +3,7 @@ import { AccessPolicy, LibraryItemType } from '@rsconcept/domain/library';
 import { authAdmin, authAnonymous } from './mocks/auth';
 import { createRSFormMock, createRSModelMock, dataRSForms, dataRSModels, resetConceptMocks } from './mocks/concepts';
 import { BACKEND_URL } from './mocks/constants';
-import { clickAndWaitForURL } from './navigation';
+import { clickAndWaitForApi, clickAndWaitForURL } from './navigation';
 import { expect, test } from './setup';
 
 test.describe.configure({ mode: 'serial' });
@@ -43,7 +43,7 @@ test('RSModel allows switching to data tab', async ({ page }) => {
   await page.goto(`/models/${modelID}`, { waitUntil: 'domcontentloaded' });
 
   const dataTab = page.getByRole('tab', { name: 'Данные' });
-  await dataTab.click();
+  await clickAndWaitForURL(page, dataTab, /tab=4/);
 
   await expect(dataTab).toHaveAttribute('aria-selected', 'true');
 });
@@ -111,7 +111,10 @@ test('RSModel card mutation saves model title', async ({ page }) => {
 
   await page.goto(`/models/${modelID}`, { waitUntil: 'domcontentloaded' });
   await page.locator('#schema_title').fill('Модель после мутации');
-  await page.getByRole('button', { name: 'Сохранить изменения' }).click();
+  await clickAndWaitForApi(page, page.getByRole('button', { name: 'Сохранить изменения' }), {
+    url: new RegExp(`${BACKEND_URL}/api/library/${modelID}$`),
+    method: 'PATCH'
+  });
 
   await expect(page.getByText('Изменения сохранены')).toBeVisible();
   await expect(page.locator('#schema_title')).toHaveValue('Модель после мутации');
@@ -150,7 +153,11 @@ test('RSModel card save shows error when update is rejected', async ({ page }) =
 
   await page.goto(`/models/${modelID}`, { waitUntil: 'domcontentloaded' });
   await page.locator('#schema_title').fill('Запрещённое имя');
-  await page.getByRole('button', { name: 'Сохранить изменения' }).click();
+  await clickAndWaitForApi(page, page.getByRole('button', { name: 'Сохранить изменения' }), {
+    url: new RegExp(`${BACKEND_URL}/api/library/${modelID}$`),
+    method: 'PATCH',
+    ok: false
+  });
 
   await expect(page.getByText('title: Недопустимое название модели')).toBeVisible();
   await expect(page).toHaveURL(new RegExp(`/models/${modelID}$`));
