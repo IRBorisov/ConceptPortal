@@ -167,11 +167,11 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.localNotUsed': 'Variable inutilisée : {name}',
   'tx.rslang.error.localUndeclared': 'Variable non déclarée : {name}',
   'tx.rslang.error.localShadowing': 'Masquage de variable : {name}',
-  'tx.rslang.error.typesNotEqual': 'Typifications différentes : {a} ≠ {b}',
+  'tx.rslang.error.typesNotEqual': 'Les types {a} et {b} sont incompatibles pour l’opérateur « {operator} »',
   'tx.rslang.error.globalNotTyped': 'Pas de typification : {name}',
   'tx.rslang.error.invalidDecart': 'τ(α×b) = 𝔅(𝔇τ(α)×𝔇τ(b)). Argument non valide : {arg}',
   'tx.rslang.error.invalidBoolean': 'τ(ℬ(a)) = 𝔅𝔅𝔇τ(a). Argument non valide : {arg}',
-  'tx.rslang.error.invalidTypeOperation': 'L’argument de l’opération doit être un ensemble : {arg}',
+  'tx.rslang.error.invalidTypeOperation': 'L’argument {type} de l’opérateur « {operator} » doit être un ensemble',
   'tx.rslang.error.invalidCard': 'Cardinalité réservée aux ensembles : {arg}',
   'tx.rslang.error.invalidDebool': 'τ(debool(a)) = 𝔇τ(a). Argument non valide : {arg}',
   'tx.rslang.error.globalFuncWithoutArgs': 'Fonction sans arguments : {name}',
@@ -182,7 +182,8 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.invalidCortegeDeclare':
     'Le nombre de variables du n-uplet ne correspond pas à la dimension du produit cartésien',
   'tx.rslang.error.localOutOfScope': 'La variable _{name}_ est hors de la portée de sa définition',
-  'tx.rslang.error.invalidElementPredicate': 'Typifications incohérentes : {a}{b}{c}',
+  'tx.rslang.error.invalidElementPredicate':
+    'Le type {a} est incompatible avec l’ensemble {c} pour l’opérateur « {b} »',
   'tx.rslang.error.invalidEmptySetUsage': 'Usage dénué de sens de l’ensemble vide',
   'tx.rslang.error.invalidArgsArity': 'Nombre d’arguments incorrect : {a} ≠ {b}',
   'tx.rslang.error.invalidArgumentType':
@@ -191,13 +192,16 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.radicalUsage': 'Radicaux interdits hors déclarations : {name}',
   'tx.rslang.error.invalidFilterArgumentType': 'Typification de l’argument du filtre non valide : {a}({b})',
   'tx.rslang.error.invalidFilterArity': 'Le nombre de paramètres du filtre ne correspond pas au nombre d’indices',
-  'tx.rslang.error.arithmeticNotSupported': 'Type sans arithmétique : {type}',
-  'tx.rslang.error.typesNotCompatible': 'Types incompatibles pour l’opération choisie : {a} et {b}',
+  'tx.rslang.error.arithmeticNotSupported':
+    'Le type {type} ne prend pas en charge l’opération arithmétique « {operator} »',
+  'tx.rslang.error.typesNotCompatible': 'Les types {a} et {b} sont incompatibles pour l’opérateur « {operator} »',
   'tx.rslang.error.orderingNotSupported': 'Le type {type} ne prend pas en charge l’opérateur « {operator} »',
   'tx.rslang.error.expectedLogic': 'Expression logique attendue, obtenu : {type}',
   'tx.rslang.error.expectedSetexpr': 'Expression ensembliste attendue, obtenu : {type}',
   'tx.rslang.error.invalidArgumentCortegeDeclare':
     'La déclaration liée dans les arguments de fonction n’est pas autorisée ; utilisez des projections ou déclarez les variables séparément',
+  'tx.rslang.error.invalidQuantifierDomain':
+    'Dans la déclaration du quantificateur « {operator} », un ensemble est attendu, type obtenu : {type}',
   'tx.rslang.error.globalNoValue': 'Identifiant non calculable : {name}',
   'tx.rslang.error.invalidPropertyUsage': 'Ensemble non itérable utilisé comme valeur',
   'tx.rslang.error.cstEmptyDerived': 'Expression vide pour une notion complexe ou un énoncé',
@@ -209,7 +213,7 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.calcGlobalMissing': 'Pas de valeur : {name}',
   'tx.rslang.error.iterationsLimit': 'Limite d’itérations dépassée : {limit}',
   'tx.rslang.error.calcInvalidDebool': 'Application debool non valide',
-  'tx.rslang.error.calcInvalidData': 'Opération sur les données non valide : valeurs incompatibles {a} et {b}',
+  'tx.rslang.error.calcInvalidData': 'Les valeurs {a} et {b} sont incompatibles pour l’opérateur « {operator} »',
   'tx.rslang.error.iterateInfinity': 'Itération sur l’infini',
 
   'tx.rslang.identifiers': 'Identificateurs',

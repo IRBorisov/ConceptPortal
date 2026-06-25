@@ -38,6 +38,7 @@ const labelTokenRecord: Partial<Record<TokenID, string>> = {
   [TokenID.NT_DECLARATIVE_EXPR]: 'D{}',
   [TokenID.NT_IMPERATIVE_EXPR]: 'I{}',
   [TokenID.NT_RECURSIVE_FULL]: 'R{}',
+  [TokenID.NT_RECURSIVE_SHORT]: 'R{}',
   [TokenID.BIGPR]: 'Pr1()',
   [TokenID.SMALLPR]: 'pr1()',
   [TokenID.FILTER]: 'Fi1[]()',

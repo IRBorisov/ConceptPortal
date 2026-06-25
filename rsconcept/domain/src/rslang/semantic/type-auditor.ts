@@ -298,7 +298,12 @@ export class TypeAuditor {
     return true;
   }
 
-  private childTypeDebool(node: AstNode, index: number, errorCode: RSErrorCode): Typification | null {
+  private childTypeDebool(
+    node: AstNode,
+    index: number,
+    errorCode: RSErrorCode,
+    operation?: string
+  ): Typification | null {
     const result = this.childTypification(node, index);
     if (result === null) {
       return null;
@@ -307,7 +312,30 @@ export class TypeAuditor {
       return result;
     }
     if (result.typeID !== TypeID.collection) {
-      this.onError(errorCode, node.children[index], [labelType(result)]);
+      const params =
+        errorCode === RSErrorCode.invalidTypeOperation && operation !== undefined
+          ? [operation, labelType(result)]
+          : [labelType(result)];
+      this.onError(errorCode, node.children[index], params);
+      return null;
+    }
+    return debool(result);
+  }
+
+  private childQuantifierDomain(node: AstNode, index: number, operator: string): Typification | null {
+    const result = this.visitChild(node, index);
+    if (result === null) {
+      return null;
+    }
+    if (!isTypification(result)) {
+      this.onError(RSErrorCode.invalidQuantifierDomain, node.children[index], [operator, labelType(result)]);
+      return null;
+    }
+    if (result.typeID === TypeID.anyTypification) {
+      return result;
+    }
+    if (result.typeID !== TypeID.collection) {
+      this.onError(RSErrorCode.invalidQuantifierDomain, node.children[index], [operator, labelType(result)]);
       return null;
     }
     return debool(result);
@@ -415,7 +443,7 @@ export class TypeAuditor {
     if (variable.typeID === TokenID.NT_TUPLE_DECL) {
       return this.onError(RSErrorCode.invalidArgumentCortegeDeclare, variable);
     }
-    const domain = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation);
+    const domain = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation, labelToken(TokenID.ITERATE));
     if (domain === null) {
       return null;
     }
@@ -433,12 +461,13 @@ export class TypeAuditor {
   }
 
   private visitArithmetic(node: AstNode): ExpressionType | null {
+    const operator = labelRSLangNode(node);
     const type1 = this.childTypification(node, 0);
     if (type1 === null) {
       return null;
     }
     if (!('isArithmetic' in type1 && type1.isArithmetic)) {
-      return this.onError(RSErrorCode.arithmeticNotSupported, node.children[0], [labelType(type1)]);
+      return this.onError(RSErrorCode.arithmeticNotSupported, node.children[0], [labelType(type1), operator]);
     }
 
     const type2 = this.childTypification(node, 1);
@@ -446,12 +475,12 @@ export class TypeAuditor {
       return null;
     }
     if (!('isArithmetic' in type2 && type2.isArithmetic)) {
-      return this.onError(RSErrorCode.arithmeticNotSupported, node.children[1], [labelType(type2)]);
+      return this.onError(RSErrorCode.arithmeticNotSupported, node.children[1], [labelType(type2), operator]);
     }
 
     const result = mergeTypifications(type1, type2);
     if (result === null) {
-      return this.onError(RSErrorCode.typesNotCompatible, node, [labelType(type1), labelType(type2)]);
+      return this.onError(RSErrorCode.typesNotCompatible, node, [labelType(type1), labelType(type2), operator]);
     }
     return result;
   }
@@ -475,7 +504,7 @@ export class TypeAuditor {
     }
 
     if (!checkCompatibility(type1, type2)) {
-      return this.onError(RSErrorCode.typesNotCompatible, node, [labelType(type1), labelType(type2)]);
+      return this.onError(RSErrorCode.typesNotCompatible, node, [labelType(type1), labelType(type2), operator]);
     }
     return LogicT;
   }
@@ -483,7 +512,8 @@ export class TypeAuditor {
   private visitQuantifier(node: AstNode): ExpressionType | null {
     this.locals.startScope();
 
-    const domain = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation);
+    const operator = labelRSLangNode(node);
+    const domain = this.childQuantifierDomain(node, 1, operator);
     if (domain === null) {
       return null;
     } else if (!this.visitChildDeclaration(node, 0, domain)) {
@@ -511,6 +541,7 @@ export class TypeAuditor {
   }
 
   private visitEquals(node: AstNode): ExpressionType | null {
+    const operator = labelRSLangNode(node);
     const type1 = this.childTypification(node, 0);
     if (type1 === null) {
       return null;
@@ -521,13 +552,14 @@ export class TypeAuditor {
       return null;
     }
     if (!checkCompatibility(type1, type2)) {
-      return this.onError(RSErrorCode.typesNotCompatible, node, [labelType(type1), labelType(type2)]);
+      return this.onError(RSErrorCode.typesNotCompatible, node, [labelType(type1), labelType(type2), operator]);
     }
     return LogicT;
   }
 
   private visitSetexprPredicate(node: AstNode): ExpressionType | null {
-    let type2 = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation);
+    const operator = labelRSLangNode(node);
+    let type2 = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation, operator);
     if (type2 === null) {
       return null;
     }
@@ -542,11 +574,11 @@ export class TypeAuditor {
 
     if (!checkCompatibility(type1, type2)) {
       if (isSubset) {
-        return this.onError(RSErrorCode.typesNotEqual, node, [labelType(type1), labelType(type2)]);
+        return this.onError(RSErrorCode.typesNotEqual, node, [labelType(type1), labelType(type2), operator]);
       } else {
         return this.onError(RSErrorCode.invalidElementPredicate, node, [
           labelType(type1),
-          labelToken(node.typeID as TokenID),
+          operator,
           labelType(bool(type2))
         ]);
       }
@@ -619,19 +651,20 @@ export class TypeAuditor {
   }
 
   private visitSetexprBinary(node: AstNode): ExpressionType | null {
-    const type1 = this.childTypeDebool(node, 0, RSErrorCode.invalidTypeOperation);
+    const operator = labelRSLangNode(node);
+    const type1 = this.childTypeDebool(node, 0, RSErrorCode.invalidTypeOperation, operator);
     if (type1 === null) {
       return null;
     }
 
-    const type2 = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation);
+    const type2 = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation, operator);
     if (type2 === null) {
       return null;
     }
 
     const result = mergeTypifications(type1, type2);
     if (result === null) {
-      return this.onError(RSErrorCode.typesNotEqual, node, [labelType(bool(type1)), labelType(bool(type2))]);
+      return this.onError(RSErrorCode.typesNotEqual, node, [labelType(bool(type1)), labelType(bool(type2)), operator]);
     }
     return bool(result);
   }
@@ -707,6 +740,7 @@ export class TypeAuditor {
   }
 
   private visitFilter(node: AstNode): ExpressionType | null {
+    const operator = labelRSLangNode(node);
     const indices = getNodeIndices(node);
     const tupleParam = indices.length === node.children.length - 1;
     if (!tupleParam && node.children.length > 2) {
@@ -752,7 +786,8 @@ export class TypeAuditor {
         if (param.typeID !== TypeID.collection || !checkCompatibility(bases[child], debool(param))) {
           return this.onError(RSErrorCode.typesNotEqual, node.children[child], [
             labelType(param),
-            labelType(bool(bases[child]))
+            labelType(bool(bases[child])),
+            operator
           ]);
         }
       }
@@ -764,7 +799,11 @@ export class TypeAuditor {
       const paramType = param;
       const expected = bool(tuple(bases));
       if (paramType.typeID !== TypeID.collection || !checkCompatibility(expected, paramType)) {
-        return this.onError(RSErrorCode.typesNotEqual, node.children[0], [labelType(paramType), labelType(expected)]);
+        return this.onError(RSErrorCode.typesNotEqual, node.children[0], [
+          labelType(paramType),
+          labelType(expected),
+          operator
+        ]);
       }
     }
     return argument;
@@ -794,7 +833,12 @@ export class TypeAuditor {
   private visitDeclarative(node: AstNode): ExpressionType | null {
     this.locals.startScope();
 
-    const domain = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation);
+    const domain = this.childTypeDebool(
+      node,
+      1,
+      RSErrorCode.invalidTypeOperation,
+      labelToken(TokenID.NT_DECLARATIVE_EXPR)
+    );
     if (domain === null) {
       return null;
     } else if (!this.visitChildDeclaration(node, 0, domain)) {
@@ -826,7 +870,7 @@ export class TypeAuditor {
   }
 
   private visitIterate(node: AstNode): ExpressionType | null {
-    const domain = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation);
+    const domain = this.childTypeDebool(node, 1, RSErrorCode.invalidTypeOperation, labelToken(TokenID.ITERATE));
     if (domain === null) {
       return null;
     }
@@ -868,7 +912,8 @@ export class TypeAuditor {
     if (!checkCompatibility(iterationValue, initType)) {
       return this.onError(RSErrorCode.typesNotEqual, node.children[iterationIndex], [
         labelType(iterationValue),
-        labelType(initType)
+        labelType(initType),
+        labelToken(node.typeID as TokenID)
       ]);
     }
 

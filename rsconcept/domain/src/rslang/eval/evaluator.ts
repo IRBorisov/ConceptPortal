@@ -5,6 +5,7 @@
 import { type AstNode, getNodeIndices, getNodeText } from '../../parsing';
 import { annotateError } from '../ast-annotations';
 import { type ErrorReporter, RSErrorCode } from '../error';
+import { labelRSLangNode } from '../labels';
 import { TokenID } from '../parser/token';
 
 import { EvaluationCache, EvaluationMetadata } from './evaluation-cache';
@@ -162,7 +163,7 @@ export class Evaluator {
       return result;
     } catch (error) {
       if (error instanceof CalcInvalidDataError) {
-        return this.onError(RSErrorCode.calcInvalidData, node, [error.left, error.right]);
+        return this.onError(RSErrorCode.calcInvalidData, node, [error.left, error.right, labelRSLangNode(node)]);
       }
       this.onError(RSErrorCode.calcUnknownError, node);
       return null;

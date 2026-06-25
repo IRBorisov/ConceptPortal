@@ -230,8 +230,8 @@ const errorData = [
   ['I{(a,b) | a:∈X1; b:=a; b≠D1}', { code: RSErrorCode.calcGlobalMissing, from: 25, to: 27, params: ['D1'] }],
   ['I{(a,b) | a:∈X1; b:=D1; b≠a}', { code: RSErrorCode.calcGlobalMissing, from: 20, to: 22, params: ['D1'] }],
   ['∀a∈X1 b=b', { code: RSErrorCode.localUndeclared, from: 6, to: 7, params: ['b'] }],
-  ['X1=1', { code: RSErrorCode.calcInvalidData, from: 0, to: 4, params: ['{1, 2, 3}', '1'] }],
-  ['X1=1 & 1=1', { code: RSErrorCode.calcInvalidData, from: 0, to: 4, params: ['{1, 2, 3}', '1'] }]
+  ['X1=1', { code: RSErrorCode.calcInvalidData, from: 0, to: 4, params: ['{1, 2, 3}', '1', '='] }],
+  ['X1=1 & 1=1', { code: RSErrorCode.calcInvalidData, from: 0, to: 4, params: ['{1, 2, 3}', '1', '='] }]
 ];
 
 describe('Calculator', () => {

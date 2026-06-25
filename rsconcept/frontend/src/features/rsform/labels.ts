@@ -52,6 +52,7 @@ const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
   [RSErrorCode.expectedLogic]: 'tx.rslang.error.expectedLogic',
   [RSErrorCode.expectedSetexpr]: 'tx.rslang.error.expectedSetexpr',
   [RSErrorCode.invalidArgumentCortegeDeclare]: 'tx.rslang.error.invalidArgumentCortegeDeclare',
+  [RSErrorCode.invalidQuantifierDomain]: 'tx.rslang.error.invalidQuantifierDomain',
   [RSErrorCode.globalNoValue]: 'tx.rslang.error.globalNoValue',
   [RSErrorCode.invalidPropertyUsage]: 'tx.rslang.error.invalidPropertyUsage',
   [RSErrorCode.cstEmptyDerived]: 'tx.rslang.error.cstEmptyDerived',
@@ -394,18 +395,19 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
     case RSErrorCode.invalidArgsArity:
     case RSErrorCode.typesNotCompatible:
     case RSErrorCode.calcInvalidData:
-      return globalTx(id, { a: params[0] ?? '', b: params[1] ?? '' });
+      return globalTx(id, { a: params[0] ?? '', b: params[1] ?? '', operator: params[2] ?? '' });
     case RSErrorCode.invalidDecart:
     case RSErrorCode.invalidBoolean:
-    case RSErrorCode.invalidTypeOperation:
     case RSErrorCode.invalidCard:
     case RSErrorCode.invalidDebool:
     case RSErrorCode.invalidReduce:
       return globalTx(id, { arg: params[0] ?? '' });
+    case RSErrorCode.invalidTypeOperation:
+    case RSErrorCode.invalidQuantifierDomain:
+      return globalTx(id, { operator: params[0] ?? '', type: params[1] ?? '' });
     case RSErrorCode.arithmeticNotSupported:
-    case RSErrorCode.expectedSetexpr:
-      return globalTx(id, { type: params[0] ?? '' });
     case RSErrorCode.orderingNotSupported:
+    case RSErrorCode.expectedSetexpr:
       return globalTx(id, { type: params[0] ?? '', operator: params[1] ?? '' });
     case RSErrorCode.expectedLogic:
       return globalTx(id, { type: params[0] ?? '' });
