@@ -150,7 +150,7 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
                   onClick={() => handleSelectConstituenta(cst)}
                   onDoubleClick={handleDoubleClick}
                 >
-                  <span className='min-w-8 rounded-sm bg-secondary px-2 py-0.5 text-xs font-medium text-center'>
+                  <span className='min-w-12 rounded-sm bg-secondary px-2 py-0.5 text-xs font-medium text-center'>
                     {cst.alias}
                   </span>
                   <span className='min-w-0 grow truncate text-left'>{cst.term_resolved}</span>

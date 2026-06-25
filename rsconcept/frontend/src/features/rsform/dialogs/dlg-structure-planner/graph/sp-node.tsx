@@ -9,7 +9,10 @@ import { colorSPNode } from '@/features/rsform/colors';
 
 import { type SPFlowNode } from './sp-models';
 
+const LABEL_THRESHOLD = 3;
+
 export function SPNodeComponent(node: NodeProps<SPFlowNode>) {
+  const alias = node.data.node.existing?.alias ?? 'N/A';
   const descriptionText = node.data.node.existing?.term_resolved || labelType(node.data.node.type);
   return (
     <>
@@ -19,11 +22,12 @@ export function SPNodeComponent(node: NodeProps<SPFlowNode>) {
         className={clsx(
           'cc-node-label',
           'w-full h-full flex items-center justify-center',
-          'cursor-default rounded-full'
+          'cursor-default rounded-full',
+          alias.length > LABEL_THRESHOLD ? 'text-[12px]/[16px]' : 'text-[14px]/[20px]'
         )}
         style={{ backgroundColor: colorSPNode(node.data) }}
       >
-        {node.data.node.existing?.alias ?? 'N/A'}
+        {alias}
       </div>
 
       {descriptionText ? (

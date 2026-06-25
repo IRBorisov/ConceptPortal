@@ -183,8 +183,8 @@ export function DlgStructurePlanner() {
 
           <div
             className={clsx(
-              'w-8 pt-5.5 pr-3 pb-3.75',
-              'font-medium whitespace-nowrap',
+              'w-12 shrink-0 pt-5.5 pr-3 pb-3.75',
+              'text-center font-medium whitespace-nowrap',
               blurClass,
               !selectedCst && 'text-constructive'
             )}
