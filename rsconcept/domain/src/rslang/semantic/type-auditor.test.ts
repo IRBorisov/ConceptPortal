@@ -219,11 +219,17 @@ const errorData = [
   ['pr1(debool(X1))', { code: RSErrorCode.invalidProjectionTuple, from: 4, to: 14, params: ['pr1', 'X1'] }],
   ['pr3(debool(S1))', { code: RSErrorCode.invalidProjectionTuple, from: 4, to: 14, params: ['pr3', 'X1×X1'] }],
   ['Fi1[X1](ℬ(X1))', { code: RSErrorCode.invalidFilterArgumentType, from: 8, to: 13, params: ['Fi1', 'ℬℬ(X1)'] }],
-  ['Fi1[1](S1)', { code: RSErrorCode.typesNotEqual, from: 4, to: 5, params: ['Z', 'ℬ(X1)', 'Fi1'] }],
-  ['Fi1[X1](ℬ(X1)×X1)', { code: RSErrorCode.typesNotEqual, from: 4, to: 6, params: ['ℬ(X1)', 'ℬℬ(X1)', 'Fi1'] }],
+  ['Fi1[1](S1)', { code: RSErrorCode.invalidFilterParameterType, from: 4, to: 5, params: ['Z', 'ℬ(X1)', 'Fi1'] }],
+  [
+    'Fi1[X1](ℬ(X1)×X1)',
+    { code: RSErrorCode.invalidFilterParameterType, from: 4, to: 6, params: ['ℬ(X1)', 'ℬℬ(X1)', 'Fi1'] }
+  ],
   ['Fi3[X1](S1)', { code: RSErrorCode.invalidFilterArgumentType, from: 8, to: 10, params: ['Fi3', 'ℬ(X1×X1)'] }],
   ['Fi1[X1,X1](S1)', { code: RSErrorCode.invalidFilterArity, from: 0, to: 14 }],
-  ['Fi1,2[X1](S1)', { code: RSErrorCode.typesNotEqual, from: 6, to: 8, params: ['ℬ(X1)', 'ℬ(X1×X1)', 'Fi1,2'] }],
+  [
+    'Fi1,2[X1](S1)',
+    { code: RSErrorCode.invalidFilterParameterType, from: 6, to: 8, params: ['ℬ(X1)', 'ℬ(X1×X1)', 'Fi1,2'] }
+  ],
   ['red(X1)', { code: RSErrorCode.invalidReduce, from: 4, to: 6, params: ['ℬ(X1)'] }],
   ['debool(S3)', { code: RSErrorCode.invalidDebool, from: 7, to: 9, params: ['C1'] }],
   // Locals

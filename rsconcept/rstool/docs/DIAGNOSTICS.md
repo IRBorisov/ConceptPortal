@@ -53,7 +53,7 @@
 - `0x8816 invalidElementPredicate` — `ξ ∈ S` с несовместимыми ступенями (`params`: тип элемента, оператор, тип множества).
 - `0x8818 invalidArgsArity`, `0x8819 invalidArgumentType` — неверный вызов функции.
 - `0x8821 radicalUsage` — радикал вне домена параметра.
-- `0x8822 invalidFilterArgumentType`, `0x8823 invalidFilterArity` — неверный `Fi`.
+- `0x8822 invalidFilterArgumentType`, `0x8823 invalidFilterArity`, `0x882B invalidFilterParameterType` — неверный `Fi` (`params` для параметра: тип параметра, ожидаемый тип компонента аргумента, оператор).
 - `0x8824 arithmeticNotSupported`, `0x8826 orderingNotSupported` — тип не поддерживает оператор (`params`: тип, оператор); для арифметики/порядка нужна ступень `Z`.
 - `0x8827 expectedLogic` — нужна логическая формула.
 - `0x8828 expectedSetexpr` — нужно теоретико-множественное выражение, а не логика.

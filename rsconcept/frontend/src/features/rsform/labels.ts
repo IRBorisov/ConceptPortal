@@ -46,6 +46,7 @@ const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
   [RSErrorCode.radicalUsage]: 'tx.rslang.error.radicalUsage',
   [RSErrorCode.invalidFilterArgumentType]: 'tx.rslang.error.invalidFilterArgumentType',
   [RSErrorCode.invalidFilterArity]: 'tx.rslang.error.invalidFilterArity',
+  [RSErrorCode.invalidFilterParameterType]: 'tx.rslang.error.invalidFilterParameterType',
   [RSErrorCode.arithmeticNotSupported]: 'tx.rslang.error.arithmeticNotSupported',
   [RSErrorCode.typesNotCompatible]: 'tx.rslang.error.typesNotCompatible',
   [RSErrorCode.orderingNotSupported]: 'tx.rslang.error.orderingNotSupported',
@@ -423,6 +424,12 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
       return globalTx(id, { expected: params[0] ?? '', actual: params[1] ?? '' });
     case RSErrorCode.invalidFilterArgumentType:
       return globalTx(id, { a: params[0] ?? '', b: params[1] ?? '' });
+    case RSErrorCode.invalidFilterParameterType:
+      return globalTx(id, {
+        param: params[0] ?? '',
+        expected: params[1] ?? '',
+        operator: params[2] ?? ''
+      });
     case RSErrorCode.setOverflow:
     case RSErrorCode.booleanBaseLimit:
     case RSErrorCode.iterationsLimit:

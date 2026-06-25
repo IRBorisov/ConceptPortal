@@ -192,6 +192,8 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.radicalUsage': 'Radicaux interdits hors déclarations : {name}',
   'tx.rslang.error.invalidFilterArgumentType': 'Typification de l’argument du filtre non valide : {a}({b})',
   'tx.rslang.error.invalidFilterArity': 'Le nombre de paramètres du filtre ne correspond pas au nombre d’indices',
+  'tx.rslang.error.invalidFilterParameterType':
+    'La typification du paramètre de filtre {param} ne correspond pas à la typification du composant de l’argument {expected} pour {operator}',
   'tx.rslang.error.arithmeticNotSupported':
     'Le type {type} ne prend pas en charge l’opération arithmétique « {operator} »',
   'tx.rslang.error.typesNotCompatible': 'Les types {a} et {b} sont incompatibles pour l’opérateur « {operator} »',

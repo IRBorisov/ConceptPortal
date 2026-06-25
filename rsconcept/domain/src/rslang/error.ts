@@ -72,6 +72,7 @@ export const RSErrorCode = {
   expectedSetexpr: 0x8828, // 34856
   invalidArgumentCortegeDeclare: 0x8829, // 34857
   invalidQuantifierDomain: 0x882a, // 34858
+  invalidFilterParameterType: 0x882b, // 34859
 
   globalNoValue: 0x8840, // 34880
   invalidPropertyUsage: 0x8841, // 34881

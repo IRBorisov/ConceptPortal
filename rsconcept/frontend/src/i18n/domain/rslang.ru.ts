@@ -188,6 +188,8 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.radicalUsage': 'Радикалы запрещены вне деклараций: {name}',
   'tx.rslang.error.invalidFilterArgumentType': 'Типизация аргумента фильтра не корректна: {a}({b})',
   'tx.rslang.error.invalidFilterArity': 'Количество параметров фильтра не соответствует количеству индексов',
+  'tx.rslang.error.invalidFilterParameterType':
+    'Типизация параметра фильтра {param} не соответствует типизации компонента аргумента {expected} в {operator}',
   'tx.rslang.error.arithmeticNotSupported': 'Тип {type} не поддерживает арифметическую операцию "{operator}"',
   'tx.rslang.error.typesNotCompatible': 'Типы {a} и {b} не совместимы для оператора "{operator}"',
   'tx.rslang.error.orderingNotSupported': 'Тип {type} не поддерживает оператор "{operator}"',

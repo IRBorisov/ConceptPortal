@@ -184,6 +184,8 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.radicalUsage': 'Radicals are forbidden outside declarations: {name}',
   'tx.rslang.error.invalidFilterArgumentType': 'Filter argument typification invalid: {a}({b})',
   'tx.rslang.error.invalidFilterArity': 'Filter parameter count does not match index count',
+  'tx.rslang.error.invalidFilterParameterType':
+    'Filter parameter typification {param} does not match argument component {expected} for {operator}',
   'tx.rslang.error.arithmeticNotSupported': 'Type {type} does not support arithmetic operation "{operator}"',
   'tx.rslang.error.typesNotCompatible': 'Types {a} and {b} are incompatible for operator "{operator}"',
   'tx.rslang.error.orderingNotSupported': 'Type {type} does not support operator "{operator}"',

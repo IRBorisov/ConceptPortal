@@ -784,7 +784,7 @@ export class TypeAuditor {
           return null;
         }
         if (param.typeID !== TypeID.collection || !checkCompatibility(bases[child], debool(param))) {
-          return this.onError(RSErrorCode.typesNotEqual, node.children[child], [
+          return this.onError(RSErrorCode.invalidFilterParameterType, node.children[child], [
             labelType(param),
             labelType(bool(bases[child])),
             operator
@@ -799,7 +799,7 @@ export class TypeAuditor {
       const paramType = param;
       const expected = bool(tuple(bases));
       if (paramType.typeID !== TypeID.collection || !checkCompatibility(expected, paramType)) {
-        return this.onError(RSErrorCode.typesNotEqual, node.children[0], [
+        return this.onError(RSErrorCode.invalidFilterParameterType, node.children[0], [
           labelType(paramType),
           labelType(expected),
           operator
