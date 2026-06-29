@@ -22,14 +22,12 @@
 ## Частые parser-коды
 
 - `0x8400 unknownSyntax` — неопределенная синтаксическая ошибка.
-- `0x8406 missingParenthesis` — не закрыты `(` `)`.
-- `0x8407 missingCurlyBrace` — не закрыты `{` `}`.
-- `0x8408 missingSquareBracket` — не закрыты `[` `]`.
-- `0x8409 bracketMismatch` — смешаны типы скобок.
+- `0x8409 bracketMismatch` — неверная закрывающая скобка (`params`: ожидаемая, фактическая).
 - `0x840A doubleParenthesis` — лишняя пара скобок.
-- `0x840B missingOpenBracket` — закрывающая скобка без открывающей.
+- `0x840B missingOpenBracket` — непарная закрывающая скобка (`params`: сама скобка).
+- `0x840C missingCloseBracket` — непарная открывающая скобка (`params`: сама скобка).
 - `0x8415 expectedLocal` — нужна локальная переменная.
-- `0x8416 expectedType` — нужна явная ступень.
+- `0x8416 expectedType` — тип выражения не соответствует ожидаемому.
 
 ## Локальные переменные
 
@@ -47,17 +45,17 @@
 - `0x8807 invalidTypeOperation` — аргумент оператора (`∪`, `∈`, `D{}`, `:∈` и т.д.) должен быть множеством (`params`: оператор, тип).
 - `0x8808 invalidCard` — `card(...)` не над множеством.
 - `0x8809 invalidDebool` — нет гарантии синглетона.
-- `0x880B globalFuncWithoutArgs` — функция вызвана без `[]`.
+- `0x880B globalFuncWithoutArgs` — терм-функция или предикат-функция вызвана без указания аргументов.
 - `0x8811 invalidProjectionTuple`, `0x8812 invalidProjectionSet` — неверная проекция.
 - `0x8813 invalidEnumeration` — элементы перечисления разных ступеней.
 - `0x8816 invalidElementPredicate` — `ξ ∈ S` с несовместимыми ступенями (`params`: тип элемента, оператор, тип множества).
 - `0x8818 invalidArgsArity`, `0x8819 invalidArgumentType` — неверный вызов функции.
 - `0x8821 radicalUsage` — радикал вне домена параметра.
 - `0x8822 invalidFilterArgumentType`, `0x8823 invalidFilterArity`, `0x882B invalidFilterParameterType` — неверный `Fi` (`params` для параметра: тип параметра, ожидаемый тип компонента аргумента, оператор).
-- `0x8824 arithmeticNotSupported`, `0x8826 orderingNotSupported` — тип не поддерживает оператор (`params`: тип, оператор); для арифметики/порядка нужна ступень `Z`.
+- `0x8824 arithmeticNotSupported`, `0x8826 orderingNotSupported` — тип не поддерживает оператор (`params`: тип, оператор); для арифметики/порядка нужна ступень `Z` или `C#`.
 - `0x8827 expectedLogic` — нужна логическая формула.
 - `0x8828 expectedSetexpr` — нужно теоретико-множественное выражение, а не логика.
-- `0x882A invalidQuantifierDomain` — в кванторной декларации `∀`/`∃` область должна быть множеством (`params`: оператор, тип); не путать с `0x8807`.
+- `0x882A invalidQuantifierDomain` — в кванторной декларации `∀`/`∃` область должна быть множеством (`params`: оператор, тип).
 
 ## Схема и вычисление
 
@@ -66,21 +64,10 @@
 - `0x8840 globalNoValue` / `0x8103 calcGlobalMissing` — нет значения в модели.
 - `0x8841 invalidPropertyUsage` — `Property` использован как вычислимое значение.
 - `0x8101 setOverflow`, `0x8102 booleanBaseLimit`, `0x8104 iterationsLimit` — выражение слишком дорого вычислять.
-- `0x8100 calcUnknownError` — непредвиденная ошибка вычисления (неверные данные для операции, внутренний сбой).
+- `0x8100 calcUnknownError` — непредвиденная ошибка вычисления.
 - `0x8105 calcInvalidDebool` — `debool` получил не синглетон.
 - `0x8106 iterateInfinity`, `0x8107 calculationNotSupported` — конструкция не исполнима в конечной модели.
-- `0x8108 calcInvalidData` — несовместимые значения в runtime (`params`: значение A, значение B, оператор); типично сравнение множества с числом. Диапазон `from`/`to` — узел операции.
-
-## Типичные ошибки агентов
-
-- Задавать значение `term`/`axiom`/`statement` напрямую.
-- Писать формулу у `basic` или `constant`.
-- Добавлять потребителя раньше поставщика.
-- Давать логическое тело `term` или нелогическое тело `axiom`/`statement`.
-- Использовать `R#` в теле результата.
-- Вычислять производные понятия до привязки данных для базовых.
-- Сравнивать или комбинировать значения несовместимых ступеней в модели (ожидай `0x8108 calcInvalidData` с оператором в `params`).
-- Писать `∀a∈Z` или `∀a∈(логика)` вместо множества (ожидай `0x882A invalidQuantifierDomain`).
+- `0x8108 calcInvalidData` — несовместимые значения в runtime (`params`: значение A, значение B, оператор).
 
 ## Цикл исправления
 

@@ -12,12 +12,10 @@ import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores
 
 const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
   [RSErrorCode.unknownSyntax]: 'tx.rslang.error.unknownSyntax',
-  [RSErrorCode.missingParenthesis]: 'tx.rslang.error.missingParenthesis',
-  [RSErrorCode.missingCurlyBrace]: 'tx.rslang.error.missingCurlyBrace',
-  [RSErrorCode.missingSquareBracket]: 'tx.rslang.error.missingSquareBracket',
   [RSErrorCode.bracketMismatch]: 'tx.rslang.error.bracketMismatch',
   [RSErrorCode.doubleParenthesis]: 'tx.rslang.error.doubleParenthesis',
   [RSErrorCode.missingOpenBracket]: 'tx.rslang.error.missingOpenBracket',
+  [RSErrorCode.missingCloseBracket]: 'tx.rslang.error.missingCloseBracket',
   [RSErrorCode.expectedLocal]: 'tx.rslang.error.expectedLocal',
   [RSErrorCode.expectedType]: 'tx.rslang.error.expectedType',
   [RSErrorCode.localDoubleDeclare]: 'tx.rslang.error.localDoubleDeclare',
@@ -377,8 +375,9 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
   const notDef = () => 'NOT DEFINED';
   switch (code) {
     case RSErrorCode.bracketMismatch:
-      return globalTx(id, { open: params[0] ?? '', close: params[1] ?? '' });
+      return globalTx(id, { expected: params[0] ?? '', actual: params[1] ?? '' });
     case RSErrorCode.missingOpenBracket:
+    case RSErrorCode.missingCloseBracket:
       return globalTx(id, { bracket: params[0] ?? '' });
     case RSErrorCode.localDoubleDeclare:
     case RSErrorCode.localNotUsed:

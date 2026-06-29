@@ -150,12 +150,13 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.token.iterate': 'Iterate over set elements',
 
   'tx.rslang.error.unknownSyntax': 'Undefined syntax error',
-  'tx.rslang.error.missingParenthesis': "Missing '')''",
-  'tx.rslang.error.missingCurlyBrace': "Missing ''}''",
-  'tx.rslang.error.missingSquareBracket': "Missing '']''",
-  'tx.rslang.error.bracketMismatch': "Mismatched brackets: ''{open}'' instead of ''{close}''",
+  'tx.rslang.error.bracketMismatch':
+    "Invalid closing bracket: expected ''{expected}'', but found ''{actual}'' in the expression",
   'tx.rslang.error.doubleParenthesis': 'Double outer parentheses (( and )) are not allowed',
-  'tx.rslang.error.missingOpenBracket': "Missing opening bracket ''{bracket}''",
+  'tx.rslang.error.missingOpenBracket':
+    "Unmatched closing bracket ''{bracket}'' — remove it or add the corresponding opening bracket",
+  'tx.rslang.error.missingCloseBracket':
+    "Unmatched opening bracket ''{bracket}'' — remove it or add the corresponding closing bracket",
   'tx.rslang.error.expectedLocal': 'Variable name expected',
   'tx.rslang.error.expectedType': 'Expression type does not match the constituent',
   'tx.rslang.error.localDoubleDeclare': 'Duplicate declaration: {name}',

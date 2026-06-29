@@ -153,12 +153,13 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.token.iterate': 'Перебор элементов множества',
 
   'tx.rslang.error.unknownSyntax': 'Неопределенная синтаксическая ошибка',
-  'tx.rslang.error.missingParenthesis': "Пропущена '')''",
-  'tx.rslang.error.missingCurlyBrace': "Пропущена ''}''",
-  'tx.rslang.error.missingSquareBracket': "Пропущена '']''",
-  'tx.rslang.error.bracketMismatch': "Несогласованные скобки: ''{open}'' вместо ''{close}''",
+  'tx.rslang.error.bracketMismatch':
+    "Некорректный вид закрывающей скобки: ожидалась ''{expected}'', а в выражении ''{actual}''",
   'tx.rslang.error.doubleParenthesis': 'Двойные обрамляющие скобки (( и )) не допускаются',
-  'tx.rslang.error.missingOpenBracket': "Пропущена открывающая скобка ''{bracket}''",
+  'tx.rslang.error.missingOpenBracket':
+    "Непарная закрывающая скобка ''{bracket}'' — удалите её или добавьте соответствующую открывающую",
+  'tx.rslang.error.missingCloseBracket':
+    "Непарная открывающая скобка ''{bracket}'' — удалите её или добавьте соответствующую закрывающую",
   'tx.rslang.error.expectedLocal': 'Ожидалось имя переменной',
   'tx.rslang.error.expectedType': 'Тип выражения не соответствует конституенте',
   'tx.rslang.error.localDoubleDeclare': 'Повторное объявление: {name}',

@@ -68,13 +68,16 @@ const testError = [
 ];
 
 const testErrorData = [
-  ['(', { code: RSErrorCode.missingParenthesis, from: 1, to: 1 }],
-  ['{X1', { code: RSErrorCode.missingCurlyBrace, from: 3, to: 3 }],
+  ['(', { code: RSErrorCode.missingCloseBracket, from: 0, to: 1, params: ['('] }],
+  ['{X1', { code: RSErrorCode.missingCloseBracket, from: 0, to: 1, params: ['{'] }],
   ['∀∈X1 (1=1)', { code: RSErrorCode.expectedLocal, from: 1, to: 1 }],
-  ['∀σ∈S2 ∀(ξ,δ,π)∈σ (ξ∈δ & δ∈{pr1(π), pr2(π)}', { code: RSErrorCode.missingParenthesis, from: 42, to: 42 }],
+  [
+    '∀σ∈S2 ∀(ξ,δ,π)∈σ (ξ∈δ & δ∈{pr1(π), pr2(π)}',
+    { code: RSErrorCode.missingCloseBracket, from: 17, to: 18, params: ['('] }
+  ],
   ['Fi1[X1) (X1)', { code: RSErrorCode.bracketMismatch, from: 6, to: 7, params: [']', ')'] }],
-  [')X1', { code: RSErrorCode.missingOpenBracket, from: 0, to: 1, params: ['('] }],
-  ['Fi1[X1(X1)', { code: RSErrorCode.missingSquareBracket, from: 10, to: 10 }]
+  [')X1', { code: RSErrorCode.missingOpenBracket, from: 0, to: 1, params: [')'] }],
+  ['Fi1[X1(X1)', { code: RSErrorCode.missingCloseBracket, from: 3, to: 4, params: ['['] }]
 ];
 
 describe('Testing RSParser correct inputs', () => {

@@ -96,7 +96,7 @@ function extractBracketErrors(expression: string): RSErrorDescription | null {
         code: RSErrorCode.missingOpenBracket,
         from: pos,
         to: pos + 1,
-        params: [expectedOpen]
+        params: [symbol]
       };
     }
 
@@ -114,26 +114,15 @@ function extractBracketErrors(expression: string): RSErrorDescription | null {
 
   if (stack.length > 0) {
     const unclosed = stack[0];
-    const code = missingBracketCode(unclosed.bracket);
     return {
-      code,
-      from: expression.length,
-      to: expression.length
+      code: RSErrorCode.missingCloseBracket,
+      from: unclosed.index,
+      to: unclosed.index + 1,
+      params: [unclosed.bracket]
     };
   }
 
   return null;
-}
-
-function missingBracketCode(bracket: OpenBracket): RSErrorCode {
-  switch (bracket) {
-    case '(':
-      return RSErrorCode.missingParenthesis;
-    case '[':
-      return RSErrorCode.missingSquareBracket;
-    case '{':
-      return RSErrorCode.missingCurlyBrace;
-  }
 }
 
 function isOpenBracket(symbol: string): symbol is OpenBracket {

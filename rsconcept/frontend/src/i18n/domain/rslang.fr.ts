@@ -155,12 +155,13 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.token.iterate': 'Parcourir les éléments de l’ensemble',
 
   'tx.rslang.error.unknownSyntax': 'Erreur syntaxique indéfinie',
-  'tx.rslang.error.missingParenthesis': "'')'' manquante",
-  'tx.rslang.error.missingCurlyBrace': "''}'' manquant",
-  'tx.rslang.error.missingSquareBracket': "'']'' manquante",
-  'tx.rslang.error.bracketMismatch': 'Parenthèses incohérentes : « {open} » au lieu de « {close} »',
+  'tx.rslang.error.bracketMismatch':
+    "Type de parenthèse fermante incorrect : ''{expected}'' attendue, mais ''{actual}'' dans l’expression",
   'tx.rslang.error.doubleParenthesis': 'Les doubles parenthèses externes (( et )) sont interdites',
-  'tx.rslang.error.missingOpenBracket': 'Parenthèse ouvrante « {bracket} » manquante',
+  'tx.rslang.error.missingOpenBracket':
+    "Parenthèse fermante ''{bracket}'' sans ouvrante — supprimez-la ou ajoutez l’ouvrante correspondante",
+  'tx.rslang.error.missingCloseBracket':
+    "Parenthèse ouvrante ''{bracket}'' sans fermante — supprimez-la ou ajoutez la fermante correspondante",
   'tx.rslang.error.expectedLocal': 'Nom de variable attendu',
   'tx.rslang.error.expectedType': 'Type d’expression non conforme à la constitution',
   'tx.rslang.error.localDoubleDeclare': 'Déclaration en double : {name}',
