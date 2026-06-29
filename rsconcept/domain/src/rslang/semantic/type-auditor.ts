@@ -351,6 +351,9 @@ export class TypeAuditor {
     if (!type) {
       return this.onError(RSErrorCode.globalNotTyped, node, [alias]);
     }
+    if (type.typeID === TypeID.function || type.typeID === TypeID.predicate) {
+      return this.onError(RSErrorCode.globalFuncWithoutArgs, node, [alias]);
+    }
     return type;
   }
 
@@ -744,7 +747,12 @@ export class TypeAuditor {
     const indices = getNodeIndices(node);
     const tupleParam = indices.length === node.children.length - 1;
     if (!tupleParam && node.children.length > 2) {
-      return this.onError(RSErrorCode.invalidFilterArity, node);
+      const extraParam = node.children[indices.length];
+      return this.onError(RSErrorCode.invalidFilterArity, extraParam ?? node, [
+        String(indices.length),
+        String(node.children.length - 1),
+        operator
+      ]);
     }
 
     const argument = this.childTypification(node, node.children.length - 1);
@@ -757,10 +765,12 @@ export class TypeAuditor {
     ) {
       return EmptySetT;
     }
+    const expectedArgument = this.expectedFilterArgumentLabel(indices);
     if (argument.typeID !== TypeID.collection || argument.base.typeID !== TypeID.tuple) {
       return this.onError(RSErrorCode.invalidFilterArgumentType, node.children[node.children.length - 1], [
-        labelRSLangNode(node),
-        labelType(argument)
+        operator,
+        labelType(argument),
+        expectedArgument
       ]);
     }
 
@@ -769,9 +779,11 @@ export class TypeAuditor {
     for (const index of indices) {
       const newBase = component(argBase, index);
       if (newBase === null) {
-        return this.onError(RSErrorCode.invalidFilterArgumentType, node.children[node.children.length - 1], [
-          labelRSLangNode(node),
-          labelType(argument)
+        return this.onError(RSErrorCode.invalidFilterIndex, node.children[node.children.length - 1], [
+          operator,
+          labelType(argument),
+          String(index),
+          String(argBase.factors.length)
         ]);
       }
       bases.push(newBase);
@@ -783,12 +795,9 @@ export class TypeAuditor {
         if (param === null) {
           return null;
         }
+        const expectedParam = bool(bases[child]);
         if (param.typeID !== TypeID.collection || !checkCompatibility(bases[child], debool(param))) {
-          return this.onError(RSErrorCode.invalidFilterParameterType, node.children[child], [
-            labelType(param),
-            labelType(bool(bases[child])),
-            operator
-          ]);
+          return this.reportFilterParameterError(node, child, param, expectedParam, operator);
         }
       }
     } else {
@@ -799,14 +808,44 @@ export class TypeAuditor {
       const paramType = param;
       const expected = bool(tuple(bases));
       if (paramType.typeID !== TypeID.collection || !checkCompatibility(expected, paramType)) {
-        return this.onError(RSErrorCode.invalidFilterParameterType, node.children[0], [
-          labelType(paramType),
-          labelType(expected),
-          operator
-        ]);
+        return this.reportFilterParameterError(node, 0, paramType, expected, operator);
       }
     }
     return argument;
+  }
+
+  private expectedFilterArgumentLabel(indices: number[]): string {
+    const maxIndex = Math.max(...indices, 0);
+    if (maxIndex <= 1) {
+      return labelType(bool({ typeID: TypeID.anyTypification }));
+    }
+    const factors: Typification[] = [];
+    for (let index = 1; index <= maxIndex; index++) {
+      factors.push({ typeID: TypeID.anyTypification });
+    }
+    return labelType(bool(tuple(factors)));
+  }
+
+  private reportFilterParameterError(
+    node: AstNode,
+    childIndex: number,
+    param: Typification,
+    expected: Typification,
+    operator: string
+  ): null {
+    const wrapped = bool(param);
+    if (checkEquality(wrapped, expected) || checkCompatibility(wrapped, expected)) {
+      return this.onError(RSErrorCode.invalidFilterBooleanEchelon, node.children[childIndex], [
+        operator,
+        labelType(param),
+        labelType(expected)
+      ]);
+    }
+    return this.onError(RSErrorCode.invalidFilterParameterType, node.children[childIndex], [
+      labelType(param),
+      labelType(expected),
+      operator
+    ]);
   }
 
   private visitReduce(node: AstNode): ExpressionType | null {
