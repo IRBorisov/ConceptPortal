@@ -167,15 +167,15 @@
   },
   "devDependencies": {
     "@lezer/generator": "^1.8.0",
-    "@types/node": "^25.9.4",
+    "@types/node": "^26.0.1",
     "@typescript-eslint/parser": "^8.0.1",
     "eslint": "^9.39.4",
     "eslint-plugin-simple-import-sort": "^13.0.0",
-    "globals": "^17.6.0",
-    "prettier": "^3.8.4",
+    "globals": "^17.7.0",
+    "prettier": "^3.9.1",
     "tsdown": "^0.22.3",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.61.1",
+    "typescript-eslint": "^8.62.0",
     "vitest": "^4.1.9"
   },
   "publishConfig": {

@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-import { pdfFontSrc } from './pdf-font-path';
+import { pdfFontSrc } from './pdf-font-path.vitest';
 
 describe('pdfFontSrc', () => {
   it('resolves bundled fonts from the public directory in test mode', () => {
