@@ -157,6 +157,8 @@ export const txRslangEn: Record<string, string> = {
     "Unmatched closing bracket ''{bracket}'' — remove it or add the corresponding opening bracket",
   'tx.rslang.error.missingCloseBracket':
     "Unmatched opening bracket ''{bracket}'' — remove it or add the corresponding closing bracket",
+  'tx.rslang.error.invalidFilterSyntax':
+    'Filter syntax: Fi_indices_[parameters](argument), e.g. Fi1[D1](S1), Fi1,2[D1,D2](S1) or Fi1,2[D3](S1)',
   'tx.rslang.error.expectedLocal': 'Variable name expected',
   'tx.rslang.error.expectedType': 'Expression type does not match the constituent',
   'tx.rslang.error.localDoubleDeclare': 'Duplicate declaration: {name}',
@@ -170,7 +172,7 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.invalidTypeOperation': 'Argument {type} of operator "{operator}" must be a set',
   'tx.rslang.error.invalidCard': 'Cardinality only for sets: {arg}',
   'tx.rslang.error.invalidDebool': 'τ(debool(a)) = 𝔇τ(a). Invalid argument: {arg}',
-  'tx.rslang.error.globalFuncWithoutArgs': 'Function without arguments: {name}',
+  'tx.rslang.error.globalFuncWithoutArgs': 'Term function or predicate must be called with arguments: {name}[…]',
   'tx.rslang.error.invalidReduce': 'τ(red(a)) = 𝔅𝔇𝔇τ(a). Invalid argument: {arg}',
   'tx.rslang.error.invalidProjectionTuple': 'Projection only for a tuple: {from} → {to}',
   'tx.rslang.error.invalidProjectionSet': 'τ(Pri(a)) = 𝔅𝒞i𝔇τ(a). Invalid argument: {from} → {to}',
@@ -183,10 +185,14 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.invalidArgumentType': 'Argument typification does not match declaration: {expected} != {actual}',
   'tx.rslang.error.globalStructure': 'Generic structure domain of definition is invalid',
   'tx.rslang.error.radicalUsage': 'Radicals are forbidden outside declarations: {name}',
-  'tx.rslang.error.invalidFilterArgumentType': 'Filter argument typification invalid: {a}({b})',
-  'tx.rslang.error.invalidFilterArity': 'Filter parameter count does not match index count',
+  'tx.rslang.error.invalidFilterArgumentType': '{operator}: argument type {actual} is invalid; expected {expected}',
+  'tx.rslang.error.invalidFilterArity': '{operator} expects {indexCount} filter parameter(s), got {paramCount}',
   'tx.rslang.error.invalidFilterParameterType':
     'Filter parameter typification {param} does not match argument component {expected} for {operator}',
+  'tx.rslang.error.invalidFilterIndex':
+    '{operator}: projection index {index} exceeds tuple arity {arity} of argument {actual}',
+  'tx.rslang.error.invalidFilterBooleanEchelon':
+    '{operator}: parameter type {actual} missing boolean; possibly missing bool or {{}}',
   'tx.rslang.error.arithmeticNotSupported': 'Type {type} does not support arithmetic operation "{operator}"',
   'tx.rslang.error.typesNotCompatible': 'Types {a} and {b} are incompatible for operator "{operator}"',
   'tx.rslang.error.orderingNotSupported': 'Type {type} does not support operator "{operator}"',

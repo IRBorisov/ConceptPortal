@@ -160,6 +160,8 @@ export const txRslangRu: Record<string, string> = {
     "Непарная закрывающая скобка ''{bracket}'' — удалите её или добавьте соответствующую открывающую",
   'tx.rslang.error.missingCloseBracket':
     "Непарная открывающая скобка ''{bracket}'' — удалите её или добавьте соответствующую закрывающую",
+  'tx.rslang.error.invalidFilterSyntax':
+    'Фильтр записывается как Fi_индексы_[параметры](аргумент), напр. Fi1[D1](S1), Fi1,2[D1,D2](S1) или Fi1,2[D3](S1)',
   'tx.rslang.error.expectedLocal': 'Ожидалось имя переменной',
   'tx.rslang.error.expectedType': 'Тип выражения не соответствует конституенте',
   'tx.rslang.error.localDoubleDeclare': 'Повторное объявление: {name}',
@@ -173,7 +175,8 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.invalidTypeOperation': 'Аргумент {type} оператора "{operator}" должен быть множеством',
   'tx.rslang.error.invalidCard': 'Мощность только для множеств: {arg}',
   'tx.rslang.error.invalidDebool': 'τ(debool(a)) = 𝔇τ(a). Некорректный аргумент: {arg}',
-  'tx.rslang.error.globalFuncWithoutArgs': 'Функция без аргументов: {name}',
+  'tx.rslang.error.globalFuncWithoutArgs':
+    'Терм-функция или предикат-функция должны вызываться с аргументами: {name}[…]',
   'tx.rslang.error.invalidReduce': 'τ(red(a)) = 𝔅𝔇𝔇τ(a). Некорректный аргумент: {arg}',
   'tx.rslang.error.invalidProjectionTuple': 'Проекция только для кортежа: {from} -> {to}',
   'tx.rslang.error.invalidProjectionSet': 'τ(Pri(a)) = 𝔅𝒞i𝔇τ(a). Некорректный аргумент: {from} -> {to}',
@@ -187,10 +190,15 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.invalidArgumentType': 'Типизация аргумента не соответствует объявленной: {expected} != {actual}',
   'tx.rslang.error.globalStructure': 'Область определения родовой структуры не корректна',
   'tx.rslang.error.radicalUsage': 'Радикалы запрещены вне деклараций: {name}',
-  'tx.rslang.error.invalidFilterArgumentType': 'Типизация аргумента фильтра не корректна: {a}({b})',
-  'tx.rslang.error.invalidFilterArity': 'Количество параметров фильтра не соответствует количеству индексов',
+  'tx.rslang.error.invalidFilterArgumentType': '{operator}: тип аргумента {actual} не корректен; ожидается {expected}',
+  'tx.rslang.error.invalidFilterArity':
+    '{operator}: ожидается {indexCount} параметр(ов) фильтра, получено {paramCount}',
   'tx.rslang.error.invalidFilterParameterType':
     'Типизация параметра фильтра {param} не соответствует типизации компонента аргумента {expected} в {operator}',
+  'tx.rslang.error.invalidFilterIndex':
+    '{operator}: индекс проекции {index} превышает арность {arity} кортежа аргумента {actual}',
+  'tx.rslang.error.invalidFilterBooleanEchelon':
+    '{operator}: параметр имеет типизацию {actual}, а должен быть на булеан выше. Возможно пропущен bool или {{}}',
   'tx.rslang.error.arithmeticNotSupported': 'Тип {type} не поддерживает арифметическую операцию "{operator}"',
   'tx.rslang.error.typesNotCompatible': 'Типы {a} и {b} не совместимы для оператора "{operator}"',
   'tx.rslang.error.orderingNotSupported': 'Тип {type} не поддерживает оператор "{operator}"',

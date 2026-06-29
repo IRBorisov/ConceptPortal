@@ -16,6 +16,7 @@ const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
   [RSErrorCode.doubleParenthesis]: 'tx.rslang.error.doubleParenthesis',
   [RSErrorCode.missingOpenBracket]: 'tx.rslang.error.missingOpenBracket',
   [RSErrorCode.missingCloseBracket]: 'tx.rslang.error.missingCloseBracket',
+  [RSErrorCode.invalidFilterSyntax]: 'tx.rslang.error.invalidFilterSyntax',
   [RSErrorCode.expectedLocal]: 'tx.rslang.error.expectedLocal',
   [RSErrorCode.expectedType]: 'tx.rslang.error.expectedType',
   [RSErrorCode.localDoubleDeclare]: 'tx.rslang.error.localDoubleDeclare',
@@ -45,6 +46,8 @@ const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
   [RSErrorCode.invalidFilterArgumentType]: 'tx.rslang.error.invalidFilterArgumentType',
   [RSErrorCode.invalidFilterArity]: 'tx.rslang.error.invalidFilterArity',
   [RSErrorCode.invalidFilterParameterType]: 'tx.rslang.error.invalidFilterParameterType',
+  [RSErrorCode.invalidFilterIndex]: 'tx.rslang.error.invalidFilterIndex',
+  [RSErrorCode.invalidFilterBooleanEchelon]: 'tx.rslang.error.invalidFilterBooleanEchelon',
   [RSErrorCode.arithmeticNotSupported]: 'tx.rslang.error.arithmeticNotSupported',
   [RSErrorCode.typesNotCompatible]: 'tx.rslang.error.typesNotCompatible',
   [RSErrorCode.orderingNotSupported]: 'tx.rslang.error.orderingNotSupported',
@@ -422,12 +425,35 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
     case RSErrorCode.invalidArgumentType:
       return globalTx(id, { expected: params[0] ?? '', actual: params[1] ?? '' });
     case RSErrorCode.invalidFilterArgumentType:
-      return globalTx(id, { a: params[0] ?? '', b: params[1] ?? '' });
+      return globalTx(id, {
+        operator: params[0] ?? '',
+        actual: params[1] ?? '',
+        expected: params[2] ?? ''
+      });
+    case RSErrorCode.invalidFilterArity:
+      return globalTx(id, {
+        indexCount: params[0] ?? '',
+        paramCount: params[1] ?? '',
+        operator: params[2] ?? ''
+      });
     case RSErrorCode.invalidFilterParameterType:
       return globalTx(id, {
         param: params[0] ?? '',
         expected: params[1] ?? '',
         operator: params[2] ?? ''
+      });
+    case RSErrorCode.invalidFilterIndex:
+      return globalTx(id, {
+        operator: params[0] ?? '',
+        actual: params[1] ?? '',
+        index: params[2] ?? '',
+        arity: params[3] ?? ''
+      });
+    case RSErrorCode.invalidFilterBooleanEchelon:
+      return globalTx(id, {
+        operator: params[0] ?? '',
+        actual: params[1] ?? '',
+        expected: params[2] ?? ''
       });
     case RSErrorCode.setOverflow:
     case RSErrorCode.booleanBaseLimit:

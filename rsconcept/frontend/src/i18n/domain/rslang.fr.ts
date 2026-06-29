@@ -162,6 +162,8 @@ export const txRslangFr: Record<string, string> = {
     "Parenthèse fermante ''{bracket}'' sans ouvrante — supprimez-la ou ajoutez l’ouvrante correspondante",
   'tx.rslang.error.missingCloseBracket':
     "Parenthèse ouvrante ''{bracket}'' sans fermante — supprimez-la ou ajoutez la fermante correspondante",
+  'tx.rslang.error.invalidFilterSyntax':
+    'Le filtre s’écrit Fi_indices_[paramètres](argument), p. ex. Fi1[D1](S1), Fi1,2[D1,D2](S1) ou Fi1,2[D3](S1)',
   'tx.rslang.error.expectedLocal': 'Nom de variable attendu',
   'tx.rslang.error.expectedType': 'Type d’expression non conforme à la constitution',
   'tx.rslang.error.localDoubleDeclare': 'Déclaration en double : {name}',
@@ -175,7 +177,8 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.invalidTypeOperation': 'L’argument {type} de l’opérateur « {operator} » doit être un ensemble',
   'tx.rslang.error.invalidCard': 'Cardinalité réservée aux ensembles : {arg}',
   'tx.rslang.error.invalidDebool': 'τ(debool(a)) = 𝔇τ(a). Argument non valide : {arg}',
-  'tx.rslang.error.globalFuncWithoutArgs': 'Fonction sans arguments : {name}',
+  'tx.rslang.error.globalFuncWithoutArgs':
+    'La fonction terme ou le prédicat doit être appelé avec des arguments : {name}[…]',
   'tx.rslang.error.invalidReduce': 'τ(red(a)) = 𝔅𝔇𝔇τ(a). Argument non valide : {arg}',
   'tx.rslang.error.invalidProjectionTuple': 'Projection réservée au n-uplet : {from} → {to}',
   'tx.rslang.error.invalidProjectionSet': 'τ(Pri(a)) = 𝔅𝒞i𝔇τ(a). Argument non valide : {from} → {to}',
@@ -191,10 +194,15 @@ export const txRslangFr: Record<string, string> = {
     'Typification de l’argument différente de la déclaration : {expected} != {actual}',
   'tx.rslang.error.globalStructure': 'Domaine de définition de la structure générique non valide',
   'tx.rslang.error.radicalUsage': 'Radicaux interdits hors déclarations : {name}',
-  'tx.rslang.error.invalidFilterArgumentType': 'Typification de l’argument du filtre non valide : {a}({b})',
-  'tx.rslang.error.invalidFilterArity': 'Le nombre de paramètres du filtre ne correspond pas au nombre d’indices',
+  'tx.rslang.error.invalidFilterArgumentType':
+    '{operator} : le type d’argument {actual} est invalide ; attendu {expected}',
+  'tx.rslang.error.invalidFilterArity': '{operator} attend {indexCount} paramètre(s) de filtre, reçu {paramCount}',
   'tx.rslang.error.invalidFilterParameterType':
     'La typification du paramètre de filtre {param} ne correspond pas à la typification du composant de l’argument {expected} pour {operator}',
+  'tx.rslang.error.invalidFilterIndex':
+    '{operator} : l’indice de projection {index} dépasse l’arité {arity} du tuple d’argument {actual}',
+  'tx.rslang.error.invalidFilterBooleanEchelon':
+    '{operator} : le paramètre a la typification {actual}, mais doit être au moins un booléen ; peut-être manque-t-il bool ou {{}}',
   'tx.rslang.error.arithmeticNotSupported':
     'Le type {type} ne prend pas en charge l’opération arithmétique « {operator} »',
   'tx.rslang.error.typesNotCompatible': 'Les types {a} et {b} sont incompatibles pour l’opérateur « {operator} »',

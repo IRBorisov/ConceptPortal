@@ -77,7 +77,11 @@ const testErrorData = [
   ],
   ['Fi1[X1) (X1)', { code: RSErrorCode.bracketMismatch, from: 6, to: 7, params: [']', ')'] }],
   [')X1', { code: RSErrorCode.missingOpenBracket, from: 0, to: 1, params: [')'] }],
-  ['Fi1[X1(X1)', { code: RSErrorCode.missingCloseBracket, from: 3, to: 4, params: ['['] }]
+  ['Fi1[X1(X1)', { code: RSErrorCode.missingCloseBracket, from: 3, to: 4, params: ['['] }],
+  ['F1', { code: RSErrorCode.globalFuncWithoutArgs, from: 0, to: 2, params: ['F1'] }],
+  ['P1', { code: RSErrorCode.globalFuncWithoutArgs, from: 0, to: 2, params: ['P1'] }],
+  ['F1[]', { code: RSErrorCode.globalFuncWithoutArgs, from: 0, to: 2, params: ['F1'] }],
+  ['Fi1(S1)', { code: RSErrorCode.invalidFilterSyntax, from: 0, to: 4 }]
 ];
 
 describe('Testing RSParser correct inputs', () => {

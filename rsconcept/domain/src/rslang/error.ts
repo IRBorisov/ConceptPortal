@@ -32,6 +32,7 @@ export const RSErrorCode = {
   doubleParenthesis: 0x840a, // 33802
   missingOpenBracket: 0x840b, // 33803
   missingCloseBracket: 0x840c, // 33804
+  invalidFilterSyntax: 0x8417, // 33815
   expectedLocal: 0x8415, // 33813
   expectedType: 0x8416, // 33814
 
@@ -71,6 +72,8 @@ export const RSErrorCode = {
   invalidArgumentCortegeDeclare: 0x8829, // 34857
   invalidQuantifierDomain: 0x882a, // 34858
   invalidFilterParameterType: 0x882b, // 34859
+  invalidFilterIndex: 0x882c, // 34860
+  invalidFilterBooleanEchelon: 0x882d, // 34861
 
   globalNoValue: 0x8840, // 34880
   invalidPropertyUsage: 0x8841, // 34881
