@@ -16,22 +16,29 @@ export function extractSyntaxErrors(
   annotateErrors: boolean = false
 ) {
   const collected: RSErrorDescription[] = [];
-  const collect = (error: RSErrorDescription) => {
+  const annotationTargets = new Map<RSErrorDescription, AstNode>();
+  const collect = (error: RSErrorDescription, target?: AstNode) => {
     collected.push(error);
+    if (target !== undefined) {
+      annotationTargets.set(error, target);
+    }
   };
 
   const bracketError = extractBracketErrors(expression);
   if (bracketError !== null) {
-    collect(bracketError);
-    if (annotateErrors) {
-      annotateError(ast, bracketError.code, bracketError.params);
-    }
+    collect(bracketError, ast);
   }
   const hasBracketErrors = bracketError !== null;
-  visitAstDFS(ast, node => extractInternal(node, expression, collect, annotateErrors, hasBracketErrors));
+  visitAstDFS(ast, node => extractInternal(node, expression, collect, hasBracketErrors));
 
   for (const error of deduplicateErrors(collected)) {
     reporter(error);
+    if (annotateErrors) {
+      const target = annotationTargets.get(error);
+      if (target !== undefined) {
+        annotateError(target, error.code, error.params);
+      }
+    }
   }
 }
 
@@ -39,8 +46,7 @@ export function extractSyntaxErrors(
 function extractInternal(
   node: AstNode,
   expression: string,
-  reporter: ErrorReporter,
-  annotateErrors: boolean,
+  collect: (error: RSErrorDescription, target: AstNode) => void,
   ignoreUnknownErrors: boolean
 ) {
   if (node.typeID !== TokenID.ERROR) {
@@ -48,18 +54,12 @@ function extractInternal(
   }
 
   function emit(target: AstNode, code: RSErrorCode, params?: readonly string[]) {
-    reporter({ code: code, from: target.from, to: target.to, params });
-    if (annotateErrors) {
-      annotateError(target, code, params);
-    }
+    collect({ code: code, from: target.from, to: target.to, params }, target);
   }
 
   const classified = classifyParseError(node, expression);
   if (classified !== null) {
-    reporter(classified);
-    if (annotateErrors) {
-      annotateError(node, classified.code, classified.params);
-    }
+    collect(classified, node);
     return;
   }
 
@@ -133,37 +133,30 @@ function classifyFuncWithoutArgs(funcNode: AstNode, expression: string): RSError
   const name = expression.slice(funcNode.from, funcNode.to);
   const rest = expression.slice(funcNode.to);
 
-  if (!/^\s*\[/.test(rest)) {
-    return {
-      code: RSErrorCode.globalFuncWithoutArgs,
-      from: funcNode.from,
-      to: funcNode.to,
-      params: [name]
-    };
+  const withoutArgs: RSErrorDescription = {
+    code: RSErrorCode.globalFuncWithoutArgs,
+    from: funcNode.from,
+    to: funcNode.to,
+    params: [name]
+  };
+
+  // Function with nothing (or only whitespace) after it is genuinely called without arguments.
+  if (/^\s*$/.test(rest)) {
+    return withoutArgs;
   }
 
-  if (/^\s*\[\s*\]/.test(rest)) {
-    return {
-      code: RSErrorCode.globalFuncWithoutArgs,
-      from: funcNode.from,
-      to: funcNode.to,
-      params: [name]
-    };
-  }
-
+  // Anything other than a bracketed argument form (e.g. parentheses or braces) is malformed call
+  // syntax: defer to the bracket/syntax error handling instead of reporting a missing-arguments error.
   const openBracket = /^\s*\[/.exec(rest);
-  if (openBracket !== null) {
-    const closeIdx = findMatchingCloseBracket(rest, openBracket[0].length - 1);
-    if (closeIdx >= 0) {
-      const inner = rest.slice(openBracket[0].length, closeIdx).trim();
-      if (inner.length === 0) {
-        return {
-          code: RSErrorCode.globalFuncWithoutArgs,
-          from: funcNode.from,
-          to: funcNode.to,
-          params: [name]
-        };
-      }
+  if (openBracket === null) {
+    return null;
+  }
+
+  const closeIdx = findMatchingCloseBracket(rest, openBracket[0].length - 1);
+  if (closeIdx >= 0) {
+    const inner = rest.slice(openBracket[0].length, closeIdx).trim();
+    if (inner.length === 0) {
+      return withoutArgs;
     }
   }
 

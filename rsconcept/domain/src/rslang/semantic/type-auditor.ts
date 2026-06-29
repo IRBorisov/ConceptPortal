@@ -837,8 +837,7 @@ export class TypeAuditor {
     if (checkEquality(wrapped, expected) || checkCompatibility(wrapped, expected)) {
       return this.onError(RSErrorCode.invalidFilterBooleanEchelon, node.children[childIndex], [
         operator,
-        labelType(param),
-        labelType(expected)
+        labelType(param)
       ]);
     }
     return this.onError(RSErrorCode.invalidFilterParameterType, node.children[childIndex], [

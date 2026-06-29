@@ -225,7 +225,7 @@ const errorData = [
   ['Fi1[1](S1)', { code: RSErrorCode.invalidFilterParameterType, from: 4, to: 5, params: ['Z', 'ℬ(X1)', 'Fi1'] }],
   [
     'Fi1[X1](ℬ(X1)×X1)',
-    { code: RSErrorCode.invalidFilterBooleanEchelon, from: 4, to: 6, params: ['Fi1', 'ℬ(X1)', 'ℬℬ(X1)'] }
+    { code: RSErrorCode.invalidFilterBooleanEchelon, from: 4, to: 6, params: ['Fi1', 'ℬ(X1)'] }
   ],
   ['Fi3[X1](S1)', { code: RSErrorCode.invalidFilterIndex, from: 8, to: 10, params: ['Fi3', 'ℬ(X1×X1)', '3', '2'] }],
   ['Fi1[X1,X1](S1)', { code: RSErrorCode.invalidFilterArity, from: 7, to: 9, params: ['1', '2', 'Fi1'] }],
