@@ -40,27 +40,30 @@ class ErrorRangesPlugin {
   decorations: DecorationSet;
   errors: readonly RSErrorDescription[];
 
-  constructor(errors: readonly RSErrorDescription[]) {
+  constructor(view: EditorView, errors: readonly RSErrorDescription[]) {
     this.errors = errors;
-    this.decorations = this.buildDecorations();
+    this.decorations = this.buildDecorations(view.state.doc.length);
   }
 
   update(update: ViewUpdate) {
     if (update.docChanged || update.viewportChanged) {
-      this.decorations = this.buildDecorations();
+      this.decorations = this.buildDecorations(update.view.state.doc.length);
     }
   }
 
-  buildDecorations(): DecorationSet {
+  buildDecorations(docLength: number): DecorationSet {
     const builder = new RangeSetBuilder<Decoration>();
-    const sortedErrors = [...this.errors].sort((left, right) => {
-      if (left.from !== right.from) {
-        return left.from - right.from;
-      }
-      return left.to - right.to;
-    });
+    const sortedErrors = [...this.errors]
+      .map(error => clampErrorRange(error, docLength))
+      .filter((range): range is { from: number; to: number } => range !== null)
+      .sort((left, right) => {
+        if (left.from !== right.from) {
+          return left.from - right.from;
+        }
+        return left.to - right.to;
+      });
 
-    const nonOverlappingErrors: RSErrorDescription[] = [];
+    const nonOverlappingErrors: { from: number; to: number }[] = [];
     let lastTo = -1;
     for (const error of sortedErrors) {
       if (error.from >= lastTo) {
@@ -84,8 +87,8 @@ export function rsErrorRanges(errors: readonly RSErrorDescription[]) {
   return [
     ViewPlugin.fromClass(
       class extends ErrorRangesPlugin {
-        constructor() {
-          super(errors);
+        constructor(view: EditorView) {
+          super(view, errors);
         }
       },
       {
@@ -94,4 +97,13 @@ export function rsErrorRanges(errors: readonly RSErrorDescription[]) {
     ),
     errorRangesTheme
   ];
+}
+
+function clampErrorRange(error: RSErrorDescription, docLength: number): { from: number; to: number } | null {
+  const from = Math.max(0, Math.min(error.from, docLength));
+  const to = Math.max(0, Math.min(error.to, docLength));
+  if (from >= to) {
+    return null;
+  }
+  return { from, to };
 }
