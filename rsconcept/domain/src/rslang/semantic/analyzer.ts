@@ -1,6 +1,7 @@
 import { type AstNode, buildTree } from '../../parsing';
 import { annotateError } from '../ast-annotations';
 import { RSErrorCode, type RSErrorDescription } from '../error';
+import { labelType } from '../labels';
 import { normalizeAST } from '../parser/normalize';
 import { parser as rslangParser } from '../parser/parser';
 import { extractSyntaxErrors } from '../parser/syntax-errors';
@@ -136,13 +137,15 @@ export class RSLangAnalyzer {
       return { success: true, type: debool(type), valueClass: ValueClass.VALUE, errors, ast };
     }
     if (options?.expected && getTypeClass(type.typeID) !== options.expected) {
+      const errorParams = [String(options.expected), labelType(type)];
       reporter({
         code: RSErrorCode.expectedType,
         from: ast.from,
-        to: ast.to
+        to: ast.to,
+        params: errorParams
       });
       if (options?.annotateErrors) {
-        annotateError(ast, RSErrorCode.expectedType);
+        annotateError(ast, RSErrorCode.expectedType, errorParams);
       }
       return { success: false, type: null, valueClass: null, errors, ast };
     }

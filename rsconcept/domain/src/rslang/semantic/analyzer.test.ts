@@ -45,15 +45,65 @@ describe('RSLang analyzer', () => {
   });
 
   it('Expected type', () => {
-    expectError('X1', { expected: TypeClass.logic }, { code: RSErrorCode.expectedType, from: 0, to: 2 });
-    expectError('1=1', { expected: TypeClass.typification }, { code: RSErrorCode.expectedType, from: 0, to: 3 });
-    expectError('1=1', { expected: TypeClass.function }, { code: RSErrorCode.expectedType, from: 0, to: 3 });
-    expectError('[a ∈ X1] a=a', { expected: TypeClass.function }, { code: RSErrorCode.expectedType, from: 0, to: 12 });
-    expectError('[a ∈ X1] a', { expected: TypeClass.predicate }, { code: RSErrorCode.expectedType, from: 0, to: 10 });
+    expectError(
+      'X1',
+      { expected: TypeClass.logic },
+      {
+        code: RSErrorCode.expectedType,
+        from: 0,
+        to: 2,
+        params: [String(TypeClass.logic), labelType(bool(basic('X1')))]
+      }
+    );
+    expectError(
+      '1=1',
+      { expected: TypeClass.typification },
+      {
+        code: RSErrorCode.expectedType,
+        from: 0,
+        to: 3,
+        params: [String(TypeClass.typification), 'Logic']
+      }
+    );
+    expectError(
+      '1=1',
+      { expected: TypeClass.function },
+      {
+        code: RSErrorCode.expectedType,
+        from: 0,
+        to: 3,
+        params: [String(TypeClass.function), 'Logic']
+      }
+    );
+    expectError(
+      '[a ∈ X1] a=a',
+      { expected: TypeClass.function },
+      {
+        code: RSErrorCode.expectedType,
+        from: 0,
+        to: 12,
+        params: [String(TypeClass.function), '[X1] → Logic']
+      }
+    );
+    expectError(
+      '[a ∈ X1] a',
+      { expected: TypeClass.predicate },
+      {
+        code: RSErrorCode.expectedType,
+        from: 0,
+        to: 10,
+        params: [String(TypeClass.predicate), '[X1] → X1']
+      }
+    );
   });
 
   it('Reports analyzer-level ranges for whole-expression errors', () => {
     const result = analyzer.checkFull('X1', { expected: TypeClass.logic });
-    expect(result.errors[0]).toMatchObject({ code: RSErrorCode.expectedType, from: 0, to: 2 });
+    expect(result.errors[0]).toMatchObject({
+      code: RSErrorCode.expectedType,
+      from: 0,
+      to: 2,
+      params: [String(TypeClass.logic), labelType(bool(basic('X1')))]
+    });
   });
 });

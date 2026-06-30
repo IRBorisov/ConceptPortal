@@ -396,7 +396,8 @@ export function getAnalysisFor(expression: string, cstType: CstType, schema: RSF
         {
           code: RSErrorCode.definitionNotAllowed,
           from: 0,
-          to: Math.max(0, expression.length - 1)
+          to: Math.max(expression.length, 1),
+          params: [cstType, alias ?? '']
         }
       ],
       ast: null

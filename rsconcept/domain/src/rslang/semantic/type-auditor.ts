@@ -673,18 +673,21 @@ export class TypeAuditor {
   }
 
   private visitProjectSet(node: AstNode): ExpressionType | null {
-    const argument = this.childTypeDebool(node, 0, RSErrorCode.invalidProjectionSet);
-    if (argument === null) {
+    const operator = labelRSLangNode(node);
+    const argNode = node.children[0];
+    const argType = this.childTypification(node, 0);
+    if (argType === null) {
       return null;
     }
-    if (argument.typeID === TypeID.anyTypification) {
+    if (argType.typeID === TypeID.anyTypification) {
       return EmptySetT;
     }
+    if (argType.typeID !== TypeID.collection) {
+      return this.onError(RSErrorCode.projectionSetArgumentNotSet, argNode, [operator, labelType(argType)]);
+    }
+    const argument = debool(argType);
     if (argument.typeID !== TypeID.tuple) {
-      return this.onError(RSErrorCode.invalidProjectionSet, node.children[0], [
-        labelRSLangNode(node),
-        labelType(bool(argument))
-      ]);
+      return this.onError(RSErrorCode.projectionSetArgumentNotTupleSet, argNode, [operator, labelType(bool(argument))]);
     }
 
     const indices = getNodeIndices(node);
@@ -692,8 +695,10 @@ export class TypeAuditor {
     for (const index of indices) {
       const newComponent = component(argument, index);
       if (newComponent === null) {
-        return this.onError(RSErrorCode.invalidProjectionSet, node.children[0], [
-          labelRSLangNode(node),
+        return this.onError(RSErrorCode.projectionSetIndexOutOfRange, argNode, [
+          operator,
+          String(index),
+          String(argument.factors.length),
           labelType(bool(argument))
         ]);
       } else {
@@ -708,6 +713,8 @@ export class TypeAuditor {
   }
 
   private visitProjectTuple(node: AstNode): ExpressionType | null {
+    const operator = labelRSLangNode(node);
+    const argNode = node.children[0];
     const argument = this.childTypification(node, 0);
     if (argument === null) {
       return null;
@@ -716,10 +723,7 @@ export class TypeAuditor {
       return argument;
     }
     if (argument.typeID !== TypeID.tuple) {
-      return this.onError(RSErrorCode.invalidProjectionTuple, node.children[0], [
-        labelRSLangNode(node),
-        labelType(argument)
-      ]);
+      return this.onError(RSErrorCode.projectionTupleArgumentNotTuple, argNode, [operator, labelType(argument)]);
     }
 
     const indices = getNodeIndices(node);
@@ -727,8 +731,10 @@ export class TypeAuditor {
     for (const index of indices) {
       const newComponent = component(argument, index);
       if (newComponent === null) {
-        return this.onError(RSErrorCode.invalidProjectionTuple, node.children[0], [
-          labelRSLangNode(node),
+        return this.onError(RSErrorCode.projectionTupleIndexOutOfRange, argNode, [
+          operator,
+          String(index),
+          String(argument.factors.length),
           labelType(argument)
         ]);
       } else {

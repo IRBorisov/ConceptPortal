@@ -35,8 +35,11 @@ const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
   [RSErrorCode.invalidDebool]: 'tx.rslang.error.invalidDebool',
   [RSErrorCode.globalFuncWithoutArgs]: 'tx.rslang.error.globalFuncWithoutArgs',
   [RSErrorCode.invalidReduce]: 'tx.rslang.error.invalidReduce',
-  [RSErrorCode.invalidProjectionTuple]: 'tx.rslang.error.invalidProjectionTuple',
-  [RSErrorCode.invalidProjectionSet]: 'tx.rslang.error.invalidProjectionSet',
+  [RSErrorCode.projectionSetArgumentNotSet]: 'tx.rslang.error.projectionSetArgumentNotSet',
+  [RSErrorCode.projectionSetArgumentNotTupleSet]: 'tx.rslang.error.projectionSetArgumentNotTupleSet',
+  [RSErrorCode.projectionSetIndexOutOfRange]: 'tx.rslang.error.projectionSetIndexOutOfRange',
+  [RSErrorCode.projectionTupleArgumentNotTuple]: 'tx.rslang.error.projectionTupleArgumentNotTuple',
+  [RSErrorCode.projectionTupleIndexOutOfRange]: 'tx.rslang.error.projectionTupleIndexOutOfRange',
   [RSErrorCode.invalidEnumeration]: 'tx.rslang.error.invalidEnumeration',
   [RSErrorCode.invalidCortegeDeclare]: 'tx.rslang.error.invalidCortegeDeclare',
   [RSErrorCode.localOutOfScope]: 'tx.rslang.error.localOutOfScope',
@@ -73,6 +76,13 @@ const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
   [RSErrorCode.calcInvalidDebool]: 'tx.rslang.error.calcInvalidDebool',
   [RSErrorCode.calcInvalidData]: 'tx.rslang.error.calcInvalidData',
   [RSErrorCode.iterateInfinity]: 'tx.rslang.error.iterateInfinity'
+};
+
+const TYPE_CLASS_LID: Record<TypeClass, string> = {
+  [TypeClass.logic]: 'tx.rsexpression.class.logic',
+  [TypeClass.typification]: 'tx.rsexpression.class.typification',
+  [TypeClass.function]: 'tx.rsexpression.class.function',
+  [TypeClass.predicate]: 'tx.rsexpression.class.predicate'
 };
 
 const CST_TYPE_LID: Record<CstType, string> = {
@@ -380,7 +390,6 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
   if (id === undefined) {
     return 'UNKNOWN ERROR';
   }
-  const notDef = () => 'NOT DEFINED';
   switch (code) {
     case RSErrorCode.bracketMismatch:
       return globalTx(id, { expected: params[0] ?? '', actual: params[1] ?? '' });
@@ -422,11 +431,27 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
       return globalTx(id, { type: params[0] ?? '', operator: params[1] ?? '' });
     case RSErrorCode.expectedLogic:
       return globalTx(id, { type: params[0] ?? '' });
-    case RSErrorCode.invalidProjectionTuple:
-    case RSErrorCode.invalidProjectionSet:
+    case RSErrorCode.expectedType:
       return globalTx(id, {
-        from: params[0] ?? '',
-        to: params[1] !== undefined && params[1] !== '' ? params[1] : notDef()
+        expected: labelTypeClass(Number(params[0]) as TypeClass),
+        actual: params[1] ?? ''
+      });
+    case RSErrorCode.definitionNotAllowed:
+      return globalTx(id, {
+        cstType: labelCstType((params[0] ?? CstType.BASE) as CstType),
+        alias: params[1] ?? ''
+      });
+    case RSErrorCode.projectionSetArgumentNotSet:
+    case RSErrorCode.projectionSetArgumentNotTupleSet:
+    case RSErrorCode.projectionTupleArgumentNotTuple:
+      return globalTx(id, { operator: params[0] ?? '', actual: params[1] ?? '' });
+    case RSErrorCode.projectionSetIndexOutOfRange:
+    case RSErrorCode.projectionTupleIndexOutOfRange:
+      return globalTx(id, {
+        operator: params[0] ?? '',
+        index: params[1] ?? '',
+        arity: params[2] ?? '',
+        actual: params[3] ?? ''
       });
     case RSErrorCode.invalidElementPredicate:
       return globalTx(id, { a: params[0] ?? '', b: params[1] ?? '', c: params[2] ?? '' });
@@ -474,14 +499,6 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
 
 /** Generates label for type class. */
 export function labelTypeClass(type: TypeClass): string {
-  switch (type) {
-    case TypeClass.logic:
-      return globalTx('tx.rsexpression.class.logic');
-    case TypeClass.typification:
-      return globalTx('tx.rsexpression.class.typification');
-    case TypeClass.function:
-      return globalTx('tx.rsexpression.class.function');
-    case TypeClass.predicate:
-      return globalTx('tx.rsexpression.class.predicate');
-  }
+  const id = TYPE_CLASS_LID[type];
+  return id ? globalTx(id) : String(type);
 }

@@ -163,7 +163,7 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.expectedExpressionBody': 'После объявления аргументов добавьте выражение терм-функции',
   'tx.rslang.error.expectedLogicBody': 'После объявления аргументов добавьте логическое выражение предикат-функции',
   'tx.rslang.error.expectedLocal': 'Здесь нужна локальная переменная',
-  'tx.rslang.error.expectedType': 'Тип выражения не подходит для этой конституенты',
+  'tx.rslang.error.expectedType': 'Ожидался класс выражения «{expected}»; получено {actual}',
   'tx.rslang.error.localDoubleDeclare': 'Локальная переменная уже объявлена: {name}',
   'tx.rslang.error.localNotUsed': 'Локальная переменная объявлена, но не используется: {name}',
   'tx.rslang.error.localUndeclared': 'Локальная переменная не объявлена в этой области: {name}',
@@ -177,9 +177,16 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.invalidDebool': 'debool снимает один уровень булеана; получено: {arg}',
   'tx.rslang.error.globalFuncWithoutArgs': 'Функцию или предикат нужно вызвать с аргументами: {name}[…]',
   'tx.rslang.error.invalidReduce': 'red применяется к множеству множеств; получено: {arg}',
-  'tx.rslang.error.invalidProjectionTuple': 'Малая проекция {from} применима только к кортежу; получено {to}',
-  'tx.rslang.error.invalidProjectionSet':
-    'Большая проекция {from} применима только к множеству кортежей; получено {to}',
+  'tx.rslang.error.projectionSetArgumentNotSet':
+    'Большая проекция {operator} применяется к множеству; получено {actual}',
+  'tx.rslang.error.projectionSetArgumentNotTupleSet':
+    'Большая проекция {operator} применяется к множеству кортежей ℬ(H1×…×Hn); получено {actual}',
+  'tx.rslang.error.projectionSetIndexOutOfRange':
+    'В {operator} индекс {index} превышает размерность {arity} аргумента {actual}',
+  'tx.rslang.error.projectionTupleArgumentNotTuple':
+    'Малая проекция {operator} применяется к кортежу H1×…×Hn; получено {actual}',
+  'tx.rslang.error.projectionTupleIndexOutOfRange':
+    'В {operator} индекс {index} превышает размерность {arity} кортежа {actual}',
   'tx.rslang.error.invalidEnumeration': 'В перечислении все элементы должны иметь один тип: {a} и {b} различаются',
   'tx.rslang.error.invalidCortegeDeclare':
     'Количество переменных в кортеже не совпадает с размерностью декартова произведения',
@@ -194,7 +201,8 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.invalidArgsArity': 'Неверное число аргументов: ожидалось {a}, указано {b}',
   'tx.rslang.error.invalidArgumentType':
     'Аргумент имеет неподходящую типизацию: ожидалось {expected}, получено {actual}',
-  'tx.rslang.error.globalStructure': 'Область определения родовой структуры задана некорректно',
+  'tx.rslang.error.globalStructure':
+    'Область определения родовой структуры задана некорректно. Используйте конструкцию ступени через ℬ и ×. Помимо базисных и константных множеств можете использовать термы и другие родовые структуры',
   'tx.rslang.error.radicalUsage': 'Радикал {name} можно использовать только в декларации аргументов',
   'tx.rslang.error.invalidFilterArgumentType':
     'Фильтр {operator} применим к аргументу типа {expected}; получено {actual}',
@@ -219,7 +227,8 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.invalidPropertyUsage':
     'Это множество не перечисляется, поэтому его нельзя использовать как готовое значение',
   'tx.rslang.error.cstEmptyDerived': 'Для сложного понятия или утверждения нужно указать выражение',
-  'tx.rslang.error.definitionNotAllowed': 'Определение не допускается для выбранного типа',
+  'tx.rslang.error.definitionNotAllowed':
+    'Для {cstType} формальное определение не допускается — оставьте поле пустым, смысл задайте в convention',
   'tx.rslang.error.calcUnknownError': 'Неизвестная ошибка вычисления',
   'tx.rslang.error.calculationNotSupported': 'Объявление функции нельзя вычислить как значение',
   'tx.rslang.error.setOverflow': 'Слишком много элементов для вычисления: лимит {limit}',

@@ -54,9 +54,12 @@ export const RSErrorCode = {
   invalidDebool: 0x8809, // 34825
   globalFuncWithoutArgs: 0x880b, // 34827
   invalidReduce: 0x8810, // 34832
-  invalidProjectionTuple: 0x8811, // 34833
-  invalidProjectionSet: 0x8812, // 34834
   invalidEnumeration: 0x8813, // 34835
+  projectionSetArgumentNotSet: 0x8830, // 34864
+  projectionSetArgumentNotTupleSet: 0x8831, // 34865
+  projectionSetIndexOutOfRange: 0x8832, // 34866
+  projectionTupleArgumentNotTuple: 0x8833, // 34867
+  projectionTupleIndexOutOfRange: 0x8834, // 34868
   invalidCortegeDeclare: 0x8814, // 34836
   localOutOfScope: 0x8815, // 34837
   invalidElementPredicate: 0x8816, // 34838

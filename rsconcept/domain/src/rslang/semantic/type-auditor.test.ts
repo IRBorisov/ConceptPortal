@@ -214,13 +214,22 @@ const errorData = [
   ['X1 ∪ ∅', { code: RSErrorCode.invalidEmptySetUsage, from: 5, to: 6 }],
   ['X1 ∪ S1', { code: RSErrorCode.typesNotEqual, from: 0, to: 7, params: ['ℬ(X1)', 'ℬ(X1×X1)', '∪'] }],
   ['S1 ∪ X1', { code: RSErrorCode.typesNotEqual, from: 0, to: 7, params: ['ℬ(X1×X1)', 'ℬ(X1)', '∪'] }],
-  ['Pr1(X1)', { code: RSErrorCode.invalidProjectionSet, from: 4, to: 6, params: ['Pr1', 'ℬ(X1)'] }],
-  ['Pr3(S1)', { code: RSErrorCode.invalidProjectionSet, from: 4, to: 6, params: ['Pr3', 'ℬ(X1×X1)'] }],
-  ['Pr1,3(S1)', { code: RSErrorCode.invalidProjectionSet, from: 6, to: 8, params: ['Pr1,3', 'ℬ(X1×X1)'] }],
-  ['Pr1((1,2))', { code: RSErrorCode.invalidProjectionSet, from: 4, to: 9, params: ['Z×Z'] }],
-  ['pr1(X1)', { code: RSErrorCode.invalidProjectionTuple, from: 4, to: 6, params: ['pr1', 'ℬ(X1)'] }],
-  ['pr1(debool(X1))', { code: RSErrorCode.invalidProjectionTuple, from: 4, to: 14, params: ['pr1', 'X1'] }],
-  ['pr3(debool(S1))', { code: RSErrorCode.invalidProjectionTuple, from: 4, to: 14, params: ['pr3', 'X1×X1'] }],
+  ['Pr1(X1)', { code: RSErrorCode.projectionSetArgumentNotTupleSet, from: 4, to: 6, params: ['Pr1', 'ℬ(X1)'] }],
+  [
+    'Pr3(S1)',
+    { code: RSErrorCode.projectionSetIndexOutOfRange, from: 4, to: 6, params: ['Pr3', '3', '2', 'ℬ(X1×X1)'] }
+  ],
+  [
+    'Pr1,3(S1)',
+    { code: RSErrorCode.projectionSetIndexOutOfRange, from: 6, to: 8, params: ['Pr1,3', '3', '2', 'ℬ(X1×X1)'] }
+  ],
+  ['Pr1((1,2))', { code: RSErrorCode.projectionSetArgumentNotSet, from: 4, to: 9, params: ['Pr1', 'Z×Z'] }],
+  ['pr1(X1)', { code: RSErrorCode.projectionTupleArgumentNotTuple, from: 4, to: 6, params: ['pr1', 'ℬ(X1)'] }],
+  ['pr1(debool(X1))', { code: RSErrorCode.projectionTupleArgumentNotTuple, from: 4, to: 14, params: ['pr1', 'X1'] }],
+  [
+    'pr3(debool(S1))',
+    { code: RSErrorCode.projectionTupleIndexOutOfRange, from: 4, to: 14, params: ['pr3', '3', '2', 'X1×X1'] }
+  ],
   [
     'Fi1[X1](ℬ(X1))',
     { code: RSErrorCode.invalidFilterArgumentType, from: 8, to: 13, params: ['Fi1', 'ℬℬ(X1)', 'ℬ(R0)'] }

@@ -161,7 +161,7 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.expectedExpressionBody': 'Add a term-function expression after the argument declaration',
   'tx.rslang.error.expectedLogicBody': 'Add a predicate-function logical expression after the argument declaration',
   'tx.rslang.error.expectedLocal': 'A local variable is required here',
-  'tx.rslang.error.expectedType': 'The expression type is not suitable for this constituent',
+  'tx.rslang.error.expectedType': 'Expected expression class «{expected}»; got {actual}',
   'tx.rslang.error.localDoubleDeclare': 'Local variable is already declared: {name}',
   'tx.rslang.error.localNotUsed': 'Local variable is declared but not used: {name}',
   'tx.rslang.error.localUndeclared': 'Local variable is not declared in this scope: {name}',
@@ -175,8 +175,15 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.invalidDebool': 'debool removes one boolean level; got {arg}',
   'tx.rslang.error.globalFuncWithoutArgs': 'Call the function or predicate with arguments: {name}[…]',
   'tx.rslang.error.invalidReduce': 'red applies to a set of sets; got {arg}',
-  'tx.rslang.error.invalidProjectionTuple': 'Small projection {from} applies only to a tuple; got {to}',
-  'tx.rslang.error.invalidProjectionSet': 'Large projection {from} applies only to a set of tuples; got {to}',
+  'tx.rslang.error.projectionSetArgumentNotSet': 'Large projection {operator} applies to a set; got {actual}',
+  'tx.rslang.error.projectionSetArgumentNotTupleSet':
+    'Large projection {operator} applies to a set of tuples ℬ(H1×…×Hn); got {actual}',
+  'tx.rslang.error.projectionSetIndexOutOfRange':
+    'In {operator}, index {index} exceeds dimension {arity} of argument {actual}',
+  'tx.rslang.error.projectionTupleArgumentNotTuple':
+    'Small projection {operator} applies to a tuple H1×…×Hn; got {actual}',
+  'tx.rslang.error.projectionTupleIndexOutOfRange':
+    'In {operator}, index {index} exceeds dimension {arity} of tuple {actual}',
   'tx.rslang.error.invalidEnumeration': 'All enumeration items must have one type: {a} and {b} differ',
   'tx.rslang.error.invalidCortegeDeclare': 'Tuple variable count does not match Cartesian product dimension',
   'tx.rslang.error.localOutOfScope': 'Variable _{name}_ is used outside its definition scope',
@@ -189,7 +196,8 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.invalidEmptySetUsage': 'The empty set cannot be used here without clarifying its type',
   'tx.rslang.error.invalidArgsArity': 'Wrong number of arguments: expected {a}, got {b}',
   'tx.rslang.error.invalidArgumentType': 'Argument has the wrong typification: expected {expected}, got {actual}',
-  'tx.rslang.error.globalStructure': 'The generic structure domain of definition is invalid',
+  'tx.rslang.error.globalStructure':
+    'The structure domain of definition is invalid. Use a structure scale via ℬ and ×. In addition to base and constant sets, you can use terms and other structures',
   'tx.rslang.error.radicalUsage': 'Radical {name} can only be used in a declaration',
   'tx.rslang.error.invalidFilterArgumentType':
     'Filter {operator} requires an argument of type {expected}; got {actual}',
@@ -211,7 +219,8 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.globalNoValue': 'Identifier cannot be evaluated: {name}',
   'tx.rslang.error.invalidPropertyUsage': 'This set is not iterable, so it cannot be used as a ready value',
   'tx.rslang.error.cstEmptyDerived': 'A complex notion or statement must have an expression',
-  'tx.rslang.error.definitionNotAllowed': 'Definition is not allowed for the selected type',
+  'tx.rslang.error.definitionNotAllowed':
+    'Formal definition is not allowed for {cstType} — leave the field empty and specify meaning in convention',
   'tx.rslang.error.calcUnknownError': 'Unknown evaluation error',
   'tx.rslang.error.calculationNotSupported': 'A function declaration cannot be evaluated as a value',
   'tx.rslang.error.setOverflow': 'Too many elements to evaluate: limit {limit}',

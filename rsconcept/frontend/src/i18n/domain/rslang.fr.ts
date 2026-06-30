@@ -171,7 +171,7 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.expectedLogicBody':
     'Ajoutez une expression logique de fonction-prédicat après la déclaration des arguments',
   'tx.rslang.error.expectedLocal': 'Une variable locale est requise ici',
-  'tx.rslang.error.expectedType': 'Le type de l’expression ne convient pas à cette constituante',
+  'tx.rslang.error.expectedType': 'Classe d’expression attendue : « {expected} » ; obtenu {actual}',
   'tx.rslang.error.localDoubleDeclare': 'La variable locale est déjà déclarée : {name}',
   'tx.rslang.error.localNotUsed': 'La variable locale est déclarée mais non utilisée : {name}',
   'tx.rslang.error.localUndeclared': 'La variable locale n’est pas déclarée dans cette portée : {name}',
@@ -186,10 +186,16 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.invalidDebool': 'debool retire un niveau booléen ; obtenu {arg}',
   'tx.rslang.error.globalFuncWithoutArgs': 'Appelez la fonction ou le prédicat avec des arguments : {name}[…]',
   'tx.rslang.error.invalidReduce': 'red s’applique à un ensemble d’ensembles ; obtenu {arg}',
-  'tx.rslang.error.invalidProjectionTuple':
-    'La petite projection {from} s’applique seulement à un n-uplet ; obtenu {to}',
-  'tx.rslang.error.invalidProjectionSet':
-    'La grande projection {from} s’applique seulement à un ensemble de n-uplets ; obtenu {to}',
+  'tx.rslang.error.projectionSetArgumentNotSet':
+    'La grande projection {operator} s’applique à un ensemble ; obtenu {actual}',
+  'tx.rslang.error.projectionSetArgumentNotTupleSet':
+    'La grande projection {operator} s’applique à un ensemble de n-uplets ℬ(H1×…×Hn) ; obtenu {actual}',
+  'tx.rslang.error.projectionSetIndexOutOfRange':
+    'Dans {operator}, l’indice {index} dépasse la dimension {arity} de l’argument {actual}',
+  'tx.rslang.error.projectionTupleArgumentNotTuple':
+    'La petite projection {operator} s’applique à un n-uplet H1×…×Hn ; obtenu {actual}',
+  'tx.rslang.error.projectionTupleIndexOutOfRange':
+    'Dans {operator}, l’indice {index} dépasse la dimension {arity} du n-uplet {actual}',
   'tx.rslang.error.invalidEnumeration':
     'Tous les éléments d’une énumération doivent avoir un seul type : {a} et {b} diffèrent',
   'tx.rslang.error.invalidCortegeDeclare':
@@ -204,7 +210,8 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.invalidEmptySetUsage': 'L’ensemble vide ne peut pas être utilisé ici sans préciser son type',
   'tx.rslang.error.invalidArgsArity': 'Nombre d’arguments incorrect : attendu {a}, reçu {b}',
   'tx.rslang.error.invalidArgumentType': 'L’argument a une typification incorrecte : attendu {expected}, reçu {actual}',
-  'tx.rslang.error.globalStructure': 'Le domaine de définition de la structure générique est non valide',
+  'tx.rslang.error.globalStructure':
+    'Le domaine de définition de la structure générique est non valide. Utilisez une échelle de structure via ℬ et ×. En plus des ensembles de base et constants, vous pouvez utiliser des termes et d’autres structures génériques',
   'tx.rslang.error.radicalUsage': 'Le radical {name} ne peut être utilisé que dans une déclaration',
   'tx.rslang.error.invalidFilterArgumentType':
     'Le filtre {operator} requiert un argument de type {expected} ; reçu {actual}',
@@ -231,7 +238,8 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.invalidPropertyUsage':
     'Cet ensemble n’est pas itérable, il ne peut donc pas être utilisé comme valeur prête',
   'tx.rslang.error.cstEmptyDerived': 'Une notion complexe ou un énoncé doit avoir une expression',
-  'tx.rslang.error.definitionNotAllowed': 'Définition interdite pour le type choisi',
+  'tx.rslang.error.definitionNotAllowed':
+    'La définition formelle n’est pas autorisée pour {cstType} — laissez le champ vide et précisez le sens dans convention',
   'tx.rslang.error.calcUnknownError': 'Erreur d’évaluation inconnue',
   'tx.rslang.error.calculationNotSupported': 'Une déclaration de fonction ne peut pas être évaluée comme une valeur',
   'tx.rslang.error.setOverflow': 'Trop d’éléments à évaluer : limite {limit}',
