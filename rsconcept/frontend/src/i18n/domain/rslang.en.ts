@@ -159,7 +159,10 @@ export const txRslangEn: Record<string, string> = {
     "Unmatched opening bracket ''{bracket}'' — remove it or add the corresponding closing bracket",
   'tx.rslang.error.invalidFilterSyntax':
     'Filter syntax: Fi_indices_[parameters](argument), e.g. Fi1[D1](S1), Fi1,2[D1,D2](S1) or Fi1,2[D3](S1)',
-  'tx.rslang.error.expectedLocal': 'Variable name expected',
+  'tx.rslang.error.expectedFunctionBody': 'Function body expected after parameters',
+  'tx.rslang.error.expectedExpressionBody': 'Term-function body expected',
+  'tx.rslang.error.expectedLogicBody': 'Predicate-function body expected',
+  'tx.rslang.error.expectedLocal': 'Local variable name expected',
   'tx.rslang.error.expectedType': 'Expression type does not match the constituent',
   'tx.rslang.error.localDoubleDeclare': 'Duplicate declaration: {name}',
   'tx.rslang.error.localNotUsed': 'Unused variable: {name}',

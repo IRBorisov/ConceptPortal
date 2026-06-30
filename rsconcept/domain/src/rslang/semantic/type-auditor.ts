@@ -998,7 +998,7 @@ export class TypeAuditor {
 
   private checkFuncArguments(node: AstNode, alias: string, type: Parametrized): Map<string, Typification> | null {
     if (node.children.length - 1 !== type.args.length) {
-      return this.onError(RSErrorCode.invalidArgsArity, node.children[1], [
+      return this.onError(RSErrorCode.invalidArgsArity, node, [
         String(type.args.length),
         String(node.children.length - 1)
       ]);

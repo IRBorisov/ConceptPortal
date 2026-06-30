@@ -6,7 +6,7 @@ import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { useTx } from '@/i18n';
 import { type Constituenta, CstStatus, type RSForm } from '@rsconcept/domain/library';
-import { getAnalysisFor, inferStatus } from '@rsconcept/domain/library/rsform-api';
+import { getAnalysisFor, inferStatus, isLogical } from '@rsconcept/domain/library/rsform-api';
 import { buildTree, flattenAst } from '@rsconcept/domain/parsing';
 import { type AnalysisFull, type ExpressionType, type RSErrorDescription, TokenID } from '@rsconcept/domain/rslang';
 import { rslangParser } from '@rsconcept/domain/rslang';
@@ -134,10 +134,7 @@ export function EditorRSExpression({
     setErrors(null);
   }
 
-  function handleCheckExpression(
-    event: React.MouseEvent<Element> | null,
-    callback?: (parse: AnalysisFull) => void
-  ) {
+  function handleCheckExpression(event: React.MouseEvent<Element> | null, callback?: (parse: AnalysisFull) => void) {
     event?.preventDefault();
     event?.stopPropagation();
     if (onAnalyze) {
@@ -254,6 +251,7 @@ export function EditorRSExpression({
         className='absolute -top-1 right-0'
         showAST={handleShowAST}
         showTypeGraph={handleShowTypeGraph}
+        hideTypeGraph={!!activeCst && isLogical(activeCst.cst_type)}
         disabled={disabled}
         isProcessing={isProcessing}
         helpTopic={helpTopic}
@@ -271,6 +269,7 @@ export function EditorRSExpression({
         ref={rsInput}
         value={value}
         schema={schema}
+        cstType={activeCst?.cst_type}
         errors={displayedErrors}
         minHeight='3.75rem'
         maxHeight='8rem'

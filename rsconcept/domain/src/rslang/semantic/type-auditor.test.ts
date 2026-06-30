@@ -157,12 +157,12 @@ const errorData = [
   ['R1', { code: RSErrorCode.radicalUsage, from: 0, to: 2, params: ['R1'] }],
   ['[a∈ℬ(R1)] R1\\a', { code: RSErrorCode.radicalUsage, from: 10, to: 12, params: ['R1'] }],
   // Functions
-  ['F1[X1]', { code: RSErrorCode.invalidArgsArity, from: 3, to: 5, params: ['2', '1'] }],
-  ['F1[X1, X1, X1]', { code: RSErrorCode.invalidArgsArity, from: 3, to: 5, params: ['2', '3'] }],
+  ['F1[X1]', { code: RSErrorCode.invalidArgsArity, from: 0, to: 6, params: ['2', '1'] }],
+  ['F1[X1, X1, X1]', { code: RSErrorCode.invalidArgsArity, from: 0, to: 14, params: ['2', '3'] }],
   ['F1[X1, S1]', { code: RSErrorCode.invalidArgumentType, from: 7, to: 9, params: ['b∈ℬ(X1)', 'ℬ(X1×X1)'] }],
   ['F1[S1, X1]', { code: RSErrorCode.invalidArgumentType, from: 3, to: 5, params: ['a∈ℬ(X1)', 'ℬ(X1×X1)'] }],
-  ['P1[X1]', { code: RSErrorCode.invalidArgsArity, from: 3, to: 5, params: ['2', '1'] }],
-  ['P1[X1, X1, X1]', { code: RSErrorCode.invalidArgsArity, from: 3, to: 5, params: ['2', '3'] }],
+  ['P1[X1]', { code: RSErrorCode.invalidArgsArity, from: 0, to: 6, params: ['2', '1'] }],
+  ['P1[X1, X1, X1]', { code: RSErrorCode.invalidArgsArity, from: 0, to: 14, params: ['2', '3'] }],
   ['P1[X1, S1]', { code: RSErrorCode.invalidArgumentType, from: 7, to: 9, params: ['b∈ℬ(X1)', 'ℬ(X1×X1)'] }],
   ['P1[S1, X1]', { code: RSErrorCode.invalidArgumentType, from: 3, to: 5, params: ['a∈ℬ(X1)', 'ℬ(X1×X1)'] }],
   // Integral
@@ -223,10 +223,7 @@ const errorData = [
     { code: RSErrorCode.invalidFilterArgumentType, from: 8, to: 13, params: ['Fi1', 'ℬℬ(X1)', 'ℬ(R0)'] }
   ],
   ['Fi1[1](S1)', { code: RSErrorCode.invalidFilterParameterType, from: 4, to: 5, params: ['Z', 'ℬ(X1)', 'Fi1'] }],
-  [
-    'Fi1[X1](ℬ(X1)×X1)',
-    { code: RSErrorCode.invalidFilterBooleanEchelon, from: 4, to: 6, params: ['Fi1', 'ℬ(X1)'] }
-  ],
+  ['Fi1[X1](ℬ(X1)×X1)', { code: RSErrorCode.invalidFilterBooleanEchelon, from: 4, to: 6, params: ['Fi1', 'ℬ(X1)'] }],
   ['Fi3[X1](S1)', { code: RSErrorCode.invalidFilterIndex, from: 8, to: 10, params: ['Fi3', 'ℬ(X1×X1)', '3', '2'] }],
   ['Fi1[X1,X1](S1)', { code: RSErrorCode.invalidFilterArity, from: 7, to: 9, params: ['1', '2', 'Fi1'] }],
   [
@@ -326,6 +323,33 @@ describe('TypeAuditor', () => {
     });
     expectType('F4[X1]', 'ℬ(X1)');
     expectType('F4[Z]', 'ℬ(X1)');
+  });
+
+  it('Highlights the function call site for invalidArgsArity', () => {
+    typeContext.set('F7', {
+      typeID: TypeID.function,
+      result: bool(basic('X1')),
+      args: [
+        { alias: 'a', type: bool(basic('X1')) },
+        { alias: 'b', type: bool(basic('X1')) },
+        { alias: 'c', type: bool(basic('X1')) }
+      ]
+    });
+    typeContext.set('F8', {
+      typeID: TypeID.function,
+      result: bool(basic('X1')),
+      args: [
+        { alias: 'a', type: bool(basic('X1')) },
+        { alias: 'b', type: bool(basic('X1')) },
+        { alias: 'c', type: bool(basic('X1')) }
+      ]
+    });
+    expectError('F8[X1,F7[X1,X1],X1]', {
+      code: RSErrorCode.invalidArgsArity,
+      from: 6,
+      to: 15,
+      params: ['3', '2']
+    });
   });
 
   it('Templated nesting', () => {

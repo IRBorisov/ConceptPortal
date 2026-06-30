@@ -162,7 +162,10 @@ export const txRslangRu: Record<string, string> = {
     "Непарная открывающая скобка ''{bracket}'' — удалите её или добавьте соответствующую закрывающую",
   'tx.rslang.error.invalidFilterSyntax':
     'Фильтр записывается как Fi_индексы_[параметры](аргумент), напр. Fi1[D1](S1), Fi1,2[D1,D2](S1) или Fi1,2[D3](S1)',
-  'tx.rslang.error.expectedLocal': 'Ожидалось имя переменной',
+  'tx.rslang.error.expectedFunctionBody': 'Отсутствует тело функции после объявления аргументов',
+  'tx.rslang.error.expectedExpressionBody': 'Отсутствует тело терм-функции',
+  'tx.rslang.error.expectedLogicBody': 'Отсутствует тело предикат-функции',
+  'tx.rslang.error.expectedLocal': 'Ожидалось имя локальной переменной',
   'tx.rslang.error.expectedType': 'Тип выражения не соответствует конституенте',
   'tx.rslang.error.localDoubleDeclare': 'Повторное объявление: {name}',
   'tx.rslang.error.localNotUsed': 'Неиспользованная переменная: {name}',
