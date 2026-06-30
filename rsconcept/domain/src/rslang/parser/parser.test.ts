@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { buildTree, printTree } from '../../parsing';
 import { RSErrorCode, type RSErrorDescription } from '../error';
+import { TypeClass } from '../semantic/typification';
 
 import { parser } from './parser';
 import { extractSyntaxErrors } from './syntax-errors';
@@ -81,8 +82,15 @@ const testErrorData = [
   ['F1', { code: RSErrorCode.globalFuncWithoutArgs, from: 0, to: 2, params: ['F1'] }],
   ['P1', { code: RSErrorCode.globalFuncWithoutArgs, from: 0, to: 2, params: ['P1'] }],
   ['F1[]', { code: RSErrorCode.globalFuncWithoutArgs, from: 0, to: 2, params: ['F1'] }],
-  ['Fi1(S1)', { code: RSErrorCode.invalidFilterSyntax, from: 0, to: 4 }]
+  ['Fi1(S1)', { code: RSErrorCode.invalidFilterSyntax, from: 0, to: 4 }],
+  ['[α∈ℬ(X1×X1)]', { code: RSErrorCode.expectedFunctionBody, from: 12, to: 12 }]
 ];
+
+const testIncompleteFormalData = [
+  ['[α∈ℬ(X1×X1)]', TypeClass.function, RSErrorCode.expectedExpressionBody],
+  ['[σ∈S1]', TypeClass.predicate, RSErrorCode.expectedLogicBody],
+  ['[ξ∈X1]', TypeClass.logic, RSErrorCode.expectedLogicBody]
+] as const;
 
 describe('Testing RSParser correct inputs', () => {
   testSuccess.forEach(([input, expectedTree]) => {
@@ -112,6 +120,18 @@ describe('Testing RSParser error data', () => {
       extractSyntaxErrors(ast, input as string, error => errors.push(error));
       expect(errors.length).toBe(1);
       expect(errors[0]).toMatchObject(expectedError as RSErrorDescription);
+    });
+  });
+
+  testIncompleteFormalData.forEach(([input, expected, code]) => {
+    it(`Parse incomplete formal "${input}" for ${expected}`, () => {
+      const tree = parser.parse(input);
+      const ast = buildTree(tree.cursor());
+      const errors: RSErrorDescription[] = [];
+      extractSyntaxErrors(ast, input, error => errors.push(error), false, { expected });
+      expect(errors.length).toBe(1);
+      expect(errors[0].code).toBe(code);
+      expect(errors[0].from).toBe(errors[0].to);
     });
   });
 

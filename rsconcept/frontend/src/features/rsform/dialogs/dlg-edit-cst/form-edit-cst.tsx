@@ -152,6 +152,7 @@ export function FormEditCst({
               value={field.state.value ?? ''}
               onChange={field.handleChange}
               disabled={target.is_inherited}
+              cstType={cst_type}
             />
           ) : (
             <></>

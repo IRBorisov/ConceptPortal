@@ -33,6 +33,9 @@ export const RSErrorCode = {
   missingOpenBracket: 0x840b, // 33803
   missingCloseBracket: 0x840c, // 33804
   invalidFilterSyntax: 0x8417, // 33815
+  expectedFunctionBody: 0x8418, // 33816
+  expectedExpressionBody: 0x8419, // 33817
+  expectedLogicBody: 0x841a, // 33818
   expectedLocal: 0x8415, // 33813
   expectedType: 0x8416, // 33814
 

@@ -13,6 +13,7 @@ import CodeMirror, {
 import clsx from 'clsx';
 
 import { CstType, type RSForm } from '@rsconcept/domain/library';
+import { typeClassForCstType } from '@rsconcept/domain/library/rsform-api';
 import { generateAlias, guessCstType } from '@rsconcept/domain/library/rsform-api';
 import { type AnalysisFull, type RSErrorDescription } from '@rsconcept/domain/rslang';
 import { extractGlobals } from '@rsconcept/domain/rslang/api';
@@ -70,23 +71,38 @@ interface RSInputProps extends Pick<
   | 'style'
   | 'className'
 > {
+  /** Schema for the input. */
   schema?: RSForm;
+  /** CST type for the input. */
+  cstType?: CstType;
+  /** Errors to show. */
   errors?: readonly RSErrorDescription[] | null;
+  /** Disable auto-check. */
   noAutoCheck?: boolean;
 
+  /** Error message to show. */
   errorMessage?: string;
+  /** Input ref. */
   ref?: React.Ref<ReactCodeMirrorRef>;
+  /** Label for the input. */
   label?: string;
+  /** Disable the input. */
   disabled?: boolean;
+  /** Enable portal tooltips. */
   portalHoverTooltips?: boolean;
 
+  /** Called when value changes. */
   onChange?: (newValue: string) => void;
+  /** Called when analyzing input. */
   onAnalyze?: () => void;
+  /** Called when opening edit. */
   onOpenEdit?: (cstID: number) => void;
 }
 
+/** Represents an input field for RSLang expressions. */
 export function RSInput({
   schema,
+  cstType,
   errors,
 
   label,
@@ -146,12 +162,14 @@ export function RSInput({
 
       const currentSchema = schema;
       const text = value ?? '';
+      const expected = cstType !== undefined ? typeClassForCstType(cstType) : undefined;
 
       function runLocalParse() {
         parseTimerRef.current = undefined;
         const nextParse = currentSchema.analyzer.checkFull(text, {
           annotateTypes: true,
-          annotateErrors: true
+          annotateErrors: true,
+          expected
         });
         setLocalParse(nextParse);
       }
@@ -168,16 +186,18 @@ export function RSInput({
 
       return clearScheduledParse;
     },
-    [noAutoCheck, value, schema, errors]
+    [noAutoCheck, value, schema, cstType, errors]
   );
 
   function prepareParse(value: string): AnalysisFull | null {
     if (!schema) {
       return null;
     }
+    const expected = cstType !== undefined ? typeClassForCstType(cstType) : undefined;
     const result = schema.analyzer.checkFull(value, {
       annotateTypes: true,
-      annotateErrors: true
+      annotateErrors: true,
+      expected
     });
     setLocalParse(result);
     return result;

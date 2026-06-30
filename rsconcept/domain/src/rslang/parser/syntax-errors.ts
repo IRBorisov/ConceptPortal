@@ -5,15 +5,23 @@
 import { type AstNode, visitAstDFS } from '../../parsing';
 import { annotateError } from '../ast-annotations';
 import { type ErrorReporter, RSErrorCode, type RSErrorDescription } from '../error';
+import { type TypeClass, TypeClass as TypeClassEnum } from '../semantic/typification';
 
-import { Filter, Function, Predicate, Variable } from './parser.terms';
+import { Arguments, Filter, Function, Function_decl, Predicate, Variable } from './parser.terms';
 import { TokenID } from './token';
 
+/** Options for syntax error extraction. */
+export interface SyntaxErrorOptions {
+  expected?: TypeClass;
+}
+
+/** Extracts syntax errors from an AST. */
 export function extractSyntaxErrors(
   ast: AstNode,
   expression: string,
   reporter: ErrorReporter,
-  annotateErrors: boolean = false
+  annotateErrors: boolean = false,
+  options?: SyntaxErrorOptions
 ) {
   const collected: RSErrorDescription[] = [];
   const annotationTargets = new Map<RSErrorDescription, AstNode>();
@@ -29,7 +37,7 @@ export function extractSyntaxErrors(
     collect(bracketError, ast);
   }
   const hasBracketErrors = bracketError !== null;
-  visitAstDFS(ast, node => extractInternal(node, expression, collect, hasBracketErrors));
+  visitAstDFS(ast, node => extractInternal(node, expression, collect, hasBracketErrors, options));
 
   for (const error of deduplicateErrors(collected)) {
     reporter(error);
@@ -47,7 +55,8 @@ function extractInternal(
   node: AstNode,
   expression: string,
   collect: (error: RSErrorDescription, target: AstNode) => void,
-  ignoreUnknownErrors: boolean
+  ignoreUnknownErrors: boolean,
+  options?: SyntaxErrorOptions
 ) {
   if (node.typeID !== TokenID.ERROR) {
     return;
@@ -57,7 +66,7 @@ function extractInternal(
     collect({ code: code, from: target.from, to: target.to, params }, target);
   }
 
-  const classified = classifyParseError(node, expression);
+  const classified = classifyParseError(node, expression, options);
   if (classified !== null) {
     collect(classified, node);
     return;
@@ -80,13 +89,72 @@ function extractInternal(
   }
 }
 
-function classifyParseError(node: AstNode, expression: string): RSErrorDescription | null {
+function classifyParseError(
+  node: AstNode,
+  expression: string,
+  options?: SyntaxErrorOptions
+): RSErrorDescription | null {
+  const incompleteFunctionDecl = detectIncompleteFunctionDecl(node, expression, options?.expected);
+  if (incompleteFunctionDecl !== null) {
+    return incompleteFunctionDecl;
+  }
+
   const filterParen = detectFilterParenMismatch(node, expression);
   if (filterParen !== null) {
     return filterParen;
   }
 
   return detectGlobalFuncWithoutArgs(node, expression);
+}
+
+function detectIncompleteFunctionDecl(
+  node: AstNode,
+  expression: string,
+  expected?: TypeClass
+): RSErrorDescription | null {
+  const funcDecl = findAncestor(node, isFunctionDeclNode);
+  if (funcDecl === null) {
+    return null;
+  }
+
+  const bodyChild = funcDecl.children[funcDecl.children.length - 1];
+  if (bodyChild?.typeID !== TokenID.ERROR || node !== bodyChild) {
+    return null;
+  }
+
+  const argsNode = funcDecl.children.find(child => child.typeID === Arguments || child.typeID === TokenID.NT_ARGUMENTS);
+  if (argsNode === undefined || subtreeHasError(argsNode)) {
+    return null;
+  }
+
+  if (expression.slice(funcDecl.to).trim().length > 0) {
+    return null;
+  }
+
+  return {
+    code: incompleteFormalExpressionCode(expected),
+    from: bodyChild.from,
+    to: bodyChild.to
+  };
+}
+
+function incompleteFormalExpressionCode(expected?: TypeClass): RSErrorCode {
+  switch (expected) {
+    case TypeClassEnum.function:
+      return RSErrorCode.expectedExpressionBody;
+    case TypeClassEnum.predicate:
+    case TypeClassEnum.logic:
+      return RSErrorCode.expectedLogicBody;
+    default:
+      return RSErrorCode.expectedFunctionBody;
+  }
+}
+
+function subtreeHasError(node: AstNode): boolean {
+  if (node.typeID === TokenID.ERROR) {
+    return true;
+  }
+  return node.children.some(subtreeHasError);
 }
 
 function detectFilterParenMismatch(node: AstNode, expression: string): RSErrorDescription | null {
@@ -172,6 +240,10 @@ function findAncestor(node: AstNode, predicate: (node: AstNode) => boolean): Ast
     current = current.parent;
   }
   return null;
+}
+
+function isFunctionDeclNode(node: AstNode): boolean {
+  return node.typeID === Function_decl || node.typeID === TokenID.NT_FUNC_DEFINITION;
 }
 
 function isFunctionNode(node: AstNode): boolean {

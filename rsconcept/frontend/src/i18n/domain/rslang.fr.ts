@@ -164,7 +164,10 @@ export const txRslangFr: Record<string, string> = {
     "Parenthèse ouvrante ''{bracket}'' sans fermante — supprimez-la ou ajoutez la fermante correspondante",
   'tx.rslang.error.invalidFilterSyntax':
     'Le filtre s’écrit Fi_indices_[paramètres](argument), p. ex. Fi1[D1](S1), Fi1,2[D1,D2](S1) ou Fi1,2[D3](S1)',
-  'tx.rslang.error.expectedLocal': 'Nom de variable attendu',
+  'tx.rslang.error.expectedFunctionBody': 'Corps de fonction attendu après les paramètres',
+  'tx.rslang.error.expectedExpressionBody': 'Corps de terme-fonction attendu',
+  'tx.rslang.error.expectedLogicBody': 'Corps de prédicat-fonction attendu',
+  'tx.rslang.error.expectedLocal': 'Nom de variable locale attendu',
   'tx.rslang.error.expectedType': 'Type d’expression non conforme à la constitution',
   'tx.rslang.error.localDoubleDeclare': 'Déclaration en double : {name}',
   'tx.rslang.error.localNotUsed': 'Variable inutilisée : {name}',

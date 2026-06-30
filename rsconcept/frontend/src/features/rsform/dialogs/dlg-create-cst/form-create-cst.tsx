@@ -104,6 +104,7 @@ export function FormCreateCst({ schema, values, fields, onChangeCstType, onToggl
               value={field.state.value ?? ''}
               onChange={field.handleChange}
               schema={schema}
+              cstType={cst_type}
             />
           ) : (
             <></>

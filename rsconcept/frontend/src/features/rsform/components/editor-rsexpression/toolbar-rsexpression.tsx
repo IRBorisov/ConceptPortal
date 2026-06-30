@@ -17,6 +17,7 @@ interface ToolbarRSExpressionProps {
   disabled?: boolean;
   isProcessing?: boolean;
   helpTopic?: HelpTopic;
+  hideTypeGraph?: boolean;
   showAST: (event: React.MouseEvent<Element>) => void;
   showTypeGraph: (event: React.MouseEvent<Element>) => void;
 }
@@ -26,6 +27,7 @@ export function ToolbarRSExpression({
   disabled,
   isProcessing,
   helpTopic,
+  hideTypeGraph,
   showTypeGraph,
   showAST
 }: ToolbarRSExpressionProps) {
@@ -43,11 +45,13 @@ export function ToolbarRSExpression({
           onClick={toggleControls}
         />
       ) : null}
-      <MiniButton
-        title={tx('tx.typeGraph.fromExpression')}
-        icon={<IconTypeGraph size='1.25rem' className='hover:text-primary' />}
-        onClick={showTypeGraph}
-      />
+      {!hideTypeGraph ? (
+        <MiniButton
+          title={tx('tx.typeGraph.fromExpression')}
+          icon={<IconTypeGraph size='1.25rem' className='hover:text-primary' />}
+          onClick={showTypeGraph}
+        />
+      ) : null}
       <MiniButton
         title={tx('tx.rsexpression.ast.hint')}
         onClick={showAST}
