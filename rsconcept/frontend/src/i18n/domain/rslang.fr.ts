@@ -154,81 +154,89 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.token.assign': 'Affectation',
   'tx.rslang.token.iterate': 'Parcourir les éléments de l’ensemble',
 
-  'tx.rslang.error.unknownSyntax': 'Erreur syntaxique indéfinie',
+  'tx.rslang.error.unknownSyntax': 'L’expression contient une erreur de syntaxe. Vérifiez le fragment sélectionné',
   'tx.rslang.error.bracketMismatch':
-    "Type de parenthèse fermante incorrect : ''{expected}'' attendue, mais ''{actual}'' dans l’expression",
-  'tx.rslang.error.doubleParenthesis': 'Les doubles parenthèses externes (( et )) sont interdites',
+    'La parenthèse est fermée par un autre type : « {expected} » attendu, « {actual} » trouvé',
+  'tx.rslang.error.doubleParenthesis':
+    'Paire de parenthèses externe en trop : utilisez une seule paire au lieu de ((...))',
   'tx.rslang.error.missingOpenBracket':
-    "Parenthèse fermante ''{bracket}'' sans ouvrante — supprimez-la ou ajoutez l’ouvrante correspondante",
+    'Parenthèse fermante « {bracket} » sans paire. Supprimez-la ou ajoutez une ouvrante',
   'tx.rslang.error.missingCloseBracket':
-    "Parenthèse ouvrante ''{bracket}'' sans fermante — supprimez-la ou ajoutez la fermante correspondante",
+    'Parenthèse ouvrante « {bracket} » sans paire. Supprimez-la ou ajoutez une fermante',
   'tx.rslang.error.invalidFilterSyntax':
-    'Le filtre s’écrit Fi_indices_[paramètres](argument), p. ex. Fi1[D1](S1), Fi1,2[D1,D2](S1) ou Fi1,2[D3](S1)',
-  'tx.rslang.error.expectedFunctionBody': 'Corps de fonction attendu après les paramètres',
-  'tx.rslang.error.expectedExpressionBody': 'Corps de terme-fonction attendu',
-  'tx.rslang.error.expectedLogicBody': 'Corps de prédicat-fonction attendu',
-  'tx.rslang.error.expectedLocal': 'Nom de variable locale attendu',
-  'tx.rslang.error.expectedType': 'Type d’expression non conforme à la constitution',
-  'tx.rslang.error.localDoubleDeclare': 'Déclaration en double : {name}',
-  'tx.rslang.error.localNotUsed': 'Variable inutilisée : {name}',
-  'tx.rslang.error.localUndeclared': 'Variable non déclarée : {name}',
-  'tx.rslang.error.localShadowing': 'Masquage de variable : {name}',
-  'tx.rslang.error.typesNotEqual': 'Les types {a} et {b} doivent être égaux pour l’opérateur « {operator} »',
-  'tx.rslang.error.globalNotTyped': 'Pas de typification : {name}',
-  'tx.rslang.error.invalidDecart': 'τ(α×b) = 𝔅(𝔇τ(α)×𝔇τ(b)). Argument non valide : {arg}',
-  'tx.rslang.error.invalidBoolean': 'τ(ℬ(a)) = 𝔅𝔅𝔇τ(a). Argument non valide : {arg}',
-  'tx.rslang.error.invalidTypeOperation': 'L’argument {type} de l’opérateur « {operator} » doit être un ensemble',
-  'tx.rslang.error.invalidCard': 'Cardinalité réservée aux ensembles : {arg}',
-  'tx.rslang.error.invalidDebool': 'τ(debool(a)) = 𝔇τ(a). Argument non valide : {arg}',
-  'tx.rslang.error.globalFuncWithoutArgs':
-    'La fonction terme ou le prédicat doit être appelé avec des arguments : {name}[…]',
-  'tx.rslang.error.invalidReduce': 'τ(red(a)) = 𝔅𝔇𝔇τ(a). Argument non valide : {arg}',
-  'tx.rslang.error.invalidProjectionTuple': 'Projection réservée au n-uplet : {from} → {to}',
-  'tx.rslang.error.invalidProjectionSet': 'τ(Pri(a)) = 𝔅𝒞i𝔇τ(a). Argument non valide : {from} → {to}',
-  'tx.rslang.error.invalidEnumeration': 'Typifications des éléments différentes : {a} ≠ {b}',
+    'Le filtre s’écrit Fiindices[paramètres](argument), par exemple Fi1[D1](S1) ou Fi1,2[D1,D2](S1)',
+  'tx.rslang.error.expectedFunctionBody': 'Ajoutez un corps de fonction après la déclaration des arguments',
+  'tx.rslang.error.expectedExpressionBody':
+    'Ajoutez une expression de fonction-terme après la déclaration des arguments',
+  'tx.rslang.error.expectedLogicBody':
+    'Ajoutez une expression logique de fonction-prédicat après la déclaration des arguments',
+  'tx.rslang.error.expectedLocal': 'Une variable locale est requise ici',
+  'tx.rslang.error.expectedType': 'Le type de l’expression ne convient pas à cette constituante',
+  'tx.rslang.error.localDoubleDeclare': 'La variable locale est déjà déclarée : {name}',
+  'tx.rslang.error.localNotUsed': 'La variable locale est déclarée mais non utilisée : {name}',
+  'tx.rslang.error.localUndeclared': 'La variable locale n’est pas déclarée dans cette portée : {name}',
+  'tx.rslang.error.localShadowing': 'Ce nom de variable locale est déjà utilisé dans cette portée : {name}',
+  'tx.rslang.error.typesNotEqual': 'L’opérateur « {operator} » requiert des types identiques, obtenu {a} et {b}',
+  'tx.rslang.error.globalNotTyped': 'L’identifiant n’a pas de typification : {name}',
+  'tx.rslang.error.invalidDecart': 'Le produit cartésien ne peut être construit qu’à partir d’ensembles ; obtenu {arg}',
+  'tx.rslang.error.invalidBoolean': 'Le booléen ne peut être construit qu’à partir d’un ensemble ; obtenu {arg}',
+  'tx.rslang.error.invalidTypeOperation':
+    'L’opérateur « {operator} » s’applique aux ensembles ; le type {type} ne convient pas',
+  'tx.rslang.error.invalidCard': 'La cardinalité ne peut être calculée que pour un ensemble ; obtenu {arg}',
+  'tx.rslang.error.invalidDebool': 'debool retire un niveau booléen ; obtenu {arg}',
+  'tx.rslang.error.globalFuncWithoutArgs': 'Appelez la fonction ou le prédicat avec des arguments : {name}[…]',
+  'tx.rslang.error.invalidReduce': 'red s’applique à un ensemble d’ensembles ; obtenu {arg}',
+  'tx.rslang.error.invalidProjectionTuple':
+    'La petite projection {from} s’applique seulement à un n-uplet ; obtenu {to}',
+  'tx.rslang.error.invalidProjectionSet':
+    'La grande projection {from} s’applique seulement à un ensemble de n-uplets ; obtenu {to}',
+  'tx.rslang.error.invalidEnumeration':
+    'Tous les éléments d’une énumération doivent avoir un seul type : {a} et {b} diffèrent',
   'tx.rslang.error.invalidCortegeDeclare':
     'Le nombre de variables du n-uplet ne correspond pas à la dimension du produit cartésien',
-  'tx.rslang.error.localOutOfScope': 'La variable _{name}_ est hors de la portée de sa définition',
+  'tx.rslang.error.localOutOfScope': 'La variable _{name}_ est utilisée hors de la portée de sa définition',
   'tx.rslang.error.invalidElementPredicate':
-    'Le type {a} est incompatible avec l’ensemble {c} pour l’opérateur « {b} »',
-  'tx.rslang.error.invalidEmptySetUsage': 'Usage dénué de sens de l’ensemble vide',
-  'tx.rslang.error.invalidArgsArity': 'Nombre d’arguments incorrect : {a} ≠ {b}',
-  'tx.rslang.error.invalidArgumentType':
-    'Typification de l’argument différente de la déclaration : {expected} != {actual}',
-  'tx.rslang.error.globalStructure': 'Domaine de définition de la structure générique non valide',
-  'tx.rslang.error.radicalUsage': 'Radicaux interdits hors déclarations : {name}',
+    'L’opérateur « {b} » compare un élément avec un ensemble ; le type {a} est incompatible avec {c}',
+  'tx.rslang.error.invalidEmptySetUsage': 'L’ensemble vide ne peut pas être utilisé ici sans préciser son type',
+  'tx.rslang.error.invalidArgsArity': 'Nombre d’arguments incorrect : attendu {a}, reçu {b}',
+  'tx.rslang.error.invalidArgumentType': 'L’argument a une typification incorrecte : attendu {expected}, reçu {actual}',
+  'tx.rslang.error.globalStructure': 'Le domaine de définition de la structure générique est non valide',
+  'tx.rslang.error.radicalUsage': 'Le radical {name} ne peut être utilisé que dans une déclaration',
   'tx.rslang.error.invalidFilterArgumentType':
-    '{operator} : le type d’argument {actual} est invalide ; attendu {expected}',
-  'tx.rslang.error.invalidFilterArity': '{operator} attend {indexCount} paramètre(s) de filtre, reçu {paramCount}',
+    'Le filtre {operator} requiert un argument de type {expected} ; reçu {actual}',
+  'tx.rslang.error.invalidFilterArity':
+    'Le filtre {operator} requiert des paramètres selon le nombre d’indices : attendu {indexCount}, reçu {paramCount}',
   'tx.rslang.error.invalidFilterParameterType':
-    'La typification du paramètre de filtre {param} ne correspond pas à la typification du composant de l’argument {expected} pour {operator}',
+    'Le paramètre du filtre a le type {param}, mais {operator} requiert {expected}',
   'tx.rslang.error.invalidFilterIndex':
-    '{operator} : l’indice de projection {index} dépasse l’arité {arity} du tuple d’argument {actual}',
+    'Dans le filtre {operator}, l’indice {index} dépasse la dimension {arity} de l’argument {actual}',
   'tx.rslang.error.invalidFilterBooleanEchelon':
-    '{operator} : le paramètre a la typification {actual}, mais doit être au moins un booléen ; peut-être manque-t-il bool ou {{}}',
+    'Le paramètre du filtre a le type {actual}. Pour {operator}, passez un ensemble un niveau booléen au-dessus',
   'tx.rslang.error.arithmeticNotSupported':
-    'Le type {type} ne prend pas en charge l’opération arithmétique « {operator} »',
-  'tx.rslang.error.typesNotCompatible': 'Les types {a} et {b} sont incompatibles pour l’opérateur « {operator} »',
-  'tx.rslang.error.orderingNotSupported': 'Le type {type} ne prend pas en charge l’opérateur « {operator} »',
-  'tx.rslang.error.expectedLogic': 'Expression logique attendue, obtenu : {type}',
-  'tx.rslang.error.expectedSetexpr': 'Expression ensembliste attendue, obtenu : {type}',
+    'L’opérateur « {operator} » fonctionne avec des nombres ; le type {type} ne convient pas',
+  'tx.rslang.error.typesNotCompatible': 'L’opérateur « {operator} » ne peut pas être appliqué aux types {a} et {b}',
+  'tx.rslang.error.orderingNotSupported':
+    'L’opérateur de comparaison « {operator} » ne prend pas en charge le type {type}',
+  'tx.rslang.error.expectedLogic': 'Expression logique attendue ; obtenu {type}',
+  'tx.rslang.error.expectedSetexpr': 'Expression ensembliste attendue ; obtenu {type}',
   'tx.rslang.error.invalidArgumentCortegeDeclare':
-    'La déclaration liée dans les arguments de fonction n’est pas autorisée ; utilisez des projections ou déclarez les variables séparément',
+    'La déclaration liée dans les arguments de fonction n’est pas autorisée. Utilisez des projections ou déclarez les variables séparément',
   'tx.rslang.error.invalidQuantifierDomain':
-    'Dans la déclaration du quantificateur « {operator} », un ensemble est attendu, type obtenu : {type}',
-  'tx.rslang.error.globalNoValue': 'Identifiant non calculable : {name}',
-  'tx.rslang.error.invalidPropertyUsage': 'Ensemble non itérable utilisé comme valeur',
-  'tx.rslang.error.cstEmptyDerived': 'Expression vide pour une notion complexe ou un énoncé',
+    'La déclaration du quantificateur « {operator} » requiert un domaine ensemble ; obtenu {type}',
+  'tx.rslang.error.globalNoValue': 'L’identifiant ne peut pas être évalué : {name}',
+  'tx.rslang.error.invalidPropertyUsage':
+    'Cet ensemble n’est pas itérable, il ne peut donc pas être utilisé comme valeur prête',
+  'tx.rslang.error.cstEmptyDerived': 'Une notion complexe ou un énoncé doit avoir une expression',
   'tx.rslang.error.definitionNotAllowed': 'Définition interdite pour le type choisi',
   'tx.rslang.error.calcUnknownError': 'Erreur d’évaluation inconnue',
-  'tx.rslang.error.calculationNotSupported': 'La déclaration de fonction n’implique pas d’évaluation',
-  'tx.rslang.error.setOverflow': 'Limite du nombre d’éléments dépassée : {limit}',
-  'tx.rslang.error.booleanBaseLimit': 'Limite de la base de l’ensemble des parties dépassée : {limit}',
-  'tx.rslang.error.calcGlobalMissing': 'Pas de valeur : {name}',
-  'tx.rslang.error.iterationsLimit': 'Limite d’itérations dépassée : {limit}',
-  'tx.rslang.error.calcInvalidDebool': 'Application debool non valide',
-  'tx.rslang.error.calcInvalidData': 'Les valeurs {a} et {b} sont incompatibles pour l’opérateur « {operator} »',
-  'tx.rslang.error.iterateInfinity': 'Itération sur l’infini',
+  'tx.rslang.error.calculationNotSupported': 'Une déclaration de fonction ne peut pas être évaluée comme une valeur',
+  'tx.rslang.error.setOverflow': 'Trop d’éléments à évaluer : limite {limit}',
+  'tx.rslang.error.booleanBaseLimit': 'La base du booléen est trop grande pour l’évaluation : limite {limit}',
+  'tx.rslang.error.calcGlobalMissing': 'Aucune valeur n’est définie pour {name}',
+  'tx.rslang.error.iterationsLimit': 'Évaluation arrêtée : limite d’itérations {limit} dépassée',
+  'tx.rslang.error.calcInvalidDebool': 'debool a été appliqué à une valeur de mauvais type',
+  'tx.rslang.error.calcInvalidData': 'L’opérateur « {operator} » ne peut pas être appliqué aux valeurs {a} et {b}',
+  'tx.rslang.error.iterateInfinity': 'Impossible de parcourir un ensemble infini',
 
   'tx.rslang.identifiers': 'Identificateurs',
   'tx.rslang.identifiers.hint': 'Désignations des constituantes, variables locales et littéraux'
