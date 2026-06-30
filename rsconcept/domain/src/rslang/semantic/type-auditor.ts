@@ -1067,6 +1067,50 @@ interface LocalData {
   type: Typification;
 }
 
+function isLogicBinaryNode(typeID: number): boolean {
+  return (
+    typeID === TokenID.LOGIC_AND ||
+    typeID === TokenID.LOGIC_OR ||
+    typeID === TokenID.LOGIC_IMPLICATION ||
+    typeID === TokenID.LOGIC_EQUIVALENT
+  );
+}
+
+function isQuantifierNode(typeID: number): boolean {
+  return typeID === TokenID.QUANTOR_UNIVERSAL || typeID === TokenID.QUANTOR_EXISTS;
+}
+
+/** Quantifier on the path from `node` up through `stopAt` (inclusive). */
+function pathContainsQuantifier(node: AstNode, stopAt: AstNode): boolean {
+  let current: AstNode | null = node;
+  while (current !== null) {
+    if (isQuantifierNode(current.typeID)) {
+      return true;
+    }
+    if (current === stopAt) {
+      return false;
+    }
+    current = current.parent;
+  }
+  return false;
+}
+
+/** Right operand subtree of the innermost logic binary containing `node`. */
+function findRightLogicOperandRoot(node: AstNode): AstNode | null {
+  let current: AstNode | null = node;
+  while (current !== null && current.parent !== null) {
+    const parent: AstNode = current.parent;
+    if (isLogicBinaryNode(parent.typeID)) {
+      const childIndex = parent.children.indexOf(current);
+      if (childIndex > 0) {
+        return current;
+      }
+    }
+    current = parent;
+  }
+  return null;
+}
+
 /** Local variables context. */
 class LocalContext {
   private onError: (code: RSErrorCode, node: AstNode, params: string[]) => null;
@@ -1124,6 +1168,13 @@ class LocalContext {
       this.onError(RSErrorCode.localUndeclared, node, [alias]);
       return null;
     } else if (local.level < 1) {
+      const subexprRoot = findRightLogicOperandRoot(node);
+      if (subexprRoot !== null) {
+        if (pathContainsQuantifier(node, subexprRoot)) {
+          return this.onError(RSErrorCode.localUndeclaredInSubexpr, node, [alias, labelType(local.type)]);
+        }
+        return this.onError(RSErrorCode.localOutOfScopeParentheses, node, [alias]);
+      }
       this.onError(RSErrorCode.localOutOfScope, node, [alias]);
       return null;
     } else {
