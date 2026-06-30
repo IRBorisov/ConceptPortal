@@ -40,6 +40,8 @@ const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
   [RSErrorCode.invalidEnumeration]: 'tx.rslang.error.invalidEnumeration',
   [RSErrorCode.invalidCortegeDeclare]: 'tx.rslang.error.invalidCortegeDeclare',
   [RSErrorCode.localOutOfScope]: 'tx.rslang.error.localOutOfScope',
+  [RSErrorCode.localOutOfScopeParentheses]: 'tx.rslang.error.localOutOfScopeParentheses',
+  [RSErrorCode.localUndeclaredInSubexpr]: 'tx.rslang.error.localUndeclaredInSubexpr',
   [RSErrorCode.invalidElementPredicate]: 'tx.rslang.error.invalidElementPredicate',
   [RSErrorCode.invalidEmptySetUsage]: 'tx.rslang.error.invalidEmptySetUsage',
   [RSErrorCode.invalidArgsArity]: 'tx.rslang.error.invalidArgsArity',
@@ -392,7 +394,10 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
     case RSErrorCode.globalNotTyped:
     case RSErrorCode.globalFuncWithoutArgs:
     case RSErrorCode.localOutOfScope:
+    case RSErrorCode.localOutOfScopeParentheses:
     case RSErrorCode.radicalUsage:
+    case RSErrorCode.localUndeclaredInSubexpr:
+      return globalTx(id, { name: params[0] ?? '', domain: params[1] ?? '' });
     case RSErrorCode.globalNoValue:
     case RSErrorCode.calcGlobalMissing:
       return globalTx(id, { name: params[0] ?? '' });

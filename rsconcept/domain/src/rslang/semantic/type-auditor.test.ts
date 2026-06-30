@@ -182,8 +182,11 @@ const errorData = [
   ['∀(a,a)∈S1 a=a', { code: RSErrorCode.localShadowing, from: 4, to: 5, params: ['a'] }],
   ['∀(a,b)∈X1 a=b', { code: RSErrorCode.invalidCortegeDeclare, from: 2, to: 3 }],
   ['∀a∈X1 D{a∈S1| 1=1}=S1', { code: RSErrorCode.localShadowing, from: 8, to: 9, params: ['a'] }],
-  ['∀a∈X1 a=a & a=a', { code: RSErrorCode.localOutOfScope, from: 12, to: 13, params: ['a'] }],
-  ['∀a∈X1 a=a & debool(X1)=a', { code: RSErrorCode.localOutOfScope, from: 23, to: 24, params: ['a'] }],
+  ['∀a∈X1 a=a & a=a', { code: RSErrorCode.localOutOfScopeParentheses, from: 12, to: 13, params: ['a'] }],
+  ['∀a∈X1 a=a & debool(X1)=a', { code: RSErrorCode.localOutOfScopeParentheses, from: 23, to: 24, params: ['a'] }],
+  ['∀ξ∈X1 ξ=ξ & ∀φ∈X1 φ=ξ', { code: RSErrorCode.localUndeclaredInSubexpr, from: 20, to: 21, params: ['ξ', 'X1'] }],
+  ['∀ξ∈X1 ξ=ξ & (ξ=ξ & ∀φ∈X1 φ=φ)', { code: RSErrorCode.localOutOfScopeParentheses, from: 13, to: 14, params: ['ξ'] }],
+  ['D{t∈X1 | t=t} ∪ {t}', { code: RSErrorCode.localOutOfScope, from: 17, to: 18, params: ['t'] }],
   // Set predicates
   ['X1∈X1', { code: RSErrorCode.invalidElementPredicate, from: 0, to: 5, params: ['ℬ(X1)', '∈', 'ℬ(X1)'] }],
   ['(1,2)∈X1', { code: RSErrorCode.invalidElementPredicate, from: 0, to: 8, params: ['Z×Z', '∈', 'ℬ(X1)'] }],

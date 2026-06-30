@@ -77,6 +77,8 @@ export const RSErrorCode = {
   invalidFilterParameterType: 0x882b, // 34859
   invalidFilterIndex: 0x882c, // 34860
   invalidFilterBooleanEchelon: 0x882d, // 34861
+  localOutOfScopeParentheses: 0x882e, // 34862
+  localUndeclaredInSubexpr: 0x882f, // 34863
 
   globalNoValue: 0x8840, // 34880
   invalidPropertyUsage: 0x8841, // 34881

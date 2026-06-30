@@ -180,6 +180,10 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.invalidEnumeration': 'All enumeration items must have one type: {a} and {b} differ',
   'tx.rslang.error.invalidCortegeDeclare': 'Tuple variable count does not match Cartesian product dimension',
   'tx.rslang.error.localOutOfScope': 'Variable _{name}_ is used outside its definition scope',
+  'tx.rslang.error.localOutOfScopeParentheses':
+    'Variable _{name}_ is outside its scope: the complex logical expression probably needs parentheses',
+  'tx.rslang.error.localUndeclaredInSubexpr':
+    'Variable _{name}_ is not defined for this subexpression. Expected ∀(∃) {name}∈{domain}',
   'tx.rslang.error.invalidElementPredicate':
     'Operator "{b}" compares an element with a set; type {a} is incompatible with {c}',
   'tx.rslang.error.invalidEmptySetUsage': 'The empty set cannot be used here without clarifying its type',

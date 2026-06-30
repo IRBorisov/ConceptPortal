@@ -184,6 +184,10 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.invalidCortegeDeclare':
     'Количество переменных в кортеже не совпадает с размерностью декартова произведения',
   'tx.rslang.error.localOutOfScope': 'Переменная _{name}_ используется вне своей области определения',
+  'tx.rslang.error.localOutOfScopeParentheses':
+    'Переменная _{name}_ вне области видимости: вероятно, сложное логическое выражение не взято в скобки',
+  'tx.rslang.error.localUndeclaredInSubexpr':
+    'Переменная _{name}_ не определена для данного подвыражения. Ожидается ∀(∃) {name}∈{domain}',
   'tx.rslang.error.invalidElementPredicate':
     'Оператор «{b}» сравнивает элемент с множеством; тип {a} не совместим с {c}',
   'tx.rslang.error.invalidEmptySetUsage': 'Пустое множество нельзя использовать здесь без уточнения типа',

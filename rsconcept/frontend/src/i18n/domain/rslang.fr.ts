@@ -195,6 +195,10 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.invalidCortegeDeclare':
     'Le nombre de variables du n-uplet ne correspond pas à la dimension du produit cartésien',
   'tx.rslang.error.localOutOfScope': 'La variable _{name}_ est utilisée hors de la portée de sa définition',
+  'tx.rslang.error.localOutOfScopeParentheses':
+    'La variable _{name}_ est hors portée : l’expression logique complexe doit probablement être entre parenthèses',
+  'tx.rslang.error.localUndeclaredInSubexpr':
+    'La variable _{name}_ n’est pas définie pour cette sous-expression. Attendu : ∀(∃) {name}∈{domain}',
   'tx.rslang.error.invalidElementPredicate':
     'L’opérateur « {b} » compare un élément avec un ensemble ; le type {a} est incompatible avec {c}',
   'tx.rslang.error.invalidEmptySetUsage': 'L’ensemble vide ne peut pas être utilisé ici sans préciser son type',
