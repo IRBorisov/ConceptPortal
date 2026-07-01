@@ -19,22 +19,25 @@ async function run() {
     await client.waitUntilReady();
     const session = await client.call<{ sessionId: string; contractVersion: string }>('createSession');
 
-    for (const input of BANK_DRAFTS) {
-      const result = await client.call<{
-        state: { alias: string; analysis: { success: boolean } };
-        diagnostics: unknown[];
-      }>('addOrUpdateConstituenta', {
-        sessionId: session.sessionId,
-        input
-      });
-      const ok = result.state.analysis.success;
-      const diagCount = result.diagnostics?.length ?? 0;
-      console.log(`${input.draft.alias}: ${ok ? 'OK' : 'FAIL'} (${diagCount} diagnostics)`);
-      if (!ok) {
-        const diags = await client.call('listDiagnostics', { sessionId: session.sessionId });
-        console.log(JSON.stringify(diags, null, 2));
-        throw new Error(`${input.draft.alias}: analysis failed (${diagCount} diagnostics)`);
-      }
+    const patch = await client.call<{
+      success: boolean;
+      diagnostics: unknown[];
+      failed: Array<{ draft: { alias: string }; diagnostics: unknown[] }>;
+      summary: { items: Array<{ alias: string; analysisSuccess: boolean }> };
+    }>('applySchemaPatch', {
+      sessionId: session.sessionId,
+      mode: 'atomic',
+      items: BANK_DRAFTS.map(entry => entry.draft)
+    });
+
+    for (const item of patch.summary.items) {
+      console.log(`${item.alias}: ${item.analysisSuccess ? 'OK' : 'FAIL'}`);
+    }
+    if (!patch.success) {
+      const diags = await client.call('listDiagnostics', { sessionId: session.sessionId });
+      console.log(JSON.stringify(diags, null, 2));
+      const failedAlias = patch.failed[0]?.draft.alias ?? 'unknown';
+      throw new Error(`${failedAlias}: analysis failed`);
     }
 
     await client.call('commitStep', {

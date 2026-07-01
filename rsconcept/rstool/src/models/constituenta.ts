@@ -2,22 +2,24 @@ import { type AnalysisResult } from './analysis';
 import { type CstType } from './common';
 import { type DiagnosticRecord } from './diagnostic';
 
+/** Constituent payload before analysis and merge into session state. */
 export interface ConstituentaDraft {
   id: number;
-  /** Alias */
+  /** Unique alias (e.g. `X1`, `D2`). */
   alias: string;
-  /** CST type */
+  /** Constituent type. */
   cstType: CstType;
-  /** Formal definition */
+  /** Formal RSLang definition. */
   definitionFormal: string;
-  /** Natural-language term */
+  /** Natural-language term. */
   term?: string;
-  /** Natural-language definition */
+  /** Natural-language definition. */
   definitionText?: string;
-  /** Convention or comment */
+  /** Convention or comment. */
   convention?: string;
 }
 
+/** Constituent stored in session state after analysis. */
 export interface ConstituentaState extends Omit<ConstituentaDraft, 'term' | 'definitionText' | 'convention'> {
   term: string;
   definitionText: string;
@@ -31,5 +33,21 @@ export interface AddOrUpdateConstituentaInput {
 
 export interface AddOrUpdateConstituentaResult {
   state: ConstituentaState;
+  diagnostics: DiagnosticRecord[];
+}
+
+/** How a multi-draft apply handles partial failures. */
+export type ApplyConstituentsMode = 'atomic' | 'best_effort';
+
+export interface ApplyConstituentsInput {
+  drafts: ConstituentaDraft[];
+  /** atomic: rollback on first failure; best_effort: apply valid drafts. Default: atomic. */
+  mode?: ApplyConstituentsMode;
+}
+
+export interface ApplyConstituentsResult {
+  success: boolean;
+  applied: ConstituentaState[];
+  failed: Array<{ draft: ConstituentaDraft; diagnostics: DiagnosticRecord[] }>;
   diagnostics: DiagnosticRecord[];
 }

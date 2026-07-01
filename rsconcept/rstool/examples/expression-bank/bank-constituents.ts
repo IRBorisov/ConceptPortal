@@ -1,4 +1,6 @@
-import { CstType, type AddOrUpdateConstituentaInput } from '../../src';
+import { CstType, type AgentConstituentaPatch } from '../../src';
+
+type DraftBatch = { draft: AgentConstituentaPatch };
 
 type BankRow = {
   id: number;
@@ -9,7 +11,7 @@ type BankRow = {
   convention?: string;
 };
 
-function row(input: BankRow): AddOrUpdateConstituentaInput {
+function row(input: BankRow): DraftBatch {
   return {
     draft: {
       id: input.id,
@@ -29,7 +31,13 @@ function row(input: BankRow): AddOrUpdateConstituentaInput {
 const rows: BankRow[] = [
   // T1 — управляющие конструкции
   { id: 1, alias: 'T1', cstType: CstType.STATEMENT, term: 'Управляющие конструкции', definitionFormal: '1=1' },
-  { id: 2, alias: 'F1', cstType: CstType.FUNCTION, term: 'схема ограниченного выделения', definitionFormal: '[α∈ℬ(R1)] D{ ξ∈α | ξ=ξ }' },
+  {
+    id: 2,
+    alias: 'F1',
+    cstType: CstType.FUNCTION,
+    term: 'схема ограниченного выделения',
+    definitionFormal: '[α∈ℬ(R1)] D{ ξ∈α | ξ=ξ }'
+  },
   {
     id: 3,
     alias: 'F2',
@@ -37,15 +45,51 @@ const rows: BankRow[] = [
     term: 'условный переход',
     definitionFormal: '[α∈ℬ(R1)] debool(I{ α | 1=1} ∪ I{ α\\α | 1≠1})'
   },
-  { id: 4, alias: 'F3', cstType: CstType.FUNCTION, term: 'рекурсивное определение', definitionFormal: '[α∈ℬ(R1)] R{ ξ:=α | ξ≠∅ | ξ\\ξ }' },
+  {
+    id: 4,
+    alias: 'F3',
+    cstType: CstType.FUNCTION,
+    term: 'рекурсивное определение',
+    definitionFormal: '[α∈ℬ(R1)] R{ ξ:=α | ξ≠∅ | ξ\\ξ }'
+  },
 
   // T2 — бинарные отношения двух множеств
   { id: 5, alias: 'T2', cstType: CstType.STATEMENT, term: 'Бинарные отношения двух множеств', definitionFormal: '1=1' },
-  { id: 6, alias: 'F4', cstType: CstType.FUNCTION, term: 'обратное отношение', definitionFormal: '[σ∈ℬ(R1×R2)] Pr2,1(σ)' },
-  { id: 7, alias: 'P1', cstType: CstType.PREDICATE, term: 'свойство всюдуопределенности', definitionFormal: '[α∈ℬ(R1), σ∈ℬ(R1×R2)] Pr1(σ) = α' },
-  { id: 8, alias: 'P2', cstType: CstType.PREDICATE, term: 'свойство всюдузначности', definitionFormal: '[α∈ℬ(R2), σ∈ℬ(R1×R2)] Pr2(σ) = α' },
-  { id: 9, alias: 'P3', cstType: CstType.PREDICATE, term: 'свойство прямой однозначности', definitionFormal: '[σ∈ℬ(R1×R2)] card(Pr1(σ)) = card(σ)' },
-  { id: 10, alias: 'P4', cstType: CstType.PREDICATE, term: 'свойство обратной однозначности', definitionFormal: '[σ∈ℬ(R1×R2)] card(Pr2(σ)) = card(σ)' },
+  {
+    id: 6,
+    alias: 'F4',
+    cstType: CstType.FUNCTION,
+    term: 'обратное отношение',
+    definitionFormal: '[σ∈ℬ(R1×R2)] Pr2,1(σ)'
+  },
+  {
+    id: 7,
+    alias: 'P1',
+    cstType: CstType.PREDICATE,
+    term: 'свойство всюдуопределенности',
+    definitionFormal: '[α∈ℬ(R1), σ∈ℬ(R1×R2)] Pr1(σ) = α'
+  },
+  {
+    id: 8,
+    alias: 'P2',
+    cstType: CstType.PREDICATE,
+    term: 'свойство всюдузначности',
+    definitionFormal: '[α∈ℬ(R2), σ∈ℬ(R1×R2)] Pr2(σ) = α'
+  },
+  {
+    id: 9,
+    alias: 'P3',
+    cstType: CstType.PREDICATE,
+    term: 'свойство прямой однозначности',
+    definitionFormal: '[σ∈ℬ(R1×R2)] card(Pr1(σ)) = card(σ)'
+  },
+  {
+    id: 10,
+    alias: 'P4',
+    cstType: CstType.PREDICATE,
+    term: 'свойство обратной однозначности',
+    definitionFormal: '[σ∈ℬ(R1×R2)] card(Pr2(σ)) = card(σ)'
+  },
   {
     id: 11,
     alias: 'P5',
@@ -53,12 +97,48 @@ const rows: BankRow[] = [
     term: 'функция',
     definitionFormal: '[α∈ℬ(R1), σ∈ℬ(R1×R2)] card(Pr1(σ)) = card(σ)  & Pr1(σ) = α'
   },
-  { id: 12, alias: 'F5', cstType: CstType.FUNCTION, term: 'образ элемента', definitionFormal: '[α∈R1, σ∈ℬ(R1×R2)] debool(Pr2(Fi1[{α}](σ)))' },
-  { id: 13, alias: 'F6', cstType: CstType.FUNCTION, term: 'сечение по элементу', definitionFormal: '[α∈R1, σ∈ℬ(R1×R2)] Pr2(Fi1[{α}](σ))' },
-  { id: 14, alias: 'F7', cstType: CstType.FUNCTION, term: 'прообраз значения', definitionFormal: '[α∈R2, σ∈ℬ(R1×R2)] debool(Pr1(Fi2[{α}](σ)))' },
-  { id: 15, alias: 'F8', cstType: CstType.FUNCTION, term: 'сечение по значению', definitionFormal: '[α∈R2, σ∈ℬ(R1×R2)] Pr1(Fi2[{α}](σ))' },
-  { id: 16, alias: 'F9', cstType: CstType.FUNCTION, term: 'образ множества', definitionFormal: '[α∈ℬ(R1), σ∈ℬ(R1×R2)] Pr2(Fi1[α](σ))' },
-  { id: 17, alias: 'F10', cstType: CstType.FUNCTION, term: 'прообраз множества', definitionFormal: '[α∈ℬ(R2), σ∈ℬ(R1×R2)] Pr1(Fi2[α](σ))' },
+  {
+    id: 12,
+    alias: 'F5',
+    cstType: CstType.FUNCTION,
+    term: 'образ элемента',
+    definitionFormal: '[α∈R1, σ∈ℬ(R1×R2)] debool(Pr2(Fi1[{α}](σ)))'
+  },
+  {
+    id: 13,
+    alias: 'F6',
+    cstType: CstType.FUNCTION,
+    term: 'сечение по элементу',
+    definitionFormal: '[α∈R1, σ∈ℬ(R1×R2)] Pr2(Fi1[{α}](σ))'
+  },
+  {
+    id: 14,
+    alias: 'F7',
+    cstType: CstType.FUNCTION,
+    term: 'прообраз значения',
+    definitionFormal: '[α∈R2, σ∈ℬ(R1×R2)] debool(Pr1(Fi2[{α}](σ)))'
+  },
+  {
+    id: 15,
+    alias: 'F8',
+    cstType: CstType.FUNCTION,
+    term: 'сечение по значению',
+    definitionFormal: '[α∈R2, σ∈ℬ(R1×R2)] Pr1(Fi2[{α}](σ))'
+  },
+  {
+    id: 16,
+    alias: 'F9',
+    cstType: CstType.FUNCTION,
+    term: 'образ множества',
+    definitionFormal: '[α∈ℬ(R1), σ∈ℬ(R1×R2)] Pr2(Fi1[α](σ))'
+  },
+  {
+    id: 17,
+    alias: 'F10',
+    cstType: CstType.FUNCTION,
+    term: 'прообраз множества',
+    definitionFormal: '[α∈ℬ(R2), σ∈ℬ(R1×R2)] Pr1(Fi2[α](σ))'
+  },
   {
     id: 18,
     alias: 'F11',
@@ -69,7 +149,13 @@ const rows: BankRow[] = [
 
   // T3 — бинарные отношения на множестве
   { id: 19, alias: 'T3', cstType: CstType.STATEMENT, term: 'Бинарные отношения на множестве', definitionFormal: '1=1' },
-  { id: 20, alias: 'F12', cstType: CstType.FUNCTION, term: 'участники отношения', definitionFormal: '[σ∈ℬ(R1×R1)] Pr1(σ)∪Pr2(σ)' },
+  {
+    id: 20,
+    alias: 'F12',
+    cstType: CstType.FUNCTION,
+    term: 'участники отношения',
+    definitionFormal: '[σ∈ℬ(R1×R1)] Pr1(σ)∪Pr2(σ)'
+  },
   {
     id: 21,
     alias: 'P6',
@@ -77,7 +163,13 @@ const rows: BankRow[] = [
     term: 'свойство полноты (линейности)',
     definitionFormal: '[α∈ℬ(R1), σ∈ℬ(R1×R1)] σ∪Pr2,1(σ)∪Pr1,1(σ)∪Pr2,2(σ) = α×α'
   },
-  { id: 22, alias: 'P7', cstType: CstType.PREDICATE, term: 'свойство симметричности', definitionFormal: '[σ∈ℬ(R1×R1)] Pr2,1(σ) = σ' },
+  {
+    id: 22,
+    alias: 'P7',
+    cstType: CstType.PREDICATE,
+    term: 'свойство симметричности',
+    definitionFormal: '[σ∈ℬ(R1×R1)] Pr2,1(σ) = σ'
+  },
   {
     id: 23,
     alias: 'P8',
@@ -85,8 +177,20 @@ const rows: BankRow[] = [
     term: 'свойство антисимметричности',
     definitionFormal: '[σ∈ℬ(R1×R1)] (Pr2,1(σ)∩σ)\\Pr1,1(σ)=∅'
   },
-  { id: 24, alias: 'P9', cstType: CstType.PREDICATE, term: 'свойство рефлексивности', definitionFormal: '[σ∈ℬ(R1×R1)] Pr1,1(σ) ⊆ σ' },
-  { id: 25, alias: 'P10', cstType: CstType.PREDICATE, term: 'свойство антирефлексивности', definitionFormal: '[σ∈ℬ(R1×R1)] Pr1,1(σ)∩σ=∅' },
+  {
+    id: 24,
+    alias: 'P9',
+    cstType: CstType.PREDICATE,
+    term: 'свойство рефлексивности',
+    definitionFormal: '[σ∈ℬ(R1×R1)] Pr1,1(σ) ⊆ σ'
+  },
+  {
+    id: 25,
+    alias: 'P10',
+    cstType: CstType.PREDICATE,
+    term: 'свойство антирефлексивности',
+    definitionFormal: '[σ∈ℬ(R1×R1)] Pr1,1(σ)∩σ=∅'
+  },
   {
     id: 26,
     alias: 'P11',
@@ -132,8 +236,20 @@ const rows: BankRow[] = [
     term: 'эквивалентность',
     definitionFormal: '[σ∈ℬ(R1×R1)] Pr1,1(σ) ⊆ σ & Pr2,1(σ) = σ & ∀(α1,α2),(β1,β2)∈σ (α2=β1 ⇒ (α1,β2)∈σ)'
   },
-  { id: 32, alias: 'P18', cstType: CstType.PREDICATE, term: 'толерантность', definitionFormal: '[σ∈ℬ(R1×R1)] Pr1,1(σ) ⊆ σ & Pr2,1(σ) = σ' },
-  { id: 33, alias: 'F15', cstType: CstType.FUNCTION, term: 'класс эквивалентности элемента', definitionFormal: '[α∈R1, σ∈ℬ(R1×R1)] Pr2(Fi1[{α}](σ))' },
+  {
+    id: 32,
+    alias: 'P18',
+    cstType: CstType.PREDICATE,
+    term: 'толерантность',
+    definitionFormal: '[σ∈ℬ(R1×R1)] Pr1,1(σ) ⊆ σ & Pr2,1(σ) = σ'
+  },
+  {
+    id: 33,
+    alias: 'F15',
+    cstType: CstType.FUNCTION,
+    term: 'класс эквивалентности элемента',
+    definitionFormal: '[α∈R1, σ∈ℬ(R1×R1)] Pr2(Fi1[{α}](σ))'
+  },
 
   // T4 — цепочки
   { id: 34, alias: 'T4', cstType: CstType.STATEMENT, term: 'Цепочки', definitionFormal: '1=1' },
@@ -145,10 +261,34 @@ const rows: BankRow[] = [
     definitionFormal:
       '[σ∈ℬ(R1×R1)] card(Pr1(σ))=card(σ) & card(Pr2(σ))=card(σ) & card(Pr1(σ)\\Pr2(σ))=1 & card(Pr2(σ)\\Pr1(σ))=1'
   },
-  { id: 36, alias: 'F16', cstType: CstType.FUNCTION, term: 'начало цепочки', definitionFormal: '[σ∈ℬ(R1×R1)] debool(Pr1(σ) \\ Pr2(σ))' },
-  { id: 37, alias: 'F17', cstType: CstType.FUNCTION, term: 'конец цепочки', definitionFormal: '[σ∈ℬ(R1×R1)] debool(Pr2(σ) \\ Pr1(σ))' },
-  { id: 38, alias: 'F18', cstType: CstType.FUNCTION, term: 'следующий за данным элемент цепочки', definitionFormal: '[α∈R1, σ∈ℬ(R1×R1)] debool(Pr2(Fi1[{α}](σ)))' },
-  { id: 39, alias: 'F19', cstType: CstType.FUNCTION, term: 'предшествующий данному элемент цепочки', definitionFormal: '[α∈R1, σ∈ℬ(R1×R1)] debool(Pr1(Fi2[{α}](σ)))' },
+  {
+    id: 36,
+    alias: 'F16',
+    cstType: CstType.FUNCTION,
+    term: 'начало цепочки',
+    definitionFormal: '[σ∈ℬ(R1×R1)] debool(Pr1(σ) \\ Pr2(σ))'
+  },
+  {
+    id: 37,
+    alias: 'F17',
+    cstType: CstType.FUNCTION,
+    term: 'конец цепочки',
+    definitionFormal: '[σ∈ℬ(R1×R1)] debool(Pr2(σ) \\ Pr1(σ))'
+  },
+  {
+    id: 38,
+    alias: 'F18',
+    cstType: CstType.FUNCTION,
+    term: 'следующий за данным элемент цепочки',
+    definitionFormal: '[α∈R1, σ∈ℬ(R1×R1)] debool(Pr2(Fi1[{α}](σ)))'
+  },
+  {
+    id: 39,
+    alias: 'F19',
+    cstType: CstType.FUNCTION,
+    term: 'предшествующий данному элемент цепочки',
+    definitionFormal: '[α∈R1, σ∈ℬ(R1×R1)] debool(Pr1(Fi2[{α}](σ)))'
+  },
 
   // T5 — графы
   { id: 40, alias: 'T5', cstType: CstType.STATEMENT, term: 'Графы', definitionFormal: '1=1' },
@@ -159,11 +299,35 @@ const rows: BankRow[] = [
     term: 'неориентированный граф',
     definitionFormal: '[γ∈ℬ(R1)×ℬ(R1×R1)] pr2(γ) = Pr2,1(pr2(γ))'
   },
-  { id: 42, alias: 'F20', cstType: CstType.FUNCTION, term: 'истоки', definitionFormal: '[σ∈ℬ(R1×R1)] Pr1(σ) \\ Pr2(σ)' },
+  {
+    id: 42,
+    alias: 'F20',
+    cstType: CstType.FUNCTION,
+    term: 'истоки',
+    definitionFormal: '[σ∈ℬ(R1×R1)] Pr1(σ) \\ Pr2(σ)'
+  },
   { id: 43, alias: 'F21', cstType: CstType.FUNCTION, term: 'стоки', definitionFormal: '[σ∈ℬ(R1×R1)] Pr2(σ) \\ Pr1(σ)' },
-  { id: 44, alias: 'F22', cstType: CstType.FUNCTION, term: 'изолированные вершины', definitionFormal: '[α∈ℬ(R1), σ∈ℬ(R1×R1)] α \\ (Pr2(σ) ∪ Pr1(σ))' },
-  { id: 45, alias: 'F23', cstType: CstType.FUNCTION, term: 'потребители', definitionFormal: '[α∈R1, σ∈ℬ(R1×R1)] Pr2(Fi1[{α}](σ))' },
-  { id: 46, alias: 'F24', cstType: CstType.FUNCTION, term: 'поставщики', definitionFormal: '[α∈R1, σ∈ℬ(R1×R1)] Pr1(Fi2[{α}](σ))' },
+  {
+    id: 44,
+    alias: 'F22',
+    cstType: CstType.FUNCTION,
+    term: 'изолированные вершины',
+    definitionFormal: '[α∈ℬ(R1), σ∈ℬ(R1×R1)] α \\ (Pr2(σ) ∪ Pr1(σ))'
+  },
+  {
+    id: 45,
+    alias: 'F23',
+    cstType: CstType.FUNCTION,
+    term: 'потребители',
+    definitionFormal: '[α∈R1, σ∈ℬ(R1×R1)] Pr2(Fi1[{α}](σ))'
+  },
+  {
+    id: 46,
+    alias: 'F24',
+    cstType: CstType.FUNCTION,
+    term: 'поставщики',
+    definitionFormal: '[α∈R1, σ∈ℬ(R1×R1)] Pr1(Fi2[{α}](σ))'
+  },
   {
     id: 47,
     alias: 'F25',
@@ -204,8 +368,20 @@ const rows: BankRow[] = [
 
   // T6 — целые числа
   { id: 52, alias: 'T6', cstType: CstType.STATEMENT, term: 'Целые числа', definitionFormal: '1=1' },
-  { id: 53, alias: 'F31', cstType: CstType.FUNCTION, term: 'минимум набора чисел', definitionFormal: '[σ∈ℬ(Z)] debool(D{ξ∈σ | ∀α∈σ α ≥ ξ})' },
-  { id: 54, alias: 'F32', cstType: CstType.FUNCTION, term: 'максимум набора чисел', definitionFormal: '[σ∈ℬ(Z)] debool(D{ξ∈σ | ∀α∈σ α ≤ ξ})' },
+  {
+    id: 53,
+    alias: 'F31',
+    cstType: CstType.FUNCTION,
+    term: 'минимум набора чисел',
+    definitionFormal: '[σ∈ℬ(Z)] debool(D{ξ∈σ | ∀α∈σ α ≥ ξ})'
+  },
+  {
+    id: 54,
+    alias: 'F32',
+    cstType: CstType.FUNCTION,
+    term: 'максимум набора чисел',
+    definitionFormal: '[σ∈ℬ(Z)] debool(D{ξ∈σ | ∀α∈σ α ≤ ξ})'
+  },
   {
     id: 55,
     alias: 'F33',
@@ -213,8 +389,20 @@ const rows: BankRow[] = [
     term: 'натуральные числа, меньшие или равные данному',
     definitionFormal: '[α∈Z] R{(ξ,σ):=(0, {0}) | ξ<α | (ξ+1, σ ∪ {ξ+1})}'
   },
-  { id: 56, alias: 'P25', cstType: CstType.PREDICATE, term: 'набор чисел, удовлетворяющий данному периоду', definitionFormal: '[σ∈ℬ(Z), τ∈Z] ∀α∈σ (α+τ ≤ F32[σ] ⇒ α+τ∈σ)' },
-  { id: 57, alias: 'F35', cstType: CstType.FUNCTION, term: 'остаток от деления', definitionFormal: '[α∈Z, β∈Z] R{ξ:=α | ξ≥β & β>0 | ξ-β}' },
+  {
+    id: 56,
+    alias: 'P25',
+    cstType: CstType.PREDICATE,
+    term: 'набор чисел, удовлетворяющий данному периоду',
+    definitionFormal: '[σ∈ℬ(Z), τ∈Z] ∀α∈σ (α+τ ≤ F32[σ] ⇒ α+τ∈σ)'
+  },
+  {
+    id: 57,
+    alias: 'F35',
+    cstType: CstType.FUNCTION,
+    term: 'остаток от деления',
+    definitionFormal: '[α∈Z, β∈Z] R{ξ:=α | ξ≥β & β>0 | ξ-β}'
+  },
 
   // T7 — последовательности
   { id: 58, alias: 'T7', cstType: CstType.STATEMENT, term: 'Последовательности', definitionFormal: '1=1' },
@@ -225,9 +413,27 @@ const rows: BankRow[] = [
     term: 'корректная последовательность (позиции с нуля)',
     definitionFormal: '[σ∈ℬ(R1×Z)] card(σ)=card(Pr2(σ)) & ∀λ∈Pr2(σ) λ < card(σ)'
   },
-  { id: 60, alias: 'P28', cstType: CstType.PREDICATE, term: 'подпоследовательность', definitionFormal: '[σ∈ℬ(R1×Z)] card(σ) = card(Pr2(σ))' },
-  { id: 61, alias: 'F36', cstType: CstType.FUNCTION, term: 'начало последовательности', definitionFormal: '[σ∈ℬ(R1×Z)] debool(Pr1(Fi2[{0}](σ)))' },
-  { id: 62, alias: 'F37', cstType: CstType.FUNCTION, term: 'конец последовательности', definitionFormal: '[σ∈ℬ(R1×Z)] debool(Pr1(Fi2[{card(σ) - 1}](σ)))' },
+  {
+    id: 60,
+    alias: 'P28',
+    cstType: CstType.PREDICATE,
+    term: 'подпоследовательность',
+    definitionFormal: '[σ∈ℬ(R1×Z)] card(σ) = card(Pr2(σ))'
+  },
+  {
+    id: 61,
+    alias: 'F36',
+    cstType: CstType.FUNCTION,
+    term: 'начало последовательности',
+    definitionFormal: '[σ∈ℬ(R1×Z)] debool(Pr1(Fi2[{0}](σ)))'
+  },
+  {
+    id: 62,
+    alias: 'F37',
+    cstType: CstType.FUNCTION,
+    term: 'конец последовательности',
+    definitionFormal: '[σ∈ℬ(R1×Z)] debool(Pr1(Fi2[{card(σ) - 1}](σ)))'
+  },
   {
     id: 63,
     alias: 'F40',
@@ -265,8 +471,7 @@ const rows: BankRow[] = [
     alias: 'F44',
     cstType: CstType.FUNCTION,
     term: 'нейтральные элементы',
-    definitionFormal:
-      '[σ∈ℬ((R1×R1)×R1)] D{ξ∈Pr1(Pr1(σ)) | ∀α∈Pr1(Pr1(σ)) (((α,ξ),α)∈σ & ((ξ,α),α)∈σ)}'
+    definitionFormal: '[σ∈ℬ((R1×R1)×R1)] D{ξ∈Pr1(Pr1(σ)) | ∀α∈Pr1(Pr1(σ)) (((α,ξ),α)∈σ & ((ξ,α),α)∈σ)}'
   },
   {
     id: 68,
@@ -280,16 +485,14 @@ const rows: BankRow[] = [
     alias: 'F46',
     cstType: CstType.FUNCTION,
     term: 'обратные элементы для данного элемента',
-    definitionFormal:
-      '[α∈R1, σ∈ℬ((R1×R1)×R1)] D{ω∈Pr1(Pr1(σ)) | F42[α,ω,σ]∈F44[σ] & F42[ω,α,σ]∈F44[σ]}'
+    definitionFormal: '[α∈R1, σ∈ℬ((R1×R1)×R1)] D{ω∈Pr1(Pr1(σ)) | F42[α,ω,σ]∈F44[σ] & F42[ω,α,σ]∈F44[σ]}'
   },
   {
     id: 70,
     alias: 'F47',
     cstType: CstType.FUNCTION,
     term: 'элемент, являющийся данной степенью данного элемента',
-    definitionFormal:
-      '[α∈R1, λ∈Z, σ∈ℬ((R1×R1)×R1)] pr1(R{(ξ, μ) := (α, 1) | μ<λ & λ>0 | (F42[ξ,α,σ], μ + 1)})'
+    definitionFormal: '[α∈R1, λ∈Z, σ∈ℬ((R1×R1)×R1)] pr1(R{(ξ, μ) := (α, 1) | μ<λ & λ>0 | (F42[ξ,α,σ], μ + 1)})'
   },
   {
     id: 71,
@@ -305,7 +508,13 @@ const rows: BankRow[] = [
     term: 'свойство ассоциативности',
     definitionFormal: '[σ∈ℬ((R1×R1)×R1)] ∀α,β,γ∈Pr1(Pr1(σ)) F42[F42[α,β,σ],γ,σ] = F42[α,F42[β,γ,σ],σ]'
   },
-  { id: 73, alias: 'P31', cstType: CstType.PREDICATE, term: 'свойство коммутативности', definitionFormal: '[σ∈ℬ((R1×R1)×R1)] ∀((α1,α2),γ)∈σ ((α2,α1),γ)∈σ' },
+  {
+    id: 73,
+    alias: 'P31',
+    cstType: CstType.PREDICATE,
+    term: 'свойство коммутативности',
+    definitionFormal: '[σ∈ℬ((R1×R1)×R1)] ∀((α1,α2),γ)∈σ ((α2,α1),γ)∈σ'
+  },
   {
     id: 74,
     alias: 'P35',
@@ -331,7 +540,14 @@ const rows: BankRow[] = [
   },
 
   // T9 — кольца
-  { id: 77, alias: 'T9', cstType: CstType.STATEMENT, term: 'Кольца', definitionFormal: '1=1', convention: 'Операции по умолчанию — группоиды' },
+  {
+    id: 77,
+    alias: 'T9',
+    cstType: CstType.STATEMENT,
+    term: 'Кольца',
+    definitionFormal: '1=1',
+    convention: 'Операции по умолчанию — группоиды'
+  },
   {
     id: 78,
     alias: 'P39',
@@ -345,16 +561,33 @@ const rows: BankRow[] = [
     alias: 'P41',
     cstType: CstType.PREDICATE,
     term: 'полукольцо',
-    definitionFormal:
-      '[α∈ℬ(R1), φ∈ℬ((R1×R1)×R1), ψ∈ℬ((R1×R1)×R1)] P36[α, φ] & P31[φ] & P35[α, ψ] & P39[φ, ψ]',
+    definitionFormal: '[α∈ℬ(R1), φ∈ℬ((R1×R1)×R1), ψ∈ℬ((R1×R1)×R1)] P36[α, φ] & P31[φ] & P35[α, ψ] & P39[φ, ψ]',
     convention: 'сложение — моноид + коммутативность; умножение — полугруппа'
   },
 
   // T10 — множества подмножеств
   { id: 80, alias: 'T10', cstType: CstType.STATEMENT, term: 'Множества подмножеств', definitionFormal: '1=1' },
-  { id: 81, alias: 'P46', cstType: CstType.PREDICATE, term: 'свойство покрытия', definitionFormal: '[α∈ℬ(R1), σ∈ℬℬ(R1)] α⊆red(σ)' },
-  { id: 82, alias: 'P47', cstType: CstType.PREDICATE, term: 'свойство попарного непересечения', definitionFormal: '[σ∈ℬℬ(R1)] ∀α,β∈σ (α≠β ⇒ α∩β=∅)' },
-  { id: 83, alias: 'P48', cstType: CstType.PREDICATE, term: 'свойство замкнутости по объединению', definitionFormal: '[σ∈ℬℬ(R1)] ∀α,β∈σ α∪β∈σ' },
+  {
+    id: 81,
+    alias: 'P46',
+    cstType: CstType.PREDICATE,
+    term: 'свойство покрытия',
+    definitionFormal: '[α∈ℬ(R1), σ∈ℬℬ(R1)] α⊆red(σ)'
+  },
+  {
+    id: 82,
+    alias: 'P47',
+    cstType: CstType.PREDICATE,
+    term: 'свойство попарного непересечения',
+    definitionFormal: '[σ∈ℬℬ(R1)] ∀α,β∈σ (α≠β ⇒ α∩β=∅)'
+  },
+  {
+    id: 83,
+    alias: 'P48',
+    cstType: CstType.PREDICATE,
+    term: 'свойство замкнутости по объединению',
+    definitionFormal: '[σ∈ℬℬ(R1)] ∀α,β∈σ α∪β∈σ'
+  },
   {
     id: 84,
     alias: 'P52',
@@ -362,9 +595,27 @@ const rows: BankRow[] = [
     term: 'разбиение',
     definitionFormal: '[α∈ℬ(R1), σ∈ℬℬ(R1)] red(σ)=α & card(σ)>1 & ∅∉σ & ∀ξ1,ξ2∈σ (ξ1≠ξ2 ⇒ ξ1∩ξ2=∅)'
   },
-  { id: 85, alias: 'F48', cstType: CstType.FUNCTION, term: 'фильтр по вхождению элемента', definitionFormal: '[α∈R1, σ∈ℬℬ(R1)] D{ξ∈σ | α∈ξ}' },
-  { id: 86, alias: 'F49', cstType: CstType.FUNCTION, term: 'фильтр по подмножеству', definitionFormal: '[α∈ℬ(R1), σ∈ℬℬ(R1)] D{ξ∈σ | α⊆ξ}' },
-  { id: 87, alias: 'F50', cstType: CstType.FUNCTION, term: 'фильтр по надмножеству', definitionFormal: '[α∈ℬ(R1), σ∈ℬℬ(R1)] D{ξ∈σ | ξ⊆α}' }
+  {
+    id: 85,
+    alias: 'F48',
+    cstType: CstType.FUNCTION,
+    term: 'фильтр по вхождению элемента',
+    definitionFormal: '[α∈R1, σ∈ℬℬ(R1)] D{ξ∈σ | α∈ξ}'
+  },
+  {
+    id: 86,
+    alias: 'F49',
+    cstType: CstType.FUNCTION,
+    term: 'фильтр по подмножеству',
+    definitionFormal: '[α∈ℬ(R1), σ∈ℬℬ(R1)] D{ξ∈σ | α⊆ξ}'
+  },
+  {
+    id: 87,
+    alias: 'F50',
+    cstType: CstType.FUNCTION,
+    term: 'фильтр по надмножеству',
+    definitionFormal: '[α∈ℬ(R1), σ∈ℬℬ(R1)] D{ξ∈σ | ξ⊆α}'
+  }
 ];
 
-export const BANK_DRAFTS: AddOrUpdateConstituentaInput[] = rows.map(row);
+export const BANK_DRAFTS: DraftBatch[] = rows.map(row);

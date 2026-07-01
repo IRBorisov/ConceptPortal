@@ -1,6 +1,6 @@
 # Диагностика
 
-Читай, когда `analyzeExpression`, `addOrUpdateConstituenta`, `listDiagnostics` или `evaluate*`
+Читай, когда `analyzeExpression`, `applySchemaPatch`, `listDiagnostics` или `evaluate`
 вернули диагностику. Источник истины по кодам — `@rsconcept/domain/src/rslang/error.ts`.
 
 ## Где лежит диагностика
@@ -8,15 +8,16 @@
 У rstool два представления одной и той же ошибки.
 
 - **Плоское** `RSToolErrorDescription` — в `AnalysisResult.diagnostics` (из `analyzeExpression`
-  и `addOrUpdateConstituenta(...).analysis`) и в `EvaluationResult.diagnostics`:
+  и анализа конституент после `applySchemaPatch`) и в `EvaluationResult.diagnostics`:
   - `code` — числовой `RSErrorCode`.
   - `from`, `to` — полуинтервал `[from, to)` в `definitionFormal` (или в выражении вычисления).
   - `params?` — позиционный массив строк-аргументов сообщения (см. таблицы ниже).
 - **Обёрнутое** `DiagnosticRecord` — только из `listDiagnostics`:
   - `sessionId`, `expression` — исходное выражение.
   - `error` — то же `RSToolErrorDescription` (`code`/`from`/`to`/`params`) **вложено**, читай `record.error.code`.
-  - `constituentId?` — id конституенты. У диагностик от `addOrUpdateConstituenta` он есть;
-    у черновиков `analyzeExpression` он `undefined`. Фильтруй `listDiagnostics(sessionId, { constituentId })`.
+  - `constituentId?` — id конституенты. У диагностик сохранённых конституент он есть;
+    у черновиков `analyzeExpression` он `undefined`. Фильтруй `listDiagnostics({ constituentId })`
+    или `listDiagnostics({ constituentId }, sessionId)`.
 
 ## Класс и префикс кода
 
@@ -128,7 +129,7 @@
 | `0x8100` | `calcUnknownError`        | —                  | Непредвиденная ошибка вычисления.                                      |
 | `0x8101` | `setOverflow`             | `[limit]`          | Превышен предел числа элементов `limit`: упрости выражение или данные. |
 | `0x8102` | `booleanBaseLimit`        | `[limit]`          | Превышен предел базы степенного множества `limit`.                     |
-| `0x8103` | `calcGlobalMissing`       | `[name]`           | Нет значения для `name`: задай `setConstituentaValue(s)`.              |
+| `0x8103` | `calcGlobalMissing`       | `[name]`           | Нет значения для `name`: задай через `setModelValues`.                 |
 | `0x8104` | `iterationsLimit`         | `[limit]`          | Превышен предел итераций `limit`.                                      |
 | `0x8105` | `calcInvalidDebool`       | —                  | `debool` получил не синглетон.                                         |
 | `0x8106` | `iterateInfinity`         | —                  | Итерация по бесконечному множеству.                                    |

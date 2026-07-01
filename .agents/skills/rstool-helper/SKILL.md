@@ -8,6 +8,8 @@ description: >-
 
 Thin entry skill for this repository. **Do not** `npm install @rsconcept/rstool` for in-tree work — the library and docs are at `rsconcept/rstool/`.
 
+If this skill is copied into a project that installed `@rsconcept/rstool` from npm, use the package paths under `node_modules/@rsconcept/rstool/`. In this Portal workspace, always prefer the in-repo files because they match the local code under edit.
+
 ## Canonical files (read before rstool work)
 
 Paths are from the **workspace root**.

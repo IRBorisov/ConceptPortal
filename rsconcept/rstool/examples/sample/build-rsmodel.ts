@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 
 import { TUPLE_ID } from '@rsconcept/domain';
 
-import { CstType, RSToolWrapperClient, type AddOrUpdateConstituentaInput } from '../../src';
+import { CstType, RSToolWrapperClient, type AgentConstituentaPatch } from '../../src';
 
 async function run() {
   const client = new RSToolWrapperClient({
@@ -14,63 +14,44 @@ async function run() {
     await client.waitUntilReady();
     const session = await client.call<{ sessionId: string; contractVersion: string }>('createSession');
 
-    const drafts: AddOrUpdateConstituentaInput[] = [
+    const items: AgentConstituentaPatch[] = [
+      { id: 1, alias: 'X1', cstType: CstType.BASE, definitionFormal: '' },
+      { id: 2, alias: 'C1', cstType: CstType.CONSTANT, definitionFormal: '' },
       {
-        draft: { id: 1, alias: 'X1', cstType: CstType.BASE, definitionFormal: '' }
+        id: 3,
+        alias: 'S1',
+        cstType: CstType.STRUCTURED,
+        definitionFormal: 'ℬ(X1×X1)',
+        convention: 'Pairs (parent, child) over X1.'
       },
-      {
-        draft: { id: 2, alias: 'C1', cstType: CstType.CONSTANT, definitionFormal: '' }
-      },
-      {
-        draft: {
-          id: 3,
-          alias: 'S1',
-          cstType: CstType.STRUCTURED,
-          definitionFormal: 'ℬ(X1×X1)',
-          convention: 'Pairs (parent, child) over X1.'
-        }
-      },
-      {
-        draft: { id: 4, alias: 'D1', cstType: CstType.TERM, definitionFormal: 'Pr1(S1)' }
-      },
-      {
-        draft: { id: 5, alias: 'A1', cstType: CstType.AXIOM, definitionFormal: '1=1' }
-      }
+      { id: 4, alias: 'D1', cstType: CstType.TERM, definitionFormal: 'Pr1(S1)' },
+      { id: 5, alias: 'A1', cstType: CstType.AXIOM, definitionFormal: '1=1' }
     ];
 
-    for (const input of drafts) {
-      const result = await client.call('addOrUpdateConstituenta', {
-        sessionId: session.sessionId,
-        input
-      });
-      console.log(
-        `Added ${input.draft.alias}:`,
-        (result as { diagnostics?: unknown[] }).diagnostics?.length ?? 0,
-        'diagnostics'
-      );
-    }
-
-    const model = await client.call('setConstituentaValues', {
+    await client.call('applySchemaPatch', {
       sessionId: session.sessionId,
-      input: {
-        items: [
-          { target: 1, value: { 0: 'alice', 1: 'bob' } },
-          { target: 2, value: { 0: 'zero', 1: 'one', 2: 'two' } },
-          { target: 3, value: [[TUPLE_ID, 0, 1]] }
-        ]
-      }
+      items
+    });
+
+    const model = await client.call('setModelValues', {
+      sessionId: session.sessionId,
+      set: [
+        { target: 1, value: { 0: 'alice', 1: 'bob' } },
+        { target: 2, value: { 0: 'zero', 1: 'one', 2: 'two' } },
+        { target: 3, value: [[TUPLE_ID, 0, 1]] }
+      ]
     });
     console.log('Model values set:', model);
 
-    const d1Eval = await client.call('evaluateConstituenta', {
+    const d1Eval = await client.call('evaluate', {
       sessionId: session.sessionId,
-      input: { constituentId: 4 }
+      constituentId: 4
     });
     console.log('D1 (Pr1(S1)) evaluation:', d1Eval);
 
-    const a1Eval = await client.call('evaluateConstituenta', {
+    const a1Eval = await client.call('evaluate', {
       sessionId: session.sessionId,
-      input: { constituentId: 5 }
+      constituentId: 5
     });
     console.log('A1 (1=1) evaluation:', a1Eval);
 

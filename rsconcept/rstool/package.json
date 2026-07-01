@@ -1,7 +1,7 @@
 {
   "name": "@rsconcept/rstool",
-  "version": "0.10.3",
-  "description": "Agent-facing library for incremental RSForm construction, RSLang analysis, diagnostics, modeling, and evaluation. Wraps @rsconcept/domain with a deterministic session contract and stdio wrapper.",
+  "version": "1.0.0",
+  "description": "Agent-facing library for incremental RSForm construction, RSLang analysis, diagnostics, modeling, and evaluation. Wraps @rsconcept/domain with a deterministic session contract.",
   "license": "MIT",
   "author": "IRBorisov",
   "repository": {
@@ -54,6 +54,7 @@
     "build": "tsdown",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "wrapper": "tsx src/wrapper/stdio-wrapper.ts",
     "example:client": "tsx examples/agent-client.ts",
     "example:build-schema": "tsx examples/sample/build-rsform.ts",
@@ -74,6 +75,7 @@
   },
   "devDependencies": {
     "@types/node": "^26.0.1",
+    "@vitest/coverage-v8": "^4.1.9",
     "tsdown": "^0.22.3",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",

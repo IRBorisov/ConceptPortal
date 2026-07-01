@@ -15,13 +15,13 @@
 
 `basic`, `constant`, `structure` можно интерпретировать напрямую. `term`, `function`, `predicate`, `axiom`, `statement` должны вычисляться из формулы, поэтому их напрямую не задавай.
 
-Пример формы данных:
+Пример формы данных (`setModelValues` — асинхронный, нужен `await`):
 
 ```ts
 import { TUPLE_ID } from '@rsconcept/domain';
 
-tool.setConstituentaValues(sessionId, {
-  items: [
+await tool.setModelValues({
+  set: [
     { target: 1, value: { 0: 'ann', 1: 'bob', 2: 'cat' } },
     {
       target: 2,

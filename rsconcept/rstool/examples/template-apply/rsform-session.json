@@ -1,32 +1,36 @@
 {
-  "contractVersion": "1.4.0",
+  "contractVersion": "2.0.0",
   "state": {
-    "sessionId": "04678669-0343-4a1c-8238-3f0de2fc12f7",
+    "sessionId": "b72f75c0-4f17-4bef-9ff3-913ea16191db",
     "alias": "",
     "title": "",
     "comment": "",
-    "createdAt": "2026-06-22T11:29:09.607Z",
-    "updatedAt": "2026-06-22T11:29:09.628Z",
+    "createdAt": "2026-07-01T17:12:54.696Z",
+    "updatedAt": "2026-07-01T17:12:54.714Z",
     "revisions": [
       {
-        "revisionId": "b577a24d-20ff-4056-992e-7662cb2e56cf",
-        "at": "2026-06-22T11:29:09.628Z",
+        "revisionId": "e85ad551-0aa0-42d9-b55d-01719aed6533",
+        "at": "2026-07-01T17:12:54.714Z",
         "message": "Применение шаблонов БВ: сотрудники, проекты, F6/F9/F20/P5"
       }
     ],
     "items": [
       {
-        "id": 1,
-        "alias": "T1",
-        "cstType": "statement",
-        "definitionFormal": "1=1",
-        "term": "Применение шаблонов банка выражений",
-        "convention": "Подстановка радикалов БВ: R1→X1, R2→X2. Отношение σ→S1 или S2. Примеры: БВ F6→F_IMAGE, БВ F20→F_SOURCES, БВ P5→P_FUNCTION",
+        "id": 3,
+        "alias": "X2",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "проекты",
         "definitionText": "",
+        "convention": "",
         "analysis": {
           "success": true,
           "type": {
-            "typeID": 6
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
+            }
           },
           "valueClass": "value",
           "diagnostics": []
@@ -54,34 +58,13 @@
         }
       },
       {
-        "id": 3,
-        "alias": "X2",
-        "cstType": "basic",
-        "definitionFormal": "",
-        "term": "проекты",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 5,
-            "base": {
-              "typeID": 3,
-              "baseID": "X2"
-            }
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
         "id": 4,
         "alias": "S1",
         "cstType": "structure",
         "definitionFormal": "ℬ(X1×X2)",
         "term": "назначение на проект",
-        "convention": "σ в шаблонах БВ для бинарных отношений двух множеств",
         "definitionText": "",
+        "convention": "σ в шаблонах БВ для бинарных отношений двух множеств",
         "analysis": {
           "success": true,
           "type": {
@@ -110,8 +93,8 @@
         "cstType": "structure",
         "definitionFormal": "ℬ(X1×X1)",
         "term": "подчинённость",
-        "convention": "σ в шаблонах БВ для бинарных отношений на одном множестве",
         "definitionText": "",
+        "convention": "σ в шаблонах БВ для бинарных отношений на одном множестве",
         "analysis": {
           "success": true,
           "type": {
@@ -135,13 +118,34 @@
         }
       },
       {
+        "id": 10,
+        "alias": "D2",
+        "cstType": "term",
+        "definitionFormal": "Pr1(S2) \\ Pr2(S2)",
+        "term": "глава иерархии",
+        "definitionText": "",
+        "convention": "БВ F20: применение к S2 (развёрнуто в D2, т.к. вызов F# в терме не анализируется)",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
         "id": 6,
         "alias": "F_IMAGE",
         "cstType": "function",
         "definitionFormal": "[α∈X1, σ∈ℬ(X1×X2)] Pr2(Fi1[{α}](σ))",
         "term": "проекты сотрудника",
-        "convention": "БВ F6: R1→X1, R2→X2",
         "definitionText": "",
+        "convention": "БВ F6: R1→X1, R2→X2",
         "analysis": {
           "success": true,
           "type": {
@@ -192,8 +196,8 @@
         "cstType": "function",
         "definitionFormal": "[σ∈ℬ(X1×X1)] Pr1(σ) \\ Pr2(σ)",
         "term": "вершины без предшественников",
-        "convention": "БВ F20 (истоки графа подчинённости)",
         "definitionText": "",
+        "convention": "БВ F20 (истоки графа подчинённости)",
         "analysis": {
           "success": true,
           "type": {
@@ -237,8 +241,8 @@
         "cstType": "predicate",
         "definitionFormal": "[α∈ℬ(X1), σ∈ℬ(X1×X2)] card(Pr1(σ)) = card(σ) & Pr1(σ) = α",
         "term": "тотальная функция X1→X2",
-        "convention": "БВ P5",
         "definitionText": "",
+        "convention": "БВ P5",
         "analysis": {
           "success": true,
           "type": {
@@ -288,8 +292,8 @@
         "cstType": "term",
         "definitionFormal": "Pr2(Fi1[X1](S1))",
         "term": "все назначенные проекты",
-        "convention": "БВ F9: образ множества X1 по S1",
         "definitionText": "",
+        "convention": "БВ F9: образ множества X1 по S1",
         "analysis": {
           "success": true,
           "type": {
@@ -304,21 +308,17 @@
         }
       },
       {
-        "id": 10,
-        "alias": "D2",
-        "cstType": "term",
-        "definitionFormal": "Pr1(S2) \\ Pr2(S2)",
-        "term": "глава иерархии",
-        "convention": "БВ F20: применение к S2 (развёрнуто в D2, т.к. вызов F# в терме не анализируется)",
+        "id": 1,
+        "alias": "T1",
+        "cstType": "statement",
+        "definitionFormal": "1=1",
+        "term": "Применение шаблонов банка выражений",
         "definitionText": "",
+        "convention": "Подстановка радикалов БВ: R1→X1, R2→X2. Отношение σ→S1 или S2. Примеры: БВ F6→F_IMAGE, БВ F20→F_SOURCES, БВ P5→P_FUNCTION",
         "analysis": {
           "success": true,
           "type": {
-            "typeID": 5,
-            "base": {
-              "typeID": 3,
-              "baseID": "X1"
-            }
+            "typeID": 6
           },
           "valueClass": "value",
           "diagnostics": []

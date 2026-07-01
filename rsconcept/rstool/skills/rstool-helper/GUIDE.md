@@ -4,18 +4,27 @@
 
 **RSLang** — формальная нотация концептуальных схем: понятия, отношения, операции, утверждения. Основа: принадлежность `x∈y`, теоретико-множественные и логические выражения, типизация.
 
-**rstool** — API агента для сессий, upsert, анализа, диагностик, значений модели, вычисления, экспорта/импорта.
+**rstool** — API агента для сессий, редактирования схемы, анализа, диагностик, значений модели, вычисления, экспорта/импорта.
 
 - Библиотека: `@rsconcept/rstool`.
 - Анализатор: `@rsconcept/domain`.
 - Stdio-обёртка: `npx rstool-wrapper`, JSON построчно.
 - Node-клиент: `RSToolWrapperClient`.
 
+## Быстрый контракт для агента
+
+- Library API: `tool.applySchemaPatch(input, sessionId?)` — единственный путь правки схемы.
+- Stdio/MCP: **плоские** `params` — поля метода и optional `sessionId` на одном уровне (без `params.input`).
+- Состояние: `getSessionState()` (summary) или `getSessionState('full')`.
+- Импорт/экспорт Portal: `importData`, `exportPortal({ kind })`.
+- Модель: `setModelValues`, `evaluate`, `recalculateModel`.
+- Перед сохранением сомнительной формулы — `analyzeExpression`.
+
 ## Что читать
 
 Пути — относительно этого файла.
 
-- API, методы, stdio, коды ошибок: [REFERENCE.md](REFERENCE.md).
+- API, методы, stdio: [REFERENCE.md](REFERENCE.md).
 - Примеры: [EXAMPLES.md](EXAMPLES.md).
 - Термины предметной области: [../../docs/DOMAIN.md](../../docs/DOMAIN.md).
 - Концептуализация, создание схемы: [../../docs/CONCEPTUAL-SCHEMA.md](../../docs/CONCEPTUAL-SCHEMA.md).
@@ -36,16 +45,16 @@
 
 Когда схема уже есть и нужны точечные правки, новые конституенты или проверка формул.
 
-1. `createSession` (или продолжить существующую сессию).
-2. Развивай схему — добавляй конституенты с корректным `cstType` и атрибутами.
-3. Добавляй поставщиков раньше потребителей (см. [порядок объявления](#порядок-объявления-конституент)).
-4. Перед upsert при сомнении вызывай `analyzeExpression`.
+1. Продолжи текущую сессию или вызови `ensureSession`; большинство методов создают сессию лениво.
+2. Развивай схему через `applySchemaPatch`: можно опускать `id` и `cstType` для стандартных alias `X/C/S/D/A/F/P`.
+3. Для пачки конституент передавай все элементы вместе — `applySchemaPatch` упорядочит поставщиков раньше потребителей.
+4. Перед patch в `applySchemaPatch` при сомнении вызывай `analyzeExpression`.
 5. Исправляй диагностики по диапазону `from` / `to` в `definitionFormal` ([DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md)).
 6. При сомнении в семантике собери маленькую КМ и проверь тестовые данные ([цикл КМ](#проверка-на-маленькой-км)).
-7. Задай базовые/модельные значения: `setConstituentaValue(s)`; вычисли: `evaluateExpression`, `evaluateConstituenta`, `recalculateModel`.
-8. `commitStep`, когда состояние согласовано.
-9. Сохрани: `exportSession` / `importSession`.
-10. Для загрузки в Portal: `exportPortalSchema` (схема) или `exportPortalModel` (модель).
+7. Задай значения модели: `setModelValues`; вычисли: `evaluate`, `recalculateModel`.
+8. `commitStep` или `commitMessage` в `applySchemaPatch`, когда состояние согласовано.
+9. Сохрани: `exportSession` / `importData`.
+10. Для загрузки в Portal: `exportPortal({ kind: 'schema' })` или `{ kind: 'model' }`.
 
 ### Оценка или правка КС из Portal
 
@@ -56,13 +65,8 @@
 Если id неизвестен — контекстный поиск `GET /api/library/context-search?q=...`, затем
 метаданные по найденным id: `GET /api/library/by-ids?ids=...` (curl и поля поиска — в том же файле).
 
-Portal JSON из `/details` не является форматом `exportSession` и не передаётся в
-`importSession` напрямую. Создай `createSession({ title, alias, comment: description })`
-и перенеси `items[]` через `addOrUpdateConstituenta`, сохраняя raw-поля:
-`cst_type → cstType`, `definition_formal → definitionFormal`,
-`term_raw → term`, `definition_raw → definitionText`, `convention → convention`.
-После переноса запусти `listDiagnostics`; для результата в Portal используй
-`exportPortalSchema`, а для локального снапшота — `exportSession`.
+Portal JSON из `/details` не является форматом `exportSession`. Используй `importData(payload)` —
+auto определит `portal-details` или `portal-schema`. Явный kind: `'portal-details'`, `'portal-schema'`, `'session'`.
 
 ### Концептуализация (КС из содержания источника)
 
@@ -75,7 +79,7 @@ Portal JSON из `/details` не является форматом `exportSessio
 5. Добавь `A#` на структуры: `card`, покрытие `Pr1,2(S#)=…`, принадлежность выбора.
 6. Введи `F#` для типовых запросов.
 7. Производные понятия строй через `Pr*`, `Fi*`, `F#` от центрального `D#` и базовых `S#`.
-8. Перед каждым upsert — `analyzeExpression`; при ошибках — [цикл диагностик](#цикл-диагностик).
+8. Перед каждым patch — `analyzeExpression`; при ошибках — [цикл диагностик](#цикл-диагностик).
 9. Сомнительную семантику проверь на маленькой КМ ([цикл КМ](#проверка-на-маленькой-км), [MODEL-TESTING.md](../../docs/MODEL-TESTING.md)).
 10. Перед показом результата пройди [чеклист ревью КС](#ревью-концептуальной-схемы).
 
@@ -90,7 +94,7 @@ Portal JSON из `/details` не является форматом `exportSessio
 3. Сопоставь `code` с исправлением в [DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md).
 4. Исправь именно диапазон в `definitionFormal`.
 5. Не повторяй вызов без изменения ввода.
-6. После успеха — `addOrUpdateConstituenta`.
+6. После успеха — ещё один `applySchemaPatch` с исправленным элементом.
 
 ### Проверка на маленькой КМ
 
@@ -98,9 +102,9 @@ Portal JSON из `/details` не является форматом `exportSessio
 
 1. Отдельная `createSession` или изолированная копия текущей сессии.
 2. Только нужные поставщики: `X#`, `C#`, `S#` и проверяемые `D#` / `F#` / `P#` / `A#`.
-3. `analyzeExpression` и `addOrUpdateConstituenta`.
-4. Значения базовых понятий: `setConstituentaValue` / `setConstituentaValues`.
-5. `evaluateExpression` или `evaluateConstituenta`; сравни с ожидаемым `value`.
+3. `analyzeExpression` и `applySchemaPatch`.
+4. Значения: `setModelValues`.
+5. `evaluate`; сравни с ожидаемым `value`.
 6. При нескольких зависимых определениях — `recalculateModel`.
 
 Для регрессий вынеси проверку в скрипт или colocated `*.test.ts` (см. [MODEL-TESTING.md](../../docs/MODEL-TESTING.md)).
@@ -114,13 +118,24 @@ Portal JSON из `/details` не является форматом `exportSessio
 
 Правила валидации по типам — [CONSTITUENTA.md](../../docs/CONSTITUENTA.md).
 
+## Формат ответа агента
+
+В конце работы сообщи:
+
+- что изменено в схеме или модели;
+- есть ли активные диагностики;
+- какой экспорт получен: session / Portal schema / Portal model;
+- какие проверки выполнены: analyze / evaluate / recalculate / tests.
+
+Не вставляй большой JSON в чат без запроса пользователя.
+
 ## Чеклисты
 
 ### Сессия и rstool
 
-- [ ] Отслеживается `sessionId`.
-- [ ] `cstType` соответствует роли конституенты.
-- [ ] Поставщики добавлены раньше потребителей.
+- [ ] Используется текущая сессия (`getSessionState`) или явный `sessionId`, если сессий несколько.
+- [ ] Для стандартных alias `X/C/S/D/A/F/P` можно доверить `cstType` `applySchemaPatch`; нестандартные alias передаются с явным `cstType`.
+- [ ] Для пачки конституент предпочитай один `applySchemaPatch` с массивом `items`.
 
 ### Перед показом, commit и export
 
