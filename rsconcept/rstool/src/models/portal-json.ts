@@ -1,5 +1,14 @@
-import { type BasicBinding, type RSToolValue } from './common';
+import { CstType, type BasicBinding, type RSToolValue } from './common';
 import { type ConstituentaDraft } from './constituenta';
+
+const CST_TYPE_VALUES = new Set<string>(Object.values(CstType));
+
+function parsePortalCstType(value: string, alias: string): ConstituentaDraft['cstType'] {
+  if (!CST_TYPE_VALUES.has(value)) {
+    throw new Error(`Invalid cst_type "${value}" for constituent "${alias}"`);
+  }
+  return value as ConstituentaDraft['cstType'];
+}
 
 /** Portal JSON import/export format version (schema and model files). */
 export const PORTAL_JSON_CONTRACT_VERSION = '1.0.0';
@@ -80,7 +89,7 @@ export function portalItemToDraft(item: {
   return {
     id: item.id,
     alias: item.alias,
-    cstType: item.cst_type as ConstituentaDraft['cstType'],
+    cstType: parsePortalCstType(item.cst_type, item.alias),
     definitionFormal: item.definition_formal ?? '',
     term: item.term_raw ?? '',
     definitionText: item.definition_raw ?? '',

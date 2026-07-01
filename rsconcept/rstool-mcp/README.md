@@ -44,7 +44,7 @@ Restart Cursor; the tools appear under the **rstool** server. Pin a version if y
   "mcpServers": {
     "rstool": {
       "command": "npx",
-      "args": ["-y", "@rsconcept/rstool-mcp@0.2.0"],
+      "args": ["-y", "@rsconcept/rstool-mcp@0.3.0"],
       "env": {
         "RSTOOL_PERSISTENCE_DIR": "C:/path/to/rstool-sessions"
       }
@@ -79,6 +79,7 @@ Edit `claude_desktop_config.json` (`~/Library/Application Support/Claude/` on ma
 | `ensure_session`      | `ensureSession`     | Return active session or create one.         |
 | `create_session`      | `createSession`     | Optional `initial` seed.                     |
 | `set_current_session` | `setCurrentSession` | Switch active session.                       |
+| `get_current_session` | `getCurrentSession` | Current session handle, or `null`.           |
 | `apply_schema_patch`  | `applySchemaPatch`  | Primary schema edit path.                    |
 | `get_session_state`   | `getSessionState`   | `detail=summary` (default) or `full`.        |
 | `analyze_expression`  | `analyzeExpression` | Scratch analysis.                            |
@@ -117,7 +118,7 @@ const tool = new RSToolAgent();
 const server = buildRSToolMcpServer({
   tool,
   name: "my-rstool-mcp",
-  version: "0.2.0",
+  version: "0.3.0",
 });
 ```
 

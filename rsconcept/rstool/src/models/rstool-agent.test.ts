@@ -287,6 +287,37 @@ describe('RSToolAgent modeling and evaluation', () => {
     );
   });
 
+  it('restores session state when setModelValues fails mid-batch', async () => {
+    const tool = new RSToolAgent();
+    const session = tool.createSession();
+    buildSampleForm(tool, session.sessionId);
+    await tool.setModelValues({ set: [{ target: 1, value: { 0: 'a' } }] }, session.sessionId);
+
+    await expect(
+      tool.setModelValues(
+        {
+          set: [
+            { target: 1, value: { 0: 'b' } },
+            { target: 999, value: { 0: 'x' } }
+          ]
+        },
+        session.sessionId
+      )
+    ).rejects.toThrow(/Unknown constituent/);
+
+    expect(tool.getModelState(session.sessionId).items).toEqual([
+      expect.objectContaining({ id: 1, value: { 0: 'a' } })
+    ]);
+
+    await expect(
+      tool.setModelValues({ clear: [1], set: [{ target: 999, value: { 0: 'x' } }] }, session.sessionId)
+    ).rejects.toThrow(/Unknown constituent/);
+
+    expect(tool.getModelState(session.sessionId).items).toEqual([
+      expect.objectContaining({ id: 1, value: { 0: 'a' } })
+    ]);
+  });
+
   it('evaluates expression against session context', () => {
     const tool = new RSToolAgent();
     const session = tool.createSession();
@@ -419,8 +450,8 @@ describe('RSToolAgent agent ergonomics', () => {
     expect(result.summary.title).toBe('Agent patch');
     expect(result.summary.itemCount).toBe(3);
     expect(result.revision?.message).toBe('initial schema');
-    expect(fullState(tool).items.map(item => item.alias)).toEqual(['X1', 'S1', 'D1']);
-    expect(fullState(tool).items.map(item => item.cstType)).toEqual([CstType.BASE, CstType.STRUCTURED, CstType.TERM]);
+    expect(fullState(tool).items.map(item => item.alias)).toEqual(['D1', 'X1', 'S1']);
+    expect(fullState(tool).items.map(item => item.cstType)).toEqual([CstType.TERM, CstType.BASE, CstType.STRUCTURED]);
   });
 
   it('exports Portal payloads as structured objects', () => {
@@ -592,6 +623,19 @@ describe('RSToolAgent session management', () => {
     expect(() => tool.getSessionState('full', unknownId)).toThrow(/Unknown session/);
   });
 
+  it('applySchemaPatch with explicit sessionId does not switch current session', () => {
+    const tool = new RSToolAgent();
+    const first = tool.createSession({ title: 'First' });
+    const second = tool.createSession({ title: 'Second' });
+    tool.setCurrentSession(first.sessionId);
+
+    tool.applySchemaPatch({ items: [{ alias: 'X1' }] }, second.sessionId);
+
+    expect(tool.getCurrentSession()?.sessionId).toBe(first.sessionId);
+    expect(tool.getSessionState('summary', second.sessionId)).toMatchObject({ itemCount: 1 });
+    expect(tool.getSessionState('summary', first.sessionId)).toMatchObject({ itemCount: 0 });
+  });
+
   it('returns summary session state by default', () => {
     const tool = new RSToolAgent();
     const session = tool.createSession({ title: 'Summary', alias: 'SUM' });
@@ -637,6 +681,44 @@ describe('RSToolAgent session management', () => {
     const forX1 = tool.listDiagnostics({ constituentId: 1 }, session.sessionId);
     expect(all.length).toBeGreaterThanOrEqual(2);
     expect(forX1.every(record => record.constituentId === 1)).toBe(true);
+  });
+
+  it('filters diagnostics by constituent id 0', () => {
+    const tool = new RSToolAgent();
+    const session = tool.createSession();
+    tool.applySchemaPatch(
+      {
+        mode: 'best_effort',
+        items: [
+          { id: 0, alias: 'X0', cstType: CstType.BASE, definitionFormal: 'Z' },
+          { alias: 'X1', cstType: CstType.BASE, definitionFormal: 'Z' }
+        ]
+      },
+      session.sessionId
+    );
+    const all = tool.listDiagnostics(undefined, session.sessionId);
+    const forX0 = tool.listDiagnostics({ constituentId: 0 }, session.sessionId);
+    expect(all.length).toBeGreaterThanOrEqual(2);
+    expect(forX0.length).toBeGreaterThan(0);
+    expect(forX0.length).toBeLessThan(all.length);
+    expect(forX0.every(record => record.constituentId === 0)).toBe(true);
+  });
+
+  it('applySchemaPatch avoids id collisions when explicit ids precede auto-assigned ones', () => {
+    const tool = new RSToolAgent();
+    const session = tool.createSession();
+    tool.applySchemaPatch(
+      {
+        items: [
+          { id: 1, alias: 'X1', cstType: CstType.BASE, definitionFormal: '' },
+          { alias: 'X2', cstType: CstType.BASE, definitionFormal: '' }
+        ]
+      },
+      session.sessionId
+    );
+
+    const ids = fullState(tool, session.sessionId).items.map(item => item.id);
+    expect(ids).toEqual([1, 2]);
   });
 
   it('loads a persisted session from disk via setCurrentSession', () => {
@@ -687,7 +769,28 @@ describe('RSToolAgent import and export', () => {
     const session = tool.importData(payload, 'portal-schema');
     const state = fullState(tool, session.sessionId);
     expect(state).toMatchObject({ title: 'Imported schema', alias: 'IMP', comment: 'From portal' });
-    expect(state.items.map(item => item.alias).sort()).toEqual(['D1', 'X1']);
+    expect(state.items.map(item => item.alias)).toEqual(['X1', 'D1']);
+  });
+
+  it('keeps declaration order in portal schema export', () => {
+    const tool = new RSToolAgent();
+    const session = tool.createSession({ title: 'Order', alias: 'ORD' });
+    tool.applySchemaPatch(
+      {
+        items: [
+          { alias: 'D1', cstType: CstType.TERM, definitionFormal: 'Pr1(S1)' },
+          { alias: 'S1', cstType: CstType.STRUCTURED, definitionFormal: 'ℬ(X1×X1)' },
+          { alias: 'C1', cstType: CstType.CONSTANT, definitionFormal: '' },
+          { alias: 'X1', cstType: CstType.BASE, definitionFormal: '' }
+        ]
+      },
+      session.sessionId
+    );
+
+    const exported = tool.exportPortal({ kind: 'schema', format: 'object' }, session.sessionId) as {
+      items: Array<{ alias: string }>;
+    };
+    expect(exported.items.map(item => item.alias)).toEqual(['D1', 'S1', 'C1', 'X1']);
   });
 
   it('round-trips portal schema export and import', () => {
@@ -719,6 +822,16 @@ describe('RSToolAgent import and export', () => {
   it('rejects undetectable import payloads', () => {
     const tool = new RSToolAgent();
     expect(() => tool.importData({ title: 'orphan' })).toThrow(/Cannot detect import kind/);
+  });
+
+  it('infers cstType from N and T alias prefixes', () => {
+    const tool = new RSToolAgent();
+    const statementResult = tool.applySchemaPatch({ items: [{ alias: 'T1', definitionFormal: '1=1' }] });
+    expect(statementResult.success).toBe(true);
+    expect(fullState(tool).items[0]?.cstType).toBe(CstType.STATEMENT);
+
+    const nominalResult = tool.applySchemaPatch({ items: [{ alias: 'N1' }] });
+    expect(nominalResult.failed[0]?.draft.cstType).toBe(CstType.NOMINAL);
   });
 
   it('rejects aliases with unknown cstType prefix', () => {

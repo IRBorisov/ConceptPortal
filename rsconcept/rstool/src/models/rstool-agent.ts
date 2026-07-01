@@ -6,7 +6,7 @@ import {
 } from '../mappers/portal-adapter';
 import { ModelAdapter } from '../mappers/model-adapter';
 import { SchemaAdapter } from '../mappers/schema-adapter';
-import { orderDrafts } from '../session/batch-apply';
+import { orderDrafts, reorderSessionItemsByDrafts } from '../session/batch-apply';
 import { SessionStore } from '../session/session-store';
 import {
   type AgentConstituentaPatch,
@@ -82,6 +82,10 @@ function inferCstType(alias: string): CstType {
       return CstType.FUNCTION;
     case 'P':
       return CstType.PREDICATE;
+    case 'N':
+      return CstType.NOMINAL;
+    case 'T':
+      return CstType.STATEMENT;
     default:
       throw new Error(`Cannot infer cstType from alias "${alias}"; pass cstType explicitly`);
   }
@@ -141,7 +145,9 @@ export class RSToolAgent implements RSToolAgentContract {
 
   /** @inheritdoc */
   public applySchemaPatch(input: ApplySchemaPatchInput, sessionId?: string): ApplySchemaPatchResult {
-    const session = sessionId ? this.setCurrentSession(sessionId) : this.ensureSession(input.initial);
+    const session = sessionId
+      ? { sessionId: this.resolveSessionId(sessionId), contractVersion: this.contractVersion }
+      : this.ensureSession(input.initial);
     const drafts = this.resolveAgentPatches(session.sessionId, input.items);
     const result = this.applyConstituents(
       {
@@ -241,23 +247,30 @@ export class RSToolAgent implements RSToolAgentContract {
   /** @inheritdoc */
   public async setModelValues(input: SetModelValuesInput, sessionId?: string): Promise<SessionModelState> {
     const id = this.resolveSessionId(sessionId);
-    let state = this.sessions.get(id).state;
+    const snapshot = this.sessions.snapshot(id);
 
-    if (input.clear?.length) {
-      const model = await this.evaluation.clearConstituentaValues(state, input.clear);
-      state = { ...state, model };
-      this.sessions.replaceState(id, state);
+    try {
+      let state = this.sessions.get(id).state;
+
+      if (input.clear?.length) {
+        const model = await this.evaluation.clearConstituentaValues(state, input.clear);
+        state = { ...state, model };
+        this.sessions.replaceState(id, state);
+      }
+
+      if (input.set?.length) {
+        state = this.sessions.get(id).state;
+        const model = await this.evaluation.setConstituentaValues(state, { items: input.set });
+        state = { ...state, model };
+        this.sessions.replaceState(id, state);
+        return model;
+      }
+
+      return structuredClone(this.sessions.get(id).state.model);
+    } catch (error) {
+      this.sessions.restore(id, snapshot);
+      throw error;
     }
-
-    if (input.set?.length) {
-      state = this.sessions.get(id).state;
-      const model = await this.evaluation.setConstituentaValues(state, { items: input.set });
-      state = { ...state, model };
-      this.sessions.replaceState(id, state);
-      return model;
-    }
-
-    return structuredClone(this.sessions.get(id).state.model);
   }
 
   /** @inheritdoc */
@@ -303,6 +316,7 @@ export class RSToolAgent implements RSToolAgentContract {
     const id = this.resolveSessionId(sessionId);
     const mode = input.mode ?? 'atomic';
     const ordered = orderDrafts(this.sessions.get(id).state.items, input.drafts);
+    const preBatchItemIds = new Set(this.sessions.get(id).state.items.map(item => item.id));
     const snapshot = this.sessions.snapshot(id);
     const applied: ConstituentaState[] = [];
     const failed: ApplyConstituentsResult['failed'] = [];
@@ -324,6 +338,10 @@ export class RSToolAgent implements RSToolAgentContract {
         };
       }
     }
+
+    const envelope = this.sessions.get(id);
+    reorderSessionItemsByDrafts(envelope.state.items, input.drafts, preBatchItemIds);
+    this.sessions.replaceState(id, envelope.state);
 
     return {
       success: failed.length === 0,
@@ -424,11 +442,37 @@ export class RSToolAgent implements RSToolAgentContract {
   private resolveAgentPatches(sessionId: string, patches: AgentConstituentaPatch[]): ConstituentaDraft[] {
     const items = this.sessions.get(sessionId).state.items;
     const existingByAlias = new Map(items.map(item => [item.alias, item]));
+    const usedIds = new Set(items.map(item => item.id));
     let nextId = items.reduce((max, item) => Math.max(max, item.id), 0) + 1;
+
+    const reserveId = (id: number): void => {
+      usedIds.add(id);
+      if (id >= nextId) {
+        nextId = id + 1;
+      }
+    };
+
+    const allocateId = (): number => {
+      while (usedIds.has(nextId)) {
+        nextId += 1;
+      }
+      const id = nextId;
+      nextId += 1;
+      usedIds.add(id);
+      return id;
+    };
 
     return patches.map(patch => {
       const existing = existingByAlias.get(patch.alias);
-      const id = patch.id ?? existing?.id ?? nextId++;
+      let id: number;
+      if (patch.id !== undefined) {
+        id = patch.id;
+        reserveId(id);
+      } else if (existing !== undefined) {
+        id = existing.id;
+      } else {
+        id = allocateId();
+      }
       const draft = {
         id,
         alias: patch.alias,

@@ -1,7 +1,7 @@
 import { writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import { CstType, RSToolWrapperClient, type AgentConstituentaPatch } from '../../src';
+import { CstType, RSToolWrapperClient, type AgentConstituentaPatch, type ApplySchemaPatchResult } from '../../src';
 
 async function run() {
   const client = new RSToolWrapperClient({
@@ -26,16 +26,14 @@ async function run() {
       { id: 5, alias: 'A1', cstType: CstType.AXIOM, definitionFormal: '1=1' }
     ];
 
-    const result = await client.call<{ diagnostics: unknown[]; summary: { items: { alias: string }[] } }>(
-      'applySchemaPatch',
-      {
-        sessionId: session.sessionId,
-        items
-      }
-    );
+    const result = await client.call<ApplySchemaPatchResult>('applySchemaPatch', {
+      sessionId: session.sessionId,
+      items
+    });
     for (const item of result.summary.items) {
-      console.log(`Added ${item.alias}:`, result.diagnostics?.length ?? 0, 'diagnostics');
+      console.log(`Added ${item.alias}`);
     }
+    console.log(`Patch diagnostics: ${result.diagnostics.length}`);
 
     await client.call('commitStep', {
       sessionId: session.sessionId,

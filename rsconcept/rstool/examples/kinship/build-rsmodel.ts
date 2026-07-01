@@ -10,9 +10,11 @@ import {
   D3_ID,
   DEFAULT_RSFORM_SESSION_PATH,
   DEFAULT_RSMODEL_SESSION_PATH,
+  S1_ID,
   S2_ID,
   S3_ID,
-  S4_ID
+  S4_ID,
+  X1_ID
 } from './constants';
 
 /**
@@ -68,8 +70,8 @@ async function run() {
     await client.call('setModelValues', {
       sessionId: imported.sessionId,
       set: [
-        { target: 1, value: X1_BINDING },
-        { target: 2, value: S1_VALUE },
+        { target: X1_ID, value: X1_BINDING },
+        { target: S1_ID, value: S1_VALUE },
         { target: S2_ID, value: S2_VALUE },
         { target: S3_ID, value: S3_VALUE },
         { target: S4_ID, value: S4_VALUE }

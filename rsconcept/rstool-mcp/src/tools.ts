@@ -127,6 +127,16 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
     invoke: (tool, args) => tool.setCurrentSession(String(args.sessionId)),
   },
   {
+    name: "get_current_session",
+    description: "Return the current active session, or null if none exists.",
+    inputSchema: {
+      type: "object",
+      properties: {},
+      additionalProperties: false,
+    },
+    invoke: (tool) => tool.getCurrentSession(),
+  },
+  {
     name: "apply_schema_patch",
     description:
       "Preferred schema edit path. Batch patch with inferred ids and cstType, dependency ordering, and compact summary.",

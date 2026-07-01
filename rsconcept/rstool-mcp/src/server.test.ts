@@ -13,6 +13,7 @@ describe("buildRSToolMcpServer", () => {
       "ensure_session",
       "create_session",
       "set_current_session",
+      "get_current_session",
       "apply_schema_patch",
       "get_session_state",
       "analyze_expression",

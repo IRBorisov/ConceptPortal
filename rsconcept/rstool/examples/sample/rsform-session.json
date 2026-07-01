@@ -1,32 +1,36 @@
 {
   "contractVersion": "2.0.0",
   "state": {
-    "sessionId": "b86aa3b1-3a18-47e9-b025-4295ab9ba57c",
+    "sessionId": "a03eec4c-6519-4088-9d8c-0a9c11611583",
     "alias": "",
     "title": "",
     "comment": "",
-    "createdAt": "2026-07-01T17:12:43.950Z",
-    "updatedAt": "2026-07-01T17:12:43.963Z",
+    "createdAt": "2026-07-01T21:33:21.321Z",
+    "updatedAt": "2026-07-01T21:33:21.332Z",
     "revisions": [
       {
-        "revisionId": "49f6f60f-04d2-435a-8d56-e31de745c581",
-        "at": "2026-07-01T17:12:43.963Z",
+        "revisionId": "4ec113d2-1d28-4bac-bed8-6a593bb6b0e2",
+        "at": "2026-07-01T21:33:21.332Z",
         "message": "Built sample RSForm"
       }
     ],
     "items": [
       {
-        "id": 5,
-        "alias": "A1",
-        "cstType": "axiom",
-        "definitionFormal": "1=1",
+        "id": 1,
+        "alias": "X1",
+        "cstType": "basic",
+        "definitionFormal": "",
         "term": "",
         "definitionText": "",
         "convention": "",
         "analysis": {
           "success": true,
           "type": {
-            "typeID": 6
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
           },
           "valueClass": "value",
           "diagnostics": []
@@ -50,27 +54,6 @@
               "isOrdered": true,
               "isArithmetic": true,
               "isIntegerCompatible": true
-            }
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 1,
-        "alias": "X1",
-        "cstType": "basic",
-        "definitionFormal": "",
-        "term": "",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 5,
-            "base": {
-              "typeID": 3,
-              "baseID": "X1"
             }
           },
           "valueClass": "value",
@@ -123,6 +106,23 @@
               "typeID": 3,
               "baseID": "X1"
             }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
+        "alias": "A1",
+        "cstType": "axiom",
+        "definitionFormal": "1=1",
+        "term": "",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
           },
           "valueClass": "value",
           "diagnostics": []

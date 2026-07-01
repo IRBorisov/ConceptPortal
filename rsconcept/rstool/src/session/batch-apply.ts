@@ -45,3 +45,41 @@ export function orderDrafts(sessionItems: ConstituentaState[], drafts: Constitue
   const orderedIds = [...topoIds, ...missing];
   return orderedIds.map(id => drafts.find(draft => draft.id === id)!).filter(Boolean);
 }
+
+/**
+ * Restore declaration order in session items after a batch apply.
+ * Topological apply order is only needed for analysis; Portal JSON uses array order.
+ */
+export function reorderSessionItemsByDrafts(
+  items: ConstituentaState[],
+  drafts: ConstituentaDraft[],
+  preBatchItemIds: ReadonlySet<number>
+): void {
+  if (drafts.length === 0 || items.length === 0) {
+    return;
+  }
+
+  const draftIds = drafts.map(draft => draft.id);
+  const draftIdSet = new Set(draftIds);
+  const mentioned = items.filter(item => draftIdSet.has(item.id));
+  if (mentioned.length === 0) {
+    return;
+  }
+
+  const unmentioned = items.filter(item => !draftIdSet.has(item.id));
+  if (unmentioned.length === 0) {
+    const byId = new Map(items.map(item => [item.id, item]));
+    items.splice(0, items.length, ...draftIds.map(id => byId.get(id)!));
+    return;
+  }
+
+  const newDrafts = drafts.filter(draft => !preBatchItemIds.has(draft.id));
+  if (newDrafts.length === 0) {
+    return;
+  }
+
+  const newIds = new Set(newDrafts.map(draft => draft.id));
+  const kept = items.filter(item => !newIds.has(item.id));
+  const byId = new Map(items.map(item => [item.id, item]));
+  items.splice(0, items.length, ...kept, ...newDrafts.map(draft => byId.get(draft.id)!));
+}

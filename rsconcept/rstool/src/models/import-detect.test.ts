@@ -46,6 +46,15 @@ describe('detectImportKind', () => {
     ).toThrow(/Portal model JSON cannot be imported/);
   });
 
+  it('treats empty contract_version items as undetectable', () => {
+    expect(() =>
+      detectImportKind({
+        contract_version: '1.0.0',
+        items: []
+      })
+    ).toThrow(/Cannot detect import kind/);
+  });
+
   it('rejects non-objects', () => {
     expect(() => detectImportKind(null)).toThrow(/Invalid import payload/);
     expect(() => detectImportKind('string')).toThrow(/Invalid import payload/);

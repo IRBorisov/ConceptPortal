@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
 import {
+  CONTRACT_VERSION,
   type DiagnosticRecord,
   type ListDiagnosticsFilters,
   type SessionHandle,
@@ -48,7 +49,7 @@ export class SessionStore {
     this.persist(sessionId, envelope);
     return {
       sessionId,
-      contractVersion: contractVersion ?? '1.0.0'
+      contractVersion: contractVersion ?? CONTRACT_VERSION
     };
   }
 
@@ -114,7 +115,7 @@ export class SessionStore {
 
   public listDiagnostics(sessionId: string, filters?: ListDiagnosticsFilters): DiagnosticRecord[] {
     const found = this.get(sessionId);
-    if (!filters?.constituentId) {
+    if (filters?.constituentId === undefined) {
       return [...found.diagnostics];
     }
     return found.diagnostics.filter(record => record.constituentId === filters.constituentId);

@@ -113,13 +113,23 @@ Supported methods (contract `2.0.0`):
 
 Params are **flat** at the top level (no `params.input` wrapper). Optional `sessionId` sits alongside method fields.
 
-Example request:
+Example `createSession`:
+
+Request:
 
 ```json
 { "id": "1", "method": "createSession", "params": {} }
 ```
 
-Example schema patch:
+Response:
+
+```json
+{ "id": "1", "ok": true, "result": { "sessionId": "...", "contractVersion": "2.0.0" } }
+```
+
+Example `applySchemaPatch`:
+
+Request:
 
 ```json
 {
@@ -135,10 +145,18 @@ Example schema patch:
 }
 ```
 
-Example response:
+Response:
 
 ```json
-{ "id": "1", "ok": true, "result": { "sessionId": "...", "contractVersion": "2.0.0" } }
+{
+  "id": "2",
+  "ok": true,
+  "result": {
+    "success": true,
+    "session": { "sessionId": "...", "contractVersion": "2.0.0" },
+    "summary": { "itemCount": 3 }
+  }
+}
 ```
 
 ## Typed client example
