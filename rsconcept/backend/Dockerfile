@@ -72,6 +72,7 @@ WORKDIR $APP_HOME
 COPY pyproject.toml ./
 COPY project/ ./project
 COPY shared/ ./shared
+COPY templates/ ./templates
 COPY fixtures/ ./fixtures
 COPY apps/ ./apps
 COPY manage.py entrypoint.sh ./
