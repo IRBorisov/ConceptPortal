@@ -23,6 +23,17 @@ export function extractSyntaxErrors(
   annotateErrors: boolean = false,
   options?: SyntaxErrorOptions
 ) {
+  const forbiddenErrors = extractForbiddenCharacterErrors(expression);
+  if (forbiddenErrors.length > 0) {
+    for (const error of forbiddenErrors) {
+      reporter(error);
+      if (annotateErrors) {
+        annotateError(ast, error.code, error.params);
+      }
+    }
+    return;
+  }
+
   const collected: RSErrorDescription[] = [];
   const annotationTargets = new Map<RSErrorDescription, AstNode>();
   const collect = (error: RSErrorDescription, target?: AstNode) => {
@@ -317,6 +328,58 @@ type CloseBracket = ')' | ']' | '}';
 interface BracketFrame {
   bracket: OpenBracket;
   index: number;
+}
+
+const ALLOWED_EXPRESSION_CHARS = buildAllowedExpressionChars();
+
+function buildAllowedExpressionChars(): Set<string> {
+  const chars = new Set<string>();
+  for (const chunk of [
+    '0123456789',
+    'abcdefghijklmnopqrstuvwxyz',
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    '_',
+    '∅¬∀∃⇔⇒∨&ℬ+-*∪\\∆∩×∈∉⊆⊄⊂<>≥≤≠=,:;|[]{}()'
+  ]) {
+    for (const symbol of chunk) {
+      chars.add(symbol);
+    }
+  }
+  for (let codePoint = 0x03b1; codePoint <= 0x03c9; codePoint++) {
+    chars.add(String.fromCodePoint(codePoint));
+  }
+  return chars;
+}
+
+function isAllowedExpressionChar(symbol: string): boolean {
+  return /\s/u.test(symbol) || ALLOWED_EXPRESSION_CHARS.has(symbol);
+}
+
+function extractForbiddenCharacterErrors(expression: string): RSErrorDescription[] {
+  const errors: RSErrorDescription[] = [];
+  let pos = 0;
+
+  while (pos < expression.length) {
+    const symbol = expression[pos];
+    if (isAllowedExpressionChar(symbol)) {
+      pos++;
+      continue;
+    }
+
+    const start = pos;
+    while (pos < expression.length && !isAllowedExpressionChar(expression[pos])) {
+      pos++;
+    }
+
+    errors.push({
+      code: RSErrorCode.forbiddenCharacter,
+      from: start,
+      to: pos,
+      params: [expression.slice(start, pos)]
+    });
+  }
+
+  return errors;
 }
 
 function extractBracketErrors(expression: string): RSErrorDescription | null {

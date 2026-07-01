@@ -149,7 +149,8 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.token.assign': 'Assignment',
   'tx.rslang.token.iterate': 'Iterate over set elements',
 
-  'tx.rslang.error.unknownSyntax': 'The expression has a syntax error. Check the highlighted fragment',
+  'tx.rslang.error.unknownSyntax': 'The expression has a syntax error. Check the selected fragment',
+  'tx.rslang.error.forbiddenCharacter': "Character '{character}' is not used in formal expressions",
   'tx.rslang.error.bracketMismatch':
     'The bracket is closed with the wrong type: expected "{expected}", found "{actual}"',
   'tx.rslang.error.doubleParenthesis': 'Extra outer parentheses: use one pair instead of ((...))',

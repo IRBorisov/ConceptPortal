@@ -155,6 +155,7 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.token.iterate': 'Parcourir les éléments de l’ensemble',
 
   'tx.rslang.error.unknownSyntax': 'L’expression contient une erreur de syntaxe. Vérifiez le fragment sélectionné',
+  'tx.rslang.error.forbiddenCharacter': 'Le caractère « {character} » n’est pas utilisé dans les expressions formelles',
   'tx.rslang.error.bracketMismatch':
     'La parenthèse est fermée par un autre type : « {expected} » attendu, « {actual} » trouvé',
   'tx.rslang.error.doubleParenthesis':

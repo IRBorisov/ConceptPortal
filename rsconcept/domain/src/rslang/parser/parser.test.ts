@@ -82,6 +82,10 @@ const testErrorData = [
   ['F1', { code: RSErrorCode.globalFuncWithoutArgs, from: 0, to: 2, params: ['F1'] }],
   ['P1', { code: RSErrorCode.globalFuncWithoutArgs, from: 0, to: 2, params: ['P1'] }],
   ['F1[]', { code: RSErrorCode.globalFuncWithoutArgs, from: 0, to: 2, params: ['F1'] }],
+  ['!', { code: RSErrorCode.forbiddenCharacter, from: 0, to: 1, params: ['!'] }],
+  ['?', { code: RSErrorCode.forbiddenCharacter, from: 0, to: 1, params: ['?'] }],
+  ['16=2^4', { code: RSErrorCode.forbiddenCharacter, from: 4, to: 5, params: ['^'] }],
+  ['16=2/4', { code: RSErrorCode.forbiddenCharacter, from: 4, to: 5, params: ['/'] }],
   ['Fi1(S1)', { code: RSErrorCode.invalidFilterSyntax, from: 0, to: 4 }],
   ['[α∈ℬ(X1×X1)]', { code: RSErrorCode.expectedFunctionBody, from: 12, to: 12 }]
 ];
@@ -176,5 +180,22 @@ describe('Testing RSParser error data', () => {
     extractSyntaxErrors(astTuple, withTuple, error => errorsTuple.push(error));
 
     expect(errorsTuple.some(error => error.code === RSErrorCode.doubleParenthesis)).toBe(false);
+  });
+
+  it('Reports a single forbidden-character error for exponentiation', () => {
+    const input = '[σ∈S2]I{γ | ξ:∈ℬ(σ); γ:=(ξ×{1})∪((σ\\ξ)×{0}); 16=2^4}';
+    const tree = parser.parse(input);
+    const ast = buildTree(tree.cursor());
+    const errors: RSErrorDescription[] = [];
+    extractSyntaxErrors(ast, input, error => errors.push(error));
+
+    expect(errors).toEqual([
+      {
+        code: RSErrorCode.forbiddenCharacter,
+        from: input.indexOf('^'),
+        to: input.indexOf('^') + 1,
+        params: ['^']
+      }
+    ]);
   });
 });

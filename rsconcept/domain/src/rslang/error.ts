@@ -28,6 +28,7 @@ export type ErrorReporter = (error: RSErrorDescription) => void;
 /** Represents RSLang expression error types. */
 export const RSErrorCode = {
   unknownSyntax: 0x8400, // 33792
+  forbiddenCharacter: 0x8401, // 33793
   bracketMismatch: 0x8409, // 33801
   doubleParenthesis: 0x840a, // 33802
   missingOpenBracket: 0x840b, // 33803

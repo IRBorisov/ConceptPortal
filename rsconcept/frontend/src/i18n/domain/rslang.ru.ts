@@ -152,7 +152,8 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.token.assign': 'Присвоение',
   'tx.rslang.token.iterate': 'Перебор элементов множества',
 
-  'tx.rslang.error.unknownSyntax': 'Выражение записано с синтаксической ошибкой. Проверьте выделенный фрагмент',
+  'tx.rslang.error.unknownSyntax': 'Выражение содержит синтаксическую ошибку. Проверьте выделенный фрагмент',
+  'tx.rslang.error.forbiddenCharacter': 'Символ «{character}» не используется в формальных выражениях',
   'tx.rslang.error.bracketMismatch': 'Скобка закрыта другим типом: ожидалась «{expected}», найдено «{actual}»',
   'tx.rslang.error.doubleParenthesis': 'Лишняя внешняя пара скобок: используйте одну пару вместо ((...))',
   'tx.rslang.error.missingOpenBracket': 'Закрывающая скобка «{bracket}» без пары. Удалите её или добавьте открывающую',

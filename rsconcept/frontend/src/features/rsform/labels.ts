@@ -12,6 +12,7 @@ import { type InteractionMode, type TGColoring, type TGEdgeType } from './stores
 
 const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
   [RSErrorCode.unknownSyntax]: 'tx.rslang.error.unknownSyntax',
+  [RSErrorCode.forbiddenCharacter]: 'tx.rslang.error.forbiddenCharacter',
   [RSErrorCode.bracketMismatch]: 'tx.rslang.error.bracketMismatch',
   [RSErrorCode.doubleParenthesis]: 'tx.rslang.error.doubleParenthesis',
   [RSErrorCode.missingOpenBracket]: 'tx.rslang.error.missingOpenBracket',
@@ -410,6 +411,8 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
     case RSErrorCode.globalNoValue:
     case RSErrorCode.calcGlobalMissing:
       return globalTx(id, { name: params[0] ?? '' });
+    case RSErrorCode.forbiddenCharacter:
+      return globalTx(id, { character: params[0] ?? '' });
     case RSErrorCode.typesNotEqual:
     case RSErrorCode.invalidEnumeration:
     case RSErrorCode.invalidArgsArity:
