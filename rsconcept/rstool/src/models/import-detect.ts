@@ -22,10 +22,13 @@ export function detectImportKind(data: unknown): Exclude<ImportDataKind, 'auto'>
 
   if ('contract_version' in data && Array.isArray(data.items)) {
     const items = data.items as unknown[];
-    if (items.length > 0 && isRecord(items[0]) && 'cst_type' in items[0]) {
-      return 'portal-schema';
+    if (items.length > 0) {
+      const first = items[0];
+      if (isRecord(first) && 'cst_type' in first) {
+        return 'portal-schema';
+      }
+      throw new Error('Portal model JSON cannot be imported as a schema session');
     }
-    throw new Error('Portal model JSON cannot be imported as a schema session');
   }
 
   if (Array.isArray(data.items) && data.items.length > 0) {

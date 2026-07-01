@@ -1,10 +1,5 @@
 import { type CstType } from './common';
-import {
-  type ApplyConstituentsMode,
-  type ApplyConstituentsResult,
-  type ConstituentaDraft,
-  type ConstituentaState
-} from './constituenta';
+import { type ApplyConstituentsMode, type ApplyConstituentsResult, type ConstituentaDraft } from './constituenta';
 import { type DiagnosticRecord } from './diagnostic';
 import { type SessionHandle, type SessionRevision, type SessionState } from './session';
 
@@ -68,11 +63,4 @@ export interface ApplySchemaPatchResult extends ApplyConstituentsResult {
   session: SessionHandle;
   summary: SessionSummary;
   revision?: SessionRevision;
-}
-
-/** Internal: resolved patch with previous state for undo bookkeeping. */
-export interface ResolvedAgentPatch {
-  patch: AgentConstituentaPatch;
-  draft: ConstituentaDraft;
-  previous?: ConstituentaState;
 }

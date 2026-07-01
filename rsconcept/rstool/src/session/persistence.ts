@@ -9,6 +9,13 @@ export interface PersistedSessionEnvelope {
 }
 
 const CURRENT_SESSION_FILE = '_current.json';
+const UNSAFE_SESSION_ID = /[/\\]|\.\./;
+
+function assertSafeSessionId(sessionId: string): void {
+  if (!sessionId || UNSAFE_SESSION_ID.test(sessionId)) {
+    throw new Error(`Invalid session ID: ${sessionId}`);
+  }
+}
 
 export class SessionPersistence {
   private readonly dir: string;
@@ -51,6 +58,12 @@ export class SessionPersistence {
   }
 
   private filePath(sessionId: string): string {
-    return path.join(this.dir, `${sessionId}.json`);
+    assertSafeSessionId(sessionId);
+    const file = path.resolve(this.dir, `${sessionId}.json`);
+    const relative = path.relative(path.resolve(this.dir), file);
+    if (relative.startsWith('..') || path.isAbsolute(relative)) {
+      throw new Error(`Invalid session ID: ${sessionId}`);
+    }
+    return file;
   }
 }
