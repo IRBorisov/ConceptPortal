@@ -12,15 +12,19 @@ Thin entry skill for this repository. **Do not** `npm install @rsconcept/rstool`
 
 Paths are from the **workspace root**.
 
-| What                                         | Path                                                 |
-| :------------------------------------------- | :--------------------------------------------------- |
+| What                                                   | Path                                                 |
+| :----------------------------------------------------- | :--------------------------------------------------- |
 | **Start here** — воркфлоу, чеклисты, cstType, S# vs D# | `rsconcept/rstool/skills/rstool-helper/GUIDE.md`     |
-| API, stdio, контракт                         | `rsconcept/rstool/skills/rstool-helper/REFERENCE.md` |
-| Примеры, типичные ошибки                     | `rsconcept/rstool/skills/rstool-helper/EXAMPLES.md`  |
-| Language / domain docs                       | `rsconcept/rstool/docs/*.md`                         |
-| Package agent rules                          | `rsconcept/rstool/AGENTS.md`                         |
+| API, stdio, контракт                                   | `rsconcept/rstool/skills/rstool-helper/REFERENCE.md` |
+| Примеры, типичные ошибки                               | `rsconcept/rstool/skills/rstool-helper/EXAMPLES.md`  |
+| Language / domain docs                                 | `rsconcept/rstool/docs/*.md`                         |
+| Package agent rules                                    | `rsconcept/rstool/AGENTS.md`                         |
 
 Always open **GUIDE.md** first when starting a rstool task, then **REFERENCE.md** / **EXAMPLES.md** / relevant `docs/*.md` as needed.
+
+## Portal (приложение)
+
+Репозиторий: [github.com/IRBorisov/ConceptPortal](https://github.com/IRBorisov/ConceptPortal). REST и curl — `rsconcept/rstool/docs/PORTAL-API.md`; карта путей в исходниках — раздел «Репозиторий Portal» в том же файле.
 
 ## Quick facts
 

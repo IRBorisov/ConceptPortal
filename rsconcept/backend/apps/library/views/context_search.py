@@ -10,7 +10,7 @@ from shared import permissions
 from .. import serializers as s
 from ..services.context_search import search_library_context
 
-_CONTEXT_SEARCH_PARAMS = ('q', 'search_fields', 'admin')
+_CONTEXT_SEARCH_PARAMS = ('q', 'search_fields', 'admin', 'location', 'subfolders', 'item_type')
 
 
 @extend_schema(tags=['Library'])
@@ -43,6 +43,9 @@ class LibraryContextSearchView(generics.GenericAPIView):
             request.user,
             validated.get('q', ''),
             fields=validated.get('search_fields'),
-            all_items=admin
+            all_items=admin,
+            location=validated.get('location'),
+            subfolders=validated.get('subfolders', False),
+            item_type=validated.get('item_type'),
         )
         return Response(s.LibraryContextSearchResponseSerializer({'ids': ids}).data)

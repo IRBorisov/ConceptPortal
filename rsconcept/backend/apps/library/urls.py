@@ -12,6 +12,7 @@ urlpatterns = [
     path('library/active', views.LibraryActiveView.as_view()),
     path('library/all', views.LibraryAdminView.as_view()),
     path('library/context-search', views.LibraryContextSearchView.as_view()),
+    path('library/by-ids', views.LibraryItemsByIdsView.as_view()),
     path('library/templates', views.LibraryTemplatesView.as_view(), name='templates'),
     path('library/<int:pk_item>/create-version', views.create_version),
     path('library/<int:pk_item>/versions/<int:pk_version>', views.retrieve_version),
