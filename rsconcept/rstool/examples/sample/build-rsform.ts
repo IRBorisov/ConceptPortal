@@ -1,7 +1,7 @@
 import { writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import { CstType, RSToolWrapperClient, type AddOrUpdateConstituentaInput } from '../../src';
+import { CstType, RSToolWrapperClient, type AgentConstituentaPatch } from '../../src';
 
 async function run() {
   const client = new RSToolWrapperClient({
@@ -12,60 +12,29 @@ async function run() {
     await client.waitUntilReady();
     const session = await client.call<{ sessionId: string; contractVersion: string }>('createSession');
 
-    const drafts: AddOrUpdateConstituentaInput[] = [
+    const items: AgentConstituentaPatch[] = [
+      { id: 1, alias: 'X1', cstType: CstType.BASE, definitionFormal: '' },
+      { id: 2, alias: 'C1', cstType: CstType.CONSTANT, definitionFormal: '' },
       {
-        draft: {
-          id: 1,
-          alias: 'X1',
-          cstType: CstType.BASE,
-          definitionFormal: ''
-        }
+        id: 3,
+        alias: 'S1',
+        cstType: CstType.STRUCTURED,
+        definitionFormal: 'ℬ(X1×X1)',
+        convention: 'Pairs (parent, child) over X1.'
       },
-      {
-        draft: {
-          id: 2,
-          alias: 'C1',
-          cstType: CstType.CONSTANT,
-          definitionFormal: ''
-        }
-      },
-      {
-        draft: {
-          id: 3,
-          alias: 'S1',
-          cstType: CstType.STRUCTURED,
-          definitionFormal: 'ℬ(X1×X1)',
-          convention: 'Pairs (parent, child) over X1.'
-        }
-      },
-      {
-        draft: {
-          id: 4,
-          alias: 'D1',
-          cstType: CstType.TERM,
-          definitionFormal: 'Pr1(S1)'
-        }
-      },
-      {
-        draft: {
-          id: 5,
-          alias: 'A1',
-          cstType: CstType.AXIOM,
-          definitionFormal: '1=1'
-        }
-      }
+      { id: 4, alias: 'D1', cstType: CstType.TERM, definitionFormal: 'Pr1(S1)' },
+      { id: 5, alias: 'A1', cstType: CstType.AXIOM, definitionFormal: '1=1' }
     ];
 
-    for (const input of drafts) {
-      const result = await client.call('addOrUpdateConstituenta', {
+    const result = await client.call<{ diagnostics: unknown[]; summary: { items: { alias: string }[] } }>(
+      'applySchemaPatch',
+      {
         sessionId: session.sessionId,
-        input
-      });
-      console.log(
-        `Added ${input.draft.alias}:`,
-        (result as { diagnostics?: unknown[] }).diagnostics?.length ?? 0,
-        'diagnostics'
-      );
+        items
+      }
+    );
+    for (const item of result.summary.items) {
+      console.log(`Added ${item.alias}:`, result.diagnostics?.length ?? 0, 'diagnostics');
     }
 
     await client.call('commitStep', {

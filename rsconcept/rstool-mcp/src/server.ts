@@ -1,16 +1,18 @@
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import {
   CallToolRequestSchema,
-  ListToolsRequestSchema
-} from '@modelcontextprotocol/sdk/types.js';
+  ListToolsRequestSchema,
+} from "@modelcontextprotocol/sdk/types.js";
 
-import { RSToolAgent } from '@rsconcept/rstool';
+import { RSToolAgent } from "@rsconcept/rstool";
 
-import { TOOL_DEFINITIONS, type ToolDefinition } from './tools';
+import { TOOL_DEFINITIONS, type ToolDefinition } from "./tools";
 
 export interface BuildRSToolMcpServerOptions {
   /** Pre-built RSToolAgent. Defaults to a fresh in-memory instance. */
   tool?: RSToolAgent;
+  /** Persist sessions to this directory (also reads RSTOOL_PERSISTENCE_DIR when set). */
+  persistenceDir?: string;
   /** Server name advertised to MCP clients. */
   name?: string;
   /** Server version advertised to MCP clients. */
@@ -33,59 +35,68 @@ export interface BuildRSToolMcpServerOptions {
  * await server.connect(new StdioServerTransport());
  * ```
  */
-export function buildRSToolMcpServer(options: BuildRSToolMcpServerOptions = {}): McpServer {
-  const tool = options.tool ?? new RSToolAgent();
+export function buildRSToolMcpServer(
+  options: BuildRSToolMcpServerOptions = {},
+): McpServer {
+  const persistenceDir =
+    options.persistenceDir ?? process.env.RSTOOL_PERSISTENCE_DIR;
+  const tool =
+    options.tool ??
+    new RSToolAgent(persistenceDir ? { persistenceDir } : undefined);
   const server = new McpServer(
     {
-      name: options.name ?? 'rstool-mcp',
-      version: options.version ?? '0.1.0'
+      name: options.name ?? "rstool-mcp",
+      version: options.version ?? "0.1.0",
     },
     {
       capabilities: {
-        tools: {}
-      }
-    }
+        tools: {},
+      },
+    },
   );
 
   const definitionByName = new Map<string, ToolDefinition>(
-    TOOL_DEFINITIONS.map(definition => [definition.name, definition])
+    TOOL_DEFINITIONS.map((definition) => [definition.name, definition]),
   );
 
   server.server.setRequestHandler(ListToolsRequestSchema, () =>
     Promise.resolve({
-      tools: TOOL_DEFINITIONS.map(definition => ({
+      tools: TOOL_DEFINITIONS.map((definition) => ({
         name: definition.name,
         description: definition.description,
-        inputSchema: definition.inputSchema
-      }))
-    })
+        inputSchema: definition.inputSchema,
+      })),
+    }),
   );
 
-  server.server.setRequestHandler(CallToolRequestSchema, async request => {
+  server.server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const definition = definitionByName.get(request.params.name);
     if (!definition) {
       return {
         isError: true,
         content: [
           {
-            type: 'text' as const,
-            text: `Unknown rstool tool: ${request.params.name}`
-          }
-        ]
+            type: "text" as const,
+            text: `Unknown rstool tool: ${request.params.name}`,
+          },
+        ],
       };
     }
 
     try {
-      const result = await definition.invoke(tool, request.params.arguments ?? {});
+      const result = await definition.invoke(
+        tool,
+        request.params.arguments ?? {},
+      );
       const text =
-        typeof result === 'string' ? result : JSON.stringify(result, null, 2);
+        typeof result === "string" ? result : JSON.stringify(result, null, 2);
       return {
         content: [
           {
-            type: 'text' as const,
-            text
-          }
-        ]
+            type: "text" as const,
+            text,
+          },
+        ],
       };
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -93,10 +104,10 @@ export function buildRSToolMcpServer(options: BuildRSToolMcpServerOptions = {}):
         isError: true,
         content: [
           {
-            type: 'text' as const,
-            text: `rstool error in ${definition.name}: ${message}`
-          }
-        ]
+            type: "text" as const,
+            text: `rstool error in ${definition.name}: ${message}`,
+          },
+        ],
       };
     }
   });

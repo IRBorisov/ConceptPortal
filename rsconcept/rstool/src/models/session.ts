@@ -1,17 +1,20 @@
 import { type ConstituentaState } from './constituenta';
 import { type SessionModelState } from './model-value';
 
+/** Opaque session reference returned by create/import operations. */
 export interface SessionHandle {
   sessionId: string;
   contractVersion: string;
 }
 
+/** Recorded checkpoint in session revision history. */
 export interface SessionRevision {
   revisionId: string;
   at: string;
   message?: string;
 }
 
+/** Full in-memory session state. */
 export interface SessionState {
   sessionId: string;
   /** Library item alias for the conceptual schema or model. */
@@ -20,14 +23,14 @@ export interface SessionState {
   title: string;
   /** Developer comment (Portal JSON `description` on export). */
   comment: string;
-  /** Date of creation. */
+  /** ISO timestamp of session creation. */
   createdAt: string;
-  /** Date of last update. */
+  /** ISO timestamp of last mutation. */
   updatedAt: string;
-  /** List of revisions. */
+  /** Revision checkpoints recorded via {@link RSToolAgent.commitStep}. */
   revisions: SessionRevision[];
-  /** List of constituents in the session. */
+  /** Analyzed constituents in the conceptual schema. */
   items: ConstituentaState[];
-  /** Model state. */
+  /** Evaluated model values. */
   model: SessionModelState;
 }

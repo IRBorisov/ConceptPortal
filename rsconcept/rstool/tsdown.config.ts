@@ -3,6 +3,7 @@ import { defineConfig } from 'tsdown';
 const entryFiles = [
   'src/index.ts',
   'src/models/index.ts',
+  'src/models/agent-workflow.ts',
   'src/models/tool-contract.ts',
   'src/models/rstool-agent.ts',
   'src/models/common.ts',

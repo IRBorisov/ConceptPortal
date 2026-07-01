@@ -61,24 +61,22 @@ async function run() {
     const schemaPath = resolve(process.cwd(), DEFAULT_RSFORM_SESSION_PATH);
     const schemaJson = await readFile(schemaPath, 'utf8');
 
-    const imported = await client.call<{ sessionId: string }>('importSession', {
+    const imported = await client.call<{ sessionId: string }>('importData', {
       payload: schemaJson
     });
 
-    await client.call('setConstituentaValues', {
+    await client.call('setModelValues', {
       sessionId: imported.sessionId,
-      input: {
-        items: [
-          { target: X1_ID, value: X1_BINDING },
-          { target: X2_ID, value: X2_BINDING },
-          { target: X3_ID, value: X3_BINDING },
-          { target: X4_ID, value: X4_BINDING },
-          { target: S1_ID, value: S1_VALUE },
-          { target: S2_ID, value: S2_VALUE },
-          { target: S3_ID, value: S3_VALUE },
-          { target: S4_ID, value: S4_VALUE }
-        ]
-      }
+      set: [
+        { target: X1_ID, value: X1_BINDING },
+        { target: X2_ID, value: X2_BINDING },
+        { target: X3_ID, value: X3_BINDING },
+        { target: X4_ID, value: X4_BINDING },
+        { target: S1_ID, value: S1_VALUE },
+        { target: S2_ID, value: S2_VALUE },
+        { target: S3_ID, value: S3_VALUE },
+        { target: S4_ID, value: S4_VALUE }
+      ]
     });
 
     const recalculated = await client.call<{
@@ -90,17 +88,17 @@ async function run() {
     const d5 = recalculated.items.find(item => item.id === D5_ID);
     const d6 = recalculated.items.find(item => item.id === D6_ID);
     const d10 = recalculated.items.find(item => item.id === D10_ID);
-    const a1Eval = await client.call<{ success: boolean; value: unknown; status: number }>('evaluateConstituenta', {
+    const a1Eval = await client.call<{ success: boolean; value: unknown; status: number }>('evaluate', {
       sessionId: imported.sessionId,
-      input: { constituentId: A1_ID }
+      constituentId: A1_ID
     });
-    const a3Eval = await client.call<{ success: boolean; value: unknown; status: number }>('evaluateConstituenta', {
+    const a3Eval = await client.call<{ success: boolean; value: unknown; status: number }>('evaluate', {
       sessionId: imported.sessionId,
-      input: { constituentId: A3_ID }
+      constituentId: A3_ID
     });
-    const a4Eval = await client.call<{ success: boolean; value: unknown; status: number }>('evaluateConstituenta', {
+    const a4Eval = await client.call<{ success: boolean; value: unknown; status: number }>('evaluate', {
       sessionId: imported.sessionId,
-      input: { constituentId: A4_ID }
+      constituentId: A4_ID
     });
 
     console.log('D5 Pr3(S2):', d5);

@@ -61,21 +61,19 @@ async function run() {
     const kinshipPath = resolve(process.cwd(), DEFAULT_RSFORM_SESSION_PATH);
     const kinshipJson = await readFile(kinshipPath, 'utf8');
 
-    const imported = await client.call<{ sessionId: string }>('importSession', {
+    const imported = await client.call<{ sessionId: string }>('importData', {
       payload: kinshipJson
     });
 
-    await client.call('setConstituentaValues', {
+    await client.call('setModelValues', {
       sessionId: imported.sessionId,
-      input: {
-        items: [
-          { target: 1, value: X1_BINDING },
-          { target: 2, value: S1_VALUE },
-          { target: S2_ID, value: S2_VALUE },
-          { target: S3_ID, value: S3_VALUE },
-          { target: S4_ID, value: S4_VALUE }
-        ]
-      }
+      set: [
+        { target: 1, value: X1_BINDING },
+        { target: 2, value: S1_VALUE },
+        { target: S2_ID, value: S2_VALUE },
+        { target: S3_ID, value: S3_VALUE },
+        { target: S4_ID, value: S4_VALUE }
+      ]
     });
 
     const recalculated = await client.call<{
@@ -85,14 +83,14 @@ async function run() {
     });
 
     const d3 = recalculated.items.find(item => item.id === D3_ID);
-    const d3Eval = await client.call<{ success: boolean; value: unknown; status: number }>('evaluateConstituenta', {
+    const d3Eval = await client.call<{ success: boolean; value: unknown; status: number }>('evaluate', {
       sessionId: imported.sessionId,
-      input: { constituentId: D3_ID }
+      constituentId: D3_ID
     });
 
-    const a1Eval = await client.call<{ success: boolean; value: unknown; status: number }>('evaluateConstituenta', {
+    const a1Eval = await client.call<{ success: boolean; value: unknown; status: number }>('evaluate', {
       sessionId: imported.sessionId,
-      input: { constituentId: A1_ID }
+      constituentId: A1_ID
     });
 
     console.log('D3 recalculate:', d3);

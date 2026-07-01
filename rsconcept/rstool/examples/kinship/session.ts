@@ -50,20 +50,20 @@ function getModelItem(model: SessionModelState, id: number): unknown {
 
 export class KinshipModelSession {
   private genderByName: GenderRegistry = {};
+  private readonly client: RSToolWrapperClient;
+  public readonly sessionId: string;
+  public readonly sessionPath: string;
 
-  public constructor(
-    private readonly client: RSToolWrapperClient,
-    public readonly sessionId: string,
-    public readonly sessionPath: string
-  ) {}
+  public constructor(client: RSToolWrapperClient, sessionId: string, sessionPath: string) {
+    this.client = client;
+    this.sessionId = sessionId;
+    this.sessionPath = sessionPath;
+  }
 
-  public static async open(
-    client: RSToolWrapperClient,
-    sessionPath: string
-  ): Promise<KinshipModelSession> {
+  public static async open(client: RSToolWrapperClient, sessionPath: string): Promise<KinshipModelSession> {
     const absolutePath = resolve(process.cwd(), sessionPath);
     const payload = await readFile(absolutePath, 'utf8');
-    const imported = await client.call<{ sessionId: string }>('importSession', { payload });
+    const imported = await client.call<{ sessionId: string }>('importData', { payload });
     const session = new KinshipModelSession(client, imported.sessionId, absolutePath);
     await session.loadGenderFromModel();
     return session;
@@ -97,23 +97,21 @@ export class KinshipModelSession {
 
   private async applyModelValues(binding: BasicBinding, s1: S1Value): Promise<SessionModelState> {
     const { s2, s3 } = deriveGenderSets(binding, this.genderByName);
-    return this.client.call<SessionModelState>('setConstituentaValues', {
+    return this.client.call<SessionModelState>('setModelValues', {
       sessionId: this.sessionId,
-      input: {
-        items: [
-          { target: X1_ID, value: binding },
-          { target: S1_ID, value: s1 },
-          { target: S2_ID, value: s2 },
-          { target: S3_ID, value: s3 }
-        ]
-      }
+      set: [
+        { target: X1_ID, value: binding },
+        { target: S1_ID, value: s1 },
+        { target: S2_ID, value: s2 },
+        { target: S3_ID, value: s3 }
+      ]
     });
   }
 
   private async clearModelValues(): Promise<SessionModelState> {
-    return this.client.call<SessionModelState>('clearConstituentaValues', {
+    return this.client.call<SessionModelState>('setModelValues', {
       sessionId: this.sessionId,
-      input: { items: [X1_ID, S1_ID, S2_ID, S3_ID] }
+      clear: [X1_ID, S1_ID, S2_ID, S3_ID]
     });
   }
 

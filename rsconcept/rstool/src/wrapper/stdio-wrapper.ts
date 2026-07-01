@@ -2,45 +2,10 @@
 import readline from 'node:readline';
 
 import { RSToolAgent } from '../models/rstool-agent';
+import { handleStdioRequest, type StdioRequest, type StdioResponse } from './stdio-handler';
 
-interface StdioRequest {
-  id: string | number;
-  method: string;
-  params?: unknown;
-}
-
-interface StdioResponse {
-  id: string | number | null;
-  ok: boolean;
-  result?: unknown;
-  error?: {
-    code: string;
-    message: string;
-    details?: unknown;
-  };
-}
-
-const tool = new RSToolAgent();
-
-const METHODS = [
-  'createSession',
-  'addOrUpdateConstituenta',
-  'analyzeExpression',
-  'getFormState',
-  'listDiagnostics',
-  'commitStep',
-  'exportSession',
-  'exportPortalSchema',
-  'exportPortalModel',
-  'importSession',
-  'setConstituentaValue',
-  'setConstituentaValues',
-  'clearConstituentaValues',
-  'getModelState',
-  'evaluateExpression',
-  'evaluateConstituenta',
-  'recalculateModel'
-] as const;
+const persistenceDir = process.env.RSTOOL_PERSISTENCE_DIR;
+const tool = new RSToolAgent(persistenceDir ? { persistenceDir } : {});
 
 function writeResponse(response: StdioResponse): void {
   if (!process.stdout.writable || process.stdout.destroyed || process.stdout.writableEnded) {
@@ -50,154 +15,6 @@ function writeResponse(response: StdioResponse): void {
     process.stdout.write(`${JSON.stringify(response)}\n`);
   } catch {
     // The client might have already closed stdout (EPIPE). Safe to ignore.
-  }
-}
-
-function asObject(value: unknown): Record<string, unknown> {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    return {};
-  }
-  return value as Record<string, unknown>;
-}
-
-function requiredString(input: Record<string, unknown>, key: string): string {
-  const value = input[key];
-  if (typeof value !== 'string' || value.length === 0) {
-    throw new Error(`Missing or invalid "${key}"`);
-  }
-  return value;
-}
-
-async function handleRequest(request: StdioRequest): Promise<StdioResponse> {
-  try {
-    const params = asObject(request.params);
-    switch (request.method) {
-      case 'ping':
-        return { id: request.id, ok: true, result: { pong: true } };
-      case 'methods':
-        return { id: request.id, ok: true, result: METHODS };
-      case 'createSession':
-        return {
-          id: request.id,
-          ok: true,
-          result: tool.createSession(params.initial as never)
-        };
-      case 'addOrUpdateConstituenta':
-        return {
-          id: request.id,
-          ok: true,
-          result: tool.addOrUpdateConstituenta(requiredString(params, 'sessionId'), params.input as never)
-        };
-      case 'analyzeExpression':
-        return {
-          id: request.id,
-          ok: true,
-          result: tool.analyzeExpression(requiredString(params, 'sessionId'), params.input as never)
-        };
-      case 'getFormState':
-        return {
-          id: request.id,
-          ok: true,
-          result: tool.getFormState(requiredString(params, 'sessionId'))
-        };
-      case 'listDiagnostics':
-        return {
-          id: request.id,
-          ok: true,
-          result: tool.listDiagnostics(requiredString(params, 'sessionId'), params.filters as never)
-        };
-      case 'commitStep':
-        return {
-          id: request.id,
-          ok: true,
-          result: tool.commitStep(requiredString(params, 'sessionId'), params.message as string | undefined)
-        };
-      case 'exportSession':
-        return {
-          id: request.id,
-          ok: true,
-          result: tool.exportSession(requiredString(params, 'sessionId'))
-        };
-      case 'exportPortalSchema':
-        return {
-          id: request.id,
-          ok: true,
-          result: tool.exportPortalSchema(requiredString(params, 'sessionId'))
-        };
-      case 'exportPortalModel':
-        return {
-          id: request.id,
-          ok: true,
-          result: tool.exportPortalModel(requiredString(params, 'sessionId'))
-        };
-      case 'importSession':
-        return {
-          id: request.id,
-          ok: true,
-          result: tool.importSession(requiredString(params, 'payload'))
-        };
-      case 'setConstituentaValue':
-        return {
-          id: request.id,
-          ok: true,
-          result: await tool.setConstituentaValue(requiredString(params, 'sessionId'), params.input as never)
-        };
-      case 'setConstituentaValues':
-        return {
-          id: request.id,
-          ok: true,
-          result: await tool.setConstituentaValues(requiredString(params, 'sessionId'), params.input as never)
-        };
-      case 'clearConstituentaValues':
-        return {
-          id: request.id,
-          ok: true,
-          result: await tool.clearConstituentaValues(requiredString(params, 'sessionId'), params.input as never)
-        };
-      case 'getModelState':
-        return {
-          id: request.id,
-          ok: true,
-          result: tool.getModelState(requiredString(params, 'sessionId'))
-        };
-      case 'evaluateExpression':
-        return {
-          id: request.id,
-          ok: true,
-          result: tool.evaluateExpression(requiredString(params, 'sessionId'), params.input as never)
-        };
-      case 'evaluateConstituenta':
-        return {
-          id: request.id,
-          ok: true,
-          result: tool.evaluateConstituenta(requiredString(params, 'sessionId'), params.input as never)
-        };
-      case 'recalculateModel':
-        return {
-          id: request.id,
-          ok: true,
-          result: tool.recalculateModel(requiredString(params, 'sessionId'))
-        };
-      default:
-        return {
-          id: request.id ?? null,
-          ok: false,
-          error: {
-            code: 'METHOD_NOT_FOUND',
-            message: `Unknown method: ${request.method}`
-          }
-        };
-    }
-  } catch (error) {
-    return {
-      id: request.id ?? null,
-      ok: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: error instanceof Error ? error.message : 'Unknown error',
-        details: error
-      }
-    };
   }
 }
 
@@ -225,7 +42,7 @@ input.on('line', line => {
     if (!('id' in request) || !('method' in request)) {
       throw new Error('Request must include "id" and "method"');
     }
-    void handleRequest(request).then(writeResponse);
+    void handleStdioRequest(tool, request).then(writeResponse);
   } catch (error) {
     writeResponse({
       id: null,

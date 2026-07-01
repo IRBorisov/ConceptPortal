@@ -3,7 +3,9 @@ import { resolve } from 'node:path';
 
 import { TUPLE_ID } from '@rsconcept/domain';
 
-import { CstType, EvalStatus, RSToolWrapperClient, type AddOrUpdateConstituentaInput } from '../../src';
+import { CstType, EvalStatus, RSToolWrapperClient, type AgentConstituentaPatch } from '../../src';
+
+type DraftBatch = { draft: AgentConstituentaPatch };
 
 import {
   D1_ID,
@@ -42,7 +44,7 @@ const S2_VALUE = [
 async function buildSchema(client: RSToolWrapperClient): Promise<string> {
   const session = await client.call<{ sessionId: string }>('createSession');
 
-  const drafts: AddOrUpdateConstituentaInput[] = [
+  const drafts: DraftBatch[] = [
     {
       draft: {
         id: T1_ID,
@@ -144,18 +146,21 @@ async function buildSchema(client: RSToolWrapperClient): Promise<string> {
     }
   ];
 
-  for (const input of drafts) {
-    const result = await client.call<{
-      state: { analysis: { success: boolean } };
-      diagnostics: unknown[];
-    }>('addOrUpdateConstituenta', {
-      sessionId: session.sessionId,
-      input
-    });
-    if (!result.state.analysis.success) {
-      throw new Error(`${input.draft.alias}: analysis failed`);
-    }
-    console.log(`${input.draft.alias}: OK`);
+  const patch = await client.call<{
+    success: boolean;
+    summary: { items: Array<{ alias: string; analysisSuccess: boolean }> };
+    failed: Array<{ draft: { alias: string } }>;
+  }>('applySchemaPatch', {
+    sessionId: session.sessionId,
+    mode: 'atomic',
+    items: drafts.map(entry => entry.draft)
+  });
+  if (!patch.success) {
+    const failedAlias = patch.failed[0]?.draft.alias ?? 'unknown';
+    throw new Error(`${failedAlias}: analysis failed`);
+  }
+  for (const item of patch.summary.items) {
+    console.log(`${item.alias}: OK`);
   }
 
   await client.call('commitStep', {
@@ -167,20 +172,18 @@ async function buildSchema(client: RSToolWrapperClient): Promise<string> {
 }
 
 async function verifyModel(client: RSToolWrapperClient, schemaJson: string) {
-  const imported = await client.call<{ sessionId: string }>('importSession', {
+  const imported = await client.call<{ sessionId: string }>('importData', {
     payload: schemaJson
   });
 
-  await client.call('setConstituentaValues', {
+  await client.call('setModelValues', {
     sessionId: imported.sessionId,
-    input: {
-      items: [
-        { target: X1_ID, value: X1_BINDING },
-        { target: X2_ID, value: X2_BINDING },
-        { target: S1_ID, value: S1_VALUE },
-        { target: S2_ID, value: S2_VALUE }
-      ]
-    }
+    set: [
+      { target: X1_ID, value: X1_BINDING },
+      { target: X2_ID, value: X2_BINDING },
+      { target: S1_ID, value: S1_VALUE },
+      { target: S2_ID, value: S2_VALUE }
+    ]
   });
 
   const recalculated = await client.call<{

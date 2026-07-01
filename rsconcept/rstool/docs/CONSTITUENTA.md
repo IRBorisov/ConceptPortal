@@ -1,6 +1,6 @@
 # Конституенты
 
-Читай перед `addOrUpdateConstituenta`.
+Читай перед `applySchemaPatch`.
 
 ## Поля
 
@@ -28,7 +28,7 @@
 - `axiom` / `A#` — аксиома; нужна типизация `Logic`.
 - `statement` / `T#` — высказывание; нужна типизация `Logic`.
 
-В модели `basic`, `constant`, `structure` можно интерпретировать через `setConstituentaValue`. `term`, `axiom`, `statement` вычисляются и напрямую не задаются.
+В модели `basic`, `constant`, `structure` можно интерпретировать через `setModelValues`. `term`, `function`, `predicate`, `axiom`, `statement` вычисляются и напрямую не задаются.
 
 ## Различие родовой структуры и терма
 

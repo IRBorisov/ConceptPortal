@@ -1,6 +1,8 @@
 # @rsconcept/rstool
 
-Agent-facing library for **incremental RSForm construction**, **RSLang expression analysis**, **diagnostics**, **modeling**, and **evaluation**. It wraps [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) with a deterministic session contract and a stdio JSON wrapper that LLM agents and MCP clients can call directly.
+Agent-facing library for **incremental RSForm construction**, **RSLang expression analysis**, **diagnostics**, **modeling**, and **evaluation**. It wraps [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) with a deterministic session contract and a stdio JSON wrapper for LLM agents. MCP hosts can use it through [`@rsconcept/rstool-mcp`](https://www.npmjs.com/package/@rsconcept/rstool-mcp).
+
+**Contract version:** `2.0.0` — see [skills/rstool-helper/REFERENCE.md](./skills/rstool-helper/REFERENCE.md) for the full v2 API.
 
 ## Agent skill
 
@@ -12,7 +14,7 @@ RS language + rstool workflows for agents: `skills/rstool-helper/` (`GUIDE.md`, 
 npm install @rsconcept/rstool
 ```
 
-`@rsconcept/domain` is a peer-of-dependency installed automatically.
+`@rsconcept/domain` is a package dependency and is installed automatically.
 
 ## Installing the agent skill
 
@@ -31,13 +33,11 @@ Details: `skills/README.md`.
 ## Quick use (library)
 
 ```ts
-import { CstType, RSToolAgent } from '@rsconcept/rstool';
+import { RSToolAgent } from '@rsconcept/rstool';
 
 const tool = new RSToolAgent();
-const session = tool.createSession();
-const result = tool.analyzeExpression(session.sessionId, {
-  expression: '1+2',
-  cstType: CstType.TERM
+const result = tool.applySchemaPatch({
+  items: [{ alias: 'X1' }, { alias: 'D1', definitionFormal: '1+2' }]
 });
 ```
 
@@ -52,7 +52,9 @@ Or run it as a child process from your own code:
 ```ts
 import { RSToolWrapperClient } from '@rsconcept/rstool/wrapper';
 
-const client = new RSToolWrapperClient(); // spawns `rstool-wrapper` by default
+// Default is for checkout/dev use: `npm run wrapper` in the current cwd.
+// For an installed package, pass { command: 'npx', args: ['rstool-wrapper'] }.
+const client = new RSToolWrapperClient();
 await client.waitUntilReady();
 const session = await client.call<{ sessionId: string }>('createSession');
 await client.close();
@@ -84,30 +86,32 @@ From `rsconcept/rstool` (or run `powershell -File scripts/dev/LocalDevSetup.ps1`
 
 - Input: one JSON request per line.
 - Output: one JSON response per line.
-- The wrapper keeps state in memory while the process is alive.
+- The wrapper keeps state in memory while the process is alive (or on disk when `RSTOOL_PERSISTENCE_DIR` is set).
+- If a session method is called without an active session, rstool creates one lazily.
 - On startup, a ready handshake is printed.
 
-Supported methods (current contract version: see [`CONTRACT_VERSION`](src/models/tool-contract.ts)):
+Supported methods (contract `2.0.0`):
 
 - `ping`
 - `methods`
+- `ensureSession`
 - `createSession`
-- `addOrUpdateConstituenta`
+- `getCurrentSession`
+- `setCurrentSession`
+- `applySchemaPatch`
+- `getSessionState`
 - `analyzeExpression`
-- `getFormState`
 - `listDiagnostics`
 - `commitStep`
 - `exportSession`
-- `exportPortalSchema`
-- `exportPortalModel`
-- `importSession`
-- `setConstituentaValue`
-- `setConstituentaValues`
-- `clearConstituentaValues`
+- `exportPortal`
+- `importData`
+- `setModelValues`
 - `getModelState`
-- `evaluateExpression`
-- `evaluateConstituenta`
+- `evaluate`
 - `recalculateModel`
+
+Params are **flat** at the top level (no `params.input` wrapper). Optional `sessionId` sits alongside method fields.
 
 Example request:
 
@@ -115,10 +119,26 @@ Example request:
 { "id": "1", "method": "createSession", "params": {} }
 ```
 
+Example schema patch:
+
+```json
+{
+  "id": "2",
+  "method": "applySchemaPatch",
+  "params": {
+    "items": [
+      { "alias": "X1" },
+      { "alias": "S1", "definitionFormal": "ℬ(X1×X1)" },
+      { "alias": "D1", "definitionFormal": "Pr1(S1)" }
+    ]
+  }
+}
+```
+
 Example response:
 
 ```json
-{ "id": "1", "ok": true, "result": { "sessionId": "...", "contractVersion": "1.4.0" } }
+{ "id": "1", "ok": true, "result": { "sessionId": "...", "contractVersion": "2.0.0" } }
 ```
 
 ## Typed client example
@@ -130,16 +150,6 @@ npm run example:client
 ```
 
 File: [`examples/agent-client.ts`](examples/agent-client.ts)
-
-The example:
-
-- starts the stdio wrapper as a child process
-- waits for the ready handshake
-- creates a session
-- upserts a constituent
-- runs expression analysis
-- sets a base binding and evaluates a term
-- fetches diagnostics
 
 ## License
 

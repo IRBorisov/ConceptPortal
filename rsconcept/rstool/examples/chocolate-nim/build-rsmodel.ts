@@ -32,18 +32,16 @@ async function run() {
     const schemaPath = resolve(process.cwd(), DEFAULT_RSFORM_SESSION_PATH);
     const schemaJson = await readFile(schemaPath, 'utf8');
 
-    const imported = await client.call<{ sessionId: string }>('importSession', {
+    const imported = await client.call<{ sessionId: string }>('importData', {
       payload: schemaJson
     });
 
-    await client.call('setConstituentaValues', {
+    await client.call('setModelValues', {
       sessionId: imported.sessionId,
-      input: {
-        items: [
-          { target: S1_ID, value: S1_VALUE },
-          { target: S2_ID, value: S2_VALUE }
-        ]
-      }
+      set: [
+        { target: S1_ID, value: S1_VALUE },
+        { target: S2_ID, value: S2_VALUE }
+      ]
     });
 
     const recalculated = await client.call<{
@@ -53,13 +51,13 @@ async function run() {
     });
 
     const d6 = recalculated.items.find(item => item.id === D6_ID);
-    const a1Eval = await client.call<{ success: boolean; value: unknown; status: number }>('evaluateConstituenta', {
+    const a1Eval = await client.call<{ success: boolean; value: unknown; status: number }>('evaluate', {
       sessionId: imported.sessionId,
-      input: { constituentId: A1_ID }
+      constituentId: A1_ID
     });
-    const t1Eval = await client.call<{ success: boolean; value: unknown; status: number }>('evaluateConstituenta', {
+    const t1Eval = await client.call<{ success: boolean; value: unknown; status: number }>('evaluate', {
       sessionId: imported.sessionId,
-      input: { constituentId: T1_ID }
+      constituentId: T1_ID
     });
 
     console.log('D6 recalculate:', d6);

@@ -1,286 +1,340 @@
 /**
  * MCP tool definitions for the @rsconcept/rstool contract.
- *
- * Schemas are intentionally permissive (additionalProperties: true) where the rstool input
- * is structurally rich (e.g. ConstituentaDraft, SessionState). The wrapped RSToolAgent
- * validates inputs at runtime and returns deterministic error responses.
  */
 
-import { type RSToolAgent } from '@rsconcept/rstool';
+import { type RSToolAgent } from "@rsconcept/rstool";
 
 export interface ToolDefinition {
   name: string;
   description: string;
   inputSchema: {
-    type: 'object';
+    type: "object";
     properties: Record<string, unknown>;
     required?: string[];
     additionalProperties?: boolean;
   };
-  invoke: (tool: RSToolAgent, args: Record<string, unknown>) => unknown | Promise<unknown>;
+  invoke: (
+    tool: RSToolAgent,
+    args: Record<string, unknown>,
+  ) => unknown | Promise<unknown>;
 }
 
 const sessionId = {
-  type: 'string',
-  description: 'Session identifier returned from create_session or import_session.'
+  type: "string",
+  description: "Session id. Omit to use the current active session.",
 };
+
+const agentPatchSchema = {
+  type: "object",
+  description:
+    "Agent-friendly constituent patch. id and cstType are optional; cstType is inferred from alias prefixes X/C/S/D/A/F/P.",
+  properties: {
+    id: { type: "number" },
+    alias: { type: "string" },
+    cstType: { type: "string" },
+    definitionFormal: { type: "string" },
+    term: { type: "string" },
+    definitionText: { type: "string" },
+    convention: { type: "string" },
+  },
+  required: ["alias"],
+};
+
+function optionalSessionId(args: Record<string, unknown>): string | undefined {
+  const value = args.sessionId;
+  return typeof value === "string" && value.length > 0 ? value : undefined;
+}
+
+function omitSessionId(args: Record<string, unknown>): Record<string, unknown> {
+  const { sessionId: _sessionId, ...rest } = args;
+  return rest;
+}
 
 export const TOOL_DEFINITIONS: ToolDefinition[] = [
   {
-    name: 'ping',
-    description: 'Liveness check; returns {pong: true} and the active rstool contract version.',
-    inputSchema: { type: 'object', properties: {}, additionalProperties: false },
-    invoke: tool => ({ pong: true, contractVersion: tool.contractVersion })
-  },
-  {
-    name: 'list_methods',
-    description: 'List all rstool methods exposed as MCP tools.',
-    inputSchema: { type: 'object', properties: {}, additionalProperties: false },
-    invoke: () => TOOL_DEFINITIONS.map(definition => definition.name)
-  },
-  {
-    name: 'create_session',
+    name: "ping",
     description:
-      'Create a fresh in-memory rstool session. Returns a SessionHandle with sessionId and initial revision.',
+      "Liveness check; returns {pong: true} and the active rstool contract version.",
     inputSchema: {
-      type: 'object',
+      type: "object",
+      properties: {},
+      additionalProperties: false,
+    },
+    invoke: (tool) => ({ pong: true, contractVersion: tool.contractVersion }),
+  },
+  {
+    name: "list_methods",
+    description: "List all rstool methods exposed as MCP tools.",
+    inputSchema: {
+      type: "object",
+      properties: {},
+      additionalProperties: false,
+    },
+    invoke: () => TOOL_DEFINITIONS.map((definition) => definition.name),
+  },
+  {
+    name: "ensure_session",
+    description:
+      "Return the current active session, or create one if none exists. Optional initial seed is used only when creating.",
+    inputSchema: {
+      type: "object",
       properties: {
         initial: {
-          type: 'object',
-          description: 'Optional partial SessionState seed (alias, title, constituents, etc.).',
-          additionalProperties: true
-        }
-      },
-      additionalProperties: false
-    },
-    invoke: (tool, args) => tool.createSession(args.initial as never)
-  },
-  {
-    name: 'add_or_update_constituenta',
-    description:
-      'Upsert a single constituent in the session. Provide alias, cstType, definitionFormal (may be ""), and optional term/definitionText/convention.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        sessionId,
-        input: {
-          type: 'object',
-          description: 'AddOrUpdateConstituentaInput. Required keys: alias, cstType, definitionFormal.',
-          additionalProperties: true
-        }
-      },
-      required: ['sessionId', 'input']
-    },
-    invoke: (tool, args) =>
-      tool.addOrUpdateConstituenta(String(args.sessionId), args.input as never)
-  },
-  {
-    name: 'analyze_expression',
-    description:
-      'Run parser + semantic analysis on a scratch RSLang expression in the session context. Returns typification, valueClass, success flag and diagnostics.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        sessionId,
-        input: {
-          type: 'object',
-          description: 'AnalyzeExpressionInput. Required keys: expression, cstType.',
+          type: "object",
           properties: {
-            expression: { type: 'string' },
-            cstType: { type: 'string' },
-            alias: { type: 'string' }
+            alias: { type: "string" },
+            title: { type: "string" },
+            comment: { type: "string" },
           },
-          required: ['expression', 'cstType'],
-          additionalProperties: true
-        }
+          additionalProperties: true,
+        },
       },
-      required: ['sessionId', 'input']
+      additionalProperties: false,
     },
-    invoke: (tool, args) =>
-      tool.analyzeExpression(String(args.sessionId), args.input as never)
+    invoke: (tool, args) => tool.ensureSession(args.initial as never),
   },
   {
-    name: 'get_form_state',
-    description: 'Return the full SessionState (constituents, revision, alias, title, etc.).',
-    inputSchema: {
-      type: 'object',
-      properties: { sessionId },
-      required: ['sessionId']
-    },
-    invoke: (tool, args) => tool.getFormState(String(args.sessionId))
-  },
-  {
-    name: 'list_diagnostics',
+    name: "create_session",
     description:
-      'List diagnostics across the session, optionally filtered by constituentId / severity / classes.',
+      "Create a fresh in-memory rstool session and set it as the current active session.",
     inputSchema: {
-      type: 'object',
+      type: "object",
       properties: {
-        sessionId,
-        filters: {
-          type: 'object',
-          description: 'Optional ListDiagnosticsFilters object.',
-          additionalProperties: true
-        }
-      },
-      required: ['sessionId']
-    },
-    invoke: (tool, args) =>
-      tool.listDiagnostics(String(args.sessionId), args.filters as never)
-  },
-  {
-    name: 'commit_step',
-    description: 'Record a session revision with an optional human-readable message.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        sessionId,
-        message: { type: 'string' }
-      },
-      required: ['sessionId']
-    },
-    invoke: (tool, args) =>
-      tool.commitStep(String(args.sessionId), args.message as string | undefined)
-  },
-  {
-    name: 'export_session',
-    description: 'Serialize the session to a JSON string suitable for import_session.',
-    inputSchema: {
-      type: 'object',
-      properties: { sessionId },
-      required: ['sessionId']
-    },
-    invoke: (tool, args) => tool.exportSession(String(args.sessionId))
-  },
-  {
-    name: 'import_session',
-    description:
-      'Import a session previously produced by export_session. Returns a fresh SessionHandle pointing at the restored state.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        payload: { type: 'string', description: 'JSON payload from export_session.' }
-      },
-      required: ['payload']
-    },
-    invoke: (tool, args) => tool.importSession(String(args.payload))
-  },
-  {
-    name: 'set_constituenta_value',
-    description:
-      'Bind or assign a value to a single interpretable constituent (basic, constant, structure). Inferrable constituents (term, axiom, statement) cannot be set directly.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        sessionId,
-        input: {
-          type: 'object',
-          description: 'SetConstituentaValueInput. Required keys: target (id), value.',
-          additionalProperties: true
-        }
-      },
-      required: ['sessionId', 'input']
-    },
-    invoke: (tool, args) =>
-      tool.setConstituentaValue(String(args.sessionId), args.input as never)
-  },
-  {
-    name: 'set_constituenta_values',
-    description: 'Batch variant of set_constituenta_value: assign values to multiple interpretable constituents.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        sessionId,
-        input: {
-          type: 'object',
-          description: 'SetConstituentaValuesInput. Required keys: values (list of {target, value}).',
-          additionalProperties: true
-        }
-      },
-      required: ['sessionId', 'input']
-    },
-    invoke: (tool, args) =>
-      tool.setConstituentaValues(String(args.sessionId), args.input as never)
-  },
-  {
-    name: 'clear_constituenta_values',
-    description: 'Clear current values for one or more constituents and reset dependents to NOT_PROCESSED.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        sessionId,
-        input: {
-          type: 'object',
-          description: 'ClearConstituentaValuesInput. Required keys: targets (list of ids).',
-          additionalProperties: true
-        }
-      },
-      required: ['sessionId', 'input']
-    },
-    invoke: (tool, args) =>
-      tool.clearConstituentaValues(String(args.sessionId), args.input as never)
-  },
-  {
-    name: 'get_model_state',
-    description: 'Return the SessionModelState — current values and evaluation statuses for every constituent.',
-    inputSchema: {
-      type: 'object',
-      properties: { sessionId },
-      required: ['sessionId']
-    },
-    invoke: (tool, args) => tool.getModelState(String(args.sessionId))
-  },
-  {
-    name: 'evaluate_expression',
-    description:
-      'Evaluate a scratch RSLang expression against the current bindings without storing it. Returns value + evaluation status.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        sessionId,
-        input: {
-          type: 'object',
-          description: 'EvaluateExpressionInput. Required keys: expression. Optional: cstType, alias.',
+        initial: {
+          type: "object",
+          description:
+            "Optional partial SessionState seed (alias, title, comment).",
           properties: {
-            expression: { type: 'string' },
-            cstType: { type: 'string' },
-            alias: { type: 'string' }
+            alias: { type: "string" },
+            title: { type: "string" },
+            comment: { type: "string" },
           },
-          required: ['expression'],
-          additionalProperties: true
-        }
+          additionalProperties: false,
+        },
       },
-      required: ['sessionId', 'input']
+      additionalProperties: false,
     },
-    invoke: (tool, args) =>
-      tool.evaluateExpression(String(args.sessionId), args.input as never)
+    invoke: (tool, args) => tool.createSession(args.initial as never),
   },
   {
-    name: 'evaluate_constituenta',
-    description: 'Evaluate a stored derived constituent (term, axiom, statement) using the current bindings.',
+    name: "set_current_session",
+    description: "Set the active session by id.",
     inputSchema: {
-      type: 'object',
+      type: "object",
+      properties: { sessionId },
+      required: ["sessionId"],
+    },
+    invoke: (tool, args) => tool.setCurrentSession(String(args.sessionId)),
+  },
+  {
+    name: "apply_schema_patch",
+    description:
+      "Preferred schema edit path. Batch patch with inferred ids and cstType, dependency ordering, and compact summary.",
+    inputSchema: {
+      type: "object",
       properties: {
         sessionId,
-        input: {
-          type: 'object',
-          description: 'EvaluateConstituentaInput. Required keys: target (id).',
-          additionalProperties: true
-        }
+        initial: {
+          type: "object",
+          properties: {
+            alias: { type: "string" },
+            title: { type: "string" },
+            comment: { type: "string" },
+          },
+          additionalProperties: true,
+        },
+        items: { type: "array", items: agentPatchSchema },
+        mode: { type: "string", enum: ["atomic", "best_effort"] },
+        commitMessage: { type: "string" },
       },
-      required: ['sessionId', 'input']
+      required: ["items"],
     },
     invoke: (tool, args) =>
-      tool.evaluateConstituenta(String(args.sessionId), args.input as never)
+      tool.applySchemaPatch(
+        omitSessionId(args) as never,
+        optionalSessionId(args),
+      ),
   },
   {
-    name: 'recalculate_model',
-    description: 'Recompute every interpretable / inferrable constituent using current bindings. Returns the updated SessionModelState.',
+    name: "get_session_state",
+    description:
+      "Return session state. detail=summary (default): compact metadata, aliases, diagnostics. detail=full: complete SessionState clone.",
     inputSchema: {
-      type: 'object',
-      properties: { sessionId },
-      required: ['sessionId']
+      type: "object",
+      properties: {
+        sessionId,
+        detail: { type: "string", enum: ["summary", "full"] },
+      },
     },
-    invoke: (tool, args) => tool.recalculateModel(String(args.sessionId))
-  }
+    invoke: (tool, args) =>
+      tool.getSessionState(
+        (args.detail as "summary" | "full" | undefined) ?? "summary",
+        optionalSessionId(args),
+      ),
+  },
+  {
+    name: "analyze_expression",
+    description:
+      "Parse and type-check a scratch expression without saving it. Does not record diagnostics unless recordDiagnostics=true.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        sessionId,
+        expression: { type: "string" },
+        cstType: { type: "string" },
+        recordDiagnostics: { type: "boolean" },
+      },
+      required: ["expression", "cstType"],
+    },
+    invoke: (tool, args) =>
+      tool.analyzeExpression(
+        omitSessionId(args) as never,
+        optionalSessionId(args),
+      ),
+  },
+  {
+    name: "list_diagnostics",
+    description:
+      "List active diagnostics for the session (one record set per constituent, not a historical log).",
+    inputSchema: {
+      type: "object",
+      properties: {
+        sessionId,
+        constituentId: { type: "number" },
+      },
+    },
+    invoke: (tool, args) => {
+      const constituentId = args.constituentId;
+      const filters =
+        typeof constituentId === "number" ? { constituentId } : undefined;
+      return tool.listDiagnostics(filters, optionalSessionId(args));
+    },
+  },
+  {
+    name: "commit_step",
+    description:
+      "Record a session revision with an optional human-readable message.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        sessionId,
+        message: { type: "string" },
+      },
+    },
+    invoke: (tool, args) =>
+      tool.commitStep(
+        args.message as string | undefined,
+        optionalSessionId(args),
+      ),
+  },
+  {
+    name: "export_session",
+    description:
+      "Serialize the session to a JSON string suitable for import_data with kind=session.",
+    inputSchema: {
+      type: "object",
+      properties: { sessionId },
+    },
+    invoke: (tool, args) => tool.exportSession(optionalSessionId(args)),
+  },
+  {
+    name: "export_portal",
+    description:
+      "Export Portal Load-from-JSON payload. kind=schema|model; format=json (default string) or object.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        sessionId,
+        kind: { type: "string", enum: ["schema", "model"] },
+        format: { type: "string", enum: ["json", "object"] },
+      },
+      required: ["kind"],
+    },
+    invoke: (tool, args) =>
+      tool.exportPortal(omitSessionId(args) as never, optionalSessionId(args)),
+  },
+  {
+    name: "import_data",
+    description:
+      "Import a session from export_session JSON, Portal schema JSON, or GET /api/rsforms/:id/details. kind=auto (default) detects the shape.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        payload: {
+          description:
+            "JSON string or parsed object (session export, Portal schema, or rsform details).",
+        },
+        kind: {
+          type: "string",
+          enum: ["auto", "session", "portal-schema", "portal-details"],
+        },
+      },
+      required: ["payload"],
+    },
+    invoke: (tool, args) =>
+      tool.importData(args.payload as string | object, args.kind as never),
+  },
+  {
+    name: "set_model_values",
+    description:
+      "Set and/or clear interpretable model bindings. Pass set[] for bindings and clear[] for constituent ids to reset.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        sessionId,
+        set: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              target: { type: "number" },
+              type: { type: "string" },
+              value: {},
+            },
+            required: ["target", "value"],
+          },
+        },
+        clear: { type: "array", items: { type: "number" } },
+      },
+    },
+    invoke: (tool, args) =>
+      tool.setModelValues(
+        omitSessionId(args) as never,
+        optionalSessionId(args),
+      ),
+  },
+  {
+    name: "get_model_state",
+    description: "Return the SessionModelState.",
+    inputSchema: {
+      type: "object",
+      properties: { sessionId },
+    },
+    invoke: (tool, args) => tool.getModelState(optionalSessionId(args)),
+  },
+  {
+    name: "evaluate",
+    description:
+      "Evaluate a scratch expression (expression + cstType) or a stored constituent (constituentId).",
+    inputSchema: {
+      type: "object",
+      properties: {
+        sessionId,
+        expression: { type: "string" },
+        cstType: { type: "string" },
+        constituentId: { type: "number" },
+      },
+    },
+    invoke: (tool, args) =>
+      tool.evaluate(omitSessionId(args) as never, optionalSessionId(args)),
+  },
+  {
+    name: "recalculate_model",
+    description: "Recompute every inferrable constituent.",
+    inputSchema: {
+      type: "object",
+      properties: { sessionId },
+    },
+    invoke: (tool, args) => tool.recalculateModel(optionalSessionId(args)),
+  },
 ];

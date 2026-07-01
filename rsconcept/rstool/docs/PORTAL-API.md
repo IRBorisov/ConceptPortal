@@ -224,19 +224,24 @@ curl.exe -s "https://api.portal.acconcept.ru/api/rsforms/856/details"
 ## Как перенести КС в rstool
 
 1. Получи `GET /api/rsforms/:id/details`.
-2. Создай `createSession({ title, alias, comment: description })`.
-3. Иди по `items[]` в порядке ответа API.
-4. Для каждого элемента вызови `addOrUpdateConstituenta(sessionId, { draft })`.
-5. Проверь `listDiagnostics(sessionId)`.
-6. Работай локально: анализ, правки, вычисления, маленькая КМ.
-7. Для сохранения рабочей сессии используй `exportSession`.
-8. Для загрузки схемы обратно в Portal используй `exportPortalSchema`.
+2. Вызови `importData(JSON.stringify(payload))` — auto определит `portal-details`; для Load from JSON — `importData(payload, 'portal-schema')`.
+3. Проверь `listDiagnostics()` (после `importData` сессия уже текущая).
+4. Работай локально: анализ, правки, вычисления, маленькая КМ.
+5. Для сохранения рабочей сессии используй `exportSession`.
+6. Для загрузки схемы обратно в Portal используй `exportPortal({ kind: 'schema' })`.
 
-Portal JSON из `/details` **не является** форматом `exportSession` и не передаётся
-в `importSession` напрямую. Его нужно перенести через `addOrUpdateConstituenta`
-или через отдельный адаптер, если он появится в контракте.
+Альтернатива: `createSession` + `applySchemaPatch` с массивом `items`.
 
-Минимальный маппинг:
+Portal JSON из `/details` **не является** форматом `exportSession`; используй `importData`, не передавай его как session export.
+
+Минимальный импорт:
+
+```ts
+const session = tool.importData(JSON.stringify(portal));
+tool.listDiagnostics();
+```
+
+Пакетный маппинг через `applySchemaPatch`:
 
 ```ts
 const session = tool.createSession({
@@ -245,9 +250,9 @@ const session = tool.createSession({
   comment: portal.description
 });
 
-for (const item of portal.items) {
-  tool.addOrUpdateConstituenta(session.sessionId, {
-    draft: {
+tool.applySchemaPatch(
+  {
+    items: portal.items.map(item => ({
       id: item.id,
       alias: item.alias,
       cstType: item.cst_type,
@@ -255,9 +260,10 @@ for (const item of portal.items) {
       term: item.term_raw ?? '',
       definitionText: item.definition_raw ?? '',
       convention: item.convention ?? ''
-    }
-  });
-}
+    }))
+  },
+  session.sessionId
+);
 ```
 
 ## Практика для агентов
@@ -294,5 +300,5 @@ path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf
 - Не парси HTML SPA.
 - Не запрашивай UI напрямую, используй преобразованные API запросы.
 - Не предлагай авторизацию через session cookie или `sessionid` в curl.
-- Не передавай `/details` JSON в `importSession`.
+- Не передавай `/details` JSON в `importData` с `kind: 'session'`.
 - Не запрашивай `/details`, если нужны только метаданные.

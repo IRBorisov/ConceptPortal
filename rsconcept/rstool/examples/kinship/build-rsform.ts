@@ -1,7 +1,9 @@
 import { writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import { CstType, RSToolWrapperClient, type AddOrUpdateConstituentaInput } from '../../src';
+import { CstType, RSToolWrapperClient, type AgentConstituentaPatch } from '../../src';
+
+type DraftBatch = { draft: AgentConstituentaPatch };
 
 import { DEFAULT_RSFORM_SESSION_PATH } from './constants';
 
@@ -14,7 +16,7 @@ async function run() {
     await client.waitUntilReady();
     const session = await client.call<{ sessionId: string; contractVersion: string }>('createSession');
 
-    const drafts: AddOrUpdateConstituentaInput[] = [
+    const drafts: DraftBatch[] = [
       {
         draft: {
           id: 1,
@@ -647,22 +649,25 @@ async function run() {
       }
     ];
 
-    for (const input of drafts) {
-      const result = await client.call<{
-        state: { alias: string; analysis: { success: boolean } };
-        diagnostics: unknown[];
-      }>('addOrUpdateConstituenta', {
-        sessionId: session.sessionId,
-        input
-      });
-      const ok = result.state.analysis.success;
-      const diagCount = result.diagnostics?.length ?? 0;
-      console.log(`${input.draft.alias}: ${ok ? 'OK' : 'FAIL'} (${diagCount} diagnostics)`);
-      if (!ok) {
-        const diags = await client.call('listDiagnostics', { sessionId: session.sessionId });
-        console.log(JSON.stringify(diags, null, 2));
-        throw new Error(`${input.draft.alias}: analysis failed (${diagCount} diagnostics): ${JSON.stringify(diags)}`);
-      }
+    const patch = await client.call<{
+      success: boolean;
+      diagnostics: unknown[];
+      failed: Array<{ draft: { alias: string }; diagnostics: unknown[] }>;
+      summary: { items: Array<{ alias: string; analysisSuccess: boolean }> };
+    }>('applySchemaPatch', {
+      sessionId: session.sessionId,
+      mode: 'atomic',
+      items: drafts.map(entry => entry.draft)
+    });
+
+    for (const item of patch.summary.items) {
+      console.log(`${item.alias}: ${item.analysisSuccess ? 'OK' : 'FAIL'}`);
+    }
+    if (!patch.success) {
+      const diags = await client.call('listDiagnostics', { sessionId: session.sessionId });
+      console.log(JSON.stringify(diags, null, 2));
+      const failedAlias = patch.failed[0]?.draft.alias ?? 'unknown';
+      throw new Error(`${failedAlias}: analysis failed: ${JSON.stringify(diags)}`);
     }
 
     await client.call('commitStep', {

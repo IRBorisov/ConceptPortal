@@ -30,7 +30,7 @@ npx tsx node_modules/@rsconcept/rstool/examples/agent-client.ts
 | `build-rsform.ts`  | Сборка RSForm → `rsform-session.json`           |
 | `build-rsmodel.ts` | Демо-модель и проверки → `rsmodel-session.json` |
 
-Готовые `*-session.json` — снимки `exportSession` для `importSession` и тестов. Пересобрать: соответствующий `build-*.ts` перезапишет файл рядом с собой.
+Готовые `*-session.json` — снимки `exportSession` для `importData` и тестов. Пересобрать: соответствующий `build-*.ts` перезапишет файл рядом с собой.
 
 ## Темы и npm-скрипты
 
