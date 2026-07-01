@@ -22,6 +22,7 @@ from shared.throttling import OssCloneRateThrottle
 from .. import models as m
 from .. import serializers as s
 from ..services.clone import clone_library_item
+from ..services.context_search import get_accessible_library_items_by_ids
 
 
 @extend_schema(tags=['Library'])
@@ -387,3 +388,27 @@ class LibraryTemplatesView(generics.ListAPIView):
     def get_queryset(self):
         template_ids = m.LibraryTemplate.objects.values_list('lib_source', flat=True)
         return m.LibraryItem.objects.filter(pk__in=template_ids)
+
+
+@extend_schema(tags=['Library'])
+@extend_schema_view(
+    get=extend_schema(
+        summary='get library items by ids',
+        parameters=[s.LibraryItemsByIdsSerializer],
+        responses={c.HTTP_200_OK: s.LibraryItemSerializer(many=True)},
+    )
+)
+class LibraryItemsByIdsView(generics.GenericAPIView):
+    ''' Endpoint: Get library item metadata for accessible ids. '''
+    permission_classes = (permissions.Anyone,)
+
+    def get(self, request: Request) -> Response:
+        serializer = s.LibraryItemsByIdsSerializer(
+            data={'ids': request.query_params.get('ids', '')}
+        )
+        serializer.is_valid(raise_exception=True)
+        items = get_accessible_library_items_by_ids(
+            request.user,
+            serializer.validated_data['ids']
+        )
+        return Response(s.LibraryItemSerializer(items, many=True).data)

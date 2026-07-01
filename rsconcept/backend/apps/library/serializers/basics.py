@@ -4,8 +4,9 @@ from rest_framework import serializers
 from shared import messages as msg
 from shared.serializers import StrictSerializer
 
-from ..models import AccessPolicy, validate_location
+from ..models import AccessPolicy, LibraryItemType, validate_location
 from ..services.context_search import ALL_CONTEXT_FIELDS
+from ..utils import MAX_LIBRARY_ITEM_ID, MAX_LIBRARY_ITEMS_BY_IDS
 
 
 class LocationSerializer(StrictSerializer):
@@ -61,9 +62,28 @@ class LibraryContextSearchSerializer(StrictSerializer):
         help_text='Comma-separated field names'
     )
     admin = serializers.BooleanField(required=False, default=False)
+    location = serializers.CharField(required=False, allow_blank=True, default='')
+    subfolders = serializers.BooleanField(required=False, default=False)
+    item_type = serializers.CharField(required=False, allow_blank=True, default='')
 
     def validate_q(self, value: str) -> str:
         return value.strip()
+
+    def validate_location(self, value: str) -> str | None:
+        value = value.strip()
+        if not value:
+            return None
+        if not validate_location(value):
+            raise serializers.ValidationError(msg.invalidLocation())
+        return value
+
+    def validate_item_type(self, value: str) -> str | None:
+        value = value.strip()
+        if not value:
+            return None
+        if value not in LibraryItemType.values:
+            raise serializers.ValidationError(msg.invalidEnum(value))
+        return value
 
     def validate_search_fields(self, value: str) -> list[str] | None:
         if not value or not value.strip():
@@ -75,3 +95,30 @@ class LibraryContextSearchSerializer(StrictSerializer):
                 f'Unknown fields: {", ".join(unknown)}'
             )
         return parts
+
+
+class LibraryItemsByIdsSerializer(StrictSerializer):
+    ''' Serializer: library items lookup by id list. '''
+    ids = serializers.CharField(required=False, allow_blank=True, default='')
+
+    def validate_ids(self, value: str) -> list[int]:
+        value = value.strip()
+        if not value:
+            return []
+        result: list[int] = []
+        for part in value.split(','):
+            part = part.strip()
+            if not part:
+                continue
+            try:
+                parsed = int(part)
+            except ValueError as exc:
+                raise serializers.ValidationError(f'Invalid id: {part}') from exc
+            if parsed <= 0 or parsed > MAX_LIBRARY_ITEM_ID:
+                raise serializers.ValidationError(f'Invalid id: {part}')
+            result.append(parsed)
+        if len(result) > MAX_LIBRARY_ITEMS_BY_IDS:
+            raise serializers.ValidationError(
+                f'Too many ids (max {MAX_LIBRARY_ITEMS_BY_IDS})'
+            )
+        return result

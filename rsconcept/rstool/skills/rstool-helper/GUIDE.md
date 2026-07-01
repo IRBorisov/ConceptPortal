@@ -26,6 +26,7 @@
 - Диагностики: [../../docs/DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md).
 - Грамматика: [../../docs/GRAMMAR-REF.md](../../docs/GRAMMAR-REF.md).
 - REST Portal: [../../docs/PORTAL-API.md](../../docs/PORTAL-API.md).
+- Репозиторий Portal (исходники, API, nginx): [ConceptPortal на GitHub](https://github.com/IRBorisov/ConceptPortal) — карта путей в [PORTAL-API.md](../../docs/PORTAL-API.md#репозиторий-portal).
 
 ## Воркфлоу
 
@@ -52,6 +53,8 @@
 не открывай SPA и не парси HTML. Преобразуй ссылку в REST API по правилам
 [PORTAL-API.md](../../docs/PORTAL-API.md): метаданные `GET /api/rsforms/:id`,
 полная КС `GET /api/rsforms/:id/details`, версия `GET /api/library/:id/versions/:version`.
+Если id неизвестен — контекстный поиск `GET /api/library/context-search?q=...`, затем
+метаданные по найденным id: `GET /api/library/by-ids?ids=...` (curl и поля поиска — в том же файле).
 
 Portal JSON из `/details` не является форматом `exportSession` и не передаётся в
 `importSession` напрямую. Создай `createSession({ title, alias, comment: description })`

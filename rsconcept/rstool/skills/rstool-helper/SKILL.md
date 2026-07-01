@@ -26,6 +26,10 @@ Then continue with the canonical files below.
 
 Always open **GUIDE.md** first when starting a rstool task, then **REFERENCE.md** / **EXAMPLES.md** / relevant `docs/*.md` as needed.
 
+## Portal (приложение)
+
+Репозиторий: [github.com/IRBorisov/ConceptPortal](https://github.com/IRBorisov/ConceptPortal). REST и curl — `node_modules/@rsconcept/rstool/docs/PORTAL-API.md`; карта путей в исходниках — раздел «Репозиторий Portal» в том же файле.
+
 ## Quick facts
 
 - Package: `@rsconcept/rstool`; wrapper: `npx rstool-wrapper`

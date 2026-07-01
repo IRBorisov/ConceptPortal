@@ -154,3 +154,61 @@ class TestLibraryContextSearch(EndpointTester):
         response = self._search(q='AnonymousVisibleTerm')
         self.assertIn(public_schema.pk, response.data['ids'])
         self.assertNotIn(self.schema.pk, response.data['ids'])
+
+    @decl_endpoint('/api/library/context-search', method='get')
+    def test_search_filters_by_location_exact(self):
+        nested = LibraryItem.objects.create(
+            title='Nested schema',
+            alias='NST',
+            owner=self.user,
+            location=f'{LocationHead.USER}/Project'
+        )
+        Constituenta.objects.create(
+            schema=nested,
+            alias='X2',
+            term_resolved='LocationScopedTerm',
+        )
+        response = self._search(q='LocationScopedTerm', location=LocationHead.USER)
+        self.assertNotIn(nested.pk, response.data['ids'])
+
+        response = self._search(q='LocationScopedTerm', location=f'{LocationHead.USER}/Project')
+        self.assertIn(nested.pk, response.data['ids'])
+
+    @decl_endpoint('/api/library/context-search', method='get')
+    def test_search_filters_by_location_with_subfolders(self):
+        nested = LibraryItem.objects.create(
+            title='Nested schema',
+            alias='NST',
+            owner=self.user,
+            location=f'{LocationHead.USER}/Project'
+        )
+        Constituenta.objects.create(
+            schema=nested,
+            alias='X2',
+            term_resolved='LocationScopedTerm',
+        )
+        response = self._search(
+            q='LocationScopedTerm',
+            location=LocationHead.USER,
+            subfolders='1'
+        )
+        self.assertIn(nested.pk, response.data['ids'])
+
+    @decl_endpoint('/api/library/context-search', method='get')
+    def test_search_filters_by_item_type(self):
+        response = self._search(q='OperationUniqueTitle', item_type='rsform')
+        self.assertNotIn(self.oss.pk, response.data['ids'])
+
+        response = self._search(q='OperationUniqueTitle', search_fields='operation', item_type='oss')
+        self.assertIn(self.oss.pk, response.data['ids'])
+        self.assertNotIn(self.schema.pk, response.data['ids'])
+
+    @decl_endpoint('/api/library/context-search', method='get')
+    def test_search_rejects_invalid_location(self):
+        response = self.client.get(self.endpoint_search, {'q': 'test', 'location': 'bad-path'})
+        self.assertEqual(response.status_code, 400)
+
+    @decl_endpoint('/api/library/context-search', method='get')
+    def test_search_rejects_invalid_item_type(self):
+        response = self.client.get(self.endpoint_search, {'q': 'test', 'item_type': 'unknown'})
+        self.assertEqual(response.status_code, 400)

@@ -39,12 +39,16 @@ def get_accessible_items_queryset(user, *, all_items: bool = False) -> QuerySet[
     ).distinct()
 
 
+# pylint: disable=too-many-arguments
 def search_library_context(
     user,
     query: str,
     *,
     fields: Optional[Iterable[str]] = None,
-    all_items: bool = False
+    all_items: bool = False,
+    location: Optional[str] = None,
+    subfolders: bool = False,
+    item_type: Optional[str] = None,
 ) -> list[int]:
     ''' Return library item ids whose nested text matches *query*. '''
     normalized_query = query.strip()
@@ -55,7 +59,12 @@ def search_library_context(
     if not active_fields:
         return []
 
-    accessible = get_accessible_items_queryset(user, all_items=all_items)
+    accessible = _apply_search_filters(
+        get_accessible_items_queryset(user, all_items=all_items),
+        location=location,
+        subfolders=subfolders,
+        item_type=item_type,
+    )
     matching_ids: set[int] = set()
 
     item_text_fields = _library_item_text_fields(active_fields)
@@ -131,6 +140,34 @@ def search_library_context(
         )
 
     return sorted(matching_ids)
+
+
+def get_accessible_library_items_by_ids(user, ids: list[int]) -> list[LibraryItem]:
+    ''' Return accessible library items for *ids*, preserving request order. '''
+    if not ids:
+        return []
+    accessible = get_accessible_items_queryset(user).filter(pk__in=ids)
+    items_by_id = {item.pk: item for item in accessible}
+    return [items_by_id[pk] for pk in ids if pk in items_by_id]
+
+
+def _apply_search_filters(
+    queryset: QuerySet[LibraryItem],
+    *,
+    location: Optional[str] = None,
+    subfolders: bool = False,
+    item_type: Optional[str] = None,
+) -> QuerySet[LibraryItem]:
+    if item_type:
+        queryset = queryset.filter(item_type=item_type)
+    if location:
+        if subfolders:
+            queryset = queryset.filter(
+                Q(location=location) | Q(location__startswith=f'{location}/')
+            )
+        else:
+            queryset = queryset.filter(location=location)
+    return queryset
 
 
 def _normalize_fields(fields: Optional[Iterable[str]]) -> set[str]:

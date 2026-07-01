@@ -3,6 +3,7 @@
 from .basics import (
     AccessPolicySerializer,
     LibraryContextSearchSerializer,
+    LibraryItemsByIdsSerializer,
     LocationSerializer,
     RenameLocationSerializer
 )
