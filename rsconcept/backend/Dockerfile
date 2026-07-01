@@ -69,6 +69,7 @@ COPY --from=builder /opt/venv $VIRTUAL_ENV
 
 # Copy application sources and setup permissions
 WORKDIR $APP_HOME
+COPY pyproject.toml ./
 COPY project/ ./project
 COPY shared/ ./shared
 COPY fixtures/ ./fixtures

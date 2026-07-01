@@ -1,6 +1,6 @@
 [project]
 name = "rsconcept-backend"
-version = "0.1.0"
+version = "1.0.0"
 description = "Django backend for the Portal application."
 requires-python = ">=3.12,<3.13"
 dependencies = [
@@ -15,6 +15,7 @@ dependencies = [
     "drf-spectacular-sidecar==2026.4.1",
     "gunicorn==25.3.0",
     "psycopg2-binary==2.9.11",
+    "sentry-sdk[django]>=2.64.0",
     "tzdata==2026.1",
 ]
 

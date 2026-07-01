@@ -17,7 +17,7 @@ from apps.rsform.serializers.io_files import (
 from shared.serializers import (
     PortalImportJsonMetadataSerializer,
     StrictModelSerializer,
-    StrictSerializer,
+    StrictSerializer
 )
 
 from ..models import ConstituentData, RSModel

@@ -13,8 +13,10 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import logging
 import os
 import sys
+import tomllib
 from pathlib import Path
 
+import sentry_sdk
 from corsheaders.defaults import default_headers
 from django.core.exceptions import ImproperlyConfigured
 
@@ -33,6 +35,25 @@ def _get_bool(key: str, default: bool) -> bool:
 
 def _get_list(key: str, default: str) -> list[str]:
     return [value for value in os.environ.get(key, default).split(';') if value]
+
+
+def _get_float(key: str, default: float) -> float:
+    return float(os.environ.get(key, default))
+
+
+def _get_sentry_release() -> str | None:
+    env_release = os.environ.get('SENTRY_RELEASE')
+    if env_release:
+        return env_release
+    pyproject_path = BASE_DIR / 'pyproject.toml'
+    if not pyproject_path.is_file():
+        return None
+    with pyproject_path.open('rb') as pyproject_file:
+        pyproject = tomllib.load(pyproject_file)
+    version = pyproject['project']['version']
+    if not isinstance(version, str):
+        raise ImproperlyConfigured('pyproject.toml project.version must be a string')
+    return version
 
 
 _TRUE_VARIANTS = [True, 'True', '1']
@@ -67,6 +88,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = _get_bool('DEBUG', IS_SAFE_LOCAL_CONTEXT)
 
+SENTRY_DSN = _get_secret('SENTRY_DSN', '')
+SENTRY_ENABLED = _get_bool('SENTRY_ENABLED', False)
+SENTRY_ENVIRONMENT = os.environ.get('SENTRY_ENVIRONMENT', 'production')
+SENTRY_RELEASE = _get_sentry_release()
+SENTRY_TRACES_SAMPLE_RATE = _get_float('SENTRY_TRACES_SAMPLE_RATE', 0.1)
+SENTRY_SEND_DEFAULT_PII = _get_bool('SENTRY_SEND_DEFAULT_PII', True)
+SENTRY_ENABLE_LOGS = _get_bool('SENTRY_ENABLE_LOGS', True)
+
 ALLOWED_HOSTS = _get_list(
     'ALLOWED_HOSTS',
     'localhost;127.0.0.1;[::1]' if DEBUG else ''
@@ -83,6 +112,24 @@ if not SECRET_KEY:
         SECRET_KEY = 'local-dev-secret-key-not-for-production'
     else:
         raise ImproperlyConfigured('SECRET_KEY must be configured when DEBUG is disabled')
+
+if (
+    SENTRY_ENABLED
+    and SENTRY_DSN
+    and not DEBUG
+    and not IS_TESTING
+    and not IS_STATIC_ANALYSIS
+    and not IS_SAFE_LOCAL_CONTEXT
+):
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        environment=SENTRY_ENVIRONMENT,
+        release=SENTRY_RELEASE,
+        send_default_pii=SENTRY_SEND_DEFAULT_PII,
+        traces_sample_rate=SENTRY_TRACES_SAMPLE_RATE,
+        enable_logs=SENTRY_ENABLE_LOGS,
+        debug=_get_bool('SENTRY_DEBUG', False),
+    )
 
 # MAIL SETUP
 EMAIL_HOST = _get_secret('EMAIL_HOST', '')
