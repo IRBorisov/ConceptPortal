@@ -8,10 +8,14 @@ import { useTx } from '@/i18n';
 import { CheckboxTristate } from '../input';
 
 interface SelectAllProps<TData> {
+  /** TanStack table instance. */
   table: Table<TData>;
+
+  /** Clears shift-click range selection anchor. */
   resetLastSelected: () => void;
 }
 
+/** Tri-state checkbox that toggles selection of all rows on the current page. */
 export function SelectAll<TData>({ table, resetLastSelected }: SelectAllProps<TData>) {
   const tx = useTx();
   function handleChange(value: boolean | null) {

@@ -9,11 +9,17 @@ import { SelectAll } from './select-all';
 import { SortingIcon } from './sorting-icon';
 
 interface TableHeaderProps<TData> {
+  /** TanStack table instance. */
   table: Table<TData>;
+
+  /** Skips CSS variable-based column width calculation. */
   skipWidthCalculation?: boolean;
+
+  /** Clears shift-click range selection anchor. */
   resetLastSelected: () => void;
 }
 
+/** Sticky table header with sort controls and optional select-all checkbox. */
 export function TableHeader<TData>({ table, skipWidthCalculation, resetLastSelected }: TableHeaderProps<TData>) {
   const { darkMode } = usePreferencesStore();
   const backgroundColor = darkMode

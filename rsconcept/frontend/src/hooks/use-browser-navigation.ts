@@ -4,6 +4,7 @@ import { useAppTransitionStore } from '@/stores/app-transition';
 
 const DELAY_CACHE_CHECK = 100; // ms
 
+/** Syncs app transition state with browser back/forward navigation (`popstate`). */
 export function useBrowserNavigation() {
   const start = useAppTransitionStore(state => state.startNavigation);
   const end = useAppTransitionStore(state => state.endNavigation);

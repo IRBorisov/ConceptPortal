@@ -9,22 +9,27 @@ type DialogProps = Omit<React.ComponentProps<typeof DialogPrimitive.Root>, 'chil
   children?: React.ReactNode;
 };
 
+/** Root dialog primitive; controls open state and modal behavior. */
 function Dialog({ ...props }: DialogProps) {
   return <DialogPrimitive.Root data-slot='dialog' {...props} />;
 }
 
+/** Element that opens the dialog when activated. */
 function DialogTrigger({ ...props }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
   return <DialogPrimitive.Trigger data-slot='dialog-trigger' {...props} />;
 }
 
+/** Renders dialog content into a portal outside the DOM hierarchy. */
 function DialogPortal({ ...props }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
   return <DialogPrimitive.Portal data-slot='dialog-portal' {...props} />;
 }
 
+/** Button or control that closes the dialog. */
 function DialogClose({ ...props }: React.ComponentProps<typeof DialogPrimitive.Close>) {
   return <DialogPrimitive.Close data-slot='dialog-close' {...props} />;
 }
 
+/** Semi-transparent backdrop behind the dialog panel. */
 function DialogOverlay({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Backdrop>) {
   return (
     <DialogPrimitive.Backdrop
@@ -38,6 +43,7 @@ function DialogOverlay({ className, ...props }: React.ComponentProps<typeof Dial
   );
 }
 
+/** Centered dialog panel with overlay, close button, and enter/exit animation. */
 function DialogContent({ className, children, ...props }: React.ComponentProps<typeof DialogPrimitive.Popup>) {
   return (
     <DialogPortal data-slot='dialog-portal'>
@@ -60,6 +66,7 @@ function DialogContent({ className, children, ...props }: React.ComponentProps<t
   );
 }
 
+/** Top section of dialog content (title and description). */
 function DialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
@@ -70,6 +77,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
+/** Bottom section of dialog content (action buttons). */
 function DialogFooter({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
@@ -80,6 +88,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
+/** Accessible dialog title announced to screen readers. */
 function DialogTitle({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Title>) {
   return (
     <DialogPrimitive.Title
@@ -90,6 +99,7 @@ function DialogTitle({ className, ...props }: React.ComponentProps<typeof Dialog
   );
 }
 
+/** Accessible dialog description announced to screen readers. */
 function DialogDescription({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Description>) {
   return (
     <DialogPrimitive.Description

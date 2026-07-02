@@ -7,6 +7,7 @@ interface ButtonProps extends Control, ButtonStyle {
   /** Icon to display first. */
   icon?: React.ReactNode;
 
+  /** Renders with submit-button accent color. */
   colorSubmit?: boolean;
 
   /** Text to display second. */

@@ -2,14 +2,17 @@ import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 
 import { cn } from '../utils';
 
+/** Root popover primitive; controls open state and anchor pairing. */
 function Popover(props: React.ComponentProps<typeof PopoverPrimitive.Root>) {
   return <PopoverPrimitive.Root data-slot='popover' {...props} />;
 }
 
+/** Element that toggles the popover when activated. */
 function PopoverTrigger(props: React.ComponentProps<typeof PopoverPrimitive.Trigger>) {
   return <PopoverPrimitive.Trigger data-slot='popover-trigger' {...props} />;
 }
 
+/** Portaled floating panel positioned relative to the trigger. */
 function PopoverContent({
   className,
   align = 'center',
@@ -44,6 +47,7 @@ function PopoverContent({
   );
 }
 
+/** Optional positioning anchor when the trigger is not the alignment target. */
 function PopoverAnchor(props: React.ComponentProps<'div'>) {
   return <div data-slot='popover-anchor' {...props} />;
 }

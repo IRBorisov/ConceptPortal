@@ -9,13 +9,16 @@ import { isResponseHtml } from '@/utils/utils';
 
 import { PrettyJson } from './view';
 
+/** Supported error shapes for {@link DescribeError} and {@link InfoError}. */
 export type ErrorData = string | Error | AxiosError | ZodError;
 
-interface InfoErrorProps {
+interface DescribeErrorProps {
+  /** Error to describe in human-readable form. */
   error: ErrorData;
 }
 
-export function DescribeError({ error }: { error: ErrorData }) {
+/** Renders a human-readable description for API, validation, and generic errors. */
+export function DescribeError({ error }: DescribeErrorProps) {
   const tx = useTx();
   if (!error) {
     return <p>{tx('tx.shell.error.none')}</p>;
@@ -96,7 +99,8 @@ export function DescribeError({ error }: { error: ErrorData }) {
   );
 }
 
-export function InfoError({ error }: InfoErrorProps) {
+/** Displays an error panel with user guidance and a detailed {@link DescribeError} section. */
+export function InfoError({ error }: DescribeErrorProps) {
   const tx = useTx();
   return (
     <div

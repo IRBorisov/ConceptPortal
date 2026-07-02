@@ -12,26 +12,47 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { cn } from '../utils';
 
 interface ComboMultiPropsBase<Option> extends Styling {
+  /** Id of the trigger button. */
   id?: string;
+
+  /** Options available for selection. */
   items?: Option[];
+
+  /** Currently selected options. */
   value: Option[];
 
+  /** Stable string key for each option. */
   idFunc: (item: Option) => string;
+
+  /** Label shown on each selected chip in the trigger. */
   labelValueFunc: (item: Option) => string;
+
+  /** Label shown for each option in the dropdown list. */
   labelOptionFunc: (item: Option) => string;
 
+  /** Disables interaction with the control. */
   disabled?: boolean;
+
+  /** Placeholder text when no values are selected. */
   placeholder?: string;
+
+  /** Disables the search input inside the dropdown. */
   noSearch?: boolean;
 }
 
 interface ComboMultiPropsFull<Option> extends ComboMultiPropsBase<Option> {
+  /** Called with the full selection array on add, remove, or clear. */
   onChange: (newValue: Option[]) => void;
 }
 
 interface ComboMultiPropsSplit<Option> extends ComboMultiPropsBase<Option> {
+  /** Called when all selections are cleared. */
   onClear: () => void;
+
+  /** Called when an option is added to the selection. */
   onAdd: (item: Option) => void;
+
+  /** Called when an option is removed from the selection. */
   onRemove: (item: Option) => void;
 }
 

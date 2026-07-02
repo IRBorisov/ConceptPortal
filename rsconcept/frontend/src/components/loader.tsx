@@ -1,5 +1,6 @@
 'use client';
 
+/** Visual style of the {@link Loader} spinner. */
 export type LoaderVariant = 'dots' | 'circular' | 'ring';
 
 interface LoaderProps {

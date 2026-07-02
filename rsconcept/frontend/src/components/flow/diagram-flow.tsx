@@ -20,13 +20,29 @@ type DiagramFlowProps<NodeType extends Node = Node, EdgeType extends Edge = Edge
   'height'
 > & {
   children?: ReactNode;
+
+  /** Canvas height (number in px or CSS length). */
   height?: number | string;
+
+  /** Renders a dot grid background. */
   showGrid?: boolean;
+
+  /** Dot grid spacing in pixels when {@link showGrid} is enabled. */
   gridSize?: number;
+
+  /** Keyboard handler on the focusable wrapper (runs before internal Space-pan logic). */
   onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+
+  /** Keyboard handler on the focusable wrapper (runs after internal Space-pan logic). */
   onKeyUp?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
 };
 
+/**
+ * React Flow wrapper with Space-to-pan mode, tooltip suppression while dragging, and optional grid.
+ *
+ * @remarks
+ * Extends {@link ReactFlowProps}; all standard React Flow callbacks and options are supported.
+ */
 export function DiagramFlow<NodeType extends Node = Node, EdgeType extends Edge = Edge>({
   children,
   className,

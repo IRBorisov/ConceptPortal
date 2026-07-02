@@ -3,9 +3,11 @@
 import { flexRender, type Header, type HeaderGroup, type Table } from '@tanstack/react-table';
 
 interface TableFooterProps<TData> {
+  /** TanStack table instance. */
   table: Table<TData>;
 }
 
+/** Renders column footer cells from TanStack column definitions. */
 export function TableFooter<TData>({ table }: TableFooterProps<TData>) {
   return (
     <tfoot>

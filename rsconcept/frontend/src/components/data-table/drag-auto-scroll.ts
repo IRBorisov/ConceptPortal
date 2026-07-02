@@ -1,6 +1,7 @@
 const EDGE_THRESHOLD_PX = 48;
 const MAX_SCROLL_STEP_PX = 18;
 
+/** Finds the nearest scrollable ancestor of an element. */
 export function resolveScrollContainer(element: HTMLElement | null): HTMLElement | null {
   let current = element;
   while (current) {
@@ -16,6 +17,7 @@ export function resolveScrollContainer(element: HTMLElement | null): HTMLElement
   return null;
 }
 
+/** Temporarily disables CSS scroll-snap on a container and its table rows during drag. */
 export function disableScrollSnap(container: HTMLElement): void {
   container.style.scrollSnapType = 'none';
   container.querySelectorAll('.cc-scroll-row').forEach(row => {
@@ -23,6 +25,7 @@ export function disableScrollSnap(container: HTMLElement): void {
   });
 }
 
+/** Restores CSS scroll-snap after row drag ends. */
 export function restoreScrollSnap(container: HTMLElement): void {
   container.style.scrollSnapType = '';
   container.querySelectorAll('.cc-scroll-row').forEach(row => {
@@ -30,8 +33,15 @@ export function restoreScrollSnap(container: HTMLElement): void {
   });
 }
 
+/** Vertical scroll direction: up (-1), none (0), or down (1). */
 export type ScrollDirection = -1 | 0 | 1;
 
+/**
+ * Determines scroll direction from the pointer Y position relative to container edges.
+ *
+ * @param container - Scrollable element.
+ * @param clientY - Pointer Y coordinate in viewport pixels.
+ */
 export function getScrollDirection(container: HTMLElement, clientY: number): ScrollDirection {
   const { top, bottom } = container.getBoundingClientRect();
   if (clientY < top || clientY > bottom) {
@@ -50,6 +60,13 @@ export function getScrollDirection(container: HTMLElement, clientY: number): Scr
   return 0;
 }
 
+/**
+ * Scrolls a container when dragging near its top or bottom edge.
+ *
+ * @param container - Scrollable element.
+ * @param clientY - Pointer Y coordinate in viewport pixels.
+ * @param direction - Scroll direction from {@link getScrollDirection}.
+ */
 export function scrollOnDragOver(container: HTMLElement, clientY: number, direction: ScrollDirection): void {
   const { top, bottom } = container.getBoundingClientRect();
   const distanceFromTop = clientY - top;
@@ -73,6 +90,12 @@ export function scrollOnDragOver(container: HTMLElement, clientY: number, direct
   }
 }
 
+/**
+ * Returns a Y coordinate inside the container edge zone for synthetic drag-over events.
+ *
+ * @param container - Scrollable element.
+ * @param direction - Target edge direction.
+ */
 export function getEdgeClientY(container: HTMLElement, direction: ScrollDirection): number {
   const { top, bottom } = container.getBoundingClientRect();
   if (direction < 0) {

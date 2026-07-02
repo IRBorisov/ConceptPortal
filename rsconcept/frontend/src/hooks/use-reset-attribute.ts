@@ -4,6 +4,12 @@ import { useEffect } from 'react';
 
 import { PARAMETER } from '@/utils/constants';
 
+/**
+ * Forces react-tooltip to re-scan elements inside a container after mount or tab visibility change.
+ *
+ * @param elementRef - Root element whose descendants carry tooltip attributes.
+ * @param attribute - Tooltip attribute to reset (typically `data-tooltip-id`).
+ */
 export function useResetAttribute(elementRef: React.RefObject<HTMLElement | null>, attribute: string) {
   useEffect(
     function forceResetAttribute() {

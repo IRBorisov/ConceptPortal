@@ -28,7 +28,13 @@ const documentMetadata = {
     'See http://scripts.sil.org/OFL for full terms.'
 };
 
-export function CDocument({ children }: { children: React.ReactNode }) {
+interface CDocumentProps {
+  /** PDF page content rendered inside a landscape A4 page. */
+  children: React.ReactNode;
+}
+
+/** Root PDF document with registered Portal fonts and landscape A4 layout. */
+export function CDocument({ children }: CDocumentProps) {
   return (
     <Document {...documentMetadata}>
       <Page size='A4' orientation='landscape' style={pdfs.page}>

@@ -7,14 +7,17 @@ import { globalIDs } from '@/utils/constants';
 
 import { cn } from '../utils';
 
+/** Root select primitive; controls open state and selected value. */
 const Select = SelectPrimitive.Root;
 
+/** Displays the selected option label inside a {@link SelectTrigger}. */
 function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
   return (
     <SelectPrimitive.Value data-slot='select-value' className={cn('flex flex-1 text-left', className)} {...props} />
   );
 }
 
+/** Button that opens the select dropdown and shows the current value. */
 function SelectTrigger({
   className,
   children,
@@ -49,6 +52,7 @@ function SelectTrigger({
   );
 }
 
+/** Portaled dropdown list with scroll buttons and configurable positioning. */
 function SelectContent({
   className,
   children,
@@ -92,6 +96,7 @@ function SelectContent({
   );
 }
 
+/** Non-interactive label for a group of {@link SelectItem} options. */
 function SelectLabel({ className, ...props }: SelectPrimitive.GroupLabel.Props) {
   return (
     <SelectPrimitive.GroupLabel
@@ -102,6 +107,7 @@ function SelectLabel({ className, ...props }: SelectPrimitive.GroupLabel.Props) 
   );
 }
 
+/** Single selectable option inside {@link SelectContent}. */
 function SelectItem({ className, children, title, ...props }: React.ComponentProps<typeof SelectPrimitive.Item>) {
   return (
     <SelectPrimitive.Item
@@ -126,6 +132,7 @@ function SelectItem({ className, children, title, ...props }: React.ComponentPro
   );
 }
 
+/** Scroll-up affordance shown when the option list overflows. */
 function SelectScrollUpButton({ className, ...props }: React.ComponentProps<typeof SelectPrimitive.ScrollUpArrow>) {
   return (
     <SelectPrimitive.ScrollUpArrow
@@ -138,6 +145,7 @@ function SelectScrollUpButton({ className, ...props }: React.ComponentProps<type
   );
 }
 
+/** Scroll-down affordance shown when the option list overflows. */
 function SelectScrollDownButton({ className, ...props }: React.ComponentProps<typeof SelectPrimitive.ScrollDownArrow>) {
   return (
     <SelectPrimitive.ScrollDownArrow

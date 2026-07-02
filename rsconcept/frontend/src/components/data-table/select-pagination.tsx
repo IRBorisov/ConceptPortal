@@ -12,13 +12,23 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { cn } from '../utils';
 
 interface SelectPaginationProps<TData> {
+  /** Id of the per-page select trigger. */
   id?: string;
+
+  /** TanStack table instance. */
   table: Table<TData>;
+
+  /** Available page-size options. */
   paginationOptions: readonly number[];
+
+  /** Called when the user picks a new page size. */
   onChange?: (newValue: number) => void;
+
+  /** Additional CSS class name(s) for the trigger. */
   className?: string;
 }
 
+/** Dropdown to change the number of rows per page. */
 export function SelectPagination<TData>({
   id,
   table,

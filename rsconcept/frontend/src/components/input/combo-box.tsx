@@ -13,19 +13,40 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { cn } from '../utils';
 
 interface ComboBoxProps<Option> extends Styling {
+  /** Id of the trigger button. */
   id?: string;
+
+  /** Options to choose from. */
   items?: readonly Option[];
+
+  /** Currently selected option, or `null` when empty. */
   value: Option | null;
+
+  /** Called when the selection changes. */
   onChange: (newValue: Option | null) => void;
 
+  /** Stable string key for each option. */
   idFunc: (item: Option) => string;
+
+  /** Label shown in the trigger when an option is selected. */
   labelValueFunc: (item: Option) => string;
+
+  /** Label shown for each option in the dropdown list. */
   labelOptionFunc: (item: Option) => string;
 
+  /** Placeholder text when no value is selected. */
   placeholder?: string;
+
+  /** Hides the trigger while closed (popover can still open programmatically). */
   hidden?: boolean;
+
+  /** Renders the trigger without a border. */
   noBorder?: boolean;
+
+  /** Shows a clear button to reset the value to `null`. */
   clearable?: boolean;
+
+  /** Disables the search input inside the dropdown. */
   noSearch?: boolean;
 }
 

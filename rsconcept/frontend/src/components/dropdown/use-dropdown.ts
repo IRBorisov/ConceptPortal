@@ -2,6 +2,14 @@
 
 import { useRef, useState } from 'react';
 
+/**
+ * Manages open/close state for a dropdown container with blur-safe dismissal.
+ *
+ * @remarks
+ * Keeps the menu open when focus moves into a portaled popover (e.g. {@link ComboBox}).
+ *
+ * @returns Ref to attach to the dropdown root, visibility state, and toggle/hide handlers.
+ */
 export function useDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const elementRef = useRef<HTMLDivElement>(null);

@@ -25,6 +25,7 @@ function useCommandContext(componentName: string) {
   return context;
 }
 
+/** Searchable command list root; provides query state to child items. */
 function Command({ className, ...props }: React.ComponentProps<'div'>) {
   const [query, setQuery] = useState('');
   const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
@@ -76,15 +77,21 @@ function Command({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
+type CommandDialogProps = React.ComponentProps<typeof Dialog> & {
+  /** Accessible title for the command palette dialog. */
+  title?: string;
+
+  /** Accessible description for the command palette dialog. */
+  description?: string;
+};
+
+/** Full-screen command palette rendered inside a {@link Dialog}. */
 function CommandDialog({
   title = 'Command Palette',
   description = 'Search for a command to run...',
   children,
   ...props
-}: React.ComponentProps<typeof Dialog> & {
-  title?: string;
-  description?: string;
-}) {
+}: CommandDialogProps) {
   return (
     <Dialog {...props}>
       <DialogHeader className='sr-only'>
@@ -101,9 +108,11 @@ function CommandDialog({
 }
 
 type CommandInputProps = Omit<React.ComponentProps<'input'>, 'onChange'> & {
+  /** Called when the search query changes. */
   onValueChange?: (value: string) => void;
 };
 
+/** Search input wired to the parent {@link Command} query state. */
 function CommandInput({ className, onValueChange, value, defaultValue, ...props }: CommandInputProps) {
   const { query, setQuery } = useCommandContext('CommandInput');
 
@@ -133,6 +142,7 @@ function CommandInput({ className, onValueChange, value, defaultValue, ...props 
   );
 }
 
+/** Scrollable list container for {@link CommandItem} children. */
 function CommandList({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
@@ -143,6 +153,7 @@ function CommandList({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
+/** Placeholder shown when no {@link CommandItem} matches the current query. */
 function CommandEmpty({ className, ...props }: React.ComponentProps<'div'>) {
   const { hasVisibleItems } = useCommandContext('CommandEmpty');
   if (hasVisibleItems) {
@@ -151,6 +162,7 @@ function CommandEmpty({ className, ...props }: React.ComponentProps<'div'>) {
   return <div data-slot='command-empty' className={cn('py-6 text-center text-sm', className)} {...props} />;
 }
 
+/** Visual group of related {@link CommandItem} options. */
 function CommandGroup({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
@@ -164,15 +176,20 @@ function CommandGroup({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
+/** Horizontal rule separating command groups. */
 function CommandSeparator({ className, ...props }: React.ComponentProps<'div'>) {
   return <div data-slot='command-separator' className={cn('bg-border -mx-1 h-px', className)} {...props} />;
 }
 
 type CommandItemProps = Omit<React.ComponentProps<'button'>, 'value' | 'onSelect'> & {
+  /** Text used for client-side filtering against the command query. */
   value?: string;
+
+  /** Called when the item is selected (clicked or activated). */
   onSelect?: (value: string) => void;
 };
 
+/** Selectable command entry; hidden when it does not match the query. */
 function CommandItem({ className, value, disabled, onSelect, onClick, children, ...props }: CommandItemProps) {
   const { query, registerItem, unregisterItem } = useCommandContext('CommandItem');
   const itemId = useId();
@@ -217,6 +234,7 @@ function CommandItem({ className, value, disabled, onSelect, onClick, children, 
   );
 }
 
+/** Keyboard shortcut hint displayed at the end of a {@link CommandItem}. */
 function CommandShortcut({ className, ...props }: React.ComponentProps<'span'>) {
   return (
     <span

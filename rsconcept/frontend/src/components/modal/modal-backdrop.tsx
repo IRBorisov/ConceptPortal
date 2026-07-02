@@ -1,9 +1,11 @@
 'use client';
 
 interface ModalBackdropProps {
+  /** Called when the backdrop is clicked. */
   onHide?: () => void;
 }
 
+/** Blurred overlay behind a modal; clicking it invokes {@link onHide}. */
 export function ModalBackdrop({ onHide }: ModalBackdropProps) {
   return (
     <>

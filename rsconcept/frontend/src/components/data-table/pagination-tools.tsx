@@ -11,12 +11,20 @@ import { IconPageFirst, IconPageLast, IconPageLeft, IconPageRight } from '../ico
 import { SelectPagination } from './select-pagination';
 
 interface PaginationToolsProps<TData> {
+  /** Id prefix for page and per-page controls. */
   id?: string;
+
+  /** TanStack table instance. */
   table: Table<TData>;
+
+  /** Available page-size options. */
   paginationOptions: readonly number[];
+
+  /** Called when the user changes rows per page. */
   onChangePaginationOption?: (newValue: number) => void;
 }
 
+/** Pagination bar with range label, page navigation, and per-page selector. */
 export function PaginationTools<TData>({
   id,
   table,

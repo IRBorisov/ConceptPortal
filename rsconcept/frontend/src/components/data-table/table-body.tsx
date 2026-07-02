@@ -11,22 +11,44 @@ import { TableRow } from './table-row';
 import { type IConditionalStyle } from './use-data-table';
 
 interface TableBodyProps<TData> {
+  /** TanStack table instance. */
   table: Table<TData>;
+
+  /** Minimal row padding. */
   dense?: boolean;
+
+  /** Hides the header row (affects column width calculation). */
   noHeader?: boolean;
+
+  /** Skips CSS variable-based column width calculation. */
   skipWidthCalculation?: boolean;
+
+  /** Conditional styles applied per row. */
   conditionalRowStyles?: IConditionalStyle<TData>[];
 
+  /** Id of the last row selected (for shift-click range selection). */
   lastSelected: string | null;
+
+  /** Updates the last-selected row id. */
   onChangeLastSelected: (newValue: string | null) => void;
 
+  /** Single-click row handler. */
   onRowClicked?: (rowData: TData, event: React.MouseEvent<Element>) => void;
+
+  /** Double-click row handler. */
   onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element>) => void;
+
+  /** Enables HTML5 drag-and-drop row reordering. */
   enableRowReordering?: boolean;
+
+  /** Called when rows are dropped in a new order. */
   onRowsReordered?: (event: DataTableRowDrop<TData>) => void;
+
+  /** Ref to the scroll container used for drag auto-scroll. */
   scrollContainerRef: RefObject<HTMLElement | null>;
 }
 
+/** Renders table body rows with selection, styling, and optional drag reordering. */
 export function TableBody<TData>({
   table,
   dense,

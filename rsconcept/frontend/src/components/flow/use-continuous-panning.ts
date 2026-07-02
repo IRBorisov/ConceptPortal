@@ -2,9 +2,16 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useReactFlow } from '@xyflow/react';
 
 interface PanOptions {
+  /** Pixels to pan per animation frame for each held key. */
   panSpeed: number;
 }
 
+/**
+ * Enables WASD keyboard panning on a focusable React Flow container.
+ *
+ * @param ref - Focusable element that receives key events.
+ * @param options - Pan speed configuration.
+ */
 export function useContinuousPan(
   ref: React.RefObject<HTMLDivElement | null>,
   options: PanOptions = {

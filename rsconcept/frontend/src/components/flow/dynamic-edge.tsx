@@ -4,6 +4,7 @@ import { PARAMETER } from '@/utils/constants';
 
 const RADIUS = PARAMETER.graphNodeRadius + PARAMETER.graphNodePadding;
 
+/** Straight edge clipped to node boundaries; hidden when nodes are too close. */
 export function DynamicEdge({ id, markerEnd, style, ...props }: EdgeProps) {
   const sourceY = props.sourceY - PARAMETER.graphNodeRadius - PARAMETER.graphHandleSize;
   const targetY = props.targetY + PARAMETER.graphNodeRadius + PARAMETER.graphHandleSize;

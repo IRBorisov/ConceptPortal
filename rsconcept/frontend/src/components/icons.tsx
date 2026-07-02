@@ -194,20 +194,34 @@ export { LuCircleDashed   as IconAnimation }      from 'react-icons/lu';
 export { LuCircle         as IconAnimationOff }   from 'react-icons/lu';
 
 // ===== Custom elements ======
+
+/** Common props for Portal custom SVG icons. */
+export interface IconProps {
+  /** SVG width and height (CSS length). */
+  size?: string;
+
+  /** Additional CSS class name(s). */
+  className?: string;
+}
+
+/** Props for icons that render differently per domain value. */
 export interface DomIconProps<RequestData> extends IconProps {
+  /** Domain value that determines icon appearance. */
   value: RequestData;
 }
 
 interface IconSVGProps {
+  /** SVG viewBox attribute. */
   viewBox: string;
-  size?: string;
-  className?: string;
-  props?: React.SVGProps<SVGSVGElement>;
-}
 
-export interface IconProps {
+  /** SVG width and height (CSS length). */
   size?: string;
+
+  /** Additional CSS class name(s). */
   className?: string;
+
+  /** Extra props forwarded to the root SVG element. */
+  props?: React.SVGProps<SVGSVGElement>;
 }
 
 function MetaIconSVG({ viewBox, size = '1.5rem', props, className, children }: React.PropsWithChildren<IconSVGProps>) {
@@ -218,6 +232,7 @@ function MetaIconSVG({ viewBox, size = '1.5rem', props, className, children }: R
   );
 }
 
+/** Help manuals navigation icon. */
 export function IconManuals(props: IconProps) {
   return (
     <MetaIconSVG viewBox='0 0 20 20' {...props}>
@@ -226,6 +241,7 @@ export function IconManuals(props: IconProps) {
   );
 }
 
+/** Login / sign-in icon. */
 export function IconLogin(props: IconProps) {
   return (
     <MetaIconSVG viewBox='0 0 24 24' {...props}>
@@ -236,6 +252,7 @@ export function IconLogin(props: IconProps) {
 }
 
 
+/** Checkmark glyph used inside tri-state checkbox controls. */
 export function CheckboxChecked() {
   return (
     <svg className='w-4 h-4 p-0.75 -ml-0.25 -mt-0.25' viewBox='0 0 512 512' fill='#ffffff'>
@@ -244,6 +261,7 @@ export function CheckboxChecked() {
   );
 }
 
+/** Indeterminate (null) glyph used inside tri-state checkbox controls. */
 export function CheckboxNull() {
   return (
     <svg className='w-4 h-4 px-0.25 -ml-0.25 -mt-0.25' viewBox='0 0 16 16' fill='#ffffff'>

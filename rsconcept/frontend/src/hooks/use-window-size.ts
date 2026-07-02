@@ -4,6 +4,11 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { PARAMETER } from '@/utils/constants';
 
+/**
+ * Tracks viewport width and height, and whether the layout is below the small-screen breakpoint.
+ *
+ * @returns `{ width, height, isSmall }` — dimensions are `undefined` during SSR.
+ */
 export function useWindowSize() {
   const isClient = typeof window === 'object';
 

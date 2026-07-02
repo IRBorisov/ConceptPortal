@@ -23,8 +23,12 @@ import { type IConditionalStyle, useDataTable } from './use-data-table';
 
 export { createColumnHelper, type RowSelectionState, type VisibilityState };
 
+/** Payload emitted when rows are reordered via drag-and-drop. */
 export interface DataTableRowDrop<TData extends RowData> {
+  /** Rows that were dragged. */
   draggedRows: TData[];
+
+  /** Row after which the dragged rows were inserted, or `null` for the start. */
   afterRow: TData | null;
 }
 

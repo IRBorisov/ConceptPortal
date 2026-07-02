@@ -21,6 +21,11 @@ function isNodeInView(node: Node, viewport: { x: number; y: number; zoom: number
   return !(nodeRight < viewLeft || nodeLeft > viewRight || nodeBottom < viewTop || nodeTop > viewBottom);
 }
 
+/**
+ * Returns a callback that scrolls the viewport to a node when it is outside the visible area.
+ *
+ * @returns `scrollToNode(nodeId, opts?)` — no-op when the node is missing or already in view.
+ */
 export function useScrollToNode() {
   const { getNode, getViewport, fitView } = useReactFlow();
 

@@ -22,13 +22,16 @@ import { useModalPlacement } from './use-modal-placement';
 interface ModalViewProps extends ModalProps {
   /** Float all UI elements on top of contents. */
   fullScreen?: boolean;
+
+  /** Hides the footer close button. */
   noFooterButton?: boolean;
+
   /** Callback to close the modal. Defaults to the global dialog store. */
   onHide?: () => void;
 }
 
 /**
- * Displays a customizable modal window with submit form.
+ * Read-only modal window with header, help badge, and close controls.
  */
 export function ModalView({
   children,

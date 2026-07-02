@@ -11,28 +11,53 @@ import { type DataTableRowDrop } from './data-table';
 import { SelectRow } from './select-row';
 
 interface TableRowProps<TData> {
+  /** TanStack table instance. */
   table: Table<TData>;
+
+  /** TanStack row instance. */
   row: Row<TData>;
 
+  /** Additional CSS class name(s) for the row. */
   className?: string;
+
+  /** Skips CSS variable-based column width calculation. */
   skipWidthCalculation?: boolean;
+
+  /** Inline styles for the row. */
   style?: React.CSSProperties;
 
+  /** Hides the header row (affects column width on first row). */
   noHeader?: boolean;
+
+  /** Minimal cell padding. */
   dense?: boolean;
 
+  /** Id of the last row selected (for shift-click range selection). */
   lastSelected: string | null;
+
+  /** Updates the last-selected row id. */
   onChangeLastSelected: (newValue: string | null) => void;
 
+  /** Single-click row handler. */
   onRowClicked?: (rowData: TData, event: React.MouseEvent<Element>) => void;
+
+  /** Double-click row handler. */
   onRowDoubleClicked?: (rowData: TData, event: React.MouseEvent<Element>) => void;
 
+  /** Enables HTML5 drag-and-drop row reordering. */
   enableRowReordering?: boolean;
+
+  /** Called when rows are dropped in a new order. */
   onRowsReordered?: (event: DataTableRowDrop<TData>) => void;
+
+  /** Id of the row currently being dragged, or `null`. */
   draggingRowID: string | null;
+
+  /** Updates the dragging row id. */
   onChangeDraggingRowID: (newValue: string | null) => void;
 }
 
+/** Single data table row with selection, click handlers, and optional drag reordering. */
 export function TableRow<TData>({
   table,
   row,
