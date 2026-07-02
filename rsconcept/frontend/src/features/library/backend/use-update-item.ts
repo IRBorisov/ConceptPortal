@@ -40,10 +40,26 @@ export const useUpdateItem = () => {
             schema.oss.map(item => client.invalidateQueries({ queryKey: KEYS.composite.oss({ itemID: item.id }) }))
           );
         }
-      } else {
-        client.setQueryData(itemKey, (prev: OperationSchemaDTO | RSModelDTO | undefined) =>
+      } else if (data.item_type === LibraryItemType.OSS) {
+        const ossKey = KEYS.composite.oss({ itemID: data.id });
+        const ossData: OperationSchemaDTO | undefined = client.getQueryData(ossKey);
+        client.setQueryData(ossKey, (prev: OperationSchemaDTO | undefined) =>
           !prev ? undefined : { ...prev, ...data }
         );
+        if (ossData && ossData.read_only !== data.read_only) {
+          await Promise.allSettled(
+            ossData.operations
+              .map(item => {
+                if (!item.result) {
+                  return;
+                }
+                return client.invalidateQueries({ queryKey: KEYS.composite.schema({ itemID: item.result }) });
+              })
+              .filter(item => !!item)
+          );
+        }
+      } else {
+        client.setQueryData(itemKey, (prev: RSModelDTO | undefined) => (!prev ? undefined : { ...prev, ...data }));
       }
     },
     onError: () => client.invalidateQueries()

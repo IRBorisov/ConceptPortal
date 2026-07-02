@@ -117,6 +117,34 @@ class TestChangeAttributes(EndpointTester):
         self.assertEqual(self.ks3.model.access_policy, data['access_policy'])
 
 
+    @decl_endpoint('/api/library/{item}', method='patch')
+    def test_update_read_only(self):
+        data = {'read_only': True}
+
+        self.executeOK(data, item=self.owned_id)
+
+        self.owned.model.refresh_from_db()
+        self.ks1.model.refresh_from_db()
+        self.ks2.model.refresh_from_db()
+        self.ks3.model.refresh_from_db()
+        self.assertTrue(self.owned.model.read_only)
+        self.assertFalse(self.ks1.model.read_only)
+        self.assertFalse(self.ks2.model.read_only)
+        self.assertTrue(self.ks3.model.read_only)
+
+        data = {'read_only': False}
+        self.executeOK(data, item=self.owned_id)
+
+        self.owned.model.refresh_from_db()
+        self.ks1.model.refresh_from_db()
+        self.ks2.model.refresh_from_db()
+        self.ks3.model.refresh_from_db()
+        self.assertFalse(self.owned.model.read_only)
+        self.assertFalse(self.ks1.model.read_only)
+        self.assertFalse(self.ks2.model.read_only)
+        self.assertFalse(self.ks3.model.read_only)
+
+
     @decl_endpoint('/api/library/{item}/set-editors', method='patch')
     def test_set_editors(self):
         Editor.set(self.owned.model.pk, [self.user2.pk])

@@ -22,6 +22,9 @@ export const useSetLocation = () => {
       const ossData: OperationSchemaDTO | undefined = client.getQueryData(ossKey);
       if (ossData) {
         client.setQueryData(ossKey, { ...ossData, location: variables.location });
+        client.setQueryData(libraryKey, (prev: LibraryItem[] | undefined) =>
+          prev?.map(item => (item.id === variables.itemID ? { ...item, location: variables.location } : item))
+        );
         await Promise.allSettled([
           client.invalidateQueries({ queryKey: libraryApi.libraryListKey }),
           ...ossData.operations

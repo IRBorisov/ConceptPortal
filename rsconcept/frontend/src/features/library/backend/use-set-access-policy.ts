@@ -22,6 +22,9 @@ export const useSetAccessPolicy = () => {
       const ossData: OperationSchemaDTO | undefined = client.getQueryData(ossKey);
       if (ossData) {
         client.setQueryData(ossKey, { ...ossData, access_policy: variables.policy });
+        client.setQueryData(libraryKey, (prev: LibraryItem[] | undefined) =>
+          prev?.map(item => (item.id === variables.itemID ? { ...item, access_policy: variables.policy } : item))
+        );
         await Promise.allSettled([
           client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
           ...ossData.operations

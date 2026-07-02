@@ -53,7 +53,18 @@ class LibraryViewSet(viewsets.ModelViewSet):
             RSModel.objects.create(model=serializer.instance, schema=schema)
 
     def perform_update(self, serializer) -> None:
+        instance_before = cast(m.LibraryItem, serializer.instance)
+        old_read_only = instance_before.read_only
         instance = serializer.save()
+        if (
+            instance.item_type == m.LibraryItemType.OPERATION_SCHEMA
+            and 'read_only' in serializer.validated_data
+            and instance.read_only != old_read_only
+        ):
+            owned_schemas = OperationSchema.owned_schemasQ(instance).only('read_only')
+            for schema in owned_schemas:
+                schema.read_only = instance.read_only
+            m.LibraryItem.objects.bulk_update(owned_schemas, ['read_only'])
         operations = Operation.objects.filter(result__pk=instance.pk)
         if not operations.exists():
             return
@@ -262,7 +273,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
                     schema.location = location
                 m.LibraryItem.objects.bulk_update(owned_schemas, ['location'])
             item.location = location
-            item.save(update_fields=['location'])
+            m.LibraryItem.objects.filter(pk=item.pk).update(location=location)
 
         return Response(status=c.HTTP_200_OK)
 
@@ -294,7 +305,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
                     schema.access_policy = new_policy
                 m.LibraryItem.objects.bulk_update(owned_schemas, ['access_policy'])
             item.access_policy = new_policy
-            item.save(update_fields=['access_policy'])
+            m.LibraryItem.objects.filter(pk=item.pk).update(access_policy=new_policy)
 
         return Response(status=c.HTTP_200_OK)
 
