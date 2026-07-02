@@ -24,6 +24,7 @@ export const pdfs = StyleSheet.create({
 
   row: {
     flexDirection: 'row',
+    alignItems: 'stretch',
     borderBottomWidth: 0.5,
     borderLeftWidth: 0.5,
     borderRightWidth: 0.5,

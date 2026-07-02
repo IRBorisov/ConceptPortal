@@ -1,4 +1,5 @@
 ''' Testing API: Library. '''
+import time
 from typing import Any
 
 from apps.library.models import (
@@ -161,15 +162,19 @@ class TestLibraryViewset(EndpointTester):
 
     @decl_endpoint('/api/library/{item}/set-access-policy', method='patch')
     def test_set_access_policy(self):
+        time_update = self.owned.time_update
+
         data = {'access_policy': 'invalid'}
         self.executeBadData(data, item=self.owned.pk)
 
         data = {'access_policy': AccessPolicy.PRIVATE}
         self.executeNotFound(data, item=self.invalid_item)
         self.executeForbidden(data, item=self.unowned.pk)
+        time.sleep(0.01)
         self.executeOK(data, item=self.owned.pk)
         self.owned.refresh_from_db()
         self.assertEqual(self.owned.access_policy, data['access_policy'])
+        self.assertEqual(self.owned.time_update, time_update)
 
         self.toggle_editor(self.unowned, True)
         self.executeForbidden(data, item=self.unowned.pk)
@@ -181,15 +186,19 @@ class TestLibraryViewset(EndpointTester):
 
     @decl_endpoint('/api/library/{item}/set-location', method='patch')
     def test_set_location(self):
+        time_update = self.owned.time_update
+
         data = {'location': 'invalid'}
         self.executeBadData(data, item=self.owned.pk)
 
         data = {'location': '/U/temp'}
         self.executeNotFound(data, item=self.invalid_item)
         self.executeForbidden(data, item=self.unowned.pk)
+        time.sleep(0.01)
         self.executeOK(data, item=self.owned.pk)
         self.owned.refresh_from_db()
         self.assertEqual(self.owned.location, data['location'])
+        self.assertEqual(self.owned.time_update, time_update)
 
         data = {'location': LocationHead.LIBRARY}
         self.executeForbidden(data, item=self.owned.pk)

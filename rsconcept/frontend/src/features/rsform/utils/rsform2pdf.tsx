@@ -18,6 +18,7 @@ import {
   addSpacesTypification,
   formatPdfPageRange,
   hyphenateCyrillic,
+  pdfRowNeedsMultiPageWrap,
   protectShortRussianWords
 } from './pdf-utils';
 
@@ -147,27 +148,50 @@ function CstTable({ data }: { data: Constituenta[] }) {
 
         {/* Table Rows */}
         {data.map((cst, idx) => (
-          <View key={cst.id ?? idx} style={pdfs.row} wrap={false}>
-            <Text style={{ ...pdfs.cell, width: '13mm', fontFamily: 'CodeMath', textAlign: 'center' }}>
-              {cst.alias}
-            </Text>
-            <Text style={{ ...pdfs.cell, width: '82mm', fontFamily: 'CodeMath' }} hyphenationCallback={word => [word]}>
-              {addSpaces(cst.definition_formal)}
-            </Text>
-            <Text style={{ ...pdfs.cell, width: '38mm', fontFamily: 'CodeMath' }} hyphenationCallback={word => [word]}>
-              {addSpacesTypification(labelType(cst.effectiveType))}
-            </Text>
-            <Text style={{ ...pdfs.cell, width: '40mm' }} hyphenationCallback={hyphenateCyrillic}>
-              {protectShortRussianWords(cst.term_resolved)}
-            </Text>
-            <Text style={{ ...pdfs.cell, width: '82mm', borderRightWidth: 0 }} hyphenationCallback={hyphenateCyrillic}>
-              {protectShortRussianWords(getCommentColumnText(cst, tx))}
-            </Text>
+          <View key={cst.id ?? idx} style={pdfs.row} wrap={rowNeedsMultiPageWrap(cst, tx)}>
+            <View style={{ ...pdfs.cell, width: '13mm' }}>
+              <Text style={{ fontFamily: 'CodeMath', textAlign: 'center' }}>{cst.alias}</Text>
+            </View>
+            <View style={{ ...pdfs.cell, width: '82mm' }}>
+              <Text style={{ fontFamily: 'CodeMath' }} hyphenationCallback={word => [word]}>
+                {addSpaces(cst.definition_formal)}
+              </Text>
+            </View>
+            <View style={{ ...pdfs.cell, width: '38mm' }}>
+              <Text style={{ fontFamily: 'CodeMath' }} hyphenationCallback={word => [word]}>
+                {addSpacesTypification(labelType(cst.effectiveType))}
+              </Text>
+            </View>
+            <View style={{ ...pdfs.cell, width: '40mm' }}>
+              <Text hyphenationCallback={hyphenateCyrillic}>{protectShortRussianWords(cst.term_resolved)}</Text>
+            </View>
+            <View style={{ ...pdfs.cell, width: '82mm', borderRightWidth: 0 }}>
+              <Text hyphenationCallback={hyphenateCyrillic}>
+                {protectShortRussianWords(getCommentColumnText(cst, tx))}
+              </Text>
+            </View>
           </View>
         ))}
       </View>
     </>
   );
+}
+
+function rowNeedsMultiPageWrap(cst: Constituenta, tx: (id: string) => string): boolean {
+  return pdfRowNeedsMultiPageWrap([
+    { text: cst.alias, columnWidthMm: 13, avgCharWidthRatio: 0.6 },
+    { text: addSpaces(cst.definition_formal), columnWidthMm: 82, avgCharWidthRatio: 0.72 },
+    {
+      text: addSpacesTypification(labelType(cst.effectiveType)),
+      columnWidthMm: 38,
+      avgCharWidthRatio: 0.72
+    },
+    { text: protectShortRussianWords(cst.term_resolved), columnWidthMm: 40 },
+    {
+      text: protectShortRussianWords(getCommentColumnText(cst, tx)),
+      columnWidthMm: 82
+    }
+  ]);
 }
 
 function getCommentColumnText(cst: Constituenta, tx: (id: string) => string) {

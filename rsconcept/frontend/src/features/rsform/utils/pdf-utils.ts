@@ -72,6 +72,86 @@ export function formatPdfPageRange(pageNumber: number, totalPages: number): stri
 /**
  * Gives @react-pdf conservative hyphenation points for Cyrillic words.
  */
+const MM_TO_PT = 2.834645669;
+const PDF_TABLE_FONT_SIZE_PT = 11;
+const PDF_CELL_PADDING_H_PT = 8;
+const PDF_CELL_PADDING_V_PT = 6;
+const PDF_LINE_HEIGHT_PT = 14;
+/** Matches A4 landscape page in `CDocument` minus vertical padding, footer, and table header. */
+const PDF_SINGLE_CELL_MAX_HEIGHT_PT = (210 - 40 - 15 - 8) * MM_TO_PT - PDF_CELL_PADDING_V_PT;
+
+export interface PdfCellLayoutEstimate {
+  text: string;
+  columnWidthMm: number;
+  /** Average character width as a fraction of font size; higher means wider glyphs. */
+  avgCharWidthRatio?: number;
+}
+
+function estimateParagraphLines(paragraph: string, charsPerLine: number): number {
+  if (!paragraph) {
+    return 1;
+  }
+
+  const tokens = paragraph.split(/\s+/).filter(Boolean);
+  if (tokens.length === 0) {
+    return 1;
+  }
+
+  let lines = 1;
+  let currentLineLength = 0;
+
+  for (const token of tokens) {
+    if (token.length > charsPerLine) {
+      if (currentLineLength > 0) {
+        lines += 1;
+        currentLineLength = 0;
+      }
+      lines += Math.ceil(token.length / charsPerLine) - 1;
+      currentLineLength = token.length % charsPerLine || charsPerLine;
+      continue;
+    }
+
+    const nextLength = currentLineLength === 0 ? token.length : currentLineLength + 1 + token.length;
+    if (nextLength > charsPerLine) {
+      lines += 1;
+      currentLineLength = token.length;
+      continue;
+    }
+
+    currentLineLength = nextLength;
+  }
+
+  return lines;
+}
+
+/** Estimates wrapped line count for a PDF table cell at 11pt. */
+export function estimatePdfCellLines(text: string, columnWidthMm: number, avgCharWidthRatio = 0.55): number {
+  if (!text) {
+    return 1;
+  }
+
+  const innerWidthPt = columnWidthMm * MM_TO_PT - PDF_CELL_PADDING_H_PT;
+  const charsPerLine = Math.max(6, Math.floor(innerWidthPt / (PDF_TABLE_FONT_SIZE_PT * avgCharWidthRatio)));
+  const paragraphLines = text.split('\n').reduce((total, paragraph) => {
+    return total + estimateParagraphLines(paragraph, charsPerLine);
+  }, 0);
+
+  return Math.max(1, paragraphLines);
+}
+
+/** True when a single cell is estimated to be taller than one PDF page can fit. */
+export function pdfCellExceedsSinglePageHeight(lineCount: number): boolean {
+  return PDF_CELL_PADDING_V_PT + lineCount * PDF_LINE_HEIGHT_PT > PDF_SINGLE_CELL_MAX_HEIGHT_PT;
+}
+
+/** True when any cell in a row must be allowed to span multiple pages. */
+export function pdfRowNeedsMultiPageWrap(cells: PdfCellLayoutEstimate[]): boolean {
+  return cells.some(cell => {
+    const lines = estimatePdfCellLines(cell.text, cell.columnWidthMm, cell.avgCharWidthRatio);
+    return pdfCellExceedsSinglePageHeight(lines);
+  });
+}
+
 export function hyphenateCyrillic(word: string): string[] {
   if (!CYRILLIC_LETTER.test(word) || word.length < 6) {
     return [word];

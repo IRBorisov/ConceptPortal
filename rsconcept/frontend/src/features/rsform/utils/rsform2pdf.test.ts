@@ -104,6 +104,29 @@ describe('rsform2pdf', () => {
     expect(pdfText.length).toBeGreaterThan(0);
   });
 
+  it('renders schema PDF when text definition exceeds one page height', async () => {
+    locale = 'ru';
+
+    const longDefinition = 'Длинное текстовое определение конституенты с подробным описанием смысла. '.repeat(120);
+    const items = [
+      mockConstituenta({
+        id: 1,
+        alias: 'X1',
+        cst_class: CstClass.BASIC,
+        cst_type: CstType.BASE,
+        definition_formal: '[α∈ℬ(R)]',
+        definition_resolved: longDefinition,
+        term_resolved: 'термин'
+      })
+    ];
+
+    const blob = await createSchemaFile(mockSchema(items));
+    const pdfText = await pdfBlobToLatin1Text(blob);
+
+    assertNoInvalidPdfPageNumbers(pdfText);
+    expect(blob.size).toBeGreaterThan(5_000);
+  });
+
   it('does not embed invalid page numbers in constituent list PDF footers', async () => {
     locale = 'en';
 
