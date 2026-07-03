@@ -3,16 +3,11 @@
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 import clsx from 'clsx';
 
-import { useTx } from '@/i18n';
-import { type Constituenta } from '@rsconcept/domain/library';
-import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
-import { labelType } from '@rsconcept/domain/rslang/labels';
-
-import { useValueTooltipStore } from '@/stores/value-tooltip';
+import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 import { APP_COLORS } from '@/styling/colors';
-import { globalIDs } from '@/utils/constants';
 
 import { colorBgGraphNode } from '../../../colors';
+import { describeCstNodeTooltip } from '../../../labels';
 import { useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
 
 import { type TGNode } from './tg-models';
@@ -21,23 +16,20 @@ const DESCRIPTION_THRESHOLD = 15;
 const LABEL_THRESHOLD = 3;
 
 export function TGNodeComponent(node: NodeProps<TGNode>) {
-  const tx = useTx();
   const filter = useTermGraphStore(state => state.filter);
   const coloring = useTermGraphStore(state => state.coloring);
   const connectionStart = useTGConnectionStore(state => state.start);
-  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
+  const tooltipAnchor = useValueTooltipAnchor(describeCstNodeTooltip(node.data.cst));
   const isConnecting = connectionStart !== null;
 
   const label = node.data.cst.alias;
   const description = filter.noText ? '' : node.data.cst.term_resolved || node.data.cst.definition_resolved;
-  const tooltipText = describeCstNode(node.data.cst, tx);
 
   return (
     <>
       <div
         className='relative h-full w-full pointer-events-auto! border rounded-full cc-fade-in duration-transform delay-move'
-        data-tooltip-id={globalIDs.value_tooltip}
-        onPointerEnter={() => setActiveTooltipText(tooltipText)}
+        {...tooltipAnchor}
       >
         {connectionStart !== node.id ? (
           <Handle
@@ -92,18 +84,4 @@ export function TGNodeComponent(node: NodeProps<TGNode>) {
       ) : null}
     </>
   );
-}
-
-// ====== INTERNAL ======
-function describeCstNode(
-  cst: Constituenta,
-  tx: (id: string, values?: Record<string, string | number | boolean | Date | null | undefined>) => string
-) {
-  const contents = isBasicConcept(cst.cst_type)
-    ? cst.convention
-    : cst.definition_resolved || cst.definition_formal || cst.convention;
-  const typification = labelType(cst.analysis?.type ?? null);
-  return `${cst.alias}${tx('tx.general.colon')}${cst.term_resolved}\n${
-    cst.analysis ? `${tx('tx.rslang.typification')}${tx('tx.general.colon')}${typification}\n` : ''
-  }${tx('tx.lib.contents')}${tx('tx.general.colon')}${contents ? contents : tx('tx.general.none').toLocaleLowerCase()}`;
 }

@@ -5,12 +5,11 @@ import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 
-import { useValueTooltipStore } from '@/stores/value-tooltip';
-import { globalIDs } from '@/utils/constants';
-
 import { MiniButton } from '../control';
 import { IconDropArrow, IconPageRight } from '../icons';
 import { type Styling } from '../props';
+
+import { SelectTreeItem } from './select-tree-item';
 
 interface SelectTreeProps<ItemType> extends Styling {
   /** Current value. */
@@ -49,7 +48,6 @@ export function SelectTree<ItemType>({
   ...restProps
 }: SelectTreeProps<ItemType>) {
   const tx = useTx();
-  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const foldable = new Set(items.filter(item => getParent(item) !== item).map(item => getParent(item)));
   const defaultFolded = items.filter(item => getParent(value) !== item && getParent(getParent(value)) !== item);
   const [foldedByValue, setFoldedByValue] = useState<{ value: ItemType; folded: ItemType[] }[]>([]);
@@ -96,15 +94,14 @@ export function SelectTree<ItemType>({
         const isActive = getParent(item) === item || !folded.includes(getParent(item));
         const description = getDescription(item);
         return (
-          <div
+          <SelectTreeItem
             key={`${prefix}${index}`}
             className={clsx(
               'cc-tree-item relative cc-scroll-row cc-hover-bg',
               isActive ? 'max-h-7 py-1' : 'max-h-0 opacity-0 pointer-events-none',
               value === item && 'cc-selected'
             )}
-            data-tooltip-id={description ? globalIDs.value_tooltip : undefined}
-            onPointerEnter={description ? () => setActiveTooltipText(description) : undefined}
+            description={description}
             onClick={event => handleClickItem(event, item)}
           >
             {foldable.has(item) ? (
@@ -117,7 +114,7 @@ export function SelectTree<ItemType>({
               />
             ) : null}
             {getParent(item) === item ? getLabel(item) : `- ${getLabel(item).toLowerCase()}`}
-          </div>
+          </SelectTreeItem>
         );
       })}
     </div>

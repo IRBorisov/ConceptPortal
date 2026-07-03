@@ -3,8 +3,7 @@
 import { type ComponentProps } from 'react';
 import clsx from 'clsx';
 
-import { useValueTooltipStore } from '@/stores/value-tooltip';
-import { globalIDs } from '@/utils/constants';
+import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 import { truncateToLastWord } from '@/utils/format';
 
 interface TextContentProps extends Omit<ComponentProps<'div'>, 'children'> {
@@ -27,25 +26,34 @@ export function TextContent({
   maxLength,
   noTooltip,
   onPointerEnter,
+  onPointerLeave,
   ...restProps
 }: TextContentProps) {
-  const setActiveText = useValueTooltipStore(state => state.setActiveText);
   const truncated = maxLength ? truncateToLastWord(text, maxLength) : text;
   const isTruncated = Boolean(maxLength && text.length > maxLength);
   const showTooltip = isTruncated && !noTooltip;
+  const tooltipAnchor = useValueTooltipAnchor(showTooltip ? text : null);
 
   return (
     <div
       {...restProps}
+      {...tooltipAnchor}
       className={clsx('text-xs text-pretty', className)}
-      data-tooltip-id={showTooltip ? globalIDs.value_tooltip : undefined}
       onPointerEnter={
-        showTooltip
+        showTooltip || onPointerEnter
           ? event => {
+              tooltipAnchor.onPointerEnter?.(event);
               onPointerEnter?.(event);
-              setActiveText(text);
             }
           : onPointerEnter
+      }
+      onPointerLeave={
+        showTooltip || onPointerLeave
+          ? event => {
+              tooltipAnchor.onPointerLeave?.(event);
+              onPointerLeave?.(event);
+            }
+          : onPointerLeave
       }
     >
       {truncated}

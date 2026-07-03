@@ -9,8 +9,7 @@ import { type AstNode, type FlatAstNode } from '@rsconcept/domain/parsing';
 import { readErrorAnnotation, readTypeAnnotation, TokenID } from '@rsconcept/domain/rslang';
 import { labelRSLangNode, labelType } from '@rsconcept/domain/rslang/labels';
 
-import { useValueTooltipStore } from '@/stores/value-tooltip';
-import { globalIDs } from '@/utils/constants';
+import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 
 import { colorBgSyntaxTree } from '../../../colors';
 import { describeRSError } from '../../../labels';
@@ -23,11 +22,11 @@ const LABEL_THRESHOLD = 3;
 export function ASTNodeComponent(node: NodeProps<AstGraphNode>) {
   const tx = useTx();
   const schema = useShowAstSchema();
-  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const label = labelRSLangNode(node.data);
   const errorData = readErrorAnnotation(node.data as AstNode);
   const errorMessage = errorData ? describeRSError(errorData.code, errorData.params ?? []) : '';
   const tooltipText = buildTooltip(node.data, schema, errorMessage, tx);
+  const tooltipAnchor = useValueTooltipAnchor(tooltipText || null);
 
   return (
     <>
@@ -38,8 +37,7 @@ export function ASTNodeComponent(node: NodeProps<AstGraphNode>) {
           errorMessage && 'ring-2 ring-destructive ring-offset-2 ring-offset-background'
         )}
         style={{ backgroundColor: colorBgSyntaxTree(node.data) }}
-        data-tooltip-id={tooltipText ? globalIDs.value_tooltip : undefined}
-        onPointerEnter={tooltipText ? () => setActiveTooltipText(tooltipText) : undefined}
+        {...tooltipAnchor}
       />
       <Handle type='source' position={Position.Bottom} className='opacity-0' />
       <div
@@ -48,8 +46,7 @@ export function ASTNodeComponent(node: NodeProps<AstGraphNode>) {
           'font-math text-center ',
           label.length > LABEL_THRESHOLD ? 'text-[12px]/[16px]' : 'text-[14px]/[20px]'
         )}
-        data-tooltip-id={tooltipText ? globalIDs.value_tooltip : undefined}
-        onPointerEnter={tooltipText ? () => setActiveTooltipText(tooltipText) : undefined}
+        {...tooltipAnchor}
       >
         <div className='absolute top-0 left-0 text-center w-full'>{label}</div>
         <div aria-hidden className='cc-ast-label-outline'>

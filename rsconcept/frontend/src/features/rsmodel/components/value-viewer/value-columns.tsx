@@ -9,8 +9,7 @@ import { testInvalid, valueStub } from '@rsconcept/domain/rslang/eval/value-api'
 import { type EchelonCollection, IntegerT } from '@rsconcept/domain/rslang/semantic/typification';
 
 import { cn } from '@/components/utils';
-import { useValueTooltipStore } from '@/stores/value-tooltip';
-import { globalIDs } from '@/utils/constants';
+import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 import { truncateToLastWord, truncateToSymbol } from '@/utils/format';
 
 import { prepareValueString } from '../../labels';
@@ -136,13 +135,9 @@ function createColumnsInternal(
 }
 
 function TitledHeader({ text, title, className }: { text: string; title?: string; className?: string }) {
-  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
+  const tooltipAnchor = useValueTooltipAnchor(title ?? null);
   return (
-    <div
-      className={cn('truncate', className)}
-      data-tooltip-id={!!title ? globalIDs.value_tooltip : undefined}
-      onPointerEnter={title ? () => setActiveTooltipText(title) : undefined}
-    >
+    <div className={cn('truncate', className)} {...tooltipAnchor}>
       {title
         ? truncateToSymbol(text && !title.startsWith(text) ? `[${text}] - ${title}` : title, HEADER_TRUNCATE)
         : text}
@@ -179,12 +174,12 @@ function BasicCell({
   isInvalid?: boolean;
 }) {
   const tx = useTx();
-  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const text =
     prepareValueString(value, type, services.schema, services.basics, services.showDataText) ??
     tx('tx.rslang.value.render.tooLarge.hint');
   const isSingleColumn = path.length === 0 || (path.length === 1 && !services.isSingleton);
   const needsTooltip = text.length > (isSingleColumn ? VALUE_TRUNCATE_LONG : VALUE_TRUNCATE);
+  const tooltipAnchor = useValueTooltipAnchor(needsTooltip ? text : null);
   const isMatch = services.matcher?.match(value, type) ?? false;
   return (
     <div
@@ -194,8 +189,7 @@ function BasicCell({
         isInvalid && 'bg-accent-orange50 outline-2 outline-accent-orange',
         isMatch && 'bg-accent-green50 outline-2 outline-accent-green'
       )}
-      data-tooltip-id={needsTooltip ? globalIDs.value_tooltip : undefined}
-      onPointerEnter={needsTooltip ? () => setActiveTooltipText(text) : undefined}
+      {...tooltipAnchor}
     >
       {truncateToLastWord(text, isSingleColumn ? VALUE_TRUNCATE_LONG : VALUE_TRUNCATE)}
     </div>

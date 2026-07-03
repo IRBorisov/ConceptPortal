@@ -15,9 +15,8 @@ import { HelpTopic } from '@/features/help';
 import { MiniButton } from '@/components/control';
 import { IconNewItem, IconReset, IconSave } from '@/components/icons';
 import { ModalView } from '@/components/modal';
+import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 import { useDialogsStore } from '@/stores/dialogs';
-import { useValueTooltipStore } from '@/stores/value-tooltip';
-import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 import { isMac } from '@/utils/utils';
 
@@ -50,7 +49,6 @@ export function DlgStructurePlanner() {
     state => state.props as DlgStructurePlannerProps
   );
   const hideDialog = useDialogsStore(state => state.hideDialog);
-  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const [currentSchema, setCurrentSchema] = useState(schema);
 
   const target = currentSchema.cstByID.get(targetID) ?? null;
@@ -156,6 +154,7 @@ export function DlgStructurePlanner() {
   }
 
   const isDefinitionTooLong = selectedNode.definition.length > DEFINITION_TRUNCATE;
+  const definitionTooltip = useValueTooltipAnchor(isDefinitionTooLong ? selectedNode.definition : null);
   const blurClass = 'backdrop-blur-xs bg-background/90';
 
   return (
@@ -175,8 +174,7 @@ export function DlgStructurePlanner() {
               'font-math text-right select-none',
               blurClass
             )}
-            data-tooltip-id={isDefinitionTooLong ? globalIDs.value_tooltip : undefined}
-            onPointerEnter={isDefinitionTooLong ? () => setActiveTooltipText(selectedNode.definition) : undefined}
+            {...definitionTooltip}
           >
             {selectedNode.definition}
           </div>

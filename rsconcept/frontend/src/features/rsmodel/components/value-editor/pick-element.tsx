@@ -11,8 +11,8 @@ import { type BasicBinding } from '@rsconcept/domain/library';
 import { DataTable, type IConditionalStyle } from '@/components/data-table';
 import { SearchBar, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
-import { useValueTooltipStore } from '@/stores/value-tooltip';
-import { globalIDs, PARAMETER } from '@/utils/constants';
+import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
+import { PARAMETER } from '@/utils/constants';
 import { truncateToLastWord } from '@/utils/format';
 
 const VALUE_TRUNCATE = 40;
@@ -33,10 +33,10 @@ const columnHelper = createColumnHelper<number>();
 
 export function PickElement({ className, value, alias, isInteger, term, binding, onChange }: PickElementProps) {
   const tx = useTx();
-  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const [filter, setFilter] = useState('');
   const [filterDebounced] = useDebounce(filter, PARAMETER.searchDebounce);
   const labelText = term ? `${alias}${tx('tx.general.colon')}${term}` : alias || 'N/A';
+  const labelTooltip = useValueTooltipAnchor(labelText);
 
   const filteredIDs = binding ? filterBindingByQuery(binding, filterDebounced).filter(id => id !== value) : [];
   const filtered = [...(value === null ? [] : [value]), ...filteredIDs];
@@ -93,11 +93,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
 
   return (
     <div className={cn('flex flex-col h-fit', className)}>
-      <div
-        className='truncate select-none mb-3'
-        data-tooltip-id={globalIDs.value_tooltip}
-        onPointerEnter={() => setActiveTooltipText(labelText)}
-      >
+      <div className='truncate select-none mb-3' {...labelTooltip}>
         {labelText}
       </div>
       <SearchBar
@@ -133,14 +129,10 @@ function prepareText(id: number, binding: BasicBinding | null): string {
 }
 
 function TextCell({ text }: { text: string }) {
-  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const needsTooltip = text.length > VALUE_TRUNCATE;
+  const tooltipAnchor = useValueTooltipAnchor(needsTooltip ? text : null);
   return (
-    <div
-      className='w-43'
-      data-tooltip-id={needsTooltip ? globalIDs.value_tooltip : undefined}
-      onPointerEnter={needsTooltip ? () => setActiveTooltipText(text) : undefined}
-    >
+    <div className='w-43' {...tooltipAnchor}>
       {truncateToLastWord(text, VALUE_TRUNCATE)}
     </div>
   );

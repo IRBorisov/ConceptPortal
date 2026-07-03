@@ -6,8 +6,7 @@ import { useTx } from '@/i18n';
 import { LibraryItemType } from '@rsconcept/domain/library';
 
 import { IconOSS, IconRSForm, IconRSModel } from '@/components/icons';
-import { useValueTooltipStore } from '@/stores/value-tooltip';
-import { globalIDs } from '@/utils/constants';
+import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 
 interface SchemaTitleProps {
   itemType: LibraryItemType;
@@ -27,7 +26,7 @@ function ItemIcon({ itemType, className }: { itemType: LibraryItemType; classNam
 
 export function CurrentTitle({ itemType, title }: SchemaTitleProps) {
   const tx = useTx();
-  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
+  const tooltipAnchor = useValueTooltipAnchor(title);
 
   return (
     <div
@@ -38,8 +37,7 @@ export function CurrentTitle({ itemType, title }: SchemaTitleProps) {
         'text-md text-muted-foreground pointer-events-auto'
       )}
       aria-label={tx('tx.shell.activeItem.hint')}
-      data-tooltip-id={globalIDs.value_tooltip}
-      onPointerEnter={() => setActiveTooltipText(title)}
+      {...tooltipAnchor}
     >
       <ItemIcon itemType={itemType} className='shrink-0' />
       <span className='pt-0.5 font-medium truncate'>{title}</span>

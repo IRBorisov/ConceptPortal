@@ -5,7 +5,12 @@ import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 
 export const GlobalTooltips = () => {
+  const isOpen = useValueTooltipStore(state => state.isOpen);
   const activeText = useValueTooltipStore(state => state.activeText);
+  const anchorPosition = useValueTooltipStore(state => state.anchorPosition);
+  const hide = useValueTooltipStore(state => state.hide);
+  const clearDisplayed = useValueTooltipStore(state => state.clearDisplayed);
+
   return (
     <>
       <Tooltip
@@ -21,7 +26,17 @@ export const GlobalTooltips = () => {
       />
       <Tooltip
         float
-        delayShow={500}
+        instantWhenOpen
+        delayShow={0}
+        delayHide={200}
+        isOpen={isOpen}
+        setIsOpen={open => {
+          if (!open) {
+            hide();
+          }
+        }}
+        afterHide={clearDisplayed}
+        position={anchorPosition ?? undefined}
         id={globalIDs.value_tooltip}
         layer='z-topmost'
         className='max-w-[calc(min(40rem,100dvw-2rem))] text-justify'

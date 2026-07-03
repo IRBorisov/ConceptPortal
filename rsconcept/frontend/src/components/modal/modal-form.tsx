@@ -10,9 +10,8 @@ import { type HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { useEscapeKey } from '@/hooks/use-escape-key';
+import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 import { useDialogsStore } from '@/stores/dialogs';
-import { useValueTooltipStore } from '@/stores/value-tooltip';
-import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 
 import { Button, MiniButton, SubmitButton } from '../control';
@@ -80,7 +79,7 @@ export function ModalForm({
 }: React.PropsWithChildren<ModalFormProps>) {
   const tx = useTx();
   const hideDialog = useDialogsStore(state => state.hideDialog);
-  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
+  const validationTooltip = useValueTooltipAnchor(validationHint ?? null);
   const resolvedSubmitText = submitText ?? tx('tx.general.continue');
   const { isTopPlaced, setElement } = useModalPlacement<HTMLFormElement>();
 
@@ -157,13 +156,9 @@ export function ModalForm({
                 'text-muted-foreground cc-animate-color duration-fade',
                 canSubmit ? 'hover:text-constructive' : 'hover:text-destructive'
               )}
+              {...validationTooltip}
             >
-              <IconAlert
-                size='1.5rem'
-                className='mx-auto'
-                data-tooltip-id={globalIDs.value_tooltip}
-                onPointerEnter={() => setActiveTooltipText(validationHint)}
-              />
+              <IconAlert size='1.5rem' className='mx-auto' />
             </div>
           ) : null}
           <Button

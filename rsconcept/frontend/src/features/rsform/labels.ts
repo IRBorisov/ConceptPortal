@@ -4,7 +4,9 @@
 
 import { globalTx } from '@/i18n';
 import { type Constituenta, CstClass, CstStatus, CstType } from '@rsconcept/domain/library';
+import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 import { RSErrorCode, TokenID, TypeClass } from '@rsconcept/domain/rslang';
+import { labelType } from '@rsconcept/domain/rslang/labels';
 
 import { prepareTooltip } from '@/utils/format';
 
@@ -275,6 +277,18 @@ const TOKEN_HOTKEY: Partial<Record<TokenID, string>> = {
   [TokenID.ASSIGN]: 'Alt + Shift + 6',
   [TokenID.ITERATE]: 'Alt + 6'
 };
+
+/** Tooltip text for graph node hover (term graph, structure planner). */
+export function describeCstNodeTooltip(cst: Constituenta): string {
+  const tx = globalTx;
+  const contents = isBasicConcept(cst.cst_type)
+    ? cst.convention
+    : cst.definition_resolved || cst.definition_formal || cst.convention;
+  const typification = labelType(cst.analysis?.type ?? null);
+  return `${cst.alias}${tx('tx.general.colon')}${cst.term_resolved}\n${
+    cst.analysis ? `${tx('tx.rslang.typification')}${tx('tx.general.colon')}${typification}\n` : ''
+  }${tx('tx.lib.contents')}${tx('tx.general.colon')}${contents ? contents : tx('tx.general.none').toLocaleLowerCase()}`;
+}
 
 /** Generates description for {@link Constituenta}. */
 export function describeConstituenta(cst: Constituenta): string {

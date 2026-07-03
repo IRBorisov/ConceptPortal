@@ -11,8 +11,7 @@ import { type EchelonCollection, IntegerT } from '@rsconcept/domain/rslang/seman
 
 import { MiniButton } from '@/components/control';
 import { IconRemove } from '@/components/icons';
-import { useValueTooltipStore } from '@/stores/value-tooltip';
-import { globalIDs } from '@/utils/constants';
+import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 import { truncateToLastWord, truncateToSymbol } from '@/utils/format';
 
 import { prepareValueString } from '../../labels';
@@ -68,9 +67,7 @@ export function createColumnsType(
             className='align-middle w-fit'
             noPadding
             icon={<IconRemove size='1.25rem' className='cc-remove' />}
-            onClick={() =>
-              services.deleteElement!(services.indexMap.get(props.row.index) ?? props.row.index)
-            }
+            onClick={() => services.deleteElement!(services.indexMap.get(props.row.index) ?? props.row.index)}
           />
         )
       })
@@ -176,13 +173,9 @@ function createColumnsInternal(
 }
 
 function TitledHeader({ text, title, className }: { text: string; title?: string; className?: string }) {
-  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
+  const tooltipAnchor = useValueTooltipAnchor(title ?? null);
   return (
-    <div
-      className={className}
-      data-tooltip-id={!!title ? globalIDs.value_tooltip : undefined}
-      onPointerEnter={title ? () => setActiveTooltipText(title) : undefined}
-    >
+    <div className={className} {...tooltipAnchor}>
       {title
         ? truncateToSymbol(text && !title.startsWith(text) ? `[${text}] - ${title}` : title, HEADER_TRUNCATE)
         : text}
@@ -236,12 +229,12 @@ function BasicCell({
   path: ValuePath;
 }) {
   const tx = useTx();
-  const setActiveTooltipText = useValueTooltipStore(state => state.setActiveText);
   const text =
     prepareValueString(value, type, services.schema, services.basics, services.showDataText) ??
     tx('tx.rslang.value.render.tooLarge.hint');
   const isSingleColumn = path.length === 0 || (path.length === 1 && !services.isSingleton);
   const needsTooltip = text.length > (isSingleColumn ? VALUE_TRUNCATE_LONG : VALUE_TRUNCATE);
+  const tooltipAnchor = useValueTooltipAnchor(needsTooltip ? text : null);
   const isMatch = services.matcher?.match(value, type) ?? false;
   return (
     <div
@@ -254,8 +247,7 @@ function BasicCell({
         !isSelected && isMatch && 'bg-accent-green50 outline-2 outline-accent-green'
       )}
       onClick={services.selectElement ? () => services.selectElement!(isSelected ? null : path) : undefined}
-      data-tooltip-id={needsTooltip ? globalIDs.value_tooltip : undefined}
-      onPointerEnter={needsTooltip ? () => setActiveTooltipText(text) : undefined}
+      {...tooltipAnchor}
     >
       {truncateToLastWord(text, isSingleColumn ? VALUE_TRUNCATE_LONG : VALUE_TRUNCATE)}
     </div>

@@ -1,29 +1,28 @@
 'use client';
 
 import { type ComponentProps } from 'react';
-import clsx from 'clsx';
 
 import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 
-interface TextProps extends Omit<ComponentProps<'div'>, 'children'> {
-  /** Text to display. */
-  text: string;
-
-  /** Tooltip text */
-  title?: string;
+interface SelectTreeItemProps extends ComponentProps<'div'> {
+  description: string;
 }
 
-/** Displays text with a tooltip. */
-export function Text({ className, text, title, onPointerEnter, onPointerLeave, ...restProps }: TextProps) {
-  const tooltipAnchor = useValueTooltipAnchor(title ?? null);
+export function SelectTreeItem({
+  description,
+  children,
+  onPointerEnter,
+  onPointerLeave,
+  ...restProps
+}: SelectTreeItemProps) {
+  const tooltipAnchor = useValueTooltipAnchor(description || null);
 
   return (
     <div
       {...restProps}
       {...tooltipAnchor}
-      className={clsx('text-pretty', className)}
       onPointerEnter={
-        title || onPointerEnter
+        description || onPointerEnter
           ? event => {
               tooltipAnchor.onPointerEnter?.(event);
               onPointerEnter?.(event);
@@ -31,7 +30,7 @@ export function Text({ className, text, title, onPointerEnter, onPointerLeave, .
           : onPointerEnter
       }
       onPointerLeave={
-        title || onPointerLeave
+        description || onPointerLeave
           ? event => {
               tooltipAnchor.onPointerLeave?.(event);
               onPointerLeave?.(event);
@@ -39,7 +38,7 @@ export function Text({ className, text, title, onPointerEnter, onPointerLeave, .
           : onPointerLeave
       }
     >
-      {text}
+      {children}
     </div>
   );
 }
