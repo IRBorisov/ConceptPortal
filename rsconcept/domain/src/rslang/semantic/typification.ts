@@ -174,7 +174,17 @@ export function isTypification(type: ExpressionType | null): boolean {
   );
 }
 
-/** Checks if given type is radical. */
+/** Checks if given alias is a template or mangled radical. */
 export function isRadical(alias: string): boolean {
-  return alias.length > 0 && alias.startsWith('R') && alias[1] !== '0';
+  return /^R[1-9]\d*(?:<[^>]+>)?$/.test(alias);
+}
+
+/** Checks if given alias is an unmangled template radical. */
+export function isTemplateRadical(alias: string): boolean {
+  return /^R[1-9]\d*$/.test(alias);
+}
+
+/** Mangle template radical with calling function name. */
+export function mangleRadicalId(radical: string, funcName: string): string {
+  return `${radical}<${funcName}>`;
 }

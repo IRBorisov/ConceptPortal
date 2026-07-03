@@ -227,6 +227,21 @@ export function compareTemplated(
   }
 }
 
+/** Clone typification tree. */
+export function cloneTypification(type: Typification): Typification {
+  switch (type.typeID) {
+    case TypeID.anyTypification:
+    case TypeID.integer:
+      return type;
+    case TypeID.basic:
+      return { ...type };
+    case TypeID.collection:
+      return { typeID: type.typeID, base: cloneTypification(type.base) };
+    case TypeID.tuple:
+      return { typeID: type.typeID, factors: type.factors.map(cloneTypification) };
+  }
+}
+
 /** Apply substitutions to typification. */
 export function substituteBase(target: Typification, substitutes: Map<string, Typification>): void {
   switch (target.typeID) {

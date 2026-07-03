@@ -250,8 +250,18 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
       'Iterative constructs. Loop and recursive expression syntax, construct composition, repetition, and evaluation.'
   },
   [HelpTopic.RSL_EXPRESSION_PARAMETER]: {
-    keywords: ['parameterized expressions', 'parameters', 'term function', 'predicate function', 'arguments'],
-    searchText: 'Parameterized expressions. Declaring term and predicate functions, parameters, arguments, and reuse.'
+    keywords: [
+      'parameterized expressions',
+      'parameters',
+      'term function',
+      'predicate function',
+      'arguments',
+      'template',
+      'radical',
+      'typification checking'
+    ],
+    searchText:
+      'Parameterized expressions. Declaring term and predicate functions, parameters, arguments, template radical typification, and reuse.'
   },
   [HelpTopic.RSL_CORRECT]: {
     keywords: ['portability', 'correctness', 'validity', 'compatibility', 'checking'],

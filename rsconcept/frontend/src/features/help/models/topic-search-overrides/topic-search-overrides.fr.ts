@@ -275,9 +275,18 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
       'Constructions itératives. Syntaxe des boucles et expressions récursives, composition des constructions, répétition et évaluation.'
   },
   [HelpTopic.RSL_EXPRESSION_PARAMETER]: {
-    keywords: ['expressions paramétrées', 'paramètres', 'fonction terme', 'fonction prédicat', 'arguments'],
+    keywords: [
+      'expressions paramétrées',
+      'paramètres',
+      'fonction terme',
+      'fonction prédicat',
+      'arguments',
+      'modèle',
+      'radical',
+      'vérification typification'
+    ],
     searchText:
-      'Expressions paramétrées. Déclaration de fonctions terme et prédicat, paramètres, arguments et réutilisation.'
+      'Expressions paramétrées. Déclaration de fonctions terme et prédicat, paramètres, arguments, typification des radicaux modèles et réutilisation.'
   },
   [HelpTopic.RSL_CORRECT]: {
     keywords: ['portabilité', 'correction', 'validité', 'compatibilité', 'vérification'],

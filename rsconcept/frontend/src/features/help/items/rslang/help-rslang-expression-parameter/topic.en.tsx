@@ -34,9 +34,7 @@ export function HelpRSLangExpressionParameterEn() {
       <h2>Calling functions</h2>
       <code>F1[ξ1, S1], P1[ξ1\ξ2, ξ3]</code>
       <ul>
-        <li>
-          Arguments are listed in square brackets after the function name; order matters.
-        </li>
+        <li>Arguments are listed in square brackets after the function name; order matters.</li>
         <li>The typifications of the arguments are checked against the typifications of the declared parameters.</li>
         <li>The result of calling a term-function is an STE; calling a predicate-function yields an LE.</li>
       </ul>
@@ -55,6 +53,23 @@ export function HelpRSLangExpressionParameterEn() {
         <li>Radicals with different indices are considered distinct in typification.</li>
         <li>Radicals may only be used in the domains of the parameter declarations, not in the result expression.</li>
       </ul>
+
+      <h2>Typification checking</h2>
+      <p>
+        When a template function is called, the analyser matches each argument&apos;s typification against the
+        corresponding parameter declaration. A radical in a parameter domain is a placeholder for an arbitrary grade;
+        its value is inferred from the argument&apos;s actual typification. If the same radical appears in several
+        parameters, the inferred grades must agree.
+      </p>
+      <p>
+        On a mismatch, the message gives the expected and actual typifications, for example: expected ζ∈ℬℬ(X1), got Z.
+        For arguments after the first, radicals in the expected typification are replaced with values already inferred
+        from earlier arguments — <code>R1</code> is shown as the concrete grade, as in the example.
+      </p>
+      <p>
+        If the error is on the first argument and no radical value is available yet, the diagnostic may qualify the
+        radical with the function name, e.g. <code>{'R1<P2>'}</code>.
+      </p>
     </>
   );
 }

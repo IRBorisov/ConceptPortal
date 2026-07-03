@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import type { TypePath } from './typification';
-import { AnyTypificationT, basic, bool, IntegerT, tuple, type Typification } from './typification';
-import { applyPath, compareTemplated } from './typification-api';
+import { AnyTypificationT, basic, bool, IntegerT, mangleRadicalId, tuple, type Typification } from './typification';
+import { applyPath, cloneTypification, compareTemplated, substituteBase } from './typification-api';
 
 describe('applyPath', () => {
   function typePath(path: number[]): TypePath {
@@ -51,5 +51,22 @@ describe('compareTemplated', () => {
     expect(compareTemplated(substitutes, AnyTypificationT, basic('X1'))).toBe(true);
     expect(compareTemplated(substitutes, bool(basic('X1')), AnyTypificationT)).toBe(true);
     expect(compareTemplated(substitutes, AnyTypificationT, AnyTypificationT)).toBe(true);
+  });
+});
+
+describe('mangleRadicalId', () => {
+  it('qualifies template radical with function name', () => {
+    expect(mangleRadicalId('R1', 'P2')).toBe('R1<P2>');
+    expect(mangleRadicalId('R2', 'F10')).toBe('R2<F10>');
+  });
+});
+
+describe('cloneTypification + substituteBase', () => {
+  it('resolves mangled radicals for error messages', () => {
+    const argType = bool(basic('R1<F2>'));
+    const substitutes = new Map<string, Typification>([['R1<F2>', basic('X1')]]);
+    const expectedType = cloneTypification(argType);
+    substituteBase(expectedType, substitutes);
+    expect(expectedType).toEqual(bool(basic('X1')));
   });
 });

@@ -313,7 +313,25 @@ describe('TypeAuditor', () => {
       code: RSErrorCode.invalidArgumentType,
       from: 7,
       to: 12,
-      params: ['b∈R1F2', 'ℬℬ(X1)']
+      params: ['b∈X1', 'ℬℬ(X1)']
+    });
+  });
+
+  it('Resolves templated radicals in invalidArgumentType message', () => {
+    typeContext.set('S5', bool(bool(basic('X1'))));
+    typeContext.set('P2', {
+      typeID: TypeID.predicate,
+      result: LogicT,
+      args: [
+        { alias: 'σ', type: bool(bool(basic('R1'))) },
+        { alias: 'ζ', type: bool(bool(basic('R1'))) }
+      ]
+    });
+    expectError('P2[S5, 12]', {
+      code: RSErrorCode.invalidArgumentType,
+      from: 7,
+      to: 9,
+      params: ['ζ∈ℬℬ(X1)', 'Z']
     });
   });
 

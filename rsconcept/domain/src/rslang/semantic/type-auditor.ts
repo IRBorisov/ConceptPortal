@@ -17,9 +17,10 @@ import {
   EmptySetT,
   type ExpressionType,
   IntegerT,
-  isRadical,
+  isTemplateRadical,
   isTypification,
   LogicT,
+  mangleRadicalId,
   type Parametrized,
   tuple,
   type TypeContext,
@@ -29,6 +30,7 @@ import {
 import {
   checkCompatibility,
   checkEquality,
+  cloneTypification,
   compareTemplated,
   hasGenerics,
   mergeTypifications,
@@ -1018,8 +1020,12 @@ export class TypeAuditor {
       }
       const argType = mangleRadicals(alias, type.args[child - 1].type);
       if (!compareTemplated(substitutes, argType, childType)) {
+        const expectedType = cloneTypification(argType);
+        if (substitutes.size > 0) {
+          substituteBase(expectedType, substitutes);
+        }
         this.onError(RSErrorCode.invalidArgumentType, node.children[child], [
-          `${type.args[child - 1].alias}∈${labelType(argType)}`,
+          `${type.args[child - 1].alias}∈${labelType(expectedType)}`,
           labelType(childType)
         ]);
         return null;
@@ -1038,10 +1044,10 @@ function mangleRadicals(funcName: string, type: Typification): Typification {
     case TypeID.integer:
       return type;
     case TypeID.basic: {
-      if (isRadical(type.baseID)) {
+      if (isTemplateRadical(type.baseID)) {
         return {
           typeID: type.typeID,
-          baseID: type.baseID + funcName
+          baseID: mangleRadicalId(type.baseID, funcName)
         };
       }
       return type;
