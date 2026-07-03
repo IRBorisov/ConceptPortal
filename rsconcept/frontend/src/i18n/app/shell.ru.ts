@@ -83,6 +83,7 @@ export const txShellRu: Record<string, string> = {
   'tx.shell.logo.alt.light': 'Логотип Концепт Портал (светлый)',
   'tx.shell.logo.alt.dark': 'Логотип Концепт Портал (темный)',
   'tx.shell.activeItem.hint': 'Название элемента',
+  'tx.shell.activeItem.archive.hint': '{title} — архивная версия {version}',
 
   'tx.shell.notImplemented': 'Функция находится в разработке',
 

@@ -7,6 +7,7 @@ import { LibraryItemType } from '@rsconcept/domain/library';
 
 import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useAuth } from '@/features/auth';
+import { labelVersion } from '@/features/library/labels';
 
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
@@ -45,6 +46,11 @@ export function Navigation() {
   const currentModel = useAIStore(state => state.model);
   const currentSchema = useAIStore(state => state.schema);
   const currentItem = currentOSS || currentModel || currentSchema;
+  const archiveVersionLabel =
+    currentSchema && currentSchema.version !== 'latest'
+      ? labelVersion(currentSchema.version, currentSchema.versions)
+      : undefined;
+  const isArchiveView = !!archiveVersionLabel;
   const {
     elementRef: createRef,
     isOpen: isCreateOpen,
@@ -105,7 +111,7 @@ export function Navigation() {
           noNavigationAnimation ? '-translate-y-6 max-h-0' : 'max-h-12'
         )}
       >
-        <div className='absolute top-0 w-full h-full overflow-hidden'>
+        <div className='absolute top-0 w-full h-full overflow-hidden pointer-events-none'>
           <div
             aria-hidden
             className={clsx(
@@ -124,6 +130,17 @@ export function Navigation() {
               'pointer-events-none '
             )}
           />
+          {isArchiveView ? (
+            <div
+              aria-hidden
+              className={clsx(
+                'absolute left-1/3 -top-6 h-16 w-48',
+                'rounded-full blur-3xl',
+                'bg-accent-orange/35 dark:bg-accent-orange/55',
+                'pointer-events-none'
+              )}
+            />
+          ) : null}
         </div>
 
         <div
@@ -132,7 +149,13 @@ export function Navigation() {
         >
           <Logo />
         </div>
-        {currentItem ? <CurrentTitle itemType={currentItem.item_type} title={currentItem.title} /> : null}
+        {currentItem ? (
+          <CurrentTitle
+            itemType={currentItem.item_type}
+            title={currentItem.title}
+            archiveVersionLabel={archiveVersionLabel}
+          />
+        ) : null}
         <div className='relative z-10 flex gap-2 items-center shrink-0'>
           {isAnonymous ? (
             <NavigationButton

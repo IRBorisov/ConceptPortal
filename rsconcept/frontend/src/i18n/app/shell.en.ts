@@ -82,6 +82,7 @@ export const txShellEn: Record<string, string> = {
   'tx.shell.logo.alt.light': 'Concept Portal logo (light)',
   'tx.shell.logo.alt.dark': 'Concept Portal logo (dark)',
   'tx.shell.activeItem.hint': 'Item title',
+  'tx.shell.activeItem.archive.hint': '{title} — archived version {version}',
 
   'tx.shell.notImplemented': 'Feature is under development',
 
