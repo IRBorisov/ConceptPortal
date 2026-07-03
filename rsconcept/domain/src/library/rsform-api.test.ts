@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { RSErrorCode } from '../rslang/error';
 
 import { CstType, type RSForm } from './rsform';
-import { getAnalysisFor, validateAliasFormat } from './rsform-api';
+import { applyMappingToConstituents, getAnalysisFor, validateAliasFormat } from './rsform-api';
 
 const emptySchema = {} as RSForm;
 
@@ -48,5 +48,26 @@ describe('getAnalysisFor', () => {
       to: 2,
       params: [CstType.CONSTANT, 'C1']
     });
+  });
+});
+
+describe('applyMappingToConstituents', () => {
+  it('updates formal expressions and terminological references', () => {
+    const items = [
+      {
+        alias: 'X3',
+        definition_formal: 'X1 = X2',
+        typification_manual: 'ℬ(X1)',
+        term_raw: '@{X1|sing}',
+        definition_raw: '@{X2|sing}'
+      }
+    ];
+
+    applyMappingToConstituents(items, { X1: 'X3', X2: 'X4' }, false);
+
+    expect(items[0].definition_formal).toBe('X3 = X4');
+    expect(items[0].typification_manual).toBe('ℬ(X3)');
+    expect(items[0].term_raw).toBe('@{X3|sing}');
+    expect(items[0].definition_raw).toBe('@{X4|sing}');
   });
 });

@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from shared.serializers import StrictSerializer
 
-from .data_access import RSFormParseSerializer
+from .data_access import CstInfoSerializer, RSFormParseSerializer
 
 
 class ResultTextResponse(StrictSerializer):
@@ -18,8 +18,6 @@ class NewCstResponse(StrictSerializer):
 
 
 class NewMultiCstResponse(StrictSerializer):
-    ''' Serializer: Create multiple cst response. '''
-    cst_list = serializers.ListField(
-        child=serializers.IntegerField()
-    )
+    ''' Serializer: Clone multiple constituents response. '''
+    cst_list = CstInfoSerializer(many=True)
     schema = RSFormParseSerializer()

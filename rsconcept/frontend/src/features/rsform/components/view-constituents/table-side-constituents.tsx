@@ -29,7 +29,7 @@ interface TableSideConstituentsProps {
   onDoubleClick?: (cst: Constituenta) => void;
 
   enableRowReordering?: boolean;
-  onMoveAfter?: (afterCst: Constituenta | null, items: Constituenta[]) => void;
+  onRowsDropped?: (event: DataTableRowDrop<Constituenta>) => void;
 
   maxHeight?: string;
   autoScroll?: boolean;
@@ -46,7 +46,7 @@ export function TableSideConstituents({
   onActivate,
   onDoubleClick,
   enableRowReordering,
-  onMoveAfter,
+  onRowsDropped,
   maxHeight,
   autoScroll = true
 }: TableSideConstituentsProps) {
@@ -128,7 +128,7 @@ export function TableSideConstituents({
   ];
 
   function handleRowsReordered(event: DataTableRowDrop<Constituenta>) {
-    onMoveAfter?.(event.afterRow ?? null, event.draggedRows);
+    onRowsDropped?.(event);
   }
 
   return (
@@ -142,7 +142,7 @@ export function TableSideConstituents({
       conditionalRowStyles={conditionalRowStyles}
       enableHiding
       enableRowReordering={enableRowReordering}
-      onRowsReordered={onMoveAfter ? handleRowsReordered : undefined}
+      onRowsReordered={onRowsDropped ? handleRowsReordered : undefined}
       noDataComponent={
         <NoData className='min-h-20'>
           <p>{tx('tx.list.empty')}</p>

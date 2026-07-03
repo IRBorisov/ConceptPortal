@@ -11,6 +11,7 @@ import { generateAlias, removeAliasReference } from '@rsconcept/domain/library/r
 import { type UnsavedSaveHandler, useConceptNavigation, useUnsavedChanges } from '@/app';
 import { type ConstituentaCreatedResponse, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
 import { SchemaEditContext } from '@/features/rsform/pages/rsform-page/schema-edit-context';
+import { buildCloneConstituentsBatch } from '@/features/rsform/utils/build-clone-batch';
 
 import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
@@ -29,6 +30,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     updateCrucial,
     patchConstituenta,
     createConstituenta,
+    createConstituentsBatch,
     createAttribution,
     deleteAttribution,
     clearAttributions,
@@ -85,12 +87,16 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     };
   }
 
-  function onCreateCst(newCst: ConstituentaCreatedResponse['new_cst']) {
-    setPendingActiveID(newCst.id);
-    setSelectedCst([newCst.id]);
-    router.changeActive(newCst.id);
+  function onCreateCstBatch(newIDs: number[]) {
+    if (newIDs.length === 0) {
+      return;
+    }
+    const lastID = newIDs[newIDs.length - 1];
+    setPendingActiveID(lastID);
+    setSelectedCst(newIDs);
+    router.changeActive(lastID);
     setTimeout(function scrollToCreatedConstituenta() {
-      const element = document.getElementById(`${prefixes.cst_list}${newCst.id}`);
+      const element = document.getElementById(`${prefixes.cst_list}${lastID}`);
       if (element) {
         element.scrollIntoView({
           behavior: 'smooth',
@@ -99,6 +105,10 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
         });
       }
     }, PARAMETER.refreshTimeout);
+  }
+
+  function onCreateCst(newCst: ConstituentaCreatedResponse['new_cst']) {
+    onCreateCstBatch([newCst.id]);
   }
 
   function handleSetFocus(newValue: Constituenta | null) {
@@ -131,17 +141,17 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     return response.new_cst.id;
   }
 
-  async function cloneCst(): Promise<number> {
-    if (!activeCst) {
-      throw new Error('No active cst');
+  async function cloneCst(options?: { insertAfter?: number | null; cstIDs?: number[] }): Promise<number> {
+    const ids = options?.cstIDs ?? selectedCstInSchema;
+    if (ids.length === 0) {
+      throw new Error('No cst to clone');
     }
-    const response = await createConstituenta(
-      buildCreateCstData(activeCst, {
-        insertAfter: activeCst.id
-      })
-    );
-    onCreateCst(response.new_cst);
-    return response.new_cst.id;
+    const insertAfter =
+      options && 'insertAfter' in options ? (options.insertAfter ?? null) : (activeCst?.id ?? null);
+    const response = await createConstituentsBatch(buildCloneConstituentsBatch(schema, ids, insertAfter));
+    const newIDs = response.cst_list.map(cst => cst.id);
+    onCreateCstBatch(newIDs);
+    return newIDs[newIDs.length - 1];
   }
 
   function moveToIndex(target: number, selected = selectedCstInSchema) {

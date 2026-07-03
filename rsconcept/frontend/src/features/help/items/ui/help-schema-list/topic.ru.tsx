@@ -44,6 +44,9 @@ export function HelpSchemaListRu() {
         </li>
         <li>перетаскивание строки – изменить порядок</li>
         <li>
+          <kbd>Ctrl + перетаскивание</kbd> – клонировать с указанием позиции вставки (зелёная метка)
+        </li>
+        <li>
           <kbd>Клик</kbd> – выделение строки
         </li>
         <li>
@@ -61,7 +64,7 @@ export function HelpSchemaListRu() {
         </li>
 
         <li>
-          <IconClone className='inline-icon icon-green' /> клонировать выделенную: <kbd>Alt + V</kbd>
+          <IconClone className='inline-icon icon-green' /> клонировать выделенные: <kbd>Alt + V</kbd>
         </li>
         <li>
           <IconNewItem className='inline-icon icon-green' /> новая конституента: <kbd>Alt + `</kbd>

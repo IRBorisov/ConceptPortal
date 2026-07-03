@@ -4,6 +4,7 @@ import { type ReactNode } from 'react';
 
 import { type Constituenta, type RSEngine, type RSForm } from '@rsconcept/domain/library';
 
+import { type DataTableRowDrop } from '@/components/data-table';
 import { cn } from '@/components/utils';
 
 import { ConstituentsSearch } from './constituents-search';
@@ -19,7 +20,7 @@ interface ViewConstituentsProps {
   onActivate?: (cst: Constituenta) => void;
   onDoubleClick?: (cst: Constituenta) => void;
   enableRowReordering?: boolean;
-  onMoveAfter?: (target: Constituenta | null, items: Constituenta[]) => void;
+  onRowsDropped?: (event: DataTableRowDrop<Constituenta>) => void;
 
   className?: string;
   maxListHeight?: string;
@@ -39,7 +40,7 @@ export function ViewConstituents({
   onActivate,
   onDoubleClick,
   enableRowReordering,
-  onMoveAfter,
+  onRowsDropped,
 
   className,
   maxListHeight,
@@ -63,7 +64,7 @@ export function ViewConstituents({
         isModelIssue={isModelIssue}
         onActivate={onActivate}
         enableRowReordering={enableRowReordering}
-        onMoveAfter={onMoveAfter}
+        onRowsDropped={onRowsDropped}
         maxHeight={maxListHeight}
         autoScroll={autoScroll}
         onDoubleClick={onDoubleClick}

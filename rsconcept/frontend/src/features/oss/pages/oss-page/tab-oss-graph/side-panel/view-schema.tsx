@@ -9,8 +9,10 @@ import { calculateSchemaStats, isSchemaIssue } from '@rsconcept/domain/library/r
 import { useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
+import { type ConstituentaBasicsDTO } from '@/features/rsform/backend/types';
 import { useClearAttributions } from '@/features/rsform/backend/use-clear-attributions';
 import { useCreateAttribution } from '@/features/rsform/backend/use-create-attribution';
+import { useCreateConstituentsBatch } from '@/features/rsform/backend/use-create-constituents-batch';
 import { useDeleteAttribution } from '@/features/rsform/backend/use-delete-attribution';
 import { useMoveConstituents } from '@/features/rsform/backend/use-move-constituents';
 import { useMutatingRSForm } from '@/features/rsform/backend/use-mutating-rsform';
@@ -19,11 +21,14 @@ import { useUpdateConstituenta } from '@/features/rsform/backend/use-update-cons
 import { MiniRSFormStats } from '@/features/rsform/components/mini-rsform-stats';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
 import { useCstSearchStore } from '@/features/rsform/stores/cst-search';
+import { buildCloneConstituentsBatch } from '@/features/rsform/utils/build-clone-batch';
 
 import { MiniButton } from '@/components/control';
+import { type DataTableRowDrop } from '@/components/data-table';
 import { IconMoveDown, IconMoveUp } from '@/components/icons';
 import { useFitHeight } from '@/stores/app-layout';
 import { useDialogsStore } from '@/stores/dialogs';
+import { PARAMETER, prefixes } from '@/utils/constants';
 
 import { ToolbarSchema } from './toolbar-schema';
 
@@ -45,6 +50,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
   const { deleteAttribution } = useDeleteAttribution();
   const { clearAttributions } = useClearAttributions();
   const { moveConstituents } = useMoveConstituents();
+  const { createConstituentsBatch } = useCreateConstituentsBatch();
   const isProcessing = useMutatingRSForm();
   const setCurrentSchema = useAIStore(state => state.setSchema);
   const onSetSchema = useEffectEvent(setCurrentSchema);
@@ -138,9 +144,43 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
     });
   }
 
-  function handleMoveAfter(afterCst: Constituenta | null, items: Constituenta[]) {
-    const selected = items.map(cst => cst.id);
+  function onCreateCst(newCst: ConstituentaBasicsDTO) {
+    setActiveID(newCst.id);
+    setTimeout(function scrollToCreatedConstituenta() {
+      const element = document.getElementById(`${prefixes.cst_list}${newCst.id}`);
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'end'
+        });
+      }
+    }, PARAMETER.refreshTimeout);
+  }
+
+  async function cloneConstituentsFromList(sources: Constituenta[], insertAfter: number | null) {
+    const response = await createConstituentsBatch({
+      itemID: schema.id,
+      data: buildCloneConstituentsBatch(
+        schema,
+        sources.map(cst => cst.id),
+        insertAfter
+      )
+    });
+    const lastCst = response.cst_list[response.cst_list.length - 1];
+    if (lastCst) {
+      onCreateCst(lastCst);
+    }
+  }
+
+  function handleRowsDropped(event: DataTableRowDrop<Constituenta>) {
+    if (event.isClone) {
+      void cloneConstituentsFromList(event.draggedRows, event.afterRow?.id ?? null);
+      return;
+    }
+    const selected = event.draggedRows.map(cst => cst.id);
     const remaining = schema.items.filter(cst => !selected.includes(cst.id));
+    const afterCst = event.afterRow;
     const afterIndex = afterCst === null ? -1 : remaining.findIndex(cst => cst.id === afterCst.id);
     if (afterCst !== null && afterIndex === -1) {
       return;
@@ -176,7 +216,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
         isSchemaIssue={isSchemaIssue}
         onActivate={cst => setActiveID(cst.id)}
         enableRowReordering={canReorderConstituents}
-        onMoveAfter={handleMoveAfter}
+        onRowsDropped={handleRowsDropped}
         maxListHeight={listHeight}
         stopSearchKeyPropagation
         onDoubleClick={isMutable ? handleEditCst : undefined}

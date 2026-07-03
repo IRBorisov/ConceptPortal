@@ -439,6 +439,43 @@ class CstMoveSerializer(CstListSerializer):
     move_to = serializers.IntegerField()
 
 
+class CstBatchCreateItemSerializer(StrictModelSerializer):
+    ''' Serializer: One constituenta inside a batch create request. '''
+    alias = serializers.CharField(max_length=8)
+    cst_type = serializers.ChoiceField(CstType.choices)
+
+    class Meta:
+        ''' serializer metadata. '''
+        model = Constituenta
+        fields = \
+            'alias', 'cst_type', 'convention', 'crucial', \
+            'term_raw', 'definition_raw', 'definition_formal', \
+            'term_forms', 'typification_manual', 'value_is_property'
+
+
+class CstBatchCreateSerializer(StrictSerializer):
+    ''' Serializer: Batch constituenta creation. '''
+    insert_after = PKField(
+        many=False,
+        allow_null=True,
+        required=False,
+        queryset=Constituenta.objects.all().only('schema_id', 'order')
+    )
+    items = serializers.ListField(
+        child=CstBatchCreateItemSerializer(),
+        min_length=1
+    )
+
+    def validate(self, attrs):
+        schema = cast(LibraryItem, self.context['schema'])
+        insert_after = attrs.get('insert_after')
+        if insert_after and insert_after.schema_id != schema.pk:
+            raise serializers.ValidationError({
+                'insert_after': msg.constituentaNotInRSform(schema.title)
+            })
+        return attrs
+
+
 class SubstitutionSerializerBase(StrictSerializer):
     ''' Serializer: Basic substitution. '''
     original = PKField(many=False, queryset=Constituenta.objects.only('alias', 'schema_id'))

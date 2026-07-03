@@ -30,6 +30,14 @@ export interface DataTableRowDrop<TData extends RowData> {
 
   /** Row after which the dragged rows were inserted, or `null` for the start. */
   afterRow: TData | null;
+
+  /** When `true`, rows were copied (Ctrl/Meta drag) instead of moved. */
+  isClone?: boolean;
+}
+
+export interface DataTableDropHint {
+  rowID: string;
+  after: boolean;
 }
 
 export interface DataTableProps<TData extends RowData>

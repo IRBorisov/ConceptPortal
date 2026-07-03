@@ -119,7 +119,7 @@ export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
         aria-label={tx('tx.cst.clone')}
         icon={<IconClone size='1.25rem' className='icon-green' />}
         onClick={() => void cloneCst()}
-        disabled={isProcessing || selectedCst.length !== 1}
+        disabled={isProcessing || selectedCst.length === 0}
       />
       <MiniButton
         title={prepareTooltip(tx('tx.general.selection.selected.delete'), 'Delete')}
