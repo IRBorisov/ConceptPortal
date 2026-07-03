@@ -49,13 +49,13 @@ export const RSErrorCode = {
   expectedLocal: 0x8415, // 33813
   expectedType: 0x8416, // 33814
 
-  localDoubleDeclare: 0x2801, // 10241
   localNotUsed: 0x2802, // 10242
 
   localUndeclared: 0x8801, // 34817
   localShadowing: 0x8802, // 34818
+  localDoubleDeclare: 0x8803, // 34819
 
-  typesNotEqual: 0x8803, // 34819
+  typesNotEqual: 0x880a, // 34826
   globalNotTyped: 0x8804, // 34820
   invalidDecart: 0x8805, // 34821
   invalidBoolean: 0x8806, // 34822
@@ -147,5 +147,8 @@ export function getRSErrorPrefix(code: RSErrorCode): string {
 
 /** Checks if error is critical. */
 export function isCritical(code: RSErrorCode): boolean {
-  return code !== RSErrorCode.localDoubleDeclare && code !== RSErrorCode.localNotUsed;
+  if ((code & 0xf000) === 0x2000) {
+    return false;
+  }
+  return true;
 }

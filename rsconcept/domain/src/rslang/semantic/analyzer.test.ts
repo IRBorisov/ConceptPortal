@@ -106,4 +106,12 @@ describe('RSLang analyzer', () => {
       params: [String(TypeClass.logic), labelType(bool(basic('X1')))]
     });
   });
+
+  it('Rejects duplicate local names across non-overlapping scopes', () => {
+    expectError(
+      'D{t ∈ X1 | t=t} ∪ D{t∈X1 | t=t}',
+      {},
+      { code: RSErrorCode.localDoubleDeclare, from: 20, to: 21, params: ['t'] }
+    );
+  });
 });

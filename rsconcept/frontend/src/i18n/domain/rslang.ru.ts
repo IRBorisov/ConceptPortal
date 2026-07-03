@@ -175,7 +175,7 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.expectedArgument': 'Допишите аргумент в списке',
   'tx.rslang.error.expectedLocal': 'Здесь нужна локальная переменная',
   'tx.rslang.error.expectedType': 'Ожидался класс выражения «{expected}»; получено {actual}',
-  'tx.rslang.error.localDoubleDeclare': 'Локальная переменная уже объявлена: {name}',
+  'tx.rslang.error.localDoubleDeclare': 'Идентификатор «{name}» уже объявлен в этом выражении — используйте другое имя',
   'tx.rslang.error.localNotUsed': 'Локальная переменная объявлена, но не используется: {name}',
   'tx.rslang.error.localUndeclared': 'Локальная переменная не объявлена в этой области: {name}',
   'tx.rslang.error.localShadowing': 'Имя локальной переменной уже занято в этой области: {name}',

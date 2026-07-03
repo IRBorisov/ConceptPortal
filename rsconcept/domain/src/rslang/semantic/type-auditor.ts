@@ -1163,10 +1163,7 @@ class LocalContext {
         return false;
       } else {
         this.onError(RSErrorCode.localDoubleDeclare, node, [alias]);
-        const index = this.data.indexOf(existing);
-        if (index !== -1) {
-          this.data.splice(index, 1);
-        }
+        return false;
       }
     }
     this.data.push({ alias, type, level: 1, useCount: 0 });
@@ -1177,8 +1174,7 @@ class LocalContext {
     const alias = getNodeText(node);
     const local = this.data.find(data => data.alias === alias);
     if (local === undefined) {
-      this.onError(RSErrorCode.localUndeclared, node, [alias]);
-      return null;
+      return this.onError(RSErrorCode.localUndeclared, node, [alias]);
     } else if (local.level < 1) {
       const subexprRoot = findRightLogicOperandRoot(node);
       if (subexprRoot !== null) {
@@ -1187,8 +1183,7 @@ class LocalContext {
         }
         return this.onError(RSErrorCode.localOutOfScopeParentheses, node, [alias]);
       }
-      this.onError(RSErrorCode.localOutOfScope, node, [alias]);
-      return null;
+      return this.onError(RSErrorCode.localOutOfScope, node, [alias]);
     } else {
       local.useCount++;
       return local.type;

@@ -184,7 +184,8 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.expectedArgument': 'Ajoutez l’argument manquant dans la liste',
   'tx.rslang.error.expectedLocal': 'Une variable locale est requise ici',
   'tx.rslang.error.expectedType': 'Classe d’expression attendue : « {expected} » ; obtenu {actual}',
-  'tx.rslang.error.localDoubleDeclare': 'La variable locale est déjà déclarée : {name}',
+  'tx.rslang.error.localDoubleDeclare':
+    "L'identifiant « {name} » est déjà déclaré dans cette expression — utilisez un autre nom",
   'tx.rslang.error.localNotUsed': 'La variable locale est déclarée mais non utilisée : {name}',
   'tx.rslang.error.localUndeclared': 'La variable locale n’est pas déclarée dans cette portée : {name}',
   'tx.rslang.error.localShadowing': 'Ce nom de variable locale est déjà utilisé dans cette portée : {name}',

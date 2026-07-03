@@ -174,7 +174,8 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.expectedArgument': 'Add the missing argument in the list',
   'tx.rslang.error.expectedLocal': 'A local variable is required here',
   'tx.rslang.error.expectedType': 'Expected expression class «{expected}»; got {actual}',
-  'tx.rslang.error.localDoubleDeclare': 'Local variable is already declared: {name}',
+  'tx.rslang.error.localDoubleDeclare':
+    'Identifier «{name}» is already declared in this expression — use a different name',
   'tx.rslang.error.localNotUsed': 'Local variable is declared but not used: {name}',
   'tx.rslang.error.localUndeclared': 'Local variable is not declared in this scope: {name}',
   'tx.rslang.error.localShadowing': 'Local variable name is already used in this scope: {name}',
