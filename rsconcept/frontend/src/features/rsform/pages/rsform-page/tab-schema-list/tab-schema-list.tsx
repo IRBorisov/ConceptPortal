@@ -1,10 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
-import { matchConstituenta } from '@/services/search';
 import { CstType } from '@rsconcept/domain/library/rsform';
 
 import { useConceptNavigation } from '@/app';
@@ -17,6 +15,8 @@ import { useRowsDropHandler } from '@/hooks/use-rows-drop-handler';
 import { useFitHeight } from '@/stores/app-layout';
 import { withPreventDefault } from '@/utils/utils';
 
+import { useFilteredItems } from '../../../components/view-constituents/use-filtered-items';
+import { useCstSearchStore } from '../../../stores/cst-search';
 import { useSchemaEdit } from '../schema-edit-context';
 
 import { TableSchemaList } from './table-schema-list';
@@ -43,22 +43,32 @@ export function TabSchemaList() {
     promptDeleteSelected
   } = useSchemaEdit();
 
-  const [filterText, setFilterText] = useState('');
-  const filtered = filterText ? schema.items.filter(cst => matchConstituenta(cst, filterText)) : schema.items;
+  const query = useCstSearchStore(state => state.query);
+  const filter = useCstSearchStore(state => state.filter);
+  const setQuery = useCstSearchStore(state => state.setQuery);
+  const filtered = useFilteredItems(schema);
+  const listScrollKey = `${query}\0${filter}`;
 
   const rowSelection: RowSelectionState = Object.fromEntries(
-    filtered.map((cst, index) => [String(index), selectedCst.includes(cst.id)])
+    filtered.filter(cst => selectedCst.includes(cst.id)).map(cst => [String(cst.id), true])
   );
 
   function handleRowSelection(updater: React.SetStateAction<RowSelectionState>) {
     const newRowSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
-    const newSelection: number[] = [];
-    filtered.forEach((cst, index) => {
-      if (newRowSelection[String(index)] === true) {
-        newSelection.push(cst.id);
+    const filteredIds = new Set(filtered.map(cst => cst.id));
+    const hiddenSelected = selectedCst.filter(id => !filteredIds.has(id));
+    const newVisibleSelection: number[] = [];
+
+    for (const [key, selected] of Object.entries(newRowSelection)) {
+      if (selected) {
+        const cstID = Number(key);
+        if (filteredIds.has(cstID)) {
+          newVisibleSelection.push(cstID);
+        }
       }
-    });
-    setSelectedCst(prev => [...prev.filter(cst_id => !filtered.find(cst => cst.id === cst_id)), ...newSelection]);
+    }
+
+    setSelectedCst([...hiddenSelected, ...newVisibleSelection]);
   }
 
   const handleRowsDrop = useRowsDropHandler(cloneCst, moveAfter);
@@ -152,13 +162,7 @@ export function TabSchemaList() {
             onSelect={(event, value) => router.gotoOss(value.id, event.ctrlKey || event.metaKey)}
           />
         ) : null}
-        <SearchBar
-          id='constituents_search'
-          noBorder
-          className='max-w-50'
-          query={filterText}
-          onChangeQuery={setFilterText}
-        />
+        <SearchBar id='constituents_search' noBorder className='max-w-50' query={query} onChangeQuery={setQuery} />
       </div>
 
       <ExportDropdown
@@ -172,6 +176,7 @@ export function TabSchemaList() {
       <TableSchemaList
         items={filtered}
         focusCstId={focusCstId}
+        listScrollKey={listScrollKey}
         maxHeight={tableHeight}
         enableSelection={isContentEditable}
         selected={rowSelection}

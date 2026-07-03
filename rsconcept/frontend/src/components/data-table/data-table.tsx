@@ -41,7 +41,9 @@ export interface DataTableDropHint {
 }
 
 export interface DataTableProps<TData extends RowData>
-  extends Styling, Pick<TableOptions<TData>, 'data' | 'columns' | 'onRowSelectionChange' | 'onColumnVisibilityChange'> {
+  extends
+    Styling,
+    Pick<TableOptions<TData>, 'data' | 'columns' | 'getRowId' | 'onRowSelectionChange' | 'onColumnVisibilityChange'> {
   /** Id of the component. */
   id?: string;
 

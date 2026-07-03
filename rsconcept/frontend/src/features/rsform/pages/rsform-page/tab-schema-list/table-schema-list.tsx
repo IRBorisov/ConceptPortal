@@ -23,6 +23,7 @@ import { useScrollToConstituent } from '../../../utils/scroll-to-constituent';
 interface TableSchemaListProps {
   items?: Constituenta[];
   focusCstId?: number;
+  listScrollKey?: string;
   enableSelection: boolean;
   maxHeight?: string;
   selected: RowSelectionState;
@@ -50,6 +51,7 @@ const columnHelper = createColumnHelper<Constituenta>();
 export function TableSchemaList({
   items,
   focusCstId,
+  listScrollKey,
   maxHeight,
   enableSelection,
   selected,
@@ -62,7 +64,7 @@ export function TableSchemaList({
   const tx = useTx();
   const windowSize = useWindowSize();
 
-  useScrollToConstituent(prefixes.cst_list, focusCstId);
+  useScrollToConstituent(prefixes.cst_list, focusCstId, true, { scrollKey: listScrollKey });
 
   function handleRowClicked(cst: Constituenta, event: React.MouseEvent<Element>) {
     if (event.altKey) {
@@ -148,6 +150,7 @@ export function TableSchemaList({
       style={{ maxHeight: maxHeight }}
       data={items ?? []}
       columns={columns}
+      getRowId={(row: Constituenta) => String(row.id)}
       onRowDoubleClicked={handleRowDoubleClicked}
       onRowClicked={handleRowClicked}
       enableHiding

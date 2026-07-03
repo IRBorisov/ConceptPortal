@@ -7,6 +7,8 @@ export interface ScrollToConstituentOptions {
   behavior?: ScrollBehavior;
   block?: ScrollLogicalPosition;
   inline?: ScrollLogicalPosition;
+  /** When this value changes, scroll to the constituent again (e.g. list filter). */
+  scrollKey?: unknown;
 }
 
 const SMOOTH_SCROLL_RESTORE_MS = 400;
@@ -86,9 +88,11 @@ export function useScrollToConstituent(
 ): void {
   const prevCstId = useRef<number | null>(null);
   const isFirstRender = useRef(true);
+  const isFirstScrollKey = useRef(true);
   const behavior = options?.behavior;
   const block = options?.block;
   const inline = options?.inline;
+  const scrollKey = options?.scrollKey;
 
   useLayoutEffect(
     function scrollInstantlyOnMount() {
@@ -131,5 +135,19 @@ export function useScrollToConstituent(
       scheduleScrollToConstituent(prefix, cstId, { behavior: behavior ?? 'smooth', block, inline });
     },
     [prefix, cstId, enabled, behavior, block, inline]
+  );
+
+  useEffect(
+    function scrollWhenContextChanges() {
+      if (!enabled || cstId == null || scrollKey === undefined) {
+        return;
+      }
+      if (isFirstScrollKey.current) {
+        isFirstScrollKey.current = false;
+        return;
+      }
+      scheduleScrollToConstituent(prefix, cstId, { behavior: behavior ?? 'smooth', block, inline });
+    },
+    [prefix, cstId, enabled, behavior, block, inline, scrollKey]
   );
 }

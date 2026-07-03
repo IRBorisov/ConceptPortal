@@ -10,6 +10,7 @@ import { NoData, TextContent } from '@/components/view';
 import { prefixes } from '@/utils/constants';
 
 import { describeConstituenta } from '../../labels';
+import { useCstSearchStore } from '../../stores/cst-search';
 import { useScrollToConstituent } from '../../utils/scroll-to-constituent';
 import { BadgeConstituenta } from '../badge-constituenta';
 
@@ -51,8 +52,11 @@ export function TableSideConstituents({
 }: TableSideConstituentsProps) {
   const tx = useTx();
   const items = useFilteredItems(schema, isSchemaIssue, isModelIssue);
+  const query = useCstSearchStore(state => state.query);
+  const filter = useCstSearchStore(state => state.filter);
+  const listScrollKey = `${query}\0${filter}`;
 
-  useScrollToConstituent(prefixes.cst_side_table, activeCst?.id, autoScroll);
+  useScrollToConstituent(prefixes.cst_side_table, activeCst?.id, autoScroll, { scrollKey: listScrollKey });
 
   const columns = [
     columnHelper.accessor('alias', {

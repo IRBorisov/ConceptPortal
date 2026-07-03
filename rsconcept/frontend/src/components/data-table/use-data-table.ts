@@ -30,7 +30,7 @@ export interface IConditionalStyle<TData> {
 
 interface UseDataTableProps<TData extends RowData> extends Pick<
   TableOptions<TData>,
-  'data' | 'columns' | 'onRowSelectionChange' | 'onColumnVisibilityChange'
+  'data' | 'columns' | 'getRowId' | 'onRowSelectionChange' | 'onColumnVisibilityChange'
 > {
   /** Enable row selection. */
   enableRowSelection?: boolean;
