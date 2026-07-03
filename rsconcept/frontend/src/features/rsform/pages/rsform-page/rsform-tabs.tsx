@@ -42,6 +42,7 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
 
   const problemItems = schema.items.filter(cst => isSchemaIssue(cst));
   const countProblematic = problemItems.length;
+  const listSyncRef = useRef({ activeTab, activeID });
 
   useLayoutEffect(
     function updateWindowTitle() {
@@ -68,6 +69,19 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
 
   useLayoutEffect(
     function syncNavigationAndSelection() {
+      if (activeTab === RSTabID.CST_LIST) {
+        const prev = listSyncRef.current;
+        const tabOrActiveChanged = prev.activeTab !== activeTab || prev.activeID !== activeID;
+        listSyncRef.current = { activeTab, activeID };
+
+        if (tabOrActiveChanged && activeID !== undefined && schema.cstByID.has(activeID) && selectedCst.length === 0) {
+          setSelectedCst([activeID]);
+        }
+        return;
+      }
+
+      listSyncRef.current = { activeTab, activeID };
+
       if (activeTab === RSTabID.CST_EDIT) {
         // After create, URL can lag; skip syncing from stale `active` until it matches `pendingActiveID`.
         // User-driven `changeActive` / `gotoEditActive` must call `clearPendingActiveID()` so this gate does not block.

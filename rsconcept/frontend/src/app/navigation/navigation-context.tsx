@@ -63,6 +63,9 @@ interface INavigationContext {
   /** Change active id. */
   changeActive: (activeID: number) => void;
 
+  /** Remove active id from the current URL. */
+  clearActive: () => void;
+
   /** Navigate to Sandbox Editor. */
   gotoSandboxEditor: (newTab?: boolean) => void;
 

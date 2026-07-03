@@ -161,6 +161,15 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     pushInPlace(url.pathname + url.search + url.hash);
   }
 
+  function clearActive(): void {
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has('active')) {
+      return;
+    }
+    url.searchParams.delete('active');
+    replace({ path: url.pathname + url.search + url.hash });
+  }
+
   function gotoEditActive(activeID: number, newTab?: boolean): void {
     const url = new URL(window.location.href);
     url.searchParams.set('tab', String(RSTabID.CST_EDIT));
@@ -273,6 +282,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
 
         changeTab,
         changeActive,
+        clearActive,
 
         gotoLibrary,
         gotoNewItem,

@@ -30,6 +30,7 @@ export function TabSchemaList() {
     isProcessing,
     schema,
     selectedCst,
+    activeCst,
     deselectAll,
     setSelectedCst,
     clearPendingActiveID,
@@ -62,9 +63,14 @@ export function TabSchemaList() {
 
   const handleRowsDrop = useRowsDropHandler(cloneCst, moveAfter);
 
+  function handleDeselectAll() {
+    deselectAll();
+    router.clearActive();
+  }
+
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Escape') {
-      withPreventDefault(deselectAll)(event);
+      withPreventDefault(handleDeselectAll)(event);
       return;
     }
     if (!isContentEditable || isProcessing) {
@@ -115,6 +121,7 @@ export function TabSchemaList() {
   }
 
   const tableHeight = useFitHeight('4rem + 5px');
+  const focusCstId = activeCst?.id;
 
   return (
     <div tabIndex={-1} onKeyDown={handleKeyDown} className='relative pt-8'>
@@ -126,6 +133,7 @@ export function TabSchemaList() {
             'cc-animate-position',
             'mx-8'
           )}
+          onDeselectAll={handleDeselectAll}
         />
       ) : null}
 
@@ -163,6 +171,7 @@ export function TabSchemaList() {
 
       <TableSchemaList
         items={filtered}
+        focusCstId={focusCstId}
         maxHeight={tableHeight}
         enableSelection={isContentEditable}
         selected={rowSelection}

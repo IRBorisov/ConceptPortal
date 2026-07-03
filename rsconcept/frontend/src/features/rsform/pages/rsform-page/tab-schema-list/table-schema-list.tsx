@@ -18,9 +18,11 @@ import { prefixes } from '@/utils/constants';
 import { truncateToSymbol } from '@/utils/format';
 
 import { BadgeConstituenta } from '../../../components/badge-constituenta';
+import { useScrollToConstituent } from '../../../utils/scroll-to-constituent';
 
 interface TableSchemaListProps {
   items?: Constituenta[];
+  focusCstId?: number;
   enableSelection: boolean;
   maxHeight?: string;
   selected: RowSelectionState;
@@ -47,6 +49,7 @@ const columnHelper = createColumnHelper<Constituenta>();
 
 export function TableSchemaList({
   items,
+  focusCstId,
   maxHeight,
   enableSelection,
   selected,
@@ -58,6 +61,8 @@ export function TableSchemaList({
 }: TableSchemaListProps) {
   const tx = useTx();
   const windowSize = useWindowSize();
+
+  useScrollToConstituent(prefixes.cst_list, focusCstId);
 
   function handleRowClicked(cst: Constituenta, event: React.MouseEvent<Element>) {
     if (event.altKey) {

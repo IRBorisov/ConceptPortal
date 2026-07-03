@@ -41,6 +41,7 @@ import { useRSForm } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
 import { useUpdateCrucial } from '../../backend/use-update-crucial';
 import { buildCloneConstituentsBatch } from '../../utils/build-clone-batch';
+import { scrollToConstituentElement } from '../../utils/scroll-to-constituent';
 
 import { SchemaEditContext } from './schema-edit-context';
 
@@ -171,14 +172,7 @@ export const SchemaEditState = ({
     setSelectedCst(newIDs);
     router.changeActive(lastID);
     setTimeout(function scrollToCreatedConstituenta() {
-      const element = document.getElementById(`${prefixes.cst_list}${lastID}`);
-      if (element) {
-        element.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'end'
-        });
-      }
+      scrollToConstituentElement(prefixes.cst_list, lastID, { behavior: 'smooth' });
     }, PARAMETER.refreshTimeout);
   }
 
@@ -187,8 +181,7 @@ export const SchemaEditState = ({
     if (ids.length === 0) {
       throw new Error('No cst to clone');
     }
-    const insertAfter =
-      options && 'insertAfter' in options ? (options.insertAfter ?? null) : (activeCst?.id ?? null);
+    const insertAfter = options && 'insertAfter' in options ? (options.insertAfter ?? null) : (activeCst?.id ?? null);
     const response = await cstCreateBatch({
       itemID: schema.id,
       data: buildCloneConstituentsBatch(schema, ids, insertAfter)
@@ -306,7 +299,6 @@ export const SchemaEditState = ({
     onCreateCst(newCst);
     return newCst.id;
   }
-
 
   function promptDeleteSelected() {
     if (!canDeleteSelected) {

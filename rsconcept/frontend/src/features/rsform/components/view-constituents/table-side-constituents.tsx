@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-
 import { useTx } from '@/i18n';
 import { type Constituenta, type RSEngine, type RSForm } from '@rsconcept/domain/library';
 
@@ -9,9 +7,10 @@ import { BadgeEvaluation } from '@/features/rsmodel/components/badge-evaluation'
 
 import { createColumnHelper, DataTable, type DataTableRowDrop, type IConditionalStyle } from '@/components/data-table';
 import { NoData, TextContent } from '@/components/view';
-import { PARAMETER, prefixes } from '@/utils/constants';
+import { prefixes } from '@/utils/constants';
 
 import { describeConstituenta } from '../../labels';
+import { useScrollToConstituent } from '../../utils/scroll-to-constituent';
 import { BadgeConstituenta } from '../badge-constituenta';
 
 import { useFilteredItems } from './use-filtered-items';
@@ -52,28 +51,8 @@ export function TableSideConstituents({
 }: TableSideConstituentsProps) {
   const tx = useTx();
   const items = useFilteredItems(schema, isSchemaIssue, isModelIssue);
-  const prevActiveCstID = useRef<number | null>(null);
 
-  useEffect(
-    function autoScrollToActive() {
-      if (autoScroll && prevActiveCstID.current !== activeCst?.id) {
-        prevActiveCstID.current = activeCst?.id ?? null;
-        if (!!activeCst) {
-          setTimeout(function scrollToActiveConstituenta() {
-            const element = document.getElementById(`${prefixes.cst_side_table}${activeCst.id}`);
-            if (element) {
-              element.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-                inline: 'end'
-              });
-            }
-          }, PARAMETER.refreshTimeout);
-        }
-      }
-    },
-    [autoScroll, activeCst]
-  );
+  useScrollToConstituent(prefixes.cst_side_table, activeCst?.id, autoScroll);
 
   const columns = [
     columnHelper.accessor('alias', {

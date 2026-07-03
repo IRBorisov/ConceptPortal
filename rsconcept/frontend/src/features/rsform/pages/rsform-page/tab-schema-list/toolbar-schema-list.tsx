@@ -30,9 +30,10 @@ import { useSchemaEdit } from '../schema-edit-context';
 
 interface ToolbarSchemaListProps {
   className?: string;
+  onDeselectAll?: () => void;
 }
 
-export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
+export function ToolbarSchemaList({ className, onDeselectAll }: ToolbarSchemaListProps) {
   const tx = useTx();
   const router = useConceptNavigation();
   const { elementRef: menuRef, isOpen: isMenuOpen, toggle: toggleMenu, handleBlur: handleMenuBlur } = useDropdown();
@@ -63,7 +64,7 @@ export function ToolbarSchemaList({ className }: ToolbarSchemaListProps) {
         title={prepareTooltip(tx('tx.general.selection.reset'), 'ESC')}
         aria-label={tx('tx.general.selection.reset')}
         icon={<IconReset size='1.25rem' className='icon-primary' />}
-        onClick={deselectAll}
+        onClick={onDeselectAll ?? deselectAll}
         disabled={selectedCst.length === 0}
       />
       <MiniButton
