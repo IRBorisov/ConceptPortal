@@ -9,7 +9,6 @@ export function HelpAPIFr() {
     <>
       <h1>{tx('tx.general.restApi')}</h1>
       <p>L&apos;interface programmatique du serveur est une API REST implémentée avec Django.</p>
-      <p>L&apos;API est encore en développement : les requêtes externes ne sont pas prises en charge.</p>
       <p>
         Consultez la description de l&apos;interface <TextURL text='ici' href={external_urls.restAPI} />.
       </p>
