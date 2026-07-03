@@ -29,7 +29,7 @@ interface TableSchemaListProps {
 
   onEdit: (cstID: number) => void;
   onCreateNew: () => void;
-  onMoveRows?: (rows: Constituenta[], afterID: number | null) => void;
+  onMoveRows?: (event: DataTableRowDrop<Constituenta>) => void;
 }
 
 // Window width cutoff for columns
@@ -72,7 +72,7 @@ export function TableSchemaList({
   }
 
   function handleRowsReordered(event: DataTableRowDrop<Constituenta>) {
-    onMoveRows?.(event.draggedRows, event.afterRow?.id ?? null);
+    onMoveRows?.(event);
   }
 
   const columns = [

@@ -6,7 +6,9 @@ import { type UpdateLibraryItemDTO } from '@/features/library';
 import {
   type AttributionTargetDTO,
   type ConstituentaCreatedResponse,
+  type ConstituentsCreatedResponse,
   type CreateConstituentaDTO,
+  type CreateConstituentsBatchDTO,
   type InlineSynthesisDTO,
   type MoveConstituentsDTO,
   type RSFormDTO,
@@ -31,6 +33,7 @@ interface IBundleContext {
   updateCrucial: (data: UpdateCrucialDTO) => void;
   patchConstituenta: (data: UpdateConstituentaDTO) => Promise<RSFormDTO>;
   createConstituenta: (data: CreateConstituentaDTO) => Promise<ConstituentaCreatedResponse>;
+  createConstituentsBatch: (data: CreateConstituentsBatchDTO) => Promise<ConstituentsCreatedResponse>;
   createAttribution: (attr: Attribution) => void;
   deleteAttribution: (attr: Attribution) => void;
   clearAttributions: (data: AttributionTargetDTO) => void;

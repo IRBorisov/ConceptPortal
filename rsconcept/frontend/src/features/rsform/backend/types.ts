@@ -32,6 +32,15 @@ export type CreateConstituentaDTO = z.infer<typeof schemaCreateConstituenta>;
 /** Represents data response when creating {@link Constituenta}. */
 export type ConstituentaCreatedResponse = z.infer<typeof schemaConstituentaCreatedResponse>;
 
+/** Represents data for creating multiple {@link Constituenta} in one request. */
+export type CreateConstituentsBatchDTO = z.infer<typeof schemaCreateConstituentsBatch>;
+
+/** One constituenta payload inside a batch create request (without per-item insert_after). */
+export type CreateConstituentaBatchItem = z.infer<typeof schemaCreateConstituentaBatchItem>;
+
+/** Represents data response when creating multiple {@link Constituenta}. */
+export type ConstituentsCreatedResponse = z.infer<typeof schemaConstituentsCreatedResponse>;
+
 /** Represents data, used in updating persistent attributes in {@link Constituenta}. */
 export type UpdateConstituentaDTO = z.infer<typeof schemaUpdateConstituenta>;
 
@@ -169,6 +178,18 @@ export const schemaCreateConstituenta = schemaConstituentaBasics
 
 export const schemaConstituentaCreatedResponse = z.strictObject({
   new_cst: schemaConstituentaBasics,
+  schema: schemaRSForm
+});
+
+export const schemaCreateConstituentaBatchItem = schemaCreateConstituenta.omit({ insert_after: true });
+
+export const schemaCreateConstituentsBatch = z.strictObject({
+  insert_after: z.number().nullable(),
+  items: z.array(schemaCreateConstituentaBatchItem).min(1)
+});
+
+export const schemaConstituentsCreatedResponse = z.strictObject({
+  cst_list: z.array(schemaConstituentaBasics),
   schema: schemaRSForm
 });
 

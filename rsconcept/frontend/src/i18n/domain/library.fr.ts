@@ -262,6 +262,7 @@ export const txLibraryFr: Record<string, string> = {
   'tx.cst.edit': 'Modifier la constituante',
   'tx.cst.rename': 'Renommer la constituante',
   'tx.cst.clone': 'Cloner la constituante',
+  'tx.cst.clone.success': 'Constituantes clonées : {count}',
   'tx.cst.onlySelected': 'Constituantes sélectionnées uniquement [{n} sur {total}]',
 
   'tx.cst.type.nominal': 'Nominoïde',

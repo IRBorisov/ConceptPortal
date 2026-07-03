@@ -32,6 +32,7 @@ import {
 import { useClearAttributions } from '../../backend/use-clear-attributions';
 import { useCreateAttribution } from '../../backend/use-create-attribution';
 import { useCreateConstituenta } from '../../backend/use-create-constituenta';
+import { useCreateConstituentsBatch } from '../../backend/use-create-constituents-batch';
 import { useDeleteAttribution } from '../../backend/use-delete-attribution';
 import { useDeleteConstituents } from '../../backend/use-delete-constituents';
 import { useMoveConstituents } from '../../backend/use-move-constituents';
@@ -39,6 +40,7 @@ import { useMutatingRSForm } from '../../backend/use-mutating-rsform';
 import { useRSForm } from '../../backend/use-rsform';
 import { useUpdateConstituenta } from '../../backend/use-update-constituenta';
 import { useUpdateCrucial } from '../../backend/use-update-crucial';
+import { buildCloneConstituentsBatch } from '../../utils/build-clone-batch';
 
 import { SchemaEditContext } from './schema-edit-context';
 
@@ -86,6 +88,7 @@ export const SchemaEditState = ({
   const activeCst = selectedCst.length === 0 ? null : (schema.cstByID.get(selectedCst[selectedCst.length - 1]) ?? null);
 
   const { createConstituenta: cstCreate } = useCreateConstituenta();
+  const { createConstituentsBatch: cstCreateBatch } = useCreateConstituentsBatch();
   const { deleteConstituents: cstDelete } = useDeleteConstituents();
   const { moveConstituents: cstMove } = useMoveConstituents();
   const { deleteItem } = useDeleteItem();
@@ -156,11 +159,19 @@ export const SchemaEditState = ({
   }
 
   function onCreateCst(newCst: ConstituentaBasicsDTO) {
-    setPendingActiveID(newCst.id);
-    setSelectedCst([newCst.id]);
-    router.changeActive(newCst.id);
+    onCreateCstBatch([newCst.id]);
+  }
+
+  function onCreateCstBatch(newIDs: number[]) {
+    if (newIDs.length === 0) {
+      return;
+    }
+    const lastID = newIDs[newIDs.length - 1];
+    setPendingActiveID(lastID);
+    setSelectedCst(newIDs);
+    router.changeActive(lastID);
     setTimeout(function scrollToCreatedConstituenta() {
-      const element = document.getElementById(`${prefixes.cst_list}${newCst.id}`);
+      const element = document.getElementById(`${prefixes.cst_list}${lastID}`);
       if (element) {
         element.scrollIntoView({
           behavior: 'smooth',
@@ -169,6 +180,22 @@ export const SchemaEditState = ({
         });
       }
     }, PARAMETER.refreshTimeout);
+  }
+
+  async function cloneCst(options?: { insertAfter?: number | null; cstIDs?: number[] }): Promise<number> {
+    const ids = options?.cstIDs ?? selectedCst;
+    if (ids.length === 0) {
+      throw new Error('No cst to clone');
+    }
+    const insertAfter =
+      options && 'insertAfter' in options ? (options.insertAfter ?? null) : (activeCst?.id ?? null);
+    const response = await cstCreateBatch({
+      itemID: schema.id,
+      data: buildCloneConstituentsBatch(schema, ids, insertAfter)
+    });
+    const newIDs = response.cst_list.map(cst => cst.id);
+    onCreateCstBatch(newIDs);
+    return newIDs[newIDs.length - 1];
   }
 
   function moveToIndex(targetIndex: number, selected = selectedCst) {
@@ -280,30 +307,6 @@ export const SchemaEditState = ({
     return newCst.id;
   }
 
-  async function cloneCst(): Promise<number> {
-    if (!activeCst) {
-      throw new Error('No active cst');
-    }
-    const response = await cstCreate({
-      itemID: schema.id,
-      data: {
-        insert_after: activeCst.id,
-        cst_type: activeCst.cst_type,
-        alias: generateAlias(activeCst.cst_type, schema),
-        term_raw: activeCst.term_raw,
-        typification_manual: activeCst.typification_manual,
-        value_is_property: activeCst.value_is_property,
-        definition_formal: activeCst.definition_formal,
-        definition_raw: activeCst.definition_raw,
-        convention: activeCst.convention,
-        crucial: activeCst.crucial,
-        term_forms: activeCst.term_forms
-      }
-    });
-    const newCst = response.new_cst;
-    onCreateCst(newCst);
-    return newCst.id;
-  }
 
   function promptDeleteSelected() {
     if (!canDeleteSelected) {

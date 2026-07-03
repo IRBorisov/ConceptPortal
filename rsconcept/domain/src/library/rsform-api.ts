@@ -2,6 +2,7 @@
  * Module: API for formal representation for systems of concepts.
  */
 
+import { applyEntityReferenceMapping } from '../cctext/language-api';
 import {
   type AnalysisFull,
   RSErrorCode,
@@ -11,6 +12,7 @@ import {
   type Typification,
   ValueClass
 } from '../rslang';
+import { type AliasMapping, applyAliasMapping, applyTypificationMapping } from '../rslang/api';
 import { basic, bool, constant, type EchelonFunctional, isTypification } from '../rslang/semantic/typification';
 import { applyPath } from '../rslang/semantic/typification-api';
 
@@ -337,6 +339,32 @@ export function sortItemsForInlineSynthesis(receiver: RSForm, items: readonly Li
     }
   }
   return result;
+}
+
+/** Fields of {@link Constituenta} that are updated by alias mapping. */
+export interface ConstituentaMappableFields {
+  alias: string;
+  definition_formal: string;
+  typification_manual: string;
+  term_raw: string;
+  definition_raw: string;
+}
+
+/** Remap formal expressions and terminological entity references in constituent fields. */
+export function applyMappingToConstituents<T extends ConstituentaMappableFields>(
+  items: T[],
+  mapping: AliasMapping,
+  changeAliases: boolean
+): void {
+  for (const cst of items) {
+    if (changeAliases && cst.alias in mapping) {
+      cst.alias = mapping[cst.alias];
+    }
+    cst.definition_formal = applyAliasMapping(cst.definition_formal, mapping);
+    cst.typification_manual = applyTypificationMapping(cst.typification_manual, mapping);
+    cst.term_raw = applyEntityReferenceMapping(cst.term_raw, mapping);
+    cst.definition_raw = applyEntityReferenceMapping(cst.definition_raw, mapping);
+  }
 }
 
 /** Remove alias from expression. */

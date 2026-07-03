@@ -175,6 +175,99 @@ class TestConstituentaAPI(EndpointTester):
         self.assertEqual(x4.crucial, data['crucial'])
 
 
+    @decl_endpoint('/api/rsforms/{item}/create-multiple-cst', method='post')
+    def test_create_multiple_constituenta(self):
+        data = {
+            'insert_after': self.x2.pk,
+            'items': [
+                {
+                    'alias': 'X4',
+                    'cst_type': self.x1.cst_type,
+                    'term_raw': self.x1.term_raw,
+                    'definition_raw': self.x1.definition_raw,
+                    'definition_formal': self.x1.definition_formal,
+                    'typification_manual': self.x1.typification_manual,
+                    'value_is_property': self.x1.value_is_property,
+                    'convention': self.x1.convention,
+                    'crucial': self.x1.crucial,
+                    'term_forms': self.x1.term_forms
+                },
+                {
+                    'alias': 'X5',
+                    'cst_type': self.x3.cst_type,
+                    'term_raw': self.x3.term_raw,
+                    'definition_raw': self.x3.definition_raw,
+                    'definition_formal': self.x3.definition_formal,
+                    'typification_manual': self.x3.typification_manual,
+                    'value_is_property': self.x3.value_is_property,
+                    'convention': self.x3.convention,
+                    'crucial': self.x3.crucial,
+                    'term_forms': self.x3.term_forms
+                }
+            ]
+        }
+        self.executeForbidden(data, item=self.unowned_id)
+
+        response = self.executeCreated(data, item=self.owned_id)
+        self.assertEqual(len(response.data['cst_list']), 2)
+        cloned_aliases = [item['alias'] for item in response.data['cst_list']]
+        self.assertEqual(cloned_aliases, ['X4', 'X5'])
+        x4 = Constituenta.objects.get(alias='X4')
+        x5 = Constituenta.objects.get(alias='X5')
+        self.assertEqual(x4.order, 2)
+        self.assertEqual(x5.order, 3)
+        self.assertEqual(x4.term_raw, self.x1.term_raw)
+        self.assertEqual(x5.term_raw, self.x3.term_raw)
+
+    @decl_endpoint('/api/rsforms/{item}/create-multiple-cst', method='post')
+    def test_create_multiple_constituenta_with_remapped_references(self):
+        self.x1.definition_formal = 'X1 = X2'
+        self.x1.term_raw = '@{X1|sing}'
+        self.x1.definition_raw = '@{X2|sing}'
+        self.x1.save()
+        self.x2.definition_formal = 'X2 = X1'
+        self.x2.term_raw = '@{X2|sing}'
+        self.x2.definition_raw = '@{X1|sing}'
+        self.x2.save()
+
+        data = {
+            'insert_after': self.x2.pk,
+            'items': [
+                {
+                    'alias': 'X4',
+                    'cst_type': self.x1.cst_type,
+                    'term_raw': '@{X4|sing}',
+                    'definition_raw': '@{X5|sing}',
+                    'definition_formal': 'X4 = X5',
+                    'typification_manual': '',
+                    'value_is_property': False,
+                    'convention': '',
+                    'crucial': False,
+                    'term_forms': []
+                },
+                {
+                    'alias': 'X5',
+                    'cst_type': self.x2.cst_type,
+                    'term_raw': '@{X5|sing}',
+                    'definition_raw': '@{X4|sing}',
+                    'definition_formal': 'X5 = X4',
+                    'typification_manual': '',
+                    'value_is_property': False,
+                    'convention': '',
+                    'crucial': False,
+                    'term_forms': []
+                }
+            ]
+        }
+        response = self.executeCreated(data, item=self.owned_id)
+        x4 = Constituenta.objects.get(pk=response.data['cst_list'][0]['id'])
+        x5 = Constituenta.objects.get(pk=response.data['cst_list'][1]['id'])
+        self.assertEqual(x4.definition_formal, 'X4 = X5')
+        self.assertEqual(x5.definition_formal, 'X5 = X4')
+        self.assertEqual(x4.term_raw, '@{X4|sing}')
+        self.assertEqual(x5.definition_raw, '@{X4|sing}')
+
+
     @decl_endpoint('/api/rsforms/{item}/create-cst', method='post')
     def test_create_constituenta_after(self):
         self.set_params(item=self.owned_id)

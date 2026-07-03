@@ -11,7 +11,7 @@ import { useConceptNavigation } from '@/app';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { ExportDropdown } from '@/components/control/export-dropdown';
-import { type RowSelectionState } from '@/components/data-table';
+import { type DataTableRowDrop, type RowSelectionState } from '@/components/data-table';
 import { SearchBar } from '@/components/input';
 import { useFitHeight } from '@/stores/app-layout';
 import { withPreventDefault } from '@/utils/utils';
@@ -62,6 +62,17 @@ export function TabModelList() {
   function handleMoveRows(rows: typeof schema.items, afterID: number | null) {
     const movedIDs = rows.map(cst => cst.id);
     moveAfter(afterID, movedIDs);
+  }
+
+  function handleRowsDrop(event: DataTableRowDrop<(typeof schema.items)[number]>) {
+    if (event.isClone) {
+      void cloneCst({
+        cstIDs: event.draggedRows.map(cst => cst.id),
+        insertAfter: event.afterRow?.id ?? null
+      });
+      return;
+    }
+    handleMoveRows(event.draggedRows, event.afterRow?.id ?? null);
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
@@ -167,7 +178,7 @@ export function TabModelList() {
         enableRowReordering={isContentEditable && !isProcessing && schema.items.length > 1}
         onEdit={cstID => router.gotoActiveValue(cstID)}
         onCreateNew={() => void promptCreateCst()}
-        onMoveRows={handleMoveRows}
+        onMoveRows={handleRowsDrop}
       />
     </div>
   );

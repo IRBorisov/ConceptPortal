@@ -7,7 +7,7 @@ import clsx from 'clsx';
 
 import { cn } from '../utils';
 
-import { type DataTableRowDrop } from './data-table';
+import { type DataTableDropHint, type DataTableRowDrop } from './data-table';
 import { SelectRow } from './select-row';
 
 interface TableRowProps<TData> {
@@ -53,8 +53,20 @@ interface TableRowProps<TData> {
   /** Id of the row currently being dragged, or `null`. */
   draggingRowID: string | null;
 
+  /** Whether the current drag operation is a clone (Ctrl/Meta). */
+  isCloneDrag: boolean;
+
+  /** Current drop position hint, if any. */
+  dropHint: DataTableDropHint | null;
+
   /** Updates the dragging row id. */
   onChangeDraggingRowID: (newValue: string | null) => void;
+
+  /** Updates whether the drag is a clone operation. */
+  onChangeIsCloneDrag: (newValue: boolean) => void;
+
+  /** Updates the drop position hint. */
+  onChangeDropHint: (newValue: DataTableDropHint | null) => void;
 }
 
 /** Single data table row with selection, click handlers, and optional drag reordering. */
@@ -73,11 +85,17 @@ export function TableRow<TData>({
   enableRowReordering,
   onRowsReordered,
   draggingRowID,
-  onChangeDraggingRowID
+  isCloneDrag,
+  dropHint,
+  onChangeDraggingRowID,
+  onChangeIsCloneDrag,
+  onChangeDropHint
 }: TableRowProps<TData>) {
   const hasBG = className?.includes('bg-') ?? false;
   const canReorder = !!enableRowReordering && !!onRowsReordered;
   const isDragging = draggingRowID !== null;
+  const showDropBefore = dropHint?.rowID === row.id && !dropHint.after;
+  const showDropAfter = dropHint?.rowID === row.id && dropHint.after;
 
   const handleRowClicked = useCallback(
     (target: Row<TData>, event: React.MouseEvent<Element>) => {
@@ -126,12 +144,44 @@ export function TableRow<TData>({
     return rows.filter(current => current.getIsSelected());
   }
 
+  function isCloneModifier(event: React.DragEvent | KeyboardEvent): boolean {
+    return event.ctrlKey || event.metaKey;
+  }
+
+  function syncCloneDragState(event: React.DragEvent): boolean {
+    const isClone = isCloneModifier(event);
+    if (isClone !== isCloneDrag) {
+      onChangeIsCloneDrag(isClone);
+    }
+    return isClone;
+  }
+
+  function getDropIndicatorStyle(): React.CSSProperties | undefined {
+    if (!showDropBefore && !showDropAfter) {
+      return undefined;
+    }
+    const color = isCloneDrag ? 'var(--color-accent-green)' : 'var(--color-primary)';
+    if (showDropBefore) {
+      return { boxShadow: `inset 0 2px 0 0 ${color}` };
+    }
+    return { boxShadow: `inset 0 -2px 0 0 ${color}` };
+  }
+
+  function resolveAfterRow(allRows: Row<TData>[], targetRow: Row<TData>, after: boolean): TData | null {
+    if (after) {
+      return targetRow.original;
+    }
+    const targetIndex = allRows.findIndex(current => current.id === targetRow.id);
+    return allRows[targetIndex - 1]?.original ?? null;
+  }
+
   function handleDragStart(event: React.DragEvent<HTMLTableRowElement>) {
     if (!canReorder) {
       return;
     }
-    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.effectAllowed = 'copyMove';
     event.dataTransfer.setData('text/plain', row.id);
+    onChangeIsCloneDrag(false);
     onChangeDraggingRowID(row.id);
   }
 
@@ -139,43 +189,67 @@ export function TableRow<TData>({
     if (!canReorder) {
       return;
     }
-    const draggedRowID = draggingRowID;
-    if (!draggedRowID) {
+    const currentDraggingRowID = draggingRowID;
+    if (!currentDraggingRowID) {
       return;
     }
-    const draggedRows = getDraggedRows(draggedRowID);
-    if (draggedRows.some(current => current.id === row.id)) {
+    const isClone = syncCloneDragState(event);
+    const draggedRows = getDraggedRows(currentDraggingRowID);
+    if (!isClone && draggedRows.some(current => current.id === row.id)) {
+      onChangeDropHint(null);
       return;
     }
     event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
+    event.dataTransfer.dropEffect = isClone ? 'copy' : 'move';
+    const after = isDropAfterTarget(event);
+    if (dropHint?.rowID !== row.id || dropHint.after !== after) {
+      onChangeDropHint({ rowID: row.id, after });
+    }
   }
 
   function handleDrop(event: React.DragEvent<HTMLTableRowElement>) {
     if (!canReorder) {
       return;
     }
-    const draggedRowID = draggingRowID ?? event.dataTransfer.getData('text/plain');
-    const draggedRows = getDraggedRows(draggedRowID);
-    if (draggedRows.length === 0 || draggedRows.some(current => current.id === row.id)) {
+    const currentDraggingRowID = draggingRowID ?? event.dataTransfer.getData('text/plain');
+    const draggedRows = getDraggedRows(currentDraggingRowID);
+    if (draggedRows.length === 0) {
+      return;
+    }
+    const isClone = isCloneModifier(event);
+    if (!isClone && draggedRows.some(current => current.id === row.id)) {
       return;
     }
     event.preventDefault();
-    const remainingRows = table
-      .getRowModel()
-      .rows.filter(current => !draggedRows.some(dragged => dragged.id === current.id));
-    const targetIndex = remainingRows.findIndex(current => current.id === row.id);
-    const afterRow = isDropAfterTarget(event) ? row : (remainingRows[targetIndex - 1] ?? null);
-    onRowsReordered?.({
-      draggedRows: draggedRows.map(current => current.original),
-      afterRow: afterRow?.original ?? null
-    });
+    const after = isDropAfterTarget(event);
+    const allRows = table.getRowModel().rows;
+    if (isClone) {
+      onRowsReordered?.({
+        draggedRows: draggedRows.map(current => current.original),
+        afterRow: resolveAfterRow(allRows, row, after),
+        isClone: true
+      });
+    } else {
+      const remainingRows = allRows.filter(current => !draggedRows.some(dragged => dragged.id === current.id));
+      const targetIndex = remainingRows.findIndex(current => current.id === row.id);
+      const afterRow = after ? row : (remainingRows[targetIndex - 1] ?? null);
+      onRowsReordered?.({
+        draggedRows: draggedRows.map(current => current.original),
+        afterRow: afterRow?.original ?? null
+      });
+    }
     onChangeDraggingRowID(null);
+    onChangeIsCloneDrag(false);
+    onChangeDropHint(null);
   }
 
   function handleDragEnd() {
     onChangeDraggingRowID(null);
+    onChangeIsCloneDrag(false);
+    onChangeDropHint(null);
   }
+
+  const dropIndicatorStyle = getDropIndicatorStyle();
 
   return (
     <tr
@@ -189,9 +263,9 @@ export function TableRow<TData>({
             ? 'odd:bg-secondary even:bg-background'
             : '',
         className,
-        canReorder && isDragging && 'cursor-move'
+        canReorder && isDragging && (isCloneDrag ? 'cursor-copy' : 'cursor-move')
       )}
-      style={style}
+      style={dropIndicatorStyle ? { ...style, ...dropIndicatorStyle } : style}
       draggable={canReorder}
       onClick={event => handleRowClicked(row, event)}
       onDoubleClick={event => onRowDoubleClicked?.(row.original, event)}
@@ -212,7 +286,9 @@ export function TableRow<TData>({
             'px-2 align-middle border-y',
             dense ? 'py-1' : 'py-2',
             canReorder && isDragging
-              ? 'cursor-move'
+              ? isCloneDrag
+                ? 'cursor-copy'
+                : 'cursor-move'
               : onRowClicked || onRowDoubleClicked
                 ? 'cursor-pointer'
                 : 'cursor-auto'

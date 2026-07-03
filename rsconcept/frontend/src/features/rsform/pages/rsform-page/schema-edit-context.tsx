@@ -47,7 +47,7 @@ interface ISchemaEditContext {
   toggleValueClass: () => void;
   createCst: (type?: CstType, definition?: string) => Promise<number>;
   createCstFromData: (data: CreateConstituentaDTO) => Promise<ConstituentaCreatedResponse>;
-  cloneCst: () => Promise<number>;
+  cloneCst: (options?: { insertAfter?: number | null; cstIDs?: number[] }) => Promise<number>;
   patchConstituenta: (data: UpdateConstituentaDTO) => Promise<RSFormDTO>;
   addAttribution: (containerID: number, attributeID: number) => void;
   removeAttribution: (attribute: Constituenta) => void;

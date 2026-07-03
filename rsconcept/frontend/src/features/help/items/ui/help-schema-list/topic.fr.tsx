@@ -44,6 +44,9 @@ export function HelpSchemaListFr() {
         </li>
         <li>glisser une ligne – réordonner</li>
         <li>
+          <kbd>Ctrl + glisser</kbd> – cloner à la position d'insertion (marqueur vert)
+        </li>
+        <li>
           <kbd>Clic</kbd> – sélectionner une ligne
         </li>
         <li>

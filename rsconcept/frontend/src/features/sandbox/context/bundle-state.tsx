@@ -13,7 +13,9 @@ import { loadRSForm } from '@/features/rsform/backend/rsform-loader';
 import {
   type AttributionTargetDTO,
   type ConstituentaCreatedResponse,
+  type ConstituentsCreatedResponse,
   type CreateConstituentaDTO,
+  type CreateConstituentsBatchDTO,
   type InlineSynthesisDTO,
   type MoveConstituentsDTO,
   type RSFormDTO,
@@ -163,6 +165,22 @@ export function SandboxState({ children }: React.PropsWithChildren) {
     return Promise.resolve(response);
   }
 
+  function createConstituentsBatch(data: CreateConstituentsBatchDTO) {
+    let response: ConstituentsCreatedResponse | null = null;
+    commitBundle(prev => {
+      const result = sbApi.createConstituentsBatch(prev, data);
+      response = {
+        cst_list: result.newCstList,
+        schema: result.bundle.schema
+      };
+      return result.bundle;
+    });
+    if (!response) {
+      throw new Error('Sandbox bundle is not available');
+    }
+    return Promise.resolve(response);
+  }
+
   function createAttribution(attr: Attribution) {
     commitBundle(prev => sbApi.createAttribution(prev, attr));
   }
@@ -213,6 +231,7 @@ export function SandboxState({ children }: React.PropsWithChildren) {
         updateCrucial,
         patchConstituenta,
         createConstituenta,
+        createConstituentsBatch,
         createAttribution,
         deleteAttribution,
         clearAttributions,

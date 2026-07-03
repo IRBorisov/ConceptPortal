@@ -12,6 +12,7 @@ import { useConceptNavigation } from '@/app';
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { MiniButton } from '@/components/control';
+import { type DataTableRowDrop } from '@/components/data-table';
 import { IconMoveDown, IconMoveUp } from '@/components/icons';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
@@ -114,9 +115,16 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
     return false;
   }
 
-  function handleMoveConstituentRows(afterCst: Constituenta | null, items: Constituenta[]) {
-    const movedIDs = items.map(cst => cst.id);
-    moveAfter(afterCst?.id ?? null, movedIDs);
+  function handleRowsDropped(event: DataTableRowDrop<Constituenta>) {
+    if (event.isClone) {
+      void cloneCst({
+        cstIDs: event.draggedRows.map(cst => cst.id),
+        insertAfter: event.afterRow?.id ?? null
+      });
+      return;
+    }
+    const movedIDs = event.draggedRows.map(cst => cst.id);
+    moveAfter(event.afterRow?.id ?? null, movedIDs);
   }
 
   return (
@@ -176,7 +184,7 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
           router.changeActive(cst.id);
         }}
         enableRowReordering={canReorderConstituents}
-        onMoveAfter={handleMoveConstituentRows}
+        onRowsDropped={handleRowsDropped}
         maxListHeight={listHeight}
         autoScroll={!isNarrow}
         sidebarActions={

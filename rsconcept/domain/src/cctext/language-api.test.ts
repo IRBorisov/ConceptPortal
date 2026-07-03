@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { Grammeme } from './language';
 import {
+  applyEntityReferenceMapping,
   extractEntities,
   generateNominalLexeme,
   parseEntityReference,
@@ -111,6 +112,17 @@ describe('Testing reference parsing', () => {
     expect(parseReference('@{0|derived term}')).toBeNull();
     expect(parseReference('@{-0|derived term}')).toBeNull();
     expect(parseReference('@{1|}')).toBeNull();
+  });
+});
+
+describe('applyEntityReferenceMapping', () => {
+  it('replaces entity aliases in terminological references', () => {
+    expect(applyEntityReferenceMapping('@{X1|sing}', { X1: 'X3' })).toBe('@{X3|sing}');
+    expect(applyEntityReferenceMapping('@{X1|sing} and @{X2|plur}', { X1: 'X3', X2: 'X4' })).toBe(
+      '@{X3|sing} and @{X4|plur}'
+    );
+    expect(applyEntityReferenceMapping('', { X1: 'X3' })).toBe('');
+    expect(applyEntityReferenceMapping('plain text', { X1: 'X3' })).toBe('plain text');
   });
 });
 

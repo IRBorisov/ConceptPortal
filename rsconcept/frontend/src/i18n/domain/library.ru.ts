@@ -263,6 +263,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.cst.edit': 'Редактирование конституенты',
   'tx.cst.rename': 'Переименование конституенты',
   'tx.cst.clone': 'Клонировать конституенту',
+  'tx.cst.clone.success': 'Клонировано конституент: {count}',
   'tx.cst.onlySelected': 'Только выбранные конституенты [{n} из {total}]',
 
   'tx.cst.type.nominal': 'Номиноид',

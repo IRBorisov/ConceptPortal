@@ -128,6 +128,28 @@ export function parseReference(text: string): IReference | null {
   };
 }
 
+/** Apply alias mapping to entity references in terminological text. */
+export function applyEntityReferenceMapping(text: string, mapping: Record<string, string>): string {
+  if (text === '' || Object.keys(mapping).length === 0) {
+    return text;
+  }
+
+  let posInput = 0;
+  let output = '';
+  for (const segment of text.matchAll(ENTITY_REFERENCE_PATTERN)) {
+    const entity = segment[1];
+    const start = segment.index ?? 0;
+    if (entity in mapping) {
+      output += text.substring(posInput, start + 2);
+      output += mapping[entity];
+      output += text.substring(start + 2 + entity.length, start + segment[0].length);
+      posInput = start + segment[0].length;
+    }
+  }
+  output += text.substring(posInput);
+  return output;
+}
+
 /** Extracts unique entity aliases referenced by text. */
 export function extractEntities(text: string): string[] {
   const result: string[] = [];
