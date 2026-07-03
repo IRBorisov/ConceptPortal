@@ -9,7 +9,7 @@ import { type Constituenta, CstType } from '@rsconcept/domain/library/rsform';
 import { generateAlias, removeAliasReference } from '@rsconcept/domain/library/rsform-api';
 
 import { type UnsavedSaveHandler, useConceptNavigation, useUnsavedChanges } from '@/app';
-import { type ConstituentaCreatedResponse, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
+import { type ConstituentaCreatedResponse, type CreateConstituentaDTO } from '@/features/rsform';
 import { SchemaEditContext } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { buildCloneConstituentsBatch } from '@/features/rsform/utils/build-clone-batch';
 
@@ -146,8 +146,7 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     if (ids.length === 0) {
       throw new Error('No cst to clone');
     }
-    const insertAfter =
-      options && 'insertAfter' in options ? (options.insertAfter ?? null) : (activeCst?.id ?? null);
+    const insertAfter = options && 'insertAfter' in options ? (options.insertAfter ?? null) : (activeCst?.id ?? null);
     const response = await createConstituentsBatch(buildCloneConstituentsBatch(schema, ids, insertAfter));
     const newIDs = response.cst_list.map(cst => cst.id);
     onCreateCstBatch(newIDs);

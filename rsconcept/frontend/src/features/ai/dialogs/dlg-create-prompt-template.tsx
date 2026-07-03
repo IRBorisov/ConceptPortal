@@ -5,7 +5,7 @@ import { useForm, useStore } from '@tanstack/react-form';
 
 import { useTx } from '@/i18n';
 
-import { useAuth } from '@/features/auth';
+import { useAuth } from '@/features/auth/backend/use-auth';
 import { HelpTopic } from '@/features/help';
 
 import { Checkbox, TextArea, TextInput } from '@/components/input';

@@ -6,7 +6,7 @@ import { useTx } from '@/i18n';
 import { LocationHead } from '@rsconcept/domain/library';
 import { combineLocation } from '@rsconcept/domain/library/library-api';
 
-import { useAuth } from '@/features/auth';
+import { useAuth } from '@/features/auth/backend/use-auth';
 
 import { ErrorField, Label, TextArea } from '@/components/input';
 import { type Styling } from '@/components/props';

@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
-import { schemaLibraryItem } from '@/features/library/backend/types';
-import { schemaPortalImportMetadata } from '@/features/library/models/portal-import-json';
+import { schemaLibraryItem, schemaPortalImportMetadata } from '@/features/library';
 
 /** Represents data for {@link RSModel} provided by backend. */
 export type RSModelDTO = z.infer<typeof schemaRSModel>;

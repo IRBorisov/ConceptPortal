@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { CstType } from '@rsconcept/domain/library';
 
-import { schemaConstituentaBasics } from '@/features/rsform/backend/types';
+import { schemaConstituentaBasics } from '@/features/rsform';
 import { sbApi } from '@/features/sandbox/stores/sandbox-mutations';
 
 import starterEn from './starter-bundles/starter-bundle.en.json';

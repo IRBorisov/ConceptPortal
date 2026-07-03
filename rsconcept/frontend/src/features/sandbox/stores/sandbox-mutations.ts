@@ -3,7 +3,7 @@ import { type Attribution, CstType, type RSForm, type Substitution } from '@rsco
 import { getCstTypePrefix } from '@rsconcept/domain/library/rsform-api';
 import { applyMappingToConstituents } from '@rsconcept/domain/library/rsform-api';
 
-import { type UpdateLibraryItemDTO } from '@/features/library/backend/types';
+import { type UpdateLibraryItemDTO } from '@/features/library';
 import {
   type AttributionTargetDTO,
   type ConstituentaBasicsDTO,
@@ -14,8 +14,8 @@ import {
   type RSFormDTO,
   type UpdateConstituentaDTO,
   type UpdateCrucialDTO
-} from '@/features/rsform/backend/types';
-import { type ConstituentaDataDTO, type ConstituentaValue, type RSModelDTO } from '@/features/rsmodel/backend/types';
+} from '@/features/rsform';
+import { type ConstituentaDataDTO, type ConstituentaValue, type RSModelDTO } from '@/features/rsmodel';
 
 import { nowIso } from '@/utils/format';
 

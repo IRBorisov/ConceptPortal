@@ -9,11 +9,12 @@ import { AccessPolicy, LocationHead } from '@rsconcept/domain/library';
 
 import { useConceptNavigation, useUnsavedChanges } from '@/app';
 import { buildModelToSchemaQuery, buildSiblingModelQuery } from '@/app/navigation/cross-rs-query';
-import { useAuth } from '@/features/auth';
+import { useAuth } from '@/features/auth/backend/use-auth';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { createSandboxBundleFromRSModel } from '@/features/sandbox/models/bundle-transfer';
 import { saveBundle } from '@/features/sandbox/stores/sandbox-repository';
-import { useRoleStore, UserRole } from '@/features/users';
+import { UserRole } from '@/features/users';
+import { useRoleStore } from '@/features/users/stores/role';
 
 import { Divider } from '@/components/container';
 import { MiniButton } from '@/components/control';

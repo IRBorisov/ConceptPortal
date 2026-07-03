@@ -2,7 +2,7 @@
 
 import { useTx } from '@/i18n';
 
-import { useAuth } from '@/features/auth';
+import { useAuth } from '@/features/auth/backend/use-auth';
 
 import { IconLogin, IconUser2 } from '@/components/icons';
 import { usePreferencesStore } from '@/stores/preferences';

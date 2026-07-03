@@ -33,6 +33,7 @@ Run from `rsconcept/frontend`:
 - Unit test: `npm test`
 - E2E tests: `npm run test:e2e`
 - Lint: `npm run lint` (slow; prefer targeted checks)
+- Lint fix: `npm run lintFix` (ESLint auto-fix, including import sort)
 - Regenerate parsers: `npm run generate`
 
 ## Feature Paths
@@ -47,6 +48,27 @@ Run from `rsconcept/frontend`:
 - Users: `src/features/users`
 - Help: `src/features/help`
 - Sandbox: `src/features/sandbox`
+
+## Feature public API (`index.ts`)
+
+Each feature may expose `src/features/{name}/index.ts` as its **public contract** for cross-feature imports.
+
+**Export via `index.ts` (explicit named exports only — no `export *`):**
+
+- Types and interfaces (`export type { … }`)
+- Zod schemas paired with DTOs (`export { schema… }`)
+- Shared constants and enums (`UserRole`, `HelpTopic`, …)
+
+**Import via deep paths (not through `index.ts`):**
+
+- Components, pages, dialogs
+- Hooks (`useAuth`, `useRSForm`, …)
+- Stores (`useRoleStore`, `useLibrarySearchStore`, …)
+- `backend/api.ts`, mutation/query hooks, loaders
+
+After adding, removing, or moving imports (especially cross-feature dependency changes), run `npm run lintFix` from `rsconcept/frontend` to auto-sort imports (`eslint-plugin-simple-import-sort`).
+
+**Cross-feature imports:** use `@/features/{name}` barrels for types, Zod schemas, and shared constants. Use deep paths for hooks, stores, components, and runtime helpers. Intra-feature imports may stay deep.
 
 ## Internationalization
 

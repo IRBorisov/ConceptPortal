@@ -6,7 +6,7 @@ import { useTx } from '@/i18n';
 import { LibraryItemType } from '@rsconcept/domain/library';
 
 import { useAIStore } from '@/features/ai/stores/ai-context';
-import { useAuth } from '@/features/auth';
+import { useAuth } from '@/features/auth/backend/use-auth';
 import { labelVersion } from '@/features/library/labels';
 
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';

@@ -1,1 +1,1 @@
-export { type OperationSchemaDTO } from './backend/types';
+export type { OperationSchemaDTO, UpdateOperationDTO } from './backend/types';

@@ -5,8 +5,8 @@ import clsx from 'clsx';
 import { useTx } from '@/i18n';
 
 import { urls } from '@/app/urls';
-import { useAuth } from '@/features/auth';
-import { HelpTopic } from '@/features/help/models/help-topic';
+import { useAuth } from '@/features/auth/backend/use-auth';
+import { HelpTopic } from '@/features/help';
 
 import {
   IconFormula,

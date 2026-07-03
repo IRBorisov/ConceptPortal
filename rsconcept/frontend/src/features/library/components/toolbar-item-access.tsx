@@ -7,7 +7,8 @@ import { type AccessPolicy, type LibraryItem } from '@rsconcept/domain/library';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
-import { useRoleStore, UserRole } from '@/features/users';
+import { UserRole } from '@/features/users';
+import { useRoleStore } from '@/features/users/stores/role';
 
 import { MiniButton } from '@/components/control';
 import { IconImmutable, IconMutable } from '@/components/icons';

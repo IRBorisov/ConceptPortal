@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@/features/auth';
+import { useAuth } from '@/features/auth/backend/use-auth';
 
 import { ExportDropdown } from '@/components/control/export-dropdown';
 import { useDialogsStore } from '@/stores/dialogs';

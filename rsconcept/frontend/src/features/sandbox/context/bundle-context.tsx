@@ -1,6 +1,12 @@
 import { createContext, use } from 'react';
 
-import { type Attribution, type RSEngine, type RSForm, type RSModel, type Substitution } from '@rsconcept/domain/library';
+import {
+  type Attribution,
+  type RSEngine,
+  type RSForm,
+  type RSModel,
+  type Substitution
+} from '@rsconcept/domain/library';
 
 import { type UpdateLibraryItemDTO } from '@/features/library';
 import {
@@ -14,7 +20,7 @@ import {
   type RSFormDTO,
   type UpdateConstituentaDTO,
   type UpdateCrucialDTO
-} from '@/features/rsform/backend/types';
+} from '@/features/rsform';
 
 import { type SandboxBundle } from '../models/bundle';
 

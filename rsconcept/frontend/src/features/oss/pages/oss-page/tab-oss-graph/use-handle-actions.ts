@@ -7,7 +7,7 @@ import { globalTx } from '@/i18n';
 import { NodeType, OperationType, type OssItem } from '@rsconcept/domain/library';
 import { LayoutManager } from '@rsconcept/domain/library/oss-layout-api';
 
-import { type UpdateOperationDTO } from '@/features/oss/backend/types';
+import { type UpdateOperationDTO } from '@/features/oss';
 
 import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';

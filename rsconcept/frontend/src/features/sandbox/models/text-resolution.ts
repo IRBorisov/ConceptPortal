@@ -2,7 +2,7 @@ import { type TermContext } from '@rsconcept/domain/cctext';
 import { extractEntities, parseGrammemes, resolveTextReferences } from '@rsconcept/domain/cctext/language-api';
 import { Graph } from '@rsconcept/domain/graph';
 
-import { type ConstituentaBasicsDTO } from '@/features/rsform/backend/types';
+import { type ConstituentaBasicsDTO } from '@/features/rsform';
 
 export interface TextChangeOptions {
   termChanged: boolean;

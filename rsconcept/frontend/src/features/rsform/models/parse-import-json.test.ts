@@ -3,8 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { globalTx } from '@/i18n';
 import { CstType } from '@rsconcept/domain/library';
 
-import { PORTAL_JSON_CONTRACT_VERSION } from '@/features/library/models/portal-import-json';
 import starterEn from '@/features/sandbox/models/starter-bundles/starter-bundle.en.json';
+
+import { PORTAL_JSON_CONTRACT_VERSION } from '@/utils/constants';
 
 import { parseRSFormImportJson } from './parse-import-json';
 

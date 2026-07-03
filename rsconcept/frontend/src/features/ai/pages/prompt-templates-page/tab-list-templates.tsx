@@ -3,8 +3,8 @@
 import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
-import { type IPromptTemplate } from '@/features/ai/backend/types';
-import { useLabelUser } from '@/features/users';
+import { type IPromptTemplate } from '@/features/ai';
+import { useLabelUser } from '@/features/users/backend/use-label-user';
 
 import { TextURL } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';

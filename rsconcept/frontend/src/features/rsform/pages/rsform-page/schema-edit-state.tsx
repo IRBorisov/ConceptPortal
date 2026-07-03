@@ -9,11 +9,12 @@ import { generateAlias, removeAliasReference } from '@rsconcept/domain/library/r
 
 import { type UnsavedSaveHandler, urls, useConceptNavigation, useUnsavedChanges } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
-import { useAuth } from '@/features/auth';
-import { useLibrarySearchStore } from '@/features/library';
+import { useAuth } from '@/features/auth/backend/use-auth';
 import { useDeleteItem } from '@/features/library/backend/use-delete-item';
+import { useLibrarySearchStore } from '@/features/library/stores/library-search';
 import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
-import { useRoleStore, UserRole } from '@/features/users';
+import { UserRole } from '@/features/users';
+import { useRoleStore } from '@/features/users/stores/role';
 import { useAdjustRole } from '@/features/users/stores/use-adjust-role';
 
 import { useDialogsStore } from '@/stores/dialogs';

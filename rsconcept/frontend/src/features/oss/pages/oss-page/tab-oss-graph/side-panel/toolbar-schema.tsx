@@ -7,7 +7,7 @@ import { generateAlias } from '@rsconcept/domain/library/rsform-api';
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
-import { type ConstituentaBasicsDTO, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
+import { type ConstituentaBasicsDTO, type CreateConstituentaDTO } from '@/features/rsform';
 import { useCreateConstituenta } from '@/features/rsform/backend/use-create-constituenta';
 import { useCreateConstituentsBatch } from '@/features/rsform/backend/use-create-constituents-batch';
 import { useDeleteConstituents } from '@/features/rsform/backend/use-delete-constituents';

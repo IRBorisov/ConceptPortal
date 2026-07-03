@@ -7,10 +7,11 @@ import { NodeType, type Operation, OperationType } from '@rsconcept/domain/libra
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
-import { useAuth } from '@/features/auth';
-import { useLibrarySearchStore } from '@/features/library';
+import { useAuth } from '@/features/auth/backend/use-auth';
 import { useDeleteItem } from '@/features/library/backend/use-delete-item';
-import { useRoleStore, UserRole } from '@/features/users';
+import { useLibrarySearchStore } from '@/features/library/stores/library-search';
+import { UserRole } from '@/features/users';
+import { useRoleStore } from '@/features/users/stores/role';
 import { useAdjustRole } from '@/features/users/stores/use-adjust-role';
 
 import { usePreferencesStore } from '@/stores/preferences';

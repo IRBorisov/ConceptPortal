@@ -9,7 +9,7 @@ import { useTx } from '@/i18n';
 
 import { useRegisterUnsavedSave } from '@/app';
 import { PromptInput } from '@/features/ai/components/prompt-input';
-import { useAuth } from '@/features/auth';
+import { useAuth } from '@/features/auth/backend/use-auth';
 
 import { MiniButton } from '@/components/control';
 import { IconSample } from '@/components/icons';

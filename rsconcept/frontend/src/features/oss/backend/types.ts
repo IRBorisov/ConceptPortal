@@ -3,8 +3,8 @@ import { z } from 'zod';
 import { globalTx } from '@/i18n';
 import { OperationType, type OssLayout } from '@rsconcept/domain/library';
 
-import { schemaLibraryItem } from '@/features/library/backend/types';
-import { schemaSubstituteConstituents } from '@/features/rsform/backend/types';
+import { schemaLibraryItem } from '@/features/library';
+import { schemaSubstituteConstituents } from '@/features/rsform';
 
 import { limits } from '@/utils/constants';
 

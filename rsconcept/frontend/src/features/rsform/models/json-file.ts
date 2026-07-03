@@ -2,7 +2,7 @@ import { globalTx } from '@/i18n';
 import { type CstType } from '@rsconcept/domain/library';
 import { validateAliasFormat } from '@rsconcept/domain/library/rsform-api';
 
-import { PORTAL_JSON_CONTRACT_VERSION } from '@/features/library/models/portal-import-json';
+import { PORTAL_JSON_CONTRACT_VERSION } from '@/utils/constants';
 
 import { type ConstituentaBasicsDTO, type RSFormImportJsonDTO } from '../backend/types';
 

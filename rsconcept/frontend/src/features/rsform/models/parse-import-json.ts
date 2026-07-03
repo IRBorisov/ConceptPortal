@@ -1,6 +1,6 @@
 import { globalTx } from '@/i18n';
 
-import { schemaSandboxBundle } from '@/features/sandbox/models/bundle';
+import { schemaSandboxBundle } from '@/features/sandbox';
 
 import { type RSFormImportJsonDTO, schemaRSFormImportJson } from '../backend/types';
 

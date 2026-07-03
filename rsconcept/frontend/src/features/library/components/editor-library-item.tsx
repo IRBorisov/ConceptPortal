@@ -6,9 +6,11 @@ import { useIntl } from 'react-intl';
 import { useTx } from '@/i18n';
 
 import { useConceptNavigation } from '@/app';
-import { useLabelUser, useRoleStore, UserRole } from '@/features/users';
+import { UserRole } from '@/features/users';
+import { useLabelUser } from '@/features/users/backend/use-label-user';
 import { InfoUsers } from '@/features/users/components/info-users';
 import { SelectUser } from '@/features/users/components/select-user';
+import { useRoleStore } from '@/features/users/stores/role';
 
 import { Tooltip } from '@/components/container';
 import { MiniButton } from '@/components/control';

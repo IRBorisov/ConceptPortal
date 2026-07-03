@@ -60,6 +60,9 @@ export const limits = {
 /** Exteor file extension for RSForm. */
 export const EXTEOR_TRS_FILE = '.trs';
 
+/** Portal JSON import/export format version (schema and model files). */
+export const PORTAL_JSON_CONTRACT_VERSION = '1.0.0' as const;
+
 /** Regex patterns for data validation. */
 export const patterns = {
   login: '^[a-zA-Z][a-zA-Z0-9_\\-]{1,}[a-zA-Z0-9]$'

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
 
-import { useAuth } from '@/features/auth';
+import { useAuth } from '@/features/auth/backend/use-auth';
 
 import { DELAYS } from '@/backend/configuration';
 import { usePreferencesStore } from '@/stores/preferences';

@@ -1,7 +1,7 @@
 import { type BasicBinding, type RSEngine, type RSForm, type RSModel } from '@rsconcept/domain/library';
 import { TYPE_BASIC } from '@rsconcept/domain/library/rsmodel';
 
-import { PORTAL_JSON_CONTRACT_VERSION } from '@/features/library/models/portal-import-json';
+import { PORTAL_JSON_CONTRACT_VERSION } from '@/utils/constants';
 
 import { type ConstituentaValue, type RSModelJsonDTO } from '../backend/types';
 

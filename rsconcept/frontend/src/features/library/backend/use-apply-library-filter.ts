@@ -1,6 +1,6 @@
 import { matchLibraryItem, matchLibraryItemLocation } from '@/services/search';
 
-import { useAuth } from '@/features/auth';
+import { useAuth } from '@/features/auth/backend/use-auth';
 
 import { type LibraryFilter } from '../models/library-filter';
 

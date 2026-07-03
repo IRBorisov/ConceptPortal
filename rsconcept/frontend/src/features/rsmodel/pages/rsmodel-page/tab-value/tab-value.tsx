@@ -10,7 +10,8 @@ import { isInferrable, isModelIssue } from '@rsconcept/domain/library/rsmodel-ap
 import { useConceptNavigation } from '@/app';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
-import { useRoleStore, UserRole } from '@/features/users';
+import { UserRole } from '@/features/users';
+import { useRoleStore } from '@/features/users/stores/role';
 
 import { MiniButton } from '@/components/control';
 import { IconMoveDown, IconMoveUp } from '@/components/icons';

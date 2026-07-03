@@ -2,10 +2,7 @@ import { z } from 'zod';
 
 import { globalTx } from '@/i18n';
 
-import { limits } from '@/utils/constants';
-
-/** Portal JSON import/export format version (schema and model files). */
-export const PORTAL_JSON_CONTRACT_VERSION = '1.0.0';
+import { limits, PORTAL_JSON_CONTRACT_VERSION } from '@/utils/constants';
 
 export const schemaPortalImportMetadata = z.strictObject({
   contract_version: z.literal(PORTAL_JSON_CONTRACT_VERSION),

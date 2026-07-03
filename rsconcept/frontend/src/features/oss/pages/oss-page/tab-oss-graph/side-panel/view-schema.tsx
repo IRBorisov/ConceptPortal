@@ -9,7 +9,7 @@ import { calculateSchemaStats, isSchemaIssue } from '@rsconcept/domain/library/r
 import { useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useFindPredecessor } from '@/features/oss/backend/use-find-predecessor';
-import { type ConstituentaBasicsDTO } from '@/features/rsform/backend/types';
+import { type ConstituentaBasicsDTO } from '@/features/rsform';
 import { useClearAttributions } from '@/features/rsform/backend/use-clear-attributions';
 import { useCreateAttribution } from '@/features/rsform/backend/use-create-attribution';
 import { useCreateConstituentsBatch } from '@/features/rsform/backend/use-create-constituents-batch';

@@ -3,9 +3,10 @@
 import { useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
-import { useAuth } from '@/features/auth';
-import { useRoleStore, UserRole } from '@/features/users';
+import { useAuth } from '@/features/auth/backend/use-auth';
+import { UserRole } from '@/features/users';
 import { describeUserRole, labelUserRole } from '@/features/users/labels';
+import { useRoleStore } from '@/features/users/stores/role';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';

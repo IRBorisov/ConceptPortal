@@ -1,1 +1,2 @@
-export { type RSModelDTO, schemaRSModel } from './backend/types';
+export type { ConstituentaDataDTO, ConstituentaValue, RSModelDTO } from './backend/types';
+export { schemaRSModel } from './backend/types';

@@ -4,8 +4,7 @@ import { globalTx } from '@/i18n';
 import { CstType } from '@rsconcept/domain/library';
 import { RSErrorCode, TokenID, ValueClass } from '@rsconcept/domain/rslang';
 
-import { schemaLibraryItem, schemaVersionInfo } from '@/features/library/backend/types';
-import { schemaPortalImportMetadata } from '@/features/library/models/portal-import-json';
+import { schemaLibraryItem, schemaPortalImportMetadata, schemaVersionInfo } from '@/features/library';
 
 import { limits } from '@/utils/constants';
 

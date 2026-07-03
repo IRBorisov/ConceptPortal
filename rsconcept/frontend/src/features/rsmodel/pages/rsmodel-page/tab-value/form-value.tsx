@@ -19,7 +19,7 @@ import { labelType } from '@rsconcept/domain/rslang/labels';
 
 import { useConceptNavigation, useRegisterUnsavedSave } from '@/app';
 import { HelpTopic } from '@/features/help';
-import { type UpdateConstituentaDTO } from '@/features/rsform/backend/types';
+import { type UpdateConstituentaDTO } from '@/features/rsform';
 import { EditorRSExpression } from '@/features/rsform/components/editor-rsexpression/editor-rsexpression';
 import { RefsInput } from '@/features/rsform/components/refs-input';
 import { TypificationInput } from '@/features/rsform/components/typification-input';

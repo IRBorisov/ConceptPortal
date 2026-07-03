@@ -9,7 +9,6 @@ import { RSEngine, type RSEngineServices } from '@rsconcept/domain/library/rseng
 import { type Attribution, type Substitution } from '@rsconcept/domain/library/rsform';
 
 import { type UpdateLibraryItemDTO } from '@/features/library';
-import { loadRSForm } from '@/features/rsform/backend/rsform-loader';
 import {
   type AttributionTargetDTO,
   type ConstituentaCreatedResponse,
@@ -21,7 +20,8 @@ import {
   type RSFormDTO,
   type UpdateConstituentaDTO,
   type UpdateCrucialDTO
-} from '@/features/rsform/backend/types';
+} from '@/features/rsform';
+import { loadRSForm } from '@/features/rsform/backend/rsform-loader';
 
 import { type SandboxBundle } from '../models/bundle';
 import { createStarterSandboxBundle, resolveStarterLocale } from '../models/bundle-starter';

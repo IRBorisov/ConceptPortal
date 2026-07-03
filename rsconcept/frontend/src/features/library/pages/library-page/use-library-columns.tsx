@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 import { useTx } from '@/i18n';
 import { type LibraryItem } from '@rsconcept/domain/library';
 
-import { useLabelUser } from '@/features/users';
+import { useLabelUser } from '@/features/users/backend/use-label-user';
 
 import { createColumnHelper } from '@/components/data-table';
 import { useWindowSize } from '@/hooks/use-window-size';

@@ -8,12 +8,13 @@ import { RSEngine } from '@rsconcept/domain/library';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
-import { useAuth } from '@/features/auth';
-import { useLibrarySearchStore } from '@/features/library';
+import { useAuth } from '@/features/auth/backend/use-auth';
 import { useDeleteItem } from '@/features/library/backend/use-delete-item';
+import { useLibrarySearchStore } from '@/features/library/stores/library-search';
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { SchemaEditState } from '@/features/rsform/pages/rsform-page/schema-edit-state';
-import { useRoleStore, UserRole } from '@/features/users';
+import { UserRole } from '@/features/users';
+import { useRoleStore } from '@/features/users/stores/role';
 
 import { useClearValues } from '../../backend/use-clear-values';
 import { useMutatingRSModel } from '../../backend/use-mutating-rsmodel';

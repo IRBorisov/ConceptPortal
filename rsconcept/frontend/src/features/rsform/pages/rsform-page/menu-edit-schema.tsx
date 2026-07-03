@@ -4,7 +4,7 @@ import { useTx } from '@/i18n';
 import { CstType } from '@rsconcept/domain/library';
 
 import { useConceptNavigation, useUnsavedChanges } from '@/app';
-import { useAuth } from '@/features/auth';
+import { useAuth } from '@/features/auth/backend/use-auth';
 
 import { Divider } from '@/components/container';
 import { MiniButton } from '@/components/control';

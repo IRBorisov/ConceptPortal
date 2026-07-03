@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@/features/auth';
+import { useAuth } from '@/features/auth/backend/use-auth';
 import { MenuRole } from '@/features/library/components/menu-role';
 import { MenuEditSchema } from '@/features/rsform/pages/rsform-page/menu-edit-schema';
 

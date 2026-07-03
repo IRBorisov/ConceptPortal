@@ -1,3 +1,2 @@
-export { useLabelUser } from './backend/use-label-user';
-export { useUsers } from './backend/use-users';
-export { useRoleStore, UserRole } from './stores/role';
+export type { RoleFlags } from './models/user-role';
+export { UserRole } from './models/user-role';

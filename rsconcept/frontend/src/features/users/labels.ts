@@ -1,6 +1,6 @@
 import { globalTx } from '@/i18n';
 
-import { UserRole } from './stores/role';
+import { UserRole } from './models/user-role';
 
 const ROLE_LABEL_LID: Record<UserRole, string> = {
   [UserRole.READER]: 'tx.general.role.reader',

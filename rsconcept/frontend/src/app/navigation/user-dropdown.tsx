@@ -2,7 +2,7 @@
 
 import { localeLabel, useTx } from '@/i18n';
 
-import { useAuth } from '@/features/auth';
+import { useAuth } from '@/features/auth/backend/use-auth';
 import { useLogout } from '@/features/auth/backend/use-logout';
 
 import { Dropdown, DropdownButton } from '@/components/dropdown';
