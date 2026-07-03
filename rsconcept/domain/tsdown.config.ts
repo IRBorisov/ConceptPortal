@@ -15,7 +15,7 @@ const entryFiles = [
   'src/rslang/eval/calculator.ts',
   'src/rslang/parser/parser.ts',
   'src/rslang/parser/normalize.ts',
-  'src/rslang/parser/syntax-errors.ts',
+  'src/rslang/parser/syntax-errors/index.ts',
   'src/rslang/parser/expression-generator.ts',
   'src/rslang/parser/token.ts',
   'src/rslang/parser/parser.terms.ts',

@@ -25,6 +25,11 @@ const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
   [RSErrorCode.expectedDeclarativeBody]: 'tx.rslang.error.expectedDeclarativeBody',
   [RSErrorCode.expectedImperativeBody]: 'tx.rslang.error.expectedImperativeBody',
   [RSErrorCode.expectedRecursiveBody]: 'tx.rslang.error.expectedRecursiveBody',
+  [RSErrorCode.expectedQuantifierDomain]: 'tx.rslang.error.expectedQuantifierDomain',
+  [RSErrorCode.expectedRightOperand]: 'tx.rslang.error.expectedRightOperand',
+  [RSErrorCode.expectedUnaryOperand]: 'tx.rslang.error.expectedUnaryOperand',
+  [RSErrorCode.globalFuncParenCall]: 'tx.rslang.error.globalFuncParenCall',
+  [RSErrorCode.expectedArgument]: 'tx.rslang.error.expectedArgument',
   [RSErrorCode.expectedLocal]: 'tx.rslang.error.expectedLocal',
   [RSErrorCode.expectedType]: 'tx.rslang.error.expectedType',
   [RSErrorCode.localDoubleDeclare]: 'tx.rslang.error.localDoubleDeclare',
@@ -407,6 +412,7 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
     case RSErrorCode.localShadowing:
     case RSErrorCode.globalNotTyped:
     case RSErrorCode.globalFuncWithoutArgs:
+    case RSErrorCode.globalFuncParenCall:
     case RSErrorCode.localOutOfScope:
     case RSErrorCode.localOutOfScopeParentheses:
     case RSErrorCode.radicalUsage:
