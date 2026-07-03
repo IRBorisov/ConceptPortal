@@ -11,7 +11,8 @@ import { type FlatAST } from '@rsconcept/domain/parsing';
 import { HelpTopic } from '@/features/help';
 
 import { ModalView } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
+
+import { useRsformDialogsStore } from '../rsform-dialog-store';
 
 import { ASTFlow } from './ast-flow';
 import { ShowAstSchemaProvider } from './show-ast-schema-context';
@@ -25,7 +26,7 @@ export interface DlgShowFlatAstProps {
 }
 
 export function DlgShowFlatAst() {
-  const { ast, expression, schema } = useDialogsStore(state => state.props as DlgShowFlatAstProps);
+  const { ast, expression, schema } = useRsformDialogsStore(state => state.props as DlgShowFlatAstProps);
 
   const [hoverID, setHoverID] = useState<number | null>(null);
 

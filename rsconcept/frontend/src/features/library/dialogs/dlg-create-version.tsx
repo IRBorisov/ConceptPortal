@@ -7,11 +7,13 @@ import { type VersionInfo } from '@rsconcept/domain/library';
 
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { type CreateVersionDTO, schemaCreateVersion } from '../backend/types';
 import { useCreateVersion } from '../backend/use-create-version';
 import { nextVersion } from '../models/utils';
+
+import { useLibraryDialogsStore } from './library-dialog-store';
+
 
 export interface DlgCreateVersionProps {
   itemID: number;
@@ -23,7 +25,7 @@ export interface DlgCreateVersionProps {
 
 export function DlgCreateVersion() {
   const tx = useTx();
-  const { itemID, versions, selected, totalCount, onCreate } = useDialogsStore(
+  const { itemID, versions, selected, totalCount, onCreate } = useLibraryDialogsStore(
     state => state.props as DlgCreateVersionProps
   );
   const { createVersion: versionCreate } = useCreateVersion();

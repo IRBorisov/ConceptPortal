@@ -10,10 +10,11 @@ import { generateAlias, removeAliasReference } from '@rsconcept/domain/library/r
 
 import { type UnsavedSaveHandler, useConceptNavigation, useUnsavedChanges } from '@/app';
 import { type ConstituentaCreatedResponse, type CreateConstituentaDTO } from '@/features/rsform';
+import { RsformDialogHost } from '@/features/rsform/dialogs/rsform-dialog-host';
+import { useRsformDialogsStore } from '@/features/rsform/dialogs/rsform-dialog-store';
 import { SchemaEditContext } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { buildCloneConstituentsBatch } from '@/features/rsform/utils/build-clone-batch';
 
-import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { PARAMETER, prefixes } from '@/utils/constants';
 import { notImplemented } from '@/utils/utils';
@@ -38,11 +39,11 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
   } = useSandboxBundle();
 
   const isModified = useModificationStore(state => state.isModified);
-  const showCreateCst = useDialogsStore(state => state.showCreateCst);
-  const showDeleteCst = useDialogsStore(state => state.showDeleteCst);
-  const showCstTemplate = useDialogsStore(state => state.showCstTemplate);
-  const showEditTerm = useDialogsStore(state => state.showEditWordForms);
-  const showRenameCst = useDialogsStore(state => state.showRenameCst);
+  const showCreateCst = useRsformDialogsStore(state => state.showCreateCst);
+  const showDeleteCst = useRsformDialogsStore(state => state.showDeleteCst);
+  const showCstTemplate = useRsformDialogsStore(state => state.showCstTemplate);
+  const showEditTerm = useRsformDialogsStore(state => state.showEditWordForms);
+  const showRenameCst = useRsformDialogsStore(state => state.showRenameCst);
 
   const [selectedCst, setSelectedCst] = useState<number[]>([]);
   const [selectedEdges, setSelectedEdges] = useState<string[]>([]);
@@ -389,64 +390,67 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
   }
 
   return (
-    <SchemaEditContext
-      value={{
-        schema,
-        focusCst,
-        selectedCst: selectedCstInSchema,
-        selectedEdges,
-        activeCst,
-        pendingActiveID,
+    <>
+      <RsformDialogHost />
+      <SchemaEditContext
+        value={{
+          schema,
+          focusCst,
+          selectedCst: selectedCstInSchema,
+          selectedEdges,
+          activeCst,
+          pendingActiveID,
 
-        isOwned: true,
-        isArchive: false,
-        isMutable: true,
-        isContentEditable: true,
-        canDeleteSelected,
-        isProcessing: false,
+          isOwned: true,
+          isArchive: false,
+          isMutable: true,
+          isContentEditable: true,
+          canDeleteSelected,
+          isProcessing: false,
 
-        deleteSchema: notImplemented,
+          deleteSchema: notImplemented,
 
-        patchConstituenta,
-        openTermEditor: (onSave?: UnsavedSaveHandler) => void openTermEditor(onSave),
-        promptRename,
-        addAttribution,
-        removeAttribution,
-        clearAttributions: clearAttributionsForActive,
-        gotoPredecessor,
+          patchConstituenta,
+          openTermEditor: (onSave?: UnsavedSaveHandler) => void openTermEditor(onSave),
+          promptRename,
+          addAttribution,
+          removeAttribution,
+          clearAttributions: clearAttributionsForActive,
+          gotoPredecessor,
 
-        setFocus: handleSetFocus,
-        clearPendingActiveID: function clearPendingActiveID() {
-          setPendingActiveID(null);
-        },
-        setSelectedCst,
-        setSelectedEdges,
-        selectCst: function selectCst(target: number) {
-          setSelectedCst(prev => [...prev, target]);
-        },
-        deselectCst: function deselectCst(target: number) {
-          setSelectedCst(prev => prev.filter(id => id !== target));
-        },
-        toggleSelectCst: function toggleSelectCst(target: number) {
-          setSelectedCst(prev => (prev.includes(target) ? prev.filter(id => id !== target) : [...prev, target]));
-        },
-        deselectAll,
+          setFocus: handleSetFocus,
+          clearPendingActiveID: function clearPendingActiveID() {
+            setPendingActiveID(null);
+          },
+          setSelectedCst,
+          setSelectedEdges,
+          selectCst: function selectCst(target: number) {
+            setSelectedCst(prev => [...prev, target]);
+          },
+          deselectCst: function deselectCst(target: number) {
+            setSelectedCst(prev => prev.filter(id => id !== target));
+          },
+          toggleSelectCst: function toggleSelectCst(target: number) {
+            setSelectedCst(prev => (prev.includes(target) ? prev.filter(id => id !== target) : [...prev, target]));
+          },
+          deselectAll,
 
-        moveUp,
-        moveDown,
-        moveAfter,
-        toggleCrucial,
-        toggleValueClass,
-        createCst,
-        createCstFromData: createConstituenta,
-        promptCreateCst,
-        cloneCst,
-        promptDeleteSelected,
-        promptTemplate: () => void promptTemplate()
-      }}
-    >
-      {children}
-    </SchemaEditContext>
+          moveUp,
+          moveDown,
+          moveAfter,
+          toggleCrucial,
+          toggleValueClass,
+          createCst,
+          createCstFromData: createConstituenta,
+          promptCreateCst,
+          cloneCst,
+          promptDeleteSelected,
+          promptTemplate: () => void promptTemplate()
+        }}
+      >
+        {children}
+      </SchemaEditContext>
+    </>
   );
 }
 

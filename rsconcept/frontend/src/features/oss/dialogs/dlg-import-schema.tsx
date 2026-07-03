@@ -13,12 +13,14 @@ import { PickSchema } from '@/features/library/components/pick-schema';
 
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ImportSchemaDTO, schemaImportSchema } from '../backend/types';
 import { useImportSchema } from '../backend/use-import-schema';
 import { useOss } from '../backend/use-oss';
 import { SelectParent } from '../components/select-parent';
+
+import { useOssDialogsStore } from './oss-dialog-store';
+
 
 export interface DlgImportSchemaProps {
   ossID: number;
@@ -33,7 +35,7 @@ export function DlgImportSchema() {
   const tx = useTx();
   const { importSchema } = useImportSchema();
 
-  const { ossID, layout, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
+  const { ossID, layout, initialParent, onCreate, defaultX, defaultY } = useOssDialogsStore(
     state => state.props as DlgImportSchemaProps
   );
   const { schema } = useOss({ itemID: ossID });

@@ -16,7 +16,6 @@ import { MiniButton } from '@/components/control';
 import { IconNewItem, IconReset, IconSave } from '@/components/icons';
 import { ModalView } from '@/components/modal';
 import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
-import { useDialogsStore } from '@/stores/dialogs';
 import { prepareTooltip } from '@/utils/format';
 import { isMac } from '@/utils/utils';
 
@@ -28,6 +27,7 @@ import {
   type UpdateConstituentaDTO
 } from '../../backend/types';
 import { RefsInput } from '../../components/refs-input';
+import { useRsformDialogsStore } from '../rsform-dialog-store';
 
 import { StructureFlow } from './structure-flow';
 
@@ -45,10 +45,10 @@ export interface DlgStructurePlannerProps {
 export function DlgStructurePlanner() {
   const tx = useTx();
   const { promptUnsaved } = useUnsavedChanges();
-  const { schema, targetID, isMutable, onCreate, onUpdate } = useDialogsStore(
+  const { schema, targetID, isMutable, onCreate, onUpdate } = useRsformDialogsStore(
     state => state.props as DlgStructurePlannerProps
   );
-  const hideDialog = useDialogsStore(state => state.hideDialog);
+  const hideDialog = useRsformDialogsStore(state => state.hideDialog);
   const [currentSchema, setCurrentSchema] = useState(schema);
 
   const target = currentSchema.cstByID.get(targetID) ?? null;

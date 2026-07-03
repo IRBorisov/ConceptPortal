@@ -10,9 +10,11 @@ import { normalizeValue } from '@rsconcept/domain/rslang/eval/value-api';
 import { HelpTopic } from '@/features/help';
 
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { ValueEditor } from '../components/value-editor';
+
+import { useRsmodelDialogsStore } from './rsmodel-dialog-store';
+
 
 export interface DlgEditValueProps {
   initialValue: Value | null;
@@ -24,7 +26,7 @@ export interface DlgEditValueProps {
 
 export function DlgEditValue() {
   const tx = useTx();
-  const { initialValue, type, engine, onChange, getHeaderText } = useDialogsStore(
+  const { initialValue, type, engine, onChange, getHeaderText } = useRsmodelDialogsStore(
     state => state.props as DlgEditValueProps
   );
   const [value, setValue] = useState<Value | null>(initialValue);

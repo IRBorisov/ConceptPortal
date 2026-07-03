@@ -10,10 +10,10 @@ import { Footer } from '@/app/footer';
 import { ToasterThemed } from '@/app/global-toaster';
 
 import { ModalLoader } from '@/components/modal';
+import { useDialogInert } from '@/hooks/use-dialog-inert';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/app-layout';
-import { useDialogsStore } from '@/stores/dialogs';
 
-import { GlobalDialogs } from '../global-dialogs';
+import { AppShellDialogHosts } from '../app-shell-dialog-hosts';
 import { GlobalLoader } from '../global-loader';
 import { GlobalTooltips } from '../global-tooltips';
 import { NavigationSandbox } from '../navigation/navigation-sandbox';
@@ -26,7 +26,7 @@ export function LayoutSandbox() {
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
   const toastBottom = useAppLayoutStore(state => state.toastBottom);
   const noFooter = useAppLayoutStore(state => state.noFooter);
-  const activeDialog = useDialogsStore(state => state.active);
+  const dialogInert = useDialogInert();
 
   return (
     <div className='min-w-80 antialiased h-full max-w-480 mx-auto'>
@@ -41,13 +41,13 @@ export function LayoutSandbox() {
       />
 
       <Suspense fallback={<ModalLoader />}>
-        <GlobalDialogs />
+        <AppShellDialogHosts />
       </Suspense>
       <GlobalTooltips />
 
       <NavigationSandbox />
 
-      <div className='overflow-x-auto max-w-dvw' style={{ maxHeight: viewportHeight }} inert={activeDialog !== null}>
+      <div className='overflow-x-auto max-w-dvw' style={{ maxHeight: viewportHeight }} inert={dialogInert}>
         <main className='cc-scroll-y overflow-y-auto' style={{ height: mainHeight }}>
           <GlobalLoader />
           <Outlet />

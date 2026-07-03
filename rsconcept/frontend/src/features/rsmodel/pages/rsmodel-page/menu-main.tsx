@@ -10,6 +10,8 @@ import { AccessPolicy, LocationHead } from '@rsconcept/domain/library';
 import { useConceptNavigation, useUnsavedChanges } from '@/app';
 import { buildModelToSchemaQuery, buildSiblingModelQuery } from '@/app/navigation/cross-rs-query';
 import { useAuth } from '@/features/auth/backend/use-auth';
+import { useLibraryDialogsStore } from '@/features/library/dialogs/library-dialog-store';
+import { useRsformDialogsStore } from '@/features/rsform/dialogs/rsform-dialog-store';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { createSandboxBundleFromRSModel } from '@/features/sandbox/models/bundle-transfer';
 import { saveBundle } from '@/features/sandbox/stores/sandbox-repository';
@@ -33,7 +35,6 @@ import {
   IconShare,
   IconUpload
 } from '@/components/icons';
-import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { convertToJSON, generatePageQR, readJsonFile, sharePage } from '@/utils/utils';
 
@@ -55,8 +56,8 @@ export function MenuMain() {
 
   const role = useRoleStore(state => state.role);
 
-  const showQR = useDialogsStore(state => state.showQR);
-  const showClone = useDialogsStore(state => state.showCloneLibraryItem);
+  const showQR = useRsformDialogsStore(state => state.showQR);
+  const showClone = useLibraryDialogsStore(state => state.showCloneLibraryItem);
   const { uploadJson } = useUploadRSModelJson();
   const jsonInputRef = useRef<HTMLInputElement | null>(null);
 

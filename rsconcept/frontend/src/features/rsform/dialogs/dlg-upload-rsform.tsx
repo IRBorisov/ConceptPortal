@@ -6,10 +6,11 @@ import { useTx } from '@/i18n';
 
 import { Checkbox, FileInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
 
 import { type RSFormUploadDTO } from '../backend/types';
+
+import { useRsformDialogsStore } from './rsform-dialog-store';
 
 export interface DlgUploadRSFormProps {
   onUpload: (data: RSFormUploadDTO) => void;
@@ -17,7 +18,7 @@ export interface DlgUploadRSFormProps {
 
 export function DlgUploadRSForm() {
   const tx = useTx();
-  const { onUpload } = useDialogsStore(state => state.props as DlgUploadRSFormProps);
+  const { onUpload } = useRsformDialogsStore(state => state.props as DlgUploadRSFormProps);
   const [loadMetadata, setLoadMetadata] = useState(false);
   const [file, setFile] = useState<File | null>(null);
 

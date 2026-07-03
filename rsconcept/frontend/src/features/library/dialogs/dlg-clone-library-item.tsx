@@ -10,7 +10,6 @@ import { urls, useConceptNavigation } from '@/app';
 import { MiniButton } from '@/components/control';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { type CloneLibraryItemDTO, schemaCloneLibraryItem } from '../backend/types';
 import { useCloneItem } from '../backend/use-clone-item';
@@ -18,6 +17,9 @@ import { IconItemVisibility } from '../components/icon-item-visibility';
 import { PickLocation } from '../components/pick-location';
 import { SelectAccessPolicy } from '../components/select-access-policy';
 import { cloneTitle } from '../models/utils';
+
+import { useLibraryDialogsStore } from './library-dialog-store';
+
 
 export interface DlgCloneLibraryItemProps {
   base: LibraryItem;
@@ -28,7 +30,7 @@ export interface DlgCloneLibraryItemProps {
 
 export function DlgCloneLibraryItem() {
   const tx = useTx();
-  const { base, initialLocation, selected, totalCount } = useDialogsStore(
+  const { base, initialLocation, selected, totalCount } = useLibraryDialogsStore(
     state => state.props as DlgCloneLibraryItemProps
   );
   const router = useConceptNavigation();

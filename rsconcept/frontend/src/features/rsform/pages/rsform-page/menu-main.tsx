@@ -10,6 +10,7 @@ import { AccessPolicy, LocationHead } from '@rsconcept/domain/library';
 import { useConceptNavigation, useUnsavedChanges } from '@/app';
 import { buildSchemaToModelQuery } from '@/app/navigation/cross-rs-query';
 import { useAuth } from '@/features/auth/backend/use-auth';
+import { useLibraryDialogsStore } from '@/features/library/dialogs/library-dialog-store';
 import { createSandboxBundleFromRSForm } from '@/features/sandbox/models/bundle-transfer';
 import { saveBundle } from '@/features/sandbox/stores/sandbox-repository';
 import { UserRole } from '@/features/users';
@@ -32,13 +33,13 @@ import {
   IconShare,
   IconUpload
 } from '@/components/icons';
-import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { EXTEOR_TRS_FILE, prefixes } from '@/utils/constants';
 import { convertToJSON, generatePageQR, sharePage } from '@/utils/utils';
 
 import { useUploadRSFormJson } from '../../backend/use-upload-json';
 import { useUploadTRS } from '../../backend/use-upload-trs';
+import { useRsformDialogsStore } from '../../dialogs/rsform-dialog-store';
 import { rsFormContentToImportJson } from '../../models/json-file';
 import { readRSFormImportJsonFile } from '../../models/parse-import-json';
 import { prepareTRSFile } from '../../models/trs-file';
@@ -61,9 +62,9 @@ export function MenuMain() {
   const { uploadJson } = useUploadRSFormJson();
   const jsonInputRef = useRef<HTMLInputElement | null>(null);
 
-  const showQR = useDialogsStore(state => state.showQR);
-  const showClone = useDialogsStore(state => state.showCloneLibraryItem);
-  const showUpload = useDialogsStore(state => state.showUploadRSForm);
+  const showQR = useRsformDialogsStore(state => state.showQR);
+  const showClone = useLibraryDialogsStore(state => state.showCloneLibraryItem);
+  const showUpload = useRsformDialogsStore(state => state.showUploadRSForm);
 
   const {
     elementRef: menuRef,

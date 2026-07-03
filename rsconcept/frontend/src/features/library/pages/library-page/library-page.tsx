@@ -3,12 +3,12 @@
 import { useAuth } from '@/features/auth/backend/use-auth';
 
 import { ExportDropdown } from '@/components/control/export-dropdown';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { useApplyLibraryFilter } from '../../backend/use-apply-library-filter';
 import { useLibrary } from '../../backend/use-library';
 import { useLibraryContextSearch } from '../../backend/use-library-context-search';
 import { useRenameLocation } from '../../backend/use-rename-location';
+import { useLibraryDialogsStore } from '../../dialogs/library-dialog-store';
 import { useCreateLibraryFilter, useLibrarySearchStore } from '../../stores/library-search';
 
 import { LocationBreadcrumb } from './location-breadcrumb';
@@ -32,7 +32,7 @@ export function LibraryPage() {
   });
   const { filtered } = useApplyLibraryFilter(filter, matchIds);
 
-  const showChangeLocation = useDialogsStore(state => state.showChangeLocation);
+  const showChangeLocation = useLibraryDialogsStore(state => state.showChangeLocation);
   const canRename = (() => {
     if (location.length <= 3 || isAnonymous) {
       return false;

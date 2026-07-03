@@ -22,7 +22,6 @@ import { HelpTopic } from '@/features/help';
 
 import { TextButton } from '@/components/control/text-button';
 import { Label, TextArea } from '@/components/input';
-import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { withPreventDefault } from '@/utils/utils';
 
@@ -31,6 +30,7 @@ import { EditorRSExpression } from '../../../components/editor-rsexpression';
 import { RefsInput } from '../../../components/refs-input';
 import { SelectMultiConstituenta } from '../../../components/select-multi-constituenta';
 import { TypificationInput } from '../../../components/typification-input';
+import { useRsformDialogsStore } from '../../../dialogs/rsform-dialog-store';
 import { getRSDefinitionPlaceholder, labelRSExpression } from '../../../labels';
 import { useSchemaEdit } from '../schema-edit-context';
 
@@ -74,7 +74,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
     isProcessing,
     isContentEditable
   } = useSchemaEdit();
-  const showTypification = useDialogsStore(state => state.showShowTypeGraph);
+  const showTypification = useRsformDialogsStore(state => state.showShowTypeGraph);
   const disabled = !activeCst || !isContentEditable;
 
   function handleAddAttribution(attribute: Constituenta) {

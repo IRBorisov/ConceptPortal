@@ -10,7 +10,8 @@ import { useConceptNavigation } from '@/app';
 import { MiniButton } from '@/components/control';
 import { IconRSForm } from '@/components/icons';
 import { ModalView } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
+
+import { useRsformDialogsStore } from '../rsform-dialog-store';
 
 import { TGReadonlyFlow } from './tg-readonly-flow';
 
@@ -20,8 +21,8 @@ export interface DlgShowTermGraphProps {
 
 export function DlgShowTermGraph() {
   const tx = useTx();
-  const { schema } = useDialogsStore(state => state.props as DlgShowTermGraphProps);
-  const hideDialog = useDialogsStore(state => state.hideDialog);
+  const { schema } = useRsformDialogsStore(state => state.props as DlgShowTermGraphProps);
+  const hideDialog = useRsformDialogsStore(state => state.hideDialog);
   const router = useConceptNavigation();
 
   function handleOpenSchema(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {

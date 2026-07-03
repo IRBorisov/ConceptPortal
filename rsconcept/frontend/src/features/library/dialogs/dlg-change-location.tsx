@@ -7,11 +7,13 @@ import { z } from 'zod';
 import { globalTx, useTx } from '@/i18n';
 
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 import { limits } from '@/utils/constants';
 
 import { PickLocation } from '../components/pick-location';
 import { validateLocation } from '../models/utils';
+
+import { useLibraryDialogsStore } from './library-dialog-store';
+
 
 const schemaLocation = z.strictObject({
   location: z.string().refine(data => validateLocation(data), { message: globalTx('tx.lib.location.validate') })
@@ -26,7 +28,7 @@ export interface DlgChangeLocationProps {
 
 export function DlgChangeLocation() {
   const tx = useTx();
-  const { initial, onChangeLocation } = useDialogsStore(state => state.props as DlgChangeLocationProps);
+  const { initial, onChangeLocation } = useLibraryDialogsStore(state => state.props as DlgChangeLocationProps);
 
   const form = useForm({
     defaultValues: {

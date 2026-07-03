@@ -10,12 +10,14 @@ import { HelpTopic } from '@/features/help';
 
 import { TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { type CreateSchemaDTO, schemaCreateSchema } from '../backend/types';
 import { useCreateSchema } from '../backend/use-create-schema';
 import { useOss } from '../backend/use-oss';
 import { SelectParent } from '../components/select-parent';
+
+import { useOssDialogsStore } from './oss-dialog-store';
+
 
 export interface DlgCreateSchemaProps {
   ossID: number;
@@ -30,7 +32,7 @@ export function DlgCreateSchema() {
   const tx = useTx();
   const { createSchema } = useCreateSchema();
 
-  const { ossID, layout, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
+  const { ossID, layout, initialParent, onCreate, defaultX, defaultY } = useOssDialogsStore(
     state => state.props as DlgCreateSchemaProps
   );
 

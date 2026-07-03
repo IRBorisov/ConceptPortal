@@ -8,7 +8,7 @@ import { useTx } from '@/i18n';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { useEscapeKey } from '@/hooks/use-escape-key';
-import { useDialogsStore } from '@/stores/dialogs';
+import { useHideActiveDialog } from '@/hooks/use-hide-active-dialog';
 import { prepareTooltip } from '@/utils/format';
 
 import { Button, MiniButton } from '../control';
@@ -26,7 +26,7 @@ interface ModalViewProps extends ModalProps {
   /** Hides the footer close button. */
   noFooterButton?: boolean;
 
-  /** Callback to close the modal. Defaults to the global dialog store. */
+  /** Callback to close the modal. Defaults to the active feature dialog store. */
   onHide?: () => void;
 }
 
@@ -46,8 +46,8 @@ export function ModalView({
   ...restProps
 }: React.PropsWithChildren<ModalViewProps>) {
   const tx = useTx();
-  const hideDialog = useDialogsStore(state => state.hideDialog);
-  const handleHide = onHide ?? hideDialog;
+  const hideActiveDialog = useHideActiveDialog();
+  const handleHide = onHide ?? hideActiveDialog;
   useEscapeKey(handleHide);
   const { isTopPlaced, setElement } = useModalPlacement<HTMLDivElement>(!fullScreen);
 

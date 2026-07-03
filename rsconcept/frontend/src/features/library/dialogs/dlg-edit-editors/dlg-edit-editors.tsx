@@ -9,9 +9,9 @@ import { SelectUser } from '@/features/users/components/select-user';
 import { TableUsers } from '@/features/users/components/table-users';
 
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { useSetEditors } from '../../backend/use-set-editors';
+import { useLibraryDialogsStore } from '../library-dialog-store';
 
 export interface DlgEditEditorsProps {
   itemID: number;
@@ -20,7 +20,7 @@ export interface DlgEditEditorsProps {
 
 export function DlgEditEditors() {
   const tx = useTx();
-  const { initialEditors: initial, itemID } = useDialogsStore(state => state.props as DlgEditEditorsProps);
+  const { initialEditors: initial, itemID } = useLibraryDialogsStore(state => state.props as DlgEditEditorsProps);
   const { setEditors } = useSetEditors();
 
   const [selected, setSelected] = useState<number[]>([...initial]);

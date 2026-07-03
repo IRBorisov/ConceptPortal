@@ -19,9 +19,9 @@ import {
   IconRSModel,
   IconSandbox
 } from '@/components/icons';
+import { useDialogInert } from '@/hooks/use-dialog-inert';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useAppLayoutStore } from '@/stores/app-layout';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { urls } from '../urls';
 
@@ -40,7 +40,7 @@ export function Navigation() {
   const { isAnonymous } = useAuth();
   const { isSmall } = useWindowSize();
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
-  const activeDialog = useDialogsStore(state => state.active);
+  const dialogInert = useDialogInert();
 
   const currentOSS = useAIStore(state => state.oss);
   const currentModel = useAIStore(state => state.model);
@@ -99,7 +99,7 @@ export function Navigation() {
   return (
     <nav
       className='z-navigation sticky top-0 left-0 right-0 select-none bg-background/95 backdrop-blur-xl'
-      inert={activeDialog !== null}
+      inert={dialogInert}
     >
       <ToggleNavigation />
       <div

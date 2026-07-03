@@ -10,11 +10,13 @@ import { HelpTopic } from '@/features/help';
 
 import { Checkbox, TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { type ICreatePromptTemplateDTO, type IPromptTemplateDTO, schemaCreatePromptTemplate } from '../backend/types';
 import { useAvailableTemplates } from '../backend/use-available-templates';
 import { useCreatePromptTemplate } from '../backend/use-create-prompt-template';
+
+import { useAiDialogsStore } from './ai-dialog-store';
+
 
 export interface DlgCreatePromptTemplateProps {
   onCreate?: (data: IPromptTemplateDTO) => void;
@@ -22,7 +24,7 @@ export interface DlgCreatePromptTemplateProps {
 
 export function DlgCreatePromptTemplate() {
   const tx = useTx();
-  const { onCreate } = useDialogsStore(state => state.props as DlgCreatePromptTemplateProps);
+  const { onCreate } = useAiDialogsStore(state => state.props as DlgCreatePromptTemplateProps);
   const { createPromptTemplate } = useCreatePromptTemplate();
   const { items: templates } = useAvailableTemplates();
   const { user } = useAuth();

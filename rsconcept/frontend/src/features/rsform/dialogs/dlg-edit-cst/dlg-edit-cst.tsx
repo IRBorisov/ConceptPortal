@@ -11,11 +11,11 @@ import { useConceptNavigation } from '@/app';
 import { MiniButton } from '@/components/control';
 import { IconChild, IconRSForm } from '@/components/icons';
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { withPreventDefault } from '@/utils/utils';
 
 import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../../backend/types';
+import { useRsformDialogsStore } from '../rsform-dialog-store';
 
 import { FormEditCst, type FormEditCstFields } from './form-edit-cst';
 
@@ -32,8 +32,8 @@ export interface DlgEditCstProps {
 export function DlgEditCst() {
   const tx = useTx();
   const { schema, target, onEdit, onEditSource, onAddAttribution, onRemoveAttribution, onClearAttributions } =
-    useDialogsStore(state => state.props as DlgEditCstProps);
-  const hideDialog = useDialogsStore(state => state.hideDialog);
+    useRsformDialogsStore(state => state.props as DlgEditCstProps);
+  const hideDialog = useRsformDialogsStore(state => state.hideDialog);
   const router = useConceptNavigation();
 
   const defaultValues: UpdateConstituentaDTO = {

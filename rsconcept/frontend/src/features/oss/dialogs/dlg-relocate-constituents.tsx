@@ -15,13 +15,15 @@ import { PickMultiConstituenta } from '@/features/rsform/components/pick-multi-c
 
 import { MiniButton } from '@/components/control';
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { type RelocateConstituentsDTO, schemaRelocateConstituents } from '../backend/types';
 import { useOss } from '../backend/use-oss';
 import { useRelocateConstituents } from '../backend/use-relocate-constituents';
 import { useUpdateLayout } from '../backend/use-update-layout';
 import { IconRelocationUp } from '../components/icon-relocation-up';
+
+import { useOssDialogsStore } from './oss-dialog-store';
+
 
 export interface DlgRelocateConstituentsProps {
   ossID: number;
@@ -31,7 +33,7 @@ export interface DlgRelocateConstituentsProps {
 
 export function DlgRelocateConstituents() {
   const tx = useTx();
-  const { ossID, targetID, layout } = useDialogsStore(state => state.props as DlgRelocateConstituentsProps);
+  const { ossID, targetID, layout } = useOssDialogsStore(state => state.props as DlgRelocateConstituentsProps);
   const { items: libraryItems } = useLibrary();
   const { updateLayout: updatePositions } = useUpdateLayout();
   const { relocateConstituents } = useRelocateConstituents();

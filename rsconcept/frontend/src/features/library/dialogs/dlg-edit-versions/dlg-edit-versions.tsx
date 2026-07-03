@@ -11,12 +11,12 @@ import { MiniButton } from '@/components/control';
 import { IconReset, IconSave } from '@/components/icons';
 import { TextArea, TextInput } from '@/components/input';
 import { ModalView } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { schemaUpdateVersion, type UpdateVersionDTO } from '../../backend/types';
 import { useDeleteVersion } from '../../backend/use-delete-version';
 import { useMutatingLibrary } from '../../backend/use-mutating-library';
 import { useUpdateVersion } from '../../backend/use-update-version';
+import { useLibraryDialogsStore } from '../library-dialog-store';
 
 import { TableVersions } from './table-versions';
 
@@ -27,8 +27,8 @@ export interface DlgEditVersionsProps {
 
 export function DlgEditVersions() {
   const tx = useTx();
-  const { itemID, afterDelete } = useDialogsStore(state => state.props as DlgEditVersionsProps);
-  const hideDialog = useDialogsStore(state => state.hideDialog);
+  const { itemID, afterDelete } = useLibraryDialogsStore(state => state.props as DlgEditVersionsProps);
+  const hideDialog = useLibraryDialogsStore(state => state.hideDialog);
   const { schema } = useRSForm({ itemID });
   const isProcessing = useMutatingLibrary();
   const { deleteVersion: versionDelete } = useDeleteVersion();

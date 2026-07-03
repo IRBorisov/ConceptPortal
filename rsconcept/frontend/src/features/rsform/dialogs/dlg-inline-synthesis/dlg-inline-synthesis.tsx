@@ -9,10 +9,10 @@ import { type RSForm, type Substitution } from '@rsconcept/domain/library';
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
-import { useDialogsStore } from '@/stores/dialogs';
 import { withPreventDefault } from '@/utils/utils';
 
 import { type InlineSynthesisDTO, schemaInlineSynthesis } from '../../backend/types';
+import { useRsformDialogsStore } from '../rsform-dialog-store';
 
 import { TabConstituents } from './tab-constituents';
 import { TabSource } from './tab-source';
@@ -32,7 +32,7 @@ type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgInlineSynthesis() {
   const tx = useTx();
-  const { receiver, onSynthesis } = useDialogsStore(state => state.props as DlgInlineSynthesisProps);
+  const { receiver, onSynthesis } = useRsformDialogsStore(state => state.props as DlgInlineSynthesisProps);
   const [activeTab, setActiveTab] = useState<TabID>(TabID.SCHEMA);
 
   const defaultValues: InlineSynthesisDTO = {

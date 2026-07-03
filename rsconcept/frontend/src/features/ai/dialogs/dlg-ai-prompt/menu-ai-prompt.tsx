@@ -8,7 +8,9 @@ import { useConceptNavigation } from '@/app';
 
 import { MiniButton } from '@/components/control';
 import { IconClipboard, IconEdit } from '@/components/icons';
-import { useDialogsStore } from '@/stores/dialogs';
+
+import { useAiDialogsStore } from '../ai-dialog-store';
+
 
 interface MenuAIPromptProps {
   promptID: number;
@@ -18,7 +20,7 @@ interface MenuAIPromptProps {
 export function MenuAIPrompt({ promptID, generatedPrompt }: MenuAIPromptProps) {
   const tx = useTx();
   const router = useConceptNavigation();
-  const hideDialog = useDialogsStore(state => state.hideDialog);
+  const hideDialog = useAiDialogsStore(state => state.hideDialog);
 
   function navigatePrompt() {
     hideDialog();

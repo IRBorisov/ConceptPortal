@@ -11,11 +11,12 @@ import { HelpTopic } from '@/features/help';
 
 import { TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 import { withPreventDefault } from '@/utils/utils';
 
 import { schemaUpdateConstituenta, type UpdateConstituentaDTO } from '../backend/types';
 import { SelectCstType } from '../components/select-cst-type';
+
+import { useRsformDialogsStore } from './rsform-dialog-store';
 
 export interface DlgRenameCstProps {
   schema: RSForm;
@@ -25,7 +26,7 @@ export interface DlgRenameCstProps {
 
 export function DlgRenameCst() {
   const tx = useTx();
-  const { schema, target, onRename } = useDialogsStore(state => state.props as DlgRenameCstProps);
+  const { schema, target, onRename } = useRsformDialogsStore(state => state.props as DlgRenameCstProps);
   const defaultValues: UpdateConstituentaDTO = {
     target: target.id,
     item_data: {

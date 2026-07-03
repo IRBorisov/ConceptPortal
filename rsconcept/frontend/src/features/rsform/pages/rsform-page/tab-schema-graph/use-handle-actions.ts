@@ -8,13 +8,13 @@ import { CstType } from '@rsconcept/domain/library/rsform';
 import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 
 import { useScrollToNode } from '@/components/flow/use-scroll-to-node';
-import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLOR_CODES } from '@/styling/colors';
 import { EXPORTS, PARAMETER, REACTFLOW_VIEWPORT } from '@/utils/constants';
 import { cleanSvg } from '@/utils/svg';
 import { dataUrlToBlob, withPreventDefault } from '@/utils/utils';
 
+import { useRsformDialogsStore } from '../../../dialogs/rsform-dialog-store';
 import { InteractionMode, useTermGraphStore, useTGConnectionStore } from '../../../stores/term-graph';
 import { useSchemaEdit } from '../schema-edit-context';
 
@@ -55,8 +55,8 @@ export function useHandleActions(graph: Graph<number>) {
   const toggleMode = useTermGraphStore(state => state.toggleMode);
   const toggleEdgeType = useTGConnectionStore(state => state.toggleConnectionType);
 
-  const showEditCst = useDialogsStore(state => state.showEditCst);
-  const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
+  const showEditCst = useRsformDialogsStore(state => state.showEditCst);
+  const showTypeGraph = useRsformDialogsStore(state => state.showShowTypeGraph);
 
   const [isExportingImage, setIsExportingImage] = useState(false);
 

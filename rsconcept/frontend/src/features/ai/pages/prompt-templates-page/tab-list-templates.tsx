@@ -9,10 +9,10 @@ import { useLabelUser } from '@/features/users/backend/use-label-user';
 import { TextURL } from '@/components/control';
 import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { NoData } from '@/components/view';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { useAvailableTemplates } from '../../backend/use-available-templates';
 import { BadgeSharedTemplate } from '../../components/badge-shared-template';
+import { useAiDialogsStore } from '../../dialogs/ai-dialog-store';
 const columnHelper = createColumnHelper<IPromptTemplate>();
 
 interface TabListTemplatesProps {
@@ -23,7 +23,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
   const tx = useTx();
   const router = useConceptNavigation();
   const { items } = useAvailableTemplates();
-  const showCreatePromptTemplate = useDialogsStore(state => state.showCreatePromptTemplate);
+  const showCreatePromptTemplate = useAiDialogsStore(state => state.showCreatePromptTemplate);
   const getUserLabel = useLabelUser();
 
   function handleRowDoubleClicked(row: IPromptTemplate, event: React.MouseEvent<Element>) {

@@ -26,11 +26,11 @@ import { TextButton } from '@/components/control/text-button';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { TextArea } from '@/components/input';
 import { cn } from '@/components/utils';
-import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { formatInteger } from '@/utils/format';
 
 import { ValueInput } from '../../../components/value-input';
+import { useRsmodelDialogsStore } from '../../../dialogs/rsmodel-dialog-store';
 import { labelValue, prepareValueString } from '../../../labels';
 import { copyJsonToClipboard, downloadJsonFile, getExportJsonText } from '../export-helpers';
 import { useModelEdit } from '../model-edit-context';
@@ -51,7 +51,7 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   const showDataText = usePreferencesStore(state => state.showDataText);
   const toggleShowDataText = usePreferencesStore(state => state.toggleShowDataText);
   const disableCache = usePreferencesStore(state => state.disableCache);
-  const showViewValue = useDialogsStore(state => state.showModelViewValue);
+  const showViewValue = useRsmodelDialogsStore(state => state.showModelViewValue);
 
   const [evaluatedExpression, setEvaluatedExpression] = useState<string>('');
   const [expression, setExpression] = useState<string>(activeCst?.definition_formal ?? '');

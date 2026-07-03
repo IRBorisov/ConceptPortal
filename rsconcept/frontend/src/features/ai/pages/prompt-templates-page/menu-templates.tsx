@@ -6,12 +6,13 @@ import { useConceptNavigation } from '@/app';
 
 import { MiniButton } from '@/components/control';
 import { IconNewItem } from '@/components/icons';
-import { useDialogsStore } from '@/stores/dialogs';
+
+import { useAiDialogsStore } from '../../dialogs/ai-dialog-store';
 
 export function MenuTemplates() {
   const tx = useTx();
   const router = useConceptNavigation();
-  const showCreatePromptTemplate = useDialogsStore(state => state.showCreatePromptTemplate);
+  const showCreatePromptTemplate = useAiDialogsStore(state => state.showCreatePromptTemplate);
 
   function handleNewTemplate() {
     showCreatePromptTemplate({

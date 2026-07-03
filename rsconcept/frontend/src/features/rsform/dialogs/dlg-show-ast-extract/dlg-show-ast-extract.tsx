@@ -23,14 +23,14 @@ import {
   type RSFormDTO,
   type UpdateConstituentaDTO
 } from '@/features/rsform/backend/types';
-import { ASTFlow } from '@/features/rsform/dialogs/dlg-show-ast/ast-flow';
-import { ShowAstSchemaProvider } from '@/features/rsform/dialogs/dlg-show-ast/show-ast-schema-context';
 
 import { ModalView } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 
+import { ASTFlow } from '../dlg-show-ast/ast-flow';
 import { type AstGraphNode } from '../dlg-show-ast/graph/ast-models';
+import { ShowAstSchemaProvider } from '../dlg-show-ast/show-ast-schema-context';
+import { useRsformDialogsStore } from '../rsform-dialog-store';
 
 import { PopoverExtraction } from './popover-extraction';
 
@@ -49,8 +49,8 @@ export interface DlgShowAstExtractProps {
 
 export function DlgShowAstExtract() {
   const tx = useTx();
-  const hideDialog = useDialogsStore(state => state.hideDialog);
-  const { initial, targetID, onCreate, onUpdate } = useDialogsStore(state => state.props as DlgShowAstExtractProps);
+  const hideDialog = useRsformDialogsStore(state => state.hideDialog);
+  const { initial, targetID, onCreate, onUpdate } = useRsformDialogsStore(state => state.props as DlgShowAstExtractProps);
 
   const [schema, setSchema] = useState(initial.schema);
   const [expression, setExpression] = useState(initial.expression);

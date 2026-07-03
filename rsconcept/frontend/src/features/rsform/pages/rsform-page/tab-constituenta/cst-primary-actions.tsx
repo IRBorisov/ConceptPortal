@@ -8,10 +8,10 @@ import { PillValueClass } from '@/features/rsform/components/pill-valueClass';
 
 import { TextButton } from '@/components/control/text-button';
 import { cn } from '@/components/utils';
-import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 
 import { PillCrucial } from '../../../components/pill-crucial';
+import { useRsformDialogsStore } from '../../../dialogs/rsform-dialog-store';
 import { useSchemaEdit } from '../schema-edit-context';
 
 export interface ConstituentaPrimaryActionsProps {
@@ -31,7 +31,7 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
     isProcessing,
     isContentEditable
   } = useSchemaEdit();
-  const showStructurePlanner = useDialogsStore(state => state.showStructurePlanner);
+  const showStructurePlanner = useRsformDialogsStore(state => state.showStructurePlanner);
   const isModified = useModificationStore(state => state.isModified);
 
   const disabled = !activeCst || !isContentEditable;

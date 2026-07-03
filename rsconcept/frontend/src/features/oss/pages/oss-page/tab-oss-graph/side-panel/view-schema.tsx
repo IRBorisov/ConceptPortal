@@ -20,6 +20,7 @@ import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { useUpdateConstituenta } from '@/features/rsform/backend/use-update-constituenta';
 import { MiniRSFormStats } from '@/features/rsform/components/mini-rsform-stats';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
+import { useRsformDialogsStore } from '@/features/rsform/dialogs/rsform-dialog-store';
 import { useCstSearchStore } from '@/features/rsform/stores/cst-search';
 import { buildCloneConstituentsBatch } from '@/features/rsform/utils/build-clone-batch';
 
@@ -27,7 +28,6 @@ import { MiniButton } from '@/components/control';
 import { type DataTableRowDrop } from '@/components/data-table';
 import { IconMoveDown, IconMoveUp } from '@/components/icons';
 import { useFitHeight } from '@/stores/app-layout';
-import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER, prefixes } from '@/utils/constants';
 
 import { ToolbarSchema } from './toolbar-schema';
@@ -42,7 +42,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
   const { schema } = useRSForm({ itemID: schemaID });
   const [activeID, setActiveID] = useState<number | null>(null);
   const activeCst = activeID ? (schema.cstByID.get(activeID) ?? null) : null;
-  const showEditCst = useDialogsStore(state => state.showEditCst);
+  const showEditCst = useRsformDialogsStore(state => state.showEditCst);
   const router = useConceptNavigation();
   const { findPredecessor } = useFindPredecessor();
   const { updateConstituenta } = useUpdateConstituenta();

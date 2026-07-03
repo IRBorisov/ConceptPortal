@@ -18,7 +18,6 @@ import {
   IconSortList,
   IconTemplates
 } from '@/components/icons';
-import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 
 import { useInlineSynthesis } from '../../backend/use-inline-synthesis';
@@ -26,6 +25,7 @@ import { useResetAliases } from '../../backend/use-reset-aliases';
 import { useRestoreOrder } from '../../backend/use-restore-order';
 import { useSubstituteConstituents } from '../../backend/use-substitute-constituents';
 import { IconCstType } from '../../components/icon-cst-type';
+import { useRsformDialogsStore } from '../../dialogs/rsform-dialog-store';
 
 import { useSchemaEdit } from './schema-edit-context';
 
@@ -50,8 +50,8 @@ export function MenuEditSchema() {
   const { inlineSynthesis } = useInlineSynthesis();
   const { substituteConstituents } = useSubstituteConstituents();
 
-  const showInlineSynthesis = useDialogsStore(state => state.showInlineSynthesis);
-  const showSubstituteCst = useDialogsStore(state => state.showSubstituteCst);
+  const showInlineSynthesis = useRsformDialogsStore(state => state.showInlineSynthesis);
+  const showSubstituteCst = useRsformDialogsStore(state => state.showSubstituteCst);
 
   function handleReindex() {
     hideMenu();

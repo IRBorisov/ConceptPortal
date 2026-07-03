@@ -7,9 +7,11 @@ import { type TypePath, type Typification, type Value } from '@rsconcept/domain/
 import { HelpTopic } from '@/features/help';
 
 import { ModalView } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { ValueViewer } from '../components/value-viewer';
+
+import { useRsmodelDialogsStore } from './rsmodel-dialog-store';
+
 
 export interface DlgViewValueProps {
   value: Value | null;
@@ -20,7 +22,7 @@ export interface DlgViewValueProps {
 
 export function DlgViewValue() {
   const tx = useTx();
-  const { value, type, engine, getHeaderText } = useDialogsStore(state => state.props as DlgViewValueProps);
+  const { value, type, engine, getHeaderText } = useRsmodelDialogsStore(state => state.props as DlgViewValueProps);
   return (
     <ModalView
       helpTopic={HelpTopic.UI_MODEL_VALUE_EDIT}

@@ -14,6 +14,7 @@ import { useDeleteConstituents } from '@/features/rsform/backend/use-delete-cons
 import { useMutatingRSForm } from '@/features/rsform/backend/use-mutating-rsform';
 import { useResetAliases } from '@/features/rsform/backend/use-reset-aliases';
 import { useRestoreOrder } from '@/features/rsform/backend/use-restore-order';
+import { useRsformDialogsStore } from '@/features/rsform/dialogs/rsform-dialog-store';
 import { buildCloneConstituentsBatch } from '@/features/rsform/utils/build-clone-batch';
 
 import { MiniButton } from '@/components/control';
@@ -30,7 +31,6 @@ import {
   IconTypeGraph
 } from '@/components/icons';
 import { cn } from '@/components/utils';
-import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER, prefixes } from '@/utils/constants';
 
 interface ToolbarSchemaProps {
@@ -57,10 +57,10 @@ export function ToolbarSchema({
   const router = useConceptNavigation();
   const isProcessing = useMutatingRSForm();
 
-  const showCreateCst = useDialogsStore(state => state.showCreateCst);
-  const showDeleteCst = useDialogsStore(state => state.showDeleteCst);
-  const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
-  const showTermGraph = useDialogsStore(state => state.showShowTermGraph);
+  const showCreateCst = useRsformDialogsStore(state => state.showCreateCst);
+  const showDeleteCst = useRsformDialogsStore(state => state.showDeleteCst);
+  const showTypeGraph = useRsformDialogsStore(state => state.showShowTypeGraph);
+  const showTermGraph = useRsformDialogsStore(state => state.showShowTermGraph);
   const { createConstituenta } = useCreateConstituenta();
   const { createConstituentsBatch } = useCreateConstituentsBatch();
   const { deleteConstituents } = useDeleteConstituents();

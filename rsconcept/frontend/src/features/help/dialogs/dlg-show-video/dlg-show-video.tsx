@@ -5,9 +5,10 @@ import { TabList, TabPanel, Tabs } from 'react-tabs';
 import { ModalView } from '@/components/modal';
 import { TabLabel } from '@/components/tabs';
 import { useWindowSize } from '@/hooks/use-window-size';
-import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { type IVideo } from '@/utils/constants';
+
+import { useHelpDialogsStore } from '../help-dialog-store';
 
 import { TabVK } from './tab-vk';
 import { TabYoutube } from './tab-youtube';
@@ -26,7 +27,7 @@ export function DlgShowVideo() {
   const preferredPlayer = usePreferencesStore(state => state.preferredPlayer);
   const setPreferredPlayer = usePreferencesStore(state => state.setPreferredPlayer);
   const activeTab = preferredPlayer === 'vk' ? TabID.VK : TabID.YOUTUBE;
-  const { video } = useDialogsStore(state => state.props as DlgShowVideoProps);
+  const { video } = useHelpDialogsStore(state => state.props as DlgShowVideoProps);
   const windowSize = useWindowSize();
 
   const videoHeight = (() => {

@@ -8,9 +8,11 @@ import { type BasicBinding } from '@rsconcept/domain/library';
 import { HelpTopic } from '@/features/help';
 
 import { ModalForm, ModalView } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { BindingEditor } from '../components/binding-editor.tsx';
+
+import { useRsmodelDialogsStore } from './rsmodel-dialog-store';
+
 
 export interface DlgEditBindingProps {
   initialValue: BasicBinding;
@@ -21,7 +23,7 @@ const dialogClassName = 'w-200 h-152 max-w-[calc(100dvw-3rem)] max-h-[calc(100sv
 
 export function DlgEditBinding() {
   const tx = useTx();
-  const { initialValue, onChange } = useDialogsStore(state => state.props as DlgEditBindingProps);
+  const { initialValue, onChange } = useRsmodelDialogsStore(state => state.props as DlgEditBindingProps);
   const [value, setValue] = useState<BasicBinding>(initialValue);
 
   function handleChange(newValue: BasicBinding) {

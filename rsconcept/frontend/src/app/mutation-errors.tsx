@@ -9,13 +9,13 @@ import { Button } from '@/components/control';
 import { DescribeError } from '@/components/info-error';
 import { ModalBackdrop } from '@/components/modal/modal-backdrop';
 import { useEscapeKey } from '@/hooks/use-escape-key';
-import { useDialogsStore } from '@/stores/dialogs';
+import { useHideActiveDialog } from '@/hooks/use-hide-active-dialog';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 export function MutationErrors() {
   const tx = useTx();
   const { mutationErrors, resetErrors } = useMutationErrors();
-  const hideDialog = useDialogsStore(state => state.hideDialog);
+  const hideActiveDialog = useHideActiveDialog();
 
   useEscapeKey(resetErrors, mutationErrors.length > 0);
 
@@ -24,7 +24,7 @@ export function MutationErrors() {
   }
   rethrowIfStaleBundleError(mutationErrors[0]);
 
-  hideDialog();
+  hideActiveDialog();
 
   return (
     <div className='cc-modal-wrapper '>

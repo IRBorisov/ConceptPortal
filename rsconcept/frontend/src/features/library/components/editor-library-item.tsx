@@ -25,7 +25,6 @@ import {
 } from '@/components/icons';
 import { Loader } from '@/components/loader';
 import { ValueIcon } from '@/components/view';
-import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { prefixes } from '@/utils/constants';
 
@@ -33,6 +32,7 @@ import { type LibraryItemData } from '../backend/types';
 import { useMutatingLibrary } from '../backend/use-mutating-library';
 import { useSetLocation } from '../backend/use-set-location';
 import { useSetOwner } from '../backend/use-set-owner';
+import { useLibraryDialogsStore } from '../dialogs/library-dialog-store';
 import { labelLibraryLocationPath } from '../labels';
 import { useLibrarySearchStore } from '../stores/library-search';
 
@@ -55,8 +55,8 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
   const { setOwner } = useSetOwner();
   const { setLocation } = useSetLocation();
 
-  const showEditEditors = useDialogsStore(state => state.showEditEditors);
-  const showEditLocation = useDialogsStore(state => state.showChangeLocation);
+  const showEditEditors = useLibraryDialogsStore(state => state.showEditEditors);
+  const showEditLocation = useLibraryDialogsStore(state => state.showChangeLocation);
 
   const {
     elementRef: ownerRef,

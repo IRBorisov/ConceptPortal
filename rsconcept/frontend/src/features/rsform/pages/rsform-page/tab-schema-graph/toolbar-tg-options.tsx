@@ -9,11 +9,11 @@ import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconFilter, IconFitImage, IconFocus, IconImage, IconPNG, IconSVG } from '@/components/icons';
 import { cn } from '@/components/utils';
-import { useDialogsStore } from '@/stores/dialogs';
 import { prepareTooltip } from '@/utils/format';
 
 import { IconEnableClustering } from '../../../components/icon-enable-clustering';
 import { IconEnableText } from '../../../components/icon-enable-text';
+import { useRsformDialogsStore } from '../../../dialogs/rsform-dialog-store';
 import { useSchemaEdit } from '../schema-edit-context';
 
 import { useHandleActions } from './use-handle-actions';
@@ -44,7 +44,7 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
     isExportingImage
   } = useHandleActions(graph);
 
-  const showParams = useDialogsStore(state => state.showGraphParams);
+  const showParams = useRsformDialogsStore(state => state.showGraphParams);
   const filter = useTermGraphStore(state => state.filter);
 
   function handleExportSvgBtn() {

@@ -9,7 +9,6 @@ import { LayoutManager } from '@rsconcept/domain/library/oss-layout-api';
 
 import { type UpdateOperationDTO } from '@/features/oss';
 
-import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLOR_CODES } from '@/styling/colors';
 import { EXPORTS, PARAMETER, REACTFLOW_VIEWPORT } from '@/utils/constants';
@@ -20,6 +19,7 @@ import { useDeleteBlock } from '../../../backend/use-delete-block';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useUpdateLayout } from '../../../backend/use-update-layout';
 import { useUpdateOperation } from '../../../backend/use-update-operation';
+import { useOssDialogsStore } from '../../../dialogs/oss-dialog-store';
 import { useOSSGraphStore } from '../../../stores/oss-graph';
 import { useOssEdit } from '../oss-edit-context';
 
@@ -55,13 +55,13 @@ export function useHandleActions() {
   const { deleteBlock } = useDeleteBlock();
   const { updateOperation } = useUpdateOperation();
 
-  const showCreateOperation = useDialogsStore(state => state.showCreateSynthesis);
-  const showCreateBlock = useDialogsStore(state => state.showCreateBlock);
-  const showCreateSchema = useDialogsStore(state => state.showCreateSchema);
-  const showDeleteOperation = useDialogsStore(state => state.showDeleteOperation);
-  const showDeleteReference = useDialogsStore(state => state.showDeleteReference);
-  const showImportSchema = useDialogsStore(state => state.showImportSchema);
-  const showOptions = useDialogsStore(state => state.showOssOptions);
+  const showCreateOperation = useOssDialogsStore(state => state.showCreateSynthesis);
+  const showCreateBlock = useOssDialogsStore(state => state.showCreateBlock);
+  const showCreateSchema = useOssDialogsStore(state => state.showCreateSchema);
+  const showDeleteOperation = useOssDialogsStore(state => state.showDeleteOperation);
+  const showDeleteReference = useOssDialogsStore(state => state.showDeleteReference);
+  const showImportSchema = useOssDialogsStore(state => state.showImportSchema);
+  const showOptions = useOssDialogsStore(state => state.showOssOptions);
 
   const [isExportingImage, setIsExportingImage] = useState(false);
 

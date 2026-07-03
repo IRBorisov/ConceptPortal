@@ -9,11 +9,13 @@ import { HelpTopic } from '@/features/help';
 
 import { Checkbox, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { type DeleteOperationDTO, schemaDeleteOperation } from '../backend/types';
 import { useDeleteOperation } from '../backend/use-delete-operation';
 import { useOss } from '../backend/use-oss';
+
+import { useOssDialogsStore } from './oss-dialog-store';
+
 
 export interface DlgDeleteOperationProps {
   ossID: number;
@@ -24,7 +26,7 @@ export interface DlgDeleteOperationProps {
 
 export function DlgDeleteOperation() {
   const tx = useTx();
-  const { ossID, targetID, layout, beforeDelete } = useDialogsStore(state => state.props as DlgDeleteOperationProps);
+  const { ossID, targetID, layout, beforeDelete } = useOssDialogsStore(state => state.props as DlgDeleteOperationProps);
   const { deleteOperation } = useDeleteOperation();
 
   const { schema: oss } = useOss({ itemID: ossID });

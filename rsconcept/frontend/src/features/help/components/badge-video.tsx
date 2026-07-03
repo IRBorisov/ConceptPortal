@@ -5,8 +5,9 @@ import { useTx } from '@/i18n/use-tx';
 import { IconVideo } from '@/components/icons';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
-import { useDialogsStore } from '@/stores/dialogs';
 import { globalIDs, type IVideo } from '@/utils/constants';
+
+import { useHelpDialogsStore } from '../dialogs/help-dialog-store';
 
 interface BadgeVideoProps extends Styling {
   video: IVideo;
@@ -14,7 +15,7 @@ interface BadgeVideoProps extends Styling {
 
 /** Displays a badge with a video icon to click and open the video. */
 export function BadgeVideo({ video, className, ...restProps }: BadgeVideoProps) {
-  const showVideo = useDialogsStore(state => state.showVideo);
+  const showVideo = useHelpDialogsStore(state => state.showVideo);
   const tx = useTx();
 
   function handleShowExplication() {

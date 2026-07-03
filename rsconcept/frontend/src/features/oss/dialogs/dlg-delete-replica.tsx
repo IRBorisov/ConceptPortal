@@ -9,11 +9,13 @@ import { HelpTopic } from '@/features/help';
 
 import { Checkbox, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { type DeleteReplicaDTO, schemaDeleteReplica } from '../backend/types';
 import { useDeleteReplica } from '../backend/use-delete-replica';
 import { useOss } from '../backend/use-oss';
+
+import { useOssDialogsStore } from './oss-dialog-store';
+
 
 export interface DlgDeleteReplicaProps {
   ossID: number;
@@ -24,7 +26,7 @@ export interface DlgDeleteReplicaProps {
 
 export function DlgDeleteReplica() {
   const tx = useTx();
-  const { ossID, targetID, layout, beforeDelete } = useDialogsStore(state => state.props as DlgDeleteReplicaProps);
+  const { ossID, targetID, layout, beforeDelete } = useOssDialogsStore(state => state.props as DlgDeleteReplicaProps);
   const { deleteReplica: deleteReference } = useDeleteReplica();
 
   const { schema } = useOss({ itemID: ossID });

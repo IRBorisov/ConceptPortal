@@ -21,9 +21,9 @@ import {
 
 import { cn } from '@/components/utils';
 import { useResetOnChange } from '@/hooks/use-reset-on-change';
-import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 
+import { useRsformDialogsStore } from '../../dialogs/rsform-dialog-store';
 import { RSInput } from '../rs-input';
 import { RSTextWrapper } from '../rs-input/text-editing';
 import { ViewErrors } from '../view-errors';
@@ -90,9 +90,9 @@ export function EditorRSExpression({
   const rsInput = useRef<ReactCodeMirrorRef>(null);
 
   const showControls = usePreferencesStore(state => state.showExpressionControls);
-  const showFlatAst = useDialogsStore(state => state.showShowFlatAst);
-  const showAstExtract = useDialogsStore(state => state.showShowAstExtract);
-  const showTypification = useDialogsStore(state => state.showShowTypeGraph);
+  const showFlatAst = useRsformDialogsStore(state => state.showShowFlatAst);
+  const showAstExtract = useRsformDialogsStore(state => state.showShowAstExtract);
+  const showTypification = useRsformDialogsStore(state => state.showShowTypeGraph);
   const [errors, setErrors] = useState<RSErrorDescription[] | null>(analysis?.errors ?? null);
 
   function resetHandler() {

@@ -7,8 +7,9 @@ import { type RSForm } from '@rsconcept/domain/library';
 
 import { Checkbox } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 import { prefixes } from '@/utils/constants';
+
+import { useRsformDialogsStore } from '../rsform-dialog-store';
 
 import { ListConstituents } from './list-constituents';
 
@@ -20,7 +21,7 @@ export interface DlgDeleteCstProps {
 
 export function DlgDeleteCst() {
   const tx = useTx();
-  const { selected, schema, onDelete } = useDialogsStore(state => state.props as DlgDeleteCstProps);
+  const { selected, schema, onDelete } = useRsformDialogsStore(state => state.props as DlgDeleteCstProps);
 
   const [expandOut, setExpandOut] = useState(false);
   const expansion: number[] = schema.graph.expandAllOutputs(selected);

@@ -11,13 +11,13 @@ import { HelpTopic } from '@/features/help';
 
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
-import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 
 import { type CreateBlockDTO, schemaCreateBlock } from '../../backend/types';
 import { useCreateBlock } from '../../backend/use-create-block';
 import { useOss } from '../../backend/use-oss';
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../../pages/oss-page/tab-oss-graph/graph/block-node';
+import { useOssDialogsStore } from '../oss-dialog-store';
 
 import { type DlgCreateBlockCardFields, TabBlockCard } from './tab-block-card';
 import { TabBlockChildren } from './tab-block-children';
@@ -44,7 +44,7 @@ export function DlgCreateBlock() {
   const { createBlock } = useCreateBlock();
 
   const { ossID, layout, childrenBlocks, childrenOperations, initialParent, onCreate, defaultX, defaultY } =
-    useDialogsStore(state => state.props as DlgCreateBlockProps);
+    useOssDialogsStore(state => state.props as DlgCreateBlockProps);
   const childrenCount = childrenOperations.length + childrenBlocks.length;
   const { schema } = useOss({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);

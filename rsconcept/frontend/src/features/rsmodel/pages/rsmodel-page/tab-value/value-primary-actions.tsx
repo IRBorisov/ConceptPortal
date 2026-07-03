@@ -18,10 +18,10 @@ import { processBindingData, processValueData } from '@/features/rsmodel/models/
 
 import { TextButton } from '@/components/control/text-button';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
-import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 import { limits } from '@/utils/constants';
 
+import { useRsmodelDialogsStore } from '../../../dialogs/rsmodel-dialog-store';
 import { copyJsonToClipboard, downloadJsonFile, getExportJsonText } from '../export-helpers';
 import { useModelEdit } from '../model-edit-context';
 
@@ -44,9 +44,9 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
   const isModified = useModificationStore(state => state.isModified);
   const cstStatus = useCstStatus(engine, activeCst);
 
-  const showEditValue = useDialogsStore(state => state.showModelEditValue);
-  const showViewValue = useDialogsStore(state => state.showModelViewValue);
-  const showEditBinding = useDialogsStore(state => state.showModelEditBinding);
+  const showEditValue = useRsmodelDialogsStore(state => state.showModelEditValue);
+  const showViewValue = useRsmodelDialogsStore(state => state.showModelViewValue);
+  const showEditBinding = useRsmodelDialogsStore(state => state.showModelEditBinding);
 
   const typification = activeCst.effectiveType;
   const isBase = isBaseSet(activeCst.cst_type);

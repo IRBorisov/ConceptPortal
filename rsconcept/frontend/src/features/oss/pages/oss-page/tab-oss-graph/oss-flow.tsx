@@ -15,13 +15,13 @@ import { useConceptNavigation } from '@/app';
 import { DiagramFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
 import { useMainHeight } from '@/stores/app-layout';
-import { useDialogsStore } from '@/stores/dialogs';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
 
 import { type UpdateOperationDTO } from '../../../backend/types';
 import { useMutatingOss } from '../../../backend/use-mutating-oss';
 import { useUpdateOperation } from '../../../backend/use-update-operation';
+import { useOssDialogsStore } from '../../../dialogs/oss-dialog-store';
 import { useOSSGraphStore } from '../../../stores/oss-graph';
 import { useOssEdit } from '../oss-edit-context';
 
@@ -72,7 +72,7 @@ export function OssFlow() {
 
   const [mouseCoords, setMouseCoords] = useState<Position2D>({ x: 0, y: 0 });
 
-  const showEditBlock = useDialogsStore(state => state.showEditBlock);
+  const showEditBlock = useOssDialogsStore(state => state.showEditBlock);
   const { isOpen: isContextMenuOpen, menuProps, openContextMenu, hideContextMenu } = useContextMenu();
   const { handleDragStart, handleDrag, handleDragStop } = useDragging({ hideContextMenu });
   const handleNodeDragStart: OnNodeDrag<OGNode> = (event, node) => handleDragStart(event, node);

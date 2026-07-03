@@ -2,11 +2,11 @@
 
 import { useTx } from '@/i18n';
 
+import { useAiDialogsStore } from '@/features/ai/dialogs/ai-dialog-store';
 import { useAuth } from '@/features/auth/backend/use-auth';
 
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconAssistant, IconChat, IconRobot, IconTemplates } from '@/components/icons';
-import { useDialogsStore } from '@/stores/dialogs';
 import { external_urls, globalIDs } from '@/utils/constants';
 
 import { urls } from '../urls';
@@ -25,7 +25,7 @@ export function MenuAI() {
     hide: hideMenu
   } = useDropdown();
   const { user } = useAuth();
-  const showAIPrompt = useDialogsStore(state => state.showAIPrompt);
+  const showAIPrompt = useAiDialogsStore(state => state.showAIPrompt);
 
   function openRstoolReadme() {
     hideMenu();

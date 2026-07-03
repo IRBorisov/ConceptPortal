@@ -5,10 +5,10 @@ import { type Block } from '@rsconcept/domain/library';
 
 import { DropdownButton } from '@/components/dropdown';
 import { IconDestroy, IconEdit } from '@/components/icons';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { useDeleteBlock } from '../../../../backend/use-delete-block';
 import { useMutatingOss } from '../../../../backend/use-mutating-oss';
+import { useOssDialogsStore } from '../../../../dialogs/oss-dialog-store';
 import { useOssEdit } from '../../oss-edit-context';
 import { useGetLayout } from '../use-get-layout';
 
@@ -23,7 +23,7 @@ export function MenuBlock({ block, onHide }: MenuBlockProps) {
   const isProcessing = useMutatingOss();
   const getLayout = useGetLayout();
 
-  const showEditBlock = useDialogsStore(state => state.showEditBlock);
+  const showEditBlock = useOssDialogsStore(state => state.showEditBlock);
   const { deleteBlock } = useDeleteBlock();
 
   function handleEditBlock() {

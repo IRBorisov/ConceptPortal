@@ -11,12 +11,14 @@ import { HelpTopic } from '@/features/help';
 
 import { TextArea, TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { schemaUpdateBlock, type UpdateBlockDTO } from '../backend/types';
 import { useOss } from '../backend/use-oss';
 import { useUpdateBlock } from '../backend/use-update-block';
 import { SelectParent } from '../components/select-parent';
+
+import { useOssDialogsStore } from './oss-dialog-store';
+
 
 export interface DlgEditBlockProps {
   ossID: number;
@@ -26,7 +28,7 @@ export interface DlgEditBlockProps {
 
 export function DlgEditBlock() {
   const tx = useTx();
-  const { ossID, targetID, layout } = useDialogsStore(state => state.props as DlgEditBlockProps);
+  const { ossID, targetID, layout } = useOssDialogsStore(state => state.props as DlgEditBlockProps);
   const { updateBlock } = useUpdateBlock();
   const { schema } = useOss({ itemID: ossID });
   const manager = new LayoutManager(schema, layout);

@@ -6,11 +6,11 @@ import { useConceptNavigation, useUnsavedChanges } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { useRestoreVersion } from '@/features/library/backend/use-restore-version';
+import { useLibraryDialogsStore } from '@/features/library/dialogs/library-dialog-store';
 
 import { MiniButton } from '@/components/control';
 import { IconNewVersion, IconUpload, IconVersions } from '@/components/icons';
 import { cn } from '@/components/utils';
-import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 
 import { useSchemaEdit } from '../schema-edit-context';
@@ -28,8 +28,8 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
   const { restoreVersion: versionRestore } = useRestoreVersion();
   const { schema, isMutable, isContentEditable, activeVersion, selectedCst } = useSchemaEdit();
 
-  const showCreateVersion = useDialogsStore(state => state.showCreateVersion);
-  const showEditVersions = useDialogsStore(state => state.showEditVersions);
+  const showCreateVersion = useLibraryDialogsStore(state => state.showCreateVersion);
+  const showEditVersions = useLibraryDialogsStore(state => state.showEditVersions);
 
   function handleRestoreVersion() {
     if (schema.version === 'latest' || !window.confirm(tx('tx.lib.version.revert.confirm'))) {

@@ -5,6 +5,8 @@ import { LocationHead } from '@rsconcept/domain/library';
 
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth/backend/use-auth';
+import { useLibraryDialogsStore } from '@/features/library/dialogs/library-dialog-store';
+import { useRsformDialogsStore } from '@/features/rsform/dialogs/rsform-dialog-store';
 import { UserRole } from '@/features/users';
 import { useRoleStore } from '@/features/users/stores/role';
 
@@ -12,7 +14,6 @@ import { Divider } from '@/components/container';
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconClone, IconDestroy, IconLibrary, IconMenu, IconQR, IconShare } from '@/components/icons';
-import { useDialogsStore } from '@/stores/dialogs';
 import { generatePageQR, sharePage } from '@/utils/utils';
 
 import { useMutatingOss } from '../../backend/use-mutating-oss';
@@ -28,8 +29,8 @@ export function MenuMain() {
 
   const role = useRoleStore(state => state.role);
 
-  const showQR = useDialogsStore(state => state.showQR);
-  const showClone = useDialogsStore(state => state.showCloneLibraryItem);
+  const showQR = useRsformDialogsStore(state => state.showQR);
+  const showClone = useLibraryDialogsStore(state => state.showCloneLibraryItem);
 
   const {
     elementRef: menuRef,

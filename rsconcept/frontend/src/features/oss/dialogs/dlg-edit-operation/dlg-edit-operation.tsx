@@ -13,12 +13,12 @@ import { HelpTopic } from '@/features/help';
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
-import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 
 import { schemaUpdateOperation, type UpdateOperationDTO } from '../../backend/types';
 import { useOss } from '../../backend/use-oss';
 import { useUpdateOperation } from '../../backend/use-update-operation';
+import { useOssDialogsStore } from '../oss-dialog-store';
 
 import { TabArguments } from './tab-arguments';
 import { type DlgEditOperationCardFields, TabOperation } from './tab-operation';
@@ -39,7 +39,7 @@ type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgEditOperation() {
   const tx = useTx();
-  const { ossID, layout, targetID } = useDialogsStore(state => state.props as DlgEditOperationProps);
+  const { ossID, layout, targetID } = useOssDialogsStore(state => state.props as DlgEditOperationProps);
   const { updateOperation } = useUpdateOperation();
 
   const { schema } = useOss({ itemID: ossID });

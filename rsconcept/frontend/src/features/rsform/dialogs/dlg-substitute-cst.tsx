@@ -11,10 +11,11 @@ import { describeSubstitutionError } from '@/features/oss/labels';
 
 import { ErrorField, TextArea } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { schemaSubstitutions, type SubstitutionsDTO } from '../backend/types';
 import { PickSubstitutions } from '../components/pick-substitutions';
+
+import { useRsformDialogsStore } from './rsform-dialog-store';
 
 export interface DlgSubstituteCstProps {
   schema: RSForm;
@@ -23,7 +24,7 @@ export interface DlgSubstituteCstProps {
 
 export function DlgSubstituteCst() {
   const tx = useTx();
-  const { onSubstitute, schema } = useDialogsStore(state => state.props as DlgSubstituteCstProps);
+  const { onSubstitute, schema } = useRsformDialogsStore(state => state.props as DlgSubstituteCstProps);
 
   const defaultValues: SubstitutionsDTO = {
     substitutions: []

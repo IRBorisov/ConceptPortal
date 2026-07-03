@@ -12,16 +12,16 @@ import { ToggleNavigation } from '@/app/navigation/toggle-navigation';
 import { urls } from '@/app/urls';
 
 import { IconLibrary2, IconManuals } from '@/components/icons';
+import { useDialogInert } from '@/hooks/use-dialog-inert';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useAppLayoutStore } from '@/stores/app-layout';
-import { useDialogsStore } from '@/stores/dialogs';
 
 export function NavigationSandbox() {
   const tx = useTx();
   const { push } = useConceptNavigation();
   const size = useWindowSize();
   const noNavigationAnimation = useAppLayoutStore(state => state.noNavigationAnimation);
-  const activeDialog = useDialogsStore(state => state.active);
+  const dialogInert = useDialogInert();
 
   function navigateHome(event: React.MouseEvent<Element>) {
     push({ path: urls.home, newTab: event.ctrlKey || event.metaKey });
@@ -38,7 +38,7 @@ export function NavigationSandbox() {
   return (
     <nav
       className='z-navigation sticky top-0 left-0 right-0 select-none bg-background/95 backdrop-blur-xl'
-      inert={activeDialog !== null}
+      inert={dialogInert}
     >
       <ToggleNavigation />
       <div

@@ -13,12 +13,12 @@ import { HelpTopic } from '@/features/help';
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
-import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 
 import { type CreateSynthesisDTO, schemaCreateSynthesis } from '../../backend/types';
 import { useCreateSynthesis } from '../../backend/use-create-synthesis';
 import { useOss } from '../../backend/use-oss';
+import { useOssDialogsStore } from '../oss-dialog-store';
 
 import { TabArguments } from './tab-arguments';
 import { TabSubstitutions } from './tab-substitutions';
@@ -43,7 +43,7 @@ export function DlgCreateSynthesis() {
   const tx = useTx();
   const { createSynthesis } = useCreateSynthesis();
 
-  const { ossID, layout, initialInputs, initialParent, onCreate, defaultX, defaultY } = useDialogsStore(
+  const { ossID, layout, initialInputs, initialParent, onCreate, defaultX, defaultY } = useOssDialogsStore(
     state => state.props as DlgCreateSynthesisProps
   );
   const { schema } = useOss({ itemID: ossID });

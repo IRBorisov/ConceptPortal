@@ -10,7 +10,8 @@ import { TypificationGraph } from '@rsconcept/domain/rslang';
 import { HelpTopic } from '@/features/help';
 
 import { ModalView } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
+
+import { useRsformDialogsStore } from '../rsform-dialog-store';
 
 import { MGraphFlow } from './mgraph-flow';
 
@@ -20,8 +21,8 @@ export interface DlgShowTypeGraphProps {
 
 export function DlgShowTypeGraph() {
   const tx = useTx();
-  const { items } = useDialogsStore(state => state.props as DlgShowTypeGraphProps);
-  const hideDialog = useDialogsStore(state => state.hideDialog);
+  const { items } = useRsformDialogsStore(state => state.props as DlgShowTypeGraphProps);
+  const hideDialog = useRsformDialogsStore(state => state.hideDialog);
   const graph = (() => {
     const result = new TypificationGraph();
     for (const item of items) {

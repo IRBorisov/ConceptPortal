@@ -8,13 +8,13 @@ import { CstType } from '@rsconcept/domain/library';
 import { useUnsavedChanges } from '@/app';
 import { rsformsApi } from '@/features/rsform/backend/api';
 import { IconCstType } from '@/features/rsform/components/icon-cst-type';
+import { useRsformDialogsStore } from '@/features/rsform/dialogs/rsform-dialog-store';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { queryClient } from '@/backend/query-client';
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconEdit2, IconGenerateNames, IconInlineSynthesis, IconReplace, IconSortList } from '@/components/icons';
-import { useDialogsStore } from '@/stores/dialogs';
 import { useModificationStore } from '@/stores/modification';
 
 import { useSandboxBundle } from '../../context/bundle-context';
@@ -33,8 +33,8 @@ export function MenuEdit() {
     hide: hideMenu
   } = useDropdown();
 
-  const showSubstituteCst = useDialogsStore(state => state.showSubstituteCst);
-  const showInlineSynthesis = useDialogsStore(state => state.showInlineSynthesis);
+  const showSubstituteCst = useRsformDialogsStore(state => state.showSubstituteCst);
+  const showInlineSynthesis = useRsformDialogsStore(state => state.showInlineSynthesis);
 
   async function requireUnsavedResolved(): Promise<boolean> {
     if (!isModified) {

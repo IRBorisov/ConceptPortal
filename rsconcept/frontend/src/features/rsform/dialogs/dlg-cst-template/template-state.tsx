@@ -10,7 +10,7 @@ import { labelType } from '@rsconcept/domain/rslang/labels';
 
 import { useTemplates } from '@/features/library/backend/use-templates';
 
-import { useDialogsStore } from '@/stores/dialogs';
+import { useRsformDialogsStore } from '../rsform-dialog-store';
 
 import { type DlgCstTemplateProps } from './dlg-cst-template';
 import { TemplateContext } from './template-context';
@@ -31,7 +31,7 @@ export const TemplateState = ({
   onTermRawChange,
   onDefinitionRawChange
 }: TemplateStateProps) => {
-  const { schema } = useDialogsStore(state => state.props as DlgCstTemplateProps);
+  const { schema } = useRsformDialogsStore(state => state.props as DlgCstTemplateProps);
   const { templates } = useTemplates();
 
   const [templateID, setTemplateID] = useState<number | null>(templates.length > 0 ? templates[0].id : null);

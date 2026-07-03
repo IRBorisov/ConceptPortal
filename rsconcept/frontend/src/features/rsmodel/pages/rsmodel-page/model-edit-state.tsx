@@ -20,6 +20,7 @@ import { useClearValues } from '../../backend/use-clear-values';
 import { useMutatingRSModel } from '../../backend/use-mutating-rsmodel';
 import { useRSModel } from '../../backend/use-rsmodel';
 import { useSetValue } from '../../backend/use-set-value';
+import { RsmodelDialogHost } from '../../dialogs/rsmodel-dialog-host';
 
 import { ModelEditContext } from './model-edit-context';
 
@@ -105,7 +106,9 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
   }
 
   return (
-    <ModelEditContext
+    <>
+      <RsmodelDialogHost />
+      <ModelEditContext
       value={{
         model,
         schema,
@@ -119,5 +122,6 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
         {children}
       </SchemaEditState>
     </ModelEditContext>
+    </>
   );
 };

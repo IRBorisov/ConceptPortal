@@ -21,7 +21,6 @@ import {
   IconReference,
   IconRSForm
 } from '@/components/icons';
-import { useDialogsStore } from '@/stores/dialogs';
 import { PARAMETER } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 
@@ -30,6 +29,7 @@ import { useCreateInput } from '../../../../backend/use-create-input';
 import { useCreateReference } from '../../../../backend/use-create-replica';
 import { useExecuteOperation } from '../../../../backend/use-execute-operation';
 import { useMutatingOss } from '../../../../backend/use-mutating-oss';
+import { useOssDialogsStore } from '../../../../dialogs/oss-dialog-store';
 import { useOssEdit } from '../../oss-edit-context';
 import { useGetLayout } from '../use-get-layout';
 
@@ -51,11 +51,11 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
   const { cloneSchema } = useCloneSchema();
   const { createReplica: createReference } = useCreateReference();
 
-  const showEditInput = useDialogsStore(state => state.showChangeInputSchema);
-  const showRelocateConstituents = useDialogsStore(state => state.showRelocateConstituents);
-  const showEditOperation = useDialogsStore(state => state.showEditOperation);
-  const showDeleteOperation = useDialogsStore(state => state.showDeleteOperation);
-  const showDeleteReference = useDialogsStore(state => state.showDeleteReference);
+  const showEditInput = useOssDialogsStore(state => state.showChangeInputSchema);
+  const showRelocateConstituents = useOssDialogsStore(state => state.showRelocateConstituents);
+  const showEditOperation = useOssDialogsStore(state => state.showEditOperation);
+  const showDeleteOperation = useOssDialogsStore(state => state.showDeleteOperation);
+  const showDeleteReference = useOssDialogsStore(state => state.showDeleteReference);
 
   const readyForSynthesis = (() => {
     if (operation?.operation_type !== OperationType.SYNTHESIS) {

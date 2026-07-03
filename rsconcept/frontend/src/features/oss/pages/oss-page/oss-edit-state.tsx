@@ -17,6 +17,7 @@ import { useAdjustRole } from '@/features/users/stores/use-adjust-role';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { useOss } from '../../backend/use-oss';
+import { OssDialogHost } from '../../dialogs/oss-dialog-host';
 
 import { OssEditContext } from './oss-edit-context';
 
@@ -136,7 +137,9 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   }
 
   return (
-    <OssEditContext
+    <>
+      <OssDialogHost />
+      <OssEditContext
       value={{
         schema,
         selectedNodes,
@@ -156,5 +159,6 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
     >
       {children}
     </OssEditContext>
+    </>
   );
 };

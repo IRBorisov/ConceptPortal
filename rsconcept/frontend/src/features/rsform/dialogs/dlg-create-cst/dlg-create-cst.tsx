@@ -7,11 +7,11 @@ import { type CstType, type RSForm } from '@rsconcept/domain/library';
 import { generateAlias, validateNewAlias } from '@rsconcept/domain/library/rsform-api';
 
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { withPreventDefault } from '@/utils/utils';
 
 import { type CreateConstituentaDTO, schemaCreateConstituenta } from '../../backend/types';
+import { useRsformDialogsStore } from '../rsform-dialog-store';
 
 import { FormCreateCst, type FormCreateCstFields } from './form-create-cst';
 
@@ -24,7 +24,7 @@ export interface DlgCreateCstProps {
 
 export function DlgCreateCst() {
   const tx = useTx();
-  const { initial, schema, onCreate, onCancel } = useDialogsStore(state => state.props as DlgCreateCstProps);
+  const { initial, schema, onCreate, onCancel } = useRsformDialogsStore(state => state.props as DlgCreateCstProps);
 
   const form = useForm({
     defaultValues: { ...initial },

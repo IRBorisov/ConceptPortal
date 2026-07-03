@@ -19,10 +19,12 @@ import { MiniButton } from '@/components/control';
 import { IconReset } from '@/components/icons';
 import { Label } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { schemaUpdateInput, type UpdateInputDTO } from '../backend/types';
 import { useUpdateInput } from '../backend/use-update-input';
+
+import { useOssDialogsStore } from './oss-dialog-store';
+
 
 export interface DlgChangeInputSchemaProps {
   oss: OperationSchema;
@@ -32,7 +34,7 @@ export interface DlgChangeInputSchemaProps {
 
 export function DlgChangeInputSchema() {
   const tx = useTx();
-  const { oss, target, layout } = useDialogsStore(state => state.props as DlgChangeInputSchemaProps);
+  const { oss, target, layout } = useOssDialogsStore(state => state.props as DlgChangeInputSchemaProps);
   const { updateInput } = useUpdateInput();
 
   const form = useForm({

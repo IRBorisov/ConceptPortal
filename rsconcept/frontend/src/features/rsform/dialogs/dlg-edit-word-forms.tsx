@@ -14,7 +14,6 @@ import { MiniButton } from '@/components/control';
 import { IconMoveDown } from '@/components/icons';
 import { TextInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
-import { useDialogsStore } from '@/stores/dialogs';
 
 import { type LexemeResponse } from '../backend/cctext/types';
 import { useIsProcessingCctext } from '../backend/cctext/use-is-processing-cctext';
@@ -25,6 +24,8 @@ import {
   RUSSIAN_WORD_FORM_NUMBER_LABELS,
   WORD_FORM_ROW_DEFS
 } from '../components/select-word-form';
+
+import { useRsformDialogsStore } from './rsform-dialog-store';
 
 export interface DlgEditWordFormsProps {
   schema: RSForm;
@@ -48,7 +49,7 @@ const CASE_ROW_KEYS = CASE_KEYS.map(key => ({
 
 export function DlgEditWordForms() {
   const tx = useTx();
-  const { schema, target, onSave, generateLexeme } = useDialogsStore(state => state.props as DlgEditWordFormsProps);
+  const { schema, target, onSave, generateLexeme } = useRsformDialogsStore(state => state.props as DlgEditWordFormsProps);
 
   const isProcessing = useIsProcessingCctext();
 

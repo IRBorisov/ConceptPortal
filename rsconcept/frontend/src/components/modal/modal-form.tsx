@@ -10,8 +10,8 @@ import { type HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { useEscapeKey } from '@/hooks/use-escape-key';
+import { useHideActiveDialog } from '@/hooks/use-hide-active-dialog';
 import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
-import { useDialogsStore } from '@/stores/dialogs';
 import { prepareTooltip } from '@/utils/format';
 
 import { Button, MiniButton, SubmitButton } from '../control';
@@ -54,6 +54,9 @@ interface ModalFormProps extends ModalProps {
 
   /** Callback to be called when modal is canceled. */
   onCancel?: () => void;
+
+  /** Override default dialog close (active feature store). */
+  onHide?: () => void;
 }
 
 /**
@@ -72,13 +75,15 @@ export function ModalForm({
   beforeSubmit,
   onSubmit,
   onCancel,
+  onHide,
 
   helpTopic,
   hideHelpWhen,
   ...restProps
 }: React.PropsWithChildren<ModalFormProps>) {
   const tx = useTx();
-  const hideDialog = useDialogsStore(state => state.hideDialog);
+  const hideActiveDialog = useHideActiveDialog();
+  const closeDialog = onHide ?? hideActiveDialog;
   const validationTooltip = useValueTooltipAnchor(validationHint ?? null);
   const resolvedSubmitText = submitText ?? tx('tx.general.continue');
   const { isTopPlaced, setElement } = useModalPlacement<HTMLFormElement>();
@@ -93,7 +98,7 @@ export function ModalForm({
 
   function handleCancel() {
     onCancel?.();
-    hideDialog();
+    closeDialog();
   }
   useEscapeKey(handleCancel);
 
@@ -102,7 +107,7 @@ export function ModalForm({
       return;
     }
     onSubmit(event);
-    hideDialog();
+    closeDialog();
   }
 
   return (

@@ -12,12 +12,12 @@ import { HelpTopic } from '@/features/help';
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
-import { useDialogsStore } from '@/stores/dialogs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { withPreventDefault } from '@/utils/utils';
 
 import { type CreateConstituentaDTO, schemaCreateConstituenta } from '../../backend/types';
 import { FormCreateCst, type FormCreateCstFields } from '../dlg-create-cst/form-create-cst';
+import { useRsformDialogsStore } from '../rsform-dialog-store';
 
 import { TabArguments } from './tab-arguments';
 import { TabTemplate } from './tab-template';
@@ -38,7 +38,7 @@ type TabID = (typeof TabID)[keyof typeof TabID];
 
 export function DlgCstTemplate() {
   const tx = useTx();
-  const { schema, onCreate, insertAfter } = useDialogsStore(state => state.props as DlgCstTemplateProps);
+  const { schema, onCreate, insertAfter } = useRsformDialogsStore(state => state.props as DlgCstTemplateProps);
 
   const defaultValues: CreateConstituentaDTO = {
     insert_after: insertAfter ?? null,
