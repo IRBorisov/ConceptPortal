@@ -13,13 +13,16 @@ import {
   type AttributionTargetDTO,
   type ConstituentaCreatedResponse,
   type ConstituentaList,
+  type ConstituentsCreatedResponse,
   type CreateConstituentaDTO,
+  type CreateConstituentsBatchDTO,
   type InlineSynthesisDTO,
   type MoveConstituentsDTO,
   type RSFormDTO,
   type RSFormImportJsonDTO,
   type RSFormUploadDTO,
   schemaConstituentaCreatedResponse,
+  schemaConstituentsCreatedResponse,
   schemaRSForm,
   type SubstitutionsDTO,
   type UpdateConstituentaDTO,
@@ -93,6 +96,18 @@ export const rsformsApi = {
       request: {
         data: data,
         successMessage: response => globalTx('tx.cst.create.success', { alias: response.new_cst.alias })
+      }
+    }),
+  createConstituentsBatch: ({ itemID, data }: { itemID: number; data: CreateConstituentsBatchDTO }) =>
+    axiosPost<CreateConstituentsBatchDTO, ConstituentsCreatedResponse>({
+      schema: schemaConstituentsCreatedResponse,
+      endpoint: `/api/rsforms/${itemID}/create-multiple-cst`,
+      request: {
+        data: data,
+        successMessage: response =>
+          response.cst_list.length === 1
+            ? globalTx('tx.cst.create.success', { alias: response.cst_list[0].alias })
+            : globalTx('tx.cst.clone.success', { count: response.cst_list.length })
       }
     }),
   updateConstituenta: ({ itemID, data }: { itemID: number; data: UpdateConstituentaDTO }) =>

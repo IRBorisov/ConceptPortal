@@ -9,10 +9,12 @@ import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { type ConstituentaBasicsDTO, type CreateConstituentaDTO } from '@/features/rsform/backend/types';
 import { useCreateConstituenta } from '@/features/rsform/backend/use-create-constituenta';
+import { useCreateConstituentsBatch } from '@/features/rsform/backend/use-create-constituents-batch';
 import { useDeleteConstituents } from '@/features/rsform/backend/use-delete-constituents';
 import { useMutatingRSForm } from '@/features/rsform/backend/use-mutating-rsform';
 import { useResetAliases } from '@/features/rsform/backend/use-reset-aliases';
 import { useRestoreOrder } from '@/features/rsform/backend/use-restore-order';
+import { buildCloneConstituentsBatch } from '@/features/rsform/utils/build-clone-batch';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
@@ -60,6 +62,7 @@ export function ToolbarSchema({
   const showTypeGraph = useDialogsStore(state => state.showShowTypeGraph);
   const showTermGraph = useDialogsStore(state => state.showShowTermGraph);
   const { createConstituenta } = useCreateConstituenta();
+  const { createConstituentsBatch } = useCreateConstituentsBatch();
   const { deleteConstituents } = useDeleteConstituents();
   const { resetAliases } = useResetAliases();
   const { restoreOrder } = useRestoreOrder();
@@ -105,22 +108,15 @@ export function ToolbarSchema({
     if (!activeCst) {
       return;
     }
-    void createConstituenta({
+    void createConstituentsBatch({
       itemID: schema.id,
-      data: {
-        insert_after: activeCst.id,
-        crucial: activeCst.crucial,
-        cst_type: activeCst.cst_type,
-        alias: generateAlias(activeCst.cst_type, schema),
-        term_raw: activeCst.term_raw,
-        definition_formal: activeCst.definition_formal,
-        definition_raw: activeCst.definition_raw,
-        typification_manual: activeCst.typification_manual,
-        value_is_property: activeCst.value_is_property,
-        convention: activeCst.convention,
-        term_forms: activeCst.term_forms
+      data: buildCloneConstituentsBatch(schema, [activeCst.id], activeCst.id)
+    }).then(response => {
+      const newCst = response.cst_list[0];
+      if (newCst) {
+        onCreateCst(newCst);
       }
-    }).then(response => onCreateCst(response.new_cst));
+    });
   }
 
   function promptDeleteCst() {

@@ -41,6 +41,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             'load_json',
             'load_trs',
             'create_cst',
+            'create_multiple_cst',
             'update_cst',
             'update_crucial',
             'move_cst',
@@ -142,6 +143,46 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
             status=c.HTTP_201_CREATED,
             data={
                 'new_cst': s.CstInfoSerializer(new_cst).data,
+                'schema': s.RSFormParseSerializer(item).data
+            }
+        )
+
+    @extend_schema(
+        summary='create multiple constituenta',
+        tags=['Constituenta'],
+        request=s.CstBatchCreateSerializer,
+        responses={
+            c.HTTP_201_CREATED: s.NewMultiCstResponse,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['post'], url_path='create-multiple-cst')
+    def create_multiple_cst(self, request: Request, pk) -> HttpResponse:
+        ''' Create multiple Constituenta in one request. '''
+        item = self._get_item()
+        serializer = s.CstBatchCreateSerializer(data=request.data, context={'schema': item})
+        serializer.is_valid(raise_exception=True)
+        insert_after = serializer.validated_data.get('insert_after')
+        items_data = serializer.validated_data['items']
+
+        with transaction.atomic():
+            propagation = PropagationFacade()
+            schema = propagation.get_schema(item.pk)
+            new_cst_list: list[m.Constituenta] = []
+            current_insert_after = insert_after
+            for item_data in items_data:
+                new_cst = schema.create_cst(item_data, current_insert_after)
+                new_cst_list.append(new_cst)
+                current_insert_after = new_cst
+            propagation.after_create_cst(new_cst_list)
+            item.save(update_fields=['time_update'])
+
+        return Response(
+            status=c.HTTP_201_CREATED,
+            data={
+                'cst_list': s.CstInfoSerializer(new_cst_list, many=True).data,
                 'schema': s.RSFormParseSerializer(item).data
             }
         )

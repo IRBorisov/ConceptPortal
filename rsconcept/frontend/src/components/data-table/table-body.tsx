@@ -1,12 +1,12 @@
 'use no memo';
 'use client';
 
-import { type RefObject, useCallback, useState } from 'react';
+import { type RefObject, useCallback, useEffect, useState } from 'react';
 import { type Row, type Table } from '@tanstack/react-table';
 
 import { useDragAutoScroll } from '@/hooks/use-drag-auto-scroll';
 
-import { type DataTableRowDrop } from './data-table';
+import { type DataTableDropHint, type DataTableRowDrop } from './data-table';
 import { TableRow } from './table-row';
 import { type IConditionalStyle } from './use-data-table';
 
@@ -64,9 +64,32 @@ export function TableBody<TData>({
   scrollContainerRef
 }: TableBodyProps<TData>) {
   const [draggingRowID, setDraggingRowID] = useState<string | null>(null);
+  const [isCloneDrag, setIsCloneDrag] = useState(false);
+  const [dropHint, setDropHint] = useState<DataTableDropHint | null>(null);
   const canReorder = !!enableRowReordering && !!onRowsReordered;
 
   useDragAutoScroll(scrollContainerRef, canReorder && draggingRowID !== null);
+
+  useEffect(
+    function trackCloneModifierDuringDrag() {
+      if (!draggingRowID) {
+        return;
+      }
+      function updateCloneModifier(event: KeyboardEvent) {
+        if (event.key !== 'Control' && event.key !== 'Meta') {
+          return;
+        }
+        setIsCloneDrag(event.ctrlKey || event.metaKey);
+      }
+      window.addEventListener('keydown', updateCloneModifier);
+      window.addEventListener('keyup', updateCloneModifier);
+      return function cleanupCloneModifierTracking() {
+        window.removeEventListener('keydown', updateCloneModifier);
+        window.removeEventListener('keyup', updateCloneModifier);
+      };
+    },
+    [draggingRowID]
+  );
 
   const getRowStyles = useCallback(
     (row: Row<TData>) =>
@@ -108,7 +131,11 @@ export function TableBody<TData>({
           enableRowReordering={enableRowReordering}
           onRowsReordered={onRowsReordered}
           draggingRowID={draggingRowID}
+          isCloneDrag={isCloneDrag}
+          dropHint={dropHint}
           onChangeDraggingRowID={setDraggingRowID}
+          onChangeIsCloneDrag={setIsCloneDrag}
+          onChangeDropHint={setDropHint}
         />
       ))}
     </tbody>

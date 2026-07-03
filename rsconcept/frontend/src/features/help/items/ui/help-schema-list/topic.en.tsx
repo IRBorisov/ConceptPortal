@@ -45,6 +45,9 @@ export function HelpSchemaListEn() {
         </li>
         <li>drag a row – reorder</li>
         <li>
+          <kbd>Ctrl + drag</kbd> – clone to insertion position (green marker)
+        </li>
+        <li>
           <kbd>Click</kbd> – select a row
         </li>
         <li>

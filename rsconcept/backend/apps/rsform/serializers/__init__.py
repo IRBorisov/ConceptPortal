@@ -15,6 +15,7 @@ from .data_access import (
     AttributionCreateSerializer,
     AttributionDataSerializer,
     CrucialUpdateSerializer,
+    CstBatchCreateSerializer,
     CstCreateSerializer,
     CstInfoSerializer,
     CstListSerializer,

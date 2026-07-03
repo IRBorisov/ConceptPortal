@@ -1,12 +1,14 @@
 import { LibraryItemType } from '@rsconcept/domain/library';
 import { type Attribution, CstType, type RSForm, type Substitution } from '@rsconcept/domain/library/rsform';
 import { getCstTypePrefix } from '@rsconcept/domain/library/rsform-api';
+import { applyMappingToConstituents } from '@rsconcept/domain/library/rsform-api';
 
 import { type UpdateLibraryItemDTO } from '@/features/library/backend/types';
 import {
   type AttributionTargetDTO,
   type ConstituentaBasicsDTO,
   type CreateConstituentaDTO,
+  type CreateConstituentsBatchDTO,
   type InlineSynthesisDTO,
   type MoveConstituentsDTO,
   type RSFormDTO,
@@ -19,7 +21,6 @@ import { nowIso } from '@/utils/format';
 
 import { type SandboxBundle } from '../models/bundle';
 import { bumpBundle, cloneBundle } from '../models/bundle-api';
-import { applyMappingToConstituents } from '../models/mutations-api';
 import { resolveAllConstituentTexts, resolveConstituentTextChange } from '../models/text-resolution';
 
 /** Sandbox mutations API. */
@@ -30,6 +31,7 @@ export const sbApi = {
   substituteConstituents,
   inlineSynthesis,
   createConstituenta,
+  createConstituentsBatch,
   deleteConstituents,
   updateConstituenta,
   updateCrucial,
@@ -329,6 +331,22 @@ function createConstituenta(
   });
   bumpBundle(next);
   return { bundle: next, newCst };
+}
+
+function createConstituentsBatch(
+  bundle: SandboxBundle,
+  data: CreateConstituentsBatchDTO
+): { bundle: SandboxBundle; newCstList: ConstituentaBasicsDTO[] } {
+  let current = bundle;
+  let insertAfter: number | null = data.insert_after;
+  const newCstList: ConstituentaBasicsDTO[] = [];
+  for (const item of data.items) {
+    const result = createConstituenta(current, { ...item, insert_after: insertAfter });
+    current = result.bundle;
+    insertAfter = result.newCst.id;
+    newCstList.push(result.newCst);
+  }
+  return { bundle: current, newCstList };
 }
 
 function deleteConstituents(bundle: SandboxBundle, deleted: number[]): SandboxBundle {
