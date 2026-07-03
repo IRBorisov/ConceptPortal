@@ -28,17 +28,21 @@
 | `scripts/prod`         | Production update helpers.                           |
 | `nginx`                | Local and production reverse proxy configuration.    |
 
-The npm packages in `domain`, `rstool`, and `rstool-mcp` are independently installable and have their own `package.json` and lockfile.
+The npm packages in `domain`, `rstool`, and `rstool-mcp` are independently publishable. Local development uses a **pnpm workspace** at the repo root so `@rsconcept/domain` and `@rsconcept/rstool` resolve to in-tree sources.
 
 ## Local Development
 
-**Prerequisites:** Docker Desktop, Python 3.12, [uv](https://docs.astral.sh/uv/), Node.js, PowerShell, and VS Code or another IDE that can use [`.vscode/launch.json`](.vscode/launch.json).
+**Prerequisites:** Docker Desktop, Python 3.12, [uv](https://docs.astral.sh/uv/), Node.js 24, [pnpm](https://pnpm.io/) (via Corepack: `corepack enable`), PowerShell, and VS Code or another IDE that can use [`.vscode/launch.json`](.vscode/launch.json).
 
-1. Install dependencies:
+1. Install dependencies (repo root, pnpm workspace):
 
    ```powershell
-   .\scripts\dev\LocalDevSetup.ps1
+   corepack enable
+   pnpm install
+   pnpm --filter @rsconcept/domain run build
    ```
+
+   Or run `.\scripts\dev\LocalDevSetup.ps1` (also sets up the Python backend).
 
 2. Start the local debug stack:
 
@@ -78,10 +82,10 @@ Mirrors production layout on `localhost`, without production secrets.
 RSLang grammar source lives in `rsconcept/domain`. After changing grammar files, regenerate the domain package output:
 
 ```bash
-cd rsconcept/domain && npm run generate
+cd rsconcept/domain && pnpm run generate
 ```
 
-Then publish a new `@rsconcept/domain` version or use `npm link` locally. If the frontend or `rstool` depends on the changed contract, update its package pin and local generated artifacts as needed.
+After grammar or domain API changes, rebuild domain (`pnpm --filter @rsconcept/domain run build`) and test consumers. For npm releases, publish a new `@rsconcept/domain` version per [`PUBLISHING.md`](rsconcept/domain/PUBLISHING.md).
 
 The npm packages are published manually from this repo:
 

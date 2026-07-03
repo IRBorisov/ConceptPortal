@@ -1,10 +1,7 @@
 # Run tests
 
+$root = Resolve-Path -Path "$PSScriptRoot\..\.."
 $backend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\backend"
-$domain = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\domain"
-$frontend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\frontend"
-$rstool = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\rstool"
-$rstoolMcp = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\rstool-mcp"
 
 function RunTests() {
   TestDomain
@@ -23,27 +20,31 @@ function TestBackend() {
 }
 
 function TestDomain() {
-  Set-Location $domain
-  & npm run typecheck
-  & npm test
+  Set-Location $root
+  & pnpm --filter @rsconcept/domain run typecheck
+  & pnpm --filter @rsconcept/domain test
 }
 
 function TestFrontend() {
-  Set-Location $frontend
-  & npm run typecheck
-  & npm test
+  Set-Location $root
+  & pnpm --filter @rsconcept/domain run build
+  & pnpm --filter frontend run typecheck
+  & pnpm --filter frontend test
 }
 
 function TestRstool() {
-  Set-Location $rstool
-  & npm run typecheck
-  & npm test
+  Set-Location $root
+  & pnpm --filter @rsconcept/domain run build
+  & pnpm --filter @rsconcept/rstool run typecheck
+  & pnpm --filter @rsconcept/rstool test
 }
 
 function TestRstoolMcp() {
-  Set-Location $rstoolMcp
-  & npm run typecheck
-  & npm test
+  Set-Location $root
+  & pnpm --filter @rsconcept/domain run build
+  & pnpm --filter @rsconcept/rstool run build
+  & pnpm --filter @rsconcept/rstool-mcp run typecheck
+  & pnpm --filter @rsconcept/rstool-mcp test
 }
 
 RunTests

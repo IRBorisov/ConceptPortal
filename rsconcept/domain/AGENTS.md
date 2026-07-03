@@ -20,17 +20,18 @@ Applies to all files under `rsconcept/domain`. This package is the shared TypeSc
 
 ## Commands
 
-Run from `rsconcept/domain`:
+Run from repo root (pnpm workspace):
 
-- `npm run generate` — regenerate the Lezer parser from `src/rslang/parser/rslang.grammar`
-- `npm run build` — produce `dist/` via [tsdown](https://tsdown.dev) (ESM + `.d.ts` + sourcemaps)
-- `npm run typecheck` — `tsc --noEmit`
-- `npm test` — `vitest run`
-- `npm run lint` — ESLint (TypeScript rules aligned with frontend, no React)
-- `npm run lintFix` — ESLint with `--fix`
-- `npm run format` / `npm run format:check` — Prettier on `src/**/*.ts`
+- `pnpm --filter @rsconcept/domain run generate` — regenerate the Lezer parser from `src/rslang/parser/rslang.grammar`
+- `pnpm --filter @rsconcept/domain run build` — produce `dist/` via [tsdown](https://tsdown.dev) (ESM + `.d.ts` + sourcemaps)
+- `pnpm --filter @rsconcept/domain run dev` — rebuild `dist/` on change (`tsdown --watch`)
+- `pnpm --filter @rsconcept/domain run typecheck` — `tsc --noEmit`
+- `pnpm --filter @rsconcept/domain test` — `vitest run`
+- `pnpm --filter @rsconcept/domain run lint` — ESLint (TypeScript rules aligned with frontend, no React)
+- `pnpm --filter @rsconcept/domain run lintFix` — ESLint with `--fix`
+- `pnpm --filter @rsconcept/domain run format` / `format:check` — Prettier on `src/**/*.ts`
 
-Always run `npm run generate` after editing `rslang.grammar`. The build is reproduced as part of `npm run build`.
+Always run `generate` after editing `rslang.grammar`. The build is reproduced as part of `build`.
 
 ## Edit rules
 
@@ -46,4 +47,4 @@ Always run `npm run generate` after editing `rslang.grammar`. The build is repro
 
 - Public package `@rsconcept/domain` on npm; release steps in `PUBLISHING.md`.
 - Bump `version` in `package.json` per semver. Breaking changes for **any** consumer (frontend or rstool) require a major bump.
-- `prepublishOnly` runs `npm run build`; only `dist/`, `src/`, `README.md`, and `LICENSE` are shipped.
+- `prepublishOnly` runs `pnpm run build`; only `dist/`, `src/`, `README.md`, and `LICENSE` are shipped.

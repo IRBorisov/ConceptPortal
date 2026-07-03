@@ -19,13 +19,13 @@ services:
     depends_on:
       - backend
     build:
-      context: ./rsconcept/frontend
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: rsconcept/frontend/Dockerfile.dev
       args:
         BUILD_TYPE: development
     ports:
       - 3002:3002
-    command: npm run dev -- --host
+    command: pnpm run dev -- --host
 
   backend:
     container_name: dev-portal-backend

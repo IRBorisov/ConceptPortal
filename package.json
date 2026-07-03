@@ -1,0 +1,13 @@
+{
+  "name": "concept-portal",
+  "private": true,
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "build:domain": "pnpm --filter @rsconcept/domain run build",
+    "dev:domain": "pnpm --filter @rsconcept/domain run dev",
+    "build:frontend": "pnpm --filter @rsconcept/domain run build && pnpm --filter frontend run build",
+    "dev:frontend": "pnpm --filter @rsconcept/domain run build && pnpm --filter frontend run dev",
+    "build:rstool": "pnpm --filter @rsconcept/domain run build && pnpm --filter @rsconcept/rstool run build",
+    "build:rstool-mcp": "pnpm --filter @rsconcept/domain run build && pnpm --filter @rsconcept/rstool run build && pnpm --filter @rsconcept/rstool-mcp run build"
+  }
+}

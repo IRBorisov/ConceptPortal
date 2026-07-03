@@ -1,10 +1,7 @@
 # Run linters
 
+$root = Resolve-Path -Path "$PSScriptRoot\..\.."
 $backend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\backend"
-$domain = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\domain"
-$frontend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\frontend"
-$rstool = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\rstool"
-$rstoolMcp = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\rstool-mcp"
 
 function RunLinters() {
   LintDomain
@@ -22,23 +19,23 @@ function LintBackend() {
 }
 
 function LintDomain() {
-  Set-Location $domain
-  & npm run lint
+  Set-Location $root
+  & pnpm --filter @rsconcept/domain run lint
 }
 
 function LintFrontend() {
-  Set-Location $frontend
-  & npm run lint
+  Set-Location $root
+  & pnpm --filter frontend run lint
 }
 
 function LintRstool() {
-  Set-Location $rstool
-  & npm run typecheck
+  Set-Location $root
+  & pnpm --filter @rsconcept/rstool run typecheck
 }
 
 function LintRstoolMcp() {
-  Set-Location $rstoolMcp
-  & npm run typecheck
+  Set-Location $root
+  & pnpm --filter @rsconcept/rstool-mcp run typecheck
 }
 
 RunLinters

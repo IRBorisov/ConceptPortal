@@ -1,6 +1,6 @@
 {
   "name": "@rsconcept/rstool",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Agent-facing library for incremental RSForm construction, RSLang analysis, diagnostics, modeling, and evaluation. Wraps @rsconcept/domain with a deterministic session contract.",
   "license": "MIT",
   "author": "IRBorisov",
@@ -68,10 +68,10 @@
     "example:build-expression-bank-schema": "tsx examples/expression-bank/build-rsform.ts",
     "example:build-template-apply-schema": "tsx examples/template-apply/build-rsform.ts",
     "kinship:cli": "tsx examples/kinship/cli.ts",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@rsconcept/domain": "^1.7.4"
+    "@rsconcept/domain": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^26.1.0",
@@ -79,6 +79,7 @@
     "tsdown": "^0.22.3",
     "tsx": "^4.22.5",
     "typescript": "^6.0.3",
+    "unrun": "^0.3.1",
     "vitest": "^4.1.9"
   },
   "publishConfig": {

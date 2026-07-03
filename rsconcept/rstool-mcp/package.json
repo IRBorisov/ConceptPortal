@@ -45,17 +45,18 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "start": "tsx src/bin/server.ts",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
-    "@rsconcept/rstool": "^1.0.2"
+    "@rsconcept/rstool": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^25.9.4",
     "tsdown": "^0.22.3",
     "tsx": "^4.22.5",
     "typescript": "^6.0.3",
+    "unrun": "^0.3.1",
     "vitest": "^4.1.9"
   },
   "publishConfig": {

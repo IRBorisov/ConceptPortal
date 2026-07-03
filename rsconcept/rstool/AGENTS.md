@@ -26,15 +26,15 @@ Transports: library API (`RSToolAgent`) and stdio wrapper.
 
 ## Commands
 
-From `rsconcept/rstool` (`@rsconcept/domain` from npm unless `npm link` to `rsconcept/domain`):
+From repo root (pnpm workspace; `@rsconcept/domain` links to `rsconcept/domain`):
 
-- Install: `npm install`
-- Typecheck: `npm run typecheck`
-- Tests: `npm test` (discovers `src/**/*.test.ts`, `examples/**/*.test.ts`)
-- Build: `npm run build`
-- Stdio (dev): `npm run wrapper`
+- Install: `pnpm install` then `pnpm --filter @rsconcept/domain run build`
+- Typecheck: `pnpm --filter @rsconcept/rstool run typecheck`
+- Tests: `pnpm --filter @rsconcept/rstool test` (discovers `src/**/*.test.ts`, `examples/**/*.test.ts`)
+- Build: `pnpm --filter @rsconcept/rstool run build`
+- Stdio (dev): `pnpm --filter @rsconcept/rstool run wrapper`
 - Stdio (built): `npx rstool-wrapper`
-- Examples: `npm run example:client`, `example:build-schema`, `example:build-rsmodel` (+ kinship, chocolate-nim, movd — см. `package.json` и `examples/README.md`)
+- Examples: `pnpm --filter @rsconcept/rstool run example:client`, `example:build-schema`, `example:build-rsmodel` (+ kinship, chocolate-nim, movd — см. `package.json` и `examples/README.md`)
 
 ## Edit rules
 

@@ -18,6 +18,7 @@ Workspace rules for agents.
 - `scripts/prod`: deploy scripts
 - `nginx`: reverse proxy/deploy config
 - `docker-compose-*.yml`: containers
+- `pnpm-workspace.yaml` + root `pnpm-lock.yaml`: JS/TS packages (`domain`, `frontend`, `rstool`, `rstool-mcp`) linked via `workspace:*`
 - `.agents/skills/`: project agent skills for Cursor (see [Agent skills](#agent-skills))
 
 ## Portal URLs → REST API

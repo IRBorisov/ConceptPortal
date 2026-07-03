@@ -3,8 +3,8 @@ Param(
     [switch] $freshStart
 )
 
+$root = Resolve-Path -Path "$PSScriptRoot\..\.."
 $backend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\backend"
-$frontend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\frontend"
 
 $djangoSrc = "$backend\manage.py"
 $initialData = "fixtures/InitialData.json"
@@ -32,9 +32,10 @@ function BackendRun() {
 }
 
 function FrontendRun() {
-	Set-Location $frontend
-    & npm install
-    Invoke-Expression "cmd /c start powershell -Command { `$Host.UI.RawUI.WindowTitle = 'react'; & npm run dev }"
+	Set-Location $root
+    & pnpm install
+    & pnpm --filter @rsconcept/domain run build
+    Invoke-Expression "cmd /c start powershell -Command { `$Host.UI.RawUI.WindowTitle = 'react'; Set-Location '$root'; & pnpm --filter frontend run dev }"
 }
 
 function FlushData {

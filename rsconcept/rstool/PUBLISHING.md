@@ -2,7 +2,7 @@
 
 This package is published **manually** from a local checkout. [RSTool CI](../../.github/workflows/rstool.yml) typechecks, tests, and builds on push; it does **not** publish to npm.
 
-**Prerequisite:** [`@rsconcept/domain`](../domain/PUBLISHING.md) is published at the version pinned in `package.json` (or use `npm link` while testing unpublished domain builds).
+**Prerequisite:** [`@rsconcept/domain`](../domain/PUBLISHING.md) is published when releasing to npm (local workspace uses `workspace:*`).
 
 ## One-time setup
 
@@ -13,11 +13,11 @@ See [domain publishing — one-time setup](../domain/PUBLISHING.md#one-time-setu
 Run from a clean `main` with a clean working tree.
 
 1. **Sync** and confirm: `git status`.
-2. **Install**: `cd rsconcept/rstool && npm ci`
+2. **Install**: `pnpm install --frozen-lockfile` (repo root)
 3. **Verify**:
 
    ```bash
-   npm run typecheck && npm test && npm run build
+   pnpm --filter @rsconcept/domain run build && pnpm --filter @rsconcept/rstool run typecheck && pnpm --filter @rsconcept/rstool test && pnpm --filter @rsconcept/rstool run build
    ```
 
    If you changed the agent contract, bump `CONTRACT_VERSION` in `src/models/tool-contract.ts` and update the [skill sync checklist](AGENTS.md#contract-changes--update-the-skill).
@@ -34,7 +34,7 @@ Run from a clean `main` with a clean working tree.
 5. **Dry-run**:
 
    ```bash
-   npm publish --dry-run --access public
+   pnpm publish --dry-run --access public
    ```
 
    Confirm the tarball only includes intended paths (`dist/`, `src/`, `skills/`, `docs/`, `examples/`, `README.md`, `LICENSE`, etc.).
@@ -42,7 +42,7 @@ Run from a clean `main` with a clean working tree.
 6. **Publish**:
 
    ```bash
-   npm publish --access public
+   pnpm publish --access public
    ```
 
 7. **Push** the version-bump commit and tag(s):
@@ -62,8 +62,8 @@ Run from a clean `main` with a clean working tree.
 ## When `@rsconcept/domain` changed
 
 1. Publish domain per [domain/PUBLISHING.md](../domain/PUBLISHING.md).
-2. Bump the `^` pin on `dependencies."@rsconcept/domain"` in this `package.json`.
-3. `npm ci`, then run the release checklist above.
+2. Bump the published semver on `dependencies."@rsconcept/domain"` when cutting an npm release (`workspace:*` locally).
+3. `pnpm install --frozen-lockfile`, then run the release checklist above.
 
 ## Downstream packages
 

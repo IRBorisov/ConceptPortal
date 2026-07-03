@@ -1,14 +1,11 @@
-# Run tests
+# Run E2E tests
 
-$frontend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\frontend"
+$root = Resolve-Path -Path "$PSScriptRoot\..\.."
 
 function RunTests() {
-  TestFrontend
-}
-
-function TestFrontend() {
-  Set-Location $frontend
-  & npm run test:e2e
+  Set-Location $root
+  & pnpm --filter @rsconcept/domain run build
+  & pnpm --filter frontend run test:e2e
 }
 
 RunTests

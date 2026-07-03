@@ -7,6 +7,10 @@ on:
       - rsconcept/rstool-mcp/**
       - rsconcept/rstool/**
       - rsconcept/domain/**
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - .npmrc
       - .github/workflows/rstool-mcp.yml
   pull_request:
     branches: ["main"]
@@ -14,6 +18,10 @@ on:
       - rsconcept/rstool-mcp/**
       - rsconcept/rstool/**
       - rsconcept/domain/**
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - .npmrc
       - .github/workflows/rstool-mcp.yml
 
 permissions:
@@ -29,21 +37,32 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
-          cache-dependency-path: rsconcept/rstool-mcp/package-lock.json
+          cache: pnpm
       - name: Install dependencies
-        working-directory: rsconcept/rstool-mcp
-        run: npm ci
+        run: pnpm install --frozen-lockfile
+      - name: Build domain
+        run: pnpm --filter @rsconcept/domain run build
+      - name: Build rstool
+        run: pnpm --filter @rsconcept/rstool run build
       - name: Typecheck
-        working-directory: rsconcept/rstool-mcp
-        run: npm run typecheck
+        run: pnpm --filter @rsconcept/rstool-mcp run typecheck
       - name: Test
-        working-directory: rsconcept/rstool-mcp
-        run: npm test
+        run: pnpm --filter @rsconcept/rstool-mcp test
       - name: Build
-        working-directory: rsconcept/rstool-mcp
-        run: npm run build
+        run: pnpm --filter @rsconcept/rstool-mcp run build
+  notify-failure:
+    permissions: {}
+    runs-on: ubuntu-latest
+    needs: build
+    if: failure()
+    steps:
+      - name: Send Telegram Notification
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+          -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+          -d text="❌ RSTool MCP build failed! Repository: ${{ github.repository }} Commit: ${{ github.sha }}"

@@ -1,6 +1,6 @@
 {
   "name": "@rsconcept/domain",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "description": "Shared TypeScript domain for RS language, RSForm, RSModel, RSEngine, OSS, and concept-text helpers.",
   "license": "MIT",
   "author": "IRBorisov",
@@ -153,13 +153,14 @@
   "scripts": {
     "generate": "lezer-generator src/rslang/parser/rslang.grammar -o src/rslang/parser/parser.ts",
     "build": "tsdown",
+    "dev": "tsdown --watch",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "lintFix": "eslint . --report-unused-disable-directives --max-warnings 0 --fix",
     "format": "prettier --write \"src/**/*.ts\" \"*.{ts,js}\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"*.{ts,js}\"",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "@lezer/common": "^1.5.2",
@@ -176,6 +177,7 @@
     "tsdown": "^0.22.3",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.62.1",
+    "unrun": "^0.3.1",
     "vitest": "^4.1.9"
   },
   "publishConfig": {

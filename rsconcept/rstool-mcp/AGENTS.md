@@ -16,13 +16,13 @@ Applies to all files under `rsconcept/rstool-mcp`. The package is a **thin adapt
 
 ## Commands
 
-From `rsconcept/rstool-mcp` (`@rsconcept/rstool` comes from npm unless you `npm link` a local build):
+From repo root (pnpm workspace; `@rsconcept/rstool` links to `rsconcept/rstool`):
 
-- Install: `npm install`
-- Typecheck: `npm run typecheck`
-- Tests: `npm test`
-- Build: `npm run build`
-- Run (dev): `npm run start`
+- Install: `pnpm install` then build domain and rstool
+- Typecheck: `pnpm --filter @rsconcept/rstool-mcp run typecheck`
+- Tests: `pnpm --filter @rsconcept/rstool-mcp test`
+- Build: `pnpm --filter @rsconcept/rstool-mcp run build`
+- Run (dev): `pnpm --filter @rsconcept/rstool-mcp run start`
 - Run (built bin): `node dist/bin/server.js` or `npx rstool-mcp`
 
 ## Edit rules

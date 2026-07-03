@@ -25,16 +25,16 @@ Vite, React 19 + Compiler, Tailwind CSS, TypeScript, React Router, TanStack Quer
 
 ## Commands
 
-Run from `rsconcept/frontend`:
+Run from repo root (pnpm workspace) unless noted:
 
-- Install: `npm install`
-- Dev server: `npm run dev` (assume already running)
-- Build: `npm run build`
-- Unit test: `npm test`
-- E2E tests: `npm run test:e2e`
-- Lint: `npm run lint` (slow; prefer targeted checks)
-- Lint fix: `npm run lintFix` (ESLint auto-fix, including import sort)
-- Regenerate parsers: `npm run generate`
+- Install: `pnpm install` (then `pnpm --filter @rsconcept/domain run build`)
+- Dev server: `pnpm --filter frontend run dev` (assume already running; run `pnpm --filter @rsconcept/domain run dev` when editing domain)
+- Build: `pnpm --filter @rsconcept/domain run build && pnpm --filter frontend run build`
+- Unit test: `pnpm --filter frontend test`
+- E2E tests: `pnpm --filter frontend run test:e2e`
+- Lint: `pnpm --filter frontend run lint` (slow; prefer targeted checks)
+- Lint fix: `pnpm --filter frontend run lintFix` (ESLint auto-fix, including import sort)
+- Regenerate parsers: `pnpm --filter frontend run generate`
 
 ## Feature Paths
 
@@ -66,7 +66,7 @@ Each feature may expose `src/features/{name}/index.ts` as its **public contract*
 - Stores (`useRoleStore`, `useLibrarySearchStore`, …)
 - `backend/api.ts`, mutation/query hooks, loaders
 
-After adding, removing, or moving imports (especially cross-feature dependency changes), run `npm run lintFix` from `rsconcept/frontend` to auto-sort imports (`eslint-plugin-simple-import-sort`).
+After adding, removing, or moving imports (especially cross-feature dependency changes), run `pnpm --filter frontend run lintFix` to auto-sort imports (`eslint-plugin-simple-import-sort`).
 
 **Cross-feature imports:** use `@/features/{name}` barrels for types, Zod schemas, and shared constants. Use deep paths for hooks, stores, components, and runtime helpers. Intra-feature imports may stay deep.
 

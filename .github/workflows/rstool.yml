@@ -6,12 +6,20 @@ on:
     paths:
       - rsconcept/rstool/**
       - rsconcept/domain/**
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - .npmrc
       - .github/workflows/rstool.yml
   pull_request:
     branches: ["main"]
     paths:
       - rsconcept/rstool/**
       - rsconcept/domain/**
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - .npmrc
       - .github/workflows/rstool.yml
 
 permissions:
@@ -27,24 +35,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
-          cache-dependency-path: rsconcept/rstool/package-lock.json
+          cache: pnpm
       - name: Install dependencies
-        working-directory: rsconcept/rstool
-        run: npm ci
+        run: pnpm install --frozen-lockfile
+      - name: Build domain
+        run: pnpm --filter @rsconcept/domain run build
       - name: Typecheck rstool
-        working-directory: rsconcept/rstool
-        run: npm run typecheck
+        run: pnpm --filter @rsconcept/rstool run typecheck
       - name: Test rstool
-        working-directory: rsconcept/rstool
-        run: npm test
+        run: pnpm --filter @rsconcept/rstool test
       - name: Build rstool
-        working-directory: rsconcept/rstool
-        run: npm run build
+        run: pnpm --filter @rsconcept/rstool run build
   notify-failure:
     permissions: {}
     runs-on: ubuntu-latest

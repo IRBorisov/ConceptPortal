@@ -19,7 +19,8 @@ services:
     depends_on:
       - backend
     build:
-      context: ./rsconcept/frontend
+      context: .
+      dockerfile: rsconcept/frontend/Dockerfile
       args:
         BUILD_TYPE: production.local
     expose:

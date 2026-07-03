@@ -25,14 +25,14 @@ This package is published **manually** from a local checkout. [Domain CI](../../
 Run from a clean `main` with a clean working tree.
 
 1. **Sync** and confirm: `git status`.
-2. **Install**: `cd rsconcept/domain && npm ci`
+2. **Install**: `pnpm install --frozen-lockfile` (repo root)
 3. **Verify**:
 
    ```bash
-   npm run typecheck && npm test && npm run build
+   pnpm --filter @rsconcept/domain run typecheck && pnpm --filter @rsconcept/domain test && pnpm --filter @rsconcept/domain run build
    ```
 
-   Run `npm run generate` first if you changed `src/rslang/parser/rslang.grammar`.
+   Run `pnpm --filter @rsconcept/domain run generate` first if you changed `src/rslang/parser/rslang.grammar`.
 
 4. **Bump version** in `package.json` (semver):
    - **patch** — bug fixes / internal refactors
@@ -48,7 +48,7 @@ Run from a clean `main` with a clean working tree.
 5. **Dry-run**:
 
    ```bash
-   npm publish --dry-run --access public
+   pnpm publish --dry-run --access public
    ```
 
    Confirm the tarball only includes `dist/`, `src/`, `README.md`, `LICENSE`, etc. (see `files` in `package.json`).
@@ -56,10 +56,10 @@ Run from a clean `main` with a clean working tree.
 6. **Publish**:
 
    ```bash
-   npm publish --access public
+   pnpm publish --access public
    ```
 
-   First publication of a scoped public package needs `--access public`; later releases inherit it. `prepublishOnly` runs `npm run build`.
+   First publication of a scoped public package needs `--access public`; later releases inherit it. `prepublishOnly` runs `pnpm run build`.
 
 7. **Push** the version-bump commit and tag(s):
 
@@ -77,10 +77,10 @@ Run from a clean `main` with a clean working tree.
 
 ## Downstream packages
 
-After a domain release that consumers need:
+After a domain release that external npm consumers need:
 
-1. Bump `dependencies."@rsconcept/domain"` in `rsconcept/rstool/package.json` (and in `rsconcept/frontend/package.json` for the Portal SPA).
-2. `npm ci` + test in each consumer, then publish those packages per their publishing guides:
+1. Bump `dependencies."@rsconcept/domain"` semver in published packages when releasing them (workspace uses `workspace:*` locally).
+2. `pnpm install --frozen-lockfile` + test in each consumer, then publish those packages per their publishing guides:
    - [RSTool](../rstool/PUBLISHING.md)
    - [RSTool MCP](../rstool-mcp/PUBLISHING.md)
 

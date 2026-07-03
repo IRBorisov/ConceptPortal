@@ -5,11 +5,19 @@ on:
     branches: ["main"]
     paths:
       - rsconcept/domain/**
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - .npmrc
       - .github/workflows/domain.yml
   pull_request:
     branches: ["main"]
     paths:
       - rsconcept/domain/**
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - .npmrc
       - .github/workflows/domain.yml
 
 permissions:
@@ -25,27 +33,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
-          cache-dependency-path: rsconcept/domain/package-lock.json
+          cache: pnpm
       - name: Install dependencies
-        working-directory: rsconcept/domain
-        run: npm ci
+        run: pnpm install --frozen-lockfile
       - name: Typecheck
-        working-directory: rsconcept/domain
-        run: npm run typecheck
+        run: pnpm --filter @rsconcept/domain run typecheck
       - name: Lint
-        working-directory: rsconcept/domain
-        run: npm run lint
+        run: pnpm --filter @rsconcept/domain run lint
       - name: Test
-        working-directory: rsconcept/domain
-        run: npm test
+        run: pnpm --filter @rsconcept/domain test
       - name: Build
-        working-directory: rsconcept/domain
-        run: npm run build
+        run: pnpm --filter @rsconcept/domain run build
   notify-failure:
     permissions: {}
     runs-on: ubuntu-latest

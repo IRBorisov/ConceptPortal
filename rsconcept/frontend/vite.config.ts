@@ -1,7 +1,7 @@
 import babel from '@rolldown/plugin-babel';
 import tailwindcss from '@tailwindcss/vite';
 import react, { reactCompilerPreset } from '@vitejs/plugin-react';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig, loadEnv, type Plugin } from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'url';
@@ -14,6 +14,16 @@ function getPackageVersion(): string {
   return packageJson.version;
 }
 
+function watchDomainDist(): Plugin {
+  const domainDist = fileURLToPath(new URL('../domain/dist', import.meta.url));
+  return {
+    name: 'watch-domain-dist',
+    configureServer(server) {
+      server.watcher.add(domainDist);
+    }
+  };
+}
+
 export default ({ mode }: { mode: string }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const release = `frontend@${getPackageVersion()}`;
@@ -21,6 +31,7 @@ export default ({ mode }: { mode: string }) => {
     appType: 'spa',
 
     plugins: [
+      watchDomainDist(),
       tailwindcss(),
       react(),
       babel({
@@ -46,6 +57,9 @@ export default ({ mode }: { mode: string }) => {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url))
       }
+    },
+    optimizeDeps: {
+      exclude: ['@rsconcept/domain']
     },
     build: {
       chunkSizeWarningLimit: 2000, // KB

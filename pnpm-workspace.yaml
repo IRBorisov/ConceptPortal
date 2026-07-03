@@ -1,0 +1,5 @@
+packages:
+  - rsconcept/domain
+  - rsconcept/frontend
+  - rsconcept/rstool
+  - rsconcept/rstool-mcp

@@ -13,11 +13,11 @@ See [domain publishing — one-time setup](../domain/PUBLISHING.md#one-time-setu
 Run from a clean `main` with a clean working tree.
 
 1. **Sync** and confirm: `git status`.
-2. **Install**: `cd rsconcept/rstool-mcp && npm ci`
+2. **Install**: `pnpm install --frozen-lockfile` (repo root)
 3. **Verify**:
 
    ```bash
-   npm run typecheck && npm test && npm run build
+   pnpm --filter @rsconcept/domain run build && pnpm --filter @rsconcept/rstool run build && pnpm --filter @rsconcept/rstool-mcp run typecheck && pnpm --filter @rsconcept/rstool-mcp test && pnpm --filter @rsconcept/rstool-mcp run build
    ```
 
    If the rstool tool catalog changed, update `src/tools.ts`, `src/server.test.ts`, and the tool table in `README.md`.
@@ -34,7 +34,7 @@ Run from a clean `main` with a clean working tree.
 5. **Dry-run**:
 
    ```bash
-   npm publish --dry-run --access public
+   pnpm publish --dry-run --access public
    ```
 
    Confirm the tarball only includes `dist/`, `src/`, `README.md`, `LICENSE`, etc.
@@ -42,7 +42,7 @@ Run from a clean `main` with a clean working tree.
 6. **Publish**:
 
    ```bash
-   npm publish --access public
+   pnpm publish --access public
    ```
 
 7. **Push** the version-bump commit and tag(s):
@@ -62,8 +62,8 @@ Run from a clean `main` with a clean working tree.
 ## When `@rsconcept/rstool` changed
 
 1. Publish rstool per [rstool/PUBLISHING.md](../rstool/PUBLISHING.md) (and domain first if the chain changed).
-2. Bump the `^` pin on `dependencies."@rsconcept/rstool"` in this `package.json`.
-3. `npm ci`, then run the release checklist above.
+2. Bump the published semver on `dependencies."@rsconcept/rstool"` when cutting an npm release (`workspace:*` locally).
+3. `pnpm install --frozen-lockfile`, then run the release checklist above.
 
 ## Release order (full chain)
 
