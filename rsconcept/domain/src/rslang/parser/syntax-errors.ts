@@ -7,7 +7,21 @@ import { annotateError } from '../ast-annotations';
 import { type ErrorReporter, RSErrorCode, type RSErrorDescription } from '../error';
 import { type TypeClass, TypeClass as TypeClassEnum } from '../semantic/typification';
 
-import { Arguments, Filter, Function, Function_decl, Predicate, Variable } from './parser.terms';
+import {
+  Arguments,
+  Declarative,
+  Filter,
+  Function,
+  Function_decl,
+  Imp_blocks,
+  Imperative,
+  Logic_quantor,
+  Predicate,
+  Recursion,
+  Setexpr,
+  Variable,
+  Variable_pack
+} from './parser.terms';
 import { TokenID } from './token';
 
 /** Options for syntax error extraction. */
@@ -44,11 +58,13 @@ export function extractSyntaxErrors(
   };
 
   const bracketError = extractBracketErrors(expression);
-  if (bracketError !== null) {
-    collect(bracketError, ast);
-  }
   const hasBracketErrors = bracketError !== null;
   visitAstDFS(ast, node => extractInternal(node, expression, collect, hasBracketErrors, options));
+
+  const hasIncompleteGenerator = collected.some(error => isIncompleteGeneratorBodyCode(error.code));
+  if (bracketError !== null && !hasIncompleteGenerator) {
+    collect(bracketError, ast);
+  }
 
   for (const error of deduplicateErrors(collected)) {
     reporter(error);
@@ -110,6 +126,16 @@ function classifyParseError(
     return incompleteFunctionDecl;
   }
 
+  const incompleteQuantifier = detectIncompleteQuantifier(node, expression);
+  if (incompleteQuantifier !== null) {
+    return incompleteQuantifier;
+  }
+
+  const incompleteGenerator = detectIncompleteGenerator(node, expression);
+  if (incompleteGenerator !== null) {
+    return incompleteGenerator;
+  }
+
   const filterParen = detectFilterParenMismatch(node, expression);
   if (filterParen !== null) {
     return filterParen;
@@ -159,6 +185,394 @@ function incompleteFormalExpressionCode(expected?: TypeClass): RSErrorCode {
     default:
       return RSErrorCode.expectedFunctionBody;
   }
+}
+
+function detectIncompleteQuantifier(node: AstNode, expression: string): RSErrorDescription | null {
+  const quantNode = findAncestor(node, isQuantifierNode);
+  if (quantNode === null) {
+    return null;
+  }
+
+  const bodyChild = quantNode.children[quantNode.children.length - 1];
+  if (bodyChild?.typeID !== TokenID.ERROR || node !== bodyChild) {
+    return null;
+  }
+
+  const headerChildren = quantNode.children.slice(0, -1);
+  if (headerChildren.length < 3) {
+    return null;
+  }
+
+  const varPack = headerChildren.find(child => child.typeID === Variable_pack || child.typeID === TokenID.NT_ENUM_DECL);
+  if (varPack === undefined || subtreeHasError(varPack)) {
+    return null;
+  }
+
+  const domainChild = headerChildren[headerChildren.length - 1];
+  if (domainChild === varPack || subtreeHasError(domainChild)) {
+    return null;
+  }
+
+  if (expression.slice(quantNode.to).trim().length > 0) {
+    return null;
+  }
+
+  return {
+    code: RSErrorCode.expectedQuantifierBody,
+    from: bodyChild.from,
+    to: bodyChild.to
+  };
+}
+
+function detectIncompleteGenerator(node: AstNode, expression: string): RSErrorDescription | null {
+  return (
+    detectIncompleteDeclarative(node, expression) ??
+    detectIncompleteImperative(node, expression) ??
+    detectIncompleteRecursion(node, expression)
+  );
+}
+
+function detectIncompleteDeclarative(node: AstNode, expression: string): RSErrorDescription | null {
+  const generatorNode = findAncestor(
+    node,
+    target => target.typeID === Declarative || target.typeID === TokenID.NT_DECLARATIVE_EXPR
+  );
+  return detectIncompleteGeneratorBody(node, expression, generatorNode, RSErrorCode.expectedDeclarativeBody, slot =>
+    isIncompleteDeclarativeBody(slot)
+  );
+}
+
+function detectIncompleteImperative(node: AstNode, expression: string): RSErrorDescription | null {
+  const generatorNode = findAncestor(
+    node,
+    target => target.typeID === Imperative || target.typeID === TokenID.NT_IMPERATIVE_EXPR
+  );
+  return detectIncompleteGeneratorBody(node, expression, generatorNode, RSErrorCode.expectedImperativeBody, slot =>
+    isIncompleteImperativeBody(slot, expression)
+  );
+}
+
+function detectIncompleteRecursion(node: AstNode, expression: string): RSErrorDescription | null {
+  const generatorNode = findAncestor(node, target => target.typeID === Recursion);
+  return detectIncompleteGeneratorBody(node, expression, generatorNode, RSErrorCode.expectedRecursiveBody, slot =>
+    isIncompleteRecursionBody(slot)
+  );
+}
+
+interface GeneratorBodySlot {
+  nodes: AstNode[];
+  headerEndIndex: number;
+}
+
+function detectIncompleteGeneratorBody(
+  node: AstNode,
+  expression: string,
+  generatorNode: AstNode | null,
+  code: RSErrorCode,
+  isIncomplete: (slot: GeneratorBodySlot) => boolean
+): RSErrorDescription | null {
+  if (generatorNode === null) {
+    return null;
+  }
+
+  if (expression.slice(generatorNode.to).trim().length > 0) {
+    return null;
+  }
+
+  const slot = getGeneratorBodySlot(generatorNode, expression);
+  if (slot === null || !isIncomplete(slot)) {
+    return null;
+  }
+
+  if (!generatorHeaderIsValid(generatorNode, expression, slot.headerEndIndex)) {
+    return null;
+  }
+
+  if (!isErrorInBodySlot(node, slot, generatorNode)) {
+    return null;
+  }
+
+  return incompleteGeneratorError(code, node);
+}
+
+function getGeneratorBodySlot(generatorNode: AstNode, expression: string): GeneratorBodySlot | null {
+  if (generatorNode.typeID === Declarative || generatorNode.typeID === TokenID.NT_DECLARATIVE_EXPR) {
+    return getDeclarativeBodySlot(generatorNode, expression);
+  }
+  if (generatorNode.typeID === Imperative || generatorNode.typeID === TokenID.NT_IMPERATIVE_EXPR) {
+    return getImperativeBodySlot(generatorNode, expression);
+  }
+  if (generatorNode.typeID === Recursion) {
+    return getRecursionBodySlot(generatorNode, expression);
+  }
+  return null;
+}
+
+function getDeclarativeBodySlot(declNode: AstNode, expression: string): GeneratorBodySlot | null {
+  const pipeIndex = declNode.children.findIndex(child => isPipeToken(child, expression));
+  if (pipeIndex >= 0) {
+    return {
+      nodes: contentChildren(declNode, expression, pipeIndex + 1),
+      headerEndIndex: pipeIndex + 1
+    };
+  }
+
+  const domainNode = findDeclarativeDomain(declNode, expression);
+  if (domainNode === null) {
+    return null;
+  }
+
+  const domainIndex = declNode.children.indexOf(domainNode);
+  return {
+    nodes: contentChildren(declNode, expression, domainIndex + 1),
+    headerEndIndex: domainIndex + 1
+  };
+}
+
+function getImperativeBodySlot(impNode: AstNode, expression: string): GeneratorBodySlot | null {
+  const pipeIndex = impNode.children.findIndex(child => isPipeToken(child, expression));
+  if (pipeIndex >= 0) {
+    return {
+      nodes: contentChildren(impNode, expression, pipeIndex + 1),
+      headerEndIndex: pipeIndex + 1
+    };
+  }
+
+  const tupleNode = findImperativeTuple(impNode);
+  if (tupleNode === null) {
+    return null;
+  }
+
+  const tupleIndex = impNode.children.indexOf(tupleNode);
+  return {
+    nodes: contentChildren(impNode, expression, tupleIndex + 1),
+    headerEndIndex: tupleIndex + 1
+  };
+}
+
+function getRecursionBodySlot(recNode: AstNode, expression: string): GeneratorBodySlot | null {
+  const initNode = findRecursionInit(recNode, expression);
+  if (initNode === null) {
+    return null;
+  }
+
+  const initIndex = recNode.children.indexOf(initNode);
+  const afterInit = contentChildren(recNode, expression, initIndex + 1);
+  const lastPipeIndex = findLastPipeIndex(afterInit, expression);
+  if (lastPipeIndex < 0) {
+    return {
+      nodes: afterInit,
+      headerEndIndex: initIndex + 1
+    };
+  }
+
+  return {
+    nodes: afterInit.slice(lastPipeIndex + 1),
+    headerEndIndex: recNode.children.indexOf(afterInit[lastPipeIndex]) + 1
+  };
+}
+
+function contentChildren(generatorNode: AstNode, expression: string, fromIndex: number): AstNode[] {
+  return generatorNode.children.slice(fromIndex).filter(child => !isClosingBrace(child, expression));
+}
+
+function findDeclarativeDomain(declNode: AstNode, expression: string): AstNode | null {
+  const inIndex = declNode.children.findIndex(child => expression.slice(child.from, child.to) === '∈');
+  if (inIndex < 0) {
+    return null;
+  }
+
+  for (let index = inIndex + 1; index < declNode.children.length; index++) {
+    const child = declNode.children[index];
+    if (isPipeToken(child, expression) || isClosingBrace(child, expression)) {
+      break;
+    }
+    if (child.typeID === Setexpr) {
+      return child;
+    }
+  }
+
+  return null;
+}
+
+function findImperativeTuple(impNode: AstNode): AstNode | null {
+  for (const child of impNode.children) {
+    if (child.typeID === Setexpr) {
+      return child;
+    }
+  }
+  return null;
+}
+
+function findLastPipeIndex(nodes: AstNode[], expression: string): number {
+  for (let index = nodes.length - 1; index >= 0; index--) {
+    if (isPipeToken(nodes[index], expression)) {
+      return index;
+    }
+  }
+  return -1;
+}
+
+function generatorHeaderIsValid(generatorNode: AstNode, expression: string, headerEndIndex: number): boolean {
+  for (let index = 0; index < headerEndIndex; index++) {
+    const child = generatorNode.children[index];
+    if (child.typeID === TokenID.ERROR) {
+      return false;
+    }
+    if (isStructuralGeneratorToken(child, expression)) {
+      continue;
+    }
+    if (subtreeHasError(child)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function isIncompleteDeclarativeBody(slot: GeneratorBodySlot): boolean {
+  return isEmptyOrErrorOnlyBody(slot.nodes);
+}
+
+function isIncompleteImperativeBody(slot: GeneratorBodySlot, expression: string): boolean {
+  if (slot.nodes.length === 0) {
+    return true;
+  }
+  if (slot.nodes.length === 1 && slot.nodes[0].typeID === Imp_blocks) {
+    return isImpBlocksIncomplete(slot.nodes[0], expression);
+  }
+  return isEmptyOrErrorOnlyBody(slot.nodes);
+}
+
+function isIncompleteRecursionBody(slot: GeneratorBodySlot): boolean {
+  return isEmptyOrErrorOnlyBody(slot.nodes);
+}
+
+function isEmptyOrErrorOnlyBody(nodes: AstNode[]): boolean {
+  if (nodes.length === 0) {
+    return true;
+  }
+  if (nodes.length === 1) {
+    return isErrorPlaceholder(nodes[0]);
+  }
+  return false;
+}
+
+function isImpBlocksIncomplete(blocksNode: AstNode, expression: string): boolean {
+  if (blocksNode.children.length === 0) {
+    return true;
+  }
+
+  const lastChild = blocksNode.children[blocksNode.children.length - 1];
+  if (lastChild.typeID === TokenID.ERROR) {
+    return true;
+  }
+  if (isSemicolonToken(lastChild, expression)) {
+    return true;
+  }
+  if (lastChild.typeID === Setexpr && isErrorPlaceholder(lastChild)) {
+    return true;
+  }
+
+  return false;
+}
+
+function isErrorInBodySlot(errorNode: AstNode, slot: GeneratorBodySlot, generatorNode: AstNode): boolean {
+  if (slot.nodes.length === 0) {
+    const bodyStart = generatorNode.children[slot.headerEndIndex]?.from ?? generatorNode.from;
+    return errorNode.from >= bodyStart;
+  }
+
+  for (const bodyNode of slot.nodes) {
+    if (errorNode === bodyNode || isDescendantOf(bodyNode, errorNode)) {
+      if (isErrorPlaceholder(bodyNode)) {
+        return true;
+      }
+      if (bodyNode.typeID === Imp_blocks && isImpBlocksTailError(bodyNode, errorNode)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+function isImpBlocksTailError(blocksNode: AstNode, errorNode: AstNode): boolean {
+  const lastChild = blocksNode.children[blocksNode.children.length - 1];
+  return lastChild.typeID === TokenID.ERROR && (errorNode === lastChild || isDescendantOf(lastChild, errorNode));
+}
+
+function isErrorPlaceholder(node: AstNode): boolean {
+  if (node.typeID === TokenID.ERROR) {
+    return true;
+  }
+  if (node.children.length === 0) {
+    return false;
+  }
+  return node.children.every(child => isErrorPlaceholder(child));
+}
+
+function isDescendantOf(ancestor: AstNode, node: AstNode): boolean {
+  let current: AstNode | null = node.parent;
+  while (current !== null) {
+    if (current === ancestor) {
+      return true;
+    }
+    current = current.parent;
+  }
+  return false;
+}
+
+function findRecursionInit(recursionNode: AstNode, expression: string): AstNode | null {
+  const assignIndex = recursionNode.children.findIndex(child => expression.slice(child.from, child.to) === ':=');
+  if (assignIndex < 0) {
+    return null;
+  }
+
+  for (let index = assignIndex + 1; index < recursionNode.children.length; index++) {
+    const child = recursionNode.children[index];
+    if (child.typeID === TokenID.ERROR) {
+      break;
+    }
+    if (isPipeToken(child, expression) || isClosingBrace(child, expression)) {
+      continue;
+    }
+    return child;
+  }
+
+  return null;
+}
+
+function incompleteGeneratorError(code: RSErrorCode, errorNode: AstNode): RSErrorDescription {
+  return {
+    code,
+    from: errorNode.from,
+    to: errorNode.to
+  };
+}
+
+function isIncompleteGeneratorBodyCode(code: RSErrorCode): boolean {
+  return (
+    code === RSErrorCode.expectedDeclarativeBody ||
+    code === RSErrorCode.expectedImperativeBody ||
+    code === RSErrorCode.expectedRecursiveBody
+  );
+}
+
+function isPipeToken(node: AstNode, expression: string): boolean {
+  return expression.slice(node.from, node.to) === '|';
+}
+
+function isSemicolonToken(node: AstNode, expression: string): boolean {
+  return expression.slice(node.from, node.to) === ';';
+}
+
+function isClosingBrace(node: AstNode, expression: string): boolean {
+  return node.typeID !== TokenID.ERROR && expression.slice(node.from, node.to) === '}';
+}
+
+function isStructuralGeneratorToken(node: AstNode, expression: string): boolean {
+  const text = expression.slice(node.from, node.to);
+  return text === '{' || text === '}' || text === '|' || text === '∈' || text === ':=' || text === ';';
 }
 
 function subtreeHasError(node: AstNode): boolean {
@@ -255,6 +669,10 @@ function findAncestor(node: AstNode, predicate: (node: AstNode) => boolean): Ast
 
 function isFunctionDeclNode(node: AstNode): boolean {
   return node.typeID === Function_decl || node.typeID === TokenID.NT_FUNC_DEFINITION;
+}
+
+function isQuantifierNode(node: AstNode): boolean {
+  return node.typeID === Logic_quantor;
 }
 
 function isFunctionNode(node: AstNode): boolean {

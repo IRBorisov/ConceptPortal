@@ -11,7 +11,6 @@ export const txGeneralFr: Record<string, string> = {
   'tx.general.error': 'Erreur',
   'tx.general.error.plural': 'Erreurs',
   'tx.general.warning': 'Avertissement',
-  'tx.general.warning.plural': 'Avertissements',
   'tx.general.issue.plural': 'Problèmes',
   'tx.general.notification': 'Notification',
   'tx.general.none': 'Absent',

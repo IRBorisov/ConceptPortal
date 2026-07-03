@@ -91,9 +91,20 @@ const testErrorData = [
 ];
 
 const testIncompleteFormalData = [
-  ['[α∈ℬ(X1×X1)]', TypeClass.function, RSErrorCode.expectedExpressionBody],
-  ['[σ∈S1]', TypeClass.predicate, RSErrorCode.expectedLogicBody],
-  ['[ξ∈X1]', TypeClass.logic, RSErrorCode.expectedLogicBody]
+  ['[α∈ℬ(X1×X1)]', TypeClass.function, { code: RSErrorCode.expectedExpressionBody, from: 12, to: 12 }],
+  ['[σ∈S1]', TypeClass.predicate, { code: RSErrorCode.expectedLogicBody, from: 6, to: 6 }],
+  ['[ξ∈X1]', TypeClass.logic, { code: RSErrorCode.expectedLogicBody, from: 6, to: 6 }],
+  ['∀α∈X1', TypeClass.logic, { code: RSErrorCode.expectedQuantifierBody, from: 5, to: 5 }],
+  ['∃β∈S2', TypeClass.logic, { code: RSErrorCode.expectedQuantifierBody, from: 5, to: 5 }],
+  ['D{ξ∈X1 |', TypeClass.function, { code: RSErrorCode.expectedDeclarativeBody, from: 8, to: 8 }],
+  ['D{ξ∈X1 |}', TypeClass.function, { code: RSErrorCode.expectedDeclarativeBody, from: 8, to: 8 }],
+  ['D{ξ∈X1}', TypeClass.function, { code: RSErrorCode.expectedDeclarativeBody, from: 6, to: 7 }],
+  ['I{(σ, γ) |}', TypeClass.function, { code: RSErrorCode.expectedImperativeBody, from: 10, to: 10 }],
+  ['I{(σ, γ)}', TypeClass.function, { code: RSErrorCode.expectedImperativeBody, from: 8, to: 9 }],
+  ['I{(σ, γ) | σ:∈X1;}', TypeClass.function, { code: RSErrorCode.expectedImperativeBody, from: 17, to: 17 }],
+  ['R{ξ:=D1 |}', TypeClass.function, { code: RSErrorCode.expectedRecursiveBody, from: 9, to: 9 }],
+  ['R{ξ:=D1 | F1[ξ]≠∅ |}', TypeClass.function, { code: RSErrorCode.expectedRecursiveBody, from: 19, to: 19 }],
+  ['R{ξ:=D1}', TypeClass.function, { code: RSErrorCode.expectedRecursiveBody, from: 7, to: 8 }]
 ] as const;
 
 describe('Testing RSParser correct inputs', () => {
@@ -127,15 +138,14 @@ describe('Testing RSParser error data', () => {
     });
   });
 
-  testIncompleteFormalData.forEach(([input, expected, code]) => {
+  testIncompleteFormalData.forEach(([input, expected, expectedError]) => {
     it(`Parse incomplete formal "${input}" for ${expected}`, () => {
       const tree = parser.parse(input);
       const ast = buildTree(tree.cursor());
       const errors: RSErrorDescription[] = [];
       extractSyntaxErrors(ast, input, error => errors.push(error), false, { expected });
       expect(errors.length).toBe(1);
-      expect(errors[0].code).toBe(code);
-      expect(errors[0].from).toBe(errors[0].to);
+      expect(errors[0]).toMatchObject(expectedError);
     });
   });
 
@@ -180,6 +190,29 @@ describe('Testing RSParser error data', () => {
     extractSyntaxErrors(astTuple, withTuple, error => errorsTuple.push(error));
 
     expect(errorsTuple.some(error => error.code === RSErrorCode.doubleParenthesis)).toBe(false);
+  });
+
+  it('Does not treat malformed generator body as incomplete', () => {
+    const input = 'D{ξ∈X1 | P1[';
+    const tree = parser.parse(input);
+    const ast = buildTree(tree.cursor());
+    const errors: RSErrorDescription[] = [];
+    extractSyntaxErrors(ast, input, error => errors.push(error));
+    expect(errors.some(error => error.code === RSErrorCode.expectedDeclarativeBody)).toBe(false);
+  });
+
+  it('Reports incomplete quantifier only for innermost missing body', () => {
+    const input = '∀α∈X1 ∀β∈X2';
+    const tree = parser.parse(input);
+    const ast = buildTree(tree.cursor());
+    const errors: RSErrorDescription[] = [];
+    extractSyntaxErrors(ast, input, error => errors.push(error), false, { expected: TypeClass.logic });
+    expect(errors.length).toBe(1);
+    expect(errors[0]).toMatchObject({
+      code: RSErrorCode.expectedQuantifierBody,
+      from: input.length,
+      to: input.length
+    });
   });
 
   it('Reports a single forbidden-character error for exponentiation', () => {

@@ -12,7 +12,6 @@ export const txGeneralRu: Record<string, string> = {
   'tx.general.error.plural': 'Ошибки',
   'tx.general.notification': 'Уведомление',
   'tx.general.warning': 'Предупреждение',
-  'tx.general.warning.plural': 'Предупреждения',
   'tx.general.issue.plural': 'Проблемы',
   'tx.general.none': 'Отсутствует',
   'tx.general.labels.show': 'Показать подписи',

@@ -171,6 +171,12 @@ export const txRslangFr: Record<string, string> = {
     'Ajoutez une expression de fonction-terme après la déclaration des arguments',
   'tx.rslang.error.expectedLogicBody':
     'Ajoutez une expression logique de fonction-prédicat après la déclaration des arguments',
+  'tx.rslang.error.expectedQuantifierBody': 'Ajoutez une expression logique après le domaine du quantificateur',
+  'tx.rslang.error.expectedDeclarativeBody': 'Complétez l’expression déclarative D{variable ∈ domaine | condition}',
+  'tx.rslang.error.expectedImperativeBody':
+    'Complétez l’expression impérative I{tuple | blocs d’instructions séparés par ";" }',
+  'tx.rslang.error.expectedRecursiveBody':
+    'Complétez l’expression récursive R{variable := départ | optionnellement condition de continuation | étape}',
   'tx.rslang.error.expectedLocal': 'Une variable locale est requise ici',
   'tx.rslang.error.expectedType': 'Classe d’expression attendue : « {expected} » ; obtenu {actual}',
   'tx.rslang.error.localDoubleDeclare': 'La variable locale est déjà déclarée : {name}',
