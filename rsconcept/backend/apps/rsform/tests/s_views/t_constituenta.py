@@ -221,15 +221,6 @@ class TestConstituentaAPI(EndpointTester):
 
     @decl_endpoint('/api/rsforms/{item}/create-multiple-cst', method='post')
     def test_create_multiple_constituenta_with_remapped_references(self):
-        self.x1.definition_formal = 'X1 = X2'
-        self.x1.term_raw = '@{X1|sing}'
-        self.x1.definition_raw = '@{X2|sing}'
-        self.x1.save()
-        self.x2.definition_formal = 'X2 = X1'
-        self.x2.term_raw = '@{X2|sing}'
-        self.x2.definition_raw = '@{X1|sing}'
-        self.x2.save()
-
         data = {
             'insert_after': self.x2.pk,
             'items': [
@@ -266,6 +257,45 @@ class TestConstituentaAPI(EndpointTester):
         self.assertEqual(x5.definition_formal, 'X5 = X4')
         self.assertEqual(x4.term_raw, '@{X4|sing}')
         self.assertEqual(x5.definition_raw, '@{X4|sing}')
+
+    @decl_endpoint('/api/rsforms/{item}/create-multiple-cst', method='post')
+    def test_create_multiple_constituenta_rejects_foreign_insert_after(self):
+        data = {
+            'insert_after': self.unowned_cst.pk,
+            'items': [
+                {
+                    'alias': 'X4',
+                    'cst_type': CstType.BASE,
+                    'term_raw': 'test',
+                    'term_forms': []
+                }
+            ]
+        }
+        self.executeBadData(data, item=self.owned_id)
+
+    @decl_endpoint('/api/rsforms/{item}/create-multiple-cst', method='post')
+    def test_create_multiple_constituenta_rejects_empty_items(self):
+        data = {'insert_after': self.x2.pk, 'items': []}
+        self.executeBadData(data, item=self.owned_id)
+
+    @decl_endpoint('/api/rsforms/{item}/create-multiple-cst', method='post')
+    def test_create_multiple_constituenta_rejects_duplicate_alias(self):
+        data = {
+            'items': [
+                {'alias': 'X4', 'cst_type': CstType.BASE},
+                {'alias': 'X4', 'cst_type': CstType.BASE},
+            ]
+        }
+        self.executeBadData(data, item=self.owned_id)
+
+    @decl_endpoint('/api/rsforms/{item}/create-multiple-cst', method='post')
+    def test_create_multiple_constituenta_rejects_existing_alias(self):
+        data = {
+            'items': [
+                {'alias': 'X1', 'cst_type': CstType.BASE},
+            ]
+        }
+        self.executeBadData(data, item=self.owned_id)
 
 
     @decl_endpoint('/api/rsforms/{item}/create-cst', method='post')

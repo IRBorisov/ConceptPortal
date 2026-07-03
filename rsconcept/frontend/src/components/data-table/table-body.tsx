@@ -1,7 +1,7 @@
 'use no memo';
 'use client';
 
-import { type RefObject, useCallback, useEffect, useState } from 'react';
+import { type RefObject, useCallback, useState } from 'react';
 import { type Row, type Table } from '@tanstack/react-table';
 
 import { useDragAutoScroll } from '@/hooks/use-drag-auto-scroll';
@@ -69,27 +69,6 @@ export function TableBody<TData>({
   const canReorder = !!enableRowReordering && !!onRowsReordered;
 
   useDragAutoScroll(scrollContainerRef, canReorder && draggingRowID !== null);
-
-  useEffect(
-    function trackCloneModifierDuringDrag() {
-      if (!draggingRowID) {
-        return;
-      }
-      function updateCloneModifier(event: KeyboardEvent) {
-        if (event.key !== 'Control' && event.key !== 'Meta') {
-          return;
-        }
-        setIsCloneDrag(event.ctrlKey || event.metaKey);
-      }
-      window.addEventListener('keydown', updateCloneModifier);
-      window.addEventListener('keyup', updateCloneModifier);
-      return function cleanupCloneModifierTracking() {
-        window.removeEventListener('keydown', updateCloneModifier);
-        window.removeEventListener('keyup', updateCloneModifier);
-      };
-    },
-    [draggingRowID]
-  );
 
   const getRowStyles = useCallback(
     (row: Row<TData>) =>

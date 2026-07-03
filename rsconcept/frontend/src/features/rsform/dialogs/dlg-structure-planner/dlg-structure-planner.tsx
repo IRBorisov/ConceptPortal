@@ -60,13 +60,16 @@ export function DlgStructurePlanner() {
   );
   const isMultiline = term.length > TERM_CHARS_PER_LINE || term.includes('\n');
 
+  const selectedNode = items.find(node => node.key === selectedKey) ?? items[0];
+  const isDefinitionTooLong = (selectedNode?.definition.length ?? 0) > DEFINITION_TRUNCATE;
+  const definitionTooltip = useValueTooltipAnchor(isDefinitionTooLong && selectedNode ? selectedNode.definition : null);
+
   if (!target?.effectiveType || items.length === 0) {
     console.error('Structure planner error input', target, items);
     hideDialog();
     return null;
   }
 
-  const selectedNode = items.find(node => node.key === selectedKey) ?? items[0];
   const selectedCst = selectedNode?.existing;
   const isDirty = isMutable && ((selectedCst && term !== selectedCst?.term_raw) || (!selectedCst && term !== ''));
   const canSaveDirty = isDirty && term !== '';
@@ -153,8 +156,6 @@ export function DlgStructurePlanner() {
     }
   }
 
-  const isDefinitionTooLong = selectedNode.definition.length > DEFINITION_TRUNCATE;
-  const definitionTooltip = useValueTooltipAnchor(isDefinitionTooLong ? selectedNode.definition : null);
   const blurClass = 'backdrop-blur-xs bg-background/90';
 
   return (

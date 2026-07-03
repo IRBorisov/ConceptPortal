@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
-import { type Constituenta } from '@rsconcept/domain/library';
 import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
 import { isInferrable, isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
 
@@ -14,8 +13,8 @@ import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-c
 import { useRoleStore, UserRole } from '@/features/users';
 
 import { MiniButton } from '@/components/control';
-import { type DataTableRowDrop } from '@/components/data-table';
 import { IconMoveDown, IconMoveUp } from '@/components/icons';
+import { useRowsDropHandler } from '@/hooks/use-rows-drop-handler';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
@@ -125,17 +124,7 @@ export function TabValue() {
     router.changeActive(cstID);
   }
 
-  function handleRowsDropped(event: DataTableRowDrop<Constituenta>) {
-    if (event.isClone) {
-      void cloneCst({
-        cstIDs: event.draggedRows.map(cst => cst.id),
-        insertAfter: event.afterRow?.id ?? null
-      });
-      return;
-    }
-    const movedIDs = event.draggedRows.map(cst => cst.id);
-    moveAfter(event.afterRow?.id ?? null, movedIDs);
-  }
+  const handleRowsDropped = useRowsDropHandler(cloneCst, moveAfter);
 
   return (
     <div

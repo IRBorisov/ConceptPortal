@@ -439,6 +439,9 @@ class CstMoveSerializer(CstListSerializer):
     move_to = serializers.IntegerField()
 
 
+CST_BATCH_CREATE_MAX_ITEMS = 100
+
+
 class CstBatchCreateItemSerializer(StrictModelSerializer):
     ''' Serializer: One constituenta inside a batch create request. '''
     alias = serializers.CharField(max_length=8)
@@ -463,7 +466,8 @@ class CstBatchCreateSerializer(StrictSerializer):
     )
     items = serializers.ListField(
         child=CstBatchCreateItemSerializer(),
-        min_length=1
+        min_length=1,
+        max_length=CST_BATCH_CREATE_MAX_ITEMS
     )
 
     def validate(self, attrs):
@@ -473,6 +477,17 @@ class CstBatchCreateSerializer(StrictSerializer):
             raise serializers.ValidationError({
                 'insert_after': msg.constituentaNotInRSform(schema.title)
             })
+        items = attrs['items']
+        alias_error = find_import_alias_error(items)
+        if alias_error:
+            raise serializers.ValidationError({'items': alias_error})
+        existing_aliases = set(
+            Constituenta.objects.filter(schema=schema).values_list('alias', flat=True)
+        )
+        for item in items:
+            alias = item['alias']
+            if alias in existing_aliases:
+                raise serializers.ValidationError({'items': msg.aliasTaken(alias)})
         return attrs
 
 

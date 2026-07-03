@@ -69,6 +69,7 @@ describe('buildCloneConstituentsBatch', () => {
 
     const batch = buildCloneConstituentsBatch(schema, [1, 2], 3);
 
+    expect(batch.insert_after).toBe(3);
     expect(batch.items).toHaveLength(2);
     expect(batch.items[0].alias).toBe('X4');
     expect(batch.items[1].alias).toBe('X5');
@@ -97,6 +98,7 @@ describe('buildCloneConstituentsBatch', () => {
 
     const batch = buildCloneConstituentsBatch(schema, [1], null);
 
+    expect(batch.insert_after).toBeNull();
     expect(batch.items).toHaveLength(1);
     expect(batch.items[0].alias).toBe('X3');
     expect(batch.items[0].definition_formal).toBe('X3 = X2');

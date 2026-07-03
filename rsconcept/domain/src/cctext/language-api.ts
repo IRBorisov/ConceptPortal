@@ -138,10 +138,11 @@ export function applyEntityReferenceMapping(text: string, mapping: Record<string
   let output = '';
   for (const segment of text.matchAll(ENTITY_REFERENCE_PATTERN)) {
     const entity = segment[1];
+    const entityKey = entity.trim();
     const start = segment.index ?? 0;
-    if (entity in mapping) {
+    if (entityKey in mapping) {
       output += text.substring(posInput, start + 2);
-      output += mapping[entity];
+      output += mapping[entityKey];
       output += text.substring(start + 2 + entity.length, start + segment[0].length);
       posInput = start + segment[0].length;
     }

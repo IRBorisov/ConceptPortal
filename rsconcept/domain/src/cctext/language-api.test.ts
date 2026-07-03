@@ -124,6 +124,10 @@ describe('applyEntityReferenceMapping', () => {
     expect(applyEntityReferenceMapping('', { X1: 'X3' })).toBe('');
     expect(applyEntityReferenceMapping('plain text', { X1: 'X3' })).toBe('plain text');
   });
+
+  it('trims padded entity names when resolving aliases', () => {
+    expect(applyEntityReferenceMapping('@{ X1 |sing}', { X1: 'X3' })).toBe('@{X3|sing}');
+  });
 });
 
 describe('Testing reference resolution', () => {

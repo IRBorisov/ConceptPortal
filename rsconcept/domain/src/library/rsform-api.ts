@@ -341,7 +341,7 @@ export function sortItemsForInlineSynthesis(receiver: RSForm, items: readonly Li
   return result;
 }
 
-/** Fields of {@link Constituenta} that are updated by alias mapping. */
+/** Fields of {@link Constituenta} updated in place by alias mapping. */
 export interface ConstituentaMappableFields {
   alias: string;
   definition_formal: string;
@@ -350,7 +350,10 @@ export interface ConstituentaMappableFields {
   definition_raw: string;
 }
 
-/** Remap formal expressions and terminological entity references in constituent fields. */
+/**
+ * Remap formal expressions and terminological entity references in constituent fields.
+ * Mutates each element of `items` in place; pass owned or cloned data only.
+ */
 export function applyMappingToConstituents<T extends ConstituentaMappableFields>(
   items: T[],
   mapping: AliasMapping,

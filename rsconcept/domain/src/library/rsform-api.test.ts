@@ -70,4 +70,21 @@ describe('applyMappingToConstituents', () => {
     expect(items[0].term_raw).toBe('@{X3|sing}');
     expect(items[0].definition_raw).toBe('@{X4|sing}');
   });
+
+  it('updates aliases when changeAliases is true', () => {
+    const items = [
+      {
+        alias: 'X1',
+        definition_formal: 'X1',
+        typification_manual: '',
+        term_raw: '',
+        definition_raw: ''
+      }
+    ];
+
+    applyMappingToConstituents(items, { X1: 'X3' }, true);
+
+    expect(items[0].alias).toBe('X3');
+    expect(items[0].definition_formal).toBe('X3');
+  });
 });
