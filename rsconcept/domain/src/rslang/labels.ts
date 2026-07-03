@@ -56,7 +56,7 @@ export function labelToken(id: TokenID): string {
   return text ?? 'UNKNOWN TOKEN: ' + String(id);
 }
 
-/** Generates label for {@link AstNodeBase}. */
+/** Generates label for {@link AstNodeBase}. Unnormalized grammar nodes fall through to `node.data.value` (Lezer name). */
 export function labelRSLangNode(node: AstNodeBase): string {
   // prettier-ignore
   switch (node.typeID) {

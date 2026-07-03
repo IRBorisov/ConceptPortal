@@ -1,5 +1,9 @@
 /**
- * Module: Transforming AST to a simple form.
+ * Rewrites the Lezer parse tree into semantic {@link TokenID} nodes.
+ *
+ * Skips any node with `hasError` (subtree contains a parse `ERROR`). Those branches keep grammar
+ * `typeID`s from `parser.terms` — the tree becomes **hybrid** until the expression is valid.
+ * See `parser/README.md` (hybrid AST) and `syntax-errors/README.md`.
  */
 
 import { type AstNode, visitAstDFS } from '../../parsing';

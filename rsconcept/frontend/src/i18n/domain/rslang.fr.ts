@@ -177,6 +177,11 @@ export const txRslangFr: Record<string, string> = {
     'Complétez l’expression impérative I{tuple | blocs d’instructions séparés par ";" }',
   'tx.rslang.error.expectedRecursiveBody':
     'Complétez l’expression récursive R{variable := départ | optionnellement condition de continuation | étape}',
+  'tx.rslang.error.expectedQuantifierDomain': 'Après la variable du quantificateur, indiquez ∈ et le domaine',
+  'tx.rslang.error.expectedRightOperand': 'Ajoutez l’opérande de droite après l’opérateur',
+  'tx.rslang.error.expectedUnaryOperand': 'Ajoutez une expression après ¬',
+  'tx.rslang.error.globalFuncParenCall': 'Appelez une fonction ou un prédicat avec des crochets : {name}[…]',
+  'tx.rslang.error.expectedArgument': 'Ajoutez l’argument manquant dans la liste',
   'tx.rslang.error.expectedLocal': 'Une variable locale est requise ici',
   'tx.rslang.error.expectedType': 'Classe d’expression attendue : « {expected} » ; obtenu {actual}',
   'tx.rslang.error.localDoubleDeclare': 'La variable locale est déjà déclarée : {name}',

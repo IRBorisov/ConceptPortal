@@ -168,6 +168,11 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.expectedImperativeBody': 'Допишите императивное выражение I{кортеж | блоки операторов через ";"}',
   'tx.rslang.error.expectedRecursiveBody':
     'Допишите рекурсивное выражение R{переменная := начало | опционально условие продолжения | шаг}',
+  'tx.rslang.error.expectedQuantifierDomain': 'После переменной квантора укажите ∈ и домен',
+  'tx.rslang.error.expectedRightOperand': 'Допишите правый операнд после оператора',
+  'tx.rslang.error.expectedUnaryOperand': 'Допишите выражение после ¬',
+  'tx.rslang.error.globalFuncParenCall': 'Функцию или предикат нужно вызывать в квадратных скобках: {name}[…]',
+  'tx.rslang.error.expectedArgument': 'Допишите аргумент в списке',
   'tx.rslang.error.expectedLocal': 'Здесь нужна локальная переменная',
   'tx.rslang.error.expectedType': 'Ожидался класс выражения «{expected}»; получено {actual}',
   'tx.rslang.error.localDoubleDeclare': 'Локальная переменная уже объявлена: {name}',

@@ -9,6 +9,7 @@ Applies to all files under `rsconcept/domain`. This package is the shared TypeSc
 ## Structure
 
 - `src/rslang/` — RSLang parser, semantic analyzer, evaluator, calculator, type and value systems, error codes
+- `src/rslang/parser/README.md` — parse → normalize → hybrid AST pipeline
 - `src/library/` — `RSForm`, `RSModel`, `RSEngine`, OSS, library metadata, structure planner
 - `src/graph/` — generic directed-graph utilities
 - `src/parsing/` — shared Lezer AST helpers

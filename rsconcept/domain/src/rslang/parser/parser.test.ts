@@ -96,6 +96,8 @@ const testIncompleteFormalData = [
   ['[ξ∈X1]', TypeClass.logic, { code: RSErrorCode.expectedLogicBody, from: 6, to: 6 }],
   ['∀α∈X1', TypeClass.logic, { code: RSErrorCode.expectedQuantifierBody, from: 5, to: 5 }],
   ['∃β∈S2', TypeClass.logic, { code: RSErrorCode.expectedQuantifierBody, from: 5, to: 5 }],
+  ['∀α', TypeClass.logic, { code: RSErrorCode.expectedQuantifierDomain, from: 2, to: 2 }],
+  ['∀α∈', TypeClass.logic, { code: RSErrorCode.expectedQuantifierDomain, from: 3, to: 3 }],
   ['D{ξ∈X1 |', TypeClass.function, { code: RSErrorCode.expectedDeclarativeBody, from: 8, to: 8 }],
   ['D{ξ∈X1 |}', TypeClass.function, { code: RSErrorCode.expectedDeclarativeBody, from: 8, to: 8 }],
   ['D{ξ∈X1}', TypeClass.function, { code: RSErrorCode.expectedDeclarativeBody, from: 6, to: 7 }],
@@ -105,6 +107,35 @@ const testIncompleteFormalData = [
   ['R{ξ:=D1 |}', TypeClass.function, { code: RSErrorCode.expectedRecursiveBody, from: 9, to: 9 }],
   ['R{ξ:=D1 | F1[ξ]≠∅ |}', TypeClass.function, { code: RSErrorCode.expectedRecursiveBody, from: 19, to: 19 }],
   ['R{ξ:=D1}', TypeClass.function, { code: RSErrorCode.expectedRecursiveBody, from: 7, to: 8 }]
+] as const;
+
+const testSpecifiedSyntaxData = [
+  ['1=', { code: RSErrorCode.expectedRightOperand, from: 2, to: 2 }],
+  ['1+', { code: RSErrorCode.expectedRightOperand, from: 2, to: 2 }],
+  ['1=1&', { code: RSErrorCode.expectedRightOperand, from: 4, to: 4 }],
+  ['1=1⇒', { code: RSErrorCode.expectedRightOperand, from: 4, to: 4 }],
+  ['¬', { code: RSErrorCode.expectedUnaryOperand, from: 1, to: 1 }],
+  ['ℬ()', { code: RSErrorCode.expectedRightOperand, from: 2, to: 2 }],
+  ['P1(S1)', { code: RSErrorCode.globalFuncParenCall, from: 0, to: 2, params: ['P1'] }],
+  ['P1()', { code: RSErrorCode.globalFuncParenCall, from: 0, to: 2, params: ['P1'] }],
+  ['F1(S1)', { code: RSErrorCode.globalFuncParenCall, from: 0, to: 2, params: ['F1'] }],
+  ['P1[S1, ]', { code: RSErrorCode.expectedArgument, from: 7, to: 7 }],
+  ['X1∈', { code: RSErrorCode.expectedRightOperand, from: 3, to: 3 }],
+  ['ξ:=', { code: RSErrorCode.expectedRightOperand, from: 3, to: 3 }]
+] as const;
+
+const testUnknownSyntaxData = [
+  ['1==1', { code: RSErrorCode.unknownSyntax, from: 0, to: 2 }],
+  ['=1', { code: RSErrorCode.unknownSyntax, from: 0, to: 1 }],
+  ['∈X1', { code: RSErrorCode.unknownSyntax, from: 0, to: 1 }],
+  ['∀', { code: RSErrorCode.unknownSyntax, from: 0, to: 1 }],
+  ['∃∈X1', { code: RSErrorCode.unknownSyntax, from: 0, to: 1 }],
+  ['&1=1', { code: RSErrorCode.unknownSyntax, from: 0, to: 1 }],
+  ['P1[,S1]', { code: RSErrorCode.unknownSyntax, from: 3, to: 4 }],
+  ['(,β)', { code: RSErrorCode.unknownSyntax, from: 1, to: 1 }],
+  ['(α,β,)', { code: RSErrorCode.unknownSyntax, from: 1, to: 5 }],
+  ['F1[S1][S2]', { code: RSErrorCode.unknownSyntax, from: 6, to: 10 }],
+  [':∈X1', { code: RSErrorCode.unknownSyntax, from: 0, to: 2 }]
 ] as const;
 
 describe('Testing RSParser correct inputs', () => {
@@ -144,6 +175,28 @@ describe('Testing RSParser error data', () => {
       const ast = buildTree(tree.cursor());
       const errors: RSErrorDescription[] = [];
       extractSyntaxErrors(ast, input, error => errors.push(error), false, { expected });
+      expect(errors.length).toBe(1);
+      expect(errors[0]).toMatchObject(expectedError);
+    });
+  });
+
+  testSpecifiedSyntaxData.forEach(([input, expectedError]) => {
+    it(`Parse specified syntax "${input}"`, () => {
+      const tree = parser.parse(input);
+      const ast = buildTree(tree.cursor());
+      const errors: RSErrorDescription[] = [];
+      extractSyntaxErrors(ast, input, error => errors.push(error));
+      expect(errors.length).toBe(1);
+      expect(errors[0]).toMatchObject(expectedError);
+    });
+  });
+
+  testUnknownSyntaxData.forEach(([input, expectedError]) => {
+    it(`Parse unknown syntax "${input}"`, () => {
+      const tree = parser.parse(input);
+      const ast = buildTree(tree.cursor());
+      const errors: RSErrorDescription[] = [];
+      extractSyntaxErrors(ast, input, error => errors.push(error));
       expect(errors.length).toBe(1);
       expect(errors[0]).toMatchObject(expectedError);
     });

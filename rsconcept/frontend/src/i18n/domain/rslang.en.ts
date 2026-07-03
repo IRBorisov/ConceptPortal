@@ -167,6 +167,11 @@ export const txRslangEn: Record<string, string> = {
     'Complete the imperative expression I{tuple | statement blocks separated by ";" }',
   'tx.rslang.error.expectedRecursiveBody':
     'Complete the recursive expression R{variable := seed | optionally continuation condition | step}',
+  'tx.rslang.error.expectedQuantifierDomain': 'After the quantifier variable, specify ∈ and the domain',
+  'tx.rslang.error.expectedRightOperand': 'Add the right-hand operand after the operator',
+  'tx.rslang.error.expectedUnaryOperand': 'Add an expression after ¬',
+  'tx.rslang.error.globalFuncParenCall': 'Call a function or predicate with square brackets: {name}[…]',
+  'tx.rslang.error.expectedArgument': 'Add the missing argument in the list',
   'tx.rslang.error.expectedLocal': 'A local variable is required here',
   'tx.rslang.error.expectedType': 'Expected expression class «{expected}»; got {actual}',
   'tx.rslang.error.localDoubleDeclare': 'Local variable is already declared: {name}',
