@@ -17,20 +17,12 @@ interface ViewErrorsProps {
 
 export function ViewErrors({ isOpen, errors, disabled, className, onShowError }: ViewErrorsProps) {
   const tx = useTx();
-  const errorCount = errors ? errors.reduce((total, error) => (isCritical(error.code) ? total + 1 : total), 0) : 0;
-  const warningsCount = errors ? errors.length - errorCount : 0;
 
   return (
     <div
       tabIndex={-1}
       className={cn('cc-parsing-result text-sm border dense cc-scroll-y', isOpen && 'open', className)}
     >
-      <p>
-        <span>{tx('tx.general.error.plural') + tx('tx.general.colon') + errorCount}</span>
-        {warningsCount > 0 ? (
-          <span> | {tx('tx.general.warning.plural') + tx('tx.general.colon') + warningsCount}</span>
-        ) : null}
-      </p>
       {errors?.map((error, index) => {
         return (
           <p

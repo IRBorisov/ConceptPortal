@@ -37,6 +37,10 @@ export const RSErrorCode = {
   expectedFunctionBody: 0x8418, // 33816
   expectedExpressionBody: 0x8419, // 33817
   expectedLogicBody: 0x841a, // 33818
+  expectedQuantifierBody: 0x841b, // 33819
+  expectedDeclarativeBody: 0x841c, // 33820
+  expectedImperativeBody: 0x841d, // 33821
+  expectedRecursiveBody: 0x841e, // 33822
   expectedLocal: 0x8415, // 33813
   expectedType: 0x8416, // 33814
 

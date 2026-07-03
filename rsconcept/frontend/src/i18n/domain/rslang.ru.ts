@@ -163,6 +163,11 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.expectedFunctionBody': 'После объявления аргументов добавьте тело функции',
   'tx.rslang.error.expectedExpressionBody': 'После объявления аргументов добавьте выражение терм-функции',
   'tx.rslang.error.expectedLogicBody': 'После объявления аргументов добавьте логическое выражение предикат-функции',
+  'tx.rslang.error.expectedQuantifierBody': 'После домена квантора добавьте логическое выражение',
+  'tx.rslang.error.expectedDeclarativeBody': 'Допишите декларативное выражение D{переменная ∈ домен | условие}',
+  'tx.rslang.error.expectedImperativeBody': 'Допишите императивное выражение I{кортеж | блоки операторов через ";"}',
+  'tx.rslang.error.expectedRecursiveBody':
+    'Допишите рекурсивное выражение R{переменная := начало | опционально условие продолжения | шаг}',
   'tx.rslang.error.expectedLocal': 'Здесь нужна локальная переменная',
   'tx.rslang.error.expectedType': 'Ожидался класс выражения «{expected}»; получено {actual}',
   'tx.rslang.error.localDoubleDeclare': 'Локальная переменная уже объявлена: {name}',
