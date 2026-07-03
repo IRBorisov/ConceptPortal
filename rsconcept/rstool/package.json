@@ -1,6 +1,6 @@
 {
   "name": "@rsconcept/rstool",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Agent-facing library for incremental RSForm construction, RSLang analysis, diagnostics, modeling, and evaluation. Wraps @rsconcept/domain with a deterministic session contract.",
   "license": "MIT",
   "author": "IRBorisov",
@@ -71,13 +71,13 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@rsconcept/domain": "^1.6.1"
+    "@rsconcept/domain": "^1.7.4"
   },
   "devDependencies": {
-    "@types/node": "^26.0.1",
+    "@types/node": "^26.1.0",
     "@vitest/coverage-v8": "^4.1.9",
     "tsdown": "^0.22.3",
-    "tsx": "^4.22.4",
+    "tsx": "^4.22.5",
     "typescript": "^6.0.3",
     "vitest": "^4.1.9"
   },
