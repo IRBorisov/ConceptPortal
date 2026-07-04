@@ -93,9 +93,12 @@ export const TemplateState = ({
     setTemplateItems([]);
   }
 
-  useEffect(() => {
-    onSelectionChange({ prototype, args, templateItems });
-  }, [prototype, args, templateItems, onSelectionChange]);
+  useEffect(
+    function syncSelection() {
+      onSelectionChange({ prototype, args, templateItems });
+    },
+    [prototype, args, templateItems, onSelectionChange]
+  );
 
   return (
     <TemplateContext

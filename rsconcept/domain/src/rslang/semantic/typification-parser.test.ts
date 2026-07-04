@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { labelType } from '../labels';
+import { labelBaseId, labelType } from '../labels';
 
 import { TypeID } from './typification';
 import { applyAsciiTypeSubstitutions, parseTypeText } from './typification-parser';
@@ -46,5 +46,10 @@ describe('parseTypeText', () => {
   it('applies live input substitutions', () => {
     expect(applyAsciiTypeSubstitutions('X1*X2 -> X3')).toBe('X1×X2 → X3');
     expect(applyAsciiTypeSubstitutions('B(X1)')).toBe('ℬ(X1)');
+  });
+
+  it('displays mangled radicals with function qualifier before radical', () => {
+    expect(labelBaseId('P44<R3>')).toBe('<P44>R3');
+    expect(labelType({ typeID: TypeID.basic, baseID: 'P2<R1>' })).toBe('<P2>R1');
   });
 });

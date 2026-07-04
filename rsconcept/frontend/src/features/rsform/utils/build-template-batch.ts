@@ -83,13 +83,7 @@ export function buildTemplateConstituentsBatch(
   userArgs: ArgumentValue[],
   mainItem: CreateConstituentaDTO
 ): CreateConstituentsBatchDTO {
-  const plan = planTemplateInstantiation({
-    targetSchema,
-    templateItems,
-    prototype,
-    userArgs,
-    mainItem: toTemplateMainItem(mainItem)
-  });
+  const plan = previewTemplateInstantiationPlan(targetSchema, templateItems, prototype, userArgs, mainItem)!;
 
   return {
     insert_after: mainItem.insert_after,

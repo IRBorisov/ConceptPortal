@@ -110,7 +110,8 @@ export const txLibraryEn: Record<string, string> = {
   'tx.lib.item.visibility.hint': 'Toggle library visibility',
 
   'tx.concept': 'Concept',
-  'tx.concept.basic.plural': 'Basic',
+  'tx.concept.basic.plural': 'Undefined',
+  'tx.concept.basic.plural.short': 'Basic',
   'tx.concept.basic.hint': 'Basic concepts and axiomatic assertions',
   'tx.concept.basic.validate.noConvention': 'Without convention',
   'tx.concept.basic.validate.noInterpretation': 'Without interpretation',

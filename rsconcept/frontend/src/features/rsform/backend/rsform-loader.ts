@@ -9,7 +9,6 @@ import {
   inferStatus,
   inferTemplate,
   isBaseSet,
-  isBasicConcept,
   isFunctional,
   normalizeExpression,
   typeClassForCstType
@@ -156,11 +155,9 @@ export class RSFormLoader {
       cst.effectiveType = effectiveType;
       cst.is_type_mismatch = isManualMismatch;
       this.analyzer.setGlobal(cst.alias, effectiveType, parse.valueClass);
-      if (!isBasicConcept(cst.cst_type) || cst.cst_type === CstType.AXIOM) {
-        const normalized = normalizeExpression(cst.definition_formal, cst.cst_type, parse.ast);
-        if (normalized) {
-          this.normalizedDefinitions.set(cst.id, normalized);
-        }
+      const normalized = normalizeExpression(cst.definition_formal, cst.cst_type, parse.ast);
+      if (normalized) {
+        this.normalizedDefinitions.set(cst.id, normalized);
       }
       cst.status =
         cst.cst_type === CstType.NOMINAL

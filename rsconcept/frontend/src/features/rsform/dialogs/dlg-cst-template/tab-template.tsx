@@ -38,9 +38,12 @@ export function TabTemplate({ schema }: TabTemplateProps) {
   const { schema: templateSchema } = useRSForm({ itemID: templateID ?? undefined });
   const selectedTemplate = templateOptions.find(item => item.id === templateID);
 
-  useEffect(() => {
-    onChangeTemplateItems(templateSchema?.items ?? []);
-  }, [templateSchema, onChangeTemplateItems]);
+  useEffect(
+    function syncTemplateItems() {
+      onChangeTemplateItems(templateSchema?.items ?? []);
+    },
+    [templateSchema, onChangeTemplateItems]
+  );
 
   const constituents = templateSchema?.items.filter(isTemplateCst) ?? [];
   const filteredData = !filterCategory ? constituents : applyFilterCategory(filterCategory, constituents);

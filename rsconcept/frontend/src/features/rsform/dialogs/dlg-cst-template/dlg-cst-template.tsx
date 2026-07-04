@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useMemo, useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { useTx } from '@/i18n';
@@ -78,12 +78,15 @@ export function DlgCstTemplate() {
   const alias = values.alias;
   const cst_type = values.cst_type;
 
-  const mainDuplicateAlias = useMemo(
-    () => getTemplateMainDuplicateAlias(schema, selection.templateItems, selection.prototype, selection.args, values),
-    [schema, selection, values]
+  const mainDuplicateAlias = getTemplateMainDuplicateAlias(
+    schema,
+    selection.templateItems,
+    selection.prototype,
+    selection.args,
+    values
   );
 
-  const { canSubmit, hint } = (() => {
+  function getSubmitState(): { canSubmit: boolean; hint: string } {
     if (!selection.prototype || !cst_type) {
       return { canSubmit: false, hint: tx('tx.cst.template.validate') };
     }
@@ -100,7 +103,9 @@ export function DlgCstTemplate() {
       return { canSubmit: false, hint: tx('tx.general.form.invalid') };
     }
     return { canSubmit: true, hint: '' };
-  })();
+  }
+
+  const { canSubmit, hint } = getSubmitState();
 
   const [activeTab, setActiveTab] = useState<TabID>(TabID.TEMPLATE);
 
@@ -162,7 +167,7 @@ export function DlgCstTemplate() {
   }
 
   function handleSubmit() {
-    if (!selection.prototype || mainDuplicateAlias) {
+    if (!getSubmitState().canSubmit || !selection.prototype) {
       return;
     }
     onCreate(

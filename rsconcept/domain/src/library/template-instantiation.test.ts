@@ -219,17 +219,82 @@ describe('planTemplateInstantiation', () => {
     expect(plan.items[0].definition_formal).not.toContain('F42[');
   });
 
-  it('skips template constituents that already exist in the target schema', () => {
+  it('instantiates bank dependency when target alias collides but definition differs', () => {
+    const schemaWithUnrelatedF42 = mockSchema([
+      ...targetSchema.items,
+      mockCst({
+        id: 12,
+        alias: 'F42',
+        cst_type: CstType.FUNCTION,
+        definition_formal: '[α∈R1] α'
+      })
+    ]);
+
+    const plan = planTemplateInstantiation({
+      targetSchema: schemaWithUnrelatedF42,
+      templateItems,
+      prototype: p30,
+      userArgs: [{ alias: 'σ', typification: 'ℬ((R1×R1)×R1)', value: 'S2' }],
+      mainItem: {
+        alias: 'A2',
+        cst_type: CstType.PREDICATE,
+        crucial: false,
+        convention: '',
+        definition_formal: p30.definition_formal,
+        definition_raw: '',
+        term_raw: p30.term_raw,
+        term_forms: [],
+        typification_manual: '',
+        value_is_property: false
+      }
+    });
+
+    const dependency = plan.items[0];
+    expect(plan.items).toHaveLength(2);
+    expect(dependency.alias).not.toBe('F42');
+    expect(dependency.definition_formal).toContain('S2');
+    expect(plan.items.at(-1)!.definition_formal).toContain(`${dependency.alias}[`);
+    expect(plan.items.at(-1)!.definition_formal).not.toContain('F42[');
+  });
+
+  it('reuses template dependency when target has matching substituted definition', () => {
+    const userArgs: ArgumentValue[] = [{ alias: 'σ', typification: 'ℬ((R1×R1)×R1)', value: 'S2' }];
+
+    const baseline = planTemplateInstantiation({
+      targetSchema,
+      templateItems,
+      prototype: p30,
+      userArgs,
+      mainItem: {
+        alias: 'A2',
+        cst_type: CstType.PREDICATE,
+        crucial: false,
+        convention: '',
+        definition_formal: p30.definition_formal,
+        definition_raw: '',
+        term_raw: p30.term_raw,
+        term_forms: [],
+        typification_manual: '',
+        value_is_property: false
+      }
+    });
+
+    const equivalentFunction = baseline.items[0];
     const schemaWithF42 = mockSchema([
       ...targetSchema.items,
-      mockCst({ id: 12, alias: 'F42', cst_type: CstType.FUNCTION, definition_formal: f42.definition_formal })
+      mockCst({
+        id: 12,
+        alias: 'F42',
+        cst_type: equivalentFunction.cst_type,
+        definition_formal: equivalentFunction.definition_formal
+      })
     ]);
 
     const plan = planTemplateInstantiation({
       targetSchema: schemaWithF42,
       templateItems,
       prototype: p30,
-      userArgs: [{ alias: 'σ', typification: 'ℬ((R1×R1)×R1)', value: 'S2' }],
+      userArgs,
       mainItem: {
         alias: 'A2',
         cst_type: CstType.PREDICATE,
@@ -304,5 +369,59 @@ describe('planTemplateInstantiation', () => {
 
     expect(plan.mainDuplicateAlias).toBe('A9');
     expect(plan.items.some(item => item.term_raw === p35.term_raw)).toBe(false);
+  });
+
+  it('reports binding conflict when the same template parameter is bound to different aliases', () => {
+    const f10 = mockCst({
+      id: 5,
+      alias: 'F10',
+      cst_type: CstType.FUNCTION,
+      term_raw: 'g',
+      definition_formal: '[x∈R1] x'
+    });
+    const p11 = mockCst({
+      id: 6,
+      alias: 'P11',
+      cst_type: CstType.PREDICATE,
+      term_raw: 'h',
+      definition_formal: '[y∈R1] F10[y]'
+    });
+    const mainTemplate = mockCst({
+      id: 7,
+      alias: 'P12',
+      cst_type: CstType.PREDICATE,
+      term_raw: 'main',
+      definition_formal: '[a∈R1, b∈R1] P11[a] & P11[b]'
+    });
+
+    const plan = planTemplateInstantiation({
+      targetSchema,
+      templateItems: [f10, p11],
+      prototype: mainTemplate,
+      userArgs: [
+        { alias: 'a', typification: 'R1', value: 'S1' },
+        { alias: 'b', typification: 'R1', value: 'S2' }
+      ],
+      mainItem: {
+        alias: 'A1',
+        cst_type: CstType.PREDICATE,
+        crucial: false,
+        convention: '',
+        definition_formal: mainTemplate.definition_formal,
+        definition_raw: '',
+        term_raw: mainTemplate.term_raw,
+        term_forms: [],
+        typification_manual: '',
+        value_is_property: false
+      }
+    });
+
+    expect(plan.bindingConflict).toEqual({
+      templateAlias: 'P11',
+      paramAlias: 'y',
+      existing: 'S1',
+      incoming: 'S2'
+    });
+    expect(plan.items).toHaveLength(0);
   });
 });

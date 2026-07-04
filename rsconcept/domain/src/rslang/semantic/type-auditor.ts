@@ -20,6 +20,7 @@ import {
   isTemplateRadical,
   isTypification,
   LogicT,
+  mangleParamAlias,
   mangleRadicalId,
   type Parametrized,
   tuple,
@@ -1025,7 +1026,7 @@ export class TypeAuditor {
           substituteBase(expectedType, substitutes);
         }
         this.onError(RSErrorCode.invalidArgumentType, node.children[child], [
-          `${type.args[child - 1].alias}∈${labelType(expectedType)}`,
+          `${mangleParamAlias(type.args[child - 1].alias, alias)}∈${labelType(expectedType)}`,
           labelType(childType)
         ]);
         return null;

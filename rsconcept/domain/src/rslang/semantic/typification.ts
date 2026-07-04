@@ -174,17 +174,27 @@ export function isTypification(type: ExpressionType | null): boolean {
   );
 }
 
-/** Checks if given alias is a template or mangled radical. */
-export function isRadical(alias: string): boolean {
-  return /^R[1-9]\d*(?:<[^>]+>)?$/.test(alias);
-}
-
 /** Checks if given alias is an unmangled template radical. */
 export function isTemplateRadical(alias: string): boolean {
   return /^R[1-9]\d*$/.test(alias);
 }
 
+/** Checks if given alias is a mangled template radical (`funcName<R#>`). */
+export function isMangledRadical(alias: string): boolean {
+  return /^[^<]+<R[1-9]\d*>$/.test(alias);
+}
+
+/** Checks if given alias is a template or mangled radical. */
+export function isRadical(alias: string): boolean {
+  return isTemplateRadical(alias) || isMangledRadical(alias);
+}
+
 /** Mangle template radical with calling function name. */
 export function mangleRadicalId(radical: string, funcName: string): string {
-  return `${radical}<${funcName}>`;
+  return `${funcName}<${radical}>`;
+}
+
+/** Mangle formal parameter alias with calling function name (for diagnostics). */
+export function mangleParamAlias(alias: string, funcName: string): string {
+  return `${funcName}<${alias}>`;
 }

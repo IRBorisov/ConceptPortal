@@ -138,6 +138,15 @@ export function labelRSLangNode(node: AstNodeBase): string {
   return 'UNKNOWN NODE: ' + String(node.typeID);
 }
 
+/** Formats a base-set alias for display (mangled radicals `func<R#>` → `<func>R#`). */
+export function labelBaseId(baseID: string): string {
+  const match = /^([^<]+)<(R[1-9]\d*)>$/.exec(baseID);
+  if (match) {
+    return `<${match[1]}>${match[2]}`;
+  }
+  return baseID;
+}
+
 /** Converts expression type to string. */
 export function labelType(type: ExpressionType | null): string {
   if (!type) {
@@ -149,7 +158,7 @@ export function labelType(type: ExpressionType | null): string {
     case TypeID.integer:
       return INTEGER_TYPE_NAME;
     case TypeID.basic:
-      return type.baseID;
+      return labelBaseId(type.baseID);
     case TypeID.tuple:
       return type.factors
         .map(factor => (factor.typeID === TypeID.tuple ? `(${labelType(factor)})` : labelType(factor)))

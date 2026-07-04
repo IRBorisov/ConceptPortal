@@ -62,8 +62,8 @@ export function HelpRSLangTemplatesFr() {
         une liste de paramètres réduite.
       </p>
       <p>
-        Les références aux alias de la banque dans les définitions formelles sont remplacées par de nouveaux alias
-        générés dans le schéma cible.
+        Les références aux noms de la banque dans les définitions formelles sont remplacées par de nouveaux noms générés
+        dans le schéma cible.
       </p>
     </>
   );

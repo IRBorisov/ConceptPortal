@@ -113,7 +113,8 @@ export const txLibraryRu: Record<string, string> = {
   'tx.lib.item.visibility.hint': 'Отображение элемента в библиотеке',
 
   'tx.concept': 'Понятие',
-  'tx.concept.basic.plural': 'Базовые',
+  'tx.concept.basic.plural': 'Неопределяемые',
+  'tx.concept.basic.plural.short': 'Базовые',
   'tx.concept.basic.hint': 'Неопределяемые понятия и аксиоматические утверждения',
   'tx.concept.basic.validate.noConvention': 'Неопределяемые без конвенции',
   'tx.concept.basic.validate.noInterpretation': 'Неопределяемые без интерпретации',

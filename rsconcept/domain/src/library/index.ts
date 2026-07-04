@@ -46,6 +46,7 @@ export {
 } from './rsmodel';
 export {
   planTemplateInstantiation,
+  type TemplateBindingConflict,
   type TemplateInstantiationInput,
   type TemplateInstantiationItem,
   type TemplateInstantiationPlan,

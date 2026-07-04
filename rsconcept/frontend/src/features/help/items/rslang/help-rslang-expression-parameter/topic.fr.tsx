@@ -68,14 +68,15 @@ export function HelpRSLangExpressionParameterFr() {
         dans plusieurs paramètres, les grades inférés doivent coïncider.
       </p>
       <p>
-        En cas d'incompatibilité, le message indique les typifications attendue et effective, par exemple : attendu
-        ζ∈ℬℬ(X1), obtenu Z. Pour les arguments après le premier, les radicaux dans la typification attendue sont
-        remplacés par les valeurs déjà inférées à partir des arguments précédents — <code>R1</code> est affiché comme
-        grade concret, comme dans l'exemple.
+        En cas d'incompatibilité, le message indique les typifications attendue et effective, par exemple : attendu{' '}
+        <code>{'P2<ζ>∈ℬℬ(X1)'}</code>, obtenu Z. Le nom du paramètre est qualifié par celui de la fonction appelée pour
+        ne pas le confondre avec des variables homonymes du contexte englobant. Pour les arguments après le premier, les
+        radicaux dans la typification attendue sont remplacés par les valeurs déjà inférées à partir des arguments
+        précédents — <code>R1</code> est affiché comme grade concret, comme dans l'exemple.
       </p>
       <p>
         Si l'erreur concerne le premier argument et qu'aucune valeur de radical n'est encore disponible, le diagnostic
-        peut qualifier le radical avec le nom de la fonction, par ex. <code>{'R1<P2>'}</code>.
+        peut qualifier le radical avec le nom de la fonction à gauche, par ex. <code>{'<P2>R1'}</code>.
       </p>
     </>
   );

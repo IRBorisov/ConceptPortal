@@ -55,9 +55,7 @@ export function HelpRSLangTemplatesEn() {
         If all parameters of an auxiliary function receive values after substitution, it is created as a term or axiom;
         with partial substitution it remains a term function or predicate function with a shorter parameter list.
       </p>
-      <p>
-        References to bank aliases in formal definitions are replaced with new aliases generated in the target schema.
-      </p>
+      <p>References to bank names in formal definitions are replaced with new names generated in the target schema.</p>
     </>
   );
 }
