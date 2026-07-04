@@ -2,14 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export type CstFilterOption =
-  | 'all'
-  | 'schema_issues'
-  | 'model_issues'
-  | 'crucial'
-  | 'kernel'
-  | 'derived'
-  | 'owned'
-  | 'inherited';
+  'all' | 'schema_issues' | 'model_issues' | 'crucial' | 'kernel' | 'derived' | 'owned' | 'inherited';
 
 interface CstSearchStore {
   query: string;
@@ -23,6 +16,10 @@ interface CstSearchStore {
 }
 
 type PersistedCstSearchStore = Pick<CstSearchStore, 'filter'>;
+
+export function hasActiveCstFilter(query: string, filter: CstFilterOption): boolean {
+  return filter !== 'all' || query.trim() !== '';
+}
 
 export const useCstSearchStore = create<CstSearchStore>()(
   persist<CstSearchStore, [], [], PersistedCstSearchStore>(

@@ -21,7 +21,7 @@ import { useUpdateConstituenta } from '@/features/rsform/backend/use-update-cons
 import { MiniRSFormStats } from '@/features/rsform/components/mini-rsform-stats';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
 import { useRsformDialogsStore } from '@/features/rsform/dialogs/rsform-dialog-store';
-import { useCstSearchStore } from '@/features/rsform/stores/cst-search';
+import { useCstSearchStore, hasActiveCstFilter } from '@/features/rsform/stores/cst-search';
 import { buildCloneConstituentsBatch } from '@/features/rsform/utils/build-clone-batch';
 
 import { MiniButton } from '@/components/control';
@@ -54,8 +54,9 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
   const isProcessing = useMutatingRSForm();
   const setCurrentSchema = useAIStore(state => state.setSchema);
   const onSetSchema = useEffectEvent(setCurrentSchema);
-  const searchText = useCstSearchStore(state => state.query);
-  const hasSearch = searchText.length > 0;
+  const query = useCstSearchStore(state => state.query);
+  const filter = useCstSearchStore(state => state.filter);
+  const hasActiveFilter = hasActiveCstFilter(query, filter);
   const stats = calculateSchemaStats(schema);
 
   const listHeight = useFitHeight('14.5rem', '10rem');
@@ -194,7 +195,7 @@ export function ViewSchema({ schemaID, isMutable }: ViewSchemaProps) {
     });
   }
 
-  const canReorderConstituents = isMutable && !isProcessing && schema.items.length > 1 && !hasSearch;
+  const canReorderConstituents = isMutable && !isProcessing && schema.items.length > 1 && !hasActiveFilter;
 
   return (
     <div className='grid h-full relative cc-fade-in mt-5' style={{ gridTemplateRows: '1fr auto' }}>

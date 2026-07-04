@@ -10,6 +10,7 @@ import { isInferrable, isModelIssue } from '@rsconcept/domain/library/rsmodel-ap
 import { useConceptNavigation } from '@/app';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
+import { hasActiveCstFilter, useCstSearchStore } from '@/features/rsform/stores/cst-search';
 import { UserRole } from '@/features/users';
 import { useRoleStore } from '@/features/users/stores/role';
 
@@ -48,11 +49,15 @@ export function TabValue() {
   } = useSchemaEdit();
   const { engine } = useModelEdit();
   const isModified = useModificationStore(state => state.isModified);
+  const query = useCstSearchStore(state => state.query);
+  const filter = useCstSearchStore(state => state.filter);
+  const hasActiveFilter = hasActiveCstFilter(query, filter);
   const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
   const [toggleReset, setToggleReset] = useState(false);
 
-  const canReorderConstituents = isContentEditable && !isProcessing && !isModified && schema.items.length > 1;
+  const canReorderConstituents =
+    isContentEditable && !isProcessing && !isModified && schema.items.length > 1 && !hasActiveFilter;
   const reorderDisabled = !activeCst || !canReorderConstituents;
 
   const cloneDisabled = !activeCst || !isContentEditable || isProcessing || isModified;

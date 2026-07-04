@@ -8,7 +8,7 @@ import { MiniButton } from '@/components/control';
 import { IconFilterReset } from '@/components/icons';
 import { SearchBar } from '@/components/input';
 
-import { useCstSearchStore } from '../../stores/cst-search';
+import { hasActiveCstFilter, useCstSearchStore } from '../../stores/cst-search';
 
 import { SelectorCstFilter } from './selector-cst-filter';
 
@@ -24,7 +24,7 @@ export function ConstituentsSearch({ actions, showModelFilter, stopSearchKeyProp
   const setQuery = useCstSearchStore(state => state.setQuery);
   const filter = useCstSearchStore(state => state.filter);
 
-  const hasActiveFilter = filter !== 'all' || query !== '';
+  const hasActiveFilter = hasActiveCstFilter(query, filter);
 
   function handleReset() {
     useCstSearchStore.getState().reset();

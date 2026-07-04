@@ -1,7 +1,8 @@
 /**
- * Wrapper class for generalized text matching.
+ * Generalized text matcher for Portal search.
  *
- * If possible create regexp, otherwise use symbol matching.
+ * By default the query is compiled as a case-insensitive `RegExp`. Invalid patterns fall back to
+ * `String.includes`. Pass `isPlainText` to escape regexp metacharacters and force substring search.
  */
 export class TextMatcher {
   protected query: RegExp | string;
@@ -17,6 +18,7 @@ export class TextMatcher {
     }
   }
 
+  /** Returns whether `text` matches the query configured in the constructor. */
   test(text: string): boolean {
     if (typeof this.query === 'string') {
       return text.includes(this.query);

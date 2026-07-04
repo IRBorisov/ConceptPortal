@@ -1,4 +1,4 @@
-import { matchConstituenta } from '@/services/search';
+import { filterConstituentaByQuery } from '@/services/search';
 import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
 import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 
@@ -12,7 +12,7 @@ export function useFilteredItems(
   const query = useCstSearchStore(state => state.query);
   const filter = useCstSearchStore(state => state.filter);
 
-  const filteredByQuery = query ? schema.items.filter(cst => matchConstituenta(cst, query)) : schema.items;
+  const filteredByQuery = filterConstituentaByQuery(schema.items, query);
 
   switch (filter) {
     case 'schema_issues':

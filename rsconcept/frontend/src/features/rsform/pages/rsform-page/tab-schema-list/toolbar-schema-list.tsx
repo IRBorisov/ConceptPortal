@@ -26,6 +26,7 @@ import { prepareTooltip } from '@/utils/format';
 
 import { IconCstType } from '../../../components/icon-cst-type';
 import { getCstTypeShortcut, labelCstType } from '../../../labels';
+import { hasActiveCstFilter, useCstSearchStore } from '../../../stores/cst-search';
 import { useSchemaEdit } from '../schema-edit-context';
 
 interface ToolbarSchemaListProps {
@@ -51,6 +52,9 @@ export function ToolbarSchemaList({ className, onDeselectAll }: ToolbarSchemaLis
     moveDown,
     toggleCrucial
   } = useSchemaEdit();
+  const query = useCstSearchStore(state => state.query);
+  const filter = useCstSearchStore(state => state.filter);
+  const hasActiveFilter = hasActiveCstFilter(query, filter);
 
   return (
     <div className={cn('cc-icons items-start outline-hidden', className)}>
@@ -72,14 +76,18 @@ export function ToolbarSchemaList({ className, onDeselectAll }: ToolbarSchemaLis
         aria-label={tx('tx.general.moveUp')}
         icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
         onClick={moveUp}
-        disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
+        disabled={
+          isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length || hasActiveFilter
+        }
       />
       <MiniButton
         title={prepareTooltip(tx('tx.general.moveDown'), 'Alt + ↓')}
         aria-label={tx('tx.general.moveDown')}
         icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
         onClick={moveDown}
-        disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
+        disabled={
+          isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length || hasActiveFilter
+        }
       />
       <MiniButton
         title={tx('tx.cst.crucial')}

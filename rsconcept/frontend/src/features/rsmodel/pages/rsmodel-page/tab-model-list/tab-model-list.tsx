@@ -4,7 +4,7 @@ import { useState } from 'react';
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
-import { matchConstituenta } from '@/services/search';
+import { filterConstituentaByQuery } from '@/services/search';
 import { CstType } from '@rsconcept/domain/library/rsform';
 
 import { useConceptNavigation } from '@/app';
@@ -43,7 +43,8 @@ export function TabModelList() {
   const { engine } = useModelEdit();
 
   const [filterText, setFilterText] = useState('');
-  const filtered = filterText ? schema.items.filter(cst => matchConstituenta(cst, filterText)) : schema.items;
+  const filtered = filterConstituentaByQuery(schema.items, filterText);
+  const hasActiveFilter = filterText.trim() !== '';
 
   const rowSelection: RowSelectionState = Object.fromEntries(
     filtered.map((cst, index) => [String(index), selectedCst.includes(cst.id)])
@@ -89,13 +90,16 @@ export function TabModelList() {
   }
 
   function processAltKey(code: string): boolean {
-    if (selectedCst.length > 0) {
+    if (selectedCst.length > 0 && !hasActiveFilter) {
       // prettier-ignore
       switch (code) {
         case 'ArrowUp': moveUp(); return true;
         case 'ArrowDown': moveDown(); return true;
         case 'KeyV': void cloneCst(); return true;
       }
+    } else if (selectedCst.length > 0 && code === 'KeyV') {
+      void cloneCst();
+      return true;
     }
     // prettier-ignore
     switch (code) {
@@ -127,6 +131,7 @@ export function TabModelList() {
             'cc-animate-position',
             'mx-8'
           )}
+          hasActiveFilter={hasActiveFilter}
         />
       ) : null}
 
@@ -162,7 +167,7 @@ export function TabModelList() {
         enableSelection={isContentEditable}
         selected={rowSelection}
         setSelected={handleRowSelection}
-        enableRowReordering={isContentEditable && !isProcessing && schema.items.length > 1}
+        enableRowReordering={isContentEditable && !isProcessing && schema.items.length > 1 && !hasActiveFilter}
         onEdit={cstID => router.gotoActiveValue(cstID)}
         onCreateNew={() => void promptCreateCst()}
         onMoveRows={handleRowsDrop}

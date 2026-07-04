@@ -30,9 +30,10 @@ import { useModelEdit } from '../model-edit-context';
 
 interface ToolbarModelListProps {
   className?: string;
+  hasActiveFilter?: boolean;
 }
 
-export function ToolbarModelList({ className }: ToolbarModelListProps) {
+export function ToolbarModelList({ className, hasActiveFilter = false }: ToolbarModelListProps) {
   const tx = useTx();
   const { elementRef: menuRef, isOpen: isMenuOpen, toggle: toggleMenu, handleBlur: handleMenuBlur } = useDropdown();
   const {
@@ -71,14 +72,18 @@ export function ToolbarModelList({ className }: ToolbarModelListProps) {
         aria-label={tx('tx.general.moveUp')}
         icon={<IconMoveUp size='1.25rem' className='icon-primary' />}
         onClick={moveUp}
-        disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
+        disabled={
+          isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length || hasActiveFilter
+        }
       />
       <MiniButton
         title={prepareTooltip(tx('tx.general.moveDown'), 'Alt + ↓')}
         aria-label={tx('tx.general.moveDown')}
         icon={<IconMoveDown size='1.25rem' className='icon-primary' />}
         onClick={moveDown}
-        disabled={isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length}
+        disabled={
+          isProcessing || selectedCst.length === 0 || selectedCst.length === schema.items.length || hasActiveFilter
+        }
       />
       <MiniButton
         title={tx('tx.cst.crucial')}

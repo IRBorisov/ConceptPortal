@@ -16,7 +16,7 @@ import { useFitHeight } from '@/stores/app-layout';
 import { withPreventDefault } from '@/utils/utils';
 
 import { useFilteredItems } from '../../../components/view-constituents/use-filtered-items';
-import { useCstSearchStore } from '../../../stores/cst-search';
+import { hasActiveCstFilter, useCstSearchStore } from '../../../stores/cst-search';
 import { useSchemaEdit } from '../schema-edit-context';
 
 import { TableSchemaList } from './table-schema-list';
@@ -48,6 +48,7 @@ export function TabSchemaList() {
   const setQuery = useCstSearchStore(state => state.setQuery);
   const filtered = useFilteredItems(schema);
   const listScrollKey = `${query}\0${filter}`;
+  const hasActiveFilter = hasActiveCstFilter(query, filter);
 
   const rowSelection: RowSelectionState = Object.fromEntries(
     filtered.filter(cst => selectedCst.includes(cst.id)).map(cst => [String(cst.id), true])
@@ -105,12 +106,17 @@ export function TabSchemaList() {
   }
 
   function processAltKey(code: string): boolean {
-    if (selectedCst.length > 0) {
+    if (selectedCst.length > 0 && !hasActiveFilter) {
       // prettier-ignore
       switch (code) {
         case 'ArrowUp': moveUp(); return true;
         case 'ArrowDown': moveDown(); return true;
         case 'KeyV': void cloneCst(); return true;
+      }
+    } else if (selectedCst.length > 0) {
+      if (code === 'KeyV') {
+        void cloneCst();
+        return true;
       }
     }
     // prettier-ignore
@@ -181,7 +187,7 @@ export function TabSchemaList() {
         enableSelection={isContentEditable}
         selected={rowSelection}
         setSelected={handleRowSelection}
-        enableRowReordering={isContentEditable && !isProcessing && schema.items.length > 1}
+        enableRowReordering={isContentEditable && !isProcessing && schema.items.length > 1 && !hasActiveFilter}
         onEdit={cstID => {
           clearPendingActiveID();
           router.gotoEditActive(cstID);

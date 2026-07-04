@@ -22,6 +22,7 @@ import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 
 import { ViewConstituents } from '../../../components/view-constituents';
+import { hasActiveCstFilter, useCstSearchStore } from '../../../stores/cst-search';
 import { useSchemaEdit } from '../schema-edit-context';
 
 import { FormConstituenta } from './form-constituenta';
@@ -55,11 +56,14 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
   const onSelectCst = useEffectEvent(setSelectedCst);
 
   const { isModified } = useModificationStore();
+  const query = useCstSearchStore(state => state.query);
+  const filter = useCstSearchStore(state => state.filter);
+  const hasActiveFilter = hasActiveCstFilter(query, filter);
 
   const [toggleReset, setToggleReset] = useState(false);
 
   const disabled = !activeCst || !isContentEditable || isProcessing;
-  const canReorderConstituents = isContentEditable && !isProcessing && !isModified;
+  const canReorderConstituents = isContentEditable && !isProcessing && !isModified && !hasActiveFilter;
   const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
 
   const role = useRoleStore(state => state.role);
@@ -107,11 +111,16 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
   }
 
   function processAltKey(code: string): boolean {
-    // prettier-ignore
-    switch (code) {
-      case 'ArrowUp': moveUp(); return true;
-      case 'ArrowDown': moveDown(); return true;
-      case 'KeyV': void cloneCst(); return true;
+    if (canReorderConstituents) {
+      // prettier-ignore
+      switch (code) {
+        case 'ArrowUp': moveUp(); return true;
+        case 'ArrowDown': moveDown(); return true;
+        case 'KeyV': void cloneCst(); return true;
+      }
+    } else if (code === 'KeyV') {
+      void cloneCst();
+      return true;
     }
     return false;
   }
@@ -187,7 +196,7 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
                 className='px-0'
                 icon={<IconMoveUp size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
                 onClick={moveUp}
-                disabled={disabled || isModified || schema.items.length < 2}
+                disabled={disabled || !canReorderConstituents || schema.items.length < 2}
               />
               <MiniButton
                 title={prepareTooltip(tx('tx.general.moveDown'), 'Alt + ↓')}
@@ -195,7 +204,7 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
                 className='px-0'
                 icon={<IconMoveDown size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
                 onClick={moveDown}
-                disabled={disabled || isModified || schema.items.length < 2}
+                disabled={disabled || !canReorderConstituents || schema.items.length < 2}
               />
             </div>
           ) : null
