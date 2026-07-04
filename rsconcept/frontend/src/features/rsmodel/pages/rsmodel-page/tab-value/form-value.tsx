@@ -324,6 +324,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
           extractionDisabled={formalFieldDisabled || !isContentEditable}
           onCreateCst={isContentEditable ? createCstFromData : undefined}
           onUpdateCst={isContentEditable ? patchConstituenta : undefined}
+          onSaveUnsaved={() => handleSubmitAll()}
           onChange={setFormalDraft}
           disabled={formalFieldDisabled}
           onOpenEdit={handleNavigateCst}

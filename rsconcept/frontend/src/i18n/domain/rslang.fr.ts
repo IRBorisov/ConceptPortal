@@ -98,7 +98,7 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.value.import': 'Importer une valeur',
   'tx.rslang.value.add.random': 'Ajouter des valeurs aléatoires',
   'tx.rslang.value.add.random.hint': 'Générer des valeurs aléatoires pour la constituante courante',
-  'tx.rslang.value.add.random.fail': 'Impossible de générer des valeurs aléatoires',
+  'tx.rslang.value.add.random.fail': 'Impossible de générer des valeurs aléatoires: l’ensemble est vide',
 
   'tx.rslang.valueClass.full': 'Valeur entière',
   'tx.rslang.valueClass.full.hint':

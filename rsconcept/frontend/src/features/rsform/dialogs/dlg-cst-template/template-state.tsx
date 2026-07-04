@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { type ArgumentValue, type Constituenta } from '@rsconcept/domain/library';
+import { type ArgumentValue, type Constituenta, type RSForm } from '@rsconcept/domain/library';
 import { generateAlias, inferTemplatedType } from '@rsconcept/domain/library/rsform-api';
 import { TypeID } from '@rsconcept/domain/rslang';
 import { type AliasMapping, substituteTemplateArgs } from '@rsconcept/domain/rslang/api';
@@ -10,10 +10,13 @@ import { labelType } from '@rsconcept/domain/rslang/labels';
 
 import { useTemplates } from '@/features/library/backend/use-templates';
 
+import { useRSForm } from '../../backend/use-rsform';
 import { useRsformDialogsStore } from '../rsform-dialog-store';
 
 import { type DlgCstTemplateProps } from './dlg-cst-template';
 import { TemplateContext, type TemplateSelection } from './template-context';
+
+const EMPTY_TEMPLATE_ITEMS: Constituenta[] = [];
 
 interface TemplateStateProps extends React.PropsWithChildren {
   onDefinitionFormalChange: (newValue: string) => void;
@@ -39,8 +42,11 @@ export const TemplateState = ({
   const [templateID, setTemplateID] = useState<number | null>(templates.length > 0 ? templates[0].id : null);
   const [args, setArguments] = useState<ArgumentValue[]>([]);
   const [prototype, setPrototype] = useState<Constituenta | null>(null);
-  const [templateItems, setTemplateItems] = useState<Constituenta[]>([]);
   const [filterCategory, setFilterCategory] = useState<Constituenta | null>(null);
+
+  const { schema: loadedSchema } = useRSForm({ itemID: templateID ?? undefined });
+  const templateSchema: RSForm | undefined = templateID ? loadedSchema : undefined;
+  const templateItems = templateSchema?.items ?? EMPTY_TEMPLATE_ITEMS;
 
   function onChangeArguments(newArgs: ArgumentValue[]) {
     setArguments(newArgs);
@@ -90,14 +96,13 @@ export const TemplateState = ({
     setTemplateID(newTemplateID);
     setPrototype(null);
     setArguments([]);
-    setTemplateItems([]);
   }
 
   useEffect(
     function syncSelection() {
-      onSelectionChange({ prototype, args, templateItems });
+      onSelectionChange({ prototype, args, templateItems: templateSchema?.items ?? EMPTY_TEMPLATE_ITEMS });
     },
-    [prototype, args, templateItems, onSelectionChange]
+    [prototype, args, templateSchema, onSelectionChange]
   );
 
   return (
@@ -106,13 +111,13 @@ export const TemplateState = ({
         templateID,
         prototype,
         filterCategory,
+        templateSchema,
         templateItems,
         args,
         onChangeArguments,
         onChangePrototype,
         onChangeFilterCategory: setFilterCategory,
-        onChangeTemplateID,
-        onChangeTemplateItems: setTemplateItems
+        onChangeTemplateID
       }}
     >
       {children}

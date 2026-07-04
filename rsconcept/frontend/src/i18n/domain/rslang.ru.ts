@@ -96,7 +96,7 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.value.import': 'Импортировать значение',
   'tx.rslang.value.add.random': 'Добавить случайные',
   'tx.rslang.value.add.random.hint': 'Сгенерировать случайные значения для текущей конституенты',
-  'tx.rslang.value.add.random.fail': 'Невозможно сгенерировать: в базовом множестве отсутствуют элементы',
+  'tx.rslang.value.add.random.fail': 'Невозможно сгенерировать: в множестве отсутствуют элементы',
 
   'tx.rslang.valueClass.full': 'Полное значение',
   'tx.rslang.valueClass.full.hint':

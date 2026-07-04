@@ -7,10 +7,11 @@ import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { useTx } from '@/i18n';
 import { type Constituenta, CstStatus, type RSForm } from '@rsconcept/domain/library';
 import { getAnalysisFor, inferStatus, isLogical } from '@rsconcept/domain/library/rsform-api';
-import { buildTree, flattenAst } from '@rsconcept/domain/parsing';
+import { type AstNode, buildTree, flattenAst } from '@rsconcept/domain/parsing';
 import { type AnalysisFull, type ExpressionType, type RSErrorDescription, TokenID } from '@rsconcept/domain/rslang';
 import { rslangParser } from '@rsconcept/domain/rslang';
 
+import { type UnsavedSaveHandler, useUnsavedChanges } from '@/app';
 import { type HelpTopic } from '@/features/help';
 import {
   type ConstituentaCreatedResponse,
@@ -21,6 +22,7 @@ import {
 
 import { cn } from '@/components/utils';
 import { useResetOnChange } from '@/hooks/use-reset-on-change';
+import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { useRsformDialogsStore } from '../../dialogs/rsform-dialog-store';
@@ -59,6 +61,7 @@ interface EditorRSExpressionProps {
   onShowTypeGraph?: (event: React.MouseEvent<Element>) => void;
   onCreateCst?: (data: CreateConstituentaDTO) => Promise<ConstituentaCreatedResponse>;
   onUpdateCst?: (data: UpdateConstituentaDTO) => Promise<RSFormDTO>;
+  onSaveUnsaved?: UnsavedSaveHandler;
 }
 
 export function EditorRSExpression({
@@ -83,9 +86,12 @@ export function EditorRSExpression({
   onShowTypeGraph,
   onCreateCst,
   onUpdateCst,
+  onSaveUnsaved,
   ...restProps
 }: EditorRSExpressionProps) {
   const tx = useTx();
+  const isModified = useModificationStore(state => state.isModified);
+  const { promptUnsaved } = useUnsavedChanges();
   const [needsAnalyze, setNeedsAnalyze] = useState(false);
   const rsInput = useRef<ReactCodeMirrorRef>(null);
 
@@ -188,6 +194,22 @@ export function EditorRSExpression({
     setNeedsAnalyze(true);
   }
 
+  function openAstExtractDialog(ast: AstNode) {
+    if (!activeCst || !onCreateCst || !onUpdateCst) {
+      return;
+    }
+    showAstExtract({
+      initial: {
+        ast,
+        expression: value,
+        schema
+      },
+      targetID: activeCst.id,
+      onCreate: onCreateCst,
+      onUpdate: onUpdateCst
+    });
+  }
+
   function handleShowAST(event: React.MouseEvent<Element>) {
     if (event.ctrlKey || event.metaKey) {
       const tree = rslangParser.parse(value);
@@ -200,24 +222,23 @@ export function EditorRSExpression({
       });
     } else {
       const parse = schema.analyzer.checkFull(value, { annotateTypes: true, annotateErrors: true });
-      if (!parse.ast) {
+      const ast = parse.ast;
+      if (!ast) {
         toast.error(tx('tx.rsexpression.ast.fail'));
         return;
       }
-      if (!parse.ast.hasError && !extractionDisabled && !disabled && activeCst && onCreateCst && onUpdateCst) {
-        showAstExtract({
-          initial: {
-            ast: parse.ast,
-            expression: value,
-            schema
-          },
-          targetID: activeCst.id,
-          onCreate: onCreateCst,
-          onUpdate: onUpdateCst
-        });
+      if (!ast.hasError && !extractionDisabled && !disabled && activeCst && onCreateCst && onUpdateCst) {
+        if (isModified) {
+          void promptUnsaved({
+            onSave: onSaveUnsaved,
+            onConfirm: () => openAstExtractDialog(ast)
+          });
+        } else {
+          openAstExtractDialog(ast);
+        }
       } else {
         showFlatAst({
-          ast: flattenAst(parse.ast),
+          ast: flattenAst(ast),
           expression: value,
           schema
         });

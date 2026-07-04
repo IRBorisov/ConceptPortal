@@ -83,7 +83,10 @@ export function buildTemplateConstituentsBatch(
   userArgs: ArgumentValue[],
   mainItem: CreateConstituentaDTO
 ): CreateConstituentsBatchDTO {
-  const plan = previewTemplateInstantiationPlan(targetSchema, templateItems, prototype, userArgs, mainItem)!;
+  const plan = previewTemplateInstantiationPlan(targetSchema, templateItems, prototype, userArgs, mainItem);
+  if (!plan) {
+    throw new Error('Template instantiation plan could not be built: prototype is required');
+  }
 
   return {
     insert_after: mainItem.insert_after,

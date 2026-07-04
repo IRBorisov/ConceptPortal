@@ -46,7 +46,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.lib.defineFormal.function': 'Определение функции',
   'tx.lib.convention': 'Конвенция',
   'tx.lib.convention.plural': 'Конвенции',
-  'tx.lib.convention.hint': 'Договоренность об интерпретации базового понятия',
+  'tx.lib.convention.hint': 'Договоренность об интерпретации неопределяемого понятия',
   'tx.lib.convention.validate.empty': 'Пустая конвенция',
   'tx.lib.contents': 'Содержание',
 
@@ -149,7 +149,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.concept.system.evaluability.hint':
     'Возможность вычисления значений определений и утверждений по формальному определению',
   'tx.concept.system.complexity': 'Сложность',
-  'tx.concept.system.complexity.hint': 'Количество терминов, описывающих базовые понятия',
+  'tx.concept.system.complexity.hint': 'Количество терминов, описывающих неопределяемые понятия',
   'tx.concept.system.body': 'Тело теории',
 
   'tx.concept.framework': 'Концептуализация',
@@ -284,7 +284,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.cst.class.nominal': 'Номинальная сущность',
   'tx.cst.class.nominal.short': 'Номинальный',
   'tx.cst.class.basic': 'Неопределяемое понятие',
-  'tx.cst.class.basic.short': 'Базовый',
+  'tx.cst.class.basic.short': 'Неопределяемый',
   'tx.cst.class.derived': 'Определяемое понятие',
   'tx.cst.class.derived.short': 'Производный',
   'tx.cst.class.statement': 'Логическое утверждение',
@@ -340,7 +340,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.model.data.hint': 'Ввод, просмотр и редактирование значений конституент модели',
   'tx.model.base': 'Базис',
   'tx.model.base.cardinality': 'Мощность базы',
-  'tx.model.base.cardinality.hint': 'Суммарная мощность интерпретаций базовых понятий',
+  'tx.model.base.cardinality.hint': 'Суммарная мощность интерпретаций неопределяемых понятий',
   'tx.model.plural': 'Концептуальные модели',
   'tx.model.create': 'Создать модель',
   'tx.model.edit': 'Редактирование модели',
@@ -356,7 +356,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.model.issue.plural.short': 'МодОшибки',
   'tx.model.issue.plural': 'Модельные ошибки',
   'tx.model.issue.hint':
-    'Проблемы с данными модели, включая отсутствующие базовые интерпретации, неверные данные, невыполненные аксиомы, ошибки вычисления и пустые термы',
+    'Проблемы с данными модели, включая отсутствующие интерпретации неопределяемых понятий, неверные данные, невыполненные аксиомы, ошибки вычисления и пустые термы',
 
   'tx.evaluation': 'Расчет выражения',
   'tx.evaluation.hint': 'Проверка и вычисление произвольных выражений',
