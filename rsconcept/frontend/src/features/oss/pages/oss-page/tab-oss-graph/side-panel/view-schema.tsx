@@ -21,7 +21,7 @@ import { useUpdateConstituenta } from '@/features/rsform/backend/use-update-cons
 import { MiniRSFormStats } from '@/features/rsform/components/mini-rsform-stats';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
 import { useRsformDialogsStore } from '@/features/rsform/dialogs/rsform-dialog-store';
-import { useCstSearchStore, hasActiveCstFilter } from '@/features/rsform/stores/cst-search';
+import { hasActiveCstFilter,useCstSearchStore } from '@/features/rsform/stores/cst-search';
 import { buildCloneConstituentsBatch } from '@/features/rsform/utils/build-clone-batch';
 
 import { MiniButton } from '@/components/control';
