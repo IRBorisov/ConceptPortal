@@ -72,8 +72,8 @@ export function HelpThesaurusEn() {
       </p>
 
       <p>
-        DS core — base concepts, axioms, and derived concepts needed to state axioms. Remaining constituents form the DS
-        body.
+        DS core — undefined concepts, axioms, and derived concepts needed to state axioms. Remaining constituents form
+        the DS body.
       </p>
 
       <ul>

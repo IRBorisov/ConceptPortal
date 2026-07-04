@@ -13,7 +13,7 @@ export function HelpConceptSystemFr() {
         d'application. Un système de définitions désigne un ensemble de concepts et d'assertions individuels, ainsi que
         les relations entre eux, établies par les définitions des concepts.
       </p>
-
+    
       <p>
         Un système de définitions est un outil pour étudier un objet depuis un point de vue sélectionné par le problème
         traité. Un tel outil est soumis à des exigences de <b>capacité expressive</b> — la capacité de distinguer un
@@ -28,10 +28,10 @@ export function HelpConceptSystemFr() {
       </p>
 
       <p>
-        Un système de définitions est construit sur des <b>concepts indéfinis</b>, auxquels est donnée une définition
+        Un système de définitions est construit sur des <b>concepts non définis</b>, auxquels est donnée une définition
         informelle appelée <b>convention</b> — un accord communément compris entre les participants sur la mise en
-        correspondance des concepts indéfinis avec des entités ou objets du domaine d'application. En plus de la
-        convention, un ensemble d'assertions reliant les concepts indéfinis, appelées <b>axiomes</b>, est souvent
+        correspondance des concepts non définis avec des entités ou objets du domaine d'application. En plus de la
+        convention, un ensemble d'assertions reliant les concepts non définis, appelées <b>axiomes</b>, est souvent
         spécifié.
       </p>
 

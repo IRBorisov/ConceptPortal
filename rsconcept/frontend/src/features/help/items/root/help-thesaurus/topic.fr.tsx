@@ -72,7 +72,7 @@ export function HelpThesaurusFr() {
       </p>
 
       <p>
-        Noyau du SD — concepts de base, axiomes et concepts dérivés nécessaires pour énoncer les axiomes. Les autres
+        Noyau du SD — concepts non définis, axiomes et concepts dérivés nécessaires pour énoncer les axiomes. Les autres
         constituants forment le corps du SD.
       </p>
 
@@ -88,8 +88,8 @@ export function HelpThesaurusFr() {
         </li>
         <li>
           <IconRSFormImported className='inline-icon' />
-          {'\u2009'}SD externe à cet OSS — rattaché à une opération dont le propriétaire ou l&apos;emplacement diffère des
-          attributs de l&apos;OSS.
+          {'\u2009'}SD externe à cet OSS — rattaché à une opération dont le propriétaire ou l&apos;emplacement diffère
+          des attributs de l&apos;OSS.
         </li>
       </ul>
 
@@ -101,8 +101,8 @@ export function HelpThesaurusFr() {
         Convention, Typage (Structure), Définition formelle, Définition textuelle, Commentaire.
       </p>
       <p>
-        <IconCrucial className='inline-icon' /> Un constituant clé sert de repère pour les constituants importants sur le
-        fond. Ils sont mis en évidence visuellement et servent au filtrage.
+        <IconCrucial className='inline-icon' /> Un constituant clé sert de repère pour les constituants importants sur
+        le fond. Ils sont mis en évidence visuellement et servent au filtrage.
       </p>
 
       <br />
@@ -134,13 +134,14 @@ export function HelpThesaurusFr() {
         </li>
         <li>
           <IconCstConstSet className='inline-icon' />
-          {'\u2009'}Ensemble constant (C#) — concept non défini modélisé par un terme en théorie des ensembles autorisant
-          des opérations formelles sur ses éléments.
+          {'\u2009'}Ensemble constant (C#) — concept non défini modélisé par un terme en théorie des ensembles
+          autorisant des opérations formelles sur ses éléments.
         </li>
         <li>
           <IconCstStructured className='inline-icon' />
           {'\u2009'}Structure de genre (S#) — concept non défini structuré sur ensembles de base et constants. Le
-          contenu est formé par la <LinkTopic text='relation de typage' topic={HelpTopic.RSL_TYPIFICATION} />, les axiomes et la convention.
+          contenu est formé par la <LinkTopic text='relation de typage' topic={HelpTopic.RSL_TYPIFICATION} />, les
+          axiomes et la convention.
         </li>
         <li>
           <IconCstAxiom className='inline-icon' />
@@ -153,7 +154,8 @@ export function HelpThesaurusFr() {
         </li>
         <li>
           <IconCstFunction className='inline-icon' />
-          {'\u2009'}Fonction-terme (F#) — concept dérivé paramétré avec relation fonctionnelle entre arguments et résultat.
+          {'\u2009'}Fonction-terme (F#) — concept dérivé paramétré avec relation fonctionnelle entre arguments et
+          résultat.
         </li>
         <li>
           <IconCstPredicate className='inline-icon' />
@@ -217,7 +219,8 @@ export function HelpThesaurusFr() {
         </li>
         <li>
           <IconStatusProperty className='inline-icon' />
-          {'\u2009'}non mesurable — spécifie un ensemble non calculable pour lequel l&apos;appartenance peut être testée ;
+          {'\u2009'}non mesurable — spécifie un ensemble non calculable pour lequel l&apos;appartenance peut être testée
+          ;
         </li>
         <li>
           <IconStatusIncalculable className='inline-icon' />
@@ -270,9 +273,7 @@ export function HelpThesaurusFr() {
         qui cadre l&apos;affectation des schémas conceptuels de l&apos;OSS aux aspects du domaine.
       </p>
 
-      <p>
-        Opération — partie distinguée de l&apos;OSS qui définit comment obtenir un SD dans l&apos;OSS.
-      </p>
+      <p>Opération — partie distinguée de l&apos;OSS qui définit comment obtenir un SD dans l&apos;OSS.</p>
       <p>
         <IconReference className='inline-icon' />
         {'\u2009'}Réplique — duplique la vue graphique du résultat d&apos;une opération pour raccourcir les liaisons
@@ -315,8 +316,8 @@ export function HelpThesaurusFr() {
       </p>
       <p>
         <IconAxiomFalse className='inline-icon' />
-        {'\u2009'}Axiome violé — axiome dont l&apos;interprétation dans ce modèle est FAUX. Un tel modèle ne satisfait pas
-        pleinement le système axiomatique.
+        {'\u2009'}Axiome violé — axiome dont l&apos;interprétation dans ce modèle est FAUX. Un tel modèle ne satisfait
+        pas pleinement le système axiomatique.
       </p>
       <p>
         <IconNotCalculated className='inline-icon' />
@@ -325,8 +326,8 @@ export function HelpThesaurusFr() {
       </p>
       <p>
         <IconEmptyTerm className='inline-icon' />
-        {'\u2009'}Termes vides — termes dont la valeur courante est l&apos;ensemble vide. Les termes pour le pilotage et la
-        décision ne doivent pas être vides.
+        {'\u2009'}Termes vides — termes dont la valeur courante est l&apos;ensemble vide. Les termes pour le pilotage et
+        la décision ne doivent pas être vides.
       </p>
     </>
   );
