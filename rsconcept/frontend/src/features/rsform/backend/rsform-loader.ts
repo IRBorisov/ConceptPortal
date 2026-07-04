@@ -11,6 +11,7 @@ import {
   isBaseSet,
   isBasicConcept,
   isFunctional,
+  normalizeExpression,
   typeClassForCstType
 } from '@rsconcept/domain/library/rsform-api';
 import { type AstNode, getNodeIndices } from '@rsconcept/domain/parsing';
@@ -24,12 +25,7 @@ import {
   ValueClass
 } from '@rsconcept/domain/rslang';
 import { parseTypeText } from '@rsconcept/domain/rslang';
-import {
-  extractGlobals,
-  generateExpressionFromAst,
-  isSimpleExpression,
-  splitTemplateDefinition
-} from '@rsconcept/domain/rslang/api';
+import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@rsconcept/domain/rslang/api';
 import { labelType } from '@rsconcept/domain/rslang/labels';
 import { type ExpressionType } from '@rsconcept/domain/rslang/semantic/typification';
 
@@ -161,14 +157,8 @@ export class RSFormLoader {
       cst.is_type_mismatch = isManualMismatch;
       this.analyzer.setGlobal(cst.alias, effectiveType, parse.valueClass);
       if (!isBasicConcept(cst.cst_type) || cst.cst_type === CstType.AXIOM) {
-        let normalized = '';
-        if (parse.ast && !parse.ast.hasError) {
-          normalized = generateExpressionFromAst(parse.ast, { normalize: true });
-        } else {
-          normalized = cst.definition_formal;
-        }
-        normalized = normalized.replace(/\s+/g, '');
-        if (normalized !== '') {
+        const normalized = normalizeExpression(cst.definition_formal, cst.cst_type, parse.ast);
+        if (normalized) {
           this.normalizedDefinitions.set(cst.id, normalized);
         }
       }

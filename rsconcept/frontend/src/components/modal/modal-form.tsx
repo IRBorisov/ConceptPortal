@@ -20,6 +20,7 @@ import { type Styling } from '../props';
 import { cn } from '../utils';
 
 import { ModalBackdrop } from './modal-backdrop';
+import { ModalPortal } from './modal-portal';
 import { useModalPlacement } from './use-modal-placement';
 
 export interface ModalProps extends Styling {
@@ -111,7 +112,8 @@ export function ModalForm({
   }
 
   return (
-    <div className={cn('cc-modal-wrapper', isTopPlaced && 'cc-modal-wrapper-top')}>
+    <ModalPortal>
+      <div className={cn('cc-modal-wrapper', isTopPlaced && 'cc-modal-wrapper-top')}>
       <ModalBackdrop onHide={handleCancel} />
       <form
         ref={setElement}
@@ -174,6 +176,7 @@ export function ModalForm({
           />
         </div>
       </form>
-    </div>
+      </div>
+    </ModalPortal>
   );
 }

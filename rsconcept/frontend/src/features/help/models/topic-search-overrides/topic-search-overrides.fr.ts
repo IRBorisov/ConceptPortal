@@ -304,8 +304,17 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
       'Opérations sur les schémas conceptuels. Opérations formelles, transformations de schémas, application de règles et modification de structure.'
   },
   [HelpTopic.RSL_TEMPLATES]: {
-    keywords: ['modèles', 'banque d’expressions', 'fragments', 'réutilisation', 'patrons'],
-    searchText: 'Modèles. Banque d’expressions, fragments, réutilisation d’expressions et constructions typiques.'
+    keywords: [
+      'modèles',
+      'banque d’expressions',
+      'fonctions terme',
+      'fonctions prédicat',
+      'dépendances',
+      'substitution d’arguments',
+      'réutilisation'
+    ],
+    searchText:
+      'Modèles et banque d’expressions. Création de constituantes depuis un modèle avec fonctions terme et prédicat, substitution en chaîne des arguments, ordre des dépendances.'
   },
   [HelpTopic.TERM_CONTROL]: {
     keywords: ['terminologie', 'termes', 'contrôle terminologique', 'renvois', 'renvois textuels'],

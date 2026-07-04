@@ -44,3 +44,10 @@ export {
   type RSModel,
   type RSModelStats
 } from './rsmodel';
+export {
+  planTemplateInstantiation,
+  type TemplateInstantiationInput,
+  type TemplateInstantiationItem,
+  type TemplateInstantiationPlan,
+  TemplateInstantiationPlanner
+} from './template-instantiation';

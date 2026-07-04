@@ -17,6 +17,7 @@ import { cn } from '../utils';
 
 import { ModalBackdrop } from './modal-backdrop';
 import { type ModalProps } from './modal-form';
+import { ModalPortal } from './modal-portal';
 import { useModalPlacement } from './use-modal-placement';
 
 interface ModalViewProps extends ModalProps {
@@ -60,7 +61,8 @@ export function ModalView({
   }, []);
 
   return (
-    <div className={cn('cc-modal-wrapper', isTopPlaced && 'cc-modal-wrapper-top')}>
+    <ModalPortal>
+      <div className={cn('cc-modal-wrapper', isTopPlaced && 'cc-modal-wrapper-top')}>
       <ModalBackdrop onHide={handleHide} />
       <div
         ref={setElement}
@@ -128,6 +130,7 @@ export function ModalView({
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </ModalPortal>
   );
 }

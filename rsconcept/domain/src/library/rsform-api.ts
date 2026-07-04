@@ -3,6 +3,7 @@
  */
 
 import { applyEntityReferenceMapping } from '../cctext/language-api';
+import { type AstNode } from '../parsing';
 import {
   type AnalysisFull,
   RSErrorCode,
@@ -12,7 +13,13 @@ import {
   type Typification,
   ValueClass
 } from '../rslang';
-import { type AliasMapping, applyAliasMapping, applyTypificationMapping } from '../rslang/api';
+import {
+  type AliasMapping,
+  applyAliasMapping,
+  applyTypificationMapping,
+  generateExpressionFromAst,
+  parseRSLangExpression
+} from '../rslang/api';
 import { basic, bool, constant, type EchelonFunctional, isTypification } from '../rslang/semantic/typification';
 import { applyPath } from '../rslang/semantic/typification-api';
 
@@ -95,6 +102,38 @@ export function inferTemplatedType(templateType: CstType, args: ArgumentValue[])
   } else {
     return CstType.TERM;
   }
+}
+
+/** Build alias mapping from template argument bindings. */
+export function argumentValuesToMapping(args: ArgumentValue[]): AliasMapping {
+  const mapping: AliasMapping = {};
+  for (const arg of args) {
+    if (arg.value) {
+      mapping[arg.alias] = arg.value;
+    }
+  }
+  return mapping;
+}
+
+/**
+ * Normalize a RSLang expression for duplicate comparison.
+ *
+ * Returns `null` for basic concepts without formal definitions. Pass a pre-parsed `ast`
+ * when the expression was already analyzed to avoid re-parsing.
+ */
+export function normalizeExpression(expression: string, cst_type: CstType, ast?: AstNode | null): string | null {
+  if (isBasicConcept(cst_type) && cst_type !== CstType.AXIOM) {
+    return null;
+  }
+  const parsed = ast ?? parseRSLangExpression(expression);
+  let normalized = '';
+  if (parsed && !parsed.hasError) {
+    normalized = generateExpressionFromAst(parsed, { normalize: true });
+  } else {
+    normalized = expression;
+  }
+  normalized = normalized.replace(/\s+/g, '');
+  return normalized === '' ? null : normalized;
 }
 
 /** Checks if given expression is a template. */

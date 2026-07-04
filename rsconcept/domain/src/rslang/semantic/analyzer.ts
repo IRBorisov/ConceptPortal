@@ -1,9 +1,8 @@
-import { type AstNode, buildTree } from '../../parsing';
+import { type AstNode } from '../../parsing';
+import { parseRSLangExpression } from '../api';
 import { annotateError } from '../ast-annotations';
 import { RSErrorCode, type RSErrorDescription } from '../error';
 import { labelType } from '../labels';
-import { normalizeAST } from '../parser/normalize';
-import { parser as rslangParser } from '../parser/parser';
 import { extractSyntaxErrors } from '../parser/syntax-errors';
 import { TokenID } from '../parser/token';
 
@@ -74,10 +73,10 @@ export class RSLangAnalyzer {
   }
 
   public checkFast(expression: string, options?: AnalysisOptions): AnalysisFast {
-    if (expression.length === 0) {
+    const ast = parseRSLangExpression(expression);
+    if (!ast) {
       return { success: false, type: null, valueClass: null, ast: null };
     }
-    const ast = this.parse(expression);
     if (ast.hasError) {
       return { success: false, type: null, valueClass: null, ast: ast };
     }
@@ -109,11 +108,11 @@ export class RSLangAnalyzer {
     const reporter = (error: RSErrorDescription) => {
       errors.push(error);
     };
-    if (expression.length === 0) {
+    const ast = parseRSLangExpression(expression);
+    if (!ast) {
       reporter({ code: RSErrorCode.cstEmptyDerived, from: 0, to: 0 });
       return { success: false, type: null, valueClass: null, errors: errors, ast: null };
     }
-    const ast = this.parse(expression);
     if (ast.hasError) {
       extractSyntaxErrors(ast, expression, reporter, options?.annotateErrors ?? false, {
         expected: options?.expected
@@ -153,13 +152,6 @@ export class RSLangAnalyzer {
       ? ValueClass.VALUE
       : this.valueAuditor.run(ast, reporter, options?.annotateErrors ?? false);
     return { success: true, type, valueClass, errors, ast };
-  }
-
-  private parse(expression: string): AstNode {
-    const tree = rslangParser.parse(expression);
-    const ast = buildTree(tree.cursor());
-    normalizeAST(ast, expression);
-    return ast;
   }
 }
 

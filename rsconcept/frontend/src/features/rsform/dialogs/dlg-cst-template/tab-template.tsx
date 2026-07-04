@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import { useTx } from '@/i18n';
 import { CstType, type RSForm } from '@rsconcept/domain/library';
 import { applyFilterCategory, isTemplateCst } from '@rsconcept/domain/library/rsform-api';
@@ -27,13 +29,18 @@ export function TabTemplate({ schema }: TabTemplateProps) {
     prototype,
     onChangePrototype,
     onChangeTemplateID,
-    onChangeFilterCategory
+    onChangeFilterCategory,
+    onChangeTemplateItems
   } = useTemplateContext();
 
   const { templates } = useTemplates();
   const templateOptions = [{ ...schema, title: tx('tx.schema.current') }, ...templates];
   const { schema: templateSchema } = useRSForm({ itemID: templateID ?? undefined });
   const selectedTemplate = templateOptions.find(item => item.id === templateID);
+
+  useEffect(() => {
+    onChangeTemplateItems(templateSchema?.items ?? []);
+  }, [templateSchema, onChangeTemplateItems]);
 
   const constituents = templateSchema?.items.filter(isTemplateCst) ?? [];
   const filteredData = !filterCategory ? constituents : applyFilterCategory(filterCategory, constituents);
