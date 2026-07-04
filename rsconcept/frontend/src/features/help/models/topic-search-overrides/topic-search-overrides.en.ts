@@ -278,8 +278,17 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
       'Operations on conceptual schemas. Formal operations, schema transforms, applying rules, and changing structure.'
   },
   [HelpTopic.RSL_TEMPLATES]: {
-    keywords: ['templates', 'expression bank', 'snippets', 'reuse', 'patterns'],
-    searchText: 'Templates. Expression bank, snippets, reusing expressions and typical constructs.'
+    keywords: [
+      'templates',
+      'expression bank',
+      'term functions',
+      'predicate functions',
+      'dependencies',
+      'argument substitution',
+      'reuse'
+    ],
+    searchText:
+      'Templates and expression bank. Creating constituents from a template with term functions and predicate functions, chained argument substitution, dependency order.'
   },
   [HelpTopic.TERM_CONTROL]: {
     keywords: ['terminology', 'terms', 'term control', 'references', 'text references'],

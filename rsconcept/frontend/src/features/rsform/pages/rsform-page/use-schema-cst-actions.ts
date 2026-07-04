@@ -308,8 +308,10 @@ export function useSchemaCstActions({ schema, itemID }: UseSchemaCstActionsParam
     showCstTemplate({
       schema: schema,
       insertAfter: activeCst?.id,
-      onCreate: value =>
-        void cstCreate({ itemID: schema.id, data: value }).then(response => onCreateCst(response.new_cst))
+      onCreate: batch =>
+        void cstCreateBatch({ itemID: schema.id, data: batch }).then(response =>
+          onCreateCstBatch(response.cst_list.map(cst => cst.id))
+        )
     });
   }
 

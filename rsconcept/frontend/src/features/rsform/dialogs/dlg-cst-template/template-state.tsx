@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { type ArgumentValue, type Constituenta } from '@rsconcept/domain/library';
 import { generateAlias, inferTemplatedType } from '@rsconcept/domain/library/rsform-api';
@@ -13,7 +13,7 @@ import { useTemplates } from '@/features/library/backend/use-templates';
 import { useRsformDialogsStore } from '../rsform-dialog-store';
 
 import { type DlgCstTemplateProps } from './dlg-cst-template';
-import { TemplateContext } from './template-context';
+import { TemplateContext, type TemplateSelection } from './template-context';
 
 interface TemplateStateProps extends React.PropsWithChildren {
   onDefinitionFormalChange: (newValue: string) => void;
@@ -21,6 +21,7 @@ interface TemplateStateProps extends React.PropsWithChildren {
   onAliasChange: (newValue: string) => void;
   onTermRawChange: (newValue: string) => void;
   onDefinitionRawChange: (newValue: string) => void;
+  onSelectionChange: (selection: TemplateSelection) => void;
 }
 
 export const TemplateState = ({
@@ -29,7 +30,8 @@ export const TemplateState = ({
   onCstTypeChange,
   onAliasChange,
   onTermRawChange,
-  onDefinitionRawChange
+  onDefinitionRawChange,
+  onSelectionChange
 }: TemplateStateProps) => {
   const { schema } = useRsformDialogsStore(state => state.props as DlgCstTemplateProps);
   const { templates } = useTemplates();
@@ -37,6 +39,7 @@ export const TemplateState = ({
   const [templateID, setTemplateID] = useState<number | null>(templates.length > 0 ? templates[0].id : null);
   const [args, setArguments] = useState<ArgumentValue[]>([]);
   const [prototype, setPrototype] = useState<Constituenta | null>(null);
+  const [templateItems, setTemplateItems] = useState<Constituenta[]>([]);
   const [filterCategory, setFilterCategory] = useState<Constituenta | null>(null);
 
   function onChangeArguments(newArgs: ArgumentValue[]) {
@@ -87,7 +90,12 @@ export const TemplateState = ({
     setTemplateID(newTemplateID);
     setPrototype(null);
     setArguments([]);
+    setTemplateItems([]);
   }
+
+  useEffect(() => {
+    onSelectionChange({ prototype, args, templateItems });
+  }, [prototype, args, templateItems, onSelectionChange]);
 
   return (
     <TemplateContext
@@ -95,11 +103,13 @@ export const TemplateState = ({
         templateID,
         prototype,
         filterCategory,
+        templateItems,
         args,
         onChangeArguments,
         onChangePrototype,
         onChangeFilterCategory: setFilterCategory,
-        onChangeTemplateID
+        onChangeTemplateID,
+        onChangeTemplateItems: setTemplateItems
       }}
     >
       {children}

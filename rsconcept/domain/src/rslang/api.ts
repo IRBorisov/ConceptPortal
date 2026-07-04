@@ -1,8 +1,10 @@
 /**
  * Module: API for RSLanguage.
  */
-import { type AstNode } from '../parsing';
+import { type AstNode, buildTree } from '../parsing';
 
+import { normalizeAST } from './parser/normalize';
+import { parser as rslangParser } from './parser/parser';
 import { ArgumentsExtractor, type ArgumentsType } from './semantic/arguments-extractor';
 export { generateExpressionFromAst } from './parser/expression-generator';
 
@@ -11,10 +13,32 @@ export type AliasMapping = Record<string, string>;
 
 // cspell:disable
 const LOCALS_REGEXP = /[_a-zα-ω][a-zα-ω]*\d*/g;
-const GLOBALS_REGEXP = /[XCSADFPTN]\d+/g;
+const GLOBAL_ALIAS_SOURCE = '[XCSADFPTN]\\d+';
+const GLOBALS_REGEXP = new RegExp(GLOBAL_ALIAS_SOURCE, 'g');
 const COMPLEX_SYMBOLS_REGEXP = /[∀∃×ℬ;|:]/g;
 const TYPIFICATION_SET = /^ℬ+\([ℬ\(((X|C)\d+|Z)\)×]*\)$/g;
 // cspell:enable
+
+/** Whether {@link value} is a single schema global alias (e.g. `X1`, `F42`). */
+export function isGlobalAlias(value: string): boolean {
+  return new RegExp(`^${GLOBAL_ALIAS_SOURCE}$`).test(value);
+}
+
+/**
+ * Parse a RSLang expression into a normalized AST.
+ *
+ * Returns `null` for blank input. Parses the original `expression` string so node
+ * offsets match the source text (required for slice-based AST walks).
+ */
+export function parseRSLangExpression(expression: string): AstNode | null {
+  if (!expression.trim()) {
+    return null;
+  }
+  const tree = rslangParser.parse(expression);
+  const ast = buildTree(tree.cursor());
+  normalizeAST(ast, expression);
+  return ast;
+}
 
 /** Extract arguments from AST. */
 export function extractArguments(ast: AstNode): ArgumentsType[] {
@@ -98,6 +122,11 @@ export function substituteTemplateArgs(expression: string, mapping: AliasMapping
   } else {
     return `[${head}] ${body}`;
   }
+}
+
+/** Substitute local parameter aliases in an expression fragment. */
+export function substituteLocalAliases(expression: string, mapping: AliasMapping): string {
+  return applyPattern(expression, mapping, LOCALS_REGEXP);
 }
 
 /** Apply alias mapping. */

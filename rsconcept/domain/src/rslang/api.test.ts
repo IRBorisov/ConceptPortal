@@ -3,10 +3,27 @@ import { describe, expect, it } from 'vitest';
 import {
   applyTypificationMapping,
   extractGlobals,
+  isGlobalAlias,
   isSetTypification,
   isSimpleExpression,
+  parseRSLangExpression,
   splitTemplateDefinition
 } from './api';
+
+describe('Testing isGlobalAlias', () => {
+  it.each([
+    ['X1', true],
+    ['F42', true],
+    ['P6', true],
+    ['S1', true],
+    ['X1×X2', false],
+    ['F42[α]', false],
+    ['α', false],
+    ['', false]
+  ])('isGlobalAlias("%s") -> %s', (value, expected) => {
+    expect(isGlobalAlias(value)).toBe(expected);
+  });
+});
 
 const globalsData: [string, string][] = [
   ['', ''],
@@ -112,5 +129,16 @@ describe('Testing isSetTypification', () => {
     it(`isSetTypification("${input}") should be ${expected}`, () => {
       expect(isSetTypification(input)).toBe(expected);
     });
+  });
+});
+
+describe('parseRSLangExpression', () => {
+  it('returns null for blank input', () => {
+    expect(parseRSLangExpression('')).toBeNull();
+    expect(parseRSLangExpression('   ')).toBeNull();
+  });
+
+  it('parses non-blank expressions', () => {
+    expect(parseRSLangExpression('1 = 2')?.hasError).toBe(false);
   });
 });

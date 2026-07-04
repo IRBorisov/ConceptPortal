@@ -371,8 +371,8 @@ export function SandboxSchemaState({ children }: React.PropsWithChildren) {
     showCstTemplate({
       schema,
       insertAfter: activeCst?.id,
-      onCreate: value => {
-        void createConstituenta(value).then(response => onCreateCst(response.new_cst));
+      onCreate: batch => {
+        void createConstituentsBatch(batch).then(response => onCreateCstBatch(response.cst_list.map(cst => cst.id)));
       }
     });
   }

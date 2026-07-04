@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 
 import { useTx } from '@/i18n';
@@ -15,17 +15,23 @@ import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 import { type CreateFieldProps, type FieldStateData } from '@/utils/forms';
 import { withPreventDefault } from '@/utils/utils';
 
-import { type CreateConstituentaDTO, schemaCreateConstituenta } from '../../backend/types';
+import {
+  type CreateConstituentaDTO,
+  type CreateConstituentsBatchDTO,
+  schemaCreateConstituenta
+} from '../../backend/types';
+import { buildTemplateConstituentsBatch, getTemplateMainDuplicateAlias } from '../../utils/build-template-batch';
 import { FormCreateCst, type FormCreateCstFields } from '../dlg-create-cst/form-create-cst';
 import { useRsformDialogsStore } from '../rsform-dialog-store';
 
 import { TabArguments } from './tab-arguments';
 import { TabTemplate } from './tab-template';
+import { type TemplateSelection } from './template-context';
 import { TemplateState } from './template-state';
 
 export interface DlgCstTemplateProps {
   schema: RSForm;
-  onCreate: (data: CreateConstituentaDTO) => void;
+  onCreate: (data: CreateConstituentsBatchDTO) => void;
   insertAfter?: number;
 }
 
@@ -36,9 +42,16 @@ const TabID = {
 } as const;
 type TabID = (typeof TabID)[keyof typeof TabID];
 
+const emptySelection: TemplateSelection = {
+  prototype: null,
+  args: [],
+  templateItems: []
+};
+
 export function DlgCstTemplate() {
   const tx = useTx();
   const { schema, onCreate, insertAfter } = useRsformDialogsStore(state => state.props as DlgCstTemplateProps);
+  const [selection, setSelection] = useState<TemplateSelection>(emptySelection);
 
   const defaultValues: CreateConstituentaDTO = {
     insert_after: insertAfter ?? null,
@@ -58,16 +71,27 @@ export function DlgCstTemplate() {
     defaultValues,
     validators: {
       onChange: schemaCreateConstituenta
-    },
-    onSubmit: ({ value }) => onCreate(value)
+    }
   });
 
   const values = useStore(form.store, state => state.values);
   const alias = values.alias;
   const cst_type = values.cst_type;
+
+  const mainDuplicateAlias = useMemo(
+    () => getTemplateMainDuplicateAlias(schema, selection.templateItems, selection.prototype, selection.args, values),
+    [schema, selection, values]
+  );
+
   const { canSubmit, hint } = (() => {
-    if (!cst_type) {
+    if (!selection.prototype || !cst_type) {
       return { canSubmit: false, hint: tx('tx.cst.template.validate') };
+    }
+    if (mainDuplicateAlias) {
+      return {
+        canSubmit: false,
+        hint: tx('tx.lib.defineFormal.validate.duplicate', { aliases: mainDuplicateAlias })
+      };
     }
     if (!validateNewAlias(alias, cst_type, schema)) {
       return { canSubmit: false, hint: tx('tx.cst.alias.validate') };
@@ -137,13 +161,22 @@ export function DlgCstTemplate() {
     form.setFieldValue('definition_raw', newValue);
   }
 
+  function handleSubmit() {
+    if (!selection.prototype || mainDuplicateAlias) {
+      return;
+    }
+    onCreate(
+      buildTemplateConstituentsBatch(schema, selection.templateItems, selection.prototype, selection.args, values)
+    );
+  }
+
   return (
     <ModalForm
       header={tx('tx.cst.template.instantiate')}
       submitText={tx('tx.general.create')}
       className='w-172 h-140 px-6'
       canSubmit={canSubmit}
-      onSubmit={withPreventDefault(() => void form.handleSubmit())}
+      onSubmit={withPreventDefault(handleSubmit)}
       validationHint={hint}
       helpTopic={HelpTopic.RSL_TEMPLATES}
     >
@@ -161,6 +194,7 @@ export function DlgCstTemplate() {
             onAliasChange={handleAliasChange}
             onTermRawChange={handleTermRawChange}
             onDefinitionRawChange={handleDefinitionRawChange}
+            onSelectionChange={setSelection}
           >
             <TabPanel>
               <TabTemplate schema={schema} />

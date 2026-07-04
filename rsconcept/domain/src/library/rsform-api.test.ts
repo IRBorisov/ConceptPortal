@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { RSErrorCode } from '../rslang/error';
 
 import { CstType, type RSForm } from './rsform';
-import { applyMappingToConstituents, getAnalysisFor, validateAliasFormat } from './rsform-api';
+import { applyMappingToConstituents, getAnalysisFor, normalizeExpression, validateAliasFormat } from './rsform-api';
 
 const emptySchema = {} as RSForm;
 
@@ -86,5 +86,15 @@ describe('applyMappingToConstituents', () => {
 
     expect(items[0].alias).toBe('X3');
     expect(items[0].definition_formal).toBe('X3');
+  });
+});
+
+describe('normalizeExpression', () => {
+  it('normalizes spacing in derived definitions', () => {
+    expect(normalizeExpression('1 = 2', CstType.TERM)).toBe('1=2');
+  });
+
+  it('returns null for basic sets', () => {
+    expect(normalizeExpression('ℬ(X1)', CstType.STRUCTURED)).toBeNull();
   });
 });
