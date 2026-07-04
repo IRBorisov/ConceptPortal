@@ -1,7 +1,7 @@
 # Диагностика
 
 Читай, когда `analyzeExpression`, `applySchemaPatch`, `listDiagnostics` или `evaluate`
-вернули диагностику. Источник истины по кодам — `@rsconcept/domain/src/rslang/error.ts`.
+вернули диагностику. Коды ошибок определяются анализатором `@rsconcept/domain`; полный перечень — в таблице ниже.
 
 ## Где лежит диагностика
 

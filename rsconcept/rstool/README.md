@@ -52,9 +52,7 @@ Or run it as a child process from your own code:
 ```ts
 import { RSToolWrapperClient } from '@rsconcept/rstool/wrapper';
 
-// Default is for checkout/dev use: `npm run wrapper` in the current cwd.
-// For an installed package, pass { command: 'npx', args: ['rstool-wrapper'] }.
-const client = new RSToolWrapperClient();
+const client = new RSToolWrapperClient({ command: 'npx', args: ['rstool-wrapper'] });
 await client.waitUntilReady();
 const session = await client.call<{ sessionId: string }>('createSession');
 await client.close();
@@ -70,17 +68,6 @@ await client.close();
 ## Publishing
 
 Maintainers: see [PUBLISHING.md](./PUBLISHING.md) for npm release steps.
-
-## Repo scripts
-
-From `rsconcept/rstool` (or run `powershell -File scripts/dev/LocalDevSetup.ps1` from the repo root on Windows):
-
-- `npm install` / `npm ci`
-- `npm run typecheck`
-- `npm test`
-- `npm run build` — produce `dist/` via tsdown
-- `npm run wrapper` — dev stdio wrapper via `tsx`
-- `npm run example:client`, `npm run example:build-schema`, `npm run example:build-rsmodel` — полный список `example:*` и `kinship:cli` в [`examples/README.md`](examples/README.md)
 
 ## Stdio protocol
 
@@ -164,7 +151,7 @@ Response:
 Run:
 
 ```bash
-npm run example:client
+npx tsx node_modules/@rsconcept/rstool/examples/agent-client.ts
 ```
 
 File: [`examples/agent-client.ts`](examples/agent-client.ts)

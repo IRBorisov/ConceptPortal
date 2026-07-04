@@ -4,23 +4,6 @@
 `rstool` сам не ходит в REST API: он работает с in-memory сессиями.
 Агент получает JSON Portal отдельно, затем переносит конституенты через контракт `rstool`.
 
-## Репозиторий Portal
-
-Исходники приложения: [github.com/IRBorisov/ConceptPortal](https://github.com/IRBorisov/ConceptPortal)
-
-Для работы с продакшен API клон не обязателен — достаточно этого файла и OpenAPI (`/schema`).
-Если нужен исходный контекст, подгружай файлы из репозитория (Read в checkout, `git clone`, или просмотр на GitHub):
-
-| Нужно                              | Путь в репозитории                                                                                                                |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Правила монорепо, UI→API           | [`AGENTS.md`](https://github.com/IRBorisov/ConceptPortal/blob/main/AGENTS.md)                                                     |
-| Обзор, локальная разработка        | [`README.md`](https://github.com/IRBorisov/ConceptPortal/blob/main/README.md)                                                     |
-| Библиотека, context-search, by-ids | [`rsconcept/backend/apps/library/`](https://github.com/IRBorisov/ConceptPortal/tree/main/rsconcept/backend/apps/library)          |
-| Правила и команды бэкенда          | [`rsconcept/backend/AGENTS.md`](https://github.com/IRBorisov/ConceptPortal/blob/main/rsconcept/backend/AGENTS.md)                 |
-| RSForm / КС API                    | [`rsconcept/backend/apps/rsform/`](https://github.com/IRBorisov/ConceptPortal/tree/main/rsconcept/backend/apps/rsform)            |
-| Хосты UI и API в проде             | [`nginx/production.conf`](https://github.com/IRBorisov/ConceptPortal/blob/main/nginx/production.conf)                             |
-| Справка rstool (этот файл в npm)   | [`rsconcept/rstool/docs/PORTAL-API.md`](https://github.com/IRBorisov/ConceptPortal/blob/main/rsconcept/rstool/docs/PORTAL-API.md) |
-
 ## Хосты
 
 - UI: `https://portal.acconcept.ru/`
@@ -66,7 +49,7 @@ GET https://api.portal.acconcept.ru/api/rsforms/856/details
 
 1. Пользователь временно делает схему публичной (`access_policy: public`).
 2. Пользователь экспортирует JSON (`GET /api/rsforms/:id/details` из своей сессии в UI
-   или экспорт из Portal) и передаёт файл в чат/репозиторий — агент переносит в `rstool`.
+   или экспорт из Portal) и передаёт JSON в чат или файл — агент переносит в `rstool`.
 3. Работа с личной библиотекой остаётся в UI Portal; агент помогает с публичными схемами
    и с JSON, который пользователь явно предоставил.
 

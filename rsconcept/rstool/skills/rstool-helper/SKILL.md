@@ -1,36 +1,40 @@
 ---
 name: rstool-helper
 description: >-
-  RS language, formal definitions and conceptual schema design for agents. Read GUIDE and docs from node_modules.
+  RSLang, формальные определения и проектирование концептуальных схем для агентов. Читай GUIDE и docs из node_modules.
 ---
 
 # rstool-helper
 
-Thin **entry** skill. Full guide and docs stay in the package — use the Read tool on the paths below (from the project root).
+Тонкий **входной** skill. Полный гайд и документация остаются в пакете — читай через Read tool по путям ниже (от корня проекта).
 
-## If the entry skill is not installed yet
+## Если входной skill ещё не установлен
 
-The user ran `npm install @rsconcept/rstool` but has not registered the agent skill in the project. **Run the install procedure** in:
+Пользователь выполнил `npm install @rsconcept/rstool`, но не зарегистрировал agent skill в проекте. **Выполни процедуру установки** из:
 
 `node_modules/@rsconcept/rstool/skills/INSTALL.md`
 
-Then continue with the canonical files below.
+Затем продолжай с каноническими файлами ниже.
 
-## Canonical files (read before rstool work)
+## Канонические файлы (читать перед работой с rstool)
 
-- **Start here** — воркфлоу и чеклисты: `node_modules/@rsconcept/rstool/skills/rstool-helper/GUIDE.md`
+- **Начни здесь** — воркфлоу и чеклисты: `node_modules/@rsconcept/rstool/skills/rstool-helper/GUIDE.md`
 - API, stdio, контракт: `node_modules/@rsconcept/rstool/skills/rstool-helper/REFERENCE.md`
 - Примеры, типичные ошибки: `node_modules/@rsconcept/rstool/skills/rstool-helper/EXAMPLES.md`
-- Language / domain docs: `node_modules/@rsconcept/rstool/docs/*.md`
-- Install procedure: `node_modules/@rsconcept/rstool/skills/INSTALL.md`
+- Язык и предметная область: `node_modules/@rsconcept/rstool/docs/*.md`
+- Процедура установки: `node_modules/@rsconcept/rstool/skills/INSTALL.md`
 
-Always open **GUIDE.md** first when starting a rstool task, then **REFERENCE.md** / **EXAMPLES.md** / relevant `docs/*.md` as needed.
+Перед началом задачи rstool всегда открывай **GUIDE.md**, затем по необходимости **REFERENCE.md** / **EXAMPLES.md** / нужные `docs/*.md`.
+
+## Язык ответа пользователю
+
+В тексте для пользователя используй термины предметной области («формальное определение», «конституента», «диагностики»), а не английские имена полей и методов API (`definitionFormal`, `applySchemaPatch`). Идентификаторы API — только в коде, patch-ах и JSON. Словарь соответствий — раздел «Язык ответа» в GUIDE.md.
 
 ## Portal (приложение)
 
-Репозиторий: [github.com/IRBorisov/ConceptPortal](https://github.com/IRBorisov/ConceptPortal). REST и curl — `node_modules/@rsconcept/rstool/docs/PORTAL-API.md`; карта путей в исходниках — раздел «Репозиторий Portal» в том же файле.
+REST API и curl — `node_modules/@rsconcept/rstool/docs/PORTAL-API.md`.
 
-## Quick facts
+## Кратко
 
-- Package: `@rsconcept/rstool`; wrapper: `npx rstool-wrapper`
-- `@rsconcept/domain` is installed as a dependency (analyzer, errors in `src/rslang/error.ts`)
+- Пакет: `@rsconcept/rstool`; обёртка: `npx rstool-wrapper`
+- `@rsconcept/domain` устанавливается как зависимость (анализатор и коды ошибок)

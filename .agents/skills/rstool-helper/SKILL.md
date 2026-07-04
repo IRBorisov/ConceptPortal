@@ -1,34 +1,38 @@
 ---
 name: rstool-helper
 description: >-
-  RS language, formal definitions and conceptual schema design for agents. Read GUIDE and docs from rsconcept/rstool in the repo.
+  RSLang, формальные определения и проектирование концептуальных схем для агентов. Читай GUIDE и docs из rsconcept/rstool в репозитории.
 ---
 
 # rstool-helper (Concept Portal workspace)
 
-Thin entry skill for this repository. **Do not** `npm install @rsconcept/rstool` for in-tree work — the library and docs are at `rsconcept/rstool/`.
+Тонкий входной skill для этого репозитория. Для работы **в дереве** не делай `npm install @rsconcept/rstool` — библиотека и документация лежат в `rsconcept/rstool/`.
 
-If this skill is copied into a project that installed `@rsconcept/rstool` from npm, use the package paths under `node_modules/@rsconcept/rstool/`. In this Portal workspace, always prefer the in-repo files because they match the local code under edit.
+Если skill скопирован в проект, где `@rsconcept/rstool` установлен из npm, используй пути пакета под `node_modules/@rsconcept/rstool/`. В workspace Portal всегда предпочитай in-repo файлы — они соответствуют локальному коду под правкой.
 
-## Canonical files (read before rstool work)
+## Канонические файлы (читать перед работой с rstool)
 
-Paths are from the **workspace root**.
+Пути — от **корня workspace**.
 
-| What                                                   | Path                                                 |
-| :----------------------------------------------------- | :--------------------------------------------------- |
-| **Start here** — воркфлоу, чеклисты, cstType, S# vs D# | `rsconcept/rstool/skills/rstool-helper/GUIDE.md`     |
-| API, stdio, контракт                                   | `rsconcept/rstool/skills/rstool-helper/REFERENCE.md` |
-| Примеры, типичные ошибки                               | `rsconcept/rstool/skills/rstool-helper/EXAMPLES.md`  |
-| Language / domain docs                                 | `rsconcept/rstool/docs/*.md`                         |
-| Package agent rules                                    | `rsconcept/rstool/AGENTS.md`                         |
+| Что                                                     | Путь                                                 |
+| :------------------------------------------------------ | :--------------------------------------------------- |
+| **Начни здесь** — воркфлоу, чеклисты, cstType, S# vs D# | `rsconcept/rstool/skills/rstool-helper/GUIDE.md`     |
+| API, stdio, контракт                                    | `rsconcept/rstool/skills/rstool-helper/REFERENCE.md` |
+| Примеры, типичные ошибки                                | `rsconcept/rstool/skills/rstool-helper/EXAMPLES.md`  |
+| Язык и предметная область                               | `rsconcept/rstool/docs/*.md`                         |
+| Правила агента для пакета                               | `rsconcept/rstool/AGENTS.md`                         |
 
-Always open **GUIDE.md** first when starting a rstool task, then **REFERENCE.md** / **EXAMPLES.md** / relevant `docs/*.md` as needed.
+Перед началом задачи rstool всегда открывай **GUIDE.md**, затем по необходимости **REFERENCE.md** / **EXAMPLES.md** / нужные `docs/*.md`.
+
+## Язык ответа пользователю
+
+В тексте для пользователя используй термины предметной области («формальное определение», «конституента», «диагностики»), а не английские имена полей и методов API (`definitionFormal`, `applySchemaPatch`). Идентификаторы API — только в коде, patch-ах и JSON. Словарь соответствий — раздел «Язык ответа» в GUIDE.md.
 
 ## Portal (приложение)
 
 Репозиторий: [github.com/IRBorisov/ConceptPortal](https://github.com/IRBorisov/ConceptPortal). REST и curl — `rsconcept/rstool/docs/PORTAL-API.md`; карта путей в исходниках — раздел «Репозиторий Portal» в том же файле.
 
-## Quick facts
+## Кратко
 
-- Run typecheck/tests from `rsconcept/rstool` (`npm test`, `npm run wrapper`)
-- `@rsconcept/domain` is at `rsconcept/domain` in this workspace
+- Typecheck и тесты — из `rsconcept/rstool` (`npm test`, `npm run wrapper`)
+- `@rsconcept/domain` в этом workspace — в `rsconcept/domain`

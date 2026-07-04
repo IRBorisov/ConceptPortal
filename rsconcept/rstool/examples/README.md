@@ -4,21 +4,13 @@
 
 ## Как запускать
 
-**Из checkout репозитория** (`rsconcept/rstool`):
-
-```bash
-npm install
-npm run build          # обёртка для скриптов
-npm run example:client # минимальный цикл API; схемы — см. таблицу ниже
-```
-
-**После `npm install @rsconcept/rstool`** (нужен `tsx` или аналог):
+После `npm install @rsconcept/rstool` (нужен `tsx` или аналог):
 
 ```bash
 npx tsx node_modules/@rsconcept/rstool/examples/agent-client.ts
 ```
 
-Скрипты пишут JSON в `examples/<topic>/`; запускайте из корня пакета (каталог с `package.json` rstool).
+Скрипты пишут JSON в `examples/<topic>/` рядом с собой. Запускайте из каталога, где установлен пакет.
 
 ## Макет папки темы
 

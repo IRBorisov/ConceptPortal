@@ -71,9 +71,7 @@ const session = tool.importData(portalDetailsJsonString);
 ```ts
 import { RSToolWrapperClient } from '@rsconcept/rstool/wrapper';
 
-// Из checkout rstool: по умолчанию запускает `npm run wrapper` в текущем cwd.
-// Для установленного пакета: new RSToolWrapperClient({ command: 'npx', args: ['rstool-wrapper'] }).
-const client = new RSToolWrapperClient();
+const client = new RSToolWrapperClient({ command: 'npx', args: ['rstool-wrapper'] });
 await client.waitUntilReady();
 
 await client.call('applySchemaPatch', {
