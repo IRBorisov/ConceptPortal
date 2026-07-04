@@ -56,7 +56,7 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
       <StatsCategory
         id='model-stats-structures'
         label={tx('tx.schema.short')}
-        primaryLabel={tx('tx.concept.basic.plural')}
+        primaryLabel={tx('tx.concept.basic.plural.short')}
         primaryValue={countBase}
         primaryTitle={tx('tx.concept.basic.hint')}
         secondaryLabel={tx('tx.concept.system.complexity')}

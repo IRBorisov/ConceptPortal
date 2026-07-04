@@ -112,7 +112,8 @@ export const txLibraryFr: Record<string, string> = {
   'tx.lib.item.visibility.hint': 'Afficher la bibliothèque',
 
   'tx.concept': 'Concept',
-  'tx.concept.basic.plural': 'Basiques',
+  'tx.concept.basic.plural': 'Non définis',
+  'tx.concept.basic.plural.short': 'Basiques',
   'tx.concept.basic.hint': 'Concepts non définis et axiomatiques',
   'tx.concept.basic.validate.noConvention': 'Sans convention',
   'tx.concept.basic.validate.noInterpretation': 'Sans interprétation',

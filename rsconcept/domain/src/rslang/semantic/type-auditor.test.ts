@@ -159,12 +159,12 @@ const errorData = [
   // Functions
   ['F1[X1]', { code: RSErrorCode.invalidArgsArity, from: 0, to: 6, params: ['2', '1'] }],
   ['F1[X1, X1, X1]', { code: RSErrorCode.invalidArgsArity, from: 0, to: 14, params: ['2', '3'] }],
-  ['F1[X1, S1]', { code: RSErrorCode.invalidArgumentType, from: 7, to: 9, params: ['b∈ℬ(X1)', 'ℬ(X1×X1)'] }],
-  ['F1[S1, X1]', { code: RSErrorCode.invalidArgumentType, from: 3, to: 5, params: ['a∈ℬ(X1)', 'ℬ(X1×X1)'] }],
+  ['F1[X1, S1]', { code: RSErrorCode.invalidArgumentType, from: 7, to: 9, params: ['F1<b>∈ℬ(X1)', 'ℬ(X1×X1)'] }],
+  ['F1[S1, X1]', { code: RSErrorCode.invalidArgumentType, from: 3, to: 5, params: ['F1<a>∈ℬ(X1)', 'ℬ(X1×X1)'] }],
   ['P1[X1]', { code: RSErrorCode.invalidArgsArity, from: 0, to: 6, params: ['2', '1'] }],
   ['P1[X1, X1, X1]', { code: RSErrorCode.invalidArgsArity, from: 0, to: 14, params: ['2', '3'] }],
-  ['P1[X1, S1]', { code: RSErrorCode.invalidArgumentType, from: 7, to: 9, params: ['b∈ℬ(X1)', 'ℬ(X1×X1)'] }],
-  ['P1[S1, X1]', { code: RSErrorCode.invalidArgumentType, from: 3, to: 5, params: ['a∈ℬ(X1)', 'ℬ(X1×X1)'] }],
+  ['P1[X1, S1]', { code: RSErrorCode.invalidArgumentType, from: 7, to: 9, params: ['P1<b>∈ℬ(X1)', 'ℬ(X1×X1)'] }],
+  ['P1[S1, X1]', { code: RSErrorCode.invalidArgumentType, from: 3, to: 5, params: ['P1<a>∈ℬ(X1)', 'ℬ(X1×X1)'] }],
   // Integral
   ['card(debool(X1))', { code: RSErrorCode.invalidCard, from: 5, to: 15, params: ['X1'] }],
   ['card(S3)', { code: RSErrorCode.invalidCard, from: 5, to: 7, params: ['C1'] }],
@@ -313,7 +313,26 @@ describe('TypeAuditor', () => {
       code: RSErrorCode.invalidArgumentType,
       from: 7,
       to: 12,
-      params: ['b∈X1', 'ℬℬ(X1)']
+      params: ['F2<b>∈X1', 'ℬℬ(X1)']
+    });
+  });
+
+  it('Qualifies unresolved radicals and parameter aliases in invalidArgumentType message', () => {
+    typeContext.set('P44', {
+      typeID: TypeID.predicate,
+      result: LogicT,
+      args: [
+        { alias: 'α', type: bool(tuple([tuple([basic('R1'), basic('R2')]), basic('C1')])) },
+        { alias: 'β', type: bool(tuple([tuple([basic('R2'), basic('R3')]), basic('C1')])) }
+      ]
+    });
+    const inner = tuple([basic('X1'), basic('X2')]);
+    typeContext.set('S9', bool(tuple([inner, basic('C1')])));
+    expectError('P44[S9, S9]', {
+      code: RSErrorCode.invalidArgumentType,
+      from: 8,
+      to: 10,
+      params: ['P44<β>∈ℬ((X2×<P44>R3)×C1)', 'ℬ((X1×X2)×C1)']
     });
   });
 
@@ -331,7 +350,7 @@ describe('TypeAuditor', () => {
       code: RSErrorCode.invalidArgumentType,
       from: 7,
       to: 9,
-      params: ['ζ∈ℬℬ(X1)', 'Z']
+      params: ['P2<ζ>∈ℬℬ(X1)', 'Z']
     });
   });
 

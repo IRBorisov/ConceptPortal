@@ -47,11 +47,19 @@ export interface TemplateInstantiationItem {
   value_is_property: boolean;
 }
 
+/** Conflicting argument bindings inferred for the same template dependency. */
+export interface TemplateBindingConflict {
+  templateAlias: string;
+  paramAlias: string;
+  existing: string;
+  incoming: string;
+}
+
 /**
  * Batch create plan: dependencies first, selected template constituent last.
  *
- * Skips bank functions/predicates whose alias already exists in the target schema, and
- * constituents whose substituted formal definition already exists (normalized comparison).
+ * Reuses constituents whose substituted formal definition already exists in the target schema
+ * (normalized comparison), even when the bank alias differs from the matched target alias.
  * {@link TemplateInstantiationPlan.mainDuplicateAlias} reports when the selected template is a duplicate.
  * Does not set `insert_after`; the caller supplies insertion on the batch DTO.
  */
@@ -59,6 +67,8 @@ export interface TemplateInstantiationPlan {
   items: TemplateInstantiationItem[];
   /** Set when the selected template expression already exists in the target schema. */
   mainDuplicateAlias: string | null;
+  /** Set when nested template calls bind the same parameter to different global aliases. */
+  bindingConflict: TemplateBindingConflict | null;
 }
 
 /**
@@ -115,6 +125,7 @@ export class TemplateInstantiationPlanner {
   private readonly userMapping: AliasMapping;
   private readonly depBindings = new Map<string, Map<string, string>>();
   private readonly depRefs = new Map<string, Set<string>>();
+  private bindingConflict: TemplateBindingConflict | null = null;
 
   /** @param input - See {@link TemplateInstantiationInput}. */
   constructor(input: TemplateInstantiationInput) {
@@ -133,6 +144,10 @@ export class TemplateInstantiationPlanner {
     const mainDefinition = substituteTemplateArgs(this.prototype.definition_formal, this.userMapping);
     this.collectDependencies(mainDefinition, this.userMapping);
 
+    if (this.bindingConflict) {
+      return { items: [], mainDuplicateAlias: null, bindingConflict: this.bindingConflict };
+    }
+
     const definitionIndex = createFormalDefinitionIndex(this.targetSchema);
     const dependencyItems = this.buildDependencyItems(definitionIndex);
     const { item: mainItem, duplicateAlias: mainDuplicateAlias } = this.buildMainItem(
@@ -144,7 +159,8 @@ export class TemplateInstantiationPlanner {
 
     return {
       items: mainItem ? [...dependencyItems.items, mainItem] : dependencyItems.items,
-      mainDuplicateAlias
+      mainDuplicateAlias,
+      bindingConflict: null
     };
   }
 
@@ -221,7 +237,10 @@ export class TemplateInstantiationPlanner {
   }
 
   private ensureDep(templateAlias: string, bindings: Map<string, string>, referrer?: string): void {
-    if (targetHasAlias(this.targetSchema, templateAlias) || !this.templateByAlias.has(templateAlias)) {
+    if (this.bindingConflict) {
+      return;
+    }
+    if (!this.templateByAlias.has(templateAlias)) {
       return;
     }
     if (referrer && this.depBindings.has(referrer)) {
@@ -229,7 +248,12 @@ export class TemplateInstantiationPlanner {
       refs.add(templateAlias);
       this.depRefs.set(referrer, refs);
     }
-    const merged = mergeBindings(this.depBindings.get(templateAlias), bindings);
+    const mergeResult = mergeBindings(this.depBindings.get(templateAlias), bindings);
+    if (!mergeResult.ok) {
+      this.bindingConflict = { templateAlias, ...mergeResult.conflict };
+      return;
+    }
+    const merged = mergeResult.bindings;
     const changed =
       !this.depBindings.has(templateAlias) || merged.size !== (this.depBindings.get(templateAlias)?.size ?? 0);
     this.depBindings.set(templateAlias, merged);
@@ -243,6 +267,9 @@ export class TemplateInstantiationPlanner {
   }
 
   private collectDependencies(expression: string, scope: AliasMapping, referrer?: string): void {
+    if (this.bindingConflict) {
+      return;
+    }
     const ast = parseRSLangExpression(expression);
     if (!ast) {
       return;
@@ -332,14 +359,21 @@ function resolveArgBinding(argExpr: string, scope: AliasMapping): string | undef
   return undefined;
 }
 
-function mergeBindings(existing: Map<string, string> | undefined, incoming: Map<string, string>): Map<string, string> {
+type MergeBindingsResult =
+  | { ok: true; bindings: Map<string, string> }
+  | { ok: false; conflict: { paramAlias: string; existing: string; incoming: string } };
+
+function mergeBindings(existing: Map<string, string> | undefined, incoming: Map<string, string>): MergeBindingsResult {
   const result = new Map(existing);
   for (const [alias, value] of incoming) {
-    if (!result.has(alias)) {
+    const existingValue = result.get(alias);
+    if (existingValue === undefined) {
       result.set(alias, value);
+    } else if (existingValue !== value) {
+      return { ok: false, conflict: { paramAlias: alias, existing: existingValue, incoming: value } };
     }
   }
-  return result;
+  return { ok: true, bindings: result };
 }
 
 function bindingMapToArgs(params: TemplateParam[], bindings: Map<string, string>): ArgumentValue[] {
@@ -399,10 +433,6 @@ function extractFuncCalls(ast: AstNode, expression: string): FuncCallRef[] {
     });
   });
   return result;
-}
-
-function targetHasAlias(schema: RSForm, alias: string): boolean {
-  return schema.items.some(cst => cst.alias === alias);
 }
 
 function topologicalSort(aliases: string[], refs: Map<string, Set<string>>): string[] {

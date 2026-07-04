@@ -15,13 +15,14 @@ export type AliasMapping = Record<string, string>;
 const LOCALS_REGEXP = /[_a-zα-ω][a-zα-ω]*\d*/g;
 const GLOBAL_ALIAS_SOURCE = '[XCSADFPTN]\\d+';
 const GLOBALS_REGEXP = new RegExp(GLOBAL_ALIAS_SOURCE, 'g');
+const GLOBAL_ALIAS_ANCHORED_REGEXP = new RegExp(`^${GLOBAL_ALIAS_SOURCE}$`);
 const COMPLEX_SYMBOLS_REGEXP = /[∀∃×ℬ;|:]/g;
 const TYPIFICATION_SET = /^ℬ+\([ℬ\(((X|C)\d+|Z)\)×]*\)$/g;
 // cspell:enable
 
 /** Whether {@link value} is a single schema global alias (e.g. `X1`, `F42`). */
 export function isGlobalAlias(value: string): boolean {
-  return new RegExp(`^${GLOBAL_ALIAS_SOURCE}$`).test(value);
+  return GLOBAL_ALIAS_ANCHORED_REGEXP.test(value);
 }
 
 /**

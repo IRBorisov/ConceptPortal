@@ -62,13 +62,15 @@ export function HelpRSLangExpressionParameterEn() {
         parameters, the inferred grades must agree.
       </p>
       <p>
-        On a mismatch, the message gives the expected and actual typifications, for example: expected ζ∈ℬℬ(X1), got Z.
-        For arguments after the first, radicals in the expected typification are replaced with values already inferred
-        from earlier arguments — <code>R1</code> is shown as the concrete grade, as in the example.
+        On a mismatch, the message gives the expected and actual typifications, for example: expected{' '}
+        <code>{'P2<ζ>∈ℬℬ(X1)'}</code>, got Z. The parameter name is qualified with the called function&apos;s name so it
+        is not confused with same-named variables in an outer scope. For arguments after the first, radicals in the
+        expected typification are replaced with values already inferred from earlier arguments — <code>R1</code> is
+        shown as the concrete grade, as in the example.
       </p>
       <p>
         If the error is on the first argument and no radical value is available yet, the diagnostic may qualify the
-        radical with the function name, e.g. <code>{'R1<P2>'}</code>.
+        radical with the function name on the left, e.g. <code>{'<P2>R1'}</code>.
       </p>
     </>
   );

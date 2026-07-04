@@ -50,7 +50,7 @@ export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaSt
       <StatsCategory
         id='stats-structures'
         label={tx('tx.concept.system.core')}
-        primaryLabel={tx('tx.concept.basic.plural')}
+        primaryLabel={tx('tx.concept.basic.plural.short')}
         primaryValue={countBase}
         primaryTitle={tx('tx.concept.basic.hint')}
         secondaryLabel={tx('tx.concept.system.complexity')}
