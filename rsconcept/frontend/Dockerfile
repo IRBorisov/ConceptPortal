@@ -18,8 +18,8 @@ RUN pnpm install --frozen-lockfile --filter frontend...
 
 COPY rsconcept/domain rsconcept/domain
 COPY rsconcept/frontend rsconcept/frontend
-COPY rsconcept/frontend/env/.env.$BUILD_TYPE rsconcept/frontend/.env
-RUN rm -rf rsconcept/frontend/env
+COPY rsconcept/frontend/env/.env.$BUILD_TYPE rsconcept/frontend/.env.production
+RUN rm -rf rsconcept/frontend/env rsconcept/frontend/.env.local
 
 ENV NODE_ENV=production
 RUN pnpm --filter @rsconcept/domain run build
