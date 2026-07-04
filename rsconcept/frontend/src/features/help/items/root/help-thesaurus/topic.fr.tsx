@@ -109,9 +109,7 @@ export function HelpThesaurusFr() {
 
       <ul>
         <b>Classification selon la nature de la définition formelle</b>
-        <li>
-          Concept de base (<i>concept non défini</i>) sans définition, fixé par convention et axiomes.
-        </li>
+        <li>Concept non défini sans définition, fixé par convention et axiomes.</li>
         <li>
           Concept dérivé (<i>concept définissable</i>) muni d&apos;une définition formelle.
         </li>

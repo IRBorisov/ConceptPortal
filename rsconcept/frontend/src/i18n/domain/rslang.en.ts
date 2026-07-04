@@ -94,7 +94,7 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.value.import': 'Import value',
   'tx.rslang.value.add.random': 'Add random items',
   'tx.rslang.value.add.random.hint': 'Generate random values for the current constituent',
-  'tx.rslang.value.add.random.fail': 'Failed to generate random values',
+  'tx.rslang.value.add.random.fail': 'Failed to generate random values: the set is empty',
 
   'tx.rslang.valueClass.full': 'Full value',
   'tx.rslang.valueClass.property': 'Non-dimensionable value',

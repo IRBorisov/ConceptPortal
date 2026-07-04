@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
-
 import { useTx } from '@/i18n';
 import { CstType, type RSForm } from '@rsconcept/domain/library';
 import { applyFilterCategory, isTemplateCst } from '@rsconcept/domain/library/rsform-api';
@@ -11,7 +9,6 @@ import { useTemplates } from '@/features/library/backend/use-templates';
 import { TextArea } from '@/components/input';
 import { ComboBox } from '@/components/input/combo-box';
 
-import { useRSForm } from '../../backend/use-rsform';
 import { PickConstituenta } from '../../components/pick-constituenta';
 import { RSInput } from '../../components/rs-input';
 
@@ -27,23 +24,15 @@ export function TabTemplate({ schema }: TabTemplateProps) {
     templateID, //
     filterCategory,
     prototype,
+    templateSchema,
     onChangePrototype,
     onChangeTemplateID,
-    onChangeFilterCategory,
-    onChangeTemplateItems
+    onChangeFilterCategory
   } = useTemplateContext();
 
   const { templates } = useTemplates();
   const templateOptions = [{ ...schema, title: tx('tx.schema.current') }, ...templates];
-  const { schema: templateSchema } = useRSForm({ itemID: templateID ?? undefined });
   const selectedTemplate = templateOptions.find(item => item.id === templateID);
-
-  useEffect(
-    function syncTemplateItems() {
-      onChangeTemplateItems(templateSchema?.items ?? []);
-    },
-    [templateSchema, onChangeTemplateItems]
-  );
 
   const constituents = templateSchema?.items.filter(isTemplateCst) ?? [];
   const filteredData = !filterCategory ? constituents : applyFilterCategory(filterCategory, constituents);
