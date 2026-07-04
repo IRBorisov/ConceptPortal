@@ -52,9 +52,9 @@
 | `0x8419` | `expectedExpressionBody`   | —                         | Нужно теоретико-множественное тело функции (ТФ).                                      |
 | `0x841A` | `expectedLogicBody`        | —                         | Нужно логическое тело функции.                                                        |
 | `0x841B` | `expectedQuantifierBody`   | —                         | Нужно логическое тело после `∀(∃)…∈домен`.                                            |
-| `0x841C` | `expectedDeclarativeBody`  | —                         | Допиши декларативное `D{…∈…                                                           | …}`. |
-| `0x841D` | `expectedImperativeBody`   | —                         | Допиши императивное `I{…                                                              | …}`. |
-| `0x841E` | `expectedRecursiveBody`    | —                         | Допиши рекурсивное `R{…:=…                                                            | …    | …}`. |
+| `0x841C` | `expectedDeclarativeBody`  | —                         | Допиши декларативное `D{…∈… \| …}`.                                                   |
+| `0x841D` | `expectedImperativeBody`   | —                         | Допиши императивное `I{… \| …}`.                                                      |
+| `0x841E` | `expectedRecursiveBody`    | —                         | Допиши рекурсивное `R{…:=… \| … \| …}`.                                               |
 | `0x841F` | `expectedQuantifierDomain` | —                         | После переменной квантора нужны `∈` и домен.                                          |
 | `0x8420` | `expectedRightOperand`     | —                         | Нужен правый операнд после оператора.                                                 |
 | `0x8421` | `expectedUnaryOperand`     | —                         | Нужно выражение после `¬`.                                                            |

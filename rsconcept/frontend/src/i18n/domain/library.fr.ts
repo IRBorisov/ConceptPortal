@@ -44,7 +44,7 @@ export const txLibraryFr: Record<string, string> = {
   'tx.lib.defineFormal.function': 'Définition de fonction',
   'tx.lib.convention': 'Convention',
   'tx.lib.convention.plural': 'Conventions',
-  'tx.lib.convention.hint': 'Convention d’interprétation du concept de base',
+  'tx.lib.convention.hint': 'Convention d’interprétation du concept non défini',
   'tx.lib.convention.validate.empty': 'Convention vide',
   'tx.lib.contents': 'Contenu',
 
@@ -147,7 +147,7 @@ export const txLibraryFr: Record<string, string> = {
   'tx.concept.system.evaluability': 'Interprétabilité',
   'tx.concept.system.evaluability.hint': 'Interprétation des définitions et des énoncés',
   'tx.concept.system.complexity': 'Complexité',
-  'tx.concept.system.complexity.hint': 'Nombre de termes décrivant les concepts de base',
+  'tx.concept.system.complexity.hint': 'Nombre de termes décrivant les concepts non définis',
   'tx.concept.system.body': 'Corps de la théorie',
 
   'tx.concept.framework': 'Conceptualisation',
@@ -283,7 +283,7 @@ export const txLibraryFr: Record<string, string> = {
   'tx.cst.class.nominal': 'Entité nominale',
   'tx.cst.class.nominal.short': 'Nominale',
   'tx.cst.class.basic': 'Notion non définie',
-  'tx.cst.class.basic.short': 'Base',
+  'tx.cst.class.basic.short': 'Non défini',
   'tx.cst.class.derived': 'Notion définie',
   'tx.cst.class.derived.short': 'Dérivé',
   'tx.cst.class.statement': 'Énoncé logique',
@@ -340,7 +340,7 @@ export const txLibraryFr: Record<string, string> = {
   'tx.model.plural': 'Modèles conceptuels',
   'tx.model.base': 'Base',
   'tx.model.base.cardinality': 'Cardinalité de la base',
-  'tx.model.base.cardinality.hint': 'Cardinalité totale des interprétations des notions de base',
+  'tx.model.base.cardinality.hint': 'Cardinalité totale des interprétations des notions non définies',
   'tx.model.create': 'Créer un modèle',
   'tx.model.edit': 'Modifier le modèle',
   'tx.model.delete': 'Supprimer le modèle',
@@ -355,7 +355,7 @@ export const txLibraryFr: Record<string, string> = {
   'tx.model.issue.plural.short': 'Erreurs mod.',
   'tx.model.issue.plural': 'Erreurs de modèle',
   'tx.model.issue.hint':
-    'Problèmes avec les données du modèle, y compris les interprétations de base manquantes, les données invalides, les axiomes non satisfaits, les erreurs de calcul et les termes vides',
+    'Problèmes avec les données du modèle, y compris les interprétations des notions non définies manquantes, les données invalides, les axiomes non satisfaits, les erreurs de calcul et les termes vides',
 
   'tx.evaluation': 'Évaluation d’expression',
   'tx.evaluation.hint': 'Vérification et évaluation d’expressions arbitraires',

@@ -174,7 +174,12 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
     >
       <h2 className='text-left w-fit'>{tx('tx.cst') + ' ' + activeCst.alias}</h2>
-      <ConstituentaPrimaryActions className='-mt-1' activeCst={activeCst} schema={schema} />
+      <ConstituentaPrimaryActions
+        className='-mt-1'
+        activeCst={activeCst}
+        schema={schema}
+        onSaveUnsaved={() => form.handleSubmit()}
+      />
 
       <form.Field name='item_data.term_raw'>
         {field => (
@@ -308,6 +313,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
               onShowTypeGraph={handleTypeGraph}
               onCreateCst={createCstFromData}
               onUpdateCst={patchConstituenta}
+              onSaveUnsaved={() => form.handleSubmit()}
               disabled={disabled || activeCst.is_inherited}
             />
           )}

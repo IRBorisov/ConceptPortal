@@ -45,7 +45,7 @@ export const txLibraryEn: Record<string, string> = {
   'tx.lib.defineFormal.function': 'Function definition',
   'tx.lib.convention': 'Convention',
   'tx.lib.convention.plural': 'Conventions',
-  'tx.lib.convention.hint': 'Convention of interpretation of the base concept',
+  'tx.lib.convention.hint': 'Convention of interpretation of the undefined concept',
   'tx.lib.convention.validate.empty': 'Empty convention',
   'tx.lib.contents': 'Contents',
 
@@ -145,7 +145,7 @@ export const txLibraryEn: Record<string, string> = {
   'tx.concept.system.evaluability': 'Interpretability',
   'tx.concept.system.evaluability.hint': 'Interpretation of definitions and assertions',
   'tx.concept.system.complexity': 'Complexity',
-  'tx.concept.system.complexity.hint': 'Number of terms describing base concepts',
+  'tx.concept.system.complexity.hint': 'Number of terms describing undefined concepts',
   'tx.concept.system.body': 'Theory body',
 
   'tx.concept.framework': 'Conceptualization',
@@ -280,7 +280,7 @@ export const txLibraryEn: Record<string, string> = {
   'tx.cst.class.nominal': 'Nominal entity',
   'tx.cst.class.nominal.short': 'Nominal',
   'tx.cst.class.basic': 'Undefined notion',
-  'tx.cst.class.basic.short': 'Basic',
+  'tx.cst.class.basic.short': 'Undefined',
   'tx.cst.class.derived': 'Defined notion',
   'tx.cst.class.derived.short': 'Derived',
   'tx.cst.class.statement': 'Logical statement',
@@ -337,7 +337,7 @@ export const txLibraryEn: Record<string, string> = {
   'tx.model.plural': 'Conceptual models',
   'tx.model.base': 'Base',
   'tx.model.base.cardinality': 'Base cardinality',
-  'tx.model.base.cardinality.hint': 'Total cardinality of interpretations of base concepts',
+  'tx.model.base.cardinality.hint': 'Total cardinality of interpretations of undefined concepts',
   'tx.model.create': 'Create model',
   'tx.model.edit': 'Edit model',
   'tx.model.delete': 'Delete model',
@@ -352,7 +352,7 @@ export const txLibraryEn: Record<string, string> = {
   'tx.model.issue.plural.short': 'Model errors',
   'tx.model.issue.plural': 'Model issues',
   'tx.model.issue.hint':
-    'Problems with the model data, including missing base interpretations, invalid data, failed axioms, calculation errors and empty terms',
+    'Problems with the model data, including missing undefined interpretations, invalid data, failed axioms, calculation errors and empty terms',
 
   'tx.evaluation': 'Expression evaluation',
   'tx.evaluation.hint': 'Checking and evaluating arbitrary expressions',

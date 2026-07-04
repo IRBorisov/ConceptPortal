@@ -17,7 +17,7 @@ export function HelpConceptSynthesisEn() {
       <p>
         The solution to this problem is the introduction of a formal operation of <b>conceptual schema synthesis</b>.
         The conceptual schema produced by this operation must unite the expressive capabilities of the source schemas
-        and contain concepts not expressible in the source schemas individually.
+        and contain concepts not definable in the source schemas individually.
       </p>
 
       <p>

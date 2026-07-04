@@ -4,6 +4,7 @@ import { useTx } from '@/i18n';
 import { type Constituenta, CstType, type RSForm } from '@rsconcept/domain/library';
 import { canProduceStructure } from '@rsconcept/domain/library/rsform-api';
 
+import { type UnsavedSaveHandler, useUnsavedChanges } from '@/app';
 import { PillValueClass } from '@/features/rsform/components/pill-valueClass';
 
 import { TextButton } from '@/components/control/text-button';
@@ -18,9 +19,15 @@ export interface ConstituentaPrimaryActionsProps {
   className?: string;
   activeCst: Constituenta;
   schema: RSForm;
+  onSaveUnsaved?: UnsavedSaveHandler;
 }
 
-export function ConstituentaPrimaryActions({ className, activeCst, schema }: ConstituentaPrimaryActionsProps) {
+export function ConstituentaPrimaryActions({
+  className,
+  activeCst,
+  schema,
+  onSaveUnsaved
+}: ConstituentaPrimaryActionsProps) {
   const tx = useTx();
   const {
     toggleCrucial, //
@@ -33,6 +40,7 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
   } = useSchemaEdit();
   const showStructurePlanner = useRsformDialogsStore(state => state.showStructurePlanner);
   const isModified = useModificationStore(state => state.isModified);
+  const { promptUnsaved } = useUnsavedChanges();
 
   const disabled = !activeCst || !isContentEditable;
   const crucial = activeCst.crucial;
@@ -53,7 +61,7 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
     return null;
   }
 
-  function handleStructurePlanner() {
+  function openStructurePlanner() {
     showStructurePlanner({
       schema: schema,
       targetID: activeCst.spawner_path ? activeCst.spawner! : activeCst.id,
@@ -61,6 +69,17 @@ export function ConstituentaPrimaryActions({ className, activeCst, schema }: Con
       onCreate: createCstFromData,
       onUpdate: patchConstituenta
     });
+  }
+
+  function handleStructurePlanner() {
+    if (isModified) {
+      void promptUnsaved({
+        onSave: onSaveUnsaved,
+        onConfirm: openStructurePlanner
+      });
+    } else {
+      openStructurePlanner();
+    }
   }
 
   return (

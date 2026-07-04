@@ -109,9 +109,7 @@ export function HelpThesaurusEn() {
 
       <ul>
         <b>Classification by kind of formal definition</b>
-        <li>
-          Base concept (<i>undefined concept</i>) has no definition and is fixed by convention and axioms.
-        </li>
+        <li>Undefined concept has no definition and is fixed by convention and axioms.</li>
         <li>
           Derived concept (<i>definable concept</i>) has a formal definition.
         </li>
