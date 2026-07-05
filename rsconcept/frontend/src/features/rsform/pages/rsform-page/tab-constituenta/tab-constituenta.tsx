@@ -19,10 +19,7 @@ import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 
 import { ViewConstituents } from '../../../components/view-constituents';
-import {
-  ConstituentsNarrowPicker,
-  ConstituentsNarrowSearch
-} from '../../../components/view-constituents/constituents-narrow-picker';
+import { ConstituentsNarrowPicker } from '../../../components/view-constituents/constituents-narrow-picker';
 import { hasActiveCstFilter, useCstSearchStore } from '../../../stores/cst-search';
 import { useSchemaEdit } from '../schema-edit-context';
 
@@ -58,9 +55,6 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
   const hasActiveFilter = hasActiveCstFilter(query, filter);
 
   const [toggleReset, setToggleReset] = useState(false);
-  const [pickerOpen, setPickerOpen] = useState(false);
-  const formContainerRef = useRef<HTMLDivElement>(null);
-  const searchAnchorRef = useRef<HTMLDivElement>(null);
 
   const disabled = !activeCst || !isContentEditable || isProcessing;
   const canReorderConstituents = isContentEditable && !isProcessing && !isModified && !hasActiveFilter;
@@ -157,14 +151,17 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
       />
 
       <div className='mx-0 min-w-120 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0 min-h-6'>
-        <div ref={formContainerRef} className='relative w-full'>
-          <ConstituentsNarrowSearch
-            ref={searchAnchorRef}
-            onOpen={() => setPickerOpen(true)}
-            className={clsx('lg:hidden', 'mb-1 ml-6 mt-2 self-start')}
-            showModelFilter={!!engine}
-            stopSearchKeyPropagation
-          />
+        <ConstituentsNarrowPicker
+          searchClassName='mb-1 ml-6 mt-2 self-start'
+          schema={schema}
+          engine={engine}
+          activeCst={activeCst}
+          isSchemaIssue={isSchemaIssue}
+          isModelIssue={engine ? cst => isModelIssue(engine, cst) : undefined}
+          onActivate={handleActivateCst}
+          showModelFilter={!!engine}
+          stopSearchKeyPropagation
+        >
           {activeCst ? (
             <FormConstituenta
               key={`cst-${activeCst.id}`}
@@ -175,20 +172,7 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
               onOpenEdit={handleOpenEdit}
             />
           ) : null}
-          <ConstituentsNarrowPicker
-            className='lg:hidden'
-            open={pickerOpen}
-            onOpenChange={setPickerOpen}
-            anchorRef={searchAnchorRef}
-            containerRef={formContainerRef}
-            schema={schema}
-            engine={engine}
-            activeCst={activeCst}
-            isSchemaIssue={isSchemaIssue}
-            isModelIssue={engine ? cst => isModelIssue(engine, cst) : undefined}
-            onActivate={handleActivateCst}
-          />
-        </div>
+        </ConstituentsNarrowPicker>
       </div>
       <ViewConstituents
         className={clsx(

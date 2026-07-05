@@ -10,10 +10,7 @@ import { isInferrable, isModelIssue } from '@rsconcept/domain/library/rsmodel-ap
 
 import { useConceptNavigation } from '@/app';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
-import {
-  ConstituentsNarrowPicker,
-  ConstituentsNarrowSearch
-} from '@/features/rsform/components/view-constituents/constituents-narrow-picker';
+import { ConstituentsNarrowPicker } from '@/features/rsform/components/view-constituents/constituents-narrow-picker';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { hasActiveCstFilter, useCstSearchStore } from '@/features/rsform/stores/cst-search';
 
@@ -53,9 +50,6 @@ export function TabValue() {
   const hasActiveFilter = hasActiveCstFilter(query, filter);
   const mainHeight = useMainHeight();
   const [toggleReset, setToggleReset] = useState(false);
-  const [pickerOpen, setPickerOpen] = useState(false);
-  const formContainerRef = useRef<HTMLDivElement>(null);
-  const searchAnchorRef = useRef<HTMLDivElement>(null);
 
   const canReorderConstituents =
     isContentEditable && !isProcessing && !isModified && schema.items.length > 1 && !hasActiveFilter;
@@ -154,14 +148,17 @@ export function TabValue() {
       />
 
       <div className='mx-0 min-w-120 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0 min-h-6'>
-        <div ref={formContainerRef} className='relative w-full'>
-          <ConstituentsNarrowSearch
-            ref={searchAnchorRef}
-            onOpen={() => setPickerOpen(true)}
-            className={clsx('lg:hidden', 'mb-1 ml-6 mt-2 self-start')}
-            showModelFilter
-            stopSearchKeyPropagation
-          />
+        <ConstituentsNarrowPicker
+          searchClassName='mb-1 ml-6 mt-2 self-start'
+          schema={schema}
+          engine={engine}
+          activeCst={activeCst}
+          isSchemaIssue={isSchemaIssue}
+          isModelIssue={cst => isModelIssue(engine, cst)}
+          onActivate={handleActivateCst}
+          showModelFilter
+          stopSearchKeyPropagation
+        >
           {activeCst ? (
             <FormValue
               key={`data-${activeCst.id}`}
@@ -171,20 +168,7 @@ export function TabValue() {
               toggleReset={toggleReset}
             />
           ) : null}
-          <ConstituentsNarrowPicker
-            className='lg:hidden'
-            open={pickerOpen}
-            onOpenChange={setPickerOpen}
-            anchorRef={searchAnchorRef}
-            containerRef={formContainerRef}
-            schema={schema}
-            engine={engine}
-            activeCst={activeCst}
-            isSchemaIssue={isSchemaIssue}
-            isModelIssue={cst => isModelIssue(engine, cst)}
-            onActivate={handleActivateCst}
-          />
-        </div>
+        </ConstituentsNarrowPicker>
       </div>
       <ViewConstituents
         className={clsx(

@@ -1,6 +1,5 @@
 'use client';
 
-import { useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { type Constituenta } from '@rsconcept/domain/library';
@@ -9,10 +8,7 @@ import { isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
 
 import { useConceptNavigation } from '@/app';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
-import {
-  ConstituentsNarrowPicker,
-  ConstituentsNarrowSearch
-} from '@/features/rsform/components/view-constituents/constituents-narrow-picker';
+import { ConstituentsNarrowPicker } from '@/features/rsform/components/view-constituents/constituents-narrow-picker';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
@@ -28,9 +24,6 @@ export function TabEvaluator() {
   const { schema, activeCst } = useSchemaEdit();
   const { engine } = useModelEdit();
   const mainHeight = useMainHeight();
-  const [pickerOpen, setPickerOpen] = useState(false);
-  const formContainerRef = useRef<HTMLDivElement>(null);
-  const searchAnchorRef = useRef<HTMLDivElement>(null);
 
   const listHeight = useFitHeight('8.2rem', '10rem');
 
@@ -64,29 +57,19 @@ export function TabEvaluator() {
       />
 
       <div className='mx-0 min-w-120 md:mx-auto pt-16 md:w-195 shrink-0 xs:pt-8 min-h-6'>
-        <div ref={formContainerRef} className='relative w-full'>
-          <ConstituentsNarrowSearch
-            ref={searchAnchorRef}
-            onOpen={() => setPickerOpen(true)}
-            className={clsx('lg:hidden', 'mb-1 ml-6 -mt-6 self-start')}
-            showModelFilter
-            stopSearchKeyPropagation
-          />
+        <ConstituentsNarrowPicker
+          searchClassName='mb-1 ml-6 -mt-6 self-start'
+          schema={schema}
+          engine={engine}
+          activeCst={activeCst}
+          isSchemaIssue={isSchemaIssue}
+          isModelIssue={cst => isModelIssue(engine, cst)}
+          onActivate={handleActivateCst}
+          showModelFilter
+          stopSearchKeyPropagation
+        >
           <FormEvaluator key={`eval-${activeCst?.id ?? 0}`} id={globalIDs.evaluator} />
-          <ConstituentsNarrowPicker
-            className='lg:hidden'
-            open={pickerOpen}
-            onOpenChange={setPickerOpen}
-            anchorRef={searchAnchorRef}
-            containerRef={formContainerRef}
-            schema={schema}
-            engine={engine}
-            activeCst={activeCst}
-            isSchemaIssue={isSchemaIssue}
-            isModelIssue={cst => isModelIssue(engine, cst)}
-            onActivate={handleActivateCst}
-          />
-        </div>
+        </ConstituentsNarrowPicker>
       </div>
 
       <ViewConstituents
