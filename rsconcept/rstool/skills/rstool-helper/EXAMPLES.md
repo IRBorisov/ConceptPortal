@@ -16,6 +16,25 @@ const result = tool.applySchemaPatch({
 console.log(result.summary.itemCount, result.success);
 ```
 
+## `X#`, `C#` и `Z`
+
+Выбор основания — [BASE-SELECTION.md](../../docs/BASE-SELECTION.md).
+
+```ts
+// X# + отношение
+tool.applySchemaPatch({
+  items: [
+    { alias: 'X1', convention: 'люди' },
+    { alias: 'S1', definitionFormal: 'ℬ(X1×X1)' }
+  ]
+});
+
+// Z×Z (шоколадный Ним) — без X# и C#
+tool.applySchemaPatch({
+  items: [{ alias: 'S1', definitionFormal: 'Z×Z', convention: 'ширина × длина' }]
+});
+```
+
 ## Анализ без сохранения
 
 ```ts

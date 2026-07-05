@@ -17,6 +17,7 @@ description: >-
 | Что                                                     | Путь                                                 |
 | :------------------------------------------------------ | :--------------------------------------------------- |
 | **Начни здесь** — воркфлоу, чеклисты, cstType, S# vs D# | `rsconcept/rstool/skills/rstool-helper/GUIDE.md`     |
+| **`X#` / `C#` / `Z`** — выбор основания                 | `rsconcept/rstool/docs/BASE-SELECTION.md`            |
 | API, stdio, контракт                                    | `rsconcept/rstool/skills/rstool-helper/REFERENCE.md` |
 | Примеры, типичные ошибки                                | `rsconcept/rstool/skills/rstool-helper/EXAMPLES.md`  |
 | Язык и предметная область                               | `rsconcept/rstool/docs/*.md`                         |

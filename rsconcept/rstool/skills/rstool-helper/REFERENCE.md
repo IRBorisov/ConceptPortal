@@ -22,8 +22,8 @@
 | `commitStep(message?, sessionId?)`             | Ревизия                                      |
 | `exportSession(sessionId?)`                    | JSON сессии                                  |
 | `exportPortal({ kind, format? }, sessionId?)`  | Portal Load from JSON                        |
-| `importData(payload, kind?)`                   | Импорт сессии / Portal                       |
-| `setModelValues({ set?, clear? }, sessionId?)` | Значения модели                              |
+| `importData(payload, kind?)`                   | Импорт сессии / Portal (`kind` см. ниже)     |
+| `setModelValues({ set?, clear? }, sessionId?)` | Значения модели (async — нужен `await`)      |
 | `getModelState(sessionId?)`                    | Состояние интерпретации                      |
 | `evaluate(input, sessionId?)`                  | Scratch или конституента                     |
 | `recalculateModel(sessionId?)`                 | Пересчёт                                     |
@@ -37,6 +37,15 @@ tool.applySchemaPatch({
   items: [{ alias: 'X1' }, { alias: 'S1', definitionFormal: 'ℬ(X1×X1)' }, { alias: 'D1', definitionFormal: 'Pr1(S1)' }]
 });
 ```
+
+- `items` упорядочиваются автоматически: поставщики раньше потребителей.
+- `id` и `cstType` можно опускать — выводятся из префикса `alias` (`X/C/S/D/F/P/A/T/N`).
+- `mode`: `'atomic'` (default; откат всей пачки при первой ошибке) или `'best_effort'` (применяются корректные элементы).
+- `commitMessage` фиксирует ревизию после успешного patch.
+
+### `importData(payload, kind?)`
+
+`kind`: `'auto'` (default; определяет формат по содержимому), `'session'`, `'portal-details'` (ответ `GET /api/rsforms/:id/details`), `'portal-schema'` (Portal Load from JSON). После импорта новая сессия становится текущей.
 
 ### Протокол stdio
 
@@ -54,10 +63,6 @@ tool.applySchemaPatch({
 {"id":"9","method":"exportPortal","params":{"kind":"schema"}}
 {"id":"10","method":"importData","params":{"payload":"..."}}
 ```
-
-### MCP tools
-
-17 tools — см. `rstool-mcp/README.md`.
 
 ## Документация
 
