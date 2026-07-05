@@ -109,6 +109,8 @@ export const txGeneralFr: Record<string, string> = {
   'tx.general.changes.save.success': 'Modifications enregistrées',
   'tx.general.changes.reset': 'Annuler les modifications',
   'tx.general.changes.unsaved.hint': 'Enregistrez ou annulez les modifications',
+  'tx.general.changes.crossTab.reset':
+    'Les modifications non enregistrées ont été annulées après une mise à jour dans un autre onglet.',
 
   'tx.general.load': 'Charger',
   'tx.general.load.fromFile': 'Charger depuis un fichier',

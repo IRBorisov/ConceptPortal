@@ -11,7 +11,7 @@ export const useSetValue = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
   const mutation = useMutation({
-    mutationKey: [KEYS.global_mutation, rsmodelApi.baseKey, 'clear-values'],
+    mutationKey: [KEYS.global_mutation, rsmodelApi.baseKey, 'set-value'],
     mutationFn: rsmodelApi.setValue,
     onSuccess: (_, context) => {
       updateTimestamp(context.itemID, new Date(Date.now()).toISOString());

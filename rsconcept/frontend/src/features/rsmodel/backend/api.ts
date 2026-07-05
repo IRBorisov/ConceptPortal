@@ -1,5 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 import { type QueryClient } from '@tanstack/react-query';
+import equal from 'fast-deep-equal';
 
 import { globalTx } from '@/i18n';
 
@@ -11,10 +12,21 @@ import { DELAYS, KEYS } from '@/backend/configuration';
 import { notifyModelSync } from './model-sync';
 import { type ConstituentaDataDTO, type RSModelDTO, type RSModelJsonDTO, schemaRSModel } from './types';
 
+/** Write an RSModel payload into the local TanStack Query cache (no cross-tab broadcast). */
 export function applyRSModel(data: RSModelDTO, client: QueryClient) {
-  client.setQueryData(rsmodelApi.getRSModelQueryOptions({ itemID: data.id }).queryKey, data);
+  const queryKey = rsmodelApi.getRSModelQueryOptions({ itemID: data.id }).queryKey;
+  client.setQueryData(queryKey, old => {
+    if (old && equal(old, data)) {
+      return old;
+    }
+    return data;
+  });
 }
 
+/**
+ * Apply a fresh RSModel payload locally and notify other tabs.
+ * Call from mutation `onSuccess` handlers that receive a full `RSModelDTO`.
+ */
 export function updateRSModel(data: RSModelDTO, client: QueryClient) {
   applyRSModel(data, client);
   notifyModelSync(data.id, data);

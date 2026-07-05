@@ -5,7 +5,10 @@ import { queryClient } from '@/backend/query-client';
 
 import { subscribeLibrarySync } from './library-sync';
 
-/** Refresh library caches when library-wide data was modified in another tab. */
+/**
+ * Subscribe to cross-tab library sync and invalidate library, RSForm, OSS, and RSModel query roots.
+ * Used when metadata changes (rename, move, access policy) affect multiple item types.
+ */
 export function useLibrarySync() {
   useEffect(function subscribeCrossTabLibrarySync() {
     return subscribeLibrarySync(function handleLibrarySync() {

@@ -12,10 +12,7 @@ export const useCreateInput = () => {
     mutationFn: ossApi.createInput,
     onSuccess: async data => {
       updateOss(data.oss, client);
-      await Promise.allSettled([
-        client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
-        client.invalidateQueries({ queryKey: [KEYS.rsform] })
-      ]);
+      await client.invalidateQueries({ queryKey: KEYS.composite.libraryList });
     },
     onError: () => client.invalidateQueries()
   });

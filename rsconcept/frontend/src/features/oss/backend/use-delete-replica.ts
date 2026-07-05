@@ -4,6 +4,7 @@ import { KEYS } from '@/backend/configuration';
 import { PARAMETER } from '@/utils/constants';
 
 import { ossApi, updateOss } from './api';
+import { type OperationSchemaDTO } from './types';
 
 export const useDeleteReplica = () => {
   const client = useQueryClient();
@@ -15,11 +16,11 @@ export const useDeleteReplica = () => {
         variables.beforeUpdate();
         await new Promise(resolve => setTimeout(resolve, PARAMETER.minimalTimeout));
       }
-      updateOss(data, client);
-      await Promise.allSettled([
-        client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
-        client.invalidateQueries({ queryKey: [KEYS.rsform] })
-      ]);
+      const removedSchemaId = client
+        .getQueryData<OperationSchemaDTO>(ossApi.getOssQueryOptions({ itemID: variables.itemID }).queryKey)
+        ?.operations.find(operation => operation.id === variables.data.target)?.result;
+      updateOss(data, client, [removedSchemaId]);
+      await client.invalidateQueries({ queryKey: KEYS.composite.libraryList });
     },
     onError: () => client.invalidateQueries()
   });

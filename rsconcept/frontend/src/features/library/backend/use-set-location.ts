@@ -3,15 +3,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type LibraryItem, type RSForm } from '@rsconcept/domain/library';
 
 import { type OperationSchemaDTO } from '@/features/oss';
-import { notifyOssSync } from '@/features/oss/backend/oss-sync';
 import { type RSFormDTO } from '@/features/rsform';
-import { notifySchemaSync } from '@/features/rsform/backend/schema-sync';
 import { type RSModelDTO } from '@/features/rsmodel';
-import { notifyModelSync } from '@/features/rsmodel/backend/model-sync';
 
 import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
+import { notifyLibrarySync } from './library-sync';
 import { useLibraryListKey } from './use-library';
 
 export const useSetLocation = () => {
@@ -40,28 +38,25 @@ export const useSetLocation = () => {
             })
             .filter(item => !!item)
         ]);
-        notifyOssSync(variables.itemID);
-        return;
+      } else {
+        const rsKey = KEYS.composite.schema({ itemID: variables.itemID });
+        client.setQueryData(rsKey, (prev: { raw: RSFormDTO; transformed: RSForm } | undefined) =>
+          !prev
+            ? undefined
+            : {
+                raw: { ...prev.raw, location: variables.location },
+                transformed: { ...prev.transformed, location: variables.location }
+              }
+        );
+        const modelKey = KEYS.composite.model({ itemID: variables.itemID });
+        client.setQueryData(modelKey, (prev: RSModelDTO | undefined) =>
+          !prev ? undefined : { ...prev, location: variables.location }
+        );
+        client.setQueryData(libraryKey, (prev: LibraryItem[] | undefined) =>
+          prev?.map(item => (item.id === variables.itemID ? { ...item, location: variables.location } : item))
+        );
       }
-
-      const rsKey = KEYS.composite.schema({ itemID: variables.itemID });
-      client.setQueryData(rsKey, (prev: { raw: RSFormDTO; transformed: RSForm } | undefined) =>
-        !prev
-          ? undefined
-          : {
-              raw: { ...prev.raw, location: variables.location },
-              transformed: { ...prev.transformed, location: variables.location }
-            }
-      );
-      const modelKey = KEYS.composite.model({ itemID: variables.itemID });
-      client.setQueryData(modelKey, (prev: RSModelDTO | undefined) =>
-        !prev ? undefined : { ...prev, location: variables.location }
-      );
-      client.setQueryData(libraryKey, (prev: LibraryItem[] | undefined) =>
-        prev?.map(item => (item.id === variables.itemID ? { ...item, location: variables.location } : item))
-      );
-      notifySchemaSync(variables.itemID);
-      notifyModelSync(variables.itemID);
+      notifyLibrarySync();
     },
     onError: () => client.invalidateQueries()
   });

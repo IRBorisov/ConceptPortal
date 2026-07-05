@@ -5,6 +5,7 @@ import { updateRSForm } from '@/features/rsform/backend/api';
 import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
+import { notifyLibrarySync } from './library-sync';
 
 export const useRestoreVersion = () => {
   const client = useQueryClient();
@@ -13,6 +14,7 @@ export const useRestoreVersion = () => {
     mutationFn: libraryApi.restoreVersion,
     onSuccess: data => {
       updateRSForm(data, client);
+      notifyLibrarySync();
       return client.invalidateQueries({ queryKey: [libraryApi.baseKey] });
     },
     onError: () => client.invalidateQueries()
