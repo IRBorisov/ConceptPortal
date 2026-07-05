@@ -4,32 +4,30 @@ import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
-import { type RSEngine } from '@rsconcept/domain/library';
+import { type Constituenta, type RSEngine } from '@rsconcept/domain/library';
 import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
 import { isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
 
 import { useConceptNavigation } from '@/app';
-import { UserRole } from '@/features/users';
-import { useRoleStore } from '@/features/users/stores/role';
 
 import { MiniButton } from '@/components/control';
 import { IconMoveDown, IconMoveUp } from '@/components/icons';
 import { useRowsDropHandler } from '@/hooks/use-rows-drop-handler';
-import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 import { prepareTooltip } from '@/utils/format';
 
 import { ViewConstituents } from '../../../components/view-constituents';
+import {
+  ConstituentsNarrowPicker,
+  ConstituentsNarrowSearch
+} from '../../../components/view-constituents/constituents-narrow-picker';
 import { hasActiveCstFilter, useCstSearchStore } from '../../../stores/cst-search';
 import { useSchemaEdit } from '../schema-edit-context';
 
 import { FormConstituenta } from './form-constituenta';
 import { ToolbarConstituenta } from './toolbar-constituenta';
-
-// Threshold window width to switch layout.
-const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 
 interface TabConstituentaProps {
   engine?: RSEngine;
@@ -51,7 +49,6 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
     moveAfter,
     cloneCst
   } = useSchemaEdit();
-  const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
   const onSelectCst = useEffectEvent(setSelectedCst);
 
@@ -61,13 +58,14 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
   const hasActiveFilter = hasActiveCstFilter(query, filter);
 
   const [toggleReset, setToggleReset] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const formContainerRef = useRef<HTMLDivElement>(null);
+  const searchAnchorRef = useRef<HTMLDivElement>(null);
 
   const disabled = !activeCst || !isContentEditable || isProcessing;
   const canReorderConstituents = isContentEditable && !isProcessing && !isModified && !hasActiveFilter;
-  const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
 
-  const role = useRoleStore(state => state.role);
-  const listHeight = useFitHeight(!isNarrow ? '8.2rem' : role !== UserRole.READER ? '42rem' : '35rem', '10rem');
+  const listHeight = useFitHeight('8.2rem', '10rem');
 
   const prevActiveCstId = useRef<number | null>(null);
   useEffect(
@@ -127,26 +125,30 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
 
   const handleRowsDropped = useRowsDropHandler(cloneCst, moveAfter);
 
+  function handleOpenEdit(cstID: number) {
+    clearPendingActiveID();
+    router.changeActive(cstID);
+  }
+
+  function handleActivateCst(cst: Constituenta) {
+    clearPendingActiveID();
+    router.changeActive(cst.id);
+  }
+
   return (
     <div
       tabIndex={-1}
       className={clsx(
         'relative ',
         'min-h-80 max-w-[calc(min(100vw,80rem))] mx-auto',
-        'flex pt-8',
-        'overflow-y-auto overflow-x-clip',
-        isNarrow && 'flex-col md:items-center'
+        'flex flex-col md:items-center lg:flex-row lg:items-stretch pt-8',
+        'overflow-y-auto overflow-x-clip'
       )}
       style={{ maxHeight: mainHeight }}
       onKeyDown={handleInput}
     >
       <ToolbarConstituenta
-        className={clsx(
-          'cc-tab-tools right-1/2 translate-x-0',
-          'xs:right-4 xs:-translate-x-1/2',
-          'md:right-1/2 md:translate-x-0',
-          'cc-animate-position'
-        )}
+        className={clsx('cc-tab-tools cc-animate-position', 'right-4 lg:right-1/2 -translate-x-1/2 lg:translate-x-0')}
         hasInheritance={schema.inheritance.length > 0}
         activeCst={activeCst}
         onSubmit={initiateSubmit}
@@ -155,38 +157,53 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
       />
 
       <div className='mx-0 min-w-120 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0 min-h-6'>
-        {activeCst ? (
-          <FormConstituenta
-            key={`cst-${activeCst.id}`}
-            id={globalIDs.constituenta_editor}
-            toggleReset={toggleReset}
-            activeCst={activeCst}
-            schema={schema}
-            onOpenEdit={cstID => {
-              clearPendingActiveID();
-              router.changeActive(cstID);
-            }}
+        <div ref={formContainerRef} className='relative w-full'>
+          <ConstituentsNarrowSearch
+            ref={searchAnchorRef}
+            onOpen={() => setPickerOpen(true)}
+            className={clsx('lg:hidden', 'mb-1 ml-6 mt-2 self-start')}
+            showModelFilter={!!engine}
+            stopSearchKeyPropagation
           />
-        ) : null}
+          {activeCst ? (
+            <FormConstituenta
+              key={`cst-${activeCst.id}`}
+              id={globalIDs.constituenta_editor}
+              toggleReset={toggleReset}
+              activeCst={activeCst}
+              schema={schema}
+              onOpenEdit={handleOpenEdit}
+            />
+          ) : null}
+          <ConstituentsNarrowPicker
+            className='lg:hidden'
+            open={pickerOpen}
+            onOpenChange={setPickerOpen}
+            anchorRef={searchAnchorRef}
+            containerRef={formContainerRef}
+            schema={schema}
+            engine={engine}
+            activeCst={activeCst}
+            isSchemaIssue={isSchemaIssue}
+            isModelIssue={engine ? cst => isModelIssue(engine, cst) : undefined}
+            onActivate={handleActivateCst}
+          />
+        </div>
       </div>
       <ViewConstituents
         className={clsx(
-          'cc-animate-sidebar min-h-55',
-          isNarrow ? 'mt-3 mx-6 rounded-md overflow-hidden' : 'mt-9 rounded-l-md rounded-r-none overflow-visible'
+          'cc-animate-sidebar min-h-55 hidden lg:block',
+          'mt-9 rounded-l-md rounded-r-none overflow-visible'
         )}
         schema={schema}
         engine={engine}
         activeCst={activeCst}
         isSchemaIssue={isSchemaIssue}
         isModelIssue={engine ? cst => isModelIssue(engine, cst) : undefined}
-        onActivate={cst => {
-          clearPendingActiveID();
-          router.changeActive(cst.id);
-        }}
+        onActivate={handleActivateCst}
         enableRowReordering={canReorderConstituents}
         onRowsDropped={handleRowsDropped}
         maxListHeight={listHeight}
-        autoScroll={!isNarrow}
         sidebarActions={
           isContentEditable ? (
             <div className='flex pl-1'>

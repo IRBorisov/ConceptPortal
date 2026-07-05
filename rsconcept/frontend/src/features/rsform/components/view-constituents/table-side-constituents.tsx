@@ -6,6 +6,7 @@ import { type Constituenta, type RSEngine, type RSForm } from '@rsconcept/domain
 import { BadgeEvaluation } from '@/features/rsmodel/components/badge-evaluation';
 
 import { createColumnHelper, DataTable, type DataTableRowDrop, type IConditionalStyle } from '@/components/data-table';
+import { cn } from '@/components/utils';
 import { NoData, TextContent } from '@/components/view';
 import { prefixes } from '@/utils/constants';
 
@@ -33,6 +34,7 @@ interface TableSideConstituentsProps {
 
   maxHeight?: string;
   autoScroll?: boolean;
+  className?: string;
 }
 
 const columnHelper = createColumnHelper<Constituenta>();
@@ -48,7 +50,8 @@ export function TableSideConstituents({
   enableRowReordering,
   onRowsDropped,
   maxHeight,
-  autoScroll = true
+  autoScroll = true,
+  className
 }: TableSideConstituentsProps) {
   const tx = useTx();
   const items = useFilteredItems(schema, isSchemaIssue, isModelIssue);
@@ -118,7 +121,7 @@ export function TableSideConstituents({
     <DataTable
       dense
       noFooter
-      className='text-sm select-none cc-scroll-y [&_thead_th]:py-1'
+      className={cn('text-sm select-none cc-scroll-y [&_thead_th]:py-1', className)}
       style={maxHeight ? { maxHeight: maxHeight } : {}}
       data={items}
       columns={columns}

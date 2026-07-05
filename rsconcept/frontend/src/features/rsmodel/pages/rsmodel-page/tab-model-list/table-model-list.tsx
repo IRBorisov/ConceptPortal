@@ -36,7 +36,7 @@ interface TableModelListProps {
 }
 
 // Window width cutoff for columns
-const COLUMN_DEFINITION_HIDE_THRESHOLD = 9500;
+const COLUMN_DEFINITION_HIDE_THRESHOLD = 950;
 const COLUMN_TYPE_HIDE_THRESHOLD = 1150;
 const COLUMN_CONVENTION_HIDE_THRESHOLD = 1700;
 
