@@ -1,4 +1,5 @@
 import { queryOptions } from '@tanstack/react-query';
+import { type QueryClient } from '@tanstack/react-query';
 
 import { globalTx } from '@/i18n';
 
@@ -7,7 +8,17 @@ import { type ConstituentaList } from '@/features/rsform';
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 
+import { notifyModelSync } from './model-sync';
 import { type ConstituentaDataDTO, type RSModelDTO, type RSModelJsonDTO, schemaRSModel } from './types';
+
+export function applyRSModel(data: RSModelDTO, client: QueryClient) {
+  client.setQueryData(rsmodelApi.getRSModelQueryOptions({ itemID: data.id }).queryKey, data);
+}
+
+export function updateRSModel(data: RSModelDTO, client: QueryClient) {
+  applyRSModel(data, client);
+  notifyModelSync(data.id, data);
+}
 
 export const rsmodelApi = {
   baseKey: KEYS.rsmodel,

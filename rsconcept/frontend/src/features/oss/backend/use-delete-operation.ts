@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 import { PARAMETER } from '@/utils/constants';
 
-import { ossApi } from './api';
+import { ossApi, updateOss } from './api';
 
 export const useDeleteOperation = () => {
   const client = useQueryClient();
@@ -15,7 +15,7 @@ export const useDeleteOperation = () => {
         variables.beforeUpdate();
         await new Promise(resolve => setTimeout(resolve, PARAMETER.minimalTimeout));
       }
-      client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
+      updateOss(data, client);
       await Promise.allSettled([
         client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
         client.invalidateQueries({ queryKey: [KEYS.rsform] })

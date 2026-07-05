@@ -3,8 +3,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type LibraryItem, type RSForm } from '@rsconcept/domain/library';
 
 import { type OperationSchemaDTO } from '@/features/oss';
+import { notifyOssSync } from '@/features/oss/backend/oss-sync';
 import { type RSFormDTO } from '@/features/rsform';
+import { notifySchemaSync } from '@/features/rsform/backend/schema-sync';
 import { type RSModelDTO } from '@/features/rsmodel';
+import { notifyModelSync } from '@/features/rsmodel/backend/model-sync';
 
 import { KEYS } from '@/backend/configuration';
 
@@ -34,6 +37,7 @@ export const useSetOwner = () => {
             })
             .filter(item => !!item)
         ]);
+        notifyOssSync(variables.itemID);
       }
 
       const rsFormKey = [KEYS.rsform, 'item', variables.itemID];
@@ -53,6 +57,8 @@ export const useSetOwner = () => {
       client.setQueryData(libraryKey, (prev: LibraryItem[] | undefined) =>
         prev?.map(item => (item.id === variables.itemID ? { ...item, owner: variables.owner } : item))
       );
+      notifySchemaSync(variables.itemID);
+      notifyModelSync(variables.itemID);
     },
     onError: () => client.invalidateQueries()
   });

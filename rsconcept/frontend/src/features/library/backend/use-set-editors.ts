@@ -3,8 +3,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type RSForm } from '@rsconcept/domain/library';
 
 import { type OperationSchemaDTO } from '@/features/oss';
+import { notifyOssSync } from '@/features/oss/backend/oss-sync';
 import { type RSFormDTO } from '@/features/rsform';
+import { notifySchemaSync } from '@/features/rsform/backend/schema-sync';
 import { type RSModelDTO } from '@/features/rsmodel';
+import { notifyModelSync } from '@/features/rsmodel/backend/model-sync';
 
 import { KEYS } from '@/backend/configuration';
 
@@ -31,6 +34,7 @@ export const useSetEditors = () => {
             })
             .filter(item => !!item)
         );
+        notifyOssSync(variables.itemID);
         return;
       }
 
@@ -47,6 +51,8 @@ export const useSetEditors = () => {
       client.setQueryData(modelKey, (prev: RSModelDTO | undefined) =>
         !prev ? undefined : { ...prev, editors: variables.editors }
       );
+      notifySchemaSync(variables.itemID);
+      notifyModelSync(variables.itemID);
     },
     onError: () => client.invalidateQueries()
   });

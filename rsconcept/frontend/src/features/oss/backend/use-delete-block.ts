@@ -5,7 +5,7 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 import { KEYS } from '@/backend/configuration';
 import { PARAMETER } from '@/utils/constants';
 
-import { ossApi } from './api';
+import { ossApi, updateOss } from './api';
 export const useDeleteBlock = () => {
   const client = useQueryClient();
   const { updateTimestamp } = useUpdateTimestamp();
@@ -18,7 +18,7 @@ export const useDeleteBlock = () => {
         await new Promise(resolve => setTimeout(resolve, PARAMETER.minimalTimeout));
       }
       updateTimestamp(data.id, data.time_update);
-      client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
+      updateOss(data, client);
     },
     onError: () => client.invalidateQueries()
   });

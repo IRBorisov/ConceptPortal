@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
+import { notifyLibrarySync } from './library-sync';
 
 export const useRenameLocation = () => {
   const client = useQueryClient();
@@ -10,6 +11,7 @@ export const useRenameLocation = () => {
     mutationKey: [libraryApi.baseKey, 'rename-location'],
     mutationFn: libraryApi.renameLocation,
     onSuccess: async () => {
+      notifyLibrarySync();
       await Promise.allSettled([
         client.invalidateQueries({ queryKey: [KEYS.library] }),
         client.invalidateQueries({ queryKey: [KEYS.rsform] }),

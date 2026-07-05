@@ -9,6 +9,7 @@ import { DELAYS, KEYS } from '@/backend/configuration';
 import { queryClient } from '@/backend/query-client';
 
 import { loadRSForm } from './rsform-loader';
+import { notifySchemaSync } from './schema-sync';
 import {
   type AttributionTargetDTO,
   type ConstituentaCreatedResponse,
@@ -29,7 +30,7 @@ import {
   type UpdateCrucialDTO
 } from './types';
 
-export function updateRSForm(data: RSFormDTO, client: QueryClient) {
+export function applyRSForm(data: RSFormDTO, client: QueryClient) {
   const queryKey = rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey;
   client.setQueryData(queryKey, old => {
     if (!old || equal(old.raw, data)) {
@@ -37,6 +38,11 @@ export function updateRSForm(data: RSFormDTO, client: QueryClient) {
     }
     return { raw: data, transformed: loadRSForm(data) };
   });
+}
+
+export function updateRSForm(data: RSFormDTO, client: QueryClient) {
+  applyRSForm(data, client);
+  notifySchemaSync(data.id, data);
 }
 
 export const rsformsApi = {

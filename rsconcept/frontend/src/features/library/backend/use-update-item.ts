@@ -3,8 +3,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type LibraryItem, LibraryItemType, type RSForm } from '@rsconcept/domain/library';
 
 import { type OperationSchemaDTO } from '@/features/oss';
+import { notifyOssSync } from '@/features/oss/backend/oss-sync';
 import { type RSFormDTO } from '@/features/rsform';
+import { notifySchemaSync } from '@/features/rsform/backend/schema-sync';
 import { type RSModelDTO } from '@/features/rsmodel';
+import { notifyModelSync } from '@/features/rsmodel/backend/model-sync';
 
 import { KEYS } from '@/backend/configuration';
 
@@ -40,6 +43,7 @@ export const useUpdateItem = () => {
             schema.oss.map(item => client.invalidateQueries({ queryKey: KEYS.composite.oss({ itemID: item.id }) }))
           );
         }
+        notifySchemaSync(data.id);
       } else if (data.item_type === LibraryItemType.OSS) {
         const ossKey = KEYS.composite.oss({ itemID: data.id });
         const ossData: OperationSchemaDTO | undefined = client.getQueryData(ossKey);
@@ -58,8 +62,10 @@ export const useUpdateItem = () => {
               .filter(item => !!item)
           );
         }
+        notifyOssSync(data.id);
       } else {
         client.setQueryData(itemKey, (prev: RSModelDTO | undefined) => (!prev ? undefined : { ...prev, ...data }));
+        notifyModelSync(data.id);
       }
     },
     onError: () => client.invalidateQueries()

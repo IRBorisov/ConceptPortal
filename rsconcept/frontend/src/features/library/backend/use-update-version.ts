@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { type RSFormDTO } from '@/features/rsform';
+import { notifySchemaSync } from '@/features/rsform/backend/schema-sync';
 
 import { KEYS } from '@/backend/configuration';
 
@@ -36,6 +37,7 @@ export const useUpdateVersion = () => {
                 )
               }
       );
+      notifySchemaSync(variables.itemID);
     },
     onError: () => client.invalidateQueries()
   });

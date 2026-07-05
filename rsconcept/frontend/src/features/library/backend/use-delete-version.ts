@@ -2,6 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { type RSForm } from '@rsconcept/domain/library';
 
+import { notifySchemaSync } from '@/features/rsform/backend/schema-sync';
+
 import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
@@ -20,6 +22,7 @@ export const useDeleteVersion = () => {
               versions: prev.versions.filter(version => version.id !== variables.versionID)
             }
       );
+      notifySchemaSync(variables.itemID);
     },
     onError: () => client.invalidateQueries()
   });
