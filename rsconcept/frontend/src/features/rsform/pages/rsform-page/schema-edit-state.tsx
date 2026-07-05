@@ -14,6 +14,7 @@ import { UserRole } from '@/features/users';
 import { useRoleStore } from '@/features/users/stores/role';
 import { useAdjustRole } from '@/features/users/stores/use-adjust-role';
 
+import { setOpenSchemaItemId } from '@/backend/cross-tab-reset-notify';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { useMutatingRSForm } from '../../backend/use-mutating-rsform';
@@ -70,6 +71,14 @@ export const SchemaEditState = ({
     isStaff: user.is_staff,
     adminMode: adminMode
   });
+
+  useEffect(
+    function trackOpenSchemaItem() {
+      setOpenSchemaItemId(itemID);
+      return () => setOpenSchemaItemId(undefined);
+    },
+    [itemID]
+  );
 
   useEffect(
     function syncGlobalSchema() {

@@ -108,6 +108,7 @@ export const txGeneralRu: Record<string, string> = {
   'tx.general.changes.save.success': 'Изменения сохранены',
   'tx.general.changes.reset': 'Сбросить изменения',
   'tx.general.changes.unsaved.hint': 'Сохраните или отмените изменения',
+  'tx.general.changes.crossTab.reset': 'Несохранённые изменения сброшены из‑за обновления в другой вкладке.',
 
   'tx.general.load': 'Загрузить',
   'tx.general.load.fromFile': 'Загрузить из файла',

@@ -2,8 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { KEYS } from '@/backend/configuration';
 
-import { ossApi } from './api';
-import { notifyOssSync } from './oss-sync';
+import { ossApi, refreshOss } from './api';
 
 export const useRelocateConstituents = () => {
   const client = useQueryClient();
@@ -11,10 +10,9 @@ export const useRelocateConstituents = () => {
     mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'relocate-constituents'],
     mutationFn: ossApi.relocateConstituents,
     onSuccess: async (_, variables) => {
-      notifyOssSync(variables.itemID);
-      await Promise.allSettled([
-        client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
-        client.invalidateQueries({ queryKey: [KEYS.rsform] })
+      await Promise.all([
+        refreshOss(variables.itemID, client),
+        client.invalidateQueries({ queryKey: KEYS.composite.libraryList })
       ]);
     },
     onError: () => client.invalidateQueries()

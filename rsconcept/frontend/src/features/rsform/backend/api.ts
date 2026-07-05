@@ -6,6 +6,7 @@ import { type Attribution, type RSForm } from '@rsconcept/domain/library';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
+import { invalidateRelatedOss } from '@/backend/item-sync-utils';
 import { queryClient } from '@/backend/query-client';
 
 import { loadRSForm } from './rsform-loader';
@@ -30,18 +31,24 @@ import {
   type UpdateCrucialDTO
 } from './types';
 
+/** Write an RSForm payload into the local TanStack Query cache (no cross-tab broadcast). */
 export function applyRSForm(data: RSFormDTO, client: QueryClient) {
   const queryKey = rsformsApi.getRSFormQueryOptions({ itemID: data.id }).queryKey;
   client.setQueryData(queryKey, old => {
-    if (!old || equal(old.raw, data)) {
+    if (old && equal(old.raw, data)) {
       return old;
     }
     return { raw: data, transformed: loadRSForm(data) };
   });
 }
 
+/**
+ * Apply a fresh RSForm payload locally and notify other tabs.
+ * Call from mutation `onSuccess` handlers that receive a full `RSFormDTO`.
+ */
 export function updateRSForm(data: RSFormDTO, client: QueryClient) {
   applyRSForm(data, client);
+  invalidateRelatedOss(client, data.oss);
   notifySchemaSync(data.id, data);
 }
 

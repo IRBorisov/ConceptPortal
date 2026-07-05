@@ -108,6 +108,7 @@ export const txGeneralEn: Record<string, string> = {
   'tx.general.changes.save.success': 'Changes saved',
   'tx.general.changes.reset': 'Reset changes',
   'tx.general.changes.unsaved.hint': 'Save or discard changes',
+  'tx.general.changes.crossTab.reset': 'Unsaved changes were reset after an update in another tab.',
 
   'tx.general.load': 'Load',
   'tx.general.load.fromFile': 'Load from file',

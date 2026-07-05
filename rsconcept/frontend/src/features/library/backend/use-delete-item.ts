@@ -4,6 +4,7 @@ import { KEYS } from '@/backend/configuration';
 import { PARAMETER } from '@/utils/constants';
 
 import { libraryApi } from './api';
+import { notifyLibrarySync } from './library-sync';
 
 function deletedItemQueryKeys(target: number) {
   return [
@@ -29,6 +30,7 @@ export const useDeleteItem = () => {
     onSuccess: async (_, variables) => {
       await Promise.all(deletedItemQueryKeys(variables.target).map(queryKey => client.cancelQueries({ queryKey })));
       await client.invalidateQueries({ queryKey: libraryApi.libraryListKey });
+      notifyLibrarySync();
       await Promise.resolve(variables.beforeInvalidate?.());
       setTimeout(function refreshRelatedQueries() {
         void client.invalidateQueries({ queryKey: [KEYS.oss] });

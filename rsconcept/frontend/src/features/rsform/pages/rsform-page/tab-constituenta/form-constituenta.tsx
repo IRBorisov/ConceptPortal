@@ -97,6 +97,9 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
   const onResetEvent = useEffectEvent((next: UpdateConstituentaDTO) => {
     form.reset(next);
   });
+  const onResetToServerState = useEffectEvent(() => {
+    onResetEvent(constituentaDefaults(activeCst));
+  });
 
   const definition = useSelector(form.store, state => state.values.item_data.definition_formal);
   const isDefaultValue = useSelector(form.store, state => state.isDefaultValue);
@@ -119,6 +122,8 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
   const showConvention = !!activeCst.convention || forceComment || isBasic;
   const needsInterpretation = isBasic && !isLogical(activeCst.cst_type);
 
+  const serverCstRevision = `${activeCst.id}:${schema.time_update}`;
+
   useLayoutEffect(
     function resetGlobalModifiedFlagOnCstChange() {
       onModifiedEvent(false);
@@ -128,9 +133,9 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
 
   useEffect(
     function resetFormOnCstChange() {
-      onResetEvent(constituentaDefaults(activeCst));
+      onResetToServerState();
     },
-    [activeCst, toggleReset]
+    [serverCstRevision, toggleReset]
   );
 
   useEffect(
@@ -146,7 +151,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
   );
 
   useEffect(
-    function syncGlobalModified() {
+    function syncConstituentaDirtyState() {
       onModifiedEvent(!isDefaultValue);
     },
     [isDefaultValue]

@@ -11,10 +11,7 @@ export const useExecuteOperation = () => {
     mutationFn: ossApi.executeOperation,
     onSuccess: async data => {
       updateOss(data, client);
-      await Promise.allSettled([
-        client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
-        client.invalidateQueries({ queryKey: [KEYS.rsform] })
-      ]);
+      await client.invalidateQueries({ queryKey: KEYS.composite.libraryList });
     },
     onError: () => client.invalidateQueries()
   });

@@ -1,27 +1,35 @@
+import { noopUnsubscribe, TAB_SOURCE_ID } from '@/backend/item-sync-utils';
+
 const LIBRARY_SYNC_CHANNEL = 'portal-library-sync';
 
-function noopUnsubscribe(): void {
-  // BroadcastChannel unavailable — nothing to clean up.
+export { LIBRARY_SYNC_CHANNEL };
+
+interface LibrarySyncMessage {
+  sourceId: string;
 }
 
-/** Notify other tabs that library-wide data was modified. */
+function isLibrarySyncMessage(value: unknown): value is LibrarySyncMessage {
+  return typeof value === 'object' && value !== null && typeof (value as { sourceId?: unknown }).sourceId === 'string';
+}
+
+/** Broadcast library-wide changes to other browser tabs via `portal-library-sync`. */
 export function notifyLibrarySync(): void {
   if (typeof BroadcastChannel === 'undefined') {
     return;
   }
   const channel = new BroadcastChannel(LIBRARY_SYNC_CHANNEL);
-  channel.postMessage('refresh');
+  channel.postMessage({ sourceId: TAB_SOURCE_ID } satisfies LibrarySyncMessage);
   channel.close();
 }
 
-/** Subscribe to library-wide changes from other tabs. Returns an unsubscribe function. */
+/** Subscribe to library-wide changes from other tabs on `portal-library-sync`. Returns an unsubscribe function. */
 export function subscribeLibrarySync(listener: () => void): () => void {
   if (typeof BroadcastChannel === 'undefined') {
     return noopUnsubscribe;
   }
   const channel = new BroadcastChannel(LIBRARY_SYNC_CHANNEL);
   channel.onmessage = (message: MessageEvent) => {
-    if (message.data === 'refresh') {
+    if (isLibrarySyncMessage(message.data) && message.data.sourceId !== TAB_SOURCE_ID) {
       listener();
     }
   };
