@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 import { type LibraryItem, type OssLayout } from '@rsconcept/domain/library';
@@ -64,8 +65,8 @@ export function DlgRelocateConstituents() {
     }
   });
 
-  const selected = useStore(form.store, state => state.values.items);
-  const destination = useStore(form.store, state => state.values.destination as number | null | undefined);
+  const selected = useSelector(form.store, state => state.values.items);
+  const destination = useSelector(form.store, state => state.values.destination as number | null | undefined);
   const destinationItem = destination ? (libraryItems.find(item => item.id === destination) ?? null) : null;
 
   const [directionUp, setDirectionUp] = useState(true);

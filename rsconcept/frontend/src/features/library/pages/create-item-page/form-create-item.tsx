@@ -1,6 +1,7 @@
 'use client';
 
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 import { AccessPolicy, LibraryItemType, LocationHead } from '@rsconcept/domain/library';
@@ -71,7 +72,7 @@ export function FormCreateItem({ modelFrom, initialType = LibraryItemType.RSFORM
     }
   });
 
-  const itemType = useStore(form.store, state => state.values.item_type);
+  const itemType = useSelector(form.store, state => state.values.item_type);
 
   function resetErrors() {
     clearServerError();

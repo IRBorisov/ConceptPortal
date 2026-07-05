@@ -2,7 +2,8 @@
 
 import { useEffect, useEffectEvent } from 'react';
 import { useIntl } from 'react-intl';
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 import { LibraryItemType, type RSModel } from '@rsconcept/domain/library';
@@ -54,8 +55,8 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
     }
   });
 
-  const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
-  const canSubmit = useStore(form.store, state => state.isValid);
+  const isDefaultValue = useSelector(form.store, state => state.isDefaultValue);
+  const canSubmit = useSelector(form.store, state => state.isValid);
   const onResetEvent = useEffectEvent((next: UpdateLibraryItemDTO) => form.reset(next));
 
   useEffect(

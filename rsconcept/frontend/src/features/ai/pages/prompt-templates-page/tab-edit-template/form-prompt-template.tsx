@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
@@ -71,8 +72,8 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
     form.reset(next);
   });
 
-  const text = useStore(form.store, state => state.values.text);
-  const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
+  const text = useSelector(form.store, state => state.values.text);
+  const isDefaultValue = useSelector(form.store, state => state.isDefaultValue);
   useRegisterUnsavedSave(() => form.handleSubmit(), !isDefaultValue);
 
   const prevReset = useRef(toggleReset);

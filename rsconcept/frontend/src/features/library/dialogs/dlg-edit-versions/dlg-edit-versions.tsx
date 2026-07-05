@@ -1,7 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 
@@ -60,9 +61,9 @@ export function DlgEditVersions() {
     }
   });
 
-  const versionID = useStore(form.store, state => state.values.id);
-  const versionName = useStore(form.store, state => state.values.version);
-  const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
+  const versionID = useSelector(form.store, state => state.values.id);
+  const versionName = useSelector(form.store, state => state.values.version);
+  const isDefaultValue = useSelector(form.store, state => state.isDefaultValue);
 
   const isValid = useMemo(
     () => !!versionName && schema.versions.every(ver => ver.id === versionID || ver.version !== versionName),

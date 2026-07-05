@@ -1,7 +1,8 @@
 'use client';
 
 import { Suspense, useState } from 'react';
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 import { type RSForm, type Substitution } from '@rsconcept/domain/library';
@@ -49,7 +50,7 @@ export function DlgInlineSynthesis() {
     onSubmit: ({ value }) => onSynthesis(value)
   });
 
-  const values = useStore(form.store, state => state.values);
+  const values = useSelector(form.store, state => state.values);
   const sourceID = values.source;
   const canSubmit = sourceID !== null && schemaInlineSynthesis.safeParse(values).success;
 

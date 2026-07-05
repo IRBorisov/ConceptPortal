@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 import { type OssLayout } from '@rsconcept/domain/library';
@@ -82,7 +83,7 @@ export function DlgCreateBlock() {
     }
   });
 
-  const values = useStore(form.store, state => state.values);
+  const values = useSelector(form.store, state => state.values);
   const title = values.item_data.title;
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
   const { canSubmit, hint } = (() => {

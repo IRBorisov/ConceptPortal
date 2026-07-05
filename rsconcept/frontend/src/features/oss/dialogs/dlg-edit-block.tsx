@@ -1,7 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 import { type OssLayout } from '@rsconcept/domain/library';
@@ -57,7 +58,7 @@ export function DlgEditBlock() {
     }
   });
 
-  const values = useStore(form.store, state => state.values);
+  const values = useSelector(form.store, state => state.values);
   const canSubmit = useMemo(() => schemaUpdateBlock.safeParse(values).success, [values]);
 
   return (

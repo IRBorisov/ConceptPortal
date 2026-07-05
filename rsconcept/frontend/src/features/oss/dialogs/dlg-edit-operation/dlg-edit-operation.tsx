@@ -1,7 +1,8 @@
 'use client';
 
 import { Suspense, useMemo, useState } from 'react';
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 import { OperationType, type OssLayout } from '@rsconcept/domain/library';
@@ -78,7 +79,7 @@ export function DlgEditOperation() {
     }
   });
 
-  const values = useStore(form.store, state => state.values);
+  const values = useSelector(form.store, state => state.values);
   const canSubmit = useMemo(() => schemaUpdateOperation.safeParse(values).success, [values]);
 
   const [activeTab, setActiveTab] = useState<TabID>(TabID.CARD);
