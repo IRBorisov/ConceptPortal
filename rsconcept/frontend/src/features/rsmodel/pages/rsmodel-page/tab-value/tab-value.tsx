@@ -4,20 +4,22 @@ import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
+import { type Constituenta } from '@rsconcept/domain/library';
 import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
 import { isInferrable, isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
 
 import { useConceptNavigation } from '@/app';
 import { ViewConstituents } from '@/features/rsform/components/view-constituents';
+import {
+  ConstituentsNarrowPicker,
+  ConstituentsNarrowSearch
+} from '@/features/rsform/components/view-constituents/constituents-narrow-picker';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { hasActiveCstFilter, useCstSearchStore } from '@/features/rsform/stores/cst-search';
-import { UserRole } from '@/features/users';
-import { useRoleStore } from '@/features/users/stores/role';
 
 import { MiniButton } from '@/components/control';
 import { IconMoveDown, IconMoveUp } from '@/components/icons';
 import { useRowsDropHandler } from '@/hooks/use-rows-drop-handler';
-import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
@@ -27,9 +29,6 @@ import { useModelEdit } from '../model-edit-context';
 
 import { FormValue } from './form-value';
 import { ToolbarValueTab } from './toolbar-value-tab';
-
-// Threshold window width to switch layout.
-const SIDELIST_LAYOUT_THRESHOLD = 1000; // px
 
 export function TabValue() {
   const tx = useTx();
@@ -52,9 +51,11 @@ export function TabValue() {
   const query = useCstSearchStore(state => state.query);
   const filter = useCstSearchStore(state => state.filter);
   const hasActiveFilter = hasActiveCstFilter(query, filter);
-  const windowSize = useWindowSize();
   const mainHeight = useMainHeight();
   const [toggleReset, setToggleReset] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const formContainerRef = useRef<HTMLDivElement>(null);
+  const searchAnchorRef = useRef<HTMLDivElement>(null);
 
   const canReorderConstituents =
     isContentEditable && !isProcessing && !isModified && schema.items.length > 1 && !hasActiveFilter;
@@ -62,10 +63,7 @@ export function TabValue() {
 
   const cloneDisabled = !activeCst || !isContentEditable || isProcessing || isModified;
 
-  const isNarrow = !!windowSize.width && windowSize.width <= SIDELIST_LAYOUT_THRESHOLD;
-
-  const role = useRoleStore(state => state.role);
-  const listHeight = useFitHeight(!isNarrow ? '8.2rem' : role !== UserRole.READER ? '42rem' : '35rem', '10rem');
+  const listHeight = useFitHeight('8.2rem', '10rem');
 
   const prevActiveCstId = useRef<number | null>(null);
   useEffect(
@@ -130,6 +128,11 @@ export function TabValue() {
     router.changeActive(cstID);
   }
 
+  function handleActivateCst(cst: Constituenta) {
+    clearPendingActiveID();
+    router.changeActive(cst.id);
+  }
+
   const handleRowsDropped = useRowsDropHandler(cloneCst, moveAfter);
 
   return (
@@ -138,52 +141,65 @@ export function TabValue() {
       className={clsx(
         'relative ',
         'min-h-80 max-w-[calc(min(100vw,80rem))] mx-auto',
-        'flex pt-8',
-        'overflow-y-auto overflow-x-clip',
-        isNarrow && 'flex-col md:items-center'
+        'flex flex-col md:items-center lg:flex-row lg:items-stretch pt-8',
+        'overflow-y-auto overflow-x-clip'
       )}
       style={{ maxHeight: mainHeight }}
       onKeyDown={handleInput}
     >
       <ToolbarValueTab
-        className={clsx(
-          'cc-tab-tools',
-          'right-1/2 translate-x-0 xs:right-4 xs:-translate-x-1/2 md:right-1/2 md:translate-x-0',
-          'cc-animate-position'
-        )}
+        className={clsx('cc-tab-tools cc-animate-position', 'right-4 lg:right-1/2 -translate-x-1/2 lg:translate-x-0')}
         onSubmit={initiateSubmit}
         onReset={() => setToggleReset(prev => !prev)}
       />
 
       <div className='mx-0 min-w-120 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0 min-h-6'>
-        {activeCst ? (
-          <FormValue
-            key={`data-${activeCst.id}`}
-            id={globalIDs.value_editor}
-            activeCst={activeCst}
-            onOpenEdit={handleOpenEdit}
-            toggleReset={toggleReset}
+        <div ref={formContainerRef} className='relative w-full'>
+          <ConstituentsNarrowSearch
+            ref={searchAnchorRef}
+            onOpen={() => setPickerOpen(true)}
+            className={clsx('lg:hidden', 'mb-1 ml-6 mt-2 self-start')}
+            showModelFilter
+            stopSearchKeyPropagation
           />
-        ) : null}
+          {activeCst ? (
+            <FormValue
+              key={`data-${activeCst.id}`}
+              id={globalIDs.value_editor}
+              activeCst={activeCst}
+              onOpenEdit={handleOpenEdit}
+              toggleReset={toggleReset}
+            />
+          ) : null}
+          <ConstituentsNarrowPicker
+            className='lg:hidden'
+            open={pickerOpen}
+            onOpenChange={setPickerOpen}
+            anchorRef={searchAnchorRef}
+            containerRef={formContainerRef}
+            schema={schema}
+            engine={engine}
+            activeCst={activeCst}
+            isSchemaIssue={isSchemaIssue}
+            isModelIssue={cst => isModelIssue(engine, cst)}
+            onActivate={handleActivateCst}
+          />
+        </div>
       </div>
       <ViewConstituents
         className={clsx(
-          'cc-animate-sidebar min-h-55',
-          isNarrow ? 'mt-3 mx-6 rounded-md overflow-hidden' : 'mt-9 rounded-l-md rounded-r-none overflow-visible'
+          'cc-animate-sidebar min-h-55 hidden lg:block',
+          'mt-9 rounded-l-md rounded-r-none overflow-visible'
         )}
         schema={schema}
         engine={engine}
         activeCst={activeCst}
         isSchemaIssue={isSchemaIssue}
         isModelIssue={cst => isModelIssue(engine, cst)}
-        onActivate={cst => {
-          clearPendingActiveID();
-          router.changeActive(cst.id);
-        }}
+        onActivate={handleActivateCst}
         enableRowReordering={canReorderConstituents}
         onRowsDropped={handleRowsDropped}
         maxListHeight={listHeight}
-        autoScroll={!isNarrow}
         sidebarActions={
           isContentEditable ? (
             <div className='flex pl-1'>
