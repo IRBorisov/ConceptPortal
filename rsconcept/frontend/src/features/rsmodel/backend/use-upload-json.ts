@@ -6,7 +6,7 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 
 import { KEYS } from '@/backend/configuration';
 
-import { rsmodelApi } from './api';
+import { rsmodelApi, updateRSModel } from './api';
 
 export const useUploadRSModelJson = () => {
   const client = useQueryClient();
@@ -15,7 +15,7 @@ export const useUploadRSModelJson = () => {
     mutationKey: [KEYS.global_mutation, rsmodelApi.baseKey, 'load-json'],
     mutationFn: rsmodelApi.uploadJson,
     onSuccess: data => {
-      client.setQueryData(KEYS.composite.model({ itemID: data.id }), data);
+      updateRSModel(data, client);
       client.setQueryData(KEYS.composite.libraryList, (prev: LibraryItem[] | undefined) =>
         prev?.map(item => (item.id === data.id ? data : item))
       );

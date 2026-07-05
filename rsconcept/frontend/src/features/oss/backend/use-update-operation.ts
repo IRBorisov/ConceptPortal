@@ -3,10 +3,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type LibraryItem } from '@rsconcept/domain/library';
 
 import { useUpdateTimestamp } from '@/features/library/backend/use-update-timestamp';
+import { notifySchemaSync } from '@/features/rsform/backend/schema-sync';
 
 import { KEYS } from '@/backend/configuration';
 
-import { ossApi } from './api';
+import { ossApi, updateOss } from './api';
 
 export const useUpdateOperation = () => {
   const client = useQueryClient();
@@ -16,7 +17,7 @@ export const useUpdateOperation = () => {
     mutationFn: ossApi.updateOperation,
     onSuccess: async (data, variables) => {
       updateTimestamp(data.id, data.time_update);
-      client.setQueryData(KEYS.composite.oss({ itemID: data.id }), data);
+      updateOss(data, client);
       const schemaID = data.operations.find(item => item.id === variables.data.target)?.result;
       if (!schemaID) {
         return;
@@ -31,6 +32,7 @@ export const useUpdateOperation = () => {
       await client.invalidateQueries({
         queryKey: KEYS.composite.schema({ itemID: schemaID })
       });
+      notifySchemaSync(schemaID);
     },
     onError: () => client.invalidateQueries()
   });

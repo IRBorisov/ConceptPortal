@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { KEYS } from '@/backend/configuration';
 
-import { ossApi } from './api';
+import { ossApi, updateOss } from './api';
 
 export const useExecuteOperation = () => {
   const client = useQueryClient();
@@ -10,7 +10,7 @@ export const useExecuteOperation = () => {
     mutationKey: [KEYS.global_mutation, ossApi.baseKey, 'execute-operation'],
     mutationFn: ossApi.executeOperation,
     onSuccess: async data => {
-      client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
+      updateOss(data, client);
       await Promise.allSettled([
         client.invalidateQueries({ queryKey: KEYS.composite.libraryList }),
         client.invalidateQueries({ queryKey: [KEYS.rsform] })

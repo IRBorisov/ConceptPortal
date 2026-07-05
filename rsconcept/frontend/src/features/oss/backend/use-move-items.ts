@@ -4,7 +4,7 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 
 import { KEYS } from '@/backend/configuration';
 
-import { ossApi } from './api';
+import { ossApi, updateOss } from './api';
 
 export const useMoveItems = () => {
   const client = useQueryClient();
@@ -14,7 +14,7 @@ export const useMoveItems = () => {
     mutationFn: ossApi.moveItems,
     onSuccess: data => {
       updateTimestamp(data.id, data.time_update);
-      client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
+      updateOss(data, client);
     },
     onError: () => client.invalidateQueries()
   });

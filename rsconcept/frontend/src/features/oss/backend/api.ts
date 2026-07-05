@@ -1,4 +1,5 @@
 import { queryOptions } from '@tanstack/react-query';
+import { type QueryClient } from '@tanstack/react-query';
 
 import { globalTx } from '@/i18n';
 import { type OssLayout } from '@rsconcept/domain/library';
@@ -6,6 +7,7 @@ import { type OssLayout } from '@rsconcept/domain/library';
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 
+import { notifyOssSync } from './oss-sync';
 import {
   type BlockCreatedResponse,
   type CloneSchemaDTO,
@@ -34,6 +36,15 @@ import {
   type UpdateInputDTO,
   type UpdateOperationDTO
 } from './types';
+
+export function applyOss(data: OperationSchemaDTO, client: QueryClient) {
+  client.setQueryData(ossApi.getOssQueryOptions({ itemID: data.id }).queryKey, data);
+}
+
+export function updateOss(data: OperationSchemaDTO, client: QueryClient) {
+  applyOss(data, client);
+  notifyOssSync(data.id, data);
+}
 
 export const ossApi = {
   baseKey: KEYS.oss,

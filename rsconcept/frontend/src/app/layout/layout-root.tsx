@@ -6,6 +6,10 @@ import { Outlet, useLocation } from 'react-router';
 import { type AppLocale, SUPPORTED_LOCALES, useTx } from '@/i18n';
 
 import { useAuthSync } from '@/features/auth/backend/use-auth-sync';
+import { useLibrarySync } from '@/features/library/backend/use-library-sync';
+import { useOssSync } from '@/features/oss/backend/use-oss-sync';
+import { useSchemaSync } from '@/features/rsform/backend/use-schema-sync';
+import { useModelSync } from '@/features/rsmodel/backend/use-model-sync';
 
 import { useBrowserNavigation } from '@/hooks/use-browser-navigation';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -20,6 +24,10 @@ export function LayoutRoot() {
 
   useBrowserNavigation();
   useAuthSync();
+  useSchemaSync();
+  useOssSync();
+  useModelSync();
+  useLibrarySync();
   useEffect(
     function syncSeoHead() {
       const pathname = removeLocalePrefix(window.location.pathname);
