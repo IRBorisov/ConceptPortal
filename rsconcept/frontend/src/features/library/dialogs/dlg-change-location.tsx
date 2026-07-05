@@ -1,7 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 import { z } from 'zod';
 
 import { globalTx, useTx } from '@/i18n';
@@ -42,8 +43,8 @@ export function DlgChangeLocation() {
     }
   });
 
-  const values = useStore(form.store, state => state.values);
-  const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
+  const values = useSelector(form.store, state => state.values);
+  const isDefaultValue = useSelector(form.store, state => state.isDefaultValue);
   const isValid = useMemo(() => schemaLocation.safeParse(values).success, [values]);
 
   return (

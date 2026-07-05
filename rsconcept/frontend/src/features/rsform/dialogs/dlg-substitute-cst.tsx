@@ -1,6 +1,7 @@
 'use client';
 
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 import { type RSForm } from '@rsconcept/domain/library';
@@ -38,7 +39,7 @@ export function DlgSubstituteCst() {
     onSubmit: ({ value }) => onSubstitute(value)
   });
 
-  const values = useStore(form.store, state => state.values);
+  const values = useSelector(form.store, state => state.values);
   const substitutions = values.substitutions;
   const isValid = schemaSubstitutions.safeParse(values).success;
 

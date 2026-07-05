@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useEffectEvent } from 'react';
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 import { LibraryItemType } from '@rsconcept/domain/library';
@@ -64,9 +65,9 @@ export function FormOSS({ className }: FormOSSProps) {
     form.reset(next);
   });
 
-  const visible = useStore(form.store, state => state.values.visible);
-  const readOnly = useStore(form.store, state => state.values.read_only);
-  const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
+  const visible = useSelector(form.store, state => state.values.visible);
+  const readOnly = useSelector(form.store, state => state.values.read_only);
+  const isDefaultValue = useSelector(form.store, state => state.isDefaultValue);
   useRegisterUnsavedSave(() => form.handleSubmit(), !isDefaultValue);
 
   useEffect(

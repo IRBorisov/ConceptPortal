@@ -1,6 +1,7 @@
 'use client';
 
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 import { type CstType, type RSForm } from '@rsconcept/domain/library';
@@ -34,7 +35,7 @@ export function DlgCreateCst() {
     onSubmit: ({ value }) => onCreate(value)
   });
 
-  const values = useStore(form.store, state => state.values);
+  const values = useSelector(form.store, state => state.values);
   const alias = values.alias;
   const cst_type = values.cst_type;
   const { canSubmit, hint } = (() => {

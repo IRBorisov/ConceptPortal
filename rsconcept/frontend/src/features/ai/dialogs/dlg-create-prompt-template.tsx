@@ -1,7 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 
@@ -43,7 +44,7 @@ export function DlgCreatePromptTemplate() {
     onSubmit: ({ value }) => void createPromptTemplate(value).then(onCreate)
   });
 
-  const label = useStore(form.store, state => state.values.label);
+  const label = useSelector(form.store, state => state.values.label);
   const canSubmit = useMemo(() => !!label && !templates.find(template => template.label === label), [label, templates]);
 
   return (

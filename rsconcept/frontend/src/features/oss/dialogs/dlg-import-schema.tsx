@@ -1,6 +1,7 @@
 'use client';
 
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 import { type LibraryItem, LibraryItemType, type OssLayout } from '@rsconcept/domain/library';
@@ -73,7 +74,7 @@ export function DlgImportSchema() {
     }
   });
 
-  const values = useStore(form.store, state => state.values);
+  const values = useSelector(form.store, state => state.values);
   const alias = values.item_data.alias;
   const clone_source = values.clone_source;
   const { canSubmit, hint } = (() => {

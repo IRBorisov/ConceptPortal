@@ -1,6 +1,7 @@
 'use client';
 
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 import { type VersionInfo } from '@rsconcept/domain/library';
@@ -44,7 +45,7 @@ export function DlgCreateVersion() {
     }
   });
 
-  const version = useStore(form.store, state => state.values.version);
+  const version = useSelector(form.store, state => state.values.version);
   const { canSubmit, hint } = (() => {
     if (!version) {
       return { canSubmit: false, hint: tx('tx.lib.version.alias') };

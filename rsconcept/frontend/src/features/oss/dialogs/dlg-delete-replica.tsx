@@ -1,6 +1,7 @@
 'use client';
 
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 import { type OssLayout } from '@rsconcept/domain/library';
@@ -48,7 +49,7 @@ export function DlgDeleteReplica() {
     }
   });
 
-  const keep_connections = useStore(form.store, state => state.values.keep_connections);
+  const keep_connections = useSelector(form.store, state => state.values.keep_connections);
 
   return (
     <ModalForm

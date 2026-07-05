@@ -2,7 +2,8 @@
 
 import { useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
@@ -97,8 +98,8 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
     form.reset(next);
   });
 
-  const definition = useStore(form.store, state => state.values.item_data.definition_formal);
-  const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
+  const definition = useSelector(form.store, state => state.values.item_data.definition_formal);
+  const isDefaultValue = useSelector(form.store, state => state.isDefaultValue);
   useRegisterUnsavedSave(() => form.handleSubmit(), !isDefaultValue);
 
   const [forceComment, setForceComment] = useState(false);
@@ -106,7 +107,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
   const [localParse, setLocalParse] = useState<AnalysisFull | null>(null);
   const typification = localParse ? labelType(localParse.type) : labelType(activeCst.effectiveType);
 
-  const manualDraft = useStore(form.store, state => state.values.item_data.typification_manual ?? '');
+  const manualDraft = useSelector(form.store, state => state.values.item_data.typification_manual ?? '');
   const canManualType = canHaveManualTypification(activeCst.cst_type);
   const showManualType = !!manualDraft || !!activeCst.typification_manual || (canManualType && forceManualType);
   const showManualTypeBtn = canManualType && !showManualType && activeCst.analysis.type === null;

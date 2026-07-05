@@ -1,6 +1,7 @@
 'use client';
 
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 import { OperationType, type OssLayout } from '@rsconcept/domain/library';
@@ -52,7 +53,7 @@ export function DlgDeleteOperation() {
     }
   });
 
-  const deleteSchema = useStore(form.store, state => state.values.delete_schema);
+  const deleteSchema = useSelector(form.store, state => state.values.delete_schema);
 
   return (
     <ModalForm

@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useEffectEvent } from 'react';
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 
@@ -37,7 +38,7 @@ export function EditorProfile() {
     }
   });
 
-  const isDefaultValue = useStore(form.store, state => state.isDefaultValue);
+  const isDefaultValue = useSelector(form.store, state => state.isDefaultValue);
   useRegisterUnsavedSave(() => form.handleSubmit(), !isDefaultValue);
 
   const onResetEvent = useEffectEvent((next: UpdateProfileDTO) => {

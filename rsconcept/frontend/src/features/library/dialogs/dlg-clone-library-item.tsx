@@ -1,6 +1,7 @@
 'use client';
 
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 import { AccessPolicy, type LibraryItem, LibraryItemType } from '@rsconcept/domain/library';
@@ -65,7 +66,7 @@ export function DlgCloneLibraryItem() {
     }
   });
 
-  const values = useStore(form.store, state => state.values);
+  const values = useSelector(form.store, state => state.values);
   const parsed = schemaCloneLibraryItem.safeParse(values);
   const locationDiffers = !isOss || values.item_data.location !== base.location;
   const isValid = parsed.success && locationDiffers;

@@ -1,6 +1,7 @@
 'use client';
 
-import { useForm, useStore } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
+import { useSelector } from '@tanstack/react-store';
 
 import { useTx } from '@/i18n';
 import { type Constituenta, type CstType, type RSForm } from '@rsconcept/domain/library';
@@ -57,7 +58,7 @@ export function DlgEditCst() {
     onSubmit: ({ value }) => onEdit(value)
   });
 
-  const values = useStore(form.store, state => state.values);
+  const values = useSelector(form.store, state => state.values);
   const alias = values.item_data.alias!;
   const cst_type = values.item_data.cst_type!;
   const canSubmit = (() => {
