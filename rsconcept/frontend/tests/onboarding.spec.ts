@@ -4,7 +4,7 @@ const ONBOARDING_KEY = 'portal.onboarding';
 
 function seedTourState(status: 'skipped' | 'done') {
   return {
-    state: { tours: { 'sandbox-intro': { status, seenVersion: 1, resumeStep: 0 } } },
+    state: { tours: { 'sandbox-intro': { status, seenVersion: 3, resumeStep: 0 } } },
     version: 1
   };
 }
@@ -17,7 +17,7 @@ test('first sandbox visit offers the tour and Start walks across tabs', async ({
   const card = page.getByTestId('tour-card');
   await expect(card).toBeVisible();
   await expect(card).toContainText('Добро пожаловать в Песочницу');
-  await expect(card.getByRole('img', { name: 'Шаг 1 из 8' })).toBeVisible();
+  await expect(card.getByRole('img', { name: 'Шаг 1 из 13' })).toBeVisible();
 
   await card.getByRole('button', { name: 'Начать обучение' }).click();
   await expect(card).toContainText('Паспорт');
@@ -38,10 +38,10 @@ test('completing the tour persists done status and prevents re-offer', async ({ 
   const card = page.getByTestId('tour-card');
   await expect(card).toBeVisible();
   await card.getByRole('button', { name: 'Начать обучение' }).click();
-  for (let i = 0; i < 6; ++i) {
+  for (let i = 0; i < 11; ++i) {
     await card.getByRole('button', { name: 'Далее' }).click();
   }
-  await expect(card.getByRole('img', { name: 'Шаг 8 из 8' })).toBeVisible();
+  await expect(card.getByRole('img', { name: 'Шаг 13 из 13' })).toBeVisible();
   await card.getByRole('button', { name: 'Завершить' }).click();
   await expect(card).toBeHidden();
 
@@ -88,7 +88,7 @@ test('Escape dismisses the tour and saves the resume point', async ({ page }) =>
   const resumedCard = page.getByTestId('tour-card');
   await expect(resumedCard).toBeVisible();
   await expect(resumedCard).toContainText('Паспорт');
-  await expect(resumedCard.getByRole('img', { name: 'Шаг 2 из 8' })).toBeVisible();
+  await expect(resumedCard.getByRole('img', { name: 'Шаг 2 из 13' })).toBeVisible();
 });
 
 test('users with completed tour never see it, and can restart from the menu', async ({ page }) => {

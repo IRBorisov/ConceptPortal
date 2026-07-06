@@ -31,6 +31,7 @@ Rules for agents editing `src/features/onboarding` (guided tour engine) and for 
 ## Engine invariants (keep true)
 
 - Escape dismisses and persists the resume point (status stays `pending`); Skip/Done persist `seenVersion`.
+- Leaving `tour.route` pauses the tour (same resume persistence, no `sessionDismissed`) so returning to the route auto-resumes.
 - Auto-start fires only on `tour.route` and is suppressed for the session after Escape (`sessionDismissed`).
 - Short UI strings (`tx.onboarding.*`) live in `src/i18n/app/shell.{en,ru,fr}.ts`; keep all three locales in parity.
 - Spotlight/card use `z-tour` (`--z-index-tour` in `index.css`), above modals.

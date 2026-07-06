@@ -19,6 +19,7 @@ export interface TourLocaleContent {
 /** Navigation facade passed to step hooks; kept minimal so tours stay decoupled from router internals. */
 export interface TourStepController {
   changeTab: (tabID: number) => void;
+  gotoEditActive: (activeID: number) => void;
 }
 
 /** Popover side relative to the anchored element. */

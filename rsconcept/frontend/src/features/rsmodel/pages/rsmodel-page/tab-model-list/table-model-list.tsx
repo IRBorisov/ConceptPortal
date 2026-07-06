@@ -155,6 +155,7 @@ export function TableModelList({
       style={{ maxHeight: maxHeight }}
       data={items ?? []}
       columns={columns}
+      getRowId={(row: Constituenta) => String(row.id)}
       onRowDoubleClicked={handleRowDoubleClicked}
       onRowClicked={handleRowClicked}
       enableHiding

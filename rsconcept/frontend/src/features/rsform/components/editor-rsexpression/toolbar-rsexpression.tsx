@@ -36,7 +36,7 @@ export function ToolbarRSExpression({
   const toggleControls = usePreferencesStore(state => state.toggleShowExpressionControls);
 
   return (
-    <div className={cn('cc-icons', className)}>
+    <div className={cn('cc-icons', className)} data-tour='sandbox-concept-tools'>
       {helpTopic ? <BadgeHelp topic={helpTopic} offset={4} /> : null}
       {!disabled || isProcessing ? (
         <MiniButton
