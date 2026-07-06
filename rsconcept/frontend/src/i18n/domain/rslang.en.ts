@@ -220,7 +220,7 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.invalidFilterIndex':
     'In filter {operator}, index {index} exceeds dimension {arity} of argument {actual}',
   'tx.rslang.error.invalidFilterBooleanEchelon':
-    'Filter parameter has type {actual}. For {operator}, pass a set one boolean level higher',
+    'Filter parameter has type {actual} — the wrong set was passed (one ℬ level too low). For {operator}, wrap an element in curly braces `{…}` or pass a set of the required level; otherwise check the parameter semantics',
   'tx.rslang.error.arithmeticNotSupported': 'Operator "{operator}" works with numbers; type {type} is not suitable',
   'tx.rslang.error.typesNotCompatible': 'Operator "{operator}" cannot be applied to types {a} and {b}',
   'tx.rslang.error.orderingNotSupported': 'Comparison operator "{operator}" does not support type {type}',

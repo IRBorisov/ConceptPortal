@@ -235,7 +235,7 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.invalidFilterIndex':
     'Dans le filtre {operator}, l’indice {index} dépasse la dimension {arity} de l’argument {actual}',
   'tx.rslang.error.invalidFilterBooleanEchelon':
-    'Le paramètre du filtre a le type {actual}. Pour {operator}, passez un ensemble un niveau booléen au-dessus',
+    'Le paramètre du filtre a le type {actual} — ce n’est pas le bon ensemble (un niveau ℬ trop bas). Pour {operator}, mettez un élément entre accolades `{…}` ou passez un ensemble au niveau requis ; sinon vérifiez la sémantique du paramètre',
   'tx.rslang.error.arithmeticNotSupported':
     'L’opérateur « {operator} » fonctionne avec des nombres ; le type {type} ne convient pas',
   'tx.rslang.error.typesNotCompatible': 'L’opérateur « {operator} » ne peut pas être appliqué aux types {a} et {b}',

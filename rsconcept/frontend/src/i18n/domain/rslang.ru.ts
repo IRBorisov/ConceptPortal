@@ -224,7 +224,7 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.invalidFilterIndex':
     'В фильтре {operator} индекс {index} выходит за размерность {arity} аргумента {actual}',
   'tx.rslang.error.invalidFilterBooleanEchelon':
-    'Параметр фильтра имеет тип {actual}. Для {operator} передайте множество на один булеан выше',
+    'Параметр фильтра имеет тип {actual} — передано не то множество (ступень на один ℬ ниже). Для {operator} возьмите элемент в фигурные скобки `{…}` или передайте множество нужной ступени; иначе проверьте семантику параметра',
   'tx.rslang.error.arithmeticNotSupported': 'Оператор «{operator}» работает с числами; тип {type} не подходит',
   'tx.rslang.error.typesNotCompatible': 'Оператор «{operator}» нельзя применить к типам {a} и {b}',
   'tx.rslang.error.orderingNotSupported': 'Оператор сравнения «{operator}» не поддерживает тип {type}',
