@@ -481,7 +481,7 @@ describe('RSToolAgent agent ergonomics', () => {
     tool.applySchemaPatch({ items: [{ alias: 'X1', cstType: CstType.BASE, definitionFormal: '' }] }, session.sessionId);
     expect(tool.listDiagnostics({ kind: 'expression' }, session.sessionId)).toHaveLength(0);
     expect(tool.listDiagnostics({ kind: 'schema' }, session.sessionId).length).toBeGreaterThan(0);
-    expect(tool.listDiagnostics({ kind: 'model' }, session.sessionId).length).toBeGreaterThan(0);
+    expect(tool.listDiagnostics({ kind: 'model' }, session.sessionId)).toHaveLength(0);
   });
 
   it('reports schema homonyms and missing convention', () => {
@@ -524,7 +524,7 @@ describe('RSToolAgent agent ergonomics', () => {
     expect(duplicates[0]?.params?.[0]).toContain('D2');
   });
 
-  it('reports model diagnostics for empty basic sets', () => {
+  it('reports model diagnostics for empty basic sets after model refresh', () => {
     const tool = new RSToolAgent();
     const session = tool.createSession();
     tool.applySchemaPatch(
@@ -533,6 +533,10 @@ describe('RSToolAgent agent ergonomics', () => {
       },
       session.sessionId
     );
+
+    expect(tool.listDiagnostics({ kind: 'model' }, session.sessionId)).toHaveLength(0);
+
+    tool.recalculateModel(session.sessionId);
 
     const modelIssues = tool.listDiagnostics({ kind: 'model' }, session.sessionId);
     expect(modelIssues.some(record => record.code === RSDiagnosticCode.modelEmpty)).toBe(true);

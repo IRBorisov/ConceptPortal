@@ -14,8 +14,8 @@ import { enrichSessionConstituents } from './rsform-builder';
 
 const modelAdapter = new ModelAdapter();
 
-/** Collect expression, schema, and model diagnostics for a session (Portal parity). */
-export function collectSessionDiagnostics(session: SessionState): Diagnostic[] {
+/** Collect expression and schema diagnostics for a session. */
+export function collectSchemaDiagnostics(session: SessionState): Diagnostic[] {
   const records: Diagnostic[] = [];
 
   for (const item of session.items) {
@@ -54,20 +54,34 @@ export function collectSessionDiagnostics(session: SessionState): Diagnostic[] {
     }
   }
 
-  if (session.items.length > 0) {
-    const schema = enriched.map(entry => entry.cst);
-    const engine = modelAdapter.createEngine(session);
-    engine.recalculateAll();
-    for (const cst of schema) {
-      if (!isModelIssue(engine, cst)) {
-        continue;
-      }
-      const diagnostic = modelStatusDiagnostic(engine.getCstStatus(cst.id), cst);
-      if (diagnostic) {
-        records.push(diagnostic);
-      }
+  return records;
+}
+
+/** Collect model diagnostics for a session (requires schema items). */
+export function collectModelDiagnostics(session: SessionState): Diagnostic[] {
+  if (session.items.length === 0) {
+    return [];
+  }
+
+  const records: Diagnostic[] = [];
+  const enriched = enrichSessionConstituents(session);
+  const schema = enriched.map(entry => entry.cst);
+  const engine = modelAdapter.createEngine(session);
+  engine.recalculateAll();
+  for (const cst of schema) {
+    if (!isModelIssue(engine, cst)) {
+      continue;
+    }
+    const diagnostic = modelStatusDiagnostic(engine.getCstStatus(cst.id), cst);
+    if (diagnostic) {
+      records.push(diagnostic);
     }
   }
 
   return records;
+}
+
+/** Collect expression, schema, and model diagnostics for a session. */
+export function collectSessionDiagnostics(session: SessionState): Diagnostic[] {
+  return [...collectSchemaDiagnostics(session), ...collectModelDiagnostics(session)];
 }

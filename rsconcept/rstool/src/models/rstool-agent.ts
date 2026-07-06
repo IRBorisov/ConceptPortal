@@ -4,7 +4,10 @@ import {
   portalSchemaToDrafts,
   portalSchemaToSessionSeed
 } from '../mappers/portal-adapter';
-import { collectSessionDiagnostics } from '../mappers/diagnostics-collector';
+import {
+  collectModelDiagnostics,
+  collectSchemaDiagnostics
+} from '../mappers/diagnostics-collector';
 import { ModelAdapter } from '../mappers/model-adapter';
 import { SchemaAdapter } from '../mappers/schema-adapter';
 import { orderDrafts, reorderSessionItemsByDrafts } from '../session/batch-apply';
@@ -192,9 +195,8 @@ export class RSToolAgent implements RSToolAgentContract {
       definitionFormal: input.expression
     });
     if (input.recordDiagnostics) {
-      const refreshed = collectSessionDiagnostics(envelope.state);
       this.sessions.setDiagnostics(id, [
-        ...refreshed,
+        ...collectSchemaDiagnostics(envelope.state),
         ...diagnostics.map(item => ({ ...item, constituentId: undefined }))
       ]);
     }
@@ -264,11 +266,11 @@ export class RSToolAgent implements RSToolAgentContract {
         const model = await this.evaluation.setConstituentaValues(state, { items: input.set });
         state = { ...state, model };
         this.sessions.replaceState(id, state);
-        this.refreshDiagnostics(id);
+        this.refreshModelDiagnostics(id);
         return model;
       }
 
-      this.refreshDiagnostics(id);
+      this.refreshModelDiagnostics(id);
       return structuredClone(this.sessions.get(id).state.model);
     } catch (error) {
       this.sessions.restore(id, snapshot);
@@ -302,7 +304,7 @@ export class RSToolAgent implements RSToolAgentContract {
     const id = this.resolveSessionId(sessionId);
     const envelope = this.sessions.get(id);
     const result = this.evaluation.recalculateModel(envelope.state);
-    this.refreshDiagnostics(id);
+    this.refreshModelDiagnostics(id);
     return result;
   }
 
@@ -519,6 +521,14 @@ export class RSToolAgent implements RSToolAgentContract {
 
   private refreshDiagnostics(sessionId: string): void {
     const envelope = this.sessions.get(sessionId);
-    this.sessions.setDiagnostics(sessionId, collectSessionDiagnostics(envelope.state));
+    this.sessions.setDiagnostics(sessionId, collectSchemaDiagnostics(envelope.state));
+  }
+
+  private refreshModelDiagnostics(sessionId: string): void {
+    const envelope = this.sessions.get(sessionId);
+    this.sessions.setDiagnostics(sessionId, [
+      ...collectSchemaDiagnostics(envelope.state),
+      ...collectModelDiagnostics(envelope.state)
+    ]);
   }
 }
