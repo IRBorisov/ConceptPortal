@@ -14,6 +14,7 @@ import { hasActiveCstFilter, useCstSearchStore } from '../../stores/cst-search';
 import { SelectorCstFilter } from './selector-cst-filter';
 
 interface ConstituentsSearchProps {
+  id?: string;
   actions?: ReactNode;
   showModelFilter?: boolean;
   stopSearchKeyPropagation?: boolean;
@@ -21,6 +22,7 @@ interface ConstituentsSearchProps {
 }
 
 export function ConstituentsSearch({
+  id,
   actions,
   showModelFilter,
   stopSearchKeyPropagation,
@@ -52,7 +54,7 @@ export function ConstituentsSearch({
         className={compact ? 'shrink-0' : undefined}
       />
       <SearchBar
-        id='constituents_search'
+        id={id}
         noBorder
         className={cn(compact ? 'min-w-0 w-28' : 'min-w-24 grow')}
         query={query}

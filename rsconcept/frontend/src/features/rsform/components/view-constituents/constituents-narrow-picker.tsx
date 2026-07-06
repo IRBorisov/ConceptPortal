@@ -57,6 +57,7 @@ export function ConstituentsNarrowPicker({
         onFocusCapture={() => setOpen(true)}
       >
         <ConstituentsSearch
+          id='constituents_search_narrow'
           compact
           showModelFilter={showModelFilter}
           stopSearchKeyPropagation={stopSearchKeyPropagation}

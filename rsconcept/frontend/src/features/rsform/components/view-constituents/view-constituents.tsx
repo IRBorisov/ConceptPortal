@@ -52,6 +52,7 @@ export function ViewConstituents({
   return (
     <div className={cn(!noBorder && 'border', className)}>
       <ConstituentsSearch
+        id='constituents_search_sidebar'
         actions={sidebarActions}
         showModelFilter={!!isModelIssue}
         stopSearchKeyPropagation={stopSearchKeyPropagation}
