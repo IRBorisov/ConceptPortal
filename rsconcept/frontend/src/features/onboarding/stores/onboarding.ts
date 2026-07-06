@@ -43,8 +43,11 @@ interface OnboardingStore {
   startTour: (tourID: string, fromStep?: number) => void;
   setActiveStep: (index: number) => void;
 
-  /** Escape/dismiss: keeps status `pending` and saves the resume point. */
+  /** Escape/dismiss: keeps status `pending`, saves the resume point, and suppresses auto-restart this session. */
   dismissActiveTour: () => void;
+
+  /** Route leave: keeps status `pending` and saves the resume point without suppressing auto-restart. */
+  pauseActiveTour: () => void;
 
   skipActiveTour: (tourVersion: number) => void;
   completeActiveTour: (tourVersion: number) => void;
@@ -82,6 +85,21 @@ export const useOnboardingStore = create<OnboardingStore>()(
             [activeTourID]: { ...progress, status: 'pending', resumeStep: activeStep }
           },
           sessionDismissed: { ...sessionDismissed, [activeTourID]: true }
+        });
+      },
+
+      pauseActiveTour: () => {
+        const { activeTourID, activeStep, tours } = get();
+        if (!activeTourID) {
+          return;
+        }
+        const progress = tours[activeTourID] ?? defaultTourProgress;
+        set({
+          activeTourID: null,
+          tours: {
+            ...tours,
+            [activeTourID]: { ...progress, status: 'pending', resumeStep: activeStep }
+          }
         });
       },
 

@@ -7,25 +7,58 @@ export function findAnchorElement(anchor: string): HTMLElement | null {
 
 /**
  * Waits for the anchor element to appear using rAF polling.
- * Resolves `null` after `timeoutMs` so a missing anchor never blocks the tour.
+ * Resolves `null` after `timeoutMs`, or immediately when `signal` is aborted,
+ * so a missing or abandoned anchor never blocks the tour.
  */
-export function waitForAnchorElement(anchor: string, timeoutMs = 3000): Promise<HTMLElement | null> {
+export function waitForAnchorElement(
+  anchor: string,
+  timeoutMs = 3000,
+  signal?: AbortSignal
+): Promise<HTMLElement | null> {
   return new Promise(resolve => {
+    if (signal?.aborted) {
+      resolve(null);
+      return;
+    }
+
     const deadline = performance.now() + timeoutMs;
+    let frame = 0;
+    let settled = false;
+
+    function finish(result: HTMLElement | null) {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      if (frame) {
+        cancelAnimationFrame(frame);
+      }
+      signal?.removeEventListener('abort', onAbort);
+      resolve(result);
+    }
+
+    function onAbort() {
+      finish(null);
+    }
 
     function poll() {
+      if (signal?.aborted) {
+        finish(null);
+        return;
+      }
       const element = findAnchorElement(anchor);
       if (element) {
-        resolve(element);
+        finish(element);
         return;
       }
       if (performance.now() > deadline) {
-        resolve(null);
+        finish(null);
         return;
       }
-      requestAnimationFrame(poll);
+      frame = requestAnimationFrame(poll);
     }
 
+    signal?.addEventListener('abort', onAbort, { once: true });
     poll();
   });
 }

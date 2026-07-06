@@ -21,7 +21,11 @@ interface TourCardProps {
 
   className?: string;
   style?: React.CSSProperties;
+  onLayout?: (height: number) => void;
 }
+
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 export function TourCard({
   title,
@@ -32,13 +36,22 @@ export function TourCard({
   onBack,
   onSkip,
   className,
-  style
+  style,
+  onLayout
 }: TourCardProps) {
   const tx = useTx();
   const cardRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const isFirst = stepIndex === 0;
   const isLast = stepIndex === totalSteps - 1;
+
+  useEffect(function saveAndRestoreFocus() {
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    return function restoreFocus() {
+      previousFocusRef.current?.focus();
+    };
+  }, []);
 
   useEffect(
     function focusCardOnStepChange() {
@@ -46,6 +59,57 @@ export function TourCard({
     },
     [stepIndex]
   );
+
+  useEffect(
+    function reportCardHeight() {
+      const element = cardRef.current;
+      if (!element || !onLayout) {
+        return;
+      }
+      function measureCardHeight() {
+        const cardElement = cardRef.current;
+        if (!cardElement || !onLayout) {
+          return;
+        }
+        onLayout(cardElement.offsetHeight);
+      }
+      const observer = new ResizeObserver(measureCardHeight);
+      observer.observe(element);
+      const frame = requestAnimationFrame(measureCardHeight);
+      return function disconnectCardHeightObserver() {
+        cancelAnimationFrame(frame);
+        observer.disconnect();
+      };
+    },
+    [onLayout, stepIndex, title, body]
+  );
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key !== 'Tab' || !cardRef.current) {
+      return;
+    }
+
+    const focusable = Array.from(cardRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
+    const active = document.activeElement;
+
+    if (focusable.length === 0) {
+      event.preventDefault();
+      cardRef.current.focus();
+      return;
+    }
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey) {
+      if (active === first || active === cardRef.current) {
+        event.preventDefault();
+        last.focus();
+      }
+    } else if (active === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
 
   return (
     <div
@@ -55,11 +119,13 @@ export function TourCard({
       aria-modal='true'
       aria-label={tx('tx.onboarding.tour')}
       data-testid='tour-card'
+      onKeyDown={handleKeyDown}
       className={cn(
-        'fixed z-tour w-100 max-w-[calc(100vw-1rem)]',
+        'fixed w-100 max-w-[calc(100vw-1rem)] max-h-[calc(100vh-1rem)] overflow-y-auto',
         'flex flex-col gap-3 px-6 py-3',
         'border rounded-xl shadow-lg outline-hidden',
         'bg-popover text-popover-foreground',
+        'transition-[left,top] duration-300 ease-in-out',
         className
       )}
       style={style}
@@ -86,19 +152,12 @@ export function TourCard({
         {!isFirst ? (
           <Button text={tx('tx.general.goBack')} className='px-4 py-1.5 rounded-lg' onClick={onBack} />
         ) : null}
-        <button
-          type='button'
-          className={cn(
-            'px-5 py-1.5 rounded-lg',
-            'font-medium select-none whitespace-nowrap',
-            'bg-primary text-primary-foreground',
-            'hover:brightness-110 active:brightness-95 cc-animate-color',
-            'cursor-pointer focus-outline'
-          )}
+        <Button
+          text={isFirst ? tx('tx.onboarding.start') : isLast ? tx('tx.onboarding.done') : tx('tx.onboarding.next')}
+          className='px-5 py-1.5 rounded-lg whitespace-nowrap'
           onClick={onNext}
-        >
-          {isFirst ? tx('tx.onboarding.start') : isLast ? tx('tx.onboarding.done') : tx('tx.onboarding.next')}
-        </button>
+          colorSubmit
+        />
       </div>
     </div>
   );

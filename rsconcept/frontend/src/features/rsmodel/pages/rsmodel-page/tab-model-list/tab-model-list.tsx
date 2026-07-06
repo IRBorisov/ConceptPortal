@@ -1,14 +1,16 @@
 'use client';
 
-import { useState } from 'react';
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
-import { filterConstituentaByQuery } from '@/services/search';
 import { CstType } from '@rsconcept/domain/library/rsform';
+import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
+import { isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
 
 import { useConceptNavigation } from '@/app';
+import { useFilteredItems } from '@/features/rsform/components/view-constituents/use-filtered-items';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
+import { hasActiveCstFilter, useCstSearchStore } from '@/features/rsform/stores/cst-search';
 
 import { ExportDropdown } from '@/components/control/export-dropdown';
 import { type RowSelectionState } from '@/components/data-table';
@@ -42,23 +44,32 @@ export function TabModelList() {
   } = useSchemaEdit();
   const { engine } = useModelEdit();
 
-  const [filterText, setFilterText] = useState('');
-  const filtered = filterConstituentaByQuery(schema.items, filterText);
-  const hasActiveFilter = filterText.trim() !== '';
+  const query = useCstSearchStore(state => state.query);
+  const filter = useCstSearchStore(state => state.filter);
+  const setQuery = useCstSearchStore(state => state.setQuery);
+  const filtered = useFilteredItems(schema, isSchemaIssue, cst => isModelIssue(engine, cst));
+  const hasActiveFilter = hasActiveCstFilter(query, filter);
 
   const rowSelection: RowSelectionState = Object.fromEntries(
-    filtered.map((cst, index) => [String(index), selectedCst.includes(cst.id)])
+    filtered.filter(cst => selectedCst.includes(cst.id)).map(cst => [String(cst.id), true])
   );
 
   function handleRowSelection(updater: React.SetStateAction<RowSelectionState>) {
     const newRowSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
-    const newSelection: number[] = [];
-    filtered.forEach((cst, index) => {
-      if (newRowSelection[String(index)] === true) {
-        newSelection.push(cst.id);
+    const filteredIds = new Set(filtered.map(cst => cst.id));
+    const hiddenSelected = selectedCst.filter(id => !filteredIds.has(id));
+    const newVisibleSelection: number[] = [];
+
+    for (const [key, selected] of Object.entries(newRowSelection)) {
+      if (selected) {
+        const cstID = Number(key);
+        if (filteredIds.has(cstID)) {
+          newVisibleSelection.push(cstID);
+        }
       }
-    });
-    setSelectedCst(prev => [...prev.filter(cst_id => !filtered.find(cst => cst.id === cst_id)), ...newSelection]);
+    }
+
+    setSelectedCst([...hiddenSelected, ...newVisibleSelection]);
   }
 
   const handleRowsDrop = useRowsDropHandler(cloneCst, moveAfter);
@@ -137,7 +148,7 @@ export function TabModelList() {
 
       <div className={clsx('flex items-center border-b', !isContentEditable && 'justify-center pl-10')}>
         {isContentEditable ? (
-          <div className='px-2'>
+          <div className='px-2 shrink-0' data-tour='sandbox-list-selection'>
             {tx('tx.general.selection.status', {
               selected: selectedCst.length,
               total: schema.items.length
@@ -148,8 +159,9 @@ export function TabModelList() {
           id='constituents_search'
           noBorder
           className='max-w-50'
-          query={filterText}
-          onChangeQuery={setFilterText}
+          query={query}
+          onChangeQuery={setQuery}
+          data-tour='sandbox-list-search'
         />
       </div>
 
@@ -161,17 +173,19 @@ export function TabModelList() {
         pdfConverter={createPDFList}
       />
 
-      <TableModelList
-        items={filtered}
-        maxHeight={tableHeight}
-        enableSelection={isContentEditable}
-        selected={rowSelection}
-        setSelected={handleRowSelection}
-        enableRowReordering={isContentEditable && !isProcessing && schema.items.length > 1 && !hasActiveFilter}
-        onEdit={cstID => router.gotoActiveValue(cstID)}
-        onCreateNew={() => void promptCreateCst()}
-        onMoveRows={handleRowsDrop}
-      />
+      <div data-tour='sandbox-list-table'>
+        <TableModelList
+          items={filtered}
+          maxHeight={tableHeight}
+          enableSelection={isContentEditable}
+          selected={rowSelection}
+          setSelected={handleRowSelection}
+          enableRowReordering={isContentEditable && !isProcessing && schema.items.length > 1 && !hasActiveFilter}
+          onEdit={cstID => router.gotoActiveValue(cstID)}
+          onCreateNew={() => void promptCreateCst()}
+          onMoveRows={handleRowsDrop}
+        />
+      </div>
     </div>
   );
 }

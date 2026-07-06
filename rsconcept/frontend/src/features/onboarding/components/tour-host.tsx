@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useEffectEvent, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation } from 'react-router';
 
@@ -8,20 +8,19 @@ import { type AppLocale } from '@/i18n';
 
 import { useConceptNavigation } from '@/app/navigation/navigation-context';
 
+import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
 
-import { type Tour, type TourPlacement, type TourStepContent } from '../models/tour';
+import { type Tour, type TourStepContent } from '../models/tour';
 import { shouldOfferTour, useOnboardingStore } from '../stores/onboarding';
 import { findAutoStartTour, getTourByID } from '../tours';
 import { rectsAlmostEqual, waitForAnchorElement } from '../utils/anchors';
+import { computeCardPosition, computeCenteredCardPosition, ESTIMATED_CARD_HEIGHT } from '../utils/card-position';
 
 import { TourCard } from './tour-card';
 
 const SPOTLIGHT_PADDING = 6;
-const CARD_OFFSET = 12;
-const CARD_WIDTH = 320;
-const CARD_MARGIN = 8;
-const ESTIMATED_CARD_HEIGHT = 240;
+const TAB_TOOLS_OBSTACLE_SELECTOR = '.cc-tab-tools';
 
 /** Renders the active onboarding tour: spotlight, step card, and auto-start logic. Mount once per app shell. */
 export function TourHost() {
@@ -35,7 +34,7 @@ export function TourHost() {
   const sessionDismissed = useOnboardingStore(state => state.sessionDismissed);
   const startTour = useOnboardingStore(state => state.startTour);
   const setActiveStep = useOnboardingStore(state => state.setActiveStep);
-  const dismissActiveTour = useOnboardingStore(state => state.dismissActiveTour);
+  const pauseActiveTour = useOnboardingStore(state => state.pauseActiveTour);
   const skipActiveTour = useOnboardingStore(state => state.skipActiveTour);
   const completeActiveTour = useOnboardingStore(state => state.completeActiveTour);
 
@@ -45,13 +44,16 @@ export function TourHost() {
   // Keyed by tour/step so stale async resolutions and rects are ignored without clearing state in effects.
   const [resolvedAnchor, setResolvedAnchor] = useState<ResolvedAnchor | null>(null);
   const [trackedRect, setTrackedRect] = useState<TrackedRect | null>(null);
+  const [cardHeight, setCardHeight] = useState(ESTIMATED_CARD_HEIGHT);
   const [direction, setDirection] = useState<1 | -1>(1);
 
   const anchorElement =
-    resolvedAnchor?.tourID === activeTourID && resolvedAnchor?.stepIndex === activeStep
-      ? resolvedAnchor.element
-      : null;
+    resolvedAnchor?.tourID === activeTourID && resolvedAnchor?.stepIndex === activeStep ? resolvedAnchor.element : null;
   const anchorRect = anchorElement !== null && trackedRect?.element === anchorElement ? trackedRect.rect : null;
+  const layoutAnchorRect = anchorRect ?? (step?.anchor && trackedRect ? trackedRect.rect : null);
+  const hasSpotlight = layoutAnchorRect !== null;
+  const [animateSpotlight, setAnimateSpotlight] = useState(false);
+  const spotlightWasVisibleRef = useRef(false);
 
   useEffect(
     function autoStartTourOnRoute() {
@@ -66,38 +68,44 @@ export function TourHost() {
       if (!shouldOfferTour(progress, candidate.version)) {
         return;
       }
-      const fromStep =
-        progress?.status === 'pending' ? Math.min(progress.resumeStep, candidate.steps.length - 1) : 0;
+      const fromStep = progress?.status === 'pending' ? Math.min(progress.resumeStep, candidate.steps.length - 1) : 0;
       startTour(candidate.id, fromStep);
     },
     [location.pathname, activeTourID, tourRecords, sessionDismissed, startTour]
   );
 
   useEffect(
-    function dismissTourOnRouteLeave() {
+    function pauseTourOnRouteLeave() {
       if (tour && location.pathname !== tour.route) {
-        dismissActiveTour();
+        pauseActiveTour();
       }
     },
-    [location.pathname, tour, dismissActiveTour]
+    [location.pathname, tour, pauseActiveTour]
   );
 
-  const onActivateStep = useEffectEvent(function activateStep(currentTour: Tour, stepIndex: number, moveDirection: 1 | -1) {
+  const onActivateStep = useEffectEvent(function activateStep(
+    currentTour: Tour,
+    stepIndex: number,
+    moveDirection: 1 | -1,
+    signal: AbortSignal
+  ) {
     const currentStep = currentTour.steps[stepIndex];
     if (!currentStep) {
       return;
     }
-    currentStep.onEnter?.({ changeTab: router.changeTab });
+    currentStep.onEnter?.({ changeTab: router.changeTab, gotoEditActive: router.gotoEditActive });
     if (!currentStep.anchor) {
       return;
     }
-    void waitForAnchorElement(currentStep.anchor).then(function resolveAnchor(element) {
+    void waitForAnchorElement(currentStep.anchor, 3000, signal).then(function resolveAnchor(element) {
       const state = useOnboardingStore.getState();
       if (state.activeTourID !== currentTour.id || state.activeStep !== stepIndex) {
         return;
       }
       if (!element) {
-        console.warn(`Tour "${currentTour.id}": anchor "${currentStep.anchor}" not found; skipping step "${currentStep.id}"`);
+        console.warn(
+          `Tour "${currentTour.id}": anchor "${currentStep.anchor}" not found; skipping step "${currentStep.id}"`
+        );
         const nextIndex = stepIndex + moveDirection;
         if (nextIndex < 0 || nextIndex >= currentTour.steps.length) {
           state.dismissActiveTour();
@@ -117,19 +125,37 @@ export function TourHost() {
         return;
       }
       const currentTour = getTourByID(activeTourID);
-      if (currentTour) {
-        onActivateStep(currentTour, activeStep, direction);
+      if (location.pathname !== currentTour?.route) {
+        return;
       }
+      const controller = new AbortController();
+      onActivateStep(currentTour, activeStep, direction, controller.signal);
+      return function abortAnchorWait() {
+        controller.abort();
+      };
     },
-    [activeTourID, activeStep, direction]
+    [activeTourID, activeStep, direction, location.pathname]
+  );
+
+  useEffect(
+    function resetCardHeightOnStepChange() {
+      let frame = 0;
+      frame = requestAnimationFrame(function resetEstimatedCardHeight() {
+        setCardHeight(ESTIMATED_CARD_HEIGHT);
+      });
+      return function cancelResetCardHeight() {
+        cancelAnimationFrame(frame);
+      };
+    },
+    [activeStep]
   );
 
   useEffect(
     function trackAnchorRect() {
-      const element = anchorElement;
-      if (!element) {
+      if (!anchorElement) {
         return;
       }
+      const element: HTMLElement = anchorElement;
       let frame = 0;
       let lastRect: DOMRect | null = null;
       function measureAnchor() {
@@ -146,6 +172,37 @@ export function TourHost() {
       };
     },
     [anchorElement]
+  );
+
+  useEffect(
+    function enableSpotlightTransitionAfterFirstPaint() {
+      if (!hasSpotlight) {
+        spotlightWasVisibleRef.current = false;
+        let frame = 0;
+        frame = requestAnimationFrame(function disableSpotlightTransition() {
+          setAnimateSpotlight(false);
+        });
+        return function cancelDisableSpotlightTransition() {
+          cancelAnimationFrame(frame);
+        };
+      }
+      if (spotlightWasVisibleRef.current) {
+        return;
+      }
+      spotlightWasVisibleRef.current = true;
+      let frame1 = 0;
+      let frame2 = 0;
+      frame1 = requestAnimationFrame(function waitForSpotlightPaint() {
+        frame2 = requestAnimationFrame(function enableSpotlightTransition() {
+          setAnimateSpotlight(true);
+        });
+      });
+      return function cancelEnableSpotlightTransition() {
+        cancelAnimationFrame(frame1);
+        cancelAnimationFrame(frame2);
+      };
+    },
+    [hasSpotlight, activeStep]
   );
 
   useEffect(
@@ -167,10 +224,24 @@ export function TourHost() {
     [activeTourID]
   );
 
+  useEffect(
+    function markAppInertWhileTourActive() {
+      if (!activeTourID) {
+        return;
+      }
+      const root = document.getElementById('root');
+      if (!root) {
+        return;
+      }
+      root.setAttribute('inert', '');
+      return function clearAppInert() {
+        root.removeAttribute('inert');
+      };
+    },
+    [activeTourID]
+  );
+
   if (!tour || !step) {
-    return null;
-  }
-  if (step.anchor && !anchorRect) {
     return null;
   }
 
@@ -184,6 +255,7 @@ export function TourHost() {
 
   function handleNext() {
     setDirection(1);
+    setCardHeight(ESTIMATED_CARD_HEIGHT);
     if (activeStep >= totalSteps - 1) {
       completeActiveTour(currentTourVersion);
     } else {
@@ -193,6 +265,7 @@ export function TourHost() {
 
   function handleBack() {
     setDirection(-1);
+    setCardHeight(ESTIMATED_CARD_HEIGHT);
     setActiveStep(activeStep - 1);
   }
 
@@ -200,22 +273,36 @@ export function TourHost() {
     skipActiveTour(currentTourVersion);
   }
 
+  const isCenteredCard = layoutAnchorRect === null;
+  const cardPosition = isCenteredCard
+    ? computeCenteredCardPosition(cardHeight)
+    : computeCardPosition(
+        layoutAnchorRect,
+        step.placement ?? 'bottom',
+        cardHeight,
+        undefined,
+        TAB_TOOLS_OBSTACLE_SELECTOR
+      );
+
   return createPortal(
-    <>
-      <div className='fixed inset-0 z-tour' data-testid='tour-overlay' />
-      {anchorRect ? (
+    <div className='fixed inset-0 z-topmost isolate pointer-events-none' data-testid='tour-layer'>
+      <div className='fixed inset-0 z-0 pointer-events-auto' data-testid='tour-overlay' />
+      {hasSpotlight ? (
         <div
-          className='fixed z-tour rounded-md pointer-events-none'
+          className={cn(
+            'fixed z-0 rounded-md pointer-events-none',
+            animateSpotlight && 'transition-[top,left,width,height] duration-300 ease-in-out'
+          )}
           style={{
-            top: anchorRect.top - SPOTLIGHT_PADDING,
-            left: anchorRect.left - SPOTLIGHT_PADDING,
-            width: anchorRect.width + 2 * SPOTLIGHT_PADDING,
-            height: anchorRect.height + 2 * SPOTLIGHT_PADDING,
+            top: layoutAnchorRect.top - SPOTLIGHT_PADDING,
+            left: layoutAnchorRect.left - SPOTLIGHT_PADDING,
+            width: layoutAnchorRect.width + 2 * SPOTLIGHT_PADDING,
+            height: layoutAnchorRect.height + 2 * SPOTLIGHT_PADDING,
             boxShadow: '0 0 0 2px var(--color-primary), 0 0 0 9999px rgb(0 0 0 / 45%)'
           }}
         />
       ) : (
-        <div className='fixed inset-0 z-tour bg-[rgb(0_0_0/45%)]' />
+        <div className='fixed inset-0 z-0 bg-[rgb(0_0_0/45%)]' />
       )}
       <TourCard
         title={content.title}
@@ -225,10 +312,11 @@ export function TourHost() {
         onNext={handleNext}
         onBack={handleBack}
         onSkip={handleSkip}
-        className={!anchorRect ? 'left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2' : undefined}
-        style={anchorRect ? computeCardStyle(anchorRect, step.placement ?? 'bottom') : undefined}
+        className='pointer-events-auto z-10'
+        style={{ left: cardPosition.left, top: cardPosition.top }}
+        onLayout={setCardHeight}
       />
-    </>,
+    </div>,
     document.body
   );
 }
@@ -248,36 +336,4 @@ interface TrackedRect {
 function resolveStepContent(tour: Tour, stepID: string, locale: AppLocale): TourStepContent | null {
   const localized = tour.content[locale]?.[stepID];
   return localized ?? tour.content.en[stepID] ?? null;
-}
-
-function computeCardStyle(rect: DOMRect, placement: TourPlacement): React.CSSProperties {
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
-
-  const centeredLeft = Math.min(
-    Math.max(rect.left + rect.width / 2 - CARD_WIDTH / 2, CARD_MARGIN),
-    Math.max(viewportWidth - CARD_WIDTH - CARD_MARGIN, CARD_MARGIN)
-  );
-
-  let effective = placement;
-  if (placement === 'bottom' && rect.bottom + CARD_OFFSET + ESTIMATED_CARD_HEIGHT > viewportHeight) {
-    effective = 'top';
-  } else if (placement === 'top' && rect.top - CARD_OFFSET - ESTIMATED_CARD_HEIGHT < 0) {
-    effective = 'bottom';
-  }
-
-  switch (effective) {
-    case 'top':
-      return { left: centeredLeft, top: rect.top - CARD_OFFSET, transform: 'translateY(-100%)' };
-    case 'left':
-      return { left: Math.max(rect.left - CARD_OFFSET - CARD_WIDTH, CARD_MARGIN), top: rect.top };
-    case 'right':
-      return {
-        left: Math.min(rect.right + CARD_OFFSET, viewportWidth - CARD_WIDTH - CARD_MARGIN),
-        top: rect.top
-      };
-    case 'bottom':
-    default:
-      return { left: centeredLeft, top: rect.bottom + CARD_OFFSET };
-  }
 }

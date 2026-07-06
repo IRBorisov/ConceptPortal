@@ -22,11 +22,7 @@ const storage = vi.hoisted(() => {
 
 vi.stubGlobal('localStorage', storage);
 
-import {
-  defaultTourProgress,
-  shouldOfferTour,
-  type TourProgress,
-  useOnboardingStore} from './onboarding';
+import { defaultTourProgress, shouldOfferTour, type TourProgress, useOnboardingStore } from './onboarding';
 
 const TOUR_ID = 'sandbox-intro';
 const TOUR_VERSION = 2;
@@ -95,6 +91,16 @@ describe('useOnboardingStore', () => {
     expect(state.activeTourID).toBeNull();
     expect(state.tours[TOUR_ID]).toEqual({ ...defaultTourProgress, resumeStep: 4 });
     expect(state.sessionDismissed[TOUR_ID]).toBe(true);
+  });
+
+  test('pauseActiveTour saves resume point and keeps pending without session dismissal', () => {
+    useOnboardingStore.getState().startTour(TOUR_ID, 4);
+    useOnboardingStore.getState().pauseActiveTour();
+
+    const state = useOnboardingStore.getState();
+    expect(state.activeTourID).toBeNull();
+    expect(state.tours[TOUR_ID]).toEqual({ ...defaultTourProgress, resumeStep: 4 });
+    expect(state.sessionDismissed[TOUR_ID]).toBeUndefined();
   });
 
   test('dismissActiveTour is a no-op without an active tour', () => {
