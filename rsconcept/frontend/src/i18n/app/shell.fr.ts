@@ -192,6 +192,15 @@ export const txShellFr: Record<string, string> = {
   'tx.sandbox.bundle.load.file': 'Charger les données du bac à sable depuis un JSON',
   'tx.sandbox.bundle.load.file.invalid': 'Fichier de bac à sable invalide',
 
+  'tx.onboarding.tour': 'Tutoriel interactif',
+  'tx.onboarding.progress': 'Étape {current} sur {total}',
+  'tx.onboarding.start': 'Commencer la visite',
+  'tx.onboarding.next': 'Suivant',
+  'tx.onboarding.skip': 'Passer',
+  'tx.onboarding.done': 'Terminer',
+  'tx.onboarding.show': 'Afficher le tutoriel',
+  'tx.onboarding.show.hint': 'Relancer le tutoriel interactif',
+
   'tx.shell.embed.youtube': 'Vidéo Youtube intégrée',
   'tx.shell.embed.vk': 'Vidéo VK intégrée'
 };

@@ -8,6 +8,8 @@ import { LocationHead } from '@rsconcept/domain/library';
 
 import { useConceptNavigation } from '@/app';
 import { useCreateFromSandbox } from '@/features/library/backend/use-create-from-sandbox';
+import { useOnboardingStore } from '@/features/onboarding/stores/onboarding';
+import { sandboxIntroTour } from '@/features/onboarding/tours/sandbox-intro';
 
 import { Divider } from '@/components/container';
 import { MiniButton } from '@/components/control';
@@ -15,6 +17,7 @@ import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
   IconCalculateAll,
   IconDownload,
+  IconHelp,
   IconMenu,
   IconReset,
   IconRSForm,
@@ -29,6 +32,7 @@ export function MenuMain() {
   const router = useConceptNavigation();
   const { resetBundle, importBundle, exportBundle, engine, bundle } = useSandboxBundle();
   const { createRSFormFromSandbox, createRSModelFromSandbox } = useCreateFromSandbox();
+  const restartTour = useOnboardingStore(state => state.restartTour);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const {
     elementRef: menuRef,
@@ -114,6 +118,11 @@ export function MenuMain() {
     engine.recalculateAll();
   }
 
+  function handleShowTour() {
+    hideMenu();
+    restartTour(sandboxIntroTour.id);
+  }
+
   async function handleImportFile(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     event.target.value = '';
@@ -180,6 +189,12 @@ export function MenuMain() {
           title={tx('tx.sandbox.export.model')}
           icon={<IconRSModel size='1rem' className='text-accent-orange' />}
           onClick={() => void handleCreateRSModel()}
+        />
+        <DropdownButton
+          text={tx('tx.onboarding.show')}
+          title={tx('tx.onboarding.show.hint')}
+          icon={<IconHelp size='1rem' className='icon-primary' />}
+          onClick={handleShowTour}
         />
         <Divider margins='mx-3 my-1' />
         <DropdownButton

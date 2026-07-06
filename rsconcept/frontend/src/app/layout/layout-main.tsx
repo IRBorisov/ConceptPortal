@@ -6,6 +6,8 @@ import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 
+import { TourHost } from '@/features/onboarding/components/tour-host';
+
 import { ModalLoader } from '@/components/modal';
 import { useDialogInert } from '@/hooks/use-dialog-inert';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/app-layout';
@@ -44,6 +46,7 @@ export function LayoutMain() {
         <AppShellDialogHosts />
       </Suspense>
       <GlobalTooltips />
+      <TourHost />
 
       <Navigation />
 

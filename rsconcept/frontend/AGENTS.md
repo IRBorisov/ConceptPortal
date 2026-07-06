@@ -48,6 +48,7 @@ Run from repo root (pnpm workspace) unless noted:
 - Users: `src/features/users`
 - Help: `src/features/help`
 - Sandbox: `src/features/sandbox`
+- Onboarding tours: `src/features/onboarding` (see its `AGENTS.md` for adding/editing tours)
 
 ## Feature public API (`index.ts`)
 

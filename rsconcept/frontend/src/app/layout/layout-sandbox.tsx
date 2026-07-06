@@ -8,6 +8,7 @@ import { useTx } from '@/i18n';
 
 import { Footer } from '@/app/footer';
 import { ToasterThemed } from '@/app/global-toaster';
+import { TourHost } from '@/features/onboarding/components/tour-host';
 
 import { ModalLoader } from '@/components/modal';
 import { useDialogInert } from '@/hooks/use-dialog-inert';
@@ -44,6 +45,7 @@ export function LayoutSandbox() {
         <AppShellDialogHosts />
       </Suspense>
       <GlobalTooltips />
+      <TourHost />
 
       <NavigationSandbox />
 

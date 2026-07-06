@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sandbox First-User Onboarding Plan</title>
+    <title>Portal Onboarding System Plan</title>
     <style>
       :root {
         color-scheme: light dark;
@@ -272,7 +272,7 @@
 
       .flow {
         display: grid;
-        grid-template-columns: repeat(7, minmax(110px, 1fr));
+        grid-template-columns: repeat(8, minmax(105px, 1fr));
         gap: 10px;
         overflow-x: auto;
         padding-bottom: 4px;
@@ -409,18 +409,19 @@
     <main>
       <header>
         <div class="eyebrow">Planning Artifact</div>
-        <h1>Sandbox First-User Onboarding</h1>
+        <h1>Portal Onboarding System</h1>
         <p class="lead">
-          A visual, interactive introduction that teaches users how Portal
-          schemas and models work by guiding them through the real Sandbox
-          editor.
+          A reusable tour engine — registry, persisted state, and
+          spotlight/popover UI — mounted in both the main app shell and the
+          Sandbox shell. The Sandbox intro tour ships as its first consumer; any
+          main-UI page can register its own tour later with zero engine changes.
         </p>
         <div class="tag-row">
           <span class="tag">Frontend</span>
-          <span class="tag">Sandbox</span>
+          <span class="tag">Tour engine</span>
+          <span class="tag">Main UI + Sandbox</span>
           <span class="tag">Onboarding</span>
-          <span class="tag">Schema editing</span>
-          <span class="tag">Model editing</span>
+          <span class="tag">Extensible registry</span>
         </div>
       </header>
 
@@ -428,20 +429,22 @@
         <div class="card">
           <h2>Goal</h2>
           <p>
-            Convert the first Sandbox visit into a safe guided experience. The
-            user should leave understanding that a schema defines concepts and
-            relationships, while a model provides concrete values and evaluation
-            results.
+            Build one onboarding system instead of a Sandbox-only feature. The
+            engine handles spotlighting, step navigation, persistence, and
+            re-offering after version bumps; individual tours are pure data plus
+            localized content. V1 ships the engine and the Sandbox intro tour,
+            which teaches that a schema defines concepts and relationships while
+            a model provides concrete values and evaluation results.
           </p>
           <div class="tag-row">
-            <span class="tag">No auth required</span>
-            <span class="tag">Local IndexedDB bundle</span>
+            <span class="tag">Works without auth</span>
+            <span class="tag">Browser-local persistence</span>
             <span class="tag">Real editor UI</span>
-            <span class="tag">Skippable</span>
+            <span class="tag">Skippable and resumable</span>
           </div>
         </div>
 
-        <div class="mock-ui" aria-label="Mock Sandbox onboarding UI">
+        <div class="mock-ui" aria-label="Mock tour UI">
           <div class="mock-toolbar">
             <span class="mock-pill">Menu</span>
             <span class="mock-pill dim">Edit</span>
@@ -459,8 +462,8 @@
             <div class="spotlight">
               <strong>Welcome to Sandbox</strong>
               <p class="muted">
-                This tab names your schema and model. Next, we will inspect its
-                concepts.
+                Step 2 / 8 — this tab names your schema and model. Next, we will
+                inspect its concepts.
               </p>
             </div>
           </div>
@@ -468,12 +471,57 @@
       </section>
 
       <section class="card">
-        <h2>Recommended V1 Flow</h2>
+        <h2>Engine vs. Tours</h2>
+        <div class="architecture">
+          <div class="layer">
+            <strong><code>src/features/onboarding</code> — the engine</strong>
+            <p class="muted">
+              Owns tour/step types, the tour registry, the persisted onboarding
+              store, the <code>TourHost</code> visual layer, and the anchor
+              resolver. Knows nothing about any specific tour.
+            </p>
+          </div>
+          <div class="layer">
+            <strong><code>tours/</code> — pure data consumers</strong>
+            <p class="muted">
+              Each tour is a definition object: <code>id</code>,
+              <code>version</code>, ordered steps with anchors, optional
+              <code>onEnter</code> hooks for tab/route switching, and per-locale
+              content modules (<code>content.en.tsx</code> /
+              <code>.ru.tsx</code> / <code>.fr.tsx</code>) following the help
+              manuals convention.
+            </p>
+          </div>
+          <div class="layer">
+            <strong><code>TourHost</code> mounted in both shells</strong>
+            <p class="muted">
+              Added to <code>layout-main.tsx</code> and
+              <code>layout-sandbox.tsx</code> beside
+              <code>AppShellDialogHosts</code>. Renders nothing unless a tour is
+              active or a first-run trigger fires on its declared route.
+            </p>
+          </div>
+          <div class="layer">
+            <strong><code>data-tour</code> anchors in existing UI</strong>
+            <p class="muted">
+              Inert attributes on stable UI elements (Sandbox tab chrome, key
+              panels). The anchor resolver waits for elements, scrolls them into
+              view, and tracks their rects; missing anchors skip the step with a
+              warning instead of blocking the tour.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Sandbox Intro Tour (first consumer)</h2>
         <div class="flow">
           <div class="flow-step">
             <span class="step-number">1</span>
             <h3>Welcome</h3>
-            <p class="muted">Explain Sandbox and offer Start, Skip, Manuals.</p>
+            <p class="muted">
+              Centered modal step: Start, Skip, link to Manuals.
+            </p>
           </div>
           <div class="flow-step">
             <span class="step-number">2</span>
@@ -492,7 +540,7 @@
           <div class="flow-step">
             <span class="step-number">4</span>
             <h3>Concept</h3>
-            <p class="muted">Guide selection and optional concept editing.</p>
+            <p class="muted">Guide selection; read-only in v1.</p>
           </div>
           <div class="flow-step">
             <span class="step-number">5</span>
@@ -511,66 +559,71 @@
               Show calculated values, issues, and next actions.
             </p>
           </div>
+          <div class="flow-step">
+            <span class="step-number">8</span>
+            <h3>Finish</h3>
+            <p class="muted">
+              Modal step: recap, links to Manuals, mark tour done.
+            </p>
+          </div>
         </div>
       </section>
 
       <section class="grid two">
         <div class="card">
-          <h2>System Structure</h2>
-          <div class="architecture">
-            <div class="layer">
-              <strong><code>features/onboarding</code></strong>
-              <p class="muted">
-                Owns the welcome dialog, step controller, popover, spotlight,
-                content, and tests.
-              </p>
-            </div>
-            <div class="layer">
-              <strong><code>GlobalOnboarding</code></strong>
-              <p class="muted">
-                Mounted near global dialogs/tooltips so it can react to routes
-                without living inside Sandbox state.
-              </p>
-            </div>
-            <div class="layer">
-              <strong><code>SandboxTabs</code> anchors</strong>
-              <p class="muted">
-                Adds stable <code>data-onboarding-id</code> targets to tab
-                chrome and key editor areas.
-              </p>
-            </div>
-            <div class="layer">
-              <strong>Existing editors</strong>
-              <p class="muted">
-                The tour teaches through current RSForm/RSModel components
-                instead of replacing them.
-              </p>
-            </div>
-          </div>
+          <h2>Persistence Model</h2>
+          <ul>
+            <li>
+              New zustand store persisted as <code>portal.onboarding</code> with
+              <code>version</code> + <code>migrate</code>, following the
+              <code>library-search.ts</code> pattern.
+            </li>
+            <li>
+              Per-tour record: <code>status</code> (<code>pending</code> /
+              <code>skipped</code> / <code>done</code>),
+              <code>seenVersion</code>, and <code>resumeStep</code>.
+            </li>
+            <li>
+              Browser-local only — same behavior for anonymous Sandbox users and
+              authenticated users. No backend changes.
+            </li>
+            <li>
+              Bumping a tour's <code>version</code> in its definition re-offers
+              it after UX changes; Escape persists the resume point instead of
+              losing progress.
+            </li>
+          </ul>
         </div>
 
         <div class="card">
           <h2>Key Decisions</h2>
           <ul>
             <li>
-              Use a small custom tour layer based on existing Base UI popover
-              primitives.
+              Custom tour layer over existing Base UI
+              <code>Popover</code>/<code>PopoverAnchor</code> primitives plus a
+              body-portal spotlight overlay (box-shadow cutout); no third-party
+              tour library.
             </li>
             <li>
-              Keep long onboarding prose in per-locale feature files, not i18n
-              message maps.
+              New <code>--z-index-tour</code> above modal (60) in
+              <code>index.css</code> so steps can spotlight over dialogs.
             </li>
             <li>
-              Persist completion with an onboarding version so later UX changes
-              can re-trigger the tour.
+              Steps without an anchor render as centered modal steps
+              (welcome/finish); steps with anchors get spotlight + popover.
             </li>
             <li>
-              Make mutation steps optional in v1 so the tutorial cannot trap
-              users in an invalid state.
+              Short strings (buttons, progress) as
+              <code>tx.onboarding.*</code>; long step prose in per-locale tour
+              content files, per frontend i18n rules.
             </li>
             <li>
-              Do not change Sandbox bundle persistence, schema APIs, model APIs,
-              or starter data format.
+              V1 is read-only over the starter bundle — no mutation steps, so
+              the tour cannot trap users in an invalid state.
+            </li>
+            <li>
+              No changes to Sandbox Dexie persistence, schema/model APIs, or
+              starter bundle format.
             </li>
           </ul>
         </div>
@@ -581,51 +634,56 @@
         <div class="phase">
           <span class="status green">Phase 1</span>
           <div>
-            <h3>State and copy skeleton</h3>
+            <h3>Engine core</h3>
             <p class="muted">
-              Add versioned onboarding state, short
-              <code>tx.onboarding.*</code> labels, and colocated long-form
-              content files for English, Russian, and French.
+              Tour/step types in <code>models/tour.ts</code>, tour registry, and
+              the versioned persisted store
+              <code>stores/onboarding.ts</code> with migrate support.
             </p>
           </div>
         </div>
         <div class="phase">
           <span class="status green">Phase 2</span>
           <div>
-            <h3>Global entry point</h3>
+            <h3>Visual layer</h3>
             <p class="muted">
-              Add first-run welcome UI, Start/Skip behavior, and route users
-              into <code>/sandbox</code> when they begin.
+              <code>TourHost</code> with spotlight overlay, anchored step
+              popover, progress controls, keyboard access, Escape/resume
+              handling, and the anchor resolver (<code>utils/anchors.ts</code>).
             </p>
           </div>
         </div>
         <div class="phase">
           <span class="status orange">Phase 3</span>
           <div>
-            <h3>Sandbox anchors and navigation</h3>
+            <h3>Shell mounting</h3>
             <p class="muted">
-              Add stable onboarding anchors and define steps that can switch
-              Sandbox tabs through existing navigation.
+              Mount <code>TourHost</code> in <code>layout-main.tsx</code> and
+              <code>layout-sandbox.tsx</code>; wire route-aware auto-start and
+              re-entry ("Show tour" menu item).
             </p>
           </div>
         </div>
         <div class="phase">
           <span class="status orange">Phase 4</span>
           <div>
-            <h3>Tour engine and visual layer</h3>
+            <h3>Sandbox intro tour</h3>
             <p class="muted">
-              Implement popover, spotlight, scroll-into-view, progress controls,
-              Escape dismissal, and persistence.
+              Register <code>sandbox-intro</code> with per-locale content,
+              tab-switching <code>onEnter</code> hooks through existing
+              navigation, and <code>data-tour</code> anchors in
+              <code>sandbox-tabs.tsx</code>.
             </p>
           </div>
         </div>
         <div class="phase">
           <span class="status red">Phase 5</span>
           <div>
-            <h3>Tests and polish</h3>
+            <h3>i18n, tests, polish</h3>
             <p class="muted">
-              Add focused unit and Playwright coverage, verify locale parity,
-              then refine copy and manual/video links.
+              <code>tx.onboarding.*</code> strings for en/ru/fr with locale
+              parity green, Vitest for store/registry, Playwright flow spec,
+              copy refinement.
             </p>
           </div>
         </div>
@@ -638,36 +696,41 @@
             <div class="row">
               <div class="cell"><code>src/features/onboarding</code></div>
               <div class="cell">
-                New feature module for controller, UI, step definitions,
-                content, and tests.
+                New feature module: engine (models, store, TourHost, anchor
+                resolver) plus <code>tours/sandbox-intro</code>.
               </div>
             </div>
             <div class="row">
-              <div class="cell"><code>src/stores/preferences.ts</code></div>
+              <div class="cell"><code>src/app/layout</code></div>
               <div class="cell">
-                Small persisted state extension, unless onboarding state gets
-                its own store.
-              </div>
-            </div>
-            <div class="row">
-              <div class="cell"><code>src/app</code></div>
-              <div class="cell">
-                Mount <code>GlobalOnboarding</code> beside existing global UI
-                infrastructure.
+                Mount <code>TourHost</code> in <code>layout-main.tsx</code> and
+                <code>layout-sandbox.tsx</code>.
               </div>
             </div>
             <div class="row">
               <div class="cell"><code>sandbox-tabs.tsx</code></div>
               <div class="cell">
-                Add harmless anchor attributes to menu, tabs, and issue
-                indicators.
+                Inert <code>data-tour</code> anchors on tabs, menu, and key
+                editor areas.
+              </div>
+            </div>
+            <div class="row">
+              <div class="cell"><code>src/index.css</code></div>
+              <div class="cell">
+                Add <code>--z-index-tour</code> to the z-index scale.
               </div>
             </div>
             <div class="row">
               <div class="cell"><code>src/i18n/app</code></div>
               <div class="cell">
-                Add short button, progress, and status strings in all supported
-                locales.
+                Short button, progress, and status strings in en/ru/fr.
+              </div>
+            </div>
+            <div class="row">
+              <div class="cell"><code>tests/onboarding.spec.ts</code></div>
+              <div class="cell">
+                New Playwright spec following <code>tests/setup.ts</code>
+                mock and localStorage-seeding patterns.
               </div>
             </div>
           </div>
@@ -677,23 +740,26 @@
           <h2>Acceptance Criteria</h2>
           <ul>
             <li>
-              First-time users see a skippable welcome entry for Sandbox
-              onboarding.
+              The engine has no Sandbox-specific code; adding a main-UI tour
+              requires only a new definition in <code>tours/</code> plus
+              anchors.
             </li>
             <li>
-              Starting the tour routes to Sandbox and highlights the current
-              step target.
+              First-time Sandbox visitors see a skippable welcome step; Start
+              advances across Passport, List, Concept, Graph, Data, and
+              Evaluation via existing tab navigation.
             </li>
             <li>
-              Next and Back can move across the Passport, List, Concept, Graph,
-              Data, and Evaluation tabs.
+              Skip and Done persist in <code>portal.onboarding</code> and
+              prevent the first-run flow from reappearing; version bumps
+              re-offer the tour.
             </li>
             <li>
-              Skip and Done persist and prevent the first-run flow from
-              reappearing.
+              Escape dismisses and stores a resume point; the tour is fully
+              keyboard accessible.
             </li>
             <li>
-              The tour remains keyboard accessible and dismissible by Escape.
+              Missing anchors skip their step gracefully instead of blocking.
             </li>
             <li>Locale parity tests pass after adding onboarding strings.</li>
           </ul>
@@ -704,24 +770,25 @@
         <h2>Testing Plan</h2>
         <div class="grid three">
           <div class="card compact">
-            <h3>State</h3>
+            <h3>Engine state</h3>
             <p class="muted">
-              Unit test version handling, resume point, skip, done, and re-show
-              behavior.
+              Vitest: version bump re-offer, skip/done/resume transitions, store
+              migrate, registry validation (unique step ids, declared anchors).
             </p>
           </div>
           <div class="card compact">
             <h3>Flow</h3>
             <p class="muted">
-              Playwright: first visit, Start to Sandbox, advance across steps,
-              Skip persists.
+              Playwright: first visit shows welcome, Start advances across tabs,
+              Skip persists (assert <code>portal.onboarding</code> in
+              localStorage).
             </p>
           </div>
           <div class="card compact">
             <h3>Regression</h3>
             <p class="muted">
-              Verify completed users do not see onboarding and existing Sandbox
-              editing still works.
+              Completed users see nothing; existing Sandbox editing and main UI
+              behavior are unaffected beyond inert anchor attributes.
             </p>
           </div>
         </div>
@@ -730,10 +797,12 @@
       <section class="callout">
         <h2>Scope Boundary</h2>
         <p>
-          The onboarding system should teach through the current editor. It
-          should not change Sandbox persistence, schema/model mutation
-          contracts, starter bundle format, or production editor behavior beyond
-          stable anchor attributes needed for the tour.
+          The onboarding system teaches through the current editors. It must not
+          change Sandbox Dexie persistence, schema/model mutation contracts, the
+          starter bundle format, or backend behavior. Only the engine module,
+          shell mount points, inert anchor attributes, one CSS variable, and
+          i18n strings are touched. V1 ships the Sandbox intro tour only;
+          main-UI tours are follow-up consumers of the same engine.
         </p>
       </section>
     </main>
