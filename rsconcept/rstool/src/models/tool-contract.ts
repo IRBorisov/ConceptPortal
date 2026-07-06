@@ -5,14 +5,14 @@ import {
   type SessionStateResult
 } from './agent-workflow';
 import { type AnalysisResult, type AnalyzeExpressionInput } from './analysis';
-import { type DiagnosticRecord, type ListDiagnosticsFilters } from './diagnostic';
+import { type Diagnostic, type ListDiagnosticsFilters } from './diagnostic';
 import { type EvaluateInput, type EvaluationResult } from './evaluation';
 import { type ExportPortalInput, type ExportPortalResult, type ImportDataKind } from './import-export';
 import { type RecalculateModelResult, type SessionModelState, type SetModelValuesInput } from './model-value';
 import { type SessionHandle, type SessionRevision, type SessionState } from './session';
 
 /** Agent-visible contract version; bump on breaking API changes. */
-export const CONTRACT_VERSION = '2.0.0';
+export const CONTRACT_VERSION = '3.0.0';
 
 /** Options for constructing an {@link RSToolAgent}. */
 export interface RSToolAgentOptions {
@@ -48,8 +48,8 @@ export interface RSToolAgentContract {
   /** Return session summary (default) or full cloned state when `detail` is `'full'`. */
   getSessionState(detail?: SessionStateDetail, sessionId?: string): SessionStateResult;
 
-  /** List diagnostics for the session, optionally filtered by constituent. */
-  listDiagnostics(filters?: ListDiagnosticsFilters, sessionId?: string): DiagnosticRecord[];
+  /** List diagnostics for the session, optionally filtered by constituent or kind. */
+  listDiagnostics(filters?: ListDiagnosticsFilters, sessionId?: string): Diagnostic[];
 
   /** Parse and type-check an RSLang expression against the current schema context. */
   analyzeExpression(input: AnalyzeExpressionInput, sessionId?: string): AnalysisResult;

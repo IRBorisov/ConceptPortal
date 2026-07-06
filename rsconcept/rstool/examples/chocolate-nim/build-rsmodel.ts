@@ -1,26 +1,11 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import { TUPLE_ID } from '@rsconcept/domain';
-
 import { EvalStatus, RSToolWrapperClient } from '../../src';
 
-import {
-  A1_ID,
-  D6_ID,
-  DEFAULT_RSFORM_SESSION_PATH,
-  DEFAULT_RSMODEL_SESSION_PATH,
-  S1_ID,
-  S2_ID,
-  T1_ID
-} from './constants';
-
-/**
- * Демо-позиция: шоколадка 4×6, отравленная долька в (2, 3).
- * Кучки Ним: 1, 2, 2, 3 камня; игра не окончена.
- */
-const S1_VALUE = [TUPLE_ID, 4, 6] as const;
-const S2_VALUE = [TUPLE_ID, 2, 3] as const;
+import { A1_ID, D6_ID, DEFAULT_RSFORM_SESSION_PATH, DEFAULT_RSMODEL_SESSION_PATH, T1_ID } from './constants';
+import { CHOCOLATE_MODEL_SET } from './model-demo';
+import { assertCleanDiagnostics } from '../diagnostics-utils';
 
 async function run() {
   const client = new RSToolWrapperClient({
@@ -38,10 +23,7 @@ async function run() {
 
     await client.call('setModelValues', {
       sessionId: imported.sessionId,
-      set: [
-        { target: S1_ID, value: S1_VALUE },
-        { target: S2_ID, value: S2_VALUE }
-      ]
+      set: [...CHOCOLATE_MODEL_SET]
     });
 
     const recalculated = await client.call<{
@@ -75,6 +57,17 @@ async function run() {
     if (d6?.value !== 4) {
       throw new Error(`Expected D6=4 piles; got ${JSON.stringify(d6)}`);
     }
+
+    const state = await client.call<{ items: Array<{ id: number; alias: string }> }>('getSessionState', {
+      sessionId: imported.sessionId,
+      detail: 'full'
+    });
+    await assertCleanDiagnostics(
+      client,
+      imported.sessionId,
+      new Map(state.items.map(item => [item.id, item.alias])),
+      'chocolate-nim RSModel'
+    );
 
     await client.call('commitStep', {
       sessionId: imported.sessionId,

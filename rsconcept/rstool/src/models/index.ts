@@ -14,11 +14,17 @@ export {
   RSErrorCode,
   ValueClass,
   type BasicBinding,
-  type RSToolErrorDescription,
   type RSToolValue
 } from './common';
 export { type ApplyConstituentsMode, type ConstituentaDraft, type ConstituentaState } from './constituenta';
-export { type DiagnosticRecord, type ListDiagnosticsFilters } from './diagnostic';
+export {
+  type CstDiagnostic,
+  type Diagnostic,
+  DiagnosticKind,
+  type DiagnosticSeverity,
+  type ListDiagnosticsFilters,
+  RSDiagnosticCode
+} from './diagnostic';
 export { type EvaluateInput, type EvaluationResult } from './evaluation';
 export {
   type ExportFormat,

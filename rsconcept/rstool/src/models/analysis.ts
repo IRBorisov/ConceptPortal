@@ -1,4 +1,5 @@
-import { type CstType, type RSToolErrorDescription, type ValueClass } from './common';
+import { type Diagnostic } from './diagnostic';
+import { type CstType, type ValueClass } from './common';
 
 /** Input for {@link RSToolAgent.analyzeExpression}. */
 export interface AnalyzeExpressionInput {
@@ -16,5 +17,5 @@ export interface AnalysisResult {
   /** Inferred RS type AST as a plain object, or `null` on failure. */
   type: Record<string, unknown> | null;
   valueClass: ValueClass | null;
-  diagnostics: RSToolErrorDescription[];
+  diagnostics: Diagnostic[];
 }

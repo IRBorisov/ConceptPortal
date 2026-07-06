@@ -1,339 +1,26 @@
 {
-  "contractVersion": "2.0.0",
+  "contractVersion": "2.1.0",
   "state": {
-    "sessionId": "2681e6c5-9e8c-4339-9b66-ccaba986c9a4",
+    "sessionId": "e9ccbb3c-09ff-4aba-be9a-aeda0e8c160a",
     "alias": "",
     "title": "",
     "comment": "",
-    "createdAt": "2026-07-01T17:12:52.506Z",
-    "updatedAt": "2026-07-01T17:12:52.559Z",
+    "createdAt": "2026-07-06T14:50:05.401Z",
+    "updatedAt": "2026-07-06T14:50:05.542Z",
     "revisions": [
       {
-        "revisionId": "e21a055b-bd0b-4645-b779-97f12f867ece",
-        "at": "2026-07-01T17:12:52.559Z",
+        "revisionId": "8ce59be2-a4c3-42a2-84ca-c1743b489d50",
+        "at": "2026-07-06T14:50:05.542Z",
         "message": "Банк выражений (rsforms/42): шаблоны T1–T10 на радикалах R1–R3"
       }
     ],
     "items": [
       {
-        "id": 87,
-        "alias": "F50",
-        "cstType": "function",
-        "definitionFormal": "[α∈ℬ(R1), σ∈ℬℬ(R1)] D{ξ∈σ | ξ⊆α}",
-        "term": "фильтр по надмножеству",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 5,
-                "base": {
-                  "typeID": 3,
-                  "baseID": "R1"
-                }
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 5,
-                    "base": {
-                      "typeID": 3,
-                      "baseID": "R1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 86,
-        "alias": "F49",
-        "cstType": "function",
-        "definitionFormal": "[α∈ℬ(R1), σ∈ℬℬ(R1)] D{ξ∈σ | α⊆ξ}",
-        "term": "фильтр по подмножеству",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 5,
-                "base": {
-                  "typeID": 3,
-                  "baseID": "R1"
-                }
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 5,
-                    "base": {
-                      "typeID": 3,
-                      "baseID": "R1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 85,
-        "alias": "F48",
-        "cstType": "function",
-        "definitionFormal": "[α∈R1, σ∈ℬℬ(R1)] D{ξ∈σ | α∈ξ}",
-        "term": "фильтр по вхождению элемента",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 5,
-                "base": {
-                  "typeID": 3,
-                  "baseID": "R1"
-                }
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 3,
-                  "baseID": "R1"
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 5,
-                    "base": {
-                      "typeID": 3,
-                      "baseID": "R1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 84,
-        "alias": "P52",
-        "cstType": "predicate",
-        "definitionFormal": "[α∈ℬ(R1), σ∈ℬℬ(R1)] red(σ)=α & card(σ)>1 & ∅∉σ & ∀ξ1,ξ2∈σ (ξ1≠ξ2 ⇒ ξ1∩ξ2=∅)",
-        "term": "разбиение",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 5,
-                    "base": {
-                      "typeID": 3,
-                      "baseID": "R1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 83,
-        "alias": "P48",
-        "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬℬ(R1)] ∀α,β∈σ α∪β∈σ",
-        "term": "свойство замкнутости по объединению",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 5,
-                    "base": {
-                      "typeID": 3,
-                      "baseID": "R1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 82,
-        "alias": "P47",
-        "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬℬ(R1)] ∀α,β∈σ (α≠β ⇒ α∩β=∅)",
-        "term": "свойство попарного непересечения",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 5,
-                    "base": {
-                      "typeID": 3,
-                      "baseID": "R1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 81,
-        "alias": "P46",
-        "cstType": "predicate",
-        "definitionFormal": "[α∈ℬ(R1), σ∈ℬℬ(R1)] α⊆red(σ)",
-        "term": "свойство покрытия",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 5,
-                    "base": {
-                      "typeID": 3,
-                      "baseID": "R1"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 80,
-        "alias": "T10",
+        "id": 1,
+        "alias": "T1",
         "cstType": "statement",
         "definitionFormal": "1=1",
-        "term": "Множества подмножеств",
+        "term": "Управляющие конструкции",
         "definitionText": "",
         "convention": "",
         "analysis": {
@@ -346,13 +33,121 @@
         }
       },
       {
-        "id": 77,
-        "alias": "T9",
-        "cstType": "statement",
-        "definitionFormal": "1=1",
-        "term": "Кольца",
+        "id": 2,
+        "alias": "F1",
+        "cstType": "function",
+        "definitionFormal": "[α∈ℬ(R1)] D{ ξ∈α | ξ=ξ }",
+        "term": "схема ограниченного выделения",
         "definitionText": "",
-        "convention": "Операции по умолчанию — группоиды",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 3,
+        "alias": "F2",
+        "cstType": "function",
+        "definitionFormal": "[α∈ℬ(R1)] debool(I{ α | 1=1} ∪ I{ α\\α | 1≠1})",
+        "term": "условный переход",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 4,
+        "alias": "F3",
+        "cstType": "function",
+        "definitionFormal": "[α∈ℬ(R1)] R{ ξ:=α | ξ≠∅ | ξ\\ξ }",
+        "term": "рекурсивное определение",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
+        "alias": "T2",
+        "cstType": "statement",
+        "definitionFormal": "2=2",
+        "term": "Бинарные отношения двух множеств",
+        "definitionText": "",
+        "convention": "",
         "analysis": {
           "success": true,
           "type": {
@@ -363,11 +158,65 @@
         }
       },
       {
-        "id": 73,
-        "alias": "P31",
+        "id": 6,
+        "alias": "F4",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(R1×R2)] Pr2,1(σ)",
+        "term": "обратное отношение",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 4,
+                "factors": [
+                  {
+                    "typeID": 3,
+                    "baseID": "R2"
+                  },
+                  {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                ]
+              }
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R2"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 7,
+        "alias": "P1",
         "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬ((R1×R1)×R1)] ∀((α1,α2),γ)∈σ ((α2,α1),γ)∈σ",
-        "term": "свойство коммутативности",
+        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R2)] Pr1(σ) = α",
+        "term": "свойство всюдуопределенности",
         "definitionText": "",
         "convention": "",
         "analysis": {
@@ -378,6 +227,2599 @@
               "typeID": 6
             },
             "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R2"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 8,
+        "alias": "P2",
+        "cstType": "predicate",
+        "definitionFormal": "[α∈ℬ(R2), σ∈ℬ(R1×R2)] Pr2(σ) = α",
+        "term": "свойство всюдузначности",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R2"
+                  }
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R2"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 9,
+        "alias": "P3",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬ(R1×R2)] card(Pr1(σ)) = card(σ)",
+        "term": "свойство прямой однозначности",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R2"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 10,
+        "alias": "P4",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬ(R1×R2)] card(Pr2(σ)) = card(σ)",
+        "term": "свойство обратной однозначности",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R2"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 11,
+        "alias": "P5",
+        "cstType": "predicate",
+        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R2)] card(Pr1(σ)) = card(σ)  & Pr1(σ) = α",
+        "term": "функция",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R2"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 12,
+        "alias": "F5",
+        "cstType": "function",
+        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R2)] debool(Pr2(Fi1[{α}](σ)))",
+        "term": "образ элемента",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 3,
+              "baseID": "R2"
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "R1"
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R2"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 13,
+        "alias": "F6",
+        "cstType": "function",
+        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R2)] Pr2(Fi1[{α}](σ))",
+        "term": "сечение по элементу",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R2"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "R1"
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R2"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 14,
+        "alias": "F7",
+        "cstType": "function",
+        "definitionFormal": "[α∈R2, σ∈ℬ(R1×R2)] debool(Pr1(Fi2[{α}](σ)))",
+        "term": "прообраз значения",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 3,
+              "baseID": "R1"
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "R2"
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R2"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 15,
+        "alias": "F8",
+        "cstType": "function",
+        "definitionFormal": "[α∈R2, σ∈ℬ(R1×R2)] Pr1(Fi2[{α}](σ))",
+        "term": "сечение по значению",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "R2"
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R2"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 16,
+        "alias": "F9",
+        "cstType": "function",
+        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R2)] Pr2(Fi1[α](σ))",
+        "term": "образ множества",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R2"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R2"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 17,
+        "alias": "F10",
+        "cstType": "function",
+        "definitionFormal": "[α∈ℬ(R2), σ∈ℬ(R1×R2)] Pr1(Fi2[α](σ))",
+        "term": "прообраз множества",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R2"
+                  }
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R2"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 18,
+        "alias": "F11",
+        "cstType": "function",
+        "definitionFormal": "[σ1∈ℬ(R1×R2), σ2∈ℬ(R2×R3)] I{(ξ1, ξ3) | (ξ1,ξ2):∈σ1; ξ3:∈Pr2(Fi1[{ξ2}](σ2))}",
+        "term": "композиция отношений",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 4,
+                "factors": [
+                  {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  },
+                  {
+                    "typeID": 3,
+                    "baseID": "R3"
+                  }
+                ]
+              }
+            },
+            "args": [
+              {
+                "alias": "σ1",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R2"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "alias": "σ2",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R2"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R3"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 19,
+        "alias": "T3",
+        "cstType": "statement",
+        "definitionFormal": "3=3",
+        "term": "Бинарные отношения на множестве",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 20,
+        "alias": "F12",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr1(σ)∪Pr2(σ)",
+        "term": "участники отношения",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 21,
+        "alias": "P6",
+        "cstType": "predicate",
+        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R1)] σ∪Pr2,1(σ)∪Pr1,1(σ)∪Pr2,2(σ) = α×α",
+        "term": "свойство полноты (линейности)",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 22,
+        "alias": "P7",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr2,1(σ) = σ",
+        "term": "свойство симметричности",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 23,
+        "alias": "P8",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬ(R1×R1)] (Pr2,1(σ)∩σ)\\Pr1,1(σ)=∅",
+        "term": "свойство антисимметричности",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 24,
+        "alias": "P9",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr1,1(σ) ⊆ σ",
+        "term": "свойство рефлексивности",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 25,
+        "alias": "P10",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr1,1(σ)∩σ=∅",
+        "term": "свойство антирефлексивности",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 26,
+        "alias": "P11",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬ(R1×R1)] ∀(α1,α2),(β1,β2)∈σ (α2=β1 ⇒ (α1,β2)∈σ)",
+        "term": "свойство транзитивности",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 27,
+        "alias": "P14",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr2,1(σ)∩σ\\Pr1,1(σ)=∅ & (Pr1,1(σ)∩σ=∅ ∨ Pr1,1(σ)⊆σ) & ∀(α1,α2),(β1,β2)∈σ (α2=β1 ⇒ (α1,β2)∈σ)",
+        "term": "частичный порядок",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 28,
+        "alias": "P15",
+        "cstType": "predicate",
+        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R1)] Pr2,1(σ)∩σ\\Pr1,1(σ) = ∅ & (Pr1,1(σ)∩σ = ∅ ∨ Pr1,1(σ) ⊆ σ) & ∀(α1,α2),(β1,β2)∈σ (α2=β1 ⇒ (α1,β2)∈σ) & σ∪Pr2,1(σ)∪Pr1,1(σ)∪Pr2,2(σ) = α×α",
+        "term": "линейный порядок",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 29,
+        "alias": "F13",
+        "cstType": "function",
+        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R1)] α \\ Pr2(Fi1,2[α, α](σ))",
+        "term": "минимальные элементы порядка на данном подмножестве",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 30,
+        "alias": "F14",
+        "cstType": "function",
+        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R1)] debool(I{ β | δ1:=Fi1,2[α, α](σ); δ2:=δ1\\Pr1,1(δ1); β:=Pr1(δ2)\\Pr2(δ2) })",
+        "term": "наименьший элемент порядка на данном подмножестве",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 31,
+        "alias": "P17",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr1,1(σ) ⊆ σ & Pr2,1(σ) = σ & ∀(α1,α2),(β1,β2)∈σ (α2=β1 ⇒ (α1,β2)∈σ)",
+        "term": "эквивалентность",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 32,
+        "alias": "P18",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr1,1(σ) ⊆ σ & Pr2,1(σ) = σ",
+        "term": "толерантность",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 33,
+        "alias": "F15",
+        "cstType": "function",
+        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R1)] Pr2(Fi1[{α}](σ))",
+        "term": "класс эквивалентности элемента",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "R1"
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 34,
+        "alias": "T4",
+        "cstType": "statement",
+        "definitionFormal": "4=4",
+        "term": "Цепочки",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 35,
+        "alias": "P19",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬ(R1×R1)] card(Pr1(σ))=card(σ) & card(Pr2(σ))=card(σ) & card(Pr1(σ)\\Pr2(σ))=1 & card(Pr2(σ)\\Pr1(σ))=1",
+        "term": "условие связности цепочки",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 36,
+        "alias": "F16",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(R1×R1)] debool(Pr1(σ) \\ Pr2(σ))",
+        "term": "начало цепочки",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 3,
+              "baseID": "R1"
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 37,
+        "alias": "F17",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(R1×R1)] debool(Pr2(σ) \\ Pr1(σ))",
+        "term": "конец цепочки",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 3,
+              "baseID": "R1"
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 38,
+        "alias": "F18",
+        "cstType": "function",
+        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R1)] debool(Pr2(Fi1[{α}](σ)))",
+        "term": "следующий за данным элемент цепочки",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 3,
+              "baseID": "R1"
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "R1"
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 39,
+        "alias": "F19",
+        "cstType": "function",
+        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R1)] debool(Pr1(Fi2[{α}](σ)))",
+        "term": "предшествующий данному элемент цепочки",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 3,
+              "baseID": "R1"
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "R1"
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 40,
+        "alias": "T5",
+        "cstType": "statement",
+        "definitionFormal": "5=5",
+        "term": "Графы",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 41,
+        "alias": "P20",
+        "cstType": "predicate",
+        "definitionFormal": "[γ∈ℬ(R1)×ℬ(R1×R1)] pr2(γ) = Pr2,1(pr2(γ))",
+        "term": "неориентированный граф",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "γ",
+                "type": {
+                  "typeID": 4,
+                  "factors": [
+                    {
+                      "typeID": 5,
+                      "base": {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    },
+                    {
+                      "typeID": 5,
+                      "base": {
+                        "typeID": 4,
+                        "factors": [
+                          {
+                            "typeID": 3,
+                            "baseID": "R1"
+                          },
+                          {
+                            "typeID": 3,
+                            "baseID": "R1"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 42,
+        "alias": "F20",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr1(σ) \\ Pr2(σ)",
+        "term": "истоки",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 43,
+        "alias": "F21",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr2(σ) \\ Pr1(σ)",
+        "term": "стоки",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 44,
+        "alias": "F22",
+        "cstType": "function",
+        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R1)] α \\ (Pr2(σ) ∪ Pr1(σ))",
+        "term": "изолированные вершины",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 45,
+        "alias": "F23",
+        "cstType": "function",
+        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R1)] F15[α, σ]",
+        "term": "потребители",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "R1"
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 46,
+        "alias": "F24",
+        "cstType": "function",
+        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R1)] Pr1(Fi2[{α}](σ))",
+        "term": "поставщики",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "R1"
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 47,
+        "alias": "F25",
+        "cstType": "function",
+        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R1)] R{ ξ:=Pr2(Fi1[{α}](σ)) | ξ ∪ Pr2(Fi1[ξ](σ)) }",
+        "term": "зависимые вершины",
+        "definitionText": "",
+        "convention": "вершины, достижимые из данной",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "R1"
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 48,
+        "alias": "F26",
+        "cstType": "function",
+        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R1)] R{ ξ:=Pr2(Fi1[α](σ)) | ξ ∪ Pr2(Fi1[ξ](σ)) }",
+        "term": "зависимые вершины совокупности",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 49,
+        "alias": "F27",
+        "cstType": "function",
+        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R1)] R{ ξ:=Pr1(Fi2[{α}](σ)) | ξ ∪ Pr1(Fi2[ξ](σ)) }",
+        "term": "влияющие вершины",
+        "definitionText": "",
+        "convention": "вершины, из которых данная достижима",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "R1"
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "R1"
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 50,
+        "alias": "P22",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬ(R1×R1)] ∀γ∈Pr1(σ) γ∉R{ ξ:=Pr2(Fi1[{γ}](σ)) | ξ ∪ Pr2(Fi1[ξ](σ)) }",
+        "term": "свойство ацикличности",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 51,
+        "alias": "F29",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(R1×R1)] I{(ξ1, ξ2) | ξ1:∈Pr1(σ); ξ2:∈F25[ξ1, σ]}",
+        "term": "транзитивное замыкание",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 4,
+                "factors": [
+                  {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  },
+                  {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                ]
+              }
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 52,
+        "alias": "T6",
+        "cstType": "statement",
+        "definitionFormal": "6=6",
+        "term": "Целые числа",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 53,
+        "alias": "F31",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(Z)] debool(D{ξ∈σ | ∀α∈σ α ≥ ξ})",
+        "term": "минимум набора чисел",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 2,
+              "isOrdered": true,
+              "isArithmetic": true,
+              "isIntegerCompatible": true
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 2,
+                    "isOrdered": true,
+                    "isArithmetic": true,
+                    "isIntegerCompatible": true
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 54,
+        "alias": "F32",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(Z)] debool(D{ξ∈σ | ∀α∈σ α ≤ ξ})",
+        "term": "максимум набора чисел",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 2,
+              "isOrdered": true,
+              "isArithmetic": true,
+              "isIntegerCompatible": true
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 2,
+                    "isOrdered": true,
+                    "isArithmetic": true,
+                    "isIntegerCompatible": true
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 55,
+        "alias": "F33",
+        "cstType": "function",
+        "definitionFormal": "[α∈Z] R{(ξ,σ):=(0, {0}) | ξ<α | (ξ+1, σ ∪ {ξ+1})}",
+        "term": "натуральные числа, меньшие или равные данному",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                },
+                {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 2,
+                    "isOrdered": true,
+                    "isArithmetic": true,
+                    "isIntegerCompatible": true
+                  }
+                }
+              ]
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 56,
+        "alias": "P25",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬ(Z), τ∈Z] ∀α∈σ (α+τ ≤ F32[σ] ⇒ α+τ∈σ)",
+        "term": "набор чисел, удовлетворяющий данному периоду",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 2,
+                    "isOrdered": true,
+                    "isArithmetic": true,
+                    "isIntegerCompatible": true
+                  }
+                }
+              },
+              {
+                "alias": "τ",
+                "type": {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 57,
+        "alias": "F35",
+        "cstType": "function",
+        "definitionFormal": "[α∈Z, β∈Z] R{ξ:=α | ξ≥β & β>0 | ξ-β}",
+        "term": "остаток от деления",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 2,
+              "isOrdered": true,
+              "isArithmetic": true,
+              "isIntegerCompatible": true
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              },
+              {
+                "alias": "β",
+                "type": {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 58,
+        "alias": "T7",
+        "cstType": "statement",
+        "definitionFormal": "7=7",
+        "term": "Последовательности",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 59,
+        "alias": "P26",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬ(R1×Z)] card(σ)=card(Pr2(σ)) & ∀λ∈Pr2(σ) λ < card(σ)",
+        "term": "корректная последовательность (позиции с нуля)",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 2,
+                        "isOrdered": true,
+                        "isArithmetic": true,
+                        "isIntegerCompatible": true
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 60,
+        "alias": "P28",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬ(R1×Z)] card(σ) = card(Pr2(σ))",
+        "term": "подпоследовательность",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 2,
+                        "isOrdered": true,
+                        "isArithmetic": true,
+                        "isIntegerCompatible": true
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 61,
+        "alias": "F36",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(R1×Z)] debool(Pr1(Fi2[{0}](σ)))",
+        "term": "начало последовательности",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 3,
+              "baseID": "R1"
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 2,
+                        "isOrdered": true,
+                        "isArithmetic": true,
+                        "isIntegerCompatible": true
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 62,
+        "alias": "F37",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(R1×Z)] debool(Pr1(Fi2[{card(σ) - 1}](σ)))",
+        "term": "конец последовательности",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 3,
+              "baseID": "R1"
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 2,
+                        "isOrdered": true,
+                        "isArithmetic": true,
+                        "isIntegerCompatible": true
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 63,
+        "alias": "F40",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(R1×Z)] I{(α, λ) | (α,μ):∈σ; λ := card(σ) - μ - 1}",
+        "term": "обращенная последовательность",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 4,
+                "factors": [
+                  {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  },
+                  {
+                    "typeID": 2,
+                    "isOrdered": true,
+                    "isArithmetic": true,
+                    "isIntegerCompatible": true
+                  }
+                ]
+              }
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      },
+                      {
+                        "typeID": 2,
+                        "isOrdered": true,
+                        "isArithmetic": true,
+                        "isIntegerCompatible": true
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 64,
+        "alias": "T8",
+        "cstType": "statement",
+        "definitionFormal": "8=8",
+        "term": "Групповые операции",
+        "definitionText": "",
+        "convention": "Условия для левых и правых свойств через конкатенацию",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 65,
+        "alias": "F42",
+        "cstType": "function",
+        "definitionFormal": "[α∈R1, β∈R1, σ∈ℬ((R1×R1)×R1)] debool(Pr2(Fi1[{(α,β)}](σ)))",
+        "term": "результат операции для данных аргументов",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 3,
+              "baseID": "R1"
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "R1"
+                }
+              },
+              {
+                "alias": "β",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "R1"
+                }
+              },
               {
                 "alias": "σ",
                 "type": {
@@ -413,73 +2855,13 @@
         }
       },
       {
-        "id": 71,
-        "alias": "P29",
-        "cstType": "predicate",
-        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ((R1×R1)×R1)] Pr1(σ) = α×α & card(σ) = card(Pr1(σ))",
-        "term": "свойство замкнутости и однозначности",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 4,
-                        "factors": [
-                          {
-                            "typeID": 3,
-                            "baseID": "R1"
-                          },
-                          {
-                            "typeID": 3,
-                            "baseID": "R1"
-                          }
-                        ]
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 68,
-        "alias": "F45",
+        "id": 66,
+        "alias": "F43",
         "cstType": "function",
-        "definitionFormal": "[σ∈ℬ((R1×R1)×R1)] D{ξ∈Pr1(Pr1(σ)) | ((ξ,ξ),ξ)∈σ}",
-        "term": "идемпотентные элементы",
+        "definitionFormal": "[σ∈ℬ((R1×R1)×R1)] D{ξ∈Pr1(Pr1(σ)) | ∀α∈Pr1(Pr1(σ)) (((α,ξ),ξ)∈σ & ((ξ,α),ξ)∈σ)}",
+        "term": "инвариантные элементы",
         "definitionText": "",
-        "convention": "",
+        "convention": "например ноль для операции умножения целых чисел",
         "analysis": {
           "success": true,
           "type": {
@@ -581,13 +2963,13 @@
         }
       },
       {
-        "id": 66,
-        "alias": "F43",
+        "id": 68,
+        "alias": "F45",
         "cstType": "function",
-        "definitionFormal": "[σ∈ℬ((R1×R1)×R1)] D{ξ∈Pr1(Pr1(σ)) | ∀α∈Pr1(Pr1(σ)) (((α,ξ),ξ)∈σ & ((ξ,α),ξ)∈σ)}",
-        "term": "инвариантные элементы",
+        "definitionFormal": "[σ∈ℬ((R1×R1)×R1)] D{ξ∈Pr1(Pr1(σ)) | ((ξ,ξ),ξ)∈σ}",
+        "term": "идемпотентные элементы",
         "definitionText": "",
-        "convention": "например ноль для операции умножения целых чисел",
+        "convention": "",
         "analysis": {
           "success": true,
           "type": {
@@ -600,71 +2982,6 @@
               }
             },
             "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 4,
-                        "factors": [
-                          {
-                            "typeID": 3,
-                            "baseID": "R1"
-                          },
-                          {
-                            "typeID": 3,
-                            "baseID": "R1"
-                          }
-                        ]
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 65,
-        "alias": "F42",
-        "cstType": "function",
-        "definitionFormal": "[α∈R1, β∈R1, σ∈ℬ((R1×R1)×R1)] debool(Pr2(Fi1[{(α,β)}](σ)))",
-        "term": "результат операции для данных аргументов",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 3,
-              "baseID": "R1"
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 3,
-                  "baseID": "R1"
-                }
-              },
-              {
-                "alias": "β",
-                "type": {
-                  "typeID": 3,
-                  "baseID": "R1"
-                }
-              },
               {
                 "alias": "σ",
                 "type": {
@@ -828,11 +3145,121 @@
         }
       },
       {
+        "id": 71,
+        "alias": "P29",
+        "cstType": "predicate",
+        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ((R1×R1)×R1)] Pr1(σ) = α×α & card(σ) = card(Pr1(σ))",
+        "term": "свойство замкнутости и однозначности",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 4,
+                        "factors": [
+                          {
+                            "typeID": 3,
+                            "baseID": "R1"
+                          },
+                          {
+                            "typeID": 3,
+                            "baseID": "R1"
+                          }
+                        ]
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
         "id": 72,
         "alias": "P30",
         "cstType": "predicate",
         "definitionFormal": "[σ∈ℬ((R1×R1)×R1)] ∀α,β,γ∈Pr1(Pr1(σ)) F42[F42[α,β,σ],γ,σ] = F42[α,F42[β,γ,σ],σ]",
         "term": "свойство ассоциативности",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 4,
+                    "factors": [
+                      {
+                        "typeID": 4,
+                        "factors": [
+                          {
+                            "typeID": 3,
+                            "baseID": "R1"
+                          },
+                          {
+                            "typeID": 3,
+                            "baseID": "R1"
+                          }
+                        ]
+                      },
+                      {
+                        "typeID": 3,
+                        "baseID": "R1"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 73,
+        "alias": "P31",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬ((R1×R1)×R1)] ∀((α1,α2),γ)∈σ ((α2,α1),γ)∈σ",
+        "term": "свойство коммутативности",
         "definitionText": "",
         "convention": "",
         "analysis": {
@@ -1058,6 +3485,23 @@
         }
       },
       {
+        "id": 77,
+        "alias": "T9",
+        "cstType": "statement",
+        "definitionFormal": "9=9",
+        "term": "Кольца",
+        "definitionText": "",
+        "convention": "Операции по умолчанию — группоиды",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
         "id": 78,
         "alias": "P39",
         "cstType": "predicate",
@@ -1224,260 +3668,11 @@
         }
       },
       {
-        "id": 64,
-        "alias": "T8",
+        "id": 80,
+        "alias": "T10",
         "cstType": "statement",
-        "definitionFormal": "1=1",
-        "term": "Групповые операции",
-        "definitionText": "",
-        "convention": "Условия для левых и правых свойств через конкатенацию",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 6
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 63,
-        "alias": "F40",
-        "cstType": "function",
-        "definitionFormal": "[σ∈ℬ(R1×Z)] I{(α, λ) | (α,μ):∈σ; λ := card(σ) - μ - 1}",
-        "term": "обращенная последовательность",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 4,
-                "factors": [
-                  {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  },
-                  {
-                    "typeID": 2,
-                    "isOrdered": true,
-                    "isArithmetic": true,
-                    "isIntegerCompatible": true
-                  }
-                ]
-              }
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 2,
-                        "isOrdered": true,
-                        "isArithmetic": true,
-                        "isIntegerCompatible": true
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 62,
-        "alias": "F37",
-        "cstType": "function",
-        "definitionFormal": "[σ∈ℬ(R1×Z)] debool(Pr1(Fi2[{card(σ) - 1}](σ)))",
-        "term": "конец последовательности",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 3,
-              "baseID": "R1"
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 2,
-                        "isOrdered": true,
-                        "isArithmetic": true,
-                        "isIntegerCompatible": true
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 61,
-        "alias": "F36",
-        "cstType": "function",
-        "definitionFormal": "[σ∈ℬ(R1×Z)] debool(Pr1(Fi2[{0}](σ)))",
-        "term": "начало последовательности",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 3,
-              "baseID": "R1"
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 2,
-                        "isOrdered": true,
-                        "isArithmetic": true,
-                        "isIntegerCompatible": true
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 60,
-        "alias": "P28",
-        "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬ(R1×Z)] card(σ) = card(Pr2(σ))",
-        "term": "подпоследовательность",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 2,
-                        "isOrdered": true,
-                        "isArithmetic": true,
-                        "isIntegerCompatible": true
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 59,
-        "alias": "P26",
-        "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬ(R1×Z)] card(σ)=card(Pr2(σ)) & ∀λ∈Pr2(σ) λ < card(σ)",
-        "term": "корректная последовательность (позиции с нуля)",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 2,
-                        "isOrdered": true,
-                        "isArithmetic": true,
-                        "isIntegerCompatible": true
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 58,
-        "alias": "T7",
-        "cstType": "statement",
-        "definitionFormal": "1=1",
-        "term": "Последовательности",
+        "definitionFormal": "10=10",
+        "term": "Множества подмножеств",
         "definitionText": "",
         "convention": "",
         "analysis": {
@@ -1490,139 +3685,11 @@
         }
       },
       {
-        "id": 57,
-        "alias": "F35",
-        "cstType": "function",
-        "definitionFormal": "[α∈Z, β∈Z] R{ξ:=α | ξ≥β & β>0 | ξ-β}",
-        "term": "остаток от деления",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 2,
-              "isOrdered": true,
-              "isArithmetic": true,
-              "isIntegerCompatible": true
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 2,
-                  "isOrdered": true,
-                  "isArithmetic": true,
-                  "isIntegerCompatible": true
-                }
-              },
-              {
-                "alias": "β",
-                "type": {
-                  "typeID": 2,
-                  "isOrdered": true,
-                  "isArithmetic": true,
-                  "isIntegerCompatible": true
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 55,
-        "alias": "F33",
-        "cstType": "function",
-        "definitionFormal": "[α∈Z] R{(ξ,σ):=(0, {0}) | ξ<α | (ξ+1, σ ∪ {ξ+1})}",
-        "term": "натуральные числа, меньшие или равные данному",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 4,
-              "factors": [
-                {
-                  "typeID": 2,
-                  "isOrdered": true,
-                  "isArithmetic": true,
-                  "isIntegerCompatible": true
-                },
-                {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 2,
-                    "isOrdered": true,
-                    "isArithmetic": true,
-                    "isIntegerCompatible": true
-                  }
-                }
-              ]
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 2,
-                  "isOrdered": true,
-                  "isArithmetic": true,
-                  "isIntegerCompatible": true
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 54,
-        "alias": "F32",
-        "cstType": "function",
-        "definitionFormal": "[σ∈ℬ(Z)] debool(D{ξ∈σ | ∀α∈σ α ≤ ξ})",
-        "term": "максимум набора чисел",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 2,
-              "isOrdered": true,
-              "isArithmetic": true,
-              "isIntegerCompatible": true
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 2,
-                    "isOrdered": true,
-                    "isArithmetic": true,
-                    "isIntegerCompatible": true
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 56,
-        "alias": "P25",
+        "id": 81,
+        "alias": "P46",
         "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬ(Z), τ∈Z] ∀α∈σ (α+τ ≤ F32[σ] ⇒ α+τ∈σ)",
-        "term": "набор чисел, удовлетворяющий данному периоду",
+        "definitionFormal": "[α∈ℬ(R1), σ∈ℬℬ(R1)] α⊆red(σ)",
+        "term": "свойство покрытия",
         "definitionText": "",
         "convention": "",
         "analysis": {
@@ -1634,200 +3701,6 @@
             },
             "args": [
               {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 2,
-                    "isOrdered": true,
-                    "isArithmetic": true,
-                    "isIntegerCompatible": true
-                  }
-                }
-              },
-              {
-                "alias": "τ",
-                "type": {
-                  "typeID": 2,
-                  "isOrdered": true,
-                  "isArithmetic": true,
-                  "isIntegerCompatible": true
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 53,
-        "alias": "F31",
-        "cstType": "function",
-        "definitionFormal": "[σ∈ℬ(Z)] debool(D{ξ∈σ | ∀α∈σ α ≥ ξ})",
-        "term": "минимум набора чисел",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 2,
-              "isOrdered": true,
-              "isArithmetic": true,
-              "isIntegerCompatible": true
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 2,
-                    "isOrdered": true,
-                    "isArithmetic": true,
-                    "isIntegerCompatible": true
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 52,
-        "alias": "T6",
-        "cstType": "statement",
-        "definitionFormal": "1=1",
-        "term": "Целые числа",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 6
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 50,
-        "alias": "P22",
-        "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬ(R1×R1)] ∀γ∈Pr1(σ) γ∉R{ ξ:=Pr2(Fi1[{γ}](σ)) | ξ ∪ Pr2(Fi1[ξ](σ)) }",
-        "term": "свойство ацикличности",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 49,
-        "alias": "F27",
-        "cstType": "function",
-        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R1)] R{ ξ:=Pr1(Fi2[{α}](σ)) | ξ ∪ Pr1(Fi2[ξ](σ)) }",
-        "term": "влияющие вершины",
-        "definitionText": "",
-        "convention": "вершины, из которых данная достижима",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R1"
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 3,
-                  "baseID": "R1"
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 48,
-        "alias": "F26",
-        "cstType": "function",
-        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R1)] R{ ξ:=Pr2(Fi1[α](σ)) | ξ ∪ Pr2(Fi1[ξ](σ)) }",
-        "term": "зависимые вершины совокупности",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R1"
-              }
-            },
-            "args": [
-              {
                 "alias": "α",
                 "type": {
                   "typeID": 5,
@@ -1842,491 +3715,11 @@
                 "type": {
                   "typeID": 5,
                   "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 47,
-        "alias": "F25",
-        "cstType": "function",
-        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R1)] R{ ξ:=Pr2(Fi1[{α}](σ)) | ξ ∪ Pr2(Fi1[ξ](σ)) }",
-        "term": "зависимые вершины",
-        "definitionText": "",
-        "convention": "вершины, достижимые из данной",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R1"
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 3,
-                  "baseID": "R1"
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 51,
-        "alias": "F29",
-        "cstType": "function",
-        "definitionFormal": "[σ∈ℬ(R1×R1)] I{(ξ1, ξ2) | ξ1:∈Pr1(σ); ξ2:∈F25[ξ1, σ]}",
-        "term": "транзитивное замыкание",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 4,
-                "factors": [
-                  {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  },
-                  {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                ]
-              }
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 46,
-        "alias": "F24",
-        "cstType": "function",
-        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R1)] Pr1(Fi2[{α}](σ))",
-        "term": "поставщики",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R1"
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 3,
-                  "baseID": "R1"
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 45,
-        "alias": "F23",
-        "cstType": "function",
-        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R1)] Pr2(Fi1[{α}](σ))",
-        "term": "потребители",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R1"
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 3,
-                  "baseID": "R1"
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 44,
-        "alias": "F22",
-        "cstType": "function",
-        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R1)] α \\ (Pr2(σ) ∪ Pr1(σ))",
-        "term": "изолированные вершины",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R1"
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 43,
-        "alias": "F21",
-        "cstType": "function",
-        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr2(σ) \\ Pr1(σ)",
-        "term": "стоки",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R1"
-              }
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 42,
-        "alias": "F20",
-        "cstType": "function",
-        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr1(σ) \\ Pr2(σ)",
-        "term": "истоки",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R1"
-              }
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 41,
-        "alias": "P20",
-        "cstType": "predicate",
-        "definitionFormal": "[γ∈ℬ(R1)×ℬ(R1×R1)] pr2(γ) = Pr2,1(pr2(γ))",
-        "term": "неориентированный граф",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "γ",
-                "type": {
-                  "typeID": 4,
-                  "factors": [
-                    {
-                      "typeID": 5,
-                      "base": {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    },
-                    {
-                      "typeID": 5,
-                      "base": {
-                        "typeID": 4,
-                        "factors": [
-                          {
-                            "typeID": 3,
-                            "baseID": "R1"
-                          },
-                          {
-                            "typeID": 3,
-                            "baseID": "R1"
-                          }
-                        ]
-                      }
+                    "typeID": 5,
+                    "base": {
+                      "typeID": 3,
+                      "baseID": "R1"
                     }
-                  ]
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 40,
-        "alias": "T5",
-        "cstType": "statement",
-        "definitionFormal": "1=1",
-        "term": "Графы",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 6
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 39,
-        "alias": "F19",
-        "cstType": "function",
-        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R1)] debool(Pr1(Fi2[{α}](σ)))",
-        "term": "предшествующий данному элемент цепочки",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 3,
-              "baseID": "R1"
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 3,
-                  "baseID": "R1"
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
                   }
                 }
               }
@@ -2337,144 +3730,11 @@
         }
       },
       {
-        "id": 38,
-        "alias": "F18",
-        "cstType": "function",
-        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R1)] debool(Pr2(Fi1[{α}](σ)))",
-        "term": "следующий за данным элемент цепочки",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 3,
-              "baseID": "R1"
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 3,
-                  "baseID": "R1"
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 37,
-        "alias": "F17",
-        "cstType": "function",
-        "definitionFormal": "[σ∈ℬ(R1×R1)] debool(Pr2(σ) \\ Pr1(σ))",
-        "term": "конец цепочки",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 3,
-              "baseID": "R1"
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 36,
-        "alias": "F16",
-        "cstType": "function",
-        "definitionFormal": "[σ∈ℬ(R1×R1)] debool(Pr1(σ) \\ Pr2(σ))",
-        "term": "начало цепочки",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 3,
-              "baseID": "R1"
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 35,
-        "alias": "P19",
+        "id": 82,
+        "alias": "P47",
         "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬ(R1×R1)] card(Pr1(σ))=card(σ) & card(Pr2(σ))=card(σ) & card(Pr1(σ)\\Pr2(σ))=1 & card(Pr2(σ)\\Pr1(σ))=1",
-        "term": "условие связности цепочки",
+        "definitionFormal": "[σ∈ℬℬ(R1)] ∀α,β∈σ (α≠β ⇒ α∩β=∅)",
+        "term": "свойство попарного непересечения",
         "definitionText": "",
         "convention": "",
         "analysis": {
@@ -2490,17 +3750,11 @@
                 "type": {
                   "typeID": 5,
                   "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
+                    "typeID": 5,
+                    "base": {
+                      "typeID": 3,
+                      "baseID": "R1"
+                    }
                   }
                 }
               }
@@ -2511,28 +3765,91 @@
         }
       },
       {
-        "id": 34,
-        "alias": "T4",
-        "cstType": "statement",
-        "definitionFormal": "1=1",
-        "term": "Цепочки",
+        "id": 83,
+        "alias": "P48",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈ℬℬ(R1)] ∀α,β∈σ α∪β∈σ",
+        "term": "свойство замкнутости по объединению",
         "definitionText": "",
         "convention": "",
         "analysis": {
           "success": true,
           "type": {
-            "typeID": 6
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 5,
+                    "base": {
+                      "typeID": 3,
+                      "baseID": "R1"
+                    }
+                  }
+                }
+              }
+            ]
           },
           "valueClass": "value",
           "diagnostics": []
         }
       },
       {
-        "id": 33,
-        "alias": "F15",
+        "id": 84,
+        "alias": "P52",
+        "cstType": "predicate",
+        "definitionFormal": "[α∈ℬ(R1), σ∈ℬℬ(R1)] red(σ)=α & card(σ)>1 & ∅∉σ & ∀ξ1,ξ2∈σ (ξ1≠ξ2 ⇒ ξ1∩ξ2=∅)",
+        "term": "разбиение",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                }
+              },
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 5,
+                    "base": {
+                      "typeID": 3,
+                      "baseID": "R1"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 85,
+        "alias": "F48",
         "cstType": "function",
-        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R1)] Pr2(Fi1[{α}](σ))",
-        "term": "класс эквивалентности элемента",
+        "definitionFormal": "[α∈R1, σ∈ℬℬ(R1)] D{ξ∈σ | α∈ξ}",
+        "term": "фильтр по вхождению элемента",
         "definitionText": "",
         "convention": "",
         "analysis": {
@@ -2542,8 +3859,11 @@
             "result": {
               "typeID": 5,
               "base": {
-                "typeID": 3,
-                "baseID": "R1"
+                "typeID": 5,
+                "base": {
+                  "typeID": 3,
+                  "baseID": "R1"
+                }
               }
             },
             "args": [
@@ -2559,17 +3879,11 @@
                 "type": {
                   "typeID": 5,
                   "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
+                    "typeID": 5,
+                    "base": {
+                      "typeID": 3,
+                      "baseID": "R1"
+                    }
                   }
                 }
               }
@@ -2580,93 +3894,11 @@
         }
       },
       {
-        "id": 32,
-        "alias": "P18",
-        "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr1,1(σ) ⊆ σ & Pr2,1(σ) = σ",
-        "term": "толерантность",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 31,
-        "alias": "P17",
-        "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr1,1(σ) ⊆ σ & Pr2,1(σ) = σ & ∀(α1,α2),(β1,β2)∈σ (α2=β1 ⇒ (α1,β2)∈σ)",
-        "term": "эквивалентность",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 30,
-        "alias": "F14",
+        "id": 86,
+        "alias": "F49",
         "cstType": "function",
-        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R1)] debool(I{ β | δ1:=Fi1,2[α, α](σ); δ2:=δ1\\Pr1,1(δ1); β:=Pr1(δ2)\\Pr2(δ2) })",
-        "term": "наименьший элемент порядка на данном подмножестве",
+        "definitionFormal": "[α∈ℬ(R1), σ∈ℬℬ(R1)] D{ξ∈σ | α⊆ξ}",
+        "term": "фильтр по подмножеству",
         "definitionText": "",
         "convention": "",
         "analysis": {
@@ -2676,838 +3908,34 @@
             "result": {
               "typeID": 5,
               "base": {
-                "typeID": 3,
-                "baseID": "R1"
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 29,
-        "alias": "F13",
-        "cstType": "function",
-        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R1)] α \\ Pr2(Fi1,2[α, α](σ))",
-        "term": "минимальные элементы порядка на данном подмножестве",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R1"
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 28,
-        "alias": "P15",
-        "cstType": "predicate",
-        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R1)] Pr2,1(σ)∩σ\\Pr1,1(σ) = ∅ & (Pr1,1(σ)∩σ = ∅ ∨ Pr1,1(σ) ⊆ σ) & ∀(α1,α2),(β1,β2)∈σ (α2=β1 ⇒ (α1,β2)∈σ) & σ∪Pr2,1(σ)∪Pr1,1(σ)∪Pr2,2(σ) = α×α",
-        "term": "линейный порядок",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 27,
-        "alias": "P14",
-        "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr2,1(σ)∩σ\\Pr1,1(σ)=∅ & (Pr1,1(σ)∩σ=∅ ∨ Pr1,1(σ)⊆σ) & ∀(α1,α2),(β1,β2)∈σ (α2=β1 ⇒ (α1,β2)∈σ)",
-        "term": "частичный порядок",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 26,
-        "alias": "P11",
-        "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬ(R1×R1)] ∀(α1,α2),(β1,β2)∈σ (α2=β1 ⇒ (α1,β2)∈σ)",
-        "term": "свойство транзитивности",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 25,
-        "alias": "P10",
-        "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr1,1(σ)∩σ=∅",
-        "term": "свойство антирефлексивности",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 24,
-        "alias": "P9",
-        "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr1,1(σ) ⊆ σ",
-        "term": "свойство рефлексивности",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 23,
-        "alias": "P8",
-        "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬ(R1×R1)] (Pr2,1(σ)∩σ)\\Pr1,1(σ)=∅",
-        "term": "свойство антисимметричности",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 22,
-        "alias": "P7",
-        "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr2,1(σ) = σ",
-        "term": "свойство симметричности",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 21,
-        "alias": "P6",
-        "cstType": "predicate",
-        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R1)] σ∪Pr2,1(σ)∪Pr1,1(σ)∪Pr2,2(σ) = α×α",
-        "term": "свойство полноты (линейности)",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 20,
-        "alias": "F12",
-        "cstType": "function",
-        "definitionFormal": "[σ∈ℬ(R1×R1)] Pr1(σ)∪Pr2(σ)",
-        "term": "участники отношения",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R1"
-              }
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 19,
-        "alias": "T3",
-        "cstType": "statement",
-        "definitionFormal": "1=1",
-        "term": "Бинарные отношения на множестве",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 6
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 18,
-        "alias": "F11",
-        "cstType": "function",
-        "definitionFormal": "[σ1∈ℬ(R1×R2), σ2∈ℬ(R2×R3)] I{(ξ1, ξ3) | (ξ1,ξ2):∈σ1; ξ3:∈Pr2(Fi1[{ξ2}](σ2))}",
-        "term": "композиция отношений",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 4,
-                "factors": [
-                  {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  },
-                  {
-                    "typeID": 3,
-                    "baseID": "R3"
-                  }
-                ]
-              }
-            },
-            "args": [
-              {
-                "alias": "σ1",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R2"
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "alias": "σ2",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R2"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R3"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 17,
-        "alias": "F10",
-        "cstType": "function",
-        "definitionFormal": "[α∈ℬ(R2), σ∈ℬ(R1×R2)] Pr1(Fi2[α](σ))",
-        "term": "прообраз множества",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R1"
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R2"
-                  }
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R2"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 16,
-        "alias": "F9",
-        "cstType": "function",
-        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R2)] Pr2(Fi1[α](σ))",
-        "term": "образ множества",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R2"
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R2"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 15,
-        "alias": "F8",
-        "cstType": "function",
-        "definitionFormal": "[α∈R2, σ∈ℬ(R1×R2)] Pr1(Fi2[{α}](σ))",
-        "term": "сечение по значению",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R1"
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 3,
-                  "baseID": "R2"
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R2"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 14,
-        "alias": "F7",
-        "cstType": "function",
-        "definitionFormal": "[α∈R2, σ∈ℬ(R1×R2)] debool(Pr1(Fi2[{α}](σ)))",
-        "term": "прообраз значения",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 3,
-              "baseID": "R1"
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 3,
-                  "baseID": "R2"
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R2"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 13,
-        "alias": "F6",
-        "cstType": "function",
-        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R2)] Pr2(Fi1[{α}](σ))",
-        "term": "сечение по элементу",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R2"
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
+                "typeID": 5,
+                "base": {
                   "typeID": 3,
                   "baseID": "R1"
                 }
+              }
+            },
+            "args": [
+              {
+                "alias": "α",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "R1"
+                  }
+                }
               },
               {
                 "alias": "σ",
                 "type": {
                   "typeID": 5,
                   "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R2"
-                      }
-                    ]
+                    "typeID": 5,
+                    "base": {
+                      "typeID": 3,
+                      "baseID": "R1"
+                    }
                   }
                 }
               }
@@ -3518,11 +3946,11 @@
         }
       },
       {
-        "id": 12,
-        "alias": "F5",
+        "id": 87,
+        "alias": "F50",
         "cstType": "function",
-        "definitionFormal": "[α∈R1, σ∈ℬ(R1×R2)] debool(Pr2(Fi1[{α}](σ)))",
-        "term": "образ элемента",
+        "definitionFormal": "[α∈ℬ(R1), σ∈ℬℬ(R1)] D{ξ∈σ | ξ⊆α}",
+        "term": "фильтр по надмножеству",
         "definitionText": "",
         "convention": "",
         "analysis": {
@@ -3530,56 +3958,14 @@
           "type": {
             "typeID": 7,
             "result": {
-              "typeID": 3,
-              "baseID": "R2"
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
+              "typeID": 5,
+              "base": {
+                "typeID": 5,
+                "base": {
                   "typeID": 3,
                   "baseID": "R1"
                 }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R2"
-                      }
-                    ]
-                  }
-                }
               }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 11,
-        "alias": "P5",
-        "cstType": "predicate",
-        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R2)] card(Pr1(σ)) = card(σ)  & Pr1(σ) = α",
-        "term": "функция",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
             },
             "args": [
               {
@@ -3597,401 +3983,15 @@
                 "type": {
                   "typeID": 5,
                   "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R2"
-                      }
-                    ]
+                    "typeID": 5,
+                    "base": {
+                      "typeID": 3,
+                      "baseID": "R1"
+                    }
                   }
                 }
               }
             ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 10,
-        "alias": "P4",
-        "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬ(R1×R2)] card(Pr2(σ)) = card(σ)",
-        "term": "свойство обратной однозначности",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R2"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 9,
-        "alias": "P3",
-        "cstType": "predicate",
-        "definitionFormal": "[σ∈ℬ(R1×R2)] card(Pr1(σ)) = card(σ)",
-        "term": "свойство прямой однозначности",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R2"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 8,
-        "alias": "P2",
-        "cstType": "predicate",
-        "definitionFormal": "[α∈ℬ(R2), σ∈ℬ(R1×R2)] Pr2(σ) = α",
-        "term": "свойство всюдузначности",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R2"
-                  }
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R2"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 7,
-        "alias": "P1",
-        "cstType": "predicate",
-        "definitionFormal": "[α∈ℬ(R1), σ∈ℬ(R1×R2)] Pr1(σ) = α",
-        "term": "свойство всюдуопределенности",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 8,
-            "result": {
-              "typeID": 6
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                }
-              },
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R2"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 6,
-        "alias": "F4",
-        "cstType": "function",
-        "definitionFormal": "[σ∈ℬ(R1×R2)] Pr2,1(σ)",
-        "term": "обратное отношение",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 4,
-                "factors": [
-                  {
-                    "typeID": 3,
-                    "baseID": "R2"
-                  },
-                  {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                ]
-              }
-            },
-            "args": [
-              {
-                "alias": "σ",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 4,
-                    "factors": [
-                      {
-                        "typeID": 3,
-                        "baseID": "R1"
-                      },
-                      {
-                        "typeID": 3,
-                        "baseID": "R2"
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 5,
-        "alias": "T2",
-        "cstType": "statement",
-        "definitionFormal": "1=1",
-        "term": "Бинарные отношения двух множеств",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 6
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 4,
-        "alias": "F3",
-        "cstType": "function",
-        "definitionFormal": "[α∈ℬ(R1)] R{ ξ:=α | ξ≠∅ | ξ\\ξ }",
-        "term": "рекурсивное определение",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R1"
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 3,
-        "alias": "F2",
-        "cstType": "function",
-        "definitionFormal": "[α∈ℬ(R1)] debool(I{ α | 1=1} ∪ I{ α\\α | 1≠1})",
-        "term": "условный переход",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R1"
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 2,
-        "alias": "F1",
-        "cstType": "function",
-        "definitionFormal": "[α∈ℬ(R1)] D{ ξ∈α | ξ=ξ }",
-        "term": "схема ограниченного выделения",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 7,
-            "result": {
-              "typeID": 5,
-              "base": {
-                "typeID": 3,
-                "baseID": "R1"
-              }
-            },
-            "args": [
-              {
-                "alias": "α",
-                "type": {
-                  "typeID": 5,
-                  "base": {
-                    "typeID": 3,
-                    "baseID": "R1"
-                  }
-                }
-              }
-            ]
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 1,
-        "alias": "T1",
-        "cstType": "statement",
-        "definitionFormal": "1=1",
-        "term": "Управляющие конструкции",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 6
           },
           "valueClass": "value",
           "diagnostics": []

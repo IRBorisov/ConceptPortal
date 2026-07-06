@@ -1,11 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { type DiagnosticRecord, type SessionState } from '../models';
+import { type Diagnostic, type SessionState } from '../models';
 
 export interface PersistedSessionEnvelope {
   state: SessionState;
-  diagnostics: DiagnosticRecord[];
+  diagnostics: Diagnostic[];
 }
 
 const CURRENT_SESSION_FILE = '_current.json';

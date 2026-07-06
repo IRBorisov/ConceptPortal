@@ -218,6 +218,7 @@ export const txLibraryFr: Record<string, string> = {
   'tx.parse.status.property.hint': 'Vérification d’appartenance seulement',
   'tx.parse.status.unknown': 'Non vérifié',
   'tx.parse.status.unknown.hint': 'Vérification requise',
+  'tx.parse.error.plural.hint': 'Erreurs dans la définition formelle',
 
   'tx.cst': 'Constituente',
   'tx.cst.hint': 'Notions de la constituante et de ses attributs',

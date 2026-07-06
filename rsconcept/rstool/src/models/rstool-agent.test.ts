@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 
 import { TUPLE_ID } from '@rsconcept/domain';
 
-import { CstType, EvalStatus, RSErrorCode, RSToolAgent } from './index';
+import { CstType, EvalStatus, RSErrorCode, RSDiagnosticCode, RSToolAgent } from './index';
 
 function buildSampleForm(tool: RSToolAgent, sessionId: string) {
   tool.applySchemaPatch(
@@ -56,7 +56,7 @@ describe('RSToolAgent', () => {
       session.sessionId
     );
     expect(result.success).toBe(false);
-    expect(result.failed[0]?.diagnostics[0]?.error.code).toBe(RSErrorCode.definitionNotAllowed);
+    expect(result.failed[0]?.diagnostics[0]?.code).toBe(RSErrorCode.definitionNotAllowed);
   });
 
   it('rejects formal definition for basic sets', () => {
@@ -69,7 +69,7 @@ describe('RSToolAgent', () => {
       session.sessionId
     );
     expect(result.success).toBe(false);
-    expect(result.failed[0]?.diagnostics[0]?.error.code).toBe(RSErrorCode.definitionNotAllowed);
+    expect(result.failed[0]?.diagnostics[0]?.code).toBe(RSErrorCode.definitionNotAllowed);
   });
 
   it('returns known analysis for empty base definition', () => {
@@ -474,10 +474,68 @@ describe('RSToolAgent agent ergonomics', () => {
       { mode: 'best_effort', items: [{ alias: 'X1', cstType: CstType.BASE, definitionFormal: 'Z' }] },
       session.sessionId
     );
-    expect(tool.listDiagnostics(undefined, session.sessionId)).toHaveLength(1);
+    const expressionDiags = tool.listDiagnostics({ kind: 'expression' }, session.sessionId);
+    expect(expressionDiags).toHaveLength(1);
+    expect(expressionDiags[0]?.code).toBe(RSErrorCode.definitionNotAllowed);
 
     tool.applySchemaPatch({ items: [{ alias: 'X1', cstType: CstType.BASE, definitionFormal: '' }] }, session.sessionId);
-    expect(tool.listDiagnostics(undefined, session.sessionId)).toHaveLength(0);
+    expect(tool.listDiagnostics({ kind: 'expression' }, session.sessionId)).toHaveLength(0);
+    expect(tool.listDiagnostics({ kind: 'schema' }, session.sessionId).length).toBeGreaterThan(0);
+    expect(tool.listDiagnostics({ kind: 'model' }, session.sessionId).length).toBeGreaterThan(0);
+  });
+
+  it('reports schema homonyms and missing convention', () => {
+    const tool = new RSToolAgent();
+    const session = tool.createSession();
+    tool.applySchemaPatch(
+      {
+        items: [
+          { alias: 'X1', term: 'person', convention: 'people' },
+          { alias: 'X2', term: 'Person', convention: 'other people' }
+        ]
+      },
+      session.sessionId
+    );
+
+    const homonyms = tool.listDiagnostics({ kind: 'schema' }, session.sessionId);
+    expect(homonyms.some(record => record.code === RSDiagnosticCode.schemaHomonym)).toBe(true);
+    expect(homonyms.filter(record => record.code === RSDiagnosticCode.schemaHomonym)).toHaveLength(2);
+  });
+
+  it('reports formal duplicate definitions', () => {
+    const tool = new RSToolAgent();
+    const session = tool.createSession();
+    tool.applySchemaPatch(
+      {
+        items: [
+          { alias: 'X1', convention: 'base' },
+          { alias: 'S1', definitionFormal: 'ℬ(X1×X1)', convention: 'pairs' },
+          { alias: 'D1', definitionFormal: 'Pr1(S1)' },
+          { alias: 'D2', definitionFormal: 'Pr1(S1)' }
+        ]
+      },
+      session.sessionId
+    );
+
+    const duplicates = tool
+      .listDiagnostics({ kind: 'schema' }, session.sessionId)
+      .filter(record => record.code === RSDiagnosticCode.schemaFormalDuplicate);
+    expect(duplicates).toHaveLength(2);
+    expect(duplicates[0]?.params?.[0]).toContain('D2');
+  });
+
+  it('reports model diagnostics for empty basic sets', () => {
+    const tool = new RSToolAgent();
+    const session = tool.createSession();
+    tool.applySchemaPatch(
+      {
+        items: [{ alias: 'X1', convention: 'base', term: 'element' }]
+      },
+      session.sessionId
+    );
+
+    const modelIssues = tool.listDiagnostics({ kind: 'model' }, session.sessionId);
+    expect(modelIssues.some(record => record.code === RSDiagnosticCode.modelEmpty)).toBe(true);
   });
 
   it('does not record analyzeExpression diagnostics by default', () => {
@@ -919,6 +977,9 @@ describe('RSToolAgent modeling semantics', () => {
     const a1 = recalculated.items.find(item => item.alias === 'A1');
     expect(a1?.status).toBe(EvalStatus.AXIOM_FALSE);
     expect(a1?.value).toBe(0);
+
+    const modelIssues = tool.listDiagnostics({ kind: 'model' }, session.sessionId);
+    expect(modelIssues.some(record => record.code === RSDiagnosticCode.modelAxiomFalse)).toBe(true);
   });
 
   it('throws when evaluate input is incomplete', () => {

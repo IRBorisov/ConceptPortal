@@ -2,7 +2,7 @@
 
 Agent-facing library for **incremental RSForm construction**, **RSLang expression analysis**, **diagnostics**, **modeling**, and **evaluation**. It wraps [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) with a deterministic session contract and a stdio JSON wrapper for LLM agents. MCP hosts can use it through [`@rsconcept/rstool-mcp`](https://www.npmjs.com/package/@rsconcept/rstool-mcp).
 
-**Contract version:** `2.0.0` — see [skills/rstool-helper/REFERENCE.md](./skills/rstool-helper/REFERENCE.md) for the full v2 API.
+**Contract version:** `3.0.0` — see [skills/rstool-helper/REFERENCE.md](./skills/rstool-helper/REFERENCE.md) for the full v3 API.
 
 ## Agent skill
 
@@ -77,7 +77,7 @@ Maintainers: see [PUBLISHING.md](./PUBLISHING.md) for npm release steps.
 - If a session method is called without an active session, rstool creates one lazily.
 - On startup, a ready handshake is printed.
 
-Supported methods (contract `2.0.0`):
+Supported methods (contract `3.0.0`):
 
 - `ping`
 - `methods`
@@ -111,7 +111,7 @@ Request:
 Response:
 
 ```json
-{ "id": "1", "ok": true, "result": { "sessionId": "...", "contractVersion": "2.0.0" } }
+{ "id": "1", "ok": true, "result": { "sessionId": "...", "contractVersion": "3.0.0" } }
 ```
 
 Example `applySchemaPatch`:
@@ -140,7 +140,7 @@ Response:
   "ok": true,
   "result": {
     "success": true,
-    "session": { "sessionId": "...", "contractVersion": "2.0.0" },
+    "session": { "sessionId": "...", "contractVersion": "3.0.0" },
     "summary": { "itemCount": 3 }
   }
 }

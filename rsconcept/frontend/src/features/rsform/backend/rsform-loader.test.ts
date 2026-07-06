@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { AccessPolicy, CstStatus, CstType, LibraryItemType } from '@rsconcept/domain/library';
+import { RSDiagnosticCode } from '@rsconcept/domain/library';
 import { calculateSchemaStats, isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
 
 import { RSFormLoader } from './rsform-loader';
@@ -79,7 +80,7 @@ describe('RSFormLoader', () => {
       definition_formal: '',
       convention: 't1',
       definition_raw: 't2',
-      typification_manual: 'X1',
+      typification_manual: '',
       value_is_property: false,
       term_raw: 't3',
       term_forms: [],
@@ -105,7 +106,7 @@ describe('RSFormLoader', () => {
     expect(cst.term_resolved).toBe(item.term_resolved);
     expect(cst.definition_resolved).toBe(item.definition_resolved);
     expect(cst.crucial).toBe(item.crucial);
-    expect(cst.homonyms).toEqual([]);
+    expect(cst.diagnostics).toEqual([]);
     expect(cst.typification_manual).toBe(item.typification_manual);
     expect(cst.value_is_property).toBe(item.value_is_property);
   });
@@ -116,9 +117,13 @@ describe('RSFormLoader', () => {
     const c = createCst(3, 'X3', CstType.BASE, '', 'other');
     const dto = createMinimalDTO({ items: [a, b, c] });
     const rsform = new RSFormLoader(dto).produceRSForm();
-    expect(rsform.cstByID.get(1)!.homonyms.map(item => rsform.cstByID.get(item)!.alias)).toEqual(['X2']);
-    expect(rsform.cstByID.get(2)!.homonyms.map(item => rsform.cstByID.get(item)!.alias)).toEqual(['X1']);
-    expect(rsform.cstByID.get(3)!.homonyms).toEqual([]);
+    expect(
+      rsform.cstByID.get(1)!.diagnostics.find(item => item.code === RSDiagnosticCode.schemaHomonym)?.params?.[0]
+    ).toBe('X2');
+    expect(
+      rsform.cstByID.get(2)!.diagnostics.find(item => item.code === RSDiagnosticCode.schemaHomonym)?.params?.[0]
+    ).toBe('X1');
+    expect(rsform.cstByID.get(3)!.diagnostics.some(item => item.code === RSDiagnosticCode.schemaHomonym)).toBe(false);
   });
 
   it('should set is_type_mismatch when manual typification label differs from computed', () => {
@@ -139,8 +144,8 @@ describe('RSFormLoader', () => {
     const b = createCst(2, 'X2', CstType.BASE, '', '   ');
     const dto = createMinimalDTO({ items: [a, b] });
     const rsform = new RSFormLoader(dto).produceRSForm();
-    expect(rsform.cstByID.get(1)!.homonyms).toEqual([]);
-    expect(rsform.cstByID.get(2)!.homonyms).toEqual([]);
+    expect(rsform.cstByID.get(1)!.diagnostics.some(item => item.code === RSDiagnosticCode.schemaHomonym)).toBe(false);
+    expect(rsform.cstByID.get(2)!.diagnostics.some(item => item.code === RSDiagnosticCode.schemaHomonym)).toBe(false);
   });
 
   it('should create analysis on parsed item', () => {
@@ -189,8 +194,14 @@ describe('RSFormLoader', () => {
 
     const rsform = new RSFormLoader(createMinimalDTO({ items: [x1, p1, p2, p3] })).produceRSForm();
 
-    expect(rsform.cstByID.get(2)!.formalDuplicates.map(item => rsform.cstByID.get(item)!.alias)).toEqual(['P2']);
-    expect(rsform.cstByID.get(3)!.formalDuplicates.map(item => rsform.cstByID.get(item)!.alias)).toEqual(['P1']);
-    expect(rsform.cstByID.get(4)!.formalDuplicates).toEqual([]);
+    expect(
+      rsform.cstByID.get(2)!.diagnostics.find(item => item.code === RSDiagnosticCode.schemaFormalDuplicate)?.params?.[0]
+    ).toBe('P2');
+    expect(
+      rsform.cstByID.get(3)!.diagnostics.find(item => item.code === RSDiagnosticCode.schemaFormalDuplicate)?.params?.[0]
+    ).toBe('P1');
+    expect(rsform.cstByID.get(4)!.diagnostics.some(item => item.code === RSDiagnosticCode.schemaFormalDuplicate)).toBe(
+      false
+    );
   });
 });

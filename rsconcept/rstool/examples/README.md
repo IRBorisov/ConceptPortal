@@ -24,6 +24,8 @@ npx tsx node_modules/@rsconcept/rstool/examples/agent-client.ts
 
 Готовые `*-session.json` — снимки `exportSession` для `importData` и тестов. Пересобрать: соответствующий `build-*.ts` перезапишет файл рядом с собой.
 
+Перед экспортом каждый `build-*.ts` вызывает [`diagnostics-utils.ts`](diagnostics-utils.ts) (`assertCleanDiagnostics`): expression + schema + model должны быть пусты, иначе скрипт падает. Проверить все снимки: `pnpm run example:audit-diagnostics` ([`audit-diagnostics.ts`](audit-diagnostics.ts)).
+
 ## Темы и npm-скрипты
 
 - **[`sample/`](sample/):**

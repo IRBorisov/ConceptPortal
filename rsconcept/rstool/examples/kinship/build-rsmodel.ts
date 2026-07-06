@@ -1,57 +1,11 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import { TUPLE_ID } from '@rsconcept/domain';
-
 import { EvalStatus, RSToolWrapperClient } from '../../src';
 
-import {
-  A1_ID,
-  D3_ID,
-  DEFAULT_RSFORM_SESSION_PATH,
-  DEFAULT_RSMODEL_SESSION_PATH,
-  S1_ID,
-  S2_ID,
-  S3_ID,
-  S4_ID,
-  X1_ID
-} from './constants';
-
-/**
- * Minimal family so D3 (внучатые племянники) is non-empty:
- * - 0,1 Иван/Мария — общие родители 2,3
- * - 2 Пётр, 3 Анна — сиблинги
- * - 4 Олег — сын Петра
- * - 5 Дарья — дочь Анны (племянница Петра)
- * - 6 Семён — сын Дарьи (внучатый племянник Петра)
- */
-const X1_BINDING = {
-  0: 'Иван',
-  1: 'Мария',
-  2: 'Пётр',
-  3: 'Анна',
-  4: 'Олег',
-  5: 'Дарья',
-  6: 'Семён'
-} as const;
-
-/** S1: (parent, child) pairs — numeric indices into X1. */
-const S1_VALUE = [
-  [TUPLE_ID, 0, 2],
-  [TUPLE_ID, 1, 2],
-  [TUPLE_ID, 0, 3],
-  [TUPLE_ID, 1, 3],
-  [TUPLE_ID, 2, 4],
-  [TUPLE_ID, 3, 5],
-  [TUPLE_ID, 5, 6]
-] as const;
-
-/** S4: браки (муж, жена) — Иван (0) и Мария (1). */
-const S4_VALUE = [[TUPLE_ID, 0, 1]] as const;
-
-/** Indices of men and women in the sample family (Иван, Пётр, Олег, Семён — м; остальные — ж). */
-const S2_VALUE = [0, 2, 4, 6] as const;
-const S3_VALUE = [1, 3, 5] as const;
+import { A1_ID, D3_ID, DEFAULT_RSFORM_SESSION_PATH, DEFAULT_RSMODEL_SESSION_PATH } from './constants';
+import { KINSHIP_MODEL_SET } from './model-demo';
+import { assertCleanDiagnostics } from '../diagnostics-utils';
 
 async function run() {
   const client = new RSToolWrapperClient({
@@ -69,13 +23,7 @@ async function run() {
 
     await client.call('setModelValues', {
       sessionId: imported.sessionId,
-      set: [
-        { target: X1_ID, value: X1_BINDING },
-        { target: S1_ID, value: S1_VALUE },
-        { target: S2_ID, value: S2_VALUE },
-        { target: S3_ID, value: S3_VALUE },
-        { target: S4_ID, value: S4_VALUE }
-      ]
+      set: [...KINSHIP_MODEL_SET]
     });
 
     const recalculated = await client.call<{
@@ -113,6 +61,17 @@ async function run() {
       console.error('Expected A1 card(X1)≤10 to hold; got', a1Eval);
       throw new Error(`Expected A1 card(X1)≤10 to hold; got ${JSON.stringify(a1Eval)}`);
     }
+
+    const state = await client.call<{ items: Array<{ id: number; alias: string }> }>('getSessionState', {
+      sessionId: imported.sessionId,
+      detail: 'full'
+    });
+    await assertCleanDiagnostics(
+      client,
+      imported.sessionId,
+      new Map(state.items.map(item => [item.id, item.alias])),
+      'kinship RSModel'
+    );
 
     await client.call('commitStep', {
       sessionId: imported.sessionId,

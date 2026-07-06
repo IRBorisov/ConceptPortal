@@ -1,10 +1,5 @@
-import {
-  type BasicBinding,
-  type CstType,
-  type EvalStatus,
-  type RSToolErrorDescription,
-  type RSToolValue
-} from './common';
+import { type BasicBinding, type CstType, type EvalStatus, type RSToolValue } from './common';
+import { type Diagnostic } from './diagnostic';
 
 export interface EvaluateExpressionInput {
   expression: string;
@@ -32,5 +27,5 @@ export interface EvaluationResult {
   status: EvalStatus;
   iterations: number;
   cacheHits: number;
-  diagnostics: RSToolErrorDescription[];
+  diagnostics: Diagnostic[];
 }

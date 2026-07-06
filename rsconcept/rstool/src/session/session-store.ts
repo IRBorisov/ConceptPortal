@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 
 import {
   CONTRACT_VERSION,
-  type DiagnosticRecord,
+  type Diagnostic,
   type ListDiagnosticsFilters,
   type SessionHandle,
   type SessionRevision,
@@ -16,7 +16,7 @@ export interface SessionStoreOptions {
 
 interface SessionEnvelope {
   state: SessionState;
-  diagnostics: DiagnosticRecord[];
+  diagnostics: Diagnostic[];
 }
 
 export class SessionStore {
@@ -97,7 +97,7 @@ export class SessionStore {
   public replaceDiagnosticsForConstituent(
     sessionId: string,
     constituentId: number | undefined,
-    records: DiagnosticRecord[]
+    records: Diagnostic[]
   ): void {
     const found = this.get(sessionId);
     found.diagnostics = found.diagnostics.filter(record => record.constituentId !== constituentId);
@@ -106,19 +106,26 @@ export class SessionStore {
     this.persist(sessionId, found);
   }
 
-  public setDiagnostics(sessionId: string, records: DiagnosticRecord[]): void {
+  public setDiagnostics(sessionId: string, records: Diagnostic[]): void {
     const found = this.get(sessionId);
     found.diagnostics = [...records];
     found.state.updatedAt = new Date().toISOString();
     this.persist(sessionId, found);
   }
 
-  public listDiagnostics(sessionId: string, filters?: ListDiagnosticsFilters): DiagnosticRecord[] {
+  public listDiagnostics(sessionId: string, filters?: ListDiagnosticsFilters): Diagnostic[] {
     const found = this.get(sessionId);
-    if (filters?.constituentId === undefined) {
-      return [...found.diagnostics];
+    let records = found.diagnostics;
+    if (filters?.kind !== undefined) {
+      records = records.filter(record => record.kind === filters.kind);
     }
-    return found.diagnostics.filter(record => record.constituentId === filters.constituentId);
+    if (filters?.severity !== undefined) {
+      records = records.filter(record => record.severity === filters.severity);
+    }
+    if (filters?.constituentId === undefined) {
+      return [...records];
+    }
+    return records.filter(record => record.constituentId === filters.constituentId);
   }
 
   public snapshot(sessionId: string): SessionEnvelope {

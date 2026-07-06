@@ -219,6 +219,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.parse.status.property.hint': 'Только проверка принадлежности',
   'tx.parse.status.unknown': 'Не проверено',
   'tx.parse.status.unknown.hint': 'Требуется проверка',
+  'tx.parse.error.plural.hint': 'Ошибки в формальном определении',
 
   'tx.cst': 'Конституента',
   'tx.cst.hint': 'Конституента как часть схемы',

@@ -1,3 +1,11 @@
+export {
+  assignSchemaDiagnostics,
+  type CstDiagnostic,
+  DiagnosticKind,
+  hasCstDiagnostic,
+  modelStatusCstDiagnostic,
+  RSDiagnosticCode
+} from './diagnostics';
 export { FolderNode, FolderTree } from './folder-tree';
 export {
   AccessPolicy,

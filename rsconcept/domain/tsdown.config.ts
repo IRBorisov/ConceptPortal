@@ -28,6 +28,7 @@ const entryFiles = [
   'src/rslang/semantic/value-auditor.ts',
   'src/rslang/semantic/value-class.ts',
   'src/library/index.ts',
+  'src/library/diagnostics.ts',
   'src/library/library.ts',
   'src/library/library-api.ts',
   'src/library/folder-tree.ts',

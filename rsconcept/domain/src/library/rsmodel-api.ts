@@ -3,6 +3,7 @@ import { compare, tuple, TUPLE_ID, VALUE_TRUE, type ValuePath } from '../rslang/
 import { extractValue, isTupleValue, makeDefaultValue, setNestedValue } from '../rslang/eval/value-api';
 import { type EchelonCollection } from '../rslang/semantic/typification';
 
+import { modelStatusCstDiagnostic } from './diagnostics';
 import { type RSEngine } from './rsengine';
 import { type Constituenta, CstType, type RSForm } from './rsform';
 import { calculateSchemaStats, isBaseSet, isBasicConcept } from './rsform-api';
@@ -125,14 +126,7 @@ export function calculateModelStats(schema: RSForm, engine: RSEngine, _engineGen
 
 /** Checks whether evaluation status contributes to model status issues. */
 export function isModelIssue(engine: RSEngine, cst: Constituenta): boolean {
-  const status = engine.getCstStatus(cst.id);
-  const isBasic = isBasicConcept(cst.cst_type);
-  return (
-    status === EvalStatus.EVAL_FAIL ||
-    status === EvalStatus.AXIOM_FALSE ||
-    status === EvalStatus.INVALID_DATA ||
-    (isBasic && status === EvalStatus.EMPTY)
-  );
+  return modelStatusCstDiagnostic(engine.getCstStatus(cst.id), cst.cst_type) !== null;
 }
 
 /** Evaluate if {@link CstType} is interpretable. */

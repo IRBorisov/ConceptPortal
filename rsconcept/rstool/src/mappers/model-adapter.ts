@@ -1,8 +1,7 @@
-import { Graph } from '@rsconcept/domain/graph/graph';
-import { extractGlobals } from '@rsconcept/domain/rslang/api';
-import { type ExpressionType, RSLangAnalyzer, type Value, type ValueClass } from '@rsconcept/domain/rslang';
+import { DiagnosticKind, expressionDiagnostic } from './diagnostic-assembly';
+import { type RSErrorDescription, type Value } from '@rsconcept/domain/rslang';
 import { isBaseSet } from '@rsconcept/domain/library/rsform-api';
-import { type Constituenta, CstType, type RSForm } from '@rsconcept/domain/library/rsform';
+import { CstType, type RSForm } from '@rsconcept/domain/library/rsform';
 import { RSEngine, type RSEngineServices } from '@rsconcept/domain/library/rsengine';
 import { type BasicBinding, EvalStatus, type RSModel } from '@rsconcept/domain/library/rsmodel';
 import {
@@ -14,14 +13,13 @@ import {
 } from '@rsconcept/domain/library/rsmodel-api';
 
 import {
-  type ConstituentaState,
   type EvaluationResult,
   type RecalculateModelResult,
   type SessionModelState,
   type SessionState,
   type SetConstituentaValueInput
 } from '../models';
-import { toPublicError } from './types';
+import { buildRSFormFromSession } from './rsform-builder';
 
 const SESSION_MODEL_ID = 0;
 
@@ -73,7 +71,14 @@ export class ModelAdapter {
           ? EvalStatus.EVAL_FAIL
           : EvalStatus.EMPTY
         : EvalStatus.HAS_DATA;
-    return toPublicEvaluationResult(result.value, result.errors, result.iterations, result.cacheHits, status);
+    return toPublicEvaluationResult(
+      result.value,
+      result.errors,
+      result.iterations,
+      result.cacheHits,
+      status,
+      expression
+    );
   }
 
   public evaluateConstituenta(session: SessionState, constituentId: number): EvaluationResult {
@@ -84,7 +89,15 @@ export class ModelAdapter {
     const engine = this.createEngine(session);
     const result = engine.calculateCst(constituentId);
     const status = engine.getCstStatus(constituentId);
-    return toPublicEvaluationResult(result.value, result.errors, result.iterations, result.cacheHits, status);
+    return toPublicEvaluationResult(
+      result.value,
+      result.errors,
+      result.iterations,
+      result.cacheHits,
+      status,
+      cst.definitionFormal,
+      { constituentId: cst.id, alias: cst.alias }
+    );
   }
 
   public recalculateModel(session: SessionState): RecalculateModelResult {
@@ -155,55 +168,6 @@ function createInMemoryServices(session: SessionState): RSEngineServices {
   };
 }
 
-function buildRSFormFromSession(session: SessionState): RSForm {
-  const graph = new Graph<number>();
-  const cstByAlias = new Map<string, Constituenta>();
-  const cstByID = new Map<number, Constituenta>();
-  const analyzer = new RSLangAnalyzer();
-
-  const items = session.items.map(item => {
-    const cst = toFrontendConstituenta(item);
-    cstByAlias.set(cst.alias, cst);
-    cstByID.set(cst.id, cst);
-    graph.addNode(cst.id);
-    if (item.cstType === CstType.BASE) {
-      analyzer.addBase(cst.alias);
-    }
-    if (cst.effectiveType) {
-      analyzer.setGlobal(cst.alias, cst.effectiveType, cst.analysis.valueClass as ValueClass | null);
-    }
-    return cst;
-  });
-
-  for (const cst of items) {
-    for (const alias of extractGlobals(cst.definition_formal)) {
-      const source = cstByAlias.get(alias);
-      if (source) {
-        graph.addEdge(source.id, cst.id);
-      }
-    }
-  }
-
-  return {
-    id: 0,
-    items,
-    cstByAlias,
-    cstByID,
-    graph,
-    analyzer,
-    inheritance: [],
-    attribution: [],
-    attribution_graph: graph.clone(),
-    oss: [],
-    models: [],
-    editors: [],
-    versions: [],
-    is_produced: false,
-    is_attributive: false,
-    version: 'latest'
-  } as unknown as RSForm;
-}
-
 function buildRSModelFromSession(session: SessionState): RSModel {
   return {
     id: SESSION_MODEL_ID,
@@ -217,54 +181,19 @@ function buildRSModelFromSession(session: SessionState): RSModel {
   } as unknown as RSModel;
 }
 
-function toFrontendConstituenta(item: ConstituentaState): Constituenta {
-  const effectiveType = (item.analysis.type ?? null) as ExpressionType | null;
-  return {
-    id: item.id,
-    alias: item.alias,
-    cst_type: item.cstType,
-    definition_formal: item.definitionFormal,
-    definition_raw: item.definitionFormal,
-    definition_resolved: item.definitionFormal,
-    term_raw: item.term,
-    term_resolved: item.term,
-    term_forms: [],
-    convention: item.convention,
-    typification_manual: '',
-    value_is_property: false,
-    crucial: false,
-    attributes: [],
-    homonyms: [],
-    formalDuplicates: [],
-    analysis: {
-      success: item.analysis.success,
-      type: effectiveType,
-      valueClass: item.analysis.valueClass
-    },
-    effectiveType,
-    is_type_mismatch: false,
-    schema: 0,
-    cst_class: 'derived',
-    status: item.analysis.success ? 'verified' : 'incorrect',
-    is_template: false,
-    is_simple_expression: true,
-    parent_schema_index: 0,
-    parent_schema: null,
-    is_inherited: false,
-    has_inherited_children: false,
-    spawn: [],
-    spawn_alias: []
-  } as unknown as Constituenta;
-}
-
 function toPublicEvaluationResult(
   value: Value | null,
   errors: { code: number; from: number; to: number; params?: readonly string[] }[],
   iterations: number,
   cacheHits: number,
-  status: EvalStatus
+  status: EvalStatus,
+  expression: string,
+  target?: { constituentId?: number; alias?: string }
 ): EvaluationResult {
-  const diagnostics = errors.map(toPublicError);
+  const diagnostics = errors.map(error => ({
+    ...expressionDiagnostic(error as RSErrorDescription, expression, target),
+    kind: DiagnosticKind.MODEL
+  }));
   return {
     success: diagnostics.length === 0 && value !== null,
     value: value as EvaluationResult['value'],

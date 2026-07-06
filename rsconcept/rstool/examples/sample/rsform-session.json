@@ -1,16 +1,16 @@
 {
-  "contractVersion": "2.0.0",
+  "contractVersion": "2.1.0",
   "state": {
-    "sessionId": "a03eec4c-6519-4088-9d8c-0a9c11611583",
+    "sessionId": "eceb8650-bdf9-48a4-8ba4-5f397ae6d68b",
     "alias": "",
     "title": "",
     "comment": "",
-    "createdAt": "2026-07-01T21:33:21.321Z",
-    "updatedAt": "2026-07-01T21:33:21.332Z",
+    "createdAt": "2026-07-06T14:49:41.608Z",
+    "updatedAt": "2026-07-06T14:49:41.649Z",
     "revisions": [
       {
-        "revisionId": "4ec113d2-1d28-4bac-bed8-6a593bb6b0e2",
-        "at": "2026-07-01T21:33:21.332Z",
+        "revisionId": "5b8e8140-b659-4125-b3ac-1e2e937d817c",
+        "at": "2026-07-06T14:49:41.649Z",
         "message": "Built sample RSForm"
       }
     ],
@@ -20,9 +20,9 @@
         "alias": "X1",
         "cstType": "basic",
         "definitionFormal": "",
-        "term": "",
+        "term": "element",
         "definitionText": "",
-        "convention": "",
+        "convention": "people",
         "analysis": {
           "success": true,
           "type": {
@@ -41,9 +41,9 @@
         "alias": "C1",
         "cstType": "constant",
         "definitionFormal": "",
-        "term": "",
+        "term": "count",
         "definitionText": "",
-        "convention": "",
+        "convention": "natural numbers",
         "analysis": {
           "success": true,
           "type": {
@@ -65,7 +65,7 @@
         "alias": "S1",
         "cstType": "structure",
         "definitionFormal": "ℬ(X1×X1)",
-        "term": "",
+        "term": "parent-child pairs",
         "definitionText": "",
         "convention": "Pairs (parent, child) over X1.",
         "analysis": {
@@ -130,7 +130,36 @@
       }
     ],
     "model": {
-      "items": []
+      "items": [
+        {
+          "id": 1,
+          "type": "basic",
+          "value": {
+            "0": "alice",
+            "1": "bob"
+          }
+        },
+        {
+          "id": 2,
+          "type": "basic",
+          "value": {
+            "0": "zero",
+            "1": "one",
+            "2": "two"
+          }
+        },
+        {
+          "id": 3,
+          "type": "ℬ(X1×X1)",
+          "value": [
+            [
+              -111,
+              0,
+              1
+            ]
+          ]
+        }
+      ]
     }
   },
   "diagnostics": []

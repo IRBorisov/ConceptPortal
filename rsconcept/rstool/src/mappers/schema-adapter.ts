@@ -1,4 +1,6 @@
+import { expressionDiagnostic } from './diagnostic-assembly';
 import { RSLangAnalyzer, type AnalysisFull, type ValueClass } from '@rsconcept/domain/rslang';
+import { type RSErrorDescription } from '@rsconcept/domain/rslang/error';
 import { getAnalysisFor } from '@rsconcept/domain/library/rsform-api';
 import { CstType, type RSForm } from '@rsconcept/domain/library/rsform';
 
@@ -6,33 +8,35 @@ import {
   type AnalysisResult,
   type ConstituentaDraft,
   type ConstituentaState,
-  type DiagnosticRecord,
+  type Diagnostic,
   type SessionState
 } from '../models';
-import { toPublicAnalysis, toPublicError } from './types';
+import { toPublicAnalysis } from './types';
 
 export class SchemaAdapter {
   public analyzeAgainstSession(
     session: SessionState,
     draft: ConstituentaDraft
-  ): { result: AnalysisResult; diagnostics: DiagnosticRecord[] } {
+  ): { result: AnalysisResult; diagnostics: Diagnostic[] } {
     const analyzer = this.buildAnalyzer(session);
     const schema = this.toPseudoRSFormState(session, analyzer);
     const analysis = getAnalysisFor(draft.definitionFormal, draft.cstType, schema as unknown as RSForm, draft.alias);
-    const result = toPublicAnalysis({
-      success: analysis.success,
-      type: analysis.type as Record<string, unknown> | null,
-      valueClass: analysis.valueClass,
-      errors: analysis.errors
-    });
+    const target = { constituentId: draft.id, alias: draft.alias };
+    const result = toPublicAnalysis(
+      {
+        success: analysis.success,
+        type: analysis.type as Record<string, unknown> | null,
+        valueClass: analysis.valueClass,
+        errors: analysis.errors
+      },
+      draft.definitionFormal,
+      target
+    );
     return {
       result,
-      diagnostics: analysis.errors.map(error => ({
-        sessionId: session.sessionId,
-        constituentId: draft.id,
-        expression: draft.definitionFormal,
-        error: toPublicError(error)
-      }))
+      diagnostics: analysis.errors.map(error =>
+        expressionDiagnostic(error as RSErrorDescription, draft.definitionFormal, target)
+      )
     };
   }
 

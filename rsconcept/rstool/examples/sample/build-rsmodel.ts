@@ -5,6 +5,8 @@ import { TUPLE_ID } from '@rsconcept/domain';
 
 import { CstType, RSToolWrapperClient, type AgentConstituentaPatch } from '../../src';
 
+import { assertCleanDiagnostics } from '../diagnostics-utils';
+
 async function run() {
   const client = new RSToolWrapperClient({
     cwd: resolve(process.cwd())
@@ -15,13 +17,28 @@ async function run() {
     const session = await client.call<{ sessionId: string; contractVersion: string }>('createSession');
 
     const items: AgentConstituentaPatch[] = [
-      { id: 1, alias: 'X1', cstType: CstType.BASE, definitionFormal: '' },
-      { id: 2, alias: 'C1', cstType: CstType.CONSTANT, definitionFormal: '' },
+      {
+        id: 1,
+        alias: 'X1',
+        cstType: CstType.BASE,
+        definitionFormal: '',
+        term: 'element',
+        convention: 'people'
+      },
+      {
+        id: 2,
+        alias: 'C1',
+        cstType: CstType.CONSTANT,
+        definitionFormal: '',
+        term: 'count',
+        convention: 'natural numbers'
+      },
       {
         id: 3,
         alias: 'S1',
         cstType: CstType.STRUCTURED,
         definitionFormal: 'ℬ(X1×X1)',
+        term: 'parent-child pairs',
         convention: 'Pairs (parent, child) over X1.'
       },
       { id: 4, alias: 'D1', cstType: CstType.TERM, definitionFormal: 'Pr1(S1)' },
@@ -62,6 +79,13 @@ async function run() {
     console.log(
       'Recalculated model:',
       recalculatedItems.map(item => ({ alias: item.alias, status: item.status }))
+    );
+
+    await assertCleanDiagnostics(
+      client,
+      session.sessionId,
+      new Map(items.map(item => [item.id!, item.alias])),
+      'sample RSModel'
     );
 
     await client.call('commitStep', {

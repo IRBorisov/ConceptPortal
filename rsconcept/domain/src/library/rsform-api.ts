@@ -23,6 +23,7 @@ import {
 import { basic, bool, constant, type EchelonFunctional, isTypification } from '../rslang/semantic/typification';
 import { applyPath } from '../rslang/semantic/typification-api';
 
+import { hasCstDiagnostic, RSDiagnosticCode } from './diagnostics';
 import { type LibraryItem } from './library';
 import {
   type ArgumentValue,
@@ -62,21 +63,9 @@ const CST_TYPE_TO_CLASS: Record<CstType, CstClass> = {
 
 /** Checks if {@link Constituenta} is a schema issue. */
 export function isSchemaIssue(cst: Constituenta): boolean {
-  if (
-    cst.homonyms.length > 0 ||
-    cst.formalDuplicates.length > 0 ||
-    cst.status === CstStatus.INCORRECT ||
-    cst.status === CstStatus.INCALCULABLE ||
-    cst.is_type_mismatch
-  ) {
-    return true;
-  }
-  if (isBasicConcept(cst.cst_type) && !isLogical(cst.cst_type)) {
-    if (!cst.convention || !cst.term_resolved) {
-      return true;
-    }
-  }
-  return false;
+  return (
+    (cst.diagnostics?.length ?? 0) > 0 || cst.status === CstStatus.INCORRECT || cst.status === CstStatus.INCALCULABLE
+  );
 }
 
 /** Infers the status of an expression based on parsing and value information. */
@@ -489,8 +478,14 @@ export function calculateSchemaStats(target: RSForm): RSFormStats {
     step_complexity: items.reduce((sum, cst) => sum + calculateStepComplexity(cst), 0),
 
     count_problematic: items.reduce((sum, cst) => sum + (isSchemaIssue(cst) ? 1 : 0), 0),
-    count_homonyms: items.reduce((sum, cst) => sum + (cst.homonyms.length > 0 ? 1 : 0), 0),
-    count_formal_duplicates: items.reduce((sum, cst) => sum + (cst.formalDuplicates.length > 0 ? 1 : 0), 0),
+    count_homonyms: items.reduce(
+      (sum, cst) => sum + (hasCstDiagnostic(cst, RSDiagnosticCode.schemaHomonym) ? 1 : 0),
+      0
+    ),
+    count_formal_duplicates: items.reduce(
+      (sum, cst) => sum + (hasCstDiagnostic(cst, RSDiagnosticCode.schemaFormalDuplicate) ? 1 : 0),
+      0
+    ),
     count_missing_convention: items.reduce((sum, cst) => sum + (isMissingConvention(cst) ? 1 : 0), 0),
     count_type_mismatch: items.reduce((sum, cst) => sum + (cst.is_type_mismatch ? 1 : 0), 0),
 

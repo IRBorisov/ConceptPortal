@@ -7,7 +7,7 @@ import { useSelector } from '@tanstack/react-store';
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
-import { type Constituenta, CstType, type RSForm } from '@rsconcept/domain/library';
+import { type Constituenta, CstType, hasCstDiagnostic, RSDiagnosticCode, type RSForm } from '@rsconcept/domain/library';
 import {
   canHaveManualTypification,
   getAnalysisFor,
@@ -32,7 +32,7 @@ import { RefsInput } from '../../../components/refs-input';
 import { SelectMultiConstituenta } from '../../../components/select-multi-constituenta';
 import { TypificationInput } from '../../../components/typification-input';
 import { useRsformDialogsStore } from '../../../dialogs/rsform-dialog-store';
-import { getRSDefinitionPlaceholder, labelRSExpression } from '../../../labels';
+import { describeCstDiagnostic, getRSDefinitionPlaceholder, labelRSExpression } from '../../../labels';
 import { useSchemaEdit } from '../schema-edit-context';
 
 import { ConstituentaPrimaryActions } from './cst-primary-actions';
@@ -212,7 +212,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
               maxHeight='8rem'
               areaClassName={
                 (needsInterpretation && !field.state.value) ||
-                (activeCst.homonyms.length > 0 && !field.state.meta.isDirty)
+                (hasCstDiagnostic(activeCst, RSDiagnosticCode.schemaHomonym) && !field.state.meta.isDirty)
                   ? 'cm-error'
                   : ''
               }
@@ -228,10 +228,8 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
                 field.state.meta.errors[0]?.message ??
                 (needsInterpretation && !field.state.value
                   ? tx('tx.lang.term.validate.empty')
-                  : activeCst.homonyms.length > 0 && !field.state.meta.isDirty
-                    ? tx('tx.concept.homonym.validate', {
-                        aliases: formatAliasList(activeCst.homonyms, schema)
-                      })
+                  : !field.state.meta.isDirty
+                    ? describeCstDiagnostic(activeCst, RSDiagnosticCode.schemaHomonym)
                     : undefined)
               }
             />
@@ -269,7 +267,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
                   onBlur={field.handleBlur}
                   error={
                     field.state.meta.errors[0]?.message ??
-                    (activeCst.is_type_mismatch ? tx('tx.rslang.typification.manual.validate') : undefined)
+                    describeCstDiagnostic(activeCst, RSDiagnosticCode.schemaTypeMismatch)
                   }
                 />
               )}
@@ -377,11 +375,4 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       ) : null}
     </form>
   );
-}
-
-function formatAliasList(items: readonly number[], schema: RSForm) {
-  if (items.length === 0) {
-    return '';
-  }
-  return items.map(item => schema.cstByID.get(item)!.alias).join(', ');
 }

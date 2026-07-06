@@ -1,6 +1,6 @@
 import { type AnalysisResult } from './analysis';
 import { type CstType } from './common';
-import { type DiagnosticRecord } from './diagnostic';
+import { type Diagnostic } from './diagnostic';
 
 /** Constituent payload before analysis and merge into session state. */
 export interface ConstituentaDraft {
@@ -33,7 +33,7 @@ export interface AddOrUpdateConstituentaInput {
 
 export interface AddOrUpdateConstituentaResult {
   state: ConstituentaState;
-  diagnostics: DiagnosticRecord[];
+  diagnostics: Diagnostic[];
 }
 
 /** How a multi-draft apply handles partial failures. */
@@ -48,6 +48,6 @@ export interface ApplyConstituentsInput {
 export interface ApplyConstituentsResult {
   success: boolean;
   applied: ConstituentaState[];
-  failed: Array<{ draft: ConstituentaDraft; diagnostics: DiagnosticRecord[] }>;
-  diagnostics: DiagnosticRecord[];
+  failed: Array<{ draft: ConstituentaDraft; diagnostics: Diagnostic[] }>;
+  diagnostics: Diagnostic[];
 }

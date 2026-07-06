@@ -1,36 +1,32 @@
 {
-  "contractVersion": "2.0.0",
+  "contractVersion": "2.1.0",
   "state": {
-    "sessionId": "b72f75c0-4f17-4bef-9ff3-913ea16191db",
+    "sessionId": "12bfc7a5-ad35-42b0-9d25-1ea8c8f6588d",
     "alias": "",
     "title": "",
     "comment": "",
-    "createdAt": "2026-07-01T17:12:54.696Z",
-    "updatedAt": "2026-07-01T17:12:54.714Z",
+    "createdAt": "2026-07-06T14:50:08.453Z",
+    "updatedAt": "2026-07-06T14:50:08.531Z",
     "revisions": [
       {
-        "revisionId": "e85ad551-0aa0-42d9-b55d-01719aed6533",
-        "at": "2026-07-01T17:12:54.714Z",
+        "revisionId": "2b60fe39-9343-467f-b334-3101b39dcde0",
+        "at": "2026-07-06T14:50:08.531Z",
         "message": "Применение шаблонов БВ: сотрудники, проекты, F6/F9/F20/P5"
       }
     ],
     "items": [
       {
-        "id": 3,
-        "alias": "X2",
-        "cstType": "basic",
-        "definitionFormal": "",
-        "term": "проекты",
+        "id": 1,
+        "alias": "T1",
+        "cstType": "statement",
+        "definitionFormal": "1=1",
+        "term": "Применение шаблонов банка выражений",
         "definitionText": "",
-        "convention": "",
+        "convention": "Подстановка радикалов БВ: R1→X1, R2→X2. Отношение σ→S1 или S2. Примеры: БВ F6→F_IMAGE, БВ F20→F_SOURCES, БВ P5→P_FUNCTION",
         "analysis": {
           "success": true,
           "type": {
-            "typeID": 5,
-            "base": {
-              "typeID": 3,
-              "baseID": "X2"
-            }
+            "typeID": 6
           },
           "valueClass": "value",
           "diagnostics": []
@@ -43,7 +39,7 @@
         "definitionFormal": "",
         "term": "сотрудники",
         "definitionText": "",
-        "convention": "",
+        "convention": "Множество сотрудников; подстановка R1→X1 в шаблонах БВ",
         "analysis": {
           "success": true,
           "type": {
@@ -51,6 +47,27 @@
             "base": {
               "typeID": 3,
               "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 3,
+        "alias": "X2",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "проекты",
+        "definitionText": "",
+        "convention": "Множество проектов; подстановка R2→X2 в шаблонах БВ",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
             }
           },
           "valueClass": "value",
@@ -111,27 +128,6 @@
                   "baseID": "X1"
                 }
               ]
-            }
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
-        "id": 10,
-        "alias": "D2",
-        "cstType": "term",
-        "definitionFormal": "Pr1(S2) \\ Pr2(S2)",
-        "term": "глава иерархии",
-        "definitionText": "",
-        "convention": "БВ F20: применение к S2 (развёрнуто в D2, т.к. вызов F# в терме не анализируется)",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 5,
-            "base": {
-              "typeID": 3,
-              "baseID": "X1"
             }
           },
           "valueClass": "value",
@@ -308,17 +304,21 @@
         }
       },
       {
-        "id": 1,
-        "alias": "T1",
-        "cstType": "statement",
-        "definitionFormal": "1=1",
-        "term": "Применение шаблонов банка выражений",
+        "id": 10,
+        "alias": "D2",
+        "cstType": "term",
+        "definitionFormal": "Pr1(S2) \\ Pr2(S2)",
+        "term": "глава иерархии",
         "definitionText": "",
-        "convention": "Подстановка радикалов БВ: R1→X1, R2→X2. Отношение σ→S1 или S2. Примеры: БВ F6→F_IMAGE, БВ F20→F_SOURCES, БВ P5→P_FUNCTION",
+        "convention": "БВ F20: применение к S2 (развёрнуто в D2, т.к. вызов F# в терме не анализируется)",
         "analysis": {
           "success": true,
           "type": {
-            "typeID": 6
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
           },
           "valueClass": "value",
           "diagnostics": []
@@ -326,7 +326,62 @@
       }
     ],
     "model": {
-      "items": []
+      "items": [
+        {
+          "id": 2,
+          "type": "basic",
+          "value": {
+            "0": "Алиса",
+            "1": "Боб",
+            "2": "Кэрол"
+          }
+        },
+        {
+          "id": 3,
+          "type": "basic",
+          "value": {
+            "0": "ПроектA",
+            "1": "ПроектB"
+          }
+        },
+        {
+          "id": 4,
+          "type": "ℬ(X1×X1)",
+          "value": [
+            [
+              -111,
+              0,
+              0
+            ],
+            [
+              -111,
+              0,
+              1
+            ],
+            [
+              -111,
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "id": 5,
+          "type": "ℬ(X1×X1)",
+          "value": [
+            [
+              -111,
+              0,
+              1
+            ],
+            [
+              -111,
+              1,
+              2
+            ]
+          ]
+        }
+      ]
     }
   },
   "diagnostics": []
