@@ -1,23 +1,70 @@
 # Диагностика
 
 Читай, когда `analyzeExpression`, `applySchemaPatch`, `listDiagnostics` или `evaluate`
-вернули диагностику. Коды ошибок определяются анализатором `@rsconcept/domain`; полный перечень — в таблице ниже.
+вернули диагностику. Коды ошибок RSLang — `RSErrorCode` в `@rsconcept/domain`; коды схемы
+и модели — `RSDiagnosticCode` в том же пакете (числовой формат совпадает).
+
+## Формы диагностики
+
+**`CstDiagnostic`** (`@rsconcept/domain`, на `Constituenta` после загрузки схемы Portal) — только:
+
+| Поле      | Смысл                                      |
+| --------- | ------------------------------------------ |
+| `kind`    | `schema` (пока только схема)               |
+| `code`    | `RSDiagnosticCode`                         |
+| `params?` | аргументы; омонимы/дубликаты — `[aliases]` |
+
+**`Diagnostic`** расширяет `CstDiagnostic` полями, удобными агенту:
+
+| Поле         | Смысл                                                                  |
+| ------------ | ---------------------------------------------------------------------- |
+| `name`       | символьное имя (`typesNotEqual`, `schemaHomonym`, …) — ключ для агента |
+| `severity`   | `error` \| `warning`; вычисляется через `getDiagnosticSeverity(code)`  |
+| `alias?`     | обозначение конституенты                                               |
+| `expression` | текст формулы или затронутого поля                                     |
+| `from`, `to` | полуинтервал `[from, to)` в `expression`                               |
+
+Фильтры `listDiagnostics({ kind, constituentId, severity })`.
+
+Severity задаётся явным списком warning-кодов в `@rsconcept/domain/library`.
+Сейчас warning только `localNotUsed` (`0x2802`); все остальные известные и неизвестные
+коды считаются `error`.
 
 ## Где лежит диагностика
 
-У rstool два представления одной и той же ошибки.
+Три категории (`kind`), собранные в `listDiagnostics` после `applySchemaPatch`,
+`setModelValues` и `recalculateModel`:
 
-- **Плоское** `RSToolErrorDescription` — в `AnalysisResult.diagnostics` (из `analyzeExpression`
-  и анализа конституент после `applySchemaPatch`) и в `EvaluationResult.diagnostics`:
-  - `code` — числовой `RSErrorCode`.
-  - `from`, `to` — полуинтервал `[from, to)` в `definitionFormal` (или в выражении вычисления).
-  - `params?` — позиционный массив строк-аргументов сообщения (см. таблицы ниже).
-- **Обёрнутое** `DiagnosticRecord` — только из `listDiagnostics`:
-  - `sessionId`, `expression` — исходное выражение.
-  - `error` — то же `RSToolErrorDescription` (`code`/`from`/`to`/`params`) **вложено**, читай `record.error.code`.
-  - `constituentId?` — id конституенты. У диагностик сохранённых конституент он есть;
-    у черновиков `analyzeExpression` он `undefined`. Фильтруй `listDiagnostics({ constituentId })`
-    или `listDiagnostics({ constituentId }, sessionId)`.
+| `kind`       | Источник (как в Portal)                                                                              |
+| ------------ | ---------------------------------------------------------------------------------------------------- |
+| `expression` | разбор и семантика формулы (`definitionFormal`)                                                      |
+| `schema`     | омонимы, дубликаты формул, пустой термин/конвенция у неопределяемых, расхождение типизации           |
+| `model`      | статус интерпретации (`EvalStatus`): пустая база, ложная аксиома, неверные данные, ошибка вычисления |
+
+## Схема (Portal)
+
+| Код      | Имя                       | `params`             | Исправление                                                                             |
+| -------- | ------------------------- | -------------------- | --------------------------------------------------------------------------------------- |
+| `0x8901` | `schemaHomonym`           | `[aliases]`          | Термин совпадает с другими конституентами (`aliases` через запятую). Переименуй термин. |
+| `0x8902` | `schemaFormalDuplicate`   | `[aliases]`          | Нормализованная формула совпадает с `aliases`. Объедини или различай определения.       |
+| `0x8903` | `schemaMissingConvention` | —                    | У `basic`/`constant`/`structure` нужна конвенция.                                       |
+| `0x8904` | `schemaMissingTerm`       | —                    | У неопределяемого понятия нужен термин.                                                 |
+| `0x8905` | `schemaTypeMismatch`      | `[manual, computed]` | расхождение ручной и вычисленной типизации.                                             |
+
+Поле `params` для омонимов/дубликатов — `[aliases]` (строка с alias через запятую).
+
+## Модель (Portal)
+
+Статусы соответствуют фильтру «проблемы модели» в UI (`isModelIssue`).
+
+| Код      | Имя                | `params`   | Исправление                                                          |
+| -------- | ------------------ | ---------- | -------------------------------------------------------------------- |
+| `0x8910` | `modelEmpty`       | `[status]` | У базового/константного/структурного понятия нет данных в модели.    |
+| `0x8911` | `modelAxiomFalse`  | `[status]` | Аксиома ложна на текущих данных — проверь формулу или интерпретацию. |
+| `0x8912` | `modelInvalidData` | `[status]` | Данные не соответствуют типу (напр. элемент вне базы).               |
+| `0x8913` | `modelEvalFail`    | `[status]` | Ошибка вычисления производного значения.                             |
+
+Диагностики модели пересчитываются после `setModelValues` и `recalculateModel` (и при каждом `applySchemaPatch` для пустых баз).
 
 ## Класс и префикс кода
 
@@ -32,8 +79,9 @@
 | иначе    | UNKNOWN    | `U` + hex                  |
 
 - Диапазоны: `0x84xx` — parser (синтаксис, скобки), `0x88xx` — semantic (типизация, область
-  видимости, структура, схема, отсутствие значения), `0x81xx` — evaluation (вычисление КМ),
-- `0x2xxx` — предупреждения (не блокируют, `isCritical` возвращает `false`).
+  видимости, структура, схема, отсутствие значения), `0x81xx` — evaluation (вычисление КМ).
+- Warning определяется только явным списком warning-кодов (`localNotUsed` / `0x2802`), а не
+  битовой маской или диапазоном.
 
 ## Parser
 
@@ -114,13 +162,13 @@
 
 ## Фильтр `Fi`
 
-| Код      | Имя                           | `params`                             | Исправление                                                                           |
-| -------- | ----------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------- |
-| `0x8822` | `invalidFilterArgumentType`   | `[operator, actual, expected]`       | Аргумент `Fi` имеет тип `actual`, ожидался `expected` (обычно `ℬ(…)`).                |
-| `0x8823` | `invalidFilterArity`          | `[indexCount, paramCount, operator]` | Число индексов `indexCount` ≠ числу параметров `paramCount` у `operator`.             |
-| `0x882B` | `invalidFilterParameterType`  | `[param, expected, operator]`        | Тип параметра `param` не совпадает с компонентом аргумента `expected` для `operator`. |
-| `0x882C` | `invalidFilterIndex`          | `[operator, actual, index, arity]`   | Индекс проекции `index` превышает арность кортежа `arity` аргумента `actual`.         |
-| `0x882D` | `invalidFilterBooleanEchelon` | `[operator, actual, expected]`       | У параметра `Fi` недостаёт ступени ℬ: тип `actual`, `bool(actual)` дал бы `expected`. |
+| Код      | Имя                           | `params`                             | Исправление                                                                                                                                                       |
+| -------- | ----------------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `0x8822` | `invalidFilterArgumentType`   | `[operator, actual, expected]`       | Аргумент `Fi` имеет тип `actual`, ожидался `expected` (обычно `ℬ(…)`).                                                                                            |
+| `0x8823` | `invalidFilterArity`          | `[indexCount, paramCount, operator]` | Число индексов `indexCount` ≠ числу параметров `paramCount` у `operator`.                                                                                         |
+| `0x882B` | `invalidFilterParameterType`  | `[param, expected, operator]`        | Тип параметра `param` не совпадает с компонентом аргумента `expected` для `operator`.                                                                             |
+| `0x882C` | `invalidFilterIndex`          | `[operator, actual, index, arity]`   | Индекс проекции `index` превышает арность кортежа `arity` аргумента `actual`.                                                                                     |
+| `0x882D` | `invalidFilterBooleanEchelon` | `[operator, actual]`                 | Ступень параметра `Fi` на один ℬ ниже (`actual`; `bool(actual)` совпал бы с ожидаемым): элемент — в `{…}`, иначе множество нужной ступени или проверка семантики. |
 
 ## Значение и схема
 

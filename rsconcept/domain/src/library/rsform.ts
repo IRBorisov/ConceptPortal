@@ -5,6 +5,7 @@
 import { type Graph } from '../graph';
 import { type AnalysisBase, type ExpressionType, type RSLangAnalyzer, type TypePath } from '../rslang';
 
+import { type CstDiagnostic } from './diagnostics';
 import { type CurrentVersion, type LibraryItem, type LibraryItemReference, type VersionInfo } from './library';
 
 /** Represents {@link Constituenta} type. */
@@ -93,9 +94,10 @@ export interface Constituenta {
   /** Controls whether base concepts expose property values or full values */
   value_is_property: boolean;
 
-  homonyms: number[];
-  formalDuplicates: number[];
   analysis: AnalysisBase;
+
+  /** Schema-kind {@link CstDiagnostic} list, populated during schema loading. */
+  diagnostics: CstDiagnostic[];
 
   /** Typification used for dependents, model values, and display (manual when it overrides computed). */
   effectiveType: ExpressionType | null;

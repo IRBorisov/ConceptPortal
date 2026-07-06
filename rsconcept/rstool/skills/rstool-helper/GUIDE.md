@@ -84,12 +84,13 @@ kind `auto` (default) определит `portal-details` или `portal-schema`
 
 Когда `analysis.success === false` или `listDiagnostics` не пуст. Коды и типичные ошибки — [DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md).
 
-1. Запусти `analyzeExpression` (черновик без сохранения).
-2. Прочитай `code`, `from`, `to`, `params` в `analysis.diagnostics` или через `listDiagnostics`.
-3. Сопоставь `code` с исправлением в [DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md).
-4. Исправь именно диапазон в `definitionFormal`.
-5. Не повторяй вызов без изменения ввода.
-6. После успеха — ещё один `applySchemaPatch` с исправленным элементом.
+1. Вызови `listDiagnostics()` — смотри `kind`: `expression` (формула), `schema` (омонимы, дубликаты, термин/конвенция), `model` (интерпретация).
+2. Для черновика формулы — `analyzeExpression` (без сохранения).
+3. Прочитай `name`, `severity`, `alias`, `from`, `to`, `params` в `analysis.diagnostics` или через `listDiagnostics({ kind })`. `severity` берётся из явного списка warning-кодов: сейчас warning только `localNotUsed`, остальные коды — `error`.
+4. Сопоставь `name` (или `code`) с исправлением в [DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md).
+5. Исправь именно диапазон в `definitionFormal` (expression) или метаданные/данные модели (schema/model).
+6. Не повторяй вызов без изменения ввода.
+7. После успеха — ещё один `applySchemaPatch` / `setModelValues` с исправлением.
 
 ### Проверка на маленькой КМ
 

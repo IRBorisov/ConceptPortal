@@ -1,6 +1,6 @@
 import { type CstType } from './common';
 import { type ApplyConstituentsMode, type ApplyConstituentsResult, type ConstituentaDraft } from './constituenta';
-import { type DiagnosticRecord } from './diagnostic';
+import { type Diagnostic } from './diagnostic';
 import { type SessionHandle, type SessionRevision, type SessionState } from './session';
 
 /** Level of detail returned by {@link RSToolAgent.getSessionState}. */
@@ -54,7 +54,7 @@ export interface SessionSummary {
   modelItemCount: number;
   diagnosticsCount: number;
   items: SessionSummaryItem[];
-  diagnostics: DiagnosticRecord[];
+  diagnostics: Diagnostic[];
   lastRevision?: SessionRevision;
 }
 

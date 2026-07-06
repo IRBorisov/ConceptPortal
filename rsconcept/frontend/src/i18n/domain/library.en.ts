@@ -215,6 +215,7 @@ export const txLibraryEn: Record<string, string> = {
   'tx.parse.status.property.hint': 'Membership check only',
   'tx.parse.status.unknown': 'Non-checked',
   'tx.parse.status.unknown.hint': 'Verification required',
+  'tx.parse.error.plural.hint': 'Errors in the formal definition',
 
   'tx.cst': 'Constituenta',
   'tx.cst.hint': 'Notions of a constituenta and its attributes',

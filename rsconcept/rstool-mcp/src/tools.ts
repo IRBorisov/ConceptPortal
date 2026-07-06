@@ -205,19 +205,32 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   {
     name: "list_diagnostics",
     description:
-      "List active diagnostics for the session (one record set per constituent, not a historical log).",
+      "List active diagnostics for the session: expression (formula), schema (homonyms, duplicates, metadata), model (interpretation status).",
     inputSchema: {
       type: "object",
       properties: {
         sessionId,
         constituentId: { type: "number" },
+        kind: { type: "string", enum: ["expression", "schema", "model"] },
       },
     },
     invoke: (tool, args) => {
       const constituentId = args.constituentId;
-      const filters =
-        typeof constituentId === "number" ? { constituentId } : undefined;
-      return tool.listDiagnostics(filters, optionalSessionId(args));
+      const kind = args.kind;
+      const filters: {
+        constituentId?: number;
+        kind?: "expression" | "schema" | "model";
+      } = {};
+      if (typeof constituentId === "number") {
+        filters.constituentId = constituentId;
+      }
+      if (kind === "expression" || kind === "schema" || kind === "model") {
+        filters.kind = kind;
+      }
+      return tool.listDiagnostics(
+        Object.keys(filters).length > 0 ? filters : undefined,
+        optionalSessionId(args),
+      );
     },
   },
   {

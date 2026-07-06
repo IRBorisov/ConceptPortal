@@ -95,7 +95,7 @@ export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaSt
         primaryTitle={tx('tx.schema.issue.hint')}
         secondaryLabel={tx('tx.general.error.plural')}
         secondaryValue={countErrors}
-        secondaryTitle={tx('tx.schema.issue.hint')}
+        secondaryTitle={tx('tx.parse.error.plural.hint')}
         details={[
           { label: tx('tx.concept.homonym.plural'), value: stats.count_homonyms },
           { label: tx('tx.concept.duplicate.plural'), value: stats.count_formal_duplicates },

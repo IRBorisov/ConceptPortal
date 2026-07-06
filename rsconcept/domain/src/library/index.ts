@@ -1,3 +1,15 @@
+export {
+  assignSchemaDiagnostics,
+  type CstDiagnostic,
+  DiagnosticKind,
+  type DiagnosticSeverity,
+  getDiagnosticSeverity,
+  hasCstDiagnostic,
+  isDiagnosticCritical,
+  isDiagnosticWarning,
+  modelStatusCstDiagnostic,
+  RSDiagnosticCode
+} from './diagnostics';
 export { FolderNode, FolderTree } from './folder-tree';
 export {
   AccessPolicy,

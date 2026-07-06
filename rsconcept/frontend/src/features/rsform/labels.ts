@@ -3,7 +3,13 @@
  */
 
 import { globalTx } from '@/i18n';
-import { type Constituenta, CstClass, CstStatus, CstType } from '@rsconcept/domain/library';
+import {
+  type Constituenta,
+  CstClass,
+  CstStatus,
+  CstType,
+  RSDiagnosticCode
+} from '@rsconcept/domain/library';
 import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 import { RSErrorCode, TokenID, TypeClass } from '@rsconcept/domain/rslang';
 import { labelType } from '@rsconcept/domain/rslang/labels';
@@ -528,4 +534,47 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
 export function labelTypeClass(type: TypeClass): string {
   const id = TYPE_CLASS_LID[type];
   return id ? globalTx(id) : String(type);
+}
+
+const DIAGNOSTIC_MESSAGE_ID: Record<RSDiagnosticCode, string> = {
+  [RSDiagnosticCode.schemaHomonym]: 'tx.concept.homonym.validate',
+  [RSDiagnosticCode.schemaFormalDuplicate]: 'tx.lib.defineFormal.validate.duplicate',
+  [RSDiagnosticCode.schemaMissingConvention]: 'tx.lib.convention.validate.empty',
+  [RSDiagnosticCode.schemaMissingTerm]: 'tx.lang.term.validate.empty',
+  [RSDiagnosticCode.schemaTypeMismatch]: 'tx.rslang.typification.manual.validate',
+  [RSDiagnosticCode.modelEmpty]: 'tx.evaluation.status.empty.hint',
+  [RSDiagnosticCode.modelAxiomFalse]: 'tx.evaluation.status.axiomFalse.hint',
+  [RSDiagnosticCode.modelInvalidData]: 'tx.evaluation.status.invalidData.hint',
+  [RSDiagnosticCode.modelEvalFail]: 'tx.evaluation.status.error.hint'
+};
+
+/** Generates description for a schema/model {@link CstDiagnostic}. */
+export function describeCstDiagnostic(cst: Constituenta, code: RSDiagnosticCode): string | undefined {
+  const diagnostic = cst.diagnostics.find(item => item.code === code);
+  if (!diagnostic) {
+    return undefined;
+  }
+  const id = DIAGNOSTIC_MESSAGE_ID[code];
+  switch (code) {
+    case RSDiagnosticCode.schemaHomonym:
+    case RSDiagnosticCode.schemaFormalDuplicate:
+      return globalTx(id, { aliases: diagnostic.params?.[0] ?? '' });
+    default:
+      return globalTx(id);
+  }
+}
+
+/** Generates description for a full {@link Diagnostic} (expression errors or expanded records). */
+export function describeDiagnostic(diagnostic: { code: number; params?: readonly string[] }): string {
+  const id = DIAGNOSTIC_MESSAGE_ID[diagnostic.code as RSDiagnosticCode];
+  if (id === undefined) {
+    return describeRSError(diagnostic.code as RSErrorCode, diagnostic.params ?? []);
+  }
+  switch (diagnostic.code) {
+    case RSDiagnosticCode.schemaHomonym:
+    case RSDiagnosticCode.schemaFormalDuplicate:
+      return globalTx(id, { aliases: diagnostic.params?.[0] ?? '' });
+    default:
+      return globalTx(id);
+  }
 }

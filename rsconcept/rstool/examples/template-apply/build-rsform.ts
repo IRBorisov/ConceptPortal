@@ -20,13 +20,7 @@ import {
   X1_ID,
   X2_ID
 } from './constants';
-
-/**
- * Учебная схема: применение шаблонов БВ (rsforms/42) к предметной области.
- * Подстановка R1→X1 (сотрудники), R2→X2 (проекты), σ→S1/S2.
- */
-const X1_BINDING = { 0: 'Алиса', 1: 'Боб', 2: 'Кэрол' } as const;
-const X2_BINDING = { 0: 'ПроектA', 1: 'ПроектB' } as const;
+import { assertCleanDiagnostics } from '../diagnostics-utils';
 
 /** S1: назначение сотрудников на проекты. */
 const S1_VALUE = [
@@ -40,6 +34,9 @@ const S2_VALUE = [
   [TUPLE_ID, 0, 1],
   [TUPLE_ID, 1, 2]
 ] as const;
+
+const X1_BINDING = { 0: 'Алиса', 1: 'Боб', 2: 'Кэрол' } as const;
+const X2_BINDING = { 0: 'ПроектA', 1: 'ПроектB' } as const;
 
 async function buildSchema(client: RSToolWrapperClient): Promise<string> {
   const session = await client.call<{ sessionId: string }>('createSession');
@@ -62,7 +59,8 @@ async function buildSchema(client: RSToolWrapperClient): Promise<string> {
         alias: 'X1',
         cstType: CstType.BASE,
         definitionFormal: '',
-        term: 'сотрудники'
+        term: 'сотрудники',
+        convention: 'Множество сотрудников; подстановка R1→X1 в шаблонах БВ'
       }
     },
     {
@@ -71,7 +69,8 @@ async function buildSchema(client: RSToolWrapperClient): Promise<string> {
         alias: 'X2',
         cstType: CstType.BASE,
         definitionFormal: '',
-        term: 'проекты'
+        term: 'проекты',
+        convention: 'Множество проектов; подстановка R2→X2 в шаблонах БВ'
       }
     },
     {
@@ -162,6 +161,24 @@ async function buildSchema(client: RSToolWrapperClient): Promise<string> {
   for (const item of patch.summary.items) {
     console.log(`${item.alias}: OK`);
   }
+
+  await client.call('setModelValues', {
+    sessionId: session.sessionId,
+    set: [
+      { target: X1_ID, value: X1_BINDING },
+      { target: X2_ID, value: X2_BINDING },
+      { target: S1_ID, value: S1_VALUE },
+      { target: S2_ID, value: S2_VALUE }
+    ]
+  });
+  await client.call('recalculateModel', { sessionId: session.sessionId });
+
+  await assertCleanDiagnostics(
+    client,
+    session.sessionId,
+    new Map(drafts.map(entry => [entry.draft.id!, entry.draft.alias])),
+    'template-apply'
+  );
 
   await client.call('commitStep', {
     sessionId: session.sessionId,

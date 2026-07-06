@@ -5,14 +5,14 @@ import { describe, expect, it } from 'vitest';
 import { CstType, EvalStatus, RSToolWrapperClient } from '../index';
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
+const tsxCli = resolve(packageRoot, 'node_modules/tsx/dist/cli.mjs');
 
 describe('RSToolWrapperClient integration', () => {
   it('runs createSession, patch, model, and evaluate over stdio', async () => {
     const client = new RSToolWrapperClient({
-      command: 'npx',
-      args: ['tsx', resolve(packageRoot, 'src/wrapper/stdio-wrapper.ts')],
-      cwd: packageRoot,
-      shell: true
+      command: process.execPath,
+      args: [tsxCli, resolve(packageRoot, 'src/wrapper/stdio-wrapper.ts')],
+      cwd: packageRoot
     });
 
     try {

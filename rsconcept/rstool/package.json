@@ -67,6 +67,7 @@
     "example:build-movd-rsmodel": "tsx examples/movd/build-rsmodel.ts",
     "example:build-expression-bank-schema": "tsx examples/expression-bank/build-rsform.ts",
     "example:build-template-apply-schema": "tsx examples/template-apply/build-rsform.ts",
+    "example:audit-diagnostics": "tsx examples/audit-diagnostics.ts",
     "kinship:cli": "tsx examples/kinship/cli.ts",
     "prepublishOnly": "pnpm run build"
   },

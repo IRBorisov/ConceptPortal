@@ -3,30 +3,30 @@
 ## Контракт rstool
 
 - Пакет: `@rsconcept/rstool`
-- Версия контракта: `2.0.0` (`CONTRACT_VERSION`)
+- Версия контракта: `3.0.0` (`CONTRACT_VERSION`)
 - Основной класс: `RSToolAgent`
 - Публичные импорты: `@rsconcept/rstool` и `@rsconcept/rstool/wrapper`
 
 ### Методы library API
 
-| Метод                                          | Назначение                                   |
-| ---------------------------------------------- | -------------------------------------------- |
-| `ensureSession(initial?)`                      | Вернуть текущую сессию или создать новую     |
-| `createSession(initial?)`                      | Новая in-memory сессия                       |
-| `getCurrentSession()`                          | Текущая активная сессия или `null`           |
-| `setCurrentSession(sessionId)`                 | Сделать сессию текущей                       |
-| `applySchemaPatch(input, sessionId?)`          | Единственный путь правки схемы               |
-| `getSessionState(detail?, sessionId?)`         | `summary` (default) или `full`               |
-| `listDiagnostics(filters?, sessionId?)`        | Активные диагностики                         |
-| `analyzeExpression(input, sessionId?)`         | Разбор без сохранения (`recordDiagnostics?`) |
-| `commitStep(message?, sessionId?)`             | Ревизия                                      |
-| `exportSession(sessionId?)`                    | JSON сессии                                  |
-| `exportPortal({ kind, format? }, sessionId?)`  | Portal Load from JSON                        |
-| `importData(payload, kind?)`                   | Импорт сессии / Portal (`kind` см. ниже)     |
-| `setModelValues({ set?, clear? }, sessionId?)` | Значения модели (async — нужен `await`)      |
-| `getModelState(sessionId?)`                    | Состояние интерпретации                      |
-| `evaluate(input, sessionId?)`                  | Scratch или конституента                     |
-| `recalculateModel(sessionId?)`                 | Пересчёт                                     |
+| Метод                                          | Назначение                                                         |
+| ---------------------------------------------- | ------------------------------------------------------------------ |
+| `ensureSession(initial?)`                      | Вернуть текущую сессию или создать новую                           |
+| `createSession(initial?)`                      | Новая in-memory сессия                                             |
+| `getCurrentSession()`                          | Текущая активная сессия или `null`                                 |
+| `setCurrentSession(sessionId)`                 | Сделать сессию текущей                                             |
+| `applySchemaPatch(input, sessionId?)`          | Единственный путь правки схемы                                     |
+| `getSessionState(detail?, sessionId?)`         | `summary` (default) или `full`                                     |
+| `listDiagnostics(filters?, sessionId?)`        | Активные диагностики (`kind`, `constituentId`, `severity`)         |
+| `analyzeExpression(input, sessionId?)`         | Разбор без сохранения (`recordDiagnostics?`)                       |
+| `commitStep(message?, sessionId?)`             | Ревизия                                                            |
+| `exportSession(sessionId?)`                    | JSON сессии                                                        |
+| `exportPortal({ kind, format? }, sessionId?)`  | Portal Load from JSON                                              |
+| `importData(payload, kind?)`                   | Импорт сессии / Portal (`kind` см. ниже)                           |
+| `setModelValues({ set?, clear? }, sessionId?)` | Значения модели (async — нужен `await`)                            |
+| `getModelState(sessionId?)`                    | Состояние интерпретации                                            |
+| `evaluate(input, sessionId?)`                  | Scratch или конституента                                           |
+| `recalculateModel(sessionId?)`                 | Пересчёт                                                           |
 
 ### `applySchemaPatch`
 

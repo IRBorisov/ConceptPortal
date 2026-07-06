@@ -144,11 +144,3 @@ export function getRSErrorPrefix(code: RSErrorCode): string {
     case RSErrorClass.UNKNOWN: return 'U' + id;
   }
 }
-
-/** Checks if error is critical. */
-export function isCritical(code: RSErrorCode): boolean {
-  if ((code & 0xf000) === 0x2000) {
-    return false;
-  }
-  return true;
-}

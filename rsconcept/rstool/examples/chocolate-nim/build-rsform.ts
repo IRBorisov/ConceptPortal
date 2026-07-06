@@ -6,6 +6,8 @@ import { CstType, RSToolWrapperClient, type AgentConstituentaPatch } from '../..
 type DraftBatch = { draft: AgentConstituentaPatch };
 
 import { DEFAULT_RSFORM_SESSION_PATH } from './constants';
+import { CHOCOLATE_MODEL_SET } from './model-demo';
+import { assertCleanDiagnostics } from '../diagnostics-utils';
 
 /**
  * Учебная RSForm «шоколадный Ним» (ОШК-НИМ) по Portal rsforms/825.
@@ -293,6 +295,19 @@ async function run() {
       const failedAlias = patch.failed[0]?.draft.alias ?? 'unknown';
       throw new Error(`${failedAlias}: analysis failed`);
     }
+
+    await client.call('setModelValues', {
+      sessionId: session.sessionId,
+      set: [...CHOCOLATE_MODEL_SET]
+    });
+    await client.call('recalculateModel', { sessionId: session.sessionId });
+
+    await assertCleanDiagnostics(
+      client,
+      session.sessionId,
+      new Map(drafts.map(entry => [entry.draft.id!, entry.draft.alias])),
+      'chocolate-nim RSForm'
+    );
 
     await client.call('commitStep', {
       sessionId: session.sessionId,

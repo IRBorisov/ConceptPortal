@@ -1,4 +1,4 @@
-# RSLang и rstool — примеры (контракт 2.0)
+# RSLang и rstool — примеры (контракт 2.1)
 
 ## Схема: batch patch
 
@@ -50,6 +50,9 @@ const analysis = tool.analyzeExpression({
 const summary = tool.getSessionState(); // compact
 const full = tool.getSessionState('full'); // SessionState clone
 const diags = tool.listDiagnostics();
+const schemaIssues = tool.listDiagnostics({ kind: 'schema' });
+const modelIssues = tool.listDiagnostics({ kind: 'model' });
+const blockingIssues = tool.listDiagnostics({ severity: 'error' });
 ```
 
 ## Модель и вычисление

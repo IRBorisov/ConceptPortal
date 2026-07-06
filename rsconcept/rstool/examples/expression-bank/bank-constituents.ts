@@ -54,7 +54,7 @@ const rows: BankRow[] = [
   },
 
   // T2 — бинарные отношения двух множеств
-  { id: 5, alias: 'T2', cstType: CstType.STATEMENT, term: 'Бинарные отношения двух множеств', definitionFormal: '1=1' },
+  { id: 5, alias: 'T2', cstType: CstType.STATEMENT, term: 'Бинарные отношения двух множеств', definitionFormal: '2=2' },
   {
     id: 6,
     alias: 'F4',
@@ -148,7 +148,7 @@ const rows: BankRow[] = [
   },
 
   // T3 — бинарные отношения на множестве
-  { id: 19, alias: 'T3', cstType: CstType.STATEMENT, term: 'Бинарные отношения на множестве', definitionFormal: '1=1' },
+  { id: 19, alias: 'T3', cstType: CstType.STATEMENT, term: 'Бинарные отношения на множестве', definitionFormal: '3=3' },
   {
     id: 20,
     alias: 'F12',
@@ -252,7 +252,7 @@ const rows: BankRow[] = [
   },
 
   // T4 — цепочки
-  { id: 34, alias: 'T4', cstType: CstType.STATEMENT, term: 'Цепочки', definitionFormal: '1=1' },
+  { id: 34, alias: 'T4', cstType: CstType.STATEMENT, term: 'Цепочки', definitionFormal: '4=4' },
   {
     id: 35,
     alias: 'P19',
@@ -291,7 +291,7 @@ const rows: BankRow[] = [
   },
 
   // T5 — графы
-  { id: 40, alias: 'T5', cstType: CstType.STATEMENT, term: 'Графы', definitionFormal: '1=1' },
+  { id: 40, alias: 'T5', cstType: CstType.STATEMENT, term: 'Графы', definitionFormal: '5=5' },
   {
     id: 41,
     alias: 'P20',
@@ -319,7 +319,7 @@ const rows: BankRow[] = [
     alias: 'F23',
     cstType: CstType.FUNCTION,
     term: 'потребители',
-    definitionFormal: '[α∈R1, σ∈ℬ(R1×R1)] Pr2(Fi1[{α}](σ))'
+    definitionFormal: '[α∈R1, σ∈ℬ(R1×R1)] F15[α, σ]'
   },
   {
     id: 46,
@@ -367,7 +367,7 @@ const rows: BankRow[] = [
   },
 
   // T6 — целые числа
-  { id: 52, alias: 'T6', cstType: CstType.STATEMENT, term: 'Целые числа', definitionFormal: '1=1' },
+  { id: 52, alias: 'T6', cstType: CstType.STATEMENT, term: 'Целые числа', definitionFormal: '6=6' },
   {
     id: 53,
     alias: 'F31',
@@ -405,7 +405,7 @@ const rows: BankRow[] = [
   },
 
   // T7 — последовательности
-  { id: 58, alias: 'T7', cstType: CstType.STATEMENT, term: 'Последовательности', definitionFormal: '1=1' },
+  { id: 58, alias: 'T7', cstType: CstType.STATEMENT, term: 'Последовательности', definitionFormal: '7=7' },
   {
     id: 59,
     alias: 'P26',
@@ -448,7 +448,7 @@ const rows: BankRow[] = [
     alias: 'T8',
     cstType: CstType.STATEMENT,
     term: 'Групповые операции',
-    definitionFormal: '1=1',
+    definitionFormal: '8=8',
     convention: 'Условия для левых и правых свойств через конкатенацию'
   },
   {
@@ -545,7 +545,7 @@ const rows: BankRow[] = [
     alias: 'T9',
     cstType: CstType.STATEMENT,
     term: 'Кольца',
-    definitionFormal: '1=1',
+    definitionFormal: '9=9',
     convention: 'Операции по умолчанию — группоиды'
   },
   {
@@ -566,7 +566,7 @@ const rows: BankRow[] = [
   },
 
   // T10 — множества подмножеств
-  { id: 80, alias: 'T10', cstType: CstType.STATEMENT, term: 'Множества подмножеств', definitionFormal: '1=1' },
+  { id: 80, alias: 'T10', cstType: CstType.STATEMENT, term: 'Множества подмножеств', definitionFormal: '10=10' },
   {
     id: 81,
     alias: 'P46',

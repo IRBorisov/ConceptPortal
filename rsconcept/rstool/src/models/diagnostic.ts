@@ -1,16 +1,21 @@
-import { type RSToolErrorDescription } from './common';
+import { type CstDiagnostic, DiagnosticKind, RSDiagnosticCode } from '@rsconcept/domain/library';
 
-/** Persisted diagnostic for a failed or warned expression in a session. */
-export interface DiagnosticRecord {
-  sessionId: string;
-  /** Constituent id when the diagnostic is tied to a stored item; omitted for scratch analysis. */
-  constituentId?: number;
-  /** Expression text that was analyzed. */
-  expression: string;
-  error: RSToolErrorDescription;
-}
+export {
+  type Diagnostic,
+  type DiagnosticSeverity,
+  type DiagnosticTarget,
+  expandCstDiagnostic,
+  expressionDiagnostic,
+  getDiagnosticName,
+  getDiagnosticSeverity,
+  modelStatusDiagnostic
+} from '../mappers/diagnostic-assembly';
+
+export { type CstDiagnostic, DiagnosticKind, RSDiagnosticCode };
 
 /** Filters for {@link RSToolAgent.listDiagnostics}. */
 export interface ListDiagnosticsFilters {
   constituentId?: number;
+  kind?: DiagnosticKind;
+  severity?: import('../mappers/diagnostic-assembly').DiagnosticSeverity;
 }

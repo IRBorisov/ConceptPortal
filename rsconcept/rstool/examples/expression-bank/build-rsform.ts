@@ -5,6 +5,7 @@ import { RSToolWrapperClient } from '../../src';
 
 import { BANK_DRAFTS } from './bank-constituents';
 import { DEFAULT_RSFORM_SESSION_PATH } from './constants';
+import { assertCleanDiagnostics } from '../diagnostics-utils';
 
 /**
  * Банк шаблонов выражений (Portal rsforms/42, alias БВ).
@@ -39,6 +40,13 @@ async function run() {
       const failedAlias = patch.failed[0]?.draft.alias ?? 'unknown';
       throw new Error(`${failedAlias}: analysis failed`);
     }
+
+    await assertCleanDiagnostics(
+      client,
+      session.sessionId,
+      new Map(BANK_DRAFTS.map(entry => [entry.draft.id!, entry.draft.alias])),
+      'expression bank'
+    );
 
     await client.call('commitStep', {
       sessionId: session.sessionId,

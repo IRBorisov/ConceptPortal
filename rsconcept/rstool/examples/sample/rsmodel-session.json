@@ -1,32 +1,36 @@
 {
-  "contractVersion": "2.0.0",
+  "contractVersion": "2.1.0",
   "state": {
-    "sessionId": "4de6414b-d6a7-45c9-b950-2e622e0caa0e",
+    "sessionId": "3cf269f7-edd8-4bba-bce0-12c2b0c2e51f",
     "alias": "",
     "title": "",
     "comment": "",
-    "createdAt": "2026-07-01T17:13:04.299Z",
-    "updatedAt": "2026-07-01T17:13:04.322Z",
+    "createdAt": "2026-07-06T14:49:44.425Z",
+    "updatedAt": "2026-07-06T14:49:44.479Z",
     "revisions": [
       {
-        "revisionId": "9a11d6ff-a181-4680-b706-1507d776c5ac",
-        "at": "2026-07-01T17:13:04.322Z",
+        "revisionId": "3226c676-ab84-4e0c-aa02-bce15b9555ae",
+        "at": "2026-07-06T14:49:44.479Z",
         "message": "Built sample RSModel"
       }
     ],
     "items": [
       {
-        "id": 5,
-        "alias": "A1",
-        "cstType": "axiom",
-        "definitionFormal": "1=1",
-        "term": "",
+        "id": 1,
+        "alias": "X1",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "element",
         "definitionText": "",
-        "convention": "",
+        "convention": "people",
         "analysis": {
           "success": true,
           "type": {
-            "typeID": 6
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
           },
           "valueClass": "value",
           "diagnostics": []
@@ -37,9 +41,9 @@
         "alias": "C1",
         "cstType": "constant",
         "definitionFormal": "",
-        "term": "",
+        "term": "count",
         "definitionText": "",
-        "convention": "",
+        "convention": "natural numbers",
         "analysis": {
           "success": true,
           "type": {
@@ -57,32 +61,11 @@
         }
       },
       {
-        "id": 1,
-        "alias": "X1",
-        "cstType": "basic",
-        "definitionFormal": "",
-        "term": "",
-        "definitionText": "",
-        "convention": "",
-        "analysis": {
-          "success": true,
-          "type": {
-            "typeID": 5,
-            "base": {
-              "typeID": 3,
-              "baseID": "X1"
-            }
-          },
-          "valueClass": "value",
-          "diagnostics": []
-        }
-      },
-      {
         "id": 3,
         "alias": "S1",
         "cstType": "structure",
         "definitionFormal": "ℬ(X1×X1)",
-        "term": "",
+        "term": "parent-child pairs",
         "definitionText": "",
         "convention": "Pairs (parent, child) over X1.",
         "analysis": {
@@ -123,6 +106,23 @@
               "typeID": 3,
               "baseID": "X1"
             }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
+        "alias": "A1",
+        "cstType": "axiom",
+        "definitionFormal": "1=1",
+        "term": "",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
           },
           "valueClass": "value",
           "diagnostics": []

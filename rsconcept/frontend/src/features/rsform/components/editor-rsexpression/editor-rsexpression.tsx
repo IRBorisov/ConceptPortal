@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 
 import { useTx } from '@/i18n';
-import { type Constituenta, CstStatus, type RSForm } from '@rsconcept/domain/library';
+import { type Constituenta, CstStatus, RSDiagnosticCode, type RSForm } from '@rsconcept/domain/library';
 import { getAnalysisFor, inferStatus, isLogical } from '@rsconcept/domain/library/rsform-api';
 import { type AstNode, buildTree, flattenAst } from '@rsconcept/domain/parsing';
 import { type AnalysisFull, type ExpressionType, type RSErrorDescription, TokenID } from '@rsconcept/domain/rslang';
@@ -26,6 +26,7 @@ import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { useRsformDialogsStore } from '../../dialogs/rsform-dialog-store';
+import { describeCstDiagnostic } from '../../labels';
 import { RSInput } from '../rs-input';
 import { RSTextWrapper } from '../rs-input/text-editing';
 import { ViewErrors } from '../view-errors';
@@ -299,10 +300,8 @@ export function EditorRSExpression({
         onOpenEdit={onOpenEdit}
         disabled={disabled}
         errorMessage={
-          activeCst && activeCst.formalDuplicates.length > 0 && activeCst.definition_formal === value
-            ? tx('tx.lib.defineFormal.validate.duplicate', {
-                aliases: formatAliasList(activeCst.formalDuplicates, schema)
-              })
+          activeCst?.definition_formal === value
+            ? describeCstDiagnostic(activeCst, RSDiagnosticCode.schemaFormalDuplicate)
             : undefined
         }
         {...restProps}
@@ -336,11 +335,4 @@ function extractCstData(cst: Constituenta) {
     term_forms: cst.term_forms,
     convention: cst.convention
   };
-}
-
-function formatAliasList(items: readonly number[], schema: RSForm) {
-  if (items.length === 0) {
-    return '';
-  }
-  return items.map(item => schema.cstByID.get(item)!.alias).join(', ');
 }

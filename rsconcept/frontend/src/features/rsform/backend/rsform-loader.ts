@@ -3,7 +3,13 @@
  */
 
 import { Graph } from '@rsconcept/domain/graph/graph';
-import { type Constituenta, CstStatus, CstType, type RSForm } from '@rsconcept/domain/library';
+import {
+  assignSchemaDiagnostics,
+  type Constituenta,
+  CstStatus,
+  CstType,
+  type RSForm
+} from '@rsconcept/domain/library';
 import {
   inferClass,
   inferStatus,
@@ -55,8 +61,7 @@ export class RSFormLoader {
     this.createGraph();
     this.inferCstAttributes();
     this.parseItems();
-    this.markFormalDuplicates();
-    this.markHomonyms();
+    this.collectDiagnostics();
 
     const result = this.schema;
     result.analyzer = this.analyzer;
@@ -193,57 +198,9 @@ export class RSFormLoader {
     }
   }
 
-  private markHomonyms(): void {
-    const byTerm = new Map<string, Constituenta[]>();
-    for (const cst of this.schema.items) {
-      const key = cst.term_resolved.trim().toLocaleLowerCase();
-      if (key === '') {
-        continue;
-      }
-      let group = byTerm.get(key);
-      if (!group) {
-        group = [];
-        byTerm.set(key, group);
-      }
-      group.push(cst);
-    }
-    for (const cst of this.schema.items) {
-      cst.homonyms = [];
-    }
-    for (const group of byTerm.values()) {
-      if (group.length > 1) {
-        for (const cst of group) {
-          cst.homonyms = group.filter(groupItem => groupItem.id !== cst.id).map(item => item.id);
-        }
-      }
-    }
-  }
-
-  private markFormalDuplicates(): void {
-    const byDefinition = new Map<string, Constituenta[]>();
-    for (const cst of this.schema.items) {
-      cst.formalDuplicates = [];
-
-      const key = this.normalizedDefinitions.get(cst.id);
-      if (!key) {
-        continue;
-      }
-
-      let group = byDefinition.get(key);
-      if (!group) {
-        group = [];
-        byDefinition.set(key, group);
-      }
-      group.push(cst);
-    }
-
-    for (const group of byDefinition.values()) {
-      if (group.length > 1) {
-        for (const cst of group) {
-          cst.formalDuplicates = group.filter(groupItem => groupItem.id !== cst.id).map(item => item.id);
-        }
-      }
-    }
+  private collectDiagnostics(): void {
+    const resolveAlias = (id: number) => this.cstByID.get(id)?.alias ?? String(id);
+    assignSchemaDiagnostics(this.schema.items, resolveAlias, this.normalizedDefinitions);
   }
 
   private inferSimpleExpression(target: Constituenta): boolean {

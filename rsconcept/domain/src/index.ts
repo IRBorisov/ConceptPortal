@@ -8,6 +8,18 @@ export {
   type WordForm
 } from './cctext/language';
 export { Graph } from './graph/graph';
+export {
+  assignSchemaDiagnostics,
+  type CstDiagnostic,
+  DiagnosticKind,
+  type DiagnosticSeverity,
+  getDiagnosticSeverity,
+  hasCstDiagnostic,
+  isDiagnosticCritical,
+  isDiagnosticWarning,
+  modelStatusCstDiagnostic,
+  RSDiagnosticCode
+} from './library/diagnostics';
 export { FolderNode, FolderTree } from './library/folder-tree';
 export {
   AccessPolicy,

@@ -14,7 +14,10 @@ async function runExample() {
     console.log('Session created:', session);
 
     await client.call('applySchemaPatch', {
-      items: [{ alias: 'X1' }, { alias: 'D1', definitionFormal: '1+2' }]
+      items: [
+        { alias: 'X1', term: 'element', convention: 'people' },
+        { alias: 'D1', definitionFormal: '1+2' }
+      ]
     });
 
     await client.call('setModelValues', {
@@ -33,8 +36,17 @@ async function runExample() {
     const analysis = await client.call<{ diagnostics: unknown[] }>('analyzeExpression', analyzeInput);
     console.log('Scratch analysis diagnostics:', analysis.diagnostics.length);
 
-    const sessionDiagnostics = await client.call<unknown[]>('listDiagnostics', {});
-    console.log('Session diagnostics count:', sessionDiagnostics.length);
+    const sessionDiagnostics = await client.call<Array<{ kind: string }>>('listDiagnostics', {});
+    const counts = { expression: 0, schema: 0, model: 0 };
+    for (const record of sessionDiagnostics) {
+      if (record.kind in counts) {
+        counts[record.kind as keyof typeof counts] += 1;
+      }
+    }
+    console.log('Session diagnostics:', {
+      total: sessionDiagnostics.length,
+      ...counts
+    });
   } finally {
     await client.close();
   }

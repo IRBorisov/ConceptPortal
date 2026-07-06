@@ -4,7 +4,7 @@ import { useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
-import { type BasicBinding, type Constituenta, CstType } from '@rsconcept/domain/library';
+import { type BasicBinding, type Constituenta, CstType, RSDiagnosticCode } from '@rsconcept/domain/library';
 import {
   canHaveManualTypification,
   isBaseSet,
@@ -23,7 +23,7 @@ import { type UpdateConstituentaDTO } from '@/features/rsform';
 import { EditorRSExpression } from '@/features/rsform/components/editor-rsexpression/editor-rsexpression';
 import { RefsInput } from '@/features/rsform/components/refs-input';
 import { TypificationInput } from '@/features/rsform/components/typification-input';
-import { labelRSExpression } from '@/features/rsform/labels';
+import { describeCstDiagnostic, labelRSExpression } from '@/features/rsform/labels';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { TextButton } from '@/components/control/text-button';
@@ -290,8 +290,8 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
           value={manualTypificationDraft}
           disabled={metaFieldsDisabled || activeCst.is_inherited}
           onChange={setManualTypificationDraft}
-          areaClassName={activeCst.is_type_mismatch ? 'cm-error' : undefined}
-          error={activeCst.is_type_mismatch ? tx('tx.rslang.typification.manual.validate') : undefined}
+          areaClassName={describeCstDiagnostic(activeCst, RSDiagnosticCode.schemaTypeMismatch) ? 'cm-error' : undefined}
+          error={describeCstDiagnostic(activeCst, RSDiagnosticCode.schemaTypeMismatch)}
         />
       ) : null}
 

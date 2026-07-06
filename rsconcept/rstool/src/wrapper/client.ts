@@ -16,13 +16,13 @@ export interface WrapperResponse<T = unknown> {
 
 /** Options for spawning the `rstool-wrapper` child process. */
 export interface RSToolWrapperClientOptions {
-  /** Executable to spawn. Default: `npm`. */
+  /** Executable to spawn. Default: `npm.cmd` on Windows, `npm` elsewhere. */
   command?: string;
   /** Arguments passed to `command`. Default: `['run', 'wrapper']`. */
   args?: string[];
   /** Working directory for the child process. Default: `process.cwd()`. */
   cwd?: string;
-  /** Whether to run the command in a shell. Default: `true`. */
+  /** Whether to run the command in a shell. Default: `false`. */
   shell?: boolean;
 }
 
@@ -41,9 +41,10 @@ export class RSToolWrapperClient {
    * @param options - Spawn configuration; defaults run `npm run wrapper` in the current directory.
    */
   public constructor(options: RSToolWrapperClientOptions = {}) {
-    this.process = spawn(options.command ?? 'npm', options.args ?? ['run', 'wrapper'], {
+    const defaultCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+    this.process = spawn(options.command ?? defaultCommand, options.args ?? ['run', 'wrapper'], {
       cwd: options.cwd ?? process.cwd(),
-      shell: options.shell ?? true,
+      shell: options.shell ?? false,
       stdio: ['pipe', 'pipe', 'inherit']
     });
     this.input = readline.createInterface({

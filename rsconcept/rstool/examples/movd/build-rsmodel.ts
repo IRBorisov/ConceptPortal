@@ -13,43 +13,10 @@ import {
   D6_ID,
   D10_ID,
   DEFAULT_RSFORM_SESSION_PATH,
-  DEFAULT_RSMODEL_SESSION_PATH,
-  S1_ID,
-  S2_ID,
-  S3_ID,
-  S4_ID,
-  X1_ID,
-  X2_ID,
-  X3_ID,
-  X4_ID
+  DEFAULT_RSMODEL_SESSION_PATH
 } from './constants';
-
-/**
- * Демо-эпизод: Алиса в ситуации «переговоры» выделяет «стол»,
- * рассматривает «выйти» и «остаться», выбирает «выйти».
- */
-const X1_BINDING = { 0: 'переговоры' } as const;
-const X2_BINDING = { 0: 'стол', 1: 'дверь' } as const;
-const X3_BINDING = { 0: 'Алиса' } as const;
-const X4_BINDING = { 0: 'выйти', 1: 'остаться' } as const;
-
-/** S1: состав ситуации — стол и дверь в переговорах. */
-const S1_VALUE = [
-  [TUPLE_ID, 0, 0],
-  [TUPLE_ID, 0, 1]
-] as const;
-
-/** S2: Алиса выделяет стол в переговорах. */
-const S2_VALUE = [[TUPLE_ID, 0, 0, 0]] as const;
-
-/** S3: Алиса рассматривает оба действия. */
-const S3_VALUE = [
-  [TUPLE_ID, 0, 0, 0],
-  [TUPLE_ID, 0, 0, 1]
-] as const;
-
-/** S4: Алиса выбирает «выйти». */
-const S4_VALUE = [[TUPLE_ID, 0, 0, 0]] as const;
+import { MOVD_MODEL_SET } from './model-demo';
+import { assertCleanDiagnostics } from '../diagnostics-utils';
 
 async function run() {
   const client = new RSToolWrapperClient({
@@ -67,16 +34,7 @@ async function run() {
 
     await client.call('setModelValues', {
       sessionId: imported.sessionId,
-      set: [
-        { target: X1_ID, value: X1_BINDING },
-        { target: X2_ID, value: X2_BINDING },
-        { target: X3_ID, value: X3_BINDING },
-        { target: X4_ID, value: X4_BINDING },
-        { target: S1_ID, value: S1_VALUE },
-        { target: S2_ID, value: S2_VALUE },
-        { target: S3_ID, value: S3_VALUE },
-        { target: S4_ID, value: S4_VALUE }
-      ]
+      set: [...MOVD_MODEL_SET]
     });
 
     const recalculated = await client.call<{
@@ -134,6 +92,17 @@ async function run() {
     if (!a4Eval.success || a4Eval.status === EvalStatus.AXIOM_FALSE || a4Eval.value !== 1) {
       throw new Error(`Expected A4 to hold; got ${JSON.stringify(a4Eval)}`);
     }
+
+    const state = await client.call<{ items: Array<{ id: number; alias: string }> }>('getSessionState', {
+      sessionId: imported.sessionId,
+      detail: 'full'
+    });
+    await assertCleanDiagnostics(
+      client,
+      imported.sessionId,
+      new Map(state.items.map(item => [item.id, item.alias])),
+      'movd RSModel'
+    );
 
     await client.call('commitStep', {
       sessionId: imported.sessionId,

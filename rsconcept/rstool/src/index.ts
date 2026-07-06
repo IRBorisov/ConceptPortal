@@ -2,14 +2,16 @@
  * Public API for `@rsconcept/rstool`.
  *
  * Primary entry points: {@link RSToolAgent} (in-process) and {@link RSToolWrapperClient}
- * (stdio child process). Types describe the v2 agent contract.
+ * (stdio child process). Types describe the v3 agent contract.
  */
-export { toPublicAnalysis, toPublicError, type DomainAnalysisLike, type DomainErrorLike } from './mappers/types';
+export { toDiagnostic, toPublicAnalysis, type DomainAnalysisLike, type DomainErrorLike } from './mappers/types';
 export {
   CONTRACT_VERSION,
   CstType,
+  DiagnosticKind,
   EvalStatus,
   RSErrorCode,
+  RSDiagnosticCode,
   RSToolAgent,
   ValueClass,
   type AgentConstituentaPatch,
@@ -20,7 +22,9 @@ export {
   type BasicBinding,
   type ConstituentaDraft,
   type ConstituentaState,
-  type DiagnosticRecord,
+  type CstDiagnostic,
+  type Diagnostic,
+  type DiagnosticSeverity,
   type EvaluateInput,
   type EvaluationResult,
   type ExportFormat,
@@ -40,7 +44,6 @@ export {
   type RecalculateModelResult,
   type RSToolAgentContract,
   type RSToolAgentOptions,
-  type RSToolErrorDescription,
   type RSToolValue,
   type SessionHandle,
   type SessionModelState,
