@@ -16,12 +16,14 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY rsconcept/domain/package.json rsconcept/domain/
 COPY rsconcept/frontend/package.json rsconcept/frontend/
-RUN pnpm install --filter frontend...
 
 COPY rsconcept/domain rsconcept/domain
 COPY rsconcept/frontend rsconcept/frontend
 COPY rsconcept/frontend/env/.env.$BUILD_TYPE rsconcept/frontend/.env
-RUN rm -rf rsconcept/frontend/env
+RUN rm -rf rsconcept/frontend/env \
+    rsconcept/domain/node_modules rsconcept/frontend/node_modules
+
+RUN pnpm install --filter @rsconcept/domain --filter frontend...
 
 RUN pnpm --filter @rsconcept/domain run build
 

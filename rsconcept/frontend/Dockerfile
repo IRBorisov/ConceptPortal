@@ -14,12 +14,15 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY rsconcept/domain/package.json rsconcept/domain/
 COPY rsconcept/frontend/package.json rsconcept/frontend/
-RUN pnpm install --frozen-lockfile --filter frontend...
 
 COPY rsconcept/domain rsconcept/domain
 COPY rsconcept/frontend rsconcept/frontend
 COPY rsconcept/frontend/env/.env.$BUILD_TYPE rsconcept/frontend/.env.production
-RUN rm -rf rsconcept/frontend/env rsconcept/frontend/.env.local
+RUN rm -rf rsconcept/frontend/env rsconcept/frontend/.env.local \
+    rsconcept/domain/node_modules rsconcept/frontend/node_modules
+
+# Install after source copy so host node_modules junctions cannot break pnpm links.
+RUN pnpm install --frozen-lockfile --filter @rsconcept/domain --filter frontend...
 
 ENV NODE_ENV=production
 RUN pnpm --filter @rsconcept/domain run build
