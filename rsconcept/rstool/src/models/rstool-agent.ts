@@ -4,10 +4,7 @@ import {
   portalSchemaToDrafts,
   portalSchemaToSessionSeed
 } from '../mappers/portal-adapter';
-import {
-  collectModelDiagnostics,
-  collectSchemaDiagnostics
-} from '../mappers/diagnostics-collector';
+import { collectModelDiagnostics, collectSchemaDiagnostics } from '../mappers/diagnostics-collector';
 import { ModelAdapter } from '../mappers/model-adapter';
 import { SchemaAdapter } from '../mappers/schema-adapter';
 import { orderDrafts, reorderSessionItemsByDrafts } from '../session/batch-apply';
@@ -194,13 +191,11 @@ export class RSToolAgent implements RSToolAgentContract {
       cstType: input.cstType,
       definitionFormal: input.expression
     });
+    const sanitizedDiagnostics = diagnostics.map(item => ({ ...item, constituentId: undefined }));
     if (input.recordDiagnostics) {
-      this.sessions.setDiagnostics(id, [
-        ...collectSchemaDiagnostics(envelope.state),
-        ...diagnostics.map(item => ({ ...item, constituentId: undefined }))
-      ]);
+      this.sessions.setDiagnostics(id, [...collectSchemaDiagnostics(envelope.state), ...sanitizedDiagnostics]);
     }
-    return result;
+    return { ...result, diagnostics: sanitizedDiagnostics };
   }
 
   /** @inheritdoc */
@@ -431,8 +426,9 @@ export class RSToolAgent implements RSToolAgentContract {
     const handle = this.sessions.create(normalizeImportedState(data.state), this.contractVersion);
     if (data.diagnostics?.length) {
       this.sessions.setDiagnostics(handle.sessionId, data.diagnostics);
+    } else {
+      this.refreshDiagnostics(handle.sessionId);
     }
-    this.refreshDiagnostics(handle.sessionId);
     return this.trackSession(handle);
   }
 

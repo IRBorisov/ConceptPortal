@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { RSToolAgent } from '../src';
+import { formatDiagnostics } from './diagnostics-utils';
 
 const sessions = [
   'examples/sample/rsform-session.json',
@@ -23,17 +24,16 @@ for (const rel of sessions) {
   const payload = JSON.parse(readFileSync(path, 'utf8')) as {
     state: { items: Array<{ id: number; alias: string }> };
   };
+  const aliasById = new Map(payload.state.items.map(item => [item.id, item.alias]));
   tool.importData(payload, 'session');
   const diags = tool.listDiagnostics();
   total += diags.length;
   console.log(`\n=== ${rel} (${diags.length}) ===`);
-  for (const d of diags) {
-    const alias =
-      d.alias ??
-      (d.constituentId !== undefined
-        ? (payload.state.items.find(item => item.id === d.constituentId)?.alias ?? '?')
-        : '(scratch)');
-    console.log(`  [${d.kind}] ${alias} ${d.name} ${JSON.stringify(d.params ?? [])}`);
+  const formatted = formatDiagnostics(diags, aliasById);
+  if (formatted) {
+    for (const line of formatted.split('\n')) {
+      console.log(`  ${line}`);
+    }
   }
 }
 console.log(`\nTotal: ${total}`);

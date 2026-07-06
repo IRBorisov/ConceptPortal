@@ -1,11 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { CstType, RSDiagnosticCode, type SessionState, ValueClass } from '../models';
-import {
-  collectModelDiagnostics,
-  collectSchemaDiagnostics,
-  collectSessionDiagnostics
-} from './diagnostics-collector';
+import { CstType, RSErrorCode, RSDiagnosticCode, type SessionState, ValueClass } from '../models';
+import { expressionDiagnostic } from './diagnostic-assembly';
+import { collectModelDiagnostics, collectSchemaDiagnostics, collectSessionDiagnostics } from './diagnostics-collector';
 
 function buildFixtureSession(): SessionState {
   return {
@@ -30,7 +27,13 @@ function buildFixtureSession(): SessionState {
           success: false,
           type: null,
           valueClass: null,
-          diagnostics: [{ code: 0x8862, from: 0, to: 1, params: [CstType.BASE, 'X1'] }]
+          diagnostics: [
+            expressionDiagnostic(
+              { code: RSErrorCode.definitionNotAllowed, from: 0, to: 1, params: [CstType.BASE, 'X1'] },
+              'Z',
+              { constituentId: 1, alias: 'X1' }
+            )
+          ]
         }
       },
       {

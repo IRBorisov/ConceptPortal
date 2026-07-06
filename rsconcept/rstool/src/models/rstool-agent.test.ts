@@ -44,6 +44,7 @@ describe('RSToolAgent', () => {
     const analysis = tool.analyzeExpression({ expression: '(', cstType: CstType.TERM }, session.sessionId);
     expect(analysis.success).toBe(false);
     expect(analysis.diagnostics.length).toBeGreaterThan(0);
+    expect(analysis.diagnostics.every(record => record.constituentId === undefined)).toBe(true);
   });
 
   it('rejects formal definition for constants', () => {
@@ -411,6 +412,27 @@ describe('RSToolAgent modeling and evaluation', () => {
     const model = newTool.getModelState(imported.sessionId);
     expect(model.items).toHaveLength(1);
     expect(model.items[0]?.value).toEqual({ 0: 'zero' });
+  });
+
+  it('preserves exported diagnostics on session import', () => {
+    const tool = new RSToolAgent();
+    const session = tool.createSession();
+    tool.applySchemaPatch(
+      {
+        items: [
+          { alias: 'X1', term: 'person' },
+          { alias: 'X2', term: 'Person' }
+        ]
+      },
+      session.sessionId
+    );
+    const beforeImport = tool.listDiagnostics(undefined, session.sessionId);
+    expect(beforeImport.some(record => record.code === RSDiagnosticCode.schemaHomonym)).toBe(true);
+
+    const exported = tool.exportSession(session.sessionId);
+    const imported = tool.importData(exported, 'session');
+    const afterImport = tool.listDiagnostics(undefined, imported.sessionId);
+    expect(afterImport).toEqual(beforeImport);
   });
 });
 

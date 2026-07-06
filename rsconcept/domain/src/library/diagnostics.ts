@@ -101,23 +101,25 @@ function collectLocalSchemaDiagnostics(cst: Constituenta): CstDiagnostic[] {
   return result;
 }
 
-function detectHomonymDiagnostics(
+function detectGroupedAliasDiagnostics(
   items: Constituenta[],
-  resolveAlias: (id: number) => string
+  resolveAlias: (id: number) => string,
+  groupKey: (cst: Constituenta) => string | undefined,
+  code: RSDiagnosticCode
 ): Map<number, CstDiagnostic> {
-  const byTerm = new Map<string, Constituenta[]>();
+  const groups = new Map<string, Constituenta[]>();
   for (const cst of items) {
-    const key = cst.term_resolved.trim().toLocaleLowerCase();
-    if (key === '') {
+    const key = groupKey(cst);
+    if (!key) {
       continue;
     }
-    const group = byTerm.get(key) ?? [];
+    const group = groups.get(key) ?? [];
     group.push(cst);
-    byTerm.set(key, group);
+    groups.set(key, group);
   }
 
   const result = new Map<number, CstDiagnostic>();
-  for (const group of byTerm.values()) {
+  for (const group of groups.values()) {
     if (group.length <= 1) {
       continue;
     }
@@ -128,7 +130,7 @@ function detectHomonymDiagnostics(
         .join(', ');
       result.set(cst.id, {
         kind: DiagnosticKind.SCHEMA,
-        code: RSDiagnosticCode.schemaHomonym,
+        code,
         params: [aliases]
       });
     }
@@ -136,40 +138,32 @@ function detectHomonymDiagnostics(
   return result;
 }
 
+function detectHomonymDiagnostics(
+  items: Constituenta[],
+  resolveAlias: (id: number) => string
+): Map<number, CstDiagnostic> {
+  return detectGroupedAliasDiagnostics(
+    items,
+    resolveAlias,
+    cst => {
+      const key = cst.term_resolved.trim().toLocaleLowerCase();
+      return key === '' ? undefined : key;
+    },
+    RSDiagnosticCode.schemaHomonym
+  );
+}
+
 function detectFormalDuplicateDiagnostics(
   items: Constituenta[],
   resolveAlias: (id: number) => string,
   normalizedDefinitions: ReadonlyMap<number, string>
 ): Map<number, CstDiagnostic> {
-  const byDefinition = new Map<string, Constituenta[]>();
-  for (const cst of items) {
-    const key = normalizedDefinitions.get(cst.id);
-    if (!key) {
-      continue;
-    }
-    const group = byDefinition.get(key) ?? [];
-    group.push(cst);
-    byDefinition.set(key, group);
-  }
-
-  const result = new Map<number, CstDiagnostic>();
-  for (const group of byDefinition.values()) {
-    if (group.length <= 1) {
-      continue;
-    }
-    for (const cst of group) {
-      const aliases = group
-        .filter(other => other.id !== cst.id)
-        .map(other => resolveAlias(other.id))
-        .join(', ');
-      result.set(cst.id, {
-        kind: DiagnosticKind.SCHEMA,
-        code: RSDiagnosticCode.schemaFormalDuplicate,
-        params: [aliases]
-      });
-    }
-  }
-  return result;
+  return detectGroupedAliasDiagnostics(
+    items,
+    resolveAlias,
+    cst => normalizedDefinitions.get(cst.id),
+    RSDiagnosticCode.schemaFormalDuplicate
+  );
 }
 
 function modelStatusToCode(status: EvalStatus, cstType: CstType): RSDiagnosticCode | null {

@@ -2,10 +2,12 @@ import { type Diagnostic, type RSToolWrapperClient } from '../src';
 
 export type ExampleDiagnostic = Diagnostic;
 
-export function formatDiagnostics(diags: ExampleDiagnostic[]): string {
+export function formatDiagnostics(diags: ExampleDiagnostic[], aliasById?: ReadonlyMap<number, string>): string {
   return diags
     .map(d => {
-      const alias = d.alias ?? (d.constituentId !== undefined ? '?' : '(scratch)');
+      const alias =
+        d.alias ??
+        (d.constituentId !== undefined ? (aliasById?.get(d.constituentId) ?? '?') : '(scratch)');
       return `[${d.kind}] ${alias} ${d.name} ${JSON.stringify(d.params ?? [])}`;
     })
     .join('\n');

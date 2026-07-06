@@ -38,6 +38,18 @@ const S2_VALUE = [
 const X1_BINDING = { 0: 'Алиса', 1: 'Боб', 2: 'Кэрол' } as const;
 const X2_BINDING = { 0: 'ПроектA', 1: 'ПроектB' } as const;
 
+function bindTemplateValues(sessionId: string) {
+  return {
+    sessionId,
+    set: [
+      { target: X1_ID, value: X1_BINDING },
+      { target: X2_ID, value: X2_BINDING },
+      { target: S1_ID, value: S1_VALUE },
+      { target: S2_ID, value: S2_VALUE }
+    ]
+  };
+}
+
 async function buildSchema(client: RSToolWrapperClient): Promise<string> {
   const session = await client.call<{ sessionId: string }>('createSession');
 
@@ -162,15 +174,7 @@ async function buildSchema(client: RSToolWrapperClient): Promise<string> {
     console.log(`${item.alias}: OK`);
   }
 
-  await client.call('setModelValues', {
-    sessionId: session.sessionId,
-    set: [
-      { target: X1_ID, value: X1_BINDING },
-      { target: X2_ID, value: X2_BINDING },
-      { target: S1_ID, value: S1_VALUE },
-      { target: S2_ID, value: S2_VALUE }
-    ]
-  });
+  await client.call('setModelValues', bindTemplateValues(session.sessionId));
   await client.call('recalculateModel', { sessionId: session.sessionId });
 
   await assertCleanDiagnostics(
@@ -193,15 +197,7 @@ async function verifyModel(client: RSToolWrapperClient, schemaJson: string) {
     payload: schemaJson
   });
 
-  await client.call('setModelValues', {
-    sessionId: imported.sessionId,
-    set: [
-      { target: X1_ID, value: X1_BINDING },
-      { target: X2_ID, value: X2_BINDING },
-      { target: S1_ID, value: S1_VALUE },
-      { target: S2_ID, value: S2_VALUE }
-    ]
-  });
+  await client.call('setModelValues', bindTemplateValues(imported.sessionId));
 
   const recalculated = await client.call<{
     items: { id: number; alias: string; value: unknown; status: number }[];

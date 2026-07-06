@@ -1,6 +1,4 @@
-import { expressionDiagnostic } from './diagnostic-assembly';
 import { RSLangAnalyzer, type AnalysisFull, type ValueClass } from '@rsconcept/domain/rslang';
-import { type RSErrorDescription } from '@rsconcept/domain/rslang/error';
 import { getAnalysisFor } from '@rsconcept/domain/library/rsform-api';
 import { CstType, type RSForm } from '@rsconcept/domain/library/rsform';
 
@@ -34,9 +32,7 @@ export class SchemaAdapter {
     );
     return {
       result,
-      diagnostics: analysis.errors.map(error =>
-        expressionDiagnostic(error as RSErrorDescription, draft.definitionFormal, target)
-      )
+      diagnostics: result.diagnostics
     };
   }
 

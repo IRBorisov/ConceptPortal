@@ -548,20 +548,24 @@ const DIAGNOSTIC_MESSAGE_ID: Record<RSDiagnosticCode, string> = {
   [RSDiagnosticCode.modelEvalFail]: 'tx.evaluation.status.error.hint'
 };
 
+function formatRsDiagnosticMessage(code: RSDiagnosticCode, params?: readonly string[]): string {
+  const id = DIAGNOSTIC_MESSAGE_ID[code];
+  switch (code) {
+    case RSDiagnosticCode.schemaHomonym:
+    case RSDiagnosticCode.schemaFormalDuplicate:
+      return globalTx(id, { aliases: params?.[0] ?? '' });
+    default:
+      return globalTx(id);
+  }
+}
+
 /** Generates description for a schema/model {@link CstDiagnostic}. */
 export function describeCstDiagnostic(cst: Constituenta, code: RSDiagnosticCode): string | undefined {
   const diagnostic = cst.diagnostics.find(item => item.code === code);
   if (!diagnostic) {
     return undefined;
   }
-  const id = DIAGNOSTIC_MESSAGE_ID[code];
-  switch (code) {
-    case RSDiagnosticCode.schemaHomonym:
-    case RSDiagnosticCode.schemaFormalDuplicate:
-      return globalTx(id, { aliases: diagnostic.params?.[0] ?? '' });
-    default:
-      return globalTx(id);
-  }
+  return formatRsDiagnosticMessage(code, diagnostic.params);
 }
 
 /** Generates description for a full {@link Diagnostic} (expression errors or expanded records). */
@@ -570,11 +574,5 @@ export function describeDiagnostic(diagnostic: { code: number; params?: readonly
   if (id === undefined) {
     return describeRSError(diagnostic.code as RSErrorCode, diagnostic.params ?? []);
   }
-  switch (diagnostic.code) {
-    case RSDiagnosticCode.schemaHomonym:
-    case RSDiagnosticCode.schemaFormalDuplicate:
-      return globalTx(id, { aliases: diagnostic.params?.[0] ?? '' });
-    default:
-      return globalTx(id);
-  }
+  return formatRsDiagnosticMessage(diagnostic.code as RSDiagnosticCode, diagnostic.params);
 }

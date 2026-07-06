@@ -272,6 +272,10 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
     }
   }
 
+  const typeMismatchMessage = showManualType
+    ? describeCstDiagnostic(activeCst, RSDiagnosticCode.schemaTypeMismatch)
+    : undefined;
+
   return (
     <form
       id={id}
@@ -290,8 +294,8 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
           value={manualTypificationDraft}
           disabled={metaFieldsDisabled || activeCst.is_inherited}
           onChange={setManualTypificationDraft}
-          areaClassName={describeCstDiagnostic(activeCst, RSDiagnosticCode.schemaTypeMismatch) ? 'cm-error' : undefined}
-          error={describeCstDiagnostic(activeCst, RSDiagnosticCode.schemaTypeMismatch)}
+          areaClassName={typeMismatchMessage ? 'cm-error' : undefined}
+          error={typeMismatchMessage}
         />
       ) : null}
 

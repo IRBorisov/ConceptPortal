@@ -1,16 +1,15 @@
 import { isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
-import { type RSErrorDescription } from '@rsconcept/domain/rslang';
 
 import { type SessionState } from '../models';
 import {
   DiagnosticKind,
   expandCstDiagnostic,
-  expressionDiagnostic,
   modelStatusDiagnostic,
   type Diagnostic
 } from './diagnostic-assembly';
 import { ModelAdapter } from './model-adapter';
 import { enrichSessionConstituents } from './rsform-builder';
+import { toDiagnostic } from './types';
 
 const modelAdapter = new ModelAdapter();
 
@@ -22,19 +21,10 @@ export function collectSchemaDiagnostics(session: SessionState): Diagnostic[] {
     for (const diagnostic of item.analysis.diagnostics) {
       const base = diagnostic.name
         ? diagnostic
-        : expressionDiagnostic(
-            {
-              code: diagnostic.code,
-              from: diagnostic.from,
-              to: diagnostic.to,
-              params: diagnostic.params
-            } as RSErrorDescription,
-            item.definitionFormal,
-            {
-              constituentId: item.id,
-              alias: item.alias
-            }
-          );
+        : toDiagnostic(diagnostic, item.definitionFormal, {
+            constituentId: item.id,
+            alias: item.alias
+          });
       records.push({
         ...base,
         kind: DiagnosticKind.EXPRESSION,

@@ -183,7 +183,7 @@ function buildRSModelFromSession(session: SessionState): RSModel {
 
 function toPublicEvaluationResult(
   value: Value | null,
-  errors: { code: number; from: number; to: number; params?: readonly string[] }[],
+  errors: RSErrorDescription[],
   iterations: number,
   cacheHits: number,
   status: EvalStatus,
@@ -191,7 +191,7 @@ function toPublicEvaluationResult(
   target?: { constituentId?: number; alias?: string }
 ): EvaluationResult {
   const diagnostics = errors.map(error => ({
-    ...expressionDiagnostic(error as RSErrorDescription, expression, target),
+    ...expressionDiagnostic(error, expression, target),
     kind: DiagnosticKind.MODEL
   }));
   return {
