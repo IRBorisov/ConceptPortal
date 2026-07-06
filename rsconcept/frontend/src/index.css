@@ -75,6 +75,7 @@
   --z-index-navigation: 50;
   --z-index-modal: 60;
   --z-index-modal-pop: 70;
+  --z-index-tour: 80;
 
   /* stylelint-disable-next-line custom-property-pattern */
   --breakpoint-*: initial;

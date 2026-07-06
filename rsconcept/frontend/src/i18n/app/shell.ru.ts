@@ -193,6 +193,15 @@ export const txShellRu: Record<string, string> = {
   'tx.sandbox.bundle.load.file': 'Загрузить данные песочницы из JSON',
   'tx.sandbox.bundle.load.file.invalid': 'Неверный файл песочницы',
 
+  'tx.onboarding.tour': 'Интерактивное обучение',
+  'tx.onboarding.progress': 'Шаг {current} из {total}',
+  'tx.onboarding.start': 'Начать обучение',
+  'tx.onboarding.next': 'Далее',
+  'tx.onboarding.skip': 'Пропустить',
+  'tx.onboarding.done': 'Завершить',
+  'tx.onboarding.show': 'Показать обучение',
+  'tx.onboarding.show.hint': 'Запустить интерактивное обучение заново',
+
   'tx.shell.embed.youtube': 'Встроенное видео Youtube',
   'tx.shell.embed.vk': 'Встроенное видео ВКонтакте'
 };

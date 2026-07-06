@@ -188,6 +188,15 @@ export const txShellEn: Record<string, string> = {
   'tx.sandbox.bundle.load.file': 'Load sandbox data from JSON',
   'tx.sandbox.bundle.load.file.invalid': 'Invalid sandbox file',
 
+  'tx.onboarding.tour': 'Interactive tutorial',
+  'tx.onboarding.progress': 'Step {current} of {total}',
+  'tx.onboarding.start': 'Start tour',
+  'tx.onboarding.next': 'Next',
+  'tx.onboarding.skip': 'Skip',
+  'tx.onboarding.done': 'Finish',
+  'tx.onboarding.show': 'Show tutorial',
+  'tx.onboarding.show.hint': 'Restart the interactive tour',
+
   'tx.shell.embed.youtube': 'Embedded YouTube video',
   'tx.shell.embed.vk': 'Embedded VK video'
 };
