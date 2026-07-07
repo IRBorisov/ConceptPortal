@@ -9,6 +9,8 @@ from shared.serializers import StrictModelSerializer, StrictSerializer
 
 from ..models import LibraryItem, LibraryItemType, LocationHead, Version
 
+_LIBRARY_ITEM_TIMESTAMP_FIELDS = ('time_create', 'time_update')
+
 
 class LibraryItemBaseSerializer(StrictModelSerializer):
     ''' Serializer: LibraryItem entry full access. '''
@@ -16,7 +18,7 @@ class LibraryItemBaseSerializer(StrictModelSerializer):
         ''' serializer metadata. '''
         model = LibraryItem
         fields = '__all__'
-        read_only_fields = ('id',)
+        read_only_fields = ('id', *_LIBRARY_ITEM_TIMESTAMP_FIELDS)
 
 
 class LibraryItemCreateSerializer(LibraryItemBaseSerializer):
@@ -38,7 +40,7 @@ class LibraryItemCreateSerializer(LibraryItemBaseSerializer):
         ''' serializer metadata. '''
         model = LibraryItem
         fields = '__all__'
-        read_only_fields = ('id',)
+        read_only_fields = ('id', *_LIBRARY_ITEM_TIMESTAMP_FIELDS)
 
 
 class LibraryItemBaseNonStrictSerializer(serializers.ModelSerializer):
@@ -47,7 +49,7 @@ class LibraryItemBaseNonStrictSerializer(serializers.ModelSerializer):
         ''' serializer metadata. '''
         model = LibraryItem
         fields = '__all__'
-        read_only_fields = ('id',)
+        read_only_fields = ('id', *_LIBRARY_ITEM_TIMESTAMP_FIELDS)
 
 
 class LibraryItemReferenceSerializer(StrictModelSerializer):
@@ -64,7 +66,9 @@ class LibraryItemSerializer(StrictModelSerializer):
         ''' serializer metadata. '''
         model = LibraryItem
         fields = '__all__'
-        read_only_fields = ('id', 'item_type', 'owner', 'location', 'access_policy')
+        read_only_fields = (
+            'id', 'item_type', 'owner', 'location', 'access_policy', *_LIBRARY_ITEM_TIMESTAMP_FIELDS
+        )
 
 
 class LibraryItemCloneSerializer(StrictSerializer):
@@ -74,7 +78,7 @@ class LibraryItemCloneSerializer(StrictSerializer):
         class Meta:
             ''' serializer metadata. '''
             model = LibraryItem
-            exclude = ['id', 'item_type', 'owner', 'read_only']
+            exclude = ['id', 'item_type', 'owner', 'read_only', 'time_create', 'time_update']
 
     items = PKField(many=True, queryset=Constituenta.objects.all().only('schema_id'))
     item_data = ItemCloneData()
@@ -144,7 +148,7 @@ class LibraryItemDetailsSerializer(StrictModelSerializer):
         ''' serializer metadata. '''
         model = LibraryItem
         fields = '__all__'
-        read_only_fields = ('owner', 'id', 'item_type')
+        read_only_fields = ('owner', 'id', 'item_type', *_LIBRARY_ITEM_TIMESTAMP_FIELDS)
 
     def get_editors(self, instance: LibraryItem) -> list[int]:
         return list(instance.getQ_editors().order_by('pk').values_list('pk', flat=True))

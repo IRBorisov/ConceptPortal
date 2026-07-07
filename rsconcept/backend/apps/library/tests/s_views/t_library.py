@@ -135,6 +135,32 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(response.data['location'], self.owned.location)
         self.assertNotEqual(response.data['location'], LocationHead.LIBRARY)
 
+    @decl_endpoint('/api/library/{item}', method='patch')
+    def test_update_access_metadata_preserves_time_update(self):
+        time_update = self.owned.time_update
+
+        time.sleep(0.01)
+        self.executeOK({'read_only': True}, item=self.owned.pk)
+        self.owned.refresh_from_db()
+        self.assertTrue(self.owned.read_only)
+        self.assertEqual(self.owned.time_update, time_update)
+
+        time.sleep(0.01)
+        self.executeOK({'visible': False}, item=self.owned.pk)
+        self.owned.refresh_from_db()
+        self.assertFalse(self.owned.visible)
+        self.assertEqual(self.owned.time_update, time_update)
+
+        time.sleep(0.01)
+        self.executeOK({'read_only': False}, item=self.owned.pk)
+        self.owned.refresh_from_db()
+        self.assertFalse(self.owned.read_only)
+        self.assertEqual(self.owned.time_update, time_update)
+
+        time.sleep(0.01)
+        self.executeOK({'title': 'Content change', 'read_only': True}, item=self.owned.pk)
+        self.owned.refresh_from_db()
+        self.assertNotEqual(self.owned.time_update, time_update)
 
     @decl_endpoint('/api/library/{item}/set-owner', method='patch')
     def test_set_owner(self):

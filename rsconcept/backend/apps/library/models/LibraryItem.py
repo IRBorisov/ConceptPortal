@@ -12,6 +12,7 @@ from django.db.models import (
     TextChoices,
     TextField
 )
+from django.utils import timezone
 
 from apps.users.models import User
 
@@ -45,6 +46,14 @@ _RE_LOCATION = r'^/[PLUS]((/[!\d\w]([!\d\w\- ]*[!\d\w])?)*)?$'  # cspell:disable
 
 def validate_location(target: str) -> bool:
     return bool(re.search(_RE_LOCATION, target))
+
+
+CONTENT_FIELDS = frozenset({
+    'title',
+    'alias',
+    'description',
+    'item_type',
+})
 
 
 class LibraryItem(Model):
@@ -99,8 +108,7 @@ class LibraryItem(Model):
         auto_now_add=True
     )
     time_update = DateTimeField(
-        verbose_name='Дата изменения',
-        auto_now=True
+        verbose_name='Дата изменения'
     )
 
     class Meta:
@@ -114,6 +122,37 @@ class LibraryItem(Model):
 
     def get_absolute_url(self):
         return f'/api/library/{self.pk}'
+
+    def save(self, *args, **kwargs):
+        update_fields = kwargs.get('update_fields')
+
+        if self._state.adding:
+            if self.time_update is None:
+                self.time_update = timezone.now()
+            return super().save(*args, **kwargs)
+
+        if update_fields is not None:
+            update_fields = list(update_fields)
+            if 'time_update' in update_fields:
+                self.time_update = timezone.now()
+            elif any(field in CONTENT_FIELDS for field in update_fields):
+                self.time_update = timezone.now()
+                update_fields.append('time_update')
+            kwargs['update_fields'] = update_fields
+            return super().save(*args, **kwargs)
+
+        if self._content_fields_changed():
+            self.time_update = timezone.now()
+
+        return super().save(*args, **kwargs)
+
+    def _content_fields_changed(self) -> bool:
+        if not self.pk:
+            return True
+        old = LibraryItem.objects.filter(pk=self.pk).values(*CONTENT_FIELDS).first()
+        if old is None:
+            return True
+        return any(getattr(self, field) != old[field] for field in CONTENT_FIELDS)
 
     def getQ_editors(self) -> QuerySet[User]:
         ''' Get all Editors of this item. '''

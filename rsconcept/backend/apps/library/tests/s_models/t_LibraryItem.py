@@ -1,4 +1,6 @@
 ''' Testing models: LibraryItem. '''
+import time
+
 from django.test import TestCase
 
 from apps.library.models import (
@@ -67,6 +69,74 @@ class TestLibraryItem(TestCase):
         self.assertEqual(item.alias, 'KS1')
         self.assertEqual(item.description, 'Test description')
         self.assertEqual(item.location, LocationHead.COMMON)
+
+
+    def test_create_sets_time_update(self):
+        item = LibraryItem.objects.create(item_type=LibraryItemType.RSFORM, title='Test')
+        self.assertIsNotNone(item.time_update)
+
+
+    def test_access_metadata_save_preserves_time_update(self):
+        item = LibraryItem.objects.create(
+            item_type=LibraryItemType.RSFORM,
+            title='Test',
+            owner=self.user1,
+            alias='KS1'
+        )
+        time_update = item.time_update
+        time.sleep(0.01)
+
+        item.read_only = True
+        item.save()
+        item.refresh_from_db()
+        self.assertEqual(item.time_update, time_update)
+
+        item.visible = False
+        item.save()
+        item.refresh_from_db()
+        self.assertEqual(item.time_update, time_update)
+
+        item.access_policy = AccessPolicy.PRIVATE
+        item.save()
+        item.refresh_from_db()
+        self.assertEqual(item.time_update, time_update)
+
+        item.location = '/U/other'
+        item.save()
+        item.refresh_from_db()
+        self.assertEqual(item.time_update, time_update)
+
+        item.owner = self.user2
+        item.save()
+        item.refresh_from_db()
+        self.assertEqual(item.time_update, time_update)
+
+    def test_content_save_updates_time_update(self):
+        item = LibraryItem.objects.create(
+            item_type=LibraryItemType.RSFORM,
+            title='Test',
+            alias='KS1'
+        )
+        time_update = item.time_update
+        time.sleep(0.01)
+
+        item.title = 'Changed'
+        item.save()
+        item.refresh_from_db()
+        self.assertNotEqual(item.time_update, time_update)
+
+    def test_explicit_touch_updates_time_update(self):
+        item = LibraryItem.objects.create(
+            item_type=LibraryItemType.RSFORM,
+            title='Test',
+            alias='KS1'
+        )
+        time_update = item.time_update
+        time.sleep(0.01)
+
+        item.save(update_fields=['time_update'])
+        item.refresh_from_db()
+        self.assertNotEqual(item.time_update, time_update)
 
 
 class TestLocation(TestCase):
