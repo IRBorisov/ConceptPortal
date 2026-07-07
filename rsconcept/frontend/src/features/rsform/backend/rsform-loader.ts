@@ -3,13 +3,7 @@
  */
 
 import { Graph } from '@rsconcept/domain/graph/graph';
-import {
-  assignSchemaDiagnostics,
-  type Constituenta,
-  CstStatus,
-  CstType,
-  type RSForm
-} from '@rsconcept/domain/library';
+import { assignSchemaDiagnostics, type Constituenta, CstStatus, CstType, type RSForm } from '@rsconcept/domain/library';
 import {
   inferClass,
   inferStatus,
@@ -179,7 +173,11 @@ export class RSFormLoader {
           cst.spawner = spawner;
           if (spawner !== parent.id) {
             if (parent.spawner_path) {
-              cst.spawner_path = [...parent.spawner_path, ...path] as TypePath;
+              let suffix: number[] = [...path];
+              while (suffix.length > 0 && suffix[0] === 0) {
+                suffix = suffix.slice(1);
+              }
+              cst.spawner_path = makeTypePath([...parent.spawner_path, ...suffix]);
             }
           } else {
             cst.spawner_path = path;

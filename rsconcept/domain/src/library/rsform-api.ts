@@ -517,10 +517,12 @@ export function calculateSchemaStats(target: RSForm): RSFormStats {
 /** Finds {@link Constituenta} by structure path. */
 export function findCstByStructure(schema: RSForm, target: Constituenta, path: TypePath): Constituenta | null {
   for (const cst of schema.items) {
-    if (cst.spawner === target.id && cst.spawner_path) {
-      if (cst.spawner_path.length === path.length && cst.spawner_path.every((v, i) => v === path[i])) {
-        return cst;
-      }
+    if (!cst.spawner_path) {
+      continue;
+    }
+    const absolutePath = resolveAbsoluteSpawnerPath(schema, cst, target.id);
+    if (absolutePath?.length === path.length && absolutePath.every((v, i) => v === path[i])) {
+      return cst;
     }
   }
   return null;
@@ -589,6 +591,40 @@ function isMissingConvention(cst: Constituenta): boolean {
     }
   }
   return false;
+}
+
+function resolveAbsoluteSpawnerPath(schema: RSForm, cst: Constituenta, targetId: number): TypePath | null {
+  if (!cst.spawner_path || cst.spawner == null) {
+    return null;
+  }
+  if (cst.spawner === targetId) {
+    return cst.spawner_path;
+  }
+
+  const byId = schema.cstByID ?? new Map(schema.items.map(item => [item.id, item]));
+  const visited = new Set<number>([cst.id]);
+  let currentPath: number[] = [...cst.spawner_path];
+  let currentSpawnerId: number | null = cst.spawner;
+
+  while (currentSpawnerId != null) {
+    if (currentSpawnerId === targetId) {
+      return currentPath as TypePath;
+    }
+    if (visited.has(currentSpawnerId)) {
+      return null;
+    }
+    visited.add(currentSpawnerId);
+
+    const parent = byId.get(currentSpawnerId);
+    if (!parent?.spawner_path || parent.spawner == null) {
+      return null;
+    }
+
+    currentPath = [...parent.spawner_path, ...currentPath];
+    currentSpawnerId = parent.spawner;
+  }
+
+  return null;
 }
 
 /** Evaluate if {@link Typification} can be used to produce structure. */

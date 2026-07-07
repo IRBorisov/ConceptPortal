@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { AccessPolicy, CstStatus, CstType, LibraryItemType } from '@rsconcept/domain/library';
 import { RSDiagnosticCode } from '@rsconcept/domain/library';
 import { calculateSchemaStats, isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
+import { StructurePlanner } from '@rsconcept/domain/library/structure-planner';
 
 import { RSFormLoader } from './rsform-loader';
 import { type ConstituentaBasicsDTO, type RSFormDTO } from './types';
@@ -184,6 +185,32 @@ describe('RSFormLoader', () => {
     expect(f2.spawner).toBe(f1.id);
     expect(f2.spawner_alias).toBe('F1');
     expect(f2.spawner_path).toEqual([0, 1]);
+  });
+
+  it('should link chained projection terms in structure planner', () => {
+    const x1raw = createCst(1, 'X1', CstType.BASE, '', 'base');
+    const s1raw = createCst(2, 'S1', CstType.STRUCTURED, 'ℬℬ(X1×X1)', 'struct');
+    const d1raw = createCst(3, 'D1', CstType.TERM, 'red(S1)', 'term1');
+    const d2raw = createCst(4, 'D2', CstType.TERM, 'Pr2(D1)', 'term2');
+    const d3raw = createCst(5, 'D3', CstType.TERM, 'Pr1(D1)', 'term3');
+    const rsform = new RSFormLoader(createMinimalDTO({ items: [x1raw, s1raw, d1raw, d2raw, d3raw] })).produceRSForm();
+
+    const s1 = rsform.cstByAlias.get('S1')!;
+    const d1 = rsform.cstByAlias.get('D1')!;
+    const d2 = rsform.cstByAlias.get('D2')!;
+    const d3 = rsform.cstByAlias.get('D3')!;
+
+    expect(d1.spawner_path).toEqual([0, 0]);
+    expect(d2.spawner_path).toEqual([0, 0, 2]);
+    expect(d3.spawner_path).toEqual([0, 0, 1]);
+
+    const planner = new StructurePlanner(rsform, s1).build();
+    const byKey = new Map(planner.map(node => [node.key, node.existing?.alias ?? null]));
+
+    expect(byKey.get('0.0')).toBe('D1');
+    expect(byKey.get('0.0.2')).toBe('D2');
+    expect(byKey.get('0.0.1')).toBe('D3');
+    expect(s1.spawn).toEqual(expect.arrayContaining([d1.id, d2.id, d3.id]));
   });
 
   it('should mark formal duplicates using normalized definitions', () => {
