@@ -22,7 +22,7 @@ from shared.serializers import (
 )
 
 from ..models import Attribution, Constituenta, CstType, RSForm
-from ..models.api_RSLanguage import find_import_alias_error
+from ..models.api_RSLanguage import find_import_alias_error, validate_new_cst_alias
 from .basics import CstParseSerializer, InheritanceDataSerializer
 
 
@@ -146,10 +146,11 @@ class CstUpdateSerializer(StrictSerializer):
             })
         if 'alias' in attrs['item_data']:
             new_alias = attrs['item_data']['alias']
-            if cst.alias != new_alias and Constituenta.objects.filter(schema=schema, alias=new_alias).exists():
-                raise serializers.ValidationError({
-                    'alias': msg.aliasTaken(new_alias)
-                })
+            cst_type = attrs['item_data'].get('cst_type', cst.cst_type)
+            if cst.alias != new_alias:
+                alias_error = validate_new_cst_alias(schema.pk, new_alias, cst_type, exclude_pk=cst.pk)
+                if alias_error:
+                    raise serializers.ValidationError({'alias': alias_error})
         if 'definition_formal' in attrs['item_data'] \
                 and cst.definition_formal != attrs['item_data']['definition_formal']:
             if Inheritance.objects.filter(child=cst).exists():
@@ -213,6 +214,9 @@ class CstCreateSerializer(StrictModelSerializer):
             raise serializers.ValidationError({
                 'insert_after': msg.constituentaNotInRSform(schema.title)
             })
+        alias_error = validate_new_cst_alias(schema.pk, attrs['alias'], attrs['cst_type'])
+        if alias_error:
+            raise serializers.ValidationError({'alias': alias_error})
         return attrs
 
 
@@ -313,6 +317,9 @@ class RSFormSerializer(StrictModelSerializer):
 
     def restore_from_version(self, data: dict):
         ''' Load data from version. '''
+        alias_error = find_import_alias_error(data['items'])
+        if alias_error:
+            raise serializers.ValidationError({'items': alias_error})
         instance = cast(LibraryItem, self.instance)
         schema = RSForm(instance)
         items: list[dict] = data['items']
@@ -488,6 +495,7 @@ class CstBatchCreateSerializer(StrictSerializer):
             alias = item['alias']
             if alias in existing_aliases:
                 raise serializers.ValidationError({'items': msg.aliasTaken(alias)})
+            existing_aliases.add(alias)
         return attrs
 
 

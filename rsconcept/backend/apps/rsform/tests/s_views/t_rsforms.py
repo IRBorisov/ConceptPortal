@@ -408,8 +408,8 @@ class TestRSFormViewset(EndpointTester):
         x2 = self.owned.insert_last('X2')
 
         # Create two attributes to be attributions
-        a1 = self.owned.insert_last('A1', cst_type=CstType.BASE)
-        a2 = self.owned.insert_last('A2', cst_type=CstType.BASE)
+        a1 = self.owned.insert_last('X3', cst_type=CstType.BASE)
+        a2 = self.owned.insert_last('X4', cst_type=CstType.BASE)
 
         # Create attributions: X1 -> A1, X2 -> A2
         Attribution = self.owned.constituentsQ().model._meta.apps.get_model('rsform', 'Attribution')

@@ -8,11 +8,10 @@ from django.core.exceptions import ValidationError
 from django.db.models import QuerySet
 
 from apps.library.models import LibraryItem, LibraryItemType, Version
-from shared import messages as msg
 
 from ..graph import Graph
 from ..utils import extract_entities, extract_globals
-from .api_RSLanguage import get_type_prefix, guess_type
+from .api_RSLanguage import get_type_prefix, guess_type, validate_new_cst_alias
 from .Attribution import Attribution
 from .Constituenta import Constituenta, CstType
 
@@ -199,8 +198,9 @@ class RSForm:
         **kwargs
     ) -> Constituenta:
         ''' Insert new constituenta at last position. '''
-        if Constituenta.objects.filter(schema=self.model, alias=alias).exists():
-            raise ValidationError(msg.aliasTaken(alias))
+        alias_error = validate_new_cst_alias(self.model.pk, alias, cst_type or guess_type(alias))
+        if alias_error:
+            raise ValidationError({'alias': alias_error})
         if cst_type is None:
             cst_type = guess_type(alias)
         position = Constituenta.objects.filter(schema=self.model).count()

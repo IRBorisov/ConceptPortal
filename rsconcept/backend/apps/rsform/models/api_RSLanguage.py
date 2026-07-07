@@ -5,7 +5,7 @@ from typing import cast
 
 from shared import messages as msg
 
-from .Constituenta import CstType
+from .Constituenta import Constituenta, CstType
 
 _RE_TEMPLATE = r'R\d+'
 _RE_COMPLEX_SYMBOLS = r'[∀∃×ℬ;|:]'
@@ -94,6 +94,23 @@ def find_import_alias_error(items: list[dict]) -> str | None:
         seen.add(alias)
         if not validate_alias_format(alias, item['cst_type']):
             return msg.aliasInvalidFormat(alias)
+    return None
+
+
+def validate_new_cst_alias(
+    schema_id: int,
+    alias: str,
+    cst_type: str,
+    exclude_pk: int | None = None
+) -> str | None:
+    ''' Return first alias validation error for a new or renamed constituenta, or None. '''
+    if not validate_alias_format(alias, cst_type):
+        return msg.aliasInvalidFormat(alias)
+    query = Constituenta.objects.filter(schema_id=schema_id, alias=alias)
+    if exclude_pk is not None:
+        query = query.exclude(pk=exclude_pk)
+    if query.exists():
+        return msg.aliasTaken(alias)
     return None
 
 

@@ -1,4 +1,6 @@
 ''' Testing models: RSFormCached. '''
+from django.core.exceptions import ValidationError
+
 from apps.rsform.models import Attribution, Constituenta, CstType, OrderManager, RSFormCached
 from apps.users.models import User
 from shared.DBTester import DBTester
@@ -54,6 +56,12 @@ class TestRSFormCached(DBTester):
         self.assertEqual(x3.definition_raw, data['definition_raw'])
         self.assertEqual(x2.order, 2)
         self.assertEqual(x3.order, 1)
+
+
+    def test_create_cst_rejects_duplicate_alias(self):
+        self.schema.insert_last('X1')
+        with self.assertRaises(ValidationError):
+            self.schema.create_cst({'alias': 'X1', 'cst_type': CstType.BASE})
 
 
     def test_create_cst_resolve(self):

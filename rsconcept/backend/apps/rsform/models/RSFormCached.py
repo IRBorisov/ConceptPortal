@@ -11,7 +11,7 @@ from django.db.models import QuerySet
 from apps.library.models import LibraryItem, LibraryItemType
 from shared import messages as msg
 
-from .api_RSLanguage import get_type_prefix, guess_type
+from .api_RSLanguage import get_type_prefix, guess_type, validate_new_cst_alias
 from .Attribution import Attribution
 from .Constituenta import Constituenta, CstType
 from .RSForm import DELETED_ALIAS, RSForm
@@ -69,6 +69,9 @@ class RSFormCached:
 
     def create_cst(self, data: dict, insert_after: Optional[Constituenta] = None) -> Constituenta:
         ''' Create constituenta from data. '''
+        alias_error = validate_new_cst_alias(self.pk, data['alias'], data['cst_type'])
+        if alias_error:
+            raise ValidationError({'alias': alias_error})
         self.cache.ensure_loaded_terms()
         if insert_after:
             position = self.cache.by_id[insert_after.pk].order + 1

@@ -9,11 +9,11 @@ from apps.library.models import LibraryItem
 from apps.library.models.LibraryItem import AccessPolicy, LocationHead
 from apps.library.serializers import LibraryItemDetailsSerializer
 from apps.rsform.models import Constituenta
-from apps.rsform.models.RSForm import msg
 from apps.rsform.serializers.io_files import (
     RSFormSandboxImportSerializer,
     create_rsform_from_sandbox_data
 )
+from shared import messages as msg
 from shared.serializers import (
     PortalImportJsonMetadataSerializer,
     StrictModelSerializer,

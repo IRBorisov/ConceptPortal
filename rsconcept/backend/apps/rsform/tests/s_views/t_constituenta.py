@@ -299,6 +299,17 @@ class TestConstituentaAPI(EndpointTester):
 
 
     @decl_endpoint('/api/rsforms/{item}/create-cst', method='post')
+    def test_create_constituenta_rejects_existing_alias(self):
+        data = {'alias': 'X1', 'cst_type': CstType.BASE}
+        self.executeBadData(data, item=self.owned_id)
+
+    @decl_endpoint('/api/rsforms/{item}/create-cst', method='post')
+    def test_create_constituenta_rejects_invalid_alias(self):
+        data = {'alias': 'D1', 'cst_type': CstType.BASE}
+        self.executeBadData(data, item=self.owned_id)
+
+
+    @decl_endpoint('/api/rsforms/{item}/create-cst', method='post')
     def test_create_constituenta_after(self):
         self.set_params(item=self.owned_id)
 

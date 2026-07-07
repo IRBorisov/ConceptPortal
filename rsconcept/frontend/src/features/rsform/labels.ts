@@ -3,13 +3,7 @@
  */
 
 import { globalTx } from '@/i18n';
-import {
-  type Constituenta,
-  CstClass,
-  CstStatus,
-  CstType,
-  RSDiagnosticCode
-} from '@rsconcept/domain/library';
+import { type Constituenta, CstClass, CstStatus, CstType, RSDiagnosticCode } from '@rsconcept/domain/library';
 import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 import { RSErrorCode, TokenID, TypeClass } from '@rsconcept/domain/rslang';
 import { labelType } from '@rsconcept/domain/rslang/labels';

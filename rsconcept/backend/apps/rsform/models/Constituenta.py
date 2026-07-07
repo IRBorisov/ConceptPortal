@@ -11,7 +11,7 @@ from django.db.models import (
     TextField
 )
 
-from ..utils import extract_globals, extract_entities, replace_entities, replace_globals
+from ..utils import extract_entities, extract_globals, replace_entities, replace_globals
 
 
 class CstType(TextChoices):
