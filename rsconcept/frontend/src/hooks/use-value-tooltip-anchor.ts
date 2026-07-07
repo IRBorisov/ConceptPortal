@@ -13,6 +13,8 @@ interface ValueTooltipAnchorProps {
   'data-tooltip-id'?: string;
   'onPointerEnter'?: PointerEventHandler<HTMLElement>;
   'onPointerLeave'?: PointerEventHandler<HTMLElement>;
+  'onPointerUp'?: PointerEventHandler<HTMLElement>;
+  'onPointerCancel'?: PointerEventHandler<HTMLElement>;
 }
 
 /**
@@ -36,6 +38,16 @@ export function useValueTooltipAnchor(text: ReactNode | null | false | undefined
         return;
       }
       hide();
+    },
+    'onPointerUp': event => {
+      if (event.pointerType === 'touch') {
+        hide();
+      }
+    },
+    'onPointerCancel': event => {
+      if (event.pointerType === 'touch') {
+        hide();
+      }
     }
   };
 }

@@ -4,10 +4,27 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { type ITooltip, Tooltip as TooltipImpl } from 'react-tooltip';
 
+import { useCoarsePointer } from '@/hooks/use-coarse-pointer';
 import { usePreferencesStore } from '@/stores/preferences';
 import { useTooltipsStore } from '@/stores/tooltips';
 
 import { cn } from '../utils';
+
+const DEFAULT_CLOSE_EVENTS = {
+  mouseout: true,
+  blur: true
+} as const;
+
+const TOUCH_CLOSE_EVENTS = {
+  touchend: true,
+  touchcancel: true
+} as const;
+
+const TOUCH_GLOBAL_CLOSE_EVENTS = {
+  scroll: true,
+  escape: true,
+  clickOutsideAnchor: true
+} as const;
 
 export type { PlacesType } from 'react-tooltip';
 
@@ -42,11 +59,15 @@ export function Tooltip({
   afterHide,
   float,
   position,
+  closeEvents,
+  globalCloseEvents,
   ...restProps
 }: TooltipProps) {
   const [open, setOpen] = useState(false);
   const [pointer, setPointer] = useState<{ x: number; y: number } | null>(null);
-  const trackPointerForFloat = Boolean(instantWhenOpen && float);
+  const coarsePointer = useCoarsePointer();
+  const resolvedFloat = Boolean(float && !coarsePointer);
+  const trackPointerForFloat = Boolean(instantWhenOpen && resolvedFloat);
   const tooltipsEnabled = useTooltipsStore(state => state.tooltipsEnabled);
   const darkMode = usePreferencesStore(state => state.darkMode);
 
@@ -55,6 +76,9 @@ export function Tooltip({
       return;
     }
     function syncPointer(event: PointerEvent) {
+      if (event.pointerType === 'touch') {
+        return;
+      }
       setPointer({ x: event.clientX, y: event.clientY });
     }
     document.addEventListener('pointermove', syncPointer, { passive: true });
@@ -71,6 +95,12 @@ export function Tooltip({
 
   const resolvedDelayShow = instantWhenOpen && open ? 0 : delayShow;
   const resolvedPosition = trackPointerForFloat && open && pointer ? pointer : position;
+  const resolvedCloseEvents = coarsePointer
+    ? { ...DEFAULT_CLOSE_EVENTS, ...TOUCH_CLOSE_EVENTS, ...closeEvents }
+    : closeEvents;
+  const resolvedGlobalCloseEvents = coarsePointer
+    ? { ...TOUCH_GLOBAL_CLOSE_EVENTS, ...globalCloseEvents }
+    : globalCloseEvents;
 
   function handleAfterShow(...args: Parameters<NonNullable<ITooltip['afterShow']>>) {
     if (instantWhenOpen) {
@@ -106,8 +136,10 @@ export function Tooltip({
       delayShow={resolvedDelayShow}
       afterShow={instantWhenOpen ? handleAfterShow : afterShow}
       afterHide={instantWhenOpen ? handleAfterHide : afterHide}
-      float={float}
+      float={resolvedFloat}
       position={resolvedPosition}
+      closeEvents={resolvedCloseEvents}
+      globalCloseEvents={resolvedGlobalCloseEvents}
       {...restProps}
     >
       {text ? text : null}

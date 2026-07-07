@@ -4,6 +4,8 @@ import { Tooltip } from '@/components/container';
 import { useValueTooltipStore } from '@/stores/value-tooltip';
 import { globalIDs } from '@/utils/constants';
 
+import { TouchTooltipGuard } from './touch-tooltip-guard';
+
 export const GlobalTooltips = () => {
   const isOpen = useValueTooltipStore(state => state.isOpen);
   const activeText = useValueTooltipStore(state => state.activeText);
@@ -13,6 +15,7 @@ export const GlobalTooltips = () => {
 
   return (
     <>
+      <TouchTooltipGuard />
       <Tooltip
         float
         instantWhenOpen
