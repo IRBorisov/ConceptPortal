@@ -68,13 +68,13 @@ class RSModelSerializer(StrictModelSerializer):
 class RSModelImportJsonSerializer(PortalImportJsonMetadataSerializer):
     ''' Serializer: RSModel data for importing into an existing model. '''
 
-    class ModelBindingItemSerializer(StrictSerializer):
+    class ModelBindingJSONItemSerializer(StrictSerializer):
         ''' Serializer: One RSModel value binding item. '''
         id = serializers.IntegerField()
         type = serializers.CharField()
         value = serializers.JSONField()  # type: ignore
 
-    items = ModelBindingItemSerializer(many=True)
+    items = ModelBindingJSONItemSerializer(many=True)
 
 
 class CstDataUpdateSerializer(StrictSerializer):
@@ -104,13 +104,13 @@ class RSModelSandboxImportSerializer(StrictSerializer):
     class ModelDataSerializer(StrictSerializer):
         ''' Serializer: RSModel value bindings for sandbox import. '''
 
-        class ModelBindingItemSerializer(StrictSerializer):
+        class ModelBindingItemSandboxSerializer(StrictSerializer):
             ''' Serializer: One RSModel value binding item. '''
             id = serializers.IntegerField()
             type = serializers.CharField()
             value = serializers.JSONField()  # type: ignore
 
-        items = ModelBindingItemSerializer(many=True)
+        items = ModelBindingItemSandboxSerializer(many=True)
 
     item_data = ItemDataSerializer()
     schema_data = SchemaDataSerializer()

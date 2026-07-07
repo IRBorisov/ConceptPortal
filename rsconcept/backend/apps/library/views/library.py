@@ -411,6 +411,7 @@ class LibraryTemplatesView(generics.ListAPIView):
 )
 class LibraryItemsByIdsView(generics.GenericAPIView):
     ''' Endpoint: Get library item metadata for accessible ids. '''
+    queryset = m.LibraryItem.objects.none()
     permission_classes = (permissions.Anyone,)
 
     def get(self, request: Request) -> Response:

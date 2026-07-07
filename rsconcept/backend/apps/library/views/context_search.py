@@ -7,6 +7,7 @@ from rest_framework.response import Response
 
 from shared import permissions
 
+from .. import models as m
 from .. import serializers as s
 from ..services.context_search import search_library_context
 
@@ -23,6 +24,7 @@ _CONTEXT_SEARCH_PARAMS = ('q', 'search_fields', 'admin', 'location', 'subfolders
 )
 class LibraryContextSearchView(generics.GenericAPIView):
     ''' Endpoint: search library items by text in nested fields. '''
+    queryset = m.LibraryItem.objects.none()
     permission_classes = (permissions.Anyone,)
 
     def get(self, request: Request) -> Response:
