@@ -10,6 +10,14 @@ Applies to all files under `rsconcept/rstool`. Published as `@rsconcept/rstool` 
 
 Start at `skills/rstool-helper/GUIDE.md`, then `REFERENCE.md`, `EXAMPLES.md`, and `docs/*.md` as needed. Workspace skill entry: `.agents/skills/rstool-helper/SKILL.md`. Keep these in sync when the agent contract changes (see below).
 
+## Agents using rstool (task work, not package maintenance)
+
+When the goal is a conceptual schema, Portal export, or analysis — **do not create or edit files under `rsconcept/rstool/`** unless the user explicitly asks to change the package, add a canonical example, or update rstool docs.
+
+- Use in-memory API / stdio; write outputs (`portal-schema.json`, session JSON, ad-hoc `build-*.ts`) **outside** the package (user folder, workspace `.tmp/`, path the user named).
+- Do not add task-specific folders under `examples/` (that directory is for maintained package demos only).
+- See **«Границы правок»** in `skills/rstool-helper/GUIDE.md`.
+
 ## Structure
 
 - `src/models/` — contract types (`tool-contract.ts`, `CONTRACT_VERSION`), entity files, `RSToolAgent` in `rstool-agent.ts`, explicit barrel `index.ts`

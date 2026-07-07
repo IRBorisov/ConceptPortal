@@ -2,6 +2,8 @@
 
 Полные исполняемые сценарии поверх `RSToolWrapperClient` (stdio-обёртка) и готовые JSON-сессии для импорта. Короткие фрагменты кода для агентов — в [`../skills/rstool-helper/EXAMPLES.md`](../skills/rstool-helper/EXAMPLES.md); воркфлоу — [`../skills/rstool-helper/GUIDE.md`](../skills/rstool-helper/GUIDE.md).
 
+**Агентам:** не добавляйте сюда разовые `build-*.ts` и папки по текущей задаче пользователя. Артефакты и скрипты — вне `rsconcept/rstool/` (см. «Границы правок» в GUIDE). В `examples/` — только сопровождаемые демо пакета.
+
 ## Как запускать
 
 После `npm install @rsconcept/rstool` (нужен `tsx` или аналог):
