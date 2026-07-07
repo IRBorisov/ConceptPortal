@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from '@tanstack/react-form';
 import { useSelector } from '@tanstack/react-store';
 
@@ -35,13 +35,22 @@ export function DlgEditVersions() {
   const { deleteVersion: versionDelete } = useDeleteVersion();
   const { updateVersion: versionUpdate } = useUpdateVersion();
 
-  const latest = schema.versions[schema.versions.length - 1];
+  useEffect(
+    function hideDialogWhenNoVersions() {
+      if (schema.versions.length === 0) {
+        hideDialog();
+      }
+    },
+    [schema.versions.length, hideDialog]
+  );
+
+  const latest = schema.versions.at(-1);
 
   const form = useForm({
     defaultValues: {
-      id: latest.id,
-      version: latest.version,
-      description: latest.description
+      id: latest?.id ?? 0,
+      version: latest?.version ?? '',
+      description: latest?.description ?? ''
     } satisfies UpdateVersionDTO,
     validators: {
       onChange: schemaUpdateVersion
@@ -79,7 +88,11 @@ export function DlgEditVersions() {
   }
 
   function handleDeleteVersion(targetVersion: number) {
-    const nextVer = schema.versions.find(ver => ver.id !== targetVersion);
+    const ver = schema.versions.find(v => v.id === targetVersion);
+    if (!ver || !window.confirm(`${tx('tx.general.delete.confirm')} ${ver.version}`)) {
+      return;
+    }
+    const nextVer = schema.versions.find(v => v.id !== targetVersion);
     void versionDelete({ itemID: itemID, versionID: targetVersion }).then(() => {
       if (!nextVer) {
         hideDialog();
@@ -92,6 +105,10 @@ export function DlgEditVersions() {
 
   function handleResetClick() {
     form.reset();
+  }
+
+  if (!latest) {
+    return null;
   }
 
   return (
