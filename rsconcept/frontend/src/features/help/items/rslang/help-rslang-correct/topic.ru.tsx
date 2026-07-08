@@ -1,4 +1,4 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 import { LinkTopic } from '../../../components/link-topic';
 import { HelpTopic } from '../../../models/help-topic';

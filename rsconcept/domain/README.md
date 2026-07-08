@@ -2,7 +2,7 @@
 
 Shared TypeScript domain layer for the [Concept Portal](https://portal.acconcept.ru) stack.
 
-This package implements the formal language **RSLang**, the schema model **RSForm**, the evaluation engine **RSEngine**, the operation-of-schemas model **OSS**, and supporting helpers (graphs, parsing utilities, concept-text grammemes). It is consumed both by the Portal frontend and by [`@rsconcept/rstool`](https://www.npmjs.com/package/@rsconcept/rstool).
+This package implements the formal language **RSLang** (language of structural species explication), the schema model **RSForm**, the evaluation engine **RSEngine**, the operation-of-schemas model **OSS**, and supporting helpers (graphs, parsing utilities, concept-text grammemes). It is consumed both by the Portal frontend and by [`@rsconcept/rstool`](https://www.npmjs.com/package/@rsconcept/rstool).
 
 ## Install
 

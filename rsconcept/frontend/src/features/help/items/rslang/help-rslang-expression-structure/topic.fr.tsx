@@ -1,4 +1,4 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 import { LinkTopic } from '../../../components/link-topic';
 import { HelpTopic } from '../../../models/help-topic';
@@ -9,7 +9,7 @@ export function HelpRSLangExpressionStructureFr() {
     <>
       <h1>{tx('tx.rsexpression.structure')}</h1>
       <p>
-        Les expressions structurelles du langage des genres de structures sont utilisées pour les transformations qui
+        Les expressions structurelles de RSLang sont utilisées pour les transformations qui
         modifient la <LinkTopic topic={HelpTopic.RSL_TYPIFICATION} text='typification' /> des arguments, permettant de
         générer des concepts structurellement dépendants ou structurellement nouveaux.
       </p>

@@ -1,4 +1,4 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 export function HelpRSLangTypificationFr() {
   const tx = useTx();
@@ -6,7 +6,7 @@ export function HelpRSLangTypificationFr() {
     <>
       <h1>{tx('tx.rslang.typification')}</h1>
       <ul>
-        Une expression en genres de structures <code>ξ</code> possède une typification (structure) si ξ∈H,
+        Une expression en RSLang <code>ξ</code> possède une typification (structure) si ξ∈H,
         <br />
         où <code>H</code> est une expression de <b>grade</b> correcte définie par les règles suivantes :
         <li>

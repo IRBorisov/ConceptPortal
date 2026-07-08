@@ -1,4 +1,4 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 export function HelpRSLangExpressionLogicFr() {
   const tx = useTx();
@@ -6,7 +6,7 @@ export function HelpRSLangExpressionLogicFr() {
     <>
       <h1>{tx('tx.rsexpression.logic')}</h1>
       <p>
-        Les formules propositionnelles dans le langage des genres de structures sont des expressions logiques construites
+        Les formules propositionnelles dans RSLang sont des expressions logiques construites
         à partir de prédicats (expressions logiques) et de variables à l'aide de connecteurs. Les constantes VRAI et
         FAUX ne sont pas utilisées dans l'explication des schémas conceptuels.
       </p>

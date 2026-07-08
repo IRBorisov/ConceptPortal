@@ -1,4 +1,4 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 import { LinkTopic } from '../../../components/link-topic';
 import { HelpTopic } from '../../../models/help-topic';
@@ -9,7 +9,7 @@ export function HelpRSLangLiteralsRu() {
     <>
       <h1>{tx('tx.rslang.identifiers')}</h1>
       <p>
-        В языке родов структур идентификаторы и литералы имеют строгие правила записи, определяющие их роль в выражениях
+        в ЯРЭ идентификаторы и литералы имеют строгие правила записи, определяющие их роль в выражениях
         и обеспечивающие однозначность интерпретации.
       </p>
 

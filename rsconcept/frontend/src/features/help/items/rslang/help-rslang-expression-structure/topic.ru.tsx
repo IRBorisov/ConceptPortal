@@ -1,4 +1,4 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 import { LinkTopic } from '../../../components/link-topic';
 import { HelpTopic } from '../../../models/help-topic';
@@ -9,7 +9,7 @@ export function HelpRSLangExpressionStructureRu() {
     <>
       <h1>{tx('tx.rsexpression.structure')}</h1>
       <p>
-        Структурные выражения в языке родов структур используются для преобразований, меняющий{' '}
+        Структурные выражения в ЯРЭ используются для преобразований, меняющий{' '}
         <LinkTopic topic={HelpTopic.RSL_TYPIFICATION} text='типизацию' /> аргументов, позволяя порождать структурно
         зависимые или структурно новые понятия.
       </p>

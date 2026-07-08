@@ -9,13 +9,12 @@ export function HelpConceptRSModelEn() {
     <>
       <h1>{tx('tx.model')}</h1>
       <p>
-        A <b>conceptual model</b> combines a{' '}
-        <LinkTopic text='conceptual schema' topic={HelpTopic.CC_SYSTEM} /> with an <em>interpretation</em> of its
-        concepts in the subject domain. Theoretically it is a pair (schema, interpretation): the schema defines the
-        signature and definitions, the model assigns finite carriers (sets, structured data) to base concepts and fixes
-        which objects count as values of terms and which formulas are true in a given situation. Derived concepts are
-        not specified separately: their values are computed from schema definitions under the chosen interpretation of
-        base concepts.
+        A <b>conceptual model</b> combines a <LinkTopic text='conceptual schema' topic={HelpTopic.CC_SYSTEM} /> with an{' '}
+        <em>interpretation</em> of its concepts in the subject domain. Theoretically it is a pair (schema,
+        interpretation): the schema defines the signature and definitions, the model assigns finite carriers (sets,
+        structured data) to base concepts and fixes which objects count as values of terms and which formulas are true
+        in a given situation. Derived concepts are not specified separately: their values are computed from schema
+        definitions under the chosen interpretation of base concepts.
       </p>
 
       <p>
@@ -34,9 +33,9 @@ export function HelpConceptRSModelEn() {
         evaluated in the same way as any formula.
       </p>
       <p>
-        Expressions in the genus-structure language are evaluated by traversing the syntax tree: global names are taken
-        from the model context, quantifiers and iteration constructs enumerate elements of already-built finite sets,
-        recursive definitions are processed iteratively until convergence. The{' '}
+        Expressions in RSLang are evaluated by traversing the syntax tree: global names are taken from the model
+        context, quantifiers and iteration constructs enumerate elements of already-built finite sets, recursive
+        definitions are processed iteratively until convergence. The{' '}
         <LinkTopic text='expression evaluation tab' topic={HelpTopic.UI_MODEL_EVALUATOR} /> allows checking any formula
         in the current model context.
       </p>
@@ -50,10 +49,10 @@ export function HelpConceptRSModelEn() {
       </p>
       <p>
         The boolean operator (<code className='text-sm'>B(X)</code>, the power set of X) theoretically yields 2
-        <sup>|X|</sup> elements. In the system it is <em>fully materialised</em>: all subsets are enumerated and
-        stored. Even for moderate X this grows exponentially in memory and time; with nested booleans the growth is even
-        faster. Therefore a strict limit is imposed on the cardinality of the boolean argument: if X is too large,
-        constructing <code className='text-sm'>B(X)</code> is rejected and the expression must be rewritten.
+        <sup>|X|</sup> elements. In the system it is <em>fully materialised</em>: all subsets are enumerated and stored.
+        Even for moderate X this grows exponentially in memory and time; with nested booleans the growth is even faster.
+        Therefore a strict limit is imposed on the cardinality of the boolean argument: if X is too large, constructing{' '}
+        <code className='text-sm'>B(X)</code> is rejected and the expression must be rewritten.
       </p>
       <p>Conclusion: the model is used for executable verification of definitions on real finite data.</p>
     </>

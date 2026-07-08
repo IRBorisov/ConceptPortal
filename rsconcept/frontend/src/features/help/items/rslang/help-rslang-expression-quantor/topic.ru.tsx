@@ -1,4 +1,4 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 export function HelpRSLangExpressionQuantorRu() {
   const tx = useTx();
@@ -6,7 +6,7 @@ export function HelpRSLangExpressionQuantorRu() {
     <>
       <h1>{tx('tx.rsexpression.quantifier')}</h1>
       <p>
-        Кванторные выражения в языке родов структур используются для формулировки утверждений о всех или некоторых
+        Кванторные выражения в ЯРЭ используются для формулировки утверждений о всех или некоторых
         элементах множества.
       </p>
 

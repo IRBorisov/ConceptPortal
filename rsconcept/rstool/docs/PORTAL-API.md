@@ -202,7 +202,7 @@ curl.exe -s "https://api.portal.acconcept.ru/api/rsforms/856/details"
 | `crucial`             | обычно не переносить     | UI/Portal-флаг                                        |
 | `value_is_property`   | обычно не переносить     | Переопределение класса интерпретируемости             |
 
-`inheritance`, `attribution`, `oss`, `models`, `versions`, `editors` полезны для контекста Portal, но не нужны для базовой проверки RSLang в `rstool`.
+`inheritance`, `attribution`, `oss`, `models`, `versions`, `editors` полезны для контекста Portal, но не нужны для базовой проверки ЯРЭ в `rstool`.
 
 ## Как перенести КС в rstool
 
@@ -265,7 +265,7 @@ tool.applySchemaPatch(
 **до** следующего шага пайплайна (например вызова `npx tsx`), скрипт оборвётся и артефакт
 не обновится.
 
-- **Запись JSON** — всегда UTF-8; для RSLang-символов в формулах не экранируй Unicode в JSON:
+- **Запись JSON** — всегда UTF-8; для символов ЯРЭ в формулах не экранируй Unicode в JSON:
 
 ```python
 path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')

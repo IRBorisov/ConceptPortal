@@ -1,4 +1,4 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 export function HelpRSLangExpressionParameterFr() {
   const tx = useTx();
@@ -6,7 +6,7 @@ export function HelpRSLangExpressionParameterFr() {
     <>
       <h1>{tx('tx.rsexpression.parameter')}</h1>
       <p>
-        Les expressions paramétrées du langage des genres de structures forment une classe indépendante de
+        Les expressions paramétrées de RSLang forment une classe indépendante de
         constructions. Elles sont utilisées pour déclarer des fonctions-terme et des fonctions-prédicat. L'appel de
         telles fonctions produit respectivement une expression ensembliste (EE) ou une expression logique (EL).
       </p>

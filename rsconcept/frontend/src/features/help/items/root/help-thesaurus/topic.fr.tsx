@@ -64,7 +64,7 @@ export function HelpThesaurusFr() {
       </p>
       <p>
         L&apos;explicitation RS d&apos;un SD est son explicitation au moyen de l&apos;
-        <LinkTopic text='appareil des genres de structures' topic={HelpTopic.RSLANG} />.
+        <LinkTopic text='RSLang' topic={HelpTopic.RSLANG} />.
       </p>
       <p>
         Graphe des termes — graphe orienté dont les nœuds sont les constituants du SD ; les arcs reflètent la présence

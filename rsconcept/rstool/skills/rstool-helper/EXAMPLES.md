@@ -1,4 +1,4 @@
-# RSLang и rstool — примеры (контракт 2.1)
+# ЯРЭ и rstool — примеры
 
 ## Схема: batch patch
 

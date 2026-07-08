@@ -8,9 +8,7 @@ export function HelpAssistantEn() {
   return (
     <>
       <h1>{tx('tx.ai')}</h1>
-      <p>
-        The AI assistant supports work on the subject domain and conceptual schemes using generative LLM chatbots.
-      </p>
+      <p>The AI assistant supports work on the subject domain and conceptual schemes using generative LLM chatbots.</p>
 
       <h2>LLM prompts</h2>
       <p>
@@ -34,8 +32,9 @@ export function HelpAssistantEn() {
         <code>rstool-wrapper</code>.
       </p>
       <p>
-        Agents can install the bundled <code>rstool-helper</code> skill with RS language guidance and common workflows.
-        Setup and examples are in the <TextURL text='rstool documentation' href={external_urls.git_rstool} />.
+        Agents can install the bundled <code>rstool-helper</code> skill with RSLang language guidance and common
+        workflows. Setup and examples are in the <TextURL text='rstool documentation' href={external_urls.git_rstool} />
+        .
       </p>
 
       <h2>MCP — connecting an agent</h2>

@@ -1,4 +1,4 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 import { LinkTopic } from '../../../components/link-topic';
 import { HelpTopic } from '../../../models/help-topic';
@@ -9,9 +9,9 @@ export function HelpRSLangExpressionDeclarativeFr() {
     <>
       <h1>{tx('tx.rsexpression.declarative')}</h1>
       <p>
-        La construction déclarative, également connue sous le nom de schéma de compréhension bornée, dans le langage
-        des genres de structures définit un ensemble à travers un ensemble énuméré et une condition vérifiée. Du point
-        de vue des définitions de concepts, de telles expressions définissent une définition genre-espèce.
+        La construction déclarative, également connue sous le nom de schéma de compréhension bornée, dans RSLang définit
+        un ensemble à travers un ensemble énuméré et une condition vérifiée. Du point de vue des définitions de
+        concepts, de telles expressions définissent une définition genre-espèce.
       </p>
       <p>
         La <LinkTopic topic={HelpTopic.RSL_TYPIFICATION} text='typification' /> de la construction coïncide avec la

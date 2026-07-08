@@ -1,11 +1,11 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 export function HelpRSLangExpressionArithmeticFr() {
   const tx = useTx();
   return (
     <>
       <h1>{tx('tx.rsexpression.arithmetic')}</h1>
-      <p>Les expressions arithmétiques du langage des genres de structures sont destinées au travail avec les entiers.</p>
+      <p>Les expressions arithmétiques de RSLang sont destinées au travail avec les entiers.</p>
 
       <h2>Opérations de base</h2>
       <p>

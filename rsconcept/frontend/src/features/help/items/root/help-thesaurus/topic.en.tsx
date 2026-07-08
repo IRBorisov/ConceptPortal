@@ -63,8 +63,7 @@ export function HelpThesaurusEn() {
         constructs and rules for building definitions).
       </p>
       <p>
-        RS explication of a DS is explication using the{' '}
-        <LinkTopic text='genera-of-structures apparatus' topic={HelpTopic.RSLANG} />.
+        RS explication of a DS is explication using <LinkTopic text='RSLang' topic={HelpTopic.RSLANG} />.
       </p>
       <p>
         Term graph — a directed graph whose nodes are DS constituents; edges follow when one constituent&apos;s name

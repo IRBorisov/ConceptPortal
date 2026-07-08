@@ -21,10 +21,9 @@ export function HelpConceptRelationsFr() {
       </p>
 
       <p>
-        Si une expression formelle n'utilise que des formules structurelles de base, cette définition est dite
-        « simple » ou « strictement formelle ». Pour construire de telles définitions, il suffit d'appliquer
-        formellement les constructions du langage ; aucune nouvelle convention sur le contenu du domaine n'est
-        nécessaire.
+        Si une expression formelle n'utilise que des formules structurelles de base, cette définition est dite « simple
+        » ou « strictement formelle ». Pour construire de telles définitions, il suffit d'appliquer formellement les
+        constructions du langage ; aucune nouvelle convention sur le contenu du domaine n'est nécessaire.
       </p>
       <p>
         Cette façon de construire des définitions est appelée <b>déploiement formel</b> et est souvent utilisée pour
@@ -38,8 +37,8 @@ export function HelpConceptRelationsFr() {
       <p>
         Une autre méthode de définition est appelée déploiement substantiel (déductif). Elle emploie des constructions
         plus complexes impliquant l'énumération d'objets et la vérification de leurs propriétés à l'aide de conditions
-        logiques. Dans l'explication en genres de structures, de telles constructions comprennent les expressions
-        quantifiées, les définitions déclaratives, impératives et récursives.
+        logiques. Dans RSLang, de telles constructions comprennent les expressions quantifiées, les définitions
+        déclaratives, impératives et récursives.
       </p>
       <p>
         La <b>relation genre–espèce</b> entre les concepts est formalisée par une définition dans laquelle les éléments

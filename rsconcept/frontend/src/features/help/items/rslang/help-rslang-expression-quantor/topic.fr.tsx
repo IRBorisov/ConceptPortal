@@ -1,4 +1,4 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 export function HelpRSLangExpressionQuantorFr() {
   const tx = useTx();
@@ -6,7 +6,7 @@ export function HelpRSLangExpressionQuantorFr() {
     <>
       <h1>{tx('tx.rsexpression.quantifier')}</h1>
       <p>
-        Les expressions quantifiées dans le langage des genres de structures sont utilisées pour formuler des assertions
+        Les expressions quantifiées dans RSLang sont utilisées pour formuler des assertions
         sur tous les éléments ou certains éléments d'un ensemble.
       </p>
 

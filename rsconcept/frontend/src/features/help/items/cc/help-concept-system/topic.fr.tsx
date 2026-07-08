@@ -13,7 +13,7 @@ export function HelpConceptSystemFr() {
         d'application. Un système de définitions désigne un ensemble de concepts et d'assertions individuels, ainsi que
         les relations entre eux, établies par les définitions des concepts.
       </p>
-    
+
       <p>
         Un système de définitions est un outil pour étudier un objet depuis un point de vue sélectionné par le problème
         traité. Un tel outil est soumis à des exigences de <b>capacité expressive</b> — la capacité de distinguer un
@@ -38,11 +38,10 @@ export function HelpConceptSystemFr() {
       <p>
         Les autres concepts reçoivent des définitions formelles selon une méthode d'explication uniformément comprise
         par tous les participants. Le Portail prend en charge l'
-        <LinkTopic text='explication en genres de structures' topic={HelpTopic.RSLANG} />. Des assertions
-        supplémentaires au-delà des axiomes, appelées <b>enoncés</b>, peuvent également être énoncées. Les concepts qui
-        reçoivent des définitions formelles sont appelés <b>dérivés</b>. Il convient de noter que dans l'explication en
-        genres de structures, les axiomes incluent également les relations de{' '}
-        <LinkTopic text='typification' topic={HelpTopic.RSL_TYPIFICATION} />, et les concepts dérivés comprennent les
+        <LinkTopic text='RSLang' topic={HelpTopic.RSLANG} />. Des assertions supplémentaires au-delà des axiomes,
+        appelées <b>enoncés</b>, peuvent également être énoncées. Les concepts qui reçoivent des définitions formelles
+        sont appelés <b>dérivés</b>. Il convient de noter que dans RSLang, les axiomes incluent également les relations
+        de <LinkTopic text='typification' topic={HelpTopic.RSL_TYPIFICATION} />, et les concepts dérivés comprennent les
         termes, les fonctions-terme et les fonctions-prédicat.
       </p>
 

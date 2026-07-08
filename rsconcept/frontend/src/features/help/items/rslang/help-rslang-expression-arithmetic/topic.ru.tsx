@@ -1,11 +1,11 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 export function HelpRSLangExpressionArithmeticRu() {
   const tx = useTx();
   return (
     <>
       <h1>{tx('tx.rsexpression.arithmetic')}</h1>
-      <p>Арифметические выражения в языке родов структур предназначены для работы с целыми числами.</p>
+      <p>Арифметические выражения в ЯРЭ предназначены для работы с целыми числами.</p>
 
       <h2>Основные операции</h2>
       <p>

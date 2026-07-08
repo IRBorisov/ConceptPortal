@@ -47,7 +47,7 @@ From repo root (pnpm workspace; `@rsconcept/domain` links to `rsconcept/domain`)
 ## Edit rules
 
 - **Contract surface**: entity file in `src/models/` → `tool-contract.ts` → `rstool-agent.ts` → `stdio-wrapper.ts` → re-export from `src/models/index.ts`. New top-level module: `tsdown.config.ts` `entryFiles`.
-- **RSLang / analysis**: change `rsconcept/domain/src/rslang/`, adapt in `schema-adapter.ts` — do not fork language rules here.
+- **ЯРЭ / analysis**: change `rsconcept/domain/src/rslang/`, adapt in `schema-adapter.ts` — do not fork language rules here.
 - **Evaluation / modeling**: reuse domain `RSEngine`, `RSCalculator`, `rsmodel-api` via `model-adapter.ts`; in-memory only unless persistence is explicitly added.
 - **Tests**: colocate `*.test.ts` beside the module; no top-level `tests/` folder.
 - **Barrels**: named re-exports only in `src/index.ts` and `src/models/index.ts` — no `export *`.

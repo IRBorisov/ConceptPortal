@@ -1,4 +1,4 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 import { LinkTopic } from '../../../components/link-topic';
 import { HelpTopic } from '../../../models/help-topic';
@@ -9,7 +9,7 @@ export function HelpRSLangLiteralsFr() {
     <>
       <h1>{tx('tx.rslang.identifiers')}</h1>
       <p>
-        Dans le langage des genres de structures, les identifiants et les littéraux suivent des règles d'écriture
+        dans RSLang, les identifiants et les littéraux suivent des règles d'écriture
         strictes qui définissent leur rôle dans les expressions et assurent une interprétation non ambiguë.
       </p>
 

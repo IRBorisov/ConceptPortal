@@ -1,7 +1,7 @@
 export const txRslangEn: Record<string, string> = {
-  'tx.rslang': 'Structural language',
+  'tx.rslang': 'RSLang',
   'tx.rslang.short': 'Explication',
-  'tx.rslang.hint': 'Structural language of species and its use',
+  'tx.rslang.hint': 'RSLang (language of rodo-structural explication) and its use',
 
   'tx.rsexpression': 'Expression',
   'tx.rsexpression.templateBank': 'Expression bank',

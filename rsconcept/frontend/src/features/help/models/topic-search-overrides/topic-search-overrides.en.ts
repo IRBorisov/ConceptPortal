@@ -201,9 +201,9 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
       'End-to-end changes in an operational schema. Propagating changes across linked entities, data consistency, and dependencies.'
   },
   [HelpTopic.RSLANG]: {
-    keywords: ['genus structure explication', 'language', 'expressions', 'syntax', 'semantics', 'rslang'],
+    keywords: ['rslang', 'rodo-structural explication', 'language', 'expressions', 'syntax', 'semantics'],
     searchText:
-      'Genus-structure explication. Portal expression language, syntax, semantics, typing, interpretation, and templates.'
+      'RSLang — language of rodo-structural explication. Portal expression language, syntax, semantics, typing, interpretation, and templates.'
   },
   [HelpTopic.RSL_LITERALS]: {
     keywords: ['identifiers', 'literals', 'names', 'numbers', 'strings', 'naming rules'],

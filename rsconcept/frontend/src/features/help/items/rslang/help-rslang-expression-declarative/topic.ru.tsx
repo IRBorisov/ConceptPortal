@@ -1,4 +1,4 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 import { LinkTopic } from '../../../components/link-topic';
 import { HelpTopic } from '../../../models/help-topic';
@@ -9,7 +9,7 @@ export function HelpRSLangExpressionDeclarativeRu() {
     <>
       <h1>{tx('tx.rsexpression.declarative')}</h1>
       <p>
-        Декларативная конструкция, также известная как схема ограниченного выделения, в языке родов структур задает
+        Декларативная конструкция, также известная как схема ограниченного выделения, в ЯРЭ задает
         множество через перебираемое множество и проверяемое условие. С точки зрения определения понятий такие выражения
         задают родовидовое определение.
       </p>

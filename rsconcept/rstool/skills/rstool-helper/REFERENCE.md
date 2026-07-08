@@ -1,4 +1,4 @@
-# RSLang и rstool — справочник
+# ЯРЭ и rstool — справочник
 
 ## Контракт rstool
 

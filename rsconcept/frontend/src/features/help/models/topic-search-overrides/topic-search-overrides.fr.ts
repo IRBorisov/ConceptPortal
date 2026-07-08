@@ -221,9 +221,9 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
       'Changements bout en bout dans un schéma opérationnel. Propagation entre entités liées, cohérence des données et des dépendances.'
   },
   [HelpTopic.RSLANG]: {
-    keywords: ['explication structures de genres', 'langage', 'expressions', 'syntaxe', 'sémantique', 'rslang'],
+    keywords: ['rslang', 'explication rodostructurale', 'langage', 'expressions', 'syntaxe', 'sémantique'],
     searchText:
-      'Explication à structure générique. Langage d’expressions du Portail, syntaxe, sémantique, typage, interprétation et modèles.'
+      'RSLang — langage d’explicitation rodostructurale. Langage d’expressions du Portail, syntaxe, sémantique, typage, interprétation et modèles.'
   },
   [HelpTopic.RSL_LITERALS]: {
     keywords: ['identifiants', 'littéraux', 'noms', 'nombres', 'chaînes', 'règles de nommage'],

@@ -1,4 +1,4 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 import { LinkTopic } from '../../../components/link-topic';
 import { HelpTopic } from '../../../models/help-topic';
@@ -9,7 +9,7 @@ export function HelpRSLangExpressionImperativeFr() {
     <>
       <h1>{tx('tx.rsexpression.imperative')}</h1>
       <p>
-        La construction impérative dans le langage des genres de structures est une expression ensembliste construite à
+        La construction impérative dans RSLang est une expression ensembliste construite à
         l'aide de blocs et de règles de calcul.
       </p>
       <p>

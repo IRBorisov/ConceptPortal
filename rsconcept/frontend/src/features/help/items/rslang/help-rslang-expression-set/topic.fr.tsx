@@ -1,4 +1,4 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 export function HelpRSLangExpressionSetFr() {
   const tx = useTx();
@@ -6,7 +6,7 @@ export function HelpRSLangExpressionSetFr() {
     <>
       <h1>{tx('tx.rsexpression.set')}</h1>
       <p>
-        Les expressions ensemblistes (EE) dans le langage des genres de structures sont utilisées pour définir et
+        Les expressions ensemblistes (EE) dans RSLang sont utilisées pour définir et
         transformer des ensembles. Les constructions complexes d'expressions ensemblistes sont traitées dans des
         sections individuelles du guide.
       </p>

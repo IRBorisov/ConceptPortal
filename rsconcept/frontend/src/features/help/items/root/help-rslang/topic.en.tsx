@@ -13,21 +13,20 @@ export function HelpRSLangEn() {
     <>
       <h1>{tx('tx.rslang.short')}</h1>
       <p>
-        Formal notation (<i>explication</i>) of conceptual schemes uses the language of genera of structures
-        (hereinafter, the Language). This section explains the main notions and formal constructs. At its core the
-        Language is first-order logic; all additional notation builds on the membership predicate <code>x∈y</code>.
+        Formal notation (<i>explication</i>) of conceptual schemes uses <b>RSLang</b> — the language of rodo-structural
+        explication. This section explains the main notions and formal constructs. At its core RSLang is first-order
+        logic; all additional notation builds on the membership predicate <code>x∈y</code>.
       </p>
       <p>Strict identifier rules apply to concept names, local variables, and literals.</p>
       <p>
-        Language constructs split into set-theoretic expressions and logical expressions. Loosely, a set-theoretic
+        RSLang constructs split into set-theoretic expressions and logical expressions. Loosely, a set-theoretic
         expression yields an element of a given <LinkTopic topic={HelpTopic.RSL_TYPIFICATION} text='stage' />, while a
         logical expression yields TRUE or FALSE.
       </p>
       <p>
         Parameterized and template expressions are also allowed; their values and typing depend on parameters. Such
         expressions appear in definitions of{' '}
-        <LinkTopic topic={HelpTopic.CC_CONSTITUENTA} text='term functions and predicate functions' />
-        .
+        <LinkTopic topic={HelpTopic.CC_CONSTITUENTA} text='term functions and predicate functions' />.
       </p>
       <p>Expressions that reshape operand stages are called structural expressions.</p>
       <p>
@@ -38,7 +37,7 @@ export function HelpRSLangEn() {
       <Subtopics headTopic={HelpTopic.RSLANG} />
 
       <div className='dense'>
-        <p>Introductory materials on the language of genera of structures:</p>
+        <p>Introductory materials on RSLang:</p>
         <p>
           1. <BadgeVideo className='inline-icon' video={videos.explication} /> Video: brief introduction to the formal
           apparatus

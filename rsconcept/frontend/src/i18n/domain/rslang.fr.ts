@@ -1,7 +1,7 @@
 export const txRslangFr: Record<string, string> = {
-  'tx.rslang': 'Langage des genres de structures',
+  'tx.rslang': 'RSLang',
   'tx.rslang.short': 'Explication',
-  'tx.rslang.hint': 'Langage des genres de structures et son usage',
+  'tx.rslang.hint': "RSLang (langage d'explicitation rodostructurale) et son usage",
 
   'tx.rsexpression': 'Expression',
   'tx.rsexpression.templateBank': 'Banque d’expressions',

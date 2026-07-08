@@ -14,7 +14,7 @@ export function HelpCstAttributesFr() {
       </p>
       <p>
         <b>Définition formelle</b> est construite à l'aide de l'appareil formel de l'
-        <LinkTopic text='explication en genres de structures' topic={HelpTopic.RSLANG} />.
+        <LinkTopic text='RSLang' topic={HelpTopic.RSLANG} />.
       </p>
       <p>
         <b>Typification</b> est calculée automatiquement sur la base de la définition formelle et reflète la structure

@@ -18,7 +18,7 @@ export function HelpRSModelEvaluatorFr() {
 
       <h2>{tx('tx.general.controls')}</h2>
       <ul>
-        <li>entrer une expression en genres de structures dans le champ supérieur</li>
+        <li>entrer une expression RSLang dans le champ supérieur</li>
         <li>la typification, les erreurs d'analyse et la valeur calculée s'affichent en dessous</li>
         <li>
           pour lancer le calcul, cliquez sur le bouton de <LinkTopic text='statut' topic={HelpTopic.UI_EVAL_STATUS} />{' '}

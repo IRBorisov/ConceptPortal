@@ -1,7 +1,7 @@
 ---
 name: rstool-helper
 description: >-
-  RSLang, формальные определения и проектирование концептуальных схем для агентов. Читай GUIDE и docs из rsconcept/rstool в репозитории.
+  ЯРЭ (язык родоструктурной экспликации), формальные определения и проектирование концептуальных схем для агентов. Читай GUIDE и docs из rsconcept/rstool в репозитории.
 ---
 
 # rstool-helper (Concept Portal workspace)

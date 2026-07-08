@@ -1,4 +1,4 @@
-import { useTx } from '@/i18n';
+﻿import { useTx } from '@/i18n';
 
 import { LinkTopic } from '../../../components/link-topic';
 import { HelpTopic } from '../../../models/help-topic';
@@ -9,7 +9,7 @@ export function HelpRSLangExpressionImperativeRu() {
     <>
       <h1>{tx('tx.rsexpression.imperative')}</h1>
       <p>
-        Императивная конструкция в языке родов структур является теоретико-множественным выражением, построенным с
+        Императивная конструкция в ЯРЭ является теоретико-множественным выражением, построенным с
         помощью блоков и правил вычисления.
       </p>
       <p>

@@ -65,7 +65,7 @@ export function HelpThesaurusRu() {
       </p>
       <p>
         Родоструктурная экспликация КС – экспликация КС с использованием{' '}
-        <LinkTopic text='аппарата родов структур' topic={HelpTopic.RSLANG} />.
+        <LinkTopic text='ЯРЭ' topic={HelpTopic.RSLANG} />.
       </p>
       <p>
         Граф термов – ориентированный граф, узлами которого являются конституенты КС, а связи задаются на основе
