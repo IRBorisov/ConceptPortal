@@ -9,14 +9,14 @@ description: Replaces hardcoded user-visible strings on Portal frontend pages an
 
 `rsconcept/frontend`: any `.ts` / `.tsx` under `src/` that shows locale-specific text. Catalogs: `src/i18n/app/*.{en,ru,fr}.ts`, `src/i18n/domain/*.{en,ru,fr}.ts`, merged via `src/i18n/map/message-map.*.ts`.
 
-Authoritative rules: `rsconcept/frontend/AGENTS.md` → **Internationalization**.
+**Catalog boundaries** (what belongs in `tx.*` vs feature-local locale files): `rsconcept/frontend/AGENTS.md` → **Internationalization**. Workflow and naming conventions: this skill.
 
 ## Choose API
 
-| Context | API |
-|--------|-----|
-| React component | `useTx()` from `@/i18n` → `tx('tx....', values?)` |
-| Non-React (stores, toasts, helpers, parsers) | `globalTx('tx....', values?)` from `@/i18n` |
+| Context                                      | API                                               |
+| -------------------------------------------- | ------------------------------------------------- |
+| React component                              | `useTx()` from `@/i18n` → `tx('tx....', values?)` |
+| Non-React (stores, toasts, helpers, parsers) | `globalTx('tx....', values?)` from `@/i18n`       |
 
 Use ICU placeholders `{name}` in strings; **same placeholder names** in en, ru, fr.
 

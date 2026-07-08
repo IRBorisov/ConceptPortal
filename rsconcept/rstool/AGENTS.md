@@ -8,7 +8,7 @@ Applies to all files under `rsconcept/rstool`. Published as `@rsconcept/rstool` 
 
 ## Agent docs (read before RS work)
 
-Start at `skills/rstool-helper/GUIDE.md`, then `REFERENCE.md`, `EXAMPLES.md`, and `docs/*.md` as needed. Workspace skill entry: `.agents/skills/rstool-helper/SKILL.md`. Keep these in sync when the agent contract changes (see below).
+Start at `skills/rstool-helper/GUIDE.md`, then `REFERENCE.md`, `EXAMPLES.md`, and `docs/*.md` as needed. Workspace entry: `.agents/skills/rstool-helper/SKILL.md`.
 
 ## Agents using rstool (task work, not package maintenance)
 
