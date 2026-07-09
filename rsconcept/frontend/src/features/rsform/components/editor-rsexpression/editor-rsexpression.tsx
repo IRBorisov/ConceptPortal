@@ -152,7 +152,7 @@ export function EditorRSExpression({
       return;
     }
     try {
-      const parse = getAnalysisFor(value, activeCst.cst_type, schema);
+      const parse = getAnalysisFor(value, activeCst.cst_type, schema, activeCst.alias);
       onAnalysis(parse);
       if (parse.errors.length > 0) {
         handleShowError(parse.errors[0]);
@@ -292,6 +292,7 @@ export function EditorRSExpression({
         value={value}
         schema={schema}
         cstType={activeCst?.cst_type}
+        activeAlias={activeCst?.alias}
         errors={displayedErrors}
         minHeight='3.75rem'
         maxHeight='8rem'
@@ -301,7 +302,8 @@ export function EditorRSExpression({
         disabled={disabled}
         errorMessage={
           activeCst?.definition_formal === value
-            ? describeCstDiagnostic(activeCst, RSDiagnosticCode.schemaFormalDuplicate)
+            ? (describeCstDiagnostic(activeCst, RSDiagnosticCode.schemaDependencyCycle) ??
+              describeCstDiagnostic(activeCst, RSDiagnosticCode.schemaFormalDuplicate))
             : undefined
         }
         {...restProps}

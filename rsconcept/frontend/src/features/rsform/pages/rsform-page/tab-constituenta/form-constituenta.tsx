@@ -165,7 +165,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       toast.error(tx('tx.typeGraph.fromExpression.fail'));
       return;
     }
-    const parse = getAnalysisFor(definition, activeCst.cst_type, schema);
+    const parse = getAnalysisFor(definition, activeCst.cst_type, schema, activeCst.alias);
     if (!parse.type || parse.type.typeID === TypeID.logic) {
       toast.error(tx('tx.typeGraph.fromExpression.fail'));
       return;

@@ -1,8 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
+import { Graph } from '../graph';
+
 import {
   assignSchemaDiagnostics,
   DiagnosticKind,
+  formatDependencyCycle,
   hasCstDiagnostic,
   modelStatusCstDiagnostic,
   RSDiagnosticCode
@@ -81,5 +84,36 @@ describe('assignSchemaDiagnostics', () => {
     expect(items[2].diagnostics.find(item => item.code === RSDiagnosticCode.schemaFormalDuplicate)?.params?.[0]).toBe(
       'D2'
     );
+  });
+
+  it('detects dependency cycles when graph is provided', () => {
+    const items = [
+      stubCst(1, 'F3', { cst_type: CstType.TERM, definition_formal: 'P1' }),
+      stubCst(2, 'P1', { cst_type: CstType.AXIOM, definition_formal: 'F3' }),
+      stubCst(3, 'X1', { convention: 'base', term_resolved: 'base' })
+    ];
+    const graph = new Graph([[1, 2], [2, 1], [3]]);
+    const resolveAlias = (id: number) => items.find(item => item.id === id)!.alias;
+
+    assignSchemaDiagnostics(items, resolveAlias, new Map(), graph);
+
+    expect(hasCstDiagnostic(items[0], RSDiagnosticCode.schemaDependencyCycle)).toBe(true);
+    expect(hasCstDiagnostic(items[1], RSDiagnosticCode.schemaDependencyCycle)).toBe(true);
+    expect(hasCstDiagnostic(items[2], RSDiagnosticCode.schemaDependencyCycle)).toBe(false);
+    const cycle = items[0].diagnostics.find(item => item.code === RSDiagnosticCode.schemaDependencyCycle)?.params?.[0];
+    expect(cycle).toBeDefined();
+    expect(cycle!.includes('F3')).toBe(true);
+    expect(cycle!.includes('P1')).toBe(true);
+    expect(cycle!.startsWith(cycle!.split(' → ').at(-1)!)).toBe(true);
+  });
+});
+
+describe('formatDependencyCycle', () => {
+  it('joins aliases with arrows', () => {
+    expect(formatDependencyCycle(['F3', 'P1', 'F3'])).toBe('F3 → P1 → F3');
+  });
+
+  it('uses the same text regardless of cycle rotation', () => {
+    expect(formatDependencyCycle(['P1', 'F3', 'P1'])).toBe('F3 → P1 → F3');
   });
 });

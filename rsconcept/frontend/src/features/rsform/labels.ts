@@ -87,7 +87,8 @@ const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
   [RSErrorCode.iterationsLimit]: 'tx.rslang.error.iterationsLimit',
   [RSErrorCode.calcInvalidDebool]: 'tx.rslang.error.calcInvalidDebool',
   [RSErrorCode.calcInvalidData]: 'tx.rslang.error.calcInvalidData',
-  [RSErrorCode.iterateInfinity]: 'tx.rslang.error.iterateInfinity'
+  [RSErrorCode.iterateInfinity]: 'tx.rslang.error.iterateInfinity',
+  [RSErrorCode.schemaDependencyCycle]: 'tx.concept.dependencyCycle.validate'
 };
 
 const TYPE_CLASS_LID: Record<TypeClass, string> = {
@@ -468,6 +469,8 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
         cstType: labelCstType((params[0] ?? CstType.BASE) as CstType),
         alias: params[1] ?? ''
       });
+    case RSErrorCode.schemaDependencyCycle:
+      return globalTx(id, { cycle: params[0] ?? '' });
     case RSErrorCode.projectionSetArgumentNotSet:
     case RSErrorCode.projectionSetArgumentNotTupleSet:
     case RSErrorCode.projectionTupleArgumentNotTuple:
@@ -536,6 +539,7 @@ const DIAGNOSTIC_MESSAGE_ID: Record<RSDiagnosticCode, string> = {
   [RSDiagnosticCode.schemaMissingConvention]: 'tx.lib.convention.validate.empty',
   [RSDiagnosticCode.schemaMissingTerm]: 'tx.lang.term.validate.empty',
   [RSDiagnosticCode.schemaTypeMismatch]: 'tx.rslang.typification.manual.validate',
+  [RSDiagnosticCode.schemaDependencyCycle]: 'tx.concept.dependencyCycle.validate',
   [RSDiagnosticCode.modelEmpty]: 'tx.evaluation.status.empty.hint',
   [RSDiagnosticCode.modelAxiomFalse]: 'tx.evaluation.status.axiomFalse.hint',
   [RSDiagnosticCode.modelInvalidData]: 'tx.evaluation.status.invalidData.hint',
@@ -548,6 +552,8 @@ function formatRsDiagnosticMessage(code: RSDiagnosticCode, params?: readonly str
     case RSDiagnosticCode.schemaHomonym:
     case RSDiagnosticCode.schemaFormalDuplicate:
       return globalTx(id, { aliases: params?.[0] ?? '' });
+    case RSDiagnosticCode.schemaDependencyCycle:
+      return globalTx(id, { cycle: params?.[0] ?? '' });
     default:
       return globalTx(id);
   }

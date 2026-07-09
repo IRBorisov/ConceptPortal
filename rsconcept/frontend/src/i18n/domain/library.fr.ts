@@ -132,6 +132,7 @@ export const txLibraryFr: Record<string, string> = {
   'tx.concept.homonym.validate': 'Terme coïncide avec des constituantes : {aliases}',
   'tx.concept.homonym.confirm': 'Terme coïncide avec des constituantes : {aliases}. Créer ?',
   'tx.concept.duplicate.plural': 'Doublons',
+  'tx.concept.dependencyCycle.validate': 'Cycle logique dans les définitions : {cycle}',
 
   'tx.concept.relation.plural': 'Liens entre notions',
   'tx.concept.relation.hint': 'Relations entre constituantes',

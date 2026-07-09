@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { AccessPolicy, CstStatus, CstType, LibraryItemType } from '@rsconcept/domain/library';
 import { RSDiagnosticCode } from '@rsconcept/domain/library';
-import { calculateSchemaStats, isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
+import { calculateSchemaStats, getAnalysisFor, isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
 import { StructurePlanner } from '@rsconcept/domain/library/structure-planner';
 
 import { RSFormLoader } from './rsform-loader';
@@ -229,6 +229,36 @@ describe('RSFormLoader', () => {
     ).toBe('P1');
     expect(rsform.cstByID.get(4)!.diagnostics.some(item => item.code === RSDiagnosticCode.schemaFormalDuplicate)).toBe(
       false
+    );
+  });
+
+  it('should mark dependency cycles on mutual formal references', () => {
+    const x1 = createCst(1, 'X1', CstType.BASE, '', 'Base');
+    x1.convention = 'base';
+    const f3 = createCst(2, 'F3', CstType.FUNCTION, '[σ∈X1] P1[σ]', 'F');
+    const p1 = createCst(3, 'P1', CstType.PREDICATE, '[σ∈X1] F3[σ]=F3[σ]', 'P');
+
+    const rsform = new RSFormLoader(createMinimalDTO({ items: [x1, f3, p1] })).produceRSForm();
+
+    const f3Cycle = rsform.cstByID
+      .get(2)!
+      .diagnostics.find(item => item.code === RSDiagnosticCode.schemaDependencyCycle)?.params?.[0];
+    const p1Cycle = rsform.cstByID
+      .get(3)!
+      .diagnostics.find(item => item.code === RSDiagnosticCode.schemaDependencyCycle)?.params?.[0];
+    expect(f3Cycle).toBeDefined();
+    expect(p1Cycle).toBeDefined();
+    expect(f3Cycle).toBe(p1Cycle);
+    expect(f3Cycle!.includes('F3')).toBe(true);
+    expect(f3Cycle!.includes('P1')).toBe(true);
+    expect(rsform.cstByID.get(1)!.diagnostics.some(item => item.code === RSDiagnosticCode.schemaDependencyCycle)).toBe(
+      false
+    );
+
+    const analysis = getAnalysisFor(f3.definition_formal, CstType.FUNCTION, rsform, 'F3');
+    expect(analysis.errors.some(error => error.code === RSDiagnosticCode.schemaDependencyCycle)).toBe(true);
+    expect(analysis.errors.find(error => error.code === RSDiagnosticCode.schemaDependencyCycle)?.params?.[0]).toBe(
+      f3Cycle
     );
   });
 });

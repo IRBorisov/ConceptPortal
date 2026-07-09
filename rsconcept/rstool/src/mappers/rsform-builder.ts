@@ -75,7 +75,7 @@ export function enrichSessionConstituents(session: SessionState): EnrichedConsti
     }
   }
 
-  assignSchemaDiagnostics(schema.items, resolveAlias, normalizedDefinitions);
+  assignSchemaDiagnostics(schema.items, resolveAlias, normalizedDefinitions, schema.graph);
 
   return session.items.map(item => ({
     item,

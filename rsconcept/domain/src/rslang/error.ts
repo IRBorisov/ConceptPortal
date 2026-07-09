@@ -108,7 +108,10 @@ export const RSErrorCode = {
   calcInvalidData: 0x8108, // 35336
 
   cstEmptyDerived: 0x8861, // 34913
-  definitionNotAllowed: 0x8862 // 34914
+  definitionNotAllowed: 0x8862, // 34914
+
+  // Schema diagnostics surfaced in expression analysis (same value as RSDiagnosticCode.schemaDependencyCycle).
+  schemaDependencyCycle: 0x8906 // 35078
 } as const;
 export type RSErrorCode = (typeof RSErrorCode)[keyof typeof RSErrorCode];
 

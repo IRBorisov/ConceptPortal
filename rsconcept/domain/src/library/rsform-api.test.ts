@@ -1,8 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
+import { Graph } from '../graph';
 import { RSErrorCode } from '../rslang/error';
+import { RSLangAnalyzer } from '../rslang/semantic/analyzer';
 
-import { CstType, type RSForm } from './rsform';
+import { RSDiagnosticCode } from './diagnostics';
+import { type Constituenta, CstType, type RSForm } from './rsform';
 import {
   applyMappingToConstituents,
   findCstByStructure,
@@ -54,6 +57,56 @@ describe('getAnalysisFor', () => {
       to: 2,
       params: [CstType.CONSTANT, 'C1']
     });
+  });
+
+  it('upgrades to dependency cycle for unsaved draft that closes a cycle', () => {
+    // Saved graph: F3 → P1 only (P1 does not yet reference F3).
+    // Draft for P1 introduces F3, closing F3 ↔ P1 before Save.
+    const analyzer = new RSLangAnalyzer();
+    analyzer.addBase('X1');
+    // F3 is untyped in the analyzer (as after a failed cycle parse), so P1's call fails.
+    const items = [
+      {
+        id: 1,
+        alias: 'X1',
+        cst_type: CstType.BASE,
+        definition_formal: '',
+        diagnostics: []
+      },
+      {
+        id: 2,
+        alias: 'F3',
+        cst_type: CstType.FUNCTION,
+        definition_formal: '[σ∈X1] P1[σ]',
+        diagnostics: []
+      },
+      {
+        id: 3,
+        alias: 'P1',
+        cst_type: CstType.PREDICATE,
+        definition_formal: '[σ∈X1] σ=σ',
+        diagnostics: []
+      }
+    ] as unknown as Constituenta[];
+    const graph = new Graph([
+      [1, 2],
+      [1, 3],
+      [3, 2] // P1 → F3 from saved F3 definition
+    ]);
+    const schema = {
+      items,
+      graph,
+      analyzer,
+      cstByAlias: new Map(items.map(item => [item.alias, item])),
+      cstByID: new Map(items.map(item => [item.id, item]))
+    } as unknown as RSForm;
+
+    const draft = '[σ∈X1] F3[σ]=F3[σ]';
+    const result = getAnalysisFor(draft, CstType.PREDICATE, schema, 'P1');
+    const cycleError = result.errors.find(error => error.code === RSDiagnosticCode.schemaDependencyCycle);
+    expect(cycleError).toBeDefined();
+    expect(cycleError!.params?.[0]).toContain('F3');
+    expect(cycleError!.params?.[0]).toContain('P1');
   });
 });
 

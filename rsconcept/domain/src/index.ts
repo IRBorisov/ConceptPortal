@@ -11,7 +11,9 @@ export { Graph } from './graph/graph';
 export {
   assignSchemaDiagnostics,
   type CstDiagnostic,
+  detectDependencyCycleDiagnostics,
   DiagnosticKind,
+  formatDependencyCycle,
   hasCstDiagnostic,
   modelStatusCstDiagnostic,
   RSDiagnosticCode
