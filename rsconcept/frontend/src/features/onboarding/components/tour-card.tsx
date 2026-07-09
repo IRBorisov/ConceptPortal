@@ -172,7 +172,13 @@ export function TourCard({
           <Button text={tx('tx.general.goBack')} className='px-4 py-1.5 rounded-lg' onClick={onBack} />
         ) : null}
         <Button
-          text={isFirst ? tx('tx.onboarding.start') : isLast ? tx('tx.onboarding.done') : tx('tx.onboarding.next')}
+          text={
+            isFirst && !canGoBack
+              ? tx('tx.onboarding.start')
+              : isLast
+                ? tx('tx.onboarding.done')
+                : tx('tx.onboarding.next')
+          }
           className='px-5 py-1.5 rounded-lg whitespace-nowrap'
           onClick={onNext}
           colorSubmit

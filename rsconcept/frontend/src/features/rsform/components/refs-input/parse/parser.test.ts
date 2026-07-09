@@ -15,7 +15,10 @@ const testData = [
   ['@{-1| черный }', '[Text[RefSyntactic[Offset][Nominal]]]'],
   ['@{-100| черный слон }', '[Text[RefSyntactic[Offset][Nominal]]]'],
   ['@{X1|VERB,past,sing}', '[Text[RefEntity[Global][Grams]]]'],
-  ['@{X12|VERB,past,sing}', '[Text[RefEntity[Global][Grams]]]']
+  ['@{X12|VERB,past,sing}', '[Text[RefEntity[Global][Grams]]]'],
+  ['@{A55|sing,datv}', '[Text[RefEntity[Global][Grams]]]'],
+  // Cyrillic А (U+0410) is not a Global prefix; Lezer error-recovers as RefSyntactic
+  ['@{А55|sing,datv}', '[Text[RefSyntactic[⚠][Offset][Nominal]]]']
 ] as const;
 
 describe('Testing NaturalParser', () => {

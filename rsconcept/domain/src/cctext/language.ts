@@ -74,7 +74,6 @@ export interface SyntacticReference {
 }
 
 /** Represents abstract reference data. */
-export interface IReference {
-  type: ReferenceType;
-  data: EntityReference | SyntacticReference;
-}
+export type IReference =
+  | { type: typeof ReferenceType.ENTITY; data: EntityReference }
+  | { type: typeof ReferenceType.SYNTACTIC; data: SyntacticReference };

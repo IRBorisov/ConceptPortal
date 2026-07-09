@@ -81,7 +81,7 @@ export function parseEntityReference(text: string): EntityReference {
   if (ref?.type !== ReferenceType.ENTITY) {
     throw new Error(`Invalid entity reference: ${text}`);
   }
-  return ref.data as EntityReference;
+  return ref.data;
 }
 
 /**
@@ -94,7 +94,7 @@ export function parseSyntacticReference(text: string): SyntacticReference {
   if (ref?.type !== ReferenceType.SYNTACTIC) {
     throw new Error(`Invalid syntactic reference: ${text}`);
   }
-  return ref.data as SyntacticReference;
+  return ref.data;
 }
 
 /** Extracts a validated reference from string representation. */
@@ -172,12 +172,12 @@ export function resolveTextReferences(text: string, context: TermContext): strin
 
   for (const ref of references) {
     if (ref.ref.type === ReferenceType.ENTITY) {
-      ref.resolved = resolveEntity(ref.ref.data as EntityReference, context);
+      ref.resolved = resolveEntity(ref.ref.data, context);
     }
   }
   references.forEach((ref, index) => {
     if (ref.ref.type === ReferenceType.SYNTACTIC) {
-      ref.resolved = resolveSyntactic(ref.ref.data as SyntacticReference, index, references);
+      ref.resolved = resolveSyntactic(ref.ref.data, index, references);
     }
   });
 
@@ -196,11 +196,11 @@ export function resolveTextReferences(text: string, context: TermContext): strin
 export function referenceToString(ref: IReference): string {
   switch (ref.type) {
     case ReferenceType.ENTITY: {
-      const entity = ref.data as EntityReference;
+      const entity = ref.data;
       return `@{${entity.entity}|${entity.tags.join(',')}}`;
     }
     case ReferenceType.SYNTACTIC: {
-      const syntactic = ref.data as SyntacticReference;
+      const syntactic = ref.data;
       return `@{${syntactic.offset}|${syntactic.nominal}}`;
     }
   }

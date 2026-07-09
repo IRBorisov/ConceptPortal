@@ -106,7 +106,7 @@ function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | nul
       globalTx('tx.general.click') +
       ' ' +
       globalTx('tx.general.colon') +
-      globalTx('ui.rsform.refsTooltip.toOpen') +
+      globalTx('tx.shell.hotkey.toOpen') +
       '\n' +
       controlsTip.textContent;
   }

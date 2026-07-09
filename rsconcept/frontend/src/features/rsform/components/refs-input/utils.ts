@@ -1,17 +1,27 @@
 import { syntaxTree } from '@codemirror/language';
 import { type EditorState } from '@uiw/react-codemirror';
 
-import { parseEntityReference, parseSyntacticReference } from '@rsconcept/domain/cctext/language-api';
+import { type EntityReference, type SyntacticReference } from '@rsconcept/domain/cctext';
+import { parseReference } from '@rsconcept/domain/cctext/language-api';
 
 import { findEnvelopingNodes } from '@/utils/codemirror';
 
-import { RefEntity } from './parse/parser.terms';
 import { ReferenceTokens } from './parse';
+
+export interface ParsedReferenceAt {
+  ref: EntityReference | SyntacticReference;
+  start: number;
+  end: number;
+}
 
 /**
  * Retrieves reference from position in Editor.
+ *
+ * Uses domain {@link parseReference} as source of truth for reference kind.
+ * Lezer may recover invalid aliases (e.g. Cyrillic lookalikes) as the wrong
+ * reference token; trusting the node type alone can throw on hover/click.
  */
-export function findReferenceAt(pos: number, state: EditorState) {
+export function findReferenceAt(pos: number, state: EditorState): ParsedReferenceAt | undefined {
   const nodes = findEnvelopingNodes(pos, pos, syntaxTree(state), ReferenceTokens);
   if (nodes.length !== 1) {
     return undefined;
@@ -19,9 +29,9 @@ export function findReferenceAt(pos: number, state: EditorState) {
   const start = nodes[0].from;
   const end = nodes[0].to;
   const text = state.doc.sliceString(start, end);
-  if (nodes[0].type.id === RefEntity) {
-    return { ref: parseEntityReference(text), start, end };
-  } else {
-    return { ref: parseSyntacticReference(text), start, end };
+  const parsed = parseReference(text);
+  if (!parsed) {
+    return undefined;
   }
+  return { ref: parsed.data, start, end };
 }

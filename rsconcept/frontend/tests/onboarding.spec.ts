@@ -12,7 +12,14 @@ function seedTourState(status: 'skipped' | 'done') {
 test.describe.configure({ mode: 'serial' });
 
 test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => localStorage.removeItem('portal.onboarding'));
+  // Clear once per tab; sessionStorage survives reload so completed/skipped state can persist.
+  await page.addInitScript(() => {
+    const flag = 'portal.onboarding.e2e-cleared';
+    if (!sessionStorage.getItem(flag)) {
+      localStorage.removeItem('portal.onboarding');
+      sessionStorage.setItem(flag, '1');
+    }
+  });
 });
 
 test('first sandbox visit offers the tour and Start walks across tabs', async ({ page }) => {

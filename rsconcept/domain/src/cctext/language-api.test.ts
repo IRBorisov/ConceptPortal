@@ -112,6 +112,11 @@ describe('Testing reference parsing', () => {
     expect(parseReference('@{0|derived term}')).toBeNull();
     expect(parseReference('@{-0|derived term}')).toBeNull();
     expect(parseReference('@{1|}')).toBeNull();
+    // Cyrillic А (U+0410) is not a syntactic offset; treat as entity alias
+    expect(parseReference('@{А55|sing,datv}')).toStrictEqual({
+      type: 'entity',
+      data: { entity: 'А55', tags: ['sing', 'datv'] }
+    });
   });
 });
 

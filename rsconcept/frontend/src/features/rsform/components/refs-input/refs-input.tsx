@@ -14,7 +14,7 @@ import CodeMirror, {
 import { useDebounce } from 'use-debounce';
 
 import { type Grammeme, ReferenceType, supportedGrammemes } from '@rsconcept/domain/cctext';
-import { parseEntityReference, parseSyntacticReference, referenceToString } from '@rsconcept/domain/cctext/language-api';
+import { parseReference, referenceToString } from '@rsconcept/domain/cctext/language-api';
 import { type RSForm } from '@rsconcept/domain/library';
 
 import { ErrorField, Label } from '@/components/input';
@@ -26,7 +26,7 @@ import { CodeMirrorWrapper } from '@/utils/codemirror';
 import { PARAMETER } from '@/utils/constants';
 import { withPreventDefault } from '@/utils/utils';
 
-import { RefEntity, RefSyntactic } from './parse/parser.terms';
+import { RefEntity } from './parse/parser.terms';
 import { refsNavigation } from './click-navigation';
 import { InlineEntityEditor } from './inline-entity';
 import { InlineSyntacticEditor } from './inline-syntactic';
@@ -237,11 +237,13 @@ export function RefsInput({
     const text = wrap.getSelectionText();
     let entity = '';
     let grams: Grammeme[] = [];
-    if (nodes.length === 1 && nodes[0].type.id === RefEntity) {
+    if (nodes.length === 1) {
       const refRaw = wrap.getText(nodes[0].from, nodes[0].to);
-      const ref = parseEntityReference(refRaw);
-      entity = ref.entity;
-      grams = ref.tags;
+      const parsed = parseReference(refRaw);
+      if (parsed?.type === ReferenceType.ENTITY) {
+        entity = parsed.data.entity;
+        grams = parsed.data.tags;
+      }
     }
 
     setSyntacticEditor(null);
@@ -272,11 +274,13 @@ export function RefsInput({
     const text = wrap.getSelectionText();
     let nominal = '';
     let offset = 1;
-    if (nodes.length === 1 && nodes[0].type.id === RefSyntactic) {
+    if (nodes.length === 1) {
       const refRaw = wrap.getText(nodes[0].from, nodes[0].to);
-      const ref = parseSyntacticReference(refRaw);
-      nominal = ref.nominal;
-      offset = ref.offset;
+      const parsed = parseReference(refRaw);
+      if (parsed?.type === ReferenceType.SYNTACTIC) {
+        nominal = parsed.data.nominal;
+        offset = parsed.data.offset;
+      }
     }
 
     const entityRefs = wrap
