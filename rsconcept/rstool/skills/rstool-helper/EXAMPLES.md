@@ -16,6 +16,66 @@ const result = tool.applySchemaPatch({
 console.log(result.summary.itemCount, result.success);
 ```
 
+## Терм-функция вместо множества пар
+
+Правила — [CONCEPTUAL-SCHEMA.md](../../docs/CONCEPTUAL-SCHEMA.md), раздел «Терм-функция вместо множества пар».
+
+### Было: граф и чтение через фильтр
+
+```ts
+tool.applySchemaPatch({
+  items: [
+    { alias: 'X1', convention: 'узлы' },
+    { alias: 'S1', definitionFormal: 'ℬ(X1×X1)', convention: 'ориентированные рёбра' },
+    {
+      alias: 'D1',
+      term: 'узел и его исходящие рёбра',
+      definitionFormal: 'I{(ξ,σ) | ξ:∈X1; σ:=Pr2(Fi1[{ξ}](S1))}'
+    },
+    {
+      alias: 'D2',
+      term: 'узел и число исходящих рёбер',
+      definitionFormal: 'I{(ξ,n) | α:∈D1; ξ:=pr1(α); n:=card(pr2(α))}'
+    },
+    {
+      alias: 'A1',
+      term: 'функциональность графика D1',
+      definitionFormal: '∀d1,d2∈D1 (pr1(d1)=pr1(d2) ⇒ pr2(d1)=pr2(d2))'
+    }
+  ]
+});
+```
+
+Потребитель «степени» вынужден тащить пары и аксиому однозначности.
+
+### Стало: терм-функции и вызовы
+
+```ts
+tool.applySchemaPatch({
+  items: [
+    { alias: 'X1', convention: 'узлы' },
+    { alias: 'S1', definitionFormal: 'ℬ(X1×X1)', convention: 'ориентированные рёбра' },
+    {
+      alias: 'F1',
+      term: 'исходящие соседи',
+      definitionFormal: '[ξ∈X1] Pr2(Fi1[{ξ}](S1))'
+    },
+    {
+      alias: 'F2',
+      term: 'исходящая степень',
+      definitionFormal: '[ξ∈X1] card(F1[ξ])'
+    },
+    {
+      alias: 'D3',
+      term: 'стоки',
+      definitionFormal: 'D{ξ∈X1 | F2[ξ]=0}'
+    }
+  ]
+});
+```
+
+`A1` не нужна: однозначность уже в `F1`/`F2`. Множество пар не вводится, пока оно само не станет предметом утверждения.
+
 ## `X#`, `C#` и `Z`
 
 Выбор основания — [BASE-SELECTION.md](../../docs/BASE-SELECTION.md).
