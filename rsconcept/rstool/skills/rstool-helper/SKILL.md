@@ -1,7 +1,9 @@
 ---
 name: rstool-helper
 description: >-
-  ЯРЭ (язык родоструктурной экспликации), формальные определения и проектирование концептуальных схем для агентов. Читай GUIDE и docs из node_modules.
+  ЯРЭ и концептуальные схемы через rstool: концептуализация, ревью/оценка КС,
+  правки и диагностики формул, проверка на КМ (evaluate), выбор X#/C#/Z,
+  импорт/экспорт Portal (/rsforms, /details). Читай GUIDE и docs из node_modules.
 ---
 
 # rstool-helper
@@ -16,15 +18,32 @@ description: >-
 
 Затем продолжай с каноническими файлами ниже.
 
-## Канонические файлы (читать перед работой с rstool)
+## Канонические файлы
 
-- **Начни здесь** — воркфлоу и чеклисты: `node_modules/@rsconcept/rstool/skills/rstool-helper/GUIDE.md`
-- API, stdio, контракт: `node_modules/@rsconcept/rstool/skills/rstool-helper/REFERENCE.md`
-- Примеры, типичные ошибки: `node_modules/@rsconcept/rstool/skills/rstool-helper/EXAMPLES.md`
-- Язык и предметная область: `node_modules/@rsconcept/rstool/docs/*.md`
-- Процедура установки: `node_modules/@rsconcept/rstool/skills/INSTALL.md`
+Префикс путей: `node_modules/@rsconcept/rstool/`.
 
-Перед началом задачи rstool всегда открывай **GUIDE.md**, затем по необходимости **REFERENCE.md** / **EXAMPLES.md** / нужные `docs/*.md`.
+| Что                                                 | Путь                                |
+| :-------------------------------------------------- | :---------------------------------- |
+| **Начни здесь** — матрица задач, воркфлоу, чеклисты | `skills/rstool-helper/GUIDE.md`     |
+| API, stdio, MCP, контракт                           | `skills/rstool-helper/REFERENCE.md` |
+| Примеры, антипаттерны                               | `skills/rstool-helper/EXAMPLES.md`  |
+| Язык и предметная область                           | `docs/*.md`                         |
+| Установка skill                                     | `skills/INSTALL.md`                 |
+
+## Задача → что читать
+
+Не читай все `docs/` подряд. Открой **GUIDE.md** (раздел «Задача → чтение»), затем только нужные файлы:
+
+| Задача                            | Минимум                                                                        |
+| :-------------------------------- | :----------------------------------------------------------------------------- |
+| Собрать / развить КС из текста    | GUIDE: концептуализация; `docs/CONCEPTUAL-SCHEMA.md`; `docs/BASE-SELECTION.md` |
+| Оценить / отревьюить готовую КС   | GUIDE: ревью; чеклист ревью; `docs/CONCEPTUAL-SCHEMA.md`                       |
+| Починить формулу / диагностики    | GUIDE: цикл диагностик; `docs/DIAGNOSTICS.md`                                  |
+| Импорт / правка по ссылке Portal  | GUIDE: Portal; `docs/PORTAL-API.md`                                            |
+| Проверить смысл на данных         | GUIDE: КМ; `docs/MODEL-TESTING.md`                                             |
+| Синтаксис / типизация / вызов API | `docs/SYNTAX.md` / `TYPIFICATION.md` / `REFERENCE.md`                          |
+
+Перед работой всегда открой **GUIDE.md**; остальное — по строке таблицы.
 
 ## Не правь пакет rstool без запроса
 
@@ -41,4 +60,5 @@ REST API и curl — `node_modules/@rsconcept/rstool/docs/PORTAL-API.md`.
 ## Кратко
 
 - Пакет: `@rsconcept/rstool`; обёртка: `npx rstool-wrapper`
+- MCP: `@rsconcept/rstool-mcp` (имена tools — `snake_case`, см. REFERENCE)
 - `@rsconcept/domain` устанавливается как зависимость (анализатор и коды ошибок)

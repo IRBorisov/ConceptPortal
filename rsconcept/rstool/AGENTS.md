@@ -8,7 +8,7 @@ Applies to all files under `rsconcept/rstool`. Published as `@rsconcept/rstool` 
 
 ## Agent docs (read before RS work)
 
-Start at `skills/rstool-helper/GUIDE.md`, then `REFERENCE.md`, `EXAMPLES.md`, and `docs/*.md` as needed. Workspace entry: `.agents/skills/rstool-helper/SKILL.md`.
+Start at `skills/rstool-helper/GUIDE.md` (section «Задача → чтение»), then only the docs that row needs — not all of `docs/`. `REFERENCE.md` is the contract (library / stdio / MCP); `EXAMPLES.md` has snippets and anti-patterns. Workspace entry: `.agents/skills/rstool-helper/SKILL.md`.
 
 ## Agents using rstool (task work, not package maintenance)
 
@@ -61,7 +61,7 @@ Update code and docs in the **same change set**. Internal refactors do not count
 
 **Sync:** `src/models/` + `stdio-wrapper.ts` + `model-adapter.ts` (if modeling) + colocated tests; `README.md`; `skills/rstool-helper/{GUIDE,REFERENCE,EXAMPLES}.md` (+ `SKILL.md` / `skills/INSTALL.md` if install flow changes); `examples/` when the happy path changes. Schema-design: `docs/CONCEPTUAL-SCHEMA.md` + GUIDE + EXAMPLES; keep `docs/README.md` index in sync.
 
-**Language-only** (grammar, domain errors, help text): update skill only when agents need new guidance; point to `REFERENCE.md` help map and `rsconcept/domain/src/rslang/error.ts` — do not duplicate grammar in the skill.
+**Language-only** (grammar, domain errors, help text): update skill only when agents need new guidance; point to `REFERENCE.md` «Help map» and `rsconcept/domain/src/rslang/error.ts` — do not duplicate grammar in the skill. Keep GUIDE task matrix and EXAMPLES anti-patterns in sync when agent workflows change.
 
 ## Versioning
 

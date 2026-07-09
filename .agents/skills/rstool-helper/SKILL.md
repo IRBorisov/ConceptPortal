@@ -1,7 +1,9 @@
 ---
 name: rstool-helper
 description: >-
-  ЯРЭ (язык родоструктурной экспликации), формальные определения и проектирование концептуальных схем для агентов. Читай GUIDE и docs из rsconcept/rstool в репозитории.
+  ЯРЭ и концептуальные схемы через rstool: концептуализация, ревью/оценка КС,
+  правки и диагностики формул, проверка на КМ (evaluate), выбор X#/C#/Z,
+  импорт/экспорт Portal (/rsforms, /details). Читай GUIDE и docs из rsconcept/rstool.
 ---
 
 # rstool-helper (Concept Portal workspace)
@@ -10,20 +12,33 @@ description: >-
 
 Если skill скопирован в проект, где `@rsconcept/rstool` установлен из npm, используй пути пакета под `node_modules/@rsconcept/rstool/`. В workspace Portal всегда предпочитай in-repo файлы — они соответствуют локальному коду под правкой.
 
-## Канонические файлы (читать перед работой с rstool)
+## Канонические файлы
 
 Пути — от **корня workspace**.
 
-| Что                                                     | Путь                                                 |
-| :------------------------------------------------------ | :--------------------------------------------------- |
-| **Начни здесь** — воркфлоу, чеклисты, cstType, S# vs D# | `rsconcept/rstool/skills/rstool-helper/GUIDE.md`     |
-| **`X#` / `C#` / `Z`** — выбор основания                 | `rsconcept/rstool/docs/BASE-SELECTION.md`            |
-| API, stdio, контракт                                    | `rsconcept/rstool/skills/rstool-helper/REFERENCE.md` |
-| Примеры, типичные ошибки                                | `rsconcept/rstool/skills/rstool-helper/EXAMPLES.md`  |
-| Язык и предметная область                               | `rsconcept/rstool/docs/*.md`                         |
-| Правила агента для пакета                               | `rsconcept/rstool/AGENTS.md`                         |
+| Что                                                 | Путь                                                 |
+| :-------------------------------------------------- | :--------------------------------------------------- |
+| **Начни здесь** — матрица задач, воркфлоу, чеклисты | `rsconcept/rstool/skills/rstool-helper/GUIDE.md`     |
+| API, stdio, MCP, контракт                           | `rsconcept/rstool/skills/rstool-helper/REFERENCE.md` |
+| Примеры, антипаттерны                               | `rsconcept/rstool/skills/rstool-helper/EXAMPLES.md`  |
+| **`X#` / `C#` / `Z`** — выбор основания             | `rsconcept/rstool/docs/BASE-SELECTION.md`            |
+| Язык и предметная область                           | `rsconcept/rstool/docs/*.md`                         |
+| Правила агента для пакета                           | `rsconcept/rstool/AGENTS.md`                         |
 
-Перед началом задачи rstool всегда открывай **GUIDE.md**, затем по необходимости **REFERENCE.md** / **EXAMPLES.md** / нужные `docs/*.md`.
+## Задача → что читать
+
+Не читай все `docs/` подряд. Открой **GUIDE.md** (раздел «Задача → чтение»), затем только нужные файлы:
+
+| Задача                            | Минимум                                                                        |
+| :-------------------------------- | :----------------------------------------------------------------------------- |
+| Собрать / развить КС из текста    | GUIDE: концептуализация; `docs/CONCEPTUAL-SCHEMA.md`; `docs/BASE-SELECTION.md` |
+| Оценить / отревьюить готовую КС   | GUIDE: ревью; чеклист ревью; `docs/CONCEPTUAL-SCHEMA.md`                       |
+| Починить формулу / диагностики    | GUIDE: цикл диагностик; `docs/DIAGNOSTICS.md`                                  |
+| Импорт / правка по ссылке Portal  | GUIDE: Portal; `docs/PORTAL-API.md`                                            |
+| Проверить смысл на данных         | GUIDE: КМ; `docs/MODEL-TESTING.md`                                             |
+| Синтаксис / типизация / вызов API | `docs/SYNTAX.md` / `TYPIFICATION.md` / `REFERENCE.md`                          |
+
+Перед работой всегда открой **GUIDE.md**; остальное — по строке таблицы.
 
 ## Не правь пакет rstool без запроса
 
@@ -40,4 +55,5 @@ description: >-
 ## Кратко
 
 - Typecheck и тесты — из `rsconcept/rstool` (`npm test`, `npm run wrapper`)
+- MCP: `@rsconcept/rstool-mcp` (имена tools — `snake_case`, см. REFERENCE)
 - `@rsconcept/domain` в этом workspace — в `rsconcept/domain`
