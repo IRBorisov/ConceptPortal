@@ -5,6 +5,7 @@ import { CstType } from '@rsconcept/domain/library';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
+import { EditorTourID } from '@/features/onboarding/tours/editor-tours';
 import { IconCstType } from '@/features/rsform/components/icon-cst-type';
 import { getCstTypeShortcut, labelCstType } from '@/features/rsform/labels';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
@@ -133,7 +134,7 @@ export function ToolbarModelList({ className, hasActiveFilter = false }: Toolbar
         onClick={promptDeleteCst}
         disabled={isProcessing || !canDeleteSelected}
       />
-      <BadgeHelp topic={HelpTopic.UI_MODEL_LIST} offset={5} />
+      <BadgeHelp topic={HelpTopic.UI_MODEL_LIST} tourID={EditorTourID.CONSTITUENTS_LIST} offset={5} />
     </div>
   );
 }

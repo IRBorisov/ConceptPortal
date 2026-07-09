@@ -25,6 +25,7 @@ vi.stubGlobal('localStorage', storage);
 import { defaultTourProgress, shouldOfferTour, type TourProgress, useOnboardingStore } from './onboarding';
 
 const TOUR_ID = 'sandbox-intro';
+const SUBTOUR_ID = 'constituents-list';
 const TOUR_VERSION = 2;
 
 function resetStore() {
@@ -32,6 +33,7 @@ function resetStore() {
     tours: {},
     activeTourID: null,
     activeStep: 0,
+    tourStack: [],
     sessionDismissed: {}
   });
   storage.clear();
@@ -78,6 +80,7 @@ describe('useOnboardingStore', () => {
     useOnboardingStore.getState().startTour(TOUR_ID, 3);
     expect(useOnboardingStore.getState().activeTourID).toBe(TOUR_ID);
     expect(useOnboardingStore.getState().activeStep).toBe(3);
+    expect(useOnboardingStore.getState().tourStack).toEqual([]);
 
     useOnboardingStore.getState().startTour(TOUR_ID, -5);
     expect(useOnboardingStore.getState().activeStep).toBe(0);
@@ -110,7 +113,8 @@ describe('useOnboardingStore', () => {
       activeTourID: null,
       activeStep: 0,
       tours: {},
-      sessionDismissed: {}
+      sessionDismissed: {},
+      tourStack: []
     });
   });
 
@@ -145,7 +149,8 @@ describe('useOnboardingStore', () => {
       tours: {
         [TOUR_ID]: { status: 'done', seenVersion: 5, resumeStep: 3 }
       },
-      sessionDismissed: { [TOUR_ID]: true }
+      sessionDismissed: { [TOUR_ID]: true },
+      tourStack: [{ tourID: 'parent', returnStep: 1 }]
     });
 
     useOnboardingStore.getState().restartTour(TOUR_ID);
@@ -153,7 +158,70 @@ describe('useOnboardingStore', () => {
     const state = useOnboardingStore.getState();
     expect(state.activeTourID).toBe(TOUR_ID);
     expect(state.activeStep).toBe(0);
+    expect(state.tourStack).toEqual([]);
     expect(state.tours[TOUR_ID]).toEqual(defaultTourProgress);
     expect(state.sessionDismissed[TOUR_ID]).toBe(false);
+  });
+
+  test('enterSubtour pushes parent frame and starts the nested tour at step 0', () => {
+    useOnboardingStore.getState().startTour(TOUR_ID, 2);
+    useOnboardingStore.getState().enterSubtour(SUBTOUR_ID);
+
+    const state = useOnboardingStore.getState();
+    expect(state.activeTourID).toBe(SUBTOUR_ID);
+    expect(state.activeStep).toBe(0);
+    expect(state.tourStack).toEqual([{ tourID: TOUR_ID, returnStep: 2 }]);
+    expect(state.tours[TOUR_ID]).toEqual({ ...defaultTourProgress, resumeStep: 2 });
+  });
+
+  test('completeActiveTour on a subtour returns to the parent step', () => {
+    useOnboardingStore.getState().startTour(TOUR_ID, 2);
+    useOnboardingStore.getState().enterSubtour(SUBTOUR_ID);
+    useOnboardingStore.getState().completeActiveTour(1);
+
+    const state = useOnboardingStore.getState();
+    expect(state.activeTourID).toBe(TOUR_ID);
+    expect(state.activeStep).toBe(2);
+    expect(state.tourStack).toEqual([]);
+    expect(state.tours[SUBTOUR_ID]).toEqual({ status: 'done', seenVersion: 1, resumeStep: 0 });
+  });
+
+  test('dismissActiveTour on a subtour returns to the parent and session-dismisses the subtour', () => {
+    useOnboardingStore.getState().startTour(TOUR_ID, 2);
+    useOnboardingStore.getState().enterSubtour(SUBTOUR_ID);
+    useOnboardingStore.getState().setActiveStep(1);
+    useOnboardingStore.getState().dismissActiveTour();
+
+    const state = useOnboardingStore.getState();
+    expect(state.activeTourID).toBe(TOUR_ID);
+    expect(state.activeStep).toBe(2);
+    expect(state.tourStack).toEqual([]);
+    expect(state.tours[SUBTOUR_ID]).toEqual({ ...defaultTourProgress, resumeStep: 1 });
+    expect(state.sessionDismissed[SUBTOUR_ID]).toBe(true);
+  });
+
+  test('returnFromSubtour restores the parent without marking the subtour done', () => {
+    useOnboardingStore.getState().startTour(TOUR_ID, 2);
+    useOnboardingStore.getState().enterSubtour(SUBTOUR_ID);
+    expect(useOnboardingStore.getState().returnFromSubtour()).toBe(true);
+
+    const state = useOnboardingStore.getState();
+    expect(state.activeTourID).toBe(TOUR_ID);
+    expect(state.activeStep).toBe(2);
+    expect(state.tourStack).toEqual([]);
+    expect(state.tours[SUBTOUR_ID]).toBeUndefined();
+  });
+
+  test('pauseActiveTour while nested persists parent and child resume points', () => {
+    useOnboardingStore.getState().startTour(TOUR_ID, 2);
+    useOnboardingStore.getState().enterSubtour(SUBTOUR_ID);
+    useOnboardingStore.getState().setActiveStep(1);
+    useOnboardingStore.getState().pauseActiveTour();
+
+    const state = useOnboardingStore.getState();
+    expect(state.activeTourID).toBeNull();
+    expect(state.tourStack).toEqual([]);
+    expect(state.tours[TOUR_ID]).toEqual({ ...defaultTourProgress, resumeStep: 2 });
+    expect(state.tours[SUBTOUR_ID]).toEqual({ ...defaultTourProgress, resumeStep: 1 });
   });
 });

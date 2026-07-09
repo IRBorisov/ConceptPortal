@@ -50,7 +50,7 @@ export function ToolbarItemAccess({
   }
 
   return (
-    <div className={clsx('w-46 flex items-center h-8 select-none', className)}>
+    <div className={clsx('w-46 flex items-center h-8 select-none', className)} data-tour='passport-access'>
       <Label text={tx('tx.lib.access')} />
       <div className='ml-auto cc-icons'>
         <SelectAccessPolicy

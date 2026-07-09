@@ -31,13 +31,39 @@ export function HelpInterfaceFr() {
         d&apos;apparence (couleur, icône) selon la disponibilité de la fonction associée.
       </p>
       <p>
-        <IconHelp className='inline-icon' /> En complément de cette rubrique, l&apos;aide contextuelle est disponible via
-        l&apos;icône dédiée <IconHelp className='inline-icon' />.
+        <IconHelp className='inline-icon' /> En complément de cette rubrique, l&apos;aide contextuelle est disponible
+        via l&apos;icône dédiée <IconHelp className='inline-icon' />.
       </p>
       <p>
-        L&apos;icône <IconVideo className='inline-icon' /> ouvre des vidéos sur différents sujets et le fonctionnement du
-        portail. La lecture est proposée sur YouTube et VKontakte.
+        L&apos;icône <IconVideo className='inline-icon' /> ouvre des vidéos sur différents sujets et le fonctionnement
+        du portail. La lecture est proposée sur YouTube et VKontakte.
       </p>
+
+      <h2>{tx('tx.onboarding.tour')}</h2>
+      <p>
+        Les tutoriels interactifs parcourent l&apos;écran courant étape par étape : un projecteur met en évidence le
+        contrôle, et une carte explique son rôle.
+      </p>
+      <ul>
+        <li>
+          Sur certains écrans, une visite est proposée dès la première ouverture (par exemple le Bac à sable). Vous
+          pouvez la démarrer, la passer ou la fermer avec <kbd>Échap</kbd>.
+        </li>
+        <li>
+          Ailleurs, ouvrez l&apos;info-bulle <IconHelp className='inline-icon' /> et choisissez{' '}
+          <em>{tx('tx.onboarding.guide')}</em> (ou cliquez l&apos;icône d&apos;aide lorsqu&apos;un guide est disponible)
+          pour relancer le tutoriel de cette zone — passeport, liste des constituantes, éditeur de concept, graphe des
+          termes, bibliothèque, etc.
+        </li>
+        <li>
+          Certaines étapes d&apos;aperçu proposent <em>{tx('tx.general.details')}</em> pour un tutoriel plus détaillé de
+          l&apos;onglet ; le terminer ou le passer vous ramène à l&apos;aperçu.
+        </li>
+        <li>
+          Suivant / Retour pour naviguer, Passer pour quitter plus tôt, Terminer à la dernière étape. Quitter la page
+          met la visite en pause afin de la reprendre au retour.
+        </li>
+      </ul>
 
       <h2>{tx('tx.general.navigation')}</h2>
       <ul>
@@ -56,8 +82,8 @@ export function HelpInterfaceFr() {
           <IconLogin size='1.25rem' className='inline-icon' /> connexion / inscription d&apos;un nouvel utilisateur
         </li>
         <li>
-          <IconUser2 size='1.25rem' className='inline-icon' /> le menu utilisateur regroupe des réglages et l&apos;accès au
-          profil
+          <IconUser2 size='1.25rem' className='inline-icon' /> le menu utilisateur regroupe des réglages et l&apos;accès
+          au profil
         </li>
 
         <li>

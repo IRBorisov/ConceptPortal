@@ -62,6 +62,7 @@ export const txGeneralRu: Record<string, string> = {
   'tx.general.data': 'Данные',
   'tx.general.evaluation': 'Расчет',
   'tx.general.help': 'Справка',
+  'tx.general.help.hint': 'Открыть эту тему в справке',
   'tx.general.support': 'Поддержка',
   'tx.general.navigation': 'Навигация',
   'tx.general.ui': 'Пользовательский интерфейс',

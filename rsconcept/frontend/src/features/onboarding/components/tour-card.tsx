@@ -19,6 +19,12 @@ interface TourCardProps {
   onBack: () => void;
   onSkip: () => void;
 
+  /** When false, hides Back (default: hidden on the first step). */
+  showBack?: boolean;
+
+  /** When set, shows an Explore control that opens the linked subtour. */
+  onExplore?: () => void;
+
   className?: string;
   style?: React.CSSProperties;
   onLayout?: (height: number) => void;
@@ -35,6 +41,8 @@ export function TourCard({
   onNext,
   onBack,
   onSkip,
+  showBack,
+  onExplore,
   className,
   style,
   onLayout
@@ -45,6 +53,7 @@ export function TourCard({
 
   const isFirst = stepIndex === 0;
   const isLast = stepIndex === totalSteps - 1;
+  const canGoBack = showBack ?? !isFirst;
 
   useEffect(function saveAndRestoreFocus() {
     previousFocusRef.current = document.activeElement as HTMLElement | null;
@@ -81,7 +90,7 @@ export function TourCard({
         observer.disconnect();
       };
     },
-    [onLayout, stepIndex, title, body]
+    [onLayout, stepIndex, title, body, onExplore, canGoBack]
   );
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
@@ -122,7 +131,7 @@ export function TourCard({
       onKeyDown={handleKeyDown}
       className={cn(
         'fixed w-100 max-w-[calc(100vw-1rem)] max-h-[calc(100vh-1rem)] overflow-y-auto',
-        'flex flex-col gap-3 px-6 py-3',
+        'flex flex-col gap-3 px-5 pt-4 pb-3',
         'border rounded-xl shadow-lg outline-hidden',
         'bg-popover text-popover-foreground',
         'transition-[left,top] duration-300 ease-in-out',
@@ -130,8 +139,18 @@ export function TourCard({
       )}
       style={style}
     >
-      <strong className='text-base leading-tight'>{title}</strong>
-      <div className='text-sm'>{body}</div>
+      <div className='flex flex-col gap-2'>
+        <strong className='text-base leading-tight'>{title}</strong>
+        <div className='text-sm leading-relaxed'>{body}</div>
+        {onExplore ? (
+          <TextButton
+            text={tx('tx.general.details')}
+            title={tx('tx.onboarding.explore.hint')}
+            className='self-start'
+            onClick={onExplore}
+          />
+        ) : null}
+      </div>
 
       <StepDots
         stepIndex={stepIndex}
@@ -139,7 +158,7 @@ export function TourCard({
         label={tx('tx.onboarding.progress', { current: stepIndex + 1, total: totalSteps })}
       />
 
-      <div className='flex items-center gap-2 text-sm'>
+      <div className='flex items-center gap-2 pt-1 border-t border-border/60 text-sm'>
         {!isLast ? (
           <TextButton
             text={tx('tx.onboarding.skip')}
@@ -149,7 +168,7 @@ export function TourCard({
         ) : (
           <div className='mr-auto' />
         )}
-        {!isFirst ? (
+        {canGoBack ? (
           <Button text={tx('tx.general.goBack')} className='px-4 py-1.5 rounded-lg' onClick={onBack} />
         ) : null}
         <Button

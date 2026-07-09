@@ -35,9 +35,34 @@ export function HelpInterfaceEn() {
         <IconHelp className='inline-icon' /> icon.
       </p>
       <p>
-        The <IconVideo className='inline-icon' /> icon opens videos on various topics and details of how the Portal works.
-        Videos are hosted on YouTube and VKontakte.
+        The <IconVideo className='inline-icon' /> icon opens videos on various topics and details of how the Portal
+        works. Videos are hosted on YouTube and VKontakte.
       </p>
+
+      <h2>{tx('tx.onboarding.tour')}</h2>
+      <p>
+        Interactive tours walk through the current screen step by step: a spotlight highlights the control, and a card
+        explains what it does.
+      </p>
+      <ul>
+        <li>
+          On some screens the first visit offers a tour automatically (for example the Sandbox). You can start, skip, or
+          dismiss it with <kbd>Esc</kbd>.
+        </li>
+        <li>
+          Elsewhere, open a contextual <IconHelp className='inline-icon' /> tooltip and choose{' '}
+          <em>{tx('tx.onboarding.guide')}</em> (or click the help icon when a guide is available) to restart the tour
+          for that area — passport, constituent list, concept editor, term graph, library, and similar.
+        </li>
+        <li>
+          Some overview steps offer <em>{tx('tx.general.details')}</em> for a deeper tour of the current tab; finishing
+          or skipping that tour returns you to the overview.
+        </li>
+        <li>
+          Use Next / Back to move between steps, Skip to leave early, and Finish on the last step. Leaving the page
+          pauses the tour so you can resume when you return.
+        </li>
+      </ul>
 
       <h2>{tx('tx.general.navigation')}</h2>
       <ul>

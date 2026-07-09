@@ -148,7 +148,7 @@ export function TabModelList() {
 
       <div className={clsx('flex items-center border-b', !isContentEditable && 'justify-center pl-10')}>
         {isContentEditable ? (
-          <div className='px-2 shrink-0' data-tour='sandbox-list-selection'>
+          <div className='px-2 shrink-0' data-tour='list-selection'>
             {tx('tx.general.selection.status', {
               selected: selectedCst.length,
               total: schema.items.length
@@ -161,7 +161,7 @@ export function TabModelList() {
           className='max-w-50'
           query={query}
           onChangeQuery={setQuery}
-          data-tour='sandbox-list-search'
+          data-tour='list-search'
         />
       </div>
 
@@ -173,7 +173,7 @@ export function TabModelList() {
         pdfConverter={createPDFList}
       />
 
-      <div data-tour='sandbox-list-table'>
+      <div data-tour='list-table'>
         <TableModelList
           items={filtered}
           maxHeight={tableHeight}

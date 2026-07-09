@@ -18,6 +18,8 @@ export interface TourLocaleContent {
 
 /** Navigation facade passed to step hooks; kept minimal so tours stay decoupled from router internals. */
 export interface TourStepController {
+  /** Current location pathname when the step activates. */
+  pathname: string;
   changeTab: (tabID: number) => void;
   gotoEditActive: (activeID: number) => void;
 }
@@ -34,6 +36,12 @@ export interface TourStep {
   /** Preferred popover side; the host may flip it when there is not enough space. */
   placement?: TourPlacement;
 
+  /**
+   * Optional nested tour id offered from this step ("Explore").
+   * The subtour is a separate registered `Tour` and can also be started on its own.
+   */
+  subtour?: string;
+
   /** Invoked when the step becomes active, before anchor resolution (e.g. to switch tabs). */
   onEnter?: (controller: TourStepController) => void;
 }
@@ -44,14 +52,29 @@ export interface Tour {
   /** Bump to re-offer the tour to users who completed or skipped an older version. */
   version: number;
 
-  /** Pathname hosting the tour; used for auto-start matching and dismissal on leave. */
-  route: string;
+  /**
+   * Pathname(s) where the tour may run.
+   * An entry matches exactly, or as a prefix when followed by `/` (e.g. `/rsforms` → `/rsforms/12`).
+   */
+  route: string | readonly string[];
 
-  /** Whether the tour is offered automatically on first visit to `route`. */
+  /** Whether the tour is offered automatically on first visit to a matching route. */
   autoStart: boolean;
 
   steps: TourStep[];
   content: TourLocaleContent;
+}
+
+/** True when `pathname` is allowed for this tour (exact or prefix match). */
+export function tourMatchesRoute(tour: Pick<Tour, 'route'>, pathname: string): boolean {
+  const routes = typeof tour.route === 'string' ? [tour.route] : tour.route;
+  return routes.some(route => pathname === route || pathname.startsWith(`${route}/`));
+}
+
+/** Frame saved when diving into a subtour so the parent can resume afterward. */
+export interface TourStackFrame {
+  tourID: string;
+  returnStep: number;
 }
 
 /** Validates tour invariants; returns a list of problems (empty when valid). */
@@ -69,6 +92,12 @@ export function validateTour(tour: Tour): string[] {
       problems.push(`tour "${tour.id}" has duplicate step id "${step.id}"`);
     }
     seen.add(step.id);
+    if (step.subtour?.trim() === '') {
+      problems.push(`tour "${tour.id}" step "${step.id}" has an empty subtour id`);
+    }
+    if (step.subtour === tour.id) {
+      problems.push(`tour "${tour.id}" step "${step.id}" cannot reference itself as a subtour`);
+    }
   }
   for (const locale of ['en', 'ru', 'fr'] as const) {
     for (const step of tour.steps) {
@@ -78,4 +107,15 @@ export function validateTour(tour: Tour): string[] {
     }
   }
   return problems;
+}
+
+/** Collects `subtour` ids referenced by steps; used by the registry to verify links resolve. */
+export function collectSubtourIDs(tour: Tour): string[] {
+  const ids: string[] = [];
+  for (const step of tour.steps) {
+    if (step.subtour) {
+      ids.push(step.subtour);
+    }
+  }
+  return ids;
 }

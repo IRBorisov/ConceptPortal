@@ -17,7 +17,11 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
   const countImported = stats.count_schemas - stats.count_owned;
 
   return (
-    <aside className={cn('h-fit flex flex-col border select-none', className)} {...restProps}>
+    <aside
+      className={cn('h-fit flex flex-col border select-none', className)}
+      data-tour='passport-stats'
+      {...restProps}
+    >
       <StatsCategory
         id='oss-stats-composition'
         className='rounded-t-md'

@@ -9,9 +9,12 @@ import { LibraryItemType, type RSModel } from '@rsconcept/domain/library';
 
 import { useConceptNavigation, useRegisterUnsavedSave } from '@/app';
 import { buildModelToSchemaQuery } from '@/app/navigation/cross-rs-query';
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components/badge-help';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
+import { PassportTourID } from '@/features/onboarding/tours/editor-tours';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { SubmitButton } from '@/components/control';
@@ -98,8 +101,12 @@ export function FormRSModel({ className }: FormRSModelProps) {
         event.stopPropagation();
         void form.handleSubmit();
       }}
+      data-tour='passport-form'
     >
-      <h2 className='mb-2 select-none'>{tx('tx.model')}</h2>
+      <div className='mb-2 flex items-center gap-2'>
+        <h2 className='select-none'>{tx('tx.model')}</h2>
+        <BadgeHelp topic={HelpTopic.UI_MODEL_CARD} tourID={PassportTourID.MODEL} offset={4} />
+      </div>
       <form.Field name='title'>
         {field => (
           <TextInput
@@ -167,14 +174,16 @@ export function FormRSModel({ className }: FormRSModelProps) {
         />
       ) : null}
 
-      <ValueIcon
-        className='mt-3 -mb-1'
-        icon={<IconRSForm size='1.25rem' className='icon-primary' />}
-        value={schema.alias}
-        title={tx('tx.schema')}
-        onClick={handleNavigateSchema}
-        disabled={false}
-      />
+      <div data-tour='passport-schema-link'>
+        <ValueIcon
+          className='mt-3 -mb-1'
+          icon={<IconRSForm size='1.25rem' className='icon-primary' />}
+          value={schema.alias}
+          title={tx('tx.schema')}
+          onClick={handleNavigateSchema}
+          disabled={false}
+        />
+      </div>
     </form>
   );
 }

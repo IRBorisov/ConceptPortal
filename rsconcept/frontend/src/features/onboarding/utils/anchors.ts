@@ -8,7 +8,7 @@ export function findAnchorElement(anchor: string): HTMLElement | null {
 /**
  * Waits for the anchor element to appear using rAF polling.
  * Resolves `null` after `timeoutMs`, or immediately when `signal` is aborted,
- * so a missing or abandoned anchor never blocks the tour.
+ * so a missing or abandoned anchor never blocks the tour (caller should skip the step).
  */
 export function waitForAnchorElement(
   anchor: string,

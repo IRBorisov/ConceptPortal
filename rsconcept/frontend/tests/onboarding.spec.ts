@@ -4,12 +4,16 @@ const ONBOARDING_KEY = 'portal.onboarding';
 
 function seedTourState(status: 'skipped' | 'done') {
   return {
-    state: { tours: { 'sandbox-intro': { status, seenVersion: 3, resumeStep: 0 } } },
+    state: { tours: { 'sandbox-intro': { status, seenVersion: 6, resumeStep: 0 } } },
     version: 1
   };
 }
 
 test.describe.configure({ mode: 'serial' });
+
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => localStorage.removeItem('portal.onboarding'));
+});
 
 test('first sandbox visit offers the tour and Start walks across tabs', async ({ page }) => {
   await page.goto('/sandbox', { waitUntil: 'domcontentloaded' });
@@ -17,7 +21,7 @@ test('first sandbox visit offers the tour and Start walks across tabs', async ({
   const card = page.getByTestId('tour-card');
   await expect(card).toBeVisible();
   await expect(card).toContainText('Добро пожаловать в Песочницу');
-  await expect(card.getByRole('img', { name: 'Шаг 1 из 13' })).toBeVisible();
+  await expect(card.getByRole('img', { name: 'Шаг 1 из 8' })).toBeVisible();
 
   await card.getByRole('button', { name: 'Начать обучение' }).click();
   await expect(card).toContainText('Паспорт');
@@ -26,10 +30,35 @@ test('first sandbox visit offers the tour and Start walks across tabs', async ({
   await card.getByRole('button', { name: 'Далее' }).click();
   await expect(card).toContainText('Список конституент');
   await expect(page).toHaveURL(/tab=1/);
+  await expect(card.getByRole('button', { name: 'Подробнее' })).toBeVisible();
 
   await card.getByRole('button', { name: 'Назад' }).click();
   await expect(card).toContainText('Паспорт');
   await expect(page).toHaveURL(/tab=0/);
+});
+
+test('Explore opens a shared list subtour and Done returns to the parent step', async ({ page }) => {
+  await page.goto('/sandbox', { waitUntil: 'domcontentloaded' });
+
+  const card = page.getByTestId('tour-card');
+  await expect(card).toBeVisible();
+  await card.getByRole('button', { name: 'Начать обучение' }).click();
+  await card.getByRole('button', { name: 'Далее' }).click();
+  await expect(card).toContainText('Список конституент');
+
+  await card.getByRole('button', { name: 'Подробнее' }).click();
+  await expect(card.getByRole('img', { name: 'Шаг 1 из 3' })).toBeVisible();
+  await expect(card).toContainText('Список конституент');
+
+  await card.getByRole('button', { name: 'Далее' }).click();
+  await expect(card.getByRole('img', { name: 'Шаг 2 из 3' })).toBeVisible();
+  await card.getByRole('button', { name: 'Далее' }).click();
+  await expect(card.getByRole('img', { name: 'Шаг 3 из 3' })).toBeVisible();
+  await card.getByRole('button', { name: 'Завершить' }).click();
+
+  await expect(card).toContainText('Список конституент');
+  await expect(card.getByRole('img', { name: 'Шаг 3 из 8' })).toBeVisible();
+  await expect(card.getByRole('button', { name: 'Подробнее' })).toBeVisible();
 });
 
 test('completing the tour persists done status and prevents re-offer', async ({ page }) => {
@@ -38,10 +67,10 @@ test('completing the tour persists done status and prevents re-offer', async ({ 
   const card = page.getByTestId('tour-card');
   await expect(card).toBeVisible();
   await card.getByRole('button', { name: 'Начать обучение' }).click();
-  for (let i = 0; i < 11; ++i) {
+  for (let i = 0; i < 6; ++i) {
     await card.getByRole('button', { name: 'Далее' }).click();
   }
-  await expect(card.getByRole('img', { name: 'Шаг 13 из 13' })).toBeVisible();
+  await expect(card.getByRole('img', { name: 'Шаг 8 из 8' })).toBeVisible();
   await card.getByRole('button', { name: 'Завершить' }).click();
   await expect(card).toBeHidden();
 
@@ -88,22 +117,50 @@ test('Escape dismisses the tour and saves the resume point', async ({ page }) =>
   const resumedCard = page.getByTestId('tour-card');
   await expect(resumedCard).toBeVisible();
   await expect(resumedCard).toContainText('Паспорт');
-  await expect(resumedCard.getByRole('img', { name: 'Шаг 2 из 13' })).toBeVisible();
+  await expect(resumedCard.getByRole('img', { name: 'Шаг 2 из 8' })).toBeVisible();
 });
 
 test('users with completed tour never see it, and can restart from the menu', async ({ page }) => {
-  await page.addInitScript(
-    ([key, value]) => localStorage.setItem(key as string, JSON.stringify(value)),
-    [ONBOARDING_KEY, seedTourState('done')] as const
-  );
+  await page.addInitScript(([key, value]) => localStorage.setItem(key as string, JSON.stringify(value)), [
+    ONBOARDING_KEY,
+    seedTourState('done')
+  ] as const);
 
   await page.goto('/sandbox', { waitUntil: 'domcontentloaded' });
   await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible();
   await expect(page.getByTestId('tour-card')).toBeHidden();
 
   await page.getByRole('button', { name: 'Меню' }).click();
-  await page.getByRole('button', { name: 'Запустить интерактивное обучение заново' }).click();
+  await page.getByRole('button', { name: 'Запустить интерактивное обучение' }).click();
   const card = page.getByTestId('tour-card');
   await expect(card).toBeVisible();
   await expect(card).toContainText('Добро пожаловать в Песочницу');
+});
+
+test('help badge starts the shared list tour from the list tab', async ({ page }) => {
+  await page.addInitScript(([key, value]) => localStorage.setItem(key as string, JSON.stringify(value)), [
+    ONBOARDING_KEY,
+    seedTourState('done')
+  ] as const);
+
+  await page.goto('/sandbox?tab=1', { waitUntil: 'domcontentloaded' });
+  await expect(page.getByRole('tab', { name: 'Список' })).toBeVisible();
+  await expect(page.getByTestId('tour-card')).toBeHidden();
+
+  await page.locator('#help-ui-rsmodel-list').getByRole('button', { name: 'Показать обучение' }).click();
+  const card = page.getByTestId('tour-card');
+  await expect(card).toBeVisible();
+  await expect(card.getByRole('img', { name: 'Шаг 1 из 3' })).toBeVisible();
+  await expect(card).toContainText('Список конституент');
+});
+
+test('library help badge starts the library tour', async ({ page }) => {
+  await page.goto('/library', { waitUntil: 'domcontentloaded' });
+  await expect(page.getByTestId('tour-card')).toBeHidden();
+
+  await page.locator('#help-ui-library').getByRole('button', { name: 'Показать обучение' }).click();
+  const card = page.getByTestId('tour-card');
+  await expect(card).toBeVisible();
+  await expect(card).toContainText('Библиотека');
+  await expect(card.getByRole('img', { name: 'Шаг 1 из 5' })).toBeVisible();
 });

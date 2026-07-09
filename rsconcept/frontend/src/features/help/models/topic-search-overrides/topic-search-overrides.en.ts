@@ -14,9 +14,22 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
       'Portal thesaurus. Core terms, concepts, definitions, conceptual schema, constituent, attributes, model, and operations.'
   },
   [HelpTopic.INTERFACE]: {
-    keywords: ['interface', 'navigation', 'theme', 'icons', 'tooltips', 'video', 'menu'],
+    keywords: [
+      'interface',
+      'navigation',
+      'theme',
+      'icons',
+      'tooltips',
+      'video',
+      'menu',
+      'tour',
+      'guide',
+      'tutorial',
+      'onboarding',
+      'walkthrough'
+    ],
     searchText:
-      'Portal user interface. Navigation, settings, light and dark theme, contextual help, icons, video, and user menu.'
+      'Portal user interface. Navigation, settings, light and dark theme, contextual help, interactive tours and guides, icons, video, and user menu.'
   },
   [HelpTopic.UI_LIBRARY]: {
     keywords: [

@@ -45,6 +45,7 @@ export function ViewSideLocation({ className }: ViewSideLocationProps) {
         'flex flex-col text-xs sm:text-sm select-none',
         className
       )}
+      data-tour='library-folders'
     >
       <SelectLocation
         className='cc-scroll-left cc-scroll-stable'

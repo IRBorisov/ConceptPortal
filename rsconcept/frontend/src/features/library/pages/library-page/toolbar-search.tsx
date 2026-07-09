@@ -49,7 +49,7 @@ export function ToolbarSearch({ className }: ToolbarSearchProps) {
   }
 
   return (
-    <div className={cn('flex text-sm items-center pl-1.5', className)}>
+    <div className={cn('flex text-sm items-center pl-1.5', className)} data-tour='library-search'>
       <SelectorLibraryFilter className='mr-1' />
       <SelectorSearchMode className='mr-1 max-sm:hidden' />
       {searchMode === 'context' ? <PopoverContextFields className='mr-1 max-sm:hidden' /> : null}

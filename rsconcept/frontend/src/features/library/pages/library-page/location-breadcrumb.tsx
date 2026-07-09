@@ -6,6 +6,7 @@ import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
+import { LibraryTourID } from '@/features/onboarding/tours/editor-tours';
 
 import { MiniButton } from '@/components/control';
 import { IconFolderEdit } from '@/components/icons';
@@ -34,9 +35,15 @@ export function LocationBreadcrumb({ canRename, className, onRenameLocation }: L
   }));
 
   return (
-    <div className={clsx('flex items-center gap-3 pl-2 pr-5 pt-1', className)}>
+    <div className={clsx('flex items-center gap-3 pl-2 pr-5 pt-1', className)} data-tour='library-location'>
       <div className='cc-icons'>
-        <BadgeHelp topic={HelpTopic.UI_LIBRARY} contentClass='text-sm' offset={5} place='bottom-start' />
+        <BadgeHelp
+          topic={HelpTopic.UI_LIBRARY}
+          tourID={LibraryTourID.INTRO}
+          contentClass='text-sm'
+          offset={5}
+          place='bottom-start'
+        />
         <MiniButton
           title={tx('tx.lib.location.edit.hint')}
           aria-label={tx('tx.lib.location.edit')}

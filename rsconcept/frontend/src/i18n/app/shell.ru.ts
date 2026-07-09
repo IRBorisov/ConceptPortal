@@ -199,8 +199,10 @@ export const txShellRu: Record<string, string> = {
   'tx.onboarding.next': 'Далее',
   'tx.onboarding.skip': 'Пропустить',
   'tx.onboarding.done': 'Завершить',
+  'tx.onboarding.explore.hint': 'Открыть подробный тур по этой вкладке',
   'tx.onboarding.show': 'Показать обучение',
-  'tx.onboarding.show.hint': 'Запустить интерактивное обучение заново',
+  'tx.onboarding.show.hint': 'Запустить интерактивное обучение',
+  'tx.onboarding.guide': 'Гид',
 
   'tx.shell.embed.youtube': 'Встроенное видео Youtube',
   'tx.shell.embed.vk': 'Встроенное видео ВКонтакте'
