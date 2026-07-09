@@ -24,7 +24,7 @@ export function StatusBar({ className, status, onAnalyze }: StatusBarProps) {
   return (
     <div className={cn('pl-22 xs:pl-8 flex gap-1', className)}>
       <div
-        data-tour='sandbox-concept-check'
+        data-tour='concept-check'
         tabIndex={0}
         className={clsx(
           'w-32 h-7',

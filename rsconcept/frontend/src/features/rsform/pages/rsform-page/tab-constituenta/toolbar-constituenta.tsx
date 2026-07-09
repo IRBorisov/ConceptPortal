@@ -7,6 +7,7 @@ import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
+import { EditorTourID } from '@/features/onboarding/tours/editor-tours';
 
 import { MiniButton } from '@/components/control';
 import { IconClone, IconDestroy, IconNewItem, IconPredecessor, IconReset, IconSave } from '@/components/icons';
@@ -104,7 +105,12 @@ export function ToolbarConstituenta({
         </>
       ) : null}
 
-      <BadgeHelp topic={HelpTopic.UI_SCHEMA_EDITOR} offset={4} contentClass='sm:max-w-160' />
+      <BadgeHelp
+        topic={HelpTopic.UI_SCHEMA_EDITOR}
+        tourID={EditorTourID.CONCEPT_EDITOR}
+        offset={4}
+        contentClass='sm:max-w-160'
+      />
     </div>
   );
 }

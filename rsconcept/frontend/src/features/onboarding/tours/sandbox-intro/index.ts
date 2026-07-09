@@ -1,79 +1,46 @@
 import { RSModelTabID } from '@/app/navigation/navigation-context';
 
 import { type Tour } from '../../models/tour';
+import { EditorTourID, PassportTourID, SandboxTourID } from '../editor-tours';
 
-import { SANDBOX_TOUR_CST_ID } from './constants';
 import { sandboxIntroContentEn } from './content.en';
 import { sandboxIntroContentFr } from './content.fr';
 import { sandboxIntroContentRu } from './content.ru';
 
-function openConceptEditor(controller: {
-  changeTab: (tabID: number) => void;
-  gotoEditActive: (activeID: number) => void;
-}) {
-  controller.changeTab(RSModelTabID.CST_EDIT);
-  controller.gotoEditActive(SANDBOX_TOUR_CST_ID);
-}
-
+/** Brief Sandbox overview: tabs only; list/concept details live in shared editor subtours. */
 export const sandboxIntroTour: Tour = {
-  id: 'sandbox-intro',
-  version: 3,
+  id: SandboxTourID.INTRO,
+  version: 6,
   route: '/sandbox',
   autoStart: true,
   steps: [
     { id: 'welcome' },
     {
       id: 'passport',
-      anchor: 'sandbox-tab-passport',
+      anchor: 'tab-passport',
       placement: 'bottom',
+      subtour: PassportTourID.SANDBOX,
       onEnter: controller => controller.changeTab(RSModelTabID.CARD)
     },
     {
       id: 'list',
-      anchor: 'sandbox-tab-list',
+      anchor: 'tab-list',
       placement: 'bottom',
-      onEnter: controller => controller.changeTab(RSModelTabID.CST_LIST)
-    },
-    {
-      id: 'list-filter',
-      anchor: 'sandbox-list-search',
-      placement: 'bottom',
-      onEnter: controller => controller.changeTab(RSModelTabID.CST_LIST)
-    },
-    {
-      id: 'list-interact',
-      anchor: 'sandbox-list-table',
-      placement: 'top',
+      subtour: EditorTourID.CONSTITUENTS_LIST,
       onEnter: controller => controller.changeTab(RSModelTabID.CST_LIST)
     },
     {
       id: 'concept',
-      anchor: 'sandbox-tab-concept',
+      anchor: 'tab-concept',
       placement: 'bottom',
-      onEnter: openConceptEditor
-    },
-    {
-      id: 'concept-check',
-      anchor: 'sandbox-concept-check',
-      placement: 'bottom',
-      onEnter: openConceptEditor
-    },
-    {
-      id: 'concept-tools',
-      anchor: 'sandbox-concept-tools',
-      placement: 'bottom',
-      onEnter: openConceptEditor
-    },
-    {
-      id: 'concept-structure',
-      anchor: 'sandbox-concept-structure',
-      placement: 'bottom',
-      onEnter: openConceptEditor
+      subtour: EditorTourID.CONCEPT_EDITOR,
+      onEnter: controller => controller.changeTab(RSModelTabID.CST_EDIT)
     },
     {
       id: 'graph',
-      anchor: 'sandbox-tab-graph',
+      anchor: 'tab-graph',
       placement: 'bottom',
+      subtour: EditorTourID.TERM_GRAPH,
       onEnter: controller => controller.changeTab(RSModelTabID.GRAPH)
     },
     {

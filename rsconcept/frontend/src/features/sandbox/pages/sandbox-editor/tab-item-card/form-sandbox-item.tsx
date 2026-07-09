@@ -8,7 +8,10 @@ import { useSelector } from '@tanstack/react-store';
 import { useTx } from '@/i18n';
 import { LibraryItemType, type RSModel } from '@rsconcept/domain/library';
 
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components/badge-help';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
+import { PassportTourID } from '@/features/onboarding/tours/editor-tours';
 import { useModelEdit } from '@/features/rsmodel/pages/rsmodel-page/model-edit-context';
 import { useSandboxBundle } from '@/features/sandbox/context/bundle-context';
 
@@ -82,8 +85,12 @@ export function FormSandboxItem({ className }: FormSandboxItemProps) {
         event.stopPropagation();
         void form.handleSubmit();
       }}
+      data-tour='passport-form'
     >
-      <h2 className='mb-2 select-none font-math'>{tx('tx.sandbox')}</h2>
+      <div className='mb-2 flex items-center gap-2'>
+        <h2 className='select-none font-math'>{tx('tx.sandbox')}</h2>
+        <BadgeHelp topic={HelpTopic.UI_SCHEMA_CARD} tourID={PassportTourID.SANDBOX} offset={4} />
+      </div>
       <form.Field name='title'>
         {field => (
           <TextInput

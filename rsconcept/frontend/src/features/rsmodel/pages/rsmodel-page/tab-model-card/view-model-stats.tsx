@@ -24,7 +24,11 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
     stats.count_empty_terms;
 
   return (
-    <aside className={cn('h-fit flex flex-col border select-none', className)} {...restProps}>
+    <aside
+      className={cn('h-fit flex flex-col border select-none', className)}
+      data-tour='passport-stats'
+      {...restProps}
+    >
       <StatsCategory
         id='model-stats-overview'
         className='rounded-t-md'

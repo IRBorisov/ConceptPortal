@@ -155,7 +155,7 @@ export function TabSchemaList() {
 
       <div className={clsx('flex items-center border-b', !isContentEditable && 'justify-center pl-10')}>
         {isContentEditable ? (
-          <div className='px-2'>
+          <div className='px-2' data-tour='list-selection'>
             {tx('tx.general.selection.status', {
               selected: selectedCst.length,
               total: schema.items.length
@@ -168,7 +168,14 @@ export function TabSchemaList() {
             onSelect={(event, value) => router.gotoOss(value.id, event.ctrlKey || event.metaKey)}
           />
         ) : null}
-        <SearchBar id='constituents_search' noBorder className='max-w-50' query={query} onChangeQuery={setQuery} />
+        <SearchBar
+          id='constituents_search'
+          noBorder
+          className='max-w-50'
+          query={query}
+          onChangeQuery={setQuery}
+          data-tour='list-search'
+        />
       </div>
 
       <ExportDropdown
@@ -179,22 +186,24 @@ export function TabSchemaList() {
         pdfConverter={createPDFList}
       />
 
-      <TableSchemaList
-        items={filtered}
-        focusCstId={focusCstId}
-        listScrollKey={listScrollKey}
-        maxHeight={tableHeight}
-        enableSelection={isContentEditable}
-        selected={rowSelection}
-        setSelected={handleRowSelection}
-        enableRowReordering={isContentEditable && !isProcessing && schema.items.length > 1 && !hasActiveFilter}
-        onEdit={cstID => {
-          clearPendingActiveID();
-          router.gotoEditActive(cstID);
-        }}
-        onCreateNew={() => void promptCreateCst()}
-        onMoveRows={handleRowsDrop}
-      />
+      <div data-tour='list-table'>
+        <TableSchemaList
+          items={filtered}
+          focusCstId={focusCstId}
+          listScrollKey={listScrollKey}
+          maxHeight={tableHeight}
+          enableSelection={isContentEditable}
+          selected={rowSelection}
+          setSelected={handleRowSelection}
+          enableRowReordering={isContentEditable && !isProcessing && schema.items.length > 1 && !hasActiveFilter}
+          onEdit={cstID => {
+            clearPendingActiveID();
+            router.gotoEditActive(cstID);
+          }}
+          onCreateNew={() => void promptCreateCst()}
+          onMoveRows={handleRowsDrop}
+        />
+      </div>
     </div>
   );
 }

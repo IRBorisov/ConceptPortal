@@ -7,6 +7,7 @@ import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
+import { EditorTourID } from '@/features/onboarding/tours/editor-tours';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
@@ -137,7 +138,7 @@ export function ToolbarSchemaList({ className, onDeselectAll }: ToolbarSchemaLis
         onClick={promptDeleteCst}
         disabled={isProcessing || !canDeleteSelected}
       />
-      <BadgeHelp topic={HelpTopic.UI_SCHEMA_LIST} offset={5} />
+      <BadgeHelp topic={HelpTopic.UI_SCHEMA_LIST} tourID={EditorTourID.CONSTITUENTS_LIST} offset={5} />
     </div>
   );
 }

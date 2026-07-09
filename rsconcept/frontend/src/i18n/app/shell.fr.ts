@@ -198,8 +198,10 @@ export const txShellFr: Record<string, string> = {
   'tx.onboarding.next': 'Suivant',
   'tx.onboarding.skip': 'Passer',
   'tx.onboarding.done': 'Terminer',
+  'tx.onboarding.explore.hint': 'Ouvrir un tutoriel détaillé de cet onglet',
   'tx.onboarding.show': 'Afficher le tutoriel',
-  'tx.onboarding.show.hint': 'Relancer le tutoriel interactif',
+  'tx.onboarding.show.hint': 'Lancer le tutoriel interactif',
+  'tx.onboarding.guide': 'Guide',
 
   'tx.shell.embed.youtube': 'Vidéo Youtube intégrée',
   'tx.shell.embed.vk': 'Vidéo VK intégrée'

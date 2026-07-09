@@ -116,7 +116,7 @@ export function ConstituentaPrimaryActions({
 
       {showStructureButton ? (
         <TextButton
-          data-tour='sandbox-concept-structure'
+          data-tour='concept-structure'
           text={tx('tx.concept.expandStructure')}
           title={tx('tx.concept.expandStructure.hint')}
           onClick={handleStructurePlanner}

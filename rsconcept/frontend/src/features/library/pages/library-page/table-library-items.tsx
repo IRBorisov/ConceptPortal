@@ -62,33 +62,35 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
   }
 
   return (
-    <DataTable
-      id='library_data'
-      columns={columns}
-      data={items}
-      className='cc-scroll-y h-fit text-xs sm:text-sm'
-      style={{ maxHeight: tableHeight }}
-      noDataComponent={
-        <div className='cc-column dense p-3 items-center min-h-24'>
-          <p>{tx('tx.list.empty')}</p>
-          <p className='flex gap-6'>
-            <TextURL text={tx('tx.schema.create')} href='/library/create' />
-            <TextURL text={tx('tx.general.filter.reset')} onClick={resetFilter} />
-          </p>
-        </div>
-      }
-      columnVisibility={columnVisibility}
-      onRowClicked={handleOpenItem}
-      enableSorting
-      initialSorting={{
-        id: 'time_update',
-        desc: true
-      }}
-      enablePagination
-      paginationPerPage={itemsPerPage}
-      onChangePaginationOption={setItemsPerPage}
-      paginationOptions={[10, 20, 30, 50, 100]}
-      conditionalRowStyles={conditionalRowStyles}
-    />
+    <div data-tour='library-table'>
+      <DataTable
+        id='library_data'
+        columns={columns}
+        data={items}
+        className='cc-scroll-y h-fit text-xs sm:text-sm'
+        style={{ maxHeight: tableHeight }}
+        noDataComponent={
+          <div className='cc-column dense p-3 items-center min-h-24'>
+            <p>{tx('tx.list.empty')}</p>
+            <p className='flex gap-6'>
+              <TextURL text={tx('tx.schema.create')} href='/library/create' />
+              <TextURL text={tx('tx.general.filter.reset')} onClick={resetFilter} />
+            </p>
+          </div>
+        }
+        columnVisibility={columnVisibility}
+        onRowClicked={handleOpenItem}
+        enableSorting
+        initialSorting={{
+          id: 'time_update',
+          desc: true
+        }}
+        enablePagination
+        paginationPerPage={itemsPerPage}
+        onChangePaginationOption={setItemsPerPage}
+        paginationOptions={[10, 20, 30, 50, 100]}
+        conditionalRowStyles={conditionalRowStyles}
+      />
+    </div>
   );
 }

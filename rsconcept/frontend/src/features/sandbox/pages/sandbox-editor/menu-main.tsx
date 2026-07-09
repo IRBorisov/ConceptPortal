@@ -9,7 +9,8 @@ import { LocationHead } from '@rsconcept/domain/library';
 import { useConceptNavigation } from '@/app';
 import { useCreateFromSandbox } from '@/features/library/backend/use-create-from-sandbox';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding';
-import { sandboxIntroTour } from '@/features/onboarding/tours/sandbox-intro';
+import { ensureTourLoaded } from '@/features/onboarding/tours';
+import { SandboxTourID } from '@/features/onboarding/tours/editor-tours';
 
 import { Divider } from '@/components/container';
 import { MiniButton } from '@/components/control';
@@ -120,7 +121,12 @@ export function MenuMain() {
 
   function handleShowTour() {
     hideMenu();
-    restartTour(sandboxIntroTour.id);
+    void ensureTourLoaded(SandboxTourID.INTRO).then(function startSandboxIntro(tour) {
+      if (!tour) {
+        return;
+      }
+      restartTour(SandboxTourID.INTRO);
+    });
   }
 
   async function handleImportFile(event: React.ChangeEvent<HTMLInputElement>) {

@@ -18,7 +18,11 @@ export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaSt
   const countDerived = stats.count_all - countBase - stats.count_nominal;
 
   return (
-    <aside className={cn('h-fit flex flex-col border select-none', className)} {...restProps}>
+    <aside
+      className={cn('h-fit flex flex-col border select-none', className)}
+      data-tour='passport-stats'
+      {...restProps}
+    >
       <StatsCategory
         id='stats-overview'
         className='rounded-t-md'

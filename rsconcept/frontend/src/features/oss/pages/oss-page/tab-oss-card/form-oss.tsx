@@ -9,9 +9,12 @@ import { LibraryItemType } from '@rsconcept/domain/library';
 import { type OperationSchema } from '@rsconcept/domain/library';
 
 import { useRegisterUnsavedSave } from '@/app';
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components/badge-help';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
+import { PassportTourID } from '@/features/onboarding/tours/editor-tours';
 
 import { SubmitButton } from '@/components/control';
 import { IconSave } from '@/components/icons';
@@ -93,8 +96,12 @@ export function FormOSS({ className }: FormOSSProps) {
         event.stopPropagation();
         void form.handleSubmit();
       }}
+      data-tour='passport-form'
     >
-      <h2 className='mb-2 select-none'>{tx('tx.oss.short')}</h2>
+      <div className='mb-2 flex items-center gap-2'>
+        <h2 className='select-none'>{tx('tx.oss.short')}</h2>
+        <BadgeHelp topic={HelpTopic.UI_OSS_CARD} tourID={PassportTourID.OSS} offset={4} />
+      </div>
       <form.Field name='title'>
         {field => (
           <TextInput

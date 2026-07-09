@@ -9,10 +9,13 @@ import { type CurrentVersion, LibraryItemType } from '@rsconcept/domain/library'
 import { type RSForm } from '@rsconcept/domain/library/rsform';
 
 import { useConceptNavigation, useRegisterUnsavedSave } from '@/app';
+import { HelpTopic } from '@/features/help';
+import { BadgeHelp } from '@/features/help/components/badge-help';
 import { schemaUpdateLibraryItem, type UpdateLibraryItemDTO } from '@/features/library';
 import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { SelectVersion } from '@/features/library/components/select-version';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
+import { PassportTourID } from '@/features/onboarding/tours/editor-tours';
 
 import { SubmitButton } from '@/components/control';
 import { IconSave } from '@/components/icons';
@@ -98,8 +101,12 @@ export function FormSchema({ className }: FormSchemaProps) {
         event.stopPropagation();
         void form.handleSubmit();
       }}
+      data-tour='passport-form'
     >
-      <h2 className='mb-2 select-none'>{tx('tx.schema')}</h2>
+      <div className='mb-2 flex items-center gap-2'>
+        <h2 className='select-none'>{tx('tx.schema')}</h2>
+        <BadgeHelp topic={HelpTopic.UI_SCHEMA_CARD} tourID={PassportTourID.SCHEMA} offset={4} />
+      </div>
       <form.Field name='title'>
         {field => (
           <TextInput
@@ -130,7 +137,7 @@ export function FormSchema({ className }: FormSchemaProps) {
             />
           )}
         </form.Field>
-        <div className='relative flex flex-col gap-2'>
+        <div className='relative flex flex-col gap-2' data-tour='passport-versions'>
           <ToolbarVersioning className='absolute -top-1 right-2' blockReload={schema.oss.length > 0} />
 
           <Label text={tx('tx.lib.version')} className='select-none w-fit' />

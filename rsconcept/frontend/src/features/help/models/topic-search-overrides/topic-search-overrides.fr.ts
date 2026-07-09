@@ -14,9 +14,22 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
       'Thésaurus du Portail. Termes clés, concepts, définitions, schéma conceptuel, constituant, attributs, modèle et opérations.'
   },
   [HelpTopic.INTERFACE]: {
-    keywords: ['interface', 'navigation', 'thème', 'icônes', 'infobulles', 'vidéo', 'menu'],
+    keywords: [
+      'interface',
+      'navigation',
+      'thème',
+      'icônes',
+      'infobulles',
+      'vidéo',
+      'menu',
+      'visite',
+      'guide',
+      'tutoriel',
+      'onboarding',
+      'parcours'
+    ],
     searchText:
-      'Interface utilisateur du Portail. Navigation, réglages, thème clair et sombre, aide contextuelle, icônes, vidéo et menu utilisateur.'
+      'Interface utilisateur du Portail. Navigation, réglages, thème clair et sombre, aide contextuelle, tutoriels interactifs et guides, icônes, vidéo et menu utilisateur.'
   },
   [HelpTopic.UI_LIBRARY]: {
     keywords: [

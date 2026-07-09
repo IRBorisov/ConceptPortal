@@ -7,6 +7,7 @@ import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
+import { EditorTourID } from '@/features/onboarding/tours/editor-tours';
 
 import { MiniButton } from '@/components/control';
 import { cn } from '@/components/utils';
@@ -51,6 +52,7 @@ export function ToolbarSchemaGraph({ className, graph }: ToolbarSchemaGraphProps
         'rounded-b-2xl hover:bg-background backdrop-blur-xs',
         className
       )}
+      data-tour='graph-tools'
     >
       <div className='cc-icons'>
         {isContentEditable ? (
@@ -85,7 +87,12 @@ export function ToolbarSchemaGraph({ className, graph }: ToolbarSchemaGraphProps
             onChange={handleSetSelected}
           />
         ) : null}
-        <BadgeHelp topic={HelpTopic.UI_GRAPH_TERM} contentClass='sm:max-w-160' offset={4} />
+        <BadgeHelp
+          topic={HelpTopic.UI_GRAPH_TERM}
+          tourID={EditorTourID.TERM_GRAPH}
+          contentClass='sm:max-w-160'
+          offset={4}
+        />
       </div>
 
       {focusCst ? <FocusLabel label={focusCst.alias} /> : null}

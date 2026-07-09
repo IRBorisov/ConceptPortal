@@ -400,7 +400,10 @@ export function TGFlow() {
     >
       <ToolbarSchemaGraph className='cc-tab-tools' graph={filteredGraph} />
 
-      <div className='absolute z-pop top-16 sm:top-8 left-2 sm:left-3 flex flex-col pointer-events-none'>
+      <div
+        className='absolute z-pop top-16 sm:top-8 left-2 sm:left-3 flex flex-col pointer-events-none'
+        data-tour='graph-options'
+      >
         <ToolbarTGEdit className='pr-1 w-fit whitespace-nowrap backdrop-blur-xs rounded-xl' graph={filteredGraph} />
         <div className='px-2 py-1 select-none whitespace-nowrap backdrop-blur-xs rounded-xl w-fit'>
           {tx('tx.general.selection.status', {
@@ -430,24 +433,26 @@ export function TGFlow() {
         </div>
       </div>
 
-      <DiagramFlow
-        {...flowOptions}
-        height={mainHeight}
-        nodes={nodes}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        edges={edges}
-        nodeTypes={TGNodeTypes}
-        edgeTypes={TGEdgeTypes}
-        onContextMenu={event => event.preventDefault()}
-        onNodeContextMenu={handleNodeContextMenu}
-        onNodeDoubleClick={handleNodeDoubleClick}
-        nodesConnectable={interactionMode === InteractionMode.edit}
-        connectionLineComponent={TGConnectionLine}
-        onConnectStart={handleConnectStart}
-        onConnectEnd={handleConnectEnd}
-        onConnect={handleConnect}
-      />
+      <div data-tour='graph-canvas'>
+        <DiagramFlow
+          {...flowOptions}
+          height={mainHeight}
+          nodes={nodes}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          edges={edges}
+          nodeTypes={TGNodeTypes}
+          edgeTypes={TGEdgeTypes}
+          onContextMenu={event => event.preventDefault()}
+          onNodeContextMenu={handleNodeContextMenu}
+          onNodeDoubleClick={handleNodeDoubleClick}
+          nodesConnectable={interactionMode === InteractionMode.edit}
+          connectionLineComponent={TGConnectionLine}
+          onConnectStart={handleConnectStart}
+          onConnectEnd={handleConnectEnd}
+          onConnect={handleConnect}
+        />
+      </div>
     </div>
   );
 }

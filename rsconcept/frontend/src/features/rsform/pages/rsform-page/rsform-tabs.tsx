@@ -177,10 +177,10 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
         ) : null}
         <MenuGroupSchema />
 
-        <TabLabel label={tx('tx.lib.item.passport')} />
-        <TabLabel label={tx('tx.list')} />
-        <TabLabel label={tx('tx.concept')} />
-        <TabLabel label={tx('tx.graph')} />
+        <TabLabel label={tx('tx.lib.item.passport')} data-tour='tab-passport' />
+        <TabLabel label={tx('tx.list')} data-tour='tab-list' />
+        <TabLabel label={tx('tx.concept')} data-tour='tab-concept' />
+        <TabLabel label={tx('tx.graph')} data-tour='tab-graph' />
       </TabList>
 
       <div ref={containerRef} className='overflow-x-hidden'>

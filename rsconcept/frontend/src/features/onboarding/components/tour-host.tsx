@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation } from 'react-router';
 
@@ -10,10 +10,11 @@ import { useConceptNavigation } from '@/app/navigation/navigation-context';
 
 import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
+import { useTooltipsStore } from '@/stores/tooltips';
 
-import { type Tour, type TourStepContent } from '../models/tour';
+import { type Tour, tourMatchesRoute, type TourStepContent } from '../models/tour';
 import { shouldOfferTour, useOnboardingStore } from '../stores/onboarding';
-import { findAutoStartTour, getTourByID } from '../tours';
+import { ensureTourLoaded, findAutoStartTour, getTourByID } from '../tours';
 import { rectsAlmostEqual, waitForAnchorElement } from '../utils/anchors';
 import { computeCardPosition, computeCenteredCardPosition, ESTIMATED_CARD_HEIGHT } from '../utils/card-position';
 
@@ -27,25 +28,45 @@ export function TourHost() {
   const location = useLocation();
   const router = useConceptNavigation();
   const locale = usePreferencesStore(state => state.locale);
+  const hideTooltips = useTooltipsStore(state => state.hideTooltips);
+  const showTooltips = useTooltipsStore(state => state.showTooltips);
 
   const activeTourID = useOnboardingStore(state => state.activeTourID);
   const activeStep = useOnboardingStore(state => state.activeStep);
+  const tourStack = useOnboardingStore(state => state.tourStack);
   const tourRecords = useOnboardingStore(state => state.tours);
   const sessionDismissed = useOnboardingStore(state => state.sessionDismissed);
   const startTour = useOnboardingStore(state => state.startTour);
   const setActiveStep = useOnboardingStore(state => state.setActiveStep);
+  const enterSubtour = useOnboardingStore(state => state.enterSubtour);
+  const returnFromSubtour = useOnboardingStore(state => state.returnFromSubtour);
   const pauseActiveTour = useOnboardingStore(state => state.pauseActiveTour);
   const skipActiveTour = useOnboardingStore(state => state.skipActiveTour);
   const completeActiveTour = useOnboardingStore(state => state.completeActiveTour);
-
-  const tour = activeTourID ? getTourByID(activeTourID) : null;
-  const step = tour ? (tour.steps[activeStep] ?? null) : null;
 
   // Keyed by tour/step so stale async resolutions and rects are ignored without clearing state in effects.
   const [resolvedAnchor, setResolvedAnchor] = useState<ResolvedAnchor | null>(null);
   const [trackedRect, setTrackedRect] = useState<TrackedRect | null>(null);
   const [cardHeight, setCardHeight] = useState(ESTIMATED_CARD_HEIGHT);
   const [direction, setDirection] = useState<1 | -1>(1);
+  /** Bumps when a lazy tour finishes loading so sync `getTourByID` is re-read. */
+  const [tourLoadRevision, setTourLoadRevision] = useState(0);
+  /** Persist rehydration must finish before auto-start, or done/skipped/resume are ignored. */
+  const hasHydrated = useSyncExternalStore(
+    onStoreChange => {
+      const unsubscribe = useOnboardingStore.persist.onFinishHydration(onStoreChange);
+      // Hydration may finish between getSnapshot and subscribe; onFinishHydration would not re-fire.
+      if (useOnboardingStore.persist.hasHydrated()) {
+        onStoreChange();
+      }
+      return unsubscribe;
+    },
+    () => useOnboardingStore.persist.hasHydrated(),
+    () => false
+  );
+
+  const tour = activeTourID ? getTourByID(activeTourID) : null;
+  const step = tour ? (tour.steps[activeStep] ?? null) : null;
 
   const anchorElement =
     resolvedAnchor?.tourID === activeTourID && resolvedAnchor?.stepIndex === activeStep ? resolvedAnchor.element : null;
@@ -57,26 +78,51 @@ export function TourHost() {
 
   useEffect(
     function autoStartTourOnRoute() {
-      if (activeTourID) {
+      if (!hasHydrated || activeTourID) {
         return;
       }
-      const candidate = findAutoStartTour(location.pathname);
-      if (!candidate || sessionDismissed[candidate.id]) {
-        return;
-      }
-      const progress = tourRecords[candidate.id];
-      if (!shouldOfferTour(progress, candidate.version)) {
-        return;
-      }
-      const fromStep = progress?.status === 'pending' ? Math.min(progress.resumeStep, candidate.steps.length - 1) : 0;
-      startTour(candidate.id, fromStep);
+      let cancelled = false;
+      void findAutoStartTour(location.pathname).then(function offerAutoStart(candidate) {
+        if (cancelled || !candidate || useOnboardingStore.getState().sessionDismissed[candidate.id]) {
+          return;
+        }
+        // Read after await so we never offer against a pre-hydration empty snapshot.
+        const progress = useOnboardingStore.getState().tours[candidate.id];
+        if (!shouldOfferTour(progress, candidate.version)) {
+          return;
+        }
+        const fromStep = progress?.status === 'pending' ? Math.min(progress.resumeStep, candidate.steps.length - 1) : 0;
+        startTour(candidate.id, fromStep);
+      });
+      return function cancelAutoStart() {
+        cancelled = true;
+      };
     },
-    [location.pathname, activeTourID, tourRecords, sessionDismissed, startTour]
+    [hasHydrated, location.pathname, activeTourID, tourRecords, sessionDismissed, startTour]
+  );
+
+  useEffect(
+    function loadActiveTourContent() {
+      if (!activeTourID || getTourByID(activeTourID)) {
+        return;
+      }
+      let cancelled = false;
+      void ensureTourLoaded(activeTourID).then(function refreshAfterLoad(loaded) {
+        if (cancelled || !loaded) {
+          return;
+        }
+        setTourLoadRevision(revision => revision + 1);
+      });
+      return function cancelLoad() {
+        cancelled = true;
+      };
+    },
+    [activeTourID]
   );
 
   useEffect(
     function pauseTourOnRouteLeave() {
-      if (tour && location.pathname !== tour.route) {
+      if (tour && !tourMatchesRoute(tour, location.pathname)) {
         pauseActiveTour();
       }
     },
@@ -93,22 +139,26 @@ export function TourHost() {
     if (!currentStep) {
       return;
     }
-    currentStep.onEnter?.({ changeTab: router.changeTab, gotoEditActive: router.gotoEditActive });
+    currentStep.onEnter?.({
+      pathname: location.pathname,
+      changeTab: router.changeTab,
+      gotoEditActive: router.gotoEditActive
+    });
     if (!currentStep.anchor) {
       return;
     }
-    void waitForAnchorElement(currentStep.anchor, 3000, signal).then(function resolveAnchor(element) {
+    void waitForAnchorElement(currentStep.anchor, 800, signal).then(function resolveAnchor(element) {
       const state = useOnboardingStore.getState();
       if (state.activeTourID !== currentTour.id || state.activeStep !== stepIndex) {
         return;
       }
       if (!element) {
-        console.warn(
-          `Tour "${currentTour.id}": anchor "${currentStep.anchor}" not found; skipping step "${currentStep.id}"`
-        );
+        // Conditional UI (e.g. structure tools) may omit anchors — skip without blocking the tour.
         const nextIndex = stepIndex + moveDirection;
-        if (nextIndex < 0 || nextIndex >= currentTour.steps.length) {
+        if (nextIndex < 0) {
           state.dismissActiveTour();
+        } else if (nextIndex >= currentTour.steps.length) {
+          state.completeActiveTour(currentTour.version);
         } else {
           state.setActiveStep(nextIndex);
         }
@@ -125,7 +175,7 @@ export function TourHost() {
         return;
       }
       const currentTour = getTourByID(activeTourID);
-      if (location.pathname !== currentTour?.route) {
+      if (!currentTour || !tourMatchesRoute(currentTour, location.pathname)) {
         return;
       }
       const controller = new AbortController();
@@ -134,7 +184,7 @@ export function TourHost() {
         controller.abort();
       };
     },
-    [activeTourID, activeStep, direction, location.pathname]
+    [activeTourID, activeStep, direction, location.pathname, tourLoadRevision]
   );
 
   useEffect(
@@ -241,17 +291,33 @@ export function TourHost() {
     [activeTourID]
   );
 
+  useEffect(
+    function hideUiTooltipsWhileTourActive() {
+      if (!activeTourID) {
+        return;
+      }
+      hideTooltips();
+      return function restoreUiTooltips() {
+        showTooltips();
+      };
+    },
+    [activeTourID, hideTooltips, showTooltips]
+  );
+
   if (!tour || !step) {
     return null;
   }
 
-  const content = resolveStepContent(tour, step.id, locale);
+  const activeTour = tour;
+  const activeStepDef = step;
+
+  const content = resolveStepContent(activeTour, activeStepDef.id, locale);
   if (!content) {
     return null;
   }
 
-  const currentTourVersion = tour.version;
-  const totalSteps = tour.steps.length;
+  const currentTourVersion = activeTour.version;
+  const totalSteps = activeTour.steps.length;
 
   function handleNext() {
     setDirection(1);
@@ -266,12 +332,35 @@ export function TourHost() {
   function handleBack() {
     setDirection(-1);
     setCardHeight(ESTIMATED_CARD_HEIGHT);
+    if (activeStep <= 0) {
+      returnFromSubtour();
+      return;
+    }
     setActiveStep(activeStep - 1);
   }
 
   function handleSkip() {
     skipActiveTour(currentTourVersion);
   }
+
+  function handleExplore() {
+    const subtourID = activeStepDef.subtour;
+    if (!subtourID) {
+      return;
+    }
+    void ensureTourLoaded(subtourID).then(function openSubtour(subtour) {
+      if (!subtour) {
+        console.warn(`Tour "${activeTour.id}": subtour "${subtourID}" is not registered`);
+        return;
+      }
+      setDirection(1);
+      setCardHeight(ESTIMATED_CARD_HEIGHT);
+      enterSubtour(subtourID);
+    });
+  }
+
+  const canExplore = Boolean(activeStepDef.subtour);
+  const canGoBack = activeStep > 0 || tourStack.length > 0;
 
   const isCenteredCard = layoutAnchorRect === null;
   const cardPosition = isCenteredCard
@@ -312,6 +401,8 @@ export function TourHost() {
         onNext={handleNext}
         onBack={handleBack}
         onSkip={handleSkip}
+        showBack={canGoBack}
+        onExplore={canExplore ? handleExplore : undefined}
         className='pointer-events-auto z-10'
         style={{ left: cardPosition.left, top: cardPosition.top }}
         onLayout={setCardHeight}

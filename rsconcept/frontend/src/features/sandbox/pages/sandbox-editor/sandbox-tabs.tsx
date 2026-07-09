@@ -208,10 +208,10 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
           <MenuEdit />
         </div>
 
-        <TabLabel label={tx('tx.lib.item.passport')} data-tour='sandbox-tab-passport' />
-        <TabLabel label={tx('tx.list')} data-tour='sandbox-tab-list' />
-        <TabLabel label={tx('tx.concept')} data-tour='sandbox-tab-concept' />
-        <TabLabel label={tx('tx.graph')} data-tour='sandbox-tab-graph' />
+        <TabLabel label={tx('tx.lib.item.passport')} data-tour='tab-passport' />
+        <TabLabel label={tx('tx.list')} data-tour='tab-list' />
+        <TabLabel label={tx('tx.concept')} data-tour='tab-concept' />
+        <TabLabel label={tx('tx.graph')} data-tour='tab-graph' />
         <TabLabel label={tx('tx.general.data')} data-tour='sandbox-tab-data' />
         <TabLabel label={tx('tx.general.evaluation')} data-tour='sandbox-tab-evaluation' />
       </TabList>

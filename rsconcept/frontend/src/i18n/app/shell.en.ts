@@ -194,8 +194,10 @@ export const txShellEn: Record<string, string> = {
   'tx.onboarding.next': 'Next',
   'tx.onboarding.skip': 'Skip',
   'tx.onboarding.done': 'Finish',
+  'tx.onboarding.explore.hint': 'Open a detailed tour of this tab',
   'tx.onboarding.show': 'Show tutorial',
-  'tx.onboarding.show.hint': 'Restart the interactive tour',
+  'tx.onboarding.show.hint': 'Start the interactive tour',
+  'tx.onboarding.guide': 'Guide',
 
   'tx.shell.embed.youtube': 'Embedded YouTube video',
   'tx.shell.embed.vk': 'Embedded VK video'

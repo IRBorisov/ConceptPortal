@@ -96,7 +96,7 @@ export function EditorLibraryItem({ item, isProduced }: EditorLibraryItemProps) 
   }
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col' data-tour='passport-library'>
       <div className='relative flex justify-stretch sm:mb-1 max-w-120 gap-3'>
         <MiniButton
           title={tx('tx.lib.location.open')}

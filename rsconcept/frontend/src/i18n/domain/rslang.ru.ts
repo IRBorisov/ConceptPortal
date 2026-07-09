@@ -1,5 +1,5 @@
 export const txRslangRu: Record<string, string> = {
-  'tx.rslang': 'ЯРЭ',
+  'tx.rslang': 'Формальный язык',
   'tx.rslang.short': 'Экспликация',
   'tx.rslang.hint': 'Язык родоструктурной экспликации (ЯРЭ) и его применение',
 

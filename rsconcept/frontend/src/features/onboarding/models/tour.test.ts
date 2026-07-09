@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { type Tour, validateTour } from './tour';
+import { type Tour, tourMatchesRoute, validateTour } from './tour';
 
 function createMinimalTour(overrides: Partial<Tour> = {}): Tour {
   return {
@@ -62,5 +62,49 @@ describe('validateTour', () => {
     );
 
     expect(problems).toContain('tour "test-tour" step "step-1" is missing "fr" content');
+  });
+
+  test('reports empty or self-referential subtour ids', () => {
+    expect(
+      validateTour(
+        createMinimalTour({
+          steps: [{ id: 'step-1', subtour: '   ' }],
+          content: {
+            en: { 'step-1': { title: 'Title', body: 'Body' } },
+            ru: { 'step-1': { title: 'Title', body: 'Body' } },
+            fr: { 'step-1': { title: 'Title', body: 'Body' } }
+          }
+        })
+      )
+    ).toContain('tour "test-tour" step "step-1" has an empty subtour id');
+
+    expect(
+      validateTour(
+        createMinimalTour({
+          steps: [{ id: 'step-1', subtour: 'test-tour' }],
+          content: {
+            en: { 'step-1': { title: 'Title', body: 'Body' } },
+            ru: { 'step-1': { title: 'Title', body: 'Body' } },
+            fr: { 'step-1': { title: 'Title', body: 'Body' } }
+          }
+        })
+      )
+    ).toContain('tour "test-tour" step "step-1" cannot reference itself as a subtour');
+  });
+});
+
+describe('tourMatchesRoute', () => {
+  test('matches an exact string route', () => {
+    expect(tourMatchesRoute({ route: '/sandbox' }, '/sandbox')).toBe(true);
+    expect(tourMatchesRoute({ route: '/sandbox' }, '/sandbox/extra')).toBe(true);
+    expect(tourMatchesRoute({ route: '/sandbox' }, '/library')).toBe(false);
+  });
+
+  test('matches any entry in a route list, including prefixes', () => {
+    const tour = { route: ['/sandbox', '/rsforms', '/models'] as const };
+    expect(tourMatchesRoute(tour, '/sandbox')).toBe(true);
+    expect(tourMatchesRoute(tour, '/rsforms/12')).toBe(true);
+    expect(tourMatchesRoute(tour, '/models/7')).toBe(true);
+    expect(tourMatchesRoute(tour, '/library')).toBe(false);
   });
 });

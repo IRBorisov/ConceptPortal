@@ -63,6 +63,7 @@ export const txGeneralFr: Record<string, string> = {
   'tx.general.data': 'Données',
   'tx.general.evaluation': 'Évaluation',
   'tx.general.help': 'Aide',
+  'tx.general.help.hint': 'Ouvrir ce sujet dans les manuels',
   'tx.general.support': 'Support',
   'tx.general.navigation': 'Navigation',
   'tx.general.ui': 'Interface utilisateur',

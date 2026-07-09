@@ -58,6 +58,7 @@ export const txGeneralEn: Record<string, string> = {
   'tx.general.data': 'Data',
   'tx.general.evaluation': 'Evaluation',
   'tx.general.help': 'Manuals',
+  'tx.general.help.hint': 'Open this topic in the manuals',
   'tx.general.support': 'Support',
   'tx.general.navigation': 'Navigation',
   'tx.general.ui': 'User interface',
