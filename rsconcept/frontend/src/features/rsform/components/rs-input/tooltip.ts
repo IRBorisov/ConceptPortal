@@ -13,7 +13,7 @@ import { labelType } from '@rsconcept/domain/rslang/labels';
 import { appendBoldTextRow, appendMathBoldLabelParagraph } from '@/utils/format';
 import { isMac } from '@/utils/utils';
 
-import { describeRSError } from '../../labels';
+import { describeDiagnostic } from '../../labels';
 
 import { Local } from './parse/parser.terms';
 import { findAliasAt } from './utils';
@@ -114,7 +114,7 @@ function appendErrorRows(dom: HTMLDivElement, errors: readonly RSErrorDescriptio
   for (const error of errors) {
     const row = document.createElement('p');
     row.className = 'text-destructive';
-    row.innerText = `${describeRSError(error.code, error.params)}`;
+    row.innerText = `${describeDiagnostic(error)}`;
     dom.appendChild(row);
   }
 }

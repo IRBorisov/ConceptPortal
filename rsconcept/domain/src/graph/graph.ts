@@ -379,7 +379,7 @@ export class Graph<NodeID = number> {
    * Finds a cycle in the graph.
    *
    * @returns {NodeID[] | null} The cycle if found, otherwise `null`.
-   * Uses non-recursive DFS.
+   * Uses non-recursive DFS. The returned path is closed (first id equals last).
    */
   findCycle(): NodeID[] | null {
     const visited = new Set<NodeID>();
@@ -429,5 +429,119 @@ export class Graph<NodeID = number> {
       }
     }
     return null;
+  }
+
+  /**
+   * Finds one closed cycle path per cyclic strongly connected component.
+   *
+   * @returns Closed paths (first id equals last). Empty when the graph is acyclic.
+   */
+  findCycles(): NodeID[][] {
+    const components = this.stronglyConnectedComponents();
+    const result: NodeID[][] = [];
+    for (const component of components) {
+      if (component.length === 1) {
+        const id = component[0];
+        if (this.hasEdge(id, id)) {
+          result.push([id, id]);
+        }
+        continue;
+      }
+      const subgraph = new Graph<NodeID>();
+      const memberIds = new Set(component);
+      for (const id of component) {
+        subgraph.addNode(id);
+        const node = this.nodes.get(id);
+        if (!node) {
+          continue;
+        }
+        for (const child of node.outputs) {
+          if (memberIds.has(child)) {
+            subgraph.addEdge(id, child);
+          }
+        }
+      }
+      const cycle = subgraph.findCycle();
+      if (cycle) {
+        result.push(cycle);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Tarjan strongly connected components (iterative).
+   *
+   * @returns Node-id arrays; multi-node components are cyclic SCCs, single-node
+   *   components are acyclic unless the node has a self-loop.
+   */
+  stronglyConnectedComponents(): NodeID[][] {
+    let index = 0;
+    const indices = new Map<NodeID, number>();
+    const lowlink = new Map<NodeID, number>();
+    const onStack = new Set<NodeID>();
+    const stack: NodeID[] = [];
+    const components: NodeID[][] = [];
+
+    /** Tarjan stack frame for iterative {@link Graph.stronglyConnectedComponents}. */
+    interface Frame {
+      nodeId: NodeID;
+      edgeIndex: number;
+      entered: boolean;
+    }
+    for (const startId of this.nodes.keys()) {
+      if (indices.has(startId)) {
+        continue;
+      }
+      const callStack: Frame[] = [{ nodeId: startId, edgeIndex: 0, entered: false }];
+      while (callStack.length > 0) {
+        const frame = callStack[callStack.length - 1];
+        const node = this.nodes.get(frame.nodeId);
+        if (!node) {
+          callStack.pop();
+          continue;
+        }
+
+        if (!frame.entered) {
+          frame.entered = true;
+          indices.set(frame.nodeId, index);
+          lowlink.set(frame.nodeId, index);
+          index += 1;
+          stack.push(frame.nodeId);
+          onStack.add(frame.nodeId);
+        }
+
+        if (frame.edgeIndex < node.outputs.length) {
+          const child = node.outputs[frame.edgeIndex];
+          frame.edgeIndex += 1;
+          if (!indices.has(child)) {
+            callStack.push({ nodeId: child, edgeIndex: 0, entered: false });
+          } else if (onStack.has(child)) {
+            lowlink.set(frame.nodeId, Math.min(lowlink.get(frame.nodeId)!, indices.get(child)!));
+          }
+          continue;
+        }
+
+        callStack.pop();
+        if (callStack.length > 0) {
+          const parentId = callStack[callStack.length - 1].nodeId;
+          lowlink.set(parentId, Math.min(lowlink.get(parentId)!, lowlink.get(frame.nodeId)!));
+        }
+
+        if (lowlink.get(frame.nodeId) === indices.get(frame.nodeId)) {
+          const component: NodeID[] = [];
+          while (stack.length > 0) {
+            const id = stack.pop()!;
+            onStack.delete(id);
+            component.push(id);
+            if (id === frame.nodeId) {
+              break;
+            }
+          }
+          components.push(component);
+        }
+      }
+    }
+    return components;
   }
 }

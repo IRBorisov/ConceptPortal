@@ -90,6 +90,9 @@ function expressionForCstDiagnostic(cst: Constituenta, diagnostic: CstDiagnostic
       return cst.convention;
     case RSDiagnosticCode.schemaTypeMismatch:
       return cst.typification_manual;
+    case RSDiagnosticCode.schemaDependencyCycle:
+    case RSDiagnosticCode.schemaFormalDuplicate:
+      return cst.definition_formal;
     default:
       return cst.definition_formal;
   }

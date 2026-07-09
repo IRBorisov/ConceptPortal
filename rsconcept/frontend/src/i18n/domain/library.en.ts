@@ -130,6 +130,7 @@ export const txLibraryEn: Record<string, string> = {
   'tx.concept.homonym.validate': 'Term matches constituents: {aliases}',
   'tx.concept.homonym.confirm': 'Term matches constituents: {aliases}. Create anyway?',
   'tx.concept.duplicate.plural': 'Duplicates',
+  'tx.concept.dependencyCycle.validate': 'Circular dependency in definitions: {cycle}',
 
   'tx.concept.relation.plural': 'Concept relations',
   'tx.concept.relation.hint': 'Relations between constituents',

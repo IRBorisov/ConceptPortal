@@ -1,7 +1,9 @@
 export {
   assignSchemaDiagnostics,
   type CstDiagnostic,
+  detectDependencyCycleDiagnostics,
   DiagnosticKind,
+  formatDependencyCycle,
   hasCstDiagnostic,
   modelStatusCstDiagnostic,
   RSDiagnosticCode

@@ -155,6 +155,7 @@ tool.applySchemaPatch({
 | `radicalUsage`                                    | `R1` в теле формулы или как конституента           | `R#` только в `[…]` у `F#`/`P#`                                  |
 | `schemaMissingConvention`                         | `X1` без конвенции                                 | добавь предметную конвенцию                                      |
 | `schemaHomonym`                                   | одинаковый термин у разных конституент             | различай термины                                                 |
+| `schemaDependencyCycle`                           | круг в определениях (`F3 → P1 → F3`)               | разорви цикл: убери взаимные ссылки                              |
 | `localOutOfScopeParentheses`                      | `∀a∈S P(a) & Q(a)`                                 | `∀a∈S (P(a) & Q(a))`                                             |
 | `invalidFilterSyntax`                             | кривой `Fi`                                        | `Fi1[{ξ}](S1)` / `Fi1,2[D1,D2](S1)`                              |
 

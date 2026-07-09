@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useEffectEvent, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation } from 'react-router';
 
@@ -34,8 +34,6 @@ export function TourHost() {
   const activeTourID = useOnboardingStore(state => state.activeTourID);
   const activeStep = useOnboardingStore(state => state.activeStep);
   const tourStack = useOnboardingStore(state => state.tourStack);
-  const tourRecords = useOnboardingStore(state => state.tours);
-  const sessionDismissed = useOnboardingStore(state => state.sessionDismissed);
   const startTour = useOnboardingStore(state => state.startTour);
   const setActiveStep = useOnboardingStore(state => state.setActiveStep);
   const enterSubtour = useOnboardingStore(state => state.enterSubtour);
@@ -51,19 +49,6 @@ export function TourHost() {
   const [direction, setDirection] = useState<1 | -1>(1);
   /** Bumps when a lazy tour finishes loading so sync `getTourByID` is re-read. */
   const [tourLoadRevision, setTourLoadRevision] = useState(0);
-  /** Persist rehydration must finish before auto-start, or done/skipped/resume are ignored. */
-  const hasHydrated = useSyncExternalStore(
-    onStoreChange => {
-      const unsubscribe = useOnboardingStore.persist.onFinishHydration(onStoreChange);
-      // Hydration may finish between getSnapshot and subscribe; onFinishHydration would not re-fire.
-      if (useOnboardingStore.persist.hasHydrated()) {
-        onStoreChange();
-      }
-      return unsubscribe;
-    },
-    () => useOnboardingStore.persist.hasHydrated(),
-    () => false
-  );
 
   const tour = activeTourID ? getTourByID(activeTourID) : null;
   const step = tour ? (tour.steps[activeStep] ?? null) : null;
@@ -78,27 +63,55 @@ export function TourHost() {
 
   useEffect(
     function autoStartTourOnRoute() {
-      if (!hasHydrated || activeTourID) {
+      if (activeTourID) {
         return;
       }
       let cancelled = false;
-      void findAutoStartTour(location.pathname).then(function offerAutoStart(candidate) {
-        if (cancelled || !candidate || useOnboardingStore.getState().sessionDismissed[candidate.id]) {
+
+      /** Offer the first eligible auto-start tour after persist hydration. */
+      async function offerAutoStartTour() {
+        // Persist rehydration is async; offering before it finishes ignores done/skipped/resume.
+        if (!useOnboardingStore.persist.hasHydrated()) {
+          /** Resolve when zustand onboarding state has rehydrated from localStorage. */
+          await new Promise<void>(function waitForHydration(resolve) {
+            const unsubscribe = useOnboardingStore.persist.onFinishHydration(function onHydrated() {
+              unsubscribe();
+              resolve();
+            });
+            // Hydration may finish between the check and subscribe.
+            if (useOnboardingStore.persist.hasHydrated()) {
+              unsubscribe();
+              resolve();
+            }
+          });
+        }
+        if (cancelled) {
           return;
         }
-        // Read after await so we never offer against a pre-hydration empty snapshot.
-        const progress = useOnboardingStore.getState().tours[candidate.id];
+        const candidate = await findAutoStartTour(location.pathname);
+        if (cancelled || !candidate) {
+          return;
+        }
+        const { sessionDismissed: dismissed, tours } = useOnboardingStore.getState();
+        if (dismissed[candidate.id]) {
+          return;
+        }
+        const progress = tours[candidate.id];
         if (!shouldOfferTour(progress, candidate.version)) {
           return;
         }
         const fromStep = progress?.status === 'pending' ? Math.min(progress.resumeStep, candidate.steps.length - 1) : 0;
         startTour(candidate.id, fromStep);
-      });
+      }
+
+      void offerAutoStartTour();
       return function cancelAutoStart() {
         cancelled = true;
       };
     },
-    [hasHydrated, location.pathname, activeTourID, tourRecords, sessionDismissed, startTour]
+    // Intentionally omit tourRecords/sessionDismissed: hydration updates would cancel the in-flight offer.
+    // Progress is always read from getState() after hydration + async load.
+    [location.pathname, activeTourID, startTour]
   );
 
   useEffect(

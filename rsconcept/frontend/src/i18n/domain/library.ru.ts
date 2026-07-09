@@ -133,6 +133,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.concept.homonym.validate': 'Термин совпадает с конституентами: {aliases}',
   'tx.concept.homonym.confirm': 'Термин совпадает с конституентами: {aliases}. Создать?',
   'tx.concept.duplicate.plural': 'Дубликаты',
+  'tx.concept.dependencyCycle.validate': 'Логический круг в определениях: {cycle}',
 
   'tx.concept.relation.plural': 'Связи понятий',
   'tx.concept.relation.hint': 'Отношения между конституентами',

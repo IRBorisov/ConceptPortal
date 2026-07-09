@@ -374,6 +374,28 @@ describe('Testing Graph queries', () => {
     expect(graph.findCycle()).toStrictEqual(null);
   });
 
+  it('findCycles returns one closed path per cyclic SCC', () => {
+    const graph = new Graph([[1, 2], [2, 1], [3, 4], [4, 3], [5]]);
+    const cycles = graph.findCycles();
+    expect(cycles).toHaveLength(2);
+    expect(cycles.some(cycle => cycle[0] === cycle[cycle.length - 1] && cycle.includes(1) && cycle.includes(2))).toBe(
+      true
+    );
+    expect(cycles.some(cycle => cycle[0] === cycle[cycle.length - 1] && cycle.includes(3) && cycle.includes(4))).toBe(
+      true
+    );
+  });
+
+  it('findCycles reports self-loop', () => {
+    const graph = new Graph([[1, 1], [2]]);
+    expect(graph.findCycles()).toStrictEqual([[1, 1]]);
+  });
+
+  it('findCycles returns empty for acyclic graph', () => {
+    const graph = new Graph([[1, 2], [2, 3], [3]]);
+    expect(graph.findCycles()).toStrictEqual([]);
+  });
+
   it('sortStable should stably reorder node ids according to topological order', () => {
     const graph = new Graph([
       [1, 2],

@@ -1,6 +1,6 @@
-import { RSLangAnalyzer, type AnalysisFull, type ValueClass } from '@rsconcept/domain/rslang';
 import { getAnalysisFor } from '@rsconcept/domain/library/rsform-api';
-import { CstType, type RSForm } from '@rsconcept/domain/library/rsform';
+import { type RSForm } from '@rsconcept/domain/library/rsform';
+import { RSLangAnalyzer } from '@rsconcept/domain/rslang';
 
 import {
   type AnalysisResult,
@@ -9,6 +9,7 @@ import {
   type Diagnostic,
   type SessionState
 } from '../models';
+import { buildRSFormFromSession } from './rsform-builder';
 import { toPublicAnalysis } from './types';
 
 export class SchemaAdapter {
@@ -16,9 +17,8 @@ export class SchemaAdapter {
     session: SessionState,
     draft: ConstituentaDraft
   ): { result: AnalysisResult; diagnostics: Diagnostic[] } {
-    const analyzer = this.buildAnalyzer(session);
-    const schema = this.toPseudoRSFormState(session, analyzer);
-    const analysis = getAnalysisFor(draft.definitionFormal, draft.cstType, schema as unknown as RSForm, draft.alias);
+    const schema = this.toAnalysisSchema(session, draft);
+    const analysis = getAnalysisFor(draft.definitionFormal, draft.cstType, schema, draft.alias);
     const target = { constituentId: draft.id, alias: draft.alias };
     const result = toPublicAnalysis(
       {
@@ -70,18 +70,50 @@ export class SchemaAdapter {
     };
   }
 
-  private buildAnalyzer(session: SessionState): RSLangAnalyzer {
-    const analyzer = new RSLangAnalyzer();
-    for (const item of session.items) {
-      if (item.cstType === CstType.BASE) {
-        analyzer.addBase(item.alias);
+  /**
+   * Schema view for analysis: session items with the draft expression merged in so the
+   * dependency graph (and cycle diagnostics) reflect the expression under check.
+   */
+  private toAnalysisSchema(session: SessionState, draft: ConstituentaDraft): RSForm {
+    const items = session.items.map(item => {
+      if (item.id !== draft.id) {
+        return item;
       }
-      analyzer.setGlobal(
-        item.alias,
-        item.analysis.type as AnalysisFull['type'],
-        item.analysis.valueClass as ValueClass | null
-      );
+      return {
+        ...item,
+        alias: draft.alias,
+        cstType: draft.cstType,
+        definitionFormal: draft.definitionFormal,
+        term: draft.term ?? item.term,
+        definitionText: draft.definitionText ?? item.definitionText,
+        convention: draft.convention ?? item.convention,
+        // Drop cached type so mutual references surface as untyped → cycle.
+        analysis: {
+          ...item.analysis,
+          success: false,
+          type: null,
+          valueClass: null
+        }
+      };
+    });
+    if (!items.some(item => item.id === draft.id)) {
+      items.push({
+        id: draft.id,
+        alias: draft.alias,
+        cstType: draft.cstType,
+        definitionFormal: draft.definitionFormal,
+        term: draft.term ?? '',
+        definitionText: draft.definitionText ?? '',
+        convention: draft.convention ?? '',
+        analysis: {
+          success: false,
+          type: null,
+          valueClass: null,
+          diagnostics: []
+        }
+      });
     }
-    return analyzer;
+
+    return buildRSFormFromSession({ ...session, items });
   }
 }

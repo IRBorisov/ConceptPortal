@@ -13,8 +13,12 @@ import CodeMirror, {
 import clsx from 'clsx';
 
 import { CstType, type RSForm } from '@rsconcept/domain/library';
-import { typeClassForCstType } from '@rsconcept/domain/library/rsform-api';
-import { generateAlias, guessCstType } from '@rsconcept/domain/library/rsform-api';
+import {
+  generateAlias,
+  guessCstType,
+  refineAnalysisForDependencyCycles,
+  typeClassForCstType
+} from '@rsconcept/domain/library/rsform-api';
 import { type AnalysisFull, type RSErrorDescription } from '@rsconcept/domain/rslang';
 import { extractGlobals } from '@rsconcept/domain/rslang/api';
 
@@ -75,6 +79,8 @@ interface RSInputProps extends Pick<
   schema?: RSForm;
   /** CST type for the input. */
   cstType?: CstType;
+  /** Alias of the edited constituent (for dependency-cycle diagnostics). */
+  activeAlias?: string;
   /** Errors to show. */
   errors?: readonly RSErrorDescription[] | null;
   /** Disable auto-check. */
@@ -103,6 +109,7 @@ interface RSInputProps extends Pick<
 export function RSInput({
   schema,
   cstType,
+  activeAlias,
   errors,
 
   label,
@@ -166,11 +173,16 @@ export function RSInput({
 
       function runLocalParse() {
         parseTimerRef.current = undefined;
-        const nextParse = currentSchema.analyzer.checkFull(text, {
-          annotateTypes: true,
-          annotateErrors: true,
-          expected
-        });
+        const nextParse = refineAnalysisForDependencyCycles(
+          currentSchema.analyzer.checkFull(text, {
+            annotateTypes: true,
+            annotateErrors: true,
+            expected
+          }),
+          text,
+          currentSchema,
+          activeAlias
+        );
         setLocalParse(nextParse);
       }
 
@@ -186,7 +198,7 @@ export function RSInput({
 
       return clearScheduledParse;
     },
-    [noAutoCheck, value, schema, cstType, errors]
+    [noAutoCheck, value, schema, cstType, activeAlias, errors]
   );
 
   function prepareParse(value: string): AnalysisFull | null {
@@ -194,11 +206,16 @@ export function RSInput({
       return null;
     }
     const expected = cstType !== undefined ? typeClassForCstType(cstType) : undefined;
-    const result = schema.analyzer.checkFull(value, {
-      annotateTypes: true,
-      annotateErrors: true,
-      expected
-    });
+    const result = refineAnalysisForDependencyCycles(
+      schema.analyzer.checkFull(value, {
+        annotateTypes: true,
+        annotateErrors: true,
+        expected
+      }),
+      value,
+      schema,
+      activeAlias
+    );
     setLocalParse(result);
     return result;
   }

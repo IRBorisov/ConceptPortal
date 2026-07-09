@@ -198,7 +198,7 @@ export class RSFormLoader {
 
   private collectDiagnostics(): void {
     const resolveAlias = (id: number) => this.cstByID.get(id)?.alias ?? String(id);
-    assignSchemaDiagnostics(this.schema.items, resolveAlias, this.normalizedDefinitions);
+    assignSchemaDiagnostics(this.schema.items, resolveAlias, this.normalizedDefinitions, this.graph);
   }
 
   private inferSimpleExpression(target: Constituenta): boolean {

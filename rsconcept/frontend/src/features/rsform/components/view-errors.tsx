@@ -5,7 +5,7 @@ import { getRSErrorPrefix, isCritical, type RSErrorDescription } from '@rsconcep
 
 import { cn } from '@/components/utils';
 
-import { describeRSError } from '../labels';
+import { describeDiagnostic } from '../labels';
 
 interface ViewErrorsProps {
   errors: RSErrorDescription[] | null;
@@ -35,7 +35,7 @@ export function ViewErrors({ isOpen, errors, disabled, className, onShowError }:
               {isCritical(error.code) ? tx('tx.general.error') : tx('tx.general.warning')}{' '}
               {`${getRSErrorPrefix(error.code)}:`}
             </span>
-            <span>{` ${describeRSError(error.code, error.params)}`}</span>
+            <span>{` ${describeDiagnostic(error)}`}</span>
           </p>
         );
       })}
