@@ -276,6 +276,39 @@ class TestRSFormViewset(EndpointTester):
         self.executeBadData(item=self.owned_id, data=bad_alias)
 
     @decl_endpoint('/api/rsforms/{item}/load-json', method='patch')
+    def test_load_json_ignores_external_resolved_terms(self):
+        '''JSON import must recompute resolved texts, not trust payload values.'''
+        x1 = self.owned.insert_last(alias='X1')
+        data = {
+            'contract_version': PORTAL_JSON_CONTRACT_VERSION,
+            'title': 'Imported title',
+            'alias': 'IMP',
+            'description': 'Imported description',
+            'items': [{
+                'id': x1.pk,
+                'alias': 'S1',
+                'convention': '',
+                'crucial': False,
+                'cst_type': CstType.STRUCTURED,
+                'definition_formal': 'ℬ(X1)',
+                'typification_manual': '',
+                'value_is_property': False,
+                'definition_raw': '',
+                'definition_resolved': 'stale definition',
+                'term_raw': '@{D3|plur,nomn}',
+                'term_resolved': 'простые универсальные множества',
+                'term_forms': []
+            }],
+            'attribution': []
+        }
+        response = self.executeOK(item=self.owned_id, data=data)
+        item = response.data['items'][0]
+        self.assertEqual(item['term_raw'], '@{D3|plur,nomn}')
+        self.assertNotEqual(item['term_resolved'], 'простые универсальные множества')
+        self.assertIn('D3', item['term_resolved'])
+        self.assertNotEqual(item['definition_resolved'], 'stale definition')
+
+    @decl_endpoint('/api/rsforms/{item}/load-json', method='patch')
     def test_load_json_rejects_duplicate_alias(self):
         duplicate_alias = 'X1'
         x1 = self.owned.insert_last(alias='X1')

@@ -21,7 +21,7 @@ from shared.serializers import (
     StrictSerializer
 )
 
-from ..models import Attribution, Constituenta, CstType, RSForm
+from ..models import Attribution, Constituenta, CstType, RSForm, RSFormCached
 from ..models.api_RSLanguage import find_import_alias_error, validate_new_cst_alias
 from .basics import CstParseSerializer, InheritanceDataSerializer
 
@@ -384,6 +384,10 @@ class RSFormSerializer(StrictModelSerializer):
                 )
         if attributions_to_create:
             Attribution.objects.bulk_create(attributions_to_create)
+
+        # Never trust term_resolved / definition_resolved from version or JSON payloads:
+        # recompute from raw texts against the restored schema.
+        RSFormCached(instance.pk).resolve_all_text()
 
 
 class RSFormParseSerializer(StrictModelSerializer):

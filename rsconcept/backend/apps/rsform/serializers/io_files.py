@@ -305,9 +305,10 @@ def create_rsform_from_sandbox_data(
             value_is_property=item.get('value_is_property', False),
             definition_formal=item.get('definition_formal', ''),
             definition_raw=item.get('definition_raw', ''),
-            definition_resolved=item.get('definition_resolved', ''),
+            # Ignore external resolved texts; resolve_all_text recomputes them.
+            definition_resolved='',
             term_raw=item.get('term_raw', ''),
-            term_resolved=item.get('term_resolved', ''),
+            term_resolved='',
             term_forms=item.get('term_forms', [])
         )
         id_map[item['id']] = cst.pk
