@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
-import { matchConstituenta } from '@/services/search';
+import { filterConstituentaByQuery } from '@/services/search';
 import { type Grammeme } from '@rsconcept/domain/cctext';
 import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
 
@@ -41,8 +41,7 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
 
   const filteredItems = useMemo(() => {
     const source = schema.items.filter(cst => cst.term_resolved !== '');
-    const result = query.trim() === '' ? source : source.filter(cst => matchConstituenta(cst, query.trim()));
-    return result.slice(0, 8);
+    return filterConstituentaByQuery(source, query).slice(0, 8);
   }, [query, schema.items]);
   const canSubmit = entity.trim() !== '' && grams.length > 0;
 
