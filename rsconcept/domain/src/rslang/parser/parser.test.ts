@@ -254,6 +254,21 @@ describe('Testing RSParser error data', () => {
     expect(errors.some(error => error.code === RSErrorCode.expectedDeclarativeBody)).toBe(false);
   });
 
+  it('Does not report missing function body when body exists with trailing junk', () => {
+    const input = '[α∈ℬℬ(Z×R1),β∈ℬℬ(R1)]∀α0∈α F7[α0]∈β & P7[α0])';
+    const tree = parser.parse(input);
+    const ast = buildTree(tree.cursor());
+    const errors: RSErrorDescription[] = [];
+    extractSyntaxErrors(ast, input, error => errors.push(error), false, { expected: TypeClass.predicate });
+    expect(errors.some(error => error.code === RSErrorCode.expectedLogicBody)).toBe(false);
+    expect(errors).toEqual([
+      expect.objectContaining({
+        code: RSErrorCode.missingOpenBracket,
+        params: [')']
+      })
+    ]);
+  });
+
   it('Reports incomplete quantifier only for innermost missing body', () => {
     const input = '∀α∈X1 ∀β∈X2';
     const tree = parser.parse(input);

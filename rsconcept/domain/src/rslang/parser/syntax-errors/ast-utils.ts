@@ -110,3 +110,14 @@ export function isErrorPlaceholder(node: AstNode): boolean {
   }
   return node.children.every(child => isErrorPlaceholder(child));
 }
+
+/** True when a body slot is missing or is only an ERROR placeholder (not a real expression + trailing junk). */
+export function isEmptyOrErrorOnlyBody(nodes: AstNode[]): boolean {
+  if (nodes.length === 0) {
+    return true;
+  }
+  if (nodes.length === 1) {
+    return isErrorPlaceholder(nodes[0]);
+  }
+  return false;
+}

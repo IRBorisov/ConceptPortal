@@ -7,7 +7,7 @@ import { RSErrorCode, type RSErrorDescription } from '../../error';
 import { Declarative, Imp_blocks, Imperative, Recursion, Setexpr } from '../parser.terms';
 import { TokenID } from '../token';
 
-import { findAncestor, isDescendantOf, isErrorPlaceholder, subtreeHasError } from './ast-utils';
+import { findAncestor, isDescendantOf, isEmptyOrErrorOnlyBody, isErrorPlaceholder, subtreeHasError } from './ast-utils';
 import type { ErrorClassifier } from './context';
 import { errorAt, isTextToken } from './error-builders';
 
@@ -229,16 +229,6 @@ function isIncompleteImperativeBody(slot: GeneratorBodySlot, expression: string)
 
 function isIncompleteRecursionBody(nodes: AstNode[]): boolean {
   return isEmptyOrErrorOnlyBody(nodes);
-}
-
-function isEmptyOrErrorOnlyBody(nodes: AstNode[]): boolean {
-  if (nodes.length === 0) {
-    return true;
-  }
-  if (nodes.length === 1) {
-    return isErrorPlaceholder(nodes[0]);
-  }
-  return false;
 }
 
 function isImpBlocksIncomplete(blocksNode: AstNode, expression: string): boolean {

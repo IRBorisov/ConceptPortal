@@ -10,6 +10,7 @@ import { TokenID } from '../token';
 
 import { findAncestor, isFunctionDeclNode, isQuantifierNode, subtreeHasError } from './ast-utils';
 import type { ClassifyContext, ErrorClassifier } from './context';
+import { isTextToken } from './error-builders';
 import { detectTrailingErrorSlot } from './trailing-slot';
 
 export const classifyIncompleteFormal: ErrorClassifier = (node, expression, context) =>
@@ -27,8 +28,17 @@ function detectIncompleteFunctionDecl(
       );
       return argsNode !== undefined && !subtreeHasError(argsNode);
     },
+    bodyNodes: (container, errorChild) => functionDeclBodyNodes(container, expression, errorChild),
     code: () => incompleteFormalExpressionCode(expected)
   });
+}
+
+function functionDeclBodyNodes(container: AstNode, expression: string, errorChild: AstNode): AstNode[] {
+  const closeIndex = container.children.findIndex(child => isTextToken(child, expression, ']'));
+  if (closeIndex < 0) {
+    return [errorChild];
+  }
+  return container.children.slice(closeIndex + 1);
 }
 
 function incompleteFormalExpressionCode(expected?: ClassifyContext['expected']): RSErrorCode {
@@ -51,6 +61,7 @@ function detectIncompleteQuantifier(node: AstNode, expression: string): RSErrorD
       );
       return varPack !== undefined && !subtreeHasError(varPack);
     },
+    bodyNodes: (container, errorChild) => quantifierBodyNodes(container, expression, errorChild),
     code: (container, bodyChild) => {
       const inIndex = container.children.findIndex(child => expression.slice(child.from, child.to) === '∈');
       if (inIndex < 0) {
@@ -65,4 +76,13 @@ function detectIncompleteQuantifier(node: AstNode, expression: string): RSErrorD
       return RSErrorCode.expectedQuantifierBody;
     }
   });
+}
+
+function quantifierBodyNodes(container: AstNode, expression: string, errorChild: AstNode): AstNode[] {
+  const inIndex = container.children.findIndex(child => isTextToken(child, expression, '∈'));
+  if (inIndex < 0) {
+    return [errorChild];
+  }
+  // Domain is the child after ∈; body starts after the domain.
+  return container.children.slice(inIndex + 2);
 }
