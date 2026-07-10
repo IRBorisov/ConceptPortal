@@ -295,14 +295,14 @@ class TestRSFormCached(DBTester):
 
 
     def test_restore_order_keeps_supplier_before_semantic_child(self):
-        '''Semantic grouping must not place a dependent before its formal supplier.  '''
+        '''Preferred semantic clusters must yield to formal topology (schema 875 pattern).'''
         self.schema.insert_last('X1')
         self.schema.insert_last('C1')
         self.schema.insert_last(
             alias='P2',
             definition_formal=r'[σ∈ℬ(C1)] card(σ)=0',
         )
-        self.schema.insert_last(
+        p6 = self.schema.insert_last(
             alias='P6',
             definition_formal=r'[σ∈ℬℬ(C1)] ∀ξ∈σ P2[ξ]',
         )
@@ -314,7 +314,7 @@ class TestRSFormCached(DBTester):
             alias='F9',
             definition_formal=r'[β∈ℬ(R1×R2), α∈F7[β]] pr2(debool(Fi1[{α}](β)))',
         )
-        self.schema.insert_last(
+        f3 = self.schema.insert_last(
             alias='F3',
             definition_formal=r'[σ∈D{σ0∈ℬ(ℬ(R1)×ℬ(C1)) | P6[pr2(σ0)]}] F7[σ]',
         )
@@ -334,9 +334,12 @@ class TestRSFormCached(DBTester):
         )
 
         OrderManager(self.schema).restore_order()
+        p6.refresh_from_db()
+        f3.refresh_from_db()
         f9.refresh_from_db()
         f4.refresh_from_db()
 
+        self.assertLess(p6.order, f3.order)
         self.assertLess(
             f9.order,
             f4.order,

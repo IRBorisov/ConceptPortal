@@ -128,7 +128,10 @@ export class SubstitutionValidator {
         if (inputs.some(id => this.originals.has(id))) {
           minors.add(cst.id);
         }
-        candidates.set(cst.id, applyAliasMapping(cst.definition_formal, this.mapping.get(schema.id)!).replace(' ', ''));
+        candidates.set(
+          cst.id,
+          applyAliasMapping(cst.definition_formal, this.mapping.get(schema.id)!).replace(/\s+/g, '')
+        );
         schemaByCst.set(cst.id, schema);
       }
     }
@@ -397,7 +400,7 @@ export class SubstitutionValidator {
     }
     const expression1 = applyAliasMapping(left.definition_formal, this.mapping.get(schema1.id)!);
     const expression2 = applyAliasMapping(right.definition_formal, this.mapping.get(schema2.id)!);
-    return expression1.replace(' ', '') === expression2.replace(' ', '');
+    return expression1.replace(/\s+/g, '') === expression2.replace(/\s+/g, '');
   }
 
   private reportError(errorType: SubstitutionErrorType, params: string[]): boolean {

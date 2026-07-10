@@ -33,7 +33,7 @@ const entryFiles = [
   'src/library/library-api.ts',
   'src/library/folder-tree.ts',
   'src/library/rsform.ts',
-  'src/library/rsform-api.ts',
+  'src/library/rsform-api/index.ts',
   'src/library/rsmodel.ts',
   'src/library/rsmodel-api.ts',
   'src/library/rsengine.ts',

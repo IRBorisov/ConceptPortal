@@ -1,6 +1,6 @@
 {
   "name": "@rsconcept/domain",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "Shared TypeScript domain for RS language, RSForm, RSModel, RSEngine, OSS, and concept-text helpers.",
   "license": "MIT",
   "author": "IRBorisov",
@@ -84,8 +84,8 @@
       "import": "./dist/library/rsform.js"
     },
     "./library/rsform-api": {
-      "types": "./dist/library/rsform-api.d.ts",
-      "import": "./dist/library/rsform-api.js"
+      "types": "./dist/library/rsform-api/index.d.ts",
+      "import": "./dist/library/rsform-api/index.js"
     },
     "./library/rsmodel": {
       "types": "./dist/library/rsmodel.d.ts",

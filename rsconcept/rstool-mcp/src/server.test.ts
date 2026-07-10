@@ -26,6 +26,7 @@ describe("buildRSToolMcpServer", () => {
       "get_model_state",
       "evaluate",
       "recalculate_model",
+      "restore_order",
     ]);
   });
 

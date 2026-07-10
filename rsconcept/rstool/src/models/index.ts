@@ -2,6 +2,7 @@ export {
   type AgentConstituentaPatch,
   type ApplySchemaPatchInput,
   type ApplySchemaPatchResult,
+  type RestoreOrderResult,
   type SessionStateDetail,
   type SessionStateResult,
   type SessionSummary,

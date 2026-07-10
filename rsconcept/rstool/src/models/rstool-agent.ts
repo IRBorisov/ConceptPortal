@@ -1,3 +1,4 @@
+import { restoreConstituentOrder } from '@rsconcept/domain/library/rsform-api';
 import {
   portalDetailsToDrafts,
   portalDetailsToSessionSeed,
@@ -13,6 +14,7 @@ import {
   type AgentConstituentaPatch,
   type ApplySchemaPatchInput,
   type ApplySchemaPatchResult,
+  type RestoreOrderResult,
   type SessionStateDetail,
   type SessionStateResult,
   type SessionSummary
@@ -301,6 +303,27 @@ export class RSToolAgent implements RSToolAgentContract {
     const result = this.evaluation.recalculateModel(envelope.state);
     this.refreshModelDiagnostics(id);
     return result;
+  }
+
+  /** @inheritdoc */
+  public restoreOrder(sessionId?: string): RestoreOrderResult {
+    const id = this.resolveSessionId(sessionId);
+    const envelope = this.sessions.get(id);
+    const orderable = envelope.state.items.map(item => ({
+      id: item.id,
+      alias: item.alias,
+      cst_type: item.cstType,
+      definition_formal: item.definitionFormal
+    }));
+    const ordered = restoreConstituentOrder(orderable);
+    const byId = new Map(envelope.state.items.map(item => [item.id, item]));
+    envelope.state.items = ordered.map(item => byId.get(item.id)!);
+    envelope.state.updatedAt = new Date().toISOString();
+    this.sessions.replaceState(id, envelope.state);
+    return {
+      orderedIds: ordered.map(item => item.id),
+      orderedAliases: ordered.map(item => item.alias)
+    };
   }
 
   private addOrUpdateConstituenta(

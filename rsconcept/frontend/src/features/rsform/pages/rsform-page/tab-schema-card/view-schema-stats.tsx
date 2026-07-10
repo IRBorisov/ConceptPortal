@@ -112,8 +112,8 @@ export function ViewSchemaStats({ className, stats, ...restProps }: ViewSchemaSt
               ]
             : []),
           {
-            label: tx('tx.concept.basic.validate.noConvention'),
-            value: stats.count_missing_convention
+            label: tx('tx.concept.basic.validate.missingText'),
+            value: stats.count_missing_basic_text
           },
           { label: tx('tx.parse.status.incorrect.plural'), value: stats.count_incorrect },
           { label: tx('tx.parse.status.property.plural'), value: stats.count_property },
