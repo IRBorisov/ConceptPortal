@@ -294,6 +294,56 @@ class TestRSFormCached(DBTester):
         self.assertEqual(f2.order, 13)
 
 
+    def test_restore_order_keeps_supplier_before_semantic_child(self):
+        '''Semantic grouping must not place a dependent before its formal supplier.  '''
+        self.schema.insert_last('X1')
+        self.schema.insert_last('C1')
+        self.schema.insert_last(
+            alias='P2',
+            definition_formal=r'[σ∈ℬ(C1)] card(σ)=0',
+        )
+        self.schema.insert_last(
+            alias='P6',
+            definition_formal=r'[σ∈ℬℬ(C1)] ∀ξ∈σ P2[ξ]',
+        )
+        self.schema.insert_last(
+            alias='F7',
+            definition_formal=r'[σ∈ℬ(R1×R2)] Pr1(σ)',
+        )
+        f9 = self.schema.insert_last(
+            alias='F9',
+            definition_formal=r'[β∈ℬ(R1×R2), α∈F7[β]] pr2(debool(Fi1[{α}](β)))',
+        )
+        self.schema.insert_last(
+            alias='F3',
+            definition_formal=r'[σ∈D{σ0∈ℬ(ℬ(R1)×ℬ(C1)) | P6[pr2(σ0)]}] F7[σ]',
+        )
+        f4 = self.schema.insert_last(
+            alias='F4',
+            definition_formal=(
+                r'[β∈D{β0∈ℬ(ℬ(R1)×ℬ(C1)) | P6[pr2(β0)]}, α∈F3[β]] F9[β,α]'
+            ),
+        )
+        self.schema.insert_last(
+            alias='S1',
+            definition_formal='ℬ(ℬ(X1)×ℬ(C1))',
+        )
+        self.schema.insert_last(
+            alias='A1',
+            definition_formal=r'P6[ℬ(C1)]',
+        )
+
+        OrderManager(self.schema).restore_order()
+        f9.refresh_from_db()
+        f4.refresh_from_db()
+
+        self.assertLess(
+            f9.order,
+            f4.order,
+            msg=f'F9 (supplier, order={f9.order}) must precede F4 (dependent, order={f4.order})',
+        )
+
+
     def test_reset_aliases(self):
         x1 = self.schema.insert_last(
             alias='X11',

@@ -20,6 +20,9 @@ class OrderManager:
         self._fix_kernel()
         self._fix_topological()
         self._fix_semantic_children()
+        # Semantic grouping can pull a dependent ahead of a formal supplier;
+        # re-apply stable topological order so dependencies stay valid.
+        self._fix_topological()
         self._override_order()
 
     def _fix_kernel(self) -> None:
