@@ -646,3 +646,32 @@ class TestInlineSynthesis(EndpointTester):
         self.assertEqual(result['S2']['definition_formal'], 'X4×X4')
         self.assertEqual(result['D1']['definition_formal'], r'S1\S2\X2')
         self.assertEqual(result['D2']['definition_formal'], r'S2\S1\X4')
+
+    def test_inline_synthesis_resolves_terms_without_missing_refs(self):
+        '''Partial embed must not keep source term_resolved for absent entities.'''
+        self.schema2.insert_last('X1', term_raw='элемент', term_resolved='элемент')
+        source_d3 = self.schema2.insert_last(
+            'D3',
+            term_raw='простые множества',
+            term_resolved='простые множества'
+        )
+        source_s1 = self.schema2.insert_last(
+            'S1',
+            definition_formal='ℬ(X1)',
+            term_raw='@{D3|plur,nomn}',
+            term_resolved='простые множества'
+        )
+
+        data = {
+            'receiver': self.schema1.model.pk,
+            'source': self.schema2.model.pk,
+            'items': [source_s1.pk],
+            'substitutions': []
+        }
+        response = self.executeOK(data)
+        result = {item['alias']: item for item in response.data['items']}
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result['S1']['term_raw'], '@{D3|plur,nomn}')
+        self.assertNotEqual(result['S1']['term_resolved'], source_s1.term_resolved)
+        self.assertIn('D3', result['S1']['term_resolved'])
+        self.assertNotIn(source_d3.term_resolved, result['S1']['term_resolved'])

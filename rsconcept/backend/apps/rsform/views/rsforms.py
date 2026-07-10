@@ -687,6 +687,7 @@ def inline_synthesis(request: Request) -> HttpResponse:
 
         propagation.before_substitute(receiver.pk, substitutions)
         receiver.substitute(substitutions)
+        receiver.resolve_all_text()
         item.save(update_fields=['time_update'])
 
     return Response(
