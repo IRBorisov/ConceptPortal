@@ -3,3 +3,8 @@ packages:
   - rsconcept/frontend
   - rsconcept/rstool
   - rsconcept/rstool-mcp
+
+autoInstallPeers: true
+
+allowBuilds:
+  esbuild: true

@@ -11,7 +11,7 @@ FROM node-base AS builder
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY rsconcept/domain/package.json rsconcept/domain/
 COPY rsconcept/frontend/package.json rsconcept/frontend/
 

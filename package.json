@@ -1,7 +1,7 @@
 {
   "name": "concept-portal",
   "private": true,
-  "packageManager": "pnpm@9.15.9",
+  "packageManager": "pnpm@11.11.0",
   "scripts": {
     "build:domain": "pnpm --filter @rsconcept/domain run build",
     "dev:domain": "pnpm --filter @rsconcept/domain run dev",
