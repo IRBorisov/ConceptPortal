@@ -1,6 +1,7 @@
 import {
   type ApplySchemaPatchInput,
   type ApplySchemaPatchResult,
+  type RestoreOrderResult,
   type SessionStateDetail,
   type SessionStateResult
 } from './agent-workflow';
@@ -12,7 +13,7 @@ import { type RecalculateModelResult, type SessionModelState, type SetModelValue
 import { type SessionHandle, type SessionRevision, type SessionState } from './session';
 
 /** Agent-visible contract version; bump on breaking API changes. */
-export const CONTRACT_VERSION = '3.0.0';
+export const CONTRACT_VERSION = '3.1.0';
 
 /** Options for constructing an {@link RSToolAgent}. */
 export interface RSToolAgentOptions {
@@ -85,4 +86,10 @@ export interface RSToolAgentContract {
 
   /** Recompute derived model values for all constituents. */
   recalculateModel(sessionId?: string): RecalculateModelResult;
+
+  /**
+   * Restore declaration order: formal topology, semantic clusters when ready,
+   * otherwise stable against type/kernel preferred ranks.
+   */
+  restoreOrder(sessionId?: string): RestoreOrderResult;
 }

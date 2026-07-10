@@ -1,7 +1,10 @@
 import { LibraryItemType } from '@rsconcept/domain/library';
 import { type Attribution, CstType, type RSForm, type Substitution } from '@rsconcept/domain/library/rsform';
-import { getCstTypePrefix } from '@rsconcept/domain/library/rsform-api';
-import { applyMappingToConstituents } from '@rsconcept/domain/library/rsform-api';
+import {
+  applyMappingToConstituents,
+  getCstTypePrefix,
+  restoreConstituentOrder
+} from '@rsconcept/domain/library/rsform-api';
 
 import { type UpdateLibraryItemDTO } from '@/features/library';
 import {
@@ -64,7 +67,7 @@ function moveConstituents(bundle: SandboxBundle, data: MoveConstituentsDTO): San
   return next;
 }
 
-function restoreOrder(bundle: SandboxBundle, schema: RSForm): SandboxBundle {
+function restoreOrder(bundle: SandboxBundle, _schema: RSForm): SandboxBundle {
   const next = cloneBundle(bundle);
   const items = next.schema.items;
   if (items.length <= 1) {
@@ -72,53 +75,21 @@ function restoreOrder(bundle: SandboxBundle, schema: RSForm): SandboxBundle {
     return next;
   }
 
-  const graph = schema.graph;
+  const orderable = items.map(cst => ({
+    id: cst.id,
+    alias: cst.alias,
+    cst_type: cst.cst_type,
+    definition_formal: cst.definition_formal
+  }));
+  const orderedIds = restoreConstituentOrder(orderable).map(cst => cst.id);
   const itemById = new Map(items.map(cst => [cst.id, cst]));
-
-  let ordered = items.filter(cst => cst.cst_type === CstType.BASE);
-  ordered = ordered.concat(items.filter(cst => cst.cst_type === CstType.CONSTANT));
-  ordered = ordered.concat(items.filter(cst => !ordered.includes(cst) && (graph.at(cst.id)?.inputs.length ?? 0) === 0));
-
-  const kernelIds = items
-    .filter(cst => {
-      const meta = schema.cstByID.get(cst.id);
-      const parentId = meta?.spawner ?? cst.id;
-      const parent = schema.cstByID.get(parentId);
-      return (
-        cst.cst_type === CstType.STRUCTURED || cst.cst_type === CstType.AXIOM || parent?.cst_type === CstType.STRUCTURED
-      );
-    })
-    .map(cst => cst.id);
-  const kernel = new Set<number>(kernelIds);
-  for (const id of graph.expandAllInputs(kernelIds)) {
-    kernel.add(id);
-  }
-
-  ordered = ordered.concat(items.filter(cst => !ordered.includes(cst) && kernel.has(cst.id)));
-  ordered = ordered.concat(items.filter(cst => !ordered.includes(cst)));
-  ordered = graph
-    .sortStable(ordered.map(cst => cst.id))
-    .map(id => itemById.get(id)!)
-    .filter(Boolean);
-
-  const result: ConstituentaBasicsDTO[] = [];
-  const marked = new Set<number>();
-  for (const cst of ordered) {
-    if (marked.has(cst.id)) {
-      continue;
+  next.schema.items = orderedIds.map(id => {
+    const cst = itemById.get(id);
+    if (!cst) {
+      throw new Error(`restoreOrder: missing id ${id}`);
     }
-    result.push(cst);
-    marked.add(cst.id);
-    for (const childId of schema.cstByID.get(cst.id)?.spawn ?? []) {
-      const child = ordered.find(item => item.id === childId);
-      if (child && !marked.has(child.id)) {
-        marked.add(child.id);
-        result.push(child);
-      }
-    }
-  }
-
-  next.schema.items = result;
+    return cst;
+  });
   bumpBundle(next);
   return next;
 }

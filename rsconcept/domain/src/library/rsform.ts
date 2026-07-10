@@ -159,8 +159,8 @@ export interface RSFormStats {
   count_homonyms: number;
   /** Constituents that have same formal definition and term. */
   count_formal_duplicates: number;
-  /** Base constituents with no convention and alias. */
-  count_missing_convention: number;
+  /** Non-logical basic constituents missing convention and/or resolved term. */
+  count_missing_basic_text: number;
   /** Constituents with non-empty manual typification that disagrees with inferred typification. */
   count_type_mismatch: number;
 

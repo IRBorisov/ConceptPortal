@@ -5,7 +5,7 @@
 ## Контракт rstool
 
 - Пакет: `@rsconcept/rstool`
-- Версия контракта: `3.0.0` (`CONTRACT_VERSION`)
+- Версия контракта: `3.1.0` (`CONTRACT_VERSION`)
 - Основной класс: `RSToolAgent`
 - Публичные импорты: `@rsconcept/rstool` и `@rsconcept/rstool/wrapper`
 - Опции: `new RSToolAgent({ persistenceDir? })` — каталог для сохранения сессий между перезапусками (stdio/MCP: `RSTOOL_PERSISTENCE_DIR`)
@@ -32,6 +32,7 @@
 | `getModelState(sessionId?)`                    | Состояние интерпретации                     |
 | `evaluate(input, sessionId?)`                  | Scratch или конституента                    |
 | `recalculateModel(sessionId?)`                 | Пересчёт производных                        |
+| `restoreOrder(sessionId?)`                     | Упорядочить конституенты (топология + семантика) |
 
 Служебные (stdio / MCP): `ping` / `pong`+`contractVersion`; `methods` / `list_methods`.
 
@@ -59,6 +60,7 @@ Stdio использует **camelCase** имён методов (как library
 | `getModelState`     | `get_model_state`     |
 | `evaluate`          | `evaluate`            |
 | `recalculateModel`  | `recalculate_model`   |
+| `restoreOrder`      | `restore_order`       |
 
 ## `applySchemaPatch`
 
@@ -155,6 +157,19 @@ await tool.setModelValues({
 - `recalculateModel()` → `{ items: [{ id, alias, value, status }] }`.
 
 Формы `value` для `X#` / `S#` — [MODEL-TESTING.md](../../docs/MODEL-TESTING.md).
+
+## `restoreOrder`
+
+Упорядочивает конституенты сессии одним проходом Kahn:
+
+- формальные зависимости — жёстко (поставщик раньше зависимого);
+- семантические дети — сразу после родителя, если уже готовы;
+- иначе — стабильно относительно приоритета типов/ядра.
+
+```ts
+const { orderedAliases } = tool.restoreOrder();
+// → { orderedIds: number[], orderedAliases: string[] }
+```
 
 ## `importData` / `exportSession` / `exportPortal`
 

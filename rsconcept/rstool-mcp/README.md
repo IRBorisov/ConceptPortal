@@ -92,6 +92,7 @@ Edit `claude_desktop_config.json` (`~/Library/Application Support/Claude/` on ma
 | `get_model_state`     | `getModelState`     | Values + statuses.                           |
 | `evaluate`            | `evaluate`          | Scratch or stored constituent.               |
 | `recalculate_model`   | `recalculateModel`  | Full recompute.                              |
+| `restore_order`       | `restoreOrder`      | Restore declaration order (topo + semantic). |
 
 Session tools accept optional `sessionId` (flat params, no `input` wrapper). Prefer `apply_schema_patch` for schema edits.
 

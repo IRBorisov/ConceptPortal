@@ -292,11 +292,17 @@ export function deleteValueElement(
   type: Typification,
   target: number
 ): Value | null {
+  if (value === null) {
+    return null;
+  }
   if (path.length === 0 && type.typeID !== TypeID.collection) {
     return null;
   }
 
-  const arrayValue = extractValue(value!, path)! as Value[];
+  const arrayValue = extractValue(value, path);
+  if (!Array.isArray(arrayValue)) {
+    return null;
+  }
   const updatedArray = [...arrayValue.slice(0, target), ...arrayValue.slice(target + 1)];
   return setNestedValue(value, path, updatedArray);
 }

@@ -360,4 +360,14 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
     },
     invoke: (tool, args) => tool.recalculateModel(optionalSessionId(args)),
   },
+  {
+    name: "restore_order",
+    description:
+      "Restore constituent declaration order: formal topology, semantic clusters when ready, otherwise stable type/kernel ranks.",
+    inputSchema: {
+      type: "object",
+      properties: { sessionId },
+    },
+    invoke: (tool, args) => tool.restoreOrder(optionalSessionId(args)),
+  },
 ];

@@ -116,7 +116,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.concept.basic.plural': 'Неопределяемые',
   'tx.concept.basic.plural.short': 'Базовые',
   'tx.concept.basic.hint': 'Неопределяемые понятия и аксиоматические утверждения',
-  'tx.concept.basic.validate.noConvention': 'Неопределяемые без конвенции',
+  'tx.concept.basic.validate.missingText': 'Без конвенции/термина',
   'tx.concept.basic.validate.noInterpretation': 'Неопределяемые без интерпретации',
   'tx.concept.derived.plural': 'Выводимые',
   'tx.concept.derived.hint': 'Выводимые понятия и утверждения',

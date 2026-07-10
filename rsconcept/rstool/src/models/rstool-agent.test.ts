@@ -877,6 +877,27 @@ describe('RSToolAgent import and export', () => {
     expect(exported.items.map(item => item.alias)).toEqual(['D1', 'S1', 'C1', 'X1']);
   });
 
+  it('restoreOrder reorders by formal topology and kernel priority', () => {
+    const tool = new RSToolAgent();
+    const session = tool.createSession({ title: 'Restore', alias: 'RO' });
+    tool.applySchemaPatch(
+      {
+        items: [
+          { alias: 'D1', cstType: CstType.TERM, definitionFormal: 'Pr1(S1)\\X1' },
+          { alias: 'S1', cstType: CstType.STRUCTURED, definitionFormal: 'ℬ(X1×X1)' },
+          { alias: 'A2', cstType: CstType.AXIOM, definitionFormal: 'P1[S1]' },
+          { alias: 'P1', cstType: CstType.PREDICATE, definitionFormal: '[α∈ℬ(R1)] card(α)=0' },
+          { alias: 'X1', cstType: CstType.BASE, definitionFormal: '' }
+        ]
+      },
+      session.sessionId
+    );
+
+    const result = tool.restoreOrder(session.sessionId);
+    expect(result.orderedAliases.slice(0, 5)).toEqual(['X1', 'P1', 'S1', 'A2', 'D1']);
+    expect(fullState(tool, session.sessionId).items.map(item => item.alias)).toEqual(result.orderedAliases);
+  });
+
   it('round-trips portal schema export and import', () => {
     const tool = new RSToolAgent();
     const session = tool.createSession({ title: 'Round trip', alias: 'RT' });

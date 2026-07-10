@@ -115,7 +115,7 @@ export const txLibraryFr: Record<string, string> = {
   'tx.concept.basic.plural': 'Non définis',
   'tx.concept.basic.plural.short': 'Basiques',
   'tx.concept.basic.hint': 'Concepts non définis et axiomatiques',
-  'tx.concept.basic.validate.noConvention': 'Sans convention',
+  'tx.concept.basic.validate.missingText': 'Sans convention/terme',
   'tx.concept.basic.validate.noInterpretation': 'Sans interprétation',
   'tx.concept.derived.plural': 'Dérivés',
   'tx.concept.derived.hint': 'Concepts dérivés et énoncés',

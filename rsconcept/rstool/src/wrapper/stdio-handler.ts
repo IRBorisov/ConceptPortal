@@ -33,7 +33,8 @@ export const STDIO_METHODS = [
   'setModelValues',
   'getModelState',
   'evaluate',
-  'recalculateModel'
+  'recalculateModel',
+  'restoreOrder'
 ] as const;
 
 function asObject(value: unknown): Record<string, unknown> {
@@ -170,6 +171,12 @@ export async function handleStdioRequest(tool: RSToolAgent, request: StdioReques
           id: request.id,
           ok: true,
           result: tool.recalculateModel(optionalSessionId(params))
+        };
+      case 'restoreOrder':
+        return {
+          id: request.id,
+          ok: true,
+          result: tool.restoreOrder(optionalSessionId(params))
         };
       default:
         return {

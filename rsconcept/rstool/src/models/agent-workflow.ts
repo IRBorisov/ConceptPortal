@@ -35,6 +35,14 @@ export interface ApplySchemaPatchInput {
   commitMessage?: string;
 }
 
+/** Result of {@link RSToolAgent.restoreOrder}. */
+export interface RestoreOrderResult {
+  /** Constituent ids in the restored declaration order. */
+  orderedIds: number[];
+  /** Aliases in the same order as {@link orderedIds}. */
+  orderedAliases: string[];
+}
+
 /** Compact view of one constituent in a session summary. */
 export interface SessionSummaryItem {
   id: number;
