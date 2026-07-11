@@ -3,7 +3,9 @@ import {
   type ApplySchemaPatchResult,
   type RestoreOrderResult,
   type SessionStateDetail,
-  type SessionStateResult
+  type SessionStateResult,
+  type SynthesizeInput,
+  type SynthesizeResult
 } from './agent-workflow';
 import { type AnalysisResult, type AnalyzeExpressionInput } from './analysis';
 import { type Diagnostic, type ListDiagnosticsFilters } from './diagnostic';
@@ -13,7 +15,7 @@ import { type RecalculateModelResult, type SessionModelState, type SetModelValue
 import { type SessionHandle, type SessionRevision, type SessionState } from './session';
 
 /** Agent-visible contract version; bump on breaking API changes. */
-export const CONTRACT_VERSION = '3.1.0';
+export const CONTRACT_VERSION = '3.2.0';
 
 /** Options for constructing an {@link RSToolAgent}. */
 export interface RSToolAgentOptions {
@@ -92,4 +94,10 @@ export interface RSToolAgentContract {
    * otherwise stable against type/kernel preferred ranks.
    */
   restoreOrder(sessionId?: string): RestoreOrderResult;
+
+  /**
+   * Synthesis by embedding: merge constituents from another session into the receiver,
+   * then apply an identification table.
+   */
+  synthesize(input: SynthesizeInput, sessionId?: string): SynthesizeResult;
 }

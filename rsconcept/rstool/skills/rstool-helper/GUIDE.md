@@ -14,7 +14,7 @@
 
 ## Быстрый контракт для агента
 
-- Library API: `tool.applySchemaPatch(input, sessionId?)` — единственный путь правки схемы.
+- Library API: `tool.applySchemaPatch(input, sessionId?)` — основной путь правки схемы; `synthesize` — встраивание конституент из другой сессии (синтез с таблицей отождествлений).
 - Stdio/MCP: **плоские** `params` — поля метода и optional `sessionId` на одном уровне (без `params.input`).
 - Состояние: `getSessionState()` (summary) или `getSessionState('full')`.
 - Импорт/экспорт Portal: `importData`, `exportPortal({ kind })`.
@@ -225,6 +225,7 @@ kind `auto` (default) определит `portal-details` или `portal-schema`
 | `convention`                      | конвенция                           |
 | `comment`                         | комментарий                         |
 | `applySchemaPatch`                | правка схемы                        |
+| `synthesize`                      | встраивание / синтез схем           |
 | `analyzeExpression`               | проверка / анализ выражения         |
 | `listDiagnostics`, `diagnostics`  | диагностики                         |
 | `setModelValues`, `getModelState` | интерпретация, значения модели      |

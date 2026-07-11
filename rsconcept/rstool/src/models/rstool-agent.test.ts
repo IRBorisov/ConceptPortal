@@ -1055,4 +1055,63 @@ describe('RSToolAgent modeling semantics', () => {
       tool.setModelValues({ set: [{ target: 1, value: [1, 2, 3] as never }] }, session.sessionId)
     ).rejects.toThrow(/Invalid basic binding/);
   });
+
+  it('synthesize merges source session and remaps aliases', () => {
+    const tool = new RSToolAgent();
+    const receiver = tool.createSession({ title: 'Receiver' });
+    tool.applySchemaPatch({ items: [{ alias: 'X1' }] }, receiver.sessionId);
+
+    const source = tool.createSession({ title: 'Source' });
+    tool.applySchemaPatch(
+      {
+        items: [
+          { alias: 'X1', term: 'person' },
+          { alias: 'S1', definitionFormal: 'ℬ(X1)' }
+        ]
+      },
+      source.sessionId
+    );
+
+    tool.setCurrentSession(receiver.sessionId);
+    const result = tool.synthesize({
+      sourceSessionId: source.sessionId,
+      commitMessage: 'merge source'
+    });
+
+    expect(result.summary.itemCount).toBe(3);
+    expect(result.aliasMapping).toEqual({ X1: 'X2', S1: 'S1' });
+    const state = tool.getSessionState('full', receiver.sessionId) as {
+      items: Array<{ alias: string; definitionFormal: string }>;
+    };
+    expect(state.items.map(item => item.alias)).toEqual(['X1', 'X2', 'S1']);
+    expect(state.items.find(item => item.alias === 'S1')?.definitionFormal).toBe('ℬ(X2)');
+    expect(result.revision?.message).toBe('merge source');
+  });
+
+  it('synthesize applies identification table', () => {
+    const tool = new RSToolAgent();
+    const receiver = tool.createSession();
+    tool.applySchemaPatch({ items: [{ alias: 'X1', term: 'keep' }] }, receiver.sessionId);
+
+    const source = tool.createSession();
+    tool.applySchemaPatch({ items: [{ alias: 'X1', term: 'drop' }] }, source.sessionId);
+
+    tool.setCurrentSession(receiver.sessionId);
+    const result = tool.synthesize({
+      sourceSessionId: source.sessionId,
+      substitutions: [{ original: 'X1', substitution: 'X1' }]
+    });
+
+    expect(result.summary.itemCount).toBe(1);
+    expect(result.deletedIds).toHaveLength(1);
+    const state = tool.getSessionState('full', receiver.sessionId) as { items: Array<{ alias: string; term: string }> };
+    expect(state.items[0].alias).toBe('X1');
+    expect(state.items[0].term).toBe('keep');
+  });
+
+  it('synthesize rejects same source and receiver session', () => {
+    const tool = new RSToolAgent();
+    const session = tool.createSession();
+    expect(() => tool.synthesize({ sourceSessionId: session.sessionId }, session.sessionId)).toThrow(/must differ/);
+  });
 });

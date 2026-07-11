@@ -72,27 +72,28 @@ Edit `claude_desktop_config.json` (`~/Library/Application Support/Claude/` on ma
 
 ## Exposed tools
 
-| MCP tool              | Wraps               | Notes                                        |
-| --------------------- | ------------------- | -------------------------------------------- |
-| `ping`                | —                   | Liveness + `contractVersion`.                |
-| `list_methods`        | —                   | Enumerate available tools.                   |
-| `ensure_session`      | `ensureSession`     | Return active session or create one.         |
-| `create_session`      | `createSession`     | Optional `initial` seed.                     |
-| `set_current_session` | `setCurrentSession` | Switch active session.                       |
-| `get_current_session` | `getCurrentSession` | Current session handle, or `null`.           |
-| `apply_schema_patch`  | `applySchemaPatch`  | Primary schema edit path.                    |
-| `get_session_state`   | `getSessionState`   | `detail=summary` (default) or `full`.        |
-| `analyze_expression`  | `analyzeExpression` | Scratch analysis.                            |
-| `list_diagnostics`    | `listDiagnostics`   | Optional `constituentId`.                    |
-| `commit_step`         | `commitStep`        | Records a revision.                          |
-| `export_session`      | `exportSession`     | JSON string.                                 |
-| `export_portal`       | `exportPortal`      | `kind=schema\|model`, `format=json\|object`. |
-| `import_data`         | `importData`        | `kind=auto` by default.                      |
-| `set_model_values`    | `setModelValues`    | `set[]` and/or `clear[]`.                    |
-| `get_model_state`     | `getModelState`     | Values + statuses.                           |
-| `evaluate`            | `evaluate`          | Scratch or stored constituent.               |
-| `recalculate_model`   | `recalculateModel`  | Full recompute.                              |
-| `restore_order`       | `restoreOrder`      | Restore declaration order (topo + semantic). |
+| MCP tool              | Wraps               | Notes                                         |
+| --------------------- | ------------------- | --------------------------------------------- |
+| `ping`                | —                   | Liveness + `contractVersion`.                 |
+| `list_methods`        | —                   | Enumerate available tools.                    |
+| `ensure_session`      | `ensureSession`     | Return active session or create one.          |
+| `create_session`      | `createSession`     | Optional `initial` seed.                      |
+| `set_current_session` | `setCurrentSession` | Switch active session.                        |
+| `get_current_session` | `getCurrentSession` | Current session handle, or `null`.            |
+| `apply_schema_patch`  | `applySchemaPatch`  | Primary schema edit path.                     |
+| `get_session_state`   | `getSessionState`   | `detail=summary` (default) or `full`.         |
+| `analyze_expression`  | `analyzeExpression` | Scratch analysis.                             |
+| `list_diagnostics`    | `listDiagnostics`   | Optional `constituentId`.                     |
+| `commit_step`         | `commitStep`        | Records a revision.                           |
+| `export_session`      | `exportSession`     | JSON string.                                  |
+| `export_portal`       | `exportPortal`      | `kind=schema\|model`, `format=json\|object`.  |
+| `import_data`         | `importData`        | `kind=auto` by default.                       |
+| `set_model_values`    | `setModelValues`    | `set[]` and/or `clear[]`.                     |
+| `get_model_state`     | `getModelState`     | Values + statuses.                            |
+| `evaluate`            | `evaluate`          | Scratch or stored constituent.                |
+| `recalculate_model`   | `recalculateModel`  | Full recompute.                               |
+| `restore_order`       | `restoreOrder`      | Restore declaration order (topo + semantic).  |
+| `synthesize`          | `synthesize`        | Embed another session + identification table. |
 
 Session tools accept optional `sessionId` (flat params, no `input` wrapper). Prefer `apply_schema_patch` for schema edits.
 

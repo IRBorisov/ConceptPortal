@@ -44,6 +44,7 @@ export {
   type RSForm,
   type RSFormStats,
   type Substitution,
+  type TermForm,
   type TypeInfo
 } from './rsform';
 export {

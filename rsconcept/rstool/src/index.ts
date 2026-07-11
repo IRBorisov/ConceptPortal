@@ -54,6 +54,9 @@ export {
   type SessionSummaryItem,
   type SessionState,
   type SetConstituentaValueInput,
-  type SetModelValuesInput
+  type SetModelValuesInput,
+  type SynthesisSubstitution,
+  type SynthesizeInput,
+  type SynthesizeResult
 } from './models';
 export { RSToolWrapperClient, type RSToolWrapperClientOptions, type WrapperResponse } from './wrapper/client';

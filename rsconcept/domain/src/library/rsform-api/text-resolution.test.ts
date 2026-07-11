@@ -1,21 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
-import { type ConstituentaBasicsDTO } from '@/features/rsform';
-
 import { resolveConstituentTextChange } from './text-resolution';
+import { type ResolvableConstituenta } from './types';
 
 function row(
-  data: Partial<ConstituentaBasicsDTO> & Pick<ConstituentaBasicsDTO, 'alias' | 'id'>
-): ConstituentaBasicsDTO {
+  data: Partial<ResolvableConstituenta> & Pick<ResolvableConstituenta, 'alias' | 'id'>
+): ResolvableConstituenta {
   return {
     id: data.id,
     alias: data.alias,
-    convention: '',
-    crucial: false,
-    cst_type: 'term',
-    definition_formal: '',
-    typification_manual: '',
-    value_is_property: false,
     definition_raw: data.definition_raw ?? '',
     definition_resolved: data.definition_resolved ?? '',
     term_raw: data.term_raw ?? data.alias,
@@ -24,7 +17,7 @@ function row(
   };
 }
 
-describe('Sandbox text reference resolution', () => {
+describe('resolveConstituentTextChange', () => {
   it('cascades term changes into dependent terms and definitions', () => {
     const items = [
       row({ id: 1, alias: 'T1', term_raw: 'base concept', term_resolved: 'base concept' }),

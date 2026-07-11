@@ -4,9 +4,10 @@
 
 import { applyEntityReferenceMapping } from '../../cctext/language-api';
 import { type AliasMapping, applyAliasMapping, applyTypificationMapping } from '../../rslang/api';
-import { type ArgumentValue, type CstType, type RSForm } from '../rsform';
+import { type ArgumentValue, CstType, type RSForm } from '../rsform';
 
 import { getCstTypePrefix } from './cst-type';
+import { type AliasTypedConstituenta } from './types';
 
 /** Fields of {@link Constituenta} updated in place by alias mapping. */
 export interface ConstituentaMappableFields {
@@ -90,6 +91,61 @@ export function applyMappingToConstituents<T extends ConstituentaMappableFields>
     cst.term_raw = applyEntityReferenceMapping(cst.term_raw, mapping);
     cst.definition_raw = applyEntityReferenceMapping(cst.definition_raw, mapping);
   }
+}
+
+/** Highest numeric alias suffix for {@link type} among {@link items} (0 when none). */
+export function maxAliasIndex(items: readonly AliasTypedConstituenta[], type: CstType): number {
+  const prefix = getCstTypePrefix(type);
+  return items.reduce((max, cst) => {
+    if (cst.cst_type !== type) {
+      return max;
+    }
+    const index = Number(cst.alias.slice(prefix.length));
+    return Number.isFinite(index) ? Math.max(max, index) : max;
+  }, 0);
+}
+
+/**
+ * Build alias → new-alias mapping that renumbers each type sequentially in list order.
+ * Matches backend {@code RSFormCached.reset_aliases}.
+ */
+export function buildSequentialAliasMapping(items: readonly AliasTypedConstituenta[]): AliasMapping {
+  const counts: Record<string, number> = {};
+  for (const value of Object.values(CstType)) {
+    counts[value] = 1;
+  }
+  const mapping: AliasMapping = {};
+  for (const cst of items) {
+    const alias = `${getCstTypePrefix(cst.cst_type)}${counts[cst.cst_type]}`;
+    counts[cst.cst_type] += 1;
+    if (cst.alias !== alias) {
+      mapping[cst.alias] = alias;
+    }
+  }
+  return mapping;
+}
+
+/**
+ * Allocate fresh aliases for {@link source} constituents being imported into a non-empty receiver.
+ * Returns an empty mapping when the receiver has no items (aliases kept as-is).
+ */
+export function allocateImportAliases(
+  receiver: readonly AliasTypedConstituenta[],
+  source: readonly AliasTypedConstituenta[]
+): AliasMapping {
+  if (receiver.length === 0) {
+    return {};
+  }
+  const counts: Record<string, number> = {};
+  for (const value of Object.values(CstType)) {
+    counts[value] = maxAliasIndex(receiver, value);
+  }
+  const mapping: AliasMapping = {};
+  for (const cst of source) {
+    counts[cst.cst_type] += 1;
+    mapping[cst.alias] = `${getCstTypePrefix(cst.cst_type)}${counts[cst.cst_type]}`;
+  }
+  return mapping;
 }
 
 /** Remove alias from expression. */

@@ -68,7 +68,7 @@ export interface Substitution {
 }
 
 /** Represents word form for natural language. */
-interface TermForm {
+export interface TermForm {
   text: string;
   tags: string;
 }
