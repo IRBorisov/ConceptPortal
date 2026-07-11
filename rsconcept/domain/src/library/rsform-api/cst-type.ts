@@ -4,7 +4,9 @@
 
 import { TypeClass, TypeID, type Typification } from '../../rslang';
 import { type EchelonFunctional, isTypification } from '../../rslang/semantic/typification';
-import { type Constituenta, CstClass, CstType } from '../rsform';
+import { CstClass, CstType } from '../rsform';
+
+import { type StructureCapableFields } from './types';
 
 /** Record of {@link CstType} prefixes. */
 const CST_TYPE_PREFIX: Record<CstType, string> = {
@@ -58,8 +60,8 @@ export function inferClass(type: CstType, isTemplate: boolean = false): CstClass
   return CST_TYPE_TO_CLASS[type];
 }
 
-/** Check if {@link Constituenta} is a template or a category. */
-export function isTemplateCst(cst: Constituenta): boolean {
+/** Check if item type is a template or a category. */
+export function isTemplateCst(cst: { cst_type: CstType }): boolean {
   return cst.cst_type === CstType.FUNCTION || cst.cst_type === CstType.PREDICATE || cst.cst_type === CstType.STATEMENT;
 }
 
@@ -177,8 +179,8 @@ export function typeClassForCstType(cstType: CstType): TypeClass {
   }
 }
 
-/** Evaluate if {@link Constituenta} can be used produce structure. */
-export function canProduceStructure(cst: Constituenta): boolean {
+/** Evaluate if an item can be used to produce structure. */
+export function canProduceStructure(cst: StructureCapableFields): boolean {
   switch (cst.cst_type) {
     case CstType.NOMINAL:
     case CstType.BASE:

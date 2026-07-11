@@ -3,8 +3,10 @@
  */
 
 import { type Graph } from '../graph';
+import { type ExpressionType } from '../rslang';
 import { labelType } from '../rslang/labels';
 
+import { type BasicTextCheckFields } from './rsform-api/types';
 import { type Constituenta, type CstType } from './rsform';
 import { isBasicConcept, isLogical } from './rsform-api';
 import { EvalStatus } from './rsmodel';
@@ -41,8 +43,11 @@ export interface CstDiagnostic {
   params?: readonly string[];
 }
 
-/** Whether a constituent has a schema/model diagnostic with the given code. */
-export function hasCstDiagnostic(cst: Constituenta, code: RSDiagnosticCode): boolean {
+/** Whether an item has a schema/model diagnostic with the given code. */
+export function hasCstDiagnostic(
+  cst: { diagnostics?: readonly CstDiagnostic[] | null },
+  code: RSDiagnosticCode
+): boolean {
   return cst.diagnostics?.some(item => item.code === code) ?? false;
 }
 
@@ -160,7 +165,13 @@ export function modelStatusCstDiagnostic(status: EvalStatus, cstType: CstType): 
   return { kind: DiagnosticKind.MODEL, code, params: [String(status)] };
 }
 
-function collectLocalSchemaDiagnostics(cst: Constituenta): CstDiagnostic[] {
+function collectLocalSchemaDiagnostics(
+  cst: BasicTextCheckFields & {
+    is_type_mismatch: boolean;
+    typification_manual: string;
+    analysis: { type: ExpressionType | null };
+  }
+): CstDiagnostic[] {
   const result: CstDiagnostic[] = [];
   if (cst.is_type_mismatch) {
     result.push({
@@ -180,13 +191,13 @@ function collectLocalSchemaDiagnostics(cst: Constituenta): CstDiagnostic[] {
   return result;
 }
 
-function detectGroupedAliasDiagnostics(
-  items: Constituenta[],
+function detectGroupedAliasDiagnostics<T extends { id: number }>(
+  items: readonly T[],
   resolveAlias: (id: number) => string,
-  groupKey: (cst: Constituenta) => string | undefined,
+  groupKey: (cst: T) => string | undefined,
   code: RSDiagnosticCode
 ): Map<number, CstDiagnostic> {
-  const groups = new Map<string, Constituenta[]>();
+  const groups = new Map<string, T[]>();
   for (const cst of items) {
     const key = groupKey(cst);
     if (!key) {
@@ -218,7 +229,7 @@ function detectGroupedAliasDiagnostics(
 }
 
 function detectHomonymDiagnostics(
-  items: Constituenta[],
+  items: readonly { id: number; term_resolved: string }[],
   resolveAlias: (id: number) => string
 ): Map<number, CstDiagnostic> {
   return detectGroupedAliasDiagnostics(
@@ -233,7 +244,7 @@ function detectHomonymDiagnostics(
 }
 
 function detectFormalDuplicateDiagnostics(
-  items: Constituenta[],
+  items: readonly { id: number }[],
   resolveAlias: (id: number) => string,
   normalizedDefinitions: ReadonlyMap<number, string>
 ): Map<number, CstDiagnostic> {

@@ -1,13 +1,13 @@
 import { filterConstituentaByQuery } from '@/services/search';
 import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
-import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
+import { isBasicConcept, type ModelEvalFields, type SchemaIssueFields } from '@rsconcept/domain/library/rsform-api';
 
 import { useCstSearchStore } from '../../stores/cst-search';
 
 export function useFilteredItems(
   schema: RSForm,
-  isSchemaIssue?: (cst: Constituenta) => boolean,
-  isModelIssue?: (cst: Constituenta) => boolean
+  isSchemaIssue?: (cst: SchemaIssueFields) => boolean,
+  isModelIssue?: (cst: ModelEvalFields) => boolean
 ): Constituenta[] {
   const query = useCstSearchStore(state => state.query);
   const filter = useCstSearchStore(state => state.filter);

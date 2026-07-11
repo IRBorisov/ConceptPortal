@@ -4,7 +4,7 @@ import { labelType } from '../rslang/labels';
 import { bool, type EchelonFunctional, isTypification } from '../rslang/semantic/typification';
 
 import { type Constituenta, CstType, type RSForm } from './rsform';
-import { findCstByStructure } from './rsform-api';
+import { findCstByStructure, type FormalOrderFields, type StructureCapableFields } from './rsform-api';
 
 /** Represents a node in the structure planner. */
 export interface SPNode {
@@ -95,7 +95,11 @@ export class StructurePlanner {
 }
 
 // ======= Internals =======
-function produceDefinition(target: Constituenta, rootType: Typification, path: TypePath): string {
+function produceDefinition(
+  target: FormalOrderFields & StructureCapableFields,
+  rootType: Typification,
+  path: TypePath
+): string {
   let current = rootType;
   let expression = target.alias;
   let index = rootType.typeID === TypeID.collection ? 1 : 0;

@@ -3,8 +3,8 @@
 import { useEffect, useEffectEvent, useLayoutEffect, useRef, useSyncExternalStore } from 'react';
 
 import { useTx } from '@/i18n';
-import { type Constituenta, type RSEngine } from '@rsconcept/domain/library';
-import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
+import { type RSEngine } from '@rsconcept/domain/library';
+import { isSchemaIssue, type ModelEvalFields } from '@rsconcept/domain/library/rsform-api';
 import { isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
 
 import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
@@ -163,6 +163,7 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
     if (modelIssues.length === 0) {
       return;
     }
+
     if (event.ctrlKey || event.metaKey) {
       setSelectedCst(modelIssues.map(cst => cst.id));
     } else {
@@ -245,6 +246,6 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
   );
 }
 
-function getEvalIssueItems(items: Constituenta[], engine: RSEngine, _engineGeneration: number) {
+function getEvalIssueItems(items: ModelEvalFields[], engine: RSEngine, _engineGeneration: number) {
   return items.filter(cst => isModelIssue(engine, cst));
 }

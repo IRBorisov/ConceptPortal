@@ -7,13 +7,13 @@ import { extractGlobals } from '../../rslang/api';
 import { CstType } from '../rsform';
 
 import { computeSemanticRelations } from './semantic-relations';
-import { type OrderableConstituenta, type SemanticRelations } from './types';
+import { type FormalOrderFields, type SemanticRelations } from './types';
 
 /**
  * Build the formal dependency graph: supplier → dependent.
  * Matches backend {@code RSForm.graph_formal}.
  */
-export function buildFormalDependencyGraph(items: readonly OrderableConstituenta[]): Graph<number> {
+export function buildFormalDependencyGraph(items: readonly FormalOrderFields[]): Graph<number> {
   const graph = new Graph<number>();
   const byAlias = new Map(items.map(cst => [cst.alias, cst]));
   for (const cst of items) {
@@ -36,7 +36,7 @@ export function buildFormalDependencyGraph(items: readonly OrderableConstituenta
  *
  * One Kahn pass over the formal dependency graph.
  */
-export function restoreConstituentOrder<T extends OrderableConstituenta>(
+export function restoreConstituentOrder<T extends FormalOrderFields>(
   items: readonly T[],
   graph: Graph<number> = buildFormalDependencyGraph(items),
   relations: SemanticRelations = computeSemanticRelations(items, graph)
@@ -77,9 +77,7 @@ export function restoreConstituentOrder<T extends OrderableConstituenta>(
   const pendingChildren: number[] = [];
 
   function enqueueSticky(candidateIds: readonly number[]): void {
-    const sticky = candidateIds.filter(
-      childId => ready.has(childId) && !pendingChildren.includes(childId)
-    );
+    const sticky = candidateIds.filter(childId => ready.has(childId) && !pendingChildren.includes(childId));
     sticky.sort((left, right) => (rank.get(left) ?? 0) - (rank.get(right) ?? 0));
     pendingChildren.push(...sticky);
   }
@@ -138,7 +136,7 @@ export function restoreConstituentOrder<T extends OrderableConstituenta>(
   return result;
 }
 
-function kernelPriority<T extends OrderableConstituenta>(
+function kernelPriority<T extends FormalOrderFields>(
   items: readonly T[],
   graph: Graph<number>,
   parentOf: Map<number, number>
@@ -176,9 +174,7 @@ function kernelPriority<T extends OrderableConstituenta>(
       const parentId = parentOf.get(cst.id) ?? cst.id;
       const parent = byId.get(parentId);
       return (
-        cst.cst_type === CstType.STRUCTURED ||
-        cst.cst_type === CstType.AXIOM ||
-        parent?.cst_type === CstType.STRUCTURED
+        cst.cst_type === CstType.STRUCTURED || cst.cst_type === CstType.AXIOM || parent?.cst_type === CstType.STRUCTURED
       );
     })
     .map(cst => cst.id);

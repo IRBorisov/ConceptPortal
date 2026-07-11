@@ -8,8 +8,8 @@ export {
   applyMappingToConstituents,
   argumentValuesToMapping,
   buildSequentialAliasMapping,
-  type ConstituentaMappableFields,
   generateAlias,
+  type MappableFields,
   maxAliasIndex,
   removeAliasReference,
   validateAliasFormat,
@@ -40,7 +40,7 @@ export {
   type InlineSynthesisInput,
   type InlineSynthesisResult,
   sortItemsForInlineSynthesis,
-  type SynthesizableConstituenta
+  type SynthesizableFields
 } from './synthesis';
 export {
   buildDefinitionReferenceGraph,
@@ -50,4 +50,19 @@ export {
   type TextChangeOptions
 } from './text-resolution';
 export { insertItemAfter, moveIdsInOrder, reorderItemsByIds } from './transforms';
-export type { AliasTypedConstituenta, OrderableConstituenta, ResolvableConstituenta, SemanticRelations } from './types';
+export type {
+  AliasTypedFields,
+  BasicTextCheckFields,
+  DescribableFields,
+  DiagnosticSourceFields,
+  FormalOrderFields,
+  ModelEvalFields,
+  SchemaIssueFields,
+  SearchableFields,
+  SemanticRelations,
+  SpawnPathFields,
+  StructureCapableFields,
+  TemplateParamSourceFields,
+  TemplateSourceFields,
+  TextResolvableFields
+} from './types';

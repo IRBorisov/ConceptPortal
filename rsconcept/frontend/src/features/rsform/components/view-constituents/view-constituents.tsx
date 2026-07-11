@@ -3,6 +3,7 @@
 import { type ReactNode } from 'react';
 
 import { type Constituenta, type RSEngine, type RSForm } from '@rsconcept/domain/library';
+import { type ModelEvalFields, type SchemaIssueFields } from '@rsconcept/domain/library/rsform-api';
 
 import { type DataTableRowDrop } from '@/components/data-table';
 import { cn } from '@/components/utils';
@@ -14,8 +15,8 @@ interface ViewConstituentsProps {
   schema: RSForm;
   engine?: RSEngine;
   activeCst?: Constituenta | null;
-  isSchemaIssue?: (cst: Constituenta) => boolean;
-  isModelIssue?: (cst: Constituenta) => boolean;
+  isSchemaIssue?: (cst: SchemaIssueFields) => boolean;
+  isModelIssue?: (cst: ModelEvalFields) => boolean;
 
   onActivate?: (cst: Constituenta) => void;
   onDoubleClick?: (cst: Constituenta) => void;

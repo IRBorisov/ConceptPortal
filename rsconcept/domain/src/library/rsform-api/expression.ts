@@ -5,7 +5,7 @@
 import { type AstNode } from '../../parsing';
 import { ValueClass } from '../../rslang';
 import { generateExpressionFromAst, parseRSLangExpression } from '../../rslang/api';
-import { type ArgumentValue, type Constituenta, CstStatus, CstType } from '../rsform';
+import { type ArgumentValue, CstStatus, CstType } from '../rsform';
 
 import { isBasicConcept } from './cst-type';
 
@@ -61,8 +61,8 @@ export function inferTemplate(expression: string): boolean {
   return (match && match?.length > 0) ?? false;
 }
 
-/** Apply filter based on start {@link Constituenta} type. */
-export function applyFilterCategory(start: Constituenta, items: Constituenta[]): Constituenta[] {
+/** Apply filter based on start item type within an ordered list. */
+export function applyFilterCategory<T extends { cst_type: CstType }>(start: T, items: readonly T[]): T[] {
   const startIndex = items.indexOf(start);
   if (startIndex === -1) {
     return [];

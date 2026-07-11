@@ -4,12 +4,13 @@
 
 import { TypeID, type Typification, ValueClass } from '../../rslang';
 import { hasCstDiagnostic, RSDiagnosticCode } from '../diagnostics';
-import { type Constituenta, CstStatus, CstType, type RSForm, type RSFormStats } from '../rsform';
+import { CstStatus, CstType, type RSForm, type RSFormStats } from '../rsform';
 
 import { isBasicConcept, isLogical } from './cst-type';
+import { type BasicTextCheckFields, type SchemaIssueFields, type StructureCapableFields } from './types';
 
-/** Checks if {@link Constituenta} is a schema issue. */
-export function isSchemaIssue(cst: Constituenta): boolean {
+/** Checks if an item is a schema issue. */
+export function isSchemaIssue(cst: SchemaIssueFields): boolean {
   return (
     (cst.diagnostics?.length ?? 0) > 0 || cst.status === CstStatus.INCORRECT || cst.status === CstStatus.INCALCULABLE
   );
@@ -125,7 +126,7 @@ export function calculateSchemaStats(target: RSForm): RSFormStats {
   return stats;
 }
 
-function calculateStepComplexity(cst: Constituenta): number {
+function calculateStepComplexity(cst: StructureCapableFields): number {
   if (cst.cst_type === CstType.AXIOM || cst.cst_type === CstType.NOMINAL || !isBasicConcept(cst.cst_type)) {
     return 0;
   }
@@ -162,7 +163,7 @@ function calculateTypificationComplexity(type: Typification): number {
 }
 
 /** Non-logical basic concept missing convention and/or resolved term (trimmed). */
-function isMissingBasicText(cst: Constituenta): boolean {
+function isMissingBasicText(cst: BasicTextCheckFields): boolean {
   if (!isBasicConcept(cst.cst_type) || isLogical(cst.cst_type)) {
     return false;
   }

@@ -5,7 +5,7 @@
 import { type AliasMapping } from '../../rslang/api';
 import { type Attribution, type Substitution } from '../rsform';
 
-import { applyMappingToConstituents, type ConstituentaMappableFields } from './alias';
+import { applyMappingToConstituents, type MappableFields } from './alias';
 import { remapAttributionsUnderSubstitution } from './attribution';
 
 /** Result of applying substitutions to a schema fragment. */
@@ -21,7 +21,7 @@ export interface SubstitutionResult<T> {
  * Apply constituenta substitutions: remap attributions, drop originals, rewrite aliases in survivors.
  * Does not resolve texts — call {@link resolveAllConstituentTexts} afterwards.
  */
-export function applyConstituentSubstitutions<T extends ConstituentaMappableFields & { id: number; alias: string }>(
+export function applyConstituentSubstitutions<T extends MappableFields & { id: number; alias: string }>(
   items: readonly T[],
   attributions: readonly Attribution[],
   substitutions: readonly Substitution[]

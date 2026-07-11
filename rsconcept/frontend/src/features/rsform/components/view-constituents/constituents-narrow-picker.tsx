@@ -4,6 +4,7 @@ import { type ReactNode, type RefObject, useEffect, useEffectEvent, useLayoutEff
 import { createPortal } from 'react-dom';
 
 import { type Constituenta, type RSEngine, type RSForm } from '@rsconcept/domain/library';
+import { type ModelEvalFields, type SchemaIssueFields } from '@rsconcept/domain/library/rsform-api';
 
 import { cn } from '@/components/utils';
 import { useWindowSize } from '@/hooks/use-window-size';
@@ -16,8 +17,8 @@ interface ConstituentsNarrowPickerProps {
   schema: RSForm;
   engine?: RSEngine;
   activeCst?: Constituenta | null;
-  isSchemaIssue?: (cst: Constituenta) => boolean;
-  isModelIssue?: (cst: Constituenta) => boolean;
+  isSchemaIssue?: (cst: SchemaIssueFields) => boolean;
+  isModelIssue?: (cst: ModelEvalFields) => boolean;
   onActivate?: (cst: Constituenta) => void;
   showModelFilter?: boolean;
   stopSearchKeyPropagation?: boolean;
@@ -112,8 +113,8 @@ interface NarrowPickerOverlayProps {
   schema: RSForm;
   engine?: RSEngine;
   activeCst?: Constituenta | null;
-  isSchemaIssue?: (cst: Constituenta) => boolean;
-  isModelIssue?: (cst: Constituenta) => boolean;
+  isSchemaIssue?: (cst: SchemaIssueFields) => boolean;
+  isModelIssue?: (cst: ModelEvalFields) => boolean;
   onActivate?: (cst: Constituenta) => void;
   className?: string;
 }
