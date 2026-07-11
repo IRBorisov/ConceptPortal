@@ -1,4 +1,5 @@
-import { restoreConstituentOrder } from '@rsconcept/domain/library/rsform-api';
+import { inlineSynthesis, restoreConstituentOrder } from '@rsconcept/domain/library/rsform-api';
+import { type Substitution } from '@rsconcept/domain/library/rsform';
 import {
   portalDetailsToDrafts,
   portalDetailsToSessionSeed,
@@ -17,7 +18,9 @@ import {
   type RestoreOrderResult,
   type SessionStateDetail,
   type SessionStateResult,
-  type SessionSummary
+  type SessionSummary,
+  type SynthesizeInput,
+  type SynthesizeResult
 } from './agent-workflow';
 import { type AnalysisResult, type AnalyzeExpressionInput } from './analysis';
 import { CstType } from './common';
@@ -43,6 +46,19 @@ import {
 import { type SessionHandle, type SessionRevision, type SessionState } from './session';
 import { CONTRACT_VERSION, type RSToolAgentContract, type RSToolAgentOptions } from './tool-contract';
 
+interface SynthesizableSessionItem {
+  id: number;
+  alias: string;
+  cst_type: CstType;
+  definition_formal: string;
+  typification_manual: string;
+  term_raw: string;
+  term_resolved: string;
+  term_forms: { text: string; tags: string }[];
+  definition_raw: string;
+  definition_resolved: string;
+  convention: string;
+}
 function normalizeImportedState(state: SessionState): SessionState {
   return {
     ...state,
@@ -326,6 +342,139 @@ export class RSToolAgent implements RSToolAgentContract {
     };
   }
 
+  /** @inheritdoc */
+  public synthesize(input: SynthesizeInput, sessionId?: string): SynthesizeResult {
+    const receiverHandle = sessionId
+      ? { sessionId: this.resolveSessionId(sessionId), contractVersion: this.contractVersion }
+      : this.ensureSession();
+    const receiverId = receiverHandle.sessionId;
+    const sourceId = this.resolveSessionId(input.sourceSessionId);
+
+    if (sourceId === receiverId) {
+      throw new Error('synthesize: sourceSessionId must differ from the receiver session');
+    }
+
+    const receiverEnvelope = this.sessions.get(receiverId);
+    const sourceEnvelope = this.sessions.get(sourceId);
+    const snapshot = this.sessions.snapshot(receiverId);
+
+    try {
+      const sourceItems = this.selectSourceItems(sourceEnvelope.state.items, input.items);
+      const substitutions = this.resolveSynthesisSubstitutions(
+        receiverEnvelope.state.items,
+        sourceItems,
+        input.substitutions ?? []
+      );
+
+      const nextId = receiverEnvelope.state.items.reduce((max, item) => Math.max(max, item.id), 0) + 1;
+      const result = inlineSynthesis({
+        receiverItems: receiverEnvelope.state.items.map(toSynthesizableSessionItem),
+        sourceItems: sourceItems.map(toSynthesizableSessionItem),
+        substitutions,
+        nextId
+      });
+
+      const drafts: ConstituentaDraft[] = result.items.map(item => ({
+        id: item.id,
+        alias: item.alias,
+        cstType: item.cst_type,
+        definitionFormal: item.definition_formal,
+        term: item.term_resolved || item.term_raw,
+        definitionText: item.definition_resolved || item.definition_raw,
+        convention: item.convention
+      }));
+
+      receiverEnvelope.state.items = [];
+      receiverEnvelope.state.model = {
+        items: receiverEnvelope.state.model.items.filter(value => !result.deletedIds.has(value.id))
+      };
+      this.sessions.replaceState(receiverId, receiverEnvelope.state);
+
+      this.applyConstituents({ drafts, mode: 'best_effort' }, receiverId);
+
+      const revision = input.commitMessage ? this.commitStep(input.commitMessage, receiverId) : undefined;
+      return {
+        session: receiverHandle,
+        summary: this.buildSessionSummary(receiverId),
+        idMap: result.idMap,
+        aliasMapping: result.aliasMapping,
+        deletedIds: [...result.deletedIds],
+        insertedIds: result.insertedIds,
+        revision
+      };
+    } catch (error) {
+      this.sessions.restore(receiverId, snapshot);
+      throw error;
+    }
+  }
+
+  private selectSourceItems(sourceItems: ConstituentaState[], aliases?: string[]): ConstituentaState[] {
+    if (!aliases || aliases.length === 0) {
+      return [...sourceItems];
+    }
+    const byAlias = new Map(sourceItems.map(item => [item.alias, item]));
+    const selected: ConstituentaState[] = [];
+    for (const alias of aliases) {
+      const item = byAlias.get(alias);
+      if (!item) {
+        throw new Error(`synthesize: unknown source alias "${alias}"`);
+      }
+      selected.push(item);
+    }
+    return selected;
+  }
+
+  private resolveSynthesisSubstitutions(
+    receiverItems: ConstituentaState[],
+    sourceItems: ConstituentaState[],
+    substitutions: SynthesizeInput['substitutions']
+  ): Substitution[] {
+    if (!substitutions || substitutions.length === 0) {
+      return [];
+    }
+
+    const receiverByAlias = new Map(receiverItems.map(item => [item.alias, item]));
+    const sourceByAlias = new Map(sourceItems.map(item => [item.alias, item]));
+    const deletedKeys = new Set<string>();
+    const resolved: Substitution[] = [];
+
+    for (const row of substitutions) {
+      const originalSource = sourceByAlias.get(row.original);
+      const originalReceiver = receiverByAlias.get(row.original);
+      const substitutionSource = sourceByAlias.get(row.substitution);
+      const substitutionReceiver = receiverByAlias.get(row.substitution);
+
+      let originalId: number;
+      let substitutionId: number;
+      let originalKey: string;
+
+      // Prefer source→receiver when both sides share the same alias (typical base identification).
+      // Session ids are independent, so do not compare numeric ids across sessions.
+      if (originalSource && substitutionReceiver) {
+        originalId = originalSource.id;
+        substitutionId = substitutionReceiver.id;
+        originalKey = `s:${originalId}`;
+      } else if (originalReceiver && substitutionSource) {
+        originalId = originalReceiver.id;
+        substitutionId = substitutionSource.id;
+        originalKey = `r:${originalId}`;
+      } else {
+        throw new Error(
+          `synthesize: substitution "${row.original}" → "${row.substitution}" must pair one source alias with one receiver alias`
+        );
+      }
+
+      if (deletedKeys.has(originalKey)) {
+        throw new Error(`synthesize: constituenta "${row.original}" is substituted more than once`);
+      }
+      deletedKeys.add(originalKey);
+
+      resolved.push({ original: originalId, substitution: substitutionId });
+    }
+
+    return resolved;
+  }
+
   private addOrUpdateConstituenta(
     input: AddOrUpdateConstituentaInput,
     sessionId?: string
@@ -550,4 +699,20 @@ export class RSToolAgent implements RSToolAgentContract {
       ...collectModelDiagnostics(envelope.state)
     ]);
   }
+}
+
+function toSynthesizableSessionItem(item: ConstituentaState): SynthesizableSessionItem {
+  return {
+    id: item.id,
+    alias: item.alias,
+    cst_type: item.cstType,
+    definition_formal: item.definitionFormal,
+    typification_manual: '',
+    term_raw: item.term,
+    term_resolved: item.term,
+    term_forms: [],
+    definition_raw: item.definitionText,
+    definition_resolved: item.definitionText,
+    convention: item.convention
+  };
 }

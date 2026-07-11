@@ -5,7 +5,7 @@
 ## Контракт rstool
 
 - Пакет: `@rsconcept/rstool`
-- Версия контракта: `3.1.0` (`CONTRACT_VERSION`)
+- Версия контракта: `3.2.0` (`CONTRACT_VERSION`)
 - Основной класс: `RSToolAgent`
 - Публичные импорты: `@rsconcept/rstool` и `@rsconcept/rstool/wrapper`
 - Опции: `new RSToolAgent({ persistenceDir? })` — каталог для сохранения сессий между перезапусками (stdio/MCP: `RSTOOL_PERSISTENCE_DIR`)
@@ -14,25 +14,26 @@
 
 ### Методы library API
 
-| Метод                                          | Назначение                                  |
-| ---------------------------------------------- | ------------------------------------------- |
-| `ensureSession(initial?)`                      | Вернуть текущую сессию или создать новую    |
-| `createSession(initial?)`                      | Новая in-memory сессия (становится текущей) |
-| `getCurrentSession()`                          | Текущая активная сессия или `null`          |
-| `setCurrentSession(sessionId)`                 | Сделать сессию текущей                      |
-| `applySchemaPatch(input, sessionId?)`          | Единственный путь правки схемы              |
-| `getSessionState(detail?, sessionId?)`         | `summary` (default) или `full`              |
-| `listDiagnostics(filters?, sessionId?)`        | Активные диагностики                        |
-| `analyzeExpression(input, sessionId?)`         | Разбор без сохранения                       |
-| `commitStep(message?, sessionId?)`             | Ревизия                                     |
-| `exportSession(sessionId?)`                    | JSON-строка сессии                          |
-| `exportPortal({ kind, format? }, sessionId?)`  | Portal Load from JSON                       |
-| `importData(payload, kind?)`                   | Импорт сессии / Portal                      |
-| `setModelValues({ set?, clear? }, sessionId?)` | Значения модели (**async** — `await`)       |
-| `getModelState(sessionId?)`                    | Состояние интерпретации                     |
-| `evaluate(input, sessionId?)`                  | Scratch или конституента                    |
-| `recalculateModel(sessionId?)`                 | Пересчёт производных                        |
-| `restoreOrder(sessionId?)`                     | Упорядочить конституенты (топология + семантика) |
+| Метод                                          | Назначение                                                         |
+| ---------------------------------------------- | ------------------------------------------------------------------ |
+| `ensureSession(initial?)`                      | Вернуть текущую сессию или создать новую                           |
+| `createSession(initial?)`                      | Новая in-memory сессия (становится текущей)                        |
+| `getCurrentSession()`                          | Текущая активная сессия или `null`                                 |
+| `setCurrentSession(sessionId)`                 | Сделать сессию текущей                                             |
+| `applySchemaPatch(input, sessionId?)`          | Единственный путь правки схемы                                     |
+| `getSessionState(detail?, sessionId?)`         | `summary` (default) или `full`                                     |
+| `listDiagnostics(filters?, sessionId?)`        | Активные диагностики                                               |
+| `analyzeExpression(input, sessionId?)`         | Разбор без сохранения                                              |
+| `commitStep(message?, sessionId?)`             | Ревизия                                                            |
+| `exportSession(sessionId?)`                    | JSON-строка сессии                                                 |
+| `exportPortal({ kind, format? }, sessionId?)`  | Portal Load from JSON                                              |
+| `importData(payload, kind?)`                   | Импорт сессии / Portal                                             |
+| `setModelValues({ set?, clear? }, sessionId?)` | Значения модели (**async** — `await`)                              |
+| `getModelState(sessionId?)`                    | Состояние интерпретации                                            |
+| `evaluate(input, sessionId?)`                  | Scratch или конституента                                           |
+| `recalculateModel(sessionId?)`                 | Пересчёт производных                                               |
+| `restoreOrder(sessionId?)`                     | Упорядочить конституенты (топология + семантика)                   |
+| `synthesize(input, sessionId?)`                | Синтез (встраивание): слить другую сессию + таблица отождествлений |
 
 Служебные (stdio / MCP): `ping` / `pong`+`contractVersion`; `methods` / `list_methods`.
 
@@ -61,6 +62,7 @@ Stdio использует **camelCase** имён методов (как library
 | `evaluate`          | `evaluate`            |
 | `recalculateModel`  | `recalculate_model`   |
 | `restoreOrder`      | `restore_order`       |
+| `synthesize`        | `synthesize`          |
 
 ## `applySchemaPatch`
 
@@ -170,6 +172,34 @@ await tool.setModelValues({
 const { orderedAliases } = tool.restoreOrder();
 // → { orderedIds: number[], orderedAliases: string[] }
 ```
+
+## `synthesize`
+
+**Синтез** в rstool сейчас — это **встраивание** схемы: вставка конституент из другой сессии в текущую с опциональной таблицей отождествлений (как «Встраивание схемы» в Portal UI).
+
+```ts
+const source = tool.createSession();
+tool.applySchemaPatch({ items: [{ alias: 'X1' }] }, source.sessionId);
+
+tool.setCurrentSession(receiver.sessionId);
+tool.synthesize({
+  sourceSessionId: source.sessionId,
+  // items?: ['X1'], // optional subset of source aliases
+  substitutions: [{ original: 'X1', substitution: 'X1' }], // source → receiver
+  commitMessage: 'merge'
+});
+```
+
+**Вход**
+
+| Поле              | Смысл                                                                                         |
+| ----------------- | --------------------------------------------------------------------------------------------- |
+| `sourceSessionId` | Сессия-источник (не должна совпадать с receiver)                                              |
+| `items?`          | Алиасы конституент источника; пусто / omit — все                                              |
+| `substitutions?`  | Таблица отождествлений по алиасам: в каждой строке один алиас источника и один алиас receiver |
+| `commitMessage?`  | Ревизия после успеха                                                                          |
+
+Алиасы импорта перенумеровываются при непустом receiver (`X1` → `X2`, …). Формулы и текстовые ссылки обновляются. Результат: `summary`, `idMap`, `aliasMapping`, `deletedIds`, `insertedIds`.
 
 ## `importData` / `exportSession` / `exportPortal`
 

@@ -6,17 +6,13 @@ export {
   type SessionStateDetail,
   type SessionStateResult,
   type SessionSummary,
-  type SessionSummaryItem
+  type SessionSummaryItem,
+  type SynthesisSubstitution,
+  type SynthesizeInput,
+  type SynthesizeResult
 } from './agent-workflow';
 export { type AnalysisResult, type AnalyzeExpressionInput } from './analysis';
-export {
-  CstType,
-  EvalStatus,
-  RSErrorCode,
-  ValueClass,
-  type BasicBinding,
-  type RSToolValue
-} from './common';
+export { CstType, EvalStatus, RSErrorCode, ValueClass, type BasicBinding, type RSToolValue } from './common';
 export { type ApplyConstituentsMode, type ConstituentaDraft, type ConstituentaState } from './constituenta';
 export {
   type CstDiagnostic,

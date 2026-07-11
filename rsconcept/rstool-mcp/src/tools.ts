@@ -370,4 +370,43 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
     },
     invoke: (tool, args) => tool.restoreOrder(optionalSessionId(args)),
   },
+  {
+    name: "synthesize",
+    description:
+      "Synthesis by embedding: merge constituents from sourceSessionId into the receiver session, then apply an identification table (aliases).",
+    inputSchema: {
+      type: "object",
+      properties: {
+        sessionId,
+        sourceSessionId: {
+          type: "string",
+          description: "Session to merge from (must differ from the receiver).",
+        },
+        items: {
+          type: "array",
+          items: { type: "string" },
+          description:
+            "Optional source aliases to import. Omit or empty = import all.",
+        },
+        substitutions: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              original: { type: "string" },
+              substitution: { type: "string" },
+            },
+            required: ["original", "substitution"],
+          },
+          description:
+            "Identification table: each row pairs one source alias with one receiver alias.",
+        },
+        commitMessage: { type: "string" },
+      },
+      required: ["sourceSessionId"],
+      additionalProperties: false,
+    },
+    invoke: (tool, args) =>
+      tool.synthesize(omitSessionId(args) as never, optionalSessionId(args)),
+  },
 ];

@@ -34,7 +34,8 @@ export const STDIO_METHODS = [
   'getModelState',
   'evaluate',
   'recalculateModel',
-  'restoreOrder'
+  'restoreOrder',
+  'synthesize'
 ] as const;
 
 function asObject(value: unknown): Record<string, unknown> {
@@ -177,6 +178,12 @@ export async function handleStdioRequest(tool: RSToolAgent, request: StdioReques
           id: request.id,
           ok: true,
           result: tool.restoreOrder(optionalSessionId(params))
+        };
+      case 'synthesize':
+        return {
+          id: request.id,
+          ok: true,
+          result: tool.synthesize(omitSessionId(params) as never, optionalSessionId(params))
         };
       default:
         return {

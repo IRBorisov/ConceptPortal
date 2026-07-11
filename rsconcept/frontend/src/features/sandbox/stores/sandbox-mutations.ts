@@ -1,8 +1,16 @@
 import { LibraryItemType } from '@rsconcept/domain/library';
-import { type Attribution, CstType, type RSForm, type Substitution } from '@rsconcept/domain/library/rsform';
+import { type Attribution, type RSForm, type Substitution } from '@rsconcept/domain/library/rsform';
 import {
+  applyConstituentSubstitutions,
   applyMappingToConstituents,
-  getCstTypePrefix,
+  buildSequentialAliasMapping,
+  filterAttributions,
+  inlineSynthesis as domainInlineSynthesis,
+  insertItemAfter,
+  moveIdsInOrder,
+  reorderItemsByIds,
+  resolveAllConstituentTexts,
+  resolveConstituentTextChange,
   restoreConstituentOrder
 } from '@rsconcept/domain/library/rsform-api';
 
@@ -24,7 +32,6 @@ import { nowIso } from '@/utils/format';
 
 import { type SandboxBundle } from '../models/bundle';
 import { bumpBundle, cloneBundle } from '../models/bundle-api';
-import { resolveAllConstituentTexts, resolveConstituentTextChange } from '../models/text-resolution';
 
 /** Sandbox mutations API. */
 export const sbApi = {
@@ -49,20 +56,12 @@ export const sbApi = {
 
 function moveConstituents(bundle: SandboxBundle, data: MoveConstituentsDTO): SandboxBundle {
   const next = cloneBundle(bundle);
-  const cstIDs = next.schema.items.map(cst => cst.id);
-  const movingIDs = new Set(data.items);
-  const rest = cstIDs.filter(id => !movingIDs.has(id));
-  const movingItems = cstIDs.filter(id => movingIDs.has(id));
-  const moveTo = Math.max(0, Math.min(data.move_to, rest.length));
-  const newOrder = [...rest.slice(0, moveTo), ...movingItems, ...rest.slice(moveTo)];
-  const cstById = new Map(next.schema.items.map(cst => [cst.id, cst]));
-  next.schema.items = newOrder.map(id => {
-    const cst = cstById.get(id);
-    if (!cst) {
-      throw new Error(`moveConstituents: missing id ${id}`);
-    }
-    return cst;
-  });
+  const newOrder = moveIdsInOrder(
+    next.schema.items.map(cst => cst.id),
+    data.items,
+    data.move_to
+  );
+  next.schema.items = reorderItemsByIds(next.schema.items, newOrder);
   bumpBundle(next);
   return next;
 }
@@ -81,35 +80,17 @@ function restoreOrder(bundle: SandboxBundle, _schema: RSForm): SandboxBundle {
     cst_type: cst.cst_type,
     definition_formal: cst.definition_formal
   }));
-  const orderedIds = restoreConstituentOrder(orderable).map(cst => cst.id);
-  const itemById = new Map(items.map(cst => [cst.id, cst]));
-  next.schema.items = orderedIds.map(id => {
-    const cst = itemById.get(id);
-    if (!cst) {
-      throw new Error(`restoreOrder: missing id ${id}`);
-    }
-    return cst;
-  });
+  next.schema.items = reorderItemsByIds(
+    items,
+    restoreConstituentOrder(orderable).map(cst => cst.id)
+  );
   bumpBundle(next);
   return next;
 }
 
 function resetAliases(bundle: SandboxBundle): SandboxBundle {
   const next = cloneBundle(bundle);
-  const counts: Record<string, number> = {};
-  const mapping: Record<string, string> = {};
-  for (const value of Object.values(CstType)) {
-    counts[value] = 1;
-  }
-
-  for (const cst of next.schema.items) {
-    const alias = `${getCstTypePrefix(cst.cst_type)}${counts[cst.cst_type]}`;
-    counts[cst.cst_type] += 1;
-    if (cst.alias !== alias) {
-      mapping[cst.alias] = alias;
-    }
-  }
-
+  const mapping = buildSequentialAliasMapping(next.schema.items);
   applyMappingToConstituents(next.schema.items, mapping, true);
   resolveAllConstituentTexts(next.schema.items);
   bumpBundle(next);
@@ -122,57 +103,10 @@ function substituteConstituents(bundle: SandboxBundle, substitutions: Substituti
     return next;
   }
 
-  const byId = new Map(next.schema.items.map(cst => [cst.id, cst]));
-  const mapping: Record<string, string> = {};
-  const deleted = new Set<number>();
-  for (const { original, substitution } of substitutions) {
-    const originalCst = byId.get(original);
-    const substitutionCst = byId.get(substitution);
-    if (!originalCst || !substitutionCst) {
-      throw new Error(`substituteConstituents: unknown constituenta ${original} -> ${substitution}`);
-    }
-    mapping[originalCst.alias] = substitutionCst.alias;
-    deleted.add(original);
-  }
-
-  const origToSub = new Map<number, number>();
-  for (const { original, substitution } of substitutions) {
-    origToSub.set(original, substitution);
-  }
-
-  const updatedAttributions = [];
-  const seen = new Set<string>();
-  for (const attr of next.schema.attribution) {
-    if (!origToSub.has(attr.container) && !origToSub.has(attr.attribute)) {
-      const key = `${attr.container}:${attr.attribute}`;
-      if (!seen.has(key)) {
-        seen.add(key);
-        updatedAttributions.push({ ...attr });
-      }
-      continue;
-    }
-
-    const containerID = origToSub.get(attr.container) ?? attr.container;
-    const attributeID = origToSub.get(attr.attribute) ?? attr.attribute;
-    if (containerID === attributeID) {
-      continue;
-    }
-    const key = `${containerID}:${attributeID}`;
-    if (seen.has(key)) {
-      continue;
-    }
-    seen.add(key);
-    updatedAttributions.push({
-      container: containerID,
-      attribute: attributeID
-    });
-  }
-  next.schema.attribution = updatedAttributions;
-
-  next.schema.items = next.schema.items.filter(cst => !deleted.has(cst.id));
-  next.model.items = next.model.items.filter(value => !deleted.has(value.id));
-
-  applyMappingToConstituents(next.schema.items, mapping, false);
+  const result = applyConstituentSubstitutions(next.schema.items, next.schema.attribution, substitutions);
+  next.schema.items = result.items;
+  next.schema.attribution = result.attributions;
+  next.model.items = next.model.items.filter(value => !result.deletedIds.has(value.id));
   resolveAllConstituentTexts(next.schema.items);
   bumpBundle(next);
   return next;
@@ -190,74 +124,21 @@ function inlineSynthesis(bundle: SandboxBundle, data: InlineSynthesisDTO, source
   }
 
   const next = cloneBundle(bundle);
-  const receiverWasEmpty = next.schema.items.length === 0;
-  const mappingAlias: Record<string, string> = {};
+  const result = domainInlineSynthesis({
+    receiverItems: next.schema.items,
+    receiverAttributions: next.schema.attribution,
+    sourceItems,
+    sourceAttributions: source.attribution,
+    substitutions: data.substitutions,
+    nextId: next.meta.nextId
+  });
 
-  if (!receiverWasEmpty) {
-    const counts: Record<string, number> = {};
-    for (const value of Object.values(CstType)) {
-      counts[value] = maxAliasIndex(next.schema.items, value);
-    }
-    for (const cst of sourceItems) {
-      counts[cst.cst_type] += 1;
-      mappingAlias[cst.alias] = `${getCstTypePrefix(cst.cst_type)}${counts[cst.cst_type]}`;
-    }
-  }
-
-  const mappingId: Record<number, number> = {};
-  const inserted: ConstituentaBasicsDTO[] = [];
-  const sourceIdSet = new Set(sourceItems.map(cst => cst.id));
-
-  for (const cst of sourceItems) {
-    const newId = next.meta.nextId;
-    next.meta.nextId += 1;
-    mappingId[cst.id] = newId;
-
-    const cloned = structuredClone(cst);
-    cloned.id = newId;
-    if (!receiverWasEmpty) {
-      cloned.alias = mappingAlias[cst.alias];
-      applyMappingToConstituents([cloned], mappingAlias, false);
-    }
-    inserted.push(cloned);
-  }
-
-  const seenAttribution = new Set(next.schema.attribution.map(attr => `${attr.container}:${attr.attribute}`));
-  for (const attr of source.attribution) {
-    if (!sourceIdSet.has(attr.container) || !sourceIdSet.has(attr.attribute)) {
-      continue;
-    }
-    const containerID = mappingId[attr.container];
-    const attributeID = mappingId[attr.attribute];
-    if (containerID === attributeID) {
-      continue;
-    }
-    const key = `${containerID}:${attributeID}`;
-    if (seenAttribution.has(key)) {
-      continue;
-    }
-    seenAttribution.add(key);
-    next.schema.attribution.push({ container: containerID, attribute: attributeID });
-  }
-
-  next.schema.items = next.schema.items.concat(inserted);
-  resolveAllConstituentTexts(next.schema.items);
-
-  if (data.substitutions.length === 0) {
-    bumpBundle(next);
-    return next;
-  }
-
-  const remapped: Substitution[] = [];
-  for (const sub of data.substitutions) {
-    if (sourceIdSet.has(sub.original)) {
-      remapped.push({ original: mappingId[sub.original], substitution: sub.substitution });
-    } else {
-      remapped.push({ original: sub.original, substitution: mappingId[sub.substitution] });
-    }
-  }
-
-  return substituteConstituents(next, remapped);
+  next.schema.items = result.items;
+  next.schema.attribution = result.attributions;
+  next.meta.nextId = result.nextId;
+  next.model.items = next.model.items.filter(value => !result.deletedIds.has(value.id));
+  bumpBundle(next);
+  return next;
 }
 
 function createConstituenta(
@@ -286,14 +167,7 @@ function createConstituenta(
     term_forms: data.term_forms
   };
 
-  if (data.insert_after === null || data.insert_after === undefined) {
-    rsform.items.push(newCst);
-  } else {
-    const idx = rsform.items.findIndex(i => i.id === data.insert_after);
-    const insertAt = idx === -1 ? rsform.items.length : idx + 1;
-    rsform.items.splice(insertAt, 0, newCst);
-  }
-
+  insertItemAfter(rsform.items, newCst, data.insert_after);
   resolveConstituentTextChange(rsform.items, newId, {
     termChanged: true,
     termRawChanged: true,
@@ -327,7 +201,7 @@ function deleteConstituents(bundle: SandboxBundle, deleted: number[]): SandboxBu
   const model = next.model;
 
   rsform.items = rsform.items.filter(i => !del.has(i.id));
-  rsform.attribution = rsform.attribution.filter(a => !del.has(a.container) && !del.has(a.attribute));
+  rsform.attribution = filterAttributions(rsform.attribution, del);
   rsform.inheritance = rsform.inheritance.filter(row => !del.has(row.child) && !del.has(row.parent));
 
   model.items = model.items.filter(v => !del.has(v.id));
@@ -478,16 +352,4 @@ function clearModelValues(bundle: SandboxBundle, cstIDs: number[]): SandboxBundl
   next.model.items = next.model.items.filter(v => !drop.has(v.id));
   bumpBundle(next);
   return next;
-}
-
-function maxAliasIndex(items: ConstituentaBasicsDTO[], type: CstType): number {
-  const prefix = getCstTypePrefix(type);
-  return items.reduce((max, cst) => {
-    if (cst.cst_type !== type) {
-      return max;
-    }
-    const suffix = cst.alias.slice(prefix.length);
-    const index = Number(suffix);
-    return Number.isFinite(index) ? Math.max(max, index) : max;
-  }, 0);
 }

@@ -43,6 +43,47 @@ export interface RestoreOrderResult {
   orderedAliases: string[];
 }
 
+/** One row of an identification (substitution) table, by alias. */
+export interface SynthesisSubstitution {
+  /** Alias of the constituenta being replaced (deleted). */
+  original: string;
+  /** Alias of the surviving constituenta. */
+  substitution: string;
+}
+
+/** Input for {@link RSToolAgent.synthesize}. */
+export interface SynthesizeInput {
+  /** Session whose constituents are merged into the receiver. */
+  sourceSessionId: string;
+  /**
+   * Optional subset of source aliases to import.
+   * Omit or pass an empty array to import all source constituents.
+   */
+  items?: string[];
+  /**
+   * Identification table: one endpoint is a source alias, the other a receiver alias
+   * (same rules as Portal schema embedding / «Встраивание схемы»).
+   */
+  substitutions?: SynthesisSubstitution[];
+  /** When set, a revision is recorded after a successful synthesis. */
+  commitMessage?: string;
+}
+
+/** Result of {@link RSToolAgent.synthesize}. */
+export interface SynthesizeResult {
+  session: SessionHandle;
+  summary: SessionSummary;
+  /** Source constituent id → inserted id in the receiver (before substitutions). */
+  idMap: Record<number, number>;
+  /** Alias remapping applied to imported constituents. */
+  aliasMapping: Record<string, string>;
+  /** Ids removed by substitutions. */
+  deletedIds: number[];
+  /** Ids of constituents inserted from the source (may include later-deleted ones). */
+  insertedIds: number[];
+  revision?: SessionRevision;
+}
+
 /** Compact view of one constituent in a session summary. */
 export interface SessionSummaryItem {
   id: number;

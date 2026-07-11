@@ -1,9 +1,15 @@
-import { type TermContext } from '@rsconcept/domain/cctext';
-import { extractEntities, parseGrammemes, resolveTextReferences } from '@rsconcept/domain/cctext/language-api';
-import { Graph } from '@rsconcept/domain/graph';
+/**
+ * Cascade resolution of constituenta term/definition entity references.
+ * Matches backend {@code RSForm.resolve_all_text} / {@code resolve_term_change}.
+ */
 
-import { type ConstituentaBasicsDTO } from '@/features/rsform';
+import { type TermContext } from '../../cctext/language';
+import { extractEntities, parseGrammemes, resolveTextReferences } from '../../cctext/language-api';
+import { Graph } from '../../graph';
 
+import { type ResolvableConstituenta } from './types';
+
+/** Options controlling which texts to re-resolve after an edit. */
 export interface TextChangeOptions {
   termChanged: boolean;
   termRawChanged: boolean;
@@ -11,8 +17,19 @@ export interface TextChangeOptions {
   clearTargetForms: boolean;
 }
 
-export function resolveAllConstituentTexts(items: ConstituentaBasicsDTO[]): void {
-  const graphTerm = buildReferenceGraph(items, 'term_raw');
+/** Build term-reference graph: referenced constituent → dependent (backend {@code graph_term}). */
+export function buildTermReferenceGraph(items: readonly ResolvableConstituenta[]): Graph<number> {
+  return buildReferenceGraph(items, 'term_raw');
+}
+
+/** Build definition-reference graph: referenced constituent → dependent (backend {@code graph_text}). */
+export function buildDefinitionReferenceGraph(items: readonly ResolvableConstituenta[]): Graph<number> {
+  return buildReferenceGraph(items, 'definition_raw');
+}
+
+/** Resolve all term and definition texts in topological order. Mutates items in place. */
+export function resolveAllConstituentTexts(items: ResolvableConstituenta[]): void {
+  const graphTerm = buildTermReferenceGraph(items);
   const idToItem = new Map(items.map(item => [item.id, item]));
   const context = buildTermContext(items);
 
@@ -34,8 +51,12 @@ export function resolveAllConstituentTexts(items: ConstituentaBasicsDTO[]): void
   }
 }
 
+/**
+ * Resolve texts after a single constituent change, cascading dependents when the term changed.
+ * Mutates items in place.
+ */
 export function resolveConstituentTextChange(
-  items: ConstituentaBasicsDTO[],
+  items: ResolvableConstituenta[],
   targetID: number,
   options: TextChangeOptions
 ): void {
@@ -64,8 +85,8 @@ export function resolveConstituentTextChange(
     return;
   }
 
-  const graphTerm = buildReferenceGraph(items, 'term_raw');
-  const graphText = buildReferenceGraph(items, 'definition_raw');
+  const graphTerm = buildTermReferenceGraph(items);
+  const graphText = buildDefinitionReferenceGraph(items);
   const expansion = graphTerm.expandAllOutputs([targetID]);
   const expansionSet = new Set(expansion);
 
@@ -95,7 +116,10 @@ export function resolveConstituentTextChange(
 
 // ====== Internals =======
 
-function buildReferenceGraph(items: ConstituentaBasicsDTO[], field: 'definition_raw' | 'term_raw'): Graph<number> {
+function buildReferenceGraph(
+  items: readonly ResolvableConstituenta[],
+  field: 'definition_raw' | 'term_raw'
+): Graph<number> {
   const graph = new Graph<number>();
   const idByAlias = new Map(items.map(row => [row.alias, row.id]));
   for (const row of items) {
@@ -112,7 +136,7 @@ function buildReferenceGraph(items: ConstituentaBasicsDTO[], field: 'definition_
   return graph;
 }
 
-function buildTermContext(items: ConstituentaBasicsDTO[]): TermContext {
+function buildTermContext(items: readonly ResolvableConstituenta[]): TermContext {
   const context: TermContext = {};
   for (const row of items) {
     context[row.alias] = toContextItem(row);
@@ -120,7 +144,7 @@ function buildTermContext(items: ConstituentaBasicsDTO[]): TermContext {
   return context;
 }
 
-function toContextItem(row: ConstituentaBasicsDTO): TermContext[string] {
+function toContextItem(row: ResolvableConstituenta): TermContext[string] {
   return {
     nominal: row.term_resolved,
     forms: row.term_forms.map(form => ({ text: form.text, grams: parseGrammemes(form.tags) }))

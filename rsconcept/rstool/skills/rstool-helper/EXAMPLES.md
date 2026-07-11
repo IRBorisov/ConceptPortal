@@ -255,6 +255,31 @@ const forPortal = tool.exportPortal({ kind: 'schema' });
 
 Не передавай `/details` с `kind: 'session'`. REST и curl — [PORTAL-API.md](../../docs/PORTAL-API.md).
 
+## Встраивание схемы (синтез)
+
+```ts
+const receiver = tool.createSession({ title: 'Base' });
+tool.applySchemaPatch({ items: [{ alias: 'X1', term: 'человек' }] }, receiver.sessionId);
+
+const source = tool.createSession({ title: 'Donor' });
+tool.applySchemaPatch(
+  {
+    items: [
+      { alias: 'X1', term: 'персона' },
+      { alias: 'S1', definitionFormal: 'ℬ(X1)' }
+    ]
+  },
+  source.sessionId
+);
+
+tool.setCurrentSession(receiver.sessionId);
+tool.synthesize({
+  sourceSessionId: source.sessionId,
+  substitutions: [{ original: 'X1', substitution: 'X1' }] // source X1 → receiver X1
+});
+// receiver: X1 (человек), S1 = ℬ(X1)  — импортированный X1 отождествлён и удалён
+```
+
 ## Образец текста ревью (не код)
 
 После [воркфлоу ревью](GUIDE.md#ревью--оценка-готовой-кс) ответ может выглядеть так:
