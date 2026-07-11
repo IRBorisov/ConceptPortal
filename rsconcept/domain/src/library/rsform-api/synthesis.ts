@@ -10,23 +10,23 @@ import { type AliasMapping } from '../../rslang/api';
 import { type LibraryItem } from '../library';
 import { type Attribution, type CstType, type RSForm, type Substitution } from '../rsform';
 
-import { allocateImportAliases, applyMappingToConstituents, type ConstituentaMappableFields } from './alias';
+import { allocateImportAliases, applyMappingToConstituents, type MappableFields } from './alias';
 import { importAttributions } from './attribution';
 import { applyConstituentSubstitutions, remapSubstitutionsAfterImport } from './substitution';
 import { resolveAllConstituentTexts } from './text-resolution';
-import { type AliasTypedConstituenta, type ResolvableConstituenta } from './types';
+import { type AliasTypedFields, type TextResolvableFields } from './types';
 
-/** Constituent shape required for embedding / synthesis transforms. */
-export type SynthesizableConstituenta = ConstituentaMappableFields &
-  ResolvableConstituenta &
-  AliasTypedConstituenta & {
+/** Field intersection required for embedding / synthesis transforms. */
+export type SynthesizableFields = MappableFields &
+  TextResolvableFields &
+  AliasTypedFields & {
     id: number;
     alias: string;
     cst_type: CstType;
   };
 
 /** Input for {@link inlineSynthesis}. */
-export interface InlineSynthesisInput<T extends SynthesizableConstituenta> {
+export interface InlineSynthesisInput<T extends SynthesizableFields> {
   /** Receiver schema constituents (order preserved; imports append). */
   receiverItems: readonly T[];
   /** Receiver attributions (default empty). */
@@ -49,7 +49,7 @@ export interface InlineSynthesisInput<T extends SynthesizableConstituenta> {
 }
 
 /** Result of {@link inlineSynthesis}. */
-export interface InlineSynthesisResult<T extends SynthesizableConstituenta> {
+export interface InlineSynthesisResult<T extends SynthesizableFields> {
   items: T[];
   attributions: Attribution[];
   /** Updated next-id after inserts. */
@@ -71,7 +71,7 @@ export interface InlineSynthesisResult<T extends SynthesizableConstituenta> {
  * Resolves term/definition entity references on the result.
  * Does not mutate inputs.
  */
-export function inlineSynthesis<T extends SynthesizableConstituenta>(
+export function inlineSynthesis<T extends SynthesizableFields>(
   input: InlineSynthesisInput<T>
 ): InlineSynthesisResult<T> {
   const sourceItems = input.sourceItems;

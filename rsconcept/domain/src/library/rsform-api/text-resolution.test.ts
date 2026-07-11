@@ -1,11 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
 import { resolveConstituentTextChange } from './text-resolution';
-import { type ResolvableConstituenta } from './types';
+import { type TextResolvableFields } from './types';
 
-function row(
-  data: Partial<ResolvableConstituenta> & Pick<ResolvableConstituenta, 'alias' | 'id'>
-): ResolvableConstituenta {
+function row(data: Partial<TextResolvableFields> & Pick<TextResolvableFields, 'alias' | 'id'>): TextResolvableFields {
   return {
     id: data.id,
     alias: data.alias,

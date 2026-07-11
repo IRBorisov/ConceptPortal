@@ -10,6 +10,7 @@ import { extractBases } from '../rslang/semantic/typification-api';
 import { type LibraryItem } from './library';
 import { NodeType, type OperationSchema, type SubstitutionErrorDescription, SubstitutionErrorType } from './oss';
 import { type Constituenta, CstClass, CstType, type RSForm, type Substitution } from './rsform';
+import { type FormalOrderFields } from './rsform-api';
 
 const STARTING_SUB_INDEX = 900; // max semantic index for starting substitution
 
@@ -387,7 +388,10 @@ export class SubstitutionValidator {
     return result;
   }
 
-  private checkEqual(left: Constituenta, right: Constituenta): boolean {
+  private checkEqual(
+    left: FormalOrderFields & { schema: number },
+    right: FormalOrderFields & { schema: number }
+  ): boolean {
     const schema1 = this.schemaByID.get(left.schema)!;
     const inputs1 = schema1.graph.at(left.id)!.inputs;
     if (inputs1.some(id => !this.constituents.has(id))) {

@@ -7,6 +7,8 @@ import { isTypification } from '../../rslang/semantic/typification';
 import { applyPath } from '../../rslang/semantic/typification-api';
 import { type Constituenta, type RSForm } from '../rsform';
 
+import { type SpawnPathFields, type StructureCapableFields } from './types';
+
 /**
  * Id to pass as `insert_after` when creating a new {@link Constituenta} spawned by `targetId`:
  * after the last existing child of that spawner, or after the spawner itself if none.
@@ -21,8 +23,8 @@ export function inferNewSpawnPosition(schema: RSForm, targetId: number): number 
   return last ?? targetId;
 }
 
-/** Finds {@link Constituenta} by structure path. */
-export function findCstByStructure(schema: RSForm, target: Constituenta, path: TypePath): Constituenta | null {
+/** Finds schema item by absolute structure path under `targetId`. */
+export function findCstByStructure(schema: RSForm, target: { id: number }, path: TypePath): Constituenta | null {
   const byId = schema.cstByID ?? new Map(schema.items.map(item => [item.id, item]));
   for (const cst of schema.items) {
     if (!cst.spawner_path) {
@@ -36,8 +38,12 @@ export function findCstByStructure(schema: RSForm, target: Constituenta, path: T
   return null;
 }
 
-/** Retrieves name for piece of target {@link Constituenta} structure. */
-export function getStructureName(schema: RSForm, target: Constituenta, path: TypePath): string {
+/** Retrieves name for piece of target structure. */
+export function getStructureName(
+  schema: RSForm,
+  target: StructureCapableFields & { id: number },
+  path: TypePath
+): string {
   const representation = findCstByStructure(schema, target, path);
   if (representation) {
     return `${representation.alias}: ${representation.term_resolved}`;
@@ -56,9 +62,9 @@ export function getStructureName(schema: RSForm, target: Constituenta, path: Typ
 }
 
 function resolveAbsoluteSpawnerPath(
-  cst: Constituenta,
+  cst: SpawnPathFields,
   targetId: number,
-  byId: Map<number, Constituenta>
+  byId: Map<number, SpawnPathFields>
 ): TypePath | null {
   if (!cst.spawner_path || cst.spawner == null) {
     return null;

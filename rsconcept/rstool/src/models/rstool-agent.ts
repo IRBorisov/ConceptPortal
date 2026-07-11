@@ -1,4 +1,8 @@
-import { inlineSynthesis, restoreConstituentOrder } from '@rsconcept/domain/library/rsform-api';
+import {
+  inlineSynthesis,
+  restoreConstituentOrder,
+  type SynthesizableFields
+} from '@rsconcept/domain/library/rsform-api';
 import { type Substitution } from '@rsconcept/domain/library/rsform';
 import {
   portalDetailsToDrafts,
@@ -46,19 +50,6 @@ import {
 import { type SessionHandle, type SessionRevision, type SessionState } from './session';
 import { CONTRACT_VERSION, type RSToolAgentContract, type RSToolAgentOptions } from './tool-contract';
 
-interface SynthesizableSessionItem {
-  id: number;
-  alias: string;
-  cst_type: CstType;
-  definition_formal: string;
-  typification_manual: string;
-  term_raw: string;
-  term_resolved: string;
-  term_forms: { text: string; tags: string }[];
-  definition_raw: string;
-  definition_resolved: string;
-  convention: string;
-}
 function normalizeImportedState(state: SessionState): SessionState {
   return {
     ...state,
@@ -703,7 +694,7 @@ export class RSToolAgent implements RSToolAgentContract {
   }
 }
 
-function toSynthesizableSessionItem(item: ConstituentaState): SynthesizableSessionItem {
+function toSynthesizableSessionItem(item: ConstituentaState): SynthesizableFields & { convention: string } {
   return {
     id: item.id,
     alias: item.alias,

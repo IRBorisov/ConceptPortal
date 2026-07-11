@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Constituenta Naming &amp; Type Structure Plan</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f7f8fb;
+        --fg: #18202a;
+        --muted: #5e6b7a;
+        --card: #ffffff;
+        --border: #d9e0ea;
+        --accent: #2454c6;
+        --accent-soft: #e9eefc;
+        --warn: #8a5b00;
+        --warn-soft: #fff4d5;
+        --ok: #17633a;
+        --ok-soft: #e6f5ec;
+        --code: #edf1f7;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f141b;
+          --fg: #e7edf5;
+          --muted: #a7b2c0;
+          --card: #161d27;
+          --border: #2d3948;
+          --accent: #8fb0ff;
+          --accent-soft: #1f2d4d;
+          --warn: #ffd27a;
+          --warn-soft: #3c2d10;
+          --ok: #8ee0b0;
+          --ok-soft: #153321;
+          --code: #202a36;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.55;
+      }
+
+      main {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 48px 24px 72px;
+      }
+
+      header {
+        margin-bottom: 32px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.2;
+        margin: 0;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 5vw, 4rem);
+        letter-spacing: -0.04em;
+      }
+
+      h2 {
+        margin-top: 44px;
+        font-size: 1.65rem;
+      }
+
+      h3 {
+        margin-top: 0;
+        font-size: 1.05rem;
+      }
+
+      p {
+        margin: 12px 0 0;
+      }
+
+      ul,
+      ol {
+        margin: 12px 0 0;
+        padding-left: 1.25rem;
+      }
+
+      li + li {
+        margin-top: 6px;
+      }
+
+      code {
+        background: var(--code);
+        border-radius: 6px;
+        padding: 0.1rem 0.35rem;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 0.92em;
+      }
+
+      .subtitle {
+        max-width: 780px;
+        color: var(--muted);
+        font-size: 1.1rem;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--card);
+        padding: 6px 12px;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--card);
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(15, 20, 27, 0.06);
+      }
+
+      .callout {
+        border-left: 4px solid var(--accent);
+        border-radius: 14px;
+        background: var(--accent-soft);
+        padding: 16px 18px;
+        margin-top: 18px;
+      }
+
+      .warning {
+        border-left-color: var(--warn);
+        background: var(--warn-soft);
+      }
+
+      .success {
+        border-left-color: var(--ok);
+        background: var(--ok-soft);
+      }
+
+      .diagram {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .lane {
+        display: grid;
+        grid-template-columns: 190px 1fr;
+        align-items: stretch;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: var(--card);
+      }
+
+      .lane-label {
+        display: flex;
+        align-items: center;
+        padding: 14px 16px;
+        background: var(--code);
+        font-weight: 700;
+      }
+
+      .lane-body {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        padding: 14px 16px;
+      }
+
+      .step {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 7px 11px;
+        background: var(--bg);
+        font-size: 0.92rem;
+      }
+
+      .arrow {
+        color: var(--muted);
+      }
+
+      table {
+        width: 100%;
+        margin-top: 18px;
+        border-collapse: collapse;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: var(--card);
+      }
+
+      th,
+      td {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--code);
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .small {
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .option {
+        border-top: 1px solid var(--border);
+        margin-top: 14px;
+        padding-top: 14px;
+      }
+
+      .option:first-child {
+        border-top: 0;
+        margin-top: 0;
+        padding-top: 0;
+      }
+
+      .tag {
+        display: inline-block;
+        border-radius: 999px;
+        padding: 2px 8px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+
+      .tag-ok {
+        background: var(--ok-soft);
+        color: var(--ok);
+      }
+
+      .tag-warn {
+        background: var(--warn-soft);
+        color: var(--warn);
+      }
+
+      .tag-accent {
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
+
+      @media (max-width: 860px) {
+        .grid,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+
+        .lane {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Constituenta naming &amp; type structure</h1>
+        <p class="subtitle">
+          Overview of how <code>Constituenta</code> is used across
+          <code>@rsconcept/domain</code>, and whether the pain is the domain
+          noun itself or the capability slices that reuse it.
+        </p>
+        <div class="meta">
+          <span class="pill">Scope: domain (+ frontend / rstool mirrors)</span>
+          <span class="pill">Status: option 1 implemented</span>
+          <span class="pill">Date: 2026-07-11</span>
+          <span class="pill">domain 3.0.0</span>
+        </div>
+      </header>
+
+      <section class="callout success">
+        <strong>Done (option 1).</strong> Kept <code>Constituenta</code> as the
+        entity noun. Renamed capability slices to concern/task
+        <code>*Fields</code> names, aligned with ConceptCore’s
+        <code>RSConcept</code> / <code>TextConcept</code> split (slices named by
+        concern, never <code>*Concept</code> adjectives).
+      </section>
+
+      <section class="callout">
+        <strong>Original verdict.</strong> Keep <code>Constituenta</code> as the
+        canonical entity name (locked in <code>CONTEXT.md</code>). The overload
+        comes from capability slices named like fake subtypes
+        (<code>*Constituenta</code>). Prefer renaming those slices first;
+        optionally split the fat entity later. Do not rename the domain noun.
+      </section>
+
+      <h2>What’s canonical</h2>
+      <p>
+        <code>CONTEXT.md</code> locks
+        <strong>конституента → Constituenta</strong>
+        as the English domain alias. That should stay for the real entity and
+        for UI/API surfaces that talk about one constituenta.
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h3>Keep the noun</h3>
+          <p>
+            Entity, UI labels, API verbs (<code>createConstituenta</code>), and
+            docs should continue to say Constituenta. This matches the domain
+            glossary and Russian product language.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Where it hurts</h3>
+          <p>
+            Almost every partial shape also ends in <code>*Constituenta</code>,
+            so readers treat “fields for alias allocation” as “a kind of
+            constituenta.” That is the naming smell.
+          </p>
+        </div>
+      </div>
+
+      <h2>ConceptCore precedent</h2>
+      <p>
+        In <code>GH-ConceptCore</code>, schema items are split by concern
+        (<code>RSConcept</code>, <code>TextConcept</code>,
+        <code>ParsingInfo</code>, <code>ConceptRecord</code>) and capabilities
+        live on facets (<code>CstList</code>, <code>IdentityManager</code>,
+        <code>Thesaurus</code>). The entity noun (“constituent”) appears in
+        comments / JSON wire format, not on slice type names. Portal’s
+        TypeScript equivalent is duck-typed <code>*Fields</code> constraints for
+        pure transforms.
+      </p>
+
+      <h2>Implemented rename map</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Before</th>
+            <th>After</th>
+            <th>ConceptCore analogue</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>OrderableConstituenta</code></td>
+            <td><code>FormalOrderFields</code></td>
+            <td><code>CstList</code> + <code>RSConcept</code> formal fields</td>
+          </tr>
+          <tr>
+            <td><code>ResolvableConstituenta</code></td>
+            <td><code>TextResolvableFields</code></td>
+            <td><code>Thesaurus</code> / <code>TextConcept</code></td>
+          </tr>
+          <tr>
+            <td><code>AliasTypedConstituenta</code></td>
+            <td><code>AliasTypedFields</code></td>
+            <td><code>ConceptID</code> / alias generator inputs</td>
+          </tr>
+          <tr>
+            <td><code>ConstituentaMappableFields</code></td>
+            <td><code>MappableFields</code></td>
+            <td>alias substitution maps (no slice type in GH)</td>
+          </tr>
+          <tr>
+            <td><code>SynthesizableConstituenta</code></td>
+            <td><code>SynthesizableFields</code></td>
+            <td><code>ConceptRecord</code> + merge ops</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="small">
+        Public export path:
+        <code>@rsconcept/domain/library/rsform-api</code>. Workspace consumers
+        did not import the old names by value; npm major bumped to
+        <code>3.0.0</code>.
+      </p>
+
+      <h2>Type layers (after)</h2>
+      <div class="diagram" aria-label="Type layer diagram after rename">
+        <div class="lane">
+          <div class="lane-label">Entity</div>
+          <div class="lane-body">
+            <span class="step"
+              ><code>Constituenta</code> — fat runtime object</span
+            >
+            <span class="arrow">in</span>
+            <span class="step"><code>rsform.ts</code></span>
+          </div>
+        </div>
+        <div class="lane">
+          <div class="lane-label">Abbreviations</div>
+          <div class="lane-body">
+            <span class="step"><code>CstType</code></span>
+            <span class="step"><code>CstClass</code></span>
+            <span class="step"><code>CstStatus</code></span>
+            <span class="step"><code>CstDiagnostic</code></span>
+          </div>
+        </div>
+        <div class="lane">
+          <div class="lane-label">Capability slices</div>
+          <div class="lane-body">
+            <span class="step"><code>FormalOrderFields</code></span>
+            <span class="step"><code>TextResolvableFields</code></span>
+            <span class="step"><code>AliasTypedFields</code></span>
+            <span class="step"><code>MappableFields</code></span>
+            <span class="arrow">→</span>
+            <span class="step"><code>SynthesizableFields</code></span>
+          </div>
+        </div>
+        <div class="lane">
+          <div class="lane-label">Parallel shapes</div>
+          <div class="lane-body">
+            <span class="step">frontend DTOs (Basics / Create / Update)</span>
+            <span class="step"
+              >rstool <code>Draft</code> / <code>State</code> /
+              <code>SynthesizableSessionItem</code></span
+            >
+          </div>
+        </div>
+      </div>
+
+      <h2>Type layers (before — historical)</h2>
+      <div class="diagram" aria-label="Type layer diagram">
+        <div class="lane">
+          <div class="lane-label">Entity</div>
+          <div class="lane-body">
+            <span class="step"
+              ><code>Constituenta</code> — fat runtime object</span
+            >
+            <span class="arrow">in</span>
+            <span class="step"><code>rsform.ts</code></span>
+          </div>
+        </div>
+        <div class="lane">
+          <div class="lane-label">Abbreviations</div>
+          <div class="lane-body">
+            <span class="step"><code>CstType</code></span>
+            <span class="step"><code>CstClass</code></span>
+            <span class="step"><code>CstStatus</code></span>
+            <span class="step"><code>CstDiagnostic</code></span>
+          </div>
+        </div>
+        <div class="lane">
+          <div class="lane-label">Capability slices</div>
+          <div class="lane-body">
+            <span class="step"><code>OrderableConstituenta</code></span>
+            <span class="step"><code>ResolvableConstituenta</code></span>
+            <span class="step"><code>AliasTypedConstituenta</code></span>
+            <span class="step"><code>ConstituentaMappableFields</code></span>
+            <span class="arrow">→</span>
+            <span class="step"><code>SynthesizableConstituenta</code></span>
+          </div>
+        </div>
+        <div class="lane">
+          <div class="lane-label">Parallel shapes</div>
+          <div class="lane-body">
+            <span class="step">frontend DTOs (Basics / Create / Update)</span>
+            <span class="step"
+              >rstool <code>Draft</code> / <code>State</code></span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="callout warning" style="margin-top: 18px">
+        Slices constrain transforms; they are <strong>not</strong>
+        <code>Pick&lt;Constituenta, …&gt;</code>. The full entity requires many
+        computed fields, so incomplete payloads need duck-typed interfaces.
+      </div>
+
+      <h2>The fat entity</h2>
+      <p>
+        <code>Constituenta</code> in <code>rsform.ts</code> mixes several
+        concerns (~25+ fields):
+      </p>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Persistent</h3>
+          <p class="small">
+            <code>id</code>, <code>alias</code>, <code>cst_type</code>, terms,
+            definitions, convention, <code>typification_manual</code>,
+            attributes, crucial flag.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Analyzed / computed</h3>
+          <p class="small">
+            <code>analysis</code>, <code>diagnostics</code>,
+            <code>effectiveType</code>, <code>status</code>,
+            <code>cst_class</code>, template / simple-expression flags.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Inheritance / spawn</h3>
+          <p class="small">
+            parent schema indices, inherited flags, spawner / spawn paths and
+            aliases.
+          </p>
+        </div>
+      </div>
+
+      <h2>Capability slices</h2>
+      <p>
+        Pure transform helpers in <code>rsform-api/</code> take structural
+        duck-types instead of the full entity.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Current name</th>
+            <th>Real job</th>
+            <th>Fields</th>
+            <th>Smell</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>OrderableConstituenta</code></td>
+            <td>Formal dependency graph / restore order</td>
+            <td>
+              <code>id</code>, <code>alias</code>, <code>cst_type</code>,
+              <code>definition_formal</code>
+            </td>
+            <td><span class="tag tag-warn">noun misuse</span></td>
+          </tr>
+          <tr>
+            <td><code>ResolvableConstituenta</code></td>
+            <td>Resolve term / definition entity references</td>
+            <td>
+              <code>id</code>, <code>alias</code>, term_*, definition_raw /
+              resolved
+            </td>
+            <td><span class="tag tag-warn">noun misuse</span></td>
+          </tr>
+          <tr>
+            <td><code>AliasTypedConstituenta</code></td>
+            <td>Allocate / validate aliases by type</td>
+            <td><code>alias</code>, <code>cst_type</code></td>
+            <td><span class="tag tag-warn">noun misuse</span></td>
+          </tr>
+          <tr>
+            <td><code>ConstituentaMappableFields</code></td>
+            <td>In-place alias remapping</td>
+            <td>alias + formal / text fields</td>
+            <td><span class="tag tag-ok">clearer pattern</span></td>
+          </tr>
+          <tr>
+            <td><code>SynthesizableConstituenta</code></td>
+            <td>Inline synthesis / schema embedding</td>
+            <td>intersection of the above + <code>id</code></td>
+            <td><span class="tag tag-warn">compound noun</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="small">
+        <code>ConstituentaMappableFields</code> already broke the
+        <code>*Constituenta</code> pattern — and reads better because of it.
+      </p>
+
+      <h2>Where overuse shows up</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Identifier pressure</h3>
+          <p>
+            Across domain / frontend / rstool there are roughly
+            <strong>~90 distinct identifiers</strong> containing
+            <code>Constituenta</code>. The full entity name dominates (~400
+            hits). Slice names are few but noisy.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Parallel families</h3>
+          <ul>
+            <li>
+              frontend:
+              <code>ConstituentaBasicsDTO</code>,
+              <code>CreateConstituentaDTO</code>, …
+            </li>
+            <li>
+              rstool:
+              <code>ConstituentaDraft</code> /
+              <code>ConstituentaState</code> (camelCase, different lifecycle)
+            </li>
+          </ul>
+          <p class="small">
+            Same noun, different contracts — fine if intentional, confusing when
+            reading APIs.
+          </p>
+        </div>
+      </div>
+      <div class="callout" style="margin-top: 18px">
+        Comments also flip between “constituent”, “constituenta”, and
+        <code>Cst*</code>. Worth normalizing wording even if type names stay.
+      </div>
+
+      <h2>Directions</h2>
+      <div class="card" style="margin-top: 18px">
+        <div class="option">
+          <h3>
+            1. Keep the noun, rename slices
+            <span class="tag tag-ok">recommended first</span>
+          </h3>
+          <p>
+            Keep <code>Constituenta</code> for the entity. Rename capability
+            types to task / capability language, preferably
+            <code>*Fields</code> or role nouns:
+          </p>
+          <ul>
+            <li>
+              <code>OrderableConstituenta</code> →
+              <code>OrderableFields</code> or <code>FormalOrderItem</code>
+            </li>
+            <li>
+              <code>ResolvableConstituenta</code> →
+              <code>TextResolvableFields</code>
+            </li>
+            <li>
+              <code>AliasTypedConstituenta</code> →
+              <code>AliasTypedFields</code>
+            </li>
+            <li>
+              <code>SynthesizableConstituenta</code> →
+              <code>SynthesizableFields</code> (or keep as intersection alias)
+            </li>
+            <li>
+              Align with existing
+              <code>ConstituentaMappableFields</code>
+            </li>
+          </ul>
+          <p class="small">
+            Low blast radius (mostly domain + a handful of generics). No
+            <code>CONTEXT.md</code> change.
+          </p>
+        </div>
+        <div class="option">
+          <h3>
+            2. Split the fat entity
+            <span class="tag tag-accent">optional later</span>
+          </h3>
+          <p>
+            Introduce layered types, e.g.
+            <code>ConstituentaCore</code> (persistable) →
+            <code>ConstituentaAnalyzed</code> → full
+            <code>Constituenta</code> with inheritance / spawn. DTOs / Draft /
+            State could map onto layers instead of inventing sibling nouns.
+          </p>
+          <p class="small">
+            Higher cost; do only if the god-object itself is the real pain.
+          </p>
+        </div>
+        <div class="option">
+          <h3>
+            3. Rename Constituenta → Constituent / Concept / …
+            <span class="tag tag-warn">not recommended</span>
+          </h3>
+          <p>
+            Fights the domain glossary and churns hundreds of call sites for
+            little clarity.
+          </p>
+        </div>
+      </div>
+
+      <h2>Decision fork</h2>
+      <p>
+        Chose <strong>C then A</strong>: rename slices now; leave fat-entity
+        layering for a later pass if needed.
+      </p>
+      <div class="grid-3">
+        <div class="card">
+          <h3>A — Slice names <span class="tag tag-ok">done</span></h3>
+          <p class="small">
+            Capability types feel like fake “kinds of constituenta.” Cheap win;
+            matches direction 1.
+          </p>
+        </div>
+        <div class="card">
+          <h3>B — Fat entity <span class="tag tag-accent">deferred</span></h3>
+          <p class="small">
+            The full <code>Constituenta</code> interface mixes too many
+            concerns. Needs direction 2.
+          </p>
+        </div>
+        <div class="card">
+          <h3>C — Both <span class="tag tag-ok">selected</span></h3>
+          <p class="small">
+            Rename slices first as a cheap win, then decide whether layered
+            entity types are worth the follow-up.
+          </p>
+        </div>
+      </div>
+
+      <h2>Follow-ups (optional)</h2>
+      <ol>
+        <li>
+          Publish <code>@rsconcept/domain@3.0.0</code> when ready (workspace
+          consumers already use <code>workspace:*</code>).
+        </li>
+        <li>
+          Optionally normalize comments to “constituenta” /
+          <code>Constituenta</code> / <code>Cst*</code> consistently.
+        </li>
+        <li>
+          Later: consider <code>ConstituentaCore</code> /
+          <code>ConstituentaAnalyzed</code> layering if the fat entity remains
+          painful (ConceptCore’s <code>ConceptRecord</code> +
+          <code>GetRS</code> / <code>GetText</code> / <code>GetParse</code>).
+        </li>
+      </ol>
+
+      <section class="callout success" style="margin-top: 28px">
+        <strong>Closed.</strong> Option 1 shipped in domain
+        <code>rsform-api</code>; planning doc updated with ConceptCore mapping.
+      </section>
+    </main>
+  </body>
+</html>

@@ -5,8 +5,8 @@ import { type EchelonCollection } from '../rslang/semantic/typification';
 
 import { modelStatusCstDiagnostic } from './diagnostics';
 import { type RSEngine } from './rsengine';
-import { type Constituenta, CstType, type RSForm } from './rsform';
-import { calculateSchemaStats, isBaseSet, isBasicConcept } from './rsform-api';
+import { CstType, type RSForm } from './rsform';
+import { calculateSchemaStats, isBaseSet, isBasicConcept, type ModelEvalFields } from './rsform-api';
 import { type BasicBinding, EvalStatus, type RSModelStats } from './rsmodel';
 
 const RANDOM_INTEGER_MIN = -100;
@@ -44,7 +44,7 @@ export function validateValueData(data: unknown): data is Value {
 export function generateRandomValue(
   type: Typification,
   basics: Map<number, BasicBinding>,
-  cstByAlias: Map<string, Constituenta>,
+  cstByAlias: Map<string, { id: number }>,
   setElementsCount: number = DEFAULT_RANDOM_SET_ELEMENTS_COUNT
 ): Value | null {
   switch (type.typeID) {
@@ -125,7 +125,7 @@ export function calculateModelStats(schema: RSForm, engine: RSEngine, _engineGen
 }
 
 /** Checks whether evaluation status contributes to model status issues. */
-export function isModelIssue(engine: RSEngine, cst: Constituenta): boolean {
+export function isModelIssue(engine: RSEngine, cst: ModelEvalFields): boolean {
   return modelStatusCstDiagnostic(engine.getCstStatus(cst.id), cst.cst_type) !== null;
 }
 
@@ -325,7 +325,7 @@ export function addValueElement(
 
 // ========= Internal functions ==========
 
-function countBaseElements(cst: Constituenta, engine: RSEngine): number {
+function countBaseElements(cst: ModelEvalFields, engine: RSEngine): number {
   if (!isBasicConcept(cst.cst_type)) {
     return 0;
   }

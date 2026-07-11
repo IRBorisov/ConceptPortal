@@ -7,7 +7,7 @@ import { type TermContext } from '../../cctext/language';
 import { extractEntities, parseGrammemes, resolveTextReferences } from '../../cctext/language-api';
 import { Graph } from '../../graph';
 
-import { type ResolvableConstituenta } from './types';
+import { type TextResolvableFields } from './types';
 
 /** Options controlling which texts to re-resolve after an edit. */
 export interface TextChangeOptions {
@@ -18,17 +18,17 @@ export interface TextChangeOptions {
 }
 
 /** Build term-reference graph: referenced constituent → dependent (backend {@code graph_term}). */
-export function buildTermReferenceGraph(items: readonly ResolvableConstituenta[]): Graph<number> {
+export function buildTermReferenceGraph(items: readonly TextResolvableFields[]): Graph<number> {
   return buildReferenceGraph(items, 'term_raw');
 }
 
 /** Build definition-reference graph: referenced constituent → dependent (backend {@code graph_text}). */
-export function buildDefinitionReferenceGraph(items: readonly ResolvableConstituenta[]): Graph<number> {
+export function buildDefinitionReferenceGraph(items: readonly TextResolvableFields[]): Graph<number> {
   return buildReferenceGraph(items, 'definition_raw');
 }
 
 /** Resolve all term and definition texts in topological order. Mutates items in place. */
-export function resolveAllConstituentTexts(items: ResolvableConstituenta[]): void {
+export function resolveAllConstituentTexts(items: TextResolvableFields[]): void {
   const graphTerm = buildTermReferenceGraph(items);
   const idToItem = new Map(items.map(item => [item.id, item]));
   const context = buildTermContext(items);
@@ -56,7 +56,7 @@ export function resolveAllConstituentTexts(items: ResolvableConstituenta[]): voi
  * Mutates items in place.
  */
 export function resolveConstituentTextChange(
-  items: ResolvableConstituenta[],
+  items: TextResolvableFields[],
   targetID: number,
   options: TextChangeOptions
 ): void {
@@ -117,7 +117,7 @@ export function resolveConstituentTextChange(
 // ====== Internals =======
 
 function buildReferenceGraph(
-  items: readonly ResolvableConstituenta[],
+  items: readonly TextResolvableFields[],
   field: 'definition_raw' | 'term_raw'
 ): Graph<number> {
   const graph = new Graph<number>();
@@ -136,7 +136,7 @@ function buildReferenceGraph(
   return graph;
 }
 
-function buildTermContext(items: readonly ResolvableConstituenta[]): TermContext {
+function buildTermContext(items: readonly TextResolvableFields[]): TermContext {
   const context: TermContext = {};
   for (const row of items) {
     context[row.alias] = toContextItem(row);
@@ -144,7 +144,7 @@ function buildTermContext(items: readonly ResolvableConstituenta[]): TermContext
   return context;
 }
 
-function toContextItem(row: ResolvableConstituenta): TermContext[string] {
+function toContextItem(row: TextResolvableFields): TermContext[string] {
   return {
     nominal: row.term_resolved,
     forms: row.term_forms.map(form => ({ text: form.text, grams: parseGrammemes(form.tags) }))

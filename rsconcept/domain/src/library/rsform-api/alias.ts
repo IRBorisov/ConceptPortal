@@ -7,10 +7,10 @@ import { type AliasMapping, applyAliasMapping, applyTypificationMapping } from '
 import { type ArgumentValue, CstType, type RSForm } from '../rsform';
 
 import { getCstTypePrefix } from './cst-type';
-import { type AliasTypedConstituenta } from './types';
+import { type AliasTypedFields } from './types';
 
-/** Fields of {@link Constituenta} updated in place by alias mapping. */
-export interface ConstituentaMappableFields {
+/** Fields updated in place by alias mapping. */
+export interface MappableFields {
   alias: string;
   definition_formal: string;
   typification_manual: string;
@@ -77,7 +77,7 @@ export function generateAlias(type: CstType, schema: RSForm, takenAliases: strin
  * Remap formal expressions and terminological entity references in constituent fields.
  * Mutates each element of `items` in place; pass owned or cloned data only.
  */
-export function applyMappingToConstituents<T extends ConstituentaMappableFields>(
+export function applyMappingToConstituents<T extends MappableFields>(
   items: T[],
   mapping: AliasMapping,
   changeAliases: boolean
@@ -94,7 +94,7 @@ export function applyMappingToConstituents<T extends ConstituentaMappableFields>
 }
 
 /** Highest numeric alias suffix for {@link type} among {@link items} (0 when none). */
-export function maxAliasIndex(items: readonly AliasTypedConstituenta[], type: CstType): number {
+export function maxAliasIndex(items: readonly AliasTypedFields[], type: CstType): number {
   const prefix = getCstTypePrefix(type);
   return items.reduce((max, cst) => {
     if (cst.cst_type !== type) {
@@ -109,7 +109,7 @@ export function maxAliasIndex(items: readonly AliasTypedConstituenta[], type: Cs
  * Build alias → new-alias mapping that renumbers each type sequentially in list order.
  * Matches backend {@code RSFormCached.reset_aliases}.
  */
-export function buildSequentialAliasMapping(items: readonly AliasTypedConstituenta[]): AliasMapping {
+export function buildSequentialAliasMapping(items: readonly AliasTypedFields[]): AliasMapping {
   const counts: Record<string, number> = {};
   for (const value of Object.values(CstType)) {
     counts[value] = 1;
@@ -130,8 +130,8 @@ export function buildSequentialAliasMapping(items: readonly AliasTypedConstituen
  * Returns an empty mapping when the receiver has no items (aliases kept as-is).
  */
 export function allocateImportAliases(
-  receiver: readonly AliasTypedConstituenta[],
-  source: readonly AliasTypedConstituenta[]
+  receiver: readonly AliasTypedFields[],
+  source: readonly AliasTypedFields[]
 ): AliasMapping {
   if (receiver.length === 0) {
     return {};

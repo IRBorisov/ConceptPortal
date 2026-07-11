@@ -1,10 +1,10 @@
 import {
-  type Constituenta,
   type CstDiagnostic,
   DiagnosticKind,
   modelStatusCstDiagnostic,
   RSDiagnosticCode
 } from '@rsconcept/domain/library';
+import { type DiagnosticSourceFields } from '@rsconcept/domain/library/rsform-api';
 import { EvalStatus } from '@rsconcept/domain/library/rsmodel';
 import { isCritical, RSErrorCode, type RSErrorDescription } from '@rsconcept/domain/rslang/error';
 
@@ -43,7 +43,7 @@ export function getDiagnosticSeverity(code: number): DiagnosticSeverity {
   return isCritical(code as RSErrorCode) ? 'error' : 'warning';
 }
 
-export function expandCstDiagnostic(cst: Constituenta, diagnostic: CstDiagnostic): Diagnostic {
+export function expandCstDiagnostic(cst: DiagnosticSourceFields, diagnostic: CstDiagnostic): Diagnostic {
   const expression = expressionForCstDiagnostic(cst, diagnostic);
   return {
     ...diagnostic,
@@ -76,12 +76,12 @@ export function expressionDiagnostic(
   };
 }
 
-export function modelStatusDiagnostic(status: EvalStatus, cst: Constituenta): Diagnostic | null {
+export function modelStatusDiagnostic(status: EvalStatus, cst: DiagnosticSourceFields): Diagnostic | null {
   const base = modelStatusCstDiagnostic(status, cst.cst_type);
   return base ? expandCstDiagnostic(cst, base) : null;
 }
 
-function expressionForCstDiagnostic(cst: Constituenta, diagnostic: CstDiagnostic): string {
+function expressionForCstDiagnostic(cst: DiagnosticSourceFields, diagnostic: CstDiagnostic): string {
   switch (diagnostic.code) {
     case RSDiagnosticCode.schemaHomonym:
     case RSDiagnosticCode.schemaMissingTerm:

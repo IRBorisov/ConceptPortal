@@ -1,5 +1,5 @@
 /**
- * Constituent ({@link Constituenta}) text search for schema and model lists.
+ * Constituent text search for schema and model lists.
  *
  * Matching is case-insensitive. Queries are interpreted as regular expressions when valid;
  * otherwise {@link TextMatcher} falls back to substring search.
@@ -8,8 +8,7 @@
  * {@link filterConstituentaByQuery} sorts results by that rank and keeps the original schema
  * order for ties.
  */
-import { type Constituenta } from '@rsconcept/domain/library';
-import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
+import { type SearchableFields, isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 
 import { TextMatcher } from './text-matcher';
 
@@ -20,7 +19,7 @@ import { TextMatcher } from './text-matcher';
  * {@link filterConstituentaByQuery}.
  *
  * Field mapping:
- * - `alias` — {@link Constituenta.alias}
+ * - `alias` — alias
  * - `term` — `term_resolved`, then `term_raw`
  * - `formalDefinition` — `definition_formal`
  * - `textDefinition` — `definition_resolved`, then `definition_raw`
@@ -41,7 +40,7 @@ export const CST_MATCH_RANK = {
  *
  * An empty or whitespace-only `query` never matches.
  */
-export function cstMatchRank(target: Constituenta, query: string): number | null {
+export function cstMatchRank(target: SearchableFields, query: string): number | null {
   const trimmed = query.trim();
   if (!trimmed) {
     return null;
@@ -77,7 +76,7 @@ export function cstMatchRank(target: Constituenta, query: string): number | null
  * Equivalent to `cstMatchRank(target, query) !== null`. Prefer {@link filterConstituentaByQuery}
  * when the caller needs a filtered, relevance-sorted list.
  */
-export function matchConstituenta(target: Constituenta, query: string): boolean {
+export function matchConstituenta(target: SearchableFields, query: string): boolean {
   return cstMatchRank(target, query) !== null;
 }
 
@@ -88,7 +87,7 @@ export function matchConstituenta(target: Constituenta, query: string): boolean 
  * - Non-matching constituents are omitted.
  * - Equal rank keeps the original index order from `items`.
  */
-export function filterConstituentaByQuery(items: Constituenta[], query: string): Constituenta[] {
+export function filterConstituentaByQuery<T extends SearchableFields>(items: T[], query: string): T[] {
   const trimmed = query.trim();
   if (!trimmed) {
     return items;
@@ -96,7 +95,7 @@ export function filterConstituentaByQuery(items: Constituenta[], query: string):
 
   const ranked = items
     .map((cst, index) => ({ cst, index, rank: cstMatchRank(cst, trimmed) }))
-    .filter((entry): entry is { cst: Constituenta; index: number; rank: number } => entry.rank !== null);
+    .filter((entry): entry is { cst: T; index: number; rank: number } => entry.rank !== null);
 
   ranked.sort((a, b) => a.rank - b.rank || a.index - b.index);
   return ranked.map(entry => entry.cst);

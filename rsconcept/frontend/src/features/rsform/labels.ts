@@ -4,7 +4,7 @@
 
 import { globalTx } from '@/i18n';
 import { type Constituenta, CstClass, CstStatus, CstType, RSDiagnosticCode } from '@rsconcept/domain/library';
-import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
+import { type DescribableFields, isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 import { RSErrorCode, TokenID, TypeClass } from '@rsconcept/domain/rslang';
 import { labelType } from '@rsconcept/domain/rslang/labels';
 
@@ -292,7 +292,7 @@ export function describeCstNodeTooltip(cst: Constituenta): string {
 }
 
 /** Generates description for {@link Constituenta}. */
-export function describeConstituenta(cst: Constituenta): string {
+export function describeConstituenta(cst: DescribableFields): string {
   if (cst.cst_type === CstType.STRUCTURED) {
     return (
       cst.term_resolved ||
@@ -315,7 +315,7 @@ export function describeConstituenta(cst: Constituenta): string {
 }
 
 /** Generates description for term of a given {@link Constituenta}. */
-export function describeConstituentaTerm(cst: Constituenta | null): string {
+export function describeConstituentaTerm(cst: Pick<DescribableFields, 'term_resolved'> | null): string {
   if (!cst) {
     return '!MISSING!';
   }
@@ -327,7 +327,7 @@ export function describeConstituentaTerm(cst: Constituenta | null): string {
 }
 
 /** Generates label for {@link Constituenta}. */
-export function labelConstituenta(cst: Constituenta) {
+export function labelConstituenta(cst: DescribableFields) {
   return `${cst.alias}: ${describeConstituenta(cst)}`;
 }
 
@@ -560,7 +560,10 @@ function formatRsDiagnosticMessage(code: RSDiagnosticCode, params?: readonly str
 }
 
 /** Generates description for a schema/model {@link CstDiagnostic}. */
-export function describeCstDiagnostic(cst: Constituenta, code: RSDiagnosticCode): string | undefined {
+export function describeCstDiagnostic(
+  cst: { diagnostics: readonly { code: number; params?: readonly string[] }[] },
+  code: RSDiagnosticCode
+): string | undefined {
   const diagnostic = cst.diagnostics.find(item => item.code === code);
   if (!diagnostic) {
     return undefined;

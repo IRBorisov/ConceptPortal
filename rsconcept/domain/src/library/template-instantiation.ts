@@ -16,14 +16,16 @@ import { labelType } from '../rslang/labels';
 import { TokenID } from '../rslang/parser/token';
 import { TypeID } from '../rslang/semantic/typification';
 
-import { type ArgumentValue, type Constituenta, type CstType, type RSForm } from './rsform';
+import { type ArgumentValue, type CstType, type RSForm, type TermForm } from './rsform';
 import {
   applyMappingToConstituents,
   argumentValuesToMapping,
   generateAlias,
   inferTemplatedType,
   isFunctional,
-  normalizeExpression
+  normalizeExpression,
+  type TemplateParamSourceFields,
+  type TemplateSourceFields
 } from './rsform-api';
 
 /**
@@ -42,7 +44,7 @@ export interface TemplateInstantiationItem {
   definition_formal: string;
   definition_raw: string;
   term_raw: string;
-  term_forms: Constituenta['term_forms'];
+  term_forms: TermForm[];
   typification_manual: string;
   value_is_property: boolean;
 }
@@ -78,9 +80,9 @@ export interface TemplateInstantiationInput {
   /** Schema that will receive new constituents. */
   targetSchema: RSForm;
   /** All constituents of the selected expression-bank RSForm (not only the prototype). */
-  templateItems: Constituenta[];
+  templateItems: TemplateSourceFields[];
   /** Template constituent chosen in the UI (main expression to add). */
-  prototype: Constituenta;
+  prototype: TemplateSourceFields;
   /** User bindings from template parameter aliases to target-schema global aliases. */
   userArgs: ArgumentValue[];
   /**
@@ -118,10 +120,10 @@ export function planTemplateInstantiation(input: TemplateInstantiationInput): Te
  */
 export class TemplateInstantiationPlanner {
   private readonly targetSchema: RSForm;
-  private readonly prototype: Constituenta;
+  private readonly prototype: TemplateSourceFields;
   private readonly userArgs: ArgumentValue[];
   private readonly mainItemTemplate: TemplateInstantiationItem;
-  private readonly templateByAlias: Map<string, Constituenta>;
+  private readonly templateByAlias: Map<string, TemplateSourceFields>;
   private readonly userMapping: AliasMapping;
   private readonly depBindings = new Map<string, Map<string, string>>();
   private readonly depRefs = new Map<string, Set<string>>();
@@ -322,7 +324,7 @@ function formalDefinitionKey(cst_type: CstType, normalized: string): string {
 }
 
 function instantiateTemplateItem(
-  template: Constituenta,
+  template: TemplateSourceFields,
   args: ArgumentValue[],
   alias: string
 ): TemplateInstantiationItem {
@@ -384,7 +386,7 @@ function bindingMapToArgs(params: TemplateParam[], bindings: Map<string, string>
   }));
 }
 
-function getTemplateParams(template: Constituenta): TemplateParam[] {
+function getTemplateParams(template: TemplateParamSourceFields): TemplateParam[] {
   const effectiveType = template.effectiveType;
   if (effectiveType && (effectiveType.typeID === TypeID.function || effectiveType.typeID === TypeID.predicate)) {
     return effectiveType.args.map(arg => ({

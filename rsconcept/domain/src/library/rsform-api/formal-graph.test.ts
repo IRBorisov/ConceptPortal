@@ -4,9 +4,9 @@ import { CstType } from '../rsform';
 
 import { buildFormalDependencyGraph, restoreConstituentOrder } from './formal-graph';
 import { computeSemanticRelations } from './semantic-relations';
-import { type OrderableConstituenta } from './types';
+import { type FormalOrderFields } from './types';
 
-function cst(id: number, alias: string, cst_type: CstType, definition_formal = ''): OrderableConstituenta {
+function cst(id: number, alias: string, cst_type: CstType, definition_formal = ''): FormalOrderFields {
   return { id, alias, cst_type, definition_formal };
 }
 

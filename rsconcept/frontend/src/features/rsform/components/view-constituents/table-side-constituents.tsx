@@ -2,6 +2,7 @@
 
 import { useTx } from '@/i18n';
 import { type Constituenta, type RSEngine, type RSForm } from '@rsconcept/domain/library';
+import { type ModelEvalFields, type SchemaIssueFields } from '@rsconcept/domain/library/rsform-api';
 
 import { BadgeEvaluation } from '@/features/rsmodel/components/badge-evaluation';
 
@@ -23,8 +24,8 @@ interface TableSideConstituentsProps {
   schema: RSForm;
   engine?: RSEngine;
   activeCst?: Constituenta | null;
-  isSchemaIssue?: (cst: Constituenta) => boolean;
-  isModelIssue?: (cst: Constituenta) => boolean;
+  isSchemaIssue?: (cst: SchemaIssueFields) => boolean;
+  isModelIssue?: (cst: ModelEvalFields) => boolean;
 
   onActivate?: (cst: Constituenta) => void;
   onDoubleClick?: (cst: Constituenta) => void;

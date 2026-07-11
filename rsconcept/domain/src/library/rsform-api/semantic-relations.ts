@@ -8,16 +8,13 @@ import { CstType } from '../rsform';
 
 import { isBaseSet, isFunctional } from './cst-type';
 import { inferTemplate } from './expression';
-import { type OrderableConstituenta, type SemanticRelations } from './types';
+import { type FormalOrderFields, type SemanticRelations } from './types';
 
 /**
  * Infer semantic parent/children used for clustering during restore order.
  * Port of backend {@code SemanticInfo}.
  */
-export function computeSemanticRelations(
-  items: readonly OrderableConstituenta[],
-  graph: Graph<number>
-): SemanticRelations {
+export function computeSemanticRelations(items: readonly FormalOrderFields[], graph: Graph<number>): SemanticRelations {
   const byId = new Map(items.map(cst => [cst.id, cst]));
   const byAlias = new Map(items.map(cst => [cst.alias, cst]));
   const isTemplate = new Map<number, boolean>();
@@ -41,7 +38,7 @@ export function computeSemanticRelations(
     return !isFunctional(base.cst_type) || splitTemplateDefinition(base.definition_formal).head !== head;
   }
 
-  function extractSources(target: OrderableConstituenta): Set<number> {
+  function extractSources(target: FormalOrderFields): Set<number> {
     const sources = new Set<number>();
     if (!isFunctional(target.cst_type)) {
       for (const parentId of graph.at(target.id)?.inputs ?? []) {
@@ -76,7 +73,7 @@ export function computeSemanticRelations(
     return sources;
   }
 
-  function inferSimple(target: OrderableConstituenta): boolean {
+  function inferSimple(target: FormalOrderFields): boolean {
     if (target.cst_type === CstType.STRUCTURED || isBaseSet(target.cst_type)) {
       return false;
     }
