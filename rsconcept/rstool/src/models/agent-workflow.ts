@@ -73,6 +73,10 @@ export interface SynthesizeInput {
 export interface SynthesizeResult {
   session: SessionHandle;
   summary: SessionSummary;
+  /** False when some constituents failed re-analysis after embedding (best-effort). */
+  success: boolean;
+  /** Drafts that failed analysis after embedding; empty when {@link success} is true. */
+  failed: Array<{ draft: ConstituentaDraft; diagnostics: Diagnostic[] }>;
   /** Source constituent id → inserted id in the receiver (before substitutions). */
   idMap: Record<number, number>;
   /** Alias remapping applied to imported constituents. */

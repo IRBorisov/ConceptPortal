@@ -390,12 +390,14 @@ export class RSToolAgent implements RSToolAgentContract {
       };
       this.sessions.replaceState(receiverId, receiverEnvelope.state);
 
-      this.applyConstituents({ drafts, mode: 'best_effort' }, receiverId);
+      const applied = this.applyConstituents({ drafts, mode: 'best_effort' }, receiverId);
 
       const revision = input.commitMessage ? this.commitStep(input.commitMessage, receiverId) : undefined;
       return {
         session: receiverHandle,
         summary: this.buildSessionSummary(receiverId),
+        success: applied.success,
+        failed: applied.failed,
         idMap: result.idMap,
         aliasMapping: result.aliasMapping,
         deletedIds: [...result.deletedIds],

@@ -404,7 +404,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
         commitMessage: { type: "string" },
       },
       required: ["sourceSessionId"],
-      additionalProperties: false,
+      additionalProperties: true,
     },
     invoke: (tool, args) =>
       tool.synthesize(omitSessionId(args) as never, optionalSessionId(args)),
