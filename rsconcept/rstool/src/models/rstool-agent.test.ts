@@ -1079,6 +1079,8 @@ describe('RSToolAgent modeling semantics', () => {
     });
 
     expect(result.summary.itemCount).toBe(3);
+    expect(result.success).toBe(true);
+    expect(result.failed).toEqual([]);
     expect(result.aliasMapping).toEqual({ X1: 'X2', S1: 'S1' });
     const state = tool.getSessionState('full', receiver.sessionId) as {
       items: Array<{ alias: string; definitionFormal: string }>;
@@ -1103,6 +1105,7 @@ describe('RSToolAgent modeling semantics', () => {
     });
 
     expect(result.summary.itemCount).toBe(1);
+    expect(result.success).toBe(true);
     expect(result.deletedIds).toHaveLength(1);
     const state = tool.getSessionState('full', receiver.sessionId) as { items: Array<{ alias: string; term: string }> };
     expect(state.items[0].alias).toBe('X1');

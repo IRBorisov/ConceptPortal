@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { CstType } from '../rsform';
+import { LibraryItemType } from '../library';
+import { CstType, type RSForm } from '../rsform';
 
-import { inlineSynthesis } from './synthesis';
+import { inlineSynthesis, sortItemsForInlineSynthesis } from './synthesis';
 
 function item(partial: {
   id: number;
@@ -122,5 +123,35 @@ describe('inlineSynthesis', () => {
     });
     expect(result.items).toEqual(receiver);
     expect(result.items).not.toBe(receiver);
+  });
+});
+
+describe('sortItemsForInlineSynthesis', () => {
+  function libraryItem(partial: { id: number; location: string; owner: number | null; visible: boolean }) {
+    return {
+      id: partial.id,
+      item_type: LibraryItemType.RSFORM,
+      alias: `S${partial.id}`,
+      title: `Item ${partial.id}`,
+      description: '',
+      visible: partial.visible,
+      read_only: false,
+      location: partial.location,
+      access_policy: 'public' as const,
+      time_create: '',
+      time_update: '',
+      owner: partial.owner
+    };
+  }
+
+  it('orders by location, then owner+visible, then visible, then rest', () => {
+    const receiver = { location: '/a', owner: 1 } as RSForm;
+    const sameLocation = libraryItem({ id: 1, location: '/a', owner: 99, visible: false });
+    const sameOwnerVisible = libraryItem({ id: 2, location: '/b', owner: 1, visible: true });
+    const otherVisible = libraryItem({ id: 3, location: '/c', owner: 2, visible: true });
+    const hidden = libraryItem({ id: 4, location: '/d', owner: 2, visible: false });
+
+    const sorted = sortItemsForInlineSynthesis(receiver, [hidden, otherVisible, sameOwnerVisible, sameLocation]);
+    expect(sorted.map(item => item.id)).toEqual([1, 2, 3, 4]);
   });
 });

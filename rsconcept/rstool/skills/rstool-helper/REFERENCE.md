@@ -178,6 +178,7 @@ const { orderedAliases } = tool.restoreOrder();
 **Синтез** в rstool сейчас — это **встраивание** схемы: вставка конституент из другой сессии в текущую с опциональной таблицей отождествлений (как «Встраивание схемы» в Portal UI).
 
 ```ts
+const receiver = tool.createSession();
 const source = tool.createSession();
 tool.applySchemaPatch({ items: [{ alias: 'X1' }] }, source.sessionId);
 
@@ -199,7 +200,7 @@ tool.synthesize({
 | `substitutions?`  | Таблица отождествлений по алиасам: в каждой строке один алиас источника и один алиас receiver |
 | `commitMessage?`  | Ревизия после успеха                                                                          |
 
-Алиасы импорта перенумеровываются при непустом receiver (`X1` → `X2`, …). Формулы и текстовые ссылки обновляются. Результат: `summary`, `idMap`, `aliasMapping`, `deletedIds`, `insertedIds`.
+Алиасы импорта перенумеровываются при непустом receiver (`X1` → `X2`, …). Формулы и текстовые ссылки обновляются. Результат: `summary`, `idMap`, `aliasMapping`, `deletedIds`, `insertedIds`, и опционально `revision` (если был `commitMessage`). Также `success` / `failed` — как у `applySchemaPatch` (режим best-effort после встраивания).
 
 ## `importData` / `exportSession` / `exportPortal`
 
