@@ -116,13 +116,4 @@ export interface SearchableFields {
 }
 
 /** Fields needed to build short UI descriptions / labels. */
-export interface DescribableFields {
-  alias: string;
-  cst_type: CstType;
-  term_raw: string;
-  term_resolved: string;
-  definition_formal: string;
-  definition_raw: string;
-  definition_resolved: string;
-  convention: string;
-}
+export interface DescribableFields extends SearchableFields {}

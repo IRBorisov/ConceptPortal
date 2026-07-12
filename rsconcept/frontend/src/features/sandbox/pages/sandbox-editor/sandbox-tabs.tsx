@@ -3,9 +3,8 @@
 import { useEffect, useEffectEvent, useLayoutEffect, useRef, useSyncExternalStore } from 'react';
 
 import { useTx } from '@/i18n';
-import { type RSEngine } from '@rsconcept/domain/library';
-import { isSchemaIssue, type ModelEvalFields } from '@rsconcept/domain/library/rsform-api';
-import { isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
+import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
+import { getEvalIssueItems } from '@rsconcept/domain/library/rsmodel-api';
 
 import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
@@ -47,7 +46,7 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
     useSchemaEdit();
 
   const { engine } = useModelEdit();
-  const engineGeneration = useSyncExternalStore(
+  useSyncExternalStore(
     onStoreChange => engine.subscribeChanges(onStoreChange),
     () => engine.getChangeGeneration()
   );
@@ -55,7 +54,7 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
   const problemItems = schema.items.filter(cst => isSchemaIssue(cst));
   const countProblematic = problemItems.length;
 
-  const modelIssues = getEvalIssueItems(schema.items, engine, engineGeneration);
+  const modelIssues = getEvalIssueItems(schema.items, engine);
   const countModelIssues = modelIssues.length;
 
   useLayoutEffect(
@@ -244,8 +243,4 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
       </div>
     </Tabs>
   );
-}
-
-function getEvalIssueItems(items: ModelEvalFields[], engine: RSEngine, _engineGeneration: number) {
-  return items.filter(cst => isModelIssue(engine, cst));
 }
