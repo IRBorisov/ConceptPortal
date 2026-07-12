@@ -9,7 +9,12 @@ import { getStructureName, isBaseSet } from '@rsconcept/domain/library/rsform-ap
 import { generateRandomValue, isInferrable, isInterpretable } from '@rsconcept/domain/library/rsmodel-api';
 import { type Value } from '@rsconcept/domain/rslang';
 import { isSetValue, normalizeValue } from '@rsconcept/domain/rslang/eval/value-api';
-import { isTypification, TypeID, type TypePath, type Typification } from '@rsconcept/domain/rslang/semantic/typification';
+import {
+  isTypification,
+  TypeID,
+  type TypePath,
+  type Typification
+} from '@rsconcept/domain/rslang/semantic/typification';
 
 import { PillValueClass } from '@/features/rsform/components/pill-valueClass';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
@@ -160,6 +165,10 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
         normalizeValue(nextSet);
         onChangeValue(nextSet);
         return;
+      }
+      // Tuples of sets (e.g. ℬ(X1)×ℬ(C1)): unique nested collections before save.
+      if (Array.isArray(randomData)) {
+        normalizeValue(randomData);
       }
       onChangeValue(randomData);
     }

@@ -1,5 +1,5 @@
 import { type ExpressionType, TypeID, type Typification, type Value } from '../rslang';
-import { compare, tuple, TUPLE_ID, VALUE_TRUE, type ValuePath } from '../rslang/eval/value';
+import { compare, set, tuple, TUPLE_ID, VALUE_TRUE, type ValuePath } from '../rslang/eval/value';
 import { extractValue, isTupleValue, makeDefaultValue, setNestedValue } from '../rslang/eval/value-api';
 import { type EchelonCollection } from '../rslang/semantic/typification';
 
@@ -80,7 +80,8 @@ export function generateRandomValue(
         }
         result.push(sample);
       }
-      return result;
+      // Sets must be unique; sampling with replacement can produce duplicates.
+      return set(result);
     }
     case TypeID.anyTypification:
       return null;
