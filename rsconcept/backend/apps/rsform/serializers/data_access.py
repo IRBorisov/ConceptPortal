@@ -551,6 +551,34 @@ class InlineSynthesisSerializer(StrictSerializer):
         child=SubstitutionSerializerBase()
     )
 
+    @staticmethod
+    def _validate_substitution_pair(
+        original_cst: Constituenta,
+        substitution_cst: Constituenta,
+        schema_in: LibraryItem,
+        schema_out: LibraryItem,
+        constituents: list[Constituenta]
+    ) -> None:
+        '''Validate one identification row. Empty constituents = all source items.'''
+        if original_cst.schema_id == schema_in.pk:
+            source_cst, receiver_cst = original_cst, substitution_cst
+        else:
+            source_cst, receiver_cst = substitution_cst, original_cst
+
+        if constituents:
+            if source_cst not in constituents:
+                raise serializers.ValidationError({
+                    f'{source_cst.pk}': msg.substitutionNotInList()
+                })
+        elif source_cst.schema_id != schema_in.pk:
+            raise serializers.ValidationError({
+                f'{source_cst.pk}': msg.constituentaNotInRSform(schema_in.title)
+            })
+        if receiver_cst.schema_id != schema_out.pk:
+            raise serializers.ValidationError({
+                f'{receiver_cst.pk}': msg.constituentaNotInRSform(schema_out.title)
+            })
+
     def validate(self, attrs):
         user = cast(User, self.context['user'])
         schema_in = cast(LibraryItem, attrs['source'])
@@ -560,6 +588,7 @@ class InlineSynthesisSerializer(StrictSerializer):
                 'message': msg.schemaForbidden(),
                 'object_id': schema_in.pk
             })
+        # Empty items means "embed all source constituents" (same as insert_from(None)).
         constituents = cast(list[Constituenta], attrs['items'])
         for cst in constituents:
             if cst.schema_id != schema_in.pk:
@@ -570,24 +599,9 @@ class InlineSynthesisSerializer(StrictSerializer):
         for item in attrs['substitutions']:
             original_cst = cast(Constituenta, item['original'])
             substitution_cst = cast(Constituenta, item['substitution'])
-            if original_cst.schema_id == schema_in.pk:
-                if original_cst not in constituents:
-                    raise serializers.ValidationError({
-                        f'{original_cst.pk}': msg.substitutionNotInList()
-                    })
-                if substitution_cst.schema_id != schema_out.pk:
-                    raise serializers.ValidationError({
-                        f'{substitution_cst.pk}': msg.constituentaNotInRSform(schema_out.title)
-                    })
-            else:
-                if substitution_cst not in constituents:
-                    raise serializers.ValidationError({
-                        f'{substitution_cst.pk}': msg.substitutionNotInList()
-                    })
-                if original_cst.schema_id != schema_out.pk:
-                    raise serializers.ValidationError({
-                        f'{original_cst.pk}': msg.constituentaNotInRSform(schema_out.title)
-                    })
+            self._validate_substitution_pair(
+                original_cst, substitution_cst, schema_in, schema_out, constituents
+            )
             if original_cst.pk in deleted:
                 raise serializers.ValidationError({
                     f'{original_cst.pk}': msg.substituteDouble(original_cst.alias)

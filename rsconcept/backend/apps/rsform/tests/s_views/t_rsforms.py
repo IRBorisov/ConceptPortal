@@ -680,6 +680,31 @@ class TestInlineSynthesis(EndpointTester):
         self.assertEqual(result['D1']['definition_formal'], r'S1\S2\X2')
         self.assertEqual(result['D2']['definition_formal'], r'S2\S1\X4')
 
+    def test_inline_synthesis_empty_items_means_all_with_substitutions(self):
+        '''Empty items embeds the whole source; substitutions must still validate.'''
+        ks1_x1 = self.schema1.insert_last('X1', term_raw='KS1X1')
+        ks2_x1 = self.schema2.insert_last('X1', term_raw='KS2X1')
+        ks2_x2 = self.schema2.insert_last('X2', term_raw='KS2X2')
+
+        data = {
+            'receiver': self.schema1.model.pk,
+            'source': self.schema2.model.pk,
+            'items': [],
+            'substitutions': [
+                {
+                    'original': ks2_x1.pk,
+                    'substitution': ks1_x1.pk
+                }
+            ]
+        }
+        response = self.executeOK(data)
+        result = {item['alias']: item for item in response.data['items']}
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result['X1']['term_raw'], 'KS1X1')
+        self.assertEqual(result['X3']['term_raw'], 'KS2X2')
+        self.assertNotIn(ks2_x1.pk, {item['id'] for item in response.data['items']})
+        self.assertNotIn(ks2_x2.pk, {item['id'] for item in response.data['items']})
+
     def test_inline_synthesis_resolves_terms_without_missing_refs(self):
         '''Partial embed must not keep source term_resolved for absent entities.'''
         self.schema2.insert_last('X1', term_raw='элемент', term_resolved='элемент')

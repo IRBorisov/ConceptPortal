@@ -116,4 +116,4 @@ export interface SearchableFields {
 }
 
 /** Fields needed to build short UI descriptions / labels. */
-export interface DescribableFields extends SearchableFields {}
+export type DescribableFields = SearchableFields;

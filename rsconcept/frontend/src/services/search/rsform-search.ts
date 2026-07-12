@@ -8,7 +8,7 @@
  * {@link filterConstituentaByQuery} sorts results by that rank and keeps the original schema
  * order for ties.
  */
-import { type SearchableFields, isBasicConcept } from '@rsconcept/domain/library/rsform-api';
+import { isBasicConcept,type SearchableFields } from '@rsconcept/domain/library/rsform-api';
 
 import { TextMatcher } from './text-matcher';
 
