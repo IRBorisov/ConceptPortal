@@ -543,17 +543,45 @@ const DIAGNOSTIC_MESSAGE_ID: Record<RSDiagnosticCode, string> = {
   [RSDiagnosticCode.modelEmpty]: 'tx.evaluation.status.empty.hint',
   [RSDiagnosticCode.modelAxiomFalse]: 'tx.evaluation.status.axiomFalse.hint',
   [RSDiagnosticCode.modelInvalidData]: 'tx.evaluation.status.invalidData.hint',
-  [RSDiagnosticCode.modelEvalFail]: 'tx.evaluation.status.error.hint'
+  [RSDiagnosticCode.modelEvalFail]: 'tx.evaluation.status.error.hint',
+  [RSDiagnosticCode.substitutionInvalidIDs]: 'tx.substitution.error.invalidIDs',
+  [RSDiagnosticCode.substitutionIncorrectCst]: 'tx.substitution.error.incorrectCst',
+  [RSDiagnosticCode.substitutionInvalidClasses]: 'tx.substitution.error.invalidClasses',
+  [RSDiagnosticCode.substitutionInvalidBasic]: 'tx.substitution.error.invalidBasic',
+  [RSDiagnosticCode.substitutionInvalidConstant]: 'tx.substitution.error.invalidConstant',
+  [RSDiagnosticCode.substitutionTypificationCycle]: 'tx.substitution.error.typificationCycle',
+  [RSDiagnosticCode.substitutionBaseNotSet]: 'tx.substitution.error.baseSubstitutionNotSet',
+  [RSDiagnosticCode.substitutionUnequalTypification]: 'tx.substitution.error.unequalTypification',
+  [RSDiagnosticCode.substitutionUnequalExpressions]: 'tx.substitution.error.unequalExpressions',
+  [RSDiagnosticCode.substitutionUnequalArgsCount]: 'tx.substitution.error.unequalArgsCount',
+  [RSDiagnosticCode.substitutionUnequalArgs]: 'tx.substitution.error.unequalArgs',
+  [RSDiagnosticCode.substitutionInvalidNominal]: 'tx.substitution.error.invalidNominal'
 };
 
 function formatRsDiagnosticMessage(code: RSDiagnosticCode, params?: readonly string[]): string {
   const id = DIAGNOSTIC_MESSAGE_ID[code];
+  const from = params?.[0] ?? '';
+  const to = params?.[1] ?? '';
   switch (code) {
     case RSDiagnosticCode.schemaHomonym:
     case RSDiagnosticCode.schemaFormalDuplicate:
       return globalTx(id, { aliases: params?.[0] ?? '' });
     case RSDiagnosticCode.schemaDependencyCycle:
       return globalTx(id, { cycle: params?.[0] ?? '' });
+    case RSDiagnosticCode.substitutionTypificationCycle:
+      return globalTx(id, { detail: params?.[0] ?? '' });
+    case RSDiagnosticCode.substitutionIncorrectCst:
+    case RSDiagnosticCode.substitutionInvalidBasic:
+    case RSDiagnosticCode.substitutionInvalidConstant:
+    case RSDiagnosticCode.substitutionInvalidNominal:
+    case RSDiagnosticCode.substitutionInvalidClasses:
+    case RSDiagnosticCode.substitutionUnequalTypification:
+    case RSDiagnosticCode.substitutionUnequalArgsCount:
+    case RSDiagnosticCode.substitutionUnequalArgs:
+    case RSDiagnosticCode.substitutionUnequalExpressions:
+      return globalTx(id, { from, to });
+    case RSDiagnosticCode.substitutionBaseNotSet:
+      return globalTx(id, { from, to });
     default:
       return globalTx(id);
   }

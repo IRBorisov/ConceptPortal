@@ -19,7 +19,7 @@ export const DiagnosticKind = {
 } as const;
 export type DiagnosticKind = (typeof DiagnosticKind)[keyof typeof DiagnosticKind];
 
-/** Schema and model diagnostic codes (same numeric format as {@link RSErrorCode}). */
+/** Schema, model, and substitution-table diagnostic codes (same numeric format as {@link RSErrorCode}). */
 export const RSDiagnosticCode = {
   schemaHomonym: 0x8901,
   schemaFormalDuplicate: 0x8902,
@@ -31,7 +31,21 @@ export const RSDiagnosticCode = {
   modelEmpty: 0x8910,
   modelAxiomFalse: 0x8911,
   modelInvalidData: 0x8912,
-  modelEvalFail: 0x8913
+  modelEvalFail: 0x8913,
+
+  substitutionInvalidIDs: 0x8920,
+  substitutionIncorrectCst: 0x8921,
+  substitutionInvalidClasses: 0x8922,
+  substitutionInvalidBasic: 0x8923,
+  substitutionInvalidConstant: 0x8924,
+  substitutionTypificationCycle: 0x8925,
+  substitutionBaseNotSet: 0x8926,
+  substitutionUnequalTypification: 0x8927,
+  /** Non-blocking warning: formal definitions differ after mapping. */
+  substitutionUnequalExpressions: 0x2928,
+  substitutionUnequalArgsCount: 0x8929,
+  substitutionUnequalArgs: 0x892a,
+  substitutionInvalidNominal: 0x892b
 } as const;
 export type RSDiagnosticCode = (typeof RSDiagnosticCode)[keyof typeof RSDiagnosticCode];
 

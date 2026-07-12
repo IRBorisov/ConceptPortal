@@ -4,6 +4,7 @@
 
 import { type Graph } from '../graph';
 
+import { RSDiagnosticCode } from './diagnostics';
 import { type LibraryItem } from './library';
 import { type NodePosition, type OssLayout } from './oss-layout';
 
@@ -126,25 +127,30 @@ export interface OperationSchema extends LibraryItem {
   itemByNodeID: Map<string, OssItem>;
 }
 
-/** Represents substitution error description. */
+/** Represents substitution error description (same code space as {@link RSDiagnosticCode}). */
 export interface SubstitutionErrorDescription {
-  errorType: SubstitutionErrorType;
+  code: SubstitutionErrorType;
   params: string[];
 }
 
-/** Represents Substitution table error types. */
+/**
+ * Substitution-table error codes — aliases into {@link RSDiagnosticCode}.
+ * Logical definition cycles reuse {@link RSDiagnosticCode.schemaDependencyCycle}.
+ */
 export const SubstitutionErrorType = {
-  invalidIDs: 0,
-  incorrectCst: 1,
-  invalidClasses: 2,
-  invalidBasic: 3,
-  invalidConstant: 4,
-  typificationCycle: 5,
-  baseSubstitutionNotSet: 6,
-  unequalTypification: 7,
-  unequalExpressions: 8,
-  unequalArgsCount: 9,
-  unequalArgs: 10,
-  invalidNominal: 11
-} as const;
+  invalidIDs: RSDiagnosticCode.substitutionInvalidIDs,
+  incorrectCst: RSDiagnosticCode.substitutionIncorrectCst,
+  invalidClasses: RSDiagnosticCode.substitutionInvalidClasses,
+  invalidBasic: RSDiagnosticCode.substitutionInvalidBasic,
+  invalidConstant: RSDiagnosticCode.substitutionInvalidConstant,
+  typificationCycle: RSDiagnosticCode.substitutionTypificationCycle,
+  baseSubstitutionNotSet: RSDiagnosticCode.substitutionBaseNotSet,
+  unequalTypification: RSDiagnosticCode.substitutionUnequalTypification,
+  unequalExpressions: RSDiagnosticCode.substitutionUnequalExpressions,
+  unequalArgsCount: RSDiagnosticCode.substitutionUnequalArgsCount,
+  unequalArgs: RSDiagnosticCode.substitutionUnequalArgs,
+  invalidNominal: RSDiagnosticCode.substitutionInvalidNominal,
+  /** Same code as constituent schema dependency cycle. */
+  definitionCycle: RSDiagnosticCode.schemaDependencyCycle
+} as const satisfies Record<string, (typeof RSDiagnosticCode)[keyof typeof RSDiagnosticCode]>;
 export type SubstitutionErrorType = (typeof SubstitutionErrorType)[keyof typeof SubstitutionErrorType];

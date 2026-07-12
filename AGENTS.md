@@ -32,6 +32,7 @@ Workspace rules for agents.
 
 - Domain docs: `CONTEXT.md`.
 - Portal REST API (UI links → API paths): `rsconcept/rstool/docs/PORTAL-API.md`.
+- Conceptual-schema terminology (agents): `rsconcept/rstool/docs/DOMAIN.md` section **«Термины: не путать»** — never say «базис»/«базисы»; use **базисное множество** for `X#`, **неопределяемые понятия** for the `X#`/`C#`/`S#` layer.
 - **Project skills:** `.agents/skills/<name>/`
 - **`rstool-helper`:** canonical guide in `rsconcept/rstool/skills/rstool-helper/` + `rsconcept/rstool/docs/`; workspace entry skill `.agents/skills/rstool-helper/SKILL.md`.
 

@@ -22,6 +22,7 @@ export function HelpSubstitutionsFr() {
             lors de l'identification de constituants paramétrés, le nombre et les typifications des arguments doivent
             correspondre
           </li>
+          <li>après application de la table, il ne doit pas y avoir de cycle logique dans les définitions formelles</li>
         </ul>
       </p>
     </>

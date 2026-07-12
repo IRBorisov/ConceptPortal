@@ -7,6 +7,7 @@ import { type AliasMapping, applyAliasMapping, applyTypificationMapping, isSetTy
 import { labelType } from '../rslang/labels';
 import { extractBases } from '../rslang/semantic/typification-api';
 
+import { formatDependencyCycle } from './diagnostics';
 import { type LibraryItem } from './library';
 import { NodeType, type OperationSchema, type SubstitutionErrorDescription, SubstitutionErrorType } from './oss';
 import { type Constituenta, CstClass, CstType, type RSForm, type Substitution } from './rsform';
@@ -101,7 +102,10 @@ export class SubstitutionValidator {
     if (!this.checkTypes()) {
       return false;
     }
-    if (!this.checkCycles()) {
+    if (!this.checkTypificationCycles()) {
+      return false;
+    }
+    if (!this.checkDefinitionCycles()) {
       return false;
     }
     if (!this.checkSubstitutions()) {
@@ -238,7 +242,11 @@ export class SubstitutionValidator {
     return true;
   }
 
-  private checkCycles(): boolean {
+  /**
+   * Detect cycles among base/constant sets implied by typifications of non-base
+   * constituents under the substitution table.
+   */
+  private checkTypificationCycles(): boolean {
     const graph = new Graph();
     for (const schema of this.schemas) {
       for (const cst of schema.items) {
@@ -282,6 +290,64 @@ export class SubstitutionValidator {
         })
         .join(', ');
       return this.reportError(SubstitutionErrorType.typificationCycle, [cycleMsg]);
+    }
+    return true;
+  }
+
+  /**
+   * Detect logical cycles in formal definitions after applying the substitution table
+   * (e.g. D16 := F2[D15] with identification D15 → D16 yields D16 := F2[D16]).
+   */
+  private checkDefinitionCycles(): boolean {
+    const graph = new Graph();
+    for (const schema of this.schemas) {
+      for (const [id, node] of schema.graph.nodes) {
+        graph.addNode(id);
+        for (const output of node.outputs) {
+          graph.addEdge(id, output);
+        }
+      }
+    }
+
+    const deleted = new Map<number, number>();
+    for (const item of this.substitutions) {
+      deleted.set(item.original, item.substitution);
+    }
+    const resolve = (id: number): number => deleted.get(id) ?? id;
+
+    const result = new Graph();
+    for (const id of graph.nodes.keys()) {
+      if (!deleted.has(id)) {
+        result.addNode(id);
+      }
+    }
+    for (const substitutionId of deleted.values()) {
+      result.addNode(substitutionId);
+    }
+
+    for (const [id, node] of graph.nodes) {
+      for (const output of node.outputs) {
+        if (deleted.has(output)) {
+          continue;
+        }
+        result.addEdge(resolve(id), output);
+      }
+    }
+
+    const cycle = result.findCycle();
+    if (cycle !== null) {
+      const aliases = cycle.map(id => {
+        const cst = this.cstByID.get(id);
+        if (!cst) {
+          return String(id);
+        }
+        if (this.schemas.length > 1) {
+          const schema = this.schemaByID.get(cst.schema);
+          return schema ? `[${schema.alias}]-${cst.alias}` : cst.alias;
+        }
+        return cst.alias;
+      });
+      return this.reportError(SubstitutionErrorType.definitionCycle, [formatDependencyCycle(aliases)]);
     }
     return true;
   }
@@ -407,10 +473,10 @@ export class SubstitutionValidator {
     return expression1.replace(/\s+/g, '') === expression2.replace(/\s+/g, '');
   }
 
-  private reportError(errorType: SubstitutionErrorType, params: string[]): boolean {
+  private reportError(code: SubstitutionErrorType, params: string[]): boolean {
     this.errors.push({
-      errorType: errorType,
-      params: params
+      code,
+      params
     });
     return false;
   }

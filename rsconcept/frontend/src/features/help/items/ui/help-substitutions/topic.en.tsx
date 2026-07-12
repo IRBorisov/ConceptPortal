@@ -14,13 +14,14 @@ export function HelpSubstitutionsEn() {
           <li>base sets can only substitute other base sets</li>
           <li>constant sets can only substitute other constant sets</li>
           <li>
-            when identifying constituents other than base and constant sets, their typifications must match, taking other
-            identifications into account
+            when identifying constituents other than base and constant sets, their typifications must match, taking
+            other identifications into account
           </li>
           <li>logical expressions can only substitute other logical expressions</li>
           <li>
             when identifying parameterised constituents, the number and typifications of their arguments must match
           </li>
+          <li>after applying the table there must be no circular dependency in formal definitions (logical cycle)</li>
         </ul>
       </p>
     </>
