@@ -1,11 +1,12 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { ChevronDownIcon } from 'lucide-react';
 
 import { useTx } from '@/i18n';
 
 import { IconRemove } from '@/components/icons';
+import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 
 import { type Styling } from '../props';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command';
@@ -72,7 +73,31 @@ export function ComboBox<Option>({
   const tx = useTx();
   const [open, setOpen] = useState(false);
   const [popoverWidth, setPopoverWidth] = useState<number | undefined>(undefined);
+  const [isLabelTruncated, setIsLabelTruncated] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const labelRef = useRef<HTMLSpanElement>(null);
+  const labelText = value ? labelValueFunc(value) : (placeholder ?? '');
+  const tooltipAnchor = useValueTooltipAnchor(isLabelTruncated && value ? labelText : null);
+
+  useLayoutEffect(() => {
+    function updateTruncation() {
+      const el = labelRef.current;
+      setIsLabelTruncated(!!el && el.scrollWidth > el.clientWidth);
+    }
+
+    updateTruncation();
+
+    const el = labelRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    const observer = new ResizeObserver(updateTruncation);
+    observer.observe(el);
+    return function disconnectLabelObserver() {
+      observer.disconnect();
+    };
+  }, [labelText, className, style]);
 
   function handleOpenChange(isOpen: boolean) {
     setOpen(isOpen);
@@ -117,10 +142,12 @@ export function ComboBox<Option>({
             style={style}
             hidden={hidden && !open}
           >
-            <span className='truncate'>{value ? labelValueFunc(value) : placeholder}</span>
+            <span ref={labelRef} className='min-w-0 flex-1 truncate' {...tooltipAnchor}>
+              {value ? labelText : placeholder}
+            </span>
             <ChevronDownIcon
               className={cn(
-                'text-muted-foreground cc-hover-pulse hover:text-primary',
+                'shrink-0 text-muted-foreground cc-hover-pulse hover:text-primary',
                 clearable && !!value && 'opacity-0'
               )}
             />
