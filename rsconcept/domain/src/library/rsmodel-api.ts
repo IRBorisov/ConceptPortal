@@ -129,6 +129,11 @@ export function isModelIssue(engine: RSEngine, cst: ModelEvalFields): boolean {
   return modelStatusCstDiagnostic(engine.getCstStatus(cst.id), cst.cst_type) !== null;
 }
 
+/** Filters items whose evaluation status contributes to model issues. */
+export function getEvalIssueItems(items: readonly ModelEvalFields[], engine: RSEngine): ModelEvalFields[] {
+  return items.filter(cst => isModelIssue(engine, cst));
+}
+
 /** Evaluate if {@link CstType} is interpretable. */
 export function isInterpretable(type: CstType): boolean {
   switch (type) {

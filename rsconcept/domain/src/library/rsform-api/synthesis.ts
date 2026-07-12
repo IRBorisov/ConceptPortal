@@ -147,19 +147,23 @@ export function inlineSynthesis<T extends SynthesizableFields>(
 /** Sorts library items relevant for schema embedding with specified {@link RSForm}. */
 export function sortItemsForInlineSynthesis(receiver: RSForm, items: readonly LibraryItem[]): LibraryItem[] {
   const result = items.filter(item => item.location === receiver.location);
+  const included = new Set(result);
   for (const item of items) {
-    if (item.visible && item.owner === receiver.owner && !result.includes(item)) {
+    if (item.visible && item.owner === receiver.owner && !included.has(item)) {
       result.push(item);
+      included.add(item);
     }
   }
   for (const item of items) {
-    if (item.visible && !result.includes(item)) {
+    if (item.visible && !included.has(item)) {
       result.push(item);
+      included.add(item);
     }
   }
   for (const item of items) {
-    if (!result.includes(item)) {
+    if (!included.has(item)) {
       result.push(item);
+      included.add(item);
     }
   }
   return result;

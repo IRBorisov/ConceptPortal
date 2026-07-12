@@ -4,9 +4,8 @@ import { useEffect, useEffectEvent, useLayoutEffect, useRef, useSyncExternalStor
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
-import { type RSEngine } from '@rsconcept/domain/library';
-import { isSchemaIssue, type ModelEvalFields } from '@rsconcept/domain/library/rsform-api';
-import { isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
+import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
+import { getEvalIssueItems } from '@rsconcept/domain/library/rsmodel-api';
 
 import { RSModelTabID, useConceptNavigation } from '@/app/navigation/navigation-context';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
@@ -45,14 +44,14 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
   const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll, pendingActiveID, clearPendingActiveID } =
     useSchemaEdit();
   const { model, engine } = useModelEdit();
-  const engineGeneration = useSyncExternalStore(
+  useSyncExternalStore(
     onStoreChange => engine.subscribeChanges(onStoreChange),
     () => engine.getChangeGeneration()
   );
 
   const schemaIssues = schema.items.filter(cst => isSchemaIssue(cst));
   const countSchemaIssues = schemaIssues.length;
-  const modelIssues = getEvalIssueItems(schema.items, engine, engineGeneration);
+  const modelIssues = getEvalIssueItems(schema.items, engine);
   const countModelIssues = modelIssues.length;
 
   useLayoutEffect(
@@ -244,8 +243,4 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
       </div>
     </Tabs>
   );
-}
-
-function getEvalIssueItems(items: ModelEvalFields[], engine: RSEngine, _engineGeneration: number) {
-  return items.filter(cst => isModelIssue(engine, cst));
 }
