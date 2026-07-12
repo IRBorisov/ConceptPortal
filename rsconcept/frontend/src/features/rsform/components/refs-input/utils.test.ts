@@ -33,7 +33,12 @@ describe('findReferenceAt', () => {
     });
   });
 
-  it('returns undefined for text that is not a valid reference', () => {
-    expect(findReferenceAt(0, stateWith('plain text'))).toBeUndefined();
+  it('returns null for text that is not a valid reference', () => {
+    expect(findReferenceAt(0, stateWith('plain text'))).toBeNull();
+  });
+
+  it('does not throw on incomplete empty reference @{}', () => {
+    const text = '@{}';
+    expect(findReferenceAt(1, stateWith(text))).toBeNull();
   });
 });

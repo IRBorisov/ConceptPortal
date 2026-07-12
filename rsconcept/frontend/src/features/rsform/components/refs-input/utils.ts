@@ -21,17 +21,17 @@ export interface ParsedReferenceAt {
  * Lezer may recover invalid aliases (e.g. Cyrillic lookalikes) as the wrong
  * reference token; trusting the node type alone can throw on hover/click.
  */
-export function findReferenceAt(pos: number, state: EditorState): ParsedReferenceAt | undefined {
+export function findReferenceAt(pos: number, state: EditorState): ParsedReferenceAt | null {
   const nodes = findEnvelopingNodes(pos, pos, syntaxTree(state), ReferenceTokens);
   if (nodes.length !== 1) {
-    return undefined;
+    return null;
   }
   const start = nodes[0].from;
   const end = nodes[0].to;
   const text = state.doc.sliceString(start, end);
   const parsed = parseReference(text);
   if (!parsed) {
-    return undefined;
+    return null;
   }
   return { ref: parsed.data, start, end };
 }
