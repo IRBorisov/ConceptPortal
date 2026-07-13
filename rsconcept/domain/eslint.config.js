@@ -30,34 +30,32 @@ const basicRules = {
   'simple-import-sort/exports': 'error'
 };
 
-export default [
-  ...typescriptPlugin.configs.recommendedTypeChecked,
-  ...typescriptPlugin.configs.stylisticTypeChecked,
+export default typescriptPlugin.config(
   {
     ignores: [
       '**/parser.ts',
       '**/parser.terms.ts',
       '**/node_modules/**',
       '**/dist/**',
+      '**/*.json',
       'vitest.config.ts',
       'tsdown.config.ts',
       'eslint.config.js'
     ]
   },
   {
+    files: ['src/**/*.ts'],
+    extends: [...typescriptPlugin.configs.recommendedTypeChecked, ...typescriptPlugin.configs.stylisticTypeChecked],
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
-        globals: { ...globals.node, ...globals.es2020 },
         project: ['./tsconfig.json'],
         tsconfigRootDir: import.meta.dirname
-      }
-    }
-  },
-  {
-    files: ['src/**/*.ts'],
+      },
+      globals: { ...globals.node, ...globals.es2020 }
+    },
     plugins: {
       'simple-import-sort': simpleImportSort
     },
@@ -79,4 +77,4 @@ export default [
       ]
     }
   }
-];
+);
