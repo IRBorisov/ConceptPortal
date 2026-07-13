@@ -9,6 +9,7 @@ export interface DomainErrorLike {
   from: number;
   to: number;
   params?: readonly string[];
+  stack?: RSErrorDescription['stack'];
 }
 
 /** Minimal domain analysis shape before mapping to {@link AnalysisResult}. */

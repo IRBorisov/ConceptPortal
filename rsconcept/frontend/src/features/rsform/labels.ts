@@ -5,7 +5,7 @@
 import { globalTx } from '@/i18n';
 import { type Constituenta, CstClass, CstStatus, CstType, RSDiagnosticCode } from '@rsconcept/domain/library';
 import { type DescribableFields, isBasicConcept } from '@rsconcept/domain/library/rsform-api';
-import { RSErrorCode, TokenID, TypeClass } from '@rsconcept/domain/rslang';
+import { type EvalStackFrame, formatEvalCallStack, RSErrorCode, TokenID, TypeClass } from '@rsconcept/domain/rslang';
 import { labelType } from '@rsconcept/domain/rslang/labels';
 
 import { prepareTooltip } from '@/utils/format';
@@ -600,10 +600,19 @@ export function describeCstDiagnostic(
 }
 
 /** Generates description for a full {@link Diagnostic} (expression errors or expanded records). */
-export function describeDiagnostic(diagnostic: { code: number; params?: readonly string[] }): string {
+export function describeDiagnostic(diagnostic: {
+  code: number;
+  params?: readonly string[];
+  stack?: readonly EvalStackFrame[];
+}): string {
   const id = DIAGNOSTIC_MESSAGE_ID[diagnostic.code as RSDiagnosticCode];
-  if (id === undefined) {
-    return describeRSError(diagnostic.code as RSErrorCode, diagnostic.params ?? []);
+  const message =
+    id === undefined
+      ? describeRSError(diagnostic.code as RSErrorCode, diagnostic.params ?? [])
+      : formatRsDiagnosticMessage(diagnostic.code as RSDiagnosticCode, diagnostic.params);
+  const callStack = formatEvalCallStack(diagnostic.stack);
+  if (!callStack) {
+    return message;
   }
-  return formatRsDiagnosticMessage(diagnostic.code as RSDiagnosticCode, diagnostic.params);
+  return `${message}\n${globalTx('tx.rslang.error.callStack', { stack: callStack })}`;
 }

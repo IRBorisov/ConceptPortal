@@ -28,7 +28,10 @@ export function ViewErrors({ isOpen, errors, disabled, className, onShowError }:
           <p
             tabIndex={-1}
             key={`error-${index}`}
-            className={cn('text-destructive wrap-break-word', !disabled && onShowError && 'cursor-pointer')}
+            className={cn(
+              'text-destructive wrap-break-word whitespace-pre-line',
+              !disabled && onShowError && 'cursor-pointer'
+            )}
             onClick={disabled || !onShowError ? undefined : () => onShowError(error)}
           >
             <span className='mr-1 font-semibold underline'>

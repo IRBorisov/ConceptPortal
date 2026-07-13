@@ -71,6 +71,11 @@ export function generateRandomValue(
       return tuple(factors);
     }
     case TypeID.collection: {
+      // Empty set is a valid sample only when the element domain itself is generatable.
+      // When the count happens to be 0 we would otherwise skip sampling and miss empty basics.
+      if (!canGenerateRandomValue(type.base, basics, cstByAlias)) {
+        return null;
+      }
       const result: Value[] = [];
       const randomElementsCount = Math.floor(Math.random() * (setElementsCount + 1));
       for (let i = 0; i < randomElementsCount; i++) {
@@ -330,6 +335,28 @@ export function addValueElement(
 }
 
 // ========= Internal functions ==========
+
+function canGenerateRandomValue(
+  type: Typification,
+  basics: Map<number, BasicBinding>,
+  cstByAlias: Map<string, { id: number }>
+): boolean {
+  switch (type.typeID) {
+    case TypeID.integer:
+      return true;
+    case TypeID.basic: {
+      const cst = cstByAlias.get(type.baseID);
+      const binding = cst ? basics.get(cst.id) : undefined;
+      return Object.keys(binding ?? {}).length > 0;
+    }
+    case TypeID.tuple:
+      return type.factors.every(factor => canGenerateRandomValue(factor, basics, cstByAlias));
+    case TypeID.collection:
+      return canGenerateRandomValue(type.base, basics, cstByAlias);
+    case TypeID.anyTypification:
+      return false;
+  }
+}
 
 function countBaseElements(cst: ModelEvalFields, engine: RSEngine): number {
   if (!isBasicConcept(cst.cst_type)) {

@@ -249,6 +249,7 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.calcInvalidDebool': 'debool применён к значению неподходящего типа',
   'tx.rslang.error.calcInvalidData': 'Оператор «{operator}» нельзя применить к значениям {a} и {b}',
   'tx.rslang.error.iterateInfinity': 'Нельзя перебирать бесконечное множество',
+  'tx.rslang.error.callStack': 'Цепочка вызовов: {stack}',
 
   'tx.rslang.identifiers': 'Идентификаторы',
   'tx.rslang.identifiers.hint': 'Обозначения конституент,\nлокальных переменных и литералов'
