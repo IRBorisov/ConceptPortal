@@ -14,7 +14,7 @@ function openGraphTab(controller: { changeTab: (tabID: number) => void }) {
 /** Detailed walkthrough of the term graph tab (Sandbox, schema, and model). */
 export const termGraphTour: Tour = {
   id: EditorTourID.TERM_GRAPH,
-  version: 1,
+  version: 2,
   route: EDITOR_TOUR_ROUTES,
   autoStart: false,
   steps: [
@@ -27,6 +27,18 @@ export const termGraphTour: Tour = {
     {
       id: 'options',
       anchor: 'graph-options',
+      placement: 'right',
+      onEnter: openGraphTab
+    },
+    {
+      id: 'edit',
+      anchor: 'graph-edit',
+      placement: 'right',
+      onEnter: openGraphTab
+    },
+    {
+      id: 'hidden',
+      anchor: 'graph-hidden',
       placement: 'right',
       onEnter: openGraphTab
     },

@@ -8,6 +8,7 @@ import { NodeType } from '@rsconcept/domain/library';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { IconShowSidebar } from '@/features/library/components/icon-show-sidebar';
+import { OssTourID } from '@/features/onboarding/tours/editor-tours';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
@@ -131,6 +132,7 @@ export function ToolbarOssGraph({
         'rounded-b-2xl hover:bg-background backdrop-blur-xs',
         className
       )}
+      data-tour='oss-graph-tools'
       {...restProps}
     >
       <div className='cc-icons'>
@@ -148,6 +150,7 @@ export function ToolbarOssGraph({
           title={prepareTooltip(tx('tx.oss.sidebar.contents'), 'V')}
           icon={<IconShowSidebar value={showSidePanel} isBottom={false} size='1.25rem' />}
           onClick={handleShowSidePanel}
+          data-tour='oss-sidebar-toggle'
         />
         <MiniButton
           title={tx('tx.general.settings')}
@@ -178,10 +181,10 @@ export function ToolbarOssGraph({
           </Dropdown>
         </div>
 
-        <BadgeHelp topic={HelpTopic.UI_OSS_GRAPH} contentClass='sm:max-w-160' offset={4} />
+        <BadgeHelp topic={HelpTopic.UI_OSS_GRAPH} tourID={OssTourID.GRAPH} contentClass='sm:max-w-160' offset={4} />
       </div>
       {isMutable ? (
-        <div className='cc-icons items-start'>
+        <div className='cc-icons items-start' data-tour='oss-graph-edit'>
           <MiniButton
             aria-label={tx('tx.general.changes.save')}
             title={prepareTooltip(tx('tx.general.changes.save'), isMac() ? 'Cmd + S' : 'Ctrl + S')}

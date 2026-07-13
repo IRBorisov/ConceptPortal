@@ -40,9 +40,9 @@ export const libraryIntroContentRu: Record<string, TourStepContent> = {
     title: 'Поиск и фильтры',
     body: (
       <p>
-        Фильтруйте по типу, переключайте поиск по метаданным и по контексту с помощью{' '}
-        <IconSearch className='inline-icon' />, сужайте выдачу по владельцу. <IconFilterReset className='inline-icon' />{' '}
-        сбрасывает пользовательские фильтры.
+        Чипы типа сужают список до схем, моделей или OSS. Переключайте поиск по метаданным (заголовки, имена) и по
+        контексту (полный текст) с помощью <IconSearch className='inline-icon' />, при необходимости фильтруйте по
+        владельцу. <IconFilterReset className='inline-icon' /> сбрасывает пользовательские фильтры.
       </p>
     )
   },
@@ -54,7 +54,9 @@ export const libraryIntroContentRu: Record<string, TourStepContent> = {
           Щелчок по строке открывает элемент. Ctrl/Cmd+щелчок — в новой вкладке. Сортировка — по заголовкам столбцов{' '}
           <IconSortAsc className='inline-icon' />, экспорт видимой таблицы — <IconDownload className='inline-icon' />.
         </p>
-        <p>Зелёные строки — OSS, оранжевые — концептуальные модели.</p>
+        <p>
+          Цвет строки сразу показывает тип: зелёные — OSS, оранжевые — концептуальные модели, остальные — схемы.
+        </p>
       </div>
     )
   }

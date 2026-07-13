@@ -51,10 +51,18 @@ export const ossPassportContentFr: Record<string, TourStepContent> = {
           conceptuels attachés (total, propres, importés).
         </p>
         <p>
-          Pour le graphe des opérations, ouvrez l&apos;onglet{' '}
-          <TourHelpLink text='graphe OSS' topic={HelpTopic.UI_OSS_GRAPH} />.
+          La composition s&apos;édite sur l&apos;onglet graphe — utilisez Détails pour une visite complète du canevas.
         </p>
       </div>
+    )
+  },
+  graph: {
+    title: 'Graphe des opérations',
+    body: (
+      <p>
+        Ouvrez le <TourHelpLink text='graphe OSS' topic={HelpTopic.UI_OSS_GRAPH} /> pour composer blocs, entrées,
+        synthèse et répliques. Détails couvre l&apos;affichage, l&apos;édition, les gestes et le panneau de contenu.
+      </p>
     )
   }
 };

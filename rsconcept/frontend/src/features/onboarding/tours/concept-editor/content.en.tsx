@@ -16,6 +16,15 @@ export const conceptEditorContentEn: Record<string, TourStepContent> = {
       </p>
     )
   },
+  fields: {
+    title: 'Definition panels',
+    body: (
+      <p>
+        The form has three main panels: the term, the textual definition, and the formal definition. Edit them here;
+        save with <kbd>Ctrl + S</kbd> when changes are pending.
+      </p>
+    )
+  },
   check: {
     title: 'Check and diagnostics',
     body: (

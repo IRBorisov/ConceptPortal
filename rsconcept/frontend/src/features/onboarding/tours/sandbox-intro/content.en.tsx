@@ -63,7 +63,7 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
       <p>
         On the <TourHelpLink text='model data' topic={HelpTopic.UI_MODEL_VALUE} /> tab, the schema meets the model: base
         sets receive concrete elements. The schema defines the structure, and the model fills it with values from a
-        subject domain.
+        subject domain. Use Details for compute, save, and binding.
       </p>
     )
   },
@@ -73,7 +73,7 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
       <p>
         On the <TourHelpLink text='evaluation' topic={HelpTopic.UI_MODEL_EVALUATOR} /> tab, definitions are computed
         over the model data. Here you can inspect calculated values and issues — for example, expressions that cannot be
-        evaluated with the current data.
+        evaluated with the current data. Use Details for ad-hoc expressions and the result viewer.
       </p>
     )
   },

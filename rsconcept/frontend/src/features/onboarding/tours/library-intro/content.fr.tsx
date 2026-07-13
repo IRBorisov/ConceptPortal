@@ -41,8 +41,9 @@ export const libraryIntroContentFr: Record<string, TourStepContent> = {
     title: 'Recherche et filtres',
     body: (
       <p>
-        Filtrez par type, basculez entre recherche métadonnées et contexte avec <IconSearch className='inline-icon' />,
-        et restreignez par propriétaire. <IconFilterReset className='inline-icon' /> efface les filtres personnalisés.
+        Les puces de type restreignent la liste aux schémas, modèles ou OSS. Basculez entre recherche métadonnées
+        (titres, alias) et contexte (texte intégral) avec <IconSearch className='inline-icon' />, et filtrez
+        éventuellement par propriétaire. <IconFilterReset className='inline-icon' /> efface les filtres personnalisés.
       </p>
     )
   },
@@ -55,7 +56,10 @@ export const libraryIntroContentFr: Record<string, TourStepContent> = {
           en-têtes <IconSortAsc className='inline-icon' /> et exportez le tableau visible avec{' '}
           <IconDownload className='inline-icon' />.
         </p>
-        <p>Les lignes vertes sont des OSS ; les lignes orange sont des modèles conceptuels.</p>
+        <p>
+          La couleur de ligne indique le type : vert pour les OSS, orange pour les modèles conceptuels, le reste pour
+          les schémas.
+        </p>
       </div>
     )
   }

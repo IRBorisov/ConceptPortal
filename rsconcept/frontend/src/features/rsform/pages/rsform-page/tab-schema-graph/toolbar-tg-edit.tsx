@@ -33,7 +33,7 @@ export function ToolbarTGEdit({ className, graph }: ToolbarTGEditProps) {
   }
 
   return (
-    <div className={cn('cc-icons pointer-events-auto', className)}>
+    <div className={cn('cc-icons pointer-events-auto', className)} data-tour='graph-edit'>
       {schema.oss.length > 0 ? <MiniSelectorOSS items={schema.oss} onSelect={handleSelectOss} /> : null}
       <MiniButton
         icon={<IconTypeGraph size='1.25rem' className='icon-primary' />}

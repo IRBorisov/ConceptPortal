@@ -174,28 +174,30 @@ export function OssFlow() {
         hideContextMenu={hideContextMenu}
       />
 
-      <DiagramFlow
-        {...flowOptions}
-        className={clsx(!containMovement && 'cursor-relocate')}
-        height={mainHeight}
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        nodeTypes={OssGraphNodeTypes}
-        showGrid={showGrid}
-        onClick={hideContextMenu}
-        onNodeDoubleClick={handleNodeDoubleClick}
-        onNodeContextMenu={handleNodeContextMenu}
-        onContextMenu={hideContextMenu}
-        onNodeDragStart={handleNodeDragStart}
-        onNodeDrag={handleNodeDrag}
-        onNodeDragStop={handleNodeDragStop}
-        connectionLineComponent={OgConnectionLine}
-        // onConnectStart={handleConnectStart}
-        // onConnectEnd={handleConnectEnd}
-        onConnect={handleConnect}
-      />
+      <div data-tour='oss-graph-canvas'>
+        <DiagramFlow
+          {...flowOptions}
+          className={clsx(!containMovement && 'cursor-relocate')}
+          height={mainHeight}
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          nodeTypes={OssGraphNodeTypes}
+          showGrid={showGrid}
+          onClick={hideContextMenu}
+          onNodeDoubleClick={handleNodeDoubleClick}
+          onNodeContextMenu={handleNodeContextMenu}
+          onContextMenu={hideContextMenu}
+          onNodeDragStart={handleNodeDragStart}
+          onNodeDrag={handleNodeDrag}
+          onNodeDragStop={handleNodeDragStop}
+          connectionLineComponent={OgConnectionLine}
+          // onConnectStart={handleConnectStart}
+          // onConnectEnd={handleConnectEnd}
+          onConnect={handleConnect}
+        />
+      </div>
 
       <SidePanel
         className={clsx(

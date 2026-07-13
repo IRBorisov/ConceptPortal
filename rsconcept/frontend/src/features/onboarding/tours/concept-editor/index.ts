@@ -18,7 +18,7 @@ function openConceptEditor(controller: TourStepController) {
 /** Detailed walkthrough of the concept editor tab (Sandbox, schema, and model). */
 export const conceptEditorTour: Tour = {
   id: EditorTourID.CONCEPT_EDITOR,
-  version: 1,
+  version: 2,
   route: EDITOR_TOUR_ROUTES,
   autoStart: false,
   steps: [
@@ -26,6 +26,12 @@ export const conceptEditorTour: Tour = {
       id: 'overview',
       anchor: 'tab-concept',
       placement: 'bottom',
+      onEnter: openConceptEditor
+    },
+    {
+      id: 'fields',
+      anchor: 'concept-form',
+      placement: 'right',
       onEnter: openConceptEditor
     },
     {

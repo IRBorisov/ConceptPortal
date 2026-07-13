@@ -136,7 +136,13 @@ export function FormEvaluator({ id, className }: FormEvaluatorProps) {
   }
 
   return (
-    <div tabIndex={-1} id={id} className={cn('cc-column mt-2 pb-1 px-6 h-fit', className)} onKeyDown={handleInput}>
+    <div
+      tabIndex={-1}
+      id={id}
+      className={cn('cc-column mt-2 pb-1 px-6 h-fit', className)}
+      data-tour='model-evaluator-form'
+      onKeyDown={handleInput}
+    >
       <TextArea
         fitContent
         dense

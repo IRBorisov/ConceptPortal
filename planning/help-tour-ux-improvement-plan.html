@@ -1,0 +1,1081 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Help Tour UX Improvement Plan</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f6f8fb;
+        --fg: #18202a;
+        --muted: #607086;
+        --card: #ffffff;
+        --border: #d8e0eb;
+        --accent: #2454c6;
+        --accent-soft: #e8efff;
+        --danger: #a92b22;
+        --danger-soft: #feeceb;
+        --warning: #8a5b00;
+        --warning-soft: #fff3da;
+        --success: #17633a;
+        --success-soft: #e7f5ec;
+        --code: #edf1f7;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f141b;
+          --fg: #e7edf5;
+          --muted: #a7b2c0;
+          --card: #161d27;
+          --border: #2d3948;
+          --accent: #8fb0ff;
+          --accent-soft: #1f2d4d;
+          --danger: #ffb4ab;
+          --danger-soft: #481f1c;
+          --warning: #ffd27a;
+          --warning-soft: #3c2d10;
+          --success: #8ee0b0;
+          --success-soft: #153321;
+          --code: #202a36;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.55;
+      }
+
+      main {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 48px 24px 72px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      h1 {
+        max-width: 850px;
+        font-size: clamp(2.2rem, 5vw, 4.2rem);
+        letter-spacing: -0.045em;
+      }
+
+      h2 {
+        margin-bottom: 16px;
+        font-size: clamp(1.45rem, 2.5vw, 2rem);
+        letter-spacing: -0.025em;
+      }
+
+      h3 {
+        font-size: 1.05rem;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      ul,
+      ol {
+        margin: 0;
+        padding-left: 1.25rem;
+      }
+
+      li + li {
+        margin-top: 7px;
+      }
+
+      code {
+        border-radius: 6px;
+        background: var(--code);
+        padding: 0.12rem 0.34rem;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        font-size: 0.9em;
+      }
+
+      header {
+        display: grid;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+
+      section {
+        margin-top: 34px;
+      }
+
+      .eyebrow {
+        width: fit-content;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--card);
+        color: var(--muted);
+        padding: 6px 12px;
+        font-size: 0.82rem;
+        font-weight: 750;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .lead {
+        max-width: 850px;
+        color: var(--muted);
+        font-size: 1.15rem;
+      }
+
+      .meta,
+      .pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .pill {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--card);
+        padding: 5px 10px;
+        color: var(--muted);
+        font-size: 0.84rem;
+        font-weight: 700;
+      }
+
+      .grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      .grid.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .grid.four {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      @media (max-width: 850px) {
+        .grid.two,
+        .grid.three,
+        .grid.four {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--card);
+        padding: 20px;
+      }
+
+      .card > * + * {
+        margin-top: 10px;
+      }
+
+      .stat {
+        display: grid;
+        gap: 3px;
+      }
+
+      .stat strong {
+        color: var(--accent);
+        font-size: 1.75rem;
+        line-height: 1;
+      }
+
+      .stat span,
+      .muted {
+        color: var(--muted);
+      }
+
+      .callout {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--warning-soft);
+        padding: 20px;
+      }
+
+      .callout strong {
+        color: var(--warning);
+      }
+
+      .finding-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .finding {
+        display: grid;
+        grid-template-columns: 52px minmax(0, 1fr);
+        gap: 14px;
+        border-top: 1px solid var(--border);
+        padding-top: 16px;
+      }
+
+      .priority {
+        width: fit-content;
+        height: fit-content;
+        border-radius: 999px;
+        padding: 4px 9px;
+        font-size: 0.78rem;
+        font-weight: 800;
+      }
+
+      .priority.p0 {
+        background: var(--danger-soft);
+        color: var(--danger);
+      }
+
+      .priority.p1 {
+        background: var(--warning-soft);
+        color: var(--warning);
+      }
+
+      .priority.p2 {
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
+
+      .finding-body {
+        display: grid;
+        gap: 7px;
+      }
+
+      .evidence {
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      .wave {
+        position: relative;
+        padding-left: 28px;
+      }
+
+      .wave::before {
+        position: absolute;
+        top: 0.25rem;
+        left: 0;
+        width: 14px;
+        height: 14px;
+        border: 3px solid var(--bg);
+        border-radius: 50%;
+        background: var(--accent);
+        outline: 1px solid var(--accent);
+        content: "";
+      }
+
+      .wave + .wave {
+        margin-top: 22px;
+      }
+
+      .wave > * + * {
+        margin-top: 9px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: var(--card);
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        padding: 12px 14px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 0.84rem;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      @media (max-width: 720px) {
+        table,
+        thead,
+        tbody,
+        tr,
+        th,
+        td {
+          display: block;
+        }
+
+        thead {
+          display: none;
+        }
+
+        td {
+          border-bottom: 0;
+        }
+
+        tr {
+          border-bottom: 1px solid var(--border);
+          padding: 8px 0;
+        }
+      }
+
+      .checklist {
+        display: grid;
+        gap: 9px;
+        list-style: none;
+        padding: 0;
+      }
+
+      .checklist li {
+        position: relative;
+        padding-left: 26px;
+      }
+
+      .checklist li::before {
+        position: absolute;
+        top: 0.18rem;
+        left: 0;
+        width: 16px;
+        height: 16px;
+        border: 2px solid var(--success);
+        border-radius: 4px;
+        content: "";
+      }
+
+      footer {
+        margin-top: 44px;
+        border-top: 1px solid var(--border);
+        padding-top: 18px;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="eyebrow">Frontend UX plan</div>
+        <h1>Help Tour UX Improvement Plan</h1>
+        <p class="lead">
+          Convert the current read-only walkthrough into reliable, accessible,
+          task-oriented guidance while preserving its strong lazy-loading,
+          localization, persistence, route-resume, and nested-tour architecture.
+        </p>
+        <div class="meta">
+          <span class="pill">12 registered tours</span>
+          <span class="pill">61 authored steps</span>
+          <span class="pill">English · Russian · French</span>
+          <span class="pill">2 auto-start tours</span>
+        </div>
+      </header>
+
+      <section class="grid four" aria-label="Review totals">
+        <div class="card stat">
+          <strong>5</strong><span>P0 correctness issues</span>
+        </div>
+        <div class="card stat">
+          <strong>8</strong><span>P1 UX improvements</span>
+        </div>
+        <div class="card stat">
+          <strong>2</strong><span>P2 polish areas</span>
+        </div>
+        <div class="card stat">
+          <strong>4</strong><span>Delivery waves</span>
+        </div>
+      </section>
+
+      <section class="callout">
+        <strong>Product conclusion.</strong>
+        The current engine behaves as a slideshow over an inert application, but
+        its copy frequently asks users to click, select, drag, and use
+        shortcuts. The target experience should combine explanatory modal steps
+        with interactive practice steps that advance from real user actions.
+      </section>
+
+      <section>
+        <h2>Target experience</h2>
+        <div class="grid three">
+          <article class="card">
+            <h3>1. Invite</h3>
+            <p>
+              Offer help after page readiness with a clear purpose, step count,
+              approximate duration, Start, and Not now. Avoid opening a blocking
+              full-screen tour merely because a route was visited.
+            </p>
+          </article>
+          <article class="card">
+            <h3>2. Practice</h3>
+            <p>
+              Keep highlighted controls operable on interactive steps and
+              advance from successful actions. Retain modal/inert behavior only
+              where interaction is unsafe or unnecessary.
+            </p>
+          </article>
+          <article class="card">
+            <h3>3. Recover</h3>
+            <p>
+              Make Close for now, Skip tour, unavailable targets, route changes,
+              and loading failures explicit. Preserve progress without
+              surprising permanent choices.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>Prioritized findings</h2>
+        <div class="finding-list">
+          <article class="finding">
+            <span class="priority p0">P0</span>
+            <div class="finding-body">
+              <h3>
+                The tour teaches actions users cannot perform
+                <span class="muted">· effort L</span>
+              </h3>
+              <p>
+                Every active tour marks <code>#root</code> inert and catches
+                pointer input over the page. Highlighted controls are visual
+                only, even when the copy says click, drag, select, or press.
+              </p>
+              <p>
+                <strong>Plan:</strong> introduce explanatory and interactive
+                step modes with action-based completion.
+              </p>
+              <p class="evidence">
+                Evidence: tour-host.tsx:290–305, 389–405; multiple tour content
+                files.
+              </p>
+            </div>
+          </article>
+
+          <article class="finding">
+            <span class="priority p0">P0</span>
+            <div class="finding-body">
+              <h3>
+                Escape has contradictory meanings
+                <span class="muted">· effort M</span>
+              </h3>
+              <p>
+                The host globally captures Escape to dismiss the tour while list
+                and graph steps teach Escape as clear selection.
+              </p>
+              <p>
+                <strong>Plan:</strong> add Close for now; reserve Skip tour for
+                permanent opt-out; do not globally consume Escape during
+                interactive steps.
+              </p>
+              <p class="evidence">
+                Evidence: tour-host.tsx:271–287; constituents-list and
+                term-graph content.
+              </p>
+            </div>
+          </article>
+
+          <article class="finding">
+            <span class="priority p0">P0</span>
+            <div class="finding-body">
+              <h3>
+                Missing targets silently erase steps
+                <span class="muted">· effort M</span>
+              </h3>
+              <p>
+                Anchors get only 800 ms to appear. Delayed, conditional,
+                read-only, or absent controls silently advance the tour and can
+                cause an incomplete run to be marked done.
+              </p>
+              <p>
+                <strong>Plan:</strong> resolve visible targets using readiness
+                signals and MutationObserver; display Retry / Continue when
+                unavailable; never auto-complete a silently skipped run.
+              </p>
+              <p class="evidence">
+                Evidence: tour-host.tsx:163–179; anchors.ts:3–63.
+              </p>
+            </div>
+          </article>
+
+          <article class="finding">
+            <span class="priority p0">P0</span>
+            <div class="finding-body">
+              <h3>
+                Step transitions can spotlight the previous control
+                <span class="muted">· effort S</span>
+              </h3>
+              <p>
+                The old tracked rectangle remains active while the next anchor
+                resolves.
+              </p>
+              <p>
+                <strong>Plan:</strong> clear resolved anchor and tracked
+                rectangle immediately on tour/step changes; render a neutral
+                loading position until the new target is ready.
+              </p>
+              <p class="evidence">Evidence: tour-host.tsx:56–60, 216–238.</p>
+            </div>
+          </article>
+
+          <article class="finding">
+            <span class="priority p0">P0</span>
+            <div class="finding-body">
+              <h3>
+                A failed tour chunk can lock the app
+                <span class="muted">· effort S</span>
+              </h3>
+              <p>
+                Inert state depends on <code>activeTourID</code>, while the card
+                requires successfully loaded content. A lazy-load failure can
+                leave no visible card and an unusable application.
+              </p>
+              <p>
+                <strong>Plan:</strong> clear failed tours, restore app and
+                tooltip state, show a retryable message, and apply inert only
+                when a modal is successfully rendered.
+              </p>
+              <p class="evidence">
+                Evidence: tour-host.tsx:117–134, 290–322;
+                tours/index.ts:125–139.
+              </p>
+            </div>
+          </article>
+
+          <article class="finding">
+            <span class="priority p1">P1</span>
+            <div class="finding-body">
+              <h3>
+                First-visit auto-start is interruptive
+                <span class="muted">· effort M</span>
+              </h3>
+              <p>
+                Sandbox and Library immediately open blocking tours. Version
+                bumps also re-offer tours to users who previously skipped them.
+              </p>
+              <p>
+                <strong>Plan:</strong> use a lightweight invitation and preserve
+                deliberate opt-outs.
+              </p>
+            </div>
+          </article>
+
+          <article class="finding">
+            <span class="priority p1">P1</span>
+            <div class="finding-body">
+              <h3>
+                Accessibility announcements and motion preferences are
+                incomplete <span class="muted">· effort S</span>
+              </h3>
+              <p>
+                Step title/body are not associated with the dialog or reliably
+                announced on change. Transitions ignore reduced-motion
+                preferences.
+              </p>
+              <p>
+                <strong>Plan:</strong> add <code>aria-labelledby</code>,
+                <code>aria-describedby</code>, polite step announcements, safe
+                focus restoration, primary-action focus, and reduced-motion
+                styles.
+              </p>
+            </div>
+          </article>
+
+          <article class="finding">
+            <span class="priority p1">P1</span>
+            <div class="finding-body">
+              <h3>
+                Nested tours hide the real commitment
+                <span class="muted">· effort S</span>
+              </h3>
+              <p>
+                The eight-step Sandbox tour can branch into three-to-six-step
+                subtours. The generic Details action does not identify the
+                destination or length, and progress resets without context.
+              </p>
+              <p>
+                <strong>Plan:</strong> use labels such as “Explore List · 5
+                steps”, display a breadcrumb, and provide Return to overview.
+              </p>
+            </div>
+          </article>
+
+          <article class="finding">
+            <span class="priority p1">P1</span>
+            <div class="finding-body">
+              <h3>
+                Contextual help entry is fragile
+                <span class="muted">· effort M</span>
+              </h3>
+              <p>
+                Clicking a help badge starts a tour directly while the
+                guide/manual chooser lives in a hover tooltip. Disabling help
+                removes BadgeHelp entirely and therefore removes most tour
+                restart paths.
+              </p>
+              <p>
+                <strong>Plan:</strong> open a touch-friendly Help menu with
+                Quick guide and Read manual, and keep a stable Guides entry
+                independent of inline-help visibility.
+              </p>
+            </div>
+          </article>
+
+          <article class="finding">
+            <span class="priority p1">P1</span>
+            <div class="finding-body">
+              <h3>
+                Narrow screens need a dedicated layout
+                <span class="muted">· effort M</span>
+              </h3>
+              <p>
+                Desktop 400 px popover positioning is clamped into small
+                viewports and does not account for mobile visual viewport or
+                safe-area changes.
+              </p>
+              <p>
+                <strong>Plan:</strong> use a compact bottom sheet and keep the
+                target visible above it.
+              </p>
+            </div>
+          </article>
+
+          <article class="finding">
+            <span class="priority p1">P1</span>
+            <div class="finding-body">
+              <h3>
+                UX outcomes are not measurable
+                <span class="muted">· effort M</span>
+              </h3>
+              <p>
+                The engine persists local status but emits no events for
+                invitations, starts, exits, missing anchors, branches,
+                completion, or time per step.
+              </p>
+              <p>
+                <strong>Plan:</strong> emit privacy-safe lifecycle events keyed
+                by tour/version/step/route/locale and viewport class.
+              </p>
+            </div>
+          </article>
+
+          <article class="finding">
+            <span class="priority p1">P1</span>
+            <div class="finding-body">
+              <h3>
+                Tests do not represent current tours or UX risks
+                <span class="muted">· effort M</span>
+              </h3>
+              <p>
+                E2E coverage is Russian desktop and Sandbox-centric. It expects
+                three constituent-list steps although the tour now has five, and
+                its seeded Sandbox version is six while the current tour is
+                seven.
+              </p>
+              <p>
+                <strong>Plan:</strong> generate one smoke path per tour/anchor
+                and add accessibility, mobile, delayed-anchor, load-error,
+                route-resume, and read-only scenarios.
+              </p>
+            </div>
+          </article>
+
+          <article class="finding">
+            <span class="priority p2">P2</span>
+            <div class="finding-body">
+              <h3>
+                Some guidance is stale or overly dense
+                <span class="muted">· effort S</span>
+              </h3>
+              <p>
+                Sandbox copy points to a menu without tab tours, graph steps
+                read like shortcut manuals, and Russian content has grammar
+                errors plus an untranslated “Details”.
+              </p>
+              <p>
+                <strong>Plan:</strong> correct all locales, copyedit Russian,
+                and keep each step focused on one outcome and one action.
+              </p>
+            </div>
+          </article>
+
+          <article class="finding">
+            <span class="priority p2">P2</span>
+            <div class="finding-body">
+              <h3>
+                Tooltip state is restored unconditionally
+                <span class="muted">· effort S</span>
+              </h3>
+              <p>
+                Ending a tour enables tooltips even if another flow had disabled
+                them before the tour.
+              </p>
+              <p>
+                <strong>Plan:</strong> snapshot and restore the previous
+                tooltip-enabled value.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>Delivery plan</h2>
+        <article class="wave">
+          <h3>Wave 1 — Runtime correctness and truthful content</h3>
+          <div class="pill-row">
+            <span class="pill">Small–medium</span
+            ><span class="pill">Ship first</span>
+          </div>
+          <ul>
+            <li>Clear stale anchor state on every tour and step transition.</li>
+            <li>
+              Recover from lazy-load failures without leaving the application
+              inert.
+            </li>
+            <li>
+              Raise anchor readiness tolerance and distinguish unavailable from
+              still-loading.
+            </li>
+            <li>
+              Add explicit Close for now and clarify permanent Skip tour
+              semantics.
+            </li>
+            <li>
+              Fix Sandbox re-entry copy, Russian copy issues, E2E step counts,
+              and version fixtures.
+            </li>
+          </ul>
+        </article>
+
+        <article class="wave">
+          <h3>Wave 2 — Accessibility and responsive behavior</h3>
+          <div class="pill-row">
+            <span class="pill">Medium</span
+            ><span class="pill">No product analytics dependency</span>
+          </div>
+          <ul>
+            <li>Associate dialog title/body and announce step changes.</li>
+            <li>Define keyboard behavior for modal and interactive steps.</li>
+            <li>Preserve focus and tooltip state across every exit path.</li>
+            <li>
+              Honor reduced motion, zoom, mobile visual viewport, and safe-area
+              insets.
+            </li>
+            <li>Render a bottom sheet on narrow screens.</li>
+          </ul>
+        </article>
+
+        <article class="wave">
+          <h3>Wave 3 — Learning by doing</h3>
+          <div class="pill-row">
+            <span class="pill">Large</span
+            ><span class="pill">Requires interaction model decision</span>
+          </div>
+          <ul>
+            <li>
+              Add <code>mode: "explain" | "interact"</code> to tour steps.
+            </li>
+            <li>
+              Add optional action completion predicates/events and target
+              interaction boundaries.
+            </li>
+            <li>
+              Advance interactive steps only after the intended action succeeds.
+            </li>
+            <li>
+              Name subtours, show their length and breadcrumb, and support
+              Return to overview.
+            </li>
+            <li>
+              Shorten the Sandbox overview and move shortcut inventories into
+              manuals.
+            </li>
+          </ul>
+        </article>
+
+        <article class="wave">
+          <h3>Wave 4 — Invitation, discovery, and measurement</h3>
+          <div class="pill-row">
+            <span class="pill">Medium</span
+            ><span class="pill">Product validation</span>
+          </div>
+          <ul>
+            <li>
+              Replace immediate auto-start with an invitation shown after page
+              readiness.
+            </li>
+            <li>
+              Keep Guides discoverable when inline help badges are disabled.
+            </li>
+            <li>Provide a touch-friendly Guide / Manual chooser.</li>
+            <li>
+              Instrument invitation, start, exit, unavailable target, branch,
+              and completion events.
+            </li>
+            <li>
+              Use measured completion and exit points to revise step length and
+              copy.
+            </li>
+          </ul>
+        </article>
+      </section>
+
+      <section>
+        <h2>Likely implementation surface</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Primary files</th>
+              <th>Expected change</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Tour orchestration</td>
+              <td><code>components/tour-host.tsx</code></td>
+              <td>
+                Load/error lifecycle, anchor state, interaction mode, Escape
+                behavior, responsive positioning.
+              </td>
+            </tr>
+            <tr>
+              <td>Tour card</td>
+              <td><code>components/tour-card.tsx</code></td>
+              <td>
+                ARIA relationships, announcements, close/skip controls,
+                breadcrumb, named subtours.
+              </td>
+            </tr>
+            <tr>
+              <td>Tour contracts</td>
+              <td><code>models/tour.ts</code></td>
+              <td>
+                Step mode, optional completion signal, unavailable-target
+                behavior, validation.
+              </td>
+            </tr>
+            <tr>
+              <td>Anchor resolution</td>
+              <td><code>utils/anchors.ts</code></td>
+              <td>
+                Visible target filtering, readiness observation, duplicate
+                handling, cancellation.
+              </td>
+            </tr>
+            <tr>
+              <td>Persistence</td>
+              <td><code>stores/onboarding.ts</code></td>
+              <td>Clear close/skip semantics and optional invitation state.</td>
+            </tr>
+            <tr>
+              <td>Discovery</td>
+              <td><code>features/help/components/badge-help.tsx</code></td>
+              <td>
+                Guide/manual chooser and tour access independent of inline-help
+                visibility.
+              </td>
+            </tr>
+            <tr>
+              <td>Content</td>
+              <td><code>tours/*/content.{en,ru,fr}.tsx</code></td>
+              <td>
+                Correct re-entry instructions, reduce density, improve Russian
+                copy, action-focused language.
+              </td>
+            </tr>
+            <tr>
+              <td>Tests</td>
+              <td>
+                <code>tests/onboarding.spec.ts</code> and onboarding unit tests
+              </td>
+              <td>
+                Current step counts plus accessibility, mobile, failure,
+                read-only, and route-resume coverage.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Acceptance criteria</h2>
+        <div class="grid two">
+          <div class="card">
+            <h3>Runtime and recovery</h3>
+            <ul class="checklist">
+              <li>
+                No tour load or anchor failure can leave the application inert
+                without visible recovery controls.
+              </li>
+              <li>A spotlight never displays the previous step's target.</li>
+              <li>
+                Unavailable targets are disclosed and do not silently mark the
+                tour complete.
+              </li>
+              <li>
+                Close for now preserves progress; Skip tour clearly records a
+                deliberate opt-out.
+              </li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Learning and accessibility</h3>
+            <ul class="checklist">
+              <li>
+                Interactive steps permit and verify the action described by
+                their copy.
+              </li>
+              <li>
+                Screen readers announce the current title and “Step N of M”.
+              </li>
+              <li>
+                Keyboard focus stays predictable and returns safely after exit.
+              </li>
+              <li>
+                Reduced motion, 200% zoom, touch, and narrow screens remain
+                usable.
+              </li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Discovery and content</h3>
+            <ul class="checklist">
+              <li>
+                Every registered tour has a discoverable restart path even when
+                inline help is hidden.
+              </li>
+              <li>
+                Sandbox instructions point to the actual contextual Guide entry.
+              </li>
+              <li>Subtour actions name the destination and number of steps.</li>
+              <li>
+                English, Russian, and French remain structurally aligned and
+                copy-reviewed.
+              </li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Verification and measurement</h3>
+            <ul class="checklist">
+              <li>Every registered tour has an automated seeded smoke path.</li>
+              <li>
+                Tests cover delayed/missing anchors, failed imports, read-only
+                states, and route resume.
+              </li>
+              <li>
+                Lifecycle events distinguish invitation decline, temporary
+                close, permanent skip, and completion.
+              </li>
+              <li>
+                Product owners can identify the most common exit and
+                unavailable-target points.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Decisions required before Wave 3</h2>
+        <div class="grid two">
+          <div class="card">
+            <h3>Interaction boundary</h3>
+            <p>
+              Decide whether interactive steps unlock only the exact target, a
+              containing region, or the full page. Exact-target interaction is
+              safest; region interaction handles forms and graph canvases
+              better.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Completion signals</h3>
+            <p>
+              Choose between DOM events, feature callbacks, or declarative
+              predicates. Feature callbacks are explicit and robust but create
+              more integration work.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Auto-start policy</h3>
+            <p>
+              Decide whether skipped users remain opted out across all future
+              versions, and which changes qualify for a non-blocking What's new
+              invitation.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Analytics destination</h3>
+            <p>
+              Select the existing product telemetry destination and define a
+              privacy-safe event schema before adding instrumentation.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Strengths to preserve</h2>
+        <div class="grid two">
+          <div class="card">
+            <h3>State continuity</h3>
+            <p>
+              Per-tour status, versioning, resume points, route pause, and
+              nested return behavior are well modeled.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Content architecture</h3>
+            <p>
+              Tour definitions remain data-oriented, lazy-loaded, colocated, and
+              validated across three locales.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Contextual documentation</h3>
+            <p>
+              Help badges and manual links already connect lightweight guidance
+              with deeper reference content.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Defensive async lifecycle</h3>
+            <p>
+              Loads and anchor waits are cancellable, routes are checked, and
+              duplicate lazy loads are cached.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        Prepared from the current Portal onboarding implementation review on
+        2026-07-13. This document is a plan only; no product implementation
+        changes are included.
+      </footer>
+    </main>
+  </body>
+</html>

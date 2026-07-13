@@ -66,7 +66,8 @@ export const sandboxIntroContentFr: Record<string, TourStepContent> = {
       <p>
         Sur l&apos;onglet <TourHelpLink text='données du modèle' topic={HelpTopic.UI_MODEL_VALUE} />, le schéma
         rencontre le modèle : les ensembles de base reçoivent des éléments concrets. Le schéma définit la structure, et
-        le modèle la remplit avec des valeurs issues d&apos;un domaine sujet.
+        le modèle la remplit avec des valeurs issues d&apos;un domaine sujet. Utilisez Détails pour le calcul,
+        l&apos;enregistrement et la liaison.
       </p>
     )
   },
@@ -76,7 +77,8 @@ export const sandboxIntroContentFr: Record<string, TourStepContent> = {
       <p>
         Sur l&apos;onglet <TourHelpLink text='évaluation' topic={HelpTopic.UI_MODEL_EVALUATOR} />, les définitions sont
         calculées à partir des données du modèle. Ici, vous pouvez inspecter les valeurs calculées et les problèmes —
-        par exemple, les expressions qui ne peuvent pas être évaluées avec les données actuelles.
+        par exemple, les expressions qui ne peuvent pas être évaluées avec les données actuelles. Utilisez Détails pour
+        les expressions ad hoc et le visualiseur de résultats.
       </p>
     )
   },

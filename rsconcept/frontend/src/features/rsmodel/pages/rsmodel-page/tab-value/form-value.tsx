@@ -281,6 +281,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
       id={id}
       className='relative mt-1 cc-column gap-3 px-6 pb-3'
       tabIndex={-1}
+      data-tour='model-value-form'
       onKeyDown={handleInput}
       onSubmit={withPreventDefault(() => void handleSubmitAll())}
     >

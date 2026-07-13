@@ -7,6 +7,7 @@ import { generateAlias } from '@rsconcept/domain/library/rsform-api';
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
+import { OssTourID } from '@/features/onboarding/tours/editor-tours';
 import { type ConstituentaBasicsDTO, type CreateConstituentaDTO } from '@/features/rsform';
 import { useCreateConstituenta } from '@/features/rsform/backend/use-create-constituenta';
 import { useCreateConstituentsBatch } from '@/features/rsform/backend/use-create-constituents-batch';
@@ -234,7 +235,13 @@ export function ToolbarSchema({
         onClick={handleShowTypeGraph}
       />
 
-      <BadgeHelp topic={HelpTopic.UI_OSS_SIDEBAR} size='1rem' contentClass='sm:max-w-100' offset={4} />
+      <BadgeHelp
+        topic={HelpTopic.UI_OSS_SIDEBAR}
+        tourID={OssTourID.GRAPH}
+        size='1rem'
+        contentClass='sm:max-w-100'
+        offset={4}
+      />
     </div>
   );
 }

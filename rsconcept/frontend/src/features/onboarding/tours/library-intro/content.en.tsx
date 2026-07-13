@@ -40,8 +40,9 @@ export const libraryIntroContentEn: Record<string, TourStepContent> = {
     title: 'Search and filters',
     body: (
       <p>
-        Filter by type, switch between metadata and context search with <IconSearch className='inline-icon' />, and
-        narrow results by owner. <IconFilterReset className='inline-icon' /> clears custom filters.
+        Type chips narrow the list to schemas, models, or OSS. Switch between metadata search (titles, aliases) and
+        context search (full text) with <IconSearch className='inline-icon' />, and optionally filter by owner.{' '}
+        <IconFilterReset className='inline-icon' /> clears custom filters.
       </p>
     )
   },
@@ -54,7 +55,10 @@ export const libraryIntroContentEn: Record<string, TourStepContent> = {
           <IconSortAsc className='inline-icon' /> column headers, and export the visible table with{' '}
           <IconDownload className='inline-icon' />.
         </p>
-        <p>Green rows are OSS; orange rows are conceptual models.</p>
+        <p>
+          Row color shows the item kind at a glance: green rows are OSS, orange rows are conceptual models, and the
+          rest are schemas.
+        </p>
       </div>
     )
   }

@@ -4,12 +4,19 @@ import { IconGraphMode } from '@/features/rsform/components/icon-graph-mode';
 import { InteractionMode, TGEdgeType } from '@/features/rsform/stores/term-graph';
 
 import {
+  IconClustering,
+  IconCrucial,
+  IconDestroy,
   IconFilter,
   IconFitImage,
   IconFocus,
   IconGraphCollapse,
   IconGraphExpand,
-  IconOverviewCore
+  IconImage,
+  IconNewItem,
+  IconOverviewCore,
+  IconText,
+  IconTypeGraph
 } from '@/components/icons';
 
 import { type TourStepContent } from '../../models/tour';
@@ -28,10 +35,38 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
   options: {
     title: 'Вид и фильтры',
     body: (
+      <div className='flex flex-col gap-2'>
+        <p>
+          Слева выбираются раскраска узлов и типы связей. <IconFitImage className='inline-icon' /> подгоняет граф;{' '}
+          <IconFocus className='inline-icon' /> фокусирует одну конституенту; <IconFilter className='inline-icon' />{' '}
+          открывает настройки раскладки и фильтров.
+        </p>
+        <p>
+          <IconText className='inline-icon' /> (<kbd>T</kbd>) переключает подписи;{' '}
+          <IconClustering className='inline-icon' /> (<kbd>V</kbd>) скрывает порождённые узлы;{' '}
+          <IconOverviewCore className='inline-icon icon-green' /> (<kbd>O</kbd>) показывает только аксиоматическое ядро;{' '}
+          <IconImage className='inline-icon' /> экспортирует PNG или SVG.
+        </p>
+      </div>
+    )
+  },
+  edit: {
+    title: 'Редактирование узлов',
+    body: (
       <p>
-        Слева выбираются раскраска узлов и типы связей. <IconFitImage className='inline-icon' /> подгоняет граф под
-        экран, <IconFocus className='inline-icon' /> фокусирует одну конституенту, а{' '}
-        <IconFilter className='inline-icon' /> открывает настройки раскладки и фильтров.
+        Если редактирование разрешено, <IconNewItem className='inline-icon icon-green' /> (<kbd>R</kbd>) создаёт
+        конституенту; <IconDestroy className='inline-icon icon-red' /> удаляет выделение;{' '}
+        <IconCrucial className='inline-icon' /> (<kbd>F</kbd>) переключает ключевой статус;{' '}
+        <IconTypeGraph className='inline-icon' /> открывает граф ступеней для выделения.
+      </p>
+    )
+  },
+  hidden: {
+    title: 'Скрытые узлы',
+    body: (
+      <p>
+        Конституенты, отфильтрованные с холста, появляются в списке скрытых. Щелчок выделяет элемент; активация
+        открывает редактор конституенты.
       </p>
     )
   },
@@ -44,10 +79,6 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
           <IconGraphMode value={InteractionMode.edit} className='inline-icon icon-green' /> Редактирование — рисование
           связей. Рёбра атрибуции и определения: <IconEdgeType value={TGEdgeType.attribution} className='inline-icon' />{' '}
           / <IconEdgeType value={TGEdgeType.definition} className='inline-icon' />.
-        </p>
-        <p>
-          <IconOverviewCore className='inline-icon icon-green' /> (<kbd>O</kbd>) показывает только аксиоматическое ядро
-          — удобный обзор большой схемы; фокус открывает локальный подграф.
         </p>
         <p>
           Помощники выделения расширяют связанные узлы — например <IconGraphCollapse className='inline-icon' /> влияющие

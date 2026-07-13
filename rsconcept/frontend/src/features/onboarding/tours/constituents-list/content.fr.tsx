@@ -1,6 +1,15 @@
 import { HelpTopic } from '@/features/help';
 
-import { IconSearch } from '@/components/icons';
+import {
+  IconCalculateAll,
+  IconClone,
+  IconCrucial,
+  IconDestroy,
+  IconMoveDown,
+  IconMoveUp,
+  IconNewItem,
+  IconSearch
+} from '@/components/icons';
 
 import { type TourStepContent } from '../../models/tour';
 import { TourHelpLink } from '../shared/tour-help-links';
@@ -26,13 +35,39 @@ export const constituentsListContentFr: Record<string, TourStepContent> = {
       </p>
     )
   },
-  interact: {
-    title: 'Sélection et ordre',
+  selection: {
+    title: 'Compteur de sélection',
+    body: (
+      <p>
+        Le compteur à gauche indique combien de constituantes sont sélectionnées sur le total. Cliquez sur une ligne
+        pour sélectionner ; <kbd>Esc</kbd> efface la sélection.
+      </p>
+    )
+  },
+  toolbar: {
+    title: "Barre d'outils",
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Cliquez sur une ligne pour sélectionner une constituante ; le compteur à gauche indique combien sont
-          sélectionnées. Un double-clic ou un clic avec <kbd>Alt</kbd> ouvre la constituante dans l&apos;
+          <IconNewItem className='inline-icon icon-green' /> créer, <IconClone className='inline-icon icon-green' />{' '}
+          cloner et <IconDestroy className='inline-icon icon-red' /> supprimer la sélection.{' '}
+          <IconMoveUp className='inline-icon' /> / <IconMoveDown className='inline-icon' /> réordonnent ;{' '}
+          <IconCrucial className='inline-icon' /> marque les constituantes cruciales.
+        </p>
+        <p>
+          Sur un modèle, <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) recalcule toutes
+          les valeurs.
+        </p>
+      </div>
+    )
+  },
+  interact: {
+    title: 'Interactions du tableau',
+    body: (
+      <div className='flex flex-col gap-2'>
+        <p>
+          <kbd>Shift</kbd>+clic étend la sélection. Un double-clic ou un clic avec <kbd>Alt</kbd> ouvre la constituante
+          dans l&apos;
           <TourHelpLink text='éditeur' topic={HelpTopic.UI_SCHEMA_EDITOR} />.
         </p>
         <p>

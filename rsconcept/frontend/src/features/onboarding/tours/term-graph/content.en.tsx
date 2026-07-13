@@ -4,12 +4,19 @@ import { IconGraphMode } from '@/features/rsform/components/icon-graph-mode';
 import { InteractionMode, TGEdgeType } from '@/features/rsform/stores/term-graph';
 
 import {
+  IconClustering,
+  IconCrucial,
+  IconDestroy,
   IconFilter,
   IconFitImage,
   IconFocus,
   IconGraphCollapse,
   IconGraphExpand,
-  IconOverviewCore
+  IconImage,
+  IconNewItem,
+  IconOverviewCore,
+  IconText,
+  IconTypeGraph
 } from '@/components/icons';
 
 import { type TourStepContent } from '../../models/tour';
@@ -28,10 +35,38 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
   options: {
     title: 'View and filters',
     body: (
+      <div className='flex flex-col gap-2'>
+        <p>
+          On the left, choose node coloring and link types. <IconFitImage className='inline-icon' /> fits the graph;{' '}
+          <IconFocus className='inline-icon' /> focuses one constituent; <IconFilter className='inline-icon' /> opens
+          layout and filter settings.
+        </p>
+        <p>
+          <IconText className='inline-icon' /> (<kbd>T</kbd>) toggles labels;{' '}
+          <IconClustering className='inline-icon' /> (<kbd>V</kbd>) hides generated nodes;{' '}
+          <IconOverviewCore className='inline-icon icon-green' /> (<kbd>O</kbd>) shows the axiomatic core only;{' '}
+          <IconImage className='inline-icon' /> exports PNG or SVG.
+        </p>
+      </div>
+    )
+  },
+  edit: {
+    title: 'Edit nodes',
+    body: (
       <p>
-        On the left, choose node coloring and link types. <IconFitImage className='inline-icon' /> fits the graph to the
-        screen, <IconFocus className='inline-icon' /> focuses on one constituent, and{' '}
-        <IconFilter className='inline-icon' /> opens layout and filter settings.
+        When editing is allowed, <IconNewItem className='inline-icon icon-green' /> (<kbd>R</kbd>) creates a
+        constituent; <IconDestroy className='inline-icon icon-red' /> deletes the selection;{' '}
+        <IconCrucial className='inline-icon' /> (<kbd>F</kbd>) toggles crucial;{' '}
+        <IconTypeGraph className='inline-icon' /> opens the type graph for the selection.
+      </p>
+    )
+  },
+  hidden: {
+    title: 'Hidden nodes',
+    body: (
+      <p>
+        Constituents filtered out of the canvas appear in the hidden list. Click an item to select it, or activate it to
+        open the concept editor.
       </p>
     )
   },
@@ -44,10 +79,6 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
           <IconGraphMode value={InteractionMode.edit} className='inline-icon icon-green' /> Edit to draw relations.
           Attribution and definition edges use <IconEdgeType value={TGEdgeType.attribution} className='inline-icon' /> /{' '}
           <IconEdgeType value={TGEdgeType.definition} className='inline-icon' />.
-        </p>
-        <p>
-          <IconOverviewCore className='inline-icon icon-green' /> (<kbd>O</kbd>) shows the axiomatic core only — a
-          useful overview for large schemas; focus opens a local subgraph.
         </p>
         <p>
           Selection helpers expand related nodes — for example <IconGraphCollapse className='inline-icon' /> influencers

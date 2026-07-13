@@ -1,6 +1,15 @@
 import { collectSubtourIDs, type Tour, tourMatchesRoute } from '../models/tour';
 
-import { EDITOR_TOUR_ROUTES, EditorTourID, LibraryTourID, PassportTourID, SandboxTourID } from './editor-tours';
+import {
+  EDITOR_TOUR_ROUTES,
+  EditorTourID,
+  LibraryTourID,
+  MODEL_TOUR_ROUTES,
+  ModelTourID,
+  OssTourID,
+  PassportTourID,
+  SandboxTourID
+} from './editor-tours';
 
 /**
  * Sync catalog: ids, routes, and auto-start flags without pulling tour content into the main bundle.
@@ -38,6 +47,21 @@ const tourRegistrations: Record<string, TourRegistration> = {
     route: '/oss',
     load: () => import('./oss-passport').then(module => module.ossPassportTour)
   },
+  [OssTourID.GRAPH]: {
+    autoStart: false,
+    route: '/oss',
+    load: () => import('./oss-graph').then(module => module.ossGraphTour)
+  },
+  [ModelTourID.VALUE]: {
+    autoStart: false,
+    route: MODEL_TOUR_ROUTES,
+    load: () => import('./model-value').then(module => module.modelValueTour)
+  },
+  [ModelTourID.EVALUATOR]: {
+    autoStart: false,
+    route: MODEL_TOUR_ROUTES,
+    load: () => import('./model-evaluator').then(module => module.modelEvaluatorTour)
+  },
   [EditorTourID.CONSTITUENTS_LIST]: {
     autoStart: false,
     route: EDITOR_TOUR_ROUTES,
@@ -54,7 +78,7 @@ const tourRegistrations: Record<string, TourRegistration> = {
     load: () => import('./term-graph').then(module => module.termGraphTour)
   },
   [LibraryTourID.INTRO]: {
-    autoStart: false,
+    autoStart: true,
     route: '/library',
     load: () => import('./library-intro').then(module => module.libraryIntroTour)
   }

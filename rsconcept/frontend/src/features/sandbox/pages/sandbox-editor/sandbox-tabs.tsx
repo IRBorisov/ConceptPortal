@@ -212,8 +212,8 @@ export function SandboxTabs({ activeID, activeTab }: SandboxTabsProps) {
         <TabLabel label={tx('tx.list')} data-tour='tab-list' />
         <TabLabel label={tx('tx.concept')} data-tour='tab-concept' />
         <TabLabel label={tx('tx.graph')} data-tour='tab-graph' />
-        <TabLabel label={tx('tx.general.data')} data-tour='sandbox-tab-data' />
-        <TabLabel label={tx('tx.general.evaluation')} data-tour='sandbox-tab-evaluation' />
+        <TabLabel label={tx('tx.general.data')} data-tour='tab-data' />
+        <TabLabel label={tx('tx.general.evaluation')} data-tour='tab-evaluation' />
       </TabList>
 
       <div ref={containerRef} className='overflow-x-hidden'>

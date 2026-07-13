@@ -54,7 +54,7 @@ export function ToolbarModelList({ className, hasActiveFilter = false }: Toolbar
   const { engine } = useModelEdit();
 
   return (
-    <div className={cn('cc-icons items-start outline-hidden', className)}>
+    <div className={cn('cc-icons items-start outline-hidden', className)} data-tour='list-toolbar'>
       <MiniButton
         title={prepareTooltip(tx('tx.general.selection.reset'), 'ESC')}
         aria-label={tx('tx.general.selection.reset')}

@@ -10,7 +10,7 @@ Rules for agents editing `src/features/onboarding` (guided tour engine) and for 
 - `TourHost` is mounted once per app shell (`layout-main.tsx`, `layout-sandbox.tsx`). Do not mount it elsewhere.
 - Persistence: zustand store `useOnboardingStore`, localStorage key `portal.onboarding`, per-tour `{ status: pending|skipped|done, seenVersion, resumeStep }`.
 - Nested tours: a step may set `subtour: '<tour-id>'`. The card shows Explore; finishing/skipping/escaping the subtour returns to that parent step. Nested stack is session-only (not persisted).
-- Shared editor tours (`constituents-list`, `concept-editor`, `term-graph`) are reused by Sandbox, schema, and model — keep ids/anchors/copy context-neutral. Sandbox-only overview stays in `sandbox-intro`. Library browser tour is `library-intro`.
+- Shared editor tours (`constituents-list`, `concept-editor`, `term-graph`) are reused by Sandbox, schema, and model — keep ids/anchors/copy context-neutral. Sandbox-only overview stays in `sandbox-intro`. Library browser tour is `library-intro`. Model-only tours (`model-value`, `model-evaluator`) cover Data/Evaluation tabs on Sandbox and `/models`. OSS composition canvas tour is `oss-graph`.
 - Passport tours are type-specific: `schema-passport`, `model-passport`, `oss-passport`, plus slim `sandbox-passport`. Each ends on the statistics side panel (`passport-stats`). Prefer `BadgeHelp tourID` on the passport form heading for contextual start.
 - Contextual tour entry: pass `tourID` to `BadgeHelp` (`features/help/components/badge-help.tsx`). Clicking the icon or the tooltip link under Manuals calls `restartTour`. Do not add tab-tour items to feature menus.
 

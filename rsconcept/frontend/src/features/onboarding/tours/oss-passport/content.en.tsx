@@ -45,10 +45,17 @@ export const ossPassportContentEn: Record<string, TourStepContent> = {
           The side panel counts operations by type (blocks, inputs, synthesis, replicas) and attached conceptual schemas
           (total, owned, imported).
         </p>
-        <p>
-          For the graph of operations, open the <TourHelpLink text='OSS graph' topic={HelpTopic.UI_OSS_GRAPH} /> tab.
-        </p>
+        <p>Composition is edited on the graph tab — use Details there for a full walkthrough of the canvas.</p>
       </div>
+    )
+  },
+  graph: {
+    title: 'Operations graph',
+    body: (
+      <p>
+        Open the <TourHelpLink text='OSS graph' topic={HelpTopic.UI_OSS_GRAPH} /> to compose blocks, inputs, synthesis,
+        and replicas. Use Details for view controls, editing, canvas gestures, and the contents sidebar.
+      </p>
     )
   }
 };

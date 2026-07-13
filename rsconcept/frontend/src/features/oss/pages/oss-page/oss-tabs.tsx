@@ -83,7 +83,7 @@ export function OssTabs({ activeTab }: OssTabsProps) {
         <MenuOssTabs />
 
         <TabLabel label={tx('tx.lib.item.passport')} data-tour='tab-passport' />
-        <TabLabel label={tx('tx.graph')} />
+        <TabLabel label={tx('tx.graph')} data-tour='tab-graph' />
       </TabList>
 
       <div ref={containerRef} className='overflow-x-hidden'>

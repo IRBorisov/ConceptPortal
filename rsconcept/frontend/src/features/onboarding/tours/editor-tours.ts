@@ -37,5 +37,26 @@ export const LibraryTourID = {
 
 export type LibraryTourID = (typeof LibraryTourID)[keyof typeof LibraryTourID];
 
+/** OSS graph tour (composition canvas; passport stays in `oss-passport`). */
+export const OssTourID = {
+  GRAPH: 'oss-graph'
+} as const;
+
+export type OssTourID = (typeof OssTourID)[keyof typeof OssTourID];
+
+/**
+ * Model data / evaluation tours — Sandbox and library models only
+ * (schemas under `/rsforms` have no Data or Evaluation tabs).
+ */
+export const ModelTourID = {
+  VALUE: 'model-value',
+  EVALUATOR: 'model-evaluator'
+} as const;
+
+export type ModelTourID = (typeof ModelTourID)[keyof typeof ModelTourID];
+
 /** Routes where shared list/concept/graph editor tours may run. */
 export const EDITOR_TOUR_ROUTES = ['/sandbox', '/rsforms', '/models'] as const;
+
+/** Routes where model data / evaluation tours may run. */
+export const MODEL_TOUR_ROUTES = ['/sandbox', '/models'] as const;

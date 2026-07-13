@@ -419,15 +419,17 @@ export function TGFlow() {
             <SelectColoring className='rounded-b-none' schema={schema} />
             {schema.is_attributive ? <SelectEdgeType className='rounded-none border-t-0' /> : null}
 
-            <ViewHidden
-              items={hidden}
-              listHeight={hiddenHeight}
-              schema={schema}
-              selected={selectedCst}
-              toggleSelect={toggleSelectCst}
-              setFocus={setFocus}
-              onActivate={cstID => router.gotoEditActive(cstID)}
-            />
+            <div data-tour='graph-hidden'>
+              <ViewHidden
+                items={hidden}
+                listHeight={hiddenHeight}
+                schema={schema}
+                selected={selectedCst}
+                toggleSelect={toggleSelectCst}
+                setFocus={setFocus}
+                onActivate={cstID => router.gotoEditActive(cstID)}
+              />
+            </div>
           </div>
           <ToolbarTGOptions
             className='px-1 whitespace-nowrap backdrop-blur-xs rounded-xl h-fit'

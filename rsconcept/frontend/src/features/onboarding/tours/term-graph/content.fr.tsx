@@ -4,12 +4,19 @@ import { IconGraphMode } from '@/features/rsform/components/icon-graph-mode';
 import { InteractionMode, TGEdgeType } from '@/features/rsform/stores/term-graph';
 
 import {
+  IconClustering,
+  IconCrucial,
+  IconDestroy,
   IconFilter,
   IconFitImage,
   IconFocus,
   IconGraphCollapse,
   IconGraphExpand,
-  IconOverviewCore
+  IconImage,
+  IconNewItem,
+  IconOverviewCore,
+  IconText,
+  IconTypeGraph
 } from '@/components/icons';
 
 import { type TourStepContent } from '../../models/tour';
@@ -29,10 +36,38 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
   options: {
     title: 'Affichage et filtres',
     body: (
+      <div className='flex flex-col gap-2'>
+        <p>
+          À gauche, choisissez la coloration des nœuds et les types de liens. <IconFitImage className='inline-icon' />{' '}
+          adapte le graphe ; <IconFocus className='inline-icon' /> focalise une constituante ;{' '}
+          <IconFilter className='inline-icon' /> ouvre les paramètres de disposition et de filtre.
+        </p>
+        <p>
+          <IconText className='inline-icon' /> (<kbd>T</kbd>) bascule les libellés ;{' '}
+          <IconClustering className='inline-icon' /> (<kbd>V</kbd>) masque les nœuds générés ;{' '}
+          <IconOverviewCore className='inline-icon icon-green' /> (<kbd>O</kbd>) affiche uniquement le noyau
+          axiomatique ; <IconImage className='inline-icon' /> exporte en PNG ou SVG.
+        </p>
+      </div>
+    )
+  },
+  edit: {
+    title: 'Éditer les nœuds',
+    body: (
       <p>
-        À gauche, choisissez la coloration des nœuds et les types de liens. <IconFitImage className='inline-icon' />{' '}
-        adapte le graphe à l&apos;écran, <IconFocus className='inline-icon' /> focalise une constituante, et{' '}
-        <IconFilter className='inline-icon' /> ouvre les paramètres de disposition et de filtre.
+        Lorsque l&apos;édition est autorisée, <IconNewItem className='inline-icon icon-green' /> (<kbd>R</kbd>) crée
+        une constituante ; <IconDestroy className='inline-icon icon-red' /> supprime la sélection ;{' '}
+        <IconCrucial className='inline-icon' /> (<kbd>F</kbd>) bascule le statut crucial ;{' '}
+        <IconTypeGraph className='inline-icon' /> ouvre le graphe des échelons pour la sélection.
+      </p>
+    )
+  },
+  hidden: {
+    title: 'Nœuds masqués',
+    body: (
+      <p>
+        Les constituantes filtrées hors du canevas apparaissent dans la liste masquée. Cliquez pour sélectionner, ou
+        activez un élément pour ouvrir l&apos;éditeur de constituante.
       </p>
     )
   },
@@ -46,10 +81,6 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
           tracer des relations. Attribution et définition :{' '}
           <IconEdgeType value={TGEdgeType.attribution} className='inline-icon' /> /{' '}
           <IconEdgeType value={TGEdgeType.definition} className='inline-icon' />.
-        </p>
-        <p>
-          <IconOverviewCore className='inline-icon icon-green' /> (<kbd>O</kbd>) affiche uniquement le noyau axiomatique
-          — vue d&apos;ensemble pour les grands schémas ; la focale ouvre un sous-graphe local.
         </p>
         <p>
           Les aides à la sélection étendent les nœuds liés — par exemple <IconGraphCollapse className='inline-icon' />{' '}

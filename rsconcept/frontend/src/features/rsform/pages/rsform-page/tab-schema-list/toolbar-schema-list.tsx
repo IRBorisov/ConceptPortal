@@ -58,7 +58,7 @@ export function ToolbarSchemaList({ className, onDeselectAll }: ToolbarSchemaLis
   const hasActiveFilter = hasActiveCstFilter(query, filter);
 
   return (
-    <div className={cn('cc-icons items-start outline-hidden', className)}>
+    <div className={cn('cc-icons items-start outline-hidden', className)} data-tour='list-toolbar'>
       {schema.oss.length > 0 ? (
         <MiniSelectorOSS
           items={schema.oss}

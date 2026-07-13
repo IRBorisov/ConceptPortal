@@ -4,6 +4,7 @@ import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
+import { ModelTourID } from '@/features/onboarding/tours/editor-tours';
 import { IconEvaluatorCache } from '@/features/rsmodel/components/icon-evaluator-cache';
 
 import { MiniButton } from '@/components/control';
@@ -25,7 +26,7 @@ export function ToolbarEvaluator({ className }: ToolbarEvaluatorProps) {
   const toggleDisableCache = usePreferencesStore(state => state.toggleDisableCache);
 
   return (
-    <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>
+    <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)} data-tour='model-evaluator-tools'>
       <MiniButton
         title={tx('tx.rslang.eval.disableCache.hint')}
         icon={<IconEvaluatorCache value={!disableCache} size='1.25rem' className='hover:text-primary' />}
@@ -38,7 +39,12 @@ export function ToolbarEvaluator({ className }: ToolbarEvaluatorProps) {
         onClick={() => engine.recalculateAll()}
       />
 
-      <BadgeHelp topic={HelpTopic.UI_MODEL_EVALUATOR} offset={4} contentClass='sm:max-w-160' />
+      <BadgeHelp
+        topic={HelpTopic.UI_MODEL_EVALUATOR}
+        tourID={ModelTourID.EVALUATOR}
+        offset={4}
+        contentClass='sm:max-w-160'
+      />
     </div>
   );
 }

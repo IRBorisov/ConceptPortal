@@ -17,6 +17,15 @@ export const conceptEditorContentFr: Record<string, TourStepContent> = {
       </p>
     )
   },
+  fields: {
+    title: 'Panneaux de définition',
+    body: (
+      <p>
+        Le formulaire a trois panneaux principaux : le terme, la définition textuelle et la définition formelle.
+        Modifiez-les ici ; enregistrez avec <kbd>Ctrl + S</kbd> lorsque des changements sont en attente.
+      </p>
+    )
+  },
   check: {
     title: 'Vérification et diagnostic',
     body: (

@@ -1,7 +1,7 @@
 import { RSModelTabID } from '@/app/navigation/navigation-context';
 
 import { type Tour } from '../../models/tour';
-import { EditorTourID, PassportTourID, SandboxTourID } from '../editor-tours';
+import { EditorTourID, ModelTourID, PassportTourID, SandboxTourID } from '../editor-tours';
 
 import { sandboxIntroContentEn } from './content.en';
 import { sandboxIntroContentFr } from './content.fr';
@@ -10,7 +10,7 @@ import { sandboxIntroContentRu } from './content.ru';
 /** Brief Sandbox overview: tabs only; list/concept details live in shared editor subtours. */
 export const sandboxIntroTour: Tour = {
   id: SandboxTourID.INTRO,
-  version: 6,
+  version: 7,
   route: '/sandbox',
   autoStart: true,
   steps: [
@@ -45,14 +45,16 @@ export const sandboxIntroTour: Tour = {
     },
     {
       id: 'data',
-      anchor: 'sandbox-tab-data',
+      anchor: 'tab-data',
       placement: 'bottom',
+      subtour: ModelTourID.VALUE,
       onEnter: controller => controller.changeTab(RSModelTabID.VALUE_EDIT)
     },
     {
       id: 'evaluation',
-      anchor: 'sandbox-tab-evaluation',
+      anchor: 'tab-evaluation',
       placement: 'bottom',
+      subtour: ModelTourID.EVALUATOR,
       onEnter: controller => controller.changeTab(RSModelTabID.EVALUATOR)
     },
     {

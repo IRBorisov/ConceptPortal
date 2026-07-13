@@ -5,6 +5,7 @@ import { isInferrable } from '@rsconcept/domain/library/rsmodel-api';
 
 import { HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
+import { ModelTourID } from '@/features/onboarding/tours/editor-tours';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
 import { MiniButton } from '@/components/control';
@@ -48,7 +49,7 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
   const formDisabled = isProcessing || !activeCst || !isContentEditable;
 
   return (
-    <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)}>
+    <div className={cn('px-1 rounded-b-2xl cc-icons outline-hidden', className)} data-tour='model-value-tools'>
       <MiniButton
         title={prepareTooltip(tx('tx.general.changes.save'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
         aria-label={tx('tx.general.changes.save')}
@@ -109,7 +110,12 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
         />
       ) : null}
 
-      <BadgeHelp topic={HelpTopic.UI_MODEL_VALUE} offset={4} contentClass='sm:max-w-160' />
+      <BadgeHelp
+        topic={HelpTopic.UI_MODEL_VALUE}
+        tourID={ModelTourID.VALUE}
+        offset={4}
+        contentClass='sm:max-w-160'
+      />
     </div>
   );
 }

@@ -1,6 +1,15 @@
 import { HelpTopic } from '@/features/help';
 
-import { IconSearch } from '@/components/icons';
+import {
+  IconCalculateAll,
+  IconClone,
+  IconCrucial,
+  IconDestroy,
+  IconMoveDown,
+  IconMoveUp,
+  IconNewItem,
+  IconSearch
+} from '@/components/icons';
 
 import { type TourStepContent } from '../../models/tour';
 import { TourHelpLink } from '../shared/tour-help-links';
@@ -26,13 +35,39 @@ export const constituentsListContentRu: Record<string, TourStepContent> = {
       </p>
     )
   },
-  interact: {
-    title: 'Выделение и порядок',
+  selection: {
+    title: 'Счётчик выделения',
+    body: (
+      <p>
+        Счётчик слева показывает, сколько конституент выделено из общего числа. Щелчок по строке выделяет;{' '}
+        <kbd>Esc</kbd> снимает выделение.
+      </p>
+    )
+  },
+  toolbar: {
+    title: 'Панель списка',
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Щелчок по строке выделяет конституенту; счётчик слева показывает число выделенных. Двойной щелчок или щелчок с{' '}
-          <kbd>Alt</kbd> открывает конституенту в <TourHelpLink text='редакторе' topic={HelpTopic.UI_SCHEMA_EDITOR} />.
+          <IconNewItem className='inline-icon icon-green' /> создать, <IconClone className='inline-icon icon-green' />{' '}
+          клонировать и <IconDestroy className='inline-icon icon-red' /> удалить выбранные.{' '}
+          <IconMoveUp className='inline-icon' /> / <IconMoveDown className='inline-icon' /> меняют порядок;{' '}
+          <IconCrucial className='inline-icon' /> отмечает ключевые конституенты.
+        </p>
+        <p>
+          В модели <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) пересчитывает все
+          значения.
+        </p>
+      </div>
+    )
+  },
+  interact: {
+    title: 'Работа с таблицей',
+    body: (
+      <div className='flex flex-col gap-2'>
+        <p>
+          <kbd>Shift</kbd>+щелчок расширяет выделение. Двойной щелчок или щелчок с <kbd>Alt</kbd> открывает
+          конституенту в <TourHelpLink text='редакторе' topic={HelpTopic.UI_SCHEMA_EDITOR} />.
         </p>
         <p>
           Перетаскивайте строки, чтобы изменить порядок в схеме. При активном поиске перестановка отключена — очистите

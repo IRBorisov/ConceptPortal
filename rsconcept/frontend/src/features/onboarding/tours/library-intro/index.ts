@@ -8,9 +8,9 @@ import { libraryIntroContentRu } from './content.ru';
 /** Guided walkthrough of the library browser. */
 export const libraryIntroTour: Tour = {
   id: LibraryTourID.INTRO,
-  version: 1,
+  version: 2,
   route: '/library',
-  autoStart: false,
+  autoStart: true,
   steps: [
     { id: 'welcome' },
     {
