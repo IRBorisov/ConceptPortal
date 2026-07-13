@@ -487,8 +487,13 @@ export const txLibraryEn: Record<string, string> = {
   'tx.termGraph.hidden.status': 'Hidden [{selected} of {total}]',
   'tx.termGraph.focus': 'Focused constituent',
   'tx.termGraph.focus.short': 'Focus',
-  'tx.termGraph.focus.hint': 'Set the focus on the constituent',
+  'tx.termGraph.focus.hint': 'Focus on the constituent (right-click a node)',
   'tx.termGraph.focus.reset': 'Reset focus',
+  'tx.termGraph.overviewCore': 'Axiomatic core only',
+  'tx.termGraph.overviewCore.hint':
+    'Show only the axiomatic core (basic concepts and crucial constituents). Use focus to open a local subgraph',
+  'tx.termGraph.overviewCore.show': 'Show axiomatic core only',
+  'tx.termGraph.overviewCore.hide': 'Show full graph',
 
   'tx.termGraph.mode.explore': 'Mode: Browse',
   'tx.termGraph.mode.edit': 'Mode: Editor',

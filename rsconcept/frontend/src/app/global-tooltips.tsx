@@ -25,7 +25,7 @@ export const GlobalTooltips = () => {
         layer='z-topmost'
         place='bottom-start'
         offset={16}
-        className='max-w-80 wrap-break-word rounded-lg! select-none'
+        className='max-w-80 wrap-break-word select-none'
       />
       <Tooltip
         float
@@ -42,7 +42,7 @@ export const GlobalTooltips = () => {
         position={anchorPosition ?? undefined}
         id={globalIDs.value_tooltip}
         layer='z-topmost'
-        className='max-w-[calc(min(40rem,100dvw-2rem))] text-justify'
+        className='max-w-[calc(min(36rem,100dvw-2rem))] wrap-break-word'
       >
         {activeText}
       </Tooltip>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useMemo, useRef, useState } from 'react';
 import { type Edge, MarkerType, type Node, useEdgesState, useNodesState, useReactFlow } from '@xyflow/react';
 import clsx from 'clsx';
 
@@ -52,8 +52,11 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
 
   const filter = useTermGraphStore(state => state.filter);
   const setGraphType = useTermGraphStore(state => state.setGraphType);
-  const filteredGraph = produceFilteredGraph(schema, filter, focusCst);
-  const hidden = schema.items.filter(cst => !filteredGraph.hasNode(cst.id)).map(cst => cst.id);
+  const filteredGraph = useMemo(() => produceFilteredGraph(schema, filter, focusCst), [schema, filter, focusCst]);
+  const hidden = useMemo(
+    () => schema.items.filter(cst => !filteredGraph.hasNode(cst.id)).map(cst => cst.id),
+    [schema.items, filteredGraph]
+  );
   const hiddenHeight = useFitHeight('15.5rem + 2px', '4rem');
 
   const [nodes, setNodes, onNodesChange] = useNodesState<TGNode>([]);
@@ -112,23 +115,22 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
 
       applyLayout(newNodes, newEdges, !filter.noText);
 
-      const startAnimationFrame = requestAnimationFrame(() => {
+      setNodes(prev =>
+        newNodes.map(node => ({
+          ...node,
+          selected: prev.find(item => item.id === node.id)?.selected ?? false
+        }))
+      );
+      setEdges(prev =>
+        newEdges.map(edge => ({
+          ...edge,
+          selected: prev.find(item => item.id === edge.id)?.selected ?? false
+        }))
+      );
+
+      const startAnimationFrame = requestAnimationFrame(function startReadonlyGraphLayoutAnimation() {
         setIsAnimating(true);
       });
-
-      const stateChangeTimeout = setTimeout(function syncReadonlyGraphStateAfterLayout() {
-        setNodes(prev =>
-          !prev
-            ? newNodes
-            : newNodes.map(node => ({ ...node, selected: prev.find(item => item.id === node.id)?.selected ?? false }))
-        );
-        setEdges(prev =>
-          !prev
-            ? newEdges
-            : newEdges.map(edge => ({ ...edge, selected: prev.find(item => item.id === edge.id)?.selected ?? false }))
-        );
-      }, PARAMETER.minimalTimeout);
-
       const animationStopTimeout = setTimeout(function stopReadonlyGraphLayoutAnimation() {
         setIsAnimating(false);
       }, PARAMETER.graphLayoutDuration);
@@ -136,10 +138,19 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
       return () => {
         cancelAnimationFrame(startAnimationFrame);
         clearTimeout(animationStopTimeout);
-        clearTimeout(stateChangeTimeout);
       };
     },
-    [schema, filteredGraph, setNodes, setEdges, filter.noText, filter.graphType, fitView, viewportInitialized, focusCst]
+    [
+      schema,
+      filteredGraph,
+      setNodes,
+      setEdges,
+      filter.noText,
+      filter.graphType,
+      filter.overviewCore,
+      viewportInitialized,
+      focusCst
+    ]
   );
   const onFitViewEvent = useEffectEvent(fitView);
 

@@ -2,6 +2,7 @@
 
 import { useStoreApi } from '@xyflow/react';
 
+import { useTx } from '@/i18n';
 import { type Graph } from '@rsconcept/domain/graph/graph';
 import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 
@@ -14,6 +15,7 @@ import { cn } from '@/components/utils';
 import { prepareTooltip } from '@/utils/format';
 
 import { IconEdgeType } from '../../../components/icon-edge-type';
+import { IconEnableOverviewCore } from '../../../components/icon-enable-overview-core';
 import { IconGraphMode } from '../../../components/icon-graph-mode';
 import { FocusLabel } from '../../../components/term-graph/focus-label';
 import { ToolbarFocusedCst } from '../../../components/term-graph/toolbar-focused-cst';
@@ -30,11 +32,13 @@ interface ToolbarSchemaGraphProps {
 }
 
 export function ToolbarSchemaGraph({ className, graph }: ToolbarSchemaGraphProps) {
+  const tx = useTx();
   const { schema, selectedCst, setSelectedCst, setFocus, isContentEditable, focusCst } = useSchemaEdit();
 
-  const { handleToggleMode, handleToggleEdgeType } = useHandleActions(graph);
+  const { handleToggleMode, handleToggleEdgeType, handleToggleOverviewCore } = useHandleActions(graph);
 
   const mode = useTermGraphStore(state => state.mode);
+  const filter = useTermGraphStore(state => state.filter);
   const edgeType = useTGConnectionStore(state => state.connectionType);
 
   const store = useStoreApi();
@@ -44,6 +48,10 @@ export function ToolbarSchemaGraph({ className, graph }: ToolbarSchemaGraphProps
     setSelectedCst(newSelection);
     addSelectedNodes(newSelection.map(id => String(id)));
   }
+
+  const coreToggleTitle = filter.overviewCore
+    ? tx('tx.termGraph.overviewCore.hide')
+    : tx('tx.termGraph.overviewCore.show');
 
   return (
     <div
@@ -70,6 +78,13 @@ export function ToolbarSchemaGraph({ className, graph }: ToolbarSchemaGraphProps
             onClick={handleToggleEdgeType}
             icon={<IconEdgeType value={edgeType} size='1.25rem' className='icon-primary' />}
             disabled={mode !== InteractionMode.edit}
+          />
+        ) : null}
+        {!focusCst ? (
+          <MiniButton
+            title={prepareTooltip(coreToggleTitle, 'O')}
+            icon={<IconEnableOverviewCore value={filter.overviewCore} size='1.25rem' />}
+            onClick={handleToggleOverviewCore}
           />
         ) : null}
         {focusCst ? <ToolbarFocusedCst resetFocus={() => setFocus(null)} /> : null}

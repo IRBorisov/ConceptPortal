@@ -44,6 +44,17 @@ export function DlgGraphParams() {
             />
           )}
         </form.Field>
+        <form.Field name='overviewCore'>
+          {field => (
+            <Checkbox
+              value={field.state.value ?? false}
+              onChange={field.handleChange}
+              onBlur={field.handleBlur}
+              label={tx('tx.termGraph.overviewCore')}
+              title={prepareTooltip(tx('tx.termGraph.overviewCore.hint'), 'O')}
+            />
+          )}
+        </form.Field>
         <form.Field name='foldDerived'>
           {field => (
             <Checkbox

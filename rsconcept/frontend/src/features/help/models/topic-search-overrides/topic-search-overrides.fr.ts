@@ -120,9 +120,19 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
       'Éditeur d’interprétation de base. Table de valeurs pour les concepts primitifs, recherche textuelle sur les éléments, ajout et suppression de lignes du modèle.'
   },
   [HelpTopic.UI_GRAPH_TERM]: {
-    keywords: ['graphe des termes', 'graphe', 'termes', 'nœuds', 'liens', 'disposition'],
+    keywords: [
+      'graphe des termes',
+      'graphe',
+      'termes',
+      'nœuds',
+      'liens',
+      'disposition',
+      'noyau axiomatique',
+      'vue d’ensemble',
+      'focale'
+    ],
     searchText:
-      'Graphe des termes. Configuration du graphe, modification des nœuds et des liens, navigation et analyse visuelle de la structure.'
+      'Graphe des termes. Configuration du graphe, vue du noyau axiomatique, sous-graphe focal, modification des nœuds et des liens, navigation et analyse visuelle de la structure.'
   },
   [HelpTopic.UI_FORMULA_TREE]: {
     keywords: ['arbre syntaxique', 'formule', 'arbre d’expression', 'nœuds expression', 'ast'],

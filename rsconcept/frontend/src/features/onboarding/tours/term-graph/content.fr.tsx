@@ -8,7 +8,8 @@ import {
   IconFitImage,
   IconFocus,
   IconGraphCollapse,
-  IconGraphExpand
+  IconGraphExpand,
+  IconOverviewCore
 } from '@/components/icons';
 
 import { type TourStepContent } from '../../models/tour';
@@ -47,9 +48,12 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
           <IconEdgeType value={TGEdgeType.definition} className='inline-icon' />.
         </p>
         <p>
-          Les aides à la sélection étendent les nœuds liés — par exemple{' '}
-          <IconGraphCollapse className='inline-icon' /> influenceurs et <IconGraphExpand className='inline-icon' />{' '}
-          dépendants.
+          <IconOverviewCore className='inline-icon icon-green' /> (<kbd>O</kbd>) affiche uniquement le noyau axiomatique
+          — vue d&apos;ensemble pour les grands schémas ; la focale ouvre un sous-graphe local.
+        </p>
+        <p>
+          Les aides à la sélection étendent les nœuds liés — par exemple <IconGraphCollapse className='inline-icon' />{' '}
+          influenceurs et <IconGraphExpand className='inline-icon' /> dépendants.
         </p>
       </div>
     )
@@ -59,8 +63,8 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Cliquez sur un nœud pour le sélectionner ; un double-clic ouvre l&apos;éditeur de constituante. Déplacez la vue
-          avec <kbd>Space</kbd> ou <kbd>WASD</kbd>, et zoomez avec la molette.
+          Cliquez sur un nœud pour le sélectionner ; un double-clic ouvre l&apos;éditeur de constituante. Déplacez la
+          vue avec <kbd>Space</kbd> ou <kbd>WASD</kbd>, et zoomez avec la molette.
         </p>
         <p>
           <kbd>Esc</kbd> efface la sélection ; <kbd>Delete</kbd> supprime les constituantes sélectionnées lorsque

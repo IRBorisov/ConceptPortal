@@ -26,6 +26,7 @@ import {
   IconImage,
   IconNewItem,
   IconOSS,
+  IconOverviewCore,
   IconPredecessor,
   IconReset,
   IconText,
@@ -53,6 +54,10 @@ export function HelpSchemaGraphEn() {
             </li>
             <li>
               <IconFocus className='inline-icon' /> Set focus
+            </li>
+            <li>
+              <IconOverviewCore className='inline-icon icon-green' /> <kbd>O</kbd> –{' '}
+              <LinkTopic text='axiomatic core' topic={HelpTopic.CC_SYSTEM} /> only (schema overview)
             </li>
             <li>
               <IconFitImage className='inline-icon' /> Fit to screen

@@ -36,6 +36,8 @@ export interface GraphFilterParams {
   noTemplates: boolean;
   noText: boolean;
   foldDerived: boolean;
+  /** When not focused: show only the axiomatic core (basic concepts + crucial). */
+  overviewCore: boolean;
 
   focusShowInputs: boolean;
   focusShowOutputs: boolean;
@@ -71,6 +73,7 @@ interface TermGraphStore {
   toggleFocusOutputs: () => void;
   toggleText: () => void;
   toggleClustering: () => void;
+  toggleOverviewCore: () => void;
   toggleGraphType: () => void;
   toggleHermits: () => void;
 
@@ -105,6 +108,7 @@ export const useTermGraphStore = create<TermGraphStore>()(
         noTransitive: true,
         noText: false,
         foldDerived: false,
+        overviewCore: true,
 
         focusShowInputs: true,
         focusShowOutputs: true,
@@ -129,6 +133,8 @@ export const useTermGraphStore = create<TermGraphStore>()(
       toggleText: () => set(state => ({ filter: { ...state.filter, noText: !state.filter.noText } })),
       toggleHermits: () => set(state => ({ filter: { ...state.filter, noHermits: !state.filter.noHermits } })),
       toggleClustering: () => set(state => ({ filter: { ...state.filter, foldDerived: !state.filter.foldDerived } })),
+      toggleOverviewCore: () =>
+        set(state => ({ filter: { ...state.filter, overviewCore: !state.filter.overviewCore } })),
       toggleGraphType: () =>
         set(state => ({
           filter: {
@@ -156,15 +162,18 @@ export const useTermGraphStore = create<TermGraphStore>()(
         }))
     }),
     {
-      version: 6,
+      version: 7,
       name: 'portal.termGraph',
       migrate: (persisted, version) => {
-        if (version < 6 && persisted && typeof persisted === 'object' && 'filter' in persisted) {
+        if (persisted && typeof persisted === 'object' && 'filter' in persisted) {
           const state = persisted as { filter: Record<string, unknown> };
           const filter = state.filter;
-          if ('allowTheorem' in filter && !('allowStatement' in filter)) {
+          if (version < 6 && 'allowTheorem' in filter && !('allowStatement' in filter)) {
             filter.allowStatement = filter.allowTheorem;
             delete filter.allowTheorem;
+          }
+          if (version < 7 && filter.overviewCore === undefined) {
+            filter.overviewCore = true;
           }
         }
         return persisted as TermGraphStore;

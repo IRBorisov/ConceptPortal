@@ -26,6 +26,7 @@ import {
   IconImage,
   IconNewItem,
   IconOSS,
+  IconOverviewCore,
   IconPredecessor,
   IconReset,
   IconText,
@@ -53,6 +54,10 @@ export function HelpSchemaGraphRu() {
             </li>
             <li>
               <IconFocus className='inline-icon' /> Задать фокус
+            </li>
+            <li>
+              <IconOverviewCore className='inline-icon icon-green' /> <kbd>O</kbd> – только{' '}
+              <LinkTopic text='аксиоматическое ядро' topic={HelpTopic.CC_SYSTEM} /> (обзор схемы)
             </li>
             <li>
               <IconFitImage className='inline-icon' /> Вписать в экран

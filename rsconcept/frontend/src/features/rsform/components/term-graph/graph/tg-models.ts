@@ -6,6 +6,7 @@ import { type Edge, type Node } from '@xyflow/react';
 
 import { type Graph } from '@rsconcept/domain/graph/graph';
 import { type Constituenta, CstType, type RSForm } from '@rsconcept/domain/library';
+import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 
 import { PARAMETER } from '@/utils/constants';
 
@@ -78,6 +79,14 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
     node.position.x = -nodeWithPosition.x + PARAMETER.graphNodeRadius;
     node.position.y = nodeWithPosition.y - PARAMETER.graphNodeRadius;
   });
+}
+
+/**
+ * Axiomatic-core membership for graph overview: basic concepts (N/X/C/S/A)
+ * plus user-marked crucial constituents (navigation anchors).
+ */
+export function isSemanticCoreCst(cst: Constituenta): boolean {
+  return isBasicConcept(cst.cst_type) || cst.crucial;
 }
 
 export function inferEdgeType(schema: RSForm, source: number, target: number): TGEdgeType {
@@ -163,19 +172,40 @@ function applyToGraph(
       }
     });
   }
+
+  if (!focusCst && params.overviewCore) {
+    schema.items.forEach(cst => {
+      if (!isSemanticCoreCst(cst)) {
+        target.foldNode(cst.id);
+      }
+    });
+  }
+
   if (params.noHermits) {
     target.removeIsolated();
   }
 
   if (focusCst) {
-    const includes: number[] = [
-      focusCst.id,
-      ...focusCst.spawn,
-      ...(params.focusShowInputs ? schema.graph.expandInputs([focusCst.id]) : []),
-      ...(params.focusShowOutputs ? schema.graph.expandOutputs([focusCst.id]) : [])
-    ];
+    const includes = new Set<number>([focusCst.id, ...focusCst.spawn]);
+    if (params.focusShowInputs) {
+      for (const id of schema.graph.expandInputs([focusCst.id])) {
+        includes.add(id);
+      }
+    }
+    if (params.focusShowOutputs) {
+      for (const id of schema.graph.expandOutputs([focusCst.id])) {
+        includes.add(id);
+      }
+    }
+    // Keep axiomatic-core ancestors so the focus stays oriented in the schema core.
+    for (const id of schema.graph.expandAllInputs([focusCst.id])) {
+      const cst = schema.cstByID.get(id);
+      if (cst && isSemanticCoreCst(cst)) {
+        includes.add(id);
+      }
+    }
     schema.items.forEach(cst => {
-      if (!includes.includes(cst.id)) {
+      if (!includes.has(cst.id)) {
         target.foldNode(cst.id);
       }
     });

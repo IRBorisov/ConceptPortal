@@ -491,8 +491,13 @@ export const txLibraryFr: Record<string, string> = {
   'tx.termGraph.hidden.status': 'Constituantes [{selected} sur {total}]',
   'tx.termGraph.focus': 'Constituante focale',
   'tx.termGraph.focus.short': 'Focale',
-  'tx.termGraph.focus.hint': 'Définir la constituante focale',
+  'tx.termGraph.focus.hint': 'Focaliser la constituante (clic droit sur un nœud)',
   'tx.termGraph.focus.reset': 'Réinitialiser la focale',
+  'tx.termGraph.overviewCore': 'Noyau axiomatique seul',
+  'tx.termGraph.overviewCore.hint':
+    'Afficher uniquement le noyau axiomatique (notions de base et constituantes cruciales). La focale ouvre un sous-graphe local',
+  'tx.termGraph.overviewCore.show': 'Afficher le noyau axiomatique seul',
+  'tx.termGraph.overviewCore.hide': 'Afficher le graphe complet',
 
   'tx.termGraph.mode.explore': 'Mode : consultation',
   'tx.termGraph.mode.edit': 'Mode : édition',
