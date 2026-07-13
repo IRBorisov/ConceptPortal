@@ -8,7 +8,8 @@ import {
   IconFitImage,
   IconFocus,
   IconGraphCollapse,
-  IconGraphExpand
+  IconGraphExpand,
+  IconOverviewCore
 } from '@/components/icons';
 
 import { type TourStepContent } from '../../models/tour';
@@ -45,8 +46,12 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
           / <IconEdgeType value={TGEdgeType.definition} className='inline-icon' />.
         </p>
         <p>
-          Помощники выделения расширяют связанные узлы — например{' '}
-          <IconGraphCollapse className='inline-icon' /> влияющие и <IconGraphExpand className='inline-icon' /> зависимые.
+          <IconOverviewCore className='inline-icon icon-green' /> (<kbd>O</kbd>) показывает только аксиоматическое ядро
+          — удобный обзор большой схемы; фокус открывает локальный подграф.
+        </p>
+        <p>
+          Помощники выделения расширяют связанные узлы — например <IconGraphCollapse className='inline-icon' /> влияющие
+          и <IconGraphExpand className='inline-icon' /> зависимые.
         </p>
       </div>
     )
@@ -56,8 +61,8 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Щелчок по узлу выделяет его; двойной щелчок открывает редактор конституенты. Перемещение — <kbd>Space</kbd> или{' '}
-          <kbd>WASD</kbd>, масштаб — колёсиком мыши.
+          Щелчок по узлу выделяет его; двойной щелчок открывает редактор конституенты. Перемещение — <kbd>Space</kbd>{' '}
+          или <kbd>WASD</kbd>, масштаб — колёсиком мыши.
         </p>
         <p>
           <kbd>Esc</kbd> снимает выделение; <kbd>Delete</kbd> удаляет выбранные конституенты, если редактирование

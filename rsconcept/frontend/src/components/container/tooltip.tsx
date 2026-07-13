@@ -121,11 +121,11 @@ export function Tooltip({
     <TooltipImpl
       opacity={1}
       className={cn(
-        'relative',
+        'relative rounded-lg!',
         'max-h-[calc(100svh-6rem)]',
-        'overflow-y-auto overflow-x-hidden sm:overflow-hidden overscroll-contain',
+        'overflow-y-auto overflow-x-hidden overscroll-contain',
         'border shadow-md',
-        'text-pretty whitespace-pre-line',
+        'text-left text-pretty whitespace-pre-line',
         !tooltipsEnabled && 'hidden',
         layer,
         className

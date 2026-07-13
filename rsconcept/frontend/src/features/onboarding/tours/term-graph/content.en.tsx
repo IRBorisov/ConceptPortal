@@ -8,7 +8,8 @@ import {
   IconFitImage,
   IconFocus,
   IconGraphCollapse,
-  IconGraphExpand
+  IconGraphExpand,
+  IconOverviewCore
 } from '@/components/icons';
 
 import { type TourStepContent } from '../../models/tour';
@@ -28,8 +29,8 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
     title: 'View and filters',
     body: (
       <p>
-        On the left, choose node coloring and link types. <IconFitImage className='inline-icon' /> fits the graph to
-        the screen, <IconFocus className='inline-icon' /> focuses on one constituent, and{' '}
+        On the left, choose node coloring and link types. <IconFitImage className='inline-icon' /> fits the graph to the
+        screen, <IconFocus className='inline-icon' /> focuses on one constituent, and{' '}
         <IconFilter className='inline-icon' /> opens layout and filter settings.
       </p>
     )
@@ -41,8 +42,12 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
         <p>
           <IconGraphMode value={InteractionMode.explore} className='inline-icon' /> Explore to navigate and select;{' '}
           <IconGraphMode value={InteractionMode.edit} className='inline-icon icon-green' /> Edit to draw relations.
-          Attribution and definition edges use <IconEdgeType value={TGEdgeType.attribution} className='inline-icon' />{' '}
-          / <IconEdgeType value={TGEdgeType.definition} className='inline-icon' />.
+          Attribution and definition edges use <IconEdgeType value={TGEdgeType.attribution} className='inline-icon' /> /{' '}
+          <IconEdgeType value={TGEdgeType.definition} className='inline-icon' />.
+        </p>
+        <p>
+          <IconOverviewCore className='inline-icon icon-green' /> (<kbd>O</kbd>) shows the axiomatic core only — a
+          useful overview for large schemas; focus opens a local subgraph.
         </p>
         <p>
           Selection helpers expand related nodes — for example <IconGraphCollapse className='inline-icon' /> influencers
@@ -56,8 +61,8 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Click a node to select it; double-click opens the concept editor. Pan with <kbd>Space</kbd> or{' '}
-          <kbd>WASD</kbd>, and zoom with the mouse wheel.
+          Click a node to select it; double-click opens the concept editor. Pan with <kbd>Space</kbd> or <kbd>WASD</kbd>
+          , and zoom with the mouse wheel.
         </p>
         <p>
           <kbd>Esc</kbd> clears the selection; <kbd>Delete</kbd> removes selected constituents when editing is allowed.

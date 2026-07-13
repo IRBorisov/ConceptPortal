@@ -493,8 +493,13 @@ export const txLibraryRu: Record<string, string> = {
   'tx.termGraph.hidden.status': 'Скрытые [{selected} из {total}]',
   'tx.termGraph.focus': 'Фокус-конституента',
   'tx.termGraph.focus.short': 'Фокус',
-  'tx.termGraph.focus.hint': 'Установить фокус на конституенту',
+  'tx.termGraph.focus.hint': 'Сфокусировать конституенту (ПКМ по узлу)',
   'tx.termGraph.focus.reset': 'Сбросить фокус',
+  'tx.termGraph.overviewCore': 'Только аксиоматическое ядро',
+  'tx.termGraph.overviewCore.hint':
+    'Показать только аксиоматическое ядро и ключевые конституенты. Фокус открывает локальный подграф',
+  'tx.termGraph.overviewCore.show': 'Показать только аксиоматическое ядро',
+  'tx.termGraph.overviewCore.hide': 'Показать полный граф',
 
   'tx.termGraph.mode.explore': 'Режим: Просмотр',
   'tx.termGraph.mode.edit': 'Режим: Редактор',

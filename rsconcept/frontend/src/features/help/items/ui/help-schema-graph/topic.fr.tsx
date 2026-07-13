@@ -26,6 +26,7 @@ import {
   IconImage,
   IconNewItem,
   IconOSS,
+  IconOverviewCore,
   IconPredecessor,
   IconReset,
   IconText,
@@ -53,6 +54,10 @@ export function HelpSchemaGraphFr() {
             </li>
             <li>
               <IconFocus className='inline-icon' /> Définir le focus
+            </li>
+            <li>
+              <IconOverviewCore className='inline-icon icon-green' /> <kbd>O</kbd> –{' '}
+              <LinkTopic text='noyau axiomatique' topic={HelpTopic.CC_SYSTEM} /> seul (vue d&apos;ensemble)
             </li>
             <li>
               <IconFitImage className='inline-icon' /> Ajuster à l'écran

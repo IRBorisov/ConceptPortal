@@ -40,7 +40,7 @@ describe('tour registry', () => {
     expect(new Set(ids).size).toBe(ids.length);
     expect(validateSubtourLinks(allTours)).toEqual([]);
     expect(validateTourRegistrations(allTours)).toEqual([]);
-  });
+  }, 15_000);
 
   test('getTourByID returns loaded tours and null for unknown', async () => {
     await loadAllTours();

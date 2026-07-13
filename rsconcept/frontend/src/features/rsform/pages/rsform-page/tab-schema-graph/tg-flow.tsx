@@ -184,58 +184,61 @@ export function TGFlow() {
 
       applyLayout(newNodes, newEdges, !filter.noText);
 
+      const topologyChanged =
+        newNodes.length !== prevNodesRef.current.length ||
+        newNodes.some(node => !prevNodesRef.current.some(prev => prev.id === node.id)) ||
+        prevNodesRef.current.some(prev => !newNodes.some(node => node.id === prev.id));
+
       const positionsChanged =
+        topologyChanged ||
         prevNodesRef.current.some(prevNode => {
           const newNode = newNodes.find(n => n.id === prevNode.id);
           return newNode?.position.x !== prevNode.position.x || newNode?.position.y !== prevNode.position.y;
-        }) || newNodes.some(node => !prevNodesRef.current.find(prevNode => prevNode.id === node.id));
+        });
+
+      // Apply immediately — deferred setNodes was cancelled when isAnimating re-rendered
+      // (new filteredGraph identity), so switching to the full graph never committed.
+      setNodes(prev =>
+        newNodes.map(node => ({
+          ...node,
+          selected: prev.find(item => item.id === node.id)?.selected ?? false
+        }))
+      );
+      setEdges(prev =>
+        newEdges.map(edge => ({
+          ...edge,
+          selected: prev.find(item => item.id === edge.id)?.selected ?? false
+        }))
+      );
+      prevNodesRef.current = newNodes;
 
       if (!positionsChanged) {
-        setNodes(prev =>
-          newNodes.map(node => ({
-            ...node,
-            selected: prev.find(item => item.id === node.id)?.selected ?? false
-          }))
-        );
-        setEdges(prev =>
-          newEdges.map(edge => ({
-            ...edge,
-            selected: prev.find(item => item.id === edge.id)?.selected ?? false
-          }))
-        );
         return;
       }
 
-      const startAnimationFrame = requestAnimationFrame(() => {
+      const startAnimationFrame = requestAnimationFrame(function startGraphLayoutAnimation() {
         setIsAnimating(true);
       });
-
-      const stateChangeTimeout = setTimeout(function syncGraphStateAfterLayout() {
-        setNodes(prev =>
-          !prev
-            ? newNodes
-            : newNodes.map(node => ({ ...node, selected: prev.find(item => item.id === node.id)?.selected ?? false }))
-        );
-        setEdges(prev =>
-          !prev
-            ? newEdges
-            : newEdges.map(edge => ({ ...edge, selected: prev.find(item => item.id === edge.id)?.selected ?? false }))
-        );
-      }, PARAMETER.minimalTimeout);
-
       const animationStopTimeout = setTimeout(function stopGraphLayoutAnimation() {
         setIsAnimating(false);
       }, PARAMETER.graphLayoutDuration);
 
-      prevNodesRef.current = newNodes;
-
       return () => {
         cancelAnimationFrame(startAnimationFrame);
         clearTimeout(animationStopTimeout);
-        clearTimeout(stateChangeTimeout);
       };
     },
-    [schema, filteredGraph, setNodes, setEdges, filter.noText, viewportInitialized, focusCst, filter.graphType]
+    [
+      schema,
+      filteredGraph,
+      setNodes,
+      setEdges,
+      filter.noText,
+      filter.graphType,
+      filter.overviewCore,
+      viewportInitialized,
+      focusCst
+    ]
   );
 
   useEffect(
@@ -244,7 +247,7 @@ export function TGFlow() {
         void onFitViewEvent(flowOptions.fitViewOptions);
       }, PARAMETER.refreshTimeout);
     },
-    [schema.id, filter.noText, filter.graphType, focusCst]
+    [schema.id, filter.noText, filter.graphType, filter.overviewCore, focusCst]
   );
 
   const readyForUpdate = nodes.length === filteredGraph.nodes.size;

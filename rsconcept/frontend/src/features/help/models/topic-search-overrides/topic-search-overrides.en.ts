@@ -111,8 +111,9 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
       'Base interpretation editor. Value table for primitive concepts, text search on elements, add and remove model rows.'
   },
   [HelpTopic.UI_GRAPH_TERM]: {
-    keywords: ['term graph', 'graph', 'terms', 'nodes', 'edges', 'layout'],
-    searchText: 'Term graph. Graph setup, editing nodes, edges, navigating the graph, and visual structure analysis.'
+    keywords: ['term graph', 'graph', 'terms', 'nodes', 'edges', 'layout', 'axiomatic core', 'overview', 'focus'],
+    searchText:
+      'Term graph. Graph setup, axiomatic core overview, focus subgraph, editing nodes, edges, navigating the graph, and visual structure analysis.'
   },
   [HelpTopic.UI_FORMULA_TREE]: {
     keywords: ['parse tree', 'formula', 'syntax tree', 'expression nodes', 'ast'],

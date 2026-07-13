@@ -5,8 +5,17 @@ import { useReactFlow } from '@xyflow/react';
 import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';
-import { IconClustering, IconClusteringOff, IconFitImage, IconText, IconTextOff } from '@/components/icons';
+import {
+  IconClustering,
+  IconClusteringOff,
+  IconFitImage,
+  IconOverviewCore,
+  IconText,
+  IconTextOff,
+  IconTree
+} from '@/components/icons';
 import { PARAMETER } from '@/utils/constants';
+import { prepareTooltip } from '@/utils/format';
 
 import { useTermGraphStore } from '../../stores/term-graph';
 
@@ -17,6 +26,7 @@ export default function ToolbarGraphFilter() {
   const filter = useTermGraphStore(state => state.filter);
   const toggleText = useTermGraphStore(state => state.toggleText);
   const toggleClustering = useTermGraphStore(state => state.toggleClustering);
+  const toggleOverviewCore = useTermGraphStore(state => state.toggleOverviewCore);
   const { fitView } = useReactFlow();
 
   function handleFitView() {
@@ -42,6 +52,20 @@ export default function ToolbarGraphFilter() {
           )
         }
         onClick={toggleText}
+      />
+      <MiniButton
+        title={prepareTooltip(
+          filter.overviewCore ? tx('tx.termGraph.overviewCore.hide') : tx('tx.termGraph.overviewCore.show'),
+          'O'
+        )}
+        icon={
+          filter.overviewCore ? (
+            <IconOverviewCore size='1.25rem' className='icon-green' />
+          ) : (
+            <IconTree size='1.25rem' className='icon-primary' />
+          )
+        }
+        onClick={toggleOverviewCore}
       />
       <MiniButton
         title={!filter.foldDerived ? tx('tx.cst.spawned.hide') : tx('tx.cst.spawned.show')}

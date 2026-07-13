@@ -51,6 +51,7 @@ export function useHandleActions(graph: Graph<number>) {
   const noText = useTermGraphStore(state => state.filter.noText);
   const toggleText = useTermGraphStore(state => state.toggleText);
   const toggleClustering = useTermGraphStore(state => state.toggleClustering);
+  const toggleOverviewCore = useTermGraphStore(state => state.toggleOverviewCore);
   const toggleHermits = useTermGraphStore(state => state.toggleHermits);
   const toggleMode = useTermGraphStore(state => state.toggleMode);
   const toggleEdgeType = useTGConnectionStore(state => state.toggleConnectionType);
@@ -338,6 +339,10 @@ export function useHandleActions(graph: Graph<number>) {
       withPreventDefault(toggleClustering)(event);
       return;
     }
+    if (event.code === 'KeyO') {
+      withPreventDefault(toggleOverviewCore)(event);
+      return;
+    }
     if (event.code === 'KeyH') {
       withPreventDefault(toggleHermits)(event);
       return;
@@ -393,6 +398,7 @@ export function useHandleActions(graph: Graph<number>) {
     handleToggleEdgeType: toggleEdgeType,
     handleToggleText: toggleText,
     handleToggleClustering: toggleClustering,
+    handleToggleOverviewCore: toggleOverviewCore,
     handleToggleHermits: toggleHermits,
     handelFastEdit,
     handleExportSVG,
