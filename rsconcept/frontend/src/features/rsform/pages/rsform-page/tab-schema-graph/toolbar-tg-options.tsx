@@ -12,6 +12,7 @@ import { cn } from '@/components/utils';
 import { prepareTooltip } from '@/utils/format';
 
 import { IconEnableClustering } from '../../../components/icon-enable-clustering';
+import { IconEnableOverviewCore } from '../../../components/icon-enable-overview-core';
 import { IconEnableText } from '../../../components/icon-enable-text';
 import { useRsformDialogsStore } from '../../../dialogs/rsform-dialog-store';
 import { useSchemaEdit } from '../schema-edit-context';
@@ -25,7 +26,7 @@ interface ToolbarTGOptionsProps {
 
 export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
   const tx = useTx();
-  const { selectedCst, isProcessing } = useSchemaEdit();
+  const { selectedCst, isProcessing, focusCst } = useSchemaEdit();
 
   const {
     elementRef: exportRef,
@@ -38,6 +39,7 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
     handleFitView,
     handleToggleText,
     handleToggleClustering,
+    handleToggleOverviewCore,
     handleExportSVG,
     handleExportPNG,
     handleSetFocus,
@@ -59,6 +61,9 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
 
   const textToggleTitle = !filter.noText ? tx('tx.general.labels.hide') : tx('tx.general.labels.show');
   const derivedToggleTitle = !filter.foldDerived ? tx('tx.cst.spawned.hide') : tx('tx.cst.spawned.show');
+  const coreToggleTitle = filter.overviewCore
+    ? tx('tx.termGraph.overviewCore.hide')
+    : tx('tx.termGraph.overviewCore.show');
 
   return (
     <div className={cn('grid grid-cols-2 gap-1 pointer-events-auto', className)}>
@@ -80,9 +85,20 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
         onClick={handleSetFocus}
       />
       <MiniButton
+        title={prepareTooltip(coreToggleTitle, 'O')}
+        icon={<IconEnableOverviewCore value={filter.overviewCore} size='1.25rem' />}
+        onClick={handleToggleOverviewCore}
+        disabled={!!focusCst}
+      />
+      <MiniButton
         title={prepareTooltip(textToggleTitle, 'T')}
         icon={<IconEnableText value={!filter.noText} size='1.25rem' />}
         onClick={handleToggleText}
+      />
+      <MiniButton
+        title={prepareTooltip(derivedToggleTitle, 'V')}
+        icon={<IconEnableClustering value={!filter.foldDerived} size='1.25rem' />}
+        onClick={handleToggleClustering}
       />
       <div ref={exportRef} onBlur={handleExportBlur} className='flex relative'>
         <MiniButton
@@ -107,11 +123,6 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
           />
         </Dropdown>
       </div>
-      <MiniButton
-        title={prepareTooltip(derivedToggleTitle, 'V')}
-        icon={<IconEnableClustering value={!filter.foldDerived} size='1.25rem' />}
-        onClick={handleToggleClustering}
-      />
     </div>
   );
 }

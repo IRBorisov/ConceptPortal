@@ -38,6 +38,7 @@ export function useHandleActions(graph: Graph<number>) {
     deselectAll,
     promptCreateCst,
     setFocus,
+    focusCst,
     promptDeleteSelected,
     toggleCrucial,
     patchConstituenta,
@@ -339,7 +340,7 @@ export function useHandleActions(graph: Graph<number>) {
       withPreventDefault(toggleClustering)(event);
       return;
     }
-    if (event.code === 'KeyO') {
+    if (event.code === 'KeyO' && !focusCst) {
       withPreventDefault(toggleOverviewCore)(event);
       return;
     }
