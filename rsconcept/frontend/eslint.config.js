@@ -33,16 +33,26 @@ const basicRules = {
   'simple-import-sort/exports': 'error'
 };
 
-export default [
+const typeAwareLanguageOptions = {
+  parser: typescriptParser,
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.vite.json', './tsconfig.playwright.json'],
+    tsconfigRootDir: import.meta.dirname
+  },
+  globals: { ...globals.browser, ...globals.es2020, ...globals.jest }
+};
+
+export default typescriptPlugin.config(
   reactHooksPlugin.configs.flat.recommended,
-  ...typescriptPlugin.configs.recommendedTypeChecked,
-  ...typescriptPlugin.configs.stylisticTypeChecked,
   {
     ignores: [
       '**/parser.ts',
       '**/node_modules/**',
       '**/public/**',
       '**/dist/**',
+      '**/*.json',
       'vite.config.ts',
       'vitest.config.ts',
       'eslint.config.js',
@@ -50,19 +60,12 @@ export default [
     ]
   },
   {
-    languageOptions: {
-      parser: typescriptParser,
-      parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-        globals: { ...globals.browser, ...globals.es2020, ...globals.jest },
-        project: ['./tsconfig.json', './tsconfig.vite.json', './tsconfig.playwright.json'],
-        tsconfigRootDir: import.meta.dirname
-      }
-    }
+    files: ['src/**/*.{ts,tsx}', 'tests/**/*.ts'],
+    extends: [...typescriptPlugin.configs.recommendedTypeChecked, ...typescriptPlugin.configs.stylisticTypeChecked],
+    languageOptions: typeAwareLanguageOptions
   },
   {
-    files: ['src/**/*.ts', 'src/**/*.tsx'],
+    files: ['src/**/*.{ts,tsx}'],
     plugins: {
       'react': reactPlugin,
       'react-hooks': reactHooksPlugin,
@@ -104,18 +107,15 @@ export default [
   },
   {
     ...playwright.configs['flat/recommended'],
-
     files: ['tests/**/*.ts'],
-
     plugins: {
       'playwright': playwright,
       'simple-import-sort': simpleImportSort
     },
-
     rules: {
       ...basicRules,
       ...playwright.configs['flat/recommended'].rules,
       'simple-import-sort/imports': 'warn'
     }
   }
-];
+);
