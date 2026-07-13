@@ -6,7 +6,7 @@ import {
 } from '@rsconcept/domain/library';
 import { type DiagnosticSourceFields } from '@rsconcept/domain/library/rsform-api';
 import { EvalStatus } from '@rsconcept/domain/library/rsmodel';
-import { isCritical, RSErrorCode, type RSErrorDescription } from '@rsconcept/domain/rslang/error';
+import { isCritical, RSErrorCode, type EvalStackFrame, type RSErrorDescription } from '@rsconcept/domain/rslang/error';
 
 export { DiagnosticKind, RSDiagnosticCode };
 
@@ -22,6 +22,8 @@ export interface Diagnostic extends CstDiagnostic {
   expression: string;
   from: number;
   to: number;
+  /** Evaluation call chain when the fault is inside a called `F#`/`P#` body. */
+  stack?: readonly EvalStackFrame[];
 }
 
 /** Context for attributing a {@link Diagnostic} to a constituent. */
@@ -72,7 +74,8 @@ export function expressionDiagnostic(
     expression,
     from: error.from,
     to: error.to,
-    ...(error.params ? { params: error.params } : {})
+    ...(error.params ? { params: error.params } : {}),
+    ...(error.stack ? { stack: error.stack } : {})
   };
 }
 

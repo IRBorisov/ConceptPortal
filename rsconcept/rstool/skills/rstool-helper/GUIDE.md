@@ -150,8 +150,8 @@ kind `auto` (default) определит `portal-details` или `portal-schema`
 
 1. Вызови `listDiagnostics()` — смотри `kind`: `expression` (формула), `schema` (омонимы, дубликаты, термин/конвенция), `model` (интерпретация).
 2. Для черновика формулы — `analyzeExpression` (без сохранения).
-3. Прочитай `name`, `severity`, `alias`, `from`, `to`, `params` в `analysis.diagnostics` или через `listDiagnostics({ kind })`.
-4. Сопоставь `name` (или `code`) с исправлением в [DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md).
+3. Прочитай `name`, `severity`, `alias`, `from`, `to`, `params`, при вычислении — ещё `stack` (цепочка `F#`/`P#`, см. [DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md)), в `analysis.diagnostics` или через `listDiagnostics({ kind })`.
+4. Сопоставь `name` (или `code`) с исправлением в [DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md). Для runtime-ошибок внутри вызова смотри `stack[0]` — там реальный locus, а не только call site в корневом выражении.
 5. Исправь именно диапазон в `definitionFormal` (expression) или метаданные/данные модели (schema/model).
 6. Не повторяй вызов без изменения ввода.
 7. После успеха — ещё один `applySchemaPatch` / `setModelValues` с исправлением.

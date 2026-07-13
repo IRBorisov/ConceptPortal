@@ -262,6 +262,7 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.calcInvalidDebool': 'debool a été appliqué à une valeur de mauvais type',
   'tx.rslang.error.calcInvalidData': 'L’opérateur « {operator} » ne peut pas être appliqué aux valeurs {a} et {b}',
   'tx.rslang.error.iterateInfinity': 'Impossible de parcourir un ensemble infini',
+  'tx.rslang.error.callStack': 'Pile d’appels : {stack}',
 
   'tx.rslang.identifiers': 'Identificateurs',
   'tx.rslang.identifiers.hint': 'Désignations des constituantes, variables locales et littéraux'

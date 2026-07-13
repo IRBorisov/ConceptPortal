@@ -5,10 +5,9 @@ export type ExampleDiagnostic = Diagnostic;
 export function formatDiagnostics(diags: ExampleDiagnostic[], aliasById?: ReadonlyMap<number, string>): string {
   return diags
     .map(d => {
-      const alias =
-        d.alias ??
-        (d.constituentId !== undefined ? (aliasById?.get(d.constituentId) ?? '?') : '(scratch)');
-      return `[${d.kind}] ${alias} ${d.name} ${JSON.stringify(d.params ?? [])}`;
+      const alias = d.alias ?? (d.constituentId !== undefined ? (aliasById?.get(d.constituentId) ?? '?') : '(scratch)');
+      const stack = d.stack && d.stack.length > 0 ? ` stack=${d.stack.map(frame => frame.alias).join('←')}` : '';
+      return `[${d.kind}] ${alias} ${d.name} ${JSON.stringify(d.params ?? [])}${stack}`;
     })
     .join('\n');
 }

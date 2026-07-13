@@ -243,6 +243,7 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.calcInvalidDebool': 'debool was applied to a value of the wrong type',
   'tx.rslang.error.calcInvalidData': 'Operator "{operator}" cannot be applied to values {a} and {b}',
   'tx.rslang.error.iterateInfinity': 'Cannot iterate over an infinite set',
+  'tx.rslang.error.callStack': 'Call stack: {stack}',
 
   'tx.rslang.identifiers': 'Identifiers',
   'tx.rslang.identifiers.hint': 'Designations of constituents, local variables and literals'

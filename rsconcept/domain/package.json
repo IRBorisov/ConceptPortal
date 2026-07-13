@@ -1,6 +1,6 @@
 {
   "name": "@rsconcept/domain",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "description": "Shared TypeScript domain for RS language, RSForm, RSModel, RSEngine, OSS, and concept-text helpers.",
   "license": "MIT",
   "author": "IRBorisov",

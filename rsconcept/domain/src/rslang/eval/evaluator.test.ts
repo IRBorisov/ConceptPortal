@@ -308,10 +308,65 @@ describe('Calculator', () => {
       expect(errors[0]).toMatchObject({
         code: RSErrorCode.iterateInfinity,
         from: callSite!.from,
-        to: callSite!.to
+        to: callSite!.to,
+        stack: [{ alias: 'F9', from: zOffset, to: zOffset + 1 }]
       });
+      expect(errors[0]?.stack).toHaveLength(1);
       expect(readErrorAnnotation(callSite!)).toMatchObject({ code: RSErrorCode.iterateInfinity });
       expect(readErrorAnnotation(innerErrorNode!)).toBeNull();
+    });
+
+    it('keeps nested call surface span in the root expression and records the full stack', () => {
+      const innerExpr = '[a∈X1] debool(∅)';
+      const midExpr = '[a∈X1] F8[a]';
+      treeContext.set('F8', buildAST(innerExpr));
+      treeContext.set('F7', buildAST(midExpr));
+      const mainAst = buildAST('F7[X1]');
+      const outerCall = findFirstNode(mainAst, TokenID.NT_FUNC_CALL);
+      expect(outerCall).not.toBeNull();
+
+      const midAst = treeContext.get('F7')!;
+      const midCall = findFirstNode(midAst, TokenID.NT_FUNC_CALL);
+      expect(midCall).not.toBeNull();
+
+      const deboolArgFrom = innerExpr.indexOf('∅');
+      calculator.run(mainAst, error => errors.push(error), true);
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toMatchObject({
+        code: RSErrorCode.calcInvalidDebool,
+        from: outerCall!.from,
+        to: outerCall!.to,
+        stack: [
+          { alias: 'F8', from: deboolArgFrom, to: deboolArgFrom + 1 },
+          { alias: 'F7', from: midCall!.from, to: midCall!.to }
+        ]
+      });
+      expect(errors[0]?.stack).toHaveLength(2);
+      expect(readErrorAnnotation(outerCall!)).toMatchObject({ code: RSErrorCode.calcInvalidDebool });
+    });
+
+    it('distinguishes which call site failed when the same function is used twice', () => {
+      treeContext.set('F8', buildAST('[a∈ℬ(X1)] debool(a)'));
+      const mainAst = buildAST('F8[{1}] ∪ F8[X1]');
+      const callSites: AstNode[] = [];
+      visitAstDFS(mainAst, node => {
+        if (node.typeID === TokenID.NT_FUNC_CALL) {
+          callSites.push(node);
+        }
+      });
+      expect(callSites).toHaveLength(2);
+
+      calculator.run(mainAst, error => errors.push(error));
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toMatchObject({
+        code: RSErrorCode.calcInvalidDebool,
+        from: callSites[1].from,
+        to: callSites[1].to,
+        stack: [{ alias: 'F8' }]
+      });
+      expect(errors[0]?.stack).toHaveLength(1);
     });
   });
 

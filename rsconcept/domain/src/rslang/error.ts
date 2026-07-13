@@ -16,14 +16,56 @@ export interface RSErrorInfo {
   params?: readonly string[];
 }
 
-/** Represents RSLang expression error description. */
-export interface RSErrorDescription extends RSErrorInfo {
+/**
+ * One frame of an evaluation call chain.
+ *
+ * Spans are relative to the formal definition of {@link alias}.
+ * Frames are ordered innermost-first: fault locus, then each caller outward.
+ * The root expression under evaluation is not a frame — its highlight is
+ * {@link RSErrorDescription.from}/{@link RSErrorDescription.to}; {@link RSErrorDescription.stack}
+ * is absent when the fault is in that root expression.
+ */
+export interface EvalStackFrame {
+  /** Constituent whose formal definition contains this span. */
+  alias: string;
+  /** Half-open span `[from, to)` in that definition. */
   from: number;
   to: number;
 }
 
+/** Represents RSLang expression error description. */
+export interface RSErrorDescription extends RSErrorInfo {
+  from: number;
+  to: number;
+  /**
+   * Evaluation call chain when the fault is inside a called `F#`/`P#` body.
+   * Absent for parse/semantic errors and for evaluation errors in the root expression.
+   */
+  stack?: readonly EvalStackFrame[];
+}
+
 /** Error reporter function type. */
 export type ErrorReporter = (error: RSErrorDescription) => void;
+
+/**
+ * Formats an evaluation call chain for display (`F5 → F12`).
+ *
+ * Uses callee aliases from outermost call to innermost fault container.
+ * Returns an empty string when there is no nested call to show.
+ */
+export function formatEvalCallStack(stack: readonly EvalStackFrame[] | undefined): string {
+  if (!stack || stack.length === 0) {
+    return '';
+  }
+  const aliases: string[] = [];
+  for (let index = stack.length - 1; index >= 0; index--) {
+    const frame = stack[index];
+    if (frame) {
+      aliases.push(frame.alias);
+    }
+  }
+  return aliases.join(' → ');
+}
 
 /** Represents RSLang expression error types. */
 export const RSErrorCode = {

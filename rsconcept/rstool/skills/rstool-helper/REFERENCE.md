@@ -5,7 +5,7 @@
 ## Контракт rstool
 
 - Пакет: `@rsconcept/rstool`
-- Версия контракта: `3.2.0` (`CONTRACT_VERSION`)
+- Версия контракта: `3.3.0` (`CONTRACT_VERSION`)
 - Основной класс: `RSToolAgent`
 - Публичные импорты: `@rsconcept/rstool` и `@rsconcept/rstool/wrapper`
 - Опции: `new RSToolAgent({ persistenceDir? })` — каталог для сохранения сессий между перезапусками (stdio/MCP: `RSTOOL_PERSISTENCE_DIR`)
@@ -116,7 +116,7 @@ tool.listDiagnostics({ kind: 'schema', constituentId: 3, severity: 'error' });
 
 Фильтры: `kind?: 'expression' | 'schema' | 'model'`, `constituentId?`, `severity?: 'error' | 'warning'`.
 
-Элемент диагностики (агентский вид): `kind`, `code`, `name`, `severity`, `alias?`, `expression`, `from`, `to`, `params?`. Ключ для поиска исправления — `name` ([DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md)).
+Элемент диагностики (агентский вид): `kind`, `code`, `name`, `severity`, `alias?`, `expression`, `from`, `to`, `params?`, `stack?` (цепочка вызовов при ошибке внутри `F#`/`P#`). Ключ для поиска исправления — `name` ([DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md)).
 
 ## `analyzeExpression`
 

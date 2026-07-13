@@ -15,7 +15,7 @@ import { type RecalculateModelResult, type SessionModelState, type SetModelValue
 import { type SessionHandle, type SessionRevision, type SessionState } from './session';
 
 /** Agent-visible contract version; bump on breaking API changes. */
-export const CONTRACT_VERSION = '3.2.0';
+export const CONTRACT_VERSION = '3.3.0';
 
 /** Options for constructing an {@link RSToolAgent}. */
 export interface RSToolAgentOptions {

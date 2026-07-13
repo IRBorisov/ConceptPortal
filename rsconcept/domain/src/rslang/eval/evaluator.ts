@@ -4,7 +4,7 @@
 
 import { type AstNode, getNodeIndices, getNodeText } from '../../parsing';
 import { annotateError } from '../ast-annotations';
-import { type ErrorReporter, RSErrorCode } from '../error';
+import { type ErrorReporter, type EvalStackFrame, RSErrorCode } from '../error';
 import { labelRSLangNode } from '../labels';
 import { TokenID } from '../parser/token';
 
@@ -95,16 +95,59 @@ export class Evaluator {
     this.iterationCounter = 0;
   }
 
-  private errorNode(node: AstNode): AstNode {
-    if (this.callSiteStack.length > 0) {
-      return this.callSiteStack[this.callSiteStack.length - 1];
+  /**
+   * Surface highlight target in the root expression under evaluation.
+   * Nested call sites live in callee ASTs — only the outermost call is in the root.
+   */
+  private surfaceErrorNode(fault: AstNode): AstNode {
+    return this.callSiteStack[0] ?? fault;
+  }
+
+  /**
+   * Builds innermost-first frames for called `F#`/`P#` bodies only.
+   * The root expression is represented by the surface `from`/`to`, not a stack frame.
+   * Returns `undefined` when the fault is in the root expression (no function call).
+   */
+  private buildEvalStack(fault: AstNode): readonly EvalStackFrame[] | undefined {
+    if (this.callSiteStack.length === 0) {
+      return undefined;
     }
-    return node;
+    const frames: EvalStackFrame[] = [];
+    const innermostCall = this.callSiteStack[this.callSiteStack.length - 1];
+    if (!innermostCall) {
+      return undefined;
+    }
+    frames.push({
+      alias: getNodeText(innermostCall.children[0]),
+      from: fault.from,
+      to: fault.to
+    });
+    // Call sites at index ≥ 1 live in a callee body; index 0 is the root call site.
+    for (let index = this.callSiteStack.length - 1; index >= 1; index--) {
+      const callSite = this.callSiteStack[index];
+      const outerCall = this.callSiteStack[index - 1];
+      if (!callSite || !outerCall) {
+        continue;
+      }
+      frames.push({
+        alias: getNodeText(outerCall.children[0]),
+        from: callSite.from,
+        to: callSite.to
+      });
+    }
+    return frames;
   }
 
   private onError(code: RSErrorCode, node: AstNode, params?: string[]): null {
-    const target = this.errorNode(node);
-    this.reporter?.({ code, from: target.from, to: target.to, params });
+    const target = this.surfaceErrorNode(node);
+    const stack = this.buildEvalStack(node);
+    this.reporter?.({
+      code,
+      from: target.from,
+      to: target.to,
+      ...(params !== undefined ? { params } : {}),
+      ...(stack !== undefined ? { stack } : {})
+    });
     if (this.annotateErrors) {
       annotateError(target, code, params);
     }
