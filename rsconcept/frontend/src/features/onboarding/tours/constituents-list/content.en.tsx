@@ -19,27 +19,32 @@ export const constituentsListContentEn: Record<string, TourStepContent> = {
     title: 'Constituents list',
     body: (
       <p>
-        Constituents are the building blocks of a schema: base sets, terms, definitions, and axioms. The{' '}
-        <TourHelpLink text='list' topic={HelpTopic.UI_MODEL_LIST} /> tab shows them all in one table — with evaluation
-        status when a model is attached.
+        Constituents are parts of a conceptual schema: undefined concepts, terms, functions, axioms, statements, and
+        more. The <TourHelpLink text='list' topic={HelpTopic.UI_MODEL_LIST} /> tab shows them in a table; when a model
+        is open — evaluation status too.
       </p>
     )
   },
   filter: {
     title: 'Search',
     body: (
-      <p>
-        Use the <IconSearch className='inline-icon' /> search field to find constituents by alias, term, or definition
-        text. See the <TourHelpLink text='constituent list' topic={HelpTopic.UI_SCHEMA_LIST} /> manual for details.
-      </p>
+      <div className='flex flex-col gap-2'>
+        <p>
+          Try it: type in the <IconSearch className='inline-icon' /> search field. The list filters by alias, term,
+          definitions, and convention. Press Enter or leave the field — the guide continues.
+        </p>
+        <p>
+          See the <TourHelpLink text='constituent list' topic={HelpTopic.UI_SCHEMA_LIST} /> manual for details.
+        </p>
+      </div>
     )
   },
   selection: {
     title: 'Selection counter',
     body: (
       <p>
-        The counter on the left shows how many constituents are selected out of the total. Click rows to select; use{' '}
-        <kbd>Esc</kbd> to clear the selection.
+        The counter on the left shows how many constituents are selected out of the total. Click a row to select;{' '}
+        <kbd>Esc</kbd> clears the selection.
       </p>
     )
   },
@@ -54,8 +59,8 @@ export const constituentsListContentEn: Record<string, TourStepContent> = {
           <IconCrucial className='inline-icon' /> marks crucial constituents.
         </p>
         <p>
-          On a model, <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) recalculates all
-          values.
+          When a model is open, <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>)
+          recalculates all values.
         </p>
       </div>
     )
@@ -65,12 +70,11 @@ export const constituentsListContentEn: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          <kbd>Shift</kbd>-click extends the selection. Double-click a row or press <kbd>Alt</kbd> while clicking to
-          open a constituent in the <TourHelpLink text='editor' topic={HelpTopic.UI_SCHEMA_EDITOR} />.
+          <kbd>Shift</kbd>-click extends the selection. Double-click a row or <kbd>Alt</kbd>-click to open a constituent
+          in the <TourHelpLink text='editor' topic={HelpTopic.UI_SCHEMA_EDITOR} />.
         </p>
         <p>
-          Drag rows to change their order in the schema. Reordering is disabled while search is active — clear the
-          search field first if you need to move items.
+          Drag rows to change their order. Reordering is disabled while search is active — clear the search field first.
         </p>
       </div>
     )

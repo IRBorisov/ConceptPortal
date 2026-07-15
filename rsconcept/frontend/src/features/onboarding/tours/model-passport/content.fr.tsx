@@ -11,7 +11,7 @@ export const modelPassportContentFr: Record<string, TourStepContent> = {
     body: (
       <p>
         Le <TourHelpLink text='passeport du modèle' topic={HelpTopic.UI_MODEL_CARD} /> décrit un modèle conceptuel lié à
-        un schéma : nom, accès et statistiques d&apos;évaluation.
+        un schéma : nom, accès et statistiques résumées du schéma et du modèle.
       </p>
     )
   },
@@ -19,8 +19,8 @@ export const modelPassportContentFr: Record<string, TourStepContent> = {
     title: 'Titre, alias, description',
     body: (
       <p>
-        Modifiez ici le titre, l&apos;alias et la description du modèle. Les attributs du schéma ne se changent pas sur
-        cet onglet — ouvrez le schéma lié. Enregistrez avec <IconSave className='inline-icon' /> ou <kbd>Ctrl + S</kbd>.
+        Ici vous modifiez le titre, l&apos;alias et la description du modèle. Les attributs du schéma lié ne changent
+        pas sur ce formulaire. Enregistrement — <IconSave className='inline-icon' /> ou <kbd>Ctrl + S</kbd>.
       </p>
     )
   },
@@ -28,8 +28,8 @@ export const modelPassportContentFr: Record<string, TourStepContent> = {
     title: 'Accès',
     body: (
       <p>
-        Le bloc <TourHelpLink text='accès' topic={HelpTopic.ACCESS} /> contrôle le partage, la visibilité dans la
-        bibliothèque et le mode lecture seule pour ce modèle.
+        Le bloc <TourHelpLink text='accès' topic={HelpTopic.ACCESS} /> définit la politique de partage, la visibilité
+        dans la bibliothèque et le mode lecture seule pour ce modèle.
       </p>
     )
   },
@@ -37,8 +37,8 @@ export const modelPassportContentFr: Record<string, TourStepContent> = {
     title: 'Schéma lié',
     body: (
       <p>
-        Le lien <IconRSForm className='inline-icon' /> ouvre le schéma conceptuel source. Les données et
-        l&apos;évaluation du modèle s&apos;appuient toujours sur ses constituantes.
+        Le lien <IconRSForm className='inline-icon' /> ouvre le schéma conceptuel source, dont les constituantes
+        sous-tendent les données et calculs du modèle.
       </p>
     )
   },
@@ -46,8 +46,7 @@ export const modelPassportContentFr: Record<string, TourStepContent> = {
     title: 'Emplacement et propriété',
     body: (
       <p>
-        Emplacement, propriétaire, éditeurs et dates se gèrent sous le formulaire — comme pour les autres éléments de
-        bibliothèque.
+        Sous le formulaire — emplacement dans la bibliothèque, propriétaire, éditeurs et dates de création/mise à jour.
       </p>
     )
   },
@@ -56,10 +55,10 @@ export const modelPassportContentFr: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Le panneau latéral combine les compteurs de structure du schéma avec les problèmes du modèle : données de base
-          manquantes, axiomes faux, valeurs invalides et calculs échoués.
+          Le panneau latéral combine les compteurs de structure du schéma et les problèmes du modèle : concepts non
+          définis sans interprétation, axiomes violés, données invalides et erreurs de calcul.
         </p>
-        <p>Utilisez-le comme contrôle rapide avant les onglets données et évaluation.</p>
+        <p>Développez les catégories pour voir le détail par type.</p>
       </div>
     )
   }

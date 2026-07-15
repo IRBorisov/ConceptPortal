@@ -78,9 +78,14 @@ const tourRegistrations: Record<string, TourRegistration> = {
     load: () => import('./term-graph').then(module => module.termGraphTour)
   },
   [LibraryTourID.INTRO]: {
-    autoStart: true,
+    autoStart: false,
     route: '/library',
     load: () => import('./library-intro').then(module => module.libraryIntroTour)
+  },
+  'engine-fixture': {
+    autoStart: false,
+    route: '/sandbox',
+    load: () => import('./engine-fixture').then(module => module.engineFixtureTour)
   }
 };
 
@@ -156,6 +161,33 @@ export function findAutoStartTourID(pathname: string): string | null {
     }
   }
   return null;
+}
+
+/**
+ * Session pause candidate: the tour left via route leave, if it still matches this pathname.
+ * Used so contextual (`autoStart: false`) guides can show Resume after help → back.
+ */
+export function findResumeOfferTourID(pathname: string, resumeOfferTourID: string | null): string | null {
+  if (!resumeOfferTourID) {
+    return null;
+  }
+  const registration = tourRegistrations[resumeOfferTourID];
+  if (!registration || !tourMatchesRoute({ route: registration.route }, pathname)) {
+    return null;
+  }
+  return resumeOfferTourID;
+}
+
+/**
+ * Resolve a tour to offer on this pathname: paused resume candidate first, else auto-start.
+ * Returns null when none matches or the load fails.
+ */
+export async function findTourToOffer(pathname: string, resumeOfferTourID: string | null): Promise<Tour | null> {
+  const resumeID = findResumeOfferTourID(pathname, resumeOfferTourID);
+  if (resumeID) {
+    return ensureTourLoaded(resumeID);
+  }
+  return findAutoStartTour(pathname);
 }
 
 /**

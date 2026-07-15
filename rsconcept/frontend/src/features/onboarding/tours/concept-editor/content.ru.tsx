@@ -10,18 +10,20 @@ export const conceptEditorContentRu: Record<string, TourStepContent> = {
     title: 'Редактор конституенты',
     body: (
       <p>
-        Здесь редактируется одна конституента в{' '}
-        <TourHelpLink text='редакторе конституент' topic={HelpTopic.UI_SCHEMA_EDITOR} />: её термин, текстовое и
-        формальное определение. Выбирайте конституенты в списке, чтобы открыть их на этой вкладке.
+        Здесь правится одна конституента в{' '}
+        <TourHelpLink text='редакторе конституенты' topic={HelpTopic.UI_SCHEMA_EDITOR} />: термин, конвенция или
+        текстовое определение и формальное определение. Выберите строку в списке слева, чтобы открыть другую
+        конституенту.
       </p>
     )
   },
   fields: {
-    title: 'Панели определения',
+    title: 'Поля конституенты',
     body: (
       <p>
-        В форме три основные панели: термин, текстовое определение и формальное определение. Редактируйте их здесь;
-        сохраняйте через <kbd>Ctrl + S</kbd>, если есть несохранённые изменения.
+        Редактируйте термин и формальное определение. У неопределяемых понятий смысл задаёт{' '}
+        <TourHelpLink text='конвенция' topic={HelpTopic.CC_CONSTITUENTA} />, у производных — текстовое определение.
+        Сохранение — <kbd>Ctrl + S</kbd>.
       </p>
     )
   },
@@ -31,12 +33,12 @@ export const conceptEditorContentRu: Record<string, TourStepContent> = {
       <div className='flex flex-col gap-2'>
         <p>
           После правки формального определения <IconStatusUnknown className='inline-icon' /> индикатор{' '}
-          <TourHelpLink text='статуса определения' topic={HelpTopic.UI_CST_STATUS} /> становится синим, пока вы не
-          запустите проверку. Нажмите на него или клавиши <kbd>Ctrl + Q</kbd>, чтобы проверить выражение.
+          <TourHelpLink text='статуса выражения' topic={HelpTopic.UI_CST_STATUS} /> становится синим, пока вы не
+          запустите проверку. Нажмите на него или <kbd>Ctrl + Q</kbd>.
         </p>
         <p>
-          При ошибках под редактором появляется список — щелчок по сообщению переносит курсор к проблемному фрагменту.
-          Зелёный <IconStatusOK className='inline-icon' /> статус означает, что определение проверено.
+          При ошибках под редактором появляется список — щелчок переносит курсор к фрагменту. Зелёный{' '}
+          <IconStatusOK className='inline-icon' /> статус «корректно» означает, что определение проверено и вычислимо.
         </p>
       </div>
     )
@@ -46,26 +48,25 @@ export const conceptEditorContentRu: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Кнопка <IconTree className='inline-icon' />{' '}
-          <TourHelpLink text='дерева разбора' topic={HelpTopic.UI_FORMULA_TREE} /> открывает диалог с синтаксическим
-          деревом формального определения — удобно для понимания структуры и поиска ошибок разбора.
+          <IconTree className='inline-icon' /> <TourHelpLink text='Дерево разбора' topic={HelpTopic.UI_FORMULA_TREE} />{' '}
+          — синтаксическое дерево формального определения: структура выражения и ошибки разбора.
         </p>
         <p>
-          Кнопка <IconTypeGraph className='inline-icon' />{' '}
-          <TourHelpLink text='графа ступеней' topic={HelpTopic.UI_TYPE_GRAPH} /> показывает, как типы в выражении
-          связаны в виде графа ступеней типизации.
+          <IconTypeGraph className='inline-icon' />{' '}
+          <TourHelpLink text='Граф ступеней' topic={HelpTopic.UI_TYPE_GRAPH} /> — как типы в выражении связаны ступенями
+          типизации.
         </p>
       </div>
     )
   },
   structure: {
-    title: 'Планировщик структуры',
+    title: 'Раскрытие структуры',
     body: (
       <p>
-        Для структурных понятий кнопка <IconGenerateStructure size='1.25rem' className='inline-icon' /> Раскрыть
-        структуру открывает <TourHelpLink text='планировщик структуры' topic={HelpTopic.UI_STRUCTURE_PLANNER} /> —
-        интерактивный граф для разложения понятия на порождённые конституенты. Из диаграммы можно добавлять,
-        редактировать и связывать элементы.
+        Если у конституенты есть структура типизации, кнопка{' '}
+        <IconGenerateStructure size='1.25rem' className='inline-icon' /> Раскрыть структуру открывает{' '}
+        <TourHelpLink text='раскрытие структуры' topic={HelpTopic.UI_STRUCTURE_PLANNER} />: по графу ступеней можно
+        добавить порождённые конституенты и задать им термины.
       </p>
     )
   }

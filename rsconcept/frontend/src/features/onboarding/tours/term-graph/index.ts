@@ -1,5 +1,6 @@
 import { RSModelTabID } from '@/app/navigation/navigation-context';
 
+import { OnboardingActionID } from '../../models/actions';
 import { type Tour } from '../../models/tour';
 import { EDITOR_TOUR_ROUTES, EditorTourID } from '../editor-tours';
 
@@ -14,7 +15,7 @@ function openGraphTab(controller: { changeTab: (tabID: number) => void }) {
 /** Detailed walkthrough of the term graph tab (Sandbox, schema, and model). */
 export const termGraphTour: Tour = {
   id: EditorTourID.TERM_GRAPH,
-  version: 2,
+  version: 3,
   route: EDITOR_TOUR_ROUTES,
   autoStart: false,
   steps: [
@@ -28,6 +29,9 @@ export const termGraphTour: Tour = {
       id: 'options',
       anchor: 'graph-options',
       placement: 'right',
+      mode: 'interact',
+      interactionRegion: 'graph-toggle-labels',
+      completeAction: OnboardingActionID.GRAPH_LABELS_TOGGLED,
       onEnter: openGraphTab
     },
     {

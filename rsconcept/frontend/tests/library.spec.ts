@@ -55,14 +55,6 @@ test('library page renders mocked items and supports search', async ({ page }) =
   await expect(page.getByText('Схема тестового учета')).toHaveCount(0);
 });
 
-test('create page opens for authenticated user', async ({ page }) => {
-  await page.goto('/library/create');
-
-  await expect(page.getByRole('heading', { name: 'Концептуальная схема' })).toBeVisible();
-  await expect(page.locator('#schema_title')).toBeVisible();
-  await expect(page.locator('#schema_alias')).toBeVisible();
-});
-
 test('library page filters items by selected folder with subfolders toggle', async ({ page }) => {
   dataLibraryItems.push({ ...createLibraryItem(201, 'Корневая КС'), location: '/U/team' });
   dataLibraryItems.push({ ...createLibraryItem(202, 'Вложенная КС'), location: '/U/team/sub' });

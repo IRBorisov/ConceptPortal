@@ -7,6 +7,8 @@ import { type Graph } from '@rsconcept/domain/graph/graph';
 import { CstType } from '@rsconcept/domain/library/rsform';
 import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 
+import { emitOnboardingAction, OnboardingActionID } from '@/features/onboarding/models/actions';
+
 import { useScrollToNode } from '@/components/flow/use-scroll-to-node';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLOR_CODES } from '@/styling/colors';
@@ -61,6 +63,11 @@ export function useHandleActions(graph: Graph<number>) {
   const showTypeGraph = useRsformDialogsStore(state => state.showShowTypeGraph);
 
   const [isExportingImage, setIsExportingImage] = useState(false);
+
+  function handleToggleText() {
+    toggleText();
+    emitOnboardingAction(OnboardingActionID.GRAPH_LABELS_TOGGLED);
+  }
 
   function handleShowTypeGraph() {
     const items =
@@ -333,7 +340,7 @@ export function useHandleActions(graph: Graph<number>) {
       return;
     }
     if (event.code === 'KeyT') {
-      withPreventDefault(toggleText)(event);
+      withPreventDefault(handleToggleText)(event);
       return;
     }
     if (event.code === 'KeyB') {
@@ -397,7 +404,7 @@ export function useHandleActions(graph: Graph<number>) {
     handleCreateCst,
     handleDeleteSelected,
     handleToggleEdgeType: toggleEdgeType,
-    handleToggleText: toggleText,
+    handleToggleText,
     handleToggleClustering: toggleClustering,
     handleToggleOverviewCore: toggleOverviewCore,
     handleToggleHermits: toggleHermits,

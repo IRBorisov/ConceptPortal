@@ -4,6 +4,8 @@ export const CARD_OFFSET = 12;
 export const CARD_WIDTH = 400;
 export const CARD_MARGIN = 8;
 export const ESTIMATED_CARD_HEIGHT = 300;
+/** Viewports narrower than this use a bottom-sheet tour card layout. */
+export const NARROW_VIEWPORT_WIDTH = 640;
 
 export interface AnchorRect {
   top: number;
@@ -14,95 +16,208 @@ export interface AnchorRect {
   height: number;
 }
 
-export interface ViewportSize {
+export interface LayoutViewport {
   width: number;
   height: number;
+  offsetLeft: number;
+  offsetTop: number;
+  safeAreaTop: number;
+  safeAreaRight: number;
+  safeAreaBottom: number;
+  safeAreaLeft: number;
 }
+
+/** @deprecated Use {@link LayoutViewport}. */
+export type ViewportSize = LayoutViewport;
 
 export interface CardPosition {
   left: number;
   top: number;
 }
 
-/** Positions the tour card next to the anchor, keeping it fully inside the viewport. */
+export type TourCardLayoutMode = 'anchored' | 'centered' | 'bottom-sheet';
+
+/** Reads the visible layout viewport, including visual-viewport offset and safe-area insets. */
+export function readLayoutViewport(): LayoutViewport {
+  if (typeof window === 'undefined') {
+    return defaultLayoutViewport(1280, 720);
+  }
+  const visualViewport = window.visualViewport;
+  const safeArea = readSafeAreaInsets();
+  if (visualViewport) {
+    return {
+      width: visualViewport.width,
+      height: visualViewport.height,
+      offsetLeft: visualViewport.offsetLeft,
+      offsetTop: visualViewport.offsetTop,
+      ...safeArea
+    };
+  }
+  return {
+    width: window.innerWidth,
+    height: window.innerHeight,
+    offsetLeft: 0,
+    offsetTop: 0,
+    ...safeArea
+  };
+}
+
+export function isNarrowLayout(viewport: LayoutViewport): boolean {
+  return viewport.width < NARROW_VIEWPORT_WIDTH;
+}
+
+export function resolveTourCardLayoutMode(
+  hasAnchor: boolean,
+  viewport: LayoutViewport = readLayoutViewport()
+): TourCardLayoutMode {
+  if (isNarrowLayout(viewport)) {
+    return 'bottom-sheet';
+  }
+  return hasAnchor ? 'anchored' : 'centered';
+}
+
+/** Positions the tour card next to the anchor, keeping it fully inside the visible viewport. */
 export function computeCardPosition(
   anchorRect: AnchorRect,
   placement: TourPlacement,
   cardHeight: number,
-  viewport: ViewportSize = { width: window.innerWidth, height: window.innerHeight },
+  viewport: LayoutViewport = readLayoutViewport(),
   obstacleSelector?: string
 ): CardPosition {
   const visible = intersectViewport(anchorRect, viewport);
-  const left = computeCardLeft(visible, placement, viewport.width);
-  const top = computeCardTop(visible, placement, cardHeight, viewport.height, obstacleSelector);
+  const bounds = visibleBounds(viewport, cardHeight, CARD_WIDTH);
+  const left = computeCardLeft(visible, placement, bounds);
+  const top = computeCardTop(visible, placement, cardHeight, bounds, obstacleSelector);
 
   return { left, top };
 }
 
-/** Centers the tour card in the viewport. */
+/** Centers the tour card in the visible viewport. */
 export function computeCenteredCardPosition(
   cardHeight: number,
-  viewport: ViewportSize = { width: window.innerWidth, height: window.innerHeight }
+  viewport: LayoutViewport = readLayoutViewport()
 ): CardPosition {
-  const left = clamp(
-    (viewport.width - CARD_WIDTH) / 2,
-    CARD_MARGIN,
-    Math.max(viewport.width - CARD_WIDTH - CARD_MARGIN, CARD_MARGIN)
-  );
-  const top = clamp(
-    (viewport.height - cardHeight) / 2,
-    CARD_MARGIN,
-    Math.max(viewport.height - cardHeight - CARD_MARGIN, CARD_MARGIN)
-  );
+  const bounds = visibleBounds(viewport, cardHeight, CARD_WIDTH);
+  const left = clamp((bounds.minLeft + bounds.maxLeft) / 2, bounds.minLeft, bounds.maxLeft);
+  const top = clamp((bounds.minTop + bounds.maxTop) / 2, bounds.minTop, bounds.maxTop);
   return { left, top };
 }
 
-function intersectViewport(rect: AnchorRect, viewport: ViewportSize): AnchorRect {
-  const left = Math.max(rect.left, 0);
-  const top = Math.max(rect.top, 0);
-  const right = Math.min(rect.right, viewport.width);
-  const bottom = Math.min(rect.bottom, viewport.height);
+/** Pins the tour card to the bottom of the visible viewport (mobile bottom sheet). */
+export function computeBottomSheetPosition(
+  cardHeight: number,
+  viewport: LayoutViewport = readLayoutViewport()
+): CardPosition {
+  const cardWidth = Math.min(CARD_WIDTH, viewport.width - 2 * CARD_MARGIN);
+  const bounds = visibleBounds(viewport, cardHeight, cardWidth);
+  const left = viewport.offsetLeft + (viewport.width - cardWidth) / 2;
+  const top = bounds.maxTop;
+  return {
+    left: clamp(left, bounds.minLeft, bounds.maxLeft),
+    top
+  };
+}
+
+function defaultLayoutViewport(width: number, height: number): LayoutViewport {
+  return {
+    width,
+    height,
+    offsetLeft: 0,
+    offsetTop: 0,
+    safeAreaTop: 0,
+    safeAreaRight: 0,
+    safeAreaBottom: 0,
+    safeAreaLeft: 0
+  };
+}
+
+function readSafeAreaInsets(): Pick<LayoutViewport, 'safeAreaTop' | 'safeAreaRight' | 'safeAreaBottom' | 'safeAreaLeft'> {
+  if (typeof document === 'undefined') {
+    return { safeAreaTop: 0, safeAreaRight: 0, safeAreaBottom: 0, safeAreaLeft: 0 };
+  }
+  const probe = document.createElement('div');
+  probe.style.cssText =
+    'position:fixed;visibility:hidden;pointer-events:none;top:env(safe-area-inset-top);right:env(safe-area-inset-right);bottom:env(safe-area-inset-bottom);left:env(safe-area-inset-left);';
+  document.documentElement.appendChild(probe);
+  const style = getComputedStyle(probe);
+  const insets = {
+    safeAreaTop: parseFloat(style.top) || 0,
+    safeAreaRight: parseFloat(style.right) || 0,
+    safeAreaBottom: parseFloat(style.bottom) || 0,
+    safeAreaLeft: parseFloat(style.left) || 0
+  };
+  document.documentElement.removeChild(probe);
+  return insets;
+}
+
+interface VisibleBounds {
+  minLeft: number;
+  maxLeft: number;
+  minTop: number;
+  maxTop: number;
+}
+
+function visibleBounds(viewport: LayoutViewport, cardHeight: number, cardWidth: number): VisibleBounds {
+  const minLeft = viewport.offsetLeft + CARD_MARGIN + viewport.safeAreaLeft;
+  const maxLeft = Math.max(
+    minLeft,
+    viewport.offsetLeft + viewport.width - cardWidth - CARD_MARGIN - viewport.safeAreaRight
+  );
+  const minTop = viewport.offsetTop + CARD_MARGIN + viewport.safeAreaTop;
+  const maxTop = Math.max(
+    minTop,
+    viewport.offsetTop + viewport.height - cardHeight - CARD_MARGIN - viewport.safeAreaBottom
+  );
+  return { minLeft, maxLeft, minTop, maxTop };
+}
+
+function intersectViewport(rect: AnchorRect, viewport: LayoutViewport): AnchorRect {
+  const viewportLeft = viewport.offsetLeft;
+  const viewportTop = viewport.offsetTop;
+  const viewportRight = viewport.offsetLeft + viewport.width;
+  const viewportBottom = viewport.offsetTop + viewport.height;
+  const left = Math.max(rect.left, viewportLeft);
+  const top = Math.max(rect.top, viewportTop);
+  const right = Math.min(rect.right, viewportRight);
+  const bottom = Math.min(rect.bottom, viewportBottom);
   const width = Math.max(0, right - left);
   const height = Math.max(0, bottom - top);
   return { left, top, right, bottom, width, height };
 }
 
-function computeCardLeft(visible: AnchorRect, placement: TourPlacement, viewportWidth: number): number {
-  const maxLeft = Math.max(viewportWidth - CARD_WIDTH - CARD_MARGIN, CARD_MARGIN);
-
+function computeCardLeft(visible: AnchorRect, placement: TourPlacement, bounds: VisibleBounds): number {
   if (placement === 'left' || placement === 'right') {
     const besideLeft = visible.left - CARD_OFFSET - CARD_WIDTH;
     const besideRight = visible.right + CARD_OFFSET;
     const order = placement === 'left' ? [besideLeft, besideRight] : [besideRight, besideLeft];
 
     for (const left of order) {
-      if (left >= CARD_MARGIN && left <= maxLeft) {
+      if (left >= bounds.minLeft && left <= bounds.maxLeft) {
         return left;
       }
     }
   }
 
   const centered = visible.left + visible.width / 2 - CARD_WIDTH / 2;
-  return clamp(centered, CARD_MARGIN, maxLeft);
+  return clamp(centered, bounds.minLeft, bounds.maxLeft);
 }
 
 function computeCardTop(
   visible: AnchorRect,
   placement: TourPlacement,
   cardHeight: number,
-  viewportHeight: number,
+  bounds: VisibleBounds,
   obstacleSelector?: string
 ): number {
-  const maxTop = Math.max(viewportHeight - cardHeight - CARD_MARGIN, CARD_MARGIN);
   const candidates = buildTopCandidates(visible, placement, cardHeight, obstacleSelector);
 
   for (const top of candidates) {
-    if (top >= CARD_MARGIN && top <= maxTop) {
+    if (top >= bounds.minTop && top <= bounds.maxTop) {
       return top;
     }
   }
 
-  return clamp((viewportHeight - cardHeight) / 2, CARD_MARGIN, maxTop);
+  return clamp((bounds.minTop + bounds.maxTop) / 2, bounds.minTop, bounds.maxTop);
 }
 
 function buildTopCandidates(

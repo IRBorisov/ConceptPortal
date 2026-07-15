@@ -24,6 +24,12 @@ interface SearchBarProps extends Styling {
   /** Callback to be called when the search query changes. */
   onChangeQuery?: (newValue: string) => void;
 
+  /** Blur handler for the search input. */
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
+
+  /** Keydown handler for the search input. */
+  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
+
   /** Disable search icon. */
   noIcon?: boolean;
 
@@ -48,6 +54,8 @@ export function SearchBar({
   query,
   noIcon,
   onChangeQuery,
+  onBlur,
+  onKeyDown,
   noBorder,
   loading,
   className,
@@ -104,6 +112,8 @@ export function SearchBar({
         )}
         value={query}
         onChange={event => onChangeQuery?.(event.target.value)}
+        onBlur={onBlur}
+        onKeyDown={onKeyDown}
         onKeyDownCapture={handleKeyDownCapture}
         placeholder={resolvedPlaceholder}
         aria-busy={loading}

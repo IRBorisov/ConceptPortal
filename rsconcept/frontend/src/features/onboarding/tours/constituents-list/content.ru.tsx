@@ -19,27 +19,31 @@ export const constituentsListContentRu: Record<string, TourStepContent> = {
     title: 'Список конституент',
     body: (
       <p>
-        Конституенты — строительные блоки схемы: базисные множества, термины, определения и аксиомы. На вкладке{' '}
-        <TourHelpLink text='список' topic={HelpTopic.UI_MODEL_LIST} /> они собраны в одной таблице — со статусом
-        вычисления, если к схеме привязана модель.
+        Конституенты — части концептуальной схемы: неопределяемые понятия, термы, функции, аксиомы, высказывания и др.
+        На вкладке <TourHelpLink text='список' topic={HelpTopic.UI_MODEL_LIST} /> они собраны в таблице; если открыта
+        модель — ещё статус вычисления.
       </p>
     )
   },
   filter: {
     title: 'Поиск',
     body: (
-      <p>
-        Строка <IconSearch className='inline-icon' /> поиска находит конституенты по имени, термину или тексту
-        определения. Подробнее — в руководстве по{' '}
-        <TourHelpLink text='списку конституент' topic={HelpTopic.UI_SCHEMA_LIST} />.
-      </p>
+      <div className='flex flex-col gap-2'>
+        <p>
+          Попробуйте: введите текст в строку <IconSearch className='inline-icon' /> поиска. Список отфильтруется по
+          имени, термину, определениям и конвенции. Нажмите Enter или уйдите из поля — гид продолжится.
+        </p>
+        <p>
+          Подробнее — в руководстве по <TourHelpLink text='списку конституент' topic={HelpTopic.UI_SCHEMA_LIST} />.
+        </p>
+      </div>
     )
   },
   selection: {
     title: 'Счётчик выделения',
     body: (
       <p>
-        Счётчик слева показывает, сколько конституент выделено из общего числа. Щелчок по строке выделяет;{' '}
+        Счётчик слева показывает число выделенных конституент из общего количества. Щелчок по строке выделяет;{' '}
         <kbd>Esc</kbd> снимает выделение.
       </p>
     )
@@ -55,8 +59,8 @@ export const constituentsListContentRu: Record<string, TourStepContent> = {
           <IconCrucial className='inline-icon' /> отмечает ключевые конституенты.
         </p>
         <p>
-          В модели <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) пересчитывает все
-          значения.
+          Если открыта модель, <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>)
+          пересчитывает все значения.
         </p>
       </div>
     )
@@ -66,12 +70,12 @@ export const constituentsListContentRu: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          <kbd>Shift</kbd>+щелчок расширяет выделение. Двойной щелчок или щелчок с <kbd>Alt</kbd> открывает
-          конституенту в <TourHelpLink text='редакторе' topic={HelpTopic.UI_SCHEMA_EDITOR} />.
+          <kbd>Shift</kbd>+щелчок расширяет выделение. Двойной щелчок или щелчок с <kbd>Alt</kbd> открывает конституенту
+          в <TourHelpLink text='редакторе' topic={HelpTopic.UI_SCHEMA_EDITOR} />.
         </p>
         <p>
-          Перетаскивайте строки, чтобы изменить порядок в схеме. При активном поиске перестановка отключена — очистите
-          строку поиска, если нужно переместить элементы.
+          Перетаскивайте строки, чтобы изменить порядок. При активном поиске перестановка отключена — очистите строку
+          поиска.
         </p>
       </div>
     )

@@ -1,6 +1,14 @@
 import { HelpTopic } from '@/features/help';
 
-import { IconDownload, IconFilterReset, IconFolder, IconSearch, IconSortAsc, IconSubfolders } from '@/components/icons';
+import {
+  IconDownload,
+  IconFilterReset,
+  IconFolderEdit,
+  IconSearch,
+  IconSortAsc,
+  IconSubfolders,
+  IconText
+} from '@/components/icons';
 
 import { type TourStepContent } from '../../models/tour';
 import { TourHelpLink } from '../shared/tour-help-links';
@@ -12,7 +20,7 @@ export const libraryIntroContentEn: Record<string, TourStepContent> = {
       <div className='flex flex-col gap-2'>
         <p>
           The <TourHelpLink text='library' topic={HelpTopic.UI_LIBRARY} /> is where you browse and open conceptual
-          schemas, models, and operational synthesis schemas stored in the Portal.
+          schemas, models, and operational synthesis schemas (OSS) stored in the Portal.
         </p>
         <p>This short tour covers folders, search, and the items table.</p>
       </div>
@@ -31,8 +39,8 @@ export const libraryIntroContentEn: Record<string, TourStepContent> = {
     title: 'Current location',
     body: (
       <p>
-        The breadcrumb shows the active path. Use <IconFolder className='inline-icon' /> rename (when allowed) and{' '}
-        <IconSubfolders className='inline-icon' /> to include or hide items from nested folders.
+        The breadcrumb shows the active path. Use <IconFolderEdit className='inline-icon' /> to rename a folder (when
+        allowed) and <IconSubfolders className='inline-icon' /> to include or hide items from nested folders.
       </p>
     )
   },
@@ -40,8 +48,8 @@ export const libraryIntroContentEn: Record<string, TourStepContent> = {
     title: 'Search and filters',
     body: (
       <p>
-        Type chips narrow the list to schemas, models, or OSS. Switch between metadata search (titles, aliases) and
-        context search (full text) with <IconSearch className='inline-icon' />, and optionally filter by owner.{' '}
+        Type chips narrow the list to schemas, models, or OSS. Switch Metadata (<IconSearch className='inline-icon' />)
+        and Context search (<IconText className='inline-icon' />) with the mode selector; optionally filter by owner.{' '}
         <IconFilterReset className='inline-icon' /> clears custom filters.
       </p>
     )
@@ -56,8 +64,8 @@ export const libraryIntroContentEn: Record<string, TourStepContent> = {
           <IconDownload className='inline-icon' />.
         </p>
         <p>
-          Row color shows the item kind at a glance: green rows are OSS, orange rows are conceptual models, and the
-          rest are schemas.
+          Row color shows the item kind: green rows are OSS, orange rows are conceptual models, and the rest are
+          schemas.
         </p>
       </div>
     )

@@ -17,8 +17,9 @@ export const modelValueContentEn: Record<string, TourStepContent> = {
     title: 'Model data',
     body: (
       <p>
-        On the <TourHelpLink text='model data' topic={HelpTopic.UI_MODEL_VALUE} /> tab, assign concrete values to base
-        sets and other interpretables. The schema defines structure; the model fills it from a subject domain.
+        Here <TourHelpLink text='model data' topic={HelpTopic.UI_MODEL_VALUE} /> lets you set and inspect constituent
+        values. Undefined concepts get an interpretation (for base sets — subject-domain elements); derived ones are
+        computed from definitions.
       </p>
     )
   },
@@ -33,7 +34,7 @@ export const modelValueContentEn: Record<string, TourStepContent> = {
         </p>
         <p>
           <IconSave className='inline-icon' /> (<kbd>Ctrl + S</kbd>) saves the value;{' '}
-          <IconUpload className='inline-icon' /> / <IconDownload className='inline-icon' /> import or export it.
+          <IconUpload className='inline-icon' /> / <IconDownload className='inline-icon' /> — import or export.
         </p>
       </div>
     )
@@ -43,12 +44,11 @@ export const modelValueContentEn: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Click the <IconStatusUnknown className='inline-icon' /> status button to compute, or open the value dialog for
-          structured editing. For base sets, the{' '}
-          <TourHelpLink text='binding dialog' topic={HelpTopic.UI_MODEL_BINDING} /> assigns domain elements.
+          The <IconStatusUnknown className='inline-icon' /> status button runs computation. For base sets, the{' '}
+          <TourHelpLink text='binding dialog' topic={HelpTopic.UI_MODEL_BINDING} /> sets subject-domain elements.
         </p>
         <p>
-          See also <TourHelpLink text='value editing' topic={HelpTopic.UI_MODEL_VALUE_EDIT} />.
+          See the <TourHelpLink text='value editing' topic={HelpTopic.UI_MODEL_VALUE_EDIT} /> manual for value formats.
         </p>
       </div>
     )

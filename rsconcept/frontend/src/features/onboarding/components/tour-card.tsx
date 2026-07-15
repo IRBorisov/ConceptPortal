@@ -1,12 +1,15 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useId, useRef } from 'react';
 
 import { useTx } from '@/i18n';
 
 import { Button } from '@/components/control';
 import { TextButton } from '@/components/control/text-button';
 import { cn } from '@/components/utils';
+
+import { type TourCardLayoutMode } from '../utils/card-position';
+import { focusTourCardEntry, scheduleFocusRestore } from '../utils/focus';
 
 interface TourCardProps {
   title: string;
@@ -25,13 +28,19 @@ interface TourCardProps {
   /** When set, shows an Explore control that opens the linked subtour. */
   onExplore?: () => void;
 
+  /** Step anchor could not be resolved; show message + Retry; Next/Done stay for manual advance. */
+  anchorUnavailable?: boolean;
+  onRetryAnchor?: () => void;
+
+  layoutMode?: TourCardLayoutMode;
+
+  /** Notifies the host when the card element mounts or unmounts. */
+  onCardElement?: (element: HTMLDivElement | null) => void;
+
   className?: string;
   style?: React.CSSProperties;
   onLayout?: (height: number) => void;
 }
-
-const FOCUSABLE_SELECTOR =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 export function TourCard({
   title,
@@ -43,6 +52,10 @@ export function TourCard({
   onSkip,
   showBack,
   onExplore,
+  anchorUnavailable,
+  onRetryAnchor,
+  layoutMode = 'anchored',
+  onCardElement,
   className,
   style,
   onLayout
@@ -50,23 +63,51 @@ export function TourCard({
   const tx = useTx();
   const cardRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const titleId = useId();
+  const bodyId = useId();
+  const statusId = useId();
 
   const isFirst = stepIndex === 0;
   const isLast = stepIndex === totalSteps - 1;
   const canGoBack = showBack ?? !isFirst;
+  const progressLabel = tx('tx.onboarding.progress', { current: stepIndex + 1, total: totalSteps });
+  const isBottomSheet = layoutMode === 'bottom-sheet';
 
   useEffect(function saveAndRestoreFocus() {
     previousFocusRef.current = document.activeElement as HTMLElement | null;
     return function restoreFocus() {
-      previousFocusRef.current?.focus();
+      scheduleFocusRestore(previousFocusRef.current);
     };
   }, []);
 
   useEffect(
-    function focusCardOnStepChange() {
-      cardRef.current?.focus();
+    function notifyCardElement() {
+      onCardElement?.(cardRef.current);
+      return function clearCardElement() {
+        onCardElement?.(null);
+      };
     },
-    [stepIndex]
+    [onCardElement]
+  );
+
+  useEffect(
+    function focusEntryOnStepChange() {
+      const card = cardRef.current;
+      if (!card) {
+        return;
+      }
+      const frame = requestAnimationFrame(function focusPrimaryAction() {
+        const currentCard = cardRef.current;
+        if (!currentCard) {
+          return;
+        }
+        focusTourCardEntry(currentCard);
+      });
+      return function cancelFocusEntry() {
+        cancelAnimationFrame(frame);
+      };
+    },
+    [stepIndex, anchorUnavailable]
   );
 
   useEffect(
@@ -90,35 +131,8 @@ export function TourCard({
         observer.disconnect();
       };
     },
-    [onLayout, stepIndex, title, body, onExplore, canGoBack]
+    [onLayout, stepIndex, title, body, onExplore, canGoBack, anchorUnavailable, layoutMode]
   );
-
-  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (event.key !== 'Tab' || !cardRef.current) {
-      return;
-    }
-
-    const focusable = Array.from(cardRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
-    const active = document.activeElement;
-
-    if (focusable.length === 0) {
-      event.preventDefault();
-      cardRef.current.focus();
-      return;
-    }
-
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    if (event.shiftKey) {
-      if (active === first || active === cardRef.current) {
-        event.preventDefault();
-        last.focus();
-      }
-    } else if (active === last) {
-      event.preventDefault();
-      first.focus();
-    }
-  }
 
   return (
     <div
@@ -126,22 +140,40 @@ export function TourCard({
       tabIndex={-1}
       role='dialog'
       aria-modal='true'
-      aria-label={tx('tx.onboarding.tour')}
+      aria-labelledby={titleId}
+      aria-describedby={anchorUnavailable ? `${bodyId} ${statusId}` : bodyId}
       data-testid='tour-card'
-      onKeyDown={handleKeyDown}
+      data-tour-layout={layoutMode}
+      data-tour-step={`${stepIndex + 1}/${totalSteps}`}
       className={cn(
-        'fixed w-100 max-w-[calc(100vw-1rem)] max-h-[calc(100vh-1rem)] overflow-y-auto',
-        'flex flex-col gap-3 px-5 pt-4 pb-3',
-        'border rounded-xl shadow-lg outline-hidden',
+        'fixed max-h-[calc(100vh-1rem)] overflow-y-auto',
+        'flex flex-col gap-3 px-5 pt-4',
+        'border shadow-lg outline-hidden',
         'bg-popover text-popover-foreground',
-        'transition-[left,top] duration-300 ease-in-out',
+        'transition-[left,top] duration-500 ease-in-out motion-reduce:duration-1000',
+        isBottomSheet
+          ? 'inset-x-0 w-full max-w-none rounded-t-2xl rounded-b-none pb-[max(0.75rem,env(safe-area-inset-bottom))] max-h-[min(70dvh,calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-1rem))]'
+          : 'w-100 max-w-[calc(100vw-1rem)] rounded-xl pb-3',
         className
       )}
       style={style}
     >
+      <div aria-live='polite' aria-atomic='true' className='sr-only'>
+        {progressLabel}
+      </div>
+
       <div className='flex flex-col gap-2'>
-        <strong className='text-base leading-tight'>{title}</strong>
-        <div className='text-sm leading-relaxed'>{body}</div>
+        <strong id={titleId} className='text-base leading-tight'>
+          {title}
+        </strong>
+        <div id={bodyId} className='text-sm leading-relaxed'>
+          {body}
+        </div>
+        {anchorUnavailable ? (
+          <p id={statusId} className='text-sm text-warning' data-testid='tour-anchor-unavailable'>
+            {tx('tx.onboarding.anchor.unavailable')}
+          </p>
+        ) : null}
         {onExplore ? (
           <TextButton
             text={tx('tx.general.details')}
@@ -152,37 +184,38 @@ export function TourCard({
         ) : null}
       </div>
 
-      <StepDots
-        stepIndex={stepIndex}
-        totalSteps={totalSteps}
-        label={tx('tx.onboarding.progress', { current: stepIndex + 1, total: totalSteps })}
-      />
+      <StepDots stepIndex={stepIndex} totalSteps={totalSteps} label={progressLabel} />
 
-      <div className='flex items-center gap-2 pt-1 border-t border-border/60 text-sm'>
-        {!isLast ? (
-          <TextButton
-            text={tx('tx.onboarding.skip')}
-            className='mr-auto text-muted-foreground hover:text-foreground'
-            onClick={onSkip}
+      <div className='flex flex-wrap items-center justify-between gap-x-3 gap-y-2 text-sm'>
+        <div className='flex flex-wrap items-center gap-x-3 gap-y-1'>
+          {!isLast ? (
+            <TextButton
+              tabIndex={1}
+              text={tx('tx.onboarding.skipTour')}
+              title={tx('tx.onboarding.skipTour')}
+              className='text-muted-foreground hover:text-foreground'
+              onClick={onSkip}
+            />
+          ) : null}
+        </div>
+        <div className='flex items-center gap-3 ml-auto'>
+          {canGoBack ? <Button text={tx('tx.general.goBack')} onClick={onBack} /> : null}
+          {anchorUnavailable && onRetryAnchor ? (
+            <Button text={tx('tx.onboarding.anchor.retry')} onClick={onRetryAnchor} />
+          ) : null}
+          <Button
+            data-tour-primary-action
+            text={
+              isFirst && !canGoBack
+                ? tx('tx.onboarding.start')
+                : isLast
+                  ? tx('tx.onboarding.done')
+                  : tx('tx.onboarding.next')
+            }
+            onClick={onNext}
+            colorSubmit
           />
-        ) : (
-          <div className='mr-auto' />
-        )}
-        {canGoBack ? (
-          <Button text={tx('tx.general.goBack')} className='px-4 py-1.5 rounded-lg' onClick={onBack} />
-        ) : null}
-        <Button
-          text={
-            isFirst && !canGoBack
-              ? tx('tx.onboarding.start')
-              : isLast
-                ? tx('tx.onboarding.done')
-                : tx('tx.onboarding.next')
-          }
-          className='px-5 py-1.5 rounded-lg whitespace-nowrap'
-          onClick={onNext}
-          colorSubmit
-        />
+        </div>
       </div>
     </div>
   );
@@ -197,12 +230,17 @@ interface StepDotsProps {
 
 function StepDots({ stepIndex, totalSteps, label }: StepDotsProps) {
   return (
-    <div className='flex items-center justify-center gap-1.5 py-0.5' role='img' aria-label={label} title={label}>
+    <div
+      className='flex items-center justify-center gap-1.5 py-0.5'
+      aria-hidden='true'
+      title={label}
+      data-testid='tour-step-dots'
+    >
       {Array.from({ length: totalSteps }, (_, index) => (
         <span
           key={index}
           className={cn(
-            'h-2 rounded-full transition-all duration-300',
+            'h-2 rounded-full transition-all duration-500 motion-reduce:duration-1000',
             index === stepIndex ? 'w-5 bg-primary' : 'w-2 bg-muted-foreground/30',
             index < stepIndex && 'bg-primary/40'
           )}

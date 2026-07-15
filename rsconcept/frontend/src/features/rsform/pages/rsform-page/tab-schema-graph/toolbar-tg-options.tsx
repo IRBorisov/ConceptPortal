@@ -91,6 +91,7 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
         disabled={!!focusCst}
       />
       <MiniButton
+        data-tour='graph-toggle-labels'
         title={prepareTooltip(textToggleTitle, 'T')}
         icon={<IconEnableText value={!filter.noText} size='1.25rem' />}
         onClick={handleToggleText}

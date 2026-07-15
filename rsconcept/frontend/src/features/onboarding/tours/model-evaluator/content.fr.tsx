@@ -11,9 +11,9 @@ export const modelEvaluatorContentFr: Record<string, TourStepContent> = {
     title: 'Évaluation',
     body: (
       <p>
-        L&apos;onglet <TourHelpLink text='évaluation' topic={HelpTopic.UI_MODEL_EVALUATOR} /> vérifie et calcule des
-        expressions arbitraires dans le modèle courant sans modifier les constituantes ni leurs interprétations —
-        utile pour déboguer des formules et inspecter des résultats intermédiaires.
+        L&apos;onglet <TourHelpLink text='Évaluation' topic={HelpTopic.UI_MODEL_EVALUATOR} /> vérifie et calcule des
+        expressions RSLang arbitraires sur les données du modèle, sans modifier les constituantes ni leurs
+        interprétations.
       </p>
     )
   },
@@ -21,9 +21,9 @@ export const modelEvaluatorContentFr: Record<string, TourStepContent> = {
     title: 'Cache et recalcul',
     body: (
       <p>
-        <IconEvaluatorCache value={true} className='inline-icon' /> active ou désactive le cache d&apos;évaluation ;{' '}
+        <IconEvaluatorCache value={true} className='inline-icon' /> active ou désactive le cache de calcul ;{' '}
         <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) recalcule tout le modèle pour que
-        les expressions ad hoc voient des valeurs à jour.
+        les expressions voient des valeurs à jour.
       </p>
     )
   },
@@ -32,13 +32,13 @@ export const modelEvaluatorContentFr: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Saisissez une expression, puis cliquez sur le bouton de <IconStatusUnknown className='inline-icon' />{' '}
-          <TourHelpLink text='statut' topic={HelpTopic.UI_EVAL_STATUS} /> pour calculer. La typification, les erreurs
-          et la valeur apparaissent en dessous.
+          Saisissez une expression et cliquez sur <IconStatusUnknown className='inline-icon' />{' '}
+          <TourHelpLink text='statut' topic={HelpTopic.UI_EVAL_STATUS} /> pour calculer. Typification, erreurs et valeur
+          apparaissent en dessous.
         </p>
         <p>
-          Ouvrez le résultat dans le visualiseur de valeurs <IconDatabase className='inline-icon' /> pour une
-          inspection structurée.
+          Ouvrez le résultat dans la <IconDatabase className='inline-icon' /> visionneuse de valeurs pour une analyse
+          structurée.
         </p>
       </div>
     )

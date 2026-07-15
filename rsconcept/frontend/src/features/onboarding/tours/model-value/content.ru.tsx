@@ -17,9 +17,9 @@ export const modelValueContentRu: Record<string, TourStepContent> = {
     title: 'Данные модели',
     body: (
       <p>
-        На вкладке <TourHelpLink text='данные модели' topic={HelpTopic.UI_MODEL_VALUE} /> задаются конкретные значения
-        базисных множеств и других интерпретируемых конституент. Схема задаёт структуру, модель заполняет её из
-        предметной области.
+        На вкладке <TourHelpLink text='данные модели' topic={HelpTopic.UI_MODEL_VALUE} /> задают и просматривают
+        значения конституент. Неопределяемым понятиям задают интерпретацию (для базисных множеств — элементы предметной
+        области); производные вычисляются по определениям.
       </p>
     )
   },
@@ -43,12 +43,12 @@ export const modelValueContentRu: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Кнопка <IconStatusUnknown className='inline-icon' /> статуса запускает вычисление; диалог значения удобен для
-          структурированного редактирования. Для базисных множеств{' '}
+          Кнопка <IconStatusUnknown className='inline-icon' /> статуса запускает вычисление. Для базисных множеств{' '}
           <TourHelpLink text='диалог привязки' topic={HelpTopic.UI_MODEL_BINDING} /> задаёт элементы предметной области.
         </p>
         <p>
-          Также см. <TourHelpLink text='редактирование значений' topic={HelpTopic.UI_MODEL_VALUE_EDIT} />.
+          Подробнее о форматах значений — в руководстве{' '}
+          <TourHelpLink text='редактирование значений' topic={HelpTopic.UI_MODEL_VALUE_EDIT} />.
         </p>
       </div>
     )

@@ -23,12 +23,22 @@ export const defaultTourProgress: TourProgress = {
   resumeStep: 0
 };
 
-/** Indicates whether the tour should be offered on first visit. */
+/**
+ * Indicates whether the tour should be auto-offered (invitation) on a matching route.
+ * Explicit `skipped` stays opted out across version bumps; `done` may be re-offered after a bump.
+ * Manual restart via BadgeHelp/menu is independent of this check.
+ */
 export function shouldOfferTour(progress: TourProgress | undefined, tourVersion: number): boolean {
   if (!progress) {
     return true;
   }
-  return progress.status === 'pending' || progress.seenVersion < tourVersion;
+  if (progress.status === 'skipped') {
+    return false;
+  }
+  if (progress.status === 'pending') {
+    return true;
+  }
+  return progress.seenVersion < tourVersion;
 }
 
 interface OnboardingStore {
@@ -45,11 +55,23 @@ interface OnboardingStore {
    */
   tourStack: TourStackFrame[];
 
-  /** Tours dismissed via Escape in this session; prevents immediate auto-restart. Not persisted. */
+  /**
+   * Tours declined or Escape-dismissed in this session; suppresses auto-offer invitation.
+   * Not persisted — "Not now" never marks the tour skipped.
+   */
   sessionDismissed: Record<string, boolean>;
+
+  /**
+   * Innermost tour paused by leaving its route (e.g. help link → manuals).
+   * Session-only — returning to a matching route re-offers Resume even when `autoStart` is false.
+   */
+  resumeOfferTourID: string | null;
 
   startTour: (tourID: string, fromStep?: number) => void;
   setActiveStep: (index: number) => void;
+
+  /** Session-only decline of an auto-start invitation; does not change persisted progress. */
+  declineTourOffer: (tourID: string) => void;
 
   /** Dive into a nested tour from the current step; parent resumes at that step when the subtour ends. */
   enterSubtour: (tourID: string) => void;
@@ -104,7 +126,8 @@ export const useOnboardingStore = create<OnboardingStore>()(
             tours: nextTours,
             tourStack: tourStack.slice(0, -1),
             activeTourID: frame.tourID,
-            activeStep: frame.returnStep
+            activeStep: frame.returnStep,
+            resumeOfferTourID: null
           });
           return;
         }
@@ -112,7 +135,8 @@ export const useOnboardingStore = create<OnboardingStore>()(
           activeTourID: null,
           activeStep: 0,
           tourStack: [],
-          tours: nextTours
+          tours: nextTours,
+          resumeOfferTourID: null
         });
       }
 
@@ -122,15 +146,24 @@ export const useOnboardingStore = create<OnboardingStore>()(
         activeStep: 0,
         tourStack: [],
         sessionDismissed: {},
+        resumeOfferTourID: null,
 
         startTour: (tourID, fromStep = 0) =>
           set({
             activeTourID: tourID,
             activeStep: Math.max(0, fromStep),
-            tourStack: []
+            tourStack: [],
+            sessionDismissed: { ...get().sessionDismissed, [tourID]: false },
+            resumeOfferTourID: null
           }),
 
         setActiveStep: index => set({ activeStep: Math.max(0, index) }),
+
+        declineTourOffer: tourID =>
+          set(state => ({
+            sessionDismissed: { ...state.sessionDismissed, [tourID]: true },
+            resumeOfferTourID: state.resumeOfferTourID === tourID ? null : state.resumeOfferTourID
+          })),
 
         enterSubtour: tourID => {
           const { activeTourID, activeStep, tours, tourStack, sessionDismissed } = get();
@@ -203,7 +236,8 @@ export const useOnboardingStore = create<OnboardingStore>()(
             activeTourID: null,
             activeStep: 0,
             tourStack: [],
-            tours: nextTours
+            tours: nextTours,
+            resumeOfferTourID: activeTourID
           });
         },
 
@@ -224,7 +258,8 @@ export const useOnboardingStore = create<OnboardingStore>()(
               ...state.tours,
               [tourID]: { ...defaultTourProgress }
             },
-            sessionDismissed: { ...state.sessionDismissed, [tourID]: false }
+            sessionDismissed: { ...state.sessionDismissed, [tourID]: false },
+            resumeOfferTourID: null
           }))
       };
     },

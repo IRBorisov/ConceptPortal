@@ -19,61 +19,65 @@ export const constituentsListContentFr: Record<string, TourStepContent> = {
     title: 'Liste des constituantes',
     body: (
       <p>
-        Les constituantes sont les éléments de base d&apos;un schéma : ensembles de base, termes, définitions et
-        axiomes. L&apos;onglet <TourHelpLink text='liste' topic={HelpTopic.UI_MODEL_LIST} /> les regroupe dans un seul
-        tableau — avec le statut d&apos;évaluation lorsqu&apos;un modèle est attaché.
+        Les constituantes sont les parties d&apos;un schéma conceptuel : concepts non définis, termes, fonctions,
+        axiomes, énoncés, etc. L&apos;onglet <TourHelpLink text='liste' topic={HelpTopic.UI_MODEL_LIST} /> les regroupe
+        en tableau ; si un modèle est ouvert — aussi le statut d&apos;évaluation.
       </p>
     )
   },
   filter: {
     title: 'Recherche',
     body: (
-      <p>
-        Le champ <IconSearch className='inline-icon' /> de recherche trouve les constituantes par alias, terme ou texte
-        de définition. Voir le manuel de la{' '}
-        <TourHelpLink text='liste des constituantes' topic={HelpTopic.UI_SCHEMA_LIST} />.
-      </p>
+      <div className='flex flex-col gap-2'>
+        <p>
+          Essayez : saisissez du texte dans le champ <IconSearch className='inline-icon' />. La liste se filtre par nom,
+          terme, définitions et convention. Appuyez sur Entrée ou quittez le champ — le guide continue.
+        </p>
+        <p>
+          Plus de détails dans le manuel de la{' '}
+          <TourHelpLink text='liste des constituantes' topic={HelpTopic.UI_SCHEMA_LIST} />.
+        </p>
+      </div>
     )
   },
   selection: {
     title: 'Compteur de sélection',
     body: (
       <p>
-        Le compteur à gauche indique combien de constituantes sont sélectionnées sur le total. Cliquez sur une ligne
-        pour sélectionner ; <kbd>Esc</kbd> efface la sélection.
+        Le compteur à gauche indique le nombre de constituantes sélectionnées sur le total. Cliquez une ligne pour
+        sélectionner ; <kbd>Esc</kbd> efface la sélection.
       </p>
     )
   },
   toolbar: {
-    title: "Barre d'outils",
+    title: 'Barre d’outils de la liste',
     body: (
       <div className='flex flex-col gap-2'>
         <p>
           <IconNewItem className='inline-icon icon-green' /> créer, <IconClone className='inline-icon icon-green' />{' '}
           cloner et <IconDestroy className='inline-icon icon-red' /> supprimer la sélection.{' '}
-          <IconMoveUp className='inline-icon' /> / <IconMoveDown className='inline-icon' /> réordonnent ;{' '}
+          <IconMoveUp className='inline-icon' /> / <IconMoveDown className='inline-icon' /> changent l&apos;ordre ;{' '}
           <IconCrucial className='inline-icon' /> marque les constituantes cruciales.
         </p>
         <p>
-          Sur un modèle, <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) recalcule toutes
-          les valeurs.
+          Si un modèle est ouvert, <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>)
+          recalcule toutes les valeurs.
         </p>
       </div>
     )
   },
   interact: {
-    title: 'Interactions du tableau',
+    title: 'Travail avec le tableau',
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          <kbd>Shift</kbd>+clic étend la sélection. Un double-clic ou un clic avec <kbd>Alt</kbd> ouvre la constituante
-          dans l&apos;
+          <kbd>Shift</kbd>+clic étend la sélection. Double-clic ou clic avec <kbd>Alt</kbd> ouvre la constituante dans
+          l&apos;
           <TourHelpLink text='éditeur' topic={HelpTopic.UI_SCHEMA_EDITOR} />.
         </p>
         <p>
-          Faites glisser les lignes pour modifier l&apos;ordre dans le schéma. Le réordonnancement est désactivé tant
-          qu&apos;une recherche est active — effacez le champ de recherche d&apos;abord si vous devez déplacer des
-          éléments.
+          Faites glisser les lignes pour changer l&apos;ordre. Le réordonnancement est désactivé tant que la recherche
+          est active — videz d&apos;abord le champ.
         </p>
       </div>
     )

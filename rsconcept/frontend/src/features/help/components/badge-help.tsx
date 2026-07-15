@@ -1,15 +1,19 @@
 'use client';
 
 import React, { Suspense } from 'react';
+import { toast } from 'react-toastify';
 
+import { globalTx } from '@/i18n/format-app-message';
 import { useTx } from '@/i18n/use-tx';
 
+import { emitOnboardingEvent } from '@/features/onboarding/models/events';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding';
 import { ensureTourLoaded } from '@/features/onboarding/tours';
 
 import { type PlacesType, Tooltip } from '@/components/container';
 import { MiniButton, TextURL } from '@/components/control';
-import { IconHelp } from '@/components/icons';
+import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
+import { IconHelp, IconTour } from '@/components/icons';
 import { Loader } from '@/components/loader';
 import { type Styling } from '@/components/props';
 import { cn } from '@/components/utils';
@@ -26,8 +30,8 @@ interface BadgeHelpProps extends Styling {
   topic: HelpTopic;
 
   /**
-   * Optional onboarding tour started by clicking the icon or the tooltip Guide link.
-   * When set, the help icon is a button and Guide appears beside Manuals.
+   * Optional onboarding tour. When set, click opens Quick guide / Read manual.
+   * Without a tour, click opens the manual page.
    */
   tourID?: string;
 
@@ -48,8 +52,10 @@ interface BadgeHelpProps extends Styling {
 }
 
 /**
- * Display help icon with a manual page tooltip.
- * Optionally starts an onboarding tour on icon click or via a tooltip link.
+ * Help button with optional tour entry.
+ * Shows `IconTour` when `tourID` is set, otherwise `IconHelp`.
+ * Hover shows the manual preview when inline help is on.
+ * Click: dropdown (tour + manual) when a tour is wired; otherwise open the manuals page.
  */
 export function BadgeHelp({
   topic,
@@ -64,87 +70,157 @@ export function BadgeHelp({
   const showHelp = usePreferencesStore(state => state.showHelp);
   const restartTour = useOnboardingStore(state => state.restartTour);
   const tx = useTx();
+  const { elementRef, isOpen, handleBlur, toggle, hide } = useDropdown();
 
-  if (!showHelp) {
+  const hasTour = Boolean(tourID);
+  if (!showHelp && !hasTour) {
     return null;
   }
 
-  function startTour(event?: React.SyntheticEvent) {
+  const showManualTooltip = showHelp && !isOpen;
+  const manualHref = `/manuals?topic=${topic}`;
+  const anchorId = `help-${topic}`;
+  const menuId = `${anchorId}-menu`;
+  const buttonLabel = hasTour ? tx('tx.help.menu.hint') : tx('tx.general.help.hint');
+
+  function handleStartTour(event?: React.SyntheticEvent) {
     if (!tourID) {
       return;
     }
     event?.preventDefault();
     event?.stopPropagation();
-    void ensureTourLoaded(tourID).then(function startLoadedTour(tour) {
-      if (!tour) {
-        console.warn(`Tour "${tourID}" is not registered`);
-        return;
-      }
-      restartTour(tourID);
-    });
+    hide();
+    void startHelpTour(tourID, restartTour);
+  }
+
+  function handleOpenManual(event?: React.SyntheticEvent) {
+    event?.preventDefault();
+    event?.stopPropagation();
+    hide();
+    window.location.assign(manualHref);
+  }
+
+  function handleHelpActivate(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (hasTour) {
+      toggle();
+      return;
+    }
+    window.location.assign(manualHref);
   }
 
   return (
     <div
+      ref={elementRef}
       tabIndex={-1}
-      id={`help-${topic}`}
-      className={cn('inline-flex items-center justify-center leading-none', padding, className)}
+      onBlur={hasTour ? handleBlur : undefined}
+      id={anchorId}
+      className={cn('relative inline-flex items-center justify-center leading-none', padding, className)}
       style={style}
     >
-      {tourID ? (
-        <MiniButton
-          noPadding
-          aria-label={tx('tx.onboarding.show')}
-          onClick={startTour}
-          icon={<IconHelp size={size} className='hover:text-primary' />}
-        />
-      ) : (
-        <IconHelp size={size} className='text-muted-foreground hover:text-primary cc-animate-color' />
-      )}
-      <Tooltip
-        delayShow={500}
-        clickable
-        anchorSelect={`#help-${topic}`}
-        layer='z-topmost'
-        className={cn('max-w-120', contentClass)}
-        {...restProps}
-      >
-        <Suspense
-          fallback={
-            <div className={cn('w-full min-w-80', contentClass)}>
-              <Loader />
-            </div>
-          }
+      <MiniButton
+        noPadding
+        tabIndex={0}
+        title={buttonLabel}
+        hideTitle
+        aria-haspopup={hasTour ? 'menu' : undefined}
+        aria-expanded={hasTour ? isOpen : undefined}
+        aria-controls={hasTour ? menuId : undefined}
+        onClick={handleHelpActivate}
+        icon={
+          hasTour ? (
+            <IconTour size={size} className='hover:text-primary' />
+          ) : (
+            <IconHelp size={size} className='hover:text-primary' />
+          )
+        }
+      />
+      {hasTour ? (
+        <Dropdown id={menuId} isOpen={isOpen} margin='mt-1'>
+          <DropdownButton
+            text={tx('tx.help.quickGuide')}
+            icon={<IconTour size='1rem' className='icon-primary' />}
+            onClick={handleStartTour}
+          />
+          <DropdownButton
+            text={tx('tx.help.readManual')}
+            icon={<IconHelp size='1rem' className='text-muted-foreground' />}
+            onClick={handleOpenManual}
+          />
+        </Dropdown>
+      ) : null}
+      {showManualTooltip ? (
+        <Tooltip
+          delayShow={500}
+          clickable
+          anchorSelect={`#${anchorId}`}
+          layer='z-topmost'
+          className={cn('max-w-120', contentClass)}
+          {...restProps}
         >
-          <div className='cc-fade-in relative'>
-            <div
-              className='absolute right-2 top-1 z-1 flex items-center gap-1.5 text-sm whitespace-nowrap'
-              onClick={event => event.stopPropagation()}
-            >
-              {tourID ? (
-                <>
-                  <TextURL
-                    text={tx('tx.onboarding.guide')}
-                    title={tx('tx.onboarding.show.hint')}
-                    onClick={() => startTour()}
-                  />
-                  <span className='text-muted-foreground/40 select-none' aria-hidden>
-                    ·
-                  </span>
-                </>
-              ) : null}
-              <TextURL
-                text={tx('tx.general.help')}
-                title={tx('tx.general.help.hint')}
-                href={`/manuals?topic=${topic}`}
-              />
+          <Suspense
+            fallback={
+              <div className={cn('w-full min-w-80', contentClass)}>
+                <Loader />
+              </div>
+            }
+          >
+            <div className='cc-fade-in relative'>
+              <div
+                className='absolute right-2 top-1 z-1 flex items-center gap-1.5 text-sm whitespace-nowrap'
+                onClick={event => event.stopPropagation()}
+              >
+                {hasTour ? (
+                  <>
+                    <TextURL
+                      text={tx('tx.help.quickGuide')}
+                      title={tx('tx.onboarding.show.hint')}
+                      onClick={() => handleStartTour()}
+                    />
+                    <span className='text-muted-foreground/40 select-none' aria-hidden>
+                      ·
+                    </span>
+                  </>
+                ) : null}
+                <TextURL text={tx('tx.general.help')} title={tx('tx.general.help.hint')} href={manualHref} />
+              </div>
+              <div className={hasTour ? '[&_h1]:pr-28' : '[&_h1]:pr-20'}>
+                <TopicPage topic={topic} popover />
+              </div>
             </div>
-            <div className={tourID ? '[&_h1]:pr-28' : '[&_h1]:pr-20'}>
-              <TopicPage topic={topic} popover />
-            </div>
-          </div>
-        </Suspense>
-      </Tooltip>
+          </Suspense>
+        </Tooltip>
+      ) : null}
     </div>
   );
+}
+
+async function startHelpTour(tourID: string, restartTour: (id: string) => void) {
+  const tour = await ensureTourLoaded(tourID);
+  const locale = usePreferencesStore.getState().locale;
+  const route = typeof window === 'undefined' ? '' : window.location.pathname;
+  if (!tour) {
+    toast.error(globalTx('tx.onboarding.load.fail'));
+    emitOnboardingEvent({
+      name: 'load_failed',
+      tourId: tourID,
+      tourVersion: 0,
+      locale,
+      route,
+      source: 'manual'
+    });
+    return;
+  }
+  restartTour(tourID);
+  emitOnboardingEvent({
+    name: 'tour_restarted',
+    tourId: tour.id,
+    tourVersion: tour.version,
+    stepCount: tour.steps.length,
+    stepIndex: 0,
+    locale,
+    route,
+    source: 'manual'
+  });
 }

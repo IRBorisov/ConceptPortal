@@ -34,7 +34,8 @@ function resetStore() {
     activeTourID: null,
     activeStep: 0,
     tourStack: [],
-    sessionDismissed: {}
+    sessionDismissed: {},
+    resumeOfferTourID: null
   });
   storage.clear();
 }
@@ -49,20 +50,22 @@ describe('shouldOfferTour', () => {
     expect(shouldOfferTour(progress, TOUR_VERSION)).toBe(true);
   });
 
-  test('does not offer done/skipped when seenVersion meets tour version', () => {
+  test('does not offer done when seenVersion meets tour version', () => {
     const done: TourProgress = { status: 'done', seenVersion: TOUR_VERSION, resumeStep: 0 };
-    const skipped: TourProgress = { status: 'skipped', seenVersion: TOUR_VERSION, resumeStep: 0 };
-
     expect(shouldOfferTour(done, TOUR_VERSION)).toBe(false);
-    expect(shouldOfferTour(skipped, TOUR_VERSION)).toBe(false);
   });
 
-  test('re-offers done/skipped after a version bump', () => {
-    const done: TourProgress = { status: 'done', seenVersion: 1, resumeStep: 0 };
-    const skipped: TourProgress = { status: 'skipped', seenVersion: 1, resumeStep: 0 };
+  test('never auto-offers skipped tours, even after a version bump', () => {
+    const skippedCurrent: TourProgress = { status: 'skipped', seenVersion: TOUR_VERSION, resumeStep: 0 };
+    const skippedOlder: TourProgress = { status: 'skipped', seenVersion: 1, resumeStep: 0 };
 
+    expect(shouldOfferTour(skippedCurrent, TOUR_VERSION)).toBe(false);
+    expect(shouldOfferTour(skippedOlder, TOUR_VERSION)).toBe(false);
+  });
+
+  test('re-offers completed tours after a version bump', () => {
+    const done: TourProgress = { status: 'done', seenVersion: 1, resumeStep: 0 };
     expect(shouldOfferTour(done, TOUR_VERSION)).toBe(true);
-    expect(shouldOfferTour(skipped, TOUR_VERSION)).toBe(true);
   });
 });
 
@@ -86,6 +89,26 @@ describe('useOnboardingStore', () => {
     expect(useOnboardingStore.getState().activeStep).toBe(0);
   });
 
+  test('declineTourOffer only sets sessionDismissed without changing progress', () => {
+    useOnboardingStore.setState({
+      tours: { [TOUR_ID]: { status: 'pending', seenVersion: 0, resumeStep: 2 } }
+    });
+
+    useOnboardingStore.getState().declineTourOffer(TOUR_ID);
+
+    const state = useOnboardingStore.getState();
+    expect(state.sessionDismissed[TOUR_ID]).toBe(true);
+    expect(state.tours[TOUR_ID]).toEqual({ status: 'pending', seenVersion: 0, resumeStep: 2 });
+    expect(state.activeTourID).toBeNull();
+  });
+
+  test('startTour clears a prior session dismissal for that tour', () => {
+    useOnboardingStore.setState({ sessionDismissed: { [TOUR_ID]: true } });
+    useOnboardingStore.getState().startTour(TOUR_ID, 1);
+
+    expect(useOnboardingStore.getState().sessionDismissed[TOUR_ID]).toBe(false);
+  });
+
   test('dismissActiveTour saves resume point, keeps pending, and sets sessionDismissed', () => {
     useOnboardingStore.getState().startTour(TOUR_ID, 4);
     useOnboardingStore.getState().dismissActiveTour();
@@ -103,7 +126,22 @@ describe('useOnboardingStore', () => {
     const state = useOnboardingStore.getState();
     expect(state.activeTourID).toBeNull();
     expect(state.tours[TOUR_ID]).toEqual({ ...defaultTourProgress, resumeStep: 4 });
-    expect(state.sessionDismissed[TOUR_ID]).toBeUndefined();
+    expect(state.sessionDismissed[TOUR_ID]).not.toBe(true);
+    expect(state.resumeOfferTourID).toBe(TOUR_ID);
+  });
+
+  test('startTour and declineTourOffer clear a pending resume offer', () => {
+    useOnboardingStore.getState().startTour(TOUR_ID, 2);
+    useOnboardingStore.getState().pauseActiveTour();
+    expect(useOnboardingStore.getState().resumeOfferTourID).toBe(TOUR_ID);
+
+    useOnboardingStore.getState().declineTourOffer(TOUR_ID);
+    expect(useOnboardingStore.getState().resumeOfferTourID).toBeNull();
+
+    useOnboardingStore.getState().startTour(TOUR_ID, 2);
+    useOnboardingStore.getState().pauseActiveTour();
+    useOnboardingStore.getState().startTour(TOUR_ID, 2);
+    expect(useOnboardingStore.getState().resumeOfferTourID).toBeNull();
   });
 
   test('dismissActiveTour is a no-op without an active tour', () => {
@@ -223,5 +261,6 @@ describe('useOnboardingStore', () => {
     expect(state.tourStack).toEqual([]);
     expect(state.tours[TOUR_ID]).toEqual({ ...defaultTourProgress, resumeStep: 2 });
     expect(state.tours[SUBTOUR_ID]).toEqual({ ...defaultTourProgress, resumeStep: 1 });
+    expect(state.resumeOfferTourID).toBe(SUBTOUR_ID);
   });
 });

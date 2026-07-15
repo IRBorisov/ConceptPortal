@@ -11,9 +11,8 @@ export const modelEvaluatorContentEn: Record<string, TourStepContent> = {
     title: 'Evaluation',
     body: (
       <p>
-        The <TourHelpLink text='evaluation' topic={HelpTopic.UI_MODEL_EVALUATOR} /> tab checks and computes arbitrary
-        expressions in the current model without modifying constituents or their interpretations — useful for debugging
-        formulas and inspecting intermediate results.
+        The <TourHelpLink text='Evaluation' topic={HelpTopic.UI_MODEL_EVALUATOR} /> tab checks and evaluates arbitrary
+        RSLang expressions against the current model data without changing constituents or their interpretations.
       </p>
     )
   },
@@ -23,7 +22,7 @@ export const modelEvaluatorContentEn: Record<string, TourStepContent> = {
       <p>
         <IconEvaluatorCache value={true} className='inline-icon' /> toggles the evaluation cache;{' '}
         <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) recalculates the whole model so
-        ad-hoc expressions see up-to-date values.
+        expressions see up-to-date values.
       </p>
     )
   },
@@ -32,12 +31,12 @@ export const modelEvaluatorContentEn: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Enter an expression, then click the <IconStatusUnknown className='inline-icon' />{' '}
-          <TourHelpLink text='status' topic={HelpTopic.UI_EVAL_STATUS} /> button to compute. Typification, errors, and
+          Enter an expression and click the <IconStatusUnknown className='inline-icon' />{' '}
+          <TourHelpLink text='status' topic={HelpTopic.UI_EVAL_STATUS} /> button to evaluate. Typification, errors, and
           the value appear below.
         </p>
         <p>
-          Open the result in the <IconDatabase className='inline-icon' /> value viewer for structured inspection.
+          Open the result in the <IconDatabase className='inline-icon' /> value viewer for a structured breakdown.
         </p>
       </div>
     )

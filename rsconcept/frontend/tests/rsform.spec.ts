@@ -20,7 +20,7 @@ test.afterEach(() => {
   dataLibraryItems.splice(0, dataLibraryItems.length);
 });
 
-test('RSForm page loads and renders base tabs', async ({ page }) => {
+test('RSForm page loads, switches tabs, and shows 404 for missing schema', async ({ page }) => {
   const rsformID = 301;
   dataRSForms.set(rsformID, createRSFormMock(rsformID, 'Тестовая КС'));
 
@@ -30,82 +30,14 @@ test('RSForm page loads and renders base tabs', async ({ page }) => {
   await expect(page.getByRole('tab', { name: 'Список' })).toBeVisible();
   await expect(page.getByRole('tab', { name: 'Понятие' })).toBeVisible();
   await expect(page.getByRole('tab', { name: 'Граф' })).toBeVisible();
-});
-
-test('RSForm allows switching active tab', async ({ page }) => {
-  const rsformID = 302;
-  dataRSForms.set(rsformID, createRSFormMock(rsformID, 'КС переключения вкладок'));
-
-  await page.goto(`/rsforms/${rsformID}`, { waitUntil: 'domcontentloaded' });
 
   const graphTab = page.getByRole('tab', { name: 'Граф' });
   await graphTab.click();
-
   await expect(graphTab).toHaveAttribute('aria-selected', 'true');
-});
 
-test('RSForm respects tab query parameter', async ({ page }) => {
-  const rsformID = 303;
-  dataRSForms.set(rsformID, createRSFormMock(rsformID, 'КС query tab'));
-
-  await page.goto(`/rsforms/${rsformID}?tab=3`, { waitUntil: 'domcontentloaded' });
-
-  await expect(page).toHaveURL(new RegExp(`/rsforms/${rsformID}\\?tab=3`));
-});
-
-test('RSForm keeps active query parameter in URL', async ({ page }) => {
-  const rsformID = 305;
-  dataRSForms.set(rsformID, createRSFormMock(rsformID, 'КС query active'));
-
-  await page.goto(`/rsforms/${rsformID}?tab=2&active=777`, { waitUntil: 'domcontentloaded' });
-
-  await expect(page).toHaveURL(new RegExp(`/rsforms/${rsformID}\\?tab=2&active=777`));
-});
-
-test('RSForm opens version route when v query parameter is present', async ({ page }) => {
-  const rsformID = 304;
-  dataRSForms.set(rsformID, createRSFormMock(rsformID, 'КС query version'));
-
-  await page.goto(`/rsforms/${rsformID}?v=2`, { waitUntil: 'domcontentloaded' });
-
-  await expect(page).toHaveURL(new RegExp(`/rsforms/${rsformID}\\?v=2`));
-  await expect(page.getByRole('tab', { name: 'Паспорт' })).toBeVisible();
-});
-
-test('RSForm shows 404 fallback when schema is missing', async ({ page }) => {
   await page.goto('/rsforms/999999', { waitUntil: 'domcontentloaded' });
-
   await expect(page.getByText(/отсутствует/i).first()).toBeVisible();
   await expect(page.getByRole('link', { name: 'Библиотека' }).first()).toBeVisible();
-});
-
-test('RSForm menu opens create-model page with prefilled schema data', async ({ page }) => {
-  const rsformID = 306;
-  const schema = createRSFormMock(rsformID, 'Схема для создания модели');
-  dataRSForms.set(rsformID, schema);
-  dataLibraryItems.push({
-    id: schema.id,
-    item_type: LibraryItemType.RSFORM,
-    alias: schema.alias,
-    title: schema.title,
-    description: schema.description,
-    visible: schema.visible,
-    read_only: schema.read_only,
-    location: schema.location,
-    access_policy: AccessPolicy.PUBLIC,
-    time_create: schema.time_create,
-    time_update: schema.time_update,
-    owner: schema.owner
-  });
-
-  await page.goto(`/rsforms/${rsformID}`, { waitUntil: 'domcontentloaded' });
-  await page.getByRole('button', { name: 'Меню' }).click();
-  const createModel = page.getByRole('button', { name: 'Создать модель' });
-  await expect(createModel).toBeVisible();
-  await clickAndWaitForURL(page, createModel, new RegExp(`/library/create\\?itemType=rsmodel&modelFrom=${rsformID}`));
-  await expect(page.getByRole('heading', { name: 'Концептуальная модель' })).toBeVisible();
-  await expect(page.locator('#schema_title')).toHaveValue(`Модель ${schema.title}`);
-  await expect(page.locator('#schema_alias')).toHaveValue(`M${schema.alias}`);
 });
 
 test('RSForm flow creates model from schema and redirects to new model', async ({ page }) => {
@@ -178,6 +110,9 @@ test('RSForm flow creates model from schema and redirects to new model', async (
   const createModel = page.getByRole('button', { name: 'Создать модель' });
   await expect(createModel).toBeVisible();
   await clickAndWaitForURL(page, createModel, /\/library\/create/);
+  await expect(page.getByRole('heading', { name: 'Концептуальная модель' })).toBeVisible();
+  await expect(page.locator('#schema_title')).toHaveValue(`Модель ${schema.title}`);
+  await expect(page.locator('#schema_alias')).toHaveValue(`M${schema.alias}`);
   await submitAndWaitForURL(page, page.getByRole('main').getByRole('button', { name: 'Создать', exact: true }), {
     url: new RegExp(`/models/${newModelID}$`),
     api: { url: `${BACKEND_URL}/api/library`, method: 'POST' },

@@ -1,6 +1,14 @@
 import { HelpTopic } from '@/features/help';
 
-import { IconDownload, IconFilterReset, IconFolder, IconSearch, IconSortAsc, IconSubfolders } from '@/components/icons';
+import {
+  IconDownload,
+  IconFilterReset,
+  IconFolderEdit,
+  IconSearch,
+  IconSortAsc,
+  IconSubfolders,
+  IconText
+} from '@/components/icons';
 
 import { type TourStepContent } from '../../models/tour';
 import { TourHelpLink } from '../shared/tour-help-links';
@@ -12,7 +20,7 @@ export const libraryIntroContentFr: Record<string, TourStepContent> = {
       <div className='flex flex-col gap-2'>
         <p>
           La <TourHelpLink text='bibliothèque' topic={HelpTopic.UI_LIBRARY} /> permet de parcourir et d&apos;ouvrir les
-          schémas conceptuels, modèles et schémas de synthèse opérationnelle stockés dans le Portail.
+          schémas conceptuels, modèles et schémas de synthèse opérationnelle (OSS) stockés dans le Portail.
         </p>
         <p>Ce court tour présente les dossiers, la recherche et le tableau des éléments.</p>
       </div>
@@ -32,8 +40,9 @@ export const libraryIntroContentFr: Record<string, TourStepContent> = {
     title: 'Emplacement actuel',
     body: (
       <p>
-        Le fil d&apos;Ariane montre le chemin actif. Utilisez <IconFolder className='inline-icon' /> pour renommer (si
-        autorisé) et <IconSubfolders className='inline-icon' /> pour inclure ou masquer les éléments des sous-dossiers.
+        Le fil d&apos;Ariane montre le chemin actif. Utilisez <IconFolderEdit className='inline-icon' /> pour renommer
+        (si autorisé) et <IconSubfolders className='inline-icon' /> pour inclure ou masquer les éléments des
+        sous-dossiers.
       </p>
     )
   },
@@ -41,9 +50,10 @@ export const libraryIntroContentFr: Record<string, TourStepContent> = {
     title: 'Recherche et filtres',
     body: (
       <p>
-        Les puces de type restreignent la liste aux schémas, modèles ou OSS. Basculez entre recherche métadonnées
-        (titres, alias) et contexte (texte intégral) avec <IconSearch className='inline-icon' />, et filtrez
-        éventuellement par propriétaire. <IconFilterReset className='inline-icon' /> efface les filtres personnalisés.
+        Les puces de type restreignent la liste aux schémas, modèles ou OSS. Basculez Métadonnées (
+        <IconSearch className='inline-icon' />) et Recherche contextuelle (<IconText className='inline-icon' />) avec le
+        sélecteur de mode ; filtrez éventuellement par propriétaire. <IconFilterReset className='inline-icon' /> efface
+        les filtres personnalisés.
       </p>
     )
   },
