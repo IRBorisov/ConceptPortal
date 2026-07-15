@@ -11,6 +11,7 @@ import { getRelocateCandidates } from '@rsconcept/domain/library/oss-api';
 import { HelpTopic } from '@/features/help';
 import { useLibrary } from '@/features/library/backend/use-library';
 import { SelectLibraryItem } from '@/features/library/components/select-library-item';
+import { DialogTourID } from '@/features/onboarding/tours/editor-tours';
 import { useRSForm } from '@/features/rsform/backend/use-rsform';
 import { PickMultiConstituenta } from '@/features/rsform/components/pick-multi-constituenta';
 
@@ -24,7 +25,6 @@ import { useUpdateLayout } from '../backend/use-update-layout';
 import { IconRelocationUp } from '../components/icon-relocation-up';
 
 import { useOssDialogsStore } from './oss-dialog-store';
-
 
 export interface DlgRelocateConstituentsProps {
   ossID: number;
@@ -135,9 +135,13 @@ export function DlgRelocateConstituents() {
       }}
       className='w-160 h-132 py-3 px-6'
       helpTopic={HelpTopic.UI_RELOCATE_CST}
+      tourID={DialogTourID.RELOCATE_CST}
     >
       <div className='flex flex-col border'>
-        <div className='flex justify-between gap-1 items-center bg-input border-b rounded-t-md max-w-full'>
+        <div
+          data-tour='relocate-routing'
+          className='flex justify-between gap-1 items-center bg-input border-b rounded-t-md max-w-full'
+        >
           <SelectLibraryItem
             noBorder
             className='w-69'
@@ -162,14 +166,16 @@ export function DlgRelocateConstituents() {
         </div>
         <form.Field name='items'>
           {field => (
-            <PickMultiConstituenta
-              noBorder
-              schema={sourceData.schema}
-              items={filteredConstituents}
-              rows={12}
-              value={field.state.value ?? []}
-              onChange={field.handleChange}
-            />
+            <div data-tour='relocate-list'>
+              <PickMultiConstituenta
+                noBorder
+                schema={sourceData.schema}
+                items={filteredConstituents}
+                rows={12}
+                value={field.state.value ?? []}
+                onChange={field.handleChange}
+              />
+            </div>
           )}
         </form.Field>
       </div>

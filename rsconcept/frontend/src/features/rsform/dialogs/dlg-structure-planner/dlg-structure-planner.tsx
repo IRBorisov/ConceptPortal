@@ -11,6 +11,7 @@ import { type SPNode, StructurePlanner } from '@rsconcept/domain/library/structu
 
 import { useUnsavedChanges } from '@/app';
 import { HelpTopic } from '@/features/help';
+import { DialogTourID } from '@/features/onboarding/tours/editor-tours';
 
 import { MiniButton } from '@/components/control';
 import { IconNewItem, IconReset, IconSave } from '@/components/icons';
@@ -164,10 +165,14 @@ export function DlgStructurePlanner() {
       fullScreen
       noFooterButton
       helpTopic={HelpTopic.UI_STRUCTURE_PLANNER}
+      tourID={DialogTourID.STRUCTURE_PLANNER}
       onHide={() => void handleHide()}
     >
       <div className='relative flex flex-col h-full'>
-        <div className={clsx('z-modal-pop', 'absolute top-0 right-1/2 translate-x-1/2 mr-12', 'flex px-6 items-start')}>
+        <div
+          data-tour='structure-planner-panel'
+          className={clsx('z-modal-pop', 'absolute top-0 right-1/2 translate-x-1/2 mr-12', 'flex px-6 items-start')}
+        >
           <div
             className={clsx(
               'w-70 pt-5.5 pr-3 pl-2 pb-3.75',
@@ -238,12 +243,14 @@ export function DlgStructurePlanner() {
         </div>
 
         <ReactFlowProvider>
-          <StructureFlow
-            items={items}
-            rootType={target.effectiveType}
-            selected={selectedKey}
-            setSelected={key => void handleSelectNode(key)}
-          />
+          <div className='h-full w-full' data-tour='structure-planner-graph'>
+            <StructureFlow
+              items={items}
+              rootType={target.effectiveType}
+              selected={selectedKey}
+              setSelected={key => void handleSelectNode(key)}
+            />
+          </div>
         </ReactFlowProvider>
       </div>
     </ModalView>

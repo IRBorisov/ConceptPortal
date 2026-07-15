@@ -26,6 +26,8 @@ const TOUCH_GLOBAL_CLOSE_EVENTS = {
   clickOutsideAnchor: true
 } as const;
 
+const TOOLTIP_VIEWPORT_PADDING_PX = 8;
+
 export type { PlacesType } from 'react-tooltip';
 
 interface TooltipProps extends Omit<ITooltip, 'variant'> {
@@ -72,6 +74,10 @@ export function Tooltip({
   const darkMode = usePreferencesStore(state => state.darkMode);
 
   useEffect(() => {
+    ensureTooltipViewportGuard();
+  }, []);
+
+  useEffect(() => {
     if (!trackPointerForFloat) {
       return;
     }
@@ -106,6 +112,8 @@ export function Tooltip({
     if (instantWhenOpen) {
       setOpen(true);
     }
+    // Tall left/right placements can end up with top < 0; clamp after paint/Suspense resize.
+    scheduleTooltipViewportClamp();
     afterShow?.(...args);
   }
 
@@ -120,10 +128,11 @@ export function Tooltip({
   return createPortal(
     <TooltipImpl
       opacity={1}
+      positionStrategy='fixed'
       className={cn(
-        'relative rounded-lg!',
-        'max-h-[calc(100svh-6rem)]',
-        'overflow-y-auto overflow-x-hidden overscroll-contain',
+        // Scroll lives on `.react-tooltip-content-wrapper` (see overrides.css) so the
+        // abspos arrow does not participate in the scrollport / clip the first lines.
+        'rounded-lg! max-h-[calc(100svh-6rem)]',
         'border shadow-md',
         'text-left text-pretty whitespace-pre-line',
         !tooltipsEnabled && 'hidden',
@@ -134,7 +143,7 @@ export function Tooltip({
       variant={darkMode ? 'dark' : 'light'}
       place={place}
       delayShow={resolvedDelayShow}
-      afterShow={instantWhenOpen ? handleAfterShow : afterShow}
+      afterShow={handleAfterShow}
       afterHide={instantWhenOpen ? handleAfterHide : afterHide}
       float={resolvedFloat}
       position={resolvedPosition}
@@ -147,4 +156,69 @@ export function Tooltip({
     </TooltipImpl>,
     document.body
   );
+}
+
+/** Keep open tooltips inside the viewport and reset scroll to the true content start. */
+function clampVisibleTooltipsInViewport(options?: { resetScroll?: boolean }) {
+  const resetScroll = options?.resetScroll ?? false;
+  document.querySelectorAll<HTMLElement>('.react-tooltip.react-tooltip__show').forEach(tooltip => {
+    const rect = tooltip.getBoundingClientRect();
+    if (rect.height <= 0) {
+      return;
+    }
+    if (rect.top < TOOLTIP_VIEWPORT_PADDING_PX) {
+      tooltip.style.top = `${TOOLTIP_VIEWPORT_PADDING_PX}px`;
+    }
+    if (resetScroll) {
+      tooltip.scrollTop = 0;
+      const content = tooltip.querySelector<HTMLElement>('.react-tooltip-content-wrapper');
+      if (content) {
+        content.scrollTop = 0;
+      }
+    }
+  });
+}
+
+function scheduleTooltipViewportClamp() {
+  function clampAndResetScroll() {
+    clampVisibleTooltipsInViewport({ resetScroll: true });
+  }
+  requestAnimationFrame(function clampTooltipFrame() {
+    clampAndResetScroll();
+    requestAnimationFrame(clampAndResetScroll);
+  });
+  window.setTimeout(clampAndResetScroll, 50);
+  window.setTimeout(clampAndResetScroll, 250);
+}
+
+let tooltipViewportGuardStarted = false;
+
+/** One shared observer for Suspense/content resize after open. */
+function ensureTooltipViewportGuard() {
+  if (tooltipViewportGuardStarted || typeof window === 'undefined') {
+    return;
+  }
+  tooltipViewportGuardStarted = true;
+
+  const resizeObserver = new ResizeObserver(function onTooltipResize() {
+    clampVisibleTooltipsInViewport();
+  });
+
+  function watchOpenTooltips() {
+    document.querySelectorAll<HTMLElement>('.react-tooltip.react-tooltip__show').forEach(tooltip => {
+      resizeObserver.observe(tooltip);
+      const content = tooltip.querySelector('.react-tooltip-content-wrapper');
+      if (content) {
+        resizeObserver.observe(content);
+      }
+    });
+  }
+
+  watchOpenTooltips();
+  new MutationObserver(watchOpenTooltips).observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['class']
+  });
 }

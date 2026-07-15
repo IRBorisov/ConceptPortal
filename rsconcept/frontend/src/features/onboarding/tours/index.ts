@@ -1,6 +1,7 @@
 import { collectSubtourIDs, type Tour, tourMatchesRoute } from '../models/tour';
 
 import {
+  DialogTourID,
   EDITOR_TOUR_ROUTES,
   EditorTourID,
   LibraryTourID,
@@ -81,6 +82,31 @@ const tourRegistrations: Record<string, TourRegistration> = {
     autoStart: false,
     route: '/library',
     load: () => import('./library-intro').then(module => module.libraryIntroTour)
+  },
+  [DialogTourID.FORMULA_TREE]: {
+    autoStart: false,
+    route: EDITOR_TOUR_ROUTES,
+    load: () => import('./formula-tree').then(module => module.formulaTreeTour)
+  },
+  [DialogTourID.STRUCTURE_PLANNER]: {
+    autoStart: false,
+    route: EDITOR_TOUR_ROUTES,
+    load: () => import('./structure-planner').then(module => module.structurePlannerTour)
+  },
+  [DialogTourID.CST_TEMPLATE]: {
+    autoStart: false,
+    route: EDITOR_TOUR_ROUTES,
+    load: () => import('./cst-template').then(module => module.cstTemplateTour)
+  },
+  [DialogTourID.RELOCATE_CST]: {
+    autoStart: false,
+    route: '/oss',
+    load: () => import('./relocate-cst').then(module => module.relocateCstTour)
+  },
+  [DialogTourID.CREATE_SYNTHESIS]: {
+    autoStart: false,
+    route: '/oss',
+    load: () => import('./create-synthesis').then(module => module.createSynthesisTour)
   },
   'engine-fixture': {
     autoStart: false,

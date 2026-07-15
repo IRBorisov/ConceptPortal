@@ -60,3 +60,17 @@ export const EDITOR_TOUR_ROUTES = ['/sandbox', '/rsforms', '/models'] as const;
 
 /** Routes where model data / evaluation tours may run. */
 export const MODEL_TOUR_ROUTES = ['/sandbox', '/models'] as const;
+
+/**
+ * Dialog tours started from modal BadgeHelp while the dialog is open.
+ * Not auto-started — anchors live inside the modal.
+ */
+export const DialogTourID = {
+  FORMULA_TREE: 'formula-tree',
+  STRUCTURE_PLANNER: 'structure-planner',
+  CST_TEMPLATE: 'cst-template',
+  RELOCATE_CST: 'relocate-cst',
+  CREATE_SYNTHESIS: 'create-synthesis'
+} as const;
+
+export type DialogTourID = (typeof DialogTourID)[keyof typeof DialogTourID];

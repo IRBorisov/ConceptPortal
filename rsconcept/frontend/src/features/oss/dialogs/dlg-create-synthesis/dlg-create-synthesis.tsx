@@ -10,6 +10,7 @@ import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@rsc
 import { type Substitution } from '@rsconcept/domain/library/rsform';
 
 import { HelpTopic } from '@/features/help';
+import { DialogTourID } from '@/features/onboarding/tours/editor-tours';
 
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
@@ -132,18 +133,21 @@ export function DlgCreateSynthesis() {
       }}
       className='w-180 px-6 h-128'
       helpTopic={HelpTopic.CC_OSS}
+      tourID={DialogTourID.CREATE_SYNTHESIS}
     >
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
-        <TabList className='z-pop mx-auto flex border divide-x rounded-none'>
+        <TabList className='z-pop mx-auto flex border divide-x rounded-none' data-tour='synthesis-tabs'>
           <TabLabel title={tx('tx.operation.argument.select')} label={tx('tx.operation.argument.plural')} />
           <TabLabel title={tx('tx.substitution.table')} label={tx('tx.substitution.plural')} />
         </TabList>
         <TabPanel>
-          <TabArguments
-            oss={schema}
-            inputs={values.arguments}
-            fields={{ TitleField, AliasField, ParentField, DescriptionField, ArgumentsField }}
-          />
+          <div data-tour='synthesis-arguments'>
+            <TabArguments
+              oss={schema}
+              inputs={values.arguments}
+              fields={{ TitleField, AliasField, ParentField, DescriptionField, ArgumentsField }}
+            />
+          </div>
         </TabPanel>
         <TabPanel>
           <Suspense fallback={<Loader />}>
