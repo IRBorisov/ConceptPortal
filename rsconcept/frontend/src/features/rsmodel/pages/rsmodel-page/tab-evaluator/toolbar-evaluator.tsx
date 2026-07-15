@@ -43,6 +43,7 @@ export function ToolbarEvaluator({ className }: ToolbarEvaluatorProps) {
         topic={HelpTopic.UI_MODEL_EVALUATOR}
         tourID={ModelTourID.EVALUATOR}
         offset={4}
+        place='left'
         contentClass='sm:max-w-160'
       />
     </div>

@@ -24,6 +24,8 @@ interface ConstituentsNarrowPickerProps {
   stopSearchKeyPropagation?: boolean;
   className?: string;
   searchClassName?: string;
+  /** Keep the search bar fixed and scroll only {@link children}. Parent must constrain height. */
+  scrollChildren?: boolean;
   children?: ReactNode;
 }
 
@@ -44,6 +46,7 @@ export function ConstituentsNarrowPicker({
   stopSearchKeyPropagation,
   className,
   searchClassName,
+  scrollChildren,
   children
 }: ConstituentsNarrowPickerProps) {
   const [open, setOpen] = useState(false);
@@ -51,7 +54,10 @@ export function ConstituentsNarrowPicker({
   const anchorRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div ref={containerRef} className={cn('relative w-full', className)}>
+    <div
+      ref={containerRef}
+      className={cn('relative w-full', scrollChildren && 'flex min-h-0 flex-1 flex-col', className)}
+    >
       <div
         ref={anchorRef}
         className={cn('relative shrink-0 lg:hidden', searchClassName)}
@@ -64,7 +70,11 @@ export function ConstituentsNarrowPicker({
           stopSearchKeyPropagation={stopSearchKeyPropagation}
         />
       </div>
-      {children}
+      {scrollChildren ? (
+        <div className='min-h-0 flex-1 overflow-y-auto overscroll-y-contain'>{children}</div>
+      ) : (
+        children
+      )}
       <NarrowPickerOverlay
         className='lg:hidden'
         open={open}
