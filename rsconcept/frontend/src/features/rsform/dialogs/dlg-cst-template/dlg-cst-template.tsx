@@ -9,6 +9,7 @@ import { CstType, type RSForm } from '@rsconcept/domain/library';
 import { generateAlias, validateNewAlias } from '@rsconcept/domain/library/rsform-api';
 
 import { HelpTopic } from '@/features/help';
+import { DialogTourID } from '@/features/onboarding/tours/editor-tours';
 
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
@@ -185,9 +186,15 @@ export function DlgCstTemplate() {
       onSubmit={withPreventDefault(handleSubmit)}
       validationHint={hint}
       helpTopic={HelpTopic.RSL_TEMPLATES}
+      tourID={DialogTourID.CST_TEMPLATE}
     >
-      <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
-        <TabList className='mb-3 mx-auto flex border divide-x rounded-none'>
+      <Tabs
+        className='grid'
+        selectedIndex={activeTab}
+        onSelect={index => setActiveTab(index as TabID)}
+        data-tour='cst-template-body'
+      >
+        <TabList className='mb-3 mx-auto flex border divide-x rounded-none' data-tour='cst-template-tabs'>
           <TabLabel label={tx('tx.cst.template.short')} title={tx('tx.cst.template.select')} />
           <TabLabel label={tx('tx.cst.template.argument.plural')} title={tx('tx.cst.template.argument.replace')} />
           <TabLabel label={tx('tx.general.role.editor')} title={tx('tx.cst.edit')} />

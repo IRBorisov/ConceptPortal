@@ -9,6 +9,7 @@ import { type RSForm } from '@rsconcept/domain/library/rsform';
 import { type FlatAST } from '@rsconcept/domain/parsing';
 
 import { HelpTopic } from '@/features/help';
+import { DialogTourID } from '@/features/onboarding/tours/editor-tours';
 
 import { ModalView } from '@/components/modal';
 
@@ -39,9 +40,11 @@ export function DlgShowFlatAst() {
     <ModalView
       className='relative w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]'
       helpTopic={HelpTopic.UI_FORMULA_TREE}
+      tourID={DialogTourID.FORMULA_TREE}
       fullScreen
     >
       <div
+        data-tour='ast-expression'
         className={clsx(
           'absolute z-pop top-2 right-1/2 translate-x-1/2 max-w-[60ch]',
           'px-2 rounded-2xl',
@@ -61,7 +64,7 @@ export function DlgShowFlatAst() {
         ) : null}
       </div>
 
-      <div className='cc-mask-sides h-full w-full'>
+      <div className='cc-mask-sides h-full w-full' data-tour='ast-canvas'>
         <ReactFlowProvider>
           <ShowAstSchemaProvider schema={schema}>
             <ASTFlow

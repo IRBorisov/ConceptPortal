@@ -16,6 +16,7 @@ import { extractArguments } from '@rsconcept/domain/rslang/api';
 import { labelType } from '@rsconcept/domain/rslang/labels';
 
 import { HelpTopic } from '@/features/help';
+import { DialogTourID } from '@/features/onboarding/tours/editor-tours';
 import { loadRSForm } from '@/features/rsform/backend/rsform-loader';
 import {
   type ConstituentaCreatedResponse,
@@ -50,7 +51,9 @@ export interface DlgShowAstExtractProps {
 export function DlgShowAstExtract() {
   const tx = useTx();
   const hideDialog = useRsformDialogsStore(state => state.hideDialog);
-  const { initial, targetID, onCreate, onUpdate } = useRsformDialogsStore(state => state.props as DlgShowAstExtractProps);
+  const { initial, targetID, onCreate, onUpdate } = useRsformDialogsStore(
+    state => state.props as DlgShowAstExtractProps
+  );
 
   const [schema, setSchema] = useState(initial.schema);
   const [expression, setExpression] = useState(initial.expression);
@@ -161,6 +164,7 @@ export function DlgShowAstExtract() {
     <ModalView
       className='relative w-[calc(100dvw-3rem)] h-[calc(100dvh-3rem)]'
       helpTopic={HelpTopic.UI_FORMULA_TREE}
+      tourID={DialogTourID.FORMULA_TREE}
       fullScreen
     >
       <div
@@ -170,6 +174,7 @@ export function DlgShowAstExtract() {
         )}
       >
         <div
+          data-tour='ast-expression'
           className={clsx(
             'max-w-[60ch]',
             'px-2 rounded-2xl',
@@ -199,7 +204,13 @@ export function DlgShowAstExtract() {
         />
       </div>
 
-      <div ref={astInteractionRef} tabIndex={-1} className='cc-mask-sides h-full w-full' onKeyDown={handleKeyDown}>
+      <div
+        ref={astInteractionRef}
+        tabIndex={-1}
+        className='cc-mask-sides h-full w-full'
+        data-tour='ast-canvas'
+        onKeyDown={handleKeyDown}
+      >
         <ReactFlowProvider>
           <ShowAstSchemaProvider schema={schema}>
             <ASTFlow

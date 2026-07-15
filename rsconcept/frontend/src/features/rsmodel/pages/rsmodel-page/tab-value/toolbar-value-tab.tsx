@@ -114,7 +114,7 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
         topic={HelpTopic.UI_MODEL_VALUE}
         tourID={ModelTourID.VALUE}
         offset={4}
-        place='left'
+        place='left-start'
         contentClass='sm:max-w-160'
       />
     </div>

@@ -33,6 +33,9 @@ export interface ModalProps extends Styling {
   /** Help topic to be displayed in the modal window. */
   helpTopic?: HelpTopic;
 
+  /** Optional onboarding tour started from the modal help badge. */
+  tourID?: string;
+
   /** Callback to determine if help should be displayed. */
   hideHelpWhen?: () => boolean;
 }
@@ -79,6 +82,7 @@ export function ModalForm({
   onHide,
 
   helpTopic,
+  tourID,
   hideHelpWhen,
   ...restProps
 }: React.PropsWithChildren<ModalFormProps>) {
@@ -114,68 +118,75 @@ export function ModalForm({
   return (
     <ModalPortal>
       <div className={cn('cc-modal-wrapper', isTopPlaced && 'cc-modal-wrapper-top')}>
-      <ModalBackdrop onHide={handleCancel} />
-      <form
-        ref={setElement}
-        className='cc-animate-modal relative grid border-2 px-1 pb-1 rounded-xl bg-background'
-        role='dialog'
-        onSubmit={handleSubmit}
-        aria-labelledby='modal-title'
-      >
-        {helpTopic && !hideHelpWhen?.() ? (
-          <BadgeHelp topic={helpTopic} className='absolute z-pop top-1 left-1' contentClass='sm:max-w-160' />
-        ) : null}
-
-        <MiniButton
-          title={prepareTooltip(tx('tx.shell.modal.close.hint'), 'ESC')}
-          aria-label={tx('tx.general.close')}
-          noPadding
-          icon={<IconClose size='1.25rem' />}
-          className='absolute z-pop top-2 right-2'
-          onClick={handleCancel}
-        />
-
-        {header ? (
-          <h1 id='modal-title' className='px-12 py-2 select-none'>
-            {header}
-          </h1>
-        ) : null}
-
-        <div
-          className={cn(
-            '@container/modal',
-            'max-h-[calc(100svh-8rem)] max-w-svw xs:max-w-[calc(100svw-2rem)]',
-            'overscroll-contain outline-hidden',
-            overflowVisible ? 'overflow-visible' : 'overflow-auto',
-            className
-          )}
-          {...restProps}
+        <ModalBackdrop onHide={handleCancel} />
+        <form
+          ref={setElement}
+          className={clsx('cc-animate-modal', 'relative grid px-1 pb-1', 'border-2 rounded-xl bg-background')}
+          role='dialog'
+          onSubmit={handleSubmit}
+          aria-labelledby='modal-title'
         >
-          {children}
-        </div>
-
-        <div className={clsx('z-pop relative', 'my-2', 'flex justify-center', 'text-sm', !validationHint && 'gap-12')}>
-          <SubmitButton autoFocus text={resolvedSubmitText} className='min-w-28' disabled={!canSubmit} />
-          {validationHint ? (
-            <div
-              className={clsx(
-                'pt-0.5 w-12',
-                'text-muted-foreground cc-animate-color duration-fade',
-                canSubmit ? 'hover:text-constructive' : 'hover:text-destructive'
-              )}
-              {...validationTooltip}
-            >
-              <IconAlert size='1.5rem' className='mx-auto' />
-            </div>
+          {helpTopic && !hideHelpWhen?.() ? (
+            <BadgeHelp
+              topic={helpTopic}
+              tourID={tourID}
+              className='absolute z-pop top-1 left-1'
+              contentClass='sm:max-w-160'
+            />
           ) : null}
-          <Button
-            text={tx('tx.general.cancel')}
+
+          <MiniButton
+            title={prepareTooltip(tx('tx.shell.modal.close.hint'), 'ESC')}
             aria-label={tx('tx.general.close')}
-            className='min-w-28'
+            noPadding
+            icon={<IconClose size='1.25rem' />}
+            className='absolute z-pop top-2 right-2'
             onClick={handleCancel}
           />
-        </div>
-      </form>
+
+          {header ? (
+            <h1 id='modal-title' className='px-12 py-2 select-none'>
+              {header}
+            </h1>
+          ) : null}
+
+          <div
+            className={cn(
+              '@container/modal',
+              'max-h-[calc(100svh-8rem)] max-w-svw xs:max-w-[calc(100svw-2rem)]',
+              'overscroll-contain outline-hidden',
+              overflowVisible ? 'overflow-visible' : 'overflow-auto',
+              className
+            )}
+            {...restProps}
+          >
+            {children}
+          </div>
+
+          <div
+            className={clsx('z-pop relative', 'my-2', 'flex justify-center', 'text-sm', !validationHint && 'gap-12')}
+          >
+            <SubmitButton autoFocus text={resolvedSubmitText} className='min-w-28' disabled={!canSubmit} />
+            {validationHint ? (
+              <div
+                className={clsx(
+                  'pt-0.5 w-12',
+                  'text-muted-foreground cc-animate-color duration-fade',
+                  canSubmit ? 'hover:text-constructive' : 'hover:text-destructive'
+                )}
+                {...validationTooltip}
+              >
+                <IconAlert size='1.5rem' className='mx-auto' />
+              </div>
+            ) : null}
+            <Button
+              text={tx('tx.general.cancel')}
+              aria-label={tx('tx.general.close')}
+              className='min-w-28'
+              onClick={handleCancel}
+            />
+          </div>
+        </form>
       </div>
     </ModalPortal>
   );

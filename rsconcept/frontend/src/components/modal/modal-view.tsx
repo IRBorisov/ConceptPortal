@@ -40,6 +40,7 @@ export function ModalView({
   header,
   overflowVisible,
   helpTopic,
+  tourID,
   hideHelpWhen,
   noFooterButton,
   fullScreen,
@@ -63,73 +64,75 @@ export function ModalView({
   return (
     <ModalPortal>
       <div className={cn('cc-modal-wrapper', isTopPlaced && 'cc-modal-wrapper-top')}>
-      <ModalBackdrop onHide={handleHide} />
-      <div
-        ref={setElement}
-        className='cc-animate-modal relative grid border-2 px-1 pb-1 rounded-xl bg-background'
-        role='dialog'
-      >
-        {helpTopic && !hideHelpWhen?.() ? (
-          <BadgeHelp topic={helpTopic} className='absolute z-pop top-1 left-1' contentClass='sm:max-w-160' />
-        ) : null}
-
-        <MiniButton
-          title={prepareTooltip(tx('tx.shell.modal.close.hint'), 'ESC')}
-          aria-label={tx('tx.general.close')}
-          noPadding
-          icon={<IconClose size='1.25rem' />}
-          className='absolute z-pop top-2 right-2'
-          onClick={handleHide}
-        />
-
-        {header ? (
-          <h1
-            className={clsx(
-              'px-12 py-2 select-none',
-              fullScreen &&
-                'z-pop absolute top-0 right-1/2 translate-x-1/2 backdrop-blur-xs bg-background/90 rounded-2xl'
-            )}
-          >
-            {header}
-          </h1>
-        ) : null}
-
+        <ModalBackdrop onHide={handleHide} />
         <div
-          className={cn(
-            '@container/modal',
-            'max-w-svw xs:max-w-[calc(100svw-2rem)]',
-            'overscroll-contain outline-hidden',
-            overflowVisible ? 'overflow-visible' : 'overflow-auto',
-            fullScreen ? 'max-h-[calc(100svh-2rem)]' : 'max-h-[calc(100svh-8rem)]',
-            className
-          )}
-          {...restProps}
+          ref={setElement}
+          className={clsx('cc-animate-modal', 'relative grid px-1 pb-1', 'border-2 rounded-xl bg-background')}
+          role='dialog'
         >
-          {children}
-        </div>
+          {helpTopic && !hideHelpWhen?.() ? (
+            <BadgeHelp
+              topic={helpTopic}
+              tourID={tourID}
+              className='absolute z-pop top-1 left-1'
+              contentClass='sm:max-w-160'
+            />
+          ) : null}
 
-        {noFooterButton ? null : !fullScreen ? (
-          <Button
-            text={tx('tx.general.close')}
+          <MiniButton
+            title={prepareTooltip(tx('tx.shell.modal.close.hint'), 'ESC')}
             aria-label={tx('tx.general.close')}
-            className={clsx(
-              'my-2 mx-auto text-sm min-w-28',
-              fullScreen && 'z-pop absolute bottom-0 right-1/2 translate-x-1/2'
-            )}
+            noPadding
+            icon={<IconClose size='1.25rem' />}
+            className='absolute z-pop top-2 right-2'
             onClick={handleHide}
           />
-        ) : (
-          <div className='z-pop absolute bottom-0 right-1/2 translate-x-1/2 p-3 rounded-xl bg-background/90 backdrop-blur-xs'>
-            {' '}
+
+          {header ? (
+            <h1
+              className={clsx(
+                'px-12 py-2 select-none',
+                fullScreen &&
+                  'z-pop absolute top-0 right-1/2 translate-x-1/2 backdrop-blur-xs bg-background/90 rounded-2xl'
+              )}
+            >
+              {header}
+            </h1>
+          ) : null}
+
+          <div
+            className={cn(
+              '@container/modal',
+              'max-w-svw xs:max-w-[calc(100svw-2rem)]',
+              'overscroll-contain outline-hidden',
+              overflowVisible ? 'overflow-visible' : 'overflow-auto',
+              fullScreen ? 'max-h-[calc(100svh-2rem)]' : 'max-h-[calc(100svh-8rem)]',
+              className
+            )}
+            {...restProps}
+          >
+            {children}
+          </div>
+
+          {noFooterButton ? null : !fullScreen ? (
             <Button
               text={tx('tx.general.close')}
               aria-label={tx('tx.general.close')}
-              className='text-sm min-w-28'
+              className='my-2 mx-auto text-sm min-w-28'
               onClick={handleHide}
             />
-          </div>
-        )}
-      </div>
+          ) : (
+            <div className='z-pop absolute bottom-0 right-1/2 translate-x-1/2 p-3 rounded-xl bg-background/90 backdrop-blur-xs'>
+              {' '}
+              <Button
+                text={tx('tx.general.close')}
+                aria-label={tx('tx.general.close')}
+                className='text-sm min-w-28'
+                onClick={handleHide}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </ModalPortal>
   );

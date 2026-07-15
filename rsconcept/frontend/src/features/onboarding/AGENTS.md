@@ -21,6 +21,7 @@ How to add or expand guided tours. Engine code (`models/`, `stores/`, `component
 - **Model tabs**: `model-value`, `model-evaluator`
 - **OSS**: `oss-graph`
 - **Passports**: `schema-passport`, `model-passport`, `oss-passport`, `sandbox-passport` — end on `passport-stats`; wire via BadgeHelp on the form heading
+- **Dialogs** (BadgeHelp only; open the dialog first): `formula-tree` (`Q` / Cmd+S extract), `structure-planner` (Cmd+S), `cst-template`, `relocate-cst`, `create-synthesis`
 
 ## Add a tour
 

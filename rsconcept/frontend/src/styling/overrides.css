@@ -33,6 +33,17 @@
   --rt-color-dark:    var(--color-input);
 }
 
+/*
+ * Scroll the content wrapper, not the tooltip root.
+ * Root overflow + abspos arrow makes the first lines unreachable at scrollTop=0
+ * when a tall tooltip is shifted against the viewport edge.
+ */
+.react-tooltip > .react-tooltip-content-wrapper {
+  max-height: inherit;
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+}
+
 /* ----- Code Mirror ------ */
 
 .cm-tooltip {

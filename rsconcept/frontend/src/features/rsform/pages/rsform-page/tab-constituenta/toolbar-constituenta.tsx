@@ -109,7 +109,7 @@ export function ToolbarConstituenta({
         topic={HelpTopic.UI_SCHEMA_EDITOR}
         tourID={EditorTourID.CONCEPT_EDITOR}
         offset={4}
-        place='left'
+        place='left-start'
         contentClass='sm:max-w-160'
       />
     </div>
