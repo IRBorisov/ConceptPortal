@@ -80,6 +80,29 @@ describe('cstMatchRank', () => {
     expect(cstMatchRank(base, 'missing')).toBeNull();
     expect(cstMatchRank(base, '')).toBeNull();
   });
+
+  it('matches formal expression pastes via plain-text fallback when regexp does not', () => {
+    const typed = mockCst({
+      id: 3,
+      alias: 'F1',
+      cst_type: CstType.FUNCTION,
+      definition_formal: '[α∈ℬ(R1)×ℬ(C1)] Pr1(α)'
+    });
+
+    expect(cstMatchRank(typed, 'ℬ(R1)×ℬ(C1)')).toBe(CST_MATCH_RANK.formalDefinition);
+    expect(cstMatchRank(typed, 'ℬ(R1)')).toBe(CST_MATCH_RANK.formalDefinition);
+  });
+
+  it('still supports regexp queries', () => {
+    const typed = mockCst({
+      id: 4,
+      alias: 'F12',
+      cst_type: CstType.FUNCTION,
+      definition_formal: 'Pr1(X1)'
+    });
+
+    expect(cstMatchRank(typed, String.raw`F\d+`)).toBe(CST_MATCH_RANK.alias);
+  });
 });
 
 describe('filterConstituentaByQuery', () => {
