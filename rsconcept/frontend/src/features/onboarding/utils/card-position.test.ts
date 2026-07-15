@@ -205,7 +205,7 @@ describe('computeBottomSheetPosition', () => {
 
     expect(position.width).toBe(expectedWidth);
     expect(position.left).toBeGreaterThanOrEqual(CARD_MARGIN + landscapeViewport.safeAreaLeft);
-    expect(position.left! + position.width!).toBeLessThanOrEqual(
+    expect(position.left + expectedWidth).toBeLessThanOrEqual(
       landscapeViewport.width - CARD_MARGIN - landscapeViewport.safeAreaRight
     );
   });

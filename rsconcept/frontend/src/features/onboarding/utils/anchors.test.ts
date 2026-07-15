@@ -40,6 +40,9 @@ function mockVisibleElement(width = 40, height = 20): HTMLElement {
   } as HTMLElement;
 }
 
+const realSetTimeout = globalThis.setTimeout.bind(globalThis);
+const realClearTimeout = globalThis.clearTimeout.bind(globalThis);
+
 beforeEach(() => {
   dom.queryResults = [];
   dom.getComputedStyle.mockReturnValue({
@@ -50,8 +53,8 @@ beforeEach(() => {
 
   vi.stubGlobal('window', {
     getComputedStyle: dom.getComputedStyle,
-    setTimeout: (...args: Parameters<typeof setTimeout>) => setTimeout(...args),
-    clearTimeout: (...args: Parameters<typeof clearTimeout>) => clearTimeout(...args)
+    setTimeout: realSetTimeout,
+    clearTimeout: realClearTimeout
   });
   vi.stubGlobal('document', {
     querySelectorAll: dom.querySelectorAll,

@@ -327,6 +327,23 @@ export function TourHost() {
     [location.pathname, tour, pauseActiveTour]
   );
 
+  // Hard navigations (address bar, Playwright `goto`, refresh) skip React Router updates.
+  // Persist the resume point before the document unloads so returning can offer Resume.
+  useEffect(
+    function persistPauseOnPageHide() {
+      function onPageHide() {
+        if (useOnboardingStore.getState().activeTourID) {
+          pauseActiveTour();
+        }
+      }
+      window.addEventListener('pagehide', onPageHide);
+      return function removePageHideListener() {
+        window.removeEventListener('pagehide', onPageHide);
+      };
+    },
+    [pauseActiveTour]
+  );
+
   const onActivateStep = useEffectEvent(function activateStep(
     currentTour: Tour,
     stepIndex: number,

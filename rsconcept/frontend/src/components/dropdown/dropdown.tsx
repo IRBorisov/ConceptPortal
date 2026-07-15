@@ -147,7 +147,9 @@ export function Dropdown({
       }}
       tabIndex={-1}
       className={cn(
-        'cc-dropdown isolate z-topmost absolute grid bg-popover border rounded-md shadow-lg text-sm',
+        'cc-dropdown',
+        'isolate z-topmost absolute grid',
+        'bg-popover border rounded-md shadow-lg text-sm',
         openLeft ? 'right-0' : 'left-0',
         openUp ? 'bottom-0' : 'top-full',
         isOpen && 'open',

@@ -55,8 +55,20 @@ export function TabEvaluator() {
         )}
       />
 
-      <div className='flex min-h-0 flex-1 flex-col overflow-hidden pt-8 md:items-center lg:flex-row lg:items-stretch'>
-        <div className='mx-0 flex h-full min-h-0 min-w-120 flex-1 flex-col overflow-hidden pt-16 md:mx-auto md:w-195 xs:pt-8 lg:flex-none'>
+      <div
+        className={clsx(
+          'flex flex-col overflow-hidden md:items-center lg:flex-row lg:items-stretch',
+          'min-h-0 flex-1',
+          'pt-8'
+        )}
+      >
+        <div
+          className={clsx(
+            'flex flex-col overflow-hidden',
+            'h-full min-h-0 min-w-120 flex-1 md:w-195 lg:flex-none',
+            'mx-0 pt-16 md:mx-auto xs:pt-8'
+          )}
+        >
           <ConstituentsNarrowPicker
             className='min-h-0 flex-1'
             scrollChildren
