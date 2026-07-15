@@ -132,17 +132,16 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
   return (
     <div
       tabIndex={-1}
-      className={clsx(
-        'relative ',
-        'min-h-80 max-w-[calc(min(100vw,80rem))] mx-auto',
-        'flex flex-col md:items-center lg:flex-row lg:items-stretch pt-8',
-        'overflow-y-auto overflow-x-clip'
-      )}
-      style={{ maxHeight: mainHeight }}
+      className={clsx('relative flex flex-col', 'min-h-80 max-w-[calc(min(100vw,80rem))] mx-auto')}
+      style={{ height: mainHeight }}
       onKeyDown={handleInput}
     >
       <ToolbarConstituenta
-        className={clsx('cc-tab-tools cc-animate-position', 'right-4 lg:right-1/2 -translate-x-1/2 lg:translate-x-0')}
+        className={clsx(
+          'cc-tab-tools cc-animate-position',
+          'right-4 lg:right-1/2 -translate-x-1/2 lg:translate-x-0',
+          'backdrop-blur-xs bg-background/90'
+        )}
         hasInheritance={schema.inheritance.length > 0}
         activeCst={activeCst}
         onSubmit={initiateSubmit}
@@ -150,67 +149,71 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
         disabled={disabled}
       />
 
-      <div className='mx-0 min-w-120 md:mx-auto pt-8 md:w-195 shrink-0 xs:pt-0 min-h-6'>
-        <ConstituentsNarrowPicker
-          searchClassName='mb-1 ml-6 mt-2 self-start'
+      <div className='flex min-h-0 flex-1 flex-col overflow-hidden pt-8 md:items-center lg:flex-row lg:items-stretch'>
+        <div className='mx-0 flex h-full min-h-0 min-w-120 flex-1 flex-col overflow-hidden pt-8 md:mx-auto md:w-195 xs:pt-0 lg:flex-none'>
+          <ConstituentsNarrowPicker
+            className='min-h-0 flex-1'
+            scrollChildren
+            searchClassName='mb-1 ml-6 mt-2 w-fit'
+            schema={schema}
+            engine={engine}
+            activeCst={activeCst}
+            isSchemaIssue={isSchemaIssue}
+            isModelIssue={engine ? cst => isModelIssue(engine, cst) : undefined}
+            onActivate={handleActivateCst}
+            showModelFilter={!!engine}
+            stopSearchKeyPropagation
+          >
+            {activeCst ? (
+              <FormConstituenta
+                key={`cst-${activeCst.id}`}
+                id={globalIDs.constituenta_editor}
+                toggleReset={toggleReset}
+                activeCst={activeCst}
+                schema={schema}
+                onOpenEdit={handleOpenEdit}
+              />
+            ) : null}
+          </ConstituentsNarrowPicker>
+        </div>
+        <ViewConstituents
+          className={clsx(
+            'cc-animate-sidebar min-h-55 hidden shrink-0 self-start lg:block',
+            'mt-9 rounded-l-md rounded-r-none overflow-visible'
+          )}
           schema={schema}
           engine={engine}
           activeCst={activeCst}
           isSchemaIssue={isSchemaIssue}
           isModelIssue={engine ? cst => isModelIssue(engine, cst) : undefined}
           onActivate={handleActivateCst}
-          showModelFilter={!!engine}
-          stopSearchKeyPropagation
-        >
-          {activeCst ? (
-            <FormConstituenta
-              key={`cst-${activeCst.id}`}
-              id={globalIDs.constituenta_editor}
-              toggleReset={toggleReset}
-              activeCst={activeCst}
-              schema={schema}
-              onOpenEdit={handleOpenEdit}
-            />
-          ) : null}
-        </ConstituentsNarrowPicker>
+          enableRowReordering={canReorderConstituents}
+          onRowsDropped={handleRowsDropped}
+          maxListHeight={listHeight}
+          sidebarActions={
+            isContentEditable ? (
+              <div className='flex pl-1'>
+                <MiniButton
+                  title={prepareTooltip(tx('tx.general.moveUp'), 'Alt + ↑')}
+                  aria-label={tx('tx.general.moveUp')}
+                  className='px-0'
+                  icon={<IconMoveUp size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
+                  onClick={moveUp}
+                  disabled={disabled || !canReorderConstituents || schema.items.length < 2}
+                />
+                <MiniButton
+                  title={prepareTooltip(tx('tx.general.moveDown'), 'Alt + ↓')}
+                  aria-label={tx('tx.general.moveDown')}
+                  className='px-0'
+                  icon={<IconMoveDown size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
+                  onClick={moveDown}
+                  disabled={disabled || !canReorderConstituents || schema.items.length < 2}
+                />
+              </div>
+            ) : null
+          }
+        />
       </div>
-      <ViewConstituents
-        className={clsx(
-          'cc-animate-sidebar min-h-55 hidden lg:block',
-          'mt-9 rounded-l-md rounded-r-none overflow-visible'
-        )}
-        schema={schema}
-        engine={engine}
-        activeCst={activeCst}
-        isSchemaIssue={isSchemaIssue}
-        isModelIssue={engine ? cst => isModelIssue(engine, cst) : undefined}
-        onActivate={handleActivateCst}
-        enableRowReordering={canReorderConstituents}
-        onRowsDropped={handleRowsDropped}
-        maxListHeight={listHeight}
-        sidebarActions={
-          isContentEditable ? (
-            <div className='flex pl-1'>
-              <MiniButton
-                title={prepareTooltip(tx('tx.general.moveUp'), 'Alt + ↑')}
-                aria-label={tx('tx.general.moveUp')}
-                className='px-0'
-                icon={<IconMoveUp size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
-                onClick={moveUp}
-                disabled={disabled || !canReorderConstituents || schema.items.length < 2}
-              />
-              <MiniButton
-                title={prepareTooltip(tx('tx.general.moveDown'), 'Alt + ↓')}
-                aria-label={tx('tx.general.moveDown')}
-                className='px-0'
-                icon={<IconMoveDown size='1.1rem' className='hover:icon-primary text-muted-foreground' />}
-                onClick={moveDown}
-                disabled={disabled || !canReorderConstituents || schema.items.length < 2}
-              />
-            </div>
-          ) : null
-        }
-      />
     </div>
   );
 }
