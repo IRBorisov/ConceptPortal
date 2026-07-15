@@ -12,14 +12,19 @@ import { type TourCardLayoutMode } from '../utils/card-position';
 import { focusTourCardEntry, scheduleFocusRestore } from '../utils/focus';
 
 interface TourCardProps {
+  /** Step title shown in the dialog heading. */
   title: string;
+  /** Step body content (localized JSX from tour content files). */
   body: React.ReactNode;
 
+  /** Zero-based index of the active step. */
   stepIndex: number;
+  /** Total number of steps in the active tour. */
   totalSteps: number;
 
   onNext: () => void;
   onBack: () => void;
+  /** Permanently opts out of the tour (`status: skipped`). */
   onSkip: () => void;
 
   /** When false, hides Back (default: hidden on the first step). */
@@ -30,8 +35,10 @@ interface TourCardProps {
 
   /** Step anchor could not be resolved; show message + Retry; Next/Done stay for manual advance. */
   anchorUnavailable?: boolean;
+  /** Re-runs anchor resolution for the current step. */
   onRetryAnchor?: () => void;
 
+  /** Visual layout: anchored popover, centered modal, or mobile bottom sheet. */
   layoutMode?: TourCardLayoutMode;
 
   /** Notifies the host when the card element mounts or unmounts. */
@@ -39,9 +46,14 @@ interface TourCardProps {
 
   className?: string;
   style?: React.CSSProperties;
+  /** Reports measured card height so the host can keep positioning accurate. */
   onLayout?: (height: number) => void;
 }
 
+/**
+ * Active tour step dialog: copy, progress, Skip/Explore, and Next/Back/Done.
+ * Restores focus on unmount; primary action is focused when the step changes.
+ */
 export function TourCard({
   title,
   body,
@@ -152,7 +164,7 @@ export function TourCard({
         'bg-popover text-popover-foreground',
         'transition-[left,top] duration-500 ease-in-out motion-reduce:duration-1000',
         isBottomSheet
-          ? 'inset-x-0 w-full max-w-none rounded-t-2xl rounded-b-none pb-[max(0.75rem,env(safe-area-inset-bottom))] max-h-[min(70dvh,calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-1rem))]'
+          ? 'max-w-none rounded-t-2xl rounded-b-none pb-[max(0.75rem,env(safe-area-inset-bottom))] max-h-[min(70dvh,calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-1rem))]'
           : 'w-100 max-w-[calc(100vw-1rem)] rounded-xl pb-3',
         className
       )}
@@ -176,6 +188,7 @@ export function TourCard({
         ) : null}
         {onExplore ? (
           <TextButton
+            tabIndex={0}
             text={tx('tx.general.details')}
             title={tx('tx.onboarding.explore.hint')}
             className='self-start'
@@ -190,7 +203,7 @@ export function TourCard({
         <div className='flex flex-wrap items-center gap-x-3 gap-y-1'>
           {!isLast ? (
             <TextButton
-              tabIndex={1}
+              tabIndex={0}
               text={tx('tx.onboarding.skipTour')}
               title={tx('tx.onboarding.skipTour')}
               className='text-muted-foreground hover:text-foreground'
@@ -225,9 +238,11 @@ export function TourCard({
 interface StepDotsProps {
   stepIndex: number;
   totalSteps: number;
+  /** Accessible progress label mirrored via `title` (dots themselves are `aria-hidden`). */
   label: string;
 }
 
+/** Decorative step progress dots; screen readers use the live progress label instead. */
 function StepDots({ stepIndex, totalSteps, label }: StepDotsProps) {
   return (
     <div

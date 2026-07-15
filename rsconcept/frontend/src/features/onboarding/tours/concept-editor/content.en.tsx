@@ -37,7 +37,7 @@ export const conceptEditorContentEn: Record<string, TourStepContent> = {
         </p>
         <p>
           On errors, a list appears below the editor — click a message to jump to the fragment. A{' '}
-          <IconStatusOK className='inline-icon' /> green «valid» status means the definition is verified and computable.
+          <IconStatusOK className='inline-icon' /> green "valid" status means the definition is verified and computable.
         </p>
       </div>
     )

@@ -176,4 +176,24 @@ describe('focus containment helpers', () => {
     expect(first.focus).toHaveBeenCalled();
     dispose();
   });
+
+  test('forward Tab from outside roots focuses the first focusable', () => {
+    const card = dom.createContainer();
+    const region = dom.createContainer();
+    const first = dom.createFocusable('first');
+    const outsider = dom.createFocusable('outside');
+    card.children.push(first);
+    region.children.push(dom.createFocusable('region'));
+
+    const dispose = installInteractFocusContainment({
+      roots: [card as never, region as never],
+      fallbackRoot: card as never
+    });
+    outsider.focus();
+    const event = dom.dispatch('keydown', { key: 'Tab' });
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(first.focus).toHaveBeenCalled();
+    dispose();
+  });
 });

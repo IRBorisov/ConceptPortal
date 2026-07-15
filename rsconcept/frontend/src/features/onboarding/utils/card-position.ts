@@ -33,6 +33,8 @@ export type ViewportSize = LayoutViewport;
 export interface CardPosition {
   left: number;
   top: number;
+  /** Explicit width when the layout supplies it (bottom-sheet). */
+  width?: number;
 }
 
 export type TourCardLayoutMode = 'anchored' | 'centered' | 'bottom-sheet';
@@ -62,10 +64,15 @@ export function readLayoutViewport(): LayoutViewport {
   };
 }
 
+/** True when the visible viewport is below the mobile bottom-sheet breakpoint. */
 export function isNarrowLayout(viewport: LayoutViewport): boolean {
   return viewport.width < NARROW_VIEWPORT_WIDTH;
 }
 
+/**
+ * Picks card layout: bottom-sheet on narrow viewports, else anchored when a
+ * spotlight exists, otherwise centered.
+ */
 export function resolveTourCardLayoutMode(
   hasAnchor: boolean,
   viewport: LayoutViewport = readLayoutViewport()
@@ -114,7 +121,8 @@ export function computeBottomSheetPosition(
   const top = bounds.maxTop;
   return {
     left: clamp(left, bounds.minLeft, bounds.maxLeft),
-    top
+    top,
+    width: cardWidth
   };
 }
 
@@ -131,7 +139,10 @@ function defaultLayoutViewport(width: number, height: number): LayoutViewport {
   };
 }
 
-function readSafeAreaInsets(): Pick<LayoutViewport, 'safeAreaTop' | 'safeAreaRight' | 'safeAreaBottom' | 'safeAreaLeft'> {
+function readSafeAreaInsets(): Pick<
+  LayoutViewport,
+  'safeAreaTop' | 'safeAreaRight' | 'safeAreaBottom' | 'safeAreaLeft'
+> {
   if (typeof document === 'undefined') {
     return { safeAreaTop: 0, safeAreaRight: 0, safeAreaBottom: 0, safeAreaLeft: 0 };
   }

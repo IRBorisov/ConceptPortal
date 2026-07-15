@@ -186,6 +186,28 @@ describe('computeBottomSheetPosition', () => {
 
     expect(position.top).toBe(maxTop);
     expect(position.left).toBeGreaterThanOrEqual(CARD_MARGIN);
+    expect(position.width).toBe(Math.min(CARD_WIDTH, narrowViewport.width - 2 * CARD_MARGIN));
+  });
+
+  test('honors horizontal safe-area insets when sizing the sheet', () => {
+    const landscapeViewport: LayoutViewport = {
+      width: 844,
+      height: 390,
+      offsetLeft: 0,
+      offsetTop: 0,
+      safeAreaTop: 0,
+      safeAreaRight: 44,
+      safeAreaBottom: 21,
+      safeAreaLeft: 44
+    };
+    const position = computeBottomSheetPosition(ESTIMATED_CARD_HEIGHT, landscapeViewport);
+    const expectedWidth = Math.min(CARD_WIDTH, landscapeViewport.width - 2 * CARD_MARGIN);
+
+    expect(position.width).toBe(expectedWidth);
+    expect(position.left).toBeGreaterThanOrEqual(CARD_MARGIN + landscapeViewport.safeAreaLeft);
+    expect(position.left! + position.width!).toBeLessThanOrEqual(
+      landscapeViewport.width - CARD_MARGIN - landscapeViewport.safeAreaRight
+    );
   });
 });
 

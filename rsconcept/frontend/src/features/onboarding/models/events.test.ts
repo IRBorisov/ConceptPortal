@@ -48,6 +48,8 @@ describe('sanitizeOnboardingRoute', () => {
   test('parses absolute URLs and redacts numeric or UUID item ids', () => {
     expect(sanitizeOnboardingRoute('https://example.test/models/9?x=1')).toBe('/models/:id');
     expect(sanitizeOnboardingRoute('/oss/550e8400-e29b-41d4-a716-446655440000')).toBe('/oss/:id');
+    // UUIDv7 (version nibble 7) must also be redacted.
+    expect(sanitizeOnboardingRoute('/rsforms/01936b1e-7c3a-7a2b-9c4d-5e6f708192a3')).toBe('/rsforms/:id');
   });
 
   test('returns empty string for missing input', () => {

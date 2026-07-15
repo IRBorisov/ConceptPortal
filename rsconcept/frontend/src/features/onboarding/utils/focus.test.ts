@@ -11,6 +11,8 @@ const dom = vi.hoisted(() => {
   let matchesResult = true;
   const focus = vi.fn();
 
+  let clientRectCount = 1;
+
   const element = {
     focus,
     matches(selector: string) {
@@ -27,6 +29,9 @@ const dom = vi.hoisted(() => {
     },
     hasAttribute() {
       return false;
+    },
+    getClientRects() {
+      return { length: clientRectCount } as DOMRectList;
     }
   } as unknown as HTMLElement;
 
@@ -40,6 +45,7 @@ const dom = vi.hoisted(() => {
       display = 'block';
       visibility = 'visible';
       matchesResult = true;
+      clientRectCount = 1;
       focus.mockClear();
     },
     setContains(value: boolean) {
@@ -54,6 +60,9 @@ const dom = vi.hoisted(() => {
     setHidden(value: boolean) {
       display = value ? 'none' : 'block';
       visibility = value ? 'hidden' : 'visible';
+    },
+    setAncestorHidden(value: boolean) {
+      clientRectCount = value ? 0 : 1;
     },
     setMatchesResult(value: boolean) {
       matchesResult = value;
@@ -113,5 +122,13 @@ describe('focus helpers', () => {
     dom.setHidden(true);
 
     expect(isFocusableElement(dom.element)).toBe(false);
+  });
+
+  test('restoreFocusSafely skips targets hidden by an ancestor', () => {
+    dom.setAncestorHidden(true);
+
+    restoreFocusSafely(dom.element);
+
+    expect(dom.focus).not.toHaveBeenCalled();
   });
 });

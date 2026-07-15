@@ -1,6 +1,7 @@
 import { type CutoutPanelRects } from '../utils/interact-cutout';
 
 interface TourInteractOverlayProps {
+  /** Four blocking panels around the unlocked interaction region. */
   panels: CutoutPanelRects;
 }
 

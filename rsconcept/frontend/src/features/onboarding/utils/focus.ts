@@ -27,6 +27,10 @@ export function canReceiveProgrammaticFocus(element: HTMLElement): boolean {
   if (style.visibility === 'hidden' || style.display === 'none') {
     return false;
   }
+  // Reject elements hidden by an ancestor (display:none / zero layout boxes).
+  if (element.getClientRects().length === 0) {
+    return false;
+  }
   return true;
 }
 

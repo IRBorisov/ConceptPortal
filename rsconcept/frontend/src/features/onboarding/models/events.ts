@@ -51,7 +51,8 @@ export type OnboardingEventInput = Omit<OnboardingEventDetail, 'timestamp' | 'ro
 
 export type OnboardingEventHandler = (detail: OnboardingEventDetail) => void;
 
-const UUID_SEGMENT = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+/** UUID-shaped path segment (any version, including v7) — redacted from analytics routes. */
+const UUID_SEGMENT = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
 
 /** Strip query/hash and redact common dynamic ID segments. */
 export function sanitizeOnboardingRoute(route: string | undefined | null): string {

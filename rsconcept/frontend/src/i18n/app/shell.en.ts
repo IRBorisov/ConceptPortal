@@ -200,7 +200,6 @@ export const txShellEn: Record<string, string> = {
   'tx.onboarding.explore.hint': 'Open a detailed tour of this tab',
   'tx.onboarding.show': 'Show tutorial',
   'tx.onboarding.show.hint': 'Start the interactive tour',
-  'tx.onboarding.guide': 'Guide',
   'tx.onboarding.load.fail': 'Could not load the tutorial. Please try again.',
   'tx.onboarding.anchor.unavailable': 'This step target is not available on this page.',
   'tx.onboarding.anchor.retry': 'Retry',

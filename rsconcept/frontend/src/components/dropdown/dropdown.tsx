@@ -3,22 +3,28 @@ import { cn } from '../utils';
 
 interface DropdownProps extends Styling {
   /** Reference to the dropdown element. */
-  ref?: React.Ref<HTMLDivElement>;
+  'ref'?: React.Ref<HTMLDivElement>;
 
   /** Unique ID for the dropdown. */
-  id?: string;
+  'id'?: string;
 
   /** Margin for the dropdown. */
-  margin?: string;
+  'margin'?: string;
 
   /** Indicates whether the dropdown should stretch to the left. */
-  stretchLeft?: boolean;
+  'stretchLeft'?: boolean;
 
   /** Indicates whether the dropdown should stretch to the top. */
-  stretchTop?: boolean;
+  'stretchTop'?: boolean;
 
   /** Indicates whether the dropdown is open. */
-  isOpen: boolean;
+  'isOpen': boolean;
+
+  /** Optional ARIA role when the dropdown is not a true menu. */
+  'role'?: React.AriaRole;
+
+  /** Accessible name for non-menu disclosure groups. */
+  'aria-label'?: string;
 }
 
 /**

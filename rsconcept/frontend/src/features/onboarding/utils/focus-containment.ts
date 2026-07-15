@@ -108,7 +108,7 @@ export function installInteractFocusContainment(options: InteractFocusContainmen
       return;
     }
 
-    if (activeIndex === focusables.length - 1 || active === options.fallbackRoot) {
+    if (activeIndex === -1 || activeIndex === focusables.length - 1 || active === options.fallbackRoot) {
       event.preventDefault();
       first.focus();
     }

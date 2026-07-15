@@ -87,8 +87,9 @@ export const sandboxIntroContentFr: Record<string, TourStepContent> = {
           expressions. Les données initiales se restaurent depuis le menu du Bac à sable.
         </p>
         <p>
-          Rouvrez cet aperçu depuis le menu du Bac à sable ; le guide d&apos;un onglet — via le badge d&apos;aide
-          (Guide) sur cet onglet. Voir aussi les <TourHelpLink text='manuels' topic={HelpTopic.INTERFACE} />.
+          Rouvrez cet aperçu depuis le menu du Bac à sable ; le guide d&apos;un onglet — via le menu du badge
+          d&apos;aide (Guide rapide) sur cet onglet. Voir aussi les{' '}
+          <TourHelpLink text='manuels' topic={HelpTopic.INTERFACE} />.
         </p>
       </div>
     )

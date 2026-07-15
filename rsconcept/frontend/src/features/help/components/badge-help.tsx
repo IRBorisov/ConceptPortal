@@ -11,7 +11,7 @@ import { useOnboardingStore } from '@/features/onboarding/stores/onboarding';
 import { ensureTourLoaded } from '@/features/onboarding/tours';
 
 import { type PlacesType, Tooltip } from '@/components/container';
-import { MiniButton, TextURL } from '@/components/control';
+import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconHelp, IconTour } from '@/components/icons';
 import { Loader } from '@/components/loader';
@@ -124,7 +124,6 @@ export function BadgeHelp({
         tabIndex={0}
         title={buttonLabel}
         hideTitle
-        aria-haspopup={hasTour ? 'menu' : undefined}
         aria-expanded={hasTour ? isOpen : undefined}
         aria-controls={hasTour ? menuId : undefined}
         onClick={handleHelpActivate}
@@ -137,7 +136,7 @@ export function BadgeHelp({
         }
       />
       {hasTour ? (
-        <Dropdown id={menuId} isOpen={isOpen} margin='mt-1'>
+        <Dropdown id={menuId} isOpen={isOpen} margin='mt-1' role='group' aria-label={buttonLabel}>
           <DropdownButton
             text={tx('tx.help.quickGuide')}
             icon={<IconTour size='1rem' className='icon-primary' />}
@@ -166,28 +165,8 @@ export function BadgeHelp({
               </div>
             }
           >
-            <div className='cc-fade-in relative'>
-              <div
-                className='absolute right-2 top-1 z-1 flex items-center gap-1.5 text-sm whitespace-nowrap'
-                onClick={event => event.stopPropagation()}
-              >
-                {hasTour ? (
-                  <>
-                    <TextURL
-                      text={tx('tx.help.quickGuide')}
-                      title={tx('tx.onboarding.show.hint')}
-                      onClick={() => handleStartTour()}
-                    />
-                    <span className='text-muted-foreground/40 select-none' aria-hidden>
-                      ·
-                    </span>
-                  </>
-                ) : null}
-                <TextURL text={tx('tx.general.help')} title={tx('tx.general.help.hint')} href={manualHref} />
-              </div>
-              <div className={hasTour ? '[&_h1]:pr-28' : '[&_h1]:pr-20'}>
-                <TopicPage topic={topic} popover />
-              </div>
+            <div className='cc-fade-in'>
+              <TopicPage topic={topic} popover />
             </div>
           </Suspense>
         </Tooltip>

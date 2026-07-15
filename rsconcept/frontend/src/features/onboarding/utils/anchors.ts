@@ -1,6 +1,8 @@
 import { TOUR_ANCHOR_ATTR } from '../models/tour';
 
 export const DEFAULT_ANCHOR_TIMEOUT_MS = 5000;
+/** Poll interval while waiting for a visible tour anchor (avoids rAF layout thrash). */
+const ANCHOR_POLL_INTERVAL_MS = 100;
 
 /** Finds DOM elements marked with the given `data-tour` anchor value. */
 export function findAnchorElements(anchor: string): NodeListOf<HTMLElement> {
@@ -31,7 +33,7 @@ export function findVisibleAnchorElement(anchor: string): HTMLElement | null {
 }
 
 /**
- * Waits for a visible anchor using rAF polling and a DOM mutation observer.
+ * Waits for a visible anchor with a throttled timeout poll.
  * Resolves `null` after `timeoutMs`, or immediately when `signal` is aborted.
  */
 export function waitForAnchorElement(
@@ -48,15 +50,12 @@ export function waitForAnchorElement(
     const deadline = performance.now() + timeoutMs;
     let frame = 0;
     let settled = false;
-    let observer: MutationObserver | null = null;
 
     function cleanup() {
       if (frame) {
-        cancelAnimationFrame(frame);
+        clearTimeout(frame);
         frame = 0;
       }
-      observer?.disconnect();
-      observer = null;
       signal?.removeEventListener('abort', onAbort);
     }
 
@@ -91,23 +90,11 @@ export function waitForAnchorElement(
     function poll() {
       tryResolve();
       if (!settled) {
-        frame = requestAnimationFrame(poll);
+        frame = window.setTimeout(poll, ANCHOR_POLL_INTERVAL_MS);
       }
     }
 
     signal?.addEventListener('abort', onAbort, { once: true });
-
-    observer = new MutationObserver(function onDomChange() {
-      tryResolve();
-    });
-    if (document.body) {
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['style', 'class', 'hidden', 'aria-hidden', TOUR_ANCHOR_ATTR]
-      });
-    }
 
     poll();
   });

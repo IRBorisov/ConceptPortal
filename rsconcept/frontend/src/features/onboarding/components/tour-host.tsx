@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import { type MouseEvent, useEffect, useEffectEvent, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation } from 'react-router';
 import { toast } from 'react-toastify';
@@ -41,7 +41,7 @@ import {
   type TourCardLayoutMode
 } from '../utils/card-position';
 import { installInteractFocusContainment } from '../utils/focus-containment';
-import { computeCutoutPanelRects, expandRectToCutout } from '../utils/interact-cutout';
+import { computeCutoutPanelRects, expandRectToCutout, isPointInsideCutout } from '../utils/interact-cutout';
 
 import { TourCard } from './tour-card';
 import { TourInteractOverlay } from './tour-interact-overlay';
@@ -58,11 +58,13 @@ interface AnchorResolution {
   element: HTMLElement | null;
 }
 
+/** Pending auto-start offer shown as {@link TourInvitation} until accepted or dismissed. */
 interface TourInvitationOffer {
   tour: Tour;
   resumeStep: number;
 }
 
+/** Stable key tying an anchor resolution attempt to a tour step (and optional anchor name). */
 function buildStepAnchorKey(tourID: string, stepIndex: number, anchor?: string): string {
   return `${tourID}:${stepIndex}:${anchor ?? ''}`;
 }
@@ -153,9 +155,11 @@ export function TourHost() {
         : regionResolutionMatchesStep
           ? regionResolution.status
           : 'loading';
+  /** Practice unlock: region must be ready before cutout, actions, and non-inert app access. */
+  const isInteractUnlocked = isInteractStep && regionStatus === 'ready';
   const anchorElement = resolutionMatchesStep && anchorResolution.status === 'ready' ? anchorResolution.element : null;
   const regionElement =
-    isInteractStep && regionAnchorName
+    isInteractUnlocked && regionAnchorName
       ? sharesRegionAndSpotlight
         ? anchorElement
         : regionResolutionMatchesStep && regionResolution.status === 'ready'
@@ -487,10 +491,7 @@ export function TourHost() {
   useEffect(
     function subscribeToPracticeActions() {
       const completeAction = step?.completeAction;
-      if (!isTourRendered || !isInteractStep || !completeAction || !tour || !step) {
-        return;
-      }
-      if (isInteractStep && regionAnchorName && regionStatus === 'unavailable') {
+      if (!isTourRendered || !isInteractUnlocked || !completeAction || !tour || !step) {
         return;
       }
       const expectedStepIndex = activeStep;
@@ -505,23 +506,12 @@ export function TourHost() {
         onAdvanceFromAction(tour, expectedStepIndex, expectedStepId, expectedAction, layout);
       });
     },
-    [
-      isTourRendered,
-      isInteractStep,
-      tour,
-      step,
-      activeStep,
-      regionAnchorName,
-      regionStatus,
-      layoutAnchorRect,
-      locale,
-      location.pathname
-    ]
+    [isTourRendered, isInteractUnlocked, tour, step, activeStep, layoutAnchorRect, locale, location.pathname]
   );
 
   useEffect(
     function containInteractFocus() {
-      if (!isInteractStep || !isTourRendered || !cardElement || !regionElement) {
+      if (!isInteractUnlocked || !isTourRendered || !cardElement || !regionElement) {
         return;
       }
       return installInteractFocusContainment({
@@ -529,7 +519,7 @@ export function TourHost() {
         fallbackRoot: cardElement
       });
     },
-    [isInteractStep, isTourRendered, cardElement, regionElement]
+    [isInteractUnlocked, isTourRendered, cardElement, regionElement]
   );
 
   useEffect(
@@ -664,7 +654,7 @@ export function TourHost() {
 
   useEffect(
     function markAppInertWhileTourVisible() {
-      if (!isTourRendered || isInteractStep) {
+      if (!isTourRendered || isInteractUnlocked) {
         return;
       }
       const root = document.getElementById('root');
@@ -676,7 +666,7 @@ export function TourHost() {
         root.removeAttribute('inert');
       };
     },
-    [isTourRendered, isInteractStep]
+    [isTourRendered, isInteractUnlocked]
   );
 
   useEffect(
@@ -888,22 +878,41 @@ export function TourHost() {
   }
 
   const interactCutoutRect =
-    isInteractStep && regionRect
+    isInteractUnlocked && regionRect
       ? expandRectToCutout(regionRect, SPOTLIGHT_PADDING, layoutViewport)
-      : isInteractStep && spotlightRect
+      : isInteractUnlocked && spotlightRect
         ? expandRectToCutout(spotlightRect, SPOTLIGHT_PADDING, layoutViewport)
         : null;
   const interactPanels =
     interactCutoutRect !== null ? computeCutoutPanelRects(interactCutoutRect, layoutViewport) : null;
+  /** Explain steps: click the spotlight hole to advance; never completes the tour on the last step. */
+  const canAdvanceBySpotlightClick = !isInteractUnlocked && hasSpotlight && activeStep < totalSteps - 1;
+  const explainSpotlightCutout =
+    canAdvanceBySpotlightClick && spotlightRect
+      ? expandRectToCutout(spotlightRect, SPOTLIGHT_PADDING, layoutViewport)
+      : null;
+
+  function handleExplainOverlayClick(event: MouseEvent<HTMLDivElement>) {
+    if (!explainSpotlightCutout) {
+      return;
+    }
+    if (isPointInsideCutout(event.clientX, event.clientY, explainSpotlightCutout)) {
+      handleNext();
+    }
+  }
 
   return createPortal(
     <div className='fixed inset-0 z-topmost isolate pointer-events-none' data-testid='tour-layer'>
-      {isInteractStep ? (
+      {isInteractUnlocked ? (
         interactPanels ? (
           <TourInteractOverlay panels={interactPanels} />
         ) : null
       ) : (
-        <div className='fixed inset-0 z-0 pointer-events-auto' data-testid='tour-overlay' />
+        <div
+          className='fixed inset-0 z-0 pointer-events-auto'
+          data-testid='tour-overlay'
+          onClick={handleExplainOverlayClick}
+        />
       )}
       {hasSpotlight && spotlightRect ? (
         <div
@@ -917,13 +926,13 @@ export function TourHost() {
             left: spotlightRect.left - SPOTLIGHT_PADDING,
             width: spotlightRect.width + 2 * SPOTLIGHT_PADDING,
             height: spotlightRect.height + 2 * SPOTLIGHT_PADDING,
-            boxShadow: isInteractStep
+            boxShadow: isInteractUnlocked
               ? '0 0 0 2px var(--color-primary)'
               : '0 0 0 2px var(--color-primary), 0 0 0 9999px rgb(0 0 0 / 45%)'
           }}
           data-testid='tour-spotlight'
         />
-      ) : !isInteractStep ? (
+      ) : !isInteractUnlocked ? (
         <div className='fixed inset-0 z-0 bg-[rgb(0_0_0/45%)]' />
       ) : null}
       <TourCard
@@ -943,7 +952,7 @@ export function TourHost() {
         className='pointer-events-auto z-10'
         style={
           cardLayoutMode === 'bottom-sheet'
-            ? { top: cardPosition.top }
+            ? { left: cardPosition.left, top: cardPosition.top, width: cardPosition.width }
             : { left: cardPosition.left, top: cardPosition.top }
         }
         onLayout={setCardHeight}
@@ -959,6 +968,7 @@ interface TrackedRect {
   rect: DOMRect;
 }
 
+/** Emits a privacy-safe onboarding lifecycle event for the active tour run. */
 function emitTourLifecycle(
   name: OnboardingEventName,
   targetTour: Pick<Tour, 'id' | 'version' | 'steps'>,
@@ -987,6 +997,7 @@ function emitTourLifecycle(
   });
 }
 
+/** Resolves step copy for the active locale, falling back to English. */
 function resolveStepContent(tour: Tour, stepID: string, locale: AppLocale): TourStepContent | null {
   const localized = tour.content[locale]?.[stepID];
   return localized ?? tour.content.en[stepID] ?? null;
