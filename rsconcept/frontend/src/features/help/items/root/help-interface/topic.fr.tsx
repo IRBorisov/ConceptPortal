@@ -33,12 +33,14 @@ export function HelpInterfaceFr() {
       </p>
       <p>
         <IconHelp className='inline-icon' /> En complément de cette rubrique, l&apos;aide contextuelle est disponible
-        via l&apos;icône dédiée <IconHelp className='inline-icon' />.
+        via l&apos;icône dédiée <IconHelp className='inline-icon' /> : le survol affiche un aperçu du sujet ; un clic
+        ouvre la page des manuels.
       </p>
       <p>
         L&apos;icône <IconTour className='inline-icon' /> indique qu&apos;un tutoriel interactif est disponible pour
-        cette zone : un clic ouvre un menu avec le guide rapide et l&apos;accès au manuel. Cette icône reste visible
-        même si l&apos;aide contextuelle est désactivée.
+        cette zone. Lorsque l&apos;aide contextuelle est activée, le survol affiche toujours l&apos;aperçu ; un clic
+        ouvre un menu avec <em>{tx('tx.help.quickGuide')}</em> et <em>{tx('tx.help.readManual')}</em>. Cette icône reste
+        visible même si l&apos;aide contextuelle est désactivée.
       </p>
       <p>
         L&apos;icône <IconVideo className='inline-icon' /> ouvre des vidéos sur différents sujets et le fonctionnement

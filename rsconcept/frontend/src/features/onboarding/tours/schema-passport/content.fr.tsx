@@ -61,7 +61,7 @@ export const schemaPassportContentFr: Record<string, TourStepContent> = {
           que les indicateurs de correction (erreurs et définitions incalculables).
         </p>
         <p>
-          Développez une catégorie pour le détail — ensembles de base ou constants, axiomes, termes, définitions
+          Développez une catégorie pour le détail — ensembles de base ou constantes, axiomes, termes, définitions
           textuelles et conventions.
         </p>
       </div>

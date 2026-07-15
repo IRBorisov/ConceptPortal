@@ -83,8 +83,8 @@ export const sandboxIntroContentRu: Record<string, TourStepContent> = {
           восстановить из меню Песочницы.
         </p>
         <p>
-          Этот обзор снова открывается из меню Песочницы; гид вкладки — через значок справки (Гид) на ней. Также см.{' '}
-          <TourHelpLink text='руководства' topic={HelpTopic.INTERFACE} />.
+          Этот обзор снова открывается из меню Песочницы; гид вкладки — через меню значка справки на ней (Быстрый гид).
+          Также см. <TourHelpLink text='руководства' topic={HelpTopic.INTERFACE} />.
         </p>
       </div>
     )

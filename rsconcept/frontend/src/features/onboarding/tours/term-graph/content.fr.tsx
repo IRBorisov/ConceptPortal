@@ -28,7 +28,7 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
     body: (
       <p>
         Le <TourHelpLink text='graphe des termes' topic={HelpTopic.UI_GRAPH_TERM} /> montre les liens entre
-        constituantes par définition formelle et attribution — pratique pour voir la structure du schéma entière.
+        constituantes par définition formelle et attribution — pratique pour voir la structure entière du schéma.
       </p>
     )
   },

@@ -9,12 +9,17 @@ import { Button } from '@/components/control';
 import { cn } from '@/components/utils';
 
 interface TourInvitationProps {
+  /** Tour title shown in the invitation heading. */
   title: string;
+  /** Short purpose blurb for the offered tour. */
   purpose: React.ReactNode;
+  /** Number of steps; shown as a localized count label. */
   stepCount: number;
   /** When true, primary action uses Resume wording and resumes at a saved step. */
   canResume: boolean;
+  /** Accepts the offer and starts/resumes the tour. */
   onStart: () => void;
+  /** Dismisses the offer for this session only (`sessionDismissed`). */
   onDecline: () => void;
 }
 
@@ -34,13 +39,13 @@ export function TourInvitation({ title, purpose, stepCount, canResume, onStart, 
     function declineOnEscape() {
       function onKeyDown(event: KeyboardEvent) {
         if (event.key === 'Escape') {
-          event.stopPropagation();
           onDecline();
         }
       }
-      window.addEventListener('keydown', onKeyDown, true);
+      // Bubble phase so capture-phase handlers on other overlays can take Escape first.
+      window.addEventListener('keydown', onKeyDown);
       return function removeEscapeListener() {
-        window.removeEventListener('keydown', onKeyDown, true);
+        window.removeEventListener('keydown', onKeyDown);
       };
     },
     [onDecline]

@@ -13,7 +13,8 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
           model, stored locally in your browser.
         </p>
         <p>
-          This short overview of the editor tabs. On a step with Details, you can open a guide for the highlighted tab.
+          This is a short overview of the editor tabs. On a step with Details, you can open a guide for the highlighted
+          tab.
         </p>
       </div>
     )
@@ -85,8 +86,8 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
           initial data from the Sandbox menu.
         </p>
         <p>
-          Reopen this overview from the Sandbox menu; start a tab guide from the help badge (Guide) on that tab. See
-          also the <TourHelpLink text='manuals' topic={HelpTopic.INTERFACE} />.
+          Reopen this overview from the Sandbox menu; start a tab guide from that tab&apos;s help badge menu (Quick
+          guide). See also the <TourHelpLink text='manuals' topic={HelpTopic.INTERFACE} />.
         </p>
       </div>
     )

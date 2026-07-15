@@ -205,7 +205,6 @@ export const txShellRu: Record<string, string> = {
   'tx.onboarding.explore.hint': 'Открыть подробный тур по этой вкладке',
   'tx.onboarding.show': 'Показать обучение',
   'tx.onboarding.show.hint': 'Запустить интерактивное обучение',
-  'tx.onboarding.guide': 'Гид',
   'tx.onboarding.load.fail': 'Не удалось загрузить обучение. Попробуйте ещё раз.',
   'tx.onboarding.anchor.unavailable': 'Элемент для этого шага недоступен на странице.',
   'tx.onboarding.anchor.retry': 'Повторить',

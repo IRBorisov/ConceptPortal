@@ -48,28 +48,16 @@ beforeEach(() => {
     opacity: '1'
   } as CSSStyleDeclaration);
 
-  vi.stubGlobal('window', { getComputedStyle: dom.getComputedStyle });
+  vi.stubGlobal('window', {
+    getComputedStyle: dom.getComputedStyle,
+    setTimeout: (...args: Parameters<typeof setTimeout>) => setTimeout(...args),
+    clearTimeout: (...args: Parameters<typeof clearTimeout>) => clearTimeout(...args)
+  });
   vi.stubGlobal('document', {
     querySelectorAll: dom.querySelectorAll,
     body: {}
   });
-  vi.stubGlobal(
-    'MutationObserver',
-    class {
-      observe() {
-        return undefined;
-      }
-      disconnect() {
-        return undefined;
-      }
-    }
-  );
   vi.stubGlobal('performance', { now: () => Date.now() });
-  vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
-    setTimeout(() => callback(0), 0);
-    return 1;
-  });
-  vi.stubGlobal('cancelAnimationFrame', () => undefined);
 });
 
 afterEach(() => {

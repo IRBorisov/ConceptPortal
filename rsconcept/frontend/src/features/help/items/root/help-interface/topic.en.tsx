@@ -33,12 +33,13 @@ export function HelpInterfaceEn() {
       </p>
       <p>
         <IconHelp className='inline-icon' /> In addition to this section, help is available in context via the dedicated{' '}
-        <IconHelp className='inline-icon' /> icon.
+        <IconHelp className='inline-icon' /> icon: hover shows a preview of the topic; click opens the full manuals
+        page.
       </p>
       <p>
-        The <IconTour className='inline-icon' /> icon means an interactive tour is available for that area: click it to
-        open a menu with a quick guide and a link to the manual. This icon stays visible even when contextual help is
-        turned off.
+        The <IconTour className='inline-icon' /> icon means an interactive tour is available for that area. Hover still
+        shows the topic preview when contextual help is on; click opens a menu with <em>{tx('tx.help.quickGuide')}</em>{' '}
+        and <em>{tx('tx.help.readManual')}</em>. This icon stays visible even when contextual help is turned off.
       </p>
       <p>
         The <IconVideo className='inline-icon' /> icon opens videos on various topics and details of how the Portal

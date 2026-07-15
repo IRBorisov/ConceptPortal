@@ -204,7 +204,6 @@ export const txShellFr: Record<string, string> = {
   'tx.onboarding.explore.hint': 'Ouvrir un tutoriel détaillé de cet onglet',
   'tx.onboarding.show': 'Afficher le tutoriel',
   'tx.onboarding.show.hint': 'Lancer le tutoriel interactif',
-  'tx.onboarding.guide': 'Guide',
   'tx.onboarding.load.fail': 'Impossible de charger le tutoriel. Réessayez.',
   'tx.onboarding.anchor.unavailable': 'La cible de cette étape n’est pas disponible sur cette page.',
   'tx.onboarding.anchor.retry': 'Réessayer',
