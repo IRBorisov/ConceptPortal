@@ -1,14 +1,15 @@
 /**
  * Constituent text search for schema and model lists.
  *
- * Matching is case-insensitive. Queries are interpreted as regular expressions when valid;
- * otherwise {@link TextMatcher} falls back to substring search.
+ * Matching is case-insensitive. Queries are tried as regular expressions first; when a valid
+ * pattern does not match, {@link TextMatcher} falls back to plain substring search (needed for
+ * formal-expression pastes with `()`, `[]`, …).
  *
  * When several fields match, {@link cstMatchRank} reports the **best** (most relevant) rank only.
  * {@link filterConstituentaByQuery} sorts results by that rank and keeps the original schema
  * order for ties.
  */
-import { isBasicConcept,type SearchableFields } from '@rsconcept/domain/library/rsform-api';
+import { isBasicConcept, type SearchableFields } from '@rsconcept/domain/library/rsform-api';
 
 import { TextMatcher } from './text-matcher';
 

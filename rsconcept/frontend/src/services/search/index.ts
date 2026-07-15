@@ -1,7 +1,7 @@
 /**
  * Domain-neutral text search helpers for Portal UI.
  *
- * - {@link TextMatcher} — shared regexp / substring matcher
+ * - {@link TextMatcher} — shared regexp matcher with plain-text fallback
  * - {@link matchLibraryItem}, {@link matchLibraryItemLocation} — library browser
  * - {@link matchConstituenta}, {@link filterConstituentaByQuery}, {@link cstMatchRank} — schema constituents
  * - {@link filterBindingByQuery} — basic-concept binding tables
