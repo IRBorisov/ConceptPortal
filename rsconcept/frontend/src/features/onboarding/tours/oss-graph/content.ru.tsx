@@ -19,11 +19,11 @@ import { TourHelpLink } from '../shared/tour-help-links';
 
 export const ossGraphContentRu: Record<string, TourStepContent> = {
   overview: {
-    title: 'Граф OSS',
+    title: 'Граф ОСС',
     body: (
       <p>
-        На <TourHelpLink text='графе OSS' topic={HelpTopic.UI_OSS_GRAPH} /> собирается операционный синтез: блоки,
-        входные схемы, узлы синтеза и реплики. Паспорт только описывает OSS; структура редактируется здесь.
+        На <TourHelpLink text='графе ОСС' topic={HelpTopic.UI_OSS_GRAPH} /> собирается операционный синтез: блоки,
+        загрузки, узлы синтеза и репликации.
       </p>
     )
   },
@@ -35,7 +35,7 @@ export const ossGraphContentRu: Record<string, TourStepContent> = {
           <IconReset className='inline-icon' /> (<kbd>Z</kbd>) сбрасывает несохранённые сдвиги;{' '}
           <IconFitImage className='inline-icon' /> (<kbd>G</kbd>) подгоняет граф;{' '}
           <IconShowSidebar value={true} isBottom={false} className='inline-icon' /> (<kbd>V</kbd>) открывает панель
-          содержимого; <IconSettings className='inline-icon' /> — сетка, линии и анимация;{' '}
+          содержания; <IconSettings className='inline-icon' /> — сетка, линии и анимация;{' '}
           <IconImage className='inline-icon' /> — экспорт PNG или SVG.
         </p>
       </div>
@@ -54,8 +54,8 @@ export const ossGraphContentRu: Record<string, TourStepContent> = {
           выделение.
         </p>
         <p>
-          В контекстном меню также: активация, реплика, клон КС, перенос конституент и открытие связанной схемы — см.{' '}
-          <TourHelpLink text='мануал графа OSS' topic={HelpTopic.UI_OSS_GRAPH} />.
+          В контекстном меню также: активация, репликация, клон КС, перенос конституент и открытие связанной схемы — см.{' '}
+          <TourHelpLink text='справку по графу ОСС' topic={HelpTopic.UI_OSS_GRAPH} />.
         </p>
       </div>
     )
@@ -76,13 +76,13 @@ export const ossGraphContentRu: Record<string, TourStepContent> = {
     )
   },
   sidebar: {
-    title: 'Панель содержимого',
+    title: 'Панель содержания',
     body: (
       <p>
         <IconShowSidebar value={true} isBottom={false} className='inline-icon' /> (<kbd>V</kbd>) открывает{' '}
-        <TourHelpLink text='панель содержимого' topic={HelpTopic.UI_OSS_SIDEBAR} />: правка конституент схемы выбранной
-        операции без ухода из OSS — фильтр, создание, клон, удаление, порядок, граф термов и типов. Выберите операцию со
-        связанной КС, чтобы панель заполнилась.
+        <TourHelpLink text='панель содержания' topic={HelpTopic.UI_OSS_SIDEBAR} />: правка конституент схемы выбранной
+        операции — фильтр, создание, клон, удаление, порядок, граф термов и граф ступеней. Выберите операцию со
+        связанной схемой, чтобы панель заполнилась.
       </p>
     )
   }

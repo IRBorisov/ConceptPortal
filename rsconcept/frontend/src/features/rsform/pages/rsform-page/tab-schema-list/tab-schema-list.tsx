@@ -7,6 +7,7 @@ import { CstType } from '@rsconcept/domain/library/rsform';
 
 import { useConceptNavigation } from '@/app';
 import { MiniSelectorOSS } from '@/features/library/components/mini-selector-oss';
+import { emitOnboardingAction, OnboardingActionID } from '@/features/onboarding/models/actions';
 
 import { ExportDropdown } from '@/components/control/export-dropdown';
 import { type RowSelectionState } from '@/components/data-table';
@@ -49,6 +50,22 @@ export function TabSchemaList() {
   const filtered = useFilteredItems(schema);
   const listScrollKey = `${query}\0${filter}`;
   const hasActiveFilter = hasActiveCstFilter(query, filter);
+
+  function handleChangeQuery(value: string) {
+    setQuery(value);
+  }
+
+  function completeSearchPractice(value: string = query) {
+    if (value.trim()) {
+      emitOnboardingAction(OnboardingActionID.CONSTITUENTS_SEARCH_USED);
+    }
+  }
+
+  function handleSearchKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key === 'Enter') {
+      completeSearchPractice(query);
+    }
+  }
 
   const rowSelection: RowSelectionState = Object.fromEntries(
     filtered.filter(cst => selectedCst.includes(cst.id)).map(cst => [String(cst.id), true])
@@ -173,7 +190,10 @@ export function TabSchemaList() {
           noBorder
           className='max-w-50'
           query={query}
-          onChangeQuery={setQuery}
+          onChangeQuery={handleChangeQuery}
+          onBlur={() => completeSearchPractice()}
+          onKeyDown={handleSearchKeyDown}
+          stopKeyPropagation
           data-tour='list-search'
         />
       </div>

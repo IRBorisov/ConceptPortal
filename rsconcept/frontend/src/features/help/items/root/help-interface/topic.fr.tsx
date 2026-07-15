@@ -8,6 +8,7 @@ import {
   IconLogin,
   IconLogout,
   IconPin,
+  IconTour,
   IconUser2,
   IconVideo
 } from '@/components/icons';
@@ -35,6 +36,11 @@ export function HelpInterfaceFr() {
         via l&apos;icône dédiée <IconHelp className='inline-icon' />.
       </p>
       <p>
+        L&apos;icône <IconTour className='inline-icon' /> indique qu&apos;un tutoriel interactif est disponible pour
+        cette zone : un clic ouvre un menu avec le guide rapide et l&apos;accès au manuel. Cette icône reste visible
+        même si l&apos;aide contextuelle est désactivée.
+      </p>
+      <p>
         L&apos;icône <IconVideo className='inline-icon' /> ouvre des vidéos sur différents sujets et le fonctionnement
         du portail. La lecture est proposée sur YouTube et VKontakte.
       </p>
@@ -50,9 +56,8 @@ export function HelpInterfaceFr() {
           pouvez la démarrer, la passer ou la fermer avec <kbd>Échap</kbd>.
         </li>
         <li>
-          Ailleurs, ouvrez l&apos;info-bulle <IconHelp className='inline-icon' /> et choisissez{' '}
-          <em>{tx('tx.onboarding.guide')}</em> (ou cliquez l&apos;icône d&apos;aide lorsqu&apos;un guide est disponible)
-          pour relancer le tutoriel de cette zone — passeport, liste des constituantes, éditeur de concept, graphe des
+          Ailleurs, cliquez <IconTour className='inline-icon' /> et choisissez <em>{tx('tx.help.quickGuide')}</em> pour
+          relancer le tutoriel de cette zone — passeport, liste des constituantes, éditeur de concept, graphe des
           termes, bibliothèque, etc.
         </li>
         <li>

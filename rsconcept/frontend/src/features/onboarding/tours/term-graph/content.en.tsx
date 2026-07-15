@@ -27,8 +27,8 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
     title: 'Term graph',
     body: (
       <p>
-        The <TourHelpLink text='term graph' topic={HelpTopic.UI_GRAPH_TERM} /> shows how constituents relate: which
-        definitions depend on which. Use it to see the structure of the schema as a whole.
+        The <TourHelpLink text='term graph' topic={HelpTopic.UI_GRAPH_TERM} /> shows constituent links by formal
+        definition and attribution — useful to see the schema structure as a whole.
       </p>
     )
   },
@@ -37,15 +37,18 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          On the left, choose node coloring and link types. <IconFitImage className='inline-icon' /> fits the graph;{' '}
+          On the left — node coloring and link types. <IconFitImage className='inline-icon' /> fits the graph;{' '}
           <IconFocus className='inline-icon' /> focuses one constituent; <IconFilter className='inline-icon' /> opens
           layout and filter settings.
         </p>
         <p>
-          <IconText className='inline-icon' /> (<kbd>T</kbd>) toggles labels;{' '}
-          <IconClustering className='inline-icon' /> (<kbd>V</kbd>) hides generated nodes;{' '}
-          <IconOverviewCore className='inline-icon icon-green' /> (<kbd>O</kbd>) shows the axiomatic core only;{' '}
-          <IconImage className='inline-icon' /> exports PNG or SVG.
+          <IconText className='inline-icon' /> (<kbd>T</kbd>) toggles labels; <IconClustering className='inline-icon' />{' '}
+          (<kbd>V</kbd>) hides generated nodes; <IconOverviewCore className='inline-icon icon-green' /> (<kbd>O</kbd>)
+          shows the axiomatic core only; <IconImage className='inline-icon' /> exports PNG or SVG.
+        </p>
+        <p>
+          Try it: toggle <IconText className='inline-icon' /> labels with the highlighted button. The guide continues
+          automatically.
         </p>
       </div>
     )
@@ -54,9 +57,9 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
     title: 'Edit nodes',
     body: (
       <p>
-        When editing is allowed, <IconNewItem className='inline-icon icon-green' /> (<kbd>R</kbd>) creates a
-        constituent; <IconDestroy className='inline-icon icon-red' /> deletes the selection;{' '}
-        <IconCrucial className='inline-icon' /> (<kbd>F</kbd>) toggles crucial;{' '}
+        When editing is allowed, <IconNewItem className='inline-icon icon-green' /> (<kbd>R</kbd>) creates a constituent
+        with links to the selected nodes; <IconDestroy className='inline-icon icon-red' /> deletes the selection;{' '}
+        <IconCrucial className='inline-icon' /> (<kbd>F</kbd>) toggles the crucial status;{' '}
         <IconTypeGraph className='inline-icon' /> opens the type graph for the selection.
       </p>
     )
@@ -65,8 +68,8 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
     title: 'Hidden nodes',
     body: (
       <p>
-        Constituents filtered out of the canvas appear in the hidden list. Click an item to select it, or activate it to
-        open the concept editor.
+        Constituents filtered out of the canvas appear in the hidden list. Click to select; double-click to open the
+        concept editor.
       </p>
     )
   },
@@ -75,14 +78,14 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          <IconGraphMode value={InteractionMode.explore} className='inline-icon' /> Explore to navigate and select;{' '}
-          <IconGraphMode value={InteractionMode.edit} className='inline-icon icon-green' /> Edit to draw relations.
-          Attribution and definition edges use <IconEdgeType value={TGEdgeType.attribution} className='inline-icon' /> /{' '}
-          <IconEdgeType value={TGEdgeType.definition} className='inline-icon' />.
+          <IconGraphMode value={InteractionMode.explore} className='inline-icon' /> Browse — navigate and select;{' '}
+          <IconGraphMode value={InteractionMode.edit} className='inline-icon icon-green' /> Editor — draw relations.{' '}
+          <IconEdgeType value={TGEdgeType.attribution} className='inline-icon' /> attribution /{' '}
+          <IconEdgeType value={TGEdgeType.definition} className='inline-icon' /> definition.
         </p>
         <p>
-          Selection helpers expand related nodes — for example <IconGraphCollapse className='inline-icon' /> influencers
-          and <IconGraphExpand className='inline-icon' /> dependents.
+          Helpers expand related nodes — for example <IconGraphCollapse className='inline-icon' /> all influencers and{' '}
+          <IconGraphExpand className='inline-icon' /> all dependents.
         </p>
       </div>
     )
@@ -93,7 +96,7 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
       <div className='flex flex-col gap-2'>
         <p>
           Click a node to select it; double-click opens the concept editor. Pan with <kbd>Space</kbd> or <kbd>WASD</kbd>
-          , and zoom with the mouse wheel.
+          , zoom with the mouse wheel.
         </p>
         <p>
           <kbd>Esc</kbd> clears the selection; <kbd>Delete</kbd> removes selected constituents when editing is allowed.

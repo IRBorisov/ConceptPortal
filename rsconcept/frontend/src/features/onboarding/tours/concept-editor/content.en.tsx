@@ -10,18 +10,19 @@ export const conceptEditorContentEn: Record<string, TourStepContent> = {
     title: 'Concept editor',
     body: (
       <p>
-        Here a single constituent is edited in the{' '}
-        <TourHelpLink text='concept editor' topic={HelpTopic.UI_SCHEMA_EDITOR} />: its term, textual definition, and
-        formal definition. Select constituents in the list to open them on this tab.
+        Here you edit one constituent in the <TourHelpLink text='concept editor' topic={HelpTopic.UI_SCHEMA_EDITOR} />:
+        its term, convention or textual definition, and formal definition. Select a row in the list on the left to open
+        another constituent.
       </p>
     )
   },
   fields: {
-    title: 'Definition panels',
+    title: 'Constituent fields',
     body: (
       <p>
-        The form has three main panels: the term, the textual definition, and the formal definition. Edit them here;
-        save with <kbd>Ctrl + S</kbd> when changes are pending.
+        Edit the term and the formal definition. For undefined concepts, meaning is set by a{' '}
+        <TourHelpLink text='convention' topic={HelpTopic.CC_CONSTITUENTA} />; for derived ones — by a textual
+        definition. Save with <kbd>Ctrl + S</kbd>.
       </p>
     )
   },
@@ -31,12 +32,12 @@ export const conceptEditorContentEn: Record<string, TourStepContent> = {
       <div className='flex flex-col gap-2'>
         <p>
           After editing a formal definition, the <IconStatusUnknown className='inline-icon' />{' '}
-          <TourHelpLink text='definition status' topic={HelpTopic.UI_CST_STATUS} /> indicator turns blue until you run a
-          check. Click it or press <kbd>Ctrl + Q</kbd> to validate the expression.
+          <TourHelpLink text='expression status' topic={HelpTopic.UI_CST_STATUS} /> indicator turns blue until you run a
+          check. Click it or press <kbd>Ctrl + Q</kbd>.
         </p>
         <p>
-          If something is wrong, errors appear below the editor — click an error to jump to the problematic fragment in
-          the expression. A <IconStatusOK className='inline-icon' /> green status means the definition is verified.
+          On errors, a list appears below the editor — click a message to jump to the fragment. A{' '}
+          <IconStatusOK className='inline-icon' /> green «valid» status means the definition is verified and computable.
         </p>
       </div>
     )
@@ -46,25 +47,24 @@ export const conceptEditorContentEn: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          The <IconTree className='inline-icon' /> <TourHelpLink text='syntax tree' topic={HelpTopic.UI_FORMULA_TREE} />{' '}
-          button opens a dialog with the parse tree of the formal definition — useful for understanding structure and
-          spotting parse issues.
+          <IconTree className='inline-icon' /> <TourHelpLink text='Syntax tree' topic={HelpTopic.UI_FORMULA_TREE} /> —{' '}
+          the parse tree of the formal definition: expression structure and parse errors.
         </p>
         <p>
-          The <IconTypeGraph className='inline-icon' />{' '}
-          <TourHelpLink text='type graph' topic={HelpTopic.UI_TYPE_GRAPH} /> button shows how types in the expression
-          relate as an echelon graph — a visual map of typification steps.
+          <IconTypeGraph className='inline-icon' /> <TourHelpLink text='Type graph' topic={HelpTopic.UI_TYPE_GRAPH} /> —
+          how types in the expression relate as typification echelons.
         </p>
       </div>
     )
   },
   structure: {
-    title: 'Structure planner',
+    title: 'Expand structure',
     body: (
       <p>
-        For structured concepts, <IconGenerateStructure size='1.25rem' className='inline-icon' /> Expand structure opens
-        the <TourHelpLink text='structure planner' topic={HelpTopic.UI_STRUCTURE_PLANNER} />: an interactive graph for
-        decomposing a concept into derived constituents. You can add, edit, and link items directly from the diagram.
+        When the constituent has a typification structure,{' '}
+        <IconGenerateStructure size='1.25rem' className='inline-icon' /> Expand structure opens{' '}
+        <TourHelpLink text='structure expansion' topic={HelpTopic.UI_STRUCTURE_PLANNER} />: from the echelon graph you
+        can add generated constituents and set their terms.
       </p>
     )
   }

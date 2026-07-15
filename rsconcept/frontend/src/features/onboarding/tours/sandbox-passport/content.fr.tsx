@@ -1,19 +1,14 @@
-import { HelpTopic } from '@/features/help';
-
 import { IconSave } from '@/components/icons';
 
 import { type TourStepContent } from '../../models/tour';
-import { TourHelpLink } from '../shared/tour-help-links';
 
 export const sandboxPassportContentFr: Record<string, TourStepContent> = {
   overview: {
-    title: 'Passeport du bac à sable',
+    title: 'Passeport du Bac à sable',
     body: (
       <p>
-        Dans le bac à sable, le passeport nomme le schéma et le modèle de démonstration locaux. Les données restent dans
-        le navigateur — sans accès ni propriété de bibliothèque. Les passeports complets sont décrits sous{' '}
-        <TourHelpLink text='passeport du schéma' topic={HelpTopic.UI_SCHEMA_CARD} /> et{' '}
-        <TourHelpLink text='passeport du modèle' topic={HelpTopic.UI_MODEL_CARD} />.
+        Le passeport définit le titre, l&apos;alias et la description du schéma et modèle de démo locaux. Les données
+        restent dans le navigateur — sans accès ni propriété de bibliothèque.
       </p>
     )
   },
@@ -21,8 +16,8 @@ export const sandboxPassportContentFr: Record<string, TourStepContent> = {
     title: 'Titre, alias, description',
     body: (
       <p>
-        Modifiez le titre, l&apos;alias et la description de la démo. Les changements sont locaux ;{' '}
-        <IconSave className='inline-icon' /> les applique au lot du bac à sable.
+        Modifiez le titre, l&apos;alias et la description de démo. Les changements sont locaux ;{' '}
+        <IconSave className='inline-icon' /> les applique au jeu du Bac à sable.
       </p>
     )
   },
@@ -31,13 +26,10 @@ export const sandboxPassportContentFr: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Le panneau latéral reprend le style du passeport modèle : compteurs de constituantes du schéma et problèmes du
-          modèle (données de base manquantes, calculs échoués, etc.).
+          Le panneau latéral montre les compteurs de constituantes du schéma et les problèmes du modèle — par exemple
+          concepts non définis sans interprétation ou erreurs de calcul.
         </p>
-        <p>
-          Développez les catégories pour le détail. En bibliothèque, les passeports schéma et modèle ajoutent accès,
-          emplacement, et plus.
-        </p>
+        <p>Développez les catégories pour le détail par type.</p>
       </div>
     )
   }

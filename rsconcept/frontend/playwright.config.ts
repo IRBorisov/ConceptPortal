@@ -20,8 +20,8 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : 'list',
-  /** Vite `webServer` is one process; parallel workers cause flaky navigations on every browser. */
-  workers: 1,
+  /** Vite `webServer` is one process; parallel workers share mutable API mocks and flake. Override with PLAYWRIGHT_WORKERS only after mocks are per-worker isolated. */
+  workers: process.env.PLAYWRIGHT_WORKERS ? Number(process.env.PLAYWRIGHT_WORKERS) : 1,
   fullyParallel: true,
   projects: runAllBrowsers
     ? [

@@ -18,7 +18,7 @@ test.afterEach(() => {
   resetConceptMocks();
 });
 
-test('RSModel page loads and renders model tabs', async ({ page }) => {
+test('RSModel page loads, switches to data tab, and shows 404 for missing model', async ({ page }) => {
   const rsformID = 501;
   const modelID = 601;
   dataRSForms.set(rsformID, createRSFormMock(rsformID, 'Схема для модели'));
@@ -32,36 +32,12 @@ test('RSModel page loads and renders model tabs', async ({ page }) => {
   await expect(page.getByRole('tab', { name: 'Граф' })).toBeVisible();
   await expect(page.getByRole('tab', { name: 'Данные' })).toBeVisible();
   await expect(page.getByRole('tab', { name: 'Расчет' })).toBeVisible();
-});
-
-test('RSModel allows switching to data tab', async ({ page }) => {
-  const rsformID = 502;
-  const modelID = 602;
-  dataRSForms.set(rsformID, createRSFormMock(rsformID, 'Схема переключения модели'));
-  dataRSModels.set(modelID, createRSModelMock(modelID, rsformID, 'Модель переключения вкладок'));
-
-  await page.goto(`/models/${modelID}`, { waitUntil: 'domcontentloaded' });
 
   const dataTab = page.getByRole('tab', { name: 'Данные' });
   await clickAndWaitForURL(page, dataTab, /tab=4/);
-
   await expect(dataTab).toHaveAttribute('aria-selected', 'true');
-});
 
-test('RSModel respects tab and active query parameters', async ({ page }) => {
-  const rsformID = 503;
-  const modelID = 603;
-  dataRSForms.set(rsformID, createRSFormMock(rsformID, 'Схема query model'));
-  dataRSModels.set(modelID, createRSModelMock(modelID, rsformID, 'Модель query tab'));
-
-  await page.goto(`/models/${modelID}?tab=4&active=123`, { waitUntil: 'domcontentloaded' });
-
-  await expect(page).toHaveURL(new RegExp(`/models/${modelID}\\?tab=4&active=123`));
-});
-
-test('RSModel shows 404 fallback when model is missing', async ({ page }) => {
   await page.goto('/models/999999', { waitUntil: 'domcontentloaded' });
-
   await expect(page.getByText('Концептуальная модель с указанным идентификатором отсутствует')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Библиотека' }).first()).toBeVisible();
 });

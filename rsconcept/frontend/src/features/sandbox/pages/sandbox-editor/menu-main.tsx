@@ -8,6 +8,7 @@ import { LocationHead } from '@rsconcept/domain/library';
 
 import { useConceptNavigation } from '@/app';
 import { useCreateFromSandbox } from '@/features/library/backend/use-create-from-sandbox';
+import { emitOnboardingEvent } from '@/features/onboarding/models/events';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding';
 import { ensureTourLoaded } from '@/features/onboarding/tours';
 import { SandboxTourID } from '@/features/onboarding/tours/editor-tours';
@@ -18,13 +19,14 @@ import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
   IconCalculateAll,
   IconDownload,
-  IconHelp,
   IconMenu,
   IconReset,
   IconRSForm,
   IconRSModel,
+  IconTour,
   IconUpload
 } from '@/components/icons';
+import { usePreferencesStore } from '@/stores/preferences';
 
 import { useSandboxBundle } from '../../context/bundle-context';
 
@@ -122,10 +124,30 @@ export function MenuMain() {
   function handleShowTour() {
     hideMenu();
     void ensureTourLoaded(SandboxTourID.INTRO).then(function startSandboxIntro(tour) {
+      const locale = usePreferencesStore.getState().locale;
+      const route = typeof window !== 'undefined' ? window.location.pathname : '';
       if (!tour) {
+        emitOnboardingEvent({
+          name: 'load_failed',
+          tourId: SandboxTourID.INTRO,
+          tourVersion: 0,
+          locale,
+          route,
+          source: 'menu'
+        });
         return;
       }
       restartTour(SandboxTourID.INTRO);
+      emitOnboardingEvent({
+        name: 'tour_restarted',
+        tourId: tour.id,
+        tourVersion: tour.version,
+        stepCount: tour.steps.length,
+        stepIndex: 0,
+        locale,
+        route,
+        source: 'menu'
+      });
     });
   }
 
@@ -199,7 +221,7 @@ export function MenuMain() {
         <DropdownButton
           text={tx('tx.onboarding.show')}
           title={tx('tx.onboarding.show.hint')}
-          icon={<IconHelp size='1rem' className='icon-primary' />}
+          icon={<IconTour size='1rem' className='icon-primary' />}
           onClick={handleShowTour}
         />
         <Divider margins='mx-3 my-1' />

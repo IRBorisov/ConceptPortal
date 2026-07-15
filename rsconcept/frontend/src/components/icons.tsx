@@ -52,6 +52,7 @@ export { LuFolderOpen as IconFolderOpened } from 'react-icons/lu';
 export { LuFolderClosed as IconFolderClosed } from 'react-icons/lu';
 export { LuFolderDot as IconFolderEmpty } from 'react-icons/lu';
 export { TbHelpOctagon as IconHelp } from 'react-icons/tb';
+export { MdOutlineTour as IconTour } from 'react-icons/md';
 export { LuPresentation as IconSample } from 'react-icons/lu';
 export { LuLightbulbOff as IconHelpOff } from 'react-icons/lu';
 export { RiPushpinFill as IconPin } from 'react-icons/ri';

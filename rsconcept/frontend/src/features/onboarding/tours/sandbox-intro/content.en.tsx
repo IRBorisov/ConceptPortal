@@ -9,12 +9,11 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          The Sandbox is a demo environment that works without registration. It contains a small conceptual schema
-          together with a model, stored locally in your browser.
+          The Sandbox is a demo environment that works without registration. It contains a small conceptual schema and a
+          model, stored locally in your browser.
         </p>
         <p>
-          This short tour introduces the editor tabs. On some steps you can open a deeper walkthrough of that tab, or
-          start those tours later from the menu while you are on the tab.
+          This short overview of the editor tabs. On a step with Details, you can open a guide for the highlighted tab.
         </p>
       </div>
     )
@@ -23,8 +22,8 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
     title: 'Passport',
     body: (
       <p>
-        The <TourHelpLink text='passport' topic={HelpTopic.UI_SCHEMA_CARD} /> names your schema and model: title, alias,
-        and description. Use Details for the form and the statistics side panel.
+        The <TourHelpLink text='passport' topic={HelpTopic.UI_SCHEMA_CARD} /> sets the title, alias, and description of
+        this demo schema and model. Details covers the form and the statistics side panel.
       </p>
     )
   },
@@ -32,9 +31,9 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
     title: 'Constituents list',
     body: (
       <p>
-        Constituents are the building blocks of a schema: base sets, terms, definitions, and axioms. The{' '}
-        <TourHelpLink text='list' topic={HelpTopic.UI_MODEL_LIST} /> tab shows them all in one table — with evaluation
-        status when a model is attached. Use Details for search, selection, and reordering.
+        The <TourHelpLink text='list' topic={HelpTopic.UI_MODEL_LIST} /> shows schema constituents in one table:
+        undefined concepts, terms, functions, axioms, statements, and more. When a model is open, evaluation status is
+        shown too. Details covers search, selection, and order.
       </p>
     )
   },
@@ -42,9 +41,9 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
     title: 'Concept editor',
     body: (
       <p>
-        Here a single constituent is edited in the{' '}
-        <TourHelpLink text='concept editor' topic={HelpTopic.UI_SCHEMA_EDITOR} />: its term, textual definition, and
-        formal definition. Use Details for checking definitions, syntax tools, and the structure planner.
+        Here you edit one constituent in the <TourHelpLink text='concept editor' topic={HelpTopic.UI_SCHEMA_EDITOR} />:
+        its term, convention or textual definition, and formal definition. Details covers checking, syntax tools, and
+        structure expansion.
       </p>
     )
   },
@@ -52,8 +51,8 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
     title: 'Term graph',
     body: (
       <p>
-        The <TourHelpLink text='term graph' topic={HelpTopic.UI_GRAPH_TERM} /> visualizes relationships between
-        concepts: which definitions depend on which. Use Details for view options, modes, and canvas navigation.
+        The <TourHelpLink text='term graph' topic={HelpTopic.UI_GRAPH_TERM} /> shows constituent links by definition and
+        attribution. Details covers view options, modes, and canvas navigation.
       </p>
     )
   },
@@ -61,9 +60,9 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
     title: 'Model data',
     body: (
       <p>
-        On the <TourHelpLink text='model data' topic={HelpTopic.UI_MODEL_VALUE} /> tab, the schema meets the model: base
-        sets receive concrete elements. The schema defines the structure, and the model fills it with values from a
-        subject domain. Use Details for compute, save, and binding.
+        On the <TourHelpLink text='model data' topic={HelpTopic.UI_MODEL_VALUE} /> tab you set and inspect constituent
+        values: undefined concepts get an interpretation from the subject domain; derived ones show computed results.
+        Details covers compute, save, and binding.
       </p>
     )
   },
@@ -71,9 +70,9 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
     title: 'Evaluation',
     body: (
       <p>
-        On the <TourHelpLink text='evaluation' topic={HelpTopic.UI_MODEL_EVALUATOR} /> tab, definitions are computed
-        over the model data. Here you can inspect calculated values and issues — for example, expressions that cannot be
-        evaluated with the current data. Use Details for ad-hoc expressions and the result viewer.
+        The <TourHelpLink text='Evaluation' topic={HelpTopic.UI_MODEL_EVALUATOR} /> tab checks arbitrary RSLang
+        expressions against model data without changing constituents. Details covers the expression field and result
+        viewer.
       </p>
     )
   },
@@ -82,13 +81,12 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          That is the core loop: manage constituents, edit and check definitions, provide model data, and inspect
-          evaluation results.
+          The core loop: manage and edit constituents, provide model data, and evaluate expressions. You can restore the
+          initial data from the Sandbox menu.
         </p>
         <p>
-          Explore the Sandbox freely — you can always restore the initial data from the menu, reopen this overview, or
-          start a tab tour from the menu while on that tab. See also the{' '}
-          <TourHelpLink text='manuals' topic={HelpTopic.INTERFACE} />.
+          Reopen this overview from the Sandbox menu; start a tab guide from the help badge (Guide) on that tab. See
+          also the <TourHelpLink text='manuals' topic={HelpTopic.INTERFACE} />.
         </p>
       </div>
     )

@@ -17,25 +17,23 @@ export const modelValueContentFr: Record<string, TourStepContent> = {
     title: 'Données du modèle',
     body: (
       <p>
-        Sur l&apos;onglet <TourHelpLink text='données du modèle' topic={HelpTopic.UI_MODEL_VALUE} />, attribuez des
-        valeurs concrètes aux ensembles de base et autres constituantes interprétables. Le schéma définit la structure ;
-        le modèle la remplit depuis un domaine sujet.
+        Dans l&apos;onglet <TourHelpLink text='données du modèle' topic={HelpTopic.UI_MODEL_VALUE} /> vous saisissez et
+        consultez les valeurs des constituantes. Les concepts non définis reçoivent une interprétation (pour les
+        ensembles de base — des éléments du domaine) ; les dérivés se calculent d&apos;après les définitions.
       </p>
     )
   },
   tools: {
-    title: 'Calculer et enregistrer',
+    title: 'Calcul et enregistrement',
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          <IconCalculateOne className='inline-icon icon-green' /> (<kbd>Ctrl + Q</kbd>) calcule la constituante
-          courante ; <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) recalcule tout le
-          modèle.
+          <IconCalculateOne className='inline-icon icon-green' /> (<kbd>Ctrl + Q</kbd>) calcule la constituante courante
+          ; <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) recalcule tout le modèle.
         </p>
         <p>
           <IconSave className='inline-icon' /> (<kbd>Ctrl + S</kbd>) enregistre la valeur ;{' '}
-          <IconUpload className='inline-icon' /> / <IconDownload className='inline-icon' /> l&apos;importent ou
-          l&apos;exportent.
+          <IconUpload className='inline-icon' /> / <IconDownload className='inline-icon' /> — import ou export.
         </p>
       </div>
     )
@@ -45,13 +43,13 @@ export const modelValueContentFr: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Cliquez sur le bouton de <IconStatusUnknown className='inline-icon' /> statut pour calculer, ou ouvrez le
-          dialogue de valeur pour une édition structurée. Pour les ensembles de base, le{' '}
-          <TourHelpLink text='dialogue de liaison' topic={HelpTopic.UI_MODEL_BINDING} /> assigne les éléments du
+          Le bouton <IconStatusUnknown className='inline-icon' /> de statut lance le calcul. Pour les ensembles de base,
+          le <TourHelpLink text='dialogue de liaison' topic={HelpTopic.UI_MODEL_BINDING} /> définit les éléments du
           domaine.
         </p>
         <p>
-          Voir aussi <TourHelpLink text="l'édition de valeurs" topic={HelpTopic.UI_MODEL_VALUE_EDIT} />.
+          Voir le manuel <TourHelpLink text='édition des valeurs' topic={HelpTopic.UI_MODEL_VALUE_EDIT} /> pour les
+          formats de valeurs.
         </p>
       </div>
     )

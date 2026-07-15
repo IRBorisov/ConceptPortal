@@ -27,8 +27,8 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
     title: 'Граф термов',
     body: (
       <p>
-        <TourHelpLink text='Граф термов' topic={HelpTopic.UI_GRAPH_TERM} /> показывает связи между конституентами: какие
-        определения от каких зависят. Он помогает увидеть структуру схемы в целом.
+        <TourHelpLink text='Граф термов' topic={HelpTopic.UI_GRAPH_TERM} /> показывает связи конституент по формальным
+        определениям и атрибутированию — удобно видеть структуру схемы целиком.
       </p>
     )
   },
@@ -37,7 +37,7 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Слева выбираются раскраска узлов и типы связей. <IconFitImage className='inline-icon' /> подгоняет граф;{' '}
+          Слева — раскраска узлов и типы связей. <IconFitImage className='inline-icon' /> подгоняет граф;{' '}
           <IconFocus className='inline-icon' /> фокусирует одну конституенту; <IconFilter className='inline-icon' />{' '}
           открывает настройки раскладки и фильтров.
         </p>
@@ -47,6 +47,10 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
           <IconOverviewCore className='inline-icon icon-green' /> (<kbd>O</kbd>) показывает только аксиоматическое ядро;{' '}
           <IconImage className='inline-icon' /> экспортирует PNG или SVG.
         </p>
+        <p>
+          Попробуйте: переключите <IconText className='inline-icon' /> подписи выделенной кнопкой. Гид продолжится
+          автоматически.
+        </p>
       </div>
     )
   },
@@ -55,8 +59,8 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
     body: (
       <p>
         Если редактирование разрешено, <IconNewItem className='inline-icon icon-green' /> (<kbd>R</kbd>) создаёт
-        конституенту; <IconDestroy className='inline-icon icon-red' /> удаляет выделение;{' '}
-        <IconCrucial className='inline-icon' /> (<kbd>F</kbd>) переключает ключевой статус;{' '}
+        конституенту со ссылками на выделенные; <IconDestroy className='inline-icon icon-red' /> удаляет выделение;{' '}
+        <IconCrucial className='inline-icon' /> (<kbd>F</kbd>) переключает статус «ключевая»;{' '}
         <IconTypeGraph className='inline-icon' /> открывает граф ступеней для выделения.
       </p>
     )
@@ -65,8 +69,8 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
     title: 'Скрытые узлы',
     body: (
       <p>
-        Конституенты, отфильтрованные с холста, появляются в списке скрытых. Щелчок выделяет элемент; активация
-        открывает редактор конституенты.
+        Конституенты, отфильтрованные с холста, появляются в списке скрытых. Щелчок выделяет; двойной щелчок открывает
+        редактор конституенты.
       </p>
     )
   },
@@ -75,14 +79,14 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          <IconGraphMode value={InteractionMode.explore} className='inline-icon' /> Обзор — навигация и выделение;{' '}
-          <IconGraphMode value={InteractionMode.edit} className='inline-icon icon-green' /> Редактирование — рисование
-          связей. Рёбра атрибуции и определения: <IconEdgeType value={TGEdgeType.attribution} className='inline-icon' />{' '}
-          / <IconEdgeType value={TGEdgeType.definition} className='inline-icon' />.
+          <IconGraphMode value={InteractionMode.explore} className='inline-icon' /> Просмотр — навигация и выделение;{' '}
+          <IconGraphMode value={InteractionMode.edit} className='inline-icon icon-green' /> Редактор — рисование связей.{' '}
+          <IconEdgeType value={TGEdgeType.attribution} className='inline-icon' /> атрибутирование /{' '}
+          <IconEdgeType value={TGEdgeType.definition} className='inline-icon' /> определение.
         </p>
         <p>
-          Помощники выделения расширяют связанные узлы — например <IconGraphCollapse className='inline-icon' /> влияющие
-          и <IconGraphExpand className='inline-icon' /> зависимые.
+          Помощники расширяют связанные узлы — например <IconGraphCollapse className='inline-icon' /> все влияющие и{' '}
+          <IconGraphExpand className='inline-icon' /> все зависимые.
         </p>
       </div>
     )

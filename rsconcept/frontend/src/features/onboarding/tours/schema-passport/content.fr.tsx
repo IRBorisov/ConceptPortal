@@ -19,8 +19,8 @@ export const schemaPassportContentFr: Record<string, TourStepContent> = {
     title: 'Titre, alias, description',
     body: (
       <p>
-        Le titre est le nom lisible, l&apos;alias l&apos;identifiant court dans la bibliothèque, et la description
-        documente le domaine. Enregistrez avec <IconSave className='inline-icon' /> ou <kbd>Ctrl + S</kbd>.
+        Le titre apparaît dans les listes, l&apos;alias est l&apos;identifiant court dans la bibliothèque, et la
+        description documente le domaine. Enregistrez avec <IconSave className='inline-icon' /> ou <kbd>Ctrl + S</kbd>.
       </p>
     )
   },
@@ -57,12 +57,12 @@ export const schemaPassportContentFr: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Le panneau latéral résume le schéma : nombre de constituantes, structure de base vs dérivée, et indicateurs de
-          correction (erreurs et définitions incalculables).
+          Le panneau latéral résume le schéma : nombre de constituantes, noyau axiomatique et corps de la théorie, ainsi
+          que les indicateurs de correction (erreurs et définitions incalculables).
         </p>
         <p>
-          Développez une catégorie pour voir le détail — ensembles de base, axiomes, termes et définitions textuelles,
-          par exemple.
+          Développez une catégorie pour le détail — ensembles de base ou constants, axiomes, termes, définitions
+          textuelles et conventions.
         </p>
       </div>
     )

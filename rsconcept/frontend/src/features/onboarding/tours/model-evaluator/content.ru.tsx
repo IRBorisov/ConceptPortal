@@ -8,12 +8,11 @@ import { TourHelpLink } from '../shared/tour-help-links';
 
 export const modelEvaluatorContentRu: Record<string, TourStepContent> = {
   overview: {
-    title: 'Вычисления',
+    title: 'Расчет',
     body: (
       <p>
-        Вкладка <TourHelpLink text='вычисления' topic={HelpTopic.UI_MODEL_EVALUATOR} /> проверяет и вычисляет
-        произвольные выражения в контексте текущей модели, не изменяя конституенты и их интерпретации — удобно для
-        отладки формул и просмотра промежуточных результатов.
+        Вкладка <TourHelpLink text='Расчет' topic={HelpTopic.UI_MODEL_EVALUATOR} /> проверяет и вычисляет произвольные
+        выражения ЯРЭ на данных модели, не изменяя конституенты и их интерпретации.
       </p>
     )
   },
@@ -23,7 +22,7 @@ export const modelEvaluatorContentRu: Record<string, TourStepContent> = {
       <p>
         <IconEvaluatorCache value={true} className='inline-icon' /> включает или отключает кэш вычислений;{' '}
         <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) пересчитывает всю модель, чтобы
-        произвольные выражения видели актуальные значения.
+        выражения видели актуальные значения.
       </p>
     )
   },
@@ -32,8 +31,8 @@ export const modelEvaluatorContentRu: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Введите выражение и нажмите кнопку <IconStatusUnknown className='inline-icon' />{' '}
-          <TourHelpLink text='статуса' topic={HelpTopic.UI_EVAL_STATUS} />, чтобы вычислить. Ниже появятся типизация,
+          Введите выражение и нажмите <IconStatusUnknown className='inline-icon' />{' '}
+          <TourHelpLink text='статус' topic={HelpTopic.UI_EVAL_STATUS} />, чтобы вычислить. Ниже появятся типизация,
           ошибки и значение.
         </p>
         <p>

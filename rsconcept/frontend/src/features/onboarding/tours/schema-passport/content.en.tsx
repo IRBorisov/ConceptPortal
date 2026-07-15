@@ -19,8 +19,8 @@ export const schemaPassportContentEn: Record<string, TourStepContent> = {
     title: 'Title, alias, description',
     body: (
       <p>
-        Title is the human-readable name, alias is the short identifier used in the library, and description documents
-        the subject domain. Save with <IconSave className='inline-icon' /> or <kbd>Ctrl + S</kbd>.
+        Title appears in lists, alias is the short library identifier, and description documents the subject domain.
+        Save with <IconSave className='inline-icon' /> or <kbd>Ctrl + S</kbd>.
       </p>
     )
   },
@@ -57,10 +57,13 @@ export const schemaPassportContentEn: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          The side panel summarizes the schema: total constituents, core vs derived structure, and correctness
+          The side panel summarizes the schema: total constituents, axiomatic core and theory body, and correctness
           indicators (errors and incalculable definitions).
         </p>
-        <p>Expand a category to see a breakdown — for example base sets, axioms, terms, and textual definitions.</p>
+        <p>
+          Expand a category for a breakdown — for example base or constant sets, axioms, terms, textual definitions and
+          conventions.
+        </p>
       </div>
     )
   }

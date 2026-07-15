@@ -1,5 +1,6 @@
 import { RSModelTabID } from '@/app/navigation/navigation-context';
 
+import { OnboardingActionID } from '../../models/actions';
 import { type Tour } from '../../models/tour';
 import { EDITOR_TOUR_ROUTES, EditorTourID } from '../editor-tours';
 
@@ -10,7 +11,7 @@ import { constituentsListContentRu } from './content.ru';
 /** Detailed walkthrough of the constituents list tab (Sandbox, schema, and model). */
 export const constituentsListTour: Tour = {
   id: EditorTourID.CONSTITUENTS_LIST,
-  version: 2,
+  version: 3,
   route: EDITOR_TOUR_ROUTES,
   autoStart: false,
   steps: [
@@ -24,6 +25,8 @@ export const constituentsListTour: Tour = {
       id: 'filter',
       anchor: 'list-search',
       placement: 'bottom',
+      mode: 'interact',
+      completeAction: OnboardingActionID.CONSTITUENTS_SEARCH_USED,
       onEnter: controller => controller.changeTab(RSModelTabID.CST_LIST)
     },
     {

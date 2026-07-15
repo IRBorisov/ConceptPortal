@@ -4,12 +4,25 @@ import {
   CARD_MARGIN,
   CARD_OFFSET,
   CARD_WIDTH,
+  computeBottomSheetPosition,
   computeCardPosition,
   computeCenteredCardPosition,
-  ESTIMATED_CARD_HEIGHT
+  ESTIMATED_CARD_HEIGHT,
+  isNarrowLayout,
+  type LayoutViewport,
+  NARROW_VIEWPORT_WIDTH
 } from './card-position';
 
-const VIEWPORT = { width: 1280, height: 720 };
+const VIEWPORT: LayoutViewport = {
+  width: 1280,
+  height: 720,
+  offsetLeft: 0,
+  offsetTop: 0,
+  safeAreaTop: 0,
+  safeAreaRight: 0,
+  safeAreaBottom: 0,
+  safeAreaLeft: 0
+};
 
 function rect(top: number, left: number, width: number, height: number) {
   return { top, left, right: left + width, bottom: top + height, width, height };
@@ -104,6 +117,23 @@ describe('computeCardPosition', () => {
 
     expect(position.top).toBe(anchor.top);
   });
+
+  test('clamps anchored placement inside a shifted visual viewport', () => {
+    const anchor = rect(120, 40, 200, 40);
+    const shiftedViewport: LayoutViewport = {
+      ...VIEWPORT,
+      width: 360,
+      height: 640,
+      offsetLeft: 0,
+      offsetTop: 80
+    };
+    const position = computeCardPosition(anchor, 'bottom', ESTIMATED_CARD_HEIGHT, shiftedViewport);
+
+    expect(position.top).toBeGreaterThanOrEqual(shiftedViewport.offsetTop + CARD_MARGIN);
+    expect(position.top + ESTIMATED_CARD_HEIGHT).toBeLessThanOrEqual(
+      shiftedViewport.offsetTop + shiftedViewport.height - CARD_MARGIN
+    );
+  });
 });
 
 describe('computeCenteredCardPosition', () => {
@@ -112,5 +142,56 @@ describe('computeCenteredCardPosition', () => {
 
     expect(position.left).toBe((VIEWPORT.width - CARD_WIDTH) / 2);
     expect(position.top).toBe((VIEWPORT.height - ESTIMATED_CARD_HEIGHT) / 2);
+  });
+
+  test('centers inside a shifted visual viewport', () => {
+    const shiftedViewport: LayoutViewport = {
+      width: 390,
+      height: 700,
+      offsetLeft: 0,
+      offsetTop: 44,
+      safeAreaTop: 0,
+      safeAreaRight: 0,
+      safeAreaBottom: 34,
+      safeAreaLeft: 0
+    };
+    const position = computeCenteredCardPosition(ESTIMATED_CARD_HEIGHT, shiftedViewport);
+
+    expect(position.top).toBeGreaterThanOrEqual(shiftedViewport.offsetTop + CARD_MARGIN);
+    expect(position.top + ESTIMATED_CARD_HEIGHT).toBeLessThanOrEqual(
+      shiftedViewport.offsetTop + shiftedViewport.height - CARD_MARGIN - shiftedViewport.safeAreaBottom
+    );
+  });
+});
+
+describe('computeBottomSheetPosition', () => {
+  test('pins the card to the bottom of the visible viewport', () => {
+    const narrowViewport: LayoutViewport = {
+      width: 390,
+      height: 844,
+      offsetLeft: 0,
+      offsetTop: 0,
+      safeAreaTop: 0,
+      safeAreaRight: 0,
+      safeAreaBottom: 34,
+      safeAreaLeft: 0
+    };
+    const position = computeBottomSheetPosition(ESTIMATED_CARD_HEIGHT, narrowViewport);
+    const maxTop =
+      narrowViewport.offsetTop +
+      narrowViewport.height -
+      ESTIMATED_CARD_HEIGHT -
+      CARD_MARGIN -
+      narrowViewport.safeAreaBottom;
+
+    expect(position.top).toBe(maxTop);
+    expect(position.left).toBeGreaterThanOrEqual(CARD_MARGIN);
+  });
+});
+
+describe('isNarrowLayout', () => {
+  test('treats viewports below the breakpoint as narrow', () => {
+    expect(isNarrowLayout({ ...VIEWPORT, width: NARROW_VIEWPORT_WIDTH - 1 })).toBe(true);
+    expect(isNarrowLayout({ ...VIEWPORT, width: NARROW_VIEWPORT_WIDTH })).toBe(false);
   });
 });

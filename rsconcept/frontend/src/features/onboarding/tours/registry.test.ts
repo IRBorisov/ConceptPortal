@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
+import { OnboardingActionID } from '../models/actions';
 import { validateTour } from '../models/tour';
 
 import { EditorTourID, LibraryTourID, PassportTourID, SandboxTourID } from './editor-tours';
@@ -7,6 +8,8 @@ import {
   ensureTourLoaded,
   findAutoStartTour,
   findAutoStartTourID,
+  findResumeOfferTourID,
+  findTourToOffer,
   getTourByID,
   isKnownTourID,
   loadAllTours,
@@ -24,8 +27,23 @@ describe('tour registry', () => {
 
   test('findAutoStartTourID is sync and does not require content', () => {
     expect(findAutoStartTourID('/sandbox')).toBe(SandboxTourID.INTRO);
-    expect(findAutoStartTourID('/library')).toBe(LibraryTourID.INTRO);
+    expect(findAutoStartTourID('/library')).toBeNull();
     expect(findAutoStartTourID('/unknown')).toBeNull();
+  });
+
+  test('findResumeOfferTourID matches paused contextual tours on editor routes', () => {
+    expect(findResumeOfferTourID('/sandbox', EditorTourID.CONSTITUENTS_LIST)).toBe(EditorTourID.CONSTITUENTS_LIST);
+    expect(findResumeOfferTourID('/rsforms/12', EditorTourID.CONSTITUENTS_LIST)).toBe(EditorTourID.CONSTITUENTS_LIST);
+    expect(findResumeOfferTourID('/manuals', EditorTourID.CONSTITUENTS_LIST)).toBeNull();
+    expect(findResumeOfferTourID('/sandbox', null)).toBeNull();
+  });
+
+  test('findTourToOffer prefers a resume candidate over auto-start', async () => {
+    const resumed = await findTourToOffer('/sandbox', EditorTourID.CONSTITUENTS_LIST);
+    expect(resumed?.id).toBe(EditorTourID.CONSTITUENTS_LIST);
+
+    const auto = await findTourToOffer('/sandbox', null);
+    expect(auto?.id).toBe(SandboxTourID.INTRO);
   });
 
   test('every registered tour loads, validates, and matches catalog metadata', async () => {
@@ -56,13 +74,25 @@ describe('tour registry', () => {
     expect(getTourByID('missing-tour')).toBeNull();
   });
 
-  test('findAutoStartTour loads sandbox and library intro content', async () => {
+  test('product practice steps are wired to stable feature actions', async () => {
+    await loadAllTours();
+
+    expect(getTourByID(EditorTourID.CONSTITUENTS_LIST)?.steps.find(step => step.id === 'filter')).toMatchObject({
+      mode: 'interact',
+      completeAction: OnboardingActionID.CONSTITUENTS_SEARCH_USED
+    });
+    expect(getTourByID(EditorTourID.TERM_GRAPH)?.steps.find(step => step.id === 'options')).toMatchObject({
+      mode: 'interact',
+      interactionRegion: 'graph-toggle-labels',
+      completeAction: OnboardingActionID.GRAPH_LABELS_TOGGLED
+    });
+  });
+
+  test('findAutoStartTour loads sandbox intro only', async () => {
     const sandbox = await findAutoStartTour('/sandbox');
     expect(sandbox?.id).toBe(SandboxTourID.INTRO);
     expect(sandbox?.autoStart).toBe(true);
-    const library = await findAutoStartTour('/library');
-    expect(library?.id).toBe(LibraryTourID.INTRO);
-    expect(library?.autoStart).toBe(true);
+    expect(await findAutoStartTour('/library')).toBeNull();
   });
 
   test('ensureTourLoaded caches and returns null for unknown ids', async () => {
@@ -73,12 +103,12 @@ describe('tour registry', () => {
     expect(await ensureTourLoaded('missing-tour')).toBeNull();
   });
 
-  test('shared editor and passport tours are not auto-started', async () => {
+  test('shared editor, library, and passport tours are not auto-started', async () => {
     await loadAllTours();
     expect(getTourByID(EditorTourID.CONSTITUENTS_LIST)?.autoStart).toBe(false);
     expect(getTourByID(EditorTourID.CONCEPT_EDITOR)?.autoStart).toBe(false);
     expect(getTourByID(EditorTourID.TERM_GRAPH)?.autoStart).toBe(false);
-    expect(getTourByID(LibraryTourID.INTRO)?.autoStart).toBe(true);
+    expect(getTourByID(LibraryTourID.INTRO)?.autoStart).toBe(false);
     expect(getTourByID(PassportTourID.SCHEMA)?.autoStart).toBe(false);
     expect(getTourByID(PassportTourID.MODEL)?.autoStart).toBe(false);
     expect(getTourByID(PassportTourID.OSS)?.autoStart).toBe(false);

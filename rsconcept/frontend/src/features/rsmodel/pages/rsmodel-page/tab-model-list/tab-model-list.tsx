@@ -8,6 +8,7 @@ import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
 import { isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
 
 import { useConceptNavigation } from '@/app';
+import { emitOnboardingAction, OnboardingActionID } from '@/features/onboarding/models/actions';
 import { useFilteredItems } from '@/features/rsform/components/view-constituents/use-filtered-items';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 import { hasActiveCstFilter, useCstSearchStore } from '@/features/rsform/stores/cst-search';
@@ -49,6 +50,22 @@ export function TabModelList() {
   const setQuery = useCstSearchStore(state => state.setQuery);
   const filtered = useFilteredItems(schema, isSchemaIssue, cst => isModelIssue(engine, cst));
   const hasActiveFilter = hasActiveCstFilter(query, filter);
+
+  function handleChangeQuery(value: string) {
+    setQuery(value);
+  }
+
+  function completeSearchPractice(value: string = query) {
+    if (value.trim()) {
+      emitOnboardingAction(OnboardingActionID.CONSTITUENTS_SEARCH_USED);
+    }
+  }
+
+  function handleSearchKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key === 'Enter') {
+      completeSearchPractice(query);
+    }
+  }
 
   const rowSelection: RowSelectionState = Object.fromEntries(
     filtered.filter(cst => selectedCst.includes(cst.id)).map(cst => [String(cst.id), true])
@@ -160,7 +177,10 @@ export function TabModelList() {
           noBorder
           className='max-w-50'
           query={query}
-          onChangeQuery={setQuery}
+          onChangeQuery={handleChangeQuery}
+          onBlur={() => completeSearchPractice()}
+          onKeyDown={handleSearchKeyDown}
+          stopKeyPropagation
           data-tour='list-search'
         />
       </div>

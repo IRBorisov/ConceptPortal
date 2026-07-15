@@ -1,6 +1,14 @@
 import { HelpTopic } from '@/features/help';
 
-import { IconDownload, IconFilterReset, IconFolder, IconSearch, IconSortAsc, IconSubfolders } from '@/components/icons';
+import {
+  IconDownload,
+  IconFilterReset,
+  IconFolderEdit,
+  IconSearch,
+  IconSortAsc,
+  IconSubfolders,
+  IconText
+} from '@/components/icons';
 
 import { type TourStepContent } from '../../models/tour';
 import { TourHelpLink } from '../shared/tour-help-links';
@@ -12,7 +20,7 @@ export const libraryIntroContentRu: Record<string, TourStepContent> = {
       <div className='flex flex-col gap-2'>
         <p>
           <TourHelpLink text='Библиотека' topic={HelpTopic.UI_LIBRARY} /> — место, где вы просматриваете и открываете
-          концептуальные схемы, модели и схемы операционного синтеза, хранящиеся в Портале.
+          концептуальные схемы, модели и операционные схемы синтеза (ОСС), хранящиеся в Портале.
         </p>
         <p>Этот короткий тур охватывает папки, поиск и таблицу элементов.</p>
       </div>
@@ -31,7 +39,7 @@ export const libraryIntroContentRu: Record<string, TourStepContent> = {
     title: 'Текущее расположение',
     body: (
       <p>
-        Хлебные крошки показывают активный путь. Кнопка <IconFolder className='inline-icon' /> переименовывает папку
+        Хлебные крошки показывают активный путь. Кнопка <IconFolderEdit className='inline-icon' /> переименовывает папку
         (если доступно), а <IconSubfolders className='inline-icon' /> включает или скрывает элементы из вложенных папок.
       </p>
     )
@@ -40,9 +48,9 @@ export const libraryIntroContentRu: Record<string, TourStepContent> = {
     title: 'Поиск и фильтры',
     body: (
       <p>
-        Чипы типа сужают список до схем, моделей или OSS. Переключайте поиск по метаданным (заголовки, имена) и по
-        контексту (полный текст) с помощью <IconSearch className='inline-icon' />, при необходимости фильтруйте по
-        владельцу. <IconFilterReset className='inline-icon' /> сбрасывает пользовательские фильтры.
+        Чипы типа сужают список до схем, моделей или ОСС. Режим «Метаданные» (<IconSearch className='inline-icon' />) и
+        «Контекстный поиск» (<IconText className='inline-icon' />) переключаются селектором; при необходимости — фильтр
+        по владельцу. <IconFilterReset className='inline-icon' /> сбрасывает пользовательские фильтры.
       </p>
     )
   },
@@ -54,9 +62,7 @@ export const libraryIntroContentRu: Record<string, TourStepContent> = {
           Щелчок по строке открывает элемент. Ctrl/Cmd+щелчок — в новой вкладке. Сортировка — по заголовкам столбцов{' '}
           <IconSortAsc className='inline-icon' />, экспорт видимой таблицы — <IconDownload className='inline-icon' />.
         </p>
-        <p>
-          Цвет строки сразу показывает тип: зелёные — OSS, оранжевые — концептуальные модели, остальные — схемы.
-        </p>
+        <p>Цвет строки показывает тип: зелёные — ОСС, оранжевые — концептуальные модели, остальные — схемы.</p>
       </div>
     )
   }

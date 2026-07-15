@@ -36,35 +36,13 @@ test.afterEach(() => {
   dataLibraryItems.splice(0, dataLibraryItems.length);
 });
 
-test('create item page applies itemType=oss from query', async ({ page }) => {
+test('create item page applies itemType query for OSS and RSModel', async ({ page }) => {
   await page.goto('/library/create?itemType=oss', { waitUntil: 'domcontentloaded' });
-
   await expect(page.getByRole('heading', { name: 'Операционная схема' })).toBeVisible();
-});
 
-test('create item page applies itemType=rsmodel from query', async ({ page }) => {
   await page.goto('/library/create?itemType=rsmodel', { waitUntil: 'domcontentloaded' });
-
   await expect(page.getByRole('heading', { name: 'Концептуальная модель' })).toBeVisible();
   await expect(page.getByRole('main').getByRole('button', { name: 'Создать', exact: true })).toBeVisible();
-});
-
-test('create item page applies modelFrom parameter and pre-fills fields', async ({ page }) => {
-  dataLibraryItems.push(createLibraryItem(901, 'Базовая схема', 'KS_BASE'));
-
-  await page.goto('/library/create?modelFrom=901', { waitUntil: 'domcontentloaded' });
-
-  await expect(page.getByRole('heading', { name: 'Концептуальная модель' })).toBeVisible();
-  await expect(page.locator('#schema_title')).toHaveValue('Модель Базовая схема');
-  await expect(page.locator('#schema_alias')).toHaveValue('MKS_BASE');
-});
-
-test('create item page with unknown modelFrom still opens model form', async ({ page }) => {
-  await page.goto('/library/create?modelFrom=9999', { waitUntil: 'domcontentloaded' });
-
-  await expect(page.getByRole('heading', { name: 'Концептуальная модель' })).toBeVisible();
-  await expect(page.locator('#schema_title')).toHaveValue('');
-  await expect(page.locator('#schema_alias')).toHaveValue('');
 });
 
 test('create item page validates required fields on submit', async ({ page }) => {

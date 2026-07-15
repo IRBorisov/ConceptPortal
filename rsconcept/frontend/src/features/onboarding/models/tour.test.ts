@@ -91,6 +91,50 @@ describe('validateTour', () => {
       )
     ).toContain('tour "test-tour" step "step-1" cannot reference itself as a subtour');
   });
+
+  test('reports invalid interact step combinations', () => {
+    const content = {
+      en: { step: { title: 'Title', body: 'Body' } },
+      ru: { step: { title: 'Title', body: 'Body' } },
+      fr: { step: { title: 'Title', body: 'Body' } }
+    };
+
+    expect(
+      validateTour(
+        createMinimalTour({
+          steps: [{ id: 'step', completeAction: 'action.a' }],
+          content
+        })
+      )
+    ).toContain('tour "test-tour" step "step" sets completeAction but mode is not "interact"');
+
+    expect(
+      validateTour(
+        createMinimalTour({
+          steps: [{ id: 'step', interactionRegion: 'region-a' }],
+          content
+        })
+      )
+    ).toContain('tour "test-tour" step "step" sets interactionRegion but mode is not "interact"');
+
+    expect(
+      validateTour(
+        createMinimalTour({
+          steps: [{ id: 'step', mode: 'interact' }],
+          content
+        })
+      )
+    ).toContain('tour "test-tour" step "step" interact mode requires anchor or interactionRegion');
+
+    expect(
+      validateTour(
+        createMinimalTour({
+          steps: [{ id: 'step', mode: 'interact', anchor: 'target', completeAction: '   ' }],
+          content
+        })
+      )
+    ).toContain('tour "test-tour" step "step" has an empty completeAction');
+  });
 });
 
 describe('tourMatchesRoute', () => {

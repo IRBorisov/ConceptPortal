@@ -8,6 +8,7 @@ import {
   IconLogin,
   IconLogout,
   IconPin,
+  IconTour,
   IconUser2,
   IconVideo
 } from '@/components/icons';
@@ -35,6 +36,11 @@ export function HelpInterfaceEn() {
         <IconHelp className='inline-icon' /> icon.
       </p>
       <p>
+        The <IconTour className='inline-icon' /> icon means an interactive tour is available for that area: click it to
+        open a menu with a quick guide and a link to the manual. This icon stays visible even when contextual help is
+        turned off.
+      </p>
+      <p>
         The <IconVideo className='inline-icon' /> icon opens videos on various topics and details of how the Portal
         works. Videos are hosted on YouTube and VKontakte.
       </p>
@@ -50,9 +56,8 @@ export function HelpInterfaceEn() {
           dismiss it with <kbd>Esc</kbd>.
         </li>
         <li>
-          Elsewhere, open a contextual <IconHelp className='inline-icon' /> tooltip and choose{' '}
-          <em>{tx('tx.onboarding.guide')}</em> (or click the help icon when a guide is available) to restart the tour
-          for that area — passport, constituent list, concept editor, term graph, library, and similar.
+          Elsewhere, click <IconTour className='inline-icon' /> and choose <em>{tx('tx.help.quickGuide')}</em> to
+          restart the tour for that area — passport, constituent list, concept editor, term graph, library, and similar.
         </li>
         <li>
           Some overview steps offer <em>{tx('tx.general.details')}</em> for a deeper tour of the current tab; finishing

@@ -1,18 +1,42 @@
 import { TOUR_ANCHOR_ATTR } from '../models/tour';
 
-/** Finds the DOM element marked with the given `data-tour` anchor value. */
-export function findAnchorElement(anchor: string): HTMLElement | null {
-  return document.querySelector<HTMLElement>(`[${TOUR_ANCHOR_ATTR}="${anchor}"]`);
+export const DEFAULT_ANCHOR_TIMEOUT_MS = 5000;
+
+/** Finds DOM elements marked with the given `data-tour` anchor value. */
+export function findAnchorElements(anchor: string): NodeListOf<HTMLElement> {
+  return document.querySelectorAll<HTMLElement>(`[${TOUR_ANCHOR_ATTR}="${anchor}"]`);
+}
+
+/** True when the element is connected, laid out, and not hidden. */
+export function isAnchorVisible(element: HTMLElement): boolean {
+  if (!element.isConnected) {
+    return false;
+  }
+  const style = window.getComputedStyle(element);
+  if (style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0) {
+    return false;
+  }
+  const rect = element.getBoundingClientRect();
+  return rect.width > 0 && rect.height > 0;
+}
+
+/** Returns the anchor element only when it is visible and ready to spotlight. */
+export function findVisibleAnchorElement(anchor: string): HTMLElement | null {
+  for (const element of findAnchorElements(anchor)) {
+    if (isAnchorVisible(element)) {
+      return element;
+    }
+  }
+  return null;
 }
 
 /**
- * Waits for the anchor element to appear using rAF polling.
- * Resolves `null` after `timeoutMs`, or immediately when `signal` is aborted,
- * so a missing or abandoned anchor never blocks the tour (caller should skip the step).
+ * Waits for a visible anchor using rAF polling and a DOM mutation observer.
+ * Resolves `null` after `timeoutMs`, or immediately when `signal` is aborted.
  */
 export function waitForAnchorElement(
   anchor: string,
-  timeoutMs = 3000,
+  timeoutMs = DEFAULT_ANCHOR_TIMEOUT_MS,
   signal?: AbortSignal
 ): Promise<HTMLElement | null> {
   return new Promise(resolve => {
@@ -24,16 +48,24 @@ export function waitForAnchorElement(
     const deadline = performance.now() + timeoutMs;
     let frame = 0;
     let settled = false;
+    let observer: MutationObserver | null = null;
+
+    function cleanup() {
+      if (frame) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      }
+      observer?.disconnect();
+      observer = null;
+      signal?.removeEventListener('abort', onAbort);
+    }
 
     function finish(result: HTMLElement | null) {
       if (settled) {
         return;
       }
       settled = true;
-      if (frame) {
-        cancelAnimationFrame(frame);
-      }
-      signal?.removeEventListener('abort', onAbort);
+      cleanup();
       resolve(result);
     }
 
@@ -41,24 +73,42 @@ export function waitForAnchorElement(
       finish(null);
     }
 
-    function poll() {
+    function tryResolve() {
       if (signal?.aborted) {
         finish(null);
         return;
       }
-      const element = findAnchorElement(anchor);
+      const element = findVisibleAnchorElement(anchor);
       if (element) {
         finish(element);
         return;
       }
       if (performance.now() > deadline) {
         finish(null);
-        return;
       }
-      frame = requestAnimationFrame(poll);
+    }
+
+    function poll() {
+      tryResolve();
+      if (!settled) {
+        frame = requestAnimationFrame(poll);
+      }
     }
 
     signal?.addEventListener('abort', onAbort, { once: true });
+
+    observer = new MutationObserver(function onDomChange() {
+      tryResolve();
+    });
+    if (document.body) {
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class', 'hidden', 'aria-hidden', TOUR_ANCHOR_ATTR]
+      });
+    }
+
     poll();
   });
 }

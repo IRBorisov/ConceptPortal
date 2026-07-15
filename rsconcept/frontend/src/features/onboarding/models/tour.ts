@@ -27,6 +27,13 @@ export interface TourStepController {
 /** Popover side relative to the anchored element. */
 export type TourPlacement = 'top' | 'bottom' | 'left' | 'right';
 
+/**
+ * Step presentation mode.
+ * - `explain` (default): full-app inert modal; user advances via the card.
+ * - `interact`: unlocks a declared region for practice; optional action auto-advances.
+ */
+export type TourStepMode = 'explain' | 'interact';
+
 export interface TourStep {
   id: string;
 
@@ -35,6 +42,21 @@ export interface TourStep {
 
   /** Preferred popover side; the host may flip it when there is not enough space. */
   placement?: TourPlacement;
+
+  /** Defaults to `explain`. */
+  mode?: TourStepMode;
+
+  /**
+   * `data-tour` value of the operable region when `mode` is `interact`.
+   * Defaults to `anchor` when omitted.
+   */
+  interactionRegion?: string;
+
+  /**
+   * Stable action id (see `emitOnboardingAction`) that completes this step once when `mode` is `interact`.
+   * Next remains available as a manual fallback.
+   */
+  completeAction?: string;
 
   /**
    * Optional nested tour id offered from this step ("Explore").
@@ -46,10 +68,23 @@ export interface TourStep {
   onEnter?: (controller: TourStepController) => void;
 }
 
+/** Resolved step mode; `explain` when omitted in tour data. */
+export function resolveTourStepMode(step: Pick<TourStep, 'mode'>): TourStepMode {
+  return step.mode ?? 'explain';
+}
+
+/** `data-tour` anchor for the interactable region; only meaningful when mode is `interact`. */
+export function resolveInteractionRegionAnchor(step: Pick<TourStep, 'anchor' | 'interactionRegion'>): string | undefined {
+  return step.interactionRegion ?? step.anchor;
+}
+
 export interface Tour {
   id: string;
 
-  /** Bump to re-offer the tour to users who completed or skipped an older version. */
+  /**
+   * Bump to re-offer the tour to users who completed an older version.
+   * Explicitly skipped tours stay opted out of automatic offers across bumps.
+   */
   version: number;
 
   /**
@@ -97,6 +132,26 @@ export function validateTour(tour: Tour): string[] {
     }
     if (step.subtour === tour.id) {
       problems.push(`tour "${tour.id}" step "${step.id}" cannot reference itself as a subtour`);
+    }
+    const mode = resolveTourStepMode(step);
+    if (mode === 'explain') {
+      if (step.interactionRegion !== undefined) {
+        problems.push(`tour "${tour.id}" step "${step.id}" sets interactionRegion but mode is not "interact"`);
+      }
+      if (step.completeAction !== undefined) {
+        problems.push(`tour "${tour.id}" step "${step.id}" sets completeAction but mode is not "interact"`);
+      }
+    } else {
+      const regionAnchor = resolveInteractionRegionAnchor(step)?.trim();
+      if (!regionAnchor) {
+        problems.push(`tour "${tour.id}" step "${step.id}" interact mode requires anchor or interactionRegion`);
+      }
+      if (step.interactionRegion?.trim() === '') {
+        problems.push(`tour "${tour.id}" step "${step.id}" has an empty interactionRegion`);
+      }
+      if (step.completeAction?.trim() === '') {
+        problems.push(`tour "${tour.id}" step "${step.id}" has an empty completeAction`);
+      }
     }
   }
   for (const locale of ['en', 'ru', 'fr'] as const) {

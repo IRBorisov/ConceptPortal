@@ -7,12 +7,11 @@ import { TourHelpLink } from '../shared/tour-help-links';
 
 export const ossPassportContentFr: Record<string, TourStepContent> = {
   overview: {
-    title: 'Passeport OSS',
+    title: 'Passeport de l’OSS',
     body: (
       <p>
-        Le <TourHelpLink text='passeport OSS' topic={HelpTopic.UI_OSS_CARD} /> identifie un schéma de synthèse
-        opérationnelle dans la bibliothèque et résume ses opérations. La composition est éditée sur l&apos;onglet
-        graphe.
+        Le <TourHelpLink text='passeport de l’OSS' topic={HelpTopic.UI_OSS_CARD} /> identifie un schéma opérationnel de
+        synthèse dans la bibliothèque : nom, accès et statistiques résumées des opérations.
       </p>
     )
   },
@@ -20,7 +19,7 @@ export const ossPassportContentFr: Record<string, TourStepContent> = {
     title: 'Titre, alias, description',
     body: (
       <p>
-        Titre, alias et description fonctionnent comme pour les autres passeports. Enregistrez avec{' '}
+        Titre, alias et description identifient l&apos;OSS dans la bibliothèque. Enregistrement —{' '}
         <IconSave className='inline-icon' /> ou <kbd>Ctrl + S</kbd>.
       </p>
     )
@@ -29,8 +28,8 @@ export const ossPassportContentFr: Record<string, TourStepContent> = {
     title: 'Accès',
     body: (
       <p>
-        Le bloc <TourHelpLink text='accès' topic={HelpTopic.ACCESS} /> définit partage, visibilité et lecture seule —
-        les mêmes contrôles que sur les passeports schéma et modèle.
+        Le bloc <TourHelpLink text='accès' topic={HelpTopic.ACCESS} /> définit la politique de partage, la visibilité
+        dans la bibliothèque et le mode lecture seule.
       </p>
     )
   },
@@ -38,7 +37,7 @@ export const ossPassportContentFr: Record<string, TourStepContent> = {
     title: 'Emplacement et propriété',
     body: (
       <p>
-        Emplacement, propriétaire, éditeurs et dates apparaissent sous le formulaire, comme pour les autres éléments.
+        Sous le formulaire — emplacement dans la bibliothèque, propriétaire, éditeurs et dates de création/mise à jour.
       </p>
     )
   },
@@ -47,12 +46,10 @@ export const ossPassportContentFr: Record<string, TourStepContent> = {
     body: (
       <div className='flex flex-col gap-2'>
         <p>
-          Le panneau latéral compte les opérations par type (blocs, entrées, synthèse, répliques) et les schémas
-          conceptuels attachés (total, propres, importés).
+          Le panneau latéral compte les opérations par type (blocs, chargement, synthèse, réplication) et les schémas
+          conceptuels liés (total, propres, import).
         </p>
-        <p>
-          La composition s&apos;édite sur l&apos;onglet graphe — utilisez Détails pour une visite complète du canevas.
-        </p>
+        <p>Développez les catégories pour voir le détail.</p>
       </div>
     )
   },
@@ -60,8 +57,8 @@ export const ossPassportContentFr: Record<string, TourStepContent> = {
     title: 'Graphe des opérations',
     body: (
       <p>
-        Ouvrez le <TourHelpLink text='graphe OSS' topic={HelpTopic.UI_OSS_GRAPH} /> pour composer blocs, entrées,
-        synthèse et répliques. Détails couvre l&apos;affichage, l&apos;édition, les gestes et le panneau de contenu.
+        Dans l&apos;onglet <TourHelpLink text='graphe OSS' topic={HelpTopic.UI_OSS_GRAPH} /> vous assemblez blocs,
+        chargements, synthèse et réplications. Détails — affichage, édition, canevas et panneau de contenu.
       </p>
     )
   }
