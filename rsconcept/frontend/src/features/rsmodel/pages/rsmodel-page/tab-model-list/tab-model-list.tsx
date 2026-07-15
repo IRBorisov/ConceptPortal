@@ -55,7 +55,7 @@ export function TabModelList() {
     setQuery(value);
   }
 
-  function completeSearchPractice(value: string = query) {
+  function completeSearchPractice(value: string) {
     if (value.trim()) {
       emitOnboardingAction(OnboardingActionID.CONSTITUENTS_SEARCH_USED);
     }
@@ -63,7 +63,7 @@ export function TabModelList() {
 
   function handleSearchKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === 'Enter') {
-      completeSearchPractice(query);
+      completeSearchPractice(event.currentTarget.value);
     }
   }
 
@@ -178,7 +178,7 @@ export function TabModelList() {
           className='max-w-50'
           query={query}
           onChangeQuery={handleChangeQuery}
-          onBlur={() => completeSearchPractice()}
+          onBlur={event => completeSearchPractice(event.currentTarget.value)}
           onKeyDown={handleSearchKeyDown}
           stopKeyPropagation
           data-tour='list-search'

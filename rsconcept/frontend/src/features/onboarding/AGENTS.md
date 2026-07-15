@@ -54,4 +54,4 @@ For click-to-advance practice: `mode: 'interact'`, optional `completeAction: '<s
 pnpm --filter frontend exec vitest run src/features/onboarding
 ```
 
-Registry tests validate every registered tour and subtour links. E2E: `pnpm --filter frontend exec playwright test onboarding`.
+Registry tests validate every registered tour and subtour links. E2E (`pnpm --filter frontend exec playwright test onboarding`) covers only base engine mechanics: invitation → start, next/back, complete, skip, session dismiss, pause/resume.
