@@ -115,7 +115,7 @@ export function TabModelList() {
 
   async function createPDFList() {
     const { cstListToFile } = await import('@/services/pdf');
-    return cstListToFile(schema.items, usePreferencesStore.getState().locale);
+    return cstListToFile(filtered, usePreferencesStore.getState().locale);
   }
 
   function processAltKey(code: string): boolean {
