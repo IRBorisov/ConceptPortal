@@ -1,7 +1,7 @@
 import { Document, Font, Page } from '@react-pdf/renderer';
 
-import { pdfFontSrc } from './pdf-font-path';
-import { pdfs } from './pdf-styles';
+import { pdfFontSrc } from './font-path';
+import { pdfs } from './styles';
 
 Font.register({
   family: 'ConceptText',
@@ -28,13 +28,27 @@ const documentMetadata = {
     'See http://scripts.sil.org/OFL for full terms.'
 };
 
-interface CDocumentProps {
-  /** PDF page content rendered inside a landscape A4 page. */
+/**
+ * Props for {@link PdfDocument}.
+ *
+ * Importing this module registers Portal PDF fonts (`ConceptText`, `CodeMath`) as a side effect.
+ */
+export interface PdfDocumentProps {
+  /** Page body (tables, titles, etc.) drawn inside a single landscape A4 {@link Page}. */
   children: React.ReactNode;
 }
 
-/** Root PDF document with registered Portal fonts and landscape A4 layout. */
-export function CDocument({ children }: CDocumentProps) {
+/**
+ * Root PDF document shell used by all Portal exports.
+ *
+ * - Landscape A4 with {@link pdfs}.`page` margins and default body font
+ * - Registers custom fonts on first import (required before any `Text` that uses them)
+ * - Embeds font license metadata in the PDF producer field
+ *
+ * Content that should repeat on every page (headers/footers) belongs inside `children` with
+ * react-pdf `fixed`, not as siblings of {@link PdfDocument}.
+ */
+export function PdfDocument({ children }: PdfDocumentProps) {
   return (
     <Document {...documentMetadata}>
       <Page size='A4' orientation='landscape' style={pdfs.page}>
