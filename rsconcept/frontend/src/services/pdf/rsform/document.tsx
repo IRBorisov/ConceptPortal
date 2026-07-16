@@ -1,69 +1,42 @@
-import type { ReactNode } from 'react';
-import { IntlProvider } from 'react-intl';
 import { Link, pdf, Text, View } from '@react-pdf/renderer';
 
-import { type AppLocale, DEFAULT_LOCALE, getMessageMapForLocale, useTx } from '@/i18n';
-import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
+import { type AppLocale, useTx } from '@/i18n';
+import { PdfDocument } from '@/services/pdf/document';
+import { PdfIntlRoot } from '@/services/pdf/intl-root';
+import { pdfRowNeedsMultiPageWrap } from '@/services/pdf/layout';
+import { pdfs } from '@/services/pdf/styles';
+import { formatPdfPageRange, hyphenateCyrillic, protectShortRussianWords } from '@/services/pdf/text';
+import { type Constituenta } from '@rsconcept/domain/library';
 import { labelType } from '@rsconcept/domain/rslang/labels';
 
 import { urls } from '@/app/urls';
 
-import { CDocument } from '@/components/pdf/CDocument';
-import { pdfs } from '@/components/pdf/pdf-styles';
-import { usePreferencesStore } from '@/stores/preferences';
 import { external_urls } from '@/utils/constants';
 
-import {
-  addSpaces,
-  addSpacesTypification,
-  formatPdfPageRange,
-  hyphenateCyrillic,
-  pdfRowNeedsMultiPageWrap,
-  protectShortRussianWords
-} from './pdf-utils';
+import { addSpaces, addSpacesTypification } from './formal-text';
+import { type SchemaPdfInput } from './protocol';
 
-function handleIntlError(locale: AppLocale, error: unknown) {
-  if (locale === 'en' && typeof error === 'object' && error && 'code' in error) {
-    const code = (error as { code?: string }).code;
-    if (code === 'MISSING_TRANSLATION') {
-      return;
-    }
-  }
-  console.error(error);
-}
-
-function PdfIntlRoot({ children }: { children: ReactNode }) {
-  const locale = usePreferencesStore.getState().locale;
-  const messages = getMessageMapForLocale(locale);
-  return (
-    <IntlProvider
-      locale={locale}
-      defaultLocale={DEFAULT_LOCALE}
-      messages={messages}
-      onError={error => handleIntlError(locale, error)}
-    >
-      {children}
-    </IntlProvider>
-  );
-}
-
-/** Renders a PDF file with a list of Constituenta.
- * WARNING! Large library load, use lazy loading.
+/**
+ * Renders a constituenta-list PDF to a Blob (main thread or worker).
+ *
+ * Must not import preferences / DOM-only stores — locale is passed in so this stays worker-safe.
  */
-export function cstListToFile(data: Constituenta[]): Promise<Blob> {
+export function renderCstListPdfBlob(data: Constituenta[], locale: AppLocale): Promise<Blob> {
   return pdf(
-    <PdfIntlRoot>
+    <PdfIntlRoot locale={locale}>
       <CstListDocument data={data} />
     </PdfIntlRoot>
   ).toBlob();
 }
 
-/** Renders a PDF file with target Schema.
- * WARNING! Large library load, use lazy loading.
+/**
+ * Renders a schema PDF to a Blob (main thread or worker).
+ *
+ * @param data - {@link SchemaPdfInput} (not a full `RSForm`)
  */
-export function createSchemaFile(data: RSForm): Promise<Blob> {
+export function renderSchemaPdfBlob(data: SchemaPdfInput, locale: AppLocale): Promise<Blob> {
   return pdf(
-    <PdfIntlRoot>
+    <PdfIntlRoot locale={locale}>
       <SchemaDocument data={data} />
     </PdfIntlRoot>
   ).toBlob();
@@ -71,29 +44,28 @@ export function createSchemaFile(data: RSForm): Promise<Blob> {
 
 function CstListDocument({ data }: { data: Constituenta[] }) {
   return (
-    <CDocument>
+    <PdfDocument>
       <CstTable data={data} />
       <Text
         fixed
         style={{ ...pdfs.footer, textAlign: 'center' }}
         render={({ pageNumber, totalPages }) => formatPdfPageRange(pageNumber, totalPages)}
       />
-    </CDocument>
+    </PdfDocument>
   );
 }
 
-function SchemaDocument({ data }: { data: RSForm }) {
+function SchemaDocument({ data }: { data: SchemaPdfInput }) {
   return (
-    <CDocument>
+    <PdfDocument>
       <SchemaTitle schema={data} />
       <CstTable data={data.items} />
       <SchemaFooter schema={data} />
-    </CDocument>
+    </PdfDocument>
   );
 }
 
-// ======== Internal components ========
-function SchemaTitle({ schema }: { schema: RSForm }) {
+function SchemaTitle({ schema }: { schema: SchemaPdfInput }) {
   const tx = useTx();
   const url = `${external_urls.portal}${urls.schema(schema.id)}`;
   return (
@@ -112,7 +84,7 @@ function SchemaTitle({ schema }: { schema: RSForm }) {
   );
 }
 
-function SchemaFooter({ schema }: { schema: RSForm }) {
+function SchemaFooter({ schema }: { schema: SchemaPdfInput }) {
   const tx = useTx();
   return (
     <View fixed style={pdfs.footer}>
@@ -135,7 +107,6 @@ function CstTable({ data }: { data: Constituenta[] }) {
   return (
     <>
       <View style={{ flex: 1 }}>
-        {/* Table Header */}
         <View fixed style={pdfs.headerRow}>
           <Text style={{ ...pdfs.cell, width: '13mm' }}>ID</Text>
           <Text style={{ ...pdfs.cell, width: '82mm' }}>{tx('tx.lib.defineFormal')}</Text>
@@ -146,7 +117,6 @@ function CstTable({ data }: { data: Constituenta[] }) {
           </Text>
         </View>
 
-        {/* Table Rows */}
         {data.map((cst, idx) => (
           <View key={cst.id ?? idx} style={pdfs.row} wrap={rowNeedsMultiPageWrap(cst, tx)}>
             <View style={{ ...pdfs.cell, width: '13mm' }}>

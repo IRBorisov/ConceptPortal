@@ -10,8 +10,8 @@ export default mergeConfig(
       // Matching is on the import specifier, so use a regex that excludes the `.vitest` file itself.
       alias: [
         {
-          find: /(^|\/)pdf-font-path$/,
-          replacement: '$1pdf-font-path.vitest'
+          find: /(^|\/)font-path$/,
+          replacement: '$1font-path.vitest'
         }
       ]
     },

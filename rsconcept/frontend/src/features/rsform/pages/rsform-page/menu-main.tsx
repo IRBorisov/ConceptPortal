@@ -231,7 +231,7 @@ export function MenuMain() {
     hideMenu();
     const filename = schema.alias ?? 'Schema';
     try {
-      const { createSchemaFile } = await import('../../utils/rsform2pdf');
+      const { createSchemaFile } = await import('@/services/pdf');
       const blob = await createSchemaFile(schema);
       fileDownload(blob, `${filename}.pdf`, 'application/pdf;charset=utf-8;');
     } catch (error) {

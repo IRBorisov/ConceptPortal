@@ -118,7 +118,7 @@ export function TabSchemaList() {
   }
 
   async function createPDFList() {
-    const { cstListToFile } = await import('../../../utils/rsform2pdf');
+    const { cstListToFile } = await import('@/services/pdf');
     return cstListToFile(schema.items);
   }
 

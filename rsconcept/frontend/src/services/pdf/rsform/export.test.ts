@@ -72,12 +72,12 @@ function assertNoInvalidPdfPageNumbers(pdfText: string): void {
   expect(pdfText).not.toMatch(/(?:^|[\s(])(-1)\s*\/\s*\d/);
 }
 
-describe('rsform2pdf', () => {
+describe('rsform PDF export', () => {
   let createSchemaFile: CreateSchemaFileFn;
   let cstListToFile: CstListToFileFn;
 
   beforeAll(async () => {
-    ({ createSchemaFile, cstListToFile } = await import('./rsform2pdf'));
+    ({ createSchemaFile, cstListToFile } = await import('./export'));
   });
 
   it('does not embed invalid page numbers in schema PDF footers', async () => {
