@@ -19,6 +19,7 @@ import { ToasterThemed } from '../global-toaster';
 import { GlobalTooltips } from '../global-tooltips';
 import { MutationErrors } from '../mutation-errors';
 import { Navigation } from '../navigation';
+import { PdfExportOverlay } from '../pdf-export-overlay';
 
 export function LayoutMain() {
   const tx = useTx();
@@ -47,6 +48,7 @@ export function LayoutMain() {
       </Suspense>
       <GlobalTooltips />
       <TourHost />
+      <PdfExportOverlay />
 
       <Navigation />
 

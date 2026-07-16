@@ -125,6 +125,7 @@ export const txGeneralEn: Record<string, string> = {
   'tx.general.download.json': 'Save to JSON',
   'tx.general.download.csv': 'Save to CSV',
   'tx.general.download.pdf': 'Save to PDF',
+  'tx.general.download.pdf.progress': 'Creating PDF…',
   'tx.general.download.pdf.fail': 'Failed to create PDF file',
   'tx.general.download.toExteor': 'Save to Exteor',
   'tx.general.copy.toClipboard': 'Copy to clipboard',

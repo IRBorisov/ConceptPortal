@@ -5,7 +5,7 @@ import { PdfDocument } from '@/services/pdf/document';
 import { PdfIntlRoot } from '@/services/pdf/intl-root';
 import { pdfRowNeedsMultiPageWrap } from '@/services/pdf/layout';
 import { pdfs } from '@/services/pdf/styles';
-import { formatPdfPageRange, hyphenateCyrillic, protectShortRussianWords } from '@/services/pdf/text';
+import { formatPdfPageRange, hyphenateCyrillic, preparePdfProse } from '@/services/pdf/text';
 
 import { addSpaces, addSpacesTypification } from './formal-text';
 import { schemaPortalUrl } from './portal-url';
@@ -70,7 +70,7 @@ function SchemaTitle({ schema }: { schema: SchemaPdfInput }) {
       <Text style={{ fontSize: 12 }}>
         {tx('tx.general.source') + tx('tx.general.colon')}
         <Link src={url} style={{ textDecoration: 'underline' }}>
-          {url}
+          {preparePdfProse(url)}
         </Link>
       </Text>
     </View>
@@ -126,12 +126,10 @@ function CstTable({ data }: { data: ConstituentaPdfRow[] }) {
               </Text>
             </View>
             <View style={{ ...pdfs.cell, width: '40mm' }}>
-              <Text hyphenationCallback={hyphenateCyrillic}>{protectShortRussianWords(cst.term_resolved)}</Text>
+              <Text hyphenationCallback={hyphenateCyrillic}>{preparePdfProse(cst.term_resolved)}</Text>
             </View>
             <View style={{ ...pdfs.cell, width: '82mm', borderRightWidth: 0 }}>
-              <Text hyphenationCallback={hyphenateCyrillic}>
-                {protectShortRussianWords(getCommentColumnText(cst, tx))}
-              </Text>
+              <Text hyphenationCallback={hyphenateCyrillic}>{preparePdfProse(getCommentColumnText(cst, tx))}</Text>
             </View>
           </View>
         ))}
@@ -149,9 +147,9 @@ function rowNeedsMultiPageWrap(cst: ConstituentaPdfRow, tx: (id: string) => stri
       columnWidthMm: 38,
       avgCharWidthRatio: 0.72
     },
-    { text: protectShortRussianWords(cst.term_resolved), columnWidthMm: 40 },
+    { text: preparePdfProse(cst.term_resolved), columnWidthMm: 40 },
     {
-      text: protectShortRussianWords(getCommentColumnText(cst, tx)),
+      text: preparePdfProse(getCommentColumnText(cst, tx)),
       columnWidthMm: 82
     }
   ]);

@@ -1,5 +1,6 @@
 import { type AppLocale } from '@/i18n';
 
+import { PdfExportCancelledError } from './errors';
 import {
   type ConstituentaPdfRow,
   type RsformPdfWorkerRequest,
@@ -18,6 +19,8 @@ interface PendingJob {
 
 let worker: Worker | null = null;
 let nextRequestId = 1;
+/** Bumped on cancel so queued jobs started after abort also reject. */
+let exportGeneration = 0;
 const pending = new Map<number, PendingJob>();
 
 /** Ensures at most one job is posted/awaited at a time (client-side queue). */
@@ -48,6 +51,18 @@ function rejectAllPending(error: Error) {
 function resetWorker() {
   worker?.terminate();
   worker = null;
+}
+
+/**
+ * Aborts every in-flight / queued PDF worker job and terminates the singleton worker.
+ *
+ * Main-thread fallbacks check {@link exportGeneration} after `toBlob()` and discard the result
+ * when a cancel happened mid-render.
+ */
+export function cancelActivePdfExport(): void {
+  exportGeneration += 1;
+  rejectAllPending(new PdfExportCancelledError());
+  resetWorker();
 }
 
 /**
@@ -91,8 +106,20 @@ function getPdfWorker(): Worker {
   return worker;
 }
 
+/**
+ * Starts a worker job after any previous export has been preempted.
+ *
+ * Callers must invoke {@link cancelActivePdfExport} (via {@link startPdfExport}) before this so
+ * `generation` is captured for the new request only.
+ */
 function requestPdfFromWorker(request: Omit<RsformPdfWorkerRequest, 'id'>): Promise<Blob> {
+  const generation = exportGeneration;
+
   const run = async () => {
+    if (generation !== exportGeneration) {
+      throw new PdfExportCancelledError();
+    }
+
     const id = nextRequestId++;
     const workerInstance = getPdfWorker();
     const message = { ...request, id } as RsformPdfWorkerRequest;
@@ -118,23 +145,40 @@ function requestPdfFromWorker(request: Omit<RsformPdfWorkerRequest, 'id'>): Prom
 }
 
 async function renderSchemaPdfOnMainThread(data: SchemaPdfInput, locale: AppLocale): Promise<Blob> {
+  const generation = exportGeneration;
   const { renderSchemaPdfBlob } = await import('./document');
-  return renderSchemaPdfBlob(data, locale);
+  const blob = await renderSchemaPdfBlob(data, locale);
+  if (generation !== exportGeneration) {
+    throw new PdfExportCancelledError();
+  }
+  return blob;
 }
 
 async function renderCstListPdfOnMainThread(data: ConstituentaPdfRow[], locale: AppLocale): Promise<Blob> {
+  const generation = exportGeneration;
   const { renderCstListPdfBlob } = await import('./document');
-  return renderCstListPdfBlob(data, locale);
+  const blob = await renderCstListPdfBlob(data, locale);
+  if (generation !== exportGeneration) {
+    throw new PdfExportCancelledError();
+  }
+  return blob;
+}
+
+/** Cancels any in-flight export so a newer request owns the worker / generation. */
+function startPdfExport(): void {
+  cancelActivePdfExport();
 }
 
 /**
  * Renders a schema PDF off the UI thread when `Worker` is available.
  *
- * Jobs are queued one-at-a-time. A hung `toBlob()` triggers terminate/recreate after
- * {@link PDF_WORKER_TIMEOUT_MS}. Falls back to a dynamic main-thread import under Vitest /
- * environments without workers.
+ * A new request preempts any in-flight / queued export (worker is terminated). A hung `toBlob()`
+ * also triggers terminate/recreate after {@link PDF_WORKER_TIMEOUT_MS}. Falls back to a dynamic
+ * main-thread import under Vitest / environments without workers. Call
+ * {@link cancelActivePdfExport} to abort without starting another job.
  */
 export function renderSchemaPdfInWorker(data: SchemaPdfInput, locale: AppLocale): Promise<Blob> {
+  startPdfExport();
   if (!canUsePdfWorker()) {
     return renderSchemaPdfOnMainThread(data, locale);
   }
@@ -147,6 +191,7 @@ export function renderSchemaPdfInWorker(data: SchemaPdfInput, locale: AppLocale)
  * @see {@link renderSchemaPdfInWorker}
  */
 export function renderCstListPdfInWorker(data: ConstituentaPdfRow[], locale: AppLocale): Promise<Blob> {
+  startPdfExport();
   if (!canUsePdfWorker()) {
     return renderCstListPdfOnMainThread(data, locale);
   }

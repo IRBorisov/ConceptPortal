@@ -99,6 +99,7 @@
 
   /* Custom animations */
   --animate-pulse-brightness: pulse-brightness 1s infinite;
+  --animate-indeterminate-bar: indeterminate-bar 1.35s ease-in-out infinite;
 
   @keyframes pulse-brightness {
     0%,
@@ -108,6 +109,16 @@
 
     70% {
       filter: brightness(1.25);
+    }
+  }
+
+  @keyframes indeterminate-bar {
+    0% {
+      transform: translateX(-120%);
+    }
+
+    100% {
+      transform: translateX(320%);
     }
   }
 

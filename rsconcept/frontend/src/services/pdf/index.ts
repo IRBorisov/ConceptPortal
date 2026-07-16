@@ -8,13 +8,15 @@
  *
  * - {@link createSchemaFile} — full schema PDF (title, constituenta table, footer)
  * - {@link cstListToFile} — constituenta-list PDF (table only)
+ * - {@link isPdfExportCancelled} — skip failure toasts when the user cancelled
  *
  * Pass `locale` from the UI; this package does not read preferences. Feature exporters live under
  * `rsform/` beside shared PDF chrome; the barrel stays free of `@react-pdf` on the happy path.
  *
  * ## Package layout
  *
- * - **Common** (`services/pdf/*`) — `PdfDocument`, `PdfIntlRoot`, `pdfs`, text/layout, worker shim
+ * - **Common** (`services/pdf/*`) — `PdfDocument`, `PdfIntlRoot`, `pdfs`, text/layout, worker shim,
+ *   export progress store / overlay hook-in
  * - **RSForm** (`services/pdf/rsform/*`) — DTOs, documents, formal-text, queued worker export
  */
-export { createSchemaFile, cstListToFile } from './rsform';
+export { createSchemaFile, cstListToFile, isPdfExportCancelled } from './rsform';

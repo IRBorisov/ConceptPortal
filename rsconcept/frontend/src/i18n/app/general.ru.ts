@@ -125,6 +125,7 @@ export const txGeneralRu: Record<string, string> = {
   'tx.general.download.json': 'Сохранить в JSON',
   'tx.general.download.csv': 'Сохранить в CSV',
   'tx.general.download.pdf': 'Сохранить в PDF',
+  'tx.general.download.pdf.progress': 'Создание PDF…',
   'tx.general.download.pdf.fail': 'Не удалось создать PDF-файл',
   'tx.general.download.toExteor': 'Сохранить в Экстеор',
   'tx.general.copy.toClipboard': 'Скопировать в буфер',

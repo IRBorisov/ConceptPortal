@@ -231,12 +231,15 @@ export function MenuMain() {
   async function handleSavePDF() {
     hideMenu();
     const filename = schema.alias ?? 'Schema';
+    const { createSchemaFile, isPdfExportCancelled } = await import('@/services/pdf');
     try {
-      const { createSchemaFile } = await import('@/services/pdf');
       const locale = usePreferencesStore.getState().locale;
       const blob = await createSchemaFile(schema, locale);
       fileDownload(blob, `${filename}.pdf`, 'application/pdf;charset=utf-8;');
     } catch (error) {
+      if (isPdfExportCancelled(error)) {
+        return;
+      }
       toast.error(tx('tx.general.download.pdf.fail'));
       throw error;
     }
