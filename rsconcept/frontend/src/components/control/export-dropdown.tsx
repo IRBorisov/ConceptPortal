@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import fileDownload from 'js-file-download';
 
 import { useTx } from '@/i18n';
+import { isPdfExportCancelled } from '@/services/pdf/rsform/errors';
 
 import { convertToCSV, convertToJSON } from '@/utils/utils';
 
@@ -71,6 +72,9 @@ export function ExportDropdown<T extends object = object>({
         void pdfConverter(data)
           .then(blob => fileDownload(blob, `${filename}.pdf`, 'application/pdf;charset=utf-8;'))
           .catch(error => {
+            if (isPdfExportCancelled(error)) {
+              return;
+            }
             toast.error(tx('tx.general.download.pdf.fail'));
             throw error;
           });

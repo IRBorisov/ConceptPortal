@@ -18,6 +18,7 @@ import { AppShellDialogHosts } from '../app-shell-dialog-hosts';
 import { GlobalLoader } from '../global-loader';
 import { GlobalTooltips } from '../global-tooltips';
 import { NavigationSandbox } from '../navigation/navigation-sandbox';
+import { PdfExportOverlay } from '../pdf-export-overlay';
 
 export function LayoutSandbox() {
   const tx = useTx();
@@ -46,6 +47,7 @@ export function LayoutSandbox() {
       </Suspense>
       <GlobalTooltips />
       <TourHost />
+      <PdfExportOverlay />
 
       <NavigationSandbox />
 

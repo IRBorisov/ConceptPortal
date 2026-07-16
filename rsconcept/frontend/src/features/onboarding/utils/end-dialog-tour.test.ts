@@ -12,7 +12,6 @@ describe('endDialogTourIfActive', () => {
       tourStack: [],
       sessionDismissed: {},
       resumeOfferTourID: null,
-      resumeNesting: [],
       tours: {}
     });
 
@@ -30,7 +29,6 @@ describe('endDialogTourIfActive', () => {
       tourStack: [],
       sessionDismissed: {},
       resumeOfferTourID: null,
-      resumeNesting: [],
       tours: {}
     });
 

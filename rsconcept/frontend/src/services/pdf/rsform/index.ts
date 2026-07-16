@@ -5,4 +5,5 @@
  * Entry points {@link createSchemaFile} and {@link cstListToFile} are also re-exported from
  * `@/services/pdf`.
  */
+export { isPdfExportCancelled, PdfExportCancelledError } from './errors';
 export { createSchemaFile, cstListToFile } from './export';
