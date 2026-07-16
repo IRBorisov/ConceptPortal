@@ -34,6 +34,7 @@ import {
   IconUpload
 } from '@/components/icons';
 import { useModificationStore } from '@/stores/modification';
+import { usePreferencesStore } from '@/stores/preferences';
 import { EXTEOR_TRS_FILE, prefixes } from '@/utils/constants';
 import { convertToJSON, generatePageQR, sharePage } from '@/utils/utils';
 
@@ -232,7 +233,8 @@ export function MenuMain() {
     const filename = schema.alias ?? 'Schema';
     try {
       const { createSchemaFile } = await import('@/services/pdf');
-      const blob = await createSchemaFile(schema);
+      const locale = usePreferencesStore.getState().locale;
+      const blob = await createSchemaFile(schema, locale);
       fileDownload(blob, `${filename}.pdf`, 'application/pdf;charset=utf-8;');
     } catch (error) {
       toast.error(tx('tx.general.download.pdf.fail'));

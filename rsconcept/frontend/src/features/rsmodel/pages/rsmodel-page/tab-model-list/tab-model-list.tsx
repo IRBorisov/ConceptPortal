@@ -18,6 +18,7 @@ import { type RowSelectionState } from '@/components/data-table';
 import { SearchBar } from '@/components/input';
 import { useRowsDropHandler } from '@/hooks/use-rows-drop-handler';
 import { useFitHeight } from '@/stores/app-layout';
+import { usePreferencesStore } from '@/stores/preferences';
 import { withPreventDefault } from '@/utils/utils';
 
 import { useModelEdit } from '../model-edit-context';
@@ -114,7 +115,7 @@ export function TabModelList() {
 
   async function createPDFList() {
     const { cstListToFile } = await import('@/services/pdf');
-    return cstListToFile(schema.items);
+    return cstListToFile(schema.items, usePreferencesStore.getState().locale);
   }
 
   function processAltKey(code: string): boolean {

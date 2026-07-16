@@ -6,25 +6,18 @@ import { PdfIntlRoot } from '@/services/pdf/intl-root';
 import { pdfRowNeedsMultiPageWrap } from '@/services/pdf/layout';
 import { pdfs } from '@/services/pdf/styles';
 import { formatPdfPageRange, hyphenateCyrillic, protectShortRussianWords } from '@/services/pdf/text';
-import { type Constituenta } from '@rsconcept/domain/library';
-import { labelType } from '@rsconcept/domain/rslang/labels';
-
-import { urls } from '@/app/urls';
-
-import { external_urls } from '@/utils/constants';
 
 import { addSpaces, addSpacesTypification } from './formal-text';
-import { type SchemaPdfInput } from './protocol';
+import { schemaPortalUrl } from './portal-url';
+import { type ConstituentaPdfRow, type SchemaPdfInput } from './protocol';
 
 /**
  * Renders a constituenta-list PDF to a Blob (main thread or worker).
- *
- * Must not import preferences / DOM-only stores — locale is passed in so this stays worker-safe.
  */
-export function renderCstListPdfBlob(data: Constituenta[], locale: AppLocale): Promise<Blob> {
+export function renderCstListPdfBlob(data: ConstituentaPdfRow[], locale: AppLocale): Promise<Blob> {
   return pdf(
     <PdfIntlRoot locale={locale}>
-      <CstListDocument data={data} />
+      <CstListDocument data={data} locale={locale} />
     </PdfIntlRoot>
   ).toBlob();
 }
@@ -37,14 +30,14 @@ export function renderCstListPdfBlob(data: Constituenta[], locale: AppLocale): P
 export function renderSchemaPdfBlob(data: SchemaPdfInput, locale: AppLocale): Promise<Blob> {
   return pdf(
     <PdfIntlRoot locale={locale}>
-      <SchemaDocument data={data} />
+      <SchemaDocument data={data} locale={locale} />
     </PdfIntlRoot>
   ).toBlob();
 }
 
-function CstListDocument({ data }: { data: Constituenta[] }) {
+function CstListDocument({ data, locale }: { data: ConstituentaPdfRow[]; locale: AppLocale }) {
   return (
-    <PdfDocument>
+    <PdfDocument language={locale}>
       <CstTable data={data} />
       <Text
         fixed
@@ -55,9 +48,9 @@ function CstListDocument({ data }: { data: Constituenta[] }) {
   );
 }
 
-function SchemaDocument({ data }: { data: SchemaPdfInput }) {
+function SchemaDocument({ data, locale }: { data: SchemaPdfInput; locale: AppLocale }) {
   return (
-    <PdfDocument>
+    <PdfDocument language={locale}>
       <SchemaTitle schema={data} />
       <CstTable data={data.items} />
       <SchemaFooter schema={data} />
@@ -67,7 +60,7 @@ function SchemaDocument({ data }: { data: SchemaPdfInput }) {
 
 function SchemaTitle({ schema }: { schema: SchemaPdfInput }) {
   const tx = useTx();
-  const url = `${external_urls.portal}${urls.schema(schema.id)}`;
+  const url = schemaPortalUrl(schema.id);
   return (
     <View style={{ marginBottom: 10 }}>
       <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: '3mm' }}>
@@ -102,7 +95,7 @@ function SchemaFooter({ schema }: { schema: SchemaPdfInput }) {
   );
 }
 
-function CstTable({ data }: { data: Constituenta[] }) {
+function CstTable({ data }: { data: ConstituentaPdfRow[] }) {
   const tx = useTx();
   return (
     <>
@@ -129,7 +122,7 @@ function CstTable({ data }: { data: Constituenta[] }) {
             </View>
             <View style={{ ...pdfs.cell, width: '38mm' }}>
               <Text style={{ fontFamily: 'CodeMath' }} hyphenationCallback={word => [word]}>
-                {addSpacesTypification(labelType(cst.effectiveType))}
+                {addSpacesTypification(cst.typification)}
               </Text>
             </View>
             <View style={{ ...pdfs.cell, width: '40mm' }}>
@@ -147,12 +140,12 @@ function CstTable({ data }: { data: Constituenta[] }) {
   );
 }
 
-function rowNeedsMultiPageWrap(cst: Constituenta, tx: (id: string) => string): boolean {
+function rowNeedsMultiPageWrap(cst: ConstituentaPdfRow, tx: (id: string) => string): boolean {
   return pdfRowNeedsMultiPageWrap([
     { text: cst.alias, columnWidthMm: 13, avgCharWidthRatio: 0.6 },
     { text: addSpaces(cst.definition_formal), columnWidthMm: 82, avgCharWidthRatio: 0.72 },
     {
-      text: addSpacesTypification(labelType(cst.effectiveType)),
+      text: addSpacesTypification(cst.typification),
       columnWidthMm: 38,
       avgCharWidthRatio: 0.72
     },
@@ -164,7 +157,7 @@ function rowNeedsMultiPageWrap(cst: Constituenta, tx: (id: string) => string): b
   ]);
 }
 
-function getCommentColumnText(cst: Constituenta, tx: (id: string) => string) {
+function getCommentColumnText(cst: ConstituentaPdfRow, tx: (id: string) => string) {
   let result = cst.definition_resolved;
   if (cst.convention) {
     if (result) {
