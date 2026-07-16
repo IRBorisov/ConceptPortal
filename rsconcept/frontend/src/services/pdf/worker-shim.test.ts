@@ -1,15 +1,22 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { installPdfWorkerShim } from './worker-shim';
 
 describe('pdf worker-shim', () => {
+  const root = globalThis as Record<string, unknown>;
+  let hadDocument: boolean;
+  let originalDocument: unknown;
+
+  beforeEach(() => {
+    hadDocument = 'document' in root;
+    originalDocument = root.document;
+  });
+
   afterEach(() => {
-    // Restore a real-enough document so other tests are unaffected.
-    const root = globalThis as Record<string, unknown>;
-    if (!root.document || typeof (root.document as { createElement?: unknown }).createElement !== 'function') {
-      root.document = {
-        createElement: () => ({ style: {} })
-      };
+    if (hadDocument) {
+      root.document = originalDocument;
+    } else {
+      delete root.document;
     }
   });
 
@@ -21,7 +28,20 @@ describe('pdf worker-shim', () => {
     installPdfWorkerShim();
 
     expect(root.document).toBeTruthy();
-    expect(typeof (root.document as { createElement: unknown }).createElement).toBe('function');
+    const doc = root.document as {
+      createElement: () => { querySelector: () => null; getContext?: () => unknown };
+      querySelector: (selector: string) => null;
+      querySelectorAll: (selector: string) => unknown[];
+      createTextNode: (text: string) => unknown;
+      addEventListener: (...args: unknown[]) => void;
+    };
+    expect(typeof doc.createElement).toBe('function');
+    // Vite HMR client gates on `"document" in globalThis` then calls these.
+    expect(doc.querySelector('meta')).toBeNull();
+    expect(doc.querySelectorAll('link')).toEqual([]);
+    expect(typeof doc.createTextNode).toBe('function');
+    expect(typeof doc.addEventListener).toBe('function');
+    expect(typeof doc.createElement().querySelector).toBe('function');
     expect(root.window).toBe(root);
 
     // Idempotent when document already exists.
