@@ -15,7 +15,7 @@ function handleIntlError(locale: AppLocale, error: unknown) {
 
 /** Props for {@link PdfIntlRoot}. */
 export interface PdfIntlRootProps {
-  /** Active UI locale; selects the message map passed to `IntlProvider`. */
+  /** Selects the message map for `IntlProvider`. */
   locale: AppLocale;
   /** PDF document tree that calls `useTx` / `useIntl`. */
   children: ReactNode;
@@ -24,10 +24,6 @@ export interface PdfIntlRootProps {
 /**
  * `react-intl` root for PDF trees rendered outside the React app (main-thread `pdf()` or a
  * dedicated worker).
- *
- * PDF generation does not mount under the app `IntlProvider`, so exports must wrap documents
- * with this component and pass an explicit `AppLocale` (typically from preferences at the
- * call site).
  */
 export function PdfIntlRoot({ locale, children }: PdfIntlRootProps) {
   const messages = getMessageMapForLocale(locale);

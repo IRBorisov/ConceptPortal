@@ -10,6 +10,8 @@ export default mergeConfig(
       // Matching is on the import specifier, so use a regex that excludes the `.vitest` file itself.
       alias: [
         {
+          // Remap PDF font-path only: this repo's sole `font-path` module lives under services/pdf.
+          // Specifiers are relative (`./font-path`) or absolute (`…/services/pdf/font-path`).
           find: /(^|\/)font-path$/,
           replacement: '$1font-path.vitest'
         }

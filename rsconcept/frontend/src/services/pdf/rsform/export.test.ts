@@ -1,24 +1,11 @@
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import { type AppLocale } from '@/i18n';
 import { Graph } from '@rsconcept/domain/graph';
 import { type Constituenta, CstClass, CstType, type RSForm } from '@rsconcept/domain/library';
 
-type CreateSchemaFileFn = (data: RSForm) => Promise<Blob>;
-type CstListToFileFn = (data: Constituenta[]) => Promise<Blob>;
-
-let locale: AppLocale = 'ru';
-
-vi.mock('@/stores/preferences', () => ({
-  usePreferencesStore: {
-    getState: () => ({ locale }),
-    setState: (partial: { locale?: AppLocale }) => {
-      if (partial.locale) {
-        locale = partial.locale;
-      }
-    }
-  }
-}));
+type CreateSchemaFileFn = (data: RSForm, locale: AppLocale) => Promise<Blob>;
+type CstListToFileFn = (data: Constituenta[], locale: AppLocale) => Promise<Blob>;
 
 function mockConstituenta(
   partial: Pick<Constituenta, 'id' | 'alias' | 'definition_formal' | 'cst_class' | 'cst_type'> &
@@ -81,8 +68,6 @@ describe('rsform PDF export', () => {
   });
 
   it('does not embed invalid page numbers in schema PDF footers', async () => {
-    locale = 'ru';
-
     const items = Array.from({ length: 40 }, (_, index) =>
       mockConstituenta({
         id: index + 1,
@@ -96,7 +81,7 @@ describe('rsform PDF export', () => {
       })
     );
 
-    const blob = await createSchemaFile(mockSchema(items));
+    const blob = await createSchemaFile(mockSchema(items), 'ru');
     const pdfText = await pdfBlobToLatin1Text(blob);
 
     assertNoInvalidPdfPageNumbers(pdfText);
@@ -104,8 +89,6 @@ describe('rsform PDF export', () => {
   });
 
   it('renders schema PDF when text definition exceeds one page height', async () => {
-    locale = 'ru';
-
     const longDefinition = 'Длинное текстовое определение конституенты с подробным описанием смысла. '.repeat(120);
     const items = [
       mockConstituenta({
@@ -119,7 +102,7 @@ describe('rsform PDF export', () => {
       })
     ];
 
-    const blob = await createSchemaFile(mockSchema(items));
+    const blob = await createSchemaFile(mockSchema(items), 'ru');
     const pdfText = await pdfBlobToLatin1Text(blob);
 
     assertNoInvalidPdfPageNumbers(pdfText);
@@ -127,8 +110,6 @@ describe('rsform PDF export', () => {
   });
 
   it('does not embed invalid page numbers in constituent list PDF footers', async () => {
-    locale = 'en';
-
     const items = Array.from({ length: 35 }, (_, index) =>
       mockConstituenta({
         id: index + 1,
@@ -141,7 +122,7 @@ describe('rsform PDF export', () => {
       })
     );
 
-    const blob = await cstListToFile(items);
+    const blob = await cstListToFile(items, 'en');
     const pdfText = await pdfBlobToLatin1Text(blob);
 
     assertNoInvalidPdfPageNumbers(pdfText);

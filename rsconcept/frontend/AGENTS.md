@@ -13,7 +13,7 @@ Vite, React 19 + Compiler, Tailwind CSS, TypeScript, React Router, TanStack Quer
 ## Structure
 
 - `src/app`: bootstrap, layout, routes, providers
-- `src/services`: domain-neutral service layer (search, pdf export, etc.) consumable by `features`
+- `src/services`: reusable service layer consumable by `features` (search, PDF export, …). Shared mechanics stay domain-agnostic; a service may colocate feature-specific exporters beside that chrome (e.g. `services/pdf` + `services/pdf/rsform`) when the engine is heavy, worker-bound, or shared across features — do not put such stacks back under `features/*/utils` solely for “colocation”
 - `src/features`: feature UI, hooks, dialogs, pages
 - `src/components`: shared UI blocks/controls
 - `src/backend`: API transport/query setup
@@ -90,7 +90,7 @@ Catalog workflow (`useTx` / `globalTx`, `tx.*` ids, en/ru/fr parity, naming): `.
 
 ## Edit rules
 
-- Keep components small; colocate feature helpers.
+- Keep components small; colocate feature helpers in the feature unless a shared/heavy engine belongs in `src/services` (see Structure).
 - Preserve `src/features` naming/folder patterns.
 - Avoid `useMemo`/`useCallback`; React Compiler handles memoization.
 - Prefer `useEffectEvent` over `useCallback` for handlers used inside `useEffect`.

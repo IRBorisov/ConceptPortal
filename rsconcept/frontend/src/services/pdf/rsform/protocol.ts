@@ -1,11 +1,35 @@
 import { type AppLocale } from '@/i18n';
-import { type Constituenta } from '@rsconcept/domain/library';
+import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
+import { labelType } from '@rsconcept/domain/rslang/labels';
+
+/**
+ * Minimal constituenta fields needed to render one PDF table row.
+ *
+ * Built on the main thread so the worker never receives full `Constituenta` graphs
+ * (diagnostics, analysis, spawn, …) or needs `labelType`.
+ */
+export interface ConstituentaPdfRow {
+  /** Stable row key (constituenta id). */
+  id: number;
+  /** Alias shown in the ID column (e.g. `X1`). */
+  alias: string;
+  /** Formal definition expression. */
+  definition_formal: string;
+  /** Precomputed typification label (`labelType(effectiveType)`). */
+  typification: string;
+  /** Resolved term text. */
+  term_resolved: string;
+  /** Resolved textual definition. */
+  definition_resolved: string;
+  /** Convention text; empty when absent. */
+  convention: string;
+}
 
 /**
  * Structured-clone-safe schema payload for PDF export / worker messages.
  *
- * Omits non-cloneable `RSForm` fields (`graph`, `analyzer`, …). Only the fields consumed by the
- * schema PDF title, table, and footer are included.
+ * Omits non-cloneable `RSForm` fields (`graph`, `analyzer`, …) and trims each item to
+ * {@link ConstituentaPdfRow}.
  */
 export interface SchemaPdfInput {
   /** Library item id (used in the Portal source URL). */
@@ -15,14 +39,13 @@ export interface SchemaPdfInput {
   /** Short alias shown in the title block and footer. */
   alias: string;
   /** Constituents rendered as table rows (order preserved). */
-  items: Constituenta[];
+  items: ConstituentaPdfRow[];
 }
 
 /**
  * Request posted from the main thread to the RSForm PDF worker.
  *
- * `id` correlates the response. `kind` selects the document tree; `locale` is applied via
- * `PdfIntlRoot` inside the worker.
+ * `id` correlates the response; `kind` selects the document tree.
  */
 export type RsformPdfWorkerRequest =
   | {
@@ -36,7 +59,7 @@ export type RsformPdfWorkerRequest =
       id: number;
       kind: 'cst-list';
       locale: AppLocale;
-      data: Constituenta[];
+      data: ConstituentaPdfRow[];
     };
 
 /**
@@ -57,3 +80,26 @@ export type RsformPdfWorkerResponse =
       ok: false;
       error: string;
     };
+
+/** Maps a live constituenta to the fields the PDF table actually reads. */
+export function toConstituentaPdfRow(cst: Constituenta): ConstituentaPdfRow {
+  return {
+    id: cst.id,
+    alias: cst.alias,
+    definition_formal: cst.definition_formal,
+    typification: labelType(cst.effectiveType),
+    term_resolved: cst.term_resolved,
+    definition_resolved: cst.definition_resolved,
+    convention: cst.convention
+  };
+}
+
+/** Picks serializable schema fields and trims each item to {@link ConstituentaPdfRow}. */
+export function toSchemaPdfInput(data: RSForm): SchemaPdfInput {
+  return {
+    id: data.id,
+    title: data.title,
+    alias: data.alias,
+    items: data.items.map(toConstituentaPdfRow)
+  };
+}

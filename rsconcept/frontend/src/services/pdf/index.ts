@@ -9,13 +9,12 @@
  * - {@link createSchemaFile} — full schema PDF (title, constituenta table, footer)
  * - {@link cstListToFile} — constituenta-list PDF (table only)
  *
+ * Pass `locale` from the UI; this package does not read preferences. Feature exporters live under
+ * `rsform/` beside shared PDF chrome; the barrel stays free of `@react-pdf` on the happy path.
+ *
  * ## Package layout
  *
- * - **Common** (`services/pdf/*`, import by deep path) — `PdfDocument`, `PdfIntlRoot`, `pdfs`,
- *   text/layout helpers, `worker-shim`, fonts
- * - **RSForm** (`services/pdf/rsform/*`) — schema / list documents, formal-text spacing, worker
- *
- * This barrel intentionally re-exports only the two export entry points so a dynamic import does
- * not pull `@react-pdf` onto the main thread; use deep imports for shared building blocks.
+ * - **Common** (`services/pdf/*`) — `PdfDocument`, `PdfIntlRoot`, `pdfs`, text/layout, worker shim
+ * - **RSForm** (`services/pdf/rsform/*`) — DTOs, documents, formal-text, queued worker export
  */
 export { createSchemaFile, cstListToFile } from './rsform';
