@@ -53,15 +53,7 @@ Watch for:
 ## Workflow
 
 1. Inventory user-visible literals (labels, buttons, errors, empty states, aria, tooltips).
-2. For each, **match or add** a `tx.*` id; prefer reuse.
+2. For each, match or add a `tx.*` id; prefer reuse.
 3. Patch **en**, **ru**, **fr** in the same relative order in the slice file.
 4. Replace literals in components/helpers with `tx` / `globalTx`.
 5. Run the parity test; fix dupes / missing keys.
-
-## Checklist
-
-- [ ] No remaining hardcoded locale text for the scope you touched
-- [ ] en / ru / fr aligned for every new or changed id
-- [ ] `useTx` vs `globalTx` chosen correctly
-- [ ] Emoji / non-translatable fragments concatenated in code if needed
-- [ ] `locale-keys-parity.test.ts` passes

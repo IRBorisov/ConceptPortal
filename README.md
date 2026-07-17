@@ -58,6 +58,8 @@ The npm packages in `domain`, `rstool`, and `rstool-mcp` are independently publi
 
 Use [`.vscode/launch.json`](.vscode/launch.json) to start app configurations, run tests, and attach debuggers. GitHub Actions run linting and CI builds on push.
 
+Without Docker (e.g. Cursor Cloud VMs): bare-metal ports, SQLite bootstrap, and related notes are in [`.agents/CURSOR-CLOUD.md`](.agents/CURSOR-CLOUD.md).
+
 To update dependencies across all `rsconcept` projects in one shot:
 
 ```powershell

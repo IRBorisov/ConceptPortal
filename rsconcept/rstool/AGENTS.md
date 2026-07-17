@@ -34,15 +34,7 @@ Transports: library API (`RSToolAgent`) and stdio wrapper.
 
 ## Commands
 
-From repo root (pnpm workspace; `@rsconcept/domain` links to `rsconcept/domain`):
-
-- Install: `pnpm install` then `pnpm --filter @rsconcept/domain run build`
-- Typecheck: `pnpm --filter @rsconcept/rstool run typecheck`
-- Tests: `pnpm --filter @rsconcept/rstool test` (discovers `src/**/*.test.ts`, `examples/**/*.test.ts`)
-- Build: `pnpm --filter @rsconcept/rstool run build`
-- Stdio (dev): `pnpm --filter @rsconcept/rstool run wrapper`
-- Stdio (built): `npx rstool-wrapper`
-- Examples: `pnpm --filter @rsconcept/rstool run example:client`, `example:build-schema`, `example:build-rsmodel` (+ kinship, chocolate-nim, movd — см. `package.json` и `examples/README.md`)
+Scripts: `package.json` / `examples/README.md`. Non-obvious: build `@rsconcept/domain` before rstool work; contract-visible changes update skill docs in the same change set (see below).
 
 ## Edit rules
 

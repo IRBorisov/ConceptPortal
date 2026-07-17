@@ -20,18 +20,10 @@ Applies to all files under `rsconcept/domain`. This package is the shared TypeSc
 
 ## Commands
 
-Run from repo root (pnpm workspace):
+Scripts: `package.json`. Non-obvious:
 
-- `pnpm --filter @rsconcept/domain run generate` — regenerate the Lezer parser from `src/rslang/parser/rslang.grammar`
-- `pnpm --filter @rsconcept/domain run build` — produce `dist/` via [tsdown](https://tsdown.dev) (ESM + `.d.ts` + sourcemaps)
-- `pnpm --filter @rsconcept/domain run dev` — rebuild `dist/` on change (`tsdown --watch`)
-- `pnpm --filter @rsconcept/domain run typecheck` — `tsc --noEmit`
-- `pnpm --filter @rsconcept/domain test` — `vitest run`
-- `pnpm --filter @rsconcept/domain run lint` — ESLint (TypeScript rules aligned with frontend, no React)
-- `pnpm --filter @rsconcept/domain run lintFix` — ESLint with `--fix`
-- `pnpm --filter @rsconcept/domain run format` / `format:check` — Prettier on `src/**/*.ts`
-
-Always run `generate` after editing `rslang.grammar`. The build is reproduced as part of `build`.
+- After editing `rslang.grammar`, run `pnpm --filter @rsconcept/domain run generate`.
+- Consumers need built `dist/` — `pnpm --filter @rsconcept/domain run build` (or `run dev` to watch).
 
 ## Edit rules
 
