@@ -43,7 +43,7 @@ export const conceptEditorContentEn: Record<string, TourStepContent> = {
     )
   },
   tools: {
-    title: 'Syntax tree and type graph',
+    title: 'Syntax tree, type graph, and structure',
     body: (
       <div className='flex flex-col gap-2'>
         <p>
@@ -54,18 +54,13 @@ export const conceptEditorContentEn: Record<string, TourStepContent> = {
           <IconTypeGraph className='inline-icon' /> <TourHelpLink text='Type graph' topic={HelpTopic.UI_TYPE_GRAPH} /> —
           how types in the expression relate as typification echelons.
         </p>
+        <p>
+          When the constituent has a typification structure,{' '}
+          <IconGenerateStructure size='1.25rem' className='inline-icon' /> Expand structure opens{' '}
+          <TourHelpLink text='structure expansion' topic={HelpTopic.UI_STRUCTURE_PLANNER} />: from the echelon graph you
+          can add generated constituents and set their terms.
+        </p>
       </div>
-    )
-  },
-  structure: {
-    title: 'Expand structure',
-    body: (
-      <p>
-        When the constituent has a typification structure,{' '}
-        <IconGenerateStructure size='1.25rem' className='inline-icon' /> Expand structure opens{' '}
-        <TourHelpLink text='structure expansion' topic={HelpTopic.UI_STRUCTURE_PLANNER} />: from the echelon graph you
-        can add generated constituents and set their terms.
-      </p>
     )
   }
 };

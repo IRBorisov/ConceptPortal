@@ -48,14 +48,5 @@ export const ossPassportContentRu: Record<string, TourStepContent> = {
         <p>Раскройте категории, чтобы увидеть разбивку.</p>
       </div>
     )
-  },
-  graph: {
-    title: 'Граф операций',
-    body: (
-      <p>
-        На вкладке <TourHelpLink text='граф ОСС' topic={HelpTopic.UI_OSS_GRAPH} /> собирают блоки, загрузки, синтез и
-        репликации. «Подробнее» — вид, правка, холст и панель содержания.
-      </p>
-    )
   }
 };

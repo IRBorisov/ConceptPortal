@@ -183,6 +183,8 @@ export function TourHost() {
   const stepViewGateRef = useRef(createStepViewGate());
   const lastUnavailableKeyRef = useRef<string | null>(null);
   const actionCompletedRef = useRef(false);
+  /** Practice action received before the interact region unlocked; flushed when unlock succeeds. */
+  const pendingPracticeActionRef = useRef<string | null>(null);
 
   const expectsSpotlight = Boolean(step?.anchor) && anchorStatus !== 'unavailable' && Boolean(activeTourID);
   if (layoutAnchorRect) {
@@ -464,6 +466,7 @@ export function TourHost() {
   useEffect(
     function resetActionCompletionOnStepChange() {
       actionCompletedRef.current = false;
+      pendingPracticeActionRef.current = null;
     },
     [activeStep, activeTourID, step?.completeAction]
   );
@@ -483,6 +486,7 @@ export function TourHost() {
       return;
     }
     actionCompletedRef.current = true;
+    pendingPracticeActionRef.current = null;
     emitTourLifecycle('action_completed', targetTour, {
       route: location.pathname,
       locale,
@@ -508,22 +512,46 @@ export function TourHost() {
   useEffect(
     function subscribeToPracticeActions() {
       const completeAction = step?.completeAction;
-      if (!isTourRendered || !isInteractUnlocked || !completeAction || !tour || !step) {
+      if (!isTourRendered || !isInteractStep || !completeAction || !tour || !step) {
         return;
       }
       const expectedStepIndex = activeStep;
       const expectedStepId = step.id;
       const expectedAction = completeAction;
-      const layout = resolveTourCardLayoutMode(layoutAnchorRect !== null, readLayoutViewport());
 
       return subscribeOnboardingActions(function handlePracticeAction(detail) {
         if (detail.actionId !== expectedAction) {
           return;
         }
+        // Latch emits that arrive before the cutout unlocks (fast click / slow layout).
+        if (!isInteractUnlocked) {
+          pendingPracticeActionRef.current = expectedAction;
+          return;
+        }
+        const layout = resolveTourCardLayoutMode(layoutAnchorRect !== null, readLayoutViewport());
         onAdvanceFromAction(tour, expectedStepIndex, expectedStepId, expectedAction, layout);
       });
     },
-    [isTourRendered, isInteractUnlocked, tour, step, activeStep, layoutAnchorRect, locale, location.pathname]
+    [isTourRendered, isInteractStep, isInteractUnlocked, tour, step, activeStep, layoutAnchorRect]
+  );
+
+  useEffect(
+    function flushLatchedPracticeActionOnUnlock() {
+      const completeAction = step?.completeAction;
+      if (
+        !isTourRendered ||
+        !isInteractUnlocked ||
+        !completeAction ||
+        !tour ||
+        !step ||
+        pendingPracticeActionRef.current !== completeAction
+      ) {
+        return;
+      }
+      const layout = resolveTourCardLayoutMode(layoutAnchorRect !== null, readLayoutViewport());
+      onAdvanceFromAction(tour, activeStep, step.id, completeAction, layout);
+    },
+    [isTourRendered, isInteractUnlocked, tour, step, activeStep, layoutAnchorRect]
   );
 
   useEffect(
@@ -741,6 +769,8 @@ export function TourHost() {
     const canResume = inviteResumeStep > 0;
 
     function handleStartInvitation() {
+      const { resumeOfferTourID: offerID, resumeNesting: nesting } = useOnboardingStore.getState();
+      const parentIDs = offerID === inviteTour.id ? nesting.map(frame => frame.tourID) : [];
       emitTourLifecycle('invitation_accepted', inviteTour, {
         route: location.pathname,
         locale,
@@ -754,6 +784,14 @@ export function TourHost() {
       });
       startTour(inviteTour.id, inviteResumeStep);
       setInvitation(null);
+      // Parents may not be in the lazy cache after a remount; preload so Finish/Back can render them.
+      for (const parentID of parentIDs) {
+        void ensureTourLoaded(parentID).then(function refreshAfterParentLoad(loaded) {
+          if (loaded) {
+            setTourLoadRevision(revision => revision + 1);
+          }
+        });
+      }
     }
 
     function handleDeclineInvitation() {

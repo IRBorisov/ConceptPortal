@@ -8,6 +8,7 @@ import { useTx } from '@/i18n';
 
 import { type HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
+import { endDialogTourIfActive } from '@/features/onboarding/utils/end-dialog-tour';
 
 import { useEscapeKey } from '@/hooks/use-escape-key';
 import { useHideActiveDialog } from '@/hooks/use-hide-active-dialog';
@@ -101,9 +102,14 @@ export function ModalForm({
     };
   }, []);
 
+  function closeModal() {
+    endDialogTourIfActive(tourID);
+    closeDialog();
+  }
+
   function handleCancel() {
     onCancel?.();
-    closeDialog();
+    closeModal();
   }
   useEscapeKey(handleCancel);
 
@@ -112,7 +118,7 @@ export function ModalForm({
       return;
     }
     onSubmit(event);
-    closeDialog();
+    closeModal();
   }
 
   return (

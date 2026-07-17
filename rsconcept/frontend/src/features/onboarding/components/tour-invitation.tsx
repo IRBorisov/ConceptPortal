@@ -92,7 +92,7 @@ export function TourInvitation({ title, purpose, stepCount, canResume, onStart, 
             </p>
           </div>
 
-          <div className='flex flex-wrap items-center justify-center gap-6'>
+          <div className='flex flex-wrap items-center justify-center gap-6 text-sm'>
             <Button text={tx('tx.onboarding.notNow')} title={tx('tx.onboarding.notNow')} onClick={onDecline} />
             <Button data-tour-primary-action text={primaryLabel} title={primaryLabel} onClick={onStart} colorSubmit />
           </div>

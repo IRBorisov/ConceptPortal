@@ -107,11 +107,6 @@ const tourRegistrations: Record<string, TourRegistration> = {
     autoStart: false,
     route: '/oss',
     load: () => import('./create-synthesis').then(module => module.createSynthesisTour)
-  },
-  'engine-fixture': {
-    autoStart: false,
-    route: '/sandbox',
-    load: () => import('./engine-fixture').then(module => module.engineFixtureTour)
   }
 };
 

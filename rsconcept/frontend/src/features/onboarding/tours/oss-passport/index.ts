@@ -1,7 +1,7 @@
 import { OssTabID } from '@/app/navigation/navigation-context';
 
 import { type Tour } from '../../models/tour';
-import { OssTourID, PassportTourID } from '../editor-tours';
+import { PassportTourID } from '../editor-tours';
 
 import { ossPassportContentEn } from './content.en';
 import { ossPassportContentFr } from './content.fr';
@@ -11,14 +11,10 @@ function openPassport(controller: { changeTab: (tabID: number) => void }) {
   controller.changeTab(OssTabID.CARD);
 }
 
-function openGraph(controller: { changeTab: (tabID: number) => void }) {
-  controller.changeTab(OssTabID.GRAPH);
-}
-
-/** Detailed walkthrough of the OSS passport. */
+/** Detailed walkthrough of the OSS passport. Graph details live in the separate `oss-graph` tour. */
 export const ossPassportTour: Tour = {
   id: PassportTourID.OSS,
-  version: 2,
+  version: 3,
   route: '/oss',
   autoStart: false,
   steps: [
@@ -51,13 +47,6 @@ export const ossPassportTour: Tour = {
       anchor: 'passport-stats',
       placement: 'left',
       onEnter: openPassport
-    },
-    {
-      id: 'graph',
-      anchor: 'tab-graph',
-      placement: 'bottom',
-      subtour: OssTourID.GRAPH,
-      onEnter: openGraph
     }
   ],
   content: {

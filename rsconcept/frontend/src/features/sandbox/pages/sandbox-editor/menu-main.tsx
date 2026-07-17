@@ -189,6 +189,12 @@ export function MenuMain() {
       />
       <Dropdown isOpen={isMenuOpen} margin='mt-3'>
         <DropdownButton
+          text={tx('tx.onboarding.show')}
+          title={tx('tx.onboarding.show.hint')}
+          icon={<IconTour size='1rem' className='icon-primary' />}
+          onClick={handleShowTour}
+        />
+        <DropdownButton
           text={tx('tx.model.recalculate')}
           aria-label={tx('tx.model.recalculate.hint')}
           icon={<IconCalculateAll size='1rem' className='icon-green' />}
@@ -217,12 +223,6 @@ export function MenuMain() {
           title={tx('tx.sandbox.export.model')}
           icon={<IconRSModel size='1rem' className='text-accent-orange' />}
           onClick={() => void handleCreateRSModel()}
-        />
-        <DropdownButton
-          text={tx('tx.onboarding.show')}
-          title={tx('tx.onboarding.show.hint')}
-          icon={<IconTour size='1rem' className='icon-primary' />}
-          onClick={handleShowTour}
         />
         <Divider margins='mx-3 my-1' />
         <DropdownButton

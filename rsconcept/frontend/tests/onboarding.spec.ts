@@ -129,3 +129,51 @@ test('leaving the route pauses the tour and Resume restores the resume point', a
   const resumedCard = page.getByTestId('tour-card');
   await expect(resumedCard).toHaveAttribute('data-tour-step', '2/8');
 });
+
+test('Explore opens a subtour and Finish returns to the parent step', async ({ page }) => {
+  await page.goto('/sandbox', { waitUntil: 'domcontentloaded' });
+  await acceptTourInvitation(page);
+
+  const card = page.getByTestId('tour-card');
+  await card.getByRole('button', { name: 'Начать обучение' }).click();
+  await expect(card).toHaveAttribute('data-tour-step', '2/8');
+  await expect(card.getByRole('button', { name: 'Подробнее' })).toBeVisible();
+
+  await card.getByRole('button', { name: 'Подробнее' }).click();
+  await expect(card).toHaveAttribute('data-tour-step', '1/3');
+
+  await card.getByRole('button', { name: 'Далее' }).click();
+  await expect(card).toHaveAttribute('data-tour-step', '2/3');
+  await card.getByRole('button', { name: 'Далее' }).click();
+  await expect(card).toHaveAttribute('data-tour-step', '3/3');
+  await card.getByRole('button', { name: 'Завершить' }).click();
+
+  await expect(card).toHaveAttribute('data-tour-step', '2/8');
+  await expect(card.getByRole('button', { name: 'Подробнее' })).toBeVisible();
+});
+
+test('pause mid-subtour resumes the child nested under the parent', async ({ page }) => {
+  await page.goto('/sandbox', { waitUntil: 'domcontentloaded' });
+  await acceptTourInvitation(page);
+
+  const card = page.getByTestId('tour-card');
+  await card.getByRole('button', { name: 'Начать обучение' }).click();
+  await expect(card).toHaveAttribute('data-tour-step', '2/8');
+  await card.getByRole('button', { name: 'Подробнее' }).click();
+  await expect(card).toHaveAttribute('data-tour-step', '1/3');
+  await card.getByRole('button', { name: 'Далее' }).click();
+  await expect(card).toHaveAttribute('data-tour-step', '2/3');
+
+  await page.goto('/library', { waitUntil: 'domcontentloaded' });
+  await expect(page.getByTestId('tour-card')).toBeHidden();
+
+  await page.goto('/sandbox', { waitUntil: 'domcontentloaded' });
+  await acceptTourInvitation(page, 'resume');
+  const resumedCard = page.getByTestId('tour-card');
+  await expect(resumedCard).toHaveAttribute('data-tour-step', '2/3');
+
+  await resumedCard.getByRole('button', { name: 'Далее' }).click();
+  await expect(resumedCard).toHaveAttribute('data-tour-step', '3/3');
+  await resumedCard.getByRole('button', { name: 'Завершить' }).click();
+  await expect(resumedCard).toHaveAttribute('data-tour-step', '2/8');
+});

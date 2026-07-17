@@ -23,6 +23,8 @@ How to add or expand guided tours. Engine code (`models/`, `stores/`, `component
 - **Passports**: `schema-passport`, `model-passport`, `oss-passport`, `sandbox-passport` — end on `passport-stats`; wire via BadgeHelp on the form heading
 - **Dialogs** (BadgeHelp only; open the dialog first): `formula-tree` (`Q` / Cmd+S extract), `structure-planner` (Cmd+S), `cst-template`, `relocate-cst`, `create-synthesis`
 
+Do not register test-only fixtures (e.g. `engine-fixture`) in the production catalog.
+
 ## Add a tour
 
 1. **`tours/<name>/index.ts`** — export a `Tour`:
@@ -55,4 +57,4 @@ For click-to-advance practice: `mode: 'interact'`, optional `completeAction: '<s
 pnpm --filter frontend exec vitest run src/features/onboarding
 ```
 
-Registry tests validate every registered tour and subtour links. E2E (`pnpm --filter frontend exec playwright test onboarding`) covers only base engine mechanics: invitation → start, next/back, complete, skip, session dismiss, pause/resume.
+Registry tests validate every registered tour, subtour links, and that passport tours end on `passport-stats`. E2E (`pnpm --filter frontend exec playwright test onboarding`) covers invitation → start, next/back, complete, skip, session dismiss, pause/resume, Explore → return, and pause mid-subtour.

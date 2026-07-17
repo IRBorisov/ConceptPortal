@@ -114,4 +114,18 @@ describe('tour registry', () => {
     expect(getTourByID(PassportTourID.OSS)?.autoStart).toBe(false);
     expect(getTourByID(PassportTourID.SANDBOX)?.autoStart).toBe(false);
   });
+
+  test('passport tours end on the passport-stats anchor', async () => {
+    await loadAllTours();
+    for (const passportID of Object.values(PassportTourID)) {
+      const tour = getTourByID(passportID);
+      expect(tour, passportID).toBeTruthy();
+      const lastStep = tour!.steps[tour!.steps.length - 1];
+      expect(lastStep.anchor, passportID).toBe('passport-stats');
+    }
+  });
+
+  test('engine-fixture is not part of the production catalog', () => {
+    expect(isKnownTourID('engine-fixture')).toBe(false);
+  });
 });

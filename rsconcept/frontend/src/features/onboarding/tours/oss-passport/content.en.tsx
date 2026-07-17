@@ -48,14 +48,5 @@ export const ossPassportContentEn: Record<string, TourStepContent> = {
         <p>Expand categories to see the breakdown.</p>
       </div>
     )
-  },
-  graph: {
-    title: 'Operations graph',
-    body: (
-      <p>
-        On the <TourHelpLink text='OSS graph' topic={HelpTopic.UI_OSS_GRAPH} /> tab you assemble blocks, inputs,
-        synthesis, and replicas. Details covers view, editing, canvas, and the contents panel.
-      </p>
-    )
   }
 };

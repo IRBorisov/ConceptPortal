@@ -1,6 +1,6 @@
 import { type Tour } from '../../models/tour';
 
-/** Internal tour for engine/E2E tests; not offered via auto-start or product UI. */
+/** Internal tour definition for engine/E2E experiments; not registered in the production catalog. */
 export const ENGINE_FIXTURE_TOUR_ID = 'engine-fixture';
 
 export const engineFixtureTour: Tour = {
@@ -28,18 +28,18 @@ export const engineFixtureTour: Tour = {
   ],
   content: {
     en: {
-      explain: { title: 'Explain step', body: 'Explain-only fixture step.' },
-      interact: { title: 'Interact step', body: 'Complete the fixture action.' },
+      'explain': { title: 'Explain step', body: 'Explain-only fixture step.' },
+      'interact': { title: 'Interact step', body: 'Complete the fixture action.' },
       'interact-fallback': { title: 'Interact fallback', body: 'Advance manually with Next.' }
     },
     ru: {
-      explain: { title: 'Шаг объяснения', body: 'Только объяснение.' },
-      interact: { title: 'Интерактивный шаг', body: 'Выполните действие.' },
+      'explain': { title: 'Шаг объяснения', body: 'Только объяснение.' },
+      'interact': { title: 'Интерактивный шаг', body: 'Выполните действие.' },
       'interact-fallback': { title: 'Интерактивный запасной', body: 'Перейдите кнопкой Далее.' }
     },
     fr: {
-      explain: { title: 'Étape explicative', body: 'Étape explicative seulement.' },
-      interact: { title: 'Étape interactive', body: 'Effectuez l’action.' },
+      'explain': { title: 'Étape explicative', body: 'Étape explicative seulement.' },
+      'interact': { title: 'Étape interactive', body: 'Effectuez l’action.' },
       'interact-fallback': { title: 'Secours interactif', body: 'Avancez avec Suivant.' }
     }
   }

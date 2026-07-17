@@ -63,9 +63,16 @@ interface OnboardingStore {
 
   /**
    * Innermost tour paused by leaving its route (e.g. help link → manuals).
-   * Session-only — returning to a matching route re-offers Resume even when `autoStart` is false.
+   * Persisted so hard navigations / remounts still re-offer Resume when `autoStart` is false.
    */
   resumeOfferTourID: string | null;
+
+  /**
+   * Parent frames captured with {@link pauseActiveTour} while nested.
+   * Restored by {@link startTour} when resuming the paused tour so Explore nesting survives route leave
+   * and hard navigations (Playwright `goto`, refresh).
+   */
+  resumeNesting: TourStackFrame[];
 
   startTour: (tourID: string, fromStep?: number) => void;
   setActiveStep: (index: number) => void;
@@ -147,23 +154,32 @@ export const useOnboardingStore = create<OnboardingStore>()(
         tourStack: [],
         sessionDismissed: {},
         resumeOfferTourID: null,
+        resumeNesting: [],
 
-        startTour: (tourID, fromStep = 0) =>
+        startTour: (tourID, fromStep = 0) => {
+          const { resumeOfferTourID, resumeNesting, sessionDismissed } = get();
+          const restoreStack = resumeOfferTourID === tourID ? resumeNesting : [];
           set({
             activeTourID: tourID,
             activeStep: Math.max(0, fromStep),
-            tourStack: [],
-            sessionDismissed: { ...get().sessionDismissed, [tourID]: false },
-            resumeOfferTourID: null
-          }),
+            tourStack: restoreStack,
+            sessionDismissed: { ...sessionDismissed, [tourID]: false },
+            resumeOfferTourID: null,
+            resumeNesting: []
+          });
+        },
 
         setActiveStep: index => set({ activeStep: Math.max(0, index) }),
 
         declineTourOffer: tourID =>
-          set(state => ({
-            sessionDismissed: { ...state.sessionDismissed, [tourID]: true },
-            resumeOfferTourID: state.resumeOfferTourID === tourID ? null : state.resumeOfferTourID
-          })),
+          set(state => {
+            const clearingResume = state.resumeOfferTourID === tourID;
+            return {
+              sessionDismissed: { ...state.sessionDismissed, [tourID]: true },
+              resumeOfferTourID: clearingResume ? null : state.resumeOfferTourID,
+              resumeNesting: clearingResume ? [] : state.resumeNesting
+            };
+          }),
 
         enterSubtour: tourID => {
           const { activeTourID, activeStep, tours, tourStack, sessionDismissed } = get();
@@ -237,7 +253,9 @@ export const useOnboardingStore = create<OnboardingStore>()(
             activeStep: 0,
             tourStack: [],
             tours: nextTours,
-            resumeOfferTourID: activeTourID
+            resumeOfferTourID: activeTourID,
+            // Keep parent frames so Resume can restore Explore nesting (not only the child tour).
+            resumeNesting: tourStack
           });
         },
 
@@ -259,13 +277,19 @@ export const useOnboardingStore = create<OnboardingStore>()(
               [tourID]: { ...defaultTourProgress }
             },
             sessionDismissed: { ...state.sessionDismissed, [tourID]: false },
-            resumeOfferTourID: null
+            resumeOfferTourID: null,
+            resumeNesting: []
           }))
       };
     },
     {
       version: 1,
-      partialize: state => ({ tours: state.tours }),
+      partialize: state => ({
+        tours: state.tours,
+        // Keep paused resume target + Explore nesting across remounts (pagehide / hard nav).
+        resumeOfferTourID: state.resumeOfferTourID,
+        resumeNesting: state.resumeNesting
+      }),
       name: 'portal.onboarding'
     }
   )

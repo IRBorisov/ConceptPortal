@@ -44,7 +44,7 @@ export const conceptEditorContentRu: Record<string, TourStepContent> = {
     )
   },
   tools: {
-    title: 'Дерево разбора и граф ступеней',
+    title: 'Дерево разбора, граф ступеней и структура',
     body: (
       <div className='flex flex-col gap-2'>
         <p>
@@ -56,18 +56,13 @@ export const conceptEditorContentRu: Record<string, TourStepContent> = {
           <TourHelpLink text='Граф ступеней' topic={HelpTopic.UI_TYPE_GRAPH} /> — как типы в выражении связаны ступенями
           типизации.
         </p>
+        <p>
+          Если у конституенты есть структура типизации, кнопка{' '}
+          <IconGenerateStructure size='1.25rem' className='inline-icon' /> Раскрыть структуру открывает{' '}
+          <TourHelpLink text='раскрытие структуры' topic={HelpTopic.UI_STRUCTURE_PLANNER} />: по графу ступеней можно
+          добавить порождённые конституенты и задать им термины.
+        </p>
       </div>
-    )
-  },
-  structure: {
-    title: 'Раскрытие структуры',
-    body: (
-      <p>
-        Если у конституенты есть структура типизации, кнопка{' '}
-        <IconGenerateStructure size='1.25rem' className='inline-icon' /> Раскрыть структуру открывает{' '}
-        <TourHelpLink text='раскрытие структуры' topic={HelpTopic.UI_STRUCTURE_PLANNER} />: по графу ступеней можно
-        добавить порождённые конституенты и задать им термины.
-      </p>
     )
   }
 };

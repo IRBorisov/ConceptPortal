@@ -45,7 +45,7 @@ export const conceptEditorContentFr: Record<string, TourStepContent> = {
     )
   },
   tools: {
-    title: 'Arbre syntaxique et graphe des échelons',
+    title: 'Arbre syntaxique, graphe des échelons et structure',
     body: (
       <div className='flex flex-col gap-2'>
         <p>
@@ -58,18 +58,13 @@ export const conceptEditorContentFr: Record<string, TourStepContent> = {
           <TourHelpLink text='Graphe des échelons' topic={HelpTopic.UI_TYPE_GRAPH} /> — comment les types de
           l&apos;expression s&apos;enchaînent en typification.
         </p>
+        <p>
+          Si la constituante a une structure de typification,{' '}
+          <IconGenerateStructure size='1.25rem' className='inline-icon' /> Développer la structure ouvre le{' '}
+          <TourHelpLink text='développement de structure' topic={HelpTopic.UI_STRUCTURE_PLANNER} /> : depuis le graphe
+          des échelons, ajoutez des constituantes générées et leurs termes.
+        </p>
       </div>
-    )
-  },
-  structure: {
-    title: 'Développer la structure',
-    body: (
-      <p>
-        Si la constituante a une structure de typification,{' '}
-        <IconGenerateStructure size='1.25rem' className='inline-icon' /> Développer la structure ouvre le{' '}
-        <TourHelpLink text='développement de structure' topic={HelpTopic.UI_STRUCTURE_PLANNER} /> : depuis le graphe des
-        échelons, ajoutez des constituantes générées et leurs termes.
-      </p>
     )
   }
 };
