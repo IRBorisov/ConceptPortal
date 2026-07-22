@@ -26,7 +26,7 @@ export const modelValueContentRu: Record<string, TourStepContent> = {
   tools: {
     title: 'Вычисление и сохранение',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <IconCalculateOne className='inline-icon icon-green' /> (<kbd>Ctrl + Q</kbd>) вычисляет текущую конституенту;{' '}
           <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) пересчитывает всю модель.
@@ -35,13 +35,13 @@ export const modelValueContentRu: Record<string, TourStepContent> = {
           <IconSave className='inline-icon' /> (<kbd>Ctrl + S</kbd>) сохраняет значение;{' '}
           <IconUpload className='inline-icon' /> / <IconDownload className='inline-icon' /> — импорт или экспорт.
         </p>
-      </div>
+      </>
     )
   },
   form: {
     title: 'Редактор значения',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Кнопка <IconStatusUnknown className='inline-icon' /> статуса запускает вычисление. Для базисных множеств{' '}
           <TourHelpLink text='диалог привязки' topic={HelpTopic.UI_MODEL_BINDING} /> задаёт элементы предметной области.
@@ -50,7 +50,7 @@ export const modelValueContentRu: Record<string, TourStepContent> = {
           Подробнее о форматах значений — в руководстве{' '}
           <TourHelpLink text='редактирование значений' topic={HelpTopic.UI_MODEL_VALUE_EDIT} />.
         </p>
-      </div>
+      </>
     )
   }
 };

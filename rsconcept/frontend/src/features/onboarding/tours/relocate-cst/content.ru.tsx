@@ -8,7 +8,7 @@ export const relocateCstContentRu: Record<string, TourStepContent> = {
   overview: {
     title: 'Перенос конституент',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <TourHelpLink text='Перенос' topic={HelpTopic.UI_RELOCATE_CST} /> перемещает ненаследуемые конституенты между
           схемами, связанными операцией ОР — обычно вверх в схему-аргумент или вниз в результат.
@@ -17,7 +17,7 @@ export const relocateCstContentRu: Record<string, TourStepContent> = {
           Выберите исходную схему, переключите направление кнопкой{' '}
           <IconRelocationUp value={true} className='inline-icon' />, затем укажите допустимую схему-назначение.
         </p>
-      </div>
+      </>
     )
   },
   selection: {

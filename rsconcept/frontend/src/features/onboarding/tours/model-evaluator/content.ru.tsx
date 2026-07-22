@@ -29,7 +29,7 @@ export const modelEvaluatorContentRu: Record<string, TourStepContent> = {
   form: {
     title: 'Выражение и результат',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Введите выражение и нажмите <IconStatusUnknown className='inline-icon' />{' '}
           <TourHelpLink text='статус' topic={HelpTopic.UI_EVAL_STATUS} />, чтобы вычислить. Ниже появятся типизация,
@@ -39,7 +39,7 @@ export const modelEvaluatorContentRu: Record<string, TourStepContent> = {
           Откройте результат в <IconDatabase className='inline-icon' /> просмотрщике значений для структурированного
           разбора.
         </p>
-      </div>
+      </>
     )
   }
 };

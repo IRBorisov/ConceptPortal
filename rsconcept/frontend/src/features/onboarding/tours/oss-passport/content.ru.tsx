@@ -40,13 +40,13 @@ export const ossPassportContentRu: Record<string, TourStepContent> = {
   stats: {
     title: 'Панель статистики',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Боковая панель считает операции по типам (блоки, загрузка, синтез, реплика) и связанные концептуальные схемы
           (всего, собственные, импорт).
         </p>
         <p>Раскройте категории, чтобы увидеть разбивку.</p>
-      </div>
+      </>
     )
   }
 };

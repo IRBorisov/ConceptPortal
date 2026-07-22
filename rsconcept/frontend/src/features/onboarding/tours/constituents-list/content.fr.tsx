@@ -28,7 +28,7 @@ export const constituentsListContentFr: Record<string, TourStepContent> = {
   filter: {
     title: 'Recherche',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Essayez : saisissez du texte dans le champ <IconSearch className='inline-icon' />. La liste se filtre par nom,
           terme, définitions et convention. Appuyez sur Entrée ou quittez le champ — le guide continue.
@@ -37,7 +37,7 @@ export const constituentsListContentFr: Record<string, TourStepContent> = {
           Plus de détails dans le manuel de la{' '}
           <TourHelpLink text='liste des constituantes' topic={HelpTopic.UI_SCHEMA_LIST} />.
         </p>
-      </div>
+      </>
     )
   },
   selection: {
@@ -52,7 +52,7 @@ export const constituentsListContentFr: Record<string, TourStepContent> = {
   toolbar: {
     title: 'Barre d’outils de la liste',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <IconNewItem className='inline-icon icon-green' /> créer, <IconClone className='inline-icon icon-green' />{' '}
           cloner et <IconDestroy className='inline-icon icon-red' /> supprimer la sélection.{' '}
@@ -63,13 +63,13 @@ export const constituentsListContentFr: Record<string, TourStepContent> = {
           Si un modèle est ouvert, <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>)
           recalcule toutes les valeurs.
         </p>
-      </div>
+      </>
     )
   },
   interact: {
     title: 'Travail avec le tableau',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <kbd>Shift</kbd>+clic étend la sélection. Double-clic ou clic avec <kbd>Alt</kbd> ouvre la constituante dans
           l&apos;
@@ -79,7 +79,7 @@ export const constituentsListContentFr: Record<string, TourStepContent> = {
           Faites glisser les lignes pour changer l&apos;ordre. Le réordonnancement est désactivé tant que la recherche
           est active — videz d&apos;abord le champ.
         </p>
-      </div>
+      </>
     )
   }
 };

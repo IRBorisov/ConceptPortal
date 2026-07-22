@@ -8,7 +8,7 @@ export const relocateCstContentEn: Record<string, TourStepContent> = {
   overview: {
     title: 'Relocate constituents',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <TourHelpLink text='Relocate' topic={HelpTopic.UI_RELOCATE_CST} /> moves non-inherited constituents between
           schemas linked by an OSS operation — typically to push concepts up into an argument schema or down into a
@@ -18,7 +18,7 @@ export const relocateCstContentEn: Record<string, TourStepContent> = {
           Pick the source schema, toggle direction with <IconRelocationUp value={true} className='inline-icon' />, then
           choose the destination among the allowed neighbors.
         </p>
-      </div>
+      </>
     )
   },
   selection: {

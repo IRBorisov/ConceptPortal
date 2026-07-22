@@ -19,19 +19,19 @@ export const createSynthesisContentRu: Record<string, TourStepContent> = {
   arguments: {
     title: 'Операция и аргументы',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Заполните название, обозначение, при необходимости родительский блок и описание. Затем выберите
           операции-аргументы, чьи схемы будут объединены — обычно загрузки или предыдущие синтезы.
         </p>
         <p>Нельзя выбрать и реплику, и её оригинал; несовместимые пары из списка исключены.</p>
-      </div>
+      </>
     )
   },
   substitutions: {
     title: 'Таблица отождествлений',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           На вкладке <b>Отождествления</b> заполните{' '}
           <TourHelpLink text='таблицу идентификации' topic={HelpTopic.UI_SUBSTITUTIONS} />: сопоставьте конституенты
@@ -44,7 +44,7 @@ export const createSynthesisContentRu: Record<string, TourStepContent> = {
           <TourHelpLink text='распространение изменений' topic={HelpTopic.CC_PROPAGATION} /> — как активация синтеза{' '}
           <IconExecute className='inline-icon icon-green' />.
         </p>
-      </div>
+      </>
     )
   }
 };

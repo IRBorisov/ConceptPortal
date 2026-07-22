@@ -35,7 +35,7 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
   options: {
     title: 'Affichage et filtres',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           À gauche — coloration des nœuds et types de liens. <IconFitImage className='inline-icon' /> adapte le graphe ;{' '}
           <IconFocus className='inline-icon' /> focalise une constituante ; <IconFilter className='inline-icon' /> ouvre
@@ -51,7 +51,7 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
           Essayez : basculez les <IconText className='inline-icon' /> libellés avec le bouton mis en évidence. Le guide
           continue automatiquement.
         </p>
-      </div>
+      </>
     )
   },
   edit: {
@@ -77,7 +77,7 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
   tools: {
     title: 'Modes et sélection',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <IconGraphMode value={InteractionMode.explore} className='inline-icon' /> Consultation — navigation et
           sélection ; <IconGraphMode value={InteractionMode.edit} className='inline-icon icon-green' /> Édition — tracer
@@ -88,13 +88,13 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
           Les aides étendent les nœuds liés — par exemple <IconGraphCollapse className='inline-icon' /> tous les
           influenceurs et <IconGraphExpand className='inline-icon' /> tous les dépendants.
         </p>
-      </div>
+      </>
     )
   },
   canvas: {
     title: 'Nœuds et navigation',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Cliquez sur un nœud pour le sélectionner ; un double-clic ouvre l&apos;éditeur de constituante. Déplacez la
           vue avec <kbd>Space</kbd> ou <kbd>WASD</kbd>, zoomez avec la molette.
@@ -103,7 +103,7 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
           <kbd>Esc</kbd> efface la sélection ; <kbd>Delete</kbd> supprime les constituantes sélectionnées lorsque
           l&apos;édition est autorisée.
         </p>
-      </div>
+      </>
     )
   }
 };

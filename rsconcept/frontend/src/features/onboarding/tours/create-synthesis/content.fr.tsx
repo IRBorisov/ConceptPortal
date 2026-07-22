@@ -19,7 +19,7 @@ export const createSynthesisContentFr: Record<string, TourStepContent> = {
   arguments: {
     title: 'Opération et arguments',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Renseignez le titre, l&apos;alias, éventuellement le bloc parent et la description. Sélectionnez ensuite les
           opérations arguments dont les schémas seront fusionnés — en général des chargements ou des synthèses
@@ -28,13 +28,13 @@ export const createSynthesisContentFr: Record<string, TourStepContent> = {
         <p>
           Évitez de choisir à la fois une réplique et son original ; les paires incompatibles sont filtrées de la liste.
         </p>
-      </div>
+      </>
     )
   },
   substitutions: {
     title: 'Table d’identification',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Dans <b>Identifications</b>, construisez la{' '}
           <TourHelpLink text="table d'identification" topic={HelpTopic.UI_SUBSTITUTIONS} /> : associez les constituantes
@@ -47,7 +47,7 @@ export const createSynthesisContentFr: Record<string, TourStepContent> = {
           <TourHelpLink text='changements propagés' topic={HelpTopic.CC_PROPAGATION} /> — comme activer la synthèse avec{' '}
           <IconExecute className='inline-icon icon-green' />.
         </p>
-      </div>
+      </>
     )
   }
 };

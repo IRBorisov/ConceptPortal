@@ -178,7 +178,7 @@ export function TourCard({
         <strong id={titleId} className='text-base leading-tight'>
           {title}
         </strong>
-        <div id={bodyId} className='text-sm leading-relaxed'>
+        <div id={bodyId} className='dense text-sm leading-relaxed space-y-2'>
           {body}
         </div>
         {anchorUnavailable ? (

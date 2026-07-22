@@ -35,7 +35,7 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
   options: {
     title: 'Вид и фильтры',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Слева — раскраска узлов и типы связей. <IconFitImage className='inline-icon' /> подгоняет граф;{' '}
           <IconFocus className='inline-icon' /> фокусирует одну конституенту; <IconFilter className='inline-icon' />{' '}
@@ -51,7 +51,7 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
           Попробуйте: переключите <IconText className='inline-icon' /> подписи выделенной кнопкой. Гид продолжится
           автоматически.
         </p>
-      </div>
+      </>
     )
   },
   edit: {
@@ -77,7 +77,7 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
   tools: {
     title: 'Режимы и выделение',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <IconGraphMode value={InteractionMode.explore} className='inline-icon' /> Просмотр — навигация и выделение;{' '}
           <IconGraphMode value={InteractionMode.edit} className='inline-icon icon-green' /> Редактор — рисование связей.{' '}
@@ -88,13 +88,13 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
           Помощники расширяют связанные узлы — например <IconGraphCollapse className='inline-icon' /> все влияющие и{' '}
           <IconGraphExpand className='inline-icon' /> все зависимые.
         </p>
-      </div>
+      </>
     )
   },
   canvas: {
     title: 'Узлы и навигация',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Щелчок по узлу выделяет его; двойной щелчок открывает редактор конституенты. Перемещение — <kbd>Space</kbd>{' '}
           или <kbd>WASD</kbd>, масштаб — колёсиком мыши.
@@ -103,7 +103,7 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
           <kbd>Esc</kbd> снимает выделение; <kbd>Delete</kbd> удаляет выбранные конституенты, если редактирование
           разрешено.
         </p>
-      </div>
+      </>
     )
   }
 };

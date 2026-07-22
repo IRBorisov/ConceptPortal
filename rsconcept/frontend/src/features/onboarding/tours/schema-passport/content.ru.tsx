@@ -56,7 +56,7 @@ export const schemaPassportContentRu: Record<string, TourStepContent> = {
   stats: {
     title: 'Панель статистики',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Боковая панель суммирует схему: число конституент, аксиоматическое ядро и тело теории, а также показатели
           корректности (ошибки и невычислимые определения).
@@ -65,7 +65,7 @@ export const schemaPassportContentRu: Record<string, TourStepContent> = {
           Раскройте категорию для разбивки — например базисные или константные множества, аксиомы, термы, текстовые
           определения и конвенции.
         </p>
-      </div>
+      </>
     )
   }
 };

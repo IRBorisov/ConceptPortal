@@ -30,7 +30,7 @@ export const modelEvaluatorContentFr: Record<string, TourStepContent> = {
   form: {
     title: 'Expression et résultat',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Saisissez une expression et cliquez sur <IconStatusUnknown className='inline-icon' />{' '}
           <TourHelpLink text='statut' topic={HelpTopic.UI_EVAL_STATUS} /> pour calculer. Typification, erreurs et valeur
@@ -40,7 +40,7 @@ export const modelEvaluatorContentFr: Record<string, TourStepContent> = {
           Ouvrez le résultat dans la <IconDatabase className='inline-icon' /> visionneuse de valeurs pour une analyse
           structurée.
         </p>
-      </div>
+      </>
     )
   }
 };

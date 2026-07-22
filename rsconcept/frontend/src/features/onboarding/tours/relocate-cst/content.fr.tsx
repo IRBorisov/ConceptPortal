@@ -8,7 +8,7 @@ export const relocateCstContentFr: Record<string, TourStepContent> = {
   overview: {
     title: 'Déplacer des constituantes',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <TourHelpLink text='Déplacer' topic={HelpTopic.UI_RELOCATE_CST} /> transfère des constituantes non héritées
           entre schémas liés par une opération OSS — en général vers un schéma argument ou vers un résultat.
@@ -17,7 +17,7 @@ export const relocateCstContentFr: Record<string, TourStepContent> = {
           Choisissez le schéma source, inversez le sens avec <IconRelocationUp value={true} className='inline-icon' />,
           puis sélectionnez une destination autorisée.
         </p>
-      </div>
+      </>
     )
   },
   selection: {

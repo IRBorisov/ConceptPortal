@@ -7,7 +7,7 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
   welcome: {
     title: 'Welcome to the Sandbox',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           The Sandbox is a demo environment that works without registration. It contains a small conceptual schema and a
           model, stored locally in your browser.
@@ -16,7 +16,7 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
           This is a short overview of the editor tabs. On a step with Details, you can open a guide for the highlighted
           tab.
         </p>
-      </div>
+      </>
     )
   },
   passport: {
@@ -80,7 +80,7 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
   finish: {
     title: 'You are all set',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           The core loop: manage and edit constituents, provide model data, and evaluate expressions. You can restore the
           initial data from the Sandbox menu.
@@ -89,7 +89,7 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
           Reopen this overview from the Sandbox menu; start a tab guide from that tab&apos;s help badge menu (Quick
           guide). See also the <TourHelpLink text='manuals' topic={HelpTopic.INTERFACE} />.
         </p>
-      </div>
+      </>
     )
   }
 };

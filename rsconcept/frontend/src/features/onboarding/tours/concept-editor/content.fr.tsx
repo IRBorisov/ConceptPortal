@@ -30,7 +30,7 @@ export const conceptEditorContentFr: Record<string, TourStepContent> = {
   check: {
     title: 'Vérification et diagnostics',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Après modification de la définition formelle, l&apos;indicateur <IconStatusUnknown className='inline-icon' />{' '}
           <TourHelpLink text='statut d’expression' topic={HelpTopic.UI_CST_STATUS} /> devient bleu jusqu&apos;à la
@@ -41,13 +41,13 @@ export const conceptEditorContentFr: Record<string, TourStepContent> = {
           statut <IconStatusOK className='inline-icon' /> vert « valide » signifie que la définition est vérifiée et
           calculable.
         </p>
-      </div>
+      </>
     )
   },
   tools: {
     title: 'Arbre syntaxique, graphe des échelons et structure',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <IconTree className='inline-icon' />{' '}
           <TourHelpLink text='Arbre syntaxique' topic={HelpTopic.UI_FORMULA_TREE} /> — arbre d&apos;analyse de la
@@ -64,7 +64,7 @@ export const conceptEditorContentFr: Record<string, TourStepContent> = {
           <TourHelpLink text='développement de structure' topic={HelpTopic.UI_STRUCTURE_PLANNER} /> : depuis le graphe
           des échelons, ajoutez des constituantes générées et leurs termes.
         </p>
-      </div>
+      </>
     )
   }
 };

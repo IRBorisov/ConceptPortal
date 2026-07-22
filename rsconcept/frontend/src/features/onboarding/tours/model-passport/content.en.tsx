@@ -49,13 +49,13 @@ export const modelPassportContentEn: Record<string, TourStepContent> = {
   stats: {
     title: 'Statistics side panel',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           The side panel combines schema structure counts with model issues: undefined concepts without interpretation,
           violated axioms, invalid data, and evaluation errors.
         </p>
         <p>Expand categories to see the breakdown by type.</p>
-      </div>
+      </>
     )
   }
 };

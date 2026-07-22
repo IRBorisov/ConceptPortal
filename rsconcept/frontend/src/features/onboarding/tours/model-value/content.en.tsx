@@ -26,7 +26,7 @@ export const modelValueContentEn: Record<string, TourStepContent> = {
   tools: {
     title: 'Compute and save',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <IconCalculateOne className='inline-icon icon-green' /> (<kbd>Ctrl + Q</kbd>) computes the current
           constituent; <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) recalculates the
@@ -36,13 +36,13 @@ export const modelValueContentEn: Record<string, TourStepContent> = {
           <IconSave className='inline-icon' /> (<kbd>Ctrl + S</kbd>) saves the value;{' '}
           <IconUpload className='inline-icon' /> / <IconDownload className='inline-icon' /> — import or export.
         </p>
-      </div>
+      </>
     )
   },
   form: {
     title: 'Value editor',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           The <IconStatusUnknown className='inline-icon' /> status button runs computation. For base sets, the{' '}
           <TourHelpLink text='binding dialog' topic={HelpTopic.UI_MODEL_BINDING} /> sets subject-domain elements.
@@ -50,7 +50,7 @@ export const modelValueContentEn: Record<string, TourStepContent> = {
         <p>
           See the <TourHelpLink text='value editing' topic={HelpTopic.UI_MODEL_VALUE_EDIT} /> manual for value formats.
         </p>
-      </div>
+      </>
     )
   }
 };

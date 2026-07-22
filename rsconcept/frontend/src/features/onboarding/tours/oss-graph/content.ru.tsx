@@ -30,7 +30,7 @@ export const ossGraphContentRu: Record<string, TourStepContent> = {
   view: {
     title: 'Управление видом',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <IconReset className='inline-icon' /> (<kbd>Z</kbd>) сбрасывает несохранённые сдвиги;{' '}
           <IconFitImage className='inline-icon' /> (<kbd>G</kbd>) подгоняет граф;{' '}
@@ -38,13 +38,13 @@ export const ossGraphContentRu: Record<string, TourStepContent> = {
           содержания; <IconSettings className='inline-icon' /> — сетка, линии и анимация;{' '}
           <IconImage className='inline-icon' /> — экспорт PNG или SVG.
         </p>
-      </div>
+      </>
     )
   },
   edit: {
     title: 'Создание и правка узлов',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Если редактирование разрешено, <IconSave className='inline-icon' /> (<kbd>Ctrl + S</kbd>) сохраняет позиции;{' '}
           <IconEdit2 className='inline-icon' /> открывает то же меню, что правый щелчок по выбранному узлу;{' '}
@@ -57,13 +57,13 @@ export const ossGraphContentRu: Record<string, TourStepContent> = {
           В контекстном меню также: активация, репликация, клон КС, перенос конституент и открытие связанной схемы — см.{' '}
           <TourHelpLink text='справку по графу ОСС' topic={HelpTopic.UI_OSS_GRAPH} />.
         </p>
-      </div>
+      </>
     )
   },
   canvas: {
     title: 'Работа с холстом',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Щелчок выделяет узел; <kbd>Shift</kbd>+щелчок расширяет выделение. Двойной щелчок открывает связанную КС (или
           редактор блока). Перетаскивайте узлы; тяните от ручки к узлу синтеза, чтобы добавить аргумент.
@@ -72,7 +72,7 @@ export const ossGraphContentRu: Record<string, TourStepContent> = {
           Перемещение холста — <kbd>Space</kbd>, масштаб — колёсиком, сброс выделения — <kbd>Esc</kbd>, удаление —{' '}
           <kbd>Delete</kbd>, если редактирование разрешено.
         </p>
-      </div>
+      </>
     )
   },
   sidebar: {

@@ -24,13 +24,13 @@ export const sandboxPassportContentRu: Record<string, TourStepContent> = {
   stats: {
     title: 'Панель статистики',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Боковая панель показывает счётчики конституент схемы и проблемы модели — например неопределяемые без
           интерпретации или ошибки вычисления.
         </p>
         <p>Раскройте категории для разбивки по типам.</p>
-      </div>
+      </>
     )
   }
 };

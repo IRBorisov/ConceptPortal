@@ -17,7 +17,7 @@ export const cstTemplateContentFr: Record<string, TourStepContent> = {
   workflow: {
     title: 'Modèle et arguments',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Dans <b>Modèle</b>, choisissez un concept ou une assertion paramétrés. Dans <b>Arguments</b>, liez chaque
           paramètre à une constituante du schéma courant ; les valeurs sont substituées dans l&apos;expression (y
@@ -26,20 +26,20 @@ export const cstTemplateContentFr: Record<string, TourStepContent> = {
         <p>
           Quand tous les arguments sont renseignés, le type de la constituante principale se met à jour automatiquement.
         </p>
-      </div>
+      </>
     )
   },
   create: {
     title: 'Éditer et créer',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Dans <b>Éditeur</b>, ajustez l&apos;alias, le terme et les définitions de l&apos;élément principal. Créer
           ajoute toutes les aides de la banque absentes du schéma, puis la constituante principale — les aides
           d&apos;abord pour garder des références valides.
         </p>
         <p>Les noms déjà présents ne sont pas dupliqués ; les alias de la banque sont réécrits dans le schéma cible.</p>
-      </div>
+      </>
     )
   }
 };

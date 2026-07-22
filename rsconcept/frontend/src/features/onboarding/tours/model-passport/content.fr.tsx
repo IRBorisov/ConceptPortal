@@ -53,13 +53,13 @@ export const modelPassportContentFr: Record<string, TourStepContent> = {
   stats: {
     title: 'Panneau de statistiques',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Le panneau latéral combine les compteurs de structure du schéma et les problèmes du modèle : concepts non
           définis sans interprétation, axiomes violés, données invalides et erreurs de calcul.
         </p>
         <p>Développez les catégories pour voir le détail par type.</p>
-      </div>
+      </>
     )
   }
 };

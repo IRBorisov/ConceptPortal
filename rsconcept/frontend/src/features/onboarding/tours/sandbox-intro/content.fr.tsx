@@ -7,7 +7,7 @@ export const sandboxIntroContentFr: Record<string, TourStepContent> = {
   welcome: {
     title: 'Bienvenue dans le Bac à sable',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Le Bac à sable est un environnement de démonstration sans inscription. Il contient un petit schéma conceptuel
           et un modèle, stockés localement dans le navigateur.
@@ -16,7 +16,7 @@ export const sandboxIntroContentFr: Record<string, TourStepContent> = {
           Court aperçu des onglets de l&apos;éditeur. Sur une étape avec Détails, vous pouvez ouvrir le guide de
           l&apos;onglet mis en évidence.
         </p>
-      </div>
+      </>
     )
   },
   passport: {
@@ -81,7 +81,7 @@ export const sandboxIntroContentFr: Record<string, TourStepContent> = {
   finish: {
     title: 'Vous êtes prêt',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Boucle principale : gérer et éditer les constituantes, fournir les données du modèle et évaluer des
           expressions. Les données initiales se restaurent depuis le menu du Bac à sable.
@@ -91,7 +91,7 @@ export const sandboxIntroContentFr: Record<string, TourStepContent> = {
           d&apos;aide (Guide rapide) sur cet onglet. Voir aussi les{' '}
           <TourHelpLink text='manuels' topic={HelpTopic.INTERFACE} />.
         </p>
-      </div>
+      </>
     )
   }
 };

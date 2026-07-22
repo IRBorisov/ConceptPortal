@@ -32,7 +32,7 @@ export const formulaTreeContentFr: Record<string, TourStepContent> = {
   extract: {
     title: 'Extraire une constituante',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Quand l&apos;extraction est disponible, sélectionnez un nœud imbriqué (pas la racine), puis appuyez sur{' '}
           <kbd>Q</kbd> ou cliquez <IconNewItem className='inline-icon' /> Extraire pour en faire une nouvelle
@@ -42,7 +42,7 @@ export const formulaTreeContentFr: Record<string, TourStepContent> = {
           Dans le panneau d&apos;extraction, saisissez le terme (et éventuellement la définition textuelle), puis
           confirmez avec <kbd>{saveHotkey}</kbd>. <kbd>Esc</kbd> ferme le panneau sans extraire.
         </p>
-      </div>
+      </>
     )
   }
 };

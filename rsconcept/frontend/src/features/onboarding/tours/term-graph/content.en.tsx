@@ -35,7 +35,7 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
   options: {
     title: 'View and filters',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           On the left — node coloring and link types. <IconFitImage className='inline-icon' /> fits the graph;{' '}
           <IconFocus className='inline-icon' /> focuses one constituent; <IconFilter className='inline-icon' /> opens
@@ -50,7 +50,7 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
           Try it: toggle <IconText className='inline-icon' /> labels with the highlighted button. The guide continues
           automatically.
         </p>
-      </div>
+      </>
     )
   },
   edit: {
@@ -76,7 +76,7 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
   tools: {
     title: 'Modes and selection',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <IconGraphMode value={InteractionMode.explore} className='inline-icon' /> Browse — navigate and select;{' '}
           <IconGraphMode value={InteractionMode.edit} className='inline-icon icon-green' /> Editor — draw relations.{' '}
@@ -87,13 +87,13 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
           Helpers expand related nodes — for example <IconGraphCollapse className='inline-icon' /> all influencers and{' '}
           <IconGraphExpand className='inline-icon' /> all dependents.
         </p>
-      </div>
+      </>
     )
   },
   canvas: {
     title: 'Nodes and navigation',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Click a node to select it; double-click opens the concept editor. Pan with <kbd>Space</kbd> or <kbd>WASD</kbd>
           , zoom with the mouse wheel.
@@ -101,7 +101,7 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
         <p>
           <kbd>Esc</kbd> clears the selection; <kbd>Delete</kbd> removes selected constituents when editing is allowed.
         </p>
-      </div>
+      </>
     )
   }
 };

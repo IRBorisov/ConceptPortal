@@ -31,7 +31,7 @@ export const formulaTreeContentRu: Record<string, TourStepContent> = {
   extract: {
     title: 'Выделить конституенту',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Если выделение доступно, выберите вложенный узел (не корень), затем нажмите <kbd>Q</kbd> или кнопку{' '}
           <IconNewItem className='inline-icon' /> Выделить, чтобы вынести подвыражение в новую конституенту.
@@ -40,7 +40,7 @@ export const formulaTreeContentRu: Record<string, TourStepContent> = {
           В панели выделения заполните терм (и при необходимости текстовое определение), затем подтвердите{' '}
           <kbd>{saveHotkey}</kbd>. <kbd>Esc</kbd> закрывает панель без выделения.
         </p>
-      </div>
+      </>
     )
   }
 };

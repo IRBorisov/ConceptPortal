@@ -29,7 +29,7 @@ export const modelEvaluatorContentEn: Record<string, TourStepContent> = {
   form: {
     title: 'Expression and result',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Enter an expression and click the <IconStatusUnknown className='inline-icon' />{' '}
           <TourHelpLink text='status' topic={HelpTopic.UI_EVAL_STATUS} /> button to evaluate. Typification, errors, and
@@ -38,7 +38,7 @@ export const modelEvaluatorContentEn: Record<string, TourStepContent> = {
         <p>
           Open the result in the <IconDatabase className='inline-icon' /> value viewer for a structured breakdown.
         </p>
-      </div>
+      </>
     )
   }
 };

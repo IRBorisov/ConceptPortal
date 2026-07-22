@@ -19,19 +19,19 @@ export const createSynthesisContentEn: Record<string, TourStepContent> = {
   arguments: {
     title: 'Operation and arguments',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Fill in title, alias, optional parent block, and description. Then select the argument operations whose
           schemas will be merged — typically loads or prior syntheses that feed this step.
         </p>
         <p>Avoid picking both a replica and its original; incompatible pairs are filtered out of the list.</p>
-      </div>
+      </>
     )
   },
   substitutions: {
     title: 'Identification table',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           On <b>Substitutions</b>, build the{' '}
           <TourHelpLink text='identification table' topic={HelpTopic.UI_SUBSTITUTIONS} />: pair constituents from
@@ -44,7 +44,7 @@ export const createSynthesisContentEn: Record<string, TourStepContent> = {
           <TourHelpLink text='propagated changes' topic={HelpTopic.CC_PROPAGATION} /> can follow — like activating
           synthesis with <IconExecute className='inline-icon icon-green' />.
         </p>
-      </div>
+      </>
     )
   }
 };

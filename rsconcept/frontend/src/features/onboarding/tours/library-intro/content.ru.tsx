@@ -17,13 +17,13 @@ export const libraryIntroContentRu: Record<string, TourStepContent> = {
   welcome: {
     title: 'Библиотека',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <TourHelpLink text='Библиотека' topic={HelpTopic.UI_LIBRARY} /> — место, где вы просматриваете и открываете
           концептуальные схемы, модели и операционные схемы синтеза (ОСС), хранящиеся в Портале.
         </p>
         <p>Этот короткий тур охватывает папки, поиск и таблицу элементов.</p>
-      </div>
+      </>
     )
   },
   folders: {
@@ -57,13 +57,13 @@ export const libraryIntroContentRu: Record<string, TourStepContent> = {
   table: {
     title: 'Таблица элементов',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Щелчок по строке открывает элемент. Ctrl/Cmd+щелчок — в новой вкладке. Сортировка — по заголовкам столбцов{' '}
           <IconSortAsc className='inline-icon' />, экспорт видимой таблицы — <IconDownload className='inline-icon' />.
         </p>
         <p>Цвет строки показывает тип: зелёные — ОСС, оранжевые — концептуальные модели, остальные — схемы.</p>
-      </div>
+      </>
     )
   }
 };

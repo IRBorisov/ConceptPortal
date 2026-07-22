@@ -30,7 +30,7 @@ export const ossGraphContentEn: Record<string, TourStepContent> = {
   view: {
     title: 'View controls',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <IconReset className='inline-icon' /> (<kbd>Z</kbd>) resets unsaved shifts;{' '}
           <IconFitImage className='inline-icon' /> (<kbd>G</kbd>) fits the graph;{' '}
@@ -38,13 +38,13 @@ export const ossGraphContentEn: Record<string, TourStepContent> = {
           panel; <IconSettings className='inline-icon' /> — grid, lines, and animation;{' '}
           <IconImage className='inline-icon' /> — export PNG or SVG.
         </p>
-      </div>
+      </>
     )
   },
   edit: {
     title: 'Create and edit nodes',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           When editing is allowed, <IconSave className='inline-icon' /> (<kbd>Ctrl + S</kbd>) saves positions;{' '}
           <IconEdit2 className='inline-icon' /> opens the same menu as right-click on the selected node;{' '}
@@ -57,13 +57,13 @@ export const ossGraphContentEn: Record<string, TourStepContent> = {
           Context menu also covers activation, replica, schema clone, constituent transfer, and opening the linked
           schema — see the <TourHelpLink text='OSS graph manual' topic={HelpTopic.UI_OSS_GRAPH} />.
         </p>
-      </div>
+      </>
     )
   },
   canvas: {
     title: 'Canvas interactions',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Click selects a node; <kbd>Shift</kbd>-click extends the selection. Double-click opens the linked schema (or
           the block editor). Drag nodes; drag from a handle to a synthesis node to add an argument.
@@ -72,7 +72,7 @@ export const ossGraphContentEn: Record<string, TourStepContent> = {
           Pan with <kbd>Space</kbd>, zoom with the wheel, clear selection with <kbd>Esc</kbd>, delete with{' '}
           <kbd>Delete</kbd> when editing is allowed.
         </p>
-      </div>
+      </>
     )
   },
   sidebar: {

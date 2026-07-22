@@ -7,13 +7,13 @@ export const sandboxIntroContentRu: Record<string, TourStepContent> = {
   welcome: {
     title: 'Добро пожаловать в Песочницу',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Песочница — демонстрационная среда без регистрации. Здесь есть небольшая концептуальная схема и модель; данные
           хранятся локально в браузере.
         </p>
         <p>Краткий обзор вкладок редактора. На шаге с кнопкой «Подробнее» можно открыть гид по выделенной вкладке.</p>
-      </div>
+      </>
     )
   },
   passport: {
@@ -77,7 +77,7 @@ export const sandboxIntroContentRu: Record<string, TourStepContent> = {
   finish: {
     title: 'Вы готовы',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Основной цикл: список и правки конституент, данные модели и расчёт выражений. Начальные данные можно
           восстановить из меню Песочницы.
@@ -86,7 +86,7 @@ export const sandboxIntroContentRu: Record<string, TourStepContent> = {
           Этот обзор снова открывается из меню Песочницы; гид вкладки — через меню значка справки на ней (Быстрый гид).
           Также см. <TourHelpLink text='руководства' topic={HelpTopic.INTERFACE} />.
         </p>
-      </div>
+      </>
     )
   }
 };

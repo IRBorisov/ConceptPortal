@@ -55,7 +55,7 @@ export const schemaPassportContentEn: Record<string, TourStepContent> = {
   stats: {
     title: 'Statistics side panel',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           The side panel summarizes the schema: total constituents, axiomatic core and theory body, and correctness
           indicators (errors and incalculable definitions).
@@ -64,7 +64,7 @@ export const schemaPassportContentEn: Record<string, TourStepContent> = {
           Expand a category for a breakdown — for example base or constant sets, axioms, terms, textual definitions and
           conventions.
         </p>
-      </div>
+      </>
     )
   }
 };

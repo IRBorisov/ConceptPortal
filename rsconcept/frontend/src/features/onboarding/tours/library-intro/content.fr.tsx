@@ -17,13 +17,13 @@ export const libraryIntroContentFr: Record<string, TourStepContent> = {
   welcome: {
     title: 'Bibliothèque',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           La <TourHelpLink text='bibliothèque' topic={HelpTopic.UI_LIBRARY} /> permet de parcourir et d&apos;ouvrir les
           schémas conceptuels, modèles et schémas de synthèse opérationnelle (OSS) stockés dans le Portail.
         </p>
         <p>Ce court tour présente les dossiers, la recherche et le tableau des éléments.</p>
-      </div>
+      </>
     )
   },
   folders: {
@@ -60,7 +60,7 @@ export const libraryIntroContentFr: Record<string, TourStepContent> = {
   table: {
     title: 'Tableau des éléments',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Cliquez sur une ligne pour ouvrir un élément. Ctrl/Cmd+clic l&apos;ouvre dans un nouvel onglet. Triez avec les
           en-têtes <IconSortAsc className='inline-icon' /> et exportez le tableau visible avec{' '}
@@ -70,7 +70,7 @@ export const libraryIntroContentFr: Record<string, TourStepContent> = {
           La couleur de ligne indique le type : vert pour les OSS, orange pour les modèles conceptuels, le reste pour
           les schémas.
         </p>
-      </div>
+      </>
     )
   }
 };

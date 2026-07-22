@@ -28,7 +28,7 @@ export const constituentsListContentEn: Record<string, TourStepContent> = {
   filter: {
     title: 'Search',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Try it: type in the <IconSearch className='inline-icon' /> search field. The list filters by alias, term,
           definitions, and convention. Press Enter or leave the field — the guide continues.
@@ -36,7 +36,7 @@ export const constituentsListContentEn: Record<string, TourStepContent> = {
         <p>
           See the <TourHelpLink text='constituent list' topic={HelpTopic.UI_SCHEMA_LIST} /> manual for details.
         </p>
-      </div>
+      </>
     )
   },
   selection: {
@@ -51,7 +51,7 @@ export const constituentsListContentEn: Record<string, TourStepContent> = {
   toolbar: {
     title: 'List toolbar',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <IconNewItem className='inline-icon icon-green' /> create, <IconClone className='inline-icon icon-green' />{' '}
           clone, and <IconDestroy className='inline-icon icon-red' /> delete selected items.{' '}
@@ -62,13 +62,13 @@ export const constituentsListContentEn: Record<string, TourStepContent> = {
           When a model is open, <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>)
           recalculates all values.
         </p>
-      </div>
+      </>
     )
   },
   interact: {
     title: 'Table interactions',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <kbd>Shift</kbd>-click extends the selection. Double-click a row or <kbd>Alt</kbd>-click to open a constituent
           in the <TourHelpLink text='editor' topic={HelpTopic.UI_SCHEMA_EDITOR} />.
@@ -76,7 +76,7 @@ export const constituentsListContentEn: Record<string, TourStepContent> = {
         <p>
           Drag rows to change their order. Reordering is disabled while search is active — clear the search field first.
         </p>
-      </div>
+      </>
     )
   }
 };

@@ -29,7 +29,7 @@ export const conceptEditorContentEn: Record<string, TourStepContent> = {
   check: {
     title: 'Check and diagnostics',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           After editing a formal definition, the <IconStatusUnknown className='inline-icon' />{' '}
           <TourHelpLink text='expression status' topic={HelpTopic.UI_CST_STATUS} /> indicator turns blue until you run a
@@ -39,13 +39,13 @@ export const conceptEditorContentEn: Record<string, TourStepContent> = {
           On errors, a list appears below the editor — click a message to jump to the fragment. A{' '}
           <IconStatusOK className='inline-icon' /> green "valid" status means the definition is verified and computable.
         </p>
-      </div>
+      </>
     )
   },
   tools: {
     title: 'Syntax tree, type graph, and structure',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <IconTree className='inline-icon' /> <TourHelpLink text='Syntax tree' topic={HelpTopic.UI_FORMULA_TREE} /> —{' '}
           the parse tree of the formal definition: expression structure and parse errors.
@@ -60,7 +60,7 @@ export const conceptEditorContentEn: Record<string, TourStepContent> = {
           <TourHelpLink text='structure expansion' topic={HelpTopic.UI_STRUCTURE_PLANNER} />: from the echelon graph you
           can add generated constituents and set their terms.
         </p>
-      </div>
+      </>
     )
   }
 };

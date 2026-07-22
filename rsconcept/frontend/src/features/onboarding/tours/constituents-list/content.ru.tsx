@@ -28,7 +28,7 @@ export const constituentsListContentRu: Record<string, TourStepContent> = {
   filter: {
     title: 'Поиск',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Попробуйте: введите текст в строку <IconSearch className='inline-icon' /> поиска. Список отфильтруется по
           имени, термину, определениям и конвенции. Нажмите Enter или уйдите из поля — гид продолжится.
@@ -36,7 +36,7 @@ export const constituentsListContentRu: Record<string, TourStepContent> = {
         <p>
           Подробнее — в руководстве по <TourHelpLink text='списку конституент' topic={HelpTopic.UI_SCHEMA_LIST} />.
         </p>
-      </div>
+      </>
     )
   },
   selection: {
@@ -51,7 +51,7 @@ export const constituentsListContentRu: Record<string, TourStepContent> = {
   toolbar: {
     title: 'Панель списка',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <IconNewItem className='inline-icon icon-green' /> создать, <IconClone className='inline-icon icon-green' />{' '}
           клонировать и <IconDestroy className='inline-icon icon-red' /> удалить выбранные.{' '}
@@ -62,13 +62,13 @@ export const constituentsListContentRu: Record<string, TourStepContent> = {
           Если открыта модель, <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>)
           пересчитывает все значения.
         </p>
-      </div>
+      </>
     )
   },
   interact: {
     title: 'Работа с таблицей',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <kbd>Shift</kbd>+щелчок расширяет выделение. Двойной щелчок или щелчок с <kbd>Alt</kbd> открывает конституенту
           в <TourHelpLink text='редакторе' topic={HelpTopic.UI_SCHEMA_EDITOR} />.
@@ -77,7 +77,7 @@ export const constituentsListContentRu: Record<string, TourStepContent> = {
           Перетаскивайте строки, чтобы изменить порядок. При активном поиске перестановка отключена — очистите строку
           поиска.
         </p>
-      </div>
+      </>
     )
   }
 };

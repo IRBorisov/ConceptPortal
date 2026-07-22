@@ -30,7 +30,7 @@ export const conceptEditorContentRu: Record<string, TourStepContent> = {
   check: {
     title: 'Проверка и диагностика',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           После правки формального определения <IconStatusUnknown className='inline-icon' /> индикатор{' '}
           <TourHelpLink text='статуса выражения' topic={HelpTopic.UI_CST_STATUS} /> становится синим, пока вы не
@@ -40,13 +40,13 @@ export const conceptEditorContentRu: Record<string, TourStepContent> = {
           При ошибках под редактором появляется список — щелчок переносит курсор к фрагменту. Зелёный{' '}
           <IconStatusOK className='inline-icon' /> статус «корректно» означает, что определение проверено и вычислимо.
         </p>
-      </div>
+      </>
     )
   },
   tools: {
     title: 'Дерево разбора, граф ступеней и структура',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <IconTree className='inline-icon' /> <TourHelpLink text='Дерево разбора' topic={HelpTopic.UI_FORMULA_TREE} />{' '}
           — синтаксическое дерево формального определения: структура выражения и ошибки разбора.
@@ -62,7 +62,7 @@ export const conceptEditorContentRu: Record<string, TourStepContent> = {
           <TourHelpLink text='раскрытие структуры' topic={HelpTopic.UI_STRUCTURE_PLANNER} />: по графу ступеней можно
           добавить порождённые конституенты и задать им термины.
         </p>
-      </div>
+      </>
     )
   }
 };

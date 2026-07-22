@@ -55,7 +55,7 @@ export const schemaPassportContentFr: Record<string, TourStepContent> = {
   stats: {
     title: 'Panneau de statistiques',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Le panneau latéral résume le schéma : nombre de constituantes, noyau axiomatique et corps de la théorie, ainsi
           que les indicateurs de correction (erreurs et définitions incalculables).
@@ -64,7 +64,7 @@ export const schemaPassportContentFr: Record<string, TourStepContent> = {
           Développez une catégorie pour le détail — ensembles de base ou constantes, axiomes, termes, définitions
           textuelles et conventions.
         </p>
-      </div>
+      </>
     )
   }
 };

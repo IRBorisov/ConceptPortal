@@ -26,7 +26,7 @@ export const modelValueContentFr: Record<string, TourStepContent> = {
   tools: {
     title: 'Calcul et enregistrement',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           <IconCalculateOne className='inline-icon icon-green' /> (<kbd>Ctrl + Q</kbd>) calcule la constituante courante
           ; <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) recalcule tout le modèle.
@@ -35,13 +35,13 @@ export const modelValueContentFr: Record<string, TourStepContent> = {
           <IconSave className='inline-icon' /> (<kbd>Ctrl + S</kbd>) enregistre la valeur ;{' '}
           <IconUpload className='inline-icon' /> / <IconDownload className='inline-icon' /> — import ou export.
         </p>
-      </div>
+      </>
     )
   },
   form: {
     title: 'Éditeur de valeur',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Le bouton <IconStatusUnknown className='inline-icon' /> de statut lance le calcul. Pour les ensembles de base,
           le <TourHelpLink text='dialogue de liaison' topic={HelpTopic.UI_MODEL_BINDING} /> définit les éléments du
@@ -51,7 +51,7 @@ export const modelValueContentFr: Record<string, TourStepContent> = {
           Voir le manuel <TourHelpLink text='édition des valeurs' topic={HelpTopic.UI_MODEL_VALUE_EDIT} /> pour les
           formats de valeurs.
         </p>
-      </div>
+      </>
     )
   }
 };

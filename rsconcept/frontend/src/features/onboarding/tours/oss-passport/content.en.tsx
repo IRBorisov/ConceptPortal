@@ -40,13 +40,13 @@ export const ossPassportContentEn: Record<string, TourStepContent> = {
   stats: {
     title: 'Statistics side panel',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           The side panel counts operations by type (blocks, inputs, synthesis, replicas) and linked conceptual schemas
           (total, owned, imported).
         </p>
         <p>Expand categories to see the breakdown.</p>
-      </div>
+      </>
     )
   }
 };

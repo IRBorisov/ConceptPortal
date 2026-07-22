@@ -22,7 +22,7 @@ export const structurePlannerContentEn: Record<string, TourStepContent> = {
   panel: {
     title: 'Definition, term, and save',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           The top panel shows the formal definition of the selected node, its alias (green when new), and the term field
           with text-reference support. Existing constituents load their term; empty nodes get a suggested name for a new
@@ -34,7 +34,7 @@ export const structurePlannerContentEn: Record<string, TourStepContent> = {
           <kbd>{saveHotkey}</kbd> does the same. <IconReset className='inline-icon icon-primary' /> discards unsaved
           edits.
         </p>
-      </div>
+      </>
     )
   }
 };

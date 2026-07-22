@@ -30,7 +30,7 @@ export const formulaTreeContentEn: Record<string, TourStepContent> = {
   extract: {
     title: 'Extract a constituent',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           When extraction is available, select a nested node (not the root), then press <kbd>Q</kbd> or click{' '}
           <IconNewItem className='inline-icon' /> Extract to pull that subexpression into a new constituent.
@@ -39,7 +39,7 @@ export const formulaTreeContentEn: Record<string, TourStepContent> = {
           In the extraction panel, fill in the term (and optional text definition), then confirm with{' '}
           <kbd>{saveHotkey}</kbd>. <kbd>Esc</kbd> closes the panel without extracting.
         </p>
-      </div>
+      </>
     )
   }
 };

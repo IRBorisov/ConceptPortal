@@ -44,13 +44,13 @@ export const ossPassportContentFr: Record<string, TourStepContent> = {
   stats: {
     title: 'Panneau de statistiques',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Le panneau latéral compte les opérations par type (blocs, chargement, synthèse, réplication) et les schémas
           conceptuels liés (total, propres, import).
         </p>
         <p>Développez les catégories pour voir le détail.</p>
-      </div>
+      </>
     )
   }
 };

@@ -17,13 +17,13 @@ export const libraryIntroContentEn: Record<string, TourStepContent> = {
   welcome: {
     title: 'Library',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           The <TourHelpLink text='library' topic={HelpTopic.UI_LIBRARY} /> is where you browse and open conceptual
           schemas, models, and operational synthesis schemas (OSS) stored in the Portal.
         </p>
         <p>This short tour covers folders, search, and the items table.</p>
-      </div>
+      </>
     )
   },
   folders: {
@@ -57,7 +57,7 @@ export const libraryIntroContentEn: Record<string, TourStepContent> = {
   table: {
     title: 'Items table',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Click a row to open an item. Ctrl/Cmd-click opens it in a new tab. Sort with{' '}
           <IconSortAsc className='inline-icon' /> column headers, and export the visible table with{' '}
@@ -67,7 +67,7 @@ export const libraryIntroContentEn: Record<string, TourStepContent> = {
           Row color shows the item kind: green rows are OSS, orange rows are conceptual models, and the rest are
           schemas.
         </p>
-      </div>
+      </>
     )
   }
 };

@@ -22,7 +22,7 @@ export const structurePlannerContentFr: Record<string, TourStepContent> = {
   panel: {
     title: 'Définition, terme et enregistrement',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Le panneau supérieur affiche la définition formelle du nœud, son alias (vert s&apos;il est nouveau) et le
           champ terme avec références textuelles. Les constituantes existantes chargent leur terme ; les nœuds vides
@@ -34,7 +34,7 @@ export const structurePlannerContentFr: Record<string, TourStepContent> = {
           <kbd>{saveHotkey}</kbd> fait de même. <IconReset className='inline-icon icon-primary' /> annule les
           modifications non enregistrées.
         </p>
-      </div>
+      </>
     )
   }
 };

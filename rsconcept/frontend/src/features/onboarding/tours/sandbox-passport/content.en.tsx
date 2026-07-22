@@ -24,13 +24,13 @@ export const sandboxPassportContentEn: Record<string, TourStepContent> = {
   stats: {
     title: 'Statistics side panel',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           The side panel shows schema constituent counts and model issues — for example undefined concepts without
           interpretation or evaluation errors.
         </p>
         <p>Expand categories for a breakdown by type.</p>
-      </div>
+      </>
     )
   }
 };

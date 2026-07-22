@@ -24,13 +24,13 @@ export const sandboxPassportContentFr: Record<string, TourStepContent> = {
   stats: {
     title: 'Panneau de statistiques',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Le panneau latéral montre les compteurs de constituantes du schéma et les problèmes du modèle — par exemple
           concepts non définis sans interprétation ou erreurs de calcul.
         </p>
         <p>Développez les catégories pour le détail par type.</p>
-      </div>
+      </>
     )
   }
 };

@@ -22,7 +22,7 @@ export const structurePlannerContentRu: Record<string, TourStepContent> = {
   panel: {
     title: 'Определение, терм и сохранение',
     body: (
-      <div className='flex flex-col gap-2'>
+      <>
         <p>
           Верхняя панель показывает формальное определение выбранного узла, его обозначение (зелёным — если новое) и
           поле терма со ссылками. Для существующих конституент подставляется терм; для пустых — предлагается имя новой.
@@ -32,7 +32,7 @@ export const structurePlannerContentRu: Record<string, TourStepContent> = {
           <IconNewItem className='inline-icon icon-green' /> сохраняет или создаёт — из поля терма то же делает{' '}
           <kbd>{saveHotkey}</kbd>. <IconReset className='inline-icon icon-primary' /> отменяет несохранённые правки.
         </p>
-      </div>
+      </>
     )
   }
 };
