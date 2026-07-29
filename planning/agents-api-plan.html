@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agents API &amp; API Keys Plan</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f7f8fb;
+        --fg: #18202a;
+        --muted: #5e6b7a;
+        --card: #ffffff;
+        --border: #d9e0ea;
+        --accent: #2454c6;
+        --accent-soft: #e9eefc;
+        --warn: #8a5b00;
+        --warn-soft: #fff4d5;
+        --ok: #17633a;
+        --ok-soft: #e6f5ec;
+        --code: #edf1f7;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f141b;
+          --fg: #e7edf5;
+          --muted: #a7b2c0;
+          --card: #161d27;
+          --border: #2d3948;
+          --accent: #8fb0ff;
+          --accent-soft: #1f2d4d;
+          --warn: #ffd27a;
+          --warn-soft: #3c2d10;
+          --ok: #8ee0b0;
+          --ok-soft: #153321;
+          --code: #202a36;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.55;
+      }
+
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 48px 24px 72px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        letter-spacing: -0.04em;
+        margin-bottom: 12px;
+      }
+
+      h2 {
+        margin: 36px 0 14px;
+        font-size: 1.55rem;
+        letter-spacing: -0.02em;
+      }
+
+      h3 {
+        margin: 20px 0 8px;
+        font-size: 1.05rem;
+      }
+
+      p {
+        margin: 0 0 12px;
+      }
+
+      ul,
+      ol {
+        margin: 0 0 12px;
+        padding-left: 1.25rem;
+      }
+
+      li + li {
+        margin-top: 6px;
+      }
+
+      code {
+        border-radius: 6px;
+        background: var(--code);
+        padding: 0.12rem 0.32rem;
+        font-size: 0.92em;
+      }
+
+      .eyebrow {
+        display: inline-block;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--card);
+        color: var(--muted);
+        padding: 6px 12px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 16px;
+      }
+
+      .lead {
+        color: var(--muted);
+        font-size: 1.1rem;
+        max-width: 820px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px 20px;
+        margin: 14px 0;
+      }
+
+      .grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      @media (max-width: 800px) {
+        .grid.two {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .tag {
+        display: inline-block;
+        border-radius: 999px;
+        padding: 2px 10px;
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+
+      .tag.ok {
+        background: var(--ok-soft);
+        color: var(--ok);
+      }
+
+      .tag.warn {
+        background: var(--warn-soft);
+        color: var(--warn);
+      }
+
+      .tag.accent {
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+      }
+
+      th,
+      td {
+        border: 1px solid var(--border);
+        padding: 8px 10px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--accent-soft);
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      pre {
+        overflow-x: auto;
+        background: var(--code);
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-size: 0.88rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">Planning · Portal</div>
+      <h1>Agents API, API keys &amp; action log</h1>
+      <p class="lead">
+        Dedicated <code>/api/agents</code> surface for machine clients (rstool /
+        MCP / scripts), authenticated by user-issued API keys. Keys do
+        <strong>not</strong> unlock existing session/CSRF UI routes. Profile
+        gains tabs for keys and an agent action log. No OSS actions in v1.
+      </p>
+
+      <h2>Decisions (locked)</h2>
+      <div class="grid two">
+        <div class="card">
+          <h3>Auth boundary <span class="tag ok">A</span></h3>
+          <p>
+            API keys authenticate <strong>only</strong>
+            <code>/api/agents/*</code>. Existing <code>/api/rsforms</code>,
+            <code>/api/library</code>, etc. stay session + CSRF.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Key power <span class="tag ok">A</span></h3>
+          <p>
+            Key acts as the issuing user (same Owner/Editor read/edit rules).
+            Label + revoke only; no scopes / item binding in v1.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Mutation shape <span class="tag ok">C</span></h3>
+          <p>
+            Hybrid: bulk replace (<code>load-json</code> /
+            <code>exportPortal</code> payload) + curated granular constituenta
+            actions. Portal-native bodies; reuse existing rsform services.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Scope &amp; roadmap</h3>
+          <p>
+            v1: RSForm only (read library helpers + schema mutations).
+            <span class="tag warn">No OSS</span>. Long-term: agents read/write
+            Portal as source of truth instead of long-lived rstool sessions.
+            Models later.
+          </p>
+        </div>
+      </div>
+
+      <h2>Current gap</h2>
+      <ul>
+        <li>
+          Backend auth is session-only; anonymous REST sees public library only.
+        </li>
+        <li>
+          Agents today: read public JSON → edit in <code>rstool</code> → user
+          pastes/loads <code>exportPortal</code> in UI.
+        </li>
+        <li>
+          No API key model, no agent audit trail, profile is name/email +
+          password only.
+        </li>
+      </ul>
+
+      <h2>Architecture</h2>
+      <div class="card">
+        <pre>
+apps/agents/                    # new Django app
+  models/
+    ApiKey.py                   # hashed secret, prefix, label, owner, last_used
+    AgentActionLog.py           # per-request audit for /api/agents writes (+ optional reads)
+  authentication.py             # Bearer API-key auth (agents routes only)
+  permissions.py                # IsAuthenticated via key or session (key mgmt = session)
+  views/
+    keys.py                     # CRUD keys — session auth only
+    logs.py                     # list own action log — session auth only
+    library.py                  # active / context-search / by-ids — API key
+    rsforms.py                  # details, create, replace, granular — API key
+  services/
+    audit.py                    # write AgentActionLog
+    rsform_ops.py               # thin wrappers calling existing rsform serializers/services
+
+Frontend profile (/profile)
+  Tabs: Account | API keys | Agent activity
+  Account = existing profile + password
+  API keys = create (show secret once) / list / revoke
+  Agent activity = paginated action log
+
+Wire format for agent mutations = existing Portal serializers
+(rstool exportPortal schema JSON ↔ replace; CstCreate / update payloads for granular)
+        </pre>
+      </div>
+
+      <h2>API surface (v1)</h2>
+      <h3>Session-auth (profile / SPA)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Path</th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/agents/keys</code></td>
+            <td>
+              List own keys (id, label, prefix, created, last_used; never
+              secret)
+            </td>
+          </tr>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/agents/keys</code></td>
+            <td>
+              Create key; response includes plaintext secret
+              <strong>once</strong>
+            </td>
+          </tr>
+          <tr>
+            <td>DELETE</td>
+            <td><code>/api/agents/keys/{id}</code></td>
+            <td>Revoke / delete key</td>
+          </tr>
+          <tr>
+            <td>PATCH</td>
+            <td><code>/api/agents/keys/{id}</code></td>
+            <td>Rename label (optional)</td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/agents/logs</code></td>
+            <td>Own action log (filter by key, item, action; paginated)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>API-key auth (agents)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Path</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/agents/library/active</code></td>
+            <td>Accessible library metadata (as user)</td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/agents/library/context-search</code></td>
+            <td>Same query params as UI search</td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/agents/library/by-ids</code></td>
+            <td>Metadata by ids</td>
+          </tr>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/agents/rsforms</code></td>
+            <td>Create RSForm library item (passport fields)</td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/agents/rsforms/{id}/details</code></td>
+            <td>Full schema for rstool <code>importData</code></td>
+          </tr>
+          <tr>
+            <td>PATCH</td>
+            <td><code>/api/agents/rsforms/{id}/replace</code></td>
+            <td>
+              Bulk load-json equivalent (<code>exportPortal</code> schema)
+            </td>
+          </tr>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/agents/rsforms/{id}/create-version</code></td>
+            <td>Snapshot before agent rewrite (owner/staff rules)</td>
+          </tr>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/agents/rsforms/{id}/constituents</code></td>
+            <td>Create constituenta (Portal create-cst body)</td>
+          </tr>
+          <tr>
+            <td>PATCH</td>
+            <td><code>/api/agents/rsforms/{id}/constituents/{cst_id}</code></td>
+            <td>Update constituenta</td>
+          </tr>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/agents/rsforms/{id}/constituents/delete</code></td>
+            <td>Delete multiple (ids body)</td>
+          </tr>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/agents/rsforms/{id}/substitute</code></td>
+            <td>Substitute aliases</td>
+          </tr>
+          <tr>
+            <td>PATCH</td>
+            <td><code>/api/agents/rsforms/{id}/move-cst</code></td>
+            <td>Reorder / move</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="muted">
+        Out of v1: OSS, RSModel, attributions, reset-aliases, restore-order,
+        load-trs, inline-synthesis. Add when needed.
+      </p>
+
+      <h2>API keys</h2>
+      <ul>
+        <li>
+          Format: <code>rcp_</code> + public prefix (8 chars) + <code>_</code> +
+          secret (32+ random). Store <strong>SHA-256</strong> of full token
+          only; return plaintext once on create.
+        </li>
+        <li>Header: <code>Authorization: Bearer rcp_…</code></li>
+        <li>
+          On successful auth, update <code>last_used_at</code> (throttled write
+          ok).
+        </li>
+        <li>
+          Revoke = delete row (or soft-delete flag); revoked keys fail auth
+          immediately.
+        </li>
+        <li>CSRF: not required for Bearer API-key requests on agent routes.</li>
+      </ul>
+
+      <h2>Action log</h2>
+      <div class="card">
+        <ul>
+          <li>
+            Fields: <code>user</code>, <code>api_key</code> (nullable FK / label
+            snapshot), <code>action</code> (string code),
+            <code>item_id</code> (nullable), <code>item_alias</code> / title
+            snapshot, <code>status_code</code>, <code>summary</code> (short
+            human text), <code>created_at</code>. No full request/response
+            bodies in v1.
+          </li>
+          <li>
+            Log all <strong>mutating</strong> agent routes; optionally skip
+            high-volume GETs or log only failures.
+          </li>
+          <li>
+            Profile “Agent activity” lists newest first; filter by key / action;
+            pagination (~50).
+          </li>
+          <li>
+            Retention: keep indefinitely for v1 (add prune job later if needed).
+          </li>
+        </ul>
+      </div>
+
+      <h2>Frontend profile</h2>
+      <ul>
+        <li>
+          Refactor <code>/profile</code> to tabs: <strong>Account</strong> |
+          <strong>API keys</strong> | <strong>Agent activity</strong>.
+        </li>
+        <li>
+          Reuse existing <code>Tabs</code> / <code>TabLabel</code> components.
+        </li>
+        <li>
+          API module under <code>features/users/backend/</code> or new
+          <code>features/agents/</code> — prefer
+          <code>features/agents</code> for keys/logs API + profile panels;
+          profile page composes them.
+        </li>
+        <li>i18n: en / ru / fr for all new copy.</li>
+        <li>
+          Create-key UX: modal shows secret once with copy; warn it cannot be
+          retrieved again.
+        </li>
+      </ul>
+
+      <h2>Security &amp; permissions</h2>
+      <ul>
+        <li>
+          Agent views: <code>ApiKeyAuthentication</code> required (reject
+          session-only on agent data routes, or allow both for debugging —
+          <strong>prefer key-only</strong> for
+          <code>/api/agents/rsforms|library</code> so audit always ties to a
+          key).
+        </li>
+        <li>
+          Key CRUD + logs: session auth only (never API key managing keys).
+        </li>
+        <li>
+          Object permissions: reuse <code>can_read_library_item</code> /
+          <code>can_edit_item</code> / <code>ItemEditor</code> / owner rules for
+          create-version.
+        </li>
+        <li>
+          Throttle agent writes (new DRF throttle rate, e.g.
+          <code>agents: 60/minute</code>).
+        </li>
+      </ul>
+
+      <h2>Docs</h2>
+      <ul>
+        <li>
+          Update <code>rsconcept/rstool/docs/PORTAL-API.md</code>: API keys,
+          agent routes, mutation workflow.
+        </li>
+        <li>OpenAPI: tag <code>Agents</code> via spectacular.</li>
+        <li>
+          Backend <code>AGENTS.md</code>: mention <code>apps.agents</code>.
+        </li>
+      </ul>
+
+      <h2>Implementation order</h2>
+      <ol>
+        <li>
+          <span class="tag accent">1</span> Backend app skeleton: models,
+          migration, ApiKeyAuthentication, key CRUD + logs list (session).
+        </li>
+        <li>
+          <span class="tag accent">2</span> Agent library + rsform routes
+          wrapping existing services; audit middleware / decorator on mutations.
+        </li>
+        <li>
+          <span class="tag accent">3</span> Tests: auth, permissions, replace,
+          granular create/update/delete, log entries.
+        </li>
+        <li>
+          <span class="tag accent">4</span> Frontend profile tabs + keys UI +
+          activity list + i18n.
+        </li>
+        <li>
+          <span class="tag accent">5</span> PORTAL-API.md + OpenAPI smoke.
+        </li>
+      </ol>
+
+      <h2>Non-goals (v1)</h2>
+      <ul>
+        <li>OSS / RSModel agent endpoints</li>
+        <li>Key scopes or item-bound keys</li>
+        <li>Unlocking existing UI routes with Bearer tokens</li>
+        <li>
+          Shipping Portal HTTP client inside
+          <code>@rsconcept/rstool</code> (docs + curl only for now)
+        </li>
+        <li>
+          Optimistic concurrency / If-Match (revisit when concurrent agent+UI
+          edits hurt)
+        </li>
+      </ul>
+
+      <h2>Success criteria</h2>
+      <ul>
+        <li>
+          Agent with a user key can search private library, pull
+          <code>details</code>, granular-edit or <code>replace</code>, and
+          create a version — without browser cookies.
+        </li>
+        <li>User can issue/revoke keys and see agent mutations in profile.</li>
+        <li>
+          Session-only clients cannot call agent data routes; keys cannot call
+          UI mutation routes.
+        </li>
+      </ul>
+    </main>
+  </body>
+</html>
