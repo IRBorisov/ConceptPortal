@@ -1,0 +1,30 @@
+export const txAgentsRu: Record<string, string> = {
+  'tx.agents.tab.account': 'Аккаунт',
+  'tx.agents.tab.keys': 'API-ключи',
+  'tx.agents.tab.activity': 'Действия агентов',
+
+  'tx.agents.key.label': 'Название ключа',
+  'tx.agents.key.label.hint': 'Короткая метка, чтобы узнать ключ позже',
+  'tx.agents.key.create': 'Создать API-ключ',
+  'tx.agents.key.create.success': 'API-ключ создан',
+  'tx.agents.key.revoke': 'Отозвать',
+  'tx.agents.key.revoke.confirm': 'Отозвать этот API-ключ? Агенты с этим ключом сразу потеряют доступ.',
+  'tx.agents.key.revoke.success': 'API-ключ отозван',
+  'tx.agents.key.empty': 'Пока нет API-ключей',
+  'tx.agents.key.prefix': 'Префикс',
+  'tx.agents.key.created': 'Создан',
+  'tx.agents.key.lastUsed': 'Последнее использование',
+  'tx.agents.key.neverUsed': 'Никогда',
+  'tx.agents.key.secret.title': 'Скопируйте API-ключ сейчас',
+  'tx.agents.key.secret.hint': 'Секрет показывается только один раз. Сохраните его — повторно посмотреть будет нельзя.',
+  'tx.agents.key.secret.copy': 'Копировать ключ',
+  'tx.agents.key.list': 'Ваши ключи',
+
+  'tx.agents.log.empty': 'Пока нет действий агентов',
+  'tx.agents.log.action': 'Действие',
+  'tx.agents.log.item': 'Объект',
+  'tx.agents.log.key': 'Ключ',
+  'tx.agents.log.status': 'Статус',
+  'tx.agents.log.summary': 'Кратко',
+  'tx.agents.log.time': 'Время'
+};

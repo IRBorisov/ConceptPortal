@@ -32,9 +32,14 @@ GET https://api.portal.acconcept.ru/api/rsforms/856/details
 
 ## Доступ
 
-**Для агентов через REST/curl** отдельного API-токена нет. Запросы без авторизации
-видят только объекты с `access_policy: "public"` в общих разделах (`/S`, `/L`).
-Это касается `context-search`, `by-ids`, `GET /api/rsforms/:id` и `/details`.
+**Для агентов** есть выделенный API под `/api/agents/*` с авторизацией по **API-ключу**
+(`Authorization: Bearer rcp_…`). Ключи выдаёт пользователь в профиле Portal (вкладка «API keys»).
+Ключи **не** открывают обычные UI-маршруты (`/api/rsforms`, `/api/library`, …) — те по-прежнему
+требуют сессию браузера и CSRF.
+
+Запросы **без** авторизации к публичному REST видят только объекты с `access_policy: "public"`
+в общих разделах (`/S`, `/L`). Это касается `context-search`, `by-ids`, `GET /api/rsforms/:id`
+и `/details`.
 
 - Недоступная схема → `403` на прямой запрос; в `by-ids` такой id **пропускается**.
 - Личные (`/U`) и проектные (`/P`) объекты через анонимный API **не читаются**, даже если
@@ -45,7 +50,39 @@ GET https://api.portal.acconcept.ru/api/rsforms/856/details
 пользователю передавать session cookie агенту** — для curl/скриптов это нерабочий путь
 (cookie привязан к браузеру, истекает, не предназначен для машинного доступа).
 
-Если КС не публичная, варианты для агента:
+### API-ключи (рекомендуемый путь для агентов)
+
+1. Пользователь создаёт ключ в профиле → получает секрет `rcp_<prefix>_<secret>` **один раз**.
+2. Агент передаёт `Authorization: Bearer <секрет>` на маршруты `/api/agents/...`.
+3. Ключ действует от имени пользователя (те же права Owner/Editor на объекты библиотеки).
+4. Мутации пишутся в журнал «Agent activity» в профиле.
+
+| Метод | Путь                                           | Назначение                                       |
+| ----- | ---------------------------------------------- | ------------------------------------------------ |
+| GET   | `/api/agents/library/active`                   | Метаданные доступных объектов                    |
+| GET   | `/api/agents/library/context-search`           | Поиск (те же query-параметры)                    |
+| GET   | `/api/agents/library/by-ids`                   | Метаданные по id                                 |
+| POST  | `/api/agents/rsforms`                          | Создать КС                                       |
+| GET   | `/api/agents/rsforms/:id/details`              | Полная КС                                        |
+| PATCH | `/api/agents/rsforms/:id/replace`              | Заменить содержимое (`exportPortal` / load-json) |
+| POST  | `/api/agents/rsforms/:id/create-version`       | Снимок версии (owner/staff)                      |
+| POST  | `/api/agents/rsforms/:id/constituents`         | Создать конституенту                             |
+| PATCH | `/api/agents/rsforms/:id/constituents/:cst_id` | Обновить конституенту                            |
+| POST  | `/api/agents/rsforms/:id/constituents/delete`  | Удалить список конституент                       |
+| POST  | `/api/agents/rsforms/:id/substitute`           | Подстановка                                      |
+| PATCH | `/api/agents/rsforms/:id/move-cst`             | Перемещение                                      |
+
+Пример:
+
+```bash
+curl.exe -s -H "Authorization: Bearer rcp_...." ^
+  "https://api.portal.acconcept.ru/api/agents/rsforms/856/details"
+```
+
+Управление ключами и журналом — только из сессии UI: `GET/POST /api/agents/keys`,
+`DELETE /api/agents/keys/:id`, `GET /api/agents/logs`.
+
+Если КС не публичная и **нет** API-ключа, варианты для агента:
 
 1. Пользователь временно делает схему публичной (`access_policy: public`).
 2. Пользователь экспортирует JSON (`GET /api/rsforms/:id/details` из своей сессии в UI
@@ -252,8 +289,11 @@ tool.applySchemaPatch(
 ## Практика для агентов
 
 - Запрашивай API host, а не UI host: `https://api.portal.acconcept.ru/api/...`.
-- Считай, что REST без авторизации = только **публичные** схемы в `/S` и `/L`.
-- Для непубличной КС проси у пользователя JSON (`/details`) или публикацию схемы — не cookie.
+- Для чтения/записи от имени пользователя используй `/api/agents/...` и Bearer API-ключ.
+- Без ключа REST анонима = только **публичные** схемы в `/S` и `/L`.
+- Для непубличной КС без ключа проси JSON (`/details`) или публикацию схемы — не cookie.
+- После правок в `rstool` можно `exportPortal({ kind: 'schema' })` и
+  `PATCH /api/agents/rsforms/:id/replace` с тем же JSON (или гранулярные `/constituents`).
 - Для больших схем используй увеличенный таймаут. В PowerShell вызывай `curl.exe`,
   а не alias `curl` (`Invoke-WebRequest`), если нужен CLI-синтаксис curl.
 - Сначала бери метаданные, если нужно только название или доступность схемы.

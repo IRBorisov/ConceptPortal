@@ -14,7 +14,7 @@ Django, Django REST Framework, PostgreSQL/SQLite local, MyPy, Pylint, Coverage.
 
 - `manage.py`: Django commands
 - `project`: settings, root URLs, WSGI
-- `apps`: domain apps (`users`, `library`, `rsform`, `oss`, `rsmodel`, `prompt`)
+- `apps`: domain apps (`users`, `library`, `rsform`, `oss`, `rsmodel`, `prompt`, `agents`)
 - `shared`: serializers, permissions, throttling, utils, test helpers
 - `fixtures`: initial data
 - `templates`: backend-served robots/mail views

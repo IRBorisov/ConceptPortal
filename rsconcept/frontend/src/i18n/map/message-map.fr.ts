@@ -1,3 +1,4 @@
+import { txAgentsFr } from '../app/agents.fr';
 import { txGeneralFr } from '../app/general.fr';
 import { txShellFr } from '../app/shell.fr';
 import { txAiFr } from '../domain/ai.fr';
@@ -7,6 +8,7 @@ import { txRslangFr } from '../domain/rslang.fr';
 
 export const frMessageMap: Record<string, string> = {
   ...txGeneralFr,
+  ...txAgentsFr,
   ...txLibraryFr,
   ...txLangFr,
   ...txRslangFr,

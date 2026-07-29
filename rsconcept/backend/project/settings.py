@@ -167,6 +167,7 @@ INSTALLED_APPS = [
     'apps.oss',
     'apps.rsmodel',
     'apps.prompt',
+    'apps.agents',
 
     'drf_spectacular',
     'drf_spectacular_sidecar',
@@ -194,6 +195,7 @@ REST_FRAMEWORK = {
         'signup': '3/hour',
         'password_reset': '5/hour',
         'oss_clone': '2/hour',
+        'agents': '60/minute',
     }
 }
 
