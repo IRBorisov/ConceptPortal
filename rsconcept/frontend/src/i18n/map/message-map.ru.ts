@@ -1,3 +1,4 @@
+import { txAgentsRu } from '../app/agents.ru';
 import { txGeneralRu } from '../app/general.ru';
 import { txShellRu } from '../app/shell.ru';
 import { txAiRu } from '../domain/ai.ru';
@@ -6,6 +7,7 @@ import { txLibraryRu } from '../domain/library.ru';
 import { txRslangRu } from '../domain/rslang.ru';
 export const ruMessageMap: Record<string, string> = {
   ...txGeneralRu,
+  ...txAgentsRu,
   ...txLibraryRu,
   ...txLangRu,
   ...txRslangRu,

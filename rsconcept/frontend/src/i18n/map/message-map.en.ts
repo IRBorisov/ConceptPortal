@@ -1,3 +1,4 @@
+import { txAgentsEn } from '../app/agents.en';
 import { txGeneralEn } from '../app/general.en';
 import { txShellEn } from '../app/shell.en';
 import { txAiEn } from '../domain/ai.en';
@@ -7,6 +8,7 @@ import { txRslangEn } from '../domain/rslang.en';
 
 export const enMessageMap: Record<string, string> = {
   ...txGeneralEn,
+  ...txAgentsEn,
   ...txLibraryEn,
   ...txLangEn,
   ...txRslangEn,

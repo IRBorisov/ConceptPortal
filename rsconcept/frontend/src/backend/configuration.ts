@@ -20,6 +20,7 @@ export const KEYS = {
   users: 'users',
   cctext: 'cctext',
   prompts: 'prompts',
+  agents: 'agents',
   global_mutation: 'global_mutation',
 
   composite: {

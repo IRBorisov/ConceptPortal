@@ -14,6 +14,7 @@ urlpatterns = [
     path('api/', include('apps.oss.urls')),
     path('api/', include('apps.rsmodel.urls')),
     path('api/', include('apps.prompt.urls')),
+    path('api/', include('apps.agents.urls')),
     path('users/', include('apps.users.urls')),
     path('schema', SpectacularAPIView.as_view(), name='schema'),
     path('redoc', SafeRedocView.as_view()),
