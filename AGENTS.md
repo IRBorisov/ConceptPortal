@@ -12,7 +12,7 @@ Workspace rules for agents.
 - `docs/`: portable architecture and coding-style guides for reuse across projects
 - `rsconcept/domain`: published TypeScript domain package (`@rsconcept/domain`)
 - `rsconcept/frontend`: Vite React TS app
-- `rsconcept/backend`: Django backend
+- `rsconcept/backend`: Django backend (`apps.agents` — API keys + `/api/agents` routes)
 - `rsconcept/rstool`: published agent library (`@rsconcept/rstool`) and stdio wrapper
 - `rsconcept/rstool-mcp`: published MCP adapter (`@rsconcept/rstool-mcp`) wrapping `rstool`
 - `scripts/dev`, `scripts/prod`, `nginx`, `docker-compose-*.yml`: ops/deploy
