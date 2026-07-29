@@ -9,6 +9,7 @@ Workspace rules for agents.
 ## Structure
 
 - `README.md`: setup/conventions/run docs
+- `docs/`: portable architecture and coding-style guides for reuse across projects
 - `rsconcept/domain`: published TypeScript domain package (`@rsconcept/domain`)
 - `rsconcept/frontend`: Vite React TS app
 - `rsconcept/backend`: Django backend
@@ -17,6 +18,10 @@ Workspace rules for agents.
 - `scripts/dev`, `scripts/prod`, `nginx`, `docker-compose-*.yml`: ops/deploy
 - `pnpm-workspace.yaml` + root `pnpm-lock.yaml`: JS/TS packages linked via `workspace:*`
 - `.agents/skills/`: project agent skills (see below)
+
+## Style guides
+
+Portable, principle-level docs (no tool flags or version pins): [`docs/architecture.md`](docs/architecture.md), [`docs/coding-style.md`](docs/coding-style.md). Package-local `AGENTS.md` files still win for in-repo edit rules.
 
 ## Edit Rules
 
