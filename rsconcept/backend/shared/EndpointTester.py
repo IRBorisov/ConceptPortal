@@ -93,7 +93,7 @@ class EndpointTester(DBTester):
         headers = kwargs.pop('headers', None)
         self.set_params(**kwargs)
         options = {'headers': headers} if headers else {}
-        if not data is None:
+        if data is not None:
             return self.client.patch(self.endpoint, data=data, format='json', **options)
         else:
             return self.client.patch(self.endpoint, **options)
@@ -102,7 +102,7 @@ class EndpointTester(DBTester):
         headers = kwargs.pop('headers', None)
         self.set_params(**kwargs)
         options = {'headers': headers} if headers else {}
-        if not data is None:
+        if data is not None:
             return self.client.post(self.endpoint, data=data, format='json', **options)
         else:
             return self.client.post(self.endpoint, **options)
@@ -113,7 +113,7 @@ class EndpointTester(DBTester):
 
     def delete(self, data=None, **kwargs):
         self.set_params(**kwargs)
-        if not data is None:
+        if data is not None:
             return self.client.delete(self.endpoint, data=data, format='json')
         else:
             return self.client.delete(self.endpoint)

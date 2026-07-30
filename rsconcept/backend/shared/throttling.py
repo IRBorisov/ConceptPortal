@@ -9,6 +9,7 @@ class EndpointRateThrottle(SimpleRateThrottle):
     ''' Throttle requests by client identity regardless of auth state. '''
 
     def get_cache_key(self, request, view):
+        ''' Cache key based on throttle scope and client identity. '''
         return self.cache_format % {
             'scope': self.scope,
             'ident': self.get_ident(request),
@@ -35,6 +36,7 @@ class OssCloneRateThrottle(EndpointRateThrottle):
     scope = 'oss_clone'
 
     def allow_request(self, request, view):
+        ''' Apply the rate limit only to OSS ``clone`` actions. '''
         if getattr(view, 'action', None) != 'clone':
             return True
         try:

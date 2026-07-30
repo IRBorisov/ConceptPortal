@@ -591,7 +591,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
     @action(detail=True, methods=['get'], url_path='contents')
     def contents(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: View schema db contents (including constituents). '''
-        serializer = s.RSFormSerializer(self.get_object())
+        serializer = s.RSFormSerializer(self.get_object(), context={'request': request})
         return Response(
             status=c.HTTP_200_OK,
             data=serializer.data
