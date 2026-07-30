@@ -75,11 +75,12 @@
     "@rsconcept/domain": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^26.1.1",
+    "@types/node": "^26.1.2",
     "@vitest/coverage-v8": "^4.1.10",
-    "tsdown": "^0.22.4",
-    "tsx": "^4.23.0",
-    "typescript": "^6.0.3",
+    "tsdown": "^0.22.14",
+    "tsx": "^4.23.1",
+    "@typescript/native": "npm:typescript@^7.0.2",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
     "unrun": "^0.3.1",
     "vitest": "^4.1.10"
   },
