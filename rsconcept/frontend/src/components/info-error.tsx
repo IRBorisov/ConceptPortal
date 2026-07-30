@@ -60,6 +60,17 @@ export function DescribeError({ error }: DescribeErrorProps) {
       </div>
     );
   }
+  if (error.response.status === 409) {
+    return (
+      <div>
+        <p>{tx('tx.shell.error.conflict')}</p>
+        <p className='mt-2 font-normal text-foreground'>{tx('tx.shell.error.conflict.hint')}</p>
+        {typeof error.response.data === 'object' && error.response.data !== null ? (
+          <PrettyJson data={error.response.data as object} />
+        ) : null}
+      </div>
+    );
+  }
   if (isCsrfAxiosFailure(error)) {
     return (
       <div>

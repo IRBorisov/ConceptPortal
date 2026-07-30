@@ -1,5 +1,6 @@
 ''' Serializers for persistent data manipulation. '''
 from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
 from rest_framework import serializers
 from rest_framework.serializers import PrimaryKeyRelatedField as PKField
 
@@ -7,7 +8,8 @@ from apps.rsform.models import Constituenta
 from shared import messages
 from shared.serializers import StrictModelSerializer, StrictSerializer
 
-from ..models import LibraryItem, LibraryItemType, LocationHead, Version
+from ..models import LibraryItem, LibraryItemType, Version
+from ..services.location_access import assert_can_write_location
 
 _LIBRARY_ITEM_TIMESTAMP_FIELDS = ('time_create', 'time_update')
 
@@ -67,8 +69,24 @@ class LibraryItemSerializer(StrictModelSerializer):
         model = LibraryItem
         fields = '__all__'
         read_only_fields = (
-            'id', 'item_type', 'owner', 'location', 'access_policy', *_LIBRARY_ITEM_TIMESTAMP_FIELDS
+            'id', 'item_type', 'owner', 'location', 'access_policy',
+            'read_only', 'visible', *_LIBRARY_ITEM_TIMESTAMP_FIELDS
         )
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        forbidden = []
+        initial_data = self.initial_data
+        if isinstance(initial_data, dict):
+            if 'read_only' in initial_data:
+                forbidden.append('read_only')
+            if 'visible' in initial_data:
+                forbidden.append('visible')
+        if forbidden:
+            raise serializers.ValidationError({
+                key: messages.fieldNotAllowed() for key in forbidden
+            })
+        return attrs
 
 
 class LibraryItemCloneSerializer(StrictSerializer):
@@ -94,20 +112,24 @@ class LibraryItemCloneSerializer(StrictSerializer):
         return value
 
     def validate(self, attrs):
+        location = attrs['item_data'].get('location', '')
+        request = self.context.get('request')
+        user = request.user if request is not None else None
+        if user is not None:
+            try:
+                assert_can_write_location(user, location)
+            except PermissionDenied as exc:
+                raise serializers.ValidationError({
+                    'item_data': {'location': 'Only staff may place items into the shared library'}
+                }) from exc
+
         target = self.context.get('target')
         if target.item_type != LibraryItemType.OPERATION_SCHEMA:
             return attrs
-        location = attrs['item_data'].get('location', '')
         if location == target.location:
             raise serializers.ValidationError({
                 'item_data': {'location': 'Clone target folder must differ from the source OSS location'}
             })
-        if location.startswith(LocationHead.LIBRARY):
-            request = self.context.get('request')
-            if request is None or not request.user.is_staff:
-                raise serializers.ValidationError({
-                    'item_data': {'location': 'Only staff may clone into the shared library'}
-                })
         return attrs
 
 
@@ -151,6 +173,9 @@ class LibraryItemDetailsSerializer(StrictModelSerializer):
         read_only_fields = ('owner', 'id', 'item_type', *_LIBRARY_ITEM_TIMESTAMP_FIELDS)
 
     def get_editors(self, instance: LibraryItem) -> list[int]:
+        request = self.context.get('request')
+        if request is not None and getattr(request.user, 'is_anonymous', False):
+            return []
         return list(instance.getQ_editors().order_by('pk').values_list('pk', flat=True))
 
     def get_versions(self, instance: LibraryItem) -> list:

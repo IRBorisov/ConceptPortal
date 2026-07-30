@@ -162,7 +162,7 @@ test('RSForm create-model flow shows error when API rejects creation', async ({ 
     ok: false
   });
 
-  await expect(page.getByText('detail: Создание модели запрещено для этой схемы')).toBeVisible();
+  await expect(page.getByText('Создание модели запрещено для этой схемы', { exact: true })).toBeVisible();
   await expect(page).toHaveURL(/\/library\/create/);
 });
 

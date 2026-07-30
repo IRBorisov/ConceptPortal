@@ -41,7 +41,7 @@ class RenameLocationSerializer(StrictSerializer):
 
 
 class AccessPolicySerializer(StrictSerializer):
-    ''' Serializer: Constituenta renaming. '''
+    ''' Serializer: Access policy update. '''
     access_policy = serializers.CharField()
 
     def validate(self, attrs):
@@ -51,6 +51,16 @@ class AccessPolicySerializer(StrictSerializer):
                 'access_policy': msg.invalidEnum(attrs['access_policy'])
             })
         return attrs
+
+
+class ReadOnlyFlagSerializer(StrictSerializer):
+    ''' Serializer: read_only flag update. '''
+    read_only = serializers.BooleanField()  # type: ignore[assignment]
+
+
+class VisibleFlagSerializer(StrictSerializer):
+    ''' Serializer: visible flag update. '''
+    visible = serializers.BooleanField()
 
 
 class LibraryContextSearchSerializer(StrictSerializer):

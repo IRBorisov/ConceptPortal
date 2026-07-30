@@ -57,6 +57,8 @@ def can_edit_item(user, obj: Any) -> bool:
         return True
 
     item = _extract_item(obj)
+    if item.read_only:
+        return False
     if item.owner_id == user.pk:
         return True
 
@@ -95,18 +97,10 @@ class ItemOwner(GlobalAdmin):
 
 
 class ItemEditor(ItemOwner):
-    ''' Item permission: Editor or higher. '''
+    ''' Item permission: Editor or higher (blocked when ``read_only``). '''
 
     def has_object_permission(self, request: Request, view: APIView, obj: Any) -> bool:
-        if request.user.is_anonymous:
-            return False
-        item = _extract_item(obj)
-        if Editor.objects.filter(
-            item=item,
-            editor=cast(User, request.user)
-        ).exists() and item.access_policy != AccessPolicy.PRIVATE:
-            return True
-        return super().has_object_permission(request, view, obj)
+        return can_edit_item(request.user, obj)
 
 
 class ItemAnyone(ItemEditor):

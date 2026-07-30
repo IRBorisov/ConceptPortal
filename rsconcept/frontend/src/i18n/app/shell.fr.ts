@@ -99,6 +99,9 @@ export const txShellFr: Record<string, string> = {
   'tx.shell.error.noServerResponse': 'Aucune réponse du serveur',
   'tx.shell.error.invalidResponse': 'Réponse du serveur non valide',
   'tx.shell.error.api404': 'Appel à une API inexistante',
+  'tx.shell.error.conflict': 'Cet élément a été modifié ailleurs',
+  'tx.shell.error.conflict.hint':
+    'Rechargez la page pour charger la dernière version, puis réessayez vos modifications.',
   'tx.shell.error.csrfLost': 'Connexion au serveur perdue. Rechargez la page',
   'tx.shell.error.contactIntro':
     'Veuillez faire une capture d’écran et l’envoyer avec une description à portal@acconcept.ru',

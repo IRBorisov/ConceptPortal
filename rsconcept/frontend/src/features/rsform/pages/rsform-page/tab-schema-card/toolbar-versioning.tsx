@@ -35,7 +35,7 @@ export function ToolbarVersioning({ blockReload, className }: ToolbarVersioningP
     if (schema.version === 'latest' || !window.confirm(tx('tx.lib.version.revert.confirm'))) {
       return;
     }
-    void versionRestore({ versionID: schema.version }).then(() => router.gotoRSForm(schema.id));
+    void versionRestore({ versionID: schema.version, itemID: schema.id }).then(() => router.gotoRSForm(schema.id));
   }
 
   async function handleCreateVersion() {

@@ -46,12 +46,12 @@ export function DlgUploadRSForm() {
       validationHint={!!file ? '' : tx('tx.general.file.choose.hint')}
       onSubmit={handleSubmit}
       submitText={tx('tx.general.load')}
-      className='w-100 px-6'
+      className='w-100 px-6 text-sm flex flex-col'
     >
       <FileInput label={tx('tx.general.file.choose')} acceptType={EXTEOR_TRS_FILE} onChange={handleFile} />
       <Checkbox
         label={tx('tx.schema.upload.attributes')}
-        className='py-2'
+        className='py-3'
         value={loadMetadata}
         onChange={value => setLoadMetadata(value)}
       />

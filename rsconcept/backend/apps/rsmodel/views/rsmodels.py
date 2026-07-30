@@ -13,10 +13,12 @@ from rest_framework.serializers import ValidationError
 
 from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemBaseNonStrictSerializer, LibraryItemSerializer
+from apps.library.services.context_search import get_accessible_items_queryset
 from apps.rsform.models import Constituenta
 from apps.rsform.serializers import CstListSerializer
 from apps.users.models import User
 from shared import permissions
+from shared.concurrency import ConcurrencyMixin
 
 from .. import models as m
 from .. import serializers as s
@@ -24,7 +26,7 @@ from .. import serializers as s
 
 @extend_schema(tags=['RSModel'])
 @extend_schema_view()
-class RSModelViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.RetrieveAPIView):
+class RSModelViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     ''' Endpoint: RSModel operations. '''
     queryset = LibraryItem.objects.filter(item_type=LibraryItemType.RSMODEL)
     serializer_class = LibraryItemSerializer
@@ -35,6 +37,13 @@ class RSModelViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Ret
     def _get_schema(self) -> LibraryItem | None:
         return m.RSModel.objects.get(model=self.get_object()).schema
 
+    def get_queryset(self):
+        if self.action == 'list':
+            return get_accessible_items_queryset(self.request.user).filter(
+                item_type=LibraryItemType.RSMODEL
+            )
+        return super().get_queryset()
+
     def get_permissions(self):
         ''' Determine permission class. '''
         if self.action in [
@@ -44,7 +53,7 @@ class RSModelViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Ret
             'reset_all'
         ]:
             permission_list = [permissions.ItemEditor]
-        elif self.action in ['details']:
+        elif self.action in ['list', 'retrieve', 'details']:
             permission_list = [permissions.ItemAnyone]
         else:
             permission_list = [permissions.Anyone]
@@ -62,7 +71,7 @@ class RSModelViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Ret
     @action(detail=True, methods=['get'], url_path='details')
     def details(self, request: Request, pk) -> Response:
         ''' Endpoint: Detailed model view. '''
-        serializer = s.RSModelSerializer(self._get_item())
+        serializer = s.RSModelSerializer(self._get_item(), context={'request': request})
         return Response(
             status=c.HTTP_200_OK,
             data=serializer.data

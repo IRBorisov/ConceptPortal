@@ -1,8 +1,11 @@
 ''' Serializers for file interaction. '''
+from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from rest_framework import serializers
 
 from apps.library.models import AccessPolicy, LibraryItem, LocationHead
+from apps.library.models import validate_location as is_valid_location
+from apps.library.services.location_access import assert_can_write_location
 from shared import messages as msg
 from shared.serializers import StrictSerializer
 
@@ -15,6 +18,7 @@ _ENTITY_SCHEMA = 'rsform'
 _TRS_VERSION_MIN = 16
 _TRS_VERSION = 16
 _TRS_HEADER = 'Exteor 4.8.13.1000 - 30/05/2022'
+TRS_IMPORT_MAX_ITEMS = 500
 
 # Legacy TRS file format value for statement constituents (unchanged on disk).
 _CST_TYPE_TRS_STATEMENT = 'theorem'
@@ -113,6 +117,39 @@ class RSFormTRSSerializer(serializers.Serializer):
             raise serializers.ValidationError({
                 'version': msg.exteorFileVersionNotSupported()
             })
+        items = attrs.get('items') or []
+        if len(items) > TRS_IMPORT_MAX_ITEMS:
+            raise serializers.ValidationError({
+                'items': msg.importTooManyItems(TRS_IMPORT_MAX_ITEMS)
+            })
+        normalized_items = []
+        for index, cst_data in enumerate(items):
+            if not isinstance(cst_data, dict):
+                raise serializers.ValidationError({
+                    'items': msg.trsItemInvalid(f'item {index} is not an object')
+                })
+            try:
+                alias = cst_data['alias']
+                cst_type = _cst_type_from_trs(cst_data['cstType'])
+            except KeyError as exc:
+                raise serializers.ValidationError({
+                    'items': msg.trsItemInvalid(f'missing {exc.args[0]}')
+                }) from exc
+            if 'entityUID' not in cst_data:
+                raise serializers.ValidationError({
+                    'items': msg.trsItemInvalid('missing entityUID')
+                })
+            if cst_type not in CstType.values:
+                raise serializers.ValidationError({
+                    'items': msg.trsItemInvalid(f'invalid cstType: {cst_data.get("cstType")}')
+                })
+            normalized_items.append({
+                'alias': alias,
+                'cst_type': cst_type,
+            })
+        alias_error = find_import_alias_error(normalized_items)
+        if alias_error:
+            raise serializers.ValidationError({'items': alias_error})
         return attrs
 
     @transaction.atomic
@@ -216,6 +253,11 @@ class RSFormSandboxImportSerializer(StrictSerializer):
             default=AccessPolicy.PUBLIC)
         location = serializers.CharField(required=False, default=LocationHead.USER)
 
+        def validate_location(self, value: str) -> str:
+            if not is_valid_location(value):
+                raise serializers.ValidationError(msg.invalidLocation())
+            return value
+
     class SchemaDataSerializer(StrictSerializer):
         ''' Serializer: Schema data for RSForm sandbox import. '''
 
@@ -247,10 +289,25 @@ class RSFormSandboxImportSerializer(StrictSerializer):
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
+        request = self.context.get('request')
+        location = attrs['item_data'].get('location', LocationHead.USER)
+        if request is not None:
+            try:
+                assert_can_write_location(request.user, location)
+            except PermissionDenied as exc:
+                raise serializers.ValidationError({
+                    'item_data': {'location': 'Only staff may place items into the shared library'}
+                }) from exc
+
         item_ids = [item['id'] for item in attrs['schema_data']['items']]
         if len(item_ids) != len(set(item_ids)):
             raise serializers.ValidationError({
                 'schema_data': 'Duplicate constituent ids are not allowed'
+            })
+
+        if len(attrs['schema_data']['items']) > TRS_IMPORT_MAX_ITEMS:
+            raise serializers.ValidationError({
+                'schema_data': msg.importTooManyItems(TRS_IMPORT_MAX_ITEMS)
             })
 
         known_ids = set(item_ids)

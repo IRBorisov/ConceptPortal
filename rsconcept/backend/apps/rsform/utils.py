@@ -43,12 +43,15 @@ def fix_old_references(text: str) -> str:
 
 
 def filename_for_schema(alias: str) -> str:
-    ''' Generate filename for schema from alias. '''
+    ''' Generate a safe Content-Disposition filename from alias. '''
     if alias == '' or not alias.isascii():
         # Note: non-ascii symbols in Content-Disposition
         # are not supported by some browsers
         return 'Schema.trs'
-    return alias + '.trs'
+    safe = re.sub(r'[^A-Za-z0-9._-]', '_', alias)
+    if not safe or safe in {'.', '..'}:
+        return 'Schema.trs'
+    return safe + '.trs'
 
 
 def extract_globals(expression: str) -> set[str]:

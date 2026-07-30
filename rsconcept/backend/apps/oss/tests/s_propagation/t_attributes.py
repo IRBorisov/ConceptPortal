@@ -117,7 +117,7 @@ class TestChangeAttributes(EndpointTester):
         self.assertEqual(self.ks3.model.access_policy, data['access_policy'])
 
 
-    @decl_endpoint('/api/library/{item}', method='patch')
+    @decl_endpoint('/api/library/{item}/set-read-only', method='patch')
     def test_update_read_only(self):
         data = {'read_only': True}
 

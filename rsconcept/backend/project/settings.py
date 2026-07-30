@@ -194,6 +194,7 @@ REST_FRAMEWORK = {
         'signup': '3/hour',
         'password_reset': '5/hour',
         'oss_clone': '2/hour',
+        'cctext': '30/minute',
     }
 }
 
@@ -204,6 +205,7 @@ CORS_ALLOW_HEADERS = (
     *default_headers,
     'sentry-trace',
     'baggage',
+    'x-expected-time-update',
 )
 CSRF_TRUSTED_ORIGINS = _get_list('CSRF_TRUSTED_ORIGINS', 'http://localhost:3000')
 CSRF_COOKIE_AGE = 365 * 24 * 60 * 60

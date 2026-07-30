@@ -109,6 +109,6 @@ test('create item page shows server error when create request fails', async ({ p
     ok: false
   });
 
-  await expect(page.getByText('detail: Схема с таким именем уже существует')).toBeVisible();
+  await expect(page.getByText('Схема с таким именем уже существует', { exact: true })).toBeVisible();
   await expect(page).toHaveURL(/\/library\/create$/);
 });

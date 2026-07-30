@@ -12,6 +12,7 @@ import {
 
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
+import { resolveExpectedTimeUpdate } from '@/backend/expected-time-update';
 
 import { type LibraryContextSearchField } from '../models/library-context-search';
 
@@ -113,6 +114,7 @@ export const libraryApi = {
     axiosPatch<UpdateLibraryItemDTO, LibraryItem>({
       schema: schemaLibraryItem,
       endpoint: `/api/library/${data.id}`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(data.id),
       request: {
         data: data,
         successMessage: globalTx('tx.general.changes.save.success')
@@ -139,6 +141,22 @@ export const libraryApi = {
       endpoint: `/api/library/${itemID}/set-access-policy`,
       request: {
         data: { access_policy: policy },
+        successMessage: globalTx('tx.general.changes.save.success')
+      }
+    }),
+  setReadOnly: ({ itemID, readOnly }: { itemID: number; readOnly: boolean }) =>
+    axiosPatch({
+      endpoint: `/api/library/${itemID}/set-read-only`,
+      request: {
+        data: { read_only: readOnly },
+        successMessage: globalTx('tx.general.changes.save.success')
+      }
+    }),
+  setVisible: ({ itemID, visible }: { itemID: number; visible: boolean }) =>
+    axiosPatch({
+      endpoint: `/api/library/${itemID}/set-visible`,
+      request: {
+        data: { visible },
         successMessage: globalTx('tx.general.changes.save.success')
       }
     }),
@@ -180,15 +198,17 @@ export const libraryApi = {
     axiosPost<CreateVersionDTO, VersionCreatedResponse>({
       schema: schemaVersionCreatedResponse,
       endpoint: `/api/library/${itemID}/create-version`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {
         data: data,
         successMessage: globalTx('tx.lib.version.create.success', { version: data.version })
       }
     }),
-  restoreVersion: ({ versionID }: { versionID: number }) =>
+  restoreVersion: ({ versionID, itemID }: { versionID: number; itemID?: number }) =>
     axiosPatch<undefined, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/versions/${versionID}/restore`,
+      expectedTimeUpdate: itemID !== undefined ? resolveExpectedTimeUpdate(itemID) : undefined,
       request: {
         successMessage: globalTx('tx.lib.version.revert.success')
       }

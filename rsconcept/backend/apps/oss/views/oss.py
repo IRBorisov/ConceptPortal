@@ -14,10 +14,12 @@ from rest_framework.response import Response
 
 from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemSerializer
+from apps.library.services.context_search import get_accessible_items_queryset
 from apps.rsform.models import Constituenta
 from apps.rsform.serializers import CstTargetSerializer
 from shared import messages as msg
 from shared import permissions
+from shared.concurrency import ConcurrencyMixin
 
 from .. import models as m
 from .. import serializers as s
@@ -25,13 +27,20 @@ from .. import serializers as s
 
 @extend_schema(tags=['OSS'])
 @extend_schema_view()
-class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.RetrieveAPIView):
+class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     ''' Endpoint: OperationSchema. '''
     queryset = LibraryItem.objects.filter(item_type=LibraryItemType.OPERATION_SCHEMA)
     serializer_class = LibraryItemSerializer
 
     def _get_item(self) -> LibraryItem:
         return cast(LibraryItem, self.get_object())
+
+    def get_queryset(self):
+        if self.action == 'list':
+            return get_accessible_items_queryset(self.request.user).filter(
+                item_type=LibraryItemType.OPERATION_SCHEMA
+            )
+        return super().get_queryset()
 
     def get_permissions(self):
         ''' Determine permission class. '''
@@ -55,7 +64,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
             'relocate_constituents'
         ]:
             permission_list = [permissions.ItemEditor]
-        elif self.action in ['details']:
+        elif self.action in ['list', 'retrieve', 'details']:
             permission_list = [permissions.ItemAnyone]
         elif self.action in ['get_predecessor']:
             permission_list = [permissions.Anyone]
@@ -75,7 +84,7 @@ class OssViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retriev
     @action(detail=True, methods=['get'], url_path='details')
     def details(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Detailed OSS data. '''
-        serializer = s.OperationSchemaSerializer(self._get_item())
+        serializer = s.OperationSchemaSerializer(self._get_item(), context={'request': request})
         return Response(
             status=c.HTTP_200_OK,
             data=serializer.data

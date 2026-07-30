@@ -102,6 +102,8 @@ export const txShellEn: Record<string, string> = {
   'tx.shell.error.noServerResponse': 'No response from server',
   'tx.shell.error.invalidResponse': 'Invalid server response',
   'tx.shell.error.api404': 'Request to a non-existent API',
+  'tx.shell.error.conflict': 'This item was changed elsewhere',
+  'tx.shell.error.conflict.hint': 'Reload the page to load the latest version, then retry your changes.',
   'tx.shell.error.csrfLost': 'Server connection lost. Reload the page',
   'tx.shell.error.contactIntro': 'Please take a screenshot and send it with a description to portal@acconcept.ru',
 

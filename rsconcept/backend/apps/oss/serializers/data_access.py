@@ -563,7 +563,7 @@ class OperationSchemaSerializer(StrictModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance: LibraryItem):
-        result = LibraryItemDetailsSerializer(instance).data
+        result = LibraryItemDetailsSerializer(instance, context=self.context).data
         del result['versions']
         result['layout'] = Layout.objects.get(oss=instance).data
         result['operations'] = []

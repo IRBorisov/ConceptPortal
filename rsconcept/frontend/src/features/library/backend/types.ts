@@ -143,7 +143,9 @@ export const schemaCreateLibraryItem = schemaInputLibraryItem
 export const schemaUpdateLibraryItem = schemaInputLibraryItem
   .omit({
     location: true,
-    access_policy: true
+    access_policy: true,
+    visible: true,
+    read_only: true
   })
   .extend({
     id: z.number()

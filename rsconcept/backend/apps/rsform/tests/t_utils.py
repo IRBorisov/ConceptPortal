@@ -2,7 +2,7 @@
 import re
 import unittest
 
-from apps.rsform.utils import apply_pattern, fix_old_references
+from apps.rsform.utils import apply_pattern, filename_for_schema, fix_old_references
 
 
 class TestUtils(unittest.TestCase):
@@ -24,3 +24,9 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(fix_old_references('@{X1|nomn,sing}'), '@{X1|nomn,sing}')
         self.assertEqual(fix_old_references('@{X1|sing,ablt} @{X1|sing,ablt}'), '@{X1|sing,ablt} @{X1|sing,ablt}')
         self.assertEqual(fix_old_references('@{X1|nomn|sing}'), '@{X1|nomn,sing}')
+
+
+    def test_filename_for_schema_sanitizes_alias(self):
+        self.assertEqual(filename_for_schema('Safe_Name-1'), 'Safe_Name-1.trs')
+        self.assertEqual(filename_for_schema('bad"name\r\n'), 'bad_name__.trs')
+        self.assertEqual(filename_for_schema('Схема'), 'Schema.trs')

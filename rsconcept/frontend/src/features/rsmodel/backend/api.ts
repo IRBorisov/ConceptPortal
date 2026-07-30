@@ -8,6 +8,7 @@ import { type ConstituentaList } from '@/features/rsform';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
+import { resolveExpectedTimeUpdate } from '@/backend/expected-time-update';
 
 import { notifyModelSync } from './model-sync';
 import { type ConstituentaDataDTO, type RSModelDTO, type RSModelJsonDTO, schemaRSModel } from './types';
@@ -53,6 +54,7 @@ export const rsmodelApi = {
   setValue: ({ itemID, data }: { itemID: number; data: ConstituentaDataDTO }) =>
     axiosPost<ConstituentaDataDTO>({
       endpoint: `/api/models/${itemID}/set-value`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {
         data: data,
         successMessage: globalTx('tx.general.changes.save.success')
@@ -62,6 +64,7 @@ export const rsmodelApi = {
     axiosPatch<RSModelJsonDTO, RSModelDTO>({
       schema: schemaRSModel,
       endpoint: `/api/models/${itemID}/load-json`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {
         data: data,
         successMessage: globalTx('tx.model.upload.success')
@@ -70,6 +73,7 @@ export const rsmodelApi = {
   clearValues: ({ itemID, data }: { itemID: number; data: ConstituentaList }) =>
     axiosPost<ConstituentaList>({
       endpoint: `/api/models/${itemID}/clear-values`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {
         data: data,
         successMessage: globalTx('tx.rslang.value.reset.success')

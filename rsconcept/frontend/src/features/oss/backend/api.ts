@@ -9,6 +9,7 @@ import { notifySchemaSync } from '@/features/rsform/backend/schema-sync';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
+import { resolveExpectedTimeUpdate } from '@/backend/expected-time-update';
 import { invalidateRelatedSchemas, patchLibraryTimestamp } from '@/backend/item-sync-utils';
 
 import { notifyOssSync } from './oss-sync';
@@ -127,6 +128,7 @@ export const ossApi = {
 
   updateLayout: ({ itemID, data, isSilent }: { itemID: number; data: OssLayout; isSilent?: boolean }) =>
     axiosPatch<IOssLayoutDTO, OperationSchemaDTO>({
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/update-layout`,
       request: {
         data: { data: data },
@@ -137,6 +139,7 @@ export const ossApi = {
   createBlock: ({ itemID, data }: { itemID: number; data: CreateBlockDTO }) =>
     axiosPost<CreateBlockDTO, BlockCreatedResponse>({
       schema: schemaBlockCreatedResponse,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/create-block`,
       request: {
         data: data,
@@ -146,6 +149,7 @@ export const ossApi = {
   updateBlock: ({ itemID, data }: { itemID: number; data: UpdateBlockDTO }) =>
     axiosPatch<UpdateBlockDTO, OperationSchemaDTO>({
       schema: schemaOperationSchema,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/update-block`,
       request: {
         data: data,
@@ -155,6 +159,7 @@ export const ossApi = {
   deleteBlock: ({ itemID, data }: { itemID: number; data: DeleteBlockDTO; beforeUpdate?: () => void }) =>
     axiosPatch<DeleteBlockDTO, OperationSchemaDTO>({
       schema: schemaOperationSchema,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/delete-block`,
       request: {
         data: data,
@@ -165,6 +170,7 @@ export const ossApi = {
   createReplica: ({ itemID, data }: { itemID: number; data: CreateReplicaDTO }) =>
     axiosPost<CreateReplicaDTO, OperationCreatedResponse>({
       schema: schemaOperationCreatedResponse,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/create-replica`,
       request: {
         data: data,
@@ -177,6 +183,7 @@ export const ossApi = {
   deleteReplica: ({ itemID, data }: { itemID: number; data: DeleteReplicaDTO; beforeUpdate?: () => void }) =>
     axiosPatch<DeleteReplicaDTO, OperationSchemaDTO>({
       schema: schemaOperationSchema,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/delete-replica`,
       request: {
         data: data,
@@ -187,6 +194,7 @@ export const ossApi = {
   createSchema: ({ itemID, data }: { itemID: number; data: CreateSchemaDTO }) =>
     axiosPost<CreateSchemaDTO, OperationCreatedResponse>({
       schema: schemaOperationCreatedResponse,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/create-schema`,
       request: {
         data: data,
@@ -199,6 +207,7 @@ export const ossApi = {
   cloneSchema: ({ itemID, data }: { itemID: number; data: CloneSchemaDTO }) =>
     axiosPost<CloneSchemaDTO, OperationCreatedResponse>({
       schema: schemaOperationCreatedResponse,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/clone-schema`,
       request: {
         data: data,
@@ -211,6 +220,7 @@ export const ossApi = {
   createSynthesis: ({ itemID, data }: { itemID: number; data: CreateSynthesisDTO }) =>
     axiosPost<CreateSynthesisDTO, OperationCreatedResponse>({
       schema: schemaOperationCreatedResponse,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/create-synthesis`,
       request: {
         data: data,
@@ -223,6 +233,7 @@ export const ossApi = {
   importSchema: ({ itemID, data }: { itemID: number; data: ImportSchemaDTO }) =>
     axiosPost<ImportSchemaDTO, OperationCreatedResponse>({
       schema: schemaOperationCreatedResponse,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/import-schema`,
       request: {
         data: data,
@@ -235,6 +246,7 @@ export const ossApi = {
   updateOperation: ({ itemID, data }: { itemID: number; data: UpdateOperationDTO }) =>
     axiosPatch<UpdateOperationDTO, OperationSchemaDTO>({
       schema: schemaOperationSchema,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/update-operation`,
       request: {
         data: data,
@@ -244,6 +256,7 @@ export const ossApi = {
   deleteOperation: ({ itemID, data }: { itemID: number; data: DeleteOperationDTO; beforeUpdate?: () => void }) =>
     axiosPatch<DeleteOperationDTO, OperationSchemaDTO>({
       schema: schemaOperationSchema,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/delete-operation`,
       request: {
         data: data,
@@ -254,6 +267,7 @@ export const ossApi = {
   createInput: ({ itemID, data }: { itemID: number; data: TargetOperation }) =>
     axiosPatch<TargetOperation, InputCreatedResponse>({
       schema: schemaInputCreatedResponse,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/create-input`,
       request: {
         data: data,
@@ -263,6 +277,7 @@ export const ossApi = {
   updateInput: ({ itemID, data }: { itemID: number; data: UpdateInputDTO }) =>
     axiosPatch<UpdateInputDTO, OperationSchemaDTO>({
       schema: schemaOperationSchema,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/set-input`,
       request: {
         data: data,
@@ -272,6 +287,7 @@ export const ossApi = {
   executeOperation: ({ itemID, data }: { itemID: number; data: TargetOperation }) =>
     axiosPost<TargetOperation, OperationSchemaDTO>({
       schema: schemaOperationSchema,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/execute-operation`,
       request: {
         data: data,
@@ -282,6 +298,7 @@ export const ossApi = {
   moveItems: ({ itemID, data }: { itemID: number; data: MoveItemsDTO }) =>
     axiosPatch<MoveItemsDTO, OperationSchemaDTO>({
       schema: schemaOperationSchema,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/move-items`,
       request: {
         data: data,
@@ -291,6 +308,7 @@ export const ossApi = {
 
   relocateConstituents: ({ itemID, data }: { itemID: number; data: RelocateConstituentsDTO }) =>
     axiosPost<RelocateConstituentsDTO>({
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/relocate-constituents`,
       request: {
         data: data,

@@ -157,16 +157,57 @@ class TestRSFormViewset(EndpointTester):
         self.executeBadData(data)
 
 
+    @decl_endpoint('/api/rsforms/create-from-sandbox', method='post')
+    def test_create_rsform_from_sandbox_rejects_shared_library_for_non_staff(self):
+        data = {
+            'item_data': {
+                'title': 'Sandbox',
+                'alias': 'SB',
+                'description': '',
+                'location': LocationHead.LIBRARY,
+            },
+            'schema_data': {
+                'items': [{
+                    'id': 1,
+                    'alias': 'X1',
+                    'cst_type': CstType.BASE,
+                }],
+                'attribution': []
+            }
+        }
+        self.executeBadData(data)
+
+
     @decl_endpoint('/api/rsforms', method='get')
     def test_list_rsforms(self):
         oss = LibraryItem.objects.create(
             item_type=LibraryItemType.OPERATION_SCHEMA,
-            title='Test3'
+            title='Test3',
+            location=LocationHead.COMMON,
+            access_policy=AccessPolicy.PUBLIC
         )
+        private = RSForm.create(
+            title='Private',
+            alias='PRIV',
+            access_policy=AccessPolicy.PRIVATE,
+            owner=self.user2
+        )
+        # Place unowned schema in common public catalog so list can include it
+        self.unowned.model.location = LocationHead.COMMON
+        self.unowned.model.access_policy = AccessPolicy.PUBLIC
+        self.unowned.model.save()
+
         response = self.executeOK()
         self.assertFalse(response_contains(response, oss))
         self.assertTrue(response_contains(response, self.unowned.model))
         self.assertTrue(response_contains(response, self.owned.model))
+        self.assertFalse(response_contains(response, private.model))
+
+        self.logout()
+        response = self.executeOK()
+        self.assertTrue(response_contains(response, self.unowned.model))
+        self.assertFalse(response_contains(response, self.owned.model))
+        self.assertFalse(response_contains(response, private.model))
 
 
     @decl_endpoint('/api/rsforms/{item}/contents', method='get')
@@ -219,6 +260,13 @@ class TestRSFormViewset(EndpointTester):
         self.logout()
         self.executeOK(item=self.owned_id)
         self.executeOK(item=self.unowned_id)
+        self.executeForbidden(item=self.private_id)
+
+
+    @decl_endpoint('/api/rsforms/{item}', method='get')
+    def test_retrieve_private_forbidden(self):
+        self.executeForbidden(item=self.private_id)
+        self.logout()
         self.executeForbidden(item=self.private_id)
 
 

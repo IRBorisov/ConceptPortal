@@ -24,6 +24,7 @@ export { AxiosError } from 'axios';
 export const isAxiosError = axios.isAxiosError;
 
 const CSRF_AUTH_ENDPOINT = '/users/api/auth';
+const EXPECTED_TIME_UPDATE_HEADER = 'X-Expected-Time-Update';
 
 const defaultOptions = {
   xsrfCookieName: 'csrftoken',
@@ -103,6 +104,24 @@ interface IAxiosRequest<RequestData, ResponseData> {
   request?: IFrontRequest<RequestData, ResponseData>;
   options?: AxiosRequestConfig;
   schema?: z.ZodType;
+  /** Optimistic concurrency token matched against library item ``time_update``. */
+  expectedTimeUpdate?: string;
+}
+
+function withConcurrencyHeaders(
+  options: AxiosRequestConfig | undefined,
+  expectedTimeUpdate: string | undefined
+): AxiosRequestConfig | undefined {
+  if (!expectedTimeUpdate) {
+    return options;
+  }
+  return {
+    ...options,
+    headers: {
+      ...options?.headers,
+      [EXPECTED_TIME_UPDATE_HEADER]: expectedTimeUpdate
+    }
+  };
 }
 
 interface IAxiosGetRequest {
@@ -135,10 +154,11 @@ export function axiosPost<RequestData, ResponseData = void>({
   endpoint,
   request,
   options,
-  schema
+  schema,
+  expectedTimeUpdate
 }: IAxiosRequest<RequestData, ResponseData>) {
   return axiosInstance
-    .post<ResponseData>(endpoint, request?.data, options)
+    .post<ResponseData>(endpoint, request?.data, withConcurrencyHeaders(options, expectedTimeUpdate))
     .then(response => {
       schema?.parse(response.data);
       notifySuccess(response.data, request?.successMessage);
@@ -154,10 +174,11 @@ export function axiosDelete<RequestData, ResponseData = void>({
   endpoint,
   request,
   options,
-  schema
+  schema,
+  expectedTimeUpdate
 }: IAxiosRequest<RequestData, ResponseData>) {
   return axiosInstance
-    .delete<ResponseData>(endpoint, options)
+    .delete<ResponseData>(endpoint, withConcurrencyHeaders(options, expectedTimeUpdate))
     .then(response => {
       schema?.parse(response.data);
       notifySuccess(response.data, request?.successMessage);
@@ -173,10 +194,11 @@ export function axiosPatch<RequestData, ResponseData = void>({
   endpoint,
   request,
   options,
-  schema
+  schema,
+  expectedTimeUpdate
 }: IAxiosRequest<RequestData, ResponseData>) {
   return axiosInstance
-    .patch<ResponseData>(endpoint, request?.data, options)
+    .patch<ResponseData>(endpoint, request?.data, withConcurrencyHeaders(options, expectedTimeUpdate))
     .then(response => {
       schema?.parse(response.data);
       notifySuccess(response.data, request?.successMessage);

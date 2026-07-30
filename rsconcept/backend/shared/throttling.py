@@ -44,3 +44,8 @@ class OssCloneRateThrottle(EndpointRateThrottle):
         if item.item_type != LibraryItemType.OPERATION_SCHEMA:
             return True
         return super().allow_request(request, view)
+
+
+class CctextRateThrottle(EndpointRateThrottle):
+    ''' Throttle public natural-language (cctext) endpoints. '''
+    scope = 'cctext'

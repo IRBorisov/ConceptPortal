@@ -29,11 +29,21 @@ export function isResponseHtml(response?: AxiosResponse) {
 /** Extract error message from error object. */
 export function extractErrorMessage(error: Error | AxiosError): string {
   if (isAxiosError(error)) {
-    if (error.response?.status === 400) {
-      const data = error.response.data as Record<string, unknown>;
-      const messages = Object.entries(data).flatMap(([key, value]) => formatApiFieldError(key, value));
-      if (messages.length > 0) {
-        return messages.join('\n');
+    const status = error.response?.status;
+    if (status === 400 || status === 409) {
+      const data: unknown = error.response?.data;
+      if (typeof data === 'string' && data.trim()) {
+        return data;
+      }
+      if (data && typeof data === 'object') {
+        const record = data as Record<string, unknown>;
+        if (typeof record.detail === 'string' && record.detail.trim()) {
+          return record.detail;
+        }
+        const messages = Object.entries(record).flatMap(([key, value]) => formatApiFieldError(key, value));
+        if (messages.length > 0) {
+          return messages.join('\n');
+        }
       }
     }
   }

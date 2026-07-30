@@ -33,9 +33,7 @@ function modelDefaults(model: RSModel): UpdateLibraryItemDTO {
     item_type: LibraryItemType.RSMODEL,
     title: model.title,
     alias: model.alias,
-    description: model.description,
-    visible: model.visible,
-    read_only: model.read_only
+    description: model.description
   };
 }
 

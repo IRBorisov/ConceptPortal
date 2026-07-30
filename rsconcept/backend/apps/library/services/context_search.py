@@ -24,7 +24,10 @@ ALL_CONTEXT_FIELDS = frozenset({
 
 
 def get_accessible_items_queryset(user, *, all_items: bool = False) -> QuerySet[LibraryItem]:
-    ''' Items visible to *user* (or all items for staff admin mode). '''
+    ''' Items visible to *user* (or all items for staff admin mode).
+
+    Editor listings exclude ``PRIVATE`` items — same rule as ``can_read_library_item``.
+    '''
     if all_items:
         return LibraryItem.objects.all()
     common_location = Q(location__startswith=LocationHead.COMMON) | Q(location__startswith=LocationHead.LIBRARY)
@@ -35,7 +38,7 @@ def get_accessible_items_queryset(user, *, all_items: bool = False) -> QuerySet[
     return LibraryItem.objects.filter(
         (is_public & common_location) |
         Q(owner=user) |
-        Q(editor__editor=user)
+        (Q(editor__editor=user) & ~Q(access_policy=AccessPolicy.PRIVATE))
     ).distinct()
 
 
