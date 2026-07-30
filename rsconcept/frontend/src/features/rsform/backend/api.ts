@@ -6,6 +6,7 @@ import { type Attribution, type RSForm } from '@rsconcept/domain/library';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
+import { resolveExpectedTimeUpdate } from '@/backend/expected-time-update';
 import { invalidateRelatedOss } from '@/backend/item-sync-utils';
 import { queryClient } from '@/backend/query-client';
 
@@ -81,6 +82,7 @@ export const rsformsApi = {
     axiosPatch<RSFormUploadDTO, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/load-trs`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {
         data: data,
         successMessage: globalTx('tx.schema.upload.success')
@@ -96,6 +98,7 @@ export const rsformsApi = {
     axiosPatch<RSFormImportJsonDTO, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/load-json`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {
         data: data,
         successMessage: globalTx('tx.schema.upload.success')
@@ -106,6 +109,7 @@ export const rsformsApi = {
     axiosPost<CreateConstituentaDTO, ConstituentaCreatedResponse>({
       schema: schemaConstituentaCreatedResponse,
       endpoint: `/api/rsforms/${itemID}/create-cst`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {
         data: data,
         successMessage: response => globalTx('tx.cst.create.success', { alias: response.new_cst.alias })
@@ -115,6 +119,7 @@ export const rsformsApi = {
     axiosPost<CreateConstituentsBatchDTO, ConstituentsCreatedResponse>({
       schema: schemaConstituentsCreatedResponse,
       endpoint: `/api/rsforms/${itemID}/create-multiple-cst`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {
         data: data,
         successMessage: response =>
@@ -127,6 +132,7 @@ export const rsformsApi = {
     axiosPatch<UpdateConstituentaDTO, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/update-cst`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {
         data: data,
         successMessage: globalTx('tx.general.changes.save.success')
@@ -136,6 +142,7 @@ export const rsformsApi = {
     axiosPatch<UpdateCrucialDTO, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/update-crucial`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {
         data: data,
         successMessage: globalTx('tx.general.changes.save.success')
@@ -145,6 +152,7 @@ export const rsformsApi = {
     axiosPatch<ConstituentaList, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/delete-multiple-cst`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {
         data: data,
         successMessage: globalTx('tx.general.delete.success')
@@ -154,6 +162,7 @@ export const rsformsApi = {
     axiosPatch<SubstitutionsDTO, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/substitute`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {
         data: data,
         successMessage: globalTx('tx.substitution.success')
@@ -163,6 +172,7 @@ export const rsformsApi = {
     axiosPatch<MoveConstituentsDTO, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/move-cst`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: { data: data }
     }),
 
@@ -170,6 +180,7 @@ export const rsformsApi = {
     axiosPatch<InlineSynthesisDTO, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/inline-synthesis`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(data.receiver),
       request: {
         data: data,
         successMessage: globalTx('tx.synthesis.inline.success')
@@ -179,12 +190,14 @@ export const rsformsApi = {
     axiosPatch<undefined, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/restore-order`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: { successMessage: globalTx('tx.schema.order.restore.success') }
     }),
   resetAliases: ({ itemID }: { itemID: number }) =>
     axiosPatch<undefined, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/reset-aliases`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: { successMessage: globalTx('tx.schema.order.rename.success') }
     }),
 
@@ -192,6 +205,7 @@ export const rsformsApi = {
     axiosPost<Attribution, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/create-attribution`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {
         data: data,
         successMessage: globalTx('tx.general.changes.save.success')
@@ -201,6 +215,7 @@ export const rsformsApi = {
     axiosPatch<Attribution, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/delete-attribution`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {
         data: data,
         successMessage: globalTx('tx.general.changes.save.success')
@@ -210,6 +225,7 @@ export const rsformsApi = {
     axiosPatch<AttributionTargetDTO, RSFormDTO>({
       schema: schemaRSForm,
       endpoint: `/api/rsforms/${itemID}/clear-attributions`,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {
         data: data,
         successMessage: globalTx('tx.general.changes.save.success')

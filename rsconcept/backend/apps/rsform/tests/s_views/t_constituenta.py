@@ -1,5 +1,10 @@
 ''' Testing API: Constituenta editing. '''
+from datetime import timedelta
+
+from django.utils import timezone
+
 from apps.rsform.models import Constituenta, CstType, RSForm
+from shared.concurrency import EXPECTED_TIME_UPDATE_HEADER
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
 
@@ -330,3 +335,37 @@ class TestConstituentaAPI(EndpointTester):
         self.x3.refresh_from_db()
         self.assertEqual(x4.order, 2)
         self.assertEqual(self.x3.order, 3)
+
+
+    @decl_endpoint('/api/rsforms/{item}/create-cst', method='post')
+    def test_create_constituenta_rejects_read_only(self):
+        self.owned.model.read_only = True
+        self.owned.model.save(update_fields=['read_only'])
+        data = {
+            'alias': 'X9',
+            'cst_type': CstType.BASE,
+        }
+        self.executeForbidden(data, item=self.owned_id)
+
+        self.owned.model.read_only = False
+        self.owned.model.save(update_fields=['read_only'])
+        self.executeCreated(data, item=self.owned_id)
+
+
+    @decl_endpoint('/api/rsforms/{item}/update-cst', method='patch')
+    def test_partial_update_rejects_stale_time_update(self):
+        stale = (timezone.now() - timedelta(days=1)).isoformat().replace('+00:00', 'Z')
+        data = {'target': self.x1.pk, 'item_data': {'convention': 'new'}}
+        self.executeConflict(
+            data,
+            item=self.owned_id,
+            headers={EXPECTED_TIME_UPDATE_HEADER: stale}
+        )
+
+        self.owned.model.refresh_from_db()
+        fresh = self.owned.model.time_update.isoformat().replace('+00:00', 'Z')
+        self.executeOK(
+            data,
+            item=self.owned_id,
+            headers={EXPECTED_TIME_UPDATE_HEADER: fresh}
+        )

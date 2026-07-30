@@ -5,7 +5,9 @@ from .basics import (
     LibraryContextSearchSerializer,
     LibraryItemsByIdsSerializer,
     LocationSerializer,
-    RenameLocationSerializer
+    ReadOnlyFlagSerializer,
+    RenameLocationSerializer,
+    VisibleFlagSerializer
 )
 from .data_access import (
     LibraryItemBaseNonStrictSerializer,

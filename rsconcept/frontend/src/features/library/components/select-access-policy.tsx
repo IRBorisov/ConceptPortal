@@ -19,12 +19,15 @@ interface SelectAccessPolicyProps extends Styling {
   onChange: (value: AccessPolicy) => void;
 
   disabled?: boolean;
+  /** Overrides the default access-policy tooltip (e.g. unsaved-form hint). */
+  title?: string;
   stretchLeft?: boolean;
 }
 
 export function SelectAccessPolicy({
   value,
   disabled,
+  title,
   className,
   stretchLeft,
   onChange,
@@ -43,7 +46,7 @@ export function SelectAccessPolicy({
   return (
     <div ref={elementRef} onBlur={handleBlur} className={clsx('relative', className)} {...restProps}>
       <MiniButton
-        title={`${tx('tx.lib.access')}${tx('tx.general.colon')}${labelAccessPolicy(value)}`}
+        title={title ?? `${tx('tx.lib.access')}${tx('tx.general.colon')}${labelAccessPolicy(value)}`}
         hideTitle={isOpen}
         className='h-full'
         icon={<IconAccessPolicy value={value} size='1.25rem' />}

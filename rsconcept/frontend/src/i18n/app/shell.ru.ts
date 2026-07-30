@@ -100,6 +100,8 @@ export const txShellRu: Record<string, string> = {
   'tx.shell.error.noServerResponse': 'Нет ответа от сервера',
   'tx.shell.error.invalidResponse': 'Некорректный ответ сервера',
   'tx.shell.error.api404': 'Запрашиваемый API не существует',
+  'tx.shell.error.conflict': 'Элемент был изменён в другом месте',
+  'tx.shell.error.conflict.hint': 'Обновите страницу, чтобы загрузить актуальную версию, и повторите изменения.',
   'tx.shell.error.csrfLost': 'Соединение с сервером потеряно. Перезагрузите страницу',
   'tx.shell.error.contactIntro':
     'Пожалуйста сделайте скриншот и отправьте вместе с описанием ситуации на почту portal@acconcept.ru',

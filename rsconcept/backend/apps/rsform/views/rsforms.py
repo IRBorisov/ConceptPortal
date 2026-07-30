@@ -15,10 +15,13 @@ from rest_framework.serializers import ValidationError
 
 from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemSerializer
+from apps.library.services.context_search import get_accessible_items_queryset
 from apps.oss.models import Inheritance, PropagationFacade
 from apps.users.models import User
 from shared import messages as msg
 from shared import permissions, utility
+from shared.concurrency import ConcurrencyMixin
+from shared.utility import ZipMemberTooLarge
 
 from .. import models as m
 from .. import serializers as s
@@ -27,13 +30,20 @@ from .. import utils
 
 @extend_schema(tags=['RSForm'])
 @extend_schema_view()
-class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.RetrieveAPIView):
+class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView, generics.RetrieveAPIView):
     ''' Endpoint: RSForm operations. '''
     queryset = LibraryItem.objects.filter(item_type=LibraryItemType.RSFORM)
     serializer_class = LibraryItemSerializer
 
     def _get_item(self) -> LibraryItem:
         return cast(LibraryItem, self.get_object())
+
+    def get_queryset(self):
+        if self.action == 'list':
+            return get_accessible_items_queryset(self.request.user).filter(
+                item_type=LibraryItemType.RSFORM
+            )
+        return super().get_queryset()
 
     def get_permissions(self):
         ''' Determine permission class. '''
@@ -55,9 +65,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
         ]:
             permission_list = [permissions.ItemEditor]
         elif self.action in [
+            'list',
+            'retrieve',
             'contents',
             'details',
-            'export_trs',
             'resolve',
         ]:
             permission_list = [permissions.ItemAnyone]
@@ -537,7 +548,13 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
 
         item = self._get_item()
         load_metadata = input_serializer.validated_data['load_metadata']
-        data = utility.read_zipped_json(request.FILES['file'].file, utils.EXTEOR_INNER_FILENAME)
+        try:
+            data = utility.read_zipped_json(request.FILES['file'].file, utils.EXTEOR_INNER_FILENAME)
+        except ZipMemberTooLarge:
+            return Response(
+                status=c.HTTP_400_BAD_REQUEST,
+                data={'file': msg.importTooLarge()}
+            )
         if data is None:
             return Response(
                 status=c.HTTP_400_BAD_REQUEST,
@@ -592,7 +609,7 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
     @action(detail=True, methods=['get'], url_path='details')
     def details(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Detailed schema view including statuses and parse. '''
-        serializer = s.RSFormParseSerializer(self.get_object())
+        serializer = s.RSFormParseSerializer(self.get_object(), context={'request': request})
         return Response(
             status=c.HTTP_200_OK,
             data=serializer.data
@@ -638,7 +655,10 @@ class RSFormViewSet(viewsets.GenericViewSet, generics.ListAPIView, generics.Retr
 def create_rsform_from_sandbox(request: Request) -> HttpResponse:
     ''' Endpoint: Create RSForm from current sandbox schema data. '''
     owner = cast(User, request.user) if not request.user.is_anonymous else None
-    serializer = s.RSFormSandboxImportSerializer(data=request.data, context={'owner': owner})
+    serializer = s.RSFormSandboxImportSerializer(
+        data=request.data,
+        context={'owner': owner, 'request': request}
+    )
     serializer.is_valid(raise_exception=True)
     schema = serializer.save()
     return Response(

@@ -19,6 +19,7 @@ from apps.rsform.models import RSForm, RSFormCached
 from apps.rsform.serializers import RSFormParseSerializer, RSFormSerializer, RSFormTRSSerializer
 from shared import messages as msg
 from shared import permissions, utility
+from shared.concurrency import ConcurrencyMixin, assert_expected_time_update
 
 from .. import models as m
 from .. import serializers as s
@@ -37,6 +38,7 @@ def _forbid_unless_version_item_readable(request: Request, version: m.Version) -
 @extend_schema(tags=['Version'])
 @extend_schema_view()
 class VersionViewset(
+    ConcurrencyMixin,
     viewsets.GenericViewSet,
     generics.RetrieveUpdateDestroyAPIView,
     permissions.EditorMixin
@@ -100,7 +102,7 @@ def export_file(request: Request, pk: int) -> HttpResponse:
     file = utility.write_zipped_json(data, utils.EXTEOR_INNER_FILENAME)
     filename = utils.filename_for_schema(data['alias'])
     response = HttpResponse(file, content_type='application/zip')
-    response['Content-Disposition'] = f'attachment; filename={filename}'
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
 
 
@@ -129,10 +131,12 @@ def create_version(request: Request, pk_item: int) -> HttpResponse:
 
     version_input = s.VersionCreateSerializer(data=request.data)
     version_input.is_valid(raise_exception=True)
+    assert_expected_time_update(item, request)
     data = RSFormSerializer(item).to_versioned_data()
-    items: list[int] = [] if 'items' not in request.data else request.data['items']
+    items = version_input.validated_data.get('items')
     if items:
-        data['items'] = [cst for cst in data['items'] if cst['id'] in items]
+        item_ids = {cst.pk for cst in items}
+        data['items'] = [cst for cst in data['items'] if cst['id'] in item_ids]
     result = RSForm(item).create_version(
         version=version_input.validated_data['version'],
         description=version_input.validated_data['description'],

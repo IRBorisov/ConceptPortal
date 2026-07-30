@@ -16,8 +16,8 @@ import { useUpdateItem } from '@/features/library/backend/use-update-item';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
 import { PassportTourID } from '@/features/onboarding/tours/editor-tours';
 
-import { SubmitButton } from '@/components/control';
-import { IconSave } from '@/components/icons';
+import { Button, SubmitButton } from '@/components/control';
+import { IconReset, IconSave } from '@/components/icons';
 import { TextArea, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
@@ -35,12 +35,10 @@ interface FormOSSProps {
 function ossDefaults(schema: OperationSchema): UpdateLibraryItemDTO {
   return {
     id: schema.id,
-    item_type: LibraryItemType.RSFORM,
+    item_type: LibraryItemType.OSS,
     title: schema.title,
     alias: schema.alias,
-    description: schema.description,
-    visible: schema.visible,
-    read_only: schema.read_only
+    description: schema.description
   };
 }
 
@@ -68,8 +66,6 @@ export function FormOSS({ className }: FormOSSProps) {
     form.reset(next);
   });
 
-  const visible = useSelector(form.store, state => state.values.visible);
-  const readOnly = useSelector(form.store, state => state.values.read_only);
   const isDefaultValue = useSelector(form.store, state => state.isDefaultValue);
   useRegisterUnsavedSave(() => form.handleSubmit(), !isDefaultValue);
 
@@ -86,6 +82,10 @@ export function FormOSS({ className }: FormOSSProps) {
     },
     [isDefaultValue]
   );
+
+  function handleResetChanges() {
+    form.reset(ossDefaults(schema));
+  }
 
   return (
     <form
@@ -132,15 +132,7 @@ export function FormOSS({ className }: FormOSSProps) {
             />
           )}
         </form.Field>
-        <ToolbarItemAccess
-          visible={visible}
-          className='mt-6'
-          toggleVisible={() => form.setFieldValue('visible', !visible)}
-          readOnly={readOnly}
-          toggleReadOnly={() => form.setFieldValue('read_only', !readOnly)}
-          schema={schema}
-          isProduced={false}
-        />
+        <ToolbarItemAccess className='mt-6' schema={schema} isProduced={false} formDirty={!isDefaultValue} />
       </div>
 
       <form.Field name='description'>
@@ -159,14 +151,22 @@ export function FormOSS({ className }: FormOSSProps) {
         )}
       </form.Field>
       {isMutable || isModified ? (
-        <SubmitButton
-          text={tx('tx.general.changes.save')}
-          title={prepareTooltip(tx('tx.general.changes.save'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
-          className='self-center mt-4'
-          loading={isProcessing}
-          icon={<IconSave size='1.25rem' />}
-          disabled={!isModified}
-        />
+        <div className='w-full mt-4 flex justify-between gap-3'>
+          <SubmitButton
+            text={tx('tx.general.changes.save')}
+            title={prepareTooltip(tx('tx.general.changes.save'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+            loading={isProcessing}
+            icon={<IconSave size='1.25rem' />}
+            disabled={!isModified}
+          />
+          <Button
+            text={tx('tx.general.changes.reset')}
+            title={tx('tx.general.changes.reset')}
+            icon={<IconReset size='1.25rem' className='icon-primary' />}
+            onClick={handleResetChanges}
+            disabled={!isModified || isProcessing}
+          />
+        </div>
       ) : null}
     </form>
   );

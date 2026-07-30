@@ -89,19 +89,23 @@ class EndpointTester(DBTester):
             self.set_params(**kwargs)
             return self.client.get(self.endpoint)
 
-    def post(self, data=None, **kwargs):
-        self.set_params(**kwargs)
-        if not data is None:
-            return self.client.post(self.endpoint, data=data, format='json')
-        else:
-            return self.client.post(self.endpoint)
-
     def patch(self, data=None, **kwargs):
+        headers = kwargs.pop('headers', None)
         self.set_params(**kwargs)
+        options = {'headers': headers} if headers else {}
         if not data is None:
-            return self.client.patch(self.endpoint, data=data, format='json')
+            return self.client.patch(self.endpoint, data=data, format='json', **options)
         else:
-            return self.client.patch(self.endpoint)
+            return self.client.patch(self.endpoint, **options)
+
+    def post(self, data=None, **kwargs):
+        headers = kwargs.pop('headers', None)
+        self.set_params(**kwargs)
+        options = {'headers': headers} if headers else {}
+        if not data is None:
+            return self.client.post(self.endpoint, data=data, format='json', **options)
+        else:
+            return self.client.post(self.endpoint, **options)
 
     def put(self, data, **kwargs):
         self.set_params(**kwargs)
@@ -155,6 +159,11 @@ class EndpointTester(DBTester):
     def executeForbidden(self, data=None, **kwargs):
         response = self.execute(data, **kwargs)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        return response
+
+    def executeConflict(self, data=None, **kwargs):
+        response = self.execute(data, **kwargs)
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
         return response
 
     def executeNotModified(self, data=None, **kwargs):

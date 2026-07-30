@@ -172,7 +172,7 @@ class TestVersionViews(EndpointTester):
         response = self.executeOK(version=version_id)
         self.assertEqual(
             response.headers['Content-Disposition'],
-            f'attachment; filename={self.owned.model.alias}.trs'
+            f'attachment; filename="{self.owned.model.alias}.trs"'
         )
         with io.BytesIO(response.content) as stream:
             with ZipFile(stream, 'r') as zipped_file:

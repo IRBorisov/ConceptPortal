@@ -17,20 +17,30 @@ from apps.oss.models import Layout, Operation, OperationSchema, PropagationFacad
 from apps.rsmodel.models import RSModel
 from apps.users.models import User
 from shared import permissions
+from shared.concurrency import ConcurrencyMixin
 from shared.throttling import OssCloneRateThrottle
 
 from .. import models as m
 from .. import serializers as s
 from ..services.clone import clone_library_item
-from ..services.context_search import get_accessible_library_items_by_ids
+from ..services.context_search import (
+    get_accessible_items_queryset,
+    get_accessible_library_items_by_ids
+)
+from ..services.location_access import assert_can_write_location
 
 
 @extend_schema(tags=['Library'])
 @extend_schema_view()
-class LibraryViewSet(viewsets.ModelViewSet):
+class LibraryViewSet(ConcurrencyMixin, viewsets.ModelViewSet):
     ''' Endpoint: Library operations. '''
     queryset = m.LibraryItem.objects.all()
     ordering = '-time_update'
+
+    def get_queryset(self):
+        if self.action == 'list':
+            return get_accessible_items_queryset(self.request.user).order_by('-time_update')
+        return super().get_queryset()
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -39,8 +49,8 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer) -> None:
         location = serializer.validated_data.get('location')
-        if location and location.startswith(m.LocationHead.LIBRARY) and not self.request.user.is_staff:
-            raise PermissionDenied()
+        if location:
+            assert_can_write_location(self.request.user, location)
 
         if not self.request.user.is_anonymous and 'owner' not in self.request.POST:
             serializer.save(owner=self.request.user)
@@ -53,18 +63,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
             RSModel.objects.create(model=serializer.instance, schema=schema)
 
     def perform_update(self, serializer) -> None:
-        instance_before = cast(m.LibraryItem, serializer.instance)
-        old_read_only = instance_before.read_only
         instance = serializer.save()
-        if (
-            instance.item_type == m.LibraryItemType.OPERATION_SCHEMA
-            and 'read_only' in serializer.validated_data
-            and instance.read_only != old_read_only
-        ):
-            owned_schemas = OperationSchema.owned_schemasQ(instance).only('read_only')
-            for schema in owned_schemas:
-                schema.read_only = instance.read_only
-            m.LibraryItem.objects.bulk_update(owned_schemas, ['read_only'])
         operations = Operation.objects.filter(result__pk=instance.pk)
         if not operations.exists():
             return
@@ -115,7 +114,9 @@ class LibraryViewSet(viewsets.ModelViewSet):
             'set_owner',
             'set_access_policy',
             'set_location',
-            'set_editors'
+            'set_editors',
+            'set_read_only',
+            'set_visible'
         ]:
             access_level = permissions.ItemOwner
         elif self.action in [
@@ -150,7 +151,9 @@ class LibraryViewSet(viewsets.ModelViewSet):
         new_location = serializer.validated_data['new_location']
         if target == new_location:
             return Response(status=c.HTTP_200_OK)
-        if new_location.startswith(m.LocationHead.LIBRARY) and not self.request.user.is_staff:
+        try:
+            assert_can_write_location(self.request.user, new_location)
+        except PermissionDenied:
             return Response(status=c.HTTP_403_FORBIDDEN)
 
         user_involved = new_location.startswith(m.LocationHead.USER) or target.startswith(m.LocationHead.USER)
@@ -263,7 +266,9 @@ class LibraryViewSet(viewsets.ModelViewSet):
         location: str = serializer.validated_data['location']
         if location == item.location:
             return Response(status=c.HTTP_200_OK)
-        if location.startswith(m.LocationHead.LIBRARY) and not self.request.user.is_staff:
+        try:
+            assert_can_write_location(self.request.user, location)
+        except PermissionDenied:
             return Response(status=c.HTTP_403_FORBIDDEN)
 
         with transaction.atomic():
@@ -275,6 +280,63 @@ class LibraryViewSet(viewsets.ModelViewSet):
             item.location = location
             m.LibraryItem.objects.filter(pk=item.pk).update(location=location)
 
+        return Response(status=c.HTTP_200_OK)
+
+    @extend_schema(
+        summary='set read_only flag for item',
+        tags=['Library'],
+        request=s.ReadOnlyFlagSerializer,
+        responses={
+            c.HTTP_200_OK: None,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='set-read-only')
+    def set_read_only(self, request: Request, pk) -> HttpResponse:
+        ''' Endpoint: Set item read_only flag (owner only). '''
+        item = self._get_item()
+        serializer = s.ReadOnlyFlagSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        read_only = serializer.validated_data['read_only']
+        if read_only == item.read_only:
+            return Response(status=c.HTTP_200_OK)
+
+        with transaction.atomic():
+            if item.item_type == m.LibraryItemType.OPERATION_SCHEMA:
+                owned_schemas = OperationSchema.owned_schemasQ(item).only('read_only')
+                for schema in owned_schemas:
+                    schema.read_only = read_only
+                m.LibraryItem.objects.bulk_update(owned_schemas, ['read_only'])
+            item.read_only = read_only
+            m.LibraryItem.objects.filter(pk=item.pk).update(read_only=read_only)
+
+        return Response(status=c.HTTP_200_OK)
+
+    @extend_schema(
+        summary='set visible flag for item',
+        tags=['Library'],
+        request=s.VisibleFlagSerializer,
+        responses={
+            c.HTTP_200_OK: None,
+            c.HTTP_400_BAD_REQUEST: None,
+            c.HTTP_403_FORBIDDEN: None,
+            c.HTTP_404_NOT_FOUND: None
+        }
+    )
+    @action(detail=True, methods=['patch'], url_path='set-visible')
+    def set_visible(self, request: Request, pk) -> HttpResponse:
+        ''' Endpoint: Set item visible flag (owner only). '''
+        item = self._get_item()
+        serializer = s.VisibleFlagSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        visible = serializer.validated_data['visible']
+        if visible == item.visible:
+            return Response(status=c.HTTP_200_OK)
+
+        item.visible = visible
+        m.LibraryItem.objects.filter(pk=item.pk).update(visible=visible)
         return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
@@ -362,20 +424,7 @@ class LibraryActiveView(generics.ListAPIView):
     serializer_class = s.LibraryItemSerializer
 
     def get_queryset(self):
-        common_location = Q(location__startswith=m.LocationHead.COMMON) | Q(location__startswith=m.LocationHead.LIBRARY)
-        is_public = Q(access_policy=m.AccessPolicy.PUBLIC)
-        if self.request.user.is_anonymous:
-            return m.LibraryItem.objects \
-                .filter(is_public) \
-                .filter(common_location).order_by('-time_update')
-        else:
-            user = cast(User, self.request.user)
-            # pylint: disable=unsupported-binary-operation
-            return m.LibraryItem.objects.filter(
-                (is_public & common_location) |
-                Q(owner=user) |
-                Q(editor__editor=user)
-            ).distinct().order_by('-time_update')
+        return get_accessible_items_queryset(self.request.user).order_by('-time_update')
 
 
 @extend_schema(tags=['Library'])

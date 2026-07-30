@@ -17,8 +17,8 @@ import { SelectVersion } from '@/features/library/components/select-version';
 import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-access';
 import { PassportTourID } from '@/features/onboarding/tours/editor-tours';
 
-import { SubmitButton } from '@/components/control';
-import { IconSave } from '@/components/icons';
+import { Button, SubmitButton } from '@/components/control';
+import { IconReset, IconSave } from '@/components/icons';
 import { Label, TextArea, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
@@ -40,9 +40,7 @@ function itemDefaults(schema: RSForm): UpdateLibraryItemDTO {
     item_type: LibraryItemType.RSFORM,
     title: schema.title,
     alias: schema.alias,
-    description: schema.description,
-    visible: schema.visible,
-    read_only: schema.read_only
+    description: schema.description
   };
 }
 
@@ -65,8 +63,6 @@ export function FormSchema({ className }: FormSchemaProps) {
     }
   });
 
-  const visible = useSelector(form.store, state => state.values.visible);
-  const readOnly = useSelector(form.store, state => state.values.read_only);
   const isDefaultValue = useSelector(form.store, state => state.isDefaultValue);
   useRegisterUnsavedSave(() => form.handleSubmit(), !isDefaultValue);
 
@@ -90,6 +86,10 @@ export function FormSchema({ className }: FormSchemaProps) {
 
   function handleSelectVersion(version: CurrentVersion) {
     router.gotoRSForm(schema.id, version === 'latest' ? undefined : version);
+  }
+
+  function handleResetChanges() {
+    form.reset(itemDefaults(schema));
   }
 
   return (
@@ -155,12 +155,9 @@ export function FormSchema({ className }: FormSchemaProps) {
       <div className='relative'>
         <ToolbarItemAccess
           className='absolute -top-1.5 right-2'
-          visible={visible}
-          toggleVisible={() => form.setFieldValue('visible', !visible)}
-          readOnly={readOnly}
-          toggleReadOnly={() => form.setFieldValue('read_only', !readOnly)}
           schema={schema}
           isProduced={schema.is_produced}
+          formDirty={!isDefaultValue}
         />
         <form.Field name='description'>
           {field => (
@@ -179,14 +176,22 @@ export function FormSchema({ className }: FormSchemaProps) {
         </form.Field>
       </div>
       {isContentEditable || !isDefaultValue ? (
-        <SubmitButton
-          text={tx('tx.general.changes.save')}
-          title={prepareTooltip(tx('tx.general.changes.save'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
-          className='self-center mt-4'
-          loading={isProcessing}
-          icon={<IconSave size='1.25rem' />}
-          disabled={isDefaultValue}
-        />
+        <div className='w-full mt-4 flex justify-between gap-3'>
+          <SubmitButton
+            text={tx('tx.general.changes.save')}
+            title={prepareTooltip(tx('tx.general.changes.save'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+            loading={isProcessing}
+            icon={<IconSave size='1.25rem' />}
+            disabled={isDefaultValue}
+          />
+          <Button
+            text={tx('tx.general.changes.reset')}
+            title={tx('tx.general.changes.reset')}
+            icon={<IconReset size='1.25rem' />}
+            onClick={handleResetChanges}
+            disabled={isDefaultValue || isProcessing}
+          />
+        </div>
       ) : null}
     </form>
   );

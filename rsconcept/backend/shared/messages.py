@@ -216,3 +216,26 @@ def promptSharedPermissionDenied() -> str:
 
 def promptNotFound() -> str:
     return 'Шаблон не найден.'
+
+
+def concurrentModification() -> str:
+    return (
+        'Схема была изменена другим пользователем или в другой вкладке. '
+        'Обновите страницу и повторите действие.'
+    )
+
+
+def itemReadOnly() -> str:
+    return 'Редактирование запрещено: элемент библиотеки в режиме только для чтения'
+
+
+def importTooLarge() -> str:
+    return 'Импортируемый файл слишком большой'
+
+
+def importTooManyItems(limit: int) -> str:
+    return f'Слишком много конституент для импорта (максимум {limit})'
+
+
+def trsItemInvalid(detail: str) -> str:
+    return f'Некорректные данные конституенты в TRS: {detail}'

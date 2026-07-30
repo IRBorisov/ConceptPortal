@@ -52,7 +52,7 @@ class RSModelSerializer(StrictModelSerializer):
         return model.schema_id
 
     def to_representation(self, instance: LibraryItem) -> dict:
-        result = LibraryItemDetailsSerializer(instance).data
+        result = LibraryItemDetailsSerializer(instance, context=self.context).data
         del result['versions']
         result['schema'] = self.get_schema(instance)
         result['items'] = []

@@ -17,8 +17,8 @@ import { ToolbarItemAccess } from '@/features/library/components/toolbar-item-ac
 import { PassportTourID } from '@/features/onboarding/tours/editor-tours';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
-import { SubmitButton } from '@/components/control';
-import { IconRSForm, IconSave } from '@/components/icons';
+import { Button, SubmitButton } from '@/components/control';
+import { IconReset, IconRSForm, IconSave } from '@/components/icons';
 import { TextArea, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
 import { ValueIcon } from '@/components/view';
@@ -39,9 +39,7 @@ function modelDefaults(model: RSModel): UpdateLibraryItemDTO {
     item_type: LibraryItemType.RSMODEL,
     title: model.title,
     alias: model.alias,
-    description: model.description,
-    visible: model.visible,
-    read_only: model.read_only
+    description: model.description
   };
 }
 
@@ -65,8 +63,6 @@ export function FormRSModel({ className }: FormRSModelProps) {
     }
   });
 
-  const visible = useSelector(form.store, state => state.values.visible);
-  const readOnly = useSelector(form.store, state => state.values.read_only);
   const isDefaultValue = useSelector(form.store, state => state.isDefaultValue);
   useRegisterUnsavedSave(() => form.handleSubmit(), !isDefaultValue);
 
@@ -90,6 +86,10 @@ export function FormRSModel({ className }: FormRSModelProps) {
 
   function handleNavigateSchema() {
     router.gotoRSForm(model.schema, undefined, undefined, buildModelToSchemaQuery());
+  }
+
+  function handleResetChanges() {
+    form.reset(modelDefaults(model));
   }
 
   return (
@@ -137,15 +137,7 @@ export function FormRSModel({ className }: FormRSModelProps) {
             />
           )}
         </form.Field>
-        <ToolbarItemAccess
-          className='mt-6 mr-2'
-          visible={visible}
-          toggleVisible={() => form.setFieldValue('visible', !visible)}
-          readOnly={readOnly}
-          toggleReadOnly={() => form.setFieldValue('read_only', !readOnly)}
-          schema={model}
-          isProduced={false}
-        />
+        <ToolbarItemAccess className='mt-6 mr-2' schema={model} isProduced={false} formDirty={!isDefaultValue} />
       </div>
 
       <form.Field name='description'>
@@ -164,14 +156,22 @@ export function FormRSModel({ className }: FormRSModelProps) {
         )}
       </form.Field>
       {isMutable || !isDefaultValue ? (
-        <SubmitButton
-          text={tx('tx.general.changes.save')}
-          title={prepareTooltip(tx('tx.general.changes.save'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
-          className='self-center mt-4'
-          loading={isProcessing}
-          icon={<IconSave size='1.25rem' />}
-          disabled={isDefaultValue}
-        />
+        <div className='w-full mt-4 flex justify-between gap-3'>
+          <SubmitButton
+            text={tx('tx.general.changes.save')}
+            title={prepareTooltip(tx('tx.general.changes.save'), isMac() ? 'Cmd + S' : 'Ctrl + S')}
+            loading={isProcessing}
+            icon={<IconSave size='1.25rem' />}
+            disabled={isDefaultValue}
+          />
+          <Button
+            text={tx('tx.general.changes.reset')}
+            title={tx('tx.general.changes.reset')}
+            icon={<IconReset size='1.25rem' className='icon-primary' />}
+            onClick={handleResetChanges}
+            disabled={isDefaultValue || isProcessing}
+          />
+        </div>
       ) : null}
 
       <div data-tour='passport-schema-link'>

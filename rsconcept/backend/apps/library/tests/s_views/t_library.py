@@ -135,8 +135,8 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(response.data['location'], self.owned.location)
         self.assertNotEqual(response.data['location'], LocationHead.LIBRARY)
 
-    @decl_endpoint('/api/library/{item}', method='patch')
-    def test_update_access_metadata_preserves_time_update(self):
+    @decl_endpoint('/api/library/{item}/set-read-only', method='patch')
+    def test_set_read_only_preserves_time_update(self):
         time_update = self.owned.time_update
 
         time.sleep(0.01)
@@ -146,21 +146,52 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(self.owned.time_update, time_update)
 
         time.sleep(0.01)
-        self.executeOK({'visible': False}, item=self.owned.pk)
-        self.owned.refresh_from_db()
-        self.assertFalse(self.owned.visible)
-        self.assertEqual(self.owned.time_update, time_update)
-
-        time.sleep(0.01)
         self.executeOK({'read_only': False}, item=self.owned.pk)
         self.owned.refresh_from_db()
         self.assertFalse(self.owned.read_only)
         self.assertEqual(self.owned.time_update, time_update)
 
+    @decl_endpoint('/api/library/{item}/set-read-only', method='patch')
+    def test_set_read_only_forbidden_for_editor(self):
+        foreign = RSForm.create(title='F', alias='F1', owner=self.user2)
+        self.toggle_editor(foreign.model, True)
+        foreign.model.read_only = True
+        foreign.model.save(update_fields=['read_only'])
+        self.executeForbidden({'read_only': False}, item=foreign.model.pk)
+
+        self.login2()
+        self.executeOK({'read_only': False}, item=foreign.model.pk)
+        foreign.model.refresh_from_db()
+        self.assertFalse(foreign.model.read_only)
+
+    @decl_endpoint('/api/library/{item}/set-visible', method='patch')
+    def test_set_visible_preserves_time_update(self):
+        time_update = self.owned.time_update
+
         time.sleep(0.01)
-        self.executeOK({'title': 'Content change', 'read_only': True}, item=self.owned.pk)
+        self.executeOK({'visible': False}, item=self.owned.pk)
+        self.owned.refresh_from_db()
+        self.assertFalse(self.owned.visible)
+        self.assertEqual(self.owned.time_update, time_update)
+
+    @decl_endpoint('/api/library/{item}/set-visible', method='patch')
+    def test_set_visible_forbidden_for_editor(self):
+        foreign = RSForm.create(title='F', alias='F2', owner=self.user2)
+        self.toggle_editor(foreign.model, True)
+        self.executeForbidden({'visible': False}, item=foreign.model.pk)
+
+    @decl_endpoint('/api/library/{item}', method='patch')
+    def test_update_content_bumps_time_update(self):
+        time_update = self.owned.time_update
+        time.sleep(0.01)
+        self.executeOK({'title': 'Content change'}, item=self.owned.pk)
         self.owned.refresh_from_db()
         self.assertNotEqual(self.owned.time_update, time_update)
+
+    @decl_endpoint('/api/library/{item}', method='patch')
+    def test_update_rejects_read_only_and_visible_fields(self):
+        self.executeBadData({'read_only': True}, item=self.owned.pk)
+        self.executeBadData({'visible': False}, item=self.owned.pk)
 
     @decl_endpoint('/api/library/{item}/set-owner', method='patch')
     def test_set_owner(self):
@@ -362,16 +393,44 @@ class TestLibraryViewset(EndpointTester):
         self.assertFalse(response_contains(response, self.unowned))
         self.assertFalse(response_contains(response, self.owned))
 
+    @decl_endpoint('/api/library/active', method='get')
+    def test_retrieve_common_excludes_private_for_editors(self):
+        foreign = RSForm.create(title='F', alias='F3', owner=self.user2)
+        self.toggle_editor(foreign.model, True)
+        foreign.model.access_policy = AccessPolicy.PRIVATE
+        foreign.model.save(update_fields=['access_policy'])
+
+        response = self.executeOK()
+        self.assertFalse(response_contains(response, foreign.model))
+
     @decl_endpoint('/api/library', method='get')
     def test_library_get(self):
+        private = LibraryItem.objects.create(
+            title='Private',
+            alias='PRIV',
+            access_policy=AccessPolicy.PRIVATE,
+            owner=self.user2
+        )
         non_schema = LibraryItem.objects.create(
             item_type=LibraryItemType.OPERATION_SCHEMA,
-            title='Test4'
+            title='Test4',
+            location=LocationHead.COMMON,
+            access_policy=AccessPolicy.PUBLIC
         )
         response = self.executeOK()
         self.assertTrue(response_contains(response, non_schema))
-        self.assertTrue(response_contains(response, self.unowned))
         self.assertTrue(response_contains(response, self.owned))
+        self.assertTrue(response_contains(response, self.common))
+        self.assertFalse(response_contains(response, private))
+        # Unowned default location /U is not listed for other users
+        self.assertFalse(response_contains(response, self.unowned))
+
+        self.logout()
+        response = self.executeOK()
+        self.assertTrue(response_contains(response, self.common))
+        self.assertTrue(response_contains(response, non_schema))
+        self.assertFalse(response_contains(response, self.owned))
+        self.assertFalse(response_contains(response, private))
 
     @decl_endpoint('/api/library/all', method='get')
     def test_retrieve_all(self):
@@ -514,3 +573,24 @@ class TestLibraryViewset(EndpointTester):
         private_other.model.save()
         data = {'item_data': {'title': 'Copy attempt'}, 'items': []}
         self.executeForbidden(data, item=private_other.model.pk)
+
+    @decl_endpoint('/api/library/{item}/clone', method='post')
+    def test_clone_rejects_shared_library_for_non_staff(self):
+        public = RSForm.create(
+            title='Pub',
+            alias='PUB',
+            location=LocationHead.COMMON,
+            access_policy=AccessPolicy.PUBLIC
+        )
+        data = {
+            'items': [],
+            'item_data': {
+                'title': 'Clone',
+                'alias': 'CLN',
+                'description': '',
+                'visible': True,
+                'access_policy': AccessPolicy.PUBLIC,
+                'location': LocationHead.LIBRARY
+            }
+        }
+        self.executeBadData(data, item=public.model.pk)

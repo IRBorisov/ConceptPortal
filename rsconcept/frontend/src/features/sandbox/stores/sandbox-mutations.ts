@@ -289,8 +289,6 @@ function updateLibraryItem(bundle: SandboxBundle, data: UpdateLibraryItemDTO): S
       title: data.title,
       alias: data.alias,
       description: data.description,
-      visible: data.visible,
-      read_only: data.read_only,
       time_update: timestamp
     });
   } else if (data.id === next.model.id && data.item_type === LibraryItemType.RSMODEL) {
@@ -298,8 +296,6 @@ function updateLibraryItem(bundle: SandboxBundle, data: UpdateLibraryItemDTO): S
       title: data.title,
       alias: data.alias,
       description: data.description,
-      visible: data.visible,
-      read_only: data.read_only,
       time_update: timestamp
     });
     const modelEntry = next.schema.models.find(m => m.id === next.model.id);

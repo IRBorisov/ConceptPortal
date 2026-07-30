@@ -15,6 +15,7 @@ from apps.library.serializers import (
 )
 from apps.oss.models import Inheritance, Operation, OperationType
 from shared import messages as msg
+from shared import permissions
 from shared.serializers import (
     PortalImportJsonMetadataSerializer,
     StrictModelSerializer,
@@ -264,7 +265,7 @@ class RSFormSerializer(StrictModelSerializer):
 
     def to_base_data(self, instance: LibraryItem) -> dict:
         ''' Create serializable base representation without redundant data. '''
-        result = LibraryItemDetailsSerializer(instance).data
+        result = LibraryItemDetailsSerializer(instance, context=self.context).data
         result['items'] = []
         result['oss'] = []
         result['models'] = []
@@ -583,7 +584,12 @@ class InlineSynthesisSerializer(StrictSerializer):
         user = cast(User, self.context['user'])
         schema_in = cast(LibraryItem, attrs['source'])
         schema_out = cast(LibraryItem, attrs['receiver'])
-        if user.is_anonymous or (schema_out.owner != user and not user.is_staff):
+        if not permissions.can_edit_item(user, schema_out):
+            raise PermissionDenied({
+                'message': msg.schemaForbidden(),
+                'object_id': schema_out.pk
+            })
+        if not permissions.can_read_library_item(user, schema_in):
             raise PermissionDenied({
                 'message': msg.schemaForbidden(),
                 'object_id': schema_in.pk
