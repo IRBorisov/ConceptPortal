@@ -17,7 +17,7 @@ from apps.oss.models import Layout, Operation, OperationSchema, PropagationFacad
 from apps.rsmodel.models import RSModel
 from apps.users.models import User
 from shared import permissions
-from shared.concurrency import ConcurrencyMixin
+from shared.concurrency import ConcurrencyMixin, assert_expected_time_update_locked
 from shared.throttling import OssCloneRateThrottle
 
 from .. import models as m
@@ -63,7 +63,10 @@ class LibraryViewSet(ConcurrencyMixin, viewsets.ModelViewSet):
             RSModel.objects.create(model=serializer.instance, schema=schema)
 
     def perform_update(self, serializer) -> None:
-        instance = serializer.save()
+        ''' Persist library-item updates under concurrency lock; sync linked OSS ops. '''
+        with transaction.atomic():
+            assert_expected_time_update_locked(serializer.instance, self.request)
+            instance = serializer.save()
         operations = Operation.objects.filter(result__pk=instance.pk)
         if not operations.exists():
             return

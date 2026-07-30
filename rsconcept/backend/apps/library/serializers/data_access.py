@@ -1,6 +1,5 @@
 ''' Serializers for persistent data manipulation. '''
 from django.contrib.auth.models import User
-from django.core.exceptions import PermissionDenied
 from rest_framework import serializers
 from rest_framework.serializers import PrimaryKeyRelatedField as PKField
 
@@ -9,7 +8,7 @@ from shared import messages
 from shared.serializers import StrictModelSerializer, StrictSerializer
 
 from ..models import LibraryItem, LibraryItemType, Version
-from ..services.location_access import assert_can_write_location
+from ..services.location_access import assert_writable_item_data_location
 
 _LIBRARY_ITEM_TIMESTAMP_FIELDS = ('time_create', 'time_update')
 
@@ -102,6 +101,7 @@ class LibraryItemCloneSerializer(StrictSerializer):
     item_data = ItemCloneData()
 
     def validate_items(self, value):
+        ''' Ensure selected constituents belong to the clone target schema. '''
         target = self.context.get('target')
         if target.item_type == LibraryItemType.OPERATION_SCHEMA and value:
             raise serializers.ValidationError('OSS clone does not support constituent selection')
@@ -112,16 +112,12 @@ class LibraryItemCloneSerializer(StrictSerializer):
         return value
 
     def validate(self, attrs):
+        ''' Require request context and enforce shared-library / OSS location rules. '''
         location = attrs['item_data'].get('location', '')
         request = self.context.get('request')
-        user = request.user if request is not None else None
-        if user is not None:
-            try:
-                assert_can_write_location(user, location)
-            except PermissionDenied as exc:
-                raise serializers.ValidationError({
-                    'item_data': {'location': 'Only staff may place items into the shared library'}
-                }) from exc
+        if request is None:
+            raise serializers.ValidationError('Request context is required for clone')
+        assert_writable_item_data_location(request.user, location)
 
         target = self.context.get('target')
         if target.item_type != LibraryItemType.OPERATION_SCHEMA:
@@ -173,12 +169,14 @@ class LibraryItemDetailsSerializer(StrictModelSerializer):
         read_only_fields = ('owner', 'id', 'item_type', *_LIBRARY_ITEM_TIMESTAMP_FIELDS)
 
     def get_editors(self, instance: LibraryItem) -> list[int]:
+        ''' Editor user ids; empty for anonymous clients. '''
         request = self.context.get('request')
         if request is not None and getattr(request.user, 'is_anonymous', False):
             return []
         return list(instance.getQ_editors().order_by('pk').values_list('pk', flat=True))
 
     def get_versions(self, instance: LibraryItem) -> list:
+        ''' Serialized version summaries for *instance*. '''
         return [VersionInnerSerializer(item).data for item in instance.getQ_versions().order_by('pk')]
 
 

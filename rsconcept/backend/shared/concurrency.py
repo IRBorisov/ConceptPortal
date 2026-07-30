@@ -2,6 +2,7 @@
 from datetime import datetime
 from typing import Any
 
+from django.db import transaction
 from django.utils.dateparse import parse_datetime
 from rest_framework.exceptions import APIException, ValidationError
 from rest_framework.request import Request
@@ -20,6 +21,7 @@ class Conflict(APIException):
 
 
 def _extract_expected_timestamp(request: Request) -> str | None:
+    ''' Read expected ``time_update`` from header or request body. '''
     expected = request.headers.get(EXPECTED_TIME_UPDATE_HEADER)
     if expected:
         return expected.strip() or None
@@ -32,6 +34,7 @@ def _extract_expected_timestamp(request: Request) -> str | None:
 
 
 def _normalize_datetime(value: datetime | str) -> datetime:
+    ''' Parse a datetime or ISO string; raise ``ValidationError`` if invalid. '''
     if isinstance(value, datetime):
         return value
     parsed = parse_datetime(value.replace('Z', '+00:00') if isinstance(value, str) else value)
@@ -76,15 +79,42 @@ def library_item_from_object(obj: Any) -> LibraryItem | None:
     return None
 
 
+def assert_expected_time_update_locked(item: LibraryItem, request: Request) -> None:
+    ''' Re-check concurrency token under row lock. Call inside ``transaction.atomic``. '''
+    locked = LibraryItem.objects.select_for_update().only('pk', 'time_update').get(pk=item.pk)
+    assert_expected_time_update(locked, request)
+
+
 class ConcurrencyMixin:
-    ''' Check ``X-Expected-Time-Update`` on unsafe methods after object lookup. '''
+    ''' Check ``X-Expected-Time-Update`` on unsafe methods after object lookup.
+
+    ``get_object`` fails fast on stale tokens. ``perform_update`` re-checks under
+    ``select_for_update`` in the write transaction so concurrent ModelViewSet
+    updates cannot both pass and overwrite each other. Custom ``@action``
+    endpoints that mutate outside ``perform_update`` should call
+    ``assert_expected_time_update_locked`` inside their own atomic block when
+    stronger guarantees are required.
+    '''
 
     def get_object(self):
+        ''' Return the object; on unsafe methods, reject stale concurrency tokens. '''
         obj = super().get_object()  # type: ignore[misc]
         request = self.request  # type: ignore[attr-defined]
         if request.method.upper() in ('GET', 'HEAD', 'OPTIONS'):
             return obj
         item = library_item_from_object(obj)
         if item is not None:
-            assert_expected_time_update(item, request)
+            # Re-read token from DB; in-memory instances can be stale.
+            fresh = LibraryItem.objects.only('pk', 'time_update').filter(pk=item.pk).first()
+            if fresh is not None:
+                assert_expected_time_update(fresh, request)
         return obj
+
+    def perform_update(self, serializer):
+        ''' Save under row lock after re-checking the concurrency token. '''
+        request = self.request  # type: ignore[attr-defined]
+        with transaction.atomic():
+            item = library_item_from_object(serializer.instance)
+            if item is not None:
+                assert_expected_time_update_locked(item, request)
+            return super().perform_update(serializer)  # type: ignore[misc]

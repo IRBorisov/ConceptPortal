@@ -1,11 +1,10 @@
 ''' Serializers for file interaction. '''
-from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from rest_framework import serializers
 
 from apps.library.models import AccessPolicy, LibraryItem, LocationHead
 from apps.library.models import validate_location as is_valid_location
-from apps.library.services.location_access import assert_can_write_location
+from apps.library.services.location_access import assert_writable_item_data_location
 from shared import messages as msg
 from shared.serializers import StrictSerializer
 
@@ -111,6 +110,7 @@ class RSFormTRSSerializer(serializers.Serializer):
         return result
 
     def validate(self, attrs: dict):
+        ''' Validate TRS version, item count, and per-item shape before create/update. '''
         if 'version' not in self.initial_data \
                 or self.initial_data['version'] < _TRS_VERSION_MIN  \
                 or self.initial_data['version'] > _TRS_VERSION:
@@ -138,6 +138,21 @@ class RSFormTRSSerializer(serializers.Serializer):
             if 'entityUID' not in cst_data:
                 raise serializers.ValidationError({
                     'items': msg.trsItemInvalid('missing entityUID')
+                })
+            entity_uid = cst_data['entityUID']
+            if entity_uid is None or isinstance(entity_uid, (bool, dict, list)):
+                raise serializers.ValidationError({
+                    'items': msg.trsItemInvalid('entityUID must be an integer')
+                })
+            try:
+                int(entity_uid)
+            except (TypeError, ValueError) as exc:
+                raise serializers.ValidationError({
+                    'items': msg.trsItemInvalid('entityUID must be an integer')
+                }) from exc
+            if not isinstance(alias, str):
+                raise serializers.ValidationError({
+                    'items': msg.trsItemInvalid('alias must be a string')
                 })
             if cst_type not in CstType.values:
                 raise serializers.ValidationError({
@@ -281,23 +296,19 @@ class RSFormSandboxImportSerializer(StrictSerializer):
             container = serializers.IntegerField()
             attribute = serializers.IntegerField()
 
-        items = ItemSerializer(many=True)
+        items = ItemSerializer(many=True, max_length=TRS_IMPORT_MAX_ITEMS)
         attribution = AttributionDataSerializer(many=True, required=False, default=list)
 
     item_data = ItemDataSerializer()
     schema_data = SchemaDataSerializer()
 
     def validate(self, attrs):
+        ''' Validate sandbox location access, item ids, count, and attributions. '''
         attrs = super().validate(attrs)
         request = self.context.get('request')
         location = attrs['item_data'].get('location', LocationHead.USER)
         if request is not None:
-            try:
-                assert_can_write_location(request.user, location)
-            except PermissionDenied as exc:
-                raise serializers.ValidationError({
-                    'item_data': {'location': 'Only staff may place items into the shared library'}
-                }) from exc
+            assert_writable_item_data_location(request.user, location)
 
         item_ids = [item['id'] for item in attrs['schema_data']['items']]
         if len(item_ids) != len(set(item_ids)):

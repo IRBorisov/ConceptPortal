@@ -219,6 +219,7 @@ def promptNotFound() -> str:
 
 
 def concurrentModification() -> str:
+    ''' User-facing message for optimistic-concurrency conflicts (HTTP 409). '''
     return (
         'Схема была изменена другим пользователем или в другой вкладке. '
         'Обновите страницу и повторите действие.'
@@ -226,16 +227,20 @@ def concurrentModification() -> str:
 
 
 def itemReadOnly() -> str:
+    ''' User-facing message when a library item is locked read-only. '''
     return 'Редактирование запрещено: элемент библиотеки в режиме только для чтения'
 
 
 def importTooLarge() -> str:
+    ''' User-facing message when an import archive exceeds size limits. '''
     return 'Импортируемый файл слишком большой'
 
 
 def importTooManyItems(limit: int) -> str:
+    ''' User-facing message when an import exceeds the constituent count cap. '''
     return f'Слишком много конституент для импорта (максимум {limit})'
 
 
 def trsItemInvalid(detail: str) -> str:
+    ''' User-facing message for a malformed TRS constituent entry. '''
     return f'Некорректные данные конституенты в TRS: {detail}'

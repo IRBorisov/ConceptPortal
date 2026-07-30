@@ -18,6 +18,7 @@ from apps.users.models import User
 
 
 def _extract_item(obj: Any) -> LibraryItem:
+    ''' Resolve the owning ``LibraryItem`` from a library-related object. '''
     if isinstance(obj, LibraryItem):
         return obj
     elif isinstance(obj, Constituenta):
@@ -51,6 +52,7 @@ def can_read_library_item(user: Any, item: LibraryItem) -> bool:
 
 
 def can_edit_item(user, obj: Any) -> bool:
+    ''' Whether *user* may mutate *obj* (owners/editors; blocked when ``read_only``). '''
     if user.is_anonymous:
         return False
     if hasattr(user, 'is_staff') and user.is_staff:

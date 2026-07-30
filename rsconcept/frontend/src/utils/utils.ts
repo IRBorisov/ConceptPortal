@@ -33,12 +33,12 @@ export function extractErrorMessage(error: Error | AxiosError): string {
     if (status === 400 || status === 409) {
       const data: unknown = error.response?.data;
       if (typeof data === 'string' && data.trim()) {
-        return data;
+        return data.trim();
       }
       if (data && typeof data === 'object') {
         const record = data as Record<string, unknown>;
         if (typeof record.detail === 'string' && record.detail.trim()) {
-          return record.detail;
+          return record.detail.trim();
         }
         const messages = Object.entries(record).flatMap(([key, value]) => formatApiFieldError(key, value));
         if (messages.length > 0) {

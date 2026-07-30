@@ -406,12 +406,13 @@ class RSFormParseSerializer(StrictModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance: LibraryItem):
-        return RSFormSerializer(instance).data
+        ''' Delegate to ``RSFormSerializer``, preserving request context. '''
+        return RSFormSerializer(instance, context=self.context).data
 
     def from_versioned_data(self, version: int, data: dict) -> dict:
         ''' Load data from version and parse. '''
         item = cast(LibraryItem, self.instance)
-        return RSFormSerializer(item).from_versioned_data(version, data)
+        return RSFormSerializer(item, context=self.context).from_versioned_data(version, data)
 
 
 class CstTargetSerializer(StrictSerializer):
