@@ -1,6 +1,6 @@
 ''' Testing API: Operation Schema. '''
 from apps.library.models import AccessPolicy, LibraryItemType
-from apps.oss.models import OperationSchema, OperationType
+from apps.oss.models import Inheritance, OperationSchema, OperationType
 from apps.rsform.models import Constituenta, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
@@ -169,6 +169,40 @@ class TestOssViewset(EndpointTester):
         self.assertEqual(response.data['schema'], self.ks1.model.pk)
 
 
+    @decl_endpoint('/api/oss/get-predecessor', method='post')
+    def test_get_predecessor_requires_auth(self):
+        self.populateData()
+        self.logout()
+        self.executeForbidden({'target': self.ks1X1.pk})
+
+    @decl_endpoint('/api/oss/get-predecessor', method='post')
+    def test_get_predecessor_forbidden_without_schema_read(self):
+        self.populateData()
+        private_ks = RSForm.create(alias='PKS', title='Private', owner=self.user2)
+        private_ks.model.access_policy = AccessPolicy.PRIVATE
+        private_ks.model.save()
+        private_cst = private_ks.insert_last('X1')
+        self.executeForbidden({'target': private_cst.pk})
+
+
+    @decl_endpoint('/api/oss/get-predecessor', method='post')
+    def test_get_predecessor_forbidden_when_ancestor_schema_unreadable(self):
+        ''' Walking inheritance must not leak IDs from an unreadable ancestor schema. '''
+        self.populateData()
+        public_ks = RSForm.create(alias='PUB', title='Public', owner=self.user)
+        public_cst = public_ks.insert_last('X1')
+        private_ks = RSForm.create(alias='PKS', title='Private', owner=self.user2)
+        private_ks.model.access_policy = AccessPolicy.PRIVATE
+        private_ks.model.save()
+        private_cst = private_ks.insert_last('X1')
+        Inheritance.objects.create(
+            operation=self.operation3,
+            child=public_cst,
+            parent=private_cst,
+        )
+        self.executeForbidden({'target': public_cst.pk})
+
+
     @decl_endpoint('/api/oss/{item}/move-items', method='patch')
     def test_move_items(self):
         self.populateData()
@@ -287,3 +321,26 @@ class TestOssViewset(EndpointTester):
         self.assertTrue(Constituenta.objects.filter(as_parent__child_id=self.ks3X10.pk).exists())
         self.ks1X3 = Constituenta.objects.get(as_parent__child_id=self.ks3X10.pk)
         self.assertEqual(self.ks1X3.convention, 'test2')
+
+
+    @decl_endpoint('/api/oss/{item}/relocate-constituents', method='post')
+    def test_relocate_constituents_schema_not_in_oss(self):
+        self.set_params(item=self.owned_id)
+        self.populateData()
+        self.owned.execute_operation(self.operation3)
+        self.operation3.refresh_from_db()
+        self.ks3 = RSForm(self.operation3.result)
+        foreign_ks = RSForm.create(alias='FK', title='Foreign', owner=self.user2)
+        foreign_cst = foreign_ks.insert_last('X1')
+
+        data = {
+            'destination': foreign_ks.model.pk,
+            'items': [self.ks1X1.pk]
+        }
+        self.executeBadData(data)
+
+        data = {
+            'destination': self.ks3.model.pk,
+            'items': [foreign_cst.pk]
+        }
+        self.executeBadData(data)

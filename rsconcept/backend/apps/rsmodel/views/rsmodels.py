@@ -37,6 +37,12 @@ class RSModelViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPI
     def _get_schema(self) -> LibraryItem | None:
         return m.RSModel.objects.get(model=self.get_object()).schema
 
+    def _require_schema(self) -> LibraryItem:
+        schema = self._get_schema()
+        if schema is None:
+            raise ValidationError({'schema': 'Model has no schema bound'})
+        return schema
+
     def get_queryset(self):
         if self.action == 'list':
             return get_accessible_items_queryset(self.request.user).filter(
@@ -92,7 +98,7 @@ class RSModelViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPI
     def load_json(self, request: Request, pk) -> Response:
         ''' Endpoint: Load JSON into the current model. '''
         item = self._get_item()
-        schema = self._get_schema()
+        schema = self._require_schema()
         serializer = s.RSModelImportJsonSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         validated = serializer.validated_data
@@ -159,7 +165,7 @@ class RSModelViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPI
     def set_value(self, request: Request, pk) -> Response:
         ''' Endpoint: Set value for a specific constituent in the model. '''
         item = self._get_item()
-        serializer = s.CstDataUpdateSerializer(data=request.data, context={'schema': self._get_schema()}, many=True)
+        serializer = s.CstDataUpdateSerializer(data=request.data, context={'schema': self._require_schema()}, many=True)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
 
@@ -191,7 +197,7 @@ class RSModelViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPI
     def clear_values(self, request: Request, pk) -> Response:
         ''' Endpoint: Clear values for one or more constituents in the model. '''
         item = self._get_item()
-        serializer = CstListSerializer(data=request.data, context={'schema': self._get_schema()})
+        serializer = CstListSerializer(data=request.data, context={'schema': self._require_schema()})
         serializer.is_valid(raise_exception=True)
         cst_list: list[Constituenta] = serializer.validated_data['items']
         ids = [cst.pk for cst in cst_list]
@@ -214,6 +220,7 @@ class RSModelViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPI
     def reset_all(self, request: Request, pk) -> Response:
         ''' Endpoint: Reset all constituent values in the model. '''
         item = self._get_item()
+        self._require_schema()
         with transaction.atomic():
             m.ConstituentData.objects.filter(model=item).delete()
             item.save(update_fields=['time_update'])

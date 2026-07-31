@@ -42,6 +42,30 @@ def duplicateSchemasInArguments() -> str:
     return 'Аргументы не должны содержать повторяющиеся КС'
 
 
+def duplicateArgument() -> str:
+    return 'Аргументы не должны содержать повторяющиеся операции'
+
+
+def operationArgumentSelf() -> str:
+    return 'Операция не может быть своим аргументом'
+
+
+def operationArgumentCycle() -> str:
+    return 'Попытка создания циклической связи между операциями'
+
+
+def operationHasDependents(alias: str) -> str:
+    return f'Операция используется другими операциями: {alias}'
+
+
+def schemaReferencedByOperations() -> str:
+    return 'Схема используется другими операциями'
+
+
+def schemaNotInOSS() -> str:
+    return 'Схема не является результатом операции в этой ОСС'
+
+
 def blockNotInOSS() -> str:
     return 'Блок не принадлежит ОСС'
 

@@ -198,6 +198,9 @@ REST_FRAMEWORK = {
     }
 }
 
+# Always return 200 for password-reset requests (no email enumeration).
+DJANGO_REST_PASSWORDRESET_NO_INFORMATION_LEAKAGE = True
+
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = _get_list('CORS_ALLOWED_ORIGINS', 'http://localhost:3000')

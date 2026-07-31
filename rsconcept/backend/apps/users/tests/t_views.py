@@ -68,6 +68,16 @@ class TestUserAPIViews(EndpointTester):
         self.assertTrue(response.data['csrfToken'])
 
 
+    @decl_endpoint('/users/api/active-users', method='get')
+    def test_active_users(self):
+        self.logout()
+        self.executeForbidden()
+
+        self.login()
+        response = self.executeOK()
+        self.assertTrue(any(item['id'] == self.user.pk for item in response.data))
+
+
 class TestUserUserProfileAPIView(EndpointTester):
     ''' Testing User profile views. '''
 
@@ -156,8 +166,10 @@ class TestUserUserProfileAPIView(EndpointTester):
     @decl_endpoint('/users/api/password-reset', method='post')
     def test_password_reset_request(self):
         cache.clear()
-        self.executeBadData({'email': 'invalid@mail.ru'})
-        self.executeOK({'email': self.user.email})
+        unknown_response = self.executeOK({'email': 'invalid@mail.ru'})
+        known_response = self.executeOK({'email': self.user.email})
+        self.assertEqual(unknown_response.data, known_response.data)
+        self.assertEqual(known_response.data, {'status': 'OK'})
 
 
     @decl_endpoint('/users/api/password-reset', method='post')

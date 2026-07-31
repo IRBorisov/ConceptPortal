@@ -4,11 +4,9 @@ import { type SubmitEvent, useState } from 'react';
 
 import { useTx } from '@/i18n';
 
-import { isAxiosError } from '@/backend/api-transport';
 import { SubmitButton, TextURL } from '@/components/control';
-import { type ErrorData } from '@/components/info-error';
+import { DescribeError } from '@/components/info-error';
 import { TextInput } from '@/components/input';
-import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { useRequestPasswordReset } from '../backend/use-request-password-reset';
 
@@ -54,21 +52,12 @@ export function Component() {
           loading={isPending}
           disabled={!email}
         />
-        {serverError ? <ServerError error={serverError} /> : null}
+        {serverError ? (
+          <div className='mx-auto mt-6 text-sm select-text text-destructive'>
+            <DescribeError error={serverError} />
+          </div>
+        ) : null}
       </form>
     );
   }
-}
-
-// ====== Internals =========
-function ServerError({ error }: { error: ErrorData }): React.ReactElement {
-  const tx = useTx();
-  rethrowIfStaleBundleError(error);
-
-  if (isAxiosError(error) && error.response?.status === 400) {
-    return (
-      <div className='mx-auto mt-6 text-sm select-text text-destructive'>{tx('tx.shell.auth.validation.email')}</div>
-    );
-  }
-  throw error as Error;
 }

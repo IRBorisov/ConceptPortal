@@ -2,6 +2,7 @@
 from copy import deepcopy
 from typing import Optional, cast
 
+from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -67,7 +68,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         elif self.action in ['list', 'retrieve', 'details']:
             permission_list = [permissions.ItemAnyone]
         elif self.action in ['get_predecessor']:
-            permission_list = [permissions.Anyone]
+            permission_list = [permissions.GlobalUser]
         else:
             permission_list = [permissions.Anyone]
         return [permission() for permission in permission_list]
@@ -394,7 +395,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
     def import_schema(self, request: Request, pk) -> HttpResponse:
         ''' Create operation with existing schema. '''
         item = self._get_item()
-        serializer = s.ImportSchemaSerializer(data=request.data, context={'oss': item})
+        serializer = s.ImportSchemaSerializer(data=request.data, context={'oss': item, 'request': request})
         serializer.is_valid(raise_exception=True)
         layout = serializer.validated_data['layout']
         position = serializer.validated_data['position']
@@ -571,7 +572,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
 
             if operation.result is not None:
                 can_edit = permissions.can_edit_item(request.user, operation.result)
-                if can_edit or operation.operation_type == m.OperationType.SYNTHESIS:
+                if can_edit:
                     operation.result.alias = operation.alias
                     operation.result.title = operation.title
                     operation.result.description = operation.description
@@ -719,7 +720,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
     def set_input(self, request: Request, pk) -> HttpResponse:
         ''' Set input schema for target operation. '''
         item = self._get_item()
-        serializer = s.SetOperationInputSerializer(data=request.data, context={'oss': item})
+        serializer = s.SetOperationInputSerializer(data=request.data, context={'oss': item, 'request': request})
         serializer.is_valid(raise_exception=True)
 
         layout = serializer.validated_data['layout']
@@ -811,6 +812,8 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         serializer = CstTargetSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         cst = cast(Constituenta, serializer.validated_data['target'])
+        if not permissions.can_read_library_item(request.user, cast(LibraryItem, cst.schema)):
+            raise PermissionDenied()
         inheritance_query = m.Inheritance.objects.filter(child=cst)
         while inheritance_query.exists():
             inheritance = inheritance_query.first()
@@ -818,6 +821,10 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
                 break
             cst = inheritance.parent
             inheritance_query = m.Inheritance.objects.filter(child=cst)
+
+        # Re-check after walking inheritance: the predecessor may live in another schema.
+        if not permissions.can_read_library_item(request.user, cast(LibraryItem, cst.schema)):
+            raise PermissionDenied()
 
         return Response(
             status=c.HTTP_200_OK,
@@ -842,7 +849,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
     def relocate_constituents(self, request: Request, pk) -> Response:
         ''' Relocate constituents from one schema to another. '''
         item = self._get_item()
-        serializer = s.RelocateConstituentsSerializer(data=request.data)
+        serializer = s.RelocateConstituentsSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         ids = [cst.pk for cst in data['items']]

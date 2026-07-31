@@ -131,7 +131,6 @@ export const txShellEn: Record<string, string> = {
   'tx.shell.auth.username': 'Username or email',
   'tx.shell.auth.required': 'Accessible only to registered users',
   'tx.shell.auth.validation.password': 'This username and password combination is not known on the portal.',
-  'tx.shell.auth.validation.email': 'This email is not registered on the portal.',
   'tx.shell.auth.signedInAs': 'You are signed in as {username}',
 
   'tx.shell.auth.restore.hint': 'Reset password…',

@@ -2,8 +2,10 @@
 from collections import deque
 from typing import cast
 
-from django.db.models import F
+from django.core.exceptions import PermissionDenied
+from django.db.models import F, Q
 from rest_framework import serializers
+from rest_framework.request import Request
 from rest_framework.serializers import PrimaryKeyRelatedField as PKField
 
 from apps.library.models import LibraryItem, LibraryItemType
@@ -11,6 +13,7 @@ from apps.library.serializers import LibraryItemDetailsSerializer
 from apps.rsform.models import Constituenta
 from apps.rsform.serializers import SubstitutionSerializerBase
 from shared import messages as msg
+from shared import permissions
 from shared.serializers import StrictModelSerializer, StrictSerializer
 
 from ..models import (
@@ -297,6 +300,10 @@ class ImportSchemaSerializer(StrictSerializer):
             raise serializers.ValidationError({
                 'parent': msg.parentNotInOSS()
             })
+        request = cast(Request, self.context['request'])
+        source = cast(LibraryItem, attrs['source'])
+        if not permissions.can_read_library_item(request.user, source):
+            raise PermissionDenied()
         return attrs
 
 
@@ -326,6 +333,8 @@ class CreateSynthesisSerializer(StrictSerializer):
                 raise serializers.ValidationError({
                     'arguments': msg.operationNotInOSS()
                 })
+
+        _validate_synthesis_arguments(attrs['arguments'], oss)
 
         schemas = [arg.result_id for arg in attrs['arguments'] if arg.result is not None]
         if len(schemas) != len(set(schemas)):
@@ -407,6 +416,8 @@ class UpdateOperationSerializer(StrictSerializer):
                     'arguments': msg.operationNotInOSS()
                 })
 
+        _validate_synthesis_arguments(attrs['arguments'], oss, target=target)
+
         if 'substitutions' not in attrs:
             return attrs
         schemas = [arg.result_id for arg in attrs['arguments'] if arg.result is not None]
@@ -466,6 +477,19 @@ class DeleteOperationSerializer(StrictSerializer):
             raise serializers.ValidationError({
                 'target': msg.replicaNotAllowed()
             })
+        if operation.operation_type not in (OperationType.INPUT, OperationType.REPLICA):
+            if Argument.objects.filter(
+                operation__oss_id=oss.pk,
+                argument_id=operation.pk,
+            ).exists():
+                raise serializers.ValidationError({
+                    'target': msg.operationHasDependents(operation.alias)
+                })
+        if operation.result is not None and attrs['delete_schema']:
+            if Operation.objects.filter(result_id=operation.result_id).exclude(pk=operation.pk).exists():
+                raise serializers.ValidationError({
+                    'delete_schema': msg.schemaReferencedByOperations()
+                })
         return attrs
 
 
@@ -533,6 +557,11 @@ class SetOperationInputSerializer(StrictSerializer):
             raise serializers.ValidationError({
                 'target': msg.operationNotInput(operation.alias)
             })
+        schema = cast(LibraryItem | None, attrs.get('input'))
+        if schema is not None:
+            request = cast(Request, self.context['request'])
+            if not permissions.can_read_library_item(request.user, schema):
+                raise PermissionDenied()
         return attrs
 
 
@@ -621,8 +650,18 @@ class RelocateConstituentsSerializer(StrictSerializer):
     )
 
     def validate(self, attrs):
+        oss = cast(LibraryItem, self.context['oss'])
         attrs['destination'] = attrs['destination'].id
         attrs['source'] = attrs['items'][0].schema_id
+
+        if not Operation.objects.filter(oss=oss, result_id=attrs['source']).exists():
+            raise serializers.ValidationError({
+                'items': msg.schemaNotInOSS()
+            })
+        if not Operation.objects.filter(oss=oss, result_id=attrs['destination']).exists():
+            raise serializers.ValidationError({
+                'destination': msg.schemaNotInOSS()
+            })
 
         if attrs['source'] == attrs['destination']:
             raise serializers.ValidationError({
@@ -639,11 +678,13 @@ class RelocateConstituentsSerializer(StrictSerializer):
             })
 
         if Argument.objects.filter(
+            operation__oss=oss,
             operation__result_id=attrs['destination'],
             argument__result_id=attrs['source']
         ).exists():
             attrs['move_down'] = True
         elif Argument.objects.filter(
+            operation__oss=oss,
             operation__result_id=attrs['source'],
             argument__result_id=attrs['destination']
         ).exists():
@@ -680,3 +721,66 @@ def _collect_ancestors(block: Block) -> set[int]:
         ancestors.add(current.pk)
         current = current.parent
     return ancestors
+
+
+def _collect_operation_outputs(start_ids: list[int], oss_id: int) -> set[int]:
+    """ Collect operation IDs that transitively depend on start_ids within OSS. """
+    result: set[int] = set()
+    queue = deque(start_ids)
+    while queue:
+        op_id = queue.popleft()
+        for dependent_id in Argument.objects.filter(
+            operation__oss_id=oss_id,
+            argument_id=op_id,
+        ).values_list('operation_id', flat=True):
+            if dependent_id not in result:
+                result.add(dependent_id)
+                queue.append(dependent_id)
+    return result
+
+
+def _collect_replica_related(operation_ids: set[int], oss_id: int) -> set[int]:
+    """ Collect replica/original operation IDs related to the given set within OSS. """
+    if not operation_ids:
+        return set()
+    related: set[int] = set()
+    for replica_id, original_id in Replica.objects.filter(
+        Q(original_id__in=operation_ids) | Q(replica_id__in=operation_ids),
+        original__oss_id=oss_id,
+    ).values_list('replica_id', 'original_id'):
+        related.add(replica_id)
+        related.add(original_id)
+    return related
+
+
+def _validate_synthesis_arguments(
+    arguments: list[Operation],
+    oss: LibraryItem,
+    *,
+    target: Operation | None = None,
+) -> None:
+    argument_ids = [operation.pk for operation in arguments]
+    if len(argument_ids) != len(set(argument_ids)):
+        raise serializers.ValidationError({
+            'arguments': msg.duplicateArgument()
+        })
+
+    if target is None:
+        return
+
+    outputs = _collect_operation_outputs([target.pk], oss.pk)
+    forbidden = {target.pk} | outputs
+    # Replicas of the target, its transitive dependents, or the proposed arguments
+    # must be forbidden: OssCache routes replica edges through originals.
+    forbidden |= _collect_replica_related({target.pk, *argument_ids, *outputs}, oss.pk)
+
+    for operation in arguments:
+        if operation.pk not in forbidden:
+            continue
+        if operation.pk == target.pk:
+            raise serializers.ValidationError({
+                'arguments': msg.operationArgumentSelf()
+            })
+        raise serializers.ValidationError({
+            'arguments': msg.operationArgumentCycle()
+        })

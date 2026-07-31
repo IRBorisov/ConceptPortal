@@ -33,6 +33,10 @@ function readCsrfTokenFromCookie(): string | undefined {
   return token ? decodeURIComponent(token) : undefined;
 }
 
+export function clearCachedCsrfToken(): void {
+  memoryToken = undefined;
+}
+
 /** Token for `x-csrftoken`: in-memory from auth API first, then `document.cookie`. */
 export function getCsrfToken(): string | undefined {
   return memoryToken ?? readCsrfTokenFromCookie();

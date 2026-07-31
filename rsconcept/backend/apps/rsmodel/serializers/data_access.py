@@ -87,9 +87,13 @@ class CstDataUpdateSerializer(StrictSerializer):
     data = serializers.JSONField()  # type: ignore
 
     def validate(self, attrs):
-        schema = cast(LibraryItem, self.context.get('schema', None))
+        schema = cast(LibraryItem | None, self.context.get('schema'))
+        if schema is None:
+            raise serializers.ValidationError({
+                'schema': 'Model has no schema bound'
+            })
         cst = attrs['target']
-        if schema and cst.schema_id != schema.pk:
+        if cst.schema_id != schema.pk:
             raise serializers.ValidationError({
                 f'{cst.pk}': msg.constituentaNotInRSform(schema.title)
             })

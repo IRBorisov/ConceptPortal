@@ -133,7 +133,6 @@ export const txShellFr: Record<string, string> = {
   'tx.shell.auth.username': 'Identifiant ou e-mail',
   'tx.shell.auth.required': 'Accessible uniquement aux utilisateurs enregistrés',
   'tx.shell.auth.validation.password': 'Ce couple identifiant / mot de passe est inconnu sur le portail.',
-  'tx.shell.auth.validation.email': 'Cette adresse e-mail n’est pas enregistrée sur le portail.',
   'tx.shell.auth.signedInAs': 'Vous êtes connecté en tant que {username}',
 
   'tx.shell.auth.restore.hint': 'Mot de passe oublié…',

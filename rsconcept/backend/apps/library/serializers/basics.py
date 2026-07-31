@@ -33,7 +33,7 @@ class RenameLocationSerializer(StrictSerializer):
             raise serializers.ValidationError({
                 'target': msg.invalidLocation()
             })
-        if not validate_location(attrs['target']):
+        if not validate_location(attrs['new_location']):
             raise serializers.ValidationError({
                 'new_location': msg.invalidLocation()
             })
