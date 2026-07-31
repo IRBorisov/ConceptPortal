@@ -90,7 +90,7 @@ class AuthAPIView(generics.RetrieveAPIView):
 @extend_schema_view()
 class ActiveUsersView(generics.ListAPIView):
     ''' Endpoint: Get list of active users. '''
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = s.UserInfoSerializer
 
     def get_queryset(self):

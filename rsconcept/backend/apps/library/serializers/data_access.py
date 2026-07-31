@@ -1,10 +1,14 @@
 ''' Serializers for persistent data manipulation. '''
+from typing import cast
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.request import Request
 from rest_framework.serializers import PrimaryKeyRelatedField as PKField
 
 from apps.rsform.models import Constituenta
-from shared import messages
+from shared import messages, permissions
 from shared.serializers import StrictModelSerializer, StrictSerializer
 
 from ..models import LibraryItem, LibraryItemType, Version
@@ -25,11 +29,34 @@ class LibraryItemBaseSerializer(StrictModelSerializer):
 class LibraryItemCreateSerializer(LibraryItemBaseSerializer):
     ''' Serializer: LibraryItem creation data. '''
     schema = serializers.PrimaryKeyRelatedField(
-        queryset=LibraryItem.objects.all(),
+        queryset=LibraryItem.objects.filter(item_type=LibraryItemType.RSFORM),
         required=False,
         allow_null=True,
         write_only=True
     )
+
+    def validate_schema(self, value: LibraryItem | None) -> LibraryItem | None:
+        ''' Restrict schema binding to readable RSForm items. '''
+        if value is None:
+            return value
+        request = cast(Request | None, self.context.get('request'))
+        if request is None:
+            raise serializers.ValidationError('Request context is required')
+        if not permissions.can_read_library_item(request.user, value):
+            raise PermissionDenied({
+                'message': messages.schemaForbidden(),
+                'object_id': str(value.pk)
+            })
+        return value
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        item_type = attrs.get('item_type', LibraryItemType.RSFORM)
+        if item_type == LibraryItemType.RSMODEL and attrs.get('schema') is None:
+            raise serializers.ValidationError({
+                'schema': 'Schema is required for RSModel'
+            })
+        return attrs
 
     def create(self, validated_data):
         '''Create LibraryItem without passing auxiliary `schema` to model.'''
@@ -41,7 +68,7 @@ class LibraryItemCreateSerializer(LibraryItemBaseSerializer):
         ''' serializer metadata. '''
         model = LibraryItem
         fields = '__all__'
-        read_only_fields = ('id', *_LIBRARY_ITEM_TIMESTAMP_FIELDS)
+        read_only_fields = ('id', 'owner', *_LIBRARY_ITEM_TIMESTAMP_FIELDS)
 
 
 class LibraryItemBaseNonStrictSerializer(serializers.ModelSerializer):

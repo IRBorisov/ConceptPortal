@@ -102,6 +102,56 @@ class TestLibraryViewset(EndpointTester):
         self.assertIsNotNone(model_instance)
         self.assertEqual(model_instance.schema_id, data['schema'])
 
+    @decl_endpoint('/api/library', method='post')
+    def test_create_model_requires_schema(self):
+        data = {
+            'item_type': LibraryItemType.RSMODEL,
+            'title': 'Model Item',
+            'alias': 'model_alias',
+        }
+        self.executeBadData(data)
+
+    @decl_endpoint('/api/library', method='post')
+    def test_create_model_rejects_inaccessible_schema(self):
+        private_schema = RSForm.create(
+            title='Private',
+            alias='PRV',
+            owner=self.user2,
+            access_policy=AccessPolicy.PRIVATE
+        )
+        data = {
+            'item_type': LibraryItemType.RSMODEL,
+            'title': 'Model Item',
+            'alias': 'model_alias',
+            'schema': private_schema.model.pk
+        }
+        self.executeForbidden(data)
+
+    @decl_endpoint('/api/library', method='post')
+    def test_create_model_rejects_non_rsform_schema(self):
+        oss = LibraryItem.objects.create(
+            item_type=LibraryItemType.OPERATION_SCHEMA,
+            title='OSS',
+            alias='OSS1'
+        )
+        data = {
+            'item_type': LibraryItemType.RSMODEL,
+            'title': 'Model Item',
+            'alias': 'model_alias',
+            'schema': oss.pk
+        }
+        self.executeBadData(data)
+
+    @decl_endpoint('/api/library', method='post')
+    def test_create_ignores_owner_spoof(self):
+        data = {
+            'title': 'Title',
+            'alias': 'alias',
+            'owner': self.user2.pk
+        }
+        response = self.executeCreated(data)
+        self.assertEqual(response.data['owner'], self.user.pk)
+
 
     @decl_endpoint('/api/library/{item}', method='patch')
     def test_update(self):
@@ -311,6 +361,27 @@ class TestLibraryViewset(EndpointTester):
         self.assertEqual(self.unowned.location, '/S/temp2')
 
     @decl_endpoint('/api/library/rename-location', method='patch')
+    def test_rename_location_validates_new_location(self):
+        data = {
+            'target': '/S/temp',
+            'new_location': 'invalid'
+        }
+        self.executeBadData(data)
+
+    @decl_endpoint('/api/library/rename-location', method='patch')
+    def test_rename_location_prefix_safe(self):
+        self.owned.location = '/S/temp/target-extra'
+        self.owned.save()
+
+        data = {
+            'target': '/S/temp',
+            'new_location': '/S/temp2'
+        }
+        self.executeOK(data)
+        self.owned.refresh_from_db()
+        self.assertEqual(self.owned.location, '/S/temp2/target-extra')
+
+    @decl_endpoint('/api/library/rename-location', method='patch')
     def test_rename_location_user(self):
         self.owned.location = '/U/temp'
         self.owned.save()
@@ -453,10 +524,10 @@ class TestLibraryViewset(EndpointTester):
         self.assertFalse(response_contains(response, self.unowned))
         self.assertFalse(response_contains(response, self.owned))
 
-        LibraryTemplate.objects.create(lib_source=self.unowned)
+        LibraryTemplate.objects.create(lib_source=self.common)
         response = self.executeOK()
-        self.assertFalse(response_contains(response, self.common))
-        self.assertTrue(response_contains(response, self.unowned))
+        self.assertTrue(response_contains(response, self.common))
+        self.assertFalse(response_contains(response, self.unowned))
         self.assertFalse(response_contains(response, self.owned))
 
 

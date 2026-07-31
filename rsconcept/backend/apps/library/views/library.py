@@ -52,7 +52,7 @@ class LibraryViewSet(ConcurrencyMixin, viewsets.ModelViewSet):
         if location:
             assert_can_write_location(self.request.user, location)
 
-        if not self.request.user.is_anonymous and 'owner' not in self.request.POST:
+        if not self.request.user.is_anonymous:
             serializer.save(owner=self.request.user)
         else:
             serializer.save()
@@ -168,7 +168,10 @@ class LibraryViewSet(ConcurrencyMixin, viewsets.ModelViewSet):
                 .only('location', 'owner_id')
             for item in items:
                 if item.owner_id == self.request.user.pk or (self.request.user.is_staff and not user_involved):
-                    item.location = item.location.replace(target, new_location)
+                    if item.location == target:
+                        item.location = new_location
+                    elif item.location.startswith(f'{target}/'):
+                        item.location = new_location + item.location[len(target):]
                     changed.append(item)
             if changed:
                 m.LibraryItem.objects.bulk_update(changed, ['location'])
@@ -390,7 +393,7 @@ class LibraryViewSet(ConcurrencyMixin, viewsets.ModelViewSet):
         item = self._get_item()
         serializer = s.UsersListSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        editors: list[int] = request.data['users']
+        editors = [user.pk for user in serializer.validated_data['users']]
 
         with transaction.atomic():
             added, deleted = m.Editor.set_and_return_diff(item.pk, editors)
@@ -412,7 +415,7 @@ class LibraryViewSet(ConcurrencyMixin, viewsets.ModelViewSet):
                         m.Editor(item=schema, editor_id=user)
                         for schema in owned_schemas
                         for user in added
-                        if (item.id, user) not in existing_editor_set
+                        if (schema.pk, user) not in existing_editor_set
                     ]
                     m.Editor.objects.bulk_create(new_editors)
 
@@ -450,7 +453,11 @@ class LibraryTemplatesView(generics.ListAPIView):
 
     def get_queryset(self):
         template_ids = m.LibraryTemplate.objects.values_list('lib_source', flat=True)
-        return m.LibraryItem.objects.filter(pk__in=template_ids)
+        qs = m.LibraryItem.objects.filter(pk__in=template_ids)
+        if not self.request.user.is_staff:
+            accessible_ids = get_accessible_items_queryset(self.request.user).values_list('pk', flat=True)
+            qs = qs.filter(pk__in=accessible_ids)
+        return qs
 
 
 @extend_schema(tags=['Library'])

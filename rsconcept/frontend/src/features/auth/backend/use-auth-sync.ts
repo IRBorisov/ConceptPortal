@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 import { syncSentryUser } from '@/services/sentry';
 
+import { clearCachedCsrfToken } from '@/backend/csrf-token';
 import { queryClient } from '@/backend/query-client';
 
 import { authApi } from './api';
@@ -16,6 +17,7 @@ export function useAuthSync() {
   useEffect(function subscribeCrossTabAuthSync() {
     return subscribeAuthSync(function handleAuthSync(event) {
       if (event === 'logout') {
+        clearCachedCsrfToken();
         queryClient.setQueryData(authApi.getAuthQueryOptions().queryKey, anonymousCurrentUser);
         syncSentryUser(anonymousCurrentUser);
         void queryClient.resetQueries({

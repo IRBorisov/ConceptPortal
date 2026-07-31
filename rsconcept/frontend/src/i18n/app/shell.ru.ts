@@ -133,7 +133,6 @@ export const txShellRu: Record<string, string> = {
   'tx.shell.auth.username': 'Логин или email',
   'tx.shell.auth.required': 'Доступно только зарегистрированным пользователям',
   'tx.shell.auth.validation.password': 'На Портале отсутствует такое сочетание имени пользователя и пароля',
-  'tx.shell.auth.validation.email': 'Данный email не используется на Портале',
   'tx.shell.auth.signedInAs': 'Вы вошли в систему как {username}',
 
   'tx.shell.auth.restore.hint': 'Восстановить пароль...',

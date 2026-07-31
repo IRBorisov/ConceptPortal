@@ -70,6 +70,63 @@ class TestRSModelViewset(EndpointTester):
         self.executeForbidden(item=self.model_id, data=payload)
 
     @decl_endpoint('/api/models/{item}/set-value', method='post')
+    def test_set_value_rejects_null_schema(self):
+        model_item = LibraryItem.objects.create(
+            item_type='rsmodel',
+            title='No schema',
+            alias='NS',
+            owner=self.user
+        )
+        RSModel.objects.create(model=model_item, schema=None)
+        x1 = self.schema.insert_last(alias='X1')
+        payload = [{
+            'target': x1.pk,
+            'type': 'basic',
+            'data': {'1': 'test'}
+        }]
+        self.executeBadData(item=model_item.pk, data=payload)
+
+    @decl_endpoint('/api/models/{item}/load-json', method='patch')
+    def test_load_json_rejects_null_schema(self):
+        model_item = LibraryItem.objects.create(
+            item_type='rsmodel',
+            title='No schema',
+            alias='NS2',
+            owner=self.user
+        )
+        RSModel.objects.create(model=model_item, schema=None)
+        data = {
+            'title': 'T',
+            'alias': 'A',
+            'description': '',
+            'items': []
+        }
+        self.executeBadData(item=model_item.pk, data=data)
+
+    @decl_endpoint('/api/models/{item}/clear-values', method='post')
+    def test_clear_values_rejects_null_schema(self):
+        model_item = LibraryItem.objects.create(
+            item_type='rsmodel',
+            title='No schema',
+            alias='NS3',
+            owner=self.user
+        )
+        RSModel.objects.create(model=model_item, schema=None)
+        x1 = self.schema.insert_last(alias='X1')
+        self.executeBadData(item=model_item.pk, data={'items': [x1.pk]})
+
+    @decl_endpoint('/api/models/{item}/reset-all', method='post')
+    def test_reset_all_rejects_null_schema(self):
+        model_item = LibraryItem.objects.create(
+            item_type='rsmodel',
+            title='No schema',
+            alias='NS4',
+            owner=self.user
+        )
+        RSModel.objects.create(model=model_item, schema=None)
+        self.executeBadData(item=model_item.pk)
+
+    @decl_endpoint('/api/models/{item}/set-value', method='post')
     def test_set_multiple_values(self):
         x1 = self.schema.insert_last(alias='X1')
         x2 = self.schema.insert_last(alias='X2')

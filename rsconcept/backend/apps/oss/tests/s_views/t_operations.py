@@ -1,5 +1,5 @@
 ''' Testing API: Operation Schema - operations manipulation. '''
-from apps.library.models import Editor, LibraryItem
+from apps.library.models import AccessPolicy, Editor, LibraryItem
 from apps.oss.models import Argument, Operation, OperationSchema, OperationType, Replica
 from apps.rsform.models import Attribution, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
@@ -303,6 +303,29 @@ class TestOssOperations(EndpointTester):
         self.executeCreated(data, item=self.owned_id)
 
 
+    @decl_endpoint('/api/oss/{item}/create-synthesis', method='post')
+    def test_create_synthesis_duplicate_argument(self):
+        self.populateData()
+        data = {
+            'item_data': {
+                'alias': 'TestDup',
+                'title': 'Test title',
+                'description': '',
+                'parent': None
+            },
+            'layout': self.layout_data,
+            'position': {
+                'x': 1,
+                'y': 1,
+                'width': 500,
+                'height': 50
+            },
+            'arguments': [self.operation1.pk, self.operation1.pk],
+            'substitutions': []
+        }
+        self.executeBadData(data, item=self.owned_id)
+
+
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
     def test_delete_operation(self):
         self.populateData()
@@ -358,6 +381,37 @@ class TestOssOperations(EndpointTester):
         self.executeOK(data)
         self.assertFalse(Operation.objects.filter(pk=operation.pk).exists())
         self.assertFalse(LibraryItem.objects.filter(pk=schema.model.pk).exists())
+
+
+    @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
+    def test_delete_schema_referenced_elsewhere(self):
+        self.populateData()
+        self.unowned.create_operation(
+            alias='shared',
+            operation_type=OperationType.INPUT,
+            result=self.ks1.model
+        )
+        data = {
+            'target': self.operation1.pk,
+            'layout': self.layout_data,
+            'delete_schema': True
+        }
+        self.executeBadData(data, item=self.owned_id)
+
+
+    @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
+    def test_delete_synthesis_with_dependents(self):
+        self.populateData()
+        operation4 = self.owned.create_operation(
+            alias='4',
+            operation_type=OperationType.SYNTHESIS
+        )
+        self.owned.set_arguments(operation4.pk, [self.operation3])
+        data = {
+            'layout': self.layout_data,
+            'target': self.operation3.pk
+        }
+        self.executeBadData(data, item=self.owned_id)
 
 
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
@@ -502,6 +556,22 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(self.operation1.result, self.ks2.model)
 
 
+    @decl_endpoint('/api/oss/{item}/set-input', method='patch')
+    def test_set_input_forbidden_without_source_read(self):
+        self.populateData()
+        self.operation2.result = None
+        self.operation2.save(update_fields=['result'])
+        private_source = RSForm.create(title='PrivSrc', alias='PS', owner=self.user2)
+        private_source.model.access_policy = AccessPolicy.PRIVATE
+        private_source.model.save()
+        data = {
+            'layout': self.layout_data,
+            'target': self.operation2.pk,
+            'input': private_source.model.pk
+        }
+        self.executeForbidden(data, item=self.owned_id)
+
+
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
     def test_update_operation(self):
         self.populateData()
@@ -557,6 +627,79 @@ class TestOssOperations(EndpointTester):
 
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
+    def test_update_operation_argument_cycle(self):
+        self.populateData()
+        operation4 = self.owned.create_operation(
+            alias='4',
+            operation_type=OperationType.SYNTHESIS
+        )
+        self.owned.set_arguments(operation4.pk, [self.operation1, self.operation3])
+        data = {
+            'target': self.operation3.pk,
+            'item_data': {
+                'alias': self.operation3.alias,
+                'title': self.operation3.title,
+                'description': self.operation3.description,
+            },
+            'layout': self.layout_data,
+            'arguments': [self.operation1.pk, self.operation2.pk, operation4.pk],
+            'substitutions': [
+                {
+                    'original': self.ks1X1.pk,
+                    'substitution': self.ks2X1.pk
+                }
+            ]
+        }
+        self.executeBadData(data, item=self.owned_id)
+
+
+    @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
+    def test_update_operation_self_argument(self):
+        self.populateData()
+        data = {
+            'target': self.operation3.pk,
+            'item_data': {
+                'alias': self.operation3.alias,
+                'title': self.operation3.title,
+                'description': self.operation3.description,
+            },
+            'layout': self.layout_data,
+            'arguments': [self.operation1.pk, self.operation3.pk],
+            'substitutions': []
+        }
+        self.executeBadData(data, item=self.owned_id)
+
+
+    @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
+    def test_update_operation_replica_of_descendant_cycle(self):
+        ''' Replica of a transitive dependent must not be usable as an argument. '''
+        self.populateData()
+        operation4 = self.owned.create_operation(
+            alias='4',
+            operation_type=OperationType.SYNTHESIS
+        )
+        self.owned.set_arguments(operation4.pk, [self.operation3])
+        replica = self.owned.create_replica(operation4)
+        data = {
+            'target': self.operation3.pk,
+            'item_data': {
+                'alias': self.operation3.alias,
+                'title': self.operation3.title,
+                'description': self.operation3.description,
+            },
+            'layout': self.layout_data,
+            'arguments': [self.operation1.pk, self.operation2.pk, replica.pk],
+            'substitutions': [
+                {
+                    'original': self.ks1X1.pk,
+                    'substitution': self.ks2X1.pk
+                }
+            ]
+        }
+        self.executeBadData(data, item=self.owned_id)
+
+
+    @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
     def test_update_operation_sync(self):
         self.populateData()
         self.executeBadData(item=self.owned_id)
@@ -586,6 +729,36 @@ class TestOssOperations(EndpointTester):
         data_bad = dict(data)
         data_bad['target'] = self.unowned_operation.pk
         self.executeBadData(data_bad, item=self.owned_id)
+
+
+    @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
+    def test_update_operation_synthesis_no_result_metadata_without_edit(self):
+        self.populateData()
+        self.owned.execute_operation(self.operation3)
+        self.operation3.refresh_from_db()
+        result_schema = self.operation3.result
+        original_title = result_schema.title
+        original_description = result_schema.description
+        result_schema.owner = self.user2
+        result_schema.access_policy = AccessPolicy.PRIVATE
+        result_schema.save()
+
+        data = {
+            'target': self.operation3.pk,
+            'item_data': {
+                'alias': self.operation3.alias,
+                'title': 'Hacked title',
+                'description': 'Hacked description',
+            },
+            'layout': self.layout_data,
+        }
+        self.executeOK(data, item=self.owned_id)
+        self.operation3.refresh_from_db()
+        result_schema.refresh_from_db()
+        self.assertEqual(self.operation3.title, data['item_data']['title'])
+        self.assertEqual(self.operation3.description, data['item_data']['description'])
+        self.assertEqual(result_schema.title, original_title)
+        self.assertEqual(result_schema.description, original_description)
 
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
@@ -800,4 +973,51 @@ class TestOssOperations(EndpointTester):
         # As admin
         self.login()
         self.toggle_admin(True)
+        self.executeCreated(data, item=self.owned_id)
+
+    @decl_endpoint('/api/oss/{item}/import-schema', method='post')
+    def test_import_schema_forbidden_without_source_read(self):
+        self.populateData()
+        private_source = RSForm.create(title='PrivSrc', alias='PS', owner=self.user2)
+        private_source.model.access_policy = AccessPolicy.PRIVATE
+        private_source.model.save()
+        data = {
+            'item_data': {
+                'alias': 'Imported',
+                'title': 'Imported',
+                'description': '',
+                'parent': None
+            },
+            'layout': self.layout_data,
+            'position': {
+                'x': 0, 'y': 0, 'width': 100, 'height': 40
+            },
+            'source': private_source.model.pk,
+            'clone_source': False
+        }
+        self.executeForbidden(data, item=self.owned_id)
+
+        data['clone_source'] = True
+        self.executeForbidden(data, item=self.owned_id)
+
+    @decl_endpoint('/api/oss/{item}/import-schema', method='post')
+    def test_import_schema_public_foreign_source(self):
+        self.populateData()
+        public_source = RSForm.create(title='PubSrc', alias='PubS', owner=self.user2)
+        public_source.model.access_policy = AccessPolicy.PUBLIC
+        public_source.model.save()
+        data = {
+            'item_data': {
+                'alias': 'ImportedPub',
+                'title': 'ImportedPub',
+                'description': '',
+                'parent': None
+            },
+            'layout': self.layout_data,
+            'position': {
+                'x': 0, 'y': 0, 'width': 100, 'height': 40
+            },
+            'source': public_source.model.pk,
+            'clone_source': False
+        }
         self.executeCreated(data, item=self.owned_id)
