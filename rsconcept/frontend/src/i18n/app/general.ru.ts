@@ -64,6 +64,7 @@ export const txGeneralRu: Record<string, string> = {
   'tx.general.help': 'Справка',
   'tx.general.help.hint': 'Открыть эту тему в справке',
   'tx.help.menu.hint': 'Открыть варианты справки',
+  'tx.help.topicsList': 'Список тем',
   'tx.help.quickGuide': 'Быстрый гид',
   'tx.help.readManual': 'Читать справку',
   'tx.general.support': 'Поддержка',

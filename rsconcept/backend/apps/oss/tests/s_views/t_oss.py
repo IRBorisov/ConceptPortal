@@ -2,6 +2,7 @@
 from apps.library.models import AccessPolicy, LibraryItemType
 from apps.oss.models import Inheritance, OperationSchema, OperationType
 from apps.rsform.models import Constituenta, RSForm
+from shared import messages as msg
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
 
@@ -337,10 +338,12 @@ class TestOssViewset(EndpointTester):
             'destination': foreign_ks.model.pk,
             'items': [self.ks1X1.pk]
         }
-        self.executeBadData(data)
+        response = self.executeBadData(data)
+        self.assertEqual(response.data['destination'], [msg.schemaNotInOSS()])
 
         data = {
             'destination': self.ks3.model.pk,
             'items': [foreign_cst.pk]
         }
-        self.executeBadData(data)
+        response = self.executeBadData(data)
+        self.assertEqual(response.data['items'], [msg.schemaNotInOSS()])

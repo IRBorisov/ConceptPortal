@@ -6,6 +6,11 @@ Rules for agents in `rsconcept/rstool-mcp`.
 
 Applies to all files under `rsconcept/rstool-mcp`. The package is a **thin adapter** over `@rsconcept/rstool` — it must not duplicate validation, business logic, or RS-language behaviour.
 
+## See also
+
+- Portable guides: [`docs/architecture.md`](../../docs/architecture.md), [`docs/coding-style.md`](../../docs/coding-style.md) (package rules win on conflict)
+- Upstream contract: [`../rstool/AGENTS.md`](../rstool/AGENTS.md) §Contract changes
+
 ## Structure
 
 - `src/server.ts` — builds an MCP `McpServer` and registers tool handlers on `server.server` using `TOOL_DEFINITIONS`.

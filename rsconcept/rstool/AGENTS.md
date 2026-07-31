@@ -6,6 +6,11 @@ Rules for agents in `rsconcept/rstool`.
 
 Applies to all files under `rsconcept/rstool`. Published as `@rsconcept/rstool` with stdio bin `rstool-wrapper`.
 
+## See also
+
+- Portable guides: [`docs/architecture.md`](../../docs/architecture.md), [`docs/coding-style.md`](../../docs/coding-style.md) (package rules win on conflict)
+- Terminology: [`docs/DOMAIN.md`](docs/DOMAIN.md) §«Термины: не путать»
+
 ## Agent docs (read before RS work)
 
 Start at `skills/rstool-helper/GUIDE.md` (section «Задача → чтение»), then only the docs that row needs — not all of `docs/`. `REFERENCE.md` is the contract (library / stdio / MCP); `EXAMPLES.md` has snippets and anti-patterns. Workspace entry: `.agents/skills/rstool-helper/SKILL.md`.
@@ -23,7 +28,7 @@ When the goal is a conceptual schema, Portal export, or analysis — **do not cr
 - `src/models/` — contract types (`tool-contract.ts`, `CONTRACT_VERSION`), entity files, `RSToolAgent` in `rstool-agent.ts`, explicit barrel `index.ts`
 - `src/session/` — in-memory session store
 - `src/mappers/` — bridge to `@rsconcept/domain`: `schema-adapter.ts` (analysis), `model-adapter.ts` (evaluation/modeling)
-- `src/wrapper/` — stdio JSON-RPC (`stdio-wrapper.ts`; `METHODS` must match contract) + `RSToolWrapperClient`
+- `src/wrapper/` — stdio JSON-RPC (`stdio-handler.ts` holds `STDIO_METHODS`, must match contract; `stdio-wrapper.ts` is `RSToolWrapperClient`)
 - `src/index.ts` — package barrel
 - `examples/` — runnable workflows + sample session JSON
 - `docs/` — language reference index
@@ -38,7 +43,7 @@ Scripts: `package.json` / `examples/README.md`. Non-obvious: build `@rsconcept/d
 
 ## Edit rules
 
-- **Contract surface**: entity file in `src/models/` → `tool-contract.ts` → `rstool-agent.ts` → `stdio-wrapper.ts` → re-export from `src/models/index.ts`. New top-level module: `tsdown.config.ts` `entryFiles`.
+- **Contract surface**: entity file in `src/models/` → `tool-contract.ts` → `rstool-agent.ts` → `stdio-handler.ts` (`STDIO_METHODS`) → re-export from `src/models/index.ts`. New top-level module: `tsdown.config.ts` `entryFiles`.
 - **ЯРЭ / analysis**: change `rsconcept/domain/src/rslang/`, adapt in `schema-adapter.ts` — do not fork language rules here.
 - **Evaluation / modeling**: reuse domain `RSEngine`, `RSCalculator`, `rsmodel-api` via `model-adapter.ts`; in-memory only unless persistence is explicitly added.
 - **Tests**: colocate `*.test.ts` beside the module; no top-level `tests/` folder.
@@ -51,7 +56,7 @@ Update code and docs in the **same change set**. Internal refactors do not count
 
 **Triggers:** `CONTRACT_VERSION` bump; method add/remove/rename (library or stdio); request/response shape changes; new `CstType` or agent-facing validation rules; new exported `RSErrorCode` agents must handle; stdio protocol changes.
 
-**Sync:** `src/models/` + `stdio-wrapper.ts` + `model-adapter.ts` (if modeling) + colocated tests; `README.md`; `skills/rstool-helper/{GUIDE,REFERENCE,EXAMPLES}.md` (+ `SKILL.md` / `skills/INSTALL.md` if install flow changes); `examples/` when the happy path changes. Schema-design: `docs/CONCEPTUAL-SCHEMA.md` + GUIDE + EXAMPLES; keep `docs/README.md` index in sync.
+**Sync:** `src/models/` + `stdio-handler.ts` + `model-adapter.ts` (if modeling) + colocated tests; `README.md`; `skills/rstool-helper/{GUIDE,REFERENCE,EXAMPLES}.md` (+ `SKILL.md` / `skills/INSTALL.md` if install flow changes); `examples/` when the happy path changes. Schema-design: `docs/CONCEPTUAL-SCHEMA.md` + GUIDE + EXAMPLES; keep `docs/README.md` index in sync.
 
 **Language-only** (grammar, domain errors, help text): update skill only when agents need new guidance; point to `REFERENCE.md` «Help map» and `rsconcept/domain/src/rslang/error.ts` — do not duplicate grammar in the skill. Keep GUIDE task matrix and EXAMPLES anti-patterns in sync when agent workflows change.
 
