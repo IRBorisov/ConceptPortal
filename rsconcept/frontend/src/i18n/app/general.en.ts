@@ -60,6 +60,7 @@ export const txGeneralEn: Record<string, string> = {
   'tx.general.help': 'Manuals',
   'tx.general.help.hint': 'Open this topic in the manuals',
   'tx.help.menu.hint': 'Open help options',
+  'tx.help.topicsList': 'Topic list',
   'tx.help.quickGuide': 'Quick guide',
   'tx.help.readManual': 'Read manual',
   'tx.general.support': 'Support',

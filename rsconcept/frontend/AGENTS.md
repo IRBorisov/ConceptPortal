@@ -6,6 +6,11 @@ Rules for agents in `rsconcept/frontend`.
 
 Applies to all frontend files.
 
+## See also
+
+- Portable guides: [`docs/architecture.md`](../../docs/architecture.md), [`docs/coding-style.md`](../../docs/coding-style.md) (package rules win on conflict)
+- i18n workflow: [`.agents/skills/i18n-extract/SKILL.md`](../../.agents/skills/i18n-extract/SKILL.md)
+
 ## Stack
 
 Vite, React 19 + Compiler, Tailwind CSS, TypeScript, React Router, TanStack Query/Forms, Zustand, Vitest, Playwright, ESLint, Stylelint.

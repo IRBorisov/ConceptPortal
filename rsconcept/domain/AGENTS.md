@@ -6,6 +6,11 @@ Rules for agents in `rsconcept/domain`.
 
 Applies to all files under `rsconcept/domain`. This package is the shared TypeScript domain consumed by `rsconcept/frontend` and `rsconcept/rstool`.
 
+## See also
+
+- Portable guides: [`docs/architecture.md`](../../docs/architecture.md), [`docs/coding-style.md`](../../docs/coding-style.md) (package rules win on conflict)
+- Russian domain terminology (agents/UI): [`../rstool/docs/DOMAIN.md`](../rstool/docs/DOMAIN.md) §«Термины: не путать»
+
 ## Structure
 
 - `src/rslang/` — RSLang parser, semantic analyzer, evaluator, calculator, type and value systems, error codes

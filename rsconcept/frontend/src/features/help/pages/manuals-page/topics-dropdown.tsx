@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
+import { useTx } from '@/i18n';
+
 import { Button } from '@/components/control';
 import { useDropdown } from '@/components/dropdown';
 import { IconMenuFold, IconMenuUnfold } from '@/components/icons';
@@ -21,6 +23,7 @@ interface TopicsDropdownProps {
 }
 
 export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownProps) {
+  const tx = useTx();
   const { elementRef, isOpen, toggle, handleBlur, hide } = useDropdown();
   const noNavigation = useAppLayoutStore(state => state.noNavigation);
   const treeHeight = useFitHeight('4rem + 2px');
@@ -47,7 +50,7 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
     >
       <Button
         noOutline
-        title='Список тем'
+        title={tx('tx.help.topicsList')}
         hideTitle={isOpen}
         icon={!isOpen ? <IconMenuUnfold size='1.25rem' /> : <IconMenuFold size='1.25rem' />}
         className={clsx('w-12 h-7 rounded-none border-l-0', isOpen && 'border-b-0')}

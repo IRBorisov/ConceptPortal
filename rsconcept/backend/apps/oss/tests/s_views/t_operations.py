@@ -2,6 +2,7 @@
 from apps.library.models import AccessPolicy, Editor, LibraryItem
 from apps.oss.models import Argument, Operation, OperationSchema, OperationType, Replica
 from apps.rsform.models import Attribution, RSForm
+from shared import messages as msg
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
 
@@ -323,7 +324,8 @@ class TestOssOperations(EndpointTester):
             'arguments': [self.operation1.pk, self.operation1.pk],
             'substitutions': []
         }
-        self.executeBadData(data, item=self.owned_id)
+        response = self.executeBadData(data, item=self.owned_id)
+        self.assertEqual(response.data['arguments'], [msg.duplicateArgument()])
 
 
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
@@ -396,7 +398,8 @@ class TestOssOperations(EndpointTester):
             'layout': self.layout_data,
             'delete_schema': True
         }
-        self.executeBadData(data, item=self.owned_id)
+        response = self.executeBadData(data, item=self.owned_id)
+        self.assertEqual(response.data['delete_schema'], [msg.schemaReferencedByOperations()])
 
 
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
@@ -411,7 +414,8 @@ class TestOssOperations(EndpointTester):
             'layout': self.layout_data,
             'target': self.operation3.pk
         }
-        self.executeBadData(data, item=self.owned_id)
+        response = self.executeBadData(data, item=self.owned_id)
+        self.assertEqual(response.data['target'], [msg.operationHasDependents(self.operation3.alias)])
 
 
     @decl_endpoint('/api/oss/{item}/delete-operation', method='patch')
@@ -650,7 +654,8 @@ class TestOssOperations(EndpointTester):
                 }
             ]
         }
-        self.executeBadData(data, item=self.owned_id)
+        response = self.executeBadData(data, item=self.owned_id)
+        self.assertEqual(response.data['arguments'], [msg.operationArgumentCycle()])
 
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')
@@ -667,7 +672,8 @@ class TestOssOperations(EndpointTester):
             'arguments': [self.operation1.pk, self.operation3.pk],
             'substitutions': []
         }
-        self.executeBadData(data, item=self.owned_id)
+        response = self.executeBadData(data, item=self.owned_id)
+        self.assertEqual(response.data['arguments'], [msg.operationArgumentSelf()])
 
 
     @decl_endpoint('/api/oss/{item}/update-operation', method='patch')

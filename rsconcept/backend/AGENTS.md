@@ -6,6 +6,10 @@ Rules for agents in `rsconcept/backend`.
 
 Applies to backend files.
 
+## See also
+
+- Portable guides: [`docs/architecture.md`](../../docs/architecture.md), [`docs/coding-style.md`](../../docs/coding-style.md) (package rules win on conflict)
+
 ## Stack
 
 Django, Django REST Framework, PostgreSQL/SQLite local, MyPy, Pylint, Coverage.
