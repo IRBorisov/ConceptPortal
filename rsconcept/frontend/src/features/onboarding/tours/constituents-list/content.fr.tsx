@@ -31,7 +31,7 @@ export const constituentsListContentFr: Record<string, TourStepContent> = {
       <>
         <p>
           Essayez : saisissez du texte dans le champ <IconSearch className='inline-icon' />. La liste se filtre par nom,
-          terme, définitions et convention. Appuyez sur Entrée ou quittez le champ — le guide continue.
+          terme, définitions et convention. Appuyez sur Entrée ou cliquez hors du champ — le guide continue.
         </p>
         <p>
           Plus de détails dans le manuel de la{' '}

@@ -30,8 +30,8 @@ export const libraryIntroContentEn: Record<string, TourStepContent> = {
     title: 'Folders',
     body: (
       <p>
-        The left panel is the location explorer. Click a folder to show its items on the right. Ctrl/Cmd-click a folder
-        copies its path. Folder icons show whether a location has items or nested folders.
+        The left panel is the explorer. Click a folder to show its items on the right. Ctrl/Cmd-click a folder copies
+        its path. Folder icons show whether a folder has items or nested folders.
       </p>
     )
   },
@@ -39,7 +39,7 @@ export const libraryIntroContentEn: Record<string, TourStepContent> = {
     title: 'Current location',
     body: (
       <p>
-        The breadcrumb shows the active path. Use <IconFolderEdit className='inline-icon' /> to rename a folder (when
+        The path bar shows the current folder. Use <IconFolderEdit className='inline-icon' /> to rename a folder (when
         allowed) and <IconSubfolders className='inline-icon' /> to include or hide items from nested folders.
       </p>
     )
@@ -48,8 +48,8 @@ export const libraryIntroContentEn: Record<string, TourStepContent> = {
     title: 'Search and filters',
     body: (
       <p>
-        Type chips narrow the list to schemas, models, or OSS. Switch Metadata (<IconSearch className='inline-icon' />)
-        and Context search (<IconText className='inline-icon' />) with the mode selector; optionally filter by owner.{' '}
+        Type filters narrow the list to schemas, models, or OSS. Switch Metadata (<IconSearch className='inline-icon' />
+        ) and Context search (<IconText className='inline-icon' />) with the mode switch; optionally filter by owner.{' '}
         <IconFilterReset className='inline-icon' /> clears custom filters.
       </p>
     )

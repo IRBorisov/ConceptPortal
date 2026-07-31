@@ -31,7 +31,7 @@ export const constituentsListContentRu: Record<string, TourStepContent> = {
       <>
         <p>
           Попробуйте: введите текст в строку <IconSearch className='inline-icon' /> поиска. Список отфильтруется по
-          имени, термину, определениям и конвенции. Нажмите Enter или уйдите из поля — гид продолжится.
+          имени, термину, определениям и конвенции. Нажмите Enter или щёлкните вне поля — гид продолжится.
         </p>
         <p>
           Подробнее — в руководстве по <TourHelpLink text='списку конституент' topic={HelpTopic.UI_SCHEMA_LIST} />.

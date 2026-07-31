@@ -22,8 +22,8 @@ export const ossGraphContentFr: Record<string, TourStepContent> = {
     title: 'Graphe OSS',
     body: (
       <p>
-        Sur le <TourHelpLink text='graphe OSS' topic={HelpTopic.UI_OSS_GRAPH} /> vous assemblez la synthèse
-        opérationnelle : blocs, chargements, nœuds de synthèse et réplications.
+        Sur le <TourHelpLink text='graphe OSS' topic={HelpTopic.UI_OSS_GRAPH} /> se construit le schéma opérationnel de
+        synthèse : blocs, chargements, nœuds de synthèse et réplications.
       </p>
     )
   },
@@ -33,7 +33,7 @@ export const ossGraphContentFr: Record<string, TourStepContent> = {
       <>
         <p>
           <IconReset className='inline-icon' /> (<kbd>Z</kbd>) annule les déplacements non enregistrés ;{' '}
-          <IconFitImage className='inline-icon' /> (<kbd>G</kbd>) adapte le graphe ;{' '}
+          <IconFitImage className='inline-icon' /> (<kbd>G</kbd>) ajuste le graphe à l&apos;écran ;{' '}
           <IconShowSidebar value={true} isBottom={false} className='inline-icon' /> (<kbd>V</kbd>) ouvre le panneau de
           contenu ; <IconSettings className='inline-icon' /> — grille, lignes et animation ;{' '}
           <IconImage className='inline-icon' /> — export PNG ou SVG.
@@ -66,8 +66,8 @@ export const ossGraphContentFr: Record<string, TourStepContent> = {
       <>
         <p>
           Un clic sélectionne un nœud ; <kbd>Shift</kbd>+clic étend la sélection. Un double-clic ouvre le schéma lié (ou
-          l&apos;éditeur de bloc). Faites glisser les nœuds ; tirez depuis une poignée vers un nœud de synthèse pour
-          ajouter un argument.
+          l&apos;éditeur de bloc). Faites glisser les nœuds ; tirez depuis un point de connexion vers un nœud de
+          synthèse pour ajouter un argument.
         </p>
         <p>
           Déplacez la vue avec <kbd>Space</kbd>, zoomez avec la molette, effacez la sélection avec <kbd>Esc</kbd>,

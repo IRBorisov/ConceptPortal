@@ -36,8 +36,8 @@ export const modelEvaluatorContentRu: Record<string, TourStepContent> = {
           ошибки и значение.
         </p>
         <p>
-          Откройте результат в <IconDatabase className='inline-icon' /> просмотрщике значений для структурированного
-          разбора.
+          Откройте результат в <IconDatabase className='inline-icon' /> диалоге просмотра значения для
+          структурированного разбора.
         </p>
       </>
     )

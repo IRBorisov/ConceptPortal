@@ -10,8 +10,8 @@ export const ossPassportContentEn: Record<string, TourStepContent> = {
     title: 'OSS passport',
     body: (
       <p>
-        The <TourHelpLink text='OSS passport' topic={HelpTopic.UI_OSS_CARD} /> identifies an operational synthesis
-        schema in the library: name, access, and summary operation statistics.
+        The <TourHelpLink text='OSS passport' topic={HelpTopic.UI_OSS_CARD} /> describes an operational synthesis schema
+        in the library: name, access, and summary operation statistics.
       </p>
     )
   },
@@ -19,8 +19,8 @@ export const ossPassportContentEn: Record<string, TourStepContent> = {
     title: 'Title, alias, description',
     body: (
       <p>
-        Title, alias, and description identify the OSS in the library. Save with <IconSave className='inline-icon' /> or{' '}
-        <kbd>Ctrl + S</kbd>.
+        Title, alias, and description define how the OSS appears in the library. Save with{' '}
+        <IconSave className='inline-icon' /> or <kbd>Ctrl + S</kbd>.
       </p>
     )
   },
@@ -28,7 +28,7 @@ export const ossPassportContentEn: Record<string, TourStepContent> = {
     title: 'Access',
     body: (
       <p>
-        The <TourHelpLink text='access' topic={HelpTopic.ACCESS} /> block sets the sharing policy, visibility in the
+        The <TourHelpLink text='access' topic={HelpTopic.ACCESS} /> block sets the access policy, visibility in the
         library, and read-only mode.
       </p>
     )

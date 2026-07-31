@@ -24,7 +24,7 @@ export const sandboxIntroContentFr: Record<string, TourStepContent> = {
     body: (
       <p>
         Le <TourHelpLink text='passeport' topic={HelpTopic.UI_SCHEMA_CARD} /> définit le titre, le nom court et la
-        description de ce schéma et modèle de démo. Détails — formulaire et panneau de statistiques.
+        description de ce schéma et modèle de démonstration. Détails — formulaire et panneau de statistiques.
       </p>
     )
   },
@@ -64,7 +64,7 @@ export const sandboxIntroContentFr: Record<string, TourStepContent> = {
       <p>
         Dans l&apos;onglet <TourHelpLink text='données du modèle' topic={HelpTopic.UI_MODEL_VALUE} /> vous saisissez et
         consultez les valeurs des constituantes : interprétation du domaine pour les concepts non définis, résultat du
-        calcul pour les dérivées. Détails — calcul, enregistrement et liaison.
+        calcul pour les dérivées. Détails — calcul, enregistrement et interprétation de base.
       </p>
     )
   },
@@ -74,12 +74,12 @@ export const sandboxIntroContentFr: Record<string, TourStepContent> = {
       <p>
         L&apos;onglet <TourHelpLink text='Évaluation' topic={HelpTopic.UI_MODEL_EVALUATOR} /> vérifie des expressions
         RSLang arbitraires sur les données du modèle, sans modifier les constituantes. Détails — champ d&apos;expression
-        et visionneuse de résultat.
+        et dialogue de résultat.
       </p>
     )
   },
   finish: {
-    title: 'Vous êtes prêt',
+    title: 'Vous pouvez commencer',
     body: (
       <>
         <p>

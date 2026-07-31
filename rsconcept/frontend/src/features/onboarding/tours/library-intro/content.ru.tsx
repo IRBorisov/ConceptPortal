@@ -30,8 +30,8 @@ export const libraryIntroContentRu: Record<string, TourStepContent> = {
     title: 'Папки',
     body: (
       <p>
-        Слева — проводник расположений. Щелчок по папке показывает её элементы справа. Ctrl/Cmd+щелчок копирует путь.
-        Иконки папок показывают, есть ли в расположении элементы или вложенные папки.
+        Слева — проводник. Щелчок по папке показывает её элементы справа. Ctrl/Cmd+щелчок копирует путь. Иконки папок
+        показывают, есть ли в папке элементы или вложенные папки.
       </p>
     )
   },
@@ -39,7 +39,7 @@ export const libraryIntroContentRu: Record<string, TourStepContent> = {
     title: 'Текущее расположение',
     body: (
       <p>
-        Хлебные крошки показывают активный путь. Кнопка <IconFolderEdit className='inline-icon' /> переименовывает папку
+        Строка пути показывает текущую папку. Кнопка <IconFolderEdit className='inline-icon' /> переименовывает папку
         (если доступно), а <IconSubfolders className='inline-icon' /> включает или скрывает элементы из вложенных папок.
       </p>
     )
@@ -48,9 +48,10 @@ export const libraryIntroContentRu: Record<string, TourStepContent> = {
     title: 'Поиск и фильтры',
     body: (
       <p>
-        Чипы типа сужают список до схем, моделей или ОСС. Режим «Метаданные» (<IconSearch className='inline-icon' />) и
-        «Контекстный поиск» (<IconText className='inline-icon' />) переключаются селектором; при необходимости — фильтр
-        по владельцу. <IconFilterReset className='inline-icon' /> сбрасывает пользовательские фильтры.
+        Фильтры по типу сужают список до схем, моделей или ОСС. Режим «Метаданные» (
+        <IconSearch className='inline-icon' />) и «Контекстный поиск» (<IconText className='inline-icon' />)
+        переключаются переключателем режима; при необходимости — фильтр по владельцу.{' '}
+        <IconFilterReset className='inline-icon' /> сбрасывает пользовательские фильтры.
       </p>
     )
   },

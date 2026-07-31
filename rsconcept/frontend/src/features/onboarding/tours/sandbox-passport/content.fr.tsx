@@ -7,8 +7,8 @@ export const sandboxPassportContentFr: Record<string, TourStepContent> = {
     title: 'Passeport du Bac à sable',
     body: (
       <p>
-        Le passeport définit le titre, l&apos;alias et la description du schéma et modèle de démo locaux. Les données
-        restent dans le navigateur — sans accès ni propriété de bibliothèque.
+        Le passeport définit le titre, l&apos;alias et la description du schéma et modèle de démonstration locaux. Les
+        données restent dans le navigateur — sans politiques d&apos;accès ni propriétaire de bibliothèque.
       </p>
     )
   },
@@ -16,8 +16,8 @@ export const sandboxPassportContentFr: Record<string, TourStepContent> = {
     title: 'Titre, alias, description',
     body: (
       <p>
-        Modifiez le titre, l&apos;alias et la description de démo. Les changements sont locaux ;{' '}
-        <IconSave className='inline-icon' /> les applique au jeu du Bac à sable.
+        Modifiez le titre, l&apos;alias et la description. Les changements sont locaux ;{' '}
+        <IconSave className='inline-icon' /> les applique aux données du Bac à sable.
       </p>
     )
   },

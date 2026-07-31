@@ -45,7 +45,8 @@ export const modelValueContentEn: Record<string, TourStepContent> = {
       <>
         <p>
           The <IconStatusUnknown className='inline-icon' /> status button runs computation. For base sets, the{' '}
-          <TourHelpLink text='binding dialog' topic={HelpTopic.UI_MODEL_BINDING} /> sets subject-domain elements.
+          <TourHelpLink text='base interpretation dialog' topic={HelpTopic.UI_MODEL_BINDING} /> sets subject-domain
+          elements.
         </p>
         <p>
           See the <TourHelpLink text='value editing' topic={HelpTopic.UI_MODEL_VALUE_EDIT} /> manual for value formats.

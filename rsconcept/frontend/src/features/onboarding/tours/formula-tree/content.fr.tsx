@@ -23,7 +23,7 @@ export const formulaTreeContentFr: Record<string, TourStepContent> = {
     title: 'Naviguer dans l’arbre',
     body: (
       <p>
-        Cliquez sur un nœud pour sélectionner une sous-expression. Maintenez <kbd>Space</kbd> pour panoramiquer sans
+        Cliquez sur un nœud pour sélectionner une sous-expression. Maintenez <kbd>Space</kbd> pour déplacer la vue sans
         survoler les nœuds ; zoomez avec la molette. Les couleurs indiquent le rôle linguistique (déclarations, globaux,
         logique, expressions typées, etc.).
       </p>

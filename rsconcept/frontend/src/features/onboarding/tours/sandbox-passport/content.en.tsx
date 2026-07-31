@@ -8,7 +8,7 @@ export const sandboxPassportContentEn: Record<string, TourStepContent> = {
     body: (
       <p>
         The passport sets the title, alias, and description of the local demo schema and model. Data stays in the
-        browser — no library access or ownership.
+        browser — without library access policies or ownership.
       </p>
     )
   },
@@ -16,8 +16,8 @@ export const sandboxPassportContentEn: Record<string, TourStepContent> = {
     title: 'Title, alias, description',
     body: (
       <p>
-        Edit the demo title, alias, and description. Changes are stored locally; <IconSave className='inline-icon' />{' '}
-        applies them to the Sandbox bundle.
+        Edit the title, alias, and description. Changes are stored locally; <IconSave className='inline-icon' /> applies
+        them to the Sandbox data.
       </p>
     )
   },

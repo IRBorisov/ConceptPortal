@@ -37,8 +37,8 @@ export const modelEvaluatorContentFr: Record<string, TourStepContent> = {
           apparaissent en dessous.
         </p>
         <p>
-          Ouvrez le résultat dans la <IconDatabase className='inline-icon' /> visionneuse de valeurs pour une analyse
-          structurée.
+          Ouvrez le résultat dans le <IconDatabase className='inline-icon' /> dialogue de consultation de valeur pour
+          une analyse structurée.
         </p>
       </>
     )

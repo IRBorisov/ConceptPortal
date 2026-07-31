@@ -10,8 +10,8 @@ export const schemaPassportContentFr: Record<string, TourStepContent> = {
     title: 'Passeport du schéma',
     body: (
       <p>
-        Le <TourHelpLink text='passeport du schéma' topic={HelpTopic.UI_SCHEMA_CARD} /> porte l&apos;identité d&apos;un
-        schéma conceptuel dans la bibliothèque : nom, accès, versions et statistiques résumées.
+        Le <TourHelpLink text='passeport du schéma' topic={HelpTopic.UI_SCHEMA_CARD} /> décrit un schéma conceptuel dans
+        la bibliothèque : nom, accès, versions et statistiques résumées.
       </p>
     )
   },
@@ -29,7 +29,7 @@ export const schemaPassportContentFr: Record<string, TourStepContent> = {
     body: (
       <p>
         Les schémas peuvent conserver des <TourHelpLink text='versions' topic={HelpTopic.VERSIONS} /> nommées. Changez
-        la version active dans le sélecteur, ou créez et modifiez des versions depuis la barre d&apos;outils au-dessus.
+        la version active dans la liste, ou créez et modifiez des versions depuis la barre d&apos;outils au-dessus.
       </p>
     )
   },
@@ -37,7 +37,7 @@ export const schemaPassportContentFr: Record<string, TourStepContent> = {
     title: 'Accès',
     body: (
       <p>
-        Le bloc <TourHelpLink text='accès' topic={HelpTopic.ACCESS} /> définit la politique de partage, la visibilité
+        Le bloc <TourHelpLink text='accès' topic={HelpTopic.ACCESS} /> définit la politique d&apos;accès, la visibilité
         dans la bibliothèque et le mode lecture seule pour les éditeurs.
       </p>
     )
@@ -57,8 +57,8 @@ export const schemaPassportContentFr: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          Le panneau latéral résume le schéma : nombre de constituantes, noyau axiomatique et corps de la théorie, ainsi
-          que les indicateurs de correction (erreurs et définitions incalculables).
+          Le panneau latéral résume le schéma : nombre de constituantes, noyau axiomatique et corps du schéma, ainsi que
+          les indicateurs de correction (erreurs et définitions incalculables).
         </p>
         <p>
           Développez une catégorie pour le détail — ensembles de base ou constantes, axiomes, termes, définitions

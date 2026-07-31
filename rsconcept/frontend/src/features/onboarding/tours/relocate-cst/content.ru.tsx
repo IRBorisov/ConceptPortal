@@ -10,12 +10,12 @@ export const relocateCstContentRu: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          <TourHelpLink text='Перенос' topic={HelpTopic.UI_RELOCATE_CST} /> перемещает ненаследуемые конституенты между
-          схемами, связанными операцией ОР — обычно вверх в схему-аргумент или вниз в результат.
+          <TourHelpLink text='Перенос' topic={HelpTopic.UI_RELOCATE_CST} /> перемещает конституенты без наследования
+          между схемами, связанными операцией ОСС — обычно вверх в схему-аргумент или вниз в результат.
         </p>
         <p>
           Выберите исходную схему, переключите направление кнопкой{' '}
-          <IconRelocationUp value={true} className='inline-icon' />, затем укажите допустимую схему-назначение.
+          <IconRelocationUp value={true} className='inline-icon' />, затем укажите допустимую целевую схему.
         </p>
       </>
     )

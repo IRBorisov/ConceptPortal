@@ -31,7 +31,7 @@ export const constituentsListContentEn: Record<string, TourStepContent> = {
       <>
         <p>
           Try it: type in the <IconSearch className='inline-icon' /> search field. The list filters by alias, term,
-          definitions, and convention. Press Enter or leave the field — the guide continues.
+          definitions, and convention. Press Enter or click outside the field — the guide continues.
         </p>
         <p>
           See the <TourHelpLink text='constituent list' topic={HelpTopic.UI_SCHEMA_LIST} /> manual for details.

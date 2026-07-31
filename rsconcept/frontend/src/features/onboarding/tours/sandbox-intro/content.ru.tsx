@@ -21,7 +21,7 @@ export const sandboxIntroContentRu: Record<string, TourStepContent> = {
     body: (
       <p>
         <TourHelpLink text='Паспорт' topic={HelpTopic.UI_SCHEMA_CARD} /> задаёт название, сокращение и описание этой
-        демо-схемы и модели. «Подробнее» — форма и боковая панель статистики.
+        демонстрационной схемы и модели. «Подробнее» — форма и боковая панель статистики.
       </p>
     )
   },
@@ -61,7 +61,7 @@ export const sandboxIntroContentRu: Record<string, TourStepContent> = {
       <p>
         На вкладке <TourHelpLink text='данные модели' topic={HelpTopic.UI_MODEL_VALUE} /> задают и просматривают
         значения конституент: неопределяемым — интерпретацию из предметной области, производным — результат вычисления.
-        «Подробнее» — вычисление, сохранение и привязка.
+        «Подробнее» — вычисление, сохранение и базовая интерпретация.
       </p>
     )
   },
@@ -75,7 +75,7 @@ export const sandboxIntroContentRu: Record<string, TourStepContent> = {
     )
   },
   finish: {
-    title: 'Вы готовы',
+    title: 'Можно начинать работу',
     body: (
       <>
         <p>

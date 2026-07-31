@@ -22,8 +22,8 @@ export const ossGraphContentEn: Record<string, TourStepContent> = {
     title: 'OSS graph',
     body: (
       <p>
-        On the <TourHelpLink text='OSS graph' topic={HelpTopic.UI_OSS_GRAPH} /> you assemble operational synthesis:
-        blocks, inputs, synthesis nodes, and replicas.
+        On the <TourHelpLink text='OSS graph' topic={HelpTopic.UI_OSS_GRAPH} /> you build an operational synthesis
+        schema: blocks, inputs, synthesis nodes, and replicas.
       </p>
     )
   },
@@ -33,7 +33,7 @@ export const ossGraphContentEn: Record<string, TourStepContent> = {
       <>
         <p>
           <IconReset className='inline-icon' /> (<kbd>Z</kbd>) resets unsaved shifts;{' '}
-          <IconFitImage className='inline-icon' /> (<kbd>G</kbd>) fits the graph;{' '}
+          <IconFitImage className='inline-icon' /> (<kbd>G</kbd>) fits the graph to the screen;{' '}
           <IconShowSidebar value={true} isBottom={false} className='inline-icon' /> (<kbd>V</kbd>) opens the contents
           panel; <IconSettings className='inline-icon' /> — grid, lines, and animation;{' '}
           <IconImage className='inline-icon' /> — export PNG or SVG.
@@ -66,7 +66,7 @@ export const ossGraphContentEn: Record<string, TourStepContent> = {
       <>
         <p>
           Click selects a node; <kbd>Shift</kbd>-click extends the selection. Double-click opens the linked schema (or
-          the block editor). Drag nodes; drag from a handle to a synthesis node to add an argument.
+          the block editor). Drag nodes; drag from a connection point to a synthesis node to add an argument.
         </p>
         <p>
           Pan with <kbd>Space</kbd>, zoom with the wheel, clear selection with <kbd>Esc</kbd>, delete with{' '}

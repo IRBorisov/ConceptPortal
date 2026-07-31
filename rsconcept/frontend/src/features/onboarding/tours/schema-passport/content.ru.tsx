@@ -10,8 +10,8 @@ export const schemaPassportContentRu: Record<string, TourStepContent> = {
     title: 'Паспорт схемы',
     body: (
       <p>
-        <TourHelpLink text='Паспорт схемы' topic={HelpTopic.UI_SCHEMA_CARD} /> хранит идентификацию концептуальной схемы
-        в библиотеке: название, доступ, версии и сводную статистику.
+        <TourHelpLink text='Паспорт схемы' topic={HelpTopic.UI_SCHEMA_CARD} /> описывает концептуальную схему в
+        библиотеке: название, доступ, версии и сводную статистику.
       </p>
     )
   },
@@ -29,7 +29,7 @@ export const schemaPassportContentRu: Record<string, TourStepContent> = {
     body: (
       <p>
         У схемы могут быть именованные <TourHelpLink text='версии' topic={HelpTopic.VERSIONS} />. Активную версию
-        выбирают в селекторе; создание и правка — в панели над ним.
+        выбирают в списке; создание и правка — в панели над ним.
       </p>
     )
   },
@@ -37,8 +37,8 @@ export const schemaPassportContentRu: Record<string, TourStepContent> = {
     title: 'Доступ',
     body: (
       <p>
-        Блок <TourHelpLink text='доступа' topic={HelpTopic.ACCESS} /> задаёт политику совместного использования,
-        видимость в библиотеке и режим «только чтение» для редакторов.
+        Блок <TourHelpLink text='доступа' topic={HelpTopic.ACCESS} /> задаёт политику доступа, видимость в библиотеке и
+        режим «только чтение» для редакторов.
       </p>
     )
   },
@@ -58,7 +58,7 @@ export const schemaPassportContentRu: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          Боковая панель суммирует схему: число конституент, аксиоматическое ядро и тело теории, а также показатели
+          Боковая панель суммирует схему: число конституент, аксиоматическое ядро и тело КС, а также показатели
           корректности (ошибки и невычислимые определения).
         </p>
         <p>

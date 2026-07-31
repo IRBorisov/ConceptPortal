@@ -44,8 +44,8 @@ export const modelValueContentFr: Record<string, TourStepContent> = {
       <>
         <p>
           Le bouton <IconStatusUnknown className='inline-icon' /> de statut lance le calcul. Pour les ensembles de base,
-          le <TourHelpLink text='dialogue de liaison' topic={HelpTopic.UI_MODEL_BINDING} /> définit les éléments du
-          domaine.
+          le <TourHelpLink text="dialogue d'interprétation de base" topic={HelpTopic.UI_MODEL_BINDING} /> définit les
+          éléments du domaine.
         </p>
         <p>
           Voir le manuel <TourHelpLink text='édition des valeurs' topic={HelpTopic.UI_MODEL_VALUE_EDIT} /> pour les

@@ -9,7 +9,7 @@ export const cstTemplateContentEn: Record<string, TourStepContent> = {
     body: (
       <p>
         This dialog instantiates an expression from the{' '}
-        <TourHelpLink text='template bank' topic={HelpTopic.RSL_TEMPLATES} />. Work left to right through the three
+        <TourHelpLink text='expression bank' topic={HelpTopic.RSL_TEMPLATES} />. Work left to right through the three
         tabs: Template → Arguments → Constituent.
       </p>
     )
@@ -20,8 +20,8 @@ export const cstTemplateContentEn: Record<string, TourStepContent> = {
       <>
         <p>
           On <b>Template</b>, pick a parameterized concept or assertion. On <b>Arguments</b>, bind each parameter to a
-          constituent from the current schema; values are substituted into the expression (including nested bank
-          helpers).
+          constituent from the current schema; values are substituted into the expression (including nested auxiliary
+          functions from the bank).
         </p>
         <p>When every argument is filled, the type of the main constituent updates automatically.</p>
       </>
@@ -32,8 +32,9 @@ export const cstTemplateContentEn: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          On <b>Constituent</b>, adjust alias, term, and definitions for the main item. Create adds every required bank
-          helper that is not already in the schema, then the main constituent — helpers first so references stay valid.
+          On <b>Constituent</b>, adjust alias, term, and definitions for the main item. Create adds every required
+          auxiliary function from the bank that is not already in the schema, then the main constituent — auxiliaries
+          first so references stay valid.
         </p>
         <p>Existing schema names are not duplicated; bank aliases are rewritten to new names in the target schema.</p>
       </>

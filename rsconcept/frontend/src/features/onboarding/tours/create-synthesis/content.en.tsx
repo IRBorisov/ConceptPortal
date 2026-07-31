@@ -12,7 +12,7 @@ export const createSynthesisContentEn: Record<string, TourStepContent> = {
       <p>
         This dialog adds a <IconSynthesis className='inline-icon' />{' '}
         <TourHelpLink text='synthesis' topic={HelpTopic.CC_SYNTHESIS} /> operation to the OSS. Work through{' '}
-        <b>Arguments</b> first, then the <b>Substitutions</b> (identification) table before creating.
+        <b>Arguments</b> first, then the <b>Substitutions</b> table before creating.
       </p>
     )
   },
@@ -29,14 +29,14 @@ export const createSynthesisContentEn: Record<string, TourStepContent> = {
     )
   },
   substitutions: {
-    title: 'Identification table',
+    title: 'Substitution table',
     body: (
       <>
         <p>
           On <b>Substitutions</b>, build the{' '}
-          <TourHelpLink text='identification table' topic={HelpTopic.UI_SUBSTITUTIONS} />: pair constituents from
-          argument schemas that should be treated as the same concept. Validation messages below the table flag
-          conflicts and suggest matches.
+          <TourHelpLink text='substitution table' topic={HelpTopic.UI_SUBSTITUTIONS} />: pair constituents from argument
+          schemas that should be treated as the same concept. Validation messages below the table flag conflicts and
+          suggest matches.
         </p>
         <p>
           For <IconConsolidation className='inline-icon' /> diamond synthesis (shared ancestors), add duplicate concepts

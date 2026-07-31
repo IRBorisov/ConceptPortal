@@ -44,7 +44,8 @@ export const modelValueContentRu: Record<string, TourStepContent> = {
       <>
         <p>
           Кнопка <IconStatusUnknown className='inline-icon' /> статуса запускает вычисление. Для базисных множеств{' '}
-          <TourHelpLink text='диалог привязки' topic={HelpTopic.UI_MODEL_BINDING} /> задаёт элементы предметной области.
+          <TourHelpLink text='диалог базовой интерпретации' topic={HelpTopic.UI_MODEL_BINDING} /> задаёт элементы
+          предметной области.
         </p>
         <p>
           Подробнее о форматах значений — в руководстве{' '}

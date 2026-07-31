@@ -37,9 +37,9 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          On the left — node coloring and link types. <IconFitImage className='inline-icon' /> fits the graph;{' '}
-          <IconFocus className='inline-icon' /> focuses one constituent; <IconFilter className='inline-icon' /> opens
-          layout and filter settings.
+          On the left — node coloring and link types. <IconFitImage className='inline-icon' /> fits the graph to the
+          screen; <IconFocus className='inline-icon' /> focuses one constituent; <IconFilter className='inline-icon' />{' '}
+          opens layout and filter settings.
         </p>
         <p>
           <IconText className='inline-icon' /> (<kbd>T</kbd>) toggles labels; <IconClustering className='inline-icon' />{' '}
@@ -84,7 +84,7 @@ export const termGraphContentEn: Record<string, TourStepContent> = {
           <IconEdgeType value={TGEdgeType.definition} className='inline-icon' /> definition.
         </p>
         <p>
-          Helpers expand related nodes — for example <IconGraphCollapse className='inline-icon' /> all influencers and{' '}
+          Buttons select related nodes — for example <IconGraphCollapse className='inline-icon' /> all influencers and{' '}
           <IconGraphExpand className='inline-icon' /> all dependents.
         </p>
       </>

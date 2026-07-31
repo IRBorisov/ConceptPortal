@@ -10,7 +10,7 @@ export const ossPassportContentFr: Record<string, TourStepContent> = {
     title: 'Passeport de l’OSS',
     body: (
       <p>
-        Le <TourHelpLink text='passeport de l’OSS' topic={HelpTopic.UI_OSS_CARD} /> identifie un schéma opérationnel de
+        Le <TourHelpLink text='passeport de l’OSS' topic={HelpTopic.UI_OSS_CARD} /> décrit un schéma opérationnel de
         synthèse dans la bibliothèque : nom, accès et statistiques résumées des opérations.
       </p>
     )
@@ -19,7 +19,7 @@ export const ossPassportContentFr: Record<string, TourStepContent> = {
     title: 'Titre, alias, description',
     body: (
       <p>
-        Titre, alias et description identifient l&apos;OSS dans la bibliothèque. Enregistrement —{' '}
+        Titre, alias et description définissent comment l&apos;OSS apparaît dans la bibliothèque. Enregistrement —{' '}
         <IconSave className='inline-icon' /> ou <kbd>Ctrl + S</kbd>.
       </p>
     )
@@ -28,7 +28,7 @@ export const ossPassportContentFr: Record<string, TourStepContent> = {
     title: 'Accès',
     body: (
       <p>
-        Le bloc <TourHelpLink text='accès' topic={HelpTopic.ACCESS} /> définit la politique de partage, la visibilité
+        Le bloc <TourHelpLink text='accès' topic={HelpTopic.ACCESS} /> définit la politique d&apos;accès, la visibilité
         dans la bibliothèque et le mode lecture seule.
       </p>
     )

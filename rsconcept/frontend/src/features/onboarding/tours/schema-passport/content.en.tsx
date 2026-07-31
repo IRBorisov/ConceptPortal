@@ -10,8 +10,8 @@ export const schemaPassportContentEn: Record<string, TourStepContent> = {
     title: 'Schema passport',
     body: (
       <p>
-        The <TourHelpLink text='schema passport' topic={HelpTopic.UI_SCHEMA_CARD} /> holds the identity of a conceptual
-        schema in the library: name, access, versions, and summary statistics.
+        The <TourHelpLink text='schema passport' topic={HelpTopic.UI_SCHEMA_CARD} /> describes a conceptual schema in
+        the library: name, access, versions, and summary statistics.
       </p>
     )
   },
@@ -29,7 +29,7 @@ export const schemaPassportContentEn: Record<string, TourStepContent> = {
     body: (
       <p>
         Schemas can keep named <TourHelpLink text='versions' topic={HelpTopic.VERSIONS} />. Switch the active version
-        from the selector, or create and edit versions from the toolbar above it.
+        from the list, or create and edit versions from the toolbar above it.
       </p>
     )
   },
@@ -37,7 +37,7 @@ export const schemaPassportContentEn: Record<string, TourStepContent> = {
     title: 'Access',
     body: (
       <p>
-        The <TourHelpLink text='access' topic={HelpTopic.ACCESS} /> block sets the sharing policy, visibility in the
+        The <TourHelpLink text='access' topic={HelpTopic.ACCESS} /> block sets the access policy, visibility in the
         library, and whether the item is read-only for editors.
       </p>
     )
@@ -57,7 +57,7 @@ export const schemaPassportContentEn: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          The side panel summarizes the schema: total constituents, axiomatic core and theory body, and correctness
+          The side panel summarizes the schema: total constituents, axiomatic core and schema body, and correctness
           indicators (errors and incalculable definitions).
         </p>
         <p>

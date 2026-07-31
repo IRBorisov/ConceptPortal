@@ -11,8 +11,8 @@ export const createSynthesisContentRu: Record<string, TourStepContent> = {
     body: (
       <p>
         Диалог добавляет операцию <IconSynthesis className='inline-icon' />{' '}
-        <TourHelpLink text='синтеза' topic={HelpTopic.CC_SYNTHESIS} /> в ОР. Сначала вкладка <b>Аргументы</b>, затем{' '}
-        <b>Отождествления</b> (таблица идентификации), после чего создайте операцию.
+        <TourHelpLink text='синтеза' topic={HelpTopic.CC_SYNTHESIS} /> в ОСС. Сначала вкладка <b>Аргументы</b>, затем{' '}
+        <b>Отождествления</b> (таблица отождествлений), после чего создайте операцию.
       </p>
     )
   },
@@ -34,7 +34,7 @@ export const createSynthesisContentRu: Record<string, TourStepContent> = {
       <>
         <p>
           На вкладке <b>Отождествления</b> заполните{' '}
-          <TourHelpLink text='таблицу идентификации' topic={HelpTopic.UI_SUBSTITUTIONS} />: сопоставьте конституенты
+          <TourHelpLink text='таблицу отождествлений' topic={HelpTopic.UI_SUBSTITUTIONS} />: сопоставьте конституенты
           схем-аргументов, которые должны считаться одним понятием. Сообщения под таблицей показывают ошибки и подсказки
           совпадений.
         </p>

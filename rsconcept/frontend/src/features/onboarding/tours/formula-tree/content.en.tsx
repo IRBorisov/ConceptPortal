@@ -22,8 +22,8 @@ export const formulaTreeContentEn: Record<string, TourStepContent> = {
     title: 'Navigate the tree',
     body: (
       <p>
-        Click a node to select a subexpression. Hold <kbd>Space</kbd> to pan without hovering nodes; zoom with the mouse
-        wheel. Node colors mark language roles (declarations, globals, logic, typed expressions, and so on).
+        Click a node to select a subexpression. Hold <kbd>Space</kbd> to move the view without hovering nodes; zoom with
+        the mouse wheel. Node colors mark language roles (declarations, globals, logic, typed expressions, and so on).
       </p>
     )
   },

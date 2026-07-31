@@ -63,7 +63,7 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
       <p>
         On the <TourHelpLink text='model data' topic={HelpTopic.UI_MODEL_VALUE} /> tab you set and inspect constituent
         values: undefined concepts get an interpretation from the subject domain; derived ones show computed results.
-        Details covers compute, save, and binding.
+        Details covers compute, save, and base interpretation.
       </p>
     )
   },
@@ -73,12 +73,12 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
       <p>
         The <TourHelpLink text='Evaluation' topic={HelpTopic.UI_MODEL_EVALUATOR} /> tab checks arbitrary RSLang
         expressions against model data without changing constituents. Details covers the expression field and result
-        viewer.
+        dialog.
       </p>
     )
   },
   finish: {
-    title: 'You are all set',
+    title: 'Ready to work',
     body: (
       <>
         <p>

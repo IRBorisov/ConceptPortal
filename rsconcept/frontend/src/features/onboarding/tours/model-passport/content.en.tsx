@@ -28,7 +28,7 @@ export const modelPassportContentEn: Record<string, TourStepContent> = {
     title: 'Access',
     body: (
       <p>
-        The <TourHelpLink text='access' topic={HelpTopic.ACCESS} /> block sets the sharing policy, visibility in the
+        The <TourHelpLink text='access' topic={HelpTopic.ACCESS} /> block sets the access policy, visibility in the
         library, and read-only mode for this model.
       </p>
     )

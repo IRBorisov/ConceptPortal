@@ -138,7 +138,8 @@ export const txShellRu: Record<string, string> = {
 
   'tx.shell.auth.restore.hint': 'Восстановить пароль...',
   'tx.shell.auth.restore.submit': 'Запросить пароль',
-  'tx.shell.auth.restore.done': 'На указанную почту отправлены инструкции по восстановлению пароля.',
+  'tx.shell.auth.restore.done':
+    'Если аккаунт с таким адресом существует, на почту отправлены инструкции по восстановлению пароля.',
   'tx.shell.auth.restore.token.validation': 'Данная ссылка не действительна',
 
   'tx.shell.signup': 'Зарегистрироваться',

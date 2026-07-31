@@ -37,9 +37,9 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          À gauche — coloration des nœuds et types de liens. <IconFitImage className='inline-icon' /> adapte le graphe ;{' '}
-          <IconFocus className='inline-icon' /> focalise une constituante ; <IconFilter className='inline-icon' /> ouvre
-          les paramètres de disposition et de filtre.
+          À gauche — coloration des nœuds et types de liens. <IconFitImage className='inline-icon' /> ajuste le graphe à
+          l&apos;écran ; <IconFocus className='inline-icon' /> focalise une constituante ;{' '}
+          <IconFilter className='inline-icon' /> ouvre les paramètres de disposition des nœuds et de filtre.
         </p>
         <p>
           <IconText className='inline-icon' /> (<kbd>T</kbd>) bascule les libellés ;{' '}
@@ -85,7 +85,7 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
           <IconEdgeType value={TGEdgeType.definition} className='inline-icon' /> définition.
         </p>
         <p>
-          Les aides étendent les nœuds liés — par exemple <IconGraphCollapse className='inline-icon' /> tous les
+          Les boutons sélectionnent les nœuds liés — par exemple <IconGraphCollapse className='inline-icon' /> tous les
           influenceurs et <IconGraphExpand className='inline-icon' /> tous les dépendants.
         </p>
       </>

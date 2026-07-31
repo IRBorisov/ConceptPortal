@@ -136,7 +136,8 @@ export const txShellEn: Record<string, string> = {
 
   'tx.shell.auth.restore.hint': 'Reset password…',
   'tx.shell.auth.restore.submit': 'Request password reset',
-  'tx.shell.auth.restore.done': 'Password reset instructions were sent to that address.',
+  'tx.shell.auth.restore.done':
+    'If an account exists for that address, password reset instructions were sent.',
   'tx.shell.auth.restore.token.validation': 'This link is no longer valid.',
 
   'tx.shell.signup': 'Sign up',

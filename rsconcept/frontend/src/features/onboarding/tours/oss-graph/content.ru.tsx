@@ -22,7 +22,7 @@ export const ossGraphContentRu: Record<string, TourStepContent> = {
     title: 'Граф ОСС',
     body: (
       <p>
-        На <TourHelpLink text='графе ОСС' topic={HelpTopic.UI_OSS_GRAPH} /> собирается операционный синтез: блоки,
+        На <TourHelpLink text='графе ОСС' topic={HelpTopic.UI_OSS_GRAPH} /> строится операционная схема синтеза: блоки,
         загрузки, узлы синтеза и репликации.
       </p>
     )
@@ -33,7 +33,7 @@ export const ossGraphContentRu: Record<string, TourStepContent> = {
       <>
         <p>
           <IconReset className='inline-icon' /> (<kbd>Z</kbd>) сбрасывает несохранённые сдвиги;{' '}
-          <IconFitImage className='inline-icon' /> (<kbd>G</kbd>) подгоняет граф;{' '}
+          <IconFitImage className='inline-icon' /> (<kbd>G</kbd>) вписывает граф в экран;{' '}
           <IconShowSidebar value={true} isBottom={false} className='inline-icon' /> (<kbd>V</kbd>) открывает панель
           содержания; <IconSettings className='inline-icon' /> — сетка, линии и анимация;{' '}
           <IconImage className='inline-icon' /> — экспорт PNG или SVG.
@@ -66,7 +66,7 @@ export const ossGraphContentRu: Record<string, TourStepContent> = {
       <>
         <p>
           Щелчок выделяет узел; <kbd>Shift</kbd>+щелчок расширяет выделение. Двойной щелчок открывает связанную КС (или
-          редактор блока). Перетаскивайте узлы; тяните от ручки к узлу синтеза, чтобы добавить аргумент.
+          редактор блока). Перетаскивайте узлы; тяните от маркера связи к узлу синтеза, чтобы добавить аргумент.
         </p>
         <p>
           Перемещение холста — <kbd>Space</kbd>, масштаб — колёсиком, сброс выделения — <kbd>Esc</kbd>, удаление —{' '}

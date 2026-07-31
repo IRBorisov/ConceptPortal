@@ -28,8 +28,8 @@ export const modelPassportContentRu: Record<string, TourStepContent> = {
     title: 'Доступ',
     body: (
       <p>
-        Блок <TourHelpLink text='доступа' topic={HelpTopic.ACCESS} /> задаёт политику совместного использования,
-        видимость в библиотеке и режим «только чтение» для этой модели.
+        Блок <TourHelpLink text='доступа' topic={HelpTopic.ACCESS} /> задаёт политику доступа, видимость в библиотеке и
+        режим «только чтение» для этой модели.
       </p>
     )
   },

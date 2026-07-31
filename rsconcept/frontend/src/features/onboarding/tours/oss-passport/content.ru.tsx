@@ -10,7 +10,7 @@ export const ossPassportContentRu: Record<string, TourStepContent> = {
     title: 'Паспорт ОСС',
     body: (
       <p>
-        <TourHelpLink text='Паспорт ОСС' topic={HelpTopic.UI_OSS_CARD} /> идентифицирует операционную схему синтеза в
+        <TourHelpLink text='Паспорт ОСС' topic={HelpTopic.UI_OSS_CARD} /> описывает операционную схему синтеза в
         библиотеке: название, доступ и сводную статистику операций.
       </p>
     )
@@ -19,7 +19,7 @@ export const ossPassportContentRu: Record<string, TourStepContent> = {
     title: 'Название, сокращение, описание',
     body: (
       <p>
-        Название, сокращение и описание задают идентификацию ОСС в библиотеке. Сохранение —{' '}
+        Название, сокращение и описание задают, как ОСС представлена в библиотеке. Сохранение —{' '}
         <IconSave className='inline-icon' /> или <kbd>Ctrl + S</kbd>.
       </p>
     )
@@ -28,8 +28,8 @@ export const ossPassportContentRu: Record<string, TourStepContent> = {
     title: 'Доступ',
     body: (
       <p>
-        Блок <TourHelpLink text='доступа' topic={HelpTopic.ACCESS} /> задаёт политику совместного использования,
-        видимость в библиотеке и режим «только чтение».
+        Блок <TourHelpLink text='доступа' topic={HelpTopic.ACCESS} /> задаёт политику доступа, видимость в библиотеке и
+        режим «только чтение».
       </p>
     )
   },

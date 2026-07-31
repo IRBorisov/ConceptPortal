@@ -138,7 +138,8 @@ export const txShellFr: Record<string, string> = {
 
   'tx.shell.auth.restore.hint': 'Mot de passe oublié…',
   'tx.shell.auth.restore.submit': 'Demander un mot de passe',
-  'tx.shell.auth.restore.done': 'Des instructions de réinitialisation ont été envoyées à cette adresse.',
+  'tx.shell.auth.restore.done':
+    'Si un compte existe pour cette adresse, des instructions de réinitialisation ont été envoyées.',
   'tx.shell.auth.restore.token.validation': 'Ce lien n’est plus valide.',
 
   'tx.shell.signup': 'Créer un compte',

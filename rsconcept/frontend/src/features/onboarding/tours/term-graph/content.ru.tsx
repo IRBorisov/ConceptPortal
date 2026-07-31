@@ -37,9 +37,9 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          Слева — раскраска узлов и типы связей. <IconFitImage className='inline-icon' /> подгоняет граф;{' '}
+          Слева — раскраска узлов и типы связей. <IconFitImage className='inline-icon' /> вписывает граф в экран;{' '}
           <IconFocus className='inline-icon' /> фокусирует одну конституенту; <IconFilter className='inline-icon' />{' '}
-          открывает настройки раскладки и фильтров.
+          открывает настройки расположения узлов и фильтров.
         </p>
         <p>
           <IconText className='inline-icon' /> (<kbd>T</kbd>) переключает подписи;{' '}
@@ -85,7 +85,7 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
           <IconEdgeType value={TGEdgeType.definition} className='inline-icon' /> определение.
         </p>
         <p>
-          Помощники расширяют связанные узлы — например <IconGraphCollapse className='inline-icon' /> все влияющие и{' '}
+          Кнопки выделяют связанные узлы — например <IconGraphCollapse className='inline-icon' /> все влияющие и{' '}
           <IconGraphExpand className='inline-icon' /> все зависимые.
         </p>
       </>
