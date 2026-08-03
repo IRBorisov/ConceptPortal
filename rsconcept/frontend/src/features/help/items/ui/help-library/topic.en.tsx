@@ -103,6 +103,10 @@ export function HelpLibraryEn() {
           <kbd>click</kbd> on the icon to collapse/expand nested items
         </li>
         <li>
+          in administrator mode, personal folders (<kbd>U</kbd>) are grouped by owner; selecting a user or their folder
+          also filters the table by that owner
+        </li>
+        <li>
           <IconFolderEdit className='inline-icon' /> rename selected folder
         </li>
         <li>

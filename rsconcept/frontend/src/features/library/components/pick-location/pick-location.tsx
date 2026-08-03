@@ -16,14 +16,19 @@ import { SelectLocationHead } from '../select-location-head';
 import { SelectLocationContext } from './select-location-context';
 
 interface PickLocationProps extends Styling {
+  /** Max height class for the folder-tree dropdown. */
   dropdownHeight?: string;
+  /** Text area rows for the free-form location path. */
   rows?: number;
 
+  /** Full library location path (e.g. `/U/work`). */
   value: string;
   onChange: (newLocation: string) => void;
+  /** Validation message shown under the path field. */
   error?: string;
 }
 
+/** Location editor: head selector, folder-tree picker, and editable path. */
 export function PickLocation({
   dropdownHeight,
   rows = 3,

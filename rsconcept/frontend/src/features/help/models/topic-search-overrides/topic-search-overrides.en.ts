@@ -43,10 +43,13 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
       'filter',
       'folders',
       'explorer',
-      'sorting'
+      'sorting',
+      'admin',
+      'owner',
+      'personal folders'
     ],
     searchText:
-      'Schema library. Metadata and context search across terms, definitions, and comments, filters, sorting, folder explorer, viewing conceptual schemas, OSS, and models.'
+      'Schema library. Metadata and context search across terms, definitions, and comments, filters, sorting, folder explorer with admin owner grouping under personal folders, viewing conceptual schemas, OSS, and models.'
   },
   [HelpTopic.UI_SCHEMA_MENU]: {
     keywords: ['schema menu', 'schema editing', 'tabs', 'actions', 'commands'],

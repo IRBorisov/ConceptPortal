@@ -15,9 +15,11 @@ import { IconLocationHead } from './icon-location-head';
 interface SelectLocationHeadProps extends Styling {
   value: LocationHead;
   onChange: (newValue: LocationHead) => void;
+  /** Location heads omitted from the dropdown (e.g. restricted roots). */
   excluded?: LocationHead[];
 }
 
+/** Dropdown to choose a library location head (`/U`, `/S`, `/L`, `/P`). */
 export function SelectLocationHead({
   value,
   excluded = [],

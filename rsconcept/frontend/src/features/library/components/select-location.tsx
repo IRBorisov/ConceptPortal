@@ -3,7 +3,9 @@
 import { useState } from 'react';
 
 import { useTx } from '@/i18n';
-import { type FolderNode } from '@rsconcept/domain/library';
+import { type FolderNode, LocationHead } from '@rsconcept/domain/library';
+
+import { useLabelUser } from '@/features/users/backend/use-label-user';
 
 import { MiniButton } from '@/components/control';
 import { IconFolder, IconFolderClosed, IconFolderEmpty, IconFolderOpened } from '@/components/icons';
@@ -12,27 +14,44 @@ import { cn } from '@/components/utils';
 
 import { useFolders } from '../backend/use-folders';
 import { labelFolderNode } from '../labels';
+import { parseOwnerFolderSegment } from '../models/user-folder-group';
 
 interface SelectLocationProps extends Styling {
+  /** Currently selected tree path (`FolderNode.getPath()`), including virtual owner segments when grouping. */
   value: string;
+  /** Select a folder row (plain click). */
   onSelect: (target: FolderNode) => void;
+  /** Optional Ctrl/Cmd-click handler (e.g. copy path). */
   onControlClick?: (target: FolderNode) => void;
 
+  /** Stable prefix for list item keys. */
   prefix: string;
+  /** Compact row height for dropdowns. */
   dense?: boolean;
+  /**
+   * Group personal `/U` folders by owner (admin library sidebar).
+   * Owner nodes are labeled with the user name; keep off in pickers that write real locations.
+   */
+  groupUserFoldersByOwner?: boolean;
 }
 
+/**
+ * Scrollable folder tree for the library location explorer and location pickers.
+ * Supports fold/unfold, selection highlighting, and optional admin owner grouping under `/U`.
+ */
 export function SelectLocation({
   value,
   dense,
   prefix,
   onSelect,
   onControlClick,
+  groupUserFoldersByOwner,
   className,
   style
 }: SelectLocationProps) {
   const tx = useTx();
-  const { folders } = useFolders();
+  const getUserLabel = useLabelUser();
+  const { folders } = useFolders({ groupUserFoldersByOwner });
   const activeNode = folders.at(value);
   const items = folders.getTree();
   const baseFolded = items.filter(item => item !== activeNode && !activeNode?.hasPredecessor(item));
@@ -86,6 +105,17 @@ export function SelectLocation({
     onSelect(target);
   }
 
+  function folderLabel(item: FolderNode): string {
+    const userHead = LocationHead.USER.slice(1);
+    if (groupUserFoldersByOwner && item.rank === 1 && item.parent?.text === userHead) {
+      const ownerId = parseOwnerFolderSegment(item.text);
+      if (ownerId !== null) {
+        return getUserLabel(ownerId);
+      }
+    }
+    return labelFolderNode(item);
+  }
+
   return (
     <div className={cn('flex flex-col cc-scroll-y', className)} style={style}>
       {items.map((item, index) =>
@@ -135,7 +165,7 @@ export function SelectLocation({
                 )}
               </div>
             )}
-            <div className='self-center text-start'>{labelFolderNode(item)}</div>
+            <div className='self-center text-start'>{folderLabel(item)}</div>
           </div>
         ) : null
       )}

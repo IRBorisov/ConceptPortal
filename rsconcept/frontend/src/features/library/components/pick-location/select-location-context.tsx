@@ -13,12 +13,16 @@ import { prefixes } from '@/utils/constants';
 import { SelectLocation } from '../select-location';
 
 interface SelectLocationContextProps extends Styling {
+  /** Currently selected location path. */
   value: string;
   onChange: (newValue: string) => void;
+  /** Tooltip for the folder-tree button. */
   title?: string;
+  /** Max height class for the dropdown panel. */
   dropdownHeight?: string;
 }
 
+/** Dropdown button that opens {@link SelectLocation} to pick a library folder path. */
 export function SelectLocationContext({
   value,
   title,

@@ -103,6 +103,10 @@ export function HelpLibraryFr() {
           <kbd>clic</kbd> sur l'icône pour replier/développer les éléments imbriqués
         </li>
         <li>
+          en mode administrateur, les dossiers personnels (<kbd>U</kbd>) sont regroupés par propriétaire ; sélectionner
+          un utilisateur ou son dossier filtre aussi le tableau par ce propriétaire
+        </li>
+        <li>
           <IconFolderEdit className='inline-icon' /> renommer le dossier sélectionné
         </li>
         <li>

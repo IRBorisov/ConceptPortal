@@ -43,10 +43,13 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
       'filtre',
       'dossiers',
       'explorateur',
-      'tri'
+      'tri',
+      'admin',
+      'propriétaire',
+      'dossiers personnels'
     ],
     searchText:
-      'Bibliothèque de schémas. Recherche par métadonnées et recherche contextuelle dans les termes, définitions et commentaires, filtres, tri, explorateur de dossiers, consultation des schémas conceptuels, OSS et modèles.'
+      'Bibliothèque de schémas. Recherche par métadonnées et recherche contextuelle dans les termes, définitions et commentaires, filtres, tri, explorateur de dossiers avec regroupement par propriétaire en mode administrateur, consultation des schémas conceptuels, OSS et modèles.'
   },
   [HelpTopic.UI_SCHEMA_MENU]: {
     keywords: ['menu schéma', 'édition schéma', 'onglets', 'actions', 'commandes'],
