@@ -3,7 +3,7 @@
  * Virtual segments are never stored as real item locations.
  */
 
-import { LocationHead } from '@rsconcept/domain/library';
+import { type FolderNode, LocationHead } from '@rsconcept/domain/library';
 
 const OWNER_SEGMENT_RE = /^!u(\d+)$/;
 
@@ -49,4 +49,52 @@ export function fromGroupedUserLocation(path: string): { location: string; owner
 /** True when `location` is the personal root `/U` or a path under it. */
 export function isUserLocation(location: string): boolean {
   return location === LocationHead.USER || location.startsWith(`${LocationHead.USER}/`);
+}
+
+/**
+ * Reorders a flat DFS folder list so the current user's owner group is first under `/U`.
+ * Other roots and nested order inside each group are unchanged.
+ */
+export function prioritizeCurrentUserFolderGroups(items: FolderNode[], currentUserId: number | null): FolderNode[] {
+  if (currentUserId === null) {
+    return items;
+  }
+  const currentSegment = ownerFolderSegment(currentUserId);
+  const userHead = LocationHead.USER.slice(1);
+  const result: FolderNode[] = [];
+  let index = 0;
+  while (index < items.length) {
+    const item = items[index]!;
+    if (item.parent === null && item.text === userHead) {
+      result.push(item);
+      index += 1;
+      const groups: FolderNode[][] = [];
+      while (index < items.length && items[index]!.hasPredecessor(item)) {
+        const node = items[index]!;
+        if (node.parent === item) {
+          groups.push([node]);
+        } else {
+          groups[groups.length - 1]!.push(node);
+        }
+        index += 1;
+      }
+      groups.sort((left, right) => {
+        const leftKey = left[0]!.text;
+        const rightKey = right[0]!.text;
+        const leftCurrent = leftKey === currentSegment;
+        const rightCurrent = rightKey === currentSegment;
+        if (leftCurrent !== rightCurrent) {
+          return leftCurrent ? -1 : 1;
+        }
+        return leftKey.localeCompare(rightKey);
+      });
+      for (const group of groups) {
+        result.push(...group);
+      }
+      continue;
+    }
+    result.push(item);
+    index += 1;
+  }
+  return result;
 }

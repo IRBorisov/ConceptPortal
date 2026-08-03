@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useTx } from '@/i18n';
 import { type FolderNode, LocationHead } from '@rsconcept/domain/library';
 
+import { useAuth } from '@/features/auth/backend/use-auth';
 import { useLabelUser } from '@/features/users/backend/use-label-user';
 
 import { MiniButton } from '@/components/control';
@@ -14,7 +15,7 @@ import { cn } from '@/components/utils';
 
 import { useFolders } from '../backend/use-folders';
 import { labelFolderNode } from '../labels';
-import { parseOwnerFolderSegment } from '../models/user-folder-group';
+import { parseOwnerFolderSegment, prioritizeCurrentUserFolderGroups } from '../models/user-folder-group';
 
 interface SelectLocationProps extends Styling {
   /** Currently selected tree path (`FolderNode.getPath()`), including virtual owner segments when grouping. */
@@ -50,10 +51,13 @@ export function SelectLocation({
   style
 }: SelectLocationProps) {
   const tx = useTx();
+  const { user } = useAuth();
   const getUserLabel = useLabelUser();
   const { folders } = useFolders({ groupUserFoldersByOwner });
   const activeNode = folders.at(value);
-  const items = folders.getTree();
+  const items = groupUserFoldersByOwner
+    ? prioritizeCurrentUserFolderGroups(folders.getTree(), user.id)
+    : folders.getTree();
   const baseFolded = items.filter(item => item !== activeNode && !activeNode?.hasPredecessor(item));
 
   // Manual overrides: true => force folded, false => force unfolded
