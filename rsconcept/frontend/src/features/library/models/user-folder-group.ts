@@ -64,23 +64,23 @@ export function prioritizeCurrentUserFolderGroups(items: FolderNode[], currentUs
   const result: FolderNode[] = [];
   let index = 0;
   while (index < items.length) {
-    const item = items[index]!;
+    const item = items[index];
     if (item.parent === null && item.text === userHead) {
       result.push(item);
       index += 1;
       const groups: FolderNode[][] = [];
-      while (index < items.length && items[index]!.hasPredecessor(item)) {
-        const node = items[index]!;
+      while (index < items.length && items[index].hasPredecessor(item)) {
+        const node = items[index];
         if (node.parent === item) {
           groups.push([node]);
         } else {
-          groups[groups.length - 1]!.push(node);
+          groups[groups.length - 1].push(node);
         }
         index += 1;
       }
       groups.sort((left, right) => {
-        const leftKey = left[0]!.text;
-        const rightKey = right[0]!.text;
+        const leftKey = left[0].text;
+        const rightKey = right[0].text;
         const leftCurrent = leftKey === currentSegment;
         const rightCurrent = rightKey === currentSegment;
         if (leftCurrent !== rightCurrent) {

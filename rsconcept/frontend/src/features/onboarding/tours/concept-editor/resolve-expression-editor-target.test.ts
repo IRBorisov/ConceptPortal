@@ -3,10 +3,9 @@ import { describe, expect, test } from 'vitest';
 import { CstType } from '@rsconcept/domain/library';
 
 import {
+  type ExpressionEditorTargetCst,
   resolveExpressionEditorTarget,
-  showsExpressionEditor,
-  type ExpressionEditorTargetCst
-} from './resolve-expression-editor-target';
+  showsExpressionEditor} from './resolve-expression-editor-target';
 
 function cst(id: number, cst_type: CstType, definition_formal = ''): ExpressionEditorTargetCst {
   return { id, cst_type, definition_formal };
