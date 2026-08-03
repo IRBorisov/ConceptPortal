@@ -7,12 +7,12 @@ import { TourHelpLink } from '../shared/tour-help-links';
 
 export const createSynthesisContentFr: Record<string, TourStepContent> = {
   overview: {
-    title: 'Créer une synthèse',
+    title: 'Synthèse',
     body: (
       <p>
         Cette boîte de dialogue ajoute une opération <IconSynthesis className='inline-icon' />{' '}
         <TourHelpLink text='synthèse' topic={HelpTopic.CC_SYNTHESIS} /> à l&apos;OSS. Parcourez d&apos;abord{' '}
-        <b>Arguments</b>, puis <b>Identifications</b> avant de créer.
+        <b>Arguments</b>, puis <b>Identifications</b>, puis cliquez sur <b>Créer</b>.
       </p>
     )
   },
@@ -21,9 +21,9 @@ export const createSynthesisContentFr: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          Renseignez le titre, l&apos;alias, éventuellement le bloc parent et la description. Sélectionnez ensuite les
-          opérations arguments dont les schémas seront fusionnés — en général des chargements ou des synthèses
-          antérieures.
+          Renseignez le titre, l&apos;<b>abréviation</b>, éventuellement le bloc parent et la description. Puis, dans{' '}
+          <b>Choix des arguments</b>, sélectionnez les opérations dont les schémas seront fusionnés — en général des
+          chargements ou des synthèses antérieures.
         </p>
         <p>
           Évitez de choisir à la fois une réplique et son original ; les paires incompatibles sont filtrées de la liste.
@@ -37,15 +37,15 @@ export const createSynthesisContentFr: Record<string, TourStepContent> = {
       <>
         <p>
           Dans <b>Identifications</b>, construisez la{' '}
-          <TourHelpLink text="table d'identification" topic={HelpTopic.UI_SUBSTITUTIONS} /> : associez les constituantes
-          des schémas arguments qui doivent représenter le même concept. Les messages sous la table signalent les
-          conflits et suggèrent des correspondances.
+          <TourHelpLink text="table d'identification" topic={HelpTopic.UI_SUBSTITUTIONS} /> des constituantes des
+          schémas arguments qui doivent représenter une seule constituante. Sous la table — le résultat de la
+          vérification ; dans les lignes — des <b>suggestions</b> (accepter ou ignorer).
         </p>
         <p>
-          Pour une <IconConsolidation className='inline-icon' /> synthèse en diamant (ancêtres communs), ajoutez les
-          doublons avec soin. Créer exécute l&apos;opération une fois pour permettre les{' '}
-          <TourHelpLink text='changements propagés' topic={HelpTopic.CC_PROPAGATION} /> — comme activer la synthèse avec{' '}
-          <IconExecute className='inline-icon icon-green' />.
+          Pour une <IconConsolidation className='inline-icon' /> synthèse en <b>losange</b> (ancêtres communs), ajoutez
+          les doublons de constituantes avec soin. Après création, <b>activez</b> la synthèse dans le graphe avec{' '}
+          <IconExecute className='inline-icon icon-green' /> pour les{' '}
+          <TourHelpLink text='changements propagés' topic={HelpTopic.CC_PROPAGATION} />.
         </p>
       </>
     )

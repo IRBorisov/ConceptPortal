@@ -27,9 +27,28 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
     title: 'Граф термов',
     body: (
       <p>
-        <TourHelpLink text='Граф термов' topic={HelpTopic.UI_GRAPH_TERM} /> показывает связи конституент по формальным
-        определениям и атрибутированию — удобно видеть структуру схемы целиком.
+        Вкладка «Граф» открывает <TourHelpLink text='граф термов' topic={HelpTopic.UI_GRAPH_TERM} />: связи конституент
+        по формальным определениям и атрибутированию — удобно видеть структуру схемы целиком.
       </p>
+    )
+  },
+  tools: {
+    title: 'Режимы и выделение',
+    body: (
+      <>
+        <p>
+          Если редактирование разрешено, сверху доступны{' '}
+          <IconGraphMode value={InteractionMode.explore} className='inline-icon' /> Режим: Просмотр — навигация и
+          выделение; <IconGraphMode value={InteractionMode.edit} className='inline-icon icon-green' /> Режим: Редактор —
+          рисование связей. В режиме редактора для атрибутивных схем{' '}
+          <IconEdgeType value={TGEdgeType.attribution} className='inline-icon' /> /{' '}
+          <IconEdgeType value={TGEdgeType.definition} className='inline-icon' /> выбирает тип создаваемой связи.
+        </p>
+        <p>
+          В меню «Выделить на основе выбранных…» — пункты <IconGraphCollapse className='inline-icon' /> Влияющие и{' '}
+          <IconGraphExpand className='inline-icon' /> Зависимые; меню доступно при ненулевом выделении.
+        </p>
+      </>
     )
   },
   options: {
@@ -37,13 +56,14 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          Слева — раскраска узлов и типы связей. <IconFitImage className='inline-icon' /> вписывает граф в экран;{' '}
-          <IconFocus className='inline-icon' /> фокусирует одну конституенту; <IconFilter className='inline-icon' />{' '}
-          открывает настройки расположения узлов и фильтров.
+          Слева — раскраска узлов и, для атрибутивных схем, фильтр отображения связей.{' '}
+          <IconFitImage className='inline-icon' /> (<kbd>G</kbd>) вписывает граф в экран;{' '}
+          <IconFocus className='inline-icon' /> фокусирует одну конституенту (или ПКМ по узлу);{' '}
+          <IconFilter className='inline-icon' /> открывает настройки отображения.
         </p>
         <p>
           <IconText className='inline-icon' /> (<kbd>T</kbd>) переключает подписи;{' '}
-          <IconClustering className='inline-icon' /> (<kbd>V</kbd>) скрывает порождённые узлы;{' '}
+          <IconClustering className='inline-icon' /> (<kbd>B</kbd>) скрывает порождённые узлы;{' '}
           <IconOverviewCore className='inline-icon icon-green' /> (<kbd>O</kbd>) показывает только аксиоматическое ядро;{' '}
           <IconImage className='inline-icon' /> экспортирует PNG или SVG.
         </p>
@@ -60,8 +80,8 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
       <p>
         Если редактирование разрешено, <IconNewItem className='inline-icon icon-green' /> (<kbd>R</kbd>) создаёт
         конституенту со ссылками на выделенные; <IconDestroy className='inline-icon icon-red' /> удаляет выделение;{' '}
-        <IconCrucial className='inline-icon' /> (<kbd>F</kbd>) переключает статус «ключевая»;{' '}
-        <IconTypeGraph className='inline-icon' /> открывает граф ступеней для выделения.
+        <IconCrucial className='inline-icon' /> (<kbd>F</kbd>) переключает статус ключевой;{' '}
+        <IconTypeGraph className='inline-icon' /> открывает граф ступеней выделенных конституент.
       </p>
     )
   },
@@ -69,26 +89,9 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
     title: 'Скрытые узлы',
     body: (
       <p>
-        Конституенты, отфильтрованные с холста, появляются в списке скрытых. Щелчок выделяет; двойной щелчок открывает
-        редактор конституенты.
+        Конституенты, отфильтрованные с холста, появляются в списке «Скрытые». Щелчок выделяет; двойной щелчок открывает
+        редактирование конституенты.
       </p>
-    )
-  },
-  tools: {
-    title: 'Режимы и выделение',
-    body: (
-      <>
-        <p>
-          <IconGraphMode value={InteractionMode.explore} className='inline-icon' /> Просмотр — навигация и выделение;{' '}
-          <IconGraphMode value={InteractionMode.edit} className='inline-icon icon-green' /> Редактор — рисование связей.{' '}
-          <IconEdgeType value={TGEdgeType.attribution} className='inline-icon' /> атрибутирование /{' '}
-          <IconEdgeType value={TGEdgeType.definition} className='inline-icon' /> определение.
-        </p>
-        <p>
-          Кнопки выделяют связанные узлы — например <IconGraphCollapse className='inline-icon' /> все влияющие и{' '}
-          <IconGraphExpand className='inline-icon' /> все зависимые.
-        </p>
-      </>
     )
   },
   canvas: {
@@ -96,8 +99,8 @@ export const termGraphContentRu: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          Щелчок по узлу выделяет его; двойной щелчок открывает редактор конституенты. Перемещение — <kbd>Space</kbd>{' '}
-          или <kbd>WASD</kbd>, масштаб — колёсиком мыши.
+          Щелчок по узлу выделяет его; двойной щелчок открывает редактирование конституенты. Перемещение —{' '}
+          <kbd>Space</kbd> или <kbd>WASD</kbd>, масштаб — колёсиком мыши.
         </p>
         <p>
           <kbd>Esc</kbd> снимает выделение; <kbd>Delete</kbd> удаляет выбранные конституенты, если редактирование

@@ -8,6 +8,8 @@ import {
   IconMoveDown,
   IconMoveUp,
   IconNewItem,
+  IconOpenList,
+  IconReset,
   IconSearch
 } from '@/components/icons';
 
@@ -20,8 +22,9 @@ export const constituentsListContentFr: Record<string, TourStepContent> = {
     body: (
       <p>
         Les constituantes sont les parties d&apos;un schéma conceptuel : concepts non définis, termes, fonctions,
-        axiomes, énoncés, etc. L&apos;onglet <TourHelpLink text='liste' topic={HelpTopic.UI_MODEL_LIST} /> les regroupe
-        en tableau ; si un modèle est ouvert — aussi le statut d&apos;évaluation.
+        axiomes, énoncés, etc. L&apos;onglet Liste les regroupe en tableau ; si un modèle est ouvert — aussi la colonne
+        « Valeur ». Manuels : <TourHelpLink text='liste du schéma' topic={HelpTopic.UI_SCHEMA_LIST} />,{' '}
+        <TourHelpLink text='liste du modèle' topic={HelpTopic.UI_MODEL_LIST} />.
       </p>
     )
   },
@@ -31,21 +34,24 @@ export const constituentsListContentFr: Record<string, TourStepContent> = {
       <>
         <p>
           Essayez : saisissez du texte dans le champ <IconSearch className='inline-icon' />. La liste se filtre par nom,
-          terme, définitions et convention. Appuyez sur Entrée ou cliquez hors du champ — le guide continue.
+          terme, définition formelle et textuelle, convention ou commentaire. Appuyez sur Entrée ou cliquez hors du champ
+          — le guide continue.
         </p>
         <p>
-          Plus de détails dans le manuel de la{' '}
-          <TourHelpLink text='liste des constituantes' topic={HelpTopic.UI_SCHEMA_LIST} />.
+          Plus de détails dans les manuels de la{' '}
+          <TourHelpLink text='liste du schéma' topic={HelpTopic.UI_SCHEMA_LIST} /> et de la{' '}
+          <TourHelpLink text='liste du modèle' topic={HelpTopic.UI_MODEL_LIST} />.
         </p>
       </>
     )
   },
   selection: {
-    title: 'Compteur de sélection',
+    title: 'Sélection … sur …',
     body: (
       <p>
-        Le compteur à gauche indique le nombre de constituantes sélectionnées sur le total. Cliquez une ligne pour
-        sélectionner ; <kbd>Esc</kbd> efface la sélection.
+        À gauche s&apos;affiche combien de constituantes sont sélectionnées sur le total. Cliquez une ligne pour
+        sélectionner ; <kbd>Esc</kbd> ou <IconReset className='inline-icon' /> dans la barre efface la sélection. Le
+        compteur et la barre n&apos;apparaissent qu&apos;en mode édition.
       </p>
     )
   },
@@ -54,14 +60,16 @@ export const constituentsListContentFr: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          <IconNewItem className='inline-icon icon-green' /> créer, <IconClone className='inline-icon icon-green' />{' '}
-          cloner et <IconDestroy className='inline-icon icon-red' /> supprimer la sélection.{' '}
-          <IconMoveUp className='inline-icon' /> / <IconMoveDown className='inline-icon' /> changent l&apos;ordre ;{' '}
-          <IconCrucial className='inline-icon' /> marque les constituantes cruciales.
+          <IconReset className='inline-icon' /> efface la sélection (<kbd>Esc</kbd>). Dans un modèle,{' '}
+          <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) recalcule ensuite toutes les
+          valeurs. <IconMoveUp className='inline-icon' /> / <IconMoveDown className='inline-icon' /> changent
+          l&apos;ordre ; <IconCrucial className='inline-icon' /> marque les constituantes cruciales.
         </p>
         <p>
-          Si un modèle est ouvert, <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>)
-          recalcule toutes les valeurs.
+          <IconOpenList className='inline-icon icon-green' /> crée par type,{' '}
+          <IconNewItem className='inline-icon icon-green' /> via dialogue ;{' '}
+          <IconClone className='inline-icon icon-green' /> clone et <IconDestroy className='inline-icon icon-red' />{' '}
+          supprime la sélection. La barre n&apos;est visible qu&apos;en édition.
         </p>
       </>
     )
@@ -71,13 +79,13 @@ export const constituentsListContentFr: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          <kbd>Shift</kbd>+clic étend la sélection. Double-clic ou clic avec <kbd>Alt</kbd> ouvre la constituante dans
-          l&apos;
-          <TourHelpLink text='éditeur' topic={HelpTopic.UI_SCHEMA_EDITOR} />.
+          <kbd>Shift</kbd>+clic étend la sélection. Double-clic ou clic avec <kbd>Alt</kbd> ouvre la constituante : dans
+          un schéma — l&apos;onglet <TourHelpLink text='Concept' topic={HelpTopic.UI_SCHEMA_EDITOR} /> ; dans un modèle
+          — l&apos;onglet <TourHelpLink text='Données' topic={HelpTopic.UI_MODEL_VALUE} />.
         </p>
         <p>
-          Faites glisser les lignes pour changer l&apos;ordre. Le réordonnancement est désactivé tant que la recherche
-          est active — videz d&apos;abord le champ.
+          Faites glisser les lignes pour changer l&apos;ordre. Tant que la recherche est active, le réordonnancement (et
+          les flèches de la barre) est désactivé — videz d&apos;abord le champ.
         </p>
       </>
     )

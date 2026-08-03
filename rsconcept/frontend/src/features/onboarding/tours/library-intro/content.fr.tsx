@@ -1,7 +1,6 @@
 import { HelpTopic } from '@/features/help';
 
 import {
-  IconDownload,
   IconFilterReset,
   IconFolderEdit,
   IconSearch,
@@ -39,9 +38,9 @@ export const libraryIntroContentFr: Record<string, TourStepContent> = {
     title: 'Emplacement actuel',
     body: (
       <p>
-        La barre de chemin montre le dossier actuel. Utilisez <IconFolderEdit className='inline-icon' /> pour renommer
-        (si autorisé) et <IconSubfolders className='inline-icon' /> pour inclure ou masquer les éléments des
-        sous-dossiers.
+        La barre de chemin montre le dossier actuel. Utilisez <IconFolderEdit className='inline-icon' /> pour modifier
+        l&apos;emplacement et déplacer vos schémas (si autorisé) et <IconSubfolders className='inline-icon' /> pour
+        inclure ou masquer les éléments des sous-dossiers.
       </p>
     )
   },
@@ -49,10 +48,10 @@ export const libraryIntroContentFr: Record<string, TourStepContent> = {
     title: 'Recherche et filtres',
     body: (
       <p>
-        Les filtres de type restreignent la liste aux schémas, modèles ou OSS. Basculez Métadonnées (
+        Le sélecteur « Filtre » restreint la liste (type, rôle, masqués…). Basculez Métadonnées (
         <IconSearch className='inline-icon' />) et Recherche contextuelle (<IconText className='inline-icon' />) avec le
-        commutateur de mode ; filtrez éventuellement par propriétaire. <IconFilterReset className='inline-icon' />{' '}
-        efface les filtres personnalisés.
+        commutateur de mode ; utilisez éventuellement « Recherche par propriétaire ».{' '}
+        <IconFilterReset className='inline-icon' /> réinitialise le filtre.
       </p>
     )
   },
@@ -62,8 +61,7 @@ export const libraryIntroContentFr: Record<string, TourStepContent> = {
       <>
         <p>
           Cliquez sur une ligne pour ouvrir un élément. Ctrl/Cmd+clic l&apos;ouvre dans un nouvel onglet. Triez avec les
-          en-têtes <IconSortAsc className='inline-icon' /> et exportez le tableau visible avec{' '}
-          <IconDownload className='inline-icon' />.
+          en-têtes <IconSortAsc className='inline-icon' />.
         </p>
         <p>
           La couleur de ligne indique le type : vert pour les OSS, orange pour les modèles conceptuels, le reste pour

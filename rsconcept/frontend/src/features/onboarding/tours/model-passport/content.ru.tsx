@@ -1,17 +1,17 @@
 import { HelpTopic } from '@/features/help';
 
-import { IconRSForm, IconSave } from '@/components/icons';
+import { IconFolderEdit, IconOwner, IconRSForm, IconSave } from '@/components/icons';
 
 import { type TourStepContent } from '../../models/tour';
 import { TourHelpLink } from '../shared/tour-help-links';
 
 export const modelPassportContentRu: Record<string, TourStepContent> = {
   overview: {
-    title: 'Паспорт модели',
+    title: 'Паспорт',
     body: (
       <p>
-        <TourHelpLink text='Паспорт модели' topic={HelpTopic.UI_MODEL_CARD} /> описывает концептуальную модель,
-        привязанную к схеме: название, доступ и сводную статистику схемы и модели.
+        Вкладка «Паспорт» открывает <TourHelpLink text='паспорт модели' topic={HelpTopic.UI_MODEL_CARD} /> —
+        карточку концептуальной модели, привязанной к схеме: название, доступ, ссылку на схему и сводную статистику.
       </p>
     )
   },
@@ -20,7 +20,7 @@ export const modelPassportContentRu: Record<string, TourStepContent> = {
     body: (
       <p>
         Здесь правятся название, сокращение и описание модели. Атрибуты связанной схемы на этой форме не меняются.
-        Сохранение — <IconSave className='inline-icon' /> или <kbd>Ctrl + S</kbd>.
+        Сохранение — «Сохранить изменения» (<IconSave className='inline-icon' />) или <kbd>Ctrl + S</kbd>.
       </p>
     )
   },
@@ -28,8 +28,8 @@ export const modelPassportContentRu: Record<string, TourStepContent> = {
     title: 'Доступ',
     body: (
       <p>
-        Блок <TourHelpLink text='доступа' topic={HelpTopic.ACCESS} /> задаёт политику доступа, видимость в библиотеке и
-        режим «только чтение» для этой модели.
+        Справа от сокращения строка <TourHelpLink text='«Доступ»' topic={HelpTopic.ACCESS} />: политика доступа
+        (Личный / Защищенный / Открытый), видимость в библиотеке и разрешение или запрет изменения для редакторов.
       </p>
     )
   },
@@ -37,22 +37,30 @@ export const modelPassportContentRu: Record<string, TourStepContent> = {
     title: 'Связанная схема',
     body: (
       <p>
-        Ссылка <IconRSForm className='inline-icon' /> открывает исходную концептуальную схему, на конституентах которой
-        строятся данные и вычисления модели.
+        Ссылка с иконкой <IconRSForm className='inline-icon' /> и сокращением схемы открывает исходную концептуальную
+        схему, на конституентах которой строятся данные и вычисления модели.
       </p>
     )
   },
   library: {
     title: 'Расположение и владение',
-    body: <p>Под формой — расположение в библиотеке, владелец, редакторы и даты создания/обновления.</p>
+    body: (
+      <p>
+        Под формой — метаданные библиотеки: расположение (<IconFolderEdit className='inline-icon' />
+        ), владелец (
+        <IconOwner className='inline-icon' />
+        ), редакторы и даты создания/обновления.
+      </p>
+    )
   },
   stats: {
     title: 'Панель статистики',
     body: (
       <>
         <p>
-          Боковая панель совмещает счётчики структуры схемы с проблемами модели: неопределяемые без интерпретации,
-          нарушенные аксиомы, неверные данные и ошибки вычисления.
+          Боковая панель делится на «Содержание» и «Схема» (структура связанной КС), «Корректность» (проблемы схемы) и
+          «Модель» (модельные проблемы: неопределяемые без интерпретации, нарушенные аксиомы, неверные данные, ошибки
+          вычисления и пустые значения термов).
         </p>
         <p>Раскройте категории, чтобы увидеть разбивку по типам.</p>
       </>

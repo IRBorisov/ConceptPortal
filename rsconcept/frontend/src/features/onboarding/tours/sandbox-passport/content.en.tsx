@@ -4,10 +4,10 @@ import { type TourStepContent } from '../../models/tour';
 
 export const sandboxPassportContentEn: Record<string, TourStepContent> = {
   overview: {
-    title: 'Sandbox passport',
+    title: 'Passport',
     body: (
       <p>
-        The passport sets the title, alias, and description of the local demo schema and model. Data stays in the
+        The Passport tab sets the title, alias, and description of the local demo schema and model. Data stays in the
         browser — without library access policies or ownership.
       </p>
     )
@@ -16,8 +16,8 @@ export const sandboxPassportContentEn: Record<string, TourStepContent> = {
     title: 'Title, alias, description',
     body: (
       <p>
-        Edit the title, alias, and description. Changes are stored locally; <IconSave className='inline-icon' /> applies
-        them to the Sandbox data.
+        Edit the title, alias, and description. Changes reach the Sandbox data in the browser only after you save —{' '}
+        <IconSave className='inline-icon' /> &quot;Save&quot; or <kbd>Ctrl + S</kbd>.
       </p>
     )
   },
@@ -26,8 +26,8 @@ export const sandboxPassportContentEn: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          The side panel shows schema constituent counts and model issues — for example undefined concepts without
-          interpretation or evaluation errors.
+          The side panel is split into Contents, Schema, Correctness, and Model. Under Model — interpretation issues:
+          undefined concepts without interpretation, violated axioms, invalid data, and evaluation errors.
         </p>
         <p>Expand categories for a breakdown by type.</p>
       </>

@@ -1,7 +1,6 @@
 import { HelpTopic } from '@/features/help';
 
 import {
-  IconDownload,
   IconFilterReset,
   IconFolderEdit,
   IconSearch,
@@ -30,7 +29,7 @@ export const libraryIntroContentEn: Record<string, TourStepContent> = {
     title: 'Folders',
     body: (
       <p>
-        The left panel is the explorer. Click a folder to show its items on the right. Ctrl/Cmd-click a folder copies
+        The left panel is the explorer. Click a folder to show its items on the right. Ctrl/Cmd-click a folder to copy
         its path. Folder icons show whether a folder has items or nested folders.
       </p>
     )
@@ -39,8 +38,9 @@ export const libraryIntroContentEn: Record<string, TourStepContent> = {
     title: 'Current location',
     body: (
       <p>
-        The path bar shows the current folder. Use <IconFolderEdit className='inline-icon' /> to rename a folder (when
-        allowed) and <IconSubfolders className='inline-icon' /> to include or hide items from nested folders.
+        The path bar shows the current folder. Use <IconFolderEdit className='inline-icon' /> to edit the location and
+        move your schemas (when allowed) and <IconSubfolders className='inline-icon' /> to include or hide items from
+        nested folders.
       </p>
     )
   },
@@ -48,9 +48,9 @@ export const libraryIntroContentEn: Record<string, TourStepContent> = {
     title: 'Search and filters',
     body: (
       <p>
-        Type filters narrow the list to schemas, models, or OSS. Switch Metadata (<IconSearch className='inline-icon' />
-        ) and Context search (<IconText className='inline-icon' />) with the mode switch; optionally filter by owner.{' '}
-        <IconFilterReset className='inline-icon' /> clears custom filters.
+        The Filter selector narrows the list (type, role, hidden…). Switch Metadata (
+        <IconSearch className='inline-icon' />) and Context search (<IconText className='inline-icon' />) with the mode
+        switch; optionally use Search by owner. <IconFilterReset className='inline-icon' /> resets the filter.
       </p>
     )
   },
@@ -60,8 +60,7 @@ export const libraryIntroContentEn: Record<string, TourStepContent> = {
       <>
         <p>
           Click a row to open an item. Ctrl/Cmd-click opens it in a new tab. Sort with{' '}
-          <IconSortAsc className='inline-icon' /> column headers, and export the visible table with{' '}
-          <IconDownload className='inline-icon' />.
+          <IconSortAsc className='inline-icon' /> column headers.
         </p>
         <p>
           Row color shows the item kind: green rows are OSS, orange rows are conceptual models, and the rest are

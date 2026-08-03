@@ -1,7 +1,6 @@
 import { HelpTopic } from '@/features/help';
 
 import {
-  IconDownload,
   IconFilterReset,
   IconFolderEdit,
   IconSearch,
@@ -39,8 +38,9 @@ export const libraryIntroContentRu: Record<string, TourStepContent> = {
     title: 'Текущее расположение',
     body: (
       <p>
-        Строка пути показывает текущую папку. Кнопка <IconFolderEdit className='inline-icon' /> переименовывает папку
-        (если доступно), а <IconSubfolders className='inline-icon' /> включает или скрывает элементы из вложенных папок.
+        Строка пути показывает текущую папку. Кнопка <IconFolderEdit className='inline-icon' /> редактирует расположение
+        и перемещает ваши схемы (если доступно), а <IconSubfolders className='inline-icon' /> включает или скрывает
+        элементы из вложенных папок.
       </p>
     )
   },
@@ -48,10 +48,10 @@ export const libraryIntroContentRu: Record<string, TourStepContent> = {
     title: 'Поиск и фильтры',
     body: (
       <p>
-        Фильтры по типу сужают список до схем, моделей или ОСС. Режим «Метаданные» (
+        Селектор «Фильтр» сужает список (тип, роль, скрытые…). Режим «Метаданные» (
         <IconSearch className='inline-icon' />) и «Контекстный поиск» (<IconText className='inline-icon' />)
-        переключаются переключателем режима; при необходимости — фильтр по владельцу.{' '}
-        <IconFilterReset className='inline-icon' /> сбрасывает пользовательские фильтры.
+        переключаются переключателем режима; при необходимости — «Поиск по владельцу».{' '}
+        <IconFilterReset className='inline-icon' /> сбрасывает фильтр.
       </p>
     )
   },
@@ -61,7 +61,7 @@ export const libraryIntroContentRu: Record<string, TourStepContent> = {
       <>
         <p>
           Щелчок по строке открывает элемент. Ctrl/Cmd+щелчок — в новой вкладке. Сортировка — по заголовкам столбцов{' '}
-          <IconSortAsc className='inline-icon' />, экспорт видимой таблицы — <IconDownload className='inline-icon' />.
+          <IconSortAsc className='inline-icon' />.
         </p>
         <p>Цвет строки показывает тип: зелёные — ОСС, оранжевые — концептуальные модели, остальные — схемы.</p>
       </>

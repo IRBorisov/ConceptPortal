@@ -27,9 +27,29 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
     title: 'Graphe des termes',
     body: (
       <p>
-        Le <TourHelpLink text='graphe des termes' topic={HelpTopic.UI_GRAPH_TERM} /> montre les liens entre
-        constituantes par définition formelle et attribution — pratique pour voir la structure entière du schéma.
+        L&apos;onglet Graphe ouvre le <TourHelpLink text='graphe des termes' topic={HelpTopic.UI_GRAPH_TERM} /> : liens
+        entre constituantes par définition formelle et attribution — pratique pour voir la structure entière du schéma.
       </p>
+    )
+  },
+  tools: {
+    title: 'Modes et sélection',
+    body: (
+      <>
+        <p>
+          Lorsque l&apos;édition est autorisée, la barre du haut propose{' '}
+          <IconGraphMode value={InteractionMode.explore} className='inline-icon' /> Mode : consultation — navigation et
+          sélection ; <IconGraphMode value={InteractionMode.edit} className='inline-icon icon-green' /> Mode : édition —
+          tracer des relations. En mode édition, pour les schémas attributifs,{' '}
+          <IconEdgeType value={TGEdgeType.attribution} className='inline-icon' /> /{' '}
+          <IconEdgeType value={TGEdgeType.definition} className='inline-icon' /> choisit le type du lien en cours de
+          tracé.
+        </p>
+        <p>
+          Dans le menu « Étendre à partir de la sélection… » — <IconGraphCollapse className='inline-icon' /> Influents
+          et <IconGraphExpand className='inline-icon' /> Dépendants ; le menu nécessite une sélection non vide.
+        </p>
+      </>
     )
   },
   options: {
@@ -37,13 +57,14 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          À gauche — coloration des nœuds et types de liens. <IconFitImage className='inline-icon' /> ajuste le graphe à
-          l&apos;écran ; <IconFocus className='inline-icon' /> focalise une constituante ;{' '}
-          <IconFilter className='inline-icon' /> ouvre les paramètres de disposition des nœuds et de filtre.
+          À gauche — coloration des nœuds et, pour les schémas attributifs, un filtre d&apos;affichage des liens.{' '}
+          <IconFitImage className='inline-icon' /> (<kbd>G</kbd>) ajuste le graphe à l&apos;écran ;{' '}
+          <IconFocus className='inline-icon' /> focalise une constituante (ou clic droit sur un nœud) ;{' '}
+          <IconFilter className='inline-icon' /> ouvre les paramètres de vue.
         </p>
         <p>
           <IconText className='inline-icon' /> (<kbd>T</kbd>) bascule les libellés ;{' '}
-          <IconClustering className='inline-icon' /> (<kbd>V</kbd>) masque les nœuds générés ;{' '}
+          <IconClustering className='inline-icon' /> (<kbd>B</kbd>) masque les nœuds générés ;{' '}
           <IconOverviewCore className='inline-icon icon-green' /> (<kbd>O</kbd>) affiche uniquement le noyau axiomatique
           ; <IconImage className='inline-icon' /> exporte en PNG ou SVG.
         </p>
@@ -61,7 +82,7 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
         Lorsque l&apos;édition est autorisée, <IconNewItem className='inline-icon icon-green' /> (<kbd>R</kbd>) crée une
         constituante avec des liens vers les nœuds sélectionnés ; <IconDestroy className='inline-icon icon-red' />{' '}
         supprime la sélection ; <IconCrucial className='inline-icon' /> (<kbd>F</kbd>) bascule le statut crucial ;{' '}
-        <IconTypeGraph className='inline-icon' /> ouvre le graphe des échelons pour la sélection.
+        <IconTypeGraph className='inline-icon' /> ouvre le graphe des échelons des constituantes sélectionnées.
       </p>
     )
   },
@@ -69,26 +90,9 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
     title: 'Nœuds masqués',
     body: (
       <p>
-        Les constituantes filtrées hors du canevas apparaissent dans la liste masquée. Cliquez pour sélectionner ;
-        double-clic pour ouvrir l&apos;éditeur de constituante.
+        Les constituantes filtrées hors du canevas apparaissent dans la liste des nœuds masqués. Cliquez pour
+        sélectionner ; double-clic pour ouvrir l&apos;édition de la constituante.
       </p>
-    )
-  },
-  tools: {
-    title: 'Modes et sélection',
-    body: (
-      <>
-        <p>
-          <IconGraphMode value={InteractionMode.explore} className='inline-icon' /> Consultation — navigation et
-          sélection ; <IconGraphMode value={InteractionMode.edit} className='inline-icon icon-green' /> Édition — tracer
-          des relations. <IconEdgeType value={TGEdgeType.attribution} className='inline-icon' /> attribution /{' '}
-          <IconEdgeType value={TGEdgeType.definition} className='inline-icon' /> définition.
-        </p>
-        <p>
-          Les boutons sélectionnent les nœuds liés — par exemple <IconGraphCollapse className='inline-icon' /> tous les
-          influenceurs et <IconGraphExpand className='inline-icon' /> tous les dépendants.
-        </p>
-      </>
     )
   },
   canvas: {
@@ -96,7 +100,7 @@ export const termGraphContentFr: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          Cliquez sur un nœud pour le sélectionner ; un double-clic ouvre l&apos;éditeur de constituante. Déplacez la
+          Cliquez sur un nœud pour le sélectionner ; un double-clic ouvre l&apos;édition de la constituante. Déplacez la
           vue avec <kbd>Space</kbd> ou <kbd>WASD</kbd>, zoomez avec la molette.
         </p>
         <p>

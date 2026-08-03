@@ -34,37 +34,35 @@ export const sandboxIntroContentFr: Record<string, TourStepContent> = {
       <p>
         La <TourHelpLink text='liste' topic={HelpTopic.UI_MODEL_LIST} /> montre les constituantes du schéma en tableau :
         concepts non définis, termes, fonctions, axiomes, énoncés, etc. Si un modèle est ouvert — aussi le statut
-        d&apos;évaluation. Détails — recherche, sélection et ordre.
+        d&apos;évaluation.
       </p>
     )
   },
   concept: {
-    title: 'Éditeur de constituante',
+    title: 'Concept',
     body: (
       <p>
-        Ici vous éditez une constituante dans l&apos;
-        <TourHelpLink text='éditeur de constituante' topic={HelpTopic.UI_SCHEMA_EDITOR} />: terme, convention ou
-        définition textuelle, et définition formelle. Détails — vérification, outils syntaxiques et développement de
-        structure.
+        Dans l&apos;onglet <TourHelpLink text='Concept' topic={HelpTopic.UI_SCHEMA_EDITOR} /> vous éditez une
+        constituante : terme, convention ou définition textuelle, et définition formelle.
       </p>
     )
   },
   graph: {
-    title: 'Graphe des termes',
+    title: 'Graphe',
     body: (
       <p>
-        Le <TourHelpLink text='graphe des termes' topic={HelpTopic.UI_GRAPH_TERM} /> montre les liens entre
-        constituantes par définition et attribution. Détails — affichage, modes et navigation du canevas.
+        L&apos;onglet <TourHelpLink text='Graphe' topic={HelpTopic.UI_GRAPH_TERM} /> montre les liens entre constituantes
+        par définition et attribution.
       </p>
     )
   },
   data: {
-    title: 'Données du modèle',
+    title: 'Données',
     body: (
       <p>
-        Dans l&apos;onglet <TourHelpLink text='données du modèle' topic={HelpTopic.UI_MODEL_VALUE} /> vous saisissez et
-        consultez les valeurs des constituantes : interprétation du domaine pour les concepts non définis, résultat du
-        calcul pour les dérivées. Détails — calcul, enregistrement et interprétation de base.
+        Dans l&apos;onglet <TourHelpLink text='Données' topic={HelpTopic.UI_MODEL_VALUE} /> vous saisissez et consultez
+        les valeurs des constituantes : interprétation du domaine pour les concepts non définis, résultat du calcul pour
+        les dérivées.
       </p>
     )
   },
@@ -73,8 +71,7 @@ export const sandboxIntroContentFr: Record<string, TourStepContent> = {
     body: (
       <p>
         L&apos;onglet <TourHelpLink text='Évaluation' topic={HelpTopic.UI_MODEL_EVALUATOR} /> vérifie des expressions
-        RSLang arbitraires sur les données du modèle, sans modifier les constituantes. Détails — champ d&apos;expression
-        et dialogue de résultat.
+        RSLang arbitraires sur les données du modèle, sans modifier les constituantes.
       </p>
     )
   },
@@ -83,12 +80,12 @@ export const sandboxIntroContentFr: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          Boucle principale : gérer et éditer les constituantes, fournir les données du modèle et évaluer des
-          expressions. Les données initiales se restaurent depuis le menu du Bac à sable.
+          Boucle principale : gérer et éditer les constituantes, fournir les données et évaluer des expressions. Données
+          de départ — Réinitialiser tout dans le menu (☰).
         </p>
         <p>
-          Rouvrez cet aperçu depuis le menu du Bac à sable ; le guide d&apos;un onglet — via le menu du badge
-          d&apos;aide (Guide rapide) sur cet onglet. Voir aussi les{' '}
+          Relancer le tutoriel — Afficher le tutoriel dans le même menu ; guide d&apos;onglet — Guide rapide dans le menu
+          du badge de tutoriel sur cet onglet. Voir aussi les{' '}
           <TourHelpLink text='manuels' topic={HelpTopic.INTERFACE} />.
         </p>
       </>

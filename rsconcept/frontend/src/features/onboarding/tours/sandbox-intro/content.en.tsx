@@ -34,36 +34,34 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
       <p>
         The <TourHelpLink text='list' topic={HelpTopic.UI_MODEL_LIST} /> shows schema constituents in one table:
         undefined concepts, terms, functions, axioms, statements, and more. When a model is open, evaluation status is
-        shown too. Details covers search, selection, and order.
+        shown too.
       </p>
     )
   },
   concept: {
-    title: 'Concept editor',
+    title: 'Concept',
     body: (
       <p>
-        Here you edit one constituent in the <TourHelpLink text='concept editor' topic={HelpTopic.UI_SCHEMA_EDITOR} />:
-        its term, convention or textual definition, and formal definition. Details covers checking, syntax tools, and
-        structure expansion.
+        On the <TourHelpLink text='Concept' topic={HelpTopic.UI_SCHEMA_EDITOR} /> tab you edit one constituent: its term,
+        convention or textual definition, and formal definition.
       </p>
     )
   },
   graph: {
-    title: 'Term graph',
+    title: 'Graph',
     body: (
       <p>
-        The <TourHelpLink text='term graph' topic={HelpTopic.UI_GRAPH_TERM} /> shows constituent links by definition and
-        attribution. Details covers view options, modes, and canvas navigation.
+        The <TourHelpLink text='Graph' topic={HelpTopic.UI_GRAPH_TERM} /> tab shows links between constituents by
+        definition and attribution.
       </p>
     )
   },
   data: {
-    title: 'Model data',
+    title: 'Data',
     body: (
       <p>
-        On the <TourHelpLink text='model data' topic={HelpTopic.UI_MODEL_VALUE} /> tab you set and inspect constituent
-        values: undefined concepts get an interpretation from the subject domain; derived ones show computed results.
-        Details covers compute, save, and base interpretation.
+        On the <TourHelpLink text='Data' topic={HelpTopic.UI_MODEL_VALUE} /> tab you set and inspect constituent values:
+        undefined concepts get an interpretation from the subject domain; derived ones show computed results.
       </p>
     )
   },
@@ -72,8 +70,7 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
     body: (
       <p>
         The <TourHelpLink text='Evaluation' topic={HelpTopic.UI_MODEL_EVALUATOR} /> tab checks arbitrary RSLang
-        expressions against model data without changing constituents. Details covers the expression field and result
-        dialog.
+        expressions against model data without changing constituents.
       </p>
     )
   },
@@ -82,12 +79,12 @@ export const sandboxIntroContentEn: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          The core loop: manage and edit constituents, provide model data, and evaluate expressions. You can restore the
-          initial data from the Sandbox menu.
+          The core loop: manage and edit constituents, provide data, and evaluate expressions. Restore starting data with
+          Reset all in the menu (☰).
         </p>
         <p>
-          Reopen this overview from the Sandbox menu; start a tab guide from that tab&apos;s help badge menu (Quick
-          guide). See also the <TourHelpLink text='manuals' topic={HelpTopic.INTERFACE} />.
+          Reopen this tutorial with Show tutorial in the same menu; a tab guide is Quick guide in that tab&apos;s tour
+          badge menu. See also the <TourHelpLink text='manuals' topic={HelpTopic.INTERFACE} />.
         </p>
       </>
     )

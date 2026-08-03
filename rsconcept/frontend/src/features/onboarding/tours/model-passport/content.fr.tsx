@@ -1,17 +1,17 @@
 import { HelpTopic } from '@/features/help';
 
-import { IconRSForm, IconSave } from '@/components/icons';
+import { IconFolderEdit, IconOwner, IconRSForm, IconSave } from '@/components/icons';
 
 import { type TourStepContent } from '../../models/tour';
 import { TourHelpLink } from '../shared/tour-help-links';
 
 export const modelPassportContentFr: Record<string, TourStepContent> = {
   overview: {
-    title: 'Passeport du modèle',
+    title: 'Passport',
     body: (
       <p>
-        Le <TourHelpLink text='passeport du modèle' topic={HelpTopic.UI_MODEL_CARD} /> décrit un modèle conceptuel lié à
-        un schéma : nom, accès et statistiques résumées du schéma et du modèle.
+        L’onglet «Passport» ouvre le <TourHelpLink text='passeport du modèle' topic={HelpTopic.UI_MODEL_CARD} /> — la
+        fiche d’un modèle conceptuel lié à un schéma : nom, accès, lien vers le schéma et statistiques résumées.
       </p>
     )
   },
@@ -20,7 +20,8 @@ export const modelPassportContentFr: Record<string, TourStepContent> = {
     body: (
       <p>
         Ici vous modifiez le titre, l&apos;alias et la description du modèle. Les attributs du schéma lié ne changent
-        pas sur ce formulaire. Enregistrement — <IconSave className='inline-icon' /> ou <kbd>Ctrl + S</kbd>.
+        pas sur ce formulaire. Enregistrement — «Enregistrer les modifications» (
+        <IconSave className='inline-icon' />) ou <kbd>Ctrl + S</kbd>.
       </p>
     )
   },
@@ -28,8 +29,9 @@ export const modelPassportContentFr: Record<string, TourStepContent> = {
     title: 'Accès',
     body: (
       <p>
-        Le bloc <TourHelpLink text='accès' topic={HelpTopic.ACCESS} /> définit la politique d&apos;accès, la visibilité
-        dans la bibliothèque et le mode lecture seule pour ce modèle.
+        À droite de l&apos;alias, la ligne <TourHelpLink text='«Accès»' topic={HelpTopic.ACCESS} /> définit la
+        politique d&apos;accès (Privé / Protégé / Public), la visibilité dans la bibliothèque et l&apos;autorisation ou
+        l&apos;interdiction de modification pour les éditeurs.
       </p>
     )
   },
@@ -37,8 +39,8 @@ export const modelPassportContentFr: Record<string, TourStepContent> = {
     title: 'Schéma lié',
     body: (
       <p>
-        Le lien <IconRSForm className='inline-icon' /> ouvre le schéma conceptuel source, dont les constituantes
-        sous-tendent les données et calculs du modèle.
+        Le lien avec l&apos;icône <IconRSForm className='inline-icon' /> et l&apos;alias du schéma ouvre le schéma
+        conceptuel source, dont les constituantes sous-tendent les données et calculs du modèle.
       </p>
     )
   },
@@ -46,7 +48,10 @@ export const modelPassportContentFr: Record<string, TourStepContent> = {
     title: 'Emplacement et propriété',
     body: (
       <p>
-        Sous le formulaire — emplacement dans la bibliothèque, propriétaire, éditeurs et dates de création/mise à jour.
+        Sous le formulaire — métadonnées de bibliothèque : emplacement (<IconFolderEdit className='inline-icon' />
+        ), propriétaire (
+        <IconOwner className='inline-icon' />
+        ), éditeurs et dates de création/mise à jour.
       </p>
     )
   },
@@ -55,8 +60,9 @@ export const modelPassportContentFr: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          Le panneau latéral combine les compteurs de structure du schéma et les problèmes du modèle : concepts non
-          définis sans interprétation, axiomes violés, données invalides et erreurs de calcul.
+          Le panneau latéral comprend «Contenu» et «Schéma» (structure du schéma lié), «Correction» (problèmes du
+          schéma) et «Modèle» (problèmes du modèle : notions non définies sans interprétation, axiomes violés, données
+          invalides, erreurs de calcul et valeurs de termes vides).
         </p>
         <p>Développez les catégories pour voir le détail par type.</p>
       </>

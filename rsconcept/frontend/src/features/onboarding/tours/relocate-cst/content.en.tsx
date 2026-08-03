@@ -10,13 +10,14 @@ export const relocateCstContentEn: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          <TourHelpLink text='Relocate' topic={HelpTopic.UI_RELOCATE_CST} /> moves non-inherited constituents between
-          schemas linked by an OSS operation — typically to push concepts up into an argument schema or down into a
-          result.
+          <TourHelpLink text='Relocate' topic={HelpTopic.UI_RELOCATE_CST} /> moves original constituents between schemas
+          linked by an OSS operation.
         </p>
         <p>
-          Pick the source schema, toggle direction with <IconRelocationUp value={true} className='inline-icon' />, then
-          choose the destination among the allowed neighbors.
+          Pick <b>Source schema</b>, toggle <b>Relocation direction</b>{' '}
+          <IconRelocationUp value={true} className='inline-icon' /> /{' '}
+          <IconRelocationUp value={false} className='inline-icon' /> (up into an argument or down into a result), then
+          choose <b>Target schema</b>.
         </p>
       </>
     )
@@ -25,8 +26,9 @@ export const relocateCstContentEn: Record<string, TourStepContent> = {
     title: 'What can move',
     body: (
       <p>
-        Only constituents that are not inherited and are valid for the chosen edge appear in the list. Select the ones
-        to move, then confirm. Inherited and blocked items stay put so propagation stays consistent.
+        The list fills after you pick <b>Target schema</b> — it shows candidates for the <b>Source schema</b> →{' '}
+        <b>Target schema</b> pair; ineligible items are hidden. Only <b>original</b> constituents move; inherited ones
+        (dashed border) may appear in the list but are not relocated. Select what to move and click <b>Move</b>.
       </p>
     )
   }

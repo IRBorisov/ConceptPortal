@@ -8,6 +8,8 @@ import {
   IconMoveDown,
   IconMoveUp,
   IconNewItem,
+  IconOpenList,
+  IconReset,
   IconSearch
 } from '@/components/icons';
 
@@ -19,9 +21,10 @@ export const constituentsListContentRu: Record<string, TourStepContent> = {
     title: 'Список конституент',
     body: (
       <p>
-        Конституенты — части концептуальной схемы: неопределяемые понятия, термы, функции, аксиомы, высказывания и др.
-        На вкладке <TourHelpLink text='список' topic={HelpTopic.UI_MODEL_LIST} /> они собраны в таблице; если открыта
-        модель — ещё статус вычисления.
+        Конституенты — части концептуальной схемы: неопределяемые понятия, термы, функции, аксиомы, высказывания и др. На
+        вкладке Список они собраны в таблице; если открыта модель — ещё колонка «Значение». Руководства:{' '}
+        <TourHelpLink text='список схемы' topic={HelpTopic.UI_SCHEMA_LIST} />,{' '}
+        <TourHelpLink text='список модели' topic={HelpTopic.UI_MODEL_LIST} />.
       </p>
     )
   },
@@ -31,20 +34,24 @@ export const constituentsListContentRu: Record<string, TourStepContent> = {
       <>
         <p>
           Попробуйте: введите текст в строку <IconSearch className='inline-icon' /> поиска. Список отфильтруется по
-          имени, термину, определениям и конвенции. Нажмите Enter или щёлкните вне поля — гид продолжится.
+          имени, термину, формальному и текстовому определению, конвенции или комментарию. Нажмите Enter или щёлкните
+          вне поля — гид продолжится.
         </p>
         <p>
-          Подробнее — в руководстве по <TourHelpLink text='списку конституент' topic={HelpTopic.UI_SCHEMA_LIST} />.
+          Подробнее — в руководствах по{' '}
+          <TourHelpLink text='списку схемы' topic={HelpTopic.UI_SCHEMA_LIST} /> и{' '}
+          <TourHelpLink text='списку модели' topic={HelpTopic.UI_MODEL_LIST} />.
         </p>
       </>
     )
   },
   selection: {
-    title: 'Счётчик выделения',
+    title: 'Выбраны … из …',
     body: (
       <p>
-        Счётчик слева показывает число выделенных конституент из общего количества. Щелчок по строке выделяет;{' '}
-        <kbd>Esc</kbd> снимает выделение.
+        Слева показано, сколько конституент выбрано из общего числа. Щелчок по строке выбирает; <kbd>Esc</kbd> или{' '}
+        <IconReset className='inline-icon' /> на панели сбрасывает выбор. Счётчик и панель доступны только в режиме
+        редактирования.
       </p>
     )
   },
@@ -53,14 +60,16 @@ export const constituentsListContentRu: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          <IconNewItem className='inline-icon icon-green' /> создать, <IconClone className='inline-icon icon-green' />{' '}
-          клонировать и <IconDestroy className='inline-icon icon-red' /> удалить выбранные.{' '}
+          <IconReset className='inline-icon' /> сбрасывает выбор (<kbd>Esc</kbd>). В модели следом{' '}
+          <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) пересчитывает все значения.{' '}
           <IconMoveUp className='inline-icon' /> / <IconMoveDown className='inline-icon' /> меняют порядок;{' '}
           <IconCrucial className='inline-icon' /> отмечает ключевые конституенты.
         </p>
         <p>
-          Если открыта модель, <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>)
-          пересчитывает все значения.
+          <IconOpenList className='inline-icon icon-green' /> создаёт по типу,{' '}
+          <IconNewItem className='inline-icon icon-green' /> — через диалог;{' '}
+          <IconClone className='inline-icon icon-green' /> клонирует и{' '}
+          <IconDestroy className='inline-icon icon-red' /> удаляет выбранные. Панель видна только при редактировании.
         </p>
       </>
     )
@@ -70,12 +79,13 @@ export const constituentsListContentRu: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          <kbd>Shift</kbd>+щелчок расширяет выделение. Двойной щелчок или щелчок с <kbd>Alt</kbd> открывает конституенту
-          в <TourHelpLink text='редакторе' topic={HelpTopic.UI_SCHEMA_EDITOR} />.
+          <kbd>Shift</kbd>+щелчок расширяет выбор. Двойной щелчок или щелчок с <kbd>Alt</kbd> открывает конституенту: в
+          схеме — вкладка <TourHelpLink text='Понятие' topic={HelpTopic.UI_SCHEMA_EDITOR} />, в модели — вкладка{' '}
+          <TourHelpLink text='Данные' topic={HelpTopic.UI_MODEL_VALUE} />.
         </p>
         <p>
-          Перетаскивайте строки, чтобы изменить порядок. При активном поиске перестановка отключена — очистите строку
-          поиска.
+          Перетаскивайте строки, чтобы изменить порядок. При активном поиске перестановка (и стрелки на панели)
+          отключена — очистите строку поиска.
         </p>
       </>
     )

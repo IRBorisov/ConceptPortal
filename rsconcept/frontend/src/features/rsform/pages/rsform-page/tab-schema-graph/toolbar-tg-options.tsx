@@ -97,7 +97,7 @@ export function ToolbarTGOptions({ className, graph }: ToolbarTGOptionsProps) {
         onClick={handleToggleText}
       />
       <MiniButton
-        title={prepareTooltip(derivedToggleTitle, 'V')}
+        title={prepareTooltip(derivedToggleTitle, 'B')}
         icon={<IconEnableClustering value={!filter.foldDerived} size='1.25rem' />}
         onClick={handleToggleClustering}
       />

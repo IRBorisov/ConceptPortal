@@ -183,6 +183,7 @@ export function ToolbarOssGraph({
 
         <BadgeHelp topic={HelpTopic.UI_OSS_GRAPH} tourID={OssTourID.GRAPH} contentClass='sm:max-w-160' offset={4} />
       </div>
+      {/* Keep the tour anchor mounted in read-only mode (edit controls are mutable-only). */}
       {isMutable ? (
         <div className='cc-icons items-start' data-tour='oss-graph-edit'>
           <MiniButton
@@ -245,7 +246,9 @@ export function ToolbarOssGraph({
             disabled={isProcessing || !canDeleteSelected}
           />
         </div>
-      ) : null}
+      ) : (
+        <div data-tour='oss-graph-edit' className='w-px h-px overflow-hidden' aria-hidden />
+      )}
     </div>
   );
 }

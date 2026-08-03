@@ -4,11 +4,11 @@ import { type TourStepContent } from '../../models/tour';
 
 export const sandboxPassportContentFr: Record<string, TourStepContent> = {
   overview: {
-    title: 'Passeport du Bac à sable',
+    title: 'Passeport',
     body: (
       <p>
-        Le passeport définit le titre, l&apos;alias et la description du schéma et modèle de démonstration locaux. Les
-        données restent dans le navigateur — sans politiques d&apos;accès ni propriétaire de bibliothèque.
+        L&apos;onglet « Passeport » définit le titre, l&apos;alias et la description du schéma et modèle de démonstration
+        locaux. Les données restent dans le navigateur — sans politiques d&apos;accès ni propriétaire de bibliothèque.
       </p>
     )
   },
@@ -16,8 +16,9 @@ export const sandboxPassportContentFr: Record<string, TourStepContent> = {
     title: 'Titre, alias, description',
     body: (
       <p>
-        Modifiez le titre, l&apos;alias et la description. Les changements sont locaux ;{' '}
-        <IconSave className='inline-icon' /> les applique aux données du Bac à sable.
+        Modifiez le titre, l&apos;alias et la description. Les modifications n&apos;entrent dans les données du Bac à
+        sable du navigateur qu&apos;après enregistrement — <IconSave className='inline-icon' /> « Enregistrer » ou{' '}
+        <kbd>Ctrl + S</kbd>.
       </p>
     )
   },
@@ -26,8 +27,9 @@ export const sandboxPassportContentFr: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          Le panneau latéral montre les compteurs de constituantes du schéma et les problèmes du modèle — par exemple
-          concepts non définis sans interprétation ou erreurs de calcul.
+          Le panneau latéral est découpé en Contenu, Schéma, Correction et Modèle. Sous Modèle — problèmes
+          d&apos;interprétation : concepts non définis sans interprétation, axiomes violés, données invalides et erreurs
+          de calcul.
         </p>
         <p>Développez les catégories pour le détail par type.</p>
       </>

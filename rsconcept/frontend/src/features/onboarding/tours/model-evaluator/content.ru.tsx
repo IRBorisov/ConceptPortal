@@ -1,7 +1,7 @@
 import { HelpTopic } from '@/features/help';
 import { IconEvaluatorCache } from '@/features/rsmodel/components/icon-evaluator-cache';
 
-import { IconCalculateAll, IconDatabase, IconStatusUnknown } from '@/components/icons';
+import { IconCalculateAll, IconStatusUnknown } from '@/components/icons';
 
 import { type TourStepContent } from '../../models/tour';
 import { TourHelpLink } from '../shared/tour-help-links';
@@ -11,8 +11,10 @@ export const modelEvaluatorContentRu: Record<string, TourStepContent> = {
     title: 'Расчет',
     body: (
       <p>
-        Вкладка <TourHelpLink text='Расчет' topic={HelpTopic.UI_MODEL_EVALUATOR} /> проверяет и вычисляет произвольные
-        выражения ЯРЭ на данных модели, не изменяя конституенты и их интерпретации.
+        Вкладка <TourHelpLink text='Расчет' topic={HelpTopic.UI_MODEL_EVALUATOR} /> проверяет и вычисляет
+        произвольные родоструктурные выражения (<TourHelpLink text='ЯРЭ' topic={HelpTopic.RSLANG} />) на данных
+        модели. В отличие от вкладки <TourHelpLink text='Данные' topic={HelpTopic.UI_MODEL_VALUE} />, здесь не
+        редактируют значения конституент — данные модели не меняются.
       </p>
     )
   },
@@ -20,9 +22,9 @@ export const modelEvaluatorContentRu: Record<string, TourStepContent> = {
     title: 'Кэш и пересчёт',
     body: (
       <p>
-        <IconEvaluatorCache value={true} className='inline-icon' /> включает или отключает кэш вычислений;{' '}
-        <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) пересчитывает всю модель, чтобы
-        выражения видели актуальные значения.
+        <IconEvaluatorCache value={true} className='inline-icon' /> отключает кэш вычислений (при включённом кэше
+        иконка цветная); <IconCalculateAll className='inline-icon icon-green' /> (<kbd>Alt + Q</kbd>) пересчитывает
+        всю модель, чтобы выражения видели актуальные значения.
       </p>
     )
   },
@@ -31,13 +33,13 @@ export const modelEvaluatorContentRu: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          Введите выражение и нажмите <IconStatusUnknown className='inline-icon' />{' '}
-          <TourHelpLink text='статус' topic={HelpTopic.UI_EVAL_STATUS} />, чтобы вычислить. Ниже появятся типизация,
-          ошибки и значение.
+          Введите выражение в поле «Формальное определение» и нажмите{' '}
+          <IconStatusUnknown className='inline-icon' />{' '}
+          <TourHelpLink text='Не вычислено' topic={HelpTopic.UI_EVAL_STATUS} /> (или <kbd>Ctrl + Q</kbd>). Сверху
+          обновится типизация, в поле выражения — ошибки, ниже — вычисленное значение.
         </p>
         <p>
-          Откройте результат в <IconDatabase className='inline-icon' /> диалоге просмотра значения для
-          структурированного разбора.
+          Кнопка «Просмотр значения» открывает структурированный разбор; для некоторых типов она недоступна.
         </p>
       </>
     )

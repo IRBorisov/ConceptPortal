@@ -23,7 +23,8 @@ export const ossGraphContentFr: Record<string, TourStepContent> = {
     body: (
       <p>
         Sur le <TourHelpLink text='graphe OSS' topic={HelpTopic.UI_OSS_GRAPH} /> se construit le schéma opérationnel de
-        synthèse : blocs, chargements, nœuds de synthèse et réplications.
+        synthèse : blocs, chargements, nœuds de synthèse et réplications. Métadonnées, accès et statistiques — onglet
+        « Passeport ».
       </p>
     )
   },
@@ -32,11 +33,10 @@ export const ossGraphContentFr: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          <IconReset className='inline-icon' /> (<kbd>Z</kbd>) annule les déplacements non enregistrés ;{' '}
+          <IconReset className='inline-icon' /> (<kbd>Z</kbd>) — Annuler les modifications ;{' '}
           <IconFitImage className='inline-icon' /> (<kbd>G</kbd>) ajuste le graphe à l&apos;écran ;{' '}
-          <IconShowSidebar value={true} isBottom={false} className='inline-icon' /> (<kbd>V</kbd>) ouvre le panneau de
-          contenu ; <IconSettings className='inline-icon' /> — grille, lignes et animation ;{' '}
-          <IconImage className='inline-icon' /> — export PNG ou SVG.
+          <IconSettings className='inline-icon' /> Paramètres : coordonnées, grille (<kbd>X</kbd>), animation des liens,
+          forme des liens (<kbd>T</kbd>) ; <IconImage className='inline-icon' /> — Enregistrer l&apos;image (PNG ou SVG).
         </p>
       </>
     )
@@ -46,16 +46,18 @@ export const ossGraphContentFr: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          Lorsque l&apos;édition est autorisée, <IconSave className='inline-icon' /> (<kbd>Ctrl + S</kbd>) enregistre
-          les positions ; <IconEdit2 className='inline-icon' /> ouvre le même menu qu&apos;un clic droit sur le nœud
-          sélectionné ; <IconNewItem className='inline-icon icon-green' /> ajoute un{' '}
-          <IconConceptBlock className='inline-icon text-constructive' /> bloc, un schéma vide, un import de schéma ou
-          une <IconSynthesis className='inline-icon' /> synthèse ; <IconDestroy className='inline-icon icon-red' />{' '}
-          supprime la sélection.
+          Lorsque l&apos;édition est autorisée, la deuxième ligne de la barre : <IconSave className='inline-icon' /> (
+          <kbd>Ctrl + S</kbd>) — Enregistrer les modifications ; <IconEdit2 className='inline-icon' /> ouvre le même
+          menu qu&apos;un clic droit sur le nœud sélectionné ;{' '}
+          <IconNewItem className='inline-icon icon-green' /> Ajouter… —{' '}
+          <IconConceptBlock className='inline-icon text-constructive' /> nouveau bloc, nouveau SC, import de schéma ou{' '}
+          <IconSynthesis className='inline-icon' /> synthèse ; <IconDestroy className='inline-icon icon-red' />{' '}
+          supprime la sélection. Sans droits d&apos;édition — voir l&apos;accès dans le passeport.
         </p>
         <p>
-          Le menu contextuel couvre aussi activation, réplication, clone de schéma, transfert de constituantes et
-          ouverture du schéma lié — voir le <TourHelpLink text='manuel du graphe OSS' topic={HelpTopic.UI_OSS_GRAPH} />.
+          Le menu contextuel couvre aussi Exécuter la synthèse, Créer une réplique, Cloner, Constituentes (
+          <TourHelpLink text='déplacer entre schémas' topic={HelpTopic.UI_RELOCATE_CST} />) et l&apos;ouverture du
+          schéma lié — voir le <TourHelpLink text='manuel du graphe OSS' topic={HelpTopic.UI_OSS_GRAPH} />.
         </p>
       </>
     )
@@ -80,10 +82,10 @@ export const ossGraphContentFr: Record<string, TourStepContent> = {
     title: 'Panneau de contenu',
     body: (
       <p>
-        <IconShowSidebar value={true} isBottom={false} className='inline-icon' /> (<kbd>V</kbd>) ouvre le{' '}
-        <TourHelpLink text='panneau de contenu' topic={HelpTopic.UI_OSS_SIDEBAR} /> : édition des constituantes du
-        schéma de l&apos;opération sélectionnée — filtre, création, clone, suppression, ordre, graphe des termes et
-        graphe des échelons. Sélectionnez une opération avec un schéma lié pour remplir le panneau.
+        Appuyez sur <IconShowSidebar value={true} isBottom={false} className='inline-icon' /> ou <kbd>V</kbd> pour
+        ouvrir le <TourHelpLink text='panneau de contenu' topic={HelpTopic.UI_OSS_SIDEBAR} /> : édition des
+        constituantes du schéma de l&apos;opération sélectionnée — filtre, création, clone, suppression, ordre, graphe
+        des termes et graphe des échelons. Sélectionnez une opération avec un schéma lié pour remplir le panneau.
       </p>
     )
   }

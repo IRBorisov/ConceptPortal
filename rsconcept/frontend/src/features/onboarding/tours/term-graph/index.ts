@@ -15,13 +15,19 @@ function openGraphTab(controller: { changeTab: (tabID: number) => void }) {
 /** Detailed walkthrough of the term graph tab (Sandbox, schema, and model). */
 export const termGraphTour: Tour = {
   id: EditorTourID.TERM_GRAPH,
-  version: 3,
+  version: 4,
   route: EDITOR_TOUR_ROUTES,
   autoStart: false,
   steps: [
     {
       id: 'overview',
       anchor: 'tab-graph',
+      placement: 'bottom',
+      onEnter: openGraphTab
+    },
+    {
+      id: 'tools',
+      anchor: 'graph-tools',
       placement: 'bottom',
       onEnter: openGraphTab
     },
@@ -44,12 +50,6 @@ export const termGraphTour: Tour = {
       id: 'hidden',
       anchor: 'graph-hidden',
       placement: 'right',
-      onEnter: openGraphTab
-    },
-    {
-      id: 'tools',
-      anchor: 'graph-tools',
-      placement: 'bottom',
       onEnter: openGraphTab
     },
     {

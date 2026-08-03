@@ -214,11 +214,13 @@ export function DlgCstTemplate() {
             </TabPanel>
 
             <TabPanel>
-              <TabArguments schema={schema} definition={values.definition_formal} />
+              <div data-tour='cst-template-arguments'>
+                <TabArguments schema={schema} definition={values.definition_formal} />
+              </div>
             </TabPanel>
 
             <TabPanel>
-              <div className='cc-fade-in cc-column'>
+              <div className='cc-fade-in cc-column' data-tour='cst-template-editor'>
                 <FormCreateCst
                   schema={schema}
                   values={values}

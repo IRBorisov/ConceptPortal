@@ -102,7 +102,7 @@ export function PopoverExtraction({
   }
 
   return (
-    <div ref={extractPopoverRef} className={cn('flex flex-col gap-2', className)}>
+    <div ref={extractPopoverRef} className={cn('flex flex-col gap-2', className)} data-tour='ast-extract'>
       {!popoverInDom ? (
         <Button
           icon={<IconNewItem size='1.1rem' className='icon-primary' />}

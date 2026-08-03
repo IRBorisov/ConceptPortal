@@ -1,7 +1,7 @@
 import { OssTabID } from '@/app/navigation/navigation-context';
 
 import { type Tour, type TourStepController } from '../../models/tour';
-import { OssTourID } from '../editor-tours';
+import { OssTourID, PassportTourID } from '../editor-tours';
 
 import { ossGraphContentEn } from './content.en';
 import { ossGraphContentFr } from './content.fr';
@@ -11,10 +11,21 @@ function openGraphTab(controller: TourStepController) {
   controller.changeTab(OssTabID.GRAPH);
 }
 
+function openGraphSidebar(controller: TourStepController) {
+  controller.changeTab(OssTabID.GRAPH);
+  // Lazy import: preferences persist middleware needs `localStorage` (not available in Node tour load).
+  void import('@/stores/preferences').then(function ensureOssSidePanelOpen({ usePreferencesStore }) {
+    const preferences = usePreferencesStore.getState();
+    if (!preferences.showOssSidePanel) {
+      preferences.toggleShowOssSidePanel();
+    }
+  });
+}
+
 /** Walkthrough of the OSS operations graph and contents sidebar. */
 export const ossGraphTour: Tour = {
   id: OssTourID.GRAPH,
-  version: 1,
+  version: 2,
   route: '/oss',
   autoStart: false,
   steps: [
@@ -22,6 +33,7 @@ export const ossGraphTour: Tour = {
       id: 'overview',
       anchor: 'tab-graph',
       placement: 'bottom',
+      subtour: PassportTourID.OSS,
       onEnter: openGraphTab
     },
     {
@@ -46,7 +58,7 @@ export const ossGraphTour: Tour = {
       id: 'sidebar',
       anchor: 'oss-sidebar-toggle',
       placement: 'bottom',
-      onEnter: openGraphTab
+      onEnter: openGraphSidebar
     }
   ],
   content: {

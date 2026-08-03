@@ -150,14 +150,16 @@ export function DlgCreateSynthesis() {
           </div>
         </TabPanel>
         <TabPanel>
-          <Suspense fallback={<Loader />}>
-            <TabSubstitutions
-              oss={schema}
-              inputs={values.arguments}
-              substitutions={values.substitutions}
-              fields={{ SubstitutionsField }}
-            />
-          </Suspense>
+          <div data-tour='synthesis-substitutions'>
+            <Suspense fallback={<Loader />}>
+              <TabSubstitutions
+                oss={schema}
+                inputs={values.arguments}
+                substitutions={values.substitutions}
+                fields={{ SubstitutionsField }}
+              />
+            </Suspense>
+          </div>
         </TabPanel>
       </Tabs>
     </ModalForm>

@@ -1,19 +1,22 @@
 import { HelpTopic } from '@/features/help';
 
 import { IconGenerateStructure, IconStatusOK, IconStatusUnknown, IconTree, IconTypeGraph } from '@/components/icons';
+import { isMac } from '@/utils/utils';
 
 import { type TourStepContent } from '../../models/tour';
 import { TourHelpLink } from '../shared/tour-help-links';
 
+const saveHotkey = isMac() ? 'Cmd + S' : 'Ctrl + S';
+const checkHotkey = isMac() ? 'Cmd + Q' : 'Ctrl + Q';
+
 export const conceptEditorContentFr: Record<string, TourStepContent> = {
   overview: {
-    title: 'Éditeur de constituante',
+    title: 'Concept',
     body: (
       <p>
-        Ici vous éditez une constituante dans l&apos;
-        <TourHelpLink text='éditeur de constituante' topic={HelpTopic.UI_SCHEMA_EDITOR} />: terme, convention ou
-        définition textuelle, et définition formelle. Sélectionnez une ligne dans la liste à gauche pour en ouvrir une
-        autre.
+        L&apos;onglet « Concept » sert à éditer une constituante dans l&apos;
+        <TourHelpLink text='éditeur de constituante' topic={HelpTopic.UI_SCHEMA_EDITOR} />. Sélectionnez une ligne dans
+        la liste à gauche pour en ouvrir une autre.
       </p>
     )
   },
@@ -21,9 +24,10 @@ export const conceptEditorContentFr: Record<string, TourStepContent> = {
     title: 'Champs de la constituante',
     body: (
       <p>
-        Éditez le terme et la définition formelle. Pour les concepts non définis, le sens est donné par une{' '}
-        <TourHelpLink text='convention' topic={HelpTopic.CC_CONSTITUENTA} /> ; pour les dérivés — par une définition
-        textuelle. Enregistrement — <kbd>Ctrl + S</kbd>.
+        Éditez le terme, la typification et l&apos;expression formelle (le libellé du champ dépend du type : définition
+        formelle, domaine de définition, définition de fonction…). Pour les concepts non définis, le sens est donné par
+        une <TourHelpLink text='convention' topic={HelpTopic.CC_CONSTITUENTA} /> ; pour les dérivés — par une définition
+        textuelle. Enregistrement — <kbd>{saveHotkey}</kbd>.
       </p>
     )
   },
@@ -32,39 +36,49 @@ export const conceptEditorContentFr: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          Après modification de la définition formelle, l&apos;indicateur <IconStatusUnknown className='inline-icon' />{' '}
-          <TourHelpLink text='statut d’expression' topic={HelpTopic.UI_CST_STATUS} /> devient bleu jusqu&apos;à la
-          vérification. Cliquez dessus ou appuyez sur <kbd>Ctrl + Q</kbd>.
+          La pastille <IconStatusUnknown className='inline-icon' /> « non vérifié » (bleue) — cliquez dessus ou appuyez
+          sur <kbd>{checkHotkey}</kbd> pour{' '}
+          <TourHelpLink text='vérifier l’expression' topic={HelpTopic.UI_CST_STATUS} />.
         </p>
         <p>
           En cas d&apos;erreurs, une liste apparaît sous l&apos;éditeur — un clic place le curseur sur le fragment. Un
           statut <IconStatusOK className='inline-icon' /> vert « valide » signifie que la définition est vérifiée et
-          calculable.
+          calculable ; vert « non mesurable » — vérifiée mais seulement comme contrôle d&apos;appartenance.
         </p>
       </>
     )
   },
   tools: {
-    title: 'Arbre syntaxique, graphe des échelons et structure',
+    title: 'Arbre syntaxique et structure de typification',
     body: (
       <>
         <p>
+          Icônes à droite du champ d&apos;expression : aide, clavier de symboles, structure de typification et arbre
+          syntaxique.
+        </p>
+        <p>
           <IconTree className='inline-icon' />{' '}
-          <TourHelpLink text='Arbre syntaxique' topic={HelpTopic.UI_FORMULA_TREE} /> — arbre d&apos;analyse de la
-          définition formelle : structure et erreurs de parsing.
+          <TourHelpLink text='Arbre syntaxique' topic={HelpTopic.UI_FORMULA_TREE} /> — arbre d&apos;analyse de
+          l&apos;expression formelle : structure et erreurs de parsing.
         </p>
         <p>
           <IconTypeGraph className='inline-icon' />{' '}
-          <TourHelpLink text='Graphe des échelons' topic={HelpTopic.UI_TYPE_GRAPH} /> — comment les types de
-          l&apos;expression s&apos;enchaînent en typification.
-        </p>
-        <p>
-          Si la constituante a une structure de typification,{' '}
-          <IconGenerateStructure size='1.25rem' className='inline-icon' /> Développer la structure ouvre le{' '}
-          <TourHelpLink text='développement de structure' topic={HelpTopic.UI_STRUCTURE_PLANNER} /> : depuis le graphe
-          des échelons, ajoutez des constituantes générées et leurs termes.
+          <TourHelpLink text='Graphe des échelons à partir de l’expression' topic={HelpTopic.UI_TYPE_GRAPH} /> — comment
+          les types de l&apos;expression s&apos;enchaînent en typification (icône masquée pour les constituantes
+          logiques).
         </p>
       </>
+    )
+  },
+  structure: {
+    title: 'Développer la structure',
+    body: (
+      <p>
+        Si le bouton <IconGenerateStructure size='1.25rem' className='inline-icon' /> Développer la structure est
+        disponible, il ouvre le{' '}
+        <TourHelpLink text='développement de structure' topic={HelpTopic.UI_STRUCTURE_PLANNER} /> : depuis la structure
+        de typification, ajoutez des constituantes générées et leurs termes.
+      </p>
     )
   }
 };

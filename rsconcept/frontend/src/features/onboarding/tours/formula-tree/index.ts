@@ -8,7 +8,7 @@ import { formulaTreeContentRu } from './content.ru';
 /** Walkthrough of the expression parse-tree dialog (view and extract). */
 export const formulaTreeTour: Tour = {
   id: DialogTourID.FORMULA_TREE,
-  version: 1,
+  version: 2,
   route: EDITOR_TOUR_ROUTES,
   autoStart: false,
   steps: [
@@ -23,7 +23,9 @@ export const formulaTreeTour: Tour = {
       placement: 'top'
     },
     {
-      id: 'extract'
+      id: 'extract',
+      anchor: 'ast-extract',
+      placement: 'bottom'
     }
   ],
   content: {

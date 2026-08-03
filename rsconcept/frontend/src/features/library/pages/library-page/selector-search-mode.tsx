@@ -24,7 +24,7 @@ export function SelectorSearchMode({ className }: SelectorSearchModeProps) {
 
   const items: Record<LibrarySearchMode, string> = {
     metadata: tx('tx.lib.search.mode.metadata'),
-    context: tx('tx.lib.contents')
+    context: tx('tx.lib.search.mode.context')
   };
 
   return (
