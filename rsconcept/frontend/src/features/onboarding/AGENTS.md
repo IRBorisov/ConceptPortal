@@ -16,7 +16,7 @@ Engine (`models/`, `stores/`, `components/`, `utils/`) is tour-agnostic — leav
 ## Invariants
 
 - Shared editor tours (Sandbox + schema + model): keep copy/anchors context-neutral.
-- Only `sandbox-intro` uses `autoStart`.
+- Only `sandbox-intro` and `library-intro` use `autoStart`.
 - `id` is persisted — never rename after release; bump `version` on structural/UX step changes (re-offers to completed users; skipped stays opted out).
 - Long copy lives in `content.*.tsx`, not `tx.*`.
 - Do not register test-only fixtures in the production catalog.

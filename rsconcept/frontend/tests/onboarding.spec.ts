@@ -23,6 +23,8 @@ test.beforeEach(async ({ page }) => {
     if (!sessionStorage.getItem(flag)) {
       localStorage.removeItem('portal.onboarding');
       sessionStorage.setItem(flag, '1');
+      // Allow auto-start invitations; default setup suppresses them for other suites.
+      sessionStorage.setItem('portal.onboarding.e2e-allow-auto', '1');
     }
   });
 });

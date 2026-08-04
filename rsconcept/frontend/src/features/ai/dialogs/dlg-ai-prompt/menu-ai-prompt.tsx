@@ -15,9 +15,10 @@ import { useAiDialogsStore } from '../ai-dialog-store';
 interface MenuAIPromptProps {
   promptID: number;
   generatedPrompt: string;
+  hasUnresolvedVariables: boolean;
 }
 
-export function MenuAIPrompt({ promptID, generatedPrompt }: MenuAIPromptProps) {
+export function MenuAIPrompt({ promptID, generatedPrompt, hasUnresolvedVariables }: MenuAIPromptProps) {
   const tx = useTx();
   const router = useConceptNavigation();
   const hideDialog = useAiDialogsStore(state => state.hideDialog);
@@ -28,6 +29,9 @@ export function MenuAIPrompt({ promptID, generatedPrompt }: MenuAIPromptProps) {
   }
 
   function handleCopyPrompt() {
+    if (hasUnresolvedVariables) {
+      toast.warning(tx('tx.ai.generated.unresolved.warning'));
+    }
     navigator.clipboard
       .writeText(generatedPrompt)
       .then(() => toast.success(tx('tx.general.copy.toClipboard.success')))

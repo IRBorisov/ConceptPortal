@@ -26,14 +26,19 @@ import { loadRSForm } from '@/features/rsform/backend/rsform-loader';
 import { type SandboxBundle } from '../models/bundle';
 import { createStarterSandboxBundle, resolveStarterLocale } from '../models/bundle-starter';
 import { sbApi } from '../stores/sandbox-mutations';
-import { downloadBundle, ensureBundleLoaded, importBundleFromJson, saveBundle } from '../stores/sandbox-repository';
+import {
+  downloadBundle,
+  ensureBundleLoaded,
+  getBundleLoadPromise,
+  getCachedBundle,
+  importBundleFromJson,
+  saveBundle,
+  syncBundleCache
+} from '../stores/sandbox-repository';
 
 import { BundleContext } from './bundle-context';
 
 type BundleUpdater = SandboxBundle | ((prev: SandboxBundle) => SandboxBundle);
-
-let initialBundleValue: SandboxBundle | null = null;
-let initialBundlePromise: Promise<SandboxBundle> | null = null;
 
 export function SandboxState({ children }: React.PropsWithChildren) {
   const intl = useIntl();
@@ -46,7 +51,7 @@ export function SandboxState({ children }: React.PropsWithChildren) {
   const commitBundle = useCallback(function commitBundle(next: BundleUpdater) {
     setBundleState(prev => {
       const resolved = typeof next === 'function' ? next(prev) : next;
-      syncBundleResource(resolved);
+      syncBundleCache(resolved);
       return resolved;
     });
   }, []);
@@ -94,6 +99,24 @@ export function SandboxState({ children }: React.PropsWithChildren) {
       engine.loadData(schema, model);
     },
     [model, engine, schema]
+  );
+
+  useEffect(
+    function reloadBundleOnMount() {
+      let isActive = true;
+      void ensureBundleLoaded().then(function applyFreshBundle(fresh) {
+        if (!isActive) {
+          return;
+        }
+        setBundleState(fresh);
+        syncBundleCache(fresh);
+      });
+
+      return function cancelReload() {
+        isActive = false;
+      };
+    },
+    []
   );
 
   useEffect(
@@ -250,27 +273,10 @@ export function SandboxState({ children }: React.PropsWithChildren) {
 // ======= Internals =======
 
 function useInitialSandboxBundle(): SandboxBundle {
-  if (initialBundleValue !== null) {
-    return initialBundleValue;
+  const cached = getCachedBundle();
+  if (cached !== null) {
+    return cached;
   }
 
-  const bundle = use(getInitialBundlePromise());
-  initialBundleValue = bundle;
-  return bundle;
-}
-
-function getInitialBundlePromise(): Promise<SandboxBundle> {
-  if (initialBundlePromise === null) {
-    initialBundlePromise = ensureBundleLoaded().then(bundle => {
-      initialBundleValue = bundle;
-      return bundle;
-    });
-  }
-
-  return initialBundlePromise;
-}
-
-function syncBundleResource(bundle: SandboxBundle) {
-  initialBundleValue = bundle;
-  initialBundlePromise = Promise.resolve(bundle);
+  return use(getBundleLoadPromise());
 }

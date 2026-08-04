@@ -40,6 +40,8 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
   const { schema, selectedCst, setSelectedCst, setSelectedEdges, deselectAll, pendingActiveID, clearPendingActiveID } =
     useSchemaEdit();
 
+  const prevTabRef = useRef(activeTab);
+
   const problemItems = schema.items.filter(cst => isSchemaIssue(cst));
   const countProblematic = problemItems.length;
   const listSyncRef = useRef({ activeTab, activeID });
@@ -61,6 +63,17 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
       onHideFooterEvent(nextNoFooter);
     },
     [activeTab]
+  );
+
+  useLayoutEffect(
+    function clearModifiedOnTabChange() {
+      if (prevTabRef.current === activeTab) {
+        return;
+      }
+      prevTabRef.current = activeTab;
+      setIsModified(false);
+    },
+    [activeTab, setIsModified]
   );
 
   useEffect(function restoreFooterOnUnmount() {
@@ -127,7 +140,6 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
     if (last === index) {
       return;
     }
-    setIsModified(false);
     setSelectedEdges([]);
     if (event.type == 'keydown') {
       const kbEvent = event as KeyboardEvent;

@@ -9,11 +9,11 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 import { LibraryTourID } from '@/features/onboarding/tours/editor-tours';
 
 import { MiniButton } from '@/components/control';
-import { IconFolderEdit } from '@/components/icons';
+import { IconFilterReset, IconFolderEdit } from '@/components/icons';
 
 import { IconShowSubfolders } from '../../components/icon-show-subfolders';
 import { labelLibraryLocationSegment } from '../../labels';
-import { useLibrarySearchStore } from '../../stores/library-search';
+import { useHasLocationFilter, useLibrarySearchStore } from '../../stores/library-search';
 
 interface LocationBreadcrumbProps {
   className?: string;
@@ -25,6 +25,8 @@ export function LocationBreadcrumb({ canRename, className, onRenameLocation }: L
   const tx = useTx();
   const location = useLibrarySearchStore(state => state.location);
   const setLocation = useLibrarySearchStore(state => state.setLocation);
+  const clearLocation = useLibrarySearchStore(state => state.clearLocation);
+  const hasLocationFilter = useHasLocationFilter();
   const subfolders = useLibrarySearchStore(state => state.subfolders);
   const toggleSubfolders = useLibrarySearchStore(state => state.toggleSubfolders);
 
@@ -57,6 +59,14 @@ export function LocationBreadcrumb({ canRename, className, onRenameLocation }: L
           icon={<IconShowSubfolders value={subfolders} />}
           onClick={toggleSubfolders}
         />
+        {hasLocationFilter ? (
+          <MiniButton
+            title={tx('tx.lib.location.clear')}
+            aria-label={tx('tx.lib.location.clear')}
+            icon={<IconFilterReset size='1.25rem' className='icon-primary' />}
+            onClick={clearLocation}
+          />
+        ) : null}
       </div>
 
       <div

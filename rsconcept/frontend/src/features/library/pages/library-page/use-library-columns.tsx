@@ -3,14 +3,28 @@
 import { useIntl } from 'react-intl';
 
 import { useTx } from '@/i18n';
-import { type LibraryItem } from '@rsconcept/domain/library';
+import { type LibraryItem, LibraryItemType } from '@rsconcept/domain/library';
 
 import { useLabelUser } from '@/features/users/backend/use-label-user';
 
 import { createColumnHelper } from '@/components/data-table';
 import { useWindowSize } from '@/hooks/use-window-size';
+import { globalIDs } from '@/utils/constants';
+
+import { IconItemType } from '../../components/icon-item-type';
 
 const columnHelper = createColumnHelper<LibraryItem>();
+
+function labelItemType(tx: ReturnType<typeof useTx>, itemType: LibraryItemType): string {
+  switch (itemType) {
+    case LibraryItemType.RSFORM:
+      return tx('tx.schema');
+    case LibraryItemType.OSS:
+      return tx('tx.oss.short');
+    case LibraryItemType.RSMODEL:
+      return tx('tx.model');
+  }
+}
 
 export function useLibraryColumns() {
   const { isSmall } = useWindowSize();
@@ -20,6 +34,28 @@ export function useLibraryColumns() {
   const getUserLabel = useLabelUser();
 
   return [
+    columnHelper.accessor('item_type', {
+      id: 'item_type',
+      header: '',
+      size: 40,
+      minSize: 40,
+      maxSize: 40,
+      enableSorting: false,
+      cell: props => {
+        const itemType = props.getValue();
+        const label = labelItemType(tx, itemType);
+        return (
+          <span
+            className='inline-flex'
+            aria-label={label}
+            data-tooltip-id={globalIDs.tooltip}
+            data-tooltip-content={label}
+          >
+            <IconItemType value={itemType} />
+          </span>
+        );
+      }
+    }),
     columnHelper.accessor('alias', {
       id: 'alias',
       header: tx('tx.lib.alias'),

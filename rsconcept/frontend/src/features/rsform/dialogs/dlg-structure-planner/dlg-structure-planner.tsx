@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { ReactFlowProvider } from '@xyflow/react';
 import clsx from 'clsx';
 
@@ -64,10 +65,20 @@ export function DlgStructurePlanner() {
   const selectedNode = items.find(node => node.key === selectedKey) ?? items[0];
   const isDefinitionTooLong = (selectedNode?.definition.length ?? 0) > DEFINITION_TRUNCATE;
   const definitionTooltip = useValueTooltipAnchor(isDefinitionTooLong && selectedNode ? selectedNode.definition : null);
+  const hasInvalidInput = !target?.effectiveType || items.length === 0;
 
-  if (!target?.effectiveType || items.length === 0) {
-    console.error('Structure planner error input', target, items);
-    hideDialog();
+  useEffect(
+    function notifyInvalidStructurePlannerInput() {
+      if (!hasInvalidInput) {
+        return;
+      }
+      toast.error(tx('tx.concept.expandStructure.fail'));
+      hideDialog();
+    },
+    [hasInvalidInput, hideDialog, tx]
+  );
+
+  if (hasInvalidInput) {
     return null;
   }
 
@@ -246,7 +257,7 @@ export function DlgStructurePlanner() {
           <div className='h-full w-full' data-tour='structure-planner-graph'>
             <StructureFlow
               items={items}
-              rootType={target.effectiveType}
+              rootType={target.effectiveType!}
               selected={selectedKey}
               setSelected={key => void handleSelectNode(key)}
             />

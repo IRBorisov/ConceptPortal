@@ -22,6 +22,7 @@ import { useCreateSynthesis } from '../../backend/use-create-synthesis';
 import { useOss } from '../../backend/use-oss';
 import { useOssDialogsStore } from '../oss-dialog-store';
 
+import { SubstitutionValiditySync } from './substitution-validity-sync';
 import { TabArguments } from './tab-arguments';
 import { TabSubstitutions } from './tab-substitutions';
 
@@ -83,12 +84,19 @@ export function DlgCreateSynthesis() {
   const values = useSelector(form.store, state => state.values);
   const alias = values.item_data.alias;
   const [activeTab, setActiveTab] = useState<TabID>(TabID.ARGUMENTS);
+  const [substitutionsValid, setSubstitutionsValid] = useState(true);
   const { canSubmit, hint } = (() => {
     if (!alias) {
       return { canSubmit: false, hint: tx('tx.cst.alias.validate') };
     }
     if (manager.oss.operations.some(operation => operation.alias === alias)) {
       return { canSubmit: false, hint: tx('tx.lib.alias.validate.taken') };
+    }
+    if (values.arguments.length === 0) {
+      return { canSubmit: false, hint: tx('tx.operation.argument.select') };
+    }
+    if (!substitutionsValid) {
+      return { canSubmit: false, hint: tx('tx.general.form.invalid') };
     }
     if (!schemaCreateSynthesis.safeParse(values).success) {
       return { canSubmit: false, hint: tx('tx.general.form.invalid') };
@@ -135,6 +143,16 @@ export function DlgCreateSynthesis() {
       helpTopic={HelpTopic.CC_OSS}
       tourID={DialogTourID.CREATE_SYNTHESIS}
     >
+      {values.arguments.length > 0 ? (
+        <Suspense fallback={null}>
+          <SubstitutionValiditySync
+            oss={schema}
+            inputs={values.arguments}
+            substitutions={values.substitutions}
+            onValidityChange={setSubstitutionsValid}
+          />
+        </Suspense>
+      ) : null}
       <Tabs className='grid' selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
         <TabList className='z-pop mx-auto flex border divide-x rounded-none' data-tour='synthesis-tabs'>
           <TabLabel title={tx('tx.operation.argument.select')} label={tx('tx.operation.argument.plural')} />

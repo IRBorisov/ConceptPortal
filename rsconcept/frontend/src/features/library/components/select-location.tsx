@@ -157,7 +157,8 @@ export function SelectLocation({
                     <IconFolderOpened size='1rem' className='icon-green' />
                   )
                 }
-                aria-label={tx('tx.lib.subfolder.visibility.hint')}
+                title={folded.includes(item) ? tx('tx.lib.folder.expand') : tx('tx.lib.folder.collapse')}
+                aria-label={folded.includes(item) ? tx('tx.lib.folder.expand') : tx('tx.lib.folder.collapse')}
                 onClick={event => onClickFold(event, item)}
               />
             ) : (

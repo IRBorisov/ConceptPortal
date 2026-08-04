@@ -12,6 +12,36 @@ import { sandboxDB } from './sandbox-db';
 const ROW_ID = 'current' as const;
 const DEFAULT_BUNDLE_FILE = 'sandbox-bundle.json' as const;
 
+let cachedBundle: SandboxBundle | null = null;
+let cachedBundlePromise: Promise<SandboxBundle> | null = null;
+
+/** Drop in-memory bundle cache so the next load reads IndexedDB. */
+export function invalidateBundleCache(): void {
+  cachedBundle = null;
+  cachedBundlePromise = null;
+}
+
+/** Keep in-memory cache aligned with the active sandbox session. */
+export function syncBundleCache(bundle: SandboxBundle): void {
+  cachedBundle = bundle;
+  cachedBundlePromise = Promise.resolve(bundle);
+}
+
+export function getCachedBundle(): SandboxBundle | null {
+  return cachedBundle;
+}
+
+export function getBundleLoadPromise(): Promise<SandboxBundle> {
+  if (cachedBundlePromise === null) {
+    cachedBundlePromise = ensureBundleLoaded().then(function rememberLoadedBundle(bundle) {
+      cachedBundle = bundle;
+      return bundle;
+    });
+  }
+
+  return cachedBundlePromise;
+}
+
 /** Load the sandbox bundle from the database. */
 export async function loadBundle(): Promise<SandboxBundle | null> {
   const row = await sandboxDB.bundle.get(ROW_ID);
@@ -22,6 +52,7 @@ export async function loadBundle(): Promise<SandboxBundle | null> {
 export async function saveBundle(bundle: SandboxBundle): Promise<void> {
   const parsed = schemaSandboxBundle.parse(bundle);
   await sandboxDB.bundle.put({ id: ROW_ID, bundle: parsed });
+  invalidateBundleCache();
 }
 
 /** Ensure Dexie has a document; seed from code when empty or stored data is invalid. */

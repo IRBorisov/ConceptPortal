@@ -45,7 +45,7 @@ export function MenuAI() {
   }
 
   return (
-    <div ref={menuRef} onBlur={handleMenuBlur} className='flex items-center justify-start relative h-full'>
+    <div ref={menuRef} onBlur={handleMenuBlur} className='relative flex items-center'>
       <NavigationButton
         title={tx('tx.ai')}
         hideTitle={isMenuOpen}
@@ -55,7 +55,7 @@ export function MenuAI() {
         onClick={toggleMenu}
       />
 
-      <Dropdown id={globalIDs.ai_dropdown} className='min-w-[12ch] max-w-48' stretchLeft isOpen={isMenuOpen}>
+      <Dropdown id={globalIDs.ai_dropdown} stretchLeft margin='mt-1' isOpen={isMenuOpen}>
         <DropdownButton
           text={tx('tx.ai.agent')}
           title={tx('tx.ai.agent.hint')}
@@ -63,8 +63,8 @@ export function MenuAI() {
           onClick={openRstoolReadme}
         />
         <DropdownButton
-          text={tx('tx.ai.prompt')}
-          title={tx('tx.ai.prompt.create')}
+          text={tx('tx.ai.prompt.generate')}
+          title={tx('tx.ai.prompt.generate.hint')}
           icon={<IconChat size='1rem' />}
           onClick={handleCreatePrompt}
         />

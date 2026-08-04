@@ -6,7 +6,8 @@ import { toast } from 'react-toastify';
 import { useTx } from '@/i18n';
 import { LocationHead } from '@rsconcept/domain/library';
 
-import { useConceptNavigation } from '@/app';
+import { urls,useConceptNavigation } from '@/app';
+import { useAuth } from '@/features/auth/backend/use-auth';
 import { useCreateFromSandbox } from '@/features/library/backend/use-create-from-sandbox';
 import { emitOnboardingEvent } from '@/features/onboarding/models/events';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding';
@@ -19,6 +20,7 @@ import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import {
   IconCalculateAll,
   IconDownload,
+  IconLogin,
   IconMenu,
   IconReset,
   IconRSForm,
@@ -33,6 +35,7 @@ import { useSandboxBundle } from '../../context/bundle-context';
 export function MenuMain() {
   const tx = useTx();
   const router = useConceptNavigation();
+  const { isAnonymous } = useAuth();
   const { resetBundle, importBundle, exportBundle, engine, bundle } = useSandboxBundle();
   const { createRSFormFromSandbox, createRSModelFromSandbox } = useCreateFromSandbox();
   const restartTour = useOnboardingStore(state => state.restartTour);
@@ -212,18 +215,32 @@ export function MenuMain() {
           icon={<IconUpload size='1rem' className='icon-primary' />}
           onClick={handleImportClick}
         />
-        <DropdownButton
-          text={tx('tx.schema.create')}
-          title={tx('tx.sandbox.export.schema')}
-          icon={<IconRSForm size='1rem' className='icon-green' />}
-          onClick={() => void handleCreateRSForm()}
-        />
-        <DropdownButton
-          text={tx('tx.model.create')}
-          title={tx('tx.sandbox.export.model')}
-          icon={<IconRSModel size='1rem' className='text-accent-orange' />}
-          onClick={() => void handleCreateRSModel()}
-        />
+        {isAnonymous ? (
+          <DropdownButton
+            text={tx('tx.general.login')}
+            title={tx('tx.general.login.hint')}
+            icon={<IconLogin size='1rem' className='icon-primary' />}
+            onClick={() => {
+              hideMenu();
+              router.push({ path: urls.login });
+            }}
+          />
+        ) : (
+          <>
+            <DropdownButton
+              text={tx('tx.schema.create')}
+              title={tx('tx.sandbox.export.schema')}
+              icon={<IconRSForm size='1rem' className='icon-green' />}
+              onClick={() => void handleCreateRSForm()}
+            />
+            <DropdownButton
+              text={tx('tx.model.create')}
+              title={tx('tx.sandbox.export.model')}
+              icon={<IconRSModel size='1rem' className='text-accent-orange' />}
+              onClick={() => void handleCreateRSModel()}
+            />
+          </>
+        )}
         <Divider margins='mx-3 my-1' />
         <DropdownButton
           text={tx('tx.general.resetAll')}

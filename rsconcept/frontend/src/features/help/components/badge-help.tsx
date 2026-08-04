@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { globalTx } from '@/i18n/format-app-message';
 import { useTx } from '@/i18n/use-tx';
 
+import { urls, useConceptNavigation } from '@/app';
 import { emitOnboardingEvent } from '@/features/onboarding/models/events';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboarding';
 import { ensureTourLoaded } from '@/features/onboarding/tours';
@@ -69,6 +70,7 @@ export function BadgeHelp({
 }: BadgeHelpProps) {
   const showHelp = usePreferencesStore(state => state.showHelp);
   const restartTour = useOnboardingStore(state => state.restartTour);
+  const router = useConceptNavigation();
   const tx = useTx();
   const { elementRef, isOpen, handleBlur, toggle, hide } = useDropdown();
 
@@ -78,7 +80,6 @@ export function BadgeHelp({
   }
 
   const showManualTooltip = showHelp && !isOpen;
-  const manualHref = `/manuals?topic=${topic}`;
   const anchorId = `help-${topic}`;
   const menuId = `${anchorId}-menu`;
   const buttonLabel = hasTour ? tx('tx.help.menu.hint') : tx('tx.general.help.hint');
@@ -97,7 +98,7 @@ export function BadgeHelp({
     event?.preventDefault();
     event?.stopPropagation();
     hide();
-    window.location.assign(manualHref);
+    router.push({ path: urls.help_topic(topic) });
   }
 
   function handleHelpActivate(event: React.MouseEvent<HTMLButtonElement>) {
@@ -107,7 +108,7 @@ export function BadgeHelp({
       toggle();
       return;
     }
-    window.location.assign(manualHref);
+    router.push({ path: urls.help_topic(topic) });
   }
 
   return (

@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
+import { LibraryItemType } from '@rsconcept/domain/library';
 
 import { urls } from '@/app/urls';
 import { useAuth } from '@/features/auth/backend/use-auth';
@@ -171,21 +172,21 @@ export function HomePage() {
             accentClass='bg-accent-teal/70'
           />
           <FeatureTile
-            to={urls.help_topic(HelpTopic.CC_SYSTEM)}
+            to={urls.create_item_by_type(LibraryItemType.RSFORM)}
             icon={<IconRSForm size='1.5rem' />}
             title={tx('tx.concept.system')}
             description={tx('tx.home.feature.schema.intro')}
             accentClass='bg-accent-purple'
           />
           <FeatureTile
-            to={urls.help_topic(HelpTopic.CC_RSMODEL)}
+            to={urls.create_item_by_type(LibraryItemType.RSMODEL)}
             icon={<IconRSModel size='1.5rem' />}
             title={tx('tx.model.plural')}
             description={tx('tx.home.feature.model.intro')}
             accentClass='bg-accent-orange'
           />
           <FeatureTile
-            to={urls.help_topic(HelpTopic.CC_OSS)}
+            to={urls.create_item_by_type(LibraryItemType.OSS)}
             icon={<IconOSS size='1.5rem' />}
             title={tx('tx.oss.plural')}
             description={tx('tx.home.feature.oss.intro')}

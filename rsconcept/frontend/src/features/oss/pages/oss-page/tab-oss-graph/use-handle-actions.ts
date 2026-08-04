@@ -418,7 +418,7 @@ export function useHandleActions() {
       return;
     }
     if (event.code === 'Digit2') {
-      withPreventDefault(handleCreateSynthesis)(event);
+      withPreventDefault(handleCreateSchema)(event);
       return;
     }
     if (event.code === 'Digit3') {

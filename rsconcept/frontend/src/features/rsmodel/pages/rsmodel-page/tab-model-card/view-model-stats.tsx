@@ -1,3 +1,5 @@
+'use client';
+
 import { useTx } from '@/i18n';
 import { type RSModelStats } from '@rsconcept/domain/library';
 
@@ -127,17 +129,26 @@ export function ViewModelStats({ className, stats, ...restProps }: ViewModelStat
         secondaryTitle={tx('tx.model.base.cardinality.hint')}
         details={[
           { label: tx('tx.model.base.cardinality'), value: stats.base_elements },
-          { label: tx('tx.evaluation.status.invalidData'), value: stats.count_invalid_data },
+          {
+            label: tx('tx.evaluation.status.invalidData'),
+            value: stats.count_invalid_data
+          },
           {
             label: tx('tx.concept.basic.validate.noInterpretation'),
             value: stats.count_missing_base
           },
-          { label: tx('tx.evaluation.status.axiomFalse.plural'), value: stats.count_false_axioms },
+          {
+            label: tx('tx.evaluation.status.axiomFalse.plural'),
+            value: stats.count_false_axioms
+          },
           {
             label: tx('tx.evaluation.status.error.hint'),
             value: stats.count_invalid_calculations
           },
-          { label: tx('tx.cst.type.term.validate.emptyValue'), value: stats.count_empty_terms }
+          {
+            label: tx('tx.cst.type.term.validate.emptyValue'),
+            value: stats.count_empty_terms
+          }
         ]}
       />
     </aside>

@@ -1,4 +1,4 @@
-import { TOUR_ANCHOR_ATTR, type Tour } from '../../models/tour';
+import { type Tour,TOUR_ANCHOR_ATTR } from '../../models/tour';
 import { DialogTourID } from '../editor-tours';
 
 import { createSynthesisContentEn } from './content.en';

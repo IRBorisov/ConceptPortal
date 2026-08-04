@@ -59,6 +59,7 @@ export const txLibraryEn: Record<string, string> = {
   'tx.lib.location.validate.hint':
     'Letters, digits, underscore, space and "!" allowed. A path segment cannot start or end with a space. Total length (including root) must not exceed {maxLen}',
   'tx.lib.location.open': 'Open in library',
+  'tx.lib.location.clear': 'Clear folder filter',
   'tx.lib.location.user': '/U : personal',
   'tx.lib.location.user.short': 'Personal',
   'tx.lib.location.user.hint': 'User’s private schemas',
@@ -100,6 +101,8 @@ export const txLibraryEn: Record<string, string> = {
   'tx.lib.subfolder.visibility.on': 'Subfolders: On',
   'tx.lib.subfolder.visibility.off': 'Subfolders: Off',
   'tx.lib.subfolder.visibility.hint': 'Toggle subfolder display',
+  'tx.lib.folder.expand': 'Expand folder',
+  'tx.lib.folder.collapse': 'Collapse folder',
 
   'tx.lib.item.passport': 'Passport',
   'tx.lib.item.owner.edit.confirm':
@@ -126,6 +129,7 @@ export const txLibraryEn: Record<string, string> = {
   'tx.concept.expandStructure': 'Expand structure',
   'tx.concept.expandStructure.hint': 'Manage the concept structure',
   'tx.concept.expandStructure.noun': 'Structure expansion',
+  'tx.concept.expandStructure.fail': 'Cannot open structure expansion for the selected constituent',
   'tx.concept.homonym.plural': 'Homonyms',
   'tx.concept.homonym.validate': 'Term matches constituents: {aliases}',
   'tx.concept.homonym.confirm': 'Term matches constituents: {aliases}. Create anyway?',

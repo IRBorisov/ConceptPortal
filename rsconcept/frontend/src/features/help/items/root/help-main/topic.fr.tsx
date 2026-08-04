@@ -45,6 +45,7 @@ export function HelpMainFr() {
             HelpTopic.TERM_CONTROL,
             HelpTopic.ACCESS,
             HelpTopic.VERSIONS,
+            HelpTopic.ASSISTANT,
             HelpTopic.INFO,
             HelpTopic.CONTRIBUTORS,
             HelpTopic.EXTEOR

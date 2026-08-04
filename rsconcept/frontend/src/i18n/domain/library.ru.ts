@@ -61,6 +61,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.lib.location.validate.hint':
     'Допустимы буквы, цифры, подчерк, пробел и "!". Сегмент пути не может начинаться и заканчиваться пробелом. Общая длина (с корнем) не должна превышать {maxLen}',
   'tx.lib.location.open': 'Открыть в библиотеке',
+  'tx.lib.location.clear': 'Сбросить фильтр папки',
 
   'tx.lib.location.user': '/U : личные',
   'tx.lib.location.user.short': 'Личные',
@@ -103,6 +104,8 @@ export const txLibraryRu: Record<string, string> = {
   'tx.lib.subfolder.visibility.on': 'Вложенные папки: Вкл',
   'tx.lib.subfolder.visibility.off': 'Вложенные папки: Выкл',
   'tx.lib.subfolder.visibility.hint': 'Отображение вложенных папок',
+  'tx.lib.folder.expand': 'Развернуть папку',
+  'tx.lib.folder.collapse': 'Свернуть папку',
 
   'tx.lib.item.passport': 'Паспорт',
   'tx.lib.item.owner.edit.confirm':
@@ -129,6 +132,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.concept.expandStructure': 'Раскрыть структуру',
   'tx.concept.expandStructure.hint': 'Управление структурой понятия',
   'tx.concept.expandStructure.noun': 'Раскрытие структуры',
+  'tx.concept.expandStructure.fail': 'Невозможно открыть раскрытие структуры для выбранной конституенты',
   'tx.concept.homonym.plural': 'Омонимы',
   'tx.concept.homonym.validate': 'Термин совпадает с конституентами: {aliases}',
   'tx.concept.homonym.confirm': 'Термин совпадает с конституентами: {aliases}. Создать?',

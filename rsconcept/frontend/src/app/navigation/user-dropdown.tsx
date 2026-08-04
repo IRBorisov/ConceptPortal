@@ -95,7 +95,7 @@ export function UserDropdown({ isOpen, hideDropdown }: UserDropdownProps) {
   }
 
   return (
-    <Dropdown id={globalIDs.user_dropdown} className='min-w-[18ch] max-w-48' stretchLeft isOpen={isOpen}>
+    <Dropdown id={globalIDs.user_dropdown} className='w-max min-w-[18ch]' stretchLeft margin='mt-1' isOpen={isOpen}>
       <DropdownButton
         text={user.username}
         title={tx('tx.general.user.profile')}

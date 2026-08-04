@@ -144,6 +144,7 @@ export const topicParent = new Map<HelpTopic, HelpTopic>([
   [HelpTopic.INFO_RULES, HelpTopic.INFO],
   [HelpTopic.INFO_PRIVACY, HelpTopic.INFO],
   [HelpTopic.INFO_API, HelpTopic.INFO],
+  [HelpTopic.ASSISTANT, HelpTopic.INFO],
 
   [HelpTopic.CONTRIBUTORS, HelpTopic.CONTRIBUTORS],
   [HelpTopic.EXTEOR, HelpTopic.EXTEOR]

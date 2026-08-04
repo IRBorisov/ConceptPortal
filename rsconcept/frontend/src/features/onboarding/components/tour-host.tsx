@@ -679,8 +679,8 @@ export function TourHost() {
   );
 
   useEffect(
-    function returnFromSubtourOnEscape() {
-      if (!isTourRendered || tourStack.length === 0) {
+    function dismissActiveTourOnEscape() {
+      if (!isTourRendered) {
         return;
       }
       function onKeyDown(event: KeyboardEvent) {
@@ -694,7 +694,7 @@ export function TourHost() {
         window.removeEventListener('keydown', onKeyDown, true);
       };
     },
-    [isTourRendered, tourStack.length, dismissActiveTour]
+    [isTourRendered, dismissActiveTour]
   );
 
   useEffect(

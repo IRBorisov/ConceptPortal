@@ -62,6 +62,7 @@ interface LibrarySearchStore {
   setFilterUser: (value: number | null) => void;
 
   resetFilter: () => void;
+  clearLocation: () => void;
 }
 
 export const useLibrarySearchStore = create<LibrarySearchStore>()(
@@ -99,12 +100,12 @@ export const useLibrarySearchStore = create<LibrarySearchStore>()(
         set(() => ({
           query: '',
           path: '',
-          location: '',
           selectorFilter: 'all',
           filterUser: null,
           searchMode: 'metadata',
           contextFields: { ...DEFAULT_LIBRARY_CONTEXT_SEARCH_FIELDS }
-        }))
+        })),
+      clearLocation: () => set({ location: '' })
     }),
     {
       version: 4,
@@ -147,18 +148,21 @@ export function useHasCustomFilter(): boolean {
   const query = useLibrarySearchStore(state => state.query);
   const selectorFilter = useLibrarySearchStore(state => state.selectorFilter);
   const filterUser = useLibrarySearchStore(state => state.filterUser);
-  const location = useLibrarySearchStore(state => state.location);
   const searchMode = useLibrarySearchStore(state => state.searchMode);
   const contextFields = useLibrarySearchStore(state => state.contextFields);
   return (
     !!path ||
     !!query ||
-    !!location ||
     selectorFilter !== 'all' ||
     filterUser !== null ||
     searchMode !== 'metadata' ||
     !isDefaultContextSearchFields(contextFields)
   );
+}
+
+/** Utility function that indicates if a folder location filter is set. */
+export function useHasLocationFilter(): boolean {
+  return !!useLibrarySearchStore(state => state.location);
 }
 
 /** Utility function that returns the current library filter. */

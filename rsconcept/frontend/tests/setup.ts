@@ -23,10 +23,35 @@ function seedE2eCsrfCookie() {
   document.cookie = 'csrftoken=e2e-playwright-csrf; path=/; SameSite=Lax';
 }
 
+/**
+ * Skip auto-start tours so invitations do not block clicks.
+ * Onboarding specs set `portal.onboarding.e2e-allow-auto` to opt out.
+ */
+function suppressAutoStartTours() {
+  if (sessionStorage.getItem('portal.onboarding.e2e-allow-auto')) {
+    return;
+  }
+  localStorage.setItem(
+    'portal.onboarding',
+    JSON.stringify({
+      state: {
+        tours: {
+          'sandbox-intro': { status: 'skipped', seenVersion: 999, resumeStep: 0 },
+          'library-intro': { status: 'skipped', seenVersion: 999, resumeStep: 0 }
+        },
+        resumeOfferTourID: null,
+        resumeNesting: []
+      },
+      version: 1
+    })
+  );
+}
+
 export const test = base.extend({
   page: async ({ page }, use) => {
     await page.addInitScript(seedDefaultLocale);
     await page.addInitScript(seedE2eCsrfCookie);
+    await page.addInitScript(suppressAutoStartTours);
     await setupAuth(page);
     await setupUsers(page);
     await setupLibrary(page);

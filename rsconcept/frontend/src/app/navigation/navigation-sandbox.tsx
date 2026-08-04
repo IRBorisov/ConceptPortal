@@ -47,7 +47,7 @@ export function NavigationSandbox() {
           'pl-2 sm:pr-4 h-12 flex gap-2 justify-between',
           'cc-shadow-border',
           'transition-[max-height,translate] ease-bezier duration-move',
-          noNavigationAnimation ? '-translate-y-6 max-h-0' : 'max-h-12'
+          noNavigationAnimation ? '-translate-y-6 max-h-0 overflow-hidden' : 'max-h-12 overflow-visible'
         )}
       >
         <div className='absolute top-0 w-full h-full overflow-hidden'>

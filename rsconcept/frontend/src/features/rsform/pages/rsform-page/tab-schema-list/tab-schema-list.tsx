@@ -11,12 +11,12 @@ import { emitOnboardingAction, OnboardingActionID } from '@/features/onboarding/
 
 import { ExportDropdown } from '@/components/control/export-dropdown';
 import { type RowSelectionState } from '@/components/data-table';
-import { SearchBar } from '@/components/input';
 import { useRowsDropHandler } from '@/hooks/use-rows-drop-handler';
 import { useFitHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { withPreventDefault } from '@/utils/utils';
 
+import { ConstituentsSearch } from '../../../components/view-constituents/constituents-search';
 import { useFilteredItems } from '../../../components/view-constituents/use-filtered-items';
 import { hasActiveCstFilter, useCstSearchStore } from '../../../stores/cst-search';
 import { useSchemaEdit } from '../schema-edit-context';
@@ -47,14 +47,9 @@ export function TabSchemaList() {
 
   const query = useCstSearchStore(state => state.query);
   const filter = useCstSearchStore(state => state.filter);
-  const setQuery = useCstSearchStore(state => state.setQuery);
   const filtered = useFilteredItems(schema);
   const listScrollKey = `${query}\0${filter}`;
   const hasActiveFilter = hasActiveCstFilter(query, filter);
-
-  function handleChangeQuery(value: string) {
-    setQuery(value);
-  }
 
   function completeSearchPractice(value: string) {
     if (value.trim()) {
@@ -186,17 +181,16 @@ export function TabSchemaList() {
             onSelect={(event, value) => router.gotoOss(value.id, event.ctrlKey || event.metaKey)}
           />
         ) : null}
-        <SearchBar
-          id='constituents_search'
-          noBorder
-          className='max-w-50'
-          query={query}
-          onChangeQuery={handleChangeQuery}
-          onBlur={event => completeSearchPractice(event.currentTarget.value)}
-          onKeyDown={handleSearchKeyDown}
-          stopKeyPropagation
-          data-tour='list-search'
-        />
+        <div data-tour='list-search'>
+          <ConstituentsSearch
+            id='constituents_search'
+            compact
+            className='ml-auto max-w-70'
+            stopSearchKeyPropagation
+            onSearchBlur={event => completeSearchPractice(event.currentTarget.value)}
+            onSearchKeyDown={handleSearchKeyDown}
+          />
+        </div>
       </div>
 
       <ExportDropdown

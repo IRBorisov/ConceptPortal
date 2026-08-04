@@ -5,8 +5,8 @@ export const txAiFr: Record<string, string> = {
   'tx.ai.agent.hint': 'Documentation @rsconcept/rstool pour les agents IA externes',
   'tx.ai.generator': 'Générateur de requêtes LLM',
 
-  'tx.ai.prompt': 'Requête',
-  'tx.ai.prompt.create': 'Créer une requête',
+  'tx.ai.prompt.generate': 'Nouvelle requête',
+  'tx.ai.prompt.generate.hint': 'Ouvrir le générateur de requêtes LLM depuis un modèle',
   'tx.ai.prompt.sample': 'Exemple de requête',
   'tx.ai.prompt.sample.hint': 'Exemple: Propose une complétion pour le schéma {{schema}}',
   'tx.ai.prompt.sample.generate': 'Générer un exemple de requête',
@@ -24,11 +24,17 @@ export const txAiFr: Record<string, string> = {
   'tx.ai.template.title.hint': 'Saisissez un titre de modèle unique',
   'tx.ai.template.text': 'Texte du modèle',
   'tx.ai.template.select.hint': 'Choisir un modèle',
+  'tx.ai.template.select.guidance':
+    'Choisissez un modèle ci-dessus pour prévisualiser les variables et générer une requête.',
+  'tx.ai.template.select.edit': 'Choisissez un modèle dans la liste.',
+  'tx.ai.template.empty.generator': 'Aucun modèle disponible. Créez un modèle ou ouvrez la page des modèles.',
   'tx.ai.template.notFound': 'Modèle de requête avec l’identifiant {itemID} non trouvé',
 
   'tx.ai.generated.short': 'Résultat',
   'tx.ai.generated.hint': 'Message généré',
   'tx.ai.generated.copy': 'Copier le résultat dans le presse-papiers',
+  'tx.ai.generated.unresolved.warning':
+    'Le résultat contient des variables ou des placeholders non résolus. Vérifiez avant de copier.',
 
   'tx.ai.variable': 'Variable',
   'tx.ai.variable.plural': 'Variables',

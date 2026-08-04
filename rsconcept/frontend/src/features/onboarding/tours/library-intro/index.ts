@@ -10,7 +10,7 @@ export const libraryIntroTour: Tour = {
   id: LibraryTourID.INTRO,
   version: 2,
   route: '/library',
-  autoStart: false,
+  autoStart: true,
   steps: [
     { id: 'welcome' },
     {

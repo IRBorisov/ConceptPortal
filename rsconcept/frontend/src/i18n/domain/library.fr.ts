@@ -61,6 +61,7 @@ export const txLibraryFr: Record<string, string> = {
   'tx.lib.location.validate.hint':
     'Lettres, chiffres, soulignement, espace et « ! » autorisés. Un segment ne peut ni commencer ni se terminer par un espace. La longueur totale (racine incluse) ne doit pas dépasser {maxLen}',
   'tx.lib.location.open': 'Ouvrir dans la bibliothèque',
+  'tx.lib.location.clear': 'Réinitialiser le filtre de dossier',
   'tx.lib.location.user': '/U : personnel',
   'tx.lib.location.user.short': 'Personnel',
   'tx.lib.location.user.hint': 'Schémas privés de l’utilisateur',
@@ -102,6 +103,8 @@ export const txLibraryFr: Record<string, string> = {
   'tx.lib.subfolder.visibility.on': 'Sous-dossiers : activés',
   'tx.lib.subfolder.visibility.off': 'Sous-dossiers : désactivés',
   'tx.lib.subfolder.visibility.hint': 'Afficher les sous-dossiers',
+  'tx.lib.folder.expand': 'Développer le dossier',
+  'tx.lib.folder.collapse': 'Réduire le dossier',
 
   'tx.lib.item.passport': 'Passport',
   'tx.lib.item.owner.edit.confirm':
@@ -128,6 +131,8 @@ export const txLibraryFr: Record<string, string> = {
   'tx.concept.expandStructure': 'Développer la structure',
   'tx.concept.expandStructure.hint': 'Gérer la structure du concept',
   'tx.concept.expandStructure.noun': 'Développement de structure',
+  'tx.concept.expandStructure.fail':
+    'Impossible d’ouvrir le développement de structure pour la constituante sélectionnée',
   'tx.concept.homonym.plural': 'Homonymes',
   'tx.concept.homonym.validate': 'Terme coïncide avec des constituantes : {aliases}',
   'tx.concept.homonym.confirm': 'Terme coïncide avec des constituantes : {aliases}. Créer ?',

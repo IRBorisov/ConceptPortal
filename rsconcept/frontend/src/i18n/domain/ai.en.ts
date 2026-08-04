@@ -5,8 +5,8 @@ export const txAiEn: Record<string, string> = {
   'tx.ai.agent.hint': '@rsconcept/rstool documentation for external AI agents',
   'tx.ai.generator': 'LLM prompt generator',
 
-  'tx.ai.prompt': 'Prompt',
-  'tx.ai.prompt.create': 'Create prompt',
+  'tx.ai.prompt.generate': 'New prompt',
+  'tx.ai.prompt.generate.hint': 'Open the LLM prompt generator from a template',
   'tx.ai.prompt.sample': 'Prompt sample',
   'tx.ai.prompt.sample.hint': 'Example: Suggest a completion for CS {{schema}}',
   'tx.ai.prompt.sample.generate': 'Generate prompt sample',
@@ -24,11 +24,16 @@ export const txAiEn: Record<string, string> = {
   'tx.ai.template.title.hint': 'Enter a unique template title',
   'tx.ai.template.text': 'Template text',
   'tx.ai.template.select.hint': 'Select a template',
+  'tx.ai.template.select.guidance': 'Select a template above to preview variables and generate a prompt.',
+  'tx.ai.template.select.edit': 'Select a template from the list.',
+  'tx.ai.template.empty.generator': 'No templates available. Create a template or open the templates page.',
   'tx.ai.template.notFound': 'Prompt template with identifier {itemID} not found',
 
   'tx.ai.generated.short': 'Result',
   'tx.ai.generated.hint': 'Generated message',
   'tx.ai.generated.copy': 'Copy the result to the clipboard',
+  'tx.ai.generated.unresolved.warning':
+    'The result contains unresolved variables or placeholders. Review before copying.',
 
   'tx.ai.variable': 'Variable',
   'tx.ai.variable.plural': 'Variables',

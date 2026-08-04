@@ -5,8 +5,8 @@ export const txAiRu: Record<string, string> = {
   'tx.ai.agent.hint': 'Документация @rsconcept/rstool для внешних ИИ-агентов',
   'tx.ai.generator': 'Генератор запросов LLM',
 
-  'tx.ai.prompt': 'Запрос',
-  'tx.ai.prompt.create': 'Создать запрос',
+  'tx.ai.prompt.generate': 'Новый запрос',
+  'tx.ai.prompt.generate.hint': 'Открыть генератор LLM-запросов из шаблона',
   'tx.ai.prompt.sample': 'Пример запроса',
   'tx.ai.prompt.sample.hint': 'Пример: Предложи дополнение для КС {{schema}}',
   'tx.ai.prompt.sample.generate': 'Сгенерировать пример запроса',
@@ -24,11 +24,16 @@ export const txAiRu: Record<string, string> = {
   'tx.ai.template.title.hint': 'Введите уникальное название шаблона',
   'tx.ai.template.text': 'Текст шаблона',
   'tx.ai.template.select.hint': 'Выберите шаблон',
+  'tx.ai.template.select.guidance': 'Выберите шаблон выше, чтобы просмотреть переменные и сгенерировать запрос.',
+  'tx.ai.template.select.edit': 'Выберите шаблон из списка.',
+  'tx.ai.template.empty.generator': 'Шаблоны отсутствуют. Создайте шаблон или откройте страницу шаблонов.',
   'tx.ai.template.notFound': 'Шаблон запроса с указанным идентификатором {itemID} отсутствует',
 
   'tx.ai.generated.short': 'Результат',
   'tx.ai.generated.hint': 'Сгенерированное сообщение',
   'tx.ai.generated.copy': 'Скопировать результат в буфер обмена',
+  'tx.ai.generated.unresolved.warning':
+    'В результате есть неразрешённые переменные или заполнители. Проверьте перед копированием.',
 
   'tx.ai.variable': 'Переменная',
   'tx.ai.variable.plural': 'Переменные',

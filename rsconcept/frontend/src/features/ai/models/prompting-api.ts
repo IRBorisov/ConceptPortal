@@ -9,6 +9,8 @@ import { PARAMETER } from '@/utils/constants';
 
 import { mockPromptVariable } from '../labels';
 
+import { PromptVariableType } from './prompting';
+
 /** Extracts a list of variables (as string[]) from a target string.
  * Note: Variables are wrapped in {{...}} and can include a-zA-Z, hyphen, and dot inside curly braces.
  * */
@@ -20,6 +22,24 @@ export function extractPromptVariables(target: string): string[] {
     result.push(match[1]);
   }
   return result;
+}
+
+/** Whether generated prompt still has unresolved variable placeholders. */
+export function hasUnresolvedPromptSubstitution(
+  generatedPrompt: string,
+  templateVariables: string[],
+  availableTypes: PromptVariableType[]
+): boolean {
+  if (/![a-zA-Z.-]+!/.test(generatedPrompt)) {
+    return true;
+  }
+  for (const variable of templateVariables) {
+    const type = Object.values(PromptVariableType).find(t => t === variable);
+    if (!type || !availableTypes.includes(type)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /** Generates a sample text from a target templates. */

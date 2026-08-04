@@ -1,5 +1,5 @@
 import { type UserProfile } from '../src/features/users/backend/types';
-import { authAdmin, authAnonymous } from './mocks/auth';
+import { authAdmin, authAnonymous, setupLogout } from './mocks/auth';
 import { BACKEND_URL } from './mocks/constants';
 import { clickAndWaitForApi, waitForApiResponse } from './navigation';
 import { expect, test } from './setup';
@@ -114,8 +114,6 @@ test('profile page shows error when old password is wrong', async ({ page }) => 
 });
 
 test('profile page redirects to login after successful password change', async ({ page }) => {
-  let afterPasswordChange = false;
-
   const profile: UserProfile = {
     id: 1,
     username: 'admin',
@@ -124,23 +122,14 @@ test('profile page redirects to login after successful password change', async (
     last_name: 'Admin'
   };
 
+  await setupLogout(page);
+
   await page.route(`${BACKEND_URL}/users/api/profile`, async route => {
     await route.fulfill({ json: profile });
   });
 
   await page.route(`${BACKEND_URL}/users/api/change-password`, async route => {
-    afterPasswordChange = true;
     await route.fulfill({ status: 200, json: {} });
-  });
-
-  await page.route(`${BACKEND_URL}/users/api/auth`, async route => {
-    if (afterPasswordChange) {
-      await route.fulfill({
-        json: { id: null, username: '', is_staff: false, editor: [] }
-      });
-      return;
-    }
-    await route.fallback();
   });
 
   await page.goto('/profile');

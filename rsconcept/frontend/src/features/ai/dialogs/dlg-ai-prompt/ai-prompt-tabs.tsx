@@ -8,8 +8,9 @@ import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
 
 import { usePromptTemplate } from '../../backend/use-prompt-template';
 import { PromptVariableType } from '../../models/prompting';
-import { extractPromptVariables } from '../../models/prompting-api';
+import { extractPromptVariables, hasUnresolvedPromptSubstitution } from '../../models/prompting-api';
 import { evaluatePromptVariable, useAIStore } from '../../stores/ai-context';
+import { useAvailableVariables } from '../../stores/use-available-variables';
 
 import { MenuAIPrompt } from './menu-ai-prompt';
 import { TabPromptEdit } from './tab-prompt-edit';
@@ -39,6 +40,7 @@ export function AIPromptTabs({ promptID, activeTab, setActiveTab }: AIPromptTabs
     setPromptDraft({ promptID, text: nextText });
   }
   const variables = extractPromptVariables(text);
+  const availableTypes = useAvailableVariables();
 
   const generatedPrompt = (() => {
     let result = text;
@@ -52,11 +54,16 @@ export function AIPromptTabs({ promptID, activeTab, setActiveTab }: AIPromptTabs
     }
     return result;
   })();
+  const hasUnresolvedVariables = hasUnresolvedPromptSubstitution(generatedPrompt, variables, availableTypes);
 
   return (
     <Tabs selectedIndex={activeTab} onSelect={index => setActiveTab(index as TabID)}>
       <TabList className='mx-auto w-fit flex border-x border-b divide-x rounded-none'>
-        <MenuAIPrompt promptID={promptID} generatedPrompt={generatedPrompt} />
+        <MenuAIPrompt
+          promptID={promptID}
+          generatedPrompt={generatedPrompt}
+          hasUnresolvedVariables={hasUnresolvedVariables}
+        />
 
         <TabLabel label={tx('tx.ai.template')} />
         <TabLabel label={tx('tx.ai.generated.short')} />
@@ -73,7 +80,7 @@ export function AIPromptTabs({ promptID, activeTab, setActiveTab }: AIPromptTabs
           />
         </TabPanel>
         <TabPanel>
-          <TabPromptResult prompt={generatedPrompt} />
+          <TabPromptResult prompt={generatedPrompt} hasUnresolvedVariables={hasUnresolvedVariables} />
         </TabPanel>
         <TabPanel>
           <TabPromptVariables template={text} />

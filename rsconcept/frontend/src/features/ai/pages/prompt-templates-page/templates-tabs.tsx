@@ -11,6 +11,7 @@ import { BadgeHelp } from '@/features/help/components/badge-help';
 
 import { Loader } from '@/components/loader';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
+import { NoData } from '@/components/view';
 
 import { MenuTemplates } from './menu-templates';
 import { TabEditTemplate } from './tab-edit-template';
@@ -71,10 +72,13 @@ export function TemplatesTabs({ activeID, tab }: TemplatesTabsProps) {
         <TabPanel>
           {activeID ? (
             <Suspense fallback={<TabLoader />}>
-              {' '}
-              <TabEditTemplate activeID={activeID} />{' '}
+              <TabEditTemplate activeID={activeID} />
             </Suspense>
-          ) : null}
+          ) : (
+            <NoData className='min-h-80 pt-16'>
+              <p>{tx('tx.ai.template.select.edit')}</p>
+            </NoData>
+          )}
         </TabPanel>
         <TabPanel>
           <TabViewVariables />

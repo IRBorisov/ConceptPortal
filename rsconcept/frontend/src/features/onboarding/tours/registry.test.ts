@@ -27,7 +27,8 @@ describe('tour registry', () => {
 
   test('findAutoStartTourID is sync and does not require content', () => {
     expect(findAutoStartTourID('/sandbox')).toBe(SandboxTourID.INTRO);
-    expect(findAutoStartTourID('/library')).toBeNull();
+    expect(findAutoStartTourID('/library')).toBe(LibraryTourID.INTRO);
+    expect(findAutoStartTourID('/library/create')).toBeNull();
     expect(findAutoStartTourID('/unknown')).toBeNull();
   });
 
@@ -88,11 +89,14 @@ describe('tour registry', () => {
     });
   });
 
-  test('findAutoStartTour loads sandbox intro only', async () => {
+  test('findAutoStartTour loads auto-start tours for matching routes', async () => {
     const sandbox = await findAutoStartTour('/sandbox');
     expect(sandbox?.id).toBe(SandboxTourID.INTRO);
     expect(sandbox?.autoStart).toBe(true);
-    expect(await findAutoStartTour('/library')).toBeNull();
+
+    const library = await findAutoStartTour('/library');
+    expect(library?.id).toBe(LibraryTourID.INTRO);
+    expect(library?.autoStart).toBe(true);
   });
 
   test('ensureTourLoaded caches and returns null for unknown ids', async () => {
@@ -103,12 +107,12 @@ describe('tour registry', () => {
     expect(await ensureTourLoaded('missing-tour')).toBeNull();
   });
 
-  test('shared editor, library, and passport tours are not auto-started', async () => {
+  test('shared editor and passport tours are not auto-started', async () => {
     await loadAllTours();
     expect(getTourByID(EditorTourID.CONSTITUENTS_LIST)?.autoStart).toBe(false);
     expect(getTourByID(EditorTourID.CONCEPT_EDITOR)?.autoStart).toBe(false);
     expect(getTourByID(EditorTourID.TERM_GRAPH)?.autoStart).toBe(false);
-    expect(getTourByID(LibraryTourID.INTRO)?.autoStart).toBe(false);
+    expect(getTourByID(LibraryTourID.INTRO)?.autoStart).toBe(true);
     expect(getTourByID(PassportTourID.SCHEMA)?.autoStart).toBe(false);
     expect(getTourByID(PassportTourID.MODEL)?.autoStart).toBe(false);
     expect(getTourByID(PassportTourID.OSS)?.autoStart).toBe(false);

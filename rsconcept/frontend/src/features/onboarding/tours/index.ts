@@ -79,7 +79,7 @@ const tourRegistrations: Record<string, TourRegistration> = {
     load: () => import('./term-graph').then(module => module.termGraphTour)
   },
   [LibraryTourID.INTRO]: {
-    autoStart: false,
+    autoStart: true,
     route: '/library',
     load: () => import('./library-intro').then(module => module.libraryIntroTour)
   },
@@ -177,9 +177,14 @@ export async function loadAllTours(): Promise<readonly Tour[]> {
 /** Sync auto-start candidate id from catalog metadata (no content load). */
 export function findAutoStartTourID(pathname: string): string | null {
   for (const [tourID, registration] of Object.entries(tourRegistrations)) {
-    if (registration.autoStart && tourMatchesRoute({ route: registration.route }, pathname)) {
-      return tourID;
+    if (!registration.autoStart || !tourMatchesRoute({ route: registration.route }, pathname)) {
+      continue;
     }
+    // Library intro targets the browser only — not create/edit subroutes under /library/.
+    if (tourID === LibraryTourID.INTRO && pathname !== '/library') {
+      continue;
+    }
+    return tourID;
   }
   return null;
 }

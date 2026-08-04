@@ -7,6 +7,7 @@ import { useTx } from '@/i18n';
 import { urls, useConceptNavigation } from '@/app';
 import { type IChangePasswordDTO, schemaChangePassword } from '@/features/auth';
 import { useChangePassword } from '@/features/auth/backend/use-change-password';
+import { useLogout } from '@/features/auth/backend/use-logout';
 
 import { isAxiosError } from '@/backend/api-transport';
 import { SubmitButton } from '@/components/control';
@@ -18,6 +19,7 @@ import { extractErrorMessage } from '@/utils/utils';
 export function EditorPassword() {
   const tx = useTx();
   const router = useConceptNavigation();
+  const { logout } = useLogout();
   const { changePassword, isPending, error: serverError, reset: clearServerError } = useChangePassword();
 
   const form = useForm({
@@ -30,7 +32,9 @@ export function EditorPassword() {
       onChange: schemaChangePassword
     },
     onSubmit: async ({ value }) => {
-      await changePassword(value).then(() => router.pushAsync({ path: urls.login, force: true }));
+      await changePassword(value).then(() =>
+        logout().then(() => router.pushAsync({ path: urls.login, force: true }))
+      );
     }
   });
 

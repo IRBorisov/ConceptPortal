@@ -19,6 +19,9 @@ interface ConstituentsSearchProps {
   showModelFilter?: boolean;
   stopSearchKeyPropagation?: boolean;
   compact?: boolean;
+  className?: string;
+  onSearchBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
+  onSearchKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export function ConstituentsSearch({
@@ -26,7 +29,10 @@ export function ConstituentsSearch({
   actions,
   showModelFilter,
   stopSearchKeyPropagation,
-  compact
+  compact,
+  className,
+  onSearchBlur,
+  onSearchKeyDown
 }: ConstituentsSearchProps) {
   const tx = useTx();
   const query = useCstSearchStore(state => state.query);
@@ -43,7 +49,8 @@ export function ConstituentsSearch({
     <div
       className={cn(
         'flex items-center bg-input pl-2 pr-1',
-        compact ? 'h-8 max-w-70 shrink-0 border rounded-md overflow-hidden' : 'border-b rounded-t-md'
+        compact ? 'h-8 max-w-70 shrink-0 border rounded-md overflow-hidden' : 'border-b rounded-t-md',
+        className
       )}
     >
       <MiniButton
@@ -59,6 +66,8 @@ export function ConstituentsSearch({
         className={cn(compact ? 'min-w-0 w-28' : 'min-w-24 grow')}
         query={query}
         onChangeQuery={setQuery}
+        onBlur={onSearchBlur}
+        onKeyDown={onSearchKeyDown}
         stopKeyPropagation={stopSearchKeyPropagation}
       />
       <SelectorCstFilter showModelFilter={showModelFilter} className={compact ? 'shrink-0' : undefined} />
