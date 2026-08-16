@@ -5,6 +5,7 @@
     "strict": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
 
     "paths": {

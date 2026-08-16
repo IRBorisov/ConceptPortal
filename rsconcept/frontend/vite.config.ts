@@ -6,7 +6,7 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'url';
 
-import { sitemapPlugin } from './vite-plugin-sitemap';
+import { sitemapPlugin } from './vite-plugin-sitemap.ts';
 
 function getPackageVersion(): string {
   const packageJsonPath = fileURLToPath(new URL('./package.json', import.meta.url));

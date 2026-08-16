@@ -5,17 +5,13 @@ import { fileURLToPath } from 'node:url';
 import type { Plugin } from 'vite';
 import { loadEnv } from 'vite';
 
-import { PUBLIC_SITEMAP_PATHS } from './public-sitemap-paths';
+import { PUBLIC_SITEMAP_PATHS } from './public-sitemap-paths.ts';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SUPPORTED_LOCALES = ['ru', 'en', 'fr'] as const;
 
 function escapeXml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function normalizeOrigin(raw: string): string {
@@ -90,7 +86,9 @@ export function sitemapPlugin(): Plugin {
 
       const origin = normalizeOrigin(originRaw);
       if (!origin.startsWith('http://') && !origin.startsWith('https://')) {
-        this.warn(`[portal-sitemap] VITE_PORTAL_PUBLIC_ORIGIN must be an absolute URL; got "${originRaw}". Skipping sitemap.`);
+        this.warn(
+          `[portal-sitemap] VITE_PORTAL_PUBLIC_ORIGIN must be an absolute URL; got "${originRaw}". Skipping sitemap.`
+        );
         return;
       }
 
