@@ -52,6 +52,8 @@ export default typescriptPlugin.config(
       '**/node_modules/**',
       '**/public/**',
       '**/dist/**',
+      '**/playwright-report/**',
+      '**/test-results/**',
       '**/*.json',
       'vite.config.ts',
       'vitest.config.ts',
