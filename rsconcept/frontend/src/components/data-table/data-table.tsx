@@ -2,14 +2,7 @@
 'use no memo';
 
 import { useMemo, useRef, useState } from 'react';
-import {
-  type ColumnSort,
-  createColumnHelper,
-  type RowData,
-  type RowSelectionState,
-  type TableOptions,
-  type VisibilityState
-} from '@tanstack/react-table';
+import { type ColumnSort, type TableOptions } from '@tanstack/react-table';
 
 import { type Styling } from '../props';
 import { cn } from '../utils';
@@ -17,14 +10,23 @@ import { cn } from '../utils';
 import { DefaultNoData } from './default-no-data';
 import { PaginationTools } from './pagination-tools';
 import { TableBody } from './table-body';
+import {
+  createColumnHelper,
+  type DataTableColumns,
+  type DataTableFeatures,
+  type DataTableRowData,
+  type RowSelectionState,
+  type VisibilityState
+} from './table-features';
 import { TableFooter } from './table-footer';
 import { TableHeader } from './table-header';
 import { type IConditionalStyle, useDataTable } from './use-data-table';
 
 export { createColumnHelper, type RowSelectionState, type VisibilityState };
+export type { DataTableColumnDef, DataTableColumns, DataTableFeatures } from './table-features';
 
 /** Payload emitted when rows are reordered via drag-and-drop. */
-export interface DataTableRowDrop<TData extends RowData> {
+export interface DataTableRowDrop<TData> {
   /** Rows that were dragged. */
   draggedRows: TData[];
 
@@ -40,10 +42,19 @@ export interface DataTableDropHint {
   after: boolean;
 }
 
-export interface DataTableProps<TData extends RowData>
+export interface DataTableProps<TData>
   extends
     Styling,
-    Pick<TableOptions<TData>, 'data' | 'columns' | 'getRowId' | 'onRowSelectionChange' | 'onColumnVisibilityChange'> {
+    Pick<TableOptions<DataTableFeatures, DataTableRowData<TData>>, 'getRowId' | 'onColumnVisibilityChange'> {
+  /** Table rows. */
+  data: readonly TData[];
+
+  /** Column definitions bound to Portal table features. */
+  columns: DataTableColumns<TData>;
+
+  /** Called when row selection changes. */
+  onRowSelectionChange?: React.Dispatch<React.SetStateAction<RowSelectionState>>;
+
   /** Id of the component. */
   id?: string;
 
@@ -118,7 +129,7 @@ export interface DataTableProps<TData extends RowData>
 }
 
 /** Data representation as a table. */
-export function DataTable<TData extends RowData>({
+export function DataTable<TData>({
   id,
   style,
   className,

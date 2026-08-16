@@ -52,7 +52,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
       maxSize: 50,
       enableSorting: true,
       cell: props => <BadgeSharedTemplate value={props.getValue()} />,
-      sortingFn: 'text'
+      sortFn: 'text'
     }),
     columnHelper.accessor('label', {
       id: 'label',
@@ -62,7 +62,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
       maxSize: 200,
       enableSorting: true,
       cell: props => <span className='min-w-20'>{props.getValue()}</span>,
-      sortingFn: 'text'
+      sortFn: 'text'
     }),
     columnHelper.accessor('description', {
       id: 'description',
@@ -71,7 +71,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
       minSize: 200,
       maxSize: 1200,
       enableSorting: true,
-      sortingFn: 'text'
+      sortFn: 'text'
     }),
     columnHelper.accessor('owner', {
       id: 'owner',
@@ -81,7 +81,7 @@ export function TabListTemplates({ activeID }: TabListTemplatesProps) {
       maxSize: 400,
       cell: props => getUserLabel(props.getValue()),
       enableSorting: true,
-      sortingFn: 'text'
+      sortFn: 'text'
     })
   ];
 

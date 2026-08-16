@@ -2,7 +2,6 @@
 'use client';
 
 import { useCallback } from 'react';
-import { type Table } from '@tanstack/react-table';
 
 import { useTx } from '@/i18n';
 
@@ -11,12 +10,14 @@ import { prefixes } from '@/utils/constants';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../input/select';
 import { cn } from '../utils';
 
+import { type DataTableInstance } from './table-features';
+
 interface SelectPaginationProps<TData> {
   /** Id of the per-page select trigger. */
   id?: string;
 
   /** TanStack table instance. */
-  table: Table<TData>;
+  table: DataTableInstance<TData>;
 
   /** Available page-size options. */
   paginationOptions: readonly number[];
@@ -59,7 +60,7 @@ export function SelectPagination<TData>({
     <Select
       items={selectItems}
       onValueChange={handlePaginationOptionsChange}
-      value={String(table.getState().pagination.pageSize)}
+      value={String(table.state.pagination.pageSize)}
     >
       <SelectTrigger
         id={id}

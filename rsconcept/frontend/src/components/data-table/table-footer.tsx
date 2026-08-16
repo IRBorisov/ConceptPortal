@@ -1,22 +1,20 @@
 'use no memo';
 
-import { flexRender, type Header, type HeaderGroup, type Table } from '@tanstack/react-table';
+import { type DataTableHeader, type DataTableHeaderGroup, type DataTableInstance } from './table-features';
 
 interface TableFooterProps<TData> {
   /** TanStack table instance. */
-  table: Table<TData>;
+  table: DataTableInstance<TData>;
 }
 
 /** Renders column footer cells from TanStack column definitions. */
 export function TableFooter<TData>({ table }: TableFooterProps<TData>) {
   return (
     <tfoot>
-      {table.getFooterGroups().map((footerGroup: HeaderGroup<TData>) => (
+      {table.getFooterGroups().map((footerGroup: DataTableHeaderGroup<TData>) => (
         <tr key={footerGroup.id}>
-          {footerGroup.headers.map((header: Header<TData, unknown>) => (
-            <th key={header.id}>
-              {!header.isPlaceholder ? flexRender(header.column.columnDef.footer, header.getContext()) : null}
-            </th>
+          {footerGroup.headers.map((header: DataTableHeader<TData>) => (
+            <th key={header.id}>{!header.isPlaceholder ? <table.FlexRender footer={header} /> : null}</th>
           ))}
         </tr>
       ))}

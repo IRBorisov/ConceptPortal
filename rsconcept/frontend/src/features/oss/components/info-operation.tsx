@@ -1,11 +1,9 @@
 'use client';
 
-import { createColumnHelper } from '@tanstack/react-table';
-
 import { useTx } from '@/i18n';
 import { type CstSubstituteInfo, type Operation, OperationType } from '@rsconcept/domain/library';
 
-import { DataTable } from '@/components/data-table';
+import { createColumnHelper, DataTable } from '@/components/data-table';
 import { IconPageRight } from '@/components/icons';
 import { truncateToLastWord } from '@/utils/format';
 

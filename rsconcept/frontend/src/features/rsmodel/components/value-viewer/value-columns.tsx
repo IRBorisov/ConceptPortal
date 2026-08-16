@@ -1,4 +1,3 @@
-import { type ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
@@ -8,6 +7,7 @@ import { makeValuePath, TypeID, type Typification, type Value, type ValuePath } 
 import { testInvalid, valueStub } from '@rsconcept/domain/rslang/eval/value-api';
 import { type EchelonCollection, IntegerT } from '@rsconcept/domain/rslang/semantic/typification';
 
+import { createColumnHelper, type DataTableColumns } from '@/components/data-table';
 import { cn } from '@/components/utils';
 import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 import { truncateToLastWord, truncateToSymbol } from '@/utils/format';
@@ -36,10 +36,7 @@ interface ColumnState {
   accessor: (value: Value) => Value;
 }
 
-export function createColumnsType(
-  type: Typification,
-  services: ColumnServices
-): ReturnType<typeof columnHelper.accessor>[] {
+export function createColumnsType(type: Typification, services: ColumnServices): DataTableColumns<Value> {
   const state = {
     path: makeValuePath([]),
     accessor: (value: Value) => value
@@ -52,7 +49,7 @@ function createColumnsInternal(
   type: Typification,
   services: ColumnServices,
   state: ColumnState
-): ReturnType<typeof columnHelper.accessor>[] {
+): DataTableColumns<Value> {
   const pathStr = state.path.join('_');
   const headerPath = services.isSingleton ? state.path : makeValuePath([0, ...state.path]);
   const columnTitle = services.getColumnText(headerPath);
@@ -67,7 +64,7 @@ function createColumnsInternal(
           size: 60,
           minSize: 60,
           maxSize: 60,
-          cell: props => <IntegerCell value={props.getValue()} services={services} />
+          cell: props => <IntegerCell value={props.getValue() as number} services={services} />
         })
       ];
     case TypeID.basic:
@@ -80,9 +77,9 @@ function createColumnsInternal(
           maxSize: services.showDataText ? 300 : 60,
           cell: props => (
             <BasicCell
-              value={props.getValue()}
+              value={props.getValue() as number}
               services={services}
-              isInvalid={testInvalid(props.getValue())}
+              isInvalid={testInvalid(props.getValue() as number)}
               type={type}
               path={elementPath(props.row.index)}
             />
@@ -102,7 +99,7 @@ function createColumnsInternal(
               className='font-math cursor-pointer'
               onClick={() => services.navigateValue(elementPath(props.row.index))}
             >
-              {props.getValue().length}
+              {(props.getValue() as Value[]).length}
             </div>
           )
         }),
@@ -113,15 +110,19 @@ function createColumnsInternal(
           minSize: 80,
           maxSize: 80,
           cell: props => (
-            <StubCell value={props.getValue()} services={services} path={elementPath(props.row.index)} type={type} />
+            <StubCell
+              value={props.getValue() as Value}
+              services={services}
+              path={elementPath(props.row.index)}
+              type={type}
+            />
           )
         })
       ];
     case TypeID.tuple: {
-      const components: ColumnDef<Value, unknown>[] = [];
+      const components: DataTableColumns<Value> = [];
       for (let i = 0; i < type.factors.length; i++) {
         components.push(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           ...createColumnsInternal(type.factors[i], services, {
             path: makeValuePath([...state.path, i + 1]),
             accessor: value => (state.accessor(value) as Value[])[i + 1]

@@ -64,7 +64,7 @@ export function useLibraryColumns() {
       maxSize: 150,
       enableSorting: true,
       cell: props => <span className='min-w-20 line-clamp-2 hover:line-clamp-none'>{props.getValue()}</span>,
-      sortingFn: 'text'
+      sortFn: 'text'
     }),
     columnHelper.accessor('title', {
       id: 'title',
@@ -73,7 +73,7 @@ export function useLibraryColumns() {
       minSize: 200,
       maxSize: 1200,
       enableSorting: true,
-      sortingFn: 'text',
+      sortFn: 'text',
       cell: props => <span className='line-clamp-2 hover:line-clamp-none'>{props.getValue()}</span>
     }),
     columnHelper.accessor('owner', {
@@ -84,7 +84,7 @@ export function useLibraryColumns() {
       maxSize: 400,
       cell: props => getUserLabel(props.getValue()),
       enableSorting: true,
-      sortingFn: 'text'
+      sortFn: 'text'
     }),
     columnHelper.accessor('time_update', {
       id: 'time_update',
@@ -103,7 +103,7 @@ export function useLibraryColumns() {
         </span>
       ),
       enableSorting: true,
-      sortingFn: 'datetime',
+      sortFn: 'datetime',
       sortDescFirst: true
     })
   ];

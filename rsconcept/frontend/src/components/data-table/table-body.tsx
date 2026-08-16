@@ -2,17 +2,17 @@
 'use client';
 
 import { type RefObject, useCallback, useState } from 'react';
-import { type Row, type Table } from '@tanstack/react-table';
 
 import { useDragAutoScroll } from '@/hooks/use-drag-auto-scroll';
 
 import { type DataTableDropHint, type DataTableRowDrop } from './data-table';
+import { type DataTableInstance, type DataTableRow } from './table-features';
 import { TableRow } from './table-row';
 import { type IConditionalStyle } from './use-data-table';
 
 interface TableBodyProps<TData> {
   /** TanStack table instance. */
-  table: Table<TData>;
+  table: DataTableInstance<TData>;
 
   /** Minimal row padding. */
   dense?: boolean;
@@ -71,7 +71,7 @@ export function TableBody<TData>({
   useDragAutoScroll(scrollContainerRef, canReorder && draggingRowID !== null);
 
   const getRowStyles = useCallback(
-    (row: Row<TData>) =>
+    (row: DataTableRow<TData>) =>
       conditionalRowStyles
         ?.filter(item => !!item.style && item.when(row.original))
         ?.reduce((prev, item) => ({ ...prev, ...item.style }), {}),
@@ -80,7 +80,7 @@ export function TableBody<TData>({
   );
 
   const getRowClasses = useCallback(
-    (row: Row<TData>) => {
+    (row: DataTableRow<TData>) => {
       return conditionalRowStyles
         ?.filter(item => !!item.className && item.when(row.original))
         ?.reduce((prev, item) => {
@@ -93,7 +93,7 @@ export function TableBody<TData>({
 
   return (
     <tbody>
-      {table.getRowModel().rows.map((row: Row<TData>) => (
+      {table.getRowModel().rows.map((row: DataTableRow<TData>) => (
         <TableRow
           key={row.id}
           table={table}

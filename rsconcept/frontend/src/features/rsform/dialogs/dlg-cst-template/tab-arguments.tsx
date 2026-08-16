@@ -1,14 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { createColumnHelper } from '@tanstack/react-table';
 
 import { useTx } from '@/i18n';
 import { type ArgumentValue, type Constituenta, type RSForm } from '@rsconcept/domain/library';
 import { isFunctional, isLogical } from '@rsconcept/domain/library/rsform-api';
 
 import { MiniButton } from '@/components/control';
-import { DataTable, type IConditionalStyle } from '@/components/data-table';
+import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { IconReset } from '@/components/icons';
 import { NoData } from '@/components/view';
 

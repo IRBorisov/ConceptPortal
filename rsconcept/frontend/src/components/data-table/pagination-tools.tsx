@@ -1,7 +1,6 @@
 'use no memo';
 'use client';
 
-import { type Table } from '@tanstack/react-table';
 import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
@@ -9,13 +8,14 @@ import { useTx } from '@/i18n';
 import { IconPageFirst, IconPageLast, IconPageLeft, IconPageRight } from '../icons';
 
 import { SelectPagination } from './select-pagination';
+import { type DataTableInstance } from './table-features';
 
 interface PaginationToolsProps<TData> {
   /** Id prefix for page and per-page controls. */
   id?: string;
 
   /** TanStack table instance. */
-  table: Table<TData>;
+  table: DataTableInstance<TData>;
 
   /** Available page-size options. */
   paginationOptions: readonly number[];
@@ -32,9 +32,9 @@ export function PaginationTools<TData>({
   paginationOptions
 }: PaginationToolsProps<TData>) {
   const tx = useTx();
-  const pageIndex = table.getState().pagination.pageIndex;
-  const pageSize = table.getState().pagination.pageSize;
-  const rowCount = table.getFilteredRowModel().rows.length;
+  const pageIndex = table.state.pagination.pageIndex;
+  const pageSize = table.state.pagination.pageSize;
+  const rowCount = table.getRowCount();
   const start = rowCount === 0 ? 0 : pageIndex * pageSize + 1;
   const end = Math.min(rowCount, (pageIndex + 1) * pageSize);
   const rangeLabel = tx('tx.shell.pagination.range', { start, end, total: rowCount });
@@ -74,7 +74,7 @@ export function PaginationTools<TData>({
             title={tx('tx.shell.pagination.page.input.hint')}
             aria-label={tx('tx.shell.pagination.page.input')}
             className='w-6 text-center bg-transparent focus-outline rounded-md p-0'
-            value={table.getState().pagination.pageIndex + 1}
+            value={table.state.pagination.pageIndex + 1}
             onChange={event => {
               const page = event.target.value ? Number(event.target.value) - 1 : 0;
               if (page + 1 <= table.getPageCount()) {

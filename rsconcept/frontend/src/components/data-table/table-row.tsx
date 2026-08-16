@@ -2,20 +2,25 @@
 'use no memo';
 
 import { useCallback } from 'react';
-import { type Cell, flexRender, type Row, type Table } from '@tanstack/react-table';
 import clsx from 'clsx';
 
 import { cn } from '../utils';
 
 import { type DataTableDropHint, type DataTableRowDrop } from './data-table';
 import { SelectRow } from './select-row';
+import {
+  type DataTableCell,
+  type DataTableInstance,
+  type DataTableRow,
+  type TanstackRowSelectionState
+} from './table-features';
 
 interface TableRowProps<TData> {
   /** TanStack table instance. */
-  table: Table<TData>;
+  table: DataTableInstance<TData>;
 
   /** TanStack row instance. */
-  row: Row<TData>;
+  row: DataTableRow<TData>;
 
   /** Additional CSS class name(s) for the row. */
   className?: string;
@@ -98,7 +103,7 @@ export function TableRow<TData>({
   const showDropAfter = dropHint?.rowID === row.id && dropHint.after;
 
   const handleRowClicked = useCallback(
-    (target: Row<TData>, event: React.MouseEvent<Element>) => {
+    (target: DataTableRow<TData>, event: React.MouseEvent<Element>) => {
       onRowClicked?.(target.original, event);
       if (table.options.enableRowSelection && target.getCanSelect()) {
         if (event.shiftKey && !!lastSelected && lastSelected !== target.id) {
@@ -113,7 +118,17 @@ export function TableRow<TData>({
           toggleRows.forEach(row => {
             newSelection[row.id] = !target.getIsSelected();
           });
-          table.setRowSelection(prev => ({ ...prev, ...newSelection }));
+          table.setRowSelection(prev => {
+            const next: TanstackRowSelectionState = { ...prev };
+            for (const [id, selected] of Object.entries(newSelection)) {
+              if (selected) {
+                next[id] = true;
+              } else {
+                delete next[id];
+              }
+            }
+            return next;
+          });
           onChangeLastSelected(null);
         } else {
           onChangeLastSelected(target.id);
@@ -129,7 +144,7 @@ export function TableRow<TData>({
     return event.clientY >= top + height / 2;
   }
 
-  function getDraggedRows(draggedRowID: string): Row<TData>[] {
+  function getDraggedRows(draggedRowID: string): DataTableRow<TData>[] {
     const rows = table.getRowModel().rows;
     const draggedRow = rows.find(current => current.id === draggedRowID);
     if (!draggedRow) {
@@ -167,7 +182,11 @@ export function TableRow<TData>({
     return { boxShadow: `inset 0 -2px 0 0 ${color}` };
   }
 
-  function resolveAfterRow(allRows: Row<TData>[], targetRow: Row<TData>, after: boolean): TData | null {
+  function resolveAfterRow(
+    allRows: DataTableRow<TData>[],
+    targetRow: DataTableRow<TData>,
+    after: boolean
+  ): TData | null {
     if (after) {
       return targetRow.original;
     }
@@ -256,7 +275,7 @@ export function TableRow<TData>({
       className={cn(
         'cc-scroll-row',
         'cc-hover-bg cc-animate-background duration-fade',
-        !noHeader && 'scroll-mt-[calc(2px+2rem)]',
+        !noHeader && 'scroll-mt-8.5',
         table.options.enableRowSelection && row.getIsSelected()
           ? 'cc-selected'
           : !hasBG
@@ -279,7 +298,7 @@ export function TableRow<TData>({
           <SelectRow row={row} onChangeLastSelected={onChangeLastSelected} />
         </td>
       ) : null}
-      {row.getVisibleCells().map((cell: Cell<TData, unknown>) => (
+      {row.getVisibleCells().map((cell: DataTableCell<TData>) => (
         <td
           key={cell.id}
           className={clsx(
@@ -300,7 +319,7 @@ export function TableRow<TData>({
                 : undefined
           }}
         >
-          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          <table.FlexRender cell={cell} />
         </td>
       ))}
     </tr>

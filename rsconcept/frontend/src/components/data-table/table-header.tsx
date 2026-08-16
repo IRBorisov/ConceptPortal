@@ -1,16 +1,16 @@
 'use no memo';
 
-import { flexRender, type Header, type HeaderGroup, type Table } from '@tanstack/react-table';
 import clsx from 'clsx';
 
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { SelectAll } from './select-all';
 import { SortingIcon } from './sorting-icon';
+import { type DataTableHeader, type DataTableHeaderGroup, type DataTableInstance } from './table-features';
 
 interface TableHeaderProps<TData> {
   /** TanStack table instance. */
-  table: Table<TData>;
+  table: DataTableInstance<TData>;
 
   /** Skips CSS variable-based column width calculation. */
   skipWidthCalculation?: boolean;
@@ -30,14 +30,14 @@ export function TableHeader<TData>({ table, skipWidthCalculation, resetLastSelec
       className='sticky top-0 border-b border-primary/20 bg-background cc-shadow-border'
       style={{ backgroundColor: backgroundColor }}
     >
-      {table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
+      {table.getHeaderGroups().map((headerGroup: DataTableHeaderGroup<TData>) => (
         <tr key={headerGroup.id}>
           {table.options.enableRowSelection ? (
             <th className='pl-2' scope='col'>
               <SelectAll table={table} resetLastSelected={resetLastSelected} />
             </th>
           ) : null}
-          {headerGroup.headers.map((header: Header<TData, unknown>) => (
+          {headerGroup.headers.map((header: DataTableHeader<TData>) => (
             <th
               key={header.id}
               colSpan={header.colSpan}
@@ -54,7 +54,7 @@ export function TableHeader<TData>({ table, skipWidthCalculation, resetLastSelec
             >
               {!header.isPlaceholder ? (
                 <span className='inline-flex gap-1'>
-                  {flexRender(header.column.columnDef.header, header.getContext())}
+                  <table.FlexRender header={header} />
                   {table.options.enableSorting && header.column.getCanSort() ? (
                     <SortingIcon sortDirection={header.column.getIsSorted()} />
                   ) : null}
