@@ -5,6 +5,7 @@ import { globalTx } from '@/i18n';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
+import { isUnauthenticatedAxiosError } from '@/backend/unauthenticated-error';
 
 import {
   schemaUserInfo,
@@ -22,12 +23,7 @@ export const usersApi = {
     queryOptions({
       queryKey: [usersApi.baseKey, 'list'],
       staleTime: DELAYS.staleMedium,
-      queryFn: meta =>
-        axiosGet<UserInfo[]>({
-          schema: z.array(schemaUserInfo),
-          endpoint: '/users/api/active-users',
-          options: { signal: meta.signal }
-        })
+      queryFn: meta => getActiveUsersOrEmpty(meta.signal)
     }),
   getProfileQueryOptions: () =>
     queryOptions({
@@ -61,3 +57,23 @@ export const usersApi = {
       }
     })
 } as const;
+
+/**
+ * `/users/api/active-users` requires a session. Anonymous visitors of public pages
+ * must not trip the error boundary; missing credentials resolve to an empty list.
+ */
+async function getActiveUsersOrEmpty(signal: AbortSignal | undefined): Promise<UserInfo[]> {
+  try {
+    return await axiosGet<UserInfo[]>({
+      schema: z.array(schemaUserInfo),
+      endpoint: '/users/api/active-users',
+      options: { signal },
+      notifyOnError: false
+    });
+  } catch (error) {
+    if (isUnauthenticatedAxiosError(error)) {
+      return [];
+    }
+    throw error;
+  }
+}

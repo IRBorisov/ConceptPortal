@@ -40,6 +40,23 @@ test('library page shows empty state and create link', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Создать схему' })).toBeVisible();
 });
 
+test('library page loads for anonymous user when active-users is forbidden', async ({ page }) => {
+  authAnonymous();
+  dataLibraryItems.push(createLibraryItem(210, 'Публичная схема'));
+
+  await page.route(`${BACKEND_URL}/users/api/active-users`, async route => {
+    await route.fulfill({
+      status: 403,
+      json: { detail: 'Учетные данные не были предоставлены.' }
+    });
+  });
+
+  await page.goto('/library');
+
+  await expect(page.getByText('Публичная схема')).toBeVisible();
+  await expect(page.getByRole('alert')).toHaveCount(0);
+});
+
 test('library page renders mocked items and supports search', async ({ page }) => {
   dataLibraryItems.push(createLibraryItem(101, 'Схема тестового учета'));
   dataLibraryItems.push(createLibraryItem(102, 'Схема для фильтра'));
