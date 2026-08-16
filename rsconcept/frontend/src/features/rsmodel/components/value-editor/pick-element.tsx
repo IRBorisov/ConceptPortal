@@ -1,14 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { createColumnHelper } from '@tanstack/react-table';
 import { useDebounce } from 'use-debounce';
 
 import { useTx } from '@/i18n';
 import { filterBindingByQuery } from '@/services/search';
 import { type BasicBinding } from '@rsconcept/domain/library';
 
-import { DataTable, type IConditionalStyle } from '@/components/data-table';
+import { createColumnHelper, DataTable, type IConditionalStyle } from '@/components/data-table';
 import { SearchBar, TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
 import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
@@ -29,7 +28,11 @@ interface PickElementProps {
   onChange: (value: number) => void;
 }
 
-const columnHelper = createColumnHelper<number>();
+interface ElementRow {
+  id: number;
+}
+
+const columnHelper = createColumnHelper<ElementRow>();
 
 export function PickElement({ className, value, alias, isInteger, term, binding, onChange }: PickElementProps) {
   const tx = useTx();
@@ -39,10 +42,10 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
   const labelTooltip = useValueTooltipAnchor(labelText);
 
   const filteredIDs = binding ? filterBindingByQuery(binding, filterDebounced).filter(id => id !== value) : [];
-  const filtered = [...(value === null ? [] : [value]), ...filteredIDs];
+  const filtered: ElementRow[] = [...(value === null ? [] : [value]), ...filteredIDs].map(id => ({ id }));
 
   const columns = [
-    columnHelper.accessor(id => id, {
+    columnHelper.accessor('id', {
       id: 'elem_id',
       header: () => <div className='w-4 pl-1'>ID</div>,
       size: 40,
@@ -50,7 +53,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
       maxSize: 40,
       cell: props => <div className='w-full text-center'>{props.getValue()}</div>
     }),
-    columnHelper.accessor(id => id, {
+    columnHelper.accessor('id', {
       id: 'elem_text',
       header: tx('tx.rslang.value.short'),
       size: 180,
@@ -60,9 +63,9 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
     })
   ];
 
-  const conditionalRowStyles: IConditionalStyle<number>[] = [
+  const conditionalRowStyles: IConditionalStyle<ElementRow>[] = [
     {
-      when: (id: number) => id === value,
+      when: (row: ElementRow) => row.id === value,
       className: 'bg-selected'
     }
   ];
@@ -106,6 +109,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
       <DataTable
         columns={columns}
         data={filtered}
+        getRowId={row => String(row.id)}
         dense
         enablePagination
         paginationPerPage={15}
@@ -113,7 +117,7 @@ export function PickElement({ className, value, alias, isInteger, term, binding,
         noFooter
         className='text-sm cc-scroll-y border h-120'
         conditionalRowStyles={conditionalRowStyles}
-        onRowClicked={(id: number) => onChange(id)}
+        onRowClicked={row => onChange(row.id)}
       />
     </div>
   );

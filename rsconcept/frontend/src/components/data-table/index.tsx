@@ -1,7 +1,10 @@
 export {
   createColumnHelper,
   DataTable,
+  type DataTableColumnDef,
+  type DataTableColumns,
   type DataTableDropHint,
+  type DataTableFeatures,
   type DataTableRowDrop,
   type RowSelectionState,
   type VisibilityState

@@ -1,12 +1,12 @@
 'use no memo';
 
-import { type Row } from '@tanstack/react-table';
-
 import { Checkbox } from '../input';
+
+import { type DataTableRow } from './table-features';
 
 interface SelectRowProps<TData> {
   /** TanStack row instance. */
-  row: Row<TData>;
+  row: DataTableRow<TData>;
 
   /** Updates the last-selected row id for shift-click range selection. */
   onChangeLastSelected: (newValue: string) => void;

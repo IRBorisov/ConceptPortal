@@ -1,15 +1,15 @@
 'use no memo';
 'use client';
 
-import { type Table } from '@tanstack/react-table';
-
 import { useTx } from '@/i18n';
 
 import { CheckboxTristate } from '../input';
 
+import { type DataTableInstance } from './table-features';
+
 interface SelectAllProps<TData> {
   /** TanStack table instance. */
-  table: Table<TData>;
+  table: DataTableInstance<TData>;
 
   /** Clears shift-click range selection anchor. */
   resetLastSelected: () => void;

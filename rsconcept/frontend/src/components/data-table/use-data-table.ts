@@ -4,17 +4,22 @@
 import { useState } from 'react';
 import {
   type ColumnSort,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   type PaginationState,
-  type RowData,
-  type RowSelectionState,
   type SortingState,
   type TableOptions,
-  useReactTable,
-  type VisibilityState
+  useTable
 } from '@tanstack/react-table';
+
+import {
+  type DataTableColumns,
+  type DataTableFeatures,
+  dataTableFeatures,
+  type DataTableInstance,
+  type DataTableRowData,
+  type RowSelectionState,
+  type TanstackRowSelectionState,
+  type VisibilityState
+} from './table-features';
 
 /** Style to conditionally apply to rows. */
 export interface IConditionalStyle<TData> {
@@ -28,10 +33,19 @@ export interface IConditionalStyle<TData> {
   className?: string;
 }
 
-interface UseDataTableProps<TData extends RowData> extends Pick<
-  TableOptions<TData>,
-  'data' | 'columns' | 'getRowId' | 'onRowSelectionChange' | 'onColumnVisibilityChange'
+interface UseDataTableProps<TData> extends Pick<
+  TableOptions<DataTableFeatures, DataTableRowData<TData>>,
+  'getRowId' | 'onColumnVisibilityChange'
 > {
+  /** Table rows. */
+  data: readonly TData[];
+
+  /** Column definitions bound to Portal table features. */
+  columns: DataTableColumns<TData>;
+
+  /** Called when row selection changes. */
+  onRowSelectionChange?: React.Dispatch<React.SetStateAction<RowSelectionState>>;
+
   /** Enable row selection. */
   enableRowSelection?: boolean;
 
@@ -61,9 +75,12 @@ interface UseDataTableProps<TData extends RowData> extends Pick<
 }
 
 /** Data representation as a table. */
-export function useDataTable<TData extends RowData>({
+export function useDataTable<TData>({
+  data,
+  columns,
   enableRowSelection,
   rowSelection,
+  onRowSelectionChange,
 
   enableHiding,
   columnVisibility,
@@ -77,36 +94,38 @@ export function useDataTable<TData extends RowData>({
   autoResetPageIndex,
 
   ...restProps
-}: UseDataTableProps<TData>) {
+}: UseDataTableProps<TData>): DataTableInstance<TData> {
   const [sorting, setSorting] = useState<SortingState>(initialSorting ? [initialSorting] : []);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: paginationPerPage
   });
 
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const table = useReactTable({
+  return useTable({
+    features: dataTableFeatures,
+    data: data as DataTableRowData<TData>[],
+    columns: columns,
     state: {
-      pagination: pagination,
+      pagination: enablePagination ? pagination : { pageIndex: 0, pageSize: Infinity },
       sorting: sorting,
-      ...(enableRowSelection ? { rowSelection: rowSelection ?? {} } : {}),
+      ...(enableRowSelection ? { rowSelection: (rowSelection ?? {}) as TanstackRowSelectionState } : {}),
       columnVisibility: columnVisibility
     },
 
-    getCoreRowModel: getCoreRowModel(),
-
     enableSorting: enableSorting,
-    getSortedRowModel: enableSorting ? getSortedRowModel() : undefined,
     onSortingChange: enableSorting ? setSorting : undefined,
 
-    getPaginationRowModel: enablePagination ? getPaginationRowModel() : undefined,
     onPaginationChange: enablePagination ? setPagination : undefined,
     autoResetPageIndex: autoResetPageIndex,
 
     enableHiding: enableHiding,
     enableMultiRowSelection: !!enableRowSelection,
     enableRowSelection: !!enableRowSelection,
+    enableRowRangeSelection: false,
+    onRowSelectionChange: onRowSelectionChange as TableOptions<
+      DataTableFeatures,
+      DataTableRowData<TData>
+    >['onRowSelectionChange'],
     ...restProps
   });
-  return table;
 }
