@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Loan underwriting decision rules — Business ЯРЭ plan</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f7f8fb;
+        --fg: #18202a;
+        --muted: #5e6b7a;
+        --card: #ffffff;
+        --border: #d9e0ea;
+        --accent: #2454c6;
+        --accent-soft: #e9eefc;
+        --warn: #8a5b00;
+        --warn-soft: #fff4d5;
+        --ok: #17633a;
+        --ok-soft: #e6f5ec;
+        --code: #edf1f7;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f141b;
+          --fg: #e7edf5;
+          --muted: #a7b2c0;
+          --card: #161d27;
+          --border: #2d3948;
+          --accent: #8fb0ff;
+          --accent-soft: #1f2d4d;
+          --warn: #ffd27a;
+          --warn-soft: #3c2d10;
+          --ok: #8ee0b0;
+          --ok-soft: #153321;
+          --code: #202a36;
+        }
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.55;
+      }
+
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 48px 24px 72px;
+      }
+
+      h1, h2, h3 { margin: 0; line-height: 1.2; }
+      h1 {
+        font-size: clamp(1.85rem, 4vw, 2.8rem);
+        letter-spacing: -0.04em;
+        margin-bottom: 12px;
+      }
+      h2 {
+        margin: 36px 0 14px;
+        font-size: 1.45rem;
+        letter-spacing: -0.02em;
+      }
+      h3 {
+        margin: 20px 0 8px;
+        font-size: 1.05rem;
+      }
+      p { margin: 0 0 12px; }
+      ul, ol { margin: 0 0 12px; padding-left: 1.25rem; }
+      li + li { margin-top: 6px; }
+      code {
+        border-radius: 6px;
+        background: var(--code);
+        padding: 0.12rem 0.32rem;
+        font-size: 0.92em;
+      }
+      .eyebrow {
+        display: inline-block;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--card);
+        color: var(--muted);
+        padding: 6px 12px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 16px;
+      }
+      .lead {
+        color: var(--muted);
+        font-size: 1.08rem;
+        max-width: 860px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px 20px;
+        margin: 14px 0;
+      }
+      .grid { display: grid; gap: 14px; }
+      .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      @media (max-width: 800px) {
+        .grid.two { grid-template-columns: 1fr; }
+      }
+      .tag {
+        display: inline-block;
+        border-radius: 999px;
+        padding: 2px 10px;
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+      .tag.ok { background: var(--ok-soft); color: var(--ok); }
+      .tag.warn { background: var(--warn-soft); color: var(--warn); }
+      .tag.accent { background: var(--accent-soft); color: var(--accent); }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+      }
+      th, td {
+        border: 1px solid var(--border);
+        padding: 8px 10px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th { background: var(--accent-soft); }
+      .muted { color: var(--muted); }
+      pre {
+        overflow-x: auto;
+        background: var(--code);
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-size: 0.88rem;
+      }
+      nav.toc a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      nav.toc a:hover { text-decoration: underline; }
+
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">Business app · 05 / 10 · Planning · ЯРЭ / Portal</div>
+      <h1>Loan underwriting decision rules</h1>
+      <p class="lead">Capture credit policy: applicant attributes, collateral links, limit rules, and mandatory hard stops as a conceptual schema with checkable statements.</p>
+
+      <h2>Business purpose</h2>
+      <div class="card"><p>Unify underwriting policy across channels; every auto-decision cites T#/P# from the published КС.</p>
+      <p class="muted"><strong>Actors:</strong> Credit risk, underwriters, compliance, product.</p></div>
+
+      <h2>Why ЯРЭ + Concept Portal</h2>
+      <ul><li>Hard stops and soft conditions separate cleanly into axioms/predicates vs scoring outside schema.</li><li>Small КМ fixtures encode known accept/reject cases for regression.</li><li>Portal versioning supports regulator-facing change logs.</li></ul>
+
+      <h2>Conceptual core (sketch)</h2>
+      <div class="grid two">
+        <div class="card">
+          <h3>Неопределяемые понятия</h3>
+          <table><thead><tr><th>Alias</th><th>Role / convention sketch</th></tr></thead><tbody>
+<tr><td><code>X1</code></td><td>Applicants</td></tr>
+<tr><td><code>X2</code></td><td>Loan products</td></tr>
+<tr><td><code>X3</code></td><td>Collateral items</td></tr>
+<tr><td><code>S1</code></td><td>ℬ(X1×X2×Z×Z) — application: product, amount, term</td></tr>
+<tr><td><code>S2</code></td><td>ℬ(X1×X3) — applicant pledges collateral</td></tr>
+<tr><td><code>S3</code></td><td>ℬ(X2×Z×Z) — product min/max amount</td></tr>
+<tr><td><code>S4</code></td><td>ℬ(X1) — applicants failing KYC hard stop (as set)</td></tr>
+</tbody></table>
+        </div>
+        <div class="card">
+          <h3>Производные / проверки</h3>
+          <table><thead><tr><th>Alias</th><th>Intent</th></tr></thead><tbody>
+<tr><td><code>P1</code></td><td>Amount within product bounds</td></tr>
+<tr><td><code>P2</code></td><td>Collateral required products have non-empty pledge</td></tr>
+<tr><td><code>P3</code></td><td>Applicant not in KYC fail set</td></tr>
+<tr><td><code>T1</code></td><td>Auto-eligible ⇔ P1 ∧ P2 ∧ P3</td></tr>
+<tr><td><code>F1</code></td><td>Required checks list for a product</td></tr>
+</tbody></table>
+        </div>
+      </div>
+      <p class="muted">Aliases are a starting sketch for conceptualization — refine with <code>BASE-SELECTION</code> and avoid new <code>X#</code>/<code>C#</code>/<code>S#</code> when a <code>D#</code>/<code>F#</code>/<code>P#</code> suffices.</p>
+
+      <h2>Concept Portal usage</h2>
+      <ul><li>КС <code>Biz/UnderwritingCore</code>; product catalog synthesized from <code>Biz/LoanProducts</code>.</li><li>Keep scoring models outside ЯРЭ; schema owns hard eligibility only.</li><li>Compliance reads Portal; agents validate diagnostics before release.</li></ul>
+
+      <h2>rstool-helper delivery workflow</h2>
+      <ol><li>Split hard vs soft policy with risk owners.</li><li>Encode only hard stops in A#/P#/T#.</li><li>Fixture КМ from last 10 policy exceptions.</li><li>Publish; map LOS decision engine to T1.</li></ol>
+      <div class="card">
+        <h3>Tooling loop</h3>
+        <pre>ensureSession → applySchemaPatch (core X/C/S)
+analyzeExpression → patch D/F/P/A/T
+setModelValues → evaluate / recalculateModel
+listDiagnostics → fix → commitStep
+exportPortal({ kind: 'schema' | 'model' }) → Portal library</pre>
+      </div>
+
+      <h2>MVP roadmap</h2>
+      <ol><li>Amount/KYC/collateral gates</li><li>Product-specific required checks F1</li><li>ОСС multi-product</li><li>Exception report when T1 false with failing Pi</li></ol>
+
+      <h2>Risks &amp; reductions</h2>
+      <ul><li>Trying to encode ML score bands as C# without conventions — keep scores in КМ inputs.</li><li>PII in public Portal — use project access_policy.</li></ul>
+
+      <h2>Success criteria</h2>
+      <div class="grid two">
+        <div class="card">
+          <h3>Schema <span class="tag ok">ready</span></h3>
+          <p>No expression/schema diagnostics; conventions in business language; review checklist passed.</p>
+        </div>
+        <div class="card">
+          <h3>Operations <span class="tag accent">adopted</span></h3>
+          <p>At least one consumer evaluates the key predicate/statement on real sample data; Portal version pinned in the runbook.</p>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
