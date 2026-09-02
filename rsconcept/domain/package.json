@@ -1,6 +1,6 @@
 {
   "name": "@rsconcept/domain",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Shared TypeScript domain for RS language, RSForm, RSModel, RSEngine, OSS, and concept-text helpers.",
   "license": "MIT",
   "author": "IRBorisov",
@@ -172,11 +172,11 @@
   },
   "devDependencies": {
     "@lezer/generator": "^1.8.0",
-    "@types/node": "^26.4.0",
+    "@types/node": "^26.4.1",
     "@typescript-eslint/parser": "^8.69.0",
     "eslint": "^10.9.1",
     "eslint-plugin-simple-import-sort": "^14.0.0",
-    "globals": "^17.11.0",
+    "globals": "^17.12.0",
     "prettier": "^3.9.6",
     "tsdown": "^0.22.14",
     "typescript": "^6.0.3",

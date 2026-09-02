@@ -8,3 +8,12 @@ autoInstallPeers: true
 
 allowBuilds:
   esbuild: true
+
+# Versions published inside pnpm 11's 24h minimumReleaseAge window.
+minimumReleaseAgeExclude:
+  - '@types/node@26.4.1'
+  - '@xyflow/react@12.11.6'
+  - '@xyflow/system@0.0.82'
+  - globals@17.12.0
+  - lucide-react@1.39.0
+  - react-zoom-pan-pinch@4.1.0
