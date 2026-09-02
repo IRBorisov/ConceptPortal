@@ -49,15 +49,17 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
-    "@rsconcept/rstool": "workspace:*"
+    "@rsconcept/rstool": "workspace:*",
+    "eslint": "^10.9.1",
+    "eslint-plugin-simple-import-sort": "^14.0.0"
   },
   "devDependencies": {
-    "@types/node": "^25.9.5",
+    "@types/node": "^26.4.0",
     "tsdown": "^0.22.14",
-    "tsx": "^4.23.12",
+    "tsx": "^4.23.13",
     "typescript": "^6.0.3",
     "unrun": "^0.3.1",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   },
   "publishConfig": {
     "access": "public"
