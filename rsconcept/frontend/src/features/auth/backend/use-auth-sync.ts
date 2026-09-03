@@ -1,13 +1,9 @@
 import { useEffect } from 'react';
 
-import { syncSentryUser } from '@/services/sentry';
-
-import { clearCachedCsrfToken } from '@/backend/csrf-token';
 import { queryClient } from '@/backend/query-client';
 
-import { authApi } from './api';
 import { subscribeAuthSync } from './auth-sync';
-import { anonymousCurrentUser } from './types';
+import { applyLoggedOutState } from './logged-out-state';
 
 /**
  * Subscribe to cross-tab auth sync: reset user-specific caches and align auth state after login/logout.
@@ -17,12 +13,7 @@ export function useAuthSync() {
   useEffect(function subscribeCrossTabAuthSync() {
     return subscribeAuthSync(function handleAuthSync(event) {
       if (event === 'logout') {
-        clearCachedCsrfToken();
-        queryClient.setQueryData(authApi.getAuthQueryOptions().queryKey, anonymousCurrentUser);
-        syncSentryUser(anonymousCurrentUser);
-        void queryClient.resetQueries({
-          predicate: query => query.queryKey[0] !== authApi.baseKey
-        });
+        applyLoggedOutState(queryClient);
         return;
       }
       void queryClient.resetQueries();

@@ -175,6 +175,8 @@ export const txShellEn: Record<string, string> = {
   'tx.sandbox.hint': 'Demo environment for guests and local experiments',
   'tx.sandbox.reset': 'Restore initial sandbox data',
   'tx.sandbox.reset.confirm': 'This action will reset the sandbox state. Continue?',
+  'tx.sandbox.import.restricted':
+    'This item is not public. Its copy will be stored unprotected in this browser and stays readable to anyone using it, even after logout.',
 
   'tx.sandbox.import': 'Open in sandbox',
   'tx.sandbox.import.fail': 'Failed to open sandbox',

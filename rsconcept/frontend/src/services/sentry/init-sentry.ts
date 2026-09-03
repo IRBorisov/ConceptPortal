@@ -3,6 +3,7 @@ import { createRoutesFromChildren, matchRoutes, useLocation, useNavigationType }
 import * as Sentry from '@sentry/react';
 
 import { isViewTransitionAbortError } from '@/app/navigation/view-transition-error';
+import { scrubResetTokenFromUrl } from '@/features/auth/models/password-reset-token';
 
 import { isAxiosError, isCsrfAxiosFailure } from '@/backend/api-transport';
 import { buildConstants } from '@/utils/build-constants';
@@ -66,7 +67,21 @@ export function initSentry(): boolean {
       if (isExpectedLibraryItemHttpError(hint.originalException) || isExpectedLibraryItemHttpSentryEvent(event)) {
         return null;
       }
-      return event;
+      return scrubSensitiveUrls(event);
+    },
+    beforeSendTransaction(event) {
+      return scrubSensitiveUrls(event);
+    },
+    beforeBreadcrumb(breadcrumb) {
+      const data = breadcrumb.data;
+      if (data) {
+        for (const key of ['url', 'from', 'to']) {
+          if (typeof data[key] === 'string') {
+            data[key] = scrubResetTokenFromUrl(data[key]);
+          }
+        }
+      }
+      return breadcrumb;
     }
   });
 
@@ -80,6 +95,17 @@ export function isSentryEnabled(): boolean {
 export { Sentry };
 
 // ======== Internal functions ========
+
+/** Defense in depth: bearer tokens are stripped before init, but scrub any URL residue anyway. */
+function scrubSensitiveUrls<T extends Sentry.Event>(event: T): T {
+  if (event.request?.url) {
+    event.request.url = scrubResetTokenFromUrl(event.request.url);
+  }
+  if (event.request?.headers?.Referer) {
+    event.request.headers.Referer = scrubResetTokenFromUrl(event.request.headers.Referer);
+  }
+  return event;
+}
 
 function isViewTransitionAbortEvent(event: Sentry.Event): boolean {
   const exceptionText = event.exception?.values

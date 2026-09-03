@@ -8,7 +8,7 @@ import type z from 'zod';
 
 import { globalTx } from '@/i18n';
 
-import { PARAMETER } from './constants';
+import { limits, PARAMETER } from './constants';
 
 /** Check if Axios response is html. */
 export function isResponseHtml(response?: AxiosResponse) {
@@ -75,8 +75,12 @@ export function convertToCSV(targetObj: readonly object[]): Blob {
       .map(item => {
         return keys
           .map(k => {
-            let cell = item[k] === null || item[k] === undefined ? '' : item[k];
+            const raw = item[k];
+            let cell = raw === null || raw === undefined ? '' : raw;
             cell = cell instanceof Date ? cell.toLocaleString() : cell.toString().replace(/"/g, '""');
+            if (typeof raw === 'string') {
+              cell = neutralizeCsvFormula(cell);
+            }
             if (cell.search(/("|,|\n)/g) >= 0) {
               cell = `"${cell}"`;
             }
@@ -89,6 +93,28 @@ export function convertToCSV(targetObj: readonly object[]): Blob {
   return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 }
 
+const CSV_FORMULA_PREFIX = /^[=+\-@\t\r]/;
+
+/**
+ * Prevent spreadsheet formula injection: user-controlled text starting with `=`, `+`, `-`, `@`,
+ * tab or CR is executed by Excel / LibreOffice when the CSV is opened. Prefix with `'` so it is
+ * rendered as text. Numbers and dates are not user-typed strings and bypass this.
+ */
+export function neutralizeCsvFormula(cell: string): string {
+  return CSV_FORMULA_PREFIX.test(cell) ? `'${cell}` : cell;
+}
+
+/**
+ * Reject files above the shared import limit before reading them into memory.
+ * `accept` on the file input only filters the picker; a huge JSON / TRS body can freeze the tab.
+ * @throws Error with localized message when the file is too large.
+ */
+export function assertImportFileSize(file: File): void {
+  if (file.size > limits.max_json_import_file_size_bytes) {
+    throw new Error(globalTx('tx.general.file.error.maxSize', { maxMb: limits.max_json_import_file_size_mb }));
+  }
+}
+
 /** Convert object or array to JSON Blob. */
 export function convertToJSON(targetObj: unknown): Blob {
   const jsonString = JSON.stringify(targetObj, null, PARAMETER.indentJSON);
@@ -97,6 +123,7 @@ export function convertToJSON(targetObj: unknown): Blob {
 
 /** Read JSON file and parse it with Zod schema. */
 export async function readJsonFile<T>(file: File, schema: z.ZodType<T>): Promise<T> {
+  assertImportFileSize(file);
   const payload = JSON.parse(await file.text()) as unknown;
   return schema.parse(payload);
 }

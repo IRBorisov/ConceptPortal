@@ -10,7 +10,7 @@ dependencies = [
     "django-cors-headers==4.9.0",
     "django-filter==25.2",
     "django-rest-passwordreset==1.5.0",
-    "djangorestframework==3.17.1",
+    "djangorestframework==3.17.2",
     "drf-spectacular==0.29.0",
     "drf-spectacular-sidecar==2026.4.1",
     "gunicorn==25.3.0",

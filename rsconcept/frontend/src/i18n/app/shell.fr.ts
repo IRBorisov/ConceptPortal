@@ -179,6 +179,8 @@ export const txShellFr: Record<string, string> = {
   'tx.sandbox.hint': 'Environnement de démonstration pour les invités et les expériences locales',
   'tx.sandbox.reset': 'Restaurer les données initiales du bac à sable',
   'tx.sandbox.reset.confirm': 'Cette action réinitialisera le bac à sable. Continuer ?',
+  'tx.sandbox.import.restricted':
+    "Cet élément n'est pas public. Sa copie sera stockée sans protection dans ce navigateur et restera lisible par quiconque l'utilise, même après déconnexion.",
 
   'tx.sandbox.import': 'Ouvrir dans le bac à sable',
   'tx.sandbox.import.fail': 'Impossible de ouvrir le bac à sable',

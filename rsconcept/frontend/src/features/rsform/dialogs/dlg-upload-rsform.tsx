@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 import { useTx } from '@/i18n';
 
 import { Checkbox, FileInput } from '@/components/input';
 import { ModalForm } from '@/components/modal';
 import { EXTEOR_TRS_FILE } from '@/utils/constants';
+import { assertImportFileSize } from '@/utils/utils';
 
 import { type RSFormUploadDTO } from '../backend/types';
 
@@ -32,11 +34,20 @@ export function DlgUploadRSForm() {
   };
 
   const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      setFile(event.target.files[0]);
-    } else {
+    const selected = event.target.files?.[0] ?? null;
+    if (!selected) {
       setFile(null);
+      return;
     }
+    try {
+      assertImportFileSize(selected);
+    } catch (error) {
+      toast.error((error as Error).message);
+      event.target.value = '';
+      setFile(null);
+      return;
+    }
+    setFile(selected);
   };
 
   return (

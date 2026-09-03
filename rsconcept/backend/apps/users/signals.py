@@ -22,7 +22,8 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         'username': reset_password_token.user.username,
         'first_name': reset_password_token.user.first_name,
         'email': reset_password_token.user.email,
-        'reset_password_url': f'{_RECOVERY_URL}?token={reset_password_token.key}'
+        # Fragment (not query): the token never reaches server access logs or Referer headers.
+        'reset_password_url': f'{_RECOVERY_URL}#token={reset_password_token.key}'
     }
     email_html_message = render_to_string(_EMAIL_TEMPLATE, context)
     email_plaintext_message = strip_tags(email_html_message)

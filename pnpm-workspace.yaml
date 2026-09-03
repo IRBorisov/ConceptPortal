@@ -9,6 +9,10 @@ autoInstallPeers: true
 allowBuilds:
   esbuild: true
 
+# Security floors for transitive deps (GHSA: browserslist <=4.28.6 OOM / prototype write).
+overrides:
+  browserslist: '>=4.28.7'
+
 # Versions published inside pnpm 11's 24h minimumReleaseAge window.
 minimumReleaseAgeExclude:
   - '@types/node@26.4.1'

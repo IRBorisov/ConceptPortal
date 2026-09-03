@@ -29,6 +29,7 @@ import {
   IconUpload
 } from '@/components/icons';
 import { usePreferencesStore } from '@/stores/preferences';
+import { assertImportFileSize } from '@/utils/utils';
 
 import { useSandboxBundle } from '../../context/bundle-context';
 
@@ -162,6 +163,7 @@ export function MenuMain() {
     }
 
     try {
+      assertImportFileSize(file);
       const raw = JSON.parse(await file.text()) as unknown;
       await importBundle(raw);
       toast.success(tx('tx.sandbox.import.success'));

@@ -190,7 +190,9 @@ export function MenuMain() {
         return;
       }
     }
-    if (!window.confirm(tx('tx.sandbox.reset.confirm'))) {
+    const isRestricted = schema.access_policy !== AccessPolicy.PUBLIC || model.access_policy !== AccessPolicy.PUBLIC;
+    const restrictedWarning = isRestricted ? `${tx('tx.sandbox.import.restricted')}\n\n` : '';
+    if (!window.confirm(`${restrictedWarning}${tx('tx.sandbox.reset.confirm')}`)) {
       return;
     }
     hideMenu();
