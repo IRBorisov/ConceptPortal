@@ -8,7 +8,9 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.http import Http404
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.csrf import csrf_protect
 from django_rest_passwordreset.models import ResetPasswordToken, get_password_reset_token_expiry_time
 from django_rest_passwordreset.serializers import PasswordTokenSerializer
 from django_rest_passwordreset.signals import post_password_reset, pre_password_reset
@@ -26,8 +28,15 @@ from . import models as m
 from . import serializers as s
 
 
+@method_decorator(csrf_protect, name='dispatch')
 class LoginAPIView(views.APIView):
-    ''' Endpoint: Login via username + password. '''
+    '''
+    Endpoint: Login via username + password.
+
+    DRF skips CSRF checks for anonymous requests; enforce them explicitly so a
+    cross-site form cannot log the victim's browser into an attacker account
+    (login CSRF). Clients obtain the token from `GET /users/api/auth`.
+    '''
     permission_classes = (permissions.AllowAny,)
     throttle_classes = (LoginRateThrottle,)
 

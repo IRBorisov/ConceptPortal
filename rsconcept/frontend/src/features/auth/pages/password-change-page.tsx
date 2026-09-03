@@ -1,6 +1,6 @@
 'use client';
 
-import { type SubmitEvent, useLayoutEffect, useState } from 'react';
+import { type SubmitEvent, useEffect, useState } from 'react';
 
 import { useTx } from '@/i18n';
 
@@ -14,64 +14,43 @@ import { Loader } from '@/components/loader';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { useResetPassword } from '../backend/use-reset-password';
-
-/** Survives React Strict Mode remount after stripping `?token=` from the address bar (dev only). */
-const PASSWORD_RESET_TOKEN_STORAGE_KEY = 'rsconcept:password-reset-token-query';
-
-function readResetToken(): string {
-  const fromQuery = new URLSearchParams(window.location.search).get('token') ?? '';
-  if (fromQuery) {
-    return fromQuery;
-  }
-  try {
-    return sessionStorage.getItem(PASSWORD_RESET_TOKEN_STORAGE_KEY) ?? '';
-  } catch {
-    return '';
-  }
-}
+import { captureResetTokenFromUrl, clearResetToken, readResetToken } from '../models/password-reset-token';
 
 function useTokenValidation(token: string, isPending: boolean) {
-  const { validateToken } = useResetPassword();
+  const { validateToken, error } = useResetPassword();
   const [isTokenValidating, setIsTokenValidating] = useState(false);
 
   const validate = async () => {
     if (!isTokenValidating && !isPending) {
       setIsTokenValidating(true);
-      await validateToken({ token });
+      try {
+        await validateToken({ token });
+      } catch {
+        // invalid / expired: do not keep a JS-readable token around for the tab lifetime
+        clearResetToken();
+      }
     }
   };
-  return { isTokenValidating, validate };
+  return { isTokenValidating, validate, error };
 }
 
 export function Component() {
   const tx = useTx();
   const router = useConceptNavigation();
-  const [resetToken] = useState(() => readResetToken());
+  const [resetToken] = useState(() => {
+    // main.tsx already stripped the URL before Sentry; this covers in-app navigation (e.g. HMR).
+    captureResetTokenFromUrl();
+    return readResetToken();
+  });
 
-  useLayoutEffect(
-    function stripResetTokenQuery() {
-      const url = new URL(window.location.href);
-      if (!url.searchParams.has('token')) {
-        return;
-      }
-      const raw = url.searchParams.get('token') ?? '';
-      try {
-        if (raw) {
-          sessionStorage.setItem(PASSWORD_RESET_TOKEN_STORAGE_KEY, raw);
-        }
-      } catch {
-        // ignore quota / privacy mode
-      }
-      url.searchParams.delete('token');
-      const search = url.searchParams.toString();
-      const nextPath = `${url.pathname}${search ? `?${search}` : ''}${url.hash}`;
-      router.replace({ path: nextPath, force: true });
-    },
-    [router]
-  );
+  useEffect(function forgetResetTokenOnLeave() {
+    // Token lives in component state; storage only needs to survive a reload while on this page.
+    return clearResetToken;
+  }, []);
 
-  const { resetPassword, isPending, error: serverError } = useResetPassword();
-  const { isTokenValidating, validate } = useTokenValidation(resetToken, isPending);
+  const { resetPassword, isPending, error: resetError } = useResetPassword();
+  const { isTokenValidating, validate, error: validationError } = useTokenValidation(resetToken, isPending);
+  const serverError = resetError ?? validationError;
 
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
@@ -85,11 +64,7 @@ export function Component() {
         password: newPassword,
         token: resetToken
       }).then(() => {
-        try {
-          sessionStorage.removeItem(PASSWORD_RESET_TOKEN_STORAGE_KEY);
-        } catch {
-          // ignore
-        }
+        clearResetToken();
         router.replace({ path: urls.login });
       });
     }

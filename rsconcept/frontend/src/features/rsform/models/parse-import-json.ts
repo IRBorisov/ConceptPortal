@@ -2,6 +2,8 @@ import { globalTx } from '@/i18n';
 
 import { schemaSandboxBundle } from '@/features/sandbox';
 
+import { assertImportFileSize } from '@/utils/utils';
+
 import { type RSFormImportJsonDTO, schemaRSFormImportJson } from '../backend/types';
 
 import { rsFormContentToImportJson } from './json-file';
@@ -38,6 +40,7 @@ export function parseRSFormImportJson(raw: unknown): RSFormImportJsonDTO {
 
 /** Read a JSON file with Portal schema export or sandbox bundle data. */
 export async function readRSFormImportJsonFile(file: File): Promise<RSFormImportJsonDTO> {
+  assertImportFileSize(file);
   const payload = JSON.parse(await file.text()) as unknown;
   return parseRSFormImportJson(payload);
 }

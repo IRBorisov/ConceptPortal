@@ -195,7 +195,12 @@ REST_FRAMEWORK = {
         'password_reset': '5/hour',
         'oss_clone': '2/hour',
         'cctext': '30/minute',
-    }
+    },
+    # Trusted reverse proxies in front of Django. Throttle identity is taken from the
+    # NUM_PROXIES-th X-Forwarded-For entry from the right, so client-supplied values
+    # cannot rotate throttle buckets. nginx overwrites (not appends) the header, so 1 is
+    # correct for the default deployment; raise it only when adding a trusted edge (CDN/LB).
+    'NUM_PROXIES': int(os.environ.get('NUM_PROXIES', '1')),
 }
 
 # Always return 200 for password-reset requests (no email enumeration).

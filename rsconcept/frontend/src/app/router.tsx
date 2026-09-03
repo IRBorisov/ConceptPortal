@@ -4,6 +4,7 @@ import * as Sentry from '@sentry/react';
 import { LayoutSandbox } from '@/app/layout/layout-sandbox';
 import { prefetchAvailableTemplates } from '@/features/ai/backend/use-available-templates';
 import { prefetchAuth } from '@/features/auth/backend/use-auth';
+import { RequireStaff } from '@/features/auth/components/require-staff';
 import { LoginPage } from '@/features/auth/pages/login-page';
 import { HomePage } from '@/features/home/home-page';
 import { NotFoundPage } from '@/features/home/not-found-page';
@@ -112,16 +113,21 @@ export const Router = createRouter([
             lazy: () => import('@/features/help/pages/manuals-page')
           },
           {
-            path: routes.icons,
-            lazy: () => import('@/features/home/icons-page')
-          },
-          {
-            path: routes.database_schema,
-            lazy: () => import('@/features/home/database-schema-page')
-          },
-          {
-            path: routes.sentry_test,
-            lazy: () => import('@/features/home/sentry-test-page')
+            element: <RequireStaff />,
+            children: [
+              {
+                path: routes.icons,
+                lazy: () => import('@/features/home/icons-page')
+              },
+              {
+                path: routes.database_schema,
+                lazy: () => import('@/features/home/database-schema-page')
+              },
+              {
+                path: routes.sentry_test,
+                lazy: () => import('@/features/home/sentry-test-page')
+              }
+            ]
           },
           {
             path: routes.prompt_templates,

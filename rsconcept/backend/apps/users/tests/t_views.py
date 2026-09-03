@@ -2,6 +2,7 @@
 from django.core.cache import cache
 from django_rest_passwordreset.models import ResetPasswordToken
 from rest_framework import status
+from rest_framework.test import APIClient
 
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
@@ -38,6 +39,47 @@ class TestUserAPIViews(EndpointTester):
             self.executeAccepted(data)
         response = self.execute(data)
         self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
+
+
+    @decl_endpoint('/users/api/login', method='post')
+    def test_login_throttling_ignores_spoofed_forwarded_for(self):
+        ''' Rotating X-Forwarded-For from a fixed source must share one throttle bucket. '''
+        cache.clear()
+        self.logout()
+
+        data = {'username': self.user.username, 'password': 'password'}
+        for index in range(5):
+            response = self.client.post(
+                self.endpoint,
+                data=data,
+                format='json',
+                headers={'X-Forwarded-For': f'10.0.{index}.1, 203.0.113.7'}
+            )
+            self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        response = self.client.post(
+            self.endpoint,
+            data=data,
+            format='json',
+            headers={'X-Forwarded-For': '10.0.99.1, 203.0.113.7'}
+        )
+        self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
+
+
+    @decl_endpoint('/users/api/login', method='post')
+    def test_login_requires_csrf(self):
+        ''' Anonymous login must be CSRF-protected (login CSRF / session swap). '''
+        cache.clear()
+        client = APIClient(enforce_csrf_checks=True)
+        data = {'username': self.user.username, 'password': 'password'}
+
+        response = client.post(self.endpoint, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        auth = client.get('/users/api/auth')
+        self.assertEqual(auth.status_code, status.HTTP_200_OK)
+        token = auth.data['csrfToken']
+        response = client.post(self.endpoint, data=data, format='json', headers={'X-CSRFToken': token})
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
 
 
     @decl_endpoint('/users/api/logout', method='post')

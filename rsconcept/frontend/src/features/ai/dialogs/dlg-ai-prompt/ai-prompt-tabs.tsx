@@ -50,7 +50,7 @@ export function AIPromptTabs({ promptID, activeTab, setActiveTab }: AIPromptTabs
       if (type) {
         value = evaluatePromptVariable(type, context) ?? '';
       }
-      result = result.replace(new RegExp(`\{\{${variable}\}\}`, 'g'), value || `${variable}`);
+      result = result.replaceAll(`{{${variable}}}`, value || `${variable}`);
     }
     return result;
   })();
