@@ -212,20 +212,26 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
         sessionId,
         constituentId: { type: "number" },
         kind: { type: "string", enum: ["expression", "schema", "model"] },
+        severity: { type: "string", enum: ["error", "warning"] },
       },
     },
     invoke: (tool, args) => {
       const constituentId = args.constituentId;
       const kind = args.kind;
+      const severity = args.severity;
       const filters: {
         constituentId?: number;
         kind?: "expression" | "schema" | "model";
+        severity?: "error" | "warning";
       } = {};
       if (typeof constituentId === "number") {
         filters.constituentId = constituentId;
       }
       if (kind === "expression" || kind === "schema" || kind === "model") {
         filters.kind = kind;
+      }
+      if (severity === "error" || severity === "warning") {
+        filters.severity = severity;
       }
       return tool.listDiagnostics(
         Object.keys(filters).length > 0 ? filters : undefined,

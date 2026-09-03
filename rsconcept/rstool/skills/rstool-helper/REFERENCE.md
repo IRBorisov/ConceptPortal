@@ -114,7 +114,9 @@ tool.listDiagnostics({ kind: 'expression' });
 tool.listDiagnostics({ kind: 'schema', constituentId: 3, severity: 'error' });
 ```
 
-Фильтры: `kind?: 'expression' | 'schema' | 'model'`, `constituentId?`, `severity?: 'error' | 'warning'`.
+Фильтры: `kind?: 'expression' | 'schema' | 'model'`, `constituentId?`, `severity?: 'error' | 'warning'`. В stdio / MCP те же поля передаются **плоско** в `params` (`{ "kind": "schema", "severity": "warning" }`); stdio дополнительно принимает устаревший вложенный `filters`.
+
+`severity` отражает правило инструмента, а не вес для ревью: `schemaMissingConvention` / `schemaMissingTerm` приходят как `error`. Как ранжировать в отчёте — [GUIDE.md](GUIDE.md), «Ревью / оценка готовой КС».
 
 Элемент диагностики (агентский вид): `kind`, `code`, `name`, `severity`, `alias?`, `expression`, `from`, `to`, `params?`, `stack?` (цепочка вызовов при ошибке внутри `F#`/`P#`). Ключ для поиска исправления — `name` ([DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md)).
 
@@ -132,6 +134,8 @@ tool.analyzeExpression({
 
 **Результат:** `{ success, type, valueClass, diagnostics }`. Не сохраняет конституенту. Для черновика формулы — до `applySchemaPatch`.
 
+`type` — AST типизации; для чтения используй `labelType` из `@rsconcept/domain/rslang/labels` (`ℬ(X1×X1)`, `[X1] → ℬ(X1)`, `Logic`). `success: true` совместим с диагностикой `error` (например, `invalidPropertyUsage` при `valueClass: null`) — проверяй `diagnostics`.
+
 ## `evaluate`
 
 Ровно один вариант входа:
@@ -141,7 +145,19 @@ tool.analyzeExpression({
 
 **Результат:** `{ success, value, status, iterations, cacheHits, diagnostics }`.
 
-`status` — статус вычисления КМ (`HAS_DATA`, `EMPTY`, `AXIOM_FALSE`, `EVAL_FAIL`, … — [DOMAIN.md](../../docs/DOMAIN.md)).
+`status` — статус вычисления КМ, **числовой** код `EvalStatus` (`@rsconcept/domain`); смысл — [DOMAIN.md](../../docs/DOMAIN.md):
+
+| Код | Имя             | Смысл                                   |
+| --: | --------------- | --------------------------------------- |
+| `1` | `NO_EVAL`       | не вычисляется (`X#`, `C#`, `F#`, `P#`) |
+| `2` | `NOT_PROCESSED` | вычисление не запускалось               |
+| `3` | `INVALID_DATA`  | неверная интерпретация                  |
+| `4` | `EVAL_FAIL`     | ошибка вычисления                       |
+| `5` | `AXIOM_FALSE`   | аксиома ложна                           |
+| `6` | `EMPTY`         | результат пуст                          |
+| `7` | `HAS_DATA`      | вычислено, непусто                      |
+
+Scratch-выражение: `cstType` задаёт ожидаемую ступень (`term` — множество / число, `axiom` — логическое). Ссылки на `D#` / `A#` / `T#` внутри scratch допустимы — их значения (и зависимости через `F#` / `P#`) вычисляются перед оценкой.
 
 ## `setModelValues` / `getModelState` / `recalculateModel`
 
@@ -155,8 +171,9 @@ await tool.setModelValues({
 - `set[]`: `{ target, value, type? }` — `target` = id конституенты; `type` обычно не нужен.
 - `clear[]`: id для сброса значений.
 - Метод **async**. После изменения данных пересчитываются диагностики модели.
+- Значения `S#` приводятся к канонической форме (сортировка, без дубликатов) — порядок элементов во входе не важен; в `getModelState` хранится уже нормализованное значение.
 - `getModelState()` → `{ items: [{ id, type, value }] }`.
-- `recalculateModel()` → `{ items: [{ id, alias, value, status }] }`.
+- `recalculateModel()` → `{ items: [{ id, alias, value, status }] }` (`status` — числовой `EvalStatus`, таблица выше).
 
 Формы `value` для `X#` / `S#` — [MODEL-TESTING.md](../../docs/MODEL-TESTING.md).
 
@@ -237,6 +254,7 @@ JSON-строка сессии для последующего `importData(..., 
 {"id":"9","method":"exportPortal","params":{"kind":"schema"}}
 {"id":"10","method":"importData","params":{"payload":"..."}}
 {"id":"11","method":"getSessionState","params":{"detail":"summary"}}
+{"id":"12","method":"listDiagnostics","params":{"kind":"expression","severity":"error"}}
 ```
 
 ## Help map: ошибка → документ

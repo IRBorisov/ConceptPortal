@@ -1029,6 +1029,101 @@ describe('RSToolAgent modeling semantics', () => {
     expect(modelIssues.some(record => record.code === RSDiagnosticCode.modelAxiomFalse)).toBe(true);
   });
 
+  function buildGraphScratch(tool: RSToolAgent, sessionId: string) {
+    tool.applySchemaPatch(
+      {
+        items: [
+          { alias: 'X1' },
+          { alias: 'S1', definitionFormal: 'ℬ(X1×X1)' },
+          { alias: 'D1', definitionFormal: 'Pr2,1(S1)' },
+          { alias: 'D2', definitionFormal: 'S1\\D1' },
+          { alias: 'F1', definitionFormal: '[α∈X1] Pr2(Fi1[{α}](D2))' }
+        ]
+      },
+      sessionId
+    );
+  }
+
+  it('normalizes unsorted structure values before evaluation', async () => {
+    const tool = new RSToolAgent();
+    const session = tool.createSession();
+    buildGraphScratch(tool, session.sessionId);
+
+    await tool.setModelValues(
+      {
+        set: [
+          { target: 1, value: { 0: 'a', 1: 'b', 2: 'c' } },
+          {
+            target: 2,
+            value: [
+              [TUPLE_ID, 1, 2],
+              [TUPLE_ID, 0, 2],
+              [TUPLE_ID, 0, 1],
+              [TUPLE_ID, 1, 0],
+              [TUPLE_ID, 0, 1]
+            ]
+          }
+        ]
+      },
+      session.sessionId
+    );
+
+    const stored = tool.getModelState(session.sessionId).items.find(item => item.id === 2);
+    expect(stored?.value).toEqual([
+      [TUPLE_ID, 0, 1],
+      [TUPLE_ID, 0, 2],
+      [TUPLE_ID, 1, 0],
+      [TUPLE_ID, 1, 2]
+    ]);
+
+    // S1 \ inverse(S1): (0,1) and (1,0) cancel out
+    const result = tool.evaluate({ constituentId: 4 }, session.sessionId);
+    expect(result.status).toBe(EvalStatus.HAS_DATA);
+    expect(result.value).toEqual([
+      [TUPLE_ID, 0, 2],
+      [TUPLE_ID, 1, 2]
+    ]);
+  });
+
+  it('evaluates scratch expressions that reference derived constituents', async () => {
+    const tool = new RSToolAgent();
+    const session = tool.createSession();
+    buildGraphScratch(tool, session.sessionId);
+    await tool.setModelValues(
+      {
+        set: [
+          { target: 1, value: { 0: 'a', 1: 'b', 2: 'c' } },
+          {
+            target: 2,
+            value: [
+              [TUPLE_ID, 0, 1],
+              [TUPLE_ID, 0, 2],
+              [TUPLE_ID, 1, 0],
+              [TUPLE_ID, 1, 2]
+            ]
+          }
+        ]
+      },
+      session.sessionId
+    );
+
+    const direct = tool.evaluate({ expression: 'card(D2)', cstType: CstType.TERM }, session.sessionId);
+    expect(direct.success).toBe(true);
+    expect(direct.value).toBe(2);
+
+    // F1 body references D2, which must be computed before the call
+    const viaFunction = tool.evaluate(
+      { expression: 'card(red(I{F1[ξ] | ξ:∈Pr1(D2)}))', cstType: CstType.TERM },
+      session.sessionId
+    );
+    expect(viaFunction.success).toBe(true);
+    expect(viaFunction.value).toBe(1);
+
+    const logic = tool.evaluate({ expression: 'D2⊆S1', cstType: CstType.AXIOM }, session.sessionId);
+    expect(logic.success).toBe(true);
+    expect(logic.value).toBe(1);
+  });
+
   it('throws when evaluate input is incomplete', () => {
     const tool = new RSToolAgent();
     const session = tool.createSession();

@@ -35,6 +35,16 @@ await tool.setModelValues({
 
 Здесь `X1` получает подписи элементов, а `S1: ℬ(X1×X1)` получает множество пар по индексам элементов `X1`.
 
+- Порядок элементов и дубликаты во входе не важны: `setModelValues` приводит значения `S#` к канонической форме (сортировка `compare`, без повторов). В `getModelState` и в результатах вычисления множества всегда отсортированы — сравнивай с ожиданием как с отсортированным массивом.
+- Кортежи — `[TUPLE_ID, …]`; вложенные множества — обычные массивы (`ℬℬ(X1)`: `[[0, 1], [2]]`).
+- `status` в `evaluate` / `recalculateModel` — числовой `EvalStatus` (`7` `HAS_DATA`, `6` `EMPTY`, `5` `AXIOM_FALSE`, `4` `EVAL_FAIL`); таблица — в `REFERENCE.md`.
+
+## Чтение результата
+
+- Конституента: `evaluate({ constituentId })` — вычисляет её и все поставщики.
+- Scratch: `evaluate({ expression, cstType })`. `cstType` задаёт ожидаемую ступень: `'term'` — множество или число, `'axiom'` — логическое выражение (`P1[S1]`, `D2⊆S1`). В scratch-выражении можно ссылаться на любые конституенты схемы, включая производные `D#`.
+- Литералов элементов `X#` в ЯРЭ нет: выражай тестовые элементы через схему (`debool(D3)`, `Pr1(S1)\Pr2(S1)`), а не через подписи.
+
 ## Скрипты-тесты
 
 Если проверка влияет на поведение схемы или есть риск регрессии, вынеси ее в маленький скрипт или colocated `*.test.ts`:
@@ -45,6 +55,44 @@ await tool.setModelValues({
 4. Проверь `success`, `status`, `diagnostics.length` и само `value`.
 
 Тест должен проверять смысл формулы, а не только отсутствие диагностик. Для аксиом отдельно проверяй положительный и отрицательный набор данных: корректная модель должна давать истинную аксиому, ошибочная — `AXIOM_FALSE` или диагностируемый сбой вычисления.
+
+```ts
+import { EvalStatus, TUPLE_ID } from '@rsconcept/domain';
+
+// X1 — вершины, S1: ℬ(X1×X1) — рёбра, A1 ::= ∀α∈X1 α∉F4[α] — ацикличность
+const X1 = 1,
+  S1 = 2,
+  A1 = 17;
+await tool.setModelValues({
+  set: [
+    { target: X1, value: { 0: 'a', 1: 'b', 2: 'c' } },
+    {
+      target: S1,
+      value: [
+        [TUPLE_ID, 0, 1],
+        [TUPLE_ID, 1, 2]
+      ]
+    }
+  ]
+});
+let a1 = tool.evaluate({ constituentId: A1 });
+// a1.status === EvalStatus.HAS_DATA, a1.value === 1
+
+await tool.setModelValues({
+  set: [
+    {
+      target: S1,
+      value: [
+        [TUPLE_ID, 0, 1],
+        [TUPLE_ID, 1, 2],
+        [TUPLE_ID, 2, 0]
+      ]
+    }
+  ]
+});
+a1 = tool.evaluate({ constituentId: A1 });
+// a1.status === EvalStatus.AXIOM_FALSE, a1.value === 0
+```
 
 ## Ограничения
 

@@ -25,8 +25,17 @@
 ## `AnalysisResult.type`
 
 1. Сначала проверь `analysis.success === true` и `analysis.type !== null`.
-2. Не разбирай объект вручную; используй helpers из `@rsconcept/domain`.
-3. `valueClass` уточняет вычислимость: `Value`, `Property`, `Invalid`.
+2. Не разбирай объект вручную; печатай через `labelType` из `@rsconcept/domain/rslang/labels`:
+
+   ```ts
+   import { labelType } from '@rsconcept/domain/rslang/labels';
+
+   labelType(analysis.type); // 'ℬ(X1×X1)', '[X1] → ℬ(X1)', '[ℬ(X1×X1)] → Logic', 'Logic'
+   ```
+
+   Для скрипта вне пакета — `file:///<workspace>/rsconcept/domain/src/rslang/labels.ts` (см. GUIDE, «Как запускать rstool»). `normalizeType` из того же модуля даёт каноническую строку для сравнения типизаций.
+
+3. `valueClass` уточняет вычислимость: `'value'` (вычислимо), `'property'` (только проверка принадлежности), `null` (ошибка). `success: true` не исключает диагностику `error`: квантор по `ℬ(…)` разбирается, но даёт `invalidPropertyUsage` и `valueClass: null`.
 
 ## `S#` и `D#`
 

@@ -1,5 +1,7 @@
 import { DiagnosticKind, expressionDiagnostic } from './diagnostic-assembly';
 import { type RSErrorDescription, type Value } from '@rsconcept/domain/rslang';
+import { extractGlobals } from '@rsconcept/domain/rslang/api';
+import { normalizeValue } from '@rsconcept/domain/rslang/eval/value-api';
 import { isBaseSet } from '@rsconcept/domain/library/rsform-api';
 import { CstType, type RSForm } from '@rsconcept/domain/library/rsform';
 import { RSEngine, type RSEngineServices } from '@rsconcept/domain/library/rsengine';
@@ -37,7 +39,11 @@ export class ModelAdapter {
       const binding = toBasicBinding(input.value as Record<string | number, string>);
       await engine.setBasicValue(input.target, binding);
     } else {
-      await engine.setStructureValue(input.target, input.value as Value);
+      // Set operations in the evaluator assume canonical form (sorted, deduplicated);
+      // agents may pass elements in arbitrary order.
+      const value = structuredClone(input.value) as Value;
+      normalizeValue(value);
+      await engine.setStructureValue(input.target, value);
     }
     session.updatedAt = new Date().toISOString();
     return structuredClone(session.model);
@@ -64,6 +70,7 @@ export class ModelAdapter {
 
   public evaluateExpression(session: SessionState, expression: string, cstType: CstType): EvaluationResult {
     const engine = this.createEngine(session);
+    this.prepareReferencedValues(engine, session, expression);
     const result = engine.evaluateExpression(expression, cstType);
     const status =
       result.value === null
@@ -118,6 +125,32 @@ export class ModelAdapter {
     const engine = new RSEngine(SESSION_MODEL_ID, createInMemoryServices(session));
     engine.loadData(schema, model);
     return engine;
+  }
+
+  /**
+   * Computes values of inferrable constituents referenced by a scratch expression (directly or
+   * through `F#` / `P#` bodies). A fresh engine only holds interpreted `X#` / `C#` / `S#` values.
+   */
+  private prepareReferencedValues(engine: RSEngine, session: SessionState, expression: string): void {
+    const schema = engine.schema;
+    if (!schema) {
+      return;
+    }
+    const globals = extractGlobals(expression);
+    const referenced = session.items.filter(item => globals.has(item.alias)).map(item => item.id);
+    if (referenced.length === 0) {
+      return;
+    }
+    const required = new Set([...referenced, ...schema.graph.expandAllInputs(referenced)]);
+    for (const cstID of schema.graph.topologicalOrder()) {
+      if (!required.has(cstID)) {
+        continue;
+      }
+      const cst = schema.cstByID.get(cstID);
+      if (cst && isInferrable(cst.cst_type)) {
+        engine.calculateCst(cstID);
+      }
+    }
   }
 
   private validateSetInput(session: SessionState, input: SetConstituentaValueInput): void {

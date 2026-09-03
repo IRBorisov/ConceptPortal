@@ -18,7 +18,7 @@
 - Stdio/MCP: **плоские** `params` — поля метода и optional `sessionId` на одном уровне (без `params.input`).
 - Состояние: `getSessionState()` (summary) или `getSessionState('full')`.
 - Импорт/экспорт Portal: `importData`, `exportPortal({ kind })`.
-- Модель: `setModelValues`, `evaluate`, `recalculateModel`.
+- Модель: `setModelValues`, `evaluate`, `recalculateModel`. Статусы вычисления приходят числами (`EvalStatus`, см. REFERENCE).
 - Перед сохранением сомнительной формулы — `analyzeExpression`.
 
 ## Задача → чтение
@@ -57,10 +57,28 @@
 Из корня workspace Portal (после `pnpm install` и сборки `@rsconcept/domain`):
 
 ```bash
-pnpm --filter @rsconcept/rstool exec tsx path/to/your/build-schema.ts
+pnpm --filter @rsconcept/rstool exec tsx C:/path/to/review.mts
 ```
 
-В скрипте импортируй API пакета (`@rsconcept/rstool` или относительный путь к `rsconcept/rstool/src` только если скрипт лежит вне пакета и это осознанный выбор). Либо используй stdio/MCP без отдельного файла.
+Правила для скрипта **вне** `rsconcept/rstool/`:
+
+- `import … from '@rsconcept/rstool'` из такого файла **не резолвится** — пакет не поднят в корневой `node_modules`. Импортируй по абсолютному `file://` URL: `file:///<workspace>/rsconcept/rstool/src/index.ts` (или `…/dist/index.js`). На Windows абсолютный путь без `file://` тоже падает (`ERR_UNSUPPORTED_ESM_URL_SCHEME`).
+- Расширение **`.mts`**: `.ts` вне пакета трактуется как CommonJS, а `@rsconcept/*` экспортируют только ESM (`ERR_PACKAGE_PATH_NOT_EXPORTED`).
+- Helpers domain — тем же способом: `file:///…/rsconcept/domain/src/index.ts` (`TUPLE_ID`), `…/domain/src/rslang/labels.ts` (`labelType`).
+- Вывод в файл с `-Encoding utf8` (PowerShell) — в консоли cp1251 символы ЯРЭ ломаются.
+
+```ts
+import { readFileSync } from 'node:fs';
+// <workspace> — абсолютный путь к корню Portal, например D:/work/Portal или /home/me/Portal
+import { RSToolAgent } from 'file:///<workspace>/rsconcept/rstool/src/index.ts';
+import { TUPLE_ID } from 'file:///<workspace>/rsconcept/domain/src/index.ts';
+
+const tool = new RSToolAgent();
+tool.importData(readFileSync('C:/tmp/details.json', 'utf-8'));
+console.log(tool.listDiagnostics());
+```
+
+Альтернатива без резолвинга — stdio-обёртка из собранного `dist`: `RSToolWrapperClient({ command: 'node', args: ['<abs>/rsconcept/rstool/dist/wrapper/stdio-wrapper.js'], cwd: '<abs>/rsconcept/rstool' })`. Внутри пакета (тесты, штатные `examples/`) обычный `@rsconcept/rstool` работает.
 
 ## Что читать
 
@@ -132,19 +150,20 @@ kind `auto` (default) определит `portal-details` или `portal-schema`
 **Правило:** без явного запроса на правку не делай массовый рефакторинг и не заменяй схему «улучшенной версией». Сначала отчёт; правки — только по согласованию или если пользователь сразу сказал «исправь».
 
 1. Загрузи схему: текущая сессия, `importData`, или Portal → [PORTAL-API.md](../../docs/PORTAL-API.md).
-2. `listDiagnostics()` — раздели `expression` / `schema` / `model`; зафиксируй ошибки и предупреждения.
-3. `getSessionState('summary')` — обзор состава; при необходимости `full` для формул.
+2. `listDiagnostics()` — раздели `expression` / `schema` / `model`; зафиксируй ошибки и предупреждения. `analysisSuccess: true` в summary **не** означает отсутствие диагностик (например, `invalidPropertyUsage` даёт `error` при успешном разборе) — опирайся на `listDiagnostics`.
+3. `getSessionState('summary')` — обзор состава; при необходимости `full` для формул. Типизацию из `analysis.type` печатай через `labelType` ([TYPIFICATION.md](../../docs/TYPIFICATION.md)), а не разбирай AST вручную.
 4. Структурный проход по [чеклисту ревью](#ревью-концептуальной-схемы) и [CONCEPTUAL-SCHEMA.md](../../docs/CONCEPTUAL-SCHEMA.md):
    - неопределяемые vs производные (`S#` там, где должно быть `D#`/`F#`/`P#`);
    - `X#` / `C#` / `Z` ([BASE-SELECTION.md](../../docs/BASE-SELECTION.md));
    - терм-функции vs множества пар;
    - радикалы `R#` не объявлены конституентами;
    - покрытие задачи vs избыточность.
-5. Severity в отчёте:
-   - **блокер** — диагностики `error`, схема не анализируется / ломает вычисление;
-   - **важно** — нарушение правил проектирования (лишнее `S#`, график вместо `F#`, смешение экспликаций);
-   - **замечание** — стиль, именование, возможные упрощения, пробелы покрытия.
-6. Ответ — по [шаблону ревью](#шаблон-ответа-ревью). Предлагай конкретные правки списком; применяй их только по запросу.
+5. Severity в отчёте — по **смыслу** диагностики, а не только по полю `severity` (инструмент помечает `error` и метаданные):
+   - **блокер** — `expression` с `severity: error` (формула не разбирается, невычислима: `invalidPropertyUsage`, …), `schemaDependencyCycle`, `schemaFormalDuplicate`, `schemaHomonym`; схема не анализируется / ломает вычисление;
+   - **важно** — нарушение правил проектирования (лишнее `S#`, график вместо `F#`, смешение экспликаций, перекрёстные ссылки `C#`, термин сильнее формулы);
+   - **замечание** — `schemaMissingConvention`, `schemaMissingTerm`, `modelEmpty` у структур, не задействованных в проверке; стиль, именование, упрощения, пробелы покрытия.
+6. Проверь на маленькой КМ ключевые производные и аксиомы ([цикл КМ](#проверка-на-маленькой-км)): позитивный набор данных → ожидаемые значения, негативный → `AXIOM_FALSE`. Это чаще всего даёт главные находки (расхождение термина и формулы, лишние/пропущенные элементы).
+7. Ответ — по [шаблону ревью](#шаблон-ответа-ревью). Предлагай конкретные правки списком; применяй их только по запросу.
 
 ### Цикл диагностик
 
@@ -162,12 +181,14 @@ kind `auto` (default) определит `portal-details` или `portal-schema`
 
 Когда синтаксис верен, но смысл формулы неочевиден. Подробности и форма данных — [MODEL-TESTING.md](../../docs/MODEL-TESTING.md).
 
-1. Отдельная `createSession` или изолированная копия текущей сессии.
+1. Отдельная `createSession` или изолированная копия текущей сессии (для ревью схемы из Portal достаточно самой импортированной сессии).
 2. Только нужные поставщики: `X#`, `C#`, `S#` и проверяемые `D#` / `F#` / `P#` / `A#`.
 3. `analyzeExpression` и `applySchemaPatch`.
-4. Значения: `setModelValues`.
-5. `evaluate`; сравни с ожидаемым `value`.
-6. При нескольких зависимых определениях — `recalculateModel`.
+4. Значения: `setModelValues`. `X#` — `{ 0: 'a', 1: 'b' }` (индекс → подпись), `S#` — массив кортежей `[TUPLE_ID, i, j]` по индексам `X#`; порядок элементов не важен, значения приводятся к канонической форме автоматически.
+5. `evaluate({ constituentId })` для конституенты; `evaluate({ expression, cstType })` для scratch-выражения — `cstType` задаёт ожидаемую ступень: множества и числа — `'term'`, логические выражения (`P1[S1]`, `D2⊆S1`) — `'axiom'`. В scratch можно ссылаться на любые конституенты схемы, включая `D#` — зависимости вычисляются автоматически.
+6. `status` в ответе — **число** (`EvalStatus`): `7` `HAS_DATA`, `6` `EMPTY`, `5` `AXIOM_FALSE`, `4` `EVAL_FAIL`, `3` `INVALID_DATA`, `1` `NO_EVAL`; полный список — [REFERENCE.md](REFERENCE.md). Сравни `value` с ожидаемым.
+7. При нескольких зависимых определениях — `recalculateModel`.
+8. Для аксиом — два набора данных: корректный (истина) и нарушающий (`AXIOM_FALSE`).
 
 Для регрессий вынеси проверку в скрипт или colocated `*.test.ts` (см. [MODEL-TESTING.md](../../docs/MODEL-TESTING.md)).
 
@@ -196,8 +217,8 @@ kind `auto` (default) определит `portal-details` или `portal-schema`
 2. **Диагностики:** число ошибок / предупреждений по `expression` / `schema` / `model` (без полного JSON).
 3. **Находки** списком: блокер → важно → замечание; у каждой — имя конституенты и суть.
 4. **Покрытие:** что из задачи отражено; чего не хватает.
-5. **Рекомендации:** конкретные правки; не применяй их без запроса.
-6. **Проверки:** что уже сделано (import, listDiagnostics, выборочный анализ).
+5. **Рекомендации:** конкретные правки; не применяй их без запроса. Предложенную замену формулы прогони через анализ выражения (и по возможности через КМ) до того, как её советовать.
+6. **Проверки:** что уже сделано (импорт, диагностики, выборочный анализ) и **КМ**: данные → ожидание → результат для проверенных конституент.
 
 ### Шаблон ответа: диагностики
 
