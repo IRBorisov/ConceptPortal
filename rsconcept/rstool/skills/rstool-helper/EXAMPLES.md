@@ -153,6 +153,7 @@ tool.applySchemaPatch({
 | `globalFuncParenCall`                             | `F1(ξ)`                                            | `F1[ξ]`                                                          |
 | `globalFuncWithoutArgs`                           | голое `F1` в формуле                               | `F1[…]`                                                          |
 | `radicalUsage`                                    | `R1` в теле формулы или как конституента           | `R#` только в `[…]` у `F#`/`P#`                                  |
+| `invalidPropertyUsage`                            | `∀σ∈ℬ(S1)\{∅} ¬P1[σ]` — квантор по булеану         | вычислимая форма через достижимость: `∀α∈X1 α∉F4[α]`             |
 | `schemaMissingConvention`                         | `X1` без конвенции                                 | добавь предметную конвенцию                                      |
 | `schemaHomonym`                                   | одинаковый термин у разных конституент             | различай термины                                                 |
 | `schemaDependencyCycle`                           | круг в определениях (`F3 → P1 → F3`)               | разорви цикл: убери взаимные ссылки                              |
@@ -235,6 +236,29 @@ await tool.setModelValues({
 const evalResult = tool.evaluate({ constituentId: 2 });
 const scratch = tool.evaluate({ expression: '1+2', cstType: CstType.TERM });
 const recalc = tool.recalculateModel();
+```
+
+Множества `S#` — кортежи `[TUPLE_ID, i, j]` по индексам `X#`; порядок во входе не важен (нормализуется). Scratch может ссылаться на производные конституенты; логические выражения — с `cstType: CstType.AXIOM`:
+
+```ts
+import { EvalStatus, TUPLE_ID } from '@rsconcept/domain';
+
+await tool.setModelValues({
+  set: [
+    { target: 1, value: { 0: 'a', 1: 'b', 2: 'c' } },
+    {
+      target: 2,
+      value: [
+        [TUPLE_ID, 1, 2],
+        [TUPLE_ID, 0, 1]
+      ]
+    } // S1: ℬ(X1×X1)
+  ]
+});
+const closure = tool.evaluate({ constituentId: 9 }); // D9 — транзитивное замыкание
+closure.status === EvalStatus.HAS_DATA; // status — число: 7
+const check = tool.evaluate({ expression: 'S1⊆D9', cstType: CstType.AXIOM });
+check.value === 1;
 ```
 
 ## Экспорт / импорт и Portal round-trip

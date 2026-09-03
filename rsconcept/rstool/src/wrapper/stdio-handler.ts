@@ -1,3 +1,4 @@
+import type { ListDiagnosticsFilters } from '../models/diagnostic';
 import type { RSToolAgent } from '../models/rstool-agent';
 
 export interface StdioRequest {
@@ -63,6 +64,22 @@ function omitSessionId(input: Record<string, unknown>): Record<string, unknown> 
   return rest;
 }
 
+/** Flat `constituentId` / `kind` / `severity` params; legacy nested `filters` object is still accepted. */
+function diagnosticsFilters(input: Record<string, unknown>): ListDiagnosticsFilters | undefined {
+  const source = { ...asObject(input.filters), ...omitSessionId(input) };
+  const filters: ListDiagnosticsFilters = {};
+  if (typeof source.constituentId === 'number') {
+    filters.constituentId = source.constituentId;
+  }
+  if (source.kind === 'expression' || source.kind === 'schema' || source.kind === 'model') {
+    filters.kind = source.kind;
+  }
+  if (source.severity === 'error' || source.severity === 'warning') {
+    filters.severity = source.severity;
+  }
+  return Object.keys(filters).length > 0 ? filters : undefined;
+}
+
 export async function handleStdioRequest(tool: RSToolAgent, request: StdioRequest): Promise<StdioResponse> {
   try {
     const params = asObject(request.params);
@@ -110,15 +127,12 @@ export async function handleStdioRequest(tool: RSToolAgent, request: StdioReques
             optionalSessionId(params)
           )
         };
-      case 'listDiagnostics': {
-        const constituentId = params.constituentId;
-        const filters = typeof constituentId === 'number' ? { constituentId } : (params.filters as never);
+      case 'listDiagnostics':
         return {
           id: request.id,
           ok: true,
-          result: tool.listDiagnostics(filters, optionalSessionId(params))
+          result: tool.listDiagnostics(diagnosticsFilters(params), optionalSessionId(params))
         };
-      }
       case 'analyzeExpression':
         return {
           id: request.id,

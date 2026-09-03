@@ -100,7 +100,7 @@ Supported methods (contract `3.3.0`):
 - `restoreOrder`
 - `synthesize`
 
-Params are **flat** at the top level (no `params.input` wrapper). Optional `sessionId` sits alongside method fields.
+Params are **flat** at the top level (no `params.input` wrapper). Optional `sessionId` sits alongside method fields. `listDiagnostics` takes flat `constituentId` / `kind` / `severity` filters (a legacy nested `filters` object is still accepted).
 
 Example `createSession`:
 

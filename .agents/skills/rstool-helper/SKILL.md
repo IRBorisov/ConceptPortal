@@ -47,6 +47,10 @@ description: >-
 
 Разовые скрипты и JSON для Portal — вне дерева пакета (каталог задачи, `.tmp/`, путь пользователя). См. **«Границы правок»** в GUIDE.md.
 
+## Запуск разовых скриптов
+
+`import ... from '@rsconcept/rstool'` из файла **вне** `rsconcept/rstool/` не резолвится (пакет не поднят в корневой `node_modules`). Рабочий рецепт — раздел **«Как запускать rstool, не кладя скрипт в пакет»** в GUIDE.md: файл `*.mts`, импорт через `file:///…/rsconcept/rstool/src/index.ts`, запуск `pnpm --filter @rsconcept/rstool exec tsx <путь>`.
+
 ## Язык ответа пользователю
 
 В тексте для пользователя используй термины предметной области («формальное определение», «конституента», «диагностики»), а не английские имена полей и методов API (`definitionFormal`, `applySchemaPatch`). Идентификаторы API — только в коде, patch-ах и JSON. Словарь API → текст: раздел «Язык ответа» в GUIDE.md. Термины КС (**неопределяемые понятия**, **базисное множество**, ядро) — только из `docs/DOMAIN.md`, раздел **«Термины: не путать»**. Не сокращай «базисное множество» до «базис» / «базисы».
@@ -57,6 +61,6 @@ description: >-
 
 ## Кратко
 
-- Typecheck и тесты — из `rsconcept/rstool` (`npm test`, `npm run wrapper`)
+- Typecheck и тесты — pnpm workspace: `pnpm --filter @rsconcept/rstool test`, `… run typecheck`, `… run wrapper`
 - MCP: `@rsconcept/rstool-mcp` (имена tools — `snake_case`, см. REFERENCE)
 - `@rsconcept/domain` в этом workspace — в `rsconcept/domain`

@@ -98,4 +98,47 @@ describe('handleStdioRequest', () => {
     expect((all.result as unknown[]).length).toBeGreaterThan(0);
     expect(filtered.result).toEqual(all.result);
   });
+
+  it('filters diagnostics by flat kind and severity params', async () => {
+    const sessionTool = new RSToolAgent();
+    const created = await handleStdioRequest(sessionTool, { id: 30, method: 'createSession' });
+    const sessionId = (created.result as { sessionId: string }).sessionId;
+    // X1 without convention → schema diagnostic; D1 with broken formula → expression diagnostic
+    await handleStdioRequest(sessionTool, {
+      id: 31,
+      method: 'applySchemaPatch',
+      params: {
+        sessionId,
+        mode: 'best_effort',
+        items: [{ alias: 'X1' }, { alias: 'D1', definitionFormal: 'Pr1(' }]
+      }
+    });
+
+    const all = await handleStdioRequest(sessionTool, { id: 32, method: 'listDiagnostics', params: { sessionId } });
+    const kinds = new Set((all.result as { kind: string }[]).map(item => item.kind));
+    expect(kinds.has('schema')).toBe(true);
+    expect(kinds.has('expression')).toBe(true);
+
+    const schemaOnly = await handleStdioRequest(sessionTool, {
+      id: 33,
+      method: 'listDiagnostics',
+      params: { sessionId, kind: 'schema' }
+    });
+    expect((schemaOnly.result as { kind: string }[]).every(item => item.kind === 'schema')).toBe(true);
+    expect((schemaOnly.result as unknown[]).length).toBeLessThan((all.result as unknown[]).length);
+
+    const warningsOnly = await handleStdioRequest(sessionTool, {
+      id: 34,
+      method: 'listDiagnostics',
+      params: { sessionId, severity: 'warning' }
+    });
+    expect((warningsOnly.result as { severity: string }[]).every(item => item.severity === 'warning')).toBe(true);
+
+    const legacy = await handleStdioRequest(sessionTool, {
+      id: 35,
+      method: 'listDiagnostics',
+      params: { sessionId, filters: { kind: 'schema' } }
+    });
+    expect(legacy.result).toEqual(schemaOnly.result);
+  });
 });

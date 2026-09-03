@@ -5,14 +5,53 @@ import { describe, expect, it } from 'vitest';
 import { CstType, EvalStatus, RSToolWrapperClient } from '../index';
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
+const tsxCli = fileURLToPath(import.meta.resolve('tsx/cli'));
+const wrapperEntry = resolve(packageRoot, 'src/wrapper/stdio-wrapper.ts');
 
 describe('RSToolWrapperClient integration', () => {
+  it('rejects readiness and calls when the wrapper command cannot start', async () => {
+    const client = new RSToolWrapperClient({
+      command: resolve(packageRoot, 'definitely-missing-rstool-wrapper-binary'),
+      args: [],
+      cwd: packageRoot
+    });
+    try {
+      await expect(client.waitUntilReady()).rejects.toThrow(/ENOENT/);
+      await expect(client.call('methods')).rejects.toThrow(/ENOENT/);
+    } finally {
+      await client.close();
+    }
+  }, 30_000);
+
+  it('rejects outstanding calls when the wrapper exits before responding', async () => {
+    const client = new RSToolWrapperClient({
+      command: process.execPath,
+      args: ['-e', 'process.stdin.resume(); setTimeout(() => process.exit(3), 200)'],
+      cwd: packageRoot
+    });
+    try {
+      await expect(client.call('methods')).rejects.toThrow(/exited before responding \(code 3/);
+    } finally {
+      await client.close();
+    }
+  }, 30_000);
+
+  it('starts the default npm wrapper without a shell', async () => {
+    const client = new RSToolWrapperClient({ cwd: packageRoot });
+    try {
+      await client.waitUntilReady();
+      const methods = await client.call<string[]>('methods');
+      expect(methods).toContain('applySchemaPatch');
+    } finally {
+      await client.close();
+    }
+  }, 30_000);
+
   it('runs createSession, patch, model, and evaluate over stdio', async () => {
     const client = new RSToolWrapperClient({
-      command: 'npx',
-      args: ['tsx', resolve(packageRoot, 'src/wrapper/stdio-wrapper.ts')],
-      cwd: packageRoot,
-      shell: true
+      command: process.execPath,
+      args: [tsxCli, wrapperEntry],
+      cwd: packageRoot
     });
 
     try {

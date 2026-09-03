@@ -31,6 +31,21 @@ describe("buildRSToolMcpServer", () => {
     ]);
   });
 
+  it("list_diagnostics forwards flat kind and severity filters", () => {
+    const definition = TOOL_DEFINITIONS.find((t) => t.name === "list_diagnostics")!;
+    const calls: unknown[][] = [];
+    const tool = {
+      listDiagnostics: (...args: unknown[]) => {
+        calls.push(args);
+        return [];
+      },
+    };
+    definition.invoke(tool as never, { kind: "schema", severity: "warning", sessionId: "s1" });
+    expect(calls[0]).toEqual([{ kind: "schema", severity: "warning" }, "s1"]);
+    definition.invoke(tool as never, {});
+    expect(calls[1]).toEqual([undefined, undefined]);
+  });
+
   it("each tool has a permissive but well-formed input schema", () => {
     for (const definition of TOOL_DEFINITIONS) {
       expect(definition.inputSchema.type).toBe("object");
