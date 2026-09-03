@@ -25,9 +25,12 @@ function useTokenValidation(token: string, isPending: boolean) {
       setIsTokenValidating(true);
       try {
         await validateToken({ token });
-      } catch {
-        // invalid / expired: do not keep a JS-readable token around for the tab lifetime
-        clearResetToken();
+      } catch (error) {
+        // Only a definitive invalid / expired response drops the token; transient network or
+        // server failures keep it so a reload can retry validation.
+        if (isInvalidTokenError(error)) {
+          clearResetToken();
+        }
       }
     }
   };
@@ -118,11 +121,16 @@ export function Component() {
 }
 
 // ====== Internals =========
+/** Backend answers 404 for an unknown or expired reset token. */
+function isInvalidTokenError(error: unknown): boolean {
+  return isAxiosError(error) && error.response?.status === 404;
+}
+
 function ServerError({ error }: { error: ErrorData }): React.ReactElement {
   const tx = useTx();
   rethrowIfStaleBundleError(error);
 
-  if (isAxiosError(error) && error.response?.status === 404) {
+  if (isInvalidTokenError(error)) {
     return (
       <div className='mx-auto mt-6 text-sm select-text text-destructive'>
         {tx('tx.shell.auth.restore.token.validation')}

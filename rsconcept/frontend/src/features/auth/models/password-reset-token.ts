@@ -11,6 +11,9 @@ export const PASSWORD_RESET_TOKEN_STORAGE_KEY = 'rsconcept:password-reset-token'
 const TOKEN_PARAM = 'token';
 const TOKEN_IN_URL_PATTERN = /([?&#]token=)[^&#\s]*/gi;
 
+/** In-memory copy for the current page load: keeps the reset usable when sessionStorage is unavailable. */
+let memoryToken = '';
+
 /**
  * Move a reset token from the current URL (query or fragment) into `sessionStorage`
  * and strip it from the address bar. Safe to call multiple times; no-op without a token.
@@ -39,6 +42,9 @@ export function captureResetTokenFromUrl(): void {
 
 /** Read the stashed reset token (empty string when absent). */
 export function readResetToken(): string {
+  if (memoryToken) {
+    return memoryToken;
+  }
   try {
     return sessionStorage.getItem(PASSWORD_RESET_TOKEN_STORAGE_KEY) ?? '';
   } catch {
@@ -46,8 +52,9 @@ export function readResetToken(): string {
   }
 }
 
-/** Forget the stashed reset token (after success, validation failure, or leaving the page). */
+/** Forget the stashed reset token (after success, invalid token, or leaving the page). */
 export function clearResetToken(): void {
+  memoryToken = '';
   try {
     sessionStorage.removeItem(PASSWORD_RESET_TOKEN_STORAGE_KEY);
   } catch {
@@ -62,9 +69,10 @@ export function scrubResetTokenFromUrl(value: string): string {
 
 // ====== Internals =========
 function storeResetToken(token: string): void {
+  memoryToken = token;
   try {
     sessionStorage.setItem(PASSWORD_RESET_TOKEN_STORAGE_KEY, token);
   } catch {
-    // ignore quota / privacy mode
+    // quota / privacy mode: the in-memory copy still serves this page load
   }
 }

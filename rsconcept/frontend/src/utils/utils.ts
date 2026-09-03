@@ -81,7 +81,7 @@ export function convertToCSV(targetObj: readonly object[]): Blob {
             if (typeof raw === 'string') {
               cell = neutralizeCsvFormula(cell);
             }
-            if (cell.search(/("|,|\n)/g) >= 0) {
+            if (cell.search(/("|,|\n|\r)/g) >= 0) {
               cell = `"${cell}"`;
             }
             return cell;
@@ -93,12 +93,13 @@ export function convertToCSV(targetObj: readonly object[]): Blob {
   return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 }
 
-const CSV_FORMULA_PREFIX = /^[=+\-@\t\r]/;
+const CSV_FORMULA_PREFIX = /^[=+\-@\t\r\n]/;
 
 /**
  * Prevent spreadsheet formula injection: user-controlled text starting with `=`, `+`, `-`, `@`,
- * tab or CR is executed by Excel / LibreOffice when the CSV is opened. Prefix with `'` so it is
+ * tab, CR or LF is executed by Excel / LibreOffice when the CSV is opened. Prefix with `'` so it is
  * rendered as text. Numbers and dates are not user-typed strings and bypass this.
+ * Callers must still quote cells containing CR / LF so the record cannot be split.
  */
 export function neutralizeCsvFormula(cell: string): string {
   return CSV_FORMULA_PREFIX.test(cell) ? `'${cell}` : cell;
