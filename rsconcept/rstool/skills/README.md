@@ -9,7 +9,7 @@ Each skill lives in its own subdirectory: `skills/<skill-name>/SKILL.md` (plus r
 - `rstool-helper/GUIDE.md`: entry point — task→read matrix, workflows (incl. review), checklists (Russian)
 - `rstool-helper/REFERENCE.md`: API, stdio, MCP names, response shapes, help map (Russian)
 - `rstool-helper/EXAMPLES.md`: snippets, anti-patterns, diagnostics, `examples/` index (Russian)
-- `../docs/*.md`: language reference (DOMAIN, SYNTAX, DIAGNOSTICS, …)
+- `../docs/*.md`: language reference (DOMAIN, SYNTAX, CONSTRUCTIONS, DIAGNOSTICS, …)
 
 ## npm workflow
 

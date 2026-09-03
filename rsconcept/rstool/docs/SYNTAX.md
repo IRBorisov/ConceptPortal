@@ -1,6 +1,6 @@
 # Синтаксис ЯРЭ
 
-Единая справка для агента: читай при построении или исправлении `definitionFormal`. Типизация — `TYPIFICATION.md`; ошибки — `DIAGNOSTICS.md`.
+Единая справка для агента: читай при построении или исправлении `definitionFormal`. Типизация — `TYPIFICATION.md`; ошибки — `DIAGNOSTICS.md`. Объяснение человеку — [CONSTRUCTIONS.md](CONSTRUCTIONS.md).
 
 ## Имена и литералы
 

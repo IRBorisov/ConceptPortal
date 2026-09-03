@@ -2,8 +2,9 @@
 name: rstool-helper
 description: >-
   ЯРЭ и концептуальные схемы через rstool: концептуализация, ревью/оценка КС,
-  правки и диагностики формул, проверка на КМ (evaluate), выбор X#/C#/Z,
-  импорт/экспорт Portal (/rsforms, /details). Читай GUIDE и docs из node_modules.
+  правки и диагностики формул, объяснение конструкций ЯРЭ, проверка на КМ (evaluate),
+  выбор X#/C#/Z, импорт/экспорт Portal (/rsforms, /details).
+  Читай GUIDE и docs из node_modules.
 ---
 
 # rstool-helper
@@ -39,9 +40,11 @@ description: >-
 | Собрать / развить КС из текста    | GUIDE: концептуализация; `docs/CONCEPTUAL-SCHEMA.md`; `docs/BASE-SELECTION.md` |
 | Оценить / отревьюить готовую КС   | GUIDE: ревью; чеклист ревью; `docs/CONCEPTUAL-SCHEMA.md`                       |
 | Починить формулу / диагностики    | GUIDE: цикл диагностик; `docs/DIAGNOSTICS.md`                                  |
+| Написать формулу / синтаксис      | `docs/SYNTAX.md`                                                               |
+| Объяснить формулу / конструкцию   | `docs/CONSTRUCTIONS.md`                                                        |
 | Импорт / правка по ссылке Portal  | GUIDE: Portal; `docs/PORTAL-API.md`                                            |
 | Проверить смысл на данных         | GUIDE: КМ; `docs/MODEL-TESTING.md`                                             |
-| Синтаксис / типизация / вызов API | `docs/SYNTAX.md` / `TYPIFICATION.md` / `REFERENCE.md`                          |
+| Типизация / вызов API             | `docs/TYPIFICATION.md` / `REFERENCE.md`                                        |
 
 Перед работой всегда открой **GUIDE.md**; остальное — по строке таблицы.
 

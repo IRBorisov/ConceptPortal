@@ -245,6 +245,7 @@ JSON-строка сессии для последующего `importData(..., 
 | -------------------------------------------------- | ------------------------------------------------------- |
 | Код / `name` диагностики                           | [DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md)             |
 | Синтаксис операторов, `D{}`/`I{}`/`R{}`, `F#`/`P#` | [SYNTAX.md](../../docs/SYNTAX.md)                       |
+| Объяснить формулу / конструкцию человеку           | [CONSTRUCTIONS.md](../../docs/CONSTRUCTIONS.md)         |
 | Ступени, `AnalysisResult.type`                     | [TYPIFICATION.md](../../docs/TYPIFICATION.md)           |
 | `X#` vs `C#` vs `Z`, переносимость                 | [BASE-SELECTION.md](../../docs/BASE-SELECTION.md)       |
 | Проектирование, `F#` vs пары, ревью                | [CONCEPTUAL-SCHEMA.md](../../docs/CONCEPTUAL-SCHEMA.md) |

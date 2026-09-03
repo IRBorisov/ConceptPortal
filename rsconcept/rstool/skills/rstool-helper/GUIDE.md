@@ -31,9 +31,10 @@
 | Оценить / отревьюить готовую КС (без запроса «перепиши») | этот GUIDE → [ревью / оценка](#ревью--оценка-готовой-кс); [чеклист ревью](#ревью-концептуальной-схемы); [CONCEPTUAL-SCHEMA.md](../../docs/CONCEPTUAL-SCHEMA.md); при импорте — [PORTAL-API.md](../../docs/PORTAL-API.md)             | EXAMPLES с batch patch; полный SYNTAX    |
 | Точечные правки существующей схемы                       | этот GUIDE → [редактирование](#редактирование-и-проверка-схемы); [REFERENCE.md](REFERENCE.md) при вызовах                                                                                                                            | CONCEPTUAL-SCHEMA целиком                |
 | Починить формулу / диагностики                           | этот GUIDE → [цикл диагностик](#цикл-диагностик); [DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md); [EXAMPLES.md](EXAMPLES.md) «типичные диагностики»                                                                                     | CONCEPTUAL-SCHEMA; PORTAL-API            |
+| Написать формулу; синтаксис `D{}`/`I{}`/`R{}`, `F#`/`P#` | [SYNTAX.md](../../docs/SYNTAX.md); при необходимости [EXAMPLES.md](EXAMPLES.md)                                                                                                                                                      | CONSTRUCTIONS; воркфлоу сессий           |
+| Объяснить формулу или конструкцию человеку               | [CONSTRUCTIONS.md](../../docs/CONSTRUCTIONS.md)                                                                                                                                                                                      | SYNTAX целиком; воркфлоу сессий          |
 | Импорт / правка по ссылке Portal                         | этот GUIDE → [Portal](#оценка-или-правка-кс-из-portal); [PORTAL-API.md](../../docs/PORTAL-API.md)                                                                                                                                    | SYNTAX; BASE-SELECTION                   |
 | Проверить смысл на данных / КМ                           | этот GUIDE → [КМ](#проверка-на-маленькой-км); [MODEL-TESTING.md](../../docs/MODEL-TESTING.md)                                                                                                                                        | DOMAIN/ОСС; CONCEPTUAL-SCHEMA            |
-| Объяснить синтаксис / генераторы / `F#`/`P#`             | [SYNTAX.md](../../docs/SYNTAX.md); при необходимости [EXAMPLES.md](EXAMPLES.md)                                                                                                                                                      | воркфлоу сессий                          |
 | Разобрать типизацию / ступени                            | [TYPIFICATION.md](../../docs/TYPIFICATION.md)                                                                                                                                                                                        | PORTAL-API                               |
 | Вызовы API / stdio / MCP                                 | [REFERENCE.md](REFERENCE.md)                                                                                                                                                                                                         | docs языка                               |
 | Термины КС, ядро/тело, не путать ярлыки                  | [DOMAIN.md](../../docs/DOMAIN.md)                                                                                                                                                                                                    | —                                        |
@@ -72,6 +73,7 @@ pnpm --filter @rsconcept/rstool exec tsx path/to/your/build-schema.ts
 - Концептуализация, создание схемы: [../../docs/CONCEPTUAL-SCHEMA.md](../../docs/CONCEPTUAL-SCHEMA.md).
 - Конституенты и валидация: [../../docs/CONSTITUENTA.md](../../docs/CONSTITUENTA.md).
 - Синтаксис ЯРЭ: [../../docs/SYNTAX.md](../../docs/SYNTAX.md).
+- Объяснение формул и конструкций: [../../docs/CONSTRUCTIONS.md](../../docs/CONSTRUCTIONS.md).
 - Типизация: [../../docs/TYPIFICATION.md](../../docs/TYPIFICATION.md).
 - Проверка определений на КМ: [../../docs/MODEL-TESTING.md](../../docs/MODEL-TESTING.md).
 - Диагностики: [../../docs/DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md).
@@ -206,10 +208,14 @@ kind `auto` (default) определит `portal-details` или `portal-schema`
 
 ### Шаблон ответа: объяснение формулы
 
+Полный сценарий и карточки конструкций — [CONSTRUCTIONS.md](../../docs/CONSTRUCTIONS.md). Кратко:
+
 - роль конституенты и термин;
 - формула как есть;
-- по шагам: что вычисляется / утверждается;
-- на какие понятия опирается; типизация.
+- ТМВ или ЛВ;
+- снаружи внутрь, только конструкции из формулы;
+- ступень и опоры;
+- вычисление на данных — только по запросу.
 
 ### Язык ответа
 
