@@ -11,6 +11,7 @@ describe('neutralizeCsvFormula', () => {
     expect(neutralizeCsvFormula('@SUM(A1:A2)')).toBe(`'@SUM(A1:A2)`);
     expect(neutralizeCsvFormula('\tcmd')).toBe(`'\tcmd`);
     expect(neutralizeCsvFormula('\rcmd')).toBe(`'\rcmd`);
+    expect(neutralizeCsvFormula('\ncmd')).toBe(`'\ncmd`);
   });
 
   it('leaves ordinary text untouched', () => {
@@ -31,6 +32,15 @@ describe('convertToCSV', () => {
     const blob = convertToCSV([{ title: '=HYPERLINK("x")' }]);
     const text = await blob.text();
     expect(text).toBe(`title\n"'=HYPERLINK(""x"")"`);
+  });
+
+  it('quotes CR / LF prefixed cells so the record cannot be split', async () => {
+    const cr = await convertToCSV([{ title: '\r=1+1', note: 'x' }]).text();
+    expect(cr).toBe(`title,note\n"'\r=1+1",x`);
+    expect(cr.split('\n')).toHaveLength(2);
+
+    const lf = await convertToCSV([{ title: '\n=1+1', note: 'x' }]).text();
+    expect(lf).toBe(`title,note\n"'\n=1+1",x`);
   });
 });
 
