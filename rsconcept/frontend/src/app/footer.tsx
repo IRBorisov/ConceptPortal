@@ -1,17 +1,16 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 
 import { TextURL } from '@/components/control';
+import { cn } from '@/components/utils';
 import { external_urls } from '@/utils/constants';
 
 export function Footer() {
   const tx = useTx();
   return (
     <footer
-      className={clsx(
+      className={cn(
         'z-navigation',
         'mx-auto',
         'px-3 py-2 flex flex-col items-center gap-1',

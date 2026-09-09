@@ -1,13 +1,13 @@
 'use client';
 
 import { toast } from 'react-toastify';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 import { type FolderNode } from '@rsconcept/domain/library';
 
 import { useAuth } from '@/features/auth/backend/use-auth';
 
+import { cn } from '@/components/utils';
 import { useMainHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { prefixes } from '@/utils/constants';
@@ -67,7 +67,7 @@ export function ViewSideLocation({ className }: ViewSideLocationProps) {
 
   return (
     <div
-      className={clsx(
+      className={cn(
         'relative',
         'border-r border-b bg-input',
         'flex flex-col text-xs sm:text-sm select-none',

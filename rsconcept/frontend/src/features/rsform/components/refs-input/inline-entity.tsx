@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 import { filterConstituentaByQuery } from '@/services/search';
@@ -11,6 +10,7 @@ import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
 import { MiniButton } from '@/components/control';
 import { IconAccept, IconClose } from '@/components/icons';
 import { SearchBar } from '@/components/input';
+import { cn } from '@/components/utils';
 import { prepareTooltip } from '@/utils/format';
 import { isMac } from '@/utils/utils';
 
@@ -141,7 +141,7 @@ export function InlineEntityEditor({ schema, initial, position, onSave, onCancel
                 <button
                   key={cst.id}
                   type='button'
-                  className={clsx(
+                  className={cn(
                     'flex w-full items-start gap-2 border-b px-2 py-1.5 text-sm last:border-b-0',
                     'cc-animate-color hover:bg-accent',
                     isSelected && 'bg-selected text-selected-foreground'

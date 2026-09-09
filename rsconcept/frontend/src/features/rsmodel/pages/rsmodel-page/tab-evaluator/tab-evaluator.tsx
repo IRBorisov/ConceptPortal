@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { type Constituenta } from '@rsconcept/domain/library';
 import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
 import { isModelIssue } from '@rsconcept/domain/library/rsmodel-api';
@@ -11,6 +9,7 @@ import { ViewConstituents } from '@/features/rsform/components/view-constituents
 import { ConstituentsNarrowPicker } from '@/features/rsform/components/view-constituents/constituents-narrow-picker';
 import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-context';
 
+import { cn } from '@/components/utils';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { globalIDs } from '@/utils/constants';
 
@@ -43,12 +42,12 @@ export function TabEvaluator() {
   return (
     <div
       tabIndex={-1}
-      className={clsx('relative flex flex-col', 'min-h-80 max-w-[calc(min(100vw,80rem))] mx-auto')}
+      className={cn('relative flex flex-col', 'min-h-80 max-w-[calc(min(100vw,80rem))] mx-auto')}
       style={{ height: mainHeight }}
       onKeyDown={handleInput}
     >
       <ToolbarEvaluator
-        className={clsx(
+        className={cn(
           'cc-tab-tools cc-animate-position',
           'right-4 lg:right-1/2 -translate-x-1/2 lg:translate-x-0',
           'backdrop-blur-xs bg-background/90'
@@ -56,14 +55,14 @@ export function TabEvaluator() {
       />
 
       <div
-        className={clsx(
+        className={cn(
           'flex flex-col overflow-hidden md:items-center lg:flex-row lg:items-stretch',
           'min-h-0 flex-1',
           'pt-8'
         )}
       >
         <div
-          className={clsx(
+          className={cn(
             'flex flex-col overflow-hidden',
             'h-full min-h-0 min-w-120 flex-1 md:w-195 lg:flex-none',
             'mx-0 pt-16 md:mx-auto xs:pt-8'
@@ -87,7 +86,7 @@ export function TabEvaluator() {
         </div>
 
         <ViewConstituents
-          className={clsx(
+          className={cn(
             'cc-animate-sidebar min-h-55 hidden shrink-0 self-start lg:block',
             'mt-9 rounded-l-md rounded-r-none overflow-visible'
           )}

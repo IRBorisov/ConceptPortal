@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';
 import { IconAccept, IconClose, IconPageLeft, IconPageRight } from '@/components/icons';
 import { Label, TextInput } from '@/components/input';
+import { cn } from '@/components/utils';
 import { prepareTooltip } from '@/utils/format';
 import { isMac } from '@/utils/utils';
 
@@ -76,7 +76,7 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
     nominalInputRef.current?.focus();
   }, []);
 
-  const buttonClass = clsx(
+  const buttonClass = cn(
     '-my-1',
     'cc-hover-text cc-animate-color',
     'focus-outline rounded-md',
@@ -116,7 +116,7 @@ export function InlineSyntacticEditor({ position, initial, onSave, onCancel }: I
           <input
             id='inline_reference_offset'
             aria-label={tx('tx.lang.reference.offset')}
-            className={clsx(
+            className={cn(
               'w-12 text-center focus-outline rounded-md p-0 border',
               isOffsetValid ? 'border-constructive/50 bg-constructive/5' : 'border-destructive/50 bg-destructive/5'
             )}

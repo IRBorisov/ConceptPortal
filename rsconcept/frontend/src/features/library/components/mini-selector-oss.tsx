@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 import { type LibraryItemReference } from '@rsconcept/domain/library';
 
@@ -10,6 +8,7 @@ import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconOSS } from '@/components/icons';
 import { Label } from '@/components/input';
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
 
 interface MiniSelectorOSSProps extends Styling {
@@ -30,7 +29,7 @@ export function MiniSelectorOSS({ items, onSelect, className, ...restProps }: Mi
   }
 
   return (
-    <div ref={ossRef} onBlur={handleOssBlur} className={clsx('relative flex items-center', className)} {...restProps}>
+    <div ref={ossRef} onBlur={handleOssBlur} className={cn('relative flex items-center', className)} {...restProps}>
       <MiniButton
         title={tx('tx.oss.plural')}
         icon={<IconOSS size='1.25rem' className='icon-primary' />}

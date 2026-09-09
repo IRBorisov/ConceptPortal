@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import equal from 'fast-deep-equal';
 
 import { useTx } from '@/i18n';
@@ -11,6 +10,7 @@ import { type EchelonCollection, IntegerT } from '@rsconcept/domain/rslang/seman
 import { MiniButton } from '@/components/control';
 import { createColumnHelper, type DataTableColumns } from '@/components/data-table';
 import { IconRemove } from '@/components/icons';
+import { cn } from '@/components/utils';
 import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 import { truncateToLastWord, truncateToSymbol } from '@/utils/format';
 
@@ -203,7 +203,7 @@ function IntegerCell({
   const isMatch = services.matcher?.match(value, IntegerT) ?? false;
   return (
     <div
-      className={clsx(
+      className={cn(
         'px-1 w-fit',
         services.selectElement && 'cursor-pointer',
         isSelected && 'bg-selected outline-2 outline-primary-border',
@@ -242,7 +242,7 @@ function BasicCell({
   const isMatch = services.matcher?.match(value, type) ?? false;
   return (
     <div
-      className={clsx(
+      className={cn(
         'px-1 w-fit truncate',
         isSingleColumn ? 'max-w-150' : 'max-w-68',
         services.selectElement && 'cursor-pointer',
@@ -274,7 +274,7 @@ function StubCell({
   const text = valueStub(value);
   return (
     <div
-      className={clsx(
+      className={cn(
         'w-18 font-math cursor-pointer',
         isInvalid && 'bg-accent-orange50 outline-2 outline-accent-orange',
         isMatch && 'bg-accent-green50 outline-2 outline-accent-green'

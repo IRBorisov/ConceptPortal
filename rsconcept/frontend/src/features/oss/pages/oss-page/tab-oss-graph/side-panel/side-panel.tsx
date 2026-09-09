@@ -1,7 +1,6 @@
 'use client';
 
 import { Suspense, useEffect, useEffectEvent } from 'react';
-import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
 import { useTx } from '@/i18n';
@@ -60,7 +59,7 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
         title={tx('tx.general.close')}
         noPadding
         icon={<IconClose size='1.25rem' />}
-        className={clsx(
+        className={cn(
           'absolute z-pop transition-transform duration-move right-0 top-0',
           noNavigationAnimation ? '-translate-x-4 translate-y-0' : 'translate-x-0 translate-y-1'
         )}
@@ -69,11 +68,7 @@ export function SidePanel({ isMounted, className }: SidePanelProps) {
 
       {!selectedSchema ? (
         <h2
-          className={clsx(
-            'mt-0 mb-1',
-            'font-medium text-sm select-none self-center',
-            selectedSchema && 'translate-x-20'
-          )}
+          className={cn('mt-0 mb-1', 'font-medium text-sm select-none self-center', selectedSchema && 'translate-x-20')}
         >
           {tx('tx.lib.contents')}
         </h2>

@@ -10,7 +10,6 @@ import CodeMirror, {
   type ReactCodeMirrorProps,
   type ReactCodeMirrorRef
 } from '@uiw/react-codemirror';
-import clsx from 'clsx';
 
 import { CstType, type RSForm } from '@rsconcept/domain/library';
 import {
@@ -23,6 +22,7 @@ import { type AnalysisFull, type RSErrorDescription } from '@rsconcept/domain/rs
 import { extractGlobals } from '@rsconcept/domain/rslang/api';
 
 import { ErrorField, Label } from '@/components/input';
+import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 import { PARAMETER } from '@/utils/constants';
@@ -342,10 +342,10 @@ export function RSInput({
   }
 
   return (
-    <div className={clsx('flex flex-col gap-2', className, cursor)} style={style}>
+    <div className={cn('flex flex-col gap-2', className, cursor)} style={style}>
       <Label text={label} />
       <CodeMirror
-        className={clsx('font-math', errorMessage && 'cm-error')}
+        className={cn('font-math', errorMessage && 'cm-error')}
         ref={thisRef}
         basicSetup={editorSetup}
         theme={customTheme}

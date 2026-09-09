@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
 
@@ -66,8 +64,8 @@ export function ViewHidden({
         onClick={toggleFolded}
       />
 
-      <div className={clsx('py-2 bg-input border-x', isFolded && 'border-b rounded-b-md')}>
-        <div className={clsx('w-fit select-none cc-view-hidden-header', !isFolded && 'open')}>
+      <div className={cn('py-2 bg-input border-x', isFolded && 'border-b rounded-b-md')}>
+        <div className={cn('w-fit select-none cc-view-hidden-header', !isFolded && 'open')}>
           {localSelected
             ? tx('tx.termGraph.hidden.status', {
                 selected: localSelected.length,
@@ -79,7 +77,7 @@ export function ViewHidden({
 
       <div
         tabIndex={-1}
-        className={clsx(
+        className={cn(
           'cc-view-hidden-list flex flex-wrap gap-2 justify-center py-2 -mt-2',
           'border-x border-b rounded-b-md bg-popover',
           'text-sm',
@@ -95,7 +93,7 @@ export function ViewHidden({
             <button
               key={`${prefixes.cst_hidden_list}${cst.alias}`}
               type='button'
-              className={clsx(
+              className={cn(
                 'cc-view-hidden-item w-12 rounded-md text-center select-none',
                 cst.crucial && 'text-primary',
                 localSelected.includes(cstID) && 'selected',

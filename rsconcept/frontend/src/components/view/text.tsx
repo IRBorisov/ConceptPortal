@@ -1,9 +1,10 @@
 'use client';
 
 import { type ComponentProps } from 'react';
-import clsx from 'clsx';
 
 import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
+
+import { cn } from '../utils';
 
 interface TextProps extends Omit<ComponentProps<'div'>, 'children'> {
   /** Text to display. */
@@ -21,7 +22,7 @@ export function Text({ className, text, title, onPointerEnter, onPointerLeave, .
     <div
       {...restProps}
       {...tooltipAnchor}
-      className={clsx('text-pretty', className)}
+      className={cn('text-pretty', className)}
       onPointerEnter={
         title || onPointerEnter
           ? event => {

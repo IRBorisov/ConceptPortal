@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import DOMPurify from 'dompurify';
 import { ZodError } from 'zod';
 
@@ -7,6 +6,7 @@ import { useTx } from '@/i18n';
 import { type AxiosError, isAxiosError, isCsrfAxiosFailure } from '@/backend/api-transport';
 import { isResponseHtml } from '@/utils/utils';
 
+import { cn } from './utils';
 import { PrettyJson } from './view';
 
 /** Supported error shapes for {@link DescribeError} and {@link InfoError}. */
@@ -115,7 +115,7 @@ export function InfoError({ error }: DescribeErrorProps) {
   const tx = useTx();
   return (
     <div
-      className={clsx(
+      className={cn(
         'min-w-100', //
         'px-3 py-2 flex flex-col',
         'text-destructive text-sm font-semibold',

@@ -1,11 +1,11 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import clsx from 'clsx';
 
 import { Button } from '../control';
 import { IconUpload } from '../icons';
 import { type Titled } from '../props';
+import { cn } from '../utils';
 
 import { Label } from './label';
 
@@ -41,7 +41,7 @@ export function FileInput({ id, label, acceptType, title, className, style, onCh
   };
 
   return (
-    <div className={clsx('py-2 flex flex-col gap-2 items-center', className)} style={style}>
+    <div className={cn('py-2 flex flex-col gap-2 items-center', className)} style={style}>
       <input
         id={id}
         type='file'

@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import clsx from 'clsx';
 
 import { useAuth } from '@/features/auth/backend/use-auth';
 
+import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
 
@@ -52,7 +52,7 @@ export function TabEditTemplate({ activeID }: TabEditTemplateProps) {
       {isMutable ? (
         <ToolbarTemplate
           activeID={activeID}
-          className={clsx(
+          className={cn(
             'cc-tab-tools cc-animate-position',
             'right-1/2 translate-x-0 xs:right-4 xs:-translate-x-1/2 md:right-1/2 md:translate-x-0'
           )}

@@ -3,7 +3,6 @@
 import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type Connection, type OnNodeDrag, useReactFlow } from '@xyflow/react';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 import { NodeType, OperationType } from '@rsconcept/domain/library';
@@ -14,6 +13,7 @@ import { useConceptNavigation } from '@/app';
 
 import { DiagramFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
+import { cn } from '@/components/utils';
 import { useMainHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { PARAMETER } from '@/utils/constants';
@@ -177,7 +177,7 @@ export function OssFlow() {
       <div data-tour='oss-graph-canvas'>
         <DiagramFlow
           {...flowOptions}
-          className={clsx(!containMovement && 'cursor-relocate')}
+          className={cn(!containMovement && 'cursor-relocate')}
           height={mainHeight}
           nodes={nodes}
           edges={edges}
@@ -200,7 +200,7 @@ export function OssFlow() {
       </div>
 
       <SidePanel
-        className={clsx(
+        className={cn(
           'absolute right-0 top-0 z-sticky w-84 min-h-80',
           'cc-animate-panel cc-shadow-left',
           showPanel ? 'translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'

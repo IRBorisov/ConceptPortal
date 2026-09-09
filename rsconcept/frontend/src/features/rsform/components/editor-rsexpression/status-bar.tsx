@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 import { CstStatus } from '@rsconcept/domain/library';
 
@@ -26,7 +24,7 @@ export function StatusBar({ className, status, onAnalyze }: StatusBarProps) {
       <div
         data-tour='concept-check'
         tabIndex={0}
-        className={clsx(
+        className={cn(
           'w-32 h-7',
           'px-2 flex items-center justify-center',
           'border rounded-full',

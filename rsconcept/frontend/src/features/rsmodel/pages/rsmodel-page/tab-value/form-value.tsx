@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 import { type BasicBinding, type Constituenta, CstType, RSDiagnosticCode } from '@rsconcept/domain/library';
@@ -28,6 +27,7 @@ import { useSchemaEdit } from '@/features/rsform/pages/rsform-page/schema-edit-c
 
 import { TextButton } from '@/components/control/text-button';
 import { TextArea } from '@/components/input';
+import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { usePreferencesStore } from '@/stores/preferences';
 import { withPreventDefault } from '@/utils/utils';
@@ -405,7 +405,7 @@ export function FormValue({ id, activeCst, onOpenEdit, toggleReset }: FormValueP
         <TextArea
           id='cst_convention'
           fitContent
-          areaClassName={clsx(
+          areaClassName={cn(
             'disabled:min-h-9 max-h-32',
             needsInterpretation && !conventionDraft && 'border-destructive! outline-destructive!'
           )}

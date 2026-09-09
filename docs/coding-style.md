@@ -51,7 +51,7 @@ Non-trivial filters, parsers, and validators live in `models/` (or equivalent) a
 
 - Build screens from **shared primitives + feature pieces**, not from one-off mega-components.
 - Prefer small presentational components composed by a thin page or dialog.
-- Group long style class lists with a small `clsx`/`cn`-style helper.
+- Group long style class lists with the `cn` helper.
 - Icon-only controls need accessible names (`title` / `aria-label`).
 - Dialogs: labelled title, focus restore, Escape to dismiss; prefer the project modal layer over raw primitives for app dialogs.
 - With a React Compiler (or similar), do not habitually wrap everything in memoization hooks; use them only when there is a clear need. Prefer stable effect-event patterns for handlers used inside effects.

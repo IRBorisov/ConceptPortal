@@ -1,8 +1,8 @@
 'use client';
 
 import { Handle, type NodeProps, Position } from '@xyflow/react';
-import clsx from 'clsx';
 
+import { cn } from '@/components/utils';
 import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 import { APP_COLORS } from '@/styling/colors';
 
@@ -43,11 +43,11 @@ export function TGNodeComponent(node: NodeProps<TGNode>) {
           <Handle
             type='source'
             position={Position.Bottom}
-            className={clsx('rf-handle rf-handle-source', isConnecting && 'pointer-events-none')}
+            className={cn('rf-handle rf-handle-source', isConnecting && 'pointer-events-none')}
           />
         ) : null}
         <div
-          className={clsx(
+          className={cn(
             'w-full h-full flex items-center justify-center rounded-full rf-node-outline',
             node.data.cst.crucial && 'text-primary',
             node.data.focused && 'border-2 border-selected',
@@ -66,7 +66,7 @@ export function TGNodeComponent(node: NodeProps<TGNode>) {
       </div>
       {description ? (
         <div
-          className={clsx(
+          className={cn(
             node.data.cst.crucial && 'text-primary',
             'mt-[4px] w-[150px] px-[4px] text-center translate-x-[calc(-50%+20px)]',
             'pointer-events-none',

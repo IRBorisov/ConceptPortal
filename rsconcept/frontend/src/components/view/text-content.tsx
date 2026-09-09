@@ -1,10 +1,11 @@
 'use client';
 
 import { type ComponentProps } from 'react';
-import clsx from 'clsx';
 
 import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 import { truncateToLastWord } from '@/utils/format';
+
+import { cn } from '../utils';
 
 interface TextContentProps extends Omit<ComponentProps<'div'>, 'children'> {
   /** Text to display. */
@@ -38,7 +39,7 @@ export function TextContent({
     <div
       {...restProps}
       {...tooltipAnchor}
-      className={clsx('text-xs text-pretty', className)}
+      className={cn('text-xs text-pretty', className)}
       onPointerEnter={
         showTooltip || onPointerEnter
           ? event => {

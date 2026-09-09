@@ -1,10 +1,10 @@
 import { syntaxTree } from '@codemirror/language';
 import { type EditorState, type Extension } from '@codemirror/state';
 import { hoverTooltip, type TooltipView } from '@codemirror/view';
-import clsx from 'clsx';
 
 import { globalTx } from '@/i18n';
 
+import { cn } from '@/components/utils';
 import { findEnvelopingNodes } from '@/utils/codemirror';
 import { appendBoldTextRow } from '@/utils/format';
 
@@ -62,7 +62,7 @@ export function variableHoverTooltip(available: string[]): Extension {
  */
 function domTooltipVariable(varName: string, isAvailable: boolean): TooltipView {
   const dom = document.createElement('div');
-  dom.className = clsx(
+  dom.className = cn(
     'max-h-100 max-w-100 min-w-40',
     'dense',
     'p-2 flex flex-col',

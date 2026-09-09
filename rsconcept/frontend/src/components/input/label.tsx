@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { cn } from '../utils';
 
 interface LabelProps extends Omit<React.ComponentProps<'label'>, 'children'> {
   /** Text to display. */
@@ -16,13 +16,13 @@ export function Label({ text, className, ...restProps }: LabelProps) {
   }
   if (restProps.htmlFor) {
     return (
-      <label className={clsx('cc-label', className)} {...restProps}>
+      <label className={cn('cc-label', className)} {...restProps}>
         {text}
       </label>
     );
   } else {
     return (
-      <span className={clsx('cc-label', className)} {...restProps}>
+      <span className={cn('cc-label', className)} {...restProps}>
         {text}
       </span>
     );

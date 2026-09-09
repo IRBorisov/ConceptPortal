@@ -2,13 +2,13 @@
 
 import { Suspense } from 'react';
 import { Outlet } from 'react-router';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 
 import { TourHost } from '@/features/onboarding/components/tour-host';
 
 import { ModalLoader } from '@/components/modal';
+import { cn } from '@/components/utils';
 import { useDialogInert } from '@/hooks/use-dialog-inert';
 import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/app-layout';
 
@@ -34,7 +34,7 @@ export function LayoutMain() {
   return (
     <div className='min-w-80 antialiased h-full max-w-480 mx-auto'>
       <ToasterThemed
-        className={clsx('sm:text-[14px]/[20px] text-[12px]/[16px]', noNavigationAnimation ? 'mt-9' : 'mt-17')}
+        className={cn('sm:text-[14px]/[20px] text-[12px]/[16px]', noNavigationAnimation ? 'mt-9' : 'mt-17')}
         aria-label={tx('tx.general.notification')}
         autoClose={3000}
         draggable={false}

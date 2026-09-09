@@ -58,6 +58,6 @@ Cross-feature: barrels for types/schemas/constants; deep paths for hooks/stores/
 - In `useEffect`/`setTimeout`, use named function expressions.
 - Reuse existing hooks, dialogs, components; keep API types synced with backend.
 - Add/update tests for parser, evaluation, or critical UI behavior changes.
-- Tailwind in `src/styles`; long class strings: group via `clsx`/`cn`.
+- Tailwind in `src/styles`; long class strings: group via `cn`.
 - Help manuals: topic registry in `src/features/help/pages/manuals-page/topic-page.tsx`.
 - Reusable components: no positioning utilities; pass via parent `className`.

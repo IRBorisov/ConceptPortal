@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import clsx from 'clsx';
 
 import { SearchBar, SelectTree } from '@/components/input';
+import { cn } from '@/components/utils';
 import { useFitHeight } from '@/stores/app-layout';
 import { prefixes } from '@/utils/constants';
 
@@ -29,7 +29,7 @@ export function TopicsStatic({ activeTopic, onChangeTopic }: TopicsStaticProps) 
 
   return (
     <div
-      className={clsx(
+      className={cn(
         'sticky top-0 left-0',
         'flex flex-col',
         'min-w-60 max-w-60',

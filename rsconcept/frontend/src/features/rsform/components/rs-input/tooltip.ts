@@ -1,6 +1,5 @@
 import { type Extension } from '@codemirror/state';
 import { hoverTooltip, type TooltipView } from '@codemirror/view';
-import clsx from 'clsx';
 
 import { globalTx } from '@/i18n';
 import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
@@ -10,6 +9,7 @@ import { type AnalysisFull, type ExpressionType, readTypeAnnotation, TokenID } f
 import { type RSErrorDescription } from '@rsconcept/domain/rslang/error';
 import { labelType } from '@rsconcept/domain/rslang/labels';
 
+import { cn } from '@/components/utils';
 import { appendBoldTextRow, appendMathBoldLabelParagraph } from '@/utils/format';
 import { isMac } from '@/utils/utils';
 
@@ -97,7 +97,7 @@ function findLocalType(ast: AstNode, alias: string, pos: number): ExpressionType
 
 function createTooltipContainer(): HTMLDivElement {
   const dom = document.createElement('div');
-  dom.className = clsx(
+  dom.className = cn(
     'max-h-100 max-w-100 min-w-40',
     'dense',
     'p-2',

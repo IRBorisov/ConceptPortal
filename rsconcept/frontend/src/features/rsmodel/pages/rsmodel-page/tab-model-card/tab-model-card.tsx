@@ -1,12 +1,12 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
-import clsx from 'clsx';
 
 import { calculateModelStats } from '@rsconcept/domain/library/rsmodel-api';
 
 import { EditorLibraryItem } from '@/features/library/components/editor-library-item';
 
+import { cn } from '@/components/utils';
 import { useFitHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
@@ -47,7 +47,7 @@ export function TabModelCard() {
   return (
     <div
       onKeyDown={handleInput}
-      className={clsx('relative md:w-fit md:max-w-fit max-w-136', 'flex flex-col gap-3 px-6 pt-8 md:flex-row md:gap-6')}
+      className={cn('relative md:w-fit md:max-w-fit max-w-136', 'flex flex-col gap-3 px-6 pt-8 md:flex-row md:gap-6')}
     >
       <div className='relative cc-column mx-0 md:mx-auto'>
         <FormRSModel key={model.id} className='min-w-88 sm:w-120' />

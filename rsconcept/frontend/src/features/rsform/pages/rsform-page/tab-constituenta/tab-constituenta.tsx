@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 import { type Constituenta, type RSEngine } from '@rsconcept/domain/library';
@@ -12,6 +11,7 @@ import { useConceptNavigation } from '@/app';
 
 import { MiniButton } from '@/components/control';
 import { IconMoveDown, IconMoveUp } from '@/components/icons';
+import { cn } from '@/components/utils';
 import { useRowsDropHandler } from '@/hooks/use-rows-drop-handler';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
@@ -132,12 +132,12 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
   return (
     <div
       tabIndex={-1}
-      className={clsx('relative flex flex-col', 'min-h-80 max-w-[calc(min(100vw,80rem))] mx-auto')}
+      className={cn('relative flex flex-col', 'min-h-80 max-w-[calc(min(100vw,80rem))] mx-auto')}
       style={{ height: mainHeight }}
       onKeyDown={handleInput}
     >
       <ToolbarConstituenta
-        className={clsx(
+        className={cn(
           'cc-tab-tools cc-animate-position',
           'right-4 lg:right-1/2 -translate-x-1/2 lg:translate-x-0',
           'backdrop-blur-xs bg-background/90'
@@ -150,14 +150,14 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
       />
 
       <div
-        className={clsx(
+        className={cn(
           'flex flex-col overflow-hidden md:items-center lg:flex-row lg:items-stretch',
           'min-h-0 flex-1',
           'pt-8'
         )}
       >
         <div
-          className={clsx(
+          className={cn(
             'flex flex-col overflow-hidden',
             'h-full min-h-0 min-w-120 flex-1 md:w-195 lg:flex-none',
             'mx-0 pt-8 md:mx-auto xs:pt-0'
@@ -189,7 +189,7 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
           </ConstituentsNarrowPicker>
         </div>
         <ViewConstituents
-          className={clsx(
+          className={cn(
             'cc-animate-sidebar min-h-55 hidden shrink-0 self-start lg:block',
             'mt-9 rounded-l-md rounded-r-none overflow-visible'
           )}

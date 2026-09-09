@@ -1,13 +1,13 @@
 'use client';
 
 import { Handle, type NodeProps, Position } from '@xyflow/react';
-import clsx from 'clsx';
 
 import { labelType } from '@rsconcept/domain/rslang/labels';
 
 import { colorSPNode } from '@/features/rsform/colors';
 import { describeCstNodeTooltip } from '@/features/rsform/labels';
 
+import { cn } from '@/components/utils';
 import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 
 import { type SPFlowNode } from './sp-models';
@@ -26,7 +26,7 @@ export function SPNodeComponent(node: NodeProps<SPFlowNode>) {
 
       <div className='relative h-full w-full pointer-events-auto!' {...tooltipAnchor}>
         <div
-          className={clsx(
+          className={cn(
             'cc-node-label',
             'w-full h-full flex items-center justify-center',
             'cursor-default rounded-full',
@@ -40,7 +40,7 @@ export function SPNodeComponent(node: NodeProps<SPFlowNode>) {
 
       {descriptionText ? (
         <div
-          className={clsx(
+          className={cn(
             'mt-[4px] w-[120px] px-[4px] translate-x-[calc(-50%+20px)]',
             'pointer-events-none',
             'cc-fade-in duration-transform delay-move',
@@ -48,7 +48,7 @@ export function SPNodeComponent(node: NodeProps<SPFlowNode>) {
           )}
         >
           <div
-            className={clsx(
+            className={cn(
               'absolute top-0 left-0 w-full',
               'px-[4px]',
               'wrap-anywhere line-clamp-3 hover:line-clamp-none'

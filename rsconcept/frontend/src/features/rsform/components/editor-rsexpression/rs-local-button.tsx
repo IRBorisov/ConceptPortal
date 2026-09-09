@@ -1,8 +1,7 @@
-import clsx from 'clsx';
-
 import { TokenID } from '@rsconcept/domain/rslang';
 
 import { type Styling, type Titled } from '@/components/props';
+import { cn } from '@/components/utils';
 import { globalIDs } from '@/utils/constants';
 
 interface RSLocalButtonProps extends Titled, Styling {
@@ -29,7 +28,7 @@ export function RSLocalButton({
       data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
-      className={clsx(
+      className={cn(
         'w-7 sm:w-8 h-5 sm:h-6',
         'cursor-pointer disabled:cursor-default',
         'rounded-md',

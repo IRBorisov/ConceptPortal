@@ -1,13 +1,12 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 import { AccessPolicy } from '@rsconcept/domain/library';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
 
 import { describeAccessPolicy, labelAccessPolicy } from '../labels';
@@ -44,7 +43,7 @@ export function SelectAccessPolicy({
   }
 
   return (
-    <div ref={elementRef} onBlur={handleBlur} className={clsx('relative', className)} {...restProps}>
+    <div ref={elementRef} onBlur={handleBlur} className={cn('relative', className)} {...restProps}>
       <MiniButton
         title={title ?? `${tx('tx.lib.access')}${tx('tx.general.colon')}${labelAccessPolicy(value)}`}
         hideTitle={isOpen}

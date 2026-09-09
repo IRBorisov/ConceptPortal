@@ -1,7 +1,7 @@
-import clsx from 'clsx';
-
 import { type Styling, type Titled } from '@/components/props';
 import { globalIDs } from '@/utils/constants';
+
+import { cn } from '../utils';
 
 // characters - threshold for small labels - small font
 const SMALL_THRESHOLD = 3;
@@ -22,7 +22,7 @@ export function ValueStats({ id, icon, value, className, title, hideTitle, ...re
   const isSmall = String(value).length < SMALL_THRESHOLD;
   return (
     <div
-      className={clsx('flex items-center gap-1', 'text-right font-math', 'hover:cursor-default', className)}
+      className={cn('flex items-center gap-1', 'text-right font-math', 'hover:cursor-default', className)}
       data-tooltip-id={!!title ? globalIDs.tooltip : undefined}
       data-tooltip-content={title}
       data-tooltip-hidden={hideTitle}
@@ -30,7 +30,7 @@ export function ValueStats({ id, icon, value, className, title, hideTitle, ...re
       {...restProps}
     >
       {icon}
-      <span id={id} className={clsx(!isSmall && 'text-xs', 'min-w-5')}>
+      <span id={id} className={cn(!isSmall && 'text-xs', 'min-w-5')}>
         {value}
       </span>
     </div>

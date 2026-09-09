@@ -1,9 +1,8 @@
-import clsx from 'clsx';
-
 import { globalIDs } from '@/utils/constants';
 
 import { MiniButton } from '../control';
 import { type Styling, type Titled } from '../props';
+import { cn } from '../utils';
 
 interface ValueIconProps extends Styling, Titled {
   /** Id of the component. */
@@ -43,7 +42,7 @@ export function ValueIcon({
 }: ValueIconProps) {
   return (
     <div
-      className={clsx(
+      className={cn(
         'flex items-center',
         'text-right',
         'hover:cursor-default',

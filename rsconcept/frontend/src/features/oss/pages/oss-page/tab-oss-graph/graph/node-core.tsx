@@ -1,7 +1,6 @@
 'use client';
 
 import { type NodeProps } from '@xyflow/react';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 import { OperationType } from '@rsconcept/domain/library';
@@ -60,7 +59,7 @@ export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode> }
       </div>
       {showCoordinates ? (
         <div
-          className={clsx(
+          className={cn(
             'absolute top-full mt-[4px] right-px',
             'text-[7px]/[8px] font-math',
             'text-muted-foreground hover:text-foreground',
@@ -80,7 +79,7 @@ export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode> }
       ) : null}
 
       <div
-        className={clsx(
+        className={cn(
           'w-full h-full',
           'flex items-center justify-center',
           'text-center line-clamp-2 px-[4px] mr-[12px]',

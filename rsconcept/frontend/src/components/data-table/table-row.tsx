@@ -2,7 +2,6 @@
 'use no memo';
 
 import { useCallback } from 'react';
-import clsx from 'clsx';
 
 import { cn } from '../utils';
 
@@ -301,7 +300,7 @@ export function TableRow<TData>({
       {row.getVisibleCells().map((cell: DataTableCell<TData>) => (
         <td
           key={cell.id}
-          className={clsx(
+          className={cn(
             'px-2 align-middle border-y',
             dense ? 'py-1' : 'py-2',
             canReorder && isDragging

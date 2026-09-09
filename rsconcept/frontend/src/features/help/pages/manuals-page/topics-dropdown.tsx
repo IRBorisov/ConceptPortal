@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 
@@ -9,6 +8,7 @@ import { Button } from '@/components/control';
 import { useDropdown } from '@/components/dropdown';
 import { IconMenuFold, IconMenuUnfold } from '@/components/icons';
 import { SearchBar, SelectTree } from '@/components/input';
+import { cn } from '@/components/utils';
 import { useAppLayoutStore, useFitHeight } from '@/stores/app-layout';
 import { prefixes } from '@/utils/constants';
 
@@ -39,7 +39,7 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
     <div
       ref={elementRef}
       onBlur={handleBlur}
-      className={clsx(
+      className={cn(
         'z-topmost',
         'absolute left-0 w-54',
         noNavigation ? 'top-0' : 'top-12',
@@ -53,11 +53,11 @@ export function TopicsDropdown({ activeTopic, onChangeTopic }: TopicsDropdownPro
         title={tx('tx.help.topicsList')}
         hideTitle={isOpen}
         icon={!isOpen ? <IconMenuUnfold size='1.25rem' /> : <IconMenuFold size='1.25rem' />}
-        className={clsx('w-12 h-7 rounded-none border-l-0', isOpen && 'border-b-0')}
+        className={cn('w-12 h-7 rounded-none border-l-0', isOpen && 'border-b-0')}
         onClick={toggle}
       />
       <div
-        className={clsx(
+        className={cn(
           'cc-topic-dropdown border-r border-t rounded-none bg-input overflow-hidden',
           isOpen && 'open',
           'flex flex-col'

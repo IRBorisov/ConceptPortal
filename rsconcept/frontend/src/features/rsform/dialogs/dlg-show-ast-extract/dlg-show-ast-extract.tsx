@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { ReactFlowProvider } from '@xyflow/react';
-import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
 import { useTx } from '@/i18n';
@@ -26,6 +25,7 @@ import {
 } from '@/features/rsform/backend/types';
 
 import { ModalView } from '@/components/modal';
+import { cn } from '@/components/utils';
 import { PARAMETER } from '@/utils/constants';
 
 import { ASTFlow } from '../dlg-show-ast/ast-flow';
@@ -168,14 +168,14 @@ export function DlgShowAstExtract() {
       fullScreen
     >
       <div
-        className={clsx(
+        className={cn(
           'absolute z-pop top-2 right-1/2 translate-x-1/2',
           'flex flex-col items-center w-full pointer-events-none gap-1'
         )}
       >
         <div
           data-tour='ast-expression'
-          className={clsx(
+          className={cn(
             'max-w-[60ch]',
             'px-2 rounded-2xl',
             'backdrop-blur-xs bg-background/90',

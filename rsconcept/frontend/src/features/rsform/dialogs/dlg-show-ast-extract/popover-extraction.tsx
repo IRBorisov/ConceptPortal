@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { type ReactCodeMirrorRef } from '@uiw/react-codemirror';
-import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
 import { useTx } from '@/i18n';
@@ -108,7 +107,7 @@ export function PopoverExtraction({
           icon={<IconNewItem size='1.1rem' className='icon-primary' />}
           text={tx('tx.rsexpression.extract')}
           title={tx('tx.rsexpression.extract.hint')}
-          className={clsx(
+          className={cn(
             'font-controls font-bold text-sm text-primary/75',
             'bg-background/90 backdrop-blur-3xl cc-fade-in',
             'rounded-full gap-1'

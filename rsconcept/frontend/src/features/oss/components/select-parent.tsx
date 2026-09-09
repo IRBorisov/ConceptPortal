@@ -1,11 +1,10 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 import { type Block } from '@rsconcept/domain/library';
 
 import { IconConceptBlock } from '@/components/icons';
+import { cn } from '@/components/utils';
 import { globalIDs } from '@/utils/constants';
 
 import { SelectBlock } from './select-block';
@@ -25,7 +24,7 @@ interface SelectParentProps {
 export function SelectParent({ fullWidth, ...restProps }: SelectParentProps) {
   const tx = useTx();
   return (
-    <div className={clsx('flex gap-2 items-center', !fullWidth ? 'w-80' : 'w-full')}>
+    <div className={cn('flex gap-2 items-center', !fullWidth ? 'w-80' : 'w-full')}>
       <IconConceptBlock
         tabIndex={-1}
         size='2rem'

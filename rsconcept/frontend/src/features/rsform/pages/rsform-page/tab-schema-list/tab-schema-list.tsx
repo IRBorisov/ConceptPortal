@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 import { CstType } from '@rsconcept/domain/library/rsform';
 
@@ -11,6 +9,7 @@ import { emitOnboardingAction, OnboardingActionID } from '@/features/onboarding/
 
 import { ExportDropdown } from '@/components/control/export-dropdown';
 import { type RowSelectionState } from '@/components/data-table';
+import { cn } from '@/components/utils';
 import { useRowsDropHandler } from '@/hooks/use-rows-drop-handler';
 import { useFitHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
@@ -156,7 +155,7 @@ export function TabSchemaList() {
     <div tabIndex={-1} onKeyDown={handleKeyDown} className='relative pt-8'>
       {isContentEditable ? (
         <ToolbarSchemaList
-          className={clsx(
+          className={cn(
             'cc-tab-tools',
             'right-4 lg:right-1/2 -translate-x-1/2 lg:translate-x-0',
             'cc-animate-position',
@@ -166,7 +165,7 @@ export function TabSchemaList() {
         />
       ) : null}
 
-      <div className={clsx('flex items-center border-b', !isContentEditable && 'justify-center pl-10')}>
+      <div className={cn('flex items-center border-b', !isContentEditable && 'justify-center pl-10')}>
         {isContentEditable ? (
           <div className='px-2' data-tour='list-selection'>
             {tx('tx.general.selection.status', {

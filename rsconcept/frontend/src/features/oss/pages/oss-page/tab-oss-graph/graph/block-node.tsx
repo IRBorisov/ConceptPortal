@@ -1,9 +1,9 @@
 'use client';
 
 import { type NodeProps, NodeResizeControl } from '@xyflow/react';
-import clsx from 'clsx';
 
 import { IconResize } from '@/components/icons';
+import { cn } from '@/components/utils';
 import { useDraggingStore } from '@/stores/dragging';
 import { globalIDs } from '@/utils/constants';
 
@@ -33,7 +33,7 @@ export function BlockNodeComponent(node: NodeProps<OGBlockNode>) {
       </NodeResizeControl>
       {showCoordinates ? (
         <div
-          className={clsx(
+          className={cn(
             'absolute top-full mt-[4px] right-px',
             'text-[7px]/[8px] font-math',
             'text-muted-foreground hover:text-foreground'
@@ -43,7 +43,7 @@ export function BlockNodeComponent(node: NodeProps<OGBlockNode>) {
         </div>
       ) : null}
       <div
-        className={clsx(
+        className={cn(
           'cc-node-block h-full w-full cursor-pointer',
           isDragging && isParent && dropTarget !== node.data.block.id && 'border-destructive',
           ((isParent && !isDragging) || dropTarget === node.data.block.id) && 'border-primary',
@@ -56,7 +56,7 @@ export function BlockNodeComponent(node: NodeProps<OGBlockNode>) {
         <div className='absolute bottom-0 -left-[8px] h-full w-[16px] cc-graph-interactive' />
 
         <div
-          className={clsx(
+          className={cn(
             'w-fit mx-auto -translate-y-1/2 -mt-[8px]',
             'px-[8px]',
             'bg-background rounded-lg',

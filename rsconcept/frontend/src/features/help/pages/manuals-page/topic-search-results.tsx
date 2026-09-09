@@ -1,11 +1,11 @@
 'use client';
 
 import { useDeferredValue } from 'react';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n/use-tx';
 
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { labelHelpTopic } from '../../labels';
@@ -29,13 +29,13 @@ export function TopicSearchResults({ activeTopic, query, onSelectTopic, classNam
   }
 
   return (
-    <div className={clsx('overflow-y-auto', className)} style={style}>
+    <div className={cn('overflow-y-auto', className)} style={style}>
       {results.length > 0 ? (
         results.map(result => (
           <button
             key={result.topic}
             type='button'
-            className={clsx(
+            className={cn(
               'w-full px-3 py-1',
               'flex flex-col',
               'text-left border-b cc-hover-bg',

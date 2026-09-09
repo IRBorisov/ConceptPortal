@@ -4,7 +4,6 @@ import { useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useForm } from '@tanstack/react-form';
 import { useSelector } from '@tanstack/react-store';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 import { type Constituenta, CstType, hasCstDiagnostic, RSDiagnosticCode, type RSForm } from '@rsconcept/domain/library';
@@ -23,6 +22,7 @@ import { HelpTopic } from '@/features/help';
 
 import { TextButton } from '@/components/control/text-button';
 import { Label, TextArea } from '@/components/input';
+import { cn } from '@/components/utils';
 import { useModificationStore } from '@/stores/modification';
 import { withPreventDefault } from '@/utils/utils';
 
@@ -351,7 +351,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
             <TextArea
               id='cst_convention'
               fitContent
-              areaClassName={clsx(
+              areaClassName={cn(
                 'disabled:min-h-9 max-h-32',
                 needsInterpretation && !field.state.value && 'border-destructive! outline-destructive!'
               )}
