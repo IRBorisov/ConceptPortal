@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useEffectEvent, useLayoutEffect, useRef, useSyncExternalStore } from 'react';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 import { isSchemaIssue } from '@rsconcept/domain/library/rsform-api';
@@ -15,6 +14,7 @@ import { useCstSearchStore } from '@/features/rsform/stores/cst-search';
 
 import { IconStatusError, IconStatusIncalculable } from '@/components/icons';
 import { TabLabel, TabList, TabPanel, Tabs } from '@/components/tabs';
+import { cn } from '@/components/utils';
 import { IndicatorPill } from '@/components/view/indicator-pill';
 import { useResetAttribute } from '@/hooks/use-reset-attribute';
 import { useAppLayoutStore } from '@/stores/app-layout';
@@ -179,7 +179,7 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
       className='relative flex flex-col min-w-fit items-center'
     >
       <TabList
-        className={clsx(
+        className={cn(
           'absolute z-sticky',
           'flex self-start xs:self-auto',
           'border-b-2 border-x-2 divide-x-2',

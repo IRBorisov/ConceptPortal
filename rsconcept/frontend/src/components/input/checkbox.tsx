@@ -1,5 +1,3 @@
-import clsx from 'clsx';
-
 import { globalIDs } from '@/utils/constants';
 
 import { CheckboxChecked } from '../icons';
@@ -77,7 +75,7 @@ export function Checkbox({
         customIcon(value)
       ) : (
         <div
-          className={clsx(
+          className={cn(
             'w-4 h-4', //
             'border rounded-sm',
             value === false ? 'bg-background text-foreground' : 'bg-primary text-primary-foreground'
@@ -86,7 +84,7 @@ export function Checkbox({
           {value ? <CheckboxChecked /> : null}
         </div>
       )}
-      {label ? <span className={clsx('text-start text-sm whitespace-nowrap select-text', cursor)}>{label}</span> : null}
+      {label ? <span className={cn('text-start text-sm whitespace-nowrap select-text', cursor)}>{label}</span> : null}
     </button>
   );
 }

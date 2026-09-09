@@ -1,10 +1,9 @@
-import clsx from 'clsx';
-
 import { CstStatus } from '@rsconcept/domain/library';
 
 import { colorBgCstStatus } from '@/features/rsform/colors';
 import { describeExpressionStatus, labelExpressionStatus } from '@/features/rsform/labels';
 
+import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
 
 interface InfoCstStatusProps {
@@ -18,7 +17,7 @@ export function InfoCstStatus({ title }: InfoCstStatusProps) {
       {Object.values(CstStatus).map((status, index) => (
         <p key={`${prefixes.cst_status_list}${index}`}>
           <span
-            className={clsx(
+            className={cn(
               'inline-block', //
               'min-w-28',
               'px-1',

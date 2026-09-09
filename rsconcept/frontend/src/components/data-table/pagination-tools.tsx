@@ -1,11 +1,10 @@
 'use no memo';
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 
 import { IconPageFirst, IconPageLast, IconPageLeft, IconPageRight } from '../icons';
+import { cn } from '../utils';
 
 import { SelectPagination } from './select-pagination';
 import { type DataTableInstance } from './table-features';
@@ -39,7 +38,7 @@ export function PaginationTools<TData>({
   const end = Math.min(rowCount, (pageIndex + 1) * pageSize);
   const rangeLabel = tx('tx.shell.pagination.range', { start, end, total: rowCount });
 
-  const buttonClass = clsx(
+  const buttonClass = cn(
     '-my-1',
     'cc-hover-text cc-animate-color',
     'focus-outline rounded-md',
@@ -48,7 +47,7 @@ export function PaginationTools<TData>({
   const multiPage = table.getPageCount() > 1;
   return (
     <div className='pl-3 flex justify-end flex-wrap items-center my-1 text-muted-foreground text-sm select-none'>
-      <div className={clsx(multiPage ? 'mr-2' : paginationOptions.length > 1 ? 'mr-1' : 'mr-3')}>{rangeLabel}</div>
+      <div className={cn(multiPage ? 'mr-2' : paginationOptions.length > 1 ? 'mr-1' : 'mr-3')}>{rangeLabel}</div>
       {multiPage ? (
         <div className='flex'>
           <button

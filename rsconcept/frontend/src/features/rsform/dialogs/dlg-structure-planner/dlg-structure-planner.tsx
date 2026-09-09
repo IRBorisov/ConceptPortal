@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { ReactFlowProvider } from '@xyflow/react';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 import { type Constituenta, CstType, type RSForm } from '@rsconcept/domain/library';
@@ -17,6 +16,7 @@ import { DialogTourID } from '@/features/onboarding/tours/editor-tours';
 import { MiniButton } from '@/components/control';
 import { IconNewItem, IconReset, IconSave } from '@/components/icons';
 import { ModalView } from '@/components/modal';
+import { cn } from '@/components/utils';
 import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 import { prepareTooltip } from '@/utils/format';
 import { isMac } from '@/utils/utils';
@@ -182,10 +182,10 @@ export function DlgStructurePlanner() {
       <div className='relative flex flex-col h-full'>
         <div
           data-tour='structure-planner-panel'
-          className={clsx('z-modal-pop', 'absolute top-0 right-1/2 translate-x-1/2 mr-12', 'flex px-6 items-start')}
+          className={cn('z-modal-pop', 'absolute top-0 right-1/2 translate-x-1/2 mr-12', 'flex px-6 items-start')}
         >
           <div
-            className={clsx(
+            className={cn(
               'w-70 pt-5.5 pr-3 pl-2 pb-3.75',
               'rounded-bl-2xl rounded-tl-2xl truncate whitespace-nowrap',
               'font-math text-right select-none',
@@ -197,7 +197,7 @@ export function DlgStructurePlanner() {
           </div>
 
           <div
-            className={clsx(
+            className={cn(
               'w-12 shrink-0 pt-5.5 pr-3 pb-3.75',
               'text-center font-medium whitespace-nowrap',
               blurClass,
@@ -208,7 +208,7 @@ export function DlgStructurePlanner() {
           </div>
 
           <div
-            className={clsx('px-2 pb-2 pt-4', blurClass, !isMutable && 'rounded-br-xl', isMultiline && 'rounded-b-xl')}
+            className={cn('px-2 pb-2 pt-4', blurClass, !isMutable && 'rounded-br-xl', isMultiline && 'rounded-b-xl')}
           >
             <RefsInput
               id='dlg_structure_term'
@@ -227,7 +227,7 @@ export function DlgStructurePlanner() {
           </div>
 
           {isMutable ? (
-            <div className={clsx('cc-icons pt-5 pb-3.25 rounded-br-2xl rounded-tr-2xl', blurClass)}>
+            <div className={cn('cc-icons pt-5 pb-3.25 rounded-br-2xl rounded-tr-2xl', blurClass)}>
               <MiniButton
                 title={prepareTooltip(
                   selectedCst ? tx('tx.general.changes.save') : tx('tx.cst.create'),

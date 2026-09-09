@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 
 import { MiniButton } from '../control';
 import { IconDropArrow, IconPageRight } from '../icons';
 import { type Styling } from '../props';
+import { cn } from '../utils';
 
 import { SelectTreeItem } from './select-tree-item';
 
@@ -96,7 +96,7 @@ export function SelectTree<ItemType>({
         return (
           <SelectTreeItem
             key={`${prefix}${index}`}
-            className={clsx(
+            className={cn(
               'cc-tree-item relative cc-scroll-row cc-hover-bg',
               isActive ? 'max-h-7 py-1' : 'max-h-0 opacity-0 pointer-events-none',
               value === item && 'cc-selected'
@@ -107,7 +107,7 @@ export function SelectTree<ItemType>({
             {foldable.has(item) ? (
               <MiniButton
                 aria-label={!folded.includes(item) ? tx('tx.general.fold') : tx('tx.general.unfold')}
-                className={clsx('absolute left-1 hover:text-primary', !folded.includes(item) ? 'top-1.5' : 'top-1')}
+                className={cn('absolute left-1 hover:text-primary', !folded.includes(item) ? 'top-1.5' : 'top-1')}
                 noPadding
                 icon={!folded.includes(item) ? <IconDropArrow size='1rem' /> : <IconPageRight size='1.25rem' />}
                 onClick={event => handleClickFold(event, item)}

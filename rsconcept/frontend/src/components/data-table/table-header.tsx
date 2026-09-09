@@ -1,8 +1,8 @@
 'use no memo';
 
-import clsx from 'clsx';
-
 import { usePreferencesStore } from '@/stores/preferences';
+
+import { cn } from '../utils';
 
 import { SelectAll } from './select-all';
 import { SortingIcon } from './sorting-icon';
@@ -42,7 +42,7 @@ export function TableHeader<TData>({ table, skipWidthCalculation, resetLastSelec
               key={header.id}
               colSpan={header.colSpan}
               scope='col'
-              className={clsx(
+              className={cn(
                 'group',
                 'p-2 text-start',
                 'text-xs font-medium',

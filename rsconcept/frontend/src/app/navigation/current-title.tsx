@@ -1,11 +1,10 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 import { LibraryItemType } from '@rsconcept/domain/library';
 
 import { IconOSS, IconRSForm, IconRSModel } from '@/components/icons';
+import { cn } from '@/components/utils';
 import { globalIDs } from '@/utils/constants';
 
 interface SchemaTitleProps {
@@ -34,7 +33,7 @@ export function CurrentTitle({ itemType, title, archiveVersionLabel }: SchemaTit
   return (
     <div
       tabIndex={-1}
-      className={clsx(
+      className={cn(
         'cc-fade-in relative z-pop min-w-0 overflow-hidden max-w-fit',
         'flex flex-1 items-center gap-2',
         'text-md text-muted-foreground pointer-events-auto'

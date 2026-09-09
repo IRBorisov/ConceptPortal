@@ -1,5 +1,3 @@
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 import { type ValueMatcher } from '@/services/search';
 import { type BasicsContext, type RSForm } from '@rsconcept/domain/library';
@@ -150,7 +148,7 @@ function IntegerCell({ value, isInvalid, services }: { value: number; isInvalid?
   const isMatch = services.matcher?.match(value, IntegerT) ?? false;
   return (
     <div
-      className={clsx(
+      className={cn(
         'px-1',
         isInvalid && 'bg-accent-orange50 outline-2 outline-accent-orange',
         isMatch && 'bg-accent-green50 outline-2 outline-accent-green'
@@ -184,7 +182,7 @@ function BasicCell({
   const isMatch = services.matcher?.match(value, type) ?? false;
   return (
     <div
-      className={clsx(
+      className={cn(
         'px-1 w-fit truncate',
         isSingleColumn ? 'max-w-160' : 'max-w-75',
         isInvalid && 'bg-accent-orange50 outline-2 outline-accent-orange',
@@ -213,7 +211,7 @@ function StubCell({
   const text = valueStub(value);
   return (
     <div
-      className={clsx(
+      className={cn(
         'w-18 font-math cursor-pointer',
         isInvalid && 'bg-accent-orange50 outline-2 outline-accent-orange',
         isMatch && 'bg-accent-green50 outline-2 outline-accent-green'

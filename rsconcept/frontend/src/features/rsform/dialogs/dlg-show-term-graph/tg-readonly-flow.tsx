@@ -2,12 +2,12 @@
 
 import { useEffect, useEffectEvent, useMemo, useRef, useState } from 'react';
 import { type Edge, MarkerType, type Node, useEdgesState, useNodesState, useReactFlow } from '@xyflow/react';
-import clsx from 'clsx';
 
 import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
 
 import { DiagramFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
+import { cn } from '@/components/utils';
 import { useFitHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
 
@@ -170,7 +170,7 @@ export function TGReadonlyFlow({ schema }: TGReadonlyFlowProps) {
   }
 
   return (
-    <div ref={flowRef} className={clsx('relative w-full h-full flex flex-col', isAnimating && 'rf-animation')}>
+    <div ref={flowRef} className={cn('relative w-full h-full flex flex-col', isAnimating && 'rf-animation')}>
       <div className='cc-tab-tools mt-2 flex flex-col items-center  rounded-b-2xl backdrop-blur-xs'>
         <ToolbarGraphFilter />
         {focusCst ? <ToolbarFocusedCst resetFocus={() => setFocusCst(null)} /> : null}

@@ -10,10 +10,10 @@ import CodeMirror, {
   type ReactCodeMirrorProps,
   type ReactCodeMirrorRef
 } from '@uiw/react-codemirror';
-import clsx from 'clsx';
 import { EditorView } from 'codemirror';
 
 import { Label } from '@/components/input';
+import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
 import { APP_COLORS } from '@/styling/colors';
 
@@ -125,7 +125,7 @@ export const PromptInput = forwardRef<ReactCodeMirrorRef, PromptInputProps>(
     ];
 
     return (
-      <div className={clsx('flex flex-col gap-2', cursor)}>
+      <div className={cn('flex flex-col gap-2', cursor)}>
         <Label text={label} />
         <CodeMirror
           id={id}

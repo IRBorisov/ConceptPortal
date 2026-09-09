@@ -1,9 +1,8 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { type Constituenta } from '@rsconcept/domain/library';
 
+import { cn } from '@/components/utils';
 import { globalIDs } from '@/utils/constants';
 
 import { colorBgBadge, colorFgCstStatus } from '../colors';
@@ -26,7 +25,7 @@ export function BadgeConstituenta({ value, prefixID }: BadgeConstituentaProps) {
   return (
     <div
       id={prefixID ? `${prefixID}${value.id}` : undefined}
-      className={clsx(
+      className={cn(
         'w-12',
         'px-1 text-center border rounded-lg',
         'font-medium whitespace-nowrap',

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { ReactFlowProvider } from '@xyflow/react';
-import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
 import { type RSForm } from '@rsconcept/domain/library/rsform';
@@ -12,6 +11,7 @@ import { HelpTopic } from '@/features/help';
 import { DialogTourID } from '@/features/onboarding/tours/editor-tours';
 
 import { ModalView } from '@/components/modal';
+import { cn } from '@/components/utils';
 
 import { useRsformDialogsStore } from '../rsform-dialog-store';
 
@@ -45,7 +45,7 @@ export function DlgShowFlatAst() {
     >
       <div
         data-tour='ast-expression'
-        className={clsx(
+        className={cn(
           'absolute z-pop top-2 right-1/2 translate-x-1/2 max-w-[60ch]',
           'px-2 rounded-2xl',
           'backdrop-blur-xs bg-background/90',

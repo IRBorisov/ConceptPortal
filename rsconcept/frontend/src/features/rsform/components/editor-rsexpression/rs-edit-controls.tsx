@@ -1,7 +1,6 @@
-import clsx from 'clsx';
-
 import { TokenID } from '@rsconcept/domain/rslang';
 
+import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
 
 import { RSLocalButton } from './rs-local-button';
@@ -90,7 +89,7 @@ interface RSEditorControlsProps {
 export function RSEditorControls({ isOpen, disabled, onEdit }: RSEditorControlsProps) {
   return (
     <div
-      className={clsx(
+      className={cn(
         'cc-rs-edit-controls',
         'max-w-md min-w-md xs:max-w-154 xs:min-w-154 sm:max-w-160 sm:min-w-160 md:max-w-fit mx-1 sm:mx-0 -mb-1.5',
         'flex flex-wrap',

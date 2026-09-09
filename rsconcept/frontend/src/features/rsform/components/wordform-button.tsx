@@ -1,7 +1,6 @@
-import clsx from 'clsx';
-
 import { type Grammeme } from '@rsconcept/domain/cctext';
 
+import { cn } from '@/components/utils';
 import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 
 export interface WordformExample {
@@ -34,7 +33,7 @@ export function WordformButton({
       type='button'
       tabIndex={-1}
       onClick={() => onSelectGrams([...grams])}
-      className={clsx(
+      className={cn(
         'min-w-8 sm:min-w-12',
         'p-1',
         'border rounded-none',

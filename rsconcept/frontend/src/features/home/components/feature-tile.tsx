@@ -1,5 +1,4 @@
 import { Link } from 'react-router';
-import clsx from 'clsx';
 
 import { cn } from '@/components/utils';
 
@@ -16,7 +15,7 @@ export function FeatureTile({ to, icon, title, description, accentClass }: Featu
     <Link
       itemProp='itemListElement'
       to={to}
-      className={clsx(
+      className={cn(
         'group relative flex flex-col gap-2 py-4 px-4 overflow-hidden',
         'border bg-muted shadow-sm rounded-xl',
         'hover:-translate-y-0.5 hover:border-primary-border hover:shadow-md focus-outline',
@@ -46,7 +45,7 @@ export function FeatureTile({ to, icon, title, description, accentClass }: Featu
 
       <div className='relative flex items-start gap-4'>
         <span
-          className={clsx(
+          className={cn(
             'h-11 w-11 shrink-0',
             'flex items-center justify-center',
             'rounded-lg border bg-muted text-primary'

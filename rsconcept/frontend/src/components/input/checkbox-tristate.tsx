@@ -1,5 +1,3 @@
-import clsx from 'clsx';
-
 import { globalIDs } from '@/utils/constants';
 
 import { CheckboxChecked, CheckboxNull } from '../icons';
@@ -71,7 +69,7 @@ export function CheckboxTristate({
       {...restProps}
     >
       <div
-        className={clsx(
+        className={cn(
           'w-4 h-4', //
           'border rounded-sm',
           value === false ? 'bg-background text-foreground' : 'bg-primary text-primary-foreground'
@@ -80,7 +78,7 @@ export function CheckboxTristate({
         {value ? <CheckboxChecked /> : null}
         {value == null ? <CheckboxNull /> : null}
       </div>
-      {label ? <span className={clsx('text-start text-sm whitespace-nowrap select-text', cursor)}>{label}</span> : null}
+      {label ? <span className={cn('text-start text-sm whitespace-nowrap select-text', cursor)}>{label}</span> : null}
     </button>
   );
 }

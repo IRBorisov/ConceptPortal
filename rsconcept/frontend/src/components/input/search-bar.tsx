@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 
 import { IconSearch } from '@/components/icons';
@@ -78,7 +76,7 @@ export function SearchBar({
       {!noIcon ? (
         loading ? (
           <span
-            className={clsx(
+            className={cn(
               'absolute -top-0.5 left-2 translate-y-1/2',
               'pointer-events-none',
               'text-muted-foreground group-focus-within:text-primary'
@@ -89,7 +87,7 @@ export function SearchBar({
           </span>
         ) : (
           <IconSearch
-            className={clsx(
+            className={cn(
               'absolute -top-0.5 left-2 translate-y-1/2',
               'pointer-events-none ',
               'bg-transparent text-muted-foreground',
@@ -103,7 +101,7 @@ export function SearchBar({
         id={id}
         ref={inputRef}
         type='search'
-        className={clsx(
+        className={cn(
           'min-w-0 py-2 w-full pr-2',
           'leading-tight truncate hover:text-clip',
           'bg-transparent',

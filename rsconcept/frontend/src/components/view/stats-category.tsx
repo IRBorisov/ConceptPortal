@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
 import { useTx } from '@/i18n';
@@ -54,7 +53,7 @@ export function StatsCategory({
       {label ? <h3 className='text-sm font-medium leading-none mt-1'>{label}</h3> : null}
 
       {!isDetailsOpen && !isOpenDebounced ? (
-        <div className={clsx('grid gap-3', fadeInCards && 'cc-fade-in', hasSecondary ? 'grid-cols-2' : 'grid-cols-1')}>
+        <div className={cn('grid gap-3', fadeInCards && 'cc-fade-in', hasSecondary ? 'grid-cols-2' : 'grid-cols-1')}>
           <ValueCard label={primaryLabel} title={primaryTitle} value={primaryValue} />
           {hasSecondary ? <ValueCard label={secondaryLabel} title={secondaryTitle} value={secondaryValue} /> : null}
         </div>

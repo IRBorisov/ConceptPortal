@@ -3,7 +3,6 @@
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { useForm } from '@tanstack/react-form';
 import { useSelector } from '@tanstack/react-store';
-import clsx from 'clsx';
 import { useDebounce } from 'use-debounce';
 
 import { useTx } from '@/i18n';
@@ -174,7 +173,7 @@ export function FormPromptTemplate({ promptTemplate, className, isMutable, toggl
         />
       </div>
 
-      <div className={clsx('cc-prompt-result overflow-y-hidden', sampleResult !== null && 'open')}>
+      <div className={cn('cc-prompt-result overflow-y-hidden', sampleResult !== null && 'open')}>
         <TextArea
           fitContent
           className='mt-3'

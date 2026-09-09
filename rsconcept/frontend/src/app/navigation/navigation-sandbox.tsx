@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 
 import { Logo } from '@/app/navigation/logo';
@@ -12,6 +10,7 @@ import { ToggleNavigation } from '@/app/navigation/toggle-navigation';
 import { urls } from '@/app/urls';
 
 import { IconLibrary2, IconManuals } from '@/components/icons';
+import { cn } from '@/components/utils';
 import { useDialogInert } from '@/hooks/use-dialog-inert';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useAppLayoutStore } from '@/stores/app-layout';
@@ -42,7 +41,7 @@ export function NavigationSandbox() {
     >
       <ToggleNavigation />
       <div
-        className={clsx(
+        className={cn(
           'relative isolate',
           'pl-2 sm:pr-4 h-12 flex gap-2 justify-between',
           'cc-shadow-border',
@@ -53,7 +52,7 @@ export function NavigationSandbox() {
         <div className='absolute top-0 w-full h-full overflow-hidden'>
           <div
             aria-hidden
-            className={clsx(
+            className={cn(
               'absolute -left-8 -top-10 h-24 w-40',
               'rounded-full blur-3xl',
               'bg-accent-blue/30 dark:bg-accent-blue/60',
@@ -62,7 +61,7 @@ export function NavigationSandbox() {
           />
           <div
             aria-hidden
-            className={clsx(
+            className={cn(
               'absolute right-8 -top-8 h-20 w-32',
               'rounded-full blur-3xl',
               'bg-accent-purple/20 dark:bg-accent-purple/60',

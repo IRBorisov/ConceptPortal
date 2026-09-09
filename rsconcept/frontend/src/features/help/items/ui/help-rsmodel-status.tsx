@@ -1,11 +1,10 @@
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 import { EvalStatus } from '@rsconcept/domain/library';
 
 import { colorBgEvalStatus } from '@/features/rsmodel/colors';
 import { describeEvalStatus, labelEvalStatus } from '@/features/rsmodel/labels';
 
+import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
 
 const statusOrder = [
@@ -27,7 +26,7 @@ export function HelpRSModelStatus() {
         {statusOrder.map(status => (
           <p key={`${prefixes.eval_status_list}${status}`}>
             <span
-              className={clsx(
+              className={cn(
                 'inline-block', //
                 'min-w-35',
                 'px-1',

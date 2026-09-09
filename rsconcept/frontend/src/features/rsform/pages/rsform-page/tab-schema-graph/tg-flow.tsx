@@ -13,7 +13,6 @@ import {
   useOnSelectionChange,
   useReactFlow
 } from '@xyflow/react';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 import { addAliasReference } from '@rsconcept/domain/library/rsform-api';
@@ -22,6 +21,7 @@ import { useConceptNavigation } from '@/app';
 
 import { DiagramFlow } from '@/components/flow/diagram-flow';
 import { useContinuousPan } from '@/components/flow/use-continuous-panning';
+import { cn } from '@/components/utils';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useFitHeight, useMainHeight } from '@/stores/app-layout';
 import { PARAMETER } from '@/utils/constants';
@@ -393,7 +393,7 @@ export function TGFlow() {
   return (
     <div
       ref={flowRef}
-      className={clsx(
+      className={cn(
         'relative',
         interactionMode === InteractionMode.explore ? 'mode-explore' : 'mode-edit',
         isAnimating && 'rf-animation'

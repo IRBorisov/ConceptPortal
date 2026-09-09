@@ -1,12 +1,12 @@
 import { syntaxTree } from '@codemirror/language';
 import { type Extension } from '@codemirror/state';
 import { hoverTooltip, type TooltipView } from '@codemirror/view';
-import clsx from 'clsx';
 
 import { globalTx } from '@/i18n';
 import { type EntityReference, type SyntacticReference } from '@rsconcept/domain/cctext';
 import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
 
+import { cn } from '@/components/utils';
 import { findContainedNodes } from '@/utils/codemirror';
 import { appendBoldTextRow } from '@/utils/format';
 import { isMac } from '@/utils/utils';
@@ -63,7 +63,7 @@ export function refsHoverTooltip(schema: RSForm, canClick?: boolean): Extension 
 
 function domTooltipEntityReference(ref: EntityReference, cst: Constituenta | null, canClick?: boolean): TooltipView {
   const dom = document.createElement('div');
-  dom.className = clsx(
+  dom.className = cn(
     'max-h-100 max-w-100 min-w-40',
     'dense',
     'p-2 flex flex-col',
@@ -121,7 +121,7 @@ function domTooltipSyntacticReference(
   canClick?: boolean
 ): TooltipView {
   const dom = document.createElement('div');
-  dom.className = clsx(
+  dom.className = cn(
     'max-h-100 max-w-100 min-w-40',
     'dense',
     'p-2 flex flex-col',

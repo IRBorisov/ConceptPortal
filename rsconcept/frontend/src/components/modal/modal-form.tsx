@@ -2,7 +2,6 @@
 
 import type { SubmitEvent, SubmitEventHandler } from 'react';
 import { useEffect, useRef } from 'react';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 
@@ -127,7 +126,7 @@ export function ModalForm({
         <ModalBackdrop onHide={handleCancel} />
         <form
           ref={setElement}
-          className={clsx('cc-animate-modal', 'relative grid px-1 pb-1', 'border-2 rounded-xl bg-background')}
+          className={cn('cc-animate-modal', 'relative grid px-1 pb-1', 'border-2 rounded-xl bg-background')}
           role='dialog'
           onSubmit={handleSubmit}
           aria-labelledby='modal-title'
@@ -169,13 +168,11 @@ export function ModalForm({
             {children}
           </div>
 
-          <div
-            className={clsx('z-pop relative', 'my-2', 'flex justify-center', 'text-sm', !validationHint && 'gap-12')}
-          >
+          <div className={cn('z-pop relative', 'my-2', 'flex justify-center', 'text-sm', !validationHint && 'gap-12')}>
             <SubmitButton autoFocus text={resolvedSubmitText} className='min-w-28' disabled={!canSubmit} />
             {validationHint ? (
               <div
-                className={clsx(
+                className={cn(
                   'pt-0.5 w-12',
                   'text-muted-foreground cc-animate-color duration-fade',
                   canSubmit ? 'hover:text-constructive' : 'hover:text-destructive'

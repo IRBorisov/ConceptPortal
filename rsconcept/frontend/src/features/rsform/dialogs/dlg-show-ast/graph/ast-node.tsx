@@ -1,7 +1,6 @@
 'use client';
 
 import { Handle, type NodeProps, Position } from '@xyflow/react';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 import { type RSForm } from '@rsconcept/domain/library/rsform';
@@ -9,6 +8,7 @@ import { type AstNode, type FlatAstNode } from '@rsconcept/domain/parsing';
 import { readErrorAnnotation, readTypeAnnotation, TokenID } from '@rsconcept/domain/rslang';
 import { labelRSLangNode, labelType } from '@rsconcept/domain/rslang/labels';
 
+import { cn } from '@/components/utils';
 import { useValueTooltipAnchor } from '@/hooks/use-value-tooltip-anchor';
 
 import { colorBgSyntaxTree } from '../../../colors';
@@ -32,7 +32,7 @@ export function ASTNodeComponent(node: NodeProps<AstGraphNode>) {
     <>
       <Handle type='target' position={Position.Top} className='opacity-0' />
       <div
-        className={clsx(
+        className={cn(
           'w-full h-full cursor-default flex items-center justify-center rounded-full',
           errorMessage && 'ring-2 ring-destructive ring-offset-2 ring-offset-background'
         )}
@@ -41,7 +41,7 @@ export function ASTNodeComponent(node: NodeProps<AstGraphNode>) {
       />
       <Handle type='source' position={Position.Bottom} className='opacity-0' />
       <div
-        className={clsx(
+        className={cn(
           'mt-[4px] w-fit translate-x-[calc(-50%+20px)]',
           'font-math text-center ',
           label.length > LABEL_THRESHOLD ? 'text-[12px]/[16px]' : 'text-[14px]/[20px]'

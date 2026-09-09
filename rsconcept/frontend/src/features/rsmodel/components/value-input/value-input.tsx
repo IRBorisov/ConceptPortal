@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 import { type EvalStatus } from '@rsconcept/domain/library';
 
@@ -101,7 +99,7 @@ export function ValueInput({
           ) : null}
           {value.length > 0 && !disabled ? (
             <div
-              className={clsx('ml-auto select-none', isTrimmed && 'text-destructive')}
+              className={cn('ml-auto select-none', isTrimmed && 'text-destructive')}
               aria-label={tx('tx.general.symbol.count')}
               data-tooltip-id={globalIDs.tooltip}
               data-tooltip-content={tx('tx.general.symbol.count.limited')}

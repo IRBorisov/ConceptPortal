@@ -1,5 +1,3 @@
-import clsx from 'clsx';
-
 import { type Editor, type ErrorProcessing, type Titled } from '../props';
 import { cn } from '../utils';
 
@@ -48,7 +46,7 @@ export function TextInput({
           <input
             id={id}
             aria-invalid={!!error}
-            className={clsx(
+            className={cn(
               'h-9 min-w-0 grow max-w-full',
               'leading-tight truncate hover:text-clip',
               transparent || disabled ? 'bg-transparent' : 'bg-input',
@@ -72,7 +70,7 @@ export function TextInput({
         <input
           id={id}
           aria-invalid={!!error}
-          className={clsx(
+          className={cn(
             'h-9 min-w-0',
             'leading-tight truncate hover:text-clip',
             transparent || disabled ? 'bg-transparent' : 'bg-input',

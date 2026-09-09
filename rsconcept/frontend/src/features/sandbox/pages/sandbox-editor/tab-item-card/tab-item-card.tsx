@@ -1,13 +1,13 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
-import clsx from 'clsx';
 
 import { calculateModelStats } from '@rsconcept/domain/library/rsmodel-api';
 
 import { useModelEdit } from '@/features/rsmodel/pages/rsmodel-page/model-edit-context';
 import { ViewModelStats } from '@/features/rsmodel/pages/rsmodel-page/tab-model-card/view-model-stats';
 
+import { cn } from '@/components/utils';
 import { useFitHeight } from '@/stores/app-layout';
 import { useModificationStore } from '@/stores/modification';
 import { globalIDs } from '@/utils/constants';
@@ -45,7 +45,7 @@ export function TabItemCard() {
     <div
       tabIndex={-1}
       onKeyDown={handleKeyDown}
-      className={clsx('relative md:w-fit md:max-w-fit max-w-136', 'flex flex-col gap-3 px-6 pt-8 md:flex-row md:gap-6')}
+      className={cn('relative md:w-fit md:max-w-fit max-w-136', 'flex flex-col gap-3 px-6 pt-8 md:flex-row md:gap-6')}
     >
       <FormSandboxItem key={schema.id} className='min-w-88 sm:w-120 mx-0 md:mx-auto' />
 

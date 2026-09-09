@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 
 import { IconDarkTheme, IconLightTheme } from '@/components/icons';
@@ -28,7 +26,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
           tabIndex={-1}
           type='button'
           onClick={toggleDarkMode}
-          className={clsx(
+          className={cn(
             'flex items-center justify-center rounded-full p-1.5 cc-animate-color',
             !darkMode ? 'bg-muted/50 text-foreground' : 'text-muted-foreground hover:text-foreground'
           )}
@@ -41,7 +39,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
           tabIndex={-1}
           type='button'
           onClick={toggleDarkMode}
-          className={clsx(
+          className={cn(
             'flex items-center justify-center rounded-full p-1.5 cc-animate-color',
             darkMode ? 'bg-muted/50 text-foreground' : 'text-muted-foreground hover:text-foreground'
           )}

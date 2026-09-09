@@ -1,13 +1,12 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 
 import { useMutationErrors } from '@/backend/use-mutation-errors';
 import { Button } from '@/components/control';
 import { DescribeError } from '@/components/info-error';
 import { ModalBackdrop } from '@/components/modal/modal-backdrop';
+import { cn } from '@/components/utils';
 import { useEscapeKey } from '@/hooks/use-escape-key';
 import { useHideActiveDialog } from '@/hooks/use-hide-active-dialog';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
@@ -30,7 +29,7 @@ export function MutationErrors() {
     <div className='cc-modal-wrapper '>
       <ModalBackdrop onHide={resetErrors} />
       <div
-        className={clsx(
+        className={cn(
           'z-pop max-h-[calc(100svh-8rem)] max-w-svw xs:max-w-[calc(100svw-4rem)]',
           'flex flex-col px-6 py-3 items-center',
           'border rounded-xl bg-background'
@@ -39,7 +38,7 @@ export function MutationErrors() {
       >
         <h1 className='py-2 select-none'>{tx('tx.shell.error.mutation.header')}</h1>
         <div
-          className={clsx(
+          className={cn(
             'max-h-full max-w-full',
             'flex flex-col',
             'text-destructive text-sm font-semibold select-text',

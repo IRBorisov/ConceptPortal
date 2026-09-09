@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { type AppLocale, localeLabel, SUPPORTED_LOCALES, useTx } from '@/i18n';
 
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
@@ -30,7 +28,7 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
         tabIndex={-1}
         type='button'
         onClick={toggle}
-        className={clsx(
+        className={cn(
           'flex items-center justify-center gap-1 rounded-full px-2 py-1.5 cc-animate-color',
           'bg-background/80 text-muted-foreground shadow-sm border backdrop-blur',
           'hover:text-foreground focus-outline'
@@ -50,7 +48,7 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
             text={localeLabel(option)}
             icon={<IconLanguage size='1rem' />}
             data-testid={`home-locale-option-${option}`}
-            className={clsx(locale === option && 'bg-accent')}
+            className={cn(locale === option && 'bg-accent')}
             onClick={() => pickLocale(option)}
           />
         ))}

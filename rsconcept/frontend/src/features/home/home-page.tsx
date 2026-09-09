@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 import { LibraryItemType } from '@rsconcept/domain/library';
 
@@ -21,6 +19,7 @@ import {
   IconSandbox2,
   IconUser2
 } from '@/components/icons';
+import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
 import { resources } from '@/utils/constants';
 
@@ -49,21 +48,21 @@ export function HomePage() {
       {/* SEO: Decorative gradients */}
       <div aria-hidden className='absolute pointer-events-none inset-0 z-bottom overflow-hidden'>
         <div
-          className={clsx(
+          className={cn(
             'absolute -top-30 left-1/2 -translate-x-1/2',
             'h-120 w-[min(48rem,100vw)] rounded-full',
             'blur-3xl bg-accent-blue/25 dark:bg-accent-blue/40'
           )}
         />
         <div
-          className={clsx(
+          className={cn(
             'absolute left-[6%] top-60',
             'h-56 w-56 rounded-full',
             'blur-3xl bg-accent-purple/35 dark:bg-accent-purple/35'
           )}
         />
         <div
-          className={clsx(
+          className={cn(
             'absolute bottom-24 right-[8%]',
             'h-48 w-72 rounded-full',
             'blur-3xl bg-accent-teal/20 dark:bg-accent-teal/30'
@@ -80,7 +79,7 @@ export function HomePage() {
           loading='eager'
         />
         {/* SEO: Hero copy as h1 */}
-        <h1 className={clsx('hidden xs:block mx-auto max-w-xl', 'text-lg font-medium', 'leading-snug text-nowrap')}>
+        <h1 className={cn('hidden xs:block mx-auto max-w-xl', 'text-lg font-medium', 'leading-snug text-nowrap')}>
           {tx('tx.home.hero1')}
           <br />
           {tx('tx.home.hero2')}

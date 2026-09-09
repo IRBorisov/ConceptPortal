@@ -10,14 +10,19 @@ allowBuilds:
   esbuild: true
 
 # Security floors for transitive deps (GHSA: browserslist <=4.28.6 OOM / prototype write).
+# CodeMirror packages must share one copy of state/view — duplicate versions break branded types.
 overrides:
   browserslist: '>=4.28.7'
+  '@codemirror/state': '>=6.7.4'
+  '@codemirror/view': '>=6.43.11'
 
 # Versions published inside pnpm 11's 24h minimumReleaseAge window.
 minimumReleaseAgeExclude:
-  - '@types/node@26.4.1'
+  - '@base-ui/react@1.8.0'
+  - '@types/node@26.5.0'
   - '@xyflow/react@12.11.6'
   - '@xyflow/system@0.0.82'
+  - cn@0.2.6
   - globals@17.12.0
-  - lucide-react@1.39.0
-  - react-zoom-pan-pinch@4.1.0
+  - lucide-react@1.43.0
+  - react-zoom-pan-pinch@4.2.0

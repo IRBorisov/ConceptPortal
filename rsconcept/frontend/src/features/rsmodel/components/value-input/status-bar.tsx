@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 import { EvalStatus } from '@rsconcept/domain/library';
 
@@ -23,7 +21,7 @@ export function StatusBar({ className, status, onCalculate }: StatusBarProps) {
     <div className={cn('pl-22 xs:pl-8 flex gap-1', className)}>
       <div
         tabIndex={0}
-        className={clsx(
+        className={cn(
           'w-42 h-7',
           'px-2 flex items-center justify-center',
           'border rounded-full',

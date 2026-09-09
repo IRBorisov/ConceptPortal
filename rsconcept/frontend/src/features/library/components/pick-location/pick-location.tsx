@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 import { LocationHead } from '@rsconcept/domain/library';
 import { combineLocation } from '@rsconcept/domain/library/library-api';
@@ -10,6 +8,7 @@ import { useAuth } from '@/features/auth/backend/use-auth';
 
 import { ErrorField, Label, TextArea } from '@/components/input';
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 
 import { SelectLocationHead } from '../select-location-head';
 
@@ -42,7 +41,7 @@ export function PickLocation({
   const { user } = useAuth();
 
   return (
-    <div className={clsx('flex flex-col relative', className)} {...restProps}>
+    <div className={cn('flex flex-col relative', className)} {...restProps}>
       <SelectLocationHead
         className='absolute right-0 top-0'
         value={value.substring(0, 2) as LocationHead}

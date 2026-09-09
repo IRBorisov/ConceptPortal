@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 import { type AccessPolicy, type LibraryItem } from '@rsconcept/domain/library';
 
@@ -13,6 +11,7 @@ import { useRoleStore } from '@/features/users/stores/role';
 import { MiniButton } from '@/components/control';
 import { IconImmutable, IconMutable } from '@/components/icons';
 import { Label } from '@/components/input';
+import { cn } from '@/components/utils';
 
 import { useMutatingLibrary } from '../backend/use-mutating-library';
 import { useSetAccessPolicy } from '../backend/use-set-access-policy';
@@ -55,7 +54,7 @@ export function ToolbarItemAccess({ className, schema, isProduced, formDirty = f
   }
 
   return (
-    <div className={clsx('w-46 flex items-center h-8 select-none', className)} data-tour='passport-access'>
+    <div className={cn('w-46 flex items-center h-8 select-none', className)} data-tour='passport-access'>
       <Label text={tx('tx.lib.access')} />
       <div className='ml-auto cc-icons'>
         <SelectAccessPolicy value={policy} onChange={handleSetAccessPolicy} disabled={disabled} title={dirtyHint} />

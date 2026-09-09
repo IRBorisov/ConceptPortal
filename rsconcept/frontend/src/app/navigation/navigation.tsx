@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 import { LibraryItemType } from '@rsconcept/domain/library';
 
@@ -19,6 +17,7 @@ import {
   IconRSModel,
   IconSandbox
 } from '@/components/icons';
+import { cn } from '@/components/utils';
 import { useDialogInert } from '@/hooks/use-dialog-inert';
 import { useWindowSize } from '@/hooks/use-window-size';
 import { useAppLayoutStore } from '@/stores/app-layout';
@@ -103,7 +102,7 @@ export function Navigation() {
     >
       <ToggleNavigation />
       <div
-        className={clsx(
+        className={cn(
           'relative isolate',
           'pl-2 sm:pr-4 h-12 flex gap-2 justify-between',
           'cc-shadow-border',
@@ -114,7 +113,7 @@ export function Navigation() {
         <div className='absolute top-0 w-full h-full overflow-hidden pointer-events-none'>
           <div
             aria-hidden
-            className={clsx(
+            className={cn(
               'absolute -left-8 -top-10 h-24 w-40',
               'rounded-full blur-3xl',
               'bg-accent-green/20 dark:bg-accent-green/60',
@@ -123,7 +122,7 @@ export function Navigation() {
           />
           <div
             aria-hidden
-            className={clsx(
+            className={cn(
               'absolute right-8 -top-8 h-20 w-32',
               'rounded-full blur-3xl',
               'bg-accent-teal/15 dark:bg-accent-teal/60',
@@ -133,7 +132,7 @@ export function Navigation() {
           {isArchiveView ? (
             <div
               aria-hidden
-              className={clsx(
+              className={cn(
                 'absolute left-1/3 -top-6 h-16 w-48',
                 'rounded-full blur-3xl',
                 'bg-accent-orange/35 dark:bg-accent-orange/55',

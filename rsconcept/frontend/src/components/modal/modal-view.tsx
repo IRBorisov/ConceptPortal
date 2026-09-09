@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import clsx from 'clsx';
 
 import { useTx } from '@/i18n';
 
@@ -71,7 +70,7 @@ export function ModalView({
         <ModalBackdrop onHide={handleHide} />
         <div
           ref={setElement}
-          className={clsx('cc-animate-modal', 'relative grid px-1 pb-1', 'border-2 rounded-xl bg-background')}
+          className={cn('cc-animate-modal', 'relative grid px-1 pb-1', 'border-2 rounded-xl bg-background')}
           role='dialog'
         >
           {helpTopic && !hideHelpWhen?.() ? (
@@ -94,7 +93,7 @@ export function ModalView({
 
           {header ? (
             <h1
-              className={clsx(
+              className={cn(
                 'px-12 py-2 select-none',
                 fullScreen &&
                   'z-pop absolute top-0 right-1/2 translate-x-1/2 backdrop-blur-xs bg-background/90 rounded-2xl'

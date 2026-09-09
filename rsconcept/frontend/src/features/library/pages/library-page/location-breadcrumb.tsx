@@ -1,7 +1,5 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 
 import { HelpTopic } from '@/features/help';
@@ -10,6 +8,7 @@ import { LibraryTourID } from '@/features/onboarding/tours/editor-tours';
 
 import { MiniButton } from '@/components/control';
 import { IconFilterReset, IconFolderEdit } from '@/components/icons';
+import { cn } from '@/components/utils';
 
 import { IconShowSubfolders } from '../../components/icon-show-subfolders';
 import { labelLibraryLocationSegment } from '../../labels';
@@ -37,7 +36,7 @@ export function LocationBreadcrumb({ canRename, className, onRenameLocation }: L
   }));
 
   return (
-    <div className={clsx('flex items-center gap-3 pl-2 pr-5 pt-1', className)} data-tour='library-location'>
+    <div className={cn('flex items-center gap-3 pl-2 pr-5 pt-1', className)} data-tour='library-location'>
       <div className='cc-icons'>
         <BadgeHelp
           topic={HelpTopic.UI_LIBRARY}
@@ -70,7 +69,7 @@ export function LocationBreadcrumb({ canRename, className, onRenameLocation }: L
       </div>
 
       <div
-        className={clsx(
+        className={cn(
           'min-w-0 flex-1 pt-1 truncate',
           'whitespace-nowrap overflow-hidden',
           'select-none font-math font-semibold'

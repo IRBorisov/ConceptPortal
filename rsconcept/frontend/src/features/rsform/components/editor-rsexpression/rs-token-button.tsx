@@ -1,8 +1,7 @@
-import clsx from 'clsx';
-
 import { type TokenID } from '@rsconcept/domain/rslang';
 import { labelToken } from '@rsconcept/domain/rslang/labels';
 
+import { cn } from '@/components/utils';
 import { globalIDs } from '@/utils/constants';
 
 import { describeToken } from '../../labels';
@@ -20,7 +19,7 @@ export function RSTokenButton({ token, disabled, onInsert }: RSTokenButtonProps)
       type='button'
       tabIndex={-1}
       onClick={() => onInsert(token)}
-      className={clsx(
+      className={cn(
         'h-5 sm:h-6',
         'px-1 rounded-md',
         'outline-hidden',

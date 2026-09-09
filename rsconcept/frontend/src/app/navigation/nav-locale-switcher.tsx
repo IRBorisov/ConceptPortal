@@ -1,11 +1,10 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { type AppLocale, localeLabel, SUPPORTED_LOCALES, useTx } from '@/i18n';
 
 import { Dropdown, DropdownButton, useDropdown } from '@/components/dropdown';
 import { IconLanguage } from '@/components/icons';
+import { cn } from '@/components/utils';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { NavigationButton } from './navigation-button';
@@ -40,7 +39,7 @@ export function NavLocaleSwitcher() {
             text={localeLabel(option)}
             icon={<IconLanguage size='1rem' />}
             data-testid={`nav-locale-option-${option}`}
-            className={clsx(locale === option && 'bg-accent')}
+            className={cn(locale === option && 'bg-accent')}
             onClick={() => pickLocale(option)}
           />
         ))}

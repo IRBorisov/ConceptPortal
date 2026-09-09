@@ -1,13 +1,12 @@
 'use client';
 
-import clsx from 'clsx';
-
 import { useTx } from '@/i18n';
 
 import { MiniButton } from '@/components/control';
 import { Dropdown, useDropdown } from '@/components/dropdown';
 import { IconFolderTree } from '@/components/icons';
 import { type Styling } from '@/components/props';
+import { cn } from '@/components/utils';
 import { prefixes } from '@/utils/constants';
 
 import { SelectLocation } from '../select-location';
@@ -44,7 +43,7 @@ export function SelectLocationContext({
     <div
       ref={elementRef} //
       onBlur={handleBlur}
-      className={clsx('text-right self-start select-none', className)}
+      className={cn('text-right self-start select-none', className)}
       {...restProps}
     >
       <MiniButton
@@ -53,7 +52,7 @@ export function SelectLocationContext({
         icon={<IconFolderTree size='1.25rem' className='icon-primary' />}
         onClick={toggle}
       />
-      <Dropdown isOpen={isOpen} className={clsx('w-80 z-tooltip', dropdownHeight)}>
+      <Dropdown isOpen={isOpen} className={cn('w-80 z-tooltip', dropdownHeight)}>
         <SelectLocation
           value={value}
           prefix={prefixes.folders_list}
