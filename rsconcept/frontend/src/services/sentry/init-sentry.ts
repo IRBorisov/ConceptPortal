@@ -5,6 +5,7 @@ import * as Sentry from '@sentry/react';
 import { isViewTransitionAbortError } from '@/app/navigation/view-transition-error';
 import { scrubResetTokenFromUrl } from '@/features/auth/models/password-reset-token';
 
+import { isAbortedRequestError } from '@/backend/aborted-request-error';
 import { isAxiosError, isCsrfAxiosFailure } from '@/backend/api-transport';
 import { buildConstants } from '@/utils/build-constants';
 import { isStaleBundleError } from '@/utils/stale-bundle-error';
@@ -58,6 +59,9 @@ export function initSentry(): boolean {
       if (isViewTransitionAbortError(hint.originalException) || isViewTransitionAbortEvent(event)) {
         return null;
       }
+      if (isAbortedRequestError(hint.originalException) || isAbortedRequestSentryEvent(event)) {
+        return null;
+      }
       if (isStaleBundleError(hint.originalException) || isStaleBundleSentryEvent(event)) {
         return null;
       }
@@ -105,6 +109,14 @@ function scrubSensitiveUrls<T extends Sentry.Event>(event: T): T {
     event.request.headers.Referer = scrubResetTokenFromUrl(event.request.headers.Referer);
   }
   return event;
+}
+
+function isAbortedRequestSentryEvent(event: Sentry.Event): boolean {
+  const exceptionText = event.exception?.values
+    ?.map(value => [value.type, value.value].filter(Boolean).join(': '))
+    .join('\n');
+
+  return isAbortedRequestError([event.message, exceptionText].filter(Boolean).join('\n'));
 }
 
 function isViewTransitionAbortEvent(event: Sentry.Event): boolean {

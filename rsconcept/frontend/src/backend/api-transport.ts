@@ -11,6 +11,7 @@ import { buildConstants } from '@/utils/build-constants';
 import { PARAMETER } from '@/utils/constants';
 import { extractErrorMessage } from '@/utils/utils';
 
+import { isAbortedRequestError } from './aborted-request-error';
 import {
   cacheCsrfFromAuth,
   CSRF_CLIENT_MISSING,
@@ -141,8 +142,7 @@ export function axiosGet<ResponseData>({ endpoint, options, notifyOnError = true
       return response.data;
     })
     .catch((error: Error | AxiosError) => {
-      // Note: Ignore cancellation errors
-      if (notifyOnError && error.name !== 'CanceledError') {
+      if (notifyOnError && !isAbortedRequestError(error)) {
         notifyError(error);
         console.error(error);
       }
@@ -165,7 +165,9 @@ export function axiosPost<RequestData, ResponseData = void>({
       return response.data;
     })
     .catch((error: Error | AxiosError | ZodError) => {
-      notifyError(error);
+      if (!isAbortedRequestError(error)) {
+        notifyError(error);
+      }
       throw error;
     });
 }
@@ -185,7 +187,9 @@ export function axiosDelete<RequestData, ResponseData = void>({
       return response.data;
     })
     .catch((error: Error | AxiosError | ZodError) => {
-      notifyError(error);
+      if (!isAbortedRequestError(error)) {
+        notifyError(error);
+      }
       throw error;
     });
 }
@@ -205,7 +209,9 @@ export function axiosPatch<RequestData, ResponseData = void>({
       return response.data;
     })
     .catch((error: Error | AxiosError | ZodError) => {
-      notifyError(error);
+      if (!isAbortedRequestError(error)) {
+        notifyError(error);
+      }
       throw error;
     });
 }
