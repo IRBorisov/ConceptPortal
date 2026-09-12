@@ -62,8 +62,8 @@ export class RSEngine {
       this.onChangeDefinitions(changedCst);
     }
     if (this.data !== model) {
+      this.prepareValues(model);
       this.data = model;
-      this.prepareValues();
     }
     this.notifyAll();
   }
@@ -386,29 +386,32 @@ export class RSEngine {
     }
   }
 
-  private prepareValues(): void {
+  private prepareValues(model: RSModel): void {
     this.basics.clear();
     this.invalidData.clear();
     this.calculatedSet.clear();
 
-    for (const item of this.data!.items) {
-      const cst = this.schema!.cstByID.get(item.id)!;
-      if (item.type === TYPE_BASIC) {
-        if (cst.cst_type !== CstType.BASE && cst.cst_type !== CstType.CONSTANT) {
-          throw new Error(`Invalid data for ${cst.alias}`);
-        }
-        const data = item.value as BasicBinding;
-        this.basics.set(cst.id, data);
-        this.calculator.setValue(cst.alias, Object.keys(data).map(Number));
+    for (const item of model.items) {
+      const cst = this.schema?.cstByID.get(item.id);
+      if (!cst || item.type !== TYPE_BASIC) {
+        continue;
       }
+      if (!isBaseSet(cst.cst_type)) {
+        this.invalidData.add(item.id);
+        continue;
+      }
+      const data = item.value as BasicBinding;
+      this.basics.set(cst.id, data);
+      this.calculator.setValue(cst.alias, Object.keys(data).map(Number));
     }
-    for (const item of this.data!.items) {
-      const cst = this.schema!.cstByID.get(item.id)!;
-      if (item.type !== TYPE_BASIC) {
-        this.calculator.setValue(cst.alias, item.value as Value);
-        if (!cst.effectiveType || !this.calculator.validate(item.value as Value, cst.effectiveType)) {
-          this.invalidData.add(item.id);
-        }
+    for (const item of model.items) {
+      const cst = this.schema?.cstByID.get(item.id);
+      if (!cst || item.type === TYPE_BASIC) {
+        continue;
+      }
+      this.calculator.setValue(cst.alias, item.value as Value);
+      if (!cst.effectiveType || !this.calculator.validate(item.value as Value, cst.effectiveType)) {
+        this.invalidData.add(item.id);
       }
     }
     this.setupEmptySets();

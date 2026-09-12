@@ -56,7 +56,10 @@ class RSModelSerializer(StrictModelSerializer):
         del result['versions']
         result['schema'] = self.get_schema(instance)
         result['items'] = []
-        for binding in ConstituentData.objects.filter(model=instance).select_related('constituent'):
+        bindings = ConstituentData.objects.filter(model=instance).select_related('constituent')
+        if result['schema'] is not None:
+            bindings = bindings.filter(constituent__schema_id=result['schema'])
+        for binding in bindings:
             result['items'].append({
                 'id': binding.constituent_id,
                 'type': binding.type,

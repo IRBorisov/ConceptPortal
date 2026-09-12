@@ -41,6 +41,20 @@ class TestRSModelViewset(EndpointTester):
         self.assertEqual(items[0]['id'], x1.pk)
         self.assertEqual(items[0]['value'], cst_data)
 
+    @decl_endpoint('/api/models/{item}/details', method='get')
+    def test_details_skips_bindings_from_other_schema(self):
+        x1 = self.schema.insert_last(alias='X1')
+        other = RSForm.create(title='Other', alias='O1', owner=self.user)
+        x2 = other.insert_last(alias='X1')
+        ConstituentData.objects.create(model=self.rsmodel.model, constituent=x1, type='basic', data={'1': 'a'})
+        ConstituentData.objects.create(model=self.rsmodel.model, constituent=x2, type='basic', data={'1': 'b'})
+
+        response = self.executeOK(item=self.model_id)
+        items = response.data['items']
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0]['id'], x1.pk)
+        self.assertEqual(items[0]['value'], {'1': 'a'})
+
     @decl_endpoint('/api/models/{item}/set-value', method='post')
     def test_set_value(self):
         x1 = self.schema.insert_last(alias='X1')
