@@ -176,7 +176,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
   return (
     <form
       id={id}
-      className='cc-column mt-1 gap-3 px-6 pb-3'
+      className='cc-column mt-1 h-fit w-full gap-3 px-6 pb-3'
       data-tour='concept-form'
       onSubmit={withPreventDefault(() => void form.handleSubmit())}
     >

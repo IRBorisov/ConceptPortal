@@ -158,9 +158,10 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
       >
         <div
           className={cn(
-            'flex flex-col overflow-hidden',
-            'h-full min-h-0 min-w-120 flex-1 md:w-195 lg:flex-none',
-            'mx-0 pt-8 md:mx-auto xs:pt-0'
+            'flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden',
+            'max-lg:flex-1 md:w-195 lg:w-195 lg:shrink-0',
+            'mx-0 md:mx-auto lg:mx-0',
+            'pt-8 xs:pt-0'
           )}
         >
           <ConstituentsNarrowPicker
@@ -190,8 +191,8 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
         </div>
         <ViewConstituents
           className={cn(
-            'cc-animate-sidebar min-h-55 hidden shrink-0 self-start lg:block',
-            'mt-9 rounded-l-md rounded-r-none overflow-visible'
+            'cc-animate-sidebar hidden min-h-55 min-w-0 self-start lg:block lg:flex-1',
+            'mt-9 overflow-x-hidden rounded-l-md rounded-r-none'
           )}
           schema={schema}
           engine={engine}

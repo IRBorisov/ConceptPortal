@@ -122,7 +122,14 @@ export function TableSideConstituents({
     <DataTable
       dense
       noFooter
-      className={cn('text-sm select-none cc-scroll-y [&_thead_th]:py-1', className)}
+      skipWidthCalculation
+      className={cn(
+        'w-full min-w-0 overflow-x-hidden text-sm select-none cc-scroll-y [&_table]:table-fixed [&_thead_th]:py-1',
+        engine
+          ? '[&_td:nth-child(1)]:w-16 [&_td:nth-child(2)]:w-14 [&_th:nth-child(1)]:w-16 [&_th:nth-child(2)]:w-14'
+          : '[&_td:first-child]:w-16 [&_th:first-child]:w-16',
+        className
+      )}
       style={maxHeight ? { maxHeight: maxHeight } : {}}
       data={items}
       columns={columns}

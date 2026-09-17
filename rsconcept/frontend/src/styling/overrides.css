@@ -63,7 +63,14 @@
   color: highlighttext !important;
 }
 
+.cm-theme {
+  width: 100%;
+  min-width: 0;
+}
+
 .cm-editor {
+  width: 100%;
+  min-width: 0;
   resize: vertical;
   overflow-y: auto;
   overscroll-behavior-y: contain;
