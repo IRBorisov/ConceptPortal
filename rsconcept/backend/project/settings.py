@@ -205,6 +205,10 @@ REST_FRAMEWORK = {
 
 # Always return 200 for password-reset requests (no email enumeration).
 DJANGO_REST_PASSWORDRESET_NO_INFORMATION_LEAKAGE = True
+# 1.6 ignores view throttle_classes on ResetPasswordRequestToken (defaults to 3/day).
+DJANGO_REST_PASSWORDRESET_THROTTLE_CLASSES = [
+    'shared.throttling.PasswordResetRateThrottle',
+]
 
 
 CORS_ALLOW_CREDENTIALS = True

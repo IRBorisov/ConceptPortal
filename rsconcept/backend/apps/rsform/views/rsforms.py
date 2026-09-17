@@ -401,7 +401,10 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
                 raise ValidationError({
                     'container': msg.missingAttribution()
                 })
-            if Inheritance.check_share_origin(request.data['container'], request.data['attribute']):
+            if Inheritance.check_share_origin(
+                serializer.validated_data['container'].pk,
+                serializer.validated_data['attribute'].pk
+            ):
                 raise ValidationError({
                     'container': msg.deleteInheritedAttribution()
                 })

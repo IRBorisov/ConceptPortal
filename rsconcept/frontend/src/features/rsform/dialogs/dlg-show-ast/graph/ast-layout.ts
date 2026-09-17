@@ -1,12 +1,12 @@
-import dagre from '@dagrejs/dagre';
 import { type Edge, type Node } from '@xyflow/react';
 
 import { type FlatAstNode } from '@rsconcept/domain/parsing';
 
 import { PARAMETER } from '@/utils/constants';
+import { createDagreGraph, dagreLayout, dagreNodePosition } from '@/utils/dagre';
 
 export function applyLayout(nodes: Node<FlatAstNode>[], edges: Edge[]) {
-  const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
+  const dagreGraph = createDagreGraph();
   dagreGraph.setGraph({
     rankdir: 'TB',
     ranksep: 40,
@@ -22,10 +22,10 @@ export function applyLayout(nodes: Node<FlatAstNode>[], edges: Edge[]) {
     dagreGraph.setEdge(edge.source, edge.target);
   }
 
-  dagre.layout(dagreGraph);
+  dagreLayout(dagreGraph);
 
   for (const node of nodes) {
-    const nodeWithPosition = dagreGraph.node(node.id) as { x: number; y: number };
+    const nodeWithPosition = dagreNodePosition(dagreGraph, node.id);
     node.position.x = -nodeWithPosition.x + PARAMETER.graphNodeRadius;
     node.position.y = nodeWithPosition.y - PARAMETER.graphNodeRadius;
   }

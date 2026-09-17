@@ -1,7 +1,6 @@
 /**
  * Module: Graph of Terms graphical representation.
  */
-import dagre from '@dagrejs/dagre';
 import { type Edge, type Node } from '@xyflow/react';
 
 import { type Graph } from '@rsconcept/domain/graph/graph';
@@ -9,6 +8,7 @@ import { type Constituenta, CstType, type RSForm } from '@rsconcept/domain/libra
 import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 
 import { PARAMETER } from '@/utils/constants';
+import { createDagreGraph, dagreLayout, dagreNodePosition } from '@/utils/dagre';
 
 import { type GraphFilterParams, TGEdgeType } from '../../../stores/term-graph';
 
@@ -23,7 +23,7 @@ export type TGNode = Node<TGNodeState>;
 export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels: boolean) {
   const rankSeparation = subLabels ? 3 * PARAMETER.graphNodeRadius : 2 * PARAMETER.graphNodeRadius;
   const nodeSeparation = subLabels ? 5 * PARAMETER.graphNodeRadius : 1 * PARAMETER.graphNodeRadius;
-  const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
+  const dagreGraph = createDagreGraph();
   dagreGraph.setGraph({
     rankdir: 'TB',
     ranksep: rankSeparation,
@@ -47,10 +47,10 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
     }
   });
 
-  dagre.layout(dagreGraph);
+  dagreLayout(dagreGraph);
 
   if (isolated.length > 0) {
-    const getLayout = (id: string) => dagreGraph.node(id) as { x: number; y: number };
+    const getLayout = (id: string) => dagreNodePosition(dagreGraph, id);
     const xs = nonIsolated.map(n => getLayout(n.id).x);
     const maxY = nonIsolated.length ? Math.min(...nonIsolated.map(node => getLayout(node.id).y)) : 0;
     const minX = nonIsolated.length ? Math.min(...xs) : 0;
@@ -75,7 +75,7 @@ export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels
   }
 
   nonIsolated.forEach(node => {
-    const nodeWithPosition = dagreGraph.node(node.id) as { x: number; y: number };
+    const nodeWithPosition = dagreNodePosition(dagreGraph, node.id);
     node.position.x = -nodeWithPosition.x + PARAMETER.graphNodeRadius;
     node.position.y = nodeWithPosition.y - PARAMETER.graphNodeRadius;
   });
