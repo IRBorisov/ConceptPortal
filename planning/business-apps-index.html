@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Business applications with ЯРЭ — plan index</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f7f8fb;
+        --fg: #18202a;
+        --muted: #5e6b7a;
+        --card: #ffffff;
+        --border: #d9e0ea;
+        --accent: #2454c6;
+        --accent-soft: #e9eefc;
+        --warn: #8a5b00;
+        --warn-soft: #fff4d5;
+        --ok: #17633a;
+        --ok-soft: #e6f5ec;
+        --code: #edf1f7;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f141b;
+          --fg: #e7edf5;
+          --muted: #a7b2c0;
+          --card: #161d27;
+          --border: #2d3948;
+          --accent: #8fb0ff;
+          --accent-soft: #1f2d4d;
+          --warn: #ffd27a;
+          --warn-soft: #3c2d10;
+          --ok: #8ee0b0;
+          --ok-soft: #153321;
+          --code: #202a36;
+        }
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.55;
+      }
+
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 48px 24px 72px;
+      }
+
+      h1, h2, h3 { margin: 0; line-height: 1.2; }
+      h1 {
+        font-size: clamp(1.85rem, 4vw, 2.8rem);
+        letter-spacing: -0.04em;
+        margin-bottom: 12px;
+      }
+      h2 {
+        margin: 36px 0 14px;
+        font-size: 1.45rem;
+        letter-spacing: -0.02em;
+      }
+      h3 {
+        margin: 20px 0 8px;
+        font-size: 1.05rem;
+      }
+      p { margin: 0 0 12px; }
+      ul, ol { margin: 0 0 12px; padding-left: 1.25rem; }
+      li + li { margin-top: 6px; }
+      code {
+        border-radius: 6px;
+        background: var(--code);
+        padding: 0.12rem 0.32rem;
+        font-size: 0.92em;
+      }
+      .eyebrow {
+        display: inline-block;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: var(--card);
+        color: var(--muted);
+        padding: 6px 12px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 16px;
+      }
+      .lead {
+        color: var(--muted);
+        font-size: 1.08rem;
+        max-width: 860px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px 20px;
+        margin: 14px 0;
+      }
+      .grid { display: grid; gap: 14px; }
+      .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      @media (max-width: 800px) {
+        .grid.two { grid-template-columns: 1fr; }
+      }
+      .tag {
+        display: inline-block;
+        border-radius: 999px;
+        padding: 2px 10px;
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+      .tag.ok { background: var(--ok-soft); color: var(--ok); }
+      .tag.warn { background: var(--warn-soft); color: var(--warn); }
+      .tag.accent { background: var(--accent-soft); color: var(--accent); }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+      }
+      th, td {
+        border: 1px solid var(--border);
+        padding: 8px 10px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th { background: var(--accent-soft); }
+      .muted { color: var(--muted); }
+      pre {
+        overflow-x: auto;
+        background: var(--code);
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-size: 0.88rem;
+      }
+      nav.toc a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      nav.toc a:hover { text-decoration: underline; }
+
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">Planning · Index · ЯРЭ / Concept Portal</div>
+      <h1>10 purposeful business application plans</h1>
+      <p class="lead">
+        Plans for enterprise applications whose decision logic is expressed as conceptual schemas (КС)
+        in ЯРЭ, managed in Concept Portal, and built/checked with the rstool-helper workflow
+        (<code>applySchemaPatch</code>, diagnostics, small КМ evaluation, <code>exportPortal</code>).
+      </p>
+      <div class="card">
+        <table>
+          <thead><tr><th>#</th><th>Plan</th><th>Tag</th></tr></thead>
+          <tbody>
+<tr><td>01</td><td><a href="procurement-eligibility-plan.html">Procurement eligibility checker</a></td><td class="muted">Business app · 01 / 10</td></tr>
+<tr><td>02</td><td><a href="access-control-matrix-plan.html">Role–resource access control matrix</a></td><td class="muted">Business app · 02 / 10</td></tr>
+<tr><td>03</td><td><a href="product-configuration-bom-plan.html">Product configuration & BOM validity</a></td><td class="muted">Business app · 03 / 10</td></tr>
+<tr><td>04</td><td><a href="pricing-discount-eligibility-plan.html">Pricing & discount eligibility</a></td><td class="muted">Business app · 04 / 10</td></tr>
+<tr><td>05</td><td><a href="loan-underwriting-rules-plan.html">Loan underwriting decision rules</a></td><td class="muted">Business app · 05 / 10</td></tr>
+<tr><td>06</td><td><a href="sla-commitment-checker-plan.html">SLA commitment & breach checker</a></td><td class="muted">Business app · 06 / 10</td></tr>
+<tr><td>07</td><td><a href="org-approval-chain-plan.html">Org structure & approval chain</a></td><td class="muted">Business app · 07 / 10</td></tr>
+<tr><td>08</td><td><a href="inventory-allocation-plan.html">Inventory reservation & allocation rules</a></td><td class="muted">Business app · 08 / 10</td></tr>
+<tr><td>09</td><td><a href="regulatory-obligation-tracker-plan.html">Regulatory obligation tracker</a></td><td class="muted">Business app · 09 / 10</td></tr>
+<tr><td>10</td><td><a href="project-portfolio-dependency-plan.html">Project portfolio dependency & capacity</a></td><td class="muted">Business app · 10 / 10</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h2>Shared method</h2>
+      <ol>
+        <li>Reduce the business question to distinctions that affect a decision or check.</li>
+        <li>Introduce неопределяемые понятия (<code>X#</code>/<code>C#</code>/<code>S#</code>) with conventions; derive the rest.</li>
+        <li>Prefer <code>F#</code> for «for ξ compute σ»; use axioms/statements for invariants.</li>
+        <li>Validate on a small КМ; publish schema/model to Portal; pin versions in ops runbooks.</li>
+      </ol>
+      <p class="muted">Related product plans in this folder: <a href="agents-api-plan.html">Agents API</a>, <a href="collaborative-schema-editing-plan.html">Collaborative schema editing</a>.</p>
+    </main>
+  </body>
+</html>
