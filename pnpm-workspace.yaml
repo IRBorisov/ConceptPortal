@@ -13,16 +13,24 @@ allowBuilds:
 # CodeMirror packages must share one copy of state/view — duplicate versions break branded types.
 overrides:
   browserslist: '>=4.28.7'
-  '@codemirror/state': '>=6.7.4'
-  '@codemirror/view': '>=6.43.11'
+  '@codemirror/state': '>=6.7.5'
+  '@codemirror/view': '>=6.43.12'
 
 # Versions published inside pnpm 11's 24h minimumReleaseAge window.
 minimumReleaseAgeExclude:
-  - '@base-ui/react@1.8.0'
-  - '@types/node@26.5.0'
-  - '@xyflow/react@12.11.6'
-  - '@xyflow/system@0.0.82'
-  - cn@0.2.6
-  - globals@17.12.0
-  - lucide-react@1.43.0
-  - react-zoom-pan-pinch@4.2.0
+  - '@sentry/react@10.75.0'
+  - '@tanstack/react-query@5.103.1'
+  - '@tanstack/react-query-devtools@5.103.1'
+  - '@types/node@26.6.1'
+  - lucide-react@1.47.0
+  - react-intl@12.1.0
+  - '@formatjs/intl@6.1.0'
+  - '@sentry/browser-utils@10.75.0'
+  - '@sentry/browser@10.75.0'
+  - '@sentry/core@10.75.0'
+  - '@sentry/feedback@10.75.0'
+  - '@sentry/replay-canvas@10.75.0'
+  - '@sentry/replay@10.75.0'
+  - '@tanstack/query-core@5.103.1'
+  - '@tanstack/query-devtools@5.103.1'
+  - intl-messageformat@12.1.0

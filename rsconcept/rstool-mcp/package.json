@@ -54,12 +54,12 @@
     "eslint-plugin-simple-import-sort": "^14.0.0"
   },
   "devDependencies": {
-    "@types/node": "^26.5.0",
+    "@types/node": "^26.6.1",
     "tsdown": "^0.23.0",
     "tsx": "^4.23.13",
     "typescript": "^6.0.3",
     "unrun": "^0.3.1",
-    "vitest": "^4.1.11"
+    "vitest": "^5.0.1"
   },
   "publishConfig": {
     "access": "public"

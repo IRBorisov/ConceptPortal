@@ -151,8 +151,7 @@ class UpdatePassword(views.APIView):
 
 
 class PasswordResetRequestAPIView(ResetPasswordRequestToken):
-    ''' Throttled password reset request endpoint. '''
-    throttle_classes = (PasswordResetRateThrottle,)
+    ''' Password reset request. Rate limit comes from DJANGO_REST_PASSWORDRESET_THROTTLE_CLASSES. '''
 
 
 class PasswordResetValidateAPIView(ResetPasswordValidateToken):
