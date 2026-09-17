@@ -20,6 +20,7 @@ export interface TGNodeState extends Record<string, unknown> {
 /** Represents graph node. */
 export type TGNode = Node<TGNodeState>;
 
+/** Assign Dagre positions to term-graph nodes, including isolated nodes. */
 export function applyLayout(nodes: Node<TGNodeState>[], edges: Edge[], subLabels: boolean) {
   const rankSeparation = subLabels ? 3 * PARAMETER.graphNodeRadius : 2 * PARAMETER.graphNodeRadius;
   const nodeSeparation = subLabels ? 5 * PARAMETER.graphNodeRadius : 1 * PARAMETER.graphNodeRadius;

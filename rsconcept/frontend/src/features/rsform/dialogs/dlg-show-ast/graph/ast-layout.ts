@@ -5,6 +5,7 @@ import { type FlatAstNode } from '@rsconcept/domain/parsing';
 import { PARAMETER } from '@/utils/constants';
 import { createDagreGraph, dagreLayout, dagreNodePosition } from '@/utils/dagre';
 
+/** Assign Dagre positions to AST graph nodes. */
 export function applyLayout(nodes: Node<FlatAstNode>[], edges: Edge[]) {
   const dagreGraph = createDagreGraph();
   dagreGraph.setGraph({

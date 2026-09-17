@@ -271,7 +271,7 @@ export function SandboxState({ children }: React.PropsWithChildren) {
 
 // ======= Internals =======
 
+/** Load the sandbox bundle; always call `use()` so React 19.3 does not see a conditional hook. */
 function useInitialSandboxBundle(): SandboxBundle {
-  // Always call `use()` — React 19.3 flags a cached early-return as a conditional use().
   return use(getBundleLoadPromise());
 }

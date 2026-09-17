@@ -8,14 +8,17 @@ import { type EdgeLabel, Graph, type GraphLabel, layout, type NodeLabel } from '
 
 export type DagreGraph = Graph<GraphLabel, NodeLabel, EdgeLabel>;
 
+/** Typed graph with empty default edge labels. */
 export function createDagreGraph(): DagreGraph {
   return new Graph<GraphLabel, NodeLabel, EdgeLabel>().setDefaultEdgeLabel(() => ({}));
 }
 
+/** Run Dagre layout in place. */
 export function dagreLayout(graph: DagreGraph, options?: Parameters<typeof layout>[1]) {
   layout(graph, options);
 }
 
+/** Layout coordinates for a node, or `{0,0}` if the node is missing. */
 export function dagreNodePosition(graph: DagreGraph, id: string): { x: number; y: number } {
   const label = graph.node(id);
   return { x: label?.x ?? 0, y: label?.y ?? 0 };

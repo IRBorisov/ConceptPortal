@@ -12,6 +12,7 @@ const VERT_SEPARATION = 40;
 const BOOLEAN_WEIGHT = 2;
 const CARTESIAN_WEIGHT = 1;
 
+/** Assign Dagre positions to type-graph nodes. */
 export function applyLayout(nodes: Node<TypificationNodeData>[], edges: Edge[]) {
   const dagreGraph = createDagreGraph();
   dagreGraph.setGraph({

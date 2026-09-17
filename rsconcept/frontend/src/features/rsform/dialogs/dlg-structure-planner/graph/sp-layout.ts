@@ -7,6 +7,7 @@ const NODE_HEIGHT = 44;
 const HOR_SEPARATION = 80;
 const VERT_SEPARATION = 60;
 
+/** Assign Dagre positions to structure-planner nodes. */
 export function applyLayout(nodes: SPFlowNode[], edges: SPFlowEdge[]) {
   const dagreGraph = createDagreGraph();
   dagreGraph.setGraph({
