@@ -30,7 +30,6 @@ import {
   downloadBundle,
   ensureBundleLoaded,
   getBundleLoadPromise,
-  getCachedBundle,
   importBundleFromJson,
   saveBundle,
   syncBundleCache
@@ -273,10 +272,6 @@ export function SandboxState({ children }: React.PropsWithChildren) {
 // ======= Internals =======
 
 function useInitialSandboxBundle(): SandboxBundle {
-  const cached = getCachedBundle();
-  if (cached !== null) {
-    return cached;
-  }
-
+  // Always call `use()` — React 19.3 flags a cached early-return as a conditional use().
   return use(getBundleLoadPromise());
 }
