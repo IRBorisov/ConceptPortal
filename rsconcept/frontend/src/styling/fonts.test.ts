@@ -16,4 +16,22 @@ describe('self-hosted UI fonts', () => {
       expect(existsSync(join(fontsDir, fileName)), fileName).toBe(true);
     }
   });
+
+  it('ships SIL OFL license text for each UI family', () => {
+    const fontsDir = fileURLToPath(new URL('../../public/fonts/', import.meta.url));
+    const families = [
+      'rubik',
+      'fira-code',
+      'alegreya-sans-sc',
+      'noto-sans-math',
+      'noto-sans-symbols-2',
+      'noto-color-emoji'
+    ];
+
+    for (const family of families) {
+      const licensePath = join(fontsDir, 'licenses', `${family}.txt`);
+      expect(existsSync(licensePath), family).toBe(true);
+      expect(readFileSync(licensePath, 'utf8')).toContain('SIL Open Font License');
+    }
+  });
 });
