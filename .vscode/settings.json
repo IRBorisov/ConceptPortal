@@ -316,5 +316,11 @@
     "Юдкин"
   ],
   "cSpell.language": "en,ru,fr",
-  "cSpell.ignorePaths": ["node_modules/**", "*.json"]
+  "cSpell.ignorePaths": ["node_modules/**", "*.json"],
+  "cursorpyright.analysis.ignore": [
+    "**/tests/**",
+    "**/node_modules/**",
+    "**/venv/**"
+  ],
+  "cursorpyright.analysis.typeCheckingMode": "off"
 }

@@ -1,3 +1,4 @@
+@import './styling/fonts.css';
 @import 'tailwindcss';
 
 @import './styling/setup.css';
