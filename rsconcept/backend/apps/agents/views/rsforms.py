@@ -7,7 +7,7 @@ from django.db import transaction
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema
 from rest_framework import status as c
-from rest_framework.exceptions import NotFound, PermissionDenied
+from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -23,14 +23,44 @@ from shared import permissions as shared_permissions
 from ..authentication import ApiKeyAuthentication
 from ..permissions import IsApiKeyAuthenticated
 from ..services.audit import api_key_from_request, log_agent_action
-from ..throttling import AgentsRateThrottle
+from ..throttling import AgentReadThrottle, AgentWriteThrottle
+
+
+def _exception_summary(exc: BaseException) -> str:
+    ''' Short text for the action log. No request body. '''
+    detail = getattr(exc, 'detail', None)
+    text = str(detail if detail is not None else exc)
+    return ' '.join(text.split())[:200]
 
 
 class AgentRsformBase(APIView):
     ''' Shared auth for agent RSForm routes. '''
     authentication_classes = [ApiKeyAuthentication]
     permission_classes = [IsApiKeyAuthenticated]
-    throttle_classes = [AgentsRateThrottle]
+    agent_action: str | None = None
+    agent_heavy = False
+
+    def get_throttles(self):
+        if self.request.method in ('GET', 'HEAD', 'OPTIONS'):
+            return [AgentReadThrottle()]
+        return [AgentWriteThrottle()]
+
+    def initial(self, request, *args, **kwargs):
+        super().initial(request, *args, **kwargs)
+        if self.agent_action:
+            self._quota_passed = True
+
+    def handle_exception(self, exc):
+        response = super().handle_exception(exc)
+        action = self.agent_action
+        should_log = (
+            action
+            and getattr(self, '_quota_passed', False)
+            and not getattr(self, '_audited', False)
+        )
+        if should_log and action:
+            self._log(action, response.status_code, summary=_exception_summary(exc))
+        return response
 
     def _get_rsform(self, pk: int) -> LibraryItem:
         try:
@@ -47,7 +77,14 @@ class AgentRsformBase(APIView):
         if not shared_permissions.can_edit_item(self.request.user, item):
             raise PermissionDenied()
 
-    def _log(self, action: str, status_code: int, summary: str = '', item: LibraryItem | None = None) -> None:
+    def _log(
+        self,
+        action: str,
+        status_code: int,
+        summary: str = '',
+        item: LibraryItem | None = None
+    ) -> None:
+        self._audited = True
         log_agent_action(
             user=self.request.user,
             api_key=api_key_from_request(self.request),
@@ -66,6 +103,8 @@ class AgentRsformBase(APIView):
 )
 class AgentRsformCreateView(AgentRsformBase):
     ''' Agent: create empty RSForm. '''
+    agent_action = 'rsform.create'
+    agent_heavy = True
 
     def post(self, request: Request) -> HttpResponse:
         data = dict(request.data)
@@ -107,12 +146,13 @@ class AgentRsformDetailsView(AgentRsformBase):
 )
 class AgentRsformReplaceView(AgentRsformBase):
     ''' Agent: bulk replace schema content. '''
+    agent_action = 'rsform.replace'
+    agent_heavy = True
 
     def patch(self, request: Request, pk: int) -> HttpResponse:
         item = self._get_rsform(pk)
         self._require_edit(item)
         if Inheritance.objects.filter(child__schema_id=item.pk).exists():
-            from rest_framework.serializers import ValidationError
             raise ValidationError({'data': msg.importIntoInherited()})
 
         serializer = rs_serializers.RSFormImportJsonSerializer(data=request.data)
@@ -148,6 +188,8 @@ class AgentRsformReplaceView(AgentRsformBase):
 )
 class AgentRsformCreateVersionView(AgentRsformBase):
     ''' Agent: create version (owner/staff). '''
+    agent_action = 'rsform.create_version'
+    agent_heavy = True
 
     def post(self, request: Request, pk: int) -> HttpResponse:
         item = self._get_rsform(pk)
@@ -157,7 +199,8 @@ class AgentRsformCreateVersionView(AgentRsformBase):
         version_input = VersionCreateSerializer(data=request.data)
         version_input.is_valid(raise_exception=True)
         data = rs_serializers.RSFormSerializer(item).to_versioned_data()
-        items: list[int] = [] if 'items' not in request.data else request.data['items']
+        body = cast(dict, request.data)
+        items: list[int] = [] if 'items' not in body else body['items']
         if items:
             data['items'] = [cst for cst in data['items'] if cst['id'] in items]
         result = rs_models.RSForm(item).create_version(
@@ -188,6 +231,7 @@ class AgentRsformCreateVersionView(AgentRsformBase):
 )
 class AgentCreateConstituentaView(AgentRsformBase):
     ''' Agent: create one constituenta. '''
+    agent_action = 'rsform.create_cst'
 
     def post(self, request: Request, pk: int) -> HttpResponse:
         item = self._get_rsform(pk)
@@ -227,6 +271,7 @@ class AgentCreateConstituentaView(AgentRsformBase):
 )
 class AgentUpdateConstituentaView(AgentRsformBase):
     ''' Agent: update constituenta by id (target taken from URL). '''
+    agent_action = 'rsform.update_cst'
 
     def patch(self, request: Request, pk: int, cst_id: int) -> HttpResponse:
         item = self._get_rsform(pk)
@@ -286,6 +331,7 @@ class AgentUpdateConstituentaView(AgentRsformBase):
 )
 class AgentDeleteConstituentsView(AgentRsformBase):
     ''' Agent: delete constituents by id list. '''
+    agent_action = 'rsform.delete_cst'
 
     def post(self, request: Request, pk: int) -> HttpResponse:
         item = self._get_rsform(pk)
@@ -318,6 +364,7 @@ class AgentDeleteConstituentsView(AgentRsformBase):
 )
 class AgentSubstituteView(AgentRsformBase):
     ''' Agent: substitute. '''
+    agent_action = 'rsform.substitute'
 
     def post(self, request: Request, pk: int) -> HttpResponse:
         item = self._get_rsform(pk)
@@ -350,6 +397,7 @@ class AgentSubstituteView(AgentRsformBase):
 )
 class AgentMoveCstView(AgentRsformBase):
     ''' Agent: move / reorder constituents. '''
+    agent_action = 'rsform.move_cst'
 
     def patch(self, request: Request, pk: int) -> HttpResponse:
         item = self._get_rsform(pk)

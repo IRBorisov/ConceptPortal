@@ -20,6 +20,8 @@ export const txAgentsFr: Record<string, string> = {
     'Ce secret n’est affiché qu’une seule fois. Conservez-le ; vous ne pourrez plus le revoir.',
   'tx.agents.key.secret.copy': 'Copier la clé',
   'tx.agents.key.list': 'Vos clés',
+  'tx.agents.key.limits':
+    '5 clés actives au maximum. Elles partagent une limite : 120 lectures par minute, 30 modifications par minute et 300 par heure. Créer un schéma, le remplacer ou en enregistrer une version est limité à 15 fois par heure.',
 
   'tx.agents.log.empty': 'Aucune action d’agent pour le moment',
   'tx.agents.log.action': 'Action',

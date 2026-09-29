@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import secrets
+from datetime import timedelta
 
 from django.db import models
 from django.utils import timezone
@@ -65,6 +66,7 @@ class ApiKey(models.Model):
     )
 
     class Meta:
+        ''' Model metadata. '''
         verbose_name = 'API-ключ'
         verbose_name_plural = 'API-ключи'
         ordering = ['-created_at']
@@ -82,8 +84,14 @@ class ApiKey(models.Model):
             self.save(update_fields=['revoked_at'])
 
     def touch_last_used(self) -> None:
-        self.last_used_at = timezone.now()
-        self.save(update_fields=['last_used_at'])
+        ''' Stamp last use at most once a minute. '''
+        now = timezone.now()
+        cutoff = now - timedelta(seconds=60)
+        if self.last_used_at is not None and self.last_used_at >= cutoff:
+            return
+        type(self).objects.filter(pk=self.pk).filter(
+            models.Q(last_used_at__isnull=True) | models.Q(last_used_at__lt=cutoff)
+        ).update(last_used_at=now)
 
     @classmethod
     def create_for_user(cls, owner: User, label: str) -> tuple['ApiKey', str]:

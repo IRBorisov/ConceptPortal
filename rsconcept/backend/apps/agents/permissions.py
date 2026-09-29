@@ -10,7 +10,8 @@ class IsApiKeyAuthenticated(BasePermission):
     ''' Require successful ApiKeyAuthentication (request.auth is ApiKey). '''
 
     def has_permission(self, request: Request, view: APIView) -> bool:
-        return isinstance(request.auth, ApiKey) and request.user and request.user.is_authenticated
+        user = request.user
+        return isinstance(request.auth, ApiKey) and bool(user and user.is_authenticated)
 
 
 class IsSessionUser(BasePermission):

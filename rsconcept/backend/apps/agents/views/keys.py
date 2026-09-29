@@ -1,13 +1,19 @@
 ''' Views: API key management (session auth only). '''
+from typing import cast
+
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status as c
 from rest_framework import viewsets
 from rest_framework.authentication import SessionAuthentication
+from rest_framework.exceptions import ValidationError
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from apps.users.models import User
+
 from ..models import ApiKey
 from ..permissions import IsSessionUser
+from ..services.quota import MAX_ACTIVE_KEYS, too_many_active_keys
 from ..serializers import (
     ApiKeyCreatedSerializer,
     ApiKeyCreateSerializer,
@@ -37,14 +43,18 @@ class ApiKeyViewSet(viewsets.ViewSet):
     permission_classes = [IsSessionUser]
 
     def list(self, request: Request) -> Response:
-        keys = ApiKey.objects.filter(owner=request.user, revoked_at__isnull=True)
+        keys = ApiKey.objects.filter(owner=self._owner(request), revoked_at__isnull=True)
         return Response(ApiKeySerializer(keys, many=True).data)
 
     def create(self, request: Request) -> Response:
         serializer = ApiKeyCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        owner = self._owner(request)
+        active = ApiKey.objects.filter(owner=owner, revoked_at__isnull=True).count()
+        if active >= MAX_ACTIVE_KEYS:
+            raise ValidationError({'label': too_many_active_keys()})
         key, secret = ApiKey.create_for_user(
-            owner=request.user,
+            owner=owner,
             label=serializer.validated_data['label'],
         )
         payload = {
@@ -58,7 +68,7 @@ class ApiKeyViewSet(viewsets.ViewSet):
 
     def partial_update(self, request: Request, pk=None) -> Response:
         try:
-            key = ApiKey.objects.get(pk=pk, owner=request.user, revoked_at__isnull=True)
+            key = ApiKey.objects.get(pk=pk, owner=self._owner(request), revoked_at__isnull=True)
         except ApiKey.DoesNotExist:
             return Response(status=c.HTTP_404_NOT_FOUND)
         serializer = ApiKeyUpdateSerializer(data=request.data)
@@ -69,8 +79,11 @@ class ApiKeyViewSet(viewsets.ViewSet):
 
     def destroy(self, request: Request, pk=None) -> Response:
         try:
-            key = ApiKey.objects.get(pk=pk, owner=request.user, revoked_at__isnull=True)
+            key = ApiKey.objects.get(pk=pk, owner=self._owner(request), revoked_at__isnull=True)
         except ApiKey.DoesNotExist:
             return Response(status=c.HTTP_404_NOT_FOUND)
         key.revoke()
         return Response(status=c.HTTP_204_NO_CONTENT)
+
+    def _owner(self, request: Request) -> User:
+        return cast(User, request.user)

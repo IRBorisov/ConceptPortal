@@ -19,24 +19,20 @@ from apps.users.models import User
 
 from ..authentication import ApiKeyAuthentication
 from ..permissions import IsApiKeyAuthenticated
-from ..throttling import AgentsRateThrottle
+from ..throttling import AgentReadThrottle
 
 _CONTEXT_SEARCH_PARAMS = ('q', 'search_fields', 'admin', 'location', 'subfolders', 'item_type')
-
-
-class AgentApiMixin:
-    ''' Shared auth for agent data routes. '''
-    authentication_classes = [ApiKeyAuthentication]
-    permission_classes = [IsApiKeyAuthenticated]
-    throttle_classes = [AgentsRateThrottle]
 
 
 @extend_schema(tags=['Agents'])
 @extend_schema_view(
     get=extend_schema(summary='List library items accessible to the API key user'),
 )
-class AgentLibraryActiveView(AgentApiMixin, generics.ListAPIView):
+class AgentLibraryActiveView(generics.ListAPIView):
     ''' Agent: accessible library metadata. '''
+    authentication_classes = [ApiKeyAuthentication]
+    permission_classes = [IsApiKeyAuthenticated]
+    throttle_classes = [AgentReadThrottle]
     serializer_class = lib_serializers.LibraryItemSerializer
 
     def get_queryset(self):
@@ -60,8 +56,11 @@ class AgentLibraryActiveView(AgentApiMixin, generics.ListAPIView):
         responses={c.HTTP_200_OK: lib_serializers.LibraryContextSearchResponseSerializer},
     )
 )
-class AgentLibraryContextSearchView(AgentApiMixin, APIView):
+class AgentLibraryContextSearchView(APIView):
     ''' Agent: context search. '''
+    authentication_classes = [ApiKeyAuthentication]
+    permission_classes = [IsApiKeyAuthenticated]
+    throttle_classes = [AgentReadThrottle]
 
     def get(self, request: Request) -> Response:
         data = {
@@ -99,8 +98,11 @@ class AgentLibraryContextSearchView(AgentApiMixin, APIView):
         responses={c.HTTP_200_OK: lib_serializers.LibraryItemSerializer(many=True)},
     )
 )
-class AgentLibraryItemsByIdsView(AgentApiMixin, APIView):
+class AgentLibraryItemsByIdsView(APIView):
     ''' Agent: metadata by ids. '''
+    authentication_classes = [ApiKeyAuthentication]
+    permission_classes = [IsApiKeyAuthenticated]
+    throttle_classes = [AgentReadThrottle]
 
     def get(self, request: Request) -> Response:
         serializer = lib_serializers.LibraryItemsByIdsSerializer(
