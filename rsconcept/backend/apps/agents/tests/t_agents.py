@@ -8,7 +8,7 @@ from rest_framework.test import APIRequestFactory
 from apps.agents.authentication import ApiKeyAuthentication
 
 from apps.agents.models import AgentActionLog, ApiKey
-from apps.library.models import AccessPolicy
+from apps.library.models import AccessPolicy, Editor
 from apps.rsform.models import CstType, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 from shared.portal_json import PORTAL_JSON_CONTRACT_VERSION
@@ -81,6 +81,22 @@ class TestAgentRsformApi(EndpointTester):
         self.key, self.secret = ApiKey.create_for_user(self.user, 'TestAgent')
         self.client.force_authenticate(user=None)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.secret}')
+
+    @decl_endpoint('/api/agents/library/active', method='get')
+    def test_active_list_hides_private_items_shared_as_editor(self):
+        Editor.add(self.private_other.model.pk, self.user.pk)
+        shared = RSForm.create(
+            title='Shared',
+            alias='SHR',
+            owner=self.user2,
+            access_policy=AccessPolicy.PROTECTED,
+        )
+        Editor.add(shared.model.pk, self.user.pk)
+        response = self.executeOK()
+        ids = [row['id'] for row in response.data]
+        self.assertIn(self.owned_id, ids)
+        self.assertIn(shared.model.pk, ids)
+        self.assertNotIn(self.private_other.model.pk, ids)
 
     @decl_endpoint('/api/agents/rsforms/{item}/details', method='get')
     def test_details_owned(self):

@@ -1,7 +1,4 @@
 ''' Views: agent library helpers (API key auth). '''
-from typing import cast
-
-from django.db.models import Q
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics
 from rest_framework import status as c
@@ -9,14 +6,13 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.library import models as lib_models
 from apps.library import serializers as lib_serializers
 from apps.library.services.context_search import (
     context_search_query,
+    get_accessible_items_queryset,
     get_accessible_library_items_by_ids,
     ids_for_context_search,
 )
-from apps.users.models import User
 
 from ..authentication import ApiKeyAuthentication
 from ..permissions import IsApiKeyAuthenticated
@@ -35,16 +31,7 @@ class AgentLibraryActiveView(generics.ListAPIView):
     serializer_class = lib_serializers.LibraryItemSerializer
 
     def get_queryset(self):
-        common_location = Q(location__startswith=lib_models.LocationHead.COMMON) | Q(
-            location__startswith=lib_models.LocationHead.LIBRARY
-        )
-        is_public = Q(access_policy=lib_models.AccessPolicy.PUBLIC)
-        user = cast(User, self.request.user)
-        return lib_models.LibraryItem.objects.filter(
-            (is_public & common_location) |
-            Q(owner=user) |
-            Q(editor__editor=user)
-        ).distinct().order_by('-time_update')
+        return get_accessible_items_queryset(self.request.user).order_by('-time_update')
 
 
 @extend_schema(tags=['Agents'])
