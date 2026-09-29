@@ -1,6 +1,11 @@
 ''' Testing API: Agents keys, auth, rsform mutations, audit log. '''
 from django.core.cache import cache
 from rest_framework import status
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.request import Request
+from rest_framework.test import APIRequestFactory
+
+from apps.agents.authentication import ApiKeyAuthentication
 
 from apps.agents.models import AgentActionLog, ApiKey
 from apps.library.models import AccessPolicy
@@ -180,3 +185,23 @@ class TestAgentRsformApi(EndpointTester):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertGreaterEqual(response.data['count'], 1)
         self.assertIn('results', response.data)
+
+    @decl_endpoint('/api/agents/rsforms/{item}/details', method='get')
+    def test_malformed_authorization_is_unauthorized(self):
+        django_request = APIRequestFactory().get('/api/agents/rsforms/1/details')
+        django_request.META['HTTP_AUTHORIZATION'] = '\xff'
+        request = Request(django_request)
+        with self.assertRaises(AuthenticationFailed):
+            ApiKeyAuthentication().authenticate(request)
+
+    @decl_endpoint('/api/agents/logs', method='get')
+    def test_logs_offset(self):
+        self.client.post('/api/agents/rsforms', {'title': 'A', 'alias': 'A1'}, format='json')
+        self.client.post('/api/agents/rsforms', {'title': 'B', 'alias': 'B1'}, format='json')
+        self.client.credentials()
+        self.client.force_authenticate(user=self.user)
+        page = self.client.get('/api/agents/logs', {'limit': 1, 'offset': 1})
+        self.assertEqual(page.status_code, status.HTTP_200_OK)
+        self.assertEqual(page.data['count'], 2)
+        self.assertEqual(len(page.data['results']), 1)
+        self.assertIn('request_text', page.data['results'][0])

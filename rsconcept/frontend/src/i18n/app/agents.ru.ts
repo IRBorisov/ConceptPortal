@@ -28,5 +28,6 @@ export const txAgentsRu: Record<string, string> = {
   'tx.agents.log.key': 'Ключ',
   'tx.agents.log.status': 'Статус',
   'tx.agents.log.summary': 'Кратко',
+  'tx.agents.log.request': 'Текст запроса',
   'tx.agents.log.time': 'Время'
 };

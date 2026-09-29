@@ -58,6 +58,13 @@ class AgentActionLogSerializer(StrictModelSerializer):
             'item_title',
             'status_code',
             'summary',
+            'request_text',
             'created_at',
         )
         read_only_fields = fields
+
+
+class AgentActionLogPageSerializer(serializers.Serializer):
+    ''' Response: one page of the agent action log. '''
+    count = serializers.IntegerField()
+    results = AgentActionLogSerializer(many=True)

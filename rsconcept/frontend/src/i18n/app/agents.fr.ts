@@ -29,5 +29,6 @@ export const txAgentsFr: Record<string, string> = {
   'tx.agents.log.key': 'Clé',
   'tx.agents.log.status': 'Statut',
   'tx.agents.log.summary': 'Résumé',
+  'tx.agents.log.request': 'Texte de la requête',
   'tx.agents.log.time': 'Heure'
 };

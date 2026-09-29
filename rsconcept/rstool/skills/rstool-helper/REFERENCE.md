@@ -223,7 +223,7 @@ tool.synthesize({
 
 ### `importData(payload, kind?)`
 
-`kind`: `'auto'` (default), `'session'`, `'portal-details'` (`GET /api/rsforms/:id/details`), `'portal-schema'` (Portal Load from JSON). После импорта новая сессия становится текущей. Возвращает `SessionHandle`.
+`kind`: `'auto'` (default), `'session'`, `'portal-details'` (JSON of `GET /api/agents/rsforms/:id/details` or public `GET /api/rsforms/:id/details`), `'portal-schema'` (Portal Load from JSON). После импорта новая сессия становится текущей. Возвращает `SessionHandle`.
 
 Portal JSON из `/details` **не** является `exportSession` — не передавай его с `kind: 'session'`.
 

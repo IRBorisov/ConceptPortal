@@ -29,5 +29,6 @@ export const txAgentsEn: Record<string, string> = {
   'tx.agents.log.key': 'Key',
   'tx.agents.log.status': 'Status',
   'tx.agents.log.summary': 'Summary',
+  'tx.agents.log.request': 'Request text',
   'tx.agents.log.time': 'Time'
 };

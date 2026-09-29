@@ -1,6 +1,7 @@
 ''' Views: API key management (session auth only). '''
 from typing import cast
 
+from django.db import transaction
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status as c
 from rest_framework import viewsets
@@ -50,13 +51,15 @@ class ApiKeyViewSet(viewsets.ViewSet):
         serializer = ApiKeyCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         owner = self._owner(request)
-        active = ApiKey.objects.filter(owner=owner, revoked_at__isnull=True).count()
-        if active >= MAX_ACTIVE_KEYS:
-            raise ValidationError({'label': too_many_active_keys()})
-        key, secret = ApiKey.create_for_user(
-            owner=owner,
-            label=serializer.validated_data['label'],
-        )
+        with transaction.atomic():
+            User.objects.select_for_update().get(pk=owner.pk)
+            active = ApiKey.objects.filter(owner=owner, revoked_at__isnull=True).count()
+            if active >= MAX_ACTIVE_KEYS:
+                raise ValidationError({'label': too_many_active_keys()})
+            key, secret = ApiKey.create_for_user(
+                owner=owner,
+                label=serializer.validated_data['label'],
+            )
         payload = {
             'id': key.id,
             'label': key.label,

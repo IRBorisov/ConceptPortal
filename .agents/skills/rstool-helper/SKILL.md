@@ -3,7 +3,7 @@ name: rstool-helper
 description: >-
   ЯРЭ и концептуальные схемы через rstool: концептуализация, ревью/оценка КС,
   правки и диагностики формул, объяснение конструкций ЯРЭ, проверка на КМ (evaluate),
-  выбор X#/C#/Z, импорт/экспорт Portal (/rsforms, /details).
+  выбор X#/C#/Z, импорт/экспорт Portal (`/api/agents` с API-ключом, публичный `/details`).
   Читай GUIDE и docs из rsconcept/rstool.
 ---
 

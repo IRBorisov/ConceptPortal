@@ -222,6 +222,30 @@ def _library_item_text_fields(active_fields: set[str]) -> list[str]:
     return fields
 
 
+CONTEXT_SEARCH_PARAMS = ('q', 'search_fields', 'admin', 'location', 'subfolders', 'item_type')
+
+
+def context_search_query(params) -> dict:
+    ''' Query-param subset accepted by context search. '''
+    return {key: params[key] for key in CONTEXT_SEARCH_PARAMS if key in params}
+
+
+def ids_for_context_search(user, validated: dict) -> list[int]:
+    ''' Run context search. Admin mode is ignored unless the user is staff. '''
+    admin = bool(validated.get('admin', False))
+    if admin and not (getattr(user, 'is_authenticated', False) and user.is_staff):
+        admin = False
+    return search_library_context(
+        user,
+        validated.get('q', ''),
+        fields=validated.get('search_fields'),
+        all_items=admin,
+        location=validated.get('location'),
+        subfolders=validated.get('subfolders', False),
+        item_type=validated.get('item_type'),
+    )
+
+
 def _constituenta_text_fields(active_fields: set[str]) -> list[str]:
     fields: list[str] = []
     if 'alias' in active_fields:

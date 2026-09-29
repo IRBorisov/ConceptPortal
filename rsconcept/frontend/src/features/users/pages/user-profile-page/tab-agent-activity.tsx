@@ -1,8 +1,15 @@
 'use client';
 
+import { useState } from 'react';
+
 import { useTx } from '@/i18n';
 
 import { useAgentLogs } from '@/features/agents/backend/use-agent-logs';
+
+import { IconPageFirst, IconPageLast, IconPageLeft, IconPageRight } from '@/components/icons';
+import { cn } from '@/components/utils';
+
+const PAGE_SIZE = 50;
 
 function formatTimestamp(value: string): string {
   const date = new Date(value);
@@ -14,14 +21,73 @@ function formatTimestamp(value: string): string {
 
 export function TabAgentActivity() {
   const tx = useTx();
-  const { logs } = useAgentLogs();
+  const [offset, setOffset] = useState(0);
+  const { logs, count } = useAgentLogs(offset);
 
-  if (logs.length === 0) {
+  if (count === 0) {
     return <div className='px-4 py-6 text-sm text-muted-foreground'>{tx('tx.agents.log.empty')}</div>;
   }
 
+  const start = offset + 1;
+  const end = Math.min(count, offset + logs.length);
+  const pageCount = Math.ceil(count / PAGE_SIZE);
+  const pageIndex = Math.floor(offset / PAGE_SIZE);
+  const canPrev = offset > 0;
+  const canNext = offset + PAGE_SIZE < count;
+  const buttonClass = cn(
+    'cc-hover-text cc-animate-color',
+    'focus-outline rounded-md',
+    'disabled:opacity-75 not-[:disabled]:cursor-pointer'
+  );
+
   return (
     <div className='w-full max-w-4xl px-4 py-2 overflow-x-auto'>
+      <div className='mb-2 flex items-center justify-end text-sm text-muted-foreground select-none'>
+        <span className='mr-2'>{tx('tx.shell.pagination.range', { start, end, total: count })}</span>
+        {pageCount > 1 ? (
+          <div className='flex'>
+            <button
+              type='button'
+              aria-label={tx('tx.shell.pagination.first')}
+              className={buttonClass}
+              disabled={!canPrev}
+              onClick={() => setOffset(0)}
+            >
+              <IconPageFirst size='1.5rem' />
+            </button>
+            <button
+              type='button'
+              aria-label={tx('tx.shell.pagination.prev')}
+              className={buttonClass}
+              disabled={!canPrev}
+              onClick={() => setOffset(current => Math.max(0, current - PAGE_SIZE))}
+            >
+              <IconPageLeft size='1.5rem' />
+            </button>
+            <span className='px-1 tabular-nums'>
+              {pageIndex + 1}/{pageCount}
+            </span>
+            <button
+              type='button'
+              aria-label={tx('tx.shell.pagination.next')}
+              className={buttonClass}
+              disabled={!canNext}
+              onClick={() => setOffset(current => current + PAGE_SIZE)}
+            >
+              <IconPageRight size='1.5rem' />
+            </button>
+            <button
+              type='button'
+              aria-label={tx('tx.shell.pagination.last')}
+              className={buttonClass}
+              disabled={!canNext}
+              onClick={() => setOffset((pageCount - 1) * PAGE_SIZE)}
+            >
+              <IconPageLast size='1.5rem' />
+            </button>
+          </div>
+        ) : null}
+      </div>
       <table className='w-full text-sm border-collapse'>
         <thead>
           <tr className='border-b text-left text-muted-foreground'>
@@ -30,7 +96,8 @@ export function TabAgentActivity() {
             <th className='py-2 pr-3 font-medium'>{tx('tx.agents.log.item')}</th>
             <th className='py-2 pr-3 font-medium'>{tx('tx.agents.log.key')}</th>
             <th className='py-2 pr-3 font-medium'>{tx('tx.agents.log.status')}</th>
-            <th className='py-2 font-medium'>{tx('tx.agents.log.summary')}</th>
+            <th className='py-2 pr-3 font-medium'>{tx('tx.agents.log.summary')}</th>
+            <th className='py-2 font-medium'>{tx('tx.agents.log.request')}</th>
           </tr>
         </thead>
         <tbody>
@@ -63,7 +130,16 @@ export function TabAgentActivity() {
                 )}
               </td>
               <td className='py-2 pr-3'>{row.status_code}</td>
-              <td className='py-2'>{row.summary || '—'}</td>
+              <td className='py-2 pr-3'>{row.summary || '—'}</td>
+              <td className='py-2 max-w-xs'>
+                {row.request_text ? (
+                  <pre className='max-h-24 overflow-auto whitespace-pre-wrap break-all font-mono text-xs'>
+                    {row.request_text}
+                  </pre>
+                ) : (
+                  '—'
+                )}
+              </td>
             </tr>
           ))}
         </tbody>

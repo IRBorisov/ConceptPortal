@@ -24,5 +24,6 @@ class AgentActionLogAdmin(admin.ModelAdmin):
     search_fields = ('summary', 'item_alias', 'key_label', 'user__username')
     readonly_fields = (
         'user', 'api_key', 'key_label', 'key_prefix', 'action',
-        'item_id', 'item_alias', 'item_title', 'status_code', 'summary', 'created_at',
+        'item_id', 'item_alias', 'item_title', 'status_code', 'summary',
+        'request_text', 'created_at',
     )

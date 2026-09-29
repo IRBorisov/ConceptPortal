@@ -9,8 +9,7 @@ export function useCreateApiKey() {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, agentsApi.baseKey, 'create-key'],
     mutationFn: agentsApi.createKey,
-    onSuccess: () => client.invalidateQueries({ queryKey: agentsApi.getKeysQueryOptions().queryKey }),
-    onError: () => client.invalidateQueries()
+    onSuccess: () => client.invalidateQueries({ queryKey: agentsApi.getKeysQueryOptions().queryKey })
   });
   return {
     createKey: mutation.mutateAsync,

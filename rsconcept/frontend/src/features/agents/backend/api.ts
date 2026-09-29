@@ -31,14 +31,14 @@ export const agentsApi = {
         })
     }),
 
-  getLogsQueryOptions: () =>
+  getLogsQueryOptions: (offset = 0) =>
     queryOptions({
-      queryKey: [agentsApi.baseKey, 'logs'],
+      queryKey: [agentsApi.baseKey, 'logs', offset],
       staleTime: DELAYS.staleShort,
       queryFn: meta =>
         axiosGet<AgentActionLogListDTO>({
           schema: schemaAgentActionLogList,
-          endpoint: '/api/agents/logs',
+          endpoint: `/api/agents/logs?limit=50&offset=${offset}`,
           options: { signal: meta.signal }
         })
     }),
