@@ -59,7 +59,10 @@ def request_text_from_request(request) -> str:
     try:
         data = request.data
     except Exception:  # pylint: disable=broad-exception-caught
-        raw = getattr(request, 'body', b'') or b''
+        try:
+            raw = getattr(request, 'body', b'') or b''
+        except Exception:  # pylint: disable=broad-exception-caught
+            return ''
         if isinstance(raw, bytes):
             text = raw.decode('utf-8', errors='replace')
         else:

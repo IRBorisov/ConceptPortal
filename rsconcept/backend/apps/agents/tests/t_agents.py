@@ -98,6 +98,27 @@ class TestAgentRsformApi(EndpointTester):
         self.assertIn(shared.model.pk, ids)
         self.assertNotIn(self.private_other.model.pk, ids)
 
+    @decl_endpoint('/api/agents/rsforms', method='post')
+    def test_malformed_json_is_bad_request_and_logged(self):
+        response = self.client.generic(
+            'POST',
+            '/api/agents/rsforms',
+            data=b'{',
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        logged = AgentActionLog.objects.filter(user=self.user, action='rsform.create')
+        self.assertEqual(logged.count(), 1)
+        self.assertEqual(logged.get().status_code, status.HTTP_400_BAD_REQUEST)
+
+    @decl_endpoint('/api/agents/rsforms/{item}/details', method='get')
+    def test_inactive_owner_key_is_rejected(self):
+        self.user.is_active = False
+        self.user.save(update_fields=['is_active'])
+        response = self.client.get(f'/api/agents/rsforms/{self.owned_id}/details')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data['detail'], 'Invalid or revoked API key.')
+
     @decl_endpoint('/api/agents/rsforms/{item}/details', method='get')
     def test_details_owned(self):
         response = self.executeOK(item=self.owned_id)
