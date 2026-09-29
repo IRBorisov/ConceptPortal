@@ -167,22 +167,22 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@lezer/common": "^1.5.2",
+    "@lezer/common": "^1.5.3",
     "@lezer/lr": "^1.4.10"
   },
   "devDependencies": {
-    "@lezer/generator": "^1.8.0",
-    "@types/node": "^26.6.1",
-    "@typescript-eslint/parser": "^8.70.0",
-    "eslint": "^10.10.0",
+    "@lezer/generator": "^1.8.1",
+    "@types/node": "^26.6.3",
+    "@typescript-eslint/parser": "^8.70.1",
+    "eslint": "^10.11.0",
     "eslint-plugin-simple-import-sort": "^14.0.0",
     "globals": "^17.12.0",
-    "prettier": "^3.9.7",
+    "prettier": "^3.9.9",
     "tsdown": "^0.23.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.70.0",
+    "typescript-eslint": "^8.70.1",
     "unrun": "^0.3.1",
-    "vitest": "^5.0.1"
+    "vitest": "^5.0.2"
   },
   "publishConfig": {
     "access": "public"
