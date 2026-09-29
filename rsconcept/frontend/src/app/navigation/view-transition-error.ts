@@ -1,4 +1,6 @@
 const TRANSITION_ABORTED = 'Transition was aborted';
+/** Chromium rejects `ready`/`finished` with this when `skipTransition()` runs or the browser drops the transition. */
+const TRANSITION_SKIPPED = 'Transition was skipped';
 
 const ABORT_ERROR_NAMES = new Set(['InvalidStateError', 'TimeoutError', 'AbortError']);
 
@@ -18,13 +20,24 @@ function hasWrappedTransitionAbortContext(text: string): boolean {
   return text.includes(TRANSITION_ABORTED) && mentionsAbortErrorName(text);
 }
 
+function mentionsSkippedTransition(text: string): boolean {
+  return text.includes(TRANSITION_SKIPPED);
+}
+
 /** View Transitions API errors that are expected during navigation and should not be reported. */
 export function isViewTransitionAbortError(error: unknown): boolean {
   if (typeof error === 'string') {
-    return (error.includes(TRANSITION_ABORTED) && mentionsViewTransition(error)) || hasWrappedTransitionAbortContext(error);
+    return (
+      (error.includes(TRANSITION_ABORTED) && mentionsViewTransition(error)) ||
+      hasWrappedTransitionAbortContext(error) ||
+      mentionsSkippedTransition(error)
+    );
   }
   if (!(error instanceof Error)) {
     return false;
+  }
+  if (mentionsSkippedTransition(error.message)) {
+    return true;
   }
   if (!ABORT_ERROR_NAMES.has(error.name)) {
     return hasWrappedTransitionAbortContext(error.message);

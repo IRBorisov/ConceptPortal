@@ -24,6 +24,21 @@ describe('isViewTransitionAbortError', () => {
     expect(isViewTransitionAbortError(error)).toBe(true);
   });
 
+  it('matches skipped transitions from skipTransition', () => {
+    const error = new DOMException('Transition was skipped', 'AbortError');
+    expect(isViewTransitionAbortError(error)).toBe(true);
+  });
+
+  it('matches skipped transitions wrapped as plain errors', () => {
+    const error = new Error('AbortError: Transition was skipped');
+    expect(isViewTransitionAbortError(error)).toBe(true);
+  });
+
+  it('matches skipped transition strings reported by Sentry', () => {
+    expect(isViewTransitionAbortError('AbortError: Transition was skipped')).toBe(true);
+    expect(isViewTransitionAbortError('Error: AbortError: Transition was skipped')).toBe(true);
+  });
+
   it('ignores InvalidStateError with unrelated message', () => {
     const error = new DOMException('The object is in an invalid state', 'InvalidStateError');
     expect(isViewTransitionAbortError(error)).toBe(false);
@@ -41,6 +56,11 @@ describe('isViewTransitionAbortError', () => {
 
   it('ignores abort names without transition context', () => {
     const error = new DOMException('Document is not active', 'InvalidStateError');
+    expect(isViewTransitionAbortError(error)).toBe(false);
+  });
+
+  it('ignores unrelated abort errors', () => {
+    const error = new DOMException('The operation was aborted', 'AbortError');
     expect(isViewTransitionAbortError(error)).toBe(false);
   });
 
