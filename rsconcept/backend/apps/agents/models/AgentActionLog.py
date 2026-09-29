@@ -74,6 +74,7 @@ class AgentActionLog(models.Model):
     )
 
     class Meta:
+        ''' Model metadata. '''
         verbose_name = 'Журнал действий агента'
         verbose_name_plural = 'Журнал действий агентов'
         ordering = ['-created_at']

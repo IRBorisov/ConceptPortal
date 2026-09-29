@@ -9,6 +9,7 @@ from ..models import AgentActionLog, ApiKey
 class ApiKeySerializer(StrictModelSerializer):
     ''' Serializer: API key metadata (never includes secret). '''
     class Meta:
+        ''' Serializer metadata. '''
         model = ApiKey
         fields = (
             'id',
@@ -23,13 +24,14 @@ class ApiKeySerializer(StrictModelSerializer):
 
 class ApiKeyCreateSerializer(StrictSerializer):
     ''' Serializer: create API key. '''
-    label = serializers.CharField(max_length=100)
+    # ``label`` clashes with DRF Field.label in the type stubs.
+    label = serializers.CharField(max_length=100)  # type: ignore[assignment]
 
 
 class ApiKeyCreatedSerializer(StrictSerializer):
     ''' Serializer: create response including one-time secret. '''
     id = serializers.IntegerField()
-    label = serializers.CharField()
+    label = serializers.CharField()  # type: ignore[assignment]
     prefix = serializers.CharField()
     created_at = serializers.DateTimeField()
     secret = serializers.CharField()
@@ -37,12 +39,13 @@ class ApiKeyCreatedSerializer(StrictSerializer):
 
 class ApiKeyUpdateSerializer(StrictSerializer):
     ''' Serializer: rename API key. '''
-    label = serializers.CharField(max_length=100)
+    label = serializers.CharField(max_length=100)  # type: ignore[assignment]
 
 
 class AgentActionLogSerializer(StrictModelSerializer):
     ''' Serializer: agent action log row. '''
     class Meta:
+        ''' Serializer metadata. '''
         model = AgentActionLog
         fields = (
             'id',

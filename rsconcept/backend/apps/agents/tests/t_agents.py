@@ -1,4 +1,5 @@
 ''' Testing API: Agents keys, auth, rsform mutations, audit log. '''
+from django.core.cache import cache
 from rest_framework import status
 
 from apps.agents.models import AgentActionLog, ApiKey
@@ -50,12 +51,20 @@ class TestAgentApiKeys(EndpointTester):
         response = self.execute(data={'label': 'Nope'})
         self.assertIn(response.status_code, (status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN))
 
+    @decl_endpoint('/api/agents/keys', method='post')
+    def test_active_key_cap(self):
+        for index in range(5):
+            ApiKey.create_for_user(self.user, f'Key {index}')
+        self.executeBadData({'label': 'Sixth'})
+        self.assertEqual(ApiKey.objects.filter(owner=self.user, revoked_at__isnull=True).count(), 5)
+
 
 class TestAgentRsformApi(EndpointTester):
     ''' API-key authenticated RSForm agent routes. '''
 
     def setUp(self):
         super().setUp()
+        cache.clear()
         self.owned = RSForm.create(title='Owned', alias='OWN', owner=self.user)
         self.owned_id = self.owned.model.pk
         self.private_other = RSForm.create(

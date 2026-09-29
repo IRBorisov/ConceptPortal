@@ -20,6 +20,8 @@ export const txAgentsEn: Record<string, string> = {
     'This secret is shown only once. Store it safely; you will not be able to view it again.',
   'tx.agents.key.secret.copy': 'Copy key',
   'tx.agents.key.list': 'Your keys',
+  'tx.agents.key.limits':
+    'Up to 5 active keys. They share one limit: 120 reads per minute, 30 edits per minute and 300 per hour. Creating a schema, replacing it, or saving a version is capped at 15 times per hour.',
 
   'tx.agents.log.empty': 'No agent actions yet',
   'tx.agents.log.action': 'Action',

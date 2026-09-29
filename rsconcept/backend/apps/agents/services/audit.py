@@ -8,7 +8,7 @@ from apps.library.models import LibraryItem
 from ..models import AgentActionLog, ApiKey
 
 
-def log_agent_action(
+def log_agent_action(  # pylint: disable=too-many-arguments
     *,
     user,
     api_key: ApiKey | None,

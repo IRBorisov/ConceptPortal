@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from '@tanstack/react-form';
 import { toast } from 'react-toastify';
+import { useForm } from '@tanstack/react-form';
 
 import { useTx } from '@/i18n';
 
@@ -60,6 +60,7 @@ export function TabApiKeys() {
 
   return (
     <div className='cc-column w-full max-w-3xl px-4 py-2 gap-6'>
+      <p className='text-sm text-muted-foreground'>{tx('tx.agents.key.limits')}</p>
       <form
         className='cc-column gap-3'
         onSubmit={event => {

@@ -7,13 +7,13 @@ import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/api-tran
 import { DELAYS, KEYS } from '@/backend/configuration';
 
 import {
-  schemaAgentActionLogList,
-  schemaApiKey,
-  schemaApiKeyCreated,
   type AgentActionLogListDTO,
   type ApiKeyCreatedDTO,
   type ApiKeyDTO,
-  type CreateApiKeyDTO
+  type CreateApiKeyDTO,
+  schemaAgentActionLogList,
+  schemaApiKey,
+  schemaApiKeyCreated
 } from './types';
 
 export const agentsApi = {

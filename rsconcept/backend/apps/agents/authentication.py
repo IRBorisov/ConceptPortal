@@ -26,5 +26,4 @@ class ApiKeyAuthentication(authentication.BaseAuthentication):
         if key is None:
             raise exceptions.AuthenticationFailed('Invalid or revoked API key.')
 
-        key.touch_last_used()
         return (key.owner, key)
