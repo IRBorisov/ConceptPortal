@@ -2,6 +2,7 @@
 from typing import cast
 
 from django.db import transaction
+from django.db.models import F
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status as c
 from rest_framework import viewsets
@@ -52,7 +53,9 @@ class ApiKeyViewSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
         owner = self._owner(request)
         with transaction.atomic():
-            User.objects.select_for_update().get(pk=owner.pk)
+            # Row lock on Postgres. SQLite drops SELECT FOR UPDATE, so a same-value
+            # UPDATE is what actually starts the write transaction there.
+            User.objects.filter(pk=owner.pk).update(is_active=F('is_active'))
             active = ApiKey.objects.filter(owner=owner, revoked_at__isnull=True).count()
             if active >= MAX_ACTIVE_KEYS:
                 raise ValidationError({'label': too_many_active_keys()})
