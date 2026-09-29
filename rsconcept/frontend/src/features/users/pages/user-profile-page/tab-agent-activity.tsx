@@ -25,7 +25,7 @@ export function TabAgentActivity() {
   const { logs, count } = useAgentLogs(offset);
 
   if (count === 0) {
-    return <div className='px-4 py-6 text-sm text-muted-foreground'>{tx('tx.agents.log.empty')}</div>;
+    return <div className='px-4 py-6 text-sm text-center text-muted-foreground'>{tx('tx.agents.log.empty')}</div>;
   }
 
   const start = offset + 1;
@@ -41,7 +41,7 @@ export function TabAgentActivity() {
   );
 
   return (
-    <div className='w-full max-w-4xl px-4 py-2 overflow-x-auto'>
+    <div className='w-full max-w-4xl mx-auto px-4 py-2 overflow-x-auto'>
       <div className='mb-2 flex items-center justify-end text-sm text-muted-foreground select-none'>
         <span className='mr-2'>{tx('tx.shell.pagination.range', { start, end, total: count })}</span>
         {pageCount > 1 ? (

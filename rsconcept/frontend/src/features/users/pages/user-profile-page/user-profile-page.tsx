@@ -18,29 +18,29 @@ export function UserProfilePage() {
   const tx = useTx();
   return (
     <RequireAuth>
-      <div className='flex flex-col py-2 mx-auto w-fit min-w-0 max-w-5xl'>
+      <div className='flex flex-col py-2 mx-auto w-full min-w-0 max-w-5xl'>
         <h1 className='mb-2 select-none'>{tx('tx.general.user.profile')}</h1>
-        <Tabs className='flex flex-col' defaultIndex={0}>
-          <TabList className='mb-3 flex border divide-x rounded-none w-fit'>
+        <Tabs className='grid min-w-0 grid-cols-1' defaultIndex={0}>
+          <TabList className='mb-3 mx-auto w-fit flex border divide-x rounded-none'>
             <TabLabel label={tx('tx.agents.tab.account')} />
             <TabLabel label={tx('tx.agents.tab.keys')} />
             <TabLabel label={tx('tx.agents.tab.activity')} />
           </TabList>
 
-          <TabPanel>
-            <div className='flex py-2 flex-wrap'>
+          <TabPanel className='min-w-0'>
+            <div className='flex py-2 flex-wrap justify-center'>
               <EditorProfile />
               <EditorPassword />
             </div>
           </TabPanel>
 
-          <TabPanel>
+          <TabPanel className='min-w-0'>
             <Suspense fallback={<Loader />}>
               <TabApiKeys />
             </Suspense>
           </TabPanel>
 
-          <TabPanel>
+          <TabPanel className='min-w-0'>
             <Suspense fallback={<Loader />}>
               <TabAgentActivity />
             </Suspense>

@@ -59,7 +59,7 @@ export function TabApiKeys() {
   }
 
   return (
-    <div className='cc-column w-full max-w-3xl px-4 py-2 gap-6'>
+    <div className='cc-column w-full max-w-3xl mx-auto px-4 py-2 gap-6'>
       <p className='text-sm text-muted-foreground'>{tx('tx.agents.key.limits')}</p>
       <form
         className='cc-column gap-3'
