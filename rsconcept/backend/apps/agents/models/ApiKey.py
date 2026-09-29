@@ -107,7 +107,7 @@ class ApiKey(models.Model):
 
     @classmethod
     def authenticate_token(cls, plaintext: str) -> ApiKey | None:
-        ''' Resolve active key by plaintext token. '''
+        ''' Resolve an active key for an active user. '''
         if not plaintext or not plaintext.startswith(KEY_PREFIX):
             return None
         key_hash = hash_api_key(plaintext)
@@ -115,6 +115,6 @@ class ApiKey(models.Model):
             key = cls.objects.select_related('owner').get(key_hash=key_hash)
         except cls.DoesNotExist:
             return None
-        if not key.is_active:
+        if not key.is_active or not key.owner.is_active:
             return None
         return key
