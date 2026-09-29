@@ -132,20 +132,38 @@ if (
     )
 
 # MAIL SETUP
-EMAIL_HOST = _get_secret('EMAIL_HOST', '')
-EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '1025'))
-EMAIL_USE_SSL = os.environ.get('EMAIL_SSL', False) in _TRUE_VARIANTS
-EMAIL_USE_TLS = os.environ.get('EMAIL_TLS', False) in _TRUE_VARIANTS
-EMAIL_HOST_USER = _get_secret('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = _get_secret('EMAIL_HOST_PASSWORD', '')
+# Env vars stay EMAIL_*. Django 6.1 reads them through MAILERS.
+_email_host = _get_secret('EMAIL_HOST', '')
+_email_port = int(os.environ.get('EMAIL_PORT', '1025'))
+_email_use_ssl = _get_bool('EMAIL_SSL', False)
+_email_use_tls = _get_bool('EMAIL_TLS', False)
+_email_host_user = _get_secret('EMAIL_HOST_USER', '')
+_email_host_password = _get_secret('EMAIL_HOST_PASSWORD', '')
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-SERVER_EMAIL = EMAIL_HOST_USER
-EMAIL_ADMIN = EMAIL_HOST_USER
-EMAIL_BACKEND = \
-    'django.core.mail.backends.smtp.EmailBackend' \
-    if EMAIL_HOST != '' else \
-    'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = _email_host_user
+SERVER_EMAIL = _email_host_user
+EMAIL_ADMIN = _email_host_user
+
+if _email_host:
+    MAILERS = {
+        'default': {
+            'BACKEND': 'django.core.mail.backends.smtp.EmailBackend',
+            'OPTIONS': {
+                'host': _email_host,
+                'port': _email_port,
+                'use_ssl': _email_use_ssl,
+                'use_tls': _email_use_tls,
+                'username': _email_host_user,
+                'password': _email_host_password,
+            },
+        },
+    }
+else:
+    MAILERS = {
+        'default': {
+            'BACKEND': 'django.core.mail.backends.console.EmailBackend',
+        },
+    }
 
 
 INSTALLED_APPS = [
