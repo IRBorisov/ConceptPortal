@@ -15,7 +15,7 @@ dependencies = [
     "drf-spectacular-sidecar==2026.9.1",
     "gunicorn==26.2.0",
     "psycopg2-binary==2.9.13",
-    "sentry-sdk[django]>=2.69.2",
+    "sentry-sdk[django]>=2.71.0",
     "tzdata==2026.4",
 ]
 
@@ -24,10 +24,10 @@ package = false
 
 [dependency-groups]
 dev = [
-    "coverage==7.16.1",
+    "coverage==7.16.2",
     "django-extensions==4.1",
     "django-stubs==6.1.1",
     "djangorestframework-stubs[compatible-mypy]==3.18.1",
     "mypy==2.3.1",
-    "pylint==4.0.8",
+    "pylint==4.0.9",
 ]

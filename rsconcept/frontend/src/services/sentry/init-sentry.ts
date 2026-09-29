@@ -54,7 +54,21 @@ export function initSentry(): boolean {
     tracePropagationTargets: resolveTracePropagationTargets(),
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1,
-    enableLogs: true,
+    // v11 collects cookies, bodies, and inferred IPs unless told otherwise.
+    // Keep the v10 posture. Explicit `setUser` still attaches Portal identity.
+    dataCollection: {
+      userInfo: false,
+      cookies: false,
+      httpHeaders: {
+        request: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] },
+        response: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] }
+      },
+      httpBodies: [],
+      urlQueryParams: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] },
+      genAI: { inputs: false, outputs: false },
+      databaseQueryData: false,
+      graphQL: { document: false, variables: false }
+    },
     beforeSend(event, hint) {
       if (isViewTransitionAbortError(hint.originalException) || isViewTransitionAbortEvent(event)) {
         return null;
@@ -73,8 +87,8 @@ export function initSentry(): boolean {
       }
       return scrubSensitiveUrls(event);
     },
-    beforeSendTransaction(event) {
-      return scrubSensitiveUrls(event);
+    beforeSendSpan(span) {
+      return scrubSpanUrls(span);
     },
     beforeBreadcrumb(breadcrumb) {
       const data = breadcrumb.data;
@@ -109,6 +123,23 @@ function scrubSensitiveUrls<T extends Sentry.Event>(event: T): T {
     event.request.headers.Referer = scrubResetTokenFromUrl(event.request.headers.Referer);
   }
   return event;
+}
+
+/** Span streaming replaced transactions. Scrub reset tokens from span names and attributes. */
+function scrubSpanUrls<T extends { name: string; attributes: Record<string, unknown> }>(span: T): T {
+  span.name = scrubResetTokenFromUrl(span.name);
+  for (const [key, value] of Object.entries(span.attributes)) {
+    if (typeof value === 'string') {
+      span.attributes[key] = scrubResetTokenFromUrl(value);
+    } else if (isStringArray(value)) {
+      span.attributes[key] = value.map(item => scrubResetTokenFromUrl(item));
+    }
+  }
+  return span;
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every(item => typeof item === 'string');
 }
 
 function isAbortedRequestSentryEvent(event: Sentry.Event): boolean {
