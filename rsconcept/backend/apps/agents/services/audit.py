@@ -1,11 +1,15 @@
 ''' Write AgentActionLog entries. '''
 from __future__ import annotations
 
+import json
 from typing import Any
+
+from django.conf import settings
 
 from apps.library.models import LibraryItem
 
 from ..models import AgentActionLog, ApiKey
+from .retention import maybe_prune_agent_logs
 
 
 def log_agent_action(  # pylint: disable=too-many-arguments
@@ -19,6 +23,7 @@ def log_agent_action(  # pylint: disable=too-many-arguments
     item_id: int | None = None,
     item_alias: str = '',
     item_title: str = '',
+    request=None,
 ) -> AgentActionLog:
     ''' Persist a short audit record for an agent API call. '''
     resolved_id = item_id
@@ -29,7 +34,7 @@ def log_agent_action(  # pylint: disable=too-many-arguments
         resolved_alias = item.alias or ''
         resolved_title = item.title or ''
 
-    return AgentActionLog.objects.create(
+    row = AgentActionLog.objects.create(
         user=user,
         api_key=api_key,
         key_label=api_key.label if api_key else '',
@@ -40,7 +45,33 @@ def log_agent_action(  # pylint: disable=too-many-arguments
         item_title=resolved_title,
         status_code=status_code,
         summary=summary[:500],
+        request_text=request_text_from_request(request),
     )
+    maybe_prune_agent_logs()
+    return row
+
+
+def request_text_from_request(request) -> str:
+    ''' JSON body of the call, cut to AGENT_LOG_REQUEST_MAX_LENGTH. No headers. '''
+    if request is None:
+        return ''
+    limit = settings.AGENT_LOG_REQUEST_MAX_LENGTH
+    try:
+        data = request.data
+    except Exception:  # pylint: disable=broad-exception-caught
+        raw = getattr(request, 'body', b'') or b''
+        if isinstance(raw, bytes):
+            text = raw.decode('utf-8', errors='replace')
+        else:
+            text = str(raw)
+        return text[:limit]
+    if data is None or data == '':
+        return ''
+    try:
+        text = json.dumps(data, ensure_ascii=False, default=str, separators=(',', ':'))
+    except TypeError:
+        text = str(data)
+    return text[:limit]
 
 
 def api_key_from_request(request) -> ApiKey | None:

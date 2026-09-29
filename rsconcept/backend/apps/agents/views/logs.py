@@ -12,13 +12,14 @@ from apps.users.models import User
 
 from ..models import AgentActionLog
 from ..permissions import IsSessionUser
-from ..serializers import AgentActionLogSerializer
+from ..serializers import AgentActionLogPageSerializer, AgentActionLogSerializer
+from ..services.retention import maybe_prune_agent_logs
 
 
 @extend_schema(
     tags=['Agents'],
     summary='List own agent API action log',
-    responses={c.HTTP_200_OK: AgentActionLogSerializer(many=True)},
+    responses={c.HTTP_200_OK: AgentActionLogPageSerializer},
 )
 class AgentActionLogListView(APIView):
     ''' Paginated-ish list of agent actions for the current user. '''
@@ -26,6 +27,7 @@ class AgentActionLogListView(APIView):
     permission_classes = [IsSessionUser]
 
     def get(self, request: Request) -> Response:
+        maybe_prune_agent_logs()
         qs = AgentActionLog.objects.filter(user=cast(User, request.user))
 
         key_id = request.query_params.get('key')

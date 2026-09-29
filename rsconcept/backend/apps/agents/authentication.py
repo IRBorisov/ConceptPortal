@@ -12,7 +12,10 @@ class ApiKeyAuthentication(authentication.BaseAuthentication):
     keyword = 'Bearer'
 
     def authenticate(self, request: Request):
-        auth_header = authentication.get_authorization_header(request).decode('utf-8')
+        try:
+            auth_header = authentication.get_authorization_header(request).decode('utf-8')
+        except UnicodeError as error:
+            raise exceptions.AuthenticationFailed('Invalid Authorization header.') from error
         if not auth_header:
             return None
 

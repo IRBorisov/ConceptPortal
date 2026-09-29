@@ -67,6 +67,11 @@ class AgentActionLog(models.Model):
         blank=True,
         default=''
     )
+    request_text = models.TextField(
+        verbose_name='Текст запроса',
+        blank=True,
+        default=''
+    )
     created_at = models.DateTimeField(
         verbose_name='Время',
         auto_now_add=True,

@@ -41,6 +41,10 @@ def _get_float(key: str, default: float) -> float:
     return float(os.environ.get(key, default))
 
 
+def _get_int(key: str, default: int) -> int:
+    return int(os.environ.get(key, default))
+
+
 def _get_sentry_release() -> str | None:
     env_release = os.environ.get('SENTRY_RELEASE')
     if env_release:
@@ -228,6 +232,14 @@ DJANGO_REST_PASSWORDRESET_NO_INFORMATION_LEAKAGE = True
 DJANGO_REST_PASSWORDRESET_THROTTLE_CLASSES = [
     'shared.throttling.PasswordResetRateThrottle',
 ]
+
+# Agent action log. Days are overridable from the environment.
+# Retention: delete rows older than this. Default is 30 days (one month).
+# Cleanup interval: do not run that delete more often than this. Default is 7 days.
+AGENT_LOG_RETENTION_DAYS = _get_int('AGENT_LOG_RETENTION_DAYS', 30)
+AGENT_LOG_CLEANUP_INTERVAL_DAYS = _get_int('AGENT_LOG_CLEANUP_INTERVAL_DAYS', 7)
+# Stored request text is cut to this many characters. The API key stays in the header, not here.
+AGENT_LOG_REQUEST_MAX_LENGTH = 4000
 
 
 CORS_ALLOW_CREDENTIALS = True

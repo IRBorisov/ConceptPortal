@@ -271,7 +271,7 @@ const restored = tool.importData(payload, 'session');
 const schemaJson = tool.exportPortal({ kind: 'schema' });
 const modelObj = tool.exportPortal({ kind: 'model', format: 'object' });
 
-// Portal GET /api/rsforms/:id/details → строка или объект
+// Portal JSON: GET /api/agents/rsforms/:id/details (Bearer key), same shape as public /details
 const session = tool.importData(portalDetailsJsonString); // kind auto
 tool.listDiagnostics();
 // правки…

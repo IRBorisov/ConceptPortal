@@ -9,8 +9,7 @@ export function useRevokeApiKey() {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, agentsApi.baseKey, 'revoke-key'],
     mutationFn: agentsApi.revokeKey,
-    onSuccess: () => client.invalidateQueries({ queryKey: agentsApi.getKeysQueryOptions().queryKey }),
-    onError: () => client.invalidateQueries()
+    onSuccess: () => client.invalidateQueries({ queryKey: agentsApi.getKeysQueryOptions().queryKey })
   });
   return {
     revokeKey: mutation.mutateAsync,

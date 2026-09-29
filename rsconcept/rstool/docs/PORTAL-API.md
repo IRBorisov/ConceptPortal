@@ -55,7 +55,7 @@ GET https://api.portal.acconcept.ru/api/rsforms/856/details
 1. Пользователь создаёт ключ в профиле → получает секрет `rcp_<prefix>_<secret>` **один раз**.
 2. Агент передаёт `Authorization: Bearer <секрет>` на маршруты `/api/agents/...`.
 3. Ключ действует от имени пользователя (те же права Owner/Editor на объекты библиотеки).
-4. Мутации пишутся в журнал «Agent activity» в профиле. Отказы `429` в журнал не попадают.
+4. Мутации пишутся в журнал в профиле: код действия, статус и текст запроса, обрезанный до 4000 символов. Секрет ключа в журнал не попадает. Отказы `429` и чтения не пишутся. Строки старше 30 дней удаляются, сама очистка запускается не чаще раза в 7 дней. Оба срока задаются окружением: `AGENT_LOG_RETENTION_DAYS` и `AGENT_LOG_CLEANUP_INTERVAL_DAYS`.
 
 ### Лимиты
 
@@ -92,7 +92,9 @@ curl.exe -s -H "Authorization: Bearer rcp_...." ^
 ```
 
 Управление ключами и журналом — только из сессии UI: `GET/POST /api/agents/keys`,
-`DELETE /api/agents/keys/:id`, `GET /api/agents/logs`.
+`PATCH /api/agents/keys/:id` (переименовать), `DELETE /api/agents/keys/:id`.
+`GET /api/agents/logs?limit=&offset=` возвращает `{count, results}` (`limit` по умолчанию 50,
+не больше 200). В строке есть `request_text`. Ключ этот маршрут не открывает.
 
 Если КС не публичная и **нет** API-ключа, варианты для агента:
 

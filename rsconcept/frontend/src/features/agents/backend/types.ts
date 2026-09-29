@@ -31,6 +31,7 @@ export const schemaAgentActionLog = z.object({
   item_title: z.string(),
   status_code: z.number(),
   summary: z.string(),
+  request_text: z.string(),
   created_at: z.iso.datetime({ offset: true }).or(z.string())
 });
 export type AgentActionLogDTO = z.infer<typeof schemaAgentActionLog>;

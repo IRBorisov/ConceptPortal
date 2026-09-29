@@ -26,6 +26,14 @@ from shared.utility import ZipMemberTooLarge
 from .. import models as m
 from .. import serializers as s
 from .. import utils
+from ..mutations import (
+    create_constituenta,
+    delete_constituents,
+    move_constituents,
+    replace_schema_content,
+    substitute_constituents,
+    update_constituenta,
+)
 
 
 @extend_schema(tags=['RSForm'])
@@ -97,23 +105,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
             })
         serializer = s.RSFormImportJsonSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
-        with transaction.atomic():
-            validated = serializer.validated_data
-            version_data = {
-                'title': validated['title'],
-                'alias': validated['alias'],
-                'description': validated['description'],
-                'items': validated['items'],
-                'attribution': validated.get('attribution', []),
-            }
-            data = s.RSFormSerializer(item).to_versioned_data() | version_data
-            PropagationFacade().before_delete_schema(item.pk)
-            s.RSFormSerializer(item).restore_from_version(data)
-            PropagationFacade().after_create_cst(
-                list(m.RSFormCached(item.pk).constituentsQ().order_by('order'))
-            )
-            item.save(update_fields=['time_update'])
+        replace_schema_content(item, serializer.validated_data)
 
         return Response(
             status=c.HTTP_200_OK,
@@ -138,17 +130,8 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         serializer = s.CstCreateSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        if 'insert_after' not in data:
-            insert_after = None
-        else:
-            insert_after = data['insert_after']
-
-        with transaction.atomic():
-            propagation = PropagationFacade()
-            schema = propagation.get_schema(item.pk)
-            new_cst = schema.create_cst(data, insert_after)
-            propagation.after_create_cst([new_cst])
-            item.save(update_fields=['time_update'])
+        insert_after = None if 'insert_after' not in data else data['insert_after']
+        new_cst = create_constituenta(item, data, insert_after)
 
         return Response(
             status=c.HTTP_201_CREATED,
@@ -217,24 +200,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         serializer.is_valid(raise_exception=True)
         cst = cast(m.Constituenta, serializer.validated_data['target'])
         data = serializer.validated_data['item_data']
-
-        with transaction.atomic():
-            propagation = PropagationFacade()
-            schema = propagation.get_schema(item.pk)
-            old_data = schema.update_cst(cst.pk, data)
-            propagation.after_update_cst(item.pk, cst.pk, data, old_data)
-            if 'alias' in data and data['alias'] != cst.alias:
-                cst.refresh_from_db()
-                changed_type = 'cst_type' in data and cst.cst_type != data['cst_type']
-                mapping = {cst.alias: data['alias']}
-                cst.alias = data['alias']
-                if changed_type:
-                    cst.cst_type = data['cst_type']
-                cst.save()
-                schema.apply_mapping(mapping=mapping, change_aliases=False)
-                if changed_type:
-                    propagation.after_change_cst_type(item.pk, cst.pk, cast(m.CstType, cst.cst_type))
-            item.save(update_fields=['time_update'])
+        update_constituenta(item, cst, data)
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(item).data
@@ -288,17 +254,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         item = self._get_item()
         serializer = s.CstSubstituteSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
-        substitutions: list[tuple[m.Constituenta, m.Constituenta]] = []
-
-        with transaction.atomic():
-            schema = m.RSForm(item)
-            for substitution in serializer.validated_data['substitutions']:
-                original = cast(m.Constituenta, substitution['original'])
-                replacement = cast(m.Constituenta, substitution['substitution'])
-                substitutions.append((original, replacement))
-            PropagationFacade().before_substitute(item.pk, substitutions)
-            schema.substitute(substitutions)
-            item.save(update_fields=['time_update'])
+        substitute_constituents(item, serializer.validated_data['substitutions'])
 
         return Response(
             status=c.HTTP_200_OK,
@@ -323,12 +279,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         serializer = s.CstListSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
         cst_list: list[m.Constituenta] = serializer.validated_data['items']
-
-        with transaction.atomic():
-            schema = m.RSForm(item)
-            PropagationFacade().before_delete_cst(item.pk, [cst.pk for cst in cst_list])
-            schema.delete_cst(cst_list)
-            item.save(update_fields=['time_update'])
+        delete_constituents(item, cst_list)
 
         return Response(
             status=c.HTTP_200_OK,
@@ -469,14 +420,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         item = self._get_item()
         serializer = s.CstMoveSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
-
-        with transaction.atomic():
-            schema = m.RSForm(item)
-            schema.move_cst(
-                target=serializer.validated_data['items'],
-                destination=serializer.validated_data['move_to']
-            )
-            item.save(update_fields=['time_update'])
+        move_constituents(item, serializer.validated_data)
 
         return Response(
             status=c.HTTP_200_OK,

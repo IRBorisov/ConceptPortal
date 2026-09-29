@@ -122,6 +122,8 @@ console.log(tool.listDiagnostics());
 Когда пользователь даёт UI-ссылку вида `https://portal.acconcept.ru/rsforms/:id`,
 не открывай SPA и не парси HTML: преобразуй ссылку в REST-запрос по правилам
 [PORTAL-API.md](../../docs/PORTAL-API.md) — там пути, контекстный поиск, правила доступа и curl.
+Чтение и запись от имени пользователя идут через Bearer API-ключ на `/api/agents/...`.
+Без ключа анонимный REST видит только публичные схемы.
 
 Portal JSON из `/details` не является форматом `exportSession`. Используй `importData(payload)` —
 kind `auto` (default) определит `portal-details` или `portal-schema`. Явный kind: `'portal-details'`, `'portal-schema'`, `'session'`.

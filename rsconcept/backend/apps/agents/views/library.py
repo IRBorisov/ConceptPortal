@@ -12,16 +12,15 @@ from rest_framework.views import APIView
 from apps.library import models as lib_models
 from apps.library import serializers as lib_serializers
 from apps.library.services.context_search import (
+    context_search_query,
     get_accessible_library_items_by_ids,
-    search_library_context
+    ids_for_context_search,
 )
 from apps.users.models import User
 
 from ..authentication import ApiKeyAuthentication
 from ..permissions import IsApiKeyAuthenticated
 from ..throttling import AgentReadThrottle
-
-_CONTEXT_SEARCH_PARAMS = ('q', 'search_fields', 'admin', 'location', 'subfolders', 'item_type')
 
 
 @extend_schema(tags=['Agents'])
@@ -63,28 +62,11 @@ class AgentLibraryContextSearchView(APIView):
     throttle_classes = [AgentReadThrottle]
 
     def get(self, request: Request) -> Response:
-        data = {
-            key: request.query_params[key]
-            for key in _CONTEXT_SEARCH_PARAMS
-            if key in request.query_params
-        }
-        serializer = lib_serializers.LibraryContextSearchSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        validated = serializer.validated_data
-
-        admin = validated.get('admin', False)
-        if admin and not request.user.is_staff:
-            admin = False
-
-        ids = search_library_context(
-            request.user,
-            validated.get('q', ''),
-            fields=validated.get('search_fields'),
-            all_items=admin,
-            location=validated.get('location'),
-            subfolders=validated.get('subfolders', False),
-            item_type=validated.get('item_type'),
+        serializer = lib_serializers.LibraryContextSearchSerializer(
+            data=context_search_query(request.query_params)
         )
+        serializer.is_valid(raise_exception=True)
+        ids = ids_for_context_search(request.user, serializer.validated_data)
         return Response(
             lib_serializers.LibraryContextSearchResponseSerializer({'ids': ids}).data
         )
