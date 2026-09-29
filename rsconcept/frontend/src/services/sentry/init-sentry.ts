@@ -10,6 +10,8 @@ import { isAxiosError, isCsrfAxiosFailure } from '@/backend/api-transport';
 import { buildConstants } from '@/utils/build-constants';
 import { isStaleBundleError } from '@/utils/stale-bundle-error';
 
+import { redactCredentialFields, TELEMETRY_HEADER_DENY } from './scrub-telemetry';
+
 const LOGIN_ENDPOINT = '/users/api/login';
 const LIBRARY_ITEM_DETAILS_PATTERN =
   /^\/api\/(?:rsforms\/\d+\/details|library\/\d+\/versions\/\d+|oss\/\d+\/details|models\/\d+\/details)/;
@@ -56,15 +58,17 @@ export function initSentry(): boolean {
     replaysOnErrorSampleRate: 1,
     // v11 collects cookies, bodies, and inferred IPs unless told otherwise.
     // Keep the v10 posture. Explicit `setUser` still attaches Portal identity.
+    // `csrftoken` is named even though the SDK also matches `csrf` and `token`:
+    // `beforeSend` redacts it again, because HttpContext forwards event headers unfiltered.
     dataCollection: {
       userInfo: false,
       cookies: false,
       httpHeaders: {
-        request: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] },
-        response: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] }
+        request: { deny: [...TELEMETRY_HEADER_DENY] },
+        response: { deny: [...TELEMETRY_HEADER_DENY] }
       },
       httpBodies: [],
-      urlQueryParams: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] },
+      urlQueryParams: { deny: [...TELEMETRY_HEADER_DENY] },
       genAI: { inputs: false, outputs: false },
       databaseQueryData: false,
       graphQL: { document: false, variables: false }
@@ -91,6 +95,7 @@ export function initSentry(): boolean {
       return scrubSpanUrls(span);
     },
     beforeBreadcrumb(breadcrumb) {
+      redactCredentialFields(breadcrumb.data);
       const data = breadcrumb.data;
       if (data) {
         for (const key of ['url', 'from', 'to']) {
@@ -122,12 +127,21 @@ function scrubSensitiveUrls<T extends Sentry.Event>(event: T): T {
   if (event.request?.headers?.Referer) {
     event.request.headers.Referer = scrubResetTokenFromUrl(event.request.headers.Referer);
   }
+  redactCredentialFields(event.request);
+  redactCredentialFields(event.contexts);
+  redactCredentialFields(event.extra);
+  if (event.breadcrumbs) {
+    for (const breadcrumb of event.breadcrumbs) {
+      redactCredentialFields(breadcrumb.data);
+    }
+  }
   return event;
 }
 
 /** Span streaming replaced transactions. Scrub reset tokens from span names and attributes. */
 function scrubSpanUrls<T extends { name: string; attributes: Record<string, unknown> }>(span: T): T {
   span.name = scrubResetTokenFromUrl(span.name);
+  redactCredentialFields(span.attributes);
   for (const [key, value] of Object.entries(span.attributes)) {
     if (typeof value === 'string') {
       span.attributes[key] = scrubResetTokenFromUrl(value);
