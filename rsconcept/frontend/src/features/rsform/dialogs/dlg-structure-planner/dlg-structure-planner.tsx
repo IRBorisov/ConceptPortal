@@ -208,7 +208,12 @@ export function DlgStructurePlanner() {
           </div>
 
           <div
-            className={cn('px-2 pb-2 pt-4', blurClass, !isMutable && 'rounded-br-xl', isMultiline && 'rounded-b-xl')}
+            className={cn(
+              'shrink-0 px-2 pb-2 pt-4',
+              blurClass,
+              !isMutable && 'rounded-br-xl',
+              isMultiline && 'rounded-b-xl'
+            )}
           >
             <RefsInput
               id='dlg_structure_term'
