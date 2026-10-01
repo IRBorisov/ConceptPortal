@@ -20,7 +20,7 @@ export function TextButton({ text, title, hideTitle, className, ...restProps }: 
         'cc-label cc-hover-underline',
         'font-medium text-primary select-none disabled:text-foreground',
         'cursor-pointer disabled:cursor-default',
-        'outline-hidden',
+        'outline-hidden whitespace-nowrap',
         className
       )}
       data-tooltip-id={!!title ? globalIDs.tooltip : undefined}

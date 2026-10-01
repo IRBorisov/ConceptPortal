@@ -250,7 +250,7 @@ export function ValuePrimaryActions({ activeCst, cstData, onChangeValue }: Value
   }
 
   return (
-    <div className='flex flex-wrap items-center gap-6 text-sm'>
+    <div className='flex flex-nowrap items-center gap-6 overflow-x-auto text-sm [&>*]:shrink-0'>
       {showValueClassPill ? (
         <PillValueClass
           value={!isProperty}
