@@ -19,7 +19,7 @@ export const useUploadRSModelJson = () => {
       client.setQueryData(KEYS.composite.libraryList, (prev: LibraryItem[] | undefined) =>
         prev?.map(item => (item.id === data.id ? data : item))
       );
-      updateTimestamp(data.id, new Date(Date.now()).toISOString());
+      updateTimestamp(data.id, data.time_update);
     },
     onError: () => client.invalidateQueries()
   });

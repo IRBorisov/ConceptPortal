@@ -4,8 +4,7 @@ import { useUpdateTimestamp } from '@/features/library/backend/use-update-timest
 
 import { KEYS } from '@/backend/configuration';
 
-import { rsmodelApi } from './api';
-import { notifyModelSync } from './model-sync';
+import { rsmodelApi, updateRSModel } from './api';
 
 export const useClearValues = () => {
   const client = useQueryClient();
@@ -13,9 +12,9 @@ export const useClearValues = () => {
   const mutation = useMutation({
     mutationKey: [KEYS.global_mutation, rsmodelApi.baseKey, 'clear-values'],
     mutationFn: rsmodelApi.clearValues,
-    onSuccess: (_, context) => {
-      updateTimestamp(context.itemID, new Date(Date.now()).toISOString());
-      notifyModelSync(context.itemID);
+    onSuccess: data => {
+      updateTimestamp(data.id, data.time_update);
+      updateRSModel(data, client);
     },
     onError: () => client.invalidateQueries()
   });

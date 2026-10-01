@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { Graph } from '../graph';
 import { RSLangAnalyzer } from '../rslang/semantic/analyzer';
+import { basic } from '../rslang/semantic/typification';
 
 import { RSEngine } from './rsengine';
 import { type Constituenta, CstClass, CstType, type RSForm } from './rsform';
@@ -68,6 +69,51 @@ function createEngine(): RSEngine {
     clearValues: () => Promise.resolve()
   });
 }
+
+describe('RSEngine.setBasicValue', () => {
+  it('awaits setCstValue before clearValues when dependents must reset', async () => {
+    const x1 = mockConstituenta({ id: 1, alias: 'X1', cst_type: CstType.BASE });
+    const s1 = mockConstituenta({
+      id: 2,
+      alias: 'S1',
+      cst_type: CstType.STRUCTURED,
+      cst_class: CstClass.BASIC,
+      // Non-number value cannot be reconciled with a basic domain shrink, so it must be cleared.
+      effectiveType: basic('X1')
+    });
+    const order: string[] = [];
+    let releaseSet!: () => void;
+    const setGate = new Promise<void>(resolve => {
+      releaseSet = resolve;
+    });
+    const engine = new RSEngine(10, {
+      setCstValue: async () => {
+        order.push('set-start');
+        await setGate;
+        order.push('set-end');
+      },
+      clearValues: () => {
+        order.push('clear');
+        return Promise.resolve();
+      }
+    });
+    const schema = mockSchema([x1, s1]);
+    schema.graph = new Graph([[1], [2], [1, 2]]);
+    engine.loadData(
+      schema,
+      mockModel([
+        { id: 1, type: TYPE_BASIC, value: { 1: 'a', 2: 'b' } },
+        { id: 2, type: 'X1', value: [1, 2] }
+      ])
+    );
+
+    const pending = engine.setBasicValue(1, { 9: 'only-new' });
+    expect(order).toEqual(['set-start']);
+    releaseSet();
+    await pending;
+    expect(order).toEqual(['set-start', 'set-end', 'clear']);
+  });
+});
 
 describe('RSEngine.loadData', () => {
   it('applies basic bindings for constituents that exist in the schema', () => {

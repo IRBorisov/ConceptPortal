@@ -2,6 +2,7 @@
 from apps.library.models import AccessPolicy, LibraryItem, LocationHead
 from apps.rsform.models import CstType, RSForm
 from apps.rsmodel.models import ConstituentData, RSModel
+from shared.concurrency import EXPECTED_TIME_UPDATE_HEADER
 from shared.EndpointTester import EndpointTester, decl_endpoint
 from shared.portal_json import PORTAL_JSON_CONTRACT_VERSION
 
@@ -64,7 +65,14 @@ class TestRSModelViewset(EndpointTester):
             'type': 'basic',
             'data': cst_data
         }]
-        self.executeOK(item=self.model_id, data=payload)
+        response = self.executeOK(item=self.model_id, data=payload)
+        self.assertIn('time_update', response.data)
+        self.assertEqual(response.data['id'], self.model_id)
+        self.assertEqual(response.data['items'], [{
+            'id': x1.pk,
+            'type': 'basic',
+            'value': cst_data
+        }])
         cdata = ConstituentData.objects.get(model=self.rsmodel.model, constituent=x1)
         self.assertEqual(cdata.type, 'basic')
         self.assertEqual(cdata.data, cst_data)
@@ -82,6 +90,38 @@ class TestRSModelViewset(EndpointTester):
         self.login2()
         payload[0]['target'] = x1.pk
         self.executeForbidden(item=self.model_id, data=payload)
+
+    @decl_endpoint('/api/models/{item}/set-value', method='post')
+    def test_set_value_rejects_stale_concurrency_token(self):
+        x1 = self.schema.insert_last(alias='X1')
+        self.rsmodel.model.refresh_from_db()
+        stale = self.rsmodel.model.time_update.isoformat().replace('+00:00', 'Z')
+        payload = [{
+            'target': x1.pk,
+            'type': 'basic',
+            'data': {'1': 'a'}
+        }]
+        first = self.executeOK(item=self.model_id, data=payload)
+        self.executeConflict(
+            item=self.model_id,
+            data=[{
+                'target': x1.pk,
+                'type': 'basic',
+                'data': {'1': 'b'}
+            }],
+            headers={EXPECTED_TIME_UPDATE_HEADER: stale}
+        )
+        second = self.executeOK(
+            item=self.model_id,
+            data=[{
+                'target': x1.pk,
+                'type': 'basic',
+                'data': {'1': 'c'}
+            }],
+            headers={EXPECTED_TIME_UPDATE_HEADER: first.data['time_update']}
+        )
+        self.assertNotEqual(first.data['time_update'], second.data['time_update'])
+        self.assertEqual(second.data['items'][0]['value'], {'1': 'c'})
 
     @decl_endpoint('/api/models/{item}/set-value', method='post')
     def test_set_value_rejects_null_schema(self):
@@ -277,7 +317,10 @@ class TestRSModelViewset(EndpointTester):
         )
 
         payload = {'items': [x1.pk, x3.pk]}
-        self.executeOK(item=self.model_id, data=payload)
+        response = self.executeOK(item=self.model_id, data=payload)
+        self.assertIn('time_update', response.data)
+        self.assertEqual(len(response.data['items']), 1)
+        self.assertEqual(response.data['items'][0]['id'], x2.pk)
 
         remaining = ConstituentData.objects.filter(model=self.rsmodel.model)
         self.assertEqual(remaining.count(), 1)
@@ -318,7 +361,9 @@ class TestRSModelViewset(EndpointTester):
 
         self.executeOK(item=self.model_id)
         self.assertFalse(ConstituentData.objects.filter(model=self.rsmodel.model).exists())
-        self.executeOK(item=self.model_id)
+        response = self.executeOK(item=self.model_id)
+        self.assertIn('time_update', response.data)
+        self.assertEqual(response.data['items'], [])
 
         self.executeNotFound(item=self.invalid_id)
 

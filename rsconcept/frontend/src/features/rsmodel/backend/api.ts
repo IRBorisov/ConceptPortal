@@ -52,7 +52,8 @@ export const rsmodelApi = {
   },
 
   setValue: ({ itemID, data }: { itemID: number; data: ConstituentaDataDTO }) =>
-    axiosPost<ConstituentaDataDTO>({
+    axiosPost<ConstituentaDataDTO, RSModelDTO>({
+      schema: schemaRSModel,
       endpoint: `/api/models/${itemID}/set-value`,
       expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {
@@ -71,7 +72,8 @@ export const rsmodelApi = {
       }
     }),
   clearValues: ({ itemID, data }: { itemID: number; data: ConstituentaList }) =>
-    axiosPost<ConstituentaList>({
+    axiosPost<ConstituentaList, RSModelDTO>({
+      schema: schemaRSModel,
       endpoint: `/api/models/${itemID}/clear-values`,
       expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       request: {

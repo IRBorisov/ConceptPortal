@@ -225,13 +225,11 @@ export class RSEngine {
       }
     }
 
+    // Sequential writes: both endpoints share the model concurrency token.
+    // A parallel pair would send the same expected time_update and the second would 409.
+    await this.services.setCstValue({ itemID: this.modelID, data: updateList });
     if (resetList.length > 0) {
-      await Promise.all([
-        this.services.setCstValue({ itemID: this.modelID, data: updateList }),
-        this.services.clearValues({ itemID: this.modelID, data: { items: resetList } })
-      ]);
-    } else {
-      await this.services.setCstValue({ itemID: this.modelID, data: updateList });
+      await this.services.clearValues({ itemID: this.modelID, data: { items: resetList } });
     }
     const changed = [...resetList, ...updateList.map(item => item.target)];
 
