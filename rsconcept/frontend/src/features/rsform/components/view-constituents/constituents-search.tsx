@@ -48,8 +48,10 @@ export function ConstituentsSearch({
   return (
     <div
       className={cn(
-        'flex items-center bg-input pl-2 pr-1',
-        compact ? 'h-8 max-w-70 shrink-0 border rounded-md overflow-hidden' : 'border-b rounded-t-md',
+        'flex items-center pl-2 pr-1',
+        compact
+          ? 'h-8 max-w-70 shrink-0 overflow-hidden'
+          : 'bg-input border-b rounded-t-md',
         className
       )}
     >
