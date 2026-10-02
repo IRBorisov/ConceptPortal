@@ -26,6 +26,32 @@ class TestAgentApiKeys(EndpointTester):
         self.assertIsNone(ApiKey.authenticate_token(secret + 'x'))
         self.assertIsNone(ApiKey.authenticate_token('rcp_badprefix_notarealsecret'))
 
+    @decl_endpoint('/api/agents/rsforms/{item}/details', method='get')
+    def test_invalid_api_key_auth_is_throttled(self):
+        ''' Failed Bearer attempts are rate-limited at the auth boundary. '''
+        from django.core.cache import cache
+        from rest_framework.exceptions import Throttled
+        from rest_framework.settings import api_settings
+
+        cache.clear()
+        try:
+            factory = APIRequestFactory()
+            auth = ApiKeyAuthentication()
+            # Exhaust the failure budget (default 30/minute).
+            rate = api_settings.DEFAULT_THROTTLE_RATES['agent_api_key_auth']
+            limit = int(rate.split('/')[0])
+            for _ in range(limit):
+                django_request = factory.get('/api/agents/rsforms/1/details')
+                django_request.META['HTTP_AUTHORIZATION'] = 'Bearer rcp_deadbeef_not-a-real-secret'
+                with self.assertRaises(AuthenticationFailed):
+                    auth.authenticate(Request(django_request))
+            django_request = factory.get('/api/agents/rsforms/1/details')
+            django_request.META['HTTP_AUTHORIZATION'] = 'Bearer rcp_deadbeef_not-a-real-secret'
+            with self.assertRaises(Throttled):
+                auth.authenticate(Request(django_request))
+        finally:
+            cache.clear()
+
     @decl_endpoint('/api/agents/keys', method='post')
     def test_create_and_list_key(self):
         response = self.executeCreated({'label': 'Cursor'})

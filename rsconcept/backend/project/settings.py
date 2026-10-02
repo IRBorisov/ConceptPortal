@@ -218,6 +218,7 @@ REST_FRAMEWORK = {
         'password_reset': '5/hour',
         'oss_clone': '2/hour',
         'cctext': '30/minute',
+        'agent_api_key_auth': '30/minute',
     },
     # Trusted reverse proxies in front of Django. Throttle identity is taken from the
     # NUM_PROXIES-th X-Forwarded-For entry from the right, so client-supplied values

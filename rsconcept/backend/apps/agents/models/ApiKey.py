@@ -26,7 +26,12 @@ def generate_api_key_token() -> tuple[str, str, str]:
 
 
 def hash_api_key(plaintext: str) -> str:
-    ''' Hash full API key token for storage with a password hasher (PBKDF2/argon2). '''
+    ''' Hash full API key token with a password hasher (PBKDF2/argon2).
+
+    Bare SHA-256 is rejected by CodeQL ``py/weak-sensitive-data-hashing``.
+    Failed-auth floods are capped in ``ApiKeyAuthentication`` instead of
+    relying on a fast digest.
+    '''
     return make_password(plaintext)
 
 
