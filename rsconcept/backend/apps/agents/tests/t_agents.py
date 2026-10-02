@@ -17,6 +17,15 @@ from shared.portal_json import PORTAL_JSON_CONTRACT_VERSION
 class TestAgentApiKeys(EndpointTester):
     ''' Session-managed API keys. '''
 
+    def test_hash_uses_password_hasher_not_sha256(self):
+        ''' Stored digests must use Django password hashers (CodeQL CWE-327/916). '''
+        key, secret = ApiKey.create_for_user(self.user, 'Hasher')
+        self.assertIn('$', key.key_hash)
+        self.assertNotEqual(len(key.key_hash), 64)
+        self.assertIsNotNone(ApiKey.authenticate_token(secret))
+        self.assertIsNone(ApiKey.authenticate_token(secret + 'x'))
+        self.assertIsNone(ApiKey.authenticate_token('rcp_badprefix_notarealsecret'))
+
     @decl_endpoint('/api/agents/keys', method='post')
     def test_create_and_list_key(self):
         response = self.executeCreated({'label': 'Cursor'})
