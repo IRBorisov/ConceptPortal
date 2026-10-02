@@ -1,10 +1,10 @@
 ''' Model: user-issued API key for /api/agents routes. '''
 from __future__ import annotations
 
-import hashlib
 import secrets
 from datetime import timedelta
 
+from django.contrib.auth.hashers import check_password, make_password
 from django.db import models
 from django.utils import timezone
 
@@ -13,10 +13,12 @@ from apps.users.models import User
 KEY_PREFIX = 'rcp_'
 PUBLIC_PREFIX_LENGTH = 8
 SECRET_LENGTH = 32
+# Django password hashes (pbkdf2/argon2/…) need more than 64 chars.
+KEY_HASH_MAX_LENGTH = 128
 
 
 def generate_api_key_token() -> tuple[str, str, str]:
-    ''' Return (plaintext, public_prefix, sha256_hex). '''
+    ''' Return (plaintext, public_prefix, password_hasher_digest). '''
     public_prefix = secrets.token_urlsafe(PUBLIC_PREFIX_LENGTH)[:PUBLIC_PREFIX_LENGTH]
     secret = secrets.token_urlsafe(SECRET_LENGTH)
     plaintext = f'{KEY_PREFIX}{public_prefix}_{secret}'
@@ -24,8 +26,22 @@ def generate_api_key_token() -> tuple[str, str, str]:
 
 
 def hash_api_key(plaintext: str) -> str:
-    ''' Hash full API key token for storage. '''
-    return hashlib.sha256(plaintext.encode('utf-8')).hexdigest()
+    ''' Hash full API key token for storage with a password hasher (PBKDF2/argon2). '''
+    return make_password(plaintext)
+
+
+def parse_api_key_prefix(plaintext: str) -> str | None:
+    ''' Extract the public prefix from a full API key token.
+
+    Tokens are ``rcp_`` + exactly ``PUBLIC_PREFIX_LENGTH`` chars + ``_`` + secret.
+    The prefix may itself contain ``_`` (url-safe alphabet), so length is fixed.
+    '''
+    if not plaintext or not plaintext.startswith(KEY_PREFIX):
+        return None
+    rest = plaintext[len(KEY_PREFIX):]
+    if len(rest) <= PUBLIC_PREFIX_LENGTH or rest[PUBLIC_PREFIX_LENGTH] != '_':
+        return None
+    return rest[:PUBLIC_PREFIX_LENGTH]
 
 
 class ApiKey(models.Model):
@@ -47,7 +63,7 @@ class ApiKey(models.Model):
     )
     key_hash = models.CharField(
         verbose_name='Хэш ключа',
-        max_length=64,
+        max_length=KEY_HASH_MAX_LENGTH,
         unique=True
     )
     created_at = models.DateTimeField(
@@ -107,14 +123,20 @@ class ApiKey(models.Model):
 
     @classmethod
     def authenticate_token(cls, plaintext: str) -> ApiKey | None:
-        ''' Resolve an active key for an active user. '''
-        if not plaintext or not plaintext.startswith(KEY_PREFIX):
+        ''' Resolve an active key for an active user.
+
+        Salted password hashes are not invertible for O(1) lookup, so candidates
+        are loaded by public prefix and verified with ``check_password``.
+        '''
+        prefix = parse_api_key_prefix(plaintext)
+        if prefix is None:
             return None
-        key_hash = hash_api_key(plaintext)
-        try:
-            key = cls.objects.select_related('owner').get(key_hash=key_hash)
-        except cls.DoesNotExist:
-            return None
-        if not key.is_active or not key.owner.is_active:
-            return None
-        return key
+        candidates = cls.objects.select_related('owner').filter(
+            prefix=prefix,
+            revoked_at__isnull=True,
+            owner__is_active=True,
+        )
+        for key in candidates:
+            if check_password(plaintext, key.key_hash):
+                return key
+        return None
