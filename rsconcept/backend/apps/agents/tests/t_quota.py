@@ -96,6 +96,25 @@ class TestAgentQuota(EndpointTester):
         self.assertEqual(denied.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
         self.assertEqual(AgentActionLog.objects.count(), 0)
 
+    def test_over_quota_auth_uses_no_password_stretching_after_cache_reset(self):
+        ''' Valid over-quota calls stay cheap and quotas survive a worker cache reset. '''
+        with (
+            patch('apps.agents.services.quota.READ_PER_MINUTE', 1),
+            patch('hashlib.pbkdf2_hmac', side_effect=AssertionError('Slow Bearer verification')),
+        ):
+            # Include key creation so password stretching cannot return on either path.
+            _key, secret = ApiKey.create_for_user(self.user, 'Fast')
+            self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {secret}')
+            self.assertEqual(
+                self.client.get('/api/agents/library/active').status_code,
+                status.HTTP_200_OK,
+            )
+            for _ in range(3):
+                # A fresh worker has no local refusal cache but sees the DB quota.
+                cache.clear()
+                denied = self.client.get('/api/agents/library/active')
+                self.assertEqual(denied.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
+
     def test_last_used_is_not_rewritten_on_every_call(self):
         self.client.get(f'/api/agents/rsforms/{self.owned_id}/details')
         key = ApiKey.objects.get(owner=self.user)

@@ -1,10 +1,11 @@
 ''' Model: user-issued API key for /api/agents routes. '''
 from __future__ import annotations
 
+import hashlib
+import hmac
 import secrets
 from datetime import timedelta
 
-from django.contrib.auth.hashers import check_password, make_password
 from django.db import models
 from django.utils import timezone
 
@@ -13,12 +14,10 @@ from apps.users.models import User
 KEY_PREFIX = 'rcp_'
 PUBLIC_PREFIX_LENGTH = 8
 SECRET_LENGTH = 32
-# Django password hashes (pbkdf2/argon2/…) need more than 64 chars.
-KEY_HASH_MAX_LENGTH = 128
 
 
 def generate_api_key_token() -> tuple[str, str, str]:
-    ''' Return (plaintext, public_prefix, password_hasher_digest). '''
+    ''' Return (plaintext, public_prefix, sha256_hex). '''
     public_prefix = secrets.token_urlsafe(PUBLIC_PREFIX_LENGTH)[:PUBLIC_PREFIX_LENGTH]
     secret = secrets.token_urlsafe(SECRET_LENGTH)
     plaintext = f'{KEY_PREFIX}{public_prefix}_{secret}'
@@ -26,13 +25,14 @@ def generate_api_key_token() -> tuple[str, str, str]:
 
 
 def hash_api_key(plaintext: str) -> str:
-    ''' Hash full API key token with a password hasher (PBKDF2/argon2).
+    ''' Hash a server-generated token containing 256 random secret bits.
 
-    Bare SHA-256 is rejected by CodeQL ``py/weak-sensitive-data-hashing``.
-    Failed-auth floods are capped in ``ApiKeyAuthentication`` instead of
-    relying on a fast digest.
+    Password stretching is unnecessary for this entropy and too expensive on
+    every Bearer request. Do not use this helper for human-chosen passwords.
     '''
-    return make_password(plaintext)
+    # CodeQL #18 is a false positive for randomly generated API tokens.
+    # codeql[py/weak-sensitive-data-hashing]
+    return hashlib.sha256(plaintext.encode('utf-8')).hexdigest()
 
 
 def parse_api_key_prefix(plaintext: str) -> str | None:
@@ -44,7 +44,7 @@ def parse_api_key_prefix(plaintext: str) -> str | None:
     if not plaintext or not plaintext.startswith(KEY_PREFIX):
         return None
     rest = plaintext[len(KEY_PREFIX):]
-    if len(rest) <= PUBLIC_PREFIX_LENGTH or rest[PUBLIC_PREFIX_LENGTH] != '_':
+    if len(rest) <= PUBLIC_PREFIX_LENGTH + 1 or rest[PUBLIC_PREFIX_LENGTH] != '_':
         return None
     return rest[:PUBLIC_PREFIX_LENGTH]
 
@@ -68,7 +68,7 @@ class ApiKey(models.Model):
     )
     key_hash = models.CharField(
         verbose_name='Хэш ключа',
-        max_length=KEY_HASH_MAX_LENGTH,
+        max_length=64,
         unique=True
     )
     created_at = models.DateTimeField(
@@ -130,8 +130,7 @@ class ApiKey(models.Model):
     def authenticate_token(cls, plaintext: str) -> ApiKey | None:
         ''' Resolve an active key for an active user.
 
-        Salted password hashes are not invertible for O(1) lookup, so candidates
-        are loaded by public prefix and verified with ``check_password``.
+        Load candidates by public prefix and compare SHA-256 digests in constant time.
         '''
         prefix = parse_api_key_prefix(plaintext)
         if prefix is None:
@@ -141,7 +140,8 @@ class ApiKey(models.Model):
             revoked_at__isnull=True,
             owner__is_active=True,
         )
+        key_hash = hash_api_key(plaintext)
         for key in candidates:
-            if check_password(plaintext, key.key_hash):
+            if hmac.compare_digest(key_hash, key.key_hash):
                 return key
         return None

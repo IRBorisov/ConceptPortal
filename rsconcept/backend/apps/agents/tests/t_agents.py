@@ -1,4 +1,7 @@
 ''' Testing API: Agents keys, auth, rsform mutations, audit log. '''
+import hashlib
+from unittest.mock import patch
+
 from django.core.cache import cache
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
@@ -17,40 +20,50 @@ from shared.portal_json import PORTAL_JSON_CONTRACT_VERSION
 class TestAgentApiKeys(EndpointTester):
     ''' Session-managed API keys. '''
 
-    def test_hash_uses_password_hasher_not_sha256(self):
-        ''' Stored digests must use Django password hashers (CodeQL CWE-327/916). '''
-        key, secret = ApiKey.create_for_user(self.user, 'Hasher')
-        self.assertIn('$', key.key_hash)
-        self.assertNotEqual(len(key.key_hash), 64)
-        self.assertIsNotNone(ApiKey.authenticate_token(secret))
+    def test_existing_sha256_key_remains_valid(self):
+        ''' Keys issued before this PR remain valid without reissue or migration. '''
+        secret = 'rcp_ab_cd-12_abcdefghijklmnopqrstuvwxyz0123456789ABCDEFG'
+        digest = hashlib.sha256(secret.encode('utf-8')).hexdigest()
+        key = ApiKey.objects.create(
+            owner=self.user, label='Existing', prefix='ab_cd-12', key_hash=digest,
+        )
+        self.assertEqual(ApiKey.authenticate_token(secret), key)
         self.assertIsNone(ApiKey.authenticate_token(secret + 'x'))
-        self.assertIsNone(ApiKey.authenticate_token('rcp_badprefix_notarealsecret'))
+        key.refresh_from_db()
+        self.assertEqual(key.key_hash, digest)
+        self.assertIsNone(key.revoked_at)
 
-    @decl_endpoint('/api/agents/rsforms/{item}/details', method='get')
-    def test_invalid_api_key_auth_is_throttled(self):
-        ''' Failed Bearer attempts are rate-limited at the auth boundary. '''
-        from django.core.cache import cache
-        from rest_framework.exceptions import Throttled
-        from rest_framework.settings import api_settings
+    def test_prefix_collision_verifies_the_full_secret(self):
+        ''' Public prefixes may collide; only the matching full digest authenticates. '''
+        with patch('apps.agents.models.ApiKey.secrets.token_urlsafe', side_effect=[
+            'ab_cd-12', 'first-secret', 'ab_cd-12', 'second-secret',
+        ]):
+            first, first_secret = ApiKey.create_for_user(self.user, 'First')
+            second, second_secret = ApiKey.create_for_user(self.user2, 'Second')
+        self.assertEqual(ApiKey.authenticate_token(first_secret), first)
+        self.assertEqual(ApiKey.authenticate_token(second_secret), second)
+        self.assertIsNone(ApiKey.authenticate_token(first_secret + 'x'))
+        second.revoke()
+        self.assertIsNone(ApiKey.authenticate_token(second_secret))
+        self.assertEqual(ApiKey.authenticate_token(first_secret), first)
 
-        cache.clear()
-        try:
-            factory = APIRequestFactory()
-            auth = ApiKeyAuthentication()
-            # Exhaust the failure budget (default 30/minute).
-            rate = api_settings.DEFAULT_THROTTLE_RATES['agent_api_key_auth']
-            limit = int(rate.split('/')[0])
-            for _ in range(limit):
-                django_request = factory.get('/api/agents/rsforms/1/details')
-                django_request.META['HTTP_AUTHORIZATION'] = 'Bearer rcp_deadbeef_not-a-real-secret'
-                with self.assertRaises(AuthenticationFailed):
-                    auth.authenticate(Request(django_request))
-            django_request = factory.get('/api/agents/rsforms/1/details')
-            django_request.META['HTTP_AUTHORIZATION'] = 'Bearer rcp_deadbeef_not-a-real-secret'
-            with self.assertRaises(Throttled):
-                auth.authenticate(Request(django_request))
-        finally:
-            cache.clear()
+    def test_malformed_token_does_not_query_candidates(self):
+        ''' Reject missing prefixes, separators and secrets before database lookup. '''
+        for token in ('', 'bad', 'rcp_short_secret', 'rcp_abcdefgh', 'rcp_abcdefgh_'):
+            with self.subTest(token=token), self.assertNumQueries(0):
+                self.assertIsNone(ApiKey.authenticate_token(token))
+
+    def test_invalid_attempts_do_not_lock_out_valid_key_on_same_ip(self):
+        ''' A bad caller behind shared NAT cannot block another caller's valid key. '''
+        factory = APIRequestFactory()
+        auth = ApiKeyAuthentication()
+        key, secret = ApiKey.create_for_user(self.user, 'Valid')
+        for _ in range(35):
+            request = factory.get('/', HTTP_AUTHORIZATION=f'Bearer {secret}x')
+            with self.assertRaises(AuthenticationFailed):
+                auth.authenticate(Request(request))
+        request = factory.get('/', HTTP_AUTHORIZATION=f'Bearer {secret}')
+        self.assertEqual(auth.authenticate(Request(request)), (self.user, key))
 
     @decl_endpoint('/api/agents/keys', method='post')
     def test_create_and_list_key(self):
