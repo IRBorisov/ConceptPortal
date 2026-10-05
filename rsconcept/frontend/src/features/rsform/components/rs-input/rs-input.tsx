@@ -12,12 +12,7 @@ import CodeMirror, {
 } from '@uiw/react-codemirror';
 
 import { CstType, type RSForm } from '@rsconcept/domain/library';
-import {
-  generateAlias,
-  guessCstType,
-  refineAnalysisForDependencyCycles,
-  typeClassForCstType
-} from '@rsconcept/domain/library/rsform-api';
+import { generateAlias, guessCstType } from '@rsconcept/domain/library/rsform-api';
 import { type AnalysisFull, type RSErrorDescription } from '@rsconcept/domain/rslang';
 import { extractGlobals } from '@rsconcept/domain/rslang/api';
 
@@ -31,6 +26,7 @@ import { ccBracketMatching } from './bracket-matching';
 import { rsNavigation } from './click-navigation';
 import { rsErrorRanges } from './error-ranges';
 import { RSLanguage } from './parse';
+import { analyzeRSInput, diffRSContext, readRSContext, type RSEditorContext, setRSContext } from './rs-context';
 import { getLigatureSymbol, getSymbolSubstitute, isPotentialLigature, RSTextWrapper } from './text-editing';
 import { rsHoverTooltip } from './tooltip';
 
@@ -61,6 +57,19 @@ const editorSetup: BasicSetupOptions = {
   completionKeymap: false,
   lintKeymap: false
 };
+
+/**
+ * Extensions shared by every RSInput. Props-dependent data reaches them through `rsContextField`,
+ * so this list never changes and React re-renders do not trigger a CodeMirror reconfigure.
+ */
+const baseExtensions: Extension[] = [
+  EditorView.lineWrapping,
+  RSLanguage,
+  rsErrorRanges,
+  ccBracketMatching(),
+  rsNavigation,
+  rsHoverTooltip
+];
 
 interface RSInputProps extends Pick<
   ReactCodeMirrorProps,
@@ -134,6 +143,7 @@ export function RSInput({
   const thisRef = !ref || typeof ref === 'function' ? internalRef : ref;
   const isFirstParse = useRef(true);
   const parseTimerRef = useRef<number | undefined>(undefined);
+  const onChangeRef = useRef(onChange);
   const [localParse, setLocalParse] = useState<AnalysisFull | null>(null);
 
   const effectiveErrors = errors == null ? (localParse?.errors ?? null) : errors;
@@ -169,21 +179,10 @@ export function RSInput({
 
       const currentSchema = schema;
       const text = value ?? '';
-      const expected = cstType !== undefined ? typeClassForCstType(cstType) : undefined;
 
       function runLocalParse() {
         parseTimerRef.current = undefined;
-        const nextParse = refineAnalysisForDependencyCycles(
-          currentSchema.analyzer.checkFull(text, {
-            annotateTypes: true,
-            annotateErrors: true,
-            expected
-          }),
-          text,
-          currentSchema,
-          activeAlias
-        );
-        setLocalParse(nextParse);
+        setLocalParse(analyzeRSInput(text, currentSchema, cstType ?? null, activeAlias ?? null));
       }
 
       if (isFirstParse.current) {
@@ -201,26 +200,8 @@ export function RSInput({
     [noAutoCheck, value, schema, cstType, activeAlias, errors]
   );
 
-  function prepareParse(value: string): AnalysisFull | null {
-    if (!schema) {
-      return null;
-    }
-    const expected = cstType !== undefined ? typeClassForCstType(cstType) : undefined;
-    const result = refineAnalysisForDependencyCycles(
-      schema.analyzer.checkFull(value, {
-        annotateTypes: true,
-        annotateErrors: true,
-        expected
-      }),
-      value,
-      schema,
-      activeAlias
-    );
-    setLocalParse(result);
-    return result;
-  }
-
   const cursor = !disabled ? 'cursor-text' : 'cursor-default';
+  const identifierCursor = schema ? 'default' : cursor;
   const customTheme: Extension = createTheme({
     theme: darkMode ? 'dark' : 'light',
     settings: {
@@ -230,8 +211,8 @@ export function RSInput({
       caret: APP_COLORS.fgDefault
     },
     styles: [
-      { tag: tags.name, color: APP_COLORS.fgPurple, cursor: schema ? 'default' : cursor }, // GlobalID
-      { tag: tags.variableName, color: APP_COLORS.fgGreen, cursor: schema ? 'default' : cursor }, // LocalID
+      { tag: tags.name, color: APP_COLORS.fgPurple, cursor: identifierCursor }, // GlobalID
+      { tag: tags.variableName, color: APP_COLORS.fgGreen, cursor: identifierCursor }, // LocalID
       { tag: tags.propertyName, color: APP_COLORS.fgTeal }, // Radical
       { tag: tags.keyword, color: APP_COLORS.fgBlue }, // keywords
       { tag: tags.literal, color: APP_COLORS.fgBlue }, // literals
@@ -241,22 +222,44 @@ export function RSInput({
     ]
   });
 
-  const editorExtensions = [
-    EditorView.lineWrapping,
-    RSLanguage,
-    ...(effectiveErrors && effectiveErrors.length > 0 ? rsErrorRanges(effectiveErrors) : []),
-    ...(portalHoverTooltips
-      ? [
-          tooltips({
-            parent: document.body,
-            position: 'fixed'
-          })
-        ]
-      : []),
-    ccBracketMatching(),
-    ...(!schema || !onOpenEdit ? [] : [rsNavigation(schema, onOpenEdit)]),
-    ...(!schema ? [] : [rsHoverTooltip(schema, prepareParse, localParse, effectiveErrors, onOpenEdit !== undefined)])
-  ];
+  const editorExtensions = portalHoverTooltips
+    ? [...baseExtensions, tooltips({ parent: document.body, position: 'fixed' })]
+    : baseExtensions;
+
+  useEffect(function syncLatestOnChange() {
+    onChangeRef.current = onChange;
+  });
+
+  useEffect(
+    function syncEditorContext() {
+      const view = thisRef.current?.view;
+      if (!view) {
+        return;
+      }
+      const next = makeEditorContext(
+        schema,
+        cstType,
+        activeAlias,
+        effectiveErrors,
+        localParse,
+        setLocalParse,
+        onOpenEdit
+      );
+      const delta = diffRSContext(readRSContext(view.state), next);
+      if (delta) {
+        view.dispatch({ effects: setRSContext.of(delta) });
+      }
+    },
+    [thisRef, schema, cstType, activeAlias, effectiveErrors, localParse, onOpenEdit]
+  );
+
+  function handleCreateEditor(view: EditorView) {
+    view.dispatch({
+      effects: setRSContext.of(
+        makeEditorContext(schema, cstType, activeAlias, effectiveErrors, localParse, setLocalParse, onOpenEdit)
+      )
+    });
+  }
 
   function handleAutoComplete(text: RSTextWrapper): boolean {
     const selection = text.getSelection();
@@ -336,9 +339,7 @@ export function RSInput({
 
   function handleChange(value: string) {
     setLocalParse(null);
-    if (onChange) {
-      onChange(value);
-    }
+    onChangeRef.current?.(value);
   }
 
   return (
@@ -355,9 +356,31 @@ export function RSInput({
         onKeyDown={handleInput}
         value={value}
         onChange={handleChange}
+        onCreateEditor={handleCreateEditor}
         {...restProps}
       />
       <ErrorField className='-mt-1' error={errorMessage} />
     </div>
   );
+}
+
+// ====== Internals =========
+function makeEditorContext(
+  schema: RSForm | undefined,
+  cstType: CstType | undefined,
+  activeAlias: string | undefined,
+  errors: readonly RSErrorDescription[] | null,
+  parse: AnalysisFull | null,
+  onParse: (parse: AnalysisFull) => void,
+  onOpenEdit: ((cstID: number) => void) | undefined
+): RSEditorContext {
+  return {
+    schema: schema ?? null,
+    cstType: cstType ?? null,
+    activeAlias: activeAlias ?? null,
+    errors: errors,
+    parse: parse,
+    onParse: schema ? onParse : null,
+    onOpenEdit: onOpenEdit ?? null
+  };
 }
