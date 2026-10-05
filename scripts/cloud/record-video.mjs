@@ -70,9 +70,9 @@ async function login(username = 'admin', password = 'admin12345') {
   await page.waitForURL(/\/library/);
 }
 
-const scenario = (await import(pathToFileURL(path.resolve(scenarioArg)).href)).default;
 let failed = false;
 try {
+  const scenario = (await import(pathToFileURL(path.resolve(scenarioArg)).href)).default;
   await scenario({ page, baseURL, login, pause });
 } catch (error) {
   failed = true;
@@ -104,6 +104,7 @@ try {
   ]);
   console.log(`Video: ${outFile}`);
 } catch {
-  console.log(`ffmpeg unavailable or failed; video kept as ${webmOut}`);
+  console.error(`ffmpeg unavailable or failed; no .mp4 written, video kept as ${webmOut}`);
+  failed = true;
 }
 process.exit(failed ? 1 : 0);
