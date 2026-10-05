@@ -2,10 +2,10 @@ import { type Extension } from '@codemirror/state';
 import { hoverTooltip, type TooltipView } from '@codemirror/view';
 
 import { globalTx } from '@/i18n';
-import { type Constituenta, type RSForm } from '@rsconcept/domain/library';
+import { type Constituenta } from '@rsconcept/domain/library';
 import { isBasicConcept } from '@rsconcept/domain/library/rsform-api';
 import { type AstNode } from '@rsconcept/domain/parsing';
-import { type AnalysisFull, type ExpressionType, readTypeAnnotation, TokenID } from '@rsconcept/domain/rslang';
+import { type ExpressionType, readTypeAnnotation, TokenID } from '@rsconcept/domain/rslang';
 import { type RSErrorDescription } from '@rsconcept/domain/rslang/error';
 import { labelType } from '@rsconcept/domain/rslang/labels';
 
@@ -16,19 +16,20 @@ import { isMac } from '@/utils/utils';
 import { describeDiagnostic } from '../../labels';
 
 import { Local } from './parse/parser.terms';
+import { analyzeRSInput, readRSContext, rsContextField } from './rs-context';
 import { findAliasAt } from './utils';
 
-const tooltipProducer = (
-  schema: RSForm,
-  prepareParse: (value: string) => AnalysisFull | null,
-  parse?: AnalysisFull | null,
-  errors?: readonly RSErrorDescription[] | null,
-  canClick?: boolean
-) => {
-  return hoverTooltip((view, pos) => {
+/** Hover tooltips for identifiers and error ranges; reads data from {@link RSEditorContext}. */
+export const rsHoverTooltip: Extension = [
+  rsContextField,
+  hoverTooltip((view, pos) => {
+    const context = readRSContext(view.state);
+    const schema = context.schema;
+    if (!schema) {
+      return null;
+    }
     const aliasData = findAliasAt(pos, view.state);
-    const effectiveErrors = errors ?? null;
-    const rangedErrors = effectiveErrors?.filter(error => pos >= error.from && pos < error.to) ?? null;
+    const rangedErrors = context.errors?.filter(error => pos >= error.from && pos < error.to) ?? null;
     if (!aliasData) {
       if (!rangedErrors || rangedErrors.length === 0) {
         return null;
@@ -48,12 +49,14 @@ const tooltipProducer = (
         pos: aliasData.node.from,
         end: aliasData.node.to,
         above: false,
-        create: () => domTooltipConstituenta(cst ?? null, rangedErrors ?? null, canClick)
+        create: () => domTooltipConstituenta(cst ?? null, rangedErrors, context.onOpenEdit !== null)
       };
     } else {
       let type: ExpressionType | null = null;
+      let parse = context.parse;
       if (!parse) {
-        parse = prepareParse(view.state.doc.toString());
+        parse = analyzeRSInput(view.state.doc.toString(), schema, context.cstType, context.activeAlias);
+        context.onParse?.(parse);
       }
       if (parse?.ast) {
         type = findLocalType(parse.ast, aliasData.alias, aliasData.node.from);
@@ -62,21 +65,11 @@ const tooltipProducer = (
         pos: aliasData.node.from,
         end: aliasData.node.to,
         above: false,
-        create: () => domTooltipLocal(aliasData.alias, type, rangedErrors ?? null)
+        create: () => domTooltipLocal(aliasData.alias, type, rangedErrors)
       };
     }
-  });
-};
-
-export function rsHoverTooltip(
-  schema: RSForm,
-  prepareParse: (value: string) => AnalysisFull | null,
-  parse?: AnalysisFull | null,
-  errors?: readonly RSErrorDescription[] | null,
-  canClick?: boolean
-): Extension {
-  return [tooltipProducer(schema, prepareParse, parse, errors, canClick)];
-}
+  })
+];
 
 // ========= Internal =========
 

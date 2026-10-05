@@ -1,14 +1,19 @@
 import { type Extension } from '@codemirror/state';
-import { EditorView } from '@uiw/react-codemirror';
+import { EditorView } from '@codemirror/view';
 
-import { type RSForm } from '@rsconcept/domain/library';
-
+import { readRSContext, rsContextField } from './rs-context';
 import { findAliasAt } from './utils';
 
-const navigationProducer = (schema: RSForm, onOpenEdit: (cstID: number) => void) => {
-  return EditorView.domEventHandlers({
+/** Ctrl/Cmd + click on a global identifier opens its constituenta; reads data from {@link RSEditorContext}. */
+export const rsNavigation: Extension = [
+  rsContextField,
+  EditorView.domEventHandlers({
     click: (event: MouseEvent, view: EditorView) => {
       if (!event.ctrlKey && !event.metaKey) {
+        return;
+      }
+      const { schema, onOpenEdit } = readRSContext(view.state);
+      if (!schema || !onOpenEdit) {
         return;
       }
 
@@ -31,9 +36,5 @@ const navigationProducer = (schema: RSForm, onOpenEdit: (cstID: number) => void)
       event.stopPropagation();
       onOpenEdit(cst.id);
     }
-  });
-};
-
-export function rsNavigation(schema: RSForm, onOpenEdit: (cstID: number) => void): Extension {
-  return [navigationProducer(schema, onOpenEdit)];
-}
+  })
+];
