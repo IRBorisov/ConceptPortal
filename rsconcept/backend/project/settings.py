@@ -24,9 +24,16 @@ from django.core.exceptions import ImproperlyConfigured
 def _get_secret(key: str, default):
     value = os.environ.get(key, default)
     if os.path.isfile(value):
-        with open(value, mode='r', encoding='utf-8') as f:
-            return f.read()
+        with open(value, mode='r', encoding='utf-8') as secret_file:
+            return secret_file.read().strip()
     return value
+
+
+def _hsts_policy(debug: bool) -> tuple[int, bool, bool]:
+    ''' HSTS seconds, includeSubDomains, and preload. Preload lists require one year. '''
+    if debug:
+        return 0, False, False
+    return 31536000, True, True
 
 
 def _get_bool(key: str, default: bool) -> bool:
@@ -205,8 +212,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny'
-        if DEBUG else
         'rest_framework.permissions.IsAuthenticated'
     ],
     'DEFAULT_FILTER_BACKENDS': [
@@ -257,9 +262,12 @@ CSRF_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_SECURE = not DEBUG
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = 'same-origin'
-SECURE_HSTS_SECONDS = 3600 if not DEBUG else 0
-SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
-SECURE_HSTS_PRELOAD = not DEBUG
+_HSTS_POLICY = _hsts_policy(DEBUG)
+(
+    SECURE_HSTS_SECONDS,
+    SECURE_HSTS_INCLUDE_SUBDOMAINS,
+    SECURE_HSTS_PRELOAD,
+) = _HSTS_POLICY
 
 _domain = os.environ.get('CSRF_COOKIE_DOMAIN', '')
 if _domain != '':
@@ -322,7 +330,7 @@ DATABASES = {
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': _get_secret('DB_PASSWORD', ''),
         'HOST': os.environ.get('DB_HOST'),
-        'DB_PORT': os.environ.get('DB_PORT'),
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
 

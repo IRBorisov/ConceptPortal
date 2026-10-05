@@ -48,61 +48,63 @@ class LibraryViewSet(ConcurrencyMixin, viewsets.ModelViewSet):
         return s.LibraryItemSerializer
 
     def perform_create(self, serializer) -> None:
-        location = serializer.validated_data.get('location')
-        if location:
-            assert_can_write_location(self.request.user, location)
+        ''' Create the item and its layout or model binding in one transaction. '''
+        with transaction.atomic():
+            location = serializer.validated_data.get('location')
+            if location:
+                assert_can_write_location(self.request.user, location)
 
-        if not self.request.user.is_anonymous:
-            serializer.save(owner=self.request.user)
-        else:
-            serializer.save()
-        if serializer.data.get('item_type') == m.LibraryItemType.OPERATION_SCHEMA:
-            Layout.objects.create(oss=serializer.instance, data=[])
-        if serializer.data.get('item_type') == m.LibraryItemType.RSMODEL:
-            schema = getattr(serializer, '_schema')
-            RSModel.objects.create(model=serializer.instance, schema=schema)
+            if not self.request.user.is_anonymous:
+                serializer.save(owner=self.request.user)
+            else:
+                serializer.save()
+            if serializer.data.get('item_type') == m.LibraryItemType.OPERATION_SCHEMA:
+                Layout.objects.create(oss=serializer.instance, data=[])
+            if serializer.data.get('item_type') == m.LibraryItemType.RSMODEL:
+                schema = getattr(serializer, '_schema')
+                RSModel.objects.create(model=serializer.instance, schema=schema)
 
     def perform_update(self, serializer) -> None:
-        ''' Persist library-item updates under concurrency lock; sync linked OSS ops. '''
+        ''' Persist library-item updates and linked OSS operation fields in one transaction. '''
         with transaction.atomic():
             assert_expected_time_update_locked(serializer.instance, self.request)
             instance = serializer.save()
-        operations = Operation.objects.filter(result__pk=instance.pk)
-        if not operations.exists():
-            return
-        update_list: list[Operation] = []
-        for operation in operations:
-            changed = False
-            if operation.alias != instance.alias:
-                operation.alias = instance.alias
-                changed = True
-            if operation.title != instance.title:
-                operation.title = instance.title
-                changed = True
-            if operation.description != instance.description:
-                operation.description = instance.description
-                changed = True
-            if changed:
-                update_list.append(operation)
-        if update_list:
-            Operation.objects.bulk_update(update_list, ['alias', 'title', 'description'])
+            operations = Operation.objects.filter(result__pk=instance.pk)
+            if not operations.exists():
+                return
+            update_list: list[Operation] = []
+            for operation in operations:
+                changed = False
+                if operation.alias != instance.alias:
+                    operation.alias = instance.alias
+                    changed = True
+                if operation.title != instance.title:
+                    operation.title = instance.title
+                    changed = True
+                if operation.description != instance.description:
+                    operation.description = instance.description
+                    changed = True
+                if changed:
+                    update_list.append(operation)
+            if update_list:
+                Operation.objects.bulk_update(update_list, ['alias', 'title', 'description'])
 
     def perform_destroy(self, instance: m.LibraryItem) -> None:
-        if instance.item_type == m.LibraryItemType.RSFORM:
-            PropagationFacade().before_delete_schema(instance.pk)
-            model_bindings = RSModel.objects.filter(schema=instance)
-            for binding in model_bindings:
-                self.perform_destroy(binding.model)
-            super().perform_destroy(instance)
-        elif instance.item_type == m.LibraryItemType.OPERATION_SCHEMA:
-            schemas = list(OperationSchema.owned_schemasQ(instance))
-            super().perform_destroy(instance)
-            for schema in schemas:
-                self.perform_destroy(schema)
-        elif instance.item_type == m.LibraryItemType.RSMODEL:
-            super().perform_destroy(instance)
-        else:
-            super().perform_destroy(instance)
+        ''' Delete an item and its cascading library rows in one transaction. '''
+        with transaction.atomic():
+            if instance.item_type == m.LibraryItemType.RSFORM:
+                PropagationFacade().before_delete_schema(instance.pk)
+                model_bindings = RSModel.objects.filter(schema=instance)
+                for binding in model_bindings:
+                    self.perform_destroy(binding.model)
+                super().perform_destroy(instance)
+            elif instance.item_type == m.LibraryItemType.OPERATION_SCHEMA:
+                schemas = list(OperationSchema.owned_schemasQ(instance))
+                super().perform_destroy(instance)
+                for schema in schemas:
+                    self.perform_destroy(schema)
+            else:
+                super().perform_destroy(instance)
 
     def get_throttles(self):
         if self.action == 'clone':

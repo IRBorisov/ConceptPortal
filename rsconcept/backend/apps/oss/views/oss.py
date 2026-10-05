@@ -70,7 +70,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         elif self.action in ['get_predecessor']:
             permission_list = [permissions.GlobalUser]
         else:
-            permission_list = [permissions.Anyone]
+            permission_list = [permissions.ItemEditor]
         return [permission() for permission in permission_list]
 
     @extend_schema(

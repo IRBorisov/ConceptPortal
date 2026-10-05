@@ -81,7 +81,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         ]:
             permission_list = [permissions.ItemAnyone]
         else:
-            permission_list = [permissions.Anyone]
+            permission_list = [permissions.ItemEditor]
         return [permission() for permission in permission_list]
 
     @extend_schema(
