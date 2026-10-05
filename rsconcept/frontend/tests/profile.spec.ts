@@ -185,6 +185,8 @@ test('profile tabs stay centered without shifting the page', async ({ page }) =>
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto('/profile');
   await expect(page.getByRole('tab', { name: 'Аккаунт' })).toBeVisible();
+  // The tablist is `w-fit` and centered: a late web-font swap changes its width and left edge.
+  await page.evaluate(() => document.fonts.ready);
 
   async function tabMetrics() {
     return page.evaluate(() => {

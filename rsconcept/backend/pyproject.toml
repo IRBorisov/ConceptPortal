@@ -8,15 +8,15 @@ dependencies = [
     "coreapi==2.3.3",
     "django==6.1.1",
     "django-cors-headers==4.9.0",
-    "django-filter==26.1",
+    "django-filter==26.2",
     "django-rest-passwordreset==1.6.0",
     "djangorestframework==3.18.1",
     "drf-spectacular==0.30.0",
-    "drf-spectacular-sidecar==2026.9.1",
+    "drf-spectacular-sidecar==2026.10.1",
     "gunicorn==26.2.0",
     "psycopg2-binary==2.9.13",
     "sentry-sdk[django]>=2.71.0",
-    "tzdata==2026.4",
+    "tzdata==2026.5",
 ]
 
 [tool.uv]
@@ -26,8 +26,8 @@ package = false
 dev = [
     "coverage==7.16.2",
     "django-extensions==4.1",
-    "django-stubs==6.1.1",
+    "django-stubs==6.1.2",
     "djangorestframework-stubs[compatible-mypy]==3.18.1",
     "mypy==2.3.1",
-    "pylint==4.0.9",
+    "pylint==4.1.2",
 ]

@@ -1,5 +1,5 @@
 import { createBrowserRouter, type LoaderFunctionArgs } from 'react-router';
-import * as Sentry from '@sentry/react';
+import { wrapCreateBrowserRouter } from '@sentry/react/react-router';
 
 import { LayoutSandbox } from '@/app/layout/layout-sandbox';
 import { prefetchAvailableTemplates } from '@/features/ai/backend/use-available-templates';
@@ -25,7 +25,7 @@ import { LayoutRoot } from './layout/layout-root';
 import { ErrorFallback } from './error-fallback';
 import { routes } from './urls';
 
-const createRouter = Sentry.wrapCreateBrowserRouterV7(createBrowserRouter);
+const createRouter = wrapCreateBrowserRouter(createBrowserRouter);
 
 export const Router = createRouter([
   {
