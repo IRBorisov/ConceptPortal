@@ -31,6 +31,8 @@ export default defineConfig({
       ]
     : [{ name: 'Desktop Chrome', use: chrome }],
   use: {
+    /** Cloud agent containers ship a preinstalled Chromium; see scripts/cloud/README.md. */
+    launchOptions: process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {},
     actionTimeout: E2E_TIMEOUTS.action,
     baseURL: 'http://localhost:3000',
     navigationTimeout: E2E_TIMEOUTS.navigation,

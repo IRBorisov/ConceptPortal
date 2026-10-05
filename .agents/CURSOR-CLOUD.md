@@ -30,3 +30,7 @@ echo "from django.contrib.auth import get_user_model as G; u=G().objects.get(use
 ## Lint / test timing
 
 Frontend lint and full backend test/lint often take tens of seconds; that is normal.
+
+## Claude Code cloud
+
+`.claude/hooks/session-start.sh` bootstraps deps and the SQLite DB. Start the stack with `scripts/cloud/dev.sh start`; record UI walkthroughs with `scripts/cloud/record-video.mjs`. Details: [`scripts/cloud/README.md`](../scripts/cloud/README.md).

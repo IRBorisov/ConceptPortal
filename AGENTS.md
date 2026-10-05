@@ -35,6 +35,6 @@ Portable, principle-level docs (no tool flags or version pins): [`docs/architect
 - Terminology (agents): `rsconcept/rstool/docs/DOMAIN.md` §«Термины: не путать» — never «базис»/«базисы»; use **базисное множество** for `X#`, **неопределяемые понятия** for the `X#`/`C#`/`S#` layer.
 - Portal REST (UI links → API): `rsconcept/rstool/docs/PORTAL-API.md`.
 
-## Cursor Cloud
+## Cursor Cloud / Claude Code cloud
 
-Bare-metal ports, SQLite bootstrap, and Cloud timing notes: [`.agents/CURSOR-CLOUD.md`](.agents/CURSOR-CLOUD.md). Prefer Docker/`README.md` when available.
+Bare-metal ports, SQLite bootstrap, and Cloud timing notes: [`.agents/CURSOR-CLOUD.md`](.agents/CURSOR-CLOUD.md). Prefer Docker/`README.md` when available. Claude Code cloud: [`scripts/cloud/README.md`](scripts/cloud/README.md) (dev stack, video recording).
