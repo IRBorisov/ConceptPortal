@@ -1,6 +1,5 @@
-import { useEffect } from 'react';
-import { createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from 'react-router';
 import * as Sentry from '@sentry/react';
+import { reactRouterBrowserTracingIntegration } from '@sentry/react/react-router';
 
 import { isViewTransitionAbortError } from '@/app/navigation/view-transition-error';
 import { scrubResetTokenFromUrl } from '@/features/auth/models/password-reset-token';
@@ -40,13 +39,8 @@ export function initSentry(): boolean {
     release: buildConstants.sentryRelease,
     tunnel: buildConstants.sentryTunnel,
     integrations: [
-      Sentry.reactRouterV7BrowserTracingIntegration({
-        useEffect,
-        useLocation,
-        useNavigationType,
-        createRoutesFromChildren,
-        matchRoutes
-      }),
+      // Version-neutral React Router integration: pulls router hooks from `react-router` itself.
+      reactRouterBrowserTracingIntegration(),
       Sentry.replayIntegration({
         maskAllText: true,
         blockAllMedia: true
