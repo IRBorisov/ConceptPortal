@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ConceptPortal Critical Design Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column, verdict + scorecard up top, findings as a severity-striped register, then strengths and next steps. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #1b2230;
+  --muted: #5b6475;
+  --line: #dde1e8;
+  --accent: #2f5aa8;
+  --sev-high: #b3261e;
+  --sev-high-bg: #fbe9e7;
+  --sev-med: #9a5b00;
+  --sev-med-bg: #fdf1dc;
+  --sev-low: #4a5a73;
+  --sev-low-bg: #eaeef4;
+  --good: #1f7a4a;
+  --good-bg: #e3f3ea;
+  --code-bg: #eef1f6;
+  --display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b5; --line: #2c3442;
+    --accent: #8fb0ee; --sev-high: #ff9a8f; --sev-high-bg: #3a1f1e; --sev-med: #f2bd6a; --sev-med-bg: #3a2c15;
+    --sev-low: #b4c1d6; --sev-low-bg: #242c39; --good: #7fd3a4; --good-bg: #17302a; --code-bg: #232a35;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b5; --line: #2c3442;
+  --accent: #8fb0ee; --sev-high: #ff9a8f; --sev-high-bg: #3a1f1e; --sev-med: #f2bd6a; --sev-med-bg: #3a2c15;
+  --sev-low: #b4c1d6; --sev-low-bg: #242c39; --good: #7fd3a4; --good-bg: #17302a; --code-bg: #232a35;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.6 var(--body); }
+.wrap { max-width: 920px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 72px; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: 2.1rem; font-weight: 650; }
+h2 { font-size: 1.45rem; font-weight: 650; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+h3 { font-size: 1.08rem; font-weight: 650; }
+p { margin: 0; max-width: 72ch; }
+code { font-family: var(--mono); font-size: 0.86em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+a { color: var(--accent); }
+section { display: grid; gap: 16px; min-width: 0; }
+.eyebrow { font: 500 0.75rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+header { display: grid; gap: 12px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 20px; color: var(--muted); font-size: 0.88rem; }
+.verdict { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; display: grid; gap: 12px; }
+.verdict .call { font: 650 1.15rem/1.35 var(--display); }
+.verdict .call span { color: var(--sev-med); }
+.tally { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: 500 0.78rem/1 var(--mono); padding: 5px 9px; border-radius: 999px; white-space: nowrap; }
+.chip.high { color: var(--sev-high); background: var(--sev-high-bg); }
+.chip.med { color: var(--sev-med); background: var(--sev-med-bg); }
+.chip.low { color: var(--sev-low); background: var(--sev-low-bg); }
+.chip.good { color: var(--good); background: var(--good-bg); }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 0.72rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.findings { display: grid; gap: 12px; }
+.finding { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--sev-low); border-radius: 8px; padding: 16px 18px; display: grid; gap: 8px; min-width: 0; }
+.finding.high { border-left-color: var(--sev-high); }
+.finding.med { border-left-color: var(--sev-med); }
+.finding .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; }
+.finding .id { font: 500 0.8rem/1 var(--mono); color: var(--muted); }
+.finding .where { font: 0.8rem/1.4 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.finding p { font-size: 0.93rem; }
+.finding .fix { color: var(--muted); }
+.finding .fix b { color: var(--fg); font-weight: 600; }
+.verified { color: var(--good); font-weight: 600; }
+ul.plain { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; max-width: 76ch; }
+.arch { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+.arch svg { display: block; width: 100%; height: auto; min-width: 560px; }
+.arch text { font-family: var(--mono); font-size: 12px; fill: var(--fg); }
+.arch .sub { fill: var(--muted); font-size: 10.5px; }
+.arch rect { fill: var(--bg); stroke: var(--line); }
+.arch rect.core { stroke: var(--accent); }
+.arch line, .arch path { stroke: var(--muted); fill: none; }
+ol.steps { margin: 0; padding-left: 1.4em; display: grid; gap: 8px; max-width: 78ch; }
+footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); padding-top: 16px; }
+@media (max-width: 560px) { h1 { font-size: 1.65rem; } .wrap { padding-block: 24px 48px; padding-inline: 16px; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header>
+  <div class="eyebrow">Critical Design Review · rsconcept / ConceptPortal</div>
+  <h1>ConceptPortal Critical Design Review</h1>
+  <div class="meta">
+    <span>Date: 2026-10-05</span>
+    <span>Baseline: <code>main @ 1ad4a401</code></span>
+    <span>Scope: backend (Django/DRF), frontend (React/Vite), deployment (Docker, nginx), CI</span>
+  </div>
+</header>
+
+<section class="verdict" aria-label="Verdict">
+  <div class="eyebrow">Verdict</div>
+  <div class="call">Design is sound and well documented. <span>Pass with actions:</span> one confirmed access-control bug, two production-reliability gaps, and several hardening items should be closed before the next release.</div>
+  <div class="tally">
+    <span class="chip high">3 high</span>
+    <span class="chip med">5 medium</span>
+    <span class="chip low">8 low</span>
+    <span class="chip good">9 strengths noted</span>
+  </div>
+  <p id="test-status" style="color:var(--muted);font-size:0.9rem">Backend suite: 356 tests passing on SQLite; no migration drift. Details in <a href="#evidence">Evidence</a>.</p>
+</section>
+
+<section aria-labelledby="sys">
+  <h2 id="sys">System under review</h2>
+  <p>ConceptPortal is an editor for RSForm conceptual schemas and operational synthesis schemas (OSS). A Django REST API on PostgreSQL serves a React SPA; a framework-free TypeScript package (<code>@rsconcept/domain</code>) holds the RS-language and graph logic, and <code>rstool</code> / <code>rstool-mcp</code> expose it to agents over the <code>/api/agents</code> API-key routes.</p>
+  <div class="arch scroll" role="img" aria-label="Architecture: nginx routes the SPA host to the frontend container and the API host to gunicorn/Django with PostgreSQL. The frontend, rstool and rstool-mcp depend on the domain package.">
+    <svg viewBox="0 0 760 230" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="90" width="120" height="50" rx="6"/><text x="70" y="112" text-anchor="middle">nginx</text><text class="sub" x="70" y="128" text-anchor="middle">TLS · 2 hosts</text>
+      <rect x="180" y="20" width="160" height="50" rx="6"/><text x="260" y="42" text-anchor="middle">frontend</text><text class="sub" x="260" y="58" text-anchor="middle">React SPA · serve -s</text>
+      <rect x="180" y="160" width="160" height="50" rx="6"/><text x="260" y="182" text-anchor="middle">backend</text><text class="sub" x="260" y="198" text-anchor="middle">gunicorn -w 3 · DRF</text>
+      <rect x="390" y="160" width="130" height="50" rx="6"/><text x="455" y="182" text-anchor="middle">PostgreSQL 16</text><text class="sub" x="455" y="198" text-anchor="middle">single instance</text>
+      <rect class="core" x="420" y="20" width="160" height="50" rx="6"/><text x="500" y="42" text-anchor="middle">@rsconcept/domain</text><text class="sub" x="500" y="58" text-anchor="middle">pure TS · ~19k LOC</text>
+      <rect x="620" y="20" width="130" height="50" rx="6"/><text x="685" y="42" text-anchor="middle">rstool / -mcp</text><text class="sub" x="685" y="58" text-anchor="middle">agent adapters</text>
+      <rect x="590" y="160" width="160" height="50" rx="6"/><text x="670" y="182" text-anchor="middle">/api/agents</text><text class="sub" x="670" y="198" text-anchor="middle">Bearer rcp_… keys</text>
+      <path d="M130 105 L180 45"/><path d="M130 125 L180 185"/>
+      <line x1="340" y1="185" x2="390" y2="185"/>
+      <line x1="340" y1="45" x2="420" y2="45"/><line x1="620" y1="45" x2="580" y2="45"/>
+      <path d="M685 70 L685 160"/>
+      <path d="M590 185 L520 185"/>
+    </svg>
+  </div>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Area</th><th>Size</th><th>Assessment</th></tr></thead>
+      <tbody>
+        <tr><td>Backend apps</td><td>~22k LOC Python across 7 apps (<code>oss</code> 7.4k, <code>rsform</code> 6.3k, <code>library</code> 4.1k)</td><td>Clear app boundaries; mutations centralised in <code>mutations.py</code> and wrapped in transactions</td></tr>
+        <tr><td>Frontend</td><td>1,216 TS/TSX files, ~93k LOC, feature-sliced</td><td>Consistent feature folders, zod at the boundary, CSRF retry and cross-tab sync handled</td></tr>
+        <tr><td>Tests</td><td>356 backend tests, ~500 unit tests (frontend + domain), 37 Playwright specs</td><td>Good breadth; persistence-layer coverage runs on SQLite only</td></tr>
+        <tr><td>Delivery</td><td>5 GitHub Actions pipelines, Docker Compose prod, certbot</td><td>Single host, single DB, no cache tier</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section aria-labelledby="find">
+  <h2 id="find">Findings</h2>
+  <p style="color:var(--muted);font-size:0.9rem">Ordered by severity. High means user-visible defect or a control that does not work as configured in production.</p>
+  <div class="findings">
+
+    <article class="finding high">
+      <div class="top"><span class="chip high">High</span><span class="id">CDR-01</span><h3>Owners lose read access to their own read-only, non-public items</h3></div>
+      <div class="where">rsconcept/backend/shared/permissions.py — ItemAnyone → ItemEditor → can_edit_item</div>
+      <p><code>ItemAnyone.has_object_permission</code> falls back to <code>can_edit_item</code> for non-public items, and <code>can_edit_item</code> returns <code>False</code> as soon as <code>read_only</code> is set, before it checks ownership. Read access is therefore gated on write access. <span class="verified">Verified by probe test:</span> owner of a <code>private</code> + <code>read_only</code> item gets <b>403</b> on both <code>GET /api/library/{id}</code> and <code>GET /api/rsforms/{id}/details</code>. Editors of <code>protected</code> items hit the same wall.</p>
+      <p class="fix"><b>Fix:</b> route the read path through the existing <code>can_read_library_item()</code> helper instead of the edit check, and add a regression test for owner/editor × read_only × policy.</p>
+    </article>
+
+    <article class="finding high">
+      <div class="top"><span class="chip high">High</span><span class="id">CDR-02</span><h3>Throttles are per worker process, not per client</h3></div>
+      <div class="where">project/settings.py (no CACHES) · docker-compose-prod.yml (gunicorn -w 3)</div>
+      <p>No <code>CACHES</code> is configured, so DRF throttles use the default per-process <code>LocMemCache</code>. With three gunicorn workers each holds its own counters: the login limit of 5/min behaves like up to 15/min, signup 3/h like 9/h, and every counter resets on deploy or worker recycle. The careful <code>NUM_PROXIES</code>/X-Forwarded-For hardening is undercut by this. (The agents app is unaffected: it keeps rate state in the database.)</p>
+      <p class="fix"><b>Fix:</b> configure a shared cache (Redis, or <code>DatabaseCache</code> as a zero-infrastructure step) and add a test asserting the throttle backend is not LocMem outside DEBUG.</p>
+    </article>
+
+    <article class="finding high">
+      <div class="top"><span class="chip high">High</span><span class="id">CDR-03</span><h3>Cascading library deletes and creates are not atomic</h3></div>
+      <div class="where">apps/library/views/library.py — perform_destroy, perform_create, perform_update</div>
+      <p><code>perform_destroy</code> runs OSS propagation (<code>before_delete_schema</code>), deletes bound RSModels, and recursively deletes owned schemas of an OSS, all outside <code>transaction.atomic</code>; <code>ATOMIC_REQUESTS</code> is off. A failure midway leaves a half-deleted OSS or schemas whose inheritance was already rewritten. <code>perform_create</code> likewise creates the item and then its <code>Layout</code>/<code>RSModel</code> in separate commits, and <code>perform_update</code> syncs operation titles after the locked block commits.</p>
+      <p class="fix"><b>Fix:</b> wrap each of these methods in <code>transaction.atomic()</code> (the rsform/oss actions already follow this pattern).</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">CDR-04</span><h3>Permission defaults fail open</h3></div>
+      <div class="where">apps/rsform/views/rsforms.py:83 · project/settings.py DEBUG / DEFAULT_PERMISSION_CLASSES</div>
+      <p>View-level <code>get_permissions</code> maps unlisted actions to <code>Anyone</code>, so a new <code>@action</code> added to <code>RSFormViewSet</code> becomes public unless someone remembers the list. Globally, <code>DEFAULT_PERMISSION_CLASSES</code> switches to <code>AllowAny</code> whenever DEBUG is on, and DEBUG defaults to <b>true</b> for <code>runserver</code>, <code>shell</code> and <code>migrate</code> when the env var is missing.</p>
+      <p class="fix"><b>Fix:</b> make the fallback branch <code>ItemEditor</code> (or raise), keep <code>IsAuthenticated</code> as the default regardless of DEBUG, and add a test that enumerates every routed action and asserts an explicit permission mapping.</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">CDR-05</span><h3>Optimistic concurrency is advisory, and custom actions check without a lock</h3></div>
+      <div class="where">shared/concurrency.py · frontend/src/backend/api-transport.ts</div>
+      <p>The <code>X-Expected-Time-Update</code> token is optional, and custom actions (<code>create-cst</code>, <code>update-cst</code>, OSS operations) only run the unlocked check in <code>get_object</code>; two writers can both pass it. The docstring acknowledges this. The SPA sends the token on content mutations (about half of the 80 mutating call sites), but library metadata calls such as <code>set-owner</code>, <code>set-editors</code>, <code>set-access-policy</code> and version updates send none, and agents/API clients can omit it.</p>
+      <p class="fix"><b>Fix:</b> call <code>assert_expected_time_update_locked</code> inside the existing atomic blocks of custom actions; consider requiring the token for session-authenticated content writes.</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">CDR-06</span><h3>CI tests a different database engine than production</h3></div>
+      <div class="where">.github/workflows/backend.yml</div>
+      <p>Backend CI runs on the SQLite default; production is PostgreSQL 16. <code>select_for_update</code> is a no-op on SQLite, so the row-lock concurrency path, JSON field behaviour and constraint semantics are never exercised before deploy. CI also does not run <code>makemigrations --check</code>.</p>
+      <p class="fix"><b>Fix:</b> add a <code>postgres:16</code> service container to the backend job and a migration-drift check.</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">CDR-07</span><h3>List endpoints are unpaginated</h3></div>
+      <div class="where">apps/library/views/library.py · settings REST_FRAMEWORK (no DEFAULT_PAGINATION_CLASS)</div>
+      <p>No pagination class is configured anywhere. <code>GET /api/library</code> serialises every accessible item, and list cost grows linearly with the library. Pagination currently lives only in the client (<code>stores/preferences.ts</code>).</p>
+      <p class="fix"><b>Fix:</b> introduce cursor or limit/offset pagination on library and user lists behind a versioned contract change, synced with the frontend query hooks.</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">CDR-08</span><h3>DB_PORT is silently ignored</h3></div>
+      <div class="where">project/settings.py — DATABASES['default']['DB_PORT']</div>
+      <p>The database dict uses the key <code>DB_PORT</code>; Django reads <code>PORT</code>. Production works only because Postgres listens on the default 5432. Moving the database to a non-default port would break the backend while <code>entrypoint.sh</code> (which does use <code>$DB_PORT</code>) reports the DB as ready.</p>
+      <p class="fix"><b>Fix:</b> rename the key to <code>PORT</code>.</p>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">CDR-09</span><h3>Secret files are read without stripping whitespace</h3></div>
+      <div class="where">project/settings.py — _get_secret</div>
+      <p>A trailing newline in <code>secrets/*.txt</code> becomes part of the DB password, SMTP host and user. Add <code>.strip()</code>.</p>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">CDR-10</span><h3>HSTS settings on the API host are inconsistent</h3></div>
+      <div class="where">project/settings.py — SECURE_HSTS_*</div>
+      <p><code>SECURE_HSTS_SECONDS=3600</code> is combined with <code>PRELOAD=True</code>; preload lists require at least one year. nginx already sends one year for the SPA host. Align the API host to 31536000 or drop the preload flag.</p>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">CDR-11</span><h3>Long-lived sessions and PII to Sentry by default</h3></div>
+      <div class="where">project/settings.py</div>
+      <p>Session cookies last two years and CSRF cookies one year; <code>SENTRY_SEND_DEFAULT_PII</code> defaults to true, which ships user identifiers and IPs to a third party. Consider 30–90 day sessions with sliding renewal and a PII-off default.</p>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">CDR-12</span><h3>Email uniqueness is enforced only in serializers</h3></div>
+      <div class="where">apps/users/serializers.py · django.contrib.auth User</div>
+      <p>Concurrent signups can create two users with the same email; login-by-email then fails for both. Add a case-insensitive unique constraint (requires a custom user model or a profile-side constraint).</p>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">CDR-13</span><h3>Edge proxy lacks timeouts and general rate limits</h3></div>
+      <div class="where">nginx/production.conf</div>
+      <p>Only the Sentry tunnel is rate-limited; there are no <code>proxy_read_timeout</code>, connection limits or body-size caps on API routes. Already tracked in <code>TODO.txt</code>; listed here because it pairs with CDR-02.</p>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">CDR-14</span><h3>Backend image built on PPAs</h3></div>
+      <div class="where">rsconcept/backend/Dockerfile</div>
+      <p>Python 3.12 comes from the deadsnakes PPA on <code>ubuntu:jammy</code>, plus the ubuntu-toolchain PPA, and static/media/backup are <code>chmod a+rwx</code>. An official <code>python:3.12-slim</code> base gives reproducible, smaller, faster-patched images; tighten the directory modes to the <code>app</code> user.</p>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">CDR-15</span><h3>Every signed-in user can list all users</h3></div>
+      <div class="where">apps/users/views.py — ActiveUsersView</div>
+      <p>Names and IDs of all active users are returned to any authenticated account. This is presumably for the editor picker; scope it to a search with a minimum query length if the user base grows.</p>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">CDR-16</span><h3>No Content-Security-Policy on the SPA</h3></div>
+      <div class="where">nginx/production.conf</div>
+      <p>Only <code>frame-ancestors</code> is set; the reason (inline bootstrap script, embeds, workers) is documented. Moving the inline script to a hashed or external file would allow a script-src policy and remove most of the XSS blast radius.</p>
+    </article>
+
+  </div>
+</section>
+
+<section aria-labelledby="good">
+  <h2 id="good">Strengths</h2>
+  <ul class="plain">
+    <li><b>Layering is explicit and enforced by docs:</b> <code>docs/architecture.md</code>, per-package <code>AGENTS.md</code>, and a pure domain package with adapters that carry no business rules.</li>
+    <li><b>Mutation services are transactional:</b> <code>apps/rsform/mutations.py</code> and the OSS actions wrap writes and propagation in <code>transaction.atomic</code>.</li>
+    <li><b>API key design is solid:</b> 256-bit random secrets, SHA-256 at rest, public prefix lookup, revocation, DB-backed rate state and capped request logging.</li>
+    <li><b>Proxy-aware throttle identity:</b> nginx overwrites X-Forwarded-For and <code>NUM_PROXIES</code> is documented next to it.</li>
+    <li><b>Fail-closed production settings:</b> missing <code>SECRET_KEY</code> or <code>ALLOWED_HOSTS</code> raises when DEBUG is off; secure cookies follow DEBUG.</li>
+    <li><b>Robust client transport:</b> lazy CSRF bootstrap with one retry, abort handling, cross-tab reset notifications, zod validation at the boundary.</li>
+    <li><b>Optimistic concurrency exists end to end</b> (header, 409 response, client token), which most apps of this size lack; CDR-05 is about tightening it.</li>
+    <li><b>Test breadth:</b> backend unit and view tests, domain/front unit tests, and Playwright E2E running in CI.</li>
+    <li><b>No password-reset enumeration</b> and scoped throttles on login, signup, reset, OSS clone and cctext.</li>
+  </ul>
+</section>
+
+<section aria-labelledby="next">
+  <h2 id="next">Recommended actions</h2>
+  <ol class="steps">
+    <li><b>Before next release:</b> fix CDR-01 with a permission-matrix test; configure a shared cache (CDR-02); wrap library create/update/destroy in transactions (CDR-03); rename <code>DB_PORT</code> → <code>PORT</code> (CDR-08).</li>
+    <li><b>Next sprint:</b> run backend CI on PostgreSQL with a migration-drift check (CDR-06); make permission fallbacks fail closed (CDR-04); add locked concurrency checks to custom actions (CDR-05).</li>
+    <li><b>Planned:</b> server-side pagination (CDR-07); nginx timeouts and limits (CDR-13); slimmer backend image (CDR-14); session lifetime, PII and HSTS tidy-up (CDR-10, CDR-11).</li>
+  </ol>
+</section>
+
+<section aria-labelledby="evidence" id="evidence">
+  <h2>Evidence and method</h2>
+  <ul class="plain">
+    <li>Static reading of settings, URL routing, permissions, concurrency helpers, library/rsform/oss views, agent authentication, user views, Dockerfile, compose files, nginx config and CI workflows.</li>
+    <li>CDR-01 confirmed with a throwaway Django test (owner, <code>private</code>, <code>read_only=True</code>): both endpoints returned 403. The probe was removed afterwards.</li>
+    <li id="suite-result">Backend suite: <code>manage.py test</code> on SQLite: <b>356 tests, all passing</b>. <code>makemigrations --check</code>: no drift today.</li>
+    <li>Not covered in depth: the OSS propagation engine's algorithmic correctness, the RS-language parser in <code>@rsconcept/domain</code>, and frontend rendering performance.</li>
+  </ul>
+</section>
+
+<footer>Prepared with Claude Code from repository state <code>1ad4a401</code>. Findings reference files relative to the repository root.</footer>
+</main>
+</body>
+</html>
