@@ -109,6 +109,18 @@ class TestVersionViews(EndpointTester):
         self.executeOK(version=version_id)
 
     @decl_endpoint('/api/versions/{version}', method='get')
+    def test_anonymous_head_follows_read_access(self):
+        version_id = self._create_version({'version': '1.0.0', 'description': 'test'})
+        self.logout()
+        allowed = self.client.head(f'/api/versions/{version_id}')
+        self.assertEqual(allowed.status_code, status.HTTP_200_OK)
+
+        self.owned.model.access_policy = AccessPolicy.PRIVATE
+        self.owned.model.save(update_fields=['access_policy'])
+        denied = self.client.head(f'/api/versions/{version_id}')
+        self.assertEqual(denied.status_code, status.HTTP_403_FORBIDDEN)
+
+    @decl_endpoint('/api/versions/{version}', method='get')
     def test_access_version(self):
         data = {'version': '1.0.0', 'description': 'test'}
         version_id = self._create_version(data)

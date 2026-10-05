@@ -26,7 +26,7 @@ class TestSecuritySettings(SimpleTestCase):
         self.assertNotIn('DB_PORT', database)
         self.assertEqual(database['PORT'], os.environ.get('DB_PORT'))
 
-    def test_secret_file_strips_whitespace(self):
+    def test_secret_file_strips_trailing_whitespace(self):
         handle = tempfile.NamedTemporaryFile(
             mode='w',
             encoding='utf-8',
@@ -37,6 +37,18 @@ class TestSecuritySettings(SimpleTestCase):
         self.addCleanup(os.remove, handle.name)
         with patch.dict(os.environ, {'DB_PASSWORD': handle.name}):
             self.assertEqual(_get_secret('DB_PASSWORD', ''), 'secret-value')
+
+    def test_secret_file_keeps_leading_space(self):
+        handle = tempfile.NamedTemporaryFile(
+            mode='w',
+            encoding='utf-8',
+            delete=False,
+        )
+        handle.write(' secret-value\n')
+        handle.close()
+        self.addCleanup(os.remove, handle.name)
+        with patch.dict(os.environ, {'DB_PASSWORD': handle.name}):
+            self.assertEqual(_get_secret('DB_PASSWORD', ''), ' secret-value')
 
     def test_secret_env_value_is_not_stripped(self):
         with patch.dict(os.environ, {'SMTP_HOST': 'mail.example'}):

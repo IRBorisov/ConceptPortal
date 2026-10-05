@@ -25,7 +25,7 @@ def _get_secret(key: str, default):
     value = os.environ.get(key, default)
     if os.path.isfile(value):
         with open(value, mode='r', encoding='utf-8') as secret_file:
-            return secret_file.read().strip()
+            return secret_file.read().rstrip()
     return value
 
 
