@@ -62,7 +62,7 @@ class RSModelViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPI
         elif self.action in ['list', 'retrieve', 'details']:
             permission_list = [permissions.ItemAnyone]
         else:
-            permission_list = [permissions.Anyone]
+            permission_list = [permissions.ItemEditor]
         return [permission() for permission in permission_list]
 
     @extend_schema(

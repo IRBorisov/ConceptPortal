@@ -106,25 +106,24 @@ class ItemEditor(ItemOwner):
 
 
 class ItemAnyone(ItemEditor):
-    ''' Item permission: Anyone if public. '''
+    ''' Item permission: read access, including public items and read-only owners/editors. '''
 
     def has_permission(self, request: Request, view: APIView) -> bool:
         return True
 
     def has_object_permission(self, request: Request, view: APIView, obj: Any) -> bool:
-        item = _extract_item(obj)
-        if item.access_policy == AccessPolicy.PUBLIC:
-            return True
-        return super().has_object_permission(request, view, obj)
+        return can_read_library_item(request.user, _extract_item(obj))
 
 
 class EditorMixin(APIView):
     ''' Editor permissions mixin for API views. '''
 
     def get_permissions(self):
-        result = super().get_permissions()
+        ''' GET is a read check. Other methods require an editor.
+
+        Replaces the global default so a public read is not also forced
+        through ``IsAuthenticated``.
+        '''
         if self.request.method.upper() == 'GET':
-            result.append(ItemAnyone())
-        else:
-            result.append(ItemEditor())
-        return result
+            return [ItemAnyone()]
+        return [ItemEditor()]
