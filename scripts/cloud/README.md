@@ -23,7 +23,7 @@ export default async function ({ page, login, pause }) {
 }
 ```
 
-See `scenarios/smoke.mjs`. Onboarding tour invitations are suppressed unless `VIDEO_SHOW_TOURS=1`.
+See `scenarios/smoke.mjs`. Onboarding tour invitations are suppressed unless `VIDEO_SHOW_TOURS=1`. React Scan (render-highlight overlay) is off unless `VITE_REACT_SCAN=true` is set in `rsconcept/frontend/.env.local`.
 Other env: `PORTAL_URL`, `VIDEO_WIDTH`, `VIDEO_HEIGHT`, `VIDEO_LOCALE` (default `ru-RU`).
 On failure the script still writes the video, saves `<out>-failure.png`, and exits 1.
 

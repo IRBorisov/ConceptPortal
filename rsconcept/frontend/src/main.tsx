@@ -16,7 +16,8 @@ import './index.css';
 captureResetTokenFromUrl();
 initSentry();
 
-if (typeof window !== 'undefined' && import.meta.env.DEV) {
+// Render-highlight overlay; opt in with VITE_REACT_SCAN=true (e.g. in env/.env.local).
+if (typeof window !== 'undefined' && import.meta.env.DEV && import.meta.env.VITE_REACT_SCAN === 'true') {
   void import('react-scan').then(module =>
     module.scan({
       enabled: true
