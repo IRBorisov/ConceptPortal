@@ -119,11 +119,12 @@ class EditorMixin(APIView):
     ''' Editor permissions mixin for API views. '''
 
     def get_permissions(self):
-        ''' GET is a read check. Other methods require an editor.
+        ''' GET and HEAD are read checks. Other methods require an editor.
 
         Replaces the global default so a public read is not also forced
-        through ``IsAuthenticated``.
+        through ``IsAuthenticated``. Django serves HEAD with the GET handler,
+        but the request method stays HEAD.
         '''
-        if self.request.method.upper() == 'GET':
+        if self.request.method.upper() in ('GET', 'HEAD'):
             return [ItemAnyone()]
         return [ItemEditor()]
