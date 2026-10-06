@@ -45,7 +45,7 @@ Repo root scripts: `powershell -File scripts/dev/RunTests.ps1`, `powershell -Fil
 - Models: `apps/*/models`
 - Serializers: `apps/*/serializers`, `shared/serializers.py`
 - Shared helpers: `shared`
-- Tests: `apps/*/tests`
+- Tests: `apps/*/tests`; files named `t_*.py` are auto-discovered (`shared/discover_runner.py`), no `__init__.py` registration
 
 ## Edit Rules
 

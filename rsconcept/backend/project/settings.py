@@ -205,6 +205,8 @@ if DEBUG:
     INSTALLED_APPS.append('django_extensions')
 
 
+TEST_RUNNER = 'shared.discover_runner.PortalTestRunner'
+
 REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
