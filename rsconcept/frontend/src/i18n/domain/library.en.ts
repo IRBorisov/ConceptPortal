@@ -437,6 +437,7 @@ export const txLibraryEn: Record<string, string> = {
   'tx.operation.attachment.plural': 'Attached schemas',
   'tx.operation.attachment.hint': 'Schemas attached to the operation',
   'tx.operation.attachment.none': 'No schema attached',
+  'tx.operation.attachment.original': 'Original schema',
   'tx.operation.attachment.original.short': 'Original',
   'tx.operation.attachment.original.hint': 'Schemas created and modified in the OSS (not imported)',
   'tx.operation.attachment.original.plural': 'Original schemas',

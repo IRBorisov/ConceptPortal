@@ -5,7 +5,7 @@ import { type NodeProps } from '@xyflow/react';
 import { useTx } from '@/i18n';
 import { OperationType } from '@rsconcept/domain/library';
 
-import { IconConsolidation, IconRSForm } from '@/components/icons';
+import { IconConsolidation, IconRSForm, IconRSFormImported, IconRSFormOwned } from '@/components/icons';
 import { cn } from '@/components/utils';
 import { Indicator } from '@/components/view';
 import { globalIDs } from '@/utils/constants';
@@ -31,7 +31,33 @@ export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode> }
   const showCoordinates = useOSSGraphStore(state => state.showCoordinates);
 
   const hasFile = !!node.data.operation.result;
+  const isInput = node.data.operation.operation_type === OperationType.INPUT;
+  const isImport = node.data.operation.operation_type === OperationType.INPUT && node.data.operation.is_import;
   const longLabel = node.data.label.length > LONG_LABEL_CHARS;
+
+  function attachmentTitle() {
+    if (!hasFile) {
+      return tx('tx.operation.attachment.none');
+    } else if (isImport) {
+      return tx('tx.oss.input.import');
+    } else if (isInput) {
+      return tx('tx.operation.attachment.original');
+    } else {
+      return tx('tx.operation.attachment');
+    }
+  }
+
+  function attachmentIcon() {
+    if (!hasFile) {
+      return <IconRSForm className='text-destructive' size='12px' />;
+    } else if (isImport) {
+      return <IconRSFormImported className='text-constructive' size='12px' />;
+    } else if (isInput) {
+      return <IconRSFormOwned className='text-constructive' size='12px' />;
+    } else {
+      return <IconRSForm className='text-constructive' size='12px' />;
+    }
+  }
 
   return (
     <div
@@ -44,11 +70,7 @@ export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode> }
       )}
     >
       <div className='absolute z-pop top-0 right-0 flex flex-col gap-[4px] p-[2px]'>
-        <Indicator
-          noPadding
-          title={hasFile ? tx('tx.operation.attachment') : tx('tx.operation.attachment.none')}
-          icon={<IconRSForm className={hasFile ? 'text-constructive' : 'text-destructive'} size='12px' />}
-        />
+        <Indicator noPadding title={attachmentTitle()} icon={attachmentIcon()} />
         {opType === OperationType.SYNTHESIS && node.data.operation.is_consolidation ? (
           <Indicator
             noPadding
@@ -70,25 +92,19 @@ export function NodeCoreComponent({ node }: { node: NodeProps<OGOperationNode> }
         </div>
       ) : null}
 
-      {opType === OperationType.INPUT ? (
-        <div className='absolute top-[3px] right-1/2 translate-x-1/2 border-t w-[30px]' />
-      ) : null}
-
-      {opType === OperationType.INPUT && node.data.operation.is_import ? (
-        <div className='absolute left-[3px] top-1/2 -translate-y-1/2 border-r rounded-none bg-input h-[22px]' />
-      ) : null}
-
       <div
-        className={cn(
-          'w-full h-full',
-          'flex items-center justify-center',
-          'text-center line-clamp-2 px-[4px] mr-[12px]',
-          longLabel ? 'text-[10px]/[14px]' : 'text-[14px]/[20px]'
-        )}
+        className='w-full h-full flex items-center justify-center px-[14px]'
         data-tooltip-id={globalIDs.operation_tooltip}
         onMouseEnter={() => setHover(node.data.operation)}
       >
-        {node.data.label}
+        <div
+          className={cn(
+            'text-center line-clamp-2 wrap-break-word',
+            longLabel ? 'text-[10px]/[14px]' : 'text-[14px]/[20px]'
+          )}
+        >
+          {node.data.label}
+        </div>
       </div>
     </div>
   );
