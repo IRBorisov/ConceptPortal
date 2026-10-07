@@ -10,6 +10,7 @@ import { useAIStore } from '@/features/ai/stores/ai-context';
 import { useAuth } from '@/features/auth/backend/use-auth';
 import { useDeleteItem } from '@/features/library/backend/use-delete-item';
 import { useLibrarySearchStore } from '@/features/library/stores/library-search';
+import { RsformDialogHost } from '@/features/rsform/dialogs/rsform-dialog-host';
 import { UserRole } from '@/features/users';
 import { useRoleStore } from '@/features/users/stores/role';
 import { useAdjustRole } from '@/features/users/stores/use-adjust-role';
@@ -139,6 +140,7 @@ export const OssEditState = ({ itemID, children }: React.PropsWithChildren<OssEd
   return (
     <>
       <OssDialogHost />
+      <RsformDialogHost />
       <OssEditContext
       value={{
         schema,
