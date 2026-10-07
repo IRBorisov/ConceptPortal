@@ -23,6 +23,8 @@ import {
   IconReference,
   IconReset,
   IconRSForm,
+  IconRSFormImported,
+  IconRSFormOwned,
   IconSave,
   IconSettings
 } from '@/components/icons';
@@ -116,9 +118,13 @@ export function HelpOssGraphRu() {
               <IconConsolidation className='inline-icon' />{' '}
               <LinkTopic text='Ромбовидный синтез' topic={HelpTopic.CC_OSS} />
             </li>
-            <li>черта сверху - Загрузка</li>
             <li>
-              черта слева - КС <LinkTopic text='внешняя' topic={HelpTopic.CC_OSS} />
+              <IconRSFormOwned className='inline-icon icon-green' /> Загрузка:{' '}
+              <LinkTopic text='собственная' topic={HelpTopic.CC_OSS} /> КС
+            </li>
+            <li>
+              <IconRSFormImported className='inline-icon icon-green' /> Загрузка:{' '}
+              <LinkTopic text='внешняя' topic={HelpTopic.CC_OSS} /> КС
             </li>
 
             <li>

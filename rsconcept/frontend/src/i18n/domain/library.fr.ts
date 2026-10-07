@@ -441,6 +441,7 @@ export const txLibraryFr: Record<string, string> = {
   'tx.operation.attachment.plural': 'Schémas attachés',
   'tx.operation.attachment.hint': 'Schémas attachés à l’opération',
   'tx.operation.attachment.none': 'Aucun schéma attaché',
+  'tx.operation.attachment.original': 'Schéma propre',
   'tx.operation.attachment.original.short': 'Propres',
   'tx.operation.attachment.original.hint': 'Schémas créés et modifiés dans l’OSS (non importés)',
   'tx.operation.attachment.original.plural': 'Schémas propres',

@@ -442,6 +442,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.operation.attachment.plural': 'Прикрепленные схемы',
   'tx.operation.attachment.hint': 'Схемы, прикрепленные к операциям данной операционной схемы',
   'tx.operation.attachment.none': 'Не прикреплена схема',
+  'tx.operation.attachment.original': 'Собственная схема',
   'tx.operation.attachment.original.short': 'Собственные',
   'tx.operation.attachment.original.hint':
     'Схемы, созданные и изменяемые в данной операционной схеме (не импортированные)',

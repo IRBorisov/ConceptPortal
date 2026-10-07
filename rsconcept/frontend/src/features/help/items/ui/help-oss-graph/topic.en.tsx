@@ -23,6 +23,8 @@ import {
   IconReference,
   IconReset,
   IconRSForm,
+  IconRSFormImported,
+  IconRSFormOwned,
   IconSave,
   IconSettings
 } from '@/components/icons';
@@ -115,9 +117,13 @@ export function HelpOssGraphEn() {
               <IconConsolidation className='inline-icon' />{' '}
               <LinkTopic text='Diamond synthesis' topic={HelpTopic.CC_OSS} />
             </li>
-            <li>top bar — Load operation</li>
             <li>
-              left bar — <LinkTopic text='external' topic={HelpTopic.CC_OSS} /> CS
+              <IconRSFormOwned className='inline-icon icon-green' /> Load:{' '}
+              <LinkTopic text='own' topic={HelpTopic.CC_OSS} /> CS
+            </li>
+            <li>
+              <IconRSFormImported className='inline-icon icon-green' /> Load:{' '}
+              <LinkTopic text='external' topic={HelpTopic.CC_OSS} /> CS
             </li>
             <li>
               <kbd>Space</kbd> — pan the canvas
