@@ -9,7 +9,7 @@ import { BadgeEvaluation } from '@/features/rsmodel/components/badge-evaluation'
 import { createColumnHelper, DataTable, type DataTableRowDrop, type IConditionalStyle } from '@/components/data-table';
 import { cn } from '@/components/utils';
 import { NoData, TextContent } from '@/components/view';
-import { prefixes } from '@/utils/constants';
+import { globalIDs, prefixes } from '@/utils/constants';
 
 import { describeConstituenta } from '../../labels';
 import { useCstSearchStore } from '../../stores/cst-search';
@@ -74,7 +74,11 @@ export function TableSideConstituents({
       ? [
           columnHelper.accessor(cst => cst, {
             id: 'value',
-            header: tx('tx.rslang.value.short'),
+            header: () => (
+              <span data-tooltip-id={globalIDs.tooltip} data-tooltip-content={tx('tx.rslang.value.short')}>
+                {tx('tx.rslang.value.compact')}
+              </span>
+            ),
             size: 60,
             minSize: 60,
             maxSize: 60,

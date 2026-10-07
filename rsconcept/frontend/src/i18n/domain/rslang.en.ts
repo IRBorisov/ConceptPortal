@@ -73,6 +73,7 @@ export const txRslangEn: Record<string, string> = {
 
   'tx.rslang.value': 'Expression value',
   'tx.rslang.value.short': 'Value',
+  'tx.rslang.value.compact': 'Val',
   'tx.rslang.value.type.error.hint': 'No value for this type',
   'tx.rslang.value.input.hint': 'Enter a value',
   'tx.rslang.value.none': 'Value missing',

@@ -75,6 +75,7 @@ export const txRslangRu: Record<string, string> = {
 
   'tx.rslang.value': 'Значение выражения',
   'tx.rslang.value.short': 'Значение',
+  'tx.rslang.value.compact': 'Зн.',
   'tx.rslang.value.type.error.hint': 'Значение для данного типа не предусмотрено',
   'tx.rslang.value.input.hint': 'Укажите значение',
   'tx.rslang.value.none': 'Значение отсутствует',
