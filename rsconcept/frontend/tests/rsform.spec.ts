@@ -1,5 +1,6 @@
-import { AccessPolicy, LibraryItemType } from '@rsconcept/domain/library';
+import { AccessPolicy, CstType, LibraryItemType } from '@rsconcept/domain/library';
 
+import { type RSFormDTO, type UpdateConstituentaDTO } from '../src/features/rsform/backend/types';
 import { authAdmin, authAnonymous } from './mocks/auth';
 import { createRSFormMock, dataRSForms, resetConceptMocks } from './mocks/concepts';
 import { BACKEND_URL } from './mocks/constants';
@@ -194,4 +195,97 @@ test('RSForm passport save shows error when update is rejected', async ({ page }
   await expect(page.getByText('alias: Сокращение уже занято')).toBeVisible();
   await expect(page).toHaveURL(new RegExp(`/rsforms/${rsformID}$`));
   await expect(page.locator('#schema_alias')).toHaveValue('KS_CONFLICT');
+});
+
+function createCstMock(
+  id: number,
+  alias: string,
+  cst_type: CstType,
+  definition_formal = ''
+): RSFormDTO['items'][number] {
+  return {
+    id,
+    alias,
+    cst_type,
+    convention: '',
+    crucial: false,
+    term_raw: '',
+    term_resolved: '',
+    term_forms: [],
+    definition_formal,
+    definition_raw: '',
+    definition_resolved: '',
+    typification_manual: '',
+    value_is_property: false
+  };
+}
+
+test('RSForm keeps unsaved expression when another user saved the schema first', async ({ page }) => {
+  const rsformID = 310;
+  const schema = createRSFormMock(rsformID, 'Схема с параллельным редактированием');
+  schema.items = [
+    createCstMock(3101, 'X1', CstType.BASE),
+    createCstMock(3102, 'S1', CstType.STRUCTURED, 'ℬ(X1)'),
+    createCstMock(3103, 'D1', CstType.TERM, 'X1')
+  ];
+  dataRSForms.set(rsformID, schema);
+
+  const patchBodies: UpdateConstituentaDTO[] = [];
+  await page.route(`${BACKEND_URL}/api/rsforms/${rsformID}/update-cst`, async route => {
+    const current = dataRSForms.get(rsformID)!;
+    if ((await route.request().headerValue('X-Expected-Time-Update')) !== current.time_update) {
+      await route.fulfill({ status: 409, json: { detail: 'Схема была изменена другим пользователем' } });
+      return;
+    }
+    const body = route.request().postDataJSON() as UpdateConstituentaDTO;
+    patchBodies.push(body);
+    const updated = {
+      ...current,
+      time_update: '2026-01-04T00:00:00+00:00',
+      items: current.items.map(cst => (cst.id === body.target ? { ...cst, ...body.item_data } : cst))
+    };
+    dataRSForms.set(rsformID, updated);
+    await route.fulfill({ json: updated });
+  });
+
+  await page.goto(`/rsforms/${rsformID}?tab=2&active=3103`, { waitUntil: 'domcontentloaded' });
+  const expression = page.locator('#cst_expression .cm-content');
+  await expect(expression).toHaveText('X1');
+
+  // Another user edits a different constituenta in the same schema.
+  dataRSForms.set(rsformID, {
+    ...schema,
+    time_update: '2026-01-03T00:00:00+00:00',
+    items: schema.items.map(cst => (cst.id === 3102 ? { ...cst, convention: 'Комментарий коллеги' } : cst))
+  });
+
+  await expression.click();
+  await page.keyboard.press('End');
+  await page.keyboard.insertText('∪X1');
+  await expect(expression).toHaveText('X1∪X1');
+
+  await Promise.all([
+    page.waitForResponse(
+      response => response.url().endsWith(`/api/rsforms/${rsformID}/update-cst`) && response.status() === 409
+    ),
+    page.keyboard.press('Control+s')
+  ]);
+  const conflictDialog = page.getByRole('alertdialog');
+  await expect(conflictDialog.getByText('Элемент был изменён в другом месте')).toBeVisible();
+  await conflictDialog.getByRole('button', { name: 'Закрыть' }).click();
+  // The conflict refetches the newer server state; the colleague's edit shows up in the list...
+  await expect(page.getByRole('cell', { name: 'Комментарий коллеги' })).toBeVisible();
+  // ...while the local draft survives.
+  await expect(expression).toHaveText('X1∪X1');
+
+  const saveButton = page.getByRole('button', { name: 'Сохранить изменения' });
+  await expect(saveButton).toBeEnabled();
+  await clickAndWaitForApi(page, saveButton, {
+    url: `${BACKEND_URL}/api/rsforms/${rsformID}/update-cst`,
+    method: 'PATCH'
+  });
+  expect(patchBodies).toHaveLength(1);
+  expect(patchBodies[0].item_data.definition_formal).toBe('X1∪X1');
+  expect(dataRSForms.get(rsformID)!.items.find(cst => cst.id === 3102)!.convention).toBe('Комментарий коллеги');
+  await expect(expression).toHaveText('X1∪X1');
 });

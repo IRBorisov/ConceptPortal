@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
+import { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useForm } from '@tanstack/react-form';
 import { useSelector } from '@tanstack/react-store';
@@ -60,6 +60,15 @@ function constituentaDefaults(activeCst: Constituenta): UpdateConstituentaDTO {
   };
 }
 
+type ConstituentaDraft = UpdateConstituentaDTO['item_data'];
+
+/** Draft fields the user changed relative to `base` that still differ from the fresh server state `next`. */
+function extractPendingEdits(draft: ConstituentaDraft, base: ConstituentaDraft, next: ConstituentaDraft) {
+  return (Object.keys(draft) as (keyof ConstituentaDraft)[]).filter(
+    key => draft[key] !== base[key] && draft[key] !== next[key]
+  );
+}
+
 export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdit }: FormConstituentaProps) {
   const tx = useTx();
   const isModified = useModificationStore(state => state.isModified);
@@ -94,11 +103,26 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
     }
   });
 
-  const onResetEvent = useEffectEvent((next: UpdateConstituentaDTO) => {
-    form.reset(next);
-  });
+  /** Server snapshot behind the current draft; `useForm` overwrites `defaultValues` on every render. */
+  const serverBase = useRef({ cstID: activeCst.id, toggleReset, values: constituentaDefaults(activeCst) });
+
   const onResetToServerState = useEffectEvent(() => {
-    onResetEvent(constituentaDefaults(activeCst));
+    const next = constituentaDefaults(activeCst);
+    const base = serverBase.current;
+    serverBase.current = { cstID: activeCst.id, toggleReset, values: next };
+
+    // Same constituenta re-fetched (concurrent edit by another user, 409 refetch, window focus): keep unsaved edits.
+    // Cross-tab sync clears the modified flag beforehand to request an explicit discard.
+    const keepDraft =
+      base.cstID === activeCst.id && base.toggleReset === toggleReset && useModificationStore.getState().isModified;
+    const draft = form.state.values.item_data;
+    const pending = keepDraft ? extractPendingEdits(draft, base.values.item_data, next.item_data) : [];
+
+    form.reset(next);
+    for (const key of pending) {
+      form.setFieldValue(`item_data.${key}`, draft[key]);
+    }
+    onModifiedEvent(pending.length > 0);
   });
 
   const definition = useSelector(form.store, state => state.values.item_data.definition_formal);
