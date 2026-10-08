@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ConceptPortal Test & Design Review</title>
+<meta name="description" content="Code review of ConceptPortal focused on missing tests and documentation, incomplete design choices, and unnecessary checks, restrictions and tests.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,650&display=swap" rel="stylesheet">
+<style>
+/* Layout: one reading column. Verdict and scorecard first, then findings grouped by theme, then a prioritised plan and the evidence log. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #1b2230;
+  --muted: #5b6475;
+  --line: #dde1e8;
+  --accent: #2f5aa8;
+  --sev-high: #b3261e;
+  --sev-high-bg: #fbe9e7;
+  --sev-med: #9a5b00;
+  --sev-med-bg: #fdf1dc;
+  --sev-low: #4a5a73;
+  --sev-low-bg: #eaeef4;
+  --good: #1f7a4a;
+  --good-bg: #e3f3ea;
+  --code-bg: #eef1f6;
+  --bar: #2f5aa8;
+  --bar-track: #e6e9ef;
+  --display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b5; --line: #2c3442;
+    --accent: #8fb0ee; --sev-high: #ff9a8f; --sev-high-bg: #3a1f1e; --sev-med: #f2bd6a; --sev-med-bg: #3a2c15;
+    --sev-low: #b4c1d6; --sev-low-bg: #242c39; --good: #7fd3a4; --good-bg: #17302a; --code-bg: #232a35;
+    --bar: #8fb0ee; --bar-track: #2a3240;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b5; --line: #2c3442;
+  --accent: #8fb0ee; --sev-high: #ff9a8f; --sev-high-bg: #3a1f1e; --sev-med: #f2bd6a; --sev-med-bg: #3a2c15;
+  --sev-low: #b4c1d6; --sev-low-bg: #242c39; --good: #7fd3a4; --good-bg: #17302a; --code-bg: #232a35;
+  --bar: #8fb0ee; --bar-track: #2a3240;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.6 var(--body); }
+.wrap { max-width: 940px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 72px; display: grid; gap: 44px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: 2.1rem; font-weight: 650; }
+h2 { font-size: 1.45rem; font-weight: 650; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+h3 { font-size: 1.06rem; font-weight: 650; }
+p { margin: 0; max-width: 74ch; }
+code { font-family: var(--mono); font-size: 0.85em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+a { color: var(--accent); }
+section { display: grid; gap: 16px; min-width: 0; }
+.eyebrow { font: 500 0.75rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+header { display: grid; gap: 12px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 20px; color: var(--muted); font-size: 0.88rem; }
+.verdict { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; display: grid; gap: 12px; }
+.verdict .call { font: 650 1.15rem/1.35 var(--display); }
+.tally { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: 500 0.76rem/1 var(--mono); padding: 5px 9px; border-radius: 999px; white-space: nowrap; }
+.chip.high { color: var(--sev-high); background: var(--sev-high-bg); }
+.chip.med { color: var(--sev-med); background: var(--sev-med-bg); }
+.chip.low { color: var(--sev-low); background: var(--sev-low-bg); }
+.chip.good { color: var(--good); background: var(--good-bg); }
+.chip.tag { color: var(--muted); background: var(--code-bg); }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.89rem; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 0.7rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+td.num { text-align: right; white-space: nowrap; }
+.barcell { min-width: 120px; }
+.bar { height: 8px; border-radius: 4px; background: var(--bar-track); overflow: hidden; }
+.bar > span { display: block; height: 100%; background: var(--bar); border-radius: 4px; }
+.findings { display: grid; gap: 12px; }
+.finding { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--sev-low); border-radius: 8px; padding: 16px 18px; display: grid; gap: 8px; min-width: 0; }
+.finding.high { border-left-color: var(--sev-high); }
+.finding.med { border-left-color: var(--sev-med); }
+.finding .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; }
+.finding .id { font: 500 0.8rem/1 var(--mono); color: var(--muted); }
+.finding .where { font: 0.79rem/1.45 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.finding p, .finding li { font-size: 0.93rem; }
+.finding ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; max-width: 74ch; }
+.finding .fix { color: var(--muted); }
+.finding .fix b { color: var(--fg); font-weight: 600; }
+.status { font: 500 0.74rem/1 var(--mono); }
+.status.verified { color: var(--good); }
+.status.plausible { color: var(--sev-med); }
+.probe { background: var(--code-bg); border-radius: 6px; padding: 10px 12px; font: 0.8rem/1.5 var(--mono); overflow-x: auto; white-space: pre; }
+.probe-table td, .probe-table th { font-size: 0.84rem; }
+.yes { color: var(--sev-high); font-weight: 600; }
+.no { color: var(--good); font-weight: 600; }
+ol.steps { margin: 0; padding-left: 1.4em; display: grid; gap: 8px; max-width: 78ch; }
+ul.plain { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; max-width: 76ch; }
+.toc { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.88rem; }
+footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); padding-top: 16px; }
+@media (max-width: 560px) {
+  h1 { font-size: 1.65rem; }
+  .wrap { padding-block: 24px 48px; padding-inline: 16px; gap: 36px; }
+  .finding { padding: 14px; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header>
+  <div class="eyebrow">Code review · rsconcept / ConceptPortal</div>
+  <h1>Tests, documentation &amp; design-completeness review</h1>
+  <div class="meta">
+    <span>Date: 2026-10-06</span>
+    <span>Baseline: <code>b8bf759</code></span>
+    <span>Scope: backend, frontend, <code>@rsconcept/domain</code>, <code>rstool</code>, <code>rstool-mcp</code>, CI</span>
+  </div>
+  <p>This review covers four things: missing tests, missing documentation, design choices that were left half-finished, and checks, restrictions or tests that cost more than they give. It builds on <a href="2026-10-05-critical-design-review.html">the 2026-10-05 critical design review</a> and does not repeat its findings (CDR-01 to CDR-16).</p>
+</header>
+
+<section class="verdict" aria-labelledby="verdict-h">
+  <h2 id="verdict-h" style="border:0;padding:0">Verdict</h2>
+  <p class="call">The test suites are broad, but they have holes that nobody can see. Some tests are written and never run. Coverage numbers leave out files that no test imports. Rules that exist in two places have drifted apart, and nothing checks them against each other.</p>
+  <div class="tally">
+    <span class="chip high">2 high</span>
+    <span class="chip med">8 medium</span>
+    <span class="chip low">5 low</span>
+    <span class="chip good">6 verified by probe</span>
+  </div>
+  <p>Many findings share one cause. A rule or contract is written by hand in two or three places, such as the RSForm model and its cached twin, the password checks on client and server, the field limits, the contract version, and the rstool method tables. No test checks that the copies still agree. Each copy works alone, but they no longer match.</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#tests">Missing tests</a>
+    <a href="#design">Incomplete design</a>
+    <a href="#restrict">Unnecessary checks &amp; restrictions</a>
+    <a href="#docs">Documentation</a>
+    <a href="#plan">Action plan</a>
+    <a href="#evidence">Evidence</a>
+  </nav>
+</section>
+
+<section aria-labelledby="inv-h">
+  <h2 id="inv-h">Test inventory</h2>
+  <p>Test volume per area compared with source volume. Code size alone does not set the priority, but areas that have large amounts of logic and almost no tests stand out.</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Area</th><th class="num">Source lines</th><th class="num">Test lines</th><th>Test : source</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td>frontend · onboarding</td><td class="num">7,595</td><td class="num">1,845</td><td class="barcell"><div class="bar"><span style="width:100%"></span></div></td><td>Most heavily tested feature</td></tr>
+      <tr><td>frontend · rsform</td><td class="num">18,631</td><td class="num">962</td><td class="barcell"><div class="bar"><span style="width:21%"></span></div></td><td>Largest feature</td></tr>
+      <tr><td>frontend · library</td><td class="num">5,054</td><td class="num">125</td><td class="barcell"><div class="bar"><span style="width:10%"></span></div></td><td></td></tr>
+      <tr><td>frontend · oss</td><td class="num">7,881</td><td class="num">72</td><td class="barcell"><div class="bar"><span style="width:4%"></span></div></td><td>One test file (<code>api-sync</code>)</td></tr>
+      <tr><td>frontend · rsmodel</td><td class="num">5,913</td><td class="num">0</td><td class="barcell"><div class="bar"><span style="width:0%"></span></div></td><td>Untested, including JSON import/export</td></tr>
+      <tr><td>frontend · stores</td><td class="num">437</td><td class="num">0</td><td class="barcell"><div class="bar"><span style="width:0%"></span></div></td><td>Includes cross-tab <code>preferences-sync</code></td></tr>
+      <tr><td>frontend · components</td><td class="num">6,180</td><td class="num">0</td><td class="barcell"><div class="bar"><span style="width:0%"></span></div></td><td>Shared UI kit</td></tr>
+      <tr><td>@rsconcept/domain</td><td class="num">~19k</td><td class="num">~4.6k</td><td class="barcell"><div class="bar"><span style="width:78%"></span></div></td><td>78.2% lines of <em>loaded</em> files (see T-04)</td></tr>
+      <tr><td>rstool</td><td class="num">28 files</td><td class="num">8 files</td><td class="barcell"><div class="bar"><span style="width:40%"></span></div></td><td>Mostly through one 1,215-line agent test</td></tr>
+      <tr><td>rstool-mcp</td><td class="num">4 files</td><td class="num">56</td><td class="barcell"><div class="bar"><span style="width:10%"></span></div></td><td>418-line <code>tools.ts</code> barely covered</td></tr>
+      <tr><td>backend (Django)</td><td class="num">~11.9k</td><td class="num">~9.3k</td><td class="barcell"><div class="bar"><span style="width:78%"></span></div></td><td>378 tests run in CI, 24 more never run (T-01)</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--muted);font-size:.85rem">Bar = test:source ratio, normalised to the onboarding feature. Backend source excludes migrations and tests.</p>
+</section>
+
+<section id="tests" aria-labelledby="tests-h">
+  <h2 id="tests-h">Missing tests</h2>
+  <div class="findings">
+
+    <article class="finding high">
+      <div class="top"><span class="chip high">High</span><span class="id">T-01</span><h3>24 backend tests are written but never run</h3><span class="status verified">✓ verified</span></div>
+      <div class="where">apps/library/tests/s_views/__init__.py · apps/users/tests/__init__.py</div>
+      <p>Backend test files are named <code>t_*.py</code>. Django's default discovery pattern is <code>test*.py</code>, so a test file only runs if its package <code>__init__.py</code> star-imports it. Three modules are missing from those imports, so neither CI nor <code>manage.py test</code> ever runs them:</p>
+      <ul>
+        <li><code>library/tests/s_views/t_context_search.py</code>: context-search ranking and access filtering</li>
+        <li><code>library/tests/s_views/t_items_by_ids.py</code>: <code>by-ids</code> access control and ordering</li>
+        <li><code>users/tests/t_docs_views.py</code>: regression guard for OPTIONS returning 500 on the Swagger/ReDoc pages</li>
+      </ul>
+      <p>The full suite reports 378 tests, and none of these appear in the <code>-v 2</code> listing. Run by name, all 24 pass, so they are good tests that nobody is running.</p>
+      <p class="fix"><b>Fix:</b> remove the need to register files by hand. Either run <code>manage.py test -p "t_*.py"</code> in CI and in <code>package.json</code> scripts and empty the star-import <code>__init__</code> files (keeping both would run every test twice), or add a meta-test that fails when a <code>t_*.py</code> file is not imported by its package.</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">T-02</span><h3>5 of the 13 agent API endpoints have no tests, and 4 of them are writes</h3><span class="status verified">✓ verified</span></div>
+      <div class="where">apps/agents/views/rsforms.py · apps/agents/views/library.py · apps/agents/tests/t_agents.py</div>
+      <p>External agents use <code>/api/agents/*</code>. These routes are documented in <code>PORTAL-API.md</code> and have their own throttles and audit log. No test covers <code>rsforms/:id/create-version</code>, <code>constituents/delete</code>, <code>substitute</code>, <code>move-cst</code> or <code>library/by-ids</code>. None of these paths appears anywhere in <code>apps/agents/tests</code>. Each untested write view has its own permission rule (create-version is owner/staff only, the others need edit rights) and its own audit-log summary.</p>
+      <p class="fix"><b>Fix:</b> for each route, test owner OK, editor OK or forbidden, other user 403, read-only item 403, and one audit row written. That is about five cases per route, and they can reuse the existing <code>TestAgentRsformApi</code> fixture.</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">T-03</span><h3>No test checks that frontend and backend agree on the API, and frontend CI runs on backend changes anyway</h3><span class="status verified">✓ verified</span></div>
+      <div class="where">rsconcept/frontend/tests/mocks/* · playwright.config.ts · .github/workflows/frontend.yml</div>
+      <p>Every Playwright spec runs against hand-written <code>page.route</code> mocks, and no spec talks to Django. The workflow is still triggered by <code>rsconcept/backend/**</code>, so a backend-only change runs the full frontend E2E suite. That suite cannot catch a backend change that breaks the frontend, so a green run is a false signal. <code>AGENTS.md</code> says "API contract changes: sync frontend/backend", but nothing enforces it. The mocks are also mutable shared state, which is why the suite is limited to one worker (see the comment in <code>playwright.config.ts</code>).</p>
+      <p class="fix"><b>Fix:</b> pick one of two options. (a) Commit the generated OpenAPI schema, add a CI check that fails when the regenerated schema differs, and generate or validate the frontend zod DTOs from it. (b) Add one smoke E2E job against a real backend started with SQLite and fixtures. In either case, drop the backend path from the frontend workflow unless (b) is chosen.</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">T-04</span><h3>Domain coverage overstates itself, and no package has a coverage gate</h3><span class="status verified">✓ verified</span></div>
+      <div class="where">rsconcept/domain/vitest.config.ts · all package vitest configs · CI workflows</div>
+      <p><code>vitest --coverage</code> reports 78.2% line coverage for <code>@rsconcept/domain</code>. Coverage is only measured for files a test loads, so modules that no test imports are left out of the total entirely:</p>
+      <ul>
+        <li>Not loaded by any test: <code>library/oss-layout-api.ts</code> (377 lines, OSS graph geometry) and <code>library/structure-planner.ts</code> (147 lines)</li>
+        <li>0%: <code>rsform-api/stats.ts</code>, <code>rslang/typification-graph.ts</code>, <code>rslang/semantic/arguments-extractor.ts</code></li>
+        <li>Low: <code>rsmodel-api.ts</code> 24.5%, <code>rsform-api/cst-type.ts</code> 36.7%, <code>rsengine.ts</code> 44.6%, <code>oss-api.ts</code> 57.6%</li>
+      </ul>
+      <p>Only <code>rstool</code> configures coverage at all, and no CI job enforces a minimum.</p>
+      <p class="fix"><b>Fix:</b> set <code>coverage.include: ['src/**']</code> so untested files count against the total. Add a <code>thresholds</code> floor at today's level so coverage cannot drop, and test <code>oss-layout-api</code> and <code>rsmodel-api</code> first, since they are pure functions and easy to test.</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">T-05</span><h3>Frontend tests are concentrated in the wrong places</h3><span class="status verified">✓ verified</span></div>
+      <div class="where">src/features/rsmodel · src/features/oss · src/stores · src/features/agents</div>
+      <p>The onboarding tour has 1,845 lines of tests. Model evaluation (<code>rsmodel</code>, 5.9k lines) and the agents key-management UI have none. OSS has 72 test lines for 7.9k lines of code. These are the pieces most likely to break silently:</p>
+      <ul>
+        <li><code>rsmodel/models/json-file.ts</code>: export payload logic (deduplicating values, falling back to basic bindings)</li>
+        <li><code>rsmodel/backend/model-sync*.ts</code>: keeping the model in sync between the client and the server</li>
+        <li><code>stores/preferences-sync.ts</code>: syncing preferences across browser tabs (the cross-tab code in <code>src/backend</code> is tested, but this store is not)</li>
+      </ul>
+      <p class="fix"><b>Fix:</b> add unit tests for the three modules above before adding more onboarding tests.</p>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">T-06</span><h3><code>rstool-mcp</code> tests the tool names and nothing about the tools' behaviour</h3><span class="status verified">✓ verified</span></div>
+      <div class="where">rsconcept/rstool-mcp/src/server.test.ts · src/tools.ts (418 lines)</div>
+      <p>The test file has three tests. One compares the names against a hard-coded list and calls it "the rstool v2 contract", although the contract is <code>3.3.0</code>. One checks that each schema has <code>type: "object"</code>. One checks how <code>list_diagnostics</code> passes its arguments through. None of the 19 other <code>invoke</code> argument mappings is tested, and nothing checks the MCP tools against the <code>RSToolContract</code> interface (see D-02).</p>
+    </article>
+  </div>
+</section>
+
+<section id="design" aria-labelledby="design-h">
+  <h2 id="design-h">Incomplete design choices</h2>
+  <div class="findings">
+
+    <article class="finding high">
+      <div class="top"><span class="chip high">High</span><span class="id">D-01</span><h3>The two RSForm implementations have drifted apart, and the plain one can write a self-attribution</h3><span class="status verified">✓ verified</span></div>
+      <div class="where">apps/rsform/models/RSForm.py:264 vs RSFormCached.py:264 · Attribution.py</div>
+      <p><code>RSForm</code> and <code>RSFormCached</code> both implement <code>substitute</code>, <code>delete_cst</code>, <code>apply_mapping</code>, <code>reset_aliases</code> and <code>insert_last</code>. Both files carry <code># pylint: disable=duplicate-code</code>. The copies have drifted apart:</p>
+      <ul>
+        <li><code>RSFormCached.substitute</code> skips a remapped attribution when <code>container == attribute</code>. <code>RSForm.substitute</code> does not. A probe test substituted the attribute <code>X1</code> with its own container <code>N1</code>. The plain version saved the attribution <code>(N1 → N1)</code>, and the cached version saved nothing.</li>
+        <li><code>RSForm.insert_last</code> validates the alias, and <code>RSFormCached.insert_last</code> does not.</li>
+      </ul>
+      <p>The plain version is the one that runs for <code>POST /api/rsforms/:id/substitute</code>, the agent <code>substitute</code> route, inline synthesis (<code>rsforms.py:656</code>) and <code>OperationSchema.py:149</code>. Three other code paths reject self-attribution (<code>data_access.py:62</code>, <code>io_files.py:392</code>, <code>PropagationEngine.py:162</code>), but the database has no constraint against it.</p>
+      <p class="fix"><b>Fix:</b> add <code>CheckConstraint(~Q(container=F('attribute')))</code> to <code>Attribution</code> with a data migration that deletes existing self-loops. Copy the guard into <code>RSForm.substitute</code>, and add a test that runs each shared method on both classes with the same fixture. In the long run, make one class delegate to the other.</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">D-02</span><h3>The rstool method list is written by hand in three places, and invalid filters are silently ignored</h3><span class="status verified">✓ verified</span></div>
+      <div class="where">rstool/src/models/tool-contract.ts · rstool/src/wrapper/stdio-handler.ts · rstool-mcp/src/tools.ts</div>
+      <p>Adding a method means editing the <code>RSToolContract</code> interface, the stdio <code>switch</code> plus <code>STDIO_METHODS</code>, and <code>TOOL_DEFINITIONS</code> in the MCP package. Nothing checks that the three lists still match. The code that parses diagnostics filters is also copied, with small differences: stdio still accepts the old nested <code>filters</code> object and MCP does not. Both silently drop an unknown <code>kind</code> or <code>severity</code>. A typo such as <code>severity: "warn"</code> therefore returns all diagnostics with no filter applied, and the caller gets no error.</p>
+      <p class="fix"><b>Fix:</b> export one method table from <code>rstool</code> with the name, how to map arguments, and the JSON schema, and build both adapters from it. Reject invalid enum values with an error. Until then, add a test that checks the stdio method list against the MCP tool names, mapping camelCase to snake_case.</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">D-03</span><h3>The Portal JSON contract version has no compatibility rule, and the constant is defined three times</h3><span class="status verified">✓ verified</span></div>
+      <div class="where">backend/shared/portal_json.py · shared/serializers.py:35 · frontend/src/utils/constants.ts:64 · library/models/portal-import-json.ts · rstool/src/models/portal-json.ts</div>
+      <p><code>PORTAL_JSON_CONTRACT_VERSION = '1.0.0'</code> is defined separately in the backend, the frontend and rstool. The <code>@rsconcept/domain</code> package exists to hold shared definitions like this, but does not hold this one. The backend and the frontend both accept only an exact match (<code>!=</code> and <code>z.literal</code>), and the frontend parses with <code>z.strictObject</code>, which rejects unknown fields. As a result, any version bump, even one that only adds a field, makes every file exported earlier unreadable and breaks any client that has not updated. The version looks like semver, but the code does not treat it as semver.</p>
+      <p class="fix"><b>Fix:</b> move the constant into <code>@rsconcept/domain</code> and generate the Python value from it, or check in CI that the copies match. Accept any version with the same major number. Document the format (see DOC-02).</p>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">D-04</span><h3>Some UI actions open a "Feature is under development" message</h3><span class="status plausible">◐ plausible</span></div>
+      <div class="where">features/sandbox/context/sandbox-schema-state.tsx:411 · sandbox-model-state.tsx:20</div>
+      <p>In the sandbox, <code>deleteSchema</code> and <code>deleteModel</code> are wired to <code>notImplemented()</code>, which shows a toast. If the controls are reachable, users can click an action that does nothing. Either hide those controls in sandbox mode, or define delete as "reset the sandbox" and implement that.</p>
+    </article>
+  </div>
+</section>
+
+<section id="restrict" aria-labelledby="restrict-h">
+  <h2 id="restrict-h">Unnecessary checks, restrictions &amp; tests</h2>
+  <div class="findings">
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">R-01</span><h3>The client-side password similarity check disagrees with Django's validator</h3><span class="status verified">✓ verified</span></div>
+      <div class="where">frontend/src/features/auth/backend/password-validation.ts · backend/project/settings.py:367</div>
+      <p><code>isPasswordTooSimilar</code> reimplements Django's <code>UserAttributeSimilarityValidator</code> with different logic. Django compares strings with <code>SequenceMatcher.quick_ratio</code>. The client uses Levenshtein distance and also treats any substring match as ratio 1. It splits user fields on <code>/\W+/</code> without the <code>u</code> flag, so Cyrillic letters count as separators. Results from the same inputs:</p>
+      <div class="scroll">
+      <table class="probe-table">
+        <thead><tr><th>Password</th><th>User fields</th><th>Client rejects?</th><th>Django rejects?</th></tr></thead>
+        <tbody>
+          <tr><td><code>Truestory2024</code></td><td>email <code>ivan.petrov@mail.ru</code></td><td class="yes">yes (the email part "ru" is a substring)</td><td class="no">no</td></tr>
+          <tr><td><code>Alpha-Centauri7</code></td><td>first name <code>Al</code></td><td class="yes">yes</td><td class="no">no</td></tr>
+          <tr><td><code>иванов2024</code></td><td>last name <code>Иванов</code></td><td class="no">no (Cyrillic name split away)</td><td class="yes">yes</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>The client blocks valid passwords, and lets through passwords the server then rejects. The audience is Russian-speaking, and Russian email domains (<code>.ru</code>) and Cyrillic names are common, so both cases come up in normal use.</p>
+      <p class="fix"><b>Fix:</b> remove the client-side similarity check and show Django's field error, which the form can already do. If an immediate client-side warning is wanted, port <code>quick_ratio</code> exactly, use <code>/\W+/u</code>, and add test cases that match Django's results on the same inputs.</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">R-02</span><h3>Frontend field limits do not match backend limits</h3><span class="status verified">✓ verified</span></div>
+      <div class="where">frontend/src/utils/constants.ts:45 · rsform/backend/types.ts:157,187 · auth/backend/types.ts · Constituenta.py:43 · data_access.py:455</div>
+      <p>One constant, <code>limits.len_alias = 255</code>, is used for fields that have different limits on the server:</p>
+      <ul>
+        <li>Constituent alias: the client allows 255 characters, the model allows <b>8</b>. Anything over 8 reaches the server and comes back as a 400 error instead of an inline message.</li>
+        <li>Username: the client allows 255, Django allows <b>150</b>.</li>
+        <li>Login and current password: capped at 255 on the client, while the server has no limit. A user with a longer password could never log in from the UI.</li>
+        <li>Batch constituent create: the client only requires <code>.min(1)</code>, while the server caps the batch at <b>100</b> (<code>CST_BATCH_CREATE_MAX_ITEMS</code>). Cloning more than 100 selected constituents from the RSForm page (<code>use-schema-cst-actions.ts:104</code>) will fail on the server (likely, not run).</li>
+      </ul>
+      <p class="fix"><b>Fix:</b> give each field its own limit constant that mirrors the backend (alias 8, username 150), remove the max length on login passwords, and either split clone/template batches into chunks of 100 or cap the selection. A test that compares the frontend limits with the generated OpenAPI <code>maxLength</code> values would stop this drifting again.</p>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">R-03</span><h3>Redundant or unreachable checks</h3><span class="status verified">✓ verified</span></div>
+      <div class="where">rsform/serializers/io_files.py:301,322 · agents/views/rsforms.py:55-66,194-197 · shared/permissions.py</div>
+      <ul>
+        <li><b>Sandbox import item cap checked twice.</b> <code>ListField(max_length=TRS_IMPORT_MAX_ITEMS)</code> already rejects oversized lists before <code>validate()</code> runs, so the second check at line 322 can never trigger.</li>
+        <li><b><code>_quota_passed</code> is always true.</b> <code>initial()</code> sets it whenever <code>agent_action</code> is set, and <code>handle_exception</code> then checks both. No quota is checked at this point, so the flag adds nothing, and its name suggests a quota gate that does not exist.</li>
+        <li><b>create-version validates <code>items</code>, then reads the raw body again.</b> <code>VersionCreateSerializer</code> validates <code>items</code>, but the view then reads <code>request.data['items']</code> directly. It should use <code>validated_data</code>.</li>
+        <li><b><code>hasattr(user, 'is_staff')</code> guards</b> in <code>can_read_library_item</code>, <code>can_edit_item</code> and <code>GlobalAdmin</code> cannot fail, because both <code>User</code> and <code>AnonymousUser</code> define <code>is_staff</code>.</li>
+        <li><b>The permission "hierarchy" is only inheritance on paper.</b> <code>ItemAnyone</code> extends <code>ItemEditor</code>, which extends <code>ItemOwner</code>, but each class overrides every method, so nothing is actually inherited. Readers will assume a chain of permissions that is not there. Use flat classes that delegate to <code>can_read_library_item</code> and <code>can_edit_item</code>.</li>
+      </ul>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">R-04</span><h3>Tests that only check Django or the framework</h3><span class="status verified">✓ verified</span></div>
+      <div class="where">oss/tests/s_models/t_Layout.py · t_Operation.py · rsform/tests/t_serializers.py · 11 files total</div>
+      <p>There are 19 tests of <code>__str__</code>, field defaults and <code>related_name</code> lookups (for example <code>test_related_name_layout</code> and <code>test_default_data</code>). They check that the Django ORM behaves like the Django ORM. <code>TestExpressionSerializer</code> checks that a required <code>CharField</code> is required. They are cheap to run but add maintenance work and inflate the test count. Replace them with tests of behaviour, starting with the gaps in T-02 and D-01, or simply delete them.</p>
+    </article>
+  </div>
+</section>
+
+<section id="docs" aria-labelledby="docs-h">
+  <h2 id="docs-h">Documentation &amp; tooling gaps</h2>
+  <div class="findings">
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">DOC-01</span><h3>The OpenAPI schema leaves out API-key auth and the key-management endpoints</h3><span class="status verified">✓ verified</span></div>
+      <div class="where">apps/agents/authentication.py · apps/agents/views/keys.py · <code>manage.py spectacular</code></div>
+      <p>Generating the schema produces 14 warnings and 7 errors. No <code>OpenApiAuthenticationExtension</code> is registered for <code>ApiKeyAuthentication</code>, so Swagger lists the 13 agent routes with no security scheme, and the Bearer API key cannot be used from the docs UI. <code>ApiKeyViewSet</code> fails with "unable to guess serializer" and is left out of the schema completely, and its <code>id</code> path parameter comes out with no type. CI never builds the schema, so these warnings appear only when someone runs the command by hand.</p>
+      <p class="fix"><b>Fix:</b> register an auth extension with <code>type: http, scheme: bearer</code>, give <code>ApiKeyViewSet</code> a serializer and an <code>&lt;int:pk&gt;</code> path, and add <code>manage.py spectacular --validate --fail-on-warn</code> to backend CI. That check is also the basis of the contract test in T-03.</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">DOC-02</span><h3>The Portal JSON import/export format is not documented</h3><span class="status verified">✓ verified</span></div>
+      <div class="where">rsconcept/rstool/docs/PORTAL-API.md · README.md</div>
+      <p>No Markdown file in the repository mentions <code>contract_version</code>. The format is shared by RSForm and RSModel exports, by the agent <code>replace</code> route and by rstool's <code>exportPortal</code>. Its required fields, item shapes, versioning rule (see D-03) and size limits (2 MB on the client, 500 items for TRS/sandbox imports, 100 per batch) can only be learned from three separate parsers.</p>
+      <p class="fix"><b>Fix:</b> add a "Portal JSON v1" section to <code>PORTAL-API.md</code> with a JSON Schema and one example each for RSForm and RSModel.</p>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">CI-01</span><h3>Some code is never linted</h3><span class="status verified">✓ verified</span></div>
+      <div class="where">.github/workflows/backend.yml · rstool/ · rstool-mcp/ · mypy.ini</div>
+      <ul>
+        <li>The backend CI runs <code>pylint project apps</code> and <code>mypy project apps</code>, which leaves out <code>shared/</code>. That folder holds the permission rules, concurrency control, serializers and throttling, which are the security-relevant parts. Running <code>pylint shared</code> today reports warnings (missing docstrings and a pointless string statement in <code>DBTester.py</code>) that CI would currently fail on.</li>
+        <li><code>mypy.ini</code> has unused sections for <code>apps.users.views</code> and <code>apps.users.tests.t_views</code>.</li>
+        <li><code>rstool</code> and <code>rstool-mcp</code> are published packages but have no ESLint config and no lint step in CI. Only <code>domain</code> and <code>frontend</code> are linted.</li>
+      </ul>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">DOC-03</span><h3>Small cleanups</h3><span class="status verified">✓ verified</span></div>
+      <ul>
+        <li><code>rsconcept/frontend/tests/_layering.png</code> is a 142 KB screenshot committed in commit <code>011b66a</code> that nothing references.</li>
+        <li>The test title in <code>rstool-mcp/src/server.test.ts</code> says "v2 contract", but <code>CONTRACT_VERSION</code> is <code>3.3.0</code>.</li>
+        <li>Backend app modules have no README. The agents app is documented only from the agent's point of view, in <code>rstool/docs/PORTAL-API.md</code>. Operators have no notes on <code>prune_agent_logs</code>, <code>MAX_ACTIVE_KEYS</code> or the <code>AGENT_LOG_*</code> environment variables beyond that file.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section aria-labelledby="good-h">
+  <h2 id="good-h">What is in good shape</h2>
+  <ul class="plain">
+    <li>The backend suite (378 tests) passes in about 33 seconds, and each app has separate model, view and propagation test packages.</li>
+    <li>The agent REST API has user-facing documentation in Russian, covering auth, every route, throttling, retention and 429 handling (<code>PORTAL-API.md</code>).</li>
+    <li>The rstool README and MCP README list every method and are kept in step with contract <code>3.3.0</code>.</li>
+    <li>The i18n test <code>locale-keys-parity</code> checks that the <code>en</code>, <code>ru</code> and <code>fr</code> key sets match. Many of the drift problems above could be caught by tests of the same kind.</li>
+    <li>The frontend's cross-tab auth and reset logic (<code>src/backend</code>) is thoroughly tested, with roughly as many test lines as source lines.</li>
+  </ul>
+</section>
+
+<section id="plan" aria-labelledby="plan-h">
+  <h2 id="plan-h">Action plan</h2>
+  <ol class="steps">
+    <li><b>Today:</b> register the three orphan test modules, or switch to <code>-p "t_*.py"</code> (T-01).</li>
+    <li><b>Today:</b> add the <code>Attribution</code> self-loop constraint and port the guard into <code>RSForm.substitute</code> (D-01).</li>
+    <li><b>This sprint:</b> remove or fix the client-side password similarity check (R-01), and split the shared <code>len_alias</code> limit into per-field limits (R-02).</li>
+    <li><b>This sprint:</b> add tests for the five uncovered agent routes (T-02), and fix the OpenAPI auth extension and add the <code>spectacular --fail-on-warn</code> CI step (DOC-01).</li>
+    <li><b>Next:</b> commit the OpenAPI schema and check it in CI, then generate or validate the frontend DTOs from it (T-03 and R-02).</li>
+    <li><b>Next:</b> include all files in coverage and add thresholds, starting with <code>oss-layout-api</code> and <code>rsmodel-api</code> (T-04), then rsmodel and stores frontend tests (T-05).</li>
+    <li><b>Next:</b> build both rstool adapters from one method table and reject invalid filters (D-02). Move the Portal JSON constant into <code>domain</code>, accept any minor version within the same major, and document the format (D-03 and DOC-02).</li>
+    <li><b>Housekeeping:</b> R-03, R-04, CI-01 and DOC-03.</li>
+  </ol>
+</section>
+
+<section id="evidence" aria-labelledby="ev-h">
+  <h2 id="ev-h">Evidence</h2>
+  <p>Each "verified" finding was reproduced on <code>b8bf759</code>. The probe test files were written to a temporary location and deleted after running, so the repository was not changed.</p>
+  <div class="probe">$ uv run python manage.py test                       → Ran 378 tests … OK
+$ uv run python manage.py test -v 2 | grep -c 'ItemsByIds\|ContextSearch\|DocsView'  → 0
+$ uv run python manage.py test apps.library.tests.s_views.t_context_search \
+    apps.library.tests.s_views.t_items_by_ids apps.users.tests.t_docs_views  → Ran 24 tests … OK
+
+# D-01 probe: substitute attribute X1 by its own container N1
+RSForm.substitute        → Attribution rows: [(1, 1)]     # self-loop written
+RSFormCached.substitute  → Attribution rows: []
+
+# R-01 probe (client isPasswordTooSimilar vs Django UserAttributeSimilarityValidator)
+client: [true, true, false]     django: [ok, ok, reject]
+
+# T-04
+$ npx vitest run --coverage (domain)  → Lines 78.2% (4224/5401); oss-layout-api.ts, structure-planner.ts absent
+
+# DOC-01
+$ manage.py spectacular  → Warnings: 14 (13 unique), Errors: 7 (1 unique)
+
+# CI-01
+$ uv run pylint shared   → C0115 missing-class-docstring ×2, W0105 pointless-string-statement</div>
+</section>
+
+<footer>
+  Generated with Claude Code · review of <code>b8bf759</code> · findings numbered independently of the CDR series in <code>reviews/2026-10-05-critical-design-review.html</code>.
+</footer>
+
+</main>
+</body>
+</html>
