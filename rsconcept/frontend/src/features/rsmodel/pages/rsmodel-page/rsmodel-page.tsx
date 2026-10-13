@@ -8,6 +8,7 @@ import { useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 import { RSModelTabID } from '@/app/navigation/navigation-context';
+import { tabQuerySchema } from '@/app/navigation/tab-query';
 import { ConstituentaTooltip } from '@/features/rsform/components/constituenta-tooltip';
 
 import { isAxiosError } from '@/backend/api-transport';
@@ -22,7 +23,7 @@ import { ModelTabs } from './model-tabs';
 
 const paramsModel = z.strictObject({
   id: z.coerce.number(),
-  tab: z.preprocess(v => (v ? Number(v) : undefined), z.enum(RSModelTabID).default(RSModelTabID.CARD)),
+  tab: tabQuerySchema(RSModelTabID, RSModelTabID.CARD),
   activeID: z.coerce
     .number()
     .nullish()

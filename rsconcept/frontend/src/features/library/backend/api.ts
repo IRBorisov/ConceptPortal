@@ -10,7 +10,7 @@ import {
   type VersionCreatedResponse
 } from '@/features/rsform';
 
-import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
+import { axiosDelete, axiosGet, axiosPatch, axiosPost, isAxiosError } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { resolveExpectedTimeUpdate } from '@/backend/expected-time-update';
 
@@ -32,21 +32,54 @@ import {
   type VersionInfoDTO
 } from './types';
 
+function fetchActiveLibrary(signal: AbortSignal): Promise<LibraryItem[]> {
+  return axiosGet<LibraryItem[]>({
+    schema: schemaLibraryItemArray,
+    endpoint: '/api/library/active',
+    options: { signal }
+  });
+}
+
 export const libraryApi = {
   baseKey: KEYS.library,
   libraryListKey: KEYS.composite.libraryList,
   contextSearchKey: [KEYS.library, 'context-search'] as const,
 
-  getLibraryQueryOptions: ({ isAdmin }: { isAdmin: boolean }) =>
+  getLibraryQueryOptions: ({
+    isAdmin,
+    onAdminForbidden
+  }: {
+    isAdmin: boolean;
+    /** Called when `/api/library/all` answers 403 and the active list is used instead. */
+    onAdminForbidden?: () => void;
+  }) =>
     queryOptions({
       queryKey: [...libraryApi.libraryListKey, isAdmin ? 'admin' : 'user'],
       staleTime: DELAYS.staleMedium,
-      queryFn: meta =>
-        axiosGet<LibraryItem[]>({
-          schema: schemaLibraryItemArray,
-          endpoint: isAdmin ? '/api/library/all' : '/api/library/active',
-          options: { signal: meta.signal }
-        })
+      queryFn: async (meta): Promise<LibraryItem[]> => {
+        if (!isAdmin) {
+          return fetchActiveLibrary(meta.signal);
+        }
+        try {
+          return await axiosGet<LibraryItem[]>({
+            schema: schemaLibraryItemArray,
+            endpoint: '/api/library/all',
+            notifyOnError: false,
+            options: { signal: meta.signal }
+          });
+        } catch (error) {
+          if (!isAxiosError(error) || error.response?.status !== 403) {
+            throw error;
+          }
+          const items = await meta.client.fetchQuery({
+            queryKey: [...libraryApi.libraryListKey, 'user'],
+            staleTime: DELAYS.staleMedium,
+            queryFn: context => fetchActiveLibrary(context.signal)
+          });
+          onAdminForbidden?.();
+          return items;
+        }
+      }
     }),
   getTemplatesQueryOptions: () =>
     queryOptions({

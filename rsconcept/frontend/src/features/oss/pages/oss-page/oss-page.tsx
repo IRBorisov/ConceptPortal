@@ -8,6 +8,7 @@ import { useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 import { OssTabID } from '@/app/navigation/navigation-context';
+import { tabQuerySchema } from '@/app/navigation/tab-query';
 import { ConstituentaTooltip } from '@/features/rsform/components/constituenta-tooltip';
 
 import { isAxiosError } from '@/backend/api-transport';
@@ -23,7 +24,7 @@ import { OssTabs } from './oss-tabs';
 
 const paramsSchema = z.strictObject({
   id: z.coerce.number(),
-  tab: z.preprocess(v => (v ? Number(v) : undefined), z.enum(OssTabID).default(OssTabID.GRAPH))
+  tab: tabQuerySchema(OssTabID, OssTabID.GRAPH)
 });
 
 export function OssPage() {

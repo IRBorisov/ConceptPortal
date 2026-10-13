@@ -5,6 +5,7 @@ import { useLocation } from 'react-router';
 import { z } from 'zod';
 
 import { RSModelTabID } from '@/app/navigation/navigation-context';
+import { tabQuerySchema } from '@/app/navigation/tab-query';
 import { ConstituentaTooltip } from '@/features/rsform/components/constituenta-tooltip';
 
 import { useResetModification } from '@/hooks/use-reset-modification';
@@ -15,7 +16,7 @@ import { SandboxSchemaState } from '../../context/sandbox-schema-state';
 import { SandboxTabs } from '../sandbox-editor/sandbox-tabs';
 
 const paramsModel = z.strictObject({
-  tab: z.preprocess(v => (v ? Number(v) : undefined), z.enum(RSModelTabID).default(RSModelTabID.CARD)),
+  tab: tabQuerySchema(RSModelTabID, RSModelTabID.CARD),
   activeID: z.coerce
     .number()
     .nullish()

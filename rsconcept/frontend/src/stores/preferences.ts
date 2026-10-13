@@ -22,6 +22,7 @@ interface PreferencesStore {
   toggleShowHelp: () => void;
 
   adminMode: boolean;
+  setAdminMode: (value: boolean) => void;
   toggleAdminMode: () => void;
 
   libraryPagination: number;
@@ -88,6 +89,7 @@ export const usePreferencesStore = create<PreferencesStore>()(
       toggleShowHelp: () => set(state => ({ showHelp: !state.showHelp })),
 
       adminMode: false,
+      setAdminMode: value => set(state => (state.adminMode === value ? state : { adminMode: value })),
       toggleAdminMode: () => set(state => ({ adminMode: !state.adminMode })),
 
       libraryPagination: 20,
