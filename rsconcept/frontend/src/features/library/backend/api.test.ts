@@ -70,15 +70,35 @@ describe('libraryApi.getLibraryQueryOptions', () => {
   });
 
   it('falls back to the active list when the admin list is forbidden', async () => {
-    const onAdminForbidden = vi.fn();
-    vi.mocked(axiosGet)
-      .mockRejectedValueOnce(axiosError(403, { detail: 'Учетные данные не были предоставлены.' }))
-      .mockResolvedValueOnce(activeItems);
+    const order: string[] = [];
+    const onAdminForbidden = vi.fn(() => {
+      order.push('forbidden');
+    });
+    vi.mocked(axiosGet).mockImplementation(request => {
+      if (request.endpoint === '/api/library/all') {
+        order.push('all');
+        return Promise.reject(axiosError(403, { detail: 'Учетные данные не были предоставлены.' }));
+      }
+      order.push('active');
+      return Promise.resolve(activeItems);
+    });
 
     await expect(fetchLibrary(true, onAdminForbidden)).resolves.toEqual(activeItems);
+    expect(order).toEqual(['all', 'forbidden', 'active']);
+  });
+
+  it('turns admin mode off even when the active list also fails', async () => {
+    const onAdminForbidden = vi.fn();
+    const activeError = axiosError(500, { detail: 'boom' });
+    vi.mocked(axiosGet).mockImplementation(request => {
+      if (request.endpoint === '/api/library/all') {
+        return Promise.reject(axiosError(403, { detail: 'Учетные данные не были предоставлены.' }));
+      }
+      return Promise.reject(activeError);
+    });
+
+    await expect(fetchLibrary(true, onAdminForbidden)).rejects.toBe(activeError);
     expect(onAdminForbidden).toHaveBeenCalledOnce();
-    expect(axiosGet).toHaveBeenNthCalledWith(1, expect.objectContaining({ endpoint: '/api/library/all' }));
-    expect(axiosGet).toHaveBeenNthCalledWith(2, expect.objectContaining({ endpoint: '/api/library/active' }));
   });
 
   it('rethrows failures other than 403', async () => {
