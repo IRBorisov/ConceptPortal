@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { useTx } from '@/i18n';
 
 import { PromptTabID } from '@/app/navigation/navigation-context';
+import { tabQuerySchema } from '@/app/navigation/tab-query';
 import { routes } from '@/app/urls';
 import { RequireAuth } from '@/features/auth/components/require-auth';
 
@@ -18,7 +19,7 @@ import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 import { TemplatesTabs } from './templates-tabs';
 
 const paramsSchema = z.strictObject({
-  tab: z.preprocess(v => (v ? Number(v) : undefined), z.enum(PromptTabID).default(PromptTabID.LIST)),
+  tab: tabQuerySchema(PromptTabID, PromptTabID.LIST),
   active: z.preprocess(v => (v ? Number(v) : undefined), z.number().nullable().default(null))
 });
 

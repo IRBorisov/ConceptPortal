@@ -8,6 +8,7 @@ import { useTx } from '@/i18n';
 
 import { urls, useConceptNavigation } from '@/app';
 import { RSTabID } from '@/app/navigation/navigation-context';
+import { tabQuerySchema } from '@/app/navigation/tab-query';
 
 import { isAxiosError } from '@/backend/api-transport';
 import { Divider } from '@/components/container';
@@ -28,7 +29,7 @@ const paramsSchema = z.strictObject({
     .number()
     .nullish()
     .transform(v => v ?? undefined),
-  tab: z.preprocess(v => (v ? Number(v) : undefined), z.enum(RSTabID).default(RSTabID.CARD)),
+  tab: tabQuerySchema(RSTabID, RSTabID.CARD),
   activeID: z.coerce
     .number()
     .nullish()
