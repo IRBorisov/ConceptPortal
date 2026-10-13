@@ -71,13 +71,12 @@ export const libraryApi = {
           if (!isAxiosError(error) || error.response?.status !== 403) {
             throw error;
           }
-          const items = await meta.client.fetchQuery({
+          onAdminForbidden?.();
+          return meta.client.fetchQuery({
             queryKey: [...libraryApi.libraryListKey, 'user'],
             staleTime: DELAYS.staleMedium,
             queryFn: context => fetchActiveLibrary(context.signal)
           });
-          onAdminForbidden?.();
-          return items;
         }
       }
     }),
