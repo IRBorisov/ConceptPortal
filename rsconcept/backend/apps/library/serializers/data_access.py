@@ -182,6 +182,9 @@ class VersionCreateSerializer(StrictModelSerializer):
         ''' serializer metadata. '''
         model = Version
         fields = 'version', 'description', 'items'
+        extra_kwargs = {
+            'description': {'default': ''}
+        }
 
 
 class LibraryItemDetailsSerializer(StrictModelSerializer):
