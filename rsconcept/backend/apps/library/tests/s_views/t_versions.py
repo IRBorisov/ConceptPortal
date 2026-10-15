@@ -43,6 +43,13 @@ class TestVersionViews(EndpointTester):
 
 
     @decl_endpoint('/api/library/{schema}/create-version', method='post')
+    def test_create_version_omitted_description(self):
+        response = self.executeCreated({'version': '1.0.0'}, schema=self.owned_id)
+        version = Version.objects.get(pk=response.data['version'])
+        self.assertEqual(version.description, '')
+
+
+    @decl_endpoint('/api/library/{schema}/create-version', method='post')
     def test_create_version_filter(self):
         x2 = self.owned.insert_last('X2')
         data = {'version': '1.0.0', 'description': 'test', 'items': [x2.pk]}
