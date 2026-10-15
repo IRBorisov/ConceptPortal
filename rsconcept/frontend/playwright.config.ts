@@ -23,13 +23,12 @@ export default defineConfig({
   /** Vite `webServer` is one process; parallel workers share mutable API mocks and flake. Override with PLAYWRIGHT_WORKERS only after mocks are per-worker isolated. */
   workers: process.env.PLAYWRIGHT_WORKERS ? Number(process.env.PLAYWRIGHT_WORKERS) : 1,
   fullyParallel: true,
-  projects: runAllBrowsers
-    ? [
-        { name: 'Desktop Chrome', use: chrome },
-        { name: 'Desktop Firefox', use: firefox },
-        { name: 'Desktop Safari', use: safari }
-      ]
-    : [{ name: 'Desktop Chrome', use: chrome }],
+  /** Firefox/Safari stay configured but skipped locally; run one with `--project="Desktop Firefox"`. */
+  projects: [
+    { name: 'Desktop Chrome', use: chrome },
+    { name: 'Desktop Firefox', use: firefox, default: runAllBrowsers },
+    { name: 'Desktop Safari', use: safari, default: runAllBrowsers }
+  ],
   use: {
     /** Cloud agent containers ship a preinstalled Chromium; see scripts/cloud/README.md. */
     launchOptions: process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {},
