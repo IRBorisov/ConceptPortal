@@ -22,6 +22,12 @@ from shared.concurrency import ConcurrencyMixin, assert_expected_time_update_loc
 
 from .. import models as m
 from .. import serializers as s
+from ..mutations import (
+    clear_constituent_values,
+    require_bound_schema,
+    reset_constituent_values,
+    set_constituent_values,
+)
 
 
 @extend_schema(tags=['RSModel'])
@@ -34,14 +40,8 @@ class RSModelViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPI
     def _get_item(self) -> LibraryItem:
         return cast(LibraryItem, self.get_object())
 
-    def _get_schema(self) -> LibraryItem | None:
-        return m.RSModel.objects.get(model=self.get_object()).schema
-
     def _require_schema(self) -> LibraryItem:
-        schema = self._get_schema()
-        if schema is None:
-            raise ValidationError({'schema': 'Model has no schema bound'})
-        return schema
+        return require_bound_schema(self._get_item())
 
     def get_queryset(self):
         if self.action == 'list':
@@ -169,20 +169,7 @@ class RSModelViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPI
         item = self._get_item()
         serializer = s.CstDataUpdateSerializer(data=request.data, context={'schema': self._require_schema()}, many=True)
         serializer.is_valid(raise_exception=True)
-        validated_data = serializer.validated_data
-
-        with transaction.atomic():
-            assert_expected_time_update_locked(item, request)
-            for cst_data in validated_data:
-                m.ConstituentData.objects.update_or_create(
-                    model=item,
-                    constituent=cst_data['target'],
-                    defaults={
-                        'type': cst_data['type'],
-                        'data': cst_data['data']
-                    }
-                )
-            item.save(update_fields=['time_update'])
+        set_constituent_values(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSModelSerializer(item).data
@@ -205,12 +192,7 @@ class RSModelViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPI
         serializer = CstListSerializer(data=request.data, context={'schema': self._require_schema()})
         serializer.is_valid(raise_exception=True)
         cst_list: list[Constituenta] = serializer.validated_data['items']
-        ids = [cst.pk for cst in cst_list]
-
-        with transaction.atomic():
-            assert_expected_time_update_locked(item, request)
-            m.ConstituentData.objects.filter(model=item, constituent_id__in=ids).delete()
-            item.save(update_fields=['time_update'])
+        clear_constituent_values(item, cst_list, request)
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSModelSerializer(item).data
@@ -231,10 +213,7 @@ class RSModelViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPI
         ''' Endpoint: Reset all constituent values in the model. '''
         item = self._get_item()
         self._require_schema()
-        with transaction.atomic():
-            assert_expected_time_update_locked(item, request)
-            m.ConstituentData.objects.filter(model=item).delete()
-            item.save(update_fields=['time_update'])
+        reset_constituent_values(item, request)
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSModelSerializer(item).data

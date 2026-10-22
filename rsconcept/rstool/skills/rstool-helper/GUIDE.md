@@ -123,6 +123,8 @@ console.log(tool.listDiagnostics());
 не открывай SPA и не парси HTML: преобразуй ссылку в REST-запрос по правилам
 [PORTAL-API.md](../../docs/PORTAL-API.md) — там пути, контекстный поиск, правила доступа и curl.
 Чтение и запись от имени пользователя идут через Bearer API-ключ на `/api/agents/...`.
+Ключ читает и меняет интерпретации концептуальной модели (`/api/agents/models/:id/details`,
+`set-value`, `clear-values`, `reset-all`); граф ОСС этим ключом по-прежнему не открывается.
 Без ключа анонимный REST видит только публичные схемы.
 
 Portal JSON из `/details` не является форматом `exportSession`. Используй `importData(payload)` —
