@@ -18,7 +18,7 @@ import { GlobalLoader } from '../global-loader';
 import { ToasterThemed } from '../global-toaster';
 import { GlobalTooltips } from '../global-tooltips';
 import { MutationErrors } from '../mutation-errors';
-import { Navigation } from '../navigation';
+import { Navigation, RouteTransition } from '../navigation';
 import { PdfExportOverlay } from '../pdf-export-overlay';
 
 export function LayoutMain() {
@@ -56,7 +56,9 @@ export function LayoutMain() {
         <main className='cc-scroll-y overflow-y-auto' style={{ height: mainHeight }}>
           <GlobalLoader />
           <MutationErrors />
-          <Outlet />
+          <RouteTransition>
+            <Outlet />
+          </RouteTransition>
         </main>
         {!noNavigation && !noFooter ? <Footer /> : null}
       </div>

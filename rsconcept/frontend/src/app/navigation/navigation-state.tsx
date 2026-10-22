@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 
 import { type LibraryItemType } from '@rsconcept/domain/library';
 
-import { absorbViewTransitionAbort, isViewTransitionAbortError } from '@/app/navigation/view-transition-error';
+import { isViewTransitionAbortError } from '@/app/navigation/view-transition-error';
 
 import { useTooltipsStore } from '@/stores/tooltips';
 
@@ -16,7 +16,6 @@ import { NavigationContext, type NavigationProps, PromptTabID, RSModelTabID, RST
 
 interface RouterCallOptions {
   replace?: boolean;
-  viewTransition?: boolean;
 }
 
 export const NavigationState = ({ children }: React.PropsWithChildren) => {
@@ -31,10 +30,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     if (typeof to === 'number') {
       return router(to);
     }
-    const result = options?.viewTransition
-      ? router(to, { replace: options.replace, viewTransition: true })
-      : router(to, options?.replace ? { replace: true } : undefined);
-    return options?.viewTransition ? absorbViewTransitionAbort(result) : result;
+    return router(to, options?.replace ? { replace: true } : undefined);
   }
 
   function runConfirmedNavigation(action: () => void | Promise<void>): Promise<void> {
@@ -90,7 +86,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     } else {
       requestNavigation(() => {
         setInternalNavigation(true);
-        return callRouter(props.path, { viewTransition: true });
+        return callRouter(props.path);
       }, props.force);
     }
   }
@@ -102,7 +98,7 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
     } else if (props.force || !onSave) {
       setInternalNavigation(true);
       enableTooltips();
-      return callRouter(props.path, { viewTransition: true });
+      return callRouter(props.path);
     } else {
       return promptUnsaved({
         onSave,
@@ -110,25 +106,25 @@ export const NavigationState = ({ children }: React.PropsWithChildren) => {
           runConfirmedNavigation(() => {
             setInternalNavigation(true);
             enableTooltips();
-            return callRouter(props.path, { viewTransition: true });
+            return callRouter(props.path);
           })
       }).then(() => undefined);
     }
   }
 
   function replace(props: Omit<NavigationProps, 'newTab'>): void {
-    requestNavigation(() => callRouter(props.path, { replace: true, viewTransition: true }), props.force);
+    requestNavigation(() => callRouter(props.path, { replace: true }), props.force);
   }
 
   function replaceAsync(props: Omit<NavigationProps, 'newTab'>): void | Promise<void> {
     const onSave = saveHandler.current?.handler;
     if (props.force || !onSave) {
       enableTooltips();
-      return callRouter(props.path, { replace: true, viewTransition: true });
+      return callRouter(props.path, { replace: true });
     } else {
       void promptUnsaved({
         onSave,
-        onConfirm: () => runConfirmedNavigation(() => callRouter(props.path, { replace: true, viewTransition: true }))
+        onConfirm: () => runConfirmedNavigation(() => callRouter(props.path, { replace: true }))
       });
     }
   }
