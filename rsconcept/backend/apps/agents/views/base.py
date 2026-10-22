@@ -28,16 +28,19 @@ class AgentItemView(APIView):
     agent_heavy = False
 
     def get_throttles(self):
+        ''' Use the read quota for safe methods and the write quota otherwise. '''
         if self.request.method in ('GET', 'HEAD', 'OPTIONS'):
             return [AgentReadThrottle()]
         return [AgentWriteThrottle()]
 
     def initial(self, request, *args, **kwargs):
+        ''' Mark the request so a later error is still written to the action log. '''
         super().initial(request, *args, **kwargs)
         if self.agent_action:
             self._quota_passed = True
 
     def handle_exception(self, exc):
+        ''' Log a failed mutation once, after the quota check has passed. '''
         response = super().handle_exception(exc)
         action = self.agent_action
         should_log = (
@@ -50,16 +53,19 @@ class AgentItemView(APIView):
         return response
 
     def _get_item(self, pk: int, item_type: str) -> LibraryItem:
+        ''' Load one library item of the given type, or answer 404. '''
         try:
             return LibraryItem.objects.get(pk=pk, item_type=item_type)
         except LibraryItem.DoesNotExist as exc:
             raise NotFound() from exc
 
     def _require_read(self, item: LibraryItem) -> None:
+        ''' Refuse the call when the key user cannot read the item. '''
         if not shared_permissions.can_read_library_item(self.request.user, item):
             raise PermissionDenied()
 
     def _require_edit(self, item: LibraryItem) -> None:
+        ''' Refuse the call when the key user cannot edit the item. '''
         if not shared_permissions.can_edit_item(self.request.user, item):
             raise PermissionDenied()
 
@@ -70,6 +76,7 @@ class AgentItemView(APIView):
         summary: str = '',
         item: LibraryItem | None = None,
     ) -> None:
+        ''' Store one action-log row and skip a second log for the same request. '''
         self._audited = True
         log_agent_action(
             user=self.request.user,

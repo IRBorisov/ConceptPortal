@@ -32,6 +32,7 @@ class AgentRsformBase(AgentItemView):
     ''' Shared auth for agent RSForm routes. '''
 
     def _get_rsform(self, pk: int) -> LibraryItem:
+        ''' Load a conceptual schema or answer 404 for another library type. '''
         return self._get_item(pk, LibraryItemType.RSFORM)
 
 

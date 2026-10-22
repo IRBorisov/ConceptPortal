@@ -14,6 +14,7 @@ class TestAgentModelApi(EndpointTester):
     ''' API-key routes that read and change model interpretations. '''
 
     def setUp(self):
+        ''' Authenticate as the model owner and prepare two constituents. '''
         super().setUp()
         cache.clear()
         self.schema = RSForm.create(title='Schema', alias='S1', owner=self.user)
@@ -38,6 +39,7 @@ class TestAgentModelApi(EndpointTester):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.secret}')
 
     def _bind(self, constituent, data, model=None):
+        ''' Store one interpretation binding on the model. '''
         return ConstituentData.objects.create(
             model=(model or self.model).model,
             constituent=constituent,
@@ -47,6 +49,7 @@ class TestAgentModelApi(EndpointTester):
 
     @decl_endpoint('/api/agents/models/{item}/details', method='get')
     def test_details_returns_interpretations(self):
+        ''' Details include the schema id and stored values, and are not logged. '''
         self._bind(self.x1, {'1': 'Петя'})
         response = self.executeOK(item=self.model_id)
         self.assertEqual(response.data['alias'], 'M1')
@@ -60,6 +63,7 @@ class TestAgentModelApi(EndpointTester):
 
     @decl_endpoint('/api/agents/models/{item}/details', method='get')
     def test_details_private_forbidden_and_session_rejected(self):
+        ''' A private model and a browser session without a key are both refused. '''
         self.executeForbidden(item=self.private.pk)
         self.client.credentials()
         self.client.force_authenticate(user=self.user)
@@ -67,10 +71,12 @@ class TestAgentModelApi(EndpointTester):
 
     @decl_endpoint('/api/agents/models/{item}/details', method='get')
     def test_details_rejects_schema_id(self):
+        ''' A conceptual schema id is not a model id. '''
         self.executeNotFound(item=self.schema.model.pk)
 
     @decl_endpoint('/api/agents/models/{item}/set-value', method='post')
     def test_set_value_upserts_and_logs(self):
+        ''' A second write replaces the binding and both calls are logged. '''
         payload = [{
             'target': self.x1.pk,
             'type': 'basic',
@@ -97,6 +103,7 @@ class TestAgentModelApi(EndpointTester):
 
     @decl_endpoint('/api/agents/models/{item}/set-value', method='post')
     def test_set_value_rejects_foreign_constituent_and_logs(self):
+        ''' A constituent from another schema is rejected and nothing is stored. '''
         other = RSForm.create(title='Other', alias='O1', owner=self.user)
         foreign = other.insert_last(alias='X9')
         self.executeBadData(item=self.model_id, data=[{
@@ -110,6 +117,7 @@ class TestAgentModelApi(EndpointTester):
 
     @decl_endpoint('/api/agents/models/{item}/set-value', method='post')
     def test_set_value_rejects_null_schema(self):
+        ''' A model that is not linked to a schema cannot take values. '''
         bare = LibraryItem.objects.create(
             item_type='rsmodel',
             title='Bare',
@@ -125,6 +133,7 @@ class TestAgentModelApi(EndpointTester):
 
     @decl_endpoint('/api/agents/models/{item}/set-value', method='post')
     def test_set_value_access(self):
+        ''' A public model is not editable, a shared one is, and read-only is not. '''
         public = RSModel.create(
             self.schema.model,
             title='Public',
@@ -156,6 +165,7 @@ class TestAgentModelApi(EndpointTester):
 
     @decl_endpoint('/api/agents/models/{item}/set-value', method='post')
     def test_set_value_rejects_stale_concurrency_token(self):
+        ''' A stale update time leaves the previous value in place. '''
         self.model.model.refresh_from_db()
         stale = self.model.model.time_update.isoformat().replace('+00:00', 'Z')
         first = self.executeOK(item=self.model_id, data=[{
@@ -193,6 +203,7 @@ class TestAgentModelApi(EndpointTester):
 
     @decl_endpoint('/api/agents/models/{item}/clear-values', method='post')
     def test_clear_values_keeps_the_rest(self):
+        ''' Clearing one constituent leaves the other bindings. '''
         self._bind(self.x1, {'v': 1})
         self._bind(self.x2, {'v': 2})
         response = self.executeOK(item=self.model_id, data={'items': [self.x1.pk]})
@@ -204,6 +215,7 @@ class TestAgentModelApi(EndpointTester):
 
     @decl_endpoint('/api/agents/models/{item}/reset-all', method='post')
     def test_reset_all(self):
+        ''' Reset removes every binding, and a schema id is not a model. '''
         self._bind(self.x1, {'v': 1})
         self._bind(self.x2, {'v': 2})
         response = self.executeOK(item=self.model_id)

@@ -1,6 +1,7 @@
 ''' Views: agent RSModel interpretation read/write (API key auth). '''
 from __future__ import annotations
 
+from django.db import transaction
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema
 from rest_framework import status as c
@@ -25,6 +26,7 @@ class AgentModelBase(AgentItemView):
     ''' Shared lookup for agent model routes. '''
 
     def _get_model(self, pk: int) -> LibraryItem:
+        ''' Load a model item or answer 404 for another library type. '''
         return self._get_item(pk, LibraryItemType.RSMODEL)
 
 
@@ -37,6 +39,7 @@ class AgentModelDetailsView(AgentModelBase):
     ''' Agent: model details. '''
 
     def get(self, request: Request, pk: int) -> HttpResponse:
+        ''' Return the model, its schema id, and current interpretations. '''
         item = self._get_model(pk)
         self._require_read(item)
         return Response(model_serializers.RSModelSerializer(item).data)
@@ -53,6 +56,7 @@ class AgentModelSetValueView(AgentModelBase):
     agent_action = 'model.set_value'
 
     def post(self, request: Request, pk: int) -> HttpResponse:
+        ''' Upsert interpretation bindings and record the action. '''
         item = self._get_model(pk)
         self._require_edit(item)
         serializer = model_serializers.CstDataUpdateSerializer(
@@ -61,14 +65,15 @@ class AgentModelSetValueView(AgentModelBase):
             many=True,
         )
         serializer.is_valid(raise_exception=True)
-        set_constituent_values(item, serializer.validated_data, request)
         count = len(serializer.validated_data)
-        self._log(
-            'model.set_value',
-            c.HTTP_200_OK,
-            summary=f'Set {count} interpretation(s)',
-            item=item,
-        )
+        with transaction.atomic():
+            set_constituent_values(item, serializer.validated_data, request)
+            self._log(
+                'model.set_value',
+                c.HTTP_200_OK,
+                summary=f'Set {count} interpretation(s)',
+                item=item,
+            )
         return Response(model_serializers.RSModelSerializer(item).data)
 
 
@@ -83,6 +88,7 @@ class AgentModelClearValuesView(AgentModelBase):
     agent_action = 'model.clear_values'
 
     def post(self, request: Request, pk: int) -> HttpResponse:
+        ''' Delete selected interpretation bindings and record the action. '''
         item = self._get_model(pk)
         self._require_edit(item)
         serializer = CstListSerializer(
@@ -91,13 +97,14 @@ class AgentModelClearValuesView(AgentModelBase):
         )
         serializer.is_valid(raise_exception=True)
         constituents: list[Constituenta] = serializer.validated_data['items']
-        clear_constituent_values(item, constituents, request)
-        self._log(
-            'model.clear_values',
-            c.HTTP_200_OK,
-            summary=f'Cleared {len(constituents)} interpretation(s)',
-            item=item,
-        )
+        with transaction.atomic():
+            clear_constituent_values(item, constituents, request)
+            self._log(
+                'model.clear_values',
+                c.HTTP_200_OK,
+                summary=f'Cleared {len(constituents)} interpretation(s)',
+                item=item,
+            )
         return Response(model_serializers.RSModelSerializer(item).data)
 
 
@@ -112,14 +119,16 @@ class AgentModelResetAllView(AgentModelBase):
     agent_action = 'model.reset_all'
 
     def post(self, request: Request, pk: int) -> HttpResponse:
+        ''' Delete every interpretation binding and record the action. '''
         item = self._get_model(pk)
         self._require_edit(item)
         require_bound_schema(item)
-        reset_constituent_values(item, request)
-        self._log(
-            'model.reset_all',
-            c.HTTP_200_OK,
-            summary='Reset all interpretations',
-            item=item,
-        )
+        with transaction.atomic():
+            reset_constituent_values(item, request)
+            self._log(
+                'model.reset_all',
+                c.HTTP_200_OK,
+                summary='Reset all interpretations',
+                item=item,
+            )
         return Response(model_serializers.RSModelSerializer(item).data)

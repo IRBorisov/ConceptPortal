@@ -68,5 +68,6 @@ def reset_constituent_values(
 
 
 def _lock_expected_update(item: LibraryItem, request: Request | None) -> None:
+    ''' Reject a stale ``X-Expected-Time-Update`` under a row lock. '''
     if request is not None:
         assert_expected_time_update_locked(item, request)
