@@ -83,3 +83,4 @@ rsconcept/frontend/public/privacy.pdf
 /rsconcept/frontend/test-results
 rsconcept/frontend/stats.html
 recordings/
+.tmp/
