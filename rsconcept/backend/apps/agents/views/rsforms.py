@@ -6,10 +6,9 @@ from typing import cast
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema
 from rest_framework import status as c
-from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from apps.library.models import LibraryItem, LibraryItemType, LocationHead
 from apps.library.serializers import LibraryItemCreateSerializer, VersionCreateSerializer
@@ -25,82 +24,15 @@ from apps.rsform.mutations import (
     update_constituenta,
 )
 from shared import messages as msg
-from shared import permissions as shared_permissions
 
-from ..authentication import ApiKeyAuthentication
-from ..permissions import IsApiKeyAuthenticated
-from ..services.audit import api_key_from_request, log_agent_action
-from ..throttling import AgentReadThrottle, AgentWriteThrottle
+from .base import AgentItemView
 
 
-def _exception_summary(exc: BaseException) -> str:
-    ''' Short text for the action log. No request body. '''
-    detail = getattr(exc, 'detail', None)
-    text = str(detail if detail is not None else exc)
-    return ' '.join(text.split())[:200]
-
-
-class AgentRsformBase(APIView):
+class AgentRsformBase(AgentItemView):
     ''' Shared auth for agent RSForm routes. '''
-    authentication_classes = [ApiKeyAuthentication]
-    permission_classes = [IsApiKeyAuthenticated]
-    agent_action: str | None = None
-    agent_heavy = False
-
-    def get_throttles(self):
-        if self.request.method in ('GET', 'HEAD', 'OPTIONS'):
-            return [AgentReadThrottle()]
-        return [AgentWriteThrottle()]
-
-    def initial(self, request, *args, **kwargs):
-        super().initial(request, *args, **kwargs)
-        if self.agent_action:
-            self._quota_passed = True
-
-    def handle_exception(self, exc):
-        response = super().handle_exception(exc)
-        action = self.agent_action
-        should_log = (
-            action
-            and getattr(self, '_quota_passed', False)
-            and not getattr(self, '_audited', False)
-        )
-        if should_log and action:
-            self._log(action, response.status_code, summary=_exception_summary(exc))
-        return response
 
     def _get_rsform(self, pk: int) -> LibraryItem:
-        try:
-            item = LibraryItem.objects.get(pk=pk, item_type=LibraryItemType.RSFORM)
-        except LibraryItem.DoesNotExist as exc:
-            raise NotFound() from exc
-        return item
-
-    def _require_read(self, item: LibraryItem) -> None:
-        if not shared_permissions.can_read_library_item(self.request.user, item):
-            raise PermissionDenied()
-
-    def _require_edit(self, item: LibraryItem) -> None:
-        if not shared_permissions.can_edit_item(self.request.user, item):
-            raise PermissionDenied()
-
-    def _log(
-        self,
-        action: str,
-        status_code: int,
-        summary: str = '',
-        item: LibraryItem | None = None
-    ) -> None:
-        self._audited = True
-        log_agent_action(
-            user=self.request.user,
-            api_key=api_key_from_request(self.request),
-            action=action,
-            status_code=status_code,
-            summary=summary,
-            item=item,
-            request=self.request,
-        )
+        return self._get_item(pk, LibraryItemType.RSFORM)
 
 
 @extend_schema(

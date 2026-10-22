@@ -24,4 +24,8 @@ urlpatterns = [
     ),
     path('agents/rsforms/<int:pk>/substitute', views.AgentSubstituteView.as_view()),
     path('agents/rsforms/<int:pk>/move-cst', views.AgentMoveCstView.as_view()),
+    path('agents/models/<int:pk>/details', views.AgentModelDetailsView.as_view()),
+    path('agents/models/<int:pk>/set-value', views.AgentModelSetValueView.as_view()),
+    path('agents/models/<int:pk>/clear-values', views.AgentModelClearValuesView.as_view()),
+    path('agents/models/<int:pk>/reset-all', views.AgentModelResetAllView.as_view()),
 ] + router.urls

@@ -84,6 +84,10 @@ GET https://api.portal.acconcept.ru/api/rsforms/856/details
 | POST  | `/api/agents/rsforms/:id/constituents/delete`  | Удалить список конституент                       |
 | POST  | `/api/agents/rsforms/:id/substitute`           | Подстановка                                      |
 | PATCH | `/api/agents/rsforms/:id/move-cst`             | Перемещение                                      |
+| GET   | `/api/agents/models/:id/details`               | Модель и текущие интерпретации                   |
+| POST  | `/api/agents/models/:id/set-value`             | Записать интерпретации конституент               |
+| POST  | `/api/agents/models/:id/clear-values`          | Сбросить интерпретации списка конституент        |
+| POST  | `/api/agents/models/:id/reset-all`             | Сбросить все интерпретации модели                |
 
 Пример:
 
@@ -91,6 +95,25 @@ GET https://api.portal.acconcept.ru/api/rsforms/856/details
 curl.exe -s -H "Authorization: Bearer rcp_...." ^
   "https://api.portal.acconcept.ru/api/agents/rsforms/856/details"
 ```
+
+### Интерпретации модели
+
+Тело совпадает с сессионными `/api/models/:id/set-value`, `clear-values` и `reset-all`.
+Ответ — та же модель, что у `GET /api/agents/models/:id/details`: метаданные, `schema`
+(id связанной КС) и `items[]` с полями `id`, `type`, `value`.
+
+`target` и элементы `items` — id конституент **связанной** КС, не шифры. Чужая конституента
+или модель без схемы → `400`. КС, переданная как id модели → `404`. Правка требует права
+редактора; чтение — права читателя. Необязательный заголовок `X-Expected-Time-Update`
+(значение `time_update` из предыдущего ответа) отклоняет устаревшую запись с `409`.
+
+```bash
+curl.exe -s -H "Authorization: Bearer rcp_...." -H "Content-Type: application/json" ^
+  -d "[{\"target\": 1201, \"type\": \"basic\", \"data\": {\"1\": \"a\"}}]" ^
+  -X POST "https://api.portal.acconcept.ru/api/agents/models/900/set-value"
+```
+
+`clear-values` принимает `{ "items": [1201, 1202] }`. `reset-all` — `POST` без тела.
 
 Управление ключами и журналом — только из сессии UI: `GET/POST /api/agents/keys`,
 `PATCH /api/agents/keys/:id` (переименовать), `DELETE /api/agents/keys/:id`.
@@ -309,6 +332,9 @@ tool.applySchemaPatch(
 - Для непубличной КС без ключа проси JSON (`/details`) или публикацию схемы — не cookie.
 - После правок в `rstool` можно `exportPortal({ kind: 'schema' })` и
   `PATCH /api/agents/rsforms/:id/replace` с тем же JSON (или гранулярные `/constituents`).
+- Интерпретации модели пишутся точечно: `POST /api/agents/models/:id/set-value`,
+  `clear-values`, `reset-all`. Сначала прочитай `GET /api/agents/models/:id/details`,
+  чтобы взять id связанной КС и id конституент.
 - Для больших схем используй увеличенный таймаут. В PowerShell вызывай `curl.exe`,
   а не alias `curl` (`Invoke-WebRequest`), если нужен CLI-синтаксис curl.
 - Сначала бери метаданные, если нужно только название или доступность схемы.

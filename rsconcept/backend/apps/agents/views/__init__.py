@@ -7,6 +7,12 @@ from .library import (
     AgentLibraryItemsByIdsView
 )
 from .logs import AgentActionLogListView
+from .models import (
+    AgentModelClearValuesView,
+    AgentModelDetailsView,
+    AgentModelResetAllView,
+    AgentModelSetValueView,
+)
 from .rsforms import (
     AgentCreateConstituentaView,
     AgentDeleteConstituentsView,
