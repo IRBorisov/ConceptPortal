@@ -1,4 +1,4 @@
-FROM nginx:stable-alpine3.17-slim
+FROM nginx:stable-alpine3.24-slim
 ARG BUILD_TYPE=production
 
 # Сopу nginx configuration to the proxy-server

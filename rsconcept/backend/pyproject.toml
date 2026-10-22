@@ -15,7 +15,7 @@ dependencies = [
     "drf-spectacular-sidecar==2026.10.1",
     "gunicorn==26.2.0",
     "psycopg2-binary==2.9.13",
-    "sentry-sdk[django]>=2.72.0",
+    "sentry-sdk[django]>=2.73.0",
     "tzdata==2026.5",
 ]
 
