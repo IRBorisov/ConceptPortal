@@ -41,6 +41,7 @@ class RSModelViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPI
         return cast(LibraryItem, self.get_object())
 
     def _require_schema(self) -> LibraryItem:
+        ''' Return the schema linked to this model. '''
         return require_bound_schema(self._get_item())
 
     def get_queryset(self):
