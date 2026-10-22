@@ -11,7 +11,9 @@ allowBuilds:
 
 # Security floors for transitive deps (GHSA: browserslist <=4.28.6 OOM / prototype write).
 # CodeMirror packages must share one copy of state/view — duplicate versions break branded types.
+# @opentelemetry/api: OTel 2.12 core/sdk peers cap it <1.10 (pulled in via react-scan → @sentry/node).
 overrides:
+  '@opentelemetry/api': '~1.9.1'
   browserslist: '>=4.28.7'
   '@codemirror/state': '>=6.7.5'
   '@codemirror/view': '>=6.43.12'
