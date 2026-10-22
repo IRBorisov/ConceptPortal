@@ -17,6 +17,7 @@ import { useAppLayoutStore, useMainHeight, useViewportHeight } from '@/stores/ap
 import { AppShellDialogHosts } from '../app-shell-dialog-hosts';
 import { GlobalLoader } from '../global-loader';
 import { GlobalTooltips } from '../global-tooltips';
+import { RouteTransition } from '../navigation';
 import { NavigationSandbox } from '../navigation/navigation-sandbox';
 import { PdfExportOverlay } from '../pdf-export-overlay';
 
@@ -54,7 +55,9 @@ export function LayoutSandbox() {
       <div className='overflow-x-auto max-w-dvw' style={{ maxHeight: viewportHeight }} inert={dialogInert}>
         <main className='cc-scroll-y overflow-y-auto' style={{ height: mainHeight }}>
           <GlobalLoader />
-          <Outlet />
+          <RouteTransition>
+            <Outlet />
+          </RouteTransition>
         </main>
         {!noNavigation && !noFooter ? <Footer /> : null}
       </div>

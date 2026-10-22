@@ -52,15 +52,3 @@ export function isViewTransitionAbortError(error: unknown): boolean {
 export function handleViewTransitionAbortError(error: unknown): boolean {
   return isViewTransitionAbortError(error);
 }
-
-/** Absorb aborted view-transition promise rejections from programmatic navigation. */
-export function absorbViewTransitionAbort(result: void | Promise<void>): void | Promise<void> {
-  if (!result || typeof result.then !== 'function') {
-    return result;
-  }
-  return result.catch(error => {
-    if (!isViewTransitionAbortError(error)) {
-      throw error;
-    }
-  });
-}

@@ -53,6 +53,15 @@
     }
   }
 
+  /* Route cross-fades (React <ViewTransition>) */
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+    }
+  }
+
   :root {
     font-size: var(--font-size-base);
     line-height: var(--line-height);

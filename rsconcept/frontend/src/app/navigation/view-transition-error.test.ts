@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { absorbViewTransitionAbort, isViewTransitionAbortError } from './view-transition-error';
+import { isViewTransitionAbortError } from './view-transition-error';
 
 describe('isViewTransitionAbortError', () => {
   it('matches invalid state aborts', () => {
@@ -80,17 +80,5 @@ describe('isViewTransitionAbortError', () => {
     expect(
       isViewTransitionAbortError('Error: InvalidStateError: Transition was aborted because of invalid state')
     ).toBe(true);
-  });
-});
-
-describe('absorbViewTransitionAbort', () => {
-  it('swallows expected rejections', async () => {
-    const error = new DOMException('Transition was aborted because of invalid state', 'InvalidStateError');
-    await expect(absorbViewTransitionAbort(Promise.reject(error))).resolves.toBeUndefined();
-  });
-
-  it('rethrows unexpected rejections', async () => {
-    const error = new Error('boom');
-    await expect(absorbViewTransitionAbort(Promise.reject(error))).rejects.toThrow('boom');
   });
 });
