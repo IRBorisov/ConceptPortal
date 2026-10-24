@@ -120,7 +120,7 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
     <span>Охват: <code>rsconcept/backend</code>, <code>rsconcept/frontend</code> (unit + Playwright), CI</span>
   </div>
   <p>Ревью заменяет ревью тестов и документации от 2026-10-06 (файл удалён, он остаётся в истории git). Сначала проверено, какие его находки по тестам закрыты. Затем добавлены новые, полученные прогоном с покрытием: <code>coverage.py</code> для Django и <code>vitest --coverage</code> по всем файлам <code>src/</code> фронтенда. Новые находки пронумерованы как <b>TS-NN</b>. Прочие, не тестовые, находки того ревью перенесены в <a href="#carried">отдельный раздел</a>.</p>
-  <p><b>Что уже исправлено в том же PR:</b> T-01 (24 теста-сироты подключены, добавлен мета-тест), TS-07 (быстрый хешер паролей), часть TS-06 (<code>makemigrations --check</code> в CI, frontend CI больше не запускается на изменения бэкенда) и часть TS-09 (удалены 7 тестов самого Django). Прогон бэкенда: 435 тестов за 12,5 с вместо 417 за 77 с.</p>
+  <p><b>Что уже исправлено в том же PR:</b> T-01 (24 теста-сироты подключены, добавлен мета-тест), TS-07 (быстрый хешер паролей), часть TS-06 (<code>makemigrations --check</code> в CI, frontend CI больше не запускается на изменения бэкенда) часть TS-09 (удалены 7 тестов самого Django), TS-02 (тест каскада смены типа) и T-02 (10 тестов пяти агентских маршрутов). Прогон бэкенда: 446 тестов за 13–17 с вместо 417 за 77 с.</p>
 </header>
 
 <section class="verdict" aria-labelledby="verdict-h">
@@ -130,7 +130,7 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
     <span class="chip high">2 high</span>
     <span class="chip med">5 medium</span>
     <span class="chip low">3 low</span>
-    <span class="chip good">исправлено в PR: T-01, TS-07</span>
+    <span class="chip good">исправлено в PR: T-01, T-02, TS-02, TS-07</span>
     <span class="chip good">частично: TS-06, TS-09</span>
     <span class="chip good">10 из 10 подтверждено прогоном</span>
   </div>
@@ -154,7 +154,7 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
     <thead><tr><th>ID</th><th>Находка</th><th>Статус на <code>8049f7c</code></th></tr></thead>
     <tbody>
       <tr><td>T-01</td><td>24 теста бэкенда не подключены в <code>__init__.py</code> и не запускаются</td><td><span class="chip good">исправлено в PR</span> На <code>8049f7c</code> не были подключены <code>t_context_search</code> (13), <code>t_items_by_ids</code> (8) и <code>t_docs_views</code> (3). Теперь они в <code>__init__.py</code>, а мета-тест <code>shared/test_registry.py</code> падает, если какой-то <code>t_*.py</code> не импортирован своим пакетом.</td></tr>
-      <tr><td>T-02</td><td>Агентские маршруты без тестов</td><td><span class="chip med">открыта</span> По-прежнему ни одного упоминания <code>create-version</code>, <code>constituents/delete</code>, <code>substitute</code>, <code>move-cst</code>, <code>library/by-ids</code> в <code>apps/agents/tests</code>. Покрытие <code>agents/views/rsforms.py</code>: 72%.</td></tr>
+      <tr><td>T-02</td><td>Агентские маршруты без тестов</td><td><span class="chip good">исправлено в PR</span> На <code>8049f7c</code> не было ни одного теста для <code>create-version</code>, <code>constituents/delete</code>, <code>substitute</code>, <code>move-cst</code>, <code>library/by-ids</code>, покрытие <code>agents/views/rsforms.py</code> было 72%. Добавлен <code>apps/agents/tests/t_rsform_routes.py</code> (10 тестов): успешный вызов и строка аудита, редактор чужой схемы, чужая приватная схема (403), read-only (403), create-version только для владельца, by-ids без ключа (403). Покрытие view теперь 98%.</td></tr>
       <tr><td>T-03</td><td>Нет контрактной проверки frontend ↔ backend</td><td><span class="chip med">открыта</span> E2E работают только на <code>page.route</code>-моках, а frontend CI по-прежнему запускается и на изменения в <code>rsconcept/backend/**</code>.</td></tr>
       <tr><td>T-04</td><td>Покрытие domain без <code>include</code> и порогов</td><td><span class="chip med">открыта</span> <code>domain/vitest.config.ts</code> не изменился.</td></tr>
       <tr><td>T-05</td><td>Фронтовые тесты не там, где риск</td><td><span class="chip med">открыта</span> <code>features/rsmodel</code>: 0 строк тестов на 5,9 тыс. строк кода, <code>stores</code>: 0. Подробнее в TS-03.</td></tr>
@@ -214,10 +214,10 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
     </article>
 
     <article class="finding med">
-      <div class="top"><span class="chip med">Medium</span><span class="id">TS-02</span><h3>Каскад смены типа конституенты по ОСС не выполняется ни одним тестом</h3><span class="status verified">✓ подтверждено</span></div>
+      <div class="top"><span class="chip med">Medium</span><span class="id">TS-02</span><h3>Каскад смены типа конституенты по ОСС не выполняется ни одним тестом</h3><span class="status verified">✓ подтверждено</span><span class="chip good">исправлено в PR</span></div>
       <div class="where">apps/oss/models/PropagationEngine.py:30-45 · apps/rsform/mutations.py:54-64 · apps/oss/tests/s_propagation/</div>
       <p><code>PropagationEngine.on_change_cst_type</code> по данным coverage не выполнился ни разу: строки 32–45 имеют 0 попаданий. Каскад запускается из <code>update_constituenta</code>, когда меняются алиас и тип одновременно (например, <code>X3 → D3</code> в схеме-источнике). Тогда тип наследников во всех дочерних КС должен смениться рекурсивно. В пакете <code>s_propagation</code> (5 файлов, 1 444 строки) нет теста на этот случай, хотя переименование с изменением типа встречается в работе часто.</p>
-      <p class="fix"><b>Решение:</b> в <code>t_constituents.py</code> добавить тест: в <code>ks1</code> выполнить PATCH <code>update-cst</code> со сменой алиаса и типа и проверить <code>cst_type</code> наследника в <code>ks3</code> и у следующего поколения.</p>
+      <p class="fix"><b>Решение:</b> в этом PR добавлен <code>TestChangeConstituents.test_change_cst_type</code>. В <code>ks1</code> конституента <code>X4</code> переименовывается в <code>C1</code> со сменой типа на константу. Тест проверяет тип и алиас наследника в <code>ks3</code> и в следующем поколении (<code>ks4</code>), а также переписывание ссылающихся определений (<code>X1\X1 → C1\C1</code>). Если отключить каскад в <code>PropagationEngine</code>, тест падает.</p>
     </article>
 
     <article class="finding med">
@@ -366,10 +366,10 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
 <section id="plan" aria-labelledby="plan-h">
   <h2 id="plan-h">План</h2>
   <ol class="steps">
-    <li><b>Сделано в этом PR:</b> быстрый хешер паролей (TS-07), подключение модулей-сирот и мета-тест (T-01), <code>makemigrations --check</code> и триггеры frontend CI (TS-06), удаление 7 тестов самого Django (TS-09).</li>
+    <li><b>Сделано в этом PR:</b> быстрый хешер паролей (TS-07), подключение модулей-сирот и мета-тест (T-01), <code>makemigrations --check</code> и триггеры frontend CI (TS-06), удаление 7 тестов самого Django (TS-09), тест каскада смены типа (TS-02), тесты пяти агентских маршрутов (T-02).</li>
     <li><b>Сегодня:</b> решить по <code>failOnFlakyTests</code> в Playwright (TS-06).</li>
     <li><b>Спринт:</b> Postgres 16 service в backend CI и один <code>TransactionTestCase</code> на конкурентную запись (TS-01).</li>
-    <li><b>Спринт:</b> тест каскада смены типа (TS-02), тесты пяти агентских маршрутов (T-02), ветки ошибок из TS-05, затем <code>coverage --fail-under=92</code> в CI.</li>
+    <li><b>Спринт:</b> ветки ошибок из TS-05, затем <code>coverage --fail-under=92</code> в CI.</li>
     <li><b>Спринт:</b> mixin для двойников RSForm с красным тестом D-01 (TS-10).</li>
     <li><b>Следующий шаг:</b> сократить онбординговые E2E до 2 (TS-08) и добавить 4–5 сценарных E2E для конституент, ОСС, модели и импорта (TS-04).</li>
     <li><b>Следующий шаг:</b> юнит-тесты для <code>text-editing</code>, <code>oss-loader</code>, <code>model-sync-handler</code>, <code>json-file</code>, <code>use-schema-cst-actions</code>, <code>stores/preferences*</code> (TS-03).</li>
@@ -418,7 +418,11 @@ $ uv run python manage.py makemigrations --check --dry-run
 
 # после правок этого PR
 $ uv run python manage.py test
-→ Ran 435 tests in 12.529s … OK      # 417 + 24 подключённых + 1 мета-тест − 7 удалённых
+→ Ran 446 tests in 14.270s … OK      # 417 + 24 подключённых + 1 мета-тест − 7 удалённых + 1 (TS-02) + 10 (T-02)
+$ coverage report   # после TS-02 и T-02
+→ apps/agents/views/rsforms.py 98% (было 72%) · apps/agents/views/library.py 100% · PropagationEngine.on_change_cst_type выполняется
+# мутационная проверка TS-02: «return» в начале on_change_cst_type
+→ FAIL test_change_cst_type: 'basic' != CstType.CONSTANT
 $ uv run python manage.py test shared.test_registry   # с откатом правок __init__.py
 → FAIL: [t_context_search.TestLibraryContextSearch, t_items_by_ids.TestLibraryItemsByIds, t_docs_views.TestDocsViews]
 $ uv run pylint project apps shared/test_registry.py → 10.00/10
