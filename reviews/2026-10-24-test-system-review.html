@@ -119,7 +119,8 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
     <span>База: <code>8049f7c</code></span>
     <span>Охват: <code>rsconcept/backend</code>, <code>rsconcept/frontend</code> (unit + Playwright), CI</span>
   </div>
-  <p>Ревью продолжает <a href="2026-10-06-tests-docs-design-review.html">ревью тестов и документации от 2026-10-06</a>. Сначала проверено, какие его находки по тестам закрыты. Затем добавлены новые, полученные прогоном с покрытием: <code>coverage.py</code> для Django и <code>vitest --coverage</code> по всем файлам <code>src/</code> фронтенда. Новые находки пронумерованы как <b>TS-NN</b>.</p>
+  <p>Ревью заменяет ревью тестов и документации от 2026-10-06 (файл удалён, он остаётся в истории git). Сначала проверено, какие его находки по тестам закрыты. Затем добавлены новые, полученные прогоном с покрытием: <code>coverage.py</code> для Django и <code>vitest --coverage</code> по всем файлам <code>src/</code> фронтенда. Новые находки пронумерованы как <b>TS-NN</b>. Прочие, не тестовые, находки того ревью перенесены в <a href="#carried">отдельный раздел</a>.</p>
+  <p><b>Что уже исправлено в том же PR:</b> T-01 (24 теста-сироты подключены, добавлен мета-тест), TS-07 (быстрый хешер паролей), часть TS-06 (<code>makemigrations --check</code> в CI, frontend CI больше не запускается на изменения бэкенда) и часть TS-09 (удалены 7 тестов самого Django). Прогон бэкенда: 435 тестов за 12,5 с вместо 417 за 77 с.</p>
 </header>
 
 <section class="verdict" aria-labelledby="verdict-h">
@@ -129,16 +130,17 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
     <span class="chip high">2 high</span>
     <span class="chip med">5 medium</span>
     <span class="chip low">3 low</span>
-    <span class="chip tag">7 из 7 тестовых находок 10-06 открыты</span>
+    <span class="chip good">исправлено в PR: T-01, TS-07, часть TS-06 и TS-09</span>
     <span class="chip good">10 из 10 подтверждено прогоном</span>
   </div>
-  <p>За 18 дней ни одна тестовая находка ревью от 10-06 не закрыта. 24 теста бэкенда по-прежнему не запускаются (T-01). Самое дешёвое улучшение с наибольшим эффектом: одна строка в настройках ускоряет прогон бэкенда с 77 до 14 секунд (TS-07).</p>
+  <p>К моменту ревью ни одна тестовая находка ревью от 10-06 не была закрыта за 18 дней. 24 теста бэкенда не запускались (T-01). Самое дешёвое улучшение с наибольшим эффектом: одна строка в настройках ускорила прогон бэкенда с 77 до 12,5 секунд (TS-07). Обе правки сделаны в этом PR.</p>
   <nav class="toc" aria-label="Разделы">
     <a href="#prev">Статус находок 10-06</a>
     <a href="#inv">Инвентарь</a>
     <a href="#blind">Слепые зоны</a>
     <a href="#redundant">Избыточные и дорогие тесты</a>
     <a href="#good">Что в порядке</a>
+    <a href="#carried">Перенесено из 10-06</a>
     <a href="#plan">План</a>
     <a href="#evidence">Доказательства</a>
   </nav>
@@ -150,13 +152,13 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
   <table>
     <thead><tr><th>ID</th><th>Находка</th><th>Статус на <code>8049f7c</code></th></tr></thead>
     <tbody>
-      <tr><td>T-01</td><td>24 теста бэкенда не подключены в <code>__init__.py</code> и не запускаются</td><td><span class="chip high">открыта</span> Набор вырос с 378 до 417 тестов, но <code>t_context_search</code> (13), <code>t_items_by_ids</code> (8) и <code>t_docs_views</code> (3) так и не подключены. По имени все 24 проходят.</td></tr>
+      <tr><td>T-01</td><td>24 теста бэкенда не подключены в <code>__init__.py</code> и не запускаются</td><td><span class="chip good">исправлено в PR</span> На <code>8049f7c</code> не были подключены <code>t_context_search</code> (13), <code>t_items_by_ids</code> (8) и <code>t_docs_views</code> (3). Теперь они в <code>__init__.py</code>, а мета-тест <code>shared/test_registry.py</code> падает, если какой-то <code>t_*.py</code> не импортирован своим пакетом.</td></tr>
       <tr><td>T-02</td><td>Агентские маршруты без тестов</td><td><span class="chip med">открыта</span> По-прежнему ни одного упоминания <code>create-version</code>, <code>constituents/delete</code>, <code>substitute</code>, <code>move-cst</code>, <code>library/by-ids</code> в <code>apps/agents/tests</code>. Покрытие <code>agents/views/rsforms.py</code>: 72%.</td></tr>
       <tr><td>T-03</td><td>Нет контрактной проверки frontend ↔ backend</td><td><span class="chip med">открыта</span> E2E работают только на <code>page.route</code>-моках, а frontend CI по-прежнему запускается и на изменения в <code>rsconcept/backend/**</code>.</td></tr>
       <tr><td>T-04</td><td>Покрытие domain без <code>include</code> и порогов</td><td><span class="chip med">открыта</span> <code>domain/vitest.config.ts</code> не изменился.</td></tr>
       <tr><td>T-05</td><td>Фронтовые тесты не там, где риск</td><td><span class="chip med">открыта</span> <code>features/rsmodel</code>: 0 строк тестов на 5,9 тыс. строк кода, <code>stores</code>: 0. Подробнее в TS-03.</td></tr>
       <tr><td>D-01</td><td>Расхождение <code>RSForm</code> и <code>RSFormCached</code></td><td><span class="chip high">открыта</span> Проверки <code>attr_id != container_id</code> в <code>RSForm.substitute</code> (<code>RSForm.py:288</code>) по-прежнему нет. У <code>RSForm.substitute</code> нет ни одного модельного теста. Подробнее в TS-10.</td></tr>
-      <tr><td>R-04</td><td>Тесты, проверяющие сам Django ORM</td><td><span class="chip low">открыта</span> 19 тестов (<code>test_str</code>, <code>test_default*</code>, <code>test_related_name*</code>) в 12 файлах.</td></tr>
+      <tr><td>R-04</td><td>Тесты, проверяющие сам Django ORM</td><td><span class="chip good">частично в PR</span> См. TS-09: удалены 7 тестов поведения Django, тесты <code>__str__</code> оставлены.</td></tr>
     </tbody>
   </table>
   </div>
@@ -265,14 +267,14 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
     </article>
 
     <article class="finding low">
-      <div class="top"><span class="chip low">Low</span><span class="id">TS-06</span><h3>Дыры в самом CI</h3><span class="status verified">✓ подтверждено</span></div>
+      <div class="top"><span class="chip low">Low</span><span class="id">TS-06</span><h3>Дыры в самом CI</h3><span class="status verified">✓ подтверждено</span><span class="chip good">частично в PR</span></div>
       <div class="where">.github/workflows/backend.yml · .github/workflows/frontend.yml · playwright.config.ts</div>
       <ul>
         <li><b>Миграции.</b> CI не проверяет, что для изменений моделей созданы миграции (<code>makemigrations --check --dry-run</code>). Сейчас расхождений нет, проверено, но защиты от них в CI нет.</li>
         <li><b>Флейки.</b> <code>retries: 2</code> в CI делает флейки зелёными без следа. Отчёт загружается как артефакт, но статус <i>flaky</i> никто не смотрит.</li>
         <li><b>Лишние прогоны.</b> Frontend CI запускается на изменения бэкенда, хотя E2E с бэкендом не работают (см. T-03). Это лишнее время CI и ложный зелёный сигнал.</li>
       </ul>
-      <p class="fix"><b>Решение:</b> добавить шаг <code>makemigrations --check</code>. В Playwright включить <code>failOnFlakyTests</code> или хотя бы выводить flaky-тесты в summary. Убрать <code>rsconcept/backend/**</code> из триггеров frontend workflow.</p>
+      <p class="fix"><b>Решение:</b> шаг <code>makemigrations --check --dry-run</code> добавлен в <code>backend.yml</code>, а <code>rsconcept/backend/**</code> убран из триггеров <code>frontend.yml</code>. Оба изменения в этом PR. Осталось: включить в Playwright <code>failOnFlakyTests</code> или хотя бы выводить flaky-тесты в summary. Это отдельное решение, потому что CI может сразу покраснеть на существующих флейках.</p>
     </article>
 
   </div>
@@ -283,10 +285,10 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
   <div class="findings">
 
     <article class="finding high">
-      <div class="top"><span class="chip high">High</span><span class="id">TS-07</span><h3>Около 80% времени прогона бэкенда уходит на хеширование паролей</h3><span class="status verified">✓ подтверждено</span></div>
+      <div class="top"><span class="chip high">High</span><span class="id">TS-07</span><h3>Около 80% времени прогона бэкенда уходит на хеширование паролей</h3><span class="status verified">✓ подтверждено</span><span class="chip good">исправлено в PR</span></div>
       <div class="where">project/settings.py · apps/users/tests/t_views.py · apps/users/tests/t_serializers.py</div>
       <p>Самые медленные тесты относятся к <code>apps.users</code>: <code>test_change_password</code> 7,7 с, <code>test_login_throttling*</code> 7,5 и 7,0 с, <code>test_login</code> 6,3 с и т. д. В тестах используется боевой хешер паролей. С <code>PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']</code> весь набор из 417 тестов проходит за <b>14 с вместо 77 с</b>, все тесты зелёные. Ни один тест не проверяет стойкость хеша, поэтому замена ничего не теряет.</p>
-      <p class="fix"><b>Решение:</b> в <code>settings.py</code> добавить <code>if IS_TESTING: PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']</code>. Флаг <code>IS_TESTING</code> уже есть (строка 86).</p>
+      <p class="fix"><b>Решение:</b> в <code>settings.py</code> добавлено <code>if IS_TESTING: PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']</code>, флаг <code>IS_TESTING</code> там уже был. Сделано в этом PR, прогон занимает 12,5 с.</p>
     </article>
 
     <article class="finding med">
@@ -311,10 +313,10 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
     </article>
 
     <article class="finding low">
-      <div class="top"><span class="chip low">Low</span><span class="id">TS-09</span><h3>Тесты, проверяющие сам Django ORM (R-04, не закрыта)</h3><span class="status verified">✓ подтверждено</span></div>
+      <div class="top"><span class="chip low">Low</span><span class="id">TS-09</span><h3>Тесты, проверяющие сам Django ORM (R-04)</h3><span class="status verified">✓ подтверждено</span><span class="chip good">частично в PR</span></div>
       <div class="where">apps/oss/tests/s_models/* · apps/library/tests/s_models/* · apps/rsform/tests/s_models/t_Constituenta.py, t_Attribution.py · apps/rsform/tests/t_serializers.py</div>
       <p>19 тестов вида <code>test_str</code>, <code>test_default_data</code>, <code>test_related_name_*</code> в 12 файлах, плюс <code>TestExpressionSerializer</code>, который проверяет, что обязательный <code>CharField</code> обязателен. Пакет <code>oss/tests/s_models</code> (6 файлов, 301 строка) почти целиком из таких тестов. Они не ловят регрессий, но раздувают счётчик и требуют правок при каждой миграции.</p>
-      <p class="fix"><b>Решение:</b> удалить. Если важен <code>__str__</code> для админки, оставить один параметризованный тест на все модели.</p>
+      <p class="fix"><b>Решение:</b> в этом PR удалены 7 тестов, которые проверяют только поведение Django: <code>TestEditor.test_default</code>, <code>TestLayout.test_default_data</code>, <code>TestLayout.test_related_name_layout</code>, <code>TestAttribution.test_related_names</code>, <code>TestOperation.test_create_default</code> и весь <code>rsform/tests/t_serializers.py</code> (2 теста). Тесты <code>__str__</code> оставлены: это собственный код, который показывается в админке. Их можно свести к одному параметризованному тесту. Тесты каскадного удаления и <code>CHECK</code>-ограничений тоже оставлены, потому что они фиксируют решения схемы БД.</p>
     </article>
 
     <article class="finding low">
@@ -338,14 +340,36 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
   </ul>
 </section>
 
+<section id="carried" aria-labelledby="carried-h">
+  <h2 id="carried-h">Перенесено из ревью 2026-10-06 (не тестовые находки)</h2>
+  <p class="note">Перенесены кратко, чтобы не потерять их при удалении старого файла. Их статус на <code>8049f7c</code> не перепроверялся, кроме D-01 (см. таблицу выше). Полные описания с доказательствами есть в истории git.</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>ID</th><th>Важность</th><th>Суть</th></tr></thead>
+    <tbody>
+      <tr><td>D-02</td><td><span class="chip med">Medium</span></td><td>Список методов rstool вручную задан в трёх местах: <code>RSToolContract</code>, stdio-обработчик, <code>TOOL_DEFINITIONS</code> в MCP. Невалидные <code>kind</code>/<code>severity</code> фильтров диагностики молча игнорируются.</td></tr>
+      <tr><td>D-03</td><td><span class="chip med">Medium</span></td><td><code>PORTAL_JSON_CONTRACT_VERSION</code> определён трижды (backend, frontend, rstool) и проверяется точным совпадением, поэтому любая смена версии ломает ранее экспортированные файлы.</td></tr>
+      <tr><td>D-04</td><td><span class="chip low">Low</span></td><td>В песочнице <code>deleteSchema</code>/<code>deleteModel</code> ведут на <code>notImplemented()</code>.</td></tr>
+      <tr><td>R-01</td><td><span class="chip med">Medium</span></td><td>Клиентская проверка похожести пароля (<code>isPasswordTooSimilar</code>) расходится с <code>UserAttributeSimilarityValidator</code> Django: блокирует валидные пароли и пропускает отклоняемые, в том числе с кириллицей.</td></tr>
+      <tr><td>R-02</td><td><span class="chip med">Medium</span></td><td>Общий <code>limits.len_alias = 255</code> на фронте против 8 символов алиаса и 150 символов username на бэке. Пакет клонирования не ограничен 100 элементами (<code>CST_BATCH_CREATE_MAX_ITEMS</code>).</td></tr>
+      <tr><td>R-03</td><td><span class="chip low">Low</span></td><td>Недостижимые или избыточные проверки: двойной лимит импорта в <code>io_files.py</code>, всегда истинный <code>_quota_passed</code>, чтение сырого <code>request.data</code> после валидации в create-version, лишние <code>hasattr(user, 'is_staff')</code>, мнимая иерархия классов прав.</td></tr>
+      <tr><td>DOC-01</td><td><span class="chip med">Medium</span></td><td>В OpenAPI нет схемы авторизации по API-ключу, <code>ApiKeyViewSet</code> выпадает из схемы. <code>spectacular --validate --fail-on-warn</code> в CI не запускается.</td></tr>
+      <tr><td>DOC-02</td><td><span class="chip med">Medium</span></td><td>Формат Portal JSON (поля, версия, лимиты) нигде не документирован.</td></tr>
+      <tr><td>CI-01</td><td><span class="chip low">Low</span></td><td><code>shared/</code> не проходит через pylint и mypy в CI. У <code>rstool</code> и <code>rstool-mcp</code> нет ESLint.</td></tr>
+      <tr><td>DOC-03</td><td><span class="chip low">Low</span></td><td>Мелочи: неиспользуемый <code>frontend/tests/_layering.png</code>, заголовок теста «v2 contract» при версии 3.3.0, нет заметок для операторов по <code>prune_agent_logs</code> и <code>AGENT_LOG_*</code>.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
 <section id="plan" aria-labelledby="plan-h">
   <h2 id="plan-h">План</h2>
   <ol class="steps">
-    <li><b>Сегодня, около 15 минут:</b> быстрый хешер паролей в тестах (TS-07) и подключение трёх модулей-сирот или переход на <code>-p "t_*.py"</code> (T-01).</li>
-    <li><b>Сегодня:</b> шаг <code>makemigrations --check</code> в backend CI. Убрать <code>rsconcept/backend/**</code> из триггеров frontend CI (TS-06).</li>
+    <li><b>Сделано в этом PR:</b> быстрый хешер паролей (TS-07), подключение модулей-сирот и мета-тест (T-01), <code>makemigrations --check</code> и триггеры frontend CI (TS-06), удаление 7 тестов самого Django (TS-09).</li>
+    <li><b>Сегодня:</b> решить по <code>failOnFlakyTests</code> в Playwright (TS-06).</li>
     <li><b>Спринт:</b> Postgres 16 service в backend CI и один <code>TransactionTestCase</code> на конкурентную запись (TS-01).</li>
     <li><b>Спринт:</b> тест каскада смены типа (TS-02), тесты пяти агентских маршрутов (T-02), ветки ошибок из TS-05, затем <code>coverage --fail-under=92</code> в CI.</li>
-    <li><b>Спринт:</b> mixin для двойников RSForm с красным тестом D-01 (TS-10), удаление ORM-тестов (TS-09).</li>
+    <li><b>Спринт:</b> mixin для двойников RSForm с красным тестом D-01 (TS-10).</li>
     <li><b>Следующий шаг:</b> сократить онбординговые E2E до 2 (TS-08) и добавить 4–5 сценарных E2E для конституент, ОСС, модели и импорта (TS-04).</li>
     <li><b>Следующий шаг:</b> юнит-тесты для <code>text-editing</code>, <code>oss-loader</code>, <code>model-sync-handler</code>, <code>json-file</code>, <code>use-schema-cst-actions</code>, <code>stores/preferences*</code> (TS-03).</li>
   </ol>
@@ -353,7 +377,7 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
 
 <section id="evidence" aria-labelledby="evidence-h">
   <h2 id="evidence-h">Доказательства</h2>
-  <p>Всё воспроизведено на <code>8049f7c</code>. Временные файлы (настройки с MD5-хешером, симлинк на <code>@vitest/coverage-v8</code>) после прогона удалены, рабочее дерево не изменено.</p>
+  <p>Находки воспроизведены на <code>8049f7c</code>. Временные файлы (настройки с MD5-хешером, симлинк на <code>@vitest/coverage-v8</code>) после прогона удалены. Последний блок показывает результат после правок этого PR.</p>
   <div class="probe">$ uv run python manage.py test
 → Ran 417 tests in 76.950s … OK
 
@@ -389,11 +413,19 @@ $ vitest run --coverage --coverage.include='src/**/*.{ts,tsx}'
 
 # TS-06
 $ uv run python manage.py makemigrations --check --dry-run
-→ No changes detected</div>
+→ No changes detected
+
+# после правок этого PR
+$ uv run python manage.py test
+→ Ran 435 tests in 12.529s … OK      # 417 + 24 подключённых + 1 мета-тест − 7 удалённых
+$ uv run python manage.py test shared.test_registry   # с откатом правок __init__.py
+→ FAIL: [t_context_search.TestLibraryContextSearch, t_items_by_ids.TestLibraryItemsByIds, t_docs_views.TestDocsViews]
+$ uv run pylint project apps shared/test_registry.py → 10.00/10
+$ uv run mypy project apps shared/test_registry.py   → Success</div>
 </section>
 
 <footer>
-  Generated with Claude Code · ревью <code>8049f7c</code> · продолжает <a href="2026-10-06-tests-docs-design-review.html">2026-10-06-tests-docs-design-review.html</a>; ID T-/D-/R- взяты оттуда, новые находки пронумерованы TS-01…TS-10.
+  Generated with Claude Code · ревью <code>8049f7c</code> · заменяет удалённое ревью 2026-10-06 (см. историю git); ID T-/D-/R-/DOC-/CI- взяты оттуда, новые находки пронумерованы TS-01…TS-10.
 </footer>
 
 </main>
