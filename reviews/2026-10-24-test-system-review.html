@@ -72,6 +72,7 @@ header { display: grid; gap: 12px; }
 .chip.low { color: var(--sev-low); background: var(--sev-low-bg); }
 .chip.good { color: var(--good); background: var(--good-bg); }
 .chip.tag { color: var(--muted); background: var(--code-bg); }
+.tally .chip { white-space: normal; line-height: 1.3; text-align: left; }
 .scroll { overflow-x: auto; }
 table { border-collapse: collapse; width: 100%; font-size: 0.89rem; font-variant-numeric: tabular-nums; }
 th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
@@ -125,7 +126,7 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
 
 <section class="verdict" aria-labelledby="verdict-h">
   <h2 id="verdict-h" style="border:0;padding:0">Итог</h2>
-  <p class="call">Бэкенд покрыт плотно (92% строк), но тесты гоняются на другой СУБД, чем продакшен, и почти всё время прогона уходит на хеширование паролей. На фронтенде юнит-тесты покрывают 11,5% строк. Покрытие сосредоточено в онбординге. Основные сценарии редактирования (конституенты, ОСС, модели) не проверяются ни юнит-тестами, ни E2E.</p>
+  <p class="call">Бэкенд покрыт плотно (92% строк), но тесты гоняются на другой СУБД, чем продакшен. На <code>8049f7c</code> почти всё время прогона уходило на хеширование паролей. После правки в этом PR прогон занимает 13–17 с вместо 77 с. На фронтенде юнит-тесты покрывают 11,5% строк. Покрытие сосредоточено в онбординге. Основные сценарии редактирования (конституенты, ОСС, модели) не проверяются ни юнит-тестами, ни E2E.</p>
   <div class="tally">
     <span class="chip high">2 high</span>
     <span class="chip med">5 medium</span>
@@ -134,7 +135,7 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
     <span class="chip good">частично: TS-06, TS-09</span>
     <span class="chip good">10 из 10 подтверждено прогоном</span>
   </div>
-  <p>К моменту ревью ни одна тестовая находка ревью от 10-06 не была закрыта за 18 дней. 24 теста бэкенда не запускались (T-01). Самое дешёвое улучшение с наибольшим эффектом: одна строка в настройках ускорила прогон бэкенда с 77 до 12,5 секунд (TS-07). Обе правки сделаны в этом PR.</p>
+  <p>К моменту ревью ни одна тестовая находка ревью от 10-06 не была закрыта за 18 дней. 24 теста бэкенда не запускались (T-01). Самое дешёвое улучшение с наибольшим эффектом: одна строка в настройках ускорила прогон бэкенда с 77 до 13–17 секунд (TS-07). Обе правки сделаны в этом PR.</p>
   <nav class="toc" aria-label="Разделы">
     <a href="#prev">Статус находок 10-06</a>
     <a href="#inv">Инвентарь</a>
@@ -155,7 +156,7 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
     <tbody>
       <tr><td>T-01</td><td>24 теста бэкенда не подключены в <code>__init__.py</code> и не запускаются</td><td><span class="chip good">исправлено в PR</span> На <code>8049f7c</code> не были подключены <code>t_context_search</code> (13), <code>t_items_by_ids</code> (8) и <code>t_docs_views</code> (3). Теперь они в <code>__init__.py</code>, а мета-тест <code>shared/test_registry.py</code> падает, если какой-то <code>t_*.py</code> не импортирован своим пакетом.</td></tr>
       <tr><td>T-02</td><td>Агентские маршруты без тестов</td><td><span class="chip good">исправлено в PR</span> На <code>8049f7c</code> не было ни одного теста для <code>create-version</code>, <code>constituents/delete</code>, <code>substitute</code>, <code>move-cst</code>, <code>library/by-ids</code>, покрытие <code>agents/views/rsforms.py</code> было 72%. Добавлен <code>apps/agents/tests/t_rsform_routes.py</code> (10 тестов): успешный вызов и строка аудита, редактор чужой схемы, чужая приватная схема (403), read-only (403), create-version только для владельца, by-ids без ключа (403). Покрытие view теперь 98%.</td></tr>
-      <tr><td>T-03</td><td>Нет контрактной проверки frontend ↔ backend</td><td><span class="chip med">открыта</span> E2E работают только на <code>page.route</code>-моках, а frontend CI по-прежнему запускается и на изменения в <code>rsconcept/backend/**</code>.</td></tr>
+      <tr><td>T-03</td><td>Нет контрактной проверки frontend ↔ backend</td><td><span class="chip med">открыта</span> E2E работают только на <code>page.route</code>-моках, и контрактной проверки по-прежнему нет. Лишний запуск frontend CI на изменения бэкенда убран в этом PR (TS-06).</td></tr>
       <tr><td>T-04</td><td>Покрытие domain без <code>include</code> и порогов</td><td><span class="chip med">открыта</span> <code>domain/vitest.config.ts</code> не изменился.</td></tr>
       <tr><td>T-05</td><td>Фронтовые тесты не там, где риск</td><td><span class="chip med">открыта</span> <code>features/rsmodel</code>: 0 строк тестов на 5,9 тыс. строк кода, <code>stores</code>: 0. Подробнее в TS-03.</td></tr>
       <tr><td>D-01</td><td>Расхождение <code>RSForm</code> и <code>RSFormCached</code></td><td><span class="chip high">открыта</span> Проверки <code>attr_id != container_id</code> в <code>RSForm.substitute</code> (<code>RSForm.py:288</code>) по-прежнему нет. У <code>RSForm.substitute</code> нет ни одного модельного теста. Подробнее в TS-10.</td></tr>
@@ -271,9 +272,9 @@ footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--li
       <div class="top"><span class="chip low">Low</span><span class="id">TS-06</span><h3>Дыры в самом CI</h3><span class="status verified">✓ подтверждено</span><span class="chip good">частично в PR</span></div>
       <div class="where">.github/workflows/backend.yml · .github/workflows/frontend.yml · playwright.config.ts</div>
       <ul>
-        <li><b>Миграции.</b> CI не проверяет, что для изменений моделей созданы миграции (<code>makemigrations --check --dry-run</code>). Сейчас расхождений нет, проверено, но защиты от них в CI нет.</li>
+        <li><b>Миграции.</b> На <code>8049f7c</code> CI не проверял, что для изменений моделей созданы миграции (<code>makemigrations --check --dry-run</code>). Расхождений не было, но защиты от них в CI тоже не было.</li>
         <li><b>Флейки.</b> <code>retries: 2</code> в CI делает флейки зелёными без следа. Отчёт загружается как артефакт, но статус <i>flaky</i> никто не смотрит.</li>
-        <li><b>Лишние прогоны.</b> Frontend CI запускается на изменения бэкенда, хотя E2E с бэкендом не работают (см. T-03). Это лишнее время CI и ложный зелёный сигнал.</li>
+        <li><b>Лишние прогоны.</b> На <code>8049f7c</code> frontend CI запускался на изменения бэкенда, хотя E2E с бэкендом не работают (см. T-03). Это лишнее время CI и ложный зелёный сигнал.</li>
       </ul>
       <p class="fix"><b>Решение:</b> шаг <code>makemigrations --check --dry-run</code> добавлен в <code>backend.yml</code>, а <code>rsconcept/backend/**</code> убран из триггеров <code>frontend.yml</code>. Оба изменения в этом PR. Осталось: включить в Playwright <code>failOnFlakyTests</code> или хотя бы выводить flaky-тесты в summary. Это отдельное решение, потому что CI может сразу покраснеть на существующих флейках.</p>
     </article>
