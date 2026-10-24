@@ -3,6 +3,9 @@
 Bodies match the session routes under ``/api/oss/:id``. ``layout`` and
 ``position`` are optional: without them the stored layout is kept and new or
 moved nodes are placed by the same rules the UI uses.
+
+Each change runs in one transaction that locks the OSS row before the stored
+layout is read, so a concurrent edit cannot be overwritten by a stale copy.
 '''
 from __future__ import annotations
 
@@ -12,7 +15,7 @@ from django.db import transaction
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema
 from rest_framework import status as c
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -42,8 +45,14 @@ class AgentOssBase(AgentItemView):
         return self._get_item(pk, LibraryItemType.OPERATION_SCHEMA)
 
     def _get_editable_oss(self, pk: int) -> LibraryItem:
-        ''' Load an operation schema the key user may change. '''
-        item = self._get_oss(pk)
+        ''' Lock an operation schema the key user may change. Call inside a transaction. '''
+        try:
+            item = LibraryItem.objects.select_for_update().get(
+                pk=pk,
+                item_type=LibraryItemType.OPERATION_SCHEMA,
+            )
+        except LibraryItem.DoesNotExist as exc:
+            raise NotFound() from exc
         self._require_edit(item)
         return item
 
@@ -163,6 +172,7 @@ class AgentOssUpdateLayoutView(AgentOssBase):
     ''' Agent: replace node positions. '''
     agent_action = 'oss.update_layout'
 
+    @transaction.atomic
     def patch(self, request: Request, pk: int) -> HttpResponse:
         ''' Store the given layout. '''
         item = self._get_editable_oss(pk)
@@ -187,6 +197,7 @@ class AgentOssCreateBlockView(AgentOssBase):
     ''' Agent: create a block, optionally around existing nodes. '''
     agent_action = 'oss.create_block'
 
+    @transaction.atomic
     def post(self, request: Request, pk: int) -> HttpResponse:
         ''' Create a block and place it when no position is given. '''
         item = self._get_editable_oss(pk)
@@ -225,6 +236,7 @@ class AgentOssUpdateBlockView(AgentOssBase):
     ''' Agent: rename a block or move it to another parent. '''
     agent_action = 'oss.update_block'
 
+    @transaction.atomic
     def patch(self, request: Request, pk: int) -> HttpResponse:
         ''' Update block attributes and keep its node inside the new parent. '''
         item = self._get_editable_oss(pk)
@@ -254,6 +266,7 @@ class AgentOssDeleteBlockView(AgentOssBase):
     ''' Agent: delete a block; its children move to its parent. '''
     agent_action = 'oss.delete_block'
 
+    @transaction.atomic
     def patch(self, request: Request, pk: int) -> HttpResponse:
         ''' Delete the block and drop its node. '''
         item = self._get_editable_oss(pk)
@@ -280,6 +293,7 @@ class AgentOssMoveItemsView(AgentOssBase):
     ''' Agent: change the parent block of several nodes. '''
     agent_action = 'oss.move_items'
 
+    @transaction.atomic
     def patch(self, request: Request, pk: int) -> HttpResponse:
         ''' Move nodes and, without a layout, fit them into the destination. '''
         item = self._get_editable_oss(pk)
@@ -318,6 +332,7 @@ class AgentOssCreateSchemaView(AgentOssBase):
     agent_action = 'oss.create_schema'
     agent_heavy = True
 
+    @transaction.atomic
     def post(self, request: Request, pk: int) -> HttpResponse:
         ''' Create the operation and its schema. '''
         item = self._get_editable_oss(pk)
@@ -350,6 +365,7 @@ class AgentOssImportSchemaView(AgentOssBase):
     agent_action = 'oss.import_schema'
     agent_heavy = True
 
+    @transaction.atomic
     def post(self, request: Request, pk: int) -> HttpResponse:
         ''' Create the input operation for the source schema. '''
         item = self._get_editable_oss(pk)
@@ -387,6 +403,7 @@ class AgentOssCloneSchemaView(AgentOssBase):
     agent_action = 'oss.clone_schema'
     agent_heavy = True
 
+    @transaction.atomic
     def post(self, request: Request, pk: int) -> HttpResponse:
         ''' Clone the schema next to its source. '''
         item = self._get_editable_oss(pk)
@@ -420,6 +437,7 @@ class AgentOssCreateReplicaView(AgentOssBase):
     ''' Agent: replica node that reuses the result of its target. '''
     agent_action = 'oss.create_replica'
 
+    @transaction.atomic
     def post(self, request: Request, pk: int) -> HttpResponse:
         ''' Create the replica next to its target. '''
         item = self._get_editable_oss(pk)
@@ -453,6 +471,7 @@ class AgentOssCreateSynthesisView(AgentOssBase):
     agent_action = 'oss.create_synthesis'
     agent_heavy = True
 
+    @transaction.atomic
     def post(self, request: Request, pk: int) -> HttpResponse:
         ''' Create the operation below its arguments and execute it. '''
         item = self._get_editable_oss(pk)
@@ -486,6 +505,7 @@ class AgentOssUpdateOperationView(AgentOssBase):
     ''' Agent: attributes, parent, arguments and substitutions of an operation. '''
     agent_action = 'oss.update_operation'
 
+    @transaction.atomic
     def patch(self, request: Request, pk: int) -> HttpResponse:
         ''' Update the operation and keep its node inside the new parent. '''
         item = self._get_editable_oss(pk)
@@ -518,6 +538,7 @@ class AgentOssDeleteOperationView(AgentOssBase):
     ''' Agent: delete a non-replica operation. '''
     agent_action = 'oss.delete_operation'
 
+    @transaction.atomic
     def patch(self, request: Request, pk: int) -> HttpResponse:
         ''' Delete the operation and, with ``delete_schema``, its result schema. '''
         item = self._get_editable_oss(pk)
@@ -546,6 +567,7 @@ class AgentOssDeleteReplicaView(AgentOssBase):
     ''' Agent: delete a replica operation. '''
     agent_action = 'oss.delete_replica'
 
+    @transaction.atomic
     def patch(self, request: Request, pk: int) -> HttpResponse:
         ''' Delete the replica. '''
         item = self._get_editable_oss(pk)
@@ -573,6 +595,7 @@ class AgentOssCreateInputView(AgentOssBase):
     agent_action = 'oss.create_input'
     agent_heavy = True
 
+    @transaction.atomic
     def patch(self, request: Request, pk: int) -> HttpResponse:
         ''' Create the schema and link it to the operation. '''
         item = self._get_editable_oss(pk)
@@ -602,6 +625,7 @@ class AgentOssSetInputView(AgentOssBase):
     ''' Agent: link a readable schema to an input operation, or unlink it. '''
     agent_action = 'oss.set_input'
 
+    @transaction.atomic
     def patch(self, request: Request, pk: int) -> HttpResponse:
         ''' Replace the result schema of the input operation. '''
         item = self._get_editable_oss(pk)
@@ -634,6 +658,7 @@ class AgentOssExecuteOperationView(AgentOssBase):
     agent_action = 'oss.execute_operation'
     agent_heavy = True
 
+    @transaction.atomic
     def post(self, request: Request, pk: int) -> HttpResponse:
         ''' Execute the synthesis. '''
         item = self._get_editable_oss(pk)
@@ -660,6 +685,7 @@ class AgentOssRelocateConstituentsView(AgentOssBase):
     ''' Agent: move constituents up or down one synthesis step. '''
     agent_action = 'oss.relocate_constituents'
 
+    @transaction.atomic
     def post(self, request: Request, pk: int) -> HttpResponse:
         ''' Move the constituents and return the OSS. '''
         item = self._get_editable_oss(pk)
