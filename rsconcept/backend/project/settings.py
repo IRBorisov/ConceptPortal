@@ -379,6 +379,10 @@ AUTH_PASSWORD_VALIDATORS: list[dict[str, str]] = [
     },
 ]
 
+# Slow default hashers dominate test runtime; no test depends on hash strength.
+if IS_TESTING:
+    PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/

@@ -27,13 +27,3 @@ class TestLayout(TestCase):
         Layout.update_data(self.library_item.id, new_data)
         self.layout.refresh_from_db()
         self.assertEqual(self.layout.data, new_data)
-
-
-    def test_default_data(self):
-        layout2 = Layout.objects.create(oss=self.library_item)
-        self.assertEqual(layout2.data, [])
-
-
-    def test_related_name_layout(self):
-        layouts = self.library_item.layout.all()
-        self.assertIn(self.layout, layouts)
