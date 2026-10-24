@@ -132,9 +132,12 @@ curl.exe -s -H "Authorization: Bearer rcp_...." -H "Content-Type: application/js
   в `create-synthesis` — `substitutions` (по умолчанию пустые списки).
 - `relocate-constituents` отвечает графом ОСС (сессионный маршрут — пустым `200`).
 
-Все id в телах — id операций, блоков и конституент из `GET /api/agents/oss/:id/details`
-(`operations[].id`, `blocks[].id`), не шифры. Правка требует права редактора ОСС; чтение —
-права читателя. Заголовок `X-Expected-Time-Update` отклоняет устаревшую запись с `409`.
+Все id в телах — числовые id, не шифры. Id операций и блоков бери из
+`GET /api/agents/oss/:id/details` (`operations[].id`, `blocks[].id`), id КС-результатов —
+из `operations[].result`. Id конституент для `relocate-constituents` и новых отождествлений
+в `create-synthesis` бери из `GET /api/agents/rsforms/:id/details` нужной КС (`items[].id`);
+уже заданные отождествления видны в `substitutions[]` деталей ОСС. Правка требует права
+редактора ОСС; чтение — права читателя. Заголовок `X-Expected-Time-Update` отклоняет устаревшую запись с `409`.
 
 | Метод | Действие                | Тело (главное)                                                                           | Ответ                  |
 | ----- | ----------------------- | ---------------------------------------------------------------------------------------- | ---------------------- |

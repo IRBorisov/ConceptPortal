@@ -2,6 +2,7 @@
 from unittest.mock import patch
 
 from django.core.cache import cache
+from django.db import connection
 from rest_framework import status
 
 from apps.agents.models import AgentActionLog, ApiKey
@@ -395,6 +396,27 @@ class TestAgentOssApi(EndpointTester):
                 )
         self.assertEqual(Operation.objects.filter(oss=self.oss.model).count(), 2)
         self.assertEqual(len(self._layout()), 2)
+
+    @decl_endpoint('/api/agents/oss/{item}/create-schema', method='post')
+    def test_layout_read_under_lock(self):
+        ''' The stored layout is read inside the write transaction, after the row lock. '''
+        from apps.agents.views import oss as oss_views  # pylint: disable=import-outside-toplevel
+
+        # TestCase already wraps each test in a transaction; the view must open its own.
+        outer_depth = len(connection.atomic_blocks)
+        seen: list[bool] = []
+        original = oss_views.current_layout
+
+        def tracked(item):
+            seen.append(len(connection.atomic_blocks) > outer_depth)
+            return original(item)
+
+        with patch.object(oss_views, 'current_layout', side_effect=tracked):
+            self.executeCreated(item=self.oss_id, data={
+                'item_data': {'alias': 'N', 'title': '', 'description': '', 'parent': None},
+            })
+        self.assertTrue(seen)
+        self.assertTrue(all(seen))
 
     def test_heavy_routes(self):
         ''' Routes that create a conceptual schema use the heavy hourly cap. '''
