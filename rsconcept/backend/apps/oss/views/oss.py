@@ -1,12 +1,10 @@
 ''' Endpoints for OSS. '''
-from copy import deepcopy
-from typing import Optional, cast
+from typing import cast
 
 from django.core.exceptions import PermissionDenied
-from django.db import transaction
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from rest_framework import generics, serializers
+from rest_framework import generics
 from rest_framework import status as c
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -18,11 +16,11 @@ from apps.library.serializers import LibraryItemSerializer
 from apps.library.services.context_search import get_accessible_items_queryset
 from apps.rsform.models import Constituenta
 from apps.rsform.serializers import CstTargetSerializer
-from shared import messages as msg
 from shared import permissions
 from shared.concurrency import ConcurrencyMixin
 
 from .. import models as m
+from .. import mutations
 from .. import serializers as s
 
 
@@ -35,6 +33,15 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
 
     def _get_item(self) -> LibraryItem:
         return cast(LibraryItem, self.get_object())
+
+    def _operation_created(self, item: LibraryItem, operation: m.Operation) -> Response:
+        return Response(
+            status=c.HTTP_201_CREATED,
+            data={
+                'new_operation': operation.pk,
+                'oss': s.OperationSchemaSerializer(item).data
+            }
+        )
 
     def get_queryset(self):
         if self.action == 'list':
@@ -107,11 +114,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         serializer = s.LayoutSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         item = self._get_item()
-
-        with transaction.atomic():
-            m.Layout.update_data(pk, serializer.validated_data['data'])
-            item.save(update_fields=['time_update'])
-
+        mutations.update_layout(item, serializer.validated_data['data'], request)
         return Response(status=c.HTTP_200_OK, data=s.OperationSchemaSerializer(item).data)
 
     @extend_schema(
@@ -131,32 +134,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         item = self._get_item()
         serializer = s.CreateBlockSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
-        layout = serializer.validated_data['layout']
-        position = serializer.validated_data['position']
-        children_blocks: list[m.Block] = serializer.validated_data['children_blocks']
-        children_operations: list[m.Operation] = serializer.validated_data['children_operations']
-
-        with transaction.atomic():
-            oss = m.OperationSchema(item)
-            new_block = oss.create_block(**serializer.validated_data['item_data'])
-            layout.append({
-                'nodeID': 'b' + str(new_block.pk),
-                'x': position['x'],
-                'y': position['y'],
-                'width': position['width'],
-                'height': position['height'],
-            })
-            m.Layout.update_data(pk, layout)
-            if children_blocks:
-                for block in children_blocks:
-                    block.parent = new_block
-                m.Block.objects.bulk_update(children_blocks, ['parent'])
-            if children_operations:
-                for operation in children_operations:
-                    operation.parent = new_block
-                m.Operation.objects.bulk_update(children_operations, ['parent'])
-            item.save(update_fields=['time_update'])
-
+        new_block = mutations.create_block(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_201_CREATED,
             data={
@@ -182,21 +160,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         item = self._get_item()
         serializer = s.UpdateBlockSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
-        block: m.Block = cast(m.Block, serializer.validated_data['target'])
-
-        with transaction.atomic():
-            if 'title' in serializer.validated_data['item_data']:
-                block.title = serializer.validated_data['item_data']['title']
-            if 'description' in serializer.validated_data['item_data']:
-                block.description = serializer.validated_data['item_data']['description']
-            if 'parent' in serializer.validated_data['item_data']:
-                block.parent = serializer.validated_data['item_data']['parent']
-            block.save(update_fields=['title', 'description', 'parent'])
-            if 'layout' in serializer.validated_data:
-                layout = serializer.validated_data['layout']
-                m.Layout.update_data(pk, layout)
-            item.save(update_fields=['time_update'])
-
+        mutations.update_block(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(item).data
@@ -219,16 +183,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         item = self._get_item()
         serializer = s.DeleteBlockSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
-        block = cast(m.Block, serializer.validated_data['target'])
-        layout = serializer.validated_data['layout']
-        layout = [x for x in layout if x['nodeID'] != 'b' + str(block.pk)]
-
-        with transaction.atomic():
-            oss = m.OperationSchema(item)
-            oss.delete_block(block)
-            m.Layout.update_data(pk, layout)
-            item.save(update_fields=['time_update'])
-
+        mutations.delete_block(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(item).data
@@ -251,18 +206,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         item = self._get_item()
         serializer = s.MoveItemsSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
-        layout = serializer.validated_data['layout']
-
-        with transaction.atomic():
-            m.Layout.update_data(pk, layout)
-            for operation in serializer.validated_data['operations']:
-                operation.parent = serializer.validated_data['destination']
-                operation.save(update_fields=['parent'])
-            for block in serializer.validated_data['blocks']:
-                block.parent = serializer.validated_data['destination']
-                block.save(update_fields=['parent'])
-            item.save(update_fields=['time_update'])
-
+        mutations.move_items(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(item).data
@@ -285,32 +229,8 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         item = self._get_item()
         serializer = s.CreateSchemaSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
-        layout = serializer.validated_data['layout']
-        position = serializer.validated_data['position']
-        data = serializer.validated_data['item_data']
-        data['operation_type'] = m.OperationType.INPUT
-
-        with transaction.atomic():
-            oss = m.OperationSchema(item)
-            new_operation = oss.create_operation(**serializer.validated_data['item_data'])
-            layout.append({
-                'nodeID': 'o' + str(new_operation.pk),
-                'x': position['x'],
-                'y': position['y'],
-                'width': position['width'],
-                'height': position['height']
-            })
-            m.Layout.update_data(pk, layout)
-            m.OperationSchema.create_input(item.pk, new_operation)
-            item.save(update_fields=['time_update'])
-
-        return Response(
-            status=c.HTTP_201_CREATED,
-            data={
-                'new_operation': new_operation.pk,
-                'oss': s.OperationSchemaSerializer(item).data
-            }
-        )
+        new_operation = mutations.create_schema_operation(item, serializer.validated_data, request)
+        return self._operation_created(item, new_operation)
 
 
     @extend_schema(
@@ -330,54 +250,8 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         item = self._get_item()
         serializer = s.CloneSchemaSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
-        layout = serializer.validated_data['layout']
-        position = serializer.validated_data['position']
-
-        with transaction.atomic():
-            source = cast(m.Operation, serializer.validated_data['source_operation'])
-            alias = '+' + source.alias
-            title = '+' + source.title
-            source_schema = cast(LibraryItem, source.result)
-            constituents = Constituenta.objects.filter(schema_id=source_schema.pk)
-
-            new_schema = source_schema
-            new_schema.pk = None
-            new_schema.owner = item.owner
-            new_schema.title = title
-            new_schema.alias = alias
-            new_schema.save()
-
-            for cst in constituents:
-                cst.pk = None
-                cst.schema = new_schema
-                cst.save()
-
-            new_operation = source
-            new_operation.pk = None
-            new_operation.alias = alias
-            new_operation.title = title
-            new_operation.operation_type = m.OperationType.INPUT
-            new_operation.result = None
-            new_operation.save()
-            new_operation.setQ_result(new_schema)
-
-            layout.append({
-                'nodeID': 'o' + str(new_operation.pk),
-                'x': position['x'],
-                'y': position['y'],
-                'width': position['width'],
-                'height': position['height']
-            })
-            m.Layout.update_data(pk, layout)
-            item.save(update_fields=['time_update'])
-
-        return Response(
-            status=c.HTTP_201_CREATED,
-            data={
-                'new_operation': new_operation.pk,
-                'oss': s.OperationSchemaSerializer(item).data
-            }
-        )
+        new_operation = mutations.clone_schema_operation(item, serializer.validated_data, request)
+        return self._operation_created(item, new_operation)
 
 
     @extend_schema(
@@ -397,54 +271,8 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         item = self._get_item()
         serializer = s.ImportSchemaSerializer(data=request.data, context={'oss': item, 'request': request})
         serializer.is_valid(raise_exception=True)
-        layout = serializer.validated_data['layout']
-        position = serializer.validated_data['position']
-        data = serializer.validated_data['item_data']
-        data['operation_type'] = m.OperationType.INPUT
-        if not serializer.validated_data['clone_source']:
-            data['result'] = serializer.validated_data['source']
-
-        with transaction.atomic():
-            oss = m.OperationSchema(item)
-            new_operation = oss.create_operation(**serializer.validated_data['item_data'])
-            layout.append({
-                'nodeID': 'o' + str(new_operation.pk),
-                'x': position['x'],
-                'y': position['y'],
-                'width': position['width'],
-                'height': position['height']
-            })
-            m.Layout.update_data(pk, layout)
-
-            if serializer.validated_data['clone_source']:
-                prototype: LibraryItem = serializer.validated_data['source']
-
-                schema_clone = deepcopy(prototype)
-                schema_clone.pk = None
-                schema_clone.owner = item.owner
-                schema_clone.title = new_operation.title
-                schema_clone.alias = new_operation.alias
-                schema_clone.description = new_operation.description
-                schema_clone.visible = False
-                schema_clone.read_only = False
-                schema_clone.access_policy = item.access_policy
-                schema_clone.location = item.location
-                schema_clone.save()
-
-                m.PropagationFacade().get_schema(schema_clone.pk).insert_from(prototype.pk)
-
-                new_operation.result = schema_clone
-                new_operation.save(update_fields=["result"])
-
-            item.save(update_fields=['time_update'])
-
-        return Response(
-            status=c.HTTP_201_CREATED,
-            data={
-                'new_operation': new_operation.pk,
-                'oss': s.OperationSchemaSerializer(item).data
-            }
-        )
+        new_operation = mutations.import_schema_operation(item, serializer.validated_data, request)
+        return self._operation_created(item, new_operation)
 
 
     @extend_schema(
@@ -464,30 +292,8 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         item = self._get_item()
         serializer = s.CreateReplicaSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
-        layout = serializer.validated_data['layout']
-        position = serializer.validated_data['position']
-
-        with transaction.atomic():
-            oss = m.OperationSchema(item)
-            target = cast(m.Operation, serializer.validated_data['target'])
-            new_operation = oss.create_replica(target)
-            layout.append({
-                'nodeID': 'o' + str(new_operation.pk),
-                'x': position['x'],
-                'y': position['y'],
-                'width': position['width'],
-                'height': position['height']
-            })
-            m.Layout.update_data(pk, layout)
-            item.save(update_fields=['time_update'])
-
-        return Response(
-            status=c.HTTP_201_CREATED,
-            data={
-                'new_operation': new_operation.pk,
-                'oss': s.OperationSchemaSerializer(item).data
-            }
-        )
+        new_operation = mutations.create_replica_operation(item, serializer.validated_data, request)
+        return self._operation_created(item, new_operation)
 
     @extend_schema(
         summary='create synthesis operation',
@@ -506,34 +312,8 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         item = self._get_item()
         serializer = s.CreateSynthesisSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
-        layout = serializer.validated_data['layout']
-        position = serializer.validated_data['position']
-        data = serializer.validated_data['item_data']
-        data['operation_type'] = m.OperationType.SYNTHESIS
-
-        with transaction.atomic():
-            oss = m.OperationSchema(item)
-            new_operation = oss.create_operation(**serializer.validated_data['item_data'])
-            layout.append({
-                'nodeID': 'o' + str(new_operation.pk),
-                'x': position['x'],
-                'y': position['y'],
-                'width': position['width'],
-                'height': position['height']
-            })
-            oss.set_arguments(new_operation.pk, serializer.validated_data['arguments'])
-            oss.set_substitutions(new_operation.pk, serializer.validated_data['substitutions'])
-            oss.execute_operation(new_operation)
-            m.Layout.update_data(pk, layout)
-            item.save(update_fields=['time_update'])
-
-        return Response(
-            status=c.HTTP_201_CREATED,
-            data={
-                'new_operation': new_operation.pk,
-                'oss': s.OperationSchemaSerializer(item).data
-            }
-        )
+        new_operation = mutations.create_synthesis_operation(item, serializer.validated_data, request)
+        return self._operation_created(item, new_operation)
 
     @extend_schema(
         summary='update operation',
@@ -552,37 +332,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         item = self._get_item()
         serializer = s.UpdateOperationSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
-        operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
-
-        with transaction.atomic():
-            propagation = m.PropagationFacade()
-            oss = propagation.get_oss(item.pk)
-            if 'layout' in serializer.validated_data:
-                layout = serializer.validated_data['layout']
-                m.Layout.update_data(pk, layout)
-            if 'alias' in serializer.validated_data['item_data']:
-                operation.alias = serializer.validated_data['item_data']['alias']
-            if 'title' in serializer.validated_data['item_data']:
-                operation.title = serializer.validated_data['item_data']['title']
-            if 'description' in serializer.validated_data['item_data']:
-                operation.description = serializer.validated_data['item_data']['description']
-            if 'parent' in serializer.validated_data['item_data']:
-                operation.parent = serializer.validated_data['item_data']['parent']
-            operation.save(update_fields=['alias', 'title', 'description', 'parent'])
-
-            if operation.result is not None:
-                can_edit = permissions.can_edit_item(request.user, operation.result)
-                if can_edit:
-                    operation.result.alias = operation.alias
-                    operation.result.title = operation.title
-                    operation.result.description = operation.description
-                    operation.result.save()
-            if 'arguments' in serializer.validated_data:
-                oss.set_arguments(operation.pk, serializer.validated_data['arguments'])
-            if 'substitutions' in serializer.validated_data:
-                oss.set_substitutions(operation.pk, serializer.validated_data['substitutions'])
-            item.save(update_fields=['time_update'])
-
+        mutations.update_operation(item, serializer.validated_data, request.user, request)
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(item).data
@@ -605,25 +355,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         item = self._get_item()
         serializer = s.DeleteOperationSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
-        operation = cast(m.Operation, serializer.validated_data['target'])
-        old_schema = operation.result
-        layout = serializer.validated_data['layout']
-        layout = [x for x in layout if x['nodeID'] != 'o' + str(operation.pk)]
-
-        with transaction.atomic():
-            propagation = m.PropagationFacade()
-            oss = propagation.get_oss(item.pk)
-            oss.delete_operation(operation.pk, serializer.validated_data['keep_constituents'])
-            m.Layout.update_data(pk, layout)
-            if old_schema is not None:
-                if serializer.validated_data['delete_schema']:
-                    propagation.before_delete_schema(old_schema.pk)
-                    old_schema.delete()
-                elif old_schema.is_synced(item):
-                    old_schema.visible = True
-                    old_schema.save(update_fields=['visible', 'time_update'])
-            item.save(update_fields=['time_update'])
-
+        mutations.delete_operation(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(item).data
@@ -646,19 +378,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         item = self._get_item()
         serializer = s.DeleteReplicaSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
-        operation = cast(m.Operation, serializer.validated_data['target'])
-        keep_connections = serializer.validated_data['keep_connections']
-        keep_constituents = serializer.validated_data['keep_constituents']
-        layout = serializer.validated_data['layout']
-        layout = [x for x in layout if x['nodeID'] != 'o' + str(operation.pk)]
-
-        with transaction.atomic():
-            propagation = m.PropagationFacade()
-            oss = propagation.get_oss(item.pk)
-            m.Layout.update_data(pk, layout)
-            oss.delete_replica(operation.pk, keep_connections, keep_constituents)
-            item.save(update_fields=['time_update'])
-
+        mutations.delete_replica(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(item).data
@@ -681,22 +401,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         item = self._get_item()
         serializer = s.TargetOperationSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
-        operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
-        if len(operation.getQ_arguments()) > 0:
-            raise serializers.ValidationError({
-                'target': msg.operationHasArguments(operation.alias)
-            })
-        if operation.result is not None:
-            raise serializers.ValidationError({
-                'target': msg.operationResultNotEmpty(operation.alias)
-            })
-        layout = serializer.validated_data['layout']
-
-        with transaction.atomic():
-            m.Layout.update_data(pk, layout)
-            schema = m.OperationSchema.create_input(item.pk, operation)
-            item.save(update_fields=['time_update'])
-
+        schema = mutations.create_input_schema(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_200_OK,
             data={
@@ -722,34 +427,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         item = self._get_item()
         serializer = s.SetOperationInputSerializer(data=request.data, context={'oss': item, 'request': request})
         serializer.is_valid(raise_exception=True)
-
-        layout = serializer.validated_data['layout']
-        target_operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
-        schema: Optional[LibraryItem] = serializer.validated_data['input']
-        if schema is not None:
-            connected_operations = m.Operation.objects.filter(result=schema).only('operation_type', 'oss_id')
-            for operation in connected_operations:
-                if operation.operation_type != m.OperationType.INPUT:
-                    raise serializers.ValidationError({
-                        'input': msg.operationResultFromAnotherOSS()
-                    })
-                if operation != target_operation and operation.oss_id == target_operation.oss_id:
-                    raise serializers.ValidationError({
-                        'input': msg.operationInputAlreadyConnected()
-                    })
-        old_schema = target_operation.result
-
-        with transaction.atomic():
-            propagation = m.PropagationFacade()
-            oss = propagation.get_oss(item.pk)
-            if old_schema is not None:
-                if old_schema.is_synced(item):
-                    old_schema.visible = True
-                    old_schema.save(update_fields=['visible'])
-            m.Layout.update_data(pk, layout)
-            oss.set_input(target_operation.pk, schema)
-            item.save(update_fields=['time_update'])
-
+        mutations.set_operation_input(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(item).data
@@ -772,24 +450,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         item = self._get_item()
         serializer = s.TargetOperationSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
-        operation: m.Operation = cast(m.Operation, serializer.validated_data['target'])
-        if operation.operation_type != m.OperationType.SYNTHESIS:
-            raise serializers.ValidationError({
-                'target': msg.operationNotSynthesis(operation.alias)
-            })
-        if operation.result is not None:
-            raise serializers.ValidationError({
-                'target': msg.operationResultNotEmpty(operation.alias)
-            })
-        layout = serializer.validated_data['layout']
-
-        with transaction.atomic():
-            propagation = m.PropagationFacade()
-            oss = propagation.get_oss(item.pk)
-            oss.execute_operation(operation)
-            m.Layout.update_data(pk, layout)
-            item.save(update_fields=['time_update'])
-
+        mutations.execute_operation(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_200_OK,
             data=s.OperationSchemaSerializer(item).data
@@ -851,21 +512,5 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         item = self._get_item()
         serializer = s.RelocateConstituentsSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        ids = [cst.pk for cst in data['items']]
-        destinationID = data['destination']
-
-        with transaction.atomic():
-            propagation = m.PropagationFacade()
-            oss = propagation.get_oss(item.pk)
-            source = propagation.get_schema(data['source'])
-            if data['move_down']:
-                oss.relocate_down(destinationID, ids)
-                propagation.before_delete_cst(source.pk, ids)
-                source.delete_cst(ids)
-            else:
-                new_items = oss.relocate_up(source.pk, destinationID, ids)
-                propagation.after_create_cst(new_items, exclude=[oss.pk])
-                item.save(update_fields=['time_update'])
-
+        mutations.relocate_constituents(item, serializer.validated_data, request)
         return Response(status=c.HTTP_200_OK)

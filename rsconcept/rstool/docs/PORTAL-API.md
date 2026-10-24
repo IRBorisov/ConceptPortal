@@ -65,6 +65,8 @@ GET https://api.portal.acconcept.ru/api/rsforms/856/details
 - Чтение (`GET`): 120 запросов в минуту. В журнал не пишется.
 - Правки: 30 в минуту и 300 в час. Успех и ошибка `400` пишутся в журнал.
 - Создание КС, `replace` и `create-version`: дополнительно не больше 15 раз в час.
+  Сюда же входят правки ОСС, которые создают КС: `POST /api/agents/oss`, `create-schema`,
+  `import-schema`, `clone-schema`, `create-synthesis`, `create-input`, `execute-operation`.
 - Активных ключей у пользователя: не больше 5.
 - `last_used_at` обновляется не чаще раза в минуту.
 
@@ -88,6 +90,9 @@ GET https://api.portal.acconcept.ru/api/rsforms/856/details
 | POST  | `/api/agents/models/:id/set-value`             | Записать интерпретации конституент               |
 | POST  | `/api/agents/models/:id/clear-values`          | Сбросить интерпретации списка конституент        |
 | POST  | `/api/agents/models/:id/reset-all`             | Сбросить все интерпретации модели                |
+| POST  | `/api/agents/oss`                              | Создать пустую ОСС                               |
+| GET   | `/api/agents/oss/:id/details`                  | Граф ОСС: операции, блоки, аргументы, раскладка  |
+| \*    | `/api/agents/oss/:id/<действие>`               | Правка ОСС, см. [ниже](#правка-осс)              |
 
 Пример:
 
@@ -114,6 +119,54 @@ curl.exe -s -H "Authorization: Bearer rcp_...." -H "Content-Type: application/js
 ```
 
 `clear-values` принимает `{ "items": [1201, 1202] }`. `reset-all` — `POST` без тела.
+
+### Правка ОСС
+
+Тела и HTTP-методы совпадают с сессионными `/api/oss/:id/<действие>`. Отличия:
+
+- `layout` (раскладка графа) **необязателен**. Без него сервер берёт сохранённую раскладку,
+  а новые и перемещённые узлы ставит по тем же правилам, что UI.
+- `position` новой операции или блока необязателен; можно передать только `{x, y}` —
+  размер узла подставится. Координаты абсолютные.
+- В `create-block` можно опустить `children_operations` / `children_blocks`,
+  в `create-synthesis` — `substitutions` (по умолчанию пустые списки).
+- `relocate-constituents` отвечает графом ОСС (сессионный маршрут — пустым `200`).
+
+Все id в телах — id операций, блоков и конституент из `GET /api/agents/oss/:id/details`
+(`operations[].id`, `blocks[].id`), не шифры. Правка требует права редактора ОСС; чтение —
+права читателя. Заголовок `X-Expected-Time-Update` отклоняет устаревшую запись с `409`.
+
+| Метод | Действие                | Тело (главное)                                                                           | Ответ                  |
+| ----- | ----------------------- | ---------------------------------------------------------------------------------------- | ---------------------- |
+| PATCH | `update-layout`         | `{ data: [{nodeID, x, y, width, height}] }`                                              | ОСС                    |
+| POST  | `create-block`          | `item_data{title, description, parent}`, `children_operations`, `children_blocks`        | `{new_block, oss}`     |
+| PATCH | `update-block`          | `target`, `item_data{title, description, parent}`                                        | ОСС                    |
+| PATCH | `delete-block`          | `target`                                                                                 | ОСС                    |
+| PATCH | `move-items`            | `operations`, `blocks`, `destination` (id блока или `null`)                              | ОСС                    |
+| POST  | `create-schema`         | `item_data{alias, title, description, parent}` — загрузка с новой пустой КС              | `{new_operation, oss}` |
+| POST  | `import-schema`         | `item_data`, `source` (id КС), `clone_source` (`true` — копия, `false` — ссылка)         | `{new_operation, oss}` |
+| POST  | `clone-schema`          | `source_operation`                                                                       | `{new_operation, oss}` |
+| POST  | `create-replica`        | `target`                                                                                 | `{new_operation, oss}` |
+| POST  | `create-synthesis`      | `item_data`, `arguments` (id операций), `substitutions[{original, substitution}]`        | `{new_operation, oss}` |
+| PATCH | `update-operation`      | `target`, `item_data{alias, title, description, parent}`, `arguments?`, `substitutions?` | ОСС                    |
+| PATCH | `delete-operation`      | `target`, `keep_constituents?`, `delete_schema?`                                         | ОСС                    |
+| PATCH | `delete-replica`        | `target`, `keep_connections?`, `keep_constituents?`                                      | ОСС                    |
+| PATCH | `create-input`          | `target` — пустая КС для загрузки без схемы                                              | `{new_schema, oss}`    |
+| PATCH | `set-input`             | `target`, `input` (id КС или `null`)                                                     | ОСС                    |
+| POST  | `execute-operation`     | `target` — построить КС синтеза                                                          | ОСС                    |
+| POST  | `relocate-constituents` | `destination` (id КС), `items` (id конституент одной КС)                                 | ОСС                    |
+
+`create-synthesis` сразу строит КС синтеза. Отождествления — пары id конституент из КС
+операций-аргументов: `original` удаляется, `substitution` остаётся. `import-schema` требует
+права чтения исходной КС. `delete_schema: true` удаляет и КС-результат, если она лежит
+в той же папке и у того же владельца, что ОСС.
+
+```bash
+# Синтез из двух загрузок без раскладки: сервер поставит узел под аргументами
+curl.exe -s -H "Authorization: Bearer rcp_...." -H "Content-Type: application/json" ^
+  -d "{\"item_data\": {\"alias\": \"S1\", \"title\": \"Синтез\", \"description\": \"\", \"parent\": null}, \"arguments\": [41, 42], \"substitutions\": [{\"original\": 1201, \"substitution\": 1305}]}" ^
+  -X POST "https://api.portal.acconcept.ru/api/agents/oss/77/create-synthesis"
+```
 
 Управление ключами и журналом — только из сессии UI: `GET/POST /api/agents/keys`,
 `PATCH /api/agents/keys/:id` (переименовать), `DELETE /api/agents/keys/:id`.
@@ -335,6 +388,9 @@ tool.applySchemaPatch(
 - Интерпретации модели пишутся точечно: `POST /api/agents/models/:id/set-value`,
   `clear-values`, `reset-all`. Сначала прочитай `GET /api/agents/models/:id/details`,
   чтобы взять id связанной КС и id конституент.
+- Граф ОСС правится через `/api/agents/oss/:id/<действие>`. Сначала прочитай
+  `GET /api/agents/oss/:id/details`: там id операций, блоков и КС-результатов (`result`).
+  Раскладку не передавай, если не нужно ставить узлы в конкретные координаты.
 - Для больших схем используй увеличенный таймаут. В PowerShell вызывай `curl.exe`,
   а не alias `curl` (`Invoke-WebRequest`), если нужен CLI-синтаксис curl.
 - Сначала бери метаданные, если нужно только название или доступность схемы.

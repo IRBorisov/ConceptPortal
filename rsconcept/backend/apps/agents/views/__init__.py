@@ -13,6 +13,27 @@ from .models import (
     AgentModelResetAllView,
     AgentModelSetValueView,
 )
+from .oss import (
+    AgentOssCloneSchemaView,
+    AgentOssCreateBlockView,
+    AgentOssCreateInputView,
+    AgentOssCreateReplicaView,
+    AgentOssCreateSchemaView,
+    AgentOssCreateSynthesisView,
+    AgentOssCreateView,
+    AgentOssDeleteBlockView,
+    AgentOssDeleteOperationView,
+    AgentOssDeleteReplicaView,
+    AgentOssDetailsView,
+    AgentOssExecuteOperationView,
+    AgentOssImportSchemaView,
+    AgentOssMoveItemsView,
+    AgentOssRelocateConstituentsView,
+    AgentOssSetInputView,
+    AgentOssUpdateBlockView,
+    AgentOssUpdateLayoutView,
+    AgentOssUpdateOperationView
+)
 from .rsforms import (
     AgentCreateConstituentaView,
     AgentDeleteConstituentsView,

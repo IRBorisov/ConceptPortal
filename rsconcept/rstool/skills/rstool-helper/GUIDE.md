@@ -124,7 +124,8 @@ console.log(tool.listDiagnostics());
 [PORTAL-API.md](../../docs/PORTAL-API.md) — там пути, контекстный поиск, правила доступа и curl.
 Чтение и запись от имени пользователя идут через Bearer API-ключ на `/api/agents/...`.
 Ключ читает и меняет интерпретации концептуальной модели (`/api/agents/models/:id/details`,
-`set-value`, `clear-values`, `reset-all`); граф ОСС этим ключом по-прежнему не открывается.
+`set-value`, `clear-values`, `reset-all`) и граф ОСС (`/api/agents/oss/:id/details`, загрузки,
+синтезы, блоки — раздел «Правка ОСС» в PORTAL-API.md).
 Без ключа анонимный REST видит только публичные схемы.
 
 Portal JSON из `/details` не является форматом `exportSession`. Используй `importData(payload)` —
