@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ConceptPortal Test System Review</title>
+<meta name="description" content="Анализ системы тестов фронтенда и бэкенда ConceptPortal: слепые зоны, избыточные и дорогие тесты, статус находок ревью 2026-10-06.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,650&display=swap" rel="stylesheet">
+<style>
+/* Layout: one reading column. Verdict, status of earlier findings, inventory, then blind spots, redundant tests, plan and evidence. Same visual system as the 2026-10-06 review. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #1b2230;
+  --muted: #5b6475;
+  --line: #dde1e8;
+  --accent: #2f5aa8;
+  --sev-high: #b3261e;
+  --sev-high-bg: #fbe9e7;
+  --sev-med: #9a5b00;
+  --sev-med-bg: #fdf1dc;
+  --sev-low: #4a5a73;
+  --sev-low-bg: #eaeef4;
+  --good: #1f7a4a;
+  --good-bg: #e3f3ea;
+  --code-bg: #eef1f6;
+  --bar: #2f5aa8;
+  --bar-track: #e6e9ef;
+  --display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b5; --line: #2c3442;
+    --accent: #8fb0ee; --sev-high: #ff9a8f; --sev-high-bg: #3a1f1e; --sev-med: #f2bd6a; --sev-med-bg: #3a2c15;
+    --sev-low: #b4c1d6; --sev-low-bg: #242c39; --good: #7fd3a4; --good-bg: #17302a; --code-bg: #232a35;
+    --bar: #8fb0ee; --bar-track: #2a3240;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b5; --line: #2c3442;
+  --accent: #8fb0ee; --sev-high: #ff9a8f; --sev-high-bg: #3a1f1e; --sev-med: #f2bd6a; --sev-med-bg: #3a2c15;
+  --sev-low: #b4c1d6; --sev-low-bg: #242c39; --good: #7fd3a4; --good-bg: #17302a; --code-bg: #232a35;
+  --bar: #8fb0ee; --bar-track: #2a3240;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.6 var(--body); }
+.wrap { max-width: 940px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 72px; display: grid; gap: 44px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: 2.1rem; font-weight: 650; }
+h2 { font-size: 1.45rem; font-weight: 650; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+h3 { font-size: 1.06rem; font-weight: 650; }
+p { margin: 0; max-width: 74ch; }
+code { font-family: var(--mono); font-size: 0.85em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+a { color: var(--accent); }
+section { display: grid; gap: 16px; min-width: 0; }
+.eyebrow { font: 500 0.75rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+header { display: grid; gap: 12px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 20px; color: var(--muted); font-size: 0.88rem; }
+.verdict { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; display: grid; gap: 12px; }
+.verdict .call { font: 650 1.15rem/1.35 var(--display); }
+.tally { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: 500 0.76rem/1 var(--mono); padding: 5px 9px; border-radius: 999px; white-space: nowrap; }
+.chip.high { color: var(--sev-high); background: var(--sev-high-bg); }
+.chip.med { color: var(--sev-med); background: var(--sev-med-bg); }
+.chip.low { color: var(--sev-low); background: var(--sev-low-bg); }
+.chip.good { color: var(--good); background: var(--good-bg); }
+.chip.tag { color: var(--muted); background: var(--code-bg); }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.89rem; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 0.7rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+td.num, th.num { text-align: right; white-space: nowrap; }
+.barcell { min-width: 120px; }
+.bar { height: 8px; border-radius: 4px; background: var(--bar-track); overflow: hidden; }
+.bar > span { display: block; height: 100%; background: var(--bar); border-radius: 4px; }
+.findings { display: grid; gap: 12px; }
+.finding { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--sev-low); border-radius: 8px; padding: 16px 18px; display: grid; gap: 8px; min-width: 0; }
+.finding.high { border-left-color: var(--sev-high); }
+.finding.med { border-left-color: var(--sev-med); }
+.finding .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; }
+.finding .id { font: 500 0.8rem/1 var(--mono); color: var(--muted); }
+.finding .where { font: 0.79rem/1.45 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.finding p, .finding li { font-size: 0.93rem; }
+.finding ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; max-width: 74ch; }
+.finding .fix { color: var(--muted); }
+.finding .fix b { color: var(--fg); font-weight: 600; }
+.status { font: 500 0.74rem/1 var(--mono); }
+.status.verified { color: var(--good); }
+.status.plausible { color: var(--sev-med); }
+.probe { background: var(--code-bg); border-radius: 6px; padding: 10px 12px; font: 0.8rem/1.5 var(--mono); overflow-x: auto; white-space: pre; }
+.probe-table td, .probe-table th { font-size: 0.84rem; }
+ol.steps { margin: 0; padding-left: 1.4em; display: grid; gap: 8px; max-width: 78ch; }
+ul.plain { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; max-width: 76ch; }
+.toc { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.88rem; }
+.note { color: var(--muted); font-size: .85rem; }
+footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); padding-top: 16px; }
+@media (max-width: 560px) {
+  h1 { font-size: 1.65rem; }
+  .wrap { padding-block: 24px 48px; padding-inline: 16px; gap: 36px; }
+  .finding { padding: 14px; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header>
+  <div class="eyebrow">Code review · rsconcept / ConceptPortal</div>
+  <h1>Система тестов фронтенда и бэкенда: слепые зоны и избыточность</h1>
+  <div class="meta">
+    <span>Дата: 2026-10-24</span>
+    <span>База: <code>8049f7c</code></span>
+    <span>Охват: <code>rsconcept/backend</code>, <code>rsconcept/frontend</code> (unit + Playwright), CI</span>
+  </div>
+  <p>Ревью продолжает <a href="2026-10-06-tests-docs-design-review.html">ревью тестов и документации от 2026-10-06</a>. Сначала проверено, какие его находки по тестам закрыты. Затем добавлены новые, полученные прогоном с покрытием: <code>coverage.py</code> для Django и <code>vitest --coverage</code> по всем файлам <code>src/</code> фронтенда. Новые находки пронумерованы как <b>TS-NN</b>.</p>
+</header>
+
+<section class="verdict" aria-labelledby="verdict-h">
+  <h2 id="verdict-h" style="border:0;padding:0">Итог</h2>
+  <p class="call">Бэкенд покрыт плотно (92% строк), но тесты гоняются на другой СУБД, чем продакшен, и почти всё время прогона уходит на хеширование паролей. На фронтенде юнит-тесты покрывают 11,5% строк. Покрытие сосредоточено в онбординге. Основные сценарии редактирования (конституенты, ОСС, модели) не проверяются ни юнит-тестами, ни E2E.</p>
+  <div class="tally">
+    <span class="chip high">2 high</span>
+    <span class="chip med">5 medium</span>
+    <span class="chip low">3 low</span>
+    <span class="chip tag">7 из 7 тестовых находок 10-06 открыты</span>
+    <span class="chip good">10 из 10 подтверждено прогоном</span>
+  </div>
+  <p>За 18 дней ни одна тестовая находка ревью от 10-06 не закрыта. 24 теста бэкенда по-прежнему не запускаются (T-01). Самое дешёвое улучшение с наибольшим эффектом: одна строка в настройках ускоряет прогон бэкенда с 77 до 14 секунд (TS-07).</p>
+  <nav class="toc" aria-label="Разделы">
+    <a href="#prev">Статус находок 10-06</a>
+    <a href="#inv">Инвентарь</a>
+    <a href="#blind">Слепые зоны</a>
+    <a href="#redundant">Избыточные и дорогие тесты</a>
+    <a href="#good">Что в порядке</a>
+    <a href="#plan">План</a>
+    <a href="#evidence">Доказательства</a>
+  </nav>
+</section>
+
+<section id="prev" aria-labelledby="prev-h">
+  <h2 id="prev-h">Статус находок ревью 2026-10-06 (тесты)</h2>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>ID</th><th>Находка</th><th>Статус на <code>8049f7c</code></th></tr></thead>
+    <tbody>
+      <tr><td>T-01</td><td>24 теста бэкенда не подключены в <code>__init__.py</code> и не запускаются</td><td><span class="chip high">открыта</span> Набор вырос с 378 до 417 тестов, но <code>t_context_search</code> (13), <code>t_items_by_ids</code> (8) и <code>t_docs_views</code> (3) так и не подключены. По имени все 24 проходят.</td></tr>
+      <tr><td>T-02</td><td>Агентские маршруты без тестов</td><td><span class="chip med">открыта</span> По-прежнему ни одного упоминания <code>create-version</code>, <code>constituents/delete</code>, <code>substitute</code>, <code>move-cst</code>, <code>library/by-ids</code> в <code>apps/agents/tests</code>. Покрытие <code>agents/views/rsforms.py</code>: 72%.</td></tr>
+      <tr><td>T-03</td><td>Нет контрактной проверки frontend ↔ backend</td><td><span class="chip med">открыта</span> E2E работают только на <code>page.route</code>-моках, а frontend CI по-прежнему запускается и на изменения в <code>rsconcept/backend/**</code>.</td></tr>
+      <tr><td>T-04</td><td>Покрытие domain без <code>include</code> и порогов</td><td><span class="chip med">открыта</span> <code>domain/vitest.config.ts</code> не изменился.</td></tr>
+      <tr><td>T-05</td><td>Фронтовые тесты не там, где риск</td><td><span class="chip med">открыта</span> <code>features/rsmodel</code>: 0 строк тестов на 5,9 тыс. строк кода, <code>stores</code>: 0. Подробнее в TS-03.</td></tr>
+      <tr><td>D-01</td><td>Расхождение <code>RSForm</code> и <code>RSFormCached</code></td><td><span class="chip high">открыта</span> Проверки <code>attr_id != container_id</code> в <code>RSForm.substitute</code> (<code>RSForm.py:288</code>) по-прежнему нет. У <code>RSForm.substitute</code> нет ни одного модельного теста. Подробнее в TS-10.</td></tr>
+      <tr><td>R-04</td><td>Тесты, проверяющие сам Django ORM</td><td><span class="chip low">открыта</span> 19 тестов (<code>test_str</code>, <code>test_default*</code>, <code>test_related_name*</code>) в 12 файлах.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="inv" aria-labelledby="inv-h">
+  <h2 id="inv-h">Инвентарь</h2>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Слой</th><th class="num">Тестов</th><th class="num">Время</th><th class="num">Покрытие строк</th><th>Как измерено</th></tr></thead>
+    <tbody>
+      <tr><td>backend · Django <code>TestCase</code></td><td class="num">417 (+24 не запускаются)</td><td class="num">77 с</td><td class="num">92%</td><td><code>coverage run manage.py test</code> по <code>apps</code>, <code>shared</code>, <code>project</code>, без тестов и миграций</td></tr>
+      <tr><td>frontend · Vitest (env <code>node</code>)</td><td class="num">375 в 56 файлах</td><td class="num">13 с</td><td class="num">11,5%</td><td><code>vitest run --coverage</code>, <code>include=src/**/*.{ts,tsx}</code></td></tr>
+      <tr><td>frontend · Playwright</td><td class="num">38 в 9 спеках</td><td class="num">—</td><td class="num">—</td><td>Только моки. В CI три браузера, <code>retries: 2</code>, 1 воркер</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <h3>Покрытие фронтенда юнит-тестами по областям</h3>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Область</th><th class="num">Строк</th><th class="num">Покрыто</th><th>Доля</th></tr></thead>
+    <tbody>
+      <tr><td>features/rsform</td><td class="num">4 631</td><td class="num">408</td><td class="barcell"><div class="bar"><span style="width:8.8%"></span></div> 8,8%</td></tr>
+      <tr><td>features/oss</td><td class="num">1 968</td><td class="num">78</td><td class="barcell"><div class="bar"><span style="width:4%"></span></div> 4,0%</td></tr>
+      <tr><td>features/rsmodel</td><td class="num">1 470</td><td class="num">42</td><td class="barcell"><div class="bar"><span style="width:2.9%"></span></div> 2,9%</td></tr>
+      <tr><td>features/library</td><td class="num">1 182</td><td class="num">109</td><td class="barcell"><div class="bar"><span style="width:9.2%"></span></div> 9,2%</td></tr>
+      <tr><td>features/onboarding</td><td class="num">1 169</td><td class="num">549</td><td class="barcell"><div class="bar"><span style="width:47%"></span></div> 47,0%</td></tr>
+      <tr><td>components (UI-кит)</td><td class="num">988</td><td class="num">1</td><td class="barcell"><div class="bar"><span style="width:0.1%"></span></div> 0,1%</td></tr>
+      <tr><td>hooks / stores</td><td class="num">342</td><td class="num">2</td><td class="barcell"><div class="bar"><span style="width:0.6%"></span></div> 0,6%</td></tr>
+      <tr><td>backend (транспорт, кросс-вкладки)</td><td class="num">231</td><td class="num">114</td><td class="barcell"><div class="bar"><span style="width:49.4%"></span></div> 49,4%</td></tr>
+      <tr><td>services/pdf · i18n</td><td class="num">421</td><td class="num">276</td><td class="barcell"><div class="bar"><span style="width:65.6%"></span></div> 65,6%</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">Основная доменная логика (парсер RSLang, типизация, вычисления) вынесена в <code>@rsconcept/domain</code> и тестируется там. Поэтому низкая цифра по фронтенду сама по себе не тревожна. Тревожно другое: непокрытой осталась чистая логика, которая живёт во фронтенде и легко тестируется (TS-03).</p>
+</section>
+
+<section id="blind" aria-labelledby="blind-h">
+  <h2 id="blind-h">Слепые зоны</h2>
+  <div class="findings">
+
+    <article class="finding high">
+      <div class="top"><span class="chip high">High</span><span class="id">TS-01</span><h3>Тесты бэкенда идут на SQLite, а продакшен работает на PostgreSQL 16</h3><span class="status verified">✓ подтверждено</span></div>
+      <div class="where">project/settings.py:326 · .github/workflows/backend.yml · apps/library/services/context_search.py:182-211 · shared/concurrency.py:82 · docker-compose-prod.yml</div>
+      <p>В CI не задаётся <code>DB_ENGINE</code>, поэтому тесты используют значение по умолчанию <code>sqlite3</code>. Продакшен и dev-стек работают на Postgres 16 (последний коммит в dev как раз закрепил эту версию). Из-за этого часть продакшен-кода тесты не проверяют вообще:</p>
+      <ul>
+        <li><b>Контекстный поиск.</b> Код выбирает ветку по <code>connection.vendor == 'sqlite'</code>. Тесты всегда идут через Python-<code>casefold</code>, а продакшен-ветка <code>_collect_ids_icontains</code> (<code>__icontains</code> в Postgres) не выполняется ни разу.</li>
+        <li><b>Блокировки.</b> На SQLite <code>select_for_update()</code> ничего не делает. Поэтому <code>assert_expected_time_update_locked</code> и тест <code>test_layout_read_under_lock</code> проверяют только вложенность транзакций, а не сериализацию конкурентных записей. В репозитории нет ни одного <code>TransactionTestCase</code> и ни одного теста с потоками.</li>
+        <li><b>Семантика LIKE.</b> В SQLite <code>location__startswith</code> не различает регистр для ASCII, в Postgres различает. Фильтр по папкам с подпапками ведёт себя по-разному в тестах и в продакшене.</li>
+      </ul>
+      <p class="fix"><b>Решение:</b> добавить в <code>backend.yml</code> service-контейнер <code>postgres:16</code> и задать <code>DB_ENGINE</code>/<code>DB_*</code> для шага тестов. Локально оставить SQLite. Добавить один <code>TransactionTestCase</code>: два потока пишут с одним <code>X-Expected-Time-Update</code>, один получает 200, другой 409.</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">TS-02</span><h3>Каскад смены типа конституенты по ОСС не выполняется ни одним тестом</h3><span class="status verified">✓ подтверждено</span></div>
+      <div class="where">apps/oss/models/PropagationEngine.py:30-45 · apps/rsform/mutations.py:54-64 · apps/oss/tests/s_propagation/</div>
+      <p><code>PropagationEngine.on_change_cst_type</code> по данным coverage не выполнился ни разу: строки 32–45 имеют 0 попаданий. Каскад запускается из <code>update_constituenta</code>, когда меняются алиас и тип одновременно (например, <code>X3 → D3</code> в схеме-источнике). Тогда тип наследников во всех дочерних КС должен смениться рекурсивно. В пакете <code>s_propagation</code> (5 файлов, 1 444 строки) нет теста на этот случай, хотя переименование с изменением типа встречается в работе часто.</p>
+      <p class="fix"><b>Решение:</b> в <code>t_constituents.py</code> добавить тест: в <code>ks1</code> выполнить PATCH <code>update-cst</code> со сменой алиаса и типа и проверить <code>cst_type</code> наследника в <code>ks3</code> и у следующего поколения.</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">TS-03</span><h3>Фронтенд: чистая логика без тестов, асимметрия между фичами, ноль тестов компонентов</h3><span class="status verified">✓ подтверждено</span></div>
+      <div class="where">vitest.config.ts · src/features/{rsform,oss,rsmodel} · src/stores · src/components</div>
+      <p>Vitest работает в окружении <code>node</code>, <code>@testing-library</code> и jsdom не подключены, ни одного <code>*.test.tsx</code> нет. Компоненты и хуки не тестируются в принципе, за них отвечают только E2E. Если принять это как осознанный выбор, то тем важнее, чтобы была покрыта чистая логика. Сейчас часть её не покрыта совсем:</p>
+      <ul>
+        <li><code>rsform/components/rs-input/text-editing.ts</code> (220 строк, 0%): лигатуры <code>!=</code>→<code>≠</code> и замена клавиш на символы RSLang. Это чистые функции, тест пишется за 15 минут.</li>
+        <li><b>Асимметрия между фичами.</b> <code>rsform-loader</code> и <code>schema-sync-handler</code> покрыты тестами, а их аналоги <code>oss/backend/oss-loader.ts</code> (91 строка) и <code>rsmodel/backend/model-sync-handler.ts</code> нет. <code>rsmodel/models/json-file.ts</code> (экспорт значений модели) тоже не покрыт.</li>
+        <li><code>rsform-page/use-schema-cst-actions.ts</code> (183 строки, 0%): здесь собирается пакет клонирования. Это тот самый путь, где по R-02 клиент не ограничивает пакет 100 элементами.</li>
+        <li><code>stores/preferences.ts</code>, <code>preferences-sync.ts</code>, <code>library/stores/library-search.ts</code>: персистентное состояние и синхронизация между вкладками.</li>
+      </ul>
+      <p class="fix"><b>Решение:</b> сначала покрыть перечисленные модули по образцу соседних тестов (<code>rsform-loader.test.ts</code>, <code>schema-sync-handler.test.ts</code>). Компонентные тесты на jsdom пока не вводить: при текущей стратегии они дороже E2E.</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">TS-04</span><h3>E2E не проверяют основные сценарии редактирования</h3><span class="status verified">✓ подтверждено</span></div>
+      <div class="where">rsconcept/frontend/tests/*.spec.ts</div>
+      <p>38 E2E-тестов распределены так: онбординг 7, библиотека 7, профиль 5, RSForm 5, RSModel 4, создание элемента 4, auth 3, защищённые маршруты 2, <b>ОСС 1</b>. Единственный тест ОСС открывает страницу и переключает вкладки. Ни один спек не проходит:</p>
+      <ul>
+        <li>создание, редактирование и удаление конституенты, ввод выражения и отображение ошибки разбора или типизации;</li>
+        <li>граф термов и любые операции ОСС (создание операции, синтез, выполнение, перемещение в блок);</li>
+        <li>ввод значений модели и вычисление;</li>
+        <li>импорт и экспорт файла (Portal JSON, TRS), создание и восстановление версии, песочницу.</li>
+      </ul>
+      <p>Эти сценарии составляют основную работу пользователя. Поломку в связке «компонент → хук → API» на этих путях сейчас не ловит ни один тест.</p>
+      <p class="fix"><b>Решение:</b> добавить 4–5 сценарных спеков: конституента, выражение, ОСС-операция, значение модели, импорт файла. Бюджет времени CI можно взять у дублирующих онбординговых E2E (TS-08).</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">TS-05</span><h3>Непокрытые ветки ошибок и валидации на бэкенде</h3><span class="status verified">✓ подтверждено</span></div>
+      <div class="where">shared/concurrency.py · apps/library/serializers/basics.py · apps/rsform/serializers/io_files.py · apps/agents/views/logs.py</div>
+      <p>При 92% общего покрытия непокрытые строки сосредоточены в обработке отказов. Именно этот код срабатывает на некорректных данных и при конкурентных правках:</p>
+      <div class="scroll">
+      <table class="probe-table">
+        <thead><tr><th>Файл</th><th class="num">Покрытие</th><th>Что не проверено</th></tr></thead>
+        <tbody>
+          <tr><td><code>shared/concurrency.py</code></td><td class="num">84%</td><td>Токен в теле запроса (<code>expected_time_update</code>), пустой заголовок, неверный формат даты (400), <code>library_item_from_object</code> для объектов с <code>.item</code>/<code>.schema</code></td></tr>
+          <tr><td><code>library/serializers/basics.py</code></td><td class="num">63%</td><td>Невалидный <code>target</code>/<code>new_location</code> в rename-location, неверный <code>access_policy</code>. Ветки context-search и by-ids не покрыты из-за T-01</td></tr>
+          <tr><td><code>rsform/serializers/io_files.py</code></td><td class="num">78%</td><td>Около 40 строк валидации импорта TRS и Portal JSON (стр. 93–217): битые поля, неизвестные типы</td></tr>
+          <tr><td><code>agents/views/logs.py</code></td><td class="num">72%</td><td>Фильтры журнала агентов (по ключу, действию, статусу, дате)</td></tr>
+          <tr><td><code>agents/services/audit.py</code></td><td class="num">70%</td><td>Запасной путь, когда <code>request.data</code> недоступен</td></tr>
+          <tr><td><code>library/services/location_access.py</code></td><td class="num">78%</td><td><code>validate_writable_location</code> с невалидным путём</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="fix"><b>Решение:</b> одним PR добавить по одному <code>executeBadData</code>/<code>executeConflict</code> на каждую ветку. Затем включить <code>coverage</code> в CI с <code>fail_under = 92</code>, чтобы покрытие не опускалось ниже текущего уровня.</p>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">TS-06</span><h3>Дыры в самом CI</h3><span class="status verified">✓ подтверждено</span></div>
+      <div class="where">.github/workflows/backend.yml · .github/workflows/frontend.yml · playwright.config.ts</div>
+      <ul>
+        <li><b>Миграции.</b> CI не проверяет, что для изменений моделей созданы миграции (<code>makemigrations --check --dry-run</code>). Сейчас расхождений нет, проверено, но защиты от них в CI нет.</li>
+        <li><b>Флейки.</b> <code>retries: 2</code> в CI делает флейки зелёными без следа. Отчёт загружается как артефакт, но статус <i>flaky</i> никто не смотрит.</li>
+        <li><b>Лишние прогоны.</b> Frontend CI запускается на изменения бэкенда, хотя E2E с бэкендом не работают (см. T-03). Это лишнее время CI и ложный зелёный сигнал.</li>
+      </ul>
+      <p class="fix"><b>Решение:</b> добавить шаг <code>makemigrations --check</code>. В Playwright включить <code>failOnFlakyTests</code> или хотя бы выводить flaky-тесты в summary. Убрать <code>rsconcept/backend/**</code> из триггеров frontend workflow.</p>
+    </article>
+
+  </div>
+</section>
+
+<section id="redundant" aria-labelledby="redundant-h">
+  <h2 id="redundant-h">Избыточные и дорогие тесты</h2>
+  <div class="findings">
+
+    <article class="finding high">
+      <div class="top"><span class="chip high">High</span><span class="id">TS-07</span><h3>Около 80% времени прогона бэкенда уходит на хеширование паролей</h3><span class="status verified">✓ подтверждено</span></div>
+      <div class="where">project/settings.py · apps/users/tests/t_views.py · apps/users/tests/t_serializers.py</div>
+      <p>Самые медленные тесты относятся к <code>apps.users</code>: <code>test_change_password</code> 7,7 с, <code>test_login_throttling*</code> 7,5 и 7,0 с, <code>test_login</code> 6,3 с и т. д. В тестах используется боевой хешер паролей. С <code>PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']</code> весь набор из 417 тестов проходит за <b>14 с вместо 77 с</b>, все тесты зелёные. Ни один тест не проверяет стойкость хеша, поэтому замена ничего не теряет.</p>
+      <p class="fix"><b>Решение:</b> в <code>settings.py</code> добавить <code>if IS_TESTING: PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']</code>. Флаг <code>IS_TESTING</code> уже есть (строка 86).</p>
+    </article>
+
+    <article class="finding med">
+      <div class="top"><span class="chip med">Medium</span><span class="id">TS-08</span><h3>Машина состояний онбординга проверяется дважды: юнит-тестами и E2E</h3><span class="status verified">✓ подтверждено</span></div>
+      <div class="where">src/features/onboarding/stores/onboarding.test.ts · tests/onboarding.spec.ts</div>
+      <p>У онбординга 1 845 строк юнит-тестов (больше, чем у всех остальных фич вместе, включая rsform) и 7 E2E, столько же, сколько у библиотеки. Большинство E2E повторяют сценарии из стор-тестов:</p>
+      <div class="scroll">
+      <table class="probe-table">
+        <thead><tr><th>E2E (<code>onboarding.spec.ts</code>)</th><th>Юнит-тест (<code>onboarding.test.ts</code>)</th></tr></thead>
+        <tbody>
+          <tr><td>completing the tour persists done status…</td><td>completeActiveTour marks tour done…</td></tr>
+          <tr><td>skipping the tour persists and prevents re-offer…</td><td>skipActiveTour marks tour skipped… · never auto-offers skipped tours</td></tr>
+          <tr><td>Not now dismisses the invitation for the session…</td><td>declineTourOffer only sets sessionDismissed…</td></tr>
+          <tr><td>leaving the route pauses the tour and Resume…</td><td>pauseActiveTour saves resume point…</td></tr>
+          <tr><td>Explore opens a subtour and Finish returns…</td><td>enterSubtour pushes parent frame… · completeActiveTour on a subtour returns…</td></tr>
+          <tr><td>pause mid-subtour resumes the child nested…</td><td>pauseActiveTour while nested persists parent/child…</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Каждый E2E-тест в CI стоит три браузера, один воркер и до двух повторов. При этом ОСС, модели и редактор конституент вообще не покрыты E2E (TS-04).</p>
+      <p class="fix"><b>Решение:</b> оставить 2 E2E: «старт и навигация Next/Back» и «состояние переживает перезагрузку», то есть проверку связки UI ↔ localStorage. Остальные 5 удалить, логика уже покрыта юнит-тестами. Освободившееся время отдать сценариям из TS-04.</p>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">TS-09</span><h3>Тесты, проверяющие сам Django ORM (R-04, не закрыта)</h3><span class="status verified">✓ подтверждено</span></div>
+      <div class="where">apps/oss/tests/s_models/* · apps/library/tests/s_models/* · apps/rsform/tests/s_models/t_Constituenta.py, t_Attribution.py · apps/rsform/tests/t_serializers.py</div>
+      <p>19 тестов вида <code>test_str</code>, <code>test_default_data</code>, <code>test_related_name_*</code> в 12 файлах, плюс <code>TestExpressionSerializer</code>, который проверяет, что обязательный <code>CharField</code> обязателен. Пакет <code>oss/tests/s_models</code> (6 файлов, 301 строка) почти целиком из таких тестов. Они не ловят регрессий, но раздувают счётчик и требуют правок при каждой миграции.</p>
+      <p class="fix"><b>Решение:</b> удалить. Если важен <code>__str__</code> для админки, оставить один параметризованный тест на все модели.</p>
+    </article>
+
+    <article class="finding low">
+      <div class="top"><span class="chip low">Low</span><span class="id">TS-10</span><h3>Двойники <code>RSForm</code> и <code>RSFormCached</code> тестируются вручную по отдельности</h3><span class="status verified">✓ подтверждено</span></div>
+      <div class="where">apps/rsform/tests/s_models/t_RSForm.py · t_RSFormCached.py</div>
+      <p>Четыре теста написаны дважды под одинаковыми именами: <code>test_constituents</code>, <code>test_delete_cst</code>, <code>test_insert_last</code>, <code>test_reset_aliases</code>. При этом <code>test_substitute</code> и <code>test_substitute_attributions</code> есть только для <code>RSFormCached</code>. Получается одновременно и дублирование, и слепая зона: расхождение D-01 (самоатрибуция) существует именно в непротестированном <code>RSForm.substitute</code>.</p>
+      <p class="fix"><b>Решение:</b> вынести общие сценарии в mixin с фабрикой схемы и подключить его к двум классам: <code>RSForm</code> и <code>RSFormCached</code>. Объём кода тестов уменьшится, а D-01 станет красным тестом.</p>
+    </article>
+
+  </div>
+</section>
+
+<section id="good" aria-labelledby="good-h">
+  <h2 id="good-h">Что в порядке</h2>
+  <ul class="plain">
+    <li>Покрытие бэкенда 92%. Отдельный пакет <code>s_propagation</code> проверяет распространение изменений по ОСС: атрибуты, ссылки, подстановки, операции.</li>
+    <li>Фронтенд валидирует ответы API через zod прямо в транспорте (<code>api-transport.ts</code>), а E2E-моки типизированы DTO-типами. Поэтому расхождение моков с фронтовой схемой ловит TypeScript. Не ловится только расхождение бэкенда с фронтовой схемой (T-03).</li>
+    <li>Логика синхронизации между вкладками в <code>src/backend</code> покрыта примерно на 50%. Конфликт параллельных правок дополнительно проверяется E2E-тестом (<code>rsform.spec.ts:223</code>).</li>
+    <li><code>locale-keys-parity.test.ts</code> держит словари <code>en</code>/<code>ru</code>/<code>fr</code> синхронными.</li>
+    <li>Миграции сейчас соответствуют моделям, <code>makemigrations --check</code> чистый.</li>
+  </ul>
+</section>
+
+<section id="plan" aria-labelledby="plan-h">
+  <h2 id="plan-h">План</h2>
+  <ol class="steps">
+    <li><b>Сегодня, около 15 минут:</b> быстрый хешер паролей в тестах (TS-07) и подключение трёх модулей-сирот или переход на <code>-p "t_*.py"</code> (T-01).</li>
+    <li><b>Сегодня:</b> шаг <code>makemigrations --check</code> в backend CI. Убрать <code>rsconcept/backend/**</code> из триггеров frontend CI (TS-06).</li>
+    <li><b>Спринт:</b> Postgres 16 service в backend CI и один <code>TransactionTestCase</code> на конкурентную запись (TS-01).</li>
+    <li><b>Спринт:</b> тест каскада смены типа (TS-02), тесты пяти агентских маршрутов (T-02), ветки ошибок из TS-05, затем <code>coverage --fail-under=92</code> в CI.</li>
+    <li><b>Спринт:</b> mixin для двойников RSForm с красным тестом D-01 (TS-10), удаление ORM-тестов (TS-09).</li>
+    <li><b>Следующий шаг:</b> сократить онбординговые E2E до 2 (TS-08) и добавить 4–5 сценарных E2E для конституент, ОСС, модели и импорта (TS-04).</li>
+    <li><b>Следующий шаг:</b> юнит-тесты для <code>text-editing</code>, <code>oss-loader</code>, <code>model-sync-handler</code>, <code>json-file</code>, <code>use-schema-cst-actions</code>, <code>stores/preferences*</code> (TS-03).</li>
+  </ol>
+</section>
+
+<section id="evidence" aria-labelledby="evidence-h">
+  <h2 id="evidence-h">Доказательства</h2>
+  <p>Всё воспроизведено на <code>8049f7c</code>. Временные файлы (настройки с MD5-хешером, симлинк на <code>@vitest/coverage-v8</code>) после прогона удалены, рабочее дерево не изменено.</p>
+  <div class="probe">$ uv run python manage.py test
+→ Ran 417 tests in 76.950s … OK
+
+$ uv run python manage.py test apps.library -v 2 | grep -ci "contextsearch\|ItemsByIds"
+→ 0
+$ uv run python manage.py test apps.library.tests.s_views.t_context_search apps.library.tests.s_views.t_items_by_ids
+→ Ran 21 tests … OK
+$ uv run python manage.py test apps.users.tests.t_docs_views
+→ Ran 3 tests … OK
+
+# TS-07
+$ uv run python manage.py test --durations 15
+→ 7.719s test_change_password · 7.507s test_login_throttling_ignores_spoofed_forwarded_for · 6.979s test_login_throttling …
+$ uv run python manage.py test --settings=&lt;settings + MD5PasswordHasher&gt;
+→ OK · real 0m14.060s
+
+# TS-01, TS-02, TS-05
+$ coverage run --source=apps,shared,project --omit='*/tests/*,*/migrations/*' manage.py test
+→ TOTAL 7956 stmts, 612 miss, 92%
+  apps/oss/models/PropagationEngine.py      87%  Missing: 32-45, …
+  shared/concurrency.py                      84%  Missing: 32, 39, 42, 57-60, 64, 76-79
+  apps/library/serializers/basics.py         63%
+  apps/rsform/serializers/io_files.py        78%
+  apps/agents/views/rsforms.py               72%  Missing: 120-142, 237-251, 265-274, 288-295
+$ grep -rln "TransactionTestCase\|Thread(" apps shared   → (пусто)
+$ grep -n "DB_ENGINE" .github/workflows/backend.yml      → (пусто; default sqlite3)
+
+# TS-03
+$ vitest run --coverage --coverage.include='src/**/*.{ts,tsx}'
+→ Tests 375 passed · Lines 1858/16127 = 11.52%
+  0%: rs-input/text-editing.ts (220), oss-page/…/use-handle-actions.ts (205),
+      rsform-page/use-schema-cst-actions.ts (183), oss/backend/oss-loader.ts (91), stores/preferences.ts (54)
+
+# TS-06
+$ uv run python manage.py makemigrations --check --dry-run
+→ No changes detected</div>
+</section>
+
+<footer>
+  Generated with Claude Code · ревью <code>8049f7c</code> · продолжает <a href="2026-10-06-tests-docs-design-review.html">2026-10-06-tests-docs-design-review.html</a>; ID T-/D-/R- взяты оттуда, новые находки пронумерованы TS-01…TS-10.
+</footer>
+
+</main>
+</body>
+</html>
