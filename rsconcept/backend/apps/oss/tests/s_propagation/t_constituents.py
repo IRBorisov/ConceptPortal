@@ -144,6 +144,43 @@ class TestChangeConstituents(EndpointTester):
 
 
     @decl_endpoint('/api/rsforms/{item}/update-cst', method='patch')
+    def test_change_cst_type(self):
+        d2 = self.ks3.insert_last('D2', cst_type=CstType.TERM, definition_formal=r'X1\X1')
+        operation4 = self.owned.create_operation(
+            alias='4',
+            operation_type=OperationType.SYNTHESIS
+        )
+        self.owned.set_arguments(operation4.pk, [self.operation3])
+        self.owned.execute_operation(operation4)
+        operation4.refresh_from_db()
+        ks4X1 = Constituenta.objects.get(as_child__parent_id=self.ks3X1.pk)
+        ks4D2 = Constituenta.objects.get(as_child__parent_id=d2.pk)
+        self.assertEqual(ks4X1.schema_id, operation4.result_id)
+
+        data = {
+            'target': self.ks1X1.pk,
+            'item_data': {
+                'alias': 'C1',
+                'cst_type': CstType.CONSTANT,
+            }
+        }
+        self.executeOK(data, item=self.ks1.model.pk)
+        self.ks1X1.refresh_from_db()
+        self.ks3X1.refresh_from_db()
+        d2.refresh_from_db()
+        ks4X1.refresh_from_db()
+        ks4D2.refresh_from_db()
+        self.assertEqual(self.ks1X1.cst_type, CstType.CONSTANT)
+        self.assertEqual(self.ks1X1.alias, 'C1')
+        self.assertEqual(self.ks3X1.cst_type, CstType.CONSTANT)
+        self.assertEqual(self.ks3X1.alias, 'C1')
+        self.assertEqual(d2.definition_formal, r'C1\C1')
+        self.assertEqual(ks4X1.cst_type, CstType.CONSTANT)
+        self.assertEqual(ks4X1.alias, 'C1')
+        self.assertEqual(ks4D2.definition_formal, r'C1\C1')
+
+
+    @decl_endpoint('/api/rsforms/{item}/update-cst', method='patch')
     def test_update_constituenta_inherited(self):
         data = {
             'target': self.ks3X1.pk,
