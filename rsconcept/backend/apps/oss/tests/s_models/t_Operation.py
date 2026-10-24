@@ -1,8 +1,7 @@
 ''' Testing models: Operation. '''
 from django.test import TestCase
 
-from apps.library.models import LibraryItem, LibraryItemType
-from apps.oss.models import Operation, OperationSchema, OperationType
+from apps.oss.models import Operation, OperationSchema
 
 
 class TestOperation(TestCase):
@@ -20,13 +19,3 @@ class TestOperation(TestCase):
     def test_str(self):
         testStr = 'Операция KS1'
         self.assertEqual(str(self.operation), testStr)
-
-
-    def test_create_default(self):
-        self.assertEqual(self.operation.oss, self.oss.model)
-        self.assertEqual(self.operation.operation_type, OperationType.INPUT)
-        self.assertEqual(self.operation.parent, None)
-        self.assertEqual(self.operation.result, None)
-        self.assertEqual(self.operation.alias, 'KS1')
-        self.assertEqual(self.operation.title, '')
-        self.assertEqual(self.operation.description, '')

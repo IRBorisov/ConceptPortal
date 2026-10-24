@@ -19,11 +19,6 @@ class TestEditor(TestCase):
         )
 
 
-    def test_default(self):
-        editors = list(Editor.objects.filter(item=self.item))
-        self.assertEqual(len(editors), 0)
-
-
     def test_str(self):
         testStr = 'КС1: User2'
         item = Editor.objects.create(

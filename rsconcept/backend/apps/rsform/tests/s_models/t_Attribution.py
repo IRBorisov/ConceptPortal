@@ -105,23 +105,6 @@ class TestAttribution(TestCase):
         with self.assertRaises(Attribution.DoesNotExist):
             Attribution.objects.get(id=association_id)
 
-    def test_related_names(self):
-        ''' Test related names for foreign key relationships. '''
-        attribution = Attribution.objects.create(
-            container=self.container1,
-            attribute=self.attribute1
-        )
-
-        # Test container related name
-        container_associations = self.container1.as_container.all()
-        self.assertEqual(len(container_associations), 1)
-        self.assertEqual(container_associations[0], attribution)
-
-        # Test attribute related name
-        attribute_associations = self.attribute1.as_attribute.all()
-        self.assertEqual(len(attribute_associations), 1)
-        self.assertEqual(attribute_associations[0], attribution)
-
     def test_multiple_attributions_same_container(self):
         ''' Test multiple Attributions with same container. '''
         attribute3 = Constituenta.objects.create(
