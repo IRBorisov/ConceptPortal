@@ -1,0 +1,251 @@
+{
+  "contractVersion": "3.3.0",
+  "state": {
+    "sessionId": "6ead18f2-2ea5-495d-afa9-c6999171df29",
+    "alias": "",
+    "title": "Маршрутная сеть",
+    "comment": "",
+    "createdAt": "2026-10-25T16:32:41.236Z",
+    "updatedAt": "2026-10-25T16:32:41.244Z",
+    "revisions": [],
+    "items": [
+      {
+        "id": 1,
+        "alias": "X1",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "остановки",
+        "definitionText": "",
+        "convention": "Остановки городского транспорта.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 2,
+        "alias": "X2",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "маршруты",
+        "definitionText": "",
+        "convention": "Маршруты городского транспорта.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 3,
+        "alias": "S1",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X2×X1)",
+        "term": "остановки маршрута",
+        "definitionText": "",
+        "convention": "Пара (маршрут, остановка): маршрут проходит через остановку.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 4,
+        "alias": "S2",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X1×X1)",
+        "term": "перегоны",
+        "definitionText": "",
+        "convention": "Пара (остановка, следующая остановка): между ними есть прямой перегон хотя бы одного маршрута.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
+        "alias": "F1",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] Pr2(Fi1[{ξ}](S2))",
+        "term": "соседние остановки",
+        "definitionText": "Остановки, до которых от данной есть прямой перегон.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 6,
+        "alias": "D1",
+        "cstType": "term",
+        "definitionFormal": "D{ξ∈X1 | card(Pr1(Fi2[ξ](S1))) ≥ 2}",
+        "term": "пересадочные остановки",
+        "definitionText": "Остановки, через которые проходят не меньше двух маршрутов.",
+        "convention": "",
+        "analysis": {
+          "success": false,
+          "type": null,
+          "valueClass": null,
+          "diagnostics": [
+            {
+              "kind": "expression",
+              "code": 34861,
+              "name": "invalidFilterBooleanEchelon",
+              "severity": "error",
+              "constituentId": 6,
+              "alias": "D1",
+              "expression": "D{ξ∈X1 | card(Pr1(Fi2[ξ](S1))) ≥ 2}",
+              "from": 22,
+              "to": 23,
+              "params": ["Fi2", "X1"]
+            }
+          ]
+        }
+      },
+      {
+        "id": 7,
+        "alias": "A1",
+        "cstType": "axiom",
+        "definitionFormal": "∀σ∈ℬ(X1) ((σ≠∅ & ∀ξ∈σ F1[ξ]⊆σ) ⇒ σ=X1)",
+        "term": "связность сети",
+        "definitionText": "От любой остановки по перегонам можно доехать до любой другой.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": null,
+          "diagnostics": [
+            {
+              "kind": "expression",
+              "code": 34881,
+              "name": "invalidPropertyUsage",
+              "severity": "error",
+              "constituentId": 7,
+              "alias": "A1",
+              "expression": "∀σ∈ℬ(X1) ((σ≠∅ & ∀ξ∈σ F1[ξ]⊆σ) ⇒ σ=X1)",
+              "from": 3,
+              "to": 8
+            }
+          ]
+        }
+      },
+      {
+        "id": 8,
+        "alias": "A2",
+        "cstType": "axiom",
+        "definitionFormal": "Pr2(S1)=X1",
+        "term": "каждая остановка обслуживается",
+        "definitionText": "Через каждую остановку проходит хотя бы один маршрут.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      }
+    ],
+    "model": {
+      "items": []
+    }
+  },
+  "diagnostics": [
+    {
+      "kind": "expression",
+      "code": 34861,
+      "name": "invalidFilterBooleanEchelon",
+      "severity": "error",
+      "constituentId": 6,
+      "alias": "D1",
+      "expression": "D{ξ∈X1 | card(Pr1(Fi2[ξ](S1))) ≥ 2}",
+      "from": 22,
+      "to": 23,
+      "params": ["Fi2", "X1"]
+    },
+    {
+      "kind": "expression",
+      "code": 34881,
+      "name": "invalidPropertyUsage",
+      "severity": "error",
+      "constituentId": 7,
+      "alias": "A1",
+      "expression": "∀σ∈ℬ(X1) ((σ≠∅ & ∀ξ∈σ F1[ξ]⊆σ) ⇒ σ=X1)",
+      "from": 3,
+      "to": 8
+    }
+  ]
+}

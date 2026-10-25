@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://portal.acconcept.ru/schemas/rstool/brief-v1.json",
+  "title": "Бриф концептуальной схемы",
+  "description": "Постановка задачи концептуализации, журнал решений и исполнимые сценарии. Один формат для файла задачи, сессии rstool и Portal. Описание полей — docs/BRIEF.md.",
+  "type": "object",
+  "required": ["version", "status", "approach", "object", "task", "expressiveness"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "const": 1 },
+    "status": {
+      "enum": ["draft", "assumed", "confirmed"],
+      "description": "draft — составляется; assumed — пользователя спросить нельзя, ответы записаны в assumptions; confirmed — пользователь подтвердил бриф"
+    },
+    "approach": {
+      "enum": ["research", "education", "project"],
+      "description": "research — экспликация (исследовательский подход); education — обучение; project — основа для ПО / ОСС (проектный подход)"
+    },
+    "object": { "type": "string", "minLength": 1, "description": "Объект исследования" },
+    "task": { "type": "string", "minLength": 1, "description": "Задача, ради которой строится схема, и точка зрения" },
+    "source": { "type": "string", "description": "Источник: документ, разделы, ссылка на схему Portal" },
+    "restrictions": {
+      "type": "array",
+      "description": "Ограничения предметной области: что сознательно исключено и какие понятия из-за этого невыразимы",
+      "items": {
+        "type": "object",
+        "required": ["id", "excludes"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^L[0-9]+$" },
+          "excludes": { "type": "string", "minLength": 1 },
+          "inexpressible": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "expressiveness": {
+      "type": "array",
+      "description": "Требования к выразительным средствам: понятия, которые схема обязана выразить",
+      "items": {
+        "type": "object",
+        "required": ["id", "concept", "constituent"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^E[0-9]+$" },
+          "concept": { "type": "string", "minLength": 1 },
+          "ref": { "type": "string", "description": "Место в источнике" },
+          "via": {
+            "type": "string",
+            "description": "Этап 2: одна строка — как требование выразится через ядро"
+          },
+          "constituent": {
+            "type": ["string", "null"],
+            "description": "Имя конституенты, которая выражает требование; null — ещё не выполнено"
+          }
+        }
+      }
+    },
+    "distinctions": {
+      "type": "array",
+      "description": "Различения: понятия, которые в запросе смешаны или легко смешиваются, а схема должна развести",
+      "items": {
+        "type": "object",
+        "required": ["id", "between"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^V[0-9]+$" },
+          "between": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": { "type": "string" },
+            "description": "Два id требований (E#) или два имени конституент"
+          },
+          "text": { "type": "string" },
+          "witness": { "type": ["string", "null"], "description": "Сценарий, на котором значения различаются" }
+        }
+      }
+    },
+    "invariants": {
+      "type": "array",
+      "description": "Правила и ограничения, которые схема должна выражать",
+      "items": {
+        "type": "object",
+        "required": ["id", "text", "constituent"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^I[0-9]+$" },
+          "text": { "type": "string", "minLength": 1 },
+          "ref": { "type": "string" },
+          "constituent": { "type": ["string", "null"], "description": "Аксиома (A#), которая выражает правило" },
+          "positive": { "type": ["string", "null"], "description": "Сценарий, где правило выполнено" },
+          "negative": { "type": ["string", "null"], "description": "Сценарий, где правило нарушено" }
+        }
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "description": "Журнал решений: выбор ядра, свойства отношений, наличие и отсутствие аксиом",
+      "items": {
+        "type": "object",
+        "required": ["id", "topic", "choice", "rationale"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^DC[0-9]+$" },
+          "topic": { "type": "string", "minLength": 1 },
+          "alternatives": { "type": "array", "items": { "type": "string" } },
+          "choice": { "type": "string", "minLength": 1 },
+          "rationale": { "type": "string", "minLength": 1 },
+          "supersedes": { "type": "string", "pattern": "^DC[0-9]+$", "description": "Решение, которое отменяется этим" }
+        }
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "description": "Маленькие интерпретации с ожиданиями: примеры и контрпримеры",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "values", "expect"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^SC[0-9]+$" },
+          "title": { "type": "string" },
+          "base": {
+            "type": "string",
+            "pattern": "^SC[0-9]+$",
+            "description": "Сценарий, значения которого наследуются"
+          },
+          "values": {
+            "type": "object",
+            "description": "Имя неопределяемого понятия → значение подписями элементов (X#/C#: массив подписей; S#: вложенные массивы подписей и целых)",
+            "additionalProperties": true
+          },
+          "expect": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "of": { "type": "string", "description": "Имя конституенты (D#, A#, T#)" },
+                "expr": { "type": "string", "description": "Выражение ЯРЭ вместо конституенты" },
+                "value": { "description": "Ожидаемое значение подписями" },
+                "holds": { "type": "boolean", "description": "Для A#/T# и логических выражений" },
+                "contains": { "type": "array", "description": "Элементы, которые должны входить в значение" },
+                "excludes": { "type": "array", "description": "Элементы, которые не должны входить в значение" },
+                "note": { "type": "string" }
+              },
+              "oneOf": [{ "required": ["of"] }, { "required": ["expr"] }]
+            }
+          }
+        }
+      }
+    },
+    "questions": {
+      "type": "array",
+      "description": "Вопросы пользователю: раунд 1 (постановка) и раунд 2 (решения по ядру)",
+      "items": {
+        "type": "object",
+        "required": ["round", "text"],
+        "additionalProperties": false,
+        "properties": {
+          "round": { "enum": [1, 2] },
+          "text": { "type": "string" },
+          "proposed": { "type": "string", "description": "Ответ, предложенный агентом" },
+          "consequence": { "type": "string", "description": "Что станет выразимо или невыразимо" },
+          "answer": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "assumptions": { "type": "array", "items": { "type": "string" } },
+    "openQuestions": { "type": "array", "items": { "type": "string" } }
+  }
+}
