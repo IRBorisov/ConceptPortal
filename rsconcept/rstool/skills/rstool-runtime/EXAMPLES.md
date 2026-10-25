@@ -1,19 +1,21 @@
 # ЯРЭ и rstool — примеры
 
-Короткие фрагменты для агентов. Воркфлоу — [GUIDE.md](GUIDE.md). Контракт — [REFERENCE.md](REFERENCE.md).
+Короткие фрагменты для агентов. Запуск и правила — [SKILL.md](SKILL.md); этапы работы — [../rstool/SKILL.md](../rstool/SKILL.md). Контракт — [REFERENCE.md](REFERENCE.md).
 
 ## Индекс runnable `examples/`
 
 Полные сценарии пакета:
 
-| Тема                                                  | Паттерн                              | Смотри                                            |
-| ----------------------------------------------------- | ------------------------------------ | ------------------------------------------------- |
-| [`sample/`](../../examples/sample/)                   | Минимальная КС + КМ                  | `X1`, `C1`, `S1`, `D1`, `A1`                      |
-| [`kinship/`](../../examples/kinship/)                 | Предметная схема, модель, CLI        | отношения на `X1`, правки интерпретации           |
-| [`chocolate-nim/`](../../examples/chocolate-nim/)     | Математика на `Z` без `X#`           | [BASE-SELECTION.md](../../docs/BASE-SELECTION.md) |
-| [`movd/`](../../examples/movd/)                       | Сложные `S#`, мультипроекции, `Fi`   | фильтры и проекции                                |
-| [`expression-bank/`](../../examples/expression-bank/) | Шаблоны на радикалах `R#`            | [SYNTAX.md](../../docs/SYNTAX.md) «Радикалы»      |
-| [`template-apply/`](../../examples/template-apply/)   | Подстановка `R#` → предметные домены | применение шаблонов                               |
+| Тема                                                              | Паттерн                              | Смотри                                            |
+| ----------------------------------------------------------------- | ------------------------------------ | ------------------------------------------------- |
+| [`sample/`](../../examples/sample/)                               | Минимальная КС + КМ                  | `X1`, `C1`, `S1`, `D1`, `A1`                      |
+| [`kinship/`](../../examples/kinship/)                             | Предметная схема, модель, CLI        | отношения на `X1`, правки интерпретации           |
+| [`chocolate-nim/`](../../examples/chocolate-nim/)                 | Математика на `Z` без `X#`           | [BASE-SELECTION.md](../../docs/BASE-SELECTION.md) |
+| [`movd/`](../../examples/movd/)                                   | Сложные `S#`, мультипроекции, `Fi`   | фильтры и проекции                                |
+| [`expression-bank/`](../../examples/expression-bank/)             | Шаблоны на радикалах `R#`            | [SYNTAX.md](../../docs/SYNTAX.md) «Радикалы»      |
+| [`template-apply/`](../../examples/template-apply/)               | Подстановка `R#` → предметные домены | применение шаблонов                               |
+| [`subordination/`](../../examples/subordination/)                 | Метод по этапам, бриф, антипримеры   | [METHOD.md](../../docs/METHOD.md)                 |
+| [`kinship-subordination/`](../../examples/kinship-subordination/) | Синтез микротеорий                   | [rs-synthesis](../rs-synthesis/SKILL.md)          |
 
 Запуск и структура папок — [examples/README.md](../../examples/README.md).
 
@@ -279,7 +281,7 @@ tool.listDiagnostics();
 const forPortal = tool.exportPortal({ kind: 'schema' });
 ```
 
-Не передавай `/details` с `kind: 'session'`. REST и curl — [PORTAL-API.md](../../docs/PORTAL-API.md).
+Не передавай `/details` с `kind: 'session'`. REST и curl — [PORTAL-READ.md](../../docs/PORTAL-READ.md).
 
 ## Встраивание схемы (синтез)
 
@@ -308,7 +310,7 @@ tool.synthesize({
 
 ## Образец текста ревью (не код)
 
-После [воркфлоу ревью](GUIDE.md#ревью--оценка-готовой-кс) ответ может выглядеть так:
+После [ревью](../rs-review/SKILL.md) ответ может выглядеть так:
 
 > **Вердикт:** схема покрывает роли и отношение подчинения; главный риск — вычисляемая «степень» задана графиком пар вместо терм-функции.
 >

@@ -2,11 +2,11 @@
 
 Agent-facing library for **incremental RSForm construction**, **RSLang expression analysis**, **diagnostics**, **modeling**, and **evaluation**. It wraps [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) with a deterministic session contract and a stdio JSON wrapper for LLM agents. MCP hosts can use it through [`@rsconcept/rstool-mcp`](https://www.npmjs.com/package/@rsconcept/rstool-mcp).
 
-**Contract version:** `3.3.0` — see [skills/rstool-helper/REFERENCE.md](./skills/rstool-helper/REFERENCE.md) for the full v3 API.
+**Contract version:** `3.3.0` — see [skills/rstool-runtime/REFERENCE.md](./skills/rstool-runtime/REFERENCE.md) for the full v3 API.
 
 ## Agent skill
 
-RS language + rstool workflows for agents: `skills/rstool-helper/` (`GUIDE.md`, `REFERENCE.md`, `EXAMPLES.md`) and `docs/` (`DOMAIN.md`, `CONCEPTUAL-SCHEMA.md`, `SYNTAX.md`, …). A **thin** entry skill is installed into the project’s agent skills folder; see [Installing the agent skill](#installing-the-agent-skill) below.
+Agents build conceptual schemas that answer the user's request, not just pass the analyzer. The router skill `skills/rstool/` picks the scenario and names the stage skills (`skills/rs-scope`, `rs-core`, `rs-explicate`, `rs-interpret`, `rs-review`, `rs-synthesis`, `rs-explain`, `rs-portal`, `rstool-runtime`). The method is in `docs/METHOD.md`; a schema brief (`docs/BRIEF.md`) holds the expressiveness requirements, decisions and labelled scenarios, checked by `skills/scripts/check-brief.ts`. Only a **stub** of the router is installed into the project; see [Installing the agent skill](#installing-the-agent-skill) below.
 
 ## Install
 
@@ -26,7 +26,7 @@ The agent should read and follow:
 
 `node_modules/@rsconcept/rstool/skills/INSTALL.md`
 
-That copies `skills/rstool-helper/SKILL.md` from the package into your host’s project skills directory (for example `.agents/skills/rstool-helper/SKILL.md`). Full guidance stays in the package (`skills/rstool-helper/GUIDE.md`, `docs/*.md`) and is read from `node_modules` when needed.
+That runs `npx rstool-skills install`, which writes a stub `rstool/SKILL.md` (name, description and a path into `node_modules`) into `.claude/skills/` and `.agents/skills/`. The skills and `docs/*.md` stay in the package and are read from `node_modules` when needed, so nothing is re-copied after an update.
 
 Details: `skills/README.md`.
 
