@@ -17,6 +17,7 @@ describe('example briefs', () => {
   const cases: Array<[string, string, string, string?]> = [
     ['subordination', 'subordination/rsform-session.json', 'subordination/brief.json'],
     ['kinship', 'kinship/rsform-session.json', 'kinship/brief.json'],
+    ['movd', 'movd/rsform-session.json', 'movd/brief.json'],
     ['kinship-subordination', 'kinship-subordination/rsform-session.json', 'kinship-subordination/brief.json'],
     ['library-loans v1', 'library-loans/rsform-session-v1.json', 'library-loans/brief-v1.json'],
     [

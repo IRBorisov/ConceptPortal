@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+
+import { type Brief, checkBrief } from '../skills/scripts/brief-check';
 import { type Diagnostic, type RSToolWrapperClient } from '../src';
 
 export type ExampleDiagnostic = Diagnostic;
@@ -23,4 +26,13 @@ export async function assertCleanDiagnostics(
     return;
   }
   throw new Error(`${context}: ${diags.length} diagnostic(s)\n${formatDiagnostics(diags)}`);
+}
+
+/** Throws unless the exported session answers its brief (no `check-brief` blockers). */
+export async function assertReady(session: string, briefPath: string, context: string): Promise<void> {
+  const brief = JSON.parse(readFileSync(briefPath, 'utf8')) as Brief;
+  const { readiness } = await checkBrief({ session, brief });
+  if (!readiness.ready) {
+    throw new Error(`${context}: brief blockers\n${readiness.blockers.join('\n')}`);
+  }
 }
