@@ -4,7 +4,7 @@
   "approach": "education",
   "object": "Родственные отношения в семье",
   "task": "Учебная схема: вывести разнообразие видов родства из одного родового отношения «быть ребёнком» и пола; точка зрения — состояние семьи в один момент времени",
-  "source": "по мотивам «Генеалогического отношения» (Т2 §4.2.3)",
+  "source": "по мотивам «Генеалогического отношения двуполой популяции» (Т2 §4.2.3.2): «должны быть выразимы понятия типа двоюродное братство, общие дети, внучатый племянник»",
   "restrictions": [
     {
       "id": "L1",
@@ -18,20 +18,38 @@
     }
   ],
   "expressiveness": [
-    { "id": "E1", "concept": "родители", "via": "Pr1 отношения родитель–ребёнок", "constituent": "D1" },
-    { "id": "E2", "concept": "потомки данного человека", "via": "замыкание «детей» через R{}", "constituent": "F2" },
+    {
+      "id": "E1",
+      "concept": "родители",
+      "via": "Pr1 отношения родитель–ребёнок",
+      "constituent": "D1"
+    },
+    {
+      "id": "E2",
+      "concept": "потомки данного человека",
+      "via": "замыкание «детей» через R{}",
+      "constituent": "F2",
+      "ref": "Т2 §4.2.3.1.4"
+    },
     {
       "id": "E3",
       "concept": "братья и сёстры",
       "via": "дети родителей, кроме самого человека",
       "constituent": "F3"
     },
-    { "id": "E4", "concept": "племянники", "via": "дети братьев и сестёр, не потомки", "constituent": "F4" },
+    {
+      "id": "E4",
+      "concept": "племянники",
+      "via": "дети братьев и сестёр, не потомки",
+      "constituent": "F4",
+      "ref": "Т2 §4.2.3.2.2"
+    },
     {
       "id": "E5",
       "concept": "двоюродные братья и сёстры",
       "via": "дети братьев и сестёр родителей",
-      "constituent": "F28"
+      "constituent": "F28",
+      "ref": "Т2 §4.2.3.2.2"
     },
     {
       "id": "E6",
@@ -39,14 +57,44 @@
       "via": "родители ребёнка совпадают с супругами его родителей",
       "constituent": "D10"
     },
-    { "id": "E7", "concept": "дети вне брака", "via": "потомки без E6", "constituent": "D11" },
-    { "id": "E8", "concept": "бездетные люди", "via": "люди вне Pr2", "constituent": "D8" },
-    { "id": "E9", "concept": "отец данного человека", "via": "родители ∩ мужчины", "constituent": "F7" },
-    { "id": "E10", "concept": "дедушки", "via": "отцы родителей", "constituent": "F24" }
+    {
+      "id": "E7",
+      "concept": "дети вне брака",
+      "via": "потомки без E6",
+      "constituent": "D11"
+    },
+    {
+      "id": "E8",
+      "concept": "бездетные люди",
+      "via": "люди вне Pr2",
+      "constituent": "D8"
+    },
+    {
+      "id": "E9",
+      "concept": "отец данного человека",
+      "via": "родители ∩ мужчины",
+      "constituent": "F7"
+    },
+    {
+      "id": "E10",
+      "concept": "дедушки",
+      "via": "отцы родителей",
+      "constituent": "F24"
+    }
   ],
   "distinctions": [
-    { "id": "V1", "between": ["D2", "E6"], "text": "дети (имеющие родителя) ≠ законные дети", "witness": "SC1" },
-    { "id": "V2", "between": ["E4", "E5"], "text": "племянники ≠ двоюродные братья и сёстры", "witness": "SC1" }
+    {
+      "id": "V1",
+      "between": ["D2", "E6"],
+      "text": "дети (имеющие родителя) ≠ законные дети",
+      "witness": "SC1"
+    },
+    {
+      "id": "V2",
+      "between": ["E4", "E5"],
+      "text": "племянники ≠ двоюродные братья и сёстры",
+      "witness": "SC1"
+    }
   ],
   "invariants": [
     {
@@ -99,7 +147,12 @@
       "choice": "S4: ℬ(S2×S3), пара (муж, жена)",
       "rationale": "учебная схема воспроизводит исходный разбор; это решение о типизации, а не свойство предметной области — при другой постановке брак типизируется ℬ(X1×X1) с аксиомами"
     },
-    { "id": "DC4", "topic": "ацикличность родства", "choice": "аксиома A5", "rationale": "через замыкание F2" },
+    {
+      "id": "DC4",
+      "topic": "ацикличность родства",
+      "choice": "аксиома A5",
+      "rationale": "через замыкание F2"
+    },
     {
       "id": "DC5",
       "topic": "однозначность отца и матери",
@@ -144,19 +197,65 @@
         ]
       },
       "expect": [
-        { "of": "D1", "value": ["grandpa", "grandma", "dad", "mom", "uncle"] },
-        { "of": "F2", "args": ["grandpa"], "value": ["dad", "uncle", "son", "daughter", "cousin"] },
-        { "of": "F3", "args": ["son"], "value": ["daughter"] },
-        { "of": "F3", "args": ["dad"], "value": ["uncle"] },
-        { "of": "F4", "args": ["uncle"], "value": ["son", "daughter"] },
-        { "of": "F28", "args": ["son"], "value": ["cousin"] },
-        { "of": "D10", "value": ["dad", "uncle", "son", "daughter"] },
-        { "of": "D11", "value": ["cousin"] },
-        { "of": "D8", "value": ["son", "daughter", "cousin"] },
-        { "of": "F7", "args": ["son"], "value": ["dad"] },
-        { "of": "F24", "args": ["son"], "value": ["grandpa"] },
-        { "of": "A5", "holds": true },
-        { "of": "T1", "holds": true }
+        {
+          "of": "D1",
+          "value": ["grandpa", "grandma", "dad", "mom", "uncle"]
+        },
+        {
+          "of": "F2",
+          "args": ["grandpa"],
+          "value": ["dad", "uncle", "son", "daughter", "cousin"]
+        },
+        {
+          "of": "F3",
+          "args": ["son"],
+          "value": ["daughter"]
+        },
+        {
+          "of": "F3",
+          "args": ["dad"],
+          "value": ["uncle"]
+        },
+        {
+          "of": "F4",
+          "args": ["uncle"],
+          "value": ["son", "daughter"]
+        },
+        {
+          "of": "F28",
+          "args": ["son"],
+          "value": ["cousin"]
+        },
+        {
+          "of": "D10",
+          "value": ["dad", "uncle", "son", "daughter"]
+        },
+        {
+          "of": "D11",
+          "value": ["cousin"]
+        },
+        {
+          "of": "D8",
+          "value": ["son", "daughter", "cousin"]
+        },
+        {
+          "of": "F7",
+          "args": ["son"],
+          "value": ["dad"]
+        },
+        {
+          "of": "F24",
+          "args": ["son"],
+          "value": ["grandpa"]
+        },
+        {
+          "of": "A5",
+          "holds": true
+        },
+        {
+          "of": "T1",
+          "holds": true
+        }
       ]
     },
     {
@@ -172,8 +271,14 @@
         "S3": ["b"]
       },
       "expect": [
-        { "of": "A5", "holds": false },
-        { "of": "T1", "holds": false }
+        {
+          "of": "A5",
+          "holds": false
+        },
+        {
+          "of": "T1",
+          "holds": false
+        }
       ]
     },
     {
@@ -187,7 +292,12 @@
         ],
         "S2": ["f1", "f2", "c"]
       },
-      "expect": [{ "of": "A3", "holds": false }]
+      "expect": [
+        {
+          "of": "A3",
+          "holds": false
+        }
+      ]
     },
     {
       "id": "SC4",
@@ -201,13 +311,25 @@
           ["m", "w2"]
         ]
       },
-      "expect": [{ "of": "A4", "holds": false }]
+      "expect": [
+        {
+          "of": "A4",
+          "holds": false
+        }
+      ]
     },
     {
       "id": "SC5",
       "title": "Человек без пола",
-      "values": { "X1": ["p"] },
-      "expect": [{ "of": "A2", "holds": false }]
+      "values": {
+        "X1": ["p"]
+      },
+      "expect": [
+        {
+          "of": "A2",
+          "holds": false
+        }
+      ]
     }
   ],
   "assumptions": [],

@@ -1,0 +1,573 @@
+{
+  "contractVersion": "3.3.0",
+  "state": {
+    "sessionId": "5bcd7fae-0c6b-4aa5-97a6-2a60fe30d90e",
+    "alias": "SUB",
+    "title": "Антипример: transitive",
+    "comment": "Формальные структуры подчинения. Построить концептуальную схему, порождающую разнообразие отношений «начальник – подчинённый» (Т2 §4.2.1.1); учебная микротеория.\nL1. Исключено: все властные отношения, кроме подчинения; невыразимо: демократия, единовластие, монархия.\nL2. Исключено: время: бывшие, настоящие и будущие отношения; невыразимо: мой подчинённый, который является моим бывшим начальником.\nL3. Исключено: процедуры формирования и изменения структуры подчинения, воспроизводство кадров; невыразимо: назначение на должность, уход на пенсию, ответственность избираемых перед избирателями.\nL4. Исключено: психология; невыразимо: сам себе приказываю.\nL5. Исключено: способы достижения, поддержания и потери власти; невыразимо: узурпация власти.\nDC1. исходное понятие: X1 люди — начальники сами бывают подчинёнными и наоборот — есть более высокая абстракция (§4.2.1.4).\nDC2. основное отношение: первая гипотеза: единичное отношение «человек — человек» — простейшая форма; проверяется на требованиях к выразительным средствам (§4.2.1.5.1).\nDC3. основное отношение после проверки выразительности: множественное отношение S1: ℬ(ℬ(X1)×ℬ(X1)) — в единичном отношении три начальника одного человека — не коллективный начальник: E4–E8 невыразимы; множественное покрывает единичное одноэлементными совокупностями (§4.2.1.7).\nDC4. порядок пары: (начальник, подчинённый) — пара упорядочена — нужно решение о жёстком порядке (§4.2.1.5.2).\nDC5. антирефлексивность: аксиома A1: стороны одного отношения не пересекаются — отсекается психологический аспект — «сам себе не начальник» (§4.2.1.5.3); в разных отношениях человек может быть и членом руководства, и руководимым — это нужно для подчинения внутри коллектива (E6).\nDC6. универсальность: без аксиомы — не все люди чьи-то начальники или подчинённые; отсутствие аксиомы — тоже решение (§4.2.1.5.3).\nDC7. симметричность: без аксиомы — подчинение многоаспектно: капитан команды подчинён нападающему, который начальник отдела капитана (§4.2.1.5.3).\nDC8. транзитивность: без аксиомы — «вассал моего вассала — не мой вассал»: косвенное подчинение не прямое (§4.2.1.5.3).\nDC9. однозначность: без аксиомы — человек может руководить многими и быть подчинён многим (§4.2.1.5.3).\nDC10. непустота сторон: аксиома A2 — в книге подразумевается неявно (§4.2.1.8); в ЯРЭ записано явно.",
+    "createdAt": "2026-10-25T18:09:06.147Z",
+    "updatedAt": "2026-10-25T18:09:06.155Z",
+    "revisions": [
+      {
+        "revisionId": "c08a7d02-24df-4b8d-b7dc-4289eed13eed",
+        "at": "2026-10-25T18:09:06.155Z",
+        "message": "Антипример: transitive"
+      }
+    ],
+    "items": [
+      {
+        "id": 1,
+        "alias": "X1",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "люди",
+        "definitionText": "",
+        "convention": "Субъекты формальной структуры подчинения: абстракция человека, без должностей и психологии (решение DC1).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 2,
+        "alias": "S1",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(ℬ(X1)×ℬ(X1))",
+        "term": "подчинение",
+        "definitionText": "",
+        "convention": "Пара (руководящая совокупность, руководимая совокупность): совокупность людей является начальником другой совокупности. Единоличное руководство — пара с одноэлементной первой совокупностью (решения DC3, DC4).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "X1"
+                  }
+                },
+                {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "X1"
+                  }
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 3,
+        "alias": "D1",
+        "cstType": "term",
+        "definitionFormal": "I{(α,β) | ρ:∈S1; α:∈pr1(ρ); β:∈pr2(ρ)}",
+        "term": "прямое подчинение",
+        "definitionText": "Пары людей (начальник, подчинённый): первый входит в руководящую совокупность, которой подчинён второй.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 4,
+        "alias": "F1",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] Pr2(Fi1[{ξ}](D1))",
+        "term": "прямые подчинённые",
+        "definitionText": "Люди, прямо подчинённые данному человеку.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
+        "alias": "F2",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] R{σ:=F1[ξ] | σ∪Pr2(Fi1[σ](D1))}",
+        "term": "подчинённые по линиям прямого подчинения",
+        "definitionText": "Люди, до которых от данного человека доходит цепочка прямых подчинений.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 6,
+        "alias": "F3",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] F2[ξ]\\(F1[ξ]∪{ξ})",
+        "term": "косвенные подчинённые",
+        "definitionText": "Подчинённые по линиям прямого подчинения, которые не подчинены данному человеку прямо: «вассал моего вассала — не мой вассал».",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 7,
+        "alias": "D2",
+        "cstType": "term",
+        "definitionFormal": "D{ρ∈S1 | card(pr1(ρ))=1}",
+        "term": "единоличное руководство",
+        "definitionText": "Отношения подчинения, в которых начальник — один человек.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "X1"
+                  }
+                },
+                {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "X1"
+                  }
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 8,
+        "alias": "D3",
+        "cstType": "term",
+        "definitionFormal": "D{ρ∈S1 | card(pr1(ρ))≥2}",
+        "term": "коллективное руководство",
+        "definitionText": "Отношения подчинения, в которых начальник — совокупность из нескольких людей.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "X1"
+                  }
+                },
+                {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "X1"
+                  }
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 9,
+        "alias": "D4",
+        "cstType": "term",
+        "definitionFormal": "D{ρ∈D3 | card(pr2(ρ))=1}",
+        "term": "коллективное руководство одним человеком",
+        "definitionText": "Коллективное руководство, которому подчинён один человек.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "X1"
+                  }
+                },
+                {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "X1"
+                  }
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 10,
+        "alias": "D5",
+        "cstType": "term",
+        "definitionFormal": "D{ρ∈D3 | card(pr2(ρ))≥2}",
+        "term": "коллективное руководство группой",
+        "definitionText": "Коллективное руководство, которому подчинена группа людей.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "X1"
+                  }
+                },
+                {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "X1"
+                  }
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 11,
+        "alias": "D6",
+        "cstType": "term",
+        "definitionFormal": "Pr1(D3)",
+        "term": "коллективные начальники",
+        "definitionText": "Совокупности людей, выступающие начальником в коллективном руководстве.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 12,
+        "alias": "F4",
+        "cstType": "function",
+        "definitionFormal": "[σ∈ℬ(X1)] D{ρ∈S1 | pr1(ρ)∪pr2(ρ)⊆σ}",
+        "term": "подчинение внутри совокупности",
+        "definitionText": "Отношения подчинения, обе стороны которых входят в данную совокупность людей.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 4,
+                "factors": [
+                  {
+                    "typeID": 5,
+                    "base": {
+                      "typeID": 3,
+                      "baseID": "X1"
+                    }
+                  },
+                  {
+                    "typeID": 5,
+                    "base": {
+                      "typeID": 3,
+                      "baseID": "X1"
+                    }
+                  }
+                ]
+              }
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 5,
+                  "base": {
+                    "typeID": 3,
+                    "baseID": "X1"
+                  }
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 13,
+        "alias": "D7",
+        "cstType": "term",
+        "definitionFormal": "D{σ∈D6 | F4[σ]≠∅}",
+        "term": "коллективные начальники с внутренним подчинением",
+        "definitionText": "Коллективные начальники, внутри которых есть отношения подчинения.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 14,
+        "alias": "D8",
+        "cstType": "term",
+        "definitionFormal": "D6\\D7",
+        "term": "«чистое» коллегиальное руководство",
+        "definitionText": "Коллективные начальники без подчинения внутри.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 15,
+        "alias": "D9",
+        "cstType": "term",
+        "definitionFormal": "D{σ∈D6 | ∃ρ∈D2 (pr1(ρ)⊆σ & pr2(ρ)=σ\\pr1(ρ))}",
+        "term": "коллегиальное руководство с единоначалием",
+        "definitionText": "Коллективные начальники, в которых один член единолично руководит всеми остальными.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 16,
+        "alias": "D10",
+        "cstType": "term",
+        "definitionFormal": "X1\\(Pr1(D1)∪Pr2(D1))",
+        "term": "люди вне отношений подчинения",
+        "definitionText": "Люди, которые никому не начальники и ничьи не подчинённые.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 17,
+        "alias": "A1",
+        "cstType": "axiom",
+        "definitionFormal": "∀ρ∈S1 pr1(ρ)∩pr2(ρ)=∅",
+        "term": "сам себе не начальник",
+        "definitionText": "Никто не входит одновременно в руководящую и в руководимую совокупность одного отношения (решение DC5).",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 18,
+        "alias": "A2",
+        "cstType": "axiom",
+        "definitionFormal": "∀ρ∈S1 (pr1(ρ)≠∅ & pr2(ρ)≠∅)",
+        "term": "стороны подчинения непусты",
+        "definitionText": "У отношения подчинения есть и начальник, и подчинённый (решение DC10).",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 19,
+        "alias": "A3",
+        "cstType": "axiom",
+        "definitionFormal": "∀ξ∈X1 F2[ξ]⊆F1[ξ]∪{ξ}",
+        "term": "подчинённый подчинённого — мой подчинённый",
+        "definitionText": "Подчинение транзитивно.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      }
+    ],
+    "model": {
+      "items": []
+    }
+  },
+  "diagnostics": []
+}
