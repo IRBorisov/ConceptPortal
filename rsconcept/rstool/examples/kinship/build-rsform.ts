@@ -304,9 +304,9 @@ async function run() {
           id: 53,
           alias: 'D8',
           cstType: CstType.TERM,
-          definitionFormal: 'X1\\D2',
+          definitionFormal: 'X1\\D1',
           term: 'бездетные люди',
-          definitionText: 'Люди, не являющиеся детьми людей'
+          definitionText: 'Люди, у которых нет детей'
         }
       },
       {

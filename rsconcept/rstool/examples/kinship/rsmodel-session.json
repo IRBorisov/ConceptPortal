@@ -1,21 +1,21 @@
 {
-  "contractVersion": "2.1.0",
+  "contractVersion": "3.3.0",
   "state": {
-    "sessionId": "e5d18e6f-d229-4ef3-b61a-2e0e977bd506",
+    "sessionId": "e145ebfa-d9eb-4331-a426-65b8d34833e0",
     "alias": "",
     "title": "",
     "comment": "",
-    "createdAt": "2026-07-06T14:49:47.568Z",
-    "updatedAt": "2026-07-06T14:49:50.914Z",
+    "createdAt": "2026-10-25T16:50:11.635Z",
+    "updatedAt": "2026-10-25T16:50:23.460Z",
     "revisions": [
       {
-        "revisionId": "ec382d12-7ab2-42c2-975d-2e583d44d15e",
-        "at": "2026-07-06T14:49:47.738Z",
+        "revisionId": "57515329-08be-4e6e-9003-8dae26c6a7b5",
+        "at": "2026-10-25T16:50:11.792Z",
         "message": "КС «родственные отношения»: браки, пол, сиблинги; ∆ ⊆ ⊂ ⊄ ∨ ⇒ ⇔ bool red Pr1,2 Fi1,2 pr1,2, упакованные кванторы"
       },
       {
-        "revisionId": "ba0d32e7-f21e-42ae-bfc3-8e6dc2528253",
-        "at": "2026-07-06T14:49:50.914Z",
+        "revisionId": "efbe0fb6-2156-4734-b736-2458fa52e557",
+        "at": "2026-10-25T16:50:23.460Z",
         "message": "Модель kinship: D3 непуст; A1 card(X1)≤10 выполняется"
       }
     ],
@@ -769,9 +769,9 @@
         "id": 53,
         "alias": "D8",
         "cstType": "term",
-        "definitionFormal": "X1\\D2",
+        "definitionFormal": "X1\\D1",
         "term": "бездетные люди",
-        "definitionText": "Люди, не являющиеся детьми людей",
+        "definitionText": "Люди, у которых нет детей",
         "convention": "",
         "analysis": {
           "success": true,
@@ -1808,13 +1808,13 @@
             ],
             [
               -111,
-              1,
-              2
+              0,
+              3
             ],
             [
               -111,
-              0,
-              3
+              1,
+              2
             ],
             [
               -111,
