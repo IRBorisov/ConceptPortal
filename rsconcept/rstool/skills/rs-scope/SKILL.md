@@ -60,4 +60,4 @@ description: >-
 
 ## Читать по потребности
 
-`docs/METHOD.md` §«Этап 1», `docs/BRIEF.md`; разбор этапа на учебном примере — `examples/subordination/NOTES.md`.
+`docs/METHOD.md` §«Этап 1», `docs/BRIEF.md`; для ТЗ и запросов на изменение — `docs/REQUIREMENTS.md`; разбор этапа на учебном примере — `examples/subordination/NOTES.md`, на требованиях к ПО — `examples/library-loans/NOTES.md`.

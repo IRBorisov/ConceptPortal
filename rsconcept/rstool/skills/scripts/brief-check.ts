@@ -274,7 +274,10 @@ class ScenarioRun {
     run.tool.importData(session, 'session');
     for (const alias of Object.keys(values)) {
       const item = schema.byAlias.get(alias);
-      if (!item || !isUndefinedConcept(item)) {
+      if (!item) {
+        throw new Error(`${alias}: конституента не найдена в схеме`);
+      }
+      if (!isUndefinedConcept(item)) {
         throw new Error(`${alias}: значения задаются только неопределяемым понятиям (X#, C#, S#)`);
       }
     }

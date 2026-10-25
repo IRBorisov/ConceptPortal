@@ -18,7 +18,11 @@ const sessions = [
   'examples/subordination/rsform-session.json',
   'examples/kinship-subordination/rsform-session.json',
   'examples/library-loans/rsform-session-v1.json',
-  'examples/library-loans/rsform-session.json'
+  'examples/library-loans/rsform-session.json',
+  'examples/access-control/rsform-session-v1.json',
+  'examples/access-control/rsform-session.json',
+  'examples/clinic-booking/rsform-session-v1.json',
+  'examples/clinic-booking/rsform-session.json'
 ];
 
 let total = 0;

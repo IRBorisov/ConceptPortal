@@ -1,0 +1,439 @@
+{
+  "contractVersion": "3.3.0",
+  "state": {
+    "sessionId": "4678b084-4fa0-4d4f-8f41-ab7d1ab034a8",
+    "alias": "RBAC",
+    "title": "Ролевой доступ",
+    "comment": "",
+    "createdAt": "2026-10-25T17:06:12.906Z",
+    "updatedAt": "2026-10-25T17:06:12.925Z",
+    "revisions": [
+      {
+        "revisionId": "6ab491a0-87c0-49a1-a797-2c139209a2e7",
+        "at": "2026-10-25T17:06:12.925Z",
+        "message": "Ролевой доступ: шаг 1"
+      }
+    ],
+    "items": [
+      {
+        "id": 1,
+        "alias": "X1",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "пользователи",
+        "definitionText": "",
+        "convention": "Учётные записи пользователей системы.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 2,
+        "alias": "X2",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "роли",
+        "definitionText": "",
+        "convention": "Роли доступа (администратор, редактор, …).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 3,
+        "alias": "X3",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "права",
+        "definitionText": "",
+        "convention": "Элементарные права: действие над видом ресурса (чтение документов, …).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X3"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 4,
+        "alias": "S1",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X1×X2)",
+        "term": "назначения ролей",
+        "definitionText": "",
+        "convention": "Пара (пользователь, роль): роль назначена пользователю напрямую.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
+        "alias": "S2",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X2×X3)",
+        "term": "права роли",
+        "definitionText": "",
+        "convention": "Пара (роль, право): право дано роли напрямую.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X3"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 6,
+        "alias": "S3",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X2×X2)",
+        "term": "иерархия ролей",
+        "definitionText": "",
+        "convention": "Пара (старшая, младшая): старшая роль включает права младшей (решение DC1).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 7,
+        "alias": "S4",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X2×X2)",
+        "term": "несовместимые роли",
+        "definitionText": "",
+        "convention": "Пара ролей, которые нельзя иметь одному пользователю (разделение обязанностей).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 8,
+        "alias": "F1",
+        "cstType": "function",
+        "definitionFormal": "[ρ∈X2] R{σ:=Pr2(Fi1[{ρ}](S3)) | σ∪Pr2(Fi1[σ](S3))}",
+        "term": "младшие роли",
+        "definitionText": "Роли, которые данная роль включает напрямую или через цепочку.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X2"
+              }
+            },
+            "args": [
+              {
+                "alias": "ρ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X2"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 9,
+        "alias": "F2",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] Pr2(Fi1[{ξ}](S1))",
+        "term": "прямые роли",
+        "definitionText": "Роли, назначенные пользователю напрямую.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X2"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 10,
+        "alias": "F3",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] red(I{F1[ρ] | ρ:∈F2[ξ]})\\F2[ξ]",
+        "term": "унаследованные роли",
+        "definitionText": "Роли, которые пользователь получает только через иерархию.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X2"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 11,
+        "alias": "F4",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] F2[ξ]∪F3[ξ]",
+        "term": "эффективные роли",
+        "definitionText": "Прямые и унаследованные роли пользователя.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X2"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 12,
+        "alias": "F5",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] Pr2(Fi1[F2[ξ]](S2))",
+        "term": "назначенные права",
+        "definitionText": "Права прямых ролей пользователя.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X3"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 13,
+        "alias": "F6",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] Pr2(Fi1[F4[ξ]](S2))",
+        "term": "эффективные права",
+        "definitionText": "Права всех ролей пользователя, включая унаследованные.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X3"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 14,
+        "alias": "A1",
+        "cstType": "axiom",
+        "definitionFormal": "∀ρ∈X2 ρ∉F1[ρ]",
+        "term": "иерархия без циклов",
+        "definitionText": "Роль не включает саму себя ни напрямую, ни через цепочку.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 15,
+        "alias": "A2",
+        "cstType": "axiom",
+        "definitionFormal": "∀ξ∈X1 ∀(α,β)∈S4 ¬(α∈F4[ξ] & β∈F4[ξ])",
+        "term": "разделение обязанностей",
+        "definitionText": "Ни у одного пользователя нет обеих ролей несовместимой пары, в том числе через иерархию.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      }
+    ],
+    "model": {
+      "items": []
+    }
+  },
+  "diagnostics": []
+}
