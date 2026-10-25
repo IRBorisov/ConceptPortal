@@ -14,10 +14,24 @@ function brief(path: string): Brief {
 }
 
 describe('example briefs', () => {
-  it.each(['subordination', 'kinship', 'kinship-subordination'])('%s answers its brief', async name => {
+  const cases: Array<[string, string, string, string?]> = [
+    ['subordination', 'subordination/rsform-session.json', 'subordination/brief.json'],
+    ['kinship', 'kinship/rsform-session.json', 'kinship/brief.json'],
+    ['kinship-subordination', 'kinship-subordination/rsform-session.json', 'kinship-subordination/brief.json'],
+    ['library-loans v1', 'library-loans/rsform-session-v1.json', 'library-loans/brief-v1.json'],
+    [
+      'library-loans v2',
+      'library-loans/rsform-session.json',
+      'library-loans/brief.json',
+      'library-loans/rsform-session-v1.json'
+    ]
+  ];
+
+  it.each(cases)('%s answers its brief', async (_, session, briefPath, base) => {
     const { readiness } = await checkBrief({
-      session: read(`${name}/rsform-session.json`),
-      brief: brief(`${name}/brief.json`)
+      session: read(session),
+      brief: brief(briefPath),
+      base: base ? read(base) : undefined
     });
     expect(readiness.blockers).toEqual([]);
     expect(readiness.stage).toBe('review');
@@ -37,6 +51,26 @@ describe('subordination anti-examples', () => {
     const { readiness } = await checkBrief({
       session: read(`subordination/anti/${name}.json`),
       brief: brief('subordination/brief.json'),
+      base: reference
+    });
+    expect(readiness.ready).toBe(false);
+    expect(readiness.blockers.some(item => item.includes(blocker))).toBe(true);
+  });
+});
+
+describe('library-loans anti-examples', () => {
+  const reference = read('library-loans/rsform-session-v1.json');
+  const cases: Array<[string, string]> = [
+    ['uncovered', 'E3: конституента D2 не найдена'],
+    ['weakened', 'I1 «Экземпляр не выдан двум читателям одновременно»: нет аксиомы'],
+    ['species-as-genus', 'ожидался кортеж X2×X1'],
+    ['collapsed', 'D6: формула стала тривиальной']
+  ];
+
+  it.each(cases)('%s is caught', async (name, blocker) => {
+    const { readiness } = await checkBrief({
+      session: read(`library-loans/anti/${name}.json`),
+      brief: brief('library-loans/brief-v1.json'),
       base: reference
     });
     expect(readiness.ready).toBe(false);
