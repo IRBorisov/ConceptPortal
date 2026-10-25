@@ -152,6 +152,7 @@ tool.applySchemaPatch({
 | `arithmeticNotSupported` / `orderingNotSupported` | `ξ+1` или `α<β` при `ξ∈X1`                         | `Z` или `C#` ([BASE-SELECTION.md](../../docs/BASE-SELECTION.md)) |
 | `globalFuncParenCall`                             | `F1(ξ)`                                            | `F1[ξ]`                                                          |
 | `globalFuncWithoutArgs`                           | голое `F1` в формуле                               | `F1[…]`                                                          |
+| `globalDeleted`                                   | `X1∪DEL` — ссылка на удаленную конституенту        | подставь действующее обозначение                                 |
 | `radicalUsage`                                    | `R1` в теле формулы или как конституента           | `R#` только в `[…]` у `F#`/`P#`                                  |
 | `invalidPropertyUsage`                            | `∀σ∈ℬ(S1)\{∅} ¬P1[σ]` — квантор по булеану         | вычислимая форма через достижимость: `∀α∈X1 α∉F4[α]`             |
 | `schemaMissingConvention`                         | `X1` без конвенции                                 | добавь предметную конвенцию                                      |

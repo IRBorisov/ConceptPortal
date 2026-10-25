@@ -8,6 +8,9 @@ import { parser as rslangParser } from './parser/parser';
 import { ArgumentsExtractor, type ArgumentsType } from './semantic/arguments-extractor';
 export { generateExpressionFromAst } from './parser/expression-generator';
 
+/** Placeholder alias written into expressions in place of references to deleted constituents. */
+export const DELETED_ALIAS = 'DEL';
+
 /** Represents alias mapping. */
 export type AliasMapping = Record<string, string>;
 

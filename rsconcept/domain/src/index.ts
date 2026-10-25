@@ -80,8 +80,9 @@ export {
   visitAstDFS
 } from './parsing/ast';
 export { type CMSyntaxNode, printTree } from './parsing/lezer-tree';
+export { DELETED_ALIAS } from './rslang/api';
 export { readErrorAnnotation, readTypeAnnotation } from './rslang/ast-annotations';
-export { type EvalStackFrame, formatEvalCallStack,RSErrorCode, type RSErrorDescription } from './rslang/error';
+export { type EvalStackFrame, formatEvalCallStack, RSErrorCode, type RSErrorDescription } from './rslang/error';
 export { type CalculatorEvaluateOptions, type CalculatorResult, RSCalculator } from './rslang/eval/calculator';
 export { makeValuePath, TUPLE_ID, type Value, type ValuePath } from './rslang/eval/value';
 export { printValue } from './rslang/eval/value-api';

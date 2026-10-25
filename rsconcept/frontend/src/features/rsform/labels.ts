@@ -46,6 +46,7 @@ const RSLANG_ERROR_MESSAGE_ID: Record<RSErrorCode, string> = {
   [RSErrorCode.invalidCard]: 'tx.rslang.error.invalidCard',
   [RSErrorCode.invalidDebool]: 'tx.rslang.error.invalidDebool',
   [RSErrorCode.globalFuncWithoutArgs]: 'tx.rslang.error.globalFuncWithoutArgs',
+  [RSErrorCode.globalDeleted]: 'tx.rslang.error.globalDeleted',
   [RSErrorCode.invalidReduce]: 'tx.rslang.error.invalidReduce',
   [RSErrorCode.projectionSetArgumentNotSet]: 'tx.rslang.error.projectionSetArgumentNotSet',
   [RSErrorCode.projectionSetArgumentNotTupleSet]: 'tx.rslang.error.projectionSetArgumentNotTupleSet',
@@ -435,6 +436,7 @@ export function describeRSError(code: RSErrorCode, params: readonly string[] = [
       return globalTx(id, { name: params[0] ?? '', domain: params[1] ?? '' });
     case RSErrorCode.globalNoValue:
     case RSErrorCode.calcGlobalMissing:
+    case RSErrorCode.globalDeleted:
       return globalTx(id, { name: params[0] ?? '' });
     case RSErrorCode.forbiddenCharacter:
       return globalTx(id, { character: params[0] ?? '' });

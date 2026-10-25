@@ -199,6 +199,8 @@ export const txRslangFr: Record<string, string> = {
   'tx.rslang.error.invalidCard': 'La cardinalité ne peut être calculée que pour un ensemble ; obtenu {arg}',
   'tx.rslang.error.invalidDebool': 'debool retire un niveau booléen ; obtenu {arg}',
   'tx.rslang.error.globalFuncWithoutArgs': 'Appelez la fonction ou le prédicat avec des arguments : {name}[…]',
+  'tx.rslang.error.globalDeleted':
+    'Référence à une constituante supprimée ({name}) : remplacez-la par un identifiant existant',
   'tx.rslang.error.invalidReduce': 'red s’applique à un ensemble d’ensembles ; obtenu {arg}',
   'tx.rslang.error.projectionSetArgumentNotSet':
     'La grande projection {operator} s’applique à un ensemble ; obtenu {actual}',

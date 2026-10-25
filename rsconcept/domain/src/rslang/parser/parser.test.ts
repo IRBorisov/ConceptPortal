@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { buildTree, printTree } from '../../parsing';
+import { DELETED_ALIAS } from '../api';
 import { RSErrorCode, type RSErrorDescription } from '../error';
 import { TypeClass } from '../semantic/typification';
 
@@ -68,6 +69,10 @@ const testError = [
   ['!', '[Expression[⚠]]']
 ];
 
+function deletedReferenceAt(from: number): RSErrorDescription {
+  return { code: RSErrorCode.globalDeleted, from, to: from + DELETED_ALIAS.length, params: [DELETED_ALIAS] };
+}
+
 const testErrorData = [
   ['(', { code: RSErrorCode.missingCloseBracket, from: 0, to: 1, params: ['('] }],
   ['{X1', { code: RSErrorCode.missingCloseBracket, from: 0, to: 1, params: ['{'] }],
@@ -86,6 +91,10 @@ const testErrorData = [
   ['?', { code: RSErrorCode.forbiddenCharacter, from: 0, to: 1, params: ['?'] }],
   ['16=2^4', { code: RSErrorCode.forbiddenCharacter, from: 4, to: 5, params: ['^'] }],
   ['16=2/4', { code: RSErrorCode.forbiddenCharacter, from: 4, to: 5, params: ['/'] }],
+  [DELETED_ALIAS, deletedReferenceAt(0)],
+  [`X1∪${DELETED_ALIAS}`, deletedReferenceAt(3)],
+  [`F1[${DELETED_ALIAS}]`, deletedReferenceAt(3)],
+  [`∀ξ∈${DELETED_ALIAS} ξ∈X1`, deletedReferenceAt(3)],
   ['Fi1(S1)', { code: RSErrorCode.invalidFilterSyntax, from: 0, to: 4 }],
   ['[α∈ℬ(X1×X1)]', { code: RSErrorCode.expectedFunctionBody, from: 12, to: 12 }]
 ];
@@ -281,6 +290,35 @@ describe('Testing RSParser error data', () => {
       from: input.length,
       to: input.length
     });
+  });
+
+  it('Reports every reference to a deleted constituent instead of syntax errors', () => {
+    const input = `${DELETED_ALIAS}∪X1 = ${DELETED_ALIAS}^2`;
+    const tree = parser.parse(input);
+    const ast = buildTree(tree.cursor());
+    const errors: RSErrorDescription[] = [];
+    extractSyntaxErrors(ast, input, error => errors.push(error));
+
+    expect(errors).toEqual([
+      deletedReferenceAt(0),
+      deletedReferenceAt(input.lastIndexOf(DELETED_ALIAS)),
+      {
+        code: RSErrorCode.forbiddenCharacter,
+        from: input.indexOf('^'),
+        to: input.indexOf('^') + 1,
+        params: ['^']
+      }
+    ]);
+  });
+
+  it('Does not treat identifiers containing the deleted alias as deleted references', () => {
+    const input = `${DELETED_ALIAS}X1`;
+    const tree = parser.parse(input);
+    const ast = buildTree(tree.cursor());
+    const errors: RSErrorDescription[] = [];
+    extractSyntaxErrors(ast, input, error => errors.push(error));
+
+    expect(errors.some(error => error.code === RSErrorCode.globalDeleted)).toBe(false);
   });
 
   it('Reports a single forbidden-character error for exponentiation', () => {

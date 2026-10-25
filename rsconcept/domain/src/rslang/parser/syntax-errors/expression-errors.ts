@@ -2,6 +2,7 @@
  * Expression-level diagnostics (no AST required) and error deduplication.
  */
 
+import { DELETED_ALIAS } from '../../api';
 import { RSErrorCode, type RSErrorDescription } from '../../error';
 
 type OpenBracket = '(' | '[' | '{';
@@ -61,6 +62,23 @@ export function extractForbiddenCharacterErrors(expression: string): RSErrorDesc
     });
   }
 
+  return errors;
+}
+
+/** Matches {@link DELETED_ALIAS} as a standalone identifier (not a part of a longer name). */
+const DELETED_ALIAS_REGEXP = new RegExp(`(?<![\\p{L}\\p{N}_])${DELETED_ALIAS}(?![\\p{L}\\p{N}_])`, 'gu');
+
+/** Reports every reference to a deleted constituent ({@link DELETED_ALIAS}) in the expression. */
+export function extractDeletedReferenceErrors(expression: string): RSErrorDescription[] {
+  const errors: RSErrorDescription[] = [];
+  for (const match of expression.matchAll(DELETED_ALIAS_REGEXP)) {
+    errors.push({
+      code: RSErrorCode.globalDeleted,
+      from: match.index,
+      to: match.index + match[0].length,
+      params: [match[0]]
+    });
+  }
   return errors;
 }
 

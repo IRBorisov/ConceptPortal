@@ -105,6 +105,7 @@ export const RSErrorCode = {
   invalidCard: 0x8808, // 34824
   invalidDebool: 0x8809, // 34825
   globalFuncWithoutArgs: 0x880b, // 34827
+  globalDeleted: 0x880c, // 34828
   invalidReduce: 0x8810, // 34832
   invalidEnumeration: 0x8813, // 34835
   projectionSetArgumentNotSet: 0x8830, // 34864

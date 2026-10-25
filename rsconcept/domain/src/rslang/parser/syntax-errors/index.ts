@@ -14,7 +14,12 @@ import { type TypeClass } from '../../semantic/typification';
 import { TokenID } from '../token';
 
 import { classifyFallbackError, classifyParseError } from './classify';
-import { deduplicateErrors, extractBracketErrors, extractForbiddenCharacterErrors } from './expression-errors';
+import {
+  deduplicateErrors,
+  extractBracketErrors,
+  extractDeletedReferenceErrors,
+  extractForbiddenCharacterErrors
+} from './expression-errors';
 import { isIncompleteGeneratorBodyCode } from './generators';
 
 /** When set, refines incomplete formal headers (`[α∈…]`, quantifiers). */
@@ -38,9 +43,11 @@ export function extractSyntaxErrors(
   annotateErrors: boolean = false,
   options?: SyntaxErrorOptions
 ) {
-  const forbiddenErrors = extractForbiddenCharacterErrors(expression);
-  if (forbiddenErrors.length > 0) {
-    for (const error of forbiddenErrors) {
+  // Deleted references and forbidden characters make the AST meaningless: report only them.
+  const textErrors = [...extractDeletedReferenceErrors(expression), ...extractForbiddenCharacterErrors(expression)];
+  if (textErrors.length > 0) {
+    textErrors.sort((left, right) => left.from - right.from);
+    for (const error of textErrors) {
       reporter(error);
       if (annotateErrors) {
         annotateError(ast, error.code, error.params);
