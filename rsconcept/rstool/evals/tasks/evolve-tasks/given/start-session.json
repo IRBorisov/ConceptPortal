@@ -1,0 +1,280 @@
+{
+  "contractVersion": "3.3.0",
+  "state": {
+    "sessionId": "3e35b4ff-ffa7-445c-bc3c-2abca0a9a03c",
+    "alias": "",
+    "title": "Задачи проекта",
+    "comment": "",
+    "createdAt": "2026-10-25T16:32:41.204Z",
+    "updatedAt": "2026-10-25T16:32:41.226Z",
+    "revisions": [
+      {
+        "revisionId": "aff4a71f-ae16-4a66-a461-426560c0a708",
+        "at": "2026-10-25T16:32:41.226Z",
+        "message": "start"
+      }
+    ],
+    "items": [
+      {
+        "id": 1,
+        "alias": "X1",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "задачи",
+        "definitionText": "",
+        "convention": "Задачи проекта, заведённые в трекере.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 2,
+        "alias": "X2",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "исполнители",
+        "definitionText": "",
+        "convention": "Сотрудники, которым можно назначать задачи.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 3,
+        "alias": "S1",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X1×X2)",
+        "term": "назначения",
+        "definitionText": "",
+        "convention": "Пара (задача, исполнитель): задача назначена исполнителю.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 4,
+        "alias": "S2",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X1)",
+        "term": "выполненные задачи",
+        "definitionText": "",
+        "convention": "Задачи, отмеченные в трекере как выполненные.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
+        "alias": "D1",
+        "cstType": "term",
+        "definitionFormal": "Pr1(S1)",
+        "term": "назначенные задачи",
+        "definitionText": "Задачи, у которых есть исполнитель.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 6,
+        "alias": "D2",
+        "cstType": "term",
+        "definitionFormal": "X1\\D1",
+        "term": "неназначенные задачи",
+        "definitionText": "Задачи, у которых нет исполнителя.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 7,
+        "alias": "F1",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X2] Pr1(Fi2[{ξ}](S1))",
+        "term": "задачи исполнителя",
+        "definitionText": "Задачи, назначенные данному исполнителю.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X2"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 8,
+        "alias": "F2",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X2] F1[ξ]\\S2",
+        "term": "активные задачи исполнителя",
+        "definitionText": "Невыполненные задачи данного исполнителя.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X2"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 9,
+        "alias": "D3",
+        "cstType": "term",
+        "definitionFormal": "D1\\S2",
+        "term": "задачи в работе",
+        "definitionText": "Назначенные, но не выполненные задачи.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 10,
+        "alias": "A1",
+        "cstType": "axiom",
+        "definitionFormal": "S2⊆D1",
+        "term": "выполнять можно только назначенное",
+        "definitionText": "Каждая выполненная задача была назначена исполнителю.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 11,
+        "alias": "A2",
+        "cstType": "axiom",
+        "definitionFormal": "card(S1)=card(Pr1(S1))",
+        "term": "один исполнитель у задачи",
+        "definitionText": "У задачи не больше одного исполнителя.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      }
+    ],
+    "model": {
+      "items": []
+    }
+  },
+  "diagnostics": []
+}

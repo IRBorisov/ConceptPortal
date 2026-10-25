@@ -1,0 +1,328 @@
+{
+  "contractVersion": "3.3.0",
+  "state": {
+    "sessionId": "d4dee657-669c-404b-8130-8a4c2a8aafa6",
+    "alias": "",
+    "title": "Круговой турнир",
+    "comment": "",
+    "createdAt": "2026-10-25T16:32:41.227Z",
+    "updatedAt": "2026-10-25T16:32:41.235Z",
+    "revisions": [
+      {
+        "revisionId": "6a6922dc-9c40-447f-a4ad-ead603dd6686",
+        "at": "2026-10-25T16:32:41.235Z",
+        "message": "start"
+      }
+    ],
+    "items": [
+      {
+        "id": 1,
+        "alias": "X1",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "команды",
+        "definitionText": "",
+        "convention": "Команды, заявленные на турнир.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 2,
+        "alias": "X2",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "матчи",
+        "definitionText": "",
+        "convention": "Матчи турнира по календарю.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 3,
+        "alias": "C1",
+        "cstType": "constant",
+        "definitionFormal": "",
+        "term": "статусы матча",
+        "definitionText": "",
+        "convention": "Коды статуса матча: 0 — запланирован, 1 — сыгран, 2 — отменён.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "C1",
+              "isOrdered": true,
+              "isArithmetic": true,
+              "isIntegerCompatible": true
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 4,
+        "alias": "S1",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X2×X1×X1)",
+        "term": "календарь",
+        "definitionText": "",
+        "convention": "Тройка (матч, хозяева, гости) из календаря турнира.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
+        "alias": "S2",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X2×C1)",
+        "term": "статус матча",
+        "definitionText": "",
+        "convention": "Пара (матч, код статуса).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "C1",
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 6,
+        "alias": "S3",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X2×X1)",
+        "term": "победитель матча",
+        "definitionText": "",
+        "convention": "Пара (матч, команда-победитель).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 7,
+        "alias": "S4",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X1)",
+        "term": "лидеры турнира",
+        "definitionText": "",
+        "convention": "Команды с наибольшим числом очков.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 8,
+        "alias": "D1",
+        "cstType": "term",
+        "definitionFormal": "Pr1(S1)",
+        "term": "сыгранные матчи",
+        "definitionText": "Матчи, которые состоялись.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 9,
+        "alias": "F1",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] card(Fi2[{ξ}](S1))",
+        "term": "очки команды",
+        "definitionText": "Число очков, набранных командой в турнире.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 2,
+              "isOrdered": true,
+              "isArithmetic": true,
+              "isIntegerCompatible": true
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 10,
+        "alias": "F2",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] Pr1(Fi2[{ξ}](S3))",
+        "term": "победы команды",
+        "definitionText": "Матчи, в которых команда победила.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X2"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 11,
+        "alias": "A1",
+        "cstType": "axiom",
+        "definitionFormal": "card(S1)=card(Pr1(S1))",
+        "term": "одна запись календаря на матч",
+        "definitionText": "Каждый матч записан в календаре один раз.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 12,
+        "alias": "A2",
+        "cstType": "axiom",
+        "definitionFormal": "card(S2)=card(Pr1(S2))",
+        "term": "один статус у матча",
+        "definitionText": "У каждого матча не более одного статуса.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      }
+    ],
+    "model": {
+      "items": []
+    }
+  },
+  "diagnostics": []
+}
