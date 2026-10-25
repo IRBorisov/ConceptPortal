@@ -188,6 +188,8 @@ export const txRslangEn: Record<string, string> = {
   'tx.rslang.error.invalidCard': 'Cardinality can only be calculated for a set; got {arg}',
   'tx.rslang.error.invalidDebool': 'debool removes one boolean level; got {arg}',
   'tx.rslang.error.globalFuncWithoutArgs': 'Call the function or predicate with arguments: {name}[…]',
+  'tx.rslang.error.globalDeleted':
+    'Reference to a deleted constituent ({name}): replace it with an existing identifier',
   'tx.rslang.error.invalidReduce': 'red applies to a set of sets; got {arg}',
   'tx.rslang.error.projectionSetArgumentNotSet': 'Large projection {operator} applies to a set; got {actual}',
   'tx.rslang.error.projectionSetArgumentNotTupleSet':

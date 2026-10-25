@@ -15,7 +15,7 @@ from .api_RSLanguage import get_type_prefix, guess_type, validate_new_cst_alias
 from .Attribution import Attribution
 from .Constituenta import Constituenta, CstType
 
-DELETED_ALIAS = 'DEL'
+DELETED_ALIAS = 'DEL'  # Keep in sync with DELETED_ALIAS in @rsconcept/domain
 
 
 class RSForm:

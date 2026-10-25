@@ -1,5 +1,6 @@
+export { DELETED_ALIAS } from './api';
 export { readErrorAnnotation, readTypeAnnotation } from './ast-annotations';
-export { type EvalStackFrame, formatEvalCallStack,RSErrorCode, type RSErrorDescription } from './error';
+export { type EvalStackFrame, formatEvalCallStack, RSErrorCode, type RSErrorDescription } from './error';
 export { type CalculatorEvaluateOptions, type CalculatorResult, RSCalculator } from './eval/calculator';
 export { makeValuePath, type Value, type ValuePath } from './eval/value';
 export { printValue } from './eval/value-api';

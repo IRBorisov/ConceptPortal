@@ -8,7 +8,7 @@ Classifiers must handle both grammar terms (`parser.terms`) and `TokenID` values
 
 ## Pipeline (`index.ts`)
 
-1. **Forbidden characters** — scan the source string; if any illegal symbol is found, report only those errors and stop.
+1. **Text-level checks** — scan the source string for references to deleted constituents (`DELETED_ALIAS`, semantic code `globalDeleted`) and forbidden characters; if any are found, report only those errors and stop.
 2. **AST walk** — for each `ERROR` node, run classifiers (`classify.ts`) or fall back to `unknownSyntax` / `expectedLocal`.
 3. **Bracket pass** — one expression-level bracket diagnostic (`missingCloseBracket`, `bracketMismatch`, …), unless an incomplete D/I/R body was already reported (generator may legally end with `}` while brackets look wrong).
 4. **Deduplication** — drop overlaps; prefer specific codes over `unknownSyntax`; keep a single `unknownSyntax` when several ERROR nodes fire.
@@ -54,7 +54,7 @@ Fallback: `expectedLocal` under `Variable`; otherwise `unknownSyntax` (`0x8400`)
 | `trailing-slot.ts`       | Reusable incomplete-trailing-body detector                  |
 | `ast-utils.ts`           | Tree navigation, node predicates, bracket matching          |
 | `error-builders.ts`      | `errorAt`, text-token helpers                               |
-| `expression-errors.ts`   | Forbidden chars, brackets, dedup                            |
+| `expression-errors.ts`   | Deleted references, forbidden chars, brackets, dedup        |
 | `incomplete-formal.ts`   | `[…]` declarations, quantifiers                             |
 | `incomplete-operands.ts` | Operators, `ℬ()`, bracket argument lists                    |
 | `generators.ts`          | D{…}, I{…}, R{…} incomplete bodies                          |

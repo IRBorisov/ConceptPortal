@@ -188,6 +188,7 @@ export const txRslangRu: Record<string, string> = {
   'tx.rslang.error.invalidCard': 'Мощность можно вычислять только для множества; получено: {arg}',
   'tx.rslang.error.invalidDebool': 'debool снимает один уровень булеана; получено: {arg}',
   'tx.rslang.error.globalFuncWithoutArgs': 'Функцию или предикат нужно вызвать с аргументами: {name}[…]',
+  'tx.rslang.error.globalDeleted': 'Ссылка на удаленную конституенту ({name}): замените ее действующим идентификатором',
   'tx.rslang.error.invalidReduce': 'red применяется к множеству множеств; получено: {arg}',
   'tx.rslang.error.projectionSetArgumentNotSet':
     'Большая проекция {operator} применяется к множеству; получено {actual}',
