@@ -153,4 +153,13 @@ describe('checkBrief', () => {
     const { readiness } = await checkBrief({ session: tool.exportSession(), brief });
     expect(readiness.blockers.some(item => item.startsWith('V2: F1 и F2 совпадают'))).toBe(true);
   });
+
+  it('warns when conventions cite brief decisions', async () => {
+    const tool = new RSToolAgent();
+    tool.importData(buildSession(), 'session');
+    tool.applySchemaPatch({ items: [{ alias: 'X2', convention: 'Экземпляры книг (решение DC1).' }] });
+    const { readiness } = await checkBrief({ session: tool.exportSession(), brief: BRIEF });
+    expect(readiness.warnings.some(item => item.includes('(DC#): X2'))).toBe(true);
+    expect(readiness.warnings.some(item => item.startsWith('Описание схемы пусто'))).toBe(true);
+  });
 });

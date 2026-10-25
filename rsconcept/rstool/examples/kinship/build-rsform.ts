@@ -7,7 +7,7 @@ type DraftBatch = { draft: AgentConstituentaPatch };
 
 import { DEFAULT_RSFORM_SESSION_PATH } from './constants';
 import { KINSHIP_MODEL_SET } from './model-demo';
-import { assertCleanDiagnostics, assertReady } from '../diagnostics-utils';
+import { assertCleanDiagnostics, assertReady, describeBrief } from '../diagnostics-utils';
 
 async function run() {
   const client = new RSToolWrapperClient({
@@ -16,7 +16,9 @@ async function run() {
 
   try {
     await client.waitUntilReady();
-    const session = await client.call<{ sessionId: string; contractVersion: string }>('createSession');
+    const session = await client.call<{ sessionId: string; contractVersion: string }>('createSession', {
+      initial: { comment: describeBrief(resolve(import.meta.dirname, 'brief.json')) }
+    });
 
     const drafts: DraftBatch[] = [
       {
