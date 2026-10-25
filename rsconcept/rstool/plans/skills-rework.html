@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>План переработки rstool</title>
+<meta name="description" content="План переработки rstool: этапы концептуализации, семейство скиллов, бриф схемы, защита от «озеленения», изменения контракта и Portal.">
+<style>
+:root {
+  --bg: #fbfaf7;
+  --surface: #ffffff;
+  --surface-2: #f3f1ec;
+  --text: #1d1f23;
+  --muted: #5d636e;
+  --border: #e2ded6;
+  --accent: #2f5fb3;
+  --accent-soft: #e6eefb;
+  --ok: #2e7d4f;
+  --ok-soft: #e4f3ea;
+  --warn: #9a6400;
+  --warn-soft: #fbf0d9;
+  --bad: #b23a3a;
+  --bad-soft: #f9e5e5;
+  --code-bg: #f1efe9;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15171b;
+    --surface: #1d2025;
+    --surface-2: #24282e;
+    --text: #e7e8ea;
+    --muted: #a0a6b0;
+    --border: #343941;
+    --accent: #86a9ec;
+    --accent-soft: #23314a;
+    --ok: #7fcf9f;
+    --ok-soft: #1f3529;
+    --warn: #e7b866;
+    --warn-soft: #3a2f1a;
+    --bad: #ee8f8f;
+    --bad-soft: #3d2222;
+    --code-bg: #262a30;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15171b;
+  --surface: #1d2025;
+  --surface-2: #24282e;
+  --text: #e7e8ea;
+  --muted: #a0a6b0;
+  --border: #343941;
+  --accent: #86a9ec;
+  --accent-soft: #23314a;
+  --ok: #7fcf9f;
+  --ok-soft: #1f3529;
+  --warn: #e7b866;
+  --warn-soft: #3a2f1a;
+  --bad: #ee8f8f;
+  --bad-soft: #3d2222;
+  --code-bg: #262a30;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+.wrap { max-width: 980px; margin: 0 auto; padding: 32px 16px 80px; }
+header { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 8px; }
+h1 { font-size: 1.9rem; line-height: 1.25; margin: 0 0 8px; }
+h2 { font-size: 1.35rem; margin: 48px 0 12px; padding-top: 8px; border-top: 1px solid var(--border); }
+h3 { font-size: 1.08rem; margin: 28px 0 8px; }
+p, li { max-width: 72ch; }
+.lead { color: var(--muted); font-size: 1.05rem; margin: 0; }
+.meta { color: var(--muted); font-size: .9rem; margin-top: 10px; }
+a { color: var(--accent); }
+code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: .88em; }
+code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+pre { background: var(--code-bg); padding: 14px 16px; border-radius: var(--radius); overflow-x: auto; line-height: 1.45; }
+pre code { background: none; padding: 0; }
+nav.toc { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin: 24px 0; }
+nav.toc ol { margin: 6px 0 0; padding-left: 22px; columns: 2; column-gap: 32px; }
+nav.toc li { break-inside: avoid; }
+@media (max-width: 640px) { nav.toc ol { columns: 1; } }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin: 14px 0; }
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.grid .card { margin: 0; }
+.callout { border-left: 4px solid var(--accent); background: var(--accent-soft); padding: 12px 16px; border-radius: 0 var(--radius) var(--radius) 0; margin: 16px 0; }
+.callout.warn { border-color: var(--warn); background: var(--warn-soft); }
+.callout.bad { border-color: var(--bad); background: var(--bad-soft); }
+.callout.ok { border-color: var(--ok); background: var(--ok-soft); }
+.callout p { margin: 4px 0; }
+.tag { display: inline-block; font-size: .75rem; font-weight: 600; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--border); vertical-align: middle; }
+.tag.p1 { background: var(--bad-soft); color: var(--bad); border-color: transparent; }
+.tag.p2 { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.tag.p3 { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+.tag.ok { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
+.table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--border); }
+th { background: var(--surface-2); font-weight: 600; white-space: nowrap; }
+tr:last-child td { border-bottom: none; }
+td code { white-space: nowrap; }
+.flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; margin: 18px 0 6px; }
+.stage { flex: 1 1 140px; background: var(--surface); border: 1px solid var(--border); border-top: 4px solid var(--accent); border-radius: var(--radius); padding: 10px 12px; min-width: 140px; }
+.stage b { display: block; font-size: .95rem; }
+.stage small { color: var(--muted); display: block; line-height: 1.4; margin-top: 4px; }
+.stage .n { font-size: .75rem; color: var(--accent); font-weight: 700; letter-spacing: .04em; }
+.arrow { align-self: center; color: var(--muted); font-size: 1.2rem; }
+@media (max-width: 640px) { .arrow { display: none; } .stage { flex-basis: 100%; } }
+.loop { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+.decisions li { margin: 4px 0; }
+.phase { border-left: 3px solid var(--border); padding: 2px 0 2px 16px; margin: 18px 0; }
+.phase h3 { margin-top: 0; }
+.muted { color: var(--muted); }
+ul.tight li, ol.tight li { margin: 2px 0; }
+footer { margin-top: 56px; color: var(--muted); font-size: .88rem; border-top: 1px solid var(--border); padding-top: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>План переработки rstool: этапы концептуализации и семейство скиллов</h1>
+  <p class="lead">Задача: агент должен строить КС, которые отвечают запросу пользователя, а не только проходят анализатор. Для этого он должен понимать, на каком этапе работы находится и какой инструмент ему нужен.</p>
+  <p class="meta">Черновик · 25.10.2026 · пакеты: <code>@rsconcept/rstool</code>, <code>@rsconcept/rstool-mcp</code>, <code>@rsconcept/domain</code>, backend, frontend</p>
+</header>
+
+<nav class="toc">
+  <strong>Содержание</strong>
+  <ol>
+    <li><a href="#decisions">Исходные решения</a></li>
+    <li><a href="#diagnosis">Диагноз: почему «зелёная» ≠ «нужная»</a></li>
+    <li><a href="#principles">Принципы переработки</a></li>
+    <li><a href="#process">Процесс: этапы и гейты</a></li>
+    <li><a href="#brief">Бриф схемы</a></li>
+    <li><a href="#skills">Семейство скиллов</a></li>
+    <li><a href="#antigreen">Защита от «озеленения»</a></li>
+    <li><a href="#contract">rstool 4.0: контракт</a></li>
+    <li><a href="#portal">Portal: бриф рядом со схемой</a></li>
+    <li><a href="#examples">Примеры: требования к ПО</a></li>
+    <li><a href="#evals">Проверка эффекта (eval)</a></li>
+    <li><a href="#roadmap">Дорожная карта</a></li>
+    <li><a href="#risks">Риски и открытые вопросы</a></li>
+    <li><a href="#files">Карта файлов</a></li>
+  </ol>
+</nav>
+
+<!-- ============================================================ -->
+<h2 id="decisions">1. Исходные решения</h2>
+<p>Зафиксированы по ответам на вопросы перед составлением плана:</p>
+<ul class="decisions">
+  <li><b>Главные симптомы:</b> (а) запрос не покрыт: в схеме нет понятий и утверждений, ради которых её просили; (б) подгонка под «зелёное»: агент упрощает формулы, удаляет аксиомы или подменяет производные понятия родовыми структурами, чтобы ушли ошибки.</li>
+  <li><b>Типичные задачи:</b> КС по тексту (источник, требования) и развитие существующей КС из Portal.</li>
+  <li><b>Назначение КС:</b> экспликация понятий, обучение, основа для ПО и ОСС. Вычисления на КМ здесь средство проверки смысла, а не самоцель.</li>
+  <li><b>Вопросы пользователю:</b> короткий бриф: 3–5 вопросов и подтверждение брифа до формализации. Всё, что не спросили, записывается как явное допущение.</li>
+  <li><b>Объём изменений:</b> допустимы любые, включая архитектуру, API rstool, backend и UI Portal.</li>
+  <li><b>Бриф хранится</b> в сессии rstool и на Portal рядом со схемой.</li>
+  <li><b>Новые примеры:</b> требования к ПО.</li>
+  <li><b>Eval:</b> реальных неудачных случаев нет, поэтому набор задач с эталонами составляем с нуля.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="diagnosis">2. Диагноз: почему «зелёная» ≠ «нужная»</h2>
+<p>Ниже причины, найденные в текущих скиллах и документации. Каждая подкреплена конкретным местом в коде или тексте.</p>
+
+<div class="grid">
+  <div class="card">
+    <h3>D1. Критерий готовности только формальный</h3>
+    <p>Шаблон ответа «Сборка / правка схемы» в <code>GUIDE.md</code> спрашивает лишь, «есть ли активные диагностики» и какие проверки выполнены. Канонические примеры заканчиваются <code>assertCleanDiagnostics</code>. Цель, которую агент видит, — ноль диагностик.</p>
+  </div>
+  <div class="card">
+    <h3>D2. Нет этапа постановки задачи</h3>
+    <p>Концептуализация начинается со слов «Собери словарь…» и сразу переходит к <code>X#</code>/<code>S#</code>. Цель схемы, целевые понятия, различения и границы нигде не фиксируются. «Предметная редукция» описана как принцип, но без процедуры.</p>
+  </div>
+  <div class="card">
+    <h3>D3. Нет трассировки «запрос → конституента»</h3>
+    <p>Схема строится снизу вверх: от словаря к производным понятиям. Целевые понятия никак не отмечены. Термины «ядро» и «тело» есть в <code>DOMAIN.md</code>, но в процессе не используются. Флаг <code>crucial</code> Portal rstool не поддерживает.</p>
+  </div>
+  <div class="card">
+    <h3>D4. Проверка смысла необязательна</h3>
+    <p>КМ включается только «при сомнении». Тесты проверяют формулу, а не то, отвечает ли схема на вопрос пользователя. Шаг громоздкий: индексы, <code>TUPLE_ID</code>, id конституент. Агенты его пропускают.</p>
+  </div>
+  <div class="card">
+    <h3>D5. Цикл диагностик поощряет подгонку</h3>
+    <p>В «Цикле диагностик» нет запрета менять смысл. Самый дешёвый способ убрать ошибку — объявить <code>S#</code>: у него нет формулы, значит, нет и ошибок. Ещё варианты — удалить <code>A#</code> или выбрать <code>best_effort</code> и забыть про <code>failed</code>. Инструмент ничего из этого не замечает.</p>
+  </div>
+  <div class="card">
+    <h3>D6. Монолитный гайд без понятия «этап»</h3>
+    <p><code>GUIDE.md</code> (306 строк) смешивает методологию, язык ЯРЭ, механику запуска скриптов, Portal REST и ревью. Описание скилла перечисляет всё подряд. Агент держит в контексте лишнее и не понимает, где он сейчас и что дальше. Состояния процесса между итерациями нет.</p>
+  </div>
+</div>
+
+<div class="callout warn">
+  <p><b>Дополнительно:</b> есть две вручную расходящиеся копии <code>SKILL.md</code> (пакет и <code>.agents/skills/</code>). Чек-лист ревью почти целиком про форму ЯРЭ: пункт «покрыты главные сущности» один, и метода проверки у него нет. Ревью Portal-схемы не восстанавливает, для чего схема делалась.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="principles">3. Принципы переработки</h2>
+<ol>
+  <li><b>Готово = отвечает брифу.</b> Схема готова, когда покрыты целевые понятия, различения и инварианты из брифа, это подтверждено примерами на КМ и диагностики чисты. Чистые диагностики — необходимое условие, но не достаточное.</li>
+  <li><b>Сверху вниз от цели.</b> Проектирование начинается с целевых понятий брифа: от них выводится, какие неопределяемые понятия нужны. Так покрытие встроено в процесс, а пересказ источника отсекается.</li>
+  <li><b>Смысл важнее «зелёного».</b> Исправление диагностики не должно менять смысл. Если сохранить смысл не удаётся, агент возвращается к проектированию или фиксирует открытый вопрос, но не подменяет формулу.</li>
+  <li><b>Инструмент знает этап.</b> rstool вычисляет готовность (<code>readiness</code>) и подсказывает следующий шаг. Агенту не нужно держать процесс в голове.</li>
+  <li><b>Один скилл — один этап или инструмент.</b> Скилл загружает только нужный контекст, у каждого есть вход, выход и гейт.</li>
+  <li><b>Примеры — главный учебный материал.</b> Каждый эталонный пример содержит бриф, сценарии и «антипример»: зелёную, но неверную схему с объяснением, какая проверка её ловит.</li>
+</ol>
+
+<!-- ============================================================ -->
+<h2 id="process">4. Процесс: этапы и гейты</h2>
+
+<div class="flow" role="list">
+  <div class="stage" role="listitem"><span class="n">ЭТАП 1</span><b>Постановка</b><small>бриф: цель, целевые понятия, различения, инварианты, примеры</small></div>
+  <span class="arrow" aria-hidden="true">→</span>
+  <div class="stage" role="listitem"><span class="n">ЭТАП 2</span><b>Проектирование</b><small>карта понятий сверху вниз, выбор неопределяемых понятий</small></div>
+  <span class="arrow" aria-hidden="true">→</span>
+  <div class="stage" role="listitem"><span class="n">ЭТАП 3</span><b>Формализация</b><small>формулы ЯРЭ, диагностики без потери смысла</small></div>
+  <span class="arrow" aria-hidden="true">→</span>
+  <div class="stage" role="listitem"><span class="n">ЭТАП 4</span><b>Валидация</b><small>сценарии брифа на КМ: примеры и контрпримеры</small></div>
+  <span class="arrow" aria-hidden="true">→</span>
+  <div class="stage" role="listitem"><span class="n">ЭТАП 5</span><b>Ревью и сдача</b><small>отчёт «как схема отвечает на запрос», публикация</small></div>
+</div>
+<p class="loop">Если валидация не прошла, агент возвращается к <b>проектированию</b> (не «подгоняет» формулу). Если в ходе работы появилось новое различение, агент дополняет <b>бриф</b> и подтверждает его у пользователя.</p>
+
+<div class="table-wrap"><table>
+  <thead><tr><th>Этап</th><th>Вход</th><th>Выход (артефакт)</th><th>Гейт перехода</th></tr></thead>
+  <tbody>
+    <tr><td>1. Постановка</td><td>запрос, источник, (для Portal) существующая схема и её бриф</td><td>бриф со статусом <code>confirmed</code> или <code>assumed</code></td><td>Каждое целевое понятие и инвариант проверяемы: для них есть хотя бы один пример или контрпример. На 3–5 вопросов получен ответ, остальное записано в допущения.</td></tr>
+    <tr><td>2. Проектирование</td><td>бриф</td><td>план конституент: имя, тип, термин, конвенция, ссылка на цель брифа</td><td>Каждой цели соответствует конституента. У каждого неопределяемого понятия есть конвенция. Нет «сирот» (конституент без пути к цели), если назначение схемы их не допускает.</td></tr>
+    <tr><td>3. Формализация</td><td>план</td><td>схема в сессии</td><td>Диагностики чисты. Ни одна цель не «ослаблена» (см. <a href="#antigreen">§7</a>). Список <code>failed</code> пуст.</td></tr>
+    <tr><td>4. Валидация</td><td>схема и сценарии брифа</td><td>матрица приёмки: цель × сценарий → результат</td><td>Все сценарии проходят. У каждого инварианта есть положительный и отрицательный сценарий. Каждое различение подтверждено сценарием, на котором значения различаются.</td></tr>
+    <tr><td>5. Ревью и сдача</td><td>готовность <code>done</code></td><td>отчёт, экспорт, публикация в Portal</td><td>Пользователь видит таблицу «цель → конституента → доказательство», а перед <code>replace</code> — сводку изменений.</td></tr>
+  </tbody>
+</table></div>
+
+<h3>Сквозные сценарии (собираются из этапов)</h3>
+<div class="table-wrap"><table>
+  <thead><tr><th>Запрос</th><th>Маршрут</th></tr></thead>
+  <tbody>
+    <tr><td>Новая КС по тексту или требованиям</td><td>бриф → проектирование → формализация ⇄ валидация → ревью (самопроверка) → экспорт / публикация</td></tr>
+    <tr><td>Развить КС Portal</td><td>Portal (чтение) → бриф (восстановить и дополнить новыми целями) → проектирование (дельта) → формализация → валидация (старые сценарии как регрессия + новые) → ревью → Portal (версия, replace, сверка)</td></tr>
+    <tr><td>Ревью КС</td><td>Portal / импорт → бриф (восстановить, уточнить цель у пользователя) → ревью; валидация — по необходимости</td></tr>
+    <tr><td>Починить формулу</td><td>формализация (запрет менять смысл). Если смысл приходится менять — вернуться к проектированию.</td></tr>
+    <tr><td>Объяснить формулу или конструкцию</td><td>объяснение (без брифа)</td></tr>
+  </tbody>
+</table></div>
+
+<h3>Критерии в зависимости от назначения схемы</h3>
+<div class="table-wrap"><table>
+  <thead><tr><th>Назначение (<code>purpose</code>)</th><th>Что считается «ответом на запрос»</th><th>Строгость проверок</th></tr></thead>
+  <tbody>
+    <tr><td>Экспликация</td><td>Термины источника получили точные определения. Различения, которые в тексте смешаны, разведены. Противоречия и пробелы источника найдены и описаны.</td><td>Различения обязательны. «Сироты» — предупреждение. Открытые вопросы к источнику — часть результата.</td></tr>
+    <tr><td>Обучение</td><td>Схема минимальна, каждое определение объяснимо. Примеры КМ иллюстрируют каждую целевую конструкцию.</td><td>Сценарий для каждой цели обязателен. Объяснение целей — через скилл объяснения.</td></tr>
+    <tr><td>Основа для ПО / ОСС</td><td>Покрыты сущности, роли, жизненные состояния и бизнес-правила (инварианты). Ядро чистое и пригодно для синтеза.</td><td>У инвариантов обязательны позитивный и негативный сценарии. Конвенции обязательны. «Сироты» — ошибка.</td></tr>
+  </tbody>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="brief">5. Бриф схемы</h2>
+<p>Бриф — один формат JSON, общий для файла задачи, сессии rstool и Portal. На этапе 1 агент задаёт 3–5 вопросов, заполняет бриф и показывает пользователю короткую версию для подтверждения.</p>
+
+<h3>Вопросы постановки (выбрать 3–5 по ситуации)</h3>
+<ol class="tight">
+  <li>Для чего будет использоваться схема: экспликация, обучение или основа для ПО / синтеза?</li>
+  <li>Какие понятия обязательно должны получить определение? Что пользователь хочет «уметь различать»?</li>
+  <li>Какие правила или ограничения схема должна выражать (инварианты)?</li>
+  <li>Что сознательно оставить за рамками?</li>
+  <li>Приведите 1–2 конкретные ситуации (пример и контрпример) для главного понятия.</li>
+  <li>(Для Portal) Что меняется относительно текущей версии схемы и что должно остаться неизменным?</li>
+</ol>
+<p>Каждый вопрос агент задаёт вместе со своим предложенным ответом, взятым из источника, чтобы пользователь мог просто подтвердить. Если спросить нельзя (фоновый агент), ответы записываются в <code>assumptions</code>, а статус брифа становится <code>assumed</code>.</p>
+
+<h3>Структура (пример: требования к ИС библиотеки)</h3>
+<pre><code>{
+  "version": 1,
+  "status": "confirmed",              // draft | assumed | confirmed
+  "purpose": "software",              // explication | education | software
+  "goal": "Эксплицировать понятия выдачи книг для проектирования ИС библиотеки",
+  "source": "ТЗ v1, разделы 2–3",
+  "scope": {
+    "in":  ["выдача и возврат экземпляров", "просрочка", "лимит выдач"],
+    "out": ["штрафы", "межбиблиотечный абонемент"]
+  },
+  "targets": [
+    { "id": "T1", "concept": "активная выдача",    "ref": "ТЗ 2.1", "constituent": "D3" },
+    { "id": "T2", "concept": "просроченная выдача", "ref": "ТЗ 2.4", "constituent": "D5" },
+    { "id": "T3", "concept": "доступный экземпляр", "ref": "ТЗ 3.1", "constituent": null }
+  ],
+  "distinctions": [
+    { "id": "R1", "between": ["издание", "экземпляр"], "witness": "SC2" },
+    { "id": "R2", "between": ["T1", "T2"],             "witness": "SC2" }
+  ],
+  "invariants": [
+    { "id": "I1", "text": "Экземпляр не выдан двум читателям одновременно",
+      "constituent": "A1", "positive": "SC1", "negative": "SC3" }
+  ],
+  "scenarios": [
+    { "id": "SC1", "title": "Две обычные выдачи",
+      "values": { "X1": ["ann", "bob"], "X2": ["e1", "e2"],
+                  "S1": [["ann", "e1", 3], ["bob", "e2", 5]] },
+      "expect": [ { "of": "D5", "value": [] }, { "of": "A1", "holds": true } ] },
+    { "id": "SC3", "title": "Двойная выдача e1",
+      "values": { "S1": [["ann", "e1", 3], ["bob", "e1", 4]] },
+      "expect": [ { "of": "A1", "holds": false } ] }
+  ],
+  "assumptions":   ["срок выдачи одинаков для всех экземпляров"],
+  "openQuestions": ["считается ли бронь выдачей?"]
+}</code></pre>
+<ul>
+  <li>В сценариях значения задаются <b>подписями элементов</b>, а не индексами: инструмент сам переводит их в индексы. Это снимает главный барьер для КМ-проверок (D4).</li>
+  <li>Цели ссылаются на конституенты по имени. Внутри хранится id, чтобы ссылка переживала перенумерацию при синтезе.</li>
+  <li><code>constituent: null</code> означает, что цель ещё не покрыта. Это видно в <code>readiness</code> и в UI.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="skills">6. Семейство скиллов</h2>
+<p>Один монолитный <code>rstool-helper</code> заменяется маршрутизатором, шестью скиллами этапов и двумя скиллами инструментов. Каждый <code>SKILL.md</code> самодостаточен (60–150 строк): вход, шаги, выход, гейт, типичные ошибки и ссылки на <code>docs/</code> по потребности. Справочники языка остаются в <code>docs/</code> общими для всех скиллов.</p>
+
+<div class="table-wrap"><table>
+  <thead><tr><th>Скилл</th><th>Роль</th><th>Когда срабатывает</th><th>Содержимое (откуда)</th><th>Docs по потребности</th></tr></thead>
+  <tbody>
+    <tr><td><code>rstool</code><br><span class="tag">маршрутизатор</span></td><td>Определяет этап и сценарий, задаёт правила общения и терминологию</td><td>Любая работа с КС, ЯРЭ, rstool, Portal</td><td>Таблица «запрос → сценарий → этапы», как читать <code>readiness</code>, язык ответа, «Термины: не путать», границы правок (из GUIDE)</td><td>DOMAIN</td></tr>
+    <tr><td><code>rs-brief</code><br><span class="tag p1">новый</span></td><td>Этап 1: постановка</td><td>Новая схема, развитие схемы, ревью без известной цели</td><td>Вопросы постановки, шаблон брифа, восстановление брифа по существующей схеме, подтверждение</td><td>CONCEPTUAL-SCHEMA §«Предметная редукция», новый REQUIREMENTS.md</td></tr>
+    <tr><td><code>rs-design</code></td><td>Этап 2: проектирование</td><td>Есть бриф, нужно решить, какие понятия вводить</td><td>Проектирование сверху вниз от целей, выбор неопределяемых понятий, паттерны (<code>F#</code> вместо графика, <code>∅</code> вместо <code>card</code>), план с трассировкой (из GUIDE «Концептуализация»)</td><td>CONCEPTUAL-SCHEMA, BASE-SELECTION</td></tr>
+    <tr><td><code>rs-formalize</code></td><td>Этап 3: формулы и диагностики</td><td>Написать или починить формулу, разобрать диагностики</td><td>Цикл диагностик, порядок объявления, <b>правила против подгонки</b>, «было → стало» (из GUIDE и EXAMPLES)</td><td>SYNTAX, DIAGNOSTICS, TYPIFICATION</td></tr>
+    <tr><td><code>rs-validate</code><br><span class="tag p1">усилен</span></td><td>Этап 4: проверка смысла на КМ</td><td>Есть схема и бриф; перед сдачей; после правки целевой конституенты</td><td>Сценарии брифа, <code>runScenarios</code>, матрица приёмки, позитив и негатив для аксиом, свидетели различений (из GUIDE «КМ»)</td><td>MODEL-TESTING</td></tr>
+    <tr><td><code>rs-review</code><br><span class="tag p1">усилен</span></td><td>Этап 5: ревью и отчёт</td><td>«Оцени», «проверь», сдача своей работы</td><td>Ревью в два прохода: <b>соответствие брифу</b>, затем форма ЯРЭ. Шаблон отчёта начинается с таблицы «цель → конституента → доказательство».</td><td>CONCEPTUAL-SCHEMA</td></tr>
+    <tr><td><code>rs-explain</code></td><td>Объяснение человеку</td><td>«Объясни формулу / конструкцию»; учебные схемы</td><td>Шаблон объяснения (из GUIDE)</td><td>CONSTRUCTIONS</td></tr>
+    <tr><td><code>rs-portal</code><br><span class="tag">инструмент</span></td><td>Portal REST</td><td>Ссылка Portal, API-ключ, публикация, модели, ОСС</td><td>Ссылка → API, чтение, <b>протокол публикации</b> (версия → replace → сверка), бриф на Portal, лимиты</td><td>PORTAL-API (разделить на 4 файла)</td></tr>
+    <tr><td><code>rstool-runtime</code><br><span class="tag">инструмент</span></td><td>Как вызывать rstool</td><td>Нужно запустить rstool: библиотеку, stdio или MCP</td><td>Быстрый контракт, запуск скриптов вне пакета, persistence, кодировки Windows (из GUIDE)</td><td>REFERENCE</td></tr>
+  </tbody>
+</table></div>
+
+<h3>Как устроен каждый скилл этапа</h3>
+<pre><code>---
+name: rs-validate
+description: >-
+  Этап 4 концептуализации: проверить смысл КС на маленьких КМ по сценариям
+  брифа — примеры и контрпримеры для целей, аксиом и различений. Используй
+  перед сдачей схемы и после правки целевой конституенты.
+---
+# Этап 4 · Валидация
+## Вход        — схема без ошибок + бриф со сценариями
+## Шаги        — 1… 2… 3…   (вызовы rstool — только имена; детали в rstool-runtime)
+## Выход       — матрица приёмки (формат)
+## Гейт        — когда можно идти дальше; куда вернуться при провале
+## Не делай    — 3–5 типичных ошибок этапа
+## Читать по потребности — docs/MODEL-TESTING.md</code></pre>
+
+<h3>Установка и синхронизация</h3>
+<ul>
+  <li><code>skills/&lt;name&gt;/SKILL.md</code> для каждого скилла. <code>skills/INSTALL.md</code> копирует все файлы. Добавить bin <code>rstool-skills install [--dir .agents/skills]</code>, чтобы не копировать вручную.</li>
+  <li>Workspace-копии в <code>.agents/skills/</code> не правятся руками, а <b>генерируются</b> скриптом <code>skills:sync</code> (пути <code>node_modules/@rsconcept/rstool/</code> → <code>rsconcept/rstool/</code>). Тест сверяет копии и падает при расхождении.</li>
+  <li>Совместимость: <code>rstool-helper/SKILL.md</code> остаётся заглушкой «используй <code>rstool</code>» на один минорный релиз, затем удаляется. <code>GUIDE.md</code> превращается в указатель на новые скиллы.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="antigreen">7. Защита от «озеленения»</h2>
+
+<h3>Правила (в <code>rs-formalize</code>, <code>rs-review</code> и маршрутизаторе)</h3>
+<div class="callout bad">
+  <p><b>Нельзя</b> ради чистых диагностик:</p>
+  <ul class="tight">
+    <li>удалять или ослаблять аксиому, связанную с инвариантом брифа;</li>
+    <li>превращать производное понятие (<code>D#</code>/<code>F#</code>/<code>P#</code>) в <code>S#</code>, <code>X#</code> или <code>C#</code>;</li>
+    <li>заменять формулу тривиальной (<code>∅</code>, голая ссылка <code>D5 := X1</code>, тавтология);</li>
+    <li>удалять целевую конституенту или оставлять непустой <code>failed</code> после <code>best_effort</code>;</li>
+    <li>оставлять пустую конвенцию у неопределяемого понятия.</li>
+  </ul>
+</div>
+<div class="callout ok">
+  <p><b>Вместо этого:</b> если не удаётся выразить смысл, вернись к проектированию (другие неопределяемые понятия, промежуточные <code>D#</code>/<code>F#</code>). Если ЯРЭ этого не выражает — запиши <code>openQuestion</code> в бриф и сообщи пользователю. Отчёт тогда честно говорит «готово частично» и перечисляет, что именно не покрыто.</p>
+</div>
+
+<h3>Поддержка в инструменте (чтобы правило проверялось автоматически)</h3>
+<div class="table-wrap"><table>
+  <thead><tr><th>Диагностика (<code>kind: 'brief'</code>)</th><th>Когда</th><th>Важность</th></tr></thead>
+  <tbody>
+    <tr><td><code>briefTargetUncovered</code></td><td>У цели нет конституенты</td><td>ошибка</td></tr>
+    <tr><td><code>briefInvariantUncovered</code></td><td>У инварианта нет аксиомы или у аксиомы нет позитивного либо негативного сценария</td><td>ошибка (ПО), предупреждение (иначе)</td></tr>
+    <tr><td><code>briefScenarioFailed</code></td><td>Ожидание сценария не выполнено</td><td>ошибка</td></tr>
+    <tr><td><code>briefScenarioStale</code></td><td>Целевая конституента изменилась после последнего прогона</td><td>предупреждение</td></tr>
+    <tr><td><code>briefDistinctionCollapsed</code></td><td>Два различаемых понятия совпадают на всех сценариях, или свидетеля нет</td><td>ошибка (экспликация), предупреждение (иначе)</td></tr>
+    <tr><td><code>briefTargetWeakened</code></td><td>Патч меняет тип цели с производного на неопределяемый, удаляет связанную аксиому или заменяет формулу тривиальной</td><td>ошибка; патч отклоняется в <code>atomic</code> без флага <code>allowBriefChange</code></td></tr>
+    <tr><td><code>briefLinkBroken</code></td><td>Удалена или переименована конституента, на которую ссылается бриф</td><td>ошибка</td></tr>
+    <tr><td><code>schemaOrphan</code></td><td>Конституента не лежит на пути зависимостей ни к одной цели или аксиоме</td><td>предупреждение (ошибка для ПО)</td></tr>
+    <tr><td><code>schemaPendingDrafts</code></td><td>Остались <code>failed</code> после <code>best_effort</code> (теперь они хранятся в сессии)</td><td>ошибка</td></tr>
+  </tbody>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="contract">8. rstool 4.0: контракт</h2>
+<p>Изменения меняют смысл «готово», поэтому это мажорная версия: <code>CONTRACT_VERSION</code> 3.3.0 → 4.0.0. Типы брифа и расчёт покрытия живут в <code>@rsconcept/domain</code> (новый модуль <code>library/brief/</code>), чтобы rstool и frontend считали одинаково. rstool только адаптирует.</p>
+
+<div class="table-wrap"><table>
+  <thead><tr><th>Метод / изменение</th><th>Назначение</th><th>Приоритет</th></tr></thead>
+  <tbody>
+    <tr><td><code>setBrief(patch)</code>, <code>getBrief()</code></td><td>Бриф в сессии. Слияние по <code>id</code> элементов, переживает <code>exportSession</code> и <code>importData</code> (включая <code>portal-details</code>).</td><td><span class="tag p1">P1</span></td></tr>
+    <tr><td><code>getReadiness()</code> и блок <code>readiness</code> в <code>summary</code></td><td><code>{ stage, diagnostics, coverage, scenarios, blockers[], next }</code>: текущий этап и следующий шаг одной строкой. Главный ориентир агента.</td><td><span class="tag p1">P1</span></td></tr>
+    <tr><td><code>runScenarios({ ids? })</code></td><td>Прогоняет сценарии брифа в изолированной копии модели (рабочая КМ не портится). Возвращает матрицу «сценарий × ожидание → факт».</td><td><span class="tag p1">P1</span></td></tr>
+    <tr><td>Диагностики <code>kind: 'brief'</code></td><td>См. <a href="#antigreen">§7</a>. <code>listDiagnostics</code> возвращает их вместе с остальными.</td><td><span class="tag p1">P1</span></td></tr>
+    <tr><td>Значения по подписям в <code>setModelValues</code></td><td><code>{ alias: 'S1', value: [['ann','e1',3]] }</code> вместо индексов и <code>TUPLE_ID</code> (старая форма сохраняется)</td><td><span class="tag p2">P2</span></td></tr>
+    <tr><td>Защита в <code>applySchemaPatch</code></td><td><code>briefTargetWeakened</code> / <code>briefLinkBroken</code>; флаг <code>allowBriefChange</code> с обязательным <code>reason</code>, который пишется в ревизию</td><td><span class="tag p2">P2</span></td></tr>
+    <tr><td><code>diffSessions(baseId, otherId?)</code></td><td>Сводка изменений перед публикацией и для ревью: добавлено, изменено, удалено, затронутые цели</td><td><span class="tag p2">P2</span></td></tr>
+    <tr><td><code>crucial</code> в патче и экспорте</td><td>Цели брифа помечаются <code>crucial</code> автоматически, флаг переносится в Portal</td><td><span class="tag p3">P3</span></td></tr>
+    <tr><td><code>pendingDrafts</code> в сессии</td><td><code>failed</code> из <code>best_effort</code> не теряются, а хранятся до исправления</td><td><span class="tag p3">P3</span></td></tr>
+  </tbody>
+</table></div>
+
+<h3>Пример <code>readiness</code></h3>
+<pre><code>{
+  "stage": "validate",
+  "diagnostics": { "errors": 0, "warnings": 1 },
+  "coverage":  { "targets": "5/6", "invariants": "2/2", "distinctions": "1/2" },
+  "scenarios": { "passed": 4, "failed": 1, "stale": 0, "missing": 1 },
+  "blockers": [
+    "T3 «доступный экземпляр»: нет конституенты",
+    "SC2: D5 ожидалось [e2], получено []"
+  ],
+  "next": "Спроектируй конституенту для T3 (rs-design), затем исправь D5 и перезапусти SC2"
+}</code></pre>
+
+<h3>MCP (<code>@rsconcept/rstool-mcp</code>)</h3>
+<ul>
+  <li>Новые инструменты: <code>set_brief</code>, <code>get_brief</code>, <code>get_readiness</code>, <code>run_scenarios</code>, <code>diff_sessions</code>.</li>
+  <li><b>MCP prompts</b> для этапов (<code>rs_start</code>, <code>rs_brief</code>, <code>rs_design</code>, <code>rs_formalize</code>, <code>rs_validate</code>, <code>rs_review</code>) строятся из тех же <code>SKILL.md</code>. Клиенты без поддержки скиллов тоже получают процесс.</li>
+  <li><b>MCP resources</b>: <code>rstool://docs/&lt;FILE&gt;</code>, чтобы справочники были доступны без <code>node_modules</code>.</li>
+  <li>В описание инструментов <code>apply_schema_patch</code> и <code>list_diagnostics</code> добавить строку: «готово ≠ нет диагностик; смотри <code>get_readiness</code>».</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="portal">9. Portal: бриф рядом со схемой</h2>
+<div class="grid">
+  <div class="card">
+    <h3>Backend</h3>
+    <ul class="tight">
+      <li>Модель <code>SchemaBrief</code> (OneToOne к <code>LibraryItem</code>, <code>data: JSONField</code>, <code>time_update</code>) в <code>apps.rsform</code>.</li>
+      <li><code>GET/PUT /api/rsforms/:id/brief</code> и <code>/api/agents/rsforms/:id/brief</code> (журнал мутаций, лимиты, <code>X-Expected-Time-Update</code>).</li>
+      <li>Бриф включается в <code>/details</code>, в снимок версии, в load-json и <code>replace</code>, копируется при клонировании.</li>
+      <li>Валидация структуры на сервере (JSON-схема), без логики покрытия.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Frontend</h3>
+    <ul class="tight">
+      <li>Вкладка «Задание» в редакторе КС: цель, назначение, цели с состоянием покрытия, различения, инварианты, сценарии (прогон в браузере через <code>RSEngine</code>), допущения, открытые вопросы.</li>
+      <li>Значок «цель T1» на конституенте и фильтр «цели» в списке.</li>
+      <li>Тексты через <code>useTx</code>/<code>globalTx</code>, синхронно в <code>en</code>/<code>ru</code>/<code>fr</code>.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Протокол публикации (скилл <code>rs-portal</code>)</h3>
+    <ol class="tight">
+      <li><code>/details</code> → <code>importData</code> (бриф приходит вместе со схемой).</li>
+      <li>Работа по этапам, пока <code>readiness.stage = done</code>.</li>
+      <li><code>diffSessions</code>: показать пользователю сводку и получить подтверждение.</li>
+      <li><code>create-version</code> (если есть права), затем <code>replace</code> с <code>X-Expected-Time-Update</code>.</li>
+      <li>Повторно прочитать <code>/details</code>, импортировать и сверить. Отчёт со ссылкой.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h3>ОСС</h3>
+    <p>При синтезе бриф результата по умолчанию пустой. Агент может собрать его из брифов аргументов: цели переносятся по таблице отождествлений. Решение — в открытых вопросах.</p>
+  </div>
+</div>
+<p>Расширить <code>X-Expected-Time-Update</code> на <code>replace</code> и правки конституент, если поддержки там ещё нет: сейчас документирована только для моделей.</p>
+
+<!-- ============================================================ -->
+<h2 id="examples">10. Примеры: требования к ПО</h2>
+<p>Три новых сопровождаемых примера в <code>examples/</code>. В каждом есть исходные требования v1 и запрос на изменение v2, поэтому один пример покрывает обе типичные задачи: «КС по тексту» и «развить КС».</p>
+
+<div class="table-wrap"><table>
+  <thead><tr><th>Пример</th><th>Предметная область</th><th>Цели и различения</th><th>Инварианты</th><th>Запрос v2</th></tr></thead>
+  <tbody>
+    <tr><td><code>library-loans/</code></td><td>Выдача книг: читатели, издания, экземпляры, выдачи, сроки (<code>Z</code>)</td><td>издание ≠ экземпляр; активная ≠ просроченная выдача; доступный экземпляр</td><td>экземпляр не выдан дважды; лимит выдач на читателя</td><td>Продление не более 2 раз; бронь</td></tr>
+    <tr><td><code>access-control/</code></td><td>Ролевой доступ: пользователи, роли, права, ресурсы, иерархия ролей (<code>R{}</code>)</td><td>назначенные ≠ эффективные права; прямая ≠ унаследованная роль</td><td>ацикличность иерархии; разделение обязанностей (SoD)</td><td>Временные роли с периодом действия</td></tr>
+    <tr><td><code>clinic-booking/</code></td><td>Запись к врачу: врачи, специальности, слоты, пациенты, записи</td><td>свободный слот ≠ доступный пациенту; запись ≠ приём</td><td>нет двойной записи на слот; слоты врача не пересекаются</td><td>Повторный приём только к тому же врачу</td></tr>
+  </tbody>
+</table></div>
+
+<h3>Состав папки примера</h3>
+<pre><code>examples/library-loans/
+  requirements-v1.md     исходный текст требований
+  requirements-v2.md     запрос на изменение
+  brief.json             эталонный бриф (с вопросами постановки и ответами)
+  build-rsform.ts        сборка эталонной КС (v1, затем v2 поверх)
+  rsform-session.json    снимок с брифом
+  anti/                  «зелёные, но неверные» снимки:
+    uncovered.json         — нет T3; ловит briefTargetUncovered
+    weakened.json          — A1 удалена, D5 стала S2; ловит briefTargetWeakened
+    collapsed.json         — активная = просроченная; ловит briefDistinctionCollapsed
+  NOTES.md               ход рассуждения по этапам + разбор антипримеров</code></pre>
+<ul>
+  <li>Антипримеры служат регрессионными тестами диагностик <code>brief</code> и учебным материалом для скиллов. Каждый скилл этапа ссылается на подходящий разбор из <code>NOTES.md</code>.</li>
+  <li>Существующим <code>kinship/</code> и <code>movd/</code> добавить <code>brief.json</code> (назначение — обучение) и сценарии. <code>assertCleanDiagnostics</code> заменить на <code>assertReady</code>.</li>
+  <li>Новый справочник <code>docs/REQUIREMENTS.md</code>: как превращать требования в цели, различения и инварианты, с выдержками из трёх примеров.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="evals">11. Проверка эффекта (eval)</h2>
+<p>Набор задач составляется с нуля и <b>не пересекается с примерами</b>: другие предметные области, иначе агент просто воспроизведёт эталон.</p>
+
+<div class="table-wrap"><table>
+  <thead><tr><th>Тип задачи</th><th>Кол-во (v0 → v1)</th><th>Что даётся агенту</th><th>Ловушка</th></tr></thead>
+  <tbody>
+    <tr><td>КС по требованиям</td><td>2 → 4</td><td>текст требований; ответы «пользователя» на вопросы постановки</td><td>пересказ текста без целевых понятий</td></tr>
+    <tr><td>Развить КС</td><td>2 → 3</td><td>сессия v1 (с брифом или без) + запрос на изменение</td><td>сломать старые сценарии; потерять инвариант</td></tr>
+    <tr><td>Ревью КС</td><td>1 → 3</td><td>зелёная схема с заложенными дефектами</td><td>отчитаться «диагностик нет — всё хорошо»</td></tr>
+    <tr><td>Починить формулу</td><td>1 → 2</td><td>схема с ошибкой, которую проще всего «исправить» ослаблением</td><td>подгонка под зелёное</td></tr>
+  </tbody>
+</table></div>
+
+<h3>Метрики и процедура</h3>
+<ul>
+  <li><b>Автоматические:</b> доля покрытых эталонных целей (агент сообщает соответствие в брифе), доля пройденных <b>скрытых</b> эталонных сценариев на соответствующих конституентах, число нарушений из §7 (по <code>diffSessions</code> с базой), чистота диагностик.</li>
+  <li><b>Оценка моделью-судьёй:</b> качество вопросов постановки (релевантность, наличие предложенных ответов, число), честность отчёта о готовности.</li>
+  <li><b>Стоимость:</b> токены, время, число вызовов инструментов.</li>
+  <li>Прогон: headless-агент + симулятор пользователя, который отвечает по карточке задачи. Три прогона на задачу, усреднение. Базовый прогон делается на текущем <code>rstool-helper</code> до любых изменений, затем после каждой фазы.</li>
+  <li>Отдельный <b>тест срабатывания</b> скиллов: 30 формулировок запросов → ожидаемый скилл.</li>
+  <li>Расположение: <code>rsconcept/rstool/evals/</code> (не входит в <code>files</code> npm-пакета).</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="roadmap">12. Дорожная карта</h2>
+
+<div class="phase">
+  <h3>Фаза 0 · База <span class="tag">1–2 дня</span></h3>
+  <p>Eval v0 (6 задач) и прогон текущего <code>rstool-helper</code>. Классификация провалов по D1–D6. Фиксация формата брифа (JSON-схема) — единого для всех последующих фаз.</p>
+</div>
+<div class="phase">
+  <h3>Фаза 1 · Процесс и ключевые скиллы <span class="tag p1">быстрый эффект</span></h3>
+  <p>Только документация: маршрутизатор <code>rstool</code>, <code>rs-brief</code>, <code>rs-validate</code>, <code>rs-review</code> (проход по брифу первым), правила против подгонки в маршрутизаторе. Бриф пока хранится файлом <code>brief.json</code> в папке задачи, сценарии запускаются скриптом-шаблоном. Новый шаблон отчёта. Прогон eval.</p>
+</div>
+<div class="phase">
+  <h3>Фаза 2 · Остальные скиллы и примеры</h3>
+  <p><code>rs-design</code>, <code>rs-formalize</code>, <code>rs-explain</code>, <code>rs-portal</code>, <code>rstool-runtime</code>. Разделение <code>PORTAL-API.md</code>. <code>GUIDE.md</code> → указатель. Скрипт <code>skills:sync</code> и тест синхронизации, обновлённый <code>INSTALL.md</code>. Примеры <code>library-loans</code>, <code>access-control</code>, <code>clinic-booking</code> с антипримерами, <code>docs/REQUIREMENTS.md</code>.</p>
+</div>
+<div class="phase">
+  <h3>Фаза 3 · Контракт rstool 4.0</h3>
+  <p>Domain: типы брифа и расчёт покрытия. rstool: <code>setBrief</code>/<code>getBrief</code>, <code>readiness</code>, <code>runScenarios</code>, диагностики <code>brief</code>, значения по подписям, защита в патче, <code>diffSessions</code>, <code>crucial</code>, <code>pendingDrafts</code>. MCP: инструменты. Скиллы переводятся с файла на методы. Прогон eval.</p>
+</div>
+<div class="phase">
+  <h3>Фаза 4 · Portal</h3>
+  <p>Модель <code>SchemaBrief</code>, миграция, API (UI и агентский), бриф в <code>/details</code>, версиях и <code>replace</code>. Вкладка «Задание» в UI, i18n. <code>X-Expected-Time-Update</code> для <code>replace</code>. Протокол публикации в <code>rs-portal</code>.</p>
+</div>
+<div class="phase">
+  <h3>Фаза 5 · MCP prompts/resources и доводка</h3>
+  <p>Prompts этапов и resources docs в <code>rstool-mcp</code>. Eval v1 (12 задач), тюнинг описаний скиллов по тесту срабатывания. Удаление заглушки <code>rstool-helper</code>.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="risks">13. Риски и открытые вопросы</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Риск / вопрос</th><th>Предложение</th></tr></thead>
+  <tbody>
+    <tr><td>Бриф — лишняя работа на мелких задачах</td><td>«Лёгкий» бриф: для точечной правки достаточно одной цели и одного сценария. Объяснение и вопросы по синтаксису обходятся без брифа. Маршрутизатор решает это по сценарию.</td></tr>
+    <tr><td>Девять скиллов конфликтуют при срабатывании</td><td>Широкое описание только у маршрутизатора. У скиллов этапов описание начинается с «Этап N …» и узкое. Тест срабатывания в eval.</td></tr>
+    <tr><td>Пользователь устаёт от вопросов</td><td>Не больше 5 вопросов, у каждого предложенный ответ, одно подтверждение брифа целиком. Новые вопросы — только при появлении нового различения.</td></tr>
+    <tr><td>Фоновый агент не может спросить</td><td>Статус <code>assumed</code>, допущения и открытые вопросы в отчёте. На Portal бриф помечен как неподтверждённый.</td></tr>
+    <tr><td>Ссылки брифа ломаются при синтезе и перенумерации</td><td>Хранить id и показывать имя. <code>synthesize</code> обновляет ссылки по <code>idMap</code>.</td></tr>
+    <tr><td>Бриф при синтезе ОСС</td><td><b>Открыто:</b> пустой по умолчанию или собирать из аргументов по таблице отождествлений?</td></tr>
+    <tr><td>Кто подтверждает бриф на Portal</td><td><b>Открыто:</b> поле <code>confirmed_by</code> или только статус. Нужна ли история изменений брифа отдельно от версий схемы?</td></tr>
+    <tr><td>Пороговые значения по назначению схемы</td><td><b>Открыто:</b> считать ли «сирот» ошибкой для учебных схем? Пока предупреждение.</td></tr>
+  </tbody>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="files">14. Карта файлов</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Где</th><th>Что</th></tr></thead>
+  <tbody>
+    <tr><td><code>rsconcept/rstool/skills/</code></td><td><code>rstool/</code>, <code>rs-brief/</code>, <code>rs-design/</code>, <code>rs-formalize/</code>, <code>rs-validate/</code>, <code>rs-review/</code>, <code>rs-explain/</code>, <code>rs-portal/</code>, <code>rstool-runtime/</code> (+ <code>REFERENCE.md</code>); <code>INSTALL.md</code>, <code>README.md</code>; <code>rstool-helper/</code> → заглушка, затем удалить</td></tr>
+    <tr><td><code>rsconcept/rstool/docs/</code></td><td>новый <code>REQUIREMENTS.md</code>; <code>PORTAL-API.md</code> → <code>PORTAL-READ</code> / <code>PORTAL-PUBLISH</code> / <code>PORTAL-MODELS</code> / <code>PORTAL-OSS</code>; правки <code>CONCEPTUAL-SCHEMA</code>, <code>MODEL-TESTING</code>, <code>DIAGNOSTICS</code> (коды <code>brief</code>); <code>README.md</code> (индекс)</td></tr>
+    <tr><td><code>rsconcept/rstool/src/</code></td><td><code>models/brief.ts</code>, <code>models/readiness.ts</code>, <code>tool-contract.ts</code> (4.0.0), <code>rstool-agent.ts</code>, <code>session/</code> (бриф, <code>pendingDrafts</code>), <code>mappers/</code> (портал ↔ бриф, сценарии), <code>wrapper/stdio-handler.ts</code>, тесты рядом</td></tr>
+    <tr><td><code>rsconcept/rstool/examples/</code></td><td><code>library-loans/</code>, <code>access-control/</code>, <code>clinic-booking/</code>; <code>brief.json</code> для <code>kinship/</code>, <code>movd/</code>; <code>assertReady</code></td></tr>
+    <tr><td><code>rsconcept/rstool/evals/</code></td><td>карточки задач, скрытые эталоны, раннер, отчёт</td></tr>
+    <tr><td><code>rsconcept/rstool-mcp/src/</code></td><td><code>tools.ts</code> (новые инструменты), prompts и resources, README, smoke-тест</td></tr>
+    <tr><td><code>rsconcept/domain/src/library/brief/</code></td><td>типы брифа, расчёт покрытия и свидетелей различений, переводы сценариев в значения КМ</td></tr>
+    <tr><td><code>rsconcept/backend/apps/rsform/</code>, <code>apps/agents/</code></td><td><code>SchemaBrief</code>, сериализаторы, представления, маршруты, включение в <code>/details</code>, версии, <code>replace</code>; тесты</td></tr>
+    <tr><td><code>rsconcept/frontend/src/features/rsform/</code></td><td>вкладка «Задание», значки целей, хуки API, i18n <code>en</code>/<code>ru</code>/<code>fr</code></td></tr>
+    <tr><td><code>.agents/skills/</code>, <code>AGENTS.md</code></td><td>генерируемые копии скиллов; обновить раздел «Agent skills» и <code>rsconcept/rstool/AGENTS.md</code> (правила синхронизации)</td></tr>
+  </tbody>
+</table></div>
+
+<footer>
+  Основано на анализе <code>rsconcept/rstool/skills/rstool-helper/*</code>, <code>rsconcept/rstool/docs/*</code>, <code>rsconcept/rstool/examples/*</code>, <code>rsconcept/rstool-mcp</code> и ответах на вопросы при постановке.
+</footer>
+
+</div>
+</body>
+</html>
