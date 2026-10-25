@@ -7,7 +7,7 @@ import { resolve } from 'node:path';
 
 import { type AgentConstituentaPatch, RSToolAgent } from '../../src';
 
-import { formatDiagnostics } from '../diagnostics-utils';
+import { describeBrief, formatDiagnostics } from '../diagnostics-utils';
 
 const V1_ITEMS: AgentConstituentaPatch[] = [
   { alias: 'X1', term: 'пользователи', convention: 'Учётные записи пользователей системы.' },
@@ -122,9 +122,9 @@ const ANTI_EXAMPLES: Record<string, AgentConstituentaPatch[]> = {
   collapsed: V1_ITEMS.map(item => (item.alias === 'F6' ? { ...item, definitionFormal: '[ξ∈X1] F5[ξ]' } : item))
 };
 
-function build(title: string, ...batches: AgentConstituentaPatch[][]): string {
+function build(title: string, brief: string, ...batches: AgentConstituentaPatch[][]): string {
   const tool = new RSToolAgent();
-  tool.createSession({ alias: 'RBAC', title });
+  tool.createSession({ alias: 'RBAC', title, comment: describeBrief(resolve(import.meta.dirname, brief)) });
   for (const [index, items] of batches.entries()) {
     const result = tool.applySchemaPatch({ items, commitMessage: `${title}: шаг ${index + 1}` });
     if (!result.success) {
@@ -140,11 +140,11 @@ function build(title: string, ...batches: AgentConstituentaPatch[][]): string {
 
 function run() {
   const root = import.meta.dirname;
-  writeFileSync(resolve(root, 'rsform-session-v1.json'), build('Ролевой доступ', V1_ITEMS));
-  writeFileSync(resolve(root, 'rsform-session.json'), build('Ролевой доступ', V1_ITEMS, V2_ITEMS));
+  writeFileSync(resolve(root, 'rsform-session-v1.json'), build('Ролевой доступ', 'brief-v1.json', V1_ITEMS));
+  writeFileSync(resolve(root, 'rsform-session.json'), build('Ролевой доступ', 'brief.json', V1_ITEMS, V2_ITEMS));
   mkdirSync(resolve(root, 'anti'), { recursive: true });
   for (const [name, items] of Object.entries(ANTI_EXAMPLES)) {
-    writeFileSync(resolve(root, 'anti', `${name}.json`), build(`Антипример: ${name}`, items));
+    writeFileSync(resolve(root, 'anti', `${name}.json`), build(`Антипример: ${name}`, 'brief-v1.json', items));
   }
   console.log(`access-control: v1, v2 + ${Object.keys(ANTI_EXAMPLES).length} anti-examples`);
 }

@@ -2,7 +2,7 @@
  * CLI: check a session against its brief and print readiness.
  *
  * Usage (from the rstool package root):
- *   tsx skills/scripts/check-brief.ts --session <session.json> --brief <brief.json> [--base <v1-session.json>] [--json]
+ *   tsx skills/scripts/check-brief.ts --session <session.json> --brief <brief.json> [--base <v1-session.json>] [--review] [--json]
  *
  * Exit code: 0 — no blockers, 1 — blockers, 2 — usage or input error.
  */
@@ -70,14 +70,15 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (typeof args.session !== 'string' || typeof args.brief !== 'string') {
     console.error(
-      'Usage: tsx skills/scripts/check-brief.ts --session <session.json> --brief <brief.json> [--base <session.json>] [--json]'
+      'Usage: tsx skills/scripts/check-brief.ts --session <session.json> --brief <brief.json> [--base <session.json>] [--review] [--json]'
     );
     process.exit(2);
   }
   const result = await checkBrief({
     session: readText(args.session),
     brief: JSON.parse(readText(args.brief)) as Brief,
-    base: typeof args.base === 'string' ? readText(args.base) : undefined
+    base: typeof args.base === 'string' ? readText(args.base) : undefined,
+    mode: args.review ? 'review' : 'build'
   });
   if (args.json) {
     console.log(JSON.stringify(result, null, 2));

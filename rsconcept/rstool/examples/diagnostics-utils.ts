@@ -36,3 +36,17 @@ export async function assertReady(session: string, briefPath: string, context: s
     throw new Error(`${context}: brief blockers\n${readiness.blockers.join('\n')}`);
   }
 }
+
+/** Schema description built from a brief: purpose, restrictions with inexpressible concepts, decision log. */
+export function describeBrief(briefPath: string): string {
+  const brief = JSON.parse(readFileSync(briefPath, 'utf8')) as Brief;
+  const lines = [`${brief.object}. ${brief.task}.`];
+  for (const item of brief.restrictions ?? []) {
+    const inexpressible = item.inexpressible?.length ? `; невыразимо: ${item.inexpressible.join(', ')}` : '';
+    lines.push(`${item.id}. Исключено: ${item.excludes}${inexpressible}.`);
+  }
+  for (const decision of brief.decisions ?? []) {
+    lines.push(`${decision.id}. ${decision.topic}: ${decision.choice} — ${decision.rationale}.`);
+  }
+  return lines.join('\n');
+}
