@@ -16,7 +16,9 @@ const sessions = [
   'examples/expression-bank/rsform-session.json',
   'examples/template-apply/rsform-session.json',
   'examples/subordination/rsform-session.json',
-  'examples/kinship-subordination/rsform-session.json'
+  'examples/kinship-subordination/rsform-session.json',
+  'examples/library-loans/rsform-session-v1.json',
+  'examples/library-loans/rsform-session.json'
 ];
 
 let total = 0;

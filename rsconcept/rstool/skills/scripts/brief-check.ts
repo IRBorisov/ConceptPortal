@@ -378,8 +378,26 @@ class ScenarioRun {
   }
 }
 
+function describeExpectation(expectation: BriefExpectation): string {
+  if (expectation.holds !== undefined) {
+    return expectation.holds ? 'истина' : 'ложь';
+  }
+  if (expectation.value !== undefined) {
+    return print(expectation.value);
+  }
+  return (
+    [
+      expectation.contains ? `содержит ${print(expectation.contains)}` : '',
+      expectation.excludes ? `не содержит ${print(expectation.excludes)}` : ''
+    ]
+      .filter(Boolean)
+      .join(', ') || '—'
+  );
+}
+
 function checkExpectation(run: ScenarioRun, expectation: BriefExpectation): ExpectationResult {
   const target = expectation.expr ?? `${expectation.of ?? '?'}${expectation.args ? print(expectation.args) : ''}`;
+  const expected = describeExpectation(expectation);
   try {
     const { value, type } = run.evaluate(expectation);
     if (expectation.holds !== undefined) {
@@ -387,7 +405,7 @@ function checkExpectation(run: ScenarioRun, expectation: BriefExpectation): Expe
       return {
         target,
         passed: holds === expectation.holds,
-        expected: expectation.holds ? 'истина' : 'ложь',
+        expected,
         actual: holds ? 'истина' : 'ложь'
       };
     }
@@ -396,11 +414,10 @@ function checkExpectation(run: ScenarioRun, expectation: BriefExpectation): Expe
     }
     const actual = run.space.decode(value, type as Typification);
     if (expectation.value !== undefined) {
-      const expected = run.space.encode(expectation.value, type as Typification);
       return {
         target,
-        passed: sameValue(expected, value),
-        expected: print(expectation.value),
+        passed: sameValue(run.space.encode(expectation.value, type as Typification), value),
+        expected,
         actual: print(actual)
       };
     }
@@ -417,17 +434,11 @@ function checkExpectation(run: ScenarioRun, expectation: BriefExpectation): Expe
     return {
       target,
       passed: missing.length === 0 && extra.length === 0,
-      expected:
-        [
-          expectation.contains ? `содержит ${print(expectation.contains)}` : '',
-          expectation.excludes ? `не содержит ${print(expectation.excludes)}` : ''
-        ]
-          .filter(Boolean)
-          .join(', ') || '—',
+      expected,
       actual: print(actual)
     };
   } catch (error) {
-    return { target, passed: false, expected: '—', actual: `ошибка: ${(error as Error).message}` };
+    return { target, passed: false, expected, actual: `ошибка: ${(error as Error).message}` };
   }
 }
 
@@ -553,7 +564,8 @@ function weakeningIssues(
 ): { blockers: string[]; warnings: string[] } {
   const blockers: string[] = [];
   const warnings: string[] = [];
-  const decisionsText = JSON.stringify(brief.decisions ?? []);
+  // only a new decision that supersedes an earlier one may justify removing or weakening a concept
+  const decisionsText = JSON.stringify((brief.decisions ?? []).filter(decision => decision.supersedes));
   const linked = new Set([
     ...briefAliases(brief),
     ...base.items.filter(item => item.cstType === CstType.AXIOM).map(item => item.alias)
@@ -566,7 +578,9 @@ function weakeningIssues(
     const justified = new RegExp(`\\b${alias}\\b`).test(decisionsText);
     const report = (message: string) =>
       (justified ? warnings : blockers).push(
-        justified ? `${message} (есть решение в журнале)` : `${message} — без нового решения в журнале`
+        justified
+          ? `${message} (обосновано новым решением в журнале)`
+          : `${message} — без нового решения (supersedes) в журнале`
       );
     const after = schema.byAlias.get(alias);
     if (!after) {

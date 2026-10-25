@@ -1,0 +1,406 @@
+{
+  "contractVersion": "3.3.0",
+  "state": {
+    "sessionId": "c72059bb-2dab-4bbb-ba77-df328f2317fd",
+    "alias": "LIB",
+    "title": "Антипример: uncovered",
+    "comment": "",
+    "createdAt": "2026-10-25T17:01:06.974Z",
+    "updatedAt": "2026-10-25T17:01:06.978Z",
+    "revisions": [
+      {
+        "revisionId": "86326562-e023-4aea-893e-2221daf16ee0",
+        "at": "2026-10-25T17:01:06.978Z",
+        "message": "Антипример: uncovered"
+      }
+    ],
+    "items": [
+      {
+        "id": 1,
+        "alias": "X1",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "читатели",
+        "definitionText": "",
+        "convention": "Записанные читатели библиотеки.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 2,
+        "alias": "X2",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "экземпляры",
+        "definitionText": "",
+        "convention": "Физические экземпляры книг фонда (ТЗ 1).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 3,
+        "alias": "X3",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "издания",
+        "definitionText": "",
+        "convention": "Издания: книга в конкретном издании; у издания может быть много экземпляров.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X3"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 4,
+        "alias": "S1",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X2×X3)",
+        "term": "издание экземпляра",
+        "definitionText": "",
+        "convention": "Пара (экземпляр, издание): экземпляр — копия издания (ТЗ 1).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X3"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
+        "alias": "S2",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X1×X2×Z)",
+        "term": "выдачи",
+        "definitionText": "",
+        "convention": "Тройка (читатель, экземпляр, день выдачи) для экземпляров, которые сейчас на руках (ТЗ 2; решение DC1). Дни — номера дней.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                },
+                {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 6,
+        "alias": "S3",
+        "cstType": "structure",
+        "definitionFormal": "Z",
+        "term": "текущий день",
+        "definitionText": "",
+        "convention": "Номер текущего дня в той же нумерации, что и дни выдачи (решение DC3).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 2,
+            "isOrdered": true,
+            "isArithmetic": true,
+            "isIntegerCompatible": true
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 7,
+        "alias": "D1",
+        "cstType": "term",
+        "definitionFormal": "Pr2(S2)",
+        "term": "выданные экземпляры",
+        "definitionText": "Экземпляры, которые сейчас на руках у читателей.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 8,
+        "alias": "F1",
+        "cstType": "function",
+        "definitionFormal": "[ε∈X3] Pr1(Fi2[{ε}](S1))",
+        "term": "экземпляры издания",
+        "definitionText": "Все экземпляры данного издания.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X2"
+              }
+            },
+            "args": [
+              {
+                "alias": "ε",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X3"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 9,
+        "alias": "F3",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] Pr2(Fi1[{ξ}](S2))",
+        "term": "экземпляры читателя",
+        "definitionText": "Экземпляры на руках у данного читателя.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X2"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 10,
+        "alias": "D4",
+        "cstType": "term",
+        "definitionFormal": "D{σ∈S2 | pr3(σ)+14 < S3}",
+        "term": "просроченные выдачи",
+        "definitionText": "Выдачи, с которых прошло больше 14 дней (решение DC2).",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                },
+                {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 11,
+        "alias": "D5",
+        "cstType": "term",
+        "definitionFormal": "Pr1(S2)",
+        "term": "читатели с выдачами",
+        "definitionText": "Читатели, у которых есть экземпляр на руках.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 12,
+        "alias": "D6",
+        "cstType": "term",
+        "definitionFormal": "Pr1(D4)",
+        "term": "должники",
+        "definitionText": "Читатели с хотя бы одной просроченной выдачей.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 13,
+        "alias": "A1",
+        "cstType": "axiom",
+        "definitionFormal": "card(Pr2(S2))=card(S2)",
+        "term": "экземпляр выдан одному читателю",
+        "definitionText": "Один экземпляр не выдан двум читателям и не записан дважды (ТЗ 3).",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 14,
+        "alias": "A2",
+        "cstType": "axiom",
+        "definitionFormal": "∀ξ∈X1 card(F3[ξ])≤5",
+        "term": "не больше 5 экземпляров на руках",
+        "definitionText": "ТЗ 4.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 15,
+        "alias": "A3",
+        "cstType": "axiom",
+        "definitionFormal": "card(S1)=card(Pr1(S1)) & Pr1(S1)=X2",
+        "term": "у экземпляра одно издание",
+        "definitionText": "Каждый экземпляр — копия ровно одного издания (ТЗ 1).",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 16,
+        "alias": "A4",
+        "cstType": "axiom",
+        "definitionFormal": "∀σ∈S2 pr3(σ)≤S3",
+        "term": "выдача не из будущего",
+        "definitionText": "День выдачи не позже текущего дня.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      }
+    ],
+    "model": {
+      "items": []
+    }
+  },
+  "diagnostics": []
+}
