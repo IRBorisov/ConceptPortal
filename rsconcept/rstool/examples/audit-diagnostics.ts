@@ -14,7 +14,9 @@ const sessions = [
   'examples/movd/rsform-session.json',
   'examples/movd/rsmodel-session.json',
   'examples/expression-bank/rsform-session.json',
-  'examples/template-apply/rsform-session.json'
+  'examples/template-apply/rsform-session.json',
+  'examples/subordination/rsform-session.json',
+  'examples/kinship-subordination/rsform-session.json'
 ];
 
 let total = 0;

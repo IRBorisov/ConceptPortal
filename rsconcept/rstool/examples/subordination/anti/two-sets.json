@@ -1,0 +1,138 @@
+{
+  "contractVersion": "3.3.0",
+  "state": {
+    "sessionId": "129b4381-4087-4de6-a653-20d53c3afd3c",
+    "alias": "SUB",
+    "title": "Антипример: two-sets",
+    "comment": "",
+    "createdAt": "2026-10-25T16:51:15.628Z",
+    "updatedAt": "2026-10-25T16:51:15.629Z",
+    "revisions": [
+      {
+        "revisionId": "81089747-85d6-4979-bbb6-0560f1b9097f",
+        "at": "2026-10-25T16:51:15.629Z",
+        "message": "Антипример: two-sets"
+      }
+    ],
+    "items": [
+      {
+        "id": 1,
+        "alias": "X1",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "начальники",
+        "definitionText": "",
+        "convention": "Сотрудники, которые руководят другими.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 2,
+        "alias": "X2",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "подчинённые",
+        "definitionText": "",
+        "convention": "Сотрудники, у которых есть руководитель.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 3,
+        "alias": "S1",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X1×X2)",
+        "term": "подчинение",
+        "definitionText": "",
+        "convention": "Пара (начальник, подчинённый).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 4,
+        "alias": "D1",
+        "cstType": "term",
+        "definitionFormal": "Pr1(S1)",
+        "term": "руководящие начальники",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
+        "alias": "D2",
+        "cstType": "term",
+        "definitionFormal": "Pr2(S1)",
+        "term": "подчинённые с начальником",
+        "definitionText": "",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      }
+    ],
+    "model": {
+      "items": []
+    }
+  },
+  "diagnostics": []
+}

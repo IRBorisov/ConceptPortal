@@ -13,5 +13,5 @@
     "declaration": true,
     "types": ["node", "vitest/globals"]
   },
-  "include": ["src/**/*.ts", "examples/**/*.ts"]
+  "include": ["src/**/*.ts", "examples/**/*.ts", "skills/**/*.ts", "evals/**/*.ts"]
 }
