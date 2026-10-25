@@ -1,0 +1,400 @@
+{
+  "contractVersion": "3.3.0",
+  "state": {
+    "sessionId": "32d2e73a-8892-4d4b-997e-3945f4ea0131",
+    "alias": "SUB",
+    "title": "Антипример: collapsed",
+    "comment": "",
+    "createdAt": "2026-10-25T16:51:15.637Z",
+    "updatedAt": "2026-10-25T16:51:15.641Z",
+    "revisions": [
+      {
+        "revisionId": "2fbd1d10-1be9-46f3-bc28-66e87598adb3",
+        "at": "2026-10-25T16:51:15.641Z",
+        "message": "Антипример: collapsed"
+      }
+    ],
+    "items": [
+      {
+        "id": 1,
+        "alias": "X1",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "сотрудники",
+        "definitionText": "",
+        "convention": "Сотрудники организации в рассматриваемый момент времени (решение DC1).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 2,
+        "alias": "S1",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X1×X1)",
+        "term": "непосредственное подчинение",
+        "definitionText": "",
+        "convention": "Пара (начальник, подчинённый): первый — непосредственный руководитель второго. Косвенное подчинение сюда не входит (решения DC2, DC6).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 3,
+        "alias": "D1",
+        "cstType": "term",
+        "definitionFormal": "Pr1(S1)",
+        "term": "начальники",
+        "definitionText": "Сотрудники, у которых есть хотя бы один непосредственный подчинённый.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 4,
+        "alias": "D2",
+        "cstType": "term",
+        "definitionFormal": "Pr2(S1)",
+        "term": "подчинённые",
+        "definitionText": "Сотрудники, у которых есть хотя бы один непосредственный начальник.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
+        "alias": "D3",
+        "cstType": "term",
+        "definitionFormal": "X1\\D2",
+        "term": "высшие руководители",
+        "definitionText": "Сотрудники без начальника.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 6,
+        "alias": "D4",
+        "cstType": "term",
+        "definitionFormal": "X1\\D1",
+        "term": "рядовые сотрудники",
+        "definitionText": "Сотрудники без подчинённых.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 7,
+        "alias": "D5",
+        "cstType": "term",
+        "definitionFormal": "D1",
+        "term": "руководители среднего звена",
+        "definitionText": "Начальники, которые сами являются подчинёнными.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 8,
+        "alias": "F1",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] Pr2(Fi1[{ξ}](S1))",
+        "term": "непосредственные подчинённые",
+        "definitionText": "Сотрудники, непосредственным начальником которых является данный сотрудник.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 9,
+        "alias": "F2",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] Pr1(Fi2[{ξ}](S1))",
+        "term": "непосредственные начальники",
+        "definitionText": "Непосредственные руководители данного сотрудника.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 10,
+        "alias": "F3",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] R{σ:=F1[ξ] | σ∪Pr2(Fi1[σ](S1))}",
+        "term": "все подчинённые",
+        "definitionText": "Непосредственные подчинённые данного сотрудника и все их подчинённые.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 11,
+        "alias": "F4",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] Pr2(Fi1[F2[ξ]](S1))\\{ξ}",
+        "term": "коллеги",
+        "definitionText": "Другие сотрудники, у которых есть общий с данным сотрудником непосредственный начальник.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 12,
+        "alias": "F5",
+        "cstType": "function",
+        "definitionFormal": "[ξ∈X1] F3[ξ]\\F1[ξ]",
+        "term": "косвенные подчинённые",
+        "definitionText": "Подчинённые данного сотрудника, которые не являются его непосредственными подчинёнными.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "ξ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 13,
+        "alias": "D6",
+        "cstType": "term",
+        "definitionFormal": "D{ξ∈X1 | card(F2[ξ]) ≥ 2}",
+        "term": "сотрудники в двойном подчинении",
+        "definitionText": "Сотрудники, у которых не меньше двух непосредственных начальников.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 14,
+        "alias": "A1",
+        "cstType": "axiom",
+        "definitionFormal": "∀ξ∈X1 ξ∉F3[ξ]",
+        "term": "нет циклов подчинения",
+        "definitionText": "Никто не оказывается в подчинении у самого себя, в том числе через цепочку подчинённых.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 15,
+        "alias": "T1",
+        "cstType": "statement",
+        "definitionFormal": "X1≠∅ ⇒ D3≠∅",
+        "term": "существует высший руководитель",
+        "definitionText": "Если в организации есть сотрудники, среди них есть хотя бы один высший руководитель.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      }
+    ],
+    "model": {
+      "items": []
+    }
+  },
+  "diagnostics": []
+}
