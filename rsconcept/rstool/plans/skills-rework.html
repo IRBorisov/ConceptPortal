@@ -350,12 +350,38 @@ description: >-
 ## Не делай    — 3–5 типичных ошибок этапа
 ## Читать по потребности — docs/MODEL-TESTING.md</code></pre>
 
-<h3>Установка и синхронизация</h3>
+<h3>Где лежат скиллы и как агенты их находят</h3>
+<p><b>Источник один:</b> <code>rsconcept/rstool/skills/</code>. Полные копии в <code>.agents/skills/</code> больше не нужны: сейчас две копии <code>rstool-helper/SKILL.md</code> разошлись вручную, и это прямое следствие копирования.</p>
+
+<div class="table-wrap"><table>
+  <thead><tr><th>Хост</th><th>Откуда загружает скиллы проекта</th><th>Найдёт ли скилл в <code>rsconcept/rstool/</code> сам</th></tr></thead>
+  <tbody>
+    <tr><td>Claude Code</td><td><code>.claude/skills/</code> в каталоге запуска и выше до корня репозитория. Вложенные <code>&lt;subdir&gt;/.claude/skills/</code> подгружаются, когда агент впервые читает или правит файл в <code>&lt;subdir&gt;</code>. <code>.agents/skills/</code> не читает: в облачной сессии, где готовился план, текущие <code>rstool-helper</code>, <code>grill-me</code> и <code>i18n-extract</code> в списке скиллов отсутствовали.</td><td>Только после того, как агент затронет файлы пакета</td></tr>
+    <tr><td>Cursor</td><td><code>.agents/skills/</code>, <code>.cursor/skills/</code>, а также <code>.claude/skills/</code>, <code>.codex/skills/</code>, в том числе вложенные в любом каталоге репозитория. Вложенные показываются, когда агент работает с файлами этого каталога.</td><td>Только при работе с файлами пакета</td></tr>
+    <tr><td>Codex</td><td><code>.agents/skills/</code> в каждом каталоге от рабочего каталога <b>вверх</b> до корня репозитория</td><td>Нет, если запущен из корня</td></tr>
+  </tbody>
+</table></div>
+
+<div class="callout warn">
+  <p>Вложенное размещение (<code>rsconcept/rstool/.claude/skills/</code>, <code>rsconcept/rstool/.agents/skills/</code>) срабатывает по <b>месту файлов</b>, а не по запросу. Типичная задача — «построй КС по тексту» или «доработай схему по ссылке» — вообще не трогает файлы пакета, поэтому скилл не всплывёт именно тогда, когда нужен. Для npm-пользователей ни один хост не сканирует <code>node_modules</code>.</p>
+</div>
+
+<p><b>Решение:</b> регистрируется <b>одна точка входа</b>, всё остальное читается по пути.</p>
+<ol>
+  <li><b>Одна строка маршрутизации в корневом <code>AGENTS.md</code></b>: «Работа с КС, ЯРЭ, rstool или Portal → прочитай <code>rsconcept/rstool/skills/rstool/SKILL.md</code>». <code>AGENTS.md</code> всегда в контексте у Codex и Cursor. Для Claude Code добавить <code>CLAUDE.md</code> с одной строкой <code>@AGENTS.md</code>. Работает без регистрации скиллов, на любой ОС.</li>
+  <li><b>Заглушки для автосрабатывания</b> — <code>.claude/skills/rstool/SKILL.md</code> и <code>.agents/skills/rstool/SKILL.md</code>: только <code>name</code>, <code>description</code> и указание «прочитай <code>rsconcept/rstool/skills/rstool/SKILL.md</code>». Содержимого нет, поэтому синхронизировать нечего. Тест проверяет, что <code>description</code> совпадает с исходником. Если Cursor покажет дубль (он читает обе папки), оставить одну заглушку в <code>.agents/skills/</code>.</li>
+  <li><b>Скиллы этапов не регистрируются.</b> Маршрутизатор и <code>readiness.next</code> называют этап, агент читает <code>skills/rs-…/SKILL.md</code> по пути. Скиллы этапов не конкурируют за срабатывание, и в списке скиллов хоста нет девяти похожих описаний.</li>
+  <li><b>Пути внутри скиллов</b> пишутся от корня пакета с явным правилом: <code>&lt;rstool&gt;</code> — это <code>rsconcept/rstool/</code> в workspace Portal или <code>node_modules/@rsconcept/rstool/</code> в npm-проекте. Один и тот же файл работает в обоих местах, переписывать пути скриптом не нужно.</li>
+</ol>
+<p class="muted">Симлинки (<code>.claude/skills/rstool → ../../rsconcept/rstool/skills/rstool</code>) отклонены: на Windows без <code>core.symlinks</code> и режима разработчика git создаёт вместо ссылки текстовый файл, а основная работа ведётся на Windows.</p>
+
+<h3>Для npm-пользователей</h3>
 <ul>
-  <li><code>skills/&lt;name&gt;/SKILL.md</code> для каждого скилла. <code>skills/INSTALL.md</code> копирует все файлы. Добавить bin <code>rstool-skills install [--dir .agents/skills]</code>, чтобы не копировать вручную.</li>
-  <li>Workspace-копии в <code>.agents/skills/</code> не правятся руками, а <b>генерируются</b> скриптом <code>skills:sync</code> (пути <code>node_modules/@rsconcept/rstool/</code> → <code>rsconcept/rstool/</code>). Тест сверяет копии и падает при расхождении.</li>
-  <li>Совместимость: <code>rstool-helper/SKILL.md</code> остаётся заглушкой «используй <code>rstool</code>» на один минорный релиз, затем удаляется. <code>GUIDE.md</code> превращается в указатель на новые скиллы.</li>
+  <li>Bin <code>rstool-skills install [--dir …]</code> пишет ту же заглушку с путём в <code>node_modules/@rsconcept/rstool/</code>, а не копирует содержимое. После обновления пакета переустанавливать ничего не нужно.</li>
+  <li><b>MCP prompts и resources</b> в <code>rstool-mcp</code> (фаза 5) — путь без файлов вообще: клиент получает этапы и справочники с сервера.</li>
+  <li>Вариант на будущее: плагин Claude Code / Cursor, который ставит заглушку и MCP-сервер одной командой.</li>
 </ul>
+<p>Совместимость: <code>rstool-helper</code> остаётся заглушкой «используй <code>rstool</code>» на один минорный релиз, затем удаляется. <code>GUIDE.md</code> превращается в указатель на новые скиллы.</p>
 
 <!-- ============================================================ -->
 <h2 id="antigreen">7. Защита от «озеленения»</h2>
@@ -539,7 +565,7 @@ description: >-
 </div>
 <div class="phase">
   <h3>Фаза 2 · Остальные скиллы и примеры</h3>
-  <p><code>rs-design</code>, <code>rs-formalize</code>, <code>rs-explain</code>, <code>rs-portal</code>, <code>rstool-runtime</code>. Разделение <code>PORTAL-API.md</code>. <code>GUIDE.md</code> → указатель. Скрипт <code>skills:sync</code> и тест синхронизации, обновлённый <code>INSTALL.md</code>. Примеры <code>library-loans</code>, <code>access-control</code>, <code>clinic-booking</code> с антипримерами, <code>docs/REQUIREMENTS.md</code>.</p>
+  <p><code>rs-design</code>, <code>rs-formalize</code>, <code>rs-explain</code>, <code>rs-portal</code>, <code>rstool-runtime</code>. Разделение <code>PORTAL-API.md</code>. <code>GUIDE.md</code> → указатель. Строка маршрутизации в <code>AGENTS.md</code>, <code>CLAUDE.md</code>, заглушки вместо копий, тест совпадения описаний, <code>rstool-skills install</code> и обновлённый <code>INSTALL.md</code>. Примеры <code>library-loans</code>, <code>access-control</code>, <code>clinic-booking</code> с антипримерами, <code>docs/REQUIREMENTS.md</code>.</p>
 </div>
 <div class="phase">
   <h3>Фаза 3 · Контракт rstool 4.0</h3>
@@ -560,7 +586,7 @@ description: >-
   <thead><tr><th>Риск / вопрос</th><th>Предложение</th></tr></thead>
   <tbody>
     <tr><td>Бриф — лишняя работа на мелких задачах</td><td>«Лёгкий» бриф: для точечной правки достаточно одной цели и одного сценария. Объяснение и вопросы по синтаксису обходятся без брифа. Маршрутизатор решает это по сценарию.</td></tr>
-    <tr><td>Девять скиллов конфликтуют при срабатывании</td><td>Широкое описание только у маршрутизатора. У скиллов этапов описание начинается с «Этап N …» и узкое. Тест срабатывания в eval.</td></tr>
+    <tr><td>Девять скиллов конфликтуют при срабатывании</td><td>Регистрируется только маршрутизатор, скиллы этапов читаются по пути (§6). Тест срабатывания в eval проверяет одну точку входа.</td></tr>
     <tr><td>Пользователь устаёт от вопросов</td><td>Не больше 5 вопросов, у каждого предложенный ответ, одно подтверждение брифа целиком. Новые вопросы — только при появлении нового различения.</td></tr>
     <tr><td>Фоновый агент не может спросить</td><td>Статус <code>assumed</code>, допущения и открытые вопросы в отчёте. На Portal бриф помечен как неподтверждённый.</td></tr>
     <tr><td>Ссылки брифа ломаются при синтезе и перенумерации</td><td>Хранить id и показывать имя. <code>synthesize</code> обновляет ссылки по <code>idMap</code>.</td></tr>
@@ -584,7 +610,7 @@ description: >-
     <tr><td><code>rsconcept/domain/src/library/brief/</code></td><td>типы брифа, расчёт покрытия и свидетелей различений, переводы сценариев в значения КМ</td></tr>
     <tr><td><code>rsconcept/backend/apps/rsform/</code>, <code>apps/agents/</code></td><td><code>SchemaBrief</code>, сериализаторы, представления, маршруты, включение в <code>/details</code>, версии, <code>replace</code>; тесты</td></tr>
     <tr><td><code>rsconcept/frontend/src/features/rsform/</code></td><td><code>pages/rsform-page/tab-schema-card/</code>: блок «Задание» под формой паспорта, покрытие в <code>view-schema-stats</code>; значки целей, хуки API, i18n <code>en</code>/<code>ru</code>/<code>fr</code></td></tr>
-    <tr><td><code>.agents/skills/</code>, <code>AGENTS.md</code></td><td>генерируемые копии скиллов; обновить раздел «Agent skills» и <code>rsconcept/rstool/AGENTS.md</code> (правила синхронизации)</td></tr>
+    <tr><td><code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>.agents/skills/</code>, <code>.claude/skills/</code></td><td>строка маршрутизации в <code>AGENTS.md</code>; <code>CLAUDE.md</code> с <code>@AGENTS.md</code>; заглушки <code>rstool/SKILL.md</code> (только описание и путь); удалить копию <code>.agents/skills/rstool-helper/</code>; обновить <code>rsconcept/rstool/AGENTS.md</code></td></tr>
   </tbody>
 </table></div>
 
