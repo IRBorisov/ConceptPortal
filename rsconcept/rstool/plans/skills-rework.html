@@ -446,7 +446,10 @@ description: >-
   <div class="card">
     <h3>Frontend</h3>
     <ul class="tight">
-      <li>Вкладка «Задание» в редакторе КС: цель, назначение, цели с состоянием покрытия, различения, инварианты, сценарии (прогон в браузере через <code>RSEngine</code>), допущения, открытые вопросы.</li>
+      <li>Отдельной вкладки нет: бриф выводится блоком «Задание» <b>внизу паспорта</b> (<code>tab-schema-card</code>), под формой схемы и редактором атрибутов, на всю ширину вкладки.</li>
+      <li>Состав блока: цель и назначение, затем сворачиваемые подразделы: цели с состоянием покрытия, различения, инварианты, сценарии (прогон в браузере через <code>RSEngine</code>), допущения, открытые вопросы.</li>
+      <li>Блок сохраняется отдельно от формы паспорта, через <code>PUT …/brief</code>, со своим признаком изменений. Если брифа нет, вместо блока показывается компактная заглушка «Задание не задано».</li>
+      <li>В боковую статистику (<code>ViewSchemaStats</code>) добавить строки покрытия: цели, инварианты, сценарии.</li>
       <li>Значок «цель T1» на конституенте и фильтр «цели» в списке.</li>
       <li>Тексты через <code>useTx</code>/<code>globalTx</code>, синхронно в <code>en</code>/<code>ru</code>/<code>fr</code>.</li>
     </ul>
@@ -544,7 +547,7 @@ description: >-
 </div>
 <div class="phase">
   <h3>Фаза 4 · Portal</h3>
-  <p>Модель <code>SchemaBrief</code>, миграция, API (UI и агентский), бриф в <code>/details</code>, версиях и <code>replace</code>. Вкладка «Задание» в UI, i18n. <code>X-Expected-Time-Update</code> для <code>replace</code>. Протокол публикации в <code>rs-portal</code>.</p>
+  <p>Модель <code>SchemaBrief</code>, миграция, API (UI и агентский), бриф в <code>/details</code>, версиях и <code>replace</code>. Блок «Задание» внизу паспорта схемы и строки покрытия в статистике, i18n. <code>X-Expected-Time-Update</code> для <code>replace</code>. Протокол публикации в <code>rs-portal</code>.</p>
 </div>
 <div class="phase">
   <h3>Фаза 5 · MCP prompts/resources и доводка</h3>
@@ -580,7 +583,7 @@ description: >-
     <tr><td><code>rsconcept/rstool-mcp/src/</code></td><td><code>tools.ts</code> (новые инструменты), prompts и resources, README, smoke-тест</td></tr>
     <tr><td><code>rsconcept/domain/src/library/brief/</code></td><td>типы брифа, расчёт покрытия и свидетелей различений, переводы сценариев в значения КМ</td></tr>
     <tr><td><code>rsconcept/backend/apps/rsform/</code>, <code>apps/agents/</code></td><td><code>SchemaBrief</code>, сериализаторы, представления, маршруты, включение в <code>/details</code>, версии, <code>replace</code>; тесты</td></tr>
-    <tr><td><code>rsconcept/frontend/src/features/rsform/</code></td><td>вкладка «Задание», значки целей, хуки API, i18n <code>en</code>/<code>ru</code>/<code>fr</code></td></tr>
+    <tr><td><code>rsconcept/frontend/src/features/rsform/</code></td><td><code>pages/rsform-page/tab-schema-card/</code>: блок «Задание» под формой паспорта, покрытие в <code>view-schema-stats</code>; значки целей, хуки API, i18n <code>en</code>/<code>ru</code>/<code>fr</code></td></tr>
     <tr><td><code>.agents/skills/</code>, <code>AGENTS.md</code></td><td>генерируемые копии скиллов; обновить раздел «Agent skills» и <code>rsconcept/rstool/AGENTS.md</code> (правила синхронизации)</td></tr>
   </tbody>
 </table></div>
