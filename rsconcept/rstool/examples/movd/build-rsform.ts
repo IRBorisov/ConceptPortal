@@ -7,7 +7,7 @@ type DraftBatch = { draft: AgentConstituentaPatch };
 
 import { DEFAULT_RSFORM_SESSION_PATH } from './constants';
 import { MOVD_MODEL_SET } from './model-demo';
-import { assertCleanDiagnostics } from '../diagnostics-utils';
+import { assertCleanDiagnostics, assertReady } from '../diagnostics-utils';
 
 /**
  * Учебная RSForm «МОВД» по Portal rsforms/838 (сокращённо).
@@ -331,6 +331,7 @@ async function run() {
     const exported = await client.call<string>('exportSession', {
       sessionId: session.sessionId
     });
+    await assertReady(exported, resolve(import.meta.dirname, 'brief.json'), 'movd RSForm');
     const outputPath = resolve(process.cwd(), DEFAULT_RSFORM_SESSION_PATH);
     await writeFile(outputPath, exported, 'utf8');
     console.log(`Exported: ${outputPath}`);

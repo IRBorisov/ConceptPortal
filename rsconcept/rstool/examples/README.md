@@ -72,7 +72,7 @@ npx tsx node_modules/@rsconcept/rstool/examples/agent-client.ts
   - требования к ПО v1 и запрос на изменение v2: бриф каждой версии (`brief-v1.json`, `brief.json`), сессии v1 и v2, антипримеры `anti/`, разбор `NOTES.md` ([`docs/REQUIREMENTS.md`](../docs/REQUIREMENTS.md))
   - `build-rsform` скрипты: `example:build-library-loans-schema`, `example:build-access-control-schema`, `example:build-clinic-booking-schema`
 
-Брифы есть у `subordination/`, `kinship/`, `kinship-subordination/` и примеров по требованиям к ПО; [`briefs.test.ts`](briefs.test.ts) проверяет, что схемы им отвечают, а антипримеры ловятся (`pnpm run check-brief -- --session … --brief …`).
+Брифы есть у `subordination/`, `kinship/`, `movd/`, `kinship-subordination/` и примеров по требованиям к ПО; сборки `kinship/` и `movd/` проверяют снимок по брифу (`assertReady`); [`briefs.test.ts`](briefs.test.ts) проверяет, что схемы им отвечают, а антипримеры ловятся (`pnpm run check-brief -- --session … --brief …`).
 
 В корне: [`agent-client.ts`](agent-client.ts) (`example:client`) — минимальный цикл через stdio без привязки к теме.
 
