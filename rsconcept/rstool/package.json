@@ -72,6 +72,8 @@
     "example:build-subordination-schema": "tsx examples/subordination/build-rsform.ts",
     "example:build-kinship-subordination-schema": "tsx examples/kinship-subordination/build-rsform.ts",
     "example:build-library-loans-schema": "tsx examples/library-loans/build-rsform.ts",
+    "example:build-access-control-schema": "tsx examples/access-control/build-rsform.ts",
+    "example:build-clinic-booking-schema": "tsx examples/clinic-booking/build-rsform.ts",
     "check-brief": "tsx skills/scripts/check-brief.ts",
     "example:audit-diagnostics": "tsx examples/audit-diagnostics.ts",
     "kinship:cli": "tsx examples/kinship/cli.ts",

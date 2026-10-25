@@ -24,6 +24,20 @@ describe('example briefs', () => {
       'library-loans/rsform-session.json',
       'library-loans/brief.json',
       'library-loans/rsform-session-v1.json'
+    ],
+    ['access-control v1', 'access-control/rsform-session-v1.json', 'access-control/brief-v1.json'],
+    [
+      'access-control v2',
+      'access-control/rsform-session.json',
+      'access-control/brief.json',
+      'access-control/rsform-session-v1.json'
+    ],
+    ['clinic-booking v1', 'clinic-booking/rsform-session-v1.json', 'clinic-booking/brief-v1.json'],
+    [
+      'clinic-booking v2',
+      'clinic-booking/rsform-session.json',
+      'clinic-booking/brief.json',
+      'clinic-booking/rsform-session-v1.json'
     ]
   ];
 
@@ -72,6 +86,38 @@ describe('library-loans anti-examples', () => {
       session: read(`library-loans/anti/${name}.json`),
       brief: brief('library-loans/brief-v1.json'),
       base: reference
+    });
+    expect(readiness.ready).toBe(false);
+    expect(readiness.blockers.some(item => item.includes(blocker))).toBe(true);
+  });
+});
+
+describe('access-control anti-examples', () => {
+  const cases: Array<[string, string]> = [
+    ['weakened', 'SC3 «Несовместимость через наследование»: A2: ожидалось ложь, получено истина'],
+    ['collapsed', 'F6["ann"]: ожидалось']
+  ];
+
+  it.each(cases)('%s is caught', async (name, blocker) => {
+    const { readiness } = await checkBrief({
+      session: read(`access-control/anti/${name}.json`),
+      brief: brief('access-control/brief-v1.json')
+    });
+    expect(readiness.ready).toBe(false);
+    expect(readiness.blockers.some(item => item.includes(blocker))).toBe(true);
+  });
+});
+
+describe('clinic-booking anti-examples', () => {
+  const cases: Array<[string, string]> = [
+    ['collapsed', 'F4["p1"]: ожидалось ["s2","s4"]'],
+    ['species-as-genus', 'E4: конституента S5 не найдена']
+  ];
+
+  it.each(cases)('%s is caught', async (name, blocker) => {
+    const { readiness } = await checkBrief({
+      session: read(`clinic-booking/anti/${name}.json`),
+      brief: brief('clinic-booking/brief-v1.json')
     });
     expect(readiness.ready).toBe(false);
     expect(readiness.blockers.some(item => item.includes(blocker))).toBe(true);

@@ -68,7 +68,11 @@ npx tsx node_modules/@rsconcept/rstool/examples/agent-client.ts
   - синтез родства и подчинения с синтетической аксиомой конфликта интересов
   - `build-rsform` скрипт: `example:build-kinship-subordination-schema`
 
-Брифы (`brief.json`) есть у `subordination/`, `kinship/` и `kinship-subordination/`; [`briefs.test.ts`](briefs.test.ts) проверяет, что схемы им отвечают, а антипримеры ловятся (`pnpm run check-brief -- --session … --brief …`).
+- **[`library-loans/`](library-loans/), [`access-control/`](access-control/), [`clinic-booking/`](clinic-booking/):**
+  - требования к ПО v1 и запрос на изменение v2: бриф каждой версии (`brief-v1.json`, `brief.json`), сессии v1 и v2, антипримеры `anti/`, разбор `NOTES.md` ([`docs/REQUIREMENTS.md`](../docs/REQUIREMENTS.md))
+  - `build-rsform` скрипты: `example:build-library-loans-schema`, `example:build-access-control-schema`, `example:build-clinic-booking-schema`
+
+Брифы есть у `subordination/`, `kinship/`, `kinship-subordination/` и примеров по требованиям к ПО; [`briefs.test.ts`](briefs.test.ts) проверяет, что схемы им отвечают, а антипримеры ловятся (`pnpm run check-brief -- --session … --brief …`).
 
 В корне: [`agent-client.ts`](agent-client.ts) (`example:client`) — минимальный цикл через stdio без привязки к теме.
 

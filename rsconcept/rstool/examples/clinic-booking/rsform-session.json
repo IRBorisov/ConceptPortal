@@ -1,0 +1,700 @@
+{
+  "contractVersion": "3.3.0",
+  "state": {
+    "sessionId": "1ca9ec84-059c-4b35-b1e2-2b2c9e43c62b",
+    "alias": "CLINIC",
+    "title": "Запись к врачу",
+    "comment": "",
+    "createdAt": "2026-10-25T17:09:26.682Z",
+    "updatedAt": "2026-10-25T17:09:26.696Z",
+    "revisions": [
+      {
+        "revisionId": "98259e59-4863-4dd9-b981-e1cefd3cd7b1",
+        "at": "2026-10-25T17:09:26.691Z",
+        "message": "Запись к врачу: шаг 1"
+      },
+      {
+        "revisionId": "041591bf-9bb3-4433-a394-25f933a6f310",
+        "at": "2026-10-25T17:09:26.696Z",
+        "message": "Запись к врачу: шаг 2"
+      }
+    ],
+    "items": [
+      {
+        "id": 1,
+        "alias": "X1",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "врачи",
+        "definitionText": "",
+        "convention": "Врачи клиники.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X1"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 2,
+        "alias": "X2",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "специальности",
+        "definitionText": "",
+        "convention": "Врачебные специальности (терапевт, хирург, …).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X2"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 3,
+        "alias": "X3",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "пациенты",
+        "definitionText": "",
+        "convention": "Пациенты, зарегистрированные в клинике.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X3"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 4,
+        "alias": "X4",
+        "cstType": "basic",
+        "definitionFormal": "",
+        "term": "слоты",
+        "definitionText": "",
+        "convention": "Слоты приёма: отрезок времени конкретного врача в конкретный день (решение DC1).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X4"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 5,
+        "alias": "S1",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X1×X2)",
+        "term": "специальности врача",
+        "definitionText": "",
+        "convention": "Пара (врач, специальность).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X2"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 6,
+        "alias": "S2",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X4×X1)",
+        "term": "врач слота",
+        "definitionText": "",
+        "convention": "Пара (слот, врач): врач ведёт приём в слоте.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X4"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 7,
+        "alias": "S3",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X4×Z×Z×Z)",
+        "term": "время слота",
+        "definitionText": "",
+        "convention": "Четвёрка (слот, день, начало, конец); начало и конец — минуты от начала дня.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X4"
+                },
+                {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                },
+                {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                },
+                {
+                  "typeID": 2,
+                  "isOrdered": true,
+                  "isArithmetic": true,
+                  "isIntegerCompatible": true
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 8,
+        "alias": "S4",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X3×X4)",
+        "term": "записи",
+        "definitionText": "",
+        "convention": "Пара (пациент, слот): пациент записан на слот.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X3"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X4"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 9,
+        "alias": "S5",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X3×X4)",
+        "term": "состоявшиеся приёмы",
+        "definitionText": "",
+        "convention": "Пара (пациент, слот): пациент пришёл на приём по записи (решение DC3).",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X3"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X4"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 10,
+        "alias": "F1",
+        "cstType": "function",
+        "definitionFormal": "[σ∈X4] Pr2,3,4(Fi1[{σ}](S3))",
+        "term": "время",
+        "definitionText": "День, начало и конец данного слота.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 4,
+                "factors": [
+                  {
+                    "typeID": 2,
+                    "isOrdered": true,
+                    "isArithmetic": true,
+                    "isIntegerCompatible": true
+                  },
+                  {
+                    "typeID": 2,
+                    "isOrdered": true,
+                    "isArithmetic": true,
+                    "isIntegerCompatible": true
+                  },
+                  {
+                    "typeID": 2,
+                    "isOrdered": true,
+                    "isArithmetic": true,
+                    "isIntegerCompatible": true
+                  }
+                ]
+              }
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X4"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 11,
+        "alias": "P1",
+        "cstType": "predicate",
+        "definitionFormal": "[σ∈X4, τ∈X4] σ≠τ & ∃(d1,b1,e1)∈F1[σ] ∃(d2,b2,e2)∈F1[τ] (d1=d2 & b1<e2 & b2<e1)",
+        "term": "слоты пересекаются",
+        "definitionText": "Два разных слота в один день перекрываются по времени.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 8,
+            "result": {
+              "typeID": 6
+            },
+            "args": [
+              {
+                "alias": "σ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X4"
+                }
+              },
+              {
+                "alias": "τ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X4"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 12,
+        "alias": "F2",
+        "cstType": "function",
+        "definitionFormal": "[δ∈X1] Pr1(Fi2[{δ}](S2))",
+        "term": "слоты врача",
+        "definitionText": "Слоты, в которых ведёт приём данный врач.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X4"
+              }
+            },
+            "args": [
+              {
+                "alias": "δ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 13,
+        "alias": "D1",
+        "cstType": "term",
+        "definitionFormal": "X4\\Pr2(S4)",
+        "term": "свободные слоты",
+        "definitionText": "Слоты без записи.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 3,
+              "baseID": "X4"
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 14,
+        "alias": "F3",
+        "cstType": "function",
+        "definitionFormal": "[π∈X3] Pr2(Fi1[{π}](S4))",
+        "term": "слоты записей пациента",
+        "definitionText": "Слоты, на которые записан данный пациент.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X4"
+              }
+            },
+            "args": [
+              {
+                "alias": "π",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X3"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 15,
+        "alias": "F4",
+        "cstType": "function",
+        "definitionFormal": "[π∈X3] D{σ∈D1 | ∀τ∈F3[π] ¬P1[σ,τ]}",
+        "term": "слоты, доступные пациенту",
+        "definitionText": "Свободные слоты, которые не пересекаются с другими записями пациента.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X4"
+              }
+            },
+            "args": [
+              {
+                "alias": "π",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X3"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 16,
+        "alias": "A1",
+        "cstType": "axiom",
+        "definitionFormal": "card(Pr2(S4))=card(S4)",
+        "term": "одна запись на слот",
+        "definitionText": "п. 3.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 17,
+        "alias": "A2",
+        "cstType": "axiom",
+        "definitionFormal": "∀δ∈X1 ∀σ,τ∈F2[δ] ¬P1[σ,τ]",
+        "term": "слоты врача не пересекаются",
+        "definitionText": "п. 2.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 18,
+        "alias": "A3",
+        "cstType": "axiom",
+        "definitionFormal": "card(S2)=card(Pr1(S2)) & Pr1(S2)=X4 & card(S3)=card(Pr1(S3)) & Pr1(S3)=X4",
+        "term": "у слота один врач и одно время",
+        "definitionText": "Каждый слот принадлежит ровно одному врачу и имеет ровно одно время.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 19,
+        "alias": "A4",
+        "cstType": "axiom",
+        "definitionFormal": "∀σ∈S3 pr3(σ)<pr4(σ)",
+        "term": "начало раньше конца",
+        "definitionText": "У слота положительная длительность.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 20,
+        "alias": "A5",
+        "cstType": "axiom",
+        "definitionFormal": "S5⊆S4",
+        "term": "приём только по записи",
+        "definitionText": "п. 5.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 21,
+        "alias": "F6",
+        "cstType": "function",
+        "definitionFormal": "[δ∈X1] Pr2(Fi1[{δ}](S1))",
+        "term": "специальности данного врача",
+        "definitionText": "Специальности, по которым ведёт приём данный врач.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X2"
+              }
+            },
+            "args": [
+              {
+                "alias": "δ",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X1"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 22,
+        "alias": "A7",
+        "cstType": "axiom",
+        "definitionFormal": "∀δ∈X1 F6[δ]≠∅",
+        "term": "у врача есть специальность",
+        "definitionText": "п. 1: у врача одна или несколько специальностей.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 23,
+        "alias": "S6",
+        "cstType": "structure",
+        "definitionFormal": "ℬ(X3×X4)",
+        "term": "повторные записи",
+        "definitionText": "",
+        "convention": "Пара (пациент, слот): запись отмечена как повторная (решение DC5). Остальные записи — первичные.",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 5,
+            "base": {
+              "typeID": 4,
+              "factors": [
+                {
+                  "typeID": 3,
+                  "baseID": "X3"
+                },
+                {
+                  "typeID": 3,
+                  "baseID": "X4"
+                }
+              ]
+            }
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 24,
+        "alias": "F5",
+        "cstType": "function",
+        "definitionFormal": "[π∈X3] Pr2(Fi1[Pr2(Fi1[{π}](S5))](S2))",
+        "term": "врачи, у которых пациент был",
+        "definitionText": "Врачи слотов состоявшихся приёмов данного пациента.",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 7,
+            "result": {
+              "typeID": 5,
+              "base": {
+                "typeID": 3,
+                "baseID": "X1"
+              }
+            },
+            "args": [
+              {
+                "alias": "π",
+                "type": {
+                  "typeID": 3,
+                  "baseID": "X3"
+                }
+              }
+            ]
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      },
+      {
+        "id": 25,
+        "alias": "A6",
+        "cstType": "axiom",
+        "definitionFormal": "S6⊆S4 & ∀(π,σ)∈S6 Pr2(Fi1[{σ}](S2))⊆F5[π]",
+        "term": "повторная запись — к знакомому врачу",
+        "definitionText": "Повторная запись — это запись, и её врач уже принимал пациента (v2 п. 1).",
+        "convention": "",
+        "analysis": {
+          "success": true,
+          "type": {
+            "typeID": 6
+          },
+          "valueClass": "value",
+          "diagnostics": []
+        }
+      }
+    ],
+    "model": {
+      "items": []
+    }
+  },
+  "diagnostics": []
+}
