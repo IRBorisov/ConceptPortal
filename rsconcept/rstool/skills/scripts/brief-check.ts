@@ -619,19 +619,23 @@ const NEXT_STEP: Record<Stage, string> = {
 const REVIEW_NEXT =
   'Ревью (rs-review): блокеры и предупреждения — находки отчёта; схему без запроса не правь и новую сессию не собирай';
 
-/** Session description must carry the brief: Portal does not store the brief yet. */
-function descriptionIssues(state: SessionState, brief: Brief): string[] {
+/**
+ * Session description must carry the brief: Portal does not store the brief yet.
+ * Conventions and texts must not cite brief decisions: synthesis does not carry the brief,
+ * and conventions are not renumbered.
+ */
+function descriptionIssues(state: SessionState): string[] {
   const issues: string[] = [];
-  const comment = state.comment.trim();
-  if (comment === '') {
+  if (state.comment.trim() === '') {
     issues.push('Описание схемы пусто: запиши назначение, ограничения с невыразимым и краткий журнал решений');
   }
-  const referenced = new Set(
-    state.items.flatMap(item => [...`${item.convention} ${item.definitionText}`.matchAll(/\bDC\d+\b/g)].map(m => m[0]))
-  );
-  const missing = [...referenced].filter(id => !new RegExp(`\\b${id}\\b`).test(comment));
-  if (missing.length > 0 && (brief.decisions ?? []).length > 0) {
-    issues.push(`Конвенции ссылаются на решения ${missing.join(', ')}, которых нет в описании схемы`);
+  const citing = state.items
+    .filter(item => /\bDC\d+\b/.test(`${item.convention} ${item.definitionText}`))
+    .map(item => item.alias);
+  if (citing.length > 0) {
+    issues.push(
+      `Конвенции или текстовые определения ссылаются на решения брифа (DC#): ${citing.join(', ')} — запиши решение словами, бриф не переносится при синтезе`
+    );
   }
   return issues;
 }
@@ -797,7 +801,7 @@ export async function checkBrief(input: BriefCheckInput): Promise<BriefCheckResu
     }
   }
 
-  warnings.push(...descriptionIssues(state, brief));
+  warnings.push(...descriptionIssues(state));
 
   const order: Stage[] = ['scope', 'core', 'explicate', 'interpret', 'review'];
   const stage = order.find(item => stages.has(item)) ?? 'review';

@@ -51,12 +51,7 @@ function run() {
   const receiver = tool.createSession({
     alias: 'KSUB',
     title: 'Родство и подчинение',
-    // conventions inherited from subordination cite its decisions: keep that log next to ours
-    comment: [
-      describeBrief(resolve(import.meta.dirname, 'brief.json')),
-      'Решения микротеории «Начальники и подчинённые» (на них ссылаются её конвенции):',
-      describeBrief(resolve(import.meta.dirname, '../subordination/brief.json'))
-    ].join('\n')
+    comment: describeBrief(resolve(import.meta.dirname, 'brief.json'))
   });
   tool.applySchemaPatch({ items: SUBORDINATION_ITEMS }, receiver.sessionId);
   const source = tool.createSession({ title: 'Родство' });
@@ -84,6 +79,12 @@ function run() {
         term: 'подчинение родственнику',
         definitionFormal: `D{(α,β)∈D1 | β∈${kin.F4}[α]}`,
         definitionText: 'Пары прямого подчинения, в которых начальник и подчинённый — прямые родственники.'
+      },
+      {
+        alias: 'D12',
+        term: 'косвенное подчинение родственнику',
+        definitionFormal: `D{(α,β)∈X1×X1 | β∈F3[α] & β∈${kin.F4}[α]}`,
+        definitionText: 'Пары людей, где второй — косвенный подчинённый первого и его прямой родственник.'
       }
     ]
   });
