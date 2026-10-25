@@ -7,7 +7,7 @@ import { resolve } from 'node:path';
 
 import { type AgentConstituentaPatch, RSToolAgent } from '../../src';
 
-import { formatDiagnostics } from '../diagnostics-utils';
+import { describeBrief, formatDiagnostics } from '../diagnostics-utils';
 
 const V1_ITEMS: AgentConstituentaPatch[] = [
   { alias: 'X1', term: 'читатели', convention: 'Записанные читатели библиотеки.' },
@@ -201,7 +201,7 @@ const ANTI_EXAMPLES: Record<string, AgentConstituentaPatch[]> = {
 
 function buildSession(title: string, items: AgentConstituentaPatch[]): string {
   const tool = new RSToolAgent();
-  tool.createSession({ alias: 'LIB', title });
+  tool.createSession({ alias: 'LIB', title, comment: describeBrief(resolve(import.meta.dirname, 'brief-v1.json')) });
   const result = tool.applySchemaPatch({ items, commitMessage: title });
   const diagnostics = tool.listDiagnostics();
   if (!result.success || diagnostics.length > 0) {
@@ -212,7 +212,11 @@ function buildSession(title: string, items: AgentConstituentaPatch[]): string {
 
 function buildV2(): string {
   const tool = new RSToolAgent();
-  tool.createSession({ alias: 'LIB', title: 'Выдача книг' });
+  tool.createSession({
+    alias: 'LIB',
+    title: 'Выдача книг',
+    comment: describeBrief(resolve(import.meta.dirname, 'brief.json'))
+  });
   tool.applySchemaPatch({ items: V1_ITEMS, commitMessage: 'v1' });
   const result = tool.applySchemaPatch({ items: V2_ITEMS, commitMessage: 'v2: продления и брони' });
   const diagnostics = tool.listDiagnostics();

@@ -8,7 +8,7 @@ import { resolve } from 'node:path';
 
 import { type AgentConstituentaPatch, RSToolAgent } from '../../src';
 
-import { formatDiagnostics } from '../diagnostics-utils';
+import { describeBrief, formatDiagnostics } from '../diagnostics-utils';
 import { SUBORDINATION_ITEMS } from '../subordination/constants';
 
 /** Kinship microtheory reduced to what the synthesis needs. */
@@ -42,7 +42,16 @@ const KINSHIP_ITEMS: AgentConstituentaPatch[] = [
 
 function run() {
   const tool = new RSToolAgent();
-  const receiver = tool.createSession({ alias: 'KSUB', title: 'Родство и подчинение' });
+  const receiver = tool.createSession({
+    alias: 'KSUB',
+    title: 'Родство и подчинение',
+    // conventions inherited from subordination cite its decisions: keep that log next to ours
+    comment: [
+      describeBrief(resolve(import.meta.dirname, 'brief.json')),
+      'Решения микротеории «Начальники и подчинённые» (на них ссылаются её конвенции):',
+      describeBrief(resolve(import.meta.dirname, '../subordination/brief.json'))
+    ].join('\n')
+  });
   tool.applySchemaPatch({ items: SUBORDINATION_ITEMS }, receiver.sessionId);
   const source = tool.createSession({ title: 'Родство' });
   tool.applySchemaPatch({ items: KINSHIP_ITEMS }, source.sessionId);

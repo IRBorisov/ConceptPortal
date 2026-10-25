@@ -7,7 +7,7 @@ import { resolve } from 'node:path';
 
 import { type AgentConstituentaPatch, RSToolAgent } from '../../src';
 
-import { formatDiagnostics } from '../diagnostics-utils';
+import { describeBrief, formatDiagnostics } from '../diagnostics-utils';
 
 import { SUBORDINATION_ITEMS } from './constants';
 
@@ -42,7 +42,7 @@ const ANTI_EXAMPLES: Record<string, AgentConstituentaPatch[]> = {
 
 function buildSession(title: string, items: AgentConstituentaPatch[]): string {
   const tool = new RSToolAgent();
-  tool.createSession({ alias: 'SUB', title });
+  tool.createSession({ alias: 'SUB', title, comment: describeBrief(resolve(import.meta.dirname, 'brief.json')) });
   const result = tool.applySchemaPatch({ items, commitMessage: title });
   const diagnostics = tool.listDiagnostics();
   if (!result.success || diagnostics.length > 0) {

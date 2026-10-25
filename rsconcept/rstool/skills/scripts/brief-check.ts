@@ -138,6 +138,8 @@ export interface BriefCheckInput {
   brief: Brief;
   /** Session JSON of the previous version: enables weakening checks. */
   base?: string;
+  /** `review` — someone else's schema: blockers are report findings, not a plan of edits. */
+  mode?: 'build' | 'review';
 }
 
 export interface BriefCheckResult {
@@ -611,6 +613,26 @@ const NEXT_STEP: Record<Stage, string> = {
   review: 'Этап 5 (rs-review): ревью по брифу и отчёт пользователю'
 };
 
+const REVIEW_NEXT =
+  'Ревью (rs-review): блокеры и предупреждения — находки отчёта; схему без запроса не правь и новую сессию не собирай';
+
+/** Session description must carry the brief: Portal does not store the brief yet. */
+function descriptionIssues(state: SessionState, brief: Brief): string[] {
+  const issues: string[] = [];
+  const comment = state.comment.trim();
+  if (comment === '') {
+    issues.push('Описание схемы пусто: запиши назначение, ограничения с невыразимым и краткий журнал решений');
+  }
+  const referenced = new Set(
+    state.items.flatMap(item => [...`${item.convention} ${item.definitionText}`.matchAll(/\bDC\d+\b/g)].map(m => m[0]))
+  );
+  const missing = [...referenced].filter(id => !new RegExp(`\\b${id}\\b`).test(comment));
+  if (missing.length > 0 && (brief.decisions ?? []).length > 0) {
+    issues.push(`Конвенции ссылаются на решения ${missing.join(', ')}, которых нет в описании схемы`);
+  }
+  return issues;
+}
+
 /** Checks session against brief: diagnostics, coverage, scenarios, distinctions, weakening. */
 export async function checkBrief(input: BriefCheckInput): Promise<BriefCheckResult> {
   const { brief } = input;
@@ -772,6 +794,8 @@ export async function checkBrief(input: BriefCheckInput): Promise<BriefCheckResu
     }
   }
 
+  warnings.push(...descriptionIssues(state, brief));
+
   const order: Stage[] = ['scope', 'core', 'explicate', 'interpret', 'review'];
   const stage = order.find(item => stages.has(item)) ?? 'review';
   const passed = scenarios.filter(item => item.passed).length;
@@ -789,7 +813,7 @@ export async function checkBrief(input: BriefCheckInput): Promise<BriefCheckResu
       scenarios: { passed, failed: scenarios.length - passed, missing },
       blockers,
       warnings,
-      next: NEXT_STEP[stage]
+      next: input.mode === 'review' ? REVIEW_NEXT : NEXT_STEP[stage]
     }
   };
 }
