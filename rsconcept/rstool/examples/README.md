@@ -1,8 +1,8 @@
 # Примеры rstool
 
-Полные исполняемые сценарии поверх `RSToolWrapperClient` (stdio-обёртка) и готовые JSON-сессии для импорта. Короткие фрагменты кода для агентов — в [`../skills/rstool-helper/EXAMPLES.md`](../skills/rstool-helper/EXAMPLES.md); воркфлоу — [`../skills/rstool-helper/GUIDE.md`](../skills/rstool-helper/GUIDE.md).
+Полные исполняемые сценарии поверх `RSToolWrapperClient` (stdio-обёртка) и готовые JSON-сессии для импорта. Короткие фрагменты кода для агентов — в [`../skills/rstool-runtime/EXAMPLES.md`](../skills/rstool-runtime/EXAMPLES.md); процесс работы — [`../skills/rstool/SKILL.md`](../skills/rstool/SKILL.md).
 
-**Агентам:** не добавляйте сюда разовые `build-*.ts` и папки по текущей задаче пользователя. Артефакты и скрипты — вне `rsconcept/rstool/` (см. «Границы правок» в GUIDE). В `examples/` — только сопровождаемые демо пакета.
+**Агентам:** не добавляйте сюда разовые `build-*.ts` и папки по текущей задаче пользователя. Артефакты и скрипты — вне `rsconcept/rstool/` (см. «Границы правок» в `../skills/rstool/SKILL.md`). В `examples/` — только сопровождаемые демо пакета.
 
 ## Как запускать
 
@@ -59,6 +59,16 @@ npx tsx node_modules/@rsconcept/rstool/examples/agent-client.ts
   - Небольшая предметная схема: подстановка `R1→X1`, `R2→X2` для шаблонов БВ (F6, F20, P5)
   - `build-rsform` скрипт: `example:build-template-apply-schema` (сборка + проверка на модели в скрипте)
   - только `rsform-session.json`
+
+- **[`subordination/`](subordination/):**
+  - «Начальники и подчинённые» — учебная микротеория по методу (`docs/METHOD.md`): источник, расчистка, бриф с журналом решений и сценариями, антипримеры `anti/`, разбор `NOTES.md`
+  - `build-rsform` скрипт: `example:build-subordination-schema`
+
+- **[`kinship-subordination/`](kinship-subordination/):**
+  - синтез родства и подчинения с синтетической аксиомой конфликта интересов
+  - `build-rsform` скрипт: `example:build-kinship-subordination-schema`
+
+Брифы (`brief.json`) есть у `subordination/`, `kinship/` и `kinship-subordination/`; [`briefs.test.ts`](briefs.test.ts) проверяет, что схемы им отвечают, а антипримеры ловятся (`pnpm run check-brief -- --session … --brief …`).
 
 В корне: [`agent-client.ts`](agent-client.ts) (`example:client`) — минимальный цикл через stdio без привязки к теме.
 

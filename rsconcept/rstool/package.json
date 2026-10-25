@@ -40,7 +40,8 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "rstool-wrapper": "dist/wrapper/stdio-wrapper.js"
+    "rstool-wrapper": "dist/wrapper/stdio-wrapper.js",
+    "rstool-skills": "skills/scripts/rstool-skills.mjs"
   },
   "files": [
     "dist",

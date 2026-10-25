@@ -13,7 +13,7 @@ Applies to all files under `rsconcept/rstool`. Published as `@rsconcept/rstool` 
 
 ## Agent docs (read before RS work)
 
-Start at `skills/rstool-helper/GUIDE.md` (section «Задача → чтение»), then only the docs that row needs — not all of `docs/`. `REFERENCE.md` is the contract (library / stdio / MCP); `EXAMPLES.md` has snippets and anti-patterns. Workspace entry: `.agents/skills/rstool-helper/SKILL.md`.
+Start at `skills/rstool/SKILL.md` (router: scenario → stage skills `skills/rs-*/SKILL.md`), then only what the stage names — not all of `docs/`. Method — `docs/METHOD.md`; brief format and `check-brief` — `docs/BRIEF.md`. `skills/rstool-runtime/REFERENCE.md` is the contract (library / stdio / MCP); `skills/rstool-runtime/EXAMPLES.md` has snippets and anti-patterns. Workspace stubs: `.claude/skills/rstool/`, `.agents/skills/rstool/`.
 
 ## Agents using rstool (task work, not package maintenance)
 
@@ -21,7 +21,7 @@ When the goal is a conceptual schema, Portal export, or analysis — **do not cr
 
 - Use in-memory API / stdio; write outputs (`portal-schema.json`, session JSON, ad-hoc `build-*.ts`) **outside** the package (user folder, workspace `.tmp/`, path the user named).
 - Do not add task-specific folders under `examples/` (that directory is for maintained package demos only).
-- See **«Границы правок»** in `skills/rstool-helper/GUIDE.md`.
+- See «Границы правок» in `skills/rstool/SKILL.md`.
 
 ## Structure
 
@@ -30,9 +30,10 @@ When the goal is a conceptual schema, Portal export, or analysis — **do not cr
 - `src/mappers/` — bridge to `@rsconcept/domain`: `schema-adapter.ts` (analysis), `model-adapter.ts` (evaluation/modeling)
 - `src/wrapper/` — stdio JSON-RPC (`stdio-handler.ts` holds `STDIO_METHODS`, must match contract; `stdio-wrapper.ts` is `RSToolWrapperClient`)
 - `src/index.ts` — package barrel
-- `examples/` — runnable workflows + sample session JSON
-- `docs/` — language reference index
-- `skills/rstool-helper/` — гайд агента на русском (`GUIDE.md`, `REFERENCE.md`, `EXAMPLES.md`, `SKILL.md`)
+- `examples/` — runnable workflows + sample session JSON; teaching examples with `brief.json` and anti-examples (`subordination/`, `kinship-subordination/`)
+- `docs/` — language reference, method (`METHOD.md`), brief (`BRIEF.md`, `brief.schema.json`)
+- `skills/` — agent skills in Russian: router `rstool/`, stage skills `rs-*/`, `rstool-runtime/` (`REFERENCE.md`, `EXAMPLES.md`), `scripts/` (`check-brief.ts`, `rstool-skills.mjs`); `rstool-helper/` is a deprecated stub
+- `evals/` — skill eval tasks, hidden references and results (not published)
 - `README.md` — setup, stdio protocol
 
 Transports: library API (`RSToolAgent`) and stdio wrapper.
@@ -56,9 +57,9 @@ Update code and docs in the **same change set**. Internal refactors do not count
 
 **Triggers:** `CONTRACT_VERSION` bump; method add/remove/rename (library or stdio); request/response shape changes; new `CstType` or agent-facing validation rules; new exported `RSErrorCode` agents must handle; stdio protocol changes.
 
-**Sync:** `src/models/` + `stdio-handler.ts` + `model-adapter.ts` (if modeling) + colocated tests; `README.md`; `skills/rstool-helper/{GUIDE,REFERENCE,EXAMPLES}.md` (+ `SKILL.md` / `skills/INSTALL.md` if install flow changes); `examples/` when the happy path changes. Schema-design: `docs/CONCEPTUAL-SCHEMA.md` + GUIDE + EXAMPLES; keep `docs/README.md` index in sync.
+**Sync:** `src/models/` + `stdio-handler.ts` + `model-adapter.ts` (if modeling) + colocated tests; `README.md`; `skills/rstool-runtime/{SKILL,REFERENCE,EXAMPLES}.md` and the stage skills that call the method (+ `skills/INSTALL.md` if install flow changes); `examples/` when the happy path changes. Schema-design: `docs/CONCEPTUAL-SCHEMA.md` + `skills/rs-explicate`, `skills/rs-review` + EXAMPLES; method or brief changes: `docs/METHOD.md`, `docs/BRIEF.md`, `docs/brief.schema.json`, `skills/scripts/brief-check.ts`; keep `docs/README.md` index in sync. Router description change: regenerate the workspace stubs (`skills/README.md` «Editing»).
 
-**Language-only** (grammar, domain errors, help text): update skill only when agents need new guidance; point to `REFERENCE.md` «Help map» and `rsconcept/domain/src/rslang/error.ts` — do not duplicate grammar in the skill. Keep GUIDE task matrix and EXAMPLES anti-patterns in sync when agent workflows change.
+**Language-only** (grammar, domain errors, help text): update skill only when agents need new guidance; point to `REFERENCE.md` «Help map» and `rsconcept/domain/src/rslang/error.ts` — do not duplicate grammar in the skill. Keep the router scenario table and EXAMPLES anti-patterns in sync when agent workflows change.
 
 ## Versioning
 

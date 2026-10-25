@@ -1,6 +1,6 @@
 # ЯРЭ и rstool — справочник
 
-Контракт library / stdio / MCP для агентов. Воркфлоу — [GUIDE.md](GUIDE.md). Примеры — [EXAMPLES.md](EXAMPLES.md). Язык — `docs/*.md`.
+Контракт library / stdio / MCP для агентов. Запуск и правила — [SKILL.md](SKILL.md); этапы работы — [../rstool/SKILL.md](../rstool/SKILL.md). Примеры — [EXAMPLES.md](EXAMPLES.md). Язык — `docs/*.md`.
 
 ## Контракт rstool
 
@@ -116,7 +116,7 @@ tool.listDiagnostics({ kind: 'schema', constituentId: 3, severity: 'error' });
 
 Фильтры: `kind?: 'expression' | 'schema' | 'model'`, `constituentId?`, `severity?: 'error' | 'warning'`. В stdio / MCP те же поля передаются **плоско** в `params` (`{ "kind": "schema", "severity": "warning" }`); stdio дополнительно принимает устаревший вложенный `filters`.
 
-`severity` отражает правило инструмента, а не вес для ревью: `schemaMissingConvention` / `schemaMissingTerm` приходят как `error`. Как ранжировать в отчёте — [GUIDE.md](GUIDE.md), «Ревью / оценка готовой КС».
+`severity` отражает правило инструмента, а не вес для ревью: `schemaMissingConvention` / `schemaMissingTerm` приходят как `error`. Как ранжировать в отчёте — [rs-review](../rs-review/SKILL.md), «Ранжирование находок».
 
 Элемент диагностики (агентский вид): `kind`, `code`, `name`, `severity`, `alias?`, `expression`, `from`, `to`, `params?`, `stack?` (цепочка вызовов при ошибке внутри `F#`/`P#`). Ключ для поиска исправления — `name` ([DIAGNOSTICS.md](../../docs/DIAGNOSTICS.md)).
 
@@ -269,9 +269,11 @@ JSON-строка сессии для последующего `importData(..., 
 | Проектирование, `F#` vs пары, ревью                | [CONCEPTUAL-SCHEMA.md](../../docs/CONCEPTUAL-SCHEMA.md) |
 | Поля и валидация конституенты                      | [CONSTITUENTA.md](../../docs/CONSTITUENTA.md)           |
 | Формы значений КМ, тесты                           | [MODEL-TESTING.md](../../docs/MODEL-TESTING.md)         |
-| Ссылка Portal, REST, curl                          | [PORTAL-API.md](../../docs/PORTAL-API.md)               |
+| Ссылка Portal, REST, curl                          | [PORTAL-READ.md](../../docs/PORTAL-READ.md)             |
 | Термины, статусы, «не путать»                      | [DOMAIN.md](../../docs/DOMAIN.md)                       |
-| Воркфлоу агента                                    | [GUIDE.md](GUIDE.md)                                    |
+| Бриф, сценарии, `check-brief`                      | [BRIEF.md](../../docs/BRIEF.md)                         |
+| Метод: этапы и гейты                               | [METHOD.md](../../docs/METHOD.md)                       |
+| Этапы работы, маршрут                              | [../rstool/SKILL.md](../rstool/SKILL.md)                |
 | Сниппеты и антипаттерны                            | [EXAMPLES.md](EXAMPLES.md)                              |
 
 Исходники кодов ошибок ЯРЭ: `@rsconcept/domain` (`RSErrorCode`, `error.ts`). Не дублируй грамматику в skill — правь domain и при необходимости этот help map.

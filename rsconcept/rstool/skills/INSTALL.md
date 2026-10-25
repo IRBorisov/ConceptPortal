@@ -1,35 +1,31 @@
-# Install `rstool-helper` (agent procedure)
+# Install the `rstool` skill (agent procedure)
 
 Use when the user has run `npm install @rsconcept/rstool` and asks to **install** or **enable** the rstool agent skill. The user should not copy files manually.
 
 ## Steps
 
 1. Confirm the package exists: `node_modules/@rsconcept/rstool/package.json`.
-2. Determine the host’s **project skills directory** (where that host loads `SKILL.md` files). Common layouts:
-   - `.agents/skills/<skill-name>/SKILL.md`
-   - `.cursor/skills/<skill-name>/SKILL.md`
-   - Other paths — use the host’s documentation if unsure.
-3. Create `<skills-dir>/rstool-helper/` if needed.
-4. Copy **one file** — the package entry skill:
-   - **From:** `node_modules/@rsconcept/rstool/skills/rstool-helper/SKILL.md`
-   - **To:** `<skills-dir>/rstool-helper/SKILL.md`
-5. Do **not** copy `GUIDE.md`, `REFERENCE.md`, `EXAMPLES.md`, or `docs/` into the project. The entry skill points at those files under `node_modules/@rsconcept/rstool/`.
-6. Confirm the destination `SKILL.md` exists and tell the user the skill is ready.
+2. Run from the project root:
 
-### Example (`.agents/skills` layout)
+   ```bash
+   npx rstool-skills install
+   ```
 
-Bash:
+   It writes a **stub** `rstool/SKILL.md` into `.claude/skills/` (Claude Code) and `.agents/skills/` (Cursor, Codex). The stub holds only the name, the description and the path `node_modules/@rsconcept/rstool/skills/rstool/SKILL.md`; the real router skill and the stage skills stay in the package, so nothing needs re-installing after a package update.
 
-```bash
-mkdir -p .agents/skills/rstool-helper
-cp node_modules/@rsconcept/rstool/skills/rstool-helper/SKILL.md .agents/skills/rstool-helper/SKILL.md
-```
+   Other skills directory: `npx rstool-skills install --dir <skills-dir>` (repeatable).
 
-PowerShell:
+3. If the project has an old copied `rstool-helper/SKILL.md`, delete that folder — `rstool` replaces it.
+4. Optional: add one routing line to the project `AGENTS.md` (always in context for Codex and Cursor):
 
-```powershell
-New-Item -ItemType Directory -Force -Path .agents/skills/rstool-helper | Out-Null
-Copy-Item -Force node_modules/@rsconcept/rstool/skills/rstool-helper/SKILL.md .agents/skills/rstool-helper/SKILL.md
-```
+   ```md
+   - Conceptual schemas, RSLang, rstool or Portal → read `node_modules/@rsconcept/rstool/skills/rstool/SKILL.md`.
+   ```
 
-Use the equivalent path for your agent host if it does not use `.agents/skills`.
+5. Tell the user the skill is ready.
+
+Do **not** copy stage skills (`rs-*`), `docs/` or `examples/` into the project: the router reads them from the package by path when a stage needs them.
+
+## Without the bin
+
+Create `<skills-dir>/rstool/SKILL.md` with the same front matter (`name: rstool`, `description` copied verbatim from `node_modules/@rsconcept/rstool/skills/rstool/SKILL.md`) and one line: «Прочитай `node_modules/@rsconcept/rstool/skills/rstool/SKILL.md` и следуй ему.»

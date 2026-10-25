@@ -32,8 +32,9 @@ Portable, principle-level docs (no tool flags or version pins): [`docs/architect
 
 ## Agent skills
 
+- Conceptual schemas (КС), RSLang (ЯРЭ), rstool or Portal → read `rsconcept/rstool/skills/rstool/SKILL.md` and follow it (router to stage skills; stubs in `.claude/skills/rstool/`, `.agents/skills/rstool/`).
 - Terminology (agents): `rsconcept/rstool/docs/DOMAIN.md` §«Термины: не путать» — never «базис»/«базисы»; use **базисное множество** for `X#`, **неопределяемые понятия** for the `X#`/`C#`/`S#` layer.
-- Portal REST (UI links → API): `rsconcept/rstool/docs/PORTAL-API.md`.
+- Portal REST (UI links → API): `rsconcept/rstool/docs/PORTAL-API.md` (index → PORTAL-READ / PUBLISH / MODELS / OSS).
 
 ## Cursor Cloud / Claude Code cloud
 
