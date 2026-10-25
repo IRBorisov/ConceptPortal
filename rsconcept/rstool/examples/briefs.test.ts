@@ -56,10 +56,10 @@ describe('example briefs', () => {
 describe('subordination anti-examples', () => {
   const reference = read('subordination/rsform-session.json');
   const cases: Array<[string, string]> = [
-    ['two-sets', 'E7: конституента D5 не найдена'],
-    ['weakened', 'SC2 «Цикл подчинения a → b → c → a»: A1: ожидалось ложь, получено истина'],
-    ['collapsed', 'D5: формула стала тривиальной'],
-    ['species-as-genus', 'A2 (допустимый сценарий): ожидалось истина, получено ложь']
+    ['single-relation', 'E4: конституента D5 не найдена'],
+    ['weakened', 'I1 «Сам себе не начальник»: нет аксиомы'],
+    ['collapsed', 'D8: формула стала тривиальной'],
+    ['transitive', 'A3 (допустимый сценарий): ожидалось истина, получено ложь']
   ];
 
   it.each(cases)('%s is caught', async (name, blocker) => {

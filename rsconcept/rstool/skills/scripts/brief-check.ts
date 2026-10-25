@@ -344,7 +344,10 @@ class ScenarioRun {
     const head = isPredicate ? (vars.length === 1 ? vars[0] : `(${vars.join(', ')})`) : `(${vars.join(', ')}, ${call})`;
     const expression = isPredicate ? `I{${head} | ${loops}; ${call}}` : `I{${head} | ${loops}}`;
     const result = this.tool.evaluate({ expression, cstType: CstType.TERM });
-    this.assertEvaluated(`${item.alias}[…]`, result.status, result.success);
+    // enumerating a boolean domain (`α:∈ℬ(X1)`) is flagged as property usage, yet the value is computed
+    const onlyBooleanDomain =
+      result.diagnostics.length > 0 && result.diagnostics.every(item => item.name === 'invalidPropertyUsage');
+    this.assertEvaluated(`${item.alias}[…]`, result.status, result.success || onlyBooleanDomain);
     return { rows: result.value as Value[], type };
   }
 

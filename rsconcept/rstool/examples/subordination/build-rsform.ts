@@ -2,7 +2,7 @@
  * Teaching microtheory «Начальники и подчинённые»: reference schema and anti-examples.
  * Run from the package root: `pnpm run example:build-subordination-schema`.
  */
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { type AgentConstituentaPatch, RSToolAgent } from '../../src';
@@ -13,29 +13,27 @@ import { SUBORDINATION_ITEMS } from './constants';
 
 /** «Green but wrong» variants: each is caught by a specific brief check (see NOTES.md). */
 const ANTI_EXAMPLES: Record<string, AgentConstituentaPatch[]> = {
-  'two-sets': [
-    { alias: 'X1', term: 'начальники', convention: 'Сотрудники, которые руководят другими.' },
-    { alias: 'X2', term: 'подчинённые', convention: 'Сотрудники, у которых есть руководитель.' },
+  // the first hypothesis of Т2 §4.2.1.5: a single person-to-person relation
+  'single-relation': [
+    { alias: 'X1', term: 'люди', convention: 'Субъекты формальной структуры подчинения.' },
     {
       alias: 'S1',
       term: 'подчинение',
-      definitionFormal: 'ℬ(X1×X2)',
+      definitionFormal: 'ℬ(X1×X1)',
       convention: 'Пара (начальник, подчинённый).'
     },
-    { alias: 'D1', term: 'руководящие начальники', definitionFormal: 'Pr1(S1)' },
-    { alias: 'D2', term: 'подчинённые с начальником', definitionFormal: 'Pr2(S1)' }
+    { alias: 'F1', term: 'прямые подчинённые', definitionFormal: '[ξ∈X1] Pr2(Fi1[{ξ}](S1))' },
+    { alias: 'A1', term: 'сам себе не начальник', definitionFormal: '∀ξ∈X1 (ξ,ξ)∉S1' }
   ],
-  'weakened': SUBORDINATION_ITEMS.map(item =>
-    item.alias === 'A1' ? { ...item, term: 'никто не начальник себе', definitionFormal: '∀ξ∈X1 (ξ,ξ)∉S1' } : item
-  ),
-  'collapsed': SUBORDINATION_ITEMS.map(item => (item.alias === 'D5' ? { ...item, definitionFormal: 'D1' } : item)),
-  'species-as-genus': [
+  'weakened': SUBORDINATION_ITEMS.filter(item => item.alias !== 'A1'),
+  'collapsed': SUBORDINATION_ITEMS.map(item => (item.alias === 'D8' ? { ...item, definitionFormal: 'D6' } : item)),
+  'transitive': [
     ...SUBORDINATION_ITEMS,
     {
-      alias: 'A2',
-      term: 'один непосредственный начальник',
-      definitionFormal: 'card(S1)=card(Pr2(S1))',
-      definitionText: 'У каждого подчинённого ровно один непосредственный начальник.'
+      alias: 'A3',
+      term: 'подчинённый подчинённого — мой подчинённый',
+      definitionFormal: '∀ξ∈X1 F2[ξ]⊆F1[ξ]∪{ξ}',
+      definitionText: 'Подчинение транзитивно.'
     }
   ]
 };
@@ -54,6 +52,7 @@ function buildSession(title: string, items: AgentConstituentaPatch[]): string {
 function run() {
   const root = import.meta.dirname;
   writeFileSync(resolve(root, 'rsform-session.json'), buildSession('Начальники и подчинённые', SUBORDINATION_ITEMS));
+  rmSync(resolve(root, 'anti'), { recursive: true, force: true });
   mkdirSync(resolve(root, 'anti'), { recursive: true });
   for (const [name, items] of Object.entries(ANTI_EXAMPLES)) {
     writeFileSync(resolve(root, 'anti', `${name}.json`), buildSession(`Антипример: ${name}`, items));
