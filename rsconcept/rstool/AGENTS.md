@@ -13,7 +13,7 @@ Applies to all files under `rsconcept/rstool`. Published as `@rsconcept/rstool` 
 
 ## Agent docs (read before RS work)
 
-Start at `skills/rstool/SKILL.md` (router: scenario → stage skills `skills/rs-*/SKILL.md`), then only what the stage names — not all of `docs/`. Method — `docs/METHOD.md`; brief format and `check-brief` — `docs/BRIEF.md`. `skills/rstool-runtime/REFERENCE.md` is the contract (library / stdio / MCP); `skills/rstool-runtime/EXAMPLES.md` has snippets and anti-patterns. Workspace entry: the routing line in the root `AGENTS.md` and the stub `.agents/skills/rstool/`.
+Start at `skills/rstool/SKILL.md` (router: scenario → stage skills `skills/rs-*/SKILL.md`), then only what the stage names — not all of `docs/`. Method — `docs/METHOD.md`; brief format and `check-brief` — `docs/BRIEF.md`. `skills/rstool-runtime/REFERENCE.md` is the contract (library / stdio / MCP); `skills/rstool-runtime/EXAMPLES.md` has snippets and anti-patterns. Workspace entry: the routing line in the root `AGENTS.md` and the stubs `.agents/skills/rstool/`, `.claude/skills/rstool/`.
 
 ## Agents using rstool (task work, not package maintenance)
 
