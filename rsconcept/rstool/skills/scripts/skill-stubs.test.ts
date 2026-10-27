@@ -8,23 +8,19 @@ import { describe, expect, it } from 'vitest';
 const SCRIPT = resolve(import.meta.dirname, 'rstool-skills.mjs');
 const ROUTER = resolve(import.meta.dirname, '../rstool/SKILL.md');
 const WORKSPACE = resolve(import.meta.dirname, '../../../..');
-const WORKSPACE_STUB = '.agents/skills/rstool/SKILL.md';
+const STUBS = ['.agents/skills/rstool/SKILL.md', '.claude/skills/rstool/SKILL.md'];
 
 function renderStub(target: string): string {
   return execFileSync('node', [SCRIPT, 'stub', '--source', ROUTER, '--target', target], { encoding: 'utf8' });
 }
 
 describe('rstool skill stubs', () => {
-  it('workspace stub matches the router skill', () => {
-    const path = join(WORKSPACE, WORKSPACE_STUB);
+  it.each(STUBS)('workspace %s matches the router skill', stub => {
+    const path = join(WORKSPACE, stub);
     if (!existsSync(path)) {
       return;
     }
     expect(readFileSync(path, 'utf8')).toBe(renderStub('rsconcept/rstool/skills/rstool/SKILL.md'));
-  });
-
-  it('keeps no host-specific copy of the workspace stub', () => {
-    expect(existsSync(join(WORKSPACE, '.claude/skills/rstool'))).toBe(false);
   });
 
   it('install requires an explicit skills directory', () => {
