@@ -8,19 +8,34 @@ import { describe, expect, it } from 'vitest';
 const SCRIPT = resolve(import.meta.dirname, 'rstool-skills.mjs');
 const ROUTER = resolve(import.meta.dirname, '../rstool/SKILL.md');
 const WORKSPACE = resolve(import.meta.dirname, '../../../..');
-const STUBS = ['.claude/skills/rstool/SKILL.md', '.agents/skills/rstool/SKILL.md'];
+const WORKSPACE_STUB = '.agents/skills/rstool/SKILL.md';
 
 function renderStub(target: string): string {
   return execFileSync('node', [SCRIPT, 'stub', '--source', ROUTER, '--target', target], { encoding: 'utf8' });
 }
 
 describe('rstool skill stubs', () => {
-  it.each(STUBS)('workspace %s matches the router skill', stub => {
-    const path = join(WORKSPACE, stub);
+  it('workspace stub matches the router skill', () => {
+    const path = join(WORKSPACE, WORKSPACE_STUB);
     if (!existsSync(path)) {
       return;
     }
     expect(readFileSync(path, 'utf8')).toBe(renderStub('rsconcept/rstool/skills/rstool/SKILL.md'));
+  });
+
+  it('keeps no host-specific copy of the workspace stub', () => {
+    expect(existsSync(join(WORKSPACE, '.claude/skills/rstool'))).toBe(false);
+  });
+
+  it('install requires an explicit skills directory', () => {
+    const project = mkdtempSync(join(tmpdir(), 'rstool-skills-'));
+    try {
+      expect(() => execFileSync('node', [SCRIPT, 'install'], { cwd: project, stdio: 'pipe' })).toThrow();
+      expect(existsSync(join(project, '.claude'))).toBe(false);
+      expect(existsSync(join(project, '.agents'))).toBe(false);
+    } finally {
+      rmSync(project, { recursive: true, force: true });
+    }
   });
 
   it('installs a stub that points into node_modules', () => {

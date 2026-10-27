@@ -26,7 +26,7 @@ The agent should read and follow:
 
 `node_modules/@rsconcept/rstool/skills/INSTALL.md`
 
-That runs `npx rstool-skills install`, which writes a stub `rstool/SKILL.md` (name, description and a path into `node_modules`) into `.claude/skills/` and `.agents/skills/`. The skills and `docs/*.md` stay in the package and are read from `node_modules` when needed, so nothing is re-copied after an update.
+The procedure is agent-neutral: the agent adds a routing line to the project `AGENTS.md` (or the instructions file its host loads) and, if its host loads a project skills folder, a stub `rstool/SKILL.md` there (name, description and a path into `node_modules`; `npx rstool-skills install --dir <skills-dir>`). The skills and `docs/*.md` stay in the package and are read from `node_modules` when needed, so nothing is re-copied after an update.
 
 Details: `skills/README.md`.
 

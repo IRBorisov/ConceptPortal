@@ -12,6 +12,6 @@ description: >-
 - в workspace Portal — `rsconcept/rstool/skills/rstool/SKILL.md`;
 - в npm-проекте — `node_modules/@rsconcept/rstool/skills/rstool/SKILL.md`.
 
-Чтобы заменить эту заглушку в проекте: `npx rstool-skills install` (пишет заглушку `rstool` в `.claude/skills/` и `.agents/skills/`), затем удали папку `rstool-helper/` из каталога скиллов проекта.
+Чтобы заменить эту заглушку в проекте, выполни `node_modules/@rsconcept/rstool/skills/INSTALL.md`, затем удали папку `rstool-helper/` из каталога скиллов проекта.
 
 Заглушка будет удалена в следующем минорном релизе.

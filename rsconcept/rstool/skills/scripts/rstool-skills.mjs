@@ -3,14 +3,16 @@
  * Writes the `rstool` entry skill stub into a project skills directory.
  *
  * The stub holds only `name`, `description` and the path to the real router skill,
- * so nothing has to be re-synced after a package update.
+ * so nothing has to be re-synced after a package update. Which directory a host loads
+ * is the agent's call (skills/INSTALL.md), so there is no default `--dir`.
  *
  * Usage:
- *   rstool-skills install [--dir <skills-dir>]... [--source <path-to-router-SKILL.md>]
- *   rstool-skills stub --source <path> --target <path-written-in-stub>   (prints the stub)
+ *   rstool-skills install --dir <skills-dir>... [--source <router SKILL.md>] [--target <path>]
+ *   rstool-skills stub [--source <router SKILL.md>] [--target <path>]   (prints the stub)
  *
- * Defaults: --dir .claude/skills and .agents/skills; --source — router skill of the
- * installed package, referenced as node_modules/@rsconcept/rstool/skills/rstool/SKILL.md.
+ * Defaults: --source — router skill of this package; --target — its path from the
+ * current directory, or node_modules/@rsconcept/rstool/skills/rstool/SKILL.md when
+ * the package lies outside it.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
@@ -74,15 +76,19 @@ function parseArgs(argv) {
   return args;
 }
 
+function stubTarget(args, source) {
+  const fromProject = relative(process.cwd(), source).split('\\').join('/');
+  return (
+    args.target ??
+    (fromProject.startsWith('..') ? 'node_modules/@rsconcept/rstool/skills/rstool/SKILL.md' : fromProject)
+  );
+}
+
 function install(args) {
   const source = resolve(args.source ?? ROUTER);
   const text = readFileSync(source, 'utf8');
-  const dirs = args.dirs.length > 0 ? args.dirs : ['.claude/skills', '.agents/skills'];
-  const fromProject = relative(process.cwd(), source).split('\\').join('/');
-  const target =
-    args.target ??
-    (fromProject.startsWith('..') ? 'node_modules/@rsconcept/rstool/skills/rstool/SKILL.md' : fromProject);
-  for (const dir of dirs) {
+  const target = stubTarget(args, source);
+  for (const dir of args.dirs) {
     const path = join(dir, 'rstool', 'SKILL.md');
     mkdirSync(dirname(path), { recursive: true });
     writeFileSync(path, renderStub(text, target), 'utf8');
@@ -98,13 +104,15 @@ const isMain = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(imp
 if (isMain) {
   const [command, ...rest] = process.argv.slice(2);
   const args = parseArgs(rest);
-  if (command === 'install') {
+  if (command === 'install' && args.dirs.length > 0) {
     install(args);
-  } else if (command === 'stub' && args.source && args.target) {
-    process.stdout.write(renderStub(readFileSync(args.source, 'utf8'), args.target));
+  } else if (command === 'stub') {
+    const source = resolve(args.source ?? ROUTER);
+    process.stdout.write(renderStub(readFileSync(source, 'utf8'), stubTarget(args, source)));
   } else {
     console.error(
-      'Usage: rstool-skills install [--dir <skills-dir>]... | rstool-skills stub --source <SKILL.md> --target <path>'
+      'Usage: rstool-skills install --dir <skills-dir>... | rstool-skills stub [--source <SKILL.md>] [--target <path>]\n' +
+        'Which skills directory to use: node_modules/@rsconcept/rstool/skills/INSTALL.md'
     );
     process.exit(2);
   }
