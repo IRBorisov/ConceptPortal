@@ -440,7 +440,7 @@ description: >-
 <p><b>Решение:</b> регистрируется <b>одна точка входа</b>, всё остальное читается по пути.</p>
 <ol>
   <li><b>Одна строка маршрутизации в корневом <code>AGENTS.md</code></b>: «Работа с КС, ЯРЭ, rstool или Portal → прочитай <code>rsconcept/rstool/skills/rstool/SKILL.md</code>». <code>AGENTS.md</code> всегда в контексте у Codex и Cursor. Для Claude Code добавить <code>CLAUDE.md</code> с одной строкой <code>@AGENTS.md</code>. Работает без регистрации скиллов, на любой ОС.</li>
-  <li><b>Заглушки для автосрабатывания</b> — <code>.claude/skills/rstool/SKILL.md</code> и <code>.agents/skills/rstool/SKILL.md</code>: только <code>name</code>, <code>description</code> и указание «прочитай <code>rsconcept/rstool/skills/rstool/SKILL.md</code>». Содержимого нет, поэтому синхронизировать нечего. Тест проверяет, что <code>description</code> совпадает с исходником. Если Cursor покажет дубль (он читает обе папки), оставить одну заглушку в <code>.agents/skills/</code>.</li>
+  <li><b>Заглушки для автосрабатывания</b> — <code>.claude/skills/rstool/SKILL.md</code> и <code>.agents/skills/rstool/SKILL.md</code>: только <code>name</code>, <code>description</code> и указание «прочитай <code>rsconcept/rstool/skills/rstool/SKILL.md</code>». Содержимого нет, поэтому синхронизировать нечего. Тест проверяет, что <code>description</code> совпадает с исходником. Если Cursor покажет дубль (он читает обе папки), оставить одну заглушку в <code>.agents/skills/</code>.<br><b>Решено:</b> одна заглушка в <code>.agents/skills/rstool/</code>, без копий по папкам хостов. Скиллы репозитория перечислены ссылками в <code>AGENTS.md</code> §«Agent skills» — так их находит любой агент, в том числе Claude Code через <code>CLAUDE.md</code> → <code>@AGENTS.md</code>. Для npm-проектов <code>INSTALL.md</code> даёт общую процедуру, которую агент сам переносит на свой хост.</li>
   <li><b>Скиллы этапов не регистрируются.</b> Маршрутизатор и <code>readiness.next</code> называют этап, агент читает <code>skills/rs-…/SKILL.md</code> по пути. Скиллы этапов не конкурируют за срабатывание, и в списке скиллов хоста нет девяти похожих описаний.</li>
   <li><b>Пути внутри скиллов</b> пишутся от корня пакета с явным правилом: <code>&lt;rstool&gt;</code> — это <code>rsconcept/rstool/</code> в workspace Portal или <code>node_modules/@rsconcept/rstool/</code> в npm-проекте. Один и тот же файл работает в обоих местах, переписывать пути скриптом не нужно.</li>
 </ol>
@@ -448,7 +448,7 @@ description: >-
 
 <h3>Для npm-пользователей</h3>
 <ul>
-  <li>Bin <code>rstool-skills install [--dir …]</code> пишет ту же заглушку с путём в <code>node_modules/@rsconcept/rstool/</code>, а не копирует содержимое. После обновления пакета переустанавливать ничего не нужно.</li>
+  <li>Bin <code>rstool-skills install --dir &lt;каталог&gt;</code> пишет ту же заглушку в каталог, который выбирает агент, с путём в <code>node_modules/@rsconcept/rstool/</code>, а не копирует содержимое. После обновления пакета переустанавливать ничего не нужно.</li>
   <li><b>MCP prompts и resources</b> в <code>rstool-mcp</code> (фаза 5) — путь без файлов вообще: клиент получает этапы и справочники с сервера.</li>
   <li>Вариант на будущее: плагин Claude Code / Cursor, который ставит заглушку и MCP-сервер одной командой.</li>
 </ul>
@@ -705,7 +705,7 @@ description: >-
     <tr><td><code>rsconcept/domain/src/library/brief/</code></td><td>типы брифа, расчёт покрытия и свидетелей различений, переводы сценариев в значения КМ</td></tr>
     <tr><td><code>rsconcept/backend/apps/rsform/</code>, <code>apps/agents/</code></td><td><code>SchemaBrief</code>, сериализаторы, представления, маршруты, включение в <code>/details</code>, версии, <code>replace</code>; тесты</td></tr>
     <tr><td><code>rsconcept/frontend/src/features/rsform/</code></td><td><code>pages/rsform-page/tab-schema-card/</code>: блок «Задание» под формой паспорта, покрытие в <code>view-schema-stats</code>; значки целей, хуки API, i18n <code>en</code>/<code>ru</code>/<code>fr</code></td></tr>
-    <tr><td><code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>.agents/skills/</code>, <code>.claude/skills/</code></td><td>строка маршрутизации в <code>AGENTS.md</code>; <code>CLAUDE.md</code> с <code>@AGENTS.md</code>; заглушки <code>rstool/SKILL.md</code> (только описание и путь); удалить копию <code>.agents/skills/rstool-helper/</code>; обновить <code>rsconcept/rstool/AGENTS.md</code></td></tr>
+    <tr><td><code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>.agents/skills/</code></td><td>строка маршрутизации и ссылки на скиллы репозитория в <code>AGENTS.md</code>; <code>CLAUDE.md</code> с <code>@AGENTS.md</code>; заглушка <code>.agents/skills/rstool/SKILL.md</code> (только описание и путь); удалить копию <code>.agents/skills/rstool-helper/</code>; обновить <code>rsconcept/rstool/AGENTS.md</code></td></tr>
   </tbody>
 </table></div>
 
