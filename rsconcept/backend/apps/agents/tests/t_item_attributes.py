@@ -1,5 +1,8 @@
 ''' Testing API: agent changes of library location and access policy. '''
+from unittest.mock import patch
+
 from django.core.cache import cache
+from django.db import connection
 from rest_framework import status
 
 from apps.agents.models import AgentActionLog, ApiKey
@@ -205,6 +208,25 @@ class TestAgentItemAttributes(EndpointTester):
         self.assertEqual(other.model.access_policy, AccessPolicy.PUBLIC)
         self.assertEqual(aside.model.access_policy, AccessPolicy.PUBLIC)
         self.assertFalse(LibraryItem.objects.filter(pk=owned_schema.pk, location='/S/old').exists())
+
+
+    @decl_endpoint('/api/agents/library/{item}/set-location', method='patch')
+    def test_set_location_locks_the_row(self):
+        ''' The owner check and the write share one transaction that locks the row. '''
+        outer = len(connection.atomic_blocks)
+        depths: list[int] = []
+        real = LibraryItem.objects.select_for_update
+
+        def tracked(*args, **kwargs):
+            depths.append(len(connection.atomic_blocks))
+            return real(*args, **kwargs)
+
+        with patch.object(LibraryItem.objects, 'select_for_update', side_effect=tracked):
+            self.executeOK({'location': '/S/locked'}, item=self.owned_id)
+        self.assertGreaterEqual(len(depths), 1)
+        self.assertTrue(all(depth > outer for depth in depths))
+        self.owned.model.refresh_from_db()
+        self.assertEqual(self.owned.model.location, '/S/locked')
 
 
     def test_attribute_routes_are_not_heavy(self):

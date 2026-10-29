@@ -1,6 +1,7 @@
 ''' Views: agent updates of library item attributes (API key, owner). '''
 from __future__ import annotations
 
+from django.db import transaction
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema
 from rest_framework import status as c
@@ -20,9 +21,14 @@ class AgentLibraryAttributeView(AgentItemView):
     ''' Owner or staff may change one library attribute. Editors may not. '''
 
     def _owned_item(self, pk: int) -> LibraryItem:
-        ''' Load any library item the key user owns, or that staff may manage. '''
+        ''' Lock an item the key user owns, or that staff may manage.
+
+        Call inside ``transaction.atomic``. The row stays locked until the
+        write commits, so an owner transfer cannot land between the check and
+        the update.
+        '''
         try:
-            item = LibraryItem.objects.get(pk=pk)
+            item = LibraryItem.objects.select_for_update().get(pk=pk)
         except LibraryItem.DoesNotExist as exc:
             raise NotFound() from exc
         user = self.request.user
@@ -48,14 +54,15 @@ class AgentSetLocationView(AgentLibraryAttributeView):
 
     def patch(self, request: Request, pk: int) -> HttpResponse:
         ''' Set ``location``. Owned OSS results in the same folder move too. '''
-        item = self._owned_item(pk)
-        serializer = lib_serializers.LocationSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        location: str = serializer.validated_data['location']
-        if location != item.location:
-            assert_can_write_location(request.user, location)
-            set_item_location(item, location)
-        return self._respond(item, 'library.set_location', f'Location {item.location}')
+        with transaction.atomic():
+            item = self._owned_item(pk)
+            serializer = lib_serializers.LocationSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            location: str = serializer.validated_data['location']
+            if location != item.location:
+                assert_can_write_location(request.user, location)
+                set_item_location(item, location)
+            return self._respond(item, 'library.set_location', f'Location {item.location}')
 
 
 @extend_schema(
@@ -70,10 +77,15 @@ class AgentSetAccessPolicyView(AgentLibraryAttributeView):
 
     def patch(self, request: Request, pk: int) -> HttpResponse:
         ''' Set ``access_policy``. Owned OSS results in the same folder follow it. '''
-        item = self._owned_item(pk)
-        serializer = lib_serializers.AccessPolicySerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        access_policy: str = serializer.validated_data['access_policy']
-        if access_policy != item.access_policy:
-            set_item_access_policy(item, access_policy)
-        return self._respond(item, 'library.set_access_policy', f'Access policy {item.access_policy}')
+        with transaction.atomic():
+            item = self._owned_item(pk)
+            serializer = lib_serializers.AccessPolicySerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            access_policy: str = serializer.validated_data['access_policy']
+            if access_policy != item.access_policy:
+                set_item_access_policy(item, access_policy)
+            return self._respond(
+                item,
+                'library.set_access_policy',
+                f'Access policy {item.access_policy}',
+            )

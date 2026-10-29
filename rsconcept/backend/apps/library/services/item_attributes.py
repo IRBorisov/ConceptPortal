@@ -23,12 +23,22 @@ def set_item_access_policy(item: LibraryItem, access_policy: str) -> None:
 
 
 def _set_cascaded_field(item: LibraryItem, field: str, value: str) -> None:
-    ''' Write one field, cascading it across an OSS and its owned results. '''
-    if getattr(item, field) == value:
-        return
+    ''' Write one field, cascading it across an OSS and its owned results.
+
+    The row is locked and read again inside the transaction. The cascade then
+    uses that folder, so a move that committed earlier is not applied on top of
+    a stale copy.
+    '''
     with transaction.atomic():
-        if item.item_type == LibraryItemType.OPERATION_SCHEMA:
-            owned_schemas = OperationSchema.owned_schemasQ(item).only(field)
+        try:
+            locked = LibraryItem.objects.select_for_update().get(pk=item.pk)
+        except LibraryItem.DoesNotExist:
+            return
+        if getattr(locked, field) == value:
+            setattr(item, field, value)
+            return
+        if locked.item_type == LibraryItemType.OPERATION_SCHEMA:
+            owned_schemas = OperationSchema.owned_schemasQ(locked).only(field)
             for schema in owned_schemas:
                 setattr(schema, field, value)
             LibraryItem.objects.bulk_update(owned_schemas, [field])
