@@ -18,6 +18,8 @@
 | GET   | `/api/agents/library/active`                   | Метаданные доступных объектов                    |
 | GET   | `/api/agents/library/context-search`           | Поиск (те же query-параметры)                    |
 | GET   | `/api/agents/library/by-ids`                   | Метаданные по id                                 |
+| PATCH | `/api/agents/library/:id/set-location`         | Расположение (владелец или staff)                |
+| PATCH | `/api/agents/library/:id/set-access-policy`    | Политика доступа (владелец или staff)            |
 | POST  | `/api/agents/rsforms`                          | Создать КС                                       |
 | GET   | `/api/agents/rsforms/:id/details`              | Полная КС                                        |
 | PATCH | `/api/agents/rsforms/:id/replace`              | Заменить содержимое (`exportPortal` / load-json) |

@@ -12,6 +12,8 @@ urlpatterns = [
     path('agents/library/active', views.AgentLibraryActiveView.as_view()),
     path('agents/library/context-search', views.AgentLibraryContextSearchView.as_view()),
     path('agents/library/by-ids', views.AgentLibraryItemsByIdsView.as_view()),
+    path('agents/library/<int:pk>/set-location', views.AgentSetLocationView.as_view()),
+    path('agents/library/<int:pk>/set-access-policy', views.AgentSetAccessPolicyView.as_view()),
     path('agents/rsforms', views.AgentRsformCreateView.as_view()),
     path('agents/rsforms/<int:pk>/details', views.AgentRsformDetailsView.as_view()),
     path('agents/rsforms/<int:pk>/replace', views.AgentRsformReplaceView.as_view()),

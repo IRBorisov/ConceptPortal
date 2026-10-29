@@ -27,6 +27,7 @@ from ..services.context_search import (
     get_accessible_items_queryset,
     get_accessible_library_items_by_ids
 )
+from ..services.item_attributes import set_item_access_policy, set_item_location
 from ..services.location_access import assert_can_write_location
 
 
@@ -279,15 +280,7 @@ class LibraryViewSet(ConcurrencyMixin, viewsets.ModelViewSet):
         except PermissionDenied:
             return Response(status=c.HTTP_403_FORBIDDEN)
 
-        with transaction.atomic():
-            if item.item_type == m.LibraryItemType.OPERATION_SCHEMA:
-                owned_schemas = OperationSchema.owned_schemasQ(item).only('location')
-                for schema in owned_schemas:
-                    schema.location = location
-                m.LibraryItem.objects.bulk_update(owned_schemas, ['location'])
-            item.location = location
-            m.LibraryItem.objects.filter(pk=item.pk).update(location=location)
-
+        set_item_location(item, location)
         return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
@@ -368,15 +361,7 @@ class LibraryViewSet(ConcurrencyMixin, viewsets.ModelViewSet):
         if new_policy == item.access_policy:
             return Response(status=c.HTTP_200_OK)
 
-        with transaction.atomic():
-            if item.item_type == m.LibraryItemType.OPERATION_SCHEMA:
-                owned_schemas = OperationSchema.owned_schemasQ(item).only('access_policy')
-                for schema in owned_schemas:
-                    schema.access_policy = new_policy
-                m.LibraryItem.objects.bulk_update(owned_schemas, ['access_policy'])
-            item.access_policy = new_policy
-            m.LibraryItem.objects.filter(pk=item.pk).update(access_policy=new_policy)
-
+        set_item_access_policy(item, new_policy)
         return Response(status=c.HTTP_200_OK)
 
     @extend_schema(
