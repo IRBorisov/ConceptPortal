@@ -40,6 +40,10 @@ UI-ссылку (`https://portal.acconcept.ru/rsforms/856?tab=editor`) не от
 3. Описание схемы содержит назначение, ограничения и краткий журнал решений (гейт `rs-explicate`). `create-version` (если есть права) → `replace` с `exportPortal({ kind: 'schema' })`.
 4. Повторно прочитай `/details`, импортируй и сверь. Отчёт со ссылкой на схему в UI.
 
+## Расположение и доступ
+
+Владелец (или staff) меняет папку и `access_policy` ключом: `PATCH /api/agents/library/:id/set-location` и `set-access-policy`. Редактор эти поля не меняет. В `/L` пишет только staff. Обычный `PATCH /api/library/:id/set-location` ключ не открывает. Подробно — `docs/PORTAL-PUBLISH.md` §«Расположение и политика доступа». Не переноси схему без просьбы пользователя.
+
 ## Лимиты
 
 Правки: 30 в минуту, 300 в час; `replace`, `create-version` и создание КС — ещё не больше 15 в час. `429` — бюджет кончился, не повторяй в цикле. Подробно — `docs/PORTAL-PUBLISH.md` §«Лимиты».

@@ -1,5 +1,6 @@
 ''' Views package for agents app. '''
 
+from .attributes import AgentSetAccessPolicyView, AgentSetLocationView
 from .keys import ApiKeyViewSet
 from .library import (
     AgentLibraryActiveView,
