@@ -15,7 +15,7 @@
  * the package lies outside it.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join, relative, resolve } from 'node:path';
+import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROUTER = fileURLToPath(new URL('../rstool/SKILL.md', import.meta.url));
@@ -77,10 +77,12 @@ function parseArgs(argv) {
 }
 
 function stubTarget(args, source) {
-  const fromProject = relative(process.cwd(), source).split('\\').join('/');
+  // On Windows a source on another drive has no relative path: relative() returns it absolute.
+  const fromProject = relative(process.cwd(), source);
+  const outside = fromProject.startsWith('..') || isAbsolute(fromProject);
   return (
     args.target ??
-    (fromProject.startsWith('..') ? 'node_modules/@rsconcept/rstool/skills/rstool/SKILL.md' : fromProject)
+    (outside ? 'node_modules/@rsconcept/rstool/skills/rstool/SKILL.md' : fromProject.split('\\').join('/'))
   );
 }
 
