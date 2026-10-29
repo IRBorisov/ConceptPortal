@@ -1,5 +1,6 @@
 ''' Tests. '''
 from .t_agents import *
+from .t_item_attributes import *
 from .t_log_retention import *
 from .t_models import *
 from .t_oss import *
