@@ -1,4 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignoreDependencies": ["react-devtools-cdt-mcp"],
   "ignore": ["src/**/parser.terms.ts", "src/components/ui/**", "src/components/input/select.tsx"]
 }

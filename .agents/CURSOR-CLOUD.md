@@ -4,7 +4,7 @@ Ops notes for agents and humans when Docker is unavailable (typical Cursor Cloud
 
 ## Bootstrap
 
-The Cloud update script usually runs `pnpm install`, builds `@rsconcept/domain`, and syncs backend deps with `uv`. Node 22 works even if README lists Node 24.
+The Cloud update script usually runs `pnpm install`, builds `@rsconcept/domain`, and syncs backend deps with `uv`. pnpm downloads the Node.js runtime pinned in root `devEngines.runtime` (26.x) for its scripts. `npm`/`npx` from the repo root enforce the same `devEngines` and fail (`EBADDEVENGINES`) on an older system Node.
 
 ## Dev stack (no Docker)
 

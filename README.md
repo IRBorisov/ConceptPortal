@@ -32,12 +32,11 @@ The npm packages in `domain`, `rstool`, and `rstool-mcp` are independently publi
 
 ## Local Development
 
-**Prerequisites:** Docker Desktop, Python 3.12, [uv](https://docs.astral.sh/uv/), Node.js 24, [pnpm](https://pnpm.io/) (via Corepack: `corepack enable`), PowerShell, and VS Code or another IDE that can use [`.vscode/launch.json`](.vscode/launch.json).
+**Prerequisites:** Docker Desktop, Python 3.12, [uv](https://docs.astral.sh/uv/), Node.js 26 LTS, [pnpm](https://pnpm.io/) 12 (`npm install -g pnpm`; it switches to the version pinned in `packageManager` and runs scripts on the Node.js version from `devEngines.runtime`), PowerShell, and VS Code or another IDE that can use [`.vscode/launch.json`](.vscode/launch.json).
 
 1. Install dependencies (repo root, pnpm workspace):
 
    ```powershell
-   corepack enable
    pnpm install
    pnpm --filter @rsconcept/domain run build
    ```

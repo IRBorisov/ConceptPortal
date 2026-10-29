@@ -1,6 +1,6 @@
 import { spawn, type ChildProcessByStdio } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { delimiter, dirname, join } from 'node:path';
 import readline from 'node:readline';
 import { type Readable, type Writable } from 'node:stream';
 
@@ -44,12 +44,19 @@ function resolveSpawn(command: string, args: string[]): { command: string; args:
   return { command, args };
 }
 
+/**
+ * Locate npm's CLI script: next to the running Node first, then in PATH directories.
+ * A pnpm-managed runtime (`devEngines.runtime`) runs a hard-linked `node_modules/.bin/node.exe` with no npm beside it.
+ */
 function bundledNpmBin(bin: 'npm-cli.js' | 'npx-cli.js'): string {
-  const cli = join(dirname(process.execPath), 'node_modules', 'npm', 'bin', bin);
-  if (!existsSync(cli)) {
-    throw new Error(`Cannot resolve ${bin} next to Node at ${process.execPath}`);
+  const pathDirs = (process.env.PATH ?? '').split(delimiter).filter(Boolean);
+  for (const dir of [dirname(process.execPath), ...pathDirs]) {
+    const cli = join(dir, 'node_modules', 'npm', 'bin', bin);
+    if (existsSync(cli)) {
+      return cli;
+    }
   }
-  return cli;
+  throw new Error(`Cannot resolve ${bin} next to Node at ${process.execPath} or in PATH`);
 }
 
 /**

@@ -24,6 +24,31 @@ function watchDomainDist(): Plugin {
   };
 }
 
+/**
+ * Registers React inspection/profiling tools for agents using Chrome DevTools MCP (dev server only).
+ * Injected as a separate module script ahead of `main.tsx`: it must install the DevTools hook before React loads.
+ */
+function reactDevtoolsMcp(enabled: boolean): Plugin {
+  return {
+    name: 'react-devtools-cdt-mcp',
+    apply: 'serve',
+    transformIndexHtml: {
+      order: 'pre',
+      handler: () =>
+        enabled
+          ? [
+              {
+                tag: 'script',
+                attrs: { type: 'module' },
+                children: "import 'react-devtools-cdt-mcp/register';",
+                injectTo: 'head-prepend'
+              }
+            ]
+          : []
+    }
+  };
+}
+
 export default ({ mode }: { mode: string }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const release = `frontend@${getPackageVersion()}`;
@@ -32,6 +57,7 @@ export default ({ mode }: { mode: string }) => {
 
     plugins: [
       watchDomainDist(),
+      reactDevtoolsMcp(env.VITE_REACT_DEVTOOLS_MCP === 'true'),
       tailwindcss(),
       react(),
       babel({

@@ -1,9 +1,10 @@
 # ======== Multi-stage base ==========
-FROM node:24-bookworm-slim AS node-base
+FROM node:26-bookworm-slim AS node-base
 RUN apt-get update -qq && \
     apt-get upgrade -y && \
     rm -rf /var/lib/apt/lists/*
-RUN corepack enable
+# Node 25+ no longer bundles Corepack.
+RUN npm install -g corepack && corepack enable
 
 # ======= Build =======
 ARG BUILD_TYPE=production

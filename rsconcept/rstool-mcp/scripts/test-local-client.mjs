@@ -14,7 +14,7 @@ async function main() {
     command: "npx",
     args: [
       "--yes",
-      "pnpm@9.15.9",
+      "pnpm@12.16.1",
       "--filter",
       "@rsconcept/rstool-mcp",
       "run",

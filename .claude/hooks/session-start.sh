@@ -9,6 +9,10 @@ fi
 
 cd "$CLAUDE_PROJECT_DIR"
 
+# Node 25+ no longer bundles Corepack; pnpm may already be installed globally.
+if ! command -v corepack >/dev/null 2>&1; then
+  npm install -g corepack >/dev/null 2>&1 || true
+fi
 corepack enable >/dev/null 2>&1 || true
 pnpm install
 pnpm --filter @rsconcept/domain run build

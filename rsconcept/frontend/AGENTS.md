@@ -37,6 +37,10 @@ From repo root (pnpm workspace) unless noted:
 - Lint fix + import sort: `pnpm --filter frontend run lintFix`
 - Parsers: `pnpm --filter frontend run generate`
 
+## React inspection for agents
+
+Root `.mcp.json` registers Chrome DevTools MCP (isolated Chrome, third-party page tools on). Set `VITE_REACT_DEVTOOLS_MCP=true` in `.env.local` and run the dev server: `react-devtools-cdt-mcp/register` is injected ahead of `main.tsx` and exposes `react_*` tools (component tree, props/hooks, owner stacks, render profiling). Dev server only; it slows rendering, so keep it off for E2E. Tool reference: https://react.dev/reference/dev-tools/react-devtools-cdt-mcp
+
 ## Feature public API (`index.ts`)
 
 | Through `index.ts` (named exports only — no `export *`) | Deep import (not via barrel)                                      |
