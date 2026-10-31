@@ -17,6 +17,14 @@ export interface ConstituentaDraft {
   definitionText?: string;
   /** Convention or comment. */
   convention?: string;
+  /** Portal flag. Omitted on an update keeps the value already stored in the session. */
+  crucial?: boolean;
+  /** Inflected term forms. Omitted on an update keeps the stored forms. */
+  termForms?: Array<{ text: string; tags: string }>;
+  /** Manual typification override. Omitted on an update keeps the stored text. */
+  typificationManual?: string;
+  /** Manual value-class override. Omitted on an update keeps the stored flag. */
+  valueIsProperty?: boolean;
 }
 
 /** Constituent stored in session state after analysis. */

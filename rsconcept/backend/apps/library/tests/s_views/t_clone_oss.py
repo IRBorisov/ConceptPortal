@@ -138,6 +138,8 @@ class TestLibraryCloneOss(EndpointTester):
             self.assertNotEqual(schema.pk, self.ks1.model.pk)
             self.assertNotEqual(schema.pk, self.ks2.model.pk)
 
+        self.assertTrue(Editor.objects.filter(item_id=clone_id, editor_id=self.user2.pk).exists())
+
         clone_layout = Layout.objects.get(oss_id=clone_id).data
         node_ids = {node['nodeID'] for node in clone_layout}
         self.assertEqual(len(node_ids), 5)
@@ -145,6 +147,29 @@ class TestLibraryCloneOss(EndpointTester):
             if node['nodeID'].startswith('o'):
                 op_id = int(node['nodeID'][1:])
                 self.assertTrue(Operation.objects.filter(pk=op_id, oss_id=clone_id).exists())
+
+
+    @decl_endpoint('/api/library/{item}/clone', method='post')
+    def test_clone_oss_rejects_unreadable_schema(self):
+        self.populate_graph()
+        self.ks2.model.access_policy = AccessPolicy.PRIVATE
+        self.ks2.model.save(update_fields=['access_policy'])
+        response = self.executeForbidden(self._clone_payload(), item=self.owned.model.pk)
+        self.assertIn('KS2', str(response.data))
+        self.assertEqual(self.ks2.constituentsQ().count(), 1)
+
+
+    @decl_endpoint('/api/library/{item}/clone', method='post')
+    def test_clone_oss_by_non_owner_does_not_copy_editors(self):
+        self.populate_graph()
+        self.login2()
+        response = self.executeCreated(self._clone_payload(), item=self.owned.model.pk)
+        clone_id = response.data['id']
+        self.assertEqual(response.data['owner'], self.user2.pk)
+        self.assertFalse(Editor.objects.filter(item_id=clone_id).exists())
+        for schema_id in Operation.objects.filter(oss_id=clone_id).values_list('result_id', flat=True):
+            if schema_id is not None:
+                self.assertFalse(Editor.objects.filter(item_id=schema_id).exists())
 
 
     @decl_endpoint('/api/library/{item}/clone', method='post')

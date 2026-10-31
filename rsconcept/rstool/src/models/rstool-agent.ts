@@ -56,6 +56,7 @@ function normalizeImportedState(state: SessionState): SessionState {
     alias: state.alias ?? '',
     title: state.title ?? '',
     comment: state.comment ?? '',
+    attribution: state.attribution ?? [],
     model: state.model ?? { items: [] }
   };
 }
@@ -360,7 +361,9 @@ export class RSToolAgent implements RSToolAgentContract {
       const nextId = receiverEnvelope.state.items.reduce((max, item) => Math.max(max, item.id), 0) + 1;
       const result = inlineSynthesis({
         receiverItems: receiverEnvelope.state.items.map(toSynthesizableSessionItem),
+        receiverAttributions: receiverEnvelope.state.attribution ?? [],
         sourceItems: sourceItems.map(toSynthesizableSessionItem),
+        sourceAttributions: sourceEnvelope.state.attribution ?? [],
         substitutions,
         nextId
       });
@@ -372,10 +375,15 @@ export class RSToolAgent implements RSToolAgentContract {
         definitionFormal: item.definition_formal,
         term: item.term_resolved || item.term_raw,
         definitionText: item.definition_resolved || item.definition_raw,
-        convention: item.convention
+        convention: item.convention,
+        crucial: item.crucial,
+        termForms: item.term_forms,
+        typificationManual: item.typification_manual,
+        valueIsProperty: item.value_is_property
       }));
 
       receiverEnvelope.state.items = [];
+      receiverEnvelope.state.attribution = result.attributions;
       receiverEnvelope.state.model = {
         items: receiverEnvelope.state.model.items.filter(value => !result.deletedIds.has(value.id))
       };
@@ -552,18 +560,18 @@ export class RSToolAgent implements RSToolAgentContract {
         id: item.id,
         alias: item.alias,
         convention: item.convention,
-        crucial: false,
+        crucial: item.crucial ?? false,
         cst_type: item.cstType,
         definition_formal: item.definitionFormal,
-        typification_manual: '',
-        value_is_property: false,
+        typification_manual: item.typificationManual ?? '',
+        value_is_property: item.valueIsProperty ?? false,
         definition_raw: item.definitionText,
         definition_resolved: item.definitionText,
         term_raw: item.term,
         term_resolved: item.term,
-        term_forms: []
+        term_forms: item.termForms ?? []
       })),
-      attribution: []
+      attribution: liveAttributions(envelope.state)
     };
   }
 
@@ -650,7 +658,11 @@ export class RSToolAgent implements RSToolAgentContract {
         definitionFormal: patch.definitionFormal ?? existing?.definitionFormal ?? '',
         term: patch.term ?? existing?.term ?? '',
         definitionText: patch.definitionText ?? existing?.definitionText ?? '',
-        convention: patch.convention ?? existing?.convention ?? ''
+        convention: patch.convention ?? existing?.convention ?? '',
+        ...(patch.crucial !== undefined ? { crucial: patch.crucial } : {}),
+        ...(patch.termForms !== undefined ? { termForms: patch.termForms } : {}),
+        ...(patch.typificationManual !== undefined ? { typificationManual: patch.typificationManual } : {}),
+        ...(patch.valueIsProperty !== undefined ? { valueIsProperty: patch.valueIsProperty } : {})
       };
       existingByAlias.set(patch.alias, {
         ...draft,
@@ -694,18 +706,34 @@ export class RSToolAgent implements RSToolAgentContract {
   }
 }
 
-function toSynthesizableSessionItem(item: ConstituentaState): SynthesizableFields & { convention: string } {
+function toSynthesizableSessionItem(item: ConstituentaState): SessionSynthesisItem {
   return {
     id: item.id,
     alias: item.alias,
     cst_type: item.cstType,
     definition_formal: item.definitionFormal,
-    typification_manual: '',
+    typification_manual: item.typificationManual ?? '',
     term_raw: item.term,
     term_resolved: item.term,
-    term_forms: [],
+    term_forms: item.termForms ?? [],
     definition_raw: item.definitionText,
     definition_resolved: item.definitionText,
-    convention: item.convention
+    convention: item.convention,
+    crucial: item.crucial ?? false,
+    value_is_property: item.valueIsProperty ?? false
   };
+}
+
+type SessionSynthesisItem = SynthesizableFields & {
+  convention: string;
+  crucial: boolean;
+  value_is_property: boolean;
+  term_forms: Array<{ text: string; tags: string }>;
+};
+
+function liveAttributions(state: SessionState): Array<{ container: number; attribute: number }> {
+  const ids = new Set(state.items.map(item => item.id));
+  return (state.attribution ?? []).filter(
+    attr => ids.has(attr.container) && ids.has(attr.attribute) && attr.container !== attr.attribute
+  );
 }

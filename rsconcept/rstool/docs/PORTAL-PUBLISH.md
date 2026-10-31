@@ -11,6 +11,8 @@
 5. `PATCH /api/agents/rsforms/:id/replace` с JSON `exportPortal({ kind: 'schema' })`.
 6. Повторно прочитай `/details`, импортируй и сверь: число конституент, формулы, диагностики. Отчёт со ссылкой на схему в UI.
 
+`exportPortal({ kind: 'schema' })` возвращает `crucial`, `term_forms`, `typification_manual`, `value_is_property` и `attribution`, если они были в импортированной схеме. Правка через `applySchemaPatch`, которая эти поля не задаёт, их не стирает. Конституента, созданная в сессии с нуля, уходит с `crucial: false`, пустыми словоформами и пустой ручной типизацией.
+
 Гранулярные правки (`/constituents`, `substitute`, `move-cst`) уместны для одной-двух конституент; для пакета правок — `replace`.
 
 ## Расположение и политика доступа

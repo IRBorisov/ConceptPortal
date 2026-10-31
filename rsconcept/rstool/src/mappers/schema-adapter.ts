@@ -41,14 +41,19 @@ export class SchemaAdapter {
     draft: ConstituentaDraft,
     analysis: AnalysisResult
   ): ConstituentaState {
+    const index = session.items.findIndex(item => item.id === draft.id);
+    const previous = index === -1 ? undefined : session.items[index];
     const state: ConstituentaState = {
       ...draft,
       term: draft.term ?? '',
       definitionText: draft.definitionText ?? '',
       convention: draft.convention ?? '',
+      crucial: draft.crucial ?? previous?.crucial ?? false,
+      termForms: draft.termForms ?? previous?.termForms ?? [],
+      typificationManual: draft.typificationManual ?? previous?.typificationManual ?? '',
+      valueIsProperty: draft.valueIsProperty ?? previous?.valueIsProperty ?? false,
       analysis
     };
-    const index = session.items.findIndex(item => item.id === draft.id);
     if (index === -1) {
       session.items.push(state);
     } else {
@@ -105,6 +110,10 @@ export class SchemaAdapter {
         term: draft.term ?? '',
         definitionText: draft.definitionText ?? '',
         convention: draft.convention ?? '',
+        crucial: draft.crucial ?? false,
+        termForms: draft.termForms ?? [],
+        typificationManual: draft.typificationManual ?? '',
+        valueIsProperty: draft.valueIsProperty ?? false,
         analysis: {
           success: false,
           type: null,

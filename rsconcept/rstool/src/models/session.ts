@@ -31,6 +31,11 @@ export interface SessionState {
   revisions: SessionRevision[];
   /** Analyzed constituents in the conceptual schema. */
   items: ConstituentaState[];
+  /**
+   * Portal attributions (`container` / `attribute` are session constituent ids).
+   * Absent on sessions saved before these fields were stored.
+   */
+  attribution?: Array<{ container: number; attribute: number }>;
   /** Evaluated model values. */
   model: SessionModelState;
 }

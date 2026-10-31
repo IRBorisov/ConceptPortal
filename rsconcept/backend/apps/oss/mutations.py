@@ -9,12 +9,12 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Optional, cast
 
+from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.request import Request
 
 from apps.library.models import LibraryItem
-from apps.rsform.models import Constituenta
 from shared import messages as msg
 from shared import permissions
 from shared.concurrency import assert_expected_time_update_locked
@@ -137,19 +137,15 @@ def clone_schema_operation(
         alias = '+' + source.alias
         title = '+' + source.title
         source_schema = cast(LibraryItem, source.result)
-        constituents = Constituenta.objects.filter(schema_id=source_schema.pk)
+        _require_readable_schema(request, source_schema)
 
-        new_schema = source_schema
+        new_schema = deepcopy(source_schema)
         new_schema.pk = None
         new_schema.owner = item.owner
         new_schema.title = title
         new_schema.alias = alias
         new_schema.save()
-
-        for cst in constituents:
-            cst.pk = None
-            cst.schema = new_schema
-            cst.save()
+        m.PropagationFacade().get_schema(new_schema.pk).insert_from(source_schema.pk)
 
         new_operation = source
         new_operation.pk = None
@@ -405,12 +401,18 @@ def relocate_constituents(item: LibraryItem, validated: dict, request: Request |
     ''' Move constituents between connected schemas of the OSS. '''
     ids = [cst.pk for cst in validated['items']]
     destination = validated['destination']
+    source_id = validated['source']
 
     with transaction.atomic():
         _lock_expected_update(item, request)
+        source_item = LibraryItem.objects.get(pk=source_id)
+        destination_item = LibraryItem.objects.get(pk=destination)
+        _require_editable_schema(request, source_item)
+        _require_editable_schema(request, destination_item)
+
         propagation = m.PropagationFacade()
         oss = propagation.get_oss(item.pk)
-        source = propagation.get_schema(validated['source'])
+        source = propagation.get_schema(source_id)
         if validated['move_down']:
             oss.relocate_down(destination, ids)
             propagation.before_delete_cst(source.pk, ids)
@@ -418,7 +420,9 @@ def relocate_constituents(item: LibraryItem, validated: dict, request: Request |
         else:
             new_items = oss.relocate_up(source.pk, destination, ids)
             propagation.after_create_cst(new_items, exclude=[oss.pk])
-            item.save(update_fields=['time_update'])
+        _touch_item(source_item)
+        _touch_item(destination_item)
+        _touch_item(item)
 
 
 # ====== Internals ============
@@ -443,3 +447,27 @@ def _lock_expected_update(item: LibraryItem, request: Request | None) -> None:
     ''' Reject a stale ``X-Expected-Time-Update`` under a row lock. '''
     if request is not None:
         assert_expected_time_update_locked(item, request)
+
+
+def _touch_item(item: LibraryItem) -> None:
+    ''' Bump the optimistic-concurrency token. '''
+    item.save(update_fields=['time_update'])
+
+
+def _require_editable_schema(request: Request | None, schema: LibraryItem) -> None:
+    ''' Reject a write into a schema the caller cannot edit. '''
+    if request is None or not permissions.can_edit_item(request.user, schema):
+        raise PermissionDenied()
+
+
+def _require_readable_schema(request: Request | None, schema: LibraryItem) -> None:
+    ''' Reject a copy of a schema the caller cannot read. '''
+    if request is None or not permissions.can_read_library_item(request.user, schema):
+        raise PermissionDenied(msg.schemasNotReadable([_schema_label(schema)]))
+
+
+def _schema_label(schema: LibraryItem) -> str:
+    ''' Alias and title for an error that names a schema. '''
+    if schema.alias and schema.title and schema.alias != schema.title:
+        return f'{schema.alias} ({schema.title})'
+    return schema.alias or schema.title or str(schema.pk)

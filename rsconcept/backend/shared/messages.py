@@ -106,6 +106,18 @@ def schemaForbidden() -> str:
     return 'Нет доступа к схеме'
 
 
+def schemasNotReadable(labels: list[str]) -> str:
+    ''' User-facing message when a clone would copy schemas the user cannot read. '''
+    if len(labels) == 1:
+        return f'Нет доступа к схеме: {labels[0]}'
+    return 'Нет доступа к схемам: ' + ', '.join(labels)
+
+
+def attributionOutsideImport() -> str:
+    ''' User-facing message when an import attribution names an id missing from the file. '''
+    return 'Атрибуция ссылается на конституенту вне файла'
+
+
 def operationNotInput(title: str) -> str:
     return f'Операция не является Загрузкой: {title}'
 

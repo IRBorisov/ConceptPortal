@@ -39,6 +39,7 @@ export class SessionStore {
       updatedAt: now,
       revisions: initial?.revisions ?? [],
       items: initial?.items ?? [],
+      attribution: initial?.attribution ?? [],
       model: initial?.model ?? { items: [] }
     };
     const envelope: SessionEnvelope = {

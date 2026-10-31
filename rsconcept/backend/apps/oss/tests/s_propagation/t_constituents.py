@@ -181,7 +181,20 @@ class TestChangeConstituents(EndpointTester):
 
 
     @decl_endpoint('/api/rsforms/{item}/update-cst', method='patch')
-    def test_update_constituenta_inherited(self):
+    def test_change_cst_type_without_alias(self):
+        data = {
+            'target': self.ks1X1.pk,
+            'item_data': {
+                'cst_type': CstType.CONSTANT,
+            }
+        }
+        self.executeOK(data, item=self.ks1.model.pk)
+        self.ks1X1.refresh_from_db()
+        self.ks3X1.refresh_from_db()
+        self.assertEqual(self.ks1X1.cst_type, CstType.CONSTANT)
+        self.assertEqual(self.ks1X1.alias, 'C1')
+        self.assertEqual(self.ks3X1.cst_type, CstType.CONSTANT)
+        self.assertTrue(self.ks3X1.alias.startswith('C'))
         data = {
             'target': self.ks3X1.pk,
             'item_data': {

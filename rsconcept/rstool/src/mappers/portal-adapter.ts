@@ -19,11 +19,17 @@ function portalMetadataToSessionSeed(data: PortalSessionSeedInput): Partial<Sess
 }
 
 export function portalSchemaToSessionSeed(data: PortalSchemaImportData): Partial<SessionState> {
-  return portalMetadataToSessionSeed(data);
+  return {
+    ...portalMetadataToSessionSeed(data),
+    attribution: data.attribution ?? []
+  };
 }
 
 export function portalDetailsToSessionSeed(data: PortalRsformDetails): Partial<SessionState> {
-  return portalMetadataToSessionSeed(data);
+  return {
+    ...portalMetadataToSessionSeed(data),
+    attribution: data.attribution ?? []
+  };
 }
 
 export function portalItemsToDrafts(
@@ -35,6 +41,10 @@ export function portalItemsToDrafts(
     term_raw?: string;
     definition_raw?: string;
     convention?: string;
+    crucial?: boolean;
+    term_forms?: Array<{ text: string; tags: string }>;
+    typification_manual?: string;
+    value_is_property?: boolean;
   }>
 ): ConstituentaDraft[] {
   return items.map(item => portalItemToDraft(item));
