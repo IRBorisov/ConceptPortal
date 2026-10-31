@@ -49,7 +49,7 @@ export class SchemaAdapter {
       definitionText: draft.definitionText ?? '',
       convention: draft.convention ?? '',
       crucial: draft.crucial ?? previous?.crucial ?? false,
-      termForms: draft.termForms ?? previous?.termForms ?? [],
+      termForms: structuredClone(draft.termForms ?? previous?.termForms ?? []),
       typificationManual: draft.typificationManual ?? previous?.typificationManual ?? '',
       valueIsProperty: draft.valueIsProperty ?? previous?.valueIsProperty ?? false,
       analysis

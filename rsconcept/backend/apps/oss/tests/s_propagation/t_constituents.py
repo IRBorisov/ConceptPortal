@@ -1,5 +1,10 @@
 ''' Testing API: Change constituents in OSS. '''
 
+from datetime import timedelta
+
+from django.utils import timezone
+
+from apps.library.models import LibraryItem
 from apps.oss.models import OperationSchema, OperationType, PropagationFacade
 from apps.rsform.models import Attribution, Constituenta, CstType, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
@@ -182,6 +187,8 @@ class TestChangeConstituents(EndpointTester):
 
     @decl_endpoint('/api/rsforms/{item}/update-cst', method='patch')
     def test_change_cst_type_without_alias(self):
+        past = timezone.now() - timedelta(days=1)
+        LibraryItem.objects.filter(pk=self.ks3.model.pk).update(time_update=past)
         data = {
             'target': self.ks1X1.pk,
             'item_data': {
@@ -191,10 +198,12 @@ class TestChangeConstituents(EndpointTester):
         self.executeOK(data, item=self.ks1.model.pk)
         self.ks1X1.refresh_from_db()
         self.ks3X1.refresh_from_db()
+        self.ks3.model.refresh_from_db()
         self.assertEqual(self.ks1X1.cst_type, CstType.CONSTANT)
         self.assertEqual(self.ks1X1.alias, 'C1')
         self.assertEqual(self.ks3X1.cst_type, CstType.CONSTANT)
-        self.assertTrue(self.ks3X1.alias.startswith('C'))
+        self.assertEqual(self.ks3X1.alias, 'C1')
+        self.assertGreater(self.ks3.model.time_update, past)
         data = {
             'target': self.ks3X1.pk,
             'item_data': {

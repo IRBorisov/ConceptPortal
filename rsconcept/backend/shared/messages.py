@@ -118,6 +118,11 @@ def attributionOutsideImport() -> str:
     return 'Атрибуция ссылается на конституенту вне файла'
 
 
+def duplicateConstituentIds() -> str:
+    ''' User-facing message when an import repeats a constituenta id. '''
+    return 'Повторяющиеся идентификаторы конституент'
+
+
 def operationNotInput(title: str) -> str:
     return f'Операция не является Загрузкой: {title}'
 

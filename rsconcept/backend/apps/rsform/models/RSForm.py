@@ -142,7 +142,13 @@ class RSForm:
         for cst in cst_list:
             if cst.apply_mapping(mapping, change_aliases):
                 update_list.append(cst)
-        Constituenta.objects.bulk_update(update_list, ['alias', 'definition_formal', 'term_raw', 'definition_raw'])
+        Constituenta.objects.bulk_update(update_list, [
+            'alias',
+            'definition_formal',
+            'typification_manual',
+            'term_raw',
+            'definition_raw'
+        ])
 
     @staticmethod
     def resolve_term_change(cst_list: Iterable[Constituenta], changed: list[int],

@@ -257,12 +257,18 @@ tool.applySchemaPatch(
       definitionFormal: item.definition_formal ?? '',
       term: item.term_raw ?? '',
       definitionText: item.definition_raw ?? '',
-      convention: item.convention ?? ''
+      convention: item.convention ?? '',
+      crucial: item.crucial ?? false,
+      termForms: item.term_forms ?? [],
+      typificationManual: item.typification_manual ?? '',
+      valueIsProperty: item.value_is_property ?? false
     }))
   },
   session.sessionId
 );
 ```
+
+`applySchemaPatch` не принимает `attribution`. Чтобы атрибуции дошли до `exportPortal`, загружай схему через `importData`.
 
 ## Практика для агентов
 

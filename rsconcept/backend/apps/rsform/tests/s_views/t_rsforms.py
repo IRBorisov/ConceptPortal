@@ -382,6 +382,17 @@ class TestRSFormViewset(EndpointTester):
         }
         self.executeBadData(item=self.owned_id, data=unknown)
 
+        duplicated = {
+            **created,
+            'items': [
+                {**base, 'id': fresh_id, 'alias': 'X1', 'cst_type': CstType.BASE},
+                {**base, 'id': fresh_id, 'alias': 'N1', 'cst_type': CstType.NOMINAL},
+            ],
+            'attribution': []
+        }
+        self.executeBadData(item=self.owned_id, data=duplicated)
+        self.assertEqual(Attribution.objects.filter(container__schema_id=self.owned_id).count(), 1)
+
     @decl_endpoint('/api/rsforms/{item}/load-json', method='patch')
     def test_load_json_ignores_external_resolved_terms(self):
         '''JSON import must recompute resolved texts, not trust payload values.'''

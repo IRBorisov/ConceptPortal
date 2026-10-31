@@ -4,6 +4,7 @@ from typing import Optional
 from django.db.models import Q
 from rest_framework.serializers import ValidationError
 
+from apps.library.models import LibraryItem
 from apps.rsform.models import Attribution, Constituenta, CstType, RSFormCached
 
 from .Inheritance import Inheritance
@@ -42,6 +43,7 @@ class PropagationEngine:
             if child_schema is None:
                 continue
             if child_schema.change_cst_type(successor_id, ctype):
+                _touch_schema(child_schema.pk)
                 self.on_change_cst_type(child_id, successor_id, ctype)
 
     # pylint: disable=too-many-arguments, too-many-positional-arguments
@@ -413,3 +415,8 @@ class PropagationEngine:
             if not new_target:
                 continue
             self._on_partial_mapping(new_mapping, new_target, child_id, child_schema)
+
+
+def _touch_schema(schema_id: int) -> None:
+    ''' Bump the schema concurrency token after propagated content changes. '''
+    LibraryItem.objects.get(pk=schema_id).save(update_fields=['time_update'])
