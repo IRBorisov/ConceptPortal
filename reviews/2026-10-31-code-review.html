@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ConceptPortal Code Review</title>
+<meta name="description" content="Ревью кода ConceptPortal: 42 дефекта по приоритетам, план работ и решения, которые нужно принять. Две уязвимости требуют срочного исправления.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,650&display=swap" rel="stylesheet">
+<style>
+/* Layout: one reading column, ordered for a decision. Verdict and priorities first, then the work order, then defects from most to least urgent, then scope limits. Same visual system as the earlier reviews in this folder. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #1b2230;
+  --muted: #5b6475;
+  --line: #dde1e8;
+  --accent: #2f5aa8;
+  --sev-high: #b3261e;
+  --sev-high-bg: #fbe9e7;
+  --sev-med: #9a5b00;
+  --sev-med-bg: #fdf1dc;
+  --sev-low: #4a5a73;
+  --sev-low-bg: #eaeef4;
+  --good: #1f7a4a;
+  --good-bg: #e3f3ea;
+  --code-bg: #eef1f6;
+  --display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b5; --line: #2c3442;
+    --accent: #8fb0ee; --sev-high: #ff9a8f; --sev-high-bg: #3a1f1e; --sev-med: #f2bd6a; --sev-med-bg: #3a2c15;
+    --sev-low: #b4c1d6; --sev-low-bg: #242c39; --good: #7fd3a4; --good-bg: #17302a; --code-bg: #232a35;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b5; --line: #2c3442;
+  --accent: #8fb0ee; --sev-high: #ff9a8f; --sev-high-bg: #3a1f1e; --sev-med: #f2bd6a; --sev-med-bg: #3a2c15;
+  --sev-low: #b4c1d6; --sev-low-bg: #242c39; --good: #7fd3a4; --good-bg: #17302a; --code-bg: #232a35;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.6 var(--body); }
+.wrap { max-width: 940px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 72px; display: grid; gap: 44px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: 2.1rem; font-weight: 650; }
+h2 { font-size: 1.45rem; font-weight: 650; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+h3 { font-size: 1.06rem; font-weight: 650; }
+p { margin: 0; max-width: 74ch; }
+code { font-family: var(--mono); font-size: 0.85em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+a { color: var(--accent); }
+section { display: grid; gap: 16px; min-width: 0; }
+.eyebrow { font: 500 0.75rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+header { display: grid; gap: 12px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 20px; color: var(--muted); font-size: 0.88rem; }
+.verdict { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; display: grid; gap: 12px; }
+.verdict .call { font: 650 1.15rem/1.35 var(--display); }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: 500 0.76rem/1 var(--mono); padding: 5px 9px; border-radius: 999px; white-space: nowrap; }
+.chip.high { color: var(--sev-high); background: var(--sev-high-bg); }
+.chip.med { color: var(--sev-med); background: var(--sev-med-bg); }
+.chip.low { color: var(--sev-low); background: var(--sev-low-bg); }
+.chip.good { color: var(--good); background: var(--good-bg); }
+.chip.tag { color: var(--muted); background: var(--code-bg); }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.89rem; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 0.7rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+td.num, th.num { text-align: right; white-space: nowrap; }
+.findings { display: grid; gap: 12px; }
+.finding { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--sev-low); border-radius: 8px; padding: 16px 18px; display: grid; gap: 8px; min-width: 0; }
+.finding.p0 { border-left-width: 6px; border-left-color: var(--sev-high); }
+.finding.p1 { border-left-color: var(--sev-high); }
+.finding.p2 { border-left-color: var(--sev-med); }
+.finding .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; }
+.finding .id { font: 500 0.8rem/1 var(--mono); color: var(--muted); }
+.finding h3 { flex: 1 1 280px; }
+.finding .where { font: 0.79rem/1.45 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.finding p { font-size: 0.93rem; }
+.finding .fix { color: var(--muted); }
+.finding b { color: var(--fg); font-weight: 600; }
+.probe { background: var(--code-bg); border-radius: 6px; padding: 10px 12px; font: 0.8rem/1.5 var(--mono); overflow-x: auto; white-space: pre; margin: 0; }
+ul.plain, ol.plain { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; max-width: 76ch; }
+.toc { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.88rem; }
+.note { color: var(--muted); font-size: .85rem; }
+footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); padding-top: 16px; }
+@media (max-width: 560px) {
+  h1 { font-size: 1.65rem; }
+  .wrap { padding-block: 24px 48px; padding-inline: 16px; gap: 36px; }
+  .finding { padding: 14px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Ревью кода · 2026-10-31</div>
+  <h1>ConceptPortal: результаты ревью кода</h1>
+  <div class="meta">
+    <span>Срез: <code>main</code>, коммит <code>d4d6950b</code></span>
+    <span>Бэкенд, rstool, rstool-mcp; фронтенд выборочно</span>
+  </div>
+  <nav class="toc">
+    <a href="#summary">Вывод</a>
+    <a href="#priorities">Приоритеты</a>
+    <a href="#plan">План работ</a>
+    <a href="#decisions">Нужные решения</a>
+    <a href="#p0">P0</a>
+    <a href="#p1">P1</a>
+    <a href="#p2">P2</a>
+    <a href="#p3">P3</a>
+    <a href="#scope">Границы проверки</a>
+  </nav>
+</header>
+
+<section id="summary">
+  <div class="verdict">
+    <div class="eyebrow">Вывод</div>
+    <div class="call">Две уязвимости стоит закрыть отдельным срочным выпуском: посторонний пользователь может менять чужие схемы, а аноним может читать приватные шаблоны промптов.</div>
+    <p>Всего найдено 42 дефекта, 27 из них воспроизведены запросами к API на временной базе. Ещё 8 дефектов приводят к утечке данных или их тихой потере и должны войти в ближайший выпуск. Остальные 30 снижают надёжность и не требуют срочных действий.</p>
+    <p>Все тесты бэкенда (456) проходят, несмотря на эти дефекты: сценариев с чужими данными в них не хватает. Зелёный CI пока не говорит о безопасности доступа.</p>
+  </div>
+</section>
+
+<section id="priorities">
+  <h2>Приоритеты</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Приоритет</th><th>Критерий</th><th>Когда</th><th>Дефекты</th><th class="num">Кол-во</th></tr></thead>
+      <tbody>
+        <tr><td><span class="chip high">P0</span></td><td>Может воспользоваться любой посторонний, без особых условий. Ущерб: потеря или раскрытие чужих данных. Сюда же входят тесты, без которых исправление не закрепить.</td><td>Срочный выпуск</td><td>15, 22, 19, 21</td><td class="num">4</td></tr>
+        <tr><td><span class="chip high">P1</span></td><td>Утечка при определённых условиях или тихая потеря данных при обычной работе.</td><td>Ближайший выпуск</td><td>7, 6, 26, 42, 30, 16, 13, 25</td><td class="num">8</td></tr>
+        <tr><td><span class="chip med">P2</span></td><td>Гонки, производительность, ослабленная защита, ошибки входа, пробелы в тестах. Ущерб ограничен или нужно редкое совпадение.</td><td>Плановые итерации</td><td>2, 5, 9, 14, 17, 18, 24, 29, 31, 32, 33, 34, 35, 36, 37, 39, 41</td><td class="num">17</td></tr>
+        <tr><td><span class="chip low">P3</span></td><td>Неверный код ответа на некорректный запрос, неточная документация, мелкие настройки. Данным не вредит.</td><td>Попутно</td><td>1, 3, 4, 8, 10, 11, 12, 20, 23, 27, 28, 38, 40</td><td class="num">13</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Приоритет учитывает ущерб, кто и как легко может вызвать дефект, и заметит ли его кто-нибудь. Поэтому тихая потеря данных стоит выше ошибки 500. Приоритеты и оценки трудоёмкости — экспертная оценка ревьюера, команда может их пересмотреть. Номера дефектов сохранены из первой версии отчёта.</p>
+</section>
+
+<section id="plan">
+  <h2>План работ</h2>
+  <p>Дефекты собраны в пакеты: их удобнее исправлять вместе, потому что они затрагивают один и тот же код. Оценка: S — до 2 часов, M — до дня, L — больше дня.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>#</th><th>Пакет</th><th>Дефекты</th><th>Результат</th><th>Оценка</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><b>Срочные права доступа</b></td><td>15, 19, 22, 21, 23</td><td>Чужие схемы и приватные шаблоны защищены, есть регрессионные тесты</td><td>M</td></tr>
+        <tr><td>2</td><td><b>Утечки при клонировании</b></td><td>7, 6</td><td>Клон не раскрывает закрытых схем и не выдаёт лишних прав</td><td>M, после решения 1 и 2</td></tr>
+        <tr><td>3</td><td><b>Целостность импорта и копий</b></td><td>26, 42, 13, 25</td><td>Импорт и копирование не теряют атрибуции и признаки конституент</td><td>L, из-за 42</td></tr>
+        <tr><td>4</td><td><b>Токены и гонки</b></td><td>39, 30, 16, 24, 14, 34</td><td>Устаревшая запись отклоняется. Начинать с 39: без Postgres в CI гонки не проверить</td><td>L</td></tr>
+        <tr><td>5</td><td><b>Вход и защита учётных записей</b></td><td>33, 31, 35, 36, 37, 38</td><td>Предсказуемый вход, реальные лимиты, пароли не уходят в Sentry</td><td>M</td></tr>
+        <tr><td>6</td><td><b>Проверка входных данных</b></td><td>9, 17, 29, 5, 3, 4, 8, 11, 27, 28</td><td>Некорректный ввод даёт 400 или 404, а не 500 и не мусор в базе</td><td>M</td></tr>
+        <tr><td>7</td><td><b>Наблюдаемость и качество</b></td><td>2, 18, 32, 41, 1, 10, 12, 20, 40</td><td>Журнал агента полон, меньше запросов к БД, документация соответствует коду</td><td>M</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Сразу после срочного выпуска</h3>
+  <ul class="plain">
+    <li><b>Проверить, использовались ли уязвимости.</b> Для этого нужны журналы nginx или gunicorn: анонимные <code>GET /api/prompts/&lt;id&gt;/</code> и запросы <code>relocate-constituents</code>. В журнал действий агента попадают только агентские маршруты, вызовы через UI там не видны. Неизвестно, хранятся ли журналы доступа на проде: явной настройки в конфигурации nginx нет.</li>
+    <li><b>Сверить публичные схемы с бэкапами,</b> если в журналах найдётся подозрительный relocate. Удаление конституент отменить нельзя, кроме как восстановлением из версии или бэкапа.</li>
+  </ul>
+</section>
+
+<section id="decisions">
+  <h2>Нужные решения</h2>
+  <ol class="plain">
+    <li><b>Клон ОСС со схемой, недоступной пользователю (дефект 7).</b> Рекомендация: запрещать клон и называть схему в ошибке. Альтернатива — клонировать, оставив операцию без результата; тогда копия получится неполной незаметно для пользователя.</li>
+    <li><b>Редакторы в клоне ОСС (дефект 6).</b> Если копирование намеренное, рекомендация: копировать только когда клонирует сам владелец. Клон обычной КС редакторов не копирует.</li>
+    <li><b>Уникальность email и alias (дефекты 34 и 24).</b> Ограничения в БД потребуют миграции и разбора существующих дубликатов на проде. Сначала нужно посчитать дубликаты.</li>
+    <li><b>Хранилище для лимитов (дефект 37).</b> Рекомендация: <code>DatabaseCache</code>, если Redis не планируется: он не добавляет новый сервис в развёртывание.</li>
+  </ol>
+</section>
+
+<section id="p0">
+  <h2>P0. Срочный выпуск</h2>
+  <div class="findings">
+
+    <article class="finding p0">
+      <div class="top"><span class="id">#15</span><h3>Посторонний удаляет и добавляет конституенты в чужой схеме</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/oss/mutations.py:417 · <code>source.delete_cst(ids)</code></p>
+      <p><b>Что происходит.</b> Для <code>relocate-constituents</code> проверяется право только на ОСС, но не на схемы, которые меняются. Свою ОСС может создать любой зарегистрированный пользователь, регистрация открыта, а новые элементы по умолчанию публичны.</p>
+      <p><b>Как воспроизведено.</b> Пользователь импортировал чужую публичную схему в свою ОСС без копирования и построил на ней синтез. Прямая правка этой схемы вернула ему 403. Перенос вниз удалил из неё конституенту <code>X3</code>, а перенос вверх добавил в неё его конституенту. Оба запроса вернули 200, <code>time_update</code> схемы при переносе вверх не изменился, поэтому владелец не получит конфликта при следующем сохранении.</p>
+      <p><b>Ущерб.</b> Необратимая потеря данных без отметки о том, кто это сделал. По коду удаление распространяется и на схемы, наследующие от этой. Агентский маршрут с API-ключом идёт через ту же функцию.</p>
+      <p class="fix"><b>Что сделать.</b> В <code>relocate_constituents</code> требовать <code>can_edit_item</code> на исходную и целевую схемы, иначе отвечать 403. Просмотреть остальные мутации ОСС на такой же пропуск. Оценка: M вместе с тестами.</p>
+    </article>
+
+    <article class="finding p0">
+      <div class="top"><span class="id">#22</span><h3>Аноним читает приватные шаблоны промптов</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/prompt/views/prompts.py:35 · <code>return [AllowAny()]</code></p>
+      <p><b>Что происходит.</b> Для действия <code>retrieve</code> список прав полностью заменяется на <code>AllowAny</code>, поэтому <code>IsOwnerOrAdmin</code> не вызывается. Комментарий в строке 19 обещает анонимам только общие шаблоны, но этот код для <code>retrieve</code> не выполняется.</p>
+      <p><b>Как воспроизведено.</b> Запрос без авторизации <code>GET /api/prompts/1/</code> к шаблону с <code>is_shared=False</code> вернул 200 и полный текст.</p>
+      <p><b>Ущерб.</b> Идентификаторы идут подряд, поэтому перебрать все шаблоны просто. Такое поведение есть в коде с 2025-07-16 (коммит <code>9964b8df</code>). Что именно развёрнуто на проде, не проверялось.</p>
+      <p class="fix"><b>Что сделать.</b> Для <code>retrieve</code> возвращать <code>[IsOwnerOrAdmin()]</code> без <code>IsAuthenticated</code>: фронтенд запрашивает шаблоны по id, а общие должны оставаться доступны анонимам. Оценка: S.</p>
+    </article>
+
+    <article class="finding p0">
+      <div class="top"><span class="id">#19</span><h3>Тесты relocate не проверяют чужие схемы</h3></div>
+      <p class="where">rsconcept/backend/apps/oss/tests/s_views/t_oss.py:263</p>
+      <p>Тесты работают только со своей ОСС и своими схемами, поэтому дефект 15 проходит CI незамеченным. <span class="fix"><b>Что сделать.</b> Добавить оба направления переноса с чужой схемой и ожидать 403 без изменений в ней. Оценка: S.</span></p>
+    </article>
+
+    <article class="finding p0">
+      <div class="top"><span class="id">#21</span><h3>Нет теста на чтение приватного шаблона</h3></div>
+      <p class="where">rsconcept/backend/apps/prompt/tests/t_prompts.py:106</p>
+      <p>Единственный тест прав на шаблон проверяет <code>PATCH</code>, поэтому дефект 22 проходит CI незамеченным. <span class="fix"><b>Что сделать.</b> Проверить чтение приватного шаблона анонимом и чужим пользователем (403), общего анонимом (200). Оценка: S.</span></p>
+    </article>
+
+  </div>
+</section>
+
+<section id="p1">
+  <h2>P1. Ближайший выпуск</h2>
+  <div class="findings">
+
+    <article class="finding p1">
+      <div class="top"><span class="id">#7</span><h3>Клон ОСС раскрывает схему, которая стала приватной</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/library/services/clone.py:174; также apps/oss/mutations.py:139</p>
+      <p>Право чтения проверяется только у самой ОСС, но не у её схем. Схема была импортирована, владелец сделал её приватной, прямое чтение стало возвращать 403, а клон ОСС отдал её текст новому владельцу. Так же работает <code>clone-schema</code>.</p>
+      <p class="fix"><b>Что сделать.</b> Проверять <code>can_read_library_item</code> для каждой схемы-результата (решение 1). Оценка: M.</p>
+    </article>
+
+    <article class="finding p1">
+      <div class="top"><span class="id">#6</span><h3>Редакторы исходной ОСС получают права на чужой клон</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/library/services/clone.py:94</p>
+      <p>Посторонний клонировал ОСС с политикой <code>protected</code>, и редактор исходника смог изменить его клон. Автор клона об этом не знает.</p>
+      <p class="fix"><b>Что сделать.</b> Не копировать редакторов в клон, сделанный другим пользователем (решение 2). Оценка: S.</p>
+    </article>
+
+    <article class="finding p1">
+      <div class="top"><span class="id">#26</span><h3>Загрузка JSON не сохраняет атрибуции</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/rsform/serializers/data_access.py:377, а также :111</p>
+      <p>Новая атрибуция: ответ 200, сохранено 0 записей, существующие удаляются. Существующая пара или неизвестные id: ответ 400, поэтому собственный файл схемы с атрибуциями не загрузить обратно. Причина: сериализатор превращает id в объекты, а код ищет их в словаре по числам.</p>
+      <p class="fix"><b>Что сделать.</b> Принимать атрибуции как пары чисел, как в импорте из песочницы. Оценка: S.</p>
+    </article>
+
+    <article class="finding p1">
+      <div class="top"><span class="id">#42</span><h3>Публикация из rstool стирает данные схемы</h3><span class="chip tag">по коду</span></div>
+      <p class="where">rsconcept/rstool/src/models/rstool-agent.ts:555–566</p>
+      <p>Сессия не хранит эти поля, а <code>exportPortal</code> подставляет постоянные значения: <code>crucial: false</code>, <code>term_forms: []</code>, <code>attribution: []</code> и другие. Цепочка импорта, правки, экспорта и <code>replace</code> снимает статус ключевых конституент, стирает словоформы, типизацию и атрибуции. Это основной сценарий работы агента с готовой схемой.</p>
+      <p class="fix"><b>Что сделать.</b> Хранить эти поля в сессии. До выхода исправления описать ограничение в <code>PORTAL-PUBLISH.md</code>. Оценка: L.</p>
+    </article>
+
+    <article class="finding p1">
+      <div class="top"><span class="id">#30</span><h3>Загрузка TRS не меняет токен версии</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/rsform/serializers/io_files.py:235</p>
+      <p>Без изменения метаданных <code>time_update</code> остаётся прежним. После полной замены схемы запись с прежним токеном вернула 200 вместо 409, поэтому второй клиент может перезаписать результат импорта.</p>
+      <p class="fix"><b>Что сделать.</b> Сохранять с <code>update_fields=['time_update']</code>, как в других мутациях. Оценка: S.</p>
+    </article>
+
+    <article class="finding p1">
+      <div class="top"><span class="id">#16</span><h3>Перенос конституент не обновляет токены</h3><span class="chip tag">по коду</span></div>
+      <p class="where">rsconcept/backend/apps/oss/mutations.py:421</p>
+      <p>Обновление <code>time_update</code> стоит только в ветке переноса вверх, и обновляется только ОСС. У схем токен не меняется (при переносе вверх воспроизведено), поэтому устаревший клиент проходит проверку.</p>
+      <p class="fix"><b>Что сделать.</b> Обновлять токены ОСС и обеих схем в обеих ветках. Оценка: S.</p>
+    </article>
+
+    <article class="finding p1">
+      <div class="top"><span class="id">#13</span><h3>Клонирование схемы в ОСС теряет атрибуции</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/oss/mutations.py:149</p>
+      <p>Вместо общей функции <code>insert_from</code> здесь своё копирование. У исходной схемы 1 атрибуция, у результата <code>clone-schema</code> 0, у импорта с клонированием 1.</p>
+      <p class="fix"><b>Что сделать.</b> Использовать <code>insert_from</code>. Оценка: S.</p>
+    </article>
+
+    <article class="finding p1">
+      <div class="top"><span class="id">#25</span><h3>Смена типа конституенты молча игнорируется</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/rsform/mutations.py:54</p>
+      <p>Тип меняется только вместе с alias. <code>update-cst</code> с одним <code>cst_type</code> вернул 200, а тип остался прежним. Агент считает изменение выполненным.</p>
+      <p class="fix"><b>Что сделать.</b> Применять <code>cst_type</code> независимо от alias, с распространением по наследникам. Оценка: S.</p>
+    </article>
+
+  </div>
+</section>
+
+<section id="p2">
+  <h2>P2. Плановые итерации</h2>
+  <div class="findings">
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#2</span><h3>Падения агентских запросов не попадают в журнал</h3><span class="chip tag">по коду</span></div>
+      <p class="where">rsconcept/backend/apps/agents/views/base.py:44</p>
+      <p>Докстринг обещает запись ошибок, но при необработанном исключении DRF пробрасывает его раньше <code>_log</code>. <span class="fix"><b>Что сделать.</b> Логировать до проброса. Оценка: S.</span></p>
+    </article>
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#5</span><h3>Агент может создать пустую версию вместо выборочной</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/agents/views/rsforms.py:128</p>
+      <p>Копия логики UI берёт сырые id. <code>"items": ["5"]</code> создаёт версию с 0 конституент и отвечает 201; маршрут UI на том же запросе сохраняет 1. <span class="fix"><b>Что сделать.</b> Использовать проверенные данные сериализатора. Оценка: S.</span></p>
+    </article>
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#9</span><h3>Расположение элемента не проверяется</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/library/services/location_access.py:28</p>
+      <p>Готовую функцию <code>validate_writable_location</code> никто не вызывает. Создание с <code>not a location/../x</code> и <code>garbage</code>, клон с <code>???</code> отвечают 201. <span class="fix"><b>Что сделать.</b> Подключить проверку при создании и клонировании, поискать мусорные значения в базе. Оценка: M.</span></p>
+    </article>
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#14</span><h3>Двойной запуск операции создаёт лишнюю схему</h3><span class="chip tag">по коду</span></div>
+      <p class="where">rsconcept/backend/apps/oss/mutations.py:391; также :343</p>
+      <p>Проверка результата идёт до блокировки и не повторяется после неё. Второй запрос дождётся первого и создаст ещё одну схему, первая останется без операции. <span class="fix"><b>Что сделать.</b> Перечитывать операцию под блокировкой. Оценка: S.</span></p>
+    </article>
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#17</span><h3>Блок можно сделать родителем самого себя</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/oss/serializers/data_access.py:146</p>
+      <p><code>update-block</code> с <code>parent = target</code> отвечает 200 и сохраняет цикл. Поведение UI на таких данных не проверялось. <span class="fix"><b>Что сделать.</b> Запретить, как уже сделано в <code>MoveItemsSerializer</code>. Оценка: S.</span></p>
+    </article>
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#18</span><h3>Детали ОСС требуют запроса к БД на каждую операцию</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/oss/serializers/data_access.py:605</p>
+      <p>18 запросов при 5 операциях, 108 при 50. Маршрут открыт анонимам без ограничения частоты, а этот же ответ строится после каждой мутации ОСС. <span class="fix"><b>Что сделать.</b> <code>select_related</code> и единый запрос для <code>has_additions</code>. Оценка: M.</span></p>
+    </article>
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#24</span><h3>Мутации КС не защищены от одновременной записи</h3><span class="chip tag">по коду</span></div>
+      <p class="where">rsconcept/backend/apps/rsform/mutations.py:13</p>
+      <p>В мутациях ОСС и моделей токен перепроверяется под блокировкой, в мутациях КС нет. Два <code>update-cst</code> с одним токеном оба пройдут, а параллельное создание может дать одинаковый alias. <span class="fix"><b>Что сделать.</b> Брать блокировку так же, как в ОСС. Оценка: M.</span></p>
+    </article>
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#29</span><h3>Некорректный файл TRS приводит к ошибке 500</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/rsform/serializers/io_files.py:115; также apps/rsform/serializers/io_files.py:242, shared/utility.py:39</p>
+      <p>Падают: <code>"version": "16"</code>, <code>definition</code> строкой, невалидный JSON и JSON-массив. Пользователь не узнаёт, что файл повреждён. <span class="fix"><b>Что сделать.</b> Проверять структуру файла и отвечать 400. Оценка: M.</span></p>
+    </article>
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#31</span><h3>Логин с символом @ не работает</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/users/serializers.py:36</p>
+      <p>Регистрация разрешает <code>at@sign</code>, а вход ищет такой логин как email и отвечает 400. Войти можно только по email. <span class="fix"><b>Что сделать.</b> Искать сначала по username, потом по email. Оценка: S.</span></p>
+    </article>
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#32</span><h3>Запрос текущего пользователя растёт с числом редактируемых элементов</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/users/serializers.py:77</p>
+      <p>6 запросов при 5 записях, 51 при 50, на каждый <code>GET /users/api/auth</code>. <span class="fix"><b>Что сделать.</b> Читать <code>item_id</code> через <code>values_list</code>. Оценка: S.</span></p>
+    </article>
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#33</span><h3>Пароль с пробелом на краю не подходит для входа</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/users/serializers.py:143</p>
+      <p>Регистрация обрезает пробелы, вход нет. С тем же введённым паролем вход отвечает 400, без пробела 202. Смена пароля использует то же умолчание. <span class="fix"><b>Что сделать.</b> <code>trim_whitespace=False</code> для всех полей пароля. Оценка: S.</span></p>
+    </article>
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#34</span><h3>Email не уникален</h3><span class="chip good">регистр воспроизведён</span></div>
+      <p class="where">rsconcept/backend/apps/users/serializers.py:164</p>
+      <p><code>Case@x.ru</code> и <code>case@x.ru</code> регистрируются оба. При гонке с одинаковым адресом оба пользователя теряют вход по email. <span class="fix"><b>Что сделать.</b> Нормализовать адрес и добавить ограничение в БД (решение 3). Оценка: L.</span></p>
+    </article>
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#35</span><h3>Регистрация без необязательных полей падает</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/users/serializers.py:176; также :164</p>
+      <p>Без <code>first_name</code> или <code>email</code> ответ 500 вместо 400 или успеха. <span class="fix"><b>Что сделать.</b> Читать необязательные поля через <code>.get()</code>, email сделать обязательным. Оценка: S.</span></p>
+    </article>
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#36</span><h3>Пароли могут уходить в Sentry</h3><span class="chip tag">требует проверки</span></div>
+      <p class="where">rsconcept/backend/project/settings.py:107; rsconcept/backend/.env.prod:38</p>
+      <p>Флаг PII включён на проде. <code>EventScrubber</code> скрыл на тестовом теле запроса <code>password</code>, но оставил открытыми <code>password2</code>, <code>old_password</code> и <code>new_password</code>. Отправка реального события не проверялась. Падение из дефекта 35 как раз происходит на запросе с <code>password2</code>. <span class="fix"><b>Что сделать.</b> Проверить тестовым событием в непродуктовый проект, затем отключить PII или расширить список скрываемых полей. Оценка: S.</span></p>
+    </article>
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#37</span><h3>Лимиты входа и регистрации втрое мягче заявленных</h3><span class="chip tag">по коду</span></div>
+      <p class="where">rsconcept/backend/project/settings.py:221; docker-compose-prod.yml:71</p>
+      <p><code>CACHES</code> не задан, поэтому счётчики живут отдельно в каждом из трёх процессов <code>gunicorn</code>. Реальный предел входа — до 15 попыток в минуту вместо 5. Перезапуск обнуляет счётчики. <span class="fix"><b>Что сделать.</b> Общий кэш (решение 4). Оценка: M.</span></p>
+    </article>
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#39</span><h3>CI не может проверить гонки</h3></div>
+      <p class="where">.github/workflows/backend.yml:53</p>
+      <p>Тесты идут на SQLite, где <code>SELECT FOR UPDATE</code> отбрасывается. Без этого не проверить исправления 14, 24 и 34. <span class="fix"><b>Что сделать.</b> Запускать тесты на Postgres. Оценка: M.</span></p>
+    </article>
+
+    <article class="finding p2">
+      <div class="top"><span class="id">#41</span><h3>Тесты MCP-сервера не вызывают сервер</h3></div>
+      <p class="where">rsconcept/rstool-mcp/src/server.test.ts:9</p>
+      <p>Тест сверяет постоянный список имён. Если удалить оба <code>setRequestHandler</code> из <code>server.ts</code>, все 3 теста останутся зелёными. <span class="fix"><b>Что сделать.</b> Вызывать обработчики через настоящего MCP-клиента. Оценка: S.</span></p>
+    </article>
+
+  </div>
+</section>
+
+<section id="p3">
+  <h2>P3. Попутно</h2>
+  <p class="note">Каждый дефект занимает до 2 часов. Дефект 23 проще исправить вместе с 22.</p>
+  <div class="findings">
+
+    <article class="finding">
+      <div class="top"><span class="id">#1</span><h3>Неверный API-ключ получает 403 вместо 401</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/agents/authentication.py:10</p>
+      <p>Нет <code>authenticate_header</code>, поэтому клиент не отличит отозванный ключ от нехватки прав.</p>
+    </article>
+
+    <article class="finding">
+      <div class="top"><span class="id">#3</span><h3>Нечисловой id ключа даёт 500</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/agents/views/keys.py:77, :88</p>
+      <p><code>PATCH</code> или <code>DELETE /api/agents/keys/abc</code> должны отвечать 404.</p>
+    </article>
+
+    <article class="finding">
+      <div class="top"><span class="id">#4</span><h3>JSON-массив в теле агентского запроса даёт 500</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/agents/views/rsforms.py:51, :199</p>
+      <p>В <code>agents/views/oss.py</code> такая проверка уже есть, её можно повторить.</p>
+    </article>
+
+    <article class="finding">
+      <div class="top"><span class="id">#8</span><h3>Клон ОСС без расположения даёт 500</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/library/services/clone.py:181</p>
+      <p>Поле <code>location</code> необязательно, но код читает его напрямую.</p>
+    </article>
+
+    <article class="finding">
+      <div class="top"><span class="id">#10</span><h3>Неверный докстринг у версий</h3></div>
+      <p class="where">rsconcept/backend/apps/library/views/versions.py:46</p>
+      <p>Написано «Get / Update Constituenta», а класс работает с версиями.</p>
+    </article>
+
+    <article class="finding">
+      <div class="top"><span class="id">#11</span><h3>Создание версии для ОСС даёт 500</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/library/views/versions.py:125</p>
+      <p>Тип элемента не проверяется, нужен ответ 400 или 404.</p>
+    </article>
+
+    <article class="finding">
+      <div class="top"><span class="id">#12</span><h3>Неверный докстринг у отождествлений</h3></div>
+      <p class="where">rsconcept/backend/apps/oss/models/OperationSchemaCached.py:128</p>
+      <p>Написано «Clear all arguments», а метод задаёт отождествления и не трогает аргументы.</p>
+    </article>
+
+    <article class="finding">
+      <div class="top"><span class="id">#20</span><h3>OpenAPI обещает тело, которого нет</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/oss/views/oss.py:516</p>
+      <p><code>relocate-constituents</code> в UI-маршруте отвечает пустым телом, хотя в схеме указан <code>OperationSchemaSerializer</code>. Агентский маршрут отдаёт ОСС.</p>
+    </article>
+
+    <article class="finding">
+      <div class="top"><span class="id">#23</span><h3>Несуществующий шаблон даёт 500</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/prompt/views/prompts.py:45</p>
+      <p>Несуществующий и нечисловой id должны отвечать 404: подойдёт <code>get_object_or_404</code>.</p>
+    </article>
+
+    <article class="finding">
+      <div class="top"><span class="id">#27</span><h3>Позиция при перемещении конституент не ограничена</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/rsform/serializers/data_access.py:452</p>
+      <p><code>-1</code> даёт 500, а <code>2**40</code> отвечает 200 и записывает такой порядок (проверено на SQLite).</p>
+    </article>
+
+    <article class="finding">
+      <div class="top"><span class="id">#28</span><h3>Встраивающий синтез принимает ОСС как получателя</h3><span class="chip good">воспроизведено</span></div>
+      <p class="where">rsconcept/backend/apps/rsform/serializers/data_access.py:549</p>
+      <p>Запрос создал 2 конституенты под записью ОСС. Менять так можно только то, на что у пользователя есть права. Нужно ограничить тип.</p>
+    </article>
+
+    <article class="finding">
+      <div class="top"><span class="id">#38</span><h3>HSTS на API, вероятно, не отправляется</h3><span class="chip tag">требует проверки</span></div>
+      <p class="where">rsconcept/backend/project/settings.py:265</p>
+      <p>Django шлёт заголовок только при <code>is_secure()</code>, но <code>SECURE_PROXY_SSL_HEADER</code> не задан, а блок nginx для API не передаёт схему и не ставит заголовок сам. Проверка:</p>
+      <pre class="probe">curl -sI https://api.portal.acconcept.ru/ | grep -i strict-transport</pre>
+    </article>
+
+    <article class="finding">
+      <div class="top"><span class="id">#40</span><h3>ESLint в рабочих зависимостях пакетов</h3></div>
+      <p class="where">rsconcept/rstool/package.json:84; rsconcept/rstool-mcp/package.json:53</p>
+      <p>Каждый потребитель опубликованных пакетов получит ESLint и его плагин при установке. Нужно перенести их в <code>devDependencies</code>.</p>
+    </article>
+
+  </div>
+</section>
+
+<section id="scope">
+  <h2>Границы проверки</h2>
+
+  <h3>Как проверялось</h3>
+  <ul class="plain">
+    <li>Код читался по категориям из эталонного промпта для кода, написанного ИИ: дублирование, конкурентность, комментарии, безопасность, обработка ошибок, тесты, зависимости.</li>
+    <li>Дефекты с отметкой «воспроизведено» получены запросами к API на временной базе SQLite в памяти. Рабочая база не затрагивалась.</li>
+    <li>Отметка «по коду» значит, что дефект виден из кода, но не запускался.</li>
+    <li>Документа с требованиями нет, поэтому ожидаемое поведение выводилось из докстрингов, <code>rstool/docs</code> и соседних маршрутов.</li>
+  </ul>
+
+  <h3>Прогоны тестов</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Пакет</th><th class="num">Тестов</th><th>Результат</th></tr></thead>
+      <tbody>
+        <tr><td>Бэкенд</td><td class="num">456</td><td>Все проходят</td></tr>
+        <tr><td><code>domain</code></td><td class="num">931</td><td>Все проходят</td></tr>
+        <tr><td><code>rstool</code></td><td class="num">166</td><td>Все проходят</td></tr>
+        <tr><td><code>rstool-mcp</code></td><td class="num">3</td><td>Все проходят</td></tr>
+        <tr><td>Фронтенд</td><td class="num">375</td><td>В первом прогоне упали 3, в четырёх следующих упавших нет. Имена не зафиксированы, возможна нестабильность</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Что не проверено</h3>
+  <ul class="plain">
+    <li><b>Прод.</b> Обращений к нему не было. Неизвестно, какая версия развёрнута, использовались ли уязвимости, отправляются ли 36 и 38.</li>
+    <li><b>Гонки на Postgres.</b> Дефекты 14, 24 и 34 не запускались в параллельных транзакциях.</li>
+    <li><b>Фронтенд.</b> Около 1200 файлов проверены выборочно: транспорт, CSRF, токен сброса, санитизация, очистка Sentry, поиск опасных конструкций. В этой выборке дефектов нет, но весь UI не просмотрен.</li>
+    <li><b>Движок.</b> <code>domain</code> проверен только тестами. <code>PropagationEngine</code>, <code>OssCache</code>, <code>rstool-mcp/src/tools.ts</code> и большая часть <code>agents/views/oss.py</code> построчно не читались.</li>
+    <li><b>Зависимости.</b> Известные CVE не проверялись. Выборочно подтверждены <code>MAILERS</code> в Django 6.1, <code>enable_logs</code> в Sentry и пакет <code>cn</code> с репозиторием shadcn-ui.</li>
+  </ul>
+
+  <p class="note"><b>Замечания по стилю, не вошедшие в дефекты:</b> <code>coreapi</code> нигде не импортируется, в <code>except PermissionDenied</code> из <code>library/views/library.py:162</code> ловится не тот класс (ответ всё равно 403), <code>_lock_expected_update</code> скопирован в двух файлах, сервер MCP объявляет версию <code>0.1.0</code> при пакете <code>1.0.0</code>, SENTRY_DSN лежит в отслеживаемом <code>.env.prod</code> (DSN не секрет, но стоит учитывать).</p>
+</section>
+
+<footer>Код репозитория при подготовке отчёта не менялся.</footer>
+
+</div>
+</body>
+</html>
