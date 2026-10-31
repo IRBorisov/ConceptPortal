@@ -239,6 +239,14 @@ def passwordsNotMatch() -> str:
     return 'Введенные пароли не совпадают'
 
 
+def passwordTrailingSpace() -> str:
+    return 'Пароль не может заканчиваться пробелом'
+
+
+def usernameAtSign() -> str:
+    return 'Имя пользователя не может содержать символ @'
+
+
 def emailAlreadyTaken() -> str:
     return 'Пользователь с данным email уже существует'
 

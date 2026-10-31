@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { isPasswordTooSimilar, schemaPassword } from './password-validation';
+import { hasTrailingPasswordSpace, isPasswordTooSimilar, schemaPassword } from './password-validation';
 
 describe('schemaPassword', () => {
   test('rejects short and numeric-only passwords', () => {
@@ -10,6 +10,12 @@ describe('schemaPassword', () => {
 
   test('allows non-dictionary algorithmic checks to pass', () => {
     expect(schemaPassword.safeParse('PortalPass123').success).toBe(true);
+  });
+
+  test('rejects a trailing space', () => {
+    expect(hasTrailingPasswordSpace('PortalPass123 ')).toBe(true);
+    expect(schemaPassword.safeParse('PortalPass123 ').success).toBe(false);
+    expect(schemaPassword.safeParse(' PortalPass123').success).toBe(true);
   });
 });
 

@@ -19,6 +19,7 @@ from pathlib import Path
 import sentry_sdk
 from corsheaders.defaults import default_headers
 from django.core.exceptions import ImproperlyConfigured
+from sentry_sdk.scrubber import DEFAULT_DENYLIST, EventScrubber
 
 
 def _get_secret(key: str, default):
@@ -106,6 +107,15 @@ SENTRY_RELEASE = _get_sentry_release()
 SENTRY_TRACES_SAMPLE_RATE = _get_float('SENTRY_TRACES_SAMPLE_RATE', 0.1)
 SENTRY_SEND_DEFAULT_PII = _get_bool('SENTRY_SEND_DEFAULT_PII', True)
 SENTRY_ENABLE_LOGS = _get_bool('SENTRY_ENABLE_LOGS', True)
+# Default denylist matches the key "password" exactly, so aliases stay in the event.
+SENTRY_SCRUB_DENYLIST = [
+    *DEFAULT_DENYLIST,
+    'password1',
+    'password2',
+    'old_password',
+    'new_password',
+    'new_password2',
+]
 
 ALLOWED_HOSTS = _get_list(
     'ALLOWED_HOSTS',
@@ -140,6 +150,11 @@ if (
         traces_sample_rate=SENTRY_TRACES_SAMPLE_RATE,
         enable_logs=SENTRY_ENABLE_LOGS,
         debug=_get_bool('SENTRY_DEBUG', False),
+        event_scrubber=EventScrubber(
+            denylist=list(SENTRY_SCRUB_DENYLIST),
+            recursive=True,
+            send_default_pii=SENTRY_SEND_DEFAULT_PII,
+        ),
     )
 
 # MAIL SETUP

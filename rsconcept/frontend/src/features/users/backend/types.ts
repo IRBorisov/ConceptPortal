@@ -2,7 +2,11 @@ import { z } from 'zod';
 
 import { globalTx } from '@/i18n';
 
-import { isPasswordTooSimilar, schemaPassword } from '@/features/auth/backend/password-validation';
+import {
+  hasTrailingPasswordSpace,
+  isPasswordTooSimilar,
+  schemaPassword
+} from '@/features/auth/backend/password-validation';
 
 import { limits, patterns } from '@/utils/constants';
 
@@ -52,6 +56,9 @@ export const schemaUserSignup = schemaUserInput
       .string()
       .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
       .nonempty(globalTx('tx.general.field.required'))
+      .refine(password => !hasTrailingPasswordSpace(password), {
+        message: globalTx('tx.general.password.validate.trailingSpace')
+      })
   })
   .refine(
     schema =>

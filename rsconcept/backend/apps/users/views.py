@@ -12,7 +12,6 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
 from django_rest_passwordreset.models import ResetPasswordToken, get_password_reset_token_expiry_time
-from django_rest_passwordreset.serializers import PasswordTokenSerializer
 from django_rest_passwordreset.signals import post_password_reset, pre_password_reset
 from django_rest_passwordreset.views import ResetPasswordRequestToken  # type: ignore
 from django_rest_passwordreset.views import ResetPasswordValidateToken  # type: ignore
@@ -169,7 +168,7 @@ class PasswordResetConfirmAPIView(generics.GenericAPIView):
 
     throttle_classes = (PasswordResetRateThrottle,)
     permission_classes = ()
-    serializer_class = PasswordTokenSerializer
+    serializer_class = s.PasswordResetConfirmSerializer
     authentication_classes = ()
 
     def post(self, request, *args, **kwargs):

@@ -4,7 +4,7 @@ import { globalTx } from '@/i18n';
 
 import { limits } from '@/utils/constants';
 
-import { schemaPassword } from './password-validation';
+import { hasTrailingPasswordSpace, schemaPassword } from './password-validation';
 
 /** Represents CurrentUser information. */
 export interface ICurrentUser {
@@ -57,6 +57,9 @@ export const schemaUserLogin = z.strictObject({
     .string()
     .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
     .nonempty(globalTx('tx.general.field.required'))
+    .refine(password => !hasTrailingPasswordSpace(password), {
+      message: globalTx('tx.general.password.validate.trailingSpace')
+    })
 });
 
 export const schemaChangePassword = z
@@ -64,12 +67,18 @@ export const schemaChangePassword = z
     old_password: z
       .string()
       .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
-      .nonempty(globalTx('tx.general.field.required')),
+      .nonempty(globalTx('tx.general.field.required'))
+      .refine(password => !hasTrailingPasswordSpace(password), {
+        message: globalTx('tx.general.password.validate.trailingSpace')
+      }),
     new_password: schemaPassword,
     new_password2: z
       .string()
       .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
       .nonempty(globalTx('tx.general.field.required'))
+      .refine(password => !hasTrailingPasswordSpace(password), {
+        message: globalTx('tx.general.password.validate.trailingSpace')
+      })
   })
   .refine(schema => schema.new_password === schema.new_password2, {
     path: ['new_password2'],
