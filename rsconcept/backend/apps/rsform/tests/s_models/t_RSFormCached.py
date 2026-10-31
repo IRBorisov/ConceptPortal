@@ -161,12 +161,14 @@ class TestRSFormCached(DBTester):
             alias='D1',
             definition_formal='X1 = X11 = X2',
             definition_raw='@{X11|sing}',
-            term_raw='@{X1|plur}'
+            term_raw='@{X1|plur}',
+            typification_manual='ℬ(X1)'
         )
 
         self.schema.apply_mapping({x1.alias: 'X3', x2.alias: 'X4'})
         d1.refresh_from_db()
         self.assertEqual(d1.definition_formal, 'X3 = X4 = X2', msg='Map IDs in expression')
+        self.assertEqual(d1.typification_manual, 'ℬ(X3)', msg='Map IDs in manual typification')
         self.assertEqual(d1.definition_raw, '@{X4|sing}', msg='Map IDs in definition')
         self.assertEqual(d1.term_raw, '@{X3|plur}', msg='Map IDs in term')
         self.assertEqual(d1.term_resolved, '', msg='Do not run resolve on mapping')

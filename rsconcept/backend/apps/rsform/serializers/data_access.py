@@ -27,6 +27,13 @@ from ..models.api_RSLanguage import find_import_alias_error, validate_new_cst_al
 from .basics import CstParseSerializer, InheritanceDataSerializer
 
 
+def _reject_duplicate_item_ids(items: list[dict]) -> None:
+    ''' Reject an import whose constituenta ids are not unique. '''
+    item_ids = [item['id'] for item in items]
+    if len(item_ids) != len(set(item_ids)):
+        raise serializers.ValidationError({'items': msg.duplicateConstituentIds()})
+
+
 class AttributionSerializer(StrictModelSerializer):
     ''' Serializer: Attribution relation. '''
     class Meta:
@@ -121,6 +128,7 @@ class RSFormImportJsonSerializer(PortalImportJsonMetadataSerializer):
         alias_error = find_import_alias_error(attrs['items'])
         if alias_error:
             raise serializers.ValidationError({'items': alias_error})
+        _reject_duplicate_item_ids(attrs['items'])
         known_ids = {item['id'] for item in attrs['items']}
         for attr in attrs.get('attribution', []):
             if attr['container'] not in known_ids or attr['attribute'] not in known_ids:
@@ -333,6 +341,7 @@ class RSFormSerializer(StrictModelSerializer):
         alias_error = find_import_alias_error(data['items'])
         if alias_error:
             raise serializers.ValidationError({'items': alias_error})
+        _reject_duplicate_item_ids(data['items'])
         instance = cast(LibraryItem, self.instance)
         schema = RSForm(instance)
         items: list[dict] = data['items']

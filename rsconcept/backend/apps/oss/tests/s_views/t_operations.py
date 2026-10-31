@@ -191,7 +191,10 @@ class TestOssOperations(EndpointTester):
         new_operation_id = response.data['new_operation']
         new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
         self.assertEqual(
-            Attribution.objects.filter(container__schema_id=new_operation['result']).count(),
+            Attribution.objects.filter(
+                container__schema_id=new_operation['result'],
+                attribute__schema_id=new_operation['result']
+            ).count(),
             1
         )
 
