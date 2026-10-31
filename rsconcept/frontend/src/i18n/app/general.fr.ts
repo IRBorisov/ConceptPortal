@@ -44,6 +44,7 @@ export const txGeneralFr: Record<string, string> = {
   'tx.general.password.new': 'Nouveau mot de passe',
   'tx.general.password.new.validate': 'Le nouveau mot de passe doit être différent du mot de passe actuel',
   'tx.general.password.validate.minLength': 'Le mot de passe doit contenir au moins {minLength} caractères',
+  'tx.general.password.validate.trailingSpace': 'Le mot de passe ne peut pas se terminer par un espace',
   'tx.general.password.validate.numeric': 'Le mot de passe ne peut pas contenir uniquement des chiffres',
   'tx.general.password.validate.similar': 'Le mot de passe est trop similaire aux informations utilisateur',
   'tx.general.password.repeat': 'Confirmer le mot de passe',

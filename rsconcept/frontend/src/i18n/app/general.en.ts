@@ -37,6 +37,7 @@ export const txGeneralEn: Record<string, string> = {
   'tx.general.password.new': 'New password',
   'tx.general.password.new.validate': 'The new password must be different from the current one',
   'tx.general.password.validate.minLength': 'The password must contain at least {minLength} characters',
+  'tx.general.password.validate.trailingSpace': 'The password cannot end with a space',
   'tx.general.password.validate.numeric': 'The password cannot consist only of digits',
   'tx.general.password.validate.similar': 'The password is too similar to the user information',
   'tx.general.password.current': 'Current password',

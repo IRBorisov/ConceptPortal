@@ -7,11 +7,19 @@ import { limits } from '@/utils/constants';
 const PASSWORD_MIN_LENGTH = 8;
 const PASSWORD_SIMILARITY_THRESHOLD = 0.7;
 
+/** True when the password ends with whitespace. Signup used to trim it and login did not. */
+export function hasTrailingPasswordSpace(password: string): boolean {
+  return password !== password.trimEnd();
+}
+
 export const schemaPassword = z
   .string()
   .max(limits.len_alias, `${globalTx('tx.general.symbol.count.limit')} (${limits.len_alias})`)
   .nonempty(globalTx('tx.general.field.required'))
   .min(PASSWORD_MIN_LENGTH, globalTx('tx.general.password.validate.minLength', { minLength: PASSWORD_MIN_LENGTH }))
+  .refine(password => !hasTrailingPasswordSpace(password), {
+    message: globalTx('tx.general.password.validate.trailingSpace')
+  })
   .refine(password => !/^\d+$/.test(password), {
     message: globalTx('tx.general.password.validate.numeric')
   });

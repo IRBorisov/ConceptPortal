@@ -13,6 +13,7 @@ import { TextInput } from '@/components/input';
 import { Loader } from '@/components/loader';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
+import { hasTrailingPasswordSpace } from '../backend/password-validation';
 import { useResetPassword } from '../backend/use-reset-password';
 import { captureResetTokenFromUrl, clearResetToken, readResetToken } from '../models/password-reset-token';
 
@@ -58,7 +59,14 @@ export function Component() {
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
 
-  const canSubmit = !!newPassword && !!newPasswordRepeat && newPassword === newPasswordRepeat;
+  const newPasswordEndsWithSpace = hasTrailingPasswordSpace(newPassword);
+  const repeatEndsWithSpace = hasTrailingPasswordSpace(newPasswordRepeat);
+  const canSubmit =
+    !!newPassword &&
+    !!newPasswordRepeat &&
+    newPassword === newPasswordRepeat &&
+    !newPasswordEndsWithSpace &&
+    !repeatEndsWithSpace;
 
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -93,6 +101,7 @@ export function Component() {
         onChange={event => {
           setNewPassword(event.target.value);
         }}
+        error={newPasswordEndsWithSpace ? tx('tx.general.password.validate.trailingSpace') : undefined}
       />
       <TextInput
         id='new_password_repeat'
@@ -104,8 +113,9 @@ export function Component() {
         onChange={event => {
           setNewPasswordRepeat(event.target.value);
         }}
+        error={repeatEndsWithSpace ? tx('tx.general.password.validate.trailingSpace') : undefined}
       />
-      {newPasswordRepeat && newPassword !== newPasswordRepeat ? (
+      {newPasswordRepeat && newPassword !== newPasswordRepeat && !repeatEndsWithSpace ? (
         <div className='text-sm text-destructive'>{tx('tx.general.password.repeat.validate')}</div>
       ) : null}
 

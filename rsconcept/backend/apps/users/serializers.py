@@ -1,7 +1,9 @@
 ''' Serializers: User profile and Authorization. '''
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from django.middleware.csrf import get_token
+from django_rest_passwordreset.serializers import PasswordTokenSerializer
 from rest_framework import serializers
 
 from apps.library.models import Editor
@@ -9,6 +11,23 @@ from shared import messages as msg
 from shared.serializers import StrictModelSerializer, StrictSerializer
 
 from . import models
+from .validators import forbid_trailing_password_space
+
+
+class PasswordField(serializers.CharField):
+    ''' Password input. Trailing whitespace is an error, not something to trim. '''
+
+    def __init__(self, **kwargs):
+        kwargs['trim_whitespace'] = False
+        super().__init__(**kwargs)
+
+    def to_internal_value(self, data):
+        value = super().to_internal_value(data)
+        try:
+            forbid_trailing_password_space(value)
+        except ValidationError as error:
+            raise serializers.ValidationError(error.messages) from error
+        return value
 
 
 class NonFieldErrorSerializer(StrictSerializer):
@@ -24,10 +43,9 @@ class LoginSerializer(StrictSerializer):
         label='Имя пользователя',
         write_only=True
     )
-    password = serializers.CharField(
+    password = PasswordField(
         label='Пароль',
         style={'input_type': 'password'},
-        trim_whitespace=False,
         write_only=True
     )
 
@@ -129,8 +147,8 @@ class UserInfoSerializer(StrictModelSerializer):
 
 class ChangePasswordSerializer(StrictSerializer):
     ''' Serializer: Change password. '''
-    old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True)
+    old_password = PasswordField(required=True)
+    new_password = PasswordField(required=True)
 
     def validate_new_password(self, value: str) -> str:
         validate_password(value, self.context.get('user'))
@@ -140,8 +158,8 @@ class ChangePasswordSerializer(StrictSerializer):
 class SignupSerializer(StrictModelSerializer):
     ''' Serializer: Create user profile. '''
     id = serializers.IntegerField(read_only=True)
-    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    password2 = serializers.CharField(write_only=True, required=True)
+    password = PasswordField(write_only=True, required=True, validators=[validate_password])
+    password2 = PasswordField(write_only=True, required=True)
 
     class Meta:
         ''' serializer metadata. '''
@@ -177,3 +195,8 @@ class SignupSerializer(StrictModelSerializer):
         user.last_name = validated_data['last_name']
         user.save()
         return user
+
+
+class PasswordResetConfirmSerializer(PasswordTokenSerializer):
+    ''' Password reset. The library field trims; this one rejects a trailing space. '''
+    password = PasswordField()

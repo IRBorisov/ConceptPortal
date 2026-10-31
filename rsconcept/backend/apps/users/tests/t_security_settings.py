@@ -81,3 +81,33 @@ class TestSecuritySettings(SimpleTestCase):
             ),
             (seconds, include_subdomains, preload),
         )
+
+    def test_sentry_scrubber_hides_password_aliases(self):
+        ''' EventScrubber matches keys exactly, so password aliases need their own entries. '''
+        from sentry_sdk.scrubber import EventScrubber
+
+        scrubber = EventScrubber(
+            denylist=list(project_settings.SENTRY_SCRUB_DENYLIST),
+            recursive=True,
+            send_default_pii=True,
+        )
+        event = {
+            'request': {
+                'data': {
+                    'username': 'ada',
+                    'password': 'secret-password',
+                    'password1': 'secret-password1',
+                    'password2': 'secret-password2',
+                    'old_password': 'secret-old',
+                    'new_password': 'secret-new',
+                    'new_password2': 'secret-new2',
+                    'nested': {'password2': 'secret-nested'},
+                }
+            }
+        }
+        scrubber.scrub_event(event)
+        data = event['request']['data']
+        self.assertEqual(data['username'], 'ada')
+        for key in ('password', 'password1', 'password2', 'old_password', 'new_password', 'new_password2'):
+            self.assertNotIsInstance(data[key], str)
+        self.assertNotIsInstance(data['nested']['password2'], str)

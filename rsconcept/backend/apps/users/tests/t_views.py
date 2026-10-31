@@ -4,6 +4,7 @@ from django_rest_passwordreset.models import ResetPasswordToken
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from apps.users.models import User
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
 
@@ -27,6 +28,13 @@ class TestUserAPIViews(EndpointTester):
         self.logout()
         data = {'username': self.user.email, 'password': 'password'}
         self.executeAccepted(data)
+
+    @decl_endpoint('/users/api/login', method='post')
+    def test_login_rejects_trailing_password_space(self):
+        cache.clear()
+        self.logout()
+        data = {'username': self.user.username, 'password': 'password '}
+        self.executeBadData(data)
 
 
     @decl_endpoint('/users/api/login', method='post')
@@ -192,6 +200,18 @@ class TestUserUserProfileAPIView(EndpointTester):
 
         data = {
             'old_password': 'password',
+            'new_password': 'StrongPass@@123 '
+        }
+        self.executeBadData(data)
+
+        data = {
+            'old_password': 'password ',
+            'new_password': 'StrongPass@@123'
+        }
+        self.executeBadData(data)
+
+        data = {
+            'old_password': 'password',
             'new_password': 'StrongPass@@123'
         }
         oldHash = self.user.password
@@ -248,6 +268,22 @@ class TestUserUserProfileAPIView(EndpointTester):
             self.client.post('/users/api/password-reset/confirm', payload, format='json').status_code,
             status.HTTP_404_NOT_FOUND
         )
+
+    def test_password_reset_confirm_rejects_trailing_space(self):
+        cache.clear()
+        self.logout()
+        self.assertEqual(
+            self.client.post('/users/api/password-reset', {'email': self.user.email}, format='json').status_code,
+            status.HTTP_200_OK
+        )
+        token_key = ResetPasswordToken.objects.filter(user=self.user).get().key
+        response = self.client.post(
+            '/users/api/password-reset/confirm',
+            {'token': token_key, 'password': 'StrongPass@@123 '},
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue(self.client.login(username=self.user.username, password='password'))
 
 
 class TestSignupAPIView(EndpointTester):
@@ -331,3 +367,53 @@ class TestSignupAPIView(EndpointTester):
         }
         response = self.execute(data)
         self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
+
+
+class TestSignupPasswordAndUsername(EndpointTester):
+    ''' Signup rejects an @ in the username and a trailing space in the password. '''
+
+    @decl_endpoint('/users/api/signup', method='post')
+    def test_signup_rejects_at_sign_and_trailing_password_space(self):
+        cache.clear()
+        data = {
+            'username': 'at@sign',
+            'email': 'atsign@mail.ru',
+            'password': 'Test@@123',
+            'password2': 'Test@@123',
+            'first_name': 'firstName',
+            'last_name': 'lastName'
+        }
+        response = self.executeBadData(data)
+        self.assertIn('username', response.data)
+
+        data = {
+            'username': 'SpacedUser',
+            'email': 'spaced@mail.ru',
+            'password': 'Test@@123 ',
+            'password2': 'Test@@123 ',
+            'first_name': 'firstName',
+            'last_name': 'lastName'
+        }
+        response = self.executeBadData(data)
+        self.assertIn('password', response.data)
+        self.assertIn('password2', response.data)
+        self.assertFalse(User.objects.filter(username='SpacedUser').exists())
+
+        data = {
+            'username': 'LeadSpace',
+            'email': 'lead@mail.ru',
+            'password': ' Test@@123',
+            'password2': ' Test@@123',
+            'first_name': 'firstName',
+            'last_name': 'lastName'
+        }
+        self.executeCreated(data)
+        self.logout()
+        self.assertEqual(
+            self.client.post(
+                '/users/api/login',
+                {'username': 'LeadSpace', 'password': ' Test@@123'},
+                format='json'
+            ).status_code,
+            status.HTTP_202_ACCEPTED
+        )
