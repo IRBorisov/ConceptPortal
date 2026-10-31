@@ -51,17 +51,22 @@ def update_constituenta(item: LibraryItem, cst: m.Constituenta, data: dict) -> N
         schema = propagation.get_schema(item.pk)
         old_data = schema.update_cst(cst.pk, data)
         propagation.after_update_cst(item.pk, cst.pk, data, old_data)
-        if 'alias' in data and data['alias'] != cst.alias:
+        type_changed = 'cst_type' in data and data['cst_type'] != cst.cst_type
+        alias_changed = 'alias' in data and data['alias'] != cst.alias
+        if alias_changed:
             cst.refresh_from_db()
-            changed_type = 'cst_type' in data and cst.cst_type != data['cst_type']
             mapping = {cst.alias: data['alias']}
             cst.alias = data['alias']
-            if changed_type:
+            if type_changed:
                 cst.cst_type = data['cst_type']
             cst.save()
             schema.apply_mapping(mapping=mapping, change_aliases=False)
-            if changed_type:
+            if type_changed:
                 propagation.after_change_cst_type(item.pk, cst.pk, cast(m.CstType, cst.cst_type))
+        elif type_changed:
+            new_type = cast(m.CstType, data['cst_type'])
+            if schema.change_cst_type(cst.pk, new_type):
+                propagation.after_change_cst_type(item.pk, cst.pk, new_type)
         item.save(update_fields=['time_update'])
 
 

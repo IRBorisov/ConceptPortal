@@ -1,12 +1,14 @@
 ''' Testing API: RSForms. '''
 import os
+from datetime import timedelta
 
 from cctext import ReferenceType
+from django.utils import timezone
 from rest_framework import status
 
 from apps.library.models import AccessPolicy, LibraryItem, LibraryItemType, LocationHead
 from apps.oss.models import Operation, OperationType
-from apps.rsform.models import Constituenta, CstType, RSForm
+from apps.rsform.models import Attribution, Constituenta, CstType, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 from shared.portal_json import PORTAL_JSON_CONTRACT_VERSION
 from shared.testing_utils import response_contains
@@ -323,6 +325,63 @@ class TestRSFormViewset(EndpointTester):
         }
         self.executeBadData(item=self.owned_id, data=bad_alias)
 
+
+    @decl_endpoint('/api/rsforms/{item}/load-json', method='patch')
+    def test_load_json_saves_attributions(self):
+        x1 = self.owned.insert_last(alias='X1')
+        n1 = self.owned.insert_last(alias='N1')
+        Attribution.objects.create(container=n1, attribute=x1)
+        base = {
+            'convention': '',
+            'crucial': False,
+            'definition_formal': '',
+            'typification_manual': '',
+            'value_is_property': False,
+            'definition_raw': '',
+            'definition_resolved': '',
+            'term_raw': '',
+            'term_resolved': '',
+            'term_forms': []
+        }
+        data = {
+            'contract_version': PORTAL_JSON_CONTRACT_VERSION,
+            'title': 'Imported title',
+            'alias': 'IMP',
+            'description': '',
+            'items': [
+                {**base, 'id': x1.pk, 'alias': 'X1', 'cst_type': CstType.BASE},
+                {**base, 'id': n1.pk, 'alias': 'N1', 'cst_type': CstType.NOMINAL},
+            ],
+            'attribution': [{'container': n1.pk, 'attribute': x1.pk}]
+        }
+        response = self.executeOK(item=self.owned_id, data=data)
+        self.assertEqual(len(response.data['attribution']), 1)
+        self.assertEqual(response.data['attribution'][0]['container'], n1.pk)
+        self.assertEqual(response.data['attribution'][0]['attribute'], x1.pk)
+        self.assertEqual(Attribution.objects.filter(container__schema_id=self.owned_id).count(), 1)
+
+        fresh_id = 900_001
+        attribute_id = 900_002
+        created = {
+            **data,
+            'items': [
+                {**base, 'id': fresh_id, 'alias': 'X1', 'cst_type': CstType.BASE},
+                {**base, 'id': attribute_id, 'alias': 'N1', 'cst_type': CstType.NOMINAL},
+            ],
+            'attribution': [{'container': attribute_id, 'attribute': fresh_id}]
+        }
+        response = self.executeOK(item=self.owned_id, data=created)
+        self.assertEqual(Attribution.objects.filter(container__schema_id=self.owned_id).count(), 1)
+        saved = Attribution.objects.get(container__schema_id=self.owned_id)
+        self.assertEqual(saved.container.alias, 'N1')
+        self.assertEqual(saved.attribute.alias, 'X1')
+
+        unknown = {
+            **created,
+            'attribution': [{'container': fresh_id, 'attribute': 1}]
+        }
+        self.executeBadData(item=self.owned_id, data=unknown)
+
     @decl_endpoint('/api/rsforms/{item}/load-json', method='patch')
     def test_load_json_ignores_external_resolved_terms(self):
         '''JSON import must recompute resolved texts, not trust payload values.'''
@@ -622,6 +681,10 @@ class TestRSFormViewset(EndpointTester):
         self.set_params(item=self.owned_id)
         self.owned.model.title = 'Test11'
         self.owned.model.save()
+        past = timezone.now() - timedelta(days=1)
+        LibraryItem.objects.filter(pk=self.owned_id).update(time_update=past)
+        self.owned.model.refresh_from_db()
+        stale = self.owned.model.time_update.isoformat()
         x1 = self.owned.insert_last('X1')
         work_dir = os.path.dirname(os.path.abspath(__file__))
         with open(f'{work_dir}/data/sample-rsform.trs', 'rb') as file:
@@ -633,6 +696,16 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(len(response.data['items']), 25)
         self.assertEqual(self.owned.constituentsQ().count(), 25)
         self.assertFalse(Constituenta.objects.filter(pk=x1.pk).exists())
+        self.owned.model.refresh_from_db()
+        self.assertGreater(self.owned.model.time_update, past)
+        loaded = response.data['items'][0]
+        stale_edit = self.client.patch(
+            f'/api/rsforms/{self.owned_id}/update-cst',
+            data={'target': loaded['id'], 'item_data': {'convention': 'stale'}},
+            format='json',
+            headers={'X-Expected-Time-Update': stale}
+        )
+        self.assertEqual(stale_edit.status_code, status.HTTP_409_CONFLICT)
 
 
 class TestInlineSynthesis(EndpointTester):

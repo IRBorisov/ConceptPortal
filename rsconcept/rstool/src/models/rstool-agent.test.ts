@@ -919,6 +919,59 @@ describe('RSToolAgent import and export', () => {
     });
   });
 
+  it('keeps portal fields through import, edit, and export', () => {
+    const tool = new RSToolAgent();
+    const session = tool.importData(
+      {
+        contract_version: '1.0.0',
+        title: 'Kept',
+        alias: 'KEEP',
+        description: '',
+        items: [
+          {
+            id: 1,
+            alias: 'X1',
+            cst_type: CstType.BASE,
+            definition_formal: '',
+            crucial: true,
+            typification_manual: 'B(X1)',
+            value_is_property: true,
+            term_raw: 'set',
+            term_forms: [{ text: 'sets', tags: 'plur' }]
+          },
+          {
+            id: 2,
+            alias: 'N1',
+            cst_type: CstType.NOMINAL,
+            definition_formal: '',
+            crucial: false
+          }
+        ],
+        attribution: [{ container: 2, attribute: 1 }]
+      },
+      'portal-schema'
+    );
+
+    tool.applySchemaPatch(
+      { items: [{ id: 1, alias: 'X1', cstType: CstType.BASE, definitionFormal: '', term: 'collection' }] },
+      session.sessionId
+    );
+
+    const exported = tool.exportPortal({ kind: 'schema', format: 'object' }, session.sessionId) as unknown as {
+      items: Array<Record<string, unknown>>;
+      attribution: Array<{ container: number; attribute: number }>;
+    };
+    expect(exported.items[0]).toMatchObject({
+      alias: 'X1',
+      term_raw: 'collection',
+      crucial: true,
+      typification_manual: 'B(X1)',
+      value_is_property: true,
+      term_forms: [{ text: 'sets', tags: 'plur' }]
+    });
+    expect(exported.attribution).toEqual([{ container: 2, attribute: 1 }]);
+  });
+
   it('rejects invalid session export payloads', () => {
     const tool = new RSToolAgent();
     expect(() => tool.importData({ contractVersion: '2.0.0' }, 'session')).toThrow(/Invalid session export/);

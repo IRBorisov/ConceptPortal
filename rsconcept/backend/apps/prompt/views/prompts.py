@@ -31,8 +31,12 @@ class PromptTemplateViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrAdmin]
 
     def get_permissions(self):
-        if self.action in ['available', 'retrieve']:
+        if self.action == 'available':
             return [AllowAny()]
+        # retrieve must run IsOwnerOrAdmin: AllowAny skipped it and exposed private templates.
+        # Shared templates stay readable without a session; private ones do not.
+        if self.action == 'retrieve':
+            return [IsOwnerOrAdmin()]
         return [permission() for permission in self.permission_classes]
 
     def get_queryset(self):

@@ -105,16 +105,28 @@ class CstImportJsonSerializer(StrictSerializer):
     term_forms = serializers.ListField(child=serializers.DictField())
 
 
+class ImportAttributionSerializer(StrictSerializer):
+    ''' Attribution pair as ids from the import file, not as database rows. '''
+    container = serializers.IntegerField()
+    attribute = serializers.IntegerField()
+
+
 class RSFormImportJsonSerializer(PortalImportJsonMetadataSerializer):
     ''' Serializer: versioned RSForm data for importing into an existing schema. '''
     items = CstImportJsonSerializer(many=True)
-    attribution = AttributionSerializer(many=True, required=False)
+    attribution = ImportAttributionSerializer(many=True, required=False)
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
         alias_error = find_import_alias_error(attrs['items'])
         if alias_error:
             raise serializers.ValidationError({'items': alias_error})
+        known_ids = {item['id'] for item in attrs['items']}
+        for attr in attrs.get('attribution', []):
+            if attr['container'] not in known_ids or attr['attribute'] not in known_ids:
+                raise serializers.ValidationError({
+                    'attribution': msg.attributionOutsideImport()
+                })
         return attrs
 
 
@@ -376,7 +388,7 @@ class RSFormSerializer(StrictModelSerializer):
             old_attribute_id = attrib['attribute']
             container_id = id_map.get(old_container_id)
             attribute_id = id_map.get(old_attribute_id)
-            if container_id and attribute_id:
+            if container_id and attribute_id and container_id != attribute_id:
                 attributions_to_create.append(
                     Attribution(
                         container_id=container_id,

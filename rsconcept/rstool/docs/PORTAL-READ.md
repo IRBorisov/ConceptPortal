@@ -212,12 +212,12 @@ curl.exe -s "https://api.portal.acconcept.ru/api/rsforms/856/details"
 | `convention`          | `draft.convention`       | Соглашение, не формальная проверка                    |
 | `term_resolved`       | не переносить            | Только отображение после resolver                     |
 | `definition_resolved` | не переносить            | Только отображение после resolver                     |
-| `typification_manual` | обычно не переносить     | Переопределение типизации                             |
-| `term_forms`          | обычно не переносить     | Словоформы термина                                    |
-| `crucial`             | обычно не переносить     | UI/Portal-флаг                                        |
-| `value_is_property`   | обычно не переносить     | Переопределение класса интерпретируемости             |
+| `typification_manual` | `draft.typificationManual` | Хранится в сессии и возвращается `exportPortal`       |
+| `term_forms`          | `draft.termForms`          | Хранится в сессии и возвращается `exportPortal`       |
+| `crucial`             | `draft.crucial`            | Хранится в сессии и возвращается `exportPortal`       |
+| `value_is_property`   | `draft.valueIsProperty`    | Хранится в сессии и возвращается `exportPortal`       |
 
-`inheritance`, `attribution`, `oss`, `models`, `versions`, `editors` полезны для контекста Portal, но не нужны для базовой проверки ЯРЭ в `rstool`.
+`attribution` тоже хранится в сессии и возвращается `exportPortal`. `inheritance`, `oss`, `models`, `versions`, `editors` полезны для контекста Portal, но не нужны для базовой проверки ЯРЭ в `rstool`.
 
 ## Как перенести КС в rstool
 

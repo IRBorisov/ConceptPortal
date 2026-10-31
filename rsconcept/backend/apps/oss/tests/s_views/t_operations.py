@@ -177,6 +177,41 @@ class TestOssOperations(EndpointTester):
         self.executeBadData(unrelated_data, item=self.owned_id)
 
 
+    @decl_endpoint('/api/oss/{item}/clone-schema', method='post')
+    def test_clone_schema_copies_attributions(self):
+        self.populateData()
+        attributed = self.ks1.insert_last('C1')
+        Attribution.objects.create(container=self.ks1X1, attribute=attributed)
+        data = {
+            'source_operation': self.operation1.pk,
+            'layout': self.layout_data,
+            'position': {'x': 2, 'y': 2, 'width': 400, 'height': 60}
+        }
+        response = self.executeCreated(data, item=self.owned_id)
+        new_operation_id = response.data['new_operation']
+        new_operation = next(op for op in response.data['oss']['operations'] if op['id'] == new_operation_id)
+        self.assertEqual(
+            Attribution.objects.filter(container__schema_id=new_operation['result']).count(),
+            1
+        )
+
+
+    @decl_endpoint('/api/oss/{item}/clone-schema', method='post')
+    def test_clone_schema_forbidden_when_source_unreadable(self):
+        self.populateData()
+        self.ks1.model.owner = self.user2
+        self.ks1.model.access_policy = AccessPolicy.PRIVATE
+        self.ks1.model.save(update_fields=['owner', 'access_policy'])
+        data = {
+            'source_operation': self.operation1.pk,
+            'layout': self.layout_data,
+            'position': {'x': 2, 'y': 2, 'width': 400, 'height': 60}
+        }
+        response = self.executeForbidden(data, item=self.owned_id)
+        self.assertIn('KS1', str(response.data))
+        self.assertEqual(self.ks1.constituentsQ().count(), 1)
+
+
     @decl_endpoint('/api/oss/{item}/create-schema', method='post')
     def test_create_schema_parent(self):
         self.populateData()

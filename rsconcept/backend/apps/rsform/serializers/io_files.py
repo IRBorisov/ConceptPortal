@@ -232,7 +232,7 @@ class RSFormTRSSerializer(serializers.Serializer):
                 prev_cst.delete()
 
         instance.resolve_all_text()
-        model.save()
+        model.save(update_fields=['alias', 'title', 'description', 'time_update'])
         return instance
 
     @staticmethod

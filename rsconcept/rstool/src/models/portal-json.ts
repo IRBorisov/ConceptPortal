@@ -64,7 +64,12 @@ export interface PortalRsformDetails {
     term_raw?: string;
     definition_raw?: string;
     convention?: string;
+    crucial?: boolean;
+    term_forms?: PortalTermForm[];
+    typification_manual?: string;
+    value_is_property?: boolean;
   }>;
+  attribution?: Array<{ container: number; attribute: number }>;
 }
 
 /** Full Portal conceptual model import/export document. */
@@ -85,6 +90,10 @@ export function portalItemToDraft(item: {
   term_raw?: string;
   definition_raw?: string;
   convention?: string;
+  crucial?: boolean;
+  term_forms?: PortalTermForm[];
+  typification_manual?: string;
+  value_is_property?: boolean;
 }): ConstituentaDraft {
   return {
     id: item.id,
@@ -93,6 +102,10 @@ export function portalItemToDraft(item: {
     definitionFormal: item.definition_formal ?? '',
     term: item.term_raw ?? '',
     definitionText: item.definition_raw ?? '',
-    convention: item.convention ?? ''
+    convention: item.convention ?? '',
+    ...(item.crucial !== undefined ? { crucial: item.crucial } : {}),
+    ...(item.term_forms !== undefined ? { termForms: item.term_forms } : {}),
+    ...(item.typification_manual !== undefined ? { typificationManual: item.typification_manual } : {}),
+    ...(item.value_is_property !== undefined ? { valueIsProperty: item.value_is_property } : {})
   };
 }

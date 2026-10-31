@@ -3,6 +3,7 @@ from copy import deepcopy
 from typing import Optional
 
 from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
 from django.db import transaction
 
 from apps.library.models import Editor, LibraryItem, LibraryItemType, LocationHead
@@ -18,6 +19,8 @@ from apps.oss.models import (
 )
 from apps.rsform.models import RSFormCached
 from apps.rsmodel.models import ConstituentData, RSModel
+from shared import messages as msg
+from shared.permissions import can_read_library_item
 
 
 def clone_library_item_shell(source: LibraryItem, owner: User, item_data: dict) -> LibraryItem:
@@ -77,6 +80,8 @@ def clone_oss(source: LibraryItem, owner: User, item_data: dict) -> LibraryItem:
     if source.item_type != LibraryItemType.OPERATION_SCHEMA:
         raise ValueError('Source is not an operation schema')
 
+    _refuse_unreadable_schemas(source, owner)
+    copy_editors = source.owner_id == owner.pk
     with transaction.atomic():
         clone = clone_library_item_shell(source, owner, item_data)
 
@@ -84,14 +89,17 @@ def clone_oss(source: LibraryItem, owner: User, item_data: dict) -> LibraryItem:
 
         block_map = _clone_oss_blocks(source.pk, clone.pk)
         operation_map = _clone_oss_operations(source.pk, clone.pk, block_map)
-        schema_map, cst_map = _clone_oss_attached_schemas(source, clone, owner, item_data)
+        schema_map, cst_map = _clone_oss_attached_schemas(
+            source, clone, owner, item_data, copy_editors=copy_editors
+        )
         _apply_oss_operation_results(operation_map, schema_map)
         _clone_oss_arguments(source.pk, operation_map)
         _clone_oss_replicas(source.pk, operation_map)
         _clone_oss_substitutions(source.pk, operation_map, cst_map)
         _clone_oss_inheritances(source.pk, operation_map, cst_map)
         _clone_oss_layout(source.pk, clone.pk, block_map, operation_map)
-        _copy_oss_editors(source.pk, clone.pk)
+        if copy_editors:
+            _copy_oss_editors(source.pk, clone.pk)
 
         return clone
 
@@ -155,11 +163,35 @@ def _clone_oss_operations(
     return operation_map
 
 
+def _refuse_unreadable_schemas(source: LibraryItem, reader: User) -> None:
+    ''' Block an OSS clone that would copy a schema the reader cannot open. '''
+    result_ids = {
+        op.result_id
+        for op in Operation.objects.filter(oss_id=source.pk).only('result_id')
+        if op.result_id is not None
+    }
+    labels: list[str] = []
+    for schema_id in sorted(result_ids):
+        prototype = LibraryItem.objects.get(pk=schema_id)
+        if not can_read_library_item(reader, prototype):
+            labels.append(_schema_label(prototype))
+    if labels:
+        raise PermissionDenied(msg.schemasNotReadable(labels))
+
+
+def _schema_label(schema: LibraryItem) -> str:
+    ''' Alias and title for an error that names a schema. '''
+    if schema.alias and schema.title and schema.alias != schema.title:
+        return f'{schema.alias} ({schema.title})'
+    return schema.alias or schema.title or str(schema.pk)
+
+
 def _clone_oss_attached_schemas(
     source: LibraryItem,
     clone: LibraryItem,
     owner: User,
     item_data: dict,
+    copy_editors: bool,
 ) -> tuple[dict[int, int], dict[int, int]]:
     schema_map: dict[int, int] = {}
     cst_map: dict[int, int] = {}
@@ -186,7 +218,7 @@ def _clone_oss_attached_schemas(
         for old_cst, new_cst in pairs:
             cst_map[old_cst.pk] = new_cst.pk
 
-        if editor_ids:
+        if copy_editors and editor_ids:
             Editor.set(schema_clone.pk, editor_ids)
 
     return schema_map, cst_map

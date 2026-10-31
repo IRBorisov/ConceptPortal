@@ -113,3 +113,35 @@ class TestPromptTemplateViewSet(EndpointTester):
         )
         self.client.force_authenticate(user=self.user)
         response = self.executeForbidden({'label': 'Nope'}, item=prompt.id)
+
+
+    @decl_endpoint('/api/prompts/{item}/', method='get')
+    def test_retrieve_private_hidden_from_anonymous_and_stranger(self):
+        prompt = PromptTemplate.objects.create(
+            owner=self.user,
+            label='Private',
+            description='',
+            text='secret',
+            is_shared=False
+        )
+        self.logout()
+        self.executeForbidden(item=prompt.id)
+        self.login2()
+        self.executeForbidden(item=prompt.id)
+        self.login()
+        response = self.executeOK(item=prompt.id)
+        self.assertEqual(response.data['text'], 'secret')
+
+
+    @decl_endpoint('/api/prompts/{item}/', method='get')
+    def test_retrieve_shared_available_to_anonymous(self):
+        prompt = PromptTemplate.objects.create(
+            owner=self.user,
+            label='Shared',
+            description='',
+            text='hello',
+            is_shared=True
+        )
+        self.logout()
+        response = self.executeOK(item=prompt.id)
+        self.assertEqual(response.data['text'], 'hello')

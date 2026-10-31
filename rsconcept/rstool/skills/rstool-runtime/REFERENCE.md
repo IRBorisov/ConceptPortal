@@ -236,6 +236,7 @@ JSON-строка сессии для последующего `importData(..., 
 - `kind`: `'schema'` | `'model'`
 - `format?`: `'json'` (default, строка) | `'object'`
 - Для загрузки в Portal UI: обычно `exportPortal({ kind: 'schema' })`.
+- Поля `crucial`, `term_forms`, `typification_manual`, `value_is_property` и `attribution` берутся из сессии. Импорт Portal JSON их сохраняет; `applySchemaPatch` без этих полей их не стирает.
 
 ## `commitStep` / сессии
 

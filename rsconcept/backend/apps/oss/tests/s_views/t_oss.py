@@ -1,5 +1,9 @@
 ''' Testing API: Operation Schema. '''
-from apps.library.models import AccessPolicy, LibraryItemType
+from datetime import timedelta
+
+from django.utils import timezone
+
+from apps.library.models import AccessPolicy, LibraryItem, LibraryItemType
 from apps.oss.models import Inheritance, OperationSchema, OperationType
 from apps.rsform.models import Constituenta, RSForm
 from shared import messages as msg
@@ -311,7 +315,14 @@ class TestOssViewset(EndpointTester):
         }
         self.ks3X2.refresh_from_db()
         self.assertEqual(self.ks3X2.convention, 'test')
+        past = timezone.now() - timedelta(days=1)
+        LibraryItem.objects.filter(
+            pk__in=[self.ks1.model.pk, self.ks3.model.pk, self.owned_id]
+        ).update(time_update=past)
         self.executeOK(data)
+        for schema in (self.ks1.model, self.ks3.model, self.owned.model):
+            schema.refresh_from_db()
+            self.assertGreater(schema.time_update, past)
         self.assertFalse(Constituenta.objects.filter(as_child__parent_id=self.ks1X2.pk).exists())
 
         data = {
@@ -347,3 +358,43 @@ class TestOssViewset(EndpointTester):
         }
         response = self.executeBadData(data)
         self.assertEqual(response.data['items'], [msg.schemaNotInOSS()])
+
+
+    @decl_endpoint('/api/oss/{item}/relocate-constituents', method='post')
+    def test_relocate_constituents_requires_edit_on_both_schemas(self):
+        self.set_params(item=self.owned_id)
+        foreign = RSForm.create(
+            alias='FK',
+            title='Foreign',
+            owner=self.user2,
+            access_policy=AccessPolicy.PUBLIC
+        )
+        foreign_cst = foreign.insert_last('X3', convention='keep')
+        child = RSForm.create(alias='CH', title='Child', owner=self.user)
+        local_cst = child.insert_last('X1', convention='local')
+        parent_op = self.owned.create_operation(
+            alias='p',
+            operation_type=OperationType.INPUT,
+            result=foreign.model
+        )
+        child_op = self.owned.create_operation(
+            alias='c',
+            operation_type=OperationType.SYNTHESIS,
+            result=child.model
+        )
+        self.owned.set_arguments(child_op.pk, [parent_op])
+
+        self.executeForbidden({
+            'destination': child.model.pk,
+            'items': [foreign_cst.pk]
+        })
+        self.assertTrue(Constituenta.objects.filter(pk=foreign_cst.pk).exists())
+        foreign.model.refresh_from_db()
+        self.assertEqual(foreign.constituentsQ().count(), 1)
+
+        self.executeForbidden({
+            'destination': foreign.model.pk,
+            'items': [local_cst.pk]
+        })
+        self.assertEqual(foreign.constituentsQ().count(), 1)
+        self.assertTrue(Constituenta.objects.filter(pk=local_cst.pk, schema_id=child.model.pk).exists())
