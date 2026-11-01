@@ -476,12 +476,6 @@ importers:
       '@rsconcept/domain':
         specifier: workspace:*
         version: link:../domain
-      eslint:
-        specifier: ^10.13.0
-        version: 10.13.0(jiti@2.7.0)(supports-color@10.2.2)
-      eslint-plugin-simple-import-sort:
-        specifier: ^14.0.0
-        version: 14.0.0(eslint@10.13.0(jiti@2.7.0)(supports-color@10.2.2))
     devDependencies:
       '@types/node':
         specifier: ^26.6.5
@@ -489,6 +483,12 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^5.0.5
         version: 5.0.5(vitest@5.0.5)
+      eslint:
+        specifier: ^10.13.0
+        version: 10.13.0(jiti@2.7.0)(supports-color@10.2.2)
+      eslint-plugin-simple-import-sort:
+        specifier: ^14.0.0
+        version: 14.0.0(eslint@10.13.0(jiti@2.7.0)(supports-color@10.2.2))
       tsdown:
         specifier: ^0.23.1
         version: 0.23.1(oxc-resolver@11.24.2)(tsx@4.23.15)(typescript@6.0.3)(unrun@0.3.1)
@@ -513,16 +513,16 @@ importers:
       '@rsconcept/rstool':
         specifier: workspace:*
         version: link:../rstool
+    devDependencies:
+      '@types/node':
+        specifier: ^26.6.5
+        version: 26.6.5
       eslint:
         specifier: ^10.13.0
         version: 10.13.0(jiti@2.7.0)(supports-color@10.2.2)
       eslint-plugin-simple-import-sort:
         specifier: ^14.0.0
         version: 14.0.0(eslint@10.13.0(jiti@2.7.0)(supports-color@10.2.2))
-    devDependencies:
-      '@types/node':
-        specifier: ^26.6.5
-        version: 26.6.5
       tsdown:
         specifier: ^0.23.1
         version: 0.23.1(oxc-resolver@11.24.2)(tsx@4.23.15)(typescript@6.0.3)(unrun@0.3.1)

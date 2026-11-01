@@ -31,6 +31,12 @@ from .base import AgentItemView
 class AgentRsformBase(AgentItemView):
     ''' Shared auth for agent RSForm routes. '''
 
+    def initial(self, request, *args, **kwargs):
+        ''' Reject a JSON array before a view treats the body as an object. '''
+        super().initial(request, *args, **kwargs)
+        if request.method in ('POST', 'PUT', 'PATCH') and not isinstance(request.data, dict):
+            raise ValidationError({'non_field_errors': 'Expected a JSON object'})
+
     def _get_rsform(self, pk: int) -> LibraryItem:
         ''' Load a conceptual schema or answer 404 for another library type. '''
         return self._get_item(pk, LibraryItemType.RSFORM)

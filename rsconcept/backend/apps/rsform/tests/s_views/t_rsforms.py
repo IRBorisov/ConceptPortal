@@ -7,7 +7,7 @@ from django.utils import timezone
 from rest_framework import status
 
 from apps.library.models import AccessPolicy, LibraryItem, LibraryItemType, LocationHead
-from apps.oss.models import Operation, OperationType
+from apps.oss.models import Operation, OperationSchema, OperationType
 from apps.rsform.models import Attribution, Constituenta, CstType, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 from shared.portal_json import PORTAL_JSON_CONTRACT_VERSION
@@ -661,6 +661,11 @@ class TestRSFormViewset(EndpointTester):
         data = {'items': [x3.pk], 'move_to': 0}
         self.executeBadData(data)
 
+        self.executeBadData({'items': [x2.pk], 'move_to': -1})
+        self.executeBadData({'items': [x2.pk], 'move_to': 2 ** 40})
+        x2.refresh_from_db()
+        self.assertEqual(x2.order, 0)
+
 
     @decl_endpoint('/api/rsforms/{item}/reset-aliases', method='patch')
     def test_reset_aliases(self):
@@ -754,6 +759,18 @@ class TestInlineSynthesis(EndpointTester):
         data['items'] = [invalid_id]
         self.executeBadData(data)
 
+
+    def test_inline_synthesis_rejects_oss_receiver(self):
+        self.schema1.insert_last('X1')
+        oss = OperationSchema.create(title='OSS', alias='O1', owner=self.user)
+        data = {
+            'receiver': oss.model.pk,
+            'source': self.schema1.model.pk,
+            'items': [],
+            'substitutions': []
+        }
+        self.executeBadData(data)
+        self.assertEqual(Constituenta.objects.filter(schema_id=oss.model.pk).count(), 0)
 
     def test_inline_synthesis_requires_auth(self):
         data = {

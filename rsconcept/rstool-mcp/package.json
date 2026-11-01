@@ -49,12 +49,12 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.1",
-    "@rsconcept/rstool": "workspace:*",
-    "eslint": "^10.13.0",
-    "eslint-plugin-simple-import-sort": "^14.0.0"
+    "@rsconcept/rstool": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
+    "eslint": "^10.13.0",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
     "tsdown": "^0.23.1",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",

@@ -85,6 +85,12 @@ class TestAgentApiKeys(EndpointTester):
         self.assertEqual(key.owner_id, self.user.pk)
 
     @decl_endpoint('/api/agents/keys/{item}', method='delete')
+    def test_non_numeric_key_id_is_not_found(self):
+        self.executeNotFound(item='abc')
+        response = self.client.patch('/api/agents/keys/abc', data={'label': 'Nope'}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    @decl_endpoint('/api/agents/keys/{item}', method='delete')
     def test_revoke_key(self):
         key, secret = ApiKey.create_for_user(self.user, 'Temp')
         self.executeNoContent(item=key.pk)
@@ -164,8 +170,26 @@ class TestAgentRsformApi(EndpointTester):
         self.user.is_active = False
         self.user.save(update_fields=['is_active'])
         response = self.client.get(f'/api/agents/rsforms/{self.owned_id}/details')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data['detail'], 'Invalid or revoked API key.')
+        self.assertIn('Bearer', response['WWW-Authenticate'])
+
+    @decl_endpoint('/api/agents/rsforms/{item}/details', method='get')
+    def test_invalid_key_is_unauthorized(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer rcp_not-a-real-key')
+        response = self.client.get(f'/api/agents/rsforms/{self.owned_id}/details')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertIn('Bearer', response['WWW-Authenticate'])
+
+    @decl_endpoint('/api/agents/rsforms', method='post')
+    def test_json_array_body_is_bad_request(self):
+        response = self.client.generic(
+            'POST',
+            '/api/agents/rsforms',
+            data=b'[]',
+            content_type='application/json',
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     @decl_endpoint('/api/agents/rsforms/{item}/details', method='get')
     def test_details_owned(self):

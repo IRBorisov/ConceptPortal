@@ -7,6 +7,7 @@ from zipfile import ZipFile
 from rest_framework import status
 
 from apps.library.models import AccessPolicy, Version
+from apps.oss.models import OperationSchema
 from apps.rsform.models import Constituenta, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
@@ -41,6 +42,12 @@ class TestVersionViews(EndpointTester):
         self.assertTrue('schema' in response.data)
         self.assertTrue(response.data['version'] in [v['id'] for v in response.data['schema']['versions']])
 
+
+    @decl_endpoint('/api/library/{schema}/create-version', method='post')
+    def test_create_version_rejects_oss(self):
+        oss = OperationSchema.create(title='OSS', alias='O1', owner=self.user)
+        self.executeBadData({'version': '1.0.0', 'description': 'test'}, schema=oss.model.pk)
+        self.assertFalse(Version.objects.filter(item=oss.model).exists())
 
     @decl_endpoint('/api/library/{schema}/create-version', method='post')
     def test_create_version_omitted_description(self):

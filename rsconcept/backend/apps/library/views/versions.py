@@ -43,7 +43,7 @@ class VersionViewset(
     generics.RetrieveUpdateDestroyAPIView,
     permissions.EditorMixin
 ):
-    ''' Endpoint: Get / Update Constituenta. '''
+    ''' Endpoint: Get / Update a library item version. '''
     queryset = m.Version.objects.all()
     serializer_class = s.VersionSerializer
 
@@ -125,6 +125,8 @@ def create_version(request: Request, pk_item: int) -> HttpResponse:
         item = m.LibraryItem.objects.get(pk=pk_item)
     except m.LibraryItem.DoesNotExist:
         return Response(status=c.HTTP_404_NOT_FOUND)
+    if item.item_type != m.LibraryItemType.RSFORM:
+        raise ValidationError(msg.versionOnlyForSchema())
     creator = request.user
     if not creator.is_staff and creator != item.owner:
         return Response(status=c.HTTP_403_FORBIDDEN)

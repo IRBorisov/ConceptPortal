@@ -8,7 +8,7 @@ from django.conf import settings
 from django.test import SimpleTestCase
 
 from project import settings as project_settings
-from project.settings import _get_secret, _hsts_policy
+from project.settings import _get_secret, _hsts_policy, _proxy_ssl_header
 
 
 class TestSecuritySettings(SimpleTestCase):
@@ -59,6 +59,11 @@ class TestSecuritySettings(SimpleTestCase):
         self.assertGreaterEqual(seconds, 31536000)
         self.assertTrue(include_subdomains)
         self.assertTrue(preload)
+
+    def test_production_trusts_nginx_scheme(self):
+        self.assertEqual(_proxy_ssl_header(False), ('HTTP_X_FORWARDED_PROTO', 'https'))
+        self.assertIsNone(_proxy_ssl_header(True))
+        self.assertEqual(settings.SECURE_PROXY_SSL_HEADER, project_settings._proxy_ssl_header(project_settings.DEBUG))
 
     def test_debug_hsts_is_disabled(self):
         seconds, include_subdomains, preload = _hsts_policy(True)
