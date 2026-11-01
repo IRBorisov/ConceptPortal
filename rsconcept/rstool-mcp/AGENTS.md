@@ -16,8 +16,13 @@ Applies to all files under `rsconcept/rstool-mcp`. The package is a **thin adapt
 - `src/server.ts` — builds an MCP `McpServer` and registers tool handlers on `server.server` using `TOOL_DEFINITIONS`.
 - `src/tools.ts` — single source of truth: tool name → description → JSON input schema → invocation onto `RSToolAgent`.
 - `src/bin/server.ts` — stdio bin entry (`#!/usr/bin/env node`). Wraps the server with `StdioServerTransport`.
+- `src/http-server.ts` — authenticated Streamable HTTP host; owns transport leases and identity/workspace isolation, not rstool session logic.
+- `src/http-auth.ts` — bearer credentials mapped to stable subjects; callers can supply a different trusted verifier.
+- `src/bin/http-server.ts` — HTTP bin entry; requires credentials and a persistence root.
+- `src/http-server.test.ts` — real MCP clients over loopback, isolation and restart checks.
 - `src/server.test.ts` — smoke tests over the tool catalog.
 - `README.md` — install + Cursor / Claude config + tool table.
+- `HTTP.md` — hosted transport configuration, workspace lifetime and deployment boundaries.
 
 ## Commands
 
@@ -28,6 +33,7 @@ From repo root (pnpm workspace; `@rsconcept/rstool` links to `rsconcept/rstool`)
 - Tests: `pnpm --filter @rsconcept/rstool-mcp test`
 - Build: `pnpm --filter @rsconcept/rstool-mcp run build`
 - Run (dev): `pnpm --filter @rsconcept/rstool-mcp run start`
+- Run (HTTP dev): `pnpm --filter @rsconcept/rstool-mcp run start:http` (required environment in `HTTP.md`)
 - Run (built bin): `node dist/bin/server.js` or `npx rstool-mcp`
 
 ## Edit rules
@@ -35,6 +41,7 @@ From repo root (pnpm workspace; `@rsconcept/rstool` links to `rsconcept/rstool`)
 - **All new tools live in `src/tools.ts`** — add an entry to `TOOL_DEFINITIONS` with a permissive JSON schema and an `invoke` that calls a method on `RSToolAgent`. Do not add handlers in `server.ts`.
 - **Mirror rstool changes**: when `@rsconcept/rstool` adds or removes a method, update `TOOL_DEFINITIONS` and the README tool table in the same change set. Update the smoke test's expected list of tool names.
 - **No business logic**: validation, error mapping, and session bookkeeping belong in `@rsconcept/rstool`. The adapter only marshals JSON.
+- HTTP authentication, transport ownership and limits belong in the HTTP host. Never share a mutable `RSToolAgent` across identities or live workspace leases. Preserve the stdio contract.
 - **Permissive schemas**: prefer `additionalProperties: true` for structurally rich payloads; let rstool throw and surface the message through `isError: true` text content.
 - **Tool naming**: use `snake_case` for MCP tool names (idiomatic for MCP), even though the underlying rstool methods are camelCase.
 - **Shebang**: `src/bin/server.ts` must keep the `#!/usr/bin/env node` shebang at the top — `tsdown` preserves it in the built bin.
