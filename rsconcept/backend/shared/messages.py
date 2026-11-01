@@ -252,7 +252,7 @@ def passwordsNotMatch() -> str:
 
 
 def passwordTrailingSpace() -> str:
-    return 'Пароль не может заканчиваться пробелом'
+    return 'Пароль не может заканчиваться пробелом или другим пробельным символом'
 
 
 def usernameAtSign() -> str:

@@ -662,6 +662,7 @@ class TestRSFormViewset(EndpointTester):
         self.executeBadData(data)
 
         self.executeBadData({'items': [x2.pk], 'move_to': -1})
+        self.executeBadData({'items': [x2.pk], 'move_to': 3})
         self.executeBadData({'items': [x2.pk], 'move_to': 2 ** 40})
         x2.refresh_from_db()
         self.assertEqual(x2.order, 0)
@@ -771,6 +772,37 @@ class TestInlineSynthesis(EndpointTester):
         }
         self.executeBadData(data)
         self.assertEqual(Constituenta.objects.filter(schema_id=oss.model.pk).count(), 0)
+
+    def test_inline_synthesis_rejects_oss_source(self):
+        before = self.schema1.constituentsQ().count()
+        oss = OperationSchema.create(title='OSS', alias='O2', owner=self.user)
+        data = {
+            'receiver': self.schema1.model.pk,
+            'source': oss.model.pk,
+            'items': [],
+            'substitutions': []
+        }
+        self.executeBadData(data)
+        self.assertEqual(self.schema1.constituentsQ().count(), before)
+
+    def test_inline_synthesis_hides_private_oss(self):
+        oss = OperationSchema.create(title='OSS', alias='O3', owner=self.user2)
+        oss.model.access_policy = AccessPolicy.PRIVATE
+        oss.model.save()
+        data = {
+            'receiver': oss.model.pk,
+            'source': self.schema1.model.pk,
+            'items': [],
+            'substitutions': []
+        }
+        self.executeForbidden(data)
+        data = {
+            'receiver': self.schema1.model.pk,
+            'source': oss.model.pk,
+            'items': [],
+            'substitutions': []
+        }
+        self.executeForbidden(data)
 
     def test_inline_synthesis_requires_auth(self):
         data = {

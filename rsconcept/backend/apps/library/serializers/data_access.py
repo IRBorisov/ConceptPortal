@@ -11,7 +11,7 @@ from apps.rsform.models import Constituenta
 from shared import messages, permissions
 from shared.serializers import StrictModelSerializer, StrictSerializer
 
-from ..models import LibraryItem, LibraryItemType, Version
+from ..models import LibraryItem, LibraryItemType, LocationHead, Version
 from ..services.location_access import assert_writable_item_data_location
 
 _LIBRARY_ITEM_TIMESTAMP_FIELDS = ('time_create', 'time_update')
@@ -140,7 +140,7 @@ class LibraryItemCloneSerializer(StrictSerializer):
 
     def validate(self, attrs):
         ''' Require request context and enforce shared-library / OSS location rules. '''
-        location = attrs['item_data'].get('location', '')
+        location = attrs['item_data'].get('location', LocationHead.USER)
         request = self.context.get('request')
         if request is None:
             raise serializers.ValidationError('Request context is required for clone')

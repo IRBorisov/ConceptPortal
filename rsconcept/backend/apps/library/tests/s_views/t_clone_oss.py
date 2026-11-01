@@ -117,6 +117,18 @@ class TestLibraryCloneOss(EndpointTester):
             self.assertEqual(schema.location, LocationHead.USER)
 
     @decl_endpoint('/api/library/{item}/clone', method='post')
+    def test_clone_oss_omitted_location_rejects_user_root(self):
+        source = OperationSchema.create(
+            title='User root',
+            alias='ROOT',
+            owner=self.user,
+            location=LocationHead.USER,
+        )
+        data = self._clone_payload()
+        del data['item_data']['location']
+        self.executeBadData(data, item=source.model.pk)
+
+    @decl_endpoint('/api/library/{item}/clone', method='post')
     def test_clone_oss_graph(self):
         self.populate_graph()
         data = self._clone_payload()

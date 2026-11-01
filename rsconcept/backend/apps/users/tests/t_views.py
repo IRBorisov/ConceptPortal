@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from apps.users.models import User
+from shared import messages as msg
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
 
@@ -33,6 +34,8 @@ class TestUserAPIViews(EndpointTester):
     def test_login_rejects_trailing_password_space(self):
         cache.clear()
         self.logout()
+        self.user.set_password('password ')
+        self.user.save()
         data = {'username': self.user.username, 'password': 'password '}
         self.executeBadData(data)
 
@@ -208,7 +211,8 @@ class TestUserUserProfileAPIView(EndpointTester):
             'old_password': 'password ',
             'new_password': 'StrongPass@@123'
         }
-        self.executeBadData(data)
+        response = self.executeBadData(data)
+        self.assertEqual(response.data['old_password'], [msg.passwordTrailingSpace()])
 
         data = {
             'old_password': 'password',
