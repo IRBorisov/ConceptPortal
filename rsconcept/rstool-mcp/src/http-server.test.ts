@@ -150,6 +150,61 @@ describe('rstool Streamable HTTP', () => {
     revoked = true;
     const response = await post(`${app.url}/mcp/task`, ALICE, { 'Mcp-Session-Id': connection.transport.sessionId! });
     expect(response.status).toBe(401);
+    const revokedDelete = await fetch(`${app.url}/mcp/task`, {
+      method: 'DELETE', headers: { Authorization: `Bearer ${ALICE}`, 'Mcp-Session-Id': connection.transport.sessionId! },
+    });
+    expect(revokedDelete.status).toBe(401);
+  });
+
+  it.each(['ignores cancellation', 'rejects on cancellation'])(
+    'ends a stalled verifier and completes shutdown when it %s', async behavior => {
+      let entered!: () => void;
+      const verifying = new Promise<void>(resolveVerifying => { entered = resolveVerifying; });
+      let verificationSignal: AbortSignal | undefined;
+      const app = await start({
+        authenticationTimeoutMs: 100,
+        verifyToken: (_token, signal) => {
+          verificationSignal = signal;
+          entered();
+          return new Promise((_resolve, rejectVerification) => {
+            if (behavior === 'rejects on cancellation') signal!.addEventListener('abort', () => rejectVerification(new Error('Cancelled')));
+          });
+        },
+      });
+      const response = post(`${app.url}/mcp/task`);
+      await verifying;
+      const shutdown = app.service.close();
+      expect((await response).status).toBe(503);
+      expect(verificationSignal?.aborted).toBe(true);
+      await shutdown;
+    },
+  );
+
+  it('releases an interrupted initialize response while retaining an interrupted existing transport', async () => {
+    const app = await start();
+    let interruptedWrites = 0;
+    app.service.server.on('request', (req, res) => {
+      if (req.headers['x-test-interrupt'] !== 'yes') return;
+      interruptedWrites++;
+      vi.spyOn(res, 'writeHead').mockImplementation(() => {
+        res.destroy();
+        return res;
+      });
+    });
+    await expect(post(`${app.url}/mcp/task`, ALICE, { 'X-Test-Interrupt': 'yes' })).rejects.toThrow();
+    expect(interruptedWrites).toBe(1);
+    let sessionId = '';
+    await vi.waitFor(async () => {
+      const retry = await post(`${app.url}/mcp/task`);
+      expect(retry.status).toBe(200);
+      sessionId = retry.headers.get('mcp-session-id')!;
+    });
+    const ping = JSON.stringify({ jsonrpc: '2.0', id: 5, method: 'tools/call', params: { name: 'ping', arguments: {} } });
+    await expect(post(`${app.url}/mcp/task`, ALICE, {
+      'Mcp-Session-Id': sessionId, 'X-Test-Interrupt': 'yes',
+    }, ping)).rejects.toThrow();
+    expect(interruptedWrites).toBe(2);
+    expect((await post(`${app.url}/mcp/task`, ALICE, { 'Mcp-Session-Id': sessionId }, ping)).status).toBe(200);
   });
 
   it('reserves a workspace before initialization and releases it on DELETE', async () => {
@@ -207,6 +262,18 @@ describe('rstool Streamable HTTP', () => {
     expect((await call((await app.connect()).client, 'ping')).pong).toBe(true);
   });
 
+  it('matches configured host names regardless of letter case', async () => {
+    const app = await start({ allowedHosts: ['LOCALHOST'] });
+    const status = await new Promise<number | undefined>((resolveStatus, rejectRequest) => {
+      const req = request(`${app.url}/mcp/task`, {
+        method: 'POST', headers: { ...headers, Host: 'LocalHost', Authorization: `Bearer ${ALICE}` },
+      }, res => { res.resume(); resolveStatus(res.statusCode); });
+      req.on('error', rejectRequest);
+      req.end(initialize);
+    });
+    expect(status).toBe(200);
+  });
+
   it('bounds pending requests and does not expire a workspace while a request is in flight', async () => {
     vi.useFakeTimers({ toFake: ['Date', 'setInterval', 'clearInterval'] });
     let onAuthorized: (() => void) | undefined;
@@ -243,7 +310,7 @@ describe('rstool Streamable HTTP', () => {
     expect((await call(connection.client, 'ping')).pong).toBe(true);
   });
 
-  it.each(['maxSessions', 'idleTimeoutMs', 'maxRequestBodySize', 'maxPendingRequests'] as const)(
+  it.each(['maxSessions', 'idleTimeoutMs', 'maxRequestBodySize', 'maxPendingRequests', 'authenticationTimeoutMs'] as const)(
     'rejects a non-positive %s', key => {
       expect(() => createRSToolHttpServer({ persistenceDir: 'unused', verifyToken: () => 'alice', [key]: 0 })).toThrow(key);
     },

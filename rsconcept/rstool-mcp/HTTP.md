@@ -55,10 +55,11 @@ The programmatic `createRSToolHttpServer` factory accepts:
 | `idleTimeoutMs` | 30 minutes | Release leases with no queued/in-flight requests after inactivity |
 | `maxRequestBodySize` | 4 MiB | SDK limit before JSON parsing |
 | `maxPendingRequests` | 8 per workspace | Bound queued and in-flight HTTP requests |
+| `authenticationTimeoutMs` | 5 seconds | End a stalled credential check with 503 and abort its optional cancellation signal |
 | `allowedHosts` | Loopback hostnames | DNS rebinding protection |
 | `allowedOrigins` | Empty | Reject requests carrying an untrusted Origin header |
 
-401 means credentials are missing or invalid; 404 means the route/session is unavailable to this identity; 409 means the workspace is already connected; 413 means the body is too large; 429 means the workspace queue is full; 503 means the active-session limit is reached or the service is stopping. Invalid initialization does not retain a lease. Tool-level rstool errors retain their existing MCP `isError` result.
+401 means credentials are missing or invalid; 404 means the route/session is unavailable to this identity; 409 means the workspace is already connected; 413 means the body is too large; 429 means the workspace queue is full; 503 means authentication timed out, the active-session limit is reached or the service is stopping. Invalid initialization or an initialize response interrupted before write completion does not retain a lease. An interrupted response on an existing transport preserves its lease. Tool-level rstool errors retain their existing MCP `isError` result.
 
 Responses use JSON. The service returns 405 for GET because it does not provide server-initiated SSE streams. It does not enable browser CORS or trust forwarded identity headers.
 
@@ -70,4 +71,4 @@ Keep the HTTP listener on loopback behind an internal HTTPS reverse proxy. Forwa
 
 Run exactly one service process for a persistence root. Do not use cluster/PM2 multi-worker mode, load-balance replicas over the same root, or run stdio against its workspace directories. The lease registry and serialization queue are process-local. A later shared-storage design needs cross-process locking or transactional revision checks.
 
-For an existing identity provider, embed `createRSToolHttpServer` and supply `verifyToken`. It must validate the credential, issuer, audience, expiry and applicable access policy, returning a stable subject only on success. Do not accept a caller-supplied subject header or forward the incoming credential to Portal. OAuth discovery and authorization flows are outside this pilot.
+For an existing identity provider, embed `createRSToolHttpServer` and supply `verifyToken`. It must validate the credential, issuer, audience, expiry and applicable access policy, returning a stable subject only on success. The optional second argument is an AbortSignal that is aborted when verification times out; use it to cancel network calls. The deadline ends the HTTP request even if the verifier ignores cancellation. Do not accept a caller-supplied subject header or forward the incoming credential to Portal. OAuth discovery and authorization flows are outside this pilot.
