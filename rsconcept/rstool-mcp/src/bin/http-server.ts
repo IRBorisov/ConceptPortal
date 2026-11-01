@@ -26,7 +26,10 @@ async function main(): Promise<void> {
   });
   await new Promise<void>((resolve, reject) => {
     service.server.once('error', reject);
-    service.server.listen(port, host, resolve);
+    service.server.listen(port, host, () => {
+      service.server.off('error', reject);
+      resolve();
+    });
   });
   process.stderr.write(`rstool-mcp HTTP ready on ${host}:${port}/mcp\n`);
   const stop = () => {
@@ -35,6 +38,11 @@ async function main(): Promise<void> {
       process.exitCode = 1;
     });
   };
+  service.server.on('error', error => {
+    process.stderr.write(`rstool-mcp HTTP server error: ${error.message}\n`);
+    process.exitCode = 1;
+    stop();
+  });
   process.once('SIGINT', stop);
   process.once('SIGTERM', stop);
 }

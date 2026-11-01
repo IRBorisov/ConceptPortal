@@ -5,7 +5,7 @@ export interface HttpCredential {
   token: string;
 }
 
-export type VerifyHttpToken = (token: string) => string | null | Promise<string | null>;
+export type VerifyHttpToken = (token: string, signal?: AbortSignal) => string | null | Promise<string | null>;
 
 /** Tokens authenticate identities; workspace names and MCP session IDs never do. */
 export function createBearerTokenVerifier(credentials: readonly HttpCredential[]): VerifyHttpToken {

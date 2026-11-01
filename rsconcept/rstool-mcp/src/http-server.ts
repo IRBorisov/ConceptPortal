@@ -21,6 +21,8 @@ export interface RSToolHttpServerOptions {
   idleTimeoutMs?: number;
   maxRequestBodySize?: number;
   maxPendingRequests?: number;
+  /** Deadline for an asynchronous credential verifier. */
+  authenticationTimeoutMs?: number;
 }
 
 interface HttpSession {
@@ -48,7 +50,8 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   const idleTimeoutMs = positiveInteger(options.idleTimeoutMs ?? 30 * 60_000, 'idleTimeoutMs');
   const maxRequestBodySize = positiveInteger(options.maxRequestBodySize ?? 4 * 1024 * 1024, 'maxRequestBodySize');
   const maxPendingRequests = positiveInteger(options.maxPendingRequests ?? 8, 'maxPendingRequests');
-  const allowedHosts = new Set(options.allowedHosts ?? ['127.0.0.1', 'localhost', '[::1]']);
+  const authenticationTimeoutMs = positiveInteger(options.authenticationTimeoutMs ?? 5_000, 'authenticationTimeoutMs');
+  const allowedHosts = new Set((options.allowedHosts ?? ['127.0.0.1', 'localhost', '[::1]']).map(host => host.toLowerCase()));
   const allowedOrigins = new Set(options.allowedOrigins ?? []);
   const workspaces = new Map<string, HttpSession>();
   const sessions = new Map<string, HttpSession>();
@@ -95,7 +98,8 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
     const route = /^\/mcp(?:\/([A-Za-z0-9][A-Za-z0-9._-]{0,63}))?\/?$/.exec(url.pathname);
     if (!route) return reject(response, 404, 'Not found');
     const token = /^Bearer ([^\s]+)$/i.exec(request.headers.authorization ?? '')?.[1];
-    const subject = token ? await options.verifyToken(token) : null;
+    const subject = token ? await verifyWithDeadline(options.verifyToken, token, authenticationTimeoutMs) : null;
+    if (subject === AUTHENTICATION_TIMEOUT) return reject(response, 503, 'Authentication timed out');
     if (!subject || typeof subject !== 'string') {
       response.setHeader('WWW-Authenticate', 'Bearer realm="rstool-mcp"');
       return reject(response, 401, 'Bearer authentication required');
@@ -108,6 +112,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
     const namespace = createHash('sha256').update(JSON.stringify([subject, route[1] ?? 'default'])).digest('hex');
     const sessionId = request.headers['mcp-session-id'];
     let entry: HttpSession;
+    let initializationResponse: Promise<boolean> | undefined;
     if (sessionId !== undefined) {
       const found = typeof sessionId === 'string' ? sessions.get(sessionId) : undefined;
       if (!found || found.namespace !== namespace || found.closed) {
@@ -119,6 +124,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       expireIdleSessions();
       if (workspaces.has(namespace)) return reject(response, 409, 'Workspace already has an active MCP session');
       if (workspaces.size >= maxSessions) return reject(response, 503, 'Active session limit reached');
+      initializationResponse = responseCompletion(response);
       const tool = new RSToolAgent({ persistenceDir: join(options.persistenceDir, namespace) });
       const mcpServer = buildRSToolMcpServer({ tool, serializeToolCalls: true });
       const transport = new StreamableHTTPServerTransport({
@@ -149,19 +155,30 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       await entry.transport.handleRequest(request, response);
     });
     entry.tail = task.catch(() => undefined);
+    let handled = false;
     try {
       await task;
+      handled = true;
     } finally {
+      if (initializationResponse) {
+        // A thrown handler must not leave completion waiting for the outer error response.
+        if (!handled) response.destroy();
+        const delivered = await initializationResponse;
+        if (!entry.transport.sessionId || !delivered) await dispose(entry);
+      }
       entry.pending--;
       entry.lastUsed = Date.now();
-      // Invalid/oversized initialization must not consume a workspace lease.
-      if (!entry.transport.sessionId) await dispose(entry);
     }
   }
 
   const server = createServer((request, response) => {
+    response.once('finish', () => {
+      // Requests active when close() began may only now have become idle.
+      if (stopped) server.closeIdleConnections();
+    });
     void handle(request, response).catch(() => {
       // Do not leak credentials, payloads or filesystem paths to clients/logs.
+      if (response.destroyed) return;
       if (!response.headersSent) reject(response, 500, 'Internal server error');
       else response.end();
     });
@@ -195,4 +212,40 @@ function reject(response: ServerResponse, status: number, message: string): void
 function positiveInteger(value: number, name: string): number {
   if (!Number.isSafeInteger(value) || value <= 0) throw new Error(`${name} must be a positive integer`);
   return value;
+}
+
+const AUTHENTICATION_TIMEOUT = Symbol('authentication-timeout');
+
+async function verifyWithDeadline(verify: VerifyHttpToken, token: string, timeoutMs: number) {
+  const controller = new AbortController();
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      Promise.resolve().then(() => verify(token, controller.signal)),
+      new Promise<typeof AUTHENTICATION_TIMEOUT>(resolveTimeout => {
+        timer = setTimeout(() => {
+          resolveTimeout(AUTHENTICATION_TIMEOUT);
+          controller.abort();
+        }, timeoutMs);
+        timer.unref();
+      }),
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/** Observe finish/close from before initialization writes any bytes. */
+function responseCompletion(response: ServerResponse): Promise<boolean> {
+  if (response.writableFinished) return Promise.resolve(true);
+  if (response.destroyed) return Promise.resolve(false);
+  return new Promise(resolveCompletion => {
+    const complete = () => {
+      response.off('finish', complete);
+      response.off('close', complete);
+      resolveCompletion(response.writableFinished);
+    };
+    response.once('finish', complete);
+    response.once('close', complete);
+  });
 }
