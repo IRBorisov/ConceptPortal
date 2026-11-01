@@ -37,6 +37,7 @@ Repo skills live in `.agents/skills/<name>/SKILL.md` (one copy for every agent).
 - Conceptual schemas (КС), RSLang (ЯРЭ), rstool or Portal → [`rsconcept/rstool/skills/rstool/SKILL.md`](rsconcept/rstool/skills/rstool/SKILL.md) (router to stage skills; stubs pointing there: `.agents/skills/rstool/`, `.claude/skills/rstool/`).
 - Frontend i18n: replace literal UI strings with `tx.*` ids → [`.agents/skills/i18n-extract/SKILL.md`](.agents/skills/i18n-extract/SKILL.md).
 - Stress-test a plan or design («grill me») → [`.agents/skills/grill-me/SKILL.md`](.agents/skills/grill-me/SKILL.md).
+- Analyze a formal language as a notation/modeling system, select technologies for a task, or coordinate several languages → [`.agents/skills/fl-model/SKILL.md`](.agents/skills/fl-model/SKILL.md). This is language-level research; use `rstool` for concrete КС edits and library operations.
 - Terminology (agents): `rsconcept/rstool/docs/DOMAIN.md` §«Термины: не путать» — never «базис»/«базисы»; use **базисное множество** for `X#`, **неопределяемые понятия** for the `X#`/`C#`/`S#` layer.
 - Portal REST (UI links → API): `rsconcept/rstool/docs/PORTAL-API.md` (index → PORTAL-READ / PUBLISH / MODELS / OSS).
 
