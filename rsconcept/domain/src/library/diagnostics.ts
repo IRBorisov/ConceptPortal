@@ -152,13 +152,19 @@ export function detectDependencyCycleDiagnostics(
   resolveAlias: (id: number) => string
 ): Map<number, CstDiagnostic> {
   const result = new Map<number, CstDiagnostic>();
+  const componentByNode = new Map<number, number[]>();
+  for (const component of graph.stronglyConnectedComponents()) {
+    for (const id of component) {
+      componentByNode.set(id, component);
+    }
+  }
   for (const cycle of graph.findCycles()) {
     if (cycle.length < 2) {
       continue;
     }
     const aliases = cycle.map(id => resolveAlias(id));
     const cycleText = formatDependencyCycle(aliases);
-    const memberIds = new Set(cycle);
+    const memberIds = componentByNode.get(cycle[0]) ?? cycle;
     for (const id of memberIds) {
       result.set(id, {
         kind: DiagnosticKind.SCHEMA,

@@ -62,6 +62,15 @@ export class RSCalculator {
     this.notify(alias);
   }
 
+  /** Drop every stored value and notify listeners for the aliases that were present. */
+  public clearAllValues(): void {
+    const aliases = [...this.context.keys()];
+    this.context.clear();
+    for (const alias of aliases) {
+      this.notify(alias);
+    }
+  }
+
   public clearAllAst(): void {
     this.treeContext.clear();
   }

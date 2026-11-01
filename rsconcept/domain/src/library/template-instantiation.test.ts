@@ -423,4 +423,47 @@ describe('planTemplateInstantiation', () => {
     });
     expect(plan.items).toHaveLength(0);
   });
+
+  it('remaps each template alias once when bank and target names overlap', () => {
+    const f1 = mockCst({
+      id: 101,
+      alias: 'F1',
+      cst_type: CstType.FUNCTION,
+      definition_formal: '[a∈R1] {a}',
+      term_raw: 'F1'
+    });
+    const f2 = mockCst({
+      id: 102,
+      alias: 'F2',
+      cst_type: CstType.FUNCTION,
+      definition_formal: '[a∈R1] F1[a]∪{a}',
+      term_raw: '@{F1|sing,nom}',
+      definition_raw: '@{F1|sing,nom}'
+    });
+    const p1 = mockCst({
+      id: 103,
+      alias: 'P1',
+      cst_type: CstType.PREDICATE,
+      definition_formal: '[a∈R1] F2[a]={a}',
+      term_raw: '@{F2|sing,nom}'
+    });
+    const target = mockSchema([
+      mockCst({ id: 1, alias: 'X1', cst_type: CstType.BASE }),
+      mockCst({ id: 2, alias: 'F1', cst_type: CstType.FUNCTION, definition_formal: '[a∈R1] (a,a)' })
+    ]);
+    const plan = planTemplateInstantiation({
+      targetSchema: target,
+      templateItems: [f1, f2, p1],
+      prototype: p1,
+      userArgs: [],
+      mainItem: { ...p1, alias: 'P2' }
+    });
+
+    expect(plan.items.map(item => item.alias)).toEqual(['F2', 'F3', 'P2']);
+    expect(plan.items[1]?.definition_formal).toBe('[a∈R1] F2[a]∪{a}');
+    expect(plan.items[1]?.term_raw).toBe('@{F2|sing,nom}');
+    expect(plan.items[1]?.definition_raw).toBe('@{F2|sing,nom}');
+    expect(plan.items[2]?.definition_formal).toBe('[a∈R1] F3[a]={a}');
+    expect(plan.items[2]?.term_raw).toBe('@{F3|sing,nom}');
+  });
 });

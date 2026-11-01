@@ -112,30 +112,14 @@ class TypificationParser {
   }
 
   private parseTypification(): Typification {
-    this.skipSpaces();
-    if (this.match('ℬ')) {
-      this.skipSpaces();
-      if (this.peek() === '(') {
-        this.next();
-        const base = this.parseTypification();
-        this.expect(')');
-        return bool(base);
-      }
-      this.skipSpaces();
-      if (this.input.startsWith('ℬ', this.index)) {
-        const base = this.parseTypification();
-        return bool(base);
-      }
-      throw new Error('Expected "(" after "ℬ"');
-    }
-    const first = this.parseTypificationAtom();
+    const first = this.parseTypificationFactor();
     const factors: Typification[] = [first];
     while (true) {
       this.skipSpaces();
       if (!this.match('×')) {
         break;
       }
-      factors.push(this.parseTypificationAtom());
+      factors.push(this.parseTypificationFactor());
     }
     if (factors.length === 1) {
       return first;
@@ -143,10 +127,11 @@ class TypificationParser {
     return tuple(factors);
   }
 
-  private parseTypificationAtom(): Typification {
+  /** One product factor. A boolean does not consume a following `×`. */
+  private parseTypificationFactor(): Typification {
     this.skipSpaces();
-    if (this.input.startsWith('ℬ', this.index)) {
-      return this.parseTypification();
+    if (this.match('ℬ')) {
+      return bool(this.parseBooleanBase());
     }
     if (this.peek() === '(') {
       this.next();
@@ -154,6 +139,26 @@ class TypificationParser {
       this.expect(')');
       return wrapped;
     }
+    return this.parseBaseToken();
+  }
+
+  /** Base of `ℬ`, either parenthesized or another boolean (`ℬℬ(X1)`). */
+  private parseBooleanBase(): Typification {
+    this.skipSpaces();
+    if (this.peek() === '(') {
+      this.next();
+      const base = this.parseTypification();
+      this.expect(')');
+      return base;
+    }
+    this.skipSpaces();
+    if (this.match('ℬ')) {
+      return bool(this.parseBooleanBase());
+    }
+    throw new Error('Expected "(" after "ℬ"');
+  }
+
+  private parseBaseToken(): Typification {
     const token = this.readToken();
     if (token === 'Z') {
       return IntegerT;

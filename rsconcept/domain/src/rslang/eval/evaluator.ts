@@ -807,23 +807,33 @@ export class Evaluator {
 
     let currentChild = 1;
 
-    // Advance to next iteration
-    const advanceIterator = (): boolean => {
+    // Advance to next iteration. A limit stop is not the end of the domain.
+    const advanceIterator = (): 'step' | 'done' | 'limit' => {
       while (frames.length > 0) {
         const top = frames[frames.length - 1];
         if (top.valueID < top.domain.length - 1) {
           top.valueID++;
           const nextValue = top.domain[top.valueID];
           if (!this.tick(node.children[top.childID], TICK_PER_IMPERATIVE)) {
-            return false;
+            return 'limit';
           }
           this.dispatchDeclare(node.children[top.childID].children[0], nextValue);
           currentChild = top.childID + 1;
-          return true;
+          return 'step';
         }
         frames.pop();
       }
-      return false;
+      return 'done';
+    };
+
+    let stoppedByLimit = false;
+    const continueIteration = (): boolean => {
+      const step = advanceIterator();
+      if (step === 'limit') {
+        stoppedByLimit = true;
+        return false;
+      }
+      return step === 'step';
     };
 
     while (true) {
@@ -834,7 +844,7 @@ export class Evaluator {
           return null;
         }
         result.push(element);
-        if (!advanceIterator()) {
+        if (!continueIteration()) {
           break;
         }
         continue;
@@ -848,7 +858,7 @@ export class Evaluator {
           return null;
         }
         if (domain.length === 0) {
-          if (!advanceIterator()) {
+          if (!continueIteration()) {
             break;
           }
           continue;
@@ -872,12 +882,15 @@ export class Evaluator {
         return null;
       }
       if (value === VALUE_FALSE) {
-        if (!advanceIterator()) {
+        if (!continueIteration()) {
           break;
         }
         continue;
       }
       currentChild++;
+    }
+    if (stoppedByLimit) {
+      return null;
     }
     return set(result);
   }
