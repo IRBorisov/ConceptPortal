@@ -210,7 +210,7 @@ def _clone_oss_attached_schemas(
         schema_clone.visible = False
         schema_clone.read_only = False
         schema_clone.access_policy = item_data.get('access_policy', clone.access_policy)
-        schema_clone.location = item_data['location']
+        schema_clone.location = item_data.get('location', LocationHead.USER)
         schema_clone.save()
 
         pairs = PropagationFacade().get_schema(schema_clone.pk).insert_from(old_schema_id)

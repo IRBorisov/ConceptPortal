@@ -1,6 +1,8 @@
 ''' Views: PromptTemplate endpoints for AI prompt management. '''
 
 from django.db import models
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
@@ -46,7 +48,11 @@ class PromptTemplateViewSet(viewsets.ModelViewSet):
         return PromptTemplate.objects.filter(models.Q(owner=user) | models.Q(is_shared=True)).distinct()
 
     def get_object(self):
-        obj = PromptTemplate.objects.get(pk=self.kwargs['pk'])
+        ''' 404 for a missing id and for an id that is not an integer. '''
+        try:
+            obj = get_object_or_404(PromptTemplate, pk=self.kwargs['pk'])
+        except (TypeError, ValueError):
+            raise Http404 from None
         self.check_object_permissions(self.request, obj)
         return obj
 

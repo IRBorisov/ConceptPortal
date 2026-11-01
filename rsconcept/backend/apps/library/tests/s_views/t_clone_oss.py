@@ -2,7 +2,7 @@
 from django.core.cache import cache
 from rest_framework import status
 
-from apps.library.models import AccessPolicy, Editor, LibraryItem
+from apps.library.models import AccessPolicy, Editor, LibraryItem, LocationHead
 from apps.oss.models import (
     Argument,
     Block,
@@ -101,6 +101,20 @@ class TestLibraryCloneOss(EndpointTester):
 
         Editor.add(self.owned.model.pk, self.user2.pk)
 
+
+    @decl_endpoint('/api/library/{item}/clone', method='post')
+    def test_clone_oss_without_location(self):
+        self.populate_graph()
+        data = self._clone_payload()
+        del data['item_data']['location']
+        response = self.executeCreated(data, item=self.owned.model.pk)
+        self.assertEqual(response.data['location'], LocationHead.USER)
+        attached = LibraryItem.objects.filter(
+            pk__in=Operation.objects.filter(oss_id=response.data['id']).values('result_id')
+        )
+        self.assertGreaterEqual(attached.count(), 1)
+        for schema in attached:
+            self.assertEqual(schema.location, LocationHead.USER)
 
     @decl_endpoint('/api/library/{item}/clone', method='post')
     def test_clone_oss_graph(self):

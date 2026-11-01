@@ -116,6 +116,11 @@ class TestPromptTemplateViewSet(EndpointTester):
 
 
     @decl_endpoint('/api/prompts/{item}/', method='get')
+    def test_missing_template_is_not_found(self):
+        self.executeNotFound(item=999999)
+        self.executeNotFound(item='abc')
+
+    @decl_endpoint('/api/prompts/{item}/', method='get')
     def test_retrieve_private_hidden_from_anonymous_and_stranger(self):
         prompt = PromptTemplate.objects.create(
             owner=self.user,

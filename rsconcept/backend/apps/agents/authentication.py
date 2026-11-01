@@ -30,3 +30,7 @@ class ApiKeyAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed('Invalid or revoked API key.')
 
         return (key.owner, key)
+
+    def authenticate_header(self, request: Request) -> str:
+        ''' So a failed key is 401, not 403. 403 stays for a valid key without permission. '''
+        return self.keyword

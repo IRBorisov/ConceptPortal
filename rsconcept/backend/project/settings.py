@@ -37,6 +37,13 @@ def _hsts_policy(debug: bool) -> tuple[int, bool, bool]:
     return 31536000, True, True
 
 
+def _proxy_ssl_header(debug: bool) -> tuple[str, str] | None:
+    ''' Header nginx sets from its own scheme. Unset in DEBUG so a client cannot fake HTTPS. '''
+    if debug:
+        return None
+    return ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
 def _get_bool(key: str, default: bool) -> bool:
     return os.environ.get(key, default) in _TRUE_VARIANTS
 
@@ -283,6 +290,9 @@ _HSTS_POLICY = _hsts_policy(DEBUG)
     SECURE_HSTS_INCLUDE_SUBDOMAINS,
     SECURE_HSTS_PRELOAD,
 ) = _HSTS_POLICY
+# Django sends HSTS only when the request is HTTPS. nginx terminates TLS and
+# must pass its own scheme; the value is $scheme, not the client header.
+SECURE_PROXY_SSL_HEADER = _proxy_ssl_header(DEBUG)
 
 _domain = os.environ.get('CSRF_COOKIE_DOMAIN', '')
 if _domain != '':

@@ -106,6 +106,18 @@ def schemaForbidden() -> str:
     return 'Нет доступа к схеме'
 
 
+def versionOnlyForSchema() -> str:
+    return 'Версию можно создать только для концептуальной схемы'
+
+
+def invalidMovePosition() -> str:
+    return 'Позиция перемещения вне диапазона схемы'
+
+
+def synthesisRequiresSchema() -> str:
+    return 'Встраивающий синтез допустим только для концептуальной схемы'
+
+
 def schemasNotReadable(labels: list[str]) -> str:
     ''' User-facing message when a clone would copy schemas the user cannot read. '''
     if len(labels) == 1:

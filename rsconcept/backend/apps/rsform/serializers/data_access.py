@@ -7,7 +7,7 @@ from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.serializers import PrimaryKeyRelatedField as PKField
 
-from apps.library.models import LibraryItem
+from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import (
     LibraryItemBaseNonStrictSerializer,
     LibraryItemDetailsSerializer,
@@ -470,7 +470,15 @@ class CstListSerializer(StrictSerializer):
 
 class CstMoveSerializer(CstListSerializer):
     ''' Serializer: Change constituenta position. '''
-    move_to = serializers.IntegerField()
+    move_to = serializers.IntegerField(min_value=0)
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        schema = cast(LibraryItem, self.context['schema'])
+        total = Constituenta.objects.filter(schema=schema).count()
+        if attrs['move_to'] > total:
+            raise serializers.ValidationError({'move_to': msg.invalidMovePosition()})
+        return attrs
 
 
 CST_BATCH_CREATE_MAX_ITEMS = 100
@@ -606,6 +614,10 @@ class InlineSynthesisSerializer(StrictSerializer):
         user = cast(User, self.context['user'])
         schema_in = cast(LibraryItem, attrs['source'])
         schema_out = cast(LibraryItem, attrs['receiver'])
+        if schema_out.item_type != LibraryItemType.RSFORM:
+            raise serializers.ValidationError({'receiver': msg.synthesisRequiresSchema()})
+        if schema_in.item_type != LibraryItemType.RSFORM:
+            raise serializers.ValidationError({'source': msg.synthesisRequiresSchema()})
         if not permissions.can_edit_item(user, schema_out):
             raise PermissionDenied({
                 'message': msg.schemaForbidden(),

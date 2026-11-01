@@ -500,7 +500,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         tags=['OSS'],
         request=s.RelocateConstituentsSerializer(),
         responses={
-            c.HTTP_200_OK: s.OperationSchemaSerializer,
+            c.HTTP_200_OK: None,
             c.HTTP_400_BAD_REQUEST: None,
             c.HTTP_403_FORBIDDEN: None,
             c.HTTP_404_NOT_FOUND: None

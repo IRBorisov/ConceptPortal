@@ -73,9 +73,8 @@ class ApiKeyViewSet(viewsets.ViewSet):
         return Response(ApiKeyCreatedSerializer(payload).data, status=c.HTTP_201_CREATED)
 
     def partial_update(self, request: Request, pk=None) -> Response:
-        try:
-            key = ApiKey.objects.get(pk=pk, owner=self._owner(request), revoked_at__isnull=True)
-        except ApiKey.DoesNotExist:
+        key = self._active_owned_key(request, pk)
+        if key is None:
             return Response(status=c.HTTP_404_NOT_FOUND)
         serializer = ApiKeyUpdateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -84,12 +83,22 @@ class ApiKeyViewSet(viewsets.ViewSet):
         return Response(ApiKeySerializer(key).data)
 
     def destroy(self, request: Request, pk=None) -> Response:
-        try:
-            key = ApiKey.objects.get(pk=pk, owner=self._owner(request), revoked_at__isnull=True)
-        except ApiKey.DoesNotExist:
+        key = self._active_owned_key(request, pk)
+        if key is None:
             return Response(status=c.HTTP_404_NOT_FOUND)
         key.revoke()
         return Response(status=c.HTTP_204_NO_CONTENT)
+
+    def _active_owned_key(self, request: Request, pk) -> ApiKey | None:
+        ''' Own active key, or None when the id is missing or not an integer. '''
+        try:
+            key_id = int(pk)
+        except (TypeError, ValueError):
+            return None
+        try:
+            return ApiKey.objects.get(pk=key_id, owner=self._owner(request), revoked_at__isnull=True)
+        except ApiKey.DoesNotExist:
+            return None
 
     def _owner(self, request: Request) -> User:
         return cast(User, request.user)

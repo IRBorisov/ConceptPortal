@@ -125,7 +125,7 @@ class OperationSchemaCached:
             self.after_create_arguments(operation, added)
 
     def set_substitutions(self, target: int, substitutes: list[dict]) -> None:
-        ''' Clear all arguments for target Operation. '''
+        ''' Set identifications for the target operation. Arguments stay unchanged. '''
         self.cache.ensure_loaded_subs()
         operation = self.cache.operation_by_id[target]
         schema = self.cache.get_result(operation)
