@@ -117,6 +117,8 @@ service.server.listen(8093, '127.0.0.1');
 
 `verifyYourCredential` is supplied by your application. The packaged CLI instead reads a protected credentials file. See [HTTP.md](HTTP.md) for the single-process ownership model and limits.
 
+The HTTP host enables `buildRSToolMcpServer({ serializeToolCalls: true })` to queue individual tool invocations, including JSON-RPC batches. Custom single-client adapters can opt into the same ordering; the stdio default remains unchanged.
+
 For a custom single-client transport:
 
 ```ts
