@@ -124,6 +124,17 @@ describe('RSCalculator', () => {
     expect(calls).toBe(1); // not incremented
   });
 
+  it('clearAllValues notifies listeners and drops stored values', () => {
+    let calls = 0;
+    calculator.subscribe('X1', () => {
+      calls += 1;
+    });
+    calculator.clearAllValues();
+    expect(calls).toBe(1);
+    expect(calculator.getValue('X1')).toBeNull();
+    expect(calculator.getValue('C1')).toBeNull();
+  });
+
   // Additional case for real RS logic
   it('evaluates logical expressions', () => {
     expectCalcValue('1=1', '1');

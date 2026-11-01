@@ -46,6 +46,27 @@ describe('Testing Graph editing', () => {
     expect(graph.topologicalOrder()).toEqual([1, 0]);
   });
 
+  it('expandAllOutputs returns a zero destination reached by two paths once', () => {
+    const graph = new Graph([
+      [1, 2],
+      [1, 3],
+      [2, 0],
+      [3, 0]
+    ]);
+    expect(graph.expandAllOutputs([1])).toStrictEqual([2, 3, 0]);
+  });
+
+  it('expandAllInputs returns a zero predecessor reached by two paths once', () => {
+    const graph = new Graph([
+      [1, 0],
+      [0, 2],
+      [0, 3],
+      [2, 4],
+      [3, 4]
+    ]);
+    expect(graph.expandAllInputs([4])).toStrictEqual([2, 3, 0, 1]);
+  });
+
   it('detects an edge whose destination is an empty string', () => {
     const graph = new Graph<string>([['a', '']]);
     expect(graph.hasEdge('a', '')).toBe(true);
@@ -286,6 +307,15 @@ describe('Testing Graph sort', () => {
       [5, 9]
     ]);
     expect(graph.topologicalOrder()).toStrictEqual([5, 4, 3, 9, 2, 1]);
+  });
+
+  it('emits a falsy node once when it is reachable through two paths', () => {
+    const graph = new Graph([
+      [1, 0],
+      [1, 2],
+      [2, 0]
+    ]);
+    expect(graph.topologicalOrder()).toStrictEqual([1, 2, 0]);
   });
 });
 
