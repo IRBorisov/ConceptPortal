@@ -1,6 +1,6 @@
 # @rsconcept/rstool-mcp
 
-[Model Context Protocol](https://modelcontextprotocol.io/) adapter for [`@rsconcept/rstool`](https://www.npmjs.com/package/@rsconcept/rstool). Exposes the full `RSToolAgent` contract — sessions, constituent upserts, RSLang analysis, diagnostics, modeling, evaluation — as MCP **tools** over stdio, so any MCP-capable host (Cursor, Claude Desktop, your own client) can drive rstool natively.
+[Model Context Protocol](https://modelcontextprotocol.io/) adapter for [`@rsconcept/rstool`](https://www.npmjs.com/package/@rsconcept/rstool). Exposes sessions, schema editing, RSLang analysis, diagnostics, modeling and evaluation as MCP tools over local stdio or authenticated Streamable HTTP.
 
 If you do not need MCP, use `@rsconcept/rstool` directly (library API or stdio JSON wrapper).
 
@@ -12,7 +12,7 @@ npm install -g @rsconcept/rstool-mcp
 npm install @rsconcept/rstool-mcp
 ```
 
-The package ships a `rstool-mcp` bin that launches the stdio server. It depends on `@rsconcept/rstool` and (transitively) `@rsconcept/domain`; no Portal checkout is required.
+The package ships `rstool-mcp` for stdio and `rstool-mcp-http` for a hosted service. It depends on `@rsconcept/rstool` and (transitively) `@rsconcept/domain`; no Portal checkout is required.
 
 ## Run
 
@@ -20,7 +20,9 @@ The package ships a `rstool-mcp` bin that launches the stdio server. It depends 
 npx rstool-mcp
 ```
 
-The server announces readiness on stderr (`rstool-mcp server ready on stdio`) and then speaks the MCP protocol on stdin/stdout. There is no HTTP port.
+The stdio server announces readiness on stderr (`rstool-mcp server ready on stdio`) and speaks MCP on stdin/stdout. This default does not open a network port.
+
+For a shared service, see [Streamable HTTP](HTTP.md). That mode requires bearer authentication and a persistence directory, isolates each identity/task workspace, and binds to loopback by default. Clients use a URL such as `https://mcp.example.com/mcp/my-task` and an `Authorization: Bearer` header. The existing tool names and arguments are unchanged.
 
 ## Configure in Cursor
 
@@ -99,18 +101,34 @@ Session tools accept optional `sessionId` (flat params, no `input` wrapper). Pre
 
 ## Programmatic use
 
-If you want to build a custom transport (HTTP, in-process) instead of stdio:
+For a hosted HTTP service with a trusted identity verifier:
 
 ```ts
-import { StreamableHttpServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { createRSToolHttpServer } from '@rsconcept/rstool-mcp';
+
+const service = createRSToolHttpServer({
+  persistenceDir: '/var/lib/rstool',
+  verifyToken: async token => verifyYourCredential(token), // stable subject or null
+  allowedHosts: ['mcp.example.com', '127.0.0.1'],
+});
+service.server.listen(8093, '127.0.0.1');
+// On shutdown: await service.close();
+```
+
+`verifyYourCredential` is supplied by your application. The packaged CLI instead reads a protected credentials file. See [HTTP.md](HTTP.md) for the single-process ownership model and limits.
+
+For a custom single-client transport:
+
+```ts
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { buildRSToolMcpServer } from "@rsconcept/rstool-mcp";
 
 const server = buildRSToolMcpServer();
-const transport = new StreamableHttpServerTransport();
+const transport = new StreamableHTTPServerTransport();
 await server.connect(transport);
 ```
 
-Or share a single `RSToolAgent` between multiple servers / requests:
+For a single trusted client, you can supply its own `RSToolAgent`. Do not share this mutable instance across users or independently active workspaces:
 
 ```ts
 import { RSToolAgent } from "@rsconcept/rstool";

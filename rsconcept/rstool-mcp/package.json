@@ -1,7 +1,7 @@
 {
   "name": "@rsconcept/rstool-mcp",
-  "version": "1.0.0",
-  "description": "Model Context Protocol (MCP) adapter that exposes the @rsconcept/rstool RSToolAgent contract over MCP stdio. Works with Cursor, Claude Desktop, and any MCP-capable host.",
+  "version": "1.1.0",
+  "description": "Model Context Protocol adapter for rstool over stdio or authenticated Streamable HTTP, with isolated persistent workspaces.",
   "license": "MIT",
   "author": "IRBorisov",
   "repository": {
@@ -32,12 +32,14 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "rstool-mcp": "dist/bin/server.js"
+    "rstool-mcp": "dist/bin/server.js",
+    "rstool-mcp-http": "dist/bin/http-server.js"
   },
   "files": [
     "dist",
     "src",
     "README.md",
+    "HTTP.md",
     "LICENSE"
   ],
   "scripts": {
@@ -45,6 +47,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "start": "tsx src/bin/server.ts",
+    "start:http": "tsx src/bin/http-server.ts",
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
