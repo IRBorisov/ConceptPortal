@@ -120,7 +120,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       if (workspaces.has(namespace)) return reject(response, 409, 'Workspace already has an active MCP session');
       if (workspaces.size >= maxSessions) return reject(response, 503, 'Active session limit reached');
       const tool = new RSToolAgent({ persistenceDir: join(options.persistenceDir, namespace) });
-      const mcpServer = buildRSToolMcpServer({ tool });
+      const mcpServer = buildRSToolMcpServer({ tool, serializeToolCalls: true });
       const transport = new StreamableHTTPServerTransport({
         sessionIdGenerator: randomUUID,
         enableJsonResponse: true,

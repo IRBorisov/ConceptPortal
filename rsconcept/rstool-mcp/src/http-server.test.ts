@@ -115,6 +115,25 @@ describe('rstool Streamable HTTP', () => {
     expect(state.items.map((item: { alias: string }) => item.alias)).toEqual(['X1']);
   });
 
+  it('does not let an asynchronous batch rollback erase a following successful tool call', async () => {
+    const app = await start();
+    const connection = await app.connect();
+    await call(connection.client, 'apply_schema_patch', { items: [{ alias: 'X1', convention: 'Objects' }] });
+    const batch = [
+      { name: 'set_model_values', arguments: { set: [{ target: 1, value: { 0: 'one' } }, { target: 999, value: { 0: 'invalid' } }] } },
+      { name: 'apply_schema_patch', arguments: { items: [{ alias: 'X2', convention: 'More objects' }] } },
+    ].map((params, index) => ({ jsonrpc: '2.0', id: 100 + index, method: 'tools/call', params }));
+    const response = await post(`${app.url}/mcp/task`, ALICE, { 'Mcp-Session-Id': connection.transport.sessionId! }, JSON.stringify(batch));
+    expect(response.status).toBe(200);
+    const results = await response.json() as Array<{ id: number; result: CallToolResult }>;
+    expect(results).toHaveLength(2);
+    expect(results.find(result => result.id === 100)!.result.isError).toBe(true);
+    expect(results.find(result => result.id === 101)!.result.isError).not.toBe(true);
+    const state = await call(connection.client, 'get_session_state');
+    expect(state.items.map((item: { alias: string }) => item.alias)).toEqual(['X1', 'X2']);
+    expect(state.modelItemCount).toBe(0);
+  });
+
   it('checks authentication on every method, including an already initialized transport', async () => {
     let revoked = false;
     const verify = createBearerTokenVerifier(credentials);

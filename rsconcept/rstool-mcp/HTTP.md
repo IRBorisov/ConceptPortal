@@ -41,7 +41,7 @@ The hostname is illustrative. For local development, use `http://127.0.0.1:8093/
 
 After initialization, the client sends the returned `Mcp-Session-Id` on each subsequent POST/DELETE. Authentication is checked again on every request. A session ID from another subject or workspace returns 404. Referencing another workspace's rstool session, including as a synthesis source, cannot load its files.
 
-One workspace permits one live MCP connection. A second initialization returns 409, including two agents using the same person's credential. This prevents independently cached copies or current-session pointers from overwriting each other. Requests within that connection are serialized. This is exclusive ownership, not collaborative editing or optimistic merging.
+One workspace permits one live MCP connection. A second initialization returns 409, including two agents using the same person's credential. This prevents independently cached copies or current-session pointers from overwriting each other. Requests within that connection and tool invocations inside a JSON-RPC batch are serialized. A failed asynchronous operation completes its rollback before the next tool starts. This is exclusive ownership, not collaborative editing or optimistic merging.
 
 Send MCP DELETE to release a transport lease when finished. Closing the local client connection alone leaves the lease until idle expiry. After DELETE, expiry or a service restart, initialize a new MCP connection at the same URL and use `get_current_session` to resume the persisted schema. Do not reuse an expired transport ID. Deleting a transport does not delete schema data.
 

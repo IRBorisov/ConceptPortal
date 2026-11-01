@@ -17,6 +17,8 @@ export interface BuildRSToolMcpServerOptions {
   name?: string;
   /** Server version advertised to MCP clients. */
   version?: string;
+  /** Queue tool invocations, including calls in one JSON-RPC batch. Enabled by the HTTP host. */
+  serializeToolCalls?: boolean;
 }
 
 /**
@@ -69,47 +71,54 @@ export function buildRSToolMcpServer(
     }),
   );
 
-  server.server.setRequestHandler(CallToolRequestSchema, async (request) => {
-    const definition = definitionByName.get(request.params.name);
-    if (!definition) {
-      return {
-        isError: true,
-        content: [
-          {
-            type: "text" as const,
-            text: `Unknown rstool tool: ${request.params.name}`,
-          },
-        ],
-      };
-    }
+  let invocationTail: Promise<unknown> = Promise.resolve();
+  server.server.setRequestHandler(CallToolRequestSchema, (request) => {
+    const invoke = async () => {
+      const definition = definitionByName.get(request.params.name);
+      if (!definition) {
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text" as const,
+              text: `Unknown rstool tool: ${request.params.name}`,
+            },
+          ],
+        };
+      }
 
-    try {
-      const result = await definition.invoke(
-        tool,
-        request.params.arguments ?? {},
-      );
-      const text =
-        typeof result === "string" ? result : JSON.stringify(result, null, 2);
-      return {
-        content: [
-          {
-            type: "text" as const,
-            text,
-          },
-        ],
-      };
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      return {
-        isError: true,
-        content: [
-          {
-            type: "text" as const,
-            text: `rstool error in ${definition.name}: ${message}`,
-          },
-        ],
-      };
-    }
+      try {
+        const result = await definition.invoke(
+          tool,
+          request.params.arguments ?? {},
+        );
+        const text =
+          typeof result === "string" ? result : JSON.stringify(result, null, 2);
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text,
+            },
+          ],
+        };
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text" as const,
+              text: `rstool error in ${definition.name}: ${message}`,
+            },
+          ],
+        };
+      }
+    };
+    if (!options.serializeToolCalls) return invoke();
+    const invocation = invocationTail.then(invoke);
+    invocationTail = invocation.catch(() => undefined);
+    return invocation;
   });
 
   return server;
