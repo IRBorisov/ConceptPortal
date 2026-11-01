@@ -85,10 +85,11 @@ export function calculateSchemaStats(target: RSForm): RSFormStats {
     if (cst.definition_raw) {
       stats.count_definition += 1;
     }
-    if (isBasicConcept(cst.cst_type) && cst.convention) {
+    const comment = cst.convention.trim();
+    if (isBasicConcept(cst.cst_type) && comment) {
       stats.count_convention += 1;
     }
-    if (!isBasicConcept(cst.cst_type) && !cst.convention) {
+    if (!isBasicConcept(cst.cst_type) && comment) {
       stats.count_comment += 1;
     }
 

@@ -53,15 +53,19 @@ export class RSEngine {
   /** Updates data for {@link RSEngine}. */
   public loadData(schema: RSForm, model: RSModel): void {
     const oldSchema = this.schema;
-    const newSchema = oldSchema !== schema;
+    const schemaChanged = oldSchema !== schema;
+    const modelChanged = this.data !== model;
     this.schema = schema;
-    if (newSchema) {
+    if (schemaChanged) {
       const changedCst = this.collectChanged(oldSchema, schema);
       this.prepareAst();
+      if (!modelChanged) {
+        this.rebindAliases(oldSchema);
+      }
       this.setupEmptySets();
       this.onChangeDefinitions(changedCst);
     }
-    if (this.data !== model) {
+    if (modelChanged) {
       this.prepareValues(model);
       this.data = model;
     }
@@ -199,7 +203,7 @@ export class RSEngine {
       return;
     }
     const oldValue = this.calculator.getValue(cst.alias);
-    const newValue = Object.keys(data).map(Number);
+    const newValue = canonicalBasicIds(data);
 
     const updateList: Parameters<RSEngineServices['setCstValue']>[0]['data'] = [
       { target: cstID, type: TYPE_BASIC, data }
@@ -213,12 +217,13 @@ export class RSEngine {
         if (child.cst_type === CstType.STRUCTURED && !!child.effectiveType) {
           const value = this.calculator.getValue(child.alias);
           if (value !== null) {
-            const fix = tryFixValue(value, child.effectiveType, cst.alias, newValue);
+            const draft = cloneValue(value);
+            const fix = tryFixValue(draft, child.effectiveType, cst.alias, newValue);
             if (fix === null) {
               resetList.push(childID);
             } else if (fix === true) {
               const typeStr = normalizeType(child.effectiveType);
-              updateList.push({ target: childID, type: typeStr, data: [...(value as Value[])] });
+              updateList.push({ target: childID, type: typeStr, data: draft });
             }
           }
         }
@@ -227,32 +232,17 @@ export class RSEngine {
 
     // Sequential writes: both endpoints share the model concurrency token.
     // A parallel pair would send the same expected time_update and the second would 409.
+    // Local state changes only after a write succeeds, so a rejected save leaves values intact.
     await this.services.setCstValue({ itemID: this.modelID, data: updateList });
     if (resetList.length > 0) {
-      await this.services.clearValues({ itemID: this.modelID, data: { items: resetList } });
-    }
-    const changed = [...resetList, ...updateList.map(item => item.target)];
-
-    this.basics.set(cstID, data);
-    this.calculator.setValue(cst.alias, Object.keys(data).map(Number));
-
-    for (const item of resetList) {
-      this.calculator.resetValue(this.schema.cstByID.get(item)!.alias);
-      this.notifyCst(item);
-    }
-    for (const updateData of updateList) {
-      if (updateData.target !== cstID) {
-        this.calculator.setValue(
-          this.schema.cstByID.get(updateData.target)!.alias,
-          updateData.data as unknown as Value
-        );
-        this.notifyCst(updateData.target);
+      try {
+        await this.services.clearValues({ itemID: this.modelID, data: { items: resetList } });
+      } catch (error) {
+        this.commitBasicUpdate(cst, data, newValue, updateList, []);
+        throw error;
       }
     }
-    for (const item of changed) {
-      this.notifyCst(item);
-    }
-    this.cascadeReset(changed);
+    this.commitBasicUpdate(cst, data, newValue, updateList, resetList);
   }
 
   /** Resets value for {@link Constituenta}. */
@@ -267,6 +257,7 @@ export class RSEngine {
     this.calculatedSet.delete(cstID);
     this.invalidData.delete(cstID);
     this.notifyCst(cstID);
+    this.cascadeReset([cstID]);
   }
 
   /** Evaluates expression for {@link RSEngine}. */
@@ -388,6 +379,7 @@ export class RSEngine {
     this.basics.clear();
     this.invalidData.clear();
     this.calculatedSet.clear();
+    this.calculator.clearAllValues();
 
     for (const item of model.items) {
       const cst = this.schema?.cstByID.get(item.id);
@@ -400,19 +392,84 @@ export class RSEngine {
       }
       const data = item.value as BasicBinding;
       this.basics.set(cst.id, data);
-      this.calculator.setValue(cst.alias, Object.keys(data).map(Number));
+      this.calculator.setValue(cst.alias, canonicalBasicIds(data));
     }
     for (const item of model.items) {
       const cst = this.schema?.cstByID.get(item.id);
       if (!cst || item.type === TYPE_BASIC) {
         continue;
       }
-      this.calculator.setValue(cst.alias, item.value as Value);
-      if (!cst.effectiveType || !this.calculator.validate(item.value as Value, cst.effectiveType)) {
+      const value = cloneValue(item.value as Value);
+      this.calculator.setValue(cst.alias, value);
+      if (!cst.effectiveType || !this.calculator.validate(value, cst.effectiveType)) {
         this.invalidData.add(item.id);
       }
     }
     this.setupEmptySets();
+  }
+
+  /** Keep stored values attached to the constituent id when only its alias changes. */
+  private rebindAliases(previousSchema: RSForm | null): void {
+    if (!previousSchema || !this.schema) {
+      return;
+    }
+    const moves: { from: string; to: string; value: Value }[] = [];
+    const removed: string[] = [];
+    for (const previous of previousSchema.items) {
+      const next = this.schema.cstByID.get(previous.id);
+      if (!next) {
+        removed.push(previous.alias);
+        continue;
+      }
+      if (next.alias === previous.alias) {
+        continue;
+      }
+      const value = this.calculator.getValue(previous.alias);
+      if (value !== null) {
+        moves.push({ from: previous.alias, to: next.alias, value });
+      } else {
+        removed.push(previous.alias);
+      }
+    }
+    for (const alias of removed) {
+      this.calculator.resetValue(alias);
+    }
+    for (const move of moves) {
+      this.calculator.resetValue(move.from);
+    }
+    for (const move of moves) {
+      this.calculator.setValue(move.to, move.value);
+    }
+  }
+
+  private commitBasicUpdate(
+    cst: { id: number; alias: string },
+    data: BasicBinding,
+    newValue: number[],
+    updateList: Parameters<RSEngineServices['setCstValue']>[0]['data'],
+    resetList: number[]
+  ): void {
+    if (!this.schema) {
+      return;
+    }
+    this.basics.set(cst.id, data);
+    this.calculator.setValue(cst.alias, newValue);
+
+    for (const item of resetList) {
+      this.calculator.resetValue(this.schema.cstByID.get(item)!.alias);
+      this.notifyCst(item);
+    }
+    for (const updateData of updateList) {
+      if (updateData.target !== cst.id) {
+        this.calculator.setValue(this.schema.cstByID.get(updateData.target)!.alias, updateData.data as Value);
+        this.notifyCst(updateData.target);
+      }
+    }
+    const changed = [...resetList, ...updateList.map(item => item.target)];
+    for (const item of changed) {
+      this.notifyCst(item);
+    }
+    this.cascadeReset(changed);
   }
 
   private setupEmptySets(): void {
@@ -537,6 +594,19 @@ function getEvaluationFor(
     cacheHits: result.cacheHits,
     errors: [...parse.errors, ...result.errors]
   };
+}
+
+function canonicalBasicIds(data: BasicBinding): number[] {
+  const ids = Object.keys(data).map(Number);
+  ids.sort((left, right) => left - right);
+  return ids;
+}
+
+function cloneValue(value: Value): Value {
+  if (typeof value === 'number') {
+    return value;
+  }
+  return value.map(cloneValue);
 }
 
 /** Evaluates expression for {@link RSModel}. */

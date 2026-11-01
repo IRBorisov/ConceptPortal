@@ -144,7 +144,7 @@ export class Graph<NodeID = number> {
     if (!sourceNode) {
       return false;
     }
-    return !!sourceNode.outputs.find(id => id === destination);
+    return sourceNode.outputs.includes(destination);
   }
 
   isReachable(source: NodeID, destination: NodeID): boolean {
@@ -199,7 +199,7 @@ export class Graph<NodeID = number> {
       if (node && !marked.get(node.id)) {
         marked.set(node.id, true);
         node.outputs.forEach(child => {
-          if (!marked.get(child) && !result.find(id => id === child)) {
+          if (!marked.get(child) && !result.includes(child)) {
             result.push(child);
           }
         });
@@ -223,7 +223,7 @@ export class Graph<NodeID = number> {
       if (node && !marked.get(node.id)) {
         marked.set(node.id, true);
         node.inputs.forEach(child => {
-          if (!marked.get(child) && !result.find(id => id === child)) {
+          if (!marked.get(child) && !result.includes(child)) {
             result.push(child);
           }
         });
@@ -259,7 +259,7 @@ export class Graph<NodeID = number> {
       while (nodeStack.length > 0) {
         const item = nodeStack[nodeStack.length - 1];
         if (marked.has(item)) {
-          if (!result.find(id => id === item)) {
+          if (!result.includes(item)) {
             result.push(item);
           }
           nodeStack.pop();

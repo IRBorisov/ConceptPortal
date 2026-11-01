@@ -198,8 +198,9 @@ export class TemplateInstantiationPlanner {
       aliasMapping[templateAlias] = alias;
 
       const item = instantiateTemplateItem(template, args, alias);
-      item.definition_formal = definition;
       applyMappingToConstituents([item], aliasMapping, false);
+      // `definition` was mapped before this alias was added, so a second pass would rename it again.
+      item.definition_formal = definition;
       definitionIndex.register(cst_type, item.definition_formal, alias);
       items.push(item);
     }
@@ -227,6 +228,7 @@ export class TemplateInstantiationPlanner {
       cst_type
     };
     applyMappingToConstituents([mainItem], aliasMapping, false);
+    mainItem.definition_formal = mappedDefinition;
 
     if (takenAliases.includes(mainItem.alias)) {
       mainItem.alias = generateAlias(mainItem.cst_type, this.targetSchema, [

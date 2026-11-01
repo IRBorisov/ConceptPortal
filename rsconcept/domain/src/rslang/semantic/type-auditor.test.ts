@@ -296,6 +296,28 @@ describe('TypeAuditor', () => {
     it(`Error for "${input as string}"`, () => expectError(input as string, expectedError as RSErrorDescription));
   });
 
+  it('reports a huge filter index without building a type of that size', () => {
+    const started = performance.now();
+    expectError('Fi10000000[X1](S1)', {
+      code: RSErrorCode.invalidFilterIndex,
+      from: 15,
+      to: 17,
+      params: ['Fi10000000', 'ℬ(X1×X1)', '10000000', '2']
+    });
+    expect(performance.now() - started).toBeLessThan(1000);
+  });
+
+  it('keeps the expected filter type short when the index is far out of range', () => {
+    const ast = buildAST('Fi10000000[X1](X1)');
+    expect(ast.hasError).toBe(false);
+    const started = performance.now();
+    auditor.run(ast, false, error => errors.push(error));
+    expect(performance.now() - started).toBeLessThan(1000);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]?.code).toBe(RSErrorCode.invalidFilterArgumentType);
+    expect(errors[0]?.params?.[2]).toBe('ℬ(R0×…×R0)');
+  });
+
   it('Templated function', () => {
     typeContext.set('F2', {
       typeID: TypeID.function,

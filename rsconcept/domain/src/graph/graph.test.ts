@@ -36,6 +36,24 @@ describe('Testing Graph construction', () => {
 });
 
 describe('Testing Graph editing', () => {
+  it('detects an edge whose destination is zero and does not add it twice', () => {
+    const graph = new Graph([[1, 0]]);
+    expect(graph.hasEdge(1, 0)).toBe(true);
+    graph.addEdge(1, 0);
+    expect(graph.at(1)?.outputs).toEqual([0]);
+    expect(graph.at(0)?.inputs).toEqual([1]);
+    expect(graph.expandAllOutputs([1])).toEqual([0]);
+    expect(graph.topologicalOrder()).toEqual([1, 0]);
+  });
+
+  it('detects an edge whose destination is an empty string', () => {
+    const graph = new Graph<string>([['a', '']]);
+    expect(graph.hasEdge('a', '')).toBe(true);
+    graph.addEdge('a', '');
+    expect(graph.at('a')?.outputs).toEqual(['']);
+    expect(graph.hasNode('')).toBe(true);
+  });
+
   it('removing edges should not remove nodes', () => {
     const graph = new Graph([[1, 2], [3], [4, 1]]);
     expect(graph.hasEdge(4, 1)).toBeTruthy();

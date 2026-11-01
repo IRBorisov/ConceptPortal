@@ -14,6 +14,14 @@ describe('validateValue', () => {
 
   it('validates integers', () => {
     expect(validateValue(42, IntegerT, basics)).toBe(true);
+    expect(validateValue(0, IntegerT, basics)).toBe(true);
+    expect(validateValue(-3, IntegerT, basics)).toBe(true);
+    expect(validateValue(Number.MAX_SAFE_INTEGER, IntegerT, basics)).toBe(true);
+    expect(validateValue(1.5, IntegerT, basics)).toBe(false);
+    expect(validateValue(NaN, IntegerT, basics)).toBe(false);
+    expect(validateValue(Infinity, IntegerT, basics)).toBe(false);
+    expect(validateValue(-Infinity, IntegerT, basics)).toBe(false);
+    expect(validateValue(Number.MAX_SAFE_INTEGER + 1, IntegerT, basics)).toBe(false);
     expect(validateValue([], IntegerT, basics)).toBe(false);
     expect(validateValue([1, 2, 3], IntegerT, basics)).toBe(false);
     expect(validateValue([1, [], 3], IntegerT, basics)).toBe(false);

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { labelBaseId, labelType } from '../labels';
 
-import { TypeID } from './typification';
+import { basic, bool, tuple, TypeID } from './typification';
 import { applyAsciiTypeSubstitutions, parseTypeText } from './typification-parser';
 
 describe('parseTypeText', () => {
@@ -46,6 +46,20 @@ describe('parseTypeText', () => {
   it('applies live input substitutions', () => {
     expect(applyAsciiTypeSubstitutions('X1*X2 -> X3')).toBe('X1×X2 → X3');
     expect(applyAsciiTypeSubstitutions('B(X1)')).toBe('ℬ(X1)');
+  });
+
+  it('round-trips a product that starts, contains, or ends with a collection', () => {
+    const samples = [
+      tuple([bool(basic('X1')), basic('X2')]),
+      tuple([basic('X1'), bool(basic('X2')), basic('X3')]),
+      tuple([basic('X1'), basic('X2'), bool(basic('X3'))]),
+      tuple([tuple([bool(basic('X1')), basic('X2')]), basic('X3')]),
+      bool(tuple([bool(basic('X1')), basic('X2')]))
+    ];
+    for (const original of samples) {
+      const text = labelType(original);
+      expect(parseTypeText(text).type).toEqual(original);
+    }
   });
 
   it('displays mangled radicals with function qualifier before radical', () => {

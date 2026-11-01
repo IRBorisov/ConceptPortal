@@ -305,7 +305,7 @@ export function normalizeValue(data: Value): void {
 export function validateValue(value: Value, type: ExpressionType, basics: ValueContext): boolean {
   switch (type.typeID) {
     case TypeID.integer:
-      return typeof value === 'number';
+      return Number.isSafeInteger(value);
     case TypeID.logic: {
       if (typeof value !== 'number') {
         return false;

@@ -38,6 +38,9 @@ import {
   substituteBase
 } from './typification-api';
 
+/** Largest filter index spelled out in an expected-type diagnostic. */
+const FILTER_ARGUMENT_LABEL_CAP = 8;
+
 /** Type auditor for AST type checking. */
 export class TypeAuditor {
   private static readonly TYPE_DEDUCTION_DEPTH = 5;
@@ -774,12 +777,11 @@ export class TypeAuditor {
     ) {
       return EmptySetT;
     }
-    const expectedArgument = this.expectedFilterArgumentLabel(indices);
     if (argument.typeID !== TypeID.collection || argument.base.typeID !== TypeID.tuple) {
       return this.onError(RSErrorCode.invalidFilterArgumentType, node.children[node.children.length - 1], [
         operator,
         labelType(argument),
-        expectedArgument
+        this.expectedFilterArgumentLabel(indices)
       ]);
     }
 
@@ -824,9 +826,18 @@ export class TypeAuditor {
   }
 
   private expectedFilterArgumentLabel(indices: number[]): string {
-    const maxIndex = Math.max(...indices, 0);
+    let maxIndex = 0;
+    for (const index of indices) {
+      if (index > maxIndex) {
+        maxIndex = index;
+      }
+    }
     if (maxIndex <= 1) {
       return labelType(bool({ typeID: TypeID.anyTypification }));
+    }
+    // A user-supplied index must not allocate one factor per integer.
+    if (maxIndex > FILTER_ARGUMENT_LABEL_CAP) {
+      return 'ℬ(R0×…×R0)';
     }
     const factors: Typification[] = [];
     for (let index = 1; index <= maxIndex; index++) {

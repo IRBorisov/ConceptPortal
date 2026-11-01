@@ -4,6 +4,7 @@ import { Graph } from '../graph';
 
 import {
   assignSchemaDiagnostics,
+  detectDependencyCycleDiagnostics,
   DiagnosticKind,
   formatDependencyCycle,
   hasCstDiagnostic,
@@ -105,6 +106,15 @@ describe('assignSchemaDiagnostics', () => {
     expect(cycle!.includes('F3')).toBe(true);
     expect(cycle!.includes('P1')).toBe(true);
     expect(cycle!.startsWith(cycle!.split(' → ').at(-1)!)).toBe(true);
+  });
+});
+
+describe('detectDependencyCycleDiagnostics', () => {
+  it('reports every node of a cyclic strongly connected component', () => {
+    const graph = new Graph([[1, 2], [2, 1], [2, 3], [3, 2], [4]]);
+    const diagnostics = detectDependencyCycleDiagnostics(graph, String);
+    expect([...diagnostics.keys()].sort((left, right) => left - right)).toEqual([1, 2, 3]);
+    expect(diagnostics.has(4)).toBe(false);
   });
 });
 

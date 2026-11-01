@@ -129,4 +129,26 @@ describe('RSCalculator', () => {
     expectCalcValue('1=1', '1');
     expectCalcValue('1=0', '0');
   });
+
+  it('returns null instead of a partial set when an imperative exceeds the iteration limit', () => {
+    calculator.setValue(
+      'X1',
+      Array.from({ length: 1001 }, (_, index) => index)
+    );
+    const ast = buildAST('I{a | a:∈X1; b:∈X1; a=1000}');
+    expect(ast.hasError).toBe(false);
+    const full = calculator.evaluateFull(ast);
+    expect(full.errors.some(error => error.code === RSErrorCode.iterationsLimit)).toBe(true);
+    expect(full.value).toBeNull();
+    expect(calculator.evaluateFast(ast)).toBeNull();
+  });
+
+  it('keeps a genuinely empty imperative result', () => {
+    calculator.setValue('X1', [0]);
+    const ast = buildAST('I{a | a:∈X1; a=1}');
+    expect(ast.hasError).toBe(false);
+    expect(calculator.evaluateFast(ast)).toEqual([]);
+    expect(calculator.evaluateFull(ast).value).toEqual([]);
+    expect(calculator.evaluateFull(ast).errors).toEqual([]);
+  });
 });
