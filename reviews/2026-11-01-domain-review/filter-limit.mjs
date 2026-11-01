@@ -1,0 +1,10 @@
+import { RSLangAnalyzer } from '../../rsconcept/domain/dist/rslang/semantic/analyzer.js';
+import { basic, bool, tuple } from '../../rsconcept/domain/dist/rslang/semantic/typification.js';
+import { ValueClass } from '../../rsconcept/domain/dist/rslang/semantic/value-class.js';
+const analyzer = new RSLangAnalyzer();
+analyzer.addBase('X1');
+analyzer.setGlobal('S1', bool(tuple([basic('X1'), basic('X1')])), ValueClass.VALUE);
+const expression = 'Fi10000000[X1](S1)';
+console.log(`Checking a ${expression.length}-character expression`);
+const result = analyzer.checkFull(expression);
+console.log('Returned', result.errors.map(x => x.code));

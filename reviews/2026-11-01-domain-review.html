@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ConceptPortal Domain Review · 2026-11-01</title>
+<meta name="description" content="Ревью @rsconcept/domain: 12 подтверждённых дефектов, приоритеты P1–P3, воспроизведения и план исправлений.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,650&display=swap" rel="stylesheet">
+<style>
+/* Визуальная система reviews/2026-10-31-code-review.html. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #1b2230;
+  --muted: #5b6475;
+  --line: #dde1e8;
+  --accent: #2f5aa8;
+  --sev-high: #b3261e;
+  --sev-high-bg: #fbe9e7;
+  --sev-med: #9a5b00;
+  --sev-med-bg: #fdf1dc;
+  --sev-low: #4a5a73;
+  --sev-low-bg: #eaeef4;
+  --good: #1f7a4a;
+  --good-bg: #e3f3ea;
+  --code-bg: #eef1f6;
+  --display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b5; --line: #2c3442;
+    --accent: #8fb0ee; --sev-high: #ff9a8f; --sev-high-bg: #3a1f1e; --sev-med: #f2bd6a; --sev-med-bg: #3a2c15;
+    --sev-low: #b4c1d6; --sev-low-bg: #242c39; --good: #7fd3a4; --good-bg: #17302a; --code-bg: #232a35;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b5; --line: #2c3442;
+  --accent: #8fb0ee; --sev-high: #ff9a8f; --sev-high-bg: #3a1f1e; --sev-med: #f2bd6a; --sev-med-bg: #3a2c15;
+  --sev-low: #b4c1d6; --sev-low-bg: #242c39; --good: #7fd3a4; --good-bg: #17302a; --code-bg: #232a35;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.6 var(--body); }
+.wrap { max-width: 940px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 72px; display: grid; gap: 44px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: 2.1rem; font-weight: 650; }
+h2 { font-size: 1.45rem; font-weight: 650; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+h3 { font-size: 1.06rem; font-weight: 650; }
+p { margin: 0; max-width: 74ch; }
+code { font-family: var(--mono); font-size: 0.85em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+a { color: var(--accent); }
+section { display: grid; gap: 16px; min-width: 0; }
+.eyebrow { font: 500 0.75rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+header { display: grid; gap: 12px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 20px; color: var(--muted); font-size: 0.88rem; }
+.verdict { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; display: grid; gap: 12px; }
+.verdict .call { font: 650 1.15rem/1.35 var(--display); }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: 500 0.76rem/1 var(--mono); padding: 5px 9px; border-radius: 999px; white-space: nowrap; }
+.chip.high { color: var(--sev-high); background: var(--sev-high-bg); }
+.chip.med { color: var(--sev-med); background: var(--sev-med-bg); }
+.chip.low { color: var(--sev-low); background: var(--sev-low-bg); }
+.chip.good { color: var(--good); background: var(--good-bg); }
+.chip.tag { color: var(--muted); background: var(--code-bg); }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.89rem; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 0.7rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+td.num, th.num { text-align: right; white-space: nowrap; }
+.findings { display: grid; gap: 12px; }
+.finding { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--sev-low); border-radius: 8px; padding: 16px 18px; display: grid; gap: 8px; min-width: 0; }
+.finding.p0 { border-left-width: 6px; border-left-color: var(--sev-high); }
+.finding.p1 { border-left-color: var(--sev-high); }
+.finding.p2 { border-left-color: var(--sev-med); }
+.finding .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; }
+.finding .id { font: 500 0.8rem/1 var(--mono); color: var(--muted); }
+.finding h3 { flex: 1 1 280px; }
+.finding .where { font: 0.79rem/1.45 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.finding p { font-size: 0.93rem; }
+.finding .fix { color: var(--muted); }
+.finding b { color: var(--fg); font-weight: 600; }
+.probe { background: var(--code-bg); border-radius: 6px; padding: 10px 12px; font: 0.8rem/1.5 var(--mono); overflow-x: auto; white-space: pre; margin: 0; }
+ul.plain, ol.plain { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; max-width: 76ch; }
+.toc { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.88rem; }
+.note { color: var(--muted); font-size: .85rem; }
+footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); padding-top: 16px; }
+@media (max-width: 560px) {
+  h1 { font-size: 1.65rem; }
+  .wrap { padding-block: 24px 48px; padding-inline: 16px; gap: 36px; }
+  .finding { padding: 14px; }
+}
+
+html { scroll-behavior: smooth; }
+[id] { scroll-margin-top: 20px; }
+.finding:target { outline: 2px solid var(--accent); outline-offset: 3px; }
+.finding .probe { white-space: pre-wrap; overflow-wrap: anywhere; }
+@media print {
+  :root { --bg: white; --surface: white; --fg: #111; --muted: #444; --line: #bbb; --code-bg: #f4f4f4; color-scheme: light; }
+  .wrap { max-width: none; padding: 0; gap: 24px; }
+  .toc { display: none; }
+  .finding { break-inside: avoid; }
+  a { color: inherit; }
+  .scroll { overflow: visible; }
+}
+</style>
+</head>
+
+<body><main class="wrap">
+
+<header>
+  <div class="eyebrow">Ревью кода · 2026-11-01</div>
+  <h1>ConceptPortal: ревью domain</h1>
+  <div class="meta"><span>Пакет <code>@rsconcept/domain</code> · версия <code>3.2.0</code></span><span>Срез <code>8011eb914e40</code></span><span>12 подтверждённых дефектов</span></div>
+  <nav class="toc" aria-label="Разделы отчёта"><a href="#summary">Вывод</a><a href="#priorities">Приоритеты</a><a href="#plan">План работ</a><a href="#decisions">Нужные решения</a><a href="#p1">P1</a><a href="#p2">P2</a><a href="#p3">P3</a><a href="#categories">Категории</a><a href="#scope">Границы проверки</a></nav>
+</header>
+<section id="summary">
+  <div class="verdict">
+    <div class="eyebrow">Вывод</div>
+    <div class="call">До следующего выпуска нужно устранить шесть ошибок, которые оставляют неверное состояние, меняют формулы или останавливают анализатор.</div>
+    <p>Всего 12 дефектов: 6 уровня P1, 5 уровня P2 и 1 уровня P3. P0 не выявлено. Наиболее опасны изменение данных до подтверждения сохранения, старые значения после сброса или загрузки, самоссылка в шаблоне, частичный результат при лимите и рост памяти от большого индекса.</p>
+    <p>Штатные 931 тест, TypeScript и ESLint прошли. Все 11 независимых тестов ожидаемого поведения падают на проверяемых дефектах. Двенадцатый дефект подтверждён в отдельном процессе с лимитом памяти.</p>
+    <p><b>Вердикт.</b> Выпускать затронутую функциональность после исправления P1: <a href="#f4">4</a>, <a href="#f5">5</a>, <a href="#f6">6</a>, <a href="#f8">8</a>, <a href="#f9">9</a>, <a href="#f11">11</a>. Остальные исправить планово. Это проверка пакета целиком, отдельный PR на merge не оценивался.</p>
+  </div>
+</section>
+
+<section id="priorities"><h2>Приоритеты</h2><div class="scroll"><table><thead><tr><th>Приоритет</th><th>Критерий</th><th>Когда</th><th>Дефекты</th><th class="num">Кол-во</th></tr></thead><tbody>
+<tr><td><span class="chip high">P0</span></td><td>Немедленный тяжёлый ущерб без особых условий</td><td>Срочный выпуск</td><td>Не найдено</td><td class="num">0</td></tr>
+<tr><td><span class="chip high">P1</span></td><td>Тихо неверные данные, формулы или состояние; достижимый отказ процесса</td><td>До ближайшего выпуска затронутой функциональности</td><td><a href="#f11">11</a>, <a href="#f4">4</a>, <a href="#f5">5</a>, <a href="#f6">6</a>, <a href="#f8">8</a>, <a href="#f9">9</a></td><td class="num">6</td></tr>
+<tr><td><span class="chip med">P2</span></td><td>Ограниченная ошибка корректности, валидации или диагностики</td><td>Плановая итерация после P1</td><td><a href="#f3">3</a>, <a href="#f12">12</a>, <a href="#f10">10</a>, <a href="#f2">2</a>, <a href="#f1">1</a></td><td class="num">5</td></tr>
+<tr><td><span class="chip low">P3</span></td><td>Неверная статистика без изменения данных</td><td>Попутно</td><td><a href="#f7">7</a></td><td class="num">1</td></tr>
+</tbody></table></div><p class="note">Номера сохранены из исходного ревью. Карточки отсортированы по приоритету и рекомендуемому порядку исправления. Приоритет учитывает последствия и условия проявления; уверенность и воспроизведение отмечены отдельно. №7 понижен с P2 до P3, поскольку меняется только счётчик. Подтверждённого анонимного удалённого пути к №11 не установлено, поэтому P0 ему не присвоен.</p></section>
+<section id="plan"><h2>План работ</h2><div class="scroll"><table><thead><tr><th>Порядок</th><th>Пакет</th><th>Дефекты</th><th>Зависимости и действие</th><th>Приёмка</th></tr></thead><tbody>
+<tr><td>1</td><td><b>Ограничить стоимость диагностики</b></td><td><a href="#f11">11</a></td><td>Проверять диапазон индекса до построения описания типа.</td><td>Большой Fi-индекс даёт диагностику в ограниченных времени и памяти, процесс остаётся жив.</td></tr>
+<tr><td>2</td><td><b>Сделать обновление и загрузку состояния согласованными</b></td><td><a href="#f4">4</a>, <a href="#f5">5</a>, <a href="#f6">6</a>, <a href="#f3">3</a></td><td>Сначала отделить расчёт изменений от применения, затем закрыть сброс, загрузку и канонизацию множества.</td><td>Отказ записи не меняет объекты; сброс инвалидирует зависимости; повторная загрузка эквивалентна новому движку; порядок ключей не влияет на результат.</td></tr>
+<tr><td>3</td><td><b>Переименовывать шаблон один раз</b></td><td><a href="#f8">8</a></td><td>Закрепить соответствие исходных и новых имён в каждом поле.</td><td>Новый F3 вызывает F2 при отображениях F1→F2, F2→F3; самоссылки не появляются.</td></tr>
+<tr><td>4</td><td><b>Отделить остановку по лимиту от завершения</b></td><td><a href="#f9">9</a></td><td>Вернуть явный отказ из вложенного перебора во всём вычислении.</td><td>evaluateFull и evaluateFast возвращают null при лимите; частичный результат не попадает в модель.</td></tr>
+<tr><td>5</td><td><b>Исправить разбор, валидацию и диагностику</b></td><td><a href="#f12">12</a>, <a href="#f10">10</a>, <a href="#f2">2</a>, <a href="#f1">1</a></td><td>После блокеров выпуска; №2 полезно сделать вместе с №8 для диагностики циклов.</td><td>Типы проходят round trip, Z отклоняет дроби и нечисловые значения, циклы размечаются полностью, ребро в 0 уникально.</td></tr>
+<tr><td>6</td><td><b>Исправить статистику комментариев</b></td><td><a href="#f7">7</a></td><td>Независимая небольшая правка.</td><td>Считаются имеющиеся комментарии, а не их отсутствие.</td></tr>
+</tbody></table></div><p>В каждом пакете сначала перенести соответствующие воспроизведения в штатные тесты. После исправления должны пройти эти тесты, существующие тесты domain, проверка типов и линтер. Для изменений состояния и шаблонов отдельно проверить вызывающие сценарии frontend и rstool.</p><p class="note">Трудоёмкость не измерялась. Порядок учитывает ущерб и общие участки кода; календарных обещаний в отчёте нет.</p></section>
+<section id="decisions"><h2>Нужные решения</h2><p>Для начала исправления P1 решений пользователя не требуется: ожидаемое поведение следует из контрактов сохранения, загрузки и вычисления. Числовую границу точного представления целых для №10 и трактовку комментария из пробелов для №7 нужно сверить с действующими правилами проекта. Эти детали не мешают устранить подтверждённые случаи с дробями, NaN, Infinity и непустым комментарием.</p></section>
+<section id="p1"><h2>P1. До ближайшего выпуска</h2><div class="findings">
+<article class="finding p1" id="f11">
+<div class="top"><span class="id">#11 · P1</span><h3>Формула из 18 символов раздувает память анализатора</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/domain/src/rslang/semantic/type-auditor.ts:832</p>
+<pre class="probe">for (let index = 1; index &lt;= maxIndex; index++) {</pre>
+<p class="note">Уверенность: точно. Категория: Производительность и конкурентность.</p>
+<p><b>Сценарий.</b> Задать S1 как множество пар элементов X1 и вызвать checkFull(&quot;Fi10000000[X1](S1)&quot;).</p>
+<p><b>Ожидаемое и фактическое.</b> До диагностики индекса строится массив из 10 миллионов факторов для ожидаемого типа. В отдельном процессе с лимитом 64 МБ сценарий завершился кодом 134 с JavaScript heap out of memory.</p>
+<p><b>Причина.</b> expectedFilterArgumentLabel вызывается до проверки диапазона индексов и выделяет по объекту на каждый индекс. Полученная строка не нужна для ветки invalidFilterIndex.</p>
+<p><b>Ущерб и условия.</b> Память и время анализа зависят от численного значения непроверенного индекса, а не от размера входного текста. Это позволяет коротким пользовательским вводом остановить процесс в проверенных условиях.</p>
+<p class="fix"><b>Что сделать.</b> Проверять индекс по реальной арности кортежа до построения описаний типов. Ограничить размер диагностического текста и не материализовывать массив длиной с пользовательский индекс.</p>
+<p class="fix"><b>Приёмка.</b> Короткая формула с большим индексом быстро возвращает штатную диагностику. Проверка выполняется в отдельном процессе с ограниченными временем и памятью.</p>
+
+<p class="note">Проверка: <a href="2026-11-01-domain-review/run-filter-limit.mjs">run-filter-limit.mjs</a>, <a href="2026-11-01-domain-review/filter-result.json">результат процесса</a>. Перед запуском сверено точное соответствие исходника type-auditor.ts source map сборки. Лимиты: 64 МБ и 5 секунд. Проверена ошибка в этих условиях, не предел памяти реального сервера.</p>
+</article>
+<article class="finding p1" id="f4">
+<div class="top"><span class="id">#4 · P1</span><h3>Отказ сохранения оставляет зависимые данные изменёнными</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/domain/src/library/rsengine.ts:216</p>
+<pre class="probe">const fix = tryFixValue(value, child.effectiveType, cst.alias, newValue);</pre>
+<p class="note">Уверенность: точно. Категория: Прочее.</p>
+<p><b>Сценарий.</b> Загрузить X1={1,2} и S1=[1,2] с типом ℬ(X1). Сузить X1 до {1}, передав сервис setCstValue, который отклоняет Promise.</p>
+<p><b>Ожидаемое и фактическое.</b> Операция выбрасывает ошибку транспорта, но S1 уже равен [1]. Меняется и значение в исходном объекте RSModel. Ожидается прежнее [1,2].</p>
+<p><b>Причина.</b> tryFixValue изменяет переданный массив. Движок передаёт значение из калькулятора до await сохранения и разделяет этот объект с загруженной моделью.</p>
+<p><b>Ущерб и условия.</b> После неудачного сохранения данные локально теряются и расходятся с сервером. Подписчики могут получить изменённый объект без успешного завершения операции.</p>
+<p class="fix"><b>Что сделать.</b> Рассчитывать исправления на глубоких копиях. Применять новые значения только после успешного завершения записи. Отдельно обработать случай успешной первой записи и отказа последующего clearValues.</p>
+<p class="fix"><b>Приёмка.</b> Во время незавершённого запроса и после отказа S1 и входной RSModel неизменны. После успеха новое состояние применяется согласованно.</p>
+
+<p class="note">Проверка: <a href="2026-11-01-domain-review/src/repro.test.ts">repro.test.ts</a> · <code>a rejected base update preserves dependent data and the loaded model</code>. Ожидаемое поведение нарушено; штатный набор тестов эту ошибку не выявил.</p>
+</article>
+<article class="finding p1" id="f5">
+<div class="top"><span class="id">#5 · P1</span><h3>Сброс входа не инвалидирует вычисленные зависимости</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/domain/src/library/rsengine.ts:269</p>
+<pre class="probe">this.notifyCst(cstID);</pre>
+<p class="note">Уверенность: точно. Категория: Прочее.</p>
+<p><b>Сценарий.</b> Для X1={1} вычислить D1 := card(X1), затем вызвать resetValue для X1.</p>
+<p><b>Ожидаемое и фактическое.</b> D1 сохраняет значение 1 и статус HAS_DATA. Ожидается сброс производного значения и статус NOT_PROCESSED.</p>
+<p><b>Причина.</b> Функция resetValue заканчивается уведомлением только самого входа. Каскадного сброса, который используется в методах установки значения, здесь нет.</p>
+<p><b>Ущерб и условия.</b> Интерфейс и следующие вычисления могут использовать результат, полученный из уже удалённой интерпретации.</p>
+<p class="fix"><b>Что сделать.</b> После успешного сброса входа инвалидировать вычисляемые зависимости и уведомить их подписчиков.</p>
+<p class="fix"><b>Приёмка.</b> Сброс базисного множества или структурированного значения сбрасывает всю цепочку производных значений. Повторное вычисление использует текущее состояние.</p>
+
+<p class="note">Проверка: <a href="2026-11-01-domain-review/src/repro.test.ts">repro.test.ts</a> · <code>resetting an input invalidates calculated dependents</code>. Ожидаемое поведение нарушено; штатный набор тестов эту ошибку не выявил.</p>
+</article>
+<article class="finding p1" id="f6">
+<div class="top"><span class="id">#6 · P1</span><h3>Новая модель получает значения от предыдущей загрузки</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/domain/src/library/rsengine.ts:388</p>
+<pre class="probe">this.basics.clear();</pre>
+<p class="note">Уверенность: точно. Категория: Прочее.</p>
+<p><b>Сценарий.</b> На одном RSEngine загрузить модель с X1={1}, затем новую модель с пустым items при той же схеме.</p>
+<p><b>Ожидаемое и фактическое.</b> basics пуст, но getCstValue(X1) по-прежнему возвращает [1]. Ожидается пустая интерпретация входа.</p>
+<p><b>Причина.</b> prepareValues очищает basics, invalidData и calculatedSet, но не очищает контекст значений калькулятора. setupEmptySets не заменяет существующее старое значение.</p>
+<p><b>Ущерб и условия.</b> Движок показывает и вычисляет данные, которых нет в загруженной модели. Это может проявляться после удаления данных и повторного получения модели с сервера.</p>
+<p class="fix"><b>Что сделать.</b> При замене модели пересобирать контекст значений из новой модели и предусмотренных пустых значений. Учесть смену схемы и переименование alias.</p>
+<p class="fix"><b>Приёмка.</b> Последовательная загрузка непустой и пустой моделей даёт то же состояние, что загрузка пустой модели в новый движок.</p>
+
+<p class="note">Проверка: <a href="2026-11-01-domain-review/src/repro.test.ts">repro.test.ts</a> · <code>loading an empty replacement model removes previous base values</code>. Ожидаемое поведение нарушено; штатный набор тестов эту ошибку не выявил.</p>
+</article>
+<article class="finding p1" id="f8">
+<div class="top"><span class="id">#8 · P1</span><h3>Двойное переименование создаёт самоссылку в шаблоне</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/domain/src/library/template-instantiation.ts:202</p>
+<pre class="probe">applyMappingToConstituents([item], aliasMapping, false);</pre>
+<p class="note">Уверенность: точно. Категория: Прочее.</p>
+<p><b>Сценарий.</b> В целевой схеме уже есть F1. В банке F1 определяет [a∈R1] {a}, F2 вызывает F1[a]∪{a}, а выбранный P1 вызывает F2. Построить план создания из шаблона.</p>
+<p><b>Ожидаемое и фактическое.</b> План создаёт F2, F3, P2. В новом F3 записано F3[a]∪{a} вместо F2[a]∪{a}.</p>
+<p><b>Причина.</b> definition уже прошёл applyAliasMapping. После присваивания item.definition_formal = definition следующий вызов applyMappingToConstituents применяет ту же таблицу ещё раз.</p>
+<p><b>Ущерб и условия.</b> Исходно ациклическая зависимость превращается в рекурсию. Сохранение такого плана создаст неверное формальное определение.</p>
+<p class="fix"><b>Что сделать.</b> Применять отображение к каждому исходному полю ровно один раз. Для формального определения и текстовых ссылок разделить этапы преобразования так, чтобы уже переименованное определение не попадало под повторную замену.</p>
+<p class="fix"><b>Приёмка.</b> При цепочке отображений F1→F2 и F2→F3 новый F3 вызывает F2. Проверить также основную конституенту и текстовые ссылки.</p>
+
+<p class="note">Проверка: <a href="2026-11-01-domain-review/src/repro.test.ts">repro.test.ts</a> · <code>template aliases are remapped once when bank and target names overlap</code>. Ожидаемое поведение нарушено; штатный набор тестов эту ошибку не выявил.</p>
+</article>
+<article class="finding p1" id="f9">
+<div class="top"><span class="id">#9 · P1</span><h3>Лимит итераций выдаёт неполное множество как результат</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/domain/src/rslang/eval/evaluator.ts:817</p>
+<pre class="probe">if (!this.tick(node.children[top.childID], TICK_PER_IMPERATIVE)) {</pre>
+<p class="note">Уверенность: точно. Категория: Проглатывание ошибок.</p>
+<p><b>Сценарий.</b> При X1={0,…,1000} вычислить I{a | a:∈X1; b:∈X1; a=1000}. Лимит будет достигнут до обработки a=1000.</p>
+<p><b>Ожидаемое и фактическое.</b> evaluateFull возвращает value=[] вместе с iterationsLimit. Ожидается value=null. При быстром вычислении диагностика не передаётся вызывающему коду, а [] остаётся результатом.</p>
+<p><b>Причина.</b> advanceIterator возвращает false как при исчерпании перебора, так и при остановке по лимиту. Вызывающий цикл завершает работу и возвращает накопленное множество.</p>
+<p><b>Ущерб и условия.</b> Вместо отказа модель получает неверное пустое множество. Оно неотличимо от полного корректного результата в быстром пути.</p>
+<p class="fix"><b>Что сделать.</b> Различать окончание перебора и ошибку лимита. При превышении лимита возвращать null из всего вычисления, сохраняя диагностику в полном пути.</p>
+<p class="fix"><b>Приёмка.</b> Полный и быстрый пути возвращают null при лимите на любом уровне вложенного перебора. Нормальное завершение и действительно пустое множество продолжают работать.</p>
+
+<p class="note">Проверка: <a href="2026-11-01-domain-review/src/repro.test.ts">repro.test.ts</a> · <code>iteration exhaustion cannot produce a usable partial imperative result</code>. Ожидаемое поведение нарушено; штатный набор тестов эту ошибку не выявил.</p>
+</article>
+</div></section>
+<section id="p2"><h2>P2. Плановые исправления</h2><div class="findings">
+<article class="finding p2" id="f3">
+<div class="top"><span class="id">#3 · P2</span><h3>Порядок ключей BasicBinding меняет результат вычисления</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/domain/src/library/rsengine.ts:202</p>
+<pre class="probe">const newValue = Object.keys(data).map(Number);</pre>
+<p class="note">Уверенность: точно. Категория: Прочее.</p>
+<p><b>Сценарий.</b> Загрузить X1 с ключами -2, -3 именно в этом порядке и вычислить I{a | a:∈X1; a∈X1}.</p>
+<p><b>Ожидаемое и фактическое.</b> Получается [-2] вместо [-3, -2]. Тот же принцип преобразования используется при загрузке в rsengine.ts:403 и записи в :237.</p>
+<p><b>Причина.</b> Object.keys(data).map(Number) не гарантирует числовую сортировку отрицательных ключей. contains использует бинарный поиск и требует канонического множества.</p>
+<p><b>Ущерб и условия.</b> Допустимые по текущему контракту целые ключи дают неверную проверку принадлежности. Обычные неотрицательные ключи малого диапазона часто скрывают ошибку, потому что JavaScript перечисляет их по возрастанию.</p>
+<p class="fix"><b>Что сделать.</b> Строить каноническое множество единым способом во всех путях загрузки и обновления BasicBinding. Не полагаться на порядок свойств объекта.</p>
+<p class="fix"><b>Приёмка.</b> Значение и принадлежность не зависят от порядка записи отрицательных ключей. Регрессия проверяет загрузку и setBasicValue.</p>
+
+<p class="note">Проверка: <a href="2026-11-01-domain-review/src/repro.test.ts">repro.test.ts</a> · <code>a set containing negative integer identifiers supports membership</code>. Ожидаемое поведение нарушено; штатный набор тестов эту ошибку не выявил.</p>
+</article>
+<article class="finding p2" id="f12">
+<div class="top"><span class="id">#12 · P2</span><h3>Парсер не читает тип, который печатает labelType</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/domain/src/rslang/semantic/typification-parser.ts:122</p>
+<pre class="probe">return bool(base);</pre>
+<p class="note">Уверенность: точно. Категория: Прочее.</p>
+<p><b>Сценарий.</b> Сформировать tuple([bool(basic(&quot;X1&quot;)), basic(&quot;X2&quot;)]), получить labelType и передать строку обратно в parseTypeText.</p>
+<p><b>Ожидаемое и фактическое.</b> labelType печатает ℬ(X1)×X2. parseTypeText возвращает type=null с ошибкой Unexpected trailing symbols.</p>
+<p><b>Причина.</b> Ветка ℬ возвращает результат до общего цикла разбора произведения. Множители после коллекции остаются непрочитанными.</p>
+<p><b>Ущерб и условия.</b> Корректный тип с коллекцией в первом множителе нельзя ввести или повторно разобрать в его штатной записи.</p>
+<p class="fix"><b>Что сделать.</b> Разделить разбор атома типа и произведения. После любого первого атома, включая ℬ, разбирать последующие множители.</p>
+<p class="fix"><b>Приёмка.</b> parseTypeText(labelType(type)) сохраняет структуру типов с коллекциями в начале, середине и конце произведения, включая вложенные кортежи.</p>
+
+<p class="note">Проверка: <a href="2026-11-01-domain-review/src/repro.test.ts">repro.test.ts</a> · <code>typification text round trips a product beginning with a collection</code>. Ожидаемое поведение нарушено; штатный набор тестов эту ошибку не выявил.</p>
+</article>
+<article class="finding p2" id="f10">
+<div class="top"><span class="id">#10 · P2</span><h3>Тип Z принимает дроби, NaN и Infinity</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/domain/src/rslang/eval/value-api.ts:308</p>
+<pre class="probe">return typeof value === &#x27;number&#x27;;</pre>
+<p class="note">Уверенность: точно. Категория: Безопасность и проверка входных данных.</p>
+<p><b>Сценарий.</b> Вызвать validateValue(value, IntegerT, new Map()) для 1.5, NaN и Infinity.</p>
+<p><b>Ожидаемое и фактическое.</b> Во всех случаях возвращается true, хотя эти значения не являются целыми числами.</p>
+<p><b>Причина.</b> Проверяется только typeof. Все три значения имеют JavaScript-тип number.</p>
+<p><b>Ущерб и условия.</b> Проверка типа не обеспечивает контракт целочисленных данных. Дробь проходит и общую проверку конечного числа; NaN и Infinity могут поступить через прямой вызов API библиотеки. Доказанного пути атаки на проде не установлено.</p>
+<p class="fix"><b>Что сделать.</b> Проверять целочисленность и, согласно числовому контракту библиотеки, допустимость диапазона точного представления.</p>
+<p class="fix"><b>Приёмка.</b> 1.5, NaN и ±Infinity отклоняются; допустимые положительные, отрицательные целые и ноль принимаются.</p>
+
+<p class="note">Проверка: <a href="2026-11-01-domain-review/src/repro.test.ts">repro.test.ts</a> · <code>a valid integer typification rejects fractional and nonfinite numbers</code>. Ожидаемое поведение нарушено; штатный набор тестов эту ошибку не выявил.</p>
+</article>
+<article class="finding p2" id="f2">
+<div class="top"><span class="id">#2 · P2</span><h3>Часть участников цикла остаётся без диагностики</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/domain/src/library/diagnostics.ts:161</p>
+<pre class="probe">const memberIds = new Set(cycle);</pre>
+<p class="note">Уверенность: точно. Категория: Несоответствие комментариев реализации.</p>
+<p><b>Сценарий.</b> Построить граф 1→2, 2→1, 2→3, 3→2 и вызвать detectDependencyCycleDiagnostics.</p>
+<p><b>Ожидаемое и фактическое.</b> Сильно связная компонента содержит 1, 2, 3, но диагностики получают только 2 и 3.</p>
+<p><b>Причина.</b> Graph.findCycles возвращает один замкнутый путь на компоненту. Он не обязан проходить через каждый её узел. Комментарий метода обещает диагностику каждому участнику циклической SCC.</p>
+<p><b>Ущерб и условия.</b> Пользователь видит неполный список конституент с циклическими зависимостями. Это дефект диагностики, а не только неточная документация.</p>
+<p class="fix"><b>Что сделать.</b> Выдавать диагностики всем узлам циклической сильно связной компоненты. Один найденный путь можно оставить в тексте сообщения.</p>
+<p class="fix"><b>Приёмка.</b> В графе с несколькими пересекающимися циклами диагностики есть у всех узлов компоненты; отдельные ациклические узлы их не получают.</p>
+
+<p class="note">Проверка: <a href="2026-11-01-domain-review/src/repro.test.ts">repro.test.ts</a> · <code>every constituent in a cyclic SCC gets a cycle diagnostic</code>. Ожидаемое поведение нарушено; штатный набор тестов эту ошибку не выявил.</p>
+</article>
+<article class="finding p2" id="f1">
+<div class="top"><span class="id">#1 · P2</span><h3>Ребро в узел 0 не находится и добавляется повторно</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/domain/src/graph/graph.ts:147</p>
+<pre class="probe">return !!sourceNode.outputs.find(id =&gt; id === destination);</pre>
+<p class="note">Уверенность: точно. Категория: Прочее.</p>
+<p><b>Сценарий.</b> Создать new Graph([[1, 0]]), проверить hasEdge(1, 0), затем ещё раз вызвать addEdge(1, 0).</p>
+<p><b>Ожидаемое и фактическое.</b> hasEdge возвращает false, а outputs становится [0, 0]. Ожидается true и единственное ребро.</p>
+<p><b>Причина.</b> find возвращает сам найденный id. Значение 0 преобразуется в false.</p>
+<p><b>Ущерб и условия.</b> Узел 0 допустим для числового Graph. Проверка наличия и удаление рёбер теряют согласованность. Для положительных id этот сценарий не проявляется.</p>
+<p class="fix"><b>Что сделать.</b> Проверять наличие через some или includes. Проверить также пустую строку для строкового NodeID и обходы графа, использующие find как булево значение.</p>
+<p class="fix"><b>Приёмка.</b> Повторное добавление ребра с destination=0 не меняет outputs и inputs; hasEdge возвращает true.</p>
+
+<p class="note">Проверка: <a href="2026-11-01-domain-review/src/repro.test.ts">repro.test.ts</a> · <code>graph detects an edge whose destination is zero</code>. Ожидаемое поведение нарушено; штатный набор тестов эту ошибку не выявил.</p>
+</article>
+</div></section>
+<section id="p3"><h2>P3. Попутно</h2><div class="findings">
+<article class="finding p3" id="f7">
+<div class="top"><span class="id">#7 · P3</span><h3>Счётчик комментариев засчитывает отсутствие комментария</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/domain/src/library/rsform-api/stats.ts:91</p>
+<pre class="probe">if (!isBasicConcept(cst.cst_type) &amp;&amp; !cst.convention) {</pre>
+<p class="note">Уверенность: точно. Категория: Прочее.</p>
+<p><b>Сценарий.</b> Для производной конституенты D1 задать непустое convention и вызвать calculateSchemaStats.</p>
+<p><b>Ожидаемое и фактическое.</b> count_comment равен 0. При пустом convention условие, наоборот, увеличивает счётчик.</p>
+<p><b>Причина.</b> Условие использует отрицание !cst.convention вместо проверки наличия комментария.</p>
+<p><b>Ущерб и условия.</b> Карточка схемы или модели показывает неверную статистику. Сами комментарии и вычисления не меняются.</p>
+<p class="fix"><b>Что сделать.</b> Считать непустые комментарии производных конституент. Согласованно определить, считается ли строка из пробелов пустой.</p>
+<p class="fix"><b>Приёмка.</b> Непустой комментарий увеличивает счётчик, пустой не увеличивает; конвенции неопределяемых понятий учитываются своим счётчиком.</p>
+
+<p class="note">Проверка: <a href="2026-11-01-domain-review/src/repro.test.ts">repro.test.ts</a> · <code>comment statistics count a supplied derived-constituent comment</code>. Ожидаемое поведение нарушено; штатный набор тестов эту ошибку не выявил.</p>
+</article>
+</div></section>
+<section id="categories"><h2>Итог по категориям</h2><div class="scroll"><table><thead><tr><th>Категория</th><th>Дефекты</th><th class="num">Кол-во</th></tr></thead><tbody>
+<tr><td>Игнорирование контекста проекта и дублирование</td><td>Не найдено</td><td class="num">0</td></tr>
+<tr><td>Производительность и конкурентность</td><td><a href="#f11">11</a></td><td class="num">1</td></tr>
+<tr><td>Несоответствие комментариев реализации</td><td><a href="#f2">2</a></td><td class="num">1</td></tr>
+<tr><td>Безопасность и проверка входных данных</td><td><a href="#f10">10</a></td><td class="num">1</td></tr>
+<tr><td>Проглатывание ошибок</td><td><a href="#f9">9</a></td><td class="num">1</td></tr>
+<tr><td>Тесты-тавтологии</td><td>Не найдено</td><td class="num">0</td></tr>
+<tr><td>Несуществующие API и зависимости</td><td>Не найдено</td><td class="num">0</td></tr>
+<tr><td>Прочее</td><td><a href="#f1">1</a>, <a href="#f3">3</a>, <a href="#f4">4</a>, <a href="#f5">5</a>, <a href="#f6">6</a>, <a href="#f7">7</a>, <a href="#f8">8</a>, <a href="#f12">12</a></td><td class="num">8</td></tr>
+</tbody></table></div><p class="note">Для подсчёта у каждой находки одна основная категория. №2 является ошибкой поведения и одновременно нарушает обещание комментария. №10 относится к целостности входных данных; эксплуатация уязвимости не доказана. Отсутствие находок в категории не означает полного аудита всех зависимостей.</p></section>
+<section id="scope"><h2>Границы проверки</h2>
+<h3>Связки дефектов</h3>
+<ul class="plain"><li>№9 маскирует остановку по лимиту под допустимый результат. В быстром вычислении теряется и диагностика.</li><li>№2 скрывает часть участников циклической компоненты. №8 создаёт новые циклы из-за переименования; это связанные этапы работы со схемой, но причины независимы.</li><li>№3, №4, №5 и №6 нарушают разные инварианты одного RSEngine. Их удобно исправлять одним пакетом, сохраняя отдельные регрессии.</li><li>Проходящие штатные тесты не проверяют приведённые сценарии. Это пробелы покрытия; отдельных дублирующих находок о каждом отсутствующем тесте не добавлено.</li></ul>
+<h3>Ожидания, зафиксированные до чтения реализации</h3>
+<p>Корректные формулы должны согласованно разбираться, типизироваться и вычисляться. Графы и операции над схемами должны сохранять зависимости. Пустой ввод должен давать предусмотренный пустой результат или диагностику; некорректный ввод и отказ переданного сервиса должны распознаваться явно. Лимиты должны останавливать вычисление, не превращая неполный ответ в полный.</p>
+<p class="note">Отдельного ТЗ нет. Ожидания выведены из README, правил domain, публичных методов, типов и вызывающего кода. Для неподтверждённых условий продакшена выводов не сделано.</p>
+<h3>Прогоны и доказательства</h3>
+<div class="scroll"><table><thead><tr><th>Проверка</th><th>Результат</th><th>Что подтверждает</th></tr></thead><tbody>
+<tr><td>Штатные тесты domain</td><td>27 файлов, 931 тест прошли</td><td>Существующий набор остаётся зелёным при указанных дефектах.</td></tr>
+<tr><td>TypeScript и ESLint</td><td>Прошли</td><td>Нет выявленных этими инструментами ошибок типов и линтера.</td></tr>
+<tr><td>Независимые сценарии</td><td>11 из 11 падают на проверке ожидаемого поведения</td><td>Дефекты 1–10 и 12. Настоящие граф, парсер, анализатор, калькулятор и движок; подменён только сервис сохранения для его отказа.</td></tr>
+<tr><td>Отдельный процесс для №11</td><td>Код 134, JavaScript heap out of memory</td><td>Соответствие исходника сборке сверено; память 64 МБ, таймаут 5 секунд.</td></tr>
+</tbody></table></div>
+<p>Доказательства: <a href="2026-11-01-domain-review/results.json">JSON тестов</a>, <a href="2026-11-01-domain-review/src/repro.test.ts">исходник проверок</a>, <a href="2026-11-01-domain-review/vitest.config.mjs">конфигурация</a>, <a href="2026-11-01-domain-review/filter-limit.mjs">формула для отдельного процесса</a>, <a href="2026-11-01-domain-review/filter-result.json">результат OOM</a>.</p>
+<p class="note">pnpm в исходном прогоне завершался ошибкой среды unable to open database file. Установленные инструменты запускались напрямую через Node. Исходники и штатные тесты domain не менялись.</p>
+<pre class="probe"># Из корня репозитория. Регрессии должны падать до исправления дефектов.
+node rsconcept/domain/node_modules/vitest/vitest.mjs run --root reviews/2026-11-01-domain-review --config D:/DEV/WORK/Portal/reviews/2026-11-01-domain-review/vitest.config.mjs --reporter=json --outputFile=D:/DEV/WORK/Portal/reviews/2026-11-01-domain-review/results.json
+node reviews/2026-11-01-domain-review/run-filter-limit.mjs</pre>
+<h3>Что не проверено</h3>
+<ul class="plain"><li>Живые backend- и браузерные сценарии, реальные HTTP-запросы и параллельные записи на сервер. Отказ сохранения воспроизведён на границе RSEngineServices.</li><li>Реальная серверная память и доступность №11 анонимному пользователю. OOM проверен в ограниченном отдельном процессе.</li><li>Опубликованный npm-архив, CVE и происхождение зависимостей. Установленные используемые API проверялись локальными тестами и проверкой типов.</li><li>Исчерпывающее покрытие всех возможных формул и конфигураций схем. Набор контрпримеров доказывает перечисленные дефекты, но не полноту формальной верификации.</li></ul>
+</section>
+<footer>Отчёт продолжает проверку от 2026-10-31, где domain проверялся только штатными тестами. В этом отчёте проверены реализация и отдельные контрпримеры. Код продукта не изменялся. Формат взят из <a href="2026-10-31-code-review.html">предыдущего ревью</a>.</footer>
+</main></body></html>
