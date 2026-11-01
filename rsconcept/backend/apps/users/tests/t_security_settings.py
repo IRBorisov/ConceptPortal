@@ -5,7 +5,7 @@ import tempfile
 from unittest.mock import patch
 
 from django.conf import settings
-from django.test import SimpleTestCase
+from django.test import Client, SimpleTestCase, override_settings
 
 from project import settings as project_settings
 from project.settings import _get_secret, _hsts_policy, _proxy_ssl_header
@@ -60,10 +60,24 @@ class TestSecuritySettings(SimpleTestCase):
         self.assertTrue(include_subdomains)
         self.assertTrue(preload)
 
-    def test_production_trusts_nginx_scheme(self):
+    def test_proxy_ssl_header_follows_debug(self):
         self.assertEqual(_proxy_ssl_header(False), ('HTTP_X_FORWARDED_PROTO', 'https'))
         self.assertIsNone(_proxy_ssl_header(True))
         self.assertEqual(settings.SECURE_PROXY_SSL_HEADER, project_settings._proxy_ssl_header(project_settings.DEBUG))
+
+    def test_forwarded_https_request_gets_hsts(self):
+        with override_settings(
+            SECURE_PROXY_SSL_HEADER=('HTTP_X_FORWARDED_PROTO', 'https'),
+            SECURE_HSTS_SECONDS=31536000,
+            SECURE_HSTS_INCLUDE_SUBDOMAINS=True,
+            SECURE_HSTS_PRELOAD=True,
+            SESSION_ENGINE='django.contrib.sessions.backends.signed_cookies',
+        ):
+            response = Client().get('/users/api/auth', HTTP_X_FORWARDED_PROTO='https')
+        self.assertEqual(
+            response['Strict-Transport-Security'],
+            'max-age=31536000; includeSubDomains; preload',
+        )
 
     def test_debug_hsts_is_disabled(self):
         seconds, include_subdomains, preload = _hsts_policy(True)
@@ -89,13 +103,9 @@ class TestSecuritySettings(SimpleTestCase):
 
     def test_sentry_scrubber_hides_password_aliases(self):
         ''' EventScrubber matches keys exactly, so password aliases need their own entries. '''
-        from sentry_sdk.scrubber import EventScrubber
-
-        scrubber = EventScrubber(
-            denylist=list(project_settings.SENTRY_SCRUB_DENYLIST),
-            recursive=True,
-            send_default_pii=True,
-        )
+        with patch('sentry_sdk.init') as init:
+            project_settings._init_sentry()
+        scrubber = init.call_args.kwargs['event_scrubber']
         event = {
             'request': {
                 'data': {

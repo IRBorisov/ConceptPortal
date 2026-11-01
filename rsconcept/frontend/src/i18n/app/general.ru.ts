@@ -41,7 +41,7 @@ export const txGeneralRu: Record<string, string> = {
   'tx.general.password.new': 'Новый пароль',
   'tx.general.password.new.validate': 'Новый пароль должен отличаться от текущего',
   'tx.general.password.validate.minLength': 'Пароль должен содержать не менее {minLength} символов',
-  'tx.general.password.validate.trailingSpace': 'Пароль не может заканчиваться пробелом',
+  'tx.general.password.validate.trailingSpace': 'Пароль не может заканчиваться пробелом или другим пробельным символом',
   'tx.general.password.validate.numeric': 'Пароль не может состоять только из цифр',
   'tx.general.password.validate.similar': 'Пароль слишком похож на данные пользователя',
   'tx.general.password.current': 'Текущий пароль',

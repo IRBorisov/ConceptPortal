@@ -141,14 +141,8 @@ if not SECRET_KEY:
     else:
         raise ImproperlyConfigured('SECRET_KEY must be configured when DEBUG is disabled')
 
-if (
-    SENTRY_ENABLED
-    and SENTRY_DSN
-    and not DEBUG
-    and not IS_TESTING
-    and not IS_STATIC_ANALYSIS
-    and not IS_SAFE_LOCAL_CONTEXT
-):
+def _init_sentry() -> None:
+    ''' Start Sentry with the password-field denylist. The caller decides whether to run. '''
     sentry_sdk.init(
         dsn=SENTRY_DSN,
         environment=SENTRY_ENVIRONMENT,
@@ -163,6 +157,17 @@ if (
             send_default_pii=SENTRY_SEND_DEFAULT_PII,
         ),
     )
+
+
+if (
+    SENTRY_ENABLED
+    and SENTRY_DSN
+    and not DEBUG
+    and not IS_TESTING
+    and not IS_STATIC_ANALYSIS
+    and not IS_SAFE_LOCAL_CONTEXT
+):
+    _init_sentry()
 
 # MAIL SETUP
 # Env vars stay EMAIL_*. Django 6.1 reads them through MAILERS.

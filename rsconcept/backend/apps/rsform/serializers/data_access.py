@@ -614,10 +614,6 @@ class InlineSynthesisSerializer(StrictSerializer):
         user = cast(User, self.context['user'])
         schema_in = cast(LibraryItem, attrs['source'])
         schema_out = cast(LibraryItem, attrs['receiver'])
-        if schema_out.item_type != LibraryItemType.RSFORM:
-            raise serializers.ValidationError({'receiver': msg.synthesisRequiresSchema()})
-        if schema_in.item_type != LibraryItemType.RSFORM:
-            raise serializers.ValidationError({'source': msg.synthesisRequiresSchema()})
         if not permissions.can_edit_item(user, schema_out):
             raise PermissionDenied({
                 'message': msg.schemaForbidden(),
@@ -628,6 +624,10 @@ class InlineSynthesisSerializer(StrictSerializer):
                 'message': msg.schemaForbidden(),
                 'object_id': schema_in.pk
             })
+        if schema_out.item_type != LibraryItemType.RSFORM:
+            raise serializers.ValidationError({'receiver': msg.synthesisRequiresSchema()})
+        if schema_in.item_type != LibraryItemType.RSFORM:
+            raise serializers.ValidationError({'source': msg.synthesisRequiresSchema()})
         # Empty items means "embed all source constituents" (same as insert_from(None)).
         constituents = cast(list[Constituenta], attrs['items'])
         for cst in constituents:

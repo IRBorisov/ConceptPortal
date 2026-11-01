@@ -91,6 +91,18 @@ class TestAgentApiKeys(EndpointTester):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     @decl_endpoint('/api/agents/keys/{item}', method='delete')
+    def test_other_user_key_is_not_found(self):
+        other_key, _ = ApiKey.create_for_user(self.user2, 'Other')
+        self.executeNotFound(item=other_key.pk)
+        response = self.client.patch(
+            f'/api/agents/keys/{other_key.pk}', data={'label': 'Nope'}, format='json',
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        other_key.refresh_from_db()
+        self.assertIsNone(other_key.revoked_at)
+        self.assertNotEqual(other_key.label, 'Nope')
+
+    @decl_endpoint('/api/agents/keys/{item}', method='delete')
     def test_revoke_key(self):
         key, secret = ApiKey.create_for_user(self.user, 'Temp')
         self.executeNoContent(item=key.pk)

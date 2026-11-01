@@ -48,6 +48,8 @@ class TestVersionViews(EndpointTester):
         oss = OperationSchema.create(title='OSS', alias='O1', owner=self.user)
         self.executeBadData({'version': '1.0.0', 'description': 'test'}, schema=oss.model.pk)
         self.assertFalse(Version.objects.filter(item=oss.model).exists())
+        hidden = OperationSchema.create(title='Hidden', alias='O2', owner=self.user2)
+        self.executeForbidden({'version': '1.0.0'}, schema=hidden.model.pk)
 
     @decl_endpoint('/api/library/{schema}/create-version', method='post')
     def test_create_version_omitted_description(self):
