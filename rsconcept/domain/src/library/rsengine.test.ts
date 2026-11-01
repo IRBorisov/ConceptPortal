@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { Graph } from '../graph';
 import { RSLangAnalyzer } from '../rslang/semantic/analyzer';
-import { basic, bool } from '../rslang/semantic/typification';
+import { basic, bool, IntegerT } from '../rslang/semantic/typification';
 
 import { getAnalysisFor } from './rsform-api/analysis';
 import { buildFormalDependencyGraph } from './rsform-api/formal-graph';
@@ -199,6 +199,7 @@ describe('RSEngine.setBasicValue', () => {
     expect(engine.getCstValue(1)).toEqual([9]);
     expect(engine.basics.get(1)).toEqual({ 9: 'only-new' });
     expect(engine.getCstValue(2)).toEqual([1, 2]);
+    expect(engine.getCstStatus(2)).toBe(EvalStatus.INVALID_DATA);
   });
 
   it('loads negative basic identifiers in numeric order', () => {
@@ -310,6 +311,77 @@ describe('RSEngine.loadData', () => {
     expect(engine.calculator.getValue('X1')).toBeNull();
     expect(engine.calculator.getValue('X2')).toBeNull();
     expect(engine.getCstValue(1)).toEqual([1]);
+  });
+
+  it('revalidates a structured value moved onto a renamed alias', () => {
+    const engine = createEngine();
+    const base = mockConstituenta({ id: 1, alias: 'X1', cst_type: CstType.BASE });
+    const original = mockSchema([
+      base,
+      mockConstituenta({
+        id: 2,
+        alias: 'S1',
+        cst_type: CstType.STRUCTURED,
+        effectiveType: bool(basic('X1'))
+      })
+    ]);
+    const model = mockModel([
+      { id: 1, type: TYPE_BASIC, value: { 1: 'a' } },
+      { id: 2, type: 'ℬ(X1)', value: [1] }
+    ]);
+    engine.loadData(original, model);
+    expect(engine.getCstStatus(2)).toBe(EvalStatus.HAS_DATA);
+
+    const retyped = mockSchema([
+      base,
+      mockConstituenta({
+        id: 2,
+        alias: 'S2',
+        cst_type: CstType.STRUCTURED,
+        effectiveType: IntegerT
+      })
+    ]);
+    engine.loadData(retyped, model);
+    expect(engine.calculator.getValue('S1')).toBeNull();
+    expect(engine.getCstValue(2)).toEqual([1]);
+    expect(engine.getCstStatus(2)).toBe(EvalStatus.INVALID_DATA);
+
+    const restored = mockSchema([
+      base,
+      mockConstituenta({
+        id: 2,
+        alias: 'S3',
+        cst_type: CstType.STRUCTURED,
+        effectiveType: bool(basic('X1'))
+      })
+    ]);
+    engine.loadData(restored, model);
+    expect(engine.getCstValue(2)).toEqual([1]);
+    expect(engine.getCstStatus(2)).toBe(EvalStatus.HAS_DATA);
+  });
+
+  it('marks a non-array structured value invalid instead of throwing', () => {
+    const structured = mockConstituenta({
+      id: 2,
+      alias: 'S1',
+      cst_type: CstType.STRUCTURED,
+      effectiveType: bool(basic('X1'))
+    });
+    const engine = createEngine();
+    const malformed = { unexpected: true } as unknown as RSModel['items'][number]['value'];
+
+    expect(() =>
+      engine.loadData(mockSchema([structured]), mockModel([{ id: 2, type: 'ℬ(X1)', value: malformed }]))
+    ).not.toThrow();
+    expect(engine.getCstStatus(2)).toBe(EvalStatus.INVALID_DATA);
+
+    expect(() =>
+      engine.loadData(
+        mockSchema([structured]),
+        mockModel([{ id: 2, type: 'ℬ(X1)', value: null as unknown as RSModel['items'][number]['value'] }])
+      )
+    ).not.toThrow();
+    expect(engine.getCstStatus(2)).toBe(EvalStatus.INVALID_DATA);
   });
 });
 

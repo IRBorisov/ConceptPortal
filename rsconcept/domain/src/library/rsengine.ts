@@ -239,6 +239,11 @@ export class RSEngine {
         await this.services.clearValues({ itemID: this.modelID, data: { items: resetList } });
       } catch (error) {
         this.commitBasicUpdate(cst, data, newValue, updateList, []);
+        // The base write landed, but these children still hold values the new base cannot contain.
+        for (const childID of resetList) {
+          this.invalidData.add(childID);
+          this.notifyCst(childID);
+        }
         throw error;
       }
     }
@@ -440,6 +445,28 @@ export class RSEngine {
     for (const move of moves) {
       this.calculator.setValue(move.to, move.value);
     }
+    this.revalidateStructuredValues();
+  }
+
+  /** Recompute {@link invalidData} after a schema-only reload moves or retypes stored values. */
+  private revalidateStructuredValues(): void {
+    if (!this.schema) {
+      return;
+    }
+    for (const cst of this.schema.items) {
+      if (cst.cst_type !== CstType.STRUCTURED) {
+        continue;
+      }
+      const value = this.calculator.getValue(cst.alias);
+      if (value === null) {
+        continue;
+      }
+      if (cst.effectiveType !== null && this.calculator.validate(value, cst.effectiveType)) {
+        this.invalidData.delete(cst.id);
+      } else {
+        this.invalidData.add(cst.id);
+      }
+    }
   }
 
   private commitBasicUpdate(
@@ -603,7 +630,7 @@ function canonicalBasicIds(data: BasicBinding): number[] {
 }
 
 function cloneValue(value: Value): Value {
-  if (typeof value === 'number') {
+  if (!Array.isArray(value)) {
     return value;
   }
   return value.map(cloneValue);
