@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { createBearerTokenVerifier } from '../http-auth';
 import { createRSToolHttpServer } from '../http-server';
 
+/** Load mandatory credentials and durable storage before opening the HTTP listener. */
 async function main(): Promise<void> {
   const credentialsFile = process.env.RSTOOL_HTTP_TOKENS_FILE;
   const persistenceDir = process.env.RSTOOL_PERSISTENCE_DIR;
@@ -32,6 +33,7 @@ async function main(): Promise<void> {
     });
   });
   process.stderr.write(`rstool-mcp HTTP ready on ${host}:${port}/mcp\n`);
+  /** Drain requests on a signal or listener failure, preserving failure exit status. */
   const stop = () => {
     void service.close().catch(() => {
       process.stderr.write('rstool-mcp HTTP shutdown failed\n');

@@ -29,6 +29,7 @@ export function createBearerTokenVerifier(credentials: readonly HttpCredential[]
   return token => subjects.get(hash(token)) ?? null;
 }
 
+/** Use fixed-length lookup keys without retaining bearer tokens in the verifier map. */
 function hash(value: string): string {
   return createHash('sha256').update(value).digest('hex');
 }

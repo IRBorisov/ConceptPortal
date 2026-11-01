@@ -58,17 +58,20 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   let closing: Promise<void> | undefined;
   let stopped = false;
 
+  /** Remove only this transport lease; the workspace's persisted schema data stays intact. */
   function forget(entry: HttpSession): void {
     entry.closed = true;
     if (workspaces.get(entry.namespace) === entry) workspaces.delete(entry.namespace);
     if (entry.transport.sessionId) sessions.delete(entry.transport.sessionId);
   }
 
+  /** Release a lease and its protocol resources without deleting durable rstool sessions. */
   async function dispose(entry: HttpSession): Promise<void> {
     forget(entry);
     await entry.server.close();
   }
 
+  /** Reclaim inactive leases while leaving queued and in-flight requests untouched. */
   function expireIdleSessions(): void {
     const cutoff = Date.now() - idleTimeoutMs;
     for (const entry of workspaces.values()) {
@@ -79,6 +82,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
     }
   }
 
+  /** Validate the caller and route each request to its identity/task-owned transport. */
   async function handle(request: IncomingMessage, response: ServerResponse): Promise<void> {
     response.setHeader('Cache-Control', 'no-store');
     if (stopped) return reject(response, 503, 'Service is stopping');
@@ -204,11 +208,13 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   };
 }
 
+/** End a host-level failure without exposing request payloads or internal error details. */
 function reject(response: ServerResponse, status: number, message: string): void {
   response.writeHead(status, { 'Content-Type': 'application/json' });
   response.end(JSON.stringify({ error: message }));
 }
 
+/** Reject invalid limits before constructing a listener or allocating transport resources. */
 function positiveInteger(value: number, name: string): number {
   if (!Number.isSafeInteger(value) || value <= 0) throw new Error(`${name} must be a positive integer`);
   return value;
@@ -216,6 +222,7 @@ function positiveInteger(value: number, name: string): number {
 
 const AUTHENTICATION_TIMEOUT = Symbol('authentication-timeout');
 
+/** Bound authentication even if the verifier ignores abort; cancel cooperative verifiers on expiry. */
 async function verifyWithDeadline(verify: VerifyHttpToken, token: string, timeoutMs: number) {
   const controller = new AbortController();
   let timer: ReturnType<typeof setTimeout> | undefined;
