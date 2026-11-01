@@ -73,6 +73,7 @@ export function buildRSToolMcpServer(
 
   let invocationTail: Promise<unknown> = Promise.resolve();
   server.server.setRequestHandler(CallToolRequestSchema, (request) => {
+    /** Adapt one rstool invocation, preserving tool errors as MCP error results. */
     const invoke = async () => {
       const definition = definitionByName.get(request.params.name);
       if (!definition) {

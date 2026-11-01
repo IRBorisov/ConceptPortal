@@ -37,6 +37,7 @@ afterEach(async () => {
   }
 });
 
+/** Start an isolated loopback service and register its storage and clients for cleanup. */
 async function start(overrides: Partial<RSToolHttpServerOptions> = {}) {
   const directory = overrides.persistenceDir ?? await mkdtemp(join(tmpdir(), 'rstool-http-test-'));
   if (!overrides.persistenceDir) directories.push(directory);
@@ -46,6 +47,7 @@ async function start(overrides: Partial<RSToolHttpServerOptions> = {}) {
   services.push(service);
   await new Promise<void>(resolveListen => service.server.listen(0, '127.0.0.1', resolveListen));
   const url = `http://127.0.0.1:${(service.server.address() as AddressInfo).port}`;
+  /** Exercise the same Streamable HTTP handshake and credentials that a real host uses. */
   async function connect(workspace = 'task', token = ALICE) {
     const client = new Client({ name: 'rstool-http-test', version: '1' });
     clients.push(client);
@@ -58,18 +60,21 @@ async function start(overrides: Partial<RSToolHttpServerOptions> = {}) {
   return { service, url, directory, connect };
 }
 
+/** Require a successful remote tool result before decoding rstool's JSON-in-text payload. */
 async function call(client: Client, name: string, args: Record<string, unknown> = {}) {
   const result = CallToolResultSchema.parse(await client.callTool({ name, arguments: args }));
   expect(result.isError, JSON.stringify(result.content)).not.toBe(true);
   return payload(result);
 }
 
+/** Decode the existing rstool text-content contract rather than assuming structuredContent. */
 function payload(result: CallToolResult) {
   const content = result.content[0];
   if (content.type !== 'text') throw new Error('Expected text result');
   return JSON.parse(content.text);
 }
 
+/** Send an initialization or overridden protocol payload for routing and malformed-input tests. */
 function post(url: string, token = ALICE, extraHeaders: Record<string, string> = {}, body = initialize) {
   return fetch(url, { method: 'POST', headers: { ...headers, Authorization: `Bearer ${token}`, ...extraHeaders }, body });
 }
