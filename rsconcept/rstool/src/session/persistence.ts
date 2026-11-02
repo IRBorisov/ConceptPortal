@@ -57,7 +57,10 @@ export class SessionPersistence {
       return null;
     }
     const parsed = JSON.parse(fs.readFileSync(file, 'utf-8')) as { sessionId?: string | null };
-    return parsed.sessionId ?? null;
+    const sessionId = parsed.sessionId ?? null;
+    if (sessionId === null) return null;
+    try { assertSafeSessionId(sessionId); } catch { return null; }
+    return sessionId;
   }
 
   private filePath(sessionId: string): string {
@@ -74,7 +77,7 @@ export class SessionPersistence {
 /** Flush a private sibling file, then atomically replace the target without truncating it. */
 function writeJsonAtomically(file: string, value: unknown): void {
   const json = JSON.stringify(value, null, 2);
-  const temporary = `${file}.${randomUUID()}.tmp`;
+  const temporary = path.join(path.dirname(file), `.${randomUUID()}.tmp`);
   let descriptor: number | undefined;
   let created = false;
   try {

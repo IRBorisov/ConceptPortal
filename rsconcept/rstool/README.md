@@ -75,6 +75,8 @@ The stdio handler and MCP server serialize requests per agent by default, includ
 
 Persistence writes and flushes a private temporary sibling before renaming it over the target. Failed writes, flushes and renames leave the previous target intact. Session files and `_current.json` are individually atomic, not a multi-file transaction. If the pointer update fails after a new session was saved, the complete session file can remain while the active pointer stays unchanged. Filesystem/hardware durability across power loss and multiple writers are outside this guarantee. Use one live agent per persistence directory and retain backups. Persisted session IDs cannot be `_current` or Windows device names and cannot contain path separators, `..`, control characters or Windows filename metacharacters.
 
+On resume, an unsafe ID in an existing `_current.json` is treated as an absent pointer, allowing `ensureSession` to create a fresh session. The legacy session file is left untouched.
+
 ## Publishing
 
 Maintainers: see [PUBLISHING.md](./PUBLISHING.md) for npm release steps.

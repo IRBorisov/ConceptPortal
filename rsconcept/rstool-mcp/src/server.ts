@@ -72,7 +72,7 @@ export function buildRSToolMcpServer(
   );
 
   let invocationTail: Promise<unknown> = Promise.resolve();
-  server.server.setRequestHandler(CallToolRequestSchema, (request) => {
+  server.server.setRequestHandler(CallToolRequestSchema, (request, extra) => {
     /** Adapt one rstool invocation, preserving tool errors as MCP error results. */
     const invoke = async () => {
       const definition = definitionByName.get(request.params.name);
@@ -89,6 +89,7 @@ export function buildRSToolMcpServer(
       }
 
       try {
+        if (extra.signal.aborted) throw new Error('Request cancelled before tool execution');
         const result = await definition.invoke(
           tool,
           request.params.arguments ?? {},
