@@ -1,5 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
+import { schemaUserSignup } from '@/features/users/backend/types';
+
 import { hasTrailingPasswordSpace, isPasswordTooSimilar, schemaPassword } from './password-validation';
 
 describe('schemaPassword', () => {
@@ -26,5 +28,24 @@ describe('isPasswordTooSimilar', () => {
 
   test('allows passwords that differ from signup user fields', () => {
     expect(isPasswordTooSimilar('PortalPass123', ['ivanov@example.com', 'Ivanov'])).toBe(false);
+  });
+
+  test('keeps a password whose only overlap with a user field is a short fragment', () => {
+    const password = 'PortalPass123';
+    expect(isPasswordTooSimilar(password, ['ivanov', 'ivanov@example.com', 'Al', ''])).toBe(false);
+    expect(
+      schemaUserSignup.safeParse({
+        username: 'ivanov',
+        email: 'ivanov@example.com',
+        first_name: 'Al',
+        last_name: '',
+        password,
+        password2: password
+      }).success
+    ).toBe(true);
+  });
+
+  test('does not treat a one-letter email part as similar to every password that contains it', () => {
+    expect(isPasswordTooSimilar('PortalPass123', ['a@b.co'])).toBe(false);
   });
 });

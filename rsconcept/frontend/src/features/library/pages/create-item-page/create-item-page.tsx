@@ -5,14 +5,12 @@ import { LibraryItemType } from '@rsconcept/domain/library';
 import { RequireAuth } from '@/features/auth/components/require-auth';
 
 import { useQueryStrings } from '@/hooks/use-query-strings';
+import { optionalQueryInteger } from '@/utils/query-integer';
 
 import { FormCreateItem } from './form-create-item';
 
 const paramsSchema = z.strictObject({
-  modelFrom: z.coerce
-    .number()
-    .nullish()
-    .transform(v => v ?? undefined),
+  modelFrom: optionalQueryInteger(),
   itemType: z
     .enum([LibraryItemType.RSFORM, LibraryItemType.RSMODEL, LibraryItemType.OSS])
     .nullish()

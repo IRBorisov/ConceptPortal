@@ -18,9 +18,11 @@ import { useLibraryColumns } from './use-library-columns';
 
 interface TableLibraryItemsProps {
   items: LibraryItem[];
+  /** Replaces the finished-empty copy while a context search is unfinished or failed. */
+  emptyLabel?: string;
 }
 
-export function TableLibraryItems({ items }: TableLibraryItemsProps) {
+export function TableLibraryItems({ items, emptyLabel }: TableLibraryItemsProps) {
   const tx = useTx();
   const router = useConceptNavigation();
   const { isSmall } = useWindowSize();
@@ -71,11 +73,13 @@ export function TableLibraryItems({ items }: TableLibraryItemsProps) {
         style={{ maxHeight: tableHeight }}
         noDataComponent={
           <div className='cc-column dense p-3 items-center min-h-24'>
-            <p>{tx('tx.list.empty')}</p>
-            <p className='flex gap-6'>
-              <TextURL text={tx('tx.schema.create')} href='/library/create' />
-              <TextURL text={tx('tx.general.filter.reset')} onClick={resetFilter} />
-            </p>
+            <p>{emptyLabel ?? tx('tx.list.empty')}</p>
+            {emptyLabel ? null : (
+              <p className='flex gap-6'>
+                <TextURL text={tx('tx.schema.create')} href='/library/create' />
+                <TextURL text={tx('tx.general.filter.reset')} onClick={resetFilter} />
+              </p>
+            )}
           </div>
         }
         columnVisibility={columnVisibility}

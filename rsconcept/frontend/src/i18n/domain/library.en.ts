@@ -93,6 +93,8 @@ export const txLibraryEn: Record<string, string> = {
   'tx.lib.search.mode.context': 'Context search',
   'tx.lib.search.context.fields': 'Search in',
   'tx.lib.search.context.fields.reset': 'Search everywhere',
+  'tx.lib.search.context.pending': 'Context search is still running',
+  'tx.lib.search.context.error': 'Context search did not return a result',
   'tx.lib.filter.byOwnerMe': 'I am owner',
   'tx.lib.filter.byEditorMe': 'I am editor',
   'tx.lib.filter.byHidden': 'Hidden',

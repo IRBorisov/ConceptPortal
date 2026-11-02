@@ -9,7 +9,8 @@ import { PARAMETER } from '@/utils/constants';
 
 import {
   enabledContextSearchFields,
-  type LibraryContextSearchFields
+  type LibraryContextSearchFields,
+  resolveLibraryContextSearch
 } from '../models/library-context-search';
 
 import { libraryApi } from './api';
@@ -29,9 +30,9 @@ export function useLibraryContextSearch({
   const trimmedQuery = query.trim();
   const [debouncedQuery] = useDebounce(trimmedQuery, PARAMETER.searchDebounce);
   const activeFields = enabledContextSearchFields(contextFields);
-  const isDebouncing = trimmedQuery !== debouncedQuery;
+  const searching = enabled && trimmedQuery.length > 0 && activeFields.length > 0;
 
-  const { data, isFetching, isLoading } = useQuery({
+  const { data, isFetching, isError, isPlaceholderData } = useQuery({
     queryKey: [...libraryApi.contextSearchKey, debouncedQuery, activeFields, isAdmin ? 'admin' : 'user'],
     queryFn: meta =>
       libraryApi.contextSearch({
@@ -40,22 +41,18 @@ export function useLibraryContextSearch({
         isAdmin,
         signal: meta.signal
       }),
-    enabled: enabled && trimmedQuery.length > 0 && activeFields.length > 0,
-    staleTime: DELAYS.staleMedium,
-    placeholderData: previous => previous
+    enabled: searching,
+    staleTime: DELAYS.staleMedium
   });
 
-  const matchIds =
-    debouncedQuery.length === 0
-      ? null
-      : activeFields.length === 0
-        ? []
-        : (data?.ids ?? null);
-  const isPending =
-    enabled &&
-    trimmedQuery.length > 0 &&
-    activeFields.length > 0 &&
-    (isDebouncing || isLoading || isFetching);
-
-  return { matchIds, isPending };
+  return resolveLibraryContextSearch({
+    enabled,
+    query: trimmedQuery,
+    debouncedQuery,
+    activeFieldCount: activeFields.length,
+    ids: data?.ids,
+    isError,
+    isFetching,
+    isPlaceholder: isPlaceholderData
+  });
 }

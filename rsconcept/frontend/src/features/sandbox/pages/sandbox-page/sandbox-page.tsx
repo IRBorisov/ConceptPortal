@@ -9,6 +9,7 @@ import { tabQuerySchema } from '@/app/navigation/tab-query';
 import { ConstituentaTooltip } from '@/features/rsform/components/constituenta-tooltip';
 
 import { useResetModification } from '@/hooks/use-reset-modification';
+import { optionalQueryInteger } from '@/utils/query-integer';
 
 import { SandboxState } from '../../context/bundle-state';
 import { SandboxModelState } from '../../context/sandbox-model-state';
@@ -17,10 +18,7 @@ import { SandboxTabs } from '../sandbox-editor/sandbox-tabs';
 
 const paramsModel = z.strictObject({
   tab: tabQuerySchema(RSModelTabID, RSModelTabID.CARD),
-  activeID: z.coerce
-    .number()
-    .nullish()
-    .transform(v => v ?? undefined)
+  activeID: optionalQueryInteger()
 });
 
 export function SandboxPage() {
