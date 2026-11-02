@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { RSToolAgent } from '@rsconcept/rstool';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { CallToolResultSchema } from '@modelcontextprotocol/sdk/types.js';
@@ -7,6 +8,54 @@ import { buildRSToolMcpServer } from "./server";
 import { TOOL_DEFINITIONS } from "./tools";
 
 describe("buildRSToolMcpServer", () => {
+  it('skips a cancelled mutation queued behind another request and continues serving calls', async () => {
+    const tool = new RSToolAgent();
+    let release!: () => void;
+    let entered!: () => void;
+    const started = new Promise<void>(resolve => { entered = resolve; });
+    const gate = new Promise<void>(resolve => { release = resolve; });
+    const model = vi.spyOn(tool, 'setModelValues').mockImplementationOnce(async () => {
+      entered();
+      await gate;
+      return { items: [] };
+    });
+    const create = vi.spyOn(tool, 'createSession');
+    const server = buildRSToolMcpServer({ tool });
+    const client = new Client({ name: 'cancel-queue-test', version: '1' });
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    let delivered!: () => void;
+    const cancellationDelivered = new Promise<void>(resolve => { delivered = resolve; });
+    const send = clientTransport.send.bind(clientTransport);
+    const transportSend = vi.spyOn(clientTransport, 'send').mockImplementation(async (message, options) => {
+      await send(message, options);
+      if ('method' in message && message.method === 'notifications/cancelled') delivered();
+    });
+    try {
+      await server.connect(serverTransport);
+      await client.connect(clientTransport);
+      const first = client.callTool({ name: 'set_model_values', arguments: {} });
+      await started;
+      const controller = new AbortController();
+      const cancelled = client.callTool({ name: 'create_session', arguments: {} }, undefined, { signal: controller.signal });
+      const rejection = expect(cancelled).rejects.toThrow();
+      controller.abort();
+      await rejection;
+      await cancellationDelivered;
+      release();
+      await first;
+      await client.callTool({ name: 'get_current_session', arguments: {} });
+      expect(create).not.toHaveBeenCalled();
+      expect(tool.getCurrentSession()).toBeNull();
+    } finally {
+      release();
+      await client.close();
+      await server.close();
+      model.mockRestore();
+      create.mockRestore();
+      transportSend.mockRestore();
+    }
+  });
+
   it('serializes model writes and schema edits by default for stdio and other transports', async () => {
     const server = buildRSToolMcpServer();
     const client = new Client({ name: 'default-queue-test', version: '1' });

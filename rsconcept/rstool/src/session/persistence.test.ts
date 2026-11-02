@@ -41,7 +41,7 @@ describe('SessionPersistence', () => {
       write(file, '{', 'utf8');
       throw new Error('Simulated partial write');
     });
-    expect(() => persistence.save('safe-id', { ...envelope, diagnostics: [] })).toThrow(/Simulated partial write/);
+    expect(() => persistence.save('safe-id', { ...envelope, state: { ...envelope.state, title: 'new' } })).toThrow(/Simulated partial write/);
     vi.restoreAllMocks();
     expect(persistence.load('safe-id')).toEqual(envelope);
     expect(fs.readdirSync(dirs.at(-1)!)).toEqual(['safe-id.json']);
@@ -102,6 +102,20 @@ describe('SessionPersistence', () => {
     dirs.push(dir);
     return new SessionPersistence(dir);
   }
+
+  it('supports long session IDs without extending the temporary filename', () => {
+    const persistence = createPersistence();
+    const sessionId = 'a'.repeat(240);
+    persistence.save(sessionId, envelope);
+    expect(persistence.load(sessionId)).toEqual(envelope);
+    expect(fs.readdirSync(dirs.at(-1)!)).toEqual([`${sessionId}.json`]);
+  });
+
+  it.each(['_current', 'con.txt', '../escape', '', 42, {}])('ignores unsafe persisted pointer %j', sessionId => {
+    const persistence = createPersistence();
+    fs.writeFileSync(path.join(dirs.at(-1)!, '_current.json'), JSON.stringify({ sessionId }), 'utf8');
+    expect(persistence.loadCurrentSessionId()).toBeNull();
+  });
 
   it('persists a safe session id under the configured directory', () => {
     const persistence = createPersistence();

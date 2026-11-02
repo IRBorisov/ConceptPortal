@@ -76,6 +76,25 @@ describe('RSToolAgent session integrity', () => {
   it.each(['patch', 'revision', 'diagnostics', 'order', 'recalculate', 'model'] as const)(
     'preserves live and persisted state when a %s save fails', async operation => {
       const { directory, tool } = persistedAgent();
+      if (operation === 'order' || operation === 'recalculate') {
+        tool.applySchemaPatch({ items: [{ alias: 'D1', definitionFormal: '1+2' }] });
+        if (operation === 'recalculate') {
+          tool.analyzeExpression({ expression: '(', cstType: CstType.TERM, recordDiagnostics: true });
+        }
+        const exported = JSON.parse(tool.exportSession());
+        exported.state.items.reverse();
+        tool.importData(exported, 'session');
+        const control = new RSToolAgent();
+        control.importData(tool.exportSession(), 'session');
+        if (operation === 'order') {
+          expect(control.restoreOrder().orderedAliases).toEqual(['X1', 'D1']);
+          expect(JSON.parse(tool.exportSession()).state.items.map((item: { alias: string }) => item.alias)).toEqual(['D1', 'X1']);
+        } else {
+          const previousDiagnostics = control.listDiagnostics();
+          expect(control.recalculateModel().items.find(item => item.alias === 'D1')?.value).toBe(3);
+          expect(control.listDiagnostics()).not.toEqual(previousDiagnostics);
+        }
+      }
       const before = tool.exportSession();
       vi.spyOn(fs, 'renameSync').mockImplementation(() => { throw new Error('Simulated rename failure'); });
       const mutate = () => {

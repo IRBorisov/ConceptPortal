@@ -119,6 +119,8 @@ service.server.listen(8093, '127.0.0.1');
 
 `buildRSToolMcpServer` queues individual tool invocations by default on every transport, including stdio and JSON-RPC batches. A custom host may explicitly set `serializeToolCalls: false`; overlapping model updates then use rstool's optimistic conflict check. The HTTP host always enables the queue.
 
+Requests cancelled while waiting in the queue are skipped before invoking rstool. Cancellation does not undo an operation that already started.
+
 For a custom single-client transport:
 
 ```ts
