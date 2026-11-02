@@ -122,6 +122,10 @@ function skipGroupFlags(pattern: string, index: number): number {
     return index + 2;
   }
   if (next === '<') {
+    const kind = pattern[index + 2];
+    if (kind === '=' || kind === '!') {
+      return index + 3;
+    }
     const close = pattern.indexOf('>', index + 2);
     return close === -1 ? pattern.length : close + 1;
   }

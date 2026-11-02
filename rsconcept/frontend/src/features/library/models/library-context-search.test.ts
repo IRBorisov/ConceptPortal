@@ -60,6 +60,14 @@ describe('library context search fields', () => {
     ).toEqual({ matchIds: [], isPending: false, phase: 'error' });
   });
 
+  it('waits for ids before the first search result', () => {
+    expect(resolveLibraryContextSearch(searchSnapshot({ isFetching: false }))).toEqual({
+      matchIds: [],
+      isPending: true,
+      phase: 'pending'
+    });
+  });
+
   it('keeps ids from the query that has settled', () => {
     expect(
       resolveLibraryContextSearch(
@@ -78,6 +86,29 @@ describe('library context search fields', () => {
         })
       )
     ).toEqual({ matchIds: [], isPending: false, phase: 'ready' });
+  });
+
+  it('keeps ids while the current query refetches', () => {
+    expect(
+      resolveLibraryContextSearch(
+        searchSnapshot({
+          ids: [4],
+          isFetching: true
+        })
+      )
+    ).toEqual({ matchIds: [4], isPending: true, phase: 'ready' });
+  });
+
+  it('keeps the last ids when a refetch of the same query fails', () => {
+    expect(
+      resolveLibraryContextSearch(
+        searchSnapshot({
+          ids: [4],
+          isError: true,
+          isFetching: false
+        })
+      )
+    ).toEqual({ matchIds: [4], isPending: false, phase: 'ready' });
   });
 
   it('does not restrict the library when context search is off', () => {

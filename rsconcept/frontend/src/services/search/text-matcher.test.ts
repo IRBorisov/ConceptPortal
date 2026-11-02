@@ -32,18 +32,24 @@ describe('TextMatcher', () => {
   });
 
   it('searches a nested quantifier as plain text', () => {
-    expect(new TextMatcher('(a+)+$').test('prefix (a+)+$ suffix')).toBe(true);
-    expect(new TextMatcher('(a+)+$').test('ab')).toBe(false);
+    const nested = '(a+' + ')+$';
+    const lookbehind = '(?<=' + '(a+' + ')+)b';
+    expect(new TextMatcher(nested).test(`prefix ${nested} suffix`)).toBe(true);
+    expect(new TextMatcher(nested).test('ab')).toBe(false);
+    expect(new TextMatcher(lookbehind).test('aab')).toBe(false);
     expect(new TextMatcher(String.raw`F\d+`).test('F12')).toBe(true);
     expect(new TextMatcher('[a+]').test('a')).toBe(true);
   });
 
   it('finishes a nested quantifier on 24 characters within a second', async () => {
     const matcherUrl = pathToFileURL(fileURLToPath(new URL('./text-matcher.ts', import.meta.url))).href;
+    const nested = '(a+' + ')+$';
     const source = `
       import { TextMatcher } from ${JSON.stringify(matcherUrl)};
-      const matched = new TextMatcher('(a+)+$').test('${'a'.repeat(24)}b');
-      process.exit(matched ? 2 : 0);
+      const started = performance.now();
+      const matched = new TextMatcher(${JSON.stringify(nested)}).test('${'a'.repeat(24)}b');
+      const elapsed = performance.now() - started;
+      process.exit(matched ? 2 : elapsed > 1000 ? 3 : 0);
     `;
     await expect(runMatcherInChild(source)).resolves.toBe(0);
   });
@@ -56,8 +62,8 @@ function runMatcherInChild(source: string): Promise<number> {
     });
     const timer = setTimeout(function killHungMatcher() {
       child.kill();
-      reject(new Error('nested quantifier check exceeded 1s'));
-    }, 1000);
+      reject(new Error('nested quantifier check did not exit'));
+    }, 4000);
     child.on('exit', code => {
       clearTimeout(timer);
       resolve(code ?? 1);

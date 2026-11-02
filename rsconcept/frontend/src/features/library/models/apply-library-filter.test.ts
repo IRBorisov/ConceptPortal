@@ -67,4 +67,10 @@ describe('applyLibraryFilter context search', () => {
     const idle: LibraryContextRestriction = { phase: 'idle', matchIds: null };
     expect(applyLibraryFilter(items, contextFilter('zebra'), user, idle).map(entry => entry.id)).toEqual([1, 2]);
   });
+
+  it('filters by metadata matching when the search mode is not context', () => {
+    const idle: LibraryContextRestriction = { phase: 'idle', matchIds: null };
+    const metadata: LibraryFilter = { ...contextFilter('zebra'), searchMode: 'metadata' };
+    expect(applyLibraryFilter(items, metadata, user, idle)).toEqual([]);
+  });
 });
