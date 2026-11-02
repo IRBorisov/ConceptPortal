@@ -46,16 +46,13 @@ function normalizePasswordPart(value: string): string {
   return value.trim().toLowerCase();
 }
 
+/** `1 - distance / (len(a) + len(b))`. A short fragment stays under 0.7; a long shared prefix does not. */
 function getSimilarityRatio(a: string, b: string): number {
   if (!a || !b) {
     return 0;
   }
-  if (a === b || a.includes(b) || b.includes(a)) {
-    return 1;
-  }
-
-  const longerLength = Math.max(a.length, b.length);
-  return (longerLength - getLevenshteinDistance(a, b)) / longerLength;
+  const distance = getLevenshteinDistance(a, b);
+  return 1 - distance / (a.length + b.length);
 }
 
 function getLevenshteinDistance(a: string, b: string): number {

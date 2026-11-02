@@ -96,6 +96,8 @@ export const txLibraryRu: Record<string, string> = {
   'tx.lib.search.mode.context': 'Контекстный поиск',
   'tx.lib.search.context.fields': 'Искать в',
   'tx.lib.search.context.fields.reset': 'Искать везде',
+  'tx.lib.search.context.pending': 'Контекстный поиск ещё не завершён',
+  'tx.lib.search.context.error': 'Контекстный поиск не вернул результат',
   'tx.lib.filter.byOwnerMe': 'Я владелец',
   'tx.lib.filter.byEditorMe': 'Я редактор',
   'tx.lib.filter.byHidden': 'Скрытые',

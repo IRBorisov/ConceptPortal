@@ -16,18 +16,16 @@ import { TextURL } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { useResetModification } from '@/hooks/use-reset-modification';
+import { optionalQueryInteger } from '@/utils/query-integer';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { ModelEditState } from './model-edit-state';
 import { ModelTabs } from './model-tabs';
 
 const paramsModel = z.strictObject({
-  id: z.coerce.number(),
+  id: optionalQueryInteger(),
   tab: tabQuerySchema(RSModelTabID, RSModelTabID.CARD),
-  activeID: z.coerce
-    .number()
-    .nullish()
-    .transform(v => v ?? undefined)
+  activeID: optionalQueryInteger()
 });
 
 export function RSModelPage() {

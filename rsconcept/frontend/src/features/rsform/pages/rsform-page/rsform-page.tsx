@@ -16,6 +16,7 @@ import { TextURL } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { useResetModification } from '@/hooks/use-reset-modification';
+import { optionalQueryInteger } from '@/utils/query-integer';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { ConstituentaTooltip } from '../../components/constituenta-tooltip';
@@ -24,16 +25,10 @@ import { RSFormTabs } from './rsform-tabs';
 import { SchemaEditState } from './schema-edit-state';
 
 const paramsSchema = z.strictObject({
-  id: z.coerce.number(),
-  version: z.coerce
-    .number()
-    .nullish()
-    .transform(v => v ?? undefined),
+  id: optionalQueryInteger(),
+  version: optionalQueryInteger(),
   tab: tabQuerySchema(RSTabID, RSTabID.CARD),
-  activeID: z.coerce
-    .number()
-    .nullish()
-    .transform(v => v ?? undefined)
+  activeID: optionalQueryInteger()
 });
 
 export function RSFormPage() {

@@ -1,5 +1,7 @@
 'use client';
 
+import { useTx } from '@/i18n';
+
 import { useAuth } from '@/features/auth/backend/use-auth';
 
 import { ExportDropdown } from '@/components/control/export-dropdown';
@@ -17,6 +19,7 @@ import { ToolbarSearch } from './toolbar-search';
 import { ViewSideLocation } from './view-side-location';
 
 export function LibraryPage() {
+  const tx = useTx();
   const { user, isAnonymous } = useAuth();
   const { items: libraryItems } = useLibrary();
   const { renameLocation } = useRenameLocation();
@@ -25,12 +28,18 @@ export function LibraryPage() {
   const setLocation = useLibrarySearchStore(state => state.setLocation);
 
   const filter = useCreateLibraryFilter();
-  const { matchIds } = useLibraryContextSearch({
+  const contextSearch = useLibraryContextSearch({
     query: filter.query,
     contextFields: filter.contextFields,
     enabled: filter.searchMode === 'context'
   });
-  const { filtered } = useApplyLibraryFilter(filter, matchIds);
+  const { filtered } = useApplyLibraryFilter(filter, contextSearch);
+  const emptyLabel =
+    contextSearch.phase === 'pending'
+      ? tx('tx.lib.search.context.pending')
+      : contextSearch.phase === 'error'
+        ? tx('tx.lib.search.context.error')
+        : undefined;
 
   const showChangeLocation = useLibraryDialogsStore(state => state.showChangeLocation);
   const canRename = (() => {
@@ -68,7 +77,7 @@ export function LibraryPage() {
             <ToolbarSearch className='h-8 w-full' />
             <ExportDropdown data={filtered} filename='library' className='mr-1 hidden sm:block' />
           </div>
-          <TableLibraryItems items={filtered} />
+          <TableLibraryItems items={filtered} emptyLabel={emptyLabel} />
         </div>
       </div>
     </div>

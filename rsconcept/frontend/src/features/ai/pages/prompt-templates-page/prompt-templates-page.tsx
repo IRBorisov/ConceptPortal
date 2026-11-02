@@ -14,13 +14,14 @@ import { RequireAuth } from '@/features/auth/components/require-auth';
 import { TextURL } from '@/components/control';
 import { type ErrorData } from '@/components/info-error';
 import { useQueryStrings } from '@/hooks/use-query-strings';
+import { parseQueryInteger } from '@/utils/query-integer';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { TemplatesTabs } from './templates-tabs';
 
 const paramsSchema = z.strictObject({
   tab: tabQuerySchema(PromptTabID, PromptTabID.LIST),
-  active: z.preprocess(v => (v ? Number(v) : undefined), z.number().nullable().default(null))
+  active: z.preprocess(value => parseQueryInteger(value) ?? null, z.number().nullable())
 });
 
 export function PromptTemplatesPage() {

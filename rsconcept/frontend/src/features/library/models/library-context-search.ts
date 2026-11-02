@@ -39,6 +39,61 @@ export const DEFAULT_LIBRARY_CONTEXT_SEARCH_FIELDS: LibraryContextSearchFields =
   block: true
 };
 
+export type LibraryContextSearchPhase = 'idle' | 'pending' | 'error' | 'ready';
+
+export interface LibraryContextSearchSnapshot {
+  enabled: boolean;
+  query: string;
+  debouncedQuery: string;
+  activeFieldCount: number;
+  /** Ids for the debounced query. Absent until that query settles. */
+  ids: number[] | undefined;
+  isError: boolean;
+  isFetching: boolean;
+  /** True when `ids` were kept from a previous query key. */
+  isPlaceholder: boolean;
+}
+
+export interface LibraryContextSearchView {
+  matchIds: number[] | null;
+  isPending: boolean;
+  phase: LibraryContextSearchPhase;
+}
+
+/**
+ * Ids that belong to the query currently in the field.
+ * A pending or failed request does not reuse the previous query's ids, and it does not mean "no filter".
+ */
+export function resolveLibraryContextSearch(snapshot: LibraryContextSearchSnapshot): LibraryContextSearchView {
+  const trimmed = snapshot.query.trim();
+  const debounced = snapshot.debouncedQuery.trim();
+  const searching = snapshot.enabled && trimmed.length > 0;
+
+  if (!searching) {
+    return { matchIds: null, isPending: false, phase: 'idle' };
+  }
+  if (snapshot.activeFieldCount === 0) {
+    return { matchIds: [], isPending: false, phase: 'ready' };
+  }
+
+  const waitingForCurrent =
+    trimmed !== debounced ||
+    snapshot.isPlaceholder ||
+    (snapshot.ids === undefined && !snapshot.isError);
+  if (waitingForCurrent) {
+    return { matchIds: [], isPending: true, phase: 'pending' };
+  }
+  if (snapshot.isError && snapshot.ids === undefined) {
+    return { matchIds: [], isPending: false, phase: 'error' };
+  }
+
+  return {
+    matchIds: snapshot.ids ?? [],
+    isPending: snapshot.isFetching,
+    phase: 'ready'
+  };
+}
+
 export function enabledContextSearchFields(fields: LibraryContextSearchFields): LibraryContextSearchField[] {
   return LIBRARY_CONTEXT_SEARCH_FIELDS.filter(field => fields[field]);
 }

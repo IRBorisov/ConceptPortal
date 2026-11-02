@@ -15,6 +15,7 @@ import { isAxiosError } from '@/backend/api-transport';
 import { TextURL } from '@/components/control';
 import { useQueryStrings } from '@/hooks/use-query-strings';
 import { useResetModification } from '@/hooks/use-reset-modification';
+import { optionalQueryInteger } from '@/utils/query-integer';
 import { rethrowIfStaleBundleError } from '@/utils/stale-bundle-error';
 
 import { OperationTooltip } from '../../components/tooltip-oss-item';
@@ -23,7 +24,7 @@ import { OssEditState } from './oss-edit-state';
 import { OssTabs } from './oss-tabs';
 
 const paramsSchema = z.strictObject({
-  id: z.coerce.number(),
+  id: optionalQueryInteger(),
   tab: tabQuerySchema(OssTabID, OssTabID.GRAPH)
 });
 

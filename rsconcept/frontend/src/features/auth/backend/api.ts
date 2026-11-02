@@ -6,7 +6,7 @@ import { syncSentryUser } from '@/services/sentry';
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { cacheCsrfFromAuth } from '@/backend/csrf-token';
-import { getRetryDelay, isTransientNetworkError } from '@/backend/query-client';
+import { isUnauthenticatedAxiosError } from '@/backend/unauthenticated-error';
 
 import {
   anonymousCurrentUser,
@@ -71,30 +71,21 @@ export const authApi = {
 
 // ======= Internal =========
 
+/**
+ * Signed-in user, or the anonymous payload when the server reports that nobody is signed in.
+ * A transport failure is thrown so a refetch leaves the previous cached user in place.
+ */
 async function getCurrentUserOrAnonymous(signal: AbortSignal | undefined): Promise<ICurrentUser> {
-  for (let attemptIndex = 0; attemptIndex < 3; attemptIndex += 1) {
-    try {
-      return await axiosGet<ICurrentUser>({
-        endpoint: '/users/api/auth',
-        options: { signal },
-        notifyOnError: false
-      });
-    } catch (error) {
-      if (!isTransientNetworkError(error) || attemptIndex === 2) {
-        if (isTransientNetworkError(error)) {
-          return anonymousCurrentUser;
-        }
-        throw error;
-      }
-      await delay(getRetryDelay(attemptIndex));
+  try {
+    return await axiosGet<ICurrentUser>({
+      endpoint: '/users/api/auth',
+      options: { signal },
+      notifyOnError: false
+    });
+  } catch (error) {
+    if (isUnauthenticatedAxiosError(error)) {
+      return anonymousCurrentUser;
     }
+    throw error;
   }
-
-  return anonymousCurrentUser;
-}
-
-function delay(milliseconds: number): Promise<void> {
-  return new Promise(resolve => {
-    setTimeout(resolve, milliseconds);
-  });
 }
