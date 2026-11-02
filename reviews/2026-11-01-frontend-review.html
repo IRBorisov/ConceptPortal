@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ConceptPortal Frontend Review · 2026-11-01</title>
+<meta name="description" content="Ревью frontend ConceptPortal: 6 подтверждённых дефектов, приоритеты P1–P2, воспроизведения и план исправлений.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,650&display=swap" rel="stylesheet">
+<style>
+/* Визуальная система reviews/2026-10-31-code-review.html. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #1b2230;
+  --muted: #5b6475;
+  --line: #dde1e8;
+  --accent: #2f5aa8;
+  --sev-high: #b3261e;
+  --sev-high-bg: #fbe9e7;
+  --sev-med: #9a5b00;
+  --sev-med-bg: #fdf1dc;
+  --sev-low: #4a5a73;
+  --sev-low-bg: #eaeef4;
+  --good: #1f7a4a;
+  --good-bg: #e3f3ea;
+  --code-bg: #eef1f6;
+  --display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b5; --line: #2c3442;
+    --accent: #8fb0ee; --sev-high: #ff9a8f; --sev-high-bg: #3a1f1e; --sev-med: #f2bd6a; --sev-med-bg: #3a2c15;
+    --sev-low: #b4c1d6; --sev-low-bg: #242c39; --good: #7fd3a4; --good-bg: #17302a; --code-bg: #232a35;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b5; --line: #2c3442;
+  --accent: #8fb0ee; --sev-high: #ff9a8f; --sev-high-bg: #3a1f1e; --sev-med: #f2bd6a; --sev-med-bg: #3a2c15;
+  --sev-low: #b4c1d6; --sev-low-bg: #242c39; --good: #7fd3a4; --good-bg: #17302a; --code-bg: #232a35;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.6 var(--body); }
+.wrap { max-width: 940px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 72px; display: grid; gap: 44px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: 2.1rem; font-weight: 650; }
+h2 { font-size: 1.45rem; font-weight: 650; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+h3 { font-size: 1.06rem; font-weight: 650; }
+p { margin: 0; max-width: 74ch; }
+code { font-family: var(--mono); font-size: 0.85em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+a { color: var(--accent); }
+section { display: grid; gap: 16px; min-width: 0; }
+.eyebrow { font: 500 0.75rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+header { display: grid; gap: 12px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 20px; color: var(--muted); font-size: 0.88rem; }
+.verdict { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; display: grid; gap: 12px; }
+.verdict .call { font: 650 1.15rem/1.35 var(--display); }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: 500 0.76rem/1 var(--mono); padding: 5px 9px; border-radius: 999px; white-space: nowrap; }
+.chip.high { color: var(--sev-high); background: var(--sev-high-bg); }
+.chip.med { color: var(--sev-med); background: var(--sev-med-bg); }
+.chip.low { color: var(--sev-low); background: var(--sev-low-bg); }
+.chip.good { color: var(--good); background: var(--good-bg); }
+.chip.tag { color: var(--muted); background: var(--code-bg); }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.89rem; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 0.7rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+td.num, th.num { text-align: right; white-space: nowrap; }
+.findings { display: grid; gap: 12px; }
+.finding { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--sev-low); border-radius: 8px; padding: 16px 18px; display: grid; gap: 8px; min-width: 0; }
+.finding.p0 { border-left-width: 6px; border-left-color: var(--sev-high); }
+.finding.p1 { border-left-color: var(--sev-high); }
+.finding.p2 { border-left-color: var(--sev-med); }
+.finding .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; }
+.finding .id { font: 500 0.8rem/1 var(--mono); color: var(--muted); }
+.finding h3 { flex: 1 1 280px; }
+.finding .where { font: 0.79rem/1.45 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.finding p { font-size: 0.93rem; }
+.finding .fix { color: var(--muted); }
+.finding b { color: var(--fg); font-weight: 600; }
+.probe { background: var(--code-bg); border-radius: 6px; padding: 10px 12px; font: 0.8rem/1.5 var(--mono); overflow-x: auto; white-space: pre; margin: 0; }
+ul.plain, ol.plain { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; max-width: 76ch; }
+.toc { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.88rem; }
+.note { color: var(--muted); font-size: .85rem; }
+footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); padding-top: 16px; }
+@media (max-width: 560px) {
+  h1 { font-size: 1.65rem; }
+  .wrap { padding-block: 24px 48px; padding-inline: 16px; gap: 36px; }
+  .finding { padding: 14px; }
+}
+html { scroll-behavior: smooth; }
+[id] { scroll-margin-top: 20px; }
+.finding:target { outline: 2px solid var(--accent); outline-offset: 3px; }
+.finding .probe { white-space: pre-wrap; overflow-wrap: anywhere; }
+@media print {
+  :root { --bg: white; --surface: white; --fg: #111; --muted: #444; --line: #bbb; --code-bg: #f4f4f4; color-scheme: light; }
+  .wrap { max-width: none; padding: 0; gap: 24px; }
+  .toc { display: none; }
+  .finding { break-inside: avoid; }
+  a { color: inherit; }
+  .scroll { overflow: visible; }
+}
+</style>
+</head>
+<body><main class="wrap">
+
+<header>
+  <div class="eyebrow">Ревью кода · 2026-11-01</div>
+  <h1>ConceptPortal: ревью frontend</h1>
+  <div class="meta"><span>Пакет <code>frontend</code> · версия <code>1.2.0</code></span><span>Срез <code>07cddd8a1bcc</code></span><span>6 подтверждённых дефектов</span></div>
+  <nav class="toc" aria-label="Разделы отчёта"><a href="#summary">Вывод</a><a href="#priorities">Приоритеты</a><a href="#plan">План работ</a><a href="#decisions">Нужные решения</a><a href="#p1">P1</a><a href="#p2">P2</a><a href="#categories">Категории</a><a href="#scope">Границы проверки</a></nav>
+</header>
+
+<section id="summary">
+  <div class="verdict">
+    <div class="eyebrow">Вывод</div>
+    <div class="call">До следующего выпуска сессии и профиля нужно перестать принимать обрыв сети за выход из аккаунта.</div>
+    <p>Всего 6 дефектов: 1 уровня P1 и 5 уровня P2. P0 и P3 не выявлены. Сетевой сбой при обновлении сессии записывает в кеш анонимного пользователя. Из-за этого профиль, шаблоны промптов и создание элемента разбираются, а редактор схемы на время теряет права.</p>
+    <p>Остальное ломает отдельные сценарии. Регистрация отвергает нормальные пароли из-за короткого фрагмента имени или почты. Нечисловой параметр адреса роняет страницу схемы. Контекстный поиск библиотеки показывает чужой или полный список. Короткий поисковый шаблон может на секунды и дольше занять вкладку.</p>
+    <p>Штатные 376 тестов frontend прошли. Независимые сценарии ожидаемого поведения падают на проверяемых дефектах. Поиск с 24 символами <code>(a+)+$</code> убит отдельным процессом по лимиту 4 секунды.</p>
+    <p><b>Вердикт.</b> Выпускать затронутую работу с сессией после исправления <a href="#f1">1</a>. Остальные исправить планово. Это проверка пакета, отдельный PR на merge не оценивался. Локальный <code>main</code> отстаёт от <code>origin/main</code> на 4 коммита, отчёт относится к этому снимку.</p>
+  </div>
+</section>
+
+<section id="priorities"><h2>Приоритеты</h2><div class="scroll"><table><thead><tr><th>Приоритет</th><th>Критерий</th><th>Когда</th><th>Дефекты</th><th class="num">Кол-во</th></tr></thead><tbody>
+<tr><td><span class="chip high">P0</span></td><td>Подтверждённый тяжёлый ущерб без особых условий</td><td>Срочный выпуск</td><td>Не найдено</td><td class="num">0</td></tr>
+<tr><td><span class="chip high">P1</span></td><td>Ложное состояние сессии при обычном обновлении и потеря несохранённого ввода</td><td>До ближайшего выпуска затронутой функциональности</td><td><a href="#f1">1</a></td><td class="num">1</td></tr>
+<tr><td><span class="chip med">P2</span></td><td>Ограниченная ошибка валидации, адреса, списка или отзывчивости</td><td>Плановая итерация после P1</td><td><a href="#f2">2</a>, <a href="#f3">3</a>, <a href="#f4">4</a>, <a href="#f5">5</a>, <a href="#f6">6</a></td><td class="num">5</td></tr>
+<tr><td><span class="chip low">P3</span></td><td>Второстепенная диагностика без влияния на данные и основной сценарий</td><td>Попутно</td><td>Не найдено</td><td class="num">0</td></tr>
+</tbody></table></div><p class="note">Номера даны по файлам и строкам. Карточки идут от более срочных к менее срочным. Приоритет отделён от уверенности. У №1 нет подтверждённого доступа к чужим данным, поэтому P0 ему не присвоен.</p></section>
+
+<section id="plan"><h2>План работ</h2><div class="scroll"><table><thead><tr><th>Порядок</th><th>Пакет</th><th>Дефекты</th><th>Зависимости и действие</th><th>Приёмка</th></tr></thead><tbody>
+<tr><td>1</td><td><b>Сохранять сессию при обрыве сети</b></td><td><a href="#f1">1</a></td><td>Сетевая ошибка без ответа должна оставлять предыдущего пользователя или завершать запрос ошибкой. Анонимный объект годится для ответа сервера об отсутствии сессии.</td><td>Кеш с пользователем 7 после трёх сетевых отказов остаётся с id 7. Профиль и редактор не переходят в гостевое состояние.</td></tr>
+<tr><td>2</td><td><b>Считать сходство пароля по порогу 0,7</b></td><td><a href="#f2">2</a></td><td>Убрать признание любой подстроки полным совпадением. Короткие части имени и почты не должны давать коэффициент 1.</td><td><code>PortalPass123</code> при имени Al и почте ivanov@example.com проходит клиентскую регистрацию. Пароль с буквой a не отвергается из-за адреса a@b.co.</td></tr>
+<tr><td>3</td><td><b>Принять кривой адрес без падения страницы</b></td><td><a href="#f3">3</a></td><td>Общий разбор id, версии и active. Нечисловое значение не превращать в NaN и не бросать из рендера.</td><td><code>/rsforms/abc</code> открывает страницу «не найдено». <code>?v=foo</code> и <code>?active=bar</code> у существующей схемы не приводят к ZodError.</td></tr>
+<tr><td>4</td><td><b>Показывать результат текущего контекстного запроса</b></td><td><a href="#f4">4</a>, <a href="#f5">5</a></td><td>Сначала решить, что видно, пока запрос идёт. Затем не подставлять ids прошлого запроса и не снимать фильтр при ошибке.</td><td>Запрос zebra не показывает ids запроса apple. Ошибка поиска не показывает всю библиотеку как результат.</td></tr>
+<tr><td>5</td><td><b>Ограничить пользовательское регулярное выражение</b></td><td><a href="#f6">6</a></td><td>После списка поиска. Ограничить время или отклонить шаблон, который не завершается быстро.</td><td>Шаблон <code>(a+)+$</code> на строке из 24 символов a заканчивается в отдельном процессе быстрее лимита в 1 секунду.</td></tr>
+</tbody></table></div><p>В каждом пакете сначала перенести соответствующее воспроизведение в штатные тесты frontend. После исправления должны пройти эти тесты и текущие 376. Для №1 отдельно проверить профиль, страницу шаблонов и открытый редактор схемы.</p><p class="note">Трудоёмкость не измерялась. Порядок учитывает ущерб и общие участки. Календарных обещаний в отчёте нет.</p></section>
+
+<section id="decisions"><h2>Нужные решения</h2><p>Для №1, №2, №3 и №6 решение пользователя не требуется. Ожидаемое поведение следует из текущей сессии, порога 0,7 в коде, уже существующего перехода на страницу «не найдено» и требования, чтобы короткий поиск не занимал вкладку.</p><p>Для №4 нужно выбрать вид списка, пока контекстный поиск ещё не ответил. Пустой список с индикатором загрузки и прежний список с явной пометкой «ещё старый запрос» оба допустимы. Сейчас показывается прежний набор без пометки. От этого выбора зависит приёмка ожидания, не приёмка ошибки №5. При ошибке список не должен выглядеть как успешный поиск по всей библиотеке.</p></section>
+
+<section id="p1"><h2>P1. До ближайшего выпуска</h2><div class="findings">
+<article class="finding p1" id="f1">
+<div class="top"><span class="id">#1 · P1</span><h3>Обрыв сети записывает в сессию анонимного пользователя</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/frontend/src/features/auth/backend/api.ts:85</p>
+<pre class="probe">return anonymousCurrentUser;</pre>
+<p class="note">Уверенность: точно. Категория: Проглатывание ошибок.</p>
+<p><b>Сценарий.</b> В кеш запроса <code>/users/api/auth</code> положить пользователя с id 7. Три раза подряд <code>GET</code> завершается AxiosError без <code>response</code>. Вызвать <code>fetchQuery</code> со <code>staleTime: 0</code>.</p>
+<p><b>Ожидаемое и фактическое.</b> Ожидается сохранённый id 7 или ошибка запроса, по которой вызывающий код видит сбой. Фактически запрос успешно возвращает <code>anonymousCurrentUser</code>, и в кеше оказывается <code>id: null</code>.</p>
+<p><b>Причина.</b> После третьей сетевой ошибки функция возвращает анонимный объект, а не пробрасывает ошибку. Для TanStack Query это успешные данные. У запроса <code>refetchOnWindowFocus: 'always'</code> и <code>staleTime</code> в сутки, поэтому один неудачный refetch при фокусе окна заменяет вошедшего пользователя до следующего фокуса или восстановления сети.</p>
+<p><b>Ущерб и условия.</b> <code>RequireAuth</code> при <code>id === null</code> убирает детей. Несохранённый профиль, шаблоны промптов и форма создания элемента при этом разбираются. Редактор схемы через <code>useAdjustRole</code> получает роль читателя, пока сессионная cookie на сервере может оставаться действительной. Условие обычное: фокус окна во время короткого обрыва сети.</p>
+<p class="fix"><b>Что сделать.</b> Сетевую ошибку без ответа пробрасывать. Анонимный объект оставлять для ответа, в котором сервер явно сообщает об отсутствии пользователя. При ошибке обновления сохранять предыдущие данные кеша.</p>
+<p class="fix"><b>Приёмка.</b> Пользователь 7 остаётся в кеше после трёх отказов сети. Страницы под <code>RequireAuth</code> не сменяются приглашением войти. Ответ 401 по-прежнему переводит интерфейс в гостевое состояние.</p>
+<p class="note">Проверка: <a href="2026-11-01-frontend-review/src/repro.test.ts">repro.test.ts</a> · <code>does not replace the session with an anonymous user</code>. Транспорт заменён отказом без ответа. Ожидаемое поведение нарушено. Штатный набор эту ошибку не выявил.</p>
+</article>
+</div></section>
+
+<section id="p2"><h2>P2. Планово</h2><div class="findings">
+<article class="finding p2" id="f2">
+<div class="top"><span class="id">#2 · P2</span><h3>Короткий фрагмент имени или почты запрещает пароль</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/frontend/src/features/auth/backend/password-validation.ts:51</p>
+<pre class="probe">if (a === b || a.includes(b) || b.includes(a)) {
+  return 1;
+}</pre>
+<p class="note">Уверенность: точно. Категория: Безопасность и проверка входных данных.</p>
+<p><b>Сценарий.</b> Регистрация: username <code>ivanov</code>, почта <code>ivanov@example.com</code>, имя <code>Al</code>, пароль <code>PortalPass123</code>. Отдельно проверить пароль против адреса <code>a@b.co</code>.</p>
+<p><b>Ожидаемое и фактическое.</b> Порог в коде равен 0,7. Доля совпадения <code>portalpass123</code> и <code>al</code> по алгоритму Django SequenceMatcher равна 0,267, с <code>a</code> равна 0,143. Ожидается принятие пароля. Фактически <code>isPasswordTooSimilar</code> возвращает true, и <code>schemaUserSignup</code> отклоняет форму.</p>
+<p><b>Причина.</b> Любое вхождение части поля пользователя в пароль получает коэффициент 1, минуя порог. Части короче осмысленного слова не отсекаются. Из <code>example.com</code> получается часть <code>com</code>, из <code>a@b.co</code> получается часть <code>a</code>.</p>
+<p><b>Ущерб и условия.</b> Клиент не даёт отправить регистрацию с паролем, который порог 0,7 и проверка Django без этого ярлыка пропускают. Достаточно короткого имени или однобуквенной части адреса. Сервер при регистрации вызывает <code>validate_password</code> без объекта пользователя, поэтому сходство с полями на сервере для новой учётной записи не срабатывает. Блокирует именно форма.</p>
+<p class="fix"><b>Что сделать.</b> Считать коэффициент Левенштейна для каждой части и сравнивать его с 0,7. Не считать короткую часть автоматическим совпадением.</p>
+<p class="fix"><b>Приёмка.</b> <code>PortalPass123</code> при имени Al принимается. Пароль, который действительно близок к username или к длинной части почты, по-прежнему отвергается. Существующий тест на <code>ivanov2026</code> остаётся красным для похожего пароля.</p>
+<p class="note">Проверка: <a href="2026-11-01-frontend-review/src/repro.test.ts">repro.test.ts</a> · <code>keeps a password whose only overlap with a user field is a short fragment</code>. Коэффициенты Django посчитаны отдельно через <code>difflib.SequenceMatcher</code>. Штатный тест проверяет только <code>ivanov2026</code> и не содержит короткой части.</p>
+</article>
+
+<article class="finding p2" id="f3">
+<div class="top"><span class="id">#3 · P2</span><h3>Нечисловой адрес роняет страницу схемы до её обработки ошибки</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/frontend/src/features/rsform/pages/rsform-page/rsform-page.tsx:28</p>
+<pre class="probe">version: z.coerce
+  .number()
+  .nullish()
+  .transform(v =&gt; v ?? undefined),</pre>
+<p class="note">Уверенность: точно. Категория: Безопасность и проверка входных данных.</p>
+<p><b>Сценарий.</b> Открыть <code>/rsforms/12?v=foo&amp;active=bar</code> и отдельно <code>/rsforms/abc</code>. Тот же приём числа стоит у модели, операционной схемы, создания элемента (<code>modelFrom</code>) и шаблонов промптов (<code>active</code>).</p>
+<p><b>Ожидаемое и фактическое.</b> Для неизвестной вкладки уже есть запасное значение. Для нечисловых id, версии и active ожидается страница «не найдено» или игнорирование параметра. Фактически <code>Number('foo')</code> даёт NaN, а <code>z.coerce.number()</code> бросает ZodError: <code>expected number, received NaN</code>. Разбор стоит до <code>ErrorBoundary</code> страницы и до проверки <code>if (!urlData.id)</code>.</p>
+<p><b>Причина.</b> <code>z.coerce.number()</code> не отвергает строку заранее и не подставляет запасное значение. <code>nullish</code> пропускает только null и undefined. Вкладка защищена через <code>tabQuerySchema</code>, соседние параметры нет.</p>
+<p><b>Ущерб и условия.</b> Существующая схема с испорченным <code>v</code> или <code>active</code> не открывается. Маршрут показывает общий <code>ErrorFallback</code> и, при включённом Sentry, отправляет исключение. Достаточно набранного или сохранённого адреса. Данные схемы этот запрос не меняет.</p>
+<p class="fix"><b>Что сделать.</b> Общий разбор целого из адреса: пустое и нецелое значение дают undefined. Для id без числа переходить на страницу «не найдено», для версии и active открывать схему без этих параметров.</p>
+<p class="fix"><b>Приёмка.</b> <code>?v=foo</code> и <code>?active=bar</code> не бросают. <code>/rsforms/abc</code>, <code>/models/abc</code> и <code>/oss/abc</code> показывают «не найдено». Неизвестная вкладка по-прежнему заменяется запасной.</p>
+<p class="note">Проверка: <a href="2026-11-01-frontend-review/src/repro.test.ts">repro.test.ts</a> · <code>does not throw on a non-numeric version</code>. Схема страницы не экспортируется, в тесте повторено то же выражение и подключён настоящий <code>tabQuerySchema</code>. Компонент в браузере не монтировался. Переход на <code>ErrorFallback</code> следует из <code>errorElement</code> в <code>router.tsx</code>.</p>
+</article>
+
+<article class="finding p2" id="f4">
+<div class="top"><span class="id">#4 · P2</span><h3>Новый контекстный поиск показывает совпадения предыдущего</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/frontend/src/features/library/backend/use-library-context-search.ts:45</p>
+<pre class="probe">placeholderData: previous =&gt; previous</pre>
+<p class="note">Уверенность: точно. Категория: Прочее.</p>
+<p><b>Сценарий.</b> Контекстный поиск <code>apple</code> вернул ids <code>[1]</code>. Затем ключ меняется на <code>zebra</code>, а новый запрос ещё не завершён.</p>
+<p><b>Ожидаемое и фактическое.</b> Список должен относиться к <code>zebra</code> или быть явно незавершённым. Фактически при <code>fetchStatus: fetching</code> данные остаются <code>[1]</code>.</p>
+<p><b>Причина.</b> <code>placeholderData</code> подставляет успешный результат прошлого ключа. <code>matchIds</code> берёт <code>data.ids</code> и не смотрит, что это заполнитель другого запроса. Фильтр библиотеки оставляет элементы с этими id.</p>
+<p><b>Ущерб и условия.</b> Пока сервер ищет новый текст, таблица и выгрузка CSV показывают совпадения старого текста. Поле поиска уже содержит новый запрос, индикатор загрузки стоит на поле, а не объясняет строки. Нужен предыдущий успешный поиск и второй запрос.</p>
+<p class="fix"><b>Что сделать.</b> Не считать placeholder текущего ответа. До ответа показывать выбранное в разделе решений состояние. Подпись должна отличать его от готового результата.</p>
+<p class="fix"><b>Приёмка.</b> Во время запроса <code>zebra</code> таблица не содержит набор <code>apple</code> как готовый результат. После ответа остаются только ids нового ответа.</p>
+<p class="note">Проверка: <a href="2026-11-01-frontend-review/src/repro.test.ts">repro.test.ts</a> · <code>does not treat a pending or failed search</code>. Наблюдатель TanStack Query с тем же <code>placeholderData</code>. Ожидаемое поведение нарушено.</p>
+</article>
+
+<article class="finding p2" id="f5">
+<div class="top"><span class="id">#5 · P2</span><h3>Ошибка контекстного поиска показывает всю библиотеку</h3><span class="chip tag">по коду</span></div>
+<p class="where">rsconcept/frontend/src/features/library/backend/use-apply-library-filter.ts:43</p>
+<pre class="probe">if (contextMatchIds !== null) {</pre>
+<p class="note">Уверенность: точно. Категория: Проглатывание ошибок.</p>
+<p><b>Сценарий.</b> Контекстный поиск с непустым текстом и выбранными полями завершается сетевой ошибкой.</p>
+<p><b>Ожидаемое и фактическое.</b> Ожидается пустой список или явное сообщение, что поиск не выполнен. Запрос действительно переходит в <code>status: error</code> и <code>data: undefined</code>, это воспроизведено. <code>matchIds</code> при этом становится null. Фильтр при null не ограничивает строки, поэтому таблица остаётся полным текущим набором библиотеки.</p>
+<p><b>Причина.</b> null одновременно значит «запроса нет» и «ответ не получен». Вторая ветка пропускает фильтр. Тост транспорта может появиться, но список выглядит как завершённый показ всех элементов.</p>
+<p><b>Ущерб и условия.</b> После сбоя пользователь видит всю доступную библиотеку при введённом запросе и может выгрузить её как результат поиска. Нужны режим контекстного поиска, непустой запрос и отказ запроса.</p>
+<p class="fix"><b>Что сделать.</b> Отличать отсутствие запроса от ошибки. При ошибке не показывать неотфильтрованный список как результат. Оставить тост или текст ошибки.</p>
+<p class="fix"><b>Приёмка.</b> Сбой <code>context-search</code> не оставляет в таблице элементы, которые сервер не вернул. Пустой успешный ответ по-прежнему показывает пустую таблицу.</p>
+<p class="note">Проверка запроса: тот же тест, поля <code>failedStatus: error</code> и <code>failedIds: null</code>. Ветка фильтра прочитана в <code>use-apply-library-filter.ts</code> и в браузере не прогонялась. Таблицу как страницу не открывал.</p>
+</article>
+
+<article class="finding p2" id="f6">
+<div class="top"><span class="id">#6 · P2</span><h3>Короткий поисковый шаблон надолго занимает вкладку</h3><span class="chip good">воспроизведено</span></div>
+<p class="where">rsconcept/frontend/src/services/search/text-matcher.ts:24</p>
+<pre class="probe">this.query = new RegExp(query, isCaseSensitive ? '' : 'i');</pre>
+<p class="note">Уверенность: точно. Категория: Производительность и конкурентность.</p>
+<p><b>Сценарий.</b> Собрать <code>TextMatcher</code> с запросом <code>(a+)+$</code> и проверить строку из 22 и 24 букв a с хвостом <code>b</code>.</p>
+<p><b>Ожидаемое и фактическое.</b> Короткий запрос в поле поиска должен быстро вернуть да или нет. 22 символа заняли 1153 мс и вернули false. 24 символа не завершились за 4 секунды, процесс убит лимитом.</p>
+<p><b>Причина.</b> Текст пользователя компилируется как регулярное выражение. Вложенный квантификатор заставляет движок перебирать варианты до отказа. Запасной поиск подстроки выполняется только после возврата <code>test</code>, поэтому во время зависания он не помогает. Тот же класс стоит на поиске конституент и на поиске библиотеки по полям карточки.</p>
+<p><b>Ущерб и условия.</b> Один ввод в поле поиска блокирует вкладку. Длина строки около двадцати символов уже достаточна. Это действие самого пользователя или вставленный шаблон, не запрос к серверу.</p>
+<p class="fix"><b>Что сделать.</b> Ограничить время проверки или не исполнять шаблон с вложенными квантификаторами как выражение. Для такого ввода сразу использовать поиск подстроки, который уже есть для невалидного шаблона.</p>
+<p class="fix"><b>Приёмка.</b> Запрос <code>(a+)+$</code> на строке из 24 символов a завершается в отдельном процессе быстрее одной секунды. Обычные шаблоны вроде <code>F\d+</code> по-прежнему ищутся как выражения.</p>
+<p class="note">Проверка: <a href="2026-11-01-frontend-review/redos-worker.mjs">redos-worker.mjs</a>, лимит <a href="2026-11-01-frontend-review/run-redos-limit.mjs">run-redos-limit.mjs</a>, цифры в <a href="2026-11-01-frontend-review/results.json">results.json</a>. Процесс отдельный. Лимит 4 секунды относится к прогону, не к допустимому времени интерфейса.</p>
+</article>
+</div></section>
+
+<section id="categories"><h2>Итог по категориям</h2><div class="scroll"><table><thead><tr><th>Категория</th><th>Дефекты</th><th class="num">Кол-во</th></tr></thead><tbody>
+<tr><td>Игнорирование контекста проекта и дублирование</td><td>Не найдено</td><td class="num">0</td></tr>
+<tr><td>Производительность и конкурентность</td><td><a href="#f6">6</a></td><td class="num">1</td></tr>
+<tr><td>Несоответствие комментариев реализации</td><td>Не найдено</td><td class="num">0</td></tr>
+<tr><td>Безопасность и проверка входных данных</td><td><a href="#f2">2</a>, <a href="#f3">3</a></td><td class="num">2</td></tr>
+<tr><td>Проглатывание ошибок</td><td><a href="#f1">1</a>, <a href="#f5">5</a></td><td class="num">2</td></tr>
+<tr><td>Тесты-тавтологии и пробелы в проверках</td><td>Не найдено</td><td class="num">0</td></tr>
+<tr><td>Несуществующие API и зависимости</td><td>Не найдено</td><td class="num">0</td></tr>
+<tr><td>Прочее</td><td><a href="#f4">4</a></td><td class="num">1</td></tr>
+</tbody></table></div><p class="note">У каждой находки одна основная категория. №2 относится к отклонению допустимого ввода, отдельная уязвимость не доказана. №4 и №5 оба портят список библиотеки, причины разные, поэтому это два дефекта. Пробелы штатных тестов указаны в карточках и здесь отдельно не считаются. Пустая категория не означает полный обход пакета.</p></section>
+
+<section id="scope"><h2>Границы проверки</h2>
+<h3>Связки дефектов</h3>
+<ul class="plain">
+<li>№4 и №5 портят один список. №4 подменяет его старыми ids, №5 при ошибке снимает фильтр. Исправлять вместе, проверки оставить раздельными.</li>
+<li>№1 скрывает сетевой сбой успешным анонимным ответом. Пока он есть, легко принять разбор профиля за обычный выход.</li>
+<li>№3 повторяется в страницах схемы, модели, операционной схемы, создания элемента и шаблонов. Это один приём разбора, не пять дефектов.</li>
+<li>Штатные тесты не покрывают эти сценарии. Отдельных находок про каждый отсутствующий тест нет.</li>
+</ul>
+<h3>Ожидания, зафиксированные до чтения реализации</h3>
+<p>Вошедший пользователь остаётся вошедшим, пока сервер не сообщит об отсутствии сессии. Пустой и неверный адрес не роняют страницу. Пароль сравнивается с полями пользователя по объявленному порогу. Список поиска относится к текущему запросу. Отказ запроса виден как отказ. Короткий ввод в поле поиска завершается быстро. Пустой поисковый запрос по-прежнему показывает все элементы, это уже закреплено тестом.</p>
+<p class="note">Отдельного ТЗ на frontend нет. Ожидания взяты из <code>docs/architecture.md</code>, <code>rsconcept/frontend/AGENTS.md</code>, текущих тестов и серверных <code>AUTH_PASSWORD_VALIDATORS</code>. Для непросмотренных экранов выводов нет.</p>
+<h3>Прогоны и доказательства</h3>
+<div class="scroll"><table><thead><tr><th>Проверка</th><th>Результат</th><th>Что подтверждает</th></tr></thead><tbody>
+<tr><td>Штатные тесты frontend</td><td>56 файлов, 376 тестов прошли</td><td>Существующий набор остаётся зелёным при этих дефектах.</td></tr>
+<tr><td>Независимые сценарии</td><td>Падают на ожидаемом поведении №1–№4 и на разборе адреса №3</td><td>Настоящие функции пароля, запрос сессии, схема Zod и наблюдатель Query.</td></tr>
+<tr><td>Отдельный процесс для №6</td><td>22 символа за 1153 мс. 24 символа убиты на 4 с</td><td>Зависание <code>TextMatcher</code>, не основного процесса ревью.</td></tr>
+</tbody></table></div>
+<p>Доказательства: <a href="2026-11-01-frontend-review/src/repro.test.ts">исходник проверок</a>, <a href="2026-11-01-frontend-review/vitest.config.mjs">конфигурация</a>, <a href="2026-11-01-frontend-review/results.json">сводка</a>, <a href="2026-11-01-frontend-review/redos-worker.mjs">поиск</a>, <a href="2026-11-01-frontend-review/run-redos-limit.mjs">лимит процесса</a>.</p>
+<pre class="probe">pnpm --filter frontend test
+pnpm --dir rsconcept/frontend exec vitest run --config reviews/2026-11-01-frontend-review/vitest.config.mjs
+node reviews/2026-11-01-frontend-review/run-redos-limit.mjs 24 4000</pre>
+<h3>Что не проверено</h3>
+<ul class="plain">
+<li>Пакет содержит больше тысячи файлов TypeScript. Построчно просмотрены сессия, пароль, разбор адресов основных редакторов, контекстный поиск, текстовый искатель, выборочно обновление кеша после мутаций, показ HTML-ошибки и запись песочницы. Графы, PDF, онбординг, каталоги переводов и остальные диалоги не объявляются проверенными.</li>
+<li>Страницы в браузере не открывались. Для №3 и №5 виден результат функции, не снимок экрана.</li>
+<li>Живой backend, CSRF в браузере и гонка двух вкладок не поднимались. Для №1 заменён только транспорт авторизации.</li>
+<li>Реестр зависимостей и CVE не проверялись. Импорты в прогнанных сценариях разрешились установленными пакетами.</li>
+<li>Запись песочницы в IndexedDB не дала подтверждённой потери. Перекрывающиеся <code>saveBundle</code> вызывают <code>put</code> до первого ожидания, отдельный дефект из этого не сделан.</li>
+</ul>
+</section>
+
+<footer>Отчёт следует за <a href="2026-11-01-domain-review.html">ревью domain от 2026-11-01</a> и за <a href="2026-10-31-code-review.html">ревью от 2026-10-31</a>, где frontend смотрели выборочно. Код продукта не изменялся.</footer>
+</main></body></html>

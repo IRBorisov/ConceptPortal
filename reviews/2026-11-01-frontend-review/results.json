@@ -1,0 +1,23 @@
+{
+  "commit": "07cddd8a1bcc",
+  "note": "Local main is 4 commits behind origin/main. Review is of this checkout.",
+  "password": {
+    "input": "PortalPass123 with first_name Al and email ivanov@example.com",
+    "clientSimilar": true,
+    "signupAccepted": false,
+    "djangoRatioAl": 0.267
+  },
+  "auth": {
+    "seededUserId": 7,
+    "afterNetworkFailure": null
+  },
+  "contextSearch": {
+    "pendingIdsWhileNextQueryFetches": [1],
+    "failedStatus": "error",
+    "failedIds": null
+  },
+  "textMatcher": [
+    { "length": 22, "matched": false, "elapsedMs": 1153, "killed": false },
+    { "length": 24, "killed": true, "limitMs": 4000 }
+  ]
+}
