@@ -1,9 +1,35 @@
 import { describe, expect, it } from "vitest";
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
+import { CallToolResultSchema } from '@modelcontextprotocol/sdk/types.js';
 
 import { buildRSToolMcpServer } from "./server";
 import { TOOL_DEFINITIONS } from "./tools";
 
 describe("buildRSToolMcpServer", () => {
+  it('serializes model writes and schema edits by default for stdio and other transports', async () => {
+    const server = buildRSToolMcpServer();
+    const client = new Client({ name: 'default-queue-test', version: '1' });
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    try {
+      await server.connect(serverTransport);
+      await client.connect(clientTransport);
+      await client.callTool({ name: 'apply_schema_patch', arguments: { items: [{ alias: 'X1' }] } });
+      const [model, patch] = await Promise.all([
+        client.callTool({ name: 'set_model_values', arguments: { set: [{ target: 1, value: { 0: 'one' } }] } }),
+        client.callTool({ name: 'apply_schema_patch', arguments: { items: [{ alias: 'X2' }] } }),
+      ]);
+      expect(model.isError).not.toBe(true);
+      expect(patch.isError).not.toBe(true);
+      const state = CallToolResultSchema.parse(await client.callTool({ name: 'get_session_state', arguments: {} }));
+      const content = state.content[0];
+      if (content.type !== 'text') throw new Error('Expected text result');
+      expect(JSON.parse(content.text)).toMatchObject({ itemCount: 2, modelItemCount: 1 });
+    } finally {
+      await client.close();
+      await server.close();
+    }
+  });
   it("exposes the rstool v2 contract as MCP tools", () => {
     const server = buildRSToolMcpServer();
     expect(server).toBeDefined();

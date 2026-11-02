@@ -7,6 +7,28 @@ import { handleStdioRequest, STDIO_METHODS } from './stdio-handler';
 describe('handleStdioRequest', () => {
   const tool = new RSToolAgent();
 
+  it('serializes overlapping calls and continues after a model update error', async () => {
+    const sessionTool = new RSToolAgent();
+    await handleStdioRequest(sessionTool, { id: 100, method: 'applySchemaPatch', params: { items: [{ alias: 'X1' }] } });
+    const successful = await Promise.all([
+      handleStdioRequest(sessionTool, { id: 110, method: 'setModelValues', params: { set: [{ target: 1, value: { 0: 'one' } }] } }),
+      handleStdioRequest(sessionTool, { id: 111, method: 'applySchemaPatch', params: { items: [{ alias: 'X2' }] } }),
+    ]);
+    expect(successful.every(response => response.ok)).toBe(true);
+    const [failed, patch] = await Promise.all([
+      handleStdioRequest(sessionTool, {
+        id: 101, method: 'setModelValues',
+        params: { set: [{ target: 1, value: { 0: 'one' } }, { target: 999, value: 1 }] },
+      }),
+      handleStdioRequest(sessionTool, { id: 102, method: 'applySchemaPatch', params: { items: [{ alias: 'X3' }] } }),
+    ]);
+    expect(failed.ok).toBe(false);
+    expect(patch.ok).toBe(true);
+    expect(sessionTool.getSessionState().items.map(item => item.alias)).toEqual(['X1', 'X2', 'X3']);
+    const result = await handleStdioRequest(sessionTool, { id: 103, method: 'setModelValues', params: { set: [{ target: 1, value: { 0: 'after error' } }] } });
+    expect(result.ok).toBe(true);
+  });
+
   it('responds to ping with contract version', async () => {
     const response = await handleStdioRequest(tool, { id: 1, method: 'ping' });
     expect(response).toEqual({

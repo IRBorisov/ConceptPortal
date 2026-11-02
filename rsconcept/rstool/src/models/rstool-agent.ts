@@ -139,8 +139,8 @@ export class RSToolAgent implements RSToolAgentContract {
       return null;
     }
     if (!this.sessions.has(this.currentSessionId)) {
-      this.currentSessionId = null;
       this.sessions.saveCurrentSessionId(null);
+      this.currentSessionId = null;
       return null;
     }
     return { sessionId: this.currentSessionId, contractVersion: this.contractVersion };
@@ -159,22 +159,24 @@ export class RSToolAgent implements RSToolAgentContract {
     const session = sessionId
       ? { sessionId: this.resolveSessionId(sessionId), contractVersion: this.contractVersion }
       : this.ensureSession(input.initial);
-    const drafts = this.resolveAgentPatches(session.sessionId, input.items);
-    const result = this.applyConstituents(
-      {
-        drafts,
-        mode: input.mode
-      },
-      session.sessionId
-    );
-    const revision =
-      result.success && input.commitMessage ? this.commitStep(input.commitMessage, session.sessionId) : undefined;
-    return {
-      ...result,
-      session,
-      summary: this.buildSessionSummary(session.sessionId),
-      revision
-    };
+    return this.sessions.transaction(session.sessionId, () => {
+      const drafts = this.resolveAgentPatches(session.sessionId, input.items);
+      const result = this.applyConstituents(
+        {
+          drafts,
+          mode: input.mode
+        },
+        session.sessionId
+      );
+      const revision =
+        result.success && input.commitMessage ? this.commitStep(input.commitMessage, session.sessionId) : undefined;
+      return {
+        ...result,
+        session,
+        summary: this.buildSessionSummary(session.sessionId),
+        revision
+      };
+    });
   }
 
   /** @inheritdoc */
@@ -232,7 +234,7 @@ export class RSToolAgent implements RSToolAgentContract {
     const format = input.format ?? 'json';
     const object =
       input.kind === 'schema' ? this.buildPortalSchemaObject(sessionId) : this.buildPortalModelObject(sessionId);
-    return format === 'object' ? object : JSON.stringify(object, null, 2);
+    return format === 'object' ? structuredClone(object) : JSON.stringify(object, null, 2);
   }
 
   /** @inheritdoc */
@@ -255,32 +257,18 @@ export class RSToolAgent implements RSToolAgentContract {
   /** @inheritdoc */
   public async setModelValues(input: SetModelValuesInput, sessionId?: string): Promise<SessionModelState> {
     const id = this.resolveSessionId(sessionId);
-    const snapshot = this.sessions.snapshot(id);
-
-    try {
-      let state = this.sessions.get(id).state;
-
-      if (input.clear?.length) {
-        const model = await this.evaluation.clearConstituentaValues(state, input.clear);
-        state = { ...state, model };
-        this.sessions.replaceState(id, state);
-      }
-
-      if (input.set?.length) {
-        state = this.sessions.get(id).state;
-        const model = await this.evaluation.setConstituentaValues(state, { items: input.set });
-        state = { ...state, model };
-        this.sessions.replaceState(id, state);
-        this.refreshModelDiagnostics(id);
-        return model;
-      }
-
-      this.refreshModelDiagnostics(id);
-      return structuredClone(this.sessions.get(id).state.model);
-    } catch (error) {
-      this.sessions.restore(id, snapshot);
-      throw error;
+    const base = this.sessions.snapshot(id);
+    const next = structuredClone(base);
+    if (input.clear?.length) {
+      next.state.model = await this.evaluation.clearConstituentaValues(next.state, input.clear);
     }
+    if (input.set?.length) {
+      next.state.model = await this.evaluation.setConstituentaValues(next.state, { items: input.set });
+    }
+    next.state.updatedAt = new Date().toISOString();
+    next.diagnostics = [...collectSchemaDiagnostics(next.state), ...collectModelDiagnostics(next.state)];
+    this.sessions.commitIfUnchanged(id, base, next);
+    return structuredClone(next.state.model);
   }
 
   /** @inheritdoc */
@@ -307,31 +295,35 @@ export class RSToolAgent implements RSToolAgentContract {
   /** @inheritdoc */
   public recalculateModel(sessionId?: string): RecalculateModelResult {
     const id = this.resolveSessionId(sessionId);
-    const envelope = this.sessions.get(id);
-    const result = this.evaluation.recalculateModel(envelope.state);
-    this.refreshModelDiagnostics(id);
-    return result;
+    return this.sessions.transaction(id, () => {
+      const envelope = this.sessions.get(id);
+      const result = this.evaluation.recalculateModel(envelope.state);
+      this.refreshModelDiagnostics(id);
+      return result;
+    });
   }
 
   /** @inheritdoc */
   public restoreOrder(sessionId?: string): RestoreOrderResult {
     const id = this.resolveSessionId(sessionId);
-    const envelope = this.sessions.get(id);
-    const orderable = envelope.state.items.map(item => ({
-      id: item.id,
-      alias: item.alias,
-      cst_type: item.cstType,
-      definition_formal: item.definitionFormal
-    }));
-    const ordered = restoreConstituentOrder(orderable);
-    const byId = new Map(envelope.state.items.map(item => [item.id, item]));
-    envelope.state.items = ordered.map(item => byId.get(item.id)!);
-    envelope.state.updatedAt = new Date().toISOString();
-    this.sessions.replaceState(id, envelope.state);
-    return {
-      orderedIds: ordered.map(item => item.id),
-      orderedAliases: ordered.map(item => item.alias)
-    };
+    return this.sessions.transaction(id, () => {
+      const envelope = this.sessions.get(id);
+      const orderable = envelope.state.items.map(item => ({
+        id: item.id,
+        alias: item.alias,
+        cst_type: item.cstType,
+        definition_formal: item.definitionFormal
+      }));
+      const ordered = restoreConstituentOrder(orderable);
+      const byId = new Map(envelope.state.items.map(item => [item.id, item]));
+      envelope.state.items = ordered.map(item => byId.get(item.id)!);
+      envelope.state.updatedAt = new Date().toISOString();
+      this.sessions.replaceState(id, envelope.state);
+      return {
+        orderedIds: ordered.map(item => item.id),
+        orderedAliases: ordered.map(item => item.alias)
+      };
+    });
   }
 
   /** @inheritdoc */
@@ -346,67 +338,69 @@ export class RSToolAgent implements RSToolAgentContract {
       throw new Error('synthesize: sourceSessionId must differ from the receiver session');
     }
 
-    const receiverEnvelope = this.sessions.get(receiverId);
-    const sourceEnvelope = this.sessions.get(sourceId);
-    const snapshot = this.sessions.snapshot(receiverId);
+    return this.sessions.transaction(receiverId, () => {
+      const receiverEnvelope = this.sessions.get(receiverId);
+      const sourceEnvelope = this.sessions.get(sourceId);
+      const snapshot = this.sessions.snapshot(receiverId);
 
-    try {
-      const sourceItems = this.selectSourceItems(sourceEnvelope.state.items, input.items);
-      const substitutions = this.resolveSynthesisSubstitutions(
-        receiverEnvelope.state.items,
-        sourceItems,
-        input.substitutions ?? []
-      );
+      try {
+        const sourceItems = this.selectSourceItems(sourceEnvelope.state.items, input.items);
+        const substitutions = this.resolveSynthesisSubstitutions(
+          receiverEnvelope.state.items,
+          sourceItems,
+          input.substitutions ?? []
+        );
 
-      const nextId = receiverEnvelope.state.items.reduce((max, item) => Math.max(max, item.id), 0) + 1;
-      const result = inlineSynthesis({
-        receiverItems: receiverEnvelope.state.items.map(toSynthesizableSessionItem),
-        receiverAttributions: receiverEnvelope.state.attribution ?? [],
-        sourceItems: sourceItems.map(toSynthesizableSessionItem),
-        sourceAttributions: sourceEnvelope.state.attribution ?? [],
-        substitutions,
-        nextId
-      });
+        const nextId = receiverEnvelope.state.items.reduce((max, item) => Math.max(max, item.id), 0) + 1;
+        const result = inlineSynthesis({
+          receiverItems: receiverEnvelope.state.items.map(toSynthesizableSessionItem),
+          receiverAttributions: receiverEnvelope.state.attribution ?? [],
+          sourceItems: sourceItems.map(toSynthesizableSessionItem),
+          sourceAttributions: sourceEnvelope.state.attribution ?? [],
+          substitutions,
+          nextId
+        });
 
-      const drafts: ConstituentaDraft[] = result.items.map(item => ({
-        id: item.id,
-        alias: item.alias,
-        cstType: item.cst_type,
-        definitionFormal: item.definition_formal,
-        term: item.term_resolved || item.term_raw,
-        definitionText: item.definition_resolved || item.definition_raw,
-        convention: item.convention,
-        crucial: item.crucial,
-        termForms: item.term_forms,
-        typificationManual: item.typification_manual,
-        valueIsProperty: item.value_is_property
-      }));
+        const drafts: ConstituentaDraft[] = result.items.map(item => ({
+          id: item.id,
+          alias: item.alias,
+          cstType: item.cst_type,
+          definitionFormal: item.definition_formal,
+          term: item.term_resolved || item.term_raw,
+          definitionText: item.definition_resolved || item.definition_raw,
+          convention: item.convention,
+          crucial: item.crucial,
+          termForms: item.term_forms,
+          typificationManual: item.typification_manual,
+          valueIsProperty: item.value_is_property
+        }));
 
-      receiverEnvelope.state.items = [];
-      receiverEnvelope.state.attribution = result.attributions;
-      receiverEnvelope.state.model = {
-        items: receiverEnvelope.state.model.items.filter(value => !result.deletedIds.has(value.id))
-      };
-      this.sessions.replaceState(receiverId, receiverEnvelope.state);
+        receiverEnvelope.state.items = [];
+        receiverEnvelope.state.attribution = result.attributions;
+        receiverEnvelope.state.model = {
+          items: receiverEnvelope.state.model.items.filter(value => !result.deletedIds.has(value.id))
+        };
+        this.sessions.replaceState(receiverId, receiverEnvelope.state);
 
-      const applied = this.applyConstituents({ drafts, mode: 'best_effort' }, receiverId);
+        const applied = this.applyConstituents({ drafts, mode: 'best_effort' }, receiverId);
 
-      const revision = input.commitMessage ? this.commitStep(input.commitMessage, receiverId) : undefined;
-      return {
-        session: receiverHandle,
-        summary: this.buildSessionSummary(receiverId),
-        success: applied.success,
-        failed: applied.failed,
-        idMap: result.idMap,
-        aliasMapping: result.aliasMapping,
-        deletedIds: [...result.deletedIds],
-        insertedIds: result.insertedIds,
-        revision
-      };
-    } catch (error) {
-      this.sessions.restore(receiverId, snapshot);
-      throw error;
-    }
+        const revision = input.commitMessage ? this.commitStep(input.commitMessage, receiverId) : undefined;
+        return {
+          session: receiverHandle,
+          summary: this.buildSessionSummary(receiverId),
+          success: applied.success,
+          failed: applied.failed,
+          idMap: result.idMap,
+          aliasMapping: result.aliasMapping,
+          deletedIds: [...result.deletedIds],
+          insertedIds: result.insertedIds,
+          revision
+        };
+      } catch (error) {
+        this.sessions.restore(receiverId, snapshot);
+        throw error;
+      }
+    });
   }
 
   private selectSourceItems(sourceItems: ConstituentaState[], aliases?: string[]): ConstituentaState[] {
@@ -547,7 +541,7 @@ export class RSToolAgent implements RSToolAgentContract {
         analysisSuccess: item.analysis.success
       })),
       diagnostics,
-      lastRevision: envelope.state.revisions.at(-1)
+      lastRevision: structuredClone(envelope.state.revisions.at(-1))
     };
   }
 
@@ -596,25 +590,29 @@ export class RSToolAgent implements RSToolAgentContract {
       state: SessionState;
       diagnostics?: Diagnostic[];
     };
-    const handle = this.sessions.create(normalizeImportedState(data.state), this.contractVersion);
-    if (data.diagnostics?.length) {
-      this.sessions.setDiagnostics(handle.sessionId, data.diagnostics);
-    } else {
-      this.refreshDiagnostics(handle.sessionId);
-    }
+    const state = normalizeImportedState(data.state);
+    const diagnostics = data.diagnostics?.length ? data.diagnostics : collectSchemaDiagnostics(state);
+    const handle = this.sessions.create(state, this.contractVersion, diagnostics);
     return this.trackSession(handle);
   }
 
   private importPortalSchemaData(data: PortalSchemaImportData): SessionHandle {
-    const handle = this.createSession(portalSchemaToSessionSeed(data));
-    this.applyConstituents({ drafts: portalSchemaToDrafts(data), mode: 'best_effort' }, handle.sessionId);
-    return handle;
+    return this.stagePortalImport(portalSchemaToSessionSeed(data), portalSchemaToDrafts(data));
   }
 
   private importPortalDetailsData(data: PortalRsformDetails): SessionHandle {
-    const handle = this.createSession(portalDetailsToSessionSeed(data));
-    this.applyConstituents({ drafts: portalDetailsToDrafts(data), mode: 'best_effort' }, handle.sessionId);
-    return handle;
+    return this.stagePortalImport(portalDetailsToSessionSeed(data), portalDetailsToDrafts(data));
+  }
+
+  /** Analyze an import in memory before publishing a complete session to durable storage. */
+  private stagePortalImport(seed: Partial<SessionState>, drafts: ConstituentaDraft[]): SessionHandle {
+    const staged = new RSToolAgent();
+    const handle = staged.createSession(seed);
+    staged.sessions.transaction(handle.sessionId, () => {
+      staged.applyConstituents({ drafts, mode: 'best_effort' }, handle.sessionId);
+    });
+    const envelope = staged.sessions.snapshot(handle.sessionId);
+    return this.trackSession(this.sessions.create(envelope.state, this.contractVersion, envelope.diagnostics));
   }
 
   private resolveAgentPatches(sessionId: string, patches: AgentConstituentaPatch[]): ConstituentaDraft[] {
@@ -687,8 +685,8 @@ export class RSToolAgent implements RSToolAgentContract {
   }
 
   private trackSession(handle: SessionHandle): SessionHandle {
-    this.currentSessionId = handle.sessionId;
     this.sessions.saveCurrentSessionId(handle.sessionId);
+    this.currentSessionId = handle.sessionId;
     return handle;
   }
 

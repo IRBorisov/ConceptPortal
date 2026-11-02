@@ -17,7 +17,7 @@ export interface BuildRSToolMcpServerOptions {
   name?: string;
   /** Server version advertised to MCP clients. */
   version?: string;
-  /** Queue tool invocations, including calls in one JSON-RPC batch. Enabled by the HTTP host. */
+  /** Queue tool invocations, including calls in one JSON-RPC batch. Defaults to true. */
   serializeToolCalls?: boolean;
 }
 
@@ -48,7 +48,7 @@ export function buildRSToolMcpServer(
   const server = new McpServer(
     {
       name: options.name ?? "rstool-mcp",
-      version: options.version ?? "1.1.0",
+      version: options.version ?? "1.1.1",
     },
     {
       capabilities: {
@@ -116,7 +116,7 @@ export function buildRSToolMcpServer(
         };
       }
     };
-    if (!options.serializeToolCalls) return invoke();
+    if (options.serializeToolCalls === false) return invoke();
     const invocation = invocationTail.then(invoke);
     invocationTail = invocation.catch(() => undefined);
     return invocation;

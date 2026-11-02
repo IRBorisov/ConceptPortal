@@ -15,7 +15,7 @@ import { type RecalculateModelResult, type SessionModelState, type SetModelValue
 import { type SessionHandle, type SessionRevision, type SessionState } from './session';
 
 /** Agent-visible contract version; bump on breaking API changes. */
-export const CONTRACT_VERSION = '3.3.0';
+export const CONTRACT_VERSION = '3.3.1';
 
 /** Options for constructing an {@link RSToolAgent}. */
 export interface RSToolAgentOptions {
@@ -73,7 +73,7 @@ export interface RSToolAgentContract {
    */
   importData(payload: string | object, kind?: ImportDataKind): SessionHandle;
 
-  /** Set or clear model values for constituents; returns the updated model state. */
+  /** Atomically update model values; rejects if the session changes before its async draft commits. */
   setModelValues(input: SetModelValuesInput, sessionId?: string): Promise<SessionModelState>;
 
   /** Return a deep clone of the session model state. */
