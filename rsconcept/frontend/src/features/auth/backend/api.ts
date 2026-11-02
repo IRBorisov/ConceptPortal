@@ -3,7 +3,7 @@ import { queryOptions } from '@tanstack/react-query';
 import { globalTx } from '@/i18n';
 import { syncSentryUser } from '@/services/sentry';
 
-import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
+import { axiosGet, axiosPatch, axiosPost, isAxiosError } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
 import { cacheCsrfFromAuth } from '@/backend/csrf-token';
 import { isUnauthenticatedAxiosError } from '@/backend/unauthenticated-error';
@@ -73,7 +73,7 @@ export const authApi = {
 
 /**
  * Signed-in user, or the anonymous payload when the server reports that nobody is signed in.
- * A transport failure is thrown so a refetch leaves the previous cached user in place.
+ * A failed refresh, including 401, is thrown so the previous cached user stays in place.
  */
 async function getCurrentUserOrAnonymous(signal: AbortSignal | undefined): Promise<ICurrentUser> {
   try {
@@ -83,7 +83,7 @@ async function getCurrentUserOrAnonymous(signal: AbortSignal | undefined): Promi
       notifyOnError: false
     });
   } catch (error) {
-    if (isUnauthenticatedAxiosError(error)) {
+    if (isAxiosError(error) && error.response?.status !== 401 && isUnauthenticatedAxiosError(error)) {
       return anonymousCurrentUser;
     }
     throw error;

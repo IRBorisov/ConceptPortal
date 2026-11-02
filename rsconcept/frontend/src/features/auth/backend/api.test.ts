@@ -52,15 +52,15 @@ describe('authApi.getAuthQueryOptions', () => {
     expect(vi.mocked(axiosGet)).toHaveBeenCalledTimes(3);
   });
 
-  it('turns a 401 into the guest session', async () => {
+  it('keeps the signed-in user after a 401 refresh', async () => {
     vi.mocked(axiosGet).mockRejectedValue(axiosError(401, { detail: 'Unauthorized' }));
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     const options = authApi.getAuthQueryOptions();
     client.setQueryData(options.queryKey, loggedIn);
 
-    const user = await client.fetchQuery({ ...options, staleTime: 0 });
+    await expect(client.fetchQuery({ ...options, staleTime: 0 })).rejects.toBeInstanceOf(AxiosError);
 
-    expect(user).toMatchObject(anonymousCurrentUser);
+    expect(client.getQueryData<ICurrentUser>(options.queryKey)?.id).toBe(7);
     expect(vi.mocked(axiosGet)).toHaveBeenCalledTimes(1);
   });
 

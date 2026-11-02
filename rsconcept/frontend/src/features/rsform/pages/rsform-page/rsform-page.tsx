@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useEffectEvent } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useParams } from 'react-router';
 import { z } from 'zod';
@@ -45,8 +46,20 @@ export function RSFormPage() {
     activeID: query.get('active')
   });
 
-  if (!urlData.id) {
+  const redirectToNotFound = useEffectEvent(function redirectToNotFound() {
     router.replace({ path: urls.page404, force: true });
+  });
+
+  useEffect(
+    function redirectMissingSchemaId() {
+      if (!urlData.id) {
+        redirectToNotFound();
+      }
+    },
+    [urlData.id]
+  );
+
+  if (!urlData.id) {
     return null;
   }
   return (

@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useEffectEvent } from 'react';
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { useParams } from 'react-router';
 import { z } from 'zod';
@@ -40,8 +41,20 @@ export function OssPage() {
     tab: query.get('tab')
   });
 
-  if (!urlData.id) {
+  const redirectToNotFound = useEffectEvent(function redirectToNotFound() {
     router.replace({ path: urls.page404, force: true });
+  });
+
+  useEffect(
+    function redirectMissingOssId() {
+      if (!urlData.id) {
+        redirectToNotFound();
+      }
+    },
+    [urlData.id]
+  );
+
+  if (!urlData.id) {
     return null;
   }
 
