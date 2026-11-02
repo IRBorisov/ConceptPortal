@@ -26,7 +26,7 @@ Replace the placeholder with a cryptographically random token. Tokens must conta
 
 Once configured, start `rstool-mcp-http`, or use `pnpm --filter @rsconcept/rstool-mcp run start:http` from a source checkout. Install a pinned package version. The CLI stops accepting requests and drains active requests on SIGINT/SIGTERM.
 
-The service account needs exclusive read/write access to the persistence root and read access to its credential file. Use restrictive filesystem permissions and back up the persistence root. Schema contents, current-session pointers and diagnostics use rstool's existing file persistence. MCP transport IDs are ephemeral. Normal service restarts preserve the schema workspaces, but the existing file persistence is not a transactional database or a guarantee of recovery from an interrupted disk write.
+The service account needs exclusive read/write access to the persistence root and read access to its credential file. Use restrictive filesystem permissions and back up the persistence root. Schema contents, current-session pointers and diagnostics use rstool's file persistence. Each JSON file is flushed to a private temporary sibling and atomically replaced; a failed write leaves its previous target intact. The schema file and current-session pointer are separate commits, not a transactional database or a power-loss durability guarantee. MCP transport IDs are ephemeral, while normal service restarts preserve schema workspaces.
 
 ## Connect clients
 

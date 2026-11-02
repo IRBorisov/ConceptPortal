@@ -21,6 +21,7 @@ description: >-
 - Синтез (встраивание) — `synthesize({ sourceSessionId, substitutions })`; имена источника перенумеровываются (`aliasMapping` в ответе).
 - Импорт / экспорт — `importData(payload, kind?)` (`auto` различает сессию и JSON Portal), `exportSession()`, `exportPortal({ kind: 'schema' })`.
 - Stdio (`npx rstool-wrapper`) и MCP (`@rsconcept/rstool-mcp`, имена в `snake_case`): **плоские** `params` — поля метода и `sessionId` на одном уровне.
+- При прямом вызове библиотеки дожидайся каждой записи в одну сессию. `setModelValues` работает с копией; при пересекающейся правке отклоняет сохранение с `Session changed during model update`, сохраняя новую правку. Перечитай состояние и реши, нужен ли повтор. Stdio и MCP по умолчанию ставят вызовы в очередь.
 
 ## Запуск скрипта вне пакета
 
@@ -55,6 +56,8 @@ writeFileSync('<abs>/task/session.json', tool.exportSession(), 'utf-8');
 ## Сохранение сессий
 
 Сессии живут в памяти процесса. Между запусками скрипта сохраняй `exportSession()` в файл и загружай `importData`. `new RSToolAgent({ persistenceDir })` (stdio / MCP: `RSTOOL_PERSISTENCE_DIR`) сохраняет сессии автоматически.
+
+Изменения сессии становятся видимыми после успешного сохранения; ошибка записи оставляет прежнее состояние. Файл сессии и `_current.json` заменяются атомарно по отдельности. Это не общая транзакция двух файлов и не блокировка между процессами: один живой `RSToolAgent` на каталог. Подробности — `REFERENCE.md`, «Целостность сессий».
 
 ## Windows и кодировки
 

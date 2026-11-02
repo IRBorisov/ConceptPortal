@@ -80,7 +80,22 @@ function diagnosticsFilters(input: Record<string, unknown>): ListDiagnosticsFilt
   return Object.keys(filters).length > 0 ? filters : undefined;
 }
 
-export async function handleStdioRequest(tool: RSToolAgent, request: StdioRequest): Promise<StdioResponse> {
+const requestQueues = new WeakMap<RSToolAgent, Promise<void>>();
+
+/** Serialize protocol requests per agent, including failed calls, and release idle queue entries. */
+export function handleStdioRequest(tool: RSToolAgent, request: StdioRequest): Promise<StdioResponse> {
+  const previous = requestQueues.get(tool) ?? Promise.resolve();
+  const response = previous.then(() => dispatchStdioRequest(tool, request));
+  const settled = response.then(() => undefined, () => undefined);
+  requestQueues.set(tool, settled);
+  void settled.then(() => {
+    if (requestQueues.get(tool) === settled) requestQueues.delete(tool);
+  });
+  return response;
+}
+
+/** Marshal one request after its preceding operations have finished. */
+async function dispatchStdioRequest(tool: RSToolAgent, request: StdioRequest): Promise<StdioResponse> {
   try {
     const params = asObject(request.params);
     switch (request.method) {

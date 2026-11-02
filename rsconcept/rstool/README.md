@@ -2,7 +2,7 @@
 
 Agent-facing library for **incremental RSForm construction**, **RSLang expression analysis**, **diagnostics**, **modeling**, and **evaluation**. It wraps [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) with a deterministic session contract and a stdio JSON wrapper for LLM agents. MCP hosts can use it through [`@rsconcept/rstool-mcp`](https://www.npmjs.com/package/@rsconcept/rstool-mcp).
 
-**Contract version:** `3.3.0` — see [skills/rstool-runtime/REFERENCE.md](./skills/rstool-runtime/REFERENCE.md) for the full v3 API.
+**Contract version:** `3.3.1` — see [skills/rstool-runtime/REFERENCE.md](./skills/rstool-runtime/REFERENCE.md) for the full v3 API.
 
 ## Agent skill
 
@@ -65,6 +65,16 @@ await client.close();
 - In-memory modeling: set base bindings and structured values; evaluate expressions and constituents.
 - Deterministic diagnostics and export/import for reproducible agent workflows.
 
+## Session integrity
+
+`setModelValues` works on a detached draft. Reads see the last committed state while it runs. If another operation changes that session before the draft commits, the promise rejects with `Session changed during model update; read the current state and retry`. The newer edit is preserved. Await each write when using the library directly; independent sessions can update concurrently.
+
+Schema patches, synthesis, ordering, recalculation and diagnostic/revision updates stage their synchronous changes in memory. A persistence failure restores the previous live state. Returned model, schema and diagnostic data do not grant mutable access to the committed session.
+
+The stdio handler and MCP server serialize requests per agent by default, including JSON-RPC tool batches. Custom MCP hosts can explicitly disable `serializeToolCalls`; direct concurrent library calls still use the draft conflict check.
+
+Persistence writes and flushes a private temporary sibling before renaming it over the target. Failed writes, flushes and renames leave the previous target intact. Session files and `_current.json` are individually atomic, not a multi-file transaction. If the pointer update fails after a new session was saved, the complete session file can remain while the active pointer stays unchanged. Filesystem/hardware durability across power loss and multiple writers are outside this guarantee. Use one live agent per persistence directory and retain backups. Persisted session IDs cannot be `_current` or Windows device names and cannot contain path separators, `..`, control characters or Windows filename metacharacters.
+
 ## Publishing
 
 Maintainers: see [PUBLISHING.md](./PUBLISHING.md) for npm release steps.
@@ -77,7 +87,7 @@ Maintainers: see [PUBLISHING.md](./PUBLISHING.md) for npm release steps.
 - If a session method is called without an active session, rstool creates one lazily.
 - On startup, a ready handshake is printed.
 
-Supported methods (contract `3.3.0`):
+Supported methods (contract `3.3.1`):
 
 - `ping`
 - `methods`
@@ -113,7 +123,7 @@ Request:
 Response:
 
 ```json
-{ "id": "1", "ok": true, "result": { "sessionId": "...", "contractVersion": "3.3.0" } }
+{ "id": "1", "ok": true, "result": { "sessionId": "...", "contractVersion": "3.3.1" } }
 ```
 
 Example `applySchemaPatch`:
@@ -142,7 +152,7 @@ Response:
   "ok": true,
   "result": {
     "success": true,
-    "session": { "sessionId": "...", "contractVersion": "3.3.0" },
+    "session": { "sessionId": "...", "contractVersion": "3.3.1" },
     "summary": { "itemCount": 3 }
   }
 }

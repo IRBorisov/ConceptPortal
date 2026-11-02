@@ -22,12 +22,13 @@ interface SessionEnvelope {
 export class SessionStore {
   private sessions = new Map<string, SessionEnvelope>();
   private readonly persistence: SessionPersistence | null;
+  private readonly transactions = new Set<string>();
 
   public constructor(options: SessionStoreOptions = {}) {
     this.persistence = options.persistenceDir ? new SessionPersistence(options.persistenceDir) : null;
   }
 
-  public create(initial?: Partial<SessionState>, contractVersion?: string): SessionHandle {
+  public create(initial?: Partial<SessionState>, contractVersion?: string, diagnostics: Diagnostic[] = []): SessionHandle {
     const now = new Date().toISOString();
     const sessionId = initial?.sessionId ?? randomUUID();
     const state: SessionState = {
@@ -44,10 +45,11 @@ export class SessionStore {
     };
     const envelope: SessionEnvelope = {
       state,
-      diagnostics: []
+      diagnostics
     };
-    this.sessions.set(sessionId, envelope);
-    this.persist(sessionId, envelope);
+    const committed = structuredClone(envelope);
+    this.persist(sessionId, committed);
+    this.sessions.set(sessionId, committed);
     return {
       sessionId,
       contractVersion: contractVersion ?? CONTRACT_VERSION
@@ -73,25 +75,29 @@ export class SessionStore {
   }
 
   public replaceState(sessionId: string, nextState: SessionState): void {
-    const found = this.get(sessionId);
-    found.state = {
-      ...nextState,
-      updatedAt: new Date().toISOString()
-    };
-    this.persist(sessionId, found);
+    this.transaction(sessionId, () => {
+      const found = this.get(sessionId);
+      found.state = {
+        ...nextState,
+        updatedAt: new Date().toISOString()
+      };
+      this.persist(sessionId, found);
+    });
   }
 
   public addRevision(sessionId: string, message?: string): SessionRevision {
-    const found = this.get(sessionId);
-    const revision: SessionRevision = {
-      revisionId: randomUUID(),
-      at: new Date().toISOString(),
-      message
-    };
-    found.state.revisions.push(revision);
-    found.state.updatedAt = revision.at;
-    this.persist(sessionId, found);
-    return revision;
+    return this.transaction(sessionId, () => {
+      const found = this.get(sessionId);
+      const revision: SessionRevision = {
+        revisionId: randomUUID(),
+        at: new Date().toISOString(),
+        message
+      };
+      found.state.revisions.push(revision);
+      found.state.updatedAt = revision.at;
+      this.persist(sessionId, found);
+      return revision;
+    });
   }
 
   /** Replace active diagnostics for one constituent (or scratch when constituentId is undefined). */
@@ -100,18 +106,22 @@ export class SessionStore {
     constituentId: number | undefined,
     records: Diagnostic[]
   ): void {
-    const found = this.get(sessionId);
-    found.diagnostics = found.diagnostics.filter(record => record.constituentId !== constituentId);
-    found.diagnostics.push(...records);
-    found.state.updatedAt = new Date().toISOString();
-    this.persist(sessionId, found);
+    this.transaction(sessionId, () => {
+      const found = this.get(sessionId);
+      found.diagnostics = found.diagnostics.filter(record => record.constituentId !== constituentId);
+      found.diagnostics.push(...records);
+      found.state.updatedAt = new Date().toISOString();
+      this.persist(sessionId, found);
+    });
   }
 
   public setDiagnostics(sessionId: string, records: Diagnostic[]): void {
-    const found = this.get(sessionId);
-    found.diagnostics = [...records];
-    found.state.updatedAt = new Date().toISOString();
-    this.persist(sessionId, found);
+    this.transaction(sessionId, () => {
+      const found = this.get(sessionId);
+      found.diagnostics = [...records];
+      found.state.updatedAt = new Date().toISOString();
+      this.persist(sessionId, found);
+    });
   }
 
   public listDiagnostics(sessionId: string, filters?: ListDiagnosticsFilters): Diagnostic[] {
@@ -124,9 +134,9 @@ export class SessionStore {
       records = records.filter(record => record.severity === filters.severity);
     }
     if (filters?.constituentId === undefined) {
-      return [...records];
+      return structuredClone(records);
     }
-    return records.filter(record => record.constituentId === filters.constituentId);
+    return structuredClone(records.filter(record => record.constituentId === filters.constituentId));
   }
 
   public snapshot(sessionId: string): SessionEnvelope {
@@ -135,8 +145,37 @@ export class SessionStore {
   }
 
   public restore(sessionId: string, snapshot: SessionEnvelope): void {
-    this.sessions.set(sessionId, structuredClone(snapshot));
-    this.persist(sessionId, this.sessions.get(sessionId)!);
+    this.transaction(sessionId, () => {
+      this.sessions.set(sessionId, structuredClone(snapshot));
+    });
+  }
+
+  /** Stage synchronous changes and publish one detached envelope only after its save succeeds. */
+  public transaction<T>(sessionId: string, action: () => T): T {
+    if (this.transactions.has(sessionId)) return action();
+    const original = this.get(sessionId);
+    this.sessions.set(sessionId, structuredClone(original));
+    this.transactions.add(sessionId);
+    try {
+      const result = action();
+      const committed = structuredClone(this.get(sessionId));
+      this.persistence?.save(sessionId, committed);
+      this.sessions.set(sessionId, committed);
+      return result;
+    } catch (error) {
+      this.sessions.set(sessionId, original);
+      throw error;
+    } finally {
+      this.transactions.delete(sessionId);
+    }
+  }
+
+  /** Reject stale async drafts without restoring over a newer committed session. */
+  public commitIfUnchanged(sessionId: string, base: SessionEnvelope, next: SessionEnvelope): void {
+    if (JSON.stringify(this.get(sessionId)) !== JSON.stringify(base)) {
+      throw new Error('Session changed during model update; read the current state and retry');
+    }
+    this.restore(sessionId, next);
   }
 
   public saveCurrentSessionId(sessionId: string | null): void {
@@ -157,6 +196,6 @@ export class SessionStore {
   }
 
   private persist(sessionId: string, envelope: SessionEnvelope): void {
-    this.persistence?.save(sessionId, envelope as PersistedSessionEnvelope);
+    if (!this.transactions.has(sessionId)) this.persistence?.save(sessionId, envelope as PersistedSessionEnvelope);
   }
 }

@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -9,10 +10,12 @@ export interface PersistedSessionEnvelope {
 }
 
 const CURRENT_SESSION_FILE = '_current.json';
-const UNSAFE_SESSION_ID = /[/\\]|\.\./;
+const UNSAFE_SESSION_ID = /[/\\:<>"|?*\u0000-\u001f]|\.\./;
+const RESERVED_WINDOWS_NAME = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i;
 
+/** Keep session files separate from metadata and portable across Windows and Linux. */
 function assertSafeSessionId(sessionId: string): void {
-  if (!sessionId || UNSAFE_SESSION_ID.test(sessionId)) {
+  if (!sessionId || sessionId.toLowerCase() === '_current' || UNSAFE_SESSION_ID.test(sessionId) || RESERVED_WINDOWS_NAME.test(sessionId)) {
     throw new Error(`Invalid session ID: ${sessionId}`);
   }
 }
@@ -26,7 +29,7 @@ export class SessionPersistence {
   }
 
   public save(sessionId: string, envelope: PersistedSessionEnvelope): void {
-    fs.writeFileSync(this.filePath(sessionId), JSON.stringify(envelope, null, 2), 'utf-8');
+    writeJsonAtomically(this.filePath(sessionId), envelope);
   }
 
   public load(sessionId: string): PersistedSessionEnvelope | null {
@@ -45,7 +48,7 @@ export class SessionPersistence {
   }
 
   public saveCurrentSessionId(sessionId: string | null): void {
-    fs.writeFileSync(path.join(this.dir, CURRENT_SESSION_FILE), JSON.stringify({ sessionId }, null, 2), 'utf-8');
+    writeJsonAtomically(path.join(this.dir, CURRENT_SESSION_FILE), { sessionId });
   }
 
   public loadCurrentSessionId(): string | null {
@@ -65,5 +68,34 @@ export class SessionPersistence {
       throw new Error(`Invalid session ID: ${sessionId}`);
     }
     return file;
+  }
+}
+
+/** Flush a private sibling file, then atomically replace the target without truncating it. */
+function writeJsonAtomically(file: string, value: unknown): void {
+  const json = JSON.stringify(value, null, 2);
+  const temporary = `${file}.${randomUUID()}.tmp`;
+  let descriptor: number | undefined;
+  let created = false;
+  try {
+    descriptor = fs.openSync(temporary, 'wx', 0o600);
+    created = true;
+    fs.writeFileSync(descriptor, json, 'utf8');
+    fs.fsyncSync(descriptor);
+    fs.closeSync(descriptor);
+    descriptor = undefined;
+    fs.renameSync(temporary, file);
+  } catch (error) {
+    const failures: unknown[] = [error];
+    if (descriptor !== undefined) {
+      try { fs.closeSync(descriptor); } catch (closeError) { failures.push(closeError); }
+    }
+    if (created) {
+      try { fs.unlinkSync(temporary); } catch (cleanupError) {
+        if ((cleanupError as NodeJS.ErrnoException).code !== 'ENOENT') failures.push(cleanupError);
+      }
+    }
+    if (failures.length > 1) throw new AggregateError(failures, 'Session write and cleanup failed', { cause: error });
+    throw error;
   }
 }

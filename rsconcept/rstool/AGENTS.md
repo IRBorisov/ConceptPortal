@@ -27,6 +27,8 @@ When the goal is a conceptual schema, Portal export, or analysis — **do not cr
 
 - `src/models/` — contract types (`tool-contract.ts`, `CONTRACT_VERSION`), entity files, `RSToolAgent` in `rstool-agent.ts`, explicit barrel `index.ts`
 - `src/session/` — in-memory session store
+- Session integrity: synchronous mutations use `SessionStore.transaction`; async model updates use an isolated draft and `commitIfUnchanged`. Never restore an async snapshot over a live session.
+- Persistence uses a flushed temporary sibling and atomic replacement. Keep session data and `_current.json` individually atomic; no cross-process or multi-file transaction is implied.
 - `src/mappers/` — bridge to `@rsconcept/domain`: `schema-adapter.ts` (analysis), `model-adapter.ts` (evaluation/modeling)
 - `src/wrapper/` — stdio JSON-RPC (`stdio-handler.ts` holds `STDIO_METHODS`, must match contract; `stdio-wrapper.ts` is `RSToolWrapperClient`)
 - `src/index.ts` — package barrel

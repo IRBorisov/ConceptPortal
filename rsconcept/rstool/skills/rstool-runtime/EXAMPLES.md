@@ -19,6 +19,16 @@
 
 Запуск и структура папок — [examples/README.md](../../examples/README.md).
 
+## Последовательные правки модели
+
+```ts
+const session = tool.ensureSession();
+await tool.setModelValues({ set: [{ target: 1, value: { 0: 'объект' } }] }, session.sessionId);
+tool.applySchemaPatch({ items: [{ alias: 'X2', convention: 'Новый вид объектов' }] }, session.sessionId);
+```
+
+Не объединяй записи в одну сессию через `Promise.all` при прямом вызове библиотеки. Незавершённая правка модели изолирована; если сессия изменилась, она завершится конфликтом вместо перезаписи новой правки. При конфликте сначала перечитай сессию. Stdio и MCP ставят вызовы в очередь по умолчанию.
+
 ## Схема: batch patch
 
 ```ts

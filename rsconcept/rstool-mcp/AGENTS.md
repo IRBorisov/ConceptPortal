@@ -42,6 +42,7 @@ From repo root (pnpm workspace; `@rsconcept/rstool` links to `rsconcept/rstool`)
 - **Mirror rstool changes**: when `@rsconcept/rstool` adds or removes a method, update `TOOL_DEFINITIONS` and the README tool table in the same change set. Update the smoke test's expected list of tool names.
 - **No business logic**: validation, error mapping, and session bookkeeping belong in `@rsconcept/rstool`. The adapter only marshals JSON.
 - HTTP authentication, transport ownership and limits belong in the HTTP host. Never share a mutable `RSToolAgent` across identities or live workspace leases. Preserve the stdio contract.
+- `buildRSToolMcpServer` serializes tool calls by default on all transports. Only an explicit `serializeToolCalls: false` opts out; the library's optimistic model commit still protects against stale writes.
 - **Permissive schemas**: prefer `additionalProperties: true` for structurally rich payloads; let rstool throw and surface the message through `isError: true` text content.
 - **Tool naming**: use `snake_case` for MCP tool names (idiomatic for MCP), even though the underlying rstool methods are camelCase.
 - **Shebang**: `src/bin/server.ts` must keep the `#!/usr/bin/env node` shebang at the top — `tsdown` preserves it in the built bin.
