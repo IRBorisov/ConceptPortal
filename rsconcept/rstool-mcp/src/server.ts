@@ -50,7 +50,7 @@ export function buildRSToolMcpServer(
   const server = new McpServer(
     {
       name: options.name ?? "rstool-mcp",
-      version: options.version ?? "1.2.0",
+      version: options.version ?? "1.2.1",
     },
     {
       capabilities: {
