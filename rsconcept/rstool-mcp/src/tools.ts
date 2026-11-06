@@ -4,6 +4,7 @@
 
 import { type RSToolAgent } from "@rsconcept/rstool";
 import type { PortalPublisher } from './portal-publisher';
+import { SessionStorageError, type SessionPolicy } from './session-policy';
 
 /** Trusted HTTP host captures the identity; tools cannot accept a key, subject or publication approval. */
 export function portalToolDefinitions(publisher: PortalPublisher, subject: string, workspace: string,
@@ -22,9 +23,61 @@ export function portalToolDefinitions(publisher: PortalPublisher, subject: strin
     } }];
 }
 
+/** Account-scoped storage management; credentials and filesystem paths are never tool arguments. */
+export function sessionStorageToolDefinitions(policy: SessionPolicy, subject: string, namespace: string,
+  config: { cleanupIntervalMs: number; maxActiveSessions: number; idleTimeoutMs: number; maxPendingRequests: number; maxRequestBodySize: number }): ToolDefinition[] {
+  return [{
+    name: 'get_session_storage_config',
+    description: 'Get effective stored-session limits, inactivity retention and your account usage across all workspaces. Read-only; never returns credentials or extends retention.',
+    annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
+    inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+    invoke: (_tool, args) => {
+      checkArguments(args, []);
+      return { ...policy.configuration(subject, config.cleanupIntervalMs), transport: {
+        maxActiveSessionsGlobal: config.maxActiveSessions, idleTimeoutSeconds: config.idleTimeoutMs / 1000,
+        maxPendingRequestsPerWorkspace: config.maxPendingRequests, maxRequestBodyBytes: config.maxRequestBodySize
+      } };
+    }
+  }, {
+    name: 'list_stored_sessions',
+    description: 'List your stored sessions across workspaces, oldest used first. Returns bounded metadata, exact sessionRef and revision for deletion; does not renew TTL or expose schema contents. Follow nextCursor; restart listing on SESSION_LIST_CHANGED.',
+    annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
+    inputSchema: { type: 'object', properties: { limit: { type: 'integer', minimum: 1, maximum: 100, default: 20 },
+      cursor: { type: 'string', maxLength: 2048 } }, additionalProperties: false },
+    invoke: (_tool, args) => {
+      checkArguments(args, ['limit', 'cursor']);
+      return policy.list(subject, namespace, args.limit as number | undefined, args.cursor as string | undefined);
+    }
+  }, {
+    name: 'delete_stored_session',
+    description: 'Destructively delete exactly one of your stored sessions and free its quota slot. Use sessionRef and revision from a fresh list. Busy workspaces cannot be deleted; changed sessions require re-listing. confirm=true expresses call intent, not proof of human approval. Follow client/user approval policy; set allowCurrent=true only to discard a selected session. Clears selection/cache and pending workspace publications.',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false },
+    inputSchema: { type: 'object', properties: {
+      sessionRef: { type: 'string', maxLength: 2048 }, expectedRevision: { type: 'string', pattern: '^[a-f0-9]{64}$' },
+      confirm: { type: 'boolean', const: true }, allowCurrent: { type: 'boolean', default: false }
+    }, required: ['sessionRef', 'expectedRevision', 'confirm'], additionalProperties: false },
+    invoke: (_tool, args) => {
+      checkArguments(args, ['sessionRef', 'expectedRevision', 'confirm', 'allowCurrent']);
+      if (args.allowCurrent !== undefined && typeof args.allowCurrent !== 'boolean') {
+        throw new SessionStorageError('INVALID_SESSION_ARGUMENTS', 'allowCurrent must be a boolean.');
+      }
+      return policy.delete(subject, args.sessionRef as string, args.expectedRevision as string,
+        args.confirm as boolean, args.allowCurrent as boolean | undefined);
+    }
+  }];
+}
+
+/** Reject unrecognized fields rather than accepting caller-supplied identities or paths. */
+function checkArguments(args: Record<string, unknown>, allowed: string[]): void {
+  if (Object.keys(args).some(key => !allowed.includes(key))) {
+    throw new SessionStorageError('INVALID_SESSION_ARGUMENTS', 'Only documented tool arguments are accepted.');
+  }
+}
+
 export interface ToolDefinition {
   name: string;
   description: string;
+  annotations?: { readOnlyHint?: boolean; destructiveHint?: boolean; idempotentHint?: boolean; openWorldHint?: boolean };
   inputSchema: {
     type: "object";
     properties: Record<string, unknown>;
@@ -82,7 +135,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: "list_methods",
-    description: "List all rstool methods exposed as MCP tools.",
+    description: "List all tools exposed by this MCP server, including hosted integrations when configured.",
     inputSchema: {
       type: "object",
       properties: {},
@@ -114,7 +167,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   {
     name: "create_session",
     description:
-      "Create a fresh in-memory rstool session and set it as the current active session.",
+      "Create a fresh rstool session and make it current. Hosted HTTP sessions are durable and consume the account quota; inspect get_session_storage_config when available.",
     inputSchema: {
       type: "object",
       properties: {

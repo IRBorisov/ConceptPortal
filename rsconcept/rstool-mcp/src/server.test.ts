@@ -8,6 +8,25 @@ import { buildRSToolMcpServer } from "./server";
 import { TOOL_DEFINITIONS } from "./tools";
 
 describe("buildRSToolMcpServer", () => {
+  it.each(['ENAMETOOLONG', 'EFBIG', 'EINVAL', 'EUNLISTED_FS'])('sanitizes hosted filesystem code %s, including aggregated failures', async code => {
+    const tool = new RSToolAgent();
+    const failure = Object.assign(new Error('Synthetic private path /private-state/model.json'),
+      { code, syscall: 'open', path: '/private-state/model.json' });
+    const create = vi.spyOn(tool, 'createSession').mockImplementation(() => {
+      throw new AggregateError([failure], 'Rollback at /private-state/model.json');
+    });
+    const server = buildRSToolMcpServer({ tool, sanitizeStorageErrors: true });
+    const client = new Client({ name: 'storage-error-test', version: '1' });
+    const [local, remote] = InMemoryTransport.createLinkedPair();
+    try {
+      await server.connect(remote);
+      await client.connect(local);
+      const result = await client.callTool({ name: 'create_session', arguments: {} });
+      expect(result.structuredContent).toMatchObject({ error: { code: 'SESSION_STORAGE_UNAVAILABLE' } });
+      expect(JSON.stringify(result)).not.toContain('/private-state');
+    } finally { create.mockRestore(); await client.close(); await server.close(); }
+  });
+
   it('skips a cancelled mutation queued behind another request and continues serving calls', async () => {
     const tool = new RSToolAgent();
     let release!: () => void;

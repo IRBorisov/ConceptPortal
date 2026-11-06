@@ -25,7 +25,7 @@ function main(): void {
   if (!/^[a-f0-9]{64}$/.test(key)) throw new Error('Invalid namespace');
   const target = fs.lstatSync(join(root, key));
   if (!target.isDirectory() || target.isSymbolicLink()) throw new Error('Workspace does not exist');
-  const count = new SessionPolicy(root).register(subject, key);
+  const count = new SessionPolicy(root).register(subject, key, workspace);
   process.stdout.write(`Workspace ownership indexed; ${count} session file(s) preserved. ${count ? 'Retention clocks are initialized only when missing.' : 'No session retention clocks were created.'}\n`);
 }
 

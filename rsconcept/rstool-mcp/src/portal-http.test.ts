@@ -215,3 +215,23 @@ it('rejects queued approval when an in-flight preparation outlives source retent
     expect(app.remote.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(0);
   } finally { release(); clock.mockRestore(); }
 }, 15_000);
+
+it('deleting the selected stored session invalidates its pending publications but preserves the personal connection', async () => {
+  const app = await start();
+  expect((await app.account('connection', 'PUT', { key: KEY })).status).toBe(200);
+  await app.client.callTool({ name: 'apply_schema_patch', arguments: {
+    items: [{ alias: 'X1', term: 'object', convention: 'Objects' }]
+  } });
+  expect((await app.client.callTool({ name: 'portal_prepare_publication', arguments: { targetId: 1 } })).isError).not.toBe(true);
+  expect(await (await app.account('publications')).json()).toHaveLength(1);
+  const listed = await app.client.callTool({ name: 'list_stored_sessions', arguments: {} });
+  const content = listed.content as Array<{ type: string; text: string }>;
+  const row = JSON.parse(content[0].text).items[0];
+  const deleted = await app.client.callTool({ name: 'delete_stored_session', arguments: {
+    sessionRef: row.sessionRef, expectedRevision: row.revision, confirm: true, allowCurrent: true
+  } });
+  expect(deleted.isError).not.toBe(true);
+  expect(await (await app.account('publications')).json()).toEqual([]);
+  expect(await (await app.account('connection')).json()).toMatchObject({ connected: true, mode: 'personal' });
+  expect(app.remote.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(0);
+}, 20_000);

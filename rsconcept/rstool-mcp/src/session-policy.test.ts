@@ -22,8 +22,22 @@ function setup(limit = 2, retention = 1000) {
     const namespace = createHash('sha256').update(JSON.stringify([subject, workspace])).digest('hex');
     selectedPolicy.register(subject, namespace);
     const directory = join(root, namespace);
-    return { namespace, directory, tool: new RSToolAgent({ persistenceDir: directory,
-      sessionLifecycle: selectedPolicy.hooks(subject, namespace) }) };
+    const agent = new RSToolAgent({ persistenceDir: directory, sessionLifecycle: selectedPolicy.hooks(subject, namespace) });
+    // Match the HTTP host's logical invocation boundary, including async completion.
+    const tool = new Proxy(agent, { get(target, key, receiver) {
+      const value = Reflect.get(target, key, receiver);
+      if (typeof value !== 'function') return value;
+      return (...args: unknown[]) => {
+        const release = selectedPolicy.begin(namespace);
+        try {
+          const result: unknown = Reflect.apply(value, target, args);
+          if (result instanceof Promise) return result.finally(release);
+          release();
+          return result;
+        } catch (error) { release(); throw error; }
+      };
+    } });
+    return { namespace, directory, tool };
   }
   return { root, policy, connect, now: () => time, advance: (ms: number) => { time += ms; } };
 }
@@ -148,8 +162,9 @@ describe('durable account session policy', () => {
     const incoming = JSON.parse(before);
     incoming.state.title = 'Must not replace';
     const rename = fs.renameSync;
+    let stamps = 0;
     const fault = vi.spyOn(fs, 'renameSync').mockImplementation((from, to) => {
-      if (String(to).includes('.lifecycle')) throw Object.assign(new Error('Synthetic private path'), { code: 'ENOSPC' });
+      if (String(to).includes('.lifecycle') && ++stamps === 2) throw Object.assign(new Error('Synthetic private path'), { code: 'ENOSPC' });
       return rename(from, to);
     });
     try {

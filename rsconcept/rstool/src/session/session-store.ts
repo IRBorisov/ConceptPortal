@@ -14,6 +14,7 @@ import { SessionPersistence, type PersistedSessionEnvelope } from './persistence
 export interface SessionStoreOptions {
   persistenceDir?: string;
   sessionLifecycle?: RSToolAgentOptions['sessionLifecycle'];
+  onSessionEvicted?: (sessionId: string) => void;
 }
 
 interface SessionEnvelope {
@@ -31,7 +32,10 @@ export class SessionStore {
   public constructor(options: SessionStoreOptions = {}) {
     this.options = options;
     this.persistence = options.persistenceDir ? new SessionPersistence(options.persistenceDir) : null;
-    options.sessionLifecycle?.onEviction?.(sessionId => { this.sessions.delete(sessionId); });
+    options.sessionLifecycle?.onEviction?.(sessionId => {
+      this.sessions.delete(sessionId);
+      options.onSessionEvicted?.(sessionId);
+    });
   }
 
   public create(initial?: Partial<SessionState>, contractVersion?: string, diagnostics: Diagnostic[] = []): SessionHandle {
