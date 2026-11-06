@@ -47,6 +47,7 @@ class AgentRsformPublishView(AgentItemView):
 
     @extend_schema(tags=['Agents'], request=PublicationSerializer, responses={200: dict, 409: dict})
     def post(self, request, pk: int):
+        ''' Replace an approved base atomically, preserving a rollback snapshot. '''
         serializer = PublicationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         item = self._get_item(pk, LibraryItemType.RSFORM)
