@@ -1,4 +1,5 @@
 ''' Guarded publication for a separately authenticated MCP approval flow. '''
+from datetime import timedelta
 from uuid import uuid4
 
 from django.db import transaction
@@ -48,14 +49,18 @@ class AgentRsformPublishView(AgentItemView):
     def post(self, request, pk: int):
         serializer = PublicationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        item = self._get_item(pk, LibraryItemType.RSFORM)
+        self._require_edit(item)
+        if item.owner_id != request.user.pk and not request.user.is_staff:
+            raise PermissionDenied('Publication requires owner access to preserve a version.')
         with transaction.atomic():
-            item = self._get_item(pk, LibraryItemType.RSFORM)
-            self._require_edit(item)
-            if item.owner_id != request.user.pk and not request.user.is_staff:
-                raise PermissionDenied('Publication requires owner access to preserve a version.')
+            # The first statement is a write, avoiding SQLite read-to-write lock upgrades.
+            claimed_time = max(
+                timezone.now(), serializer.validated_data['expected_time_update'] + timedelta(microseconds=1),
+            )
             claimed = LibraryItem.objects.filter(
                 pk=item.pk, time_update=serializer.validated_data['expected_time_update'],
-            ).update(time_update=timezone.now())
+            ).update(time_update=claimed_time)
             if not claimed:
                 raise PublicationConflict()
             # Recheck current object permissions after obtaining the write lock.
@@ -70,6 +75,8 @@ class AgentRsformPublishView(AgentItemView):
                 data=RSFormSerializer(item).to_versioned_data(),
             )
             replace_schema_content(item, serializer.validated_data['schema'])
+            # Keep the revision claim monotonic even when the wall clock stalls or moves back.
+            LibraryItem.objects.filter(pk=item.pk).update(time_update=claimed_time)
             item.refresh_from_db()
             self._log('rsform.publish', status.HTTP_200_OK, summary='Approved MCP publication', item=item)
             return Response({'version': snapshot.pk, 'schema': RSFormParseSerializer(item).data})

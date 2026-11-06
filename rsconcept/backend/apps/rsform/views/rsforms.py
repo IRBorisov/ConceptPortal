@@ -2,6 +2,7 @@
 from typing import cast
 
 from django.db import transaction
+from django.db.models import F
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics
@@ -162,6 +163,8 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         items_data = serializer.validated_data['items']
 
         with transaction.atomic():
+            # Lock the parent before constituent/attribution writes, matching publication.
+            LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
             propagation = PropagationFacade()
             schema = propagation.get_schema(item.pk)
             new_cst_list: list[m.Constituenta] = []
@@ -226,6 +229,8 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         value: bool = serializer.validated_data['value']
 
         with transaction.atomic():
+            # Lock the parent before constituent/attribution writes, matching publication.
+            LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
             for cst in serializer.validated_data['target']:
                 cst.crucial = value
                 cst.save(update_fields=['crucial'])
@@ -307,6 +312,8 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         attribute = serializer.validated_data['attribute']
 
         with transaction.atomic():
+            # Lock the parent before constituent/attribution writes, matching publication.
+            LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
             if Inheritance.check_share_origin(container.pk, attribute.pk):
                 raise ValidationError({
                     'container': msg.deleteInheritedAttribution()
@@ -343,6 +350,8 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         serializer.is_valid(raise_exception=True)
 
         with transaction.atomic():
+            # Lock the parent before constituent/attribution writes, matching publication.
+            LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
             target_query = m.Attribution.objects.filter(
                 container=serializer.validated_data['container'],
                 attribute=serializer.validated_data['attribute']
@@ -388,6 +397,8 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         serializer.is_valid(raise_exception=True)
 
         with transaction.atomic():
+            # Lock the parent before constituent/attribution writes, matching publication.
+            LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
             attributions = list(m.Attribution.objects.filter(container=serializer.validated_data['target']))
             to_delete: list[m.Attribution] = []
             for attrib in attributions:
@@ -443,6 +454,8 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         item = self._get_item()
 
         with transaction.atomic():
+            # Lock the parent before constituent/attribution writes, matching publication.
+            LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
             schema = m.RSForm(item)
             schema.reset_aliases()
             item.save(update_fields=['time_update'])
@@ -468,6 +481,8 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         item = self._get_item()
 
         with transaction.atomic():
+            # Lock the parent before constituent/attribution writes, matching publication.
+            LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
             m.OrderManager(m.RSFormCached(item.pk)).restore_order()
             item.save(update_fields=['time_update'])
 
@@ -517,6 +532,8 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         serializer.is_valid(raise_exception=True)
 
         with transaction.atomic():
+            # Lock the parent before constituent/attribution writes, matching publication.
+            LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
             PropagationFacade().before_delete_schema(item.pk)
             result: m.RSFormCached = serializer.save()
             PropagationFacade().after_create_cst(list(result.constituentsQ().order_by('order')))
@@ -635,6 +652,7 @@ def inline_synthesis(request: Request) -> HttpResponse:
     target_ids = [item.pk for item in target_cst] if target_cst else None
 
     with transaction.atomic():
+        LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
         propagation = PropagationFacade()
         receiver = propagation.get_schema(item.pk)
         new_items = receiver.insert_from(source.pk, target_ids)

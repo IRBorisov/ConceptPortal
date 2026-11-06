@@ -31,6 +31,7 @@ export interface RSToolHttpServerOptions {
 }
 
 interface HttpSession {
+  subject: string;
   namespace: string;
   server: ReturnType<typeof buildRSToolMcpServer>;
   transport: StreamableHTTPServerTransport;
@@ -72,7 +73,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   /** Remove only this transport lease; the workspace's persisted schema data stays intact. */
   function forget(entry: HttpSession): void {
     entry.closed = true;
-    options.portal?.publisher.invalidateWorkspace(entry.namespace);
+    options.portal?.publisher.invalidateWorkspace(entry.subject, entry.namespace);
     if (workspaces.get(entry.namespace) === entry) workspaces.delete(entry.namespace);
     if (entry.transport.sessionId) sessions.delete(entry.transport.sessionId);
   }
@@ -159,7 +160,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
         onsessioninitialized: id => { sessions.set(id, entry); },
       });
       entry = {
-        namespace, server: mcpServer, transport,
+        subject, namespace, server: mcpServer, transport,
         tail: Promise.resolve(), pending: 0, lastUsed: Date.now(), closed: false,
       };
       // Reserve before the first await, including simultaneous initialize requests.

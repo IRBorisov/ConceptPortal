@@ -4,10 +4,12 @@ from datetime import timedelta
 
 from django.utils import timezone
 
-from apps.library.models import LibraryItem
+from apps.agents.models import ApiKey
+from apps.library.models import LibraryItem, Version
 from apps.oss.models import OperationSchema, OperationType, PropagationFacade
 from apps.rsform.models import Attribution, Constituenta, CstType, RSForm
 from shared.EndpointTester import EndpointTester, decl_endpoint
+from shared.portal_json import PORTAL_JSON_CONTRACT_VERSION
 
 
 class TestChangeConstituents(EndpointTester):
@@ -398,3 +400,27 @@ class TestChangeConstituents(EndpointTester):
         self.assertTrue(Attribution.objects.filter(container=self.ks1X1, attribute=self.ks1X2).exists())
         self.assertTrue(Attribution.objects.filter(container=ks1x1_child, attribute=ks1x2_child).exists())
         self.assertFalse(Attribution.objects.filter(container=ks1x1_child, attribute=ks2x1_child).exists())
+
+
+    def test_delete_last_inherited_constituent_invalidates_prepared_publication(self):
+        before = self.client.get(f'/api/rsforms/{self.ks3.model.pk}/details').data
+        for schema in (self.ks1, self.ks2):
+            target = list(schema.constituentsQ().values_list('pk', flat=True))
+            response = self.client.patch(
+                f'/api/rsforms/{schema.model.pk}/delete-multiple-cst', {'items': target},
+            )
+            self.assertEqual(response.status_code, 200, response.data)
+        self.assertEqual(self.ks3.constituentsQ().count(), 0)
+        self.ks3.model.refresh_from_db()
+        self.assertNotEqual(self.ks3.model.time_update.isoformat(), before['time_update'])
+        _, secret = ApiKey.create_for_user(self.user, 'Publication regression')
+        self.client.force_authenticate(user=None)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {secret}')
+        response = self.client.post(f'/api/agents/rsforms/{self.ks3.model.pk}/publish', {
+            'expected_time_update': before['time_update'],
+            'schema': {'contract_version': PORTAL_JSON_CONTRACT_VERSION,
+                       'title': 'Stale', 'alias': 'STALE', 'description': '', 'items': []},
+        })
+        self.assertEqual(response.status_code, 409, response.data)
+        self.assertEqual(self.ks3.constituentsQ().count(), 0)
+        self.assertFalse(Version.objects.filter(item_id=self.ks3.model.pk).exists())

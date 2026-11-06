@@ -26,7 +26,7 @@ afterEach(async () => {
 });
 
 /** Exercise both protocols against a real loopback listener; only Portal itself is a stub. */
-async function start() {
+async function start(portalEnabled = true) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'portal-http-test-'));
   cleanup.push(() => {
     const relative = path.relative(path.resolve(os.tmpdir()), path.resolve(directory));
@@ -45,7 +45,7 @@ async function start() {
     expect((options!.headers as Record<string, string>).Authorization).toBe(`Bearer ${KEY}`);
     if (String(input).endsWith('/me')) return Response.json({ id: 7, username: 'Alice' });
     if (String(input).endsWith('/publish')) {
-      current = { ...JSON.parse(String(options!.body)).schema, time_update: '2026-11-06T02:00:00Z' };
+      current = { ...JSON.parse(String(options!.body)).schema, id: 1, time_update: '2026-11-06T02:00:00Z' };
       return Response.json({ version: 1, schema: current });
     }
     return Response.json(current);
@@ -60,14 +60,16 @@ async function start() {
       { subject: 'alice', token: ALICE },
       { subject: 'bob', token: BOB },
     ]),
-    portal: {
-      publisher,
-      publicOrigin: ORIGIN,
-      verifyAccountToken: createBearerTokenVerifier([
-        { subject: 'alice', token: ACCOUNT_ALICE },
-        { subject: 'bob', token: ACCOUNT_BOB },
-      ]),
-    },
+    portal: portalEnabled
+      ? {
+          publisher,
+          publicOrigin: ORIGIN,
+          verifyAccountToken: createBearerTokenVerifier([
+            { subject: 'alice', token: ACCOUNT_ALICE },
+            { subject: 'bob', token: ACCOUNT_BOB },
+          ]),
+        }
+      : undefined,
   });
   await new Promise<void>((resolve) => service.server.listen(0, '127.0.0.1', resolve));
   cleanup.push(() => service.close());
@@ -138,16 +140,46 @@ it('keeps credentials outside MCP and enforces the authenticated account for app
   expect(await (await app.account('publications')).json()).toEqual([]);
 });
 
-it('requires MCP authentication for account APIs and leaves Portal disabled by default', async () => {
+it('requires independent human authentication for account APIs', async () => {
   const app = await start();
   expect((await fetch(app.url + '/portal/api/connection')).status).toBe(401);
   expect((await app.account('connection', 'PUT', { key: KEY }, 'invalid')).status).toBe(401);
   expect((await app.account('connection', 'GET', undefined, ALICE)).status).toBe(401);
   expect((await app.account('connection', 'PUT', { key: KEY }, ALICE)).status).toBe(401);
-  expect((await fetch(app.url + '/mcp/test', { method: 'POST', headers: { Authorization: `Bearer ${ACCOUNT_ALICE}`, 'Content-Type': 'application/json' }, body: '{}' })).status).toBe(401);
+  expect(
+    (
+      await fetch(app.url + '/mcp/test', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${ACCOUNT_ALICE}`, 'Content-Type': 'application/json' },
+        body: '{}',
+      })
+    ).status
+  ).toBe(401);
   expect(
     (await app.account('publications/00000000-0000-0000-0000-000000000000/confirm', 'POST', { digest: 'x' }, ALICE))
       .status
   ).toBe(401);
+  expect(app.remote).not.toHaveBeenCalled();
+});
+
+it('removes a pending proposal when its MCP session terminates without disconnecting the key', async () => {
+  const app = await start();
+  expect((await app.account('connection', 'PUT', { key: KEY })).status).toBe(200);
+  const prepared = await app.client.callTool({ name: 'portal_prepare_publication', arguments: { targetId: 1 } });
+  expect(prepared.isError).not.toBe(true);
+  expect(await (await app.account('publications')).json()).toHaveLength(1);
+  await app.transport.terminateSession();
+  expect(await (await app.account('publications')).json()).toEqual([]);
+  expect(await (await app.account('connection')).json()).toMatchObject({ connected: true });
+});
+
+it('does not expose Portal routes or tools when the integration is absent', async () => {
+  const app = await start(false);
+  expect((await fetch(app.url + '/portal/account')).status).toBe(404);
+  expect(
+    (await fetch(app.url + '/portal/api/connection', { headers: { Authorization: `Bearer ${ALICE}` } })).status
+  ).toBe(404);
+  const names = (await app.client.listTools()).tools.map((tool) => tool.name);
+  expect(names.some((name) => name.startsWith('portal_'))).toBe(false);
   expect(app.remote).not.toHaveBeenCalled();
 });

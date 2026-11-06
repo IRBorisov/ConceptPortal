@@ -40,6 +40,7 @@ el('login').onsubmit = event => { event.preventDefault(); access = el('access').
 el('connect').onsubmit = event => { event.preventDefault(); const key = el('key').value; el('key').value = ''; run(async () => { await api('connection', 'PUT', { key }); await refresh(); }); };
 el('disconnect').onclick = () => run(async () => { await api('connection', 'DELETE'); await refresh(); });
 el('refresh').onclick = () => run(refresh);
+window.addEventListener('pagehide', () => { access = ''; el('access').value = ''; el('key').value = ''; el('settings').hidden = true; el('publications').replaceChildren(); });
 `;
 
 /** Serve static assets without embedding secrets, with scripts isolated by CSP. */
