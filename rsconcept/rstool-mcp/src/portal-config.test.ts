@@ -1,3 +1,4 @@
+import childProcess from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 import fs from 'node:fs';
 import files from 'node:fs/promises';
@@ -88,10 +89,28 @@ it('requires a full-size master key and refuses plaintext-readable credentials o
 });
 
 /** Use real credential payloads while reproducing the metadata of systemd's root-owned ACL store. */
-function systemdSetup() {
+function systemdSetup(directory = '/run/credentials/rstool-test.service') {
   const app = setup();
-  const directory = '/run/credentials/rstool-test.service';
   const modes = { file: 0o100440, directory: 0o40550, uid: 0, gid: 0, directoryUid: 0 };
+  const acl = (permission: number) => [
+    [1, permission, 0xffffffff],
+    [2, permission, process.getuid!()],
+    [4, 0, 0xffffffff],
+    [16, permission, 0xffffffff],
+    [32, 0, 0xffffffff],
+  ];
+  const acls = [acl(4), acl(5)];
+  vi.spyOn(childProcess, 'spawnSync').mockImplementation(() => {
+    const output = Buffer.from(JSON.stringify(acls));
+    return {
+      pid: 1,
+      status: 0,
+      signal: null,
+      output: [null, output, Buffer.alloc(0)],
+      stdout: output,
+      stderr: Buffer.alloc(0),
+    };
+  });
   const paths = new Map([
     [directory + '/master', app.master],
     [directory + '/accounts', app.accounts],
@@ -124,6 +143,7 @@ function systemdSetup() {
   return {
     ...app,
     modes,
+    acls,
     credentialDirectory: directory,
     environment: {
       ...app.environment,
@@ -177,5 +197,89 @@ it.skipIf(process.platform !== 'linux')(
     }
     app.escapeAccount();
     await expect(loadPortalConfiguration(app.environment, mcp, app.workspace)).rejects.toThrow('Cannot initialize');
+  }
+);
+
+it.skipIf(process.platform !== 'linux')(
+  'rejects otherwise matching credential paths outside the systemd runtime root',
+  async () => {
+    const app = systemdSetup('/outside-credentials/rstool-test.service');
+    await expect(loadPortalConfiguration(app.environment, mcp, app.workspace)).rejects.toThrow('Cannot initialize');
+    expect(childProcess.spawnSync).not.toHaveBeenCalled();
+  }
+);
+
+it.skipIf(process.platform !== 'linux').each([
+  [0, 2, 1, 4],
+  [1, 2, 1, 5],
+  [0, 1, 2, 12345],
+  [1, 1, 2, 12345],
+  [0, 4, 1, 4],
+])('rejects additional effective ACL access %j', async (which, entry, field, value) => {
+  const app = systemdSetup();
+  app.acls[which][entry][field] = field === 2 ? process.getuid!() + 1 : value;
+  await expect(loadPortalConfiguration(app.environment, mcp, app.workspace)).rejects.toThrow('Cannot initialize');
+});
+
+it.skipIf(process.platform !== 'linux')('fails closed when the ACL reader cannot verify metadata', async () => {
+  const app = systemdSetup();
+  vi.mocked(childProcess.spawnSync).mockReturnValue({
+    pid: 1,
+    status: 1,
+    signal: null,
+    output: [null, Buffer.alloc(0), Buffer.alloc(0)],
+    stdout: Buffer.alloc(0),
+    stderr: Buffer.alloc(0),
+  });
+  await expect(loadPortalConfiguration(app.environment, mcp, app.workspace)).rejects.toThrow('Cannot initialize');
+});
+
+it.skipIf(process.platform !== 'linux')(
+  'verifies real Linux POSIX ACL xattrs through the isolated reader',
+  async () => {
+    const originalSpawn = childProcess.spawnSync.bind(childProcess);
+    const app = systemdSetup();
+    fs.mkdirSync(app.workspace, { mode: 0o700 });
+    fs.mkdirSync(app.environment.RSTOOL_PORTAL_VAULT_DIR, { mode: 0o700 });
+    const prepare = `import os, struct, sys
+uid = int(sys.argv[1])
+for path, permission in ((sys.argv[2], 4), (sys.argv[3], 4), (sys.argv[4], 5)):
+    entries = ((1, permission, 0xffffffff), (2, permission, uid), (4, 0, 0xffffffff),
+               (16, permission, 0xffffffff), (32, 0, 0xffffffff))
+    data = struct.pack('<I', 2) + b''.join(struct.pack('<HHI', *entry) for entry in entries)
+    os.setxattr(path, 'system.posix_acl_access', data)
+`;
+    try {
+      const prepared = originalSpawn('python3', [
+        '-I',
+        '-B',
+        '-c',
+        prepare,
+        String(process.getuid!()),
+        app.master,
+        app.accounts,
+        app.directory,
+      ]);
+      expect(prepared.status).toBe(0);
+      const paths = new Map([
+        [app.credentialDirectory, app.directory],
+        [app.credentialDirectory + '/master', app.master],
+        [app.credentialDirectory + '/accounts', app.accounts],
+      ]);
+      vi.mocked(childProcess.spawnSync).mockImplementation((command, args, options) =>
+        originalSpawn(
+          command,
+          (args ?? []).map((argument) => paths.get(argument) ?? argument),
+          options
+        )
+      );
+      const loaded = await loadPortalConfiguration(app.environment, mcp, app.workspace);
+      expect(await loaded!.verifyAccountToken(human[0].token)).toBe('alice');
+      const readerCall = vi.mocked(childProcess.spawnSync).mock.calls[0];
+      expect(readerCall[0]).toBe('python3');
+      expect(readerCall[1]?.slice(0, 3)).toEqual(['-I', '-B', '-c']);
+    } finally {
+      fs.chmodSync(app.directory, 0o700);
+    }
   }
 );

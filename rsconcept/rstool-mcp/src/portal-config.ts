@@ -1,3 +1,4 @@
+import childProcess from 'node:child_process';
 import type { Stats } from 'node:fs';
 import files from 'node:fs/promises';
 import { dirname, isAbsolute, relative, resolve } from 'node:path';
@@ -103,5 +104,49 @@ async function systemdCredential(file: string, info: Stats, suppliedDirectory?: 
   if (dirname(directory) !== '/run/credentials' || dirname(file) !== directory) return false;
   const parent = await files.stat(directory);
   // The directory must be root-controlled, immutable to the service and closed to other users.
-  return parent.isDirectory() && parent.uid === 0 && parent.gid === 0 && !(parent.mode & 0o227);
+  if (!parent.isDirectory() || parent.uid !== 0 || parent.gid !== 0 || parent.mode & 0o227) return false;
+  const uid = process.getuid?.();
+  if (uid === undefined) return false;
+  // -I/-B isolate Python from application/user import paths and avoid bytecode writes.
+  // Read only ACL metadata, never credential contents; fail closed if unavailable.
+  const result = childProcess.spawnSync('python3', ['-I', '-B', '-c', ACL_READER, file, directory], {
+    encoding: 'utf8',
+    timeout: 2000,
+    maxBuffer: 16384,
+  });
+  if (result.error || result.status !== 0) return false;
+  const acls: unknown = JSON.parse(result.stdout.toString());
+  return Array.isArray(acls) && acls.length === 2 && exclusiveAcl(acls[0], uid, 4) && exclusiveAcl(acls[1], uid, 5);
+}
+
+// Linux POSIX access ACL xattrs have a version header followed by five expected entries.
+const ACL_READER = `import json, os, struct, sys
+result = []
+for path in sys.argv[1:]:
+    data = os.getxattr(path, 'system.posix_acl_access', follow_symlinks=False)
+    if len(data) != 44 or struct.unpack_from('<I', data)[0] != 2:
+        sys.exit(1)
+    result.append(list(struct.iter_unpack('<HHI', data[4:])))
+print(json.dumps(result))
+`;
+
+/** Accept only owner/service read grants: no owning-group, named-group or other-user access. */
+function exclusiveAcl(value: unknown, uid: number, permission: number): boolean {
+  const undefinedId = 0xffffffff;
+  const expected = [
+    [1, permission, undefinedId],
+    [2, permission, uid],
+    [4, 0, undefinedId],
+    [16, permission, undefinedId],
+    [32, 0, undefinedId],
+  ];
+  return (
+    Array.isArray(value) &&
+    value.length === expected.length &&
+    expected.every((entry) =>
+      value.some(
+        (actual) => Array.isArray(actual) && actual.length === 3 && entry.every((part, index) => actual[index] === part)
+      )
+    )
+  );
 }
