@@ -44,7 +44,11 @@ async function run(args: string[]) {
 
 describe('offline session ownership indexing', () => {
   it('rejects option names in place of values before creating any directory', async () => {
-    expect((await run(['--persistence-dir', '--subject', '--subject', 'account-a', '--workspace', 'task'])).code).toBe(1);
+    const access = vi.spyOn(fs, 'lstatSync').mockImplementation(() => { throw new Error('Unexpected filesystem access'); });
+    try {
+      expect((await run(['--persistence-dir', '--subject', '--subject', 'account-a', '--workspace', 'task'])).code).toBe(1);
+      expect(access).not.toHaveBeenCalled();
+    } finally { access.mockRestore(); }
   });
 
   it('rejects a missing target rather than creating an empty replacement namespace', async () => {
@@ -84,4 +88,16 @@ describe('offline session ownership indexing', () => {
     expect((await run(['--persistence-dir', directory, '--subject', 'account-b', '--namespace', namespace])).code).toBe(1);
     expect(fs.readFileSync(path, 'utf8')).toBe(before);
   }, 15_000);
+});
+
+
+it('indexes dash-prefixed subjects through equals syntax and rejects ambiguous or duplicate options', async () => {
+  const directory = root();
+  const namespace = createHash('sha256').update(JSON.stringify(['--account-a', 'task'])).digest('hex');
+  fs.mkdirSync(join(directory, namespace));
+  const args = ['--persistence-dir', directory, '--subject=--account-a', '--workspace', 'task'];
+  expect((await run(args)).code).toBe(0);
+  expect((await run([...args, '--subject', 'other'])).code).toBe(1);
+  expect((await run([...args, '--unknown=value'])).code).toBe(1);
+  expect((await run(['--persistence-dir', directory, '--subject', '--account-a', '--workspace', 'task'])).code).toBe(1);
 });

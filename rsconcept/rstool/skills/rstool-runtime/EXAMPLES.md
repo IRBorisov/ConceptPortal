@@ -379,14 +379,18 @@ For hosted MCP storage errors, inspect `structuredContent.error.code` or the JSO
 
 ## MCP: от схемы к значению
 
+Сначала запомни прежний sessionId через get_current_session, затем создай отдельную тестовую сессию create_session. Если создание не удалось, остановись; не выполняй пример в прежней сессии. В HTTP создание расходует квоту. После примера вернись к прежней сессии через set_current_session, если она была выбрана.
+
 Вызовы ниже используют плоские аргументы. После apply_schema_patch возьми реальные числовые ID из ответа; в этом примере они равны 1, 2, 3.
 
 ```json
+{"name":"get_current_session","arguments":{}}
+{"name":"create_session","arguments":{"initial":{"title":"Isolated MCP tutorial"}}}
 {"name":"apply_schema_patch","arguments":{"items":[{"alias":"X1","convention":"First test set"},{"alias":"X2","convention":"Second test set"},{"alias":"D1","definitionFormal":"X1×X2"}]}}
 {"name":"set_model_values","arguments":{"set":[{"target":1,"value":{"0":"one","1":"two"}},{"target":2,"value":{"0":"alpha"}}]}}
 {"name":"evaluate","arguments":{"constituentId":3}}
 ```
 
-Результат содержит `status: 7`, `statusName: "HAS_DATA"` и `value: [[-111,0,0],[-111,1,0]]`. Это множество двух кортежей `(0,0)` и `(1,0)`; `-111` — маркер кортежа. Не передавай одновременно constituentId и expression/cstType. Для чтения пустого workspace сначала вызови ensure_session, иначе получишь NO_CURRENT_SESSION без создания модели.
+Результат содержит `status: 7`, `statusName: "HAS_DATA"` и `value: [[-111,0,0],[-111,1,0]]`. Это множество двух кортежей `(0,0)` и `(1,0)`; `-111` — маркер кортежа. Не передавай одновременно constituentId и expression/cstType. get_current_session возвращает null в пустом workspace; get_session_storage_config и list_stored_sessions работают без текущей модели. Для чтения состояния передай существующий sessionId; ensure_session вызывай только если нужна новая сессия, иначе получишь NO_CURRENT_SESSION без создания модели.
 
 При HTTP-квоте используй get_session_storage_config → list_stored_sessions; удаление выбранной сессии выполняй только согласно политике пользователя/клиента и со свежими sessionRef/expectedRevision. Список не продлевает TTL. После неоднозначного ответа на удаление сначала перечитай конфиг/список. Полный [сценарий освобождения квоты](https://github.com/IRBorisov/ConceptPortal/blob/main/rsconcept/rstool-mcp/HTTP.md#agent-self-service-for-account-storage).

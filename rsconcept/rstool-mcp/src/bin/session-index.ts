@@ -10,9 +10,14 @@ function main(): void {
   const args = process.argv.slice(2);
   const allowed = new Set(['--persistence-dir', '--subject', '--workspace', '--namespace']);
   const values = new Map<string, string>();
-  for (let i = 0; i < args.length; i += 2) {
-    if (!allowed.has(args[i]) || !args[i + 1] || args[i + 1].startsWith('--') || values.has(args[i])) throw new Error('Invalid index arguments');
-    values.set(args[i], args[i + 1]);
+  for (let i = 0; i < args.length; i++) {
+    const separator = args[i].indexOf('=');
+    const key = separator < 0 ? args[i] : args[i].slice(0, separator);
+    const value = separator < 0 ? args[++i] : args[i].slice(separator + 1);
+    if (!allowed.has(key) || !value || (separator < 0 && value.startsWith('--')) || values.has(key)) {
+      throw new Error('Invalid index arguments');
+    }
+    values.set(key, value);
   }
   const root = values.get('--persistence-dir');
   const subject = values.get('--subject');

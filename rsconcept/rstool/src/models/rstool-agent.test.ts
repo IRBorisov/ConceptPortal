@@ -1181,6 +1181,7 @@ describe('RSToolAgent modeling semantics', () => {
     const tool = new RSToolAgent();
     const session = tool.createSession();
     expect(() => tool.evaluate({}, session.sessionId)).toThrow(/requires constituentId or expression/);
+    expect(() => tool.evaluate({}, session.sessionId)).toThrow(expect.objectContaining({ code: 'INVALID_EVALUATE_ARGUMENTS' }));
   });
 
   it('throws for unknown constituents on evaluate and setModelValues', async () => {
@@ -1297,4 +1298,17 @@ it('rejects ambiguous evaluation inputs instead of silently choosing one', () =>
   expect(() => tool.evaluate({ constituentId: 'D1' as never }))
     .toThrow(/numeric constituent id/);
   expect(tool.evaluate({ constituentId: 1 })).toMatchObject({ value: 3, statusName: 'HAS_DATA' });
+});
+
+
+it.each([{ expression: '1+2' }, { cstType: CstType.TERM }])('rejects an incomplete scratch evaluation %j', input => {
+  const tool = new RSToolAgent();
+  expect(() => tool.evaluate(input)).toThrow(expect.objectContaining({ code: 'INVALID_EVALUATE_ARGUMENTS' }));
+  expect(tool.getCurrentSession()).toBeNull();
+});
+
+it('rejects a null constituent id with an actionable error code', () => {
+  const tool = new RSToolAgent();
+  expect(() => tool.evaluate({ constituentId: null as never })).toThrow(expect.objectContaining({ code: 'INVALID_EVALUATE_ARGUMENTS' }));
+  expect(() => tool.evaluate({ constituentId: null as never })).toThrow(/numeric constituent id/);
 });
