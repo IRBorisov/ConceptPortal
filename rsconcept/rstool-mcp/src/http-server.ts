@@ -169,12 +169,12 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       policy.register(subject, namespace);
       const tool = new RSToolAgent({ persistenceDir: join(options.persistenceDir, namespace),
         sessionLifecycle: policy.hooks(subject, namespace) });
-      const mcpServer = buildRSToolMcpServer({ tool, serializeToolCalls: true,
+      const mcpServer = buildRSToolMcpServer({ tool, serializeToolCalls: true, sanitizeStorageErrors: true,
         aroundToolCall: async invoke => {
           const release = policy.begin(namespace);
           try { return await invoke(); } finally { release(); }
         },
-        additionalTools: options.portal ? portalToolDefinitions(options.portal.publisher, subject, namespace) : undefined });
+        additionalTools: options.portal ? portalToolDefinitions(options.portal.publisher, subject, namespace, id => policy.assertRetained(namespace, id)) : undefined });
       const transport = new StreamableHTTPServerTransport({
         sessionIdGenerator: randomUUID,
         enableJsonResponse: true,
@@ -237,7 +237,10 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   const timer = setInterval(expireIdleSessions, Math.min(idleTimeoutMs, 60_000));
   timer.unref();
   const cleanupTimer = setInterval(() => {
-    try { policy.sweep(); } catch { process.stderr.write('rstool-mcp session cleanup failed\n'); }
+    try {
+      const failures = policy.sweep();
+      if (failures.size) process.stderr.write(`rstool-mcp session cleanup failed for ${failures.size} workspace(s)\n`);
+    } catch { process.stderr.write('rstool-mcp session cleanup failed\n'); }
   }, cleanupIntervalMs);
   cleanupTimer.unref();
 

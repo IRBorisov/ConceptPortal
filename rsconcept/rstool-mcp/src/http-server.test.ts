@@ -1,11 +1,13 @@
 import { mkdtemp, rm, stat } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
+import fs from 'node:fs';
 import { request } from 'node:http';
 import { type AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
 import { join, resolve, relative } from 'node:path';
 
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { RSToolAgent } from '@rsconcept/rstool';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { CallToolResultSchema, LATEST_PROTOCOL_VERSION, type CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -94,20 +96,88 @@ describe('rstool Streamable HTTP', () => {
   });
 
   it('removes idle saved sessions on the background timer without requiring a tool request', async () => {
-    const app = await start({ sessionRetentionMs: 1000, sessionCleanupIntervalMs: 10 });
-    const peer = await app.connect();
-    const session = await call(peer.client, 'create_session');
-    const namespace = createHash('sha256').update(JSON.stringify(['alice', 'task'])).digest('hex');
-    const path = join(app.directory, namespace, `${session.sessionId}.json`);
-    expect((await stat(path)).isFile()).toBe(true);
     const now = Date.now();
-    const clock = vi.spyOn(Date, 'now').mockReturnValue(now + 1001);
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(now);
     try {
+      const app = await start({ sessionRetentionMs: 1000, sessionCleanupIntervalMs: 10 });
+      const peer = await app.connect();
+      const session = await call(peer.client, 'create_session');
+      const namespace = createHash('sha256').update(JSON.stringify(['alice', 'task'])).digest('hex');
+      const path = join(app.directory, namespace, `${session.sessionId}.json`);
+      expect((await stat(path)).isFile()).toBe(true);
+      clock.mockReturnValue(now + 1001);
       await vi.waitFor(async () => { await expect(stat(path)).rejects.toMatchObject({ code: 'ENOENT' }); });
       const expired = await peer.client.callTool({ name: 'get_session_state', arguments: { sessionId: session.sessionId } });
       expect(expired.structuredContent).toMatchObject({ error: { code: 'SESSION_NOT_FOUND_OR_EXPIRED' } });
     } finally { clock.mockRestore(); }
   });
+
+  it('pins a real async model update while background expiry runs and commits its final access clock', async () => {
+    const now = Date.now();
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(now);
+    let release!: () => void;
+    let entered!: () => void;
+    const started = new Promise<void>(resolve => { entered = resolve; });
+    const gate = new Promise<void>(resolve => { release = resolve; });
+    const original = RSToolAgent.prototype.setModelValues;
+    const update = vi.spyOn(RSToolAgent.prototype, 'setModelValues').mockImplementationOnce(async function (this: RSToolAgent, input, id) {
+      this.getSessionState('summary', id);
+      entered();
+      await gate;
+      return original.call(this, input, id);
+    });
+    try {
+      const app = await start({ sessionRetentionMs: 1000, sessionCleanupIntervalMs: 10 });
+      const peer = await app.connect();
+      const session = await call(peer.client, 'create_session');
+      await call(peer.client, 'apply_schema_patch', { items: [{ alias: 'X1' }] });
+      const pending = call(peer.client, 'set_model_values', { sessionId: session.sessionId,
+        set: [{ target: 1, value: { 0: 'node-0' } }] });
+      await started;
+      clock.mockReturnValue(now + 1500);
+      await new Promise(resolve => setTimeout(resolve, 30));
+      const namespace = createHash('sha256').update(JSON.stringify(['alice', 'task'])).digest('hex');
+      expect((await stat(join(app.directory, namespace, `${session.sessionId}.json`))).isFile()).toBe(true);
+      release();
+      await pending;
+      expect((await call(peer.client, 'get_model_state')).items[0].value).toEqual({ 0: 'node-0' });
+    } finally { release(); update.mockRestore(); clock.mockRestore(); }
+  }, 15_000);
+
+  it.each(['session', 'pointer'])('sanitizes %s persistence failures as structured hosted storage errors', async failure => {
+    const app = await start();
+    const peer = await app.connect();
+    const rename = fs.renameSync;
+    const fault = vi.spyOn(fs, 'renameSync').mockImplementation((from, to) => {
+      const target = String(to);
+      const isPointer = target.endsWith('_current.json');
+      if ((failure === 'pointer' ? isPointer : target.endsWith('.json') && !target.includes('.lifecycle') && !isPointer)) {
+        throw Object.assign(new Error('Synthetic failure at /private-state/example.json'), { code: 'ENOSPC' });
+      }
+      return rename(from, to);
+    });
+    try {
+      const result = await peer.client.callTool({ name: 'create_session', arguments: {} });
+      expect(result.isError).toBe(true);
+      expect(result.structuredContent).toMatchObject({ error: { code: 'SESSION_STORAGE_UNAVAILABLE' } });
+      expect(JSON.stringify(result)).not.toContain('/private-state');
+      expect(JSON.stringify(result)).not.toContain(app.directory);
+    } finally { fault.mockRestore(); }
+  });
+
+  it('bounds retention metadata flushes for one bulk schema patch', async () => {
+    const app = await start();
+    const peer = await app.connect();
+    await call(peer.client, 'create_session');
+    const open = vi.spyOn(fs, 'openSync');
+    try {
+      await call(peer.client, 'apply_schema_patch', { items: Array.from({ length: 30 }, (_, i) => ({
+        alias: `X${i + 1}`, term: `Objects ${i + 1}`, convention: 'Independent object set'
+      })) });
+      const metadataWrites = open.mock.calls.filter(([file]) => String(file).includes('.lifecycle'));
+      expect(metadataWrites.length).toBeLessThanOrEqual(2);
+    } finally { open.mockRestore(); }
+  }, 15_000);
 
   it('expires stored state on a live connection and permits a new session without reviving cached data', async () => {
     const app = await start({ maxStoredSessionsPerAccount: 1, sessionRetentionMs: 1000 });
@@ -149,7 +219,7 @@ describe('rstool Streamable HTTP', () => {
       const response = await post(`${app.url}/mcp/${workspace}`, token, { 'Mcp-Session-Id': alice.transport.sessionId! });
       expect(response.status).toBe(404);
     }
-  });
+  }, process.platform === 'win32' ? 15_000 : 5000);
 
   it('restores the current schema after service restart without reusing an MCP transport ID', async () => {
     const first = await start();

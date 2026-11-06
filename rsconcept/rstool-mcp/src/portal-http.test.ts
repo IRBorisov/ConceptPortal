@@ -9,7 +9,7 @@ import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/
 import { afterEach, expect, it, vi } from 'vitest';
 
 import { createBearerTokenVerifier } from './http-auth';
-import { createRSToolHttpServer } from './http-server';
+import { createRSToolHttpServer, type RSToolHttpServerOptions } from './http-server';
 import { PortalClient } from './portal-client';
 import { PortalPublisher } from './portal-publisher';
 import { PortalVault } from './portal-vault';
@@ -26,7 +26,7 @@ afterEach(async () => {
 });
 
 /** Exercise both protocols against a real loopback listener; only Portal itself is a stub. */
-async function start(portalEnabled = true) {
+async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions, 'sessionRetentionMs' | 'sessionCleanupIntervalMs'> = {}) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'portal-http-test-'));
   cleanup.push(() => {
     const relative = path.relative(path.resolve(os.tmpdir()), path.resolve(directory));
@@ -55,6 +55,7 @@ async function start(portalEnabled = true) {
     new PortalClient('https://portal-api.example', remote)
   );
   const service = createRSToolHttpServer({
+    ...policy,
     persistenceDir: path.join(directory, 'workspaces'),
     verifyToken: createBearerTokenVerifier([
       { subject: 'alice', token: ALICE },
@@ -183,3 +184,34 @@ it('does not expose Portal routes or tools when the integration is absent', asyn
   expect(names.some((name) => name.startsWith('portal_'))).toBe(false);
   expect(app.remote).not.toHaveBeenCalled();
 });
+
+it('rejects queued approval when an in-flight preparation outlives source retention', async () => {
+  const now = Date.now();
+  const clock = vi.spyOn(Date, 'now').mockReturnValue(now);
+  let release!: () => void;
+  let entered!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  const started = new Promise<void>(resolve => { entered = resolve; });
+  try {
+    const app = await start(true, { sessionRetentionMs: 1000, sessionCleanupIntervalMs: 10 });
+    expect((await app.account('connection', 'PUT', { key: KEY })).status).toBe(200);
+    await app.client.callTool({ name: 'apply_schema_patch', arguments: { items: [{ alias: 'X1', term: 'object', convention: 'Objects' }] } });
+    const first = await app.client.callTool({ name: 'portal_prepare_publication', arguments: { targetId: 1 } });
+    expect(first.isError).not.toBe(true);
+    const drafts = await (await app.account('publications')).json() as Array<{ id: string; digest: string }>;
+    const { id, digest } = drafts[0];
+    app.remote.mockImplementationOnce(async () => {
+      entered();
+      await gate;
+      return Response.json({ id: 1, alias: 'OLD', items: [], time_update: '2026-11-06T01:00:00Z' });
+    });
+    const preparing = app.client.callTool({ name: 'portal_prepare_publication', arguments: { targetId: 1 } });
+    await started;
+    clock.mockReturnValue(now + 1001);
+    const approval = app.account(`publications/${id}/confirm`, 'POST', { digest });
+    release();
+    expect((await preparing).isError).toBe(true);
+    expect((await approval).status).toBe(400);
+    expect(app.remote.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(0);
+  } finally { release(); clock.mockRestore(); }
+}, 15_000);
