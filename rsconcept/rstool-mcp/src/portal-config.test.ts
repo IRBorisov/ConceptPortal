@@ -1,15 +1,17 @@
 import { randomBytes } from 'node:crypto';
 import fs from 'node:fs';
+import files from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-import { afterEach, expect, it } from 'vitest';
+import { afterEach, expect, it, vi } from 'vitest';
 import { loadPortalConfiguration } from './portal-config';
 
 const mcp = [{ subject: 'alice', token: 'a'.repeat(40) }];
 const human = [{ subject: 'alice', token: 'b'.repeat(40) }];
 const directories: string[] = [];
 afterEach(() => {
+  vi.restoreAllMocks();
   for (const directory of directories.splice(0)) {
     const relative = path.relative(path.resolve(os.tmpdir()), path.resolve(directory));
     if (relative.startsWith('..') || !relative.startsWith('portal-config-test-')) throw new Error('Unsafe cleanup');
@@ -84,3 +86,96 @@ it('requires a full-size master key and refuses plaintext-readable credentials o
     await expect(loadPortalConfiguration(app.environment, mcp, app.workspace)).rejects.toThrow('Cannot initialize');
   }
 });
+
+/** Use real credential payloads while reproducing the metadata of systemd's root-owned ACL store. */
+function systemdSetup() {
+  const app = setup();
+  const directory = '/run/credentials/rstool-test.service';
+  const modes = { file: 0o100440, directory: 0o40550, uid: 0, gid: 0, directoryUid: 0 };
+  const paths = new Map([
+    [directory + '/master', app.master],
+    [directory + '/accounts', app.accounts],
+  ]);
+  let accountCanonical = directory + '/accounts';
+  const originalStat = files.stat.bind(files);
+  const originalRealpath = files.realpath.bind(files);
+  const originalRead = files.readFile.bind(files);
+  vi.spyOn(files, 'realpath').mockImplementation(async (input) => {
+    const value = String(input);
+    if (value === directory + '/accounts') return accountCanonical;
+    if (value === directory || paths.has(value)) return value;
+    return originalRealpath(input);
+  });
+  vi.spyOn(files, 'stat').mockImplementation(async (input) => {
+    const value = String(input);
+    if (value === directory)
+      return Object.assign(await originalStat(app.directory), {
+        mode: modes.directory,
+        uid: modes.directoryUid,
+        gid: 0,
+      });
+    const actual = paths.get(value);
+    if (actual) return Object.assign(await originalStat(actual), { mode: modes.file, uid: modes.uid, gid: modes.gid });
+    return originalStat(input);
+  });
+  vi.spyOn(files, 'readFile').mockImplementation((input, options) =>
+    originalRead(paths.get(String(input)) ?? input, options)
+  );
+  return {
+    ...app,
+    modes,
+    credentialDirectory: directory,
+    environment: {
+      ...app.environment,
+      CREDENTIALS_DIRECTORY: directory,
+      RSTOOL_PORTAL_MASTER_KEY_FILE: directory + '/master',
+      RSTOOL_ACCOUNT_TOKENS_FILE: directory + '/accounts',
+    },
+    escapeAccount: () => {
+      accountCanonical = '/tmp/outside-credential-store';
+      paths.set(accountCanonical, app.accounts);
+    },
+  };
+}
+
+it.skipIf(process.platform !== 'linux')(
+  'loads root-owned 0440 systemd credentials from the protected runtime store',
+  async () => {
+    const app = systemdSetup();
+    const options = await loadPortalConfiguration(app.environment, mcp, app.workspace);
+    expect(await options!.verifyAccountToken(human[0].token)).toBe('alice');
+    expect(await options!.verifyAccountToken(mcp[0].token)).toBeNull();
+    expect(JSON.stringify(options)).not.toContain(human[0].token);
+  }
+);
+
+it
+  .skipIf(process.platform !== 'linux')
+  .each([
+    { file: 0o100444 },
+    { file: 0o100460 },
+    { file: 0o100640 },
+    { uid: 1000 },
+    { gid: 1000 },
+    { directory: 0o40750 },
+    { directory: 0o40555 },
+    { directoryUid: 1000 },
+  ])('rejects unsafe systemd credential metadata %j', async (unsafe) => {
+  const app = systemdSetup();
+  Object.assign(app.modes, unsafe);
+  await expect(loadPortalConfiguration(app.environment, mcp, app.workspace)).rejects.toThrow('Cannot initialize');
+});
+
+it.skipIf(process.platform !== 'linux')(
+  'rejects an absent, unrelated or non-systemd credential directory and canonical escapes',
+  async () => {
+    const app = systemdSetup();
+    for (const directory of ['', '/run/credentials/another.service', app.directory, 'relative-directory']) {
+      await expect(
+        loadPortalConfiguration({ ...app.environment, CREDENTIALS_DIRECTORY: directory }, mcp, app.workspace)
+      ).rejects.toThrow('Cannot initialize');
+    }
+    app.escapeAccount();
+    await expect(loadPortalConfiguration(app.environment, mcp, app.workspace)).rejects.toThrow('Cannot initialize');
+  }
+);

@@ -1,5 +1,6 @@
-import { mkdir, readFile, realpath, stat } from 'node:fs/promises';
-import { isAbsolute, relative, resolve } from 'node:path';
+import type { Stats } from 'node:fs';
+import files from 'node:fs/promises';
+import { dirname, isAbsolute, relative, resolve } from 'node:path';
 
 import { createBearerTokenVerifier, type HttpCredential } from './http-auth';
 import type { RSToolHttpServerOptions } from './http-server';
@@ -36,20 +37,25 @@ export async function loadPortalConfiguration(
     if (publicUrl.protocol !== 'https:' || publicUrl.origin !== publicOrigin)
       throw new Error('HTTPS account origin required');
     const api = new PortalClient(portalOrigin);
-    await mkdir(vaultDirectory, { recursive: true, mode: 0o700 });
-    await mkdir(persistenceDir, { recursive: true, mode: 0o700 });
-    const vaultPath = await realpath(vaultDirectory),
-      workspacePath = await realpath(persistenceDir);
+    await files.mkdir(vaultDirectory, { recursive: true, mode: 0o700 });
+    await files.mkdir(persistenceDir, { recursive: true, mode: 0o700 });
+    const vaultPath = await files.realpath(vaultDirectory),
+      workspacePath = await files.realpath(persistenceDir);
     if (within(vaultPath, workspacePath) || within(workspacePath, vaultPath))
       throw new Error('Separate data directories required');
     const protectedInput = async (file: string) => {
-      const canonical = await realpath(file);
+      const canonical = await files.realpath(file);
       if (within(vaultPath, canonical) || within(workspacePath, canonical))
         throw new Error('Secrets must be outside application data');
-      const info = await stat(canonical);
-      if (!info.isFile() || info.size > 65536 || (process.platform !== 'win32' && info.mode & 0o077))
+      const info = await files.stat(canonical);
+      const privateMode = process.platform === 'win32' || !(info.mode & 0o077);
+      if (
+        !info.isFile() ||
+        info.size > 65536 ||
+        (!privateMode && !(await systemdCredential(canonical, info, environment.CREDENTIALS_DIRECTORY)))
+      )
         throw new Error('Private regular credential file required');
-      return readFile(canonical);
+      return files.readFile(canonical);
     };
     const accountCredentials: HttpCredential[] = JSON.parse((await protectedInput(accountTokensFile)).toString('utf8'));
     const verifyAccountToken = createBearerTokenVerifier(accountCredentials);
@@ -62,7 +68,7 @@ export async function loadPortalConfiguration(
       policyFile = environment.RSTOOL_PORTAL_SERVICE_POLICY_FILE;
     if (Boolean(serviceFile) !== Boolean(policyFile)) throw new Error('Both service settings required');
     if (serviceFile && policyFile) {
-      const policy = JSON.parse(await readFile(policyFile, 'utf8'));
+      const policy = JSON.parse(await files.readFile(policyFile, 'utf8'));
       service = {
         token: (await protectedInput(serviceFile)).toString('utf8').trim(),
         subjects: policy.subjects,
@@ -80,4 +86,22 @@ export async function loadPortalConfiguration(
 function within(parent: string, child: string): boolean {
   const path = relative(resolve(parent), resolve(child));
   return !path.startsWith('..') && !isAbsolute(path);
+}
+
+/** systemd may expose root-owned 0440 credentials through an ACL granted to this service. */
+async function systemdCredential(file: string, info: Stats, suppliedDirectory?: string): Promise<boolean> {
+  if (
+    process.platform !== 'linux' ||
+    !suppliedDirectory ||
+    !isAbsolute(suppliedDirectory) ||
+    info.uid !== 0 ||
+    info.gid !== 0 ||
+    (info.mode & 0o777) !== 0o440
+  )
+    return false;
+  const directory = await files.realpath(suppliedDirectory);
+  if (dirname(directory) !== '/run/credentials' || dirname(file) !== directory) return false;
+  const parent = await files.stat(directory);
+  // The directory must be root-controlled, immutable to the service and closed to other users.
+  return parent.isDirectory() && parent.uid === 0 && parent.gid === 0 && !(parent.mode & 0o227);
 }
