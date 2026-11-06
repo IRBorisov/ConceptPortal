@@ -1,3 +1,4 @@
+import { RSToolError } from './tool-error';
 import {
   inlineSynthesis,
   restoreConstituentOrder,
@@ -150,7 +151,7 @@ export class RSToolAgent implements RSToolAgentContract {
   /** @inheritdoc */
   public setCurrentSession(sessionId: string): SessionHandle {
     if (!this.sessions.has(sessionId)) {
-      throw new Error(`Unknown session: ${sessionId}`);
+      throw new RSToolError('SESSION_NOT_FOUND', `Unknown session: ${sessionId}`);
     }
     return this.trackSession({ sessionId, contractVersion: this.contractVersion });
   }
@@ -280,6 +281,14 @@ export class RSToolAgent implements RSToolAgentContract {
 
   /** @inheritdoc */
   public evaluate(input: EvaluateInput, sessionId?: string): EvaluationResult {
+    const stored = input.constituentId !== undefined;
+    const scratch = input.expression !== undefined || input.cstType !== undefined;
+    if ((stored && scratch) || (!stored && (input.expression === undefined || input.cstType === undefined))) {
+      throw new RSToolError('INVALID_EVALUATE_ARGUMENTS',
+        'evaluate requires constituentId or expression with cstType; provide exactly one variant, never both.');
+    }
+    if (stored && !Number.isSafeInteger(input.constituentId)) throw new RSToolError('INVALID_EVALUATE_ARGUMENTS',
+      'constituentId must be a numeric constituent id from get_session_state / getSessionState, not an alias.');
     const envelope = this.sessions.get(this.resolveSessionId(sessionId));
 
     if (input.constituentId !== undefined) {
@@ -329,9 +338,7 @@ export class RSToolAgent implements RSToolAgentContract {
 
   /** @inheritdoc */
   public synthesize(input: SynthesizeInput, sessionId?: string): SynthesizeResult {
-    const receiverHandle = sessionId
-      ? { sessionId: this.resolveSessionId(sessionId), contractVersion: this.contractVersion }
-      : this.ensureSession();
+    const receiverHandle = { sessionId: this.resolveSessionId(sessionId), contractVersion: this.contractVersion };
     const receiverId = receiverHandle.sessionId;
     const sourceId = this.resolveSessionId(input.sourceSessionId);
 
@@ -673,15 +680,9 @@ export class RSToolAgent implements RSToolAgentContract {
 
   private resolveSessionId(sessionId?: string): string {
     const id = sessionId ?? this.currentSessionId;
-    if (!id) {
-      return this.createSession().sessionId;
-    }
-    if (!this.sessions.has(id)) {
-      if (sessionId) {
-        throw new Error(`Unknown session: ${sessionId}`);
-      }
-      return this.createSession().sessionId;
-    }
+    if (!id) throw new RSToolError('NO_CURRENT_SESSION',
+      'No current session. Call ensure_session / ensureSession or create_session / createSession before this operation.');
+    if (!this.sessions.has(id)) throw new RSToolError('SESSION_NOT_FOUND', `Unknown session: ${id}`);
     return id;
   }
 

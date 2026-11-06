@@ -148,3 +148,28 @@ describe("buildRSToolMcpServer", () => {
     }
   });
 });
+
+
+it('exposes actionable empty-session errors and structured model results', async () => {
+  const tool = new RSToolAgent();
+  const server = buildRSToolMcpServer({ tool });
+  const client = new Client({ name: 'agent-contract-test', version: '1' });
+  const [local, remote] = InMemoryTransport.createLinkedPair();
+  try {
+    await server.connect(remote); await client.connect(local);
+    const empty = await client.callTool({ name: 'get_session_state', arguments: {} });
+    expect(empty.structuredContent).toMatchObject({ error: { code: 'NO_CURRENT_SESSION' } });
+    expect(tool.getCurrentSession()).toBeNull();
+    const missing = await client.callTool({ name: 'set_current_session', arguments: { sessionId: 'missing' } });
+    expect(missing.structuredContent).toMatchObject({ error: { code: 'SESSION_NOT_FOUND' } });
+    await client.callTool({ name: 'apply_schema_patch', arguments: { items: [{ alias: 'X1', convention: 'Test elements' }] } });
+    const invalid = await client.callTool({ name: 'set_model_values', arguments: { set: [{ target: 1, value: ['one'] }] } });
+    expect(invalid.structuredContent).toMatchObject({ error: { code: 'TOOL_EXECUTION_FAILED', message: expect.stringContaining('object mapping integer element ids') } });
+    const valid = await client.callTool({ name: 'set_model_values', arguments: { set: [{ target: 1, value: { 0: 'one' } }] } });
+    expect(valid.isError).not.toBe(true);
+    const result = CallToolResultSchema.parse(await client.callTool({ name: 'evaluate', arguments: { expression: '1+2', cstType: 'term' } }));
+    expect(result.structuredContent).toMatchObject({ success: true, value: 3, statusName: 'HAS_DATA' });
+    const text = result.content[0] as { type: string; text: string };
+    expect(JSON.parse(text.text)).toEqual(result.structuredContent);
+  } finally { await client.close(); await server.close(); }
+});

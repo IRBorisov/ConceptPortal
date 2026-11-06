@@ -163,3 +163,8 @@ MIT
 The HTTP host enforces configurable per-account stored-session quotas and inactivity retention, with structured limit/expiry errors. See [HTTP storage policy and migration](HTTP.md#stored-session-quota-and-retention) before upgrading an existing persistence root. The local stdio tool catalog is unchanged.
 
 HTTP additionally exposes `get_session_storage_config`, `list_stored_sessions`, and destructive `delete_stored_session` for the authenticated account. Inspect effective limits and usage, list metadata without extending retention, then explicitly compare-and-delete a selected unneeded session to free capacity. Busy/stale/current guards prevent accidental removal of other work; see [agent storage self-service](HTTP.md#agent-self-service-for-account-storage). Initialization instructions advertise effective limits and the complete catalog is available through `list_methods`.
+
+
+### MCP 2.0 / rstool 3.0 migration
+
+Contract 4.0 stops read/analysis/evaluation calls from silently creating sessions. Call `ensure_session` first or supply an existing `sessionId`; `apply_schema_patch` retains its creation path. `NO_CURRENT_SESSION` is actionable and consumes no stored slot. Discovery lists constituent type enums, value-binding examples and evaluation statuses. Object results include `structuredContent` while preserving text responses. See the [library migration notes](../rstool/README.md#contract-4-migration).

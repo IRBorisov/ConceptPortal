@@ -165,6 +165,7 @@ it('requires independent human authentication for account APIs', async () => {
 
 it('removes a pending proposal when its MCP session terminates without disconnecting the key', async () => {
   const app = await start();
+  await app.client.callTool({ name: 'ensure_session', arguments: {} });
   expect((await app.account('connection', 'PUT', { key: KEY })).status).toBe(200);
   const prepared = await app.client.callTool({ name: 'portal_prepare_publication', arguments: { targetId: 1 } });
   expect(prepared.isError).not.toBe(true);

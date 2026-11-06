@@ -50,3 +50,5 @@ export {
 export { RSToolAgent } from './rstool-agent';
 export { type SessionHandle, type SessionRevision, type SessionState } from './session';
 export { CONTRACT_VERSION, type RSToolAgentContract, type RSToolAgentOptions } from './tool-contract';
+
+export { RSToolError } from './tool-error';

@@ -2,7 +2,7 @@
 
 Agent-facing library for **incremental RSForm construction**, **RSLang expression analysis**, **diagnostics**, **modeling**, and **evaluation**. It wraps [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) with a deterministic session contract and a stdio JSON wrapper for LLM agents. MCP hosts can use it through [`@rsconcept/rstool-mcp`](https://www.npmjs.com/package/@rsconcept/rstool-mcp).
 
-**Contract version:** `3.3.1` — see [skills/rstool-runtime/REFERENCE.md](./skills/rstool-runtime/REFERENCE.md) for the full v3 API.
+**Contract version:** `4.0.0` — see [skills/rstool-runtime/REFERENCE.md](./skills/rstool-runtime/REFERENCE.md) for the full v4 API.
 
 ## Agent skill
 
@@ -89,7 +89,7 @@ Maintainers: see [PUBLISHING.md](./PUBLISHING.md) for npm release steps.
 - If a session method is called without an active session, rstool creates one lazily.
 - On startup, a ready handshake is printed.
 
-Supported methods (contract `3.3.1`):
+Supported methods (contract `4.0.0`):
 
 - `ping`
 - `methods`
@@ -125,7 +125,7 @@ Request:
 Response:
 
 ```json
-{ "id": "1", "ok": true, "result": { "sessionId": "...", "contractVersion": "3.3.1" } }
+{ "id": "1", "ok": true, "result": { "sessionId": "...", "contractVersion": "4.0.0" } }
 ```
 
 Example `applySchemaPatch`:
@@ -154,7 +154,7 @@ Response:
   "ok": true,
   "result": {
     "success": true,
-    "session": { "sessionId": "...", "contractVersion": "3.3.1" },
+    "session": { "sessionId": "...", "contractVersion": "4.0.0" },
     "summary": { "itemCount": 3 }
   }
 }
@@ -179,3 +179,10 @@ MIT
 `RSToolAgentOptions.sessionLifecycle` optionally supplies synchronous `beforeCreate`, `created`, and `access` hooks plus an optional `onEviction` cache callback binding for a trusted host. Hooks cover persisted creation/import and cached reads; a rejected access cannot revive expired data. `beforeCreate` runs before saving, `created` after saving the envelope, and `access` before cached/disk lookup. Hosts must preserve single-process storage ownership, enforce concurrency and avoid exposing secrets in errors. Ordinary library and stdio construction without these hooks keeps its existing behavior. Hosted MCP account quota, retention, migration and structured error codes are documented in [HTTP service](https://github.com/IRBorisov/ConceptPortal/blob/main/rsconcept/rstool-mcp/HTTP.md).
 
 A trusted retention host that invokes the external `onEviction` binding also clears that removed session's in-memory current selection. Hosted HTTP clears the persisted pointer before removal; explicit references to removed sessions still fail. Account-wide config/list/delete operations belong to the host and are documented in the MCP HTTP guide, not additional rstool language methods.
+
+
+## Contract 4 migration
+
+rstool 3.0.0 requires an existing current session for reads, analysis, exports and evaluation. Previously these calls could create an empty session implicitly. Call `ensureSession()` or `createSession()` first, or pass an existing session ID. `applySchemaPatch` retains its documented creation path. `NO_CURRENT_SESSION` and `SESSION_NOT_FOUND` are exported `RSToolError` codes and are preserved by stdio/MCP. Ordinary library/stdio hosts do not gain HTTP account storage tools.
+
+Evaluation and recalculation now return `statusName` alongside numeric `status`. `success` reports technical evaluation success; check the status, value and supplied model bindings before drawing conclusions. X/C basic bindings are label objects such as `{"0":"one","1":"two"}`, not arrays of labels. MCP object results include `structuredContent` as well as compatible text; errors include a structured code and message.

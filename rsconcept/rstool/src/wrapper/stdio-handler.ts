@@ -1,3 +1,4 @@
+import { RSToolError } from '../models/tool-error';
 import type { ListDiagnosticsFilters } from '../models/diagnostic';
 import type { RSToolAgent } from '../models/rstool-agent';
 
@@ -229,7 +230,7 @@ async function dispatchStdioRequest(tool: RSToolAgent, request: StdioRequest): P
       id: request.id ?? null,
       ok: false,
       error: {
-        code: 'INTERNAL_ERROR',
+        code: error instanceof RSToolError ? error.code : 'INTERNAL_ERROR',
         message: error instanceof Error ? error.message : 'Unknown error',
         details: error
       }

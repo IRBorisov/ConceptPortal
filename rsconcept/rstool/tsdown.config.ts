@@ -5,6 +5,7 @@ const entryFiles = [
   'src/models/index.ts',
   'src/models/agent-workflow.ts',
   'src/models/tool-contract.ts',
+  'src/models/tool-error.ts',
   'src/models/rstool-agent.ts',
   'src/models/common.ts',
   'src/models/analysis.ts',

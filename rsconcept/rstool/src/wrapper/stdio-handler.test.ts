@@ -85,7 +85,7 @@ describe('handleStdioRequest', () => {
     expect(response.error?.message).toMatch(/sessionId/);
   });
 
-  it('returns INTERNAL_ERROR for unknown session id', async () => {
+  it('returns SESSION_NOT_FOUND for unknown session id', async () => {
     const sessionTool = new RSToolAgent();
     const response = await handleStdioRequest(sessionTool, {
       id: 6,
@@ -93,7 +93,7 @@ describe('handleStdioRequest', () => {
       params: { sessionId: randomUUID() }
     });
     expect(response.ok).toBe(false);
-    expect(response.error?.code).toBe('INTERNAL_ERROR');
+    expect(response.error?.code).toBe('SESSION_NOT_FOUND');
     expect(response.error?.message).toMatch(/Unknown session/);
   });
 
@@ -163,4 +163,12 @@ describe('handleStdioRequest', () => {
     });
     expect(legacy.result).toEqual(schemaOnly.result);
   });
+});
+
+
+it('preserves NO_CURRENT_SESSION without allocating a model', async () => {
+  const tool = new RSToolAgent();
+  const response = await handleStdioRequest(tool, { id: 100, method: 'getSessionState' });
+  expect(response).toMatchObject({ ok: false, error: { code: 'NO_CURRENT_SESSION' } });
+  expect(tool.getCurrentSession()).toBeNull();
 });

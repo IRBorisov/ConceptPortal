@@ -4,7 +4,7 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
-import { RSToolAgent } from "@rsconcept/rstool";
+import { RSToolAgent, RSToolError } from "@rsconcept/rstool";
 
 import { TOOL_DEFINITIONS, type ToolDefinition } from "./tools";
 import { SessionStorageError } from "./session-policy";
@@ -25,7 +25,7 @@ export interface BuildRSToolMcpServerOptions {
   /** Trusted host integration tools, already bound to its authenticated identity. */
   additionalTools?: readonly ToolDefinition[];
   /** Trusted host invocation guard, run inside the per-workspace serial queue. */
-  aroundToolCall?: <T>(invoke: () => Promise<T>, name: string) => Promise<T>;
+  aroundToolCall?: <T>(invoke: () => Promise<T>, definition: ToolDefinition | undefined) => Promise<T>;
   /** Tool discovery and account-management guidance for hosted clients. */
   instructions?: string;
 }
@@ -89,17 +89,7 @@ export function buildRSToolMcpServer(
     /** Adapt one rstool invocation, preserving tool errors as MCP error results. */
     const invoke = async () => {
       const definition = definitionByName.get(request.params.name);
-      if (!definition) {
-        return {
-          isError: true,
-          content: [
-            {
-              type: "text" as const,
-              text: `Unknown rstool tool: ${request.params.name}`,
-            },
-          ],
-        };
-      }
+      if (!definition) return errorResult({ code: 'UNKNOWN_TOOL', message: `Unknown rstool tool: ${request.params.name}` });
 
       try {
         if (extra.signal.aborted) throw new Error('Request cancelled before tool execution');
@@ -107,41 +97,15 @@ export function buildRSToolMcpServer(
           tool,
           request.params.arguments ?? {},
         );
-        const text =
-          typeof result === "string" ? result : JSON.stringify(result, null, 2);
-        return {
-          content: [
-            {
-              type: "text" as const,
-              text,
-            },
-          ],
-        };
+        return successResult(result);
       } catch (error) {
-        const failure = storageFailure(error, options.sanitizeStorageErrors);
-        if (failure) {
-          return { isError: true, structuredContent: { error: failure },
-            content: [{ type: "text" as const, text: JSON.stringify({ error: failure }) }] };
-        }
-        const message = error instanceof Error ? error.message : String(error);
-        return {
-          isError: true,
-          content: [
-            {
-              type: "text" as const,
-              text: `rstool error in ${definition.name}: ${message}`,
-            },
-          ],
-        };
+        return failureResult(error, definition.name, options.sanitizeStorageErrors);
       }
     };
     const guarded = async () => {
-      try { return await (options.aroundToolCall ? options.aroundToolCall(invoke, request.params.name) : invoke()); }
+      try { return await (options.aroundToolCall ? options.aroundToolCall(invoke, definitionByName.get(request.params.name)) : invoke()); }
       catch (error) {
-        const failure = storageFailure(error, options.sanitizeStorageErrors);
-        if (!failure) throw error;
-        return { isError: true, structuredContent: { error: failure },
-          content: [{ type: "text" as const, text: JSON.stringify({ error: failure }) }] };
+        return failureResult(error, request.params.name, options.sanitizeStorageErrors);
       }
     };
     if (options.serializeToolCalls === false) return guarded();
@@ -151,6 +115,27 @@ export function buildRSToolMcpServer(
   });
 
   return server;
+}
+
+/** Preserve text compatibility while exposing object results directly to MCP clients. */
+function successResult(result: unknown) {
+  return { content: [{ type: 'text' as const,
+    text: typeof result === 'string' ? result : JSON.stringify(result, null, 2) }],
+    ...(result !== null && typeof result === 'object' && !Array.isArray(result)
+      ? { structuredContent: result as Record<string, unknown> } : {}) };
+}
+
+function errorResult(error: Record<string, unknown>, text = JSON.stringify({ error })) {
+  return { isError: true, structuredContent: { error }, content: [{ type: 'text' as const, text }] };
+}
+
+/** One error boundary for direct tool failures and trusted host invocation guards. */
+function failureResult(error: unknown, name: string, sanitizeStorageErrors = false) {
+  const storage = storageFailure(error, sanitizeStorageErrors);
+  if (storage) return errorResult(storage);
+  if (error instanceof RSToolError) return errorResult({ code: error.code, tool: name, message: error.message });
+  const message = error instanceof Error ? error.message : String(error);
+  return errorResult({ code: 'TOOL_EXECUTION_FAILED', tool: name, message }, `rstool error in ${name}: ${message}`);
 }
 
 /** Classify only known filesystem failures and serialize an explicit numeric details allow-list. */

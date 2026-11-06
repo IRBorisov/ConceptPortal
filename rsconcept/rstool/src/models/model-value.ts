@@ -39,5 +39,5 @@ export interface SetModelValuesInput {
 
 /** Per-constituent outcome after {@link RSToolAgent.recalculateModel}. */
 export interface RecalculateModelResult {
-  items: Array<{ id: number; alias: string; value: RSToolValue | null; status: EvalStatus }>;
+  items: Array<{ id: number; alias: string; value: RSToolValue | null; status: EvalStatus; statusName: keyof typeof EvalStatus }>;
 }

@@ -377,4 +377,16 @@ await client.close();
 
 For hosted MCP storage errors, inspect `structuredContent.error.code` or the JSON text error. Never retry `create_session` under another workspace to bypass `SESSION_LIMIT_REACHED`: capacity belongs to the account. After `SESSION_EXPIRED`, require an explicit new session or saved import; do not silently substitute an empty model. See the runtime reference and the MCP HTTP storage policy.
 
-Hosted HTTP storage self-service: inspect `get_session_storage_config`, then use `list_stored_sessions` to choose an unneeded session. Listing returns metadata only and does not renew TTL. `delete_stored_session` requires the exact `sessionRef` and `expectedRevision` plus explicit `confirm=true`; a selected current session additionally requires `allowCurrent=true`. Follow user/client approval policy. Never automatically evict a victim. On `SESSION_BUSY` or `SESSION_CHANGED`, refresh the list and decide again. After a cleanup warning, timeout or lost delete response, inspect config/list before choosing any other deletion. See [the hosted contract](https://github.com/IRBorisov/ConceptPortal/blob/main/rsconcept/rstool-mcp/HTTP.md#agent-self-service-for-account-storage). Unconfigured library/stdio methods remain unchanged.
+## MCP: от схемы к значению
+
+Вызовы ниже используют плоские аргументы. После apply_schema_patch возьми реальные числовые ID из ответа; в этом примере они равны 1, 2, 3.
+
+```json
+{"name":"apply_schema_patch","arguments":{"items":[{"alias":"X1","convention":"First test set"},{"alias":"X2","convention":"Second test set"},{"alias":"D1","definitionFormal":"X1×X2"}]}}
+{"name":"set_model_values","arguments":{"set":[{"target":1,"value":{"0":"one","1":"two"}},{"target":2,"value":{"0":"alpha"}}]}}
+{"name":"evaluate","arguments":{"constituentId":3}}
+```
+
+Результат содержит `status: 7`, `statusName: "HAS_DATA"` и `value: [[-111,0,0],[-111,1,0]]`. Это множество двух кортежей `(0,0)` и `(1,0)`; `-111` — маркер кортежа. Не передавай одновременно constituentId и expression/cstType. Для чтения пустого workspace сначала вызови ensure_session, иначе получишь NO_CURRENT_SESSION без создания модели.
+
+При HTTP-квоте используй get_session_storage_config → list_stored_sessions; удаление выбранной сессии выполняй только согласно политике пользователя/клиента и со свежими sessionRef/expectedRevision. Список не продлевает TTL. После неоднозначного ответа на удаление сначала перечитай конфиг/список. Полный [сценарий освобождения квоты](https://github.com/IRBorisov/ConceptPortal/blob/main/rsconcept/rstool-mcp/HTTP.md#agent-self-service-for-account-storage).

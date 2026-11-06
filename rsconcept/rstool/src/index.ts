@@ -60,3 +60,5 @@ export {
   type SynthesizeResult
 } from './models';
 export { RSToolWrapperClient, type RSToolWrapperClientOptions, type WrapperResponse } from './wrapper/client';
+
+export { RSToolError } from './models/tool-error';
