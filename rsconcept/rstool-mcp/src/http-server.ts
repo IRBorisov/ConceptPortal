@@ -6,6 +6,7 @@ import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/
 import { RSToolAgent } from '@rsconcept/rstool';
 
 import { type VerifyHttpToken } from './http-auth';
+import { SessionPolicy, SessionStorageError } from './session-policy';
 import { buildRSToolMcpServer } from './server';
 import { handlePortalAccount, servePortalAccount } from './portal-account';
 import type { PortalPublisher } from './portal-publisher';
@@ -21,6 +22,12 @@ export interface RSToolHttpServerOptions {
   /** Requests with an Origin header are rejected unless explicitly allowed. No CORS is enabled. */
   allowedOrigins?: readonly string[];
   maxSessions?: number;
+  /** Durable session count across all workspaces belonging to one authenticated account. */
+  maxStoredSessionsPerAccount?: number;
+  /** Inactivity duration, renewed by successful session access rather than HTTP keep-alives. */
+  sessionRetentionMs?: number;
+  /** Sweep cadence; persisted access checks also enforce expiry immediately. */
+  sessionCleanupIntervalMs?: number;
   idleTimeoutMs?: number;
   maxRequestBodySize?: number;
   maxPendingRequests?: number;
@@ -67,6 +74,12 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   }
   const workspaces = new Map<string, HttpSession>();
   const sessions = new Map<string, HttpSession>();
+  const policy = new SessionPolicy(options.persistenceDir, options.maxStoredSessionsPerAccount,
+    options.sessionRetentionMs, () => Date.now(), namespace => {
+      const entry = workspaces.get(namespace);
+      if (entry) options.portal?.publisher.invalidateWorkspace(entry.subject, namespace);
+    });
+  const cleanupIntervalMs = positiveInteger(options.sessionCleanupIntervalMs ?? 60_000, 'sessionCleanupIntervalMs');
   let closing: Promise<void> | undefined;
   let stopped = false;
 
@@ -74,7 +87,10 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   function forget(entry: HttpSession): void {
     entry.closed = true;
     options.portal?.publisher.invalidateWorkspace(entry.subject, entry.namespace);
-    if (workspaces.get(entry.namespace) === entry) workspaces.delete(entry.namespace);
+    if (workspaces.get(entry.namespace) === entry) {
+      policy.release(entry.namespace);
+      workspaces.delete(entry.namespace);
+    }
     if (entry.transport.sessionId) sessions.delete(entry.transport.sessionId);
   }
 
@@ -150,8 +166,14 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       if (workspaces.has(namespace)) return reject(response, 409, 'Workspace already has an active MCP session');
       if (workspaces.size >= maxSessions) return reject(response, 503, 'Active session limit reached');
       initializationResponse = responseCompletion(response);
-      const tool = new RSToolAgent({ persistenceDir: join(options.persistenceDir, namespace) });
+      policy.register(subject, namespace);
+      const tool = new RSToolAgent({ persistenceDir: join(options.persistenceDir, namespace),
+        sessionLifecycle: policy.hooks(subject, namespace) });
       const mcpServer = buildRSToolMcpServer({ tool, serializeToolCalls: true,
+        aroundToolCall: async invoke => {
+          const release = policy.begin(namespace);
+          try { return await invoke(); } finally { release(); }
+        },
         additionalTools: options.portal ? portalToolDefinitions(options.portal.publisher, subject, namespace) : undefined });
       const transport = new StreamableHTTPServerTransport({
         sessionIdGenerator: randomUUID,
@@ -202,10 +224,11 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       // Requests active when close() began may only now have become idle.
       if (stopped) server.closeIdleConnections();
     });
-    void handle(request, response).catch(() => {
+    void handle(request, response).catch((error: unknown) => {
       // Do not leak credentials, payloads or filesystem paths to clients/logs.
       if (response.destroyed) return;
-      if (!response.headersSent) reject(response, 500, 'Internal server error');
+      if (!response.headersSent) reject(response, error instanceof SessionStorageError ? 503 : 500,
+        error instanceof SessionStorageError ? error.code : 'Internal server error');
       else response.end();
     });
   });
@@ -213,6 +236,10 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   server.headersTimeout = 15_000;
   const timer = setInterval(expireIdleSessions, Math.min(idleTimeoutMs, 60_000));
   timer.unref();
+  const cleanupTimer = setInterval(() => {
+    try { policy.sweep(); } catch { process.stderr.write('rstool-mcp session cleanup failed\n'); }
+  }, cleanupIntervalMs);
+  cleanupTimer.unref();
 
   return {
     server,
@@ -220,6 +247,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       closing ??= (async () => {
         stopped = true;
         clearInterval(timer);
+        clearInterval(cleanupTimer);
         if (server.listening) {
           await new Promise<void>((resolve, rejectClose) => server.close(error => error ? rejectClose(error) : resolve()));
         }

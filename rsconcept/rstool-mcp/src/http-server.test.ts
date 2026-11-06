@@ -1,4 +1,5 @@
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, rm, stat } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { request } from 'node:http';
 import { type AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
@@ -80,6 +81,52 @@ function post(url: string, token = ALICE, extraHeaders: Record<string, string> =
 }
 
 describe('rstool Streamable HTTP', () => {
+  it('returns structured account quota errors for competing creates across workspaces', async () => {
+    const app = await start({ maxStoredSessionsPerAccount: 1 });
+    const [first, second, other] = await Promise.all([app.connect('one'), app.connect('two'), app.connect('one', BOB)]);
+    const results = await Promise.all([first, second].map(peer => peer.client.callTool({ name: 'create_session', arguments: {} })));
+    expect(results.filter(result => !result.isError)).toHaveLength(1);
+    const rejected = results.find(result => result.isError)!;
+    expect(rejected.structuredContent).toMatchObject({ error: { code: 'SESSION_LIMIT_REACHED', limit: 1, count: 1 } });
+    expect(payload(CallToolResultSchema.parse(rejected))).toMatchObject({ error: { code: 'SESSION_LIMIT_REACHED' } });
+    await call(other.client, 'create_session');
+    await call(first.client, 'ping');
+  });
+
+  it('removes idle saved sessions on the background timer without requiring a tool request', async () => {
+    const app = await start({ sessionRetentionMs: 1000, sessionCleanupIntervalMs: 10 });
+    const peer = await app.connect();
+    const session = await call(peer.client, 'create_session');
+    const namespace = createHash('sha256').update(JSON.stringify(['alice', 'task'])).digest('hex');
+    const path = join(app.directory, namespace, `${session.sessionId}.json`);
+    expect((await stat(path)).isFile()).toBe(true);
+    const now = Date.now();
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(now + 1001);
+    try {
+      await vi.waitFor(async () => { await expect(stat(path)).rejects.toMatchObject({ code: 'ENOENT' }); });
+      const expired = await peer.client.callTool({ name: 'get_session_state', arguments: { sessionId: session.sessionId } });
+      expect(expired.structuredContent).toMatchObject({ error: { code: 'SESSION_NOT_FOUND_OR_EXPIRED' } });
+    } finally { clock.mockRestore(); }
+  });
+
+  it('expires stored state on a live connection and permits a new session without reviving cached data', async () => {
+    const app = await start({ maxStoredSessionsPerAccount: 1, sessionRetentionMs: 1000 });
+    const peer = await app.connect();
+    const session = await call(peer.client, 'create_session');
+    const now = Date.now();
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(now + 1001);
+    try {
+      await call(peer.client, 'ping');
+      const expired = await peer.client.callTool({ name: 'get_session_state', arguments: { sessionId: session.sessionId } });
+      expect(expired.isError).toBe(true);
+      expect(expired.structuredContent).toMatchObject({ error: { code: 'SESSION_EXPIRED', retentionSeconds: 1 } });
+      const missing = await peer.client.callTool({ name: 'get_session_state', arguments: { sessionId: session.sessionId } });
+      expect(missing.structuredContent).toMatchObject({ error: { code: 'SESSION_NOT_FOUND_OR_EXPIRED' } });
+      const next = await call(peer.client, 'create_session');
+      expect(next.sessionId).not.toBe(session.sessionId);
+    } finally { clock.mockRestore(); }
+  });
+
   it('supports the real MCP client and isolates users, workspaces and foreign session references', async () => {
     const app = await start();
     const [alice, bob, otherTask] = await Promise.all([

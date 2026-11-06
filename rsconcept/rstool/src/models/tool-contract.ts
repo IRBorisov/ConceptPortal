@@ -21,6 +21,14 @@ export const CONTRACT_VERSION = '3.3.1';
 export interface RSToolAgentOptions {
   /** When set, sessions are persisted to this directory and survive process restarts. */
   persistenceDir?: string;
+  /** Trusted storage policy. Hooks must be synchronous and must not mutate language state. */
+  sessionLifecycle?: {
+    beforeCreate: (sessionId: string) => void;
+    created: (sessionId: string) => void;
+    access: (sessionId: string) => void;
+    /** Optional cache eviction callback binding for external retention cleanup. */
+    onEviction?: (evict: (sessionId: string) => void) => void;
+  };
 }
 
 /**

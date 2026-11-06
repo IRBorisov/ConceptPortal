@@ -118,7 +118,7 @@ export class RSToolAgent implements RSToolAgentContract {
 
   /** @param options - Optional persistence directory for session storage. */
   public constructor(options: RSToolAgentOptions = {}) {
-    this.sessions = new SessionStore({ persistenceDir: options.persistenceDir });
+    this.sessions = new SessionStore({ persistenceDir: options.persistenceDir, sessionLifecycle: options.sessionLifecycle });
     this.currentSessionId = this.sessions.loadCurrentSessionId();
   }
 

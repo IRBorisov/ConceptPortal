@@ -298,3 +298,7 @@ JSON-строка сессии для последующего `importData(..., 
 Сотрудник открывает страницу отдельно, вводит независимый ключ доступа к кабинету и личный
 ключ портала. Эти ключи запрещено передавать в чат, MCP-аргументы или сессию rstool.
 Только сотрудник подтверждает конкретное предложение на странице; MCP-инструмента подтверждения нет.
+
+### Trusted storage lifecycle hooks
+
+`RSToolAgentOptions.sessionLifecycle` optionally supplies synchronous `beforeCreate`, `created`, and `access` hooks plus an optional `onEviction` cache callback binding for a trusted host. Hooks cover persisted creation/import and cached reads; a rejected access cannot revive expired data. `beforeCreate` runs before saving, `created` after saving the envelope, and `access` before cached/disk lookup. Hosts must preserve single-process storage ownership, enforce concurrency and avoid exposing secrets in errors. Ordinary library and stdio construction without these hooks keeps its existing behavior. Hosted MCP account quota, retention, migration and structured error codes are documented in [HTTP service](../../../rstool-mcp/HTTP.md).
