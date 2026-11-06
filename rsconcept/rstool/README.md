@@ -86,7 +86,7 @@ Maintainers: see [PUBLISHING.md](./PUBLISHING.md) for npm release steps.
 - Input: one JSON request per line.
 - Output: one JSON response per line.
 - The wrapper keeps state in memory while the process is alive (or on disk when `RSTOOL_PERSISTENCE_DIR` is set).
-- If a session method is called without an active session, rstool creates one lazily.
+- Session-dependent reads, analysis, exports and evaluation require an existing current session or explicit sessionId. Call ensureSession/createSession only when a session is needed; otherwise NO_CURRENT_SESSION is returned. getCurrentSession itself returns null when none exists.
 - On startup, a ready handshake is printed.
 
 Supported methods (contract `4.0.0`):

@@ -165,3 +165,5 @@ New hosted session IDs are limited to 250 UTF-8 bytes before persistence, preven
 
 
 MCP 2.0 uses rstool 3.0 / contract 4.0: only explicit create/ensure/import and schema-patch creation can consume new slots. Reads, analysis, exports and evaluation require an existing session and return `NO_CURRENT_SESSION` when none is selected. Call `ensure_session` or `create_session`; storage config/list tools remain available without creating a model. This change applies equally to library and stdio use. See the [migration notes](../rstool/README.md#contract-4-migration).
+
+The offline index CLI accepts `--subject=--employee` for an identity beginning with two dashes. In ordinary separated arguments, an option cannot stand in for a missing value. Unknown and duplicate options remain invalid.

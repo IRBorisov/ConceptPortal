@@ -171,3 +171,39 @@ describe('RSToolAgent session integrity', () => {
     expect(fs.readdirSync(directory).sort()).toEqual(files);
   });
 });
+
+
+it.each([false, true])('handles hook failure after metadata commit with rollbackFailure=%s', rollbackFailure => {
+  const { directory, tool } = persistedAgent();
+  const before = tool.exportSession();
+  const payload = JSON.parse(before);
+  payload.state.title = 'Rejected replacement';
+  const target = path.join(directory, `${payload.state.sessionId}.json`);
+  const stamp = path.join(directory, 'policy-stamp.json');
+  const hookError = new Error('Post-stamp policy failure');
+  const rollbackError = new Error('Envelope rollback failure');
+  const guarded = new RSToolAgent({ persistenceDir: directory, sessionLifecycle: {
+    beforeCreate: () => {}, access: () => {}, created: () => {
+      fs.writeFileSync(`${stamp}.tmp`, 'committed');
+      fs.renameSync(`${stamp}.tmp`, stamp);
+      throw hookError;
+    }
+  } });
+  const rename = fs.renameSync.bind(fs);
+  let saves = 0;
+  vi.spyOn(fs, 'renameSync').mockImplementation((source, destination) => {
+    if (String(destination) === target && ++saves === 2 && rollbackFailure) throw rollbackError;
+    return rename(source, destination);
+  });
+  let failure: unknown;
+  try { guarded.importData(payload, 'session'); } catch (error) { failure = error; }
+  expect(fs.readFileSync(stamp, 'utf8')).toBe('committed');
+  if (rollbackFailure) {
+    expect(failure).toBeInstanceOf(AggregateError);
+    expect((failure as AggregateError).errors).toEqual([hookError, rollbackError]);
+  } else {
+    expect(failure).toBe(hookError);
+    expect(guarded.exportSession()).toBe(before);
+    expect(new RSToolAgent({ persistenceDir: directory }).exportSession()).toBe(before);
+  }
+});
