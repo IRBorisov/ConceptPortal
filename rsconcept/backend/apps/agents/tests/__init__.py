@@ -6,3 +6,4 @@ from .t_models import *
 from .t_oss import *
 from .t_quota import *
 from .t_rsform_routes import *
+from .t_publication import *

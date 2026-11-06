@@ -3,6 +3,23 @@
  */
 
 import { type RSToolAgent } from "@rsconcept/rstool";
+import type { PortalPublisher } from './portal-publisher';
+
+/** Trusted HTTP host captures the identity; tools cannot accept a key, subject or publication approval. */
+export function portalToolDefinitions(publisher: PortalPublisher, subject: string, workspace: string): ToolDefinition[] {
+  return [{ name: 'portal_prepare_publication', description: 'Prepare replacement of an existing owned Portal schema. Does not publish. Review and approve on the separate account page.',
+    inputSchema: { type: 'object', properties: { targetId: { type: 'integer', minimum: 1 } }, required: ['targetId'], additionalProperties: false },
+    invoke: (tool, args) => {
+      if (Object.keys(args).length !== 1) throw new Error('Only targetId is accepted');
+      return publisher.prepare(subject, workspace, args.targetId as number, tool);
+    },
+  }, { name: 'portal_connection_status', description: 'Get safe Portal connection status for the authenticated identity, without any credential.',
+    inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+    invoke: (_tool, args) => {
+      if (Object.keys(args).length) throw new Error('This tool accepts no arguments');
+      return publisher.connection(subject);
+    } }];
+}
 
 export interface ToolDefinition {
   name: string;

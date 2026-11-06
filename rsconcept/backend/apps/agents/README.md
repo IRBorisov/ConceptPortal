@@ -1,5 +1,18 @@
 # Agent API authentication
 
+## Approved MCP publication
+
+`GET /api/agents/me` resolves a bearer key to its account id/username without
+returning key material. `POST /api/agents/rsforms/:id/publish` accepts
+`{expected_time_update, schema}` and requires owner/staff edit rights. Its
+transaction conditionally claims the observed timestamp, preserves a full
+version and replaces content. A stale timestamp returns 409; failed validation
+or replacement leaves no partial schema or version. RSForm mutation helpers
+take a library-row write lock before editing constituents. Existing routes keep
+their contracts. This release does not add scopes or expiry to existing keys.
+Hosted MCP enrollment/approval and secret storage are documented in
+[rstool-mcp/PORTAL.md](../../../rstool-mcp/PORTAL.md).
+
 API keys contain a public prefix and a secret generated with
 `secrets.token_urlsafe(32)`, giving the secret 256 random bits. Store the full
 token as a SHA-256 hex digest. Authentication loads active candidates by their

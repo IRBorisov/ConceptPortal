@@ -38,9 +38,10 @@ From repo root (pnpm workspace; `@rsconcept/rstool` links to `rsconcept/rstool`)
 
 ## Edit rules
 
-- **All new tools live in `src/tools.ts`** — add an entry to `TOOL_DEFINITIONS` with a permissive JSON schema and an `invoke` that calls a method on `RSToolAgent`. Do not add handlers in `server.ts`.
+- **All new tools live in `src/tools.ts`** — RS tools in `TOOL_DEFINITIONS` invoke `RSToolAgent`. Optional Portal integration tools are created by `portalToolDefinitions` with trusted host identity and delegate to `PortalPublisher`. Do not add tool handlers in `server.ts`.
 - **Mirror rstool changes**: when `@rsconcept/rstool` adds or removes a method, update `TOOL_DEFINITIONS` and the README tool table in the same change set. Update the smoke test's expected list of tool names.
 - **No business logic**: validation, error mapping, and session bookkeeping belong in `@rsconcept/rstool`. The adapter only marshals JSON.
+- Portal transport, encrypted credential binding and human approval are external integration concerns in `portal-*.ts`, not RS-language logic. Never expose key management or a confirmation operation as an MCP tool. Account APIs derive subject from host auth, not body/query data.
 - HTTP authentication, transport ownership and limits belong in the HTTP host. Never share a mutable `RSToolAgent` across identities or live workspace leases. Preserve the stdio contract.
 - `buildRSToolMcpServer` serializes tool calls by default on all transports. Only an explicit `serializeToolCalls: false` opts out; the library's optimistic model commit still protects against stale writes.
 - **Permissive schemas**: prefer `additionalProperties: true` for structurally rich payloads; let rstool throw and surface the message through `isError: true` text content.

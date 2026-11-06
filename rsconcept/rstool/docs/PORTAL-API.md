@@ -15,6 +15,8 @@
 
 | Метод | Путь                                           | Назначение                                       |
 | ----- | ---------------------------------------------- | ------------------------------------------------ |
+| GET   | `/api/agents/me`                               | Несекретные id и имя владельца ключа              |
+| POST  | `/api/agents/rsforms/:id/publish`               | Замена с проверкой версии базы и снимком, owner/staff |
 | GET   | `/api/agents/library/active`                   | Метаданные доступных объектов                    |
 | GET   | `/api/agents/library/context-search`           | Поиск (те же query-параметры)                    |
 | GET   | `/api/agents/library/by-ids`                   | Метаданные по id                                 |

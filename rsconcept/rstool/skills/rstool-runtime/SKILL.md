@@ -20,6 +20,7 @@ description: >-
 - Модель — `await setModelValues(...)`, `evaluate`, `recalculateModel`; `status` — число (`EvalStatus`). Для проверки смысла по брифу удобнее сценарии и `check-brief` (`docs/BRIEF.md`).
 - Синтез (встраивание) — `synthesize({ sourceSessionId, substitutions })`; имена источника перенумеровываются (`aliasMapping` в ответе).
 - Импорт / экспорт — `importData(payload, kind?)` (`auto` различает сессию и JSON Portal), `exportSession()`, `exportPortal({ kind: 'schema' })`.
+- Настроенный HTTP MCP может добавить `portal_prepare_publication` и `portal_connection_status`. Подготовка не пишет в Portal; ключ и подтверждение пользователь вводит на отдельной HTTPS-странице с независимым пользовательским токеном. Обычный токен агента эту страницу настроек не открывает. Секреты не передавать в чат/аргументы инструмента. Порядок и ограничения: `../rstool-mcp/PORTAL.md` относительно корня пакета, REST-протокол — `docs/PORTAL-PUBLISH.md`.
 - Stdio (`npx rstool-wrapper`) и MCP (`@rsconcept/rstool-mcp`, имена в `snake_case`): **плоские** `params` — поля метода и `sessionId` на одном уровне.
 - При прямом вызове библиотеки дожидайся каждой записи в одну сессию. `setModelValues` работает с копией; при пересекающейся правке отклоняет сохранение с `Session changed during model update`, сохраняя новую правку. Перечитай состояние и реши, нужен ли повтор. Stdio и MCP по умолчанию ставят вызовы в очередь.
 

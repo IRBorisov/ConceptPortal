@@ -2,6 +2,7 @@
 from typing import Optional, cast
 
 from django.db import transaction
+from django.db.models import F
 
 from apps.library.models import LibraryItem
 from apps.oss.models import PropagationFacade
@@ -13,6 +14,8 @@ from . import serializers as s
 def replace_schema_content(item: LibraryItem, validated: dict) -> None:
     ''' Replace schema content from an import payload. Caller checks inheritance. '''
     with transaction.atomic():
+        # Serialize schema writers before touching constituent rows (also on SQLite).
+        LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
         version_data = {
             'title': validated['title'],
             'alias': validated['alias'],
@@ -36,6 +39,8 @@ def create_constituenta(
 ) -> m.Constituenta:
     ''' Create one constituenta and propagate the change. '''
     with transaction.atomic():
+        # Serialize schema writers before touching constituent rows (also on SQLite).
+        LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
         propagation = PropagationFacade()
         schema = propagation.get_schema(item.pk)
         new_cst = schema.create_cst(data, insert_after)
@@ -47,6 +52,8 @@ def create_constituenta(
 def update_constituenta(item: LibraryItem, cst: m.Constituenta, data: dict) -> None:
     ''' Update persistent attributes of a constituenta and propagate the change. '''
     with transaction.atomic():
+        # Serialize schema writers before touching constituent rows (also on SQLite).
+        LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
         propagation = PropagationFacade()
         schema = propagation.get_schema(item.pk)
         old_data = schema.update_cst(cst.pk, data)
@@ -73,6 +80,8 @@ def update_constituenta(item: LibraryItem, cst: m.Constituenta, data: dict) -> N
 def delete_constituents(item: LibraryItem, cst_list: list[m.Constituenta]) -> None:
     ''' Delete constituents and propagate the change. '''
     with transaction.atomic():
+        # Serialize schema writers before touching constituent rows (also on SQLite).
+        LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
         schema = m.RSForm(item)
         PropagationFacade().before_delete_cst(item.pk, [cst.pk for cst in cst_list])
         schema.delete_cst(cst_list)
@@ -82,6 +91,8 @@ def delete_constituents(item: LibraryItem, cst_list: list[m.Constituenta]) -> No
 def substitute_constituents(item: LibraryItem, substitutions_data: list) -> None:
     ''' Substitute constituents and propagate the change. '''
     with transaction.atomic():
+        # Serialize schema writers before touching constituent rows (also on SQLite).
+        LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
         schema = m.RSForm(item)
         substitutions: list[tuple[m.Constituenta, m.Constituenta]] = []
         for substitution in substitutions_data:
@@ -96,6 +107,8 @@ def substitute_constituents(item: LibraryItem, substitutions_data: list) -> None
 def move_constituents(item: LibraryItem, validated: dict) -> None:
     ''' Reorder constituents from a validated move payload. '''
     with transaction.atomic():
+        # Serialize schema writers before touching constituent rows (also on SQLite).
+        LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
         schema = m.RSForm(item)
         schema.move_cst(target=validated['items'], destination=validated['move_to'])
         item.save(update_fields=['time_update'])
