@@ -71,7 +71,7 @@ class AgentRsformPublishView(AgentItemView):
             if Inheritance.objects.filter(child__schema_id=item.pk).exists():
                 raise ValidationError('Cannot replace an inherited schema.')
             snapshot = RSForm(item).create_version(
-                version=f'mcp-{uuid4().hex}', description='Before approved MCP publication',
+                version=f'mcp-{uuid4().hex[:16]}', description='Before approved MCP publication',
                 data=RSFormSerializer(item).to_versioned_data(),
             )
             replace_schema_content(item, serializer.validated_data['schema'])

@@ -54,6 +54,8 @@ class TestAgentPublication(EndpointTester):
         response = self.client.post(self.url, self.payload)
         self.assertEqual(response.status_code, 200, response.data)
         snapshot = Version.objects.get(pk=response.data['version'])
+        # SQLite does not enforce varchar limits; validate the PostgreSQL constraint explicitly.
+        snapshot.full_clean()
         self.assertEqual(snapshot.data['alias'], 'BASE')
         self.assertEqual(len(snapshot.data['items']), 1)
         self.assertEqual(response.data['schema']['alias'], 'NEW')
