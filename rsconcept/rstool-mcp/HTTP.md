@@ -2,7 +2,7 @@
 
 `rstool-mcp-http` hosts the existing rstool tool catalog over Streamable HTTP. Use it when MCP clients on several machines need a centrally managed runtime. `rstool-mcp` remains the local stdio entry point.
 
-This is a single-process pilot service with bearer credentials. It does not implement an OAuth authorization server, project sharing/ACLs, a Portal REST adapter, or infrastructure administration.
+This is a single-process pilot service with bearer credentials. Optional [Portal publication](PORTAL.md) adds encrypted per-subject keys and a separate approval page. It does not implement an OAuth authorization server, project sharing/ACLs, or infrastructure administration.
 
 ## Configure the service
 
@@ -61,7 +61,7 @@ The programmatic `createRSToolHttpServer` factory accepts:
 
 401 means credentials are missing or invalid; 404 means the route/session is unavailable to this identity; 409 means the workspace is already connected; 413 means the body is too large; 429 means the workspace queue is full; 503 means authentication timed out, the active-session limit is reached or the service is stopping. Invalid initialization or an initialize response interrupted before write completion does not retain a lease. An interrupted response on an existing transport preserves its lease. Tool-level rstool errors retain their existing MCP `isError` result.
 
-Responses use JSON. The service returns 405 for GET because it does not provide server-initiated SSE streams. It does not enable browser CORS or trust forwarded identity headers.
+MCP responses use JSON and MCP GET returns 405 because server-initiated SSE is not provided. Optional Portal account routes serve HTML/JS/CSS and authenticated settings APIs; see [Portal publication](PORTAL.md). The service does not enable browser CORS or trust forwarded identity headers.
 
 These limits do not bound expression evaluation CPU time, total schema size, or historical workspace storage. A synchronous evaluation can block the Node.js event loop. Keep the pilot restricted to trusted internal users; hard compute budgets and worker isolation require a separate change.
 

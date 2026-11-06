@@ -7,6 +7,9 @@ import { RSToolAgent } from '@rsconcept/rstool';
 
 import { type VerifyHttpToken } from './http-auth';
 import { buildRSToolMcpServer } from './server';
+import { handlePortalAccount, servePortalAccount } from './portal-account';
+import type { PortalPublisher } from './portal-publisher';
+import { portalToolDefinitions } from './tools';
 
 export interface RSToolHttpServerOptions {
   /** Durable root, exclusively owned by this single service process. */
@@ -23,6 +26,8 @@ export interface RSToolHttpServerOptions {
   maxPendingRequests?: number;
   /** Deadline for an asynchronous credential verifier. */
   authenticationTimeoutMs?: number;
+  /** Optional fixed-origin integration; account APIs and Portal tools exist only when configured. */
+  portal?: { publisher: PortalPublisher; publicOrigin: string; verifyAccountToken: VerifyHttpToken };
 }
 
 interface HttpSession {
@@ -53,6 +58,12 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   const authenticationTimeoutMs = positiveInteger(options.authenticationTimeoutMs ?? 5_000, 'authenticationTimeoutMs');
   const allowedHosts = new Set((options.allowedHosts ?? ['127.0.0.1', 'localhost', '[::1]']).map(host => host.toLowerCase()));
   const allowedOrigins = new Set(options.allowedOrigins ?? []);
+  if (options.portal) {
+    if (typeof options.portal.verifyAccountToken !== 'function' || options.portal.verifyAccountToken === options.verifyToken) throw new Error('Portal account access requires an independent credential verifier');
+    const origin = new URL(options.portal.publicOrigin);
+    if (origin.protocol !== 'https:' || origin.origin !== options.portal.publicOrigin) throw new Error('Portal account page requires an HTTPS public origin');
+    allowedOrigins.add(origin.origin);
+  }
   const workspaces = new Map<string, HttpSession>();
   const sessions = new Map<string, HttpSession>();
   let closing: Promise<void> | undefined;
@@ -61,6 +72,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   /** Remove only this transport lease; the workspace's persisted schema data stays intact. */
   function forget(entry: HttpSession): void {
     entry.closed = true;
+    options.portal?.publisher.invalidateWorkspace(entry.namespace);
     if (workspaces.get(entry.namespace) === entry) workspaces.delete(entry.namespace);
     if (entry.transport.sessionId) sessions.delete(entry.transport.sessionId);
   }
@@ -99,15 +111,23 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
     if (origin !== undefined && !allowedOrigins.has(origin)) {
       return reject(response, 403, 'Origin is not allowed');
     }
+    if (options.portal && servePortalAccount(url.pathname, request, response)) return;
+    const accountRoute = options.portal && url.pathname.startsWith('/portal/api/');
     const route = /^\/mcp(?:\/([A-Za-z0-9][A-Za-z0-9._-]{0,63}))?\/?$/.exec(url.pathname);
-    if (!route) return reject(response, 404, 'Not found');
+    if (!route && !accountRoute) return reject(response, 404, 'Not found');
     const token = /^Bearer ([^\s]+)$/i.exec(request.headers.authorization ?? '')?.[1];
-    const subject = token ? await verifyWithDeadline(options.verifyToken, token, authenticationTimeoutMs) : null;
+    const verifier = accountRoute && options.portal ? options.portal.verifyAccountToken : options.verifyToken;
+    const subject = token ? await verifyWithDeadline(verifier, token, authenticationTimeoutMs) : null;
     if (subject === AUTHENTICATION_TIMEOUT) return reject(response, 503, 'Authentication timed out');
     if (!subject || typeof subject !== 'string') {
       response.setHeader('WWW-Authenticate', 'Bearer realm="rstool-mcp"');
       return reject(response, 401, 'Bearer authentication required');
     }
+    if (accountRoute && options.portal) {
+      await handlePortalAccount(url.pathname, request, response, subject, options.portal.publisher, options.portal.publicOrigin);
+      return;
+    }
+    if (!route) return reject(response, 404, 'Not found');
     if (request.method !== 'POST' && request.method !== 'DELETE') {
       response.setHeader('Allow', 'POST, DELETE');
       return reject(response, 405, 'Only POST and DELETE are supported');
@@ -130,7 +150,8 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       if (workspaces.size >= maxSessions) return reject(response, 503, 'Active session limit reached');
       initializationResponse = responseCompletion(response);
       const tool = new RSToolAgent({ persistenceDir: join(options.persistenceDir, namespace) });
-      const mcpServer = buildRSToolMcpServer({ tool, serializeToolCalls: true });
+      const mcpServer = buildRSToolMcpServer({ tool, serializeToolCalls: true,
+        additionalTools: options.portal ? portalToolDefinitions(options.portal.publisher, subject, namespace) : undefined });
       const transport = new StreamableHTTPServerTransport({
         sessionIdGenerator: randomUUID,
         enableJsonResponse: true,

@@ -19,6 +19,8 @@ export interface BuildRSToolMcpServerOptions {
   version?: string;
   /** Queue tool invocations, including calls in one JSON-RPC batch. Defaults to true. */
   serializeToolCalls?: boolean;
+  /** Trusted host integration tools, already bound to its authenticated identity. */
+  additionalTools?: readonly ToolDefinition[];
 }
 
 /**
@@ -48,7 +50,7 @@ export function buildRSToolMcpServer(
   const server = new McpServer(
     {
       name: options.name ?? "rstool-mcp",
-      version: options.version ?? "1.1.1",
+      version: options.version ?? "1.2.0",
     },
     {
       capabilities: {
@@ -57,13 +59,13 @@ export function buildRSToolMcpServer(
     },
   );
 
-  const definitionByName = new Map<string, ToolDefinition>(
-    TOOL_DEFINITIONS.map((definition) => [definition.name, definition]),
-  );
+  const definitions = [...TOOL_DEFINITIONS, ...(options.additionalTools ?? [])];
+  const definitionByName = new Map<string, ToolDefinition>(definitions.map(definition => [definition.name, definition]));
+  if (definitionByName.size !== definitions.length) throw new Error('Duplicate MCP tool name');
 
   server.server.setRequestHandler(ListToolsRequestSchema, () =>
     Promise.resolve({
-      tools: TOOL_DEFINITIONS.map((definition) => ({
+      tools: definitions.map((definition) => ({
         name: definition.name,
         description: definition.description,
         inputSchema: definition.inputSchema,
