@@ -22,6 +22,8 @@ Replace the placeholder with a cryptographically random token. Tokens must conta
 | `RSTOOL_PERSISTENCE_DIR` | Private durable root for rstool workspaces | Required |
 | `RSTOOL_HTTP_HOST` | Bind address | `127.0.0.1` |
 | `RSTOOL_HTTP_PORT` | Listening port | `8093` |
+| `RSTOOL_MAX_SESSIONS_PER_ACCOUNT` | Maximum stored sessions across all workspaces for one subject | `20` |
+| `RSTOOL_SESSION_RETENTION_SECONDS` | Stored-session inactivity lifetime, renewed on access | `2592000` (30 days) |
 | `RSTOOL_HTTP_ALLOWED_HOSTS` | Comma-separated permitted Host hostnames, without ports | `127.0.0.1,localhost,[::1]` |
 
 Once configured, start `rstool-mcp-http`, or use `pnpm --filter @rsconcept/rstool-mcp run start:http` from a source checkout. Install a pinned package version. The CLI stops accepting requests and drains active requests on SIGINT/SIGTERM.
@@ -43,7 +45,7 @@ After initialization, the client sends the returned `Mcp-Session-Id` on each sub
 
 One workspace permits one live MCP connection. A second initialization returns 409, including two agents using the same person's credential. This prevents independently cached copies or current-session pointers from overwriting each other. Requests within that connection and tool invocations inside a JSON-RPC batch are serialized. A failed asynchronous operation completes its rollback before the next tool starts. This is exclusive ownership, not collaborative editing or optimistic merging.
 
-Send MCP DELETE to release a transport lease when finished. Closing the local client connection alone leaves the lease until idle expiry. After DELETE, expiry or a service restart, initialize a new MCP connection at the same URL and use `get_current_session` to resume the persisted schema. Do not reuse an expired transport ID. Deleting a transport does not delete schema data.
+Send MCP DELETE to release a transport lease when finished. Closing the local client connection alone leaves the lease until idle expiry. After DELETE, transport expiry or a service restart, initialize a new MCP connection at the same URL and use `get_current_session` to resume a schema still within its storage retention period. Do not reuse an expired transport ID. Deleting a transport does not delete schema data.
 
 ## Limits and errors
 
@@ -52,6 +54,9 @@ The programmatic `createRSToolHttpServer` factory accepts:
 | Option | Default | Effect |
 | --- | --- | --- |
 | `maxSessions` | 32 | Maximum active workspace/transport leases, including initialization |
+| `maxStoredSessionsPerAccount` | 20 | Total stored sessions across all workspaces belonging to one subject |
+| `sessionRetentionMs` | 30 days | Remove stored sessions after inactivity, including cached sessions |
+| `sessionCleanupIntervalMs` | 1 minute | Background scan; access and creation also enforce expiry |
 | `idleTimeoutMs` | 30 minutes | Release leases with no queued/in-flight requests after inactivity |
 | `maxRequestBodySize` | 4 MiB | SDK limit before JSON parsing |
 | `maxPendingRequests` | 8 per workspace | Bound queued and in-flight HTTP requests |
@@ -63,7 +68,7 @@ The programmatic `createRSToolHttpServer` factory accepts:
 
 MCP responses use JSON and MCP GET returns 405 because server-initiated SSE is not provided. Optional Portal account routes serve HTML/JS/CSS and authenticated settings APIs; see [Portal publication](PORTAL.md). The service does not enable browser CORS or trust forwarded identity headers.
 
-These limits do not bound expression evaluation CPU time, total schema size, or historical workspace storage. A synchronous evaluation can block the Node.js event loop. Keep the pilot restricted to trusted internal users; hard compute budgets and worker isolation require a separate change.
+These limits bound stored session counts and inactivity, not expression evaluation CPU time, bytes per schema, or the number of empty workspace directories. A synchronous evaluation can block the Node.js event loop. Keep the pilot restricted to trusted internal users; hard compute budgets and worker isolation require a separate change.
 
 ## Reverse proxy and process ownership
 
@@ -72,3 +77,37 @@ Keep the HTTP listener on loopback behind an internal HTTPS reverse proxy. Forwa
 Run exactly one service process for a persistence root. Do not use cluster/PM2 multi-worker mode, load-balance replicas over the same root, or run stdio against its workspace directories. The lease registry and serialization queue are process-local. A later shared-storage design needs cross-process locking or transactional revision checks.
 
 For an existing identity provider, embed `createRSToolHttpServer` and supply `verifyToken`. It must validate the credential, issuer, audience, expiry and applicable access policy, returning a stable subject only on success. The optional second argument is an AbortSignal that is aborted when verification times out; use it to cancel network calls. The deadline ends the HTTP request even if the verifier ignores cancellation. Do not accept a caller-supplied subject header or forward the incoming credential to Portal. OAuth discovery and authorization flows are outside this pilot.
+
+## Stored-session quota and retention
+
+Stored rstool sessions are distinct from MCP transport leases. Quota is per authenticated subject across all workspaces, persists across restarts, and also covers imports and implicit creation. Replacing an existing session ID does not consume an additional slot. A lower configured limit preserves existing sessions and rejects further creations until usage drops below it; the host never evicts a non-expired session just to admit another one.
+
+Successful reads, edits, evaluations and exports renew the storage inactivity clock. Pings, connection status checks and a live transport do not. Client-supplied creation/update timestamps are not used as retention clocks. During an in-flight tool invocation, its workspace is pinned against background expiry. An expired session cannot be revived from a cached library instance. A sweep removes the session JSON and its access metadata; an old current-session pointer can therefore refer to a missing session. Create a new session explicitly after the error instead of silently continuing with an empty schema. Pending Portal approvals for an affected live workspace are invalidated. Session state, diagnostics and revisions are removed together; encrypted Portal credentials are unaffected.
+
+Both CLI settings require positive safe integers. Seconds must also convert to safe integer milliseconds. Invalid values fail startup. The embedded factory uses millisecond options. This policy requires exclusive single-process ownership of the root, just like session persistence itself. A sweep runs every minute and before creation; persisted access checks reject expiry without waiting for the timer. Long-running synchronous work can delay timers.
+
+Failures are MCP tool results with `isError: true`; both JSON text content and `structuredContent.error` contain a stable `code` and a safe `message`:
+
+| Code | Meaning / recovery |
+| --- | --- |
+| `SESSION_LIMIT_REACHED` | Includes `limit`, `count`, and `retryAfterSeconds` until the earliest current expiry, if no sessions are used again. Reuse an existing session or wait for expiry. Other accounts remain available. |
+| `SESSION_EXPIRED` | The referenced session just expired and was removed. Includes `retentionSeconds`. Create a new session or import a separately saved export. |
+| `SESSION_NOT_FOUND_OR_EXPIRED` | Unknown, foreign-workspace, or previously removed session ID. No cross-account existence information is disclosed. |
+| `SESSION_STORAGE_MIGRATION_REQUIRED` | Legacy workspace owners have not all been indexed. An administrator must finish the ownership migration before any new session can be admitted without undercounting. Existing sessions remain accessible. |
+| `SESSION_STORAGE_UNAVAILABLE` | Storage metadata is unavailable or invalid. No quota bypass is allowed; contact the operator. |
+
+The retry hint is not a reservation: subsequent use of existing sessions may move expiry later. These are stored-session tool errors, not HTTP 429 transport backpressure. HTTP metadata failures during connection setup return 503. Ordinary unconfigured library/stdio use has no storage quota or TTL; the HTTP host installs trusted storage lifecycle hooks.
+
+### Existing persistence roots
+
+Back up the root and stop every process using it before offline administrative indexing. Legacy workspace hashes cannot be reversed into subject/workspace names, so the service does not guess their owners. Each successful authenticated workspace connection claims its own namespace; remaining unowned legacy directories containing sessions cause new creations to fail closed with `SESSION_STORAGE_MIGRATION_REQUIRED`.
+
+An operator can index a known workspace without changing its contents:
+
+```sh
+rstool-mcp-session-index --persistence-dir /srv/mcp-state --subject employee-1 --workspace project-a
+```
+
+For a legacy hash whose owner has been independently established, use `--namespace <64-character-sha256>` instead of `--workspace`. Do not assign an unknown namespace to an arbitrary user. Run as the service account so ownership remains correct. Existing owner metadata cannot be reassigned by this command. First indexing gives legacy sessions a full retention period starting now; repeating indexing or reconnecting does not reset established clocks. Neither indexing nor a quota reduction deletes existing sessions. Restart the service only after ownership mapping and configuration have been reviewed. Once retention is enabled, expired sessions are deleted, so backups and exported sessions are the recovery path.
+
+The private `.lifecycle` directory in each workspace holds only an account hash and server-controlled per-session access clocks. Keep it together with the session files during backup/restore. Do not edit metadata while the service runs; missing metadata is initialized for legacy data, while corrupt or conflicting metadata fails closed. The index command prints neither session payloads nor credentials.

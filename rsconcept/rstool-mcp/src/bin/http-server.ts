@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { createBearerTokenVerifier } from '../http-auth';
 import { createRSToolHttpServer } from '../http-server';
 import { loadPortalConfiguration } from '../portal-config';
+import { sessionPolicyConfiguration } from '../session-policy-config';
 
 /** Load mandatory credentials and durable storage before opening the HTTP listener. */
 async function main(): Promise<void> {
@@ -24,6 +25,7 @@ async function main(): Promise<void> {
   const portal = await loadPortalConfiguration(process.env, credentials, persistenceDir);
   const service = createRSToolHttpServer({
     persistenceDir,
+    ...sessionPolicyConfiguration(process.env),
     verifyToken: createBearerTokenVerifier(credentials),
     allowedHosts: process.env.RSTOOL_HTTP_ALLOWED_HOSTS?.split(',').map(value => value.trim()),
     portal,

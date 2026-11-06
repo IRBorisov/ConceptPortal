@@ -374,3 +374,5 @@ await client.close();
 
 Контракт: [REFERENCE.md](REFERENCE.md#необязательная-публикация-через-http-хост) и
 [PORTAL-API.md](../../docs/PORTAL-API.md).
+
+For hosted MCP storage errors, inspect `structuredContent.error.code` or the JSON text error. Never retry `create_session` under another workspace to bypass `SESSION_LIMIT_REACHED`: capacity belongs to the account. After `SESSION_EXPIRED`, require an explicit new session or saved import; do not silently substitute an empty model. See the runtime reference and the MCP HTTP storage policy.

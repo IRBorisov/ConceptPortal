@@ -159,3 +159,5 @@ Maintainers: see [PUBLISHING.md](./PUBLISHING.md) for npm release steps.
 ## License
 
 MIT
+
+The HTTP host enforces configurable per-account stored-session quotas and inactivity retention, with structured limit/expiry errors. See [HTTP storage policy and migration](HTTP.md#stored-session-quota-and-retention) before upgrading an existing persistence root. The local stdio tool catalog is unchanged.

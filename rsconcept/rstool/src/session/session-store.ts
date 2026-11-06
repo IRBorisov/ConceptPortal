@@ -6,12 +6,14 @@ import {
   type ListDiagnosticsFilters,
   type SessionHandle,
   type SessionRevision,
-  type SessionState
+  type SessionState,
+  type RSToolAgentOptions
 } from '../models';
 import { SessionPersistence, type PersistedSessionEnvelope } from './persistence';
 
 export interface SessionStoreOptions {
   persistenceDir?: string;
+  sessionLifecycle?: RSToolAgentOptions['sessionLifecycle'];
 }
 
 interface SessionEnvelope {
@@ -24,8 +26,12 @@ export class SessionStore {
   private readonly persistence: SessionPersistence | null;
   private readonly transactions = new Set<string>();
 
+  private readonly options: SessionStoreOptions;
+
   public constructor(options: SessionStoreOptions = {}) {
+    this.options = options;
     this.persistence = options.persistenceDir ? new SessionPersistence(options.persistenceDir) : null;
+    options.sessionLifecycle?.onEviction?.(sessionId => { this.sessions.delete(sessionId); });
   }
 
   public create(initial?: Partial<SessionState>, contractVersion?: string, diagnostics: Diagnostic[] = []): SessionHandle {
@@ -48,8 +54,10 @@ export class SessionStore {
       diagnostics
     };
     const committed = structuredClone(envelope);
+    this.options.sessionLifecycle?.beforeCreate(sessionId);
     this.persist(sessionId, committed);
     this.sessions.set(sessionId, committed);
+    this.options.sessionLifecycle?.created(sessionId);
     return {
       sessionId,
       contractVersion: contractVersion ?? CONTRACT_VERSION
@@ -57,6 +65,7 @@ export class SessionStore {
   }
 
   public get(sessionId: string): SessionEnvelope {
+    this.options.sessionLifecycle?.access(sessionId);
     const found = this.sessions.get(sessionId) ?? this.loadFromDisk(sessionId);
     if (!found) {
       throw new Error(`Unknown session: ${sessionId}`);
@@ -65,6 +74,7 @@ export class SessionStore {
   }
 
   public has(sessionId: string): boolean {
+    this.options.sessionLifecycle?.access(sessionId);
     if (this.sessions.has(sessionId)) {
       return true;
     }

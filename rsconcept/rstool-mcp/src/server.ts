@@ -7,6 +7,7 @@ import {
 import { RSToolAgent } from "@rsconcept/rstool";
 
 import { TOOL_DEFINITIONS, type ToolDefinition } from "./tools";
+import { SessionStorageError } from "./session-policy";
 
 export interface BuildRSToolMcpServerOptions {
   /** Pre-built RSToolAgent. Defaults to a fresh in-memory instance. */
@@ -21,6 +22,8 @@ export interface BuildRSToolMcpServerOptions {
   serializeToolCalls?: boolean;
   /** Trusted host integration tools, already bound to its authenticated identity. */
   additionalTools?: readonly ToolDefinition[];
+  /** Trusted host invocation guard, run inside the per-workspace serial queue. */
+  aroundToolCall?: <T>(invoke: () => Promise<T>) => Promise<T>;
 }
 
 /**
@@ -50,7 +53,7 @@ export function buildRSToolMcpServer(
   const server = new McpServer(
     {
       name: options.name ?? "rstool-mcp",
-      version: options.version ?? "1.2.1",
+      version: options.version ?? "2.0.0",
     },
     {
       capabilities: {
@@ -107,6 +110,11 @@ export function buildRSToolMcpServer(
           ],
         };
       } catch (error) {
+        if (error instanceof SessionStorageError) {
+          const failure = { code: error.code, message: error.message, ...error.details };
+          return { isError: true, structuredContent: { error: failure },
+            content: [{ type: "text" as const, text: JSON.stringify({ error: failure }) }] };
+        }
         const message = error instanceof Error ? error.message : String(error);
         return {
           isError: true,
@@ -119,8 +127,9 @@ export function buildRSToolMcpServer(
         };
       }
     };
-    if (options.serializeToolCalls === false) return invoke();
-    const invocation = invocationTail.then(invoke);
+    const guarded = () => options.aroundToolCall ? options.aroundToolCall(invoke) : invoke();
+    if (options.serializeToolCalls === false) return guarded();
+    const invocation = invocationTail.then(guarded);
     invocationTail = invocation.catch(() => undefined);
     return invocation;
   });
