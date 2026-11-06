@@ -222,6 +222,7 @@ class PropagationEngine:
                 deleted.append(deleted_attr)
 
         if deleted:
+            _touch_schema(child_schema.pk)
             self.on_delete_attribution(operationID, deleted)
             Attribution.objects.filter(pk__in=[attrib.pk for attrib in deleted]).delete()
 
@@ -252,6 +253,7 @@ class PropagationEngine:
         target_ids = self.cache.get_inheritors_list(parents, operationID)
         self.on_delete_inherited(operationID, target_ids)
         if target_ids:
+            _touch_schema(schema.pk)
             self.cache.remove_cst(operationID, target_ids)
             schema.delete_cst(target_ids)
 

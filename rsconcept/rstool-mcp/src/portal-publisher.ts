@@ -34,6 +34,7 @@ export class PortalPublisher {
   readonly #service?: ServicePortalCredential;
   readonly #drafts = new Map<string, PreparedPublication>();
   readonly #tails = new Map<string, Promise<unknown>>();
+  readonly #preparations = new Set<{ subject: string; workspace: string; invalidated: boolean }>();
   #pending = 0;
   readonly #counts = new Map<string, number>();
 
@@ -95,7 +96,10 @@ export class PortalPublisher {
 
   /** Capture immutable before/after JSON. This method never writes to Portal. */
   public prepare(subject: string, workspace: string, targetId: number, tool: RSToolAgent) {
+    const preparation = { subject, workspace, invalidated: false };
+    this.#preparations.add(preparation);
     return this.exclusive(subject, async () => {
+      if (preparation.invalidated) throw new Error('Workspace was closed');
       if (!Number.isSafeInteger(targetId) || targetId <= 0) throw new Error('A positive Portal schema ID is required');
       this.expire();
       const credential = this.credential(subject, targetId);
@@ -104,10 +108,16 @@ export class PortalPublisher {
       const session = tool.exportSession();
       const after = JSON.parse(tool.exportPortal({ kind: 'schema', format: 'json' }) as string);
       const before = await this.#api.request(credential.token, `/api/agents/rsforms/${targetId}/details`);
-      if (typeof before.time_update !== 'string' || !Array.isArray(before.items))
+      if (
+        before.id !== targetId ||
+        typeof before.time_update !== 'string' ||
+        !Number.isFinite(Date.parse(before.time_update)) ||
+        !Array.isArray(before.items)
+      )
         throw new Error('Portal returned invalid schema metadata');
       // One proposal per live workspace; bounded storage for all subjects.
-      this.invalidateWorkspace(workspace);
+      if (preparation.invalidated) throw new Error('Workspace was closed');
+      this.clearWorkspaceDrafts(subject, workspace);
       const bytes = Buffer.byteLength(JSON.stringify({ before, after }));
       const occupied = [...this.#drafts.values()].reduce(
         (size, draft) => size + Buffer.byteLength(JSON.stringify({ before: draft.before, after: draft.after })),
@@ -142,7 +152,7 @@ export class PortalPublisher {
         changes: changes(before, after),
         confirmationPage: '/portal/account',
       };
-    });
+    }).finally(() => this.#preparations.delete(preparation));
   }
 
   /** The authenticated account page can inspect only this subject's proposals. */
@@ -185,9 +195,12 @@ export class PortalPublisher {
           expected_time_update: draft.before.time_update,
           schema: draft.after,
         });
+        if (!Number.isSafeInteger(result.version) || result.version <= 0)
+          throw new Error('Publication version was not returned');
         // Read back separately. A failed verification is uncertain, never auto-retried.
         const verified = await this.#api.request(credential.token, `/api/agents/rsforms/${draft.targetId}/details`);
         if (
+          verified.id !== draft.targetId ||
           JSON.stringify(content(verified)) !== JSON.stringify(content(result.schema)) ||
           JSON.stringify(content(verified)) !== JSON.stringify(content(draft.after))
         )
@@ -203,9 +216,17 @@ export class PortalPublisher {
   }
 
   /** Closing a workspace invalidates proposals tied to its cached rstool instance. */
-  public invalidateWorkspace(workspace: string): void {
+  public invalidateWorkspace(subject: string, workspace: string): void {
+    for (const preparation of this.#preparations)
+      if (preparation.subject === subject && preparation.workspace === workspace) preparation.invalidated = true;
+    this.clearWorkspaceDrafts(subject, workspace);
+  }
+
+  /** Replace only the authenticated owner's proposal, without cancelling its current preparation. */
+  private clearWorkspaceDrafts(subject: string, workspace: string): void {
     for (const [id, draft] of this.#drafts)
-      if (draft.workspace === workspace && draft.state !== 'sending') this.#drafts.delete(id);
+      if (draft.subject === subject && draft.workspace === workspace && draft.state !== 'sending')
+        this.#drafts.delete(id);
   }
 
   private isService(subject: string): boolean {
@@ -285,10 +306,12 @@ function content(schema: Record<string, any>) {
         ])
       )
     ),
-    attribution: (schema.attribution ?? []).map((entry: { container: number; attribute: number }) => ({
-      container: aliases.get(entry.container),
-      attribute: aliases.get(entry.attribute),
-    })),
+    attribution: (schema.attribution ?? [])
+      .map((entry: { container: number; attribute: number }) => ({
+        container: aliases.get(entry.container),
+        attribute: aliases.get(entry.attribute),
+      }))
+      .sort((left: unknown, right: unknown) => JSON.stringify(left).localeCompare(JSON.stringify(right))),
   };
 }
 
@@ -300,7 +323,11 @@ function changes(before: Record<string, any>, after: Record<string, any>) {
   const newItems = new Map(
     content(after).items.map((item: Record<string, unknown>) => [item.alias, JSON.stringify(item)])
   );
+  const oldAttribution = new Map(content(before).attribution.map((edge: unknown) => [JSON.stringify(edge), edge]));
+  const newAttribution = new Map(content(after).attribution.map((edge: unknown) => [JSON.stringify(edge), edge]));
   return {
+    attributionAdded: [...newAttribution].filter(([key]) => !oldAttribution.has(key)).map(([, edge]) => edge),
+    attributionRemoved: [...oldAttribution].filter(([key]) => !newAttribution.has(key)).map(([, edge]) => edge),
     added: [...newItems.keys()].filter((alias) => !oldItems.has(alias)),
     removed: [...oldItems.keys()].filter((alias) => !newItems.has(alias)),
     changed: [...newItems.keys()].filter((alias) => oldItems.has(alias) && oldItems.get(alias) !== newItems.get(alias)),
