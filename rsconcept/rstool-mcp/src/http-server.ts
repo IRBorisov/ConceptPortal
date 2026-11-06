@@ -179,8 +179,8 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
         sessionLifecycle: policy.hooks(subject, namespace) });
       const mcpServer = buildRSToolMcpServer({ tool, serializeToolCalls: true, sanitizeStorageErrors: true,
         instructions: `Max ${policy.limit} stored sessions per account across workspaces; inactivity TTL ${policy.retentionMs / 1000} seconds. Call get_session_storage_config for limits and usage. At SESSION_LIMIT_REACHED use list_stored_sessions and reuse or explicitly delete an unneeded session with delete_stored_session. Deletion is destructive; follow user/client approval policy. No automatic victim selection. Listing never renews TTL.`,
-        aroundToolCall: async (invoke, name) => {
-          if (['get_session_storage_config', 'list_stored_sessions', 'delete_stored_session'].includes(name)) return invoke();
+        aroundToolCall: async (invoke, definition) => {
+          if (definition?.sessionActivity === 'none') return invoke();
           const release = policy.begin(namespace);
           try { return await invoke(); } finally { release(); }
         },

@@ -1266,3 +1266,35 @@ describe('RSToolAgent modeling semantics', () => {
     expect(() => tool.synthesize({ sourceSessionId: session.sessionId }, session.sessionId)).toThrow(/must differ/);
   });
 });
+
+
+describe('explicit session creation', () => {
+  it('does not create a session when reading, analyzing or evaluating an empty agent', () => {
+    const tool = new RSToolAgent();
+    const operations = [
+      () => tool.getSessionState(), () => tool.listDiagnostics(), () => tool.getModelState(),
+      () => tool.analyzeExpression({ expression: '1+2', cstType: CstType.TERM }),
+      () => tool.evaluate({ expression: '1+2', cstType: CstType.TERM }), () => tool.exportSession(), () => tool.synthesize({ sourceSessionId: 'unknown' })
+    ];
+    for (const operation of operations) {
+      expect(operation).toThrow(expect.objectContaining({ code: 'NO_CURRENT_SESSION' }));
+      expect(tool.getCurrentSession()).toBeNull();
+    }
+    const session = tool.ensureSession();
+    expect(tool.getSessionState()).toMatchObject({ sessionId: session.sessionId });
+    expect(tool.evaluate({ expression: '1+2', cstType: CstType.TERM })).toMatchObject({
+      success: true, value: 3, status: 7, statusName: 'HAS_DATA'
+    });
+  });
+});
+
+
+it('rejects ambiguous evaluation inputs instead of silently choosing one', () => {
+  const tool = new RSToolAgent();
+  tool.applySchemaPatch({ items: [{ alias: 'D1', definitionFormal: '1+2' }] });
+  expect(() => tool.evaluate({ constituentId: 1, expression: '9', cstType: CstType.TERM }))
+    .toThrow(expect.objectContaining({ code: 'INVALID_EVALUATE_ARGUMENTS' }));
+  expect(() => tool.evaluate({ constituentId: 'D1' as never }))
+    .toThrow(/numeric constituent id/);
+  expect(tool.evaluate({ constituentId: 1 })).toMatchObject({ value: 3, statusName: 'HAS_DATA' });
+});

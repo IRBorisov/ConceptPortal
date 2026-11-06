@@ -114,7 +114,8 @@ export class ModelAdapter {
       id: item.id,
       alias: item.alias,
       value: engine.getCstValue(item.id) as number | number[] | null,
-      status: engine.getCstStatus(item.id)
+      status: engine.getCstStatus(item.id),
+      statusName: statusName(engine.getCstStatus(item.id))
     }));
     return { items };
   }
@@ -156,7 +157,7 @@ export class ModelAdapter {
   private validateSetInput(session: SessionState, input: SetConstituentaValueInput): void {
     const cst = session.items.find(item => item.id === input.target);
     if (!cst) {
-      throw new Error(`Unknown constituent: ${input.target}`);
+      throw new Error(`Unknown constituent: ${input.target}. Use a numeric id from get_session_state / getSessionState, not an alias.`);
     }
     const frontendType = cst.cstType;
     if (!isInterpretable(frontendType)) {
@@ -167,7 +168,7 @@ export class ModelAdapter {
     }
     if (isBaseSet(frontendType)) {
       if (!validateBasicBindingData(input.value)) {
-        throw new Error(`Invalid basic binding for ${cst.alias}`);
+        throw new Error(`Invalid basic binding for ${cst.alias}. Expected an object mapping integer element ids to string labels, for example {"0":"one","1":"two"}.`);
       }
       return;
     }
@@ -231,8 +232,13 @@ function toPublicEvaluationResult(
     success: diagnostics.length === 0 && value !== null,
     value: value as EvaluationResult['value'],
     status,
+    statusName: statusName(status),
     iterations,
     cacheHits,
     diagnostics
   };
+}
+
+function statusName(status: EvalStatus): keyof typeof EvalStatus {
+  return Object.entries(EvalStatus).find(([, value]) => value === status)![0] as keyof typeof EvalStatus;
 }

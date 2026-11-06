@@ -242,6 +242,7 @@ it('cancels both queued and in-flight preparations when their workspace closes',
   await Promise.all([activeRejected, queuedRejected]);
   expect(app.publisher.publications('alice')).toEqual([]);
   const replacement = new RSToolAgent();
+  replacement.ensureSession();
   await app.publisher.prepare('alice', 'default', 1, replacement);
   expect(app.publisher.publications('alice')).toHaveLength(1);
 });

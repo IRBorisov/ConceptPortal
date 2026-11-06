@@ -2,7 +2,7 @@
  * MCP tool definitions for the @rsconcept/rstool contract.
  */
 
-import { type RSToolAgent } from "@rsconcept/rstool";
+import { CstType, EvalStatus, type RSToolAgent } from "@rsconcept/rstool";
 import type { PortalPublisher } from './portal-publisher';
 import { SessionStorageError, type SessionPolicy } from './session-policy';
 
@@ -15,7 +15,7 @@ export function portalToolDefinitions(publisher: PortalPublisher, subject: strin
       if (Object.keys(args).length !== 1) throw new Error('Only targetId is accepted');
       return publisher.prepare(subject, workspace, args.targetId as number, tool, validateSource);
     },
-  }, { name: 'portal_connection_status', description: 'Get safe Portal connection status for the authenticated identity, without any credential.',
+  }, { name: 'portal_connection_status', sessionActivity: 'none', description: 'Get safe Portal connection status for the authenticated identity, without any credential.',
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
     invoke: (_tool, args) => {
       if (Object.keys(args).length) throw new Error('This tool accepts no arguments');
@@ -27,7 +27,7 @@ export function portalToolDefinitions(publisher: PortalPublisher, subject: strin
 export function sessionStorageToolDefinitions(policy: SessionPolicy, subject: string, namespace: string,
   config: { cleanupIntervalMs: number; maxActiveSessions: number; idleTimeoutMs: number; maxPendingRequests: number; maxRequestBodySize: number }): ToolDefinition[] {
   return [{
-    name: 'get_session_storage_config',
+    name: 'get_session_storage_config', sessionActivity: 'none',
     description: 'Get effective stored-session limits, inactivity retention and your account usage across all workspaces. Read-only; never returns credentials or extends retention.',
     annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
@@ -39,7 +39,7 @@ export function sessionStorageToolDefinitions(policy: SessionPolicy, subject: st
       } };
     }
   }, {
-    name: 'list_stored_sessions',
+    name: 'list_stored_sessions', sessionActivity: 'none',
     description: 'List your stored sessions across workspaces, oldest used first. Returns bounded metadata, exact sessionRef and revision for deletion; does not renew TTL or expose schema contents. Follow nextCursor; restart listing on SESSION_LIST_CHANGED.',
     annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
     inputSchema: { type: 'object', properties: { limit: { type: 'integer', minimum: 1, maximum: 100, default: 20 },
@@ -49,7 +49,7 @@ export function sessionStorageToolDefinitions(policy: SessionPolicy, subject: st
       return policy.list(subject, namespace, args.limit as number | undefined, args.cursor as string | undefined);
     }
   }, {
-    name: 'delete_stored_session',
+    name: 'delete_stored_session', sessionActivity: 'none',
     description: 'Destructively delete exactly one of your stored sessions and free its quota slot. Use sessionRef and revision from a fresh list. Busy workspaces cannot be deleted; changed sessions require re-listing. confirm=true expresses call intent, not proof of human approval. Follow client/user approval policy; set allowCurrent=true only to discard a selected session. Clears selection/cache and pending workspace publications.',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false },
     inputSchema: { type: 'object', properties: {
@@ -77,6 +77,8 @@ function checkArguments(args: Record<string, unknown>, allowed: string[]): void 
 export interface ToolDefinition {
   name: string;
   description: string;
+  /** Defaults to model pinning. Explicitly independent tools cannot keep models busy. */
+  sessionActivity?: 'none' | 'model';
   annotations?: { readOnlyHint?: boolean; destructiveHint?: boolean; idempotentHint?: boolean; openWorldHint?: boolean };
   inputSchema: {
     type: "object";
@@ -95,6 +97,12 @@ const sessionId = {
   description: "Session id. Omit to use the current active session.",
 };
 
+const cstType = {
+  type: "string", enum: Object.values(CstType),
+  description: "Constituent type: X=basic, C=constant, S=structure, D=term, A=axiom, F=function, P=predicate, T=statement, N=nominal."
+};
+const evaluationStatuses = Object.entries(EvalStatus).map(([name, value]) => `${value}=${name}`).join(", ");
+
 const agentPatchSchema = {
   type: "object",
   description:
@@ -102,11 +110,11 @@ const agentPatchSchema = {
   properties: {
     id: { type: "number" },
     alias: { type: "string" },
-    cstType: { type: "string" },
+    cstType,
     definitionFormal: { type: "string" },
     term: { type: "string" },
     definitionText: { type: "string" },
-    convention: { type: "string" },
+    convention: { type: "string", description: "Intended meaning of an undefined X/C/S concept. Supply non-empty text to resolve schemaMissingConvention; do not invent a formal definition for X/C." },
   },
   required: ["alias"],
 };
@@ -123,7 +131,7 @@ function omitSessionId(args: Record<string, unknown>): Record<string, unknown> {
 
 export const TOOL_DEFINITIONS: ToolDefinition[] = [
   {
-    name: "ping",
+    name: "ping", sessionActivity: "none",
     description:
       "Liveness check; returns {pong: true} and the active rstool contract version.",
     inputSchema: {
@@ -134,7 +142,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
     invoke: (tool) => ({ pong: true, contractVersion: tool.contractVersion }),
   },
   {
-    name: "list_methods",
+    name: "list_methods", sessionActivity: "none",
     description: "List all tools exposed by this MCP server, including hosted integrations when configured.",
     inputSchema: {
       type: "object",
@@ -262,7 +270,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
       properties: {
         sessionId,
         expression: { type: "string" },
-        cstType: { type: "string" },
+        cstType,
         recordDiagnostics: { type: "boolean" },
       },
       required: ["expression", "cstType"],
@@ -377,7 +385,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   {
     name: "set_model_values",
     description:
-      "Set and/or clear interpretable model bindings. Pass set[] for bindings and clear[] for constituent ids to reset.",
+      "Set and/or clear X/C/S model bindings by numeric constituent ids from get_session_state. For X/C, use an object mapping integer element ids to labels, e.g. {0: \"one\", 1: \"two\"}. For S, use numbers or nested arrays: sets [0,1], tuples [-111,0,1] and sets of tuples [[-111,0,1]]. Derived D/F/P values are computed, never assigned. Pass clear[] for ids to reset.",
     inputSchema: {
       type: "object",
       properties: {
@@ -415,13 +423,13 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   {
     name: "evaluate",
     description:
-      "Evaluate a scratch expression (expression + cstType) or a stored constituent (constituentId).",
+      `Evaluate exactly one variant: scratch expression + cstType, or stored numeric constituentId from get_session_state. Result.status: ${evaluationStatuses}. Result.statusName names the status. Native values encode sets as arrays, tuples as [-111,...components], sets of tuples as [[-111,0,1]], and booleans as 0/1; success means evaluation completed, not that an axiom is true or input bindings were populated. Check get_model_state before interpreting an empty result.`,
     inputSchema: {
       type: "object",
       properties: {
         sessionId,
         expression: { type: "string" },
-        cstType: { type: "string" },
+        cstType,
         constituentId: { type: "number" },
       },
     },
@@ -430,7 +438,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   },
   {
     name: "recalculate_model",
-    description: "Recompute every inferrable constituent.",
+    description: `Recompute every inferrable constituent. Each item returns numeric status: ${evaluationStatuses}. Boolean values use 0/1.`,
     inputSchema: {
       type: "object",
       properties: { sessionId },

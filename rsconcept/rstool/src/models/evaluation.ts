@@ -25,6 +25,7 @@ export interface EvaluationResult {
   success: boolean;
   value: RSToolValue | BasicBinding | null;
   status: EvalStatus;
+  statusName: keyof typeof EvalStatus;
   iterations: number;
   cacheHits: number;
   diagnostics: Diagnostic[];

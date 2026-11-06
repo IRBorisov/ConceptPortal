@@ -5,12 +5,12 @@
 ## Контракт rstool
 
 - Пакет: `@rsconcept/rstool`
-- Версия контракта: `3.3.1` (`CONTRACT_VERSION`)
+- Версия контракта: `4.0.0` (`CONTRACT_VERSION`)
 - Основной класс: `RSToolAgent`
 - Публичные импорты: `@rsconcept/rstool` и `@rsconcept/rstool/wrapper`
 - Опции: `new RSToolAgent({ persistenceDir? })` — каталог для сохранения сессий между перезапусками (stdio/MCP: `RSTOOL_PERSISTENCE_DIR`)
 
-Почти все методы принимают optional `sessionId` вторым аргументом (в stdio/MCP — поле `sessionId` в плоских `params`). Без него используется текущая сессия; при необходимости сессия создаётся лениво.
+Почти все методы принимают optional `sessionId` вторым аргументом (в stdio/MCP — поле `sessionId` в плоских `params`). Без него используется текущая сессия. Только createSession, ensureSession, importData и applySchemaPatch могут создавать сессии. Остальные вызовы без текущей сессии возвращают NO_CURRENT_SESSION и не расходуют квоту; сначала вызови ensureSession или createSession.
 
 ### Методы library API
 
@@ -303,4 +303,16 @@ JSON-строка сессии для последующего `importData(..., 
 
 `RSToolAgentOptions.sessionLifecycle` optionally supplies synchronous `beforeCreate`, `created`, and `access` hooks plus an optional `onEviction` cache callback binding for a trusted host. Hooks cover persisted creation/import and cached reads; a rejected access cannot revive expired data. `beforeCreate` runs before saving, `created` after saving the envelope, and `access` before cached/disk lookup. Hosts must preserve single-process storage ownership, enforce concurrency and avoid exposing secrets in errors. Ordinary library and stdio construction without these hooks keeps its existing behavior. Hosted MCP account quota, retention, migration and structured error codes are documented in [HTTP service](https://github.com/IRBorisov/ConceptPortal/blob/main/rsconcept/rstool-mcp/HTTP.md).
 
-Hosted HTTP storage self-service: inspect `get_session_storage_config`, then use `list_stored_sessions` to choose an unneeded session. Listing returns metadata only and does not renew TTL. `delete_stored_session` requires the exact `sessionRef` and `expectedRevision` plus explicit `confirm=true`; a selected current session additionally requires `allowCurrent=true`. Follow user/client approval policy. Never automatically evict a victim. On `SESSION_BUSY` or `SESSION_CHANGED`, refresh the list and decide again. After a cleanup warning, timeout or lost delete response, inspect config/list before choosing any other deletion. See [the hosted contract](https://github.com/IRBorisov/ConceptPortal/blob/main/rsconcept/rstool-mcp/HTTP.md#agent-self-service-for-account-storage). Unconfigured library/stdio methods remain unchanged.
+## Изменения контракта 4.0
+
+- Сессию создают только `createSession`, `ensureSession`, `importData` и путь создания `applySchemaPatch`. Остальные методы без текущей сессии выбрасывают экспортируемый `RSToolError` с `code: 'NO_CURRENT_SESSION'`; неизвестный явный ID — `SESSION_NOT_FOUND`. Stdio и MCP сохраняют эти коды. Сначала вызови ensure/create или передай существующий ID.
+- `evaluate` принимает ровно один вариант: `constituentId` либо `expression` + `cstType`. Смешивание или неполный вариант — `INVALID_EVALUATE_ARGUMENTS`. ID — число из состояния сессии, не имя вроде X1.
+- Результаты evaluate и recalculateModel содержат `statusName: keyof typeof EvalStatus` рядом с числовым `status`. `success` не доказывает истинность аксиомы или полноту интерпретаций: проверь значение, статус и входные данные.
+- X/C принимают объект меток `{"0":"one","1":"two"}`. Native value encoding: множество `[0,1]`, кортеж `[-111,0,1]`, множество кортежей `[[-111,0,1]]`, логические значения `0/1`. Маркер кортежа не является элементом предметной области.
+- В MCP объектный результат доступен как `structuredContent` и как прежний JSON-текст. Ошибка содержит `structuredContent.error` с `code` и `message`; обычная ошибка исполнения — `TOOL_EXECUTION_FAILED`. Указания инструмента и диагностики остаются источником дальнейшего действия.
+
+## Управление сохранёнными сессиями HTTP
+
+`get_session_storage_config` возвращает действующие лимиты и использование аккаунта. `list_stored_sessions` показывает метаданные по всем workspace без продления TTL. При нехватке квоты переиспользуй сессию, дождись очистки или выбери ненужную согласно политике пользователя/клиента. Не удаляй автоматически и не обходи лимит новым workspace.
+
+`delete_stored_session` требует точные `sessionRef`, `expectedRevision` из свежего списка и `confirm=true`; для выбранной текущей сессии — `allowCurrent=true`. При `SESSION_BUSY`/`SESSION_CHANGED` обнови список. После предупреждения, timeout или потерянного ответа сначала проверь конфиг/список и не выбирай второе удаление для компенсации. Эти инструменты отсутствуют в библиотеке/stdio. Поля, ошибки и ограничения — в [контракте HTTP](https://github.com/IRBorisov/ConceptPortal/blob/main/rsconcept/rstool-mcp/HTTP.md#agent-self-service-for-account-storage).
