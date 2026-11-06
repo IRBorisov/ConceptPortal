@@ -1,4 +1,4 @@
-import { mkdtemp, rm, stat } from 'node:fs/promises';
+import { mkdtemp, rm, stat, readdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import { request } from 'node:http';
@@ -83,6 +83,64 @@ function post(url: string, token = ALICE, extraHeaders: Record<string, string> =
 }
 
 describe('rstool Streamable HTTP', () => {
+  it('advertises storage limits, complete discovery and safe account self-service over the real MCP client', async () => {
+    const app = await start({ maxStoredSessionsPerAccount: 1 });
+    const peer = await app.connect();
+    const catalog = await peer.client.listTools();
+    const names = catalog.tools.map(tool => tool.name);
+    expect(await call(peer.client, 'list_methods')).toEqual(names);
+    expect(peer.client.getInstructions()).toContain('Max 1 stored sessions per account');
+    expect(catalog.tools.find(tool => tool.name === 'get_session_storage_config')?.annotations?.readOnlyHint).toBe(true);
+    expect(catalog.tools.find(tool => tool.name === 'list_stored_sessions')?.annotations?.readOnlyHint).toBe(true);
+    expect(catalog.tools.find(tool => tool.name === 'delete_stored_session')?.annotations?.destructiveHint).toBe(true);
+    expect((await call(peer.client, 'get_session_storage_config')).usage).toMatchObject({ storedSessions: 0, availableSlots: 1 });
+    await call(peer.client, 'create_session');
+    const full = await peer.client.callTool({ name: 'create_session', arguments: {} });
+    expect(full.structuredContent).toMatchObject({ error: { code: 'SESSION_LIMIT_REACHED', recovery: {
+      listTool: 'list_stored_sessions', deleteTool: 'delete_stored_session' } } });
+    const row = (await call(peer.client, 'list_stored_sessions')).items[0];
+    expect(row).toMatchObject({ current: true, busy: false, connected: true, callerWorkspace: true, workspace: 'task' });
+    const deleted = await call(peer.client, 'delete_stored_session', {
+      sessionRef: row.sessionRef, expectedRevision: row.revision, confirm: true, allowCurrent: true
+    });
+    expect(deleted).toMatchObject({ deleted: true, freedSlots: 1, usage: { availableSlots: 1 } });
+    expect(await call(peer.client, 'get_current_session')).toBeNull();
+    await call(peer.client, 'ensure_session');
+    expect((await call(peer.client, 'get_session_storage_config')).usage.storedSessions).toBe(1);
+  }, 20_000);
+
+  it('rejects caller-supplied identity overrides in storage management tools', async () => {
+    const app = await start();
+    const peer = await app.connect();
+    for (const name of ['get_session_storage_config', 'list_stored_sessions']) {
+      const result = await peer.client.callTool({ name, arguments: { subject: 'another-account' } });
+      expect(result.structuredContent).toMatchObject({ error: { code: 'INVALID_SESSION_ARGUMENTS' } });
+    }
+  });
+
+  it('rejects oversized hosted IDs without exposing a filesystem path or consuming quota', async () => {
+    const app = await start();
+    const peer = await app.connect();
+    const result = await peer.client.callTool({ name: 'ensure_session', arguments: { initial: { sessionId: 'x'.repeat(251) } } });
+    expect(result.structuredContent).toMatchObject({ error: { code: 'INVALID_SESSION_ID' } });
+    expect(JSON.stringify(result)).not.toContain(app.directory);
+    expect((await call(peer.client, 'get_session_storage_config')).usage.storedSessions).toBe(0);
+  });
+
+  it('does not accumulate empty workspaces after invalid initialization or a closed empty lease', async () => {
+    const app = await start();
+    for (let index = 0; index < 3; index++) {
+      const rejected = await post(`${app.url}/mcp/invalid-${index}`, ALICE, {}, '{}');
+      expect(rejected.status).toBe(400);
+      await rejected.text();
+    }
+    const peer = await app.connect('empty-valid');
+    await peer.transport.terminateSession();
+    await vi.waitFor(async () => {
+      expect((await readdir(app.directory)).filter(name => /^[a-f0-9]{64}$/.test(name))).toEqual([]);
+    });
+  }, 15_000);
+
   it('returns structured account quota errors for competing creates across workspaces', async () => {
     const app = await start({ maxStoredSessionsPerAccount: 1 });
     const [first, second, other] = await Promise.all([app.connect('one'), app.connect('two'), app.connect('one', BOB)]);

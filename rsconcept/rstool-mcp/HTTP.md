@@ -82,7 +82,7 @@ For an existing identity provider, embed `createRSToolHttpServer` and supply `ve
 
 Stored rstool sessions are distinct from MCP transport leases. Quota is per authenticated subject across all workspaces, persists across restarts, and also covers imports and implicit creation. Replacing an existing session ID does not consume an additional slot. A lower configured limit preserves existing sessions and rejects further creations until usage drops below it; the host never evicts a non-expired session just to admit another one.
 
-Successful reads, edits, evaluations and exports renew the storage inactivity clock. Pings, connection status checks and a live transport do not. Client-supplied creation/update timestamps are not used as retention clocks. During an in-flight tool invocation, its workspace is pinned against background expiry. An expired session cannot be revived from a cached library instance. A sweep removes the session JSON and its access metadata; an old current-session pointer can therefore refer to a missing session. Create a new session explicitly after the error instead of silently continuing with an empty schema. Pending Portal approvals for an affected live workspace are invalidated. Session state, diagnostics and revisions are removed together; encrypted Portal credentials are unaffected.
+Successful reads, edits, evaluations and exports renew the storage inactivity clock. Pings, connection status checks and a live transport do not. Client-supplied creation/update timestamps are not used as retention clocks. During an in-flight tool invocation, its workspace is pinned against background expiry. An expired session cannot be revived from a cached library instance. A sweep removes the session JSON and its access metadata and clears its persisted/in-memory current selection. `get_current_session` then returns null and `ensure_session` can explicitly create a new session; calls referencing the removed ID still fail. Do not treat a newly created empty session as recovery of expired data. Pending Portal approvals for an affected live workspace are invalidated. Session state, diagnostics and revisions are removed together; encrypted Portal credentials are unaffected.
 
 Both CLI settings require positive safe integers. Seconds must also convert to safe integer milliseconds. Invalid values fail startup. The embedded factory uses millisecond options. This policy requires exclusive single-process ownership of the root, just like session persistence itself. A sweep runs every minute and before creation; persisted access checks reject expiry without waiting for the timer. Long-running synchronous work can delay timers.
 
@@ -90,7 +90,7 @@ Failures are MCP tool results with `isError: true`; both JSON text content and `
 
 | Code | Meaning / recovery |
 | --- | --- |
-| `SESSION_LIMIT_REACHED` | Includes `limit`, `count`, and `retryAfterSeconds` until the earliest current expiry, if no sessions are used again. Reuse an existing session or wait for expiry. Other accounts remain available. |
+| `SESSION_LIMIT_REACHED` | Includes `limit`, `count`, and `retryAfterSeconds` until the earliest current expiry, if no sessions are used again. Inspect get_session_storage_config and list_stored_sessions, then reuse a session, wait for expiry, or explicitly delete a selected session under the client approval policy. Other accounts remain available. |
 | `SESSION_EXPIRED` | The referenced session just expired and was removed. Includes `retentionSeconds`. Create a new session or import a separately saved export. |
 | `SESSION_NOT_FOUND_OR_EXPIRED` | Unknown, foreign-workspace, or previously removed session ID. No cross-account existence information is disclosed. |
 | `SESSION_STORAGE_MIGRATION_REQUIRED` | Legacy workspace owners have not all been indexed. An administrator must finish the ownership migration before any new session can be admitted without undercounting. Existing sessions remain accessible. |
@@ -117,3 +117,48 @@ Retention metadata writes are coalesced within each hosted invocation, with the 
 Publication preparation and approval validate source retention using current time, independently of a longer-running invocation pin. An expired source invalidates pending proposals before publication can start. A source that is still valid can be read and renewed as part of approval. Retention does not attempt to roll back a publication that was already sent while valid.
 
 The offline index command rejects missing targets and options used as missing values. An existing empty workspace is reported as empty without claiming that session clocks were created. Unexpected or invalid JSON is not enrolled for deletion and causes a safe storage error. Restore old backups offline and export needed sessions before starting a retention-enabled host if their saved access clocks are already expired.
+
+## Agent self-service for account storage
+
+Hosted initialization instructions include the effective per-account maximum and inactivity TTL. These account-management tools exist only on HTTP; they do not change the ordinary library/stdio tool catalog. `list_methods` returns the complete MCP catalog, including configured integrations.
+
+| Tool | Purpose | Safety metadata |
+| --- | --- | --- |
+| `get_session_storage_config` | Effective limits, cleanup cadence, safe transport limits and this account's stored/available counts | Read-only; no credentials, filesystem paths, model contents or TTL renewal |
+| `list_stored_sessions` | Oldest-used-first metadata across this account's workspaces, with bounded pages | Read-only; no TTL renewal |
+| `delete_stored_session` | Explicit compare-and-delete of exactly one listed session, freeing one stored slot | Destructive; explicit call intent and client/user approval policy apply |
+
+Configuration uses `limits.maxSessionsPerAccount`, `limits.retentionSeconds`, `limits.cleanupIntervalSeconds`, `usage.storedSessions`, and `usage.availableSlots`. If ownership migration is incomplete, `usage.status` is `migration_required` and available capacity is unknown (`null`), not a guessed free count. Unavailable metadata produces `usage.status=unavailable`. No current usage counts from other accounts are exposed.
+
+List accepts `limit` (default 20, maximum 100) and a returned opaque `cursor`. Each entry has an opaque `sessionRef`, exact `sessionId`, opaque workspace ID and its name when known, bounded title/alias with truncation flags, item count when readable, server `lastUsedAt`/`expiresAt`, and separate `current`, `connected`, `busy`, and caller-workspace flags. It also returns a `revision` and deletion eligibility flags. Models, comments and expressions are not returned. Workspace names missing from legacy metadata remain unknown until a verified connection or offline name-based indexing establishes them.
+
+Pagination is oldest-first with stable identity tie-breaks. `SESSION_LIST_CHANGED` means the set/order or recorded activity changed while paging: restart without a cursor. Connected/busy state may change between responses. Compare-and-delete independently checks the current payload/activity revision immediately before deletion. Page bounds limit response size and entries, not CPU or memory used reading large saved payloads. The trusted-pilot limitation on per-model bytes and computation still applies.
+
+At `SESSION_LIMIT_REACHED`, reuse an existing session or inspect config and list before selecting an unneeded session. The structured error includes trusted recovery tool names. Never silently evict the oldest session. Respect the user's/project's deletion policy and client approval rules. `confirm=true` expresses explicit call intent; it is not evidence of human consent.
+
+```json
+{
+  "sessionRef": "<copy exactly from list_stored_sessions>",
+  "expectedRevision": "<copy that entry's revision>",
+  "confirm": true,
+  "allowCurrent": false
+}
+```
+
+Pass the object to `delete_stored_session`. References include both workspace and session identity because import may preserve the same session ID in multiple workspaces. The host rechecks the authenticated owner, busy state and revision without an await before deletion. The revision covers payload bytes, server activity generation/time, current selection and busy state. A reference listed while busy must be refreshed after that operation completes. Every model-access invocation changes activity generation, even at an unchanged clock timestamp, so a same-clock read or edit/import ABA invalidates an old selection. Listing/config do not change it.
+
+| Error | Recovery |
+| --- | --- |
+| `SESSION_BUSY` | Another model invocation is using the target workspace; wait and refresh the list |
+| `SESSION_CHANGED` | The selected session was changed or used; refresh and decide again |
+| `SESSION_IS_CURRENT` | Deleting this workspace's selection requires explicit `allowCurrent=true`; only use it when intending to discard that selection |
+| `SESSION_DELETE_CONFIRMATION_REQUIRED` | Supply explicit call intent after selecting the exact entry and following the applicable approval policy |
+| `SESSION_NOT_FOUND_OR_EXPIRED` | The reference is absent, removed, expired or not owned by this account; inspect current config/list |
+
+Deletion clears data, diagnostics, revisions, cached state and current selection, and invalidates pending publication drafts in the affected workspace. It does not disconnect the personal Portal key or roll back publication already dispatched while valid. Non-current sessions in another workspace can be selected, but a busy target cannot be removed. Management calls themselves are not treated as model-operation pins, so they can delete an explicitly selected current session without deadlocking on their own call.
+
+Success returns `deleted=true`, `freedSlots=1` and updated account usage. The payload unlink is the commit point. If later metadata/cache/publication/workspace cleanup fails, success remains explicit and `cleanupWarnings` explains required follow-up; the service retries orphan timestamp cleanup. Do not choose a second deletion to compensate for such a warning. A timeout or lost response can also leave an unknown outcome: inspect config/list before attempting anything else. Repeating the same delete is not advertised as idempotent; it can return not-found or stale-revision.
+
+Empty disconnected workspaces are pruned after invalid initialization, closing an empty lease, deleting their last session, or expiry of their last saved session. Pruning removes only known metadata and never recursively deletes directories or model payloads. Busy, connected and unrecognized-content directories are preserved. This prevents normal authenticated empty-workspace churn from accumulating permanent directories; it is not a general request-rate or per-model-byte budget.
+
+New hosted session IDs are limited to 250 UTF-8 bytes before persistence, preventing oversized filenames from exposing native filesystem errors. Existing IDs remain addressable for listing/deletion. This does not impose a new global ID byte limit on unconfigured Windows/library persistence. Hosted storage errors also sanitize filesystem failures by code and path/syscall indicators, including aggregated errors.

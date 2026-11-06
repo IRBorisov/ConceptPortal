@@ -25,7 +25,9 @@ export interface BuildRSToolMcpServerOptions {
   /** Trusted host integration tools, already bound to its authenticated identity. */
   additionalTools?: readonly ToolDefinition[];
   /** Trusted host invocation guard, run inside the per-workspace serial queue. */
-  aroundToolCall?: <T>(invoke: () => Promise<T>) => Promise<T>;
+  aroundToolCall?: <T>(invoke: () => Promise<T>, name: string) => Promise<T>;
+  /** Tool discovery and account-management guidance for hosted clients. */
+  instructions?: string;
 }
 
 /**
@@ -61,12 +63,15 @@ export function buildRSToolMcpServer(
       capabilities: {
         tools: {},
       },
+      instructions: options.instructions,
     },
   );
 
   const definitions = [...TOOL_DEFINITIONS, ...(options.additionalTools ?? [])];
   const definitionByName = new Map<string, ToolDefinition>(definitions.map(definition => [definition.name, definition]));
   if (definitionByName.size !== definitions.length) throw new Error('Duplicate MCP tool name');
+  const listMethods = definitionByName.get('list_methods');
+  if (listMethods) definitionByName.set('list_methods', { ...listMethods, invoke: () => definitions.map(item => item.name) });
 
   server.server.setRequestHandler(ListToolsRequestSchema, () =>
     Promise.resolve({
@@ -74,6 +79,7 @@ export function buildRSToolMcpServer(
         name: definition.name,
         description: definition.description,
         inputSchema: definition.inputSchema,
+        annotations: definition.annotations,
       })),
     }),
   );
@@ -130,7 +136,7 @@ export function buildRSToolMcpServer(
       }
     };
     const guarded = async () => {
-      try { return await (options.aroundToolCall ? options.aroundToolCall(invoke) : invoke()); }
+      try { return await (options.aroundToolCall ? options.aroundToolCall(invoke, request.params.name) : invoke()); }
       catch (error) {
         const failure = storageFailure(error, options.sanitizeStorageErrors);
         if (!failure) throw error;
@@ -148,11 +154,15 @@ export function buildRSToolMcpServer(
 }
 
 /** Classify only known filesystem failures and serialize an explicit numeric details allow-list. */
-function storageFailure(error: unknown, classifyFilesystem = false): Record<string, string | number> | undefined {
+function storageFailure(error: unknown, classifyFilesystem = false): Record<string, unknown> | undefined {
   const storage = error instanceof SessionStorageError ? error : classifyFilesystem && filesystemFailure(error)
     ? new SessionStorageError('SESSION_STORAGE_UNAVAILABLE', 'Session storage operation failed. Contact the administrator.') : undefined;
   if (!storage) return undefined;
-  const result: Record<string, string | number> = { code: storage.code, message: storage.message };
+  const result: Record<string, unknown> = { code: storage.code, message: storage.message };
+  if (storage.code === 'SESSION_LIMIT_REACHED') result.recovery = {
+    configTool: 'get_session_storage_config', listTool: 'list_stored_sessions', deleteTool: 'delete_stored_session',
+    automaticEviction: false, instruction: 'Reuse a session or inspect the list and explicitly delete an unneeded session. Deletion is destructive.'
+  };
   for (const key of ['limit', 'count', 'retryAfterSeconds', 'retentionSeconds']) {
     const value = storage.details[key];
     if (typeof value === 'number' && Number.isFinite(value) && value >= 0) result[key] = value;
@@ -165,6 +175,9 @@ function filesystemFailure(error: unknown, depth = 0): boolean {
   if (!error || typeof error !== 'object' || depth > 4) return false;
   const code = (error as NodeJS.ErrnoException).code;
   if (code && ['EACCES', 'EPERM', 'ENOENT', 'ENOSPC', 'EIO', 'EROFS', 'EMFILE', 'ENFILE', 'EDQUOT',
-    'EEXIST', 'EBUSY', 'ENOTDIR', 'EISDIR'].includes(code)) return true;
+    'EEXIST', 'EBUSY', 'ENOTDIR', 'EISDIR', 'ENAMETOOLONG', 'EFBIG', 'EINVAL', 'ELOOP', 'EXDEV'].includes(code)) return true;
+  const system = error as NodeJS.ErrnoException & { dest?: unknown };
+  if (code && /^E[A-Z0-9_]+$/.test(code) && (typeof system.path === 'string' || typeof system.dest === 'string' ||
+    (typeof system.syscall === 'string' && /^(open|stat|lstat|fstat|rename|read|write|unlink|mkdir|rmdir|scandir|copyfile|realpath|fsync|fdatasync|ftruncate)/.test(system.syscall)))) return true;
   return error instanceof AggregateError && error.errors.some(item => filesystemFailure(item, depth + 1));
 }

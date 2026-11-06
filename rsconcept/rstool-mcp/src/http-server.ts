@@ -10,7 +10,7 @@ import { SessionPolicy, SessionStorageError } from './session-policy';
 import { buildRSToolMcpServer } from './server';
 import { handlePortalAccount, servePortalAccount } from './portal-account';
 import type { PortalPublisher } from './portal-publisher';
-import { portalToolDefinitions } from './tools';
+import { portalToolDefinitions, sessionStorageToolDefinitions } from './tools';
 
 export interface RSToolHttpServerOptions {
   /** Durable root, exclusively owned by this single service process. */
@@ -98,6 +98,14 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   async function dispose(entry: HttpSession): Promise<void> {
     forget(entry);
     await entry.server.close();
+    pruneClosed(entry);
+  }
+
+  /** Invalid initialization and closed empty leases must not accumulate permanent directories. */
+  function pruneClosed(entry: HttpSession): void {
+    if (!entry.closed || entry.pending !== 0) return;
+    try { policy.pruneEmpty(entry.namespace); }
+    catch { process.stderr.write('rstool-mcp empty workspace cleanup pending\n'); }
   }
 
   /** Reclaim inactive leases while leaving queued and in-flight requests untouched. */
@@ -166,15 +174,22 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       if (workspaces.has(namespace)) return reject(response, 409, 'Workspace already has an active MCP session');
       if (workspaces.size >= maxSessions) return reject(response, 503, 'Active session limit reached');
       initializationResponse = responseCompletion(response);
-      policy.register(subject, namespace);
+      policy.register(subject, namespace, route[1] ?? 'default');
       const tool = new RSToolAgent({ persistenceDir: join(options.persistenceDir, namespace),
         sessionLifecycle: policy.hooks(subject, namespace) });
       const mcpServer = buildRSToolMcpServer({ tool, serializeToolCalls: true, sanitizeStorageErrors: true,
-        aroundToolCall: async invoke => {
+        instructions: `Max ${policy.limit} stored sessions per account across workspaces; inactivity TTL ${policy.retentionMs / 1000} seconds. Call get_session_storage_config for limits and usage. At SESSION_LIMIT_REACHED use list_stored_sessions and reuse or explicitly delete an unneeded session with delete_stored_session. Deletion is destructive; follow user/client approval policy. No automatic victim selection. Listing never renews TTL.`,
+        aroundToolCall: async (invoke, name) => {
+          if (['get_session_storage_config', 'list_stored_sessions', 'delete_stored_session'].includes(name)) return invoke();
           const release = policy.begin(namespace);
           try { return await invoke(); } finally { release(); }
         },
-        additionalTools: options.portal ? portalToolDefinitions(options.portal.publisher, subject, namespace, id => policy.assertRetained(namespace, id)) : undefined });
+        additionalTools: [
+          ...sessionStorageToolDefinitions(policy, subject, namespace, { cleanupIntervalMs, maxActiveSessions: maxSessions,
+            idleTimeoutMs, maxPendingRequests, maxRequestBodySize }),
+          ...(options.portal ? portalToolDefinitions(options.portal.publisher, subject, namespace,
+            id => policy.assertRetained(namespace, id)) : [])
+        ] });
       const transport = new StreamableHTTPServerTransport({
         sessionIdGenerator: randomUUID,
         enableJsonResponse: true,
@@ -216,6 +231,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       }
       entry.pending--;
       entry.lastUsed = Date.now();
+      pruneClosed(entry);
     }
   }
 
