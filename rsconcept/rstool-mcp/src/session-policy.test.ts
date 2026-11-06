@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 
 import { RSToolAgent } from '@rsconcept/rstool';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { SessionPolicy } from './session-policy';
 import { sessionPolicyConfiguration } from './session-policy-config';
@@ -40,7 +40,7 @@ describe('durable account session policy', () => {
       expect.objectContaining({ limit: 2, count: 2 }) }));
     expect(() => other.tool.createSession()).not.toThrow();
     expect(a.tool.importData(a.tool.exportSession(first.sessionId)).sessionId).toBe(first.sessionId);
-  });
+  }, 15_000); // Several durable fsync writes can exceed 5 seconds on Windows security-scanned temp volumes.
 
   it('renews on reads, deletes at expiry, frees quota and cannot revive a cached state', () => {
     const app = setup(1);
@@ -140,6 +140,25 @@ describe('durable account session policy', () => {
     try { expect(() => client.tool.createSession()).not.toThrow(); } finally { release(); }
   });
 
+  it('preserves an existing session when its replacement stamp cannot be saved', () => {
+    const app = setup(1);
+    const client = app.connect();
+    client.tool.createSession({ title: 'Before' });
+    const before = client.tool.exportSession();
+    const incoming = JSON.parse(before);
+    incoming.state.title = 'Must not replace';
+    const rename = fs.renameSync;
+    const fault = vi.spyOn(fs, 'renameSync').mockImplementation((from, to) => {
+      if (String(to).includes('.lifecycle')) throw Object.assign(new Error('Synthetic private path'), { code: 'ENOSPC' });
+      return rename(from, to);
+    });
+    try {
+      expect(() => client.tool.importData(incoming)).toThrow(expect.objectContaining({ code: 'SESSION_STORAGE_UNAVAILABLE' }));
+    } finally { fault.mockRestore(); }
+    expect(client.tool.exportSession()).toBe(before);
+    expect(new RSToolAgent({ persistenceDir: client.directory }).exportSession()).toBe(before);
+  }, 15_000);
+
   it('does not reserve quota when a session payload fails to save', () => {
     const app = setup(1);
     const { tool, directory } = app.connect();
@@ -173,8 +192,51 @@ describe('durable account session policy', () => {
     const metadata = join(client.directory, '.lifecycle');
     fs.renameSync(metadata, join(app.root, 'saved-metadata'));
     fs.symlinkSync(join(app.root, 'saved-metadata'), metadata, 'dir');
-    expect(() => app.policy.sweep()).toThrow(expect.objectContaining({ code: 'SESSION_STORAGE_UNAVAILABLE' }));
+    expect(app.policy.sweep().get(client.namespace)).toMatchObject({ code: 'SESSION_STORAGE_UNAVAILABLE' });
     expect(() => client.tool.createSession()).toThrow(expect.objectContaining({ code: 'SESSION_STORAGE_UNAVAILABLE' }));
+  });
+
+  it('preserves unrelated JSON instead of treating it as an expiring session', () => {
+    const app = setup();
+    const namespace = 'b'.repeat(64);
+    const directory = join(app.root, namespace);
+    fs.mkdirSync(directory);
+    const path = join(directory, 'notes.json');
+    const contents = JSON.stringify({ notes: 'Not a session envelope' });
+    fs.writeFileSync(path, contents);
+    expect(() => app.policy.register('account-a', namespace)).toThrow(
+      expect.objectContaining({ code: 'SESSION_STORAGE_UNAVAILABLE' }));
+    app.advance(100_000);
+    expect(app.policy.sweep().get(namespace)).toMatchObject({ code: 'SESSION_STORAGE_UNAVAILABLE' });
+    expect(fs.readFileSync(path, 'utf8')).toBe(contents);
+  });
+
+  it('continues sweeping healthy workspaces and blocks only the account with corrupt session metadata', () => {
+    const app = setup(1);
+    const broken = app.connect();
+    const healthy = app.connect('account-b');
+    const first = broken.tool.createSession();
+    const second = healthy.tool.createSession();
+    const key = createHash('sha256').update(first.sessionId).digest('hex');
+    fs.writeFileSync(join(broken.directory, '.lifecycle', 'sessions', `${key}.json`), '{');
+    app.advance(1000);
+    expect(app.policy.sweep().has(broken.namespace)).toBe(true);
+    expect(fs.existsSync(join(healthy.directory, `${second.sessionId}.json`))).toBe(false);
+    expect(() => healthy.tool.createSession()).not.toThrow();
+    expect(() => broken.tool.createSession()).toThrow(expect.objectContaining({ code: 'SESSION_STORAGE_UNAVAILABLE' }));
+  });
+
+  it('checks publication freshness against actual time even while an older invocation is pinned', () => {
+    const app = setup();
+    const client = app.connect();
+    const session = client.tool.createSession();
+    const release = app.policy.begin(client.namespace);
+    client.tool.getSessionState('full', session.sessionId);
+    app.advance(1000);
+    try {
+      expect(() => app.policy.assertRetained(client.namespace, session.sessionId)).toThrow(
+        expect.objectContaining({ code: 'SESSION_EXPIRED' }));
+    } finally { release(); }
   });
 
   it('fails closed on corrupt owner metadata and rejects ownership reassignment', () => {

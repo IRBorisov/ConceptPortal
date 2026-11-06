@@ -21,6 +21,7 @@ interface PreparedPublication {
   digest: string;
   session: string;
   tool: RSToolAgent;
+  validateSource?: () => void;
   before: Record<string, any>;
   after: Record<string, any>;
   state: 'prepared' | 'sending' | 'published' | 'uncertain' | 'failed';
@@ -95,7 +96,8 @@ export class PortalPublisher {
   }
 
   /** Capture immutable before/after JSON. This method never writes to Portal. */
-  public prepare(subject: string, workspace: string, targetId: number, tool: RSToolAgent) {
+  public prepare(subject: string, workspace: string, targetId: number, tool: RSToolAgent,
+    validateSource?: (sessionId: string) => void) {
     const preparation = { subject, workspace, invalidated: false };
     this.#preparations.add(preparation);
     return this.exclusive(subject, async () => {
@@ -105,6 +107,7 @@ export class PortalPublisher {
       const credential = this.credential(subject, targetId);
       if (tool.listDiagnostics().some((diagnostic) => diagnostic.kind === 'schema' && diagnostic.severity === 'error'))
         throw new Error('Resolve schema diagnostics before preparing publication');
+      const sourceId = tool.getCurrentSession()!.sessionId;
       const session = tool.exportSession();
       const after = JSON.parse(tool.exportPortal({ kind: 'schema', format: 'json' }) as string);
       const before = await this.#api.request(credential.token, `/api/agents/rsforms/${targetId}/details`);
@@ -115,6 +118,7 @@ export class PortalPublisher {
         !Array.isArray(before.items)
       )
         throw new Error('Portal returned invalid schema metadata');
+      validateSource?.(sourceId);
       // One proposal per live workspace; bounded storage for all subjects.
       if (preparation.invalidated) throw new Error('Workspace was closed');
       this.clearWorkspaceDrafts(subject, workspace);
@@ -137,6 +141,7 @@ export class PortalPublisher {
         digest,
         session,
         tool,
+        validateSource: validateSource ? () => validateSource(sourceId) : undefined,
         before,
         after,
         state: 'prepared',
@@ -184,11 +189,13 @@ export class PortalPublisher {
       if (draft.state !== 'prepared')
         throw new Error('Publication already attempted; inspect Portal before preparing again');
       if (draft.expiresAt <= Date.now()) throw new Error('Publication expired');
+      draft.validateSource?.();
       if (digest !== draft.digest || draft.session !== draft.tool.exportSession())
         throw new Error('Local schema changed; prepare publication again');
       const credential = this.credential(subject, draft.targetId);
       if (credential.generation !== draft.generation)
         throw new Error('Portal connection changed; prepare publication again');
+      draft.validateSource?.();
       draft.state = 'sending';
       try {
         const result = await this.#api.request(credential.token, `/api/agents/rsforms/${draft.targetId}/publish`, {

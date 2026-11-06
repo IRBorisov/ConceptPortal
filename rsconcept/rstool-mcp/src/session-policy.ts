@@ -18,7 +18,7 @@ interface Stamp { lastUsed: number }
 
 /** Single-process account-wide quota and inactivity retention, independent of transport leases. */
 export class SessionPolicy {
-  private readonly busy = new Map<string, { count: number; started: number }>();
+  private readonly busy = new Map<string, { count: number; started: number; accessed: Map<string, { persisted: number; lastUsed: number }> }>();
 
   private readonly evictions = new Map<string, (id: string) => void>();
   private readonly root: string;
@@ -41,7 +41,7 @@ export class SessionPolicy {
   }
 
   /** Bind a verified workspace to an account and give legacy sessions a full initial retention period. */
-  register(subject: string, namespace: string): void {
+  register(subject: string, namespace: string): number {
     const directory = this.workspace(namespace);
     this.directory(directory);
     this.directory(join(directory, '.lifecycle'));
@@ -50,17 +50,25 @@ export class SessionPolicy {
     const owner = this.owner(namespace);
     if (owner && owner.account !== account) throw unavailable();
     if (!owner) this.write(this.ownerPath(namespace), { account });
-    for (const file of this.files(namespace)) this.stamp(namespace, file.id);
+    const files = this.files(namespace);
+    for (const file of files) this.stamp(namespace, file.id);
+    return files.length;
   }
 
   /** Pin an entire invocation so background cleanup never deletes state underneath async work. */
   begin(namespace: string): () => void {
     const existing = this.busy.get(namespace);
-    this.busy.set(namespace, existing ? { ...existing, count: existing.count + 1 } : { count: 1, started: this.now() });
+    this.busy.set(namespace, existing ? { ...existing, count: existing.count + 1 }
+      : { count: 1, started: this.now(), accessed: new Map() });
     return () => {
       const pin = this.busy.get(namespace);
-      if (!pin || pin.count <= 1) this.busy.delete(namespace);
-      else this.busy.set(namespace, { ...pin, count: pin.count - 1 });
+      if (!pin) return;
+      if (pin.count > 1) { this.busy.set(namespace, { ...pin, count: pin.count - 1 }); return; }
+      try {
+        for (const [id, stamp] of pin.accessed) {
+          if (stamp.lastUsed !== stamp.persisted) this.write(this.stampPath(namespace, id), { lastUsed: stamp.lastUsed });
+        }
+      } finally { this.busy.delete(namespace); }
     };
   }
 
@@ -69,7 +77,11 @@ export class SessionPolicy {
     const account = hash(subject);
     return {
       beforeCreate: (id: string) => this.guard(() => {
-        this.sweep(namespace);
+        const failures = this.sweep(namespace);
+        for (const [failed, error] of failures) {
+          const owner = this.owner(failed);
+          if (!owner || owner.account === account) throw error;
+        }
         if (this.files(namespace).some(file => file.id === id)) {
           this.access(namespace, id);
           return;
@@ -92,7 +104,11 @@ export class SessionPolicy {
           'Stored session limit reached for this account. Reuse an existing session or wait for expiry.',
           { limit: this.limit, count, retryAfterSeconds: Math.max(1, Math.ceil((earliest - this.now()) / 1000)) });
       }),
-      created: (id: string) => this.write(this.stampPath(namespace, id), { lastUsed: this.now() }),
+      created: (id: string) => {
+        const now = this.now();
+        this.write(this.stampPath(namespace, id), { lastUsed: now });
+        this.busy.get(namespace)?.accessed.set(id, { persisted: now, lastUsed: now });
+      },
       access: (id: string) => this.access(namespace, id),
       onEviction: (evict: (id: string) => void) => { this.evictions.set(namespace, evict); },
     };
@@ -102,19 +118,37 @@ export class SessionPolicy {
   release(namespace: string): void { this.evictions.delete(namespace); }
 
   /** Reclaim only expired regular session files in indexed, inactive workspaces. */
-  sweep(creatingNamespace?: string): void {
+  sweep(creatingNamespace?: string): Map<string, SessionStorageError> {
+    const failures = new Map<string, SessionStorageError>();
     for (const namespace of this.namespaces()) {
-      if ((this.busy.has(namespace) && namespace !== creatingNamespace) || !this.owner(namespace)) continue;
-      for (const file of this.files(namespace)) {
-        if (this.stamp(namespace, file.id).lastUsed + this.retentionMs <= this.now()) {
-          this.remove(namespace, file);
+      try {
+        if ((this.busy.has(namespace) && namespace !== creatingNamespace) || !this.owner(namespace)) continue;
+        for (const file of this.files(namespace)) {
+          if (this.busy.get(namespace)?.accessed.has(file.id)) continue;
+          if (this.stamp(namespace, file.id).lastUsed + this.retentionMs <= this.now()) this.remove(namespace, file);
         }
-      }
+      } catch { failures.set(namespace, unavailable()); }
+    }
+    return failures;
+  }
+
+  /** Publication cannot borrow an older invocation pin or renew an already-expired source. */
+  assertRetained(namespace: string, id: string): void {
+    if (!this.files(namespace).some(file => file.id === id)) {
+      throw new SessionStorageError('SESSION_NOT_FOUND_OR_EXPIRED', 'Publication source is no longer available.');
+    }
+    const lastUsed = this.busy.get(namespace)?.accessed.get(id)?.lastUsed ?? this.stamp(namespace, id).lastUsed;
+    if (lastUsed + this.retentionMs <= this.now()) {
+      this.expired(namespace);
+      throw new SessionStorageError('SESSION_EXPIRED', 'Publication source session expired. Prepare a new session.');
     }
   }
 
   /** Validate cached as well as disk-backed access and renew the inactivity clock. */
   private access(namespace: string, id: string): void {
+    const pin = this.busy.get(namespace);
+    const touched = pin?.accessed.get(id);
+    if (touched) { touched.lastUsed = this.now(); return; }
     const file = this.files(namespace).find(item => item.id === id);
     if (!file) throw new SessionStorageError('SESSION_NOT_FOUND_OR_EXPIRED',
       'Session does not exist in this workspace or its retention period has expired. Create a new session.');
@@ -125,7 +159,9 @@ export class SessionPolicy {
       throw new SessionStorageError('SESSION_EXPIRED',
         'Session expired after inactivity and was removed. Create a new session.', { retentionSeconds: this.retentionMs / 1000 });
     }
-    this.write(this.stampPath(namespace, id), { lastUsed: this.now() });
+    const now = this.now();
+    if (stamp.lastUsed !== now) this.write(this.stampPath(namespace, id), { lastUsed: now });
+    pin?.accessed.set(id, { persisted: now, lastUsed: now });
   }
 
   /** Delete only enumerated files, never a path derived directly from an agent-supplied ID. */
@@ -176,6 +212,12 @@ export class SessionPolicy {
     const path = this.stampPath(namespace, id);
     const value = this.read(path);
     if (value === null) {
+      // Only recognized rstool envelopes may acquire a retention timestamp.
+      const file = this.files(namespace).find(item => item.id === id);
+      const envelope = file ? this.read(file.path) : null;
+      const state = envelope?.state;
+      if (!state || typeof state !== 'object' || Array.isArray(state) ||
+        (state as Record<string, unknown>).sessionId !== id || !Array.isArray(envelope?.diagnostics)) throw unavailable();
       const stamp = { lastUsed: this.now() };
       this.write(path, stamp);
       return stamp;

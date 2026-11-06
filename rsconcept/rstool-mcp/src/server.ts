@@ -20,6 +20,8 @@ export interface BuildRSToolMcpServerOptions {
   version?: string;
   /** Queue tool invocations, including calls in one JSON-RPC batch. Defaults to true. */
   serializeToolCalls?: boolean;
+  /** Hosted storage errors must never expose raw I/O paths to authenticated clients. */
+  sanitizeStorageErrors?: boolean;
   /** Trusted host integration tools, already bound to its authenticated identity. */
   additionalTools?: readonly ToolDefinition[];
   /** Trusted host invocation guard, run inside the per-workspace serial queue. */
@@ -110,8 +112,8 @@ export function buildRSToolMcpServer(
           ],
         };
       } catch (error) {
-        if (error instanceof SessionStorageError) {
-          const failure = { code: error.code, message: error.message, ...error.details };
+        const failure = storageFailure(error, options.sanitizeStorageErrors);
+        if (failure) {
           return { isError: true, structuredContent: { error: failure },
             content: [{ type: "text" as const, text: JSON.stringify({ error: failure }) }] };
         }
@@ -127,7 +129,15 @@ export function buildRSToolMcpServer(
         };
       }
     };
-    const guarded = () => options.aroundToolCall ? options.aroundToolCall(invoke) : invoke();
+    const guarded = async () => {
+      try { return await (options.aroundToolCall ? options.aroundToolCall(invoke) : invoke()); }
+      catch (error) {
+        const failure = storageFailure(error, options.sanitizeStorageErrors);
+        if (!failure) throw error;
+        return { isError: true, structuredContent: { error: failure },
+          content: [{ type: "text" as const, text: JSON.stringify({ error: failure }) }] };
+      }
+    };
     if (options.serializeToolCalls === false) return guarded();
     const invocation = invocationTail.then(guarded);
     invocationTail = invocation.catch(() => undefined);
@@ -135,4 +145,26 @@ export function buildRSToolMcpServer(
   });
 
   return server;
+}
+
+/** Classify only known filesystem failures and serialize an explicit numeric details allow-list. */
+function storageFailure(error: unknown, classifyFilesystem = false): Record<string, string | number> | undefined {
+  const storage = error instanceof SessionStorageError ? error : classifyFilesystem && filesystemFailure(error)
+    ? new SessionStorageError('SESSION_STORAGE_UNAVAILABLE', 'Session storage operation failed. Contact the administrator.') : undefined;
+  if (!storage) return undefined;
+  const result: Record<string, string | number> = { code: storage.code, message: storage.message };
+  for (const key of ['limit', 'count', 'retryAfterSeconds', 'retentionSeconds']) {
+    const value = storage.details[key];
+    if (typeof value === 'number' && Number.isFinite(value) && value >= 0) result[key] = value;
+  }
+  return result;
+}
+
+/** Persistence can aggregate an original I/O failure with a failed cleanup or rollback. */
+function filesystemFailure(error: unknown, depth = 0): boolean {
+  if (!error || typeof error !== 'object' || depth > 4) return false;
+  const code = (error as NodeJS.ErrnoException).code;
+  if (code && ['EACCES', 'EPERM', 'ENOENT', 'ENOSPC', 'EIO', 'EROFS', 'EMFILE', 'ENFILE', 'EDQUOT',
+    'EEXIST', 'EBUSY', 'ENOTDIR', 'EISDIR'].includes(code)) return true;
+  return error instanceof AggregateError && error.errors.some(item => filesystemFailure(item, depth + 1));
 }

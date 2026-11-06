@@ -28,6 +28,22 @@ function persistedAgent() {
 }
 
 describe('RSToolAgent session integrity', () => {
+  it('restores the old envelope when a post-save lifecycle hook fails during replacement', () => {
+    const { directory, tool } = persistedAgent();
+    const before = tool.exportSession();
+    const payload = JSON.parse(before);
+    const files = fs.readdirSync(directory).sort();
+    payload.state.title = 'Replacement must roll back';
+    const guarded = new RSToolAgent({ persistenceDir: directory, sessionLifecycle: {
+      beforeCreate: () => {}, access: () => {}, created: () => { throw new Error('Policy save failed'); }
+    } });
+    expect(() => guarded.importData(payload, 'session')).toThrow('Policy save failed');
+    expect(guarded.exportSession()).toBe(before);
+    expect(new RSToolAgent({ persistenceDir: directory }).exportSession()).toBe(before);
+    expect(() => guarded.createSession()).toThrow('Policy save failed');
+    expect(fs.readdirSync(directory).sort()).toEqual(files);
+  }, 15_000);
+
   it('does not roll back a successful schema edit when an overlapping model update fails', async () => {
     const tool = new RSToolAgent();
     tool.applySchemaPatch({ items: [{ alias: 'X1' }] });

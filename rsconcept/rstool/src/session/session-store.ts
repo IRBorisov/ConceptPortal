@@ -55,9 +55,20 @@ export class SessionStore {
     };
     const committed = structuredClone(envelope);
     this.options.sessionLifecycle?.beforeCreate(sessionId);
+    const previous = this.options.sessionLifecycle
+      ? this.sessions.get(sessionId) ?? this.loadFromDisk(sessionId) : undefined;
     this.persist(sessionId, committed);
+    try { this.options.sessionLifecycle?.created(sessionId); }
+    catch (error) {
+      try {
+        if (previous) this.persistence?.save(sessionId, previous);
+        else this.persistence?.delete(sessionId);
+      } catch (rollbackError) {
+        throw new AggregateError([error, rollbackError], 'Session creation and rollback failed');
+      }
+      throw error;
+    }
     this.sessions.set(sessionId, committed);
-    this.options.sessionLifecycle?.created(sessionId);
     return {
       sessionId,
       contractVersion: contractVersion ?? CONTRACT_VERSION
