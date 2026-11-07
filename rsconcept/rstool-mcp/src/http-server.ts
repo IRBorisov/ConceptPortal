@@ -31,6 +31,8 @@ export interface RSToolHttpServerOptions {
   idleTimeoutMs?: number;
   maxRequestBodySize?: number;
   maxPendingRequests?: number;
+  /** Wall-clock HTTP deadline; a timed-out lease drains before it can be reused. */
+  requestTimeoutMs?: number;
   /** Deadline for an asynchronous credential verifier. */
   authenticationTimeoutMs?: number;
   /** Optional fixed-origin integration; account APIs and Portal tools exist only when configured. */
@@ -46,6 +48,12 @@ interface HttpSession {
   pending: number;
   lastUsed: number;
   closed: boolean;
+  activeTools: number;
+  revision: string;
+  responses: Set<ServerResponse>;
+  disposal?: Promise<void>;
+  drained: Promise<void>;
+  resolveDrained: () => void;
 }
 
 export interface RSToolHttpService {
@@ -64,6 +72,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   const maxRequestBodySize = positiveInteger(options.maxRequestBodySize ?? 4 * 1024 * 1024, 'maxRequestBodySize');
   const maxPendingRequests = positiveInteger(options.maxPendingRequests ?? 8, 'maxPendingRequests');
   const authenticationTimeoutMs = positiveInteger(options.authenticationTimeoutMs ?? 5_000, 'authenticationTimeoutMs');
+  const requestTimeoutMs = positiveInteger(options.requestTimeoutMs ?? 120_000, 'requestTimeoutMs');
   const allowedHosts = new Set((options.allowedHosts ?? ['127.0.0.1', 'localhost', '[::1]']).map(host => host.toLowerCase()));
   const allowedOrigins = new Set(options.allowedOrigins ?? []);
   if (options.portal) {
@@ -83,22 +92,35 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   let closing: Promise<void> | undefined;
   let stopped = false;
 
-  /** Remove only this transport lease; the workspace's persisted schema data stays intact. */
-  function forget(entry: HttpSession): void {
-    entry.closed = true;
-    options.portal?.publisher.invalidateWorkspace(entry.subject, entry.namespace);
+  /** Release ownership only after actual tool work and HTTP handlers have settled. */
+  function releaseDrained(entry: HttpSession): void {
+    if (!entry.closed || entry.activeTools || entry.pending) return;
     if (workspaces.get(entry.namespace) === entry) {
       policy.release(entry.namespace);
       workspaces.delete(entry.namespace);
     }
-    if (entry.transport.sessionId) sessions.delete(entry.transport.sessionId);
+    pruneClosed(entry);
+    entry.resolveDrained();
   }
 
-  /** Release a lease and its protocol resources without deleting durable rstool sessions. */
+  /** Stop queued work immediately, while retaining the workspace lock for running operations. */
+  function drain(entry: HttpSession, destroyResponses = false): void {
+    if (!entry.closed) {
+      entry.closed = true;
+      entry.revision = randomUUID();
+      options.portal?.publisher.invalidateWorkspace(entry.subject, entry.namespace);
+      if (entry.transport.sessionId) sessions.delete(entry.transport.sessionId);
+    }
+    if (destroyResponses) for (const response of entry.responses) if (!response.writableFinished) response.destroy();
+    releaseDrained(entry);
+  }
+
+  /** Closing the MCP transport cannot cancel an already running asynchronous mutation. */
   async function dispose(entry: HttpSession): Promise<void> {
-    forget(entry);
-    await entry.server.close();
-    pruneClosed(entry);
+    drain(entry, true);
+    entry.disposal ??= entry.server.close();
+    await entry.disposal;
+    releaseDrained(entry);
   }
 
   /** Invalid initialization and closed empty leases must not accumulate permanent directories. */
@@ -112,7 +134,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   function expireIdleSessions(): void {
     const cutoff = Date.now() - idleTimeoutMs;
     for (const entry of workspaces.values()) {
-      if (entry.pending === 0 && entry.lastUsed <= cutoff) {
+      if (!entry.closed && entry.pending === 0 && entry.activeTools === 0 && entry.lastUsed <= cutoff) {
         // close() only releases transport resources; session data stays on disk.
         void dispose(entry).catch(() => undefined);
       }
@@ -138,7 +160,8 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
     }
     if (options.portal && servePortalAccount(url.pathname, request, response)) return;
     const accountRoute = options.portal && url.pathname.startsWith('/portal/api/');
-    const route = /^\/mcp(?:\/([A-Za-z0-9][A-Za-z0-9._-]{0,63}))?\/?$/.exec(url.pathname);
+    const management = /^\/mcp\/([A-Za-z0-9][A-Za-z0-9._-]{0,63})\/connection\/?$/.exec(url.pathname);
+    const route = management ?? /^\/mcp(?:\/([A-Za-z0-9][A-Za-z0-9._-]{0,63}))?\/?$/.exec(url.pathname);
     if (!route && !accountRoute) return reject(response, 404, 'Not found');
     const token = /^Bearer ([^\s]+)$/i.exec(request.headers.authorization ?? '')?.[1];
     const verifier = accountRoute && options.portal ? options.portal.verifyAccountToken : options.verifyToken;
@@ -153,12 +176,40 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       return;
     }
     if (!route) return reject(response, 404, 'Not found');
+    // A hash prevents subjects and workspace names from becoming filesystem paths.
+    const namespace = createHash('sha256').update(JSON.stringify([subject, route[1] ?? 'default'])).digest('hex');
+    if (management) {
+      // No request body is accepted, including chunked bodies. Reads never renew the lease.
+      if (request.headers['transfer-encoding'] || (request.headers['content-length'] && request.headers['content-length'] !== '0'))
+        return reject(response, 400, 'Connection management accepts no body');
+      const lease = workspaces.get(namespace);
+      if (request.method === 'GET') {
+        if (lease) response.setHeader('ETag', `"${lease.revision}"`);
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.end(JSON.stringify(lease ? { state: lease.closed ? 'draining' : 'connected',
+          busy: lease.pending > 0 || lease.activeTools > 0, idleSeconds: Math.max(0, (Date.now() - lease.lastUsed) / 1000) }
+          : { state: 'disconnected', busy: false }));
+        return;
+      }
+      if (request.method !== 'DELETE') {
+        response.setHeader('Allow', 'GET, DELETE');
+        return reject(response, 405, 'Only GET and DELETE are supported');
+      }
+      if (!lease) return reject(response, 404, 'Connection not found');
+      if (request.headers['if-match'] !== `"${lease.revision}"`)
+        return reject(response, 409, 'Connection changed; read its current ETag');
+      if (lease.closed || lease.pending || lease.activeTools)
+        return reject(response, 409, 'Connection is busy or draining');
+      // Explicit compare-and-release. Initialization itself never takes over another lease.
+      await dispose(lease);
+      response.writeHead(204);
+      response.end();
+      return;
+    }
     if (request.method !== 'POST' && request.method !== 'DELETE') {
       response.setHeader('Allow', 'POST, DELETE');
       return reject(response, 405, 'Only POST and DELETE are supported');
     }
-    // A hash prevents subjects or workspace names from becoming filesystem paths.
-    const namespace = createHash('sha256').update(JSON.stringify([subject, route[1] ?? 'default'])).digest('hex');
     const sessionId = request.headers['mcp-session-id'];
     let entry: HttpSession;
     let initializationResponse: Promise<boolean> | undefined;
@@ -171,7 +222,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
     } else {
       if (request.method !== 'POST') return reject(response, 400, 'Mcp-Session-Id is required');
       expireIdleSessions();
-      if (workspaces.has(namespace)) return reject(response, 409, 'Workspace already has an active MCP session');
+      if (workspaces.has(namespace)) return reject(response, 409, 'Workspace has an active or draining connection; inspect its /connection endpoint');
       if (workspaces.size >= maxSessions) return reject(response, 503, 'Active session limit reached');
       initializationResponse = responseCompletion(response);
       policy.register(subject, namespace, route[1] ?? 'default');
@@ -180,9 +231,22 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       const mcpServer = buildRSToolMcpServer({ tool, serializeToolCalls: true, sanitizeStorageErrors: true,
         instructions: `Max ${policy.limit} stored sessions per account across workspaces; inactivity TTL ${policy.retentionMs / 1000} seconds. Call get_session_storage_config for limits and usage. At SESSION_LIMIT_REACHED use list_stored_sessions and reuse or explicitly delete an unneeded session with delete_stored_session. Deletion is destructive; follow user/client approval policy. No automatic victim selection. Listing never renews TTL.`,
         aroundToolCall: async (invoke, definition) => {
-          if (definition?.sessionActivity === 'none') return invoke();
-          const release = policy.begin(namespace);
-          try { return await invoke(); } finally { release(); }
+          if (entry.closed) throw new Error('Workspace connection is draining');
+          entry.activeTools++;
+          entry.revision = randomUUID();
+          let release: (() => void) | undefined;
+          try {
+            if (definition?.sessionActivity !== 'none') release = policy.begin(namespace);
+            return await invoke();
+          } finally {
+            try { release?.(); }
+            finally {
+              entry.activeTools--;
+              entry.lastUsed = Date.now();
+              entry.revision = randomUUID();
+              releaseDrained(entry);
+            }
+          }
         },
         additionalTools: [
           ...sessionStorageToolDefinitions(policy, subject, namespace, { cleanupIntervalMs, maxActiveSessions: maxSessions,
@@ -196,13 +260,16 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
         maxRequestBodySize,
         onsessioninitialized: id => { sessions.set(id, entry); },
       });
+      let resolveDrained!: () => void;
+      const drained = new Promise<void>(resolve => { resolveDrained = resolve; });
       entry = {
         subject, namespace, server: mcpServer, transport,
         tail: Promise.resolve(), pending: 0, lastUsed: Date.now(), closed: false,
+        activeTools: 0, revision: randomUUID(), responses: new Set(), drained, resolveDrained,
       };
       // Reserve before the first await, including simultaneous initialize requests.
       workspaces.set(namespace, entry);
-      mcpServer.server.onclose = () => forget(entry);
+      mcpServer.server.onclose = () => drain(entry);
       try {
         await mcpServer.connect(transport);
       } catch (error) {
@@ -212,15 +279,25 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
     }
     if (entry.pending >= maxPendingRequests) return reject(response, 429, 'Workspace request queue is full');
     entry.pending++;
+    entry.revision = randomUUID();
+    entry.responses.add(response);
+    const completion = responseCompletion(response);
+    const onClose = () => {
+      if (!response.writableFinished) void dispose(entry).catch(() => undefined);
+    };
+    response.once('close', onClose);
+    const deadline = setTimeout(() => { void dispose(entry).catch(() => undefined); }, requestTimeoutMs);
+    deadline.unref();
     // rstool has a mutable current session. Serialize calls within each workspace.
     const task = entry.tail.then(async () => {
       if (entry.closed) return reject(response, 404, 'Session not found');
-      await entry.transport.handleRequest(request, response);
+      await Promise.race([entry.transport.handleRequest(request, response), completion]);
     });
     entry.tail = task.catch(() => undefined);
     let handled = false;
     try {
       await task;
+      await completion;
       handled = true;
     } finally {
       if (initializationResponse) {
@@ -229,9 +306,13 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
         const delivered = await initializationResponse;
         if (!entry.transport.sessionId || !delivered) await dispose(entry);
       }
+      clearTimeout(deadline);
+      response.off('close', onClose);
+      entry.responses.delete(response);
       entry.pending--;
       entry.lastUsed = Date.now();
-      pruneClosed(entry);
+      entry.revision = randomUUID();
+      releaseDrained(entry);
     }
   }
 
@@ -270,7 +351,10 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
         if (server.listening) {
           await new Promise<void>((resolve, rejectClose) => server.close(error => error ? rejectClose(error) : resolve()));
         }
-        await Promise.all([...workspaces.values()].map(dispose));
+        await Promise.all([...workspaces.values()].map(async entry => {
+          await dispose(entry);
+          await entry.drained;
+        }));
       })();
       return closing;
     },

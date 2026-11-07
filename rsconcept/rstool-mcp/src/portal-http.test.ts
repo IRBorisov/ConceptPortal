@@ -26,7 +26,7 @@ afterEach(async () => {
 });
 
 /** Exercise both protocols against a real loopback listener; only Portal itself is a stub. */
-async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions, 'sessionRetentionMs' | 'sessionCleanupIntervalMs'> = {}) {
+async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions, 'sessionRetentionMs' | 'sessionCleanupIntervalMs' | 'requestTimeoutMs'> = {}) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'portal-http-test-'));
   cleanup.push(() => {
     const relative = path.relative(path.resolve(os.tmpdir()), path.resolve(directory));
@@ -44,6 +44,12 @@ async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions,
   const remote = vi.fn<typeof fetch>(async (input, options) => {
     expect((options!.headers as Record<string, string>).Authorization).toBe(`Bearer ${KEY}`);
     if (String(input).endsWith('/me')) return Response.json({ id: 7, username: 'Alice' });
+    if (String(input).endsWith('/description')) {
+      const body = JSON.parse(String(options!.body));
+      if (body.expected_time_update !== current.time_update) return Response.json({}, { status: 409 });
+      current = { ...current, description: body.description, time_update: '2026-11-06T02:00:00Z' };
+      return Response.json({ id: 1, description: current.description, time_update: current.time_update });
+    }
     if (String(input).endsWith('/publish')) {
       current = { ...JSON.parse(String(options!.body)).schema, id: 1, time_update: '2026-11-06T02:00:00Z' };
       return Response.json({ version: 1, schema: current });
@@ -236,3 +242,50 @@ it('deleting the selected stored session invalidates its pending publications bu
   expect(await (await app.account('connection')).json()).toMatchObject({ connected: true, mode: 'personal' });
   expect(app.remote.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(0);
 }, 20_000);
+
+
+it('updates description through MCP without a local model and rejects identity overrides', async () => {
+  const app = await start();
+  await app.account('connection', 'PUT', { key: KEY });
+  expect((await app.client.listTools()).tools.map(tool => tool.name)).toContain('portal_update_description');
+  const args = { targetId: 1, expectedTimeUpdate: '2026-11-06T01:00:00Z', description: 'Comment' };
+  for (const extra of [{ key: KEY }, { subject: 'bob' }, { schema: {} }]) {
+    const rejected = await app.client.callTool({ name: 'portal_update_description', arguments: { ...args, ...extra } });
+    expect(rejected.isError).toBe(true);
+    expect(JSON.stringify(rejected)).not.toContain(KEY);
+  }
+  const updated = await app.client.callTool({ name: 'portal_update_description', arguments: args });
+  expect(updated.isError).not.toBe(true);
+  expect(updated.structuredContent).toMatchObject({ targetId: 1, description: 'Comment', time_update: '2026-11-06T02:00:00Z' });
+  expect((await app.client.callTool({ name: 'get_current_session', arguments: {} })).structuredContent).toBeUndefined();
+  expect(await (await app.account('publications')).json()).toEqual([]);
+  expect(app.remote.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(0);
+});
+
+
+it('pins a description-only Portal operation during HTTP timeout and does not release its lease early', async () => {
+  const app = await start(true, { requestTimeoutMs: 100 });
+  await app.account('connection', 'PUT', { key: KEY });
+  let release!: () => void;
+  let entered!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  const started = new Promise<void>(resolve => { entered = resolve; });
+  const normal = app.remote.getMockImplementation()!;
+  app.remote.mockImplementationOnce(async (...args) => { entered(); await gate; return normal(...args); });
+  const active = app.client.callTool({ name: 'portal_update_description', arguments: {
+    targetId: 1, expectedTimeUpdate: '2026-11-06T01:00:00Z', description: 'Comment' } }).catch(() => undefined);
+  await started;
+  const url = app.url + '/mcp/test/connection';
+  const headers = { Authorization: `Bearer ${ALICE}` };
+  try {
+    await vi.waitFor(async () => {
+      expect(await (await fetch(url, { headers })).json()).toMatchObject({ state: 'draining', busy: true });
+    });
+    const snapshot = await fetch(url, { headers });
+    expect((await fetch(url, { method: 'DELETE', headers: { ...headers, 'If-Match': snapshot.headers.get('etag')! } })).status).toBe(409);
+  } finally { release(); }
+  await active;
+  await vi.waitFor(async () => {
+    expect(await (await fetch(url, { headers })).json()).toMatchObject({ state: 'disconnected' });
+  });
+});

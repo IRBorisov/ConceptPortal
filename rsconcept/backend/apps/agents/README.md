@@ -1,5 +1,14 @@
 # Agent API authentication
 
+## Description-only editing
+
+`POST /api/agents/rsforms/:id/description` accepts only `expected_time_update`
+and `description`, preserving whitespace and allowing empty text up to 100000
+characters. It uses existing edit permissions, ordinary write quotas and audit.
+A conditional update changes only description and a strictly advancing revision;
+permission recheck or stale base rolls back. It does not create a version or
+replace constituents. The MCP host independently reads back the result.
+
 ## Approved MCP publication
 
 `GET /api/agents/me` resolves a bearer key to its account id/username without

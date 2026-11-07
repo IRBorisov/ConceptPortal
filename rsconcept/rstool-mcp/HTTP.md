@@ -47,6 +47,20 @@ One workspace permits one live MCP connection. A second initialization returns 4
 
 Send MCP DELETE to release a transport lease when finished. Closing the local client connection alone leaves the lease until idle expiry. After DELETE, transport expiry or a service restart, initialize a new MCP connection at the same URL and use `get_current_session` to resume a schema still within its storage retention period. Do not reuse an expired transport ID. Deleting a transport does not delete schema data.
 
+## Recover a lost connection ID
+
+When a client dies between requests and loses its MCP session ID, initialization still returns 409. It never silently replaces a healthy client. An authenticated caller can explicitly disconnect its own idle lease without the old ID:
+
+1. `GET /mcp/my-task/connection` with the normal bearer credential. It returns `state=connected|draining|disconnected`, `busy`, `idleSeconds` and an opaque `ETag` header for a present lease. No transport ID or credential is returned. Reads do not renew activity or retention.
+2. After deciding to disconnect that client, send `DELETE /mcp/my-task/connection` with `If-Match` copied exactly from the ETag. No request body is accepted. Success is 204. A changed revision, missing precondition, busy or draining lease returns 409; an absent lease returns 404.
+3. Initialize a new MCP connection at the original workspace URL. Saved schemas remain available. This is transport recovery, never deletion of stored models or automatic retry of uncertain mutations.
+
+Use `/mcp/default/connection` for `/mcp`. Both routes use the same Host, Origin and subject/workspace checks as MCP. The opaque revision changes on every admitted MCP request and tool start/completion, even within one clock tick. A resumed client invalidates an earlier recovery snapshot. This API is an explicit disconnect by another caller with the same authenticated identity, not proof that the old process is dead. Coordinate with another live client before releasing it. It does not provide a force-release or takeover option.
+
+An incomplete request body, interrupted response or `requestTimeoutMs` deadline closes that lease to new work and closes its HTTP responses. Tools queued behind a running tool cannot start after draining begins. Every actual tool invocation, including Portal and storage/metadata tools, keeps ownership until it settles, independently of the HTTP handler. A lease with a non-cancellable asynchronous operation stays draining and consumes its session slot; it is never replaced by a second mutable agent. HTTP deadlines bound connections, not the duration of external side effects. Inspect Portal after an interrupted write.
+
+`service.close()` waits for actual tool drain before resolving, so an embedding host must await it before reusing the persistence directory. If non-cancellable code never settles, close cannot complete safely. Synchronous CPU work can also block the event loop and its timers. These cases require stopping the old process before starting another; this release adds no worker isolation or cross-process lock.
+
 ## Limits and errors
 
 The programmatic `createRSToolHttpServer` factory accepts:
@@ -59,12 +73,13 @@ The programmatic `createRSToolHttpServer` factory accepts:
 | `sessionCleanupIntervalMs` | 1 minute | Background scan; access and creation also enforce expiry |
 | `idleTimeoutMs` | 30 minutes | Release leases with no queued/in-flight requests after inactivity |
 | `maxRequestBodySize` | 4 MiB | SDK limit before JSON parsing |
+| `requestTimeoutMs` | 120 seconds | Close stalled HTTP responses and drain their workspace lease; does not forcibly stop running tool code |
 | `maxPendingRequests` | 8 per workspace | Bound queued and in-flight HTTP requests |
 | `authenticationTimeoutMs` | 5 seconds | End a stalled credential check with 503 and abort its optional cancellation signal |
 | `allowedHosts` | Loopback hostnames | DNS rebinding protection |
 | `allowedOrigins` | Empty | Reject requests carrying an untrusted Origin header |
 
-401 means credentials are missing or invalid; 404 means the route/session is unavailable to this identity; 409 means the workspace is already connected; 413 means the body is too large; 429 means the workspace queue is full; 503 means authentication timed out, the active-session limit is reached or the service is stopping. Invalid initialization or an initialize response interrupted before write completion does not retain a lease. An interrupted response on an existing transport preserves its lease. Tool-level rstool errors retain their existing MCP `isError` result.
+401 means credentials are missing or invalid; 404 means the route/session is unavailable to this identity; 409 means the workspace is already connected; 413 means the body is too large; 429 means the workspace queue is full; 503 means authentication timed out, the active-session limit is reached or the service is stopping. Invalid initialization or an initialize response interrupted before write completion does not retain a lease. An interrupted response on an existing transport drains its lease; inspect the remote outcome before retrying any write. Tool-level rstool errors retain their existing MCP `isError` result.
 
 MCP responses use JSON and MCP GET returns 405 because server-initiated SSE is not provided. Optional Portal account routes serve HTML/JS/CSS and authenticated settings APIs; see [Portal publication](PORTAL.md). The service does not enable browser CORS or trust forwarded identity headers.
 
@@ -72,7 +87,7 @@ These limits bound stored session counts and inactivity, not expression evaluati
 
 ## Reverse proxy and process ownership
 
-Keep the HTTP listener on loopback behind an internal HTTPS reverse proxy. Forward the original allowed Host, Authorization, Content-Type, Accept, Mcp-Session-Id and Mcp-Protocol-Version headers. Add the proxy hostname to `RSTOOL_HTTP_ALLOWED_HOSTS`; forwarded Host/User headers are not used for authentication. Restrict the route to the intended LAN/VPN access. This package does not change firewall, DNS, TLS or systemd configuration.
+Keep the HTTP listener on loopback behind an internal HTTPS reverse proxy. Forward the original allowed Host, Authorization, Content-Type, Accept, Mcp-Session-Id, Mcp-Protocol-Version, ETag and If-Match headers. Add the proxy hostname to `RSTOOL_HTTP_ALLOWED_HOSTS`; forwarded Host/User headers are not used for authentication. Restrict the route to the intended LAN/VPN access. This package does not change firewall, DNS, TLS or systemd configuration.
 
 Run exactly one service process for a persistence root. Do not use cluster/PM2 multi-worker mode, load-balance replicas over the same root, or run stdio against its workspace directories. The lease registry and serialization queue are process-local. A later shared-storage design needs cross-process locking or transactional revision checks.
 

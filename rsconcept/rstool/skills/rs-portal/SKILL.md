@@ -40,6 +40,8 @@ UI-ссылку (`https://portal.acconcept.ru/rsforms/856?tab=editor`) не от
 3. Описание схемы содержит назначение, ограничения и краткий журнал решений (гейт `rs-explicate`). `create-version` (если есть права) → `replace` с `exportPortal({ kind: 'schema' })`.
 4. Повторно прочитай `/details`, импортируй и сверь. Отчёт со ссылкой на схему в UI.
 
+Для правки только комментария схемы используй CAS `/description` или `portal_update_description(targetId, expectedTimeUpdate, description)` настроенного HTTP MCP, см. `docs/PORTAL-PUBLISH.md` §«Только комментарий схемы». Полная замена и rstool-сессия для этого не нужны. Отдельное подтверждение каждой записи комментария на странице публикаций не требуется.
+
 ## Расположение и доступ
 
 Владелец (или staff) меняет папку и `access_policy` ключом: `PATCH /api/agents/library/:id/set-location` и `set-access-policy`. Редактор эти поля не меняет. В `/L` пишет только staff. Обычный `PATCH /api/library/:id/set-location` ключ не открывает. Подробно — `docs/PORTAL-PUBLISH.md` §«Расположение и политика доступа». Не переноси схему без просьбы пользователя.

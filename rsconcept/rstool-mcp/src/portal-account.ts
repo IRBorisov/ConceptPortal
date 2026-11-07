@@ -7,6 +7,7 @@ export const PORTAL_ACCOUNT_HTML = `<!doctype html><html lang="en"><head><meta c
 <form id="login"><label>Human account token <input id="access" type="password" autocomplete="off" required></label><button>Open settings</button></form>
 <section id="settings" hidden><h2>Portal connection</h2><p id="connection"></p>
 <p>A Portal API key currently has all the permissions of its owner. Create a dedicated key in your Portal profile. Encryption does not protect keys from a compromised running service or server administrator.</p>
+<p>Connecting a key lets your MCP agent directly update schema descriptions with revision checks and readback, within your Portal edit permissions. Full schema replacements still require approval below.</p>
 <form id="connect"><label>Personal Portal key <input id="key" type="password" autocomplete="off" required></label><button>Save personal key</button></form>
 <button id="disconnect" type="button">Disconnect personal key</button><p>Disconnecting here does not revoke the original key. Revoke it in your Portal profile as well.</p>
 <h2>Prepared publications</h2><button id="refresh" type="button">Refresh</button><p>Review the target and both complete schemas. Only approve the exact replacement you intend. Publication preserves the previous version and requires owner access.</p><div id="publications"></div></section>

@@ -95,6 +95,34 @@ export class PortalPublisher {
       : { connected: false, mode: 'personal' };
   }
 
+  /** Narrow CAS edit using the bound credential; never imports or replaces a schema. */
+  public updateDescription(subject: string, targetId: number, expectedTimeUpdate: string, description: string) {
+    return this.exclusive(subject, async () => {
+      if (!Number.isSafeInteger(targetId) || targetId <= 0) throw new Error('A positive Portal schema ID is required');
+      if (typeof expectedTimeUpdate !== 'string' || !Number.isFinite(Date.parse(expectedTimeUpdate)))
+        throw new Error('A valid expectedTimeUpdate is required');
+      if (typeof description !== 'string' || [...description].length > 100000)
+        throw new Error('description must be a string of at most 100000 characters');
+      const credential = this.credential(subject, targetId);
+      const path = `/api/agents/rsforms/${targetId}`;
+      const before = await this.#api.request(credential.token, `${path}/details`);
+      if (before.id !== targetId || before.time_update !== expectedTimeUpdate)
+        throw new Error('Portal schema changed; read the current revision before retrying');
+      content(before);
+      await this.#api.request(credential.token, `${path}/description`, {
+        expected_time_update: expectedTimeUpdate, description,
+      });
+      // A readback failure has an uncertain outcome. Never retry the write automatically.
+      const after = await this.#api.request(credential.token, `${path}/details`);
+      if (after.id !== targetId || after.description !== description ||
+        typeof after.time_update !== 'string' || !Number.isFinite(Date.parse(after.time_update)) ||
+        after.time_update === expectedTimeUpdate ||
+        JSON.stringify(content({ ...after, description: before.description })) !== JSON.stringify(content(before)))
+        throw new Error('Description verification failed; inspect Portal before retrying');
+      return { targetId, description, time_update: after.time_update };
+    });
+  }
+
   /** Capture immutable before/after JSON. This method never writes to Portal. */
   public prepare(subject: string, workspace: string, targetId: number, tool: RSToolAgent,
     validateSource?: (sessionId: string) => void) {

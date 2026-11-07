@@ -22,7 +22,7 @@ export class PortalClient {
 
   /** Never expose fetch exceptions, headers, redirect destinations or untrusted Portal messages. */
   public async request(token: string, path: string, body?: unknown): Promise<Record<string, any>> {
-    if (!/^\/api\/agents\/(me|rsforms\/[1-9][0-9]*\/(details|publish))$/.test(path)) {
+    if (!/^\/api\/agents\/(me|rsforms\/[1-9][0-9]*\/(details|publish|description))$/.test(path)) {
       throw new Error('Portal route is not allowed');
     }
     let response: Response;
@@ -41,7 +41,7 @@ export class PortalClient {
       await response.body?.cancel();
       throw new Error(
         response.status === 409
-          ? 'Portal schema changed; prepare publication again'
+          ? 'Portal schema changed; read the current revision before retrying'
           : `Portal refused the request (${response.status})`
       );
     }
