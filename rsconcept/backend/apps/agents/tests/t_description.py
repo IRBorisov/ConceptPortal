@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 from django.core.cache import cache
 from django.db import connection, connections
-from django.test import TransactionTestCase
+from django.test import TransactionTestCase, override_settings
 from django.utils.dateparse import parse_datetime
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.test import APIClient
@@ -85,12 +85,14 @@ class TestAgentDescription(EndpointTester):
             self.assertEqual(self.client.post(self.base + '/description', self.payload).status_code, 200)
             self.assertEqual(self.client.post(self.base + '/description', self.payload).status_code, 409)
 
+    @override_settings(TIME_ZONE='UTC')
     def test_unrepresentable_next_timestamp_is_validation_failure(self):
+        before = self.client.get(self.base + '/details').data
         self.payload['expected_time_update'] = '9999-12-31T23:59:59.999999Z'
         response = self.client.post(self.base + '/description', self.payload)
         self.assertEqual(response.status_code, 400, response.data)
-        self.assertIn('expected_time_update', response.data)
-        self.assertEqual(self.client.get(self.base + '/details').data, self.before)
+        self.assertEqual(str(response.data['expected_time_update']), 'Revision cannot be advanced.')
+        self.assertEqual(self.client.get(self.base + '/details').data, before)
 
     def test_permission_change_rolls_back_claim(self):
         with patch('apps.agents.views.description.AgentRsformDescriptionView._require_edit',
