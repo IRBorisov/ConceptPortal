@@ -7,3 +7,4 @@ from .t_oss import *
 from .t_quota import *
 from .t_rsform_routes import *
 from .t_publication import *
+from .t_description import *

@@ -85,6 +85,13 @@ class TestAgentDescription(EndpointTester):
             self.assertEqual(self.client.post(self.base + '/description', self.payload).status_code, 200)
             self.assertEqual(self.client.post(self.base + '/description', self.payload).status_code, 409)
 
+    def test_unrepresentable_next_timestamp_is_validation_failure(self):
+        self.payload['expected_time_update'] = '9999-12-31T23:59:59.999999Z'
+        response = self.client.post(self.base + '/description', self.payload)
+        self.assertEqual(response.status_code, 400, response.data)
+        self.assertIn('expected_time_update', response.data)
+        self.assertEqual(self.client.get(self.base + '/details').data, self.before)
+
     def test_permission_change_rolls_back_claim(self):
         with patch('apps.agents.views.description.AgentRsformDescriptionView._require_edit',
                    side_effect=[None, PermissionDenied()]):
