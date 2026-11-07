@@ -2,6 +2,7 @@ import { randomBytes } from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { request } from 'node:http';
 import type { AddressInfo } from 'node:net';
 
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
@@ -37,6 +38,7 @@ async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions,
     id: 1,
     title: 'Before',
     alias: 'OLD',
+    description: '',
     items: [],
     attribution: [],
     time_update: '2026-11-06T01:00:00Z',
@@ -93,7 +95,7 @@ async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions,
       headers: { Authorization: `Bearer ${token}`, Origin: origin, 'Content-Type': 'application/json' },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
-  return { url, account, client, transport, remote, directory };
+  return { url, account, client, transport, remote, directory, service, publisher };
 }
 
 it('keeps credentials outside MCP and enforces the authenticated account for approval and disconnect', async () => {
@@ -247,8 +249,15 @@ it('deleting the selected stored session invalidates its pending publications bu
 it('updates description through MCP without a local model and rejects identity overrides', async () => {
   const app = await start();
   await app.account('connection', 'PUT', { key: KEY });
-  expect((await app.client.listTools()).tools.map(tool => tool.name)).toContain('portal_update_description');
-  const args = { targetId: 1, expectedTimeUpdate: '2026-11-06T01:00:00Z', description: 'Comment' };
+  const catalog = await app.client.listTools();
+  expect(catalog.tools.map(tool => tool.name)).toContain('portal_update_description');
+  expect(catalog.tools.find(tool => tool.name === 'portal_get_description')?.annotations?.readOnlyHint).toBe(true);
+  const current = await app.client.callTool({ name: 'portal_get_description', arguments: { targetId: 1 } });
+  expect(current.isError).not.toBe(true);
+  expect(current.structuredContent).toEqual({ targetId: 1, description: '', time_update: '2026-11-06T01:00:00Z' });
+  expect(JSON.stringify(current)).not.toContain(KEY);
+  expect((await app.client.callTool({ name: 'portal_get_description', arguments: { targetId: 1, subject: 'bob' } })).isError).toBe(true);
+  const args = { targetId: 1, expectedTimeUpdate: (current.structuredContent as Record<string, unknown>).time_update, description: 'Comment' };
   for (const extra of [{ key: KEY }, { subject: 'bob' }, { schema: {} }]) {
     const rejected = await app.client.callTool({ name: 'portal_update_description', arguments: { ...args, ...extra } });
     expect(rejected.isError).toBe(true);
@@ -288,4 +297,60 @@ it('pins a description-only Portal operation during HTTP timeout and does not re
   await vi.waitFor(async () => {
     expect(await (await fetch(url, { headers })).json()).toMatchObject({ state: 'disconnected' });
   });
+});
+
+
+it.each(['binding', 'publication'] as const)('bounds an account %s response but waits for its actual Portal operation during shutdown', async mode => {
+  const app = await start(true, { requestTimeoutMs: 80 });
+  let route = 'connection', method = 'PUT';
+  let body: Record<string, unknown> = { key: KEY };
+  if (mode === 'publication') {
+    await app.account('connection', 'PUT', { key: KEY });
+    await app.client.callTool({ name: 'apply_schema_patch', arguments: { initial: { comment: 'Published description' } } });
+    const prepared = await app.client.callTool({ name: 'portal_prepare_publication', arguments: { targetId: 1 } });
+    expect(prepared.isError).not.toBe(true);
+    const [proposal] = await (await app.account('publications')).json() as Array<{ id: string; digest: string }>;
+    route = `publications/${proposal.id}/confirm`;
+    method = 'POST';
+    body = { digest: proposal.digest };
+  }
+  let release!: () => void;
+  let entered!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  const started = new Promise<void>(resolve => { entered = resolve; });
+  const normal = app.remote.getMockImplementation()!;
+  app.remote.mockImplementationOnce(async (...args) => { entered(); await gate; return normal(...args); });
+  const pending = app.account(route, method, body).then(() => 'delivered', () => 'closed');
+  await started;
+  let closing: Promise<void> | undefined;
+  let closed = false;
+  try {
+    expect(await Promise.race([pending, new Promise(resolve => setTimeout(() => resolve('still-open'), 250))])).toBe('closed');
+    expect((await app.client.callTool({ name: 'ping', arguments: {} })).isError).not.toBe(true);
+    closing = app.service.close().then(() => { closed = true; });
+    await new Promise(resolve => setTimeout(resolve, 30));
+    expect(closed).toBe(false);
+  } finally { release(); }
+  await closing;
+  await pending;
+  expect(app.publisher.connection('alice')).toMatchObject({ connected: true });
+  if (mode === 'publication') {
+    expect(app.remote.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(1);
+    expect(await app.publisher.getDescription('alice', 1)).toMatchObject({ description: 'Published description',
+      time_update: '2026-11-06T02:00:00Z' });
+  }
+});
+
+it('bounds a partial account body and does not start a Portal operation after it aborts', async () => {
+  const app = await start(true, { requestTimeoutMs: 80 });
+  await new Promise<void>(resolveClose => {
+    const req = request(app.url + '/portal/api/connection', { method: 'PUT', headers: {
+      Authorization: `Bearer ${ACCOUNT_ALICE}`, Origin: ORIGIN, 'Content-Type': 'application/json', 'Content-Length': '1000' } });
+    req.on('error', () => resolveClose());
+    req.on('close', () => resolveClose());
+    req.write('{"key":');
+  });
+  await app.service.close();
+  expect(app.remote).not.toHaveBeenCalled();
+  expect(app.publisher.connection('alice')).toMatchObject({ connected: false });
 });

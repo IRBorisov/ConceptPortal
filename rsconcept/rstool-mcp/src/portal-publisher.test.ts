@@ -353,6 +353,33 @@ it('enforces service target grants and sanitizes conflicts for description write
   await expect(publisher.updateDescription('robot', 2, '2026-11-06T01:00:00Z', '')).rejects.toThrow('not allowed');
   const normal = app.request.getMockImplementation()!;
   app.request.mockImplementationOnce(normal).mockResolvedValueOnce(new Response(token, { status: 409 }));
-  await expect(publisher.updateDescription('robot', 1, '2026-11-06T01:00:00Z', 'Comment')).rejects.toThrow('schema changed');
+  await expect(publisher.updateDescription('robot', 1, '2026-11-06T01:00:00Z', 'Comment')).rejects.toThrow(/^Portal schema changed; read the current revision before retrying$/);
   expect(app.request.mock.calls.at(-1)?.[1]?.headers).toMatchObject({ Authorization: `Bearer ${token}` });
+});
+
+
+it('reads description and revision through the bound key without exposing schema data or creating a session', async () => {
+  const app = setup();
+  await expect(app.publisher.getDescription('alice', 1)).rejects.toThrow('personal Portal key');
+  await app.publisher.connect('alice', token);
+  expect(await app.publisher.getDescription('alice', 1)).toEqual({ targetId: 1, description: '', time_update: '2026-11-06T01:00:00Z' });
+  await expect(app.publisher.getDescription('bob', 1)).rejects.toThrow('personal Portal key');
+  expect(app.request.mock.calls.at(-1)?.[1]?.headers).toMatchObject({ Authorization: `Bearer ${token}` });
+  expect(app.request.mock.calls.filter(([, options]) => options?.method === 'POST')).toHaveLength(0);
+  expect(app.publisher.publications('alice')).toEqual([]);
+});
+
+it('enforces read target grants and rejects invalid revisions and remote errors without leaking bodies', async () => {
+  const app = setup();
+  const publisher = new PortalPublisher(app.vault, new PortalClient('https://api.portal.example', app.request), {
+    token, subjects: ['robot'], targetIds: [1],
+  });
+  await expect(publisher.getDescription('robot', 2)).rejects.toThrow('not allowed');
+  expect(await publisher.getDescription('robot', 1)).toMatchObject({ targetId: 1 });
+  app.request.mockResolvedValueOnce(new Response(token, { status: 403 }));
+  await expect(publisher.getDescription('robot', 1)).rejects.toThrow(/^Portal refused the request \(403\)$/);
+  app.request.mockResolvedValueOnce(Response.json({ id: 1, description: '', time_update: 'invalid' }));
+  await expect(publisher.getDescription('robot', 1)).rejects.toThrow('invalid schema metadata');
+  app.request.mockResolvedValueOnce(Response.json({ id: 2, description: '', time_update: '2026-11-06T01:00:00Z' }));
+  await expect(publisher.getDescription('robot', 1)).rejects.toThrow('invalid schema metadata');
 });

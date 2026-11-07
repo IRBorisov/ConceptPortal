@@ -40,7 +40,7 @@ UI-ссылку (`https://portal.acconcept.ru/rsforms/856?tab=editor`) не от
 3. Описание схемы содержит назначение, ограничения и краткий журнал решений (гейт `rs-explicate`). `create-version` (если есть права) → `replace` с `exportPortal({ kind: 'schema' })`.
 4. Повторно прочитай `/details`, импортируй и сверь. Отчёт со ссылкой на схему в UI.
 
-Для правки только комментария схемы используй CAS `/description` или `portal_update_description(targetId, expectedTimeUpdate, description)` настроенного HTTP MCP, см. `docs/PORTAL-PUBLISH.md` §«Только комментарий схемы». Полная замена и rstool-сессия для этого не нужны. Отдельное подтверждение каждой записи комментария на странице публикаций не требуется.
+В настроенном HTTP MCP `portal_get_description(targetId)` читает описание и редакцию привязанным ключом без локальной сессии, в том числе для непубличной схемы. Для правки только комментария схемы используй CAS `/description` или `portal_update_description(targetId, expectedTimeUpdate, description)` настроенного HTTP MCP, см. `docs/PORTAL-PUBLISH.md` §«Только комментарий схемы». Полная замена и rstool-сессия для этого не нужны. Отдельное подтверждение каждой записи комментария на странице публикаций не требуется.
 
 ## Расположение и доступ
 

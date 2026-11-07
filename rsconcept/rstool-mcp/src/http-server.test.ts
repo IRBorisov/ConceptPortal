@@ -607,7 +607,8 @@ it('waits for actual mutation drain during shutdown before another service can u
   const app = await start({ requestTimeoutMs: 100 });
   const peer = await app.connect('shutdown');
   const saved = await call(peer.client, 'ensure_session', { initial: { title: 'Retained result' } });
-  const active = peer.client.callTool({ name: 'set_model_values', arguments: {} }).catch(() => undefined);
+  await call(peer.client, 'apply_schema_patch', { items: [{ alias: 'X1' }] });
+  const active = peer.client.callTool({ name: 'set_model_values', arguments: { set: [{ target: 1, value: { 0: 'node-0' } }] } }).catch(() => undefined);
   await started;
   await vi.waitFor(async () => {
     expect(await (await fetch(`${app.url}/mcp/shutdown/connection`, { headers: { Authorization: `Bearer ${ALICE}` } })).json())
@@ -626,6 +627,8 @@ it('waits for actual mutation drain during shutdown before another service can u
   const recovered = await replacement.connect('shutdown');
   expect(await call(recovered.client, 'get_session_state', { sessionId: saved.sessionId }))
     .toMatchObject({ title: 'Retained result' });
+  expect((await call(recovered.client, 'get_model_state', { sessionId: saved.sessionId })).items[0].value)
+    .toEqual({ 0: 'node-0' });
   expect((await call(recovered.client, 'list_stored_sessions')).items).toHaveLength(1);
 });
 
@@ -644,4 +647,56 @@ it('releases actual-tool ownership even when retention metadata flushing fails',
   const snapshot = await fetch(url, { headers });
   expect(await snapshot.json()).toMatchObject({ state: 'connected', busy: false });
   expect((await fetch(url, { method: 'DELETE', headers: { ...headers, 'If-Match': snapshot.headers.get('etag')! } })).status).toBe(204);
+});
+
+
+it.each(['requestTimeoutMs', 'authenticationTimeoutMs', 'sessionCleanupIntervalMs'] as const)(
+  'rejects %s beyond the native timer limit without creating a listener', async option => {
+    const directory = await mkdtemp(join(tmpdir(), 'rstool-http-test-'));
+    directories.push(directory);
+    expect(() => createRSToolHttpServer({ persistenceDir: directory, verifyToken: createBearerTokenVerifier(credentials),
+      [option]: 2_147_483_648 })).toThrow(`${option} must not exceed 2147483647`);
+  });
+
+it('drains an existing lease when its authenticated request disconnected during verification', async () => {
+  let blocked = false;
+  let release!: () => void;
+  let entered!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  const started = new Promise<void>(resolve => { entered = resolve; });
+  const verify = createBearerTokenVerifier(credentials);
+  const app = await start({ verifyToken: async token => {
+    if (blocked) { entered(); await gate; }
+    return verify(token);
+  } });
+  const peer = await app.connect('auth-abort');
+  blocked = true;
+  let closed!: () => void;
+  const disconnected = new Promise<void>(resolve => { closed = resolve; });
+  app.service.server.on('request', (incoming, res) => {
+    if (incoming.headers['x-abandon-test']) { incoming.socket.once('close', closed); res.once('close', closed); }
+  });
+  const req = request(`${app.url}/mcp/auth-abort`, { method: 'POST', headers: { ...headers,
+    Authorization: `Bearer ${ALICE}`, 'Mcp-Session-Id': peer.transport.sessionId!, 'X-Abandon-Test': 'yes' } });
+  req.on('error', () => undefined);
+  req.end(JSON.stringify({ jsonrpc: '2.0', id: 51, method: 'tools/call', params: { name: 'create_session', arguments: {} } }));
+  try {
+    await started;
+    req.destroy();
+    await disconnected;
+  } finally { blocked = false; release(); }
+  await vi.waitFor(async () => {
+    expect(await (await fetch(`${app.url}/mcp/auth-abort/connection`, { headers: { Authorization: `Bearer ${ALICE}` } })).json())
+      .toMatchObject({ state: 'disconnected' });
+  });
+  const recovered = await app.connect('auth-abort');
+  expect((await call(recovered.client, 'list_stored_sessions')).items).toHaveLength(0);
+});
+
+
+it('accepts the native timer boundary while allowing longer stored-session retention', async () => {
+  const app = await start({ requestTimeoutMs: 2_147_483_647, authenticationTimeoutMs: 2_147_483_647,
+    sessionCleanupIntervalMs: 2_147_483_647, sessionRetentionMs: 30 * 24 * 60 * 60_000 });
+  const peer = await app.connect('timer-boundary');
+  expect(await call(peer.client, 'ping')).toMatchObject({ pong: true });
 });

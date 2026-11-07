@@ -95,6 +95,19 @@ export class PortalPublisher {
       : { connected: false, mode: 'personal' };
   }
 
+  /** Read a private schema's editable description/revision through this subject's bound key. */
+  public getDescription(subject: string, targetId: number) {
+    return this.exclusive(subject, async () => {
+      if (!Number.isSafeInteger(targetId) || targetId <= 0) throw new Error('A positive Portal schema ID is required');
+      const credential = this.credential(subject, targetId);
+      const schema = await this.#api.request(credential.token, `/api/agents/rsforms/${targetId}/details`);
+      if (schema.id !== targetId || typeof schema.description !== 'string' ||
+        typeof schema.time_update !== 'string' || !Number.isFinite(Date.parse(schema.time_update)))
+        throw new Error('Portal returned invalid schema metadata');
+      return { targetId, description: schema.description, time_update: schema.time_update };
+    });
+  }
+
   /** Narrow CAS edit using the bound credential; never imports or replaces a schema. */
   public updateDescription(subject: string, targetId: number, expectedTimeUpdate: string, description: string) {
     return this.exclusive(subject, async () => {
