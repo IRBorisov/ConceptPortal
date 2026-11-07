@@ -71,8 +71,8 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   const idleTimeoutMs = positiveInteger(options.idleTimeoutMs ?? 30 * 60_000, 'idleTimeoutMs');
   const maxRequestBodySize = positiveInteger(options.maxRequestBodySize ?? 4 * 1024 * 1024, 'maxRequestBodySize');
   const maxPendingRequests = positiveInteger(options.maxPendingRequests ?? 8, 'maxPendingRequests');
-  const authenticationTimeoutMs = positiveInteger(options.authenticationTimeoutMs ?? 5_000, 'authenticationTimeoutMs');
-  const requestTimeoutMs = positiveInteger(options.requestTimeoutMs ?? 120_000, 'requestTimeoutMs');
+  const authenticationTimeoutMs = timerDelay(options.authenticationTimeoutMs ?? 5_000, 'authenticationTimeoutMs');
+  const requestTimeoutMs = timerDelay(options.requestTimeoutMs ?? 120_000, 'requestTimeoutMs');
   const allowedHosts = new Set((options.allowedHosts ?? ['127.0.0.1', 'localhost', '[::1]']).map(host => host.toLowerCase()));
   const allowedOrigins = new Set(options.allowedOrigins ?? []);
   if (options.portal) {
@@ -83,12 +83,13 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   }
   const workspaces = new Map<string, HttpSession>();
   const sessions = new Map<string, HttpSession>();
+  const handlers = new Set<Promise<void>>();
   const policy = new SessionPolicy(options.persistenceDir, options.maxStoredSessionsPerAccount,
     options.sessionRetentionMs, () => Date.now(), namespace => {
       const entry = workspaces.get(namespace);
       if (entry) options.portal?.publisher.invalidateWorkspace(entry.subject, namespace);
     });
-  const cleanupIntervalMs = positiveInteger(options.sessionCleanupIntervalMs ?? 60_000, 'sessionCleanupIntervalMs');
+  const cleanupIntervalMs = timerDelay(options.sessionCleanupIntervalMs ?? 60_000, 'sessionCleanupIntervalMs');
   let closing: Promise<void> | undefined;
   let stopped = false;
 
@@ -172,6 +173,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       return reject(response, 401, 'Bearer authentication required');
     }
     if (accountRoute && options.portal) {
+      if (disconnected(request, response)) return;
       await handlePortalAccount(url.pathname, request, response, subject, options.portal.publisher, options.portal.publicOrigin);
       return;
     }
@@ -179,6 +181,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
     // A hash prevents subjects and workspace names from becoming filesystem paths.
     const namespace = createHash('sha256').update(JSON.stringify([subject, route[1] ?? 'default'])).digest('hex');
     if (management) {
+      if (disconnected(request, response)) return;
       // No request body is accepted, including chunked bodies. Reads never renew the lease.
       if (request.headers['transfer-encoding'] || (request.headers['content-length'] && request.headers['content-length'] !== '0'))
         return reject(response, 400, 'Connection management accepts no body');
@@ -221,6 +224,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       entry = found;
     } else {
       if (request.method !== 'POST') return reject(response, 400, 'Mcp-Session-Id is required');
+      if (disconnected(request, response)) return;
       expireIdleSessions();
       if (workspaces.has(namespace)) return reject(response, 409, 'Workspace has an active or draining connection; inspect its /connection endpoint');
       if (workspaces.size >= maxSessions) return reject(response, 503, 'Active session limit reached');
@@ -277,6 +281,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
         throw error;
       }
     }
+    if (disconnected(request, response)) { await dispose(entry); return; }
     if (entry.pending >= maxPendingRequests) return reject(response, 429, 'Workspace request queue is full');
     entry.pending++;
     entry.revision = randomUUID();
@@ -286,8 +291,6 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       if (!response.writableFinished) void dispose(entry).catch(() => undefined);
     };
     response.once('close', onClose);
-    const deadline = setTimeout(() => { void dispose(entry).catch(() => undefined); }, requestTimeoutMs);
-    deadline.unref();
     // rstool has a mutable current session. Serialize calls within each workspace.
     const task = entry.tail.then(async () => {
       if (entry.closed) return reject(response, 404, 'Session not found');
@@ -306,7 +309,6 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
         const delivered = await initializationResponse;
         if (!entry.transport.sessionId || !delivered) await dispose(entry);
       }
-      clearTimeout(deadline);
       response.off('close', onClose);
       entry.responses.delete(response);
       entry.pending--;
@@ -317,17 +319,31 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   }
 
   const server = createServer((request, response) => {
+    // Response lifetime is bounded even during authentication or account API operations.
+    const deadline = setTimeout(() => response.destroy(), requestTimeoutMs);
+    deadline.unref();
+    const aborted = () => response.destroy();
+    request.once('aborted', aborted);
+    const complete = () => {
+      clearTimeout(deadline);
+      request.off('aborted', aborted);
+    };
+    response.once('close', complete);
     response.once('finish', () => {
+      complete();
       // Requests active when close() began may only now have become idle.
       if (stopped) server.closeIdleConnections();
     });
-    void handle(request, response).catch((error: unknown) => {
+    const operation = handle(request, response).catch((error: unknown) => {
       // Do not leak credentials, payloads or filesystem paths to clients/logs.
       if (response.destroyed) return;
       if (!response.headersSent) reject(response, error instanceof SessionStorageError ? 503 : 500,
         error instanceof SessionStorageError ? error.code : 'Internal server error');
       else response.end();
     });
+    handlers.add(operation);
+    // Retain actual work after response close; disconnect cannot cancel a Portal side effect.
+    void operation.then(() => handlers.delete(operation), () => handlers.delete(operation));
   });
   server.requestTimeout = 30_000;
   server.headersTimeout = 15_000;
@@ -351,6 +367,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
         if (server.listening) {
           await new Promise<void>((resolve, rejectClose) => server.close(error => error ? rejectClose(error) : resolve()));
         }
+        await Promise.all([...handlers]);
         await Promise.all([...workspaces.values()].map(async entry => {
           await dispose(entry);
           await entry.drained;
@@ -359,6 +376,18 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       return closing;
     },
   };
+}
+
+/** Detect disconnects that occurred before asynchronous authentication or transport setup finished. */
+function disconnected(request: IncomingMessage, response: ServerResponse): boolean {
+  return request.destroyed || request.aborted || response.destroyed || response.writableEnded;
+}
+
+/** Node converts oversized timer delays to 1 ms; reject them before allocating resources. */
+function timerDelay(value: number, name: string): number {
+  positiveInteger(value, name);
+  if (value > 2_147_483_647) throw new Error(`${name} must not exceed 2147483647`);
+  return value;
 }
 
 /** End a host-level failure without exposing request payloads or internal error details. */

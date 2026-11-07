@@ -20,8 +20,16 @@ export function portalToolDefinitions(publisher: PortalPublisher, subject: strin
     invoke: (_tool, args) => {
       if (Object.keys(args).length) throw new Error('This tool accepts no arguments');
       return publisher.connection(subject);
+    } }, { name: 'portal_get_description', sessionActivity: 'none',
+    description: 'Read an existing Portal schema description and time_update through the bound credential, including private schemas. Returns the revision needed by portal_update_description. Creates no local session and reveals no credential.',
+    annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
+    inputSchema: { type: 'object', properties: { targetId: { type: 'integer', minimum: 1 } },
+      required: ['targetId'], additionalProperties: false },
+    invoke: (_tool, args) => {
+      if (Object.keys(args).some(key => key !== 'targetId')) throw new Error('Only targetId is accepted');
+      return publisher.getDescription(subject, args.targetId as number);
     } }, { name: 'portal_update_description', sessionActivity: 'none',
-    description: 'Update only an existing Portal schema description with compare-and-set and readback. Requires targetId, expectedTimeUpdate from a fresh Portal read, and description. Uses the bound credential. No rstool session or full publication approval is needed. Never retries uncertain writes.',
+    description: 'Update only an existing Portal schema description with compare-and-set and readback. Requires targetId, expectedTimeUpdate from portal_get_description time_update, and description. Uses the bound credential. No rstool session or full publication approval is needed. Never retries uncertain writes.',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
     inputSchema: { type: 'object', properties: { targetId: { type: 'integer', minimum: 1 },
       expectedTimeUpdate: { type: 'string' }, description: { type: 'string', maxLength: 100000 } },

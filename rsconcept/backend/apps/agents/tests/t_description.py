@@ -25,6 +25,7 @@ from shared.EndpointTester import EndpointTester
 
 class TestAgentDescription(EndpointTester):
     def setUp(self):
+        """Create an isolated schema and use its owner API key for each test."""
         super().setUp()
         cache.clear()
         self.schema = RSForm.create(title='Schema', alias='SCHEMA', owner=self.user)
@@ -37,6 +38,8 @@ class TestAgentDescription(EndpointTester):
         self.payload = {'expected_time_update': self.before['time_update'], 'description': 'Комментарий\n' * 200}
 
     def test_description_only_and_replay(self):
+
+        """Preserve all other fields and reject reuse of the consumed revision."""
         response = self.client.post(self.base + '/description', self.payload)
         self.assertEqual(response.status_code, 200, response.data)
         after = self.client.get(self.base + '/details').data
@@ -49,6 +52,8 @@ class TestAgentDescription(EndpointTester):
         self.assertEqual(self.client.post(self.base + '/description', self.payload).status_code, 409)
 
     def test_blank_and_whitespace_are_preserved(self):
+
+        """Keep caller text exactly, including an empty description."""
         for description in ('  text\n ', ''):
             self.payload['description'] = description
             self.payload['expected_time_update'] = self.client.get(self.base + '/details').data['time_update']
@@ -57,20 +62,37 @@ class TestAgentDescription(EndpointTester):
             self.assertEqual(response.data['description'], description)
 
     def test_stale_revision_preserves_manual_edit(self):
+
+        """Reject stale revisions and give guidance for description editing."""
         self.schema.model.description = 'Manual edit'
         self.schema.model.save(update_fields=['description'])
-        self.assertEqual(self.client.post(self.base + '/description', self.payload).status_code, 409)
+        response = self.client.post(self.base + '/description', self.payload)
+        self.assertEqual(response.status_code, 409)
+        self.assertNotIn('approve', str(response.data).lower())
+        self.assertIn('revision', str(response.data).lower())
         self.schema.model.refresh_from_db()
         self.assertEqual(self.schema.model.description, 'Manual edit')
 
     def test_validation_rejects_other_fields_and_missing_base(self):
+
+        """Reject malformed or oversized payloads before claiming the revision."""
         for payload in ({**self.payload, 'title': 'Forbidden'}, {**self.payload, 'items': []},
                         {'description': 'Missing base'}, {**self.payload, 'description': 'x' * 100001}, []):
             self.assertEqual(self.client.post(self.base + '/description', payload).status_code, 400)
         self.schema.model.refresh_from_db()
         self.assertEqual(self.schema.model.description, self.before['description'])
 
+    def test_non_string_descriptions_are_rejected_without_writing(self):
+        """Reject numeric JSON before CharField can convert it to text."""
+        for description in (123, 1.5, True, None, [], {}):
+            with self.subTest(description=description):
+                response = self.client.post(self.base + '/description', {**self.payload, 'description': description})
+                self.assertEqual(response.status_code, 400, response.data)
+                self.assertEqual(self.client.get(self.base + '/details').data, self.before)
+
     def test_permissions_editor_and_revoked_key(self):
+
+        """Require current edit access and an active API key."""
         other = RSForm.create(title='Other', alias='OTHER', owner=self.user2)
         url = f'/api/agents/rsforms/{other.model.pk}/description'
         self.assertEqual(self.client.post(url, self.payload).status_code, 403)
@@ -81,12 +103,15 @@ class TestAgentDescription(EndpointTester):
         self.assertEqual(self.client.post(url, self.payload).status_code, 401)
 
     def test_stalled_clock_still_advances_revision(self):
+
+        """A successful edit consumes its base even when the wall clock stalls."""
         with patch('apps.agents.views.description.timezone.now', return_value=parse_datetime(self.before['time_update'])):
             self.assertEqual(self.client.post(self.base + '/description', self.payload).status_code, 200)
             self.assertEqual(self.client.post(self.base + '/description', self.payload).status_code, 409)
 
     @override_settings(TIME_ZONE='UTC')
     def test_unrepresentable_next_timestamp_is_validation_failure(self):
+        """Return a validation error when a UTC revision cannot advance."""
         before = self.client.get(self.base + '/details').data
         self.payload['expected_time_update'] = '9999-12-31T23:59:59.999999Z'
         response = self.client.post(self.base + '/description', self.payload)
@@ -95,6 +120,8 @@ class TestAgentDescription(EndpointTester):
         self.assertEqual(self.client.get(self.base + '/details').data, before)
 
     def test_permission_change_rolls_back_claim(self):
+
+        """Rollback description and revision if permissions change during the claim."""
         with patch('apps.agents.views.description.AgentRsformDescriptionView._require_edit',
                    side_effect=[None, PermissionDenied()]):
             self.assertEqual(self.client.post(self.base + '/description', self.payload).status_code, 403)
@@ -108,6 +135,8 @@ class TestConcurrentAgentDescription(TransactionTestCase):
     """Run real overlapping API requests on independent file-backed SQLite connections."""
 
     def test_competing_descriptions_have_one_winner(self):
+
+        """Serialize two independent SQLite writers with one successful CAS."""
         cache.clear()
         user = User.objects.create(username='Concurrent publisher')
         schema = RSForm.create(title='Before', alias='BASE', owner=user)
@@ -123,11 +152,15 @@ class TestConcurrentAgentDescription(TransactionTestCase):
         original_lookup = AgentRsformDescriptionView._get_item  # pylint: disable=protected-access
 
         def synchronized_lookup(view, *args):
+
+            """Make both writers observe the same revision before claiming it."""
             item = original_lookup(view, *args)
             barrier.wait()
             return item
 
         def publish():
+
+            """Send one concurrent request using its own database connection."""
             thread_client = APIClient()
             thread_client.credentials(HTTP_AUTHORIZATION=f'Bearer {secret}')
             try:
