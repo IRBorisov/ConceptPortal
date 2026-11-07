@@ -4,7 +4,7 @@
 
 If you do not need MCP, use `@rsconcept/rstool` directly (library API or stdio JSON wrapper).
 
-HTTP hosts can opt into [Portal publication and encrypted personal keys](PORTAL.md). This adds `portal_prepare_publication` and `portal_connection_status` only to configured HTTP hosts. Users connect their own key and approve replacements on a separate HTTPS page; keys and confirmations are never MCP tool arguments. Unconfigured hosts and stdio retain the existing catalog.
+HTTP hosts can opt into [Portal publication and encrypted personal keys](PORTAL.md). This adds `portal_prepare_publication`, `portal_connection_status` and `portal_update_description` only to configured HTTP hosts. Users connect their own key, can directly update descriptions with revision checks, and approve full replacements on a separate HTTPS page; keys and confirmations are never MCP tool arguments. Unconfigured hosts and stdio retain the existing catalog.
 
 ## Install
 

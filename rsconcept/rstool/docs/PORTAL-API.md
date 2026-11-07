@@ -15,6 +15,7 @@
 
 | Метод | Путь                                           | Назначение                                       |
 | ----- | ---------------------------------------------- | ------------------------------------------------ |
+| POST  | `/api/agents/rsforms/:id/description`           | Только описание с CAS по `expected_time_update`   |
 | GET   | `/api/agents/me`                               | Несекретные id и имя владельца ключа              |
 | POST  | `/api/agents/rsforms/:id/publish`               | Замена с проверкой версии базы и снимком, owner/staff |
 | GET   | `/api/agents/library/active`                   | Метаданные доступных объектов                    |

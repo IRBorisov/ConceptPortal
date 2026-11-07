@@ -39,6 +39,12 @@ function setup() {
   const request = vi.fn<typeof fetch>(async (input, options) => {
     const url = String(input);
     if (url.endsWith('/me')) return Response.json({ id: 10, username: 'Alice' });
+    if (url.endsWith('/description')) {
+      const body = JSON.parse(String(options?.body));
+      if (body.expected_time_update !== current.time_update) return Response.json({}, { status: 409 });
+      current = { ...current, description: body.description, time_update: '2026-11-06T02:00:00Z' };
+      return Response.json({ id: 1, description: current.description, time_update: current.time_update });
+    }
     if (url.endsWith('/publish')) {
       const body = JSON.parse(String(options?.body));
       if (body.expected_time_update !== current.time_update) return Response.json({}, { status: 409 });
@@ -310,4 +316,43 @@ it('marks a divergent independent readback uncertain and never repeats the write
   expect(app.publisher.publications('alice')[0].state).toBe('uncertain');
   await expect(app.publisher.approve('alice', draft.publicationId, draft.digest)).rejects.toThrow('already attempted');
   expect(app.request.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(1);
+});
+
+
+it('updates only a description with a bound key and no local session or approval', async () => {
+  const app = setup();
+  await app.publisher.connect('alice', token);
+  const result = await app.publisher.updateDescription('alice', 1, '2026-11-06T01:00:00Z', '  Comment\n');
+  expect(result).toEqual({ targetId: 1, description: '  Comment\n', time_update: '2026-11-06T02:00:00Z' });
+  const writes = app.request.mock.calls.filter(([, options]) => options?.method === 'POST');
+  expect(writes).toHaveLength(1);
+  expect(String(writes[0][0])).toMatch(/\/description$/);
+  expect(JSON.parse(String(writes[0][1]?.body))).toEqual({ expected_time_update: '2026-11-06T01:00:00Z', description: '  Comment\n' });
+  expect(app.publisher.publications('alice')).toEqual([]);
+  await expect(app.publisher.updateDescription('bob', 1, result.time_update, 'Other')).rejects.toThrow('personal Portal key');
+  await expect(app.publisher.updateDescription('alice', 1, '2026-11-06T01:00:00Z', 'Stale')).rejects.toThrow('schema changed');
+  expect(app.request.mock.calls.filter(([, options]) => options?.method === 'POST')).toHaveLength(1);
+});
+
+it('detects readback divergence and never repeats an uncertain description write', async () => {
+  const app = setup();
+  await app.publisher.connect('alice', token);
+  const normal = app.request.getMockImplementation()!;
+  app.request.mockImplementationOnce(normal).mockImplementationOnce(normal)
+    .mockResolvedValueOnce(Response.json({ id: 1, time_update: '2026-11-06T02:00:00Z', description: 'Comment',
+      title: 'Tampered', items: [] }));
+  await expect(app.publisher.updateDescription('alice', 1, '2026-11-06T01:00:00Z', 'Comment')).rejects.toThrow('verification failed');
+  expect(app.request.mock.calls.filter(([, options]) => options?.method === 'POST')).toHaveLength(1);
+});
+
+it('enforces service target grants and sanitizes conflicts for description writes', async () => {
+  const app = setup();
+  const publisher = new PortalPublisher(app.vault, new PortalClient('https://api.portal.example', app.request), {
+    token, subjects: ['robot'], targetIds: [1],
+  });
+  await expect(publisher.updateDescription('robot', 2, '2026-11-06T01:00:00Z', '')).rejects.toThrow('not allowed');
+  const normal = app.request.getMockImplementation()!;
+  app.request.mockImplementationOnce(normal).mockResolvedValueOnce(new Response(token, { status: 409 }));
+  await expect(publisher.updateDescription('robot', 1, '2026-11-06T01:00:00Z', 'Comment')).rejects.toThrow('schema changed');
+  expect(app.request.mock.calls.at(-1)?.[1]?.headers).toMatchObject({ Authorization: `Bearer ${token}` });
 });

@@ -12,6 +12,7 @@ import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/
 import { CallToolResultSchema, LATEST_PROTOCOL_VERSION, type CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { SessionPolicy, SessionStorageError } from './session-policy';
 import { createBearerTokenVerifier } from './http-auth';
 import { createRSToolHttpServer, type RSToolHttpServerOptions, type RSToolHttpService } from './http-server';
 
@@ -33,6 +34,7 @@ afterEach(async () => {
   await Promise.all(clients.splice(0).map(client => client.close()));
   await Promise.all(services.splice(0).map(service => service.close()));
   vi.useRealTimers();
+  vi.restoreAllMocks();
   for (const directory of directories.splice(0)) {
     const child = relative(resolve(tmpdir()), resolve(directory));
     if (child.startsWith('..') || !child.startsWith('rstool-http-test-')) throw new Error('Unsafe test cleanup path');
@@ -360,7 +362,7 @@ describe('rstool Streamable HTTP', () => {
     },
   );
 
-  it('releases an interrupted initialize response while retaining an interrupted existing transport', async () => {
+  it('releases interrupted initialize and existing response leases', async () => {
     const app = await start();
     let interruptedWrites = 0;
     app.service.server.on('request', (req, res) => {
@@ -384,7 +386,8 @@ describe('rstool Streamable HTTP', () => {
       'Mcp-Session-Id': sessionId, 'X-Test-Interrupt': 'yes',
     }, ping)).rejects.toThrow();
     expect(interruptedWrites).toBe(2);
-    expect((await post(`${app.url}/mcp/task`, ALICE, { 'Mcp-Session-Id': sessionId }, ping)).status).toBe(200);
+    expect((await post(`${app.url}/mcp/task`, ALICE, { 'Mcp-Session-Id': sessionId }, ping)).status).toBe(404);
+    expect((await post(`${app.url}/mcp/task`)).status).toBe(200);
   });
 
   it('reserves a workspace before initialization and releases it on DELETE', async () => {
@@ -490,9 +493,155 @@ describe('rstool Streamable HTTP', () => {
     expect((await call(connection.client, 'ping')).pong).toBe(true);
   });
 
-  it.each(['maxSessions', 'idleTimeoutMs', 'maxRequestBodySize', 'maxPendingRequests', 'authenticationTimeoutMs'] as const)(
+  it.each(['maxSessions', 'idleTimeoutMs', 'maxRequestBodySize', 'maxPendingRequests', 'authenticationTimeoutMs', 'requestTimeoutMs'] as const)(
     'rejects a non-positive %s', key => {
       expect(() => createRSToolHttpServer({ persistenceDir: 'unused', verifyToken: () => 'alice', [key]: 0 })).toThrow(key);
     },
   );
+});
+
+
+it('explicitly releases an idle lease without its lost session ID and preserves saved models', async () => {
+  const app = await start();
+  const peer = await app.connect('recover');
+  const saved = await call(peer.client, 'create_session', { initial: { title: 'Saved' } });
+  const url = `${app.url}/mcp/recover/connection`;
+  const auth = { Authorization: `Bearer ${ALICE}` };
+  const snapshot = await fetch(url, { headers: auth });
+  expect(await snapshot.json()).toMatchObject({ state: 'connected', busy: false });
+  const revision = snapshot.headers.get('etag')!;
+  expect(JSON.stringify(await (await fetch(url, { headers: auth })).json())).not.toContain(peer.transport.sessionId);
+  expect((await post(`${app.url}/mcp/recover`)).status).toBe(409);
+  expect((await fetch(url, { method: 'DELETE', headers: { Authorization: `Bearer ${BOB}`, 'If-Match': revision } })).status).toBe(404);
+  expect((await fetch(url, { method: 'DELETE', headers: auth })).status).toBe(409);
+  expect((await fetch(url, { method: 'DELETE', headers: { ...auth, 'If-Match': revision } })).status).toBe(204);
+  const replacement = await app.connect('recover');
+  expect(await call(replacement.client, 'get_session_state', { sessionId: saved.sessionId })).toMatchObject({ title: 'Saved' });
+  expect((await fetch(url, { method: 'DELETE', headers: { ...auth, 'If-Match': revision } })).status).toBe(409);
+});
+
+it('invalidates a recovery revision on activity and management reads never renew idle expiry', async () => {
+  const app = await start({ idleTimeoutMs: 120 });
+  const peer = await app.connect('race');
+  const url = `${app.url}/mcp/race/connection`;
+  const auth = { Authorization: `Bearer ${ALICE}` };
+  const old = (await fetch(url, { headers: auth })).headers.get('etag')!;
+  await call(peer.client, 'ping');
+  expect((await fetch(url, { method: 'DELETE', headers: { ...auth, 'If-Match': old } })).status).toBe(409);
+  await vi.waitFor(async () => {
+    const status = await fetch(url, { headers: auth });
+    expect(await status.json()).toMatchObject({ state: 'disconnected' });
+  });
+  await app.connect('race');
+});
+
+it('bounds incomplete HTTP bodies, releases their lease, and does not affect another subject', async () => {
+  const app = await start({ requestTimeoutMs: 80 });
+  const other = await app.connect('slow', BOB);
+  const closed = new Promise<void>((resolveClose) => {
+    const req = request(`${app.url}/mcp/slow`, { method: 'POST', headers: { ...headers,
+      Authorization: `Bearer ${ALICE}`, 'Content-Length': '100000' } });
+    req.on('error', () => resolveClose());
+    req.on('close', () => resolveClose());
+    req.write('{');
+  });
+  await closed;
+  await app.connect('slow');
+  await call(other.client, 'ping');
+});
+
+it.each(['timeout', 'abort'] as const)('keeps a %s lease draining until actual async mutation settles and rejects queued work', async (failure) => {
+  let release!: () => void;
+  let entered!: () => void;
+  const started = new Promise<void>(resolve => { entered = resolve; });
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  const original = RSToolAgent.prototype.setModelValues;
+  vi.spyOn(RSToolAgent.prototype, 'setModelValues').mockImplementation(async function (this: RSToolAgent, ...args) {
+    entered();
+    await gate;
+    return original.apply(this, args);
+  });
+  const app = await start({ requestTimeoutMs: failure === 'timeout' ? 150 : 5000 });
+  const peer = await app.connect('busy-recover');
+  await call(peer.client, 'ensure_session');
+  const url = `${app.url}/mcp/busy-recover/connection`;
+  const auth = { Authorization: `Bearer ${ALICE}` };
+  const sessionHeaders = { 'Mcp-Session-Id': peer.transport.sessionId! };
+  const controller = new AbortController();
+  const active = fetch(`${app.url}/mcp/busy-recover`, { method: 'POST', headers: { ...headers, ...auth, ...sessionHeaders },
+    body: JSON.stringify({ jsonrpc: '2.0', id: 21, method: 'tools/call', params: { name: 'set_model_values', arguments: {} } }),
+    signal: controller.signal }).catch(() => undefined);
+  await started;
+  const busy = await fetch(url, { headers: auth });
+  expect(await busy.json()).toMatchObject({ state: 'connected', busy: true });
+  expect((await fetch(url, { method: 'DELETE', headers: { ...auth, 'If-Match': busy.headers.get('etag')! } })).status).toBe(409);
+  const queued = post(`${app.url}/mcp/busy-recover`, ALICE, sessionHeaders, JSON.stringify({ jsonrpc: '2.0', id: 22,
+    method: 'tools/call', params: { name: 'create_session', arguments: {} } })).catch(() => undefined);
+  if (failure === 'abort') controller.abort();
+  try {
+    await vi.waitFor(async () => {
+      expect(await (await fetch(url, { headers: auth })).json()).toMatchObject({ state: 'draining', busy: true });
+    });
+    expect((await post(`${app.url}/mcp/busy-recover`)).status).toBe(409);
+  } finally { release(); }
+  await Promise.all([active, queued]);
+  await vi.waitFor(async () => {
+    expect(await (await fetch(url, { headers: auth })).json()).toMatchObject({ state: 'disconnected' });
+  });
+  const recovered = await app.connect('busy-recover');
+  expect((await call(recovered.client, 'list_stored_sessions')).items).toHaveLength(1);
+});
+
+
+it('waits for actual mutation drain during shutdown before another service can use the saved result', async () => {
+  let release!: () => void;
+  let entered!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  const started = new Promise<void>(resolve => { entered = resolve; });
+  const original = RSToolAgent.prototype.setModelValues;
+  vi.spyOn(RSToolAgent.prototype, 'setModelValues').mockImplementation(async function (this: RSToolAgent, ...args) {
+    entered();
+    await gate;
+    return original.apply(this, args);
+  });
+  const app = await start({ requestTimeoutMs: 100 });
+  const peer = await app.connect('shutdown');
+  const saved = await call(peer.client, 'ensure_session', { initial: { title: 'Retained result' } });
+  const active = peer.client.callTool({ name: 'set_model_values', arguments: {} }).catch(() => undefined);
+  await started;
+  await vi.waitFor(async () => {
+    expect(await (await fetch(`${app.url}/mcp/shutdown/connection`, { headers: { Authorization: `Bearer ${ALICE}` } })).json())
+      .toMatchObject({ state: 'draining', busy: true });
+  });
+  let closed = false;
+  const closing = app.service.close().then(() => { closed = true; });
+  try {
+    await new Promise(resolve => setTimeout(resolve, 30));
+    expect(closed).toBe(false);
+  } finally { release(); }
+  await closing;
+  await active;
+  expect(closed).toBe(true);
+  const replacement = await start({ persistenceDir: app.directory });
+  const recovered = await replacement.connect('shutdown');
+  expect(await call(recovered.client, 'get_session_state', { sessionId: saved.sessionId }))
+    .toMatchObject({ title: 'Retained result' });
+  expect((await call(recovered.client, 'list_stored_sessions')).items).toHaveLength(1);
+});
+
+
+it('releases actual-tool ownership even when retention metadata flushing fails', async () => {
+  const app = await start();
+  const peer = await app.connect('flush-failure');
+  await call(peer.client, 'ensure_session');
+  vi.spyOn(SessionPolicy.prototype, 'begin').mockReturnValue(() => {
+    throw new SessionStorageError('SESSION_STORAGE_UNAVAILABLE', 'Retention flush failed');
+  });
+  const failure = await peer.client.callTool({ name: 'get_session_state', arguments: {} });
+  expect(failure.isError).toBe(true);
+  const url = `${app.url}/mcp/flush-failure/connection`;
+  const headers = { Authorization: `Bearer ${ALICE}` };
+  const snapshot = await fetch(url, { headers });
+  expect(await snapshot.json()).toMatchObject({ state: 'connected', busy: false });
+  expect((await fetch(url, { method: 'DELETE', headers: { ...headers, 'If-Match': snapshot.headers.get('etag')! } })).status).toBe(204);
 });
