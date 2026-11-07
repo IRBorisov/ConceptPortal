@@ -34,8 +34,12 @@ class AgentRsformDescriptionView(AgentItemView):
         item = self._get_item(pk, LibraryItemType.RSFORM)
         self._require_edit(item)
         expected = serializer.validated_data['expected_time_update']
+        try:
+            next_revision = expected + timedelta(microseconds=1)
+        except OverflowError as exc:
+            raise ValidationError({'expected_time_update': 'Revision cannot be advanced.'}) from exc
         with transaction.atomic():
-            revision = max(timezone.now(), expected + timedelta(microseconds=1))
+            revision = max(timezone.now(), next_revision)
             # First statement is a conditional write, also safe for SQLite waiting writers.
             claimed = LibraryItem.objects.filter(pk=item.pk, time_update=expected).update(
                 description=serializer.validated_data['description'], time_update=revision,
