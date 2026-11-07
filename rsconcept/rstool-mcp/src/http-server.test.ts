@@ -659,32 +659,31 @@ it.each(['requestTimeoutMs', 'authenticationTimeoutMs', 'sessionCleanupIntervalM
   });
 
 it('drains an existing lease when its authenticated request disconnected during verification', async () => {
-  let blocked = false;
+  const abandonedToken = 'abandoned-auth-request-'.repeat(3);
   let release!: () => void;
   let entered!: () => void;
   const gate = new Promise<void>(resolve => { release = resolve; });
   const started = new Promise<void>(resolve => { entered = resolve; });
-  const verify = createBearerTokenVerifier(credentials);
+  const verify = createBearerTokenVerifier([...credentials, { subject: 'alice', token: abandonedToken }]);
   const app = await start({ verifyToken: async token => {
-    if (blocked) { entered(); await gate; }
+    if (token === abandonedToken) { entered(); await gate; }
     return verify(token);
   } });
   const peer = await app.connect('auth-abort');
-  blocked = true;
   let closed!: () => void;
   const disconnected = new Promise<void>(resolve => { closed = resolve; });
   app.service.server.on('request', (incoming, res) => {
     if (incoming.headers['x-abandon-test']) { incoming.socket.once('close', closed); res.once('close', closed); }
   });
   const req = request(`${app.url}/mcp/auth-abort`, { method: 'POST', headers: { ...headers,
-    Authorization: `Bearer ${ALICE}`, 'Mcp-Session-Id': peer.transport.sessionId!, 'X-Abandon-Test': 'yes' } });
+    Authorization: `Bearer ${abandonedToken}`, 'Mcp-Session-Id': peer.transport.sessionId!, 'X-Abandon-Test': 'yes' } });
   req.on('error', () => undefined);
   req.end(JSON.stringify({ jsonrpc: '2.0', id: 51, method: 'tools/call', params: { name: 'create_session', arguments: {} } }));
   try {
     await started;
     req.destroy();
     await disconnected;
-  } finally { blocked = false; release(); }
+  } finally { release(); }
   await vi.waitFor(async () => {
     expect(await (await fetch(`${app.url}/mcp/auth-abort/connection`, { headers: { Authorization: `Bearer ${ALICE}` } })).json())
       .toMatchObject({ state: 'disconnected' });
