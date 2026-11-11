@@ -6,17 +6,17 @@ requires-python = ">=3.12,<3.13"
 dependencies = [
     "cctext==0.1.5",
     "coreapi==2.3.3",
-    "django==6.1.2",
+    "django==6.1.3",
     "django-cors-headers==4.9.0",
     "django-filter==26.2",
     "django-rest-passwordreset==1.6.0",
     "djangorestframework==3.18.3",
     "drf-spectacular==0.30.0",
     "drf-spectacular-sidecar==2026.10.1",
-    "gunicorn==26.2.0",
+    "gunicorn==27.0.0",
     "psycopg2-binary==2.9.13",
-    "sentry-sdk[django]>=2.73.0",
-    "tzdata==2026.5",
+    "sentry-sdk[django]==2.74.0",
+    "tzdata==2026.6",
 ]
 
 [tool.uv]
@@ -24,10 +24,10 @@ package = false
 
 [dependency-groups]
 dev = [
-    "coverage==7.16.2",
+    "coverage==7.17.2",
     "django-extensions==4.1",
     "django-stubs==6.1.2",
-    "djangorestframework-stubs[compatible-mypy]==3.18.1",
-    "mypy==2.3.1",
+    "djangorestframework-stubs[compatible-mypy]==3.18.2",
+    "mypy==2.4.1",
     "pylint==4.1.3",
 ]
