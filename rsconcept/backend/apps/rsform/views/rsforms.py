@@ -510,8 +510,9 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
 
         item = self._get_item()
         load_metadata = input_serializer.validated_data['load_metadata']
+        uploaded_file = input_serializer.validated_data['file']
         try:
-            data = utility.read_zipped_json(request.FILES['file'].file, utils.EXTEOR_INNER_FILENAME)
+            data = utility.read_zipped_json(uploaded_file.file, utils.EXTEOR_INNER_FILENAME)
         except ZipMemberTooLarge:
             return Response(
                 status=c.HTTP_400_BAD_REQUEST,
