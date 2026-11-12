@@ -69,6 +69,28 @@ describe('durable account session policy', () => {
     } finally { spy.mockRestore(); }
   });
 
+  it('registers oversized legacy metadata without reading or expiring its unverified payload', () => {
+    const app = setup();
+    const client = app.connect();
+    const file = join(client.directory, 'legacy-large.json');
+    fs.writeFileSync(file, 'UNVERIFIED'.repeat(200));
+    const limited = new SessionPolicy(app.root, 2, 1000, app.now, () => {}, 1000);
+    const read = fs.readFileSync.bind(fs);
+    const spy = vi.spyOn(fs, 'readFileSync').mockImplementation(((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
+      if (path === file) throw new Error('Legacy payload must stay unread');
+      return Reflect.apply(read, fs, [path, ...args]);
+    }) as typeof fs.readFileSync);
+    try {
+      limited.register('account-a', client.namespace);
+      app.advance(2000);
+      expect(limited.sweep().size).toBe(0);
+      const row = limited.list('account-a', client.namespace).items[0];
+      expect(row).toMatchObject({ overSizeLimit: true, readable: false, expiresAt: null });
+      expect(limited.configuration('account-a').usage.expiredAwaitingCleanup).toBe(0);
+      expect(limited.delete('account-a', row.sessionRef, row.revision, true).deleted).toBe(true);
+    } finally { spy.mockRestore(); }
+  });
+
   it('shares quota across workspaces while isolating accounts and allowing replacement at capacity', () => {
     const app = setup();
     const a = app.connect();

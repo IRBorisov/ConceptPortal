@@ -306,6 +306,8 @@ export class PortalPublisher {
     if (expired(credential)) throw new Error('Portal key expired; reconnect on the account page');
     if (requiredScope && credential.keyPolicy && !credential.keyPolicy.scopes.includes(requiredScope))
       throw new Error('Portal key does not allow ' + requiredScope);
+    if (requiredScope && credential.keyPolicy && !credential.keyPolicy.scopes.includes('read'))
+      throw new Error('Portal key does not allow read, which is required to verify the target before mutation');
     return credential;
   }
 

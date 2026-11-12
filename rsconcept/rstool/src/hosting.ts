@@ -1,4 +1,5 @@
 import { RSToolAgent } from './models/rstool-agent';
+import { RSToolError } from './models/tool-error';
 import type { RSToolAgentOptions } from './models/tool-contract';
 import type { PersistedSessionEnvelope } from './session/persistence';
 
@@ -22,7 +23,11 @@ export class HostedRSToolAgent extends RSToolAgent {
     const currentSessionId = includeCurrent ? this.getCurrentSession()?.sessionId ?? null : this.currentSessionId;
     const required = new Set([...requiredIds, ...(includeCurrent && currentSessionId ? [currentSessionId] : [])]);
     const snapshots = new Map<string, PersistedSessionEnvelope>();
-    for (const id of required) snapshots.set(id, this.sessions.snapshot(id));
+    for (const id of required) {
+      const snapshot = this.sessions.findSnapshot(id);
+      if (!snapshot) throw new RSToolError('SESSION_NOT_FOUND', `Unknown session: ${id}`);
+      snapshots.set(id, snapshot);
+    }
     for (const id of optionalIds) {
       if (snapshots.has(id)) continue;
       const snapshot = this.sessions.findSnapshot(id);

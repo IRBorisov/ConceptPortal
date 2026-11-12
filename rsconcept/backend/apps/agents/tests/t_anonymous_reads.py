@@ -30,9 +30,11 @@ class TestAnonymousAgentReads(EndpointTester):
         response = self.anonymous.get(f'/api/agents/rsforms/{self.public.model.pk}/details')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['alias'], 'PUBLIC')
-        self.assertEqual(self.anonymous.get('/api/agents/library/by-ids', {
+        response = self.anonymous.get('/api/agents/library/by-ids', {
             'ids': f'{self.public.model.pk},{self.private.model.pk}'
-        }).status_code, 200)
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual([row['id'] for row in response.data], [self.public.model.pk])
 
     def test_private_details_and_all_writes_stay_protected(self):
         response = self.anonymous.get(f'/api/agents/rsforms/{self.private.model.pk}/details')
