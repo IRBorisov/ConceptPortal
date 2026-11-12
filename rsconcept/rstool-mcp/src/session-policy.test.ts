@@ -43,6 +43,32 @@ function setup(limit = 2, retention = 1000) {
 }
 
 describe('durable account session policy', () => {
+  it('bounds inline writes atomically and allows deleting oversized legacy sessions without reading them', () => {
+    const app = setup();
+    const limited = new SessionPolicy(app.root, 2, 1000, app.now, () => {}, 1000);
+    const client = app.connect('account-a', 'limited', limited);
+    const handle = client.tool.createSession();
+    const file = join(client.directory, `${handle.sessionId}.json`);
+    const before = fs.readFileSync(file, 'utf8');
+    expect(() => client.tool.applySchemaPatch({ items: [{ alias: 'X1', term: 'x'.repeat(2000) }] }))
+      .toThrow(expect.objectContaining({ code: 'SESSION_TOO_LARGE' }));
+    expect(fs.readFileSync(file, 'utf8')).toBe(before);
+    expect(client.tool.getSessionState().items).toEqual([]);
+    fs.writeFileSync(file, 'x'.repeat(2000));
+    const read = fs.readFileSync.bind(fs);
+    const spy = vi.spyOn(fs, 'readFileSync').mockImplementation(((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
+      if (path === file) throw new Error('Oversized payload must not be read');
+      return Reflect.apply(read, fs, [path, ...args]);
+    }) as typeof fs.readFileSync);
+    try {
+      const row = limited.list('account-a', client.namespace).items[0];
+      expect(row).toMatchObject({ overSizeLimit: true, readable: false });
+      expect(() => client.tool.getSessionState()).toThrow(expect.objectContaining({ code: 'SESSION_TOO_LARGE' }));
+      expect(limited.delete('account-a', row.sessionRef, row.revision, true, true).deleted).toBe(true);
+      expect(fs.existsSync(file)).toBe(false);
+    } finally { spy.mockRestore(); }
+  });
+
   it('shares quota across workspaces while isolating accounts and allowing replacement at capacity', () => {
     const app = setup();
     const a = app.connect();

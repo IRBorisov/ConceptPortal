@@ -2,7 +2,7 @@
 
 `rstool-mcp-http` hosts the existing rstool tool catalog over Streamable HTTP. Use it when MCP clients on several machines need a centrally managed runtime. `rstool-mcp` remains the local stdio entry point.
 
-This is a single-process pilot service with bearer credentials. Optional [Portal publication](PORTAL.md) adds encrypted per-subject keys and a separate approval page. It does not implement an OAuth authorization server, project sharing/ACLs, or infrastructure administration.
+This is a single-process service with bearer credentials. Optional [Portal publication](PORTAL.md) adds encrypted per-subject keys and a separate approval page. It does not implement an OAuth authorization server, project sharing/ACLs, or infrastructure administration.
 
 ## Configure the service
 
@@ -23,6 +23,11 @@ Replace the placeholder with a cryptographically random token. Tokens must conta
 | `RSTOOL_HTTP_HOST` | Bind address | `127.0.0.1` |
 | `RSTOOL_HTTP_PORT` | Listening port | `8093` |
 | `RSTOOL_MAX_SESSIONS_PER_ACCOUNT` | Maximum stored sessions across all workspaces for one subject | `20` |
+| `RSTOOL_MAX_SESSION_BYTES` | Serialized session envelope, including diagnostics and revisions | `2097152` |
+| `RSTOOL_MAX_COMPUTE_WORKERS` | Maximum concurrent disposable processes across all subjects | `2` |
+| `RSTOOL_COMPUTE_TIMEOUT_MS` | Computation wall-clock deadline, including process startup | `10000` |
+| `RSTOOL_COMPUTE_HEAP_MB` | Child V8 old-space heap ceiling, not a whole-process RSS limit | `128` |
+| `RSTOOL_MAX_COMPUTE_RESULT_BYTES` | Serialized computation result ceiling | `4194304` |
 | `RSTOOL_SESSION_RETENTION_SECONDS` | Stored-session inactivity lifetime, renewed on access | `2592000` (30 days) |
 | `RSTOOL_HTTP_ALLOWED_HOSTS` | Comma-separated permitted Host hostnames, without ports | `127.0.0.1,localhost,[::1]` |
 
@@ -59,7 +64,7 @@ Use `/mcp/default/connection` for `/mcp`. Both routes use the same Host, Origin 
 
 The HTTP response deadline starts when the listener receives a request, including authentication, management and Portal account routes. An incomplete MCP request body, interrupted response or `requestTimeoutMs` deadline closes that lease to new work and closes its HTTP responses. Tools queued behind a running tool cannot start after draining begins. Every actual tool invocation, including Portal and storage/metadata tools, keeps ownership until it settles, independently of the HTTP handler. A lease with a non-cancellable asynchronous operation stays draining and consumes its session slot; it is never replaced by a second mutable agent. HTTP deadlines bound connections, not the duration of external side effects. Inspect Portal after an interrupted write.
 
-Account responses obey the same deadline. Closing them does not cancel a bound-key change or an approved Portal operation already accepted, including one queued for the bound credential. The host tracks actual account handlers until settlement, without closing unrelated MCP leases or removing credential bindings. `service.close()` waits for these handlers and actual tool drain before resolving, so an embedding host must await it before reusing the persistence directory. If non-cancellable code never settles, close cannot complete safely. Synchronous CPU work can also block the event loop and its timers. These cases require stopping the old process before starting another; this release adds no worker isolation or cross-process lock.
+Account responses obey the same deadline. Closing them does not cancel a bound-key change or an approved Portal operation already accepted, including one queued for the bound credential. The host tracks actual account handlers until settlement, without closing unrelated MCP leases or removing credential bindings. `service.close()` waits for these handlers and actual tool drain before resolving, so an embedding host must await it before reusing the persistence directory. Heavy RS operations run in disposable child processes with a computation deadline. Shutdown kills those children and discards uncommitted results. A non-cancellable external Portal operation can still delay shutdown. The host must remain the only persistence owner; computation children use detached in-memory snapshots and never open the persistence root.
 
 ## Limits and errors
 
@@ -69,6 +74,11 @@ The programmatic `createRSToolHttpServer` factory accepts:
 | --- | --- | --- |
 | `maxSessions` | 32 | Maximum active workspace/transport leases, including initialization |
 | `maxStoredSessionsPerAccount` | 20 | Total stored sessions across all workspaces belonging to one subject |
+| `maxSessionBytes` | 2 MiB | Maximum serialized persisted session envelope; rejected writes preserve prior state |
+| `maxComputeWorkers` | 2 | Global concurrent disposable child processes; excess calls fail without a queued job |
+| `computeTimeoutMs` | 10 seconds | Child wall-clock budget including startup; killed before any result can commit |
+| `computeHeapMb` | 128 MiB | Child V8 old-space ceiling; retain an OS/cgroup memory limit for the service tree |
+| `maxComputeResultBytes` | 4 MiB | Maximum serialized result accepted from a computation |
 | `sessionRetentionMs` | 30 days | Remove stored sessions after inactivity, including cached sessions |
 | `sessionCleanupIntervalMs` | 1 minute | Background scan; access and creation also enforce expiry |
 | `idleTimeoutMs` | 30 minutes | Release leases with no queued/in-flight requests after inactivity |
@@ -85,7 +95,11 @@ Native timer options `requestTimeoutMs`, `authenticationTimeoutMs` and `sessionC
 
 MCP responses use JSON and MCP GET returns 405 because server-initiated SSE is not provided. Optional Portal account routes serve HTML/JS/CSS and authenticated settings APIs; see [Portal publication](PORTAL.md). The service does not enable browser CORS or trust forwarded identity headers.
 
-These limits bound stored session counts and inactivity, not expression evaluation CPU time, bytes per schema, or the number of empty workspace directories. A synchronous evaluation can block the Node.js event loop. Keep the pilot restricted to trusted internal users; hard compute budgets and worker isolation require a separate change.
+Schema patching, expression analysis, import, model binding, evaluation, recalculation, ordering and synthesis run in separate disposable Node processes. Each child receives only the referenced session snapshots and an allowlist of basic runtime environment variables. It receives no Portal publisher, credential variables or persistence path. The parent terminates the child before comparing all source snapshots and committing at most one changed session. Stale results, cancellation, process failure, size rejection and timeouts do not commit the staged model. Successful source access can still renew retention.
+
+This is process/resource isolation, not an OS security sandbox: a child retains the service UID's underlying rights. V8 old-space limits do not cover all native allocations or total process RSS. Keep service-level memory/CPU limits covering descendants and restrict access to intended users. Lightweight reads and serialization remain in the parent, bounded by the persisted model limit. There is no cross-process storage lock or worker persistence writer.
+
+The trusted factory option `isolateComputations: false` supports embedding and process-local test instrumentation. The CLI never exposes it. It removes computation time/heap isolation, while session write limits still apply.
 
 ## Reverse proxy and process ownership
 
@@ -93,7 +107,7 @@ Keep the HTTP listener on loopback behind an internal HTTPS reverse proxy. Forwa
 
 Run exactly one service process for a persistence root. Do not use cluster/PM2 multi-worker mode, load-balance replicas over the same root, or run stdio against its workspace directories. The lease registry and serialization queue are process-local. A later shared-storage design needs cross-process locking or transactional revision checks.
 
-For an existing identity provider, embed `createRSToolHttpServer` and supply `verifyToken`. It must validate the credential, issuer, audience, expiry and applicable access policy, returning a stable subject only on success. The optional second argument is an AbortSignal that is aborted when verification times out; use it to cancel network calls. The deadline ends the HTTP request even if the verifier ignores cancellation. Do not accept a caller-supplied subject header or forward the incoming credential to Portal. OAuth discovery and authorization flows are outside this pilot.
+For an existing identity provider, embed `createRSToolHttpServer` and supply `verifyToken`. It must validate the credential, issuer, audience, expiry and applicable access policy, returning a stable subject only on success. The optional second argument is an AbortSignal that is aborted when verification times out; use it to cancel network calls. The deadline ends the HTTP request even if the verifier ignores cancellation. Do not accept a caller-supplied subject header or forward the incoming credential to Portal. OAuth discovery and authorization flows are outside this HTTP service.
 
 ## Stored-session quota and retention
 
@@ -101,7 +115,7 @@ Stored rstool sessions are distinct from MCP transport leases. Quota is per auth
 
 Successful reads, edits, evaluations and exports renew the storage inactivity clock. Pings, connection status checks and a live transport do not. Client-supplied creation/update timestamps are not used as retention clocks. During an in-flight tool invocation, its workspace is pinned against background expiry. An expired session cannot be revived from a cached library instance. A sweep removes the session JSON and its access metadata and clears its persisted/in-memory current selection. `get_current_session` then returns null and `ensure_session` can explicitly create a new session; calls referencing the removed ID still fail. Do not treat a newly created empty session as recovery of expired data. Pending Portal approvals for an affected live workspace are invalidated. Session state, diagnostics and revisions are removed together; encrypted Portal credentials are unaffected.
 
-Both CLI settings require positive safe integers. Seconds must also convert to safe integer milliseconds. Invalid values fail startup. The embedded factory uses millisecond options. This policy requires exclusive single-process ownership of the root, just like session persistence itself. A sweep runs every minute and before creation; persisted access checks reject expiry without waiting for the timer. Long-running synchronous work can delay timers.
+All quota, retention and computation CLI settings require positive safe integers. Computation timeout must also fit the native timer range. Seconds must also convert to safe integer milliseconds. Invalid values fail startup. The embedded factory uses millisecond options. This policy requires exclusive single-process ownership of the root, just like session persistence itself. A sweep runs every minute and before creation; persisted access checks reject expiry without waiting for the timer. Long-running synchronous work can delay timers.
 
 Failures are MCP tool results with `isError: true`; both JSON text content and `structuredContent.error` contain a stable `code` and a safe `message`:
 
@@ -149,7 +163,7 @@ Configuration uses `limits.maxSessionsPerAccount`, `limits.retentionSeconds`, `l
 
 List accepts `limit` (default 20, maximum 100) and a returned opaque `cursor`. Each entry has an opaque `sessionRef`, exact `sessionId`, opaque workspace ID and its name when known, bounded title/alias with truncation flags, item count when readable, server `lastUsedAt`/`expiresAt`, and separate `current`, `connected`, `busy`, and caller-workspace flags. It also returns a `revision` and deletion eligibility flags. Models, comments and expressions are not returned. Workspace names missing from legacy metadata remain unknown until a verified connection or offline name-based indexing establishes them.
 
-Pagination is oldest-first with stable identity tie-breaks. `SESSION_LIST_CHANGED` means the set/order or recorded activity changed while paging: restart without a cursor. Connected/busy state may change between responses. Compare-and-delete independently checks the current payload/activity revision immediately before deletion. Page bounds limit response size and entries, not CPU or memory used reading large saved payloads. The trusted-pilot limitation on per-model bytes and computation still applies.
+Pagination is oldest-first with stable identity tie-breaks. `SESSION_LIST_CHANGED` means the set/order or recorded activity changed while paging: restart without a cursor. Connected/busy state may change between responses. Compare-and-delete independently checks the current payload/activity revision immediately before deletion. Each saved envelope is bounded by `maxSessionBytes`. Oversized legacy payloads are not loaded for model access or listing; list marks them `overSizeLimit=true`, with `readable=false` and no model metadata. They remain explicitly deletable, or can be exported offline by an administrator. Their deletion revision uses file identity, size and modification metadata instead of payload bytes. The host never truncates or silently deletes oversized models.
 
 At `SESSION_LIMIT_REACHED`, reuse an existing session or inspect config and list before selecting an unneeded session. The structured error includes trusted recovery tool names. Never silently evict the oldest session. Respect the user's/project's deletion policy and client approval rules. `confirm=true` expresses explicit call intent; it is not evidence of human consent.
 
@@ -184,3 +198,20 @@ New hosted session IDs are limited to 250 UTF-8 bytes before persistence, preven
 MCP 2.0 uses rstool 3.0 / contract 4.0: only explicit create/ensure/import and schema-patch creation can consume new slots. Reads, analysis, exports and evaluation require an existing session and return `NO_CURRENT_SESSION` when none is selected. Call `ensure_session` or `create_session`; storage config/list tools remain available without creating a model. This change applies equally to library and stdio use. See the [migration notes](../rstool/README.md#contract-4-migration).
 
 The offline index CLI accepts `--subject=--employee` for an identity beginning with two dashes. In ordinary separated arguments, an option cannot stand in for a missing value. Unknown and duplicate options remain invalid.
+
+## Computation failures and deployment
+
+`get_session_storage_config` includes `limits.maxSessionBytes` and a `computation` object with effective isolation, concurrency, timeout, old-space and result limits. Remote arguments cannot raise these limits or select a child executable.
+
+| Error | Meaning and recovery |
+| --- | --- |
+| `COMPUTE_CAPACITY_REACHED` | No job started; wait for capacity before an intentional retry |
+| `COMPUTE_TIMEOUT` | Child exceeded its deadline and was killed; staged model was discarded |
+| `COMPUTE_CANCELLED` | Client cancellation, shutdown or a closed workspace discarded the result |
+| `COMPUTE_RESOURCE_LIMIT` / `COMPUTE_PROCESS_FAILED` | Child crashed, exhausted resources or failed to start; inspect limits and input |
+| `SESSION_TOO_LARGE` | Envelope exceeds the configured byte cap; reduce input or export an oversized saved model offline |
+| `COMPUTE_RESULT_TOO_LARGE` | Result exceeds the response cap; staged mutation was discarded |
+
+Never repeat an unchanged failing computation automatically. A lost HTTP response can still hide a successful commit; inspect current state before retrying.
+
+Build and ship `dist/compute-worker.js` with every HTTP release. The compiled library and CLI resolve this entry through the package's own export, including from `dist/bin`. Publish the rstool hosting subpath before the MCP release. Deploy the Portal migration and backend before the new key-policy UI; existing keys retain their full scopes and no expiry. New UI keys default to read-only with a 90-day expiry. Public reads work anonymously; invalid supplied credentials fail authentication rather than downgrading to anonymous access.

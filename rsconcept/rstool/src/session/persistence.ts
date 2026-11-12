@@ -32,6 +32,10 @@ export class SessionPersistence {
     writeJsonAtomically(this.filePath(sessionId), envelope);
   }
 
+  public has(sessionId: string): boolean {
+    return fs.existsSync(this.filePath(sessionId));
+  }
+
   public load(sessionId: string): PersistedSessionEnvelope | null {
     const file = this.filePath(sessionId);
     if (!fs.existsSync(file)) {

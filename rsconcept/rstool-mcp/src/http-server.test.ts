@@ -47,7 +47,9 @@ async function start(overrides: Partial<RSToolHttpServerOptions> = {}) {
   const directory = overrides.persistenceDir ?? await mkdtemp(join(tmpdir(), 'rstool-http-test-'));
   if (!overrides.persistenceDir) directories.push(directory);
   const service = createRSToolHttpServer({
-    persistenceDir: directory, verifyToken: createBearerTokenVerifier(credentials), ...overrides,
+    // Existing white-box async/race tests instrument the in-process engine.
+    // Dedicated process-isolation tests exercise the production default separately.
+    persistenceDir: directory, verifyToken: createBearerTokenVerifier(credentials), isolateComputations: false, ...overrides,
   });
   services.push(service);
   await new Promise<void>(resolveListen => service.server.listen(0, '127.0.0.1', resolveListen));
@@ -85,6 +87,36 @@ function post(url: string, token = ALICE, extraHeaders: Record<string, string> =
 }
 
 describe('rstool Streamable HTTP', () => {
+  it('uses real isolated computations by default and persists their committed state', async () => {
+    const app = await start({ isolateComputations: true });
+    const peer = await app.connect();
+    const config = await call(peer.client, 'get_session_storage_config');
+    expect(config).toMatchObject({ limits: { maxSessionBytes: 2097152 },
+      computation: { isolated: true, maxWorkers: 2, timeoutMs: 10000, heapMb: 128 } });
+    await call(peer.client, 'apply_schema_patch', { items: [{ alias: 'X1' }] });
+    expect(await call(peer.client, 'evaluate', { expression: '1+2', cstType: 'term' })).toMatchObject({ success: true, value: 3 });
+    const session = await call(peer.client, 'get_current_session');
+    await peer.transport.terminateSession();
+    await peer.client.close();
+    await app.service.close();
+    const restarted = await start({ persistenceDir: app.directory, isolateComputations: true });
+    const resumed = await restarted.connect();
+    expect(await call(resumed.client, 'get_current_session')).toEqual(session);
+    expect((await call(resumed.client, 'get_session_state')).items.map((item: { alias: string }) => item.alias)).toEqual(['X1']);
+  }, 30_000);
+
+  it('rejects an oversized isolated mutation atomically and keeps the same workspace usable', async () => {
+    const app = await start({ isolateComputations: true, maxSessionBytes: 1500 });
+    const peer = await app.connect();
+    await call(peer.client, 'create_session');
+    const before = await call(peer.client, 'get_session_state', { detail: 'full' });
+    const result = await peer.client.callTool({ name: 'apply_schema_patch',
+      arguments: { items: [{ alias: 'X1', term: 'a'.repeat(2000) }] } });
+    expect(result.structuredContent).toMatchObject({ error: { code: 'SESSION_TOO_LARGE' } });
+    expect(await call(peer.client, 'get_session_state', { detail: 'full' })).toEqual(before);
+    expect(await call(peer.client, 'evaluate', { expression: '1+2', cstType: 'term' })).toMatchObject({ success: true, value: 3 });
+  }, 25_000);
+
   it('advertises storage limits, complete discovery and safe account self-service over the real MCP client', async () => {
     const app = await start({ maxStoredSessionsPerAccount: 1 });
     const peer = await app.connect();

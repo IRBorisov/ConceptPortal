@@ -394,3 +394,7 @@ For hosted MCP storage errors, inspect `structuredContent.error.code` or the JSO
 Результат содержит `status: 7`, `statusName: "HAS_DATA"` и `value: [[-111,0,0],[-111,1,0]]`. Это множество двух кортежей `(0,0)` и `(1,0)`; `-111` — маркер кортежа. Не передавай одновременно constituentId и expression/cstType. get_current_session возвращает null в пустом workspace; get_session_storage_config и list_stored_sessions работают без текущей модели. Для чтения состояния передай существующий sessionId; ensure_session вызывай только если нужна новая сессия, иначе получишь NO_CURRENT_SESSION без создания модели.
 
 При HTTP-квоте используй get_session_storage_config → list_stored_sessions; удаление выбранной сессии выполняй только согласно политике пользователя/клиента и со свежими sessionRef/expectedRevision. Список не продлевает TTL. После неоднозначного ответа на удаление сначала перечитай конфиг/список. Полный [сценарий освобождения квоты](https://github.com/IRBorisov/ConceptPortal/blob/main/rsconcept/rstool-mcp/HTTP.md#agent-self-service-for-account-storage).
+
+## Превышен лимит хоста
+
+Если HTTP MCP вернул `COMPUTE_TIMEOUT`, не повторяй то же вычисление. Получи `get_session_storage_config`, проверь текущее состояние и сократи вход или раздели задачу на более короткие операции. При `SESSION_TOO_LARGE` уменьши импорт или модель; старую превышающую лимит сессию экспортирует администратор. Удаление требует отдельного намерения пользователя и свежей записи из списка.

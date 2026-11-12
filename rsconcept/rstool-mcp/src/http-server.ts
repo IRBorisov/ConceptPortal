@@ -3,7 +3,8 @@ import { createServer, type IncomingMessage, type Server, type ServerResponse } 
 import { join } from 'node:path';
 
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
-import { RSToolAgent } from '@rsconcept/rstool';
+import { HostedRSToolAgent } from '@rsconcept/rstool/hosting';
+import { ComputePool, COMPUTE_TOOLS } from './compute-pool';
 
 import { type VerifyHttpToken } from './http-auth';
 import { SessionPolicy, SessionStorageError } from './session-policy';
@@ -22,6 +23,13 @@ export interface RSToolHttpServerOptions {
   /** Requests with an Origin header are rejected unless explicitly allowed. No CORS is enabled. */
   allowedOrigins?: readonly string[];
   maxSessions?: number;
+  /** Detached process execution is enabled by default; inline mode is for trusted embedding/tests. */
+  isolateComputations?: boolean;
+  maxComputeWorkers?: number;
+  computeTimeoutMs?: number;
+  computeHeapMb?: number;
+  maxSessionBytes?: number;
+  maxComputeResultBytes?: number;
   /** Durable session count across all workspaces belonging to one authenticated account. */
   maxStoredSessionsPerAccount?: number;
   /** Inactivity duration, renewed by successful session access rather than HTTP keep-alives. */
@@ -73,6 +81,9 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   const maxPendingRequests = positiveInteger(options.maxPendingRequests ?? 8, 'maxPendingRequests');
   const authenticationTimeoutMs = timerDelay(options.authenticationTimeoutMs ?? 5_000, 'authenticationTimeoutMs');
   const requestTimeoutMs = timerDelay(options.requestTimeoutMs ?? 120_000, 'requestTimeoutMs');
+  const maxSessionBytes = positiveInteger(options.maxSessionBytes ?? 2 * 1024 * 1024, 'maxSessionBytes');
+  const computations = new ComputePool({ maxWorkers: options.maxComputeWorkers ?? 2, timeoutMs: options.computeTimeoutMs ?? 10_000,
+    heapMb: options.computeHeapMb ?? 128, maxSessionBytes, maxResultBytes: options.maxComputeResultBytes ?? 4 * 1024 * 1024 });
   const allowedHosts = new Set((options.allowedHosts ?? ['127.0.0.1', 'localhost', '[::1]']).map(host => host.toLowerCase()));
   const allowedOrigins = new Set(options.allowedOrigins ?? []);
   if (options.portal) {
@@ -88,7 +99,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
     options.sessionRetentionMs, () => Date.now(), namespace => {
       const entry = workspaces.get(namespace);
       if (entry) options.portal?.publisher.invalidateWorkspace(entry.subject, namespace);
-    });
+    }, maxSessionBytes);
   const cleanupIntervalMs = timerDelay(options.sessionCleanupIntervalMs ?? 60_000, 'sessionCleanupIntervalMs');
   let closing: Promise<void> | undefined;
   let stopped = false;
@@ -230,10 +241,13 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       if (workspaces.size >= maxSessions) return reject(response, 503, 'Active session limit reached');
       initializationResponse = responseCompletion(response);
       policy.register(subject, namespace, route[1] ?? 'default');
-      const tool = new RSToolAgent({ persistenceDir: join(options.persistenceDir, namespace),
+      const tool = new HostedRSToolAgent({ persistenceDir: join(options.persistenceDir, namespace),
         sessionLifecycle: policy.hooks(subject, namespace) });
       const mcpServer = buildRSToolMcpServer({ tool, serializeToolCalls: true, sanitizeStorageErrors: true,
-        instructions: `Max ${policy.limit} stored sessions per account across workspaces; inactivity TTL ${policy.retentionMs / 1000} seconds. Call get_session_storage_config for limits and usage. At SESSION_LIMIT_REACHED use list_stored_sessions and reuse or explicitly delete an unneeded session with delete_stored_session. Deletion is destructive; follow user/client approval policy. No automatic victim selection. Listing never renews TTL.`,
+        executeTool: (definition, args, signal) => options.isolateComputations !== false && COMPUTE_TOOLS.has(definition.name)
+          ? computations.execute(tool, definition.name, args, signal, () => !entry.closed)
+          : definition.invoke(tool, args),
+        instructions: `Max ${policy.limit} stored sessions per account across workspaces; inactivity TTL ${policy.retentionMs / 1000} seconds. Call get_session_storage_config for limits and usage. At SESSION_LIMIT_REACHED use list_stored_sessions and reuse or explicitly delete an unneeded session with delete_stored_session. Deletion is destructive; follow user/client approval policy. No automatic victim selection. Listing never renews TTL. Max serialized session ${maxSessionBytes} bytes; computation timeout ${options.computeTimeoutMs ?? 10_000} ms. Computation failures do not commit staged models; inspect state before retrying.`,
         aroundToolCall: async (invoke, definition) => {
           if (entry.closed) throw new Error('Workspace connection is draining');
           entry.activeTools++;
@@ -243,7 +257,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
             if (definition?.sessionActivity !== 'none') release = policy.begin(namespace);
             return await invoke();
           } finally {
-            try { release?.(); }
+            try { tool.trimExecutionCache(); release?.(); }
             finally {
               entry.activeTools--;
               entry.lastUsed = Date.now();
@@ -254,7 +268,10 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
         },
         additionalTools: [
           ...sessionStorageToolDefinitions(policy, subject, namespace, { cleanupIntervalMs, maxActiveSessions: maxSessions,
-            idleTimeoutMs, maxPendingRequests, maxRequestBodySize }),
+            idleTimeoutMs, maxPendingRequests, maxRequestBodySize, computation: {
+              isolated: options.isolateComputations !== false, maxWorkers: options.maxComputeWorkers ?? 2,
+              timeoutMs: options.computeTimeoutMs ?? 10_000, heapMb: options.computeHeapMb ?? 128,
+              maxResultBytes: options.maxComputeResultBytes ?? 4 * 1024 * 1024 } }),
           ...(options.portal ? portalToolDefinitions(options.portal.publisher, subject, namespace,
             id => policy.assertRetained(namespace, id)) : [])
         ] });
@@ -364,6 +381,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
         stopped = true;
         clearInterval(timer);
         clearInterval(cleanupTimer);
+        await computations.close();
         if (server.listening) {
           await new Promise<void>((resolve, rejectClose) => server.close(error => error ? rejectClose(error) : resolve()));
         }

@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsdown';
 
 export default defineConfig({
-  entry: ['src/index.ts', 'src/bin/server.ts', 'src/bin/http-server.ts', 'src/bin/session-index.ts'],
+  entry: ['src/index.ts', 'src/bin/server.ts', 'src/bin/http-server.ts', 'src/bin/session-index.ts', 'src/compute-worker.ts'],
   format: ['esm'],
   dts: true,
   sourcemap: true,

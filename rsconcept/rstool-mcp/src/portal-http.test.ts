@@ -63,6 +63,9 @@ async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions,
     new PortalClient('https://portal-api.example', remote)
   );
   const service = createRSToolHttpServer({
+    // These tests isolate account/Portal deadlines, including 80 ms budgets.
+    // Real computation processes are covered by compute-pool and HTTP integration tests.
+    isolateComputations: false,
     ...policy,
     persistenceDir: path.join(directory, 'workspaces'),
     verifyToken: createBearerTokenVerifier([
