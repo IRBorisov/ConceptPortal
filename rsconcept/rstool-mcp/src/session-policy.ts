@@ -95,7 +95,8 @@ export class SessionPolicy {
         status: catalog.complete ? 'complete' as const : 'migration_required' as const,
         storedSessions: catalog.entries.length,
         availableSlots: catalog.complete ? Math.max(0, this.limit - catalog.entries.length) : null,
-        expiredAwaitingCleanup: catalog.entries.filter(item => item.stamp.lastUsed + this.retentionMs <= this.now() && !item.busy).length,
+        expiredAwaitingCleanup: catalog.entries.filter(item => item.stamp.lastUsed + this.retentionMs <= this.now() && !item.busy &&
+          this.guard(() => fs.statSync(item.path)).size <= this.maxSessionBytes).length,
         errorCode: catalog.complete ? null : 'SESSION_STORAGE_MIGRATION_REQUIRED'
       } };
     } catch {
@@ -228,7 +229,7 @@ export class SessionPolicy {
       title: title.value, titleTruncated: title.truncated, alias: alias.value, aliasTruncated: alias.truncated,
       readable, overSizeLimit: oversized, itemCount: Array.isArray(state.items) ? state.items.length : null,
       lastUsedAt: new Date(record.stamp.lastUsed).toISOString(),
-      expiresAt: new Date(record.stamp.lastUsed + this.retentionMs).toISOString(),
+      expiresAt: oversized ? null : new Date(record.stamp.lastUsed + this.retentionMs).toISOString(),
       current: record.current, connected: record.connected, busy: record.busy,
       deletionAllowed: !record.busy, requiresAllowCurrent: record.current,
       revision: this.revision(record, bytes) };
@@ -294,6 +295,8 @@ export class SessionPolicy {
       try {
         if ((this.busy.has(namespace) && namespace !== creatingNamespace) || !this.owner(namespace)) continue;
         for (const file of this.files(namespace)) {
+          // Quarantine oversized legacy files: no payload read and no implicit deletion of unverified data.
+          if (this.guard(() => fs.statSync(file.path)).size > this.maxSessionBytes) continue;
           if (this.busy.get(namespace)?.accessed.has(file.id)) continue;
           if (this.stamp(namespace, file.id).lastUsed + this.retentionMs <= this.now()) this.remove(namespace, file);
         }
@@ -454,12 +457,15 @@ export class SessionPolicy {
     const value = this.read(path);
     if (value === null) {
       if (!initialize) throw unavailable();
-      // Only recognized rstool envelopes may acquire a retention timestamp.
       const file = this.files(namespace).find(item => item.id === id);
-      const envelope = file ? this.read(file.path) : null;
-      const state = envelope?.state;
-      if (!state || typeof state !== 'object' || Array.isArray(state) ||
-        (state as Record<string, unknown>).sessionId !== id || !Array.isArray(envelope?.diagnostics)) throw unavailable();
+      if (!file) throw unavailable();
+      // Oversized legacy files get metadata only. They remain unreadable and excluded from automatic expiry.
+      if (this.guard(() => fs.statSync(file.path)).size <= this.maxSessionBytes) {
+        const envelope = this.read(file.path);
+        const state = envelope?.state;
+        if (!state || typeof state !== 'object' || Array.isArray(state) ||
+          (state as Record<string, unknown>).sessionId !== id || !Array.isArray(envelope?.diagnostics)) throw unavailable();
+      }
       const stamp = { lastUsed: this.now(), generation: randomUUID() };
       this.write(path, stamp);
       return stamp;

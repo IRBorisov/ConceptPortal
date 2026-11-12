@@ -100,6 +100,8 @@ export function TabApiKeys() {
               {(['read', 'write', 'publish'] as const).map(scope => (
                 <Checkbox
                   key={scope}
+                  role='checkbox'
+                  aria-checked={field.state.value.includes(scope)}
                   label={scopeLabels[scope]}
                   value={field.state.value.includes(scope)}
                   onChange={checked =>

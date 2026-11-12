@@ -52,6 +52,17 @@ describe('disposable computation processes', () => {
     expect(live.getCurrentSession()?.sessionId).toBe(other.sessionId);
   }, 30_000);
 
+  it('preserves missing-session errors before source capture', async () => {
+    const executor = pool();
+    const live = new HostedRSToolAgent();
+    live.createSession();
+    await expect(executor.execute(live, 'evaluate', { sessionId: 'missing', expression: '1+2', cstType: 'term' }))
+      .rejects.toMatchObject({ code: 'SESSION_NOT_FOUND' });
+    await expect(executor.execute(live, 'synthesize', { sourceSessionId: 'missing' }))
+      .rejects.toMatchObject({ code: 'SESSION_NOT_FOUND' });
+    expect(live.getSessionState().items).toEqual([]);
+  });
+
   it('kills a blocked CPU process, bounds parallel work and keeps the parent responsive', async () => {
     const executor = pool({ maxWorkers: 1, timeoutMs: 700, workerUrl: fixture("process.once('message', () => { while (true) {} });") });
     const live = new HostedRSToolAgent();

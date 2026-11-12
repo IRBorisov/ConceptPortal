@@ -421,3 +421,18 @@ it('does not turn an anonymous refusal into enrollment or expose the upstream bo
   expect(app.request.mock.calls[0][1]?.headers).not.toHaveProperty('Authorization');
   expect(app.vault.get('anonymous')).toBeNull();
 });
+
+it('requires read as well as the mutation scope before issuing any request', async () => {
+  const app = setup();
+  for (const scope of ['write', 'publish']) {
+    app.request.mockResolvedValueOnce(Response.json({ id: 10, username: 'Synthetic', scopes: [scope], expires_at: null }));
+    await app.publisher.connect('alice', token);
+    const requests = app.request.mock.calls.length;
+    if (scope === 'write') {
+      await expect(app.publisher.updateDescription('alice', 1, '2026-11-06T01:00:00Z', 'Denied')).rejects.toThrow('does not allow read');
+    } else {
+      await expect(app.publisher.prepare('alice', 'task', 1, app.tool)).rejects.toThrow('does not allow read');
+    }
+    expect(app.request.mock.calls).toHaveLength(requests);
+  }
+});

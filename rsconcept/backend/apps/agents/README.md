@@ -49,7 +49,9 @@ valid users behind the same NAT.
 
 This change retains the SHA-256 storage format and the 64-character field.
 The additive scope/expiry migration preserves existing keys and their hashes. It does not revoke them. Deployments on `main`
-can use the same keys before and after this change, including during rollback.
+can use existing unrestricted, non-expiring keys before and after this change.
+
+Before rolling back to a backend without key policies, revoke every scoped or expiring key, including already expired keys. The earlier backend ignores scopes and expiry and would otherwise give those keys the owner's full permissions again. Identify and revoke them while the policy fields still exist; do not reverse the migration first. Reissue replacement credentials only after deciding the rollback access policy. Database compatibility alone does not preserve key restrictions.
 
 If the earlier password-hasher version of PR #99 was deployed, its migration
 may already have revoked SHA-256 keys. Removing the migration does not undo
