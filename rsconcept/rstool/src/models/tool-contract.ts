@@ -26,6 +26,8 @@ export interface RSToolAgentOptions {
     beforeCreate: (sessionId: string) => void;
     created: (sessionId: string) => void;
     access: (sessionId: string) => void;
+    /** Reject an oversized detached envelope before any durable write. */
+    beforeWrite?: (sessionId: string, serializedBytes: number) => void;
     /** Optional cache eviction callback binding for external retention cleanup. */
     onEviction?: (evict: (sessionId: string) => void) => void;
   };

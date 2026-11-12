@@ -38,7 +38,7 @@ export class SessionStore {
     });
   }
 
-  public create(initial?: Partial<SessionState>, contractVersion?: string, diagnostics: Diagnostic[] = []): SessionHandle {
+  public create(initial?: Partial<SessionState>, contractVersion?: string, diagnostics: Diagnostic[] = [], preserveUpdatedAt = false): SessionHandle {
     const now = new Date().toISOString();
     const sessionId = initial?.sessionId ?? randomUUID();
     const state: SessionState = {
@@ -47,7 +47,7 @@ export class SessionStore {
       title: initial?.title ?? '',
       comment: initial?.comment ?? '',
       createdAt: initial?.createdAt ?? now,
-      updatedAt: now,
+      updatedAt: preserveUpdatedAt && initial?.updatedAt ? initial.updatedAt : now,
       revisions: initial?.revisions ?? [],
       items: initial?.items ?? [],
       attribution: initial?.attribution ?? [],
@@ -164,6 +164,21 @@ export class SessionStore {
     return structuredClone(records.filter(record => record.constituentId === filters.constituentId));
   }
 
+  /** Host-only detached snapshots; no disk or lifecycle side effects are allowed while seeding. */
+  public seedTransient(envelopes: SessionEnvelope[]): void {
+    if (this.persistence || this.options.sessionLifecycle) throw new Error('Transient seeding cannot bypass persistent storage');
+    this.sessions = new Map(envelopes.map(envelope => [envelope.state.sessionId, structuredClone(envelope)]));
+  }
+
+  public cachedSnapshots(): SessionEnvelope[] {
+    return [...this.sessions.values()].map(envelope => structuredClone(envelope));
+  }
+
+  public findSnapshot(sessionId: string): SessionEnvelope | null {
+    if (!this.sessions.has(sessionId) && !this.persistence?.has(sessionId)) return null;
+    return this.snapshot(sessionId);
+  }
+
   public snapshot(sessionId: string): SessionEnvelope {
     const found = this.get(sessionId);
     return structuredClone(found);
@@ -184,7 +199,7 @@ export class SessionStore {
     try {
       const result = action();
       const committed = structuredClone(this.get(sessionId));
-      this.persistence?.save(sessionId, committed);
+      this.save(sessionId, committed);
       this.sessions.set(sessionId, committed);
       return result;
     } catch (error) {
@@ -220,7 +235,20 @@ export class SessionStore {
     return loaded;
   }
 
+  public evictCachedExcept(ids: readonly string[]): void {
+    if (!this.persistence) return;
+    const retained = new Set(ids);
+    for (const id of this.sessions.keys()) if (!retained.has(id)) this.sessions.delete(id);
+  }
+
+  private save(sessionId: string, envelope: SessionEnvelope): void {
+    if (this.options.sessionLifecycle?.beforeWrite) {
+      this.options.sessionLifecycle.beforeWrite(sessionId, Buffer.byteLength(JSON.stringify(envelope, null, 2), 'utf8'));
+    }
+    this.persistence?.save(sessionId, envelope as PersistedSessionEnvelope);
+  }
+
   private persist(sessionId: string, envelope: SessionEnvelope): void {
-    if (!this.transactions.has(sessionId)) this.persistence?.save(sessionId, envelope as PersistedSessionEnvelope);
+    if (!this.transactions.has(sessionId)) this.save(sessionId, envelope);
   }
 }

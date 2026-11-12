@@ -186,3 +186,9 @@ A trusted retention host that invokes the external `onEviction` binding also cle
 rstool 3.0.0 requires an existing current session for reads, analysis, exports and evaluation. Previously these calls could create an empty session implicitly. Call `ensureSession()` or `createSession()` first, or pass an existing session ID. `applySchemaPatch` retains its documented creation path. `NO_CURRENT_SESSION` and `SESSION_NOT_FOUND` are exported `RSToolError` codes and are preserved by stdio/MCP. Ordinary library/stdio hosts do not gain HTTP account storage tools.
 
 Evaluation and recalculation now return `statusName` alongside numeric `status`. `success` reports technical evaluation success; check the status, value and supplied model bindings before drawing conclusions. X/C basic bindings are label objects such as `{"0":"one","1":"two"}`, not arrays of labels. MCP object results include `structuredContent` as well as compatible text; errors include a structured code and message.
+
+## Trusted computation hosting
+
+`@rsconcept/rstool/hosting` exports `HostedRSToolAgent` and `ExecutionSnapshot` for transport hosts. Capture only invocation source sessions, seed a transient in-memory agent, then commit its completed snapshot through the original authoritative agent. The commit compares all sources and the original selection before changing one session, preserving lifecycle, quota and atomic persistence rules. This is a trusted integration API, not an additional language method or a remote snapshot/filename input.
+
+The optional storage lifecycle hook `beforeWrite(sessionId, serializedBytes)` can reject a serialized envelope before persistence or cache publication. A rejected write preserves the previous model. Plain library/stdio usage has no default byte or computation cap. The HTTP host supplies those limits and owns child process cancellation; see its HTTP guide.

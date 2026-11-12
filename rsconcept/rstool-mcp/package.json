@@ -1,6 +1,6 @@
 {
   "name": "@rsconcept/rstool-mcp",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Model Context Protocol adapter for rstool over stdio or authenticated Streamable HTTP, with isolated persistent workspaces.",
   "license": "MIT",
   "author": "IRBorisov",
@@ -29,7 +29,8 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./compute-worker": "./dist/compute-worker.js"
   },
   "bin": {
     "rstool-mcp": "dist/bin/server.js",

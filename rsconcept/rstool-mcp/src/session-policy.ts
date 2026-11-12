@@ -30,14 +30,17 @@ export class SessionPolicy {
   private readonly root: string;
   readonly limit: number;
   readonly retentionMs: number;
+  readonly maxSessionBytes: number;
   private readonly now: () => number;
   private readonly expired: (namespace: string) => void;
 
   constructor(root: string, limit = 20, retentionMs = 30 * 86400_000,
-    now: () => number = Date.now, expired: (namespace: string) => void = () => {}) {
+    now: () => number = Date.now, expired: (namespace: string) => void = () => {}, maxSessionBytes = 2 * 1024 * 1024) {
     this.root = root;
     this.limit = limit;
     this.retentionMs = retentionMs;
+    this.maxSessionBytes = maxSessionBytes;
+    if (!Number.isSafeInteger(maxSessionBytes) || maxSessionBytes <= 0) throw new Error('maxSessionBytes must be a positive safe integer');
     this.now = now;
     this.expired = expired;
     if (!Number.isSafeInteger(limit) || limit <= 0 || !Number.isSafeInteger(retentionMs) || retentionMs <= 0) {
@@ -85,7 +88,7 @@ export class SessionPolicy {
   /** Effective safe configuration and this account's usage, without renewing or removing sessions. */
   configuration(subject: string, cleanupIntervalMs = 60_000) {
     const limits = { maxSessionsPerAccount: this.limit, retentionSeconds: this.retentionMs / 1000,
-      cleanupIntervalSeconds: cleanupIntervalMs / 1000, scope: 'account' as const };
+      cleanupIntervalSeconds: cleanupIntervalMs / 1000, maxSessionBytes: this.maxSessionBytes, scope: 'account' as const };
     try {
       const catalog = this.catalog(subject);
       return { limits, serverTime: new Date(this.now()).toISOString(), usage: {
@@ -153,7 +156,7 @@ export class SessionPolicy {
     const file = this.files(namespace).find(item => item.id === id);
     if (!file) throw missing();
     const record = this.record(namespace, file, owner);
-    const bytes = this.guard(() => fs.readFileSync(file.path));
+    const bytes = this.revisionBytes(file.path);
     if (this.revision(record, bytes) !== expectedRevision) throw new SessionStorageError('SESSION_CHANGED',
       'The selected session changed or was used since listing. Refresh list_stored_sessions before deleting.');
     if (record.current && allowCurrent !== true) throw new SessionStorageError('SESSION_IS_CURRENT',
@@ -199,11 +202,20 @@ export class SessionPolicy {
       record.stamp.lastUsed, record.current, record.busy])).update(bytes).digest('hex');
   }
 
+  /** Oversized legacy models remain listable/deletable without loading their payload. */
+  private revisionBytes(file: string): Buffer {
+    const info = this.guard(() => fs.statSync(file));
+    return info.size <= this.maxSessionBytes ? this.guard(() => fs.readFileSync(file))
+      : Buffer.from(JSON.stringify(['oversize', info.dev, info.ino, info.size, info.mtimeMs, info.ctimeMs]));
+  }
+
   private summary(record: CatalogRecord, callerNamespace: string) {
-    const bytes = this.guard(() => fs.readFileSync(record.path));
+    const oversized = this.guard(() => fs.statSync(record.path)).size > this.maxSessionBytes;
+    const bytes = this.revisionBytes(record.path);
     let state: Record<string, unknown> = {};
     let readable = true;
     try {
+      if (oversized) throw unavailable();
       const payload: unknown = JSON.parse(bytes.toString('utf8'));
       if (!payload || typeof payload !== 'object' || !('state' in payload) || !payload.state ||
         typeof payload.state !== 'object' || Array.isArray(payload.state)) throw unavailable();
@@ -214,7 +226,7 @@ export class SessionPolicy {
     return { sessionRef: reference(record.namespace, record.id), sessionId: record.id,
       workspaceId: record.namespace, workspace: record.workspace ?? null, callerWorkspace: record.namespace === callerNamespace,
       title: title.value, titleTruncated: title.truncated, alias: alias.value, aliasTruncated: alias.truncated,
-      readable, itemCount: Array.isArray(state.items) ? state.items.length : null,
+      readable, overSizeLimit: oversized, itemCount: Array.isArray(state.items) ? state.items.length : null,
       lastUsedAt: new Date(record.stamp.lastUsed).toISOString(),
       expiresAt: new Date(record.stamp.lastUsed + this.retentionMs).toISOString(),
       current: record.current, connected: record.connected, busy: record.busy,
@@ -264,6 +276,10 @@ export class SessionPolicy {
         this.busy.get(namespace)?.accessed.set(id, { persisted: now, lastUsed: now, generation });
       },
       access: (id: string) => this.access(namespace, id),
+      beforeWrite: (_id: string, bytes: number) => {
+        if (bytes > this.maxSessionBytes) throw new SessionStorageError('SESSION_TOO_LARGE',
+          'Session exceeds the configured serialized byte limit. Reduce the model before retrying.', { limit: this.maxSessionBytes });
+      },
       onEviction: (evict: (id: string) => void) => { this.evictions.set(namespace, evict); },
     };
   }
@@ -336,10 +352,14 @@ export class SessionPolicy {
 
   /** Validate cached as well as disk-backed access and renew the inactivity clock. */
   private access(namespace: string, id: string): void {
+    const file = this.files(namespace).find(candidate => candidate.id === id);
+    if (file && this.guard(() => fs.statSync(file.path)).size > this.maxSessionBytes) {
+      throw new SessionStorageError('SESSION_TOO_LARGE',
+        'Session exceeds the configured byte limit. Export it offline or explicitly delete it using a fresh list.', { limit: this.maxSessionBytes });
+    }
     const pin = this.busy.get(namespace);
     const touched = pin?.accessed.get(id);
     if (touched) { touched.lastUsed = this.now(); return; }
-    const file = this.files(namespace).find(item => item.id === id);
     if (!file) throw new SessionStorageError('SESSION_NOT_FOUND_OR_EXPIRED',
       'Session does not exist in this workspace or its retention period has expired. Create a new session.');
     const stamp = this.stamp(namespace, id);

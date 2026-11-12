@@ -5,7 +5,12 @@ export function sessionPolicyConfiguration(env: NodeJS.ProcessEnv) {
   if (seconds !== undefined && !Number.isSafeInteger(seconds * 1000)) {
     throw new Error('RSTOOL_SESSION_RETENTION_SECONDS is too large');
   }
-  return { maxStoredSessionsPerAccount: count, sessionRetentionMs: seconds === undefined ? undefined : seconds * 1000 };
+  const computeTimeoutMs = integer(env, 'RSTOOL_COMPUTE_TIMEOUT_MS');
+  if (computeTimeoutMs !== undefined && computeTimeoutMs > 2147483647) throw new Error('RSTOOL_COMPUTE_TIMEOUT_MS exceeds the timer range');
+  return { maxStoredSessionsPerAccount: count, sessionRetentionMs: seconds === undefined ? undefined : seconds * 1000,
+    maxSessionBytes: integer(env, 'RSTOOL_MAX_SESSION_BYTES'), maxComputeWorkers: integer(env, 'RSTOOL_MAX_COMPUTE_WORKERS'),
+    computeTimeoutMs, computeHeapMb: integer(env, 'RSTOOL_COMPUTE_HEAP_MB'),
+    maxComputeResultBytes: integer(env, 'RSTOOL_MAX_COMPUTE_RESULT_BYTES') };
 }
 
 function integer(env: NodeJS.ProcessEnv, key: string): number | undefined {

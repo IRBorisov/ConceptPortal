@@ -26,6 +26,8 @@ export interface BuildRSToolMcpServerOptions {
   additionalTools?: readonly ToolDefinition[];
   /** Trusted host invocation guard, run inside the per-workspace serial queue. */
   aroundToolCall?: <T>(invoke: () => Promise<T>, definition: ToolDefinition | undefined) => Promise<T>;
+  /** Trusted execution adapter; remote arguments cannot select executables or worker settings. */
+  executeTool?: (definition: ToolDefinition, args: Record<string, unknown>, signal: AbortSignal) => unknown | Promise<unknown>;
   /** Tool discovery and account-management guidance for hosted clients. */
   instructions?: string;
 }
@@ -57,7 +59,7 @@ export function buildRSToolMcpServer(
   const server = new McpServer(
     {
       name: options.name ?? "rstool-mcp",
-      version: options.version ?? "2.1.0",
+      version: options.version ?? "2.2.0",
     },
     {
       capabilities: {
@@ -93,10 +95,8 @@ export function buildRSToolMcpServer(
 
       try {
         if (extra.signal.aborted) throw new Error('Request cancelled before tool execution');
-        const result = await definition.invoke(
-          tool,
-          request.params.arguments ?? {},
-        );
+        const args = request.params.arguments ?? {};
+        const result = await (options.executeTool ? options.executeTool(definition, args, extra.signal) : definition.invoke(tool, args));
         return successResult(result);
       } catch (error) {
         return failureResult(error, definition.name, options.sanitizeStorageErrors);

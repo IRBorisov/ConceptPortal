@@ -112,10 +112,10 @@ function inferCstType(alias: string): CstType {
  */
 export class RSToolAgent implements RSToolAgentContract {
   public readonly contractVersion = CONTRACT_VERSION;
-  private readonly sessions: SessionStore;
+  protected readonly sessions: SessionStore;
   private readonly adapter = new SchemaAdapter();
   private readonly evaluation = new ModelAdapter();
-  private currentSessionId: string | null;
+  protected currentSessionId: string | null;
 
   /** @param options - Optional persistence directory for session storage. */
   public constructor(options: RSToolAgentOptions = {}) {
