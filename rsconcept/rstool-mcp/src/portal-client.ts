@@ -21,16 +21,17 @@ export class PortalClient {
   }
 
   /** Never expose fetch exceptions, headers, redirect destinations or untrusted Portal messages. */
-  public async request(token: string, path: string, body?: unknown): Promise<Record<string, any>> {
+  public async request(token: string | undefined, path: string, body?: unknown): Promise<Record<string, any>> {
     if (!/^\/api\/agents\/(me|rsforms\/[1-9][0-9]*\/(details|publish|description))$/.test(path)) {
       throw new Error('Portal route is not allowed');
     }
+    if (body !== undefined && !token) throw new Error('Portal writes require a key');
     let response: Response;
     try {
       response = await this.#fetch(this.#origin + path, {
         method: body === undefined ? 'GET' : 'POST',
         redirect: 'error',
-        headers: { Authorization: `Bearer ${token}`, Accept: 'application/json', 'Content-Type': 'application/json' },
+        headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), Accept: 'application/json', 'Content-Type': 'application/json' },
         body: body === undefined ? undefined : JSON.stringify(body),
         signal: AbortSignal.timeout(15_000),
       });

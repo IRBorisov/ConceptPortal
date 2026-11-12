@@ -8,7 +8,7 @@ from apps.library.models import LibraryItem
 from shared import permissions as shared_permissions
 
 from ..authentication import ApiKeyAuthentication
-from ..permissions import IsApiKeyAuthenticated
+from ..permissions import AgentDataAccess
 from ..services.audit import api_key_from_request, log_agent_action
 from ..throttling import AgentReadThrottle, AgentWriteThrottle
 
@@ -23,7 +23,7 @@ def exception_summary(exc: BaseException) -> str:
 class AgentItemView(APIView):
     ''' API-key auth for one library item type. '''
     authentication_classes = [ApiKeyAuthentication]
-    permission_classes = [IsApiKeyAuthenticated]
+    permission_classes = [AgentDataAccess]
     agent_action: str | None = None
     agent_heavy = False
 

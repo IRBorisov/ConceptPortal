@@ -34,15 +34,19 @@ class PublicationSerializer(StrictSerializer):
 
 class AgentIdentityView(AgentItemView):
     ''' Resolve the account owning a supplied key without returning its secret. '''
+    agent_require_key = True
+    agent_scope = None  # Introspection is available to every active key, independently of data scopes.
 
     @extend_schema(tags=['Agents'], responses={200: dict})
     def get(self, request):
-        return Response({'id': request.user.pk, 'username': request.user.username})
+        return Response({'id': request.user.pk, 'username': request.user.username,
+                         'scopes': request.auth.scopes, 'expires_at': request.auth.expires_at})
 
 
 class AgentRsformPublishView(AgentItemView):
     ''' Owner-only replacement with an atomic base claim and rollback snapshot. '''
     agent_action = 'rsform.publish'
+    agent_scope = 'publish'
     agent_heavy = True
 
     @extend_schema(tags=['Agents'], request=PublicationSerializer, responses={200: dict, 409: dict})

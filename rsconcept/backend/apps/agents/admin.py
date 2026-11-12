@@ -7,7 +7,7 @@ from .models import AgentActionLog, ApiKey
 @admin.register(ApiKey)
 class ApiKeyAdmin(admin.ModelAdmin):
     ''' API keys. The secret hash is visible to staff, never the plaintext. '''
-    list_display = ('id', 'label', 'prefix', 'owner', 'created_at', 'last_used_at', 'revoked_at')
+    list_display = ('id', 'label', 'prefix', 'owner', 'created_at', 'last_used_at', 'expires_at', 'revoked_at')
     list_filter = ('revoked_at',)
     search_fields = ('label', 'prefix', 'owner__username')
     readonly_fields = ('prefix', 'key_hash', 'created_at', 'last_used_at', 'revoked_at')

@@ -3,7 +3,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import type { RSToolAgent } from '@rsconcept/rstool';
 
 import { PortalClient } from './portal-client';
-import { PortalVault, type PortalCredential } from './portal-vault';
+import { PortalVault, type PortalCredential, type PortalKeyPolicy } from './portal-vault';
 
 export interface ServicePortalCredential {
   token: string;
@@ -70,7 +70,17 @@ export class PortalPublisher {
       const account = await this.#api.request(token, '/api/agents/me');
       if (!Number.isSafeInteger(account.id) || typeof account.username !== 'string')
         throw new Error('Portal returned invalid account metadata');
-      this.#vault.set(subject, token, { id: account.id, username: account.username });
+      let keyPolicy: PortalKeyPolicy | undefined;
+      if (account.scopes !== undefined) {
+        if (!Array.isArray(account.scopes) || !account.scopes.length ||
+          account.scopes.some((scope: unknown) => !['read', 'write', 'publish'].includes(scope as string)) ||
+          (account.expires_at !== null && account.expires_at !== undefined &&
+            (typeof account.expires_at !== 'string' || !Number.isFinite(Date.parse(account.expires_at)))))
+          throw new Error('Portal returned invalid key policy');
+        keyPolicy = { scopes: account.scopes, expiresAt: account.expires_at ?? null };
+        if (keyPolicy.expiresAt && Date.parse(keyPolicy.expiresAt) <= Date.now()) throw new Error('Portal key expired');
+      }
+      this.#vault.set(subject, token, { id: account.id, username: account.username }, keyPolicy);
       this.invalidateSubject(subject);
       return this.connection(subject);
     });
@@ -91,16 +101,20 @@ export class PortalPublisher {
     if (this.isService(subject)) return { connected: true, mode: 'service' };
     const credential = this.#vault.get(subject);
     return credential
-      ? { connected: true, mode: 'personal', account: credential.account }
+      ? { connected: !expired(credential), mode: 'personal', account: credential.account,
+          ...(credential.keyPolicy ? { keyPolicy: credential.keyPolicy, expired: expired(credential) } : {}) }
       : { connected: false, mode: 'personal' };
   }
 
-  /** Read a private schema's editable description/revision through this subject's bound key. */
+  /** Public reads need no Portal key. A bound key can also authorize private data. */
   public getDescription(subject: string, targetId: number) {
     return this.exclusive(subject, async () => {
       if (!Number.isSafeInteger(targetId) || targetId <= 0) throw new Error('A positive Portal schema ID is required');
-      const credential = this.credential(subject, targetId);
-      const schema = await this.#api.request(credential.token, `/api/agents/rsforms/${targetId}/details`);
+      const credential = this.isService(subject)
+        ? (this.#service!.targetIds.includes(targetId) ? this.credential(subject, targetId) : undefined)
+        : this.#vault.get(subject) ?? undefined;
+      const mayRead = credential && !expired(credential) && (!credential.keyPolicy || credential.keyPolicy.scopes.includes('read'));
+      const schema = await this.#api.request(mayRead ? credential.token : undefined, `/api/agents/rsforms/${targetId}/details`);
       if (schema.id !== targetId || typeof schema.description !== 'string' ||
         typeof schema.time_update !== 'string' || !Number.isFinite(Date.parse(schema.time_update)))
         throw new Error('Portal returned invalid schema metadata');
@@ -116,7 +130,7 @@ export class PortalPublisher {
         throw new Error('A valid expectedTimeUpdate is required');
       if (typeof description !== 'string' || [...description].length > 100000)
         throw new Error('description must be a string of at most 100000 characters');
-      const credential = this.credential(subject, targetId);
+      const credential = this.credential(subject, targetId, 'write');
       const path = `/api/agents/rsforms/${targetId}`;
       const before = await this.#api.request(credential.token, `${path}/details`);
       if (before.id !== targetId || before.time_update !== expectedTimeUpdate)
@@ -145,7 +159,7 @@ export class PortalPublisher {
       if (preparation.invalidated) throw new Error('Workspace was closed');
       if (!Number.isSafeInteger(targetId) || targetId <= 0) throw new Error('A positive Portal schema ID is required');
       this.expire();
-      const credential = this.credential(subject, targetId);
+      const credential = this.credential(subject, targetId, 'publish');
       if (tool.listDiagnostics().some((diagnostic) => diagnostic.kind === 'schema' && diagnostic.severity === 'error'))
         throw new Error('Resolve schema diagnostics before preparing publication');
       const sourceId = tool.getCurrentSession()!.sessionId;
@@ -233,7 +247,7 @@ export class PortalPublisher {
       draft.validateSource?.();
       if (digest !== draft.digest || draft.session !== draft.tool.exportSession())
         throw new Error('Local schema changed; prepare publication again');
-      const credential = this.credential(subject, draft.targetId);
+      const credential = this.credential(subject, draft.targetId, 'publish');
       if (credential.generation !== draft.generation)
         throw new Error('Portal connection changed; prepare publication again');
       draft.validateSource?.();
@@ -282,13 +296,16 @@ export class PortalPublisher {
   }
 
   /** Personal subjects never fall back to a service grant; service targets are explicitly restricted. */
-  private credential(subject: string, targetId: number): PortalCredential {
+  private credential(subject: string, targetId: number, requiredScope?: 'write' | 'publish'): PortalCredential {
     if (this.isService(subject)) {
       if (!this.#service!.targetIds.includes(targetId)) throw new Error('Service publication target is not allowed');
       return { token: this.#service!.token, generation: 'service', account: { id: 0, username: 'service' } };
     }
     const credential = this.#vault.get(subject);
     if (!credential) throw new Error('Connect a personal Portal key on the account page');
+    if (expired(credential)) throw new Error('Portal key expired; reconnect on the account page');
+    if (requiredScope && credential.keyPolicy && !credential.keyPolicy.scopes.includes(requiredScope))
+      throw new Error('Portal key does not allow ' + requiredScope);
     return credential;
   }
 
@@ -383,4 +400,9 @@ function changes(before: Record<string, any>, after: Record<string, any>) {
       (field) => (before[field] ?? '') !== (after[field] ?? '')
     ),
   };
+}
+
+/** Key policy is only an early hint; Portal enforces current scopes and expiration on each request. */
+function expired(credential: PortalCredential): boolean {
+  return !!credential.keyPolicy?.expiresAt && Date.parse(credential.keyPolicy.expiresAt) <= Date.now();
 }

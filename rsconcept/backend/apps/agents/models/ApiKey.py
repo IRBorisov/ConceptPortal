@@ -4,7 +4,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 import secrets
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from django.db import models
 from django.utils import timezone
@@ -14,6 +14,12 @@ from apps.users.models import User
 KEY_PREFIX = 'rcp_'
 PUBLIC_PREFIX_LENGTH = 8
 SECRET_LENGTH = 32
+API_KEY_SCOPES = ('read', 'write', 'publish')
+
+
+def default_api_key_scopes() -> list[str]:
+    """Preserve permissions of keys created before scope support."""
+    return list(API_KEY_SCOPES)
 
 
 def generate_api_key_token() -> tuple[str, str, str]:
@@ -86,6 +92,9 @@ class ApiKey(models.Model):
         blank=True
     )
 
+    scopes = models.JSONField(default=default_api_key_scopes)
+    expires_at = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         ''' Model metadata. '''
         verbose_name = 'API-ключ'
@@ -97,7 +106,15 @@ class ApiKey(models.Model):
 
     @property
     def is_active(self) -> bool:
-        return self.revoked_at is None
+        return self.revoked_at is None and (
+            self.expires_at is None or self.expires_at > timezone.now()
+        )
+
+    def allows_scope(self, scope: str) -> bool:
+        """A key can restrict its owner, never grant new object permissions."""
+        scopes = self.scopes
+        # Django returns JSON data; Pylint infers the model field descriptor here.
+        return isinstance(scopes, list) and scope in scopes  # pylint: disable=unsupported-membership-test
 
     def revoke(self) -> None:
         if self.revoked_at is None:
@@ -115,14 +132,17 @@ class ApiKey(models.Model):
         ).update(last_used_at=now)
 
     @classmethod
-    def create_for_user(cls, owner: User, label: str) -> tuple['ApiKey', str]:
+    def create_for_user(cls, owner: User, label: str, *, scopes: list[str] | None = None,
+                        expires_at: datetime | None = None) -> tuple['ApiKey', str]:
         ''' Create key and return (model, plaintext once). '''
         plaintext, prefix, key_hash = generate_api_key_token()
         key = cls.objects.create(
             owner=owner,
             label=label,
             prefix=prefix,
-            key_hash=key_hash
+            key_hash=key_hash,
+            scopes=default_api_key_scopes() if scopes is None else list(scopes),
+            expires_at=expires_at,
         )
         return key, plaintext
 
@@ -139,7 +159,7 @@ class ApiKey(models.Model):
             prefix=prefix,
             revoked_at__isnull=True,
             owner__is_active=True,
-        )
+        ).filter(models.Q(expires_at__isnull=True) | models.Q(expires_at__gt=timezone.now()))
         key_hash = hash_api_key(plaintext)
         for key in candidates:
             if hmac.compare_digest(key_hash, key.key_hash):

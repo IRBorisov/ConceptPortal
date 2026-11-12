@@ -18,7 +18,7 @@ transaction conditionally claims the observed timestamp, preserves a full
 version and replaces content. A stale timestamp returns 409; failed validation
 or replacement leaves no partial schema or version. RSForm mutation helpers
 take a library-row write lock before editing constituents. Existing routes keep
-their contracts. This release does not add scopes or expiry to existing keys.
+their contracts. Keys support optional read, write and publish scopes and an expiration. Existing keys retain all three scopes and no expiration after the additive migration. Public data reads need no key, while identity, private reads and all writes enforce authentication and scope. Object ACLs still apply.
 Hosted MCP enrollment/approval and secret storage are documented in
 [rstool-mcp/PORTAL.md](../../../rstool-mcp/PORTAL.md).
 
@@ -48,10 +48,14 @@ valid users behind the same NAT.
 ## Deployment compatibility
 
 This change retains the SHA-256 storage format and the 64-character field.
-It adds no migration and does not revoke existing keys. Deployments on `main`
+The additive scope/expiry migration preserves existing keys and their hashes. It does not revoke them. Deployments on `main`
 can use the same keys before and after this change, including during rollback.
 
 If the earlier password-hasher version of PR #99 was deployed, its migration
 may already have revoked SHA-256 keys. Removing the migration does not undo
 those revocations. PBKDF2-only keys cannot be converted without their plaintext;
 those installations must reissue affected keys and update integrations.
+
+## Key policy
+
+The profile can create read-only keys and select a finite lifetime. Scopes and expires_at are returned only as nonsecret metadata; the raw key is shown once. Empty or unknown scope sets and past expirations are rejected. Expired keys do not consume the active-key quota. Read and write scopes do not grant publish; owner/staff checks are still required for publication. Expired or revoked presented keys return 401, without silently falling back to anonymous access. Requests without a key can read only public library data and have a per-address read limit. The identity and key-management endpoints are not public data routes. Deploy the migration and backend before the new frontend.

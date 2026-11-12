@@ -1,12 +1,21 @@
 ''' Quotas for /api/agents. The budget is per user and stored in the database. '''
+from math import ceil
+
 from rest_framework.request import Request
 from rest_framework.throttling import BaseThrottle
 from rest_framework.views import APIView
 
 from apps.users.models import User
+from shared.throttling import EndpointRateThrottle
 
 from .models import ApiKey
 from .services.quota import blocked_for, consume, remember_block
+
+
+class AnonymousAgentReadThrottle(EndpointRateThrottle):
+    """Bound public reads by client address without requiring an API key."""
+    scope = 'agent_anon_read'
+    rate = '120/min'
 
 
 class _AgentQuotaThrottle(BaseThrottle):
@@ -23,7 +32,13 @@ class _AgentQuotaThrottle(BaseThrottle):
         api_key = getattr(request, 'auth', None)
         user = getattr(request, 'user', None)
         if not isinstance(api_key, ApiKey) or not isinstance(user, User):
-            return True
+            if self.kind != 'read':
+                return True
+            anonymous = AnonymousAgentReadThrottle()
+            allowed = anonymous.allow_request(request, view)
+            if not allowed:
+                self.retry_after = ceil(anonymous.wait() or 1)
+            return allowed
 
         heavy = self.kind == 'write' and bool(getattr(view, 'agent_heavy', False))
         block_kinds = ('write', 'heavy') if heavy else (self.kind,)

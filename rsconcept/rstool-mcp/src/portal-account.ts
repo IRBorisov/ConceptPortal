@@ -6,8 +6,8 @@ export const PORTAL_ACCOUNT_HTML = `<!doctype html><html lang="en"><head><meta c
 <h1>Portal publication settings</h1><p>Use your separate human account token to open settings. This is not your agent's MCP token. Never paste this token or a Portal key into an agent chat.</p>
 <form id="login"><label>Human account token <input id="access" type="password" autocomplete="off" required></label><button>Open settings</button></form>
 <section id="settings" hidden><h2>Portal connection</h2><p id="connection"></p>
-<p>A Portal API key currently has all the permissions of its owner. Create a dedicated key in your Portal profile. Encryption does not protect keys from a compromised running service or server administrator.</p>
-<p>Connecting a key lets your MCP agent read schema descriptions and revisions, and directly update descriptions with revision checks and readback, within your Portal edit permissions. Full schema replacements still require approval below.</p>
+<p>Public reading needs no Portal key. Create a dedicated key with only the permissions and lifetime required for edits or private data. Existing unrestricted keys keep their previous permissions. Encryption does not protect keys from a compromised running service or server administrator.</p>
+<p>A bound key can authorize private reading. Editing descriptions requires write permission; full publication requires publish permission. Your account must also have access to the target. Full schema replacements still require approval below.</p>
 <form id="connect"><label>Personal Portal key <input id="key" type="password" autocomplete="off" required></label><button>Save personal key</button></form>
 <button id="disconnect" type="button">Disconnect personal key</button><p>Disconnecting here does not revoke the original key. Revoke it in your Portal profile as well.</p>
 <h2>Prepared publications</h2><button id="refresh" type="button">Refresh</button><p>Review the target and both complete schemas. Only approve the exact replacement you intend. Publication preserves the previous version and requires owner access.</p><div id="publications"></div></section>
@@ -24,7 +24,7 @@ async function api(path, method = 'GET', body) {
 }
 async function refresh() {
   const connection = await api('connection'); el('connection').textContent = JSON.stringify(connection);
-  el('connect').hidden = connection.mode === 'service'; el('disconnect').hidden = connection.mode === 'service' || !connection.connected;
+  el('connect').hidden = connection.mode === 'service'; el('disconnect').hidden = connection.mode === 'service' || (!connection.connected && !connection.keyPolicy);
   const proposals = await api('publications'); el('publications').replaceChildren();
   for (const proposal of proposals) {
     const section = document.createElement('section'); const title = document.createElement('h3'); title.textContent = proposal.apiOrigin + ' / schema ' + proposal.targetId + ': ' + proposal.state; section.append(title);

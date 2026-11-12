@@ -57,7 +57,7 @@ class TestAgentOssApi(EndpointTester):
 
     @decl_endpoint('/api/agents/oss/{item}/details', method='get')
     def test_details(self):
-        ''' Details carry operations and layout; private, foreign type and session are refused. '''
+        ''' Public details carry operations and layout; private and foreign types stay protected. '''
         response = self.executeOK(item=self.oss_id)
         self.assertEqual(response.data['alias'], 'OSS1')
         self.assertEqual([op['id'] for op in response.data['operations']], [self.op1.pk, self.op2.pk])
@@ -70,8 +70,8 @@ class TestAgentOssApi(EndpointTester):
         self.executeForbidden(item=private.model.pk)
         self.executeNotFound(item=self.ks1.model.pk)
         self.client.credentials()
-        self.client.force_authenticate(user=self.user)
-        self.executeForbidden(item=self.oss_id)
+        self.client.force_authenticate(user=None)
+        self.executeOK(item=self.oss_id)
 
     @decl_endpoint('/api/agents/oss', method='post')
     def test_create_oss(self):

@@ -143,8 +143,8 @@ class TestAgentRsformRoutes(EndpointTester):
 
 
     @decl_endpoint('/api/agents/library/by-ids', method='get')
-    def test_items_by_ids_requires_api_key(self):
+    def test_items_by_ids_allows_anonymous_public_reads(self):
         self.client.credentials()
-        self.client.force_authenticate(user=self.user)
+        self.client.force_authenticate(user=None)
         response = self.client.get(self.endpoint, {'ids': str(self.owned_id)})
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

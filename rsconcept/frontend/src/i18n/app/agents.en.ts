@@ -19,6 +19,17 @@ export const txAgentsEn: Record<string, string> = {
   'tx.agents.key.secret.hint':
     'This secret is shown only once. Store it safely; you will not be able to view it again.',
   'tx.agents.key.secret.copy': 'Copy key',
+  'tx.agents.key.scopes': 'Permissions',
+  'tx.agents.key.scopes.hint':
+    'Permissions only restrict this key. Access to each object still depends on your account.',
+  'tx.agents.key.scope.read': 'Read data',
+  'tx.agents.key.scope.write': 'Edit data',
+  'tx.agents.key.scope.publish': 'Publish schemas',
+  'tx.agents.key.scopes.required': 'Select at least one permission.',
+  'tx.agents.key.expiry': 'Expires',
+  'tx.agents.key.expiry.days': 'In {days} days',
+  'tx.agents.key.expiry.none': 'No expiration',
+  'tx.agents.key.expiry.expired': 'Expired',
   'tx.agents.key.list': 'Your keys',
   'tx.agents.key.limits':
     'Up to 5 active keys. They share one limit: 120 reads per minute, 30 edits per minute and 300 per hour. Creating a schema, replacing it, or saving a version is capped at 15 times per hour.',

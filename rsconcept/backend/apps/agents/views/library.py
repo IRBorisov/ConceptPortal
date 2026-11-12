@@ -15,7 +15,7 @@ from apps.library.services.context_search import (
 )
 
 from ..authentication import ApiKeyAuthentication
-from ..permissions import IsApiKeyAuthenticated
+from ..permissions import AgentDataAccess
 from ..throttling import AgentReadThrottle
 
 
@@ -26,7 +26,7 @@ from ..throttling import AgentReadThrottle
 class AgentLibraryActiveView(generics.ListAPIView):
     ''' Agent: accessible library metadata. '''
     authentication_classes = [ApiKeyAuthentication]
-    permission_classes = [IsApiKeyAuthenticated]
+    permission_classes = [AgentDataAccess]
     throttle_classes = [AgentReadThrottle]
     serializer_class = lib_serializers.LibraryItemSerializer
 
@@ -45,7 +45,7 @@ class AgentLibraryActiveView(generics.ListAPIView):
 class AgentLibraryContextSearchView(APIView):
     ''' Agent: context search. '''
     authentication_classes = [ApiKeyAuthentication]
-    permission_classes = [IsApiKeyAuthenticated]
+    permission_classes = [AgentDataAccess]
     throttle_classes = [AgentReadThrottle]
 
     def get(self, request: Request) -> Response:
@@ -70,7 +70,7 @@ class AgentLibraryContextSearchView(APIView):
 class AgentLibraryItemsByIdsView(APIView):
     ''' Agent: metadata by ids. '''
     authentication_classes = [ApiKeyAuthentication]
-    permission_classes = [IsApiKeyAuthenticated]
+    permission_classes = [AgentDataAccess]
     throttle_classes = [AgentReadThrottle]
 
     def get(self, request: Request) -> Response:
