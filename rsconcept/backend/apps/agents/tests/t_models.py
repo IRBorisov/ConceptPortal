@@ -62,12 +62,12 @@ class TestAgentModelApi(EndpointTester):
         self.assertFalse(AgentActionLog.objects.filter(action='model.set_value').exists())
 
     @decl_endpoint('/api/agents/models/{item}/details', method='get')
-    def test_details_private_forbidden_and_session_rejected(self):
-        ''' A private model and a browser session without a key are both refused. '''
+    def test_private_details_forbidden_and_public_details_anonymous(self):
+        ''' Private data stays protected; public models need no key. '''
         self.executeForbidden(item=self.private.pk)
         self.client.credentials()
-        self.client.force_authenticate(user=self.user)
-        self.executeForbidden(item=self.model_id)
+        self.client.force_authenticate(user=None)
+        self.executeOK(item=self.model_id)
 
     @decl_endpoint('/api/agents/models/{item}/details', method='get')
     def test_details_rejects_schema_id(self):

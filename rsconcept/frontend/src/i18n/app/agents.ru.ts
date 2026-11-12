@@ -18,6 +18,17 @@ export const txAgentsRu: Record<string, string> = {
   'tx.agents.key.secret.title': 'Скопируйте API-ключ сейчас',
   'tx.agents.key.secret.hint': 'Секрет показывается только один раз. Сохраните его — повторно посмотреть будет нельзя.',
   'tx.agents.key.secret.copy': 'Копировать ключ',
+  'tx.agents.key.scopes': 'Права ключа',
+  'tx.agents.key.scopes.hint':
+    'Права ограничивают этот ключ. Доступ к каждому объекту по-прежнему определяется вашей учётной записью.',
+  'tx.agents.key.scope.read': 'Чтение данных',
+  'tx.agents.key.scope.write': 'Изменение данных',
+  'tx.agents.key.scope.publish': 'Публикация схем',
+  'tx.agents.key.scopes.required': 'Выберите хотя бы одно право.',
+  'tx.agents.key.expiry': 'Срок действия',
+  'tx.agents.key.expiry.days': 'Через {days} дней',
+  'tx.agents.key.expiry.none': 'Без ограничения срока',
+  'tx.agents.key.expiry.expired': 'Срок истёк',
   'tx.agents.key.list': 'Ваши ключи',
   'tx.agents.key.limits':
     'Не больше 5 активных ключей. Они делят один лимит: 120 чтений в минуту, 30 правок в минуту и 300 в час. Создание схемы, полная замена и снимок версии — не больше 15 раз в час.',

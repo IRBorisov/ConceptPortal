@@ -19,6 +19,17 @@ export const txAgentsFr: Record<string, string> = {
   'tx.agents.key.secret.hint':
     'Ce secret n’est affiché qu’une seule fois. Conservez-le ; vous ne pourrez plus le revoir.',
   'tx.agents.key.secret.copy': 'Copier la clé',
+  'tx.agents.key.scopes': 'Autorisations',
+  'tx.agents.key.scopes.hint':
+    'Les autorisations limitent cette clé. L’accès à chaque objet dépend toujours de votre compte.',
+  'tx.agents.key.scope.read': 'Lire les données',
+  'tx.agents.key.scope.write': 'Modifier les données',
+  'tx.agents.key.scope.publish': 'Publier les schémas',
+  'tx.agents.key.scopes.required': 'Choisissez au moins une autorisation.',
+  'tx.agents.key.expiry': 'Expiration',
+  'tx.agents.key.expiry.days': 'Dans {days} jours',
+  'tx.agents.key.expiry.none': 'Sans expiration',
+  'tx.agents.key.expiry.expired': 'Expirée',
   'tx.agents.key.list': 'Vos clés',
   'tx.agents.key.limits':
     '5 clés actives au maximum. Elles partagent une limite : 120 lectures par minute, 30 modifications par minute et 300 par heure. Créer un schéma, le remplacer ou en enregistrer une version est limité à 15 fois par heure.',

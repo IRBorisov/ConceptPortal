@@ -2,7 +2,8 @@
 from typing import cast
 
 from django.db import transaction
-from django.db.models import F
+from django.db.models import F, Q
+from django.utils import timezone
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status as c
 from rest_framework import viewsets
@@ -56,12 +57,16 @@ class ApiKeyViewSet(viewsets.ViewSet):
             # Row lock on Postgres. SQLite drops SELECT FOR UPDATE, so a same-value
             # UPDATE is what actually starts the write transaction there.
             User.objects.filter(pk=owner.pk).update(is_active=F('is_active'))
-            active = ApiKey.objects.filter(owner=owner, revoked_at__isnull=True).count()
+            active = ApiKey.objects.filter(owner=owner, revoked_at__isnull=True).filter(
+                Q(expires_at__isnull=True) | Q(expires_at__gt=timezone.now()),
+            ).count()
             if active >= MAX_ACTIVE_KEYS:
                 raise ValidationError({'label': too_many_active_keys()})
             key, secret = ApiKey.create_for_user(
                 owner=owner,
                 label=serializer.validated_data['label'],
+                scopes=serializer.validated_data['scopes'],
+                expires_at=serializer.validated_data['expires_at'],
             )
         payload = {
             'id': key.id,
@@ -69,6 +74,8 @@ class ApiKeyViewSet(viewsets.ViewSet):
             'prefix': key.prefix,
             'created_at': key.created_at,
             'secret': secret,
+            'scopes': key.scopes,
+            'expires_at': key.expires_at,
         }
         return Response(ApiKeyCreatedSerializer(payload).data, status=c.HTTP_201_CREATED)
 

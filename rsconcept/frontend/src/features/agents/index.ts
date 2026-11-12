@@ -1,1 +1,1 @@
-export type { AgentActionLogDTO, ApiKeyCreatedDTO, ApiKeyDTO, CreateApiKeyDTO } from './backend/types';
+export type { AgentActionLogDTO, ApiKeyCreatedDTO, ApiKeyDTO, ApiKeyScope, CreateApiKeyDTO } from './backend/types';

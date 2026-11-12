@@ -8,3 +8,5 @@ from .t_quota import *
 from .t_rsform_routes import *
 from .t_publication import *
 from .t_description import *
+from .t_key_policy import *
+from .t_anonymous_reads import *

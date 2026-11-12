@@ -41,7 +41,7 @@ Its authenticated subject determines whose settings you can manage. Each person 
 
 The encrypted key cannot be fetched back, selected by another subject or read by an MCP tool. The page uses no localStorage/cookies for credentials and clears input fields after reading them. Reload clears the human token held in memory. Disconnect removes the binding and outstanding approvals but does not revoke the original Portal key: revoke it in the Portal profile too. Replacing the key also invalidates approvals, including on an already-open MCP connection.
 
-Portal keys currently have all permissions of their owner. This release adds no per-key scopes, expiry or OAuth. The account page explicitly warns about this. Existing keys and key-management responses remain compatible.
+Public data reads require no Portal key. When a key is provided, its read, write and publish scopes can restrict its owner’s existing rights. Expired or revoked keys cannot authenticate. Existing keys retain their prior scopes and no expiration; new keys can select scopes and an expiration in the Portal profile. The account page displays bound-key policy when the backend provides it. Portal enforces current policy on every request; cached MCP metadata is only an early hint. OAuth is not implemented.
 
 ## Prepare and approve
 
@@ -49,7 +49,7 @@ Only configured HTTP hosts expose:
 
 | Tool | Behavior |
 | --- | --- |
-| `portal_get_description` | Accepts only `targetId`; reads description and `time_update` through the bound key, including private schemas, without a local session |
+| `portal_get_description` | Accepts only `targetId`; reads description and `time_update` through the bound key, publicly without a key, or privately with a bound read-capable key, without a local session |
 | `portal_update_description` | Accepts `targetId`, `expectedTimeUpdate`, `description`; updates only the description with CAS and independent readback, without a local rstool session or approval page |
 | `portal_connection_status` | Safe account/connection status for the authenticated subject |
 | `portal_prepare_publication` | Accepts only `targetId`; captures the current rstool session and Portal schema and returns a change summary and approval-page path |

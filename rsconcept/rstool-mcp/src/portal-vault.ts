@@ -2,9 +2,15 @@ import { createCipheriv, createDecipheriv, createHash, randomBytes, randomUUID }
 import fs from 'node:fs';
 import { join } from 'node:path';
 
+export interface PortalKeyPolicy {
+  scopes: Array<'read' | 'write' | 'publish'>;
+  expiresAt: string | null;
+}
+
 export interface PortalCredential {
   token: string;
   generation: string;
+  keyPolicy?: PortalKeyPolicy;
   account: { id: number; username: string };
 }
 
@@ -40,12 +46,12 @@ export class PortalVault {
   }
 
   /** Replace the encrypted record atomically; only safe account metadata is returned by callers. */
-  public set(subject: string, token: string, account: PortalCredential['account']): void {
+  public set(subject: string, token: string, account: PortalCredential['account'], keyPolicy?: PortalKeyPolicy): void {
     const id = this.id(subject);
     const iv = randomBytes(12);
     const cipher = createCipheriv('aes-256-gcm', this.#key, iv);
     cipher.setAAD(Buffer.from(id));
-    const value: PortalCredential = { token, account, generation: randomUUID() };
+    const value: PortalCredential = { token, account, generation: randomUUID(), ...(keyPolicy ? { keyPolicy } : {}) };
     const data = Buffer.concat([cipher.update(JSON.stringify(value), 'utf8'), cipher.final()]);
     const file = join(this.#directory, `${id}.json`);
     const temporary = join(this.#directory, `.${randomUUID()}.tmp`);

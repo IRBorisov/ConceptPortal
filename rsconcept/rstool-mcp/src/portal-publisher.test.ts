@@ -358,13 +358,15 @@ it('enforces service target grants and sanitizes conflicts for description write
 });
 
 
-it('reads description and revision through the bound key without exposing schema data or creating a session', async () => {
+it('reads public descriptions anonymously and private data through a bound key without creating a session', async () => {
   const app = setup();
-  await expect(app.publisher.getDescription('alice', 1)).rejects.toThrow('personal Portal key');
+  expect(await app.publisher.getDescription('alice', 1)).toMatchObject({ targetId: 1 });
+  expect(app.request.mock.calls.at(-1)?.[1]?.headers).not.toHaveProperty('Authorization');
   await app.publisher.connect('alice', token);
   expect(await app.publisher.getDescription('alice', 1)).toEqual({ targetId: 1, description: '', time_update: '2026-11-06T01:00:00Z' });
-  await expect(app.publisher.getDescription('bob', 1)).rejects.toThrow('personal Portal key');
   expect(app.request.mock.calls.at(-1)?.[1]?.headers).toMatchObject({ Authorization: `Bearer ${token}` });
+  expect(await app.publisher.getDescription('bob', 1)).toMatchObject({ targetId: 1 });
+  expect(app.request.mock.calls.at(-1)?.[1]?.headers).not.toHaveProperty('Authorization');
   expect(app.request.mock.calls.filter(([, options]) => options?.method === 'POST')).toHaveLength(0);
   expect(app.publisher.publications('alice')).toEqual([]);
 });
@@ -374,7 +376,9 @@ it('enforces read target grants and rejects invalid revisions and remote errors 
   const publisher = new PortalPublisher(app.vault, new PortalClient('https://api.portal.example', app.request), {
     token, subjects: ['robot'], targetIds: [1],
   });
-  await expect(publisher.getDescription('robot', 2)).rejects.toThrow('not allowed');
+  app.request.mockResolvedValueOnce(Response.json({ id: 2, description: '', time_update: '2026-11-06T01:00:00Z' }));
+  expect(await publisher.getDescription('robot', 2)).toMatchObject({ targetId: 2 });
+  expect(app.request.mock.calls.at(-1)?.[1]?.headers).not.toHaveProperty('Authorization');
   expect(await publisher.getDescription('robot', 1)).toMatchObject({ targetId: 1 });
   app.request.mockResolvedValueOnce(new Response(token, { status: 403 }));
   await expect(publisher.getDescription('robot', 1)).rejects.toThrow(/^Portal refused the request \(403\)$/);
@@ -382,4 +386,38 @@ it('enforces read target grants and rejects invalid revisions and remote errors 
   await expect(publisher.getDescription('robot', 1)).rejects.toThrow('invalid schema metadata');
   app.request.mockResolvedValueOnce(Response.json({ id: 2, description: '', time_update: '2026-11-06T01:00:00Z' }));
   await expect(publisher.getDescription('robot', 1)).rejects.toThrow('invalid schema metadata');
+});
+
+it('keeps public reads anonymous while scoped keys independently restrict edits and publication', async () => {
+  const app = setup();
+  app.request.mockResolvedValueOnce(Response.json({ id: 10, username: 'Synthetic', scopes: ['read'], expires_at: null }));
+  const status = await app.publisher.connect('alice', token);
+  expect(status).toMatchObject({ connected: true, keyPolicy: { scopes: ['read'], expiresAt: null } });
+  expect(JSON.stringify(status)).not.toContain(token);
+  expect(await app.publisher.getDescription('alice', 1)).toMatchObject({ targetId: 1 });
+  await expect(app.publisher.updateDescription('alice', 1, '2026-11-06T01:00:00Z', 'Denied')).rejects.toThrow('does not allow write');
+  await expect(app.publisher.prepare('alice', 'task', 1, app.tool)).rejects.toThrow('does not allow publish');
+  expect(app.request.mock.calls.filter(([, options]) => options?.method === 'POST')).toHaveLength(0);
+});
+
+it('rejects an expired bound key for writes but still reads public data without it', async () => {
+  const app = setup();
+  const expires = Date.now() + 3600000;
+  app.request.mockResolvedValueOnce(Response.json({ id: 10, username: 'Synthetic', scopes: ['read', 'write', 'publish'], expires_at: new Date(expires).toISOString() }));
+  await app.publisher.connect('alice', token);
+  vi.spyOn(Date, 'now').mockReturnValue(expires);
+  expect(app.publisher.connection('alice')).toMatchObject({ connected: false, expired: true });
+  expect(await app.publisher.getDescription('alice', 1)).toMatchObject({ targetId: 1 });
+  expect(app.request.mock.calls.at(-1)?.[1]?.headers).not.toHaveProperty('Authorization');
+  await expect(app.publisher.updateDescription('alice', 1, '2026-11-06T01:00:00Z', 'Denied')).rejects.toThrow('expired');
+  expect(app.request.mock.calls.filter(([, options]) => options?.method === 'POST')).toHaveLength(0);
+});
+
+it('does not turn an anonymous refusal into enrollment or expose the upstream body', async () => {
+  const app = setup();
+  app.request.mockResolvedValueOnce(new Response('SYNTHETIC_PRIVATE_BODY', { status: 403 }));
+  await expect(app.publisher.getDescription('anonymous', 1)).rejects.toThrow(/^Portal refused the request \(403\)$/);
+  expect(app.request.mock.calls).toHaveLength(1);
+  expect(app.request.mock.calls[0][1]?.headers).not.toHaveProperty('Authorization');
+  expect(app.vault.get('anonymous')).toBeNull();
 });

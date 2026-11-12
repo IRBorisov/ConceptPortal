@@ -213,10 +213,10 @@ class TestAgentRsformApi(EndpointTester):
         self.executeForbidden(item=self.private_other.model.pk)
 
     @decl_endpoint('/api/agents/rsforms/{item}/details', method='get')
-    def test_details_rejects_session_without_key(self):
+    def test_details_allows_anonymous_public_read(self):
         self.client.credentials()
-        self.client.force_authenticate(user=self.user)
-        self.executeForbidden(item=self.owned_id)
+        self.client.force_authenticate(user=None)
+        self.executeOK(item=self.owned_id)
 
     @decl_endpoint('/api/agents/rsforms', method='post')
     def test_create_rsform(self):

@@ -45,7 +45,8 @@ class TestAgentPublication(EndpointTester):
     def test_identity_never_returns_the_key(self):
         response = self.client.get('/api/agents/me')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, {'id': self.user.pk, 'username': self.user.username})
+        self.assertEqual(response.data, {'id': self.user.pk, 'username': self.user.username,
+                                         'scopes': ['read', 'write', 'publish'], 'expires_at': None})
         self.assertNotIn(self.secret, str(response.data))
         self.key.revoke()
         self.assertEqual(self.client.get('/api/agents/me').status_code, 401)

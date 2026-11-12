@@ -21,7 +21,7 @@ export function portalToolDefinitions(publisher: PortalPublisher, subject: strin
       if (Object.keys(args).length) throw new Error('This tool accepts no arguments');
       return publisher.connection(subject);
     } }, { name: 'portal_get_description', sessionActivity: 'none',
-    description: 'Read an existing Portal schema description and time_update through the bound credential, including private schemas. Returns the revision needed by portal_update_description. Creates no local session and reveals no credential.',
+    description: 'Read an existing Portal schema description and time_update. Public data needs no Portal key; a bound key can authorize private schemas. Returns the revision needed by portal_update_description. Creates no local session and reveals no credential.',
     annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     inputSchema: { type: 'object', properties: { targetId: { type: 'integer', minimum: 1 } },
       required: ['targetId'], additionalProperties: false },
@@ -43,7 +43,7 @@ export function portalToolDefinitions(publisher: PortalPublisher, subject: strin
 
 /** Account-scoped storage management; credentials and filesystem paths are never tool arguments. */
 export function sessionStorageToolDefinitions(policy: SessionPolicy, subject: string, namespace: string,
-  config: { cleanupIntervalMs: number; maxActiveSessions: number; idleTimeoutMs: number; maxPendingRequests: number; maxRequestBodySize: number }): ToolDefinition[] {
+  config: { cleanupIntervalMs: number; maxActiveSessions: number; idleTimeoutMs: number; maxPendingRequests: number; maxRequestBodySize: number; computation?: { isolated: boolean; maxWorkers: number; timeoutMs: number; heapMb: number; maxResultBytes: number } }): ToolDefinition[] {
   return [{
     name: 'get_session_storage_config', sessionActivity: 'none',
     description: 'Get effective stored-session limits, inactivity retention and your account usage across all workspaces. Read-only; never returns credentials or extends retention.',
@@ -54,7 +54,7 @@ export function sessionStorageToolDefinitions(policy: SessionPolicy, subject: st
       return { ...policy.configuration(subject, config.cleanupIntervalMs), transport: {
         maxActiveSessionsGlobal: config.maxActiveSessions, idleTimeoutSeconds: config.idleTimeoutMs / 1000,
         maxPendingRequestsPerWorkspace: config.maxPendingRequests, maxRequestBodyBytes: config.maxRequestBodySize
-      } };
+      }, ...(config.computation ? { computation: config.computation } : {}) };
     }
   }, {
     name: 'list_stored_sessions', sessionActivity: 'none',
