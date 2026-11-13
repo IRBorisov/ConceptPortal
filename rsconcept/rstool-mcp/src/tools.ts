@@ -10,11 +10,20 @@ import { SessionStorageError, type SessionPolicy } from './session-policy';
 /** Trusted HTTP host captures the identity; tools cannot accept a key, subject or publication approval. */
 export function portalToolDefinitions(publisher: PortalPublisher, subject: string, workspace: string,
   validateSource?: (sessionId: string) => void): ToolDefinition[] {
-  return [...portalCreationTools(publisher, subject), { name: 'portal_prepare_publication', description: 'Prepare replacement of an existing owned Portal schema. Does not publish. Review and approve on the separate account page.',
-    inputSchema: { type: 'object', properties: { targetId: { type: 'integer', minimum: 1 } }, required: ['targetId'], additionalProperties: false },
+  return [...portalCreationTools(publisher, subject), { name: 'portal_prepare_publication', description: 'Prepare replacement of an existing owned Portal schema. Does not publish. Schema errors block by default; optional sourceReview can document every preserved formal duplicate in an annotated source, with exact expression hashes, PDF pages and stored comments. Review and approve on the separate account page; no theory-correctness claim is made.',
+    inputSchema: { type: 'object', properties: { targetId: { type: 'integer', minimum: 1 }, sourceReview: {
+      type: 'object', description: 'Only for an annotated source with preserved formal duplicates. Exact error fingerprints, source SHA and PDF-page explanations are shown on the independent human approval page. This is not a claim that the theory is correct.',
+      properties: { intent: { type: 'string', enum: ['annotated_source'] }, source: { type: 'string', minLength: 1, maxLength: 500 }, sourceSha256: { type: 'string', pattern: '^[a-f0-9]{64}$' },
+        diagnostics: { type: 'array', minItems: 1, maxItems: 256, items: { type: 'object', properties: {
+          alias: { type: 'string' }, code: { type: 'integer', enum: [35074] }, expressionSha256: { type: 'string', pattern: '^[a-f0-9]{64}$' },
+          pages: { type: 'array', minItems: 1, maxItems: 100, items: { type: 'integer', minimum: 1, maximum: 1000000 } },
+          comment: { type: 'string', minLength: 20, maxLength: 10000 },
+        }, required: ['alias','code','expressionSha256','pages','comment'], additionalProperties: false } } },
+      required: ['intent','source','sourceSha256','diagnostics'], additionalProperties: false,
+    } }, required: ['targetId'], additionalProperties: false },
     invoke: (tool, args) => {
-      if (Object.keys(args).length !== 1) throw new Error('Only targetId is accepted');
-      return publisher.prepare(subject, workspace, args.targetId as number, tool, validateSource);
+      if (Object.keys(args).some(k => !['targetId','sourceReview'].includes(k))) throw new Error('Only targetId and sourceReview are accepted');
+      return publisher.prepare(subject, workspace, args.targetId as number, tool, validateSource, args.sourceReview);
     },
   }, { name: 'portal_connection_status', sessionActivity: 'none', description: 'Get safe Portal connection status for the authenticated identity, without any credential.',
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },

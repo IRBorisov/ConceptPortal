@@ -28,10 +28,11 @@ async function refresh() {
   const proposals = await api('publications'); el('publications').replaceChildren();
   for (const proposal of proposals) {
     const section = document.createElement('section'); const title = document.createElement('h3'); title.textContent = proposal.apiOrigin + ' / schema ' + proposal.targetId + ': ' + proposal.state; section.append(title);
-    const summary = document.createElement('pre'); summary.textContent = JSON.stringify({ changes: proposal.changes, digest: proposal.digest, expiresAt: proposal.expiresAt, result: proposal.result }, null, 2); section.append(summary);
+    if (proposal.sourceReview) { const notice = document.createElement('p'); notice.textContent = 'Annotated source with preserved errors: ' + proposal.sourceReview.source + '. The theory is not certified correct. Review the source fingerprint, PDF pages, explanations and both schemas before approving.'; section.append(notice); }
+    const summary = document.createElement('pre'); summary.textContent = JSON.stringify({ changes: proposal.changes, sourceReview: proposal.sourceReview, digest: proposal.digest, expiresAt: proposal.expiresAt, result: proposal.result }, null, 2); section.append(summary);
     for (const side of ['before', 'after']) { const detail = document.createElement('details'); const heading = document.createElement('summary'); heading.textContent = side === 'before' ? 'Current Portal schema' : 'Proposed replacement'; const json = document.createElement('pre'); json.textContent = JSON.stringify(proposal[side], null, 2); detail.append(heading, json); section.append(detail); }
-    if (proposal.state === 'prepared') { const button = document.createElement('button'); button.textContent = 'Approve and publish this replacement'; button.onclick = () => run(async () => {
-      button.disabled = true; if (!window.confirm('Replace Portal schema ' + proposal.targetId + ' with the reviewed content?')) { button.disabled = false; return; }
+    if (proposal.state === 'prepared') { const button = document.createElement('button'); button.textContent = proposal.sourceReview ? 'Approve annotated source with preserved errors' : 'Approve and publish this replacement'; button.onclick = () => run(async () => {
+      button.disabled = true; if (!window.confirm(proposal.sourceReview ? 'Publish the annotated source with known preserved errors to Portal schema ' + proposal.targetId + '?' : 'Replace Portal schema ' + proposal.targetId + ' with the reviewed content?')) { button.disabled = false; return; }
       await api('publications/' + proposal.id + '/confirm', 'POST', { digest: proposal.digest }); await refresh(); el('message').textContent = 'Publication completed and read back from Portal.';
     }); section.append(button); } el('publications').append(section);
   }
