@@ -1,4 +1,4 @@
-import { randomBytes } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -25,6 +25,33 @@ const ORIGIN = 'https://mcp.example';
 const cleanup: Array<() => Promise<void> | void> = [];
 afterEach(async () => {
   for (const action of cleanup.splice(0).reverse()) await action();
+});
+
+it('shows exact source-error review in the independent account approval without exposing an MCP confirmation tool', async () => {
+  const app = await start();
+  await app.account('connection', 'PUT', { key: KEY });
+  const comment = 'The printed source repeats this expression for different roles; preserve the error unchanged.';
+  await app.client.callTool({ name: 'apply_schema_patch', arguments: {
+    initial: { comment: 'Annotated source with known errors, not a certified theory.' }, items: [
+      { alias: 'X1', term: 'Objects', convention: 'Source objects' },
+      { alias: 'D1', term: 'First role', definitionFormal: 'X1', convention: comment },
+      { alias: 'D2', term: 'Second role', definitionFormal: 'X1', convention: comment },
+    ] } });
+  const sourceReview = { intent: 'annotated_source', source: 'SYNTHETIC.pdf', sourceSha256: 'a'.repeat(64),
+    diagnostics: ['D1','D2'].map(alias => ({ alias, code: 35074,
+      expressionSha256: createHash('sha256').update('X1').digest('hex'), pages: [3], comment })) };
+  expect((await app.client.callTool({ name: 'portal_prepare_publication', arguments: { targetId: 1 } })).isError).toBe(true);
+  const prepared = await app.client.callTool({ name: 'portal_prepare_publication', arguments: { targetId: 1, sourceReview } });
+  expect(prepared.isError).not.toBe(true);
+  const [proposal] = await (await app.account('publications')).json() as Array<{ id: string; digest: string; sourceReview: unknown }>;
+  expect(proposal.sourceReview).toEqual(sourceReview);
+  expect(app.remote.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(0);
+  expect((await app.client.listTools()).tools.map(t => t.name)).not.toContain('portal_publish');
+  const page = await (await fetch(app.url + '/portal/account.js')).text();
+  expect(page).toContain('Annotated source with preserved errors:');
+  expect(page).toContain('Approve annotated source with preserved errors');
+  expect((await app.account(`publications/${proposal.id}/confirm`, 'POST', { digest: proposal.digest })).status).toBe(200);
+  expect(app.remote.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(1);
 });
 
 it('creates schema, model and OSS over authenticated MCP without allocating a local session', async () => {

@@ -6,3 +6,4 @@ export { PortalVault } from './portal-vault';
 export { PortalClient, type PortalFetch } from './portal-client';
 export { PortalCreations, type PortalItemKind } from './portal-creations';
 export { PortalPublisher, type ServicePortalCredential } from './portal-publisher';
+export type { SourceDiagnosticReview } from './source-diagnostics';
