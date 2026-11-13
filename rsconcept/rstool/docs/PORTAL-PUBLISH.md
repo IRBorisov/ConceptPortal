@@ -87,7 +87,7 @@ PATCH /api/agents/library/:id/set-access-policy
 
 - Чтение (`GET`): 120 запросов в минуту. В журнал не пишется.
 - Правки: 30 в минуту и 300 в час. Успех и ошибка `400` пишутся в журнал.
-- Создание КС, `replace`, `publish` и `create-version`: дополнительно не больше 15 раз в час.
+- Создание КС и моделей, `replace`, `publish` и `create-version`: дополнительно не больше 15 раз в час.
   Сюда же входят правки ОСС, которые создают КС: `POST /api/agents/oss`, `create-schema`,
   `import-schema`, `clone-schema`, `create-synthesis`, `create-input`, `execute-operation`.
 - Активных ключей у пользователя: не больше 5.

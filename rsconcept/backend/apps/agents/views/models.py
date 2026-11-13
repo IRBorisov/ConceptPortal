@@ -5,13 +5,17 @@ from django.db import transaction
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema
 from rest_framework import status as c
+from rest_framework.exceptions import ValidationError
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from apps.library.models import LibraryItem, LibraryItemType
+from apps.library.models import LibraryItem, LibraryItemType, LocationHead
+from apps.library.serializers import LibraryItemCreateSerializer
+from apps.library.services.location_access import validate_writable_location
 from apps.rsform.models import Constituenta
 from apps.rsform.serializers import CstListSerializer
 from apps.rsmodel import serializers as model_serializers
+from apps.rsmodel.models import RSModel
 from apps.rsmodel.mutations import (
     clear_constituent_values,
     require_bound_schema,
@@ -28,6 +32,41 @@ class AgentModelBase(AgentItemView):
     def _get_model(self, pk: int) -> LibraryItem:
         ''' Load a model item or answer 404 for another library type. '''
         return self._get_item(pk, LibraryItemType.RSMODEL)
+
+
+@extend_schema(
+    tags=['Agents'],
+    summary='Create conceptual model bound to a readable schema',
+    request=LibraryItemCreateSerializer,
+    responses={c.HTTP_201_CREATED: model_serializers.RSModelSerializer},
+)
+class AgentModelCreateView(AgentModelBase):
+    ''' Agent: create an empty interpretation with a required schema binding. '''
+    agent_action = 'model.create'
+    agent_heavy = True
+
+    def post(self, request: Request) -> HttpResponse:
+        ''' Validate metadata and schema access before creating both rows atomically. '''
+        if not isinstance(request.data, dict):
+            raise ValidationError({'non_field_errors': 'Expected a JSON object'})
+        data = dict(request.data)
+        data['item_type'] = LibraryItemType.RSMODEL
+        serializer = LibraryItemCreateSerializer(data=data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        validated = dict(serializer.validated_data)
+        schema = validated.pop('schema')
+        validated.pop('item_type')
+        validated['location'] = validate_writable_location(
+            request.user, validated.get('location', LocationHead.USER),
+        )
+        with transaction.atomic():
+            model = RSModel.create(schema=schema, owner=request.user, **validated)
+            result = model_serializers.RSModelSerializer(model.model).data
+            self._log(
+                'model.create', c.HTTP_201_CREATED,
+                summary=f'Created {model.model.alias}', item=model.model,
+            )
+        return Response(result, status=c.HTTP_201_CREATED)
 
 
 @extend_schema(

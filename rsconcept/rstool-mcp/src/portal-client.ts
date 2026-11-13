@@ -22,7 +22,13 @@ export class PortalClient {
 
   /** Never expose fetch exceptions, headers, redirect destinations or untrusted Portal messages. */
   public async request(token: string | undefined, path: string, body?: unknown): Promise<Record<string, any>> {
-    if (!/^\/api\/agents\/(me|rsforms\/[1-9][0-9]*\/(details|publish|description))$/.test(path)) {
+    const [route, query] = path.split('?');
+    const reading = body === undefined;
+    const allowed = reading
+      ? /^\/api\/agents\/(me|(rsforms|models|oss)\/[1-9][0-9]*\/details|library\/context-search)$/.test(route)
+      : /^\/api\/agents\/((rsforms|models|oss)|rsforms\/[1-9][0-9]*\/(publish|description))$/.test(route);
+    if (!allowed || (query !== undefined && route !== '/api/agents/library/context-search') ||
+        path.includes('#') || path.split('?').length > 2) {
       throw new Error('Portal route is not allowed');
     }
     if (body !== undefined && !token) throw new Error('Portal writes require a key');
@@ -36,7 +42,7 @@ export class PortalClient {
         signal: AbortSignal.timeout(15_000),
       });
     } catch {
-      throw new Error('Portal request failed; check publication status before retrying');
+      throw new Error('Portal request failed; check Portal status before retrying');
     }
     if (!response.ok) {
       await response.body?.cancel();

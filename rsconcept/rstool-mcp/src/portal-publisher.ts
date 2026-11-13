@@ -3,6 +3,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import type { RSToolAgent } from '@rsconcept/rstool';
 
 import { PortalClient } from './portal-client';
+import { PortalCreations, type PortalItemKind } from './portal-creations';
 import { PortalVault, type PortalCredential, type PortalKeyPolicy } from './portal-vault';
 
 export interface ServicePortalCredential {
@@ -33,6 +34,7 @@ export class PortalPublisher {
   readonly #vault: PortalVault;
   readonly #api: PortalClient;
   readonly #service?: ServicePortalCredential;
+  readonly #creations?: PortalCreations;
   readonly #drafts = new Map<string, PreparedPublication>();
   readonly #tails = new Map<string, Promise<unknown>>();
   readonly #preparations = new Set<{ subject: string; workspace: string; invalidated: boolean }>();
@@ -40,7 +42,7 @@ export class PortalPublisher {
   readonly #counts = new Map<string, number>();
 
   /** Validate and copy administrator-only service grants, without accepting runtime tool overrides. */
-  public constructor(vault: PortalVault, api: PortalClient, service?: ServicePortalCredential) {
+  public constructor(vault: PortalVault, api: PortalClient, service?: ServicePortalCredential, creations?: PortalCreations) {
     if (
       service &&
       (typeof service.token !== 'string' ||
@@ -56,6 +58,7 @@ export class PortalPublisher {
     }
     this.#vault = vault;
     this.#api = api;
+    this.#creations = creations;
     this.#service = service
       ? { ...service, subjects: [...service.subjects], targetIds: [...service.targetIds] }
       : undefined;
@@ -104,6 +107,103 @@ export class PortalPublisher {
       ? { connected: !expired(credential), mode: 'personal', account: credential.account,
           ...(credential.keyPolicy ? { keyPolicy: credential.keyPolicy, expired: expired(credential) } : {}) }
       : { connected: false, mode: 'personal' };
+  }
+
+  /** Search with the bound personal key, including private library items. Never guess IDs. */
+  public searchLibrary(subject: string, query: string, location?: string) {
+    return this.exclusive(subject, async () => {
+      const credential = this.personalCredential(subject);
+      if (typeof query !== 'string' || !query.trim() || query.length > 1000)
+        throw new Error('A nonempty search query of at most 1000 characters is required');
+      if (location !== undefined) validateLocation(location);
+      const parameters = new URLSearchParams({ q: query, ...(location ? { location, subfolders: '1' } : {}) });
+      const result = await this.#api.request(credential.token, `/api/agents/library/context-search?${parameters}`);
+      if (!Array.isArray(result.ids) || result.ids.some((id: unknown) => !Number.isSafeInteger(id) || Number(id) <= 0))
+        throw new Error('Portal returned invalid library search results');
+      return { ids: result.ids, complete: true };
+    });
+  }
+
+  public getDetails(subject: string, kind: PortalItemKind, targetId: number) {
+    return this.exclusive(subject, async () => {
+      const credential = this.credential(subject, targetId);
+      if (credential.keyPolicy && !credential.keyPolicy.scopes.includes('read')) throw new Error('Portal key does not allow read');
+      return this.readItem(credential, kind, targetId);
+    });
+  }
+
+  /** Create a new empty item only. Existing-content replacement retains its separate approval. */
+  public createItem(subject: string, kind: PortalItemKind, args: Record<string, unknown>) {
+    return this.exclusive(subject, async () => {
+      const credential = this.personalCredential(subject, 'write');
+      if (!this.#creations) throw new Error('Portal creation receipts are not configured');
+      const allowed = ['requestId', 'title', 'alias', 'description', 'location', 'accessPolicy', ...(kind === 'model' ? ['schemaId'] : [])];
+      if (Object.keys(args).some(key => !allowed.includes(key))) throw new Error('Unexpected Portal creation argument');
+      if (typeof args.title !== 'string' || !args.title.trim() || typeof args.alias !== 'string' ||
+          (args.description !== undefined && typeof args.description !== 'string')) throw new Error('title and alias must be strings');
+      // Library creation trims CharFields, unlike the separate description CAS endpoint.
+      // Reject noncanonical input before reserving a request or causing a remote side effect.
+      if ([args.title, args.alias, args.description ?? ''].some(value =>
+        (value as string) !== (value as string).trim() || /^[\u0085\u001c-\u001f]|[\u0085\u001c-\u001f]$/.test(value as string)))
+        throw new Error('Creation title, alias and description must not start or end with whitespace');
+      validateLocation(args.location);
+      if (!['private', 'protected', 'public'].includes(args.accessPolicy as string)) throw new Error('An explicit accessPolicy is required');
+      if (kind === 'model' && (!Number.isSafeInteger(args.schemaId) || Number(args.schemaId) <= 0))
+        throw new Error('A positive schemaId is required for a model');
+      const payload = { title: args.title, alias: args.alias, description: args.description ?? '',
+        location: args.location, access_policy: args.accessPolicy, ...(kind === 'model' ? { schema: args.schemaId } : {}) };
+      const digest = createHash('sha256').update(JSON.stringify({ kind, origin: this.#api.origin, accountId: credential.account.id, payload })).digest('hex');
+      const requestId = args.requestId as string;
+      let receipt = this.#creations.get(subject, requestId);
+      if (receipt && (receipt.digest !== digest || receipt.accountId !== credential.account.id || receipt.origin !== this.#api.origin))
+        throw new Error('requestId is already bound to a different creation request');
+      if (!receipt) {
+        receipt = { kind, digest, origin: this.#api.origin, accountId: credential.account.id, state: 'sending' };
+        this.#creations.reserve(subject, requestId, receipt);
+        // A failure after reservation is uncertain. Neither this method nor a retry sends another POST.
+        const result = await this.#api.request(credential.token, `/api/agents/${itemRoute(kind)}`, payload);
+        if (!Number.isSafeInteger(result.id) || result.id <= 0)
+          throw new Error('Portal returned an invalid created ID; inspect library before retrying');
+        receipt = { ...receipt, state: 'created', targetId: result.id };
+        try { this.#creations.complete(subject, requestId, receipt); }
+        catch { throw new Error(`Portal created item ${result.id}, but its receipt could not be saved; inspect Portal before retrying`); }
+      }
+      if (!receipt.targetId) throw new Error('Creation outcome is uncertain; search the library before using a new requestId');
+      const item = await this.readItem(credential, kind, receipt.targetId);
+      if (item.title !== payload.title || item.alias !== payload.alias || item.description !== payload.description ||
+          item.location !== payload.location || item.access_policy !== payload.access_policy ||
+          (kind === 'model' && item.schema !== args.schemaId))
+        throw new Error(`Created item ${receipt.targetId} verification failed; inspect Portal, do not create another item`);
+      return { requestId, kind, portalOrigin: this.#api.origin, targetId: receipt.targetId, verified: true, item };
+    });
+  }
+
+  /** Read a durable receipt after restart or a lost response; never replays creation. */
+  public creationStatus(subject: string, requestId: string) {
+    return this.exclusive(subject, async () => {
+      const credential = this.personalCredential(subject);
+      if (!this.#creations) throw new Error('Portal creation receipts are not configured');
+      const receipt = this.#creations.get(subject, requestId);
+      if (!receipt || receipt.accountId !== credential.account.id) return { requestId, state: 'not_found' };
+      if (receipt.origin !== this.#api.origin) throw new Error('Creation receipt belongs to a different Portal origin; check host configuration');
+      return { requestId, kind: receipt.kind, state: receipt.state === 'sending' ? 'uncertain' : 'created',
+        portalOrigin: this.#api.origin,
+        ...(receipt.targetId ? { targetId: receipt.targetId } : {}) };
+    });
+  }
+
+  private personalCredential(subject: string, scope?: 'write'): PortalCredential {
+    if (this.isService(subject)) throw new Error('Creating or searching library items requires a personal Portal connection');
+    const credential = this.credential(subject, 0, scope);
+    if (credential.keyPolicy && !credential.keyPolicy.scopes.includes('read')) throw new Error('Portal key does not allow read');
+    return credential;
+  }
+
+  private async readItem(credential: PortalCredential, kind: PortalItemKind, targetId: number) {
+    if (!Number.isSafeInteger(targetId) || targetId <= 0) throw new Error('A positive Portal item ID is required');
+    const item = await this.#api.request(credential.token, `/api/agents/${itemRoute(kind)}/${targetId}/details`);
+    if (item.id !== targetId) throw new Error('Portal returned an unexpected item');
+    return item;
   }
 
   /** Public reads need no Portal key. A bound key can also authorize private data. */
@@ -343,6 +443,17 @@ export class PortalPublisher {
     });
     return result;
   }
+}
+
+function itemRoute(kind: PortalItemKind): string {
+  const route = { schema: 'rsforms', model: 'models', oss: 'oss' }[kind];
+  if (!route) throw new Error('Invalid Portal item kind');
+  return route;
+}
+
+function validateLocation(value: unknown): asserts value is string {
+  if (typeof value !== 'string' || !/^\/[USPL](?:\/[^/\\\x00-\x1f]+)*$/.test(value))
+    throw new Error('An explicit Portal location such as /U/Project is required');
 }
 
 /** Compare the material returned by two Portal reads, excluding transport metadata. */

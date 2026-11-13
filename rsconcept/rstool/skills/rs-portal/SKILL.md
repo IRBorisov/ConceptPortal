@@ -20,6 +20,8 @@ UI-ссылку (`https://portal.acconcept.ru/rsforms/856?tab=editor`) не от
 
 ## Чтение и импорт
 
+В HTTP MCP с настроенной Portal-интеграцией проверь каталог. Начиная с адаптера 2.3.0 `portal_search_library` ищет доступные объекты, включая личные; `portal_get_details` читает КС, модель или ОСС. Создание доступно через `portal_create_schema`, `portal_create_model`, `portal_create_oss`, без передачи ключа. Требуются явные `location`, `accessPolicy` и устойчивый `requestId`, модели также `schemaId`. После потери ответа сначала вызови `portal_get_creation_status` и прочитай известный ID либо найди объект поиском. Не меняй requestId ради повтора неопределенной операции. Новые объекты пустые, загрузка содержимого использует отдельный штатный протокол. Подробнее — [протокол MCP](../../../rstool-mcp/PORTAL.md).
+
 1. `GET …/rsforms/:id/details` → файл в папке задачи (UTF-8).
 2. `importData(payload)` — `auto` распознает JSON Portal; не передавай его как `kind: 'session'`.
 3. `listDiagnostics()`; дальше по маршруту (`skills/rstool/SKILL.md`): ревью, развитие.
