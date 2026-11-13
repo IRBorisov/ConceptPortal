@@ -172,7 +172,8 @@ it('registers session-independent tools with strict schemas and no secret input'
 it('rejects metadata that the backend would trim before reserving or creating an item', async () => {
   const app = setup();
   for (const changes of [{ title: ' Demo ' }, { alias: ' DEMO' }, { description: '\nDescription\n' },
-    { title: '\u0085Demo' }, { description: 'Description\u001f' }]) {
+    { title: '\u0085Demo' }, { description: 'Description\u001f' },
+    { location: '/U/Project ' }, { location: '/U/Project\u0085' }]) {
     await expect(app.publisher.createItem('alice', 'schema', { ...app.args, ...changes })).rejects.toThrow('whitespace');
     await expect(app.publisher.creationStatus('alice', app.args.requestId)).resolves.toMatchObject({ state: 'not_found' });
   }

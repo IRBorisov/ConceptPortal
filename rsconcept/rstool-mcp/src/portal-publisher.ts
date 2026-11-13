@@ -452,8 +452,9 @@ function itemRoute(kind: PortalItemKind): string {
 }
 
 function validateLocation(value: unknown): asserts value is string {
-  if (typeof value !== 'string' || !/^\/[USPL](?:\/[^/\\\x00-\x1f]+)*$/.test(value))
-    throw new Error('An explicit Portal location such as /U/Project is required');
+  if (typeof value !== 'string' || value !== value.trim() || /\u0085$/.test(value) ||
+      !/^\/[USPL](?:\/[^/\\\x00-\x1f]+)*$/.test(value))
+    throw new Error('An explicit Portal location such as /U/Project without outer whitespace is required');
 }
 
 /** Compare the material returned by two Portal reads, excluding transport metadata. */
