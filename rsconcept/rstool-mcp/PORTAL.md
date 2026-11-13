@@ -78,9 +78,9 @@ Only configured HTTP hosts expose:
 | `portal_get_description` | Accepts only `targetId`; reads description and `time_update` through the bound key, publicly without a key, or privately with a bound read-capable key, without a local session |
 | `portal_update_description` | Accepts `targetId`, `expectedTimeUpdate`, `description`; updates only the description with CAS and independent readback, without a local rstool session or approval page |
 | `portal_connection_status` | Safe account/connection status for the authenticated subject |
-| `portal_prepare_publication` | Accepts only `targetId`; captures the current rstool session and Portal schema and returns a change summary and approval-page path |
+| `portal_prepare_publication` | Accepts `targetId` and optional `sourceReview` for the annotated-source process below; captures the current session and Portal schema and returns a change summary and approval-page path |
 
-No MCP tool enrolls keys or confirms publication. Switch to the desired local session before preparation. Schema-error diagnostics block preparation. Preparations expire after ten minutes and are invalidated by local session changes, key changes or workspace disposal. There is one prepared proposal per workspace, bounded total JSON storage and bounded per-subject/global request queues. Pending proposals are lost on host restart.
+No MCP tool enrolls keys or confirms publication. Switch to the desired local session before preparation. Schema-error diagnostics block preparation by default. The narrowly scoped annotated-source process below can preserve reviewed formal duplicates. Preparations expire after ten minutes and are invalidated by local session changes, key changes or workspace disposal. There is one prepared proposal per workspace, bounded total JSON storage and bounded per-subject/global request queues. Pending proposals are lost on host restart.
 
 On the separate account page, review the fixed API origin, target id, added/changed/removed aliases, metadata and complete before/after JSON. Approval sends the stored payload matching that digest. The confirmation request cannot override target or schema. Review conceptual correctness and brief requirements yourself; clean diagnostics alone are insufficient.
 
@@ -106,6 +106,16 @@ Outgoing requests use a fixed HTTPS origin, normal certificate validation, deadl
 
 Use isolated test accounts/schemas: verify cross-user isolation, missing-key behavior, secret-free responses/logs/session exports, revocation on open connections, stale-base rejection, duplicate approval, correct service target restrictions, proxy routing and restoration of both encrypted data and the separately protected master key. No production Portal writes are needed for the local test suite.
 
+
+## Annotated sources with preserved formal duplicates
+
+MCP 2.4.0 accepts optional `sourceReview` on `portal_prepare_publication`. This is intended for an explicitly requested faithful annotated original, not for silently correcting the source or certifying its theory. The default gate is unchanged. Only `schemaFormalDuplicate` (35074) is supported in this review process; every other schema error still blocks preparation.
+
+The review must contain `intent: "annotated_source"`, the source name, `sourceSha256`, and one entry for each current blocking duplicate: `alias`, `code`, SHA-256 of the exact diagnostic expression as `expressionSha256`, positive PDF `pages`, and a substantive `comment`. Each comment must already be present verbatim in that constituent's `convention`, so the explanation is retained in the published material. A nonempty schema description is required. Missing, repeated, extra or stale fingerprints are rejected. This is an operator-supplied review, not server verification of a PDF or a proof of correctness.
+
+The host captures the review independently of caller-owned objects and binds it into the immutable proposal digest and memory budget. The account page shows a visible preserved-errors notice, source fingerprint, pages and explanations alongside the complete before/after schemas. Its button and confirmation explicitly name the annotated-source mode. The user still approves on the separately authenticated account page; no MCP tool confirms it. Target, key, ownership, source-session, expiry, stale-Portal and one-attempt checks all remain in force.
+
+Preparation and approval do not remove diagnostics or change the original formulas. A local or Portal change requires a new proposal. The review does not authorize a different target or additional diagnostic types. After publication, read back and compare the stored formulas and conventions. Existing clients that omit `sourceReview` retain their prior behavior.
 
 ## Description-only edits
 
