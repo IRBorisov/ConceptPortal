@@ -34,6 +34,7 @@
 | POST  | `/api/agents/rsforms/:id/constituents/delete`  | Удалить список конституент                       |
 | POST  | `/api/agents/rsforms/:id/substitute`           | Подстановка                                      |
 | PATCH | `/api/agents/rsforms/:id/move-cst`             | Перемещение                                      |
+| POST  | `/api/agents/models`                           | Создать модель для доступной КС, поле `schema` обязательно |
 | GET   | `/api/agents/models/:id/details`               | Модель и текущие интерпретации                   |
 | POST  | `/api/agents/models/:id/set-value`             | Записать интерпретации конституент               |
 | POST  | `/api/agents/models/:id/clear-values`          | Сбросить интерпретации списка конституент        |

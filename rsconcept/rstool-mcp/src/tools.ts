@@ -3,13 +3,14 @@
  */
 
 import { CstType, EvalStatus, type RSToolAgent } from "@rsconcept/rstool";
+import type { PortalItemKind } from './portal-creations';
 import type { PortalPublisher } from './portal-publisher';
 import { SessionStorageError, type SessionPolicy } from './session-policy';
 
 /** Trusted HTTP host captures the identity; tools cannot accept a key, subject or publication approval. */
 export function portalToolDefinitions(publisher: PortalPublisher, subject: string, workspace: string,
   validateSource?: (sessionId: string) => void): ToolDefinition[] {
-  return [{ name: 'portal_prepare_publication', description: 'Prepare replacement of an existing owned Portal schema. Does not publish. Review and approve on the separate account page.',
+  return [...portalCreationTools(publisher, subject), { name: 'portal_prepare_publication', description: 'Prepare replacement of an existing owned Portal schema. Does not publish. Review and approve on the separate account page.',
     inputSchema: { type: 'object', properties: { targetId: { type: 'integer', minimum: 1 } }, required: ['targetId'], additionalProperties: false },
     invoke: (tool, args) => {
       if (Object.keys(args).length !== 1) throw new Error('Only targetId is accepted');
@@ -39,6 +40,48 @@ export function portalToolDefinitions(publisher: PortalPublisher, subject: strin
         throw new Error('Only targetId, expectedTimeUpdate and description are accepted');
       return publisher.updateDescription(subject, args.targetId as number, args.expectedTimeUpdate as string, args.description as string);
     } }];
+}
+
+/** Empty library creation is independent of local rstool sessions and replacement approvals. */
+function portalCreationTools(publisher: PortalPublisher, subject: string): ToolDefinition[] {
+  const requestId = { type: 'string', minLength: 8, maxLength: 128, pattern: '^[A-Za-z0-9_-]+$',
+    description: 'Stable unique ID for this creation. Reuse exactly the same ID after timeout; never switch IDs to retry an uncertain POST.' };
+  const itemKinds: PortalItemKind[] = ['schema', 'model', 'oss'];
+  const tools: ToolDefinition[] = itemKinds.map(kind => ({
+    name: `portal_create_${kind}`, sessionActivity: 'none',
+    description: `Create an empty Portal ${kind} using the bound personal key, with explicit location and accessPolicy. ${kind === 'model' ? 'Requires schemaId of a readable Portal schema. ' : ''}No folder object or local session is created. Durable requestId prevents replay after restart; an uncertain result requires status and library search. Does not replace existing content.`,
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
+    inputSchema: { type: 'object', properties: {
+      requestId, title: { type: 'string', minLength: 1 }, alias: { type: 'string' },
+      description: { type: 'string' }, location: { type: 'string', description: 'Virtual library path, e.g. /U/Дипломы/DEMO001; no folder creation is needed.' },
+      accessPolicy: { type: 'string', enum: ['private', 'protected', 'public'] },
+      ...(kind === 'model' ? { schemaId: { type: 'integer', minimum: 1 } } : {}),
+    }, required: ['requestId', 'title', 'alias', 'location', 'accessPolicy', ...(kind === 'model' ? ['schemaId'] : [])], additionalProperties: false },
+    invoke: (_tool, args) => publisher.createItem(subject, kind, args),
+  }));
+  tools.push({ name: 'portal_get_creation_status', sessionActivity: 'none',
+    description: 'Read the durable receipt for a requestId, including a known created ID. Does not send a create request. uncertain means search the library before any new creation ID.',
+    annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
+    inputSchema: { type: 'object', properties: { requestId }, required: ['requestId'], additionalProperties: false },
+    invoke: (_tool, args) => {
+      if (Object.keys(args).some(key => key !== 'requestId')) throw new Error('Only requestId is accepted');
+      return publisher.creationStatus(subject, args.requestId as string);
+    } }, { name: 'portal_search_library', sessionActivity: 'none',
+    description: 'Search the accessible Portal library using the bound personal key, including private items. Returns all matching IDs; read selected IDs with portal_get_details. Check existing items before creation.',
+    annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
+    inputSchema: { type: 'object', properties: { query: { type: 'string', minLength: 1, maxLength: 1000 }, location: { type: 'string' } }, required: ['query'], additionalProperties: false },
+    invoke: (_tool, args) => {
+      if (Object.keys(args).some(key => !['query', 'location'].includes(key))) throw new Error('Only query and location are accepted');
+      return publisher.searchLibrary(subject, args.query as string, args.location as string | undefined);
+    } }, { name: 'portal_get_details', sessionActivity: 'none',
+    description: 'Read full Portal schema, model or OSS details through the bound credential. Returns metadata and contents for readback verification. IDs must come from library search or creation results, never enumeration.',
+    annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
+    inputSchema: { type: 'object', properties: { kind: { type: 'string', enum: itemKinds }, targetId: { type: 'integer', minimum: 1 } }, required: ['kind', 'targetId'], additionalProperties: false },
+    invoke: (_tool, args) => {
+      if (Object.keys(args).some(key => !['kind', 'targetId'].includes(key))) throw new Error('Only kind and targetId are accepted');
+      return publisher.getDetails(subject, args.kind as PortalItemKind, args.targetId as number);
+    } });
+  return tools;
 }
 
 /** Account-scoped storage management; credentials and filesystem paths are never tool arguments. */

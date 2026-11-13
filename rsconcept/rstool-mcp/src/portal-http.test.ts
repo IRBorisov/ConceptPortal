@@ -12,6 +12,7 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { createBearerTokenVerifier } from './http-auth';
 import { createRSToolHttpServer, type RSToolHttpServerOptions } from './http-server';
 import { PortalClient } from './portal-client';
+import { PortalCreations } from './portal-creations';
 import { PortalPublisher } from './portal-publisher';
 import { PortalVault } from './portal-vault';
 
@@ -24,6 +25,36 @@ const ORIGIN = 'https://mcp.example';
 const cleanup: Array<() => Promise<void> | void> = [];
 afterEach(async () => {
   for (const action of cleanup.splice(0).reverse()) await action();
+});
+
+it('creates schema, model and OSS over authenticated MCP without allocating a local session', async () => {
+  const app = await start();
+  await app.account('connection', 'PUT', { key: KEY });
+  const before = await app.client.callTool({ name: 'get_current_session', arguments: {} });
+  const args = { title: 'Demo', alias: 'DEMO', description: 'Source annotations',
+    location: '/U/Дипломы/DEMO001', accessPolicy: 'private' };
+  for (const [index, kind] of ['schema', 'model', 'oss'].entries()) {
+    const input = { ...args, requestId: `create-demo-${kind}`, ...(kind === 'model' ? { schemaId: 100 } : {}) };
+    const result = await app.client.callTool({ name: `portal_create_${kind}`, arguments: input });
+    expect(result.isError).not.toBe(true);
+    expect(result.structuredContent).toMatchObject({ targetId: 100 + index, kind, verified: true });
+    expect(JSON.stringify(result)).not.toContain(KEY);
+    const replay = await app.client.callTool({ name: `portal_create_${kind}`, arguments: input });
+    expect(replay.structuredContent).toMatchObject({ targetId: 100 + index });
+    const status = await app.client.callTool({ name: 'portal_get_creation_status', arguments: { requestId: input.requestId } });
+    expect(status.structuredContent).toMatchObject({ state: 'created', targetId: 100 + index });
+    const details = await app.client.callTool({ name: 'portal_get_details', arguments: { kind, targetId: 100 + index } });
+    expect(details.structuredContent).toMatchObject({ id: 100 + index, location: args.location });
+  }
+  const search = await app.client.callTool({ name: 'portal_search_library', arguments: { query: 'Demo', location: args.location } });
+  expect(search.structuredContent).toMatchObject({ ids: [100, 101, 102], complete: true });
+  expect(app.remote.mock.calls.filter(([, options]) => options?.method === 'POST')).toHaveLength(3);
+  expect(await app.client.callTool({ name: 'get_current_session', arguments: {} })).toEqual(before);
+  for (const extra of [{ key: KEY }, { subject: 'bob' }, { owner: 123 }, { schema: {} }]) {
+    const result = await app.client.callTool({ name: 'portal_create_schema', arguments: { ...args, requestId: 'invalid-creation', ...extra } });
+    expect(result.isError).toBe(true);
+    expect(JSON.stringify(result)).not.toContain(KEY);
+  }
 });
 
 /** Exercise both protocols against a real loopback listener; only Portal itself is a stub. */
@@ -43,9 +74,20 @@ async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions,
     attribution: [],
     time_update: '2026-11-06T01:00:00Z',
   };
+  const created = new Map<number, Record<string, unknown>>();
   const remote = vi.fn<typeof fetch>(async (input, options) => {
     expect((options!.headers as Record<string, string>).Authorization).toBe(`Bearer ${KEY}`);
     if (String(input).endsWith('/me')) return Response.json({ id: 7, username: 'Alice' });
+    const route = new URL(String(input)).pathname;
+    if (options?.method === 'POST' && /^\/api\/agents\/(rsforms|models|oss)$/.test(route)) {
+      const item = { ...JSON.parse(String(options.body)), id: 100 + created.size,
+        owner: 7, time_update: '2026-11-13T00:00:00Z', items: [], operations: [], blocks: [] };
+      created.set(item.id, item);
+      return Response.json(item, { status: 201 });
+    }
+    if (route.endsWith('/context-search')) return Response.json({ ids: [...created.keys()] });
+    const createdId = Number(route.split('/').at(-2));
+    if (created.has(createdId)) return Response.json(created.get(createdId));
     if (String(input).endsWith('/description')) {
       const body = JSON.parse(String(options!.body));
       if (body.expected_time_update !== current.time_update) return Response.json({}, { status: 409 });
@@ -60,7 +102,9 @@ async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions,
   });
   const publisher = new PortalPublisher(
     new PortalVault(path.join(directory, 'vault'), randomBytes(32)),
-    new PortalClient('https://portal-api.example', remote)
+    new PortalClient('https://portal-api.example', remote),
+    undefined,
+    new PortalCreations(path.join(directory, 'creations'))
   );
   const service = createRSToolHttpServer({
     // These tests isolate account/Portal deadlines, including 80 ms budgets.

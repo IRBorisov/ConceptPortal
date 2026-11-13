@@ -45,12 +45,36 @@ The encrypted key cannot be fetched back, selected by another subject or read by
 
 Public data reads require no Portal key. When a key is provided, its read, write and publish scopes can restrict its owner’s existing rights. Expired or revoked keys cannot authenticate. Existing keys retain their prior scopes and no expiration; new keys can select scopes and an expiration in the Portal profile. The account page displays bound-key policy when the backend provides it. Portal enforces current policy on every request; cached MCP metadata is only an early hint. OAuth is not implemented.
 
+## Create and inspect library items
+
+Configured HTTP hosts expose `portal_create_schema`, `portal_create_model` and `portal_create_oss`. They create **empty** library objects through the existing personal Portal binding. Required arguments are `requestId`, `title`, `alias`, `location` and `accessPolicy`; `description` is optional. Model creation also requires `schemaId` of an existing readable conceptual schema. It creates a model linked to that schema, not a replacement schema or a local rstool session.
+
+Use `portal_search_library(query, location?)` before creation to find accessible IDs, including private items. It returns the complete ID list from Portal's context search. Inspect selected matches with `portal_get_details(kind, targetId)`; do not enumerate IDs. `kind` is `schema`, `model` or `oss`. Location is a virtual library path, for example `/U/Дипломы/DEMO001`, not a separate folder object. Supply the intended access policy explicitly.
+
+Creation requires a personal key with read and write scopes. The backend determines ownership, checks readable schema binding and location rights, applies quotas and records the mutation. Existing target-ID-scoped service grants do not authorize creation or general library search. No key or owner override is accepted by the MCP tools. Supply title, alias and description without leading or trailing whitespace: noncanonical metadata is rejected before POST because library creation trims these fields.
+
+Choose a stable unique `requestId` of 8–128 letters, digits, underscores or hyphens. A subject-scoped receipt is persisted **before** POST; the returned ID is persisted **before** independent readback. Repeating the same ID and arguments reads the known result instead of sending POST again, including after host restart. Reusing the ID with different arguments, another Portal account or another API origin is rejected. Status reads also reject receipts from another origin; use separate host storage for a different Portal. These receipts store only a request digest, API origin, account ID, kind, state and created ID, never credentials or document contents.
+
+After a timeout use `portal_get_creation_status(requestId)`. `created` gives the known ID; inspect it with `portal_get_details`. `uncertain` means that the POST outcome is unknown: search the library and reconcile it before starting any new request ID. Do not bypass the no-replay guard by changing IDs. A refusal or failed verification is not retried automatically. Local receipts are not server-side exactly-once creation across different request IDs or lost host storage.
+
+Receipts live in `creations/` inside `RSTOOL_PORTAL_VAULT_DIR`. Preserve that directory across restarts and upgrades. Do not remove uncertain receipts to retry a POST. The HTTP timeout can end the caller's wait while the underlying operation is still completing; status and readback determine the result.
+
+Creation returns `{requestId, kind, portalOrigin, targetId, verified, item}` after checking metadata against an independent GET. It does not import local contents or approve a replacement. For a new schema, switch to the prepared local session and use the existing preparation/approval flow against the returned ID. Read the new object back after publication. Stored expression errors are not silently corrected by creation.
+
+Deploy the backend with `POST /api/agents/models` before using `portal_create_model`; older backends reject that route. This catalog is part of `@rsconcept/rstool-mcp` 2.3.0 and requires updating/restarting the configured host. Merely updating these instructions does not update an installed service.
+
 ## Prepare and approve
 
 Only configured HTTP hosts expose:
 
 | Tool | Behavior |
 | --- | --- |
+| `portal_create_schema` | Create an empty conceptual schema at the supplied location; durable request ID and independent readback |
+| `portal_create_model` | Create a model linked to `schemaId`; same receipt/readback protocol |
+| `portal_create_oss` | Create an empty operation schema of synthesis; same receipt/readback protocol |
+| `portal_get_creation_status` | Read a durable creation receipt without replaying POST |
+| `portal_search_library` | Search accessible public/private objects with the bound personal key |
+| `portal_get_details` | Read full details of a selected schema, model or OSS |
 | `portal_get_description` | Accepts only `targetId`; reads description and `time_update` through the bound key, publicly without a key, or privately with a bound read-capable key, without a local session |
 | `portal_update_description` | Accepts `targetId`, `expectedTimeUpdate`, `description`; updates only the description with CAS and independent readback, without a local rstool session or approval page |
 | `portal_connection_status` | Safe account/connection status for the authenticated subject |

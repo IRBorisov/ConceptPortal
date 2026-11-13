@@ -10,6 +10,7 @@ from .library import (
 from .logs import AgentActionLogListView
 from .models import (
     AgentModelClearValuesView,
+    AgentModelCreateView,
     AgentModelDetailsView,
     AgentModelResetAllView,
     AgentModelSetValueView,

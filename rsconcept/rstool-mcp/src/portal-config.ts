@@ -6,6 +6,7 @@ import { dirname, isAbsolute, relative, resolve } from 'node:path';
 import { createBearerTokenVerifier, type HttpCredential } from './http-auth';
 import type { RSToolHttpServerOptions } from './http-server';
 import { PortalClient } from './portal-client';
+import { PortalCreations } from './portal-creations';
 import { PortalPublisher, type ServicePortalCredential } from './portal-publisher';
 import { PortalVault } from './portal-vault';
 
@@ -77,7 +78,8 @@ export async function loadPortalConfiguration(
       };
     }
     const vault = new PortalVault(vaultDirectory, await protectedInput(masterKeyFile));
-    return { publicOrigin, verifyAccountToken, publisher: new PortalPublisher(vault, api, service) };
+    return { publicOrigin, verifyAccountToken,
+      publisher: new PortalPublisher(vault, api, service, new PortalCreations(resolve(vaultDirectory, 'creations'))) };
   } catch {
     throw new Error('Cannot initialize Portal credentials/configuration');
   }
