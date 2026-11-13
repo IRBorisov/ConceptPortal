@@ -11,6 +11,8 @@
 
 Хосты: UI `https://portal.acconcept.ru/`, REST `https://api.portal.acconcept.ru/`. OpenAPI — `GET https://api.portal.acconcept.ru/schema`.
 
+«Папки» библиотеки задаются полем `location` элементов. Создание КС сразу с нужным путём описано в [PORTAL-PUBLISH.md](PORTAL-PUBLISH.md) §«Новая КС»; отдельной операции создания папки не требуется.
+
 ## Маршруты агентов (`/api/agents`, Bearer API-ключ)
 
 | Метод | Путь                                           | Назначение                                       |
@@ -23,7 +25,7 @@
 | GET   | `/api/agents/library/by-ids`                   | Метаданные по id                                 |
 | PATCH | `/api/agents/library/:id/set-location`         | Расположение (владелец или staff)                |
 | PATCH | `/api/agents/library/:id/set-access-policy`    | Политика доступа (владелец или staff)            |
-| POST  | `/api/agents/rsforms`                          | Создать КС                                       |
+| POST  | `/api/agents/rsforms`                          | Создать пустую КС с `location`, затем загрузить содержимое |
 | GET   | `/api/agents/rsforms/:id/details`              | Полная КС                                        |
 | PATCH | `/api/agents/rsforms/:id/replace`              | Заменить содержимое (`exportPortal` / load-json) |
 | POST  | `/api/agents/rsforms/:id/create-version`       | Снимок версии (owner/staff)                      |
