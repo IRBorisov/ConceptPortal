@@ -1,4 +1,4 @@
-import { createHash, randomBytes } from 'node:crypto';
+import { randomBytes } from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -23,35 +23,31 @@ const ACCOUNT_ALICE = 'c'.repeat(40),
 const KEY = 'rcp_12345678_' + 'portal-secret'.repeat(4);
 const ORIGIN = 'https://mcp.example';
 const cleanup: Array<() => Promise<void> | void> = [];
-afterEach(async () => {
-  for (const action of cleanup.splice(0).reverse()) await action();
-});
 
-it('shows exact source-error review in the independent account approval without exposing an MCP confirmation tool', async () => {
+it('prepares a schema with errors using only targetId and still requires independent human approval', async () => {
   const app = await start();
   await app.account('connection', 'PUT', { key: KEY });
-  const comment = 'The printed source repeats this expression for different roles; preserve the error unchanged.';
-  await app.client.callTool({ name: 'apply_schema_patch', arguments: {
-    initial: { comment: 'Annotated source with known errors, not a certified theory.' }, items: [
-      { alias: 'X1', term: 'Objects', convention: 'Source objects' },
-      { alias: 'D1', term: 'First role', definitionFormal: 'X1', convention: comment },
-      { alias: 'D2', term: 'Second role', definitionFormal: 'X1', convention: comment },
-    ] } });
-  const sourceReview = { intent: 'annotated_source', source: 'SYNTHETIC.pdf', sourceSha256: 'a'.repeat(64),
-    diagnostics: ['D1','D2'].map(alias => ({ alias, code: 35074,
-      expressionSha256: createHash('sha256').update('X1').digest('hex'), pages: [3], comment })) };
-  expect((await app.client.callTool({ name: 'portal_prepare_publication', arguments: { targetId: 1 } })).isError).toBe(true);
-  const prepared = await app.client.callTool({ name: 'portal_prepare_publication', arguments: { targetId: 1, sourceReview } });
+  const comment = 'Preserve the source expression and this explanation without repairing its theory.';
+  await app.client.callTool({ name: 'apply_schema_patch', arguments: { items: [
+    { alias: 'X1', term: 'Objects' },
+    { alias: 'D1', definitionFormal: 'X1', convention: comment },
+    { alias: 'D2', definitionFormal: 'X1' },
+  ] } });
+  const diagnostics = await app.client.callTool({ name: 'list_diagnostics', arguments: {} });
+  expect(JSON.stringify(diagnostics)).toContain('schemaFormalDuplicate');
+  const catalog = await app.client.listTools();
+  expect(catalog.tools.some(t => /approve|confirm/.test(t.name))).toBe(false);
+  expect(catalog.tools.find(t => t.name === 'portal_prepare_publication')?.inputSchema.properties).toEqual({ targetId: { type: 'integer', minimum: 1 } });
+  const prepared = await app.client.callTool({ name: 'portal_prepare_publication', arguments: { targetId: 1 } });
   expect(prepared.isError).not.toBe(true);
-  const [proposal] = await (await app.account('publications')).json() as Array<{ id: string; digest: string; sourceReview: unknown }>;
-  expect(proposal.sourceReview).toEqual(sourceReview);
   expect(app.remote.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(0);
-  expect((await app.client.listTools()).tools.map(t => t.name)).not.toContain('portal_publish');
-  const page = await (await fetch(app.url + '/portal/account.js')).text();
-  expect(page).toContain('Annotated source with preserved errors:');
-  expect(page).toContain('Approve annotated source with preserved errors');
+  const [proposal] = await (await app.account('publications')).json() as Array<{ id: string; digest: string }>;
   expect((await app.account(`publications/${proposal.id}/confirm`, 'POST', { digest: proposal.digest })).status).toBe(200);
   expect(app.remote.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(1);
+  expect(await app.client.callTool({ name: 'list_diagnostics', arguments: {} })).toEqual(diagnostics);
+});
+afterEach(async () => {
+  for (const action of cleanup.splice(0).reverse()) await action();
 });
 
 it('creates schema, model and OSS over authenticated MCP without allocating a local session', async () => {

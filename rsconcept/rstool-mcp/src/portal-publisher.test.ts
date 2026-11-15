@@ -12,6 +12,37 @@ import { PortalVault } from './portal-vault';
 
 const token = 'rcp_abcd1234_' + 'secret'.repeat(8);
 const directories: string[] = [];
+
+it.each([
+  { name: 'formal duplicates', expressions: ['X1', 'X1'], diagnostic: 'schemaFormalDuplicate' },
+  { name: 'dependency cycles', expressions: ['D2', 'D1'], diagnostic: 'schemaDependencyCycle' },
+])('publishes $name through ordinary approval without changing expressions, comments or diagnostics', async ({ expressions, diagnostic }) => {
+  const app = setup();
+  await app.publisher.connect('alice', token);
+  const comment = 'The source expression is preserved unchanged; the error is described here.';
+  app.tool.applySchemaPatch({ items: expressions.map((_definitionFormal, index) => ({
+    alias: `D${index + 1}`, definitionFormal: 'X1', convention: index ? '' : comment,
+  })) });
+  const imported = JSON.parse(app.tool.exportPortal({ kind: 'schema', format: 'json' }) as string);
+  expressions.forEach((expression, index) => { imported.items.find((item: { alias: string }) => item.alias === `D${index + 1}`).definition_formal = expression; });
+  app.tool.importData(imported);
+  const session = app.tool.exportSession();
+  const diagnostics = app.tool.listDiagnostics();
+  expect(diagnostics.some(d => d.kind === 'schema' && d.severity === 'error' && d.name === diagnostic)).toBe(true);
+  const schema = JSON.parse(app.tool.exportPortal({ kind: 'schema', format: 'json' }) as string);
+  const prepared = await app.publisher.prepare('alice', 'task', 1, app.tool);
+  expect(app.request.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(0);
+  await expect(app.publisher.approve('bob', prepared.publicationId, prepared.digest)).rejects.toThrow('not found');
+  await expect(app.publisher.approve('alice', prepared.publicationId, 'wrong digest')).rejects.toThrow();
+  await app.publisher.approve('alice', prepared.publicationId, prepared.digest);
+  const writes = app.request.mock.calls.filter(([url]) => String(url).endsWith('/publish'));
+  expect(writes).toHaveLength(1);
+  expect(JSON.parse(String(writes[0][1]?.body)).schema).toEqual(schema);
+  expect(app.tool.exportSession()).toBe(session);
+  expect(app.tool.listDiagnostics()).toEqual(diagnostics);
+  expect(app.publisher.publications('alice')[0].state).toBe('published');
+  await expect(app.publisher.approve('alice', prepared.publicationId, prepared.digest)).rejects.toThrow('already attempted');
+});
 afterEach(() => {
   vi.restoreAllMocks();
   for (const directory of directories.splice(0)) {
@@ -435,78 +466,4 @@ it('requires read as well as the mutation scope before issuing any request', asy
     }
     expect(app.request.mock.calls).toHaveLength(requests);
   }
-});
-
-function annotatedDuplicate(app: ReturnType<typeof setup>) {
-  const comment = 'The printed source repeats this expression for different roles; preserve the error unchanged.';
-  app.tool.applySchemaPatch({ initial: { comment: 'Annotated source with known errors, not a corrected theory.' }, items: [
-    { alias: 'D1', term: 'First source role', definitionFormal: 'X1', convention: comment },
-    { alias: 'D2', term: 'Second source role', definitionFormal: 'X1', convention: comment },
-  ] });
-  const material = JSON.parse(app.tool.exportPortal({ kind: 'schema', format: 'json' }) as string);
-  material.description = 'Annotated source with known errors, not a corrected theory.';
-  app.tool.importData(material);
-  const diagnostics = app.tool.listDiagnostics().filter(d => d.kind === 'schema' && d.severity === 'error');
-  expect(diagnostics).toHaveLength(2);
-  return { intent: 'annotated_source', source: 'SYNTHETIC-SOURCE.pdf', sourceSha256: 'a'.repeat(64),
-    diagnostics: diagnostics.map(d => ({ alias: d.alias!, code: d.code,
-      expressionSha256: createHash('sha256').update(d.expression ?? '').digest('hex'), pages: [3], comment })) };
-}
-
-it('keeps the default gate and only prepares an exact annotated-source review for human approval', async () => {
-  const app = setup();
-  await app.publisher.connect('alice', token);
-  const review = annotatedDuplicate(app);
-  const unchanged = app.tool.exportSession();
-  await expect(app.publisher.prepare('alice', 'task', 1, app.tool)).rejects.toThrow('Resolve schema diagnostics');
-  const prepared = await app.publisher.prepare('alice', 'task', 1, app.tool, undefined, review);
-  expect(prepared.sourceReview).toEqual(review);
-  prepared.sourceReview!.source = 'TAMPERED-RETURN-VALUE';
-  expect(app.request.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(0);
-  const [proposal] = app.publisher.publications('alice');
-  expect(proposal.sourceReview).toEqual(review);
-  review.source = 'CHANGED-CALLER-VALUE';
-  review.diagnostics[0].pages.push(999);
-  expect(app.publisher.publications('alice')[0].sourceReview?.source).toBe('SYNTHETIC-SOURCE.pdf');
-  expect(app.publisher.publications('alice')[0].sourceReview?.diagnostics[0].pages).toEqual([3]);
-  await app.publisher.approve('alice', proposal.id, proposal.digest);
-  expect(app.tool.exportSession()).toBe(unchanged);
-  expect(app.tool.listDiagnostics().filter(d => d.kind === 'schema' && d.severity === 'error')).toHaveLength(2);
-  expect(app.request.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(1);
-  await expect(app.publisher.approve('alice', proposal.id, proposal.digest)).rejects.toThrow('already attempted');
-});
-
-it('rejects missing, stale, incomplete or detached source-error explanations without Portal reads or writes', async () => {
-  const app = setup();
-  await app.publisher.connect('alice', token);
-  const valid = annotatedDuplicate(app);
-  const invalid = [
-    { ...valid, ignoreDiagnostics: true },
-    { ...valid, sourceSha256: 'not-a-sha' },
-    { ...valid, diagnostics: valid.diagnostics.slice(0, 1) },
-    { ...valid, diagnostics: [valid.diagnostics[0], valid.diagnostics[0]] },
-    { ...valid, diagnostics: valid.diagnostics.map(d => ({ ...d, expressionSha256: '0'.repeat(64) })) },
-    { ...valid, diagnostics: valid.diagnostics.map(d => ({ ...d, pages: [] })) },
-    { ...valid, diagnostics: valid.diagnostics.map(d => ({ ...d, comment: 'This explanation was never stored in the source constituent.' })) },
-  ];
-  const calls = app.request.mock.calls.length;
-  for (const review of invalid) await expect(app.publisher.prepare('alice', 'task', 1, app.tool, undefined, review)).rejects.toThrow();
-  expect(app.request.mock.calls).toHaveLength(calls);
-  expect(app.publisher.publications('alice')).toEqual([]);
-});
-
-it('does not extend the review exception to other schema errors or allow publishing a changed source session', async () => {
-  const app = setup();
-  await app.publisher.connect('alice', token);
-  const review = annotatedDuplicate(app);
-  const prepared = await app.publisher.prepare('alice', 'task', 1, app.tool, undefined, review);
-  app.tool.applySchemaPatch({ items: [{ alias: 'X1', convention: '' }] });
-  await expect(app.publisher.approve('alice', prepared.publicationId, prepared.digest)).rejects.toThrow('Local schema changed');
-  const actual = app.tool.listDiagnostics();
-  const matchingLengthReview = { ...review, diagnostics: actual.filter(d => d.kind === 'schema' && d.severity === 'error')
-    .map(() => review.diagnostics[0]) };
-  vi.spyOn(app.tool, 'listDiagnostics').mockReturnValueOnce(actual.map(d =>
-    d.kind === 'schema' && d.severity === 'error' ? { ...d, name: 'unreviewableSchemaError' } : d));
-  await expect(app.publisher.prepare('alice', 'task', 1, app.tool, undefined, matchingLengthReview)).rejects.toThrow('other schema errors');
-  expect(app.request.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(0);
 });
