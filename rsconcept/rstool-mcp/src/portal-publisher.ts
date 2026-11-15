@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from 'node:crypto';
 
-import type { RSToolAgent } from '@rsconcept/rstool';
+import { RSToolError, type RSToolAgent } from '@rsconcept/rstool';
 
 import { PortalClient } from './portal-client';
 import { PortalCreations, type PortalItemKind } from './portal-creations';
@@ -258,8 +258,11 @@ export class PortalPublisher {
     validateSource?: (sessionId: string) => void) {
     return this.exclusive(subject, async () => {
       if (!Number.isSafeInteger(targetId) || targetId <= 0) throw new Error('A positive Portal schema ID is required');
+      const current = tool.getCurrentSession();
+      if (!current) throw new RSToolError('NO_CURRENT_SESSION',
+        'No current session. Call ensure_session / ensureSession or create_session / createSession before this operation.');
+      const sourceId = current.sessionId;
       const credential = this.credential(subject, targetId, 'publish');
-      const sourceId = tool.getCurrentSession()!.sessionId;
       const after = JSON.parse(tool.exportPortal({ kind: 'schema', format: 'json' }) as string);
       const before = await this.#api.request(credential.token, `/api/agents/rsforms/${targetId}/details`);
       if (
