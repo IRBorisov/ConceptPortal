@@ -5,7 +5,6 @@ import type { RSToolAgent } from '@rsconcept/rstool';
 import { PortalClient } from './portal-client';
 import { PortalCreations, type PortalItemKind } from './portal-creations';
 import { PortalVault, type PortalCredential, type PortalKeyPolicy } from './portal-vault';
-import { reviewSourceDiagnostics, type SourceDiagnosticReview } from './source-diagnostics';
 
 export interface ServicePortalCredential {
   token: string;
@@ -26,7 +25,6 @@ interface PreparedPublication {
   validateSource?: () => void;
   before: Record<string, any>;
   after: Record<string, any>;
-  sourceReview?: SourceDiagnosticReview;
   state: 'prepared' | 'sending' | 'published' | 'uncertain' | 'failed';
   result?: unknown;
 }
@@ -254,7 +252,7 @@ export class PortalPublisher {
 
   /** Capture immutable before/after JSON. This method never writes to Portal. */
   public prepare(subject: string, workspace: string, targetId: number, tool: RSToolAgent,
-    validateSource?: (sessionId: string) => void, sourceDiagnostics?: unknown) {
+    validateSource?: (sessionId: string) => void) {
     const preparation = { subject, workspace, invalidated: false };
     this.#preparations.add(preparation);
     return this.exclusive(subject, async () => {
@@ -265,7 +263,6 @@ export class PortalPublisher {
       const sourceId = tool.getCurrentSession()!.sessionId;
       const session = tool.exportSession();
       const after = JSON.parse(tool.exportPortal({ kind: 'schema', format: 'json' }) as string);
-      const sourceReview = reviewSourceDiagnostics(sourceDiagnostics, tool.listDiagnostics(), after);
       const before = await this.#api.request(credential.token, `/api/agents/rsforms/${targetId}/details`);
       if (
         before.id !== targetId ||
@@ -278,15 +275,15 @@ export class PortalPublisher {
       // One proposal per live workspace; bounded storage for all subjects.
       if (preparation.invalidated) throw new Error('Workspace was closed');
       this.clearWorkspaceDrafts(subject, workspace);
-      const bytes = Buffer.byteLength(JSON.stringify({ before, after, sourceReview }));
+      const bytes = Buffer.byteLength(JSON.stringify({ before, after }));
       const occupied = [...this.#drafts.values()].reduce(
-        (size, draft) => size + Buffer.byteLength(JSON.stringify({ before: draft.before, after: draft.after, sourceReview: draft.sourceReview })),
+        (size, draft) => size + Buffer.byteLength(JSON.stringify({ before: draft.before, after: draft.after })),
         0
       );
       if (this.#drafts.size >= 32 || bytes + occupied > 16 * 1024 * 1024)
         throw new Error('Publication capacity reached');
       const id = randomUUID();
-      const digest = createHash('sha256').update(JSON.stringify({ targetId, before, after, sourceReview })).digest('hex');
+      const digest = createHash('sha256').update(JSON.stringify({ targetId, before, after })).digest('hex');
       const draft: PreparedPublication = {
         id,
         subject,
@@ -300,7 +297,6 @@ export class PortalPublisher {
         validateSource: validateSource ? () => validateSource(sourceId) : undefined,
         before,
         after,
-        sourceReview,
         state: 'prepared',
       };
       this.#drafts.set(id, draft);
@@ -312,7 +308,6 @@ export class PortalPublisher {
         beforeCount: before.items.length,
         afterCount: after.items.length,
         changes: changes(before, after),
-        sourceReview: structuredClone(sourceReview),
         confirmationPage: '/portal/account',
       };
     }).finally(() => this.#preparations.delete(preparation));
@@ -334,7 +329,6 @@ export class PortalPublisher {
           changes: changes(draft.before, draft.after),
           before: draft.before,
           after: draft.after,
-          sourceReview: draft.sourceReview,
           result: draft.result,
         }))
     );
