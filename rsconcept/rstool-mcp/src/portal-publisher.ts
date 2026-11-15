@@ -250,6 +250,63 @@ export class PortalPublisher {
     });
   }
 
+  /**
+   * Replace targetId with the current session in this call.
+   * Chat permission is an agent instruction, not an argument or a second page.
+   */
+  public publishSchema(subject: string, targetId: number, tool: RSToolAgent,
+    validateSource?: (sessionId: string) => void) {
+    return this.exclusive(subject, async () => {
+      if (!Number.isSafeInteger(targetId) || targetId <= 0) throw new Error('A positive Portal schema ID is required');
+      const credential = this.credential(subject, targetId, 'publish');
+      const sourceId = tool.getCurrentSession()!.sessionId;
+      const after = JSON.parse(tool.exportPortal({ kind: 'schema', format: 'json' }) as string);
+      const before = await this.#api.request(credential.token, `/api/agents/rsforms/${targetId}/details`);
+      if (
+        before.id !== targetId ||
+        typeof before.time_update !== 'string' ||
+        !Number.isFinite(Date.parse(before.time_update)) ||
+        !Array.isArray(before.items)
+      )
+        throw new Error('Portal returned invalid schema metadata');
+      validateSource?.(sourceId);
+      const summary = changes(before, after);
+      let result: Record<string, any>;
+      try {
+        result = await this.#api.request(credential.token, `/api/agents/rsforms/${targetId}/publish`, {
+          expected_time_update: before.time_update,
+          schema: after,
+        });
+      } catch (error) {
+        if (error instanceof Error && error.message.startsWith('Portal schema changed')) throw error;
+        throw new Error('Publication result is uncertain; inspect Portal before retrying');
+      }
+      if (!Number.isSafeInteger(result.version) || result.version <= 0)
+        throw new Error('Publication result is uncertain; inspect Portal before retrying');
+      let verified: Record<string, any>;
+      try {
+        verified = await this.#api.request(credential.token, `/api/agents/rsforms/${targetId}/details`);
+      } catch {
+        throw new Error('Publication result is uncertain; inspect Portal before retrying');
+      }
+      if (
+        verified.id !== targetId ||
+        JSON.stringify(content(verified)) !== JSON.stringify(content(result.schema)) ||
+        JSON.stringify(content(verified)) !== JSON.stringify(content(after))
+      )
+        throw new Error('Publication verification failed; inspect Portal before retrying');
+      return {
+        targetId,
+        version: result.version,
+        time_update: verified.time_update,
+        beforeCount: before.items.length,
+        afterCount: after.items.length,
+        changes: summary,
+        verified: true,
+      };
+    });
+  }
+
   /** Capture immutable before/after JSON. This method never writes to Portal. */
   public prepare(subject: string, workspace: string, targetId: number, tool: RSToolAgent,
     validateSource?: (sessionId: string) => void) {

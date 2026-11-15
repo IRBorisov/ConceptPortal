@@ -10,7 +10,14 @@ import { SessionStorageError, type SessionPolicy } from './session-policy';
 /** Trusted HTTP host captures the identity; tools cannot accept a key, subject or publication approval. */
 export function portalToolDefinitions(publisher: PortalPublisher, subject: string, workspace: string,
   validateSource?: (sessionId: string) => void): ToolDefinition[] {
-  return [...portalCreationTools(publisher, subject), { name: 'portal_prepare_publication', description: 'Prepare replacement of an existing owned Portal schema, including schemas with diagnostic errors. Does not publish or certify correctness. Review and approve on the separate account page.',
+  return [...portalCreationTools(publisher, subject), { name: 'portal_publish_schema', description: 'Replace an existing owned Portal schema with the current rstool session and read it back. Writes immediately with the bound key, including schemas with diagnostic errors. Does not certify correctness. Accepts only targetId. Call it only after the user explicitly accepts a concrete change summary in the conversation. No approval flag or key is accepted.',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
+    inputSchema: { type: 'object', properties: { targetId: { type: 'integer', minimum: 1 } }, required: ['targetId'], additionalProperties: false },
+    invoke: (tool, args) => {
+      if (Object.keys(args).length !== 1) throw new Error('Only targetId is accepted');
+      return publisher.publishSchema(subject, args.targetId as number, tool, validateSource);
+    },
+  }, { name: 'portal_prepare_publication', description: 'Prepare replacement of an existing owned Portal schema, including schemas with diagnostic errors. Does not publish or certify correctness. Prefer portal_publish_schema after explicit user permission. This draft remains available for the separate account page.',
     inputSchema: { type: 'object', properties: { targetId: { type: 'integer', minimum: 1 } }, required: ['targetId'], additionalProperties: false },
     invoke: (tool, args) => {
       if (Object.keys(args).length !== 1) throw new Error('Only targetId is accepted');

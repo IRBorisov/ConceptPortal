@@ -24,6 +24,32 @@ const KEY = 'rcp_12345678_' + 'portal-secret'.repeat(4);
 const ORIGIN = 'https://mcp.example';
 const cleanup: Array<() => Promise<void> | void> = [];
 
+it('publishes the current session from MCP after the conversation already has permission', async () => {
+  const app = await start();
+  await app.account('connection', 'PUT', { key: KEY });
+  await app.client.callTool({ name: 'apply_schema_patch', arguments: { items: [
+    { alias: 'X1', term: 'Objects' },
+    { alias: 'D1', definitionFormal: 'X1', convention: 'Preserve the source expression.' },
+  ] } });
+  const catalog = await app.client.listTools();
+  const tool = catalog.tools.find(item => item.name === 'portal_publish_schema');
+  expect(tool?.inputSchema.properties).toEqual({ targetId: { type: 'integer', minimum: 1 } });
+  expect(tool?.inputSchema.additionalProperties).toBe(false);
+  const rejected = await app.client.callTool({ name: 'portal_publish_schema', arguments: { targetId: 1, approved: true } });
+  expect(rejected.isError).toBe(true);
+  expect(JSON.stringify(rejected)).not.toContain(KEY);
+  const published = await app.client.callTool({ name: 'portal_publish_schema', arguments: { targetId: 1 } });
+  expect(published.isError).not.toBe(true);
+  expect(published.structuredContent).toMatchObject({
+    targetId: 1, verified: true, beforeCount: 0, afterCount: 2, version: 1,
+    changes: { added: ['X1', 'D1'], removed: [], changed: [] },
+  });
+  expect(JSON.stringify(published)).not.toContain(KEY);
+  expect(app.remote.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(1);
+  await app.transport.terminateSession();
+  expect(await app.publisher.getDescription('alice', 1)).toMatchObject({ time_update: '2026-11-06T02:00:00Z' });
+});
+
 it('prepares a schema with errors using only targetId and still requires independent human approval', async () => {
   const app = await start();
   await app.account('connection', 'PUT', { key: KEY });
