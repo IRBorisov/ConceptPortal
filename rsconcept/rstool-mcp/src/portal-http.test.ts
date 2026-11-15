@@ -27,6 +27,9 @@ const cleanup: Array<() => Promise<void> | void> = [];
 it('publishes the current session from MCP after the conversation already has permission', async () => {
   const app = await start();
   await app.account('connection', 'PUT', { key: KEY });
+  const missing = await app.client.callTool({ name: 'portal_publish_schema', arguments: { targetId: 1 } });
+  expect(missing.structuredContent).toMatchObject({ error: { code: 'NO_CURRENT_SESSION' } });
+  expect(app.remote.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(0);
   await app.client.callTool({ name: 'apply_schema_patch', arguments: { items: [
     { alias: 'X1', term: 'Objects' },
     { alias: 'D1', definitionFormal: 'X1', convention: 'Preserve the source expression.' },
