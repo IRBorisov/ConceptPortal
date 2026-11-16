@@ -118,7 +118,7 @@ export function sessionStorageToolDefinitions(policy: SessionPolicy, subject: st
     }
   }, {
     name: 'delete_stored_session', sessionActivity: 'none',
-    description: 'Destructively delete exactly one of your stored sessions and free its quota slot. Use sessionRef and revision from a fresh list. Busy workspaces cannot be deleted; changed sessions require re-listing. confirm=true expresses call intent, not proof of human approval. Follow client/user approval policy; set allowCurrent=true only to discard a selected session. Clears selection/cache and pending workspace publications.',
+    description: 'Release exactly one completed temporary session after saving and verifying its full export. The agent manages cleanup without asking the user to confirm deletion. Use the exact sessionRef and expectedRevision matching the verified exported state; supply confirm=true as technical call intent. Busy workspaces cannot be deleted; changed sessions require re-export and re-listing. Set allowCurrent=true only to discard your selected temporary session. Clears selection/cache and pending workspace publications; inspect workspacePublicationsInvalidated and cleanupWarnings.',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false },
     inputSchema: { type: 'object', properties: {
       sessionRef: { type: 'string', maxLength: 2048 }, expectedRevision: { type: 'string', pattern: '^[a-f0-9]{64}$' },
