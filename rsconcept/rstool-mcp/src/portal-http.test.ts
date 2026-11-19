@@ -187,6 +187,15 @@ it('builds and edits an OSS with the personal key, revision guards and operation
     error: { message: expect.stringContaining('Portal OSS changed') },
   });
   expect((await call('execute_operation', { target: 3, key: KEY })).isError).toBe(true);
+  const requestsBeforeInvalidTargets = app.remote.mock.calls.length;
+  for (const target of ['3', 0, -1, 3.5, Number.MAX_SAFE_INTEGER + 1]) {
+    for (const [name, fields] of [['update_operation', { ...update, target }], ['execute_operation', { target }]] as const) {
+      expect((await call(name, fields)).structuredContent).toMatchObject({
+        error: { message: 'A positive, safe integer operation ID is required' },
+      });
+    }
+  }
+  expect(app.remote.mock.calls).toHaveLength(requestsBeforeInvalidTargets);
   expect(writes).toHaveLength(5);
   conflict = true;
   expect((await call('execute_operation', { target: 3 })).structuredContent).toMatchObject({

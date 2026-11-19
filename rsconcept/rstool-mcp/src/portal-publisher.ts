@@ -139,14 +139,18 @@ export class PortalPublisher {
     return this.exclusive(subject, async () => {
       if (typeof expectedTimeUpdate !== 'string' || !Number.isFinite(Date.parse(expectedTimeUpdate)) || /[\r\n]/.test(expectedTimeUpdate))
         throw new Error('A valid expectedTimeUpdate is required');
+      const createsOperation = action === 'create-schema' || action === 'import-schema' || action === 'create-synthesis';
+      const requestedOperationId = payload.target;
+      if (!createsOperation && (typeof requestedOperationId !== 'number' ||
+        !Number.isSafeInteger(requestedOperationId) || requestedOperationId <= 0))
+        throw new Error('A positive, safe integer operation ID is required');
       const credential = this.personalCredential(subject, 'write');
       const before = await this.readItem(credential, 'oss', targetId);
       if (before.time_update !== expectedTimeUpdate)
         throw new Error('Portal OSS changed; read the current revision before retrying');
-      const created = action === 'create-schema' || action === 'import-schema' || action === 'create-synthesis';
       const response = await this.#api.mutateOss(credential.token, targetId, action, expectedTimeUpdate, payload);
-      const written = created ? response.oss : response;
-      const operationId = created ? response.new_operation : payload.target;
+      const written = createsOperation ? response.oss : response;
+      const operationId = createsOperation ? response.new_operation : requestedOperationId;
       const verificationError = 'Portal OSS verification failed; read the graph before retrying';
       if (!Number.isSafeInteger(operationId) || Number(operationId) <= 0 || written?.id !== targetId ||
         typeof written.time_update !== 'string' || written.time_update === expectedTimeUpdate)
@@ -155,7 +159,7 @@ export class PortalPublisher {
       const oss = await this.readItem(credential, 'oss', targetId);
       const operation = Array.isArray(oss.operations) && oss.operations.find(row => row?.id === operationId);
       const writtenOperation = Array.isArray(written.operations) && written.operations.find((row: any) => row?.id === operationId);
-      const expectedType = action === 'create-synthesis' || action === 'execute-operation' ? 'synthesis' : created ? 'input' : undefined;
+      const expectedType = action === 'create-synthesis' || action === 'execute-operation' ? 'synthesis' : createsOperation ? 'input' : undefined;
       if (oss.time_update !== written.time_update || !operation || !isDeepStrictEqual(operation, writtenOperation) ||
         (expectedType !== undefined && operation.operation_type !== expectedType) ||
         !['arguments', 'substitutions'].every(field => Array.isArray(oss[field]) && Array.isArray(written[field]) &&
