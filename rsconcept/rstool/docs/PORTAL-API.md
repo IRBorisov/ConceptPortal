@@ -27,7 +27,7 @@
 | PATCH | `/api/agents/library/:id/set-access-policy`    | Политика доступа (владелец или staff)            |
 | POST  | `/api/agents/rsforms`                          | Создать пустую КС с `location`, затем загрузить содержимое |
 | GET   | `/api/agents/rsforms/:id/details`              | Полная КС                                        |
-| PATCH | `/api/agents/rsforms/:id/replace`              | Заменить содержимое (`exportPortal` / load-json) |
+| PATCH | `/api/agents/rsforms/:id/replace`              | Загрузить содержимое в собственную пустую КС |
 | POST  | `/api/agents/rsforms/:id/create-version`       | Снимок версии (owner/staff)                      |
 | POST  | `/api/agents/rsforms/:id/constituents`         | Создать конституенту                             |
 | PATCH | `/api/agents/rsforms/:id/constituents/:cst_id` | Обновить конституенту                            |

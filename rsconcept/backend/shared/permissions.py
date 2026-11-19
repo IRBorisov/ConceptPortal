@@ -4,6 +4,7 @@
 from typing import Any, cast
 
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from rest_framework.permissions import AllowAny as Anyone  # pylint: disable=unused-import
 from rest_framework.permissions import BasePermission as _Base
 from rest_framework.permissions import \
@@ -11,10 +12,9 @@ from rest_framework.permissions import \
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
-from apps.library.models import AccessPolicy, Editor, LibraryItem, Version
-from apps.oss.models import Operation
+from apps.library.models import AccessPolicy, Editor, LibraryItem, LibraryItemType, Version
+from apps.oss.models import Inheritance, Operation
 from apps.rsform.models import Constituenta
-from apps.users.models import User
 
 
 def _extract_item(obj: Any) -> LibraryItem:
@@ -33,22 +33,60 @@ def _extract_item(obj: Any) -> LibraryItem:
     })
 
 
-def can_read_library_item(user: Any, item: LibraryItem) -> bool:
-    ''' Whether *user* may read *item*. '''
+def library_item_read_filter(user: Any) -> Q:
+    ''' Direct object ACL, also usable in batched lookups. '''
     if user.is_anonymous:
-        return item.access_policy == AccessPolicy.PUBLIC
-    if hasattr(user, 'is_staff') and user.is_staff:
+        return Q(access_policy=AccessPolicy.PUBLIC)
+    if user.is_staff:
+        return Q()
+    editor_items = Editor.objects.filter(editor_id=user.pk).values('item_id')
+    return (Q(access_policy=AccessPolicy.PUBLIC) | Q(owner_id=user.pk)
+            | (Q(pk__in=editor_items) & Q(access_policy=AccessPolicy.PROTECTED)))
+
+
+def source_schema_ids(schema_ids: set[int]) -> set[int]:
+    ''' Find all live sources of inherited data, including transitive sources. '''
+    sources: set[int] = set()
+    frontier = schema_ids
+    while frontier:
+        parents = set(Inheritance.objects.filter(child__schema_id__in=frontier)
+                      .values_list('parent__schema_id', flat=True).distinct())
+        frontier = parents - sources - schema_ids
+        sources.update(frontier)
+    return sources
+
+
+def unreadable_derived_schema_ids(user: Any) -> set[int]:
+    ''' Find results with a source outside the reader's current ACL. '''
+    if user.is_staff:
+        return set()
+    readable = LibraryItem.objects.filter(library_item_read_filter(user)).values('pk')
+    links = Inheritance.objects.all()
+    blocked = set(links.exclude(parent__schema_id__in=readable)
+                  .values_list('child__schema_id', flat=True).distinct())
+    frontier = blocked
+    while frontier:
+        children = set(links.filter(parent__schema_id__in=frontier)
+                       .values_list('child__schema_id', flat=True).distinct())
+        frontier = children - blocked
+        blocked = blocked | frontier
+    return blocked
+
+
+def can_read_library_item(user: Any, item: LibraryItem) -> bool:
+    ''' Read access includes all live sources of a derived schema. '''
+    if user.is_staff:
         return True
-    if item.access_policy == AccessPolicy.PUBLIC:
-        return True
-    if item.owner_id == user.pk:
-        return True
-    if Editor.objects.filter(
-        item=item,
-        editor=cast(User, user)
-    ).exists() and item.access_policy != AccessPolicy.PRIVATE:
-        return True
-    return False
+    direct = (item.access_policy == AccessPolicy.PUBLIC
+              or (not user.is_anonymous and (item.owner_id == user.pk
+                  or (item.access_policy == AccessPolicy.PROTECTED
+                      and Editor.objects.filter(item=item, editor_id=user.pk).exists()))))
+    if not direct or item.item_type != LibraryItemType.RSFORM:
+        return direct
+    sources = source_schema_ids({item.pk})
+    return not sources or not LibraryItem.objects.filter(pk__in=sources).exclude(
+        library_item_read_filter(user)
+    ).exists()
 
 
 def can_edit_item(user, obj: Any) -> bool:
@@ -61,15 +99,10 @@ def can_edit_item(user, obj: Any) -> bool:
     item = _extract_item(obj)
     if item.read_only:
         return False
-    if item.owner_id == user.pk:
-        return True
-
-    if Editor.objects.filter(
-        item=item,
-        editor=cast(User, user)
-    ).exists() and item.access_policy != AccessPolicy.PRIVATE:
-        return True
-    return False
+    editable = item.owner_id == user.pk or (
+        item.access_policy != AccessPolicy.PRIVATE and Editor.objects.filter(item=item, editor=user).exists()
+    )
+    return editable and can_read_library_item(user, item)
 
 
 class GlobalAdmin(_Base):

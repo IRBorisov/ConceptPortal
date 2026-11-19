@@ -92,6 +92,8 @@ Only configured HTTP hosts expose:
 
 Graph tools use the bound personal key with read and write scopes. Portal enforces edit rights on the OSS and read rights on imported schemas. The tools work without a local rstool session. Before editing, show the user the OSS, its revision and the planned operations, then obtain explicit permission.
 
+Portal checks current read access to the argument schemas when synthesizing. A result can be shared only with readers who can read all its sources. If a source is restricted later, readers who lose access also lose access to schemas still inheriting its contents, including in search.
+
 1. Read `portal_get_details(kind: "oss", targetId: …)`. Use its `time_update` as `expectedTimeUpdate` for the next graph call. A concurrent edit returns a conflict. Read the revised graph and obtain acceptance for changes against that revision.
 2. Use `portal_oss_create_schema` with `item_data` to add a blank argument, or `portal_oss_import_schema` with `item_data`, a Portal schema ID in `source`, and an explicit `clone_source`. An `item_data` object can include `alias`, `title`, `description` and `parent` (block ID or null). Portal places new nodes automatically. For a local argument, load it into rstool and publish it to the new input operation's `resultId` using the schema publication workflow.
 3. Call `portal_oss_create_synthesis` with `item_data`, the input operation IDs in `arguments`, and an optional `substitutions` array of `{original, substitution}`. Substitutions use constituent IDs from each argument schema's Portal details. `original` is the constituent to replace. `substitution` is the one to retain. To edit or rerun the synthesis, use the affected operation ID in `target`.

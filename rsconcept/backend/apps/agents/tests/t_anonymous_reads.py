@@ -4,8 +4,10 @@ from unittest.mock import patch
 from django.core.cache import cache
 from rest_framework.test import APIClient
 
-from apps.library.models import AccessPolicy, LocationHead
+from apps.library.models import AccessPolicy, Editor, LocationHead
+from apps.oss.models import OperationSchema, OperationType
 from apps.rsform.models import RSForm
+from apps.rsmodel.models import RSModel
 from shared.EndpointTester import EndpointTester
 
 
@@ -48,6 +50,27 @@ class TestAnonymousAgentReads(EndpointTester):
         ):
             with self.subTest(endpoint=endpoint):
                 self.assertEqual(getattr(self.anonymous, method)(endpoint, {}).status_code, 401)
+
+    def test_public_details_filter_private_related_metadata(self):
+        editor = self.user2
+        Editor.add(self.public.model.pk, editor.pk)
+        closed = OperationSchema.create(title='Private graph', alias='CLOSED', owner=self.user,
+                                        access_policy=AccessPolicy.PRIVATE)
+        closed.create_operation(alias='Source', operation_type=OperationType.INPUT, result=self.public.model)
+        RSModel.create(schema=self.public.model, title='Private model', alias='CLOSED-MODEL',
+                       owner=self.user, access_policy=AccessPolicy.PRIVATE)
+        details = f'/api/agents/rsforms/{self.public.model.pk}/details'
+        data = self.anonymous.get(details).data
+        self.assertEqual(data['oss'], [])
+        self.assertEqual(data['models'], [])
+        self.assertEqual(data['editors'], [])
+
+        opened = OperationSchema.create(title='Public graph', alias='OPEN', owner=self.user)
+        opened.create_operation(alias='Source', operation_type=OperationType.INPUT, result=self.public.model)
+        RSModel.create(schema=self.public.model, title='Public model', alias='OPEN-MODEL', owner=self.user)
+        data = self.anonymous.get(details).data
+        self.assertEqual([item['alias'] for item in data['oss']], ['OPEN'])
+        self.assertEqual([item['alias'] for item in data['models']], ['OPEN-MODEL'])
 
     def test_invalid_present_key_does_not_silently_become_anonymous(self):
         self.anonymous.credentials(HTTP_AUTHORIZATION='Bearer rcp_invalid_key')

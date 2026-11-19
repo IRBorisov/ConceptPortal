@@ -88,6 +88,7 @@ class PropagationEngine:
                 parent=cst
             )
             self.cache.insert_inheritance(new_inheritance)
+        _touch_schema(destination.pk)
         new_mapping = {alias_mapping[alias]: cst for alias, cst in new_mapping.items()}
         self.on_inherit_cst(operation.pk, destination, new_cst_list, new_mapping)
 
@@ -120,6 +121,7 @@ class PropagationEngine:
             new_old_data = child_schema.update_cst(successor.pk, new_data)
             if not new_old_data:
                 continue
+            _touch_schema(child_schema.pk)
             new_mapping = {alias_mapping[alias]: cst for alias, cst in new_mapping.items()}
             self.on_update_cst(
                 operation=child_id,

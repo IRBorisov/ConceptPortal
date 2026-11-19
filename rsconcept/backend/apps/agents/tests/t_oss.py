@@ -146,9 +146,19 @@ class TestAgentOssApi(EndpointTester):
         inherited_url = f'{url}/{min(inherited_ids)}'
         response = self.client.patch(inherited_url, patch_data, format='json', headers=latest)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        response = self.client.post(f'{url}/delete', {'items': [min(inherited_ids)]}, format='json', headers=latest)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        response = self.client.post(f'/api/agents/rsforms/{schema.pk}/substitute', {
+            'substitutions': [{'original': min(inherited_ids), 'substitution': term_id}],
+        }, format='json', headers=latest)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         source_url = f'/api/agents/rsforms/{self.ks1.model.pk}/constituents/{self.ks1X1.pk}'
         response = self.client.patch(source_url, patch_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        schema.refresh_from_db()
+        self.assertNotEqual(latest[EXPECTED_TIME_UPDATE_HEADER], schema.time_update.isoformat())
+        response = self.client.patch(term_url, {'term_raw': 'New measure'}, format='json', headers=latest)
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
         source_copy = Inheritance.objects.get(operation=operation, parent_id=self.ks1X1.pk).child
         self.assertEqual(source_copy.term_raw, 'Updated measure')
         self.assertEqual(Constituenta.objects.get(pk=term_id).term_raw, 'Updated measure')
@@ -158,6 +168,37 @@ class TestAgentOssApi(EndpointTester):
         )
         self.assertEqual(set(Constituenta.objects.filter(schema=schema).values_list('pk', flat=True)),
                          inherited_ids | {term_id})
+
+    @decl_endpoint('/api/agents/oss/{item}/create-synthesis', method='post')
+    def test_synthesis_requires_compatible_source_audiences(self):
+        self.ks1.model.access_policy = AccessPolicy.PRIVATE
+        self.ks1.model.save(update_fields=['access_policy'])
+        data = {'item_data': {'alias': '3'}, 'arguments': [self.op1.pk, self.op2.pk]}
+        self.executeForbidden(item=self.oss_id, data=data)
+        self.assertEqual(Operation.objects.filter(oss_id=self.oss_id).count(), 2)
+        self.oss.model.access_policy = AccessPolicy.PRIVATE
+        self.oss.model.save(update_fields=['access_policy'])
+        self.executeCreated(item=self.oss_id, data=data)
+
+    @decl_endpoint('/api/agents/oss/{item}/create-synthesis', method='post')
+    def test_synthesis_read_access_follows_source_acl(self):
+        created = self.executeCreated(item=self.oss_id, data={
+            'item_data': {'alias': '3', 'title': 'Shared synthesis'},
+            'arguments': [self.op1.pk, self.op2.pk],
+        })
+        result = Operation.objects.get(pk=created.data['new_operation']).result
+        self.assertIsNotNone(result)
+        result.location = '/S'
+        result.save(update_fields=['location'])
+        self.ks1.model.access_policy = AccessPolicy.PRIVATE
+        self.ks1.model.save(update_fields=['access_policy'])
+        details = f'/api/agents/rsforms/{result.pk}/details'
+        self.assertEqual(self.client.get(details).status_code, status.HTTP_200_OK)
+        self.client.credentials()
+        self.assertIn(self.client.get(details).status_code, (401, 403))
+        search = self.client.get('/api/agents/library/context-search', {'q': 'Shared synthesis'})
+        self.assertEqual(search.status_code, status.HTTP_200_OK)
+        self.assertNotIn(result.pk, search.data['ids'])
 
     @decl_endpoint('/api/agents/oss/{item}/create-synthesis', method='post')
     def test_create_synthesis_below_arguments(self):

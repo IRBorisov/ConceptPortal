@@ -12,19 +12,16 @@ from rest_framework.response import Response
 
 from apps.library.models import LibraryItem, LibraryItemType, LocationHead
 from apps.library.serializers import LibraryItemCreateSerializer, VersionCreateSerializer
-from apps.oss.models import Inheritance
 from apps.rsform import models as rs_models
 from apps.rsform import serializers as rs_serializers
 from apps.rsform.mutations import (
     create_constituenta,
     delete_constituents,
+    import_empty_schema,
     move_constituents,
-    replace_schema_content,
     substitute_constituents,
     update_constituenta,
 )
-from shared import messages as msg
-
 from .base import AgentItemView
 
 
@@ -40,6 +37,9 @@ class AgentRsformBase(AgentItemView):
     def _get_rsform(self, pk: int) -> LibraryItem:
         ''' Load a conceptual schema or answer 404 for another library type. '''
         return self._get_item(pk, LibraryItemType.RSFORM)
+
+    def _schema_data(self, item: LibraryItem) -> dict:
+        return rs_serializers.RSFormParseSerializer(item, context={'request': self.request}).data
 
 
 @extend_schema(
@@ -67,7 +67,7 @@ class AgentRsformCreateView(AgentRsformBase):
         self._log('rsform.create', c.HTTP_201_CREATED, summary=f'Created {item.alias}', item=item)
         return Response(
             status=c.HTTP_201_CREATED,
-            data=rs_serializers.RSFormParseSerializer(item).data,
+            data=self._schema_data(item),
         )
 
 
@@ -82,33 +82,30 @@ class AgentRsformDetailsView(AgentRsformBase):
     def get(self, request: Request, pk: int) -> HttpResponse:
         item = self._get_rsform(pk)
         self._require_read(item)
-        return Response(rs_serializers.RSFormParseSerializer(item).data)
+        return Response(self._schema_data(item))
 
 
 @extend_schema(
     tags=['Agents'],
-    summary='Replace RSForm content (load-json / exportPortal)',
+    summary='Initialize an owned empty RSForm',
     request=rs_serializers.RSFormImportJsonSerializer,
     responses={c.HTTP_200_OK: rs_serializers.RSFormParseSerializer},
 )
 class AgentRsformReplaceView(AgentRsformBase):
-    ''' Agent: bulk replace schema content. '''
+    ''' Agent: first import into an owned empty schema. '''
     agent_action = 'rsform.replace'
     agent_heavy = True
 
     def patch(self, request: Request, pk: int) -> HttpResponse:
         item = self._get_rsform(pk)
         self._require_edit(item)
-        if Inheritance.objects.filter(child__schema_id=item.pk).exists():
-            raise ValidationError({'data': msg.importIntoInherited()})
-
         serializer = rs_serializers.RSFormImportJsonSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        replace_schema_content(item, serializer.validated_data)
+        import_empty_schema(item, serializer.validated_data, request)
 
         item.refresh_from_db()
-        self._log('rsform.replace', c.HTTP_200_OK, summary='Replaced schema content', item=item)
-        return Response(rs_serializers.RSFormParseSerializer(item).data)
+        self._log('rsform.replace', c.HTTP_200_OK, summary='Initialized schema content', item=item)
+        return Response(self._schema_data(item))
 
 
 @extend_schema(
@@ -149,7 +146,7 @@ class AgentRsformCreateVersionView(AgentRsformBase):
             status=c.HTTP_201_CREATED,
             data={
                 'version': result.pk,
-                'schema': rs_serializers.RSFormParseSerializer(item).data,
+                'schema': self._schema_data(item),
             },
         )
 
@@ -183,7 +180,7 @@ class AgentCreateConstituentaView(AgentRsformBase):
             status=c.HTTP_201_CREATED,
             data={
                 'new_cst': rs_serializers.CstInfoSerializer(new_cst).data,
-                'schema': rs_serializers.RSFormParseSerializer(item).data,
+                'schema': self._schema_data(item),
             },
         )
 
@@ -226,7 +223,7 @@ class AgentUpdateConstituentaView(AgentRsformBase):
             summary=f'Updated constituenta {cst_id}',
             item=item,
         )
-        return Response(rs_serializers.RSFormParseSerializer(item).data)
+        return Response(self._schema_data(item))
 
 
 @extend_schema(
@@ -245,7 +242,7 @@ class AgentDeleteConstituentsView(AgentRsformBase):
         serializer = rs_serializers.CstListSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
         cst_list: list[rs_models.Constituenta] = serializer.validated_data['items']
-        delete_constituents(item, cst_list)
+        delete_constituents(item, cst_list, request)
 
         aliases = ', '.join(cst.alias for cst in cst_list[:8])
         self._log(
@@ -254,7 +251,7 @@ class AgentDeleteConstituentsView(AgentRsformBase):
             summary=f'Deleted {len(cst_list)}: {aliases}',
             item=item,
         )
-        return Response(rs_serializers.RSFormParseSerializer(item).data)
+        return Response(self._schema_data(item))
 
 
 @extend_schema(
@@ -274,10 +271,10 @@ class AgentSubstituteView(AgentRsformBase):
             data=request.data, context={'schema': item}
         )
         serializer.is_valid(raise_exception=True)
-        substitute_constituents(item, serializer.validated_data['substitutions'])
+        substitute_constituents(item, serializer.validated_data['substitutions'], request)
 
         self._log('rsform.substitute', c.HTTP_200_OK, summary='Substituted constituents', item=item)
-        return Response(rs_serializers.RSFormParseSerializer(item).data)
+        return Response(self._schema_data(item))
 
 
 @extend_schema(
@@ -295,7 +292,7 @@ class AgentMoveCstView(AgentRsformBase):
         self._require_edit(item)
         serializer = rs_serializers.CstMoveSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
-        move_constituents(item, serializer.validated_data)
+        move_constituents(item, serializer.validated_data, request)
 
         self._log('rsform.move_cst', c.HTTP_200_OK, summary='Moved constituents', item=item)
-        return Response(rs_serializers.RSFormParseSerializer(item).data)
+        return Response(self._schema_data(item))

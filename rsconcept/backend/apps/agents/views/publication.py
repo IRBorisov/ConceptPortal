@@ -83,4 +83,5 @@ class AgentRsformPublishView(AgentItemView):
             LibraryItem.objects.filter(pk=item.pk).update(time_update=claimed_time)
             item.refresh_from_db()
             self._log('rsform.publish', status.HTTP_200_OK, summary='Approved MCP publication', item=item)
-            return Response({'version': snapshot.pk, 'schema': RSFormParseSerializer(item).data})
+            schema = RSFormParseSerializer(item, context={'request': request}).data
+            return Response({'version': snapshot.pk, 'schema': schema})
