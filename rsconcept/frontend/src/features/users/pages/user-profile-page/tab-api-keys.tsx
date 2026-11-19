@@ -137,8 +137,10 @@ export function TabApiKeys() {
           )}
         </form.Field>
         <Tooltip
+          id='api_key_access_help_tooltip'
           anchorSelect='#api_key_access_help'
           className='max-w-xs'
+          clickable
           openEvents={{ mouseover: true, focus: true, click: true }}
           globalCloseEvents={{ escape: true, clickOutsideAnchor: true }}
         >
