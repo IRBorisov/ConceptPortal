@@ -110,6 +110,77 @@ it('creates schema, model and OSS over authenticated MCP without allocating a lo
   }
 });
 
+it('appends and updates own constituents with revision checks and preserves inheritance', async () => {
+  const app = await start();
+  const revision = '2026-11-19T00:00:00.000Z';
+  const schemas = [1, 2].map(id => ({
+    id, time_update: revision, items: [{ id: id * 10, alias: 'X1', cst_type: 'basic', term_raw: 'Objects' }],
+    inheritance: id === 1 ? [] : [{ child: 20, child_source: 2, parent: 10, parent_source: 1 }],
+  }));
+  const writes: string[] = [];
+  let mismatch = false;
+  let conflict = false;
+  app.remote.mockImplementation(async (input, options) => {
+    const url = new URL(String(input));
+    const headers = new Headers(options?.headers);
+    expect(headers.get('Authorization')).toBe(`Bearer ${KEY}`);
+    if (url.pathname === '/api/agents/me') return Response.json({ id: 7, username: 'Alice' });
+    const match = /\/rsforms\/(\d+)\/(details|constituents)(?:\/(\d+))?$/.exec(url.pathname)!;
+    const schema = schemas.find(row => row.id === Number(match[1]))!;
+    if (match[2] === 'details') {
+      return Response.json(mismatch && writes.length === 5
+        ? { ...schema, items: schema.items.slice(0, -1) } : schema);
+    }
+    expect(headers.get('X-Expected-Time-Update')).toBe(schema.time_update);
+    expect(options?.redirect).toBe('error');
+    writes.push(`${options?.method} ${url.pathname}`);
+    if (conflict) return Response.json({}, { status: 409 });
+    schema.time_update = new Date(Date.parse(revision) + writes.length).toISOString();
+    const body = JSON.parse(String(options?.body));
+    if (options?.method === 'POST') {
+      const item = { id: schema.id * 10 + schema.items.length, ...body };
+      schema.items.push(item);
+      return Response.json({ new_cst: item, schema }, { status: 201 });
+    }
+    const item = schema.items.find(row => row.id === Number(match[3]));
+    Object.assign(item!, body.item_data);
+    return Response.json(schema);
+  });
+  await app.account('connection', 'PUT', { key: KEY });
+  const current = await app.client.callTool({ name: 'get_current_session', arguments: {} });
+  const use = (action: string, fields: Record<string, unknown>, id = 2, expectedTimeUpdate = schemas[id - 1].time_update) =>
+    app.client.callTool({ name: `portal_${action}_constituent`, arguments: { targetId: id, expectedTimeUpdate, ...fields } });
+  const term = { alias: 'D1', cst_type: 'term', definition_formal: 'X1', term_raw: 'Measure' };
+  for (const id of [1, 2]) {
+    const created = await use('create', { item_data: term }, id);
+    expect(created.structuredContent).toMatchObject({ verified: true, targetId: id, constituentId: id * 10 + 1, item: term });
+    expect(JSON.stringify(created)).not.toContain(KEY);
+    const updated = await use('update', { constituentId: id * 10 + 1, item_data: { term_raw: '' } }, id);
+    expect(updated.structuredContent).toMatchObject({ verified: true, item: { ...term, term_raw: '' } });
+  }
+  const edit = { constituentId: 21, item_data: { term_raw: 'Revised' } };
+  expect((await use('update', { ...edit, constituentId: 20 })).structuredContent)
+    .toMatchObject({ error: { message: expect.stringContaining('inherited') } });
+  expect((await use('update', { ...edit, constituentId: 11 })).isError).toBe(true);
+  expect((await use('update', { ...edit, constituentId: '21' })).isError).toBe(true);
+  expect((await use('update', { ...edit, key: KEY })).isError).toBe(true);
+  expect((await use('update', edit, 2, revision)).isError).toBe(true);
+  expect((await use('create', { item_data: term })).isError).toBe(true);
+  expect(writes).toEqual([
+    'POST /api/agents/rsforms/1/constituents', 'PATCH /api/agents/rsforms/1/constituents/11',
+    'POST /api/agents/rsforms/2/constituents', 'PATCH /api/agents/rsforms/2/constituents/21',
+  ]);
+  mismatch = true;
+  const unverified = await use('update', edit);
+  expect(unverified.structuredContent).toMatchObject({ error: { message: expect.stringContaining('verification failed') } });
+  expect(writes).toHaveLength(5);
+  mismatch = false;
+  conflict = true;
+  expect((await use('update', edit)).structuredContent).toMatchObject({ error: { message: expect.stringContaining('Portal schema changed') } });
+  expect(writes).toHaveLength(6);
+  expect(await app.client.callTool({ name: 'get_current_session', arguments: {} })).toEqual(current);
+});
+
 it('builds and edits an OSS with the personal key, revision guards and operation readback', async () => {
   const app = await start();
   const ossId = 42;

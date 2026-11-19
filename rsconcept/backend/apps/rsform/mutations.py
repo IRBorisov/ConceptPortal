@@ -3,9 +3,12 @@ from typing import Optional, cast
 
 from django.db import transaction
 from django.db.models import F
+from rest_framework.exceptions import ValidationError
+from rest_framework.request import Request
 
 from apps.library.models import LibraryItem
-from apps.oss.models import PropagationFacade
+from apps.oss.models import Inheritance, PropagationFacade
+from shared.concurrency import assert_expected_time_update_locked
 
 from . import models as m
 from . import serializers as s
@@ -36,11 +39,14 @@ def create_constituenta(
     item: LibraryItem,
     data: dict,
     insert_after: Optional[m.Constituenta],
+    request: Request | None = None,
 ) -> m.Constituenta:
     ''' Create one constituenta and propagate the change. '''
     with transaction.atomic():
         # Serialize schema writers before touching constituent rows (also on SQLite).
         LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
+        if request is not None:
+            assert_expected_time_update_locked(item, request)
         propagation = PropagationFacade()
         schema = propagation.get_schema(item.pk)
         new_cst = schema.create_cst(data, insert_after)
@@ -49,11 +55,17 @@ def create_constituenta(
     return new_cst
 
 
-def update_constituenta(item: LibraryItem, cst: m.Constituenta, data: dict) -> None:
+def update_constituenta(
+    item: LibraryItem, cst: m.Constituenta, data: dict, request: Request | None = None,
+) -> None:
     ''' Update persistent attributes of a constituenta and propagate the change. '''
     with transaction.atomic():
         # Serialize schema writers before touching constituent rows (also on SQLite).
         LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
+        if request is not None:
+            assert_expected_time_update_locked(item, request)
+            if Inheritance.objects.filter(child_id=cst.pk).exists():
+                raise ValidationError('The constituent is inherited; edit its source schema.')
         propagation = PropagationFacade()
         schema = propagation.get_schema(item.pk)
         old_data = schema.update_cst(cst.pk, data)

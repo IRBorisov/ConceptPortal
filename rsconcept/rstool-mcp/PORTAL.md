@@ -80,6 +80,8 @@ Only configured HTTP hosts expose:
 | `portal_oss_create_synthesis` | Add and run a synthesis with ordered argument operations and constituent substitutions |
 | `portal_oss_update_operation` | Edit operation metadata or change arguments and substitutions |
 | `portal_oss_execute_operation` | Rebuild the result of an existing synthesis operation |
+| `portal_create_constituent` | Append a constituent to an editable schema, including a synthesis result |
+| `portal_update_constituent` | Edit the supplied fields of one own constituent by ID |
 | `portal_get_description` | Accepts only `targetId`; reads description and `time_update` through the bound key, publicly without a key, or privately with a bound read-capable key, without a local session |
 | `portal_update_description` | Accepts `targetId`, `expectedTimeUpdate`, `description`; updates only the description with CAS and independent readback, without a local rstool session or approval page |
 | `portal_connection_status` | Safe account/connection status for the authenticated subject |
@@ -95,6 +97,15 @@ Graph tools use the bound personal key with read and write scopes. Portal enforc
 3. Call `portal_oss_create_synthesis` with `item_data`, the input operation IDs in `arguments`, and an optional `substitutions` array of `{original, substitution}`. Substitutions use constituent IDs from each argument schema's Portal details. `original` is the constituent to replace. `substitution` is the one to retain. To edit or rerun the synthesis, use the affected operation ID in `target`.
 
 All graph calls take the OSS `targetId` and `expectedTimeUpdate`. They send the latter as `X-Expected-Time-Update` and read the graph independently after writing. The result contains `targetId`, `operationId`, `resultId`, `time_update`, `verified` and the read-back `oss`. Read a resulting conceptual schema with `portal_get_details(kind: "schema", targetId: …)` to verify its contents. After a timeout or failed readback, inspect the graph before any retry. The adapter sends a mutation at most once per call.
+
+## Append or edit one constituent
+
+Read the schema with `portal_get_details(kind: "schema", targetId: …)`. Show the user the schema, the revision and the constituent fields to change. After explicit approval, pass that `time_update` as `expectedTimeUpdate`. Both tools need read and write access and work without an rstool session. Deploy the backend with revision checks on the constituent routes before using the tools.
+
+- `portal_create_constituent` takes `targetId`, `expectedTimeUpdate` and `item_data`. Supply an unused `alias` and `cst_type`, for example `term`. To add a term belonging to the result of a synthesis, use that result schema's ID.
+- `portal_update_constituent` also takes `constituentId` from the schema's `items`. Supply only changed fields in `item_data`. Edit an inherited constituent in its source schema, where Portal can propagate the change through the graph.
+
+Text fields use Portal names such as `term_raw`, `definition_raw`, `definition_formal` and `convention`. Use an empty string to clear a field. The tools return the constituent, its ID and the new schema revision after an independent read. On a conflict, timeout or failed verification, inspect the schema before retrying. Rebuilding a synthesis can create a new result schema. Add its own terms after building the result and check the result ID if rebuilding it later.
 
 ## Publish a schema
 

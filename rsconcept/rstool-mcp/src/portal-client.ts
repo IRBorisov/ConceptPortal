@@ -48,11 +48,23 @@ export class PortalClient {
   public mutateOss(token: string, targetId: number, action: PortalOssAction, expectedTimeUpdate: string, body: unknown) {
     if (!Number.isSafeInteger(targetId) || targetId <= 0 || !Object.hasOwn(OSS_MUTATION_METHODS, action))
       throw new Error('Portal OSS route is not allowed');
-    return this.send(token, `/api/agents/oss/${targetId}/${action}`, OSS_MUTATION_METHODS[action], body, expectedTimeUpdate);
+    return this.send(token, `/api/agents/oss/${targetId}/${action}`, OSS_MUTATION_METHODS[action], body, expectedTimeUpdate, 'OSS');
+  }
+
+  /** Append or update one constituent using an existing agent endpoint. */
+  public mutateConstituent(token: string, targetId: number, constituentId: number | undefined,
+    expectedTimeUpdate: string, body: unknown) {
+    if (!Number.isSafeInteger(targetId) || targetId <= 0 ||
+        (constituentId !== undefined && (!Number.isSafeInteger(constituentId) || constituentId <= 0)))
+      throw new Error('Portal constituent route is not allowed');
+    const path = `/api/agents/rsforms/${targetId}/constituents`;
+    return constituentId === undefined
+      ? this.send(token, path, 'POST', body, expectedTimeUpdate)
+      : this.send(token, `${path}/${constituentId}`, 'PATCH', { item_data: body }, expectedTimeUpdate);
   }
 
   private async send(token: string | undefined, path: string, method: 'GET' | 'POST' | 'PATCH', body?: unknown,
-    expectedTimeUpdate?: string): Promise<Record<string, any>> {
+    expectedTimeUpdate?: string, itemName = 'schema'): Promise<Record<string, any>> {
     if (method !== 'GET' && !token) throw new Error('Portal writes require a key');
     let response: Response;
     try {
@@ -74,7 +86,7 @@ export class PortalClient {
       await response.body?.cancel();
       throw new Error(
         response.status === 409
-          ? `Portal ${expectedTimeUpdate ? 'OSS' : 'schema'} changed; read the current revision before retrying`
+          ? `Portal ${itemName} changed; read the current revision before retrying`
           : `Portal refused the request (${response.status})`
       );
     }
