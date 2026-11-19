@@ -193,6 +193,29 @@ test('profile creates API keys with cumulative access levels', async ({ page }) 
   }
 });
 
+test('profile opens API key help when tooltips are hidden', async ({ page }) => {
+  await setupUserProfile(page);
+  await page.route(`${BACKEND_URL}/api/agents/keys`, async route => {
+    await route.fulfill({ json: [] });
+  });
+
+  await page.goto('/profile');
+  // Simulate the shared tooltip's hidden state without relying on a dev-only store import.
+  await page.addStyleTag({ content: '.react-tooltip { display: none !important; }' });
+  await page.getByRole('tab', { name: 'API-ключи' }).click();
+  const helpLabel = 'О правах и лимитах API-ключа';
+  const helpButton = page.getByRole('button', { name: helpLabel });
+  const help = page.getByRole('dialog', { name: helpLabel });
+  await expect(help).toBeHidden();
+
+  await helpButton.click();
+  await expect(help.getByText(/Доступ к каждому объекту/)).toBeVisible();
+  await expect(help.getByText(/Не больше 5 активных ключей/)).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(help).toBeHidden();
+  await expect(helpButton).toBeFocused();
+});
+
 test('profile tabs stay centered without shifting the page', async ({ page }) => {
   const profile: UserProfile = {
     id: 1,
