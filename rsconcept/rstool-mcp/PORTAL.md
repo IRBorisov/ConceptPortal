@@ -43,7 +43,7 @@ Its authenticated subject determines whose settings you can manage. Each person 
 
 The encrypted key cannot be fetched back, selected by another subject or read by an MCP tool. The page uses no localStorage/cookies for credentials and clears input fields after reading them. Reload clears the human token held in memory. Disconnect removes the binding and outstanding approvals but does not revoke the original Portal key: revoke it in the Portal profile too. Replacing the key also invalidates approvals, including on an already-open MCP connection.
 
-Public data reads require no Portal key. When a key is provided, its read, write and publish scopes can restrict its owner’s existing rights. Expired or revoked keys cannot authenticate. Existing keys retain their prior scopes and no expiration; new keys can select scopes and an expiration in the Portal profile. The account page displays bound-key policy when the backend provides it. Portal enforces current policy on every request; cached MCP metadata is only an early hint. OAuth is not implemented.
+Public data reads require no Portal key. In the Portal profile, choose **Read only** for inspection, **Read, edit and create** for writes and new objects, or **Read, edit, create and publish schemas** to also use `portal_publish_schema`. Each level includes the scopes from the previous level. Issued keys retain their saved scopes and expiry. Expired or revoked keys cannot authenticate. The account page displays bound-key policy when the backend provides it. Portal enforces scopes, expiration and the owner’s object permissions on every request. Cached MCP metadata is an early hint. OAuth is not implemented.
 
 ## Create and inspect library items
 
