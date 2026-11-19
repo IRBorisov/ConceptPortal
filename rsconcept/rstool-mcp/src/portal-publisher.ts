@@ -133,6 +133,55 @@ export class PortalPublisher {
     });
   }
 
+  /** Verify the persisted constituent by ID and leave inherited constituents to their sources. */
+  public mutateConstituent(subject: string, targetId: number, expectedTimeUpdate: string,
+    constituentId: number | undefined, fields: Record<string, unknown>) {
+    return this.exclusive(subject, async () => {
+      if (typeof expectedTimeUpdate !== 'string' || !Number.isFinite(Date.parse(expectedTimeUpdate)) ||
+          /[\r\n]/.test(expectedTimeUpdate)) throw new Error('A valid expectedTimeUpdate is required');
+      const credential = this.credential(subject, targetId, 'write');
+      if (credential.keyPolicy && !credential.keyPolicy.scopes.includes('read')) throw new Error('Portal key does not allow read');
+      const before = await this.readItem(credential, 'schema', targetId);
+      if (before.time_update !== expectedTimeUpdate)
+        throw new Error('Portal schema changed; read the current revision before retrying');
+      if (!Array.isArray(before.items) || !Array.isArray(before.inheritance)) throw new Error('Invalid Portal schema');
+      const creating = constituentId === undefined;
+      if (creating) {
+        if (before.items.some(item => item.alias === fields.alias)) throw new Error('The constituent alias already exists');
+      } else {
+        const previous = before.items.find(item => item.id === constituentId);
+        if (!previous) throw new Error('The constituent is not in this schema');
+        if (before.inheritance.some(link => link.child === constituentId))
+          throw new Error('The constituent is inherited; edit its source schema');
+        if (fields.alias === previous.alias && fields.cst_type !== undefined && fields.cst_type !== previous.cst_type)
+          throw new Error('A type change needs a new alias; omit alias to let Portal assign it');
+      }
+      const response = await this.#api.mutateConstituent(credential.token, targetId, constituentId, expectedTimeUpdate, fields);
+      const written = creating ? response.schema : response;
+      const writtenId = creating ? response.new_cst?.id : constituentId;
+      const invalid = 'Portal constituent verification failed; read the schema before retrying';
+      if (!Number.isSafeInteger(writtenId) || writtenId <= 0 || written?.id !== targetId ||
+          typeof written.time_update !== 'string' || !Number.isFinite(Date.parse(written.time_update)) ||
+          written.time_update === expectedTimeUpdate || !Array.isArray(written.items)) throw new Error(invalid);
+      const after = await this.readItem(credential, 'schema', targetId);
+      const item = Array.isArray(after.items) && after.items.find(row => row.id === writtenId);
+      const expectedIds = before.items.map(row => row.id);
+      if (creating) expectedIds.push(writtenId);
+      const incoming = (schema: Record<string, any>) => schema.inheritance
+        .filter((link: Record<string, any>) => link.child_source === targetId)
+        .sort((a: Record<string, any>, b: Record<string, any>) => a.child - b.child || a.parent - b.parent);
+      if (!item || after.time_update !== written.time_update || !Array.isArray(after.inheritance) ||
+          !isDeepStrictEqual(after.items.map((row: Record<string, unknown>) => row.id), expectedIds) ||
+          !isDeepStrictEqual(incoming(before), incoming(after)) ||
+          !isDeepStrictEqual(content(after), content(written)) ||
+          Object.entries(fields).some(([key, value]) => !isDeepStrictEqual(item[key], value)))
+        throw new Error(invalid);
+      if (creating && !isDeepStrictEqual(content(before), content({ ...after, items: after.items.slice(0, -1) })))
+        throw new Error(invalid);
+      return { targetId, constituentId: writtenId, time_update: after.time_update, verified: true, item };
+    });
+  }
+
   /** Guard the graph revision in Portal and verify the affected operation by an independent read. */
   public mutateOss(subject: string, targetId: number, expectedTimeUpdate: string,
     action: PortalOssAction, payload: Record<string, unknown>) {

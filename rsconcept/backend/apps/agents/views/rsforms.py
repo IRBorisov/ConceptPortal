@@ -171,7 +171,7 @@ class AgentCreateConstituentaView(AgentRsformBase):
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         insert_after = data.get('insert_after')
-        new_cst = create_constituenta(item, data, insert_after)
+        new_cst = create_constituenta(item, data, insert_after, request)
 
         self._log(
             'rsform.create_cst',
@@ -218,7 +218,7 @@ class AgentUpdateConstituentaView(AgentRsformBase):
         serializer.is_valid(raise_exception=True)
         cst = cast(rs_models.Constituenta, serializer.validated_data['target'])
         data = serializer.validated_data['item_data']
-        update_constituenta(item, cst, data)
+        update_constituenta(item, cst, data, request)
 
         self._log(
             'rsform.update_cst',

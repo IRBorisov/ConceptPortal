@@ -8,8 +8,8 @@ from rest_framework import status
 from apps.agents.models import AgentActionLog, ApiKey
 from apps.agents.services.oss_layout import OssLayoutPlanner
 from apps.library.models import AccessPolicy, Editor, LibraryItem, LibraryItemType
-from apps.oss.models import Argument, Block, Layout, Operation, OperationSchema, OperationType, Replica
-from apps.rsform.models import Constituenta, RSForm
+from apps.oss.models import Argument, Block, Inheritance, Layout, Operation, OperationSchema, OperationType, Replica
+from apps.rsform.models import Constituenta, CstType, RSForm
 from shared.concurrency import EXPECTED_TIME_UPDATE_HEADER
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
@@ -111,6 +111,53 @@ class TestAgentOssApi(EndpointTester):
         })
         new_id = response.data['new_operation']
         self.assertEqual(self._layout()[f'o{new_id}'], _node(f'o{new_id}', 40, 300))
+
+    @decl_endpoint('/api/agents/oss/{item}/create-synthesis', method='post')
+    def test_append_and_edit_own_term_on_synthesis(self):
+        ''' Point writes retain inherited constituents and reject stale revisions. '''
+        created = self.executeCreated(item=self.oss_id, data={
+            'item_data': {'alias': '3'},
+            'arguments': [self.op1.pk, self.op2.pk],
+        })
+        operation = Operation.objects.get(pk=created.data['new_operation'])
+        schema = operation.result
+        inherited_ids = set(Inheritance.objects.filter(operation=operation).values_list('child_id', flat=True))
+        self.assertEqual(len(inherited_ids), 2)
+        url = f'/api/agents/rsforms/{schema.pk}/constituents'
+        first_revision = {EXPECTED_TIME_UPDATE_HEADER: schema.time_update.isoformat()}
+        term = {'alias': 'D1', 'cst_type': CstType.TERM, 'term_raw': 'Measure', 'definition_formal': 'X1'}
+        stale = {EXPECTED_TIME_UPDATE_HEADER: self.ks1.model.time_update.isoformat()}
+        self.assertNotEqual(stale, first_revision)
+        response = self.client.post(url, term, format='json', headers=stale)
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
+        response = self.client.post(url, term, format='json', headers=first_revision)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
+        term_id = response.data['new_cst']['id']
+        term_url = f'{url}/{term_id}'
+        patch_data = {'item_data': {'term_raw': 'Updated measure'}}
+        response = self.client.patch(term_url, patch_data, format='json', headers=first_revision)
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
+        schema.refresh_from_db()
+        latest = {EXPECTED_TIME_UPDATE_HEADER: schema.time_update.isoformat()}
+        response = self.client.patch(term_url, patch_data, format='json', headers=latest)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        schema.refresh_from_db()
+        latest = {EXPECTED_TIME_UPDATE_HEADER: schema.time_update.isoformat()}
+        inherited_url = f'{url}/{min(inherited_ids)}'
+        response = self.client.patch(inherited_url, patch_data, format='json', headers=latest)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        source_url = f'/api/agents/rsforms/{self.ks1.model.pk}/constituents/{self.ks1X1.pk}'
+        response = self.client.patch(source_url, patch_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        source_copy = Inheritance.objects.get(operation=operation, parent_id=self.ks1X1.pk).child
+        self.assertEqual(source_copy.term_raw, 'Updated measure')
+        self.assertEqual(Constituenta.objects.get(pk=term_id).term_raw, 'Updated measure')
+        self.assertEqual(
+            set(Inheritance.objects.filter(operation=operation).values_list('child_id', flat=True)),
+            inherited_ids,
+        )
+        self.assertEqual(set(Constituenta.objects.filter(schema=schema).values_list('pk', flat=True)),
+                         inherited_ids | {term_id})
 
     @decl_endpoint('/api/agents/oss/{item}/create-synthesis', method='post')
     def test_create_synthesis_below_arguments(self):

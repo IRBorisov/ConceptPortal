@@ -11,7 +11,8 @@ import { SessionStorageError, type SessionPolicy } from './session-policy';
 /** Trusted HTTP host captures the identity; tools cannot accept a key, subject or publication approval. */
 export function portalToolDefinitions(publisher: PortalPublisher, subject: string, workspace: string,
   validateSource?: (sessionId: string) => void): ToolDefinition[] {
-  return [...portalCreationTools(publisher, subject), ...portalOssTools(publisher, subject), { name: 'portal_publish_schema', description: 'Replace an existing owned Portal schema with the current rstool session and read it back. Writes immediately with the bound key, including schemas with diagnostic errors. Does not certify correctness. Accepts only targetId. Call it only after the user explicitly accepts a summary that names this target, its time_update, the source session, and every added, removed, or changed alias. Immediately before the call, read portal_get_description and confirm that time_update and the current session still match that accepted summary. If either changed, show a new summary and obtain a new acceptance. No approval flag, revision, or key is accepted.',
+  return [...portalCreationTools(publisher, subject), ...portalOssTools(publisher, subject),
+    ...portalConstituentTools(publisher, subject), { name: 'portal_publish_schema', description: 'Replace an existing owned Portal schema with the current rstool session and read it back. Writes immediately with the bound key, including schemas with diagnostic errors. Does not certify correctness. Accepts only targetId. Call it only after the user explicitly accepts a summary that names this target, its time_update, the source session, and every added, removed, or changed alias. Immediately before the call, read portal_get_description and confirm that time_update and the current session still match that accepted summary. If either changed, show a new summary and obtain a new acceptance. No approval flag, revision, or key is accepted.',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
     inputSchema: { type: 'object', properties: { targetId: { type: 'integer', minimum: 1 } }, required: ['targetId'], additionalProperties: false },
     invoke: (tool, args) => {
@@ -90,6 +91,60 @@ function portalCreationTools(publisher: PortalPublisher, subject: string): ToolD
       return publisher.getDetails(subject, args.kind as PortalItemKind, args.targetId as number);
     } });
   return tools;
+}
+
+function portalConstituentTools(publisher: PortalPublisher, subject: string): ToolDefinition[] {
+  const id = { type: 'integer', minimum: 1 };
+  const text = { type: 'string' };
+  const flag = { type: 'boolean' };
+  const itemFields = {
+    alias: { type: 'string', minLength: 1, maxLength: 8 },
+    cst_type: { type: 'string', enum: Object.values(CstType) },
+    term_raw: text, definition_raw: text, definition_formal: text, convention: text,
+    typification_manual: text, crucial: flag, value_is_property: flag,
+    term_forms: { type: 'array', items: { type: 'object' } },
+  };
+  return [false, true].map(update => {
+    const properties = {
+      targetId: id, expectedTimeUpdate: { type: 'string', description: 'Exact time_update from the schema details.' },
+      item_data: { type: 'object', properties: itemFields, additionalProperties: false,
+        ...(update ? { minProperties: 1 } : { required: ['alias', 'cst_type'] }) },
+      ...(update ? { constituentId: id } : {}),
+    };
+    const required = ['targetId', 'expectedTimeUpdate', 'item_data', ...(update ? ['constituentId'] : [])];
+    return {
+      name: update ? 'portal_update_constituent' : 'portal_create_constituent',
+      sessionActivity: 'none',
+      description: (update
+        ? 'Edit the supplied fields of one own constituent by its Portal ID. For an inherited constituent, edit its source in the originating schema.'
+        : 'Append one own constituent, such as a term, to an editable Portal schema, including a synthesis result.') +
+        ' Uses the bound key and the schema revision. Obtain explicit user permission for the change. Read the schema after an uncertain outcome before retrying.',
+      annotations: { readOnlyHint: false, destructiveHint: update, idempotentHint: false, openWorldHint: true },
+      inputSchema: { type: 'object', properties, required, additionalProperties: false },
+      invoke: (_tool, args) => {
+        if (Object.keys(args).some(key => !Object.hasOwn(properties, key)) ||
+            required.some(key => !Object.hasOwn(args, key)))
+          throw new Error('Invalid Portal constituent tool arguments');
+        const item = args.item_data;
+        if (!item || typeof item !== 'object' || Array.isArray(item) || Object.keys(item).length === 0 ||
+            Object.keys(item).some(key => !Object.hasOwn(itemFields, key)) ||
+            (!update && (!Object.hasOwn(item, 'alias') || !Object.hasOwn(item, 'cst_type'))))
+          throw new Error('Invalid Portal constituent fields');
+        if (update && (typeof args.constituentId !== 'number' ||
+            !Number.isSafeInteger(args.constituentId) || args.constituentId <= 0))
+          throw new Error('A positive, safe integer constituent ID is required');
+        const fields = item as Record<string, unknown>;
+        for (const [field, value] of Object.entries(fields)) {
+          const kind = itemFields[field as keyof typeof itemFields].type;
+          if (kind === 'array' ? !Array.isArray(value) || value.some(entry => !entry || typeof entry !== 'object' || Array.isArray(entry))
+            : typeof value !== kind || (typeof value === 'string' && value !== value.trim()))
+            throw new Error(`Invalid Portal constituent field: ${field}`);
+        }
+        return publisher.mutateConstituent(subject, args.targetId as number, args.expectedTimeUpdate as string,
+          update ? args.constituentId as number : undefined, fields);
+      },
+    };
+  });
 }
 
 /** Graph tools accept Portal IDs and forward the corresponding REST payload. */
