@@ -171,8 +171,10 @@ test('profile creates API keys with cumulative access levels', async ({ page }) 
   await expect(accessLevel).toHaveValue('read');
   const limits = page.getByText(/Не больше 5 активных ключей/);
   await expect(limits).toBeHidden();
-  await page.getByRole('button', { name: 'О правах и лимитах API-ключа' }).focus();
+  const accessHelp = page.getByRole('button', { name: 'О правах и лимитах API-ключа' });
+  await accessHelp.focus();
   await expect(limits).toBeVisible();
+  await expect(accessHelp).toHaveAccessibleDescription(/Не больше 5 активных ключей/);
   await page.keyboard.press('Escape');
   await expect(limits).toBeHidden();
 
