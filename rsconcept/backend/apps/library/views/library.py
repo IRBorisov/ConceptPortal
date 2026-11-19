@@ -2,7 +2,7 @@
 from typing import cast
 
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import F, Q
 from django.http import HttpResponse
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics
@@ -383,28 +383,31 @@ class LibraryViewSet(ConcurrencyMixin, viewsets.ModelViewSet):
         editors = [user.pk for user in serializer.validated_data['users']]
 
         with transaction.atomic():
+            # Use the same write lock as constituent edits, including on SQLite.
+            m.LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
+            item.refresh_from_db()
+            self.check_object_permissions(request, item)
+            owned_schemas = list(OperationSchema.owned_schemasQ(item).select_for_update().only('pk').order_by('pk'))
             added, deleted = m.Editor.set_and_return_diff(item.pk, editors)
-            if added or deleted:
-                owned_schemas = OperationSchema.owned_schemasQ(item).only('pk')
-                if owned_schemas.exists():
-                    m.Editor.objects.filter(
-                        item__in=owned_schemas,
-                        editor_id__in=deleted
-                    ).delete()
+            if (added or deleted) and owned_schemas:
+                m.Editor.objects.filter(
+                    item__in=owned_schemas,
+                    editor_id__in=deleted
+                ).delete()
 
-                    existing_editors = m.Editor.objects.filter(
-                        item__in=owned_schemas,
-                        editor__in=added
-                    ).values_list('item_id', 'editor_id')
-                    existing_editor_set = set(existing_editors)
+                existing_editors = m.Editor.objects.filter(
+                    item__in=owned_schemas,
+                    editor__in=added
+                ).values_list('item_id', 'editor_id')
+                existing_editor_set = set(existing_editors)
 
-                    new_editors = [
-                        m.Editor(item=schema, editor_id=user)
-                        for schema in owned_schemas
-                        for user in added
-                        if (schema.pk, user) not in existing_editor_set
-                    ]
-                    m.Editor.objects.bulk_create(new_editors)
+                new_editors = [
+                    m.Editor(item=schema, editor_id=user)
+                    for schema in owned_schemas
+                    for user in added
+                    if (schema.pk, user) not in existing_editor_set
+                ]
+                m.Editor.objects.bulk_create(new_editors)
 
         return Response(status=c.HTTP_200_OK)
 

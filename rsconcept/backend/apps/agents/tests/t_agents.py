@@ -12,7 +12,8 @@ from apps.agents.authentication import ApiKeyAuthentication
 
 from apps.agents.models import AgentActionLog, ApiKey
 from apps.library.models import AccessPolicy, Editor
-from apps.rsform.models import CstType, RSForm
+from apps.rsform.models import Constituenta, CstType, RSForm
+from apps.rsform.mutations import create_constituenta
 from shared.EndpointTester import EndpointTester, decl_endpoint
 from shared.portal_json import PORTAL_JSON_CONTRACT_VERSION
 
@@ -256,6 +257,8 @@ class TestAgentRsformApi(EndpointTester):
 
     @decl_endpoint('/api/agents/rsforms/{item}/replace', method='patch')
     def test_replace_schema(self):
+        _, token = ApiKey.create_for_user(self.user, 'Initial import', scopes=['read', 'write'])
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
         data = {
             'contract_version': PORTAL_JSON_CONTRACT_VERSION,
             'title': 'Replaced',
@@ -281,9 +284,28 @@ class TestAgentRsformApi(EndpointTester):
         self.assertEqual(response.data['alias'], 'REP')
         self.assertEqual(len(response.data['items']), 1)
         self.assertEqual(response.data['items'][0]['alias'], 'X1')
+        self.executeForbidden(data | {'title': 'Second import'}, item=self.owned_id)
+        self.assertEqual(Constituenta.objects.get(schema_id=self.owned_id).alias, 'X1')
+        editing_only = RSForm.create(title='Other empty schema', owner=self.user2, access_policy=AccessPolicy.PROTECTED)
+        Editor.add(editing_only.model.pk, self.user.pk)
+        self.executeForbidden(data, item=editing_only.model.pk)
         self.assertTrue(
             AgentActionLog.objects.filter(action='rsform.replace', item_id=self.owned_id).exists()
         )
+
+    def test_constituent_write_rechecks_editor_permission(self):
+        shared = RSForm.create(title='Shared schema', owner=self.user2, access_policy=AccessPolicy.PROTECTED)
+        Editor.add(shared.model.pk, self.user.pk)
+        def commit(item, data, after, request):
+            Editor.remove(item.pk, self.user.pk)
+            return create_constituenta(item, data, after, request)
+
+        with patch('apps.agents.views.rsforms.create_constituenta', side_effect=commit):
+            response = self.client.post(f'/api/agents/rsforms/{shared.model.pk}/constituents', {
+                'alias': 'X1', 'cst_type': CstType.BASE,
+            }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertFalse(Constituenta.objects.filter(schema=shared.model).exists())
 
     @decl_endpoint('/api/agents/library/context-search', method='get')
     def test_context_search(self):

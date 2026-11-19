@@ -14,7 +14,8 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework.request import Request
 
-from apps.library.models import LibraryItem
+from apps.library.models import AccessPolicy, Editor, LibraryItem
+from apps.users.models import User
 from shared import messages as msg
 from shared import permissions
 from shared.concurrency import assert_expected_time_update_locked
@@ -145,6 +146,7 @@ def clone_schema_operation(
         new_schema.title = title
         new_schema.alias = alias
         new_schema.save()
+        _require_schema_audience(request, new_schema, {source_schema.pk})
         m.PropagationFacade().get_schema(new_schema.pk).insert_from(source_schema.pk)
 
         new_operation = source
@@ -196,6 +198,7 @@ def import_schema_operation(
             schema_clone.access_policy = item.access_policy
             schema_clone.location = item.location
             schema_clone.save()
+            _require_schema_audience(request, schema_clone, {prototype.pk})
 
             m.PropagationFacade().get_schema(schema_clone.pk).insert_from(prototype.pk)
 
@@ -237,6 +240,7 @@ def create_synthesis_operation(
 
     with transaction.atomic():
         _lock_expected_update(item, request)
+        _require_argument_audience(request, item, validated['arguments'])
         oss = m.OperationSchema(item)
         new_operation = oss.create_operation(**data)
         layout.append(_node('o', new_operation.pk, validated['position']))
@@ -260,6 +264,8 @@ def update_operation(
 
     with transaction.atomic():
         _lock_expected_update(item, request)
+        if 'arguments' in validated:
+            _require_argument_audience(request, operation.result or item, validated['arguments'])
         oss = m.PropagationFacade().get_oss(item.pk)
         if 'layout' in validated:
             m.Layout.update_data(item.pk, validated['layout'])
@@ -296,6 +302,11 @@ def delete_operation(item: LibraryItem, validated: dict, request: Request | None
         _lock_expected_update(item, request)
         propagation = m.PropagationFacade()
         oss = propagation.get_oss(item.pk)
+        if old_schema is not None:
+            if operation.operation_type == m.OperationType.SYNTHESIS and not validated['delete_schema']:
+                _require_schema_audience(request, old_schema, permissions.source_schema_ids({old_schema.pk}))
+            if validated['keep_constituents']:
+                _require_retained_audience(request, oss, operation)
         oss.delete_operation(operation.pk, validated['keep_constituents'])
         m.Layout.update_data(item.pk, layout)
         if old_schema is not None:
@@ -316,6 +327,8 @@ def delete_replica(item: LibraryItem, validated: dict, request: Request | None =
     with transaction.atomic():
         _lock_expected_update(item, request)
         oss = m.PropagationFacade().get_oss(item.pk)
+        if validated['keep_constituents'] and not validated['keep_connections']:
+            _require_retained_audience(request, oss, operation)
         m.Layout.update_data(item.pk, layout)
         oss.delete_replica(
             operation.pk,
@@ -369,6 +382,10 @@ def set_operation_input(item: LibraryItem, validated: dict, request: Request | N
     with transaction.atomic():
         _lock_expected_update(item, request)
         oss = m.PropagationFacade().get_oss(item.pk)
+        if schema is not None:
+            destinations = LibraryItem.objects.filter(producer__in=oss.cache.extend_graph.outputs[target.pk]).distinct()
+            for destination in destinations:
+                _require_schema_audience(request, destination, {schema.pk})
         if old_schema is not None and old_schema.is_synced(item):
             old_schema.visible = True
             old_schema.save(update_fields=['visible'])
@@ -391,6 +408,8 @@ def execute_operation(item: LibraryItem, validated: dict, request: Request | Non
 
     with transaction.atomic():
         _lock_expected_update(item, request)
+        arguments = [relation.argument for relation in operation.getQ_arguments().select_related('argument')]
+        _require_argument_audience(request, item, arguments)
         oss = m.PropagationFacade().get_oss(item.pk)
         oss.execute_operation(operation)
         m.Layout.update_data(item.pk, validated['layout'])
@@ -409,6 +428,7 @@ def relocate_constituents(item: LibraryItem, validated: dict, request: Request |
         destination_item = LibraryItem.objects.get(pk=destination)
         _require_editable_schema(request, source_item)
         _require_editable_schema(request, destination_item)
+        _require_schema_audience(request, destination_item, {source_id})
 
         propagation = m.PropagationFacade()
         oss = propagation.get_oss(item.pk)
@@ -447,6 +467,9 @@ def _lock_expected_update(item: LibraryItem, request: Request | None) -> None:
     ''' Reject a stale ``X-Expected-Time-Update`` under a row lock. '''
     if request is not None:
         assert_expected_time_update_locked(item, request)
+        item.refresh_from_db()
+        if not permissions.can_edit_item(request.user, item):
+            raise PermissionDenied()
 
 
 def _touch_item(item: LibraryItem) -> None:
@@ -464,6 +487,62 @@ def _require_readable_schema(request: Request | None, schema: LibraryItem) -> No
     ''' Reject a copy of a schema the caller cannot read. '''
     if request is None or not permissions.can_read_library_item(request.user, schema):
         raise PermissionDenied(msg.schemasNotReadable([_schema_label(schema)]))
+
+
+def _require_argument_audience(
+    request: Request | None, destination: LibraryItem, operations: list[m.Operation],
+) -> None:
+    operation_ids = [operation.pk for operation in operations]
+    schema_ids = set(m.Operation.objects.filter(pk__in=operation_ids, result_id__isnull=False)
+                     .values_list('result_id', flat=True))
+    _require_schema_audience(request, destination, schema_ids)
+
+
+def _require_retained_audience(
+    request: Request | None, oss: m.OperationSchemaCached, operation: m.Operation,
+) -> None:
+    ''' Preserve access restrictions when retaining copies would remove inheritance links. '''
+    if operation.result_id is None:
+        return
+    children = oss.cache.extend_graph.outputs[operation.pk]
+    parent_id = operation.result_id
+    affected = m.Inheritance.objects.filter(operation_id__in=children, parent__schema_id=parent_id)
+    for destination in LibraryItem.objects.filter(pk__in=affected.values('child__schema_id')):
+        _require_schema_audience(request, destination, {parent_id})
+
+
+def _require_schema_audience(request: Request | None, destination: LibraryItem, source_ids: set[int]) -> None:
+    ''' Require current read access and keep the result's audience within every source ACL. '''
+    if not source_ids:
+        return
+    if request is None:
+        raise PermissionDenied()
+
+    destination = LibraryItem.objects.select_for_update().get(pk=destination.pk)
+    all_ids = source_ids | permissions.source_schema_ids(source_ids)
+    sources = list(LibraryItem.objects.select_for_update().filter(pk__in=all_ids).order_by('pk'))
+    readable = LibraryItem.objects.filter(permissions.library_item_read_filter(request.user)).values('pk')
+    if len(sources) != len(all_ids) or LibraryItem.objects.filter(pk__in=all_ids).exclude(pk__in=readable).exists():
+        raise PermissionDenied('Every source schema must be readable.')
+
+    restricted = [source for source in sources if source.access_policy != AccessPolicy.PUBLIC]
+    if not restricted:
+        return
+    if destination.access_policy == AccessPolicy.PUBLIC:
+        raise PermissionDenied('The result cannot be shared more widely than its source schemas.')
+
+    audience: set[int] = set()
+    if destination.owner_id is not None:
+        audience.add(destination.owner_id)
+    if destination.access_policy == AccessPolicy.PROTECTED:
+        audience.update(Editor.objects.filter(item=destination).values_list('editor_id', flat=True))
+    readers = set(User.objects.filter(pk__in=audience, is_staff=False).values_list('pk', flat=True))
+    for source in restricted:
+        allowed = {source.owner_id}
+        if source.access_policy == AccessPolicy.PROTECTED:
+            allowed.update(Editor.objects.filter(item=source).values_list('editor_id', flat=True))
+        if readers - allowed:
+            raise PermissionDenied('The result cannot be shared more widely than its source schemas.')
 
 
 def _schema_label(schema: LibraryItem) -> str:

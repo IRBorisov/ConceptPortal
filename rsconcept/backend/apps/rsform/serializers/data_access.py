@@ -270,11 +270,21 @@ class RSFormSerializer(StrictModelSerializer):
 
     def to_representation(self, instance: LibraryItem) -> dict:
         result = self.to_base_data(instance)
+        request = self.context.get('request')
+        visibility = {instance.pk: True}
         inheritances = Inheritance.objects \
             .filter(Q(child__schema=instance) | Q(parent__schema=instance)) \
             .select_related('parent__schema', 'child__schema') \
-            .only('parent__id', 'parent__schema__id', 'child__id', 'child__schema__id')
+            .only('parent__schema__id', 'parent__schema__owner_id', 'parent__schema__access_policy',
+                  'parent__schema__item_type', 'child__schema__id', 'child__schema__owner_id',
+                  'child__schema__access_policy', 'child__schema__item_type')
         for link in inheritances:
+            if request is not None:
+                related = link.parent.schema if link.child.schema_id == instance.pk else link.child.schema
+                if related.pk not in visibility:
+                    visibility[related.pk] = permissions.can_read_library_item(request.user, related)
+                if not visibility[related.pk]:
+                    continue
             result['inheritance'].append({
                 'child': link.child_id,
                 'child_source': link.child.schema_id,
@@ -293,7 +303,11 @@ class RSFormSerializer(StrictModelSerializer):
         result['attribution'] = []
         for cst in Constituenta.objects.filter(schema=instance).defer('order').order_by('order'):
             result['items'].append(CstInfoSerializer(cst).data)
-        for oss in LibraryItem.objects.filter(operations__result=instance).only('alias'):
+        request = self.context.get('request')
+        related_items = LibraryItem.objects.all() if request is None else LibraryItem.objects.filter(
+            permissions.library_item_read_filter(request.user)
+        )
+        for oss in related_items.filter(operations__result=instance).only('alias'):
             result['oss'].append({
                 'id': oss.pk,
                 'alias': oss.alias
@@ -302,7 +316,7 @@ class RSFormSerializer(StrictModelSerializer):
             .filter(result=instance) \
             .exclude(operation_type=OperationType.INPUT) \
             .exists()
-        for model in LibraryItem.objects.filter(rsmodels__schema=instance).only('alias'):
+        for model in related_items.filter(rsmodels__schema=instance).only('alias'):
             result['models'].append({
                 'id': model.pk,
                 'alias': model.alias

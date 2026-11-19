@@ -9,6 +9,7 @@ from apps.oss.models import Block, Operation
 from apps.rsform.models import Constituenta
 from apps.rsmodel.models import ConstituentData, RSModel
 from apps.users.models import User
+from shared.permissions import unreadable_derived_schema_ids
 
 ALL_CONTEXT_FIELDS = frozenset({
     'alias',
@@ -32,10 +33,11 @@ def get_accessible_items_queryset(user, *, all_items: bool = False) -> QuerySet[
         return LibraryItem.objects.all()
     common_location = Q(location__startswith=LocationHead.COMMON) | Q(location__startswith=LocationHead.LIBRARY)
     is_public = Q(access_policy=AccessPolicy.PUBLIC)
+    visible_items = LibraryItem.objects.exclude(pk__in=unreadable_derived_schema_ids(user))
     if user.is_anonymous:
-        return LibraryItem.objects.filter(is_public).filter(common_location)
+        return visible_items.filter(is_public, common_location)
     user = cast(User, user)
-    return LibraryItem.objects.filter(
+    return visible_items.filter(
         (is_public & common_location) |
         Q(owner=user) |
         (Q(editor__editor=user) & ~Q(access_policy=AccessPolicy.PRIVATE))
