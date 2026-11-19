@@ -1,6 +1,8 @@
+import { type CreateApiKeyDTO } from '../src/features/agents';
 import { type UserProfile } from '../src/features/users/backend/types';
 import { authAdmin, authAnonymous, setupLogout } from './mocks/auth';
 import { BACKEND_URL } from './mocks/constants';
+import { setupUserProfile } from './mocks/users';
 import { clickAndWaitForApi, waitForApiResponse } from './navigation';
 import { expect, test } from './setup';
 
@@ -141,6 +143,52 @@ test('profile page redirects to login after successful password change', async (
 
   await expect(page).toHaveURL(/\/login$/);
   await expect(page.getByRole('button', { name: 'Войти', exact: true })).toBeVisible();
+});
+
+test('profile creates API keys with cumulative access levels', async ({ page }) => {
+  await setupUserProfile(page);
+  const keysUrl = `${BACKEND_URL}/api/agents/keys`;
+  await page.route(keysUrl, async route => {
+    if (route.request().method() === 'POST') {
+      await route.fulfill({
+        status: 201,
+        json: {
+          id: 1,
+          prefix: 'test-key',
+          secret: 'synthetic-key',
+          created_at: '2026-01-01T00:00:00Z',
+          ...(route.request().postDataJSON() as CreateApiKeyDTO)
+        }
+      });
+      return;
+    }
+    await route.fulfill({ json: [] });
+  });
+
+  await page.goto('/profile');
+  await page.getByRole('tab', { name: 'API-ключи' }).click();
+  const accessLevel = page.getByRole('combobox', { name: 'Уровень доступа' });
+  await expect(accessLevel).toHaveValue('read');
+  const limits = page.getByText(/Не больше 5 активных ключей/);
+  await expect(limits).toBeHidden();
+  await page.getByRole('button', { name: 'О правах и лимитах API-ключа' }).focus();
+  await expect(limits).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(limits).toBeHidden();
+
+  for (const [level, scopes] of [
+    ['read', ['read']],
+    ['write', ['read', 'write']],
+    ['publish', ['read', 'write', 'publish']]
+  ] as const) {
+    await page.getByLabel('Название ключа').fill(`Key ${level}`);
+    await accessLevel.selectOption(level);
+    const request = page.waitForRequest(candidate => candidate.url() === keysUrl && candidate.method() === 'POST');
+    await page.getByRole('button', { name: 'Создать API-ключ' }).click();
+    expect((await request).postDataJSON()).toMatchObject({ label: `Key ${level}`, scopes });
+    await expect(page.getByLabel('Название ключа')).toHaveValue('');
+    await expect(accessLevel).toHaveValue('read');
+  }
 });
 
 test('profile tabs stay centered without shifting the page', async ({ page }) => {

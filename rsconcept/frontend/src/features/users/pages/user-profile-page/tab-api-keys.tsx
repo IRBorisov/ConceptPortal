@@ -6,15 +6,25 @@ import { useForm } from '@tanstack/react-form';
 
 import { useTx } from '@/i18n';
 
-import { type ApiKeyCreatedDTO, type ApiKeyScope, type CreateApiKeyDTO } from '@/features/agents';
-import { schemaCreateApiKey } from '@/features/agents/backend/types';
+import { type ApiKeyCreatedDTO, type ApiKeyScope } from '@/features/agents';
+import { schemaApiKeyScope, schemaCreateApiKey } from '@/features/agents/backend/types';
 import { useApiKeys } from '@/features/agents/backend/use-api-keys';
 import { useCreateApiKey } from '@/features/agents/backend/use-create-api-key';
 import { useRevokeApiKey } from '@/features/agents/backend/use-revoke-api-key';
 
+import { Tooltip } from '@/components/container';
 import { Button, SubmitButton } from '@/components/control';
-import { Checkbox, TextInput } from '@/components/input';
+import { IconHelp } from '@/components/icons';
+import { TextInput } from '@/components/input';
 import { cn } from '@/components/utils';
+
+const schemaKeyForm = schemaCreateApiKey.pick({ label: true }).extend({ accessLevel: schemaApiKeyScope });
+const initialValues: { label: string; accessLevel: ApiKeyScope } = { label: '', accessLevel: 'read' };
+const scopesByAccessLevel: Record<ApiKeyScope, ApiKeyScope[]> = {
+  read: ['read'],
+  write: ['read', 'write'],
+  publish: ['read', 'write', 'publish']
+};
 
 function formatTimestamp(value: string | null, neverLabel: string): string {
   if (!value) {
@@ -35,20 +45,24 @@ export function TabApiKeys() {
   const [createdSecret, setCreatedSecret] = useState<ApiKeyCreatedDTO | null>(null);
 
   const [expiryDays, setExpiryDays] = useState('90');
-  const initialValues = { label: '', scopes: ['read'] as ApiKeyScope[] } satisfies CreateApiKeyDTO;
   const scopeLabels: Record<ApiKeyScope, string> = {
     read: tx('tx.agents.key.scope.read'),
     write: tx('tx.agents.key.scope.write'),
     publish: tx('tx.agents.key.scope.publish')
   };
+  const accessLevelLabels: Record<ApiKeyScope, string> = {
+    read: tx('tx.agents.key.accessLevel.read'),
+    write: tx('tx.agents.key.accessLevel.write'),
+    publish: tx('tx.agents.key.accessLevel.publish')
+  };
 
   const form = useForm({
     defaultValues: initialValues,
-    validators: { onChange: schemaCreateApiKey },
-    onSubmit: async ({ value, formApi }) => {
+    validators: { onChange: schemaKeyForm },
+    onSubmit: async ({ value: { label, accessLevel }, formApi }) => {
       const expires_at =
         expiryDays === 'never' ? null : new Date(Date.now() + Number(expiryDays) * 86400000).toISOString();
-      const created = await createKey({ ...value, expires_at });
+      const created = await createKey({ label, scopes: scopesByAccessLevel[accessLevel], expires_at });
       setCreatedSecret(created);
       formApi.reset(initialValues);
     }
@@ -70,7 +84,6 @@ export function TabApiKeys() {
 
   return (
     <div className='cc-column w-full max-w-3xl mx-auto px-4 py-2 gap-6'>
-      <p className='text-sm text-muted-foreground'>{tx('tx.agents.key.limits')}</p>
       <form
         className='cc-column gap-3'
         onSubmit={event => {
@@ -84,7 +97,6 @@ export function TabApiKeys() {
             <TextInput
               id='api_key_label'
               label={tx('tx.agents.key.label')}
-              title={tx('tx.agents.key.label.hint')}
               value={field.state.value}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
@@ -92,33 +104,47 @@ export function TabApiKeys() {
             />
           )}
         </form.Field>
-        <form.Field name='scopes'>
+        <form.Field name='accessLevel'>
           {field => (
-            <fieldset className='cc-column gap-2'>
-              <legend className='text-sm font-medium'>{tx('tx.agents.key.scopes')}</legend>
-              <p className='text-sm text-muted-foreground'>{tx('tx.agents.key.scopes.hint')}</p>
-              {(['read', 'write', 'publish'] as const).map(scope => (
-                <Checkbox
-                  key={scope}
-                  role='checkbox'
-                  aria-checked={field.state.value.includes(scope)}
-                  label={scopeLabels[scope]}
-                  value={field.state.value.includes(scope)}
-                  onChange={checked =>
-                    field.handleChange(
-                      checked ? [...field.state.value, scope] : field.state.value.filter(value => value !== scope)
-                    )
-                  }
-                />
-              ))}
-              {field.state.meta.errors.length ? (
-                <p role='alert' className='text-sm text-destructive'>
-                  {tx('tx.agents.key.scopes.required')}
-                </p>
-              ) : null}
-            </fieldset>
+            <div className='cc-column gap-1'>
+              <div className='flex items-center gap-1'>
+                <label htmlFor='api_key_access_level' className='text-sm'>
+                  {tx('tx.agents.key.accessLevel')}
+                </label>
+                <button
+                  id='api_key_access_help'
+                  type='button'
+                  className='rounded p-1 text-muted-foreground hover:text-foreground focus-visible:text-foreground'
+                  aria-label={tx('tx.agents.key.accessLevel.help')}
+                >
+                  <IconHelp size='1rem' aria-hidden='true' />
+                </button>
+              </div>
+              <select
+                id='api_key_access_level'
+                className='max-w-full self-start rounded border bg-input px-2 py-2 text-sm'
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={event => field.handleChange(schemaApiKeyScope.parse(event.target.value))}
+              >
+                {schemaApiKeyScope.options.map(level => (
+                  <option key={level} value={level}>
+                    {accessLevelLabels[level]}
+                  </option>
+                ))}
+              </select>
+            </div>
           )}
         </form.Field>
+        <Tooltip
+          anchorSelect='#api_key_access_help'
+          className='max-w-xs'
+          openEvents={{ mouseover: true, focus: true, click: true }}
+          globalCloseEvents={{ escape: true, clickOutsideAnchor: true }}
+        >
+          <p>{tx('tx.agents.key.scopes.hint')}</p>
+          <p className='mt-2'>{tx('tx.agents.key.limits')}</p>
+        </Tooltip>
         <label className='cc-column gap-1 text-sm'>
           {tx('tx.agents.key.expiry')}
           <select
