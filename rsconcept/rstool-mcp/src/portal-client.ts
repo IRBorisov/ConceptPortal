@@ -1,5 +1,15 @@
 export type PortalFetch = typeof fetch;
 
+const OSS_MUTATION_METHODS = {
+  'create-schema': 'POST',
+  'import-schema': 'POST',
+  'create-synthesis': 'POST',
+  'update-operation': 'PATCH',
+  'execute-operation': 'POST',
+} as const;
+
+export type PortalOssAction = keyof typeof OSS_MUTATION_METHODS;
+
 /** Fixed-origin Portal API, bounded responses, no redirects and no remote error bodies. */
 export class PortalClient {
   readonly #origin: string;
@@ -31,13 +41,29 @@ export class PortalClient {
         path.includes('#') || path.split('?').length > 2) {
       throw new Error('Portal route is not allowed');
     }
-    if (body !== undefined && !token) throw new Error('Portal writes require a key');
+    return this.send(token, path, reading ? 'GET' : 'POST', body);
+  }
+
+  /** Send a revision-guarded graph mutation to a fixed Portal route. */
+  public mutateOss(token: string, targetId: number, action: PortalOssAction, expectedTimeUpdate: string, body: unknown) {
+    if (!Number.isSafeInteger(targetId) || targetId <= 0 || !Object.hasOwn(OSS_MUTATION_METHODS, action))
+      throw new Error('Portal OSS route is not allowed');
+    return this.send(token, `/api/agents/oss/${targetId}/${action}`, OSS_MUTATION_METHODS[action], body, expectedTimeUpdate);
+  }
+
+  private async send(token: string | undefined, path: string, method: 'GET' | 'POST' | 'PATCH', body?: unknown,
+    expectedTimeUpdate?: string): Promise<Record<string, any>> {
+    if (method !== 'GET' && !token) throw new Error('Portal writes require a key');
     let response: Response;
     try {
       response = await this.#fetch(this.#origin + path, {
-        method: body === undefined ? 'GET' : 'POST',
+        method,
         redirect: 'error',
-        headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), Accept: 'application/json', 'Content-Type': 'application/json' },
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(expectedTimeUpdate ? { 'X-Expected-Time-Update': expectedTimeUpdate } : {}),
+          Accept: 'application/json', 'Content-Type': 'application/json',
+        },
         body: body === undefined ? undefined : JSON.stringify(body),
         signal: AbortSignal.timeout(15_000),
       });
@@ -48,7 +74,7 @@ export class PortalClient {
       await response.body?.cancel();
       throw new Error(
         response.status === 409
-          ? 'Portal schema changed; read the current revision before retrying'
+          ? `Portal ${expectedTimeUpdate ? 'OSS' : 'schema'} changed; read the current revision before retrying`
           : `Portal refused the request (${response.status})`
       );
     }

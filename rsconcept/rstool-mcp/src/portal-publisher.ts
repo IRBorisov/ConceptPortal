@@ -1,8 +1,9 @@
 import { createHash, randomUUID } from 'node:crypto';
+import { isDeepStrictEqual } from 'node:util';
 
 import { RSToolError, type RSToolAgent } from '@rsconcept/rstool';
 
-import { PortalClient } from './portal-client';
+import { PortalClient, type PortalOssAction } from './portal-client';
 import { PortalCreations, type PortalItemKind } from './portal-creations';
 import { PortalVault, type PortalCredential, type PortalKeyPolicy } from './portal-vault';
 
@@ -132,6 +133,40 @@ export class PortalPublisher {
     });
   }
 
+  /** Guard the graph revision in Portal and verify the affected operation by an independent read. */
+  public mutateOss(subject: string, targetId: number, expectedTimeUpdate: string,
+    action: PortalOssAction, payload: Record<string, unknown>) {
+    return this.exclusive(subject, async () => {
+      if (typeof expectedTimeUpdate !== 'string' || !Number.isFinite(Date.parse(expectedTimeUpdate)) || /[\r\n]/.test(expectedTimeUpdate))
+        throw new Error('A valid expectedTimeUpdate is required');
+      const credential = this.personalCredential(subject, 'write');
+      const before = await this.readItem(credential, 'oss', targetId);
+      if (before.time_update !== expectedTimeUpdate)
+        throw new Error('Portal OSS changed; read the current revision before retrying');
+      const created = action === 'create-schema' || action === 'import-schema' || action === 'create-synthesis';
+      const response = await this.#api.mutateOss(credential.token, targetId, action, expectedTimeUpdate, payload);
+      const written = created ? response.oss : response;
+      const operationId = created ? response.new_operation : payload.target;
+      const verificationError = 'Portal OSS verification failed; read the graph before retrying';
+      if (!Number.isSafeInteger(operationId) || Number(operationId) <= 0 || written?.id !== targetId ||
+        typeof written.time_update !== 'string' || written.time_update === expectedTimeUpdate)
+        throw new Error(verificationError);
+      // A failed readback leaves the outcome uncertain. Never replay the mutation here.
+      const oss = await this.readItem(credential, 'oss', targetId);
+      const operation = Array.isArray(oss.operations) && oss.operations.find(row => row?.id === operationId);
+      const writtenOperation = Array.isArray(written.operations) && written.operations.find((row: any) => row?.id === operationId);
+      const expectedType = action === 'create-synthesis' || action === 'execute-operation' ? 'synthesis' : created ? 'input' : undefined;
+      if (oss.time_update !== written.time_update || !operation || !isDeepStrictEqual(operation, writtenOperation) ||
+        (expectedType !== undefined && operation.operation_type !== expectedType) ||
+        !['arguments', 'substitutions'].every(field => Array.isArray(oss[field]) && Array.isArray(written[field]) &&
+          isDeepStrictEqual(oss[field].filter(row => row?.operation === operationId),
+            written[field].filter((row: any) => row?.operation === operationId))) ||
+        (operation.result !== null && (!Number.isSafeInteger(operation.result) || operation.result <= 0)))
+        throw new Error(verificationError);
+      return { targetId, operationId, resultId: operation.result, time_update: oss.time_update, verified: true, oss };
+    });
+  }
+
   /** Create a new empty item only. Existing-content replacement retains its separate approval. */
   public createItem(subject: string, kind: PortalItemKind, args: Record<string, unknown>) {
     return this.exclusive(subject, async () => {
@@ -193,7 +228,7 @@ export class PortalPublisher {
   }
 
   private personalCredential(subject: string, scope?: 'write'): PortalCredential {
-    if (this.isService(subject)) throw new Error('Creating or searching library items requires a personal Portal connection');
+    if (this.isService(subject)) throw new Error('This operation requires a personal Portal connection');
     const credential = this.credential(subject, 0, scope);
     if (credential.keyPolicy && !credential.keyPolicy.scopes.includes('read')) throw new Error('Portal key does not allow read');
     return credential;

@@ -3,6 +3,7 @@
  */
 
 import { CstType, EvalStatus, type RSToolAgent } from "@rsconcept/rstool";
+import type { PortalOssAction } from './portal-client';
 import type { PortalItemKind } from './portal-creations';
 import type { PortalPublisher } from './portal-publisher';
 import { SessionStorageError, type SessionPolicy } from './session-policy';
@@ -10,7 +11,7 @@ import { SessionStorageError, type SessionPolicy } from './session-policy';
 /** Trusted HTTP host captures the identity; tools cannot accept a key, subject or publication approval. */
 export function portalToolDefinitions(publisher: PortalPublisher, subject: string, workspace: string,
   validateSource?: (sessionId: string) => void): ToolDefinition[] {
-  return [...portalCreationTools(publisher, subject), { name: 'portal_publish_schema', description: 'Replace an existing owned Portal schema with the current rstool session and read it back. Writes immediately with the bound key, including schemas with diagnostic errors. Does not certify correctness. Accepts only targetId. Call it only after the user explicitly accepts a summary that names this target, its time_update, the source session, and every added, removed, or changed alias. Immediately before the call, read portal_get_description and confirm that time_update and the current session still match that accepted summary. If either changed, show a new summary and obtain a new acceptance. No approval flag, revision, or key is accepted.',
+  return [...portalCreationTools(publisher, subject), ...portalOssTools(publisher, subject), { name: 'portal_publish_schema', description: 'Replace an existing owned Portal schema with the current rstool session and read it back. Writes immediately with the bound key, including schemas with diagnostic errors. Does not certify correctness. Accepts only targetId. Call it only after the user explicitly accepts a summary that names this target, its time_update, the source session, and every added, removed, or changed alias. Immediately before the call, read portal_get_description and confirm that time_update and the current session still match that accepted summary. If either changed, show a new summary and obtain a new acceptance. No approval flag, revision, or key is accepted.',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
     inputSchema: { type: 'object', properties: { targetId: { type: 'integer', minimum: 1 } }, required: ['targetId'], additionalProperties: false },
     invoke: (tool, args) => {
@@ -89,6 +90,50 @@ function portalCreationTools(publisher: PortalPublisher, subject: string): ToolD
       return publisher.getDetails(subject, args.kind as PortalItemKind, args.targetId as number);
     } });
   return tools;
+}
+
+/** Graph tools accept Portal IDs and forward the corresponding REST payload. */
+function portalOssTools(publisher: PortalPublisher, subject: string): ToolDefinition[] {
+  const id = { type: 'integer', minimum: 1 };
+  const item_data = { type: 'object', properties: {
+    alias: { type: 'string' }, title: { type: 'string' }, description: { type: 'string' },
+    parent: { anyOf: [id, { type: 'null' }] },
+  }, additionalProperties: false };
+  const argumentsList = { type: 'array', items: id, description: 'Operation IDs in this OSS, in synthesis order.' };
+  const substitutions = { type: 'array', items: { type: 'object', properties: { original: id, substitution: id },
+    required: ['original', 'substitution'], additionalProperties: false },
+    description: 'Portal constituent IDs in the argument schemas. original is replaced by substitution.' };
+
+  function mutation(action: PortalOssAction, description: string, bodyFields: Record<string, unknown>,
+    requiredFields: string[], destructiveHint = false): ToolDefinition {
+    const properties = { targetId: id, expectedTimeUpdate: { type: 'string',
+      description: 'Exact time_update from portal_get_details for the target OSS.' }, ...bodyFields };
+    const required = ['targetId', 'expectedTimeUpdate', ...requiredFields];
+    return {
+      name: `portal_oss_${action.replaceAll('-', '_')}`, sessionActivity: 'none',
+      description: `${description} Writes with the bound personal key. Obtain explicit user permission for the graph change. Read the graph after an uncertain outcome before retrying.`,
+      annotations: { readOnlyHint: false, destructiveHint, idempotentHint: false, openWorldHint: true },
+      inputSchema: { type: 'object', properties, required, additionalProperties: false },
+      invoke: (_tool, args) => {
+        if (Object.keys(args).some(key => !Object.hasOwn(properties, key)) ||
+          required.some(key => !Object.hasOwn(args, key))) throw new Error('Invalid Portal OSS tool arguments');
+        const { targetId, expectedTimeUpdate, ...payload } = args;
+        return publisher.mutateOss(subject, targetId as number, expectedTimeUpdate as string, action, payload);
+      },
+    };
+  }
+
+  return [
+    mutation('create-schema', 'Add an input operation with a new empty conceptual schema to an OSS.',
+      { item_data }, ['item_data']),
+    mutation('import-schema', 'Add an input operation linked to an existing readable conceptual schema, or copy it with clone_source.',
+      { item_data, source: id, clone_source: { type: 'boolean' } }, ['item_data', 'source', 'clone_source']),
+    mutation('create-synthesis', 'Add and run a synthesis operation using selected argument operations and constituent substitutions.',
+      { item_data, arguments: argumentsList, substitutions }, ['item_data', 'arguments']),
+    mutation('update-operation', 'Edit an existing operation and optionally replace its arguments and substitutions.',
+      { target: id, item_data, arguments: argumentsList, substitutions }, ['target', 'item_data'], true),
+    mutation('execute-operation', 'Rebuild the result of an existing synthesis operation.', { target: id }, ['target'], true),
+  ];
 }
 
 /** Account-scoped storage management; credentials and filesystem paths are never tool arguments. */
