@@ -63,7 +63,7 @@ Creation returns `{requestId, kind, portalOrigin, targetId, verified, item}` aft
 
 Deploy the backend with `POST /api/agents/models` before using `portal_create_model`; older backends reject that route. Direct publication is part of `@rsconcept/rstool-mcp` 2.5.0 and requires updating and restarting the configured host. Merely updating these instructions does not update an installed service. The account page and `portal_prepare_publication` remain for key binding and old drafts.
 
-## Publish a schema
+## Portal tools
 
 Only configured HTTP hosts expose:
 
@@ -75,11 +75,28 @@ Only configured HTTP hosts expose:
 | `portal_get_creation_status` | Read a durable creation receipt without replaying POST |
 | `portal_search_library` | Search accessible public/private objects with the bound personal key |
 | `portal_get_details` | Read full details of a selected schema, model or OSS |
+| `portal_oss_create_schema` | Add an input operation with a new empty conceptual schema |
+| `portal_oss_import_schema` | Add an input operation linked to an existing schema or a copy of it |
+| `portal_oss_create_synthesis` | Add and run a synthesis with ordered argument operations and constituent substitutions |
+| `portal_oss_update_operation` | Edit operation metadata or change arguments and substitutions |
+| `portal_oss_execute_operation` | Rebuild the result of an existing synthesis operation |
 | `portal_get_description` | Accepts only `targetId`; reads description and `time_update` through the bound key, publicly without a key, or privately with a bound read-capable key, without a local session |
 | `portal_update_description` | Accepts `targetId`, `expectedTimeUpdate`, `description`; updates only the description with CAS and independent readback, without a local rstool session or approval page |
 | `portal_connection_status` | Safe account/connection status for the authenticated subject |
 | `portal_publish_schema` | Accepts only `targetId`; replaces that schema with the current rstool session, then reads it back. Call it only after explicit user permission |
 | `portal_prepare_publication` | Accepts only `targetId`; captures a draft and an account-page path. It does not write. Agents use `portal_publish_schema` instead |
+
+## Edit an OSS graph
+
+Graph tools use the bound personal key with read and write scopes. Portal enforces edit rights on the OSS and read rights on imported schemas. The tools work without a local rstool session. Before editing, show the user the OSS, its revision and the planned operations, then obtain explicit permission.
+
+1. Read `portal_get_details(kind: "oss", targetId: …)`. Use its `time_update` as `expectedTimeUpdate` for the next graph call. A concurrent edit returns a conflict. Read the revised graph and obtain acceptance for changes against that revision.
+2. Use `portal_oss_create_schema` with `item_data` to add a blank argument, or `portal_oss_import_schema` with `item_data`, a Portal schema ID in `source`, and an explicit `clone_source`. An `item_data` object can include `alias`, `title`, `description` and `parent` (block ID or null). Portal places new nodes automatically. For a local argument, load it into rstool and publish it to the new input operation's `resultId` using the schema publication workflow.
+3. Call `portal_oss_create_synthesis` with `item_data`, the input operation IDs in `arguments`, and an optional `substitutions` array of `{original, substitution}`. Substitutions use constituent IDs from each argument schema's Portal details. `original` is the constituent to replace. `substitution` is the one to retain. To edit or rerun the synthesis, use the affected operation ID in `target`.
+
+All graph calls take the OSS `targetId` and `expectedTimeUpdate`. They send the latter as `X-Expected-Time-Update` and read the graph independently after writing. The result contains `targetId`, `operationId`, `resultId`, `time_update`, `verified` and the read-back `oss`. Read a resulting conceptual schema with `portal_get_details(kind: "schema", targetId: …)` to verify its contents. After a timeout or failed readback, inspect the graph before any retry. The adapter sends a mutation at most once per call.
+
+## Publish a schema
 
 No MCP tool enrolls keys or accepts an approval flag. Before `portal_publish_schema`, the agent shows the user the target ID, title, alias, location, `time_update`, the source session, constituent counts before and after, and every added, removed and changed alias, including a first load into an empty schema. The summary also names title, alias or description changes and states that every constituent is new when the target is empty. The agent waits for an explicit yes for that summary. A general request to upload files, without that summary, is not permission. Immediately before the call, the agent reads `portal_get_description` and checks that the current session is still the approved source. If `time_update` or the session differs from the accepted summary, the agent shows a new summary and waits for a new yes. The tool then writes immediately. Schema diagnostics, including errors, do not block the write. A successful readback does not certify the theory. The MCP path ends at that readback. It does not also call `create-version` or `replace`.
 

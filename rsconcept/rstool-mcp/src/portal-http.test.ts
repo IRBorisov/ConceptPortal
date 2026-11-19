@@ -9,6 +9,7 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { afterEach, expect, it, vi } from 'vitest';
 
+import packageInfo from '../package.json' with { type: 'json' };
 import { createBearerTokenVerifier } from './http-auth';
 import { createRSToolHttpServer, type RSToolHttpServerOptions } from './http-server';
 import { PortalClient } from './portal-client';
@@ -107,6 +108,98 @@ it('creates schema, model and OSS over authenticated MCP without allocating a lo
     expect(result.isError).toBe(true);
     expect(JSON.stringify(result)).not.toContain(KEY);
   }
+});
+
+it('builds and edits an OSS with the personal key, revision guards and operation readback', async () => {
+  const app = await start();
+  const ossId = 42;
+  const initialRevision = '2026-11-19T00:00:00.000Z';
+  const graph = { id: ossId, time_update: initialRevision,
+    operations: [] as Array<Record<string, any>>, arguments: [] as Array<{ operation: number; argument: number }>,
+    substitutions: [] as Array<{ operation: number; original: number; substitution: number }> };
+  const writes: Array<{ route: string; method: string | undefined; payload: unknown }> = [];
+  let conflict = false;
+  let loseReadback = false;
+  let readbackPending = false;
+  app.remote.mockImplementation(async (input, options) => {
+    const url = new URL(String(input));
+    expect(url.origin).toBe('https://portal-api.example');
+    const headers = new Headers(options?.headers);
+    expect(headers.get('Authorization')).toBe(`Bearer ${KEY}`);
+    if (url.pathname === '/api/agents/me') return Response.json({ id: 7, username: 'Alice' });
+    if (url.pathname === `/api/agents/oss/${ossId}/details`) {
+      if (readbackPending) {
+        readbackPending = false;
+        return Response.json({ ...graph, arguments: [] });
+      }
+      return Response.json(graph);
+    }
+    expect(url.pathname.startsWith(`/api/agents/oss/${ossId}/`)).toBe(true);
+    expect(options?.redirect).toBe('error');
+    expect(headers.get('X-Expected-Time-Update')).toBe(graph.time_update);
+    const route = url.pathname.split('/').at(-1)!;
+    const payload = JSON.parse(String(options?.body));
+    writes.push({ route, method: options?.method, payload });
+    if (conflict) return Response.json({}, { status: 409 });
+    graph.time_update = new Date(Date.parse(initialRevision) + writes.length).toISOString();
+    const creating = ['create-schema', 'import-schema', 'create-synthesis'].includes(route);
+    const operationId = creating ? graph.operations.length + 1 : payload.target;
+    if (creating) graph.operations.push({ ...payload.item_data, id: operationId,
+      operation_type: route === 'create-synthesis' ? 'synthesis' : 'input',
+      result: route === 'import-schema' && !payload.clone_source ? payload.source : 100 + operationId });
+    else if (route === 'update-operation') Object.assign(graph.operations[operationId - 1], payload.item_data);
+    if (payload.arguments) graph.arguments = payload.arguments.map((argument: number) => ({ operation: operationId, argument }));
+    if (payload.substitutions) graph.substitutions = payload.substitutions.map((row: object) => ({ operation: operationId, ...row }));
+    readbackPending = loseReadback;
+    return creating ? Response.json({ new_operation: operationId, oss: graph }, { status: 201 }) : Response.json(graph);
+  });
+  expect(app.client.getServerVersion()?.version).toBe(packageInfo.version);
+  const call = (name: string, fields: Record<string, unknown>, expectedTimeUpdate = graph.time_update) =>
+    app.client.callTool({ name: `portal_oss_${name}`, arguments: { targetId: ossId, expectedTimeUpdate, ...fields } });
+  expect((await call('create_schema', { item_data: {} })).isError).toBe(true);
+  expect(app.remote.mock.calls).toHaveLength(0);
+  await app.account('connection', 'PUT', { key: KEY });
+  const catalog = (await app.client.listTools()).tools.filter(tool => tool.name.startsWith('portal_oss_'));
+  expect(catalog.map(tool => tool.name).sort()).toEqual(['portal_oss_create_schema', 'portal_oss_create_synthesis',
+    'portal_oss_execute_operation', 'portal_oss_import_schema', 'portal_oss_update_operation']);
+  expect(catalog.every(tool => tool.inputSchema.additionalProperties === false)).toBe(true);
+  const current = await app.client.callTool({ name: 'get_current_session', arguments: {} });
+  const input = { alias: 'A', title: 'Local argument', parent: null };
+  const imported = { item_data: { alias: 'B' }, source: 77, clone_source: false };
+  const synthesis = { item_data: { alias: 'AB' }, arguments: [1, 2], substitutions: [{ original: 15, substitution: 16 }] };
+  const update = { target: 3, item_data: { title: 'Revised' }, arguments: [2, 1] };
+  expect((await call('create_schema', { item_data: input })).structuredContent).toMatchObject({ operationId: 1, resultId: 101, verified: true });
+  expect((await call('import_schema', imported)).structuredContent).toMatchObject({ operationId: 2, resultId: 77, verified: true });
+  expect((await call('create_synthesis', synthesis)).structuredContent).toMatchObject({ operationId: 3, resultId: 103, verified: true });
+  expect((await call('update_operation', update)).structuredContent).toMatchObject({ operationId: 3, verified: true });
+  const executed = await call('execute_operation', { target: 3 });
+  expect(executed.structuredContent).toMatchObject({ targetId: ossId, operationId: 3, resultId: 103,
+    time_update: graph.time_update, verified: true, oss: graph });
+  expect(JSON.stringify(executed)).not.toContain(KEY);
+  expect(writes).toEqual([
+    { route: 'create-schema', method: 'POST', payload: { item_data: input } },
+    { route: 'import-schema', method: 'POST', payload: imported },
+    { route: 'create-synthesis', method: 'POST', payload: synthesis },
+    { route: 'update-operation', method: 'PATCH', payload: update },
+    { route: 'execute-operation', method: 'POST', payload: { target: 3 } },
+  ]);
+  expect((await call('execute_operation', { target: 3 }, initialRevision)).structuredContent).toMatchObject({
+    error: { message: expect.stringContaining('Portal OSS changed') },
+  });
+  expect((await call('execute_operation', { target: 3, key: KEY })).isError).toBe(true);
+  expect(writes).toHaveLength(5);
+  conflict = true;
+  expect((await call('execute_operation', { target: 3 })).structuredContent).toMatchObject({
+    error: { message: expect.stringContaining('Portal OSS changed') },
+  });
+  expect(writes).toHaveLength(6);
+  conflict = false;
+  loseReadback = true;
+  expect((await call('execute_operation', { target: 3 })).structuredContent).toMatchObject({
+    error: { message: expect.stringContaining('Portal OSS verification failed') },
+  });
+  expect(writes).toHaveLength(7);
+  expect(await app.client.callTool({ name: 'get_current_session', arguments: {} })).toEqual(current);
 });
 
 /** Exercise both protocols against a real loopback listener; only Portal itself is a stub. */

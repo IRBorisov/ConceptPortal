@@ -4,7 +4,7 @@
 
 If you do not need MCP, use `@rsconcept/rstool` directly (library API or stdio JSON wrapper).
 
-HTTP hosts can opt into [Portal publication and encrypted personal keys](PORTAL.md). Configured hosts expose creation of empty schemas, models and OSS, private library search, full readback, creation receipts, description updates and publication preparation. Users connect their own key; full content replacements require approval on a separate HTTPS page. Keys, identities and confirmations are never MCP tool arguments. Unconfigured hosts and stdio retain the existing catalog.
+HTTP hosts can opt into [Portal publication and encrypted personal keys](PORTAL.md). Configured hosts can create library objects, search private items, edit an OSS graph, and publish conceptual schemas. The account page binds the personal key. The agent obtains the user's explicit approval before replacing a schema or editing an OSS graph. Keys, identities and confirmations stay out of tool arguments.
 
 ## Install
 
@@ -100,6 +100,8 @@ Edit `claude_desktop_config.json` (`~/Library/Application Support/Claude/` on ma
 | `synthesize`          | `synthesize`        | Embed another session + identification table. |
 
 Session tools accept optional `sessionId` (flat params, no `input` wrapper). Prefer `apply_schema_patch` for schema edits.
+
+Configured HTTP hosts also expose the [Portal tool catalog](PORTAL.md#portal-tools), including tools to add input operations and build or update synthesis operations.
 
 ## Programmatic use
 

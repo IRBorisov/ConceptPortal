@@ -6,6 +6,7 @@ import {
 
 import { RSToolAgent, RSToolError } from "@rsconcept/rstool";
 
+import packageInfo from '../package.json' with { type: 'json' };
 import { TOOL_DEFINITIONS, type ToolDefinition } from "./tools";
 import { SessionStorageError } from "./session-policy";
 
@@ -59,7 +60,7 @@ export function buildRSToolMcpServer(
   const server = new McpServer(
     {
       name: options.name ?? "rstool-mcp",
-      version: options.version ?? "2.5.0",
+      version: options.version ?? packageInfo.version,
     },
     {
       capabilities: {
