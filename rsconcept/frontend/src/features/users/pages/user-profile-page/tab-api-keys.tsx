@@ -16,6 +16,7 @@ import { Tooltip } from '@/components/container';
 import { Button, SubmitButton } from '@/components/control';
 import { IconHelp } from '@/components/icons';
 import { TextInput } from '@/components/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/components/utils';
 
 const schemaKeyForm = schemaCreateApiKey.pick({ label: true }).extend({ accessLevel: schemaApiKeyScope });
@@ -43,6 +44,14 @@ export function TabApiKeys() {
   const { createKey, isPending } = useCreateApiKey();
   const { revokeKey, isPending: isRevoking } = useRevokeApiKey();
   const [createdSecret, setCreatedSecret] = useState<ApiKeyCreatedDTO | null>(null);
+  const [accessHelpOpen, setAccessHelpOpen] = useState(false);
+  const accessHelpLabel = tx('tx.agents.key.accessLevel.help');
+  const accessHelpContent = (
+    <>
+      <p>{tx('tx.agents.key.scopes.hint')}</p>
+      <p className='mt-2'>{tx('tx.agents.key.limits')}</p>
+    </>
+  );
 
   const [expiryDays, setExpiryDays] = useState('90');
   const scopeLabels: Record<ApiKeyScope, string> = {
@@ -111,14 +120,19 @@ export function TabApiKeys() {
                 <label htmlFor='api_key_access_level' className='text-sm'>
                   {tx('tx.agents.key.accessLevel')}
                 </label>
-                <button
-                  id='api_key_access_help'
-                  type='button'
-                  className='rounded p-1 text-muted-foreground hover:text-foreground focus-visible:text-foreground'
-                  aria-label={tx('tx.agents.key.accessLevel.help')}
-                >
-                  <IconHelp size='1rem' aria-hidden='true' />
-                </button>
+                <Popover open={accessHelpOpen} onOpenChange={setAccessHelpOpen}>
+                  <PopoverTrigger
+                    id='api_key_access_help'
+                    type='button'
+                    className='rounded p-1 text-muted-foreground hover:text-foreground focus-visible:text-foreground'
+                    aria-label={accessHelpLabel}
+                  >
+                    <IconHelp size='1rem' aria-hidden='true' />
+                  </PopoverTrigger>
+                  <PopoverContent align='start' aria-label={accessHelpLabel} className='rounded-lg text-sm'>
+                    {accessHelpContent}
+                  </PopoverContent>
+                </Popover>
               </div>
               <select
                 id='api_key_access_level'
@@ -136,17 +150,18 @@ export function TabApiKeys() {
             </div>
           )}
         </form.Field>
-        <Tooltip
-          id='api_key_access_help_tooltip'
-          anchorSelect='#api_key_access_help'
-          className='max-w-xs'
-          clickable
-          openEvents={{ mouseover: true, focus: true, click: true }}
-          globalCloseEvents={{ escape: true, clickOutsideAnchor: true }}
-        >
-          <p>{tx('tx.agents.key.scopes.hint')}</p>
-          <p className='mt-2'>{tx('tx.agents.key.limits')}</p>
-        </Tooltip>
+        {!accessHelpOpen && (
+          <Tooltip
+            id='api_key_access_help_tooltip'
+            anchorSelect='#api_key_access_help'
+            className='max-w-xs'
+            clickable
+            openEvents={{ mouseover: true, focus: true }}
+            globalCloseEvents={{ escape: true }}
+          >
+            {accessHelpContent}
+          </Tooltip>
+        )}
         <label className='cc-column gap-1 text-sm'>
           {tx('tx.agents.key.expiry')}
           <select
