@@ -14,6 +14,7 @@ from apps.rsform.serializers.io_files import (
     create_rsform_from_sandbox_data
 )
 from shared import messages as msg
+from shared.permissions import can_read_library_item
 from shared.serializers import (
     PortalImportJsonMetadataSerializer,
     StrictModelSerializer,
@@ -21,6 +22,7 @@ from shared.serializers import (
 )
 
 from ..models import ConstituentData, RSModel
+from ..type_analysis import UNAVAILABLE_TYPE, get_binding_types
 
 
 class RSModelConstituentSerializer(StrictModelSerializer):
@@ -37,7 +39,7 @@ class RSModelSerializer(StrictModelSerializer):
     editors = serializers.ListField(
         child=serializers.IntegerField()
     )
-    items = serializers.ListField(
+    items: serializers.Field = serializers.ListField(
         child=serializers.DictField()
     )
     schema = serializers.SerializerMethodField()
@@ -56,7 +58,7 @@ class RSModelSerializer(StrictModelSerializer):
         del result['versions']
         result['schema'] = self.get_schema(instance)
         result['items'] = []
-        bindings = ConstituentData.objects.filter(model=instance).select_related('constituent')
+        bindings = ConstituentData.objects.filter(model=instance)
         if result['schema'] is not None:
             bindings = bindings.filter(constituent__schema_id=result['schema'])
         for binding in bindings:
@@ -65,6 +67,42 @@ class RSModelSerializer(StrictModelSerializer):
                 'type': binding.type,
                 'value': binding.data
             })
+        return result
+
+
+class RSModelBindingDetailsSerializer(serializers.Serializer):
+    ''' Read-only representation of one model binding. '''
+    id = serializers.IntegerField()
+    type = serializers.CharField(help_text='Legacy field containing the stored type.')
+    value = serializers.JSONField()  # type: ignore
+    stored_type = serializers.CharField(help_text='Type metadata saved with the value.')
+    effective_type = serializers.CharField(
+        allow_null=True, help_text='Current type of the constituent in the linked schema.',
+    )
+    type_diagnostic = serializers.ChoiceField(
+        choices=['normalized_stored_type', 'stored_type_mismatch', 'effective_type_unavailable'],
+        allow_null=True,
+    )
+
+
+class RSModelDetailsSerializer(RSModelSerializer):
+    ''' Read model bindings alongside their current schema types. '''
+    items = RSModelBindingDetailsSerializer(many=True, read_only=True)
+
+    def to_representation(self, instance: LibraryItem) -> dict:
+        result = super().to_representation(instance)
+        items = result['items']
+        if not items:
+            return result
+        schema = LibraryItem.objects.filter(pk=result['schema']).first()
+        request = self.context.get('request')
+        details = (
+            get_binding_types(schema.pk, items)
+            if schema is not None and request is not None and can_read_library_item(request.user, schema)
+            else [UNAVAILABLE_TYPE] * len(items)
+        )
+        for item, type_details in zip(items, details, strict=True):
+            item.update(stored_type=item['type'], **type_details)
         return result
 
 

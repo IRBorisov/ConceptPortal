@@ -55,7 +55,8 @@ services:
       - email_user
       - email_password
     build:
-      context: ./rsconcept/backend
+      context: .
+      dockerfile: rsconcept/backend/Dockerfile
     env_file: ./rsconcept/backend/.env.prod
     environment:
       SECRET_KEY: /run/secrets/django_key

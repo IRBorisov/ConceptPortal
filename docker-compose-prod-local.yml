@@ -33,7 +33,8 @@ services:
     depends_on:
       - postgresql-db
     build:
-      context: ./rsconcept/backend
+      context: .
+      dockerfile: rsconcept/backend/Dockerfile
     env_file: ./rsconcept/backend/.env.prod.local
     expose:
       - 8001

@@ -1,6 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { Graph } from '../graph';
+import { tuple } from '../rslang/eval/value';
 import { RSLangAnalyzer } from '../rslang/semantic/analyzer';
 import { basic, bool, IntegerT } from '../rslang/semantic/typification';
 
@@ -93,6 +94,43 @@ function createEngine(): RSEngine {
     clearValues: () => Promise.resolve()
   });
 }
+
+describe('RSEngine.setStructureValue', () => {
+  it('stores a shape and still checks membership in the actual sets', async () => {
+    const schema = analyzedSchema([
+      mockConstituenta({ id: 1, alias: 'X1', cst_type: CstType.BASE }),
+      mockConstituenta({ id: 2, alias: 'X2', cst_type: CstType.BASE }),
+      mockConstituenta({ id: 3, alias: 'S2', cst_type: CstType.STRUCTURED, definition_formal: 'ℬ(X1×X2)' })
+    ]);
+    const setCstValue = vi.fn().mockResolvedValue(undefined);
+    const engine = new RSEngine(10, { setCstValue, clearValues: () => Promise.resolve() });
+    const baseBindings: RSModel['items'] = [
+      { id: 1, type: TYPE_BASIC, value: { 1: 'a', 2: 'b' } },
+      { id: 2, type: TYPE_BASIC, value: { 3: 'c' } }
+    ];
+    engine.loadData(schema, mockModel(baseBindings));
+
+    const pairs = [tuple([1, 3]), tuple([2, 3])];
+    await engine.setStructureValue(3, pairs);
+    expect(setCstValue).toHaveBeenLastCalledWith({
+      itemID: 10,
+      data: [{ target: 3, type: 'shape:ℬ(*×*)', data: pairs }]
+    });
+    expect(engine.getCstStatus(3)).toBe(EvalStatus.HAS_DATA);
+
+    await engine.setBasicValue(1, { 1: 'a' });
+    expect(setCstValue).toHaveBeenLastCalledWith({
+      itemID: 10,
+      data: [
+        { target: 1, type: TYPE_BASIC, data: { 1: 'a' } },
+        { target: 3, type: 'shape:ℬ(*×*)', data: [tuple([1, 3])] }
+      ]
+    });
+    const reloaded = mockModel([...baseBindings, { id: 3, type: 'shape:ℬ(*×*)', value: [tuple([1, 2])] }]);
+    engine.loadData(schema, reloaded);
+    expect(engine.getCstStatus(3)).toBe(EvalStatus.INVALID_DATA);
+  });
+});
 
 describe('RSEngine.setBasicValue', () => {
   it('awaits setCstValue before clearValues when dependents must reset', async () => {

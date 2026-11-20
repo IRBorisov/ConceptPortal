@@ -149,33 +149,20 @@ export function labelBaseId(baseID: string): string {
 
 /** Converts expression type to string. */
 export function labelType(type: ExpressionType | null): string {
-  if (!type) {
-    return 'N/A';
-  }
-  switch (type.typeID) {
-    case TypeID.anyTypification:
-      return ANY_TYPE_NAME;
-    case TypeID.integer:
-      return INTEGER_TYPE_NAME;
-    case TypeID.basic:
-      return labelBaseId(type.baseID);
-    case TypeID.tuple:
-      return type.factors
-        .map(factor => (factor.typeID === TypeID.tuple ? `(${labelType(factor)})` : labelType(factor)))
-        .join('×');
-    case TypeID.collection:
-      return type.base.typeID === TypeID.collection ? `ℬ${labelType(type.base)}` : `ℬ(${labelType(type.base)})`;
-    case TypeID.logic:
-      return LOGIC_TYPE_NAME;
-    case TypeID.predicate:
-    case TypeID.function:
-      const argsText = type.args.map(arg => labelType(arg.type)).join(', ');
-      return `[${argsText}] → ${labelType(type.result)}`;
-  }
+  return formatType(type);
 }
 
-/** Converts expression type to normalized string. */
+/** Formats the legacy model type metadata. It loses the identities of the underlying sets. */
 export function normalizeType(type: ExpressionType | null): string {
+  return formatType(type, 'X1');
+}
+
+/** Formats a model binding's value shape as metadata distinct from a typification. */
+export function labelTypeShape(type: ExpressionType): string {
+  return `shape:${formatType(type, '*')}`;
+}
+
+function formatType(type: ExpressionType | null, elementPlaceholder?: string): string {
   if (!type) {
     return 'N/A';
   }
@@ -183,19 +170,24 @@ export function normalizeType(type: ExpressionType | null): string {
     case TypeID.anyTypification:
       return ANY_TYPE_NAME;
     case TypeID.integer:
+      return elementPlaceholder ?? INTEGER_TYPE_NAME;
     case TypeID.basic:
-      return 'X1';
+      return elementPlaceholder ?? labelBaseId(type.baseID);
     case TypeID.tuple:
       return type.factors
-        .map(factor => (factor.typeID === TypeID.tuple ? `(${normalizeType(factor)})` : normalizeType(factor)))
+        .map(factor => {
+          const label = formatType(factor, elementPlaceholder);
+          return factor.typeID === TypeID.tuple ? `(${label})` : label;
+        })
         .join('×');
     case TypeID.collection:
-      return type.base.typeID === TypeID.collection ? `ℬ${normalizeType(type.base)}` : `ℬ(${normalizeType(type.base)})`;
+      const base = formatType(type.base, elementPlaceholder);
+      return type.base.typeID === TypeID.collection ? `ℬ${base}` : `ℬ(${base})`;
     case TypeID.logic:
       return LOGIC_TYPE_NAME;
     case TypeID.predicate:
     case TypeID.function:
-      const argsText = type.args.map(arg => normalizeType(arg.type)).join(', ');
-      return `[${argsText}] → ${normalizeType(type.result)}`;
+      const argsText = type.args.map(arg => formatType(arg.type, elementPlaceholder)).join(', ');
+      return `[${argsText}] → ${formatType(type.result, elementPlaceholder)}`;
   }
 }

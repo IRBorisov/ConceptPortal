@@ -1,7 +1,7 @@
 import { type AstNode } from '../parsing';
 import { type CalculatorEvaluateOptions, type CalculatorResult, RSCalculator, TypeID, type Value } from '../rslang';
 import { compare } from '../rslang/eval/value';
-import { normalizeType } from '../rslang/labels';
+import { labelTypeShape } from '../rslang/labels';
 
 import { CstType, type RSForm } from './rsform';
 import { getAnalysisFor, isBaseSet, isBasicConcept, isFunctional } from './rsform-api';
@@ -181,7 +181,7 @@ export class RSEngine {
       return;
     }
 
-    const typeStr = cst.effectiveType ? normalizeType(cst.effectiveType) : INVALID_TYPE_MARKER;
+    const typeStr = cst.effectiveType ? labelTypeShape(cst.effectiveType) : INVALID_TYPE_MARKER;
     const payload = [{ target: cstID, type: typeStr, data }];
     await this.services.setCstValue({ itemID: this.modelID, data: payload });
 
@@ -222,7 +222,7 @@ export class RSEngine {
             if (fix === null) {
               resetList.push(childID);
             } else if (fix === true) {
-              const typeStr = normalizeType(child.effectiveType);
+              const typeStr = labelTypeShape(child.effectiveType);
               updateList.push({ target: childID, type: typeStr, data: draft });
             }
           }

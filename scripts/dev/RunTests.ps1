@@ -14,6 +14,9 @@ function RunTests() {
 function TestBackend() {
   $djangoSrc = "$backend\manage.py"
 
+  Set-Location $root
+  & pnpm --filter @rsconcept/domain run build:model-types
+
   Set-Location $backend
   & uv run python $djangoSrc check
   & uv run python $djangoSrc test
