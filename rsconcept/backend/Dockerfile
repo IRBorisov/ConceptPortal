@@ -55,6 +55,7 @@ FROM python-base
 RUN apt-get update -qq && \
     apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
+        libatomic1 \
         netcat && \
     rm -rf /var/lib/apt/lists/*
 

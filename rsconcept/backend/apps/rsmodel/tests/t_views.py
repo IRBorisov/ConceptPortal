@@ -37,13 +37,7 @@ class TestRSModelViewset(EndpointTester):
         schema = response.data['schema']
         self.assertEqual(schema, self.schema_id)
 
-        items = response.data['items']
-        self.assertEqual(len(items), 1)
-        self.assertEqual(items[0]['id'], x1.pk)
-        self.assertEqual(items[0]['value'], cst_data)
-        self.assertEqual(items[0]['stored_type'], 'basic')
-        self.assertEqual(items[0]['effective_type'], 'ℬ(X1)')
-        self.assertIsNone(items[0]['type_diagnostic'])
+        self.assertEqual(response.data['items'], [{'id': x1.pk, 'type': 'basic', 'value': cst_data}])
 
     @decl_endpoint('/api/models/{item}/details', method='get')
     def test_details_skips_bindings_from_other_schema(self):

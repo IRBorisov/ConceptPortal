@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { useTx } from '@/i18n';
 import { RSEngine, type RSEngineServices } from '@rsconcept/domain/library/rsengine';
 import { type Attribution, type Substitution } from '@rsconcept/domain/library/rsform';
+import { labelTypeShape } from '@rsconcept/domain/rslang/labels';
 
 import { type UpdateLibraryItemDTO } from '@/features/library';
 import {
@@ -66,7 +67,8 @@ export function SandboxState({ children }: React.PropsWithChildren) {
         clearValues: function clearValues({ data }) {
           commitBundle(prev => sbApi.clearModelValues(prev, data.items));
           return Promise.resolve();
-        }
+        },
+        formatStructureType: labelTypeShape
       };
     },
     [commitBundle]

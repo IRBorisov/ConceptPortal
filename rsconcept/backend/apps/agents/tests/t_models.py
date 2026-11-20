@@ -1,11 +1,14 @@
 ''' Testing API: agent conceptual model interpretations. '''
-from django.core.cache import cache
+from unittest.mock import patch
+
+from django.core.cache import cache, caches
 from rest_framework import status
 
 from apps.agents.models import AgentActionLog, ApiKey
 from apps.library.models import AccessPolicy, Editor, LibraryItem
 from apps.rsform.models import RSForm
 from apps.rsmodel.models import ConstituentData, RSModel
+from apps.rsmodel.type_analysis import _run_analyzer
 from shared.concurrency import EXPECTED_TIME_UPDATE_HEADER
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
@@ -17,6 +20,7 @@ class TestAgentModelApi(EndpointTester):
         ''' Authenticate as the model owner and prepare two constituents. '''
         super().setUp()
         cache.clear()
+        caches['model_type_analysis'].clear()
         self.schema = RSForm.create(title='Schema', alias='S1', owner=self.user)
         self.x1 = self.schema.insert_last(alias='X1')
         self.x2 = self.schema.insert_last(alias='X2')
@@ -118,6 +122,49 @@ class TestAgentModelApi(EndpointTester):
             ConstituentData.objects.filter(model=self.model.model).values_list('constituent_id', 'type', 'data'),
             [(cst.pk, stored_type, value) for cst, stored_type, value in bindings],
         )
+
+    @decl_endpoint('/api/agents/models/{item}/details', method='get')
+    def test_details_reuses_analysis_until_type_inputs_change(self):
+        ''' An updated value can reuse the analysis until its type metadata or schema changes. '''
+        s2 = self.schema.insert_last(alias='S2', definition_formal='ℬ(X1×X2)')
+        binding = ConstituentData.objects.create(
+            model=self.model.model, constituent=s2, type='shape:ℬ(*×*)', data=[],
+        )
+        with patch('apps.rsmodel.type_analysis._run_analyzer', wraps=_run_analyzer) as run:
+            before = self.executeOK(item=self.model_id).data['items'][0]
+            self.assertIsNone(before['type_diagnostic'])
+            binding.data = [[-111, 1, 2]]
+            binding.save(update_fields=['data'])
+            unchanged_type = self.executeOK(item=self.model_id).data['items'][0]
+            self.assertEqual(unchanged_type['value'], binding.data)
+            run.assert_called_once()
+
+            binding.type = 'ℬ(X1×X1)'
+            binding.save(update_fields=['type'])
+            changed_type = self.executeOK(item=self.model_id).data['items'][0]
+            self.assertEqual(changed_type['type_diagnostic'], 'normalized_stored_type')
+
+            s2.definition_formal = 'ℬ(X2)'
+            s2.save(update_fields=['definition_formal'])
+            changed_schema = self.executeOK(item=self.model_id).data['items'][0]
+            self.assertEqual(changed_schema['effective_type'], 'ℬ(X2)')
+            self.assertEqual(run.call_count, 3)
+
+    @decl_endpoint('/api/agents/models/{item}/details', method='get')
+    def test_details_retries_after_analyzer_failure(self):
+        ''' A temporary analyzer failure does not become a cached result. '''
+        self._bind(self.x1, {'1': 'a'})
+        with (
+            patch('apps.rsmodel.type_analysis._run_analyzer', side_effect=OSError),
+            patch('apps.rsmodel.type_analysis.logger.error') as log_error,
+        ):
+            unavailable = self.executeOK(item=self.model_id).data['items'][0]
+            self.assertEqual(unavailable['type_diagnostic'], 'effective_type_unavailable')
+            log_error.assert_called_once()
+
+        recovered = self.executeOK(item=self.model_id).data['items'][0]
+        self.assertEqual(recovered['effective_type'], 'ℬ(X1)')
+        self.assertIsNone(recovered['type_diagnostic'])
 
     @decl_endpoint('/api/agents/models/{item}/details', method='get')
     def test_public_model_does_not_expose_private_schema_types(self):

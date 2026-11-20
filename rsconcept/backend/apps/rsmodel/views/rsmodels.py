@@ -71,14 +71,14 @@ class RSModelViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPI
         tags=['RSModel'],
         request=None,
         responses={
-            c.HTTP_200_OK: s.RSModelDetailsSerializer,
+            c.HTTP_200_OK: s.RSModelSerializer,
             c.HTTP_404_NOT_FOUND: None
         }
     )
     @action(detail=True, methods=['get'], url_path='details')
     def details(self, request: Request, pk) -> Response:
         ''' Endpoint: Detailed model view. '''
-        serializer = s.RSModelDetailsSerializer(self._get_item(), context={'request': request})
+        serializer = s.RSModelSerializer(self._get_item(), context={'request': request})
         return Response(
             status=c.HTTP_200_OK,
             data=serializer.data
