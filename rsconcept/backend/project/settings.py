@@ -148,13 +148,13 @@ if not SECRET_KEY:
 
 
 class _SentryEventScrubber(EventScrubber):
-    def scrub_dict(self, data: object) -> None:
-        if isinstance(data, dict):
-            super().scrub_dict(data)
+    def scrub_dict(self, d: object) -> None:
+        if isinstance(d, dict):
+            super().scrub_dict(d)
             # Sentry serializes the event before invoking before_send.
-            for key, value in data.items():
+            for key, value in d.items():
                 if isinstance(value, AnnotatedValue):
-                    data[key] = value.value
+                    d[key] = value.value
 
     def before_send(self, event: 'Event', _hint: 'Hint') -> 'Event':
         self.scrub_event(event)
