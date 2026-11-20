@@ -28,7 +28,10 @@ export function createSandboxBundleFromRSModel(schema: RSForm, model: RSModel): 
       updatedAt: nowIso()
     },
     schema: prepareRSForm(schema, model),
-    model: structuredClone(model)
+    model: structuredClone({
+      ...model,
+      items: model.items.map(({ id, type, value }) => ({ id, type, value }))
+    })
   };
 }
 

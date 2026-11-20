@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { schemaRSForm } from '@/features/rsform';
 import { validateImportedAliases } from '@/features/rsform/models/json-file';
-import { schemaRSModel } from '@/features/rsmodel';
+import { schemaConstituentaValue, schemaRSModel } from '@/features/rsmodel';
 
 export const SANDBOX_BUNDLE_FORMAT_VERSION = 2 as const;
 
@@ -14,7 +14,7 @@ export const schemaSandboxBundle = z
       updatedAt: z.string()
     }),
     schema: schemaRSForm,
-    model: schemaRSModel
+    model: schemaRSModel.extend({ items: z.array(schemaConstituentaValue.strip()) })
   })
   .superRefine((data, ctx) => {
     const error = validateImportedAliases(data.schema.items);

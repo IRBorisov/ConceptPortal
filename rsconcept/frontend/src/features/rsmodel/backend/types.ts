@@ -42,14 +42,5 @@ export const schemaUpdateValues = z.array(schemaConstituentaData);
 export const schemaRSModel = schemaLibraryItem.extend({
   editors: z.array(z.number()),
   schema: z.number(),
-  items: z.array(
-    schemaConstituentaValue.extend({
-      stored_type: z.string().optional(),
-      effective_type: z.string().nullable().optional(),
-      type_diagnostic: z
-        .enum(['normalized_stored_type', 'stored_type_mismatch', 'effective_type_unavailable'])
-        .nullable()
-        .optional()
-    })
-  )
+  items: z.array(schemaConstituentaValue)
 });

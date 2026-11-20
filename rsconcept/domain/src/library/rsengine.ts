@@ -1,7 +1,8 @@
 import { type AstNode } from '../parsing';
 import { type CalculatorEvaluateOptions, type CalculatorResult, RSCalculator, TypeID, type Value } from '../rslang';
 import { compare } from '../rslang/eval/value';
-import { labelTypeShape } from '../rslang/labels';
+import { normalizeType } from '../rslang/labels';
+import { type ExpressionType } from '../rslang/semantic/typification';
 
 import { CstType, type RSForm } from './rsform';
 import { getAnalysisFor, isBaseSet, isBasicConcept, isFunctional } from './rsform-api';
@@ -17,6 +18,8 @@ export interface RSEngineServices {
     data: { target: number; type: string; data: Value | BasicBinding }[];
   }) => Promise<unknown>;
   clearValues: (args: { itemID: number; data: { items: number[] } }) => Promise<unknown>;
+  /** Format stored metadata for the destination. Defaults to the legacy normalized typification. */
+  formatStructureType?: (type: ExpressionType) => string;
 }
 
 /** Notifications for {@link RSEngine}. */
@@ -181,7 +184,7 @@ export class RSEngine {
       return;
     }
 
-    const typeStr = cst.effectiveType ? labelTypeShape(cst.effectiveType) : INVALID_TYPE_MARKER;
+    const typeStr = this.formatStructureType(cst.effectiveType);
     const payload = [{ target: cstID, type: typeStr, data }];
     await this.services.setCstValue({ itemID: this.modelID, data: payload });
 
@@ -222,7 +225,7 @@ export class RSEngine {
             if (fix === null) {
               resetList.push(childID);
             } else if (fix === true) {
-              const typeStr = labelTypeShape(child.effectiveType);
+              const typeStr = this.formatStructureType(child.effectiveType);
               updateList.push({ target: childID, type: typeStr, data: draft });
             }
           }
@@ -308,6 +311,11 @@ export class RSEngine {
     const end = performance.now();
     const timeSpent = ((end - start) / 1000).toFixed(2);
     this.notifications?.onCalculationSuccess(timeSpent);
+  }
+
+  private formatStructureType(type: ExpressionType | null): string {
+    const format = this.services.formatStructureType ?? normalizeType;
+    return type ? format(type) : INVALID_TYPE_MARKER;
   }
 
   /** Notify subscribers about value and status change of {@link Constituenta}. */

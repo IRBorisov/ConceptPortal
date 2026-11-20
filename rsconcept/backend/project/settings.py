@@ -232,6 +232,18 @@ if DEBUG:
     INSTALLED_APPS.append('django_extensions')
 
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+    'model_type_analysis': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'model-type-analysis',
+        'TIMEOUT': 300,
+        'OPTIONS': {'MAX_ENTRIES': 128},
+    },
+}
+
 REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',

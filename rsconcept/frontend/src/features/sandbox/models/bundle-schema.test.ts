@@ -3,11 +3,29 @@ import { describe, expect, it } from 'vitest';
 import { CstType } from '@rsconcept/domain/library';
 
 import { schemaConstituentaBasics } from '@/features/rsform';
+import { loadRSForm } from '@/features/rsform/backend/rsform-loader';
 import { sbApi } from '@/features/sandbox/stores/sandbox-mutations';
 
 import starterEn from './starter-bundles/starter-bundle.en.json';
 import { schemaSandboxBundle } from './bundle';
 import { createStarterSandboxBundle } from './bundle-starter';
+import { createSandboxBundleFromRSModel } from './bundle-transfer';
+
+describe('sandbox model portability', () => {
+  it('drops API diagnostics when copying or importing a Portal model', () => {
+    const starter = createStarterSandboxBundle('en');
+    const schema = loadRSForm(starter.schema);
+    const cst = schema.items.find(item => item.cst_type === CstType.STRUCTURED)!;
+    const binding = { id: cst.id, type: 'shape:ℬ(*×*)', value: [] };
+    const model = {
+      ...starter.model,
+      items: [{ ...binding, stored_type: binding.type, effective_type: 'ℬ(X1×X2)', type_diagnostic: null }]
+    };
+
+    expect(createSandboxBundleFromRSModel(schema, model).model.items).toEqual([binding]);
+    expect(schemaSandboxBundle.parse({ ...starter, model }).model.items).toEqual([binding]);
+  });
+});
 
 describe('sandbox bundle / constituent alias validation', () => {
   it('rejects bundle with alias that does not match cst_type', () => {

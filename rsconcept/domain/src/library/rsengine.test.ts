@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { Graph } from '../graph';
 import { tuple } from '../rslang/eval/value';
+import { labelTypeShape } from '../rslang/labels';
 import { RSLangAnalyzer } from '../rslang/semantic/analyzer';
 import { basic, bool, IntegerT } from '../rslang/semantic/typification';
 
@@ -103,7 +104,11 @@ describe('RSEngine.setStructureValue', () => {
       mockConstituenta({ id: 3, alias: 'S2', cst_type: CstType.STRUCTURED, definition_formal: 'ℬ(X1×X2)' })
     ]);
     const setCstValue = vi.fn().mockResolvedValue(undefined);
-    const engine = new RSEngine(10, { setCstValue, clearValues: () => Promise.resolve() });
+    const engine = new RSEngine(10, {
+      setCstValue,
+      clearValues: () => Promise.resolve(),
+      formatStructureType: labelTypeShape
+    });
     const baseBindings: RSModel['items'] = [
       { id: 1, type: TYPE_BASIC, value: { 1: 'a', 2: 'b' } },
       { id: 2, type: TYPE_BASIC, value: { 3: 'c' } }

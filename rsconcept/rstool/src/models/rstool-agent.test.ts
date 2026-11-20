@@ -1032,7 +1032,7 @@ describe('RSToolAgent modeling semantics', () => {
     const session = tool.createSession();
     buildKinshipScratch(tool, session.sessionId);
 
-    await tool.setModelValues(
+    const model = await tool.setModelValues(
       {
         set: [
           { target: 1, value: { 0: 'ann', 1: 'bob' } },
@@ -1048,6 +1048,7 @@ describe('RSToolAgent modeling semantics', () => {
       session.sessionId
     );
 
+    expect(model.items.find(item => item.id === 2)?.type).toBe('ℬ(X1×X1)');
     const result = tool.evaluate({ constituentId: 3 }, session.sessionId);
     expect(result.success).toBe(true);
     expect(result.status).toBe(EvalStatus.HAS_DATA);

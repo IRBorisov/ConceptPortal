@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 
 import { useTx } from '@/i18n';
 import { RSEngine } from '@rsconcept/domain/library';
+import { labelTypeShape } from '@rsconcept/domain/rslang/labels';
 
 import { urls, useConceptNavigation } from '@/app';
 import { useAIStore } from '@/features/ai/stores/ai-context';
@@ -43,7 +44,8 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
         model.id,
         {
           setCstValue,
-          clearValues
+          clearValues,
+          formatStructureType: labelTypeShape
         },
         {
           onInvalidSetValue: () => toast.error(tx('tx.rslang.value.edit.fail')),
@@ -54,7 +56,7 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
 
   useEffect(
     function syncServices() {
-      engine.updateServices({ setCstValue, clearValues });
+      engine.updateServices({ setCstValue, clearValues, formatStructureType: labelTypeShape });
       engine.updateNotifications({
         onInvalidSetValue: () => toast.error(tx('tx.rslang.value.edit.fail')),
         onCalculationSuccess: timeSpent => toast.success(tx('tx.rslang.eval.success', { timeSpent }))
