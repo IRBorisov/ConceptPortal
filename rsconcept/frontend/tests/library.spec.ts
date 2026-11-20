@@ -40,6 +40,42 @@ test('library page shows empty state and create link', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Создать схему' })).toBeVisible();
 });
 
+test('library page scrolls folders and results within the available height', async ({ page }) => {
+  await page.setViewportSize({ width: 1100, height: 520 });
+  for (let index = 0; index < 30; index += 1) {
+    dataLibraryItems.push({
+      ...createLibraryItem(300 + index, `Schema ${index}`),
+      location: `/U/team/folder-${index}`
+    });
+  }
+  dataLibraryItems.push({ ...createLibraryItem(330, 'Nested schema'), location: '/U/team/empty/sub' });
+
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'portal.library.search',
+      JSON.stringify({ state: { subfolders: false, location: '/U/team/empty' }, version: 4 })
+    );
+  });
+  await page.goto('/library');
+  await expect(page.getByText('Список пуст')).toBeVisible();
+
+  const folders = page.locator('[data-tour="library-folders"] > div');
+  const results = page.locator('#library_data');
+  const main = page.getByRole('main');
+  const scrollRange = (element: Element) => element.scrollHeight - element.clientHeight;
+
+  expect(await folders.evaluate(scrollRange)).toBeGreaterThan(0);
+  expect(await results.evaluate(scrollRange)).toBe(0);
+  expect(await main.evaluate(scrollRange)).toBe(0);
+
+  await page.getByRole('button', { name: 'team', exact: true }).click();
+  await page.getByRole('button', { name: 'Отображение вложенных папок' }).click();
+  await expect(results.getByRole('row', { name: /Schema 0/ })).toBeVisible();
+
+  expect(await results.evaluate(scrollRange)).toBeGreaterThan(0);
+  expect(await main.evaluate(scrollRange)).toBe(0);
+});
+
 test('library page loads for anonymous user when active-users is forbidden', async ({ page }) => {
   authAnonymous();
   dataLibraryItems.push(createLibraryItem(210, 'Публичная схема'));

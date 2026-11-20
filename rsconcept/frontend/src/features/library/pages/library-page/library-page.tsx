@@ -62,18 +62,18 @@ export function LibraryPage() {
   }
 
   return (
-    <div className='relative flex'>
+    <div className='relative flex max-h-full'>
       <ViewSideLocation className='w-46 sm:w-60 shrink-0' />
 
       <div className='grow min-w-0 flex flex-col'>
         <LocationBreadcrumb
-          className='bg-input'
+          className='shrink-0 bg-input'
           canRename={canRename}
           onRenameLocation={() => showChangeLocation({ initial: location, onChangeLocation: handleRenameLocation })}
         />
 
-        <div className='overflow-hidden border-b rounded-b-none'>
-          <div className='flex items-center gap-2 border-b rounded-b-none bg-input w-full'>
+        <div className='flex min-h-0 flex-col overflow-hidden border-b rounded-b-none'>
+          <div className='flex shrink-0 items-center gap-2 border-b rounded-b-none bg-input w-full'>
             <ToolbarSearch className='h-8 w-full' />
             <ExportDropdown data={filtered} filename='library' className='mr-1 hidden sm:block' />
           </div>

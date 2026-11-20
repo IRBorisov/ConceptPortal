@@ -8,7 +8,6 @@ import { type FolderNode } from '@rsconcept/domain/library';
 import { useAuth } from '@/features/auth/backend/use-auth';
 
 import { cn } from '@/components/utils';
-import { useMainHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
 import { prefixes } from '@/utils/constants';
 
@@ -35,7 +34,6 @@ export function ViewSideLocation({ className }: ViewSideLocationProps) {
   const filterUser = useLibrarySearchStore(state => state.filterUser);
   const setFilterUser = useLibrarySearchStore(state => state.setFilterUser);
 
-  const maxHeight = useMainHeight();
   const treeValue = groupUserFoldersByOwner ? toGroupedUserLocation(location, filterUser) : location;
 
   function handleSelectFolder(target: FolderNode) {
@@ -82,7 +80,6 @@ export function ViewSideLocation({ className }: ViewSideLocationProps) {
         groupUserFoldersByOwner={groupUserFoldersByOwner}
         onSelect={handleSelectFolder}
         onControlClick={handleCopyPath}
-        style={{ maxHeight: maxHeight }}
       />
     </div>
   );

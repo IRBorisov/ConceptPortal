@@ -9,7 +9,6 @@ import { useConceptNavigation } from '@/app';
 import { TextURL } from '@/components/control';
 import { DataTable, type IConditionalStyle, type VisibilityState } from '@/components/data-table';
 import { useWindowSize } from '@/hooks/use-window-size';
-import { useFitHeight } from '@/stores/app-layout';
 import { usePreferencesStore } from '@/stores/preferences';
 
 import { useLibrarySearchStore } from '../../stores/library-search';
@@ -43,7 +42,6 @@ export function TableLibraryItems({ items, emptyLabel }: TableLibraryItemsProps)
       className: 'text-accent-orange-foreground'
     }
   ];
-  const tableHeight = useFitHeight('4.25rem');
 
   function handleOpenItem(item: LibraryItem, event: React.MouseEvent<Element>) {
     const selection = window.getSelection();
@@ -64,13 +62,12 @@ export function TableLibraryItems({ items, emptyLabel }: TableLibraryItemsProps)
   }
 
   return (
-    <div data-tour='library-table'>
+    <div data-tour='library-table' className='flex min-h-0 flex-col'>
       <DataTable
         id='library_data'
         columns={columns}
         data={items}
-        className='cc-scroll-y h-fit text-xs sm:text-sm'
-        style={{ maxHeight: tableHeight }}
+        className='cc-scroll-y text-xs sm:text-sm'
         noDataComponent={
           <div className='cc-column dense p-3 items-center min-h-24'>
             <p>{emptyLabel ?? tx('tx.list.empty')}</p>
