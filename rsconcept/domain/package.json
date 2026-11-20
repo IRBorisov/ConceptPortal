@@ -1,6 +1,6 @@
 {
   "name": "@rsconcept/domain",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Shared TypeScript domain for RS language, RSForm, RSModel, RSEngine, OSS, and concept-text helpers.",
   "license": "MIT",
   "author": "IRBorisov",
@@ -157,6 +157,7 @@
   "scripts": {
     "generate": "lezer-generator src/rslang/parser/rslang.grammar -o src/rslang/parser/parser.ts",
     "build": "tsdown",
+    "build:model-types": "tsdown --config tsdown.model-types.config.ts",
     "dev": "tsdown --watch",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",

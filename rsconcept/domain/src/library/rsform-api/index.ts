@@ -30,6 +30,7 @@ export {
   isTemplateCst,
   typeClassForCstType
 } from './cst-type';
+export { analyzeConstituentType } from './effective-type';
 export { applyFilterCategory, inferStatus, inferTemplate, inferTemplatedType, normalizeExpression } from './expression';
 export { buildFormalDependencyGraph, restoreConstituentOrder } from './formal-graph';
 export { calculateSchemaStats, isSchemaIssue } from './stats';

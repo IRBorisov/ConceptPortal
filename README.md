@@ -39,6 +39,7 @@ The npm packages in `domain`, `rstool`, and `rstool-mcp` are independently publi
    ```powershell
    pnpm install
    pnpm --filter @rsconcept/domain run build
+   pnpm --filter @rsconcept/domain run build:model-types
    ```
 
    Or run `.\scripts\dev\LocalDevSetup.ps1` (also sets up the Python backend).
@@ -58,6 +59,7 @@ The npm packages in `domain`, `rstool`, and `rstool-mcp` are independently publi
 Use [`.vscode/launch.json`](.vscode/launch.json) to start app configurations, run tests, and attach debuggers. GitHub Actions run linting and CI builds on push.
 
 Without Docker (e.g. Cursor Cloud VMs): bare-metal ports, SQLite bootstrap, and related notes are in [`.agents/CURSOR-CLOUD.md`](.agents/CURSOR-CLOUD.md).
+The Django model-details endpoints use the RSLang analyzer bundle from `build:model-types`. Rebuild it after changing the domain analyzer.
 
 To update dependencies across all `rsconcept` projects in one shot:
 

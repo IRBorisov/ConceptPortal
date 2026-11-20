@@ -15,6 +15,7 @@ function NodeSetup() {
     & pnpm install
     Write-Host "Building @rsconcept/domain`n" -ForegroundColor DarkGreen
     & pnpm --filter @rsconcept/domain run build
+    & pnpm --filter @rsconcept/domain run build:model-types
 }
 
 function BackendSetup() {

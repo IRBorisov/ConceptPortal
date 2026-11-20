@@ -72,7 +72,7 @@ class AgentModelCreateView(AgentModelBase):
 @extend_schema(
     tags=['Agents'],
     summary='Get conceptual model details, including interpretations',
-    responses={c.HTTP_200_OK: model_serializers.RSModelSerializer},
+    responses={c.HTTP_200_OK: model_serializers.RSModelDetailsSerializer},
 )
 class AgentModelDetailsView(AgentModelBase):
     ''' Agent: model details. '''
@@ -81,7 +81,7 @@ class AgentModelDetailsView(AgentModelBase):
         ''' Return the model, its schema id, and current interpretations. '''
         item = self._get_model(pk)
         self._require_read(item)
-        return Response(model_serializers.RSModelSerializer(item).data)
+        return Response(model_serializers.RSModelDetailsSerializer(item, context={'request': request}).data)
 
 
 @extend_schema(

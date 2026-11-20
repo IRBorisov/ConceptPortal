@@ -10,6 +10,9 @@ $djangoSrc = "$backend\manage.py"
 $initialData = "fixtures/InitialData.json"
 
 function RunServer() {
+    Set-Location $root
+    & pnpm install
+    & pnpm --filter @rsconcept/domain run build:model-types
 	BackendRun
 	FrontendRun
     Start-Sleep -Seconds 1
@@ -33,7 +36,6 @@ function BackendRun() {
 
 function FrontendRun() {
 	Set-Location $root
-    & pnpm install
     & pnpm --filter @rsconcept/domain run build
     Invoke-Expression "cmd /c start powershell -Command { `$Host.UI.RawUI.WindowTitle = 'react'; Set-Location '$root'; & pnpm --filter frontend run dev }"
 }

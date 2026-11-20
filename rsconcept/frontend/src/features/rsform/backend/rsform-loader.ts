@@ -5,27 +5,18 @@
 import { Graph } from '@rsconcept/domain/graph/graph';
 import { assignSchemaDiagnostics, type Constituenta, CstStatus, CstType, type RSForm } from '@rsconcept/domain/library';
 import {
+  analyzeConstituentType,
+  buildFormalDependencyGraph,
   inferClass,
   inferStatus,
   inferTemplate,
   isBaseSet,
   isFunctional,
-  normalizeExpression,
-  typeClassForCstType
+  normalizeExpression
 } from '@rsconcept/domain/library/rsform-api';
 import { type AstNode, getNodeIndices } from '@rsconcept/domain/parsing';
-import {
-  type AnalysisFast,
-  makeTypePath,
-  RSLangAnalyzer,
-  TokenID,
-  TypeID,
-  type TypePath,
-  ValueClass
-} from '@rsconcept/domain/rslang';
-import { parseTypeText } from '@rsconcept/domain/rslang';
+import { makeTypePath, RSLangAnalyzer, TokenID, TypeID, type TypePath } from '@rsconcept/domain/rslang';
 import { extractGlobals, isSimpleExpression, splitTemplateDefinition } from '@rsconcept/domain/rslang/api';
-import { labelType } from '@rsconcept/domain/rslang/labels';
 import { type ExpressionType } from '@rsconcept/domain/rslang/semantic/typification';
 
 import { type RSFormDTO } from './types';
@@ -52,7 +43,7 @@ export class RSFormLoader {
 
   produceRSForm(): RSForm {
     this.prepareLookups();
-    this.createGraph();
+    this.graph = buildFormalDependencyGraph(this.schema.items);
     this.inferCstAttributes();
     this.parseItems();
     this.collectDiagnostics();
@@ -71,19 +62,7 @@ export class RSFormLoader {
     for (const cst of this.schema.items) {
       this.cstByAlias.set(cst.alias, cst);
       this.cstByID.set(cst.id, cst);
-      this.graph.addNode(cst.id);
       this.association_graph.addNode(cst.id);
-    }
-  }
-
-  private createGraph() {
-    for (const cst of this.schema.items) {
-      for (const alias of extractGlobals(cst.definition_formal)) {
-        const source = this.cstByAlias.get(alias);
-        if (source) {
-          this.graph.addEdge(source.id, cst.id);
-        }
-      }
     }
   }
 
@@ -129,31 +108,15 @@ export class RSFormLoader {
     for (const cstID of order) {
       const cst = this.cstByID.get(cstID)!;
       cst.is_simple_expression = this.inferSimpleExpression(cst);
-      const parse = parseCst(cst, this.analyzer);
+      const { parse, effectiveType, isManualMismatch } = analyzeConstituentType(cst, this.analyzer);
       cst.analysis = {
         success: parse.success,
         type: parse.type,
         valueClass: parse.valueClass
       };
 
-      const manual = parseTypeText(cst.typification_manual);
-      const manualType = manual.type;
-      const hasComputed = parse.success && parse.type != null;
-      const hasValidManual = manualType != null;
-      const isManualMismatch =
-        hasComputed && !!cst.typification_manual && labelType(parse.type) !== labelType(manualType);
-
-      let effectiveType: ExpressionType | null = null;
-      if (hasValidManual && (!hasComputed || isManualMismatch)) {
-        effectiveType = manualType;
-      } else if (hasComputed) {
-        effectiveType = parse.type;
-      } else {
-        effectiveType = null;
-      }
       cst.effectiveType = effectiveType;
       cst.is_type_mismatch = isManualMismatch;
-      this.analyzer.setGlobal(cst.alias, effectiveType, parse.valueClass);
       const normalized = normalizeExpression(cst.definition_formal, cst.cst_type, parse.ast);
       if (normalized) {
         this.normalizedDefinitions.set(cst.id, normalized);
@@ -278,29 +241,6 @@ export class RSFormLoader {
 }
 
 // ====== Internals =========
-
-/** Parse {@link Constituenta} for {@link RSForm}. */
-function parseCst(target: Constituenta, analyzer: RSLangAnalyzer): AnalysisFast {
-  const cType = target.cst_type;
-  if (cType === CstType.NOMINAL) {
-    return { success: false, type: null, valueClass: null, ast: null };
-  }
-  if (cType === CstType.BASE || cType === CstType.CONSTANT) {
-    const valueClass = target.value_is_property ? ValueClass.PROPERTY : ValueClass.VALUE;
-    analyzer.addBase(target.alias, cType === CstType.CONSTANT, valueClass);
-    return analyzer.checkFast(target.alias);
-  } else {
-    const parse = analyzer.checkFast(target.definition_formal, {
-      expected: typeClassForCstType(cType),
-      isDomain: cType === CstType.STRUCTURED
-    });
-    if (parse.success && cType === CstType.STRUCTURED && target.value_is_property) {
-      // `isDomain` currently forces `ValueClass.VALUE`, but base concept selector can override it.
-      parse.valueClass = ValueClass.PROPERTY;
-    }
-    return parse;
-  }
-}
 
 function extractTypePath(node: AstNode, type: ExpressionType): TypePath | null {
   const result: number[] = [];

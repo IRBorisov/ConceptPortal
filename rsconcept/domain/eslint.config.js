@@ -44,7 +44,7 @@ export default typescriptPlugin.config(
     ]
   },
   {
-    files: ['src/**/*.ts'],
+    files: ['src/**/*.ts', 'scripts/**/*.ts'],
     extends: [...typescriptPlugin.configs.recommendedTypeChecked, ...typescriptPlugin.configs.stylisticTypeChecked],
     languageOptions: {
       parser: typescriptParser,

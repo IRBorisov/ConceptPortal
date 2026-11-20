@@ -41,6 +41,9 @@ class TestRSModelViewset(EndpointTester):
         self.assertEqual(len(items), 1)
         self.assertEqual(items[0]['id'], x1.pk)
         self.assertEqual(items[0]['value'], cst_data)
+        self.assertEqual(items[0]['stored_type'], 'basic')
+        self.assertEqual(items[0]['effective_type'], 'ℬ(X1)')
+        self.assertIsNone(items[0]['type_diagnostic'])
 
     @decl_endpoint('/api/models/{item}/details', method='get')
     def test_details_skips_bindings_from_other_schema(self):
@@ -248,6 +251,7 @@ class TestRSModelViewset(EndpointTester):
     def test_load_json(self):
         x1 = self.schema.insert_last(alias='X1')
         x2 = self.schema.insert_last(alias='X2')
+        s1 = self.schema.insert_last(alias='S1', definition_formal='ℬ(X1)')
         ConstituentData.objects.create(
             model=self.rsmodel.model,
             constituent=x2,
@@ -259,22 +263,17 @@ class TestRSModelViewset(EndpointTester):
             'title': 'Imported model',
             'alias': 'IMP_M',
             'description': 'Model description',
-            'items': [{
-                'id': x1.pk,
-                'type': 'basic',
-                'value': {'1': 'Петя'}
-            }]
+            'items': [
+                {'id': x1.pk, 'type': 'basic', 'value': {'1': 'Петя'}},
+                {'id': s1.pk, 'type': 'shape:ℬ(*)', 'value': [1]},
+            ]
         }
 
         response = self.executeOK(item=self.model_id, data=data)
         self.assertEqual(response.data['title'], 'Imported model')
         self.assertEqual(response.data['alias'], 'IMP_M')
         self.assertEqual(response.data['description'], 'Model description')
-        self.assertEqual(response.data['items'], [{
-            'id': x1.pk,
-            'type': 'basic',
-            'value': {'1': 'Петя'}
-        }])
+        self.assertCountEqual(response.data['items'], data['items'])
 
         self.rsmodel.model.refresh_from_db()
         self.assertEqual(self.rsmodel.model.title, 'Imported model')
@@ -284,6 +283,9 @@ class TestRSModelViewset(EndpointTester):
         self.assertFalse(ConstituentData.objects.filter(model=self.rsmodel.model, constituent=x2).exists())
         loaded = ConstituentData.objects.get(model=self.rsmodel.model, constituent=x1)
         self.assertEqual(loaded.data, {'1': 'Петя'})
+        loaded_shape = ConstituentData.objects.get(model=self.rsmodel.model, constituent=s1)
+        self.assertEqual(loaded_shape.type, 'shape:ℬ(*)')
+        self.assertEqual(loaded_shape.data, [1])
 
         self.executeNotFound(item=self.invalid_id, data=data)
         self.executeBadData(item=self.model_id, data={'items': [{'id': self.invalid_id, 'type': 'basic', 'value': []}]})

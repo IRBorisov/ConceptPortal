@@ -1,6 +1,16 @@
 # ==========================================
 # ============ Multi-stage build ===========
 # ==========================================
+FROM node:26-bookworm-slim AS model-types
+
+RUN npm install -g corepack && corepack enable
+WORKDIR /src
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY rsconcept/domain/package.json rsconcept/domain/
+RUN pnpm install --frozen-lockfile --filter @rsconcept/domain
+COPY rsconcept/domain rsconcept/domain
+RUN pnpm --filter @rsconcept/domain run build:model-types
+
 FROM ubuntu:jammy AS python-base
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -35,7 +45,7 @@ ENV UV_PROJECT_ENVIRONMENT=/opt/venv
 
 WORKDIR /tmp/backend
 
-COPY .python-version pyproject.toml uv.lock ./
+COPY rsconcept/backend/.python-version rsconcept/backend/pyproject.toml rsconcept/backend/uv.lock ./
 RUN uv sync --frozen --no-dev
 
 
@@ -66,16 +76,19 @@ RUN mkdir -p $USER_HOME && \
 
 # Install Python dependencies from the locked uv environment.
 COPY --from=builder /opt/venv $VIRTUAL_ENV
+COPY --from=model-types /usr/local/bin/node /usr/local/bin/node
 
 # Copy application sources and setup permissions
 WORKDIR $APP_HOME
-COPY pyproject.toml ./
-COPY project/ ./project
-COPY shared/ ./shared
-COPY templates/ ./templates
-COPY fixtures/ ./fixtures
-COPY apps/ ./apps
-COPY manage.py entrypoint.sh ./
+COPY --from=model-types /src/rsconcept/backend/build/model-types ./build/model-types
+RUN node --version
+COPY rsconcept/backend/pyproject.toml ./
+COPY rsconcept/backend/project/ ./project
+COPY rsconcept/backend/shared/ ./shared
+COPY rsconcept/backend/templates/ ./templates
+COPY rsconcept/backend/fixtures/ ./fixtures
+COPY rsconcept/backend/apps/ ./apps
+COPY rsconcept/backend/manage.py rsconcept/backend/entrypoint.sh ./
 RUN sed -i 's/\r$//g' $APP_HOME/entrypoint.sh && \
     chmod +x $APP_HOME/entrypoint.sh && \
     chown -R app:app $APP_HOME && \

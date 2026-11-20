@@ -16,6 +16,7 @@ fi
 corepack enable >/dev/null 2>&1 || true
 pnpm install
 pnpm --filter @rsconcept/domain run build
+pnpm --filter @rsconcept/domain run build:model-types
 
 cd rsconcept/backend
 uv sync

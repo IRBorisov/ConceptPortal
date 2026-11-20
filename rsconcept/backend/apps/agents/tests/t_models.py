@@ -58,8 +58,84 @@ class TestAgentModelApi(EndpointTester):
             'id': self.x1.pk,
             'type': 'basic',
             'value': {'1': 'Петя'},
+            'stored_type': 'basic',
+            'effective_type': 'ℬ(X1)',
+            'type_diagnostic': None,
         }])
         self.assertFalse(AgentActionLog.objects.filter(action='model.set_value').exists())
+
+    @decl_endpoint('/api/agents/models/{item}/details', method='get')
+    def test_details_reports_current_types_after_schema_edit(self):
+        ''' Compare stored types with the schema without migrating the bindings. '''
+        s2 = self.schema.insert_last(alias='S2', definition_formal='ℬ(X1×X2)')
+        d1 = self.schema.insert_last(alias='D1', definition_formal='S2')
+        d2 = self.schema.insert_last(alias='D2', definition_formal='S2', typification_manual='ℬ(X2)')
+        d3 = self.schema.insert_last(alias='D3', definition_formal='S99')
+        s3 = self.schema.insert_last(alias='S3', definition_formal='ℬ(S2)')
+        bindings = [
+            (d2, 'ℬ(X2)', [1]),
+            (s2, 'ℬ(X1×X1)', [[1, 2]]),
+            (d1, 'ℬ(X1×X2)', [[1, 2]]),
+            (d3, 'INVALID', []),
+            (s3, 'shape:ℬ(*×*)', [[1, 2]]),
+        ]
+        for cst, stored_type, value in bindings:
+            ConstituentData.objects.create(
+                model=self.model.model, constituent=cst, type=stored_type, data=value,
+            )
+
+        response = self.executeOK(item=self.model_id)
+        items = {item['id']: item for item in response.data['items']}
+        self.assertEqual(items[s2.pk], {
+            'id': s2.pk,
+            'type': 'ℬ(X1×X1)',
+            'value': [[1, 2]],
+            'stored_type': 'ℬ(X1×X1)',
+            'effective_type': 'ℬ(X1×X2)',
+            'type_diagnostic': 'normalized_stored_type',
+        })
+        self.assertEqual(items[d1.pk]['effective_type'], 'ℬ(X1×X2)')
+        self.assertIsNone(items[d1.pk]['type_diagnostic'])
+        self.assertEqual(items[d2.pk]['effective_type'], 'ℬ(X2)')
+        self.assertIsNone(items[d2.pk]['type_diagnostic'])
+        self.assertIsNone(items[d3.pk]['effective_type'])
+        self.assertEqual(items[d3.pk]['type_diagnostic'], 'effective_type_unavailable')
+        self.assertEqual(items[s3.pk]['effective_type'], 'ℬ(X1×X2)')
+        self.assertIsNone(items[s3.pk]['type_diagnostic'])
+
+        s2.definition_formal = 'ℬ(X2)'
+        s2.save(update_fields=['definition_formal'])
+        updated = self.executeOK(item=self.model_id)
+        items = {item['id']: item for item in updated.data['items']}
+        self.assertEqual(items[s2.pk]['effective_type'], 'ℬ(X2)')
+        self.assertEqual(items[s2.pk]['type_diagnostic'], 'stored_type_mismatch')
+        self.assertEqual(items[d1.pk]['effective_type'], 'ℬ(X2)')
+        self.assertEqual(items[d1.pk]['type_diagnostic'], 'stored_type_mismatch')
+        self.assertEqual(items[s3.pk]['stored_type'], 'shape:ℬ(*×*)')
+        self.assertEqual(items[s3.pk]['type_diagnostic'], 'stored_type_mismatch')
+        self.assertEqual(updated.data['time_update'], response.data['time_update'])
+        self.assertCountEqual(
+            ConstituentData.objects.filter(model=self.model.model).values_list('constituent_id', 'type', 'data'),
+            [(cst.pk, stored_type, value) for cst, stored_type, value in bindings],
+        )
+
+    @decl_endpoint('/api/agents/models/{item}/details', method='get')
+    def test_public_model_does_not_expose_private_schema_types(self):
+        ''' The existing binding stays readable without exposing the live schema. '''
+        self.schema.model.access_policy = AccessPolicy.PRIVATE
+        self.schema.model.save(update_fields=['access_policy'])
+        self._bind(self.x1, {'1': 'a'})
+        self.client.credentials()
+
+        response = self.executeOK(item=self.model_id)
+        self.assertEqual(response.data['items'], [{
+            'id': self.x1.pk,
+            'type': 'basic',
+            'value': {'1': 'a'},
+            'stored_type': 'basic',
+            'effective_type': None,
+            'type_diagnostic': 'effective_type_unavailable',
+        }])
 
     @decl_endpoint('/api/agents/models/{item}/details', method='get')
     def test_private_details_forbidden_and_public_details_anonymous(self):
