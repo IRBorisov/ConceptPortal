@@ -55,12 +55,12 @@ export function MenuEditSchema() {
 
   function handleReindex() {
     hideMenu();
-    void resetAliases({ itemID: schema.id });
+    resetAliases({ itemID: schema.id });
   }
 
   function handleRestoreOrder() {
     hideMenu();
-    void restoreOrder({ itemID: schema.id });
+    restoreOrder({ itemID: schema.id });
   }
 
   async function handleSubstituteCst() {
@@ -73,9 +73,7 @@ export function MenuEditSchema() {
     }
     showSubstituteCst({
       schema: schema,
-      onSubstitute: data => {
-        void substituteConstituents({ itemID: schema.id, data });
-      }
+      onSubstitute: data => substituteConstituents({ itemID: schema.id, data })
     });
   }
 
@@ -99,7 +97,7 @@ export function MenuEditSchema() {
     }
     showInlineSynthesis({
       receiver: schema,
-      onSynthesis: data => void inlineSynthesis(data).then(() => deselectAll())
+      onSynthesis: data => inlineSynthesis(data, { onSuccess: deselectAll })
     });
   }
 

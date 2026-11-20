@@ -99,7 +99,9 @@ export function FormSchema({ className }: FormSchemaProps) {
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
-        void form.handleSubmit();
+        void form.handleSubmit().catch(() => {
+          // MutationErrors displays the rejected save.
+        });
       }}
       data-tour='passport-form'
     >

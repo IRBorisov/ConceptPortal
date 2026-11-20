@@ -26,6 +26,6 @@ export const useSubstituteConstituents = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    substituteConstituents: mutation.mutateAsync
+    substituteConstituents: mutation.mutate
   };
 };

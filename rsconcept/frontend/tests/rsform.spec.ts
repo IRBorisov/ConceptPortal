@@ -195,6 +195,32 @@ test('RSForm passport save shows error when update is rejected', async ({ page }
   await expect(page.getByText('alias: Сокращение уже занято')).toBeVisible();
   await expect(page).toHaveURL(new RegExp(`/rsforms/${rsformID}$`));
   await expect(page.locator('#schema_alias')).toHaveValue('KS_CONFLICT');
+  expect(await page.pageErrors()).toEqual([]);
+});
+
+test('RSForm reorder shows a network error and can be retried', async ({ page }) => {
+  const rsformID = 311;
+  const schema = createRSFormMock(rsformID, 'Схема для упорядочивания');
+  dataRSForms.set(rsformID, schema);
+
+  const reorderUrl = `${BACKEND_URL}/api/rsforms/${rsformID}/restore-order`;
+  await page.route(reorderUrl, route => route.fulfill({ json: schema }));
+  await page.route(reorderUrl, route => route.abort(), { times: 1 });
+
+  await page.goto(`/rsforms/${rsformID}`, { waitUntil: 'domcontentloaded' });
+  const editMenu = page.getByRole('button', { name: 'Редактирование', exact: true });
+  const reorder = page.getByRole('button', { name: 'Упорядочить список конституент по типу и связям' });
+  await editMenu.click();
+  await reorder.click();
+
+  const errorDialog = page.getByRole('alertdialog');
+  await expect(errorDialog.getByText('Нет ответа от сервера')).toBeVisible();
+  await errorDialog.getByRole('button', { name: 'Закрыть' }).click();
+
+  await editMenu.click();
+  await reorder.click();
+  await expect(page.getByText('Список упорядочен')).toBeVisible();
+  expect(await page.pageErrors()).toEqual([]);
 });
 
 test('RSForm keeps unsaved expression when another user saved the schema first', async ({ page }) => {
@@ -265,4 +291,5 @@ test('RSForm keeps unsaved expression when another user saved the schema first',
   expect(patchBodies[0].item_data.definition_formal).toBe('X1∪X1');
   expect(dataRSForms.get(rsformID)!.items.find(cst => cst.id === 3102)!.convention).toBe('Комментарий коллеги');
   await expect(expression).toHaveText('X1∪X1');
+  expect(await page.pageErrors()).toEqual([]);
 });

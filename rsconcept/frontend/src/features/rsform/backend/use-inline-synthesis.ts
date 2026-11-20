@@ -26,6 +26,6 @@ export const useInlineSynthesis = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    inlineSynthesis: mutation.mutateAsync
+    inlineSynthesis: mutation.mutate
   };
 };

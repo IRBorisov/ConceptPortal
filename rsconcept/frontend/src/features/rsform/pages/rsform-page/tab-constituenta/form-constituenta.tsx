@@ -202,7 +202,11 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
       id={id}
       className='cc-column mt-1 h-fit w-full gap-3 px-6 pb-3'
       data-tour='concept-form'
-      onSubmit={withPreventDefault(() => void form.handleSubmit())}
+      onSubmit={withPreventDefault(() => {
+        void form.handleSubmit().catch(() => {
+          // MutationErrors displays the rejected save.
+        });
+      })}
     >
       <h2 className='text-left w-fit'>{tx('tx.cst') + ' ' + activeCst.alias}</h2>
       <ConstituentaPrimaryActions

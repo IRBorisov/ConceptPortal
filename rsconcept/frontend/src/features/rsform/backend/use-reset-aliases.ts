@@ -28,6 +28,6 @@ export const useResetAliases = () => {
     onError: () => client.invalidateQueries()
   });
   return {
-    resetAliases: mutation.mutateAsync
+    resetAliases: mutation.mutate
   };
 };
