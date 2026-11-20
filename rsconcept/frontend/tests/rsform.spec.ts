@@ -1,8 +1,8 @@
 import { AccessPolicy, CstType, LibraryItemType } from '@rsconcept/domain/library';
 
-import { type RSFormDTO, type UpdateConstituentaDTO } from '../src/features/rsform/backend/types';
+import { type UpdateConstituentaDTO } from '../src/features/rsform/backend/types';
 import { authAdmin, authAnonymous } from './mocks/auth';
-import { createRSFormMock, dataRSForms, resetConceptMocks } from './mocks/concepts';
+import { createCstMock, createRSFormMock, dataRSForms, resetConceptMocks } from './mocks/concepts';
 import { BACKEND_URL } from './mocks/constants';
 import { dataLibraryItems } from './mocks/library';
 import { clickAndWaitForApi, clickAndWaitForURL, submitAndWaitForURL } from './navigation';
@@ -196,29 +196,6 @@ test('RSForm passport save shows error when update is rejected', async ({ page }
   await expect(page).toHaveURL(new RegExp(`/rsforms/${rsformID}$`));
   await expect(page.locator('#schema_alias')).toHaveValue('KS_CONFLICT');
 });
-
-function createCstMock(
-  id: number,
-  alias: string,
-  cst_type: CstType,
-  definition_formal = ''
-): RSFormDTO['items'][number] {
-  return {
-    id,
-    alias,
-    cst_type,
-    convention: '',
-    crucial: false,
-    term_raw: '',
-    term_resolved: '',
-    term_forms: [],
-    definition_formal,
-    definition_raw: '',
-    definition_resolved: '',
-    typification_manual: '',
-    value_is_property: false
-  };
-}
 
 test('RSForm keeps unsaved expression when another user saved the schema first', async ({ page }) => {
   const rsformID = 310;

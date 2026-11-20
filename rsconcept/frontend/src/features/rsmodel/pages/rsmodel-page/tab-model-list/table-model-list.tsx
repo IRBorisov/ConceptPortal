@@ -151,8 +151,8 @@ export function TableModelList({
     <DataTable
       dense
       noFooter
-      className='min-h-64 cc-scroll-y text-sm select-none'
-      style={{ maxHeight: maxHeight }}
+      className='cc-scroll-y text-sm select-none'
+      style={{ minHeight: maxHeight ? `min(16rem, ${maxHeight})` : '16rem', maxHeight }}
       data={items ?? []}
       columns={columns}
       getRowId={(row: Constituenta) => String(row.id)}

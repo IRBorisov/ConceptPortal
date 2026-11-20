@@ -176,7 +176,7 @@ export function RSFormTabs({ activeID, activeTab }: RSFormTabsProps) {
       defaultFocus
       className='relative flex flex-col min-w-fit items-center'
     >
-      <TabList className='absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background'>
+      <TabList className='cc-editor-tab-list absolute z-sticky flex border-b-2 border-x-2 divide-x-2 bg-background'>
         {countProblematic > 0 ? (
           <IndicatorPill
             className='absolute top-1.5 -left-1.5 -translate-x-full hidden xs:inline-flex'

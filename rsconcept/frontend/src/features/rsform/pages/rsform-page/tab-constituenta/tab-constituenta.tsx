@@ -132,7 +132,7 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
   return (
     <div
       tabIndex={-1}
-      className={cn('relative flex flex-col', 'min-h-80 max-w-[calc(min(100vw,80rem))] mx-auto')}
+      className='relative flex flex-col max-w-[calc(min(100vw,80rem))] mx-auto'
       style={{ height: mainHeight }}
       onKeyDown={handleInput}
     >
@@ -191,8 +191,8 @@ export function TabConstituenta({ engine }: TabConstituentaProps) {
         </div>
         <ViewConstituents
           className={cn(
-            'cc-animate-sidebar hidden min-h-55 min-w-0 self-start lg:block lg:flex-1',
-            'mt-9 overflow-x-hidden rounded-l-md rounded-r-none'
+            'cc-editor-sidebar cc-animate-sidebar hidden min-w-0 self-start flex-col lg:flex lg:flex-1',
+            'overflow-x-hidden rounded-l-md rounded-r-none'
           )}
           schema={schema}
           engine={engine}

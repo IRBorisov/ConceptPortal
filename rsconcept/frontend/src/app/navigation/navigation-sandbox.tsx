@@ -49,7 +49,7 @@ export function NavigationSandbox() {
           noNavigationAnimation ? '-translate-y-6 max-h-0 overflow-hidden' : 'max-h-12 overflow-visible'
         )}
       >
-        <div className='absolute top-0 w-full h-full overflow-hidden'>
+        <div className='absolute inset-0 overflow-hidden pointer-events-none'>
           <div
             aria-hidden
             className={cn(

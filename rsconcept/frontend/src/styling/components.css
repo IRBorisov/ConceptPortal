@@ -31,6 +31,13 @@
   transform: translate(50%, 0%);
 }
 
+@utility cc-editor-sidebar {
+  --sidebar-top-gap: 2.25rem;
+  margin-top: var(--sidebar-top-gap);
+  min-height: min(13.75rem, 100% - var(--sidebar-top-gap));
+  max-height: calc(100% - var(--sidebar-top-gap));
+}
+
 @utility cc-label {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -113,6 +120,22 @@
   &.open {
     transform: translateY(0);
     clip-path: inset(0% 0% 0% 0%);
+  }
+
+  &:where(.cc-editor-tab-list *) {
+    transition-property: clip-path, transform, display;
+    transition-behavior: allow-discrete;
+
+    &:not(.open) {
+      display: none;
+    }
+
+    &.open {
+      @starting-style {
+        transform: translateY(-10%);
+        clip-path: inset(10% 0% 90% 0%);
+      }
+    }
   }
 }
 

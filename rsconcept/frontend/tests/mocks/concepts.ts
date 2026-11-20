@@ -1,5 +1,5 @@
 import { type Page } from '@playwright/test';
-import { AccessPolicy, LibraryItemType } from '@rsconcept/domain/library';
+import { AccessPolicy, type CstType, LibraryItemType } from '@rsconcept/domain/library';
 
 import { type OperationSchemaDTO } from '../../src/features/oss/backend/types';
 import { type RSFormDTO } from '../../src/features/rsform/backend/types';
@@ -46,6 +46,29 @@ export function createRSFormMock(id: number, title = `КС ${id}`): RSFormDTO {
     inheritance: [],
     oss: [],
     models: []
+  };
+}
+
+export function createCstMock(
+  id: number,
+  alias: string,
+  cst_type: CstType,
+  definition_formal = ''
+): RSFormDTO['items'][number] {
+  return {
+    id,
+    alias,
+    cst_type,
+    convention: '',
+    crucial: false,
+    term_raw: '',
+    term_resolved: '',
+    term_forms: [],
+    definition_formal,
+    definition_raw: '',
+    definition_resolved: '',
+    typification_manual: '',
+    value_is_property: false
   };
 }
 

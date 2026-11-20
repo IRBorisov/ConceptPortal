@@ -180,7 +180,7 @@ export function ModelTabs({ activeID, activeTab }: ModelTabsProps) {
     >
       <TabList
         className={cn(
-          'absolute z-sticky',
+          'cc-editor-tab-list absolute z-sticky',
           'flex self-start xs:self-auto',
           'border-b-2 border-x-2 divide-x-2',
           'bg-background'
