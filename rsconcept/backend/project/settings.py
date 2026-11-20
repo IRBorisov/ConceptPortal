@@ -15,11 +15,16 @@ import os
 import sys
 import tomllib
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import sentry_sdk
 from corsheaders.defaults import default_headers
 from django.core.exceptions import ImproperlyConfigured
 from sentry_sdk.scrubber import DEFAULT_DENYLIST, EventScrubber
+from sentry_sdk.utils import AnnotatedValue
+
+if TYPE_CHECKING:
+    from sentry_sdk._types import Event, Hint
 
 
 def _get_secret(key: str, default):
@@ -141,21 +146,49 @@ if not SECRET_KEY:
     else:
         raise ImproperlyConfigured('SECRET_KEY must be configured when DEBUG is disabled')
 
+
+class _SentryEventScrubber(EventScrubber):
+    def scrub_dict(self, data: object) -> None:
+        if isinstance(data, dict):
+            super().scrub_dict(data)
+            # Sentry serializes the event before invoking before_send.
+            for key, value in data.items():
+                if isinstance(value, AnnotatedValue):
+                    data[key] = value.value
+
+    def before_send(self, event: 'Event', _hint: 'Hint') -> 'Event':
+        self.scrub_event(event)
+        return event
+
+
 def _init_sentry() -> None:
-    ''' Start Sentry with the password-field denylist. The caller decides whether to run. '''
+    send_pii = SENTRY_SEND_DEFAULT_PII
+    pii_terms = [] if send_pii else ['forwarded', '-ip', 'remote-', 'via', '-user']
+    # The SDK disables event_scrubber when data_collection is configured.
+    scrubber = _SentryEventScrubber(
+        denylist=list(SENTRY_SCRUB_DENYLIST),
+        recursive=True,
+        send_default_pii=send_pii,
+    )
     sentry_sdk.init(
         dsn=SENTRY_DSN,
         environment=SENTRY_ENVIRONMENT,
         release=SENTRY_RELEASE,
-        send_default_pii=SENTRY_SEND_DEFAULT_PII,
+        data_collection={
+            'user_info': send_pii,
+            'cookies': {'mode': 'denylist' if send_pii else 'off'},
+            'http_headers': {'request': {'mode': 'denylist', 'terms': pii_terms}},
+            'url_query_params': {'mode': 'denylist', 'terms': pii_terms},
+            'graphql': {'document': send_pii, 'variables': send_pii},
+            'gen_ai': {'inputs': send_pii, 'outputs': send_pii},
+            'database_query_data': send_pii,
+            'queues': send_pii,
+        },
         traces_sample_rate=SENTRY_TRACES_SAMPLE_RATE,
         enable_logs=SENTRY_ENABLE_LOGS,
         debug=_get_bool('SENTRY_DEBUG', False),
-        event_scrubber=EventScrubber(
-            denylist=list(SENTRY_SCRUB_DENYLIST),
-            recursive=True,
-            send_default_pii=SENTRY_SEND_DEFAULT_PII,
-        ),
+        before_send=scrubber.before_send,
+        before_send_transaction=scrubber.before_send,
     )
 
 

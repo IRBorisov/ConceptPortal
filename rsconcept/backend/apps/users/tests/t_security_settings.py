@@ -2,10 +2,13 @@
 # pylint: disable=protected-access
 import os
 import tempfile
-from unittest.mock import patch
+import warnings
+from unittest.mock import Mock, patch
 
 from django.conf import settings
 from django.test import Client, SimpleTestCase, override_settings
+from sentry_sdk import Client as SentryClient
+from sentry_sdk.transport import Transport
 
 from project import settings as project_settings
 from project.settings import _get_secret, _hsts_policy, _proxy_ssl_header
@@ -102,27 +105,30 @@ class TestSecuritySettings(SimpleTestCase):
         )
 
     def test_sentry_scrubber_hides_password_aliases(self):
-        ''' EventScrubber matches keys exactly, so password aliases need their own entries. '''
+        ''' The real SDK sends masked aliases in both errors and transactions. '''
         with patch('sentry_sdk.init') as init:
             project_settings._init_sentry()
-        scrubber = init.call_args.kwargs['event_scrubber']
-        event = {
-            'request': {
-                'data': {
-                    'username': 'ada',
-                    'password': 'secret-password',
-                    'password1': 'secret-password1',
-                    'password2': 'secret-password2',
-                    'old_password': 'secret-old',
-                    'new_password': 'secret-new',
-                    'new_password2': 'secret-new2',
-                    'nested': {'password2': 'secret-nested'},
-                }
-            }
-        }
-        scrubber.scrub_event(event)
-        data = event['request']['data']
+        transport = Mock(spec=Transport)
+        password_fields = ('password', 'password1', 'password2', 'old_password', 'new_password', 'new_password2')
+        with warnings.catch_warnings():
+            warnings.simplefilter('error')
+            with SentryClient(**init.call_args.kwargs, transport=transport, default_integrations=False) as sdk:
+                sdk.capture_event({'message': 'test error', 'request': {'data': {'password1': 'secret'}}})
+                sdk.capture_event({
+                    'type': 'transaction',
+                    'transaction': 'test transaction',
+                    'request': {'data': {
+                        'username': 'ada',
+                        **dict.fromkeys(password_fields, 'secret'),
+                        'nested': [{'password2': 'secret-nested'}],
+                    }},
+                })
+        error_envelope, transaction_envelope = (call.args[0] for call in transport.capture_envelope.call_args_list)
+        error = error_envelope.get_event()
+        transaction = transaction_envelope.get_transaction_event()
+        self.assertEqual(error['request']['data']['password1'], '[Filtered]')
+        data = transaction['request']['data']
         self.assertEqual(data['username'], 'ada')
-        for key in ('password', 'password1', 'password2', 'old_password', 'new_password', 'new_password2'):
-            self.assertNotIsInstance(data[key], str)
-        self.assertNotIsInstance(data['nested']['password2'], str)
+        for key in password_fields:
+            self.assertEqual(data[key], '[Filtered]')
+        self.assertEqual(data['nested'][0]['password2'], '[Filtered]')
