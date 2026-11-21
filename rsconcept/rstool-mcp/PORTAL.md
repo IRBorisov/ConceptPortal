@@ -43,7 +43,7 @@ Its authenticated subject determines whose settings you can manage. Each person 
 
 The encrypted key cannot be fetched back, selected by another subject or read by an MCP tool. The page uses no localStorage/cookies for credentials and clears input fields after reading them. Reload clears the human token held in memory. Disconnect removes the binding and outstanding approvals but does not revoke the original Portal key: revoke it in the Portal profile too. Replacing the key also invalidates approvals, including on an already-open MCP connection.
 
-Public data reads require no Portal key. In the Portal profile, choose **Read only** for inspection, **Read, edit and create** for writes and new objects, or **Read, edit, create and publish schemas** to also use `portal_publish_schema`. Each level includes the scopes from the previous level. Issued keys retain their saved scopes and expiry. Expired or revoked keys cannot authenticate. The account page displays bound-key policy when the backend provides it. Portal enforces scopes, expiration and the owner’s object permissions on every request. Cached MCP metadata is an early hint. OAuth is not implemented.
+Public data reads require no Portal key. In the Portal profile, choose **Read only** for inspection or **Read and write** for creating, editing, and publishing schemas with `portal_publish_schema`. Issued keys retain their `read` and `write` permissions and expiry. Expired or revoked keys cannot authenticate. The account page displays bound-key policy when the backend provides it. Portal enforces scopes, expiration and the owner’s object permissions on every request. Cached MCP metadata is an early hint. OAuth is not implemented.
 
 ## Create and inspect library items
 
@@ -117,7 +117,7 @@ No MCP tool enrolls keys or accepts an approval flag. Before `portal_publish_sch
 
 The account page still binds and disconnects the personal Portal key. That binding is separate from schema publication.
 
-`portal_publish_schema` sends one `POST /api/agents/rsforms/:id/publish` for the current session. The host then reads the schema back and compares persisted fields, metadata and attribution with the requested replacement. Database-assigned IDs and resolved text are not compared literally with local IDs. A stale base returns 409 and does not write. A lost response or failed readback is uncertain: inspect Portal with `portal_get_details` before calling publish again. The tool does not retry. `POST /publish` requires owner or staff access. In one transaction it claims `expected_time_update`, saves a version and replaces content.
+`portal_publish_schema` sends one `POST /api/agents/rsforms/:id/publish` for the current session. The host then reads the schema back and compares persisted fields, metadata and attribution with the requested replacement. Database-assigned IDs and resolved text are not compared literally with local IDs. A stale base returns 409 and does not write. A lost response or failed readback is uncertain: inspect Portal with `portal_get_details` before calling publish again. The tool does not retry. `POST /publish` requires the `write` scope and owner or staff edit access. In one transaction it claims `expected_time_update`, saves a version and replaces content.
 
 An old `portal_prepare_publication` draft can still be approved on the account page. That approval sends the stored payload for its digest and cannot override the target. It is not the agent path.
 
@@ -131,7 +131,7 @@ Optional `RSTOOL_PORTAL_SERVICE_KEY_FILE` points to a protected runtime credenti
 { "subjects": ["explicit-service-subject"], "targetIds": [123] }
 ```
 
-Replace the illustrative target with an authorized existing schema. Both settings are required together. Use a dedicated non-staff Portal account owning only the intended schemas. Listed subjects operate in service mode and cannot enroll a personal key. Other subjects require personal keys for private reads and writes. Description editing and full publication need read in addition to their mutation scope because the workflow verifies target details first. Missing, revoked or invalid personal keys never fall back to the service key. Service identity is selected by trusted configuration, not tool arguments. Changes require restart and invalidate proposals.
+Replace the illustrative target with an authorized existing schema. Both settings are required together. Use a dedicated non-staff Portal account owning only the intended schemas. Listed subjects operate in service mode and cannot enroll a personal key. Other subjects require personal keys for private reads and writes. Description editing and full publication need both `read` and `write` because the workflow verifies target details. Missing, revoked or invalid personal keys never fall back to the service key. Service identity is selected by trusted configuration, not tool arguments. Changes require restart and invalidate proposals.
 
 Outgoing requests use a fixed HTTPS origin, normal certificate validation, deadlines and bounded response bodies. Redirects are refused. Transport headers, remote error bodies and credentials are not reflected in responses/logs. Incoming MCP tokens are never forwarded to Portal. Backend audit records the Portal key owner and target. Do not enable request-body debug logging on account routes.
 

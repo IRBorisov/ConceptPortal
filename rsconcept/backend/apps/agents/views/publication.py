@@ -46,7 +46,6 @@ class AgentIdentityView(AgentItemView):
 class AgentRsformPublishView(AgentItemView):
     ''' Owner-only replacement with an atomic base claim and rollback snapshot. '''
     agent_action = 'rsform.publish'
-    agent_scope = 'publish'
     agent_heavy = True
 
     @extend_schema(tags=['Agents'], request=PublicationSerializer, responses={200: dict, 409: dict})

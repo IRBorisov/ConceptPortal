@@ -2,8 +2,14 @@ import { createCipheriv, createDecipheriv, createHash, randomBytes, randomUUID }
 import fs from 'node:fs';
 import { join } from 'node:path';
 
+type PortalKeyScope = 'read' | 'write';
+
+export function isPortalKeyScope(scope: unknown): scope is PortalKeyScope {
+  return scope === 'read' || scope === 'write';
+}
+
 export interface PortalKeyPolicy {
-  scopes: Array<'read' | 'write' | 'publish'>;
+  scopes: PortalKeyScope[];
   expiresAt: string | null;
 }
 
@@ -37,9 +43,11 @@ export class PortalVault {
       const decipher = createDecipheriv('aes-256-gcm', this.#key, Buffer.from(stored.iv, 'base64'));
       decipher.setAAD(Buffer.from(id));
       decipher.setAuthTag(Buffer.from(stored.tag, 'base64'));
-      return JSON.parse(
+      const credential: PortalCredential = JSON.parse(
         Buffer.concat([decipher.update(Buffer.from(stored.data, 'base64')), decipher.final()]).toString('utf8')
       );
+      if (credential.keyPolicy) credential.keyPolicy.scopes = credential.keyPolicy.scopes.filter(isPortalKeyScope);
+      return credential;
     } catch {
       throw new Error('Portal credential is unavailable');
     }

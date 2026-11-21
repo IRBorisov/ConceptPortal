@@ -5,7 +5,7 @@ from rest_framework import serializers
 from shared.serializers import StrictModelSerializer, StrictSerializer
 
 from ..models import AgentActionLog, ApiKey
-from ..models.ApiKey import API_KEY_SCOPES, default_api_key_scopes
+from ..models.ApiKey import API_KEY_SCOPES, default_key_scopes
 
 
 class ApiKeySerializer(StrictModelSerializer):
@@ -32,7 +32,7 @@ class ApiKeyCreateSerializer(StrictSerializer):
     # ``label`` clashes with DRF Field.label in the type stubs.
     label = serializers.CharField(max_length=100)  # type: ignore[assignment]
     scopes = serializers.ListField(child=serializers.ChoiceField(choices=API_KEY_SCOPES),
-                                   allow_empty=False, default=default_api_key_scopes)
+                                   allow_empty=False, default=default_key_scopes)
     expires_at = serializers.DateTimeField(allow_null=True, required=False, default=None)
 
     def validate_scopes(self, value: list[str]) -> list[str]:

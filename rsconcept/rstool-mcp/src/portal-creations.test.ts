@@ -8,7 +8,7 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { PortalClient } from './portal-client';
 import { PortalCreations, type PortalItemKind } from './portal-creations';
 import { PortalPublisher } from './portal-publisher';
-import { PortalVault } from './portal-vault';
+import { PortalVault, type PortalKeyPolicy } from './portal-vault';
 import { portalToolDefinitions } from './tools';
 
 const token = 'rcp_12345678_' + 'private-key'.repeat(4);
@@ -21,11 +21,11 @@ afterEach(() => {
   }
 });
 
-function setup(scopes = ['read', 'write', 'publish']) {
+function setup(scopes: PortalKeyPolicy['scopes'] = ['read', 'write']) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'portal-create-test-'));
   directories.push(directory);
   const vault = new PortalVault(path.join(directory, 'keys'), randomBytes(32));
-  vault.set('alice', token, { id: 7, username: 'Alice' }, { scopes: scopes as never, expiresAt: null });
+  vault.set('alice', token, { id: 7, username: 'Alice' }, { scopes, expiresAt: null });
   const stored = new Map<number, Record<string, unknown>>();
   const remote = vi.fn<typeof fetch>(async (input, options) => {
     const url = new URL(String(input));

@@ -1,7 +1,12 @@
 import { z } from 'zod';
 
-export const schemaApiKeyScope = z.enum(['read', 'write', 'publish']);
+export const schemaApiKeyScope = z.enum(['read', 'write']);
 export type ApiKeyScope = z.infer<typeof schemaApiKeyScope>;
+
+const schemaApiKeyScopes = z
+  .array(schemaApiKeyScope.or(z.literal('publish')))
+  .transform(scopes => scopes.filter(scope => scope !== 'publish'))
+  .default(['read', 'write']);
 
 export const schemaApiKey = z.object({
   id: z.number(),
@@ -11,7 +16,7 @@ export const schemaApiKey = z.object({
   last_used_at: z.iso.datetime({ offset: true }).or(z.string()).nullable(),
   revoked_at: z.iso.datetime({ offset: true }).or(z.string()).nullable(),
   is_active: z.boolean().default(true),
-  scopes: z.array(schemaApiKeyScope).default(['read', 'write', 'publish']),
+  scopes: schemaApiKeyScopes,
   expires_at: z.iso.datetime({ offset: true }).or(z.string()).nullable().default(null)
 });
 export type ApiKeyDTO = z.infer<typeof schemaApiKey>;

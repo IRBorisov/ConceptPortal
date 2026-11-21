@@ -23,8 +23,7 @@ const schemaKeyForm = schemaCreateApiKey.pick({ label: true }).extend({ accessLe
 const initialValues: { label: string; accessLevel: ApiKeyScope } = { label: '', accessLevel: 'read' };
 const scopesByAccessLevel: Record<ApiKeyScope, ApiKeyScope[]> = {
   read: ['read'],
-  write: ['read', 'write'],
-  publish: ['read', 'write', 'publish']
+  write: ['read', 'write']
 };
 
 function formatTimestamp(value: string | null, neverLabel: string): string {
@@ -56,13 +55,11 @@ export function TabApiKeys() {
   const [expiryDays, setExpiryDays] = useState('90');
   const scopeLabels: Record<ApiKeyScope, string> = {
     read: tx('tx.agents.key.scope.read'),
-    write: tx('tx.agents.key.scope.write'),
-    publish: tx('tx.agents.key.scope.publish')
+    write: tx('tx.agents.key.scope.write')
   };
   const accessLevelLabels: Record<ApiKeyScope, string> = {
     read: tx('tx.agents.key.accessLevel.read'),
-    write: tx('tx.agents.key.accessLevel.write'),
-    publish: tx('tx.agents.key.accessLevel.publish')
+    write: tx('tx.agents.key.accessLevel.write')
   };
 
   const form = useForm({
@@ -211,7 +208,10 @@ export function TabApiKeys() {
                     {tx('tx.agents.key.created')}: {formatTimestamp(key.created_at, '—')}
                   </div>
                   <div className='text-xs text-muted-foreground'>
-                    {tx('tx.agents.key.scopes')}: {key.scopes.map(scope => scopeLabels[scope]).join(', ')}
+                    {tx('tx.agents.key.scopes')}:{' '}
+                    {key.scopes.length
+                      ? key.scopes.map(scope => scopeLabels[scope]).join(', ')
+                      : tx('tx.agents.key.scope.none')}
                   </div>
                   <div className='text-xs text-muted-foreground'>
                     {tx('tx.agents.key.expiry')}: {formatTimestamp(key.expires_at, tx('tx.agents.key.expiry.none'))}

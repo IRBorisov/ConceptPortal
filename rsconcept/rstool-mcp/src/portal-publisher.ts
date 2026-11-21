@@ -5,7 +5,7 @@ import { RSToolError, type RSToolAgent } from '@rsconcept/rstool';
 
 import { PortalClient, type PortalOssAction } from './portal-client';
 import { PortalCreations, type PortalItemKind } from './portal-creations';
-import { PortalVault, type PortalCredential, type PortalKeyPolicy } from './portal-vault';
+import { isPortalKeyScope, PortalVault, type PortalCredential, type PortalKeyPolicy } from './portal-vault';
 
 export interface ServicePortalCredential {
   token: string;
@@ -76,12 +76,12 @@ export class PortalPublisher {
         throw new Error('Portal returned invalid account metadata');
       let keyPolicy: PortalKeyPolicy | undefined;
       if (account.scopes !== undefined) {
-        if (!Array.isArray(account.scopes) || !account.scopes.length ||
-          account.scopes.some((scope: unknown) => !['read', 'write', 'publish'].includes(scope as string)) ||
+        if (!Array.isArray(account.scopes) ||
+          account.scopes.some((scope: unknown) => !isPortalKeyScope(scope) && scope !== 'publish') ||
           (account.expires_at !== null && account.expires_at !== undefined &&
             (typeof account.expires_at !== 'string' || !Number.isFinite(Date.parse(account.expires_at)))))
           throw new Error('Portal returned invalid key policy');
-        keyPolicy = { scopes: account.scopes, expiresAt: account.expires_at ?? null };
+        keyPolicy = { scopes: account.scopes.filter(isPortalKeyScope), expiresAt: account.expires_at ?? null };
         if (keyPolicy.expiresAt && Date.parse(keyPolicy.expiresAt) <= Date.now()) throw new Error('Portal key expired');
       }
       this.#vault.set(subject, token, { id: account.id, username: account.username }, keyPolicy);
@@ -350,7 +350,7 @@ export class PortalPublisher {
       if (!current) throw new RSToolError('NO_CURRENT_SESSION',
         'No current session. Call ensure_session / ensureSession or create_session / createSession before this operation.');
       const sourceId = current.sessionId;
-      const credential = this.credential(subject, targetId, 'publish');
+      const credential = this.credential(subject, targetId, 'write');
       const after = JSON.parse(tool.exportPortal({ kind: 'schema', format: 'json' }) as string);
       const before = await this.#api.request(credential.token, `/api/agents/rsforms/${targetId}/details`);
       if (
@@ -407,7 +407,7 @@ export class PortalPublisher {
       if (preparation.invalidated) throw new Error('Workspace was closed');
       if (!Number.isSafeInteger(targetId) || targetId <= 0) throw new Error('A positive Portal schema ID is required');
       this.expire();
-      const credential = this.credential(subject, targetId, 'publish');
+      const credential = this.credential(subject, targetId, 'write');
       const sourceId = tool.getCurrentSession()!.sessionId;
       const session = tool.exportSession();
       const after = JSON.parse(tool.exportPortal({ kind: 'schema', format: 'json' }) as string);
@@ -493,7 +493,7 @@ export class PortalPublisher {
       draft.validateSource?.();
       if (digest !== draft.digest || draft.session !== draft.tool.exportSession())
         throw new Error('Local schema changed; prepare publication again');
-      const credential = this.credential(subject, draft.targetId, 'publish');
+      const credential = this.credential(subject, draft.targetId, 'write');
       if (credential.generation !== draft.generation)
         throw new Error('Portal connection changed; prepare publication again');
       draft.validateSource?.();
@@ -542,7 +542,7 @@ export class PortalPublisher {
   }
 
   /** Personal subjects never fall back to a service grant; service targets are explicitly restricted. */
-  private credential(subject: string, targetId: number, requiredScope?: 'write' | 'publish'): PortalCredential {
+  private credential(subject: string, targetId: number, requiredScope?: 'write'): PortalCredential {
     if (this.isService(subject)) {
       if (!this.#service!.targetIds.includes(targetId)) throw new Error('Service publication target is not allowed');
       return { token: this.#service!.token, generation: 'service', account: { id: 0, username: 'service' } };

@@ -169,6 +169,7 @@ test('profile creates API keys with cumulative access levels', async ({ page }) 
   await page.getByRole('tab', { name: 'API-ключи' }).click();
   const accessLevel = page.getByRole('combobox', { name: 'Уровень доступа' });
   await expect(accessLevel).toHaveValue('read');
+  await expect(accessLevel.getByRole('option')).toHaveText(['Только чтение', 'Чтение и запись']);
   const limits = page.getByText(/Не больше 5 активных ключей/);
   await expect(limits).toBeHidden();
   const accessHelp = page.getByRole('button', { name: 'О правах и лимитах API-ключа' });
@@ -180,8 +181,7 @@ test('profile creates API keys with cumulative access levels', async ({ page }) 
 
   for (const [level, scopes] of [
     ['read', ['read']],
-    ['write', ['read', 'write']],
-    ['publish', ['read', 'write', 'publish']]
+    ['write', ['read', 'write']]
   ] as const) {
     await page.getByLabel('Название ключа').fill(`Key ${level}`);
     await accessLevel.selectOption(level);
