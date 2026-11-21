@@ -46,7 +46,7 @@ class TestAgentPublication(EndpointTester):
         response = self.client.get('/api/agents/me')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, {'id': self.user.pk, 'username': self.user.username,
-                                         'scopes': ['read', 'write', 'publish'], 'expires_at': None})
+                                         'scopes': ['read', 'write'], 'expires_at': None})
         self.assertNotIn(self.secret, str(response.data))
         self.key.revoke()
         self.assertEqual(self.client.get('/api/agents/me').status_code, 401)
@@ -78,6 +78,23 @@ class TestAgentPublication(EndpointTester):
             response = self.client.post(self.url, self.payload)
             self.assertEqual(response.status_code, 200, response.data)
             self.assertEqual(self.client.post(self.url, self.payload).status_code, 409)
+        self.assertEqual(Version.objects.count(), 1)
+
+    def test_publication_uses_write_scope_and_the_shared_heavy_quota(self):
+        _, secret = ApiKey.create_for_user(self.user, 'Write only', scopes=['write'])
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {secret}')
+        with patch('apps.agents.services.quota.HEAVY_PER_HOUR', 1):
+            publication = self.client.post(self.url, self.payload)
+            self.assertEqual(publication.status_code, 200, publication.data)
+
+            base_url = f'/api/agents/rsforms/{self.schema.model.pk}'
+            version = self.client.post(f'{base_url}/create-version', {'version': '1.0'})
+            self.assertEqual(version.status_code, 429)
+            description = self.client.post(f'{base_url}/description', {
+                'expected_time_update': publication.data['schema']['time_update'],
+                'description': 'Ordinary edit',
+            })
+            self.assertEqual(description.status_code, 200, description.data)
         self.assertEqual(Version.objects.count(), 1)
 
     def test_editor_cannot_publish_without_snapshot_rights(self):

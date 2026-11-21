@@ -69,7 +69,7 @@ function setup() {
   };
   const request = vi.fn<typeof fetch>(async (input, options) => {
     const url = String(input);
-    if (url.endsWith('/me')) return Response.json({ id: 10, username: 'Alice' });
+    if (url.endsWith('/me')) return Response.json({ id: 10, username: 'Alice', scopes: ['read', 'write'] });
     if (url.endsWith('/description')) {
       const body = JSON.parse(String(options?.body));
       if (body.expected_time_update !== current.time_update) return Response.json({}, { status: 409 });
@@ -419,7 +419,7 @@ it('enforces read target grants and rejects invalid revisions and remote errors 
   await expect(publisher.getDescription('robot', 1)).rejects.toThrow('invalid schema metadata');
 });
 
-it('keeps public reads anonymous while scoped keys independently restrict edits and publication', async () => {
+it('keeps public reads anonymous and requires write access for edits and publication', async () => {
   const app = setup();
   app.request.mockResolvedValueOnce(Response.json({ id: 10, username: 'Synthetic', scopes: ['read'], expires_at: null }));
   const status = await app.publisher.connect('alice', token);
@@ -427,14 +427,14 @@ it('keeps public reads anonymous while scoped keys independently restrict edits 
   expect(JSON.stringify(status)).not.toContain(token);
   expect(await app.publisher.getDescription('alice', 1)).toMatchObject({ targetId: 1 });
   await expect(app.publisher.updateDescription('alice', 1, '2026-11-06T01:00:00Z', 'Denied')).rejects.toThrow('does not allow write');
-  await expect(app.publisher.prepare('alice', 'task', 1, app.tool)).rejects.toThrow('does not allow publish');
+  await expect(app.publisher.prepare('alice', 'task', 1, app.tool)).rejects.toThrow('does not allow write');
   expect(app.request.mock.calls.filter(([, options]) => options?.method === 'POST')).toHaveLength(0);
 });
 
 it('rejects an expired bound key for writes but still reads public data without it', async () => {
   const app = setup();
   const expires = Date.now() + 3600000;
-  app.request.mockResolvedValueOnce(Response.json({ id: 10, username: 'Synthetic', scopes: ['read', 'write', 'publish'], expires_at: new Date(expires).toISOString() }));
+  app.request.mockResolvedValueOnce(Response.json({ id: 10, username: 'Synthetic', scopes: ['read', 'write'], expires_at: new Date(expires).toISOString() }));
   await app.publisher.connect('alice', token);
   vi.spyOn(Date, 'now').mockReturnValue(expires);
   expect(app.publisher.connection('alice')).toMatchObject({ connected: false, expired: true });
@@ -453,17 +453,20 @@ it('does not turn an anonymous refusal into enrollment or expose the upstream bo
   expect(app.vault.get('anonymous')).toBeNull();
 });
 
-it('requires read as well as the mutation scope before issuing any request', async () => {
+it('requires read as well as write before issuing a mutation request', async () => {
   const app = setup();
-  for (const scope of ['write', 'publish']) {
-    app.request.mockResolvedValueOnce(Response.json({ id: 10, username: 'Synthetic', scopes: [scope], expires_at: null }));
-    await app.publisher.connect('alice', token);
-    const requests = app.request.mock.calls.length;
-    if (scope === 'write') {
-      await expect(app.publisher.updateDescription('alice', 1, '2026-11-06T01:00:00Z', 'Denied')).rejects.toThrow('does not allow read');
-    } else {
-      await expect(app.publisher.prepare('alice', 'task', 1, app.tool)).rejects.toThrow('does not allow read');
-    }
-    expect(app.request.mock.calls).toHaveLength(requests);
-  }
+  app.request.mockResolvedValueOnce(Response.json({ id: 10, username: 'Synthetic', scopes: ['write'], expires_at: null }));
+  await app.publisher.connect('alice', token);
+  const requests = app.request.mock.calls.length;
+  await expect(app.publisher.updateDescription('alice', 1, '2026-11-06T01:00:00Z', 'Denied')).rejects.toThrow('does not allow read');
+  await expect(app.publisher.prepare('alice', 'task', 1, app.tool)).rejects.toThrow('does not allow read');
+  expect(app.request.mock.calls).toHaveLength(requests);
+});
+
+it('drops the legacy publication scope when binding an old key', async () => {
+  const app = setup();
+  app.request.mockResolvedValueOnce(Response.json({ id: 10, username: 'Synthetic', scopes: ['publish'], expires_at: null }));
+  const status = await app.publisher.connect('alice', token);
+  expect(status).toMatchObject({ connected: true, keyPolicy: { scopes: [], expiresAt: null } });
+  await expect(app.publisher.publishSchema('alice', 1, app.tool)).rejects.toThrow('does not allow write');
 });

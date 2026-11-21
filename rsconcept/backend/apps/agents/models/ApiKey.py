@@ -14,11 +14,16 @@ from apps.users.models import User
 KEY_PREFIX = 'rcp_'
 PUBLIC_PREFIX_LENGTH = 8
 SECRET_LENGTH = 32
-API_KEY_SCOPES = ('read', 'write', 'publish')
+API_KEY_SCOPES = ('read', 'write')
 
 
 def default_api_key_scopes() -> list[str]:
-    """Preserve permissions of keys created before scope support."""
+    """Historical field default referenced by migration 0004."""
+    return ['read', 'write', 'publish']
+
+
+def default_key_scopes() -> list[str]:
+    """Default permissions for a new key without an explicit scope list."""
     return list(API_KEY_SCOPES)
 
 
@@ -92,7 +97,7 @@ class ApiKey(models.Model):
         blank=True
     )
 
-    scopes = models.JSONField(default=default_api_key_scopes)
+    scopes = models.JSONField(default=default_key_scopes)
     expires_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
@@ -141,7 +146,7 @@ class ApiKey(models.Model):
             label=label,
             prefix=prefix,
             key_hash=key_hash,
-            scopes=default_api_key_scopes() if scopes is None else list(scopes),
+            scopes=default_key_scopes() if scopes is None else list(scopes),
             expires_at=expires_at,
         )
         return key, plaintext

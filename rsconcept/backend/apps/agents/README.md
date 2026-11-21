@@ -13,12 +13,12 @@ replace constituents. The MCP host independently reads back the result.
 
 `GET /api/agents/me` resolves a bearer key to its account id/username without
 returning key material. `POST /api/agents/rsforms/:id/publish` accepts
-`{expected_time_update, schema}` and requires owner/staff edit rights. Its
+`{expected_time_update, schema}` and requires the `write` scope and owner/staff edit rights. Its
 transaction conditionally claims the observed timestamp, preserves a full
 version and replaces content. A stale timestamp returns 409; failed validation
 or replacement leaves no partial schema or version. RSForm mutation helpers
 take a library-row write lock before editing constituents. Existing routes keep
-their contracts. Keys support optional read, write and publish scopes and an expiration. Existing keys retain all three scopes and no expiration after the additive migration. Public data reads need no key, while identity, private reads and all writes enforce authentication and scope. Object ACLs still apply.
+their contracts. Public data reads need no key. Private reads and writes require a suitable key and object access. Any active key can resolve its own identity.
 Hosted MCP enrollment/approval and secret storage are documented in
 [rstool-mcp/PORTAL.md](../../../rstool-mcp/PORTAL.md).
 
@@ -42,14 +42,20 @@ password findings remain in scope. See the
 
 Read and write quotas use database counters shared by all workers. The local
 cache only remembers recent refusals; losing it does not reset the quota.
+Heavy operations, including publication, creation, and version snapshots, also
+use a shared hourly limit of 15 requests per user regardless of key scopes.
 There is no process-local failed-authentication budget that could lock out
 valid users behind the same NAT.
 
 ## Deployment compatibility
 
 This change retains the SHA-256 storage format and the 64-character field.
-The additive scope/expiry migration preserves existing keys and their hashes. It does not revoke them. Deployments on `main`
-can use existing unrestricted, non-expiring keys before and after this change.
+The scope/expiry migrations preserve existing tokens, hashes, and expiry dates.
+Deploy the `write` policy and migration `0005` before the updated frontend and
+MCP adapter. The migration removes the old `publish` permission and preserves
+each key's existing `read` and `write` permissions. A key with only the former
+`publish` permission is left with an empty scope list. Rolling back to code that
+requires `publish` again requires reissuing publishing keys with that scope.
 
 Before rolling back to a backend without key policies, revoke every scoped or expiring key, including already expired keys. The earlier backend ignores scopes and expiry and would otherwise give those keys the owner's full permissions again. Identify and revoke them while the policy fields still exist; do not reverse the migration first. Reissue replacement credentials only after deciding the rollback access policy. Database compatibility alone does not preserve key restrictions.
 
@@ -60,4 +66,11 @@ those installations must reissue affected keys and update integrations.
 
 ## Key policy
 
-The profile can create read-only keys and select a finite lifetime. Scopes and expires_at are returned only as nonsecret metadata; the raw key is shown once. Empty or unknown scope sets and past expirations are rejected. Expired keys do not consume the active-key quota. Read and write scopes do not grant publish; owner/staff checks are still required for publication. Expired or revoked presented keys return 401, without silently falling back to anonymous access. Requests without a key can read only public library data and have a per-address read limit. The identity and key-management endpoints are not public data routes. Deploy the migration and backend before the new frontend.
+The profile can create read-only or read/write keys and select a finite lifetime.
+`write` grants access to mutations, including publication, subject to each
+operation's object permissions. Scopes and `expires_at` are returned as nonsecret
+metadata. The raw key is shown once. New keys require known, nonempty scopes and
+a future expiration if an expiration is supplied. Expired keys do not consume
+the active-key quota. Expired or revoked presented keys return 401. Requests
+without a key can read public library data and have a per-address read limit.
+The identity and key-management endpoints require authentication.

@@ -23,9 +23,9 @@ class TestApiKeyPolicy(EndpointTester):
         client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         return key, token, client
 
-    def test_legacy_key_preserves_permissions_and_no_expiry(self):
+    def test_default_key_can_read_and_write_without_expiry(self):
         key, token, client = self.bearer()
-        self.assertEqual(key.scopes, ['read', 'write', 'publish'])
+        self.assertEqual(key.scopes, ['read', 'write'])
         self.assertIsNone(key.expires_at)
         self.assertEqual(ApiKey.authenticate_token(token), key)
         self.assertEqual(client.get('/api/agents/me').status_code, 200)
@@ -54,15 +54,15 @@ class TestApiKeyPolicy(EndpointTester):
         self.assertNotEqual(schema.model.description, 'Forbidden change')
         self.assertEqual(key.scopes, ['read'])
 
-    def test_write_scope_does_not_grant_publication(self):
-        _, _, client = self.bearer(scopes=['read', 'write'])
+    def test_read_only_key_cannot_publish(self):
+        _, _, client = self.bearer(scopes=['read'])
         schema = RSForm.create(title='Synthetic schema', alias='SCOPED', owner=self.user)
         response = client.post(f'/api/agents/rsforms/{schema.model.pk}/publish', {})
         self.assertEqual(response.status_code, 403)
         self.assertFalse(Version.objects.exists())
 
-    def test_publish_scope_still_requires_owner_acl(self):
-        _, _, client = self.bearer(scopes=['read', 'publish'])
+    def test_write_scope_still_requires_owner_acl_for_publication(self):
+        _, _, client = self.bearer(scopes=['write'])
         schema = RSForm.create(title='Foreign synthetic schema', alias='OTHER', owner=self.user2)
         Editor.add(schema.model.pk, self.user.pk)
         response = client.post(f'/api/agents/rsforms/{schema.model.pk}/publish', {
@@ -73,7 +73,8 @@ class TestApiKeyPolicy(EndpointTester):
         self.assertFalse(Version.objects.exists())
 
     def test_create_validates_scopes_and_expiration(self):
-        for policy in ({'scopes': []}, {'scopes': ['admin']}, {'expires_at': (timezone.now() - timedelta(days=1)).isoformat()}):
+        for policy in ({'scopes': []}, {'scopes': ['admin']}, {'scopes': ['read', 'write', 'publish']},
+                       {'expires_at': (timezone.now() - timedelta(days=1)).isoformat()}):
             with self.subTest(policy=policy):
                 self.assertEqual(self.client.post('/api/agents/keys', {'label': 'Invalid', **policy}).status_code, 400)
         expiry = timezone.now() + timedelta(days=30)
