@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { Graph } from '../graph';
+import { RSErrorCode, ValueClass } from '../rslang';
 import { tuple } from '../rslang/eval/value';
 import { labelTypeShape } from '../rslang/labels';
 import { RSLangAnalyzer } from '../rslang/semantic/analyzer';
@@ -440,5 +441,103 @@ describe('RSEngine.resetValue', () => {
     await engine.resetValue(1);
     expect(engine.getCstStatus(2)).toBe(EvalStatus.NOT_PROCESSED);
     expect(engine.getCstValue(2)).toBeNull();
+  });
+});
+
+describe('RSEngine constituent analysis', () => {
+  it('shares analysis between recalc and direct calculation while reading current bindings', () => {
+    const schema = analyzedSchema([
+      mockConstituenta({ id: 1, alias: 'X1', cst_type: CstType.BASE }),
+      mockConstituenta({ id: 2, alias: 'D1', cst_type: CstType.TERM, definition_formal: 'card(X1)' })
+    ]);
+    const analyze = vi.spyOn(schema.analyzer, 'checkFull');
+    const engine = createEngine();
+    engine.loadData(schema, mockModel([{ id: 1, type: TYPE_BASIC, value: { 1: 'a' } }]));
+
+    engine.recalculateAll();
+    expect(engine.getCstValue(2)).toBe(1);
+    expect(engine.calculateCst(2).value).toBe(1);
+    engine.loadData(schema, mockModel([{ id: 1, type: TYPE_BASIC, value: { 1: 'a', 2: 'b' } }]));
+    expect(engine.calculateCst(2).value).toBe(2);
+
+    expect(analyze).toHaveBeenCalledTimes(2);
+
+    const reloadedSchema = { ...schema };
+    engine.loadData(reloadedSchema, engine.data!);
+    expect(engine.calculateCst(2).value).toBe(2);
+    expect(analyze).toHaveBeenCalledTimes(3);
+  });
+
+  it('reanalyzes when a definition, constituent type or global context changes', () => {
+    const term = mockConstituenta({ id: 2, alias: 'D1', cst_type: CstType.TERM, definition_formal: 'card(X1)' });
+    const schema = analyzedSchema([mockConstituenta({ id: 1, alias: 'X1', cst_type: CstType.BASE }), term]);
+    const engine = createEngine();
+    engine.loadData(schema, mockModel([{ id: 1, type: TYPE_BASIC, value: { 1: 'a', 2: 'b' } }]));
+
+    expect(engine.calculateCst(2).value).toBe(2);
+    expect(engine.calculateCst(2).value).toBe(2);
+    term.definition_formal = 'card(X1)+1';
+    expect(engine.calculateCst(2).value).toBe(3);
+    term.cst_type = CstType.AXIOM;
+    expect(engine.calculateCst(2).errors).toEqual([expect.objectContaining({ code: RSErrorCode.expectedType })]);
+
+    term.cst_type = CstType.TERM;
+    expect(engine.calculateCst(2).value).toBe(3);
+    schema.analyzer.setGlobal('X1', null, ValueClass.PROPERTY);
+    expect(engine.calculateCst(2).errors).toEqual([
+      expect.objectContaining({ code: RSErrorCode.invalidPropertyUsage, from: 5, to: 7 })
+    ]);
+    schema.analyzer.setGlobal('X1', IntegerT, ValueClass.VALUE);
+    expect(engine.calculateCst(2)).toMatchObject({
+      value: null,
+      errors: [expect.objectContaining({ code: RSErrorCode.invalidCard, from: 5, to: 7 })]
+    });
+    schema.analyzer.addBase('X1');
+    expect(engine.calculateCst(2).value).toBe(3);
+  });
+
+  it('returns fresh analysis diagnostics even when analysis succeeds', () => {
+    const schema = analyzedSchema([
+      mockConstituenta({ id: 1, alias: 'X1', cst_type: CstType.BASE }),
+      mockConstituenta({ id: 2, alias: 'D1', cst_type: CstType.TERM, definition_formal: 'D{t ∈ X1 | 1=1}' })
+    ]);
+    const engine = createEngine();
+    engine.loadData(schema, mockModel([{ id: 1, type: TYPE_BASIC, value: { 1: 'a' } }]));
+
+    engine.calculateCst(2);
+    const first = engine.calculateCst(2);
+    expect(first.value).toEqual([1]);
+    expect(first.errors).toEqual([expect.objectContaining({ code: RSErrorCode.localNotUsed })]);
+
+    const original = { ...first.errors[0] };
+    first.errors[0].from = 999;
+    expect(engine.calculateCst(2).errors).toEqual([original]);
+  });
+
+  it('preserves nested runtime diagnostics after warming the analysis on the fast path', () => {
+    const schema = analyzedSchema([
+      mockConstituenta({ id: 1, alias: 'X1', cst_type: CstType.BASE }),
+      mockConstituenta({ id: 2, alias: 'F1', cst_type: CstType.FUNCTION, definition_formal: '[x∈ℬ(X1)] debool(x)' }),
+      mockConstituenta({ id: 3, alias: 'F2', cst_type: CstType.FUNCTION, definition_formal: '[x∈ℬ(X1)] F1[x]' }),
+      mockConstituenta({ id: 4, alias: 'D1', cst_type: CstType.TERM, definition_formal: 'F2[∅]' })
+    ]);
+    const engine = createEngine();
+    engine.loadData(schema, mockModel([{ id: 1, type: TYPE_BASIC, value: { 1: 'a' } }]));
+
+    engine.recalculateAll();
+    engine.recalculateAll();
+
+    expect(engine.calculateCst(4)).toEqual(engine.evaluateExpression('F2[∅]', CstType.TERM));
+    expect(engine.calculateCst(4).errors).toEqual([
+      expect.objectContaining({
+        code: RSErrorCode.calcInvalidDebool,
+        from: 0,
+        to: 5,
+        stack: [
+          { alias: 'F1', from: 17, to: 18 },
+          { alias: 'F2', from: 10, to: 15 }
+        ]
+      })
+    ]);
   });
 });

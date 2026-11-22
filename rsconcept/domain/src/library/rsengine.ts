@@ -1,15 +1,36 @@
 import { type AstNode } from '../parsing';
-import { type CalculatorEvaluateOptions, type CalculatorResult, RSCalculator, TypeID, type Value } from '../rslang';
+import {
+  type AnalysisFull,
+  type CalculatorEvaluateOptions,
+  type CalculatorResult,
+  RSCalculator,
+  type RSLangAnalyzer,
+  TypeID,
+  type Value
+} from '../rslang';
 import { compare } from '../rslang/eval/value';
 import { normalizeType } from '../rslang/labels';
 import { type ExpressionType } from '../rslang/semantic/typification';
 
-import { CstType, type RSForm } from './rsform';
+import { type Constituenta, CstType, type RSForm } from './rsform';
 import { getAnalysisFor, isBaseSet, isBasicConcept, isFunctional } from './rsform-api';
 import { type BasicBinding, type BasicsContext, type EvalStatus, type RSModel, TYPE_BASIC } from './rsmodel';
 import { inferEvalStatus, isInferrable, tryFixValue } from './rsmodel-api';
 
 const INVALID_TYPE_MARKER = 'INVALID';
+
+interface CachedConstituentAnalysis {
+  definition: string;
+  cstType: CstType;
+  analysis: AnalysisFull;
+}
+
+interface ConstituentAnalysisCache {
+  schema: RSForm;
+  analyzer: RSLangAnalyzer;
+  revision: number;
+  entries: WeakMap<Constituenta, CachedConstituentAnalysis>;
+}
 
 /** Services for {@link RSEngine}. */
 export interface RSEngineServices {
@@ -40,6 +61,8 @@ export class RSEngine {
   private notifications: RSEngineNotifications | null;
   private invalidData = new Set<number>();
   private calculatedSet = new Set<number>();
+  private calculationPasses = 0;
+  private constituentAnalysisCache: ConstituentAnalysisCache | undefined;
   private valueSubscribers = new Map<number, Set<() => void>>();
   private statusSubscribers = new Map<number, Set<() => void>>();
   private changeSubscribers = new Set<() => void>();
@@ -60,6 +83,8 @@ export class RSEngine {
     const modelChanged = this.data !== model;
     this.schema = schema;
     if (schemaChanged) {
+      this.calculationPasses = 0;
+      this.constituentAnalysisCache = undefined;
       const changedCst = this.collectChanged(oldSchema, schema);
       this.prepareAst();
       if (!modelChanged) {
@@ -270,7 +295,7 @@ export class RSEngine {
 
   /** Evaluates expression for {@link RSEngine}. */
   public evaluateExpression(expression: string, cstType: CstType): CalculatorResult {
-    return getEvaluationFor(expression, cstType, this.schema!, this.calculator);
+    return evaluateAnalysis(getAnalysisFor(expression, cstType, this.schema!), this.calculator);
   }
 
   /** Evaluates AST for {@link RSEngine}. */
@@ -285,11 +310,12 @@ export class RSEngine {
       return { value: null, iterations: 0, errors: [], cacheHits: 0 };
     }
 
+    this.calculationPasses++;
     if (!this.calculatedSet.has(cstID)) {
       const predecessors = this.schema.graph.expandAllInputs([cstID]);
       this.prepareEvaluation(predecessors);
     }
-    const result = getEvaluationFor(cst.definition_formal, cst.cst_type, this.schema, this.calculator);
+    const result = evaluateAnalysis(this.getConstituentAnalysis(cst), this.calculator);
 
     if (result.value === null) {
       this.calculator.resetValue(cst.alias);
@@ -306,6 +332,7 @@ export class RSEngine {
   /** Recalculate model for all inferrable expressions. */
   recalculateAll(): void {
     const start = performance.now();
+    this.calculationPasses++;
     this.calculatedSet.clear();
     this.recalculateInternal();
     const end = performance.now();
@@ -568,7 +595,7 @@ export class RSEngine {
       if (dependencies.includes(cstID)) {
         const cst = this.schema!.cstByID.get(cstID)!;
         if (isInferrable(cst.cst_type)) {
-          const value = fastEvaluation(cst.definition_formal, cst.cst_type, this.schema!, this.calculator);
+          const value = this.evaluateConstituentFast(cst);
           if (value !== null) {
             this.calculator.setValue(cst.alias, value);
           } else {
@@ -593,7 +620,7 @@ export class RSEngine {
       processedIDs.push(cstID);
       const cst = this.schema!.cstByID.get(cstID)!;
       if (isInferrable(cst.cst_type)) {
-        const value = fastEvaluation(cst.definition_formal, cst.cst_type, this.schema!, this.calculator);
+        const value = this.evaluateConstituentFast(cst);
         this.calculatedSet.add(cstID);
         if (value !== null) {
           this.calculator.setValue(cst.alias, value);
@@ -602,18 +629,49 @@ export class RSEngine {
     }
     this.notifyAll();
   }
+
+  private evaluateConstituentFast(cst: Constituenta): Value | null {
+    const analysis = this.getConstituentAnalysis(cst);
+    return analysis.success && analysis.ast ? this.calculator.evaluateFast(analysis.ast) : null;
+  }
+
+  private getConstituentAnalysis(cst: Constituenta): AnalysisFull {
+    const schema = this.schema!;
+    const definition = cst.definition_formal;
+    const cstType = cst.cst_type;
+    // A fresh engine can be discarded after its first calculation.
+    if (this.calculationPasses < 2) {
+      return getAnalysisFor(definition, cstType, schema);
+    }
+
+    const analyzer = schema.analyzer;
+    const revision = analyzer.contextRevision;
+    let cache = this.constituentAnalysisCache;
+    if (cache?.schema !== schema || cache.analyzer !== analyzer || cache.revision !== revision) {
+      cache = { schema, analyzer, revision, entries: new WeakMap() };
+      this.constituentAnalysisCache = cache;
+    }
+
+    const cached = cache.entries.get(cst);
+    if (cached?.definition === definition && cached.cstType === cstType) {
+      return cached.analysis;
+    }
+
+    const analysis = getAnalysisFor(definition, cstType, schema);
+    // Diagnostics can depend on the current graph and are exposed to callers.
+    if (analysis.success && analysis.ast && analysis.errors.length === 0) {
+      cache.entries.set(cst, { definition, cstType, analysis });
+    } else if (cached) {
+      cache.entries.delete(cst);
+    }
+    return analysis;
+  }
 }
 
 // ==== Internal functions ==== /
 
-/** Evaluates expression for {@link Constituenta}, including error handling. */
-function getEvaluationFor(
-  expression: string,
-  cstType: CstType,
-  schema: RSForm,
-  calculator: RSCalculator
-): CalculatorResult {
-  const parse = getAnalysisFor(expression, cstType, schema);
+/** Evaluates an analyzed expression, including diagnostics from both stages. */
+function evaluateAnalysis(parse: AnalysisFull, calculator: RSCalculator): CalculatorResult {
   if (!parse.success || !parse.ast) {
     return {
       value: null,
@@ -642,13 +700,4 @@ function cloneValue(value: Value): Value {
     return value;
   }
   return value.map(cloneValue);
-}
-
-/** Evaluates expression for {@link RSModel}. */
-function fastEvaluation(expression: string, cstType: CstType, schema: RSForm, calculator: RSCalculator): Value | null {
-  const parse = getAnalysisFor(expression, cstType, schema);
-  if (!parse.success || !parse.ast) {
-    return null;
-  }
-  return calculator.evaluateFast(parse.ast);
 }
