@@ -56,6 +56,13 @@ export class CalcInvalidDataError extends Error {
 
 /** Compare two structured data without recursive calls. */
 export function compare(v1: Value, v2: Value): number {
+  if (v1 === v2) {
+    return 0;
+  }
+  if (typeof v1 === 'number' && typeof v2 === 'number') {
+    return v1 - v2;
+  }
+
   const stack1: Value[] = [v1];
   const stack2: Value[] = [v2];
 
