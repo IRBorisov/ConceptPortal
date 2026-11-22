@@ -43,6 +43,11 @@ const TICK_PER_RECURSION = 3;
 const TICK_PER_IMPERATIVE = 1;
 const TICK_PER_DECLARATIVE = 1;
 const TICK_PER_QUANTIFIER = 1;
+const MIN_INDEXED_FILTER_ROWS = 32;
+const FILTER_PROBES_BEFORE_INDEX = 4;
+
+type FilterIndex = Map<number, Value[][]>;
+type FilterColumnState = number | FilterIndex | null;
 
 /** AST context. */
 export type ASTContext = Map<string, AstNode>;
@@ -56,6 +61,7 @@ export class Evaluator {
   private locals: LocalContext = new LocalContext();
   private nodeMetadata: EvaluationMetadata = new EvaluationMetadata();
   private evalCache: EvaluationCache = new EvaluationCache();
+  private filterIndexes: WeakMap<Value[][], Map<number, FilterColumnState>> | undefined;
   private callSiteStack: AstNode[] = [];
   private context: ValueContext;
   private treeContext: ASTContext;
@@ -85,7 +91,11 @@ export class Evaluator {
     this.annotateErrors = annotateErrors;
     this.disableCache = disableCache;
     this.clear();
-    return this.dispatchVisit(ast);
+    try {
+      return this.dispatchVisit(ast);
+    } finally {
+      this.filterIndexes = undefined;
+    }
   }
 
   private clear(): void {
@@ -735,6 +745,21 @@ export class Evaluator {
         }
         params.push(param);
       }
+      if (
+        !this.disableCache &&
+        indices.length === 1 &&
+        node.children[lastIdx].typeID === TokenID.ID_GLOBAL &&
+        Array.isArray(argVal) &&
+        argVal.length >= MIN_INDEXED_FILTER_ROWS
+      ) {
+        const param = params[0];
+        if (Array.isArray(param) && param.length === 1 && typeof param[0] === 'number' && Number.isFinite(param[0])) {
+          const indexed = this.findByFilterIndex(argVal, indices[0], param[0]);
+          if (indexed !== undefined) {
+            return indexed;
+          }
+        }
+      }
       const result: Value[] = [];
       for (const element of argVal) {
         let valid = true;
@@ -768,6 +793,47 @@ export class Evaluator {
       }
       return result;
     }
+  }
+
+  /** Reuse a column index only within a run and only after repeated probes of the same relation. */
+  private findByFilterIndex(relation: Value[][], column: number, value: number): Value[] | undefined {
+    const indexes = (this.filterIndexes ??= new WeakMap());
+    let columns = indexes.get(relation);
+    if (!columns) {
+      columns = new Map();
+      indexes.set(relation, columns);
+    }
+    const state = columns.get(column);
+    if (state === null) {
+      return undefined;
+    }
+    if (state instanceof Map) {
+      return state.get(value)?.slice() ?? [];
+    }
+
+    const probes = (state ?? 0) + 1;
+    if (probes < FILTER_PROBES_BEFORE_INDEX) {
+      columns.set(column, probes);
+      return undefined;
+    }
+
+    const index: FilterIndex = new Map();
+    for (const row of relation) {
+      const key = Array.isArray(row) ? row[column] : undefined;
+      if (typeof key !== 'number' || !Number.isFinite(key)) {
+        // The ordinary comparison reports incompatible values in the existing evaluation context.
+        columns.set(column, null);
+        return undefined;
+      }
+      const matches = index.get(key);
+      if (matches) {
+        matches.push(row);
+      } else {
+        index.set(key, [row]);
+      }
+    }
+    columns.set(column, index);
+    return index.get(value)?.slice() ?? [];
   }
 
   private visitReduce(node: AstNode): Value | null {
