@@ -49,6 +49,13 @@ export class RSLangAnalyzer {
   private typeAuditor: TypeAuditor = new TypeAuditor(this.typeContext);
   private valueAuditor: ValueAuditor = new ValueAuditor(this.valueContext);
 
+  private revision = 0;
+
+  /** Changes when the global type or value context is updated. */
+  public get contextRevision(): number {
+    return this.revision;
+  }
+
   public addBase(alias: string, isNumeric: boolean = false, valueClass: ValueClass = ValueClass.VALUE): void {
     if (isNumeric) {
       this.typeContext.set(alias, bool(constant(alias)));
@@ -57,6 +64,7 @@ export class RSLangAnalyzer {
       this.typeContext.set(alias, bool(basic(alias)));
       this.valueContext.set(alias, valueClass);
     }
+    this.revision++;
   }
 
   public setGlobal(alias: string, type: ExpressionType | null, value: ValueClass | null): void {
@@ -65,6 +73,9 @@ export class RSLangAnalyzer {
     }
     if (value) {
       this.valueContext.set(alias, value);
+    }
+    if (type || value) {
+      this.revision++;
     }
   }
 
