@@ -104,12 +104,24 @@ export function tuple(components: Value[]): Value {
 /** Set from elements (unique). Value[] - materialized. */
 export function set(elements: Value[]): Value[] {
   const sorted = [...elements].sort(compare);
-  for (let i = 1; i < sorted.length; ) {
-    if (compare(sorted[i - 1], sorted[i]) === 0) {
-      sorted.splice(i, 1);
-    } else {
-      i++;
+  if (sorted.length < 2) {
+    return sorted;
+  }
+
+  let uniqueCount = 1;
+  while (uniqueCount < sorted.length && compare(sorted[uniqueCount - 1], sorted[uniqueCount]) !== 0) {
+    uniqueCount++;
+  }
+  if (uniqueCount === sorted.length) {
+    return sorted;
+  }
+
+  // The sorted prefix is already unique. Compact the rest after the first duplicate.
+  for (let i = uniqueCount + 1; i < sorted.length; i++) {
+    if (compare(sorted[uniqueCount - 1], sorted[i]) !== 0) {
+      sorted[uniqueCount++] = sorted[i];
     }
   }
+  sorted.length = uniqueCount;
   return sorted;
 }
