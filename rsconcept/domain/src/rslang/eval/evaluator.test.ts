@@ -370,6 +370,42 @@ describe('Calculator', () => {
     });
   });
 
+  describe('repeated relation filters', () => {
+    const expression = 'I{(a,F9[a]) | a:∈X9}';
+
+    beforeEach(() => {
+      treeContext.set('F9', buildAST('[a∈Z] Fi1[{a}](S9)'));
+      context.set('X9', [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    });
+
+    it('preserves filtered row order and observes changes between evaluations', () => {
+      const rows = Array.from({ length: 64 }, (_, i) => [TUPLE_ID, (i % 8) + 1, 63 - i]);
+      rows.push([...rows[0]]);
+      context.set('S9', rows);
+      const ast = buildAST(expression);
+      const expected = calculator.run(ast, undefined, false, true);
+
+      expect(expected).not.toBeNull();
+      expect(calculator.run(ast)).toEqual(expected);
+
+      rows[0][1] = 9;
+      const updated = calculator.run(ast);
+      expect(updated).not.toEqual(expected);
+      expect(updated).toEqual(calculator.run(ast, undefined, false, true));
+    });
+
+    it('keeps ordinary membership semantics when the relation column contains NaN', () => {
+      const rows = Array.from({ length: 64 }, (_, i) => [TUPLE_ID, (i % 8) + 1, i]);
+      rows[63][1] = NaN;
+      context.set('S9', rows);
+      const ast = buildAST(expression);
+      const expected = calculator.run(ast, undefined, false, true);
+
+      expect(expected).not.toBeNull();
+      expect(calculator.run(ast)).toEqual(expected);
+    });
+  });
+
   describe('evaluation cache', () => {
     beforeEach(() => {
       treeContext.set('F9', buildAST('[a∈ℬ(X1)] a'));
