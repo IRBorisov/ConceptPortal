@@ -131,7 +131,7 @@ export function TabModelList() {
     }
     // prettier-ignore
     switch (code) {
-      case 'KeyQ': engine.recalculateAll(); return true;
+      case 'KeyQ': engine.recalculateChanged(); return true;
       case 'Backquote': void promptCreateCst(); return true;
 
       case 'Digit1': void createCst(CstType.BASE); return true;

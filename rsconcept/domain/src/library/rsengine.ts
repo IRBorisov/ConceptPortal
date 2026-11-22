@@ -1,3 +1,4 @@
+import { type Graph } from '../graph';
 import { type AstNode } from '../parsing';
 import {
   type AnalysisFull,
@@ -13,11 +14,13 @@ import { normalizeType } from '../rslang/labels';
 import { type ExpressionType } from '../rslang/semantic/typification';
 
 import { type Constituenta, CstType, type RSForm } from './rsform';
-import { getAnalysisFor, isBaseSet, isBasicConcept, isFunctional } from './rsform-api';
+import { buildFormalDependencyGraph, getAnalysisFor, isBaseSet, isBasicConcept, isFunctional } from './rsform-api';
 import { type BasicBinding, type BasicsContext, type EvalStatus, type RSModel, TYPE_BASIC } from './rsmodel';
 import { inferEvalStatus, isInferrable, tryFixValue } from './rsmodel-api';
 
 const INVALID_TYPE_MARKER = 'INVALID';
+const MAX_SNAPSHOT_CELLS = 100_000;
+const MAX_SNAPSHOT_DEPTH = 64;
 
 interface CachedConstituentAnalysis {
   definition: string;
@@ -30,6 +33,37 @@ interface ConstituentAnalysisCache {
   analyzer: RSLangAnalyzer;
   revision: number;
   entries: WeakMap<Constituenta, CachedConstituentAnalysis>;
+}
+
+interface IncrementalConstituent {
+  alias: string;
+  definition: string;
+  type: CstType;
+  value: Value | null;
+  cells: number;
+}
+
+interface IncrementalCalculation {
+  schema: RSForm;
+  analyzer: RSLangAnalyzer;
+  analyzerRevision: number;
+  calculator: RSCalculator;
+  astRevision: number;
+  order: number[];
+  dependencies: Graph;
+  constituents: Map<number, IncrementalConstituent>;
+  cells: number;
+}
+
+interface ChangedConstituents {
+  inputs: number[];
+  outputs: number[];
+}
+
+interface PreparedFunctions {
+  calculator: RSCalculator;
+  revision: number;
+  definitions: Map<number, Pick<Constituenta, 'alias' | 'definition_formal'>>;
 }
 
 /** Services for {@link RSEngine}. */
@@ -63,6 +97,8 @@ export class RSEngine {
   private calculatedSet = new Set<number>();
   private calculationPasses = 0;
   private constituentAnalysisCache: ConstituentAnalysisCache | undefined;
+  private incrementalCalculation: IncrementalCalculation | undefined;
+  private preparedFunctions: PreparedFunctions | undefined;
   private valueSubscribers = new Map<number, Set<() => void>>();
   private statusSubscribers = new Map<number, Set<() => void>>();
   private changeSubscribers = new Set<() => void>();
@@ -85,6 +121,7 @@ export class RSEngine {
     if (schemaChanged) {
       this.calculationPasses = 0;
       this.constituentAnalysisCache = undefined;
+      this.incrementalCalculation = undefined;
       const changedCst = this.collectChanged(oldSchema, schema);
       this.prepareAst();
       if (!modelChanged) {
@@ -335,9 +372,173 @@ export class RSEngine {
     this.calculationPasses++;
     this.calculatedSet.clear();
     this.recalculateInternal();
+    this.notifyAll();
+    const timeSpent = ((performance.now() - start) / 1000).toFixed(2);
+    this.notifications?.onCalculationSuccess(timeSpent);
+  }
+
+  /** Recalculate only constituents affected by changes since the previous incremental pass. */
+  public recalculateChanged(): void {
+    if (this.calculator.hasValueSubscribers) {
+      this.incrementalCalculation = undefined;
+      this.recalculateAll();
+      return;
+    }
+    const schema = this.schema!;
+    const start = performance.now();
+    this.calculationPasses++;
+    const order = schema.graph.topologicalOrder();
+    const previous = this.incrementalCalculation;
+    const changed = previous && this.findChangedConstituents(previous, order);
+    if (!previous || !changed) {
+      this.calculatedSet.clear();
+      this.recalculateInternal(undefined, order);
+      this.incrementalCalculation = this.captureCalculation(schema, order);
+    } else if (changed.inputs.length > 0 || changed.outputs.length > 0) {
+      const affected = new Set([...changed.inputs, ...previous.dependencies.expandAllOutputs(changed.inputs)]);
+      for (const id of changed.outputs) {
+        if (affected.has(id)) {
+          continue;
+        }
+        const { alias, value } = previous.constituents.get(id)!;
+        if (value === null) {
+          this.calculator.resetValue(alias);
+        } else {
+          this.calculator.setValue(alias, cloneValue(value));
+        }
+        this.calculatedSet.add(id);
+      }
+      if (affected.size > 0) {
+        this.recalculateInternal(order.filter(id => affected.has(id)));
+        if (!this.refreshCalculationSnapshot(previous, [...affected])) {
+          this.incrementalCalculation = undefined;
+        }
+      }
+    }
+    this.notifyAll();
     const end = performance.now();
     const timeSpent = ((end - start) / 1000).toFixed(2);
     this.notifications?.onCalculationSuccess(timeSpent);
+  }
+
+  private captureCalculation(schema: RSForm, order: number[]): IncrementalCalculation | undefined {
+    const prepared = this.preparedFunctions;
+    if (
+      prepared?.calculator !== this.calculator ||
+      prepared.revision !== this.calculator.astRevision ||
+      this.calculator.hasValueSubscribers ||
+      this.calculator.hasValuesOutside(schema.cstByAlias)
+    ) {
+      return undefined;
+    }
+
+    const constituents = [...schema.cstByID.values()];
+    const functions = constituents.filter(item => isFunctional(item.cst_type));
+    if (
+      functions.length !== prepared.definitions.size ||
+      functions.some(item => {
+        const definition = prepared.definitions.get(item.id);
+        return definition?.alias !== item.alias || definition.definition_formal !== item.definition_formal;
+      })
+    ) {
+      return undefined;
+    }
+    const dependencies = buildFormalDependencyGraph(constituents);
+    const positions = new Map(order.map((id, index) => [id, index]));
+    if (
+      order.length !== constituents.length ||
+      constituents.some(item => {
+        const position = positions.get(item.id);
+        return position === undefined || dependencies.at(item.id)!.inputs.some(id => positions.get(id)! >= position);
+      })
+    ) {
+      return undefined;
+    }
+
+    const snapshots = new Map<number, IncrementalConstituent>();
+    for (const item of constituents) {
+      if (schema.cstByAlias.get(item.alias)?.id !== item.id) {
+        return undefined;
+      }
+      snapshots.set(item.id, {
+        alias: item.alias,
+        definition: item.definition_formal,
+        type: item.cst_type,
+        value: null,
+        cells: 0
+      });
+    }
+    const calculation: IncrementalCalculation = {
+      schema,
+      analyzer: schema.analyzer,
+      analyzerRevision: schema.analyzer.contextRevision,
+      calculator: this.calculator,
+      astRevision: this.calculator.astRevision,
+      order,
+      dependencies,
+      constituents: snapshots,
+      cells: 0
+    };
+    return this.refreshCalculationSnapshot(calculation, [...snapshots.keys()]) ? calculation : undefined;
+  }
+
+  private refreshCalculationSnapshot(calculation: IncrementalCalculation, ids: number[]): boolean {
+    // Bound the extra memory independently of the size of the original model and its results.
+    const budget = { remaining: MAX_SNAPSHOT_CELLS - calculation.cells };
+    for (const id of ids) {
+      budget.remaining += calculation.constituents.get(id)!.cells;
+    }
+    for (const id of ids) {
+      const snapshot = calculation.constituents.get(id)!;
+      const before = budget.remaining;
+      const value = snapshotValue(this.calculator.getValue(snapshot.alias), budget);
+      if (value === undefined) {
+        return false;
+      }
+      snapshot.value = value;
+      snapshot.cells = before - budget.remaining;
+    }
+    calculation.cells = MAX_SNAPSHOT_CELLS - budget.remaining;
+    return true;
+  }
+
+  private findChangedConstituents(previous: IncrementalCalculation, order: number[]): ChangedConstituents | undefined {
+    const schema = this.schema!;
+    if (
+      previous.schema !== schema ||
+      previous.analyzer !== schema.analyzer ||
+      previous.analyzerRevision !== schema.analyzer.contextRevision ||
+      previous.calculator !== this.calculator ||
+      previous.astRevision !== this.calculator.astRevision ||
+      this.calculator.hasValueSubscribers ||
+      this.calculator.hasValuesOutside(schema.cstByAlias) ||
+      order.length !== previous.order.length ||
+      order.some((id, index) => id !== previous.order[index]) ||
+      schema.cstByID.size !== previous.constituents.size
+    ) {
+      return undefined;
+    }
+    const changed: ChangedConstituents = { inputs: [], outputs: [] };
+    for (const item of schema.cstByID.values()) {
+      const snapshot = previous.constituents.get(item.id);
+      if (
+        snapshot?.alias !== item.alias ||
+        snapshot.definition !== item.definition_formal ||
+        snapshot.type !== item.cst_type ||
+        schema.cstByAlias.get(item.alias)?.id !== item.id
+      ) {
+        return undefined;
+      }
+      const current = this.calculator.getValue(item.alias);
+      if (isInferrable(item.cst_type)) {
+        if (!this.calculatedSet.has(item.id) || !sameValue(current, snapshot.value)) {
+          changed.outputs.push(item.id);
+        }
+      } else if (!sameValue(current, snapshot.value)) {
+        changed.inputs.push(item.id);
+      }
+    }
+    return changed;
   }
 
   private formatStructureType(type: ExpressionType | null): string {
@@ -406,13 +607,21 @@ export class RSEngine {
 
   private prepareAst(): void {
     this.calculator.clearAllAst();
-    const functions = this.schema!.items.filter(cst => isFunctional(cst.cst_type) && cst.analysis?.success);
+    const functions = this.schema!.items.filter(cst => isFunctional(cst.cst_type));
     for (const cst of functions) {
+      if (!cst.analysis?.success) {
+        continue;
+      }
       const fullAnalysis = getAnalysisFor(cst.definition_formal, cst.cst_type, this.schema!);
       if (fullAnalysis.ast) {
         this.calculator.setAST(cst.alias, fullAnalysis.ast);
       }
     }
+    this.preparedFunctions = {
+      calculator: this.calculator,
+      revision: this.calculator.astRevision,
+      definitions: new Map(functions.map(({ id, alias, definition_formal }) => [id, { alias, definition_formal }]))
+    };
   }
 
   private prepareValues(model: RSModel): void {
@@ -608,17 +817,17 @@ export class RSEngine {
     }
   }
 
-  private recalculateInternal(): void {
-    const processedIDs = [];
-    for (const cst of this.schema!.cstByID.values()) {
+  private recalculateInternal(affected?: number[], order?: number[]): void {
+    const schema = this.schema!;
+    const resetItems = affected ? affected.map(id => schema.cstByID.get(id)!) : schema.cstByID.values();
+    for (const cst of resetItems) {
       if (isInferrable(cst.cst_type)) {
         this.calculator.resetValue(cst.alias);
       }
     }
 
-    for (const cstID of this.schema!.graph.topologicalOrder()) {
-      processedIDs.push(cstID);
-      const cst = this.schema!.cstByID.get(cstID)!;
+    for (const cstID of affected ?? order ?? schema.graph.topologicalOrder()) {
+      const cst = schema.cstByID.get(cstID)!;
       if (isInferrable(cst.cst_type)) {
         const value = this.evaluateConstituentFast(cst);
         this.calculatedSet.add(cstID);
@@ -627,7 +836,6 @@ export class RSEngine {
         }
       }
     }
-    this.notifyAll();
   }
 
   private evaluateConstituentFast(cst: Constituenta): Value | null {
@@ -700,4 +908,40 @@ function cloneValue(value: Value): Value {
     return value;
   }
   return value.map(cloneValue);
+}
+
+function snapshotValue(value: Value | null, budget: { remaining: number }, depth = 0): Value | null | undefined {
+  if (budget.remaining-- <= 0 || depth > MAX_SNAPSHOT_DEPTH) {
+    return undefined;
+  }
+  if (value === null || typeof value === 'number') {
+    return value;
+  }
+  if (!Array.isArray(value) || value.length > budget.remaining) {
+    return undefined;
+  }
+  const items: Value[] = [];
+  for (const item of value) {
+    const copy = snapshotValue(item, budget, depth + 1);
+    if (copy === undefined || copy === null) {
+      return undefined;
+    }
+    items.push(copy);
+  }
+  return items;
+}
+
+function sameValue(left: Value | null, right: Value | null): boolean {
+  if (Object.is(left, right)) {
+    return true;
+  }
+  if (!Array.isArray(left) || !Array.isArray(right) || left.length !== right.length) {
+    return false;
+  }
+  for (let index = 0; index < left.length; index++) {
+    if (!sameValue(left[index], right[index])) {
+      return false;
+    }
+  }
+  return true;
 }

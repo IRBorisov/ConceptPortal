@@ -34,6 +34,25 @@ export class RSCalculator {
   private evaluator: Evaluator = new Evaluator(this.context, this.treeContext);
 
   private listeners = new Map<string, Set<Listener>>();
+  private treeRevision = 0;
+
+  /** Changes when the function context is replaced or cleared. */
+  public get astRevision(): number {
+    return this.treeRevision;
+  }
+
+  public get hasValueSubscribers(): boolean {
+    return this.listeners.size > 0;
+  }
+
+  public hasValuesOutside(aliases: ReadonlyMap<string, unknown>): boolean {
+    for (const alias of this.context.keys()) {
+      if (!aliases.has(alias)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   public subscribe = (alias: string, listener: Listener) => {
     let notifyList = this.listeners.get(alias);
@@ -73,6 +92,7 @@ export class RSCalculator {
 
   public clearAllAst(): void {
     this.treeContext.clear();
+    this.treeRevision++;
   }
 
   public getValue(alias: string): Value | null {
@@ -81,6 +101,7 @@ export class RSCalculator {
 
   public setAST(alias: string, ast: AstNode): void {
     this.treeContext.set(alias, ast);
+    this.treeRevision++;
   }
 
   public validate(value: Value, type: ExpressionType): boolean {

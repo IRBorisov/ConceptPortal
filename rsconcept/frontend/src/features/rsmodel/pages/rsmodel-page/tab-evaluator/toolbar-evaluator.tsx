@@ -36,7 +36,7 @@ export function ToolbarEvaluator({ className }: ToolbarEvaluatorProps) {
         title={prepareTooltip(tx('tx.model.recalculate'), 'Alt + Q')}
         aria-label={tx('tx.model.recalculate.hint')}
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
-        onClick={() => engine.recalculateAll()}
+        onClick={() => engine.recalculateChanged()}
       />
 
       <BadgeHelp

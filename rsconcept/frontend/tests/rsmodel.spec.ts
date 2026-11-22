@@ -1,7 +1,14 @@
-import { AccessPolicy, LibraryItemType } from '@rsconcept/domain/library';
+import { AccessPolicy, CstType, LibraryItemType } from '@rsconcept/domain/library';
 
 import { authAdmin, authAnonymous } from './mocks/auth';
-import { createRSFormMock, createRSModelMock, dataRSForms, dataRSModels, resetConceptMocks } from './mocks/concepts';
+import {
+  createCstMock,
+  createRSFormMock,
+  createRSModelMock,
+  dataRSForms,
+  dataRSModels,
+  resetConceptMocks
+} from './mocks/concepts';
 import { BACKEND_URL } from './mocks/constants';
 import { clickAndWaitForApi, clickAndWaitForURL } from './navigation';
 import { expect, test } from './setup';
@@ -94,6 +101,25 @@ test('RSModel card mutation saves model title', async ({ page }) => {
 
   await expect(page.getByText('Изменения сохранены')).toBeVisible();
   await expect(page.locator('#schema_title')).toHaveValue('Модель после мутации');
+});
+
+test('RSModel recalculates and keeps the derived value on a repeated click', async ({ page }) => {
+  const schemaID = 507;
+  const modelID = 607;
+  const termID = 7101;
+  const schema = createRSFormMock(schemaID);
+  schema.items = [createCstMock(termID, 'D1', CstType.TERM, '40+2')];
+  dataRSForms.set(schemaID, schema);
+  dataRSModels.set(modelID, createRSModelMock(modelID, schemaID));
+
+  await page.goto(`/models/${modelID}?tab=4&active=${termID}`, { waitUntil: 'domcontentloaded' });
+  const recalculate = page.getByRole('button', { name: 'Пересчитать все вычисления в модели' });
+  const value = page.locator('[data-tour="model-value-form"] textarea[rows="8"]');
+  await expect(value).toHaveValue('');
+  await recalculate.click();
+  await expect(value).toHaveValue('42');
+  await recalculate.click();
+  await expect(value).toHaveValue('42');
 });
 
 test('RSModel menu navigates to linked schema', async ({ page }) => {

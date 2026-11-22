@@ -104,7 +104,7 @@ export function TabValue() {
     if (event.altKey && event.code === 'KeyQ') {
       event.preventDefault();
       event.stopPropagation();
-      engine.recalculateAll();
+      engine.recalculateChanged();
       return;
     }
     if ((event.ctrlKey || event.metaKey) && event.code === 'KeyQ') {
