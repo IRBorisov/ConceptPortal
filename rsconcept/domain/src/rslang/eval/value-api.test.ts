@@ -75,6 +75,27 @@ describe('validateValue', () => {
     expect(validateValue([TUPLE_ID, 1, 2], collectionType, basics)).toBe(false);
   });
 
+  it('validates repeated membership in a large ordered domain and observes later mutations', () => {
+    const domain = Array.from({ length: 8_192 }, (_, i) => i);
+    const context = new Map([['X1', domain]]);
+    const type = { typeID: TypeID.collection, base: basic('X1') };
+    const value = [8_191, 8_190, 8_189, 8_188, 0, 128];
+
+    expect(validateValue(value, type, context)).toBe(true);
+    domain[0] = 9_000;
+    expect(validateValue(value, type, context)).toBe(false);
+    expect(validateValue([8_191, 8_190, 8_189, 8_188, 9_000, 128], type, context)).toBe(true);
+  });
+
+  it('keeps membership semantics for large unordered domains and NaN', () => {
+    const domain = [...Array.from({ length: 8_192 }, (_, i) => i), NaN, -2];
+    const context = new Map([['X1', domain]]);
+    const type = { typeID: TypeID.collection, base: basic('X1') };
+
+    expect(validateValue([8_191, 8_190, 8_189, 8_188, -2, NaN, -0], type, context)).toBe(true);
+    expect(validateValue([8_191, 8_190, 8_189, 8_188, -3], type, context)).toBe(false);
+  });
+
   it('returns false for unsupported types', () => {
     expect(validateValue(1, { typeID: TypeID.anyTypification }, basics)).toBe(false);
     expect(validateValue(1, { typeID: TypeID.predicate, result: LogicT, args: [] }, basics)).toBe(false);
