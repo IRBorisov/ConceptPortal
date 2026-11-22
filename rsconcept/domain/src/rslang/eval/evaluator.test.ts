@@ -404,6 +404,17 @@ describe('Calculator', () => {
       expect(expected).not.toBeNull();
       expect(calculator.run(ast)).toEqual(expected);
     });
+
+    it('keeps filtering when a high-cardinality column exceeds the key budget', () => {
+      const rows = Array.from({ length: 4_097 }, (_, i) => [TUPLE_ID, i + 1, i]);
+      context.set('S9', rows);
+      context.set('X9', [1, 2, 3, 4_096, 4_097, 4_098]);
+      const ast = buildAST(expression);
+      const expected = calculator.run(ast, undefined, false, true);
+
+      expect(expected).not.toBeNull();
+      expect(calculator.run(ast)).toEqual(expected);
+    });
   });
 
   describe('evaluation cache', () => {

@@ -45,6 +45,7 @@ const TICK_PER_DECLARATIVE = 1;
 const TICK_PER_QUANTIFIER = 1;
 const MIN_INDEXED_FILTER_ROWS = 32;
 const FILTER_PROBES_BEFORE_INDEX = 4;
+const MAX_INDEXED_FILTER_KEYS = 4_096;
 
 type FilterIndex = Map<number, Value[][]>;
 type FilterColumnState = number | FilterIndex | null;
@@ -829,6 +830,11 @@ export class Evaluator {
       if (matches) {
         matches.push(row);
       } else {
+        if (index.size === MAX_INDEXED_FILTER_KEYS) {
+          // High-cardinality columns need a separate bucket for most rows.
+          columns.set(column, null);
+          return undefined;
+        }
         index.set(key, [row]);
       }
     }
