@@ -541,3 +541,96 @@ describe('RSEngine constituent analysis', () => {
     ]);
   });
 });
+
+describe('RSEngine.recalculateChanged', () => {
+  it('runs only affected terms after a model refresh and keeps force recalculation available', () => {
+    const schema = analyzedSchema([
+      mockConstituenta({ id: 1, alias: 'X1', cst_type: CstType.BASE }),
+      mockConstituenta({ id: 2, alias: 'D1', cst_type: CstType.TERM, definition_formal: 'card(X1)' }),
+      mockConstituenta({ id: 3, alias: 'D2', cst_type: CstType.TERM, definition_formal: '2' }),
+      mockConstituenta({ id: 4, alias: 'D3', cst_type: CstType.TERM, definition_formal: 'D1+1' })
+    ]);
+    const engine = createEngine();
+    const evaluate = vi.spyOn(engine.calculator, 'evaluateFast');
+    const load = (value: Record<number, string>) =>
+      engine.loadData(schema, mockModel([{ id: 1, type: TYPE_BASIC, value }]));
+
+    load({ 1: 'a' });
+    engine.recalculateChanged();
+    expect(evaluate).toHaveBeenCalledTimes(3);
+
+    evaluate.mockClear();
+    load({ 1: 'renamed' });
+    engine.recalculateChanged();
+    expect(evaluate).not.toHaveBeenCalled();
+    expect(engine.getCstValue(4)).toBe(2);
+    expect(engine.getCstStatus(3)).toBe(EvalStatus.HAS_DATA);
+
+    load({ 1: 'a', 2: 'b' });
+    engine.recalculateChanged();
+    expect(evaluate).toHaveBeenCalledTimes(2);
+    expect(engine.getCstValue(4)).toBe(3);
+
+    evaluate.mockClear();
+    engine.recalculateAll();
+    expect(evaluate).toHaveBeenCalledTimes(3);
+  });
+
+  it('detects in-place changes in inputs and restores externally modified derived values', () => {
+    const schema = analyzedSchema([
+      mockConstituenta({ id: 1, alias: 'X1', cst_type: CstType.BASE }),
+      mockConstituenta({ id: 2, alias: 'D1', cst_type: CstType.TERM, definition_formal: 'card(X1)' })
+    ]);
+    const engine = createEngine();
+    engine.loadData(schema, mockModel([{ id: 1, type: TYPE_BASIC, value: { 1: 'a' } }]));
+    engine.recalculateChanged();
+    (engine.getCstValue(1) as number[]).push(2);
+    engine.calculator.setValue('D1', 9);
+    engine.recalculateChanged();
+    expect(engine.getCstValue(2)).toBe(2);
+    engine.calculator.setValue('D1', 9);
+    engine.recalculateChanged();
+    expect(engine.getCstValue(2)).toBe(2);
+  });
+
+  it('follows dependencies read inside functions and only recomputes their callers', () => {
+    const schema = analyzedSchema([
+      mockConstituenta({ id: 1, alias: 'X1', cst_type: CstType.BASE }),
+      mockConstituenta({ id: 2, alias: 'F1', cst_type: CstType.FUNCTION, definition_formal: '[x∈Z] x+card(X1)' }),
+      mockConstituenta({ id: 3, alias: 'D1', cst_type: CstType.TERM, definition_formal: 'F1[1]' }),
+      mockConstituenta({ id: 4, alias: 'D2', cst_type: CstType.TERM, definition_formal: '2' })
+    ]);
+    const engine = createEngine();
+    engine.loadData(schema, mockModel([{ id: 1, type: TYPE_BASIC, value: { 1: 'a' } }]));
+    engine.recalculateChanged();
+    expect(engine.getCstValue(3)).toBe(2);
+    const evaluate = vi.spyOn(engine.calculator, 'evaluateFast');
+
+    engine.loadData(schema, mockModel([{ id: 1, type: TYPE_BASIC, value: { 1: 'a', 2: 'b' } }]));
+    engine.recalculateChanged();
+
+    expect(engine.getCstValue(3)).toBe(3);
+    expect(evaluate).toHaveBeenCalledOnce();
+  });
+
+  it('calculates normally when a changed input no longer fits in the snapshot', () => {
+    const schema = analyzedSchema([
+      mockConstituenta({ id: 1, alias: 'X1', cst_type: CstType.BASE }),
+      mockConstituenta({ id: 2, alias: 'D1', cst_type: CstType.TERM, definition_formal: 'card(X1)' })
+    ]);
+    const engine = createEngine();
+    engine.loadData(schema, mockModel([{ id: 1, type: TYPE_BASIC, value: { 1: 'a' } }]));
+    engine.recalculateChanged();
+    const evaluate = vi.spyOn(engine.calculator, 'evaluateFast');
+
+    engine.calculator.setValue(
+      'X1',
+      Array.from({ length: 100_001 }, (_, index) => index)
+    );
+    engine.recalculateChanged();
+    engine.recalculateChanged();
+
+    expect(engine.getCstValue(2)).toBe(100_001);
+    expect(evaluate).toHaveBeenCalledTimes(2);
+  });
+});

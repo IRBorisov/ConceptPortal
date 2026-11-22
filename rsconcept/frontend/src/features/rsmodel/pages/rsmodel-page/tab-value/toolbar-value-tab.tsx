@@ -68,7 +68,7 @@ export function ToolbarValueTab({ className, onSubmit, onReset }: ToolbarValueTa
         title={tx('tx.model.recalculate')}
         aria-label={tx('tx.model.recalculate.hint')}
         icon={<IconCalculateAll size='1.25rem' className='icon-green' />}
-        onClick={() => engine.recalculateAll()}
+        onClick={() => engine.recalculateChanged()}
       />
       <MiniButton
         title={prepareTooltip(tx('tx.model.calculate.cst'), isMac() ? 'Cmd + Q' : 'Ctrl + Q')}

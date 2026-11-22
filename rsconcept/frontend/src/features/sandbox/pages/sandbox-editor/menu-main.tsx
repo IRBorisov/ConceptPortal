@@ -122,7 +122,7 @@ export function MenuMain() {
 
   function handleRecalculate() {
     hideMenu();
-    engine.recalculateAll();
+    engine.recalculateChanged();
   }
 
   function handleShowTour() {

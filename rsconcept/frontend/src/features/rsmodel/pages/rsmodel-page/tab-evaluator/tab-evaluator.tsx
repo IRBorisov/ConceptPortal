@@ -30,7 +30,7 @@ export function TabEvaluator() {
     if (event.altKey && event.code === 'KeyQ') {
       event.preventDefault();
       event.stopPropagation();
-      engine.recalculateAll();
+      engine.recalculateChanged();
       return;
     }
   }
