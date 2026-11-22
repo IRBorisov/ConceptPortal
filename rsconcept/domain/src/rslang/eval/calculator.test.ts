@@ -6,6 +6,7 @@ import { normalizeAST } from '../parser/normalize';
 import { parser as rslangParser } from '../parser/parser';
 
 import { type CalculatorResult, RSCalculator } from './calculator';
+import { tuple } from './value';
 import { printValue } from './value-api';
 
 function buildAST(expression: string): AstNode {
@@ -67,6 +68,21 @@ describe('RSCalculator', () => {
 
   it('evaluates a basic set operation', () => {
     expectCalcValue('{2,3,4}∩{2,3,5}', '{2, 3}');
+  });
+
+  it('projects distinct nested values in canonical order and retains the first equal value', () => {
+    const first = [1];
+    const duplicate = [1];
+    const second = [2, 3];
+    const relation = [tuple([1, second]), tuple([2, first]), tuple([3, duplicate])];
+    calculator.setValue('S2', relation);
+
+    const result = calculator.evaluateFull(buildAST('Pr2(S2)'));
+
+    expect(result.errors).toEqual([]);
+    expect(result.value).toEqual([first, second]);
+    expect(Array.isArray(result.value) && result.value[0]).toBe(first);
+    expect(relation).toEqual([tuple([1, [2, 3]]), tuple([2, [1]]), tuple([3, [1]])]);
   });
 
   it('returns error for unknown variable', () => {
