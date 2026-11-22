@@ -155,7 +155,7 @@ export function setUnion(set1: Value[], set2: Value[]): Value[] {
 /** Intersection A ∩ B. */
 export function setIntersection(set1: Value[], set2: Value[]): Value[] {
   const result: Value[] = [];
-  for (let i = 0, j = 0; i < set1.length && j < set2.length; ) {
+  for (let i = 0, j = 0; i < set1.length && j < set2.length;) {
     const cmp = compare(set1[i], set2[j]);
     if (cmp < 0) {
       i++;
@@ -303,6 +303,22 @@ export function normalizeValue(data: Value): void {
 
 /** Validates value for {@link ExpressionType} and value of basic sets. */
 export function validateValue(value: Value, type: ExpressionType, basics: ValueContext): boolean {
+  const searches: BasicSearches | undefined =
+    type.typeID === TypeID.tuple || type.typeID === TypeID.collection ? new Map() : undefined;
+  return validateValueInternal(value, type, basics, searches);
+}
+
+const MIN_SEARCH_DOMAIN_SIZE = 8_192;
+
+// Each entry is the estimated scan work, a checked ordered domain, or null for an unordered domain.
+type BasicSearches = Map<Value[], number | number[] | null>;
+
+function validateValueInternal(
+  value: Value,
+  type: ExpressionType,
+  basics: ValueContext,
+  searches?: BasicSearches
+): boolean {
   switch (type.typeID) {
     case TypeID.integer:
       return Number.isSafeInteger(value);
@@ -317,7 +333,7 @@ export function validateValue(value: Value, type: ExpressionType, basics: ValueC
         return false;
       }
       const domain = basics.get(type.baseID);
-      return !!domain && Array.isArray(domain) && domain.includes(value);
+      return Array.isArray(domain) && hasBasicValue(domain, value, searches);
     }
 
     case TypeID.tuple: {
@@ -325,7 +341,7 @@ export function validateValue(value: Value, type: ExpressionType, basics: ValueC
         return false;
       }
       for (let i = 0; i < type.factors.length; i++) {
-        if (!validateValue(value[i + 1], type.factors[i], basics)) {
+        if (!validateValueInternal(value[i + 1], type.factors[i], basics, searches)) {
           return false;
         }
       }
@@ -337,7 +353,7 @@ export function validateValue(value: Value, type: ExpressionType, basics: ValueC
         return false;
       }
       for (const item of value) {
-        if (!validateValue(item, type.base, basics)) {
+        if (!validateValueInternal(item, type.base, basics, searches)) {
           return false;
         }
       }
@@ -349,6 +365,61 @@ export function validateValue(value: Value, type: ExpressionType, basics: ValueC
     case TypeID.function:
       return false;
   }
+}
+
+function hasBasicValue(domain: Value[], value: number, searches?: BasicSearches): boolean {
+  if (!searches || domain.length < MIN_SEARCH_DOMAIN_SIZE || Number.isNaN(value)) {
+    return domain.includes(value);
+  }
+  const search = searches.get(domain);
+  if (search === null) {
+    return domain.includes(value);
+  }
+  if (Array.isArray(search)) {
+    return hasSortedNumber(search, value);
+  }
+
+  // The hit position estimates the work spent on linear scans. A miss ends validation.
+  const index = domain.indexOf(value);
+  if (index < 0) {
+    return false;
+  }
+  const scanned = (search ?? 0) + index + 1;
+  if (scanned < 2 * domain.length) {
+    searches.set(domain, scanned);
+  } else {
+    searches.set(domain, isSortedNumericDomain(domain) ? domain : null);
+  }
+  return true;
+}
+
+function isSortedNumericDomain(domain: Value[]): domain is number[] {
+  let previous = -Infinity;
+  for (const value of domain) {
+    if (typeof value !== 'number' || !(value >= previous)) {
+      return false;
+    }
+    previous = value;
+  }
+  return true;
+}
+
+function hasSortedNumber(domain: number[], value: number): boolean {
+  let left = 0;
+  let right = domain.length - 1;
+  while (left <= right) {
+    const middle = Math.floor((left + right) / 2);
+    const current = domain[middle];
+    if (current === value) {
+      return true;
+    }
+    if (current < value) {
+      left = middle + 1;
+    } else {
+      right = middle - 1;
+    }
+  }
+  return false;
 }
 
 /** Converts value path to type path. */
