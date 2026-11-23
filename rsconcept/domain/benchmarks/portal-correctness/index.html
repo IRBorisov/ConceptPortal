@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru">
+  <meta charset="utf-8" />
+  <title>Проверка корректности вычислителя</title>
+  <pre id="results">Выполняются проверки…</pre>
+  <script type="module">
+    import { runSuites } from './suites.mjs';
+
+    const output = document.querySelector('#results');
+    const options = new URLSearchParams(location.search);
+    try {
+      if (!options.has('candidate')) throw new Error('Expected the candidate bundle URL');
+      const load = name => import(new URL(options.get(name), location.href));
+      const candidate = await load('candidate');
+      const reference = options.has('reference') ? await load('reference') : candidate;
+      const experiments = options.has('experiments') ? await load('experiments') : undefined;
+      const readSnapshot = options.has('snapshot')
+        ? async name => {
+            const response = await fetch(new URL(name, new URL(options.get('snapshot'), location.href)));
+            if (!response.ok) throw new Error(`HTTP ${response.status} for ${name}`);
+            return response.json();
+          }
+        : undefined;
+      const portalMode = options.get('portal-mode') ?? 'incremental';
+      if (!['incremental', 'full'].includes(portalMode)) throw new Error('portal-mode must be incremental or full');
+      const result = await runSuites({
+        candidate,
+        reference,
+        experiments,
+        readSnapshot,
+        suites: options.has('suite') ? options.getAll('suite') : undefined,
+        extended: options.has('extended'),
+        portalMode: portalMode === 'full' ? 'recalculateAll' : 'recalculateChanged'
+      });
+      output.textContent = JSON.stringify(result, null, 2);
+      output.dataset.status = result.failures.length ? 'error' : 'complete';
+    } catch (error) {
+      output.textContent = String(error?.stack ?? error);
+      output.dataset.status = 'error';
+    }
+  </script>
+</html>
