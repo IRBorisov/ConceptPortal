@@ -178,6 +178,9 @@ describe('Portal credential isolation and publication', () => {
     await expect(publisher.prepare('alice', 'a', 1, app.tool)).rejects.toThrow('personal Portal key');
     await expect(publisher.prepare('robot', 'r', 2, app.tool)).rejects.toThrow('not allowed');
     await expect(publisher.connect('robot', token)).rejects.toThrow('administrator-managed');
+    await expect(publisher.connect(['robot', 'project'], token)).rejects.toThrow('administrator-managed');
+    app.vault.set(['robot', 'project'], token, { id: 10, username: 'Robot' });
+    await expect(publisher.searchLibrary(['robot', 'project'], 'private')).rejects.toThrow('administrator-managed');
     await expect(publisher.prepare('robot', 'r', 1, app.tool)).resolves.toMatchObject({ targetId: 1 });
   });
 
@@ -388,6 +391,21 @@ it('enforces service target grants and sanitizes conflicts for description write
   expect(app.request.mock.calls.at(-1)?.[1]?.headers).toMatchObject({ Authorization: `Bearer ${token}` });
 });
 
+
+it('keeps a definitive Portal refusal distinct from an uncertain publication', async () => {
+  const app = setup();
+  const owner = ['alice', 'research'] as const;
+  await app.publisher.connect(owner, token);
+  const draft = await app.publisher.prepare(owner, 'workspace', 1, app.tool);
+  app.request.mockResolvedValueOnce(new Response(token, { status: 401 }));
+  await expect(app.publisher.approve(owner, draft.publicationId, draft.digest)).rejects.toThrow('invalid or revoked');
+  expect(app.publisher.publications(owner)[0].state).toBe('failed');
+
+  app.request.mockResolvedValueOnce(Response.json({ id: 1, items: [], time_update: '2026-11-06T01:00:00Z' }))
+    .mockResolvedValueOnce(new Response(token, { status: 401 }));
+  await expect(app.publisher.publishSchema(owner, 1, app.tool)).rejects.toThrow('invalid or revoked');
+  expect(app.request.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(2);
+});
 
 it('reads public descriptions anonymously and private data through a bound key without creating a session', async () => {
   const app = setup();

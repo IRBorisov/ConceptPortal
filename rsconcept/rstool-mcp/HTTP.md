@@ -151,6 +151,8 @@ Publication preparation and approval validate source retention using current tim
 
 The offline index command rejects missing targets and options used as missing values. An existing empty workspace is reported as empty without claiming that session clocks were created. Unexpected or invalid JSON is not enrolled for deletion and causes a safe storage error. Restore old backups offline and export needed sessions before starting a retention-enabled host if their saved access clocks are already expired.
 
+To index a project workspace by name, supply `--project-id` with its trusted project ID in addition to `--subject` and `--workspace`. The existing owner record preserves the project during hash-only reindexing.
+
 ## Agent self-service for account storage
 
 Hosted initialization instructions include the effective per-account maximum and inactivity TTL. These account-management tools exist only on HTTP; they do not change the ordinary library/stdio tool catalog. `list_methods` returns the complete MCP catalog, including configured integrations.
@@ -158,10 +160,12 @@ Hosted initialization instructions include the effective per-account maximum and
 | Tool | Purpose | Safety metadata |
 | --- | --- | --- |
 | `get_session_storage_config` | Effective limits, cleanup cadence, safe transport limits and this account's stored/available counts | Read-only; no credentials, filesystem paths, model contents or TTL renewal |
-| `list_stored_sessions` | Oldest-used-first metadata across this account's workspaces, with bounded pages | Read-only; no TTL renewal |
+| `list_stored_sessions` | Oldest-used-first metadata across the current project's or personal scope's workspaces, with bounded pages | Read-only; no TTL renewal |
 | `delete_stored_session` | Explicit compare-and-delete of exactly one listed session, freeing one stored slot | Destructive; agent-managed cleanup with verified export and exact revision |
 
 Configuration uses `limits.maxSessionsPerAccount`, `limits.retentionSeconds`, `limits.cleanupIntervalSeconds`, `usage.storedSessions`, and `usage.availableSlots`. If ownership migration is incomplete, `usage.status` is `migration_required` and available capacity is unknown (`null`), not a guessed free count. Unavailable metadata produces `usage.status=unavailable`. No current usage counts from other accounts are exposed.
+
+The account quota and aggregate usage include personal and project workspaces. A credential can list and delete sessions only in its own scope. If that scope has no session to release, the owner can free a slot from the relevant project or personal scope.
 
 List accepts `limit` (default 20, maximum 100) and a returned opaque `cursor`. Each entry has an opaque `sessionRef`, exact `sessionId`, opaque workspace ID and its name when known, bounded title/alias with truncation flags, item count when readable, server `lastUsedAt`/`expiresAt`, and separate `current`, `connected`, `busy`, and caller-workspace flags. It also returns a `revision` and deletion eligibility flags. Models, comments and expressions are not returned. Workspace names missing from legacy metadata remain unknown until a verified connection or offline name-based indexing establishes them.
 

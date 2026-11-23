@@ -13,7 +13,7 @@ import { CallToolResultSchema, LATEST_PROTOCOL_VERSION, type CallToolResult } fr
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { SessionPolicy, SessionStorageError } from './session-policy';
-import { createBearerTokenVerifier } from './http-auth';
+import { createBearerIdentityVerifier, createBearerTokenVerifier } from './http-auth';
 import { createRSToolHttpServer, type RSToolHttpServerOptions, type RSToolHttpService } from './http-server';
 
 // Synthetic credentials, never production secrets.
@@ -87,6 +87,39 @@ function post(url: string, token = ALICE, extraHeaders: Record<string, string> =
 }
 
 describe('rstool Streamable HTTP', () => {
+  it('isolates stored-session management by project while sharing the account quota', { timeout: 15_000 }, async () => {
+    const tokenA = 'project-a-token-'.repeat(3), tokenB = 'project-b-token-'.repeat(3);
+    const verifyToken = createBearerIdentityVerifier([...credentials,
+      { subject: 'alice', projectId: 'a', token: tokenA }, { subject: 'alice', projectId: 'b', token: tokenB }]);
+    const app = await start({ verifyToken, maxStoredSessionsPerAccount: 2 });
+    const a = await app.connect('task', tokenA);
+    const b = await app.connect('task', tokenB);
+    const personal = await app.connect('task');
+    const created = await call(a.client, 'create_session', { initial: { title: 'Project A' } });
+    await call(personal.client, 'create_session', { initial: { title: 'Personal' } });
+    const listed = await call(a.client, 'list_stored_sessions');
+    const entry = listed.items.find((item: { sessionId: string }) => item.sessionId === created.sessionId);
+    const deletion = { sessionRef: entry.sessionRef, expectedRevision: entry.revision, confirm: true, allowCurrent: true };
+    expect((await b.client.callTool({ name: 'delete_stored_session', arguments: deletion })).structuredContent)
+      .toMatchObject({ error: { code: 'SESSION_NOT_FOUND_OR_EXPIRED' } });
+    expect((await personal.client.callTool({ name: 'delete_stored_session', arguments: deletion })).structuredContent)
+      .toMatchObject({ error: { code: 'SESSION_NOT_FOUND_OR_EXPIRED' } });
+    expect((await call(b.client, 'list_stored_sessions')).items).toEqual([]);
+    expect((await call(personal.client, 'list_stored_sessions')).items.map((item: { title: string }) => item.title)).toEqual(['Personal']);
+    expect(listed.items.map((item: { title: string }) => item.title)).toEqual(['Project A']);
+    expect((await call(b.client, 'get_session_storage_config')).usage).toMatchObject({ storedSessions: 2, availableSlots: 0 });
+    expect((await b.client.callTool({ name: 'create_session' })).structuredContent)
+      .toMatchObject({ error: { code: 'SESSION_LIMIT_REACHED' } });
+
+    const connected = await fetch(`${app.url}/mcp/task/connection`, { headers: { Authorization: `Bearer ${tokenA}` } });
+    expect(connected.status).toBe(200);
+    expect((await fetch(`${app.url}/mcp/task/connection`, { method: 'DELETE', headers: {
+      Authorization: `Bearer ${tokenB}`, 'If-Match': connected.headers.get('ETag')!,
+    } })).status).toBe(409);
+    const otherChat = await app.connect('other-chat', tokenA);
+    expect(await call(otherChat.client, 'delete_stored_session', deletion)).toMatchObject({ deleted: true, freedSlots: 1 });
+  });
+
   it('uses real isolated computations by default and persists their committed state', async () => {
     const app = await start({ isolateComputations: true });
     const peer = await app.connect();

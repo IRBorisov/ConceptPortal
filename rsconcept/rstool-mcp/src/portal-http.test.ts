@@ -462,6 +462,17 @@ it('enrolls once and creates and verifies a schema and linked model from another
   });
   expect((await call('portal_get_details', { kind: 'model', targetId: 101 })).structuredContent)
     .toMatchObject({ schema: 100, items: [{ id: target, type: 'basic', value: { 1: 'Item' } }] });
+  const written = { id: 101, schema: 100, time_update: '2026-11-13T00:02:00Z' };
+  const countModelWrites = () => app.remote.mock.calls.filter(([url, options]) =>
+    String(url).endsWith('/set-value') && options?.method === 'POST').length;
+  for (const readback of [Response.json({}, { status: 503 }), Response.json({ ...written,
+    items: [{ id: target, type: 'basic', value: { 1: 'Changed independently' } }] })]) {
+    const postsBefore = countModelWrites();
+    app.remote.mockResolvedValueOnce(Response.json(written)).mockResolvedValueOnce(readback);
+    expect((await call('portal_set_model_values', { ...args, expectedTimeUpdate: '2026-11-13T00:01:00Z' })).structuredContent)
+      .toMatchObject({ error: { message: expect.stringContaining('verification failed') } });
+    expect(countModelWrites()).toBe(postsBefore + 1);
+  }
   const proposal = await call('portal_prepare_publication', { targetId: 100 });
   expect(proposal.structuredContent).toMatchObject({ confirmationPage: '/portal/account?project=research-a' });
   expect(await (await app.account('publications')).json()).toEqual([]);
@@ -476,14 +487,20 @@ it('enrolls once and creates and verifies a schema and linked model from another
   }
 });
 
-it('reports read-only, revoked and expired project credentials without returning secrets', async () => {
+it('reports read-only, revoked and expired project credentials without returning secrets', { timeout: 15_000 }, async () => {
   const app = await start();
   const { client } = await app.connect(PROJECT_A, 'chat');
   const connection = 'connection?project=research-a';
   expect((await app.account(connection, 'PUT', { key: KEY })).status).toBe(200);
+  const requestId = 'recover-schema';
+  expect((await client.callTool({ name: 'portal_create_schema', arguments: {
+    requestId, title: 'Recoverable', alias: 'REC', location: '/U/Project', accessPolicy: 'private',
+  } })).structuredContent).toMatchObject({ verified: true });
   expect((await app.account(connection, 'PUT', { key: READ_KEY })).status).toBe(200);
   const status = () => client.callTool({ name: 'portal_connection_status' });
   expect((await status()).structuredContent).toMatchObject({ connected: true, keyPolicy: { scopes: ['read'] } });
+  expect((await client.callTool({ name: 'portal_get_creation_status', arguments: { requestId } })).structuredContent)
+    .toMatchObject({ state: 'created', targetId: 100 });
   expect((await client.callTool({ name: 'portal_get_details', arguments: { kind: 'schema', targetId: 1 } })).isError).not.toBe(true);
   expect((await client.callTool({ name: 'portal_update_description', arguments: {
     targetId: 1, expectedTimeUpdate: '2026-11-06T01:00:00Z', description: 'test',
@@ -494,9 +511,18 @@ it('reports read-only, revoked and expired project credentials without returning
   expect(revoked.structuredContent).toMatchObject({ connected: false, reason: 'key_invalid_or_revoked' });
   expect(JSON.stringify(revoked)).not.toContain(READ_KEY);
   app.remote.mockResolvedValueOnce(Response.json({ detail: READ_KEY }, { status: 401 }));
+  const receipt = await client.callTool({ name: 'portal_get_creation_status', arguments: { requestId } });
+  expect(receipt.structuredContent).toMatchObject({ error: { message: expect.stringContaining('invalid or revoked') } });
+  expect(receipt.structuredContent).not.toHaveProperty('targetId');
+  app.remote.mockResolvedValueOnce(Response.json({ detail: READ_KEY }, { status: 401 }));
   const denied = await client.callTool({ name: 'portal_get_details', arguments: { kind: 'schema', targetId: 1 } });
   expect(denied.structuredContent).toMatchObject({ error: { message: expect.stringContaining('invalid or revoked') } });
   expect(JSON.stringify(denied)).not.toContain(READ_KEY);
+
+  app.vault.set(['alice', 'research-a'], READ_KEY, { id: 7, username: 'Alice' }, { scopes: ['write'], expiresAt: null });
+  app.remote.mockResolvedValueOnce(Response.json({}, { status: 404 }));
+  const writeOnly = await client.callTool({ name: 'portal_get_description', arguments: { targetId: 1 } });
+  expect(writeOnly.structuredContent).toMatchObject({ error: { message: 'Portal key does not allow read' } });
 
   app.vault.set(['alice', 'research-a'], READ_KEY, { id: 7, username: 'Alice' }, {
     scopes: ['read'], expiresAt: '2001-01-01T00:00:00Z',
@@ -506,6 +532,11 @@ it('reports read-only, revoked and expired project credentials without returning
   expect((await client.callTool({ name: 'portal_get_details', arguments: { kind: 'schema', targetId: 1 } })).structuredContent)
     .toMatchObject({ error: { message: expect.stringContaining('Portal key expired') } });
   expect(app.remote.mock.calls).toHaveLength(requests);
+
+  app.remote.mockResolvedValueOnce(Response.json({ id: 1, description: 'Public', time_update: '2026-11-06T01:00:00Z' }));
+  expect((await client.callTool({ name: 'portal_get_description', arguments: { targetId: 1 } })).structuredContent)
+    .toMatchObject({ targetId: 1, description: 'Public' });
+  expect(new Headers(app.remote.mock.lastCall?.[1]?.headers).has('Authorization')).toBe(false);
 });
 
 it('keeps credentials outside MCP and enforces the authenticated account for approval and disconnect', async () => {

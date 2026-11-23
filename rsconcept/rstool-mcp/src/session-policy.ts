@@ -2,6 +2,8 @@ import { createHash, randomUUID } from 'node:crypto';
 import fs from 'node:fs';
 import { join, dirname, relative, isAbsolute, resolve } from 'node:path';
 
+import { isProjectId } from './http-auth';
+
 /** A safe, machine-readable storage failure for authenticated MCP callers. */
 export class SessionStorageError extends Error {
   public readonly code: string;
@@ -13,7 +15,7 @@ export class SessionStorageError extends Error {
   }
 }
 
-interface Owner { account: string; workspace?: string }
+interface Owner { account: string; workspace?: string; projectId?: string }
 interface Stamp { lastUsed: number; generation: string }
 interface Invocation { count: number; started: number; accessed: Map<string, Stamp & { persisted: number }> }
 interface CatalogRecord {
@@ -52,6 +54,7 @@ export class SessionPolicy {
 
   /** Bind a verified workspace to an account and give legacy sessions a full initial retention period. */
   register(subject: string, namespace: string, workspaceName?: string, projectId?: string): number {
+    if (projectId !== undefined && (!workspaceName || !isProjectId(projectId))) throw unavailable();
     if (workspaceName !== undefined && (!/^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(workspaceName) ||
       workspaceNamespace(subject, workspaceName, projectId) !== namespace)) throw unavailable();
     const directory = this.workspace(namespace);
@@ -60,9 +63,11 @@ export class SessionPolicy {
     this.directory(join(directory, '.lifecycle', 'sessions'));
     const account = hash(subject);
     const owner = this.owner(namespace);
-    if (owner && owner.account !== account) throw unavailable();
+    if (owner && (owner.account !== account || (workspaceName && owner.projectId !== projectId))) throw unavailable();
     if (owner?.workspace && workspaceName && owner.workspace !== workspaceName) throw unavailable();
-    if (!owner || (workspaceName && !owner.workspace)) this.write(this.ownerPath(namespace), { account, workspace: workspaceName });
+    if (!owner || (workspaceName && !owner.workspace)) {
+      this.write(this.ownerPath(namespace), { account, workspace: workspaceName, projectId });
+    }
     const files = this.files(namespace);
     for (const file of files) this.stamp(namespace, file.id);
     return files.length;
@@ -107,12 +112,12 @@ export class SessionPolicy {
     }
   }
 
-  /** Bounded oldest-first account metadata. Listing itself never touches the inactivity clock. */
-  list(subject: string, callerNamespace: string, limit = 20, cursor?: string) {
+  /** Bounded oldest-first metadata for the caller's scope. Listing does not extend retention. */
+  list(subject: string, callerNamespace: string, limit = 20, cursor?: string, projectId?: string) {
     if (!Number.isInteger(limit) || limit < 1 || limit > 100) {
       throw new SessionStorageError('INVALID_SESSION_PAGE', 'Page size must be an integer between 1 and 100.');
     }
-    const catalog = this.catalog(subject);
+    const catalog = this.catalog(subject, { projectId });
     const entries = catalog.entries.sort((a, b) => a.stamp.lastUsed - b.stamp.lastUsed ||
       compare(a.namespace, b.namespace) || compare(a.id, b.id));
     const snapshot = hash(JSON.stringify(entries.map(item =>
@@ -139,7 +144,7 @@ export class SessionPolicy {
   }
 
   /** Explicit compare-and-delete. Authentication, busy state and revision are checked before unlink. */
-  delete(subject: string, sessionRef: string, expectedRevision: string, confirm: boolean, allowCurrent = false) {
+  delete(subject: string, sessionRef: string, expectedRevision: string, confirm: boolean, allowCurrent = false, projectId?: string) {
     if (confirm !== true) throw new SessionStorageError('SESSION_DELETE_CONFIRMATION_REQUIRED',
       'Deletion is destructive. Select a session from list_stored_sessions and explicitly set confirm=true.');
     const parsed = decode(sessionRef, 'INVALID_SESSION_REFERENCE');
@@ -151,7 +156,7 @@ export class SessionPolicy {
     const [namespace, id] = parsed;
     let owner: Owner | null;
     try { owner = this.owner(namespace); } catch { throw missing(); }
-    if (!owner || owner.account !== hash(subject)) throw missing();
+    if (!owner || owner.account !== hash(subject) || owner.projectId !== projectId) throw missing();
     if (this.busy.has(namespace)) throw new SessionStorageError('SESSION_BUSY',
       'The target workspace has an in-flight model operation. Wait, then refresh list_stored_sessions.');
     const file = this.files(namespace).find(item => item.id === id);
@@ -175,15 +180,15 @@ export class SessionPolicy {
       usage: this.configuration(subject).usage };
   }
 
-  /** Account discovery reads foreign owners only, never their model payloads or activity metadata. */
-  private catalog(subject: string): { entries: CatalogRecord[]; complete: boolean } {
+  /** Account-wide for quotas. A supplied scope filters the session catalog for management. */
+  private catalog(subject: string, scope?: { projectId?: string }): { entries: CatalogRecord[]; complete: boolean } {
     const account = hash(subject);
     const entries: CatalogRecord[] = [];
     let complete = true;
     for (const namespace of this.namespaces()) {
       const owner = this.owner(namespace);
       if (!owner) { if (this.files(namespace).length) complete = false; continue; }
-      if (owner.account !== account) continue;
+      if (owner.account !== account || (scope && owner.projectId !== scope.projectId)) continue;
       for (const file of this.files(namespace)) entries.push(this.record(namespace, file, owner));
     }
     return { entries, complete };
@@ -446,7 +451,8 @@ export class SessionPolicy {
     if (typeof value.account !== 'string' || !/^[a-f0-9]{64}$/.test(value.account)) throw unavailable();
     if (value.workspace !== undefined && (typeof value.workspace !== 'string' ||
       !/^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(value.workspace))) throw unavailable();
-    return { account: value.account, workspace: value.workspace as string | undefined };
+    if (value.projectId !== undefined && (!value.workspace || !isProjectId(value.projectId))) throw unavailable();
+    return { account: value.account, workspace: value.workspace as string | undefined, projectId: value.projectId };
   }
 
   private stamp(namespace: string, id: string, initialize = true): Stamp {

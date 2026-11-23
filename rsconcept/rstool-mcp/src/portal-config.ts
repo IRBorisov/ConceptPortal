@@ -83,8 +83,10 @@ export async function loadPortalConfiguration(
       };
     }
     const vault = new PortalVault(vaultDirectory, await protectedInput(masterKeyFile));
+    const publisher = new PortalPublisher(vault, api, service, new PortalCreations(resolve(vaultDirectory, 'creations')));
+    if (service?.subjects.some(subject => memberships.get(subject)?.size)) throw new Error('Service subjects cannot have project credentials');
     return { publicOrigin, verifyAccountToken, projectsForSubject: subject => [...(memberships.get(subject) ?? [])].sort(),
-      publisher: new PortalPublisher(vault, api, service, new PortalCreations(resolve(vaultDirectory, 'creations'))) };
+      publisher };
   } catch {
     throw new Error('Cannot initialize Portal credentials/configuration');
   }
