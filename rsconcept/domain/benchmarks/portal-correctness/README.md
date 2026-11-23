@@ -30,11 +30,11 @@ node benchmarks/portal-correctness/run-node.mjs \
   --suite relational --extended
 ```
 
-Для Portal бандлы обоих вариантов используют один штатный `loadRSForm` из рабочего дерева стенда. Подготовьте архив снимков с `manifest.json` из стенда `portal-corpus`. Исходные ответы Portal загружаются локально и остаются за пределами репозитория. Параметр `--portal-mode full` проверяет первый расчёт экспериментального движка. С режимом по умолчанию `incremental` сверяется инкрементальный пересчёт. Для старых сборок без `recalculateChanged` выбирайте только соответствующие наборы.
+Бандлы для снимков Portal собирает frontend. Оба варианта используют штатный `loadRSForm` из рабочего дерева стенда и передают адаптер в корпус проверок. Подготовьте архив снимков с `manifest.json` из стенда `portal-corpus`. Исходные ответы Portal загружаются локально и остаются за пределами репозитория. Параметр `--portal-mode full` проверяет первый расчёт экспериментального движка. С режимом по умолчанию `incremental` сверяется инкрементальный пересчёт. Для старых сборок без `recalculateChanged` выбирайте только соответствующие наборы.
 
 ```sh
-node benchmarks/portal-correctness/bundle.mjs /path/to/reference/worktree /path/to/reference.mjs /path/to/esbuild/lib/main.js
-node benchmarks/portal-correctness/bundle.mjs /path/to/candidate/worktree /path/to/candidate.mjs /path/to/esbuild/lib/main.js
+node ../frontend/benchmarks/bundle-portal-correctness.mjs /path/to/reference/worktree /path/to/reference.mjs /path/to/esbuild/lib/main.js
+node ../frontend/benchmarks/bundle-portal-correctness.mjs /path/to/candidate/worktree /path/to/candidate.mjs /path/to/esbuild/lib/main.js
 node benchmarks/portal-correctness/run-node.mjs \
   --reference /path/to/reference.mjs --candidate /path/to/candidate.mjs \
   --snapshot /path/to/snapshot --extended

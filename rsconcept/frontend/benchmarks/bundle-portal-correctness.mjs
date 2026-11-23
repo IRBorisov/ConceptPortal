@@ -2,14 +2,16 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-import { runtimeEntries } from './runtime-entries.mjs';
+import { runtimeEntries } from '../../domain/benchmarks/portal-correctness/runtime-entries.mjs';
 
 const [worktree, output, esbuildModule] = process.argv.slice(2);
-if (!worktree || !output) throw new Error('Usage: node bundle.mjs <built worktree> <output.mjs> [esbuild module]');
+if (!worktree || !output) {
+  throw new Error('Usage: node bundle-portal-correctness.mjs <built worktree> <output.mjs> [esbuild module]');
+}
 const { build } = esbuildModule ? await import(pathToFileURL(resolve(esbuildModule))) : await import('esbuild');
 const domain = resolve(worktree, 'rsconcept/domain');
 const { exports: packageExports } = JSON.parse(await readFile(resolve(domain, 'package.json'), 'utf8'));
-const adapter = fileURLToPath(new URL('../../../frontend/benchmarks/portal-correctness-adapter.mjs', import.meta.url));
+const adapter = fileURLToPath(new URL('./portal-correctness-adapter.mjs', import.meta.url));
 const entries = runtimeEntries.map(
   ([file, names]) => `export { ${names.join(', ')} } from ${JSON.stringify(resolve(domain, 'dist', file))};`
 );
