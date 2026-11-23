@@ -914,8 +914,12 @@ function snapshotValue(value: Value | null, budget: { remaining: number }, depth
   if (budget.remaining-- <= 0 || depth > MAX_SNAPSHOT_DEPTH) {
     return undefined;
   }
-  if (value === null || typeof value === 'number') {
+  if (value === null) {
     return value;
+  }
+  if (typeof value === 'number') {
+    // Recreating arrays separately can change comparisons of shared values that contain NaN.
+    return Number.isNaN(value) ? undefined : value;
   }
   if (!Array.isArray(value) || value.length > budget.remaining) {
     return undefined;
