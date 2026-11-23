@@ -7,7 +7,9 @@ import { RSLangAnalyzer } from '../rslang/semantic/analyzer';
 import { RSDiagnosticCode } from './diagnostics';
 import { type Constituenta, CstType, type RSForm } from './rsform';
 import {
+  analyzeSchemaConstituents,
   applyMappingToConstituents,
+  buildFormalDependencyGraph,
   findCstByStructure,
   getAnalysisFor,
   normalizeExpression,
@@ -192,5 +194,35 @@ describe('findCstByStructure', () => {
     expect(findCstByStructure(schema, s1 as never, [0, 1, 2, 1] as never)).toBe(d3);
     expect(findCstByStructure(schema, s1 as never, [0, 1, 2, 1, 2] as never)).toBe(d4);
     expect(findCstByStructure(schema, s1 as never, [0, 1, 2, 2] as never)).toBeNull();
+  });
+});
+
+describe('analyzeSchemaConstituents', () => {
+  function makeItem(id: number, alias: string, cst_type: CstType, definition_formal: string) {
+    return { id, alias, cst_type, definition_formal, typification_manual: '' } as Constituenta;
+  }
+
+  it('links nested reductions to a spawner with ID zero', () => {
+    const source = makeItem(0, 'S1', CstType.STRUCTURED, 'ℬ(Z×ℬ(Z×Z))');
+    const projection = makeItem(1, 'D1', CstType.TERM, 'Pr2(S1)');
+    const reduction = makeItem(2, 'D2', CstType.TERM, 'red(D1)');
+    const items = [source, projection, reduction];
+    const schema = {
+      items,
+      graph: buildFormalDependencyGraph(items),
+      cstByID: new Map(items.map(cst => [cst.id, cst])),
+      cstByAlias: new Map(items.map(cst => [cst.alias, cst])),
+      analyzer: new RSLangAnalyzer()
+    };
+
+    analyzeSchemaConstituents(schema);
+    expect(projection).toMatchObject({ spawner: 0, spawner_alias: 'S1', spawner_path: [0, 2] });
+    expect(reduction).toMatchObject({ spawner: 0, spawner_alias: 'S1', spawner_path: [0, 2, 0] });
+    expect(source.spawn).toEqual([1, 2]);
+    expect(source.spawn_alias).toEqual(['D1', 'D2']);
+
+    analyzeSchemaConstituents(schema);
+    expect(source.spawn).toEqual([1, 2]);
+    expect(source.spawn_alias).toEqual(['D1', 'D2']);
   });
 });

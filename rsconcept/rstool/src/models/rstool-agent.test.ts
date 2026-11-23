@@ -54,11 +54,11 @@ describe('RSToolAgent', () => {
         { id: 1, alias: 'X1' },
         { id: 2, alias: 'S1', definitionFormal: 'ℬ(Z×ℬ(Z×X1))' },
         { id: 3, alias: 'D1', definitionFormal: 'Pr2( S1 )' },
-        { id: 4, alias: 'D2', definitionFormal: 'Pr1(D3)' },
+        { id: 4, alias: 'D2', definitionFormal: 'red(D1)' },
         { id: 5, alias: 'D3', definitionFormal: 'red(Pr2(S1))' },
         { id: 6, alias: 'D4', definitionFormal: 'D1' },
         { id: 7, alias: 'A1', definitionFormal: 'D4 = Pr2(S1)' },
-        { id: 8, alias: 'D5', definitionFormal: 'Pr1(red(Pr2(S1)))' }
+        { id: 8, alias: 'D5', definitionFormal: 'Pr1(D2)' }
       ],
       commitMessage: 'seed structure'
     });
@@ -80,15 +80,15 @@ describe('RSToolAgent', () => {
         path: [0, 2, 0],
         parent: 2,
         definition: 'red(Pr2(S1))',
-        existing: { id: 5, alias: 'D3' },
+        existing: { id: 4, alias: 'D2' },
         definitionMatches: [{ id: 5, alias: 'D3' }]
       },
       {
         path: [0, 2, 0, 1],
         parent: 3,
         definition: 'Pr1(red(Pr2(S1)))',
-        existing: { id: 4, alias: 'D2' },
-        definitionMatches: [{ id: 8, alias: 'D5' }]
+        existing: { id: 8, alias: 'D5' },
+        definitionMatches: []
       },
       { path: [0, 2, 0, 2], parent: 3, definition: 'Pr2(red(Pr2(S1)))' }
     ]);
