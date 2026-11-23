@@ -9,6 +9,6 @@ export function createModelValueArray<T extends Value>(length: number): T[] {
   return array;
 }
 
-export function isModelValueArray(value: Value | undefined): value is Value[] {
-  return typeof value === 'object' && modelArrays.has(value);
+export function isModelValueArray(value: Value | null | undefined): value is Value[] {
+  return value !== null && typeof value === 'object' && modelArrays.has(value);
 }

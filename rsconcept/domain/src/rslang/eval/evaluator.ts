@@ -9,7 +9,6 @@ import { labelRSLangNode } from '../labels';
 import { TokenID } from '../parser/token';
 
 import { EvaluationCache, EvaluationMetadata } from './evaluation-cache';
-import { tryEvaluateNoReturn } from './relation-closure';
 import {
   BOOL_INFINITY,
   CalcInvalidDataError,
@@ -44,7 +43,7 @@ const TICK_PER_RECURSION = 3;
 const TICK_PER_IMPERATIVE = 1;
 const TICK_PER_DECLARATIVE = 1;
 const TICK_PER_QUANTIFIER = 1;
-const ITERATION_BUDGET = {
+export const EVALUATOR_ITERATION_BUDGET = {
   limit: MAX_ITERATIONS,
   call: TICK_PER_FUNCTION,
   quantifier: TICK_PER_QUANTIFIER,
@@ -84,21 +83,6 @@ export class Evaluator {
   constructor(context: ValueContext, astContext: ASTContext) {
     this.treeContext = astContext;
     this.context = context;
-  }
-
-  public runFast(ast: AstNode): Value | null {
-    if (ast.typeID === TokenID.QUANTOR_UNIVERSAL) {
-      try {
-        const lowered = tryEvaluateNoReturn(ast, this.context, this.treeContext, ITERATION_BUDGET);
-        if (lowered !== null) {
-          this.prepareRun();
-          return lowered;
-        }
-      } catch {
-        // The ordinary evaluator owns error handling for invalid values.
-      }
-    }
-    return this.run(ast);
   }
 
   public run(

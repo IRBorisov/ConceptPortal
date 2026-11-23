@@ -67,7 +67,7 @@ export const ModelEditState = ({ itemID, children }: React.PropsWithChildren<Mod
 
   useEffect(
     function syncData() {
-      engine.loadData(schema, model);
+      engine.loadPlainData(schema, model);
     },
     [engine, schema, model]
   );

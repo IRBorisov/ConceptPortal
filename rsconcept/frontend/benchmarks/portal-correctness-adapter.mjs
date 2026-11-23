@@ -20,7 +20,11 @@ export function prepare(schemaDetails, modelDetails) {
     calculatedItems: schema.items.filter(item => isInferrable(item.cst_type)),
     load() {
       const engine = new RSEngine(modelDetails.id, services);
-      engine.loadData(schema, modelDetails);
+      if (typeof engine.loadPlainData === 'function') {
+        engine.loadPlainData(schema, modelDetails);
+      } else {
+        engine.loadData(schema, modelDetails);
+      }
       engine.flushPendingChanges();
       return engine;
     }

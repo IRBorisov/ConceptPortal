@@ -20,6 +20,8 @@ function buildAST(expression: string): AstNode {
 
 describe('RSCalculator', () => {
   let calculator: RSCalculator;
+  const graphBudget = { limit: 1000, call: 3, recursion: 3, quantifier: 1 };
+  const isolatedRoots = [7, 8, 9, 10, 11, 12, 13, 14];
 
   function modelArray(...elements: Value[]): Value[] {
     const array = createModelValueArray(elements.length);
@@ -72,6 +74,17 @@ describe('RSCalculator', () => {
     expect(calculator.evaluateFull(ast).value).toBe(null);
   });
 
+  it('handles a caller-provided root token getter in the ordinary evaluator', () => {
+    const ast = buildAST('1+1');
+    expect(calculator.evaluateFast(ast)).toBe(2);
+    Object.defineProperty(ast, 'typeID', {
+      get() {
+        throw new Error('token unavailable');
+      }
+    });
+    expect(calculator.evaluateFast(ast)).toBeNull();
+  });
+
   it('evaluates a simple constant', () => {
     expectCalcValue('1', '1');
   });
@@ -102,55 +115,51 @@ describe('RSCalculator', () => {
     calculator.setValue('S5', relation);
     for (const [domain, expected] of [
       [[], 1],
-      [[4, 5], 1],
-      [[1, 5], 0],
-      [[6], 0]
+      [[4, 5, ...isolatedRoots], 1],
+      [[1, 5, ...isolatedRoots], 0],
+      [[6, ...isolatedRoots], 0]
     ] as const) {
       const roots = modelArray(...domain);
-      const values = new Map([
-        ['X4', roots],
-        ['S5', relation]
-      ]);
       calculator.setValue('X4', roots);
-      expect(
-        tryEvaluateNoReturn(assertion, values, functions, { limit: 1000, call: 3, recursion: 3, quantifier: 1 })
-      ).toBe(expected);
+      expect(tryEvaluateNoReturn(assertion, alias => calculator.getValue(alias), functions, graphBudget)).toBe(
+        expected
+      );
       expect(calculator.evaluateFast(assertion)).toBe(expected);
       expect(calculator.evaluateFull(assertion)).toMatchObject({ value: expected, errors: [] });
     }
-    const values = new Map([
-      ['X4', modelArray(1, 5)],
-      ['S5', relation]
-    ]);
+    calculator.setValue('X4', modelArray(1, 5, ...isolatedRoots));
     expect(
-      tryEvaluateNoReturn(assertion, values, functions, { limit: 1, call: 3, recursion: 3, quantifier: 1 })
+      tryEvaluateNoReturn(assertion, alias => calculator.getValue(alias), functions, { ...graphBudget, limit: 1 })
     ).toBeNull();
-    calculator.setValue('X4', modelArray(1, 5));
-    calculator.setValue('S5', [...relation, tuple([[2], 1])]);
+    calculator.setValue('S5', modelArray(...relation, modelArray(TUPLE_ID, [2], 1)));
+    expect(tryEvaluateNoReturn(assertion, alias => calculator.getValue(alias), functions, graphBudget)).toBeNull();
     expect(calculator.evaluateFast(assertion)).toBeNull();
     expect(calculator.evaluateFull(assertion).errors[0]?.code).toBe(RSErrorCode.calcInvalidData);
   });
 
   it('leaves relation iterators to the ordinary evaluator', () => {
-    const { assertion } = loadRelationClosure();
+    const { assertion, functions } = loadRelationClosure();
     const relation = modelArray(modelEdge(2, 1));
     const edges = [tuple([1, 1])];
     Object.defineProperty(relation, Symbol.iterator, { value: edges[Symbol.iterator].bind(edges) });
-    calculator.setValue('X4', modelArray(1));
+    calculator.setValue('X4', modelArray(1, ...isolatedRoots));
     calculator.setValue('S5', relation);
 
+    expect(tryEvaluateNoReturn(assertion, alias => calculator.getValue(alias), functions, graphBudget)).toBeNull();
     expect(calculator.evaluateFast(assertion)).toBe(0);
     expect(calculator.evaluateFull(assertion)).toMatchObject({ value: 0, errors: [] });
   });
 
   it('preserves repeated reads of accessor-backed projection fields', () => {
-    const { assertion } = loadRelationClosure();
+    const { assertion, functions } = loadRelationClosure();
     let reads = 0;
     const changingEdge = modelEdge(3, 2);
     Object.defineProperty(changingEdge, 1, { get: () => (++reads === 1 ? 3 : 1) });
-    calculator.setValue('X4', modelArray(1));
+    calculator.setValue('X4', modelArray(1, ...isolatedRoots));
     calculator.setValue('S5', modelArray(modelEdge(2, 1), changingEdge));
 
+    expect(tryEvaluateNoReturn(assertion, alias => calculator.getValue(alias), functions, graphBudget)).toBeNull();
+    expect(reads).toBe(0);
     expect(calculator.evaluateFast(assertion)).toBe(0);
     expect(reads).toBeGreaterThan(1);
   });
@@ -167,6 +176,17 @@ describe('RSCalculator', () => {
 
     expect(calculator.evaluateFast(assertion)).toBe(0);
     expect(calculator.evaluateFull(assertion)).toMatchObject({ value: 0, errors: [] });
+  });
+
+  it('leaves narrow quantifiers over large relations to the ordinary evaluator', () => {
+    const { assertion, functions } = loadRelationClosure();
+    const relation = modelArray(...Array.from({ length: 320 }, (_, index) => modelEdge(index + 21, index + 20)));
+    calculator.setValue('S5', relation);
+    for (const roots of [[1], isolatedRoots]) {
+      calculator.setValue('X4', modelArray(...roots));
+      expect(tryEvaluateNoReturn(assertion, alias => calculator.getValue(alias), functions, graphBudget)).toBeNull();
+      expect(calculator.evaluateFast(assertion)).toBe(1);
+    }
   });
 
   it('projects distinct nested values in canonical order and retains the first equal value', () => {
