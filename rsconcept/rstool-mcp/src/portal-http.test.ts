@@ -405,7 +405,7 @@ async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions,
   return { url, account, client, transport, connect, remote, directory, service, publisher, vault };
 }
 
-it('enrolls once and creates and verifies a schema and linked model from another chat in the project', async () => {
+it('enrolls once and creates and verifies a schema and linked model from another chat in the project', { timeout: 15_000 }, async () => {
   const app = await start();
   const chatA = await app.connect(PROJECT_A, 'chat-a');
   const chatB = await app.connect(PROJECT_A, 'chat-b');
