@@ -209,9 +209,10 @@ function portalOssTools(publisher: PortalPublisher, subject: PortalOwner): ToolD
   ];
 }
 
-/** Account-scoped storage management; credentials and filesystem paths are never tool arguments. */
+/** Account quota and scope-bound storage management. */
 export function sessionStorageToolDefinitions(policy: SessionPolicy, subject: string, namespace: string,
-  config: { cleanupIntervalMs: number; maxActiveSessions: number; idleTimeoutMs: number; maxPendingRequests: number; maxRequestBodySize: number; computation?: { isolated: boolean; maxWorkers: number; timeoutMs: number; heapMb: number; maxResultBytes: number } }): ToolDefinition[] {
+  config: { cleanupIntervalMs: number; maxActiveSessions: number; idleTimeoutMs: number; maxPendingRequests: number; maxRequestBodySize: number; computation?: { isolated: boolean; maxWorkers: number; timeoutMs: number; heapMb: number; maxResultBytes: number } },
+  projectId?: string): ToolDefinition[] {
   return [{
     name: 'get_session_storage_config', sessionActivity: 'none',
     description: 'Get effective stored-session limits, inactivity retention and your account usage across all workspaces. Read-only; never returns credentials or extends retention.',
@@ -226,13 +227,13 @@ export function sessionStorageToolDefinitions(policy: SessionPolicy, subject: st
     }
   }, {
     name: 'list_stored_sessions', sessionActivity: 'none',
-    description: 'List your stored sessions across workspaces, oldest used first. Returns bounded metadata, exact sessionRef and revision for deletion; does not renew TTL or expose schema contents. Follow nextCursor; restart listing on SESSION_LIST_CHANGED.',
+    description: 'List your stored sessions across workspaces in the current personal or project scope, oldest used first. Returns bounded metadata, exact sessionRef and revision for deletion; does not renew TTL or expose schema contents. Follow nextCursor; restart listing on SESSION_LIST_CHANGED.',
     annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
     inputSchema: { type: 'object', properties: { limit: { type: 'integer', minimum: 1, maximum: 100, default: 20 },
       cursor: { type: 'string', maxLength: 2048 } }, additionalProperties: false },
     invoke: (_tool, args) => {
       checkArguments(args, ['limit', 'cursor']);
-      return policy.list(subject, namespace, args.limit as number | undefined, args.cursor as string | undefined);
+      return policy.list(subject, namespace, args.limit as number | undefined, args.cursor as string | undefined, projectId);
     }
   }, {
     name: 'delete_stored_session', sessionActivity: 'none',
@@ -248,7 +249,7 @@ export function sessionStorageToolDefinitions(policy: SessionPolicy, subject: st
         throw new SessionStorageError('INVALID_SESSION_ARGUMENTS', 'allowCurrent must be a boolean.');
       }
       return policy.delete(subject, args.sessionRef as string, args.expectedRevision as string,
-        args.confirm as boolean, args.allowCurrent as boolean | undefined);
+        args.confirm as boolean, args.allowCurrent as boolean | undefined, projectId);
     }
   }];
 }

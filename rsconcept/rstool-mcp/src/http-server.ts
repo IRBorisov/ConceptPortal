@@ -290,7 +290,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
             idleTimeoutMs, maxPendingRequests, maxRequestBodySize, computation: {
               isolated: options.isolateComputations !== false, maxWorkers: options.maxComputeWorkers ?? 2,
               timeoutMs: options.computeTimeoutMs ?? 10_000, heapMb: options.computeHeapMb ?? 128,
-              maxResultBytes: options.maxComputeResultBytes ?? 4 * 1024 * 1024 } }),
+              maxResultBytes: options.maxComputeResultBytes ?? 4 * 1024 * 1024 } }, projectId),
           ...(options.portal ? portalToolDefinitions(options.portal.publisher, portalOwner, namespace, options.portal.publicOrigin,
             id => policy.assertRetained(namespace, id)) : [])
         ] });

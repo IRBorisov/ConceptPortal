@@ -88,6 +88,18 @@ describe('offline session ownership indexing', () => {
     expect((await run(['--persistence-dir', directory, '--subject', 'account-b', '--namespace', namespace])).code).toBe(1);
     expect(fs.readFileSync(path, 'utf8')).toBe(before);
   }, 15_000);
+
+  it('indexes the named project workspace and preserves its scope on a hash-only reindex', async () => {
+    const directory = root();
+    const namespace = createHash('sha256').update(JSON.stringify(['account-a', 'research', 'task'])).digest('hex');
+    fs.mkdirSync(join(directory, namespace));
+    const args = ['--persistence-dir', directory, '--subject', 'account-a'];
+    expect((await run([...args, '--workspace', 'task', '--project-id', 'other'])).code).toBe(1);
+    expect((await run([...args, '--workspace', 'task', '--project-id', 'research'])).code).toBe(0);
+    expect((await run([...args, '--namespace', namespace])).code).toBe(0);
+    const owner = JSON.parse(fs.readFileSync(join(directory, namespace, '.lifecycle', 'owner.json'), 'utf8'));
+    expect(owner).toMatchObject({ projectId: 'research', workspace: 'task' });
+  });
 });
 
 

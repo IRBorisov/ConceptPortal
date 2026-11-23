@@ -339,6 +339,11 @@ export class PortalPublisher {
       const receipt = this.#creations.get(subject, requestId);
       if (!receipt || receipt.accountId !== credential.account.id) return { requestId, state: 'not_found' };
       if (receipt.origin !== this.#api.origin) throw new Error('Creation receipt belongs to a different Portal origin; check host configuration');
+      if (typeof subject !== 'string') {
+        const identity = await this.readIdentity(credential.token);
+        if (identity.account.id !== receipt.accountId) return { requestId, state: 'not_found' };
+        if (identity.keyPolicy && !identity.keyPolicy.scopes.includes('read')) throw new Error('Portal key does not allow read');
+      }
       return { requestId, kind: receipt.kind, state: receipt.state === 'sending' ? 'uncertain' : 'created',
         portalOrigin: this.#api.origin,
         ...(receipt.targetId ? { targetId: receipt.targetId } : {}) };
@@ -366,15 +371,35 @@ export class PortalPublisher {
       const credential = this.isService(subject)
         ? (this.#service!.targetIds.includes(targetId) ? this.credential(subject, targetId) : undefined)
         : this.#vault.get(subject) ?? undefined;
-      if (typeof subject !== 'string' && credential && expired(credential))
-        throw new Error('Portal key expired; reconnect on the account page');
+      const path = `/api/agents/rsforms/${targetId}/details`;
       const mayRead = credential && !expired(credential) && (!credential.keyPolicy || credential.keyPolicy.scopes.includes('read'));
-      const schema = await this.#api.request(mayRead ? credential.token : undefined, `/api/agents/rsforms/${targetId}/details`);
+      const schema = typeof subject !== 'string' && credential
+        ? await this.readProjectDescription(credential, path)
+        : await this.#api.request(mayRead ? credential.token : undefined, path);
       if (schema.id !== targetId || typeof schema.description !== 'string' ||
         typeof schema.time_update !== 'string' || !Number.isFinite(Date.parse(schema.time_update)))
         throw new Error('Portal returned invalid schema metadata');
       return { targetId, description: schema.description, time_update: schema.time_update };
     });
+  }
+
+  /** Public descriptions remain readable when a project's key cannot authorize private reads. */
+  private async readProjectDescription(credential: PortalCredential, path: string) {
+    let refusal: Error;
+    if (expired(credential)) refusal = new Error('Portal key expired; reconnect on the account page');
+    else if (credential.keyPolicy && !credential.keyPolicy.scopes.includes('read')) refusal = new Error('Portal key does not allow read');
+    else {
+      try { return await this.#api.request(credential.token, path); }
+      catch (error) {
+        if (!(error instanceof PortalHttpError) || error.status !== 401) throw error;
+        refusal = error;
+      }
+    }
+    try { return await this.#api.request(undefined, path); }
+    catch (error) {
+      if (error instanceof PortalHttpError && [401, 403, 404].includes(error.status)) throw refusal;
+      throw error;
+    }
   }
 
   /** Narrow CAS edit using the bound credential; never imports or replaces a schema. */
@@ -436,7 +461,7 @@ export class PortalPublisher {
           schema: after,
         });
       } catch (error) {
-        if (error instanceof Error && error.message.startsWith('Portal schema changed')) throw error;
+        if (isPublicationRefusal(error)) throw error;
         throw new Error('Publication result is uncertain; inspect Portal before retrying');
       }
       if (!Number.isSafeInteger(result.version) || result.version <= 0)
@@ -568,11 +593,13 @@ export class PortalPublisher {
         throw new Error('Portal connection changed; prepare publication again');
       draft.validateSource?.();
       draft.state = 'sending';
+      let accepted = false;
       try {
         const result = await this.#api.request(credential.token, `/api/agents/rsforms/${draft.targetId}/publish`, {
           expected_time_update: draft.before.time_update,
           schema: draft.after,
         });
+        accepted = true;
         if (!Number.isSafeInteger(result.version) || result.version <= 0)
           throw new Error('Publication version was not returned');
         // Read back separately. A failed verification is uncertain, never auto-retried.
@@ -587,7 +614,7 @@ export class PortalPublisher {
         draft.state = 'published';
         return draft.result;
       } catch (error) {
-        draft.state = 'uncertain';
+        draft.state = typeof subject !== 'string' && !accepted && isPublicationRefusal(error) ? 'failed' : 'uncertain';
         throw error;
       }
     });
@@ -644,6 +671,9 @@ export class PortalPublisher {
 
   /** Serialize credential changes with publication, with bounded global/per-subject queues. */
   private exclusive<T>(subject: PortalOwner, operation: () => Promise<T>): Promise<T> {
+    if (typeof subject !== 'string' && this.isService(subject[0])) {
+      return Promise.reject(new Error('This identity has an administrator-managed service credential and cannot use a project connection'));
+    }
     const ownerKey = JSON.stringify(subject);
     if (this.#pending >= 64 || (this.#counts.get(ownerKey) ?? 0) >= 8)
       return Promise.reject(new Error('Portal queue is full'));
@@ -664,6 +694,10 @@ export class PortalPublisher {
     });
     return result;
   }
+}
+
+function isPublicationRefusal(error: unknown): boolean {
+  return error instanceof PortalHttpError && [401, 403, 409].includes(error.status);
 }
 
 function itemRoute(kind: PortalItemKind): string {
