@@ -5,7 +5,7 @@ import { HostedRSToolAgent, type ExecutionSnapshot } from '@rsconcept/rstool/hos
 
 import { SessionStorageError } from './session-policy';
 
-export const COMPUTE_TOOLS = new Set(['apply_schema_patch', 'analyze_expression', 'import_data',
+export const COMPUTE_TOOLS = new Set(['apply_schema_patch', 'analyze_expression', 'preview_structure', 'import_data',
   'set_model_values', 'evaluate', 'recalculate_model', 'restore_order', 'synthesize']);
 
 interface ComputeOptions {

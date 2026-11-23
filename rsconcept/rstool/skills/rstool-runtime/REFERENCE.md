@@ -5,7 +5,7 @@
 ## Контракт rstool
 
 - Пакет: `@rsconcept/rstool`
-- Версия контракта: `4.0.0` (`CONTRACT_VERSION`)
+- Версия контракта: `4.1.0` (`CONTRACT_VERSION`). В 4.1 добавлен предпросмотр раскрытия структуры.
 - Основной класс: `RSToolAgent`
 - Публичные импорты: `@rsconcept/rstool` и `@rsconcept/rstool/wrapper`
 - Опции: `new RSToolAgent({ persistenceDir? })` — каталог для сохранения сессий между перезапусками (stdio/MCP: `RSTOOL_PERSISTENCE_DIR`)
@@ -24,6 +24,7 @@
 | `getSessionState(detail?, sessionId?)`         | `summary` (default) или `full`                                     |
 | `listDiagnostics(filters?, sessionId?)`        | Активные диагностики                                               |
 | `analyzeExpression(input, sessionId?)`         | Разбор без сохранения                                              |
+| `previewStructure({ constituentId }, sessionId?)` | Раскрытие структуры без сохранения                              |
 | `commitStep(message?, sessionId?)`             | Ревизия                                                            |
 | `exportSession(sessionId?)`                    | JSON-строка сессии                                                 |
 | `exportPortal({ kind, format? }, sessionId?)`  | Portal Load from JSON                                              |
@@ -62,6 +63,7 @@ Stdio использует **camelCase** имён методов (как library
 | `getSessionState`   | `get_session_state`   |
 | `listDiagnostics`   | `list_diagnostics`    |
 | `analyzeExpression` | `analyze_expression`  |
+| `previewStructure`  | `preview_structure`   |
 | `commitStep`        | `commit_step`         |
 | `exportSession`     | `export_session`      |
 | `exportPortal`      | `export_portal`       |
@@ -144,6 +146,22 @@ tool.analyzeExpression({
 **Результат:** `{ success, type, valueClass, diagnostics }`. Не сохраняет конституенту. Для черновика формулы — до `applySchemaPatch`.
 
 `type` — AST типизации; для чтения используй `labelType` из `@rsconcept/domain/rslang/labels` (`ℬ(X1×X1)`, `[X1] → ℬ(X1)`, `Logic`). `success: true` совместим с диагностикой `error` (например, `invalidPropertyUsage` при `valueClass: null`) — проверяй `diagnostics`.
+
+## `previewStructure`
+
+```ts
+const preview = tool.previewStructure({ constituentId: 2 });
+```
+
+Числовой `constituentId` берётся из `getSessionState()` / `get_session_state`. В stdio и MCP поля `constituentId` и необязательное `sessionId` передаются на одном уровне. Если понятие связано со структурой другого понятия, открывается дерево исходного понятия, как в карточке Portal.
+
+Успешный ответ содержит `success: true`, `nodes` и пустой массив `diagnostics`. Узел содержит `key`, путь типизации `path`, индекс родителя `parent` с нуля, текст типа `type`, формулу ЯРЭ `definition`, структурную ссылку `existing` и массив `definitionMatches`. У корня `parent` равен `null`, а `definition` содержит метку эффективной типизации, как в карточке.
+
+- `existing` содержит `{ id, alias }` конституенты, которую Portal связывает с этим путём, или `null`. У корня это само понятие. Portal вычисляет связи при анализе схемы.
+- `definitionMatches` содержит все совпадения по нормализованному формальному определению в виде `{ id, alias }`. Проверка равенств, выводимых из аксиом, остаётся задачей агента.
+- При `success: false` массив `nodes` пуст. `diagnostics` содержит причину с кодом `INVALID_CONSTITUENT_ID`, `CONSTITUENT_NOT_FOUND` или `UNDEFINED_TYPIFICATION`.
+
+Предпросмотр сохраняет состояние схемы, модели и ревизий. Для записи выбранного производного понятия используется `applySchemaPatch`.
 
 ## `evaluate`
 

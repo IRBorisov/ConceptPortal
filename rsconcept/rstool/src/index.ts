@@ -2,7 +2,7 @@
  * Public API for `@rsconcept/rstool`.
  *
  * Primary entry points: {@link RSToolAgent} (in-process) and {@link RSToolWrapperClient}
- * (stdio child process). Types describe the v3 agent contract.
+ * (stdio child process).
  */
 export { toDiagnostic, toPublicAnalysis, type DomainAnalysisLike, type DomainErrorLike } from './mappers/types';
 export {
@@ -41,6 +41,8 @@ export {
   type PortalSchemaConstituenta,
   type PortalSchemaImportData,
   type PortalTermForm,
+  type PreviewStructureInput,
+  type PreviewStructureResult,
   type RecalculateModelResult,
   type RSToolAgentContract,
   type RSToolAgentOptions,
@@ -55,6 +57,9 @@ export {
   type SessionState,
   type SetConstituentaValueInput,
   type SetModelValuesInput,
+  type StructureConstituentRef,
+  type StructurePreviewDiagnostic,
+  type StructurePreviewNode,
   type SynthesisSubstitution,
   type SynthesizeInput,
   type SynthesizeResult

@@ -87,6 +87,7 @@ Edit `claude_desktop_config.json` (`~/Library/Application Support/Claude/` on ma
 | `apply_schema_patch`  | `applySchemaPatch`  | Primary schema edit path.                     |
 | `get_session_state`   | `getSessionState`   | `detail=summary` (default) or `full`.         |
 | `analyze_expression`  | `analyzeExpression` | Scratch analysis.                             |
+| `preview_structure`   | `previewStructure` | Read-only Portal structure tree by constituent ID. |
 | `list_diagnostics`    | `listDiagnostics`   | Optional `constituentId`, `kind`, `severity`. |
 | `commit_step`         | `commitStep`        | Records a revision.                           |
 | `export_session`      | `exportSession`     | JSON string.                                  |
