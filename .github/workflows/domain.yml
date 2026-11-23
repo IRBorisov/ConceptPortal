@@ -49,6 +49,9 @@ jobs:
         run: pnpm --filter @rsconcept/domain test
       - name: Build
         run: pnpm --filter @rsconcept/domain run build
+      - name: Evaluator correctness corpus
+        working-directory: rsconcept/domain
+        run: node benchmarks/portal-correctness/run-node.mjs --extended
   notify-failure:
     permissions: {}
     runs-on: ubuntu-latest
