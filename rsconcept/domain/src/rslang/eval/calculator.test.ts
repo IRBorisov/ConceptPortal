@@ -6,7 +6,9 @@ import { normalizeAST } from '../parser/normalize';
 import { parser as rslangParser } from '../parser/parser';
 
 import { type CalculatorResult, RSCalculator } from './calculator';
-import { tuple } from './value';
+import { createModelValueArray } from './model-value-arrays';
+import { tryEvaluateNoReturn } from './relation-closure';
+import { tuple, TUPLE_ID, type Value } from './value';
 import { printValue } from './value-api';
 
 function buildAST(expression: string): AstNode {
@@ -18,6 +20,18 @@ function buildAST(expression: string): AstNode {
 
 describe('RSCalculator', () => {
   let calculator: RSCalculator;
+
+  function modelArray(...elements: Value[]): Value[] {
+    const array = createModelValueArray(elements.length);
+    elements.forEach((element, index) => {
+      array[index] = element;
+    });
+    return array;
+  }
+
+  function modelEdge(left: number, right: number): Value[] {
+    return modelArray(TUPLE_ID, left, right);
+  }
 
   beforeEach(() => {
     calculator = new RSCalculator();
@@ -68,6 +82,91 @@ describe('RSCalculator', () => {
 
   it('evaluates a basic set operation', () => {
     expectCalcValue('{2,3,4}∩{2,3,5}', '{2, 3}');
+  });
+
+  function loadRelationClosure() {
+    const functions = new Map([
+      ['F11', buildAST('[z∈X4] R{w:=F14[z] | F15[w]∪w}')],
+      ['F14', buildAST('[v∈X4] Pr1(Fi2[{v}](S5))')],
+      ['F15', buildAST('[v∈ℬ(X4)] Pr1(Fi2[v](S5))')]
+    ]);
+    for (const [alias, ast] of functions) {
+      calculator.setAST(alias, ast);
+    }
+    return { functions, assertion: buildAST('∀u∈X4 u∉F11[u]') };
+  }
+
+  it('lowers universal no-return assertions with arbitrary aliases and columns', () => {
+    const { functions, assertion } = loadRelationClosure();
+    const relation = modelArray(modelEdge(1, 2), modelEdge(3, 1), modelEdge(2, 3), modelEdge(1, 4), modelEdge(6, 6));
+    calculator.setValue('S5', relation);
+    for (const [domain, expected] of [
+      [[], 1],
+      [[4, 5], 1],
+      [[1, 5], 0],
+      [[6], 0]
+    ] as const) {
+      const roots = modelArray(...domain);
+      const values = new Map([
+        ['X4', roots],
+        ['S5', relation]
+      ]);
+      calculator.setValue('X4', roots);
+      expect(
+        tryEvaluateNoReturn(assertion, values, functions, { limit: 1000, call: 3, recursion: 3, quantifier: 1 })
+      ).toBe(expected);
+      expect(calculator.evaluateFast(assertion)).toBe(expected);
+      expect(calculator.evaluateFull(assertion)).toMatchObject({ value: expected, errors: [] });
+    }
+    const values = new Map([
+      ['X4', modelArray(1, 5)],
+      ['S5', relation]
+    ]);
+    expect(
+      tryEvaluateNoReturn(assertion, values, functions, { limit: 1, call: 3, recursion: 3, quantifier: 1 })
+    ).toBeNull();
+    calculator.setValue('X4', modelArray(1, 5));
+    calculator.setValue('S5', [...relation, tuple([[2], 1])]);
+    expect(calculator.evaluateFast(assertion)).toBeNull();
+    expect(calculator.evaluateFull(assertion).errors[0]?.code).toBe(RSErrorCode.calcInvalidData);
+  });
+
+  it('leaves relation iterators to the ordinary evaluator', () => {
+    const { assertion } = loadRelationClosure();
+    const relation = modelArray(modelEdge(2, 1));
+    const edges = [tuple([1, 1])];
+    Object.defineProperty(relation, Symbol.iterator, { value: edges[Symbol.iterator].bind(edges) });
+    calculator.setValue('X4', modelArray(1));
+    calculator.setValue('S5', relation);
+
+    expect(calculator.evaluateFast(assertion)).toBe(0);
+    expect(calculator.evaluateFull(assertion)).toMatchObject({ value: 0, errors: [] });
+  });
+
+  it('preserves repeated reads of accessor-backed projection fields', () => {
+    const { assertion } = loadRelationClosure();
+    let reads = 0;
+    const changingEdge = modelEdge(3, 2);
+    Object.defineProperty(changingEdge, 1, { get: () => (++reads === 1 ? 3 : 1) });
+    calculator.setValue('X4', modelArray(1));
+    calculator.setValue('S5', modelArray(modelEdge(2, 1), changingEdge));
+
+    expect(calculator.evaluateFast(assertion)).toBe(0);
+    expect(reads).toBeGreaterThan(1);
+  });
+
+  it('keeps caller-provided proxy domains on the interpreter path', () => {
+    const { assertion } = loadRelationClosure();
+    calculator.setValue('S5', modelArray(modelEdge(2, 2)));
+    calculator.setValue(
+      'X4',
+      new Proxy(modelArray(1), {
+        get: (target, key, receiver) => (key === '0' ? 2 : (Reflect.get(target, key, receiver) as Value))
+      })
+    );
+
+    expect(calculator.evaluateFast(assertion)).toBe(0);
+    expect(calculator.evaluateFull(assertion)).toMatchObject({ value: 0, errors: [] });
   });
 
   it('projects distinct nested values in canonical order and retains the first equal value', () => {

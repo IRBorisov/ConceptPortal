@@ -9,6 +9,7 @@ import {
   TypeID,
   type Value
 } from '../rslang';
+import { createModelValueArray } from '../rslang/eval/model-value-arrays';
 import { compare } from '../rslang/eval/value';
 import { normalizeType } from '../rslang/labels';
 import { type ExpressionType } from '../rslang/semantic/typification';
@@ -648,7 +649,7 @@ export class RSEngine {
       if (!cst || item.type === TYPE_BASIC) {
         continue;
       }
-      const value = cloneValue(item.value as Value);
+      const value = cloneStoredValue(item.value as Value);
       this.calculator.setValue(cst.alias, value);
       if (!cst.effectiveType || !this.calculator.validate(value, cst.effectiveType)) {
         this.invalidData.add(item.id);
@@ -898,9 +899,34 @@ function evaluateAnalysis(parse: AnalysisFull, calculator: RSCalculator): Calcul
 }
 
 function canonicalBasicIds(data: BasicBinding): number[] {
-  const ids = Object.keys(data).map(Number);
+  const keys = Object.keys(data);
+  const ids = createModelValueArray<number>(keys.length);
+  for (let index = 0; index < keys.length; index++) {
+    ids[index] = Number(keys[index]);
+  }
   ids.sort((left, right) => left - right);
   return ids;
+}
+
+function cloneStoredValue(value: Value): Value {
+  if (!Array.isArray(value)) {
+    return value;
+  }
+  // Keep custom array mappers and species on the existing clone path.
+  if (Object.getPrototypeOf(value) !== Array.prototype || Object.hasOwn(value, 'constructor')) {
+    return cloneValue(value);
+  }
+  const map = value.map;
+  if (map !== Array.prototype.map) {
+    return Reflect.apply<Value[], [typeof cloneValue], Value[]>(map, value, [cloneValue]);
+  }
+  const copy = createModelValueArray(value.length);
+  for (let index = 0; index < copy.length; index++) {
+    if (index in value) {
+      copy[index] = cloneStoredValue(value[index]);
+    }
+  }
+  return copy;
 }
 
 function cloneValue(value: Value): Value {

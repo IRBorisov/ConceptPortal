@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { Graph } from '../graph';
 import { RSErrorCode, ValueClass } from '../rslang';
-import { tuple } from '../rslang/eval/value';
+import { tuple, type Value } from '../rslang/eval/value';
 import { labelTypeShape } from '../rslang/labels';
 import { RSLangAnalyzer } from '../rslang/semantic/analyzer';
 import { basic, bool, IntegerT } from '../rslang/semantic/typification';
@@ -543,6 +543,45 @@ describe('RSEngine constituent analysis', () => {
 });
 
 describe('RSEngine.recalculateChanged', () => {
+  it('uses the graph for loaded relations and falls back when a caller replaces a row with a proxy', () => {
+    const schema = analyzedSchema([
+      mockConstituenta({ id: 1, alias: 'X1', cst_type: CstType.BASE }),
+      mockConstituenta({ id: 2, alias: 'S1', cst_type: CstType.STRUCTURED, definition_formal: 'ℬ(X1×X1)' }),
+      mockConstituenta({
+        id: 3,
+        alias: 'F1',
+        cst_type: CstType.FUNCTION,
+        definition_formal: '[x∈X1] R{w:=Pr2(Fi1[{x}](S1)) | w∪Pr2(Fi1[w](S1))}'
+      }),
+      mockConstituenta({ id: 4, alias: 'A1', cst_type: CstType.AXIOM, definition_formal: '∀x∈X1 x∉F1[x]' })
+    ]);
+    const engine = createEngine();
+    engine.loadData(
+      schema,
+      mockModel([
+        { id: 1, type: TYPE_BASIC, value: { 1: 'a', 2: 'b' } },
+        { id: 2, type: 'ℬ(X1×X1)', value: [tuple([1, 2])] }
+      ])
+    );
+    const components = vi.spyOn(Graph.prototype, 'stronglyConnectedComponents');
+    try {
+      engine.recalculateChanged();
+      expect(components).toHaveBeenCalledOnce();
+      expect(engine.getCstValue(4)).toBe(1);
+
+      const relation = engine.getCstValue(2) as Value[][];
+      relation[0] = new Proxy(relation[0], {
+        get: (target, key, receiver) => (key === '2' ? 1 : (Reflect.get(target, key, receiver) as Value))
+      });
+      engine.recalculateChanged();
+      expect(components).toHaveBeenCalledOnce();
+      expect(engine.getCstValue(4)).toBe(0);
+      expect(engine.calculateCst(4)).toMatchObject({ value: 0, errors: [] });
+    } finally {
+      components.mockRestore();
+    }
+  });
+
   it('runs only affected terms after a model refresh and keeps force recalculation available', () => {
     const schema = analyzedSchema([
       mockConstituenta({ id: 1, alias: 'X1', cst_type: CstType.BASE }),
