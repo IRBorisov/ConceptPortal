@@ -29,6 +29,11 @@ class SchemaAnalysis {
       const cst = this.schema.cstByID.get(id)!;
       cst.is_template = inferTemplate(cst.definition_formal);
       cst.cst_class = inferClass(cst.cst_type, cst.is_template);
+      delete cst.spawner;
+      delete cst.spawner_alias;
+      delete cst.spawner_path;
+      cst.spawn = [];
+      cst.spawn_alias = [];
     }
     for (const cstID of order) {
       const cst = this.schema.cstByID.get(cstID)!;
@@ -59,23 +64,19 @@ class SchemaAnalysis {
         const path = parent && parentType ? extractTypePath(parse.ast, parentType) : null;
         if (path && parent) {
           cst.spawner = spawner;
-          if (spawner !== parent.id) {
-            if (parent.spawner_path) {
-              let suffix: number[] = [...path];
-              while (suffix.length > 0 && suffix[0] === 0) {
-                suffix = suffix.slice(1);
-              }
-              cst.spawner_path = makeTypePath([...parent.spawner_path, ...suffix]);
-            }
-          } else {
+          if (spawner === parent.id) {
             cst.spawner_path = path;
+          } else if (parent.spawner_path) {
+            // Drop the local collection root marker and keep any reduction steps.
+            const suffix = path[0] === 0 ? path.slice(1) : path;
+            cst.spawner_path = makeTypePath([...parent.spawner_path, ...suffix]);
           }
         }
       }
     }
     for (const cstID of order) {
       const cst = this.schema.cstByID.get(cstID)!;
-      if (cst.spawner) {
+      if (cst.spawner != null) {
         const parent = this.schema.cstByID.get(cst.spawner)!;
         cst.spawner_alias = parent.alias;
         parent.spawn.push(cst.id);

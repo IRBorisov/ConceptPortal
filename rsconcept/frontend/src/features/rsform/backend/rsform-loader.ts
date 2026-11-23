@@ -75,9 +75,7 @@ export class RSFormLoader {
     for (const cstID of order) {
       const cst = this.cstByID.get(cstID)!;
       cst.schema = this.schema.id;
-      cst.spawn = [];
       cst.attributes = [];
-      cst.spawn_alias = [];
       cst.typification_manual = cst.typification_manual ?? '';
       cst.value_is_property = cst.value_is_property ?? false;
       cst.parent_schema = schemaByCst.get(cst.id) ?? null;
