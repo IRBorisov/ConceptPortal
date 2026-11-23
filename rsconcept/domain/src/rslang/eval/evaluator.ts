@@ -9,6 +9,7 @@ import { labelRSLangNode } from '../labels';
 import { TokenID } from '../parser/token';
 
 import { EvaluationCache, EvaluationMetadata } from './evaluation-cache';
+import { tryEvaluateNoReturn } from './relation-closure';
 import {
   BOOL_INFINITY,
   CalcInvalidDataError,
@@ -43,6 +44,12 @@ const TICK_PER_RECURSION = 3;
 const TICK_PER_IMPERATIVE = 1;
 const TICK_PER_DECLARATIVE = 1;
 const TICK_PER_QUANTIFIER = 1;
+const ITERATION_BUDGET = {
+  limit: MAX_ITERATIONS,
+  call: TICK_PER_FUNCTION,
+  quantifier: TICK_PER_QUANTIFIER,
+  recursion: TICK_PER_RECURSION
+};
 const MIN_INDEXED_FILTER_ROWS = 32;
 const FILTER_PROBES_BEFORE_INDEX = 4;
 const MAX_INDEXED_FILTER_KEYS = 4_096;
@@ -79,6 +86,21 @@ export class Evaluator {
     this.context = context;
   }
 
+  public runFast(ast: AstNode): Value | null {
+    if (ast.typeID === TokenID.QUANTOR_UNIVERSAL) {
+      try {
+        const lowered = tryEvaluateNoReturn(ast, this.context, this.treeContext, ITERATION_BUDGET);
+        if (lowered !== null) {
+          this.prepareRun();
+          return lowered;
+        }
+      } catch {
+        // The ordinary evaluator owns error handling for invalid values.
+      }
+    }
+    return this.run(ast);
+  }
+
   public run(
     ast: AstNode,
     reporter?: ErrorReporter,
@@ -88,10 +110,7 @@ export class Evaluator {
     if (ast.hasError) {
       return null;
     }
-    this.reporter = reporter;
-    this.annotateErrors = annotateErrors;
-    this.disableCache = disableCache;
-    this.clear();
+    this.prepareRun(reporter, annotateErrors, disableCache);
     try {
       return this.dispatchVisit(ast);
     } finally {
@@ -99,7 +118,10 @@ export class Evaluator {
     }
   }
 
-  private clear(): void {
+  private prepareRun(reporter?: ErrorReporter, annotateErrors = false, disableCache = false): void {
+    this.reporter = reporter;
+    this.annotateErrors = annotateErrors;
+    this.disableCache = disableCache;
     this.locals = new LocalContext();
     this.evalCache.clear();
     this.callSiteStack = [];

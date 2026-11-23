@@ -112,7 +112,7 @@ export class RSCalculator {
     if (ast.hasError) {
       return null;
     }
-    return this.evaluator.run(ast);
+    return this.evaluator.runFast(ast);
   }
 
   public evaluateFull(ast: AstNode, options?: CalculatorEvaluateOptions): CalculatorResult {
