@@ -2,6 +2,9 @@ import { createCipheriv, createDecipheriv, createHash, randomBytes, randomUUID }
 import fs from 'node:fs';
 import { join } from 'node:path';
 
+/** An existing personal/service subject, or a personal connection scoped to a project. */
+export type PortalOwner = string | readonly [subject: string, projectId: string];
+
 type PortalKeyScope = 'read' | 'write';
 
 export function isPortalKeyScope(scope: unknown): scope is PortalKeyScope {
@@ -34,7 +37,7 @@ export class PortalVault {
   }
 
   /** The subject is trusted authentication context, never a tool argument or pathname. */
-  public get(subject: string): PortalCredential | null {
+  public get(subject: PortalOwner): PortalCredential | null {
     const id = this.id(subject);
     const file = join(this.#directory, `${id}.json`);
     if (!fs.existsSync(file)) return null;
@@ -54,7 +57,7 @@ export class PortalVault {
   }
 
   /** Replace the encrypted record atomically; only safe account metadata is returned by callers. */
-  public set(subject: string, token: string, account: PortalCredential['account'], keyPolicy?: PortalKeyPolicy): void {
+  public set(subject: PortalOwner, token: string, account: PortalCredential['account'], keyPolicy?: PortalKeyPolicy): void {
     const id = this.id(subject);
     const iv = randomBytes(12);
     const cipher = createCipheriv('aes-256-gcm', this.#key, iv);
@@ -87,12 +90,13 @@ export class PortalVault {
   }
 
   /** Local disconnect does not revoke the original key in Portal. */
-  public remove(subject: string): void {
+  public remove(subject: PortalOwner): void {
     const file = join(this.#directory, `${this.id(subject)}.json`);
     if (fs.existsSync(file)) fs.unlinkSync(file);
   }
 
-  private id(subject: string): string {
-    return createHash('sha256').update(subject).digest('hex');
+  private id(subject: PortalOwner): string {
+    if (typeof subject === 'string') return createHash('sha256').update(subject).digest('hex');
+    return 'project-' + createHash('sha256').update(JSON.stringify(subject)).digest('hex');
   }
 }

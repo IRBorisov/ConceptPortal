@@ -27,7 +27,7 @@ StateDirectory=rstool-mcp rstool-portal
 
 Provision the encrypted credential using `systemd-creds` and an independent 32-byte random key. Select host-secret/TPM binding for the actual machine. This is not an installer or a recovery procedure. Never use a password, API key, MCP token or public example value as the master key.
 
-Personal credentials use AES-256-GCM, fresh random IVs, authenticated subject binding, atomic replacement and mode-0600 files in a mode-0700 directory. Provision correct ownership; permissions of an existing directory are not automatically repaired. Workspace JSON contains no Portal credentials. Environment variables contain paths, not secret values.
+Personal and project credentials use AES-256-GCM, fresh random IVs, authenticated binding to their owner and scope, atomic replacement and mode-0600 files in a mode-0700 directory. Provision correct ownership; permissions of an existing directory are not automatically repaired. Workspace JSON contains no Portal credentials. Environment variables contain paths, not secret values.
 
 CLI startup resolves configured paths, rejects overlapping vault/workspace directories and refuses master/human/service credential files inside either data tree. Runtime secret inputs must be regular files of bounded size; Unix group/other access bits are rejected for ordinary credential files. Linux systemd ACL credentials with mode 0440 are also accepted when they are root:root-owned, read-only, and immediate children of the canonical CREDENTIALS_DIRECTORY under /run/credentials. That directory must itself be root:root-owned, non-writable and inaccessible to other users. The access ACLs of both file and directory must grant access only to root and the current service UID, with no owning-group, named-group or other-user grants. The host reads only POSIX ACL metadata using isolated `python3` from the trusted service PATH (standard library, no external Python packages); Python is required only for this Linux ACL exception. Missing ACLs or an unavailable reader fail closed. The ACL read mask is not treated as ordinary shared-file access. This exception does not accept files elsewhere, writable credentials, world access or symlinks escaping the protected store. Human and agent token audiences must be disjoint. A configuration error is reported without file contents or secret values.
 
@@ -45,15 +45,25 @@ The encrypted key cannot be fetched back, selected by another subject or read by
 
 Public data reads require no Portal key. In the Portal profile, choose **Read only** for inspection or **Read and write** for creating, editing, and publishing schemas with `portal_publish_schema`. Issued keys retain their `read` and `write` permissions and expiry. Expired or revoked keys cannot authenticate. The account page displays bound-key policy when the backend provides it. Portal enforces scopes, expiration and the owner’s object permissions on every request. Cached MCP metadata is an early hint. OAuth is not implemented.
 
+## Connect a project
+
+Configure the MCP connection in the AI client's project settings so its chats use the same authenticated project. Use trusted client identity or a project-scoped bearer token as described in [HTTP configuration](HTTP.md#configure-the-service). Give concurrently active chats different MCP workspace names. The workspace URL selects rstool storage. Verified authentication selects the Portal connection for the user and project.
+
+1. From any project chat, call `portal_connection_status` and open its `connectionPage`. Sign in with the separate human account token, verify the selected project, and enter the Portal API key in the protected form.
+2. From another chat in the project, call `portal_connection_status` to verify the connected account and scopes. Use the Portal tools normally. Each operation keeps its own approval requirements and Portal checks the key and target permissions on every API request.
+3. To replace or disconnect the key, select that project on the same account page. The next operation in any chat uses the new connection state. An operation already sent to Portal can complete. Revoke the original key in Portal if it must stop working outside this connection too.
+
+Each project binding belongs to one authenticated user. A separate personal binding, another project or another user's binding never supplies the key. The status returns the safe account and key policy, and reports `not_connected`, `key_expired`, `key_invalid_or_revoked` or `portal_unavailable` when appropriate. Management on the account page is restricted to the projects associated with the authenticated human account by the host.
+
 ## Create and inspect library items
 
-Configured HTTP hosts expose `portal_create_schema`, `portal_create_model` and `portal_create_oss`. They create **empty** library objects through the existing personal Portal binding. Required arguments are `requestId`, `title`, `alias`, `location` and `accessPolicy`; `description` is optional. Model creation also requires `schemaId` of an existing readable conceptual schema. It creates a model linked to that schema, not a replacement schema or a local rstool session.
+Configured HTTP hosts expose `portal_create_schema`, `portal_create_model` and `portal_create_oss`. They create **empty** library objects through the active personal or project connection. Required arguments are `requestId`, `title`, `alias`, `location` and `accessPolicy`; `description` is optional. Model creation also requires `schemaId` of an existing readable conceptual schema.
 
 Use `portal_search_library(query, location?)` before creation to find accessible IDs, including private items. It returns the complete ID list from Portal's context search. Inspect selected matches with `portal_get_details(kind, targetId)`; do not enumerate IDs. `kind` is `schema`, `model` or `oss`. Location is a virtual library path, for example `/U/Дипломы/DEMO001`, not a separate folder object. Supply the intended access policy explicitly.
 
 Creation requires a personal key with read and write scopes. The backend determines ownership, checks readable schema binding and location rights, applies quotas and records the mutation. Existing target-ID-scoped service grants do not authorize creation or general library search. No key or owner override is accepted by the MCP tools. Supply title, alias and description without leading or trailing whitespace: noncanonical metadata is rejected before POST because library creation trims these fields.
 
-Choose a stable unique `requestId` of 8–128 letters, digits, underscores or hyphens. A subject-scoped receipt is persisted **before** POST; the returned ID is persisted **before** independent readback. Repeating the same ID and arguments reads the known result instead of sending POST again, including after host restart. Reusing the ID with different arguments, another Portal account or another API origin is rejected. Status reads also reject receipts from another origin; use separate host storage for a different Portal. These receipts store only a request digest, API origin, account ID, kind, state and created ID, never credentials or document contents.
+Choose a stable unique `requestId` of 8–128 letters, digits, underscores or hyphens. The active connection scope determines the receipt namespace. The host persists the receipt before POST and records the returned ID before independent readback. Repeating the same ID and arguments reads the known result instead of sending POST again, including after host restart. Reusing the ID with different arguments, another Portal account or another API origin is rejected. Status reads also reject receipts from another origin; use separate host storage for a different Portal. These receipts store only a request digest, API origin, account ID, kind, state and created ID, never credentials or document contents.
 
 After a timeout use `portal_get_creation_status(requestId)`. `created` gives the known ID; inspect it with `portal_get_details`. `uncertain` means that the POST outcome is unknown: search the library and reconcile it before starting any new request ID. Do not bypass the no-replay guard by changing IDs. A refusal or failed verification is not retried automatically. Local receipts are not server-side exactly-once creation across different request IDs or lost host storage.
 
@@ -84,9 +94,14 @@ Only configured HTTP hosts expose:
 | `portal_update_constituent` | Edit the supplied fields of one own constituent by ID |
 | `portal_get_description` | Accepts only `targetId`; reads description and `time_update` through the bound key, publicly without a key, or privately with a bound read-capable key, without a local session |
 | `portal_update_description` | Accepts `targetId`, `expectedTimeUpdate`, `description`; updates only the description with CAS and independent readback, without a local rstool session or approval page |
-| `portal_connection_status` | Safe account/connection status for the authenticated subject |
+| `portal_connection_status` | Safe account and status for the authenticated personal or project connection |
+| `portal_set_model_values` | Set interpretation values on an existing Portal model using a revision guard and independent readback |
 | `portal_publish_schema` | Accepts only `targetId`; replaces that schema with the current rstool session, then reads it back. Call it only after explicit user permission |
 | `portal_prepare_publication` | Accepts only `targetId`; captures a draft and an account-page path. It does not write. Agents use `portal_publish_schema` instead |
+
+## Set model values
+
+Read the model with `portal_get_details` using `kind: "model"` and read its linked schema to obtain constituent IDs. Call `portal_set_model_values` with the model `targetId`, its exact `time_update` as `expectedTimeUpdate`, and `values` containing one `{target, type, data}` entry per constituent. The host uses the [Portal interpretation format](../rstool/docs/PORTAL-MODELS.md) and checks the revision and stored values in a separate model read. A stale write is rejected. If the result is uncertain, read the model before deciding whether to retry.
 
 ## Edit an OSS graph
 

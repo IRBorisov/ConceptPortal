@@ -6,12 +6,13 @@ import { CstType, EvalStatus, type RSToolAgent } from "@rsconcept/rstool";
 import type { PortalOssAction } from './portal-client';
 import type { PortalItemKind } from './portal-creations';
 import type { PortalPublisher } from './portal-publisher';
+import type { PortalOwner } from './portal-vault';
 import { SessionStorageError, type SessionPolicy } from './session-policy';
 
 /** Trusted HTTP host captures the identity; tools cannot accept a key, subject or publication approval. */
-export function portalToolDefinitions(publisher: PortalPublisher, subject: string, workspace: string,
+export function portalToolDefinitions(publisher: PortalPublisher, subject: PortalOwner, workspace: string, publicOrigin: string,
   validateSource?: (sessionId: string) => void): ToolDefinition[] {
-  return [...portalCreationTools(publisher, subject), ...portalOssTools(publisher, subject),
+  return [...portalLibraryTools(publisher, subject), ...portalOssTools(publisher, subject),
     ...portalConstituentTools(publisher, subject), { name: 'portal_publish_schema', description: 'Replace an existing owned Portal schema with the current rstool session and read it back. Writes immediately with the bound key, including schemas with diagnostic errors. Does not certify correctness. Accepts only targetId. Call it only after the user explicitly accepts a summary that names this target, its time_update, the source session, and every added, removed, or changed alias. Immediately before the call, read portal_get_description and confirm that time_update and the current session still match that accepted summary. If either changed, show a new summary and obtain a new acceptance. No approval flag, revision, or key is accepted.',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
     inputSchema: { type: 'object', properties: { targetId: { type: 'integer', minimum: 1 } }, required: ['targetId'], additionalProperties: false },
@@ -27,9 +28,11 @@ export function portalToolDefinitions(publisher: PortalPublisher, subject: strin
     },
   }, { name: 'portal_connection_status', sessionActivity: 'none', description: 'Get safe Portal connection status for the authenticated identity, without any credential.',
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
-    invoke: (_tool, args) => {
+    invoke: async (_tool, args) => {
       if (Object.keys(args).length) throw new Error('This tool accepts no arguments');
-      return publisher.connection(subject);
+      const status = await publisher.verifyConnection(subject);
+      if (typeof subject === 'string') return status;
+      return { ...status, connectionPage: `${publicOrigin}/portal/account?project=${encodeURIComponent(subject[1])}` };
     } }, { name: 'portal_get_description', sessionActivity: 'none',
     description: 'Read an existing Portal schema description and time_update. Public data needs no Portal key; a bound key can authorize private schemas. Returns the revision needed by portal_update_description. Creates no local session and reveals no credential.',
     annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
@@ -51,8 +54,8 @@ export function portalToolDefinitions(publisher: PortalPublisher, subject: strin
     } }];
 }
 
-/** Empty library creation is independent of local rstool sessions and replacement approvals. */
-function portalCreationTools(publisher: PortalPublisher, subject: string): ToolDefinition[] {
+/** Library tools operate independently of the current rstool session. */
+function portalLibraryTools(publisher: PortalPublisher, subject: PortalOwner): ToolDefinition[] {
   const requestId = { type: 'string', minLength: 8, maxLength: 128, pattern: '^[A-Za-z0-9_-]+$',
     description: 'Stable unique ID for this creation. Reuse exactly the same ID after timeout; never switch IDs to retry an uncertain POST.' };
   const itemKinds: PortalItemKind[] = ['schema', 'model', 'oss'];
@@ -90,10 +93,25 @@ function portalCreationTools(publisher: PortalPublisher, subject: string): ToolD
       if (Object.keys(args).some(key => !['kind', 'targetId'].includes(key))) throw new Error('Only kind and targetId are accepted');
       return publisher.getDetails(subject, args.kind as PortalItemKind, args.targetId as number);
     } });
+  tools.push({ name: 'portal_set_model_values', sessionActivity: 'none',
+    description: 'Set interpretation values on an existing Portal model, using its exact time_update from portal_get_details. Use constituent IDs from the linked Portal schema. Independently reads back and verifies all written values. Does not retry a failed or uncertain write.',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
+    inputSchema: { type: 'object', properties: {
+      targetId: { type: 'integer', minimum: 1 }, expectedTimeUpdate: { type: 'string' },
+      values: { type: 'array', minItems: 1, items: { type: 'object', properties: {
+        target: { type: 'integer', minimum: 1 }, type: { type: 'string', minLength: 1 }, data: {},
+      }, required: ['target', 'type', 'data'], additionalProperties: false } },
+    }, required: ['targetId', 'expectedTimeUpdate', 'values'], additionalProperties: false },
+    invoke: (_tool, args) => {
+      if (Object.keys(args).some(key => !['targetId', 'expectedTimeUpdate', 'values'].includes(key)))
+        throw new Error('Only targetId, expectedTimeUpdate and values are accepted');
+      return publisher.setModelValues(subject, args.targetId as number, args.expectedTimeUpdate as string, args.values);
+    },
+  });
   return tools;
 }
 
-function portalConstituentTools(publisher: PortalPublisher, subject: string): ToolDefinition[] {
+function portalConstituentTools(publisher: PortalPublisher, subject: PortalOwner): ToolDefinition[] {
   const id = { type: 'integer', minimum: 1 };
   const text = { type: 'string' };
   const flag = { type: 'boolean' };
@@ -148,7 +166,7 @@ function portalConstituentTools(publisher: PortalPublisher, subject: string): To
 }
 
 /** Graph tools accept Portal IDs and forward the corresponding REST payload. */
-function portalOssTools(publisher: PortalPublisher, subject: string): ToolDefinition[] {
+function portalOssTools(publisher: PortalPublisher, subject: PortalOwner): ToolDefinition[] {
   const id = { type: 'integer', minimum: 1 };
   const item_data = { type: 'object', properties: {
     alias: { type: 'string' }, title: { type: 'string' }, description: { type: 'string' },

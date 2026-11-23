@@ -160,7 +160,7 @@ it('requires model binding and rejects unknown authority fields and unsafe recei
 
 it('registers session-independent tools with strict schemas and no secret input', () => {
   const app = setup();
-  const tools = portalToolDefinitions(app.publisher, 'alice', 'workspace');
+  const tools = portalToolDefinitions(app.publisher, 'alice', 'workspace', 'https://mcp.example');
   for (const name of ['portal_create_schema','portal_create_model','portal_create_oss','portal_get_creation_status','portal_search_library','portal_get_details']) {
     const tool = tools.find(t => t.name === name)!;
     expect(tool.sessionActivity).toBe('none');

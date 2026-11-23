@@ -1,4 +1,4 @@
-import { createHash, randomUUID } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import { join } from 'node:path';
 
@@ -6,18 +6,19 @@ import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/
 import { HostedRSToolAgent } from '@rsconcept/rstool/hosting';
 import { ComputePool, COMPUTE_TOOLS } from './compute-pool';
 
-import { type VerifyHttpToken } from './http-auth';
-import { SessionPolicy, SessionStorageError } from './session-policy';
+import { isProjectId, type HttpIdentity, type VerifyHttpToken } from './http-auth';
+import { SessionPolicy, SessionStorageError, workspaceNamespace } from './session-policy';
 import { buildRSToolMcpServer } from './server';
 import { handlePortalAccount, servePortalAccount } from './portal-account';
 import type { PortalPublisher } from './portal-publisher';
+import type { PortalOwner } from './portal-vault';
 import { portalToolDefinitions, sessionStorageToolDefinitions } from './tools';
 
 export interface RSToolHttpServerOptions {
   /** Durable root, exclusively owned by this single service process. */
   persistenceDir: string;
-  /** Must verify the credential and return a stable identity, or null. Called on every request. */
-  verifyToken: VerifyHttpToken;
+  /** Must verify the credential and return a stable identity, optionally with a trusted project. */
+  verifyToken: VerifyHttpToken<HttpIdentity>;
   /** Hostnames without ports. Forwarded headers are intentionally ignored. */
   allowedHosts?: readonly string[];
   /** Requests with an Origin header are rejected unless explicitly allowed. No CORS is enabled. */
@@ -44,11 +45,17 @@ export interface RSToolHttpServerOptions {
   /** Deadline for an asynchronous credential verifier. */
   authenticationTimeoutMs?: number;
   /** Optional fixed-origin integration; account APIs and Portal tools exist only when configured. */
-  portal?: { publisher: PortalPublisher; publicOrigin: string; verifyAccountToken: VerifyHttpToken };
+  portal?: {
+    publisher: PortalPublisher;
+    publicOrigin: string;
+    verifyAccountToken: VerifyHttpToken;
+    /** Authoritative project memberships available to the independently authenticated human. */
+    projectsForSubject?: (subject: string) => readonly string[];
+  };
 }
 
 interface HttpSession {
-  subject: string;
+  portalOwner: PortalOwner;
   namespace: string;
   server: ReturnType<typeof buildRSToolMcpServer>;
   transport: StreamableHTTPServerTransport;
@@ -98,7 +105,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
   const policy = new SessionPolicy(options.persistenceDir, options.maxStoredSessionsPerAccount,
     options.sessionRetentionMs, () => Date.now(), namespace => {
       const entry = workspaces.get(namespace);
-      if (entry) options.portal?.publisher.invalidateWorkspace(entry.subject, namespace);
+      if (entry) options.portal?.publisher.invalidateWorkspace(entry.portalOwner, namespace);
     }, maxSessionBytes);
   const cleanupIntervalMs = timerDelay(options.sessionCleanupIntervalMs ?? 60_000, 'sessionCleanupIntervalMs');
   let closing: Promise<void> | undefined;
@@ -120,7 +127,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
     if (!entry.closed) {
       entry.closed = true;
       entry.revision = randomUUID();
-      options.portal?.publisher.invalidateWorkspace(entry.subject, entry.namespace);
+      options.portal?.publisher.invalidateWorkspace(entry.portalOwner, entry.namespace);
       if (entry.transport.sessionId) sessions.delete(entry.transport.sessionId);
     }
     if (destroyResponses) for (const response of entry.responses) if (!response.writableFinished) response.destroy();
@@ -177,20 +184,32 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
     if (!route && !accountRoute) return reject(response, 404, 'Not found');
     const token = /^Bearer ([^\s]+)$/i.exec(request.headers.authorization ?? '')?.[1];
     const verifier = accountRoute && options.portal ? options.portal.verifyAccountToken : options.verifyToken;
-    const subject = token ? await verifyWithDeadline(verifier, token, authenticationTimeoutMs) : null;
-    if (subject === AUTHENTICATION_TIMEOUT) return reject(response, 503, 'Authentication timed out');
-    if (!subject || typeof subject !== 'string') {
+    const identity = token ? await verifyWithDeadline(verifier, token, authenticationTimeoutMs) : null;
+    if (identity === AUTHENTICATION_TIMEOUT) return reject(response, 503, 'Authentication timed out');
+    const subject = typeof identity === 'string' ? identity : identity?.subject;
+    const projectId = typeof identity === 'string' ? undefined : identity?.projectId;
+    if (typeof subject !== 'string' || !subject.trim() || (typeof identity !== 'string' &&
+        (accountRoute || !isProjectId(projectId)))) {
       response.setHeader('WWW-Authenticate', 'Bearer realm="rstool-mcp"');
       return reject(response, 401, 'Bearer authentication required');
     }
     if (accountRoute && options.portal) {
       if (disconnected(request, response)) return;
-      await handlePortalAccount(url.pathname, request, response, subject, options.portal.publisher, options.portal.publicOrigin);
+      const projects = [...new Set(options.portal.projectsForSubject?.(subject) ?? [])].filter(isProjectId);
+      const requested = url.searchParams.getAll('project');
+      if (requested.length > 1 || (requested.length && !projects.includes(requested[0]))) {
+        return reject(response, 403, 'Project is not available to this account');
+      }
+      const owner: PortalOwner = requested.length ? [subject, requested[0]] : subject;
+      await handlePortalAccount(url.pathname, request, response, owner, projects,
+        options.portal.publisher, options.portal.publicOrigin);
       return;
     }
     if (!route) return reject(response, 404, 'Not found');
+    const portalOwner: PortalOwner = projectId === undefined ? subject : [subject, projectId];
     // A hash prevents subjects and workspace names from becoming filesystem paths.
-    const namespace = createHash('sha256').update(JSON.stringify([subject, route[1] ?? 'default'])).digest('hex');
+    const workspace = route[1] ?? 'default';
+    const namespace = workspaceNamespace(subject, workspace, projectId);
     if (management) {
       if (disconnected(request, response)) return;
       // No request body is accepted, including chunked bodies. Reads never renew the lease.
@@ -240,7 +259,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       if (workspaces.has(namespace)) return reject(response, 409, 'Workspace has an active or draining connection; inspect its /connection endpoint');
       if (workspaces.size >= maxSessions) return reject(response, 503, 'Active session limit reached');
       initializationResponse = responseCompletion(response);
-      policy.register(subject, namespace, route[1] ?? 'default');
+      policy.register(subject, namespace, workspace, projectId);
       const tool = new HostedRSToolAgent({ persistenceDir: join(options.persistenceDir, namespace),
         sessionLifecycle: policy.hooks(subject, namespace) });
       const mcpServer = buildRSToolMcpServer({ tool, serializeToolCalls: true, sanitizeStorageErrors: true,
@@ -272,7 +291,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
               isolated: options.isolateComputations !== false, maxWorkers: options.maxComputeWorkers ?? 2,
               timeoutMs: options.computeTimeoutMs ?? 10_000, heapMb: options.computeHeapMb ?? 128,
               maxResultBytes: options.maxComputeResultBytes ?? 4 * 1024 * 1024 } }),
-          ...(options.portal ? portalToolDefinitions(options.portal.publisher, subject, namespace,
+          ...(options.portal ? portalToolDefinitions(options.portal.publisher, portalOwner, namespace, options.portal.publicOrigin,
             id => policy.assertRetained(namespace, id)) : [])
         ] });
       const transport = new StreamableHTTPServerTransport({
@@ -284,7 +303,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       let resolveDrained!: () => void;
       const drained = new Promise<void>(resolve => { resolveDrained = resolve; });
       entry = {
-        subject, namespace, server: mcpServer, transport,
+        portalOwner, namespace, server: mcpServer, transport,
         tail: Promise.resolve(), pending: 0, lastUsed: Date.now(), closed: false,
         activeTools: 0, revision: randomUUID(), responses: new Set(), drained, resolveDrained,
       };
@@ -423,7 +442,7 @@ function positiveInteger(value: number, name: string): number {
 const AUTHENTICATION_TIMEOUT = Symbol('authentication-timeout');
 
 /** Bound authentication even if the verifier ignores abort; cancel cooperative verifiers on expiry. */
-async function verifyWithDeadline(verify: VerifyHttpToken, token: string, timeoutMs: number) {
+async function verifyWithDeadline(verify: VerifyHttpToken<HttpIdentity>, token: string, timeoutMs: number) {
   const controller = new AbortController();
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {

@@ -4,7 +4,7 @@
 
 If you do not need MCP, use `@rsconcept/rstool` directly (library API or stdio JSON wrapper).
 
-HTTP hosts can opt into [Portal publication and encrypted personal keys](PORTAL.md). Configured hosts can create library objects, search private items, edit an OSS graph, and publish conceptual schemas. The account page binds the personal key. The agent obtains the user's explicit approval before replacing a schema or editing an OSS graph. Keys, identities and confirmations stay out of tool arguments.
+HTTP hosts can opt into [Portal integration with encrypted personal and project connections](PORTAL.md). Configured hosts can create library objects, search private items, set model values, edit an OSS graph, and publish conceptual schemas. The account page binds the key. The agent obtains the user's explicit approval before replacing a schema or editing an OSS graph. Keys, identities and confirmations stay out of tool arguments.
 
 ## Install
 

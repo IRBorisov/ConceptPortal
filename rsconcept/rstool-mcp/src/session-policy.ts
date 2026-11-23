@@ -51,9 +51,9 @@ export class SessionPolicy {
   }
 
   /** Bind a verified workspace to an account and give legacy sessions a full initial retention period. */
-  register(subject: string, namespace: string, workspaceName?: string): number {
+  register(subject: string, namespace: string, workspaceName?: string, projectId?: string): number {
     if (workspaceName !== undefined && (!/^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(workspaceName) ||
-      hash(JSON.stringify([subject, workspaceName])) !== namespace)) throw unavailable();
+      workspaceNamespace(subject, workspaceName, projectId) !== namespace)) throw unavailable();
     const directory = this.workspace(namespace);
     this.directory(directory);
     this.directory(join(directory, '.lifecycle'));
@@ -557,6 +557,10 @@ export class SessionPolicy {
 }
 
 function hash(value: string): string { return createHash('sha256').update(value).digest('hex'); }
+
+export function workspaceNamespace(subject: string, workspace: string, projectId?: string): string {
+  return hash(JSON.stringify(projectId === undefined ? [subject, workspace] : [subject, projectId, workspace]));
+}
 function unavailable(): SessionStorageError {
   return new SessionStorageError('SESSION_STORAGE_UNAVAILABLE', 'Session storage metadata is unavailable. Contact the administrator.');
 }

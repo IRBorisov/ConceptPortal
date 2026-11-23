@@ -3,9 +3,9 @@ import { isDeepStrictEqual } from 'node:util';
 
 import { RSToolError, type RSToolAgent } from '@rsconcept/rstool';
 
-import { PortalClient, type PortalOssAction } from './portal-client';
+import { PortalClient, PortalHttpError, type PortalOssAction } from './portal-client';
 import { PortalCreations, type PortalItemKind } from './portal-creations';
-import { isPortalKeyScope, PortalVault, type PortalCredential, type PortalKeyPolicy } from './portal-vault';
+import { isPortalKeyScope, PortalVault, type PortalCredential, type PortalKeyPolicy, type PortalOwner } from './portal-vault';
 
 export interface ServicePortalCredential {
   token: string;
@@ -66,32 +66,21 @@ export class PortalPublisher {
   }
 
   /** Bind an entered key to the authenticated subject after verifying its Portal account. */
-  public connect(subject: string, token: string) {
+  public connect(subject: PortalOwner, token: string) {
     return this.exclusive(subject, async () => {
       if (this.isService(subject)) throw new Error('This identity has an administrator-managed service credential');
       if (typeof token !== 'string' || !/^rcp_[A-Za-z0-9_-]{20,200}$/.test(token))
         throw new Error('Invalid Portal key');
-      const account = await this.#api.request(token, '/api/agents/me');
-      if (!Number.isSafeInteger(account.id) || typeof account.username !== 'string')
-        throw new Error('Portal returned invalid account metadata');
-      let keyPolicy: PortalKeyPolicy | undefined;
-      if (account.scopes !== undefined) {
-        if (!Array.isArray(account.scopes) ||
-          account.scopes.some((scope: unknown) => !isPortalKeyScope(scope) && scope !== 'publish') ||
-          (account.expires_at !== null && account.expires_at !== undefined &&
-            (typeof account.expires_at !== 'string' || !Number.isFinite(Date.parse(account.expires_at)))))
-          throw new Error('Portal returned invalid key policy');
-        keyPolicy = { scopes: account.scopes.filter(isPortalKeyScope), expiresAt: account.expires_at ?? null };
-        if (keyPolicy.expiresAt && Date.parse(keyPolicy.expiresAt) <= Date.now()) throw new Error('Portal key expired');
-      }
-      this.#vault.set(subject, token, { id: account.id, username: account.username }, keyPolicy);
+      const { account, keyPolicy } = await this.readIdentity(token);
+      if (keyPolicy?.expiresAt && Date.parse(keyPolicy.expiresAt) <= Date.now()) throw new Error('Portal key expired');
+      this.#vault.set(subject, token, account, keyPolicy);
       this.invalidateSubject(subject);
       return this.connection(subject);
     });
   }
 
   /** Disconnect locally; revocation of the original key is done in the Portal profile. */
-  public disconnect(subject: string) {
+  public disconnect(subject: PortalOwner) {
     return this.exclusive(subject, async () => {
       if (this.isService(subject)) throw new Error('Service credentials are managed by the administrator');
       this.#vault.remove(subject);
@@ -101,17 +90,59 @@ export class PortalPublisher {
   }
 
   /** Safe status only: no secret, encrypted value, or credential-file location. */
-  public connection(subject: string) {
+  public connection(subject: PortalOwner) {
     if (this.isService(subject)) return { connected: true, mode: 'service' };
+    const scope = typeof subject === 'string' ? { mode: 'personal' } : { mode: 'project', projectId: subject[1] };
     const credential = this.#vault.get(subject);
     return credential
-      ? { connected: !expired(credential), mode: 'personal', account: credential.account,
+      ? { ...scope, connected: !expired(credential), account: credential.account,
           ...(credential.keyPolicy ? { keyPolicy: credential.keyPolicy, expired: expired(credential) } : {}) }
-      : { connected: false, mode: 'personal' };
+      : { ...scope, connected: false };
+  }
+
+  /** Project status checks the live key so revocation is visible in every chat. */
+  public verifyConnection(subject: PortalOwner) {
+    if (typeof subject === 'string') return this.connection(subject);
+    const project = { mode: 'project', projectId: subject[1] };
+    return this.exclusive(subject, async () => {
+      const credential = this.#vault.get(subject);
+      if (!credential) return { ...project, connected: false, reason: 'not_connected' };
+      const saved = { ...project, account: credential.account, keyPolicy: credential.keyPolicy };
+      if (expired(credential)) return { ...saved, connected: false, reason: 'key_expired' };
+      try {
+        const identity = await this.readIdentity(credential.token);
+        if (identity.account.id !== credential.account.id) throw new Error('Portal account changed');
+        if (identity.keyPolicy?.expiresAt && Date.parse(identity.keyPolicy.expiresAt) <= Date.now()) {
+          return { ...project, ...identity, connected: false, reason: 'key_expired' };
+        }
+        return { ...project, ...identity, connected: true };
+      } catch (error) {
+        const reason = error instanceof PortalHttpError && error.status === 401
+          ? 'key_invalid_or_revoked' : 'portal_unavailable';
+        return { ...saved, connected: false, reason };
+      }
+    });
+  }
+
+  private async readIdentity(token: string) {
+    const result = await this.#api.request(token, '/api/agents/me');
+    if (!Number.isSafeInteger(result.id) || typeof result.username !== 'string')
+      throw new Error('Portal returned invalid account metadata');
+    const account = { id: result.id as number, username: result.username as string };
+    let keyPolicy: PortalKeyPolicy | undefined;
+    if (result.scopes !== undefined) {
+      if (!Array.isArray(result.scopes) ||
+        result.scopes.some((scope: unknown) => !isPortalKeyScope(scope) && scope !== 'publish') ||
+        (result.expires_at !== null && result.expires_at !== undefined &&
+          (typeof result.expires_at !== 'string' || !Number.isFinite(Date.parse(result.expires_at)))))
+        throw new Error('Portal returned invalid key policy');
+      keyPolicy = { scopes: result.scopes.filter(isPortalKeyScope), expiresAt: result.expires_at ?? null };
+    }
+    return { account, keyPolicy };
   }
 
   /** Search with the bound personal key, including private library items. Never guess IDs. */
-  public searchLibrary(subject: string, query: string, location?: string) {
+  public searchLibrary(subject: PortalOwner, query: string, location?: string) {
     return this.exclusive(subject, async () => {
       const credential = this.personalCredential(subject);
       if (typeof query !== 'string' || !query.trim() || query.length > 1000)
@@ -125,7 +156,7 @@ export class PortalPublisher {
     });
   }
 
-  public getDetails(subject: string, kind: PortalItemKind, targetId: number) {
+  public getDetails(subject: PortalOwner, kind: PortalItemKind, targetId: number) {
     return this.exclusive(subject, async () => {
       const credential = this.credential(subject, targetId);
       if (credential.keyPolicy && !credential.keyPolicy.scopes.includes('read')) throw new Error('Portal key does not allow read');
@@ -133,8 +164,42 @@ export class PortalPublisher {
     });
   }
 
+  /** Use the Portal revision guard and independently verify each stored interpretation. */
+  public setModelValues(subject: PortalOwner, targetId: number, expectedTimeUpdate: string, values: unknown) {
+    return this.exclusive(subject, async () => {
+      if (typeof expectedTimeUpdate !== 'string' || !Number.isFinite(Date.parse(expectedTimeUpdate)) ||
+          /[\r\n]/.test(expectedTimeUpdate)) throw new Error('A valid expectedTimeUpdate is required');
+      if (!Array.isArray(values) || !values.length) throw new Error('A nonempty values array is required');
+      const targets = new Set<number>();
+      for (const value of values) {
+        if (!value || typeof value !== 'object' || Array.isArray(value) ||
+            Object.keys(value).some(key => !['target', 'type', 'data'].includes(key)))
+          throw new Error('Each value accepts only target, type and data');
+        const { target, type, data } = value;
+        if (!Number.isSafeInteger(target) || target <= 0 || targets.has(target) ||
+            typeof type !== 'string' || !type.trim() || type !== type.trim() || data === undefined)
+          throw new Error('Each value needs a unique constituent ID, a canonical type and data');
+        targets.add(target);
+      }
+      const credential = this.personalCredential(subject, 'write');
+      const written = await this.#api.setModelValues(credential.token, targetId, expectedTimeUpdate, values);
+      const verificationError = 'Portal model value verification failed; read the model before retrying';
+      const details = await this.readItem(credential, 'model', targetId).catch(() => { throw new Error(verificationError); });
+      if (written.id !== targetId || !Number.isSafeInteger(written.schema) || written.schema <= 0 ||
+          written.schema !== details.schema || typeof written.time_update !== 'string' ||
+          written.time_update === expectedTimeUpdate || details.time_update !== written.time_update ||
+          !Array.isArray(details.items)) throw new Error(verificationError);
+      const items = new Map(details.items.map(item => [item.id, item]));
+      for (const { target, type, data } of values) {
+        const item = items.get(target);
+        if (!item || item.type !== type || !isDeepStrictEqual(item.value, data)) throw new Error(verificationError);
+      }
+      return { targetId, schemaId: details.schema, time_update: details.time_update, verified: true };
+    });
+  }
+
   /** Verify the persisted constituent by ID and leave inherited constituents to their sources. */
-  public mutateConstituent(subject: string, targetId: number, expectedTimeUpdate: string,
+  public mutateConstituent(subject: PortalOwner, targetId: number, expectedTimeUpdate: string,
     constituentId: number | undefined, fields: Record<string, unknown>) {
     return this.exclusive(subject, async () => {
       if (typeof expectedTimeUpdate !== 'string' || !Number.isFinite(Date.parse(expectedTimeUpdate)) ||
@@ -183,7 +248,7 @@ export class PortalPublisher {
   }
 
   /** Guard the graph revision in Portal and verify the affected operation by an independent read. */
-  public mutateOss(subject: string, targetId: number, expectedTimeUpdate: string,
+  public mutateOss(subject: PortalOwner, targetId: number, expectedTimeUpdate: string,
     action: PortalOssAction, payload: Record<string, unknown>) {
     return this.exclusive(subject, async () => {
       if (typeof expectedTimeUpdate !== 'string' || !Number.isFinite(Date.parse(expectedTimeUpdate)) || /[\r\n]/.test(expectedTimeUpdate))
@@ -221,7 +286,7 @@ export class PortalPublisher {
   }
 
   /** Create a new empty item only. Existing-content replacement retains its separate approval. */
-  public createItem(subject: string, kind: PortalItemKind, args: Record<string, unknown>) {
+  public createItem(subject: PortalOwner, kind: PortalItemKind, args: Record<string, unknown>) {
     return this.exclusive(subject, async () => {
       const credential = this.personalCredential(subject, 'write');
       if (!this.#creations) throw new Error('Portal creation receipts are not configured');
@@ -267,7 +332,7 @@ export class PortalPublisher {
   }
 
   /** Read a durable receipt after restart or a lost response; never replays creation. */
-  public creationStatus(subject: string, requestId: string) {
+  public creationStatus(subject: PortalOwner, requestId: string) {
     return this.exclusive(subject, async () => {
       const credential = this.personalCredential(subject);
       if (!this.#creations) throw new Error('Portal creation receipts are not configured');
@@ -280,7 +345,7 @@ export class PortalPublisher {
     });
   }
 
-  private personalCredential(subject: string, scope?: 'write'): PortalCredential {
+  private personalCredential(subject: PortalOwner, scope?: 'write'): PortalCredential {
     if (this.isService(subject)) throw new Error('This operation requires a personal Portal connection');
     const credential = this.credential(subject, 0, scope);
     if (credential.keyPolicy && !credential.keyPolicy.scopes.includes('read')) throw new Error('Portal key does not allow read');
@@ -295,12 +360,14 @@ export class PortalPublisher {
   }
 
   /** Public reads need no Portal key. A bound key can also authorize private data. */
-  public getDescription(subject: string, targetId: number) {
+  public getDescription(subject: PortalOwner, targetId: number) {
     return this.exclusive(subject, async () => {
       if (!Number.isSafeInteger(targetId) || targetId <= 0) throw new Error('A positive Portal schema ID is required');
       const credential = this.isService(subject)
         ? (this.#service!.targetIds.includes(targetId) ? this.credential(subject, targetId) : undefined)
         : this.#vault.get(subject) ?? undefined;
+      if (typeof subject !== 'string' && credential && expired(credential))
+        throw new Error('Portal key expired; reconnect on the account page');
       const mayRead = credential && !expired(credential) && (!credential.keyPolicy || credential.keyPolicy.scopes.includes('read'));
       const schema = await this.#api.request(mayRead ? credential.token : undefined, `/api/agents/rsforms/${targetId}/details`);
       if (schema.id !== targetId || typeof schema.description !== 'string' ||
@@ -311,7 +378,7 @@ export class PortalPublisher {
   }
 
   /** Narrow CAS edit using the bound credential; never imports or replaces a schema. */
-  public updateDescription(subject: string, targetId: number, expectedTimeUpdate: string, description: string) {
+  public updateDescription(subject: PortalOwner, targetId: number, expectedTimeUpdate: string, description: string) {
     return this.exclusive(subject, async () => {
       if (!Number.isSafeInteger(targetId) || targetId <= 0) throw new Error('A positive Portal schema ID is required');
       if (typeof expectedTimeUpdate !== 'string' || !Number.isFinite(Date.parse(expectedTimeUpdate)))
@@ -342,7 +409,7 @@ export class PortalPublisher {
    * Replace targetId with the current session in this call.
    * Chat permission is an agent instruction, not an argument or a second page.
    */
-  public publishSchema(subject: string, targetId: number, tool: RSToolAgent,
+  public publishSchema(subject: PortalOwner, targetId: number, tool: RSToolAgent,
     validateSource?: (sessionId: string) => void) {
     return this.exclusive(subject, async () => {
       if (!Number.isSafeInteger(targetId) || targetId <= 0) throw new Error('A positive Portal schema ID is required');
@@ -399,9 +466,10 @@ export class PortalPublisher {
   }
 
   /** Capture immutable before/after JSON. This method never writes to Portal. */
-  public prepare(subject: string, workspace: string, targetId: number, tool: RSToolAgent,
+  public prepare(subject: PortalOwner, workspace: string, targetId: number, tool: RSToolAgent,
     validateSource?: (sessionId: string) => void) {
-    const preparation = { subject, workspace, invalidated: false };
+    const ownerKey = JSON.stringify(subject);
+    const preparation = { subject: ownerKey, workspace, invalidated: false };
     this.#preparations.add(preparation);
     return this.exclusive(subject, async () => {
       if (preparation.invalidated) throw new Error('Workspace was closed');
@@ -434,7 +502,7 @@ export class PortalPublisher {
       const digest = createHash('sha256').update(JSON.stringify({ targetId, before, after })).digest('hex');
       const draft: PreparedPublication = {
         id,
-        subject,
+        subject: ownerKey,
         workspace,
         targetId,
         generation: credential.generation,
@@ -456,17 +524,19 @@ export class PortalPublisher {
         beforeCount: before.items.length,
         afterCount: after.items.length,
         changes: changes(before, after),
-        confirmationPage: '/portal/account',
+        confirmationPage: typeof subject === 'string' ? '/portal/account'
+          : `/portal/account?project=${encodeURIComponent(subject[1])}`,
       };
     }).finally(() => this.#preparations.delete(preparation));
   }
 
   /** The authenticated account page can inspect only this subject's proposals. */
-  public publications(subject: string) {
+  public publications(subject: PortalOwner) {
     this.expire();
+    const ownerKey = JSON.stringify(subject);
     return structuredClone(
       [...this.#drafts.values()]
-        .filter((draft) => draft.subject === subject)
+        .filter((draft) => draft.subject === ownerKey)
         .map((draft) => ({
           id: draft.id,
           targetId: draft.targetId,
@@ -483,10 +553,10 @@ export class PortalPublisher {
   }
 
   /** Only the out-of-band account route calls this method, never an MCP tool. */
-  public approve(subject: string, id: string, digest: string) {
+  public approve(subject: PortalOwner, id: string, digest: string) {
     return this.exclusive(subject, async () => {
       const draft = this.#drafts.get(id);
-      if (!draft || draft.subject !== subject) throw new Error('Publication not found');
+      if (!draft || draft.subject !== JSON.stringify(subject)) throw new Error('Publication not found');
       if (draft.state !== 'prepared')
         throw new Error('Publication already attempted; inspect Portal before preparing again');
       if (draft.expiresAt <= Date.now()) throw new Error('Publication expired');
@@ -524,31 +594,34 @@ export class PortalPublisher {
   }
 
   /** Closing a workspace invalidates proposals tied to its cached rstool instance. */
-  public invalidateWorkspace(subject: string, workspace: string): void {
+  public invalidateWorkspace(subject: PortalOwner, workspace: string): void {
+    const ownerKey = JSON.stringify(subject);
     for (const preparation of this.#preparations)
-      if (preparation.subject === subject && preparation.workspace === workspace) preparation.invalidated = true;
+      if (preparation.subject === ownerKey && preparation.workspace === workspace) preparation.invalidated = true;
     this.clearWorkspaceDrafts(subject, workspace);
   }
 
   /** Replace only the authenticated owner's proposal, without cancelling its current preparation. */
-  private clearWorkspaceDrafts(subject: string, workspace: string): void {
+  private clearWorkspaceDrafts(subject: PortalOwner, workspace: string): void {
+    const ownerKey = JSON.stringify(subject);
     for (const [id, draft] of this.#drafts)
-      if (draft.subject === subject && draft.workspace === workspace && draft.state !== 'sending')
+      if (draft.subject === ownerKey && draft.workspace === workspace && draft.state !== 'sending')
         this.#drafts.delete(id);
   }
 
-  private isService(subject: string): boolean {
-    return this.#service?.subjects.includes(subject) ?? false;
+  private isService(subject: PortalOwner): boolean {
+    return typeof subject === 'string' && (this.#service?.subjects.includes(subject) ?? false);
   }
 
   /** Personal subjects never fall back to a service grant; service targets are explicitly restricted. */
-  private credential(subject: string, targetId: number, requiredScope?: 'write'): PortalCredential {
+  private credential(subject: PortalOwner, targetId: number, requiredScope?: 'write'): PortalCredential {
     if (this.isService(subject)) {
       if (!this.#service!.targetIds.includes(targetId)) throw new Error('Service publication target is not allowed');
       return { token: this.#service!.token, generation: 'service', account: { id: 0, username: 'service' } };
     }
     const credential = this.#vault.get(subject);
-    if (!credential) throw new Error('Connect a personal Portal key on the account page');
+    if (!credential) throw new Error(typeof subject === 'string' ? 'Connect a personal Portal key on the account page'
+      : 'Connect this project to Portal using portal_connection_status and the account page');
     if (expired(credential)) throw new Error('Portal key expired; reconnect on the account page');
     if (requiredScope && credential.keyPolicy && !credential.keyPolicy.scopes.includes(requiredScope))
       throw new Error('Portal key does not allow ' + requiredScope);
@@ -558,8 +631,9 @@ export class PortalPublisher {
   }
 
   /** Credential replacement/disconnect removes every pending approval owned by this subject. */
-  private invalidateSubject(subject: string): void {
-    for (const [id, draft] of this.#drafts) if (draft.subject === subject) this.#drafts.delete(id);
+  private invalidateSubject(subject: PortalOwner): void {
+    const ownerKey = JSON.stringify(subject);
+    for (const [id, draft] of this.#drafts) if (draft.subject === ownerKey) this.#drafts.delete(id);
   }
 
   /** Expire idle proposals without dropping an operation whose remote result is still pending. */
@@ -569,23 +643,24 @@ export class PortalPublisher {
   }
 
   /** Serialize credential changes with publication, with bounded global/per-subject queues. */
-  private exclusive<T>(subject: string, operation: () => Promise<T>): Promise<T> {
-    if (this.#pending >= 64 || (this.#counts.get(subject) ?? 0) >= 8)
+  private exclusive<T>(subject: PortalOwner, operation: () => Promise<T>): Promise<T> {
+    const ownerKey = JSON.stringify(subject);
+    if (this.#pending >= 64 || (this.#counts.get(ownerKey) ?? 0) >= 8)
       return Promise.reject(new Error('Portal queue is full'));
     this.#pending++;
-    this.#counts.set(subject, (this.#counts.get(subject) ?? 0) + 1);
-    const result = (this.#tails.get(subject) ?? Promise.resolve()).then(operation);
+    this.#counts.set(ownerKey, (this.#counts.get(ownerKey) ?? 0) + 1);
+    const result = (this.#tails.get(ownerKey) ?? Promise.resolve()).then(operation);
     const settled = result.then(
       () => undefined,
       () => undefined
     );
-    this.#tails.set(subject, settled);
+    this.#tails.set(ownerKey, settled);
     void settled.then(() => {
       this.#pending--;
-      const count = this.#counts.get(subject)! - 1;
-      if (count) this.#counts.set(subject, count);
-      else this.#counts.delete(subject);
-      if (this.#tails.get(subject) === settled) this.#tails.delete(subject);
+      const count = this.#counts.get(ownerKey)! - 1;
+      if (count) this.#counts.set(ownerKey, count);
+      else this.#counts.delete(ownerKey);
+      if (this.#tails.get(ownerKey) === settled) this.#tails.delete(ownerKey);
     });
     return result;
   }

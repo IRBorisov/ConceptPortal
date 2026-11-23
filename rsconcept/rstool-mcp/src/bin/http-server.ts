@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { readFile } from 'node:fs/promises';
 
-import { createBearerTokenVerifier } from '../http-auth';
+import { createBearerIdentityVerifier } from '../http-auth';
 import { createRSToolHttpServer } from '../http-server';
 import { loadPortalConfiguration } from '../portal-config';
 import { sessionPolicyConfiguration } from '../session-policy-config';
@@ -26,7 +26,7 @@ async function main(): Promise<void> {
   const service = createRSToolHttpServer({
     persistenceDir,
     ...sessionPolicyConfiguration(process.env),
-    verifyToken: createBearerTokenVerifier(credentials),
+    verifyToken: createBearerIdentityVerifier(credentials),
     allowedHosts: process.env.RSTOOL_HTTP_ALLOWED_HOSTS?.split(',').map(value => value.trim()),
     portal,
   });

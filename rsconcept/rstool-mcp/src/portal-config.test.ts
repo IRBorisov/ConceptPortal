@@ -56,6 +56,19 @@ it('uses the separate human audience and does not expose configured credentials'
   expect(JSON.stringify(options)).not.toContain(human[0].token);
 });
 
+it('derives manageable projects from the host configuration for each authenticated subject', async () => {
+  const app = setup();
+  const options = await loadPortalConfiguration(app.environment, [
+    { ...mcp[0], projectId: 'research' },
+    { subject: 'alice', projectId: 'research', token: 'c'.repeat(40) },
+    { subject: 'bob', projectId: 'other', token: 'd'.repeat(40) },
+  ], app.workspace);
+  expect(options!.projectsForSubject?.('alice')).toEqual(['research']);
+  expect(options!.projectsForSubject?.('bob')).toEqual(['other']);
+  expect(options!.projectsForSubject?.('unknown')).toEqual([]);
+  expect(await options!.verifyAccountToken(human[0].token)).toBe('alice');
+});
+
 it('refuses overlapping audiences and account identities absent from MCP configuration', async () => {
   const app = setup();
   fs.writeFileSync(app.accounts, JSON.stringify(mcp));

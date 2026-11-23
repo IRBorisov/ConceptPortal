@@ -11,6 +11,15 @@ const OSS_MUTATION_METHODS = {
 export type PortalOssAction = keyof typeof OSS_MUTATION_METHODS;
 
 /** Fixed-origin Portal API, bounded responses, no redirects and no remote error bodies. */
+export class PortalHttpError extends Error {
+  readonly status: number;
+
+  public constructor(status: number, message: string) {
+    super(message);
+    this.status = status;
+  }
+}
+
 export class PortalClient {
   readonly #origin: string;
   readonly #fetch: PortalFetch;
@@ -63,6 +72,11 @@ export class PortalClient {
       : this.send(token, `${path}/${constituentId}`, 'PATCH', { item_data: body }, expectedTimeUpdate);
   }
 
+  public setModelValues(token: string, targetId: number, expectedTimeUpdate: string, values: unknown) {
+    if (!Number.isSafeInteger(targetId) || targetId <= 0) throw new Error('Portal model route is not allowed');
+    return this.send(token, `/api/agents/models/${targetId}/set-value`, 'POST', values, expectedTimeUpdate, 'model');
+  }
+
   private async send(token: string | undefined, path: string, method: 'GET' | 'POST' | 'PATCH', body?: unknown,
     expectedTimeUpdate?: string, itemName = 'schema'): Promise<Record<string, any>> {
     if (method !== 'GET' && !token) throw new Error('Portal writes require a key');
@@ -84,9 +98,10 @@ export class PortalClient {
     }
     if (!response.ok) {
       await response.body?.cancel();
-      throw new Error(
+      throw new PortalHttpError(response.status,
         response.status === 409
           ? `Portal ${itemName} changed; read the current revision before retrying`
+          : response.status === 401 && token ? 'Portal key is invalid or revoked (401); check the connection'
           : `Portal refused the request (${response.status})`
       );
     }
