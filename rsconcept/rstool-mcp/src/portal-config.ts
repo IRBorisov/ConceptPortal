@@ -3,7 +3,7 @@ import type { Stats } from 'node:fs';
 import files from 'node:fs/promises';
 import { dirname, isAbsolute, relative, resolve } from 'node:path';
 
-import { createBearerTokenVerifier, type HttpCredential } from './http-auth';
+import { createBearerIdentityVerifier, createBearerTokenVerifier, type HttpCredential } from './http-auth';
 import type { RSToolHttpServerOptions } from './http-server';
 import { PortalClient } from './portal-client';
 import { PortalCreations } from './portal-creations';
@@ -31,7 +31,7 @@ export async function loadPortalConfiguration(
     return undefined;
   if (!settings.every(Boolean)) throw new Error('All five Portal configuration settings are required');
   try {
-    createBearerTokenVerifier(credentials);
+    createBearerIdentityVerifier(credentials);
     const [portalOrigin, publicOrigin, vaultDirectory, masterKeyFile, accountTokensFile] = settings as string[];
     if ([vaultDirectory, masterKeyFile, accountTokensFile, persistenceDir].some((value) => !isAbsolute(value)))
       throw new Error('Absolute paths required');
@@ -62,8 +62,13 @@ export async function loadPortalConfiguration(
     const accountCredentials: HttpCredential[] = JSON.parse((await protectedInput(accountTokensFile)).toString('utf8'));
     const verifyAccountToken = createBearerTokenVerifier(accountCredentials);
     const tokens = new Set(credentials.map((credential) => credential.token));
-    const subjects = new Set(credentials.map((credential) => credential.subject));
-    if (accountCredentials.some((credential) => tokens.has(credential.token) || !subjects.has(credential.subject)))
+    const memberships = new Map<string, Set<string>>();
+    for (const { subject, projectId } of credentials) {
+      const projects = memberships.get(subject) ?? new Set<string>();
+      if (projectId !== undefined) projects.add(projectId);
+      memberships.set(subject, projects);
+    }
+    if (accountCredentials.some((credential) => tokens.has(credential.token) || !memberships.has(credential.subject)))
       throw new Error('Invalid account credential separation');
     let service: ServicePortalCredential | undefined;
     const serviceFile = environment.RSTOOL_PORTAL_SERVICE_KEY_FILE,
@@ -78,7 +83,7 @@ export async function loadPortalConfiguration(
       };
     }
     const vault = new PortalVault(vaultDirectory, await protectedInput(masterKeyFile));
-    return { publicOrigin, verifyAccountToken,
+    return { publicOrigin, verifyAccountToken, projectsForSubject: subject => [...(memberships.get(subject) ?? [])].sort(),
       publisher: new PortalPublisher(vault, api, service, new PortalCreations(resolve(vaultDirectory, 'creations'))) };
   } catch {
     throw new Error('Cannot initialize Portal credentials/configuration');

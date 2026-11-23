@@ -2,7 +2,7 @@
 
 `rstool-mcp-http` hosts the existing rstool tool catalog over Streamable HTTP. Use it when MCP clients on several machines need a centrally managed runtime. `rstool-mcp` remains the local stdio entry point.
 
-This is a single-process service with bearer credentials. Optional [Portal publication](PORTAL.md) adds encrypted per-subject keys and a separate approval page. It does not implement an OAuth authorization server, project sharing/ACLs, or infrastructure administration.
+This is a single-process service with bearer credentials. Optional [Portal integration](PORTAL.md) adds encrypted personal and project connections and a separate account page.
 
 ## Configure the service
 
@@ -15,6 +15,8 @@ The CLI requires a protected credentials file outside the repository. Its JSON s
 ```
 
 Replace the placeholder with a cryptographically random token. Tokens must contain at least 32 non-whitespace characters. Never commit this file or print its contents. Give each person a stable subject and separate credentials; never use one shared administrator token. Multiple different tokens may map to the same subject for rotation. The file is loaded at startup, so restart the service after changing it or revoking a credential. The verifier stores token hashes in memory.
+
+For a client that only supports an MCP URL and bearer token, add `"projectId": "my-project"` to that client's credential entry. Configure the token in the client project's private MCP settings and share that configuration across its chats. Provision a distinct token for each subject and project. The host uses the `projectId` from the verified token on every request. An embedded host can instead derive `{ subject, projectId }` in `verifyToken` from trusted client authentication and expose the user's authorized project IDs through `portal.projectsForSubject`. Use the same membership authority for both. Project IDs follow the workspace-name character rules below.
 
 | Environment variable | Meaning | Default |
 | --- | --- | --- |
@@ -44,9 +46,9 @@ Configure a Streamable HTTP MCP client with:
 
 The hostname is illustrative. For local development, use `http://127.0.0.1:8093/mcp/my-task`. Production requires HTTPS at the reverse proxy. No credentials belong in the URL.
 
-`my-task` selects a durable workspace belonging to the authenticated subject. Names are 1 to 64 ASCII letters, digits, dots, underscores or hyphens, beginning with a letter or digit. `/mcp` selects `default`. Use a different task name for each independently active agent. The server hashes the subject/workspace pair to choose a directory; neither value becomes a filesystem path.
+`my-task` selects a durable workspace belonging to the authenticated subject and, when present, the authenticated project. Names are 1 to 64 ASCII letters, digits, dots, underscores or hyphens, beginning with a letter or digit. `/mcp` selects `default`. Use a different task name for each independently active agent. The server hashes the workspace identity to choose a directory. Project-scoped workspaces share the existing stored-session quota per account.
 
-After initialization, the client sends the returned `Mcp-Session-Id` on each subsequent POST/DELETE. Authentication is checked again on every request. A session ID from another subject or workspace returns 404. Referencing another workspace's rstool session, including as a synthesis source, cannot load its files.
+After initialization, the client sends the returned `Mcp-Session-Id` on each subsequent POST/DELETE. Authentication is checked again on every request. A session ID from another subject, project or workspace returns 404. Referencing another workspace's rstool session, including as a synthesis source, cannot load its files.
 
 One workspace permits one live MCP connection. A second initialization returns 409, including two agents using the same person's credential. This prevents independently cached copies or current-session pointers from overwriting each other. Requests within that connection and tool invocations inside a JSON-RPC batch are serialized. A failed asynchronous operation completes its rollback before the next tool starts. This is exclusive ownership, not collaborative editing or optimistic merging.
 

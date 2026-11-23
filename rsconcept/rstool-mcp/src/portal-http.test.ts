@@ -10,7 +10,7 @@ import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/
 import { afterEach, expect, it, vi } from 'vitest';
 
 import packageInfo from '../package.json' with { type: 'json' };
-import { createBearerTokenVerifier } from './http-auth';
+import { createBearerIdentityVerifier, createBearerTokenVerifier } from './http-auth';
 import { createRSToolHttpServer, type RSToolHttpServerOptions } from './http-server';
 import { PortalClient } from './portal-client';
 import { PortalCreations } from './portal-creations';
@@ -22,6 +22,8 @@ const ALICE = 'a'.repeat(40),
 const ACCOUNT_ALICE = 'c'.repeat(40),
   ACCOUNT_BOB = 'd'.repeat(40);
 const KEY = 'rcp_12345678_' + 'portal-secret'.repeat(4);
+const READ_KEY = 'rcp_87654321_' + 'read-only'.repeat(4);
+const PROJECT_A = 'e'.repeat(40), PROJECT_B = 'f'.repeat(40), PROJECT_OTHER_USER = 'g'.repeat(40);
 const ORIGIN = 'https://mcp.example';
 const cleanup: Array<() => Promise<void> | void> = [];
 
@@ -301,7 +303,11 @@ async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions,
   };
   const created = new Map<number, Record<string, unknown>>();
   const remote = vi.fn<typeof fetch>(async (input, options) => {
-    expect((options!.headers as Record<string, string>).Authorization).toBe(`Bearer ${KEY}`);
+    const authorization = (options!.headers as Record<string, string>).Authorization;
+    if (authorization === `Bearer ${READ_KEY}`) {
+      if (String(input).endsWith('/me')) return Response.json({ id: 7, username: 'Alice', scopes: ['read'], expires_at: null });
+      expect(options?.method).toBe('GET');
+    } else expect(authorization).toBe(`Bearer ${KEY}`);
     if (String(input).endsWith('/me')) return Response.json({ id: 7, username: 'Alice' });
     const route = new URL(String(input)).pathname;
     if (options?.method === 'POST' && /^\/api\/agents\/(rsforms|models|oss)$/.test(route)) {
@@ -312,7 +318,27 @@ async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions,
     }
     if (route.endsWith('/context-search')) return Response.json({ ids: [...created.keys()] });
     const createdId = Number(route.split('/').at(-2));
-    if (created.has(createdId)) return Response.json(created.get(createdId));
+    const item = created.get(createdId);
+    if (item) {
+      const nextRevision = '2026-11-13T00:01:00Z';
+      if (route.endsWith('/publish')) {
+        const body = JSON.parse(String(options!.body));
+        if (body.expected_time_update !== item.time_update) return Response.json({}, { status: 409 });
+        const schema = { ...item, ...body.schema, id: createdId, time_update: nextRevision };
+        created.set(createdId, schema);
+        return Response.json({ version: 1, schema });
+      }
+      if (route.endsWith('/set-value')) {
+        const headers = new Headers(options?.headers);
+        if (headers.get('X-Expected-Time-Update') !== item.time_update) return Response.json({}, { status: 409 });
+        const values = JSON.parse(String(options!.body)) as Array<{ target: number; type: string; data: unknown }>;
+        const model = { ...item, time_update: nextRevision,
+          items: values.map(({ target, type, data }) => ({ id: target, type, value: data })) };
+        created.set(createdId, model);
+        return Response.json(model);
+      }
+      return Response.json(item);
+    }
     if (String(input).endsWith('/description')) {
       const body = JSON.parse(String(options!.body));
       if (body.expected_time_update !== current.time_update) return Response.json({}, { status: 409 });
@@ -325,8 +351,9 @@ async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions,
     }
     return Response.json(current);
   });
+  const vault = new PortalVault(path.join(directory, 'vault'), randomBytes(32));
   const publisher = new PortalPublisher(
-    new PortalVault(path.join(directory, 'vault'), randomBytes(32)),
+    vault,
     new PortalClient('https://portal-api.example', remote),
     undefined,
     new PortalCreations(path.join(directory, 'creations'))
@@ -337,14 +364,18 @@ async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions,
     isolateComputations: false,
     ...policy,
     persistenceDir: path.join(directory, 'workspaces'),
-    verifyToken: createBearerTokenVerifier([
+    verifyToken: createBearerIdentityVerifier([
       { subject: 'alice', token: ALICE },
       { subject: 'bob', token: BOB },
+      { subject: 'alice', projectId: 'research-a', token: PROJECT_A },
+      { subject: 'alice', projectId: 'research-b', token: PROJECT_B },
+      { subject: 'bob', projectId: 'research-a', token: PROJECT_OTHER_USER },
     ]),
     portal: portalEnabled
       ? {
           publisher,
           publicOrigin: ORIGIN,
+          projectsForSubject: subject => subject === 'alice' ? ['research-a', 'research-b'] : ['research-a'],
           verifyAccountToken: createBearerTokenVerifier([
             { subject: 'alice', token: ACCOUNT_ALICE },
             { subject: 'bob', token: ACCOUNT_BOB },
@@ -355,20 +386,127 @@ async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions,
   await new Promise<void>((resolve) => service.server.listen(0, '127.0.0.1', resolve));
   cleanup.push(() => service.close());
   const url = `http://127.0.0.1:${(service.server.address() as AddressInfo).port}`;
-  const client = new Client({ name: 'portal-test', version: '1' });
-  const transport = new StreamableHTTPClientTransport(new URL(url + '/mcp/test'), {
-    requestInit: { headers: { Authorization: `Bearer ${ALICE}` } },
-  });
-  await client.connect(transport);
-  cleanup.push(() => client.close());
+  const connect = async (token: string, workspace: string) => {
+    const client = new Client({ name: 'portal-test', version: '1' });
+    const transport = new StreamableHTTPClientTransport(new URL(url + '/mcp/' + workspace), {
+      requestInit: { headers: { Authorization: `Bearer ${token}` } },
+    });
+    await client.connect(transport);
+    cleanup.push(() => client.close());
+    return { client, transport };
+  };
+  const { client, transport } = await connect(ALICE, 'test');
   const account = (route: string, method = 'GET', body?: unknown, token = ACCOUNT_ALICE, origin = ORIGIN) =>
     fetch(url + '/portal/api/' + route, {
       method,
       headers: { Authorization: `Bearer ${token}`, Origin: origin, 'Content-Type': 'application/json' },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
-  return { url, account, client, transport, remote, directory, service, publisher };
+  return { url, account, client, transport, connect, remote, directory, service, publisher, vault };
 }
+
+it('enrolls once and creates and verifies a schema and linked model from another chat in the project', async () => {
+  const app = await start();
+  const chatA = await app.connect(PROJECT_A, 'chat-a');
+  const chatB = await app.connect(PROJECT_A, 'chat-b');
+  const call = (name: string, args: Record<string, unknown> = {}) => chatB.client.callTool({ name, arguments: args });
+  const status = await chatA.client.callTool({ name: 'portal_connection_status', arguments: {} });
+  expect(status.structuredContent).toMatchObject({ connected: false, reason: 'not_connected',
+    connectionPage: `${ORIGIN}/portal/account?project=research-a` });
+  const connection = 'connection?project=research-a';
+  expect(await (await app.account('projects')).json()).toEqual({ projects: ['research-a', 'research-b'] });
+  expect((await app.account(connection, 'PUT', { key: KEY }, PROJECT_A)).status).toBe(401);
+  expect((await app.account('connection?project=foreign', 'PUT', { key: KEY })).status).toBe(403);
+  const enrollment = await app.account(connection, 'PUT', { key: KEY });
+  expect(enrollment.status).toBe(200);
+  expect(await enrollment.text()).not.toContain(KEY);
+  const live = await call('portal_connection_status');
+  expect(live.structuredContent).toMatchObject({ connected: true, mode: 'project', account: { id: 7 } });
+  expect(JSON.stringify(live)).not.toContain(KEY);
+  const stored = fs.readdirSync(path.join(app.directory, 'vault')).find(file => file.startsWith('project-'))!;
+  expect(fs.readFileSync(path.join(app.directory, 'vault', stored), 'utf8')).not.toContain(KEY);
+
+  const otherProject = await app.connect(PROJECT_B, 'chat-b');
+  const otherUser = await app.connect(PROJECT_OTHER_USER, 'chat-b');
+  expect((await fetch(`${app.url}/mcp/chat-b`, { method: 'POST', headers: {
+    Authorization: `Bearer ${PROJECT_B}`, 'Mcp-Session-Id': chatB.transport.sessionId!,
+  } })).status).toBe(404);
+  for (const client of [otherProject.client, otherUser.client, app.client]) {
+    const denied = await client.callTool({ name: 'portal_get_details', arguments: { targetId: 1, kind: 'schema' } });
+    expect(denied.isError).toBe(true);
+    expect(JSON.stringify(denied)).not.toContain(KEY);
+  }
+  expect((await app.account('connection', 'PUT', { key: READ_KEY })).status).toBe(200);
+  expect((await otherProject.client.callTool({ name: 'portal_connection_status' })).structuredContent)
+    .toMatchObject({ connected: false, reason: 'not_connected' });
+
+  const metadata = { title: 'Demo', alias: 'DEMO', location: '/U/Project', accessPolicy: 'private' };
+  expect((await call('portal_create_schema', { ...metadata, requestId: 'create-schema' })).structuredContent)
+    .toMatchObject({ targetId: 100, verified: true });
+  expect((await call('apply_schema_patch', { items: [
+    { alias: 'X1', term: 'Objects' }, { alias: 'D1', definitionFormal: 'X1' },
+  ] })).isError).not.toBe(true);
+  expect((await call('portal_publish_schema', { targetId: 100 })).structuredContent).toMatchObject({ verified: true });
+  const schema = await call('portal_get_details', { kind: 'schema', targetId: 100 });
+  const items = (schema.structuredContent as { items: Array<{ id: number; alias: string; definition_formal: string }> }).items;
+  expect(items).toEqual(expect.arrayContaining([expect.objectContaining({ alias: 'D1', definition_formal: 'X1' })]));
+  const target = items.find(item => item.alias === 'X1')!.id;
+  expect((await call('portal_create_model', { ...metadata, schemaId: 100, requestId: 'create-model' })).structuredContent)
+    .toMatchObject({ targetId: 101, verified: true });
+  const model = await call('portal_get_details', { kind: 'model', targetId: 101 });
+  const args = { targetId: 101, expectedTimeUpdate: (model.structuredContent as { time_update: string }).time_update,
+    values: [{ target, type: 'basic', data: { 1: 'Item' } }] };
+  expect((await call('portal_set_model_values', args)).structuredContent).toMatchObject({ targetId: 101, schemaId: 100, verified: true });
+  expect((await call('portal_set_model_values', args)).structuredContent).toMatchObject({
+    error: { message: expect.stringContaining('Portal model changed') },
+  });
+  expect((await call('portal_get_details', { kind: 'model', targetId: 101 })).structuredContent)
+    .toMatchObject({ schema: 100, items: [{ id: target, type: 'basic', value: { 1: 'Item' } }] });
+  const proposal = await call('portal_prepare_publication', { targetId: 100 });
+  expect(proposal.structuredContent).toMatchObject({ confirmationPage: '/portal/account?project=research-a' });
+  expect(await (await app.account('publications')).json()).toEqual([]);
+  expect(await (await app.account('publications?project=research-a', 'GET', undefined, ACCOUNT_BOB)).json()).toEqual([]);
+  expect(await (await app.account('publications?project=research-a')).json()).toHaveLength(1);
+  expect((await app.account(connection, 'DELETE')).status).toBe(200);
+  expect(await (await app.account('publications?project=research-a')).json()).toEqual([]);
+  expect(await (await app.account('connection')).json()).toMatchObject({ connected: true, mode: 'personal' });
+  for (const client of [chatA.client, chatB.client]) {
+    expect((await client.callTool({ name: 'portal_connection_status' })).structuredContent)
+      .toMatchObject({ connected: false, reason: 'not_connected' });
+  }
+});
+
+it('reports read-only, revoked and expired project credentials without returning secrets', async () => {
+  const app = await start();
+  const { client } = await app.connect(PROJECT_A, 'chat');
+  const connection = 'connection?project=research-a';
+  expect((await app.account(connection, 'PUT', { key: KEY })).status).toBe(200);
+  expect((await app.account(connection, 'PUT', { key: READ_KEY })).status).toBe(200);
+  const status = () => client.callTool({ name: 'portal_connection_status' });
+  expect((await status()).structuredContent).toMatchObject({ connected: true, keyPolicy: { scopes: ['read'] } });
+  expect((await client.callTool({ name: 'portal_get_details', arguments: { kind: 'schema', targetId: 1 } })).isError).not.toBe(true);
+  expect((await client.callTool({ name: 'portal_update_description', arguments: {
+    targetId: 1, expectedTimeUpdate: '2026-11-06T01:00:00Z', description: 'test',
+  } })).structuredContent).toMatchObject({ error: { message: 'Portal key does not allow write' } });
+
+  app.remote.mockResolvedValueOnce(Response.json({ detail: READ_KEY }, { status: 401 }));
+  const revoked = await status();
+  expect(revoked.structuredContent).toMatchObject({ connected: false, reason: 'key_invalid_or_revoked' });
+  expect(JSON.stringify(revoked)).not.toContain(READ_KEY);
+  app.remote.mockResolvedValueOnce(Response.json({ detail: READ_KEY }, { status: 401 }));
+  const denied = await client.callTool({ name: 'portal_get_details', arguments: { kind: 'schema', targetId: 1 } });
+  expect(denied.structuredContent).toMatchObject({ error: { message: expect.stringContaining('invalid or revoked') } });
+  expect(JSON.stringify(denied)).not.toContain(READ_KEY);
+
+  app.vault.set(['alice', 'research-a'], READ_KEY, { id: 7, username: 'Alice' }, {
+    scopes: ['read'], expiresAt: '2001-01-01T00:00:00Z',
+  });
+  const requests = app.remote.mock.calls.length;
+  expect((await status()).structuredContent).toMatchObject({ connected: false, reason: 'key_expired' });
+  expect((await client.callTool({ name: 'portal_get_details', arguments: { kind: 'schema', targetId: 1 } })).structuredContent)
+    .toMatchObject({ error: { message: expect.stringContaining('Portal key expired') } });
+  expect(app.remote.mock.calls).toHaveLength(requests);
+});
 
 it('keeps credentials outside MCP and enforces the authenticated account for approval and disconnect', async () => {
   const app = await start();

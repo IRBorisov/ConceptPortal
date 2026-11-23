@@ -2,6 +2,8 @@ import { createHash, randomUUID } from 'node:crypto';
 import fs from 'node:fs';
 import { join } from 'node:path';
 
+import type { PortalOwner } from './portal-vault';
+
 export type PortalItemKind = 'schema' | 'model' | 'oss';
 export interface CreationReceipt {
   origin: string;
@@ -21,7 +23,7 @@ export class PortalCreations {
     fs.mkdirSync(directory, { recursive: true, mode: 0o700 });
   }
 
-  public get(subject: string, requestId: string): CreationReceipt | null {
+  public get(subject: PortalOwner, requestId: string): CreationReceipt | null {
     const file = this.file(subject, requestId);
     try {
       const value: CreationReceipt = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -38,7 +40,7 @@ export class PortalCreations {
   }
 
   /** Exclusive create also protects separate processes sharing this data directory. */
-  public reserve(subject: string, requestId: string, receipt: CreationReceipt): void {
+  public reserve(subject: PortalOwner, requestId: string, receipt: CreationReceipt): void {
     const file = this.file(subject, requestId);
     let fd: number | undefined;
     try {
@@ -53,7 +55,7 @@ export class PortalCreations {
   }
 
   /** Persist the returned ID before attempting readback, so read failure is recoverable. */
-  public complete(subject: string, requestId: string, receipt: CreationReceipt): void {
+  public complete(subject: PortalOwner, requestId: string, receipt: CreationReceipt): void {
     const file = this.file(subject, requestId);
     const temporary = join(this.directory, `.${randomUUID()}.tmp`);
     let fd: number | undefined;
@@ -70,7 +72,7 @@ export class PortalCreations {
     }
   }
 
-  private file(subject: string, requestId: string): string {
+  private file(subject: PortalOwner, requestId: string): string {
     if (typeof requestId !== 'string' || !/^[A-Za-z0-9_-]{8,128}$/.test(requestId))
       throw new Error('requestId must contain 8–128 letters, digits, underscores or hyphens');
     const id = createHash('sha256').update(JSON.stringify([subject, requestId])).digest('hex');

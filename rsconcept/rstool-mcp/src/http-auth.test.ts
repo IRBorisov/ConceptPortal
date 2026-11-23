@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { createBearerTokenVerifier } from './http-auth';
+import { createBearerIdentityVerifier, createBearerTokenVerifier } from './http-auth';
 
 describe('HTTP bearer credentials', () => {
   it('maps independent tokens to stable subjects and allows rotation', async () => {
@@ -13,6 +13,17 @@ describe('HTTP bearer credentials', () => {
     expect(await verify('b'.repeat(32))).toBe('alice');
     expect(await verify('c'.repeat(32))).toBe('bob');
     expect(await verify('unknown')).toBeNull();
+  });
+
+  it('assigns only configured projects and rejects ambiguous or invalid credentials', () => {
+    const projected = { subject: 'alice', token: 'p'.repeat(32), projectId: 'research' };
+    const personal = { subject: 'alice', token: 'a'.repeat(32) };
+    const verify = createBearerIdentityVerifier([personal, projected]);
+    expect(verify(personal.token)).toBe('alice');
+    expect(verify(projected.token)).toEqual({ subject: 'alice', projectId: 'research' });
+    expect(() => createBearerIdentityVerifier([projected, { ...projected, projectId: 'other' }])).toThrow('duplicate token');
+    expect(() => createBearerIdentityVerifier([{ ...projected, projectId: '../other' }])).toThrow('project ID');
+    expect(() => createBearerTokenVerifier([projected])).toThrow('audience');
   });
 
   it.each([
