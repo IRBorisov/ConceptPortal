@@ -9,7 +9,7 @@ if (!worktree || !output) throw new Error('Usage: node bundle.mjs <built worktre
 const { build } = esbuildModule ? await import(pathToFileURL(resolve(esbuildModule))) : await import('esbuild');
 const domain = resolve(worktree, 'rsconcept/domain');
 const { exports: packageExports } = JSON.parse(await readFile(resolve(domain, 'package.json'), 'utf8'));
-const adapter = fileURLToPath(new URL('./portal-adapter.mjs', import.meta.url));
+const adapter = fileURLToPath(new URL('../../../frontend/benchmarks/portal-correctness-adapter.mjs', import.meta.url));
 const entries = runtimeEntries.map(
   ([file, names]) => `export { ${names.join(', ')} } from ${JSON.stringify(resolve(domain, 'dist', file))};`
 );

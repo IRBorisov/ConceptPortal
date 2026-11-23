@@ -23,7 +23,7 @@ function graphProgram(runtime, source = 1, target = 2, inline = false, shadow = 
   return { calculator, closure, assertion: parse('∀u∈X4 u∉F11[u]') };
 }
 
-function graphResult(runtime, fixture) {
+function graphResult(runtime, fixture, interpretOnly = false) {
   const { calculator, closure, assertion } = graphProgram(
     runtime,
     fixture.source,
@@ -42,10 +42,11 @@ function graphResult(runtime, fixture) {
   }
   calculator.setValue('X4', domain);
   if (fixture.relation !== undefined) {
-    calculator.setValue('S7', fixture.relation);
+    calculator.setValue('S7', structuredClone(fixture.relation));
   }
-  const fast = calculator.evaluateFast(assertion);
-  return { fast, detailed: calculator.evaluateFull(assertion) };
+  const fast = interpretOnly ? undefined : calculator.evaluateFast(assertion);
+  const detailed = calculator.evaluateFull(assertion);
+  return { fast: interpretOnly ? detailed.value : fast, detailed };
 }
 
 function edge(from, to) {
@@ -78,7 +79,7 @@ function runCycleCases({ check, reference, candidate, extended }) {
     ['invalid-argument-declaration-fallback', { domain: [1], relation: [edge(1, 1)], invalidDeclaration: true }, null]
   ];
   for (const [id, fixture, literal] of ordinary) {
-    const expected = graphResult(reference, fixture);
+    const expected = graphResult(reference, fixture, true);
     if (literal !== undefined) {
       check(`scc.${id}.oracle`, expected.fast, literal);
     }
@@ -119,7 +120,7 @@ function runCycleCases({ check, reference, candidate, extended }) {
       inline: index % 3 === 0,
       shadow: index % 3 === 1
     };
-    check(`scc.seeded-directed.${index}`, () => graphResult(candidate, fixture), graphResult(reference, fixture));
+    check(`scc.seeded-directed.${index}`, () => graphResult(candidate, fixture), graphResult(reference, fixture, true));
   }
 
   if (extended) {
