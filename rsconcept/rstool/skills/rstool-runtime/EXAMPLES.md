@@ -230,6 +230,21 @@ const analysis = tool.analyzeExpression({
 });
 ```
 
+## Раскрытие структуры
+
+```ts
+const source = tool.getSessionState().items.find(item => item.alias === 'S1');
+if (source) {
+  const preview = tool.previewStructure({ constituentId: source.id });
+  if (preview.success) {
+    const projection = preview.nodes.find(node => node.definition === 'Pr2(S1)');
+    // projection?.existing и projection?.definitionMatches помогают найти готовые термы.
+  }
+}
+```
+
+В MCP вызови `preview_structure` с числовым `constituentId` из `get_session_state`. До записи проверь, какие узлы нужны по требованиям брифа.
+
 ## Состояние сессии
 
 ```ts

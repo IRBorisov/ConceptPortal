@@ -14,6 +14,7 @@ import {
 import { collectModelDiagnostics, collectSchemaDiagnostics } from '../mappers/diagnostics-collector';
 import { ModelAdapter } from '../mappers/model-adapter';
 import { SchemaAdapter } from '../mappers/schema-adapter';
+import { buildStructurePreview } from '../mappers/structure-preview';
 import { orderDrafts, reorderSessionItemsByDrafts } from '../session/batch-apply';
 import { SessionStore } from '../session/session-store';
 import {
@@ -49,6 +50,7 @@ import {
   type PortalSchemaImportData
 } from './portal-json';
 import { type SessionHandle, type SessionRevision, type SessionState } from './session';
+import { type PreviewStructureInput, type PreviewStructureResult } from './structure-preview';
 import { CONTRACT_VERSION, type RSToolAgentContract, type RSToolAgentOptions } from './tool-contract';
 
 function normalizeImportedState(state: SessionState): SessionState {
@@ -210,6 +212,12 @@ export class RSToolAgent implements RSToolAgentContract {
       this.sessions.setDiagnostics(id, [...collectSchemaDiagnostics(envelope.state), ...sanitizedDiagnostics]);
     }
     return { ...result, diagnostics: sanitizedDiagnostics };
+  }
+
+  /** @inheritdoc */
+  public previewStructure(input: PreviewStructureInput, sessionId?: string): PreviewStructureResult {
+    const { state } = this.sessions.get(this.resolveSessionId(sessionId));
+    return buildStructurePreview(state, input.constituentId);
   }
 
   /** @inheritdoc */

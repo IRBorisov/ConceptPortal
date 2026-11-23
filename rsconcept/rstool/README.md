@@ -2,7 +2,7 @@
 
 Agent-facing library for **incremental RSForm construction**, **RSLang expression analysis**, **diagnostics**, **modeling**, and **evaluation**. It wraps [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) with a deterministic session contract and a stdio JSON wrapper for LLM agents. MCP hosts can use it through [`@rsconcept/rstool-mcp`](https://www.npmjs.com/package/@rsconcept/rstool-mcp).
 
-**Contract version:** `4.0.0` — see [skills/rstool-runtime/REFERENCE.md](./skills/rstool-runtime/REFERENCE.md) for the full v4 API.
+**Contract version:** `4.1.0` — see [skills/rstool-runtime/REFERENCE.md](./skills/rstool-runtime/REFERENCE.md) for the full v4 API.
 
 ## Agent skill
 
@@ -89,7 +89,7 @@ Maintainers: see [PUBLISHING.md](./PUBLISHING.md) for npm release steps.
 - Session-dependent reads, analysis, exports and evaluation require an existing current session or explicit sessionId. Call ensureSession/createSession only when a session is needed; otherwise NO_CURRENT_SESSION is returned. getCurrentSession itself returns null when none exists.
 - On startup, a ready handshake is printed.
 
-Supported methods (contract `4.0.0`):
+Supported methods (contract `4.1.0`):
 
 - `ping`
 - `methods`
@@ -100,6 +100,7 @@ Supported methods (contract `4.0.0`):
 - `applySchemaPatch`
 - `getSessionState`
 - `analyzeExpression`
+- `previewStructure` — preview Portal's structure tree by `constituentId`, with links and formal definition matches
 - `listDiagnostics`
 - `commitStep`
 - `exportSession`
@@ -125,7 +126,7 @@ Request:
 Response:
 
 ```json
-{ "id": "1", "ok": true, "result": { "sessionId": "...", "contractVersion": "4.0.0" } }
+{ "id": "1", "ok": true, "result": { "sessionId": "...", "contractVersion": "4.1.0" } }
 ```
 
 Example `applySchemaPatch`:
@@ -154,7 +155,7 @@ Response:
   "ok": true,
   "result": {
     "success": true,
-    "session": { "sessionId": "...", "contractVersion": "4.0.0" },
+    "session": { "sessionId": "...", "contractVersion": "4.1.0" },
     "summary": { "itemCount": 3 }
   }
 }

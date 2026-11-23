@@ -47,6 +47,90 @@ describe('RSToolAgent', () => {
     expect(analysis.diagnostics.every(record => record.constituentId === undefined)).toBe(true);
   });
 
+  it('previews nested projections and reports structure links separately from definition matches', () => {
+    const tool = new RSToolAgent();
+    const { success } = tool.applySchemaPatch({
+      items: [
+        { id: 1, alias: 'X1' },
+        { id: 2, alias: 'S1', definitionFormal: 'ℬ(Z×ℬ(Z×X1))' },
+        { id: 3, alias: 'D1', definitionFormal: 'Pr2( S1 )' },
+        { id: 4, alias: 'D2', definitionFormal: 'Pr1(D3)' },
+        { id: 5, alias: 'D3', definitionFormal: 'red(Pr2(S1))' },
+        { id: 6, alias: 'D4', definitionFormal: 'D1' },
+        { id: 7, alias: 'A1', definitionFormal: 'D4 = Pr2(S1)' },
+        { id: 8, alias: 'D5', definitionFormal: 'Pr1(red(Pr2(S1)))' }
+      ],
+      commitMessage: 'seed structure'
+    });
+    expect(success).toBe(true);
+    const before = tool.exportSession();
+    const preview = tool.previewStructure({ constituentId: 2 });
+    expect(preview).toMatchObject({ success: true, diagnostics: [] });
+    expect(preview.nodes).toMatchObject([
+      { key: 'root', path: [], parent: null, existing: { id: 2, alias: 'S1' }, definitionMatches: [] },
+      { path: [0, 1], parent: 0, definition: 'Pr1(S1)', existing: null, definitionMatches: [] },
+      {
+        path: [0, 2],
+        parent: 0,
+        definition: 'Pr2(S1)',
+        existing: { id: 3, alias: 'D1' },
+        definitionMatches: [{ id: 3, alias: 'D1' }]
+      },
+      {
+        path: [0, 2, 0],
+        parent: 2,
+        definition: 'red(Pr2(S1))',
+        existing: { id: 5, alias: 'D3' },
+        definitionMatches: [{ id: 5, alias: 'D3' }]
+      },
+      {
+        path: [0, 2, 0, 1],
+        parent: 3,
+        definition: 'Pr1(red(Pr2(S1)))',
+        existing: { id: 4, alias: 'D2' },
+        definitionMatches: [{ id: 8, alias: 'D5' }]
+      },
+      { path: [0, 2, 0, 2], parent: 3, definition: 'Pr2(red(Pr2(S1)))' }
+    ]);
+    expect(tool.previewStructure({ constituentId: 3 })).toEqual(preview);
+    expect(tool.exportSession()).toBe(before);
+  });
+
+  it('uses the effective typification and keeps equal-typed tuple components distinct', () => {
+    const tool = new RSToolAgent();
+    const { session, success } = tool.applySchemaPatch({
+      items: [
+        { id: 1, alias: 'X1' },
+        { id: 2, alias: 'S2', definitionFormal: 'ℬ(X1)×ℬ(X1)' },
+        { id: 3, alias: 'S3', definitionFormal: 'Z', typificationManual: 'ℬ(X1)×ℬ(X1)' }
+      ]
+    });
+    expect(success).toBe(true);
+    const other = tool.createSession();
+    for (const [id, alias] of [[2, 'S2'], [3, 'S3']] as const) {
+      const preview = tool.previewStructure({ constituentId: id }, session.sessionId);
+      expect(preview).toMatchObject({ success: true, diagnostics: [] });
+      expect(preview.nodes.slice(1)).toMatchObject([
+        { path: [1], parent: 0, type: 'ℬ(X1)', definition: `pr1(${alias})` },
+        { path: [2], parent: 0, type: 'ℬ(X1)', definition: `pr2(${alias})` }
+      ]);
+    }
+    expect(tool.getCurrentSession()).toEqual(other);
+  });
+
+  it('reports missing constituents and undefined typifications without recording diagnostics in the session', () => {
+    const tool = new RSToolAgent();
+    tool.applySchemaPatch({ mode: 'best_effort', items: [{ id: 1, alias: 'S1', definitionFormal: 'ℬ(' }] });
+    const before = tool.exportSession();
+    expect(tool.previewStructure({ constituentId: 99 })).toMatchObject({
+      success: false, nodes: [], diagnostics: [{ code: 'CONSTITUENT_NOT_FOUND', constituentId: 99 }]
+    });
+    expect(tool.previewStructure({ constituentId: 1 })).toMatchObject({
+      success: false, nodes: [], diagnostics: [{ code: 'UNDEFINED_TYPIFICATION', constituentId: 1 }]
+    });
+    expect(tool.exportSession()).toBe(before);
+  });
+
   it('rejects formal definition for constants', () => {
     const tool = new RSToolAgent();
     const session = tool.createSession();

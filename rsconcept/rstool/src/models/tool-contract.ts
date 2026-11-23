@@ -13,9 +13,10 @@ import { type EvaluateInput, type EvaluationResult } from './evaluation';
 import { type ExportPortalInput, type ExportPortalResult, type ImportDataKind } from './import-export';
 import { type RecalculateModelResult, type SessionModelState, type SetModelValuesInput } from './model-value';
 import { type SessionHandle, type SessionRevision, type SessionState } from './session';
+import { type PreviewStructureInput, type PreviewStructureResult } from './structure-preview';
 
-/** Agent-visible contract version; bump on breaking API changes. */
-export const CONTRACT_VERSION = '4.0.0';
+/** Agent-visible contract version. */
+export const CONTRACT_VERSION = '4.1.0';
 
 /** Options for constructing an {@link RSToolAgent}. */
 export interface RSToolAgentOptions {
@@ -66,6 +67,9 @@ export interface RSToolAgentContract {
 
   /** Parse and type-check an RSLang expression against the current schema context. */
   analyzeExpression(input: AnalyzeExpressionInput, sessionId?: string): AnalysisResult;
+
+  /** Preview the selected constituent's structure as in Portal, without editing the session. */
+  previewStructure(input: PreviewStructureInput, sessionId?: string): PreviewStructureResult;
 
   /** Record a revision checkpoint with an optional message. */
   commitStep(message?: string, sessionId?: string): SessionRevision;

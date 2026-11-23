@@ -28,6 +28,7 @@ export const STDIO_METHODS = [
   'getSessionState',
   'listDiagnostics',
   'analyzeExpression',
+  'previewStructure',
   'commitStep',
   'exportSession',
   'exportPortal',
@@ -154,6 +155,12 @@ async function dispatchStdioRequest(tool: RSToolAgent, request: StdioRequest): P
           id: request.id,
           ok: true,
           result: tool.analyzeExpression(omitSessionId(params) as never, optionalSessionId(params))
+        };
+      case 'previewStructure':
+        return {
+          id: request.id,
+          ok: true,
+          result: tool.previewStructure({ constituentId: params.constituentId as number }, optionalSessionId(params))
         };
       case 'commitStep':
         return {

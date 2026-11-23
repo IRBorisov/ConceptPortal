@@ -1,8 +1,11 @@
-import { Graph } from '@rsconcept/domain/graph/graph';
-import { extractGlobals } from '@rsconcept/domain/rslang/api';
 import { type ExpressionType, RSLangAnalyzer, type ValueClass } from '@rsconcept/domain/rslang';
 import { assignSchemaDiagnostics } from '@rsconcept/domain/library';
-import { isBasicConcept, isLogical, normalizeExpression } from '@rsconcept/domain/library/rsform-api';
+import {
+  buildFormalDependencyGraph,
+  isBasicConcept,
+  isLogical,
+  normalizeExpression
+} from '@rsconcept/domain/library/rsform-api';
 import { type Constituenta, CstType, type RSForm } from '@rsconcept/domain/library/rsform';
 
 import { type ConstituentaState, type SessionState } from '../models';
@@ -13,8 +16,7 @@ export interface EnrichedConstituenta {
 }
 
 /** Build a domain {@link RSForm} view from session state (same shape as Portal loader output). */
-export function buildRSFormFromSession(session: SessionState): RSForm {
-  const graph = new Graph<number>();
+export function buildRSFormFromSession(session: SessionState, { useStoredTypes = true } = {}): RSForm {
   const cstByAlias = new Map<string, Constituenta>();
   const cstByID = new Map<number, Constituenta>();
   const analyzer = new RSLangAnalyzer();
@@ -23,24 +25,16 @@ export function buildRSFormFromSession(session: SessionState): RSForm {
     const cst = toFrontendConstituenta(item);
     cstByAlias.set(cst.alias, cst);
     cstByID.set(cst.id, cst);
-    graph.addNode(cst.id);
-    if (item.cstType === CstType.BASE) {
+    if (useStoredTypes && item.cstType === CstType.BASE) {
       analyzer.addBase(cst.alias);
     }
-    if (cst.effectiveType) {
+    if (useStoredTypes && cst.effectiveType) {
       analyzer.setGlobal(cst.alias, cst.effectiveType, cst.analysis.valueClass as ValueClass | null);
     }
     return cst;
   });
 
-  for (const cst of items) {
-    for (const alias of extractGlobals(cst.definition_formal)) {
-      const source = cstByAlias.get(alias);
-      if (source) {
-        graph.addEdge(source.id, cst.id);
-      }
-    }
-  }
+  const graph = buildFormalDependencyGraph(items);
 
   return {
     id: 0,

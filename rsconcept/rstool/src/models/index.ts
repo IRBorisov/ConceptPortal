@@ -49,6 +49,13 @@ export {
 } from './portal-json';
 export { RSToolAgent } from './rstool-agent';
 export { type SessionHandle, type SessionRevision, type SessionState } from './session';
+export {
+  type PreviewStructureInput,
+  type PreviewStructureResult,
+  type StructureConstituentRef,
+  type StructurePreviewDiagnostic,
+  type StructurePreviewNode
+} from './structure-preview';
 export { CONTRACT_VERSION, type RSToolAgentContract, type RSToolAgentOptions } from './tool-contract';
 
 export { RSToolError } from './tool-error';

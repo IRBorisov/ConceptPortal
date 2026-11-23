@@ -63,6 +63,16 @@ describe('disposable computation processes', () => {
     expect(live.getSessionState().items).toEqual([]);
   });
 
+  it('previews structure in a detached computation without changing the session', async () => {
+    const live = new HostedRSToolAgent();
+    live.applySchemaPatch({ items: [{ id: 1, alias: 'S1', definitionFormal: 'Z×Z' }] });
+    const before = live.exportSession();
+    await expect(pool().execute(live, 'preview_structure', { constituentId: 1 })).resolves.toMatchObject({
+      success: true, nodes: [{ key: 'root' }, { definition: 'pr1(S1)' }, { definition: 'pr2(S1)' }]
+    });
+    expect(live.exportSession()).toBe(before);
+  });
+
   it('kills a blocked CPU process, bounds parallel work and keeps the parent responsive', async () => {
     const executor = pool({ maxWorkers: 1, timeoutMs: 700, workerUrl: fixture("process.once('message', () => { while (true) {} });") });
     const live = new HostedRSToolAgent();

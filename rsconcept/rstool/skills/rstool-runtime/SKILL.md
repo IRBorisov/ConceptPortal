@@ -17,6 +17,7 @@ description: >-
 - Библиотека: `@rsconcept/rstool`, класс `RSToolAgent`. Анализатор — `@rsconcept/domain`.
 - Правка схемы — только `applySchemaPatch({ items, mode?, commitMessage? })`. `id` и `cstType` выводятся из префикса имени (`X/C/S/D/F/P/A/T/N`); пачка упорядочивается сама. `mode: 'atomic'` (по умолчанию) откатывает всё при первой ошибке; `'best_effort'` применяет корректное — после него `failed` должен стать пустым.
 - Черновик формулы — `analyzeExpression({ expression, cstType })` без сохранения.
+- Раскрытие структуры — `previewStructure({ constituentId })` / `preview_structure`. Узлы содержат проекции и множества-суммы, структурные ссылки `existing` и совпадения формул `definitionMatches`.
 - Диагностики — `listDiagnostics({ kind?, severity? })`; `analysisSuccess: true` в summary не означает их отсутствия.
 - Состояние — `getSessionState()` (summary) или `getSessionState('full')`.
 - Модель — `await setModelValues(...)`, `evaluate`, `recalculateModel`; `status` — число (`EvalStatus`). Для проверки смысла по брифу удобнее сценарии и `check-brief` (`docs/BRIEF.md`).
@@ -83,6 +84,7 @@ writeFileSync('<abs>/task/session.json', tool.exportSession(), 'utf-8');
 | `applySchemaPatch`                | правка схемы                        |
 | `synthesize`                      | встраивание / синтез схем           |
 | `analyzeExpression`               | проверка / анализ выражения         |
+| `previewStructure`                | предпросмотр раскрытия структуры    |
 | `listDiagnostics`, `diagnostics`  | диагностики                         |
 | `setModelValues`, `getModelState` | интерпретация, значения модели      |
 | `evaluate`, `recalculateModel`    | вычисление, пересчёт модели         |

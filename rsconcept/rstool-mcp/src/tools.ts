@@ -469,6 +469,22 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
       ),
   },
   {
+    name: "preview_structure",
+    description:
+      "Preview Portal's structure tree for a numeric constituentId from get_session_state. Each node reports an existing structural link and matching formal definitions separately. Read-only. Use the current session or pass sessionId.",
+    annotations: { readOnlyHint: true, openWorldHint: false },
+    inputSchema: {
+      type: "object",
+      properties: {
+        sessionId,
+        constituentId: { type: "integer" },
+      },
+      required: ["constituentId"],
+    },
+    invoke: (tool, args) =>
+      tool.previewStructure({ constituentId: args.constituentId as number }, optionalSessionId(args)),
+  },
+  {
     name: "list_diagnostics",
     description:
       "List active diagnostics for the session: expression (formula), schema (homonyms, duplicates, metadata), model (interpretation status).",

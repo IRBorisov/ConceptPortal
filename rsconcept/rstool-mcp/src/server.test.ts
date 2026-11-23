@@ -111,6 +111,7 @@ describe("buildRSToolMcpServer", () => {
       "apply_schema_patch",
       "get_session_state",
       "analyze_expression",
+      "preview_structure",
       "list_diagnostics",
       "commit_step",
       "export_session",
@@ -123,6 +124,38 @@ describe("buildRSToolMcpServer", () => {
       "restore_order",
       "synthesize",
     ]);
+  });
+
+  it('serves read-only structure previews with structured results and diagnostics', async () => {
+    const tool = new RSToolAgent();
+    const server = buildRSToolMcpServer({ tool });
+    const client = new Client({ name: 'structure-preview-test', version: '1' });
+    const [local, remote] = InMemoryTransport.createLinkedPair();
+    try {
+      await server.connect(remote);
+      await client.connect(local);
+      const catalog = await client.listTools();
+      expect(catalog.tools.find(item => item.name === 'preview_structure')).toMatchObject({
+        annotations: { readOnlyHint: true }, inputSchema: { required: ['constituentId'] }
+      });
+      await client.callTool({
+        name: 'apply_schema_patch',
+        arguments: { items: [{ id: 1, alias: 'S1', definitionFormal: 'ℬ(Z×Z)' }] }
+      });
+      const before = tool.exportSession();
+      const result = await client.callTool({ name: 'preview_structure', arguments: { constituentId: 1 } });
+      expect(result.structuredContent).toMatchObject({
+        success: true, nodes: [{ key: 'root' }, { definition: 'Pr1(S1)' }, { definition: 'Pr2(S1)' }]
+      });
+      const missing = await client.callTool({ name: 'preview_structure', arguments: { constituentId: 99 } });
+      expect(missing.structuredContent).toMatchObject({
+        success: false, diagnostics: [{ code: 'CONSTITUENT_NOT_FOUND', constituentId: 99 }]
+      });
+      expect(tool.exportSession()).toBe(before);
+    } finally {
+      await client.close();
+      await server.close();
+    }
   });
 
   it("list_diagnostics forwards flat kind and severity filters", () => {

@@ -33,6 +33,7 @@ export {
 export { analyzeConstituentType } from './effective-type';
 export { applyFilterCategory, inferStatus, inferTemplate, inferTemplatedType, normalizeExpression } from './expression';
 export { buildFormalDependencyGraph, restoreConstituentOrder } from './formal-graph';
+export { analyzeSchemaConstituents } from './schema-analysis';
 export { calculateSchemaStats, isSchemaIssue } from './stats';
 export { findCstByStructure, getStructureName, inferNewSpawnPosition } from './structure';
 export { applyConstituentSubstitutions, remapSubstitutionsAfterImport, type SubstitutionResult } from './substitution';

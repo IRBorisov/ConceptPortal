@@ -72,6 +72,21 @@ describe('handleStdioRequest', () => {
     expect((response.result as { value: number }).value).toBe(3);
   });
 
+  it('previews the structure of a constituent in an explicit session', async () => {
+    const tool = new RSToolAgent();
+    const { session } = tool.applySchemaPatch({ items: [{ id: 1, alias: 'S1', definitionFormal: 'Z×Z' }] });
+    tool.createSession();
+    const response = await handleStdioRequest(tool, {
+      id: 12,
+      method: 'previewStructure',
+      params: { sessionId: session.sessionId, constituentId: 1 }
+    });
+    expect(response).toMatchObject({
+      ok: true,
+      result: { success: true, nodes: [{ key: 'root' }, { definition: 'pr1(S1)' }, { definition: 'pr2(S1)' }] }
+    });
+  });
+
   it('returns METHOD_NOT_FOUND for unknown methods', async () => {
     const response = await handleStdioRequest(tool, { id: 4, method: 'notReal' });
     expect(response.ok).toBe(false);
