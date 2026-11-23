@@ -194,7 +194,7 @@ function seededFixtures(count) {
   });
 }
 
-function seededCase(runtime, fixture, index, full) {
+function seededCase(runtime, fixture, index, mode) {
   const t = runtime.TUPLE_ID;
   const rows = fixture.columns.map(columns => {
     const row = structuredClone(columns);
@@ -212,20 +212,18 @@ function seededCase(runtime, fixture, index, full) {
       ],
       fn
     );
-    return valueOf(runtime, calculator, joinExpression, full);
+    return valueOf(runtime, calculator, joinExpression, mode === 'full');
   }
   const keys = fixture.argumentsByRow.map((argument, row) => [t, row + 1, [...argument]]);
   const fn = `[a∈ℬ(X1)] Pr${fixture.to}(Fi${fixture.from}[a](S1))`;
-  return trace(
-    runtime,
-    [
-      ['X1', [...fixture.subjects]],
-      ['S1', rows],
-      ['S2', keys]
-    ],
-    fn,
-    'I{(i,F1[a]) | (i,a):∈S2}'
-  );
+  const bindings = [
+    ['X1', [...fixture.subjects]],
+    ['S1', rows],
+    ['S2', keys]
+  ];
+  const expression = 'I{(i,F1[a]) | (i,a):∈S2}';
+  if (mode === 'trace') return trace(runtime, bindings, fn, expression);
+  return valueOf(runtime, calculatorWith(runtime, bindings, fn).calculator, expression, mode === 'full');
 }
 
 export function runRelationalCases({ check, reference, candidate, extended = false }) {
@@ -310,6 +308,12 @@ export function runRelationalCases({ check, reference, candidate, extended = fal
   check('relational.image-budget-error', () => imageBudget(candidate, true), reportedLimit);
 
   for (const [index, fixture] of seededFixtures(extended ? 256 : 48).entries()) {
-    checkFast(`relational.seed-${index}`, (runtime, full) => seededCase(runtime, fixture, index, full));
+    checkFast(`relational.seed-${index}`, (runtime, full) =>
+      seededCase(runtime, fixture, index, full ? 'full' : 'fast')
+    );
+    if (index % 2 !== 0) {
+      const trace = seededCase(reference, fixture, index, 'trace');
+      check(`relational.seed-${index}.trace`, () => seededCase(candidate, fixture, index, 'trace'), trace);
+    }
   }
 }

@@ -19,6 +19,7 @@ export async function runSuites(options) {
   const checks = makeChecks();
   const { check, failures } = checks;
   const chosen = options.suites ?? Object.keys(suites).filter(name => name !== 'portal' || options.readSnapshot);
+  if (chosen.length === 0) throw new Error('Select at least one correctness suite');
   const groups = {};
   const experiments = {};
   const accepted = new Map();

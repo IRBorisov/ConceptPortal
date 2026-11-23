@@ -1,7 +1,7 @@
 import { RSEngine } from '@rsconcept/domain/library/rsengine';
 import { isInferrable } from '@rsconcept/domain/library/rsmodel-api';
 
-import { loadRSForm } from '../../../frontend/src/features/rsform/backend/rsform-loader.ts';
+import { loadRSForm } from '../src/features/rsform/backend/rsform-loader.ts';
 
 const services = {
   setCstValue: () => {
