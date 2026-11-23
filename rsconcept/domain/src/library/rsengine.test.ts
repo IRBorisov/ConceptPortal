@@ -633,4 +633,30 @@ describe('RSEngine.recalculateChanged', () => {
     expect(engine.getCstValue(2)).toBe(100_001);
     expect(evaluate).toHaveBeenCalledTimes(2);
   });
+
+  it('recalculates shared NaN values after refreshing an independent input', () => {
+    const overflow = '1' + '0'.repeat(310);
+    const schema = analyzedSchema([
+      mockConstituenta({ id: 1, alias: 'X1', cst_type: CstType.BASE }),
+      mockConstituenta({ id: 2, alias: 'D1', cst_type: CstType.TERM, definition_formal: `{${overflow}-${overflow}}` }),
+      mockConstituenta({ id: 3, alias: 'D2', cst_type: CstType.TERM, definition_formal: 'D1' }),
+      mockConstituenta({ id: 4, alias: 'A1', cst_type: CstType.AXIOM, definition_formal: 'D1=D2 & card(X1)>0' })
+    ]);
+    const engine = createEngine();
+    const reference = createEngine();
+    const initial = mockModel([{ id: 1, type: TYPE_BASIC, value: { 1: 'a' } }]);
+    const updated = mockModel([{ id: 1, type: TYPE_BASIC, value: { 1: 'a', 2: 'b' } }]);
+    engine.loadData(schema, initial);
+    engine.recalculateChanged();
+    expect(engine.getCstValue(2)).toEqual([NaN]);
+
+    engine.loadData(schema, updated);
+    engine.recalculateChanged();
+    reference.loadData(schema, updated);
+    reference.recalculateAll();
+
+    expect(reference.getCstValue(4)).toBe(1);
+    expect(engine.getCstValue(4)).toBe(reference.getCstValue(4));
+    expect(engine.getCstStatus(4)).toBe(reference.getCstStatus(4));
+  });
 });
