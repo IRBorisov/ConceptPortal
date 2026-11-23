@@ -3,7 +3,11 @@ import { type AstNode, getNodeIndices } from '../../parsing';
 import { TokenID } from '../parser/token';
 
 import { isModelValueArray } from './model-value-arrays';
-import { TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE, type ValueContext } from './value';
+import { TUPLE_ID, type Value, VALUE_FALSE, VALUE_TRUE } from './value';
+
+// Limit graph allocation when a small quantified set can be checked with a few scans.
+const MIN_GRAPH_ROOTS = 8;
+const MAX_GRAPH_ROWS_PER_ROOT = 32;
 
 interface RelationImage {
   relation: string;
@@ -22,7 +26,7 @@ interface IterationBudget {
 /** For a universal no-return assertion, decide positive reachability by strongly connected components. */
 export function tryEvaluateNoReturn(
   node: AstNode,
-  values: ValueContext,
+  getValue: (alias: string) => Value | null | undefined,
   functions: ReadonlyMap<string, AstNode>,
   budget: IterationBudget
 ): number | null {
@@ -60,12 +64,15 @@ export function tryEvaluateNoReturn(
     return null;
   }
 
-  const domain = values.get(domainAlias);
+  const domain = getValue(domainAlias);
   if (!isModelValueArray(domain)) {
     return null;
   }
   if (domain.length === 0) {
     return VALUE_TRUE;
+  }
+  if (domain.length < MIN_GRAPH_ROOTS) {
+    return null;
   }
 
   // Each nonterminal step adds a distinct vertex, and the final step checks stability.
@@ -85,9 +92,11 @@ export function tryEvaluateNoReturn(
     }
     roots.add(value);
   }
-  const relation = values.get(seed.relation);
+  const relation = getValue(seed.relation);
   if (
     !isModelValueArray(relation) ||
+    roots.size < MIN_GRAPH_ROOTS ||
+    relation.length > roots.size * MAX_GRAPH_ROWS_PER_ROOT ||
     Object.getPrototypeOf(relation) !== Array.prototype ||
     Object.hasOwn(relation, Symbol.iterator)
   ) {

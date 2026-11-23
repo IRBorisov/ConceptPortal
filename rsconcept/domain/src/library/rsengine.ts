@@ -5,13 +5,16 @@ import {
   type CalculatorEvaluateOptions,
   type CalculatorResult,
   RSCalculator,
-  type RSLangAnalyzer,
+  RSLangAnalyzer,
   TypeID,
   type Value
 } from '../rslang';
+import { type ASTContext, EVALUATOR_ITERATION_BUDGET } from '../rslang/eval/evaluator';
 import { createModelValueArray } from '../rslang/eval/model-value-arrays';
+import { tryEvaluateNoReturn } from '../rslang/eval/relation-closure';
 import { compare } from '../rslang/eval/value';
 import { normalizeType } from '../rslang/labels';
+import { TokenID } from '../rslang/parser/token';
 import { type ExpressionType } from '../rslang/semantic/typification';
 
 import { type Constituenta, CstType, type RSForm } from './rsform';
@@ -22,6 +25,8 @@ import { inferEvalStatus, isInferrable, tryFixValue } from './rsmodel-api';
 const INVALID_TYPE_MARKER = 'INVALID';
 const MAX_SNAPSHOT_CELLS = 100_000;
 const MAX_SNAPSHOT_DEPTH = 64;
+const standardCheckFull = Object.getOwnPropertyDescriptor(RSLangAnalyzer.prototype, 'checkFull')
+  ?.value as RSLangAnalyzer['checkFull'];
 
 interface CachedConstituentAnalysis {
   definition: string;
@@ -65,6 +70,7 @@ interface PreparedFunctions {
   calculator: RSCalculator;
   revision: number;
   definitions: Map<number, Pick<Constituenta, 'alias' | 'definition_formal'>>;
+  asts: ASTContext | undefined;
 }
 
 /** Services for {@link RSEngine}. */
@@ -100,6 +106,7 @@ export class RSEngine {
   private constituentAnalysisCache: ConstituentAnalysisCache | undefined;
   private incrementalCalculation: IncrementalCalculation | undefined;
   private preparedFunctions: PreparedFunctions | undefined;
+  private plainModelData = false;
   private valueSubscribers = new Map<number, Set<() => void>>();
   private statusSubscribers = new Map<number, Set<() => void>>();
   private changeSubscribers = new Set<() => void>();
@@ -115,10 +122,20 @@ export class RSEngine {
 
   /** Updates data for {@link RSEngine}. */
   public loadData(schema: RSForm, model: RSModel): void {
+    this.updateData(schema, model, false);
+  }
+
+  /** Load a decoded model whose value arrays contain plain JSON data. */
+  public loadPlainData(schema: RSForm, model: RSModel): void {
+    this.updateData(schema, model, true);
+  }
+
+  private updateData(schema: RSForm, model: RSModel, plain: boolean): void {
     const oldSchema = this.schema;
     const schemaChanged = oldSchema !== schema;
-    const modelChanged = this.data !== model;
+    const modelChanged = this.data !== model || this.plainModelData !== plain;
     this.schema = schema;
+    this.plainModelData = plain;
     if (schemaChanged) {
       this.calculationPasses = 0;
       this.constituentAnalysisCache = undefined;
@@ -269,7 +286,7 @@ export class RSEngine {
       return;
     }
     const oldValue = this.calculator.getValue(cst.alias);
-    const newValue = canonicalBasicIds(data);
+    const newValue = canonicalBasicIds(data, this.plainModelData);
 
     const updateList: Parameters<RSEngineServices['setCstValue']>[0]['data'] = [
       { target: cstID, type: TYPE_BASIC, data }
@@ -608,20 +625,25 @@ export class RSEngine {
 
   private prepareAst(): void {
     this.calculator.clearAllAst();
-    const functions = this.schema!.items.filter(cst => isFunctional(cst.cst_type));
+    const schema = this.schema!;
+    const asts: ASTContext | undefined =
+      this.plainModelData && schema.analyzer.checkFull === standardCheckFull ? new Map() : undefined;
+    const functions = schema.items.filter(cst => isFunctional(cst.cst_type));
     for (const cst of functions) {
       if (!cst.analysis?.success) {
         continue;
       }
-      const fullAnalysis = getAnalysisFor(cst.definition_formal, cst.cst_type, this.schema!);
+      const fullAnalysis = getAnalysisFor(cst.definition_formal, cst.cst_type, schema);
       if (fullAnalysis.ast) {
         this.calculator.setAST(cst.alias, fullAnalysis.ast);
+        asts?.set(cst.alias, fullAnalysis.ast);
       }
     }
     this.preparedFunctions = {
       calculator: this.calculator,
       revision: this.calculator.astRevision,
-      definitions: new Map(functions.map(({ id, alias, definition_formal }) => [id, { alias, definition_formal }]))
+      definitions: new Map(functions.map(({ id, alias, definition_formal }) => [id, { alias, definition_formal }])),
+      asts
     };
   }
 
@@ -631,6 +653,7 @@ export class RSEngine {
     this.calculatedSet.clear();
     this.calculator.clearAllValues();
 
+    const clone = this.plainModelData ? clonePlainValue : cloneValue;
     for (const item of model.items) {
       const cst = this.schema?.cstByID.get(item.id);
       if (!cst || item.type !== TYPE_BASIC) {
@@ -642,14 +665,14 @@ export class RSEngine {
       }
       const data = item.value as BasicBinding;
       this.basics.set(cst.id, data);
-      this.calculator.setValue(cst.alias, canonicalBasicIds(data));
+      this.calculator.setValue(cst.alias, canonicalBasicIds(data, this.plainModelData));
     }
     for (const item of model.items) {
       const cst = this.schema?.cstByID.get(item.id);
       if (!cst || item.type === TYPE_BASIC) {
         continue;
       }
-      const value = cloneStoredValue(item.value as Value);
+      const value = clone(item.value as Value);
       this.calculator.setValue(cst.alias, value);
       if (!cst.effectiveType || !this.calculator.validate(value, cst.effectiveType)) {
         this.invalidData.add(item.id);
@@ -840,8 +863,31 @@ export class RSEngine {
   }
 
   private evaluateConstituentFast(cst: Constituenta): Value | null {
-    const analysis = this.getConstituentAnalysis(cst);
-    return analysis.success && analysis.ast ? this.calculator.evaluateFast(analysis.ast) : null;
+    const { ast, success } = this.getConstituentAnalysis(cst);
+    if (!success || !ast) {
+      return null;
+    }
+    const prepared = this.preparedFunctions;
+    // The public calculator can replace an engine-owned function AST.
+    if (
+      this.plainModelData &&
+      prepared?.asts &&
+      prepared.calculator === this.calculator &&
+      prepared.revision === this.calculator.astRevision &&
+      this.schema?.analyzer.checkFull === standardCheckFull &&
+      ast.typeID === TokenID.QUANTOR_UNIVERSAL
+    ) {
+      const result = tryEvaluateNoReturn(
+        ast,
+        alias => this.calculator.getValue(alias),
+        prepared.asts,
+        EVALUATOR_ITERATION_BUDGET
+      );
+      if (result !== null) {
+        return result;
+      }
+    }
+    return this.calculator.evaluateFast(ast);
   }
 
   private getConstituentAnalysis(cst: Constituenta): AnalysisFull {
@@ -898,32 +944,26 @@ function evaluateAnalysis(parse: AnalysisFull, calculator: RSCalculator): Calcul
   };
 }
 
-function canonicalBasicIds(data: BasicBinding): number[] {
+function canonicalBasicIds(data: BasicBinding, plain: boolean): number[] {
   const keys = Object.keys(data);
-  const ids = createModelValueArray<number>(keys.length);
-  for (let index = 0; index < keys.length; index++) {
-    ids[index] = Number(keys[index]);
+  const ids = plain ? createModelValueArray<number>(keys.length) : keys.map(Number);
+  if (plain) {
+    for (let index = 0; index < keys.length; index++) {
+      ids[index] = Number(keys[index]);
+    }
   }
   ids.sort((left, right) => left - right);
   return ids;
 }
 
-function cloneStoredValue(value: Value): Value {
+function clonePlainValue(value: Value): Value {
   if (!Array.isArray(value)) {
     return value;
-  }
-  // Keep custom array mappers and species on the existing clone path.
-  if (Object.getPrototypeOf(value) !== Array.prototype || Object.hasOwn(value, 'constructor')) {
-    return cloneValue(value);
-  }
-  const map = value.map;
-  if (map !== Array.prototype.map) {
-    return Reflect.apply<Value[], [typeof cloneValue], Value[]>(map, value, [cloneValue]);
   }
   const copy = createModelValueArray(value.length);
   for (let index = 0; index < copy.length; index++) {
     if (index in value) {
-      copy[index] = cloneStoredValue(value[index]);
+      copy[index] = clonePlainValue(value[index]);
     }
   }
   return copy;

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { Graph } from '../graph';
 import { RSErrorCode, ValueClass } from '../rslang';
+import { parseRSLangExpression } from '../rslang/api';
 import { tuple, type Value } from '../rslang/eval/value';
 import { labelTypeShape } from '../rslang/labels';
 import { RSLangAnalyzer } from '../rslang/semantic/analyzer';
@@ -284,6 +285,26 @@ describe('RSEngine.setBasicValue', () => {
 });
 
 describe('RSEngine.loadData', () => {
+  it('preserves the native map behavior of caller-provided arrays', () => {
+    const schema = analyzedSchema([
+      mockConstituenta({ id: 1, alias: 'S1', cst_type: CstType.STRUCTURED, definition_formal: 'ℬ(Z)' })
+    ]);
+    const engine = createEngine();
+    const prototypes = new Proxy([1, 2], {
+      getPrototypeOf() {
+        throw new Error('the mapper does not read the prototype');
+      }
+    });
+    const length = new Proxy([1, 2], {
+      get: (target, key, receiver) => (key === 'length' ? 1.5 : (Reflect.get(target, key, receiver) as Value))
+    });
+
+    engine.loadData(schema, mockModel([{ id: 1, type: 'ℬ(Z)', value: prototypes }]));
+    expect(engine.getCstValue(1)).toEqual([1, 2]);
+    engine.loadData(schema, mockModel([{ id: 1, type: 'ℬ(Z)', value: length }]));
+    expect(engine.getCstValue(1)).toEqual([1]);
+  });
+
   it('applies basic bindings for constituents that exist in the schema', () => {
     const x1 = mockConstituenta({ id: 1, alias: 'X1', cst_type: CstType.BASE });
     const engine = createEngine();
@@ -543,7 +564,9 @@ describe('RSEngine constituent analysis', () => {
 });
 
 describe('RSEngine.recalculateChanged', () => {
-  it('uses the graph for loaded relations and falls back when a caller replaces a row with a proxy', () => {
+  const closureDefinition = '[x∈X1] R{w:=Pr2(Fi1[{x}](S1)) | w∪Pr2(Fi1[w](S1))}';
+
+  function loadClosureModel() {
     const schema = analyzedSchema([
       mockConstituenta({ id: 1, alias: 'X1', cst_type: CstType.BASE }),
       mockConstituenta({ id: 2, alias: 'S1', cst_type: CstType.STRUCTURED, definition_formal: 'ℬ(X1×X1)' }),
@@ -551,18 +574,23 @@ describe('RSEngine.recalculateChanged', () => {
         id: 3,
         alias: 'F1',
         cst_type: CstType.FUNCTION,
-        definition_formal: '[x∈X1] R{w:=Pr2(Fi1[{x}](S1)) | w∪Pr2(Fi1[w](S1))}'
+        definition_formal: closureDefinition
       }),
       mockConstituenta({ id: 4, alias: 'A1', cst_type: CstType.AXIOM, definition_formal: '∀x∈X1 x∉F1[x]' })
     ]);
     const engine = createEngine();
-    engine.loadData(
+    engine.loadPlainData(
       schema,
       mockModel([
-        { id: 1, type: TYPE_BASIC, value: { 1: 'a', 2: 'b' } },
+        { id: 1, type: TYPE_BASIC, value: { 1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e', 6: 'f', 7: 'g', 8: 'h' } },
         { id: 2, type: 'ℬ(X1×X1)', value: [tuple([1, 2])] }
       ])
     );
+    return engine;
+  }
+
+  it('uses the graph for loaded relations and falls back when a caller replaces a row with a proxy', () => {
+    const engine = loadClosureModel();
     const components = vi.spyOn(Graph.prototype, 'stronglyConnectedComponents');
     try {
       engine.recalculateChanged();
@@ -577,6 +605,32 @@ describe('RSEngine.recalculateChanged', () => {
       expect(components).toHaveBeenCalledOnce();
       expect(engine.getCstValue(4)).toBe(0);
       expect(engine.calculateCst(4)).toMatchObject({ value: 0, errors: [] });
+    } finally {
+      components.mockRestore();
+    }
+  });
+
+  it('uses the interpreter after an external change to the prepared function AST', () => {
+    const engine = loadClosureModel();
+    const components = vi.spyOn(Graph.prototype, 'stronglyConnectedComponents');
+    try {
+      engine.recalculateChanged();
+      expect(components).toHaveBeenCalledOnce();
+      expect(engine.getCstValue(4)).toBe(1);
+
+      const ast = parseRSLangExpression(closureDefinition)!;
+      const relation = engine.getCstValue(2) as Value[][];
+      const hasError = vi.fn(() => {
+        relation[0][2] = 1;
+        return false;
+      });
+      Object.defineProperty(ast, 'hasError', { get: hasError });
+      engine.calculator.setAST('F1', ast);
+
+      engine.recalculateChanged();
+      expect(hasError).not.toHaveBeenCalled();
+      expect(components).toHaveBeenCalledOnce();
+      expect(engine.getCstValue(4)).toBe(1);
     } finally {
       components.mockRestore();
     }
