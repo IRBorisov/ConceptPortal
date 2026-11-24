@@ -101,7 +101,7 @@ class AgentOssBase(AgentItemView):
 
     def _details(self, item: LibraryItem) -> dict:
         ''' Full OSS payload for the response. '''
-        return oss_serializers.OperationSchemaSerializer(item).data
+        return oss_serializers.OperationSchemaSerializer(item, context={'request': self.request}).data
 
     def _operation_created(self, item: LibraryItem, operation: oss_models.Operation) -> HttpResponse:
         ''' Response for a route that adds one operation. '''

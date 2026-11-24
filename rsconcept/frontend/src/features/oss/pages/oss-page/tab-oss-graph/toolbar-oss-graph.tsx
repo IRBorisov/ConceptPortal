@@ -21,6 +21,7 @@ import {
   IconImage,
   IconNewItem,
   IconPNG,
+  IconRelativization,
   IconReset,
   IconSave,
   IconSettings,
@@ -54,7 +55,7 @@ export function ToolbarOssGraph({
   ...restProps
 }: ToolbarOssGraphProps) {
   const tx = useTx();
-  const { selectedItems, isMutable, canDeleteSelected } = useOssEdit();
+  const { schema, selectedItems, isMutable, canDeleteSelected } = useOssEdit();
   const isProcessing = useMutatingOss();
   const { nodes } = useOssFlow();
 
@@ -76,6 +77,7 @@ export function ToolbarOssGraph({
     handleFitView,
     handleSavePositions,
     handleCreateSynthesis,
+    handleCreateRelativization,
     handleCreateBlock,
     handleCreateSchema,
     handleImportSchema,
@@ -234,6 +236,12 @@ export function ToolbarOssGraph({
                 title={prepareTooltip(tx('tx.synthesis'), '4')}
                 icon={<IconSynthesis size='1.25rem' className='text-primary' />}
                 onClick={handleCreateSynthesis}
+              />
+              <DropdownButton
+                text={tx('tx.oss.relativization')}
+                icon={<IconRelativization size='1.25rem' className='text-primary' />}
+                onClick={handleCreateRelativization}
+                disabled={!schema.operations.some(operation => operation.result !== null)}
               />
             </Dropdown>
           </div>

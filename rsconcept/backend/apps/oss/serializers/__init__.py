@@ -6,6 +6,7 @@ from .data_access import (
     BlockSerializer,
     CloneSchemaSerializer,
     CreateBlockSerializer,
+    CreateRelativizationSerializer,
     CreateReplicaSerializer,
     CreateSchemaSerializer,
     CreateSynthesisSerializer,

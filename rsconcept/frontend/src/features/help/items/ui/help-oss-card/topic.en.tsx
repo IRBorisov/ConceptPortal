@@ -13,8 +13,8 @@ export function HelpOssCardEn() {
       <h1>{tx('tx.oss.passport')}</h1>
 
       <p>
-        The passport contains information about the operational synthesis schema in the library and summary statistics on
-        operations.
+        The passport contains information about the operational synthesis schema in the library and summary statistics
+        on operations.
       </p>
       <p>
         The form fields, the "Access" block, and the location work analogously to the&nbsp;
@@ -29,8 +29,15 @@ export function HelpOssCardEn() {
       <h2>OSS specifics</h2>
       <ul>
         <li>
-          The statistics side area (panel expand button) shows the number of operations by type (blocks, load, synthesis,
-          replica) and a summary of linked conceptual schemas (total, own, imported).
+          The statistics side area (panel expand button) shows the number of operations by type (blocks, load,
+          synthesis, relativization, replica) and a summary of linked conceptual schemas (total, own, imported,
+          relativized). Under “{tx('tx.lib.contents')}” → “{tx('tx.general.details')}”, “{tx('tx.oss.relativization')}”
+          counts operations. Under “{tx('tx.operation.attachment.plural')}” → “{tx('tx.general.details')}”, “
+          {tx('tx.oss.relativization.schemas.short')}” counts the resulting conceptual schemas.
+        </li>
+        <li>
+          The “Relativized schemas” section shows links to the source and result, the selected constituent, and the
+          excluded constituents.
         </li>
         <li>
           The theoretical foundations of synthesis are outlined in&nbsp;

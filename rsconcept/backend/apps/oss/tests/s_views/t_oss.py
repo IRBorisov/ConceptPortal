@@ -77,6 +77,32 @@ class TestOssViewset(EndpointTester):
 
 
     @decl_endpoint('/api/oss/{item}/details', method='get')
+    def test_relativization_passport(self):
+        self.populateData()
+        excluded = self.ks1.insert_last('X2', term_resolved='Excluded')
+        result = RSForm.create(alias='R1', title='Relativized schema', owner=self.user)
+
+        with self.assertRaises(ValueError):
+            self.owned.record_relativization(self.operation1, result.model, self.ks1X1, [self.ks1X1])
+
+        operation = self.owned.record_relativization(self.operation1, result.model, self.ks1X1, [excluded])
+        self.owned.create_replica(operation)
+        with self.assertRaises(ValueError):
+            self.owned.record_relativization(self.operation1, result.model, self.ks1X1, [excluded])
+
+        response = self.executeOK(item=self.owned_id)
+        operations = {item['id']: item for item in response.data['operations']}
+        self.assertNotIn('relativization', operations[self.operation1.pk])
+        self.assertEqual(operations[operation.pk]['operation_type'], OperationType.RELATIVIZATION)
+        self.assertEqual(operations[operation.pk]['result'], result.model.pk)
+        self.assertEqual(operations[operation.pk]['relativization'], {
+            'source': {'id': self.ks1.model.pk, 'alias': 'KS1', 'title': 'Test1'},
+            'target': {'alias': 'X1', 'term': 'X1_1'},
+            'excluded': [{'alias': 'X2', 'term': 'Excluded'}],
+        })
+        self.assertIn({'operation': operation.pk, 'argument': self.operation1.pk}, response.data['arguments'])
+
+    @decl_endpoint('/api/oss/{item}/details', method='get')
     def test_details(self):
         self.populateData()
 

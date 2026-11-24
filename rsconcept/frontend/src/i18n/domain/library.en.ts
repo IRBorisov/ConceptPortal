@@ -455,6 +455,18 @@ export const txLibraryEn: Record<string, string> = {
 
   'tx.operation.or.block.select': 'Select an operation or block',
 
+  'tx.oss.relativization': 'Relativization',
+  'tx.oss.relativization.schemas': 'Relativized schemas',
+  'tx.oss.relativization.schemas.short': 'Relativized CS',
+  'tx.oss.relativization.result': 'Relativization result',
+  'tx.oss.relativization.target': 'Relativized constituent',
+  'tx.oss.relativization.target.field': 'Constituent for relativization',
+  'tx.oss.relativization.title': '{source} – relativization of {term}',
+  'tx.oss.relativization.target.select': 'Select a base set or structure',
+  'tx.oss.relativization.source.fail': 'Could not load the source schema',
+  'tx.oss.relativization.compute.fail': 'Could not relativize the selected constituent',
+  'tx.oss.relativization.excluded': 'Excluded constituents',
+  'tx.oss.relativization.excluded.none': 'No exclusions',
   'tx.oss.replica': 'Replica',
   'tx.oss.replica.original': 'Original',
   'tx.oss.replica.findOriginal': 'Select original',

@@ -23,7 +23,7 @@ export const ossGraphContentRu: Record<string, TourStepContent> = {
     body: (
       <p>
         На <TourHelpLink text='графе ОСС' topic={HelpTopic.UI_OSS_GRAPH} /> строится операционная схема синтеза: блоки,
-        загрузки, узлы синтеза и репликации. Метаданные, доступ и статистика — на вкладке «Паспорт».
+        загрузки, узлы синтеза, релятивизации и репликации. Метаданные, доступ и статистика — на вкладке «Паспорт».
       </p>
     )
   },
@@ -52,6 +52,7 @@ export const ossGraphContentRu: Record<string, TourStepContent> = {
           <IconSynthesis className='inline-icon' /> синтез; <IconDestroy className='inline-icon icon-red' /> удаляет
           выделение. Без правки — см. доступ в паспорте.
         </p>
+        <p>Для релятивизации выберите «Добавить…» → «Релятивизация». Быстрый гид запускается из меню справки окна.</p>
         <p>
           В контекстном меню также: «Выполнить операцию», «Создать реплику», «Клонировать», «Конституенты» (
           <TourHelpLink text='перенос между схемами' topic={HelpTopic.UI_RELOCATE_CST} />) и открытие связанной схемы —

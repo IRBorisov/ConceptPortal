@@ -10,6 +10,7 @@ import { globalIDs } from '@/utils/constants';
 import { useOssEdit } from '../oss-edit-context';
 
 import { FormOSS } from './form-oss';
+import { ViewOssRelativizations } from './view-oss-relativizations';
 import { ViewOssStats } from './view-oss-stats';
 
 export function TabOssCard() {
@@ -42,6 +43,7 @@ export function TabOssCard() {
       <div className='relative cc-column mx-0 md:mx-auto'>
         <FormOSS key={schema.id} className='min-w-88 sm:w-120' />
         <EditorLibraryItem item={schema} isProduced={false} />
+        <ViewOssRelativizations operations={schema.operations} />
       </div>
 
       <ViewOssStats
