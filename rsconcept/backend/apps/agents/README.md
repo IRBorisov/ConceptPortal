@@ -74,3 +74,12 @@ a future expiration if an expiration is supplied. Expired keys do not consume
 the active-key quota. Expired or revoked presented keys return 401. Requests
 without a key can read public library data and have a per-address read limit.
 The identity and key-management endpoints require authentication.
+
+## Locked items
+
+An item with `read_only` set rejects every content change, including staff and
+owner keys and including MCP routes (`shared.permissions.can_edit_item`).
+The flag is cleared by a separate Portal call (`PATCH /api/library/:id/set-read-only`,
+owner or staff, session auth); only then can content be changed. Agent routes do
+not expose that call. Metadata routes (`set-location`, `set-access-policy`) are
+not content changes and stay available to the owner or staff.

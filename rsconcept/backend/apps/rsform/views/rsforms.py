@@ -505,10 +505,10 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
     @action(detail=True, methods=['patch'], url_path='load-trs')
     def load_trs(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Load data from file and replace current schema. '''
+        item = self._get_item()
         input_serializer = s.RSFormUploadSerializer(data=request.data)
         input_serializer.is_valid(raise_exception=True)
 
-        item = self._get_item()
         load_metadata = input_serializer.validated_data['load_metadata']
         uploaded_file = input_serializer.validated_data['file']
         try:

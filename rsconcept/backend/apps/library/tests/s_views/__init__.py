@@ -5,4 +5,5 @@ from .t_items_by_ids import *
 from .t_library import *
 from .t_library_atomicity import *
 from .t_read_only_access import *
+from .t_read_only_protection import *
 from .t_versions import *

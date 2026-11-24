@@ -90,15 +90,15 @@ def can_read_library_item(user: Any, item: LibraryItem) -> bool:
 
 
 def can_edit_item(user, obj: Any) -> bool:
-    ''' Whether *user* may mutate *obj* (owners/editors; blocked when ``read_only``). '''
+    ''' Whether *user* may mutate *obj* (owners/editors/staff; blocked for everyone when ``read_only``). '''
     if user.is_anonymous:
         return False
-    if hasattr(user, 'is_staff') and user.is_staff:
-        return True
 
     item = _extract_item(obj)
     if item.read_only:
         return False
+    if hasattr(user, 'is_staff') and user.is_staff:
+        return True
     editable = item.owner_id == user.pk or (
         item.access_policy != AccessPolicy.PRIVATE and Editor.objects.filter(item=item, editor=user).exists()
     )
