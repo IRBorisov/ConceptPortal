@@ -23,8 +23,7 @@ export const ossGraphContentEn: Record<string, TourStepContent> = {
     body: (
       <p>
         On the <TourHelpLink text='OSS graph' topic={HelpTopic.UI_OSS_GRAPH} /> you build an operational synthesis
-        schema: blocks, inputs, synthesis and relativization nodes, and replicas. Metadata, access, and statistics are
-        on the Passport tab.
+        schema: blocks, inputs, synthesis nodes, and replicas. Metadata, access, and statistics are on the Passport tab.
       </p>
     )
   },
@@ -53,12 +52,10 @@ export const ossGraphContentEn: Record<string, TourStepContent> = {
           <IconSynthesis className='inline-icon' /> synthesis; <IconDestroy className='inline-icon icon-red' /> deletes
           the selection. Without edit rights — see access in the passport.
         </p>
-        <p>Choose Add… → Relativization to open the operation dialog. Its help menu opens the quick guide.</p>
         <p>
           Context menu also covers Execute synthesis, Create replica, Clone, Constituents (
-          <TourHelpLink text='relocate between schemas' topic={HelpTopic.UI_RELOCATE_CST} />
-          ), and opening the linked schema — see the{' '}
-          <TourHelpLink text='OSS graph manual' topic={HelpTopic.UI_OSS_GRAPH} />.
+          <TourHelpLink text='relocate between schemas' topic={HelpTopic.UI_RELOCATE_CST} />), and opening the linked
+          schema — see the <TourHelpLink text='OSS graph manual' topic={HelpTopic.UI_OSS_GRAPH} />.
         </p>
       </>
     )

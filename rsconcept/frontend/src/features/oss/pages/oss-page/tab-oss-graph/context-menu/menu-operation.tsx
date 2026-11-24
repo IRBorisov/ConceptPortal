@@ -127,7 +127,6 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
         });
         break;
       case OperationType.INPUT:
-      case OperationType.RELATIVIZATION:
       case OperationType.SYNTHESIS:
         showDeleteOperation({
           ossID: schema.id,

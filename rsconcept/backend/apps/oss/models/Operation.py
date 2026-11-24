@@ -4,11 +4,9 @@ from typing import Optional
 
 from django.db.models import (
     CASCADE,
-    PROTECT,
     SET_NULL,
     CharField,
     ForeignKey,
-    JSONField,
     Model,
     QuerySet,
     TextChoices,
@@ -26,7 +24,6 @@ class OperationType(TextChoices):
     ''' Type of operation. '''
     INPUT = 'input'
     SYNTHESIS = 'synthesis'
-    RELATIVIZATION = 'relativization'
     REPLICA = 'replica'
 
 
@@ -40,7 +37,7 @@ class Operation(Model):
     )
     operation_type = CharField(
         verbose_name='Тип',
-        max_length=14,
+        max_length=10,
         choices=OperationType.choices,
         default=OperationType.INPUT
     )
@@ -51,22 +48,6 @@ class Operation(Model):
         null=True,
         on_delete=SET_NULL,
         related_name='producer'
-    )
-
-    # PROTECT keeps the source ACL attached to the derived schema. SET_NULL would
-    # make a public result readable after the private source disappears.
-    relativization_source = ForeignKey(
-        verbose_name='Исходная КС релятивизации',
-        to='library.LibraryItem',
-        blank=True,
-        null=True,
-        on_delete=PROTECT,
-        related_name='+'
-    )
-    relativization = JSONField(
-        verbose_name='Параметры релятивизации',
-        blank=True,
-        null=True
     )
 
     parent = ForeignKey(

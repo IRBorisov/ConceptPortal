@@ -14,6 +14,7 @@ import {
   IconEdit2,
   IconGenerateNames,
   IconInlineSynthesis,
+  IconRelativization,
   IconReplace,
   IconSortList,
   IconTemplates
@@ -42,7 +43,7 @@ export function MenuEditSchema() {
     handleBlur: handleMenuBlur,
     hide: hideMenu
   } = useDropdown();
-  const { schema, isArchive, isContentEditable, promptTemplate, deselectAll, isProcessing, createCst } =
+  const { schema, isArchive, isContentEditable, promptTemplate, deselectAll, isProcessing, createCst, selectedCst } =
     useSchemaEdit();
 
   const { resetAliases } = useResetAliases();
@@ -51,6 +52,7 @@ export function MenuEditSchema() {
   const { substituteConstituents } = useSubstituteConstituents();
 
   const showInlineSynthesis = useRsformDialogsStore(state => state.showInlineSynthesis);
+  const showRelativize = useRsformDialogsStore(state => state.showRelativize);
   const showSubstituteCst = useRsformDialogsStore(state => state.showSubstituteCst);
 
   function handleReindex() {
@@ -85,6 +87,21 @@ export function MenuEditSchema() {
   function handleEnableAttribution() {
     hideMenu();
     void createCst(CstType.NOMINAL);
+  }
+
+  const canRelativize = schema.items.some(
+    item => item.cst_type === CstType.BASE || item.cst_type === CstType.STRUCTURED
+  );
+
+  async function handleRelativize() {
+    hideMenu();
+    if (isModified) {
+      const outcome = await promptUnsaved();
+      if (outcome === 'cancel') {
+        return;
+      }
+    }
+    showRelativize({ schema, initialTarget: selectedCst.length === 1 ? selectedCst[0] : null });
   }
 
   async function handleInlineSynthesis() {
@@ -143,6 +160,13 @@ export function MenuEditSchema() {
           icon={<IconInlineSynthesis size='1rem' className='icon-green' />}
           onClick={() => void handleInlineSynthesis()}
           disabled={!isContentEditable || isProcessing}
+        />
+        <DropdownButton
+          text={tx('tx.schema.relativization')}
+          title={tx('tx.schema.relativization.hint')}
+          icon={<IconRelativization size='1rem' className='icon-green' />}
+          onClick={() => void handleRelativize()}
+          disabled={!canRelativize || isProcessing}
         />
         {!schema.is_attributive ? (
           <DropdownButton

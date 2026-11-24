@@ -48,6 +48,7 @@ class TestRSFormViewset(EndpointTester):
                         'crucial': False,
                         'cst_type': CstType.BASE,
                         'definition_formal': '',
+                        'typification_manual': 'X1',
                         'definition_raw': '',
                         'definition_resolved': '',
                         'term_raw': 'человек',
@@ -85,6 +86,7 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(len(created_items), 2)
         self.assertEqual(created_items[0].alias, 'X1')
         self.assertEqual(created_items[0].term_resolved, 'человек')
+        self.assertEqual(created_items[0].typification_manual, 'X1')
         self.assertEqual(created_items[1].alias, 'D1')
         self.assertEqual(created_items[1].definition_formal, 'X1')
         self.assertTrue(created_items[1].crucial)

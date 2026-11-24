@@ -19,6 +19,7 @@ import {
   IconPDF,
   IconQR,
   IconReader,
+  IconRelativization,
   IconReplace,
   IconRSModel,
   IconSandbox,
@@ -103,6 +104,10 @@ export function HelpSchemaMenuRu() {
         </li>
         <li>
           <IconInlineSynthesis size='1.25rem' className='inline-icon' /> Вставка конституент из другой схемы
+        </li>
+        <li>
+          <IconRelativization size='1.25rem' className='inline-icon' /> Релятивизация – создать отдельную схему,
+          релятивизировав базисное множество или родовую структуру
         </li>
         <li>
           <IconCstType value={CstType.NOMINAL} size='1.25rem' className='inline-icon' /> Включение формы атрибутирования

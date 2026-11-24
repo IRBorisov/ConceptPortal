@@ -55,7 +55,6 @@ _EXPECTED = {
         'import_schema': ItemEditor,
         'create_replica': ItemEditor,
         'create_synthesis': ItemEditor,
-        'create_relativization': ItemEditor,
         'update_operation': ItemEditor,
         'delete_operation': ItemEditor,
         'delete_replica': ItemEditor,

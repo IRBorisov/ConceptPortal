@@ -25,7 +25,6 @@ interface OssNode extends NodePosition {
 export const OperationType = {
   INPUT: 'input',
   SYNTHESIS: 'synthesis',
-  RELATIVIZATION: 'relativization',
   REPLICA: 'replica'
 } as const;
 export type OperationType = (typeof OperationType)[keyof typeof OperationType];
@@ -75,26 +74,8 @@ export interface OperationSynthesis extends OperationBase {
   arguments: number[];
 }
 
-/** A constituent as it appeared in the source schema when the operation ran. */
-interface RelativizationConstituent {
-  alias: string;
-  term: string;
-}
-
-/** Parameters of a relativization, recorded when its result is created. */
-export interface RelativizationParameters {
-  source: { id: number; alias: string; title: string };
-  target: RelativizationConstituent;
-  excluded: RelativizationConstituent[];
-}
-
-export interface OperationRelativization extends OperationBase {
-  operation_type: typeof OperationType.RELATIVIZATION;
-  relativization: RelativizationParameters | null;
-}
-
 /** Represents Operation. */
-export type Operation = OperationInput | OperationReplica | OperationSynthesis | OperationRelativization;
+export type Operation = OperationInput | OperationReplica | OperationSynthesis;
 
 /** Represents Block. */
 export interface Block extends OssNode {
@@ -114,8 +95,6 @@ export interface OperationSchemaStats {
   count_all: number;
   count_inputs: number;
   count_synthesis: number;
-  count_relativization: number;
-  count_relativized_schemas: number;
   count_schemas: number;
   count_owned: number;
   count_block: number;

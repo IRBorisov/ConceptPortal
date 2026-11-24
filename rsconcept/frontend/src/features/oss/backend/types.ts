@@ -5,7 +5,6 @@ import { OperationType, type OssLayout } from '@rsconcept/domain/library';
 
 import { schemaLibraryItem } from '@/features/library';
 import { schemaSubstituteConstituents } from '@/features/rsform';
-import { schemaAttribution, schemaConstituentaBasics } from '@/features/rsform/backend/types';
 
 import { limits } from '@/utils/constants';
 
@@ -33,7 +32,6 @@ export type MoveItemsDTO = z.infer<typeof schemaMoveItems>;
 /** Represents {@link Operation} data, used in Create action. */
 export type CreateSchemaDTO = z.infer<typeof schemaCreateSchema>;
 export type CreateReplicaDTO = z.infer<typeof schemaCreateReplica>;
-export type CreateRelativizationDTO = z.infer<typeof schemaCreateRelativization>;
 export type CreateSynthesisDTO = z.infer<typeof schemaCreateSynthesis>;
 export type ImportSchemaDTO = z.infer<typeof schemaImportSchema>;
 export type CloneSchemaDTO = z.infer<typeof schemaCloneSchema>;
@@ -71,17 +69,6 @@ export type ConstituentaReference = z.infer<typeof schemaConstituentaReference>;
 // ====== Schemas ======
 export const schemaOperationType = z.enum(Object.values(OperationType) as [OperationType, ...OperationType[]]);
 
-const schemaRelativizationConstituent = z.strictObject({
-  alias: z.string(),
-  term: z.string()
-});
-
-const schemaRelativizationParameters = z.strictObject({
-  source: z.strictObject({ id: z.number(), alias: z.string(), title: z.string() }),
-  target: schemaRelativizationConstituent,
-  excluded: z.array(schemaRelativizationConstituent)
-});
-
 export const schemaOperation = z.strictObject({
   id: z.number(),
   operation_type: schemaOperationType,
@@ -92,8 +79,7 @@ export const schemaOperation = z.strictObject({
   parent: z.number().nullable(),
   is_import: z.boolean(),
   has_additions: z.boolean(),
-  result: z.number().nullable(),
-  relativization: schemaRelativizationParameters.nullable().optional()
+  result: z.number().nullable()
 });
 
 const schemaOperationData = schemaOperation
@@ -213,18 +199,6 @@ export const schemaCloneSchema = z.strictObject({
   layout: schemaOssLayout,
   source_operation: z.number(),
   position: schemaPosition
-});
-
-export const schemaCreateRelativization = z.strictObject({
-  layout: schemaOssLayout,
-  item_data: schemaOperationData,
-  position: schemaPosition,
-  source_operation: z.number(),
-  source_time_update: z.string(),
-  target: z.number(),
-  excluded: z.array(z.number()),
-  items: z.array(schemaConstituentaBasics),
-  attribution: z.array(schemaAttribution)
 });
 
 export const schemaCreateSynthesis = z.strictObject({

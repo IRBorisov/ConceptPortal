@@ -52,9 +52,9 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
       'Bibliothèque de schémas. Recherche par métadonnées et recherche contextuelle dans les termes, définitions et commentaires, filtres, tri, explorateur de dossiers avec regroupement par propriétaire en mode administrateur, consultation des schémas conceptuels, OSS et modèles.'
   },
   [HelpTopic.UI_SCHEMA_MENU]: {
-    keywords: ['menu schéma', 'édition schéma', 'onglets', 'actions', 'commandes'],
+    keywords: ['menu schéma', 'édition schéma', 'onglets', 'actions', 'commandes', 'relativisation'],
     searchText:
-      'Édition de schéma. Onglets, menu du schéma, actions sur le schéma, changement de mode et commandes d’édition.'
+      'Édition de schéma. Onglets, menu du schéma, actions sur le schéma, changement de mode, commandes d’édition et relativisation vers un schéma autonome.'
   },
   [HelpTopic.UI_MODEL_MENU]: {
     keywords: ['menu modèle', 'édition modèle', 'onglets modèle', 'actions modèle', 'commandes modèle'],
@@ -237,9 +237,9 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
       'Structuration du domaine. Découpage et organisation des concepts, identification d’entités, construction d’une structure formelle.'
   },
   [HelpTopic.CC_OSS]: {
-    keywords: ['schéma opérationnel synthèse', 'relativisation', 'oss', 'opérations', 'scénario synthèse', 'workflow'],
+    keywords: ['schéma opérationnel synthèse', 'oss', 'opérations', 'scénario synthèse', 'workflow'],
     searchText:
-      'Schéma opérationnel de synthèse. Chargement, synthèse et relativisation des schémas conceptuels, arguments et résultats.'
+      'Schéma opérationnel de synthèse. Description du processus de synthèse, opérations, entrées et sorties, enchaînement des étapes et logique d’exécution.'
   },
   [HelpTopic.CC_PROPAGATION]: {
     keywords: ['changements bout en bout', 'propagation changements', 'changements', 'propagation', 'oss'],

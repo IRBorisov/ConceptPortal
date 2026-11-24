@@ -1,7 +1,7 @@
 ''' Testing API: Operation Schema - operations manipulation. '''
 from apps.library.models import AccessPolicy, Editor, LibraryItem
 from apps.oss.models import Argument, Operation, OperationSchema, OperationType, Replica
-from apps.rsform.models import Attribution, Constituenta, RSForm
+from apps.rsform.models import Attribution, RSForm
 from shared import messages as msg
 from shared.EndpointTester import EndpointTester, decl_endpoint
 
@@ -280,127 +280,6 @@ class TestOssOperations(EndpointTester):
         self.assertIsNotNone(ref)
         self.assertTrue(Operation.objects.filter(pk=new_operation_id, oss=self.owned.model).exists())
 
-
-    @decl_endpoint('/api/oss/{item}/create-relativization', method='post')
-    def test_create_relativization(self):
-        self.populateData()
-        self.ks1.model.refresh_from_db()
-        short_name = 'TestRel'
-        data = {
-            'source_operation': self.operation1.pk,
-            'source_time_update': self.ks1.model.time_update.isoformat(),
-            'target': self.ks1X1.pk,
-            'excluded': [self.ks1X1.pk],
-            'item_data': {'alias': short_name, 'title': 'TestRel title', 'parent': None},
-            'layout': self.layout_data,
-            'position': {'x': 1, 'y': 2, 'width': 150, 'height': 40},
-            'items': [{
-                'id': 1, 'alias': 'X1', 'cst_type': 'basic', 'convention': '', 'crucial': False,
-                'definition_formal': '', 'definition_raw': '', 'definition_resolved': '',
-                'term_raw': 'X1_1', 'term_resolved': '', 'term_forms': [],
-            }],
-            'attribution': [],
-        }
-        self.executeBadData(data, item=self.owned_id)
-        self.assertFalse(LibraryItem.objects.filter(alias=short_name).exists())
-
-        data['excluded'] = []
-        self.ks1.model.access_policy = AccessPolicy.PRIVATE
-        self.ks1.model.save(update_fields=['access_policy'])
-        self.executeForbidden(data, item=self.owned_id)
-        self.assertFalse(LibraryItem.objects.filter(alias=short_name).exists())
-
-        self.ks1.model.access_policy = AccessPolicy.PUBLIC
-        self.ks1.model.save(update_fields=['access_policy'])
-        self.ks1.model.refresh_from_db()
-        data['source_time_update'] = self.ks1.model.time_update.isoformat()
-        response = self.executeCreated(data, item=self.owned_id)
-        new_operation = Operation.objects.get(pk=response.data['new_operation'])
-        self.assertEqual(new_operation.operation_type, OperationType.RELATIVIZATION)
-        self.assertEqual(new_operation.relativization_source_id, self.ks1.model.pk)
-        self.assertEqual(new_operation.alias, short_name)
-        self.assertEqual(new_operation.getQ_arguments().get().argument_id, self.operation1.pk)
-        self.assertEqual(new_operation.relativization['target'], {'alias': 'X1', 'term': 'X1_1'})
-        self.assertTrue(Constituenta.objects.filter(schema_id=new_operation.result_id, alias='X1').exists())
-        self.assertIn({'nodeID': f'o{new_operation.pk}', **data['position']}, response.data['oss']['layout'])
-
-        self.ks1.model.access_policy = AccessPolicy.PRIVATE
-        self.ks1.model.save(update_fields=['access_policy'])
-        self.logout()
-        oss_details = self.client.get(f'/api/oss/{self.owned_id}/details')
-        self.assertEqual(oss_details.status_code, 200)
-        operation_data = next(row for row in oss_details.data['operations'] if row['id'] == new_operation.pk)
-        self.assertIsNone(operation_data['relativization'])
-        self.assertIsNone(operation_data['result'])
-        self.assertEqual(operation_data['title'], '')
-        self.assertNotEqual(self.client.get(f'/api/rsforms/{new_operation.result_id}/details').status_code, 200)
-
-    @decl_endpoint('/api/oss/{item}/create-relativization', method='post')
-    def test_relativization_source_access_stays_sealed(self):
-        ''' Deleting or losing the source must not publish the result or its substitution terms. '''
-        self.populateData()
-        self.ks1.model.refresh_from_db()
-        data = {
-            'source_operation': self.operation1.pk,
-            'source_time_update': self.ks1.model.time_update.isoformat(),
-            'target': self.ks1X1.pk,
-            'excluded': [],
-            'item_data': {'alias': 'Rel', 'title': 'Relativized', 'parent': None},
-            'layout': self.layout_data,
-            'position': {'x': 1, 'y': 2, 'width': 150, 'height': 40},
-            'items': [{
-                'id': 1, 'alias': 'X1', 'cst_type': 'basic', 'convention': '', 'crucial': False,
-                'definition_formal': '', 'definition_raw': '', 'definition_resolved': '',
-                'term_raw': 'Secret term', 'term_resolved': 'Secret term', 'term_forms': [],
-            }],
-            'attribution': [],
-        }
-        response = self.executeCreated(data, item=self.owned_id)
-        new_operation = Operation.objects.get(pk=response.data['new_operation'])
-        result_id = new_operation.result_id
-        result_cst = Constituenta.objects.get(schema_id=result_id)
-        self.owned.set_substitutions(self.operation3.pk, [{
-            'original': result_cst,
-            'substitution': self.ks2X1,
-        }])
-        self.ks1.model.access_policy = AccessPolicy.PRIVATE
-        self.ks1.model.save(update_fields=['access_policy'])
-
-        owned = self.client.get(f'/api/oss/{self.owned_id}/details')
-        self.assertEqual(owned.status_code, 200)
-        self.assertTrue(any(row['original'] == result_cst.pk for row in owned.data['substitutions']))
-
-        self.logout()
-        hidden = self.client.get(f'/api/oss/{self.owned_id}/details')
-        self.assertEqual(hidden.status_code, 200)
-        self.assertEqual(hidden.data['substitutions'], [])
-        operation_data = next(row for row in hidden.data['operations'] if row['id'] == new_operation.pk)
-        self.assertIsNone(operation_data['relativization'])
-        self.assertIsNone(operation_data['result'])
-        self.assertNotIn('Secret term', str(hidden.data))
-        self.assertNotEqual(self.client.get(f'/api/rsforms/{result_id}/details').status_code, 200)
-
-        self.login()
-        deleted = self.client.delete(f'/api/library/{self.ks1.model.pk}')
-        self.assertEqual(deleted.status_code, 400)
-        self.assertEqual(deleted.data['schema'], msg.relativizationSourceInUse('KS1'))
-        self.assertTrue(LibraryItem.objects.filter(pk=self.ks1.model.pk).exists())
-        new_operation.refresh_from_db()
-        self.assertEqual(new_operation.relativization_source_id, self.ks1.model.pk)
-
-        Operation.objects.filter(pk=new_operation.pk).update(relativization_source=None)
-        self.toggle_admin(True)
-        self.assertEqual(self.client.get(f'/api/rsforms/{result_id}/details').status_code, 200)
-        self.toggle_admin(False)
-        self.logout()
-        sealed = self.client.get(f'/api/oss/{self.owned_id}/details')
-        self.assertEqual(sealed.status_code, 200)
-        sealed_operation = next(row for row in sealed.data['operations'] if row['id'] == new_operation.pk)
-        self.assertIsNone(sealed_operation['relativization'])
-        self.assertIsNone(sealed_operation['result'])
-        self.assertNotIn('Secret term', str(sealed.data))
-        self.assertEqual(sealed.data['substitutions'], [])
-        self.assertNotEqual(self.client.get(f'/api/rsforms/{result_id}/details').status_code, 200)
 
     @decl_endpoint('/api/oss/{item}/create-synthesis', method='post')
     def test_create_synthesis(self):

@@ -56,7 +56,6 @@ export function useHandleActions() {
   const { updateOperation } = useUpdateOperation();
 
   const showCreateOperation = useOssDialogsStore(state => state.showCreateSynthesis);
-  const showCreateRelativization = useOssDialogsStore(state => state.showCreateRelativization);
   const showCreateBlock = useOssDialogsStore(state => state.showCreateBlock);
   const showCreateSchema = useOssDialogsStore(state => state.showCreateSchema);
   const showDeleteOperation = useOssDialogsStore(state => state.showDeleteOperation);
@@ -98,24 +97,6 @@ export function useHandleActions() {
       onCreate: newID => {
         resetView();
         setTimeout(function selectCreatedOperation() {
-          setSelectedNodes([`o${newID}`]);
-        }, PARAMETER.minimalTimeout);
-      }
-    });
-  }
-
-  function handleCreateRelativization() {
-    const position = screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
-    const inputs = selectedItems.filter(item => item.nodeType === NodeType.OPERATION && item.result !== null);
-    showCreateRelativization({
-      ossID: schema.id,
-      layout: getLayout(),
-      initialSource: inputs.length === 1 ? inputs[0].id : null,
-      initialParent: extractBlockParent(selectedItems),
-      position,
-      onCreate: newID => {
-        resetView();
-        setTimeout(function selectRelativization() {
           setSelectedNodes([`o${newID}`]);
         }, PARAMETER.minimalTimeout);
       }
@@ -197,7 +178,6 @@ export function useHandleActions() {
           });
           break;
         case OperationType.INPUT:
-        case OperationType.RELATIVIZATION:
         case OperationType.SYNTHESIS:
           showDeleteOperation({
             ossID: schema.id,
@@ -485,7 +465,6 @@ export function useHandleActions() {
     handleSelectDown,
     handleSavePositions,
     handleCreateSynthesis,
-    handleCreateRelativization,
     handleCreateBlock,
     handleCreateSchema,
     handleImportSchema,

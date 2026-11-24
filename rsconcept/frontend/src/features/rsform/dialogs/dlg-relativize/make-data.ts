@@ -39,8 +39,8 @@ export function makeRelativizedData(
   const result = relativizer.transform(relativizer.prepare(input), {
     target,
     ignored,
-    accessorTerm: globalTx('tx.oss.relativization.accessor.term'),
-    accessorConvention: globalTx('tx.oss.relativization.accessor.convention')
+    accessorTerm: globalTx('tx.schema.relativization.accessor.term'),
+    accessorConvention: globalTx('tx.schema.relativization.accessor.convention')
   });
   if (!result) {
     return null;

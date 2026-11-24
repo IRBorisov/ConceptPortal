@@ -37,7 +37,6 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
           { label: tx('tx.oss.block.plural'), value: stats.count_block },
           { label: tx('tx.oss.input'), value: stats.count_inputs },
           { label: tx('tx.synthesis.short'), value: stats.count_synthesis },
-          { label: tx('tx.oss.relativization'), value: stats.count_relativization },
           { label: tx('tx.oss.replica'), value: stats.count_references }
         ]}
       />
@@ -57,8 +56,7 @@ export function ViewOssStats({ className, stats, ...restProps }: ViewOssStatsPro
         details={[
           { label: tx('tx.operation.attachment.plural'), value: stats.count_schemas },
           { label: tx('tx.operation.attachment.original.plural'), value: stats.count_owned },
-          { label: tx('tx.oss.input.import'), value: countImported },
-          { label: tx('tx.oss.relativization.schemas.short'), value: stats.count_relativized_schemas }
+          { label: tx('tx.oss.input.import'), value: countImported }
         ]}
       />
     </aside>

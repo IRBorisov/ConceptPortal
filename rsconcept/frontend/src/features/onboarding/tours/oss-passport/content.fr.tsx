@@ -23,8 +23,8 @@ export const ossPassportContentFr: Record<string, TourStepContent> = {
     body: (
       <p>
         Le titre apparaît dans les listes, l&apos;alias est l&apos;identifiant court dans la bibliothèque, et la
-        description documente le domaine. Enregistrement — <IconSave className='inline-icon' /> ou <kbd>Ctrl + S</kbd> ;
-        réinitialisation — <IconReset className='inline-icon' />.
+        description documente le domaine. Enregistrement — <IconSave className='inline-icon' /> ou{' '}
+        <kbd>Ctrl + S</kbd> ; réinitialisation — <IconReset className='inline-icon' />.
       </p>
     )
   },
@@ -53,13 +53,10 @@ export const ossPassportContentFr: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          Ouvrez « Détails » dans « Contenu » pour voir le nombre d’opérations par type. La ligne « Relativisation »
-          indique le nombre de ces opérations.
+          Le panneau latéral : « Contenu » compte les opérations par type (Blocs, Chargement, Synthèse, Réplication), et
+          « Schémas attachés » — total, propres et « Importer le schéma ».
         </p>
-        <p>
-          « Schémas attachés » affiche le total et la répartition entre schémas propres et importés. Dans « Détails »,
-          la ligne « SC relativisés » indique le nombre de schémas obtenus par relativisation.
-        </p>
+        <p>Développez les catégories pour voir le détail.</p>
       </>
     )
   }

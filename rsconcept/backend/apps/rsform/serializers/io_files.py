@@ -285,6 +285,7 @@ class RSFormSandboxImportSerializer(StrictSerializer):
             cst_type = serializers.ChoiceField(choices=CstType.choices)
             value_is_property = serializers.BooleanField(required=False, default=False)
             definition_formal = serializers.CharField(required=False, allow_blank=True, default='')
+            typification_manual = serializers.CharField(required=False, allow_blank=True, default='')
             definition_raw = serializers.CharField(required=False, allow_blank=True, default='')
             definition_resolved = serializers.CharField(required=False, allow_blank=True, default='')
             term_raw = serializers.CharField(required=False, allow_blank=True, default='')

@@ -18,7 +18,6 @@ import {
   type CloneSchemaDTO,
   type ConstituentaReference,
   type CreateBlockDTO,
-  type CreateRelativizationDTO,
   type CreateReplicaDTO,
   type CreateSchemaDTO,
   type CreateSynthesisDTO,
@@ -212,19 +211,6 @@ export const ossApi = {
       endpoint: `/api/oss/${itemID}/clone-schema`,
       request: {
         data: data,
-        successMessage: response => {
-          const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
-          return globalTx('tx.operation.create.success', { alias: alias ?? '?' });
-        }
-      }
-    }),
-  createRelativization: ({ itemID, data }: { itemID: number; data: CreateRelativizationDTO }) =>
-    axiosPost<CreateRelativizationDTO, OperationCreatedResponse>({
-      schema: schemaOperationCreatedResponse,
-      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
-      endpoint: `/api/oss/${itemID}/create-relativization`,
-      request: {
-        data,
         successMessage: response => {
           const alias = response.oss.operations.find(op => op.id === response.new_operation)?.alias;
           return globalTx('tx.operation.create.success', { alias: alias ?? '?' });

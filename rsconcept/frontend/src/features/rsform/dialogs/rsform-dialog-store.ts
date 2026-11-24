@@ -5,6 +5,7 @@ import { type DlgCstTemplateProps } from './dlg-cst-template/dlg-cst-template';
 import { type DlgDeleteCstProps } from './dlg-delete-cst/dlg-delete-cst';
 import { type DlgEditCstProps } from './dlg-edit-cst/dlg-edit-cst';
 import { type DlgInlineSynthesisProps } from './dlg-inline-synthesis/dlg-inline-synthesis';
+import { type DlgRelativizeProps } from './dlg-relativize/dlg-relativize';
 import { type DlgShowTermGraphProps } from './dlg-show-term-graph/dlg-show-term-graph';
 import { type DlgShowTypeGraphProps } from './dlg-show-type-graph/dlg-show-type-graph';
 import { type DlgStructurePlannerProps } from './dlg-structure-planner/dlg-structure-planner';
@@ -25,6 +26,7 @@ export const RsformDialogType = {
   RENAME_CONSTITUENTA: 'rename-constituenta',
   EDIT_WORD_FORMS: 'edit-word-forms',
   INLINE_SYNTHESIS: 'inline-synthesis',
+  RELATIVIZE: 'relativize',
   SHOW_QR_CODE: 'show-qr-code',
   SHOW_FLAT_AST: 'show-flat-ast',
   SHOW_TYPE_GRAPH: 'show-type-graph',
@@ -52,6 +54,7 @@ interface RsformDialogsStore {
   showDeleteCst: (props: DlgDeleteCstProps) => void;
   showEditWordForms: (props: DlgEditWordFormsProps) => void;
   showInlineSynthesis: (props: DlgInlineSynthesisProps) => void;
+  showRelativize: (props: DlgRelativizeProps) => void;
   showShowFlatAst: (props: DlgShowFlatAstProps) => void;
   showShowAstExtract: (props: DlgShowAstExtractProps) => void;
   showShowTypeGraph: (props: DlgShowTypeGraphProps) => void;
@@ -80,6 +83,7 @@ export const useRsformDialogsStore = create<RsformDialogsStore>()(set => ({
   showDeleteCst: props => set({ active: RsformDialogType.DELETE_CONSTITUENTA, props }),
   showEditWordForms: props => set({ active: RsformDialogType.EDIT_WORD_FORMS, props }),
   showInlineSynthesis: props => set({ active: RsformDialogType.INLINE_SYNTHESIS, props }),
+  showRelativize: props => set({ active: RsformDialogType.RELATIVIZE, props }),
   showShowFlatAst: props => set({ active: RsformDialogType.SHOW_FLAT_AST, props }),
   showShowAstExtract: props => set({ active: RsformDialogType.AST_EXTRACT_SUBTREE, props }),
   showShowTypeGraph: props => set({ active: RsformDialogType.SHOW_TYPE_GRAPH, props }),

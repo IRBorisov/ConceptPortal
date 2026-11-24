@@ -53,13 +53,10 @@ export const ossPassportContentEn: Record<string, TourStepContent> = {
     body: (
       <>
         <p>
-          Open “Details” in “Contents” for a breakdown of operations by type. The “Relativization” row counts operations
-          of this type.
+          The side panel: Contents counts operations by type (Blocks, Input, Synthesis, Replica), and Attached schemas
+          shows total, original, and Import schema.
         </p>
-        <p>
-          “Attached schemas” shows the total and the breakdown of original and imported schemas. Under “Details”, the
-          “Relativized CS” row counts schemas produced by relativization.
-        </p>
+        <p>Expand categories to see the breakdown.</p>
       </>
     )
   }

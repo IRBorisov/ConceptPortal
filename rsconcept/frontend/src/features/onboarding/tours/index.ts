@@ -105,7 +105,7 @@ const tourRegistrations: Record<string, TourRegistration> = {
   },
   [DialogTourID.CREATE_RELATIVIZATION]: {
     autoStart: false,
-    route: '/oss',
+    route: EDITOR_TOUR_ROUTES,
     load: () => import('./create-relativization').then(module => module.createRelativizationTour)
   },
   [DialogTourID.CREATE_SYNTHESIS]: {

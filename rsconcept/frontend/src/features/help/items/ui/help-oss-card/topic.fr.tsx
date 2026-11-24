@@ -30,15 +30,8 @@ export function HelpOssCardFr() {
       <ul>
         <li>
           La zone latérale de statistiques (bouton de déploiement du panneau) indique le nombre d'opérations par type
-          (blocs, chargement, synthèse, relativisation, réplique) et un récapitulatif des schémas conceptuels liés
-          (total, propres, importés, relativisés). Dans « {tx('tx.lib.contents')} » → « {tx('tx.general.details')} », la
-          ligne « {tx('tx.oss.relativization')} » compte les opérations. Dans « {tx('tx.operation.attachment.plural')} »
-          → « {tx('tx.general.details')} », la ligne « {tx('tx.oss.relativization.schemas.short')} » compte les schémas
-          obtenus.
-        </li>
-        <li>
-          La section « Schémas relativisés » affiche les liens vers les schémas source et résultat, le constituant
-          sélectionné et les constituants exclus.
+          (blocs, chargement, synthèse, réplique) et un récapitulatif des schémas conceptuels liés (total, propres,
+          importés).
         </li>
         <li>
           Les bases théoriques de la synthèse sont exposées dans&nbsp;

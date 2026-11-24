@@ -34,15 +34,12 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
     def _get_item(self) -> LibraryItem:
         return cast(LibraryItem, self.get_object())
 
-    def _details_data(self, item: LibraryItem) -> dict:
-        return s.OperationSchemaSerializer(item, context=self.get_serializer_context()).data
-
     def _operation_created(self, item: LibraryItem, operation: m.Operation) -> Response:
         return Response(
             status=c.HTTP_201_CREATED,
             data={
                 'new_operation': operation.pk,
-                'oss': self._details_data(item)
+                'oss': s.OperationSchemaSerializer(item).data
             }
         )
 
@@ -66,7 +63,6 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
             'import_schema',
             'create_replica',
             'create_synthesis',
-            'create_relativization',
             'update_operation',
             'delete_operation',
             'delete_replica',
@@ -119,7 +115,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         serializer = s.LayoutSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         mutations.update_layout(item, serializer.validated_data['data'], request)
-        return Response(status=c.HTTP_200_OK, data=self._details_data(item))
+        return Response(status=c.HTTP_200_OK, data=s.OperationSchemaSerializer(item).data)
 
     @extend_schema(
         summary='create block',
@@ -143,7 +139,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
             status=c.HTTP_201_CREATED,
             data={
                 'new_block': new_block.pk,
-                'oss': self._details_data(item)
+                'oss': s.OperationSchemaSerializer(item).data
             }
         )
 
@@ -167,7 +163,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         mutations.update_block(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_200_OK,
-            data=self._details_data(item)
+            data=s.OperationSchemaSerializer(item).data
         )
 
     @extend_schema(
@@ -190,7 +186,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         mutations.delete_block(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_200_OK,
-            data=self._details_data(item)
+            data=s.OperationSchemaSerializer(item).data
         )
 
     @extend_schema(
@@ -213,7 +209,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         mutations.move_items(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_200_OK,
-            data=self._details_data(item)
+            data=s.OperationSchemaSerializer(item).data
         )
 
     @extend_schema(
@@ -300,21 +296,6 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         return self._operation_created(item, new_operation)
 
     @extend_schema(
-        summary='create relativization operation',
-        tags=['OSS'],
-        request=s.CreateRelativizationSerializer,
-        responses={c.HTTP_201_CREATED: s.OperationCreatedResponse},
-    )
-    @action(detail=True, methods=['post'], url_path='create-relativization')
-    def create_relativization(self, request: Request, pk) -> Response:
-        ''' Create a unary operation with its generated schema. '''
-        item = self._get_item()
-        serializer = s.CreateRelativizationSerializer(data=request.data, context={'oss': item})
-        serializer.is_valid(raise_exception=True)
-        operation = mutations.create_relativization_operation(item, serializer.validated_data, request)
-        return self._operation_created(item, operation)
-
-    @extend_schema(
         summary='create synthesis operation',
         tags=['OSS'],
         request=s.CreateSynthesisSerializer(),
@@ -354,7 +335,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         mutations.update_operation(item, serializer.validated_data, request.user, request)
         return Response(
             status=c.HTTP_200_OK,
-            data=self._details_data(item)
+            data=s.OperationSchemaSerializer(item).data
         )
 
     @extend_schema(
@@ -377,7 +358,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         mutations.delete_operation(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_200_OK,
-            data=self._details_data(item)
+            data=s.OperationSchemaSerializer(item).data
         )
 
     @extend_schema(
@@ -400,7 +381,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         mutations.delete_replica(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_200_OK,
-            data=self._details_data(item)
+            data=s.OperationSchemaSerializer(item).data
         )
 
     @extend_schema(
@@ -425,7 +406,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
             status=c.HTTP_200_OK,
             data={
                 'new_schema': LibraryItemSerializer(schema).data,
-                'oss': self._details_data(item)
+                'oss': s.OperationSchemaSerializer(item).data
             }
         )
 
@@ -449,7 +430,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         mutations.set_operation_input(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_200_OK,
-            data=self._details_data(item)
+            data=s.OperationSchemaSerializer(item).data
         )
 
     @extend_schema(
@@ -472,7 +453,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         mutations.execute_operation(item, serializer.validated_data, request)
         return Response(
             status=c.HTTP_200_OK,
-            data=self._details_data(item)
+            data=s.OperationSchemaSerializer(item).data
         )
 
     @extend_schema(

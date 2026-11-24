@@ -48,8 +48,8 @@ export function HelpConceptOSSEn() {
         the OSS and becomes a free CS.
       </p>
       <p>
-        A synthesis operation within an OSS is defined by a set of argument operations and an{' '}
-        <b>identification table</b> of concepts from the CSs bound to the selected arguments. In this way{' '}
+        A synthesis operation within an OSS is defined by a set of argument operations and an <b>identification table</b>{' '}
+        of concepts from the CSs bound to the selected arguments. In this way{' '}
         <LinkTopic text='constituents' topic={HelpTopic.CC_CONSTITUENTA} /> in each CS are divided into source and
         inherited. When building the identification table, users are prompted to synthesise derived concepts whose
         expressions match after the specified identifications are applied.
@@ -69,27 +69,6 @@ export function HelpConceptOSSEn() {
         refers to an operation where CSs sharing common ancestors are used. Such synthesis may produce duplicates and
         ambiguities. The identification table must be carefully constructed by adding duplicate concepts from the
         synthesised schemas.
-      </p>
-      <h2 id='relativization'>Relativization</h2>
-      <p>
-        Relativization builds one new conceptual schema from one source schema. The selected base set or structure
-        specifies the allowed contexts. The resulting schema describes a family of values and relations indexed by those
-        contexts. For example, a family of sets <code>A(c)</code> is represented by a relation of pairs{' '}
-        <code>(c, a)</code> with <code>a</code> in <code>A(c)</code>.
-      </p>
-      <p>
-        Context-dependent term functions and predicates receive a parameter whose domain is the context structure. Where
-        needed, a helper term function retrieves the unique value associated with a given context.
-      </p>
-      <p>
-        Exclusions are kernel constituents that should have no direct context parameter. These constituents remain in
-        the result. Expressions of dependent constituents are transformed according to their dependencies.
-      </p>
-      <p>
-        In the <LinkTopic text='OSS graph' topic={HelpTopic.UI_OSS_GRAPH} />, choose “Add…” → “Relativization”. Select
-        the source. In “{tx('tx.oss.relativization.target.field')}”, choose a base set or structure and mark any
-        exclusions. Review the proposed title, enter a short name, and click “Create”. The source, result, and operation
-        parameters appear in the <LinkTopic text='OSS passport' topic={HelpTopic.UI_OSS_CARD} />.
       </p>
     </>
   );

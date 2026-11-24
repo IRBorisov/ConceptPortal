@@ -19,6 +19,7 @@ import {
   IconPDF,
   IconQR,
   IconReader,
+  IconRelativization,
   IconReplace,
   IconRSModel,
   IconSandbox,
@@ -112,6 +113,10 @@ export function HelpSchemaMenuFr() {
         <li>
           <IconInlineSynthesis size='1.25rem' className='inline-icon' /> Insérer des constituants à partir d'un autre
           schéma
+        </li>
+        <li>
+          <IconRelativization size='1.25rem' className='inline-icon' /> Relativisation – créer un schéma autonome en
+          relativisant un ensemble de base ou une structure
         </li>
         <li>
           <IconCstType value={CstType.NOMINAL} size='1.25rem' className='inline-icon' /> Activer la forme d'attribution

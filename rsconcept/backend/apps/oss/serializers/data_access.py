@@ -1,9 +1,7 @@
 ''' Serializers for persistent data manipulation. '''
 from collections import deque
-from collections.abc import Mapping
-from typing import Any, cast
+from typing import cast
 
-from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import PermissionDenied
 from django.db.models import F, Q
 from rest_framework import serializers
@@ -14,7 +12,6 @@ from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemDetailsSerializer
 from apps.rsform.models import Constituenta
 from apps.rsform.serializers import SubstitutionSerializerBase
-from apps.rsform.serializers.data_access import CstImportJsonSerializer, ImportAttributionSerializer
 from shared import messages as msg
 from shared import permissions
 from shared.serializers import StrictModelSerializer, StrictSerializer
@@ -35,20 +32,11 @@ from .basics import NodeSerializer, PositionSerializer, SubstitutionExSerializer
 class OperationSerializer(StrictModelSerializer):
     ''' Serializer: Operation data. '''
     is_import = serializers.BooleanField(default=False, required=False)
-    relativization = serializers.JSONField(read_only=True)
-
-    def to_representation(self, instance: Operation):
-        data = super().to_representation(instance)
-        if instance.operation_type != OperationType.RELATIVIZATION:
-            data.pop('relativization', None)
-        elif _relativization_is_hidden(self.context, instance):
-            data.update(alias='', title='', description='', result=None, relativization=None)
-        return data
 
     class Meta:
         ''' serializer metadata. '''
         model = Operation
-        exclude = ('relativization_source',)
+        fields = '__all__'
         read_only_fields = ('id', 'oss')
 
 
@@ -319,24 +307,6 @@ class ImportSchemaSerializer(StrictSerializer):
         return attrs
 
 
-class CreateRelativizationSerializer(CreateSchemaSerializer):
-    ''' Parameters and result of the client-side relativization engine. '''
-    source_operation = PKField(queryset=Operation.objects.all())
-    source_time_update = serializers.DateTimeField()
-    target = serializers.IntegerField(min_value=1)
-    excluded = serializers.ListField(child=serializers.IntegerField(min_value=1))
-    items = CstImportJsonSerializer(many=True, allow_empty=False)
-    attribution = ImportAttributionSerializer(many=True)
-
-    def validate(self, attrs):
-        attrs = super().validate(attrs)
-        oss = cast(LibraryItem, self.context['oss'])
-        source = cast(Operation, attrs['source_operation'])
-        if source.oss_id != oss.pk:
-            raise serializers.ValidationError({'source_operation': msg.operationNotInOSS()})
-        return attrs
-
-
 class CreateSynthesisSerializer(StrictSerializer):
     ''' Serializer: Synthesis operation creation. '''
     layout = serializers.ListField(child=NodeSerializer())
@@ -422,17 +392,11 @@ class UpdateOperationSerializer(StrictSerializer):
     def validate(self, attrs):
         oss = cast(LibraryItem, self.context['oss'])
         parent = attrs['item_data'].get('parent')
-        target = cast(Operation, attrs['target'])
+        target = cast(Block, attrs['target'])
         if target.oss_id != oss.pk:
             raise serializers.ValidationError({
                 'target': msg.operationNotInOSS()
             })
-
-        if target.operation_type == OperationType.RELATIVIZATION:
-            if attrs.get('arguments') or attrs.get('substitutions'):
-                raise serializers.ValidationError({'target': msg.operationNotSynthesis(target.alias)})
-            attrs.pop('arguments', None)
-            attrs.pop('substitutions', None)
 
         if parent is not None and parent.oss_id != oss.pk:
             raise serializers.ValidationError({
@@ -636,10 +600,9 @@ class OperationSchemaSerializer(StrictModelSerializer):
         result['arguments'] = []
         result['substitutions'] = []
         result['replicas'] = []
-        operations = Operation.objects.filter(oss=instance).select_related('result', 'relativization_source')
-        for operation in operations.order_by('pk'):
-            operation_data = OperationSerializer(operation, context=self.context).data
-            operation_result = operation.result if operation_data['result'] is not None else None
+        for operation in Operation.objects.filter(oss=instance).order_by('pk'):
+            operation_data = OperationSerializer(operation).data
+            operation_result = operation.result
             operation_data['is_import'] = \
                 operation_result is not None and \
                 (operation_result.owner_id != instance.owner_id or
@@ -656,7 +619,7 @@ class OperationSchemaSerializer(StrictModelSerializer):
             result['blocks'].append(BlockSerializer(block).data)
         for argument in Argument.objects.filter(operation__oss=instance).order_by('order'):
             result['arguments'].append(ArgumentSerializer(argument).data)
-        substitution_rows = list(Substitution.objects.filter(operation__oss=instance).values(
+        for substitution in Substitution.objects.filter(operation__oss=instance).values(
             'operation',
             'original',
             'substitution',
@@ -666,18 +629,7 @@ class OperationSchemaSerializer(StrictModelSerializer):
             substitution_schema=F('substitution__schema_id'),
             substitution_alias=F('substitution__alias'),
             substitution_term=F('substitution__term_resolved'),
-        ).order_by('pk'))
-        referenced_schemas = {
-            schema_id
-            for row in substitution_rows
-            for schema_id in (row['original_schema'], row['substitution_schema'])
-            if schema_id is not None
-        }
-        readable_schemas = _readable_schema_ids(self.context, referenced_schemas)
-        for substitution in substitution_rows:
-            if substitution['original_schema'] not in readable_schemas \
-                    or substitution['substitution_schema'] not in readable_schemas:
-                continue
+        ).order_by('pk'):
             result['substitutions'].append(substitution)
         for replication in Replica.objects.filter(original__oss=instance).order_by('pk'):
             result['replicas'].append(ReplicaSerializer(replication).data)
@@ -742,51 +694,9 @@ class RelocateConstituentsSerializer(StrictSerializer):
                 'destination': msg.schemasNotConnected()
             })
 
-        if attrs['move_down'] and Operation.objects.filter(
-            oss=oss,
-            result_id=attrs['destination'],
-            operation_type=OperationType.RELATIVIZATION,
-        ).exists():
-            raise serializers.ValidationError({
-                'destination': msg.relocateIntoRelativization()
-            })
-
         return attrs
 
 # ====== Internals ============
-
-
-def _request_user(context: Mapping[str, Any]):
-    ''' Reader for a serializer response. Missing request means anonymous. '''
-    request = context.get('request')
-    return request.user if request is not None else AnonymousUser()
-
-
-def _relativization_is_hidden(context: Mapping[str, Any], operation: Operation) -> bool:
-    ''' Hide the operation, its result and the stored snapshot from a reader who cannot see the source.
-
-    A missing source is sealed for the same reason: the result policy must not become the only check.
-    '''
-    user = _request_user(context)
-    if getattr(user, 'is_staff', False):
-        return False
-    source = operation.relativization_source
-    if source is None:
-        return True
-    return not permissions.can_read_library_item(user, source)
-
-
-def _readable_schema_ids(context: Mapping[str, Any], schema_ids: set[int]) -> set[int]:
-    ''' Schemas this response may describe, using the same rule as ``can_read_library_item``. '''
-    if not schema_ids:
-        return set()
-    user = _request_user(context)
-    items = LibraryItem.objects.in_bulk(schema_ids)
-    return {
-        schema_id
-        for schema_id, item in items.items()
-        if permissions.can_read_library_item(user, item)
-    }
 
 
 def _collect_descendants(start_blocks: list[Block]) -> set[int]:

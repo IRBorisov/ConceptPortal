@@ -52,8 +52,9 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
       'Schema library. Metadata and context search across terms, definitions, and comments, filters, sorting, folder explorer with admin owner grouping under personal folders, viewing conceptual schemas, OSS, and models.'
   },
   [HelpTopic.UI_SCHEMA_MENU]: {
-    keywords: ['schema menu', 'schema editing', 'tabs', 'actions', 'commands'],
-    searchText: 'Schema editing. Tabs, schema menu, schema actions, switching modes, and editing commands.'
+    keywords: ['schema menu', 'schema editing', 'tabs', 'actions', 'commands', 'relativization'],
+    searchText:
+      'Schema editing. Tabs, schema menu, schema actions, switching modes, editing commands, and relativization into a standalone schema.'
   },
   [HelpTopic.UI_MODEL_MENU]: {
     keywords: ['model menu', 'model editing', 'model tabs', 'model actions', 'model commands'],
@@ -208,9 +209,9 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
       'Domain structuring. Splitting and organizing concepts, identifying entities, building formal structure.'
   },
   [HelpTopic.CC_OSS]: {
-    keywords: ['operational synthesis schema', 'relativization', 'oss', 'operations', 'synthesis scenario', 'workflow'],
+    keywords: ['operational synthesis schema', 'oss', 'operations', 'synthesis scenario', 'workflow'],
     searchText:
-      'Operational synthesis schema. Inputs, synthesis and relativization of conceptual schemas, operation arguments and results.'
+      'Operational synthesis schema. Describing the synthesis process, operations, inputs and outputs, step layout, and execution logic.'
   },
   [HelpTopic.CC_PROPAGATION]: {
     keywords: ['end-to-end changes', 'change propagation', 'changes', 'propagation', 'oss'],

@@ -15,13 +15,10 @@ from rest_framework import serializers
 from rest_framework.request import Request
 
 from apps.library.models import AccessPolicy, Editor, LibraryItem
-from apps.rsform.models import Constituenta
-from apps.rsform.models.api_RSLanguage import find_import_alias_error
-from apps.rsform.serializers.io_files import create_rsform_from_sandbox_data
 from apps.users.models import User
 from shared import messages as msg
 from shared import permissions
-from shared.concurrency import Conflict, assert_expected_time_update_locked
+from shared.concurrency import assert_expected_time_update_locked
 
 from . import models as m
 
@@ -231,69 +228,6 @@ def create_replica_operation(
     return new_operation
 
 
-def create_relativization_operation(item: LibraryItem, validated: dict, request: Request) -> m.Operation:
-    ''' Persist the generated schema, provenance and graph position in one transaction. '''
-    with transaction.atomic():
-        _lock_expected_update(item, request)
-        source = m.Operation.objects.select_for_update().filter(oss=item, pk=validated['source_operation'].pk).first()
-        if source is None or source.result_id is None:
-            raise serializers.ValidationError({'source_operation': msg.missingArguments()})
-        source_schema = LibraryItem.objects.select_for_update().get(pk=source.result_id)
-        _require_schema_audience(request, item, {source_schema.pk})
-        if source_schema.time_update != validated['source_time_update']:
-            raise Conflict(detail=msg.concurrentModification())
-
-        ids = [validated['target'], *validated['excluded']]
-        constituents = Constituenta.objects.filter(schema_id=source_schema.pk).in_bulk(ids)
-        if len(constituents) != len(ids):
-            raise serializers.ValidationError({'target': msg.constituentaNotFromOperation()})
-
-        rows = validated['items']
-        alias_error = find_import_alias_error(rows)
-        if alias_error:
-            raise serializers.ValidationError({'items': alias_error})
-        row_ids = {row['id'] for row in rows}
-        if len(row_ids) != len(rows):
-            raise serializers.ValidationError({'items': msg.duplicateConstituentIds()})
-        if any(
-            pair['attribute'] not in row_ids or pair['container'] not in row_ids
-            for pair in validated['attribution']
-        ):
-            raise serializers.ValidationError({'attribution': msg.attributionOutsideImport()})
-
-        data = validated['item_data']
-        if not data.get('title'):
-            raise serializers.ValidationError({'title': msg.missingArguments()})
-        result, _ = create_rsform_from_sandbox_data(
-            item_data={
-                'alias': data['alias'],
-                'title': data['title'],
-                'description': data.get('description', ''),
-                'visible': False,
-                'location': item.location,
-                'access_policy': item.access_policy,
-            },
-            schema_data={'items': rows, 'attribution': validated['attribution']},
-            owner=item.owner,
-        )
-        Editor.set(result.pk, item.getQ_editors().values_list('pk', flat=True))
-        parent = data.get('parent')
-        try:
-            operation = m.OperationSchema(item).record_relativization(
-                source,
-                LibraryItem.objects.get(pk=result.pk),
-                constituents[ids[0]],
-                [constituents[pk] for pk in ids[1:]],
-                parent_id=parent.pk if parent else None,
-            )
-        except ValueError as error:
-            raise serializers.ValidationError({'target': str(error)}) from error
-
-        layout = [*validated['layout'], _node('o', operation.pk, validated['position'])]
-        m.Layout.update_data(item.pk, layout)
-        return operation
-
-
 def create_synthesis_operation(
     item: LibraryItem,
     validated: dict,
@@ -369,8 +303,7 @@ def delete_operation(item: LibraryItem, validated: dict, request: Request | None
         propagation = m.PropagationFacade()
         oss = propagation.get_oss(item.pk)
         if old_schema is not None:
-            if (operation.operation_type in (m.OperationType.SYNTHESIS, m.OperationType.RELATIVIZATION)
-                    and not validated['delete_schema']):
+            if operation.operation_type == m.OperationType.SYNTHESIS and not validated['delete_schema']:
                 _require_schema_audience(request, old_schema, permissions.source_schema_ids({old_schema.pk}))
             if validated['keep_constituents']:
                 _require_retained_audience(request, oss, operation)
@@ -378,7 +311,6 @@ def delete_operation(item: LibraryItem, validated: dict, request: Request | None
         m.Layout.update_data(item.pk, layout)
         if old_schema is not None:
             if validated['delete_schema']:
-                reject_deleting_relativization_source(old_schema)
                 propagation.before_delete_schema(old_schema.pk)
                 old_schema.delete()
             elif old_schema.is_synced(item):
@@ -511,13 +443,6 @@ def relocate_constituents(item: LibraryItem, validated: dict, request: Request |
         _touch_item(source_item)
         _touch_item(destination_item)
         _touch_item(item)
-
-
-def reject_deleting_relativization_source(schema: LibraryItem) -> None:
-    ''' Keep a live source link so deleting the schema cannot widen access to derived results. '''
-    if m.Operation.objects.filter(relativization_source=schema).exists():
-        label = schema.alias or str(schema.pk)
-        raise serializers.ValidationError({'schema': msg.relativizationSourceInUse(label)})
 
 
 # ====== Internals ============

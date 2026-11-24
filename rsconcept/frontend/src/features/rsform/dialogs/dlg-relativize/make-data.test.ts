@@ -93,8 +93,8 @@ describe('makeRelativizedData', () => {
         .every(item => item.typification_manual === '')
     ).toBe(true);
     const accessor = items.find(item => item.cst_type === CstType.FUNCTION);
-    expect(accessor?.term_raw).toBe(globalTx('tx.oss.relativization.accessor.term'));
-    expect(accessor?.convention).toBe(globalTx('tx.oss.relativization.accessor.convention'));
+    expect(accessor?.term_raw).toBe(globalTx('tx.schema.relativization.accessor.term'));
+    expect(accessor?.convention).toBe(globalTx('tx.schema.relativization.accessor.convention'));
     expect(accessor?.definition_formal).not.toMatch(/\p{Script=Cyrillic}/u);
   });
 });

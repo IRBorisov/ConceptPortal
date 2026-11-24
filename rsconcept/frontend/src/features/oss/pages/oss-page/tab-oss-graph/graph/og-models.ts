@@ -2,7 +2,7 @@ import { type Node } from '@xyflow/react';
 
 import { type Block, type Operation } from '@rsconcept/domain/library';
 
-export type OperationNodeType = 'input' | 'synthesis' | 'relativization' | 'replica';
+export type OperationNodeType = 'input' | 'synthesis' | 'replica';
 
 /** Represents graph OSS {@link Operation} node data. */
 interface OperationNodeData extends Record<string, unknown> {
@@ -19,7 +19,7 @@ interface BlockNodeData extends Record<string, unknown> {
 /** Represents graph OSS node. */
 export type OGNode = OGOperationNode | OGBlockNode;
 export type OGOperationNode = Omit<Node<OperationNodeData>, 'type'> & {
-  type: OperationNodeType;
+  type: 'input' | 'synthesis' | 'replica';
 };
 export type OGBlockNode = Omit<Node<BlockNodeData>, 'type'> & {
   type: 'block';

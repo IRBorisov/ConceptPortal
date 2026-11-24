@@ -246,9 +246,7 @@ export class LayoutManager {
       .filter(
         operation =>
           operation.parent === null &&
-          (operation.operation_type !== OperationType.SYNTHESIS || operation.arguments.length === 0) &&
-          (operation.operation_type !== OperationType.RELATIVIZATION ||
-            this.oss.graph.expandInputs([operation.id]).length === 0)
+          (operation.operation_type !== OperationType.SYNTHESIS || operation.arguments.length === 0)
       )
       .map(operation => operation.nodeID);
     let inputsPositions = this.layout.filter(pos => freeInputs.includes(pos.nodeID));

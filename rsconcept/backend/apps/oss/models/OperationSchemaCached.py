@@ -3,15 +3,12 @@
 
 from typing import Optional
 
-from rest_framework.serializers import ValidationError
-
 from apps.library.models import LibraryItem
 from apps.rsform.models import Attribution, Constituenta, CstType, OrderManager, RSFormCached
-from shared import messages as msg
 
 from .Argument import Argument
 from .Inheritance import Inheritance
-from .Operation import Operation, OperationType
+from .Operation import Operation
 from .OperationSchema import OperationSchema
 from .OssCache import OssCache
 from .PropagationContext import PropagationContext
@@ -216,14 +213,6 @@ class OperationSchemaCached:
     def relocate_down(self, destinationID: int, items: list[int]):
         ''' Move list of Constituents to destination Schema inheritor. '''
         self.cache.ensure_loaded_subs()
-
-        # Relativization does not inherit constituents, so a move would delete the source
-        # copy and leave nothing in the destination. Replicas share the result schema.
-        if Operation.objects.filter(
-            result_id=destinationID,
-            operation_type=OperationType.RELATIVIZATION,
-        ).exists():
-            raise ValidationError({'destination': msg.relocateIntoRelativization()})
 
         operation = self.cache.get_operation(destinationID)
         destination = self.context.get_schema(destinationID)

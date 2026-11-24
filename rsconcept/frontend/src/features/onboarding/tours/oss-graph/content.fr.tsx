@@ -23,8 +23,8 @@ export const ossGraphContentFr: Record<string, TourStepContent> = {
     body: (
       <p>
         Sur le <TourHelpLink text='graphe OSS' topic={HelpTopic.UI_OSS_GRAPH} /> se construit le schéma opérationnel de
-        synthèse : blocs, chargements, nœuds de synthèse et de relativisation, et réplications. Métadonnées, accès et
-        statistiques — onglet « Passeport ».
+        synthèse : blocs, chargements, nœuds de synthèse et réplications. Métadonnées, accès et statistiques — onglet
+        « Passeport ».
       </p>
     )
   },
@@ -36,8 +36,7 @@ export const ossGraphContentFr: Record<string, TourStepContent> = {
           <IconReset className='inline-icon' /> (<kbd>Z</kbd>) — Annuler les modifications ;{' '}
           <IconFitImage className='inline-icon' /> (<kbd>G</kbd>) ajuste le graphe à l&apos;écran ;{' '}
           <IconSettings className='inline-icon' /> Paramètres : coordonnées, grille (<kbd>X</kbd>), animation des liens,
-          forme des liens (<kbd>T</kbd>) ; <IconImage className='inline-icon' /> — Enregistrer l&apos;image (PNG ou
-          SVG).
+          forme des liens (<kbd>T</kbd>) ; <IconImage className='inline-icon' /> — Enregistrer l&apos;image (PNG ou SVG).
         </p>
       </>
     )
@@ -49,15 +48,11 @@ export const ossGraphContentFr: Record<string, TourStepContent> = {
         <p>
           Lorsque l&apos;édition est autorisée, la deuxième ligne de la barre : <IconSave className='inline-icon' /> (
           <kbd>Ctrl + S</kbd>) — Enregistrer les modifications ; <IconEdit2 className='inline-icon' /> ouvre le même
-          menu qu&apos;un clic droit sur le nœud sélectionné ; <IconNewItem className='inline-icon icon-green' />{' '}
-          Ajouter… — <IconConceptBlock className='inline-icon text-constructive' /> nouveau bloc, nouveau SC, import de
-          schéma ou <IconSynthesis className='inline-icon' /> synthèse ;{' '}
-          <IconDestroy className='inline-icon icon-red' /> supprime la sélection. Sans droits d&apos;édition — voir
-          l&apos;accès dans le passeport.
-        </p>
-        <p>
-          Choisissez « Ajouter… » → « Relativisation » pour ouvrir l’opération. Le menu d’aide de la fenêtre donne accès
-          au guide rapide.
+          menu qu&apos;un clic droit sur le nœud sélectionné ;{' '}
+          <IconNewItem className='inline-icon icon-green' /> Ajouter… —{' '}
+          <IconConceptBlock className='inline-icon text-constructive' /> nouveau bloc, nouveau SC, import de schéma ou{' '}
+          <IconSynthesis className='inline-icon' /> synthèse ; <IconDestroy className='inline-icon icon-red' />{' '}
+          supprime la sélection. Sans droits d&apos;édition — voir l&apos;accès dans le passeport.
         </p>
         <p>
           Le menu contextuel couvre aussi Exécuter la synthèse, Créer une réplique, Cloner, Constituentes (
