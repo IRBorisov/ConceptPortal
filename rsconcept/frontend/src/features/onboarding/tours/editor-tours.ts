@@ -70,7 +70,8 @@ export const DialogTourID = {
   STRUCTURE_PLANNER: 'structure-planner',
   CST_TEMPLATE: 'cst-template',
   RELOCATE_CST: 'relocate-cst',
-  CREATE_SYNTHESIS: 'create-synthesis'
+  CREATE_SYNTHESIS: 'create-synthesis',
+  CREATE_RELATIVIZATION: 'create-relativization'
 } as const;
 
 export type DialogTourID = (typeof DialogTourID)[keyof typeof DialogTourID];

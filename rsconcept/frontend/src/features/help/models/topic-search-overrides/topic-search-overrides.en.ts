@@ -208,9 +208,9 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
       'Domain structuring. Splitting and organizing concepts, identifying entities, building formal structure.'
   },
   [HelpTopic.CC_OSS]: {
-    keywords: ['operational synthesis schema', 'oss', 'operations', 'synthesis scenario', 'workflow'],
+    keywords: ['operational synthesis schema', 'relativization', 'oss', 'operations', 'synthesis scenario', 'workflow'],
     searchText:
-      'Operational synthesis schema. Describing the synthesis process, operations, inputs and outputs, step layout, and execution logic.'
+      'Operational synthesis schema. Inputs, synthesis and relativization of conceptual schemas, operation arguments and results.'
   },
   [HelpTopic.CC_PROPAGATION]: {
     keywords: ['end-to-end changes', 'change propagation', 'changes', 'propagation', 'oss'],

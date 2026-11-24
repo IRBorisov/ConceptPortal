@@ -71,6 +71,29 @@ export function HelpConceptOSSFr() {
         produire des doublons et des ambiguïtés. Le tableau d'identification doit être soigneusement construit en
         ajoutant les concepts dupliqués provenant des schémas synthétisés.
       </p>
+      <h2 id='relativization'>Relativisation</h2>
+      <p>
+        La relativisation produit un nouveau schéma conceptuel à partir d’un seul schéma source. L’ensemble de base ou
+        la structure sélectionnée définit les contextes admissibles. Le résultat décrit une famille de valeurs et de
+        relations indexée par ces contextes. Par exemple, une famille d’ensembles <code>A(c)</code> est représentée par
+        une relation de couples <code>(c, a)</code>, où <code>a</code> appartient à <code>A(c)</code>.
+      </p>
+      <p>
+        Les fonctions-termes et les prédicats dépendant du contexte reçoivent un paramètre dont le domaine est la
+        structure de contexte. Au besoin, une fonction-terme auxiliaire extrait la valeur unique associée à un contexte.
+      </p>
+      <p>
+        Les exclusions désignent les constituants du noyau qui restent sans paramètre de contexte direct. Ils sont
+        conservés dans le résultat. Les expressions des constituants dépendants sont transformées selon leurs
+        dépendances.
+      </p>
+      <p>
+        Dans le <LinkTopic text='graphe du SOS' topic={HelpTopic.UI_OSS_GRAPH} />, choisissez « Ajouter… » → «
+        Relativisation ». Sélectionnez le schéma source. Dans « {tx('tx.oss.relativization.target.field')} », choisissez
+        un ensemble de base ou une structure et indiquez les exclusions éventuelles. Vérifiez le titre proposé, indiquez
+        un nom court, puis cliquez sur « Créer ». La source, le résultat et les paramètres figurent dans le{' '}
+        <LinkTopic text='passeport du SOS' topic={HelpTopic.UI_OSS_CARD} />.
+      </p>
     </>
   );
 }

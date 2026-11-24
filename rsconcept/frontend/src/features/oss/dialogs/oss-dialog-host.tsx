@@ -9,6 +9,9 @@ import { OssDialogType, useOssDialogsStore } from './oss-dialog-store';
 const DlgChangeInputSchema = React.lazy(() =>
   import('./dlg-change-input-schema').then(module => ({ default: module.DlgChangeInputSchema }))
 );
+const DlgCreateRelativization = React.lazy(() =>
+  import('./dlg-create-relativization').then(module => ({ default: module.DlgCreateRelativization }))
+);
 const DlgCreateSynthesis = React.lazy(() =>
   import('./dlg-create-synthesis').then(module => ({ default: module.DlgCreateSynthesis }))
 );
@@ -49,6 +52,8 @@ export function OssDialogHost() {
     <Suspense fallback={<ModalLoader />}>
       {(() => {
         switch (active) {
+          case OssDialogType.CREATE_RELATIVIZATION:
+            return <DlgCreateRelativization />;
           case OssDialogType.CREATE_SYNTHESIS:
             return <DlgCreateSynthesis />;
           case OssDialogType.CREATE_BLOCK:

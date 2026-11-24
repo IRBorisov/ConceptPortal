@@ -237,9 +237,9 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
       'Structuration du domaine. Découpage et organisation des concepts, identification d’entités, construction d’une structure formelle.'
   },
   [HelpTopic.CC_OSS]: {
-    keywords: ['schéma opérationnel synthèse', 'oss', 'opérations', 'scénario synthèse', 'workflow'],
+    keywords: ['schéma opérationnel synthèse', 'relativisation', 'oss', 'opérations', 'scénario synthèse', 'workflow'],
     searchText:
-      'Schéma opérationnel de synthèse. Description du processus de synthèse, opérations, entrées et sorties, enchaînement des étapes et logique d’exécution.'
+      'Schéma opérationnel de synthèse. Chargement, synthèse et relativisation des schémas conceptuels, arguments et résultats.'
   },
   [HelpTopic.CC_PROPAGATION]: {
     keywords: ['changements bout en bout', 'propagation changements', 'changements', 'propagation', 'oss'],

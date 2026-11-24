@@ -459,6 +459,18 @@ export const txLibraryFr: Record<string, string> = {
 
   'tx.operation.or.block.select': 'Choisir une opération ou un bloc',
 
+  'tx.oss.relativization': 'Relativisation',
+  'tx.oss.relativization.schemas': 'Schémas relativisés',
+  'tx.oss.relativization.schemas.short': 'SC relativisés',
+  'tx.oss.relativization.result': 'Résultat de la relativisation',
+  'tx.oss.relativization.target': 'Constituant relativisé',
+  'tx.oss.relativization.target.field': 'Constituant de relativisation',
+  'tx.oss.relativization.title': '{source} – relativisation de {term}',
+  'tx.oss.relativization.target.select': 'Sélectionnez un ensemble de base ou une structure',
+  'tx.oss.relativization.source.fail': 'Impossible de charger le schéma source',
+  'tx.oss.relativization.compute.fail': 'Impossible de relativiser le constituant sélectionné',
+  'tx.oss.relativization.excluded': 'Constituants exclus',
+  'tx.oss.relativization.excluded.none': 'Aucune exclusion',
   'tx.oss.replica': 'Réplication',
   'tx.oss.replica.original': 'Original',
   'tx.oss.replica.findOriginal': 'Sélectionner l’original',

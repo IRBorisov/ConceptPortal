@@ -16,6 +16,7 @@ import { constructNodeID } from '@rsconcept/domain/library/oss-api';
 
 import { BLOCK_NODE_MIN_HEIGHT, BLOCK_NODE_MIN_WIDTH } from '../pages/oss-page/tab-oss-graph/graph/block-node';
 
+import { calculateRelativizationStats } from './relativization-passport';
 import { type OperationSchemaDTO } from './types';
 
 /** Loads data into an {@link OperationSchema} based on {@link OperationSchemaDTO}. */
@@ -102,6 +103,9 @@ export class OssLoader {
       switch (operation.operation_type) {
         case OperationType.INPUT:
           break;
+        case OperationType.RELATIVIZATION:
+          operation.relativization ??= null;
+          break;
         case OperationType.SYNTHESIS:
           operation.is_consolidation = this.inferConsolidation(operationID);
           operation.substitutions = this.oss.substitutions.filter(item => item.operation === operationID);
@@ -155,6 +159,7 @@ export class OssLoader {
       count_all: this.oss.operations.length + this.oss.blocks.length,
       count_inputs: operations.filter(item => item.operation_type === OperationType.INPUT).length,
       count_synthesis: operations.filter(item => item.operation_type === OperationType.SYNTHESIS).length,
+      ...calculateRelativizationStats(operations),
       count_schemas: this.schemaIDs.length,
       count_owned: operations.filter(
         item => !!item.result && (item.operation_type !== OperationType.INPUT || !item.is_import)

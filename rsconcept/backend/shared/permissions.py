@@ -4,7 +4,7 @@
 from typing import Any, cast
 
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from rest_framework.permissions import AllowAny as Anyone  # pylint: disable=unused-import
 from rest_framework.permissions import BasePermission as _Base
 from rest_framework.permissions import \
@@ -13,7 +13,7 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 
 from apps.library.models import AccessPolicy, Editor, LibraryItem, LibraryItemType, Version
-from apps.oss.models import Inheritance, Operation
+from apps.oss.models import Inheritance, Operation, OperationType
 from apps.rsform.models import Constituenta
 
 
@@ -44,13 +44,24 @@ def library_item_read_filter(user: Any) -> Q:
             | (Q(pk__in=editor_items) & Q(access_policy=AccessPolicy.PROTECTED)))
 
 
+def _relativization_links() -> QuerySet[Operation]:
+    return Operation.objects.filter(
+        operation_type=OperationType.RELATIVIZATION, result__isnull=False, relativization_source__isnull=False
+    )
+
+
 def source_schema_ids(schema_ids: set[int]) -> set[int]:
-    ''' Find all live sources of inherited data, including transitive sources. '''
+    ''' Find all live sources of derived data, including transitive sources. '''
+    links = _relativization_links()
     sources: set[int] = set()
     frontier = schema_ids
     while frontier:
         parents = set(Inheritance.objects.filter(child__schema_id__in=frontier)
                       .values_list('parent__schema_id', flat=True).distinct())
+        parents.update(
+            source_id for source_id in links.filter(result_id__in=frontier)
+            .values_list('relativization_source_id', flat=True).distinct() if source_id is not None
+        )
         frontier = parents - sources - schema_ids
         sources.update(frontier)
     return sources
@@ -64,10 +75,19 @@ def unreadable_derived_schema_ids(user: Any) -> set[int]:
     links = Inheritance.objects.all()
     blocked = set(links.exclude(parent__schema_id__in=readable)
                   .values_list('child__schema_id', flat=True).distinct())
+    relativizations = _relativization_links()
+    blocked.update(
+        result_id for result_id in relativizations.exclude(relativization_source_id__in=readable)
+        .values_list('result_id', flat=True).distinct() if result_id is not None
+    )
     frontier = blocked
     while frontier:
         children = set(links.filter(parent__schema_id__in=frontier)
                        .values_list('child__schema_id', flat=True).distinct())
+        children.update(
+            result_id for result_id in relativizations.filter(relativization_source_id__in=frontier)
+            .values_list('result_id', flat=True).distinct() if result_id is not None
+        )
         frontier = children - blocked
         blocked = blocked | frontier
     return blocked

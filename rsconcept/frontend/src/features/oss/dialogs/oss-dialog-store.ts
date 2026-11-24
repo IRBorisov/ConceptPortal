@@ -4,6 +4,7 @@ import { type DlgCreateBlockProps } from './dlg-create-block/dlg-create-block';
 import { type DlgCreateSynthesisProps } from './dlg-create-synthesis/dlg-create-synthesis';
 import { type DlgEditOperationProps } from './dlg-edit-operation/dlg-edit-operation';
 import { type DlgChangeInputSchemaProps } from './dlg-change-input-schema';
+import { type DlgCreateRelativizationProps } from './dlg-create-relativization';
 import { type DlgCreateSchemaProps } from './dlg-create-schema';
 import { type DlgDeleteOperationProps } from './dlg-delete-operation';
 import { type DlgDeleteReplicaProps } from './dlg-delete-replica';
@@ -13,6 +14,7 @@ import { type DlgRelocateConstituentsProps } from './dlg-relocate-constituents';
 
 export const OssDialogType = {
   CREATE_SYNTHESIS: 'create-synthesis',
+  CREATE_RELATIVIZATION: 'create-relativization',
   CREATE_BLOCK: 'create-block',
   EDIT_BLOCK: 'edit-block',
   EDIT_OPERATION: 'edit-operation',
@@ -36,6 +38,7 @@ interface OssDialogsStore {
   hideDialog: () => void;
 
   showCreateSynthesis: (props: DlgCreateSynthesisProps) => void;
+  showCreateRelativization: (props: DlgCreateRelativizationProps) => void;
   showCreateBlock: (props: DlgCreateBlockProps) => void;
   showEditBlock: (props: DlgEditBlockProps) => void;
   showEditOperation: (props: DlgEditOperationProps) => void;
@@ -59,6 +62,7 @@ export const useOssDialogsStore = create<OssDialogsStore>()(set => ({
   },
 
   showCreateSynthesis: props => set({ active: OssDialogType.CREATE_SYNTHESIS, props }),
+  showCreateRelativization: props => set({ active: OssDialogType.CREATE_RELATIVIZATION, props }),
   showCreateBlock: props => set({ active: OssDialogType.CREATE_BLOCK, props }),
   showEditBlock: props => set({ active: OssDialogType.EDIT_BLOCK, props }),
   showEditOperation: props => set({ active: OssDialogType.EDIT_OPERATION, props }),

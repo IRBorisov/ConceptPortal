@@ -7,6 +7,7 @@ from django.db.models import (
     SET_NULL,
     CharField,
     ForeignKey,
+    JSONField,
     Model,
     QuerySet,
     TextChoices,
@@ -24,6 +25,7 @@ class OperationType(TextChoices):
     ''' Type of operation. '''
     INPUT = 'input'
     SYNTHESIS = 'synthesis'
+    RELATIVIZATION = 'relativization'
     REPLICA = 'replica'
 
 
@@ -37,7 +39,7 @@ class Operation(Model):
     )
     operation_type = CharField(
         verbose_name='Тип',
-        max_length=10,
+        max_length=14,
         choices=OperationType.choices,
         default=OperationType.INPUT
     )
@@ -48,6 +50,20 @@ class Operation(Model):
         null=True,
         on_delete=SET_NULL,
         related_name='producer'
+    )
+
+    relativization_source = ForeignKey(
+        verbose_name='Исходная КС релятивизации',
+        to='library.LibraryItem',
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        related_name='+'
+    )
+    relativization = JSONField(
+        verbose_name='Параметры релятивизации',
+        blank=True,
+        null=True
     )
 
     parent = ForeignKey(

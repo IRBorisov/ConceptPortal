@@ -371,6 +371,7 @@ def create_rsform_from_sandbox_data(
             order=order,
             alias=item['alias'],
             cst_type=_cst_type_from_trs(item['cst_type']),
+            typification_manual=item.get('typification_manual', ''),
             convention=item.get('convention', ''),
             crucial=item.get('crucial', False),
             value_is_property=item.get('value_is_property', False),
