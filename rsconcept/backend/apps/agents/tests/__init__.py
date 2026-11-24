@@ -11,3 +11,4 @@ from .t_publication import *
 from .t_description import *
 from .t_key_policy import *
 from .t_anonymous_reads import *
+from .t_read_only_protection import *

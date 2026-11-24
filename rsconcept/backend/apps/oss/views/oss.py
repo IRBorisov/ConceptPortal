@@ -111,9 +111,9 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
     @action(detail=True, methods=['patch'], url_path='update-layout')
     def update_layout(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Update schema layout. '''
+        item = self._get_item()
         serializer = s.LayoutSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        item = self._get_item()
         mutations.update_layout(item, serializer.validated_data['data'], request)
         return Response(status=c.HTTP_200_OK, data=s.OperationSchemaSerializer(item).data)
 
