@@ -2,6 +2,7 @@
 from collections import deque
 from typing import cast
 
+from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import PermissionDenied
 from django.db.models import F, Q
 from rest_framework import serializers
@@ -12,6 +13,7 @@ from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemDetailsSerializer
 from apps.rsform.models import Constituenta
 from apps.rsform.serializers import SubstitutionSerializerBase
+from apps.rsform.serializers.data_access import CstImportJsonSerializer, ImportAttributionSerializer
 from shared import messages as msg
 from shared import permissions
 from shared.serializers import StrictModelSerializer, StrictSerializer
@@ -32,11 +34,23 @@ from .basics import NodeSerializer, PositionSerializer, SubstitutionExSerializer
 class OperationSerializer(StrictModelSerializer):
     ''' Serializer: Operation data. '''
     is_import = serializers.BooleanField(default=False, required=False)
+    relativization = serializers.JSONField(read_only=True)
+
+    def to_representation(self, instance: Operation):
+        data = super().to_representation(instance)
+        if instance.operation_type != OperationType.RELATIVIZATION:
+            data.pop('relativization', None)
+        elif instance.relativization_source is not None:
+            request = self.context.get('request')
+            user = request.user if request is not None else AnonymousUser()
+            if not permissions.can_read_library_item(user, instance.relativization_source):
+                data.update(alias='', title='', description='', result=None, relativization=None)
+        return data
 
     class Meta:
         ''' serializer metadata. '''
         model = Operation
-        fields = '__all__'
+        exclude = ('relativization_source',)
         read_only_fields = ('id', 'oss')
 
 
@@ -307,6 +321,24 @@ class ImportSchemaSerializer(StrictSerializer):
         return attrs
 
 
+class CreateRelativizationSerializer(CreateSchemaSerializer):
+    ''' Parameters and result of the client-side relativization engine. '''
+    source_operation = PKField(queryset=Operation.objects.all())
+    source_time_update = serializers.DateTimeField()
+    target = serializers.IntegerField(min_value=1)
+    excluded = serializers.ListField(child=serializers.IntegerField(min_value=1))
+    items = CstImportJsonSerializer(many=True, allow_empty=False)
+    attribution = ImportAttributionSerializer(many=True)
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        oss = cast(LibraryItem, self.context['oss'])
+        source = cast(Operation, attrs['source_operation'])
+        if source.oss_id != oss.pk:
+            raise serializers.ValidationError({'source_operation': msg.operationNotInOSS()})
+        return attrs
+
+
 class CreateSynthesisSerializer(StrictSerializer):
     ''' Serializer: Synthesis operation creation. '''
     layout = serializers.ListField(child=NodeSerializer())
@@ -392,11 +424,17 @@ class UpdateOperationSerializer(StrictSerializer):
     def validate(self, attrs):
         oss = cast(LibraryItem, self.context['oss'])
         parent = attrs['item_data'].get('parent')
-        target = cast(Block, attrs['target'])
+        target = cast(Operation, attrs['target'])
         if target.oss_id != oss.pk:
             raise serializers.ValidationError({
                 'target': msg.operationNotInOSS()
             })
+
+        if target.operation_type == OperationType.RELATIVIZATION:
+            if attrs.get('arguments') or attrs.get('substitutions'):
+                raise serializers.ValidationError({'target': msg.operationNotSynthesis(target.alias)})
+            attrs.pop('arguments', None)
+            attrs.pop('substitutions', None)
 
         if parent is not None and parent.oss_id != oss.pk:
             raise serializers.ValidationError({
@@ -600,9 +638,10 @@ class OperationSchemaSerializer(StrictModelSerializer):
         result['arguments'] = []
         result['substitutions'] = []
         result['replicas'] = []
-        for operation in Operation.objects.filter(oss=instance).order_by('pk'):
-            operation_data = OperationSerializer(operation).data
-            operation_result = operation.result
+        operations = Operation.objects.filter(oss=instance).select_related('result', 'relativization_source')
+        for operation in operations.order_by('pk'):
+            operation_data = OperationSerializer(operation, context=self.context).data
+            operation_result = operation.result if operation_data['result'] is not None else None
             operation_data['is_import'] = \
                 operation_result is not None and \
                 (operation_result.owner_id != instance.owner_id or

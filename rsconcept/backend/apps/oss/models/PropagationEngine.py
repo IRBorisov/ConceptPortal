@@ -8,7 +8,7 @@ from apps.library.models import LibraryItem
 from apps.rsform.models import Attribution, Constituenta, CstType, RSFormCached
 
 from .Inheritance import Inheritance
-from .Operation import Operation
+from .Operation import Operation, OperationType
 from .OssCache import OssCache
 from .PropagationContext import PropagationContext
 from .Substitution import Substitution
@@ -72,6 +72,8 @@ class PropagationEngine:
     ) -> None:
         ''' Execute inheritance of Constituenta. '''
         operation = self.cache.operation_by_id[target_operation]
+        if operation.operation_type == OperationType.RELATIVIZATION:
+            return
         destination = self.cache.get_result(operation)
         if destination is None:
             return

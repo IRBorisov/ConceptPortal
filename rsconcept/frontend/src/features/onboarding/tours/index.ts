@@ -103,6 +103,11 @@ const tourRegistrations: Record<string, TourRegistration> = {
     route: '/oss',
     load: () => import('./relocate-cst').then(module => module.relocateCstTour)
   },
+  [DialogTourID.CREATE_RELATIVIZATION]: {
+    autoStart: false,
+    route: '/oss',
+    load: () => import('./create-relativization').then(module => module.createRelativizationTour)
+  },
   [DialogTourID.CREATE_SYNTHESIS]: {
     autoStart: false,
     route: '/oss',

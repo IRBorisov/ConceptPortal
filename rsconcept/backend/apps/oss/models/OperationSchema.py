@@ -1,10 +1,11 @@
 ''' Models: OSS API. '''
 # pylint: disable=duplicate-code
 
+from django.db import transaction
 from django.db.models import QuerySet
 
 from apps.library.models import Editor, LibraryItem, LibraryItemType
-from apps.rsform.models import Constituenta, OrderManager, RSFormCached
+from apps.rsform.models import Constituenta, CstType, OrderManager, RSFormCached
 
 from .Argument import Argument
 from .Block import Block
@@ -65,6 +66,55 @@ class OperationSchema:
         ''' Create Operation. '''
         result = Operation.objects.create(oss=self.model, **kwargs)
         return result
+
+    @transaction.atomic
+    def record_relativization(
+        self,
+        source: Operation,
+        result: LibraryItem,
+        target: Constituenta,
+        excluded: list[Constituenta],
+        parent_id: int | None = None,
+    ) -> Operation:
+        ''' Attach a generated schema and record the inputs to its transformation. '''
+        source = Operation.objects.select_for_update().get(pk=source.pk)
+        source_schema = source.result
+        if source.oss_id != self.model.pk or source_schema is None:
+            raise ValueError('Relativization requires a source schema in the OSS.')
+        if target.schema_id != source_schema.pk or target.cst_type not in (CstType.BASE, CstType.STRUCTURED):
+            raise ValueError('The target must be a base set or a structure of the source schema.')
+
+        excluded_ids = {item.pk for item in excluded}
+        kernel_types = (CstType.BASE, CstType.CONSTANT, CstType.STRUCTURED)
+        if len(excluded_ids) != len(excluded) or target.pk in excluded_ids or any(
+            item.schema_id != source_schema.pk or item.cst_type not in kernel_types for item in excluded
+        ):
+            raise ValueError(
+                'Exclusions must be distinct kernel constituents of the source schema other than the target.'
+            )
+
+        result = LibraryItem.objects.select_for_update().get(pk=result.pk)
+        if (result.item_type != LibraryItemType.RSFORM or not result.is_synced(self.model)
+                or result.pk == source_schema.pk or result.producer.exists()):
+            raise ValueError('Relativization requires a new result schema owned by the OSS.')
+
+        operation = self.create_operation(
+            operation_type=OperationType.RELATIVIZATION,
+            parent_id=parent_id,
+            result=result,
+            alias=result.alias,
+            title=result.title,
+            description=result.description,
+            relativization_source=source_schema,
+            relativization={
+                'source': {'id': source_schema.pk, 'alias': source_schema.alias, 'title': source_schema.title},
+                'target': {'alias': target.alias, 'term': target.term_resolved},
+                'excluded': [{'alias': item.alias, 'term': item.term_resolved} for item in excluded],
+            },
+        )
+        self.set_arguments(operation.pk, [source])
+        self.model.save(update_fields=['time_update'])
+        return operation
 
     def create_replica(self, target: Operation) -> Operation:
         ''' Create Replica Operation. '''

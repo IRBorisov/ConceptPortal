@@ -1,16 +1,12 @@
 import { globalTx } from '@/i18n';
-import {
-  NodeType,
-  OperationType,
-  type OssItem,
-  type SubstitutionErrorDescription
-} from '@rsconcept/domain/library';
+import { NodeType, OperationType, type OssItem, type SubstitutionErrorDescription } from '@rsconcept/domain/library';
 
 import { describeDiagnostic } from '@/features/rsform/labels';
 
 const OPERATION_LABEL_LID: Record<OperationType, string> = {
   [OperationType.INPUT]: 'tx.oss.input',
   [OperationType.SYNTHESIS]: 'tx.synthesis.short',
+  [OperationType.RELATIVIZATION]: 'tx.oss.relativization',
   [OperationType.REPLICA]: 'tx.oss.replica'
 };
 
