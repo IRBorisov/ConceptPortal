@@ -71,10 +71,11 @@ function applyEdits(expression, edits) {
   return chunks.join('');
 }
 
-function remapRecord(item, alias, formal, aliases, origin, role, entityUID = item.entityUID) {
+function remapRecord(item, alias, formal, aliases, origin, role, entityUID = item.entityUID, preserveType = true) {
   const { parse, ...record } = item;
   const term = item.term;
   const text = item.definition.text;
+  const manual = item.definition.typification_manual;
   return {
     ...record,
     entityUID,
@@ -85,9 +86,9 @@ function remapRecord(item, alias, formal, aliases, origin, role, entityUID = ite
     definition: {
       ...item.definition,
       formal,
-      ...(item.definition.typification_manual !== undefined
-        ? { typification_manual: relink(item.definition.typification_manual, aliases) }
-        : {}),
+      // A rewritten formal has a different type. Keeping the old manual type makes the
+      // analyzer report a false mismatch and use that stale type for dependents.
+      ...(manual !== undefined ? { typification_manual: preserveType ? relink(manual, aliases) : '' } : {}),
       text: text && { ...text, raw: relinkText(text.raw ?? '', aliases) }
     }
   };
@@ -272,15 +273,19 @@ export function createRelativizer({
       const expression = item.definition.formal;
       const ast = asts.get(alias);
       let formal;
+      let preserveType = true;
       if (alias === target && kind === 'structure') {
         formal = axisDefinition;
+        preserveType = false;
       } else if (kind === 'structure' && affected.has(alias)) {
         formal = 'ℬ(' + axis + '×' + stableDomain(alias, expression) + ')';
+        preserveType = false;
       } else if (kind === 'structure') {
         formal = stableDomain(alias, expression);
       } else if (!affected.has(alias) || BASE_SET.has(kind)) {
         formal = relink(expression, references);
       } else {
+        preserveType = false;
         const rewritten = rewrite(expression, ast, state);
         if (CALLABLE.has(kind)) {
           const start = rewritten.indexOf('[') + 1;
@@ -294,7 +299,9 @@ export function createRelativizer({
         }
       }
       const role = generated.has(alias) ? 'carrier' : alias === target ? 'axis' : 'constituent';
-      result.push(remapRecord(item, output.get(alias), formal, references, item.entityUID, role));
+      result.push(
+        remapRecord(item, output.get(alias), formal, references, item.entityUID, role, item.entityUID, preserveType)
+      );
       if (CORE.has(kind)) lastKernelIndex = result.length - 1;
     }
 
@@ -308,19 +315,19 @@ export function createRelativizer({
         references,
         item.entityUID,
         alias === target ? 'axis' : 'relation',
-        newId()
+        newId(),
+        false
       );
     });
     const ordered = [...result.slice(0, lastKernelIndex + 1), ...added, ...result.slice(lastKernelIndex + 1)];
     if (state.usesAccessor) {
-      const term = 'Дерелятивизация по контексту';
+      const term = params.accessorTerm ?? '';
       ordered.push({
         entityUID: newId(),
         type: 'constituenta',
         cstType: 'function',
         alias: accessor,
-        convention:
-          'Извлечение единственного значения, сопоставленного заданному контексту в релятивизированном отношении.',
+        convention: params.accessorConvention ?? '',
         origin: null,
         role: 'accessor',
         term: { raw: term, resolved: term, forms: [] },

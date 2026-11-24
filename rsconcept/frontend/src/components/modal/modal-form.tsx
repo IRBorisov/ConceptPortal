@@ -1,6 +1,6 @@
 'use client';
 
-import type { SubmitEvent, SubmitEventHandler } from 'react';
+import type { SubmitEvent } from 'react';
 import { useEffect, useRef } from 'react';
 
 import { useTx } from '@/i18n';
@@ -22,6 +22,10 @@ import { cn } from '../utils';
 import { ModalBackdrop } from './modal-backdrop';
 import { ModalPortal } from './modal-portal';
 import { useModalPlacement } from './use-modal-placement';
+
+function isSubmitPromise(value: void | boolean | Promise<void | boolean>): value is Promise<void | boolean> {
+  return typeof value === 'object' && value !== null && typeof value.then === 'function';
+}
 
 export interface ModalProps extends Styling {
   /** Title of the modal window. */
@@ -53,8 +57,8 @@ interface ModalFormProps extends ModalProps {
   /** Callback to be called before submit. */
   beforeSubmit?: () => boolean;
 
-  /** Callback to be called after submit. */
-  onSubmit: SubmitEventHandler<HTMLFormElement>;
+  /** Submit handler. Return false, or a promise of false, to keep the dialog open. */
+  onSubmit: (event: SubmitEvent<HTMLFormElement>) => void | boolean | Promise<void | boolean>;
 
   /** Callback to be called when modal is canceled. */
   onCancel?: () => void;
@@ -116,8 +120,21 @@ export function ModalForm({
     if (beforeSubmit && !beforeSubmit()) {
       return;
     }
-    onSubmit(event);
-    closeModal();
+    const outcome = onSubmit(event);
+    if (isSubmitPromise(outcome)) {
+      void outcome.then(
+        value => {
+          if (value !== false) {
+            closeModal();
+          }
+        },
+        () => undefined
+      );
+      return;
+    }
+    if (outcome !== false) {
+      closeModal();
+    }
   }
 
   return (

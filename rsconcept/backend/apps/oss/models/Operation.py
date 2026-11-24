@@ -4,6 +4,7 @@ from typing import Optional
 
 from django.db.models import (
     CASCADE,
+    PROTECT,
     SET_NULL,
     CharField,
     ForeignKey,
@@ -52,12 +53,14 @@ class Operation(Model):
         related_name='producer'
     )
 
+    # PROTECT keeps the source ACL attached to the derived schema. SET_NULL would
+    # make a public result readable after the private source disappears.
     relativization_source = ForeignKey(
         verbose_name='Исходная КС релятивизации',
         to='library.LibraryItem',
         blank=True,
         null=True,
-        on_delete=SET_NULL,
+        on_delete=PROTECT,
         related_name='+'
     )
     relativization = JSONField(

@@ -362,6 +362,22 @@ class TestOssViewset(EndpointTester):
 
 
     @decl_endpoint('/api/oss/{item}/relocate-constituents', method='post')
+    def test_relocate_into_relativization_keeps_source(self):
+        self.set_params(item=self.owned_id)
+        self.populateData()
+        result = RSForm.create(alias='R1', title='Relativized', owner=self.user)
+        self.owned.record_relativization(self.operation1, result.model, self.ks1X1, [])
+
+        data = {
+            'destination': result.model.pk,
+            'items': [self.ks1X1.pk]
+        }
+        response = self.executeBadData(data)
+        self.assertEqual(response.data['destination'], [msg.relocateIntoRelativization()])
+        self.assertTrue(Constituenta.objects.filter(pk=self.ks1X1.pk).exists())
+
+
+    @decl_endpoint('/api/oss/{item}/relocate-constituents', method='post')
     def test_relocate_constituents_schema_not_in_oss(self):
         self.set_params(item=self.owned_id)
         self.populateData()

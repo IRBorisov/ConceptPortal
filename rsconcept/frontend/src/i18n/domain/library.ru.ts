@@ -473,6 +473,9 @@ export const txLibraryRu: Record<string, string> = {
   'tx.oss.relativization.compute.fail': 'Не удалось релятивизировать выбранную конституенту',
   'tx.oss.relativization.excluded': 'Исключённые конституенты',
   'tx.oss.relativization.excluded.none': 'Без исключений',
+  'tx.oss.relativization.accessor.term': 'Дерелятивизация по контексту',
+  'tx.oss.relativization.accessor.convention':
+    'Извлечение единственного значения, сопоставленного заданному контексту в релятивизированном отношении.',
   'tx.oss.replica': 'Репликация',
   'tx.oss.replica.original': 'Оригинал',
   'tx.oss.replica.findOriginal': 'Выделить оригинал',

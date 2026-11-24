@@ -1,6 +1,7 @@
 ''' Serializers for persistent data manipulation. '''
 from collections import deque
-from typing import cast
+from collections.abc import Mapping
+from typing import Any, cast
 
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import PermissionDenied
@@ -40,11 +41,8 @@ class OperationSerializer(StrictModelSerializer):
         data = super().to_representation(instance)
         if instance.operation_type != OperationType.RELATIVIZATION:
             data.pop('relativization', None)
-        elif instance.relativization_source is not None:
-            request = self.context.get('request')
-            user = request.user if request is not None else AnonymousUser()
-            if not permissions.can_read_library_item(user, instance.relativization_source):
-                data.update(alias='', title='', description='', result=None, relativization=None)
+        elif _relativization_is_hidden(self.context, instance):
+            data.update(alias='', title='', description='', result=None, relativization=None)
         return data
 
     class Meta:
@@ -658,7 +656,7 @@ class OperationSchemaSerializer(StrictModelSerializer):
             result['blocks'].append(BlockSerializer(block).data)
         for argument in Argument.objects.filter(operation__oss=instance).order_by('order'):
             result['arguments'].append(ArgumentSerializer(argument).data)
-        for substitution in Substitution.objects.filter(operation__oss=instance).values(
+        substitution_rows = list(Substitution.objects.filter(operation__oss=instance).values(
             'operation',
             'original',
             'substitution',
@@ -668,7 +666,18 @@ class OperationSchemaSerializer(StrictModelSerializer):
             substitution_schema=F('substitution__schema_id'),
             substitution_alias=F('substitution__alias'),
             substitution_term=F('substitution__term_resolved'),
-        ).order_by('pk'):
+        ).order_by('pk'))
+        referenced_schemas = {
+            schema_id
+            for row in substitution_rows
+            for schema_id in (row['original_schema'], row['substitution_schema'])
+            if schema_id is not None
+        }
+        readable_schemas = _readable_schema_ids(self.context, referenced_schemas)
+        for substitution in substitution_rows:
+            if substitution['original_schema'] not in readable_schemas \
+                    or substitution['substitution_schema'] not in readable_schemas:
+                continue
             result['substitutions'].append(substitution)
         for replication in Replica.objects.filter(original__oss=instance).order_by('pk'):
             result['replicas'].append(ReplicaSerializer(replication).data)
@@ -733,9 +742,51 @@ class RelocateConstituentsSerializer(StrictSerializer):
                 'destination': msg.schemasNotConnected()
             })
 
+        if attrs['move_down'] and Operation.objects.filter(
+            oss=oss,
+            result_id=attrs['destination'],
+            operation_type=OperationType.RELATIVIZATION,
+        ).exists():
+            raise serializers.ValidationError({
+                'destination': msg.relocateIntoRelativization()
+            })
+
         return attrs
 
 # ====== Internals ============
+
+
+def _request_user(context: Mapping[str, Any]):
+    ''' Reader for a serializer response. Missing request means anonymous. '''
+    request = context.get('request')
+    return request.user if request is not None else AnonymousUser()
+
+
+def _relativization_is_hidden(context: Mapping[str, Any], operation: Operation) -> bool:
+    ''' Hide the operation, its result and the stored snapshot from a reader who cannot see the source.
+
+    A missing source is sealed for the same reason: the result policy must not become the only check.
+    '''
+    user = _request_user(context)
+    if getattr(user, 'is_staff', False):
+        return False
+    source = operation.relativization_source
+    if source is None:
+        return True
+    return not permissions.can_read_library_item(user, source)
+
+
+def _readable_schema_ids(context: Mapping[str, Any], schema_ids: set[int]) -> set[int]:
+    ''' Schemas this response may describe, using the same rule as ``can_read_library_item``. '''
+    if not schema_ids:
+        return set()
+    user = _request_user(context)
+    items = LibraryItem.objects.in_bulk(schema_ids)
+    return {
+        schema_id
+        for schema_id, item in items.items()
+        if permissions.can_read_library_item(user, item)
+    }
 
 
 def _collect_descendants(start_blocks: list[Block]) -> set[int]:

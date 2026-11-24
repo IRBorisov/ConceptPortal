@@ -151,6 +151,14 @@ def schemasNotConnected() -> str:
     return 'Концептуальные схемы не связаны через ОСС'
 
 
+def relocateIntoRelativization() -> str:
+    return 'Нельзя перемещать конституенты в результат релятивизации'
+
+
+def relativizationSourceInUse(alias: str) -> str:
+    return f'Схема является исходной для релятивизации и не может быть удалена: {alias}'
+
+
 def sourceEqualDestination() -> str:
     return 'Схема-источник и схема-получатель не могут быть одинаковыми'
 

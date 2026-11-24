@@ -30,6 +30,6 @@ export function createRelativizer(runtime: {
   prepare: (items: SourceConstituent[]) => PreparedRelativization;
   transform: (
     prepared: PreparedRelativization,
-    params: { target: string; ignored: string[] }
+    params: { target: string; ignored?: string[]; accessorTerm?: string; accessorConvention?: string }
   ) => { items: SourceConstituent[] } | null;
 };

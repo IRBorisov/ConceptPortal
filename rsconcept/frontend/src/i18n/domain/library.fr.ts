@@ -471,6 +471,9 @@ export const txLibraryFr: Record<string, string> = {
   'tx.oss.relativization.compute.fail': 'Impossible de relativiser le constituant sélectionné',
   'tx.oss.relativization.excluded': 'Constituants exclus',
   'tx.oss.relativization.excluded.none': 'Aucune exclusion',
+  'tx.oss.relativization.accessor.term': 'Dérélativisation par le contexte',
+  'tx.oss.relativization.accessor.convention':
+    'Extrait la valeur unique associée à un contexte donné dans la relation relativisée.',
   'tx.oss.replica': 'Réplication',
   'tx.oss.replica.original': 'Original',
   'tx.oss.replica.findOriginal': 'Sélectionner l’original',

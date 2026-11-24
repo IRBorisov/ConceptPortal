@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -51,6 +51,8 @@ export function DlgCreateRelativization() {
   const [manualTitle, setManualTitle] = useState<string | null>(null);
   const [alias, setAlias] = useState('');
   const [description, setDescription] = useState('');
+  const [pending, setPending] = useState(false);
+  const pendingRef = useRef(false);
 
   const operations = oss.operations.filter(operation => operation.result !== null);
   const source = operations.find(operation => operation.id === sourceID) ?? null;
@@ -118,23 +120,31 @@ export function DlgCreateRelativization() {
     setExcludedIDs(previous => (checked ? [...previous, id] : previous.filter(item => item !== id)));
   }
 
-  async function submit() {
+  async function submit(): Promise<boolean> {
     const raw = sourceQuery.data?.raw;
-    if (!canSubmit || !source || !target || !raw) {
-      return;
+    if (pendingRef.current || !canSubmit || !source || !target || !raw) {
+      return false;
     }
+    pendingRef.current = true;
+    setPending(true);
 
     const excluded = exclusionOptions.filter(item => excludedIDs.includes(item.id));
     try {
-      const { makeRelativizedData } = await import('./relativization/make-data');
-      const result = makeRelativizedData(
-        raw,
-        target.alias,
-        excluded.map(item => item.alias)
-      );
+      let result;
+      try {
+        const { makeRelativizedData } = await import('./relativization/make-data');
+        result = makeRelativizedData(
+          raw,
+          target.alias,
+          excluded.map(item => item.alias)
+        );
+      } catch {
+        toast.error(tx('tx.oss.relativization.compute.fail'));
+        return false;
+      }
       if (!result) {
         toast.error(tx('tx.oss.relativization.compute.fail'));
-        return;
+        return false;
       }
       const layout = new LayoutManager(oss, props.layout);
       const position = layout.newOperationPosition(
@@ -142,8 +152,8 @@ export function DlgCreateRelativization() {
         parentID,
         [source.id]
       );
-      void create
-        .mutateAsync({
+      try {
+        await create.mutateAsync({
           itemID: oss.id,
           data: {
             ...result,
@@ -155,10 +165,14 @@ export function DlgCreateRelativization() {
             layout: layout.layout,
             position
           }
-        })
-        .catch(() => undefined);
-    } catch {
-      toast.error(tx('tx.oss.relativization.compute.fail'));
+        });
+      } catch {
+        return false;
+      }
+      return true;
+    } finally {
+      pendingRef.current = false;
+      setPending(false);
     }
   }
 
@@ -166,11 +180,11 @@ export function DlgCreateRelativization() {
     <ModalForm
       header={tx('tx.oss.relativization')}
       submitText={tx('tx.general.create')}
-      canSubmit={canSubmit}
+      canSubmit={canSubmit && !pending}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
-        void submit();
+        return submit();
       }}
       className='w-180 px-6 h-128'
       helpTopic={HelpTopic.CC_OSS}

@@ -378,6 +378,7 @@ def delete_operation(item: LibraryItem, validated: dict, request: Request | None
         m.Layout.update_data(item.pk, layout)
         if old_schema is not None:
             if validated['delete_schema']:
+                reject_deleting_relativization_source(old_schema)
                 propagation.before_delete_schema(old_schema.pk)
                 old_schema.delete()
             elif old_schema.is_synced(item):
@@ -510,6 +511,13 @@ def relocate_constituents(item: LibraryItem, validated: dict, request: Request |
         _touch_item(source_item)
         _touch_item(destination_item)
         _touch_item(item)
+
+
+def reject_deleting_relativization_source(schema: LibraryItem) -> None:
+    ''' Keep a live source link so deleting the schema cannot widen access to derived results. '''
+    if m.Operation.objects.filter(relativization_source=schema).exists():
+        label = schema.alias or str(schema.pk)
+        raise serializers.ValidationError({'schema': msg.relativizationSourceInUse(label)})
 
 
 # ====== Internals ============

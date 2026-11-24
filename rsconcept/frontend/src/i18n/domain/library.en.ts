@@ -467,6 +467,9 @@ export const txLibraryEn: Record<string, string> = {
   'tx.oss.relativization.compute.fail': 'Could not relativize the selected constituent',
   'tx.oss.relativization.excluded': 'Excluded constituents',
   'tx.oss.relativization.excluded.none': 'No exclusions',
+  'tx.oss.relativization.accessor.term': 'Dereativization by context',
+  'tx.oss.relativization.accessor.convention':
+    'Extracts the single value associated with a given context in the relativized relation.',
   'tx.oss.replica': 'Replica',
   'tx.oss.replica.original': 'Original',
   'tx.oss.replica.findOriginal': 'Select original',

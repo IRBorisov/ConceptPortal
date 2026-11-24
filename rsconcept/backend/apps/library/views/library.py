@@ -14,6 +14,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from apps.oss.models import Layout, Operation, OperationSchema, PropagationFacade
+from apps.oss.mutations import reject_deleting_relativization_source
 from apps.rsmodel.models import RSModel
 from apps.users.models import User
 from shared import permissions
@@ -94,6 +95,7 @@ class LibraryViewSet(ConcurrencyMixin, viewsets.ModelViewSet):
         ''' Delete an item and its cascading library rows in one transaction. '''
         with transaction.atomic():
             if instance.item_type == m.LibraryItemType.RSFORM:
+                reject_deleting_relativization_source(instance)
                 PropagationFacade().before_delete_schema(instance.pk)
                 model_bindings = RSModel.objects.filter(schema=instance)
                 for binding in model_bindings:

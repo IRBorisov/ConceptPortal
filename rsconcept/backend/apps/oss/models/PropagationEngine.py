@@ -72,6 +72,8 @@ class PropagationEngine:
     ) -> None:
         ''' Execute inheritance of Constituenta. '''
         operation = self.cache.operation_by_id[target_operation]
+        # The result is a rewritten snapshot with no inheritance rows. Copying the
+        # source constituent would insert its original formula into that schema.
         if operation.operation_type == OperationType.RELATIVIZATION:
             return
         destination = self.cache.get_result(operation)

@@ -1,3 +1,4 @@
+import { globalTx } from '@/i18n';
 import { RSLangAnalyzer, TokenID, TypeID } from '@rsconcept/domain/rslang';
 import { extractGlobals, parseRSLangExpression } from '@rsconcept/domain/rslang/api';
 import { labelType } from '@rsconcept/domain/rslang/labels';
@@ -37,7 +38,9 @@ export function makeRelativizedData(
   }));
   const result = relativizer.transform(relativizer.prepare(input), {
     target,
-    ignored
+    ignored,
+    accessorTerm: globalTx('tx.oss.relativization.accessor.term'),
+    accessorConvention: globalTx('tx.oss.relativization.accessor.convention')
   });
   if (!result) {
     return null;
