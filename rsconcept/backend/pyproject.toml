@@ -24,7 +24,7 @@ package = false
 
 [dependency-groups]
 dev = [
-    "coverage==7.17.3",
+    "coverage==7.17.5",
     "django-extensions==4.1",
     "django-stubs==6.1.2",
     "djangorestframework-stubs[compatible-mypy]==3.18.2",
