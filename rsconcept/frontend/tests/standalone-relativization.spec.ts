@@ -42,6 +42,39 @@ test('opens relativization help from the schema dialog and links to the glossary
   await expect(alias).toHaveValue('VerticesByContext');
 });
 
+test('offers French proposals for a French source in the Russian interface', async ({ page }) => {
+  const source = createRSFormMock(354, 'Граф');
+  source.items = [
+    {
+      ...createCstMock(11, 'X1', CstType.BASE),
+      term_raw: 'sommets',
+      term_resolved: 'sommets',
+      convention: 'Ensemble des sommets qui appartiennent au graphe.'
+    }
+  ];
+  dataRSForms.set(source.id, source);
+
+  await page.goto(`/rsforms/${source.id}`, { waitUntil: 'domcontentloaded' });
+  await page.getByRole('button', { name: 'Редактирование' }).click();
+  await page.getByRole('button', { name: 'Создать самостоятельную КС релятивизацией' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Релятивизация' });
+  await expect(dialog.getByRole('combobox')).toHaveCount(1);
+  await dialog.getByRole('combobox', { name: 'Релятивизируемая конституента' }).click();
+  await page.getByRole('button', { name: /^X1.*sommets/ }).click();
+  await expect(dialog.getByRole('textbox', { name: 'Имя контекста' })).toHaveValue('contexte');
+  await dialog.getByRole('textbox', { name: 'Сокращение' }).fill('GrapheContexte');
+  await dialog.getByRole('button', { name: 'Проверить тексты' }).press('Enter');
+  await expect(dialog.getByRole('heading', { name: 'Проверка текстов' })).toBeFocused();
+
+  const axis = dialog.locator('details').filter({ hasText: 'X1 → S1' });
+  await axis.locator(':scope > summary').press('Enter');
+  const term = axis.getByRole('textbox', { name: 'Термин', exact: true });
+  await expect(term).toHaveValue('contextes admissibles');
+  await expect(term).toHaveAttribute('lang', 'fr');
+  await dialog.getByRole('button', { name: 'К параметрам' }).press('Enter');
+  await expect(dialog.getByRole('combobox', { name: 'Релятивизируемая конституента' })).toBeFocused();
+});
+
 test('relativizes a schema from its editing menu and keeps reviewed text after a rejected save', async ({ page }) => {
   const source = createRSFormMock(351, 'Вершины');
   source.items = [
@@ -97,7 +130,7 @@ test('relativizes a schema from its editing menu and keeps reviewed text after a
   const confirm = dialog.getByRole('button', { name: 'Подтвердить тексты и создать КС' });
   await expect(confirm).toBeDisabled();
   await dialog.locator('summary').filter({ hasText: 'X1 → X1' }).click();
-  await axis.locator('summary').click();
+  await axis.locator(':scope > summary').click();
   const edited = 'Согласованный текст контекста.';
   const convention = axis.getByLabel('Конвенция');
   await convention.fill(edited);

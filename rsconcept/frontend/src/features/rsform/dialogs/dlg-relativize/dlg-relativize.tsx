@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
 
-import { type AppLocale, localeLabel, SUPPORTED_LOCALES, useTx } from '@/i18n';
+import { DEFAULT_LOCALE, useTx } from '@/i18n';
 import { Grammeme } from '@rsconcept/domain/cctext/language';
 import { type Constituenta, CstType, LocationHead } from '@rsconcept/domain/library';
 import { type RelativizationProjection } from '@rsconcept/domain/library/relativization';
@@ -13,19 +13,22 @@ import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth/backend/use-auth';
 import { HelpTopic } from '@/features/help';
 import { useCreateFromSandbox } from '@/features/library/backend/use-create-from-sandbox';
+import {
+  getRelativizationExclusions,
+  RelativizationParameterFields,
+  RelativizationResultFields
+} from '@/features/oss/dialogs/relativization/parameter-fields';
 import { canConfirmReview, prepareReview, type ReviewRow } from '@/features/oss/dialogs/relativization/review';
 import { ReviewRelativizationTexts } from '@/features/oss/dialogs/relativization/review-texts';
+import { defaultContextNames, getRelativizationLocale } from '@/features/oss/dialogs/relativization/source-locale';
 
 import { KEYS } from '@/backend/configuration';
-import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
-import { limits } from '@/utils/constants';
 import { extractErrorMessage } from '@/utils/utils';
 
 import { rsformsApi } from '../../backend/api';
 import { cctextApi } from '../../backend/cctext/api';
-import { SelectConstituenta } from '../../components/select-constituenta';
 import { useRsformDialogsStore } from '../rsform-dialog-store';
 
 import { type RelativizationRequest } from './relativization.worker';
@@ -34,9 +37,6 @@ export interface DlgRelativizeProps {
   schemaID: number;
   initialTarget: number | null;
 }
-
-const kernelTypes = new Set<CstType>([CstType.BASE, CstType.CONSTANT, CstType.STRUCTURED]);
-const contextNames: Record<AppLocale, string> = { en: 'context', fr: 'contexte', ru: 'контекст' };
 
 async function calculateDraft(request: RelativizationRequest): Promise<RelativizationProjection | null> {
   const worker = new Worker(new URL('./relativization.worker.ts', import.meta.url), { type: 'module' });
@@ -69,7 +69,6 @@ export function DlgRelativize() {
   const [manualTitle, setManualTitle] = useState<string | null>(null);
   const [alias, setAlias] = useState('');
   const [description, setDescription] = useState('');
-  const [language, setLanguage] = useState<AppLocale | null>(null);
   const [manualContext, setManualContext] = useState<string | null>(null);
   const [draft, setDraft] = useState<{ projection: RelativizationProjection; sourceTime: string } | null>(null);
   const [rows, setRows] = useState<ReviewRow[]>([]);
@@ -82,14 +81,11 @@ export function DlgRelativize() {
     item => item.cst_type === CstType.BASE || item.cst_type === CstType.STRUCTURED
   );
   const target = targetOptions.find(item => item.id === targetID) ?? null;
-  const exclusionOptions = (schema?.items ?? []).filter(
-    item => item.id !== target?.id && kernelTypes.has(item.cst_type)
-  );
+  const exclusionOptions = getRelativizationExclusions(schema?.items ?? [], target);
   const term = target?.term_resolved.trim() ?? '';
-  const locale =
-    language ?? (/\p{Script=Cyrillic}/u.test((schema?.title ?? '') + term) ? 'ru' : intl.locale === 'fr' ? 'fr' : 'en');
-  const contextName = manualContext ?? contextNames[locale];
-  const useInflection = intl.locale === 'ru' && !!term && manualTitle === null;
+  const locale = getRelativizationLocale(source, DEFAULT_LOCALE);
+  const contextName = manualContext ?? defaultContextNames[locale];
+  const useInflection = intl.locale === 'ru' && locale === 'ru' && !!term && manualTitle === null;
   const formQuery = useQuery({
     queryKey: [KEYS.cctext, 'inflect', term, Grammeme.gent],
     queryFn: ({ signal }) => cctextApi.inflect({ text: term, grams: Grammeme.gent }, signal),
@@ -118,6 +114,10 @@ export function DlgRelativize() {
   function changeTarget(item: Constituenta | null) {
     setTargetID(item?.id ?? null);
     setExcludedIDs(previous => previous.filter(id => id !== item?.id));
+  }
+
+  function toggleExcluded(id: number, checked: boolean) {
+    setExcludedIDs(previous => (checked ? [...previous, id] : previous.filter(item => item !== id)));
   }
 
   async function submit() {
@@ -192,7 +192,7 @@ export function DlgRelativize() {
         event.stopPropagation();
         void submit();
       }}
-      className='w-200 px-6 min-h-64'
+      className={`${reviewing ? 'w-224' : 'w-160'} max-w-[calc(100svw-1.5rem)] px-3 sm:px-5`}
       helpTopic={HelpTopic.CC_RELATIVIZATION}
       openManualInNewTab
     >
@@ -219,87 +219,29 @@ export function DlgRelativize() {
               setReviewing(false);
             }}
             disabled={pending}
+            locale={locale}
           />
         </>
       ) : (
-        <fieldset className='cc-column py-4' disabled={pending}>
-          <div className='cc-column'>
-            <Label text={tx('tx.oss.relativization.target')} htmlFor='relativization_target' />
-            <SelectConstituenta
-              id='relativization_target'
-              items={targetOptions}
-              placeholder={tx('tx.oss.relativization.target.select')}
-              value={target}
-              onChange={changeTarget}
-            />
-          </div>
-          {exclusionOptions.length ? (
-            <fieldset className='grid gap-1'>
-              <legend>{tx('tx.oss.relativization.excluded')}</legend>
-              <div className='grid grid-cols-1 sm:grid-cols-2 gap-1 max-h-36 overflow-auto'>
-                {exclusionOptions.map(item => (
-                  <Checkbox
-                    key={item.id}
-                    label={[item.alias, item.term_resolved].filter(Boolean).join(' — ')}
-                    role='checkbox'
-                    aria-checked={excludedIDs.includes(item.id)}
-                    value={excludedIDs.includes(item.id)}
-                    onChange={checked =>
-                      setExcludedIDs(previous =>
-                        checked ? [...previous, item.id] : previous.filter(id => id !== item.id)
-                      )
-                    }
-                  />
-                ))}
-              </div>
-            </fieldset>
-          ) : null}
-          <div className='grid gap-3 sm:grid-cols-2'>
-            <TextInput
-              id='relativization_context'
-              label={tx('tx.oss.relativization.review.context.name')}
-              value={contextName}
-              maxLength={limits.len_title}
-              onChange={event => setManualContext(event.target.value)}
-            />
-            <div className='cc-column'>
-              <Label text={tx('tx.oss.relativization.review.language')} htmlFor='relativization_language' />
-              <select
-                id='relativization_language'
-                className='cc-input'
-                value={locale}
-                onChange={event => setLanguage(event.target.value as AppLocale)}
-              >
-                {SUPPORTED_LOCALES.map(value => (
-                  <option key={value} value={value}>
-                    {localeLabel(value)}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <TextInput
-            id='relativization_title'
-            label={tx('tx.lib.title')}
-            value={title}
-            maxLength={limits.len_title}
-            onChange={event => setManualTitle(event.target.value)}
+        <fieldset className='grid min-w-0 gap-4 py-3' disabled={pending}>
+          <RelativizationParameterFields
+            targets={targetOptions}
+            target={target}
+            focusTarget={draft !== null}
+            onTargetChange={changeTarget}
+            contextName={contextName}
+            onContextNameChange={setManualContext}
+            exclusions={exclusionOptions}
+            excludedIDs={excludedIDs}
+            onExcludedChange={toggleExcluded}
           />
-          <TextInput
-            id='relativization_alias'
-            label={tx('tx.lib.alias')}
-            value={alias}
-            maxLength={limits.len_alias}
-            onChange={event => setAlias(event.target.value)}
-          />
-          <TextArea
-            id='relativization_description'
-            label={tx('tx.lib.description')}
-            value={description}
-            maxLength={limits.len_description}
-            rows={3}
-            noResize
-            onChange={event => setDescription(event.target.value)}
+          <RelativizationResultFields
+            title={title}
+            onTitleChange={setManualTitle}
+            alias={alias}
+            onAliasChange={setAlias}
+            description={description}
+            onDescriptionChange={setDescription}
           />
         </fieldset>
       )}

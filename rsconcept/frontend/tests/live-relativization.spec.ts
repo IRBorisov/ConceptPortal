@@ -91,7 +91,7 @@ test('relativization keeps a reviewed edit after a real rejection and saves it o
     (row: { changed: boolean; inKernel: boolean }) => row.changed && row.inKernel
   )) {
     const entry = dialog.locator('details').filter({ has: page.locator('#review-' + row.id + '-term_raw') });
-    await entry.locator('summary').click();
+    await entry.locator(':scope > summary').click();
   }
   await dialog.locator('#review-' + axis.id + '-convention').fill(edited);
   await expect(confirm).toBeEnabled();
