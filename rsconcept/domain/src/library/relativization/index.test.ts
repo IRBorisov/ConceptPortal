@@ -102,6 +102,21 @@ describe('relativization projection and review', () => {
     ).toBeNull();
   });
 
+  it.each(['@{D7|gent,plur}', '@{D7|}'])('keeps a nameless entity as plain text for review (%s)', reference => {
+    const items = [
+      row(1, 'X3', CstType.BASE, '', 'vertices'),
+      row(2, 'D7', CstType.TERM, 'X3'),
+      row(3, 'A1', CstType.AXIOM, 'D7≠∅', '', { definition_raw: reference + ' @{X3|nomn,sing}.' })
+    ];
+    const result = projectRelativization(
+      { items, attribution: [] },
+      { target: 1, excluded: [], locale: 'en', contextName: 'context' }
+    )!;
+
+    expect(result.items.find(item => item.id === 3)?.definition_raw).toContain('D7 @{X1|nomn,sing}.');
+    expect(result.proposals.find(proposal => proposal.id === 3)?.ambiguous).toContain('D7');
+  });
+
   it('transforms dependents using the manual type of a malformed term', () => {
     const items = [
       row(1, 'X1', CstType.BASE, '', 'vertices'),

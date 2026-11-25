@@ -46,7 +46,7 @@ describe('relativization graph placement', () => {
     ]);
     const result = getRelativizationPlacement(oss, fallback, null, 1);
     const { x, y, width, height } = result.position;
-    const block = oss.layout[2]!;
+    const block = oss.layout[2];
 
     expect(result.expectedTimeUpdate).toBe(timeUpdate);
     expect(
@@ -70,6 +70,6 @@ describe('relativization graph placement', () => {
     expect(moved.position).toEqual({ x: 440, y: 180, width: 180, height: 50 });
     expect(moved.layout).toContainEqual({ nodeID: 'b1', x: 420, y: 160, width: 220, height: 90 });
     expect(moved.layout.some(node => node.nodeID === 'o2')).toBe(false);
-    expect(oss.layout[2]!.width).toBe(50);
+    expect(oss.layout[2].width).toBe(50);
   });
 });

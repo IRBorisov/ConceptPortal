@@ -128,6 +128,10 @@ def update_constituenta(
     with transaction.atomic():
         _lock_schema(item, request)
         if request is not None:
+            try:
+                cst.refresh_from_db()
+            except m.Constituenta.DoesNotExist as exc:
+                raise NotFound() from exc
             if not allow_inherited:
                 _require_own_constituents([cst.pk])
             managed = _managed_operation(item.pk)
@@ -136,10 +140,6 @@ def update_constituenta(
             formal_fields = ('alias', 'cst_type', 'definition_formal', 'typification_manual', 'value_is_property')
             if managed_row and any(field in data and data[field] != getattr(cst, field) for field in formal_fields):
                 raise ValidationError('Edit managed definitions and types in the source or operation parameters.')
-            try:
-                cst.refresh_from_db()
-            except m.Constituenta.DoesNotExist as exc:
-                raise NotFound() from exc
         propagation = PropagationFacade()
         schema = propagation.get_schema(item.pk)
         old_data = schema.update_cst(cst.pk, data)

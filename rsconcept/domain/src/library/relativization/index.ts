@@ -110,7 +110,7 @@ function transferText(
   ambiguous: Set<string>
 ): string {
   const aliases = extractEntities(value);
-  const frozen = aliases.filter(alias => !Object.hasOwn(mapping, alias) || !mapping[alias]);
+  const frozen = aliases.filter(alias => !Object.hasOwn(mapping, alias));
   for (const alias of frozen) ambiguous.add(alias);
   if (!frozen.length) return applyEntityReferenceMapping(value, mapping);
 
@@ -125,7 +125,8 @@ function transferText(
   const updated = value.replace(/@{[^{}]*?}/g, token => {
     const ref = parseReference(token);
     if (ref?.type !== ReferenceType.ENTITY || !toFreeze.has(ref.data.entity)) return token;
-    return terms[ref.data.entity]?.nominal ? resolveTextReferences(token, terms) : token;
+    const nominal = terms[ref.data.entity]?.nominal;
+    return nominal?.trim() ? resolveTextReferences(token, terms) : ref.data.entity;
   });
   return applyEntityReferenceMapping(updated, mapping);
 }
@@ -232,12 +233,11 @@ export function projectRelativization(
   const baselineByOrigin = new Map(
     transformed.items.filter(row => row.origin === row.id).map(row => [row.origin!, row])
   );
-  const stableAliases = Object.fromEntries(
-    source.items.map(item => {
-      const row = baselineByOrigin.get(item.id);
-      return [item.alias, row?.role === 'preserved' || row?.role === 'carrier' ? row.alias : ''];
-    })
-  );
+  const stableAliases: Record<string, string> = {};
+  for (const item of source.items) {
+    const row = baselineByOrigin.get(item.id);
+    if (row?.role === 'preserved' || row?.role === 'carrier') stableAliases[item.alias] = row.alias;
+  }
   const terms: TermContext = Object.fromEntries(
     source.items.map(item => [
       item.alias,
