@@ -3,6 +3,7 @@ import { useWindowSize } from '@/hooks/use-window-size';
 import { HelpConceptOSS } from '../../items/cc/help-concept-oss';
 import { HelpConceptPropagation } from '../../items/cc/help-concept-propagation';
 import { HelpConceptRelations } from '../../items/cc/help-concept-relations';
+import { HelpConceptRelativization } from '../../items/cc/help-concept-relativization';
 import { HelpConceptRSModel } from '../../items/cc/help-concept-rsmodel';
 import { HelpConceptStructuring } from '../../items/cc/help-concept-structuring';
 import { HelpConceptSynthesis } from '../../items/cc/help-concept-synthesis';
@@ -121,6 +122,7 @@ function TopicPageContent({ topic, isSmall }: { topic: HelpTopic; isSmall: boole
   if (topic === HelpTopic.CC_CONSTITUENTA) return <HelpCstAttributes />;
   if (topic === HelpTopic.CC_RELATIONS) return <HelpConceptRelations />;
   if (topic === HelpTopic.CC_SYNTHESIS) return <HelpConceptSynthesis />;
+  if (topic === HelpTopic.CC_RELATIVIZATION) return <HelpConceptRelativization />;
   if (topic === HelpTopic.CC_STRUCTURING) return <HelpConceptStructuring />;
   if (topic === HelpTopic.CC_OSS) return <HelpConceptOSS />;
   if (topic === HelpTopic.CC_PROPAGATION) return <HelpConceptPropagation />;

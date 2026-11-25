@@ -193,7 +193,8 @@ export function DlgRelativize() {
         void submit();
       }}
       className='w-200 px-6 min-h-64'
-      helpTopic={HelpTopic.UI_SCHEMA_MENU}
+      helpTopic={HelpTopic.CC_RELATIVIZATION}
+      openManualInNewTab
     >
       {errorMessage ? (
         <p className='pt-3 text-destructive' role='alert'>
@@ -223,7 +224,7 @@ export function DlgRelativize() {
       ) : (
         <fieldset className='cc-column py-4' disabled={pending}>
           <div className='cc-column'>
-            <Label text={tx('tx.oss.relativization.target.field')} htmlFor='relativization_target' />
+            <Label text={tx('tx.oss.relativization.target')} htmlFor='relativization_target' />
             <SelectConstituenta
               id='relativization_target'
               items={targetOptions}

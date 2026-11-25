@@ -108,8 +108,9 @@ export function HelpSchemaMenuEn() {
           <IconInlineSynthesis size='1.25rem' className='inline-icon' /> Insert constituents from another schema
         </li>
         <li>
-          <IconRelativization size='1.25rem' className='inline-icon' /> Relativize this schema and review the texts
-          before creating a standalone result
+          <IconRelativization size='1.25rem' className='inline-icon' />{' '}
+          <LinkTopic text='Relativize this schema' topic={HelpTopic.CC_RELATIVIZATION} /> and review the texts before
+          creating a standalone result
         </li>
         <li>
           <IconCstType value={CstType.NOMINAL} size='1.25rem' className='inline-icon' /> Enable attribution form

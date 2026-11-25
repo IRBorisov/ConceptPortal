@@ -71,41 +71,12 @@ export function HelpConceptOSSFr() {
         produire des doublons et des ambiguïtés. Le tableau d'identification doit être soigneusement construit en
         ajoutant les concepts dupliqués provenant des schémas synthétisés.
       </p>
-      <h2 id='relativization'>Relativisation</h2>
+      <h2 id='relativization'>{tx('tx.oss.relativization')}</h2>
       <p>
-        La relativisation construit un schéma dont certaines valeurs dépendent d’un contexte. Pour un ensemble de base,
-        un contexte est un sous-ensemble de ses éléments. Pour une structure, un contexte est une valeur entière. Les
-        constituants exclus gardent un sens commun aux contextes.
-      </p>
-      <p>
-        Pour une relation fonction–méthode, le contexte est une relation entière entre fonctions et méthodes. La famille
-        des alternatives de décomposition associe les alternatives à chacune de ces relations. Le terme source nomme la
-        composante dans un seul contexte.
-      </p>
-      <ol>
-        <li>
-          Dans le <LinkTopic text='graphe du SOS' topic={HelpTopic.UI_OSS_GRAPH} />, ouvrez « Ajouter… » → «
-          Relativisation ». Sélectionnez le schéma source et le constituant, choisissez les exclusions éventuelles et
-          indiquez un alias.
-        </li>
-        <li>
-          Cliquez sur « {tx('tx.oss.relativization.review.start')} » et ouvrez chaque proposition du noyau. Le noyau
-          comprend les concepts non définis, les axiomes et les constituants dérivés dont ils dépendent.
-        </li>
-        <li>
-          Comparez les textes et les types. Consultez « {tx('tx.oss.relativization.review.origins')} », modifiez les
-          propositions et apportez les précisions demandées.
-        </li>
-        <li>
-          Cliquez sur « {tx('tx.oss.relativization.review.submit')} ». Revoyez les propositions concernées après une
-          modification des paramètres. Si l’enregistrement échoue, corrigez le problème et réessayez depuis le
-          brouillon.
-        </li>
-      </ol>
-      <p>
-        La <LinkTopic text='fiche du SOS' topic={HelpTopic.UI_OSS_CARD} /> indique le schéma source, le résultat et les
-        paramètres. Pour revoir les propositions, modifiez l’opération dans le graphe. Une synthèse peut employer le
-        résultat.
+        La <LinkTopic text='relativisation' topic={HelpTopic.CC_RELATIVIZATION} /> prend un schéma source et construit
+        un résultat par contexte. Toute modification du schéma source déclenche un recalcul. Le résultat peut servir à
+        une synthèse ultérieure. La <LinkTopic text='fiche du SOS' topic={HelpTopic.UI_OSS_CARD} /> indique la source et
+        les paramètres de l’opération.
       </p>
     </>
   );

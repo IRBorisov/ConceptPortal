@@ -251,6 +251,20 @@ export function HelpThesaurusEn() {
         </li>
       </ul>
 
+      <h2>{tx('tx.oss.relativization')}</h2>
+      <p>
+        <LinkTopic text='Relativization' topic={HelpTopic.CC_RELATIVIZATION} /> transforms a conceptual schema so that
+        concepts have values and conditions are checked in context.
+      </p>
+      <ul>
+        <li>Relativization target — the base set or generic structure selected to define contexts.</li>
+        <li>Context — a subset of the selected base set or an entire value of the selected generic structure.</li>
+        <li>Context axis — a generic structure in the result containing the admissible contexts.</li>
+        <li>Excluded constituent — an undefined concept shared across contexts.</li>
+        <li>Family of term values — a set of context and term-value pairs.</li>
+        <li>Derelativizer — a function that extracts the unique value for a given context.</li>
+      </ul>
+
       <h2>{tx('tx.oss')}</h2>
       <p>
         <IconOSS className='inline-icon' />
@@ -293,6 +307,9 @@ export function HelpThesaurusEn() {
         <li>
           <IconSynthesis className='inline-icon' />
           {'\u2009'}synthesizing conceptual schemes.
+        </li>
+        <li>
+          <LinkTopic text='relativizing a conceptual schema' topic={HelpTopic.CC_RELATIVIZATION} />.
         </li>
       </ul>
 

@@ -253,6 +253,22 @@ export function HelpThesaurusFr() {
         </li>
       </ul>
 
+      <h2>{tx('tx.oss.relativization')}</h2>
+      <p>
+        La <LinkTopic text='relativisation' topic={HelpTopic.CC_RELATIVIZATION} /> transforme un schéma conceptuel pour
+        que les concepts prennent des valeurs et que les conditions soient vérifiées dans chaque contexte.
+      </p>
+      <ul>
+        <li>Constituant à relativiser — ensemble de base ou structure générique choisi pour définir les contextes.</li>
+        <li>
+          Contexte — sous-ensemble de l’ensemble de base choisi ou valeur entière de la structure générique choisie.
+        </li>
+        <li>Axe des contextes — structure générique du résultat contenant les contextes admissibles.</li>
+        <li>Constituant exclu — concept non défini commun aux contextes.</li>
+        <li>Famille de valeurs d’un terme — ensemble de couples « contexte, valeur du terme dans ce contexte ».</li>
+        <li>Fonction de dérélativisation — fonction qui extrait l’unique valeur correspondant à un contexte donné.</li>
+      </ul>
+
       <h2>{tx('tx.oss')}</h2>
       <p>
         <IconOSS className='inline-icon' />
@@ -295,6 +311,9 @@ export function HelpThesaurusFr() {
         <li>
           <IconSynthesis className='inline-icon' />
           {'\u2009'}synthèse de schémas conceptuels.
+        </li>
+        <li>
+          <LinkTopic text='relativisation d’un schéma conceptuel' topic={HelpTopic.CC_RELATIVIZATION} />.
         </li>
       </ul>
 

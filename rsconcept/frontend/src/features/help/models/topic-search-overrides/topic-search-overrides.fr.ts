@@ -231,6 +231,17 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
     searchText:
       'Synthèse de schémas conceptuels. Fusion de schémas, composition des définitions et constitution de systèmes de concepts plus larges.'
   },
+  [HelpTopic.CC_RELATIVIZATION]: {
+    keywords: [
+      'relativisation',
+      'constituant à relativiser',
+      'axe des contextes',
+      'famille de valeurs',
+      'dérélativisation'
+    ],
+    searchText:
+      'Relativiser un schéma conceptuel depuis son éditeur ou un SOS. Choisir les contextes et vérifier les textes.'
+  },
   [HelpTopic.CC_STRUCTURING]: {
     keywords: ['structuration', 'domaine', 'décomposition', 'organisation concepts'],
     searchText:

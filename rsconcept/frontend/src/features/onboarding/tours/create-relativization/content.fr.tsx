@@ -11,12 +11,12 @@ export const createRelativizationContentFr: Record<string, TourStepContent> = {
     )
   },
   parameters: {
-    title: 'Constituant de relativisation et exclusions',
+    title: 'Constituant à relativiser et exclusions',
     body: (
       <p>
-        Dans « Constituant de relativisation », choisissez un ensemble de base ou une structure qui définit les
-        contextes admissibles. Sélectionnez les constituants du noyau qui doivent rester sans paramètre de contexte
-        direct. Les exclusions sont facultatives.
+        Dans « Constituant à relativiser », choisissez un ensemble de base ou une structure générique. Ce choix définit
+        ce qui constitue un contexte. Vous pouvez exclure les concepts non définis qui doivent rester communs aux
+        contextes.
       </p>
     )
   },
