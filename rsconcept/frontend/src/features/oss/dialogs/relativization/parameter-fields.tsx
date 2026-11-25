@@ -50,7 +50,7 @@ export function RelativizationParameterFields({
   const count = exclusions.filter(item => excludedIDs.includes(item.id)).length;
   return (
     <>
-      <div ref={fields} className='grid items-start gap-3 @md/modal:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]'>
+      <div ref={fields} className='grid items-start gap-3 @lg/modal:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]'>
         <div className='grid min-w-0 gap-2'>
           <Label text={tx('tx.oss.relativization.target')} htmlFor='relativization_target' />
           <SelectConstituenta
@@ -78,7 +78,7 @@ export function RelativizationParameterFields({
             {count > 0 ? <span className='ml-auto tabular-nums text-muted-foreground'>{count}</span> : null}
           </summary>
           <fieldset
-            className='grid max-h-40 gap-x-4 gap-y-1 overflow-y-auto border-t border-border px-3 py-2 @md/modal:grid-cols-2'
+            className='grid max-h-40 gap-x-4 gap-y-1 overflow-y-auto border-t border-border px-3 py-2 @lg/modal:grid-cols-2'
             aria-label={tx('tx.oss.relativization.excluded')}
           >
             {exclusions.map(item => (
@@ -126,7 +126,7 @@ export function RelativizationResultFields({
     <fieldset data-tour='relativization-result' className='min-w-0 border-t border-border pt-3'>
       <legend className='pr-2 text-sm font-semibold'>{tx('tx.oss.relativization.result')}</legend>
       <div className='grid gap-3'>
-        <div className='grid items-start gap-3 @md/modal:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]'>
+        <div className='grid items-start gap-3 @lg/modal:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]'>
           <TextInput
             id='relativization_title'
             aria-label={tx('tx.lib.title')}

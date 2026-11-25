@@ -136,7 +136,7 @@ export function ReviewRelativizationTexts({ rows, onChange, back, disabled, loca
                   </details>
                 ) : null}
                 <div className='grid gap-3'>
-                  <div className='hidden gap-3 text-sm font-medium text-foreground/75 @md/modal:grid @md/modal:grid-cols-2'>
+                  <div className='hidden gap-3 text-sm font-medium text-foreground/75 @lg/modal:grid @lg/modal:grid-cols-2'>
                     <span>{tx('tx.oss.relativization.review.before')}</span>
                     <span>{tx('tx.oss.relativization.review.after')}</span>
                   </div>
@@ -146,9 +146,9 @@ export function ReviewRelativizationTexts({ rows, onChange, back, disabled, loca
                     return (
                       <div key={field} className='grid min-w-0 gap-1.5'>
                         <Label text={tx(labels[field])} htmlFor={id} />
-                        <div className='grid min-w-0 items-stretch gap-2 @md/modal:grid-cols-2 @md/modal:gap-3'>
+                        <div className='grid min-w-0 items-stretch gap-2 @lg/modal:grid-cols-2 @lg/modal:gap-3'>
                           <div className='min-w-0 rounded-md bg-muted/55 px-3 py-2 text-sm'>
-                            <p className='mb-1 text-xs text-foreground/75 @md/modal:hidden'>
+                            <p className='mb-1 text-xs text-foreground/75 @lg/modal:hidden'>
                               {tx('tx.oss.relativization.review.before')}
                             </p>
                             <p
