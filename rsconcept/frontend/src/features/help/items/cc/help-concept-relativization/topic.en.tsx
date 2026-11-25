@@ -47,12 +47,13 @@ export function HelpConceptRelativizationEn() {
           <LinkTopic text='OSS graph' topic={HelpTopic.UI_OSS_GRAPH} />. Choose “{tx('tx.oss.relativization')}”.
         </li>
         <li>
-          In an OSS, select the source schema. Choose the target and any exclusions. Set the name for an individual
-          context, the proposal language, and the title and alias of the result.
+          In an OSS, select the source schema. Choose the target and set the context name, result title, and alias. Open
+          “Excluded constituents” to select any notions that should remain common across contexts.
         </li>
         <li>
-          Choose “{tx('tx.oss.relativization.review.start')}”. Open each kernel proposal and check its term, textual
-          definition, convention and type. Resolve the flagged questions and confirm creation.
+          Choose “{tx('tx.oss.relativization.review.start')}”. The Portal identifies the proposal language from the
+          source schema’s text. Open each kernel proposal and check its term, textual definition, convention and type.
+          Resolve the flagged questions and confirm creation.
         </li>
       </ol>
       <h2>What happens to the result</h2>

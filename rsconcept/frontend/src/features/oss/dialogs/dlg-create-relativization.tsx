@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { type AppLocale, localeLabel, SUPPORTED_LOCALES, useTx } from '@/i18n';
+import { DEFAULT_LOCALE, useTx } from '@/i18n';
 import { Grammeme } from '@rsconcept/domain/cctext/language';
 import { type Constituenta, CstType, type Operation, type OperationType } from '@rsconcept/domain/library';
 
@@ -14,11 +14,10 @@ import { DialogTourID } from '@/features/onboarding/tours/editor-tours';
 import { endDialogTourIfActive } from '@/features/onboarding/utils/end-dialog-tour';
 import { rsformsApi } from '@/features/rsform/backend/api';
 import { cctextApi } from '@/features/rsform/backend/cctext/api';
-import { SelectConstituenta } from '@/features/rsform/components/select-constituenta';
 
 import { isAxiosError } from '@/backend/api-transport';
 import { KEYS } from '@/backend/configuration';
-import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
+import { Label } from '@/components/input';
 import { Loader } from '@/components/loader';
 import { ModalForm } from '@/components/modal';
 import { limits } from '@/utils/constants';
@@ -27,12 +26,18 @@ import { extractErrorMessage } from '@/utils/utils';
 import { ossApi, updateOss } from '../backend/api';
 import { type RelativizationParametersDTO } from '../backend/types';
 import { useOss } from '../backend/use-oss';
+import { SelectBlock } from '../components/select-block';
 import { SelectOperation } from '../components/select-operation';
-import { SelectParent } from '../components/select-parent';
 
+import {
+  getRelativizationExclusions,
+  RelativizationParameterFields,
+  RelativizationResultFields
+} from './relativization/parameter-fields';
 import { getRelativizationPlacement } from './relativization/placement';
 import { canConfirmReview, hasReviewEdits, isReviewed, prepareReview, type ReviewRow } from './relativization/review';
 import { ReviewRelativizationTexts } from './relativization/review-texts';
+import { defaultContextNames, getRelativizationLocale } from './relativization/source-locale';
 import { useOssDialogsStore } from './oss-dialog-store';
 
 export interface DlgCreateRelativizationProps {
@@ -43,8 +48,6 @@ export interface DlgCreateRelativizationProps {
   position: { x: number; y: number };
   onCreate: (newID: number) => void;
 }
-
-const KERNEL_TYPES = new Set<CstType>([CstType.BASE, CstType.CONSTANT, CstType.STRUCTURED]);
 
 export function DlgCreateRelativization() {
   const tx = useTx();
@@ -63,7 +66,6 @@ export function DlgCreateRelativization() {
   const [manualTitle, setManualTitle] = useState<string | null>(existing?.title ?? null);
   const [alias, setAlias] = useState(existing?.alias ?? '');
   const [description, setDescription] = useState(existing?.description ?? '');
-  const [language, setLanguage] = useState<AppLocale | null>(options?.locale ?? null);
   const [manualContext, setManualContext] = useState<string | null>(options?.context_name ?? null);
   const [step, setStep] = useState<'parameters' | 'review'>('parameters');
   const [draft, setDraft] = useState<{ parameters: RelativizationParametersDTO; revision: string } | null>(null);
@@ -80,15 +82,12 @@ export function DlgCreateRelativization() {
     item => item.cst_type === CstType.BASE || item.cst_type === CstType.STRUCTURED
   );
   const target = targetOptions.find(item => item.id === targetID) ?? null;
-  const exclusionOptions = (schema?.items ?? []).filter(
-    item => item.id !== target?.id && KERNEL_TYPES.has(item.cst_type)
-  );
+  const exclusionOptions = getRelativizationExclusions(schema?.items ?? [], target);
 
   const term = target?.term_resolved.trim() ?? '';
-  const locale =
-    language ?? (/\p{Script=Cyrillic}/u.test((schema?.title ?? '') + term) ? 'ru' : intl.locale === 'fr' ? 'fr' : 'en');
-  const contextName = manualContext ?? (locale === 'ru' ? 'контекст' : locale === 'fr' ? 'contexte' : 'context');
-  const canInflect = !!term && manualTitle === null && intl.locale === 'ru';
+  const locale = getRelativizationLocale(sourceQuery.data?.raw, options?.locale ?? DEFAULT_LOCALE);
+  const contextName = manualContext ?? defaultContextNames[locale];
+  const canInflect = !!term && manualTitle === null && intl.locale === 'ru' && locale === 'ru';
   const formQuery = useQuery({
     queryKey: [KEYS.cctext, 'inflect', term, Grammeme.gent],
     queryFn: ({ signal }) => cctextApi.inflect({ text: term, grams: Grammeme.gent }, signal),
@@ -121,6 +120,9 @@ export function DlgCreateRelativization() {
   });
 
   const isWaitingForTitle = canInflect && formQuery.isLoading;
+  const aliasTaken = oss.operations.some(
+    operation => operation.id !== existing?.id && operation.alias === alias.trim()
+  );
   const canPrepare =
     !!source &&
     !!schema &&
@@ -130,7 +132,7 @@ export function DlgCreateRelativization() {
     !!contextName.trim() &&
     alias.length <= limits.len_alias &&
     title.length <= limits.len_title &&
-    !oss.operations.some(operation => operation.id !== existing?.id && operation.alias === alias.trim()) &&
+    !aliasTaken &&
     !isWaitingForTitle;
 
   const sourceChanged = draft !== null && sourceQuery.data?.raw.time_update !== draft.parameters.source_time_update;
@@ -238,7 +240,7 @@ export function DlgCreateRelativization() {
         event.stopPropagation();
         void submit();
       }}
-      className={step === 'parameters' ? 'w-180 px-6' : 'w-224 px-6'}
+      className={`${step === 'parameters' ? 'w-160' : 'w-224'} max-w-[calc(100svw-1.5rem)] px-3 sm:px-5`}
       helpTopic={HelpTopic.CC_RELATIVIZATION}
       openManualInNewTab
       tourID={step === 'parameters' ? DialogTourID.CREATE_RELATIVIZATION : undefined}
@@ -267,17 +269,24 @@ export function DlgCreateRelativization() {
             onChange={row => setRows(previous => previous.map(old => (old.item.id === row.item.id ? row : old)))}
             back={() => setStep('parameters')}
             disabled={pending !== null}
+            locale={draft?.parameters.locale ?? locale}
           />
         </>
       ) : (
-        <fieldset disabled={pending !== null} className='cc-column pt-4'>
-          <div data-tour='relativization-parameters' className='cc-column'>
-            <div data-tour='relativization-source' className='cc-column'>
-              <Label text={tx('tx.oss.relocate.source')} htmlFor='relativization_source' />
+        <fieldset disabled={pending !== null} className='grid min-w-0 gap-4 py-3'>
+          <div data-tour='relativization-parameters' className='grid min-w-0 gap-3'>
+            <div data-tour='relativization-source' className='grid min-w-0 gap-2'>
+              <Label text={tx('tx.oss.relocate.source')} htmlFor={existing ? undefined : 'relativization_source'} />
               {existing ? (
                 <p id='relativization_source'>{source?.title || source?.alias}</p>
               ) : (
-                <SelectOperation id='relativization_source' items={operations} value={source} onChange={changeSource} />
+                <SelectOperation
+                  id='relativization_source'
+                  className='h-9 text-left [&_svg]:size-4'
+                  items={operations}
+                  value={source}
+                  onChange={changeSource}
+                />
               )}
             </div>
             {source && sourceQuery.isPending ? <Loader /> : null}
@@ -287,101 +296,43 @@ export function DlgCreateRelativization() {
               </p>
             ) : null}
             {schema ? (
-              <>
-                <Label text={tx('tx.oss.relativization.target')} htmlFor='relativization_target' />
-                <SelectConstituenta
-                  id='relativization_target'
-                  items={targetOptions}
-                  placeholder={tx('tx.oss.relativization.target.select')}
-                  value={target}
-                  onChange={changeTarget}
-                />
-                {exclusionOptions.length > 0 ? (
-                  <fieldset className='grid gap-1'>
-                    <legend>{tx('tx.oss.relativization.excluded')}</legend>
-                    <div className='grid grid-cols-1 sm:grid-cols-2 gap-1 max-h-36 overflow-auto'>
-                      {exclusionOptions.map(item => (
-                        <Checkbox
-                          key={item.id}
-                          label={[item.alias, item.term_resolved].filter(Boolean).join(' — ')}
-                          role='checkbox'
-                          aria-checked={excludedIDs.includes(item.id)}
-                          value={excludedIDs.includes(item.id)}
-                          onChange={value => toggleExcluded(item.id, value)}
-                        />
-                      ))}
-                    </div>
-                  </fieldset>
-                ) : null}
-              </>
+              <RelativizationParameterFields
+                targets={targetOptions}
+                target={target}
+                focusTarget={draft !== null}
+                onTargetChange={changeTarget}
+                contextName={contextName}
+                maxContextLength={limits.len_alias}
+                onContextNameChange={setManualContext}
+                exclusions={exclusionOptions}
+                excludedIDs={excludedIDs}
+                onExcludedChange={toggleExcluded}
+              />
             ) : null}
           </div>
-          <div className='grid grid-cols-2 gap-4'>
-            <TextInput
-              id='relativization_context'
-              label={tx('tx.oss.relativization.review.context.name')}
-              maxLength={limits.len_alias}
-              value={contextName}
-              onChange={event => setManualContext(event.target.value)}
-            />
-            <div className='cc-column'>
-              <Label text={tx('tx.oss.relativization.review.language')} htmlFor='relativization_language' />
-              <select
-                id='relativization_language'
-                className='border border-border rounded p-1'
-                value={locale}
-                onChange={event => setLanguage(event.target.value as AppLocale)}
-              >
-                {SUPPORTED_LOCALES.map(language => (
-                  <option key={language} value={language}>
-                    {localeLabel(language)}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div data-tour='relativization-result' className='cc-column'>
-            <TextInput
-              id='relativization_title'
-              label={tx('tx.lib.title')}
-              value={title}
-              onChange={event => setManualTitle(event.target.value)}
-              maxLength={limits.len_title}
-            />
-            <div className='flex flex-col sm:flex-row gap-4'>
-              <div className='grid gap-1'>
-                <TextInput
-                  id='relativization_alias'
-                  label={tx('tx.lib.alias')}
-                  placeholder={tx('tx.lib.alias.validate.empty')}
-                  value={alias}
-                  onChange={event => setAlias(event.target.value)}
-                  maxLength={limits.len_alias}
-                  error={
-                    oss.operations.some(operation => operation.id !== existing?.id && operation.alias === alias.trim())
-                      ? tx('tx.lib.alias.validate.taken')
-                      : undefined
-                  }
-                />
-                <SelectParent
+          <RelativizationResultFields
+            title={title}
+            onTitleChange={setManualTitle}
+            alias={alias}
+            onAliasChange={setAlias}
+            aliasError={aliasTaken ? tx('tx.lib.alias.validate.taken') : undefined}
+            description={description}
+            onDescriptionChange={setDescription}
+          >
+            {oss.blocks.length > 0 ? (
+              <div>
+                <Label text={tx('tx.oss.block.parent')} htmlFor='relativization_parent' className='sr-only' />
+                <SelectBlock
+                  id='relativization_parent'
+                  className='h-9 w-full text-left [&_svg]:size-4'
                   items={oss.blocks}
                   value={parentID === null ? null : (oss.blockByID.get(parentID) ?? null)}
                   onChange={value => setParentID(value?.id ?? null)}
                   placeholder={tx('tx.oss.block.parent')}
                 />
               </div>
-              <TextArea
-                id='relativization_description'
-                className='w-full'
-                label={tx('tx.lib.description')}
-                value={description}
-                onChange={event => setDescription(event.target.value)}
-                maxLength={limits.len_description}
-                rows={3}
-                noResize
-              />
-            </div>
-          </div>
+            ) : null}
+          </RelativizationResultFields>
         </fieldset>
       )}
     </ModalForm>

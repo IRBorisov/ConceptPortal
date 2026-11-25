@@ -49,13 +49,14 @@ export function HelpConceptRelativizationFr() {
           {tx('tx.oss.relativization')} ».
         </li>
         <li>
-          Dans un SOS, sélectionnez le schéma source. Choisissez le constituant à relativiser et les exclusions
-          éventuelles. Indiquez le nom d’un contexte, la langue des propositions, le titre et l’abréviation du résultat.
+          Dans un SOS, sélectionnez le schéma source. Choisissez le constituant à relativiser, le nom du contexte, le
+          titre et l’abréviation du résultat. Ouvrez « Constituants exclus » pour choisir les notions communes aux
+          contextes.
         </li>
         <li>
-          Cliquez sur « {tx('tx.oss.relativization.review.start')} ». Ouvrez chaque proposition du noyau et vérifiez le
-          terme, la définition textuelle, la convention et la typification. Apportez les précisions demandées et
-          confirmez la création.
+          Cliquez sur « {tx('tx.oss.relativization.review.start')} ». Le Portail détermine la langue des propositions à
+          partir des textes du schéma source. Ouvrez chaque proposition du noyau et vérifiez le terme, la définition
+          textuelle, la convention et la typification. Apportez les précisions demandées et confirmez la création.
         </li>
       </ol>
       <h2>Que devient le résultat</h2>

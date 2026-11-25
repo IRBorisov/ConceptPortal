@@ -15,8 +15,8 @@ export const createRelativizationContentFr: Record<string, TourStepContent> = {
     body: (
       <p>
         Dans « Constituant à relativiser », choisissez un ensemble de base ou une structure générique. Ce choix définit
-        ce qui constitue un contexte. Vous pouvez exclure les concepts non définis qui doivent rester communs aux
-        contextes.
+        ce qui constitue un contexte. Ouvrez « Constituants exclus » pour choisir les concepts non définis qui doivent
+        rester communs aux contextes.
       </p>
     )
   },
