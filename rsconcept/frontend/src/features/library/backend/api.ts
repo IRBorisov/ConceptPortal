@@ -124,10 +124,11 @@ export const libraryApi = {
         successMessage: globalTx('tx.lib.item.create.success')
       }
     }),
-  createRSFormFromSandbox: (data: CreateRSFormFromSandboxDTO) =>
+  createRSFormFromSandbox: (data: CreateRSFormFromSandboxDTO, notifyOnError = true) =>
     axiosPost<CreateRSFormFromSandboxDTO, LibraryItem>({
       schema: schemaLibraryItem,
       endpoint: '/api/rsforms/create-from-sandbox',
+      notifyOnError,
       request: {
         data,
         successMessage: globalTx('tx.lib.item.create.success')

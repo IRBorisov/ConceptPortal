@@ -38,6 +38,7 @@ const entryFiles = [
   'src/library/rsmodel-api.ts',
   'src/library/rsengine.ts',
   'src/library/structure-planner.ts',
+  'src/library/relativization/index.ts',
   'src/library/oss.ts',
   'src/library/oss-api.ts',
   'src/library/oss-layout.ts',

@@ -34,6 +34,8 @@ from ..mutations import (
     delete_constituents,
     move_constituents,
     replace_schema_content,
+    require_unmanaged_attributions,
+    require_unmanaged_constituents,
     substitute_constituents,
     update_constituenta,
 )
@@ -368,6 +370,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
                 raise ValidationError({
                     'container': msg.missingAttribution()
                 })
+            require_unmanaged_attributions([attr], item.pk)
             if Inheritance.check_share_origin(
                 serializer.validated_data['container'].pk,
                 serializer.validated_data['attribute'].pk
@@ -408,6 +411,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
             # Lock the parent before constituent/attribution writes, matching publication.
             LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
             attributions = list(m.Attribution.objects.filter(container=serializer.validated_data['target']))
+            require_unmanaged_attributions(attributions, item.pk)
             to_delete: list[m.Attribution] = []
             for attrib in attributions:
                 if not Inheritance.check_share_origin(attrib.container.pk, attrib.attribute.pk):
@@ -672,6 +676,10 @@ def inline_synthesis(request: Request) -> HttpResponse:
 
     with transaction.atomic():
         LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
+        substitutions_data = serializer.validated_data['substitutions']
+        require_unmanaged_constituents([
+            row['original'].pk for row in substitutions_data if row['original'].schema_id == item.pk
+        ], item.pk)
         propagation = PropagationFacade()
         receiver = propagation.get_schema(item.pk)
         new_items = receiver.insert_from(source.pk, target_ids)
@@ -680,7 +688,7 @@ def inline_synthesis(request: Request) -> HttpResponse:
         propagation.after_create_cst([item[1] for item in new_items])
 
         substitutions: list[tuple[m.Constituenta, m.Constituenta]] = []
-        for substitution in serializer.validated_data['substitutions']:
+        for substitution in substitutions_data:
             original = cast(m.Constituenta, substitution['original'])
             replacement = cast(m.Constituenta, substitution['substitution'])
             if original.pk in target_ids:

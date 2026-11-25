@@ -19,6 +19,7 @@ import {
   IconPDF,
   IconQR,
   IconReader,
+  IconRelativization,
   IconReplace,
   IconRSModel,
   IconSandbox,
@@ -105,6 +106,10 @@ export function HelpSchemaMenuEn() {
         </li>
         <li>
           <IconInlineSynthesis size='1.25rem' className='inline-icon' /> Insert constituents from another schema
+        </li>
+        <li>
+          <IconRelativization size='1.25rem' className='inline-icon' /> Relativize this schema and review the texts
+          before creating a standalone result
         </li>
         <li>
           <IconCstType value={CstType.NOMINAL} size='1.25rem' className='inline-icon' /> Enable attribution form

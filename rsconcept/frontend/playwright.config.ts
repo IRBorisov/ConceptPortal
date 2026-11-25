@@ -4,7 +4,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 import { E2E_TIMEOUTS } from './tests/timeouts';
 
-const liveSite = process.env.PORTAL_TEST_SITE;
+const liveSite = process.env.PORTAL_TEST_SITE?.trim() || undefined;
 const runAllBrowsers = !!process.env.CI || process.env.PLAYWRIGHT_ALL_BROWSERS === '1';
 
 /** Presets include `locale: en-US`, which wins over top-level `use` and yields English UI; specs assert Russian. */

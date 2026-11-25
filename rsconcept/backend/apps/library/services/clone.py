@@ -163,16 +163,15 @@ def _clone_oss_operations(
     return operation_map
 
 
+def _oss_schema_ids(source: LibraryItem) -> set[int]:
+    operations = Operation.objects.filter(oss=source).values_list('result_id', 'relativization_source_id')
+    return {schema_id for schemas in operations for schema_id in schemas if schema_id is not None}
+
+
 def _refuse_unreadable_schemas(source: LibraryItem, reader: User) -> None:
     ''' Block an OSS clone that would copy a schema the reader cannot open. '''
-    result_ids = {
-        op.result_id
-        for op in Operation.objects.filter(oss_id=source.pk).only('result_id')
-        if op.result_id is not None
-    }
     labels: list[str] = []
-    for schema_id in sorted(result_ids):
-        prototype = LibraryItem.objects.get(pk=schema_id)
+    for prototype in LibraryItem.objects.filter(pk__in=_oss_schema_ids(source)).order_by('pk'):
         if not can_read_library_item(reader, prototype):
             labels.append(_schema_label(prototype))
     if labels:
@@ -195,15 +194,10 @@ def _clone_oss_attached_schemas(
 ) -> tuple[dict[int, int], dict[int, int]]:
     schema_map: dict[int, int] = {}
     cst_map: dict[int, int] = {}
-    result_ids = {
-        op.result_id
-        for op in Operation.objects.filter(oss_id=source.pk).only('result_id')
-        if op.result_id is not None
-    }
     editor_ids = list(source.getQ_editors().values_list('pk', flat=True))
 
-    for old_schema_id in sorted(result_ids):
-        prototype = LibraryItem.objects.get(pk=old_schema_id)
+    for prototype in LibraryItem.objects.filter(pk__in=_oss_schema_ids(source)).order_by('pk'):
+        old_schema_id = prototype.pk
         schema_clone = deepcopy(prototype)
         schema_clone.pk = None
         schema_clone.owner = owner

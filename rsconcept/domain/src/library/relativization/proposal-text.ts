@@ -1,6 +1,6 @@
 export type TextLocale = 'en' | 'ru' | 'fr';
 
-import { type RelativizationRole } from './engine.mjs';
+import { type RelativizationRole } from './engine';
 
 export interface ProposalFields {
   term_raw: string;

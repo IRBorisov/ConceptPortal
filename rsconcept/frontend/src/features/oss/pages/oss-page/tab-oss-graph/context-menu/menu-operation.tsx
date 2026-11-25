@@ -109,7 +109,6 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
     if (operation.operation_type === OperationType.RELATIVIZATION && operation.relativization?.parameters) {
       showRelativization({
         ossID: schema.id,
-        layout: getLayout(),
         existingOperation: operation,
         initialSource: schema.graph.expandInputs([operation.id])[0] ?? null,
         initialParent: operation.parent,

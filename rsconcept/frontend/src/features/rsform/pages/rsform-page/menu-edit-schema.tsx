@@ -14,6 +14,7 @@ import {
   IconEdit2,
   IconGenerateNames,
   IconInlineSynthesis,
+  IconRelativization,
   IconReplace,
   IconSortList,
   IconTemplates
@@ -42,7 +43,7 @@ export function MenuEditSchema() {
     handleBlur: handleMenuBlur,
     hide: hideMenu
   } = useDropdown();
-  const { schema, isArchive, isContentEditable, promptTemplate, deselectAll, isProcessing, createCst } =
+  const { schema, selectedCst, isArchive, isContentEditable, promptTemplate, deselectAll, isProcessing, createCst } =
     useSchemaEdit();
 
   const { resetAliases } = useResetAliases();
@@ -51,7 +52,11 @@ export function MenuEditSchema() {
   const { substituteConstituents } = useSubstituteConstituents();
 
   const showInlineSynthesis = useRsformDialogsStore(state => state.showInlineSynthesis);
+  const showRelativize = useRsformDialogsStore(state => state.showRelativize);
   const showSubstituteCst = useRsformDialogsStore(state => state.showSubstituteCst);
+  const canRelativize = schema.items.some(
+    item => item.cst_type === CstType.BASE || item.cst_type === CstType.STRUCTURED
+  );
 
   function handleReindex() {
     hideMenu();
@@ -101,6 +106,12 @@ export function MenuEditSchema() {
     });
   }
 
+  async function handleRelativize() {
+    hideMenu();
+    if (isModified && (await promptUnsaved()) === 'cancel') return;
+    showRelativize({ schemaID: schema.id, initialTarget: selectedCst.length === 1 ? selectedCst[0] : null });
+  }
+
   if (isAnonymous) {
     return null;
   }
@@ -143,6 +154,13 @@ export function MenuEditSchema() {
           icon={<IconInlineSynthesis size='1rem' className='icon-green' />}
           onClick={() => void handleInlineSynthesis()}
           disabled={!isContentEditable || isProcessing}
+        />
+        <DropdownButton
+          text={tx('tx.oss.relativization')}
+          title={tx('tx.schema.relativization.hint')}
+          icon={<IconRelativization size='1rem' className='icon-green' />}
+          onClick={() => void handleRelativize()}
+          disabled={!canRelativize || isProcessing}
         />
         {!schema.is_attributive ? (
           <DropdownButton

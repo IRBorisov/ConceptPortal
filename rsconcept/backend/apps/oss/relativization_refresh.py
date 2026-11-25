@@ -2,7 +2,7 @@
 from rest_framework.exceptions import ValidationError
 
 from apps.library.models import LibraryItem
-from apps.rsform.models import Attribution, Constituenta, CstType, RSFormCached
+from apps.rsform.models import Attribution, Constituenta, CstType, RSForm, RSFormCached
 from apps.rsform.models.api_RSLanguage import get_type_prefix
 from apps.rsform.utils import extract_entities, replace_entities, replace_globals
 
@@ -130,15 +130,13 @@ def _apply_projection(
         )
         updates.append((proposal['id'], current, mapped, row_metadata))
 
-    metadata, current_ids, changed = _write_updates(schema, updates, propagation)
-    changed = changed or bool(removed or renamed)
-    if removed or renamed or any(current is None for _, current, _, _ in updates):
-        schema.resolve_all_text()
+    changed_shape = bool(removed or renamed)
+    metadata, current_ids, changed = _write_updates(schema, updates, propagation, changed_shape)
     attributes = [
         [current_ids[row['container']], current_ids[row['attribute']]] for row in projection['attribution']
     ]
     changed = _apply_attributions(result.pk, stored.get('attribution', []), attributes, propagation) or changed
-    return metadata, attributes, changed
+    return metadata, attributes, changed or changed_shape
 
 
 # pylint: disable=too-many-arguments,too-many-positional-arguments
@@ -176,6 +174,7 @@ def _merge_review(
 
 def _write_updates(
     schema: RSFormCached, updates: list[tuple[int, Constituenta | None, dict, dict]], propagation: PropagationFacade,
+    changed_shape: bool,
 ) -> tuple[list[dict], dict[int, int], bool]:
     created: list[Constituenta] = []
     existing: list[tuple[Constituenta, dict]] = []
@@ -193,23 +192,41 @@ def _write_updates(
         current_ids[draft_id] = current.pk
         metadata.append(review | {'result': current.pk})
 
-    if created:
-        schema.cache.insert_multi(created)
-        propagation.after_create_cst(created)
-    changed = bool(created)
+    schema.cache.insert_multi(created)
+    order_changed = _apply_order(schema, list(current_ids.values()))
+    changes: list[tuple[int, CstType | None, dict, dict]] = []
     for current, item in existing:
+        new_type = None
         if current.cst_type != item['cst_type']:
             new_type = CstType(item['cst_type'])
             current.cst_type = new_type
             current.save(update_fields=['cst_type'])
-            propagation.after_change_cst_type(schema.pk, current.pk, new_type)
-            changed = True
         modifications = {name: item[name] for name in MUTABLE_FIELDS if getattr(current, name) != item[name]}
+        if modifications or new_type is not None:
+            old_data = schema.update_cst(current.pk, modifications) if modifications else {}
+            changes.append((current.pk, new_type, modifications, old_data))
+
+    if created or changed_shape:
+        schema.resolve_all_text()
+    propagation.after_create_cst(created)
+    for cst_id, new_type, modifications, old_data in changes:
+        if new_type is not None:
+            propagation.after_change_cst_type(schema.pk, cst_id, new_type)
         if modifications:
-            old_data = schema.update_cst(current.pk, modifications)
-            propagation.after_update_cst(schema.pk, current.pk, modifications, old_data)
-            changed = True
-    return metadata, current_ids, changed
+            propagation.after_update_cst(schema.pk, cst_id, modifications, old_data)
+    return metadata, current_ids, bool(created or changes or order_changed)
+
+
+def _apply_order(schema: RSFormCached, projected_ids: list[int]) -> bool:
+    projected = iter(schema.cache.by_id[pk] for pk in projected_ids)
+    managed = set(projected_ids)
+    current = schema.cache.constituents
+    ordered = [next(projected) if cst.pk in managed else cst for cst in current]
+    if ordered == current:
+        return False
+    RSForm.save_order(ordered)
+    schema.cache.constituents = ordered
+    return True
 
 
 def _apply_attributions(source_id: int, old_pairs: list[list[int]], pairs: list[list[int]],

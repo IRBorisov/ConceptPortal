@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { CstType } from '../rsform';
 
-import { projectRelativization, type RelativizationItem } from './index';
+import { type ProjectionOptions, projectRelativization, type RelativizationItem } from './index';
 
 function row(
   id: number,
@@ -70,6 +70,10 @@ describe('relativization projection and review', () => {
     expect(result.items.find(item => item.id === 1)?.term_forms).toEqual([{ text: 'функций', tags: 'gent,plur' }]);
     expect(result.items.find(item => item.id === 8)?.definition_raw).toContain('@{X1|gent,plur}');
     expect(result.proposals.find(proposal => proposal.id === 8)?.ambiguous).toContain('D1');
+    const accessor = result.proposals.find(proposal => proposal.role === 'accessor')!;
+    const orderedIDs = result.items.map(item => item.id);
+    expect(orderedIDs).toEqual(result.proposals.map(proposal => proposal.id));
+    expect(orderedIDs.indexOf(accessor.id)).toBeLessThan(orderedIDs.indexOf(5));
   });
 
   it('keeps the selected base set, scopes callable domains, and keeps excluded texts', () => {
@@ -96,5 +100,29 @@ describe('relativization projection and review', () => {
         { target: 4, excluded: [], locale: 'en', contextName: 'context' }
       )
     ).toBeNull();
+  });
+
+  it('transforms dependents using the manual type of a malformed term', () => {
+    const items = [
+      row(1, 'X1', CstType.BASE, '', 'vertices'),
+      row(2, 'D1', CstType.TERM, 'X1∪', 'incomplete term'),
+      row(3, 'D2', CstType.TERM, 'D1', 'dependent term')
+    ];
+    const options: ProjectionOptions = { target: 1, excluded: [], locale: 'en', contextName: 'context' };
+    const typedItems = items.map(item => (item.id === 2 ? { ...item, typification_manual: 'ℬ(X1)' } : item));
+    const withoutType = projectRelativization({ items, attribution: [] }, options)!;
+    const withType = projectRelativization({ items: typedItems, attribution: [] }, options)!;
+    expect(withoutType.proposals.find(proposal => proposal.id === 3)).toMatchObject({
+      role: 'preserved',
+      afterType: '',
+      formalInvalid: false
+    });
+    expect(withType.proposals.find(proposal => proposal.id === 2)).toMatchObject({
+      role: 'preserved',
+      afterType: 'ℬ(X1)',
+      formalInvalid: false
+    });
+    expect(withType.items.find(item => item.id === 2)?.definition_formal).toBe('X1∪');
+    expect(withType.proposals.find(proposal => proposal.id === 3)?.role).toBe('family');
   });
 });
