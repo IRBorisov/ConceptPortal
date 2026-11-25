@@ -1,4 +1,4 @@
-import { type TermContext, ReferenceType } from '../../cctext/language';
+import { ReferenceType, type TermContext } from '../../cctext/language';
 import {
   applyEntityReferenceMapping,
   extractEntities,
@@ -36,7 +36,10 @@ export type RelativizationItem = Pick<
   | 'term_forms'
 >;
 
-type ProjectionSource = { items: RelativizationItem[]; attribution: Attribution[] };
+interface ProjectionSource {
+  items: RelativizationItem[];
+  attribution: Attribution[];
+}
 
 export interface ProjectionOptions {
   target: number;
@@ -45,12 +48,12 @@ export interface ProjectionOptions {
   contextName: string;
 }
 
-type ComponentOrigin = {
+interface ComponentOrigin {
   source: string;
   path: readonly number[];
   scope: 'context' | 'value';
   term: string;
-};
+}
 
 export interface RelativizationProposal {
   id: number;
@@ -156,11 +159,7 @@ function inspectComponent(
     (sourceType?.typeID === TypeID.function && sourceType.result.typeID === TypeID.collection);
   const originalSteps = original.spawner_path.slice(isCollection ? 1 : 0);
   const resultSteps = traceComponent(after.definition_formal, source.id, target, resultByAlias, accessor, context);
-  if (
-    !resultSteps ||
-    resultSteps.length !== originalSteps.length ||
-    resultSteps.some((step, index) => step !== originalSteps[index])
-  )
+  if (resultSteps?.length !== originalSteps.length || resultSteps.some((step, index) => step !== originalSteps[index]))
     return null;
   return {
     source: source.alias,

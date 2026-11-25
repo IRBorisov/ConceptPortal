@@ -2,19 +2,19 @@ export type TextLocale = 'en' | 'ru' | 'fr';
 
 import { type RelativizationRole } from './engine.mjs';
 
-export type ProposalFields = {
+export interface ProposalFields {
   term_raw: string;
   definition_raw: string;
   convention: string;
-};
+}
 
-type TextInput = {
+interface TextInput {
   meaning: string;
   context: string;
   component: string;
   subject: string;
   isBaseSet: boolean;
-};
+}
 
 type TextFactory = (input: TextInput) => [term: string, definition: string, convention: string];
 
