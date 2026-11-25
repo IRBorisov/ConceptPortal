@@ -307,7 +307,12 @@ def create_relativization_operation(item: LibraryItem, validated: dict, request:
                 if name in data:
                     setattr(existing, name, data[name])
                     setattr(existing_result, name, data[name])
-            existing.parent = data.get('parent')
+            parent = data.get('parent')
+            if existing.parent_id != (parent.pk if parent else None):
+                layout = _without_node(validated['layout'], 'o', existing.pk)
+                layout.append(_node('o', existing.pk, validated['position']))
+                m.Layout.update_data(item.pk, layout)
+                existing.parent = parent
             existing.save(update_fields=['alias', 'title', 'description', 'parent'])
             existing_result.save(update_fields=['alias', 'title', 'description', 'time_update'])
             item.save(update_fields=['time_update'])
@@ -426,10 +431,10 @@ def delete_operation(item: LibraryItem, validated: dict, request: Request | None
                 _require_schema_audience(request, old_schema, permissions.source_schema_ids({old_schema.pk}))
             if validated['keep_constituents']:
                 _require_retained_audience(request, oss, operation)
-        if m.Argument.objects.filter(
-            argument=operation, operation__operation_type=m.OperationType.RELATIVIZATION,
-        ).exists() or (old_schema and validated['delete_schema'] and
-                       m.Operation.objects.filter(relativization_source=old_schema).exists()):
+        if _has_relativization_dependents(operation, include_replicas=True) or (
+            old_schema and validated['delete_schema'] and
+            m.Operation.objects.filter(relativization_source=old_schema).exists()
+        ):
             raise serializers.ValidationError({'target': 'Remove or reconfigure dependent relativizations first.'})
         oss.delete_operation(operation.pk, validated['keep_constituents'])
         m.Layout.update_data(item.pk, layout)
@@ -451,6 +456,8 @@ def delete_replica(item: LibraryItem, validated: dict, request: Request | None =
 
     with transaction.atomic():
         _lock_expected_update(item, request)
+        if not validated['keep_connections'] and _has_relativization_dependents(operation):
+            raise serializers.ValidationError({'target': 'Remove or reconfigure dependent relativizations first.'})
         oss = m.PropagationFacade().get_oss(item.pk)
         if validated['keep_constituents'] and not validated['keep_connections']:
             _require_retained_audience(request, oss, operation)
@@ -589,6 +596,15 @@ def relocate_constituents(item: LibraryItem, validated: dict, request: Request |
 
 
 # ====== Internals ============
+def _has_relativization_dependents(operation: m.Operation, *, include_replicas: bool = False) -> bool:
+    arguments = Q(argument=operation)
+    if include_replicas:
+        arguments |= Q(argument__replicas__original=operation)
+    return m.Argument.objects.filter(
+        arguments, operation__operation_type=m.OperationType.RELATIVIZATION,
+    ).exists()
+
+
 def _node(prefix: str, pk: int, position: dict) -> dict:
     ''' Layout node for a new operation (``o``) or block (``b``). '''
     return {

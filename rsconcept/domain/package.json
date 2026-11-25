@@ -103,6 +103,10 @@
       "types": "./dist/library/structure-planner.d.ts",
       "import": "./dist/library/structure-planner.js"
     },
+    "./library/relativization": {
+      "types": "./dist/library/relativization/index.d.ts",
+      "import": "./dist/library/relativization/index.js"
+    },
     "./library/oss": {
       "types": "./dist/library/oss.d.ts",
       "import": "./dist/library/oss.js"

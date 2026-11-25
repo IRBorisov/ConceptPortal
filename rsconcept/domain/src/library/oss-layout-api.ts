@@ -26,9 +26,10 @@ export class LayoutManager {
     const result = { ...position };
     const parentNode = this.layout.find(pos => pos.nodeID === `b${parent}`) ?? null;
     const operations = this.layout.filter(pos => pos.nodeID.startsWith('o'));
-    const hasArguments = args.length !== 0;
+    const argumentNodes = operations.filter(node => args.includes(Number(node.nodeID.slice(1))));
+    const hasArguments = argumentNodes.length !== 0;
     if (hasArguments) {
-      const pos = calculatePositionFromArgs(operations.filter(node => args.includes(Number(node.nodeID.slice(1)))));
+      const pos = calculatePositionFromArgs(argumentNodes);
       result.x = pos.x;
       result.y = pos.y;
     } else if (parentNode) {
@@ -40,17 +41,18 @@ export class LayoutManager {
       result.y = pos.y;
     }
 
+    if (parentNode) {
+      result.x = Math.max(result.x, parentNode.x + MIN_DISTANCE);
+      result.y = Math.max(result.y, parentNode.y + MIN_DISTANCE);
+    }
     const siblingBlocks = this.oss.blocks.filter(block => block.parent === parent).map(block => block.nodeID);
-    preventOverlap(
-      result,
-      this.layout.filter(node => siblingBlocks.includes(node.nodeID)),
-      {
-        moveX: !hasArguments,
-        moveY: hasArguments
-      }
-    );
+    const blockPositions = this.layout.filter(node => siblingBlocks.includes(node.nodeID));
+    preventOverlap(result, blockPositions, {
+      moveX: !hasArguments,
+      moveY: hasArguments
+    });
 
-    preventOverlap(result, operations);
+    preventOverlap(result, [...operations, ...blockPositions]);
     this.extendParentBounds(parentNode, result);
 
     return result;
@@ -254,6 +256,9 @@ export class LayoutManager {
     let inputsPositions = this.layout.filter(pos => freeInputs.includes(pos.nodeID));
     if (inputsPositions.length === 0) {
       inputsPositions = this.layout.filter(pos => pos.nodeID.startsWith('o'));
+    }
+    if (inputsPositions.length === 0) {
+      return initial;
     }
     const maxX = Math.max(...inputsPositions.map(node => node.x));
     const minY = Math.min(...inputsPositions.map(node => node.y));

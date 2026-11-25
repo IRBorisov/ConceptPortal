@@ -20,6 +20,9 @@ const DlgEditWordForms = React.lazy(() =>
 const DlgInlineSynthesis = React.lazy(() =>
   import('./dlg-inline-synthesis').then(module => ({ default: module.DlgInlineSynthesis }))
 );
+const DlgRelativize = React.lazy(() =>
+  import('./dlg-relativize/dlg-relativize').then(module => ({ default: module.DlgRelativize }))
+);
 const DlgRenameCst = React.lazy(() => import('./dlg-rename-cst').then(module => ({ default: module.DlgRenameCst })));
 const DlgShowFlatAst = React.lazy(() => import('./dlg-show-ast').then(module => ({ default: module.DlgShowFlatAst })));
 const DlgShowAstExtract = React.lazy(() =>
@@ -66,6 +69,8 @@ export function RsformDialogHost() {
             return <DlgEditWordForms />;
           case RsformDialogType.INLINE_SYNTHESIS:
             return <DlgInlineSynthesis />;
+          case RsformDialogType.RELATIVIZE:
+            return <DlgRelativize />;
           case RsformDialogType.SHOW_FLAT_AST:
             return <DlgShowFlatAst />;
           case RsformDialogType.AST_EXTRACT_SUBTREE:

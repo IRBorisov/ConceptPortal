@@ -11,10 +11,15 @@ import { RSLangAnalyzer, TokenID, TypeID } from '../../rslang';
 import { extractGlobals, parseRSLangExpression } from '../../rslang/api';
 import { labelType } from '../../rslang/labels';
 import { type Attribution, type Constituenta, CstType, type RSForm } from '../rsform';
-import { analyzeConstituentType, analyzeSchemaConstituents, buildFormalDependencyGraph } from '../rsform-api';
+import { analyzeSchemaConstituents, buildFormalDependencyGraph, restoreConstituentOrder } from '../rsform-api';
 import { StructurePlanner } from '../structure-planner';
 
-import { createRelativizer, type RelativizationRole } from './engine.mjs';
+import {
+  prepareRelativization,
+  type RelativizationRole,
+  type TransformedConstituent,
+  transformRelativization
+} from './engine';
 import { type ProposalFields, proposeText, type TextLocale } from './proposal-text';
 
 export type { ProposalFields, RelativizationRole, TextLocale };
@@ -77,15 +82,6 @@ export type RelativizationProjection = ProjectionSource & {
 };
 
 const core = new Set<CstType>([CstType.BASE, CstType.CONSTANT, CstType.STRUCTURED]);
-const relativizer = createRelativizer({
-  RSLangAnalyzer,
-  TokenID,
-  TypeID,
-  labelType,
-  parseRSLangExpression,
-  extractGlobals,
-  analyzeConstituentType
-});
 
 function analyze(items: RelativizationItem[]) {
   // Schema analysis fills transient fields on these copies.
@@ -138,13 +134,11 @@ function typeText(type: Constituenta['effectiveType'] | undefined) {
   return type ? labelType(type) : '';
 }
 
-type TransformedRow = NonNullable<ReturnType<typeof relativizer.transform>>['items'][number];
-
 function inspectComponent(
   original: Constituenta | undefined,
   after: Constituenta,
   originalByID: Map<number, Constituenta>,
-  resultByAlias: Map<string, TransformedRow>,
+  resultByAlias: Map<string, TransformedConstituent>,
   accessor: string | undefined,
   context: string,
   target: number
@@ -173,7 +167,7 @@ function traceComponent(
   expression: string,
   sourceID: number,
   targetID: number,
-  rows: Map<string, TransformedRow>,
+  rows: Map<string, TransformedConstituent>,
   accessor: string | undefined,
   context: string,
   visited = new Set<string>()
@@ -210,7 +204,7 @@ function traceComponent(
   if (!row || visited.has(alias)) return null;
   if (row.origin === sourceID && (row.role === 'relation' || row.role === 'family')) return suffix;
   visited.add(alias);
-  const prefix = traceComponent(row.definition.formal, sourceID, targetID, rows, accessor, context, visited);
+  const prefix = traceComponent(row.definition_formal, sourceID, targetID, rows, accessor, context, visited);
   return prefix ? [...prefix, ...suffix] : null;
 }
 
@@ -228,23 +222,15 @@ export function projectRelativization(
   ) {
     return null;
   }
-  const input = source.items.map(item => ({
-    entityUID: item.id,
-    type: 'constituenta',
-    cstType: item.cst_type,
-    alias: item.alias,
-    crucial: item.crucial,
-    valueIsProperty: item.value_is_property,
-    definition: { formal: item.definition_formal, typification_manual: item.typification_manual }
-  }));
-  const transformed = relativizer.transform(relativizer.prepare(input), {
-    target: target.alias,
-    ignored: excluded.map(item => item!.alias)
-  });
+  const transformed = transformRelativization(
+    prepareRelativization(source.items),
+    target.alias,
+    excluded.map(item => item!.alias)
+  );
   if (!transformed) return null;
 
   const baselineByOrigin = new Map(
-    transformed.items.filter(row => row.origin === row.entityUID).map(row => [row.origin!, row])
+    transformed.items.filter(row => row.origin === row.id).map(row => [row.origin!, row])
   );
   const stableAliases = Object.fromEntries(
     source.items.map(item => {
@@ -262,14 +248,13 @@ export function projectRelativization(
     ])
   );
   const items = transformed.items.map<RelativizationItem>(row => ({
-    id: row.entityUID,
+    id: row.id,
     alias: row.alias,
-    cst_type: row.cstType,
-    crucial: row.crucial ?? false,
-    value_is_property: row.valueIsProperty ?? false,
-    definition_formal: row.definition.formal,
-    typification_manual:
-      row.role === 'preserved' || row.role === 'carrier' ? (row.definition.typification_manual ?? '') : '',
+    cst_type: row.cst_type,
+    crucial: row.crucial,
+    value_is_property: row.value_is_property,
+    definition_formal: row.definition_formal,
+    typification_manual: row.role === 'preserved' || row.role === 'carrier' ? row.typification_manual : '',
     ...fields(),
     term_resolved: '',
     term_forms: [],
@@ -280,10 +265,11 @@ export function projectRelativization(
   const kernel = new Set([...roots.map(item => item.id), ...after.graph.expandAllInputs(roots.map(item => item.id))]);
   const byAlias = new Map(transformed.items.map(row => [row.alias, row]));
   const accessor = transformed.items.find(row => row.role === 'accessor');
-  const proposals = transformed.items.map<RelativizationProposal>((row, index) => {
+  const orderedItems = restoreConstituentOrder(items, after.graph);
+  const proposals = orderedItems.map<RelativizationProposal>(pending => {
+    const row = byAlias.get(pending.alias)!;
     const original = row.origin === null ? undefined : before.cstByID.get(row.origin);
     const old = fields(original);
-    const pending = items[index];
     const computed = after.cstByID.get(pending.id)!;
     const component = inspectComponent(
       original,
@@ -291,7 +277,7 @@ export function projectRelativization(
       before.cstByID,
       byAlias,
       accessor?.alias,
-      transformed.names.context,
+      transformed.context,
       target.id
     );
     const ambiguous = new Set<string>();
@@ -302,7 +288,7 @@ export function projectRelativization(
       convention: renamed(old.convention)
     };
     const changedMeaning = row.role !== 'carrier' && row.role !== 'preserved';
-    const usesAccessor = !!accessor && extractGlobals(row.definition.formal).has(accessor.alias);
+    const usesAccessor = !!accessor && extractGlobals(row.definition_formal).has(accessor.alias);
     const proposed = proposeText(
       row.role,
       originalText,
@@ -352,7 +338,10 @@ export function projectRelativization(
       beforeType !== afterType ||
       Object.entries(old).some(([field, value]) => proposed[field as keyof ProposalFields] !== value) ||
       (!!original && original.definition_formal !== pending.definition_formal);
-    const formalInvalid =
+    const losesComputability =
+      computed.analysis.valueClass === null &&
+      (row.role === 'accessor' || (changedMeaning && original?.analysis.valueClass != null));
+    const failsAnalysis =
       !computed.analysis.success &&
       (row.role === 'accessor' || (changedMeaning && original?.analysis.success === true));
     return {
@@ -369,9 +358,9 @@ export function projectRelativization(
       missing,
       inKernel: kernel.has(pending.id),
       changed,
-      formalInvalid
+      formalInvalid: losesComputability || failsAnalysis
     };
   });
 
-  return { items, attribution: source.attribution, proposals };
+  return { items: orderedItems, attribution: source.attribution, proposals };
 }

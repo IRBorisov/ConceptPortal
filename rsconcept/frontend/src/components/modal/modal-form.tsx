@@ -62,6 +62,9 @@ interface ModalFormProps extends ModalProps {
   /** Callback to be called when modal is canceled. */
   onCancel?: () => void;
 
+  /** Return false to keep the dialog and its active tour open on cancellation. */
+  beforeCancel?: () => boolean;
+
   /** Override default dialog close (active feature store). */
   onHide?: () => void;
 }
@@ -83,6 +86,7 @@ export function ModalForm({
   closeOnSubmit = true,
   onSubmit,
   onCancel,
+  beforeCancel,
   onHide,
 
   helpTopic,
@@ -111,6 +115,9 @@ export function ModalForm({
   }
 
   function handleCancel() {
+    if (beforeCancel && !beforeCancel()) {
+      return;
+    }
     onCancel?.();
     closeModal();
   }

@@ -109,7 +109,6 @@ export function useHandleActions() {
     const inputs = selectedItems.filter(item => item.nodeType === NodeType.OPERATION && item.result !== null);
     showCreateRelativization({
       ossID: schema.id,
-      layout: getLayout(),
       initialSource: inputs.length === 1 ? inputs[0].id : null,
       initialParent: extractBlockParent(selectedItems),
       position,

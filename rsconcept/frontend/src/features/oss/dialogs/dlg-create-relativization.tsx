@@ -6,22 +6,17 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { type AppLocale, localeLabel, SUPPORTED_LOCALES, useTx } from '@/i18n';
 import { Grammeme } from '@rsconcept/domain/cctext/language';
-import {
-  type Constituenta,
-  CstType,
-  type Operation,
-  type OperationType,
-  type OssLayout
-} from '@rsconcept/domain/library';
-import { LayoutManager, OPERATION_NODE_HEIGHT, OPERATION_NODE_WIDTH } from '@rsconcept/domain/library/oss-layout-api';
+import { type Constituenta, CstType, type Operation, type OperationType } from '@rsconcept/domain/library';
 
 import { useConceptNavigation } from '@/app';
 import { HelpTopic } from '@/features/help';
 import { DialogTourID } from '@/features/onboarding/tours/editor-tours';
+import { endDialogTourIfActive } from '@/features/onboarding/utils/end-dialog-tour';
 import { rsformsApi } from '@/features/rsform/backend/api';
 import { cctextApi } from '@/features/rsform/backend/cctext/api';
 import { SelectConstituenta } from '@/features/rsform/components/select-constituenta';
 
+import { isAxiosError } from '@/backend/api-transport';
 import { KEYS } from '@/backend/configuration';
 import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
 import { Loader } from '@/components/loader';
@@ -35,13 +30,13 @@ import { useOss } from '../backend/use-oss';
 import { SelectOperation } from '../components/select-operation';
 import { SelectParent } from '../components/select-parent';
 
-import { isReviewed, prepareReview, type ReviewRow, textFields } from './relativization/review';
+import { getRelativizationPlacement } from './relativization/placement';
+import { canConfirmReview, hasReviewEdits, isReviewed, prepareReview, type ReviewRow } from './relativization/review';
 import { ReviewRelativizationTexts } from './relativization/review-texts';
 import { useOssDialogsStore } from './oss-dialog-store';
 
 export interface DlgCreateRelativizationProps {
   ossID: number;
-  layout: OssLayout;
   initialSource: number | null;
   existingOperation?: Extract<Operation, { operation_type: typeof OperationType.RELATIVIZATION }>;
   initialParent: number | null;
@@ -73,7 +68,7 @@ export function DlgCreateRelativization() {
   const [step, setStep] = useState<'parameters' | 'review'>('parameters');
   const [draft, setDraft] = useState<{ parameters: RelativizationParametersDTO; revision: string } | null>(null);
   const [rows, setRows] = useState<ReviewRow[]>([]);
-  const [pending, setPending] = useState(false);
+  const [pending, setPending] = useState<'preview' | 'save' | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const pendingRef = useRef(false);
 
@@ -93,37 +88,39 @@ export function DlgCreateRelativization() {
   const locale =
     language ?? (/\p{Script=Cyrillic}/u.test((schema?.title ?? '') + term) ? 'ru' : intl.locale === 'fr' ? 'fr' : 'en');
   const contextName = manualContext ?? (locale === 'ru' ? 'контекст' : locale === 'fr' ? 'contexte' : 'context');
+  const canInflect = !!term && manualTitle === null && intl.locale === 'ru';
   const formQuery = useQuery({
     queryKey: [KEYS.cctext, 'inflect', term, Grammeme.gent],
     queryFn: ({ signal }) => cctextApi.inflect({ text: term, grams: Grammeme.gent }, signal),
-    enabled: !!term && manualTitle === null && intl.locale === 'ru',
+    enabled: canInflect,
     retry: false
   });
   const defaultTitle =
     schema && target
       ? tx('tx.oss.relativization.title', {
           source: schema.title || schema.alias,
-          term: formQuery.data?.result.trim() || term || target.alias
+          term: (canInflect ? formQuery.data?.result.trim() : undefined) || term || target.alias
         })
       : '';
   const title = manualTitle ?? defaultTitle;
 
   const create = useMutation({
     mutationKey: [ossApi.baseKey, 'create-relativization'],
+    networkMode: 'always',
     retry: false,
     mutationFn: ossApi.createRelativization,
     onSuccess: async response => {
       updateOss(response.oss, client);
       await client.invalidateQueries({ queryKey: KEYS.composite.libraryList });
       props.onCreate(response.new_operation);
+      endDialogTourIfActive(DialogTourID.CREATE_RELATIVIZATION);
       hideDialog();
       const resultId = response.oss.operations.find(operation => operation.id === response.new_operation)?.result;
       if (resultId != null) router.gotoCstList(resultId);
-    },
-    onError: () => client.invalidateQueries({ queryKey: ossApi.getOssQueryOptions({ itemID: oss.id }).queryKey })
+    }
   });
 
-  const isWaitingForTitle = !!term && manualTitle === null && formQuery.isLoading;
+  const isWaitingForTitle = canInflect && formQuery.isLoading;
   const canPrepare =
     !!source &&
     !!schema &&
@@ -137,13 +134,7 @@ export function DlgCreateRelativization() {
     !isWaitingForTitle;
 
   const sourceChanged = draft !== null && sourceQuery.data?.raw.time_update !== draft.parameters.source_time_update;
-  const canConfirm =
-    draft !== null &&
-    canPrepare &&
-    !sourceChanged &&
-    rows.every(
-      row => !row.proposal.formalInvalid && ((!row.proposal.inKernel && row.conflicts.length === 0) || isReviewed(row))
-    );
+  const canConfirm = draft !== null && canPrepare && !sourceChanged && canConfirmReview(rows);
 
   function changeSource(operation: Operation | null) {
     setSourceID(operation?.id ?? null);
@@ -160,12 +151,22 @@ export function DlgCreateRelativization() {
     setExcludedIDs(previous => (checked ? [...previous, id] : previous.filter(item => item !== id)));
   }
 
+  async function handleRequestError(error: unknown) {
+    setErrorMessage(error instanceof Error ? extractErrorMessage(error) : tx('tx.oss.relativization.compute.fail'));
+    if (isAxiosError(error) && error.response?.status === 409) {
+      await Promise.all([
+        client.invalidateQueries({ queryKey: ossApi.getOssQueryOptions({ itemID: oss.id }).queryKey }),
+        sourceQuery.refetch()
+      ]);
+    }
+  }
+
   async function submit() {
     const raw = sourceQuery.data?.raw;
     if (pendingRef.current || !canPrepare || !source || !target || !raw) return;
 
     pendingRef.current = true;
-    setPending(true);
+    setPending(step === 'parameters' ? 'preview' : 'save');
     setErrorMessage('');
     try {
       if (step === 'parameters') {
@@ -178,47 +179,43 @@ export function DlgCreateRelativization() {
           locale,
           context_name: contextName.trim()
         };
-        try {
-          const result = await ossApi.previewRelativization({ itemID: oss.id, data: parameters });
-          setRows(previous => prepareReview(result, draft?.parameters.source_operation === source.id ? previous : []));
-          setDraft({ parameters, revision: result.revision });
-          setStep('review');
-        } catch (error) {
-          setErrorMessage(
-            error instanceof Error ? extractErrorMessage(error) : tx('tx.oss.relativization.compute.fail')
-          );
-          void sourceQuery.refetch();
-        }
+        const result = await ossApi.previewRelativization({
+          itemID: oss.id,
+          data: parameters,
+          expectedTimeUpdate: oss.time_update
+        });
+        setRows(previous => prepareReview(result, draft?.parameters.source_operation === source.id ? previous : []));
+        setDraft({ parameters, revision: result.revision });
+        endDialogTourIfActive(DialogTourID.CREATE_RELATIVIZATION);
+        setStep('review');
         return;
       }
       if (!canConfirm || !draft) return;
-      const layout = new LayoutManager(oss, props.layout);
-      const position = layout.newOperationPosition(
-        { ...props.position, width: OPERATION_NODE_WIDTH, height: OPERATION_NODE_HEIGHT },
+      const { layout, position, expectedTimeUpdate } = getRelativizationPlacement(
+        oss,
+        props.position,
         parentID,
-        [source.id]
+        source.id,
+        existing?.id
       );
-      try {
-        await create.mutateAsync({
-          itemID: oss.id,
-          data: {
-            ...draft.parameters,
-            revision: draft.revision,
-            reviewed: rows.filter(isReviewed).map(row => row.item.id),
-            edits: rows
-              .filter(row => row.clarified || textFields.some(field => row.fields[field] !== row.item[field]))
-              .map(row => ({ id: row.item.id, clarified: row.clarified, ...row.fields })),
-            item_data: { title: title.trim(), alias: alias.trim(), description, parent: parentID },
-            layout: layout.layout,
-            position
-          }
-        });
-      } catch (error) {
-        setErrorMessage(error instanceof Error ? extractErrorMessage(error) : tx('tx.oss.relativization.compute.fail'));
-      }
+      await create.mutateAsync({
+        itemID: oss.id,
+        expectedTimeUpdate,
+        data: {
+          ...draft.parameters,
+          revision: draft.revision,
+          reviewed: rows.filter(isReviewed).map(row => row.item.id),
+          edits: rows.filter(hasReviewEdits).map(row => ({ id: row.item.id, clarified: row.clarified, ...row.fields })),
+          item_data: { title: title.trim(), alias: alias.trim(), description, parent: parentID },
+          layout,
+          position
+        }
+      });
+    } catch (error) {
+      await handleRequestError(error);
     } finally {
       pendingRef.current = false;
-      setPending(false);
+      setPending(null);
     }
   }
 
@@ -234,9 +231,8 @@ export function DlgCreateRelativization() {
       )}
       canSubmit={!pending && (step === 'parameters' ? canPrepare : canConfirm)}
       closeOnSubmit={false}
-      onHide={() => {
-        if (!pendingRef.current) hideDialog();
-      }}
+      beforeCancel={() => !pendingRef.current}
+      onHide={hideDialog}
       onSubmit={event => {
         event.preventDefault();
         event.stopPropagation();
@@ -244,8 +240,15 @@ export function DlgCreateRelativization() {
       }}
       className={step === 'parameters' ? 'w-180 px-6' : 'w-224 px-6'}
       helpTopic={HelpTopic.CC_OSS}
-      tourID={DialogTourID.CREATE_RELATIVIZATION}
+      tourID={step === 'parameters' ? DialogTourID.CREATE_RELATIVIZATION : undefined}
     >
+      <div role='status' aria-live='polite'>
+        {pending === 'preview'
+          ? tx('tx.oss.relativization.review.previewing')
+          : pending === 'save'
+            ? tx('tx.oss.relativization.review.saving')
+            : null}
+      </div>
       {errorMessage ? (
         <p role='alert' className='mt-3 whitespace-pre-wrap text-destructive'>
           {errorMessage}
@@ -262,11 +265,11 @@ export function DlgCreateRelativization() {
             rows={rows}
             onChange={row => setRows(previous => previous.map(old => (old.item.id === row.item.id ? row : old)))}
             back={() => setStep('parameters')}
-            disabled={pending}
+            disabled={pending !== null}
           />
         </>
       ) : (
-        <fieldset disabled={pending} className='cc-column pt-4'>
+        <fieldset disabled={pending !== null} className='cc-column pt-4'>
           <div data-tour='relativization-parameters' className='cc-column'>
             <div data-tour='relativization-source' className='cc-column'>
               <Label text={tx('tx.oss.relocate.source')} htmlFor='relativization_source' />

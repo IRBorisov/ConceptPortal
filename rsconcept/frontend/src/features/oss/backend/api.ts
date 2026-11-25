@@ -221,18 +221,34 @@ export const ossApi = {
         }
       }
     }),
-  previewRelativization: ({ itemID, data }: { itemID: number; data: RelativizationParametersDTO }) =>
+  previewRelativization: ({
+    itemID,
+    data,
+    expectedTimeUpdate
+  }: {
+    itemID: number;
+    data: RelativizationParametersDTO;
+    expectedTimeUpdate: string;
+  }) =>
     axiosPost<RelativizationParametersDTO, RelativizationDraftDTO>({
       schema: schemaRelativizationDraft,
       notifyOnError: false,
-      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
+      expectedTimeUpdate,
       endpoint: `/api/oss/${itemID}/preview-relativization`,
       request: { data }
     }),
-  createRelativization: ({ itemID, data }: { itemID: number; data: CreateRelativizationDTO }) =>
+  createRelativization: ({
+    itemID,
+    data,
+    expectedTimeUpdate
+  }: {
+    itemID: number;
+    data: CreateRelativizationDTO;
+    expectedTimeUpdate: string;
+  }) =>
     axiosPost<CreateRelativizationDTO, OperationCreatedResponse>({
       schema: schemaOperationCreatedResponse,
-      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
+      expectedTimeUpdate,
       endpoint: `/api/oss/${itemID}/create-relativization`,
       notifyOnError: false,
       request: {
