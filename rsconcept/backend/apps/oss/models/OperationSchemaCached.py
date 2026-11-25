@@ -3,12 +3,15 @@
 
 from typing import Optional
 
+from rest_framework.exceptions import ValidationError
+
 from apps.library.models import LibraryItem
 from apps.rsform.models import Attribution, Constituenta, CstType, OrderManager, RSFormCached
 
+from ..propagation_state import mark_schema
 from .Argument import Argument
 from .Inheritance import Inheritance
-from .Operation import Operation
+from .Operation import Operation, OperationType
 from .OperationSchema import OperationSchema
 from .OssCache import OssCache
 from .PropagationContext import PropagationContext
@@ -78,6 +81,9 @@ class OperationSchemaCached:
             return
 
         if old_schema is not None:
+            if any(self.cache.operation_by_id[child].operation_type == OperationType.RELATIVIZATION
+                   for child in self.cache.extend_graph.outputs[target]):
+                raise ValidationError('Reconfigure dependent relativizations before detaching the source.')
             if has_children:
                 self.before_delete_cst(old_schema.pk, [cst.pk for cst in old_schema.cache.constituents])
             self.context.invalidate(old_schema.pk)
@@ -201,6 +207,7 @@ class OperationSchemaCached:
                 parent=parent
             )
 
+        mark_schema(receiver.pk)
         OrderManager(receiver).restore_order()
         receiver.reset_aliases()
         receiver.resolve_all_text()

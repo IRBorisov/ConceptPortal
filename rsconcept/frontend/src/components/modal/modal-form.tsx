@@ -53,6 +53,9 @@ interface ModalFormProps extends ModalProps {
   /** Callback to be called before submit. */
   beforeSubmit?: () => boolean;
 
+  /** Leave the dialog open when a form handles its own submit lifecycle. */
+  closeOnSubmit?: boolean;
+
   /** Callback to be called after submit. */
   onSubmit: SubmitEventHandler<HTMLFormElement>;
 
@@ -77,6 +80,7 @@ export function ModalForm({
   submitText,
   validationHint,
   beforeSubmit,
+  closeOnSubmit = true,
   onSubmit,
   onCancel,
   onHide,
@@ -117,7 +121,7 @@ export function ModalForm({
       return;
     }
     onSubmit(event);
-    closeModal();
+    if (closeOnSubmit) closeModal();
   }
 
   return (

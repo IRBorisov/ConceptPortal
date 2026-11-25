@@ -23,8 +23,8 @@ export const createRelativizationContentEn: Record<string, TourStepContent> = {
     title: 'Title and result',
     body: (
       <p>
-        The Portal suggests a title, which you can edit. Enter a short name and click Create. The new schema appears on
-        the graph, and the operation parameters appear in the OSS passport.
+        Review the title and enter an alias. Choose “Review texts”, open each kernel proposal, add the necessary
+        clarifications, and choose “Confirm texts and create CS”. The result appears on the OSS graph.
       </p>
     )
   }

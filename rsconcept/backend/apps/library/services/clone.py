@@ -92,7 +92,7 @@ def clone_oss(source: LibraryItem, owner: User, item_data: dict) -> LibraryItem:
         schema_map, cst_map = _clone_oss_attached_schemas(
             source, clone, owner, item_data, copy_editors=copy_editors
         )
-        _apply_oss_operation_results(operation_map, schema_map)
+        _apply_oss_operation_results(operation_map, schema_map, cst_map)
         _clone_oss_arguments(source.pk, operation_map)
         _clone_oss_replicas(source.pk, operation_map)
         _clone_oss_substitutions(source.pk, operation_map, cst_map)
@@ -224,7 +224,9 @@ def _clone_oss_attached_schemas(
     return schema_map, cst_map
 
 
-def _apply_oss_operation_results(operation_map: dict[int, int], schema_map: dict[int, int]) -> None:
+def _apply_oss_operation_results(
+    operation_map: dict[int, int], schema_map: dict[int, int], cst_map: dict[int, int],
+) -> None:
     updates: list[Operation] = []
     for old_id, new_id in operation_map.items():
         old_operation = Operation.objects.get(pk=old_id)
@@ -235,9 +237,25 @@ def _apply_oss_operation_results(operation_map: dict[int, int], schema_map: dict
             raise ValueError(f'Missing cloned schema for operation result {old_operation.result_id}')
         new_operation = Operation.objects.get(pk=new_id)
         new_operation.result_id = new_schema_id
+        if old_operation.relativization_source_id:
+            new_operation.relativization_source_id = schema_map[old_operation.relativization_source_id]
+            if old_operation.relativization:
+                passport = deepcopy(old_operation.relativization)
+                passport['source']['id'] = new_operation.relativization_source_id
+                new_operation.relativization = passport
+            if old_operation.projection:
+                projection = deepcopy(old_operation.projection)
+                projection['target'] = cst_map[projection['target']]
+                projection['excluded'] = [cst_map[key] for key in projection['excluded']]
+                projection['attribution'] = [[cst_map[a], cst_map[b]] for a, b in projection['attribution']]
+                for row in projection['rows']:
+                    if row['origin'] is not None:
+                        row['origin'] = cst_map[row['origin']]
+                    row['result'] = cst_map[row['result']]
+                new_operation.projection = projection
         updates.append(new_operation)
     if updates:
-        Operation.objects.bulk_update(updates, ['result'])
+        Operation.objects.bulk_update(updates, ['result', 'relativization_source', 'relativization', 'projection'])
 
 
 def _clone_oss_arguments(source_oss_id: int, operation_map: dict[int, int]) -> None:

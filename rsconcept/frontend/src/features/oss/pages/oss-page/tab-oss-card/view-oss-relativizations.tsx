@@ -49,6 +49,9 @@ export function ViewOssRelativizations({ operations }: ViewOssRelativizationsPro
               </dd>
               <dt className='text-muted-foreground'>{tx('tx.oss.relativization.target')}</dt>
               <dd>{labelConstituent(relativization.target)}</dd>
+              {relativization.unreviewed ? (
+                <dd className='col-span-2'>{tx('tx.oss.relativization.review.pending')}</dd>
+              ) : null}
               <dt className='text-muted-foreground'>{tx('tx.oss.relativization.excluded')}</dt>
               <dd>
                 {relativization.excluded.length > 0

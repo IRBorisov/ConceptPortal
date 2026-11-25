@@ -31,12 +31,15 @@ import {
   type MoveItemsDTO,
   type OperationCreatedResponse,
   type OperationSchemaDTO,
+  type RelativizationDraftDTO,
+  type RelativizationParametersDTO,
   type RelocateConstituentsDTO,
   schemaBlockCreatedResponse,
   schemaConstituentaReference,
   schemaInputCreatedResponse,
   schemaOperationCreatedResponse,
   schemaOperationSchema,
+  schemaRelativizationDraft,
   type TargetOperation,
   type UpdateBlockDTO,
   type UpdateInputDTO,
@@ -218,11 +221,20 @@ export const ossApi = {
         }
       }
     }),
+  previewRelativization: ({ itemID, data }: { itemID: number; data: RelativizationParametersDTO }) =>
+    axiosPost<RelativizationParametersDTO, RelativizationDraftDTO>({
+      schema: schemaRelativizationDraft,
+      notifyOnError: false,
+      expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
+      endpoint: `/api/oss/${itemID}/preview-relativization`,
+      request: { data }
+    }),
   createRelativization: ({ itemID, data }: { itemID: number; data: CreateRelativizationDTO }) =>
     axiosPost<CreateRelativizationDTO, OperationCreatedResponse>({
       schema: schemaOperationCreatedResponse,
       expectedTimeUpdate: resolveExpectedTimeUpdate(itemID),
       endpoint: `/api/oss/${itemID}/create-relativization`,
+      notifyOnError: false,
       request: {
         data,
         successMessage: response => {

@@ -285,35 +285,49 @@ class TestOssOperations(EndpointTester):
     def test_create_relativization(self):
         self.populateData()
         self.ks1.model.refresh_from_db()
+        self.ks1X1.convention = 'The original universe'
+        self.ks1X1.save(update_fields=['convention'])
         short_name = 'TestRel'
-        data = {
+        parameters = {
             'source_operation': self.operation1.pk,
             'source_time_update': self.ks1.model.time_update.isoformat(),
             'target': self.ks1X1.pk,
-            'excluded': [self.ks1X1.pk],
-            'item_data': {'alias': short_name, 'title': 'TestRel title', 'parent': None},
-            'layout': self.layout_data,
-            'position': {'x': 1, 'y': 2, 'width': 150, 'height': 40},
-            'items': [{
-                'id': 1, 'alias': 'X1', 'cst_type': 'basic', 'convention': '', 'crucial': False,
-                'definition_formal': '', 'definition_raw': '', 'definition_resolved': '',
-                'term_raw': 'X1_1', 'term_resolved': '', 'term_forms': [],
-            }],
-            'attribution': [],
+            'excluded': [],
+            'locale': 'en',
+            'context_name': 'context',
         }
-        self.executeBadData(data, item=self.owned_id)
+        url = f'/api/oss/{self.owned_id}/preview-relativization'
+        invalid = self.client.post(url, parameters | {'excluded': [self.ks1X1.pk]}, format='json')
+        self.assertEqual(invalid.status_code, 400, invalid.data)
         self.assertFalse(LibraryItem.objects.filter(alias=short_name).exists())
 
-        data['excluded'] = []
         self.ks1.model.access_policy = AccessPolicy.PRIVATE
         self.ks1.model.save(update_fields=['access_policy'])
-        self.executeForbidden(data, item=self.owned_id)
-        self.assertFalse(LibraryItem.objects.filter(alias=short_name).exists())
+        self.assertEqual(self.client.post(url, parameters, format='json').status_code, 403)
 
         self.ks1.model.access_policy = AccessPolicy.PUBLIC
         self.ks1.model.save(update_fields=['access_policy'])
         self.ks1.model.refresh_from_db()
-        data['source_time_update'] = self.ks1.model.time_update.isoformat()
+        parameters['source_time_update'] = self.ks1.model.time_update.isoformat()
+        preview = self.client.post(url, parameters, format='json')
+        self.assertEqual(preview.status_code, 200, preview.data)
+        axis = next(row for row in preview.data['proposals'] if row['role'] == 'axis')
+        data = parameters | {
+            'item_data': {'alias': short_name, 'title': 'TestRel title', 'parent': None},
+            'layout': self.layout_data,
+            'position': {'x': 1, 'y': 2, 'width': 150, 'height': 40},
+            'revision': preview.data['revision'],
+            'reviewed': [],
+            'edits': [{
+                'id': axis['id'], 'clarified': True,
+                'term_raw': 'Context family', 'definition_raw': 'Context sets',
+                'convention': '  An exact reviewed convention.  ',
+            }],
+        }
+        self.executeBadData(data, item=self.owned_id)
+        self.assertFalse(LibraryItem.objects.filter(alias=short_name).exists())
+        data['reviewed'] = [row['id'] for row in preview.data['proposals'] if row['changed'] and row['inKernel']]
+        self.executeConflict(data | {'revision': '1' * 64}, item=self.owned_id)
         response = self.executeCreated(data, item=self.owned_id)
         new_operation = Operation.objects.get(pk=response.data['new_operation'])
         self.assertEqual(new_operation.operation_type, OperationType.RELATIVIZATION)
@@ -321,8 +335,56 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(new_operation.alias, short_name)
         self.assertEqual(new_operation.getQ_arguments().get().argument_id, self.operation1.pk)
         self.assertEqual(new_operation.relativization['target'], {'alias': 'X1', 'term': 'X1_1'})
-        self.assertTrue(Constituenta.objects.filter(schema_id=new_operation.result_id, alias='X1').exists())
         self.assertIn({'nodeID': f'o{new_operation.pk}', **data['position']}, response.data['oss']['layout'])
+        axis_map = next(row for row in new_operation.projection['rows'] if row['role'] == 'axis')
+        axis_result = Constituenta.objects.get(pk=axis_map['result'])
+        self.assertEqual(axis_result.convention, data['edits'][0]['convention'])
+        self.assertEqual(axis_result.definition_raw, data['edits'][0]['definition_raw'])
+        self.assertEqual(axis_result.term_raw, data['edits'][0]['term_raw'])
+
+        synthesis = self.client.post(f'/api/oss/{self.owned_id}/create-synthesis', {
+            'item_data': {'alias': 'Downstream', 'title': 'Synthesis', 'parent': None},
+            'layout': response.data['oss']['layout'],
+            'arguments': [new_operation.pk, self.operation2.pk],
+            'substitutions': [],
+            'position': data['position'],
+        }, format='json')
+        self.assertEqual(synthesis.status_code, 201, synthesis.data)
+        next_operation = Operation.objects.get(pk=synthesis.data['new_operation'])
+
+        term = self.client.post(f'/api/rsforms/{self.ks1.model.pk}/create-cst', {
+            'alias': 'D1', 'cst_type': 'term', 'term_raw': 'Calculated set',
+            'definition_formal': 'X1', 'crucial': False, 'term_forms': [],
+            'insert_after': self.ks1X1.pk,
+        }, format='json')
+        self.assertEqual(term.status_code, 201, term.data)
+        new_operation.refresh_from_db()
+        self.assertTrue(Constituenta.objects.filter(schema_id=new_operation.result_id, cst_type='term').exists())
+        self.assertTrue(Constituenta.objects.filter(schema_id=next_operation.result_id, cst_type='term').exists())
+        axis_result.refresh_from_db()
+        self.assertEqual(axis_result.convention, data['edits'][0]['convention'])
+
+        self.ks1.model.refresh_from_db()
+        next_parameters = parameters | {
+            'existing_operation': new_operation.pk,
+            'source_time_update': self.ks1.model.time_update.isoformat(),
+            'context_name': 'contexte',
+            'locale': 'fr',
+        }
+        next_preview = self.client.post(url, next_parameters, format='json')
+        self.assertEqual(next_preview.status_code, 200, next_preview.data)
+        previous = next(row['fields'] for row in next_preview.data['prior'] if row['id'] == axis['id'])
+        self.assertEqual(previous['convention'], data['edits'][0]['convention'])
+        reviewed = [row['id'] for row in next_preview.data['proposals'] if row['changed'] and row['inKernel']]
+        refreshed = self.executeCreated(data | next_parameters | {
+            'revision': next_preview.data['revision'],
+            'reviewed': reviewed,
+        }, item=self.owned_id)
+        self.assertEqual(refreshed.data['new_operation'], new_operation.pk)
+        new_operation.refresh_from_db()
+        axis_result.refresh_from_db()
+        self.assertEqual(new_operation.projection['locale'], 'fr')
+        self.assertEqual(axis_result.convention, data['edits'][0]['convention'])
 
         self.ks1.model.access_policy = AccessPolicy.PRIVATE
         self.ks1.model.save(update_fields=['access_policy'])
@@ -334,6 +396,7 @@ class TestOssOperations(EndpointTester):
         self.assertIsNone(operation_data['result'])
         self.assertEqual(operation_data['title'], '')
         self.assertNotEqual(self.client.get(f'/api/rsforms/{new_operation.result_id}/details').status_code, 200)
+        self.assertNotEqual(self.client.get(f'/api/rsforms/{next_operation.result_id}/details').status_code, 200)
 
     @decl_endpoint('/api/oss/{item}/create-synthesis', method='post')
     def test_create_synthesis(self):

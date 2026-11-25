@@ -30,6 +30,10 @@ def map_cst_update_data(cst: Constituenta, data: dict, old_data: dict, mapping: 
         new_data['convention'] = data['convention']
     if 'definition_formal' in data:
         new_data['definition_formal'] = replace_globals(data['definition_formal'], mapping)
+    if 'typification_manual' in data:
+        new_data['typification_manual'] = replace_globals(data['typification_manual'], mapping)
+    if 'value_is_property' in data:
+        new_data['value_is_property'] = data['value_is_property']
     if 'term_raw' in data:
         if replace_entities(old_data['term_raw'], mapping) == cst.term_raw:
             new_data['term_raw'] = replace_entities(data['term_raw'], mapping)
@@ -45,6 +49,9 @@ def extract_data_references(data: dict, old_data: dict) -> set[str]:
     if 'definition_formal' in data:
         result.update(extract_globals(data['definition_formal']))
         result.update(extract_globals(old_data['definition_formal']))
+    if 'typification_manual' in data:
+        result.update(extract_globals(data['typification_manual']))
+        result.update(extract_globals(old_data['typification_manual']))
     if 'term_raw' in data:
         result.update(extract_entities(data['term_raw']))
         result.update(extract_entities(old_data['term_raw']))

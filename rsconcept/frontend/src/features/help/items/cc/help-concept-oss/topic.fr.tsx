@@ -73,26 +73,39 @@ export function HelpConceptOSSFr() {
       </p>
       <h2 id='relativization'>Relativisation</h2>
       <p>
-        La relativisation produit un nouveau schéma conceptuel à partir d’un seul schéma source. L’ensemble de base ou
-        la structure sélectionnée définit les contextes admissibles. Le résultat décrit une famille de valeurs et de
-        relations indexée par ces contextes. Par exemple, une famille d’ensembles <code>A(c)</code> est représentée par
-        une relation de couples <code>(c, a)</code>, où <code>a</code> appartient à <code>A(c)</code>.
+        La relativisation construit un schéma dont certaines valeurs dépendent d’un contexte. Pour un ensemble de base,
+        un contexte est un sous-ensemble de ses éléments. Pour une structure, un contexte est une valeur entière. Les
+        constituants exclus gardent un sens commun aux contextes.
       </p>
       <p>
-        Les fonctions-termes et les prédicats dépendant du contexte reçoivent un paramètre dont le domaine est la
-        structure de contexte. Au besoin, une fonction-terme auxiliaire extrait la valeur unique associée à un contexte.
+        Pour une relation fonction–méthode, le contexte est une relation entière entre fonctions et méthodes. La famille
+        des alternatives de décomposition associe les alternatives à chacune de ces relations. Le terme source nomme la
+        composante dans un seul contexte.
       </p>
+      <ol>
+        <li>
+          Dans le <LinkTopic text='graphe du SOS' topic={HelpTopic.UI_OSS_GRAPH} />, ouvrez « Ajouter… » → «
+          Relativisation ». Sélectionnez le schéma source et le constituant, choisissez les exclusions éventuelles et
+          indiquez un alias.
+        </li>
+        <li>
+          Cliquez sur « {tx('tx.oss.relativization.review.start')} » et ouvrez chaque proposition du noyau. Le noyau
+          comprend les concepts non définis, les axiomes et les constituants dérivés dont ils dépendent.
+        </li>
+        <li>
+          Comparez les textes et les types. Consultez « {tx('tx.oss.relativization.review.origins')} », modifiez les
+          propositions et apportez les précisions demandées.
+        </li>
+        <li>
+          Cliquez sur « {tx('tx.oss.relativization.review.submit')} ». Revoyez les propositions concernées après une
+          modification des paramètres. Si l’enregistrement échoue, corrigez le problème et réessayez depuis le
+          brouillon.
+        </li>
+      </ol>
       <p>
-        Les exclusions désignent les constituants du noyau qui restent sans paramètre de contexte direct. Ils sont
-        conservés dans le résultat. Les expressions des constituants dépendants sont transformées selon leurs
-        dépendances.
-      </p>
-      <p>
-        Dans le <LinkTopic text='graphe du SOS' topic={HelpTopic.UI_OSS_GRAPH} />, choisissez « Ajouter… » → «
-        Relativisation ». Sélectionnez le schéma source. Dans « {tx('tx.oss.relativization.target.field')} », choisissez
-        un ensemble de base ou une structure et indiquez les exclusions éventuelles. Vérifiez le titre proposé, indiquez
-        un nom court, puis cliquez sur « Créer ». La source, le résultat et les paramètres figurent dans le{' '}
-        <LinkTopic text='passeport du SOS' topic={HelpTopic.UI_OSS_CARD} />.
+        La <LinkTopic text='fiche du SOS' topic={HelpTopic.UI_OSS_CARD} /> indique le schéma source, le résultat et les
+        paramètres. Pour revoir les propositions, modifiez l’opération dans le graphe. Une synthèse peut employer le
+        résultat.
       </p>
     </>
   );

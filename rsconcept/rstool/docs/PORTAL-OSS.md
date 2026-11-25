@@ -2,6 +2,36 @@
 
 Граф операционной схемы синтеза (ОСС) через API-ключ. Карта маршрутов — [PORTAL-API.md](PORTAL-API.md); когда делить схему на микротеории и как отождествлять — [METHOD.md](METHOD.md) §«Синтез микротеорий».
 
+## Релятивизация в интерфейсе ОСС
+
+Сессионный `POST /api/oss/:id/preview-relativization` принимает `source_operation`,
+`source_time_update`, `target`, `excluded`, `locale` (en, ru или fr), `context_name` и при
+перенастройке `existing_operation`. Сервер читает снимок аргумента и возвращает конституенты
+черновика, атрибуции, происхождение текстов и типизаций в `proposals`, прежние подтверждённые
+тексты в `prior` и ревизию `revision`.
+
+Сессионный `POST /api/oss/:id/create-relativization` принимает те же параметры, данные
+операции `item_data`, `layout`, `position`, ревизию, список просмотренных `reviewed` и
+`edits[{id, term_raw, definition_raw, convention, clarified}]`. `id` в списках проверки
+относится к черновику. Сервер самостоятельно пересчитывает формальный результат. Несовпадение
+ревизии возвращает 409. Переданный `existing_operation` обновляет текущий результат и сохраняет
+его идентификатор. Для новых строк обязательного ядра подтверждение включает разрешение
+отмеченных уточнений. Запись возвращает `{new_operation, oss}`.
+
+У операции ровно один аргумент. Источник, результат и параметры видны в `details` в пределах
+прав чтения. Результат участвует в сквозных изменениях и может быть аргументом синтеза.
+
+Для локальной проверки собери `pnpm --filter @rsconcept/domain run build:model-types`, запусти
+frontend и Django с отдельной тестовой БД. Для Playwright передай `PORTAL_TEST_SITE`,
+`PORTAL_TEST_API`, `PORTAL_TEST_USER` и `PORTAL_TEST_PASSWORD`. Выполни
+`pnpm --filter frontend exec playwright test live-relativization.spec.ts --project "Desktop Chrome"`.
+Тест создаёт собственные КС и ОСС. Он отправляет заведомо устаревшую ревизию на реальный сервер,
+повторяет запись и перечитывает КС и граф.
+
+Для замеров на отдельной локальной БД после миграций запусти в backend
+`uv run python manage.py shell -c "from apps.oss.tests.benchmark_relativization import run; run()"`.
+Скрипт откатывает свои записи после каждого размера КС.
+
 ## Правка ОСС
 
 Тела и HTTP-методы совпадают с сессионными `/api/oss/:id/<действие>`. Отличия:

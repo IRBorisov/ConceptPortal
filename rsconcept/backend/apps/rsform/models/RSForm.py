@@ -32,37 +32,27 @@ class RSForm:
         return RSForm(model)
 
     @staticmethod
+    def entity_from_constituent(cst: Constituenta) -> Entity:
+        ''' Build a text-reference entity with its stored manual forms. '''
+        return Entity(
+            alias=cst.alias,
+            nominal=cst.term_resolved,
+            manual_forms=[
+                TermForm(text=form['text'], grams=split_grams(form['tags']))
+                for form in cst.term_forms
+            ],
+        )
+
+    @staticmethod
     def resolver_from_schema(schemaID: int) -> Resolver:
         ''' Create resolver for text references based on schema terms. '''
-        result = Resolver({})
         constituents = Constituenta.objects.filter(schema_id=schemaID).only('alias', 'term_resolved', 'term_forms')
-        for cst in constituents:
-            entity = Entity(
-                alias=cst.alias,
-                nominal=cst.term_resolved,
-                manual_forms=[
-                    TermForm(text=form['text'], grams=split_grams(form['tags']))
-                    for form in cst.term_forms
-                ]
-            )
-            result.context[cst.alias] = entity
-        return result
+        return RSForm.resolver_from_list(constituents)
 
     @staticmethod
     def resolver_from_list(cst_list: Iterable[Constituenta]) -> Resolver:
         ''' Create resolver for text references based on list of constituents. '''
-        result = Resolver({})
-        for cst in cst_list:
-            entity = Entity(
-                alias=cst.alias,
-                nominal=cst.term_resolved,
-                manual_forms=[
-                    TermForm(text=form['text'], grams=split_grams(form['tags']))
-                    for form in cst.term_forms
-                ]
-            )
-            result.context[cst.alias] = entity
-        return result
+        return Resolver({cst.alias: RSForm.entity_from_constituent(cst) for cst in cst_list})
 
     @staticmethod
     def graph_formal(cst_list: Iterable[Constituenta],

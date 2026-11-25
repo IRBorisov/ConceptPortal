@@ -7,6 +7,7 @@ from rest_framework.serializers import ValidationError
 from apps.library.models import LibraryItem
 from apps.rsform.models import Attribution, Constituenta, CstType, RSFormCached
 
+from ..propagation_state import mark_schema
 from .Inheritance import Inheritance
 from .Operation import Operation, OperationType
 from .OssCache import OssCache
@@ -149,7 +150,7 @@ class PropagationEngine:
     def inherit_attributions(self, target: int, items: list[Attribution]) -> None:
         ''' Execute inheritance of Attributions. '''
         operation = self.cache.operation_by_id[target]
-        if operation.result is None or not items:
+        if operation.result_id is None or not items:
             return
 
         self.cache.ensure_loaded_subs()
@@ -174,6 +175,7 @@ class PropagationEngine:
                 attribute_id=new_attribute
             ))
         if new_attributions:
+            _touch_schema(operation.result_id)
             new_attributions = Attribution.objects.bulk_create(new_attributions)
             self.on_inherit_attribution(target, new_attributions)
 
@@ -193,6 +195,7 @@ class PropagationEngine:
                 continue
             self.on_before_substitute(child_operation.pk, new_substitutions)
             child_schema.substitute(new_substitutions)
+            _touch_schema(child_schema.pk)
 
     def on_delete_attribution(self, operationID: int, attributions: list[Attribution]) -> None:
         ''' Trigger cascade resolutions when Attribution is deleted. '''
@@ -405,6 +408,7 @@ class PropagationEngine:
         ''' Trigger cascade resolutions when Constituents are partially mapped. '''
         alias_mapping = cst_mapping_to_alias(mapping)
         schema.apply_partial_mapping(alias_mapping, target)
+        _touch_schema(schema.pk)
         children = self.cache.extend_graph.outputs[operation]
         if not children:
             return
@@ -426,3 +430,4 @@ class PropagationEngine:
 def _touch_schema(schema_id: int) -> None:
     ''' Bump the schema concurrency token after propagated content changes. '''
     LibraryItem.objects.get(pk=schema_id).save(update_fields=['time_update'])
+    mark_schema(schema_id)

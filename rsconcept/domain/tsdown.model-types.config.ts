@@ -3,7 +3,7 @@ import { defineConfig } from 'tsdown';
 const dependencies = ['@lezer/common', '@lezer/lr'];
 
 export default defineConfig({
-  entry: ['scripts/model-types.ts'],
+  entry: ['scripts/model-types.ts', 'scripts/relativization.ts'],
   format: ['esm'],
   dts: false,
   deps: { alwaysBundle: dependencies, onlyBundle: dependencies },

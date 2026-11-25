@@ -11,12 +11,12 @@ from typing import Optional, cast
 
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
+from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.request import Request
 
 from apps.library.models import AccessPolicy, Editor, LibraryItem
 from apps.rsform.models import Constituenta
-from apps.rsform.models.api_RSLanguage import find_import_alias_error
 from apps.rsform.serializers.io_files import create_rsform_from_sandbox_data
 from apps.users.models import User
 from shared import messages as msg
@@ -24,6 +24,12 @@ from shared import permissions
 from shared.concurrency import Conflict, assert_expected_time_update_locked
 
 from . import models as m
+from .propagation_batch import propagation_batch
+from .propagation_state import mark_schema
+from .relativization import (
+    TEXT_FIELDS, calculate_projection, confirm_projection, correspondence, draft_revision, parameters_from,
+)
+from .relativization_refresh import prior_texts, refresh_projection
 
 
 def update_layout(item: LibraryItem, layout: list[dict], request: Request | None = None) -> None:
@@ -231,40 +237,82 @@ def create_replica_operation(
     return new_operation
 
 
-def create_relativization_operation(item: LibraryItem, validated: dict, request: Request) -> m.Operation:
-    ''' Persist the generated schema, provenance and graph position in one transaction. '''
+def _relativization_source(item: LibraryItem, data: dict, request: Request) -> tuple[m.Operation, LibraryItem]:
+    source = m.Operation.objects.select_for_update().filter(oss=item, pk=data['source_operation'].pk).first()
+    if source is None or source.result_id is None:
+        raise serializers.ValidationError({'source_operation': msg.missingArguments()})
+    source_schema = LibraryItem.objects.select_for_update().get(pk=source.result_id)
+    _require_schema_audience(request, item, {source_schema.pk})
+    if source_schema.time_update != data['source_time_update']:
+        raise Conflict(detail=msg.concurrentModification())
+    return source, source_schema
+
+
+def _locked_relativization(data: dict, source: m.Operation, schema: LibraryItem) -> m.Operation | None:
+    existing = data.get('existing_operation')
+    if existing is None:
+        return None
+    operation = m.Operation.objects.select_for_update().filter(pk=existing.pk, oss=source.oss_id).first()
+    if (not operation or not operation.projection or operation.result_id is None
+            or operation.relativization_source_id != schema.pk
+            or not operation.getQ_arguments().filter(argument=source).exists()):
+        raise Conflict(detail=msg.concurrentModification())
+    return operation
+
+
+def preview_relativization(item: LibraryItem, validated: dict, request: Request) -> dict:
+    ''' Calculate the preview from a locked and authorized source snapshot. '''
     with transaction.atomic():
         _lock_expected_update(item, request)
-        source = m.Operation.objects.select_for_update().filter(oss=item, pk=validated['source_operation'].pk).first()
-        if source is None or source.result_id is None:
-            raise serializers.ValidationError({'source_operation': msg.missingArguments()})
-        source_schema = LibraryItem.objects.select_for_update().get(pk=source.result_id)
-        _require_schema_audience(request, item, {source_schema.pk})
-        if source_schema.time_update != validated['source_time_update']:
+        source, schema = _relativization_source(item, validated, request)
+        existing = _locked_relativization(validated, source, schema)
+        parameters = parameters_from(validated)
+        draft = calculate_projection(schema.pk, parameters)
+        prior = prior_texts(existing, draft) if existing else []
+        revision = draft_revision(schema.pk, schema.time_update, draft, parameters, prior)
+        return draft | {'revision': revision, 'prior': prior}
+
+
+@propagation_batch
+def create_relativization_operation(item: LibraryItem, validated: dict, request: Request) -> m.Operation:
+    ''' Calculate and persist the reviewed projection, provenance, and graph position atomically. '''
+    with transaction.atomic():
+        _lock_expected_update(item, request)
+        source, source_schema = _relativization_source(item, validated, request)
+        parameters = parameters_from(validated)
+        draft = calculate_projection(source_schema.pk, parameters)
+        existing = _locked_relativization(validated, source, source_schema)
+        prior = prior_texts(existing, draft) if existing else []
+        revision = draft_revision(source_schema.pk, source_schema.time_update, draft, parameters, prior)
+        if validated['revision'] != revision:
             raise Conflict(detail=msg.concurrentModification())
-
-        ids = [validated['target'], *validated['excluded']]
-        constituents = Constituenta.objects.filter(schema_id=source_schema.pk).in_bulk(ids)
-        if len(constituents) != len(ids):
-            raise serializers.ValidationError({'target': msg.constituentaNotFromOperation()})
-
-        rows = validated['items']
-        alias_error = find_import_alias_error(rows)
-        if alias_error:
-            raise serializers.ValidationError({'items': alias_error})
-        row_ids = {row['id'] for row in rows}
-        if len(row_ids) != len(rows):
-            raise serializers.ValidationError({'items': msg.duplicateConstituentIds()})
-        if any(
-            pair['attribute'] not in row_ids or pair['container'] not in row_ids
-            for pair in validated['attribution']
-        ):
-            raise serializers.ValidationError({'attribution': msg.attributionOutsideImport()})
+        suggestions = {row['id']: {name: row[name] for name in TEXT_FIELDS} for row in draft['items']}
+        confirm_projection(draft, validated['edits'], validated['reviewed'])
+        checked = set(validated['reviewed']) | {row['id'] for row in validated['edits']}
 
         data = validated['item_data']
         if not data.get('title'):
             raise serializers.ValidationError({'title': msg.missingArguments()})
-        result, _ = create_rsform_from_sandbox_data(
+        duplicates = m.Operation.objects.filter(oss=item, alias=data['alias'])
+        if existing:
+            duplicates = duplicates.exclude(pk=existing.pk)
+        if duplicates.exists():
+            raise Conflict(detail=msg.concurrentModification())
+        if existing:
+            existing_result = existing.result
+            assert existing_result is not None
+            _require_editable_schema(request, existing_result)
+            refresh_projection(existing, parameters, draft, checked, suggestions)
+            for name in ('alias', 'title', 'description'):
+                if name in data:
+                    setattr(existing, name, data[name])
+                    setattr(existing_result, name, data[name])
+            existing.parent = data.get('parent')
+            existing.save(update_fields=['alias', 'title', 'description', 'parent'])
+            existing_result.save(update_fields=['alias', 'title', 'description', 'time_update'])
+            item.save(update_fields=['time_update'])
+            return existing
+        result, id_map = create_rsform_from_sandbox_data(
             item_data={
                 'alias': data['alias'],
                 'title': data['title'],
@@ -273,27 +321,29 @@ def create_relativization_operation(item: LibraryItem, validated: dict, request:
                 'location': item.location,
                 'access_policy': item.access_policy,
             },
-            schema_data={'items': rows, 'attribution': validated['attribution']},
+            schema_data=draft,
             owner=item.owner,
         )
         Editor.set(result.pk, item.getQ_editors().values_list('pk', flat=True))
         parent = data.get('parent')
-        try:
-            operation = m.OperationSchema(item).record_relativization(
-                source,
-                LibraryItem.objects.get(pk=result.pk),
-                constituents[ids[0]],
-                [constituents[pk] for pk in ids[1:]],
-                parent_id=parent.pk if parent else None,
-            )
-        except ValueError as error:
-            raise serializers.ValidationError({'target': str(error)}) from error
+        ids = [parameters['target'], *parameters['excluded']]
+        constituents = Constituenta.objects.filter(schema_id=source_schema.pk).in_bulk(ids)
+        operation = m.OperationSchema(item).record_relativization(
+            source, LibraryItem.objects.get(pk=result.pk), constituents[ids[0]],
+            [constituents[pk] for pk in ids[1:]], parent_id=parent.pk if parent else None,
+        )
+        operation.projection = parameters | {
+            'rows': correspondence(draft, id_map, checked, suggestions),
+            'attribution': [[id_map[pair['container']], id_map[pair['attribute']]] for pair in draft['attribution']],
+        }
+        operation.save(update_fields=['projection'])
 
         layout = [*validated['layout'], _node('o', operation.pk, validated['position'])]
         m.Layout.update_data(item.pk, layout)
         return operation
 
 
+@propagation_batch
 def create_synthesis_operation(
     item: LibraryItem,
     validated: dict,
@@ -318,6 +368,7 @@ def create_synthesis_operation(
     return new_operation
 
 
+@propagation_batch
 def update_operation(
     item: LibraryItem,
     validated: dict,
@@ -358,6 +409,7 @@ def update_operation(
     return operation
 
 
+@propagation_batch
 def delete_operation(item: LibraryItem, validated: dict, request: Request | None = None) -> None:
     ''' Delete a non-replica operation and, on request, its result schema. '''
     operation = cast(m.Operation, validated['target'])
@@ -374,6 +426,11 @@ def delete_operation(item: LibraryItem, validated: dict, request: Request | None
                 _require_schema_audience(request, old_schema, permissions.source_schema_ids({old_schema.pk}))
             if validated['keep_constituents']:
                 _require_retained_audience(request, oss, operation)
+        if m.Argument.objects.filter(
+            argument=operation, operation__operation_type=m.OperationType.RELATIVIZATION,
+        ).exists() or (old_schema and validated['delete_schema'] and
+                       m.Operation.objects.filter(relativization_source=old_schema).exists()):
+            raise serializers.ValidationError({'target': 'Remove or reconfigure dependent relativizations first.'})
         oss.delete_operation(operation.pk, validated['keep_constituents'])
         m.Layout.update_data(item.pk, layout)
         if old_schema is not None:
@@ -386,6 +443,7 @@ def delete_operation(item: LibraryItem, validated: dict, request: Request | None
         item.save(update_fields=['time_update'])
 
 
+@propagation_batch
 def delete_replica(item: LibraryItem, validated: dict, request: Request | None = None) -> None:
     ''' Delete a replica operation. '''
     operation = cast(m.Operation, validated['target'])
@@ -429,6 +487,7 @@ def create_input_schema(
     return schema
 
 
+@propagation_batch
 def set_operation_input(item: LibraryItem, validated: dict, request: Request | None = None) -> None:
     ''' Attach a schema to an input operation, or detach it with ``None``. '''
     target = cast(m.Operation, validated['target'])
@@ -461,6 +520,7 @@ def set_operation_input(item: LibraryItem, validated: dict, request: Request | N
         item.save(update_fields=['time_update'])
 
 
+@propagation_batch
 def execute_operation(item: LibraryItem, validated: dict, request: Request | None = None) -> None:
     ''' Build the result schema of a synthesis operation. '''
     operation = cast(m.Operation, validated['target'])
@@ -483,6 +543,7 @@ def execute_operation(item: LibraryItem, validated: dict, request: Request | Non
         item.save(update_fields=['time_update'])
 
 
+@propagation_batch
 def relocate_constituents(item: LibraryItem, validated: dict, request: Request | None = None) -> None:
     ''' Move constituents between connected schemas of the OSS. '''
     ids = [cst.pk for cst in validated['items']]
@@ -500,6 +561,19 @@ def relocate_constituents(item: LibraryItem, validated: dict, request: Request |
         propagation = m.PropagationFacade()
         oss = propagation.get_oss(item.pk)
         source = propagation.get_schema(source_id)
+        relativization_edge = m.Argument.objects.filter(
+            operation__oss=item, operation__operation_type=m.OperationType.RELATIVIZATION,
+        ).filter(
+            Q(operation__result_id=destination, argument__result_id=source_id) |
+            Q(operation__result_id=source_id, argument__result_id=destination)
+        )
+        if relativization_edge.exists():
+            raise serializers.ValidationError({'items': 'Constituents cannot be relocated through relativization.'})
+        producer = m.Operation.objects.filter(
+            operation_type=m.OperationType.RELATIVIZATION, result_id=source_id, projection__isnull=False,
+        ).first()
+        if producer and producer.projection and any(row['result'] in ids for row in producer.projection['rows']):
+            raise serializers.ValidationError({'items': 'Managed relativization constituents cannot be relocated.'})
         if validated['move_down']:
             oss.relocate_down(destination, ids)
             propagation.before_delete_cst(source.pk, ids)
@@ -509,6 +583,8 @@ def relocate_constituents(item: LibraryItem, validated: dict, request: Request |
             propagation.after_create_cst(new_items, exclude=[oss.pk])
         _touch_item(source_item)
         _touch_item(destination_item)
+        mark_schema(source_id)
+        mark_schema(destination)
         _touch_item(item)
 
 

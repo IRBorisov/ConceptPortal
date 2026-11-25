@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { type Edge, useEdgesState, useNodesState, useOnSelectionChange, useReactFlow } from '@xyflow/react';
+import { type Edge, MarkerType, useEdgesState, useNodesState, useOnSelectionChange, useReactFlow } from '@xyflow/react';
 
 import { NodeType, type OperationSchema, OperationType, type Position2D } from '@rsconcept/domain/library';
 import { constructNodeID } from '@rsconcept/domain/library/oss-api';
@@ -91,16 +91,17 @@ export const OssFlowState = ({ children }: React.PropsWithChildren) => {
     const newEdges: Edge[] = schema.arguments.map(argument => {
       const source = schema.operationByID.get(argument.argument)!;
       const target = schema.operationByID.get(argument.operation)!;
+      const relativization = target.operation_type === OperationType.RELATIVIZATION;
       return {
         id: `${source.nodeID}-${target.nodeID}`,
         source: source.nodeID,
         target: target.nodeID,
         type: edgeStraight ? 'straight' : 'simplebezier',
         animated: edgeAnimate,
-        selectable: isMutable && target.operation_type !== OperationType.RELATIVIZATION,
+        selectable: isMutable && !relativization,
+        markerEnd: relativization ? { type: MarkerType.ArrowClosed, color: APP_COLORS.border } : undefined,
         focusable: false,
-        targetHandle:
-          target.operation_type === OperationType.RELATIVIZATION ? 'left' : source.x > target.x ? 'right' : 'left',
+        targetHandle: relativization ? 'left' : source.x > target.x ? 'right' : 'left',
         style: {
           stroke: APP_COLORS.border
         }

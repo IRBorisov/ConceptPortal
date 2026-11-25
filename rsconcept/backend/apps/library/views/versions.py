@@ -13,7 +13,8 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.oss.models import Inheritance, PropagationFacade
+from apps.oss.models import Inheritance, Operation, OperationType, PropagationFacade
+from apps.oss.propagation_batch import propagation_batch
 from apps.rsform import utils
 from apps.rsform.models import RSForm, RSFormCached
 from apps.rsform.serializers import RSFormParseSerializer, RSFormSerializer, RSFormTRSSerializer
@@ -57,6 +58,7 @@ class VersionViewset(
         }
     )
     @action(detail=True, methods=['patch'], url_path='restore')
+    @propagation_batch
     def restore(self, request: Request, pk) -> HttpResponse:
         ''' Restore version data into current item. '''
         version = cast(m.Version, self.get_object())
@@ -66,6 +68,10 @@ class VersionViewset(
                 'data': msg.importIntoInherited()
             })
         with transaction.atomic():
+            if Operation.objects.filter(
+                result_id=item.pk, operation_type=OperationType.RELATIVIZATION, projection__isnull=False,
+            ).exists():
+                raise ValidationError('The schema is managed by relativization.')
             PropagationFacade().before_delete_schema(item.pk)
             RSFormSerializer(item).restore_from_version(version.data)
             PropagationFacade().after_create_cst(
