@@ -22,3 +22,6 @@ overrides:
   '@codemirror/state': '>=6.7.5'
   '@codemirror/view': '>=6.43.12'
   'minimatch@>=7': '>=11.0.1'
+
+minimumReleaseAgeExclude:
+  - '@react-pdf/hyphenate@0.1.1'
