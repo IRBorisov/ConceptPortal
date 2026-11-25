@@ -36,7 +36,7 @@ export function HelpOssCardEn() {
           {tx('tx.oss.relativization.schemas.short')}” counts the resulting conceptual schemas.
         </li>
         <li>
-          The “Relativized schemas” section shows links to the source and result, the selected constituent, and the
+          The “Relativized schemas” section shows links to the source and result, the relativization target, and the
           excluded constituents.
         </li>
         <li>

@@ -30,6 +30,9 @@ interface BadgeHelpProps extends Styling {
   /** Topic to display in a tooltip. */
   topic: HelpTopic;
 
+  /** Keep the current editor or dialog open when showing the manual. */
+  openManualInNewTab?: boolean;
+
   /**
    * Optional onboarding tour. When set, click opens Quick guide / Read manual.
    * Without a tour, click opens the manual page.
@@ -60,6 +63,7 @@ interface BadgeHelpProps extends Styling {
  */
 export function BadgeHelp({
   topic,
+  openManualInNewTab,
   tourID,
   padding = 'p-1',
   size = '1.25rem',
@@ -98,7 +102,7 @@ export function BadgeHelp({
     event?.preventDefault();
     event?.stopPropagation();
     hide();
-    router.push({ path: urls.help_topic(topic) });
+    router.push({ path: urls.help_topic(topic), newTab: openManualInNewTab });
   }
 
   function handleHelpActivate(event: React.MouseEvent<HTMLButtonElement>) {
@@ -108,7 +112,7 @@ export function BadgeHelp({
       toggle();
       return;
     }
-    router.push({ path: urls.help_topic(topic) });
+    router.push({ path: urls.help_topic(topic), newTab: openManualInNewTab });
   }
 
   return (

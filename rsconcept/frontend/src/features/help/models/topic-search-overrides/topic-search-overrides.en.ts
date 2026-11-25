@@ -202,6 +202,11 @@ export const topicSearchOverridesEn: Record<HelpTopicValue, HelpSearchOverride> 
     searchText:
       'Conceptual schema synthesis. Merging schemas, composing definitions, and building larger systems of concepts.'
   },
+  [HelpTopic.CC_RELATIVIZATION]: {
+    keywords: ['relativization', 'relativization target', 'context axis', 'family of values', 'derelativizer'],
+    searchText:
+      'Relativize a conceptual schema from its editor or from an OSS. Choose contexts and exclusions, then review the texts.'
+  },
   [HelpTopic.CC_STRUCTURING]: {
     keywords: ['structuring', 'domain', 'decomposition', 'concept organization'],
     searchText:

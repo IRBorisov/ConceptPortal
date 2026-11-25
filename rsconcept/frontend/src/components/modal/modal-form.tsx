@@ -33,6 +33,9 @@ export interface ModalProps extends Styling {
   /** Help topic to be displayed in the modal window. */
   helpTopic?: HelpTopic;
 
+  /** Open the help page separately so this dialog keeps its state. */
+  openManualInNewTab?: boolean;
+
   /** Optional onboarding tour started from the modal help badge. */
   tourID?: string;
 
@@ -90,6 +93,7 @@ export function ModalForm({
   onHide,
 
   helpTopic,
+  openManualInNewTab,
   tourID,
   hideHelpWhen,
   ...restProps
@@ -145,6 +149,7 @@ export function ModalForm({
           {helpTopic && !hideHelpWhen?.() ? (
             <BadgeHelp
               topic={helpTopic}
+              openManualInNewTab={openManualInNewTab}
               tourID={tourID}
               className='absolute z-pop top-1 left-1'
               contentClass='sm:max-w-160'

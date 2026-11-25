@@ -106,8 +106,9 @@ export function HelpSchemaMenuRu() {
           <IconInlineSynthesis size='1.25rem' className='inline-icon' /> Вставка конституент из другой схемы
         </li>
         <li>
-          <IconRelativization size='1.25rem' className='inline-icon' /> Релятивизация КС с проверкой текстов перед
-          созданием самостоятельной схемы
+          <IconRelativization size='1.25rem' className='inline-icon' />{' '}
+          <LinkTopic text='Релятивизация КС' topic={HelpTopic.CC_RELATIVIZATION} /> с проверкой текстов перед созданием
+          самостоятельной схемы
         </li>
         <li>
           <IconCstType value={CstType.NOMINAL} size='1.25rem' className='inline-icon' /> Включение формы атрибутирования

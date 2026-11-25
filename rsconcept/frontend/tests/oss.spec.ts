@@ -1,6 +1,6 @@
 import { CstType, OperationType } from '@rsconcept/domain/library';
 
-import { authAdmin, authAnonymous } from './mocks/auth';
+import { authAdmin, authAnonymous, setupAuth } from './mocks/auth';
 import { createOssMock, createRSFormMock, dataOss, dataRSForms, resetConceptMocks } from './mocks/concepts';
 import { expect, test } from './setup';
 
@@ -89,6 +89,7 @@ test('OSS Add opens relativization and offers an editable title from the genitiv
   await page.getByRole('button', { name: /^Добавить/ }).click();
   await page.getByRole('button', { name: 'Релятивизация', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: 'Релятивизация' });
+  await expect(dialog.locator('#help-concept-relativization')).toBeVisible();
   await dialog.getByRole('button', { name: 'Открыть варианты справки' }).click();
   await dialog.getByRole('button', { name: 'Быстрый гид' }).click();
 
@@ -96,7 +97,7 @@ test('OSS Add opens relativization and offers an editable title from the genitiv
   await expect(sourceStep).toBeVisible();
   await sourceStep.getByRole('button', { name: 'Начать' }).click();
   await page
-    .getByRole('dialog', { name: 'Конституента релятивизации и исключения' })
+    .getByRole('dialog', { name: 'Релятивизируемая конституента и исключения' })
     .getByRole('button', { name: 'Далее' })
     .click();
   const resultStep = page.getByRole('dialog', { name: 'Название и результат' });
@@ -105,7 +106,7 @@ test('OSS Add opens relativization and offers an editable title from the genitiv
 
   await page.getByRole('combobox', { name: 'Исходная схема' }).click();
   await page.getByRole('button', { name: /^KS_402.*Родственные отношения/ }).click();
-  await page.getByRole('combobox', { name: 'Конституента релятивизации' }).click();
+  await page.getByRole('combobox', { name: 'Релятивизируемая конституента' }).click();
   await page.getByRole('button', { name: /^X1.*индивиды/ }).click();
 
   const title = dialog.getByRole('textbox', { name: 'Название' });
@@ -117,4 +118,16 @@ test('OSS Add opens relativization and offers an editable title from the genitiv
   await expect(dialog.getByRole('button', { name: 'Проверить тексты' })).toBeEnabled();
   await dialog.getByText('Отмена', { exact: true }).click();
   await expect(dialog).toHaveCount(0);
+
+  await page.getByRole('button', { name: /^Добавить/ }).click();
+  await page.getByRole('button', { name: 'Релятивизация', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Открыть варианты справки' }).click();
+  await setupAuth(page.context());
+  const newPage = page.context().waitForEvent('page');
+  await dialog.getByRole('button', { name: 'Читать справку' }).click();
+  const manual = await newPage;
+  await expect(manual).toHaveURL(/\/manuals\?topic=concept-relativization$/);
+  await expect(manual.getByRole('heading', { name: 'Контексты и значения' })).toBeVisible();
+  await manual.close();
+  await expect(dialog).toBeVisible();
 });

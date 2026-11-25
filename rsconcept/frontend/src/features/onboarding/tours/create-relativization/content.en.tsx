@@ -11,11 +11,11 @@ export const createRelativizationContentEn: Record<string, TourStepContent> = {
     )
   },
   parameters: {
-    title: 'Constituent for relativization and exclusions',
+    title: 'Relativization target and exclusions',
     body: (
       <p>
-        In “Constituent for relativization”, choose a base set or structure that defines the allowed contexts. Select
-        any kernel constituents that should have no direct context parameter. Exclusions are optional.
+        Under “Relativization target”, choose a base set or generic structure to define what counts as one context.
+        Select any undefined concepts that should remain shared across contexts.
       </p>
     )
   },

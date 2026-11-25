@@ -1,4 +1,4 @@
-import { type Page } from '@playwright/test';
+import { type BrowserContext, type Page } from '@playwright/test';
 
 import { type ICurrentUser, type IUserLoginDTO } from '../../src/features/auth/backend/types';
 import { BACKEND_URL } from './constants';
@@ -26,7 +26,7 @@ const dataUserAuth: ICurrentUser = {
 
 let currentAuth = dataAnonymousAuth;
 
-export async function setupAuth(context: Page) {
+export async function setupAuth(context: BrowserContext | Page) {
   await context.route(`${BACKEND_URL}/users/api/auth`, async route => {
     await route.fulfill({ json: currentAuth });
   });

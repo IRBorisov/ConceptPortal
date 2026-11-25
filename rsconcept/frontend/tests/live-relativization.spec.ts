@@ -77,7 +77,7 @@ test('relativization keeps a reviewed edit after a real rejection and saves it o
   await page.getByRole('button', { name: /^Добавить/ }).click();
   await page.getByRole('button', { name: 'Релятивизация', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: 'Релятивизация' });
-  await dialog.getByRole('combobox', { name: 'Конституента релятивизации' }).click();
+  await dialog.getByRole('combobox', { name: 'Релятивизируемая конституента' }).click();
   await page.getByRole('button', { name: /^X1.*вершины/ }).click();
   await dialog.getByRole('textbox', { name: 'Сокращение' }).fill('REL' + suffix);
   const preview = page.waitForResponse(response => response.url().endsWith('/preview-relativization'));

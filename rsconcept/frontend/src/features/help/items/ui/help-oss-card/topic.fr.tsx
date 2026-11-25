@@ -37,8 +37,8 @@ export function HelpOssCardFr() {
           obtenus.
         </li>
         <li>
-          La section « Schémas relativisés » affiche les liens vers les schémas source et résultat, le constituant
-          sélectionné et les constituants exclus.
+          La section « Schémas relativisés » affiche les liens vers les schémas source et résultat, le constituant à
+          relativiser et les constituants exclus.
         </li>
         <li>
           Les bases théoriques de la synthèse sont exposées dans&nbsp;

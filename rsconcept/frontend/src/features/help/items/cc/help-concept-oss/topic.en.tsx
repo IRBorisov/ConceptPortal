@@ -70,38 +70,11 @@ export function HelpConceptOSSEn() {
         ambiguities. The identification table must be carefully constructed by adding duplicate concepts from the
         synthesised schemas.
       </p>
-      <h2 id='relativization'>Relativization</h2>
+      <h2 id='relativization'>{tx('tx.oss.relativization')}</h2>
       <p>
-        Relativization builds a conceptual schema whose selected values depend on a context. For a base set, each
-        context is a subset of its elements. For a structure, each context is one entire value. Exclusions keep the
-        indicated constituents shared.
-      </p>
-      <p>
-        For a function–method relation, one context is an entire relation between functions and methods. The family of
-        decomposition alternatives associates each such relation with its alternatives. The original term names the
-        component inside one context.
-      </p>
-      <ol>
-        <li>
-          On the <LinkTopic text='OSS graph' topic={HelpTopic.UI_OSS_GRAPH} />, choose “Add…” → “Relativization”. Select
-          the source and the constituent. Set any exclusions, review the title, and enter an alias.
-        </li>
-        <li>
-          Choose “{tx('tx.oss.relativization.review.start')}” and open each kernel proposal. The kernel includes
-          undefined concepts, axioms, and the derived constituents they need.
-        </li>
-        <li>
-          Compare the texts and types. Check “{tx('tx.oss.relativization.review.origins')}”, edit the proposal as
-          needed, and resolve any flagged questions.
-        </li>
-        <li>
-          Choose “{tx('tx.oss.relativization.review.submit')}”. Review affected proposals after changing parameters. If
-          saving fails, you can correct the issue and retry from the same draft.
-        </li>
-      </ol>
-      <p>
-        The <LinkTopic text='OSS card' topic={HelpTopic.UI_OSS_CARD} /> records the source, result and operation
-        parameters. Edit the operation on the graph to review new proposals. A downstream synthesis can use the result.
+        <LinkTopic text='Relativization' topic={HelpTopic.CC_RELATIVIZATION} /> takes one input schema and builds a
+        result by context. Editing the source updates the result. A later synthesis can use that result, and the{' '}
+        <LinkTopic text='OSS card' topic={HelpTopic.UI_OSS_CARD} /> shows the source and operation parameters.
       </p>
     </>
   );

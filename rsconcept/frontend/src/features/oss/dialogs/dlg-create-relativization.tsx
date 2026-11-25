@@ -239,7 +239,8 @@ export function DlgCreateRelativization() {
         void submit();
       }}
       className={step === 'parameters' ? 'w-180 px-6' : 'w-224 px-6'}
-      helpTopic={HelpTopic.CC_OSS}
+      helpTopic={HelpTopic.CC_RELATIVIZATION}
+      openManualInNewTab
       tourID={step === 'parameters' ? DialogTourID.CREATE_RELATIVIZATION : undefined}
     >
       <div role='status' aria-live='polite'>
@@ -287,7 +288,7 @@ export function DlgCreateRelativization() {
             ) : null}
             {schema ? (
               <>
-                <Label text={tx('tx.oss.relativization.target.field')} htmlFor='relativization_target' />
+                <Label text={tx('tx.oss.relativization.target')} htmlFor='relativization_target' />
                 <SelectConstituenta
                   id='relativization_target'
                   items={targetOptions}
