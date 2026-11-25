@@ -71,6 +71,15 @@ test('offers French proposals for a French source in the Russian interface', asy
   const term = axis.getByRole('textbox', { name: 'Термин', exact: true });
   await expect(term).toHaveValue('contextes admissibles');
   await expect(term).toHaveAttribute('lang', 'fr');
+  await page.setViewportSize({ width: 390, height: 860 });
+  const original = axis.getByText('sommets', { exact: true });
+  await expect
+    .poll(async () => {
+      const before = await original.boundingBox();
+      const after = await term.boundingBox();
+      return before !== null && after !== null && after.y >= before.y + before.height;
+    })
+    .toBe(true);
   await dialog.getByRole('button', { name: 'К параметрам' }).press('Enter');
   await expect(dialog.getByRole('combobox', { name: 'Релятивизируемая конституента' })).toBeFocused();
 });
