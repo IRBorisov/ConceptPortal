@@ -1,10 +1,13 @@
 ''' Regression tests for changes propagated through relativization. '''
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
+from rest_framework.request import Request
 
 from apps.library.models import LibraryItem
 from apps.library.services.clone import clone_oss
 from apps.oss.models import Inheritance, Operation, OperationSchema, OperationType, Substitution
 from apps.rsform.models import Attribution, Constituenta, RSForm
+from apps.rsform.mutations import update_constituenta
 from shared.EndpointTester import EndpointTester
 
 
@@ -176,6 +179,31 @@ class TestRelativizationPropagation(EndpointTester):
         relativization.refresh_from_db()
         self.assertEqual(relativization.projection['excluded'], [])
         self.assertFalse(Constituenta.objects.filter(pk=preserved.pk).exists())
+
+    def test_managed_definition_guard_compares_to_the_current_row(self):
+        term = self.source.insert_last('D1', definition_formal='X1')
+        relativization = self._relativize()
+        stale = self._row(relativization, term, 'family')
+        response = self._update(term, definition_formal='X1∪X1')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        current = self._row(relativization, term, 'family')
+        self.assertEqual(current.pk, stale.pk)
+        self.assertNotEqual(current.definition_formal, stale.definition_formal)
+        current_formula = current.definition_formal
+
+        request = Request(self.factory.patch('/'))
+        request.user = self.user
+        result = relativization.result
+        assert result is not None
+        with self.assertRaisesMessage(ValidationError, 'Edit managed definitions and types'):
+            update_constituenta(result, stale, {'definition_formal': stale.definition_formal}, request)
+
+        convention = 'A reviewed convention.'
+        response = self._update(current, definition_formal=current_formula, convention=convention)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        current.refresh_from_db()
+        self.assertEqual(current.definition_formal, current_formula)
+        self.assertEqual(current.convention, convention)
 
     def test_reject_target_edit_that_makes_a_family_unevaluable(self):
         target = self.source.insert_last(

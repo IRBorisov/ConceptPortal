@@ -79,8 +79,8 @@ describe('relativization text review', () => {
 
   it('does not submit edits to an optional row with a missing required field', () => {
     const draft = makeDraft('');
-    draft.proposals[0]!.inKernel = false;
-    draft.proposals[0]!.missing = ['convention'];
+    draft.proposals[0].inKernel = false;
+    draft.proposals[0].missing = ['convention'];
     const [row] = prepareReview(draft);
 
     expect(canConfirmReview([row])).toBe(true);
