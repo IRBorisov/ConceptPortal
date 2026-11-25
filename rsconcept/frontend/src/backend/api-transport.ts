@@ -105,6 +105,7 @@ interface IAxiosRequest<RequestData, ResponseData> {
   request?: IFrontRequest<RequestData, ResponseData>;
   options?: AxiosRequestConfig;
   schema?: z.ZodType;
+  notifyOnError?: boolean;
   /** Optimistic concurrency token matched against library item ``time_update``. */
   expectedTimeUpdate?: string;
 }
@@ -155,7 +156,8 @@ export function axiosPost<RequestData, ResponseData = void>({
   request,
   options,
   schema,
-  expectedTimeUpdate
+  expectedTimeUpdate,
+  notifyOnError = true
 }: IAxiosRequest<RequestData, ResponseData>) {
   return axiosInstance
     .post<ResponseData>(endpoint, request?.data, withConcurrencyHeaders(options, expectedTimeUpdate))
@@ -165,7 +167,7 @@ export function axiosPost<RequestData, ResponseData = void>({
       return response.data;
     })
     .catch((error: Error | AxiosError | ZodError) => {
-      if (!isAbortedRequestError(error)) {
+      if (notifyOnError && !isAbortedRequestError(error)) {
         notifyError(error);
       }
       throw error;

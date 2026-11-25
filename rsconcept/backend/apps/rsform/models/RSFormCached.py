@@ -235,7 +235,7 @@ class RSFormCached:
                     cst.term_resolved = resolver.resolve(cst.term_raw)
                     if 'term_forms' not in data:
                         cst.term_forms = []
-                    resolver.context[cst.alias] = Entity(cst.alias, cst.term_resolved, manual_forms=cst.term_forms)
+                    resolver.context[cst.alias] = RSForm.entity_from_constituent(cst)
             if 'definition_raw' in data:
                 if cst.definition_raw == data['definition_raw']:
                     del data['definition_raw']
@@ -352,22 +352,26 @@ class RSFormCached:
 
     def resolve_all_text(self) -> None:
         ''' Trigger reference resolution for all texts. '''
-        self.cache.ensure_loaded()
+        self.cache.ensure_loaded_terms()
         graph_terms = RSForm.graph_term(self.cache.constituents, self.cache.by_alias)
         resolver = Resolver({})
-        update_list: list[Constituenta] = []
+        updated_terms: list[Constituenta] = []
         for cst_id in graph_terms.topological_order():
             cst = self.cache.by_id[cst_id]
             resolved = resolver.resolve(cst.term_raw)
-            resolver.context[cst.alias] = Entity(cst.alias, resolved)
-            cst.term_resolved = resolved
-            update_list.append(cst)
-        Constituenta.objects.bulk_update(update_list, ['term_resolved'])
+            if resolved != cst.term_resolved:
+                cst.term_resolved = resolved
+                updated_terms.append(cst)
+            resolver.context[cst.alias] = RSForm.entity_from_constituent(cst)
+        Constituenta.objects.bulk_update(updated_terms, ['term_resolved'])
 
+        updated_definitions: list[Constituenta] = []
         for cst in self.cache.constituents:
             resolved = resolver.resolve(cst.definition_raw)
-            cst.definition_resolved = resolved
-        Constituenta.objects.bulk_update(self.cache.constituents, ['definition_resolved'])
+            if resolved != cst.definition_resolved:
+                cst.definition_resolved = resolved
+                updated_definitions.append(cst)
+        Constituenta.objects.bulk_update(updated_definitions, ['definition_resolved'])
 
 
     def _get_max_index(self, cst_type: str) -> int:
@@ -427,7 +431,11 @@ class _RSFormCache:
                     'term_raw',
                     'definition_raw',
                     'term_forms',
-                    'term_resolved'
+                    'term_resolved',
+                    'definition_resolved',
+                    'convention',
+                    'crucial',
+                    'value_is_property',
                 ).order_by('order')
             )
             self.by_id = {cst.pk: cst for cst in self.constituents}

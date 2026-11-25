@@ -24,8 +24,9 @@ export const createRelativizationContentFr: Record<string, TourStepContent> = {
     title: 'Titre et résultat',
     body: (
       <p>
-        Le Portail propose un titre modifiable. Saisissez un nom court, puis cliquez sur « Créer ». Le nouveau schéma
-        apparaît dans le graphe et les paramètres figurent dans le passeport du SOS.
+        Vérifiez le titre et indiquez un alias. Cliquez sur « Vérifier les textes », ouvrez chaque proposition du noyau,
+        apportez les précisions demandées, puis cliquez sur « Confirmer les textes et créer le SC ». Le résultat
+        apparaît dans le graphe.
       </p>
     )
   }

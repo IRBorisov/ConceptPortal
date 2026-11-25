@@ -100,7 +100,8 @@ export function createRelativizer({
   TypeID,
   labelType,
   parseRSLangExpression,
-  extractGlobals
+  extractGlobals,
+  analyzeConstituentType
 }) {
   const binaryLogic = new Set([
     TokenID.LOGIC_AND,
@@ -125,7 +126,7 @@ export function createRelativizer({
     for (const item of items) {
       const { alias, cstType: kind } = item;
       const expression = item.definition.formal;
-      if (BASE_SET.has(kind)) analyzer.addBase(alias, kind === 'constant');
+
       const ast = parseRSLangExpression(expression);
       asts.set(alias, ast);
       const names = new Set();
@@ -134,7 +135,11 @@ export function createRelativizer({
       });
       locals.set(alias, names);
       let count = 0;
-      for (const dep of extractGlobals(expression)) {
+      const dependencies = new Set([
+        ...extractGlobals(expression),
+        ...extractGlobals(item.definition.typification_manual ?? '')
+      ]);
+      for (const dep of dependencies) {
         if (!byAlias.has(dep)) continue;
         children.get(dep).push(alias);
         count += 1;
@@ -146,16 +151,20 @@ export function createRelativizer({
       const alias = queue[index];
       const item = byAlias.get(alias);
       const kind = item.cstType;
-      if (BASE_SET.has(kind)) {
+      const { parse, effectiveType } = analyzeConstituentType(
+        {
+          alias,
+          cst_type: kind,
+          definition_formal: item.definition.formal,
+          typification_manual: item.definition.typification_manual ?? '',
+          value_is_property: item.valueIsProperty ?? false
+        },
+        analyzer
+      );
+      if (parse.success && effectiveType) {
         typed.add(alias);
-      } else {
-        const result = analyzer.checkFull(item.definition.formal, { isDomain: kind === 'structure' });
-        if (result.success) {
-          typed.add(alias);
-          analyzer.setGlobal(alias, result.type, result.valueClass);
-        } else if (item.definition.formal.trim()) {
-          diagnostics.set(alias, result.errors);
-        }
+      } else if (item.definition.formal.trim()) {
+        diagnostics.set(alias, parse.success ? [] : [parse]);
       }
       for (const next of children.get(alias)) {
         const count = indegree.get(next) - 1;
@@ -279,7 +288,7 @@ export function createRelativizer({
       } else if (kind === 'structure') {
         formal = stableDomain(alias, expression);
       } else if (!affected.has(alias) || BASE_SET.has(kind)) {
-        formal = relink(expression, references);
+        formal = relink(expression, output);
       } else {
         const rewritten = rewrite(expression, ast, state);
         if (CALLABLE.has(kind)) {
@@ -293,8 +302,16 @@ export function createRelativizer({
             'I{(' + context + ', ' + value + ') | ' + context + ':∈' + axis + '; ' + value + ':=' + rewritten + '}';
         }
       }
-      const role = generated.has(alias) ? 'carrier' : alias === target ? 'axis' : 'constituent';
-      result.push(remapRecord(item, output.get(alias), formal, references, item.entityUID, role));
+      let role = 'preserved';
+      if (generated.has(alias)) role = 'carrier';
+      else if (alias === target) role = 'axis';
+      else if (affected.has(alias)) {
+        if (kind === 'structure') role = 'relation';
+        else if (kind === 'term') role = 'family';
+        else if (CALLABLE.has(kind)) role = 'callable';
+        else if (kind === 'axiom' || kind === 'theorem' || kind === 'statement') role = 'condition';
+      }
+      result.push(remapRecord(item, output.get(alias), formal, output, item.entityUID, role));
       if (CORE.has(kind)) lastKernelIndex = result.length - 1;
     }
 
@@ -305,7 +322,7 @@ export function createRelativizer({
         { ...item, cstType: 'structure' },
         generated.get(alias),
         formal,
-        references,
+        output,
         item.entityUID,
         alias === target ? 'axis' : 'relation',
         newId()
@@ -313,17 +330,14 @@ export function createRelativizer({
     });
     const ordered = [...result.slice(0, lastKernelIndex + 1), ...added, ...result.slice(lastKernelIndex + 1)];
     if (state.usesAccessor) {
-      const term = 'Дерелятивизация по контексту';
       ordered.push({
         entityUID: newId(),
         type: 'constituenta',
         cstType: 'function',
         alias: accessor,
-        convention:
-          'Извлечение единственного значения, сопоставленного заданному контексту в релятивизированном отношении.',
         origin: null,
         role: 'accessor',
-        term: { raw: term, resolved: term, forms: [] },
+        term: { raw: '', forms: [] },
         definition: {
           formal:
             '[' +

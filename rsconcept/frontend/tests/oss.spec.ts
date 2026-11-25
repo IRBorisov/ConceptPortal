@@ -110,11 +110,11 @@ test('OSS Add opens relativization and offers an editable title from the genitiv
 
   const title = dialog.getByRole('textbox', { name: 'Название' });
   await expect(title).toHaveValue('Родственные отношения – релятивизация индивидов');
-  await expect(dialog.getByRole('button', { name: 'Создать' })).toBeDisabled();
+  await expect(dialog.getByRole('button', { name: 'Проверить тексты' })).toBeDisabled();
   await title.fill('Моё название');
   await dialog.getByRole('textbox', { name: 'Сокращение' }).fill('РО-р');
   await expect(title).toHaveValue('Моё название');
-  await expect(dialog.getByRole('button', { name: 'Создать' })).toBeEnabled();
+  await expect(dialog.getByRole('button', { name: 'Проверить тексты' })).toBeEnabled();
   await dialog.getByText('Отмена', { exact: true }).click();
   await expect(dialog).toHaveCount(0);
 });

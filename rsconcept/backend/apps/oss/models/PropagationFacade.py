@@ -4,6 +4,7 @@ from typing import Optional
 from apps.library.models import LibraryItem
 from apps.rsform.models import Attribution, Constituenta, CstType, RSFormCached
 
+from ..propagation_state import mark_schema
 from .OperationSchemaCached import CstSubstitution, OperationSchemaCached
 from .PropagationContext import PropagationContext
 
@@ -36,6 +37,7 @@ class PropagationFacade:
         if not new_cst:
             return
         source = new_cst[0].schema_id
+        mark_schema(source)
         hosts = _get_oss_hosts(source)
         for host in hosts:
             if exclude is None or host not in exclude:
@@ -44,6 +46,7 @@ class PropagationFacade:
     def after_change_cst_type(self, sourceID: int, target: int, new_type: CstType,
                               exclude: Optional[list[int]] = None) -> None:
         ''' Trigger cascade resolutions when constituenta type is changed. '''
+        mark_schema(sourceID)
         hosts = _get_oss_hosts(sourceID)
         for host in hosts:
             if exclude is None or host not in exclude:
@@ -56,6 +59,7 @@ class PropagationFacade:
         exclude: Optional[list[int]] = None
     ) -> None:
         ''' Trigger cascade resolutions when constituenta data is changed. '''
+        mark_schema(sourceID)
         hosts = _get_oss_hosts(sourceID)
         for host in hosts:
             if exclude is None or host not in exclude:
@@ -64,6 +68,7 @@ class PropagationFacade:
     def before_delete_cst(self, sourceID: int, target: list[int],
                           exclude: Optional[list[int]] = None) -> None:
         ''' Trigger cascade resolutions before constituents are deleted. '''
+        mark_schema(sourceID)
         hosts = _get_oss_hosts(sourceID)
         for host in hosts:
             if exclude is None or host not in exclude:
@@ -74,6 +79,7 @@ class PropagationFacade:
         ''' Trigger cascade resolutions before constituents are substituted. '''
         if not substitutions:
             return
+        mark_schema(sourceID)
         hosts = _get_oss_hosts(sourceID)
         for host in hosts:
             if exclude is None or host not in exclude:
@@ -81,6 +87,7 @@ class PropagationFacade:
 
     def before_delete_schema(self, target: int, exclude: Optional[list[int]] = None) -> None:
         ''' Trigger cascade resolutions before schema is deleted. '''
+        mark_schema(target)
         hosts = _get_oss_hosts(target)
         if not hosts:
             return
@@ -95,6 +102,7 @@ class PropagationFacade:
                                  attributions: list[Attribution],
                                  exclude: Optional[list[int]] = None) -> None:
         ''' Trigger cascade resolutions when Attribution is created. '''
+        mark_schema(sourceID)
         hosts = _get_oss_hosts(sourceID)
         for host in hosts:
             if exclude is None or host not in exclude:
@@ -104,6 +112,7 @@ class PropagationFacade:
                                   attributions: list[Attribution],
                                   exclude: Optional[list[int]] = None) -> None:
         ''' Trigger cascade resolutions before Attribution is deleted. '''
+        mark_schema(sourceID)
         hosts = _get_oss_hosts(sourceID)
         for host in hosts:
             if exclude is None or host not in exclude:

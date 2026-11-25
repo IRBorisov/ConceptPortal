@@ -4,6 +4,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 import { E2E_TIMEOUTS } from './tests/timeouts';
 
+const liveSite = process.env.PORTAL_TEST_SITE;
 const runAllBrowsers = !!process.env.CI || process.env.PLAYWRIGHT_ALL_BROWSERS === '1';
 
 /** Presets include `locale: en-US`, which wins over top-level `use` and yields English UI; specs assert Russian. */
@@ -33,16 +34,18 @@ export default defineConfig({
     /** Cloud agent containers ship a preinstalled Chromium; see scripts/cloud/README.md. */
     launchOptions: process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {},
     actionTimeout: E2E_TIMEOUTS.action,
-    baseURL: 'http://localhost:3000',
+    baseURL: liveSite ?? 'http://localhost:3000',
     navigationTimeout: E2E_TIMEOUTS.navigation,
     trace: 'on-first-retry'
   },
-  webServer: {
-    // Dev server (HMR, unbundled modules, sourcemaps) is heavy and crashes WebKit under CI load.
-    // Serve the optimized production build instead; CI already runs `npm run build` beforehand.
-    command: process.env.CI ? 'npm run preview' : 'npm run dev',
-    port: 3000,
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000
-  }
+  webServer: liveSite
+    ? undefined
+    : {
+        // Dev server (HMR, unbundled modules, sourcemaps) is heavy and crashes WebKit under CI load.
+        // Serve the optimized production build instead; CI already runs `npm run build` beforehand.
+        command: process.env.CI ? 'npm run preview' : 'npm run dev',
+        port: 3000,
+        reuseExistingServer: !process.env.CI,
+        timeout: 120_000
+      }
 });

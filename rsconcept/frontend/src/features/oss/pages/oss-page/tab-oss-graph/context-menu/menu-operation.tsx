@@ -53,6 +53,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
 
   const showEditInput = useOssDialogsStore(state => state.showChangeInputSchema);
   const showRelocateConstituents = useOssDialogsStore(state => state.showRelocateConstituents);
+  const showRelativization = useOssDialogsStore(state => state.showCreateRelativization);
   const showEditOperation = useOssDialogsStore(state => state.showEditOperation);
   const showDeleteOperation = useOssDialogsStore(state => state.showDeleteOperation);
   const showDeleteReference = useOssDialogsStore(state => state.showDeleteReference);
@@ -105,6 +106,18 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
       return;
     }
     onHide();
+    if (operation.operation_type === OperationType.RELATIVIZATION && operation.relativization?.parameters) {
+      showRelativization({
+        ossID: schema.id,
+        layout: getLayout(),
+        existingOperation: operation,
+        initialSource: schema.graph.expandInputs([operation.id])[0] ?? null,
+        initialParent: operation.parent,
+        position: { x: 0, y: 0 },
+        onCreate: id => setSelectedNodes(['o' + id])
+      });
+      return;
+    }
     showEditOperation({
       layout: getLayout(),
       ossID: schema.id,

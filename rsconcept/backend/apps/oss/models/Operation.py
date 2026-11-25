@@ -66,6 +66,12 @@ class Operation(Model):
         null=True
     )
 
+    projection = JSONField(
+        verbose_name='Соответствия конституент релятивизации',
+        blank=True,
+        null=True,
+    )
+
     parent = ForeignKey(
         verbose_name='Содержащий блок',
         to='oss.Block',

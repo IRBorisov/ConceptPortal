@@ -9,7 +9,7 @@ from rest_framework import generics
 from rest_framework import status as c
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -94,6 +94,10 @@ class LibraryViewSet(ConcurrencyMixin, viewsets.ModelViewSet):
         ''' Delete an item and its cascading library rows in one transaction. '''
         with transaction.atomic():
             if instance.item_type == m.LibraryItemType.RSFORM:
+                if Operation.objects.filter(result=instance, relativization_source__isnull=False).exists():
+                    raise ValidationError('Remove the relativization operation before deleting its result.')
+                if Operation.objects.filter(relativization_source=instance).exists():
+                    raise ValidationError('Remove or reconfigure dependent relativizations before deleting the source.')
                 PropagationFacade().before_delete_schema(instance.pk)
                 model_bindings = RSModel.objects.filter(schema=instance)
                 for binding in model_bindings:

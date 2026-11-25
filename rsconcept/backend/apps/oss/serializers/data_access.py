@@ -13,7 +13,6 @@ from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemDetailsSerializer
 from apps.rsform.models import Constituenta
 from apps.rsform.serializers import SubstitutionSerializerBase
-from apps.rsform.serializers.data_access import CstImportJsonSerializer, ImportAttributionSerializer
 from shared import messages as msg
 from shared import permissions
 from shared.serializers import StrictModelSerializer, StrictSerializer
@@ -38,19 +37,39 @@ class OperationSerializer(StrictModelSerializer):
 
     def to_representation(self, instance: Operation):
         data = super().to_representation(instance)
+        request = self.context.get('request')
+        user = request.user if request is not None else AnonymousUser()
         if instance.operation_type != OperationType.RELATIVIZATION:
             data.pop('relativization', None)
-        elif instance.relativization_source is not None:
-            request = self.context.get('request')
-            user = request.user if request is not None else AnonymousUser()
-            if not permissions.can_read_library_item(user, instance.relativization_source):
-                data.update(alias='', title='', description='', result=None, relativization=None)
+        elif instance.projection and instance.relativization:
+            params = instance.projection
+            data['relativization'] = instance.relativization | {
+                'parameters': {name: params[name] for name in ('target', 'excluded', 'locale', 'context_name')},
+                'unreviewed': any(row.get('proposal') or not row.get('confirmed') and row.get('needs_review')
+                                  for row in params['rows']),
+            }
+        readable = self.context.get('readable_schemas')
+        schema_is_readable = (
+            instance.result_id in readable if readable is not None
+            else instance.result is not None and permissions.can_read_library_item(user, instance.result)
+        )
+        source_is_readable = (
+            instance.relativization_source_id in readable if readable is not None
+            else instance.relativization_source is not None and
+            permissions.can_read_library_item(user, instance.relativization_source)
+        )
+        if (instance.result_id is not None and not schema_is_readable) or (
+            instance.operation_type == OperationType.RELATIVIZATION and not source_is_readable
+        ):
+            data.update(alias='', title='', description='', result=None)
+            if instance.operation_type == OperationType.RELATIVIZATION:
+                data['relativization'] = None
         return data
 
     class Meta:
         ''' serializer metadata. '''
         model = Operation
-        exclude = ('relativization_source',)
+        exclude = ('relativization_source', 'projection')
         read_only_fields = ('id', 'oss')
 
 
@@ -321,22 +340,41 @@ class ImportSchemaSerializer(StrictSerializer):
         return attrs
 
 
-class CreateRelativizationSerializer(CreateSchemaSerializer):
-    ''' Parameters and result of the client-side relativization engine. '''
+class RelativizationParametersSerializer(StrictSerializer):
+    ''' Parameters of a reviewed projection, expressed as persistent constituent ids. '''
+    existing_operation = PKField(queryset=Operation.objects.all(), required=False)
     source_operation = PKField(queryset=Operation.objects.all())
     source_time_update = serializers.DateTimeField()
     target = serializers.IntegerField(min_value=1)
     excluded = serializers.ListField(child=serializers.IntegerField(min_value=1))
-    items = CstImportJsonSerializer(many=True, allow_empty=False)
-    attribution = ImportAttributionSerializer(many=True)
+    locale = serializers.ChoiceField(choices=['en', 'ru', 'fr'])
+    context_name = serializers.CharField(max_length=255)
 
     def validate(self, attrs):
-        attrs = super().validate(attrs)
         oss = cast(LibraryItem, self.context['oss'])
         source = cast(Operation, attrs['source_operation'])
         if source.oss_id != oss.pk:
             raise serializers.ValidationError({'source_operation': msg.operationNotInOSS()})
+        existing = attrs.get('existing_operation')
+        if existing and (existing.oss_id != oss.pk or existing.operation_type != OperationType.RELATIVIZATION):
+            raise serializers.ValidationError({'existing_operation': msg.operationNotInOSS()})
         return attrs
+
+
+class RelativizationTextSerializer(StrictSerializer):
+    ''' The reviewed text of one projected row. '''
+    id = serializers.IntegerField(min_value=1)
+    clarified = serializers.BooleanField(default=False)
+    term_raw = serializers.CharField(allow_blank=True, trim_whitespace=False)
+    definition_raw = serializers.CharField(allow_blank=True, trim_whitespace=False)
+    convention = serializers.CharField(allow_blank=True, trim_whitespace=False)
+
+
+class CreateRelativizationSerializer(CreateSchemaSerializer, RelativizationParametersSerializer):
+    ''' Create a projection after explicit review of its texts. '''
+    revision = serializers.CharField(min_length=64, max_length=64)
+    reviewed = serializers.ListField(child=serializers.IntegerField(min_value=1))
+    edits = RelativizationTextSerializer(many=True)
 
 
 class CreateSynthesisSerializer(StrictSerializer):
@@ -638,9 +676,22 @@ class OperationSchemaSerializer(StrictModelSerializer):
         result['arguments'] = []
         result['substitutions'] = []
         result['replicas'] = []
-        operations = Operation.objects.filter(oss=instance).select_related('result', 'relativization_source')
-        for operation in operations.order_by('pk'):
-            operation_data = OperationSerializer(operation, context=self.context).data
+        operations = list(Operation.objects.filter(oss=instance).select_related('result').order_by('pk'))
+        request = self.context.get('request')
+        reader = request.user if request is not None else AnonymousUser()
+        blocked = permissions.unreadable_derived_schema_ids(reader)
+        visible_ids = {pk for operation in operations for pk in (
+            operation.result_id, operation.relativization_source_id
+        ) if pk is not None} - blocked
+        readable = set(LibraryItem.objects.filter(
+            permissions.library_item_read_filter(reader), pk__in=visible_ids,
+        ).values_list('pk', flat=True))
+        serializer_context = {**self.context, 'readable_schemas': readable}
+        hidden = set()
+        for operation in operations:
+            operation_data = OperationSerializer(operation, context=serializer_context).data
+            if operation.result_id and operation_data['result'] is None:
+                hidden.add(operation.pk)
             operation_result = operation.result if operation_data['result'] is not None else None
             operation_data['is_import'] = \
                 operation_result is not None and \
@@ -651,14 +702,26 @@ class OperationSchemaSerializer(StrictModelSerializer):
                 and Constituenta.objects
                 .filter(schema=operation_result)
                 .exclude(as_child__isnull=False)
+                .exclude(pk__in=[row['result'] for row in (operation.projection or {}).get('rows', [])])
                 .exists()
             )
             result['operations'].append(operation_data)
         for block in Block.objects.filter(oss=instance).order_by('pk'):
             result['blocks'].append(BlockSerializer(block).data)
-        for argument in Argument.objects.filter(operation__oss=instance).order_by('order'):
+        for argument in Argument.objects.filter(operation__oss=instance).exclude(
+            Q(operation_id__in=hidden) | Q(argument_id__in=hidden)
+        ).order_by('order'):
             result['arguments'].append(ArgumentSerializer(argument).data)
-        for substitution in Substitution.objects.filter(operation__oss=instance).values(
+        substitutions = Substitution.objects.filter(operation__oss=instance).exclude(
+            Q(original__schema_id__in=blocked) | Q(substitution__schema_id__in=blocked) |
+            Q(operation__result_id__in=blocked)
+        )
+        if not reader.is_staff:
+            directly_readable = LibraryItem.objects.filter(permissions.library_item_read_filter(reader)).values('pk')
+            substitutions = substitutions.filter(
+                original__schema_id__in=directly_readable, substitution__schema_id__in=directly_readable,
+            )
+        for substitution in substitutions.values(
             'operation',
             'original',
             'substitution',
@@ -670,7 +733,9 @@ class OperationSchemaSerializer(StrictModelSerializer):
             substitution_term=F('substitution__term_resolved'),
         ).order_by('pk'):
             result['substitutions'].append(substitution)
-        for replication in Replica.objects.filter(original__oss=instance).order_by('pk'):
+        for replication in Replica.objects.filter(original__oss=instance).exclude(
+            Q(original_id__in=hidden) | Q(replica_id__in=hidden)
+        ).order_by('pk'):
             result['replicas'].append(ReplicaSerializer(replication).data)
 
         return result

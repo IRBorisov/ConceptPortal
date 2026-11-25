@@ -17,7 +17,9 @@ from rest_framework.serializers import ValidationError
 from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemSerializer
 from apps.library.services.context_search import get_accessible_items_queryset
-from apps.oss.models import Inheritance, PropagationFacade
+from apps.oss.models import Inheritance, Operation, OperationType, PropagationFacade
+from apps.oss.propagation_batch import propagation_batch
+from apps.oss.propagation_state import mark_schema
 from apps.users.models import User
 from shared import messages as msg
 from shared import permissions, utility
@@ -132,7 +134,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         insert_after = None if 'insert_after' not in data else data['insert_after']
-        new_cst = create_constituenta(item, data, insert_after)
+        new_cst = create_constituenta(item, data, insert_after, request)
 
         return Response(
             status=c.HTTP_201_CREATED,
@@ -154,6 +156,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         }
     )
     @action(detail=True, methods=['post'], url_path='create-multiple-cst')
+    @propagation_batch
     def create_multiple_cst(self, request: Request, pk) -> HttpResponse:
         ''' Create multiple Constituenta in one request. '''
         item = self._get_item()
@@ -203,7 +206,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         serializer.is_valid(raise_exception=True)
         cst = cast(m.Constituenta, serializer.validated_data['target'])
         data = serializer.validated_data['item_data']
-        update_constituenta(item, cst, data)
+        update_constituenta(item, cst, data, request, allow_inherited=True)
         return Response(
             status=c.HTTP_200_OK,
             data=s.RSFormParseSerializer(item).data
@@ -221,6 +224,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         }
     )
     @action(detail=True, methods=['patch'], url_path='update-crucial')
+    @propagation_batch
     def update_crucial(self, request: Request, pk) -> HttpResponse:
         ''' Update crucial attribute of a given list of constituents. '''
         item = self._get_item()
@@ -234,6 +238,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
             for cst in serializer.validated_data['target']:
                 cst.crucial = value
                 cst.save(update_fields=['crucial'])
+            mark_schema(item.pk)
             item.save(update_fields=['time_update'])
 
         return Response(
@@ -259,7 +264,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         item = self._get_item()
         serializer = s.CstSubstituteSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
-        substitute_constituents(item, serializer.validated_data['substitutions'])
+        substitute_constituents(item, serializer.validated_data['substitutions'], request)
 
         return Response(
             status=c.HTTP_200_OK,
@@ -284,7 +289,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         serializer = s.CstListSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
         cst_list: list[m.Constituenta] = serializer.validated_data['items']
-        delete_constituents(item, cst_list)
+        delete_constituents(item, cst_list, request)
 
         return Response(
             status=c.HTTP_200_OK,
@@ -303,6 +308,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         }
     )
     @action(detail=True, methods=['post'], url_path='create-attribution')
+    @propagation_batch
     def create_attribution(self, request: Request, pk) -> HttpResponse:
         ''' Create Attribution. '''
         item = self._get_item()
@@ -343,6 +349,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         }
     )
     @action(detail=True, methods=['patch'], url_path='delete-attribution')
+    @propagation_batch
     def delete_attribution(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Delete Attribution. '''
         item = self._get_item()
@@ -390,6 +397,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         }
     )
     @action(detail=True, methods=['patch'], url_path='clear-attributions')
+    @propagation_batch
     def clear_attributions(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Delete Associations for target Constituenta. '''
         item = self._get_item()
@@ -431,7 +439,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         item = self._get_item()
         serializer = s.CstMoveSerializer(data=request.data, context={'schema': item})
         serializer.is_valid(raise_exception=True)
-        move_constituents(item, serializer.validated_data)
+        move_constituents(item, serializer.validated_data, request)
 
         return Response(
             status=c.HTTP_200_OK,
@@ -449,6 +457,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         }
     )
     @action(detail=True, methods=['patch'], url_path='reset-aliases')
+    @propagation_batch
     def reset_aliases(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Recreate all aliases based on order. '''
         item = self._get_item()
@@ -456,8 +465,11 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         with transaction.atomic():
             # Lock the parent before constituent/attribution writes, matching publication.
             LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
+            if Operation.objects.filter(result=item, operation_type=OperationType.RELATIVIZATION).exists():
+                raise ValidationError('Edit managed aliases through the source schema or operation parameters.')
             schema = m.RSForm(item)
             schema.reset_aliases()
+            mark_schema(item.pk)
             item.save(update_fields=['time_update'])
 
         return Response(
@@ -476,6 +488,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         }
     )
     @action(detail=True, methods=['patch'], url_path='restore-order')
+    @propagation_batch
     def restore_order(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Restore order based on types and Term graph. '''
         item = self._get_item()
@@ -484,6 +497,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
             # Lock the parent before constituent/attribution writes, matching publication.
             LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
             m.OrderManager(m.RSFormCached(item.pk)).restore_order()
+            mark_schema(item.pk)
             item.save(update_fields=['time_update'])
 
         return Response(
@@ -503,6 +517,7 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         }
     )
     @action(detail=True, methods=['patch'], url_path='load-trs')
+    @propagation_batch
     def load_trs(self, request: Request, pk) -> HttpResponse:
         ''' Endpoint: Load data from file and replace current schema. '''
         item = self._get_item()
@@ -535,6 +550,8 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         with transaction.atomic():
             # Lock the parent before constituent/attribution writes, matching publication.
             LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
+            if Operation.objects.filter(result=item, operation_type=OperationType.RELATIVIZATION).exists():
+                raise ValidationError('The schema is managed by relativization.')
             PropagationFacade().before_delete_schema(item.pk)
             result: m.RSFormCached = serializer.save()
             PropagationFacade().after_create_cst(list(result.constituentsQ().order_by('order')))
@@ -640,6 +657,7 @@ def create_rsform_from_sandbox(request: Request) -> HttpResponse:
 )
 @api_view(['PATCH'])
 @permission_classes([permissions.GlobalUser])
+@propagation_batch
 def inline_synthesis(request: Request) -> HttpResponse:
     ''' Endpoint: Inline synthesis. '''
     serializer = s.InlineSynthesisSerializer(data=request.data, context={'user': request.user})
