@@ -44,12 +44,18 @@ export function prepareReview(draft: ReviewDraft, previous: ReviewRow[] = []): R
         const saved = confirmed[field];
         if (sameProposal && !old.conflicts.includes(field)) {
           fields[field] = old.fields[field];
-        } else if (old && old.fields[field] !== (old.confirmed[field] ?? old.item[field])) {
+        } else if (
+          old &&
+          (old.conflicts.includes(field) || old.fields[field] !== (old.confirmed[field] ?? old.item[field]))
+        ) {
           const edited = old.fields[field];
+          const savedDiffers = saved !== undefined && saved !== edited;
+          const proposalDiffers = item[field] !== edited;
           fields[field] = edited;
           if (
-            edited !== item[field] &&
-            (old.conflicts.includes(field) || item[field] !== old.item[field] || saved !== old.confirmed[field])
+            (savedDiffers && saved !== old.confirmed[field]) ||
+            (proposalDiffers && item[field] !== old.item[field]) ||
+            (old.conflicts.includes(field) && (savedDiffers || proposalDiffers))
           ) {
             conflicts.push(field);
           }

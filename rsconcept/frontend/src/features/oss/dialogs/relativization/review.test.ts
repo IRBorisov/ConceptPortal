@@ -61,6 +61,26 @@ describe('relativization text review', () => {
     expect(canConfirmReview([row])).toBe(false);
   });
 
+  it('blocks confirmation when a changed saved text differs from the local edit that matches the proposal', () => {
+    const initialDraft = {
+      ...makeDraft('Initial proposal'),
+      prior: [{ id: 2, fields: { convention: 'Saved A' }, stillCurrent: true }]
+    };
+    const [previous] = prepareReview(initialDraft);
+    const edited = { ...previous, fields: { ...previous.fields, convention: 'Local B' } };
+    const draft = {
+      ...makeDraft('Local B'),
+      prior: [{ id: 2, fields: { convention: 'Saved C' }, stillCurrent: false }]
+    };
+    const [row] = prepareReview(draft, [edited]);
+
+    expect(row.fields.convention).toBe('Local B');
+    expect(row.confirmed.convention).toBe('Saved C');
+    expect(row.conflicts).toEqual(['convention']);
+    expect(canConfirmReview([{ ...row, visited: true }])).toBe(false);
+    expect(prepareReview(draft, [row])[0].conflicts).toEqual(['convention']);
+  });
+
   it('keeps an explicit choice when preparing the same draft again', () => {
     const draft = {
       ...makeDraft('New convention'),

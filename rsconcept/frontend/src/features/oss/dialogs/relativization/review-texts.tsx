@@ -143,6 +143,15 @@ export function ReviewRelativizationTexts({ rows, onChange, back, disabled, loca
                   {textFields.map(field => {
                     const id = 'review-' + item.id + '-' + field;
                     const needsText = proposal.missing.includes(field);
+                    const saved = row.confirmed[field];
+                    const generated = item[field];
+                    const chooseVersion = (value: string) =>
+                      onChange({
+                        ...row,
+                        fields: { ...fields, [field]: value },
+                        conflicts: row.conflicts.filter(conflict => conflict !== field),
+                        clarified: value === fields[field] && row.clarified
+                      });
                     return (
                       <div key={field} className='grid min-w-0 gap-1.5'>
                         <Label text={tx(labels[field])} htmlFor={id} />
@@ -171,7 +180,6 @@ export function ReviewRelativizationTexts({ rows, onChange, back, disabled, loca
                                 onChange({
                                   ...row,
                                   fields: { ...fields, [field]: event.target.value },
-                                  conflicts: row.conflicts.filter(value => value !== field),
                                   clarified: false
                                 })
                               }
@@ -179,27 +187,36 @@ export function ReviewRelativizationTexts({ rows, onChange, back, disabled, loca
                             {row.conflicts.includes(field) ? (
                               <div className='grid gap-1 rounded-md border border-border p-2 text-sm'>
                                 <p className='font-semibold'>{tx('tx.oss.relativization.review.conflict')}</p>
-                                <p className='whitespace-pre-wrap break-words' lang={locale}>
-                                  {item[field]}
-                                </p>
-                                <div className='flex flex-wrap gap-1'>
+                                <div className='justify-self-start'>
                                   <Button
                                     text={tx('tx.oss.relativization.review.keep')}
-                                    onClick={() =>
-                                      onChange({ ...row, conflicts: row.conflicts.filter(value => value !== field) })
-                                    }
-                                  />
-                                  <Button
-                                    text={tx('tx.oss.relativization.review.accept')}
-                                    onClick={() =>
-                                      onChange({
-                                        ...row,
-                                        fields: { ...fields, [field]: item[field] },
-                                        conflicts: row.conflicts.filter(value => value !== field)
-                                      })
-                                    }
+                                    onClick={() => chooseVersion(fields[field])}
                                   />
                                 </div>
+                                {saved !== undefined && saved !== fields[field] ? (
+                                  <div className='grid justify-items-start gap-1 border-t border-border pt-2'>
+                                    <p className='font-medium'>{tx('tx.oss.relativization.review.saved')}</p>
+                                    <p className='whitespace-pre-wrap break-words' lang={locale}>
+                                      {saved || '—'}
+                                    </p>
+                                    <Button
+                                      text={tx('tx.oss.relativization.review.useSaved')}
+                                      onClick={() => chooseVersion(saved)}
+                                    />
+                                  </div>
+                                ) : null}
+                                {generated !== fields[field] && generated !== saved ? (
+                                  <div className='grid justify-items-start gap-1 border-t border-border pt-2'>
+                                    <p className='font-medium'>{tx('tx.oss.relativization.review.proposed')}</p>
+                                    <p className='whitespace-pre-wrap break-words' lang={locale}>
+                                      {generated || '—'}
+                                    </p>
+                                    <Button
+                                      text={tx('tx.oss.relativization.review.accept')}
+                                      onClick={() => chooseVersion(generated)}
+                                    />
+                                  </div>
+                                ) : null}
                               </div>
                             ) : null}
                             {needsText ? (
