@@ -22,7 +22,7 @@ const text: Record<TextLocale, Record<Exclude<RelativizationRole, 'preserved'>, 
   ru: {
     carrier: () => ['', 'Общее множество элементов, из которого образуются наборы для отдельных контекстов.', ''],
     axis: ({ context, subject, isBaseSet }) => [
-      'допустимые контексты',
+      context,
       isBaseSet
         ? 'Семейство допустимых наборов элементов множества «' + subject + '».'
         : 'Семейство допустимых значений родовой структуры «' + subject + '».',
@@ -66,7 +66,7 @@ const text: Record<TextLocale, Record<Exclude<RelativizationRole, 'preserved'>, 
   en: {
     carrier: () => ['', 'Common set of elements used to form subsets for individual contexts.', ''],
     axis: ({ context, subject, isBaseSet }) => [
-      'admissible contexts',
+      context,
       isBaseSet
         ? 'Family of admissible subsets of “' + subject + '”.'
         : 'Family of admissible values of the structure “' + subject + '”.',
@@ -116,7 +116,7 @@ const text: Record<TextLocale, Record<Exclude<RelativizationRole, 'preserved'>, 
   fr: {
     carrier: () => ['', 'Ensemble commun des éléments utilisés pour former les sous-ensembles de chaque contexte.', ''],
     axis: ({ context, subject, isBaseSet }) => [
-      'contextes admissibles',
+      context,
       isBaseSet
         ? 'Famille de sous-ensembles admissibles de « ' + subject + ' ».'
         : 'Famille de valeurs admissibles de la structure « ' + subject + ' ».',

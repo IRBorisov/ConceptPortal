@@ -30,7 +30,7 @@ import {
   prepareReview,
   type ReviewRow
 } from '@/features/relativization/models/review';
-import { defaultContextNames, getRelativizationLocale } from '@/features/relativization/models/source-locale';
+import { getRelativizationLocale } from '@/features/relativization/models/source-locale';
 
 import { KEYS } from '@/backend/configuration';
 import { Loader } from '@/components/loader';
@@ -86,7 +86,7 @@ export function DlgRelativize() {
   const exclusionOptions = getRelativizationExclusions(schema?.items ?? [], target);
   const term = target?.term_resolved.trim() ?? '';
   const locale = getRelativizationLocale(source, DEFAULT_LOCALE);
-  const defaultContextName = defaultContextNames[locale];
+  const familyName = contextName.trim();
   const useInflection = intl.locale === 'ru' && locale === 'ru' && !!term && manualTitle === null;
   const formQuery = useQuery({
     queryKey: [KEYS.cctext, 'inflect', term, Grammeme.gent],
@@ -104,7 +104,7 @@ export function DlgRelativize() {
       : '';
   const title = manualTitle ?? defaultTitle;
   const canPrepare =
-    !!source && !!target && !!alias.trim() && !!title.trim() && !(useInflection && formQuery.isLoading);
+    !!source && !!target && !!familyName && !!alias.trim() && !!title.trim() && !(useInflection && formQuery.isLoading);
   const sourceChanged = draft !== null && draft.parameters.source_time_update !== source?.time_update;
   const canConfirm = draft !== null && !sourceChanged && canConfirmReview(rows);
 
@@ -129,7 +129,7 @@ export function DlgRelativize() {
         target: target.id,
         excluded: exclusionOptions.filter(item => excludedIDs.includes(item.id)).map(item => item.id),
         locale,
-        context_name: contextName.trim() || defaultContextName
+        context_name: familyName
       };
       if (action === 'preview') {
         const projection = await rsformsApi.previewRelativization({ itemID: schemaID, data: parameters });

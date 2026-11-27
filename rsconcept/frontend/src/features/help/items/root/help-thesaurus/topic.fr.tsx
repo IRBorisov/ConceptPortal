@@ -263,8 +263,14 @@ export function HelpThesaurusFr() {
       </p>
       <ul>
         <li>Cible de relativisation – entité individuelle choisie pour la relativisation.</li>
-        <li>Nom de la famille – nom choisi par l’utilisateur et ajouté aux termes du schéma source.</li>
-        <li>Ensemble des contextes – ensemble des parties du domaine de définition de la cible.</li>
+        <li>
+          Nom de la famille – nom choisi par l’utilisateur et ajouté aux termes du schéma source pour fixer le nouveau
+          point de vue.
+        </li>
+        <li>
+          Ensemble des contextes – valeurs admissibles de la cible, chacune correspondant à une entité de la famille.
+          Dans chaque contexte, on détermine les valeurs des concepts dépendants et on vérifie les énoncés.
+        </li>
         <li>Fonction de dérélativisation – fonction auxiliaire qui extrait l’unique valeur pour un contexte donné.</li>
       </ul>
 

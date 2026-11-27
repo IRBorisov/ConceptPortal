@@ -48,5 +48,3 @@ export function getRelativizationLocale(
   const title = clean(source.title);
   return detect(text) ?? detect(title) ?? (/\p{Script=Latin}/u.test(text || title) ? 'en' : fallback);
 }
-
-export const defaultContextNames: Record<AppLocale, string> = { en: 'context', fr: 'contexte', ru: 'контекст' };

@@ -29,7 +29,7 @@ import {
   prepareReview,
   type ReviewRow
 } from '@/features/relativization/models/review';
-import { defaultContextNames, getRelativizationLocale } from '@/features/relativization/models/source-locale';
+import { getRelativizationLocale } from '@/features/relativization/models/source-locale';
 import { rsformsApi } from '@/features/rsform/backend/api';
 import { cctextApi } from '@/features/rsform/backend/cctext/api';
 
@@ -107,7 +107,7 @@ export function DlgCreateRelativization() {
 
   const term = target?.term_resolved.trim() ?? '';
   const locale = getRelativizationLocale(sourceQuery.data?.raw, options?.locale ?? DEFAULT_LOCALE);
-  const defaultContextName = defaultContextNames[locale];
+  const familyName = contextName.trim();
   const canInflect = !!term && manualTitle === null && intl.locale === 'ru' && locale === 'ru';
   const formQuery = useQuery({
     queryKey: [KEYS.cctext, 'inflect', term, Grammeme.gent],
@@ -148,6 +148,7 @@ export function DlgCreateRelativization() {
     !!source &&
     !!schema &&
     !!target &&
+    !!familyName &&
     !!alias.trim() &&
     !!title.trim() &&
     alias.length <= limits.len_alias &&
@@ -199,7 +200,7 @@ export function DlgCreateRelativization() {
         target: target.id,
         excluded: exclusionOptions.filter(item => excludedIDs.includes(item.id)).map(item => item.id),
         locale,
-        context_name: contextName.trim() || defaultContextName
+        context_name: familyName
       };
       if (action === 'preview') {
         const result = await ossApi.previewRelativization({

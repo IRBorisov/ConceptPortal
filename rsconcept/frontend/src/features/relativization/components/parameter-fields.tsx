@@ -65,6 +65,7 @@ export function RelativizationParameterFields({
         <TextInput
           id='relativization_context'
           aria-label={contextLabel}
+          required
           placeholder={contextLabel}
           value={contextName}
           maxLength={maxContextLength}

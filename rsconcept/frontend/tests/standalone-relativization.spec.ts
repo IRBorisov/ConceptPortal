@@ -103,7 +103,7 @@ test('keeps the relativization fields in their columns with a long selected term
   await expect(exclusion).toBeChecked();
 });
 
-test('opens relativization help from the schema dialog and links to the glossary', async ({ page }) => {
+test('opens relativization help from the schema dialog and follows a term link', async ({ page }) => {
   const source = createRSFormMock(353, 'Вершины');
   source.items = [createCstMock(11, 'X1', CstType.BASE)];
   dataRSForms.set(source.id, source);
@@ -121,9 +121,9 @@ test('opens relativization help from the schema dialog and links to the glossary
   const manual = await newPage;
   await expect(manual).toHaveURL(/\/manuals\?topic=concept-relativization$/);
   await expect(manual.getByRole('heading', { name: 'Релятивизация', level: 1 })).toBeVisible();
-  await manual.getByRole('link', { name: 'Термины Портала', exact: true }).click();
-  await expect(manual.getByRole('heading', { name: 'Тезаурус' })).toBeVisible();
-  await expect(manual.getByText(/дерелятивизатор/i).first()).toBeVisible();
+  await expect(manual.locator('a[href="/manuals?topic=thesaurus"]')).toHaveCount(0);
+  await manual.locator('a[href="/manuals?topic=concept-schema"]').click();
+  await expect(manual).toHaveURL(/\/manuals\?topic=concept-schema$/);
   await manual.close();
   await expect(dialog).toBeVisible();
   await expect(alias).toHaveValue('VerticesByContext');
@@ -152,6 +152,7 @@ test('offers French proposals for a French source in the Russian interface', asy
   const context = dialog.getByRole('textbox', { name: 'Имя семейства' });
   await expect(context).toHaveValue('');
   await expect(context).toHaveAttribute('placeholder', 'Имя семейства');
+  await context.fill('contexte');
   await dialog.getByRole('textbox', { name: 'Сокращение' }).fill('GrapheContexte');
   await dialog.getByRole('button', { name: 'Проверить тексты' }).press('Enter');
   await expect(dialog.getByRole('heading', { name: 'Проверка текстов' })).toBeFocused();
@@ -159,7 +160,7 @@ test('offers French proposals for a French source in the Russian interface', asy
   const axis = dialog.locator('details').filter({ hasText: 'X1 → S1' });
   await axis.locator(':scope > summary').press('Enter');
   const term = axis.getByRole('textbox', { name: 'Термин', exact: true });
-  await expect(term).toHaveValue('contextes admissibles');
+  await expect(term).toHaveValue('contexte');
   await expect(term).toHaveAttribute('lang', 'fr');
   await page.setViewportSize({ width: 360, height: 640 });
   const original = axis.getByText('sommets', { exact: true });
@@ -229,7 +230,14 @@ test('uses the dialog focus when another constituent is selected in the schema',
   await expect(review).toBeDisabled();
   await target.press('Enter');
   await page.getByRole('button', { name: /^X1/ }).click();
-  await expect(dialog.getByRole('textbox', { name: 'Имя семейства' })).toHaveValue('');
+  const context = dialog.getByRole('textbox', { name: 'Имя семейства' });
+  await expect(context).toHaveValue('');
+  await expect(create).toBeDisabled();
+  await expect(review).toBeDisabled();
+  await context.fill('   ');
+  await expect(create).toBeDisabled();
+  await expect(review).toBeDisabled();
+  await context.fill('  группа  ');
   await expect(create).toBeEnabled();
   await expect(review).toBeEnabled();
   await expect(create).toBeInViewport();
@@ -242,7 +250,12 @@ test('uses the dialog focus when another constituent is selected in the schema',
   const submission = schemaCreateStandaloneRelativization.parse((await saved).request().postDataJSON());
   await opened;
   await expect(dialog).toHaveCount(0);
-  expect(submission).toMatchObject({ target: 11, source_time_update: source.time_update, skip_review: true });
+  expect(submission).toMatchObject({
+    target: 11,
+    source_time_update: source.time_update,
+    context_name: 'группа',
+    skip_review: true
+  });
   expect(submission).not.toHaveProperty('schema_data');
 });
 
@@ -279,6 +292,7 @@ test('relativizes a schema from its editing menu and keeps reviewed text after a
   const dialog = page.getByRole('dialog', { name: 'Релятивизация' });
   await dialog.locator('#relativization_target').click();
   await page.getByRole('button', { name: /^X1.*Вершины/ }).click();
+  await dialog.getByRole('textbox', { name: 'Имя семейства' }).fill('группа');
   await dialog.getByLabel('Сокращение').fill('Relative');
   await dialog.getByRole('button', { name: 'Проверить тексты' }).click();
 
