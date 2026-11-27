@@ -6,11 +6,13 @@ from hashlib import sha256
 from typing import cast
 
 from django.conf import settings
+from django.core.exceptions import PermissionDenied as DjangoPermissionDenied
 from django.db import transaction
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from rest_framework.request import Request
 
 from apps.library.models import AccessPolicy, LibraryItem, LocationHead
+from apps.library.services.location_access import assert_can_write_location
 from shared import messages as msg
 from shared import permissions
 from shared.concurrency import Conflict
@@ -138,6 +140,10 @@ def create_standalone_relativization(item: LibraryItem, data: dict, request: Req
 
     location = source.location if source.owner_id == request.user.pk else LocationHead.USER
     if location == LocationHead.LIBRARY:
+        location = LocationHead.USER
+    try:
+        assert_can_write_location(request.user, location)
+    except DjangoPermissionDenied:
         location = LocationHead.USER
     access_policy = source.access_policy
     if access_policy == AccessPolicy.PUBLIC:

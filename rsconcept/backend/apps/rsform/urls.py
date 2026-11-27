@@ -10,6 +10,7 @@ library_router.register('rsforms', views.RSFormViewSet, 'RSForm')
 
 urlpatterns = [
     path('rsforms/create-from-data', views.create_rsform_from_data),
+    path('rsforms/create-from-sandbox', views.create_rsform_from_data),
     path('rsforms/inline-synthesis', views.inline_synthesis),
 
     path('cctext/inflect', views.inflect),

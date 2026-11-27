@@ -140,6 +140,8 @@ def update_constituenta(
             formal_fields = ('alias', 'cst_type', 'definition_formal', 'typification_manual', 'value_is_property')
             if managed_row and any(field in data and data[field] != getattr(cst, field) for field in formal_fields):
                 raise ValidationError('Edit managed definitions and types in the source or operation parameters.')
+            if managed_row and 'crucial' in data and data['crucial'] != cst.crucial:
+                raise ValidationError({'crucial': 'Edit the managed crucial flag in the source schema.'})
         propagation = PropagationFacade()
         schema = propagation.get_schema(item.pk)
         old_data = schema.update_cst(cst.pk, data)
@@ -167,6 +169,20 @@ def update_constituenta(
             if schema.change_cst_type(cst.pk, new_type):
                 propagation.after_change_cst_type(item.pk, cst.pk, new_type)
         item.save(update_fields=['time_update'])
+
+
+@propagation_batch
+def update_crucial(
+    item: LibraryItem, targets: list[m.Constituenta], value: bool, request: Request,
+) -> None:
+    ''' Update the crucial flag of constituents that are editable in this schema. '''
+    _lock_schema(item, request)
+    changed = m.Constituenta.objects.filter(schema=item, pk__in=[cst.pk for cst in targets]).exclude(crucial=value)
+    changed_ids = list(changed.values_list('pk', flat=True))
+    require_unmanaged_constituents(changed_ids, item.pk)
+    changed.update(crucial=value)
+    mark_schema(item.pk)
+    item.save(update_fields=['time_update'])
 
 
 @propagation_batch

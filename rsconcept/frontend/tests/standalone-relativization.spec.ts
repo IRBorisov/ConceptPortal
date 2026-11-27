@@ -2,10 +2,10 @@ import { type Page } from '@playwright/test';
 import { CstType } from '@rsconcept/domain/library';
 import { projectRelativization } from '@rsconcept/domain/library/relativization';
 
+import { schemaRelativizationInput } from '../src/features/relativization';
 import {
   type CreateStandaloneRelativizationDTO,
-  schemaCreateStandaloneRelativization,
-  schemaRelativizationInput
+  schemaCreateStandaloneRelativization
 } from '../src/features/rsform/backend/relativization';
 import { type RSFormDTO } from '../src/features/rsform/backend/types';
 import { authAdmin, authAnonymous, setupAuth } from './mocks/auth';
@@ -121,7 +121,7 @@ test('opens relativization help from the schema dialog and links to the glossary
   const manual = await newPage;
   await expect(manual).toHaveURL(/\/manuals\?topic=concept-relativization$/);
   await expect(manual.getByRole('heading', { name: 'Релятивизация', level: 1 })).toBeVisible();
-  await manual.getByRole('link', { name: /^(глоссарий|тезаурус)$/i }).click();
+  await manual.getByRole('link', { name: 'Термины Портала', exact: true }).click();
   await expect(manual.getByRole('heading', { name: 'Тезаурус' })).toBeVisible();
   await expect(manual.getByText(/дерелятивизатор/i).first()).toBeVisible();
   await manual.close();

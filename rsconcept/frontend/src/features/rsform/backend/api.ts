@@ -5,6 +5,11 @@ import { globalTx } from '@/i18n';
 import { type Attribution, type LibraryItem, type RSForm } from '@rsconcept/domain/library';
 
 import { schemaLibraryItem } from '@/features/library';
+import {
+  type RelativizationDraftDTO,
+  type RelativizationParametersDTO,
+  schemaRelativizationDraft
+} from '@/features/relativization';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
@@ -12,12 +17,7 @@ import { resolveExpectedTimeUpdate } from '@/backend/expected-time-update';
 import { invalidateRelatedOss } from '@/backend/item-sync-utils';
 import { queryClient } from '@/backend/query-client';
 
-import {
-  type CreateStandaloneRelativizationDTO,
-  type RelativizationDraftDTO,
-  type RelativizationParametersDTO,
-  schemaRelativizationDraft
-} from './relativization';
+import { type CreateStandaloneRelativizationDTO } from './relativization';
 import { loadRSForm } from './rsform-loader';
 import { notifySchemaSync } from './schema-sync';
 import {

@@ -3,8 +3,8 @@ import { randomBytes } from 'node:crypto';
 import { expect, test } from '@playwright/test';
 
 import { type OperationCreatedResponse } from '@/features/oss/backend/types';
+import { type RelativizationDraftDTO } from '@/features/relativization';
 import { type RSFormDTO } from '@/features/rsform';
-import { type RelativizationDraftDTO } from '@/features/rsform/backend/relativization';
 
 const site = process.env.PORTAL_TEST_SITE;
 const api = process.env.PORTAL_TEST_API;
@@ -80,6 +80,7 @@ test('relativization keeps a reviewed edit after a real rejection and saves it o
   const dialog = page.getByRole('dialog', { name: 'Релятивизация' });
   await dialog.getByRole('combobox', { name: 'Фокус релятивизации' }).click();
   await page.getByRole('button', { name: /^X1.*вершины/ }).click();
+  await dialog.getByRole('textbox', { name: 'Имя семейства' }).fill('набор вершин');
   await dialog.getByRole('textbox', { name: 'Сокращение' }).fill('REL' + suffix);
   const preview = page.waitForResponse(response => response.url().endsWith('/preview-relativization'));
   await dialog.getByRole('button', { name: 'Проверить тексты' }).click();

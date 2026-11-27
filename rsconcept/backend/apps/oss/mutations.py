@@ -238,35 +238,49 @@ def create_replica_operation(
     return new_operation
 
 
-def _relativization_source(item: LibraryItem, data: dict, request: Request) -> tuple[m.Operation, LibraryItem]:
-    source = m.Operation.objects.select_for_update().filter(oss=item, pk=data['source_operation'].pk).first()
+def _lock_relativization(
+    item: LibraryItem, data: dict, request: Request, *, editing: bool = False,
+) -> tuple[m.Operation, LibraryItem, m.Operation | None]:
+    source = m.Operation.objects.filter(oss=item, pk=data['source_operation'].pk).only('result_id').first()
     if source is None or source.result_id is None:
         raise serializers.ValidationError({'source_operation': msg.missingArguments()})
-    source_schema = LibraryItem.objects.select_for_update().get(pk=source.result_id)
-    _require_schema_audience(request, item, {source_schema.pk})
+
+    existing = data.get('existing_operation')
+    result_id = None
+    if existing is not None:
+        result_id = m.Operation.objects.filter(pk=existing.pk, oss=item).values_list('result_id', flat=True).first()
+        if result_id is None:
+            raise Conflict(detail=msg.concurrentModification())
+
+    # Result text edits and propagation lock the schema before its operation.
+    schemas = _require_schema_audience(request, item, {source.result_id}, result_id=result_id)
+    source_schema = schemas[source.result_id]
     if source_schema.time_update != data['source_time_update']:
         raise Conflict(detail=msg.concurrentModification())
-    return source, source_schema
-
-
-def _locked_relativization(data: dict, source: m.Operation, schema: LibraryItem) -> m.Operation | None:
-    existing = data.get('existing_operation')
     if existing is None:
-        return None
-    operation = m.Operation.objects.select_for_update().filter(pk=existing.pk, oss=source.oss_id).first()
-    if (not operation or not operation.projection or operation.result_id is None
-            or operation.relativization_source_id != schema.pk
+        return source, source_schema, None
+    assert result_id is not None
+    result = schemas.get(result_id)
+    if result is None:
+        raise Conflict(detail=msg.concurrentModification())
+    if editing:
+        _require_editable_schema(request, result)
+    elif not permissions.can_read_library_item(request.user, result):
+        raise PermissionDenied()
+
+    operation = m.Operation.objects.select_for_update().filter(pk=existing.pk, oss=item).first()
+    if (not operation or not operation.projection or operation.result_id != result_id
+            or operation.relativization_source_id != source_schema.pk
             or not operation.getQ_arguments().filter(argument=source).exists()):
         raise Conflict(detail=msg.concurrentModification())
-    return operation
+    return source, source_schema, operation
 
 
 def preview_relativization(item: LibraryItem, validated: dict, request: Request) -> dict:
     ''' Calculate the preview from a locked and authorized source snapshot. '''
     with transaction.atomic():
         _lock_expected_update(item, request)
-        source, schema = _relativization_source(item, validated, request)
-        existing = _locked_relativization(validated, source, schema)
+        _, schema, existing = _lock_relativization(item, validated, request)
         parameters = parameters_from(validated)
         draft = calculate_projection(schema.pk, parameters)
         prior = prior_texts(existing, draft) if existing else []
@@ -279,10 +293,9 @@ def create_relativization_operation(item: LibraryItem, validated: dict, request:
     ''' Calculate and persist the projection, text provenance, and graph position atomically. '''
     with transaction.atomic():
         _lock_expected_update(item, request)
-        source, source_schema = _relativization_source(item, validated, request)
+        source, source_schema, existing = _lock_relativization(item, validated, request, editing=True)
         parameters = parameters_from(validated)
         draft = calculate_projection(source_schema.pk, parameters)
-        existing = _locked_relativization(validated, source, source_schema)
         suggestions = {row['id']: {name: row[name] for name in TEXT_FIELDS} for row in draft['items']}
         checked: set[int] = set()
         if validated['skip_review']:
@@ -304,22 +317,8 @@ def create_relativization_operation(item: LibraryItem, validated: dict, request:
         if duplicates.exists():
             raise Conflict(detail=msg.concurrentModification())
         if existing:
-            existing_result = existing.result
-            assert existing_result is not None
-            _require_editable_schema(request, existing_result)
             refresh_projection(existing, parameters, draft, checked, suggestions)
-            for name in ('alias', 'title', 'description'):
-                if name in data:
-                    setattr(existing, name, data[name])
-                    setattr(existing_result, name, data[name])
-            parent = data.get('parent')
-            if existing.parent_id != (parent.pk if parent else None):
-                layout = _without_node(validated['layout'], 'o', existing.pk)
-                layout.append(_node('o', existing.pk, validated['position']))
-                m.Layout.update_data(item.pk, layout)
-                existing.parent = parent
-            existing.save(update_fields=['alias', 'title', 'description', 'parent'])
-            existing_result.save(update_fields=['alias', 'title', 'description', 'time_update'])
+            _update_relativization_details(existing, validated)
             item.save(update_fields=['time_update'])
             return existing
         result, id_map = create_rsform_from_data(
@@ -351,6 +350,24 @@ def create_relativization_operation(item: LibraryItem, validated: dict, request:
         layout = [*validated['layout'], _node('o', operation.pk, validated['position'])]
         m.Layout.update_data(item.pk, layout)
         return operation
+
+
+def _update_relativization_details(operation: m.Operation, validated: dict) -> None:
+    result = operation.result
+    assert result is not None
+    data = validated['item_data']
+    for name in ('alias', 'title', 'description'):
+        if name in data:
+            setattr(operation, name, data[name])
+            setattr(result, name, data[name])
+    parent = data.get('parent')
+    if operation.parent_id != (parent.pk if parent else None):
+        layout = _without_node(validated['layout'], 'o', operation.pk)
+        layout.append(_node('o', operation.pk, validated['position']))
+        m.Layout.update_data(operation.oss_id, layout)
+        operation.parent = parent
+    operation.save(update_fields=['alias', 'title', 'description', 'parent'])
+    result.save(update_fields=['alias', 'title', 'description', 'time_update'])
 
 
 @propagation_batch
@@ -434,6 +451,7 @@ def delete_operation(item: LibraryItem, validated: dict, request: Request | None
             if (operation.operation_type in (m.OperationType.SYNTHESIS, m.OperationType.RELATIVIZATION)
                     and not validated['delete_schema']):
                 _require_schema_audience(request, old_schema, permissions.source_schema_ids({old_schema.pk}))
+            old_schema = LibraryItem.objects.select_for_update().filter(pk=old_schema.pk).first()
             if validated['keep_constituents']:
                 _require_retained_audience(request, oss, operation)
         if _has_relativization_dependents(operation, include_replicas=True) or (
@@ -675,31 +693,38 @@ def _require_retained_audience(
         _require_schema_audience(request, destination, {parent_id})
 
 
-def _require_schema_audience(request: Request | None, destination: LibraryItem, source_ids: set[int]) -> None:
-    ''' Require current read access and keep the result's audience within every source ACL. '''
+def _require_schema_audience(
+    request: Request | None, destination: LibraryItem, source_ids: set[int], *, result_id: int | None = None,
+) -> dict[int, LibraryItem]:
+    ''' Check the audience against the locked sources, optionally locking the existing result alongside them. '''
     if not source_ids:
-        return
+        return {}
     if request is None:
         raise PermissionDenied()
 
-    destination = LibraryItem.objects.select_for_update().get(pk=destination.pk)
     all_ids = source_ids | permissions.source_schema_ids(source_ids)
-    sources = list(LibraryItem.objects.select_for_update().filter(pk__in=all_ids).order_by('pk'))
+    lock_ids = all_ids | {destination.pk}
+    if result_id is not None:
+        lock_ids.add(result_id)
+    locked = {item.pk: item for item in LibraryItem.objects.select_for_update().filter(pk__in=lock_ids).order_by('pk')}
+    locked_destination = locked.get(destination.pk)
+    if locked_destination is None:
+        raise Conflict(detail=msg.concurrentModification())
     readable = LibraryItem.objects.filter(permissions.library_item_read_filter(request.user)).values('pk')
-    if len(sources) != len(all_ids) or LibraryItem.objects.filter(pk__in=all_ids).exclude(pk__in=readable).exists():
+    if not all_ids.issubset(locked) or LibraryItem.objects.filter(pk__in=all_ids).exclude(pk__in=readable).exists():
         raise PermissionDenied('Every source schema must be readable.')
 
-    restricted = [source for source in sources if source.access_policy != AccessPolicy.PUBLIC]
+    restricted = [locked[pk] for pk in all_ids if locked[pk].access_policy != AccessPolicy.PUBLIC]
     if not restricted:
-        return
-    if destination.access_policy == AccessPolicy.PUBLIC:
+        return locked
+    if locked_destination.access_policy == AccessPolicy.PUBLIC:
         raise PermissionDenied('The result cannot be shared more widely than its source schemas.')
 
     audience: set[int] = set()
-    if destination.owner_id is not None:
-        audience.add(destination.owner_id)
-    if destination.access_policy == AccessPolicy.PROTECTED:
-        audience.update(Editor.objects.filter(item=destination).values_list('editor_id', flat=True))
+    if locked_destination.owner_id is not None:
+        audience.add(locked_destination.owner_id)
+    if locked_destination.access_policy == AccessPolicy.PROTECTED:
+        audience.update(Editor.objects.filter(item=locked_destination).values_list('editor_id', flat=True))
     readers = set(User.objects.filter(pk__in=audience, is_staff=False).values_list('pk', flat=True))
     for source in restricted:
         allowed = {source.owner_id}
@@ -707,6 +732,7 @@ def _require_schema_audience(request: Request | None, destination: LibraryItem, 
             allowed.update(Editor.objects.filter(item=source).values_list('editor_id', flat=True))
         if readers - allowed:
             raise PermissionDenied('The result cannot be shared more widely than its source schemas.')
+    return locked
 
 
 def _schema_label(schema: LibraryItem) -> str:

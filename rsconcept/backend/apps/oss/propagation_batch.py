@@ -67,8 +67,11 @@ def _recompute(changed: set[int]) -> None:
             if not ancestors.intersection(pending_outputs):
                 ids = [source_id, result_id]
                 list(LibraryItem.objects.select_for_update().filter(pk__in=ids).order_by('pk'))
-                locked = Operation.objects.select_for_update().get(pk=operation.pk)
-                refresh_projection(locked)
+                locked = Operation.objects.select_for_update().filter(
+                    pk=operation.pk, relativization_source_id=source_id, result_id=result_id,
+                ).first()
+                if locked is not None:
+                    refresh_projection(locked)
                 completed.add(operation.pk)
                 break
         else:

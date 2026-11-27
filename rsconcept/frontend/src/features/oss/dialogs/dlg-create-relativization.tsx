@@ -11,6 +11,25 @@ import { type Constituenta, CstType, type Operation, type OperationType } from '
 import { useConceptNavigation } from '@/app';
 import { DialogTourID } from '@/features/onboarding/tours/editor-tours';
 import { endDialogTourIfActive } from '@/features/onboarding/utils/end-dialog-tour';
+import {
+  getRelativizationExclusions,
+  RelativizationParameterFields,
+  RelativizationResultFields
+} from '@/features/relativization/components/parameter-fields';
+import {
+  type RelativizationAction,
+  RelativizationDialog
+} from '@/features/relativization/components/relativization-dialog';
+import { ReviewRelativizationTexts } from '@/features/relativization/components/review-texts';
+import {
+  canConfirmReview,
+  hasEditedReviewTexts,
+  hasReviewEdits,
+  isReviewed,
+  prepareReview,
+  type ReviewRow
+} from '@/features/relativization/models/review';
+import { defaultContextNames, getRelativizationLocale } from '@/features/relativization/models/source-locale';
 import { rsformsApi } from '@/features/rsform/backend/api';
 import { cctextApi } from '@/features/rsform/backend/cctext/api';
 
@@ -27,23 +46,7 @@ import { useOss } from '../backend/use-oss';
 import { SelectBlock } from '../components/select-block';
 import { SelectOperation } from '../components/select-operation';
 
-import {
-  getRelativizationExclusions,
-  RelativizationParameterFields,
-  RelativizationResultFields
-} from './relativization/parameter-fields';
 import { getRelativizationPlacement } from './relativization/placement';
-import { type RelativizationAction, RelativizationDialog } from './relativization/relativization-dialog';
-import {
-  canConfirmReview,
-  hasEditedReviewTexts,
-  hasReviewEdits,
-  isReviewed,
-  prepareReview,
-  type ReviewRow
-} from './relativization/review';
-import { ReviewRelativizationTexts } from './relativization/review-texts';
-import { defaultContextNames, getRelativizationLocale } from './relativization/source-locale';
 import { useOssDialogsStore } from './oss-dialog-store';
 
 export interface DlgCreateRelativizationProps {

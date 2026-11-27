@@ -14,6 +14,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from apps.oss.models import Layout, Operation, OperationSchema, PropagationFacade
+from apps.oss.propagation_batch import propagation_batch
 from apps.rsmodel.models import RSModel
 from apps.users.models import User
 from shared import permissions
@@ -90,26 +91,29 @@ class LibraryViewSet(ConcurrencyMixin, viewsets.ModelViewSet):
             if update_list:
                 Operation.objects.bulk_update(update_list, ['alias', 'title', 'description'])
 
+    @propagation_batch
     def perform_destroy(self, instance: m.LibraryItem) -> None:
         ''' Delete an item and its cascading library rows in one transaction. '''
-        with transaction.atomic():
-            if instance.item_type == m.LibraryItemType.RSFORM:
-                if Operation.objects.filter(result=instance, relativization_source__isnull=False).exists():
-                    raise ValidationError('Remove the relativization operation before deleting its result.')
-                if Operation.objects.filter(relativization_source=instance).exists():
-                    raise ValidationError('Remove or reconfigure dependent relativizations before deleting the source.')
-                PropagationFacade().before_delete_schema(instance.pk)
-                model_bindings = RSModel.objects.filter(schema=instance)
-                for binding in model_bindings:
-                    self.perform_destroy(binding.model)
-                super().perform_destroy(instance)
-            elif instance.item_type == m.LibraryItemType.OPERATION_SCHEMA:
-                schemas = list(OperationSchema.owned_schemasQ(instance))
-                super().perform_destroy(instance)
-                for schema in schemas:
-                    self.perform_destroy(schema)
-            else:
-                super().perform_destroy(instance)
+        if not m.LibraryItem.objects.select_for_update().filter(pk=instance.pk).exists():
+            return
+        if instance.item_type == m.LibraryItemType.RSFORM:
+            if Operation.objects.filter(result=instance, relativization_source__isnull=False).exists():
+                raise ValidationError('Remove the relativization operation before deleting its result.')
+            if Operation.objects.filter(relativization_source=instance).exists():
+                raise ValidationError('Remove or reconfigure dependent relativizations before deleting the source.')
+            PropagationFacade().before_delete_schema(instance.pk)
+            model_bindings = RSModel.objects.filter(schema=instance)
+            for binding in model_bindings:
+                self.perform_destroy(binding.model)
+            super().perform_destroy(instance)
+        elif instance.item_type == m.LibraryItemType.OPERATION_SCHEMA:
+            owned_ids = OperationSchema.owned_schemasQ(instance).values('pk')
+            schemas = list(m.LibraryItem.objects.filter(pk__in=owned_ids).select_for_update().order_by('pk'))
+            super().perform_destroy(instance)
+            for schema in schemas:
+                self.perform_destroy(schema)
+        else:
+            super().perform_destroy(instance)
 
     def get_throttles(self):
         if self.action == 'clone':
