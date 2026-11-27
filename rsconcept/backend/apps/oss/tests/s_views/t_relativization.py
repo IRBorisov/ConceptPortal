@@ -310,6 +310,13 @@ class TestRelativizationPropagation(EndpointTester):
         operation = self._relativize()
         axis = self._row(operation, self.base, 'axis')
         forms = [{'text': 'Contexts', 'tags': 'plur'}]
+        response = self._update(axis, term_forms=forms)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        self._relativize(existing=operation, context_name='Generated context')
+        axis.refresh_from_db()
+        self.assertEqual(axis.term_raw, 'Generated context')
+        self.assertEqual(axis.term_forms, forms)
+
         response = self._update(axis, term_raw='Local context', term_forms=forms, definition_raw='')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
 

@@ -180,6 +180,9 @@ def _write_updates(
             current.cst_type = new_type
             current.save(update_fields=['cst_type'])
         modifications = {name: item[name] for name in MUTABLE_FIELDS if getattr(current, name) != item[name]}
+        if 'term_raw' in modifications:
+            # Updating a term without forms clears them in RSFormCached.
+            modifications['term_forms'] = item['term_forms']
         if modifications or new_type is not None:
             old_data = schema.update_cst(current.pk, modifications) if modifications else {}
             changes.append((current.pk, new_type, modifications, old_data))
