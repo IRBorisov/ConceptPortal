@@ -224,6 +224,55 @@ class TestRelativizationPropagation(EndpointTester):
         )
         self.assertTrue(LibraryItem.objects.filter(pk=removed_schema_id).exists())
 
+    def test_synthesis_identification_refreshes_relativization_and_protects_its_target(self):
+        synthesis = self._synthesize('Synthesis', self.source_operation, self.other_operation)
+        target = Inheritance.objects.get(operation=synthesis, parent=self.base).child
+        excluded = Inheritance.objects.get(operation=synthesis, parent=self.other_base).child
+        self.source = RSForm(synthesis.result)
+        relativization = self._relativize(target, excluded=[excluded], source_operation=synthesis)
+        url = f'/api/oss/{self.oss.model.pk}/update-operation'
+        payload = {
+            'target': synthesis.pk,
+            'item_data': {},
+            'arguments': [self.source_operation.pk, self.other_operation.pk],
+        }
+
+        self._assert_rejected(
+            lambda: self.client.patch(url, payload | {
+                'substitutions': [{'original': self.base.pk, 'substitution': self.other_base.pk}],
+            }, format='json'),
+            'target', [self.source_operation, self.other_operation, synthesis, relativization],
+        )
+
+        revision = self.source.model.time_update
+        response = self.client.patch(url, payload | {
+            'substitutions': [{'original': self.other_base.pk, 'substitution': self.base.pk}],
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        self.source.model.refresh_from_db()
+        self.assertGreater(self.source.model.time_update, revision)
+        relativization.refresh_from_db()
+        self.assertEqual(relativization.relativization.parameters['excluded'], [])
+        self.assertEqual(relativization.relativization.parameters['target'], target.pk)
+
+    def test_context_predicate_is_a_managed_artifact_with_stable_identity(self):
+        condition = self.source.insert_last('A1', definition_formal='X1≠∅')
+        self.source.insert_last('T1', definition_formal='¬A1')
+        relativization = self._relativize()
+        predicate = self._row(relativization, condition, 'predicate')
+        inherited = self._row(relativization, condition, 'condition')
+        self.assertEqual(
+            list(Inheritance.objects.filter(operation=relativization, parent=condition)
+                 .values_list('child_id', flat=True)),
+            [inherited.pk],
+        )
+
+        response = self._update(condition, definition_formal='X1=∅')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        refreshed = self._row(relativization, condition, 'predicate')
+        self.assertEqual(refreshed.pk, predicate.pk)
+        self.assertTrue(refreshed.definition_formal.endswith('=∅'), refreshed.definition_formal)
+
     def test_library_delete_refreshes_indirect_relativization(self):
         removed_schema_id = self.other.model.pk
         synthesis = self._synthesize('Synthesis', self.source_operation, self.other_operation)

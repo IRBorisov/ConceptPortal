@@ -4,10 +4,9 @@ from typing import Optional
 from django.db.models import Q
 from rest_framework.serializers import ValidationError
 
-from apps.library.models import LibraryItem
 from apps.rsform.models import Attribution, Constituenta, CstType, RSFormCached
 
-from ..propagation_state import mark_schema
+from ..propagation_state import touch_schema
 from .Inheritance import Inheritance
 from .Operation import Operation, OperationType
 from .OssCache import OssCache
@@ -44,7 +43,7 @@ class PropagationEngine:
             if child_schema is None:
                 continue
             if child_schema.change_cst_type(successor_id, ctype):
-                _touch_schema(child_schema.pk)
+                touch_schema(child_schema.pk)
                 self.on_change_cst_type(child_id, successor_id, ctype)
 
     # pylint: disable=too-many-arguments, too-many-positional-arguments
@@ -91,7 +90,7 @@ class PropagationEngine:
                 parent=cst
             )
             self.cache.insert_inheritance(new_inheritance)
-        _touch_schema(destination.pk)
+        touch_schema(destination.pk)
         new_mapping = {alias_mapping[alias]: cst for alias, cst in new_mapping.items()}
         self.on_inherit_cst(operation.pk, destination, new_cst_list, new_mapping)
 
@@ -124,7 +123,7 @@ class PropagationEngine:
             new_old_data = child_schema.update_cst(successor.pk, new_data)
             if not new_old_data:
                 continue
-            _touch_schema(child_schema.pk)
+            touch_schema(child_schema.pk)
             new_mapping = {alias_mapping[alias]: cst for alias, cst in new_mapping.items()}
             self.on_update_cst(
                 operation=child_id,
@@ -175,7 +174,7 @@ class PropagationEngine:
                 attribute_id=new_attribute
             ))
         if new_attributions:
-            _touch_schema(operation.result_id)
+            touch_schema(operation.result_id)
             new_attributions = Attribution.objects.bulk_create(new_attributions)
             self.on_inherit_attribution(target, new_attributions)
 
@@ -195,7 +194,7 @@ class PropagationEngine:
                 continue
             self.on_before_substitute(child_operation.pk, new_substitutions)
             child_schema.substitute(new_substitutions)
-            _touch_schema(child_schema.pk)
+            touch_schema(child_schema.pk)
 
     def on_delete_attribution(self, operationID: int, attributions: list[Attribution]) -> None:
         ''' Trigger cascade resolutions when Attribution is deleted. '''
@@ -229,7 +228,7 @@ class PropagationEngine:
                 deleted.append(deleted_attr)
 
         if deleted:
-            _touch_schema(child_schema.pk)
+            touch_schema(child_schema.pk)
             self.on_delete_attribution(operationID, deleted)
             Attribution.objects.filter(pk__in=[attrib.pk for attrib in deleted]).delete()
 
@@ -260,7 +259,7 @@ class PropagationEngine:
         target_ids = self.cache.get_inheritors_list(parents, operationID)
         self.on_delete_inherited(operationID, target_ids)
         if target_ids:
-            _touch_schema(schema.pk)
+            touch_schema(schema.pk)
             self.cache.remove_cst(operationID, target_ids)
             schema.delete_cst(target_ids)
 
@@ -408,7 +407,7 @@ class PropagationEngine:
         ''' Trigger cascade resolutions when Constituents are partially mapped. '''
         alias_mapping = cst_mapping_to_alias(mapping)
         schema.apply_partial_mapping(alias_mapping, target)
-        _touch_schema(schema.pk)
+        touch_schema(schema.pk)
         children = self.cache.extend_graph.outputs[operation]
         if not children:
             return
@@ -425,9 +424,3 @@ class PropagationEngine:
             if not new_target:
                 continue
             self._on_partial_mapping(new_mapping, new_target, child_id, child_schema)
-
-
-def _touch_schema(schema_id: int) -> None:
-    ''' Bump the schema concurrency token after propagated content changes. '''
-    LibraryItem.objects.get(pk=schema_id).save(update_fields=['time_update'])
-    mark_schema(schema_id)

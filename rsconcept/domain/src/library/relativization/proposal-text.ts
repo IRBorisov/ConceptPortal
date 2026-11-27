@@ -47,6 +47,7 @@ const text: Record<TextLocale, TextTemplates> = {
         `Пары вида (элемент семейства ${family}, значение${subject ? ` терма ${subject}` : ''} для этого элемента)`,
       callable: ({ family }) => `Первый аргумент — элемент семейства ${family}`,
       condition: ({ family }) => `Условие выполняется для каждого элемента семейства ${family}`,
+      predicate: ({ family }) => `Проверяет условие для заданного элемента семейства ${family}`,
       accessor: ({ family }) => `Извлекает значение, сопоставленное заданному элементу семейства ${family}`
     }
   },
@@ -69,6 +70,7 @@ const text: Record<TextLocale, TextTemplates> = {
         `Pairs of the form (member of the family ${family}, value${subject ? ` of ${subject}` : ''} for that member)`,
       callable: ({ family }) => `The first argument is a member of the family ${family}`,
       condition: ({ family }) => `The condition holds for every member of the family ${family}`,
+      predicate: ({ family }) => `Checks the condition for the given member of the family ${family}`,
       accessor: ({ family }) => `Retrieves the value associated with the given member of the family ${family}`
     }
   },
@@ -96,6 +98,7 @@ const text: Record<TextLocale, TextTemplates> = {
         `Couples de la forme (membre de la famille ${family}, valeur${subject ? ` de ${subject}` : ''} pour ce membre)`,
       callable: ({ family }) => `Le premier argument est un membre de la famille ${family}`,
       condition: ({ family }) => `La condition est satisfaite pour chaque membre de la famille ${family}`,
+      predicate: ({ family }) => `Vérifie la condition pour le membre donné de la famille ${family}`,
       accessor: ({ family }) => `Extrait la valeur associée au membre donné de la famille ${family}`
     }
   }

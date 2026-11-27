@@ -11,7 +11,7 @@ type FormalConstituent = Pick<
 >;
 
 export type RelativizationRole =
-  'preserved' | 'carrier' | 'axis' | 'relation' | 'family' | 'callable' | 'condition' | 'accessor';
+  'preserved' | 'carrier' | 'axis' | 'relation' | 'family' | 'callable' | 'condition' | 'predicate' | 'accessor';
 
 export interface TransformedConstituent extends FormalConstituent {
   origin: number | null;
@@ -29,6 +29,7 @@ interface RewriteContext {
   affected: ReadonlySet<string>;
   slices: ReadonlySet<string>;
   references: ReadonlyMap<string, string>;
+  predicates: ReadonlyMap<string, string>;
   accessor: string | null;
   context: string;
   usesAccessor: boolean;
@@ -53,6 +54,7 @@ function freeName(stem: string, used: ReadonlySet<string>): string {
 function allocateAliases(
   items: readonly FormalConstituent[],
   additions: readonly FormalConstituent[],
+  localConditions: ReadonlySet<string>,
   hasAccessor: boolean
 ) {
   const counts = new Map<string, number>();
@@ -64,7 +66,8 @@ function allocateAliases(
   };
   const output = Object.fromEntries(items.map(item => [item.alias, allocate(item.cst_type)]));
   const generated = new Map(additions.map(item => [item.alias, allocate(CstType.STRUCTURED)]));
-  return { output, generated, accessor: hasAccessor ? allocate(CstType.FUNCTION) : null };
+  const predicates = new Map([...localConditions].map(alias => [alias, allocate(CstType.PREDICATE)]));
+  return { output, generated, predicates, accessor: hasAccessor ? allocate(CstType.FUNCTION) : null };
 }
 
 function walk(ast: AstNode | null, visit: (node: AstNode) => void): void {
@@ -160,9 +163,12 @@ function rewrite(expression: string, ast: AstNode | null, state: RewriteContext)
       return;
     }
     const name = state.references.get(alias);
+    const predicate = state.predicates.get(alias);
     let text = name;
     if (alias === state.target) {
       text = state.context;
+    } else if (predicate) {
+      text = predicate + '[' + state.context + ']';
     } else if (state.slices.has(alias)) {
       state.usesAccessor = true;
       text = state.accessor + '[' + state.context + ', ' + name + ']';
@@ -215,16 +221,31 @@ export function transformRelativization(
     if (CORE.has(cst_type) || cst_type === CstType.TERM) slices.add(alias);
     for (const local of locals.get(alias)!) used.add(local);
   }
+  // A reference inside another formula needs the condition in a single context.
+  const localConditions = new Set<string>();
+  for (const alias of affected) {
+    const item = byAlias.get(alias)!;
+    if (CORE.has(item.cst_type)) continue;
+    for (const dependency of extractGlobals(item.definition_formal)) {
+      if (affected.has(dependency) && isLogical(byAlias.get(dependency)!.cst_type)) localConditions.add(dependency);
+    }
+  }
   const context = freeName('c', used);
   const value = freeName('v', used);
   const graph = 'g';
-  const { output, generated, accessor } = allocateAliases(items, additions, slices.size > 0);
+  const { output, generated, predicates, accessor } = allocateAliases(
+    items,
+    additions,
+    localConditions,
+    slices.size > 0
+  );
   const references = new Map([...Object.entries(output), ...generated]);
   const axis = references.get(target)!;
   const contextType = applyAliasMapping(labelType(contextTypification), output);
   const contextFactor = contextTypification.typeID === TypeID.collection ? contextType : '(' + contextType + ')';
   const axisDefinition = 'ℬ' + contextFactor;
   const result: TransformedConstituent[] = [];
+  const conditionPredicates: TransformedConstituent[] = [];
   const ids = new Set(items.map(item => item.id));
   let nextId = 1;
   function newId(): number {
@@ -234,14 +255,20 @@ export function transformRelativization(
     return id;
   }
 
-  const state: RewriteContext = { target, affected, slices, references, accessor, context, usesAccessor: false };
+  const state: RewriteContext = {
+    target,
+    affected,
+    slices,
+    references,
+    predicates,
+    accessor,
+    context,
+    usesAccessor: false
+  };
   // Keep the source slice type where projection changes a domain reference.
-  const changedTypes = new Set([target, ...generated.keys()]);
-  for (const alias of affected) {
-    if (byAlias.get(alias)!.cst_type === CstType.STRUCTURED) changedTypes.add(alias);
-  }
+  const changedDomains = new Set([target, ...generated.keys(), ...affected]);
   function stableDomain(alias: string, expression: string): string {
-    if ([...extractGlobals(expression)].some(name => changedTypes.has(name)) && typed.has(alias)) {
+    if ([...extractGlobals(expression)].some(name => changedDomains.has(name)) && typed.has(alias)) {
       const type = analyzer.getType(alias)!;
       const domain = applyAliasMapping(labelType(type), output);
       return type.typeID === TypeID.tuple ? '(' + domain + ')' : domain;
@@ -268,8 +295,25 @@ export function transformRelativization(
         const start = rewritten.indexOf('[') + 1;
         formal = rewritten.slice(0, start) + context + '∈' + axis + ', ' + rewritten.slice(start);
       } else if (isLogical(kind)) {
-        const predicate = ast && BINARY_LOGIC.has(ast.typeID) ? '(' + rewritten + ')' : rewritten;
-        formal = '∀' + context + '∈' + axis + ' ' + predicate;
+        const predicate = predicates.get(alias);
+        let body = rewritten;
+        if (predicate) {
+          conditionPredicates.push({
+            id: newId(),
+            alias: predicate,
+            cst_type: CstType.PREDICATE,
+            definition_formal: '[' + context + '∈' + axis + '] ' + rewritten,
+            typification_manual: '',
+            origin: item.id,
+            role: 'predicate',
+            crucial: false,
+            value_is_property: false
+          });
+          body = predicate + '[' + context + ']';
+        } else if (ast && BINARY_LOGIC.has(ast.typeID)) {
+          body = '(' + rewritten + ')';
+        }
+        formal = '∀' + context + '∈' + axis + ' ' + body;
       } else {
         formal =
           'I{(' + context + ', ' + value + ') | ' + context + ':∈' + axis + '; ' + value + ':=' + rewritten + '}';
@@ -305,7 +349,12 @@ export function transformRelativization(
     origin: item.id,
     role: item.alias === target ? 'axis' : 'relation'
   }));
-  const ordered = [...result.slice(0, lastKernelIndex + 1), ...added, ...result.slice(lastKernelIndex + 1)];
+  const ordered = [
+    ...result.slice(0, lastKernelIndex + 1),
+    ...added,
+    ...result.slice(lastKernelIndex + 1),
+    ...conditionPredicates
+  ];
   if (state.usesAccessor && accessor) {
     ordered.push({
       id: newId(),

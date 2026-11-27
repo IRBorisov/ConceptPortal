@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { CstType } from '../rsform';
+import { RSLangAnalyzer } from '../../rslang';
+import { RSEngine } from '../rsengine';
+import { type Constituenta, CstType, type RSForm } from '../rsform';
+import { analyzeSchemaConstituents, buildFormalDependencyGraph } from '../rsform-api';
+import { type RSModel } from '../rsmodel';
 
 import { type ProjectionOptions, projectRelativization, type RelativizationItem } from './index';
 
@@ -28,6 +32,27 @@ function row(
     definition_resolved: '',
     ...fields
   };
+}
+
+function evaluateCondition(items: RelativizationItem[], bindings: RSModel['items'], condition: number) {
+  const rows = items.map(item => ({ ...item })) as Constituenta[];
+  const schema = {
+    id: 1,
+    items: rows,
+    analyzer: new RSLangAnalyzer(),
+    graph: buildFormalDependencyGraph(rows),
+    cstByID: new Map(rows.map(item => [item.id, item])),
+    cstByAlias: new Map(rows.map(item => [item.alias, item]))
+  } as RSForm;
+  analyzeSchemaConstituents(schema);
+  const engine = new RSEngine(1, {
+    setCstValue: () => Promise.resolve(),
+    clearValues: () => Promise.resolve()
+  });
+  engine.loadPlainData(schema, { id: 1, schema: 1, items: bindings } as RSModel);
+  const evaluation = engine.calculateCst(condition);
+  expect(evaluation.errors).toEqual([]);
+  return evaluation.value;
 }
 
 describe('relativization projection and review', () => {
@@ -170,5 +195,49 @@ describe('relativization projection and review', () => {
     });
     expect(withType.items.find(item => item.id === 2)?.definition_formal).toBe('X1∪');
     expect(withType.proposals.find(proposal => proposal.id === 3)?.role).toBe('family');
+  });
+
+  it.each([
+    { kind: CstType.AXIOM, alias: 'A1' },
+    { kind: CstType.STATEMENT, alias: 'T1' }
+  ])('evaluates a referenced $kind in the current context', ({ kind, alias }) => {
+    const items = [
+      row(1, 'X1', CstType.BASE, ''),
+      row(2, alias, kind, 'X1≠∅'),
+      row(3, 'T2', CstType.STATEMENT, `¬${alias} ∨ X1=∅`)
+    ];
+    const result = projectRelativization(
+      { items, attribution: [] },
+      { target: 1, excluded: [], locale: 'en', contextName: 'Batches' }
+    )!;
+    expect(result.proposals.filter(proposal => proposal.formalInvalid)).toEqual([]);
+    const axis = result.proposals.find(proposal => proposal.role === 'axis')!;
+    const empty = { id: 1, type: 'basic', value: {} };
+    const nonempty = { id: 1, type: 'basic', value: { 1: 'element' } };
+    const expected = [empty, nonempty].map(binding => evaluateCondition(items, [binding], 3));
+    expect(expected).toEqual([1, 0]);
+    expect(evaluateCondition(result.items, [nonempty, { id: axis.id, type: 'shape:ℬℬ(*)', value: [[], [1]] }], 3)).toBe(
+      Number(expected.every(Boolean))
+    );
+  });
+
+  it.each([
+    { excluded: [], afterType: 'ℬ(ℬ(X1)×X1)' },
+    { excluded: [3], afterType: 'X1' }
+  ])('preserves the source domain type of a structure with exclusions $excluded', ({ excluded, afterType }) => {
+    const items = [
+      row(1, 'X1', CstType.BASE, ''),
+      row(2, 'D1', CstType.TERM, 'X1'),
+      row(3, 'S1', CstType.STRUCTURED, 'D1')
+    ];
+    const result = projectRelativization(
+      { items, attribution: [] },
+      { target: 1, excluded, locale: 'en', contextName: 'Batches' }
+    )!;
+    expect(result.proposals.find(proposal => proposal.id === 3)).toMatchObject({
+      beforeType: 'X1',
+      afterType,
+      formalInvalid: false
+    });
   });
 });
