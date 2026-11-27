@@ -54,6 +54,7 @@ describe('relativization projection and review', () => {
       { target: 4, excluded: [], locale: 'ru', contextName: 'отношение' }
     )!;
     expect(result.proposals.filter(proposal => proposal.formalInvalid)).toEqual([]);
+    expect(result.items.find(item => item.id === 4)?.term_raw).toBe('отношение');
     expect(result.proposals.find(proposal => proposal.id === 5)).toMatchObject({
       inKernel: true,
       component: { source: 'S1', path: [0, 2], term: 'альтернативы декомпозиции', scope: 'value' }
@@ -87,10 +88,10 @@ describe('relativization projection and review', () => {
       { items, attribution: [] },
       { target: 1, excluded: [2], locale: 'en', contextName: 'vertex set' }
     )!;
-    expect(result.proposals.filter(proposal => proposal.origin === 1).map(proposal => proposal.role)).toEqual([
-      'carrier',
-      'axis'
-    ]);
+    const fromTarget = result.proposals.filter(proposal => proposal.origin === 1);
+    expect(fromTarget.map(proposal => proposal.role)).toEqual(['carrier', 'axis']);
+    expect(result.items.find(item => item.id === fromTarget[0].id)?.term_raw).toBe('vertices');
+    expect(result.items.find(item => item.id === fromTarget[1].id)?.term_raw).toBe('vertex set');
     expect(result.items.find(item => item.id === 2)?.convention).toBe('Natural numbers.');
     expect(result.items.find(item => item.id === 4)?.definition_formal).toMatch(/^\[c∈S2, a∈c\]/);
     expect(result.proposals.filter(proposal => proposal.formalInvalid)).toEqual([]);

@@ -261,8 +261,11 @@ export function HelpThesaurusEn() {
       </p>
       <ul>
         <li>Relativization focus – individual entity chosen for relativization.</li>
-        <li>Family name – user-defined name added to the terms of the source schema.</li>
-        <li>Set of contexts – result of applying an outer power-set operator to the focus’s domain.</li>
+        <li>Family name – user-defined name added to the terms of the source schema to capture the new perspective.</li>
+        <li>
+          Set of contexts – admissible values of the focus, each corresponding to an individual entity in the family. In
+          each context, the values of dependent concepts are determined and statements are checked.
+        </li>
         <li>Derelativizer – helper function that extracts the unique value for a given context.</li>
       </ul>
 

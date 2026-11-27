@@ -14,8 +14,8 @@ export const createRelativizationContentFr: Record<string, TourStepContent> = {
     title: 'Constituant à relativiser et exclusions',
     body: (
       <p>
-        Choisissez un ensemble de base ou une structure générique. Dans « Constituants exclus », cochez les concepts non
-        définis communs aux contextes.
+        Choisissez un ensemble de base ou une structure générique et indiquez le nom de la famille. Dans « Constituants
+        exclus », cochez les concepts non définis communs aux contextes.
       </p>
     )
   },

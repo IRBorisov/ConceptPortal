@@ -43,6 +43,7 @@ class TestStandaloneRelativization(EndpointTester):
         self.assertFalse(Operation.objects.filter(result_id=result_id).exists())
         rows = Constituenta.objects.filter(schema_id=result_id)
         definitions = {row.alias: row.definition_formal for row in rows}
+        self.assertEqual(rows.get(alias='S1').term_raw, self.parameters['context_name'])
         self.assertEqual(definitions['S1'], '\u212c\u212c(X1)')
         self.assertEqual(definitions['D1'], 'I{(c, v) | c:\u2208S1; v:=c}')
         self.source.model.refresh_from_db()
@@ -53,13 +54,14 @@ class TestStandaloneRelativization(EndpointTester):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
         draft = response.data
         axis = next(item for item in draft['items'] if item['alias'] == 'S1')
+        self.assertEqual(axis['term_raw'], self.parameters['context_name'])
         reviewed = [row['id'] for row in draft['proposals'] if row['inKernel'] and row['changed']]
         request_data = self.parameters | {
             'item_data': self.result_data,
             'revision': draft['revision'],
             'reviewed': reviewed,
             'edits': [{
-                'id': axis['id'], 'term_raw': axis['term_raw'], 'definition_raw': axis['definition_raw'],
+                'id': axis['id'], 'term_raw': 'Reviewed family', 'definition_raw': axis['definition_raw'],
                 'convention': 'Reviewed context.',
             }],
         }
@@ -78,6 +80,7 @@ class TestStandaloneRelativization(EndpointTester):
         response = self.client.post(url, request_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
         result_axis = Constituenta.objects.get(schema_id=response.data['id'], alias='S1')
+        self.assertEqual(result_axis.term_raw, 'Reviewed family')
         self.assertEqual(result_axis.convention, 'Reviewed context.')
         self.assertEqual(response.data['location'], LocationHead.PROJECTS)
 

@@ -64,6 +64,7 @@ class TestRelativizationPropagation(EndpointTester):
         self.assertEqual(axis['confirmed'], {})
         self.assertTrue(axis['needs_review'])
         item = Constituenta.objects.get(pk=axis['result'])
+        self.assertEqual(item.term_raw, data['context_name'])
         self.assertEqual(item.term_raw, axis['suggested']['term_raw'])
 
     def _input(self, alias, oss=None, schema=None):

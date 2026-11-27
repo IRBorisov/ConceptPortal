@@ -2,14 +2,12 @@ import { z } from 'zod';
 
 import { schemaAttribution, schemaConstituentaBasics } from '@/features/rsform';
 
-import { limits } from '@/utils/constants';
-
 export const schemaRelativizationInput = z.strictObject({
   source_time_update: z.string(),
   target: z.number(),
   excluded: z.array(z.number()),
   locale: z.enum(['en', 'ru', 'fr']),
-  context_name: z.string().trim().min(1).max(limits.len_alias)
+  context_name: z.string().trim().min(1)
 });
 
 const schemaRelativizationText = z.strictObject({

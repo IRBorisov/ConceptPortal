@@ -14,8 +14,8 @@ export const createRelativizationContentEn: Record<string, TourStepContent> = {
     title: 'Relativization target and exclusions',
     body: (
       <p>
-        Choose a base set or generic structure to define the contexts. Under “Excluded constituents”, mark the undefined
-        concepts shared across contexts.
+        Choose a base set or generic structure and enter a family name. Under “Excluded constituents”, mark the
+        undefined concepts shared across contexts.
       </p>
     )
   },

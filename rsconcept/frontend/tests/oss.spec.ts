@@ -119,6 +119,8 @@ test('OSS Add offers an editable title and saves relativization without a previe
   await title.fill('Моё название');
   await dialog.getByRole('textbox', { name: 'Сокращение' }).fill('РО-р');
   await expect(title).toHaveValue('Моё название');
+  await expect(dialog.getByRole('button', { name: 'Проверить тексты' })).toBeDisabled();
+  await dialog.getByRole('textbox', { name: 'Имя семейства' }).fill('группа');
   await expect(dialog.getByRole('button', { name: 'Проверить тексты' })).toBeEnabled();
   await dialog.getByText('Отмена', { exact: true }).click();
   await expect(dialog).toHaveCount(0);
@@ -167,7 +169,6 @@ test('OSS Add offers an editable title and saves relativization without a previe
   await expect(target).toHaveText('Фокус релятивизации');
   const context = dialog.getByRole('textbox', { name: 'Имя семейства' });
   await expect(context).toHaveValue('');
-  await context.fill('группа');
   await dialog.getByRole('textbox', { name: 'Название' }).fill(result.title);
   await dialog.getByRole('textbox', { name: 'Сокращение' }).fill('РО-р');
   const create = dialog.getByRole('button', { name: 'Создать без проверки' });
@@ -176,6 +177,12 @@ test('OSS Add offers an editable title and saves relativization without a previe
   await expect(review).toBeDisabled();
   await target.click();
   await page.getByRole('button', { name: /^X1.*индивиды/ }).click();
+  await expect(create).toBeDisabled();
+  await expect(review).toBeDisabled();
+  await context.fill('   ');
+  await expect(create).toBeDisabled();
+  await expect(review).toBeDisabled();
+  await context.fill('  группа  ');
   await expect(create).toBeEnabled();
   await expect(review).toBeEnabled();
 
