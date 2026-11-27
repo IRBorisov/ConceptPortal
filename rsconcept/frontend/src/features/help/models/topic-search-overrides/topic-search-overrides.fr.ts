@@ -234,13 +234,13 @@ export const topicSearchOverridesFr: Record<HelpTopicValue, HelpSearchOverride> 
   [HelpTopic.CC_RELATIVIZATION]: {
     keywords: [
       'relativisation',
-      'constituant à relativiser',
-      'axe des contextes',
-      'famille de valeurs',
+      'cible de relativisation',
+      'ensemble des contextes',
+      'nom de la famille',
       'dérélativisation'
     ],
     searchText:
-      'Relativiser un schéma conceptuel depuis son éditeur ou un SOS. Choisir les contextes et vérifier les textes.'
+      'Relativisation d’un schéma conceptuel. Cible, nom de la famille, ensemble des contextes et transformation des formules dépendantes.'
   },
   [HelpTopic.CC_STRUCTURING]: {
     keywords: ['structuration', 'domaine', 'décomposition', 'organisation concepts'],
