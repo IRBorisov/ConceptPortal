@@ -18,7 +18,7 @@ from rest_framework.request import Request
 from apps.library.models import AccessPolicy, Editor, LibraryItem
 from apps.rsform.models import Constituenta
 from apps.rsform.relativization import (
-    TEXT_FIELDS, calculate_projection, confirm_projection, draft_revision, parameters_from, require_valid_projection,
+    calculate_projection, parameters_from, require_valid_projection,
 )
 from apps.rsform.serializers.io_files import create_rsform_from_data
 from apps.users.models import User
@@ -29,8 +29,8 @@ from shared.concurrency import Conflict, assert_expected_time_update_locked
 from . import models as m
 from .propagation_batch import propagation_batch
 from .propagation_state import mark_schema
-from .relativization import correspondence
-from .relativization_refresh import prior_texts, refresh_projection
+from .relativization import correspondence, store_correspondence
+from .relativization_refresh import refresh_projection
 
 
 def update_layout(item: LibraryItem, layout: list[dict], request: Request | None = None) -> None:
@@ -239,8 +239,8 @@ def create_replica_operation(
 
 
 def _lock_relativization(
-    item: LibraryItem, data: dict, request: Request, *, editing: bool = False,
-) -> tuple[m.Operation, LibraryItem, m.Operation | None]:
+    item: LibraryItem, data: dict, request: Request,
+) -> tuple[m.Operation, LibraryItem, m.Relativization | None]:
     source = m.Operation.objects.filter(oss=item, pk=data['source_operation'].pk).only('result_id').first()
     if source is None or source.result_id is None:
         raise serializers.ValidationError({'source_operation': msg.missingArguments()})
@@ -263,29 +263,13 @@ def _lock_relativization(
     result = schemas.get(result_id)
     if result is None:
         raise Conflict(detail=msg.concurrentModification())
-    if editing:
-        _require_editable_schema(request, result)
-    elif not permissions.can_read_library_item(request.user, result):
-        raise PermissionDenied()
+    _require_editable_schema(request, result)
 
-    operation = m.Operation.objects.select_for_update().filter(pk=existing.pk, oss=item).first()
-    if (not operation or not operation.projection or operation.result_id != result_id
-            or operation.relativization_source_id != source_schema.pk
-            or not operation.getQ_arguments().filter(argument=source).exists()):
+    operation = m.Operation.objects.select_for_update().filter(pk=existing.pk, oss=item, result_id=result_id).first()
+    relativization = m.Relativization.objects.filter(operation_id=existing.pk, source=source_schema).first()
+    if not operation or not relativization or not operation.getQ_arguments().filter(argument=source).exists():
         raise Conflict(detail=msg.concurrentModification())
-    return source, source_schema, operation
-
-
-def preview_relativization(item: LibraryItem, validated: dict, request: Request) -> dict:
-    ''' Calculate the preview from a locked and authorized source snapshot. '''
-    with transaction.atomic():
-        _lock_expected_update(item, request)
-        _, schema, existing = _lock_relativization(item, validated, request)
-        parameters = parameters_from(validated)
-        draft = calculate_projection(schema.pk, parameters)
-        prior = prior_texts(existing, draft) if existing else []
-        revision = draft_revision(schema.pk, schema.time_update, draft, parameters, prior)
-        return draft | {'revision': revision, 'prior': prior}
+    return source, source_schema, relativization
 
 
 @propagation_batch
@@ -293,20 +277,11 @@ def create_relativization_operation(item: LibraryItem, validated: dict, request:
     ''' Calculate and persist the projection, text provenance, and graph position atomically. '''
     with transaction.atomic():
         _lock_expected_update(item, request)
-        source, source_schema, existing = _lock_relativization(item, validated, request, editing=True)
+        source, source_schema, relativization = _lock_relativization(item, validated, request)
+        existing = relativization.operation if relativization is not None else None
         parameters = parameters_from(validated)
         draft = calculate_projection(source_schema.pk, parameters)
-        suggestions = {row['id']: {name: row[name] for name in TEXT_FIELDS} for row in draft['items']}
-        checked: set[int] = set()
-        if validated['skip_review']:
-            require_valid_projection(draft)
-        else:
-            prior = prior_texts(existing, draft) if existing else []
-            revision = draft_revision(source_schema.pk, source_schema.time_update, draft, parameters, prior)
-            if validated['revision'] != revision:
-                raise Conflict(detail=msg.concurrentModification())
-            confirm_projection(draft, validated['edits'], validated['reviewed'])
-            checked = set(validated['reviewed']) | {row['id'] for row in validated['edits']}
+        require_valid_projection(draft)
 
         data = validated['item_data']
         if not data.get('title'):
@@ -316,8 +291,9 @@ def create_relativization_operation(item: LibraryItem, validated: dict, request:
             duplicates = duplicates.exclude(pk=existing.pk)
         if duplicates.exists():
             raise Conflict(detail=msg.concurrentModification())
-        if existing:
-            refresh_projection(existing, parameters, draft, checked, suggestions)
+        if relativization is not None:
+            refresh_projection(relativization, parameters, draft)
+            existing = relativization.operation
             _update_relativization_details(existing, validated)
             item.save(update_fields=['time_update'])
             return existing
@@ -341,11 +317,15 @@ def create_relativization_operation(item: LibraryItem, validated: dict, request:
             source, LibraryItem.objects.get(pk=result.pk), constituents[ids[0]],
             [constituents[pk] for pk in ids[1:]], parent_id=parent.pk if parent else None,
         )
-        operation.projection = parameters | {
-            'rows': correspondence(draft, id_map, checked, suggestions),
-            'attribution': [[id_map[pair['container']], id_map[pair['attribute']]] for pair in draft['attribution']],
-        }
-        operation.save(update_fields=['projection'])
+        relativization = operation.relativization
+        relativization.parameters = parameters
+        relativization.attribution = [
+            [id_map[pair['container']], id_map[pair['attribute']]] for pair in draft['attribution']
+        ]
+        relativization.save(update_fields=['parameters', 'attribution'])
+        store_correspondence(operation.pk, [
+            correspondence(row, id_map[row['id']], relativization.pk) for row in draft['proposals']
+        ])
 
         layout = [*validated['layout'], _node('o', operation.pk, validated['position'])]
         m.Layout.update_data(item.pk, layout)
@@ -456,7 +436,7 @@ def delete_operation(item: LibraryItem, validated: dict, request: Request | None
                 _require_retained_audience(request, oss, operation)
         if _has_relativization_dependents(operation, include_replicas=True) or (
             old_schema and validated['delete_schema'] and
-            m.Operation.objects.filter(relativization_source=old_schema).exists()
+            m.Relativization.objects.filter(source=old_schema).exists()
         ):
             raise serializers.ValidationError({'target': 'Remove or reconfigure dependent relativizations first.'})
         oss.delete_operation(operation.pk, validated['keep_constituents'])
@@ -599,10 +579,7 @@ def relocate_constituents(item: LibraryItem, validated: dict, request: Request |
         )
         if relativization_edge.exists():
             raise serializers.ValidationError({'items': 'Constituents cannot be relocated through relativization.'})
-        producer = m.Operation.objects.filter(
-            operation_type=m.OperationType.RELATIVIZATION, result_id=source_id, projection__isnull=False,
-        ).first()
-        if producer and producer.projection and any(row['result'] in ids for row in producer.projection['rows']):
+        if m.RelativizationRow.objects.filter(result_id__in=ids, result__schema_id=source_id).exists():
             raise serializers.ValidationError({'items': 'Managed relativization constituents cannot be relocated.'})
         if validated['move_down']:
             oss.relocate_down(destination, ids)

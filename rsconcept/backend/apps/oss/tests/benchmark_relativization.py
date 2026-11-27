@@ -10,10 +10,10 @@ from django.db import transaction
 
 from apps.library.models import LibraryItem
 from apps.oss.models import OperationSchema, OperationType, PropagationFacade
-from apps.oss.relativization import correspondence
+from apps.oss.relativization import correspondence, store_correspondence
 from apps.oss.relativization_refresh import _allocate_aliases, match_projection, refresh_projection
 from apps.rsform.models import Constituenta, RSForm
-from apps.rsform.relativization import TEXT_FIELDS, calculate_projection
+from apps.rsform.relativization import calculate_projection
 from apps.rsform.serializers.io_files import create_rsform_from_data
 
 
@@ -47,9 +47,12 @@ def _seed(size):
         schema_data=projection,
     )
     operation = oss.record_relativization(source, LibraryItem.objects.get(pk=result.pk), target, [base])
-    suggestions = {item['id']: {name: item[name] for name in TEXT_FIELDS} for item in projection['items']}
-    operation.projection = params | {'rows': correspondence(projection, ids, set(), suggestions), 'attribution': []}
-    operation.save(update_fields=['projection'])
+    relativization = operation.relativization
+    relativization.parameters = params
+    relativization.save(update_fields=['parameters'])
+    store_correspondence(operation.pk, [
+        correspondence(row, ids[row['id']], relativization.pk) for row in projection['proposals']
+    ])
 
     synthesis = oss.create_operation(
         operation_type=OperationType.SYNTHESIS, alias='BenchSyn', title='Benchmark synthesis',
@@ -62,7 +65,7 @@ def _seed(size):
 def _match(operation, draft):
     current = Constituenta.objects.filter(schema_id=operation.result_id)
     by_id = current.in_bulk()
-    matches = match_projection(draft, operation.projection['rows'], by_id)
+    matches = match_projection(draft, list(operation.relativization.rows.all()), by_id)
     return _allocate_aliases(matches, {row.alias for row in by_id.values()})
 
 
@@ -92,8 +95,8 @@ def run(sizes=(30, 300, 900), repeats=5):
                 with patch('apps.rsform.relativization.subprocess.run', side_effect=subprocess_with_profile):
                     draft, calc = _sample(calculate_projection, schema_id, params)
                 _, match = _sample(_match, operation, draft)
-                _, cascade = _sample(refresh_projection, operation, projection=draft)
-                _, no_op = _sample(refresh_projection, operation, projection=draft)
+                _, cascade = _sample(refresh_projection, operation.relativization, projection=draft)
+                _, no_op = _sample(refresh_projection, operation.relativization, projection=draft)
                 if index > 0:
                     report['calculate'].append(calc | profile)
                     report['match'].append(match)

@@ -67,7 +67,6 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
             'create_replica',
             'create_synthesis',
             'create_relativization',
-            'preview_relativization',
             'update_operation',
             'delete_operation',
             'delete_replica',
@@ -299,19 +298,6 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
         serializer.is_valid(raise_exception=True)
         new_operation = mutations.create_replica_operation(item, serializer.validated_data, request)
         return self._operation_created(item, new_operation)
-
-    @extend_schema(
-        summary='preview relativization texts',
-        request=s.RelativizationParametersSerializer,
-        responses={c.HTTP_200_OK: dict},
-    )
-    @action(detail=True, methods=['post'], url_path='preview-relativization')
-    def preview_relativization(self, request: Request, pk) -> Response:
-        ''' Read the current source and calculate the draft without persisting a result. '''
-        item = self._get_item()
-        serializer = s.RelativizationParametersSerializer(data=request.data, context={'oss': item})
-        serializer.is_valid(raise_exception=True)
-        return Response(mutations.preview_relativization(item, serializer.validated_data, request))
 
     @extend_schema(
         summary='create relativization operation',

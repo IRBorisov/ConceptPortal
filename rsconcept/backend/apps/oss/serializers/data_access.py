@@ -13,7 +13,7 @@ from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemDetailsSerializer
 from apps.rsform.models import Constituenta
 from apps.rsform.serializers import SubstitutionSerializerBase
-from apps.rsform.serializers.relativization import RelativizationInputSerializer, RelativizationReviewSerializer
+from apps.rsform.serializers.relativization import RelativizationInputSerializer
 from shared import messages as msg
 from shared import permissions
 from shared.serializers import StrictModelSerializer, StrictSerializer
@@ -34,30 +34,34 @@ from .basics import NodeSerializer, PositionSerializer, SubstitutionExSerializer
 class OperationSerializer(StrictModelSerializer):
     ''' Serializer: Operation data. '''
     is_import = serializers.BooleanField(default=False, required=False)
-    relativization = serializers.JSONField(read_only=True)
+    relativization = serializers.SerializerMethodField()
+
+    def get_relativization(self, instance: Operation) -> dict | None:
+        ''' Serialize the parameters and display labels for this operation. '''
+        relativization = getattr(instance, 'relativization', None)
+        if relativization is None:
+            return None
+        if relativization.parameters:
+            return relativization.passport | {'parameters': relativization.parameters}
+        return relativization.passport or None
 
     def to_representation(self, instance: Operation):
         data = super().to_representation(instance)
         request = self.context.get('request')
         user = request.user if request is not None else AnonymousUser()
+        relativization = getattr(instance, 'relativization', None)
         if instance.operation_type != OperationType.RELATIVIZATION:
             data.pop('relativization', None)
-        elif instance.projection and instance.relativization:
-            params = instance.projection
-            data['relativization'] = instance.relativization | {
-                'parameters': {name: params[name] for name in ('target', 'excluded', 'locale', 'context_name')},
-                'unreviewed': any(row.get('proposal') or not row.get('confirmed') and row.get('needs_review')
-                                  for row in params['rows']),
-            }
         readable = self.context.get('readable_schemas')
         schema_is_readable = (
             instance.result_id in readable if readable is not None
             else instance.result is not None and permissions.can_read_library_item(user, instance.result)
         )
         source_is_readable = (
-            instance.relativization_source_id in readable if readable is not None
-            else instance.relativization_source is not None and
-            permissions.can_read_library_item(user, instance.relativization_source)
+            relativization is not None and (
+                relativization.source_id in readable if readable is not None
+                else permissions.can_read_library_item(user, relativization.source)
+            )
         )
         if (instance.result_id is not None and not schema_is_readable) or (
             instance.operation_type == OperationType.RELATIVIZATION and not source_is_readable
@@ -70,7 +74,7 @@ class OperationSerializer(StrictModelSerializer):
     class Meta:
         ''' serializer metadata. '''
         model = Operation
-        exclude = ('relativization_source', 'projection')
+        fields = '__all__'
         read_only_fields = ('id', 'oss')
 
 
@@ -358,7 +362,7 @@ class RelativizationParametersSerializer(RelativizationInputSerializer):
 
 
 class CreateRelativizationSerializer(
-    CreateSchemaSerializer, RelativizationParametersSerializer, RelativizationReviewSerializer,
+    CreateSchemaSerializer, RelativizationParametersSerializer,
 ):
     ''' Create a projection with generated or explicitly reviewed texts. '''
 
@@ -662,12 +666,12 @@ class OperationSchemaSerializer(StrictModelSerializer):
         result['arguments'] = []
         result['substitutions'] = []
         result['replicas'] = []
-        operations = list(Operation.objects.filter(oss=instance).select_related('result').order_by('pk'))
+        operations = list(Operation.objects.filter(oss=instance).select_related('result', 'relativization').order_by('pk'))
         request = self.context.get('request')
         reader = request.user if request is not None else AnonymousUser()
         blocked = permissions.unreadable_derived_schema_ids(reader)
         visible_ids = {pk for operation in operations for pk in (
-            operation.result_id, operation.relativization_source_id
+            operation.result_id, getattr(getattr(operation, 'relativization', None), 'source_id', None)
         ) if pk is not None} - blocked
         readable = set(LibraryItem.objects.filter(
             permissions.library_item_read_filter(reader), pk__in=visible_ids,
@@ -688,7 +692,7 @@ class OperationSchemaSerializer(StrictModelSerializer):
                 and Constituenta.objects
                 .filter(schema=operation_result)
                 .exclude(as_child__isnull=False)
-                .exclude(pk__in=[row['result'] for row in (operation.projection or {}).get('rows', [])])
+                .exclude(projection_row__isnull=False)
                 .exists()
             )
             result['operations'].append(operation_data)

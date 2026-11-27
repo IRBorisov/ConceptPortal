@@ -13,7 +13,7 @@ from apps.library.serializers import (
     LibraryItemDetailsSerializer,
     LibraryItemReferenceSerializer
 )
-from apps.oss.models import Inheritance, Operation, OperationType
+from apps.oss.models import Inheritance, Operation, OperationType, RelativizationRow
 from shared import messages as msg
 from shared import permissions
 from shared.serializers import (
@@ -249,6 +249,7 @@ class RSFormSerializer(StrictModelSerializer):
     items = serializers.ListField(
         child=CstInfoSerializer()
     )
+    projected = serializers.ListField(child=serializers.IntegerField())
     inheritance = serializers.ListField(
         child=InheritanceDataSerializer()
     )
@@ -291,6 +292,8 @@ class RSFormSerializer(StrictModelSerializer):
                 'parent': link.parent_id,
                 'parent_source': link.parent.schema_id
             })
+        result['projected'] = list(RelativizationRow.objects.filter(result__schema=instance)
+                                   .values_list('result_id', flat=True).order_by('result_id'))
         return result
 
     def to_base_data(self, instance: LibraryItem) -> dict:

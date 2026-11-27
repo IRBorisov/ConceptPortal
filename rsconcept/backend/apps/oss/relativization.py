@@ -1,24 +1,27 @@
-''' Maintain the durable correspondence for a relativization operation. '''
-from apps.rsform.relativization import TEXT_FIELDS
+''' Stable constituent identity across relativization recalculations. '''
+from .models.Inheritance import Inheritance
+from .models.Relativization import RelativizationRow
 
-ROLE_KEYS = {'preserved': 'main', 'carrier': 'main', 'family': 'main', 'callable': 'main', 'condition': 'main'}
-
-
-def correspondence(
-    draft: dict, id_map: dict[int, int], reviewed: set[int], suggestions: dict,
-) -> list[dict]:
-    ''' Store confirmed text fields with each durable correspondence. '''
-    items = {item['id']: item for item in draft['items']}
-    return [{
-        'origin': row['origin'],
-        'role': row['role'],
-        'result': id_map[row['id']],
-        'confirmed': {name: items[row['id']][name] for name in TEXT_FIELDS} if row['id'] in reviewed else {},
-        'suggested': suggestions[row['id']],
-        **({'needs_review': True} if row['id'] not in reviewed and row['inKernel'] and row['changed'] else {}),
-    } for row in draft['proposals']]
+ARTIFACT_ROLES = {'carrier', 'accessor'}
+TRANSFORMED_ROLES = {'preserved', 'family', 'callable', 'condition'}
 
 
-def correspondence_key(row: dict) -> tuple:
+def correspondence_key(origin: int | None, role: str) -> tuple[int | None, str]:
     ''' Preserve the identity of a main row when its expression is transformed. '''
-    return row['origin'], ROLE_KEYS.get(row['role'], row['role'])
+    return origin, 'main' if role in TRANSFORMED_ROLES else role
+
+
+def correspondence(proposal: dict, result_id: int, relativization_id: int) -> RelativizationRow:
+    ''' Link a new projected constituent to its origin and role. '''
+    return RelativizationRow(
+        relativization_id=relativization_id, origin_id=proposal['origin'], result_id=result_id, role=proposal['role'],
+    )
+
+
+def store_correspondence(operation_id: int, rows: list[RelativizationRow]) -> None:
+    ''' Record provenance for every result and inheritance for actual successors. '''
+    RelativizationRow.objects.bulk_create(rows)
+    Inheritance.objects.bulk_create([
+        Inheritance(operation_id=operation_id, parent_id=row.origin_id, child_id=row.result_id)
+        for row in rows if row.origin_id is not None and row.role not in ARTIFACT_ROLES
+    ])

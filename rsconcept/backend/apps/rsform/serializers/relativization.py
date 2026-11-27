@@ -13,35 +13,7 @@ class RelativizationInputSerializer(StrictSerializer):
     context_name = serializers.CharField(max_length=255)
 
 
-class RelativizationTextSerializer(StrictSerializer):
-    ''' The reviewed text of one projected row. '''
-    id = serializers.IntegerField(min_value=1)
-    clarified = serializers.BooleanField(default=False)
-    term_raw = serializers.CharField(allow_blank=True, trim_whitespace=False)
-    definition_raw = serializers.CharField(allow_blank=True, trim_whitespace=False)
-    convention = serializers.CharField(allow_blank=True, trim_whitespace=False)
-
-
-class RelativizationReviewSerializer(StrictSerializer):
-    ''' Confirm the text review or accept the generated texts. '''
-    skip_review = serializers.BooleanField(default=False)
-    revision = serializers.CharField(min_length=64, max_length=64, required=False)
-    reviewed = serializers.ListField(child=serializers.IntegerField(min_value=1), required=False)
-    edits = RelativizationTextSerializer(many=True, required=False)
-
-    def validate(self, attrs):
-        validated = super().validate(attrs)
-        fields = ('revision', 'reviewed', 'edits')
-        if validated['skip_review']:
-            errors = {field: 'Omit this field when skipping text review.' for field in fields if field in validated}
-        else:
-            errors = {field: 'This field is required for text review.' for field in fields if field not in validated}
-        if errors:
-            raise serializers.ValidationError(errors)
-        return validated
-
-
-class CreateStandaloneRelativizationSerializer(RelativizationInputSerializer, RelativizationReviewSerializer):
+class CreateStandaloneRelativizationSerializer(RelativizationInputSerializer):
     ''' Create a new library schema from the projection. '''
 
     class ItemDataSerializer(StrictSerializer):

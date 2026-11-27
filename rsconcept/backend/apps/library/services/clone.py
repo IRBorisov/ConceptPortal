@@ -14,6 +14,8 @@ from apps.oss.models import (
     Layout,
     Operation,
     PropagationFacade,
+    Relativization,
+    RelativizationRow,
     Replica,
     Substitution
 )
@@ -164,7 +166,7 @@ def _clone_oss_operations(
 
 
 def _oss_schema_ids(source: LibraryItem) -> set[int]:
-    operations = Operation.objects.filter(oss=source).values_list('result_id', 'relativization_source_id')
+    operations = Operation.objects.filter(oss=source).values_list('result_id', 'relativization__source_id')
     return {schema_id for schemas in operations for schema_id in schemas if schema_id is not None}
 
 
@@ -221,35 +223,31 @@ def _clone_oss_attached_schemas(
 def _apply_oss_operation_results(
     operation_map: dict[int, int], schema_map: dict[int, int], cst_map: dict[int, int],
 ) -> None:
-    updates: list[Operation] = []
-    for old_id, new_id in operation_map.items():
-        old_operation = Operation.objects.get(pk=old_id)
-        if old_operation.result_id is None:
+    for old_operation in Operation.objects.filter(pk__in=operation_map).select_related('relativization'):
+        new_id = operation_map[old_operation.pk]
+        if old_operation.result_id is not None:
+            Operation.objects.filter(pk=new_id).update(result_id=schema_map[old_operation.result_id])
+        old = getattr(old_operation, 'relativization', None)
+        if old is None:
             continue
-        new_schema_id = schema_map.get(old_operation.result_id)
-        if new_schema_id is None:
-            raise ValueError(f'Missing cloned schema for operation result {old_operation.result_id}')
-        new_operation = Operation.objects.get(pk=new_id)
-        new_operation.result_id = new_schema_id
-        if old_operation.relativization_source_id:
-            new_operation.relativization_source_id = schema_map[old_operation.relativization_source_id]
-            if old_operation.relativization:
-                passport = deepcopy(old_operation.relativization)
-                passport['source']['id'] = new_operation.relativization_source_id
-                new_operation.relativization = passport
-            if old_operation.projection:
-                projection = deepcopy(old_operation.projection)
-                projection['target'] = cst_map[projection['target']]
-                projection['excluded'] = [cst_map[key] for key in projection['excluded']]
-                projection['attribution'] = [[cst_map[a], cst_map[b]] for a, b in projection['attribution']]
-                for row in projection['rows']:
-                    if row['origin'] is not None:
-                        row['origin'] = cst_map[row['origin']]
-                    row['result'] = cst_map[row['result']]
-                new_operation.projection = projection
-        updates.append(new_operation)
-    if updates:
-        Operation.objects.bulk_update(updates, ['result', 'relativization_source', 'relativization', 'projection'])
+        source_id = schema_map[old.source_id]
+        passport = deepcopy(old.passport)
+        if passport:
+            passport['source']['id'] = source_id
+        parameters = deepcopy(old.parameters)
+        if parameters:
+            parameters['target'] = cst_map[parameters['target']]
+            parameters['excluded'] = [cst_map[key] for key in parameters['excluded']]
+        new = Relativization.objects.create(
+            operation_id=new_id, source_id=source_id, passport=passport, parameters=parameters,
+            attribution=[[cst_map[a], cst_map[b]] for a, b in old.attribution],
+        )
+        RelativizationRow.objects.bulk_create([
+            RelativizationRow(
+                relativization=new, origin_id=cst_map[row.origin_id] if row.origin_id is not None else None,
+                result_id=cst_map[row.result_id], role=row.role, text_overrides=row.text_overrides,
+            ) for row in old.rows.all()
+        ])
 
 
 def _clone_oss_arguments(source_oss_id: int, operation_map: dict[int, int]) -> None:

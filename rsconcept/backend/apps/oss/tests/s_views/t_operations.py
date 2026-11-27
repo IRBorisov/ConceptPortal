@@ -296,51 +296,40 @@ class TestOssOperations(EndpointTester):
             'locale': 'en',
             'context_name': 'context',
         }
-        url = f'/api/oss/{self.owned_id}/preview-relativization'
-        invalid = self.client.post(url, parameters | {'excluded': [self.ks1X1.pk]}, format='json')
-        self.assertEqual(invalid.status_code, 400, invalid.data)
-        self.assertFalse(LibraryItem.objects.filter(alias=short_name).exists())
-
-        self.ks1.model.access_policy = AccessPolicy.PRIVATE
-        self.ks1.model.save(update_fields=['access_policy'])
-        self.assertEqual(self.client.post(url, parameters, format='json').status_code, 403)
-
-        self.ks1.model.access_policy = AccessPolicy.PUBLIC
-        self.ks1.model.save(update_fields=['access_policy'])
-        self.ks1.model.refresh_from_db()
-        parameters['source_time_update'] = self.ks1.model.time_update.isoformat()
-        preview = self.client.post(url, parameters, format='json')
-        self.assertEqual(preview.status_code, 200, preview.data)
-        axis = next(row for row in preview.data['proposals'] if row['role'] == 'axis')
         data = parameters | {
             'item_data': {'alias': short_name, 'title': 'TestRel title', 'parent': None},
             'layout': self.layout_data,
             'position': {'x': 1, 'y': 2, 'width': 150, 'height': 40},
-            'revision': preview.data['revision'],
-            'reviewed': [],
-            'edits': [{
-                'id': axis['id'], 'clarified': True,
-                'term_raw': 'Context family', 'definition_raw': 'Context sets',
-                'convention': '  An exact reviewed convention.  ',
-            }],
         }
-        self.executeBadData(data, item=self.owned_id)
+        self.executeBadData(data | {'excluded': [self.ks1X1.pk]}, item=self.owned_id)
         self.assertFalse(LibraryItem.objects.filter(alias=short_name).exists())
-        data['reviewed'] = [row['id'] for row in preview.data['proposals'] if row['changed'] and row['inKernel']]
-        self.executeConflict(data | {'revision': '1' * 64}, item=self.owned_id)
+
+        self.ks1.model.access_policy = AccessPolicy.PRIVATE
+        self.ks1.model.save(update_fields=['access_policy'])
+        url = f'/api/oss/{self.owned_id}/create-relativization'
+        self.assertEqual(self.client.post(url, data, format='json').status_code, 403)
+
+        self.ks1.model.access_policy = AccessPolicy.PUBLIC
+        self.ks1.model.save(update_fields=['access_policy'])
+        self.ks1.model.refresh_from_db()
+        data['source_time_update'] = self.ks1.model.time_update.isoformat()
+        self.executeConflict(data | {'source_time_update': '2000-01-01T00:00:00Z'}, item=self.owned_id)
         response = self.executeCreated(data, item=self.owned_id)
         new_operation = Operation.objects.get(pk=response.data['new_operation'])
         self.assertEqual(new_operation.operation_type, OperationType.RELATIVIZATION)
-        self.assertEqual(new_operation.relativization_source_id, self.ks1.model.pk)
+        self.assertEqual(new_operation.relativization.source_id, self.ks1.model.pk)
         self.assertEqual(new_operation.alias, short_name)
         self.assertEqual(new_operation.getQ_arguments().get().argument_id, self.operation1.pk)
-        self.assertEqual(new_operation.relativization['target'], {'alias': 'X1', 'term': 'X1_1'})
+        self.assertEqual(new_operation.relativization.passport['target'], {'alias': 'X1', 'term': 'X1_1'})
         self.assertIn({'nodeID': f'o{new_operation.pk}', **data['position']}, response.data['oss']['layout'])
-        axis_map = next(row for row in new_operation.projection['rows'] if row['role'] == 'axis')
-        axis_result = Constituenta.objects.get(pk=axis_map['result'])
-        self.assertEqual(axis_result.convention, data['edits'][0]['convention'])
-        self.assertEqual(axis_result.definition_raw, data['edits'][0]['definition_raw'])
-        self.assertEqual(axis_result.term_raw, data['edits'][0]['term_raw'])
+        axis_result = new_operation.relativization.rows.get(role='axis').result
+        self.assertEqual(axis_result.term_raw, data['context_name'])
+        convention = 'A local convention.'
+        definition = 'Local definition'
+        edited = self.client.patch(f'/api/rsforms/{new_operation.result_id}/update-cst', {
+            'target': axis_result.pk, 'item_data': {'convention': convention, 'definition_raw': definition},
+        }, format='json')
+        self.assertEqual(edited.status_code, 200, edited.data)
 
         synthesis = self.client.post(f'/api/oss/{self.owned_id}/create-synthesis', {
             'item_data': {'alias': 'Downstream', 'title': 'Synthesis', 'parent': None},
@@ -362,7 +351,7 @@ class TestOssOperations(EndpointTester):
         self.assertTrue(Constituenta.objects.filter(schema_id=new_operation.result_id, cst_type='term').exists())
         self.assertTrue(Constituenta.objects.filter(schema_id=next_operation.result_id, cst_type='term').exists())
         axis_result.refresh_from_db()
-        self.assertEqual(axis_result.convention, data['edits'][0]['convention'])
+        self.assertEqual(axis_result.convention, convention)
 
         self.ks1.model.refresh_from_db()
         next_parameters = parameters | {
@@ -371,30 +360,14 @@ class TestOssOperations(EndpointTester):
             'context_name': 'contexte',
             'locale': 'fr',
         }
-        next_preview = self.client.post(url, next_parameters, format='json')
-        self.assertEqual(next_preview.status_code, 200, next_preview.data)
-        previous = next(row['fields'] for row in next_preview.data['prior'] if row['id'] == axis['id'])
-        self.assertEqual(previous['convention'], data['edits'][0]['convention'])
-        reviewed = [row['id'] for row in next_preview.data['proposals'] if row['changed'] and row['inKernel']]
-        refreshed = self.executeCreated(data | next_parameters | {
-            'revision': next_preview.data['revision'],
-            'reviewed': reviewed,
-        }, item=self.owned_id)
+        refreshed = self.executeCreated(data | next_parameters, item=self.owned_id)
         self.assertEqual(refreshed.data['new_operation'], new_operation.pk)
         new_operation.refresh_from_db()
         axis_result.refresh_from_db()
-        self.assertEqual(new_operation.projection['locale'], 'fr')
-        self.assertEqual(axis_result.convention, data['edits'][0]['convention'])
-
-        quick = {key: data[key] for key in ('item_data', 'layout', 'position')} | next_parameters | {
-            'skip_review': True, 'context_name': 'situation',
-        }
-        saved = self.executeCreated(quick, item=self.owned_id)
-        self.assertEqual(saved.data['new_operation'], new_operation.pk)
-        new_operation.refresh_from_db()
-        self.assertEqual(new_operation.projection['context_name'], 'situation')
-        axis_result.refresh_from_db()
-        self.assertEqual(axis_result.convention, data['edits'][0]['convention'])
+        self.assertEqual(new_operation.relativization.parameters['locale'], 'fr')
+        self.assertEqual(axis_result.term_raw, 'contexte')
+        self.assertEqual(axis_result.convention, convention)
+        self.assertEqual(axis_result.definition_raw, definition)
 
         self.ks1.model.access_policy = AccessPolicy.PRIVATE
         self.ks1.model.save(update_fields=['access_policy'])

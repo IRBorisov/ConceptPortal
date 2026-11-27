@@ -13,7 +13,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.oss.models import Inheritance, Operation, OperationType, PropagationFacade
+from apps.oss.models import Inheritance, PropagationFacade, Relativization
 from apps.oss.propagation_batch import propagation_batch
 from apps.rsform import utils
 from apps.rsform.models import RSForm, RSFormCached
@@ -68,9 +68,7 @@ class VersionViewset(
                 'data': msg.importIntoInherited()
             })
         with transaction.atomic():
-            if Operation.objects.filter(
-                result_id=item.pk, operation_type=OperationType.RELATIVIZATION, projection__isnull=False,
-            ).exists():
+            if Relativization.objects.filter(operation__result_id=item.pk).exclude(parameters={}).exists():
                 raise ValidationError('The schema is managed by relativization.')
             PropagationFacade().before_delete_schema(item.pk)
             RSFormSerializer(item).restore_from_version(version.data)

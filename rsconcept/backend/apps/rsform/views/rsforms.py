@@ -40,8 +40,8 @@ from ..mutations import (
     update_crucial,
     update_constituenta,
 )
-from ..relativization import create_standalone_relativization, preview_standalone_relativization
-from ..serializers.relativization import CreateStandaloneRelativizationSerializer, RelativizationInputSerializer
+from ..relativization import create_standalone_relativization
+from ..serializers.relativization import CreateStandaloneRelativizationSerializer
 
 
 @extend_schema(tags=['RSForm'])
@@ -88,24 +88,11 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
             'resolve',
         ]:
             permission_list = [permissions.ItemAnyone]
-        elif self.action in ['preview_relativization', 'create_relativization']:
+        elif self.action == 'create_relativization':
             permission_list = [permissions.ItemReader]
         else:
             permission_list = [permissions.ItemEditor]
         return [permission() for permission in permission_list]
-
-    @extend_schema(
-        summary='preview standalone relativization',
-        request=RelativizationInputSerializer,
-        responses={c.HTTP_200_OK: dict, c.HTTP_409_CONFLICT: None},
-    )
-    @action(detail=True, methods=['post'], url_path='preview-relativization')
-    def preview_relativization(self, request: Request, pk) -> Response:
-        ''' Compute the projection and propose texts for review. '''
-        source = self._get_item()
-        serializer = RelativizationInputSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        return Response(preview_standalone_relativization(source, serializer.validated_data, request))
 
     @extend_schema(
         summary='create a standalone schema by relativization',
