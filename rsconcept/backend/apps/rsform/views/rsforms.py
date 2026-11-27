@@ -37,6 +37,7 @@ from ..mutations import (
     require_unmanaged_attributions,
     require_unmanaged_constituents,
     substitute_constituents,
+    update_crucial,
     update_constituenta,
 )
 from ..relativization import create_standalone_relativization, preview_standalone_relativization
@@ -257,22 +258,12 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
         }
     )
     @action(detail=True, methods=['patch'], url_path='update-crucial')
-    @propagation_batch
     def update_crucial(self, request: Request, pk) -> HttpResponse:
         ''' Update crucial attribute of a given list of constituents. '''
         item = self._get_item()
         serializer = s.CrucialUpdateSerializer(data=request.data, partial=True, context={'schema': item})
         serializer.is_valid(raise_exception=True)
-        value: bool = serializer.validated_data['value']
-
-        with transaction.atomic():
-            # Lock the parent before constituent/attribution writes, matching publication.
-            LibraryItem.objects.filter(pk=item.pk).update(time_update=F('time_update'))
-            for cst in serializer.validated_data['target']:
-                cst.crucial = value
-                cst.save(update_fields=['crucial'])
-            mark_schema(item.pk)
-            item.save(update_fields=['time_update'])
+        update_crucial(item, serializer.validated_data['target'], serializer.validated_data['value'], request)
 
         return Response(
             status=c.HTTP_200_OK,

@@ -1,10 +1,3 @@
-export {
-  type RelativizationDraftDTO,
-  schemaConfirmRelativizationReview,
-  schemaRelativizationDraft,
-  schemaRelativizationInput,
-  schemaSkipRelativizationReview
-} from './backend/relativization';
 export type {
   AttributionTargetDTO,
   ConstituentaBasicsDTO,
@@ -21,6 +14,7 @@ export type {
   VersionCreatedResponse
 } from './backend/types';
 export {
+  schemaAttribution,
   schemaConstituentaBasics,
   schemaRSForm,
   schemaSubstituteConstituents,

@@ -95,6 +95,14 @@ class TestRSFormViewset(EndpointTester):
         Attribution = created.constituentsQ().model._meta.apps.get_model('rsform', 'Attribution')
         self.assertEqual(Attribution.objects.filter(container__schema_id=created.model.pk).count(), 1)
 
+        legacy = self.client.post('/api/rsforms/create-from-sandbox', data, format='json')
+        self.assertEqual(legacy.status_code, status.HTTP_201_CREATED, legacy.data)
+        for field in ('title', 'alias', 'location', 'owner'):
+            self.assertEqual(legacy.data[field], response.data[field])
+        legacy_items = Constituenta.objects.filter(schema_id=legacy.data['id']).order_by('order')
+        self.assertEqual(list(legacy_items.values_list('alias', 'definition_formal')),
+                         [(item.alias, item.definition_formal) for item in created_items])
+
     @decl_endpoint('/api/rsforms/create-from-data', method='post')
     def test_create_rsform_from_data_rejects_invalid_alias(self):
         data = {

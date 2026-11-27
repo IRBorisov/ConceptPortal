@@ -1,13 +1,20 @@
 ''' Regression tests for changes propagated through relativization. '''
+from concurrent.futures import ThreadPoolExecutor
+from threading import Event
+
+from django.db import connection, connections, transaction
+from django.test import TransactionTestCase, skipUnlessDBFeature
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.request import Request
+from rest_framework.test import APIClient
 
-from apps.library.models import LibraryItem
+from apps.library.models import AccessPolicy, Editor, LibraryItem
 from apps.library.services.clone import clone_oss
 from apps.oss.models import Inheritance, Operation, OperationSchema, OperationType, Substitution
 from apps.rsform.models import Attribution, Constituenta, RSForm
 from apps.rsform.mutations import update_constituenta
+from apps.users.models import User
 from shared.EndpointTester import EndpointTester
 
 
@@ -216,6 +223,92 @@ class TestRelativizationPropagation(EndpointTester):
         relativization.refresh_from_db()
         self.assertEqual(relativization.projection['excluded'], [])
         self.assertFalse(Constituenta.objects.filter(pk=preserved.pk).exists())
+
+    def test_library_delete_rolls_back_when_synthesis_loses_relativization_target(self):
+        removed_schema_id = self.source.model.pk
+        synthesis = self._synthesize('Synthesis', self.source_operation, self.other_operation)
+        target = Inheritance.objects.get(operation=synthesis, parent=self.base).child
+        self.source = RSForm(synthesis.result)
+        relativization = self._relativize(target, source_operation=synthesis)
+
+        self._assert_rejected(
+            lambda: self.client.delete(f'/api/library/{removed_schema_id}'),
+            'target', [self.source_operation, synthesis, relativization],
+        )
+        self.assertTrue(LibraryItem.objects.filter(pk=removed_schema_id).exists())
+
+    def test_library_delete_refreshes_indirect_relativization(self):
+        removed_schema_id = self.other.model.pk
+        synthesis = self._synthesize('Synthesis', self.source_operation, self.other_operation)
+        target = Inheritance.objects.get(operation=synthesis, parent=self.base).child
+        excluded = Inheritance.objects.get(operation=synthesis, parent=self.other_base).child
+        self.source = RSForm(synthesis.result)
+        relativization = self._relativize(target, excluded=[excluded], source_operation=synthesis)
+        preserved = self._row(relativization, excluded, 'preserved')
+
+        response = self.client.delete(f'/api/library/{removed_schema_id}')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.data)
+        relativization.refresh_from_db()
+        self.assertEqual(relativization.projection['excluded'], [])
+        self.assertFalse(Constituenta.objects.filter(pk=preserved.pk).exists())
+
+    def test_review_requires_access_to_the_existing_result(self):
+        relativization = self._relativize()
+        Editor.add(self.oss.model.pk, self.user2.pk)
+        self.login2()
+        url = f'/api/oss/{self.oss.model.pk}'
+        data = {
+            'source_operation': self.source_operation.pk,
+            'source_time_update': self.source.model.time_update.isoformat(),
+            'existing_operation': relativization.pk,
+            'target': self.base.pk,
+            'excluded': [],
+            'locale': 'en',
+            'context_name': 'context',
+        }
+        preview = self.client.post(f'{url}/preview-relativization', data, format='json')
+        self.assertEqual(preview.status_code, status.HTTP_200_OK, preview.data)
+        self.assertTrue(preview.data['prior'])
+        denied = self.client.post(f'{url}/create-relativization', data | {
+            'item_data': {'title': 'Relative', 'alias': 'Relative', 'parent': None},
+            'layout': [],
+            'position': {'x': 0, 'y': 0, 'width': 150, 'height': 40},
+            'revision': '0' * 64,
+            'reviewed': [],
+            'edits': [],
+        }, format='json')
+        self.assertEqual(denied.status_code, status.HTTP_403_FORBIDDEN, denied.data)
+
+        self.login()
+        response = self.client.patch(f'/api/library/{relativization.result_id}/set-access-policy', {
+            'access_policy': AccessPolicy.PRIVATE,
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        self.login2()
+        denied = self.client.post(f'{url}/preview-relativization', data, format='json')
+        self.assertEqual(denied.status_code, status.HTTP_403_FORBIDDEN, denied.data)
+        self.assertNotIn('prior', denied.data)
+
+    def test_managed_crucial_flag_is_changed_through_the_source(self):
+        relativization = self._relativize()
+        generated = self._row(relativization, self.base, 'carrier')
+        self.assertFalse(generated.crucial)
+
+        bulk_url = f'/api/rsforms/{relativization.result_id}/update-crucial'
+        bulk_edit = self.client.patch(bulk_url, {'target': [generated.pk], 'value': True}, format='json')
+        self.assertEqual(bulk_edit.status_code, status.HTTP_400_BAD_REQUEST, bulk_edit.data)
+        single_edit = self._update(generated, crucial=True)
+        self.assertEqual(single_edit.status_code, status.HTTP_400_BAD_REQUEST, single_edit.data)
+        generated.refresh_from_db()
+        self.assertFalse(generated.crucial)
+
+        source_url = f'/api/rsforms/{self.source.model.pk}/update-crucial'
+        source_edit = self.client.patch(source_url, {'target': [self.base.pk], 'value': True}, format='json')
+        self.assertEqual(source_edit.status_code, status.HTTP_200_OK, source_edit.data)
+        generated.refresh_from_db()
+        self.assertTrue(generated.crucial)
+        unchanged = self.client.patch(bulk_url, {'target': [generated.pk], 'value': True}, format='json')
+        self.assertEqual(unchanged.status_code, status.HTTP_200_OK, unchanged.data)
 
     def test_managed_definition_guard_compares_to_the_current_row(self):
         term = self.source.insert_last('D1', definition_formal='X1')
@@ -449,3 +542,66 @@ class TestRelativizationPropagation(EndpointTester):
         self.assertEqual(OperationSchema.layoutQ(self.oss.model.pk).data, expected)
         self._relativize(existing=moved, item_data=details | {'title': 'A changed title'})
         self.assertEqual(OperationSchema.layoutQ(self.oss.model.pk).data, expected)
+
+
+@skipUnlessDBFeature('has_select_for_update_nowait')
+class TestConcurrentRelativization(TransactionTestCase):
+    ''' Verify lock order on a database with independent row locks. '''
+
+    def test_reconfiguration_waits_for_result_before_locking_operation(self):
+        user = User.objects.create(username='Relativization editor')
+        client = APIClient()
+        client.force_authenticate(user=user)
+        oss = OperationSchema.create(alias='OSS', title='Operations', owner=user)
+        source = RSForm.create(alias='Source', title='Source', owner=user)
+        target = source.insert_last('X1', term_raw='Vertices', convention='Vertices in the source.')
+        source.model.refresh_from_db()
+        source_operation = oss.create_operation(operation_type=OperationType.INPUT, result=source.model)
+        url = f'/api/oss/{oss.model.pk}/create-relativization'
+        data = {
+            'source_operation': source_operation.pk,
+            'source_time_update': source.model.time_update.isoformat(),
+            'target': target.pk,
+            'excluded': [],
+            'locale': 'en',
+            'context_name': 'context',
+            'item_data': {'alias': 'Relative', 'title': 'Relative', 'parent': None},
+            'layout': [],
+            'position': {'x': 0, 'y': 0, 'width': 150, 'height': 40},
+            'skip_review': True,
+        }
+        created = client.post(url, data, format='json')
+        self.assertEqual(created.status_code, status.HTTP_201_CREATED, created.data)
+        operation = Operation.objects.get(pk=created.data['new_operation'])
+        result_id = operation.result_id
+        generated_id = next(row['result'] for row in operation.projection['rows'] if row['role'] == 'carrier')
+        waiting_for_result = Event()
+
+        def observe_result_lock(execute, sql, params, many, context):
+            if 'FOR UPDATE' in sql and 'library_libraryitem' in sql and result_id in (params or ()):
+                waiting_for_result.set()
+            return execute(sql, params, many, context)
+
+        def reconfigure():
+            thread_client = APIClient()
+            thread_client.force_authenticate(user=user)
+            with connection.execute_wrapper(observe_result_lock):
+                try:
+                    return thread_client.post(url, data | {'existing_operation': operation.pk}, format='json')
+                finally:
+                    connections.close_all()
+
+        convention = 'A confirmed edit during reconfiguration.'
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            with transaction.atomic():
+                LibraryItem.objects.select_for_update().get(pk=result_id)
+                future = executor.submit(reconfigure)
+                self.assertTrue(waiting_for_result.wait(timeout=10), 'Reconfiguration did not lock the result row.')
+                Operation.objects.select_for_update(nowait=True).get(pk=operation.pk)
+                edited = client.patch(f'/api/rsforms/{result_id}/update-cst', {
+                    'target': generated_id, 'item_data': {'convention': convention},
+                }, format='json')
+                self.assertEqual(edited.status_code, status.HTTP_200_OK, edited.data)
+            saved = future.result(timeout=20)
+        self.assertEqual(saved.status_code, status.HTTP_201_CREATED, saved.data)
+        self.assertEqual(Constituenta.objects.get(pk=generated_id).convention, convention)

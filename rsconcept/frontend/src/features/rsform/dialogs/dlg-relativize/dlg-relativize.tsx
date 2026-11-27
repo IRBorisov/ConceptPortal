@@ -11,15 +11,17 @@ import { type Constituenta, CstType } from '@rsconcept/domain/library';
 
 import { useConceptNavigation } from '@/app';
 import { notifyLibrarySync } from '@/features/library/backend/library-sync';
+import { type RelativizationParametersDTO } from '@/features/relativization';
 import {
   getRelativizationExclusions,
   RelativizationParameterFields,
   RelativizationResultFields
-} from '@/features/oss/dialogs/relativization/parameter-fields';
+} from '@/features/relativization/components/parameter-fields';
 import {
   type RelativizationAction,
   RelativizationDialog
-} from '@/features/oss/dialogs/relativization/relativization-dialog';
+} from '@/features/relativization/components/relativization-dialog';
+import { ReviewRelativizationTexts } from '@/features/relativization/components/review-texts';
 import {
   canConfirmReview,
   hasEditedReviewTexts,
@@ -27,9 +29,8 @@ import {
   isReviewed,
   prepareReview,
   type ReviewRow
-} from '@/features/oss/dialogs/relativization/review';
-import { ReviewRelativizationTexts } from '@/features/oss/dialogs/relativization/review-texts';
-import { defaultContextNames, getRelativizationLocale } from '@/features/oss/dialogs/relativization/source-locale';
+} from '@/features/relativization/models/review';
+import { defaultContextNames, getRelativizationLocale } from '@/features/relativization/models/source-locale';
 
 import { KEYS } from '@/backend/configuration';
 import { Loader } from '@/components/loader';
@@ -37,7 +38,6 @@ import { extractErrorMessage } from '@/utils/utils';
 
 import { rsformsApi } from '../../backend/api';
 import { cctextApi } from '../../backend/cctext/api';
-import { type RelativizationParametersDTO } from '../../backend/relativization';
 import { useRsformDialogsStore } from '../rsform-dialog-store';
 
 export interface DlgRelativizeProps {

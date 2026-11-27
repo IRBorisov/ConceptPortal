@@ -5,7 +5,7 @@ import equal from 'fast-deep-equal';
 import { globalTx } from '@/i18n';
 import { type LibraryItem, type OssLayout } from '@rsconcept/domain/library';
 
-import { type RelativizationDraftDTO, schemaRelativizationDraft } from '@/features/rsform';
+import { type RelativizationDraftDTO, schemaRelativizationDraft } from '@/features/relativization';
 import { notifySchemaSync } from '@/features/rsform/backend/schema-sync';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';

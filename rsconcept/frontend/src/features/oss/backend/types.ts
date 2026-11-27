@@ -7,9 +7,9 @@ import { schemaLibraryItem } from '@/features/library';
 import {
   schemaConfirmRelativizationReview,
   schemaRelativizationInput,
-  schemaSkipRelativizationReview,
-  schemaSubstituteConstituents
-} from '@/features/rsform';
+  schemaSkipRelativizationReview
+} from '@/features/relativization';
+import { schemaSubstituteConstituents } from '@/features/rsform';
 
 import { limits } from '@/utils/constants';
 

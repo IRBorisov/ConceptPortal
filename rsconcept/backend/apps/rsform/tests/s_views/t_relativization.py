@@ -81,6 +81,20 @@ class TestStandaloneRelativization(EndpointTester):
         self.assertEqual(result_axis.convention, 'Reviewed context.')
         self.assertEqual(response.data['location'], LocationHead.PROJECTS)
 
+    def test_result_from_owned_shared_library_folder_goes_to_personal_location(self):
+        self.toggle_admin()
+        response = self.client.patch(f'/api/library/{self.source.model.pk}/set-location', {
+            'location': '/L/Examples',
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        self.toggle_admin(False)
+
+        response = self.client.post(f'{self.url}/create-relativization', self.parameters | {
+            'item_data': self.result_data, 'skip_review': True,
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
+        self.assertEqual(response.data['location'], LocationHead.USER)
+
     def test_requires_read_access_on_both_routes(self):
         self.source.model.access_policy = AccessPolicy.PRIVATE
         self.source.model.save(update_fields=['access_policy'])

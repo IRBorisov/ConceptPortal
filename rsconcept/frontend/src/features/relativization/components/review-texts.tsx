@@ -7,7 +7,7 @@ import { Button } from '@/components/control';
 import { Checkbox, Label, TextArea } from '@/components/input';
 import { cn } from '@/components/utils';
 
-import { isReviewed, type ReviewRow, type TextField, textFields } from './review';
+import { isReviewed, type ReviewRow, type TextField, textFields } from '../models/review';
 
 const labels: Record<TextField, string> = {
   term_raw: 'tx.lang.term',
