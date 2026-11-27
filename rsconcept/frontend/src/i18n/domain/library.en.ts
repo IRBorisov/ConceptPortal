@@ -191,7 +191,7 @@ export const txLibraryEn: Record<string, string> = {
   'tx.schema.embed': 'Incorporate schema',
   'tx.schema.embed.hint': 'Incorporate a set of constituents from another schema',
   'tx.schema.relativization.hint': 'Create a standalone conceptual schema by relativization',
-  'tx.schema.relativization.help': 'Contexts, families of values, and how to relativize a conceptual schema',
+  'tx.schema.relativization.help': 'Relativization focus, family name, and set of contexts',
   'tx.schema.order.restore': 'Reorder list',
   'tx.schema.order.restore.short': 'Reordering',
   'tx.schema.order.restore.hint': 'Reorder the list of constituents according to type and links',

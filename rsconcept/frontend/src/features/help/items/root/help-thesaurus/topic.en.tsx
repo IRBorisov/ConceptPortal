@@ -25,6 +25,7 @@ import {
   IconOSS,
   IconPredecessor,
   IconReference,
+  IconRelativization,
   IconRSForm,
   IconRSFormImported,
   IconRSFormOwned,
@@ -253,20 +254,17 @@ export function HelpThesaurusEn() {
 
       <h2>{tx('tx.oss.relativization')}</h2>
       <p>
-        <LinkTopic text='Relativization' topic={HelpTopic.CC_RELATIVIZATION} /> transforms a conceptual schema for one
-        case into a schema for a family of cases. Each case is specified by a <b>context</b>, either a subset of the
-        selected base set or a whole value of the selected generic structure. The <b>context axis</b> in the resulting
-        schema holds the set of admissible contexts.
+        <IconRelativization className='inline-icon' />
+        {'\u2009'}
+        <LinkTopic text='Relativization' topic={HelpTopic.CC_RELATIVIZATION} /> – transformation of a conceptual schema
+        that treats an individual entity as a collection of entities of the same kind.
       </p>
-      <p>
-        Other undefined concepts can have a separate value in each context. Excluded constituents keep a common value.
-        The Portal rewrites dependent formulas to use values from the current context. Terms become families of pairs
-        “context, value”, functions and predicates take the context as their first argument, and axioms and statements
-        are checked in all admissible contexts.
-      </p>
-      <p>
-        A <b>derelativizer</b> extracts the unique value for a given context from a family or relation.
-      </p>
+      <ul>
+        <li>Relativization focus – individual entity chosen for relativization.</li>
+        <li>Family name – user-defined name added to the terms of the source schema.</li>
+        <li>Set of contexts – result of applying an outer power-set operator to the focus’s domain.</li>
+        <li>Derelativizer – helper function that extracts the unique value for a given context.</li>
+      </ul>
 
       <h2>{tx('tx.oss')}</h2>
       <p>

@@ -195,7 +195,7 @@ export const txLibraryRu: Record<string, string> = {
   'tx.schema.embed': 'Встраивание схемы',
   'tx.schema.embed.hint': 'Встраивание совокупности конституент из другой схемы',
   'tx.schema.relativization.hint': 'Создать самостоятельную КС релятивизацией',
-  'tx.schema.relativization.help': 'Контексты, семейства значений и порядок релятивизации КС',
+  'tx.schema.relativization.help': 'Фокус релятивизации, имя семейства и множество контекстов',
   'tx.schema.order.restore': 'Упорядочить список',
   'tx.schema.order.restore.short': 'Упорядочение',
   'tx.schema.order.restore.hint': 'Упорядочить список конституент по типу и связям',

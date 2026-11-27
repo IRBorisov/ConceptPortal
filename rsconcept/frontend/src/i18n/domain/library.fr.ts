@@ -195,8 +195,7 @@ export const txLibraryFr: Record<string, string> = {
   'tx.schema.embed': 'Incorporer le schéma',
   'tx.schema.embed.hint': 'Incorporer un ensemble de constituantes d’un autre schéma',
   'tx.schema.relativization.hint': 'Créer un schéma conceptuel autonome par relativisation',
-  'tx.schema.relativization.help':
-    'Contextes, familles de valeurs et procédure de relativisation d’un schéma conceptuel',
+  'tx.schema.relativization.help': 'Cible de relativisation, nom de la famille et ensemble des contextes',
   'tx.schema.order.restore': 'Réorganiser la liste',
   'tx.schema.order.restore.short': 'Réorganisation',
   'tx.schema.order.restore.hint': 'Réorganiser la liste des constituantes selon le type et les liens',
