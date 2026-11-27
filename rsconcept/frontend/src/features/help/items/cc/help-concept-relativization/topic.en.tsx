@@ -14,8 +14,9 @@ export function HelpConceptRelativizationEn() {
         dependent concepts and statements.
       </p>
       <p>
-        Enter a <b>family name</b> to capture the new perspective. The Portal suggests it as the term for the set of
-        contexts in the resulting <LinkTopic text='conceptual schema' topic={HelpTopic.CC_SYSTEM} />.
+        Enter a <b>family name</b> to capture the new perspective. The Portal adds this name to the terms for the focus
+        and the relativized constituents in the resulting{' '}
+        <LinkTopic text='conceptual schema' topic={HelpTopic.CC_SYSTEM} />.
       </p>
       <p>
         The Portal applies an outer <LinkTopic text='power-set operator' topic={HelpTopic.RSL_TYPIFICATION} /> to the

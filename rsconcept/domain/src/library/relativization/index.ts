@@ -8,7 +8,7 @@ import {
 } from '../../cctext/language-api';
 import { type AstNode, getNodeIndices } from '../../parsing';
 import { RSLangAnalyzer, TokenID, TypeID } from '../../rslang';
-import { extractGlobals, parseRSLangExpression } from '../../rslang/api';
+import { parseRSLangExpression } from '../../rslang/api';
 import { labelType } from '../../rslang/labels';
 import { type Attribution, type Constituenta, CstType, type RSForm } from '../rsform';
 import { analyzeSchemaConstituents, buildFormalDependencyGraph, restoreConstituentOrder } from '../rsform-api';
@@ -288,19 +288,15 @@ export function projectRelativization(
       convention: renamed(old.convention)
     };
     const changedMeaning = row.role !== 'carrier' && row.role !== 'preserved';
-    const usesAccessor = !!accessor && extractGlobals(row.definition_formal).has(accessor.alias);
     const proposed = proposeText(
       row.role,
       originalText,
       {
-        meaning: originalText.term_raw,
-        context: options.contextName,
-        component: component?.term ?? '',
-        subject: target.term_resolved || target.term_raw || target.alias,
-        isBaseSet: original?.cst_type === CstType.BASE || original?.cst_type === CstType.CONSTANT
+        familyName: options.contextName,
+        subject: original?.term_resolved.trim() || originalText.term_raw.trim(),
+        isSet: original?.cst_type === CstType.BASE || original?.cst_type === CstType.CONSTANT
       },
-      options.locale,
-      usesAccessor
+      options.locale
     );
 
     Object.assign(pending, proposed);

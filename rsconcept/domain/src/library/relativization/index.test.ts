@@ -39,7 +39,10 @@ describe('relativization projection and review', () => {
       }),
       row(2, 'X2', CstType.BASE, '', 'методы'),
       row(3, 'S1', CstType.STRUCTURED, 'ℬ(X1×ℬ(X1)×ℬ(X1))', 'декомпозиции', { convention: 'Пары вариантов.' }),
-      row(4, 'S2', CstType.STRUCTURED, 'ℬ(X1×X2)', 'функционально-методное отношение'),
+      row(4, 'S2', CstType.STRUCTURED, 'ℬ(X1×X2)', 'функционально-методное отношение', {
+        definition_raw: 'Методы, пригодные для выполнения функций.',
+        convention: 'Одной функции могут соответствовать несколько методов.'
+      }),
       row(5, 'D1', CstType.TERM, 'Pr2(S1)', 'альтернативы декомпозиции', { typification_manual: 'ℬℬ(X1)' }),
       row(6, 'D2', CstType.TERM, 'Pr3(S1)', 'альтернативы реализации'),
       row(7, 'D3', CstType.TERM, 'red(D1)', 'декомпозирующие функции'),
@@ -51,10 +54,16 @@ describe('relativization projection and review', () => {
 
     const result = projectRelativization(
       { items, attribution: [] },
-      { target: 4, excluded: [], locale: 'ru', contextName: 'отношение' }
+      { target: 4, excluded: [], locale: 'ru', contextName: 'Проекты' }
     )!;
     expect(result.proposals.filter(proposal => proposal.formalInvalid)).toEqual([]);
-    expect(result.items.find(item => item.id === 4)?.term_raw).toBe('отношение');
+    expect(result.items.find(item => item.id === 4)).toMatchObject({
+      term_raw: 'функционально-методное отношение (Проекты)',
+      definition_raw: 'Методы, пригодные для выполнения функций.',
+      convention:
+        'Семейство «Проекты» состоит из допустимых значений структуры «функционально-методное отношение»\n\n' +
+        'Одной функции могут соответствовать несколько методов.'
+    });
     expect(result.proposals.find(proposal => proposal.id === 5)).toMatchObject({
       inKernel: true,
       component: { source: 'S1', path: [0, 2], term: 'альтернативы декомпозиции', scope: 'value' }
@@ -65,13 +74,18 @@ describe('relativization projection and review', () => {
     });
     expect(result.proposals.find(proposal => proposal.id === 7)?.component?.path).toEqual([0, 2, 0]);
     expect(result.items.find(item => item.id === 5)).toMatchObject({
-      term_raw: 'альтернативы декомпозиции по контекстам',
+      term_raw: 'альтернативы декомпозиции (Проекты)',
+      convention: '',
       typification_manual: ''
     });
     expect(result.items.find(item => item.id === 1)?.term_forms).toEqual([{ text: 'функций', tags: 'gent,plur' }]);
     expect(result.items.find(item => item.id === 8)?.definition_raw).toContain('@{X1|gent,plur}');
     expect(result.proposals.find(proposal => proposal.id === 8)?.ambiguous).toContain('D1');
     const accessor = result.proposals.find(proposal => proposal.role === 'accessor')!;
+    const accessorItem = result.items.find(item => item.id === accessor.id)!;
+    expect(accessorItem.term_raw).toBe('Дерелятивизатор (Проекты)');
+    expect(accessorItem.convention).toContain('сопоставлено ровно одно значение');
+    expect(JSON.stringify(result.items)).not.toContain('контекст');
     const orderedIDs = result.items.map(item => item.id);
     expect(orderedIDs).toEqual(result.proposals.map(proposal => proposal.id));
     expect(orderedIDs.indexOf(accessor.id)).toBeLessThan(orderedIDs.indexOf(5));
@@ -79,21 +93,37 @@ describe('relativization projection and review', () => {
 
   it('keeps the selected base set, scopes callable domains, and keeps excluded texts', () => {
     const items = [
-      row(1, 'X1', CstType.BASE, '', 'vertices'),
+      row(1, 'X1', CstType.BASE, '', 'vertices', { convention: 'A graph has at least one vertex.' }),
       row(2, 'C1', CstType.CONSTANT, '', 'weights', { convention: 'Natural numbers.' }),
       row(3, 'S4', CstType.STRUCTURED, 'ℬ(X1×X1)', 'edges'),
       row(4, 'F1', CstType.FUNCTION, '[a∈X1] {(a,a)}∩S4', 'loops')
     ];
     const result = projectRelativization(
       { items, attribution: [] },
-      { target: 1, excluded: [2], locale: 'en', contextName: 'vertex set' }
+      { target: 1, excluded: [2], locale: 'en', contextName: 'Graphs' }
     )!;
     const fromTarget = result.proposals.filter(proposal => proposal.origin === 1);
     expect(fromTarget.map(proposal => proposal.role)).toEqual(['carrier', 'axis']);
-    expect(result.items.find(item => item.id === fromTarget[0].id)?.term_raw).toBe('vertices');
-    expect(result.items.find(item => item.id === fromTarget[1].id)?.term_raw).toBe('vertex set');
+    expect(result.items.find(item => item.id === fromTarget[0].id)).toMatchObject({
+      term_raw: 'vertices',
+      convention: 'Common set from which subsets are selected for members of the family “Graphs”'
+    });
+    const axis = result.items.find(item => item.id === fromTarget[1].id)!;
+    expect(axis.term_raw).toBe('vertices (Graphs)');
+    expect(axis.convention).toBe(
+      'The family “Graphs” consists of admissible subsets of “vertices”\n\nA graph has at least one vertex.'
+    );
+    expect(result.items.find(item => item.id === 3)).toMatchObject({
+      term_raw: 'edges (Graphs)',
+      convention: 'Pairs of the form (member of the family “Graphs”, corresponding value of “edges”)'
+    });
     expect(result.items.find(item => item.id === 2)?.convention).toBe('Natural numbers.');
-    expect(result.items.find(item => item.id === 4)?.definition_formal).toMatch(/^\[c∈S2, a∈c\]/);
+    const callable = result.items.find(item => item.id === 4)!;
+    expect(callable).toMatchObject({
+      term_raw: 'loops (Graphs)',
+      definition_raw: 'The first argument is a member of the family “Graphs”'
+    });
+    expect(callable.definition_formal).toMatch(/^\[c∈S2, a∈c\]/);
     expect(result.proposals.filter(proposal => proposal.formalInvalid)).toEqual([]);
     expect(
       projectRelativization(

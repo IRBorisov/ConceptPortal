@@ -56,7 +56,7 @@ class TestRelativizationPropagation(EndpointTester):
         operation = Operation.objects.get(pk=response.data['new_operation'])
         axis = operation.relativization.rows.get(role='axis')
         self.assertEqual(axis.text_overrides, [])
-        self.assertEqual(axis.result.term_raw, data['context_name'])
+        self.assertEqual(axis.result.term_raw, f'Vertices ({data["context_name"]})')
         self.assertEqual(axis.origin_id, self.base.pk)
         detail = self.client.get(f'/api/rsforms/{operation.result_id}/details')
         self.assertIn(axis.result_id, detail.data['projected'])
@@ -307,14 +307,15 @@ class TestRelativizationPropagation(EndpointTester):
         self.assertEqual(current.convention, convention)
 
     def test_propagation_and_reconfiguration_preserve_edited_term_forms(self):
+        edges = self.source.insert_last('S1', definition_formal='\u212c(X1\u00d7X1)', term_raw='Edges')
         operation = self._relativize()
         axis = self._row(operation, self.base, 'axis')
         forms = [{'text': 'Contexts', 'tags': 'plur'}]
         response = self._update(axis, term_forms=forms)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
-        self._relativize(existing=operation, context_name='Generated context')
+        self._relativize(existing=operation, context_name='Graphs')
         axis.refresh_from_db()
-        self.assertEqual(axis.term_raw, 'Generated context')
+        self.assertEqual(axis.term_raw, 'Vertices (Graphs)')
         self.assertEqual(axis.term_forms, forms)
 
         response = self._update(axis, term_raw='Local context', term_forms=forms, definition_raw='')
@@ -326,11 +327,14 @@ class TestRelativizationPropagation(EndpointTester):
         self.assertEqual(axis.term_raw, 'Local context')
         self.assertEqual(axis.term_forms, forms)
 
-        self._relativize(existing=operation, context_name='New context')
+        self._relativize(existing=operation, context_name='Networks')
         successor = self._row(operation, self.base, 'axis')
         self.assertEqual(successor.pk, axis.pk)
         self.assertEqual(successor.term_raw, 'Local context')
         self.assertEqual(successor.term_forms, forms)
+        self.assertEqual(self._row(operation, edges, 'relation').term_raw, 'Edges (Networks)')
+        self.assertIn('family “Networks”', successor.convention)
+        self.assertIn('Updated source.', successor.convention)
         self.assertEqual(Inheritance.objects.get(operation=operation, parent=self.base).child_id, axis.pk)
 
     def test_reject_target_edit_that_makes_a_family_unevaluable(self):

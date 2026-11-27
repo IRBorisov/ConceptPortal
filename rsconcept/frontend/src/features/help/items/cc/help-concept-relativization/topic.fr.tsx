@@ -14,8 +14,9 @@ export function HelpConceptRelativizationFr() {
         aux concepts et aux énoncés dépendants.
       </p>
       <p>
-        Saisissez le <b>nom de la famille</b> pour fixer le nouveau point de vue. Le Portail le propose comme terme pour
-        l’ensemble des contextes dans le <LinkTopic text='schéma conceptuel' topic={HelpTopic.CC_SYSTEM} /> résultant.
+        Saisissez le <b>nom de la famille</b> pour fixer le nouveau point de vue. Dans le{' '}
+        <LinkTopic text='schéma conceptuel' topic={HelpTopic.CC_SYSTEM} /> résultant, le Portail ajoute ce nom aux
+        termes de la cible et des constituants relativisés.
       </p>
       <p>
         Pour obtenir l’<b>ensemble des contextes</b>, le Portail applique l’
