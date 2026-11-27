@@ -14,8 +14,8 @@ export const createRelativizationContentEn: Record<string, TourStepContent> = {
     title: 'Relativization target and exclusions',
     body: (
       <p>
-        Under “Relativization target”, choose a base set or generic structure to define what counts as one context. Open
-        “Excluded constituents” to select any undefined concepts that should remain shared across contexts.
+        Choose a base set or generic structure to define the contexts. Under “Excluded constituents”, mark the undefined
+        concepts shared across contexts.
       </p>
     )
   },
@@ -23,8 +23,8 @@ export const createRelativizationContentEn: Record<string, TourStepContent> = {
     title: 'Title and result',
     body: (
       <p>
-        Review the title and enter an alias. Choose “Review texts”, open each kernel proposal, add the necessary
-        clarifications, and choose “Confirm texts and create CS”. The result appears on the OSS graph.
+        Check the title and enter an alias. Select “Create without review” to use the generated texts, or “Review texts”
+        to edit them first.
       </p>
     )
   }

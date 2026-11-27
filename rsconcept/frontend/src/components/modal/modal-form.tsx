@@ -1,6 +1,6 @@
 'use client';
 
-import type { SubmitEvent, SubmitEventHandler } from 'react';
+import type { KeyboardEvent, SubmitEvent, SubmitEventHandler } from 'react';
 import { useEffect, useRef } from 'react';
 
 import { useTx } from '@/i18n';
@@ -8,6 +8,7 @@ import { useTx } from '@/i18n';
 import { type HelpTopic } from '@/features/help';
 import { BadgeHelp } from '@/features/help/components/badge-help';
 import { endDialogTourIfActive } from '@/features/onboarding/utils/end-dialog-tour';
+import { collectFocusableRoots } from '@/features/onboarding/utils/focus-containment';
 
 import { useEscapeKey } from '@/hooks/use-escape-key';
 import { useHideActiveDialog } from '@/hooks/use-hide-active-dialog';
@@ -17,6 +18,7 @@ import { prepareTooltip } from '@/utils/format';
 import { Button, MiniButton, SubmitButton } from '../control';
 import { IconAlert, IconClose } from '../icons';
 import { type Styling } from '../props';
+import { PopoverContainerContext } from '../ui/popover';
 import { cn } from '../utils';
 
 import { ModalBackdrop } from './modal-backdrop';
@@ -53,6 +55,11 @@ interface ModalFormProps extends ModalProps {
   /** Indicates that submit button is enabled. */
   canSubmit?: boolean;
 
+  /** Optional action next to submit and cancel. */
+  secondaryAction?: { text: string; onClick: () => void; disabled?: boolean };
+  /** Keep Tab navigation inside this modal, including its popovers. */
+  containFocus?: boolean;
+
   /** Callback to be called before submit. */
   beforeSubmit?: () => boolean;
 
@@ -67,6 +74,8 @@ interface ModalFormProps extends ModalProps {
 
   /** Return false to keep the dialog and its active tour open on cancellation. */
   beforeCancel?: () => boolean;
+  /** Disable cancellation while an operation is in progress. */
+  canCancel?: boolean;
 
   /** Override default dialog close (active feature store). */
   onHide?: () => void;
@@ -84,12 +93,15 @@ export function ModalForm({
 
   canSubmit = true,
   submitText,
+  secondaryAction,
+  containFocus,
   validationHint,
   beforeSubmit,
   closeOnSubmit = true,
   onSubmit,
   onCancel,
   beforeCancel,
+  canCancel = true,
   onHide,
 
   helpTopic,
@@ -103,7 +115,7 @@ export function ModalForm({
   const closeDialog = onHide ?? hideActiveDialog;
   const validationTooltip = useValueTooltipAnchor(validationHint ?? null);
   const resolvedSubmitText = submitText ?? tx('tx.general.continue');
-  const { isTopPlaced, setElement } = useModalPlacement<HTMLFormElement>();
+  const { element, isTopPlaced, setElement } = useModalPlacement<HTMLFormElement>();
 
   const previousFocusRef = useRef<HTMLElement | null>(null);
   useEffect(function manageFocus() {
@@ -119,7 +131,7 @@ export function ModalForm({
   }
 
   function handleCancel() {
-    if (beforeCancel && !beforeCancel()) {
+    if (!canCancel || (beforeCancel && !beforeCancel())) {
       return;
     }
     onCancel?.();
@@ -135,14 +147,39 @@ export function ModalForm({
     if (closeOnSubmit) closeModal();
   }
 
+  function handleDialogKeyDown(event: KeyboardEvent<HTMLFormElement>) {
+    if (event.defaultPrevented || !(event.target instanceof HTMLElement)) return;
+    if (event.target.closest('[data-slot="popover-content"]')) {
+      if (event.key === 'Enter' && event.target.matches('[data-slot="command-input"]')) event.preventDefault();
+      return;
+    }
+    if (event.key !== 'Tab') return;
+    const focusable = collectFocusableRoots([event.currentTarget]).filter(control => control.tabIndex >= 0);
+    const first = focusable[0];
+    const last = focusable.at(-1);
+    const edge = event.shiftKey ? first : last;
+    if (edge && event.target !== edge) {
+      const beyond = event.shiftKey ? Node.DOCUMENT_POSITION_FOLLOWING : Node.DOCUMENT_POSITION_PRECEDING;
+      if (!(event.target.compareDocumentPosition(edge) & beyond)) return;
+    }
+    event.preventDefault();
+    ((event.shiftKey ? last : first) ?? event.currentTarget).focus();
+  }
+
   return (
     <ModalPortal>
       <div className={cn('cc-modal-wrapper', isTopPlaced && 'cc-modal-wrapper-top')}>
         <ModalBackdrop onHide={handleCancel} />
         <form
           ref={setElement}
-          className={cn('cc-animate-modal', 'relative grid px-1 pb-1', 'border-2 rounded-xl bg-background')}
+          className={cn(
+            'cc-animate-modal relative border-2 rounded-xl bg-background px-1 pb-1',
+            secondaryAction ? 'flex max-h-[calc(100svh-1rem)] flex-col' : 'grid'
+          )}
           role='dialog'
+          aria-modal={containFocus || undefined}
+          tabIndex={containFocus ? -1 : undefined}
+          onKeyDown={containFocus ? handleDialogKeyDown : undefined}
           onSubmit={handleSubmit}
           aria-labelledby='modal-title'
         >
@@ -159,14 +196,16 @@ export function ModalForm({
           <MiniButton
             title={prepareTooltip(tx('tx.shell.modal.close.hint'), 'ESC')}
             aria-label={tx('tx.general.close')}
+            tabIndex={containFocus ? 0 : undefined}
             noPadding
+            disabled={!canCancel}
             icon={<IconClose size='1.25rem' />}
             className='absolute z-pop top-2 right-2'
             onClick={handleCancel}
           />
 
           {header ? (
-            <h1 id='modal-title' className='px-12 py-2 select-none'>
+            <h1 id='modal-title' className='shrink-0 px-12 py-2 select-none'>
               {header}
             </h1>
           ) : null}
@@ -174,18 +213,30 @@ export function ModalForm({
           <div
             className={cn(
               '@container/modal',
-              'max-h-[calc(100svh-8rem)] max-w-svw xs:max-w-[calc(100svw-2rem)]',
+              'min-h-0 max-h-[calc(100svh-8rem)] max-w-svw xs:max-w-[calc(100svw-2rem)]',
               'overscroll-contain outline-hidden',
               overflowVisible ? 'overflow-visible' : 'overflow-auto',
               className
             )}
             {...restProps}
           >
-            {children}
+            <PopoverContainerContext value={containFocus ? element : null}>{children}</PopoverContainerContext>
           </div>
 
-          <div className={cn('z-pop relative', 'my-2', 'flex justify-center', 'text-sm', !validationHint && 'gap-12')}>
-            <SubmitButton autoFocus text={resolvedSubmitText} className='min-w-28' disabled={!canSubmit} />
+          <div
+            className={cn(
+              'z-pop relative my-2 shrink-0 justify-center text-sm',
+              secondaryAction ? 'grid grid-cols-2 gap-2 px-3 sm:flex sm:gap-3' : 'flex',
+              !secondaryAction && !validationHint && 'gap-12'
+            )}
+          >
+            <SubmitButton
+              autoFocus
+              text={resolvedSubmitText}
+              className={cn('min-w-28', secondaryAction && 'col-span-2')}
+              disabled={!canSubmit}
+            />
+            {secondaryAction ? <Button {...secondaryAction} className='min-w-28' /> : null}
             {validationHint ? (
               <div
                 className={cn(
@@ -198,12 +249,7 @@ export function ModalForm({
                 <IconAlert size='1.5rem' className='mx-auto' />
               </div>
             ) : null}
-            <Button
-              text={tx('tx.general.cancel')}
-              aria-label={tx('tx.general.close')}
-              className='min-w-28'
-              onClick={handleCancel}
-            />
+            <Button text={tx('tx.general.cancel')} className='min-w-28' disabled={!canCancel} onClick={handleCancel} />
           </div>
         </form>
       </div>

@@ -104,12 +104,13 @@ export function useHandleActions() {
     });
   }
 
-  function handleCreateRelativization() {
+  function handleCreateRelativization(returnFocusTo: HTMLElement | null) {
     const position = screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
     const inputs = selectedItems.filter(item => item.nodeType === NodeType.OPERATION && item.result !== null);
     showCreateRelativization({
       ossID: schema.id,
       initialSource: inputs.length === 1 ? inputs[0].id : null,
+      returnFocusTo,
       initialParent: extractBlockParent(selectedItems),
       position,
       onCreate: newID => {

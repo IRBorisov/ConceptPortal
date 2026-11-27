@@ -22,6 +22,43 @@ class TestRelativizationPropagation(EndpointTester):
         self.base = self.source.insert_last('X1', term_raw='Vertices', convention='Vertices in the source.')
         self.other_base = self.other.insert_last('X1', term_raw='Other vertices')
 
+    def test_create_without_review(self):
+        self.source.model.refresh_from_db()
+        url = f'/api/oss/{self.oss.model.pk}/create-relativization'
+        data = {
+            'source_operation': self.source_operation.pk,
+            'source_time_update': self.source.model.time_update.isoformat(),
+            'target': self.base.pk,
+            'excluded': [],
+            'locale': 'en',
+            'context_name': 'context',
+            'item_data': {'alias': 'Quick', 'title': 'Quick result', 'parent': None},
+            'layout': [],
+            'position': {'x': 0, 'y': 0, 'width': 150, 'height': 40},
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.data)
+        self.assertIn('revision', response.data)
+        quick = data | {'skip_review': True}
+        response = self.client.post(url, quick | {'reviewed': []}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.data)
+        response = self.client.post(url, quick | {'source_time_update': '2026-01-01T00:00:00Z'}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT, response.data)
+        response = self.client.post(url, quick | {'excluded': [self.base.pk]}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.data)
+        self.assertFalse(LibraryItem.objects.filter(alias='Quick').exists())
+
+        response = self.client.post(url, quick, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
+        operation = Operation.objects.get(pk=response.data['new_operation'])
+        state = next(row for row in response.data['oss']['operations'] if row['id'] == operation.pk)
+        self.assertTrue(state['relativization']['unreviewed'])
+        axis = next(row for row in operation.projection['rows'] if row['role'] == 'axis')
+        self.assertEqual(axis['confirmed'], {})
+        self.assertTrue(axis['needs_review'])
+        item = Constituenta.objects.get(pk=axis['result'])
+        self.assertEqual(item.term_raw, axis['suggested']['term_raw'])
+
     def _input(self, alias, oss=None, schema=None):
         oss = oss or self.oss
         schema = schema or RSForm.create(alias=alias, title=alias, owner=self.user, location='test')

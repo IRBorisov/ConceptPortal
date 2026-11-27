@@ -11,20 +11,27 @@ import { type RelativizationProjection } from '@rsconcept/domain/library/relativ
 
 import { useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth/backend/use-auth';
-import { HelpTopic } from '@/features/help';
 import { useCreateFromSandbox } from '@/features/library/backend/use-create-from-sandbox';
 import {
   getRelativizationExclusions,
   RelativizationParameterFields,
   RelativizationResultFields
 } from '@/features/oss/dialogs/relativization/parameter-fields';
-import { canConfirmReview, prepareReview, type ReviewRow } from '@/features/oss/dialogs/relativization/review';
+import {
+  type RelativizationAction,
+  RelativizationDialog
+} from '@/features/oss/dialogs/relativization/relativization-dialog';
+import {
+  canConfirmReview,
+  hasEditedReviewTexts,
+  prepareReview,
+  type ReviewRow
+} from '@/features/oss/dialogs/relativization/review';
 import { ReviewRelativizationTexts } from '@/features/oss/dialogs/relativization/review-texts';
 import { defaultContextNames, getRelativizationLocale } from '@/features/oss/dialogs/relativization/source-locale';
 
 import { KEYS } from '@/backend/configuration';
 import { Loader } from '@/components/loader';
-import { ModalForm } from '@/components/modal';
 import { extractErrorMessage } from '@/utils/utils';
 
 import { rsformsApi } from '../../backend/api';
@@ -35,7 +42,7 @@ import { type RelativizationRequest } from './relativization.worker';
 
 export interface DlgRelativizeProps {
   schemaID: number;
-  initialTarget: number | null;
+  returnFocusTo: HTMLElement | null;
 }
 
 async function calculateDraft(request: RelativizationRequest): Promise<RelativizationProjection | null> {
@@ -58,22 +65,22 @@ export function DlgRelativize() {
   const router = useConceptNavigation();
   const { user } = useAuth();
   const { createRSFormFromSandbox } = useCreateFromSandbox({ reportErrorInDialog: true });
-  const { schemaID, initialTarget } = useRsformDialogsStore(state => state.props as DlgRelativizeProps);
+  const { schemaID, returnFocusTo } = useRsformDialogsStore(state => state.props as DlgRelativizeProps);
   const hideDialog = useRsformDialogsStore(state => state.hideDialog);
   const sourceQuery = useQuery(rsformsApi.getRSFormQueryOptions({ itemID: schemaID }));
   const source = sourceQuery.data?.raw;
   const schema = sourceQuery.data?.transformed;
 
-  const [targetID, setTargetID] = useState(initialTarget);
+  const [targetID, setTargetID] = useState<number | null>(null);
   const [excludedIDs, setExcludedIDs] = useState<number[]>([]);
   const [manualTitle, setManualTitle] = useState<string | null>(null);
   const [alias, setAlias] = useState('');
   const [description, setDescription] = useState('');
-  const [manualContext, setManualContext] = useState<string | null>(null);
+  const [contextName, setContextName] = useState('');
   const [draft, setDraft] = useState<{ projection: RelativizationProjection; sourceTime: string } | null>(null);
   const [rows, setRows] = useState<ReviewRow[]>([]);
   const [reviewing, setReviewing] = useState(false);
-  const [pending, setPending] = useState(false);
+  const [pending, setPending] = useState<RelativizationAction | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const pendingRef = useRef(false);
 
@@ -84,7 +91,7 @@ export function DlgRelativize() {
   const exclusionOptions = getRelativizationExclusions(schema?.items ?? [], target);
   const term = target?.term_resolved.trim() ?? '';
   const locale = getRelativizationLocale(source, DEFAULT_LOCALE);
-  const contextName = manualContext ?? defaultContextNames[locale];
+  const defaultContextName = defaultContextNames[locale];
   const useInflection = intl.locale === 'ru' && locale === 'ru' && !!term && manualTitle === null;
   const formQuery = useQuery({
     queryKey: [KEYS.cctext, 'inflect', term, Grammeme.gent],
@@ -102,12 +109,7 @@ export function DlgRelativize() {
       : '';
   const title = manualTitle ?? defaultTitle;
   const canPrepare =
-    !!source &&
-    !!target &&
-    !!alias.trim() &&
-    !!title.trim() &&
-    !!contextName.trim() &&
-    !(useInflection && formQuery.isLoading);
+    !!source && !!target && !!alias.trim() && !!title.trim() && !(useInflection && formQuery.isLoading);
   const sourceChanged = draft !== null && draft.sourceTime !== source?.time_update;
   const canConfirm = draft !== null && !sourceChanged && canConfirmReview(rows);
 
@@ -120,33 +122,38 @@ export function DlgRelativize() {
     setExcludedIDs(previous => (checked ? [...previous, id] : previous.filter(item => item !== id)));
   }
 
-  async function submit() {
+  async function submit(action: RelativizationAction) {
     if (pendingRef.current || !canPrepare || !source || !target || (reviewing && !canConfirm)) return;
     pendingRef.current = true;
-    setPending(true);
+    setPending(action);
     setErrorMessage('');
     try {
-      if (!reviewing) {
-        const projection = await calculateDraft({
-          source: { items: source.items, attribution: source.attribution },
-          options: {
-            target: target.id,
-            excluded: exclusionOptions.filter(item => excludedIDs.includes(item.id)).map(item => item.id),
-            locale,
-            contextName: contextName.trim()
-          }
-        });
-        if (!projection) {
-          setErrorMessage(tx('tx.oss.relativization.compute.fail'));
-          return;
-        }
+      const projection = reviewing
+        ? draft?.projection
+        : await calculateDraft({
+            source: { items: source.items, attribution: source.attribution },
+            options: {
+              target: target.id,
+              excluded: exclusionOptions.filter(item => excludedIDs.includes(item.id)).map(item => item.id),
+              locale,
+              contextName: contextName.trim() || defaultContextName
+            }
+          }).catch(() => null);
+      if (!projection) {
+        setErrorMessage(tx('tx.oss.relativization.compute.fail'));
+        return;
+      }
+      if (action === 'preview') {
         setRows(prepareReview(projection, rows));
         setDraft({ projection, sourceTime: source.time_update });
         setReviewing(true);
         return;
       }
-      if (!draft) return;
-      const reviewedFields = new Map(rows.map(row => [row.item.id, row.fields]));
+      if (projection.proposals.some(proposal => proposal.formalInvalid)) {
+        setErrorMessage(tx('tx.oss.relativization.review.invalid'));
+        return;
+      }
+      const reviewedFields = new Map(reviewing ? rows.map(row => [row.item.id, row.fields]) : []);
       const result = await createRSFormFromSandbox({
         item_data: {
           title: title.trim(),
@@ -159,78 +166,71 @@ export function DlgRelativize() {
             user.id === source.owner && source.location !== LocationHead.LIBRARY ? source.location : LocationHead.USER
         },
         schema_data: {
-          items: draft.projection.items.map(item => {
+          items: projection.items.map(item => {
             const fields = reviewedFields.get(item.id);
             return fields
               ? { ...item, ...fields, term_forms: fields.term_raw === item.term_raw ? item.term_forms : [] }
               : item;
           }),
-          attribution: draft.projection.attribution
+          attribution: projection.attribution
         }
       });
       hideDialog();
       router.gotoCstList(result.id);
     } catch (error) {
-      setErrorMessage(
-        reviewing && error instanceof Error ? extractErrorMessage(error) : tx('tx.oss.relativization.compute.fail')
-      );
+      setErrorMessage(error instanceof Error ? extractErrorMessage(error) : tx('tx.oss.relativization.compute.fail'));
     } finally {
       pendingRef.current = false;
-      setPending(false);
+      setPending(null);
+    }
+  }
+
+  function handleSecondaryAction() {
+    if (reviewing) {
+      setErrorMessage('');
+      setReviewing(false);
+    } else {
+      void submit('preview');
     }
   }
 
   return (
-    <ModalForm
-      header={tx('tx.oss.relativization')}
-      submitText={tx(reviewing ? 'tx.oss.relativization.review.submit' : 'tx.oss.relativization.review.start')}
-      canSubmit={!pending && canPrepare && (!reviewing || canConfirm)}
+    <RelativizationDialog
+      reviewing={reviewing}
+      pending={pending}
+      canSubmit={canPrepare && (!reviewing || canConfirm)}
+      hasEditedTexts={hasEditedReviewTexts(rows)}
+      errorMessage={errorMessage}
+      returnFocusTo={returnFocusTo}
       beforeCancel={() => !pendingRef.current}
-      closeOnSubmit={false}
-      onSubmit={event => {
-        event.preventDefault();
-        event.stopPropagation();
-        void submit();
-      }}
-      className={`${reviewing ? 'w-224' : 'w-160'} max-w-[calc(100svw-1.5rem)] px-3 sm:px-5`}
-      helpTopic={HelpTopic.CC_RELATIVIZATION}
-      openManualInNewTab
+      onHide={hideDialog}
+      onSubmit={() => void submit('save')}
+      onSecondaryAction={handleSecondaryAction}
     >
-      {errorMessage ? (
-        <p className='pt-3 text-destructive' role='alert'>
-          {errorMessage}
-        </p>
-      ) : null}
-      {pending ? (
-        <p className='pt-3' role='status'>
-          {tx(reviewing ? 'tx.oss.relativization.review.saving' : 'tx.oss.relativization.review.previewing')}
-        </p>
-      ) : null}
       {sourceQuery.isPending ? <Loader /> : null}
-      {sourceQuery.isError && !source ? <p role='alert'>{tx('tx.oss.relativization.source.fail')}</p> : null}
+      {sourceQuery.isError && !source ? (
+        <p className='py-3 text-destructive' role='alert'>
+          {tx('tx.oss.relativization.source.fail')}
+        </p>
+      ) : null}
       {reviewing ? (
         <>
           {sourceChanged ? <p role='alert'>{tx('tx.oss.relativization.review.stale')}</p> : null}
           <ReviewRelativizationTexts
             rows={rows}
             onChange={row => setRows(current => current.map(item => (item.item.id === row.item.id ? row : item)))}
-            back={() => {
-              setErrorMessage('');
-              setReviewing(false);
-            }}
-            disabled={pending}
+            disabled={!!pending}
             locale={locale}
           />
         </>
-      ) : (
-        <fieldset className='grid min-w-0 gap-4 py-3' disabled={pending}>
+      ) : schema ? (
+        <fieldset className='grid min-w-0 gap-4 py-3' disabled={!!pending}>
           <RelativizationParameterFields
             targets={targetOptions}
             target={target}
-            focusTarget={draft !== null}
             onTargetChange={changeTarget}
             contextName={contextName}
-            onContextNameChange={setManualContext}
+            onContextNameChange={setContextName}
             exclusions={exclusionOptions}
             excludedIDs={excludedIDs}
             onExcludedChange={toggleExcluded}
@@ -244,7 +244,7 @@ export function DlgRelativize() {
             onDescriptionChange={setDescription}
           />
         </fieldset>
-      )}
-    </ModalForm>
+      ) : null}
+    </RelativizationDialog>
   );
 }

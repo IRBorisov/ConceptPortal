@@ -111,6 +111,7 @@ export function MenuOperation({ operation, onHide }: MenuOperationProps) {
         ossID: schema.id,
         existingOperation: operation,
         initialSource: schema.graph.expandInputs([operation.id])[0] ?? null,
+        returnFocusTo: document.querySelector<HTMLElement>(`.react-flow__node[data-id="${operation.nodeID}"]`),
         initialParent: operation.parent,
         position: { x: 0, y: 0 },
         onCreate: id => setSelectedNodes(['o' + id])

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -9,7 +9,6 @@ import { Grammeme } from '@rsconcept/domain/cctext/language';
 import { type Constituenta, CstType, type Operation, type OperationType } from '@rsconcept/domain/library';
 
 import { useConceptNavigation } from '@/app';
-import { HelpTopic } from '@/features/help';
 import { DialogTourID } from '@/features/onboarding/tours/editor-tours';
 import { endDialogTourIfActive } from '@/features/onboarding/utils/end-dialog-tour';
 import { rsformsApi } from '@/features/rsform/backend/api';
@@ -19,7 +18,6 @@ import { isAxiosError } from '@/backend/api-transport';
 import { KEYS } from '@/backend/configuration';
 import { Label } from '@/components/input';
 import { Loader } from '@/components/loader';
-import { ModalForm } from '@/components/modal';
 import { limits } from '@/utils/constants';
 import { extractErrorMessage } from '@/utils/utils';
 
@@ -35,7 +33,15 @@ import {
   RelativizationResultFields
 } from './relativization/parameter-fields';
 import { getRelativizationPlacement } from './relativization/placement';
-import { canConfirmReview, hasReviewEdits, isReviewed, prepareReview, type ReviewRow } from './relativization/review';
+import { type RelativizationAction, RelativizationDialog } from './relativization/relativization-dialog';
+import {
+  canConfirmReview,
+  hasEditedReviewTexts,
+  hasReviewEdits,
+  isReviewed,
+  prepareReview,
+  type ReviewRow
+} from './relativization/review';
 import { ReviewRelativizationTexts } from './relativization/review-texts';
 import { defaultContextNames, getRelativizationLocale } from './relativization/source-locale';
 import { useOssDialogsStore } from './oss-dialog-store';
@@ -43,6 +49,7 @@ import { useOssDialogsStore } from './oss-dialog-store';
 export interface DlgCreateRelativizationProps {
   ossID: number;
   initialSource: number | null;
+  returnFocusTo: HTMLElement | null;
   existingOperation?: Extract<Operation, { operation_type: typeof OperationType.RELATIVIZATION }>;
   initialParent: number | null;
   position: { x: number; y: number };
@@ -66,16 +73,27 @@ export function DlgCreateRelativization() {
   const [manualTitle, setManualTitle] = useState<string | null>(existing?.title ?? null);
   const [alias, setAlias] = useState(existing?.alias ?? '');
   const [description, setDescription] = useState(existing?.description ?? '');
-  const [manualContext, setManualContext] = useState<string | null>(options?.context_name ?? null);
-  const [step, setStep] = useState<'parameters' | 'review'>('parameters');
+  const [contextName, setContextName] = useState(options?.context_name ?? '');
+  const [reviewing, setReviewing] = useState(false);
   const [draft, setDraft] = useState<{ parameters: RelativizationParametersDTO; revision: string } | null>(null);
   const [rows, setRows] = useState<ReviewRow[]>([]);
-  const [pending, setPending] = useState<'preview' | 'save' | null>(null);
+  const [pending, setPending] = useState<RelativizationAction | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const pendingRef = useRef(false);
+  const sourceField = useRef<HTMLDivElement>(null);
+
+  useEffect(
+    function focusSource() {
+      if (!reviewing && sourceID === null) {
+        sourceField.current?.querySelector<HTMLButtonElement>('#relativization_source')?.focus();
+      }
+    },
+    [reviewing, sourceID]
+  );
 
   const operations = oss.operations.filter(operation => operation.result !== null);
   const source = operations.find(operation => operation.id === sourceID) ?? null;
+  const parent = parentID === null ? null : (oss.blockByID.get(parentID) ?? null);
   const sourceQuery = useQuery(rsformsApi.getRSFormQueryOptions({ itemID: source?.result }));
   const schema = sourceQuery.data?.transformed;
   const targetOptions = (schema?.items ?? []).filter(
@@ -86,7 +104,7 @@ export function DlgCreateRelativization() {
 
   const term = target?.term_resolved.trim() ?? '';
   const locale = getRelativizationLocale(sourceQuery.data?.raw, options?.locale ?? DEFAULT_LOCALE);
-  const contextName = manualContext ?? defaultContextNames[locale];
+  const defaultContextName = defaultContextNames[locale];
   const canInflect = !!term && manualTitle === null && intl.locale === 'ru' && locale === 'ru';
   const formQuery = useQuery({
     queryKey: [KEYS.cctext, 'inflect', term, Grammeme.gent],
@@ -129,7 +147,6 @@ export function DlgCreateRelativization() {
     !!target &&
     !!alias.trim() &&
     !!title.trim() &&
-    !!contextName.trim() &&
     alias.length <= limits.len_alias &&
     title.length <= limits.len_title &&
     !aliasTaken &&
@@ -163,24 +180,25 @@ export function DlgCreateRelativization() {
     }
   }
 
-  async function submit() {
+  async function submit(action: RelativizationAction) {
     const raw = sourceQuery.data?.raw;
-    if (pendingRef.current || !canPrepare || !source || !target || !raw) return;
+    if (pendingRef.current || !canPrepare || !source || !target || !raw || (reviewing && !canConfirm)) return;
 
     pendingRef.current = true;
-    setPending(step === 'parameters' ? 'preview' : 'save');
+    setPending(action);
     setErrorMessage('');
     try {
-      if (step === 'parameters') {
-        const parameters = {
-          ...(existing ? { existing_operation: existing.id } : {}),
-          source_operation: source.id,
-          source_time_update: raw.time_update,
-          target: target.id,
-          excluded: exclusionOptions.filter(item => excludedIDs.includes(item.id)).map(item => item.id),
-          locale,
-          context_name: contextName.trim()
-        };
+      const reviewedDraft = reviewing ? draft : null;
+      const parameters = reviewedDraft?.parameters ?? {
+        ...(existing ? { existing_operation: existing.id } : {}),
+        source_operation: source.id,
+        source_time_update: raw.time_update,
+        target: target.id,
+        excluded: exclusionOptions.filter(item => excludedIDs.includes(item.id)).map(item => item.id),
+        locale,
+        context_name: contextName.trim() || defaultContextName
+      };
+      if (action === 'preview') {
         const result = await ossApi.previewRelativization({
           itemID: oss.id,
           data: parameters,
@@ -189,10 +207,9 @@ export function DlgCreateRelativization() {
         setRows(previous => prepareReview(result, draft?.parameters.source_operation === source.id ? previous : []));
         setDraft({ parameters, revision: result.revision });
         endDialogTourIfActive(DialogTourID.CREATE_RELATIVIZATION);
-        setStep('review');
+        setReviewing(true);
         return;
       }
-      if (!canConfirm || !draft) return;
       const { layout, position, expectedTimeUpdate } = getRelativizationPlacement(
         oss,
         props.position,
@@ -204,10 +221,16 @@ export function DlgCreateRelativization() {
         itemID: oss.id,
         expectedTimeUpdate,
         data: {
-          ...draft.parameters,
-          revision: draft.revision,
-          reviewed: rows.filter(isReviewed).map(row => row.item.id),
-          edits: rows.filter(hasReviewEdits).map(row => ({ id: row.item.id, clarified: row.clarified, ...row.fields })),
+          ...parameters,
+          ...(reviewedDraft
+            ? {
+                revision: reviewedDraft.revision,
+                reviewed: rows.filter(isReviewed).map(row => row.item.id),
+                edits: rows
+                  .filter(hasReviewEdits)
+                  .map(row => ({ id: row.item.id, clarified: row.clarified, ...row.fields }))
+              }
+            : { skip_review: true }),
           item_data: { title: title.trim(), alias: alias.trim(), description, parent: parentID },
           layout,
           position
@@ -221,43 +244,31 @@ export function DlgCreateRelativization() {
     }
   }
 
+  function handleSecondaryAction() {
+    if (reviewing) {
+      setErrorMessage('');
+      setReviewing(false);
+    } else {
+      void submit('preview');
+    }
+  }
+
   return (
-    <ModalForm
-      header={tx('tx.oss.relativization')}
-      submitText={tx(
-        step === 'parameters'
-          ? 'tx.oss.relativization.review.start'
-          : existing
-            ? 'tx.oss.relativization.review.update'
-            : 'tx.oss.relativization.review.submit'
-      )}
-      canSubmit={!pending && (step === 'parameters' ? canPrepare : canConfirm)}
-      closeOnSubmit={false}
+    <RelativizationDialog
+      reviewing={reviewing}
+      updating={!!existing}
+      pending={pending}
+      canSubmit={reviewing ? canConfirm : canPrepare}
+      hasEditedTexts={hasEditedReviewTexts(rows)}
+      errorMessage={errorMessage}
+      returnFocusTo={props.returnFocusTo}
       beforeCancel={() => !pendingRef.current}
       onHide={hideDialog}
-      onSubmit={event => {
-        event.preventDefault();
-        event.stopPropagation();
-        void submit();
-      }}
-      className={`${step === 'parameters' ? 'w-160' : 'w-224'} max-w-[calc(100svw-1.5rem)] px-3 sm:px-5`}
-      helpTopic={HelpTopic.CC_RELATIVIZATION}
-      openManualInNewTab
-      tourID={step === 'parameters' ? DialogTourID.CREATE_RELATIVIZATION : undefined}
+      onSubmit={() => void submit('save')}
+      onSecondaryAction={handleSecondaryAction}
+      tourID={DialogTourID.CREATE_RELATIVIZATION}
     >
-      <div role='status' aria-live='polite'>
-        {pending === 'preview'
-          ? tx('tx.oss.relativization.review.previewing')
-          : pending === 'save'
-            ? tx('tx.oss.relativization.review.saving')
-            : null}
-      </div>
-      {errorMessage ? (
-        <p role='alert' className='mt-3 whitespace-pre-wrap text-destructive'>
-          {errorMessage}
-        </p>
-      ) : null}
-      {step === 'review' ? (
+      {reviewing ? (
         <>
           {sourceChanged ? (
             <p role='alert' className='text-destructive'>
@@ -267,7 +278,6 @@ export function DlgCreateRelativization() {
           <ReviewRelativizationTexts
             rows={rows}
             onChange={row => setRows(previous => previous.map(old => (old.item.id === row.item.id ? row : old)))}
-            back={() => setStep('parameters')}
             disabled={pending !== null}
             locale={draft?.parameters.locale ?? locale}
           />
@@ -275,15 +285,22 @@ export function DlgCreateRelativization() {
       ) : (
         <fieldset disabled={pending !== null} className='grid min-w-0 gap-4 py-3'>
           <div data-tour='relativization-parameters' className='grid min-w-0 gap-3'>
-            <div data-tour='relativization-source' className='grid min-w-0 gap-2'>
-              <Label text={tx('tx.oss.relocate.source')} htmlFor={existing ? undefined : 'relativization_source'} />
+            <div ref={sourceField} data-tour='relativization-source' className='grid min-w-0 gap-2'>
+              <Label
+                text={tx('tx.oss.relocate.source')}
+                htmlFor={existing ? undefined : 'relativization_source'}
+                className={existing ? undefined : 'sr-only'}
+              />
               {existing ? (
-                <p id='relativization_source'>{source?.title || source?.alias}</p>
+                <p id='relativization_source' className='wrap-anywhere'>
+                  {source?.title || source?.alias}
+                </p>
               ) : (
                 <SelectOperation
                   id='relativization_source'
-                  className='h-9 text-left [&_svg]:size-4'
+                  className='h-9 w-full min-w-0 text-left [&_svg]:size-4'
                   items={operations}
+                  placeholder={tx('tx.oss.relocate.source')}
                   value={source}
                   onChange={changeSource}
                 />
@@ -299,11 +316,10 @@ export function DlgCreateRelativization() {
               <RelativizationParameterFields
                 targets={targetOptions}
                 target={target}
-                focusTarget={draft !== null}
                 onTargetChange={changeTarget}
                 contextName={contextName}
                 maxContextLength={limits.len_alias}
-                onContextNameChange={setManualContext}
+                onContextNameChange={setContextName}
                 exclusions={exclusionOptions}
                 excludedIDs={excludedIDs}
                 onExcludedChange={toggleExcluded}
@@ -324,9 +340,9 @@ export function DlgCreateRelativization() {
                 <Label text={tx('tx.oss.block.parent')} htmlFor='relativization_parent' className='sr-only' />
                 <SelectBlock
                   id='relativization_parent'
-                  className='h-9 w-full text-left [&_svg]:size-4'
+                  className='h-9 w-full min-w-0 text-left [&_svg]:size-4'
                   items={oss.blocks}
-                  value={parentID === null ? null : (oss.blockByID.get(parentID) ?? null)}
+                  value={parent}
                   onChange={value => setParentID(value?.id ?? null)}
                   placeholder={tx('tx.oss.block.parent')}
                 />
@@ -335,6 +351,6 @@ export function DlgCreateRelativization() {
           </RelativizationResultFields>
         </fieldset>
       )}
-    </ModalForm>
+    </RelativizationDialog>
   );
 }

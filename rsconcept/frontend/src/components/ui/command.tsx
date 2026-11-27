@@ -125,7 +125,10 @@ function CommandInput({ className, onValueChange, value, defaultValue, ...props 
   }
 
   return (
-    <div data-slot='command-input-wrapper' className='flex h-9 items-center gap-2 border-b px-3'>
+    <div
+      data-slot='command-input-wrapper'
+      className='flex h-9 items-center gap-2 border-b px-3 focus-frame -outline-offset-2'
+    >
       <SearchIcon className='size-4 shrink-0 opacity-50' />
       <input
         data-slot='command-input'
@@ -222,7 +225,10 @@ function CommandItem({ className, value, disabled, onSelect, onClick, children, 
       data-slot='command-item'
       data-disabled={disabled ? true : undefined}
       className={cn(
-        "[&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 hover:bg-accent hover:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        'relative flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm select-none',
+        'focus-outline -outline-offset-2 hover:bg-accent hover:text-accent-foreground',
+        'data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50',
+        "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground",
         className
       )}
       disabled={disabled}

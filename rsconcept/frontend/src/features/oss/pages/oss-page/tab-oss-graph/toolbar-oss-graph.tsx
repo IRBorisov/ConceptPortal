@@ -55,6 +55,7 @@ export function ToolbarOssGraph({
   ...restProps
 }: ToolbarOssGraphProps) {
   const tx = useTx();
+  const addButton = React.useRef<HTMLButtonElement>(null);
   const { schema, selectedItems, isMutable, canDeleteSelected } = useOssEdit();
   const isProcessing = useMutatingOss();
   const { nodes } = useOssFlow();
@@ -206,6 +207,8 @@ export function ToolbarOssGraph({
           />
           <div ref={menuRef} onBlur={handleMenuBlur} className='relative'>
             <MiniButton
+              ref={addButton}
+              tabIndex={0}
               title={tx('tx.general.add') + '...'}
               hideTitle={isMenuOpen}
               icon={<IconNewItem size='1.25rem' className='icon-green' />}
@@ -240,7 +243,7 @@ export function ToolbarOssGraph({
               <DropdownButton
                 text={tx('tx.oss.relativization')}
                 icon={<IconRelativization size='1.25rem' className='text-primary' />}
-                onClick={handleCreateRelativization}
+                onClick={() => handleCreateRelativization(addButton.current)}
                 disabled={!schema.operations.some(operation => operation.result !== null)}
               />
             </Dropdown>

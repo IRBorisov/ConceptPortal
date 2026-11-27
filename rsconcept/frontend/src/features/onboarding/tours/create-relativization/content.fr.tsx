@@ -14,9 +14,8 @@ export const createRelativizationContentFr: Record<string, TourStepContent> = {
     title: 'Constituant à relativiser et exclusions',
     body: (
       <p>
-        Dans « Constituant à relativiser », choisissez un ensemble de base ou une structure générique. Ce choix définit
-        ce qui constitue un contexte. Ouvrez « Constituants exclus » pour choisir les concepts non définis qui doivent
-        rester communs aux contextes.
+        Choisissez un ensemble de base ou une structure générique. Dans « Constituants exclus », cochez les concepts non
+        définis communs aux contextes.
       </p>
     )
   },
@@ -24,9 +23,8 @@ export const createRelativizationContentFr: Record<string, TourStepContent> = {
     title: 'Titre et résultat',
     body: (
       <p>
-        Vérifiez le titre et indiquez un alias. Cliquez sur « Vérifier les textes », ouvrez chaque proposition du noyau,
-        apportez les précisions demandées, puis cliquez sur « Confirmer les textes et créer le SC ». Le résultat
-        apparaît dans le graphe.
+        Vérifiez le titre et indiquez une abréviation. Choisissez « Créer sans vérification » pour utiliser les textes
+        proposés ou « Vérifier les textes » pour les modifier.
       </p>
     )
   }

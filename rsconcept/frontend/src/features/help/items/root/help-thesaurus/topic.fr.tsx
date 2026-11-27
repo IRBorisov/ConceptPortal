@@ -255,19 +255,22 @@ export function HelpThesaurusFr() {
 
       <h2>{tx('tx.oss.relativization')}</h2>
       <p>
-        La <LinkTopic text='relativisation' topic={HelpTopic.CC_RELATIVIZATION} /> transforme un schéma conceptuel pour
-        que les concepts prennent des valeurs et que les conditions soient vérifiées dans chaque contexte.
+        La <LinkTopic text='relativisation' topic={HelpTopic.CC_RELATIVIZATION} /> transforme le schéma conceptuel d’un
+        cas en un schéma pour une famille de cas. Chaque cas est défini par un <b>contexte</b>, qui est un sous-ensemble
+        de l’ensemble de base choisi ou une valeur entière de la structure générique choisie. L’<b>axe des contextes</b>{' '}
+        du schéma obtenu contient l’ensemble des contextes admissibles.
       </p>
-      <ul>
-        <li>Constituant à relativiser — ensemble de base ou structure générique choisi pour définir les contextes.</li>
-        <li>
-          Contexte — sous-ensemble de l’ensemble de base choisi ou valeur entière de la structure générique choisie.
-        </li>
-        <li>Axe des contextes — structure générique du résultat contenant les contextes admissibles.</li>
-        <li>Constituant exclu — concept non défini commun aux contextes.</li>
-        <li>Famille de valeurs d’un terme — ensemble de couples « contexte, valeur du terme dans ce contexte ».</li>
-        <li>Fonction de dérélativisation — fonction qui extrait l’unique valeur correspondant à un contexte donné.</li>
-      </ul>
+      <p>
+        Les autres concepts non définis peuvent avoir une valeur propre à chaque contexte. Les constituants exclus
+        gardent une valeur commune. Le Portail réécrit les formules dépendantes pour qu’elles utilisent les valeurs du
+        contexte courant. Les termes deviennent des familles de couples « contexte, valeur ». Les fonctions et les
+        prédicats reçoivent le contexte en premier argument et les axiomes et les énoncés sont vérifiés dans tous les
+        contextes admissibles.
+      </p>
+      <p>
+        Une <b>fonction de dérélativisation</b> extrait d’une famille ou d’une relation l’unique valeur qui correspond
+        au contexte demandé.
+      </p>
 
       <h2>{tx('tx.oss')}</h2>
       <p>

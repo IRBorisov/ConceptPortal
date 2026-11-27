@@ -253,17 +253,20 @@ export function HelpThesaurusEn() {
 
       <h2>{tx('tx.oss.relativization')}</h2>
       <p>
-        <LinkTopic text='Relativization' topic={HelpTopic.CC_RELATIVIZATION} /> transforms a conceptual schema so that
-        concepts have values and conditions are checked in context.
+        <LinkTopic text='Relativization' topic={HelpTopic.CC_RELATIVIZATION} /> transforms a conceptual schema for one
+        case into a schema for a family of cases. Each case is specified by a <b>context</b>, either a subset of the
+        selected base set or a whole value of the selected generic structure. The <b>context axis</b> in the resulting
+        schema holds the set of admissible contexts.
       </p>
-      <ul>
-        <li>Relativization target — the base set or generic structure selected to define contexts.</li>
-        <li>Context — a subset of the selected base set or an entire value of the selected generic structure.</li>
-        <li>Context axis — a generic structure in the result containing the admissible contexts.</li>
-        <li>Excluded constituent — an undefined concept shared across contexts.</li>
-        <li>Family of term values — a set of context and term-value pairs.</li>
-        <li>Derelativizer — a function that extracts the unique value for a given context.</li>
-      </ul>
+      <p>
+        Other undefined concepts can have a separate value in each context. Excluded constituents keep a common value.
+        The Portal rewrites dependent formulas to use values from the current context. Terms become families of pairs
+        “context, value”, functions and predicates take the context as their first argument, and axioms and statements
+        are checked in all admissible contexts.
+      </p>
+      <p>
+        A <b>derelativizer</b> extracts the unique value for a given context from a family or relation.
+      </p>
 
       <h2>{tx('tx.oss')}</h2>
       <p>

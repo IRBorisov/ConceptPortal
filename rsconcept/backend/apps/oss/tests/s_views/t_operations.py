@@ -386,6 +386,16 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(new_operation.projection['locale'], 'fr')
         self.assertEqual(axis_result.convention, data['edits'][0]['convention'])
 
+        quick = {key: data[key] for key in ('item_data', 'layout', 'position')} | next_parameters | {
+            'skip_review': True, 'context_name': 'situation',
+        }
+        saved = self.executeCreated(quick, item=self.owned_id)
+        self.assertEqual(saved.data['new_operation'], new_operation.pk)
+        new_operation.refresh_from_db()
+        self.assertEqual(new_operation.projection['context_name'], 'situation')
+        axis_result.refresh_from_db()
+        self.assertEqual(axis_result.convention, data['edits'][0]['convention'])
+
         self.ks1.model.access_policy = AccessPolicy.PRIVATE
         self.ks1.model.save(update_fields=['access_policy'])
         self.logout()
