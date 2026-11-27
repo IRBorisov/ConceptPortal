@@ -43,7 +43,7 @@ class TestStandaloneRelativization(EndpointTester):
         self.assertFalse(Operation.objects.filter(result_id=result_id).exists())
         rows = Constituenta.objects.filter(schema_id=result_id)
         definitions = {row.alias: row.definition_formal for row in rows}
-        self.assertEqual(rows.get(alias='S1').term_raw, self.parameters['context_name'])
+        self.assertEqual(rows.get(alias='S1').term_raw, f'Vertices ({self.parameters["context_name"]})')
         self.assertEqual(definitions['S1'], '\u212c\u212c(X1)')
         self.assertEqual(definitions['D1'], 'I{(c, v) | c:\u2208S1; v:=c}')
         self.source.model.refresh_from_db()
@@ -65,7 +65,7 @@ class TestStandaloneRelativization(EndpointTester):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
         axis = Constituenta.objects.get(schema_id=response.data['id'], alias='S1')
-        self.assertEqual(axis.term_raw, self.parameters['context_name'])
+        self.assertEqual(axis.term_raw, f'Vertices ({self.parameters["context_name"]})')
         self.assertEqual(response.data['location'], LocationHead.PROJECTS)
         edited = self.client.patch(f"/api/rsforms/{response.data['id']}/update-cst", {
             'target': axis.pk, 'item_data': {'term_raw': 'Edited family'},

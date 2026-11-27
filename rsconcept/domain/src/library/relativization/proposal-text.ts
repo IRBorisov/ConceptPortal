@@ -1,6 +1,6 @@
-export type TextLocale = 'en' | 'ru' | 'fr';
-
 import { type RelativizationRole } from './engine';
+
+export type TextLocale = 'en' | 'ru' | 'fr';
 
 export interface ProposalFields {
   term_raw: string;
@@ -9,178 +9,126 @@ export interface ProposalFields {
 }
 
 interface TextInput {
-  meaning: string;
-  context: string;
-  component: string;
+  familyName: string;
   subject: string;
-  isBaseSet: boolean;
+  isSet: boolean;
 }
 
-type TextFactory = (input: TextInput) => [term: string, definition: string, convention: string];
+type Description = (input: { family: string; subject: string; isSet: boolean }) => string;
 
-const text: Record<TextLocale, Record<Exclude<RelativizationRole, 'preserved'>, TextFactory>> = {
+interface TextTemplates {
+  quote: (name: string) => string;
+  accessorName: string;
+  accessorConvention: string;
+  descriptions: Record<Exclude<RelativizationRole, 'preserved'>, Description>;
+}
+
+const text: Record<TextLocale, TextTemplates> = {
   ru: {
-    carrier: () => ['', 'Общее множество элементов, из которого образуются наборы для отдельных контекстов.', ''],
-    axis: ({ context, subject, isBaseSet }) => [
-      context,
-      isBaseSet
-        ? 'Семейство допустимых наборов элементов множества «' + subject + '».'
-        : 'Семейство допустимых значений родовой структуры «' + subject + '».',
-      (isBaseSet ? 'Один контекст — набор элементов множества «' : 'Один контекст — целое значение структуры «') +
-        subject +
-        '». Общее имя одного контекста — «' +
-        context +
-        '». Исходное соглашение применяется внутри одного контекста.'
-    ],
-    relation: ({ meaning, context, isBaseSet }) => [
-      meaning ? meaning + ' по контекстам' : '',
-      'Отношение из пар «' + context + ', ' + (isBaseSet ? 'набор элементов' : 'значение в этом контексте') + '».',
-      'Первая компонента пары задаёт допустимый контекст, вторая задаёт ' +
-        (isBaseSet ? 'локальный набор элементов общего множества' : 'значение исходной структуры') +
-        ' для этого контекста. Исходное соглашение относится ко второй компоненте.'
-    ],
-    family: ({ meaning, context, component }) => [
-      meaning ? meaning + ' по контекстам' : '',
-      'Семейство пар «' + context + ', вычисленное значение».',
-      'Первая компонента задаёт контекст вычисления. Вторая содержит значение исходного выражения в этом контексте.' +
-        (component ? ' Название компоненты в одном контексте — «' + component + '».' : '')
-    ],
-    callable: ({ meaning, context }) => [
-      meaning ? meaning + ' с заданным контекстом' : '',
-      'Первый аргумент задаёт контекст «' + context + '». Остальные аргументы передаются исходному выражению.',
-      'Исходное соглашение о значении или условии применяется при фиксированном первом аргументе.'
-    ],
-    condition: ({ meaning }) => [
-      meaning ? meaning + ' в каждом контексте' : '',
-      'Исходное условие проверяется для каждого допустимого контекста.',
-      'При каждой проверке используется исходная интерпретация условия в выбранном контексте.'
-    ],
-    accessor: ({ context }) => [
-      'Дерелятивизация по контексту',
-      'Из отношения выбираются пары с заданной первой компонентой «' +
-        context +
-        '», затем извлекается единственное значение второй компоненты.',
-      'Для вычисления нужен ровно один срез. Срез может содержать пустое значение. При отсутствии среза или при нескольких значениях извлечение не определено.'
-    ]
+    quote: name => `«${name}»`,
+    accessorName: 'Дерелятивизатор',
+    accessorConvention:
+      'Извлечение определено, если выбранному элементу сопоставлено ровно одно значение. Это может быть пустое множество',
+    descriptions: {
+      carrier: ({ family }) => `Общее множество, из которого выбираются подмножества для элементов семейства ${family}`,
+      axis: ({ family, subject, isSet }) =>
+        `Семейство ${family} состоит из допустимых ${
+          isSet
+            ? `подмножеств ${subject ? `множества ${subject}` : 'базисного множества'}`
+            : `значений структуры${subject ? ` ${subject}` : ''}`
+        }`,
+      relation: ({ family, subject, isSet }) =>
+        `Пары вида (элемент семейства ${family}, ${
+          isSet
+            ? `подмножество ${subject ? `множества ${subject}` : 'общего множества'}`
+            : `соответствующее значение${subject ? ` ${subject}` : ''}`
+        })`,
+      family: ({ family, subject }) =>
+        `Пары вида (элемент семейства ${family}, значение${subject ? ` терма ${subject}` : ''} для этого элемента)`,
+      callable: ({ family }) => `Первый аргумент — элемент семейства ${family}`,
+      condition: ({ family }) => `Условие выполняется для каждого элемента семейства ${family}`,
+      accessor: ({ family }) => `Извлекает значение, сопоставленное заданному элементу семейства ${family}`
+    }
   },
   en: {
-    carrier: () => ['', 'Common set of elements used to form subsets for individual contexts.', ''],
-    axis: ({ context, subject, isBaseSet }) => [
-      context,
-      isBaseSet
-        ? 'Family of admissible subsets of “' + subject + '”.'
-        : 'Family of admissible values of the structure “' + subject + '”.',
-      (isBaseSet ? 'One context is a subset of “' : 'One context is a whole value of “') +
-        subject +
-        '”. A single context is called “' +
-        context +
-        '”. The original convention applies within one context.'
-    ],
-    relation: ({ meaning, context, isBaseSet }) => [
-      meaning ? meaning + ' by context' : '',
-      'A relation of pairs of the form “' +
-        context +
-        ', ' +
-        (isBaseSet ? 'subset of elements' : 'value in that context') +
-        '”.',
-      'The first component specifies an admissible context. The second specifies ' +
-        (isBaseSet ? 'a subset of the common set' : 'the value of the original structure') +
-        ' in that context. The original convention applies to the second component.'
-    ],
-    family: ({ meaning, context, component }) => [
-      meaning ? meaning + ' by context' : '',
-      'A family of pairs of the form “' + context + ', computed value”.',
-      'The first component specifies the context. The second contains the value computed by the original expression in that context.' +
-        (component ? ' The component within one context is called “' + component + '”.' : '')
-    ],
-    callable: ({ meaning, context }) => [
-      meaning ? meaning + ' given a context' : '',
-      'The first argument specifies the context “' +
-        context +
-        '”. The remaining arguments are passed to the original expression.',
-      'The original convention for the value or condition applies at a fixed first argument.'
-    ],
-    condition: ({ meaning }) => [
-      meaning ? meaning + ' in every context' : '',
-      'The original condition is checked in every admissible context.',
-      'Each check uses the original interpretation of the condition within that context.'
-    ],
-    accessor: ({ context }) => [
-      'Derelativization by context',
-      'Selects the pairs whose first component is the given “' +
-        context +
-        '” and extracts the unique second component.',
-      'The computation requires exactly one slice. An empty value is a valid slice value. Extraction is undefined when the slice is missing or has several values.'
-    ]
+    quote: name => `“${name}”`,
+    accessorName: 'Derelativizer',
+    accessorConvention:
+      'Extraction is defined when exactly one value is associated with the selected member. The value may be an empty set',
+    descriptions: {
+      carrier: ({ family }) => `Common set from which subsets are selected for members of the family ${family}`,
+      axis: ({ family, subject, isSet }) =>
+        `The family ${family} consists of admissible ${
+          isSet ? `subsets of ${subject || 'the base set'}` : `values of the structure${subject ? ` ${subject}` : ''}`
+        }`,
+      relation: ({ family, subject, isSet }) =>
+        `Pairs of the form (member of the family ${family}, ${
+          isSet ? `subset of ${subject || 'the common set'}` : `corresponding value${subject ? ` of ${subject}` : ''}`
+        })`,
+      family: ({ family, subject }) =>
+        `Pairs of the form (member of the family ${family}, value${subject ? ` of ${subject}` : ''} for that member)`,
+      callable: ({ family }) => `The first argument is a member of the family ${family}`,
+      condition: ({ family }) => `The condition holds for every member of the family ${family}`,
+      accessor: ({ family }) => `Retrieves the value associated with the given member of the family ${family}`
+    }
   },
   fr: {
-    carrier: () => ['', 'Ensemble commun des éléments utilisés pour former les sous-ensembles de chaque contexte.', ''],
-    axis: ({ context, subject, isBaseSet }) => [
-      context,
-      isBaseSet
-        ? 'Famille de sous-ensembles admissibles de « ' + subject + ' ».'
-        : 'Famille de valeurs admissibles de la structure « ' + subject + ' ».',
-      (isBaseSet ? 'Un contexte est un sous-ensemble de « ' : 'Un contexte est une valeur entière de « ') +
-        subject +
-        ' ». Un contexte individuel est appelé « ' +
-        context +
-        ' ». La convention source s’applique à un contexte à la fois.'
-    ],
-    relation: ({ meaning, context, isBaseSet }) => [
-      meaning ? meaning + ' par contexte' : '',
-      'Relation constituée de couples « ' +
-        context +
-        ', ' +
-        (isBaseSet ? 'sous-ensemble d’éléments' : 'valeur dans ce contexte') +
-        ' ».',
-      'La première composante désigne un contexte admissible. La deuxième désigne ' +
-        (isBaseSet ? 'un sous-ensemble de l’ensemble commun' : 'la valeur de la structure source') +
-        ' dans ce contexte. La convention source s’applique à la deuxième composante.'
-    ],
-    family: ({ meaning, context, component }) => [
-      meaning ? meaning + ' par contexte' : '',
-      'Famille de couples « ' + context + ', valeur calculée ».',
-      'La première composante désigne le contexte. La deuxième contient le résultat de l’expression source dans ce contexte.' +
-        (component ? ' La composante dans un contexte s’appelle « ' + component + ' ».' : '')
-    ],
-    callable: ({ meaning, context }) => [
-      meaning ? meaning + ' dans un contexte donné' : '',
-      'Le premier argument fixe le contexte « ' +
-        context +
-        ' ». Les autres arguments sont transmis à l’expression source.',
-      'La convention source s’applique à la valeur ou à la condition pour un premier argument fixé.'
-    ],
-    condition: ({ meaning }) => [
-      meaning ? meaning + ' dans chaque contexte' : '',
-      'La condition source est vérifiée dans chaque contexte admissible.',
-      'Chaque vérification applique l’interprétation source de la condition dans le contexte choisi.'
-    ],
-    accessor: ({ context }) => [
-      'Dérélativisation par contexte',
-      'Sélectionne les couples dont la première composante est le « ' +
-        context +
-        ' » indiqué et extrait l’unique deuxième composante.',
-      'Le calcul exige une seule tranche. Une tranche peut contenir une valeur vide. L’extraction est indéfinie si la tranche est absente ou contient plusieurs valeurs.'
-    ]
+    quote: name => `« ${name} »`,
+    accessorName: 'Fonction de dérélativisation',
+    accessorConvention:
+      'L’extraction est définie si une seule valeur est associée au membre choisi. Cette valeur peut être un ensemble vide',
+    descriptions: {
+      carrier: ({ family }) =>
+        `Ensemble commun dans lequel sont choisis les sous-ensembles pour les membres de la famille ${family}`,
+      axis: ({ family, subject, isSet }) =>
+        `La famille ${family} est constituée ${
+          isSet
+            ? `des sous-ensembles admissibles de ${subject || 'l’ensemble de base'}`
+            : `des valeurs admissibles de la structure${subject ? ` ${subject}` : ''}`
+        }`,
+      relation: ({ family, subject, isSet }) =>
+        `Couples de la forme (membre de la famille ${family}, ${
+          isSet
+            ? `sous-ensemble de ${subject || 'l’ensemble commun'}`
+            : `valeur correspondante${subject ? ` de ${subject}` : ''}`
+        })`,
+      family: ({ family, subject }) =>
+        `Couples de la forme (membre de la famille ${family}, valeur${subject ? ` de ${subject}` : ''} pour ce membre)`,
+      callable: ({ family }) => `Le premier argument est un membre de la famille ${family}`,
+      condition: ({ family }) => `La condition est satisfaite pour chaque membre de la famille ${family}`,
+      accessor: ({ family }) => `Extrait la valeur associée au membre donné de la famille ${family}`
+    }
   }
 };
+
+function paragraphs(first: string, second: string): string {
+  return first && second ? `${first}\n\n${second}` : first || second;
+}
 
 export function proposeText(
   role: RelativizationRole,
   original: ProposalFields,
-  input: TextInput,
-  locale: TextLocale,
-  usesAccessor: boolean
+  { familyName, subject, isSet }: TextInput,
+  locale: TextLocale
 ): ProposalFields {
   if (role === 'preserved') return original;
-  if (role === 'carrier') {
-    return { ...original, definition_raw: original.definition_raw || text[locale].carrier(input)[1] };
+
+  const templates = text[locale];
+  const family = templates.quote(familyName);
+  const description = templates.descriptions[role]({ family, subject: subject ? templates.quote(subject) : '', isSet });
+  if (role === 'carrier') return { term_raw: original.term_raw, definition_raw: '', convention: description };
+  if (role === 'accessor') {
+    return {
+      term_raw: `${templates.accessorName} (${familyName})`,
+      definition_raw: description,
+      convention: templates.accessorConvention
+    };
   }
-  const [term_raw, definition, convention] = text[locale][role](input);
-  const sliceCondition = usesAccessor ? text[locale].accessor(input)[2] : '';
-  return {
-    term_raw,
-    definition_raw: [definition, original.definition_raw].filter(Boolean).join('\n\n'),
-    convention: [convention, original.convention, sliceCondition].filter(Boolean).join('\n\n')
-  };
+
+  const term = original.term_raw.trim();
+  const term_raw = term ? `${term} (${familyName})` : role === 'axis' ? familyName : '';
+  if (role === 'axis' || role === 'relation') {
+    return { ...original, term_raw, convention: paragraphs(description, original.convention) };
+  }
+  return { ...original, term_raw, definition_raw: paragraphs(description, original.definition_raw) };
 }

@@ -102,7 +102,11 @@ test('relativization retries a stale creation and allows editing result texts', 
   const data = (await response.json()) as OperationCreatedResponse;
   const result = data.oss.operations.find(row => row.id === data.new_operation)!.result;
   const stored = await call<RSFormDTO>('GET', '/api/rsforms/' + result + '/details');
-  const axis = stored.items.find(row => row.term_raw === 'набор вершин')!;
+  const axis = stored.items.find(row => row.term_raw === 'вершины (набор вершин)')!;
+  expect(stored.items.some(row => row.term_raw === 'рёбра (набор вершин)')).toBe(true);
+  expect(axis.convention).toBe(
+    'Семейство «набор вершин» состоит из допустимых подмножеств множества «вершины»\n\nМножество вершин.'
+  );
   expect(stored.projected).toContain(axis.id);
   const edited = 'Конвенция допустимых наборов вершин.';
   await call('PATCH', '/api/rsforms/' + result + '/update-cst', {
