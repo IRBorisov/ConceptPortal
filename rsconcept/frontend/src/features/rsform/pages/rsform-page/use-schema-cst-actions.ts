@@ -279,7 +279,7 @@ export function useSchemaCstActions({ schema, itemID }: UseSchemaCstActionsParam
         }
       });
     } else if (schema.graph.hasEdge(sourceID, targetID)) {
-      if (targetCst.is_inherited) {
+      if (targetCst.is_inherited || targetCst.is_projected) {
         toast.error(tx('tx.concept.inherited.definition.readOnly'));
         return;
       }

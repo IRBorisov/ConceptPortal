@@ -310,7 +310,7 @@ export function EditorRSExpression({
       />
 
       <RSEditorControls
-        isOpen={showControls && (!disabled || (!!isProcessing && !activeCst?.is_inherited))}
+        isOpen={showControls && (!disabled || (!!isProcessing && !activeCst?.is_inherited && !activeCst?.is_projected))}
         onEdit={handleEdit}
         disabled={disabled}
       />

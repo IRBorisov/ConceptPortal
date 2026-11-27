@@ -107,8 +107,7 @@ export function HelpSchemaMenuRu() {
         </li>
         <li>
           <IconRelativization size='1.25rem' className='inline-icon' />{' '}
-          <LinkTopic text='Релятивизация КС' topic={HelpTopic.CC_RELATIVIZATION} /> с проверкой текстов перед созданием
-          самостоятельной схемы
+          <LinkTopic text='Релятивизация КС' topic={HelpTopic.CC_RELATIVIZATION} /> и открыть результат для проверки.
         </li>
         <li>
           <IconCstType value={CstType.NOMINAL} size='1.25rem' className='inline-icon' /> Включение формы атрибутирования

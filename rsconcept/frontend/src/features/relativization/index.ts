@@ -1,8 +1,1 @@
-export {
-  type RelativizationDraftDTO,
-  type RelativizationParametersDTO,
-  schemaConfirmRelativizationReview,
-  schemaRelativizationDraft,
-  schemaRelativizationInput,
-  schemaSkipRelativizationReview
-} from './backend/types';
+export { schemaRelativizationInput } from './backend/types';

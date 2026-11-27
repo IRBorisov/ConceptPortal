@@ -4,11 +4,7 @@ import { globalTx } from '@/i18n';
 import { OperationType, type OssLayout } from '@rsconcept/domain/library';
 
 import { schemaLibraryItem } from '@/features/library';
-import {
-  schemaConfirmRelativizationReview,
-  schemaRelativizationInput,
-  schemaSkipRelativizationReview
-} from '@/features/relativization';
+import { schemaRelativizationInput } from '@/features/relativization';
 import { schemaSubstituteConstituents } from '@/features/rsform';
 
 import { limits } from '@/utils/constants';
@@ -37,7 +33,6 @@ export type MoveItemsDTO = z.infer<typeof schemaMoveItems>;
 /** Represents {@link Operation} data, used in Create action. */
 export type CreateSchemaDTO = z.infer<typeof schemaCreateSchema>;
 export type CreateReplicaDTO = z.infer<typeof schemaCreateReplica>;
-export type RelativizationParametersDTO = z.infer<typeof schemaOssRelativizationInput>;
 
 export type CreateRelativizationDTO = z.infer<typeof schemaCreateRelativization>;
 export type CreateSynthesisDTO = z.infer<typeof schemaCreateSynthesis>;
@@ -93,8 +88,7 @@ const schemaRelativizationParameters = z.strictObject({
       locale: z.enum(['ru', 'en', 'fr']),
       context_name: z.string()
     })
-    .optional(),
-  unreviewed: z.boolean().optional()
+    .optional()
 });
 
 export const schemaOperation = z.strictObject({
@@ -235,16 +229,11 @@ const schemaOssRelativizationInput = schemaRelativizationInput.extend({
   source_operation: z.number()
 });
 
-const schemaRelativizationResult = schemaOssRelativizationInput.extend({
+export const schemaCreateRelativization = schemaOssRelativizationInput.extend({
   layout: schemaOssLayout,
   item_data: schemaOperationData,
   position: schemaPosition
 });
-
-export const schemaCreateRelativization = z.union([
-  schemaRelativizationResult.extend(schemaSkipRelativizationReview.shape),
-  schemaRelativizationResult.extend(schemaConfirmRelativizationReview.shape)
-]);
 
 export const schemaCreateSynthesis = z.strictObject({
   layout: schemaOssLayout,

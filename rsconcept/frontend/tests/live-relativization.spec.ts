@@ -3,7 +3,6 @@ import { randomBytes } from 'node:crypto';
 import { expect, test } from '@playwright/test';
 
 import { type OperationCreatedResponse } from '@/features/oss/backend/types';
-import { type RelativizationDraftDTO } from '@/features/relativization';
 import { type RSFormDTO } from '@/features/rsform';
 
 const site = process.env.PORTAL_TEST_SITE;
@@ -14,7 +13,7 @@ const password = process.env.PORTAL_TEST_PASSWORD;
 // eslint-disable-next-line playwright/no-skipped-test -- The live scenario needs an isolated Portal and explicit credentials.
 test.skip(!site || !api || !username || !password, 'Requires an isolated local Portal and a test account');
 
-test('relativization keeps a reviewed edit after a real rejection and saves it on retry', async ({ page, context }) => {
+test('relativization retries a stale creation and allows editing result texts', async ({ page, context }) => {
   test.setTimeout(120_000);
   for (const endpoint of [site!, api!]) {
     expect(new URL(endpoint).hostname).toMatch(/^(localhost|127\.0\.0\.1)$/);
@@ -82,43 +81,36 @@ test('relativization keeps a reviewed edit after a real rejection and saves it o
   await page.getByRole('button', { name: /^X1.*вершины/ }).click();
   await dialog.getByRole('textbox', { name: 'Имя семейства' }).fill('набор вершин');
   await dialog.getByRole('textbox', { name: 'Сокращение' }).fill('REL' + suffix);
-  const preview = page.waitForResponse(response => response.url().endsWith('/preview-relativization'));
-  await dialog.getByRole('button', { name: 'Проверить тексты' }).click();
-  const draft = (await (await preview).json()) as RelativizationDraftDTO;
-  const confirm = dialog.getByRole('button', { name: 'Подтвердить тексты и создать КС' });
-  await expect(confirm).toBeDisabled();
-  const axis = draft.proposals.find(row => row.role === 'axis')!;
-  const edited = '  Проверенная конвенция допустимых наборов вершин.  ';
-  for (const row of draft.proposals.filter(
-    (row: { changed: boolean; inKernel: boolean }) => row.changed && row.inKernel
-  )) {
-    const entry = dialog.locator('details').filter({ has: page.locator('#review-' + row.id + '-term_raw') });
-    await entry.locator(':scope > summary').click();
-  }
-  await dialog.locator('#review-' + axis.id + '-convention').fill(edited);
-  await expect(confirm).toBeEnabled();
+  const create = dialog.getByRole('button', { name: 'Создать', exact: true });
   await page.route(
     '**/create-relativization',
     route =>
       route.continue({
-        postData: JSON.stringify({ ...route.request().postDataJSON(), revision: '0'.repeat(64) })
+        postData: JSON.stringify({ ...route.request().postDataJSON(), source_time_update: '2000-01-01T00:00:00Z' })
       }),
     { times: 1 }
   );
   const rejected = page.waitForResponse(response => response.url().endsWith('/create-relativization'));
-  await confirm.click();
+  await create.click();
   expect((await rejected).status()).toBe(409);
-  await expect(dialog.locator('#review-' + axis.id + '-convention')).toHaveValue(edited);
+  await expect(dialog.getByRole('textbox', { name: 'Имя семейства' })).toHaveValue('набор вершин');
 
   const saved = page.waitForResponse(response => response.url().endsWith('/create-relativization'));
-  await confirm.click();
+  await create.click();
   const response = await saved;
   expect(response.status(), await response.text()).toBe(201);
   const data = (await response.json()) as OperationCreatedResponse;
   const result = data.oss.operations.find(row => row.id === data.new_operation)!.result;
   const stored = await call<RSFormDTO>('GET', '/api/rsforms/' + result + '/details');
-  const axisAlias = draft.items.find(row => row.id === axis.id)!.alias;
-  expect(stored.items.find(row => row.alias === axisAlias)?.convention).toBe(edited);
+  const axis = stored.items.find(row => row.term_raw === 'набор вершин')!;
+  expect(stored.projected).toContain(axis.id);
+  const edited = 'Конвенция допустимых наборов вершин.';
+  await call('PATCH', '/api/rsforms/' + result + '/update-cst', {
+    target: axis.id,
+    item_data: { convention: edited }
+  });
+  const updated = await call<RSFormDTO>('GET', '/api/rsforms/' + result + '/details');
+  expect(updated.items.find(row => row.id === axis.id)?.convention).toBe(edited);
   await openGraph();
   const edge = page.locator('.react-flow__edge[data-id="o' + attached.new_operation + '-o' + data.new_operation + '"]');
   await expect(edge).toHaveCount(1);

@@ -98,7 +98,7 @@ export function ConstituentaPrimaryActions({
             <PillValueClass
               value={!isProperty}
               toggleValue={toggleValueClass}
-              disabled={disabled || isProcessing || isModified || activeCst.is_inherited}
+              disabled={disabled || isProcessing || isModified || activeCst.is_inherited || activeCst.is_projected}
             />
           ) : null}
         </div>

@@ -44,7 +44,7 @@ export function HelpConceptRelativizationFr() {
         <li>
           Dans « {tx('tx.oss.relativization.target.focus')} », vous pouvez choisir un{' '}
           <LinkTopic text='ensemble de base ou une structure générique' topic={HelpTopic.CC_CONSTITUENTA} />. Renseignez
-          le champ obligatoire « {tx('tx.oss.relativization.review.context.name')} ».
+          le champ obligatoire « {tx('tx.oss.relativization.context.name')} ».
         </li>
         <li>
           Dans « {tx('tx.oss.relativization.excluded')} », sélectionnez les concepts communs à tous les contextes.
@@ -54,35 +54,18 @@ export function HelpConceptRelativizationFr() {
           pouvez aussi modifier la description et choisir un bloc parent si le SOS contient des blocs.
         </li>
       </ul>
-      <h3>Enregistrer le résultat</h3>
-      <ul>
-        <li>
-          « {tx('tx.oss.relativization.quick.update')} » applique les paramètres directement. Le Portail reprend les
-          textes déjà confirmés pour les constituants correspondants et génère les autres textes.
-        </li>
-        <li>
-          « {tx('tx.oss.relativization.review.start')} » ouvre un brouillon. Ouvrez les lignes marquées «{' '}
-          {tx('tx.oss.relativization.review.required')} » et comparez les textes avant et après la transformation.
-          Modifiez au besoin les{' '}
-          <LinkTopic text='termes, définitions textuelles et conventions' topic={HelpTopic.CC_CONSTITUENTA} />.
-          Renseignez les champs signalés et confirmez les précisions. Cliquez sur «{' '}
-          {tx('tx.oss.relativization.review.update')} » pour enregistrer les textes et les paramètres.
-        </li>
-      </ul>
+      <h3>Travailler sur le résultat</h3>
       <p>
-        Le Portail peut afficher « {tx('tx.oss.relativization.review.conflict')} » au recalcul du brouillon, par exemple
-        après un changement du nom de la famille. Cela arrive si le nouveau texte proposé diffère d’une version déjà
-        confirmée ou de votre modification en cours. Le choix est aussi nécessaire si le texte enregistré a changé
-        pendant votre travail et diffère de votre modification. Sélectionnez la version à utiliser.
+        Cliquez sur « {tx('tx.general.save')} » pour appliquer les paramètres. Le Portail recalcule les formules et
+        ouvre le schéma résultant. Après la création ou l’enregistrement, vérifiez le sens du résultat et modifiez au
+        besoin les termes, les définitions textuelles et les conventions dans le schéma.
       </p>
       <p>
-        Si le schéma source change pendant la vérification, choisissez « {tx('tx.oss.relativization.review.back')} » et
-        relancez la vérification des textes.
-      </p>
-      <p>
-        Quand vous sélectionnez « {tx('tx.oss.relativization.quick.update')} » ou «{' '}
-        {tx('tx.oss.relativization.review.update')} », le Portail recalcule le schéma résultant et vérifie les formules
-        transformées. Il ouvre le schéma une fois l’enregistrement réussi.
+        Lors de la propagation des changements ou de la modification des paramètres, le SOS conserve vos modifications
+        sur les constituants qui subsistent. Les autres textes sont recalculés. Pour modifier les expressions formelles
+        des constituants hérités ou des artefacts générés, modifiez le schéma source ou les paramètres de
+        relativisation. Si la cible est un ensemble de base, la structure des contextes en hérite et la copie de
+        l’ensemble est un artefact généré par l’opération.
       </p>
     </>
   );

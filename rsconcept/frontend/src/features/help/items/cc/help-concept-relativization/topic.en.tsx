@@ -42,7 +42,7 @@ export function HelpConceptRelativizationEn() {
         <li>
           In “{tx('tx.oss.relativization.target.focus')}”, you can choose a{' '}
           <LinkTopic text='base set or generic structure' topic={HelpTopic.CC_CONSTITUENTA} />. Fill in the required “
-          {tx('tx.oss.relativization.review.context.name')}” field.
+          {tx('tx.oss.relativization.context.name')}” field.
         </li>
         <li>Under “{tx('tx.oss.relativization.excluded')}”, select concepts shared by all contexts.</li>
         <li>
@@ -50,34 +50,17 @@ export function HelpConceptRelativizationEn() {
           can also change the description and choose a parent block if the OSS has blocks.
         </li>
       </ul>
-      <h3>Saving the result</h3>
-      <ul>
-        <li>
-          “{tx('tx.oss.relativization.quick.update')}” applies the parameters immediately. The Portal uses previously
-          confirmed texts for the corresponding constituents and generates the remaining texts.
-        </li>
-        <li>
-          “{tx('tx.oss.relativization.review.start')}” opens a draft. Open the rows marked “
-          {tx('tx.oss.relativization.review.required')}” and compare the texts before and after transformation. Edit the{' '}
-          <LinkTopic text='terms, textual definitions, and conventions' topic={HelpTopic.CC_CONSTITUENTA} /> as needed.
-          Fill in the highlighted fields and confirm the clarifications. Select “
-          {tx('tx.oss.relativization.review.update')}” to save the texts and parameters.
-        </li>
-      </ul>
+      <h3>Working with the result</h3>
       <p>
-        You may see “{tx('tx.oss.relativization.review.conflict')}” when the Portal recalculates a draft, for example
-        after a change to the family name. This happens when the new suggested text differs from a previously confirmed
-        version or from your unsaved edit. You also need to choose when the saved text changed while you were working
-        and now differs from your edit. Select the version to use.
+        Select “{tx('tx.general.save')}” to apply the parameters. The Portal recalculates the formulas and opens the
+        resulting schema. After creating or saving it, check its meaning and edit terms, textual definitions, and
+        conventions in the schema as needed.
       </p>
       <p>
-        If the source schema changes during review, select “{tx('tx.oss.relativization.review.back')}” and start the
-        text review again.
-      </p>
-      <p>
-        When you select “{tx('tx.oss.relativization.quick.update')}” or “{tx('tx.oss.relativization.review.update')}”,
-        the Portal recalculates the result schema and checks the transformed formulas. Once the save succeeds, the
-        Portal opens the schema.
+        When changes propagate or parameters change, the OSS preserves your edits to surviving constituents. Other texts
+        are recalculated. To change formal expressions of inherited constituents or generated artifacts, edit the source
+        schema or the relativization parameters. When the focus is a base set, the context structure inherits from it
+        and the copy of the base set is a generated artifact.
       </p>
     </>
   );

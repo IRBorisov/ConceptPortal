@@ -129,6 +129,8 @@ export interface Constituenta {
   parent_schema: number | null;
   /** Indicates if this {@link Constituenta} is inherited. */
   is_inherited: boolean;
+  /** Managed result of an OSS relativization. */
+  is_projected?: boolean;
   /** Indicates if this {@link Constituenta} has children that are inherited. */
   has_inherited_children: boolean;
 

@@ -109,8 +109,8 @@ export function HelpSchemaMenuEn() {
         </li>
         <li>
           <IconRelativization size='1.25rem' className='inline-icon' />{' '}
-          <LinkTopic text='Relativize this schema' topic={HelpTopic.CC_RELATIVIZATION} /> and review the texts before
-          creating a standalone result
+          <LinkTopic text='Relativize this schema' topic={HelpTopic.CC_RELATIVIZATION} /> and open the result for
+          review.
         </li>
         <li>
           <IconCstType value={CstType.NOMINAL} size='1.25rem' className='inline-icon' /> Enable attribution form

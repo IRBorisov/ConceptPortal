@@ -87,7 +87,6 @@ export interface RelativizationParameters {
   target: RelativizationConstituent;
   excluded: RelativizationConstituent[];
   parameters?: { target: number; excluded: number[]; locale: 'en' | 'ru' | 'fr'; context_name: string };
-  unreviewed?: boolean;
 }
 
 export interface OperationRelativization extends OperationBase {

@@ -73,13 +73,20 @@ export function FormEditCst({
         <MiniButton
           title={tx('tx.cst.crucial')}
           icon={<IconCrucialValue size='1.25rem' value={crucial} />}
+          disabled={target.is_projected}
           onClick={onToggleCrucial}
         />
-        <SelectCstType id='dlg_cst_type' value={cst_type} onChange={handleTypeChange} disabled={target.is_inherited} />
+        <SelectCstType
+          id='dlg_cst_type'
+          value={cst_type}
+          onChange={handleTypeChange}
+          disabled={target.is_inherited || target.is_projected}
+        />
         <AliasField>
           {field => (
             <TextInput
               id='dlg_cst_alias'
+              disabled={target.is_projected}
               dense
               label={tx('tx.lib.alias.short')}
               className='w-28'
@@ -141,7 +148,7 @@ export function FormEditCst({
 
       <DefinitionFormalField>
         {field =>
-          !!field.state.value || (!isElementary && !target.is_inherited) ? (
+          !!field.state.value || (!isElementary && !target.is_inherited && !target.is_projected) ? (
             <RSInput
               id='dlg_cst_expression'
               portalHoverTooltips
@@ -151,7 +158,7 @@ export function FormEditCst({
               schema={schema}
               value={field.state.value ?? ''}
               onChange={field.handleChange}
-              disabled={target.is_inherited}
+              disabled={target.is_inherited || target.is_projected}
               cstType={cst_type}
             />
           ) : (
@@ -206,7 +213,7 @@ export function FormEditCst({
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}
               error={field.state.meta.errors[0]?.message}
-              disabled={isBasic && target.is_inherited}
+              disabled={isBasic && target.is_inherited && !target.is_projected}
             />
           )}
         </ConventionField>

@@ -16,19 +16,7 @@ import {
   RelativizationParameterFields,
   RelativizationResultFields
 } from '@/features/relativization/components/parameter-fields';
-import {
-  type RelativizationAction,
-  RelativizationDialog
-} from '@/features/relativization/components/relativization-dialog';
-import { ReviewRelativizationTexts } from '@/features/relativization/components/review-texts';
-import {
-  canConfirmReview,
-  hasEditedReviewTexts,
-  hasReviewEdits,
-  isReviewed,
-  prepareReview,
-  type ReviewRow
-} from '@/features/relativization/models/review';
+import { RelativizationDialog } from '@/features/relativization/components/relativization-dialog';
 import { getRelativizationLocale } from '@/features/relativization/models/source-locale';
 import { rsformsApi } from '@/features/rsform/backend/api';
 import { cctextApi } from '@/features/rsform/backend/cctext/api';
@@ -41,7 +29,6 @@ import { limits } from '@/utils/constants';
 import { extractErrorMessage } from '@/utils/utils';
 
 import { ossApi, updateOss } from '../backend/api';
-import { type RelativizationParametersDTO } from '../backend/types';
 import { useOss } from '../backend/use-oss';
 import { SelectBlock } from '../components/select-block';
 import { SelectOperation } from '../components/select-operation';
@@ -77,21 +64,18 @@ export function DlgCreateRelativization() {
   const [alias, setAlias] = useState(existing?.alias ?? '');
   const [description, setDescription] = useState(existing?.description ?? '');
   const [contextName, setContextName] = useState(options?.context_name ?? '');
-  const [reviewing, setReviewing] = useState(false);
-  const [draft, setDraft] = useState<{ parameters: RelativizationParametersDTO; revision: string } | null>(null);
-  const [rows, setRows] = useState<ReviewRow[]>([]);
-  const [pending, setPending] = useState<RelativizationAction | null>(null);
+  const [pending, setPending] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const pendingRef = useRef(false);
   const sourceField = useRef<HTMLDivElement>(null);
 
   useEffect(
     function focusSource() {
-      if (!reviewing && sourceID === null) {
+      if (sourceID === null) {
         sourceField.current?.querySelector<HTMLButtonElement>('#relativization_source')?.focus();
       }
     },
-    [reviewing, sourceID]
+    [sourceID]
   );
 
   const operations = oss.operations.filter(operation => operation.result !== null);
@@ -156,9 +140,6 @@ export function DlgCreateRelativization() {
     !aliasTaken &&
     !isWaitingForTitle;
 
-  const sourceChanged = draft !== null && sourceQuery.data?.raw.time_update !== draft.parameters.source_time_update;
-  const canConfirm = draft !== null && canPrepare && !sourceChanged && canConfirmReview(rows);
-
   function changeSource(operation: Operation | null) {
     setSourceID(operation?.id ?? null);
     setTargetID(null);
@@ -184,16 +165,15 @@ export function DlgCreateRelativization() {
     }
   }
 
-  async function submit(action: RelativizationAction) {
+  async function submit() {
     const raw = sourceQuery.data?.raw;
-    if (pendingRef.current || !canPrepare || !source || !target || !raw || (reviewing && !canConfirm)) return;
+    if (pendingRef.current || !canPrepare || !source || !target || !raw) return;
 
     pendingRef.current = true;
-    setPending(action);
+    setPending(true);
     setErrorMessage('');
     try {
-      const reviewedDraft = reviewing ? draft : null;
-      const parameters = reviewedDraft?.parameters ?? {
+      const parameters = {
         ...(existing ? { existing_operation: existing.id } : {}),
         source_operation: source.id,
         source_time_update: raw.time_update,
@@ -202,18 +182,6 @@ export function DlgCreateRelativization() {
         locale,
         context_name: familyName
       };
-      if (action === 'preview') {
-        const result = await ossApi.previewRelativization({
-          itemID: oss.id,
-          data: parameters,
-          expectedTimeUpdate: oss.time_update
-        });
-        setRows(previous => prepareReview(result, draft?.parameters.source_operation === source.id ? previous : []));
-        setDraft({ parameters, revision: result.revision });
-        endDialogTourIfActive(DialogTourID.CREATE_RELATIVIZATION);
-        setReviewing(true);
-        return;
-      }
       const { layout, position, expectedTimeUpdate } = getRelativizationPlacement(
         oss,
         props.position,
@@ -226,15 +194,6 @@ export function DlgCreateRelativization() {
         expectedTimeUpdate,
         data: {
           ...parameters,
-          ...(reviewedDraft
-            ? {
-                revision: reviewedDraft.revision,
-                reviewed: rows.filter(isReviewed).map(row => row.item.id),
-                edits: rows
-                  .filter(hasReviewEdits)
-                  .map(row => ({ id: row.item.id, clarified: row.clarified, ...row.fields }))
-              }
-            : { skip_review: true }),
           item_data: { title: title.trim(), alias: alias.trim(), description, parent: parentID },
           layout,
           position
@@ -244,117 +203,89 @@ export function DlgCreateRelativization() {
       await handleRequestError(error);
     } finally {
       pendingRef.current = false;
-      setPending(null);
-    }
-  }
-
-  function handleSecondaryAction() {
-    if (reviewing) {
-      setErrorMessage('');
-      setReviewing(false);
-    } else {
-      void submit('preview');
+      setPending(false);
     }
   }
 
   return (
     <RelativizationDialog
-      reviewing={reviewing}
       updating={!!existing}
       pending={pending}
-      canSubmit={reviewing ? canConfirm : canPrepare}
-      hasEditedTexts={hasEditedReviewTexts(rows)}
+      canSubmit={canPrepare}
       errorMessage={errorMessage}
       returnFocusTo={props.returnFocusTo}
       beforeCancel={() => !pendingRef.current}
       onHide={hideDialog}
-      onSubmit={() => void submit('save')}
-      onSecondaryAction={handleSecondaryAction}
+      onSubmit={() => void submit()}
       tourID={DialogTourID.CREATE_RELATIVIZATION}
     >
-      {reviewing ? (
-        <>
-          {sourceChanged ? (
+      <fieldset disabled={pending} className='grid min-w-0 gap-4 py-3'>
+        <div data-tour='relativization-parameters' className='grid min-w-0 gap-3'>
+          <div ref={sourceField} data-tour='relativization-source' className='grid min-w-0 gap-2'>
+            <Label
+              text={tx('tx.oss.relocate.source')}
+              htmlFor={existing ? undefined : 'relativization_source'}
+              className={existing ? undefined : 'sr-only'}
+            />
+            {existing ? (
+              <p id='relativization_source' className='wrap-anywhere'>
+                {source?.title || source?.alias}
+              </p>
+            ) : (
+              <SelectOperation
+                id='relativization_source'
+                className='h-9 w-full min-w-0 text-left [&_svg]:size-4'
+                items={operations}
+                placeholder={tx('tx.oss.relocate.source')}
+                value={source}
+                onChange={changeSource}
+              />
+            )}
+          </div>
+          {source && sourceQuery.isPending ? <Loader /> : null}
+          {sourceQuery.isError ? (
             <p role='alert' className='text-destructive'>
-              {tx('tx.oss.relativization.review.stale')}
+              {tx('tx.oss.relativization.source.fail')}
             </p>
           ) : null}
-          <ReviewRelativizationTexts
-            rows={rows}
-            onChange={row => setRows(previous => previous.map(old => (old.item.id === row.item.id ? row : old)))}
-            disabled={pending !== null}
-            locale={draft?.parameters.locale ?? locale}
-          />
-        </>
-      ) : (
-        <fieldset disabled={pending !== null} className='grid min-w-0 gap-4 py-3'>
-          <div data-tour='relativization-parameters' className='grid min-w-0 gap-3'>
-            <div ref={sourceField} data-tour='relativization-source' className='grid min-w-0 gap-2'>
-              <Label
-                text={tx('tx.oss.relocate.source')}
-                htmlFor={existing ? undefined : 'relativization_source'}
-                className={existing ? undefined : 'sr-only'}
+          {schema ? (
+            <RelativizationParameterFields
+              targets={targetOptions}
+              target={target}
+              onTargetChange={changeTarget}
+              contextName={contextName}
+              maxContextLength={limits.len_alias}
+              onContextNameChange={setContextName}
+              exclusions={exclusionOptions}
+              excludedIDs={excludedIDs}
+              onExcludedChange={toggleExcluded}
+            />
+          ) : null}
+        </div>
+        <RelativizationResultFields
+          title={title}
+          onTitleChange={setManualTitle}
+          alias={alias}
+          onAliasChange={setAlias}
+          aliasError={aliasTaken ? tx('tx.lib.alias.validate.taken') : undefined}
+          description={description}
+          onDescriptionChange={setDescription}
+        >
+          {oss.blocks.length > 0 ? (
+            <div>
+              <Label text={tx('tx.oss.block.parent')} htmlFor='relativization_parent' className='sr-only' />
+              <SelectBlock
+                id='relativization_parent'
+                className='h-9 w-full min-w-0 text-left [&_svg]:size-4'
+                items={oss.blocks}
+                value={parent}
+                onChange={value => setParentID(value?.id ?? null)}
+                placeholder={tx('tx.oss.block.parent')}
               />
-              {existing ? (
-                <p id='relativization_source' className='wrap-anywhere'>
-                  {source?.title || source?.alias}
-                </p>
-              ) : (
-                <SelectOperation
-                  id='relativization_source'
-                  className='h-9 w-full min-w-0 text-left [&_svg]:size-4'
-                  items={operations}
-                  placeholder={tx('tx.oss.relocate.source')}
-                  value={source}
-                  onChange={changeSource}
-                />
-              )}
             </div>
-            {source && sourceQuery.isPending ? <Loader /> : null}
-            {sourceQuery.isError ? (
-              <p role='alert' className='text-destructive'>
-                {tx('tx.oss.relativization.source.fail')}
-              </p>
-            ) : null}
-            {schema ? (
-              <RelativizationParameterFields
-                targets={targetOptions}
-                target={target}
-                onTargetChange={changeTarget}
-                contextName={contextName}
-                maxContextLength={limits.len_alias}
-                onContextNameChange={setContextName}
-                exclusions={exclusionOptions}
-                excludedIDs={excludedIDs}
-                onExcludedChange={toggleExcluded}
-              />
-            ) : null}
-          </div>
-          <RelativizationResultFields
-            title={title}
-            onTitleChange={setManualTitle}
-            alias={alias}
-            onAliasChange={setAlias}
-            aliasError={aliasTaken ? tx('tx.lib.alias.validate.taken') : undefined}
-            description={description}
-            onDescriptionChange={setDescription}
-          >
-            {oss.blocks.length > 0 ? (
-              <div>
-                <Label text={tx('tx.oss.block.parent')} htmlFor='relativization_parent' className='sr-only' />
-                <SelectBlock
-                  id='relativization_parent'
-                  className='h-9 w-full min-w-0 text-left [&_svg]:size-4'
-                  items={oss.blocks}
-                  value={parent}
-                  onChange={value => setParentID(value?.id ?? null)}
-                  placeholder={tx('tx.oss.block.parent')}
-                />
-              </div>
-            ) : null}
-          </RelativizationResultFields>
-        </fieldset>
-      )}
+          ) : null}
+        </RelativizationResultFields>
+      </fieldset>
     </RelativizationDialog>
   );
 }

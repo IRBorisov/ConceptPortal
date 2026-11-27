@@ -135,7 +135,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
   const typification = localParse ? labelType(localParse.type) : labelType(activeCst.effectiveType);
 
   const manualDraft = useSelector(form.store, state => state.values.item_data.typification_manual ?? '');
-  const canManualType = canHaveManualTypification(activeCst.cst_type);
+  const canManualType = !activeCst.is_projected && canHaveManualTypification(activeCst.cst_type);
   const showManualType = !!manualDraft || !!activeCst.typification_manual || (canManualType && forceManualType);
   const showManualTypeBtn = canManualType && !showManualType && activeCst.analysis.type === null;
 
@@ -290,7 +290,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
                   id='cst_typification_manual'
                   label={tx('tx.rslang.typification.manual')}
                   placeholder={disabled ? '' : tx('tx.rslang.typification.manual.hint')}
-                  disabled={disabled || activeCst.is_inherited}
+                  disabled={disabled || activeCst.is_inherited || activeCst.is_projected}
                   value={field.state.value ?? ''}
                   onChange={field.handleChange}
                   onBlur={field.handleBlur}
@@ -347,7 +347,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
               onCreateCst={createCstFromData}
               onUpdateCst={patchConstituenta}
               onSaveUnsaved={() => form.handleSubmit()}
-              disabled={disabled || activeCst.is_inherited}
+              disabled={disabled || activeCst.is_inherited || activeCst.is_projected}
             />
           )}
         </form.Field>
@@ -386,7 +386,7 @@ export function FormConstituenta({ id, toggleReset, schema, activeCst, onOpenEdi
               spellCheck
               label={isBasic ? tx('tx.lib.convention') : tx('tx.lib.comment')}
               placeholder={disabled ? '' : isBasic ? tx('tx.lib.convention.hint') : tx('tx.lib.comment.hint')}
-              disabled={disabled || (isBasic && activeCst.is_inherited)}
+              disabled={disabled || (isBasic && activeCst.is_inherited && !activeCst.is_projected)}
               value={field.state.value ?? ''}
               onChange={event => field.handleChange(event.target.value)}
               onBlur={field.handleBlur}

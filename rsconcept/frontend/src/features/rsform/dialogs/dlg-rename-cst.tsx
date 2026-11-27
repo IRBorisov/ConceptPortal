@@ -71,7 +71,7 @@ export function DlgRenameCst() {
         id='dlg_cst_type' //
         value={cst_type}
         onChange={handleChangeType}
-        disabled={target.is_inherited}
+        disabled={target.is_inherited || target.is_projected}
       />
       <form.Field name='item_data.alias'>
         {field => (

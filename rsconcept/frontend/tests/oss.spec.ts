@@ -2,7 +2,14 @@ import { CstType, OperationType } from '@rsconcept/domain/library';
 
 import { type CreateRelativizationDTO } from '../src/features/oss/backend/types';
 import { authAdmin, authAnonymous, setupAuth } from './mocks/auth';
-import { createOssMock, createRSFormMock, dataOss, dataRSForms, resetConceptMocks } from './mocks/concepts';
+import {
+  createCstMock,
+  createOssMock,
+  createRSFormMock,
+  dataOss,
+  dataRSForms,
+  resetConceptMocks
+} from './mocks/concepts';
 import { waitForApiResponse, waitForAppURL } from './navigation';
 import { expect, test } from './setup';
 
@@ -46,7 +53,7 @@ test('OSS page loads, switches tabs, and shows 404 for missing schema', async ({
   await expect(page.getByRole('link', { name: 'Библиотека' }).first()).toBeVisible();
 });
 
-test('OSS Add offers an editable title and saves relativization without a preview', async ({ page }) => {
+test('OSS Add offers an editable title and saves relativization from the parameters', async ({ page }) => {
   const schema = createRSFormMock(402, 'Родственные отношения');
   schema.items.push({
     id: 1,
@@ -115,13 +122,10 @@ test('OSS Add offers an editable title and saves relativization without a previe
 
   const title = dialog.getByRole('textbox', { name: 'Название' });
   await expect(title).toHaveValue('Родственные отношения – релятивизация индивидов');
-  await expect(dialog.getByRole('button', { name: 'Проверить тексты' })).toBeDisabled();
   await title.fill('Моё название');
   await dialog.getByRole('textbox', { name: 'Сокращение' }).fill('РО-р');
   await expect(title).toHaveValue('Моё название');
-  await expect(dialog.getByRole('button', { name: 'Проверить тексты' })).toBeDisabled();
   await dialog.getByRole('textbox', { name: 'Имя семейства' }).fill('группа');
-  await expect(dialog.getByRole('button', { name: 'Проверить тексты' })).toBeEnabled();
   await dialog.getByText('Отмена', { exact: true }).click();
   await expect(dialog).toHaveCount(0);
   await expect(add).toBeFocused();
@@ -171,27 +175,47 @@ test('OSS Add offers an editable title and saves relativization without a previe
   await expect(context).toHaveValue('');
   await dialog.getByRole('textbox', { name: 'Название' }).fill(result.title);
   await dialog.getByRole('textbox', { name: 'Сокращение' }).fill('РО-р');
-  const create = dialog.getByRole('button', { name: 'Создать без проверки' });
-  const review = dialog.getByRole('button', { name: 'Проверить тексты' });
+  const create = dialog.getByRole('button', { name: 'Создать', exact: true });
   await expect(create).toBeDisabled();
-  await expect(review).toBeDisabled();
   await target.click();
   await page.getByRole('button', { name: /^X1.*индивиды/ }).click();
   await expect(create).toBeDisabled();
-  await expect(review).toBeDisabled();
   await context.fill('   ');
   await expect(create).toBeDisabled();
-  await expect(review).toBeDisabled();
   await context.fill('  группа  ');
   await expect(create).toBeEnabled();
-  await expect(review).toBeEnabled();
 
   const saved = waitForApiResponse(page, { url: endpoint, method: 'POST' });
   const opened = waitForAppURL(page, new RegExp(`/rsforms/${result.id}(?:[/?]|$)`));
   await create.click();
   const submission = (await saved).request().postDataJSON() as CreateRelativizationDTO;
   await opened;
-  expect(submission).toMatchObject({ skip_review: true, context_name: 'группа', target: 1 });
+  expect(submission).toMatchObject({ context_name: 'группа', target: 1 });
   expect(submission).not.toHaveProperty('revision');
   await expect(dialog).toHaveCount(0);
+});
+
+test('OSS relativization locks the projected expression and leaves its texts editable', async ({ page }) => {
+  const result = createRSFormMock(405, 'Результат релятивизации');
+  result.is_produced = true;
+  result.items = [
+    createCstMock(41, 'X1', CstType.BASE),
+    createCstMock(42, 'S1', CstType.STRUCTURED, 'ℬ(ℬ(X1))'),
+    createCstMock(43, 'F1', CstType.FUNCTION, '[x∈X1] x')
+  ];
+  result.projected = [41, 42, 43];
+  result.inheritance = [{ child: 42, child_source: result.id, parent: 1, parent_source: 402 }];
+  dataRSForms.set(result.id, result);
+
+  await page.goto('/rsforms/' + result.id + '?tab=2&active=42', { waitUntil: 'domcontentloaded' });
+  const expression = page.locator('#cst_expression .cm-content');
+  await expect(expression).toHaveText('ℬ(ℬ(X1))');
+  await expect(expression).toHaveAttribute('contenteditable', 'false');
+  await expect(page.locator('#cst_term .cm-content')).toHaveAttribute('contenteditable', 'true');
+  await expect(page.locator('#cst_convention')).toBeEditable();
+
+  await page.goto('/rsforms/' + result.id + '?tab=2&active=43', { waitUntil: 'domcontentloaded' });
+  await expect(expression).toHaveText('[x∈X1] x');
+  await expect(expression).toHaveAttribute('contenteditable', 'false');
+  await expect(page.locator('#cst_term .cm-content')).toHaveAttribute('contenteditable', 'true');
 });
