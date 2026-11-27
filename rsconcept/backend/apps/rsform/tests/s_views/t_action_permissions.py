@@ -5,7 +5,7 @@ from apps.library.views import LibraryViewSet
 from apps.oss.views import OssViewSet
 from apps.rsform.views import RSFormViewSet
 from apps.rsmodel.views import RSModelViewSet
-from shared.permissions import GlobalUser, ItemAnyone, ItemEditor, ItemOwner
+from shared.permissions import GlobalUser, ItemAnyone, ItemEditor, ItemOwner, ItemReader
 
 _STANDARD_ACTIONS = ('list', 'create', 'retrieve', 'update', 'partial_update', 'destroy')
 
@@ -25,6 +25,8 @@ _EXPECTED = {
         'contents': ItemAnyone,
         'details': ItemAnyone,
         'resolve': ItemAnyone,
+        'preview_relativization': ItemReader,
+        'create_relativization': ItemReader,
         'load_json': ItemEditor,
         'load_trs': ItemEditor,
         'create_cst': ItemEditor,

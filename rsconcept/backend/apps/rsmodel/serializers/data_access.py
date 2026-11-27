@@ -10,8 +10,8 @@ from apps.library.models.LibraryItem import AccessPolicy, LocationHead
 from apps.library.serializers import LibraryItemDetailsSerializer
 from apps.rsform.models import Constituenta
 from apps.rsform.serializers.io_files import (
-    RSFormSandboxImportSerializer,
-    create_rsform_from_sandbox_data
+    RSFormCreateFromDataSerializer,
+    create_rsform_from_data
 )
 from shared import messages as msg
 from shared.permissions import can_read_library_item
@@ -143,8 +143,8 @@ class CstDataUpdateSerializer(StrictSerializer):
 
 class RSModelSandboxImportSerializer(StrictSerializer):
     ''' Import data from sandbox bundle into a new RSModel with its schema. '''
-    ItemDataSerializer = RSFormSandboxImportSerializer.ItemDataSerializer
-    SchemaDataSerializer = RSFormSandboxImportSerializer.SchemaDataSerializer
+    ItemDataSerializer = RSFormCreateFromDataSerializer.ItemDataSerializer
+    SchemaDataSerializer = RSFormCreateFromDataSerializer.SchemaDataSerializer
 
     class ModelDataSerializer(StrictSerializer):
         ''' Serializer: RSModel value bindings for sandbox import. '''
@@ -173,7 +173,7 @@ class RSModelSandboxImportSerializer(StrictSerializer):
 
     @transaction.atomic
     def create(self, validated_data: dict) -> LibraryItem:
-        schema, id_map = create_rsform_from_sandbox_data(
+        schema, id_map = create_rsform_from_data(
             item_data=validated_data['item_data'],
             schema_data=validated_data['schema_data'],
             owner=self.context.get('owner')

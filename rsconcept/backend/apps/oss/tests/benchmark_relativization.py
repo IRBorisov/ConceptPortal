@@ -10,10 +10,11 @@ from django.db import transaction
 
 from apps.library.models import LibraryItem
 from apps.oss.models import OperationSchema, OperationType, PropagationFacade
-from apps.oss.relativization import TEXT_FIELDS, calculate_projection, correspondence
+from apps.oss.relativization import correspondence
 from apps.oss.relativization_refresh import _allocate_aliases, match_projection, refresh_projection
 from apps.rsform.models import Constituenta, RSForm
-from apps.rsform.serializers.io_files import create_rsform_from_sandbox_data
+from apps.rsform.relativization import TEXT_FIELDS, calculate_projection
+from apps.rsform.serializers.io_files import create_rsform_from_data
 
 
 def _sample(action, *args, **kwargs):
@@ -41,7 +42,7 @@ def _seed(size):
     source = oss.create_operation(operation_type=OperationType.INPUT, result=schema.model)
     params = {'target': target.pk, 'excluded': [base.pk], 'context_name': 'context', 'locale': 'en'}
     projection = calculate_projection(schema.model.pk, params)
-    result, ids = create_rsform_from_sandbox_data(
+    result, ids = create_rsform_from_data(
         item_data={'alias': 'BenchRel', 'title': 'Benchmark projection', 'location': oss.model.location},
         schema_data=projection,
     )
@@ -88,7 +89,7 @@ def run(sizes=(30, 300, 900), repeats=5):
             for index in range(repeats + 1):
                 term.definition_formal = 'Pr2(S1)' if index % 2 == 0 else 'Pr1(S1)'
                 term.save(update_fields=['definition_formal'])
-                with patch('apps.oss.relativization.subprocess.run', side_effect=subprocess_with_profile):
+                with patch('apps.rsform.relativization.subprocess.run', side_effect=subprocess_with_profile):
                     draft, calc = _sample(calculate_projection, schema_id, params)
                 _, match = _sample(_match, operation, draft)
                 _, cascade = _sample(refresh_projection, operation, projection=draft)

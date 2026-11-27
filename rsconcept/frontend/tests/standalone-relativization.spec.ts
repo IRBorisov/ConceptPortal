@@ -1,6 +1,12 @@
+import { type Page } from '@playwright/test';
 import { CstType } from '@rsconcept/domain/library';
+import { projectRelativization } from '@rsconcept/domain/library/relativization';
 
-import { type CreateRSFormFromSandboxDTO } from '../src/features/library/backend/types';
+import {
+  type CreateStandaloneRelativizationDTO,
+  schemaCreateStandaloneRelativization,
+  schemaRelativizationInput
+} from '../src/features/rsform/backend/relativization';
 import { type RSFormDTO } from '../src/features/rsform/backend/types';
 import { authAdmin, authAnonymous, setupAuth } from './mocks/auth';
 import { createCstMock, createRSFormMock, dataRSForms, resetConceptMocks } from './mocks/concepts';
@@ -33,6 +39,24 @@ function createdSchema(result: RSFormDTO) {
     time_update: result.time_update,
     owner: result.owner
   };
+}
+
+const previewRevision = 'a'.repeat(64);
+
+async function mockPreview(page: Page, source: RSFormDTO) {
+  await page.route(`${BACKEND_URL}/api/rsforms/${source.id}/preview-relativization`, route => {
+    const params = schemaRelativizationInput.parse(route.request().postDataJSON());
+    const projection = projectRelativization(
+      { items: source.items, attribution: source.attribution },
+      {
+        target: params.target,
+        excluded: params.excluded,
+        locale: params.locale,
+        contextName: params.context_name
+      }
+    );
+    return route.fulfill({ json: { ...projection, revision: previewRevision, prior: [] } });
+  });
 }
 
 test('keeps the relativization fields in their columns with a long selected term', async ({ page }) => {
@@ -96,9 +120,10 @@ test('opens relativization help from the schema dialog and links to the glossary
 
   const manual = await newPage;
   await expect(manual).toHaveURL(/\/manuals\?topic=concept-relativization$/);
-  await expect(manual.getByRole('heading', { name: 'Контексты и значения' })).toBeVisible();
-  await manual.getByRole('link', { name: 'глоссарий', exact: true }).click();
-  await expect(manual.getByText('Дерелятивизатор', { exact: true })).toBeVisible();
+  await expect(manual.getByRole('heading', { name: 'Релятивизация', level: 1 })).toBeVisible();
+  await manual.getByRole('link', { name: /^(глоссарий|тезаурус)$/i }).click();
+  await expect(manual.getByRole('heading', { name: 'Тезаурус' })).toBeVisible();
+  await expect(manual.getByText(/дерелятивизатор/i).first()).toBeVisible();
   await manual.close();
   await expect(dialog).toBeVisible();
   await expect(alias).toHaveValue('VerticesByContext');
@@ -115,6 +140,7 @@ test('offers French proposals for a French source in the Russian interface', asy
     }
   ];
   dataRSForms.set(source.id, source);
+  await mockPreview(page, source);
 
   await page.goto(`/rsforms/${source.id}`, { waitUntil: 'domcontentloaded' });
   await page.getByRole('button', { name: 'Редактирование' }).click();
@@ -180,7 +206,7 @@ test('uses the dialog focus when another constituent is selected in the schema',
   const result = createRSFormMock(357, 'Релятивизированные вершины');
   dataRSForms.set(source.id, source);
   dataRSForms.set(result.id, result);
-  const endpoint = `${BACKEND_URL}/api/rsforms/create-from-sandbox`;
+  const endpoint = `${BACKEND_URL}/api/rsforms/${source.id}/create-relativization`;
   await page.route(endpoint, route => route.fulfill({ status: 201, json: createdSchema(result) }));
 
   await page.goto(`/rsforms/${source.id}`, { waitUntil: 'domcontentloaded' });
@@ -213,12 +239,11 @@ test('uses the dialog focus when another constituent is selected in the schema',
   const saved = waitForApiResponse(page, { url: endpoint, method: 'POST' });
   const opened = waitForAppURL(page, new RegExp(`/rsforms/${result.id}(?:[/?]|$)`));
   await create.press('Enter');
-  const submission = (await saved).request().postDataJSON() as CreateRSFormFromSandboxDTO;
+  const submission = schemaCreateStandaloneRelativization.parse((await saved).request().postDataJSON());
   await opened;
   await expect(dialog).toHaveCount(0);
-  expect(submission.schema_data.items).toEqual(
-    expect.arrayContaining([expect.objectContaining({ alias: 'S1', definition_formal: 'ℬℬ(X1)' })])
-  );
+  expect(submission).toMatchObject({ target: 11, source_time_update: source.time_update, skip_review: true });
+  expect(submission).not.toHaveProperty('schema_data');
 });
 
 test('relativizes a schema from its editing menu and keeps reviewed text after a rejected save', async ({ page }) => {
@@ -235,11 +260,12 @@ test('relativizes a schema from its editing menu and keeps reviewed text after a
   const result = createRSFormMock(352, 'Релятивизированные вершины');
   dataRSForms.set(source.id, source);
   dataRSForms.set(result.id, result);
+  await mockPreview(page, source);
   await page.route('**/api/cctext/inflect', route => route.fulfill({ json: { result: 'вершин' } }));
-  const endpoint = `${BACKEND_URL}/api/rsforms/create-from-sandbox`;
-  const submissions: CreateRSFormFromSandboxDTO[] = [];
+  const endpoint = `${BACKEND_URL}/api/rsforms/${source.id}/create-relativization`;
+  const submissions: CreateStandaloneRelativizationDTO[] = [];
   await page.route(endpoint, async route => {
-    submissions.push(route.request().postDataJSON() as CreateRSFormFromSandboxDTO);
+    submissions.push(schemaCreateStandaloneRelativization.parse(route.request().postDataJSON()));
     if (submissions.length === 1) {
       await route.fulfill({ status: 409, json: { detail: 'Повторите запись.' } });
       return;
@@ -282,10 +308,9 @@ test('relativizes a schema from its editing menu and keeps reviewed text after a
   await confirm.click();
   await Promise.all([saved, opened]);
   expect(submissions).toHaveLength(2);
-  expect(submissions[1].schema_data.items).toEqual(
-    expect.arrayContaining([
-      expect.objectContaining({ alias: 'S1', definition_formal: 'ℬℬ(X1)', convention: edited }),
-      expect.objectContaining({ alias: 'D1', definition_formal: 'I{(c, v) | c:∈S1; v:=c}' })
-    ])
-  );
+  expect(submissions[1]).toMatchObject({
+    revision: previewRevision,
+    edits: [expect.objectContaining({ convention: edited })]
+  });
+  expect(submissions[1]).not.toHaveProperty('schema_data');
 });

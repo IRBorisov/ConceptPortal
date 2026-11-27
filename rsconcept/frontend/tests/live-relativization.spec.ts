@@ -2,8 +2,9 @@ import { randomBytes } from 'node:crypto';
 
 import { expect, test } from '@playwright/test';
 
-import { type OperationCreatedResponse, type RelativizationDraftDTO } from '@/features/oss/backend/types';
+import { type OperationCreatedResponse } from '@/features/oss/backend/types';
 import { type RSFormDTO } from '@/features/rsform';
+import { type RelativizationDraftDTO } from '@/features/rsform/backend/relativization';
 
 const site = process.env.PORTAL_TEST_SITE;
 const api = process.env.PORTAL_TEST_API;
@@ -37,7 +38,7 @@ test('relativization keeps a reviewed edit after a real rejection and saves it o
 
   const suffix = randomBytes(4).toString('hex');
   const metadata = { alias: 'CS' + suffix, title: 'Проверка графа', access_policy: 'private', location: '/U' };
-  const source = await call<{ id: number }>('POST', '/api/rsforms/create-from-sandbox', {
+  const source = await call<{ id: number }>('POST', '/api/rsforms/create-from-data', {
     item_data: metadata,
     schema_data: {
       attribution: [],

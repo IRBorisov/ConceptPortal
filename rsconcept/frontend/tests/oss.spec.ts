@@ -132,7 +132,7 @@ test('OSS Add offers an editable title and saves relativization without a previe
   await dialog.getByRole('button', { name: 'Читать справку' }).click();
   const manual = await newPage;
   await expect(manual).toHaveURL(/\/manuals\?topic=concept-relativization$/);
-  await expect(manual.getByRole('heading', { name: 'Контексты и значения' })).toBeVisible();
+  await expect(manual.getByRole('heading', { name: 'Релятивизация', level: 1 })).toBeVisible();
   await manual.close();
   await expect(dialog).toBeVisible();
 

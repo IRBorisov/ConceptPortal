@@ -4,15 +4,12 @@ import { KEYS } from '@/backend/configuration';
 
 import { libraryApi } from './api';
 import { notifyLibrarySync } from './library-sync';
-import { type CreateRSFormFromSandboxDTO } from './types';
 
-export const useCreateFromSandbox = ({ reportErrorInDialog = false } = {}) => {
+export const useCreateFromSandbox = () => {
   const client = useQueryClient();
-  const rsformKey = [libraryApi.baseKey, 'create-from-sandbox'];
   const rsformMutation = useMutation({
-    mutationKey: reportErrorInDialog ? rsformKey : [KEYS.global_mutation, ...rsformKey],
-    mutationFn: (data: CreateRSFormFromSandboxDTO) => libraryApi.createRSFormFromSandbox(data, !reportErrorInDialog),
-    networkMode: reportErrorInDialog ? 'always' : undefined,
+    mutationKey: [KEYS.global_mutation, libraryApi.baseKey, 'create-from-data'],
+    mutationFn: libraryApi.createRSFormFromData,
     onSuccess: () => {
       notifyLibrarySync();
       return client.invalidateQueries({ queryKey: [libraryApi.baseKey] });
@@ -29,7 +26,7 @@ export const useCreateFromSandbox = ({ reportErrorInDialog = false } = {}) => {
     onError: () => client.invalidateQueries()
   });
   return {
-    createRSFormFromSandbox: rsformMutation.mutateAsync,
+    createRSFormFromData: rsformMutation.mutateAsync,
     createRSModelFromSandbox: rsmodelMutation.mutateAsync
   };
 };

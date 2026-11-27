@@ -39,6 +39,8 @@ from ..mutations import (
     substitute_constituents,
     update_constituenta,
 )
+from ..relativization import create_standalone_relativization, preview_standalone_relativization
+from ..serializers.relativization import CreateStandaloneRelativizationSerializer, RelativizationInputSerializer
 
 
 @extend_schema(tags=['RSForm'])
@@ -85,9 +87,38 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
             'resolve',
         ]:
             permission_list = [permissions.ItemAnyone]
+        elif self.action in ['preview_relativization', 'create_relativization']:
+            permission_list = [permissions.ItemReader]
         else:
             permission_list = [permissions.ItemEditor]
         return [permission() for permission in permission_list]
+
+    @extend_schema(
+        summary='preview standalone relativization',
+        request=RelativizationInputSerializer,
+        responses={c.HTTP_200_OK: dict, c.HTTP_409_CONFLICT: None},
+    )
+    @action(detail=True, methods=['post'], url_path='preview-relativization')
+    def preview_relativization(self, request: Request, pk) -> Response:
+        ''' Compute the projection and propose texts for review. '''
+        source = self._get_item()
+        serializer = RelativizationInputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(preview_standalone_relativization(source, serializer.validated_data, request))
+
+    @extend_schema(
+        summary='create a standalone schema by relativization',
+        request=CreateStandaloneRelativizationSerializer,
+        responses={c.HTTP_201_CREATED: LibraryItemSerializer, c.HTTP_409_CONFLICT: None},
+    )
+    @action(detail=True, methods=['post'], url_path='create-relativization')
+    def create_relativization(self, request: Request, pk) -> Response:
+        ''' Save a new schema computed from the source. '''
+        source = self._get_item()
+        serializer = CreateStandaloneRelativizationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        result = create_standalone_relativization(source, serializer.validated_data, request)
+        return Response(LibraryItemSerializer(result).data, status=c.HTTP_201_CREATED)
 
     @extend_schema(
         summary='load JSON data into an existing RSForm',
@@ -627,9 +658,9 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
 
 
 @extend_schema(
-    summary='create RSForm from sandbox schema data',
+    summary='create an RSForm from supplied schema data',
     tags=['RSForm'],
-    request=s.RSFormSandboxImportSerializer,
+    request=s.RSFormCreateFromDataSerializer,
     responses={
         c.HTTP_201_CREATED: LibraryItemSerializer,
         c.HTTP_400_BAD_REQUEST: None,
@@ -638,10 +669,10 @@ class RSFormViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIV
 )
 @api_view(['POST'])
 @permission_classes([permissions.GlobalUser])
-def create_rsform_from_sandbox(request: Request) -> HttpResponse:
-    ''' Endpoint: Create RSForm from current sandbox schema data. '''
+def create_rsform_from_data(request: Request) -> HttpResponse:
+    ''' Create an RSForm from the supplied constituents and attributions. '''
     owner = cast(User, request.user) if not request.user.is_anonymous else None
-    serializer = s.RSFormSandboxImportSerializer(
+    serializer = s.RSFormCreateFromDataSerializer(
         data=request.data,
         context={'owner': owner, 'request': request}
     )

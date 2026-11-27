@@ -31,7 +31,7 @@ from .data_access import (
 )
 from .io_files import (
     FileSerializer,
-    RSFormSandboxImportSerializer,
+    RSFormCreateFromDataSerializer,
     RSFormTRSSerializer,
     RSFormUploadSerializer
 )

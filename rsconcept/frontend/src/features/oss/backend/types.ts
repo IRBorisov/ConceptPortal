@@ -4,8 +4,12 @@ import { globalTx } from '@/i18n';
 import { OperationType, type OssLayout } from '@rsconcept/domain/library';
 
 import { schemaLibraryItem } from '@/features/library';
-import { schemaSubstituteConstituents } from '@/features/rsform';
-import { schemaAttribution, schemaConstituentaBasics } from '@/features/rsform/backend/types';
+import {
+  schemaConfirmRelativizationReview,
+  schemaRelativizationInput,
+  schemaSkipRelativizationReview,
+  schemaSubstituteConstituents
+} from '@/features/rsform';
 
 import { limits } from '@/utils/constants';
 
@@ -33,8 +37,7 @@ export type MoveItemsDTO = z.infer<typeof schemaMoveItems>;
 /** Represents {@link Operation} data, used in Create action. */
 export type CreateSchemaDTO = z.infer<typeof schemaCreateSchema>;
 export type CreateReplicaDTO = z.infer<typeof schemaCreateReplica>;
-export type RelativizationParametersDTO = z.infer<typeof schemaRelativizationInput>;
-export type RelativizationDraftDTO = z.infer<typeof schemaRelativizationDraft>;
+export type RelativizationParametersDTO = z.infer<typeof schemaOssRelativizationInput>;
 
 export type CreateRelativizationDTO = z.infer<typeof schemaCreateRelativization>;
 export type CreateSynthesisDTO = z.infer<typeof schemaCreateSynthesis>;
@@ -227,71 +230,20 @@ export const schemaCloneSchema = z.strictObject({
   position: schemaPosition
 });
 
-const schemaRelativizationInput = z.strictObject({
+const schemaOssRelativizationInput = schemaRelativizationInput.extend({
   existing_operation: z.number().optional(),
-  source_operation: z.number(),
-  source_time_update: z.string(),
-  target: z.number(),
-  excluded: z.array(z.number()),
-  locale: z.enum(['en', 'ru', 'fr']),
-  context_name: z.string()
+  source_operation: z.number()
 });
 
-const schemaRelativizationText = z.strictObject({
-  term_raw: z.string(),
-  definition_raw: z.string(),
-  convention: z.string()
-});
-const schemaScope = z.enum(['context', 'value']);
-
-export const schemaRelativizationDraft = z.strictObject({
-  items: z.array(schemaConstituentaBasics),
-  attribution: z.array(schemaAttribution),
-  revision: z.string(),
-  prior: z.array(
-    z.strictObject({ id: z.number(), fields: schemaRelativizationText.partial(), stillCurrent: z.boolean() })
-  ),
-  proposals: z.array(
-    z.strictObject({
-      id: z.number(),
-      origin: z.number().nullable(),
-      role: z.enum(['preserved', 'carrier', 'axis', 'relation', 'family', 'callable', 'condition', 'accessor']),
-      sourceAlias: z.string().nullable(),
-      before: schemaRelativizationText,
-      beforeType: z.string(),
-      afterType: z.string(),
-      component: z
-        .strictObject({
-          source: z.string(),
-          path: z.array(z.number()),
-          scope: schemaScope,
-          term: z.string()
-        })
-        .nullable(),
-      coordinates: z.array(z.strictObject({ path: z.array(z.number()), scope: schemaScope, label: z.string() })),
-      ambiguous: z.array(z.string()),
-      missing: z.array(z.enum(['term_raw', 'definition_raw', 'convention'])),
-      inKernel: z.boolean(),
-      changed: z.boolean(),
-      formalInvalid: z.boolean()
-    })
-  )
-});
-
-const schemaRelativizationResult = schemaRelativizationInput.extend({
+const schemaRelativizationResult = schemaOssRelativizationInput.extend({
   layout: schemaOssLayout,
   item_data: schemaOperationData,
   position: schemaPosition
 });
 
 export const schemaCreateRelativization = z.union([
-  schemaRelativizationResult.extend({ skip_review: z.literal(true) }),
-  schemaRelativizationResult.extend({
-    skip_review: z.literal(false).optional(),
-    revision: z.string(),
-    reviewed: z.array(z.number()),
-    edits: z.array(schemaRelativizationText.extend({ id: z.number(), clarified: z.boolean() }))
-  })
+  schemaRelativizationResult.extend(schemaSkipRelativizationReview.shape),
+  schemaRelativizationResult.extend(schemaConfirmRelativizationReview.shape)
 ]);
 
 export const schemaCreateSynthesis = z.strictObject({

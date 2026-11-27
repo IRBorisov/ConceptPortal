@@ -19,7 +19,7 @@ import { type LibraryContextSearchField } from '../models/library-context-search
 import {
   type CloneLibraryItemDTO,
   type CreateLibraryItemDTO,
-  type CreateRSFormFromSandboxDTO,
+  type CreateRSFormFromDataDTO,
   type CreateRSModelFromSandboxDTO,
   type CreateVersionDTO,
   type RenameLocationDTO,
@@ -124,11 +124,10 @@ export const libraryApi = {
         successMessage: globalTx('tx.lib.item.create.success')
       }
     }),
-  createRSFormFromSandbox: (data: CreateRSFormFromSandboxDTO, notifyOnError = true) =>
-    axiosPost<CreateRSFormFromSandboxDTO, LibraryItem>({
+  createRSFormFromData: (data: CreateRSFormFromDataDTO) =>
+    axiosPost<CreateRSFormFromDataDTO, LibraryItem>({
       schema: schemaLibraryItem,
-      endpoint: '/api/rsforms/create-from-sandbox',
-      notifyOnError,
+      endpoint: '/api/rsforms/create-from-data',
       request: {
         data,
         successMessage: globalTx('tx.lib.item.create.success')

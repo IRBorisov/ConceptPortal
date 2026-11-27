@@ -2,7 +2,9 @@ import { type QueryClient, queryOptions } from '@tanstack/react-query';
 import equal from 'fast-deep-equal';
 
 import { globalTx } from '@/i18n';
-import { type Attribution, type RSForm } from '@rsconcept/domain/library';
+import { type Attribution, type LibraryItem, type RSForm } from '@rsconcept/domain/library';
+
+import { schemaLibraryItem } from '@/features/library';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
@@ -10,6 +12,12 @@ import { resolveExpectedTimeUpdate } from '@/backend/expected-time-update';
 import { invalidateRelatedOss } from '@/backend/item-sync-utils';
 import { queryClient } from '@/backend/query-client';
 
+import {
+  type CreateStandaloneRelativizationDTO,
+  type RelativizationDraftDTO,
+  type RelativizationParametersDTO,
+  schemaRelativizationDraft
+} from './relativization';
 import { loadRSForm } from './rsform-loader';
 import { notifySchemaSync } from './schema-sync';
 import {
@@ -77,6 +85,22 @@ export const rsformsApi = {
       enabled: !!itemID
     });
   },
+
+  previewRelativization: ({ itemID, data }: { itemID: number; data: RelativizationParametersDTO }) =>
+    axiosPost<RelativizationParametersDTO, RelativizationDraftDTO>({
+      schema: schemaRelativizationDraft,
+      endpoint: `/api/rsforms/${itemID}/preview-relativization`,
+      notifyOnError: false,
+      request: { data }
+    }),
+
+  createRelativization: ({ itemID, data }: { itemID: number; data: CreateStandaloneRelativizationDTO }) =>
+    axiosPost<CreateStandaloneRelativizationDTO, LibraryItem>({
+      schema: schemaLibraryItem,
+      endpoint: `/api/rsforms/${itemID}/create-relativization`,
+      notifyOnError: false,
+      request: { data, successMessage: globalTx('tx.lib.item.create.success') }
+    }),
 
   upload: ({ itemID, data }: { itemID: number; data: RSFormUploadDTO }) =>
     axiosPatch<RSFormUploadDTO, RSFormDTO>({
