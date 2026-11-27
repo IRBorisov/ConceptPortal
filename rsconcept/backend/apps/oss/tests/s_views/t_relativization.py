@@ -11,7 +11,7 @@ from rest_framework.test import APIClient
 
 from apps.library.models import AccessPolicy, Editor, LibraryItem
 from apps.library.services.clone import clone_oss
-from apps.oss.models import Inheritance, Operation, OperationSchema, OperationType, Substitution
+from apps.oss.models import Inheritance, Operation, OperationSchema, OperationType, Relativization, RelativizationRow, Substitution
 from apps.rsform.models import Attribution, Constituenta, RSForm
 from apps.rsform.mutations import update_constituenta
 from apps.users.models import User
@@ -29,7 +29,7 @@ class TestRelativizationPropagation(EndpointTester):
         self.base = self.source.insert_last('X1', term_raw='Vertices', convention='Vertices in the source.')
         self.other_base = self.other.insert_last('X1', term_raw='Other vertices')
 
-    def test_create_without_review(self):
+    def test_create_with_parameters(self):
         self.source.model.refresh_from_db()
         url = f'/api/oss/{self.oss.model.pk}/create-relativization'
         data = {
@@ -43,29 +43,30 @@ class TestRelativizationPropagation(EndpointTester):
             'layout': [],
             'position': {'x': 0, 'y': 0, 'width': 150, 'height': 40},
         }
-        response = self.client.post(url, data, format='json')
+        response = self.client.post(url, data | {'edits': []}, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.data)
-        self.assertIn('revision', response.data)
-        quick = data | {'skip_review': True}
-        response = self.client.post(url, quick | {'reviewed': []}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.data)
-        response = self.client.post(url, quick | {'source_time_update': '2026-01-01T00:00:00Z'}, format='json')
+        response = self.client.post(url, data | {'source_time_update': '2026-01-01T00:00:00Z'}, format='json')
         self.assertEqual(response.status_code, status.HTTP_409_CONFLICT, response.data)
-        response = self.client.post(url, quick | {'excluded': [self.base.pk]}, format='json')
+        response = self.client.post(url, data | {'excluded': [self.base.pk]}, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.data)
         self.assertFalse(LibraryItem.objects.filter(alias='Quick').exists())
 
-        response = self.client.post(url, quick, format='json')
+        response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
         operation = Operation.objects.get(pk=response.data['new_operation'])
-        state = next(row for row in response.data['oss']['operations'] if row['id'] == operation.pk)
-        self.assertTrue(state['relativization']['unreviewed'])
-        axis = next(row for row in operation.projection['rows'] if row['role'] == 'axis')
-        self.assertEqual(axis['confirmed'], {})
-        self.assertTrue(axis['needs_review'])
-        item = Constituenta.objects.get(pk=axis['result'])
-        self.assertEqual(item.term_raw, data['context_name'])
-        self.assertEqual(item.term_raw, axis['suggested']['term_raw'])
+        axis = operation.relativization.rows.get(role='axis')
+        self.assertEqual(axis.text_overrides, [])
+        self.assertEqual(axis.result.term_raw, data['context_name'])
+        self.assertEqual(axis.origin_id, self.base.pk)
+        detail = self.client.get(f'/api/rsforms/{operation.result_id}/details')
+        self.assertIn(axis.result_id, detail.data['projected'])
+        carrier = operation.relativization.rows.get(role='carrier')
+        self.assertIn(carrier.result_id, detail.data['projected'])
+        self.assertEqual(
+            list(Inheritance.objects.filter(operation=operation).values_list('parent_id', 'child_id')),
+            [(self.base.pk, axis.result_id)],
+        )
+        self.assertFalse(Inheritance.objects.filter(child_id=carrier.result_id).exists())
 
     def _input(self, alias, oss=None, schema=None):
         oss = oss or self.oss
@@ -85,25 +86,10 @@ class TestRelativizationPropagation(EndpointTester):
         }
         if existing:
             params['existing_operation'] = existing.pk
-        response = self.client.post(f'/api/oss/{self.oss.model.pk}/preview-relativization', params, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
-        draft = response.data
-        items = {item['id']: item for item in draft['items']}
-        reviewed = [row for row in draft['proposals'] if row['inKernel'] and row['changed']]
-        edits = [
-            {'id': row['id'], 'clarified': True, **{
-                field: items[row['id']][field] or 'Reviewed text'
-                for field in ('term_raw', 'definition_raw', 'convention')
-            }}
-            for row in reviewed if row['ambiguous'] or row['missing']
-        ]
         response = self.client.post(f'/api/oss/{self.oss.model.pk}/create-relativization', params | {
             'item_data': {'alias': 'Relative', 'title': 'Relative', 'parent': None},
             'layout': [],
             'position': {'x': 0, 'y': 0, 'width': 150, 'height': 40},
-            'revision': draft['revision'],
-            'reviewed': [row['id'] for row in reviewed],
-            'edits': edits,
             **details,
         }, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
@@ -147,10 +133,7 @@ class TestRelativizationPropagation(EndpointTester):
 
     def _row(self, operation, origin, role):
         operation.refresh_from_db()
-        return Constituenta.objects.get(pk=next(
-            row['result'] for row in operation.projection['rows']
-            if row['origin'] == (origin.pk if origin is not None else None) and row['role'] == role
-        ))
+        return operation.relativization.rows.get(origin=origin, role=role).result
 
     def _assert_rejected(self, action, error_key, operations):
         schema_ids = [op.result_id for op in operations]
@@ -160,8 +143,11 @@ class TestRelativizationPropagation(EndpointTester):
             return {
                 'revisions': list(LibraryItem.objects.filter(pk__in=schema_ids).order_by('pk')
                                   .values_list('pk', 'time_update')),
-                'projections': list(Operation.objects.filter(pk__in=operation_ids).order_by('pk')
-                                    .values_list('pk', 'projection')),
+                'projections': list(Relativization.objects.filter(operation_id__in=operation_ids).order_by('pk')
+                                    .values_list('pk', 'parameters', 'attribution')),
+                'projection_rows': list(RelativizationRow.objects.filter(
+                    relativization__operation_id__in=operation_ids,
+                ).order_by('pk').values_list('pk', 'origin_id', 'result_id', 'role', 'text_overrides')),
                 'constituents': list(Constituenta.objects.filter(schema_id__in=schema_ids).order_by('pk').values_list(
                     'pk', 'alias', 'cst_type', 'definition_formal', 'typification_manual', 'value_is_property',
                 )),
@@ -217,12 +203,12 @@ class TestRelativizationPropagation(EndpointTester):
         excluded = self.source.insert_last('X2', term_raw='Excluded vertices')
         relativization = self._relativize(excluded=[excluded])
         preserved = self._row(relativization, excluded, 'preserved')
-        self.assertEqual(relativization.projection['excluded'], [excluded.pk])
+        self.assertEqual(relativization.relativization.parameters['excluded'], [excluded.pk])
 
         response = self._delete(excluded)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
         relativization.refresh_from_db()
-        self.assertEqual(relativization.projection['excluded'], [])
+        self.assertEqual(relativization.relativization.parameters['excluded'], [])
         self.assertFalse(Constituenta.objects.filter(pk=preserved.pk).exists())
 
     def test_library_delete_rolls_back_when_synthesis_loses_relativization_target(self):
@@ -250,10 +236,10 @@ class TestRelativizationPropagation(EndpointTester):
         response = self.client.delete(f'/api/library/{removed_schema_id}')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.data)
         relativization.refresh_from_db()
-        self.assertEqual(relativization.projection['excluded'], [])
+        self.assertEqual(relativization.relativization.parameters['excluded'], [])
         self.assertFalse(Constituenta.objects.filter(pk=preserved.pk).exists())
 
-    def test_review_requires_access_to_the_existing_result(self):
+    def test_reconfiguration_requires_edit_access_to_the_existing_result(self):
         relativization = self._relativize()
         Editor.add(self.oss.model.pk, self.user2.pk)
         self.login2()
@@ -267,28 +253,12 @@ class TestRelativizationPropagation(EndpointTester):
             'locale': 'en',
             'context_name': 'context',
         }
-        preview = self.client.post(f'{url}/preview-relativization', data, format='json')
-        self.assertEqual(preview.status_code, status.HTTP_200_OK, preview.data)
-        self.assertTrue(preview.data['prior'])
         denied = self.client.post(f'{url}/create-relativization', data | {
             'item_data': {'title': 'Relative', 'alias': 'Relative', 'parent': None},
             'layout': [],
             'position': {'x': 0, 'y': 0, 'width': 150, 'height': 40},
-            'revision': '0' * 64,
-            'reviewed': [],
-            'edits': [],
         }, format='json')
         self.assertEqual(denied.status_code, status.HTTP_403_FORBIDDEN, denied.data)
-
-        self.login()
-        response = self.client.patch(f'/api/library/{relativization.result_id}/set-access-policy', {
-            'access_policy': AccessPolicy.PRIVATE,
-        }, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
-        self.login2()
-        denied = self.client.post(f'{url}/preview-relativization', data, format='json')
-        self.assertEqual(denied.status_code, status.HTTP_403_FORBIDDEN, denied.data)
-        self.assertNotIn('prior', denied.data)
 
     def test_managed_crucial_flag_is_changed_through_the_source(self):
         relativization = self._relativize()
@@ -329,12 +299,32 @@ class TestRelativizationPropagation(EndpointTester):
         with self.assertRaisesMessage(ValidationError, 'Edit managed definitions and types'):
             update_constituenta(result, stale, {'definition_formal': stale.definition_formal}, request)
 
-        convention = 'A reviewed convention.'
+        convention = 'A local convention.'
         response = self._update(current, definition_formal=current_formula, convention=convention)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
         current.refresh_from_db()
         self.assertEqual(current.definition_formal, current_formula)
         self.assertEqual(current.convention, convention)
+
+    def test_propagation_and_reconfiguration_preserve_edited_term_forms(self):
+        operation = self._relativize()
+        axis = self._row(operation, self.base, 'axis')
+        forms = [{'text': 'Contexts', 'tags': 'plur'}]
+        response = self._update(axis, term_raw='Local context', term_forms=forms, definition_raw='')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+
+        response = self._update(self.base, term_raw='Source vertices', convention='Updated source.')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
+        axis.refresh_from_db()
+        self.assertEqual(axis.term_raw, 'Local context')
+        self.assertEqual(axis.term_forms, forms)
+
+        self._relativize(existing=operation, context_name='New context')
+        successor = self._row(operation, self.base, 'axis')
+        self.assertEqual(successor.pk, axis.pk)
+        self.assertEqual(successor.term_raw, 'Local context')
+        self.assertEqual(successor.term_forms, forms)
+        self.assertEqual(Inheritance.objects.get(operation=operation, parent=self.base).child_id, axis.pk)
 
     def test_reject_target_edit_that_makes_a_family_unevaluable(self):
         target = self.source.insert_last(
@@ -458,7 +448,7 @@ class TestRelativizationPropagation(EndpointTester):
         source_attribution = {'container': self.base.pk, 'attribute': attribute.pk}
         Attribution.objects.create(container=self.base, attribute=attribute)
         relativization = self._relativize()
-        container_id, attribute_id = relativization.projection['attribution'][0]
+        container_id, attribute_id = relativization.relativization.attribution[0]
         managed = {'container': container_id, 'attribute': attribute_id}
         own = self._create_term(relativization.result_id, 'D99', 'X1', Constituenta.objects.get(pk=container_id))
         local = Attribution.objects.create(container_id=container_id, attribute=own)
@@ -507,9 +497,9 @@ class TestRelativizationPropagation(EndpointTester):
 
         clone = clone_oss(self.oss.model, self.user, {'title': 'Copy', 'alias': 'Copy', 'location': 'test'})
         operation = Operation.objects.get(oss=clone, operation_type=OperationType.RELATIVIZATION)
-        self.assertNotEqual(operation.relativization_source_id, self.source.model.pk)
-        target = Constituenta.objects.get(pk=operation.projection['target'])
-        self.assertEqual(target.schema_id, operation.relativization_source_id)
+        self.assertNotEqual(operation.relativization.source_id, self.source.model.pk)
+        target = Constituenta.objects.get(pk=operation.relativization.parameters['target'])
+        self.assertEqual(target.schema_id, operation.relativization.source_id)
         managed = self._row(operation, target, 'axis')
         self.assertEqual(managed.schema_id, operation.result_id)
 
@@ -569,13 +559,12 @@ class TestConcurrentRelativization(TransactionTestCase):
             'item_data': {'alias': 'Relative', 'title': 'Relative', 'parent': None},
             'layout': [],
             'position': {'x': 0, 'y': 0, 'width': 150, 'height': 40},
-            'skip_review': True,
         }
         created = client.post(url, data, format='json')
         self.assertEqual(created.status_code, status.HTTP_201_CREATED, created.data)
         operation = Operation.objects.get(pk=created.data['new_operation'])
         result_id = operation.result_id
-        generated_id = next(row['result'] for row in operation.projection['rows'] if row['role'] == 'carrier')
+        generated_id = operation.relativization.rows.get(role='carrier').result_id
         waiting_for_result = Event()
 
         def observe_result_lock(execute, sql, params, many, context):
@@ -592,7 +581,7 @@ class TestConcurrentRelativization(TransactionTestCase):
                 finally:
                     connections.close_all()
 
-        convention = 'A confirmed edit during reconfiguration.'
+        convention = 'A local edit during reconfiguration.'
         with ThreadPoolExecutor(max_workers=1) as executor:
             with transaction.atomic():
                 LibraryItem.objects.select_for_update().get(pk=result_id)

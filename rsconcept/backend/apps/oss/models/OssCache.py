@@ -56,8 +56,11 @@ class OssCache:
         for sub in Substitution.objects.filter(operation__oss_id=self._item_id).only(
                 'operation_id', 'original_id', 'substitution_id', 'original__schema_id'):
             self.substitutions[sub.operation_id].append(sub)
-        for item in Inheritance.objects.filter(operation__oss_id=self._item_id).only(
-                'operation_id', 'parent_id', 'child_id'):
+        # Relativization links support navigation and permissions. Their rows are recalculated as a whole.
+        inheritances = Inheritance.objects.filter(operation__oss_id=self._item_id).exclude(
+            operation__operation_type=OperationType.RELATIVIZATION,
+        )
+        for item in inheritances.only('operation_id', 'parent_id', 'child_id'):
             self.inheritance[item.operation_id].append(item)
 
     def get_result(self, operation: Operation) -> Optional[RSFormCached]:

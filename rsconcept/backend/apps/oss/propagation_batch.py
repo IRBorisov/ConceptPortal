@@ -9,7 +9,8 @@ from rest_framework.exceptions import ValidationError
 from apps.library.models import LibraryItem
 
 from .models.Argument import Argument
-from .models.Operation import Operation, OperationType
+from .models.Operation import Operation
+from .models.Relativization import Relativization
 from .propagation_state import changed_schemas
 from .relativization_refresh import refresh_projection
 
@@ -50,29 +51,28 @@ def _ancestors(input_id: int) -> set[int]:
 def _recompute(changed: set[int]) -> None:
     completed: set[int] = set()
     while changed:
-        pending = list(Operation.objects.filter(
-            operation_type=OperationType.RELATIVIZATION,
-            relativization_source_id__in=changed,
-            result_id__isnull=False,
-            projection__isnull=False,
-        ).exclude(pk__in=completed).order_by('pk'))
+        pending = list(Relativization.objects.filter(
+            source_id__in=changed, operation__result_id__isnull=False,
+        ).exclude(pk__in=completed).exclude(parameters={}).select_related('operation').order_by('operation_id'))
         if not pending:
             return
-        pending_outputs = {item.result_id for item in pending}
-        for operation in pending:
-            source_id = operation.relativization_source_id
-            result_id = operation.result_id
+        pending_outputs = {item.operation.result_id for item in pending}
+        for item in pending:
+            source_id = item.source_id
+            result_id = item.operation.result_id
             assert source_id is not None and result_id is not None
             ancestors = _ancestors(source_id)
             if not ancestors.intersection(pending_outputs):
                 ids = [source_id, result_id]
                 list(LibraryItem.objects.select_for_update().filter(pk__in=ids).order_by('pk'))
                 locked = Operation.objects.select_for_update().filter(
-                    pk=operation.pk, relativization_source_id=source_id, result_id=result_id,
+                    pk=item.operation_id, result_id=result_id,
                 ).first()
                 if locked is not None:
-                    refresh_projection(locked)
-                completed.add(operation.pk)
+                    current = Relativization.objects.filter(pk=item.pk, source_id=source_id).first()
+                    if current is not None:
+                        refresh_projection(current)
+                completed.add(item.pk)
                 break
         else:
             raise ValidationError({'propagation': 'The relativization dependencies are cyclic.'})

@@ -12,6 +12,7 @@ from .Block import Block
 from .Inheritance import Inheritance
 from .Layout import Layout
 from .Operation import Operation, OperationType
+from .Relativization import Relativization
 from .Replica import Replica
 from .Substitution import Substitution
 
@@ -105,8 +106,10 @@ class OperationSchema:
             alias=result.alias,
             title=result.title,
             description=result.description,
-            relativization_source=source_schema,
-            relativization={
+        )
+        Relativization.objects.create(
+            operation=operation, source=source_schema,
+            passport={
                 'source': {'id': source_schema.pk, 'alias': source_schema.alias, 'title': source_schema.title},
                 'target': {'alias': target.alias, 'term': target.term_resolved},
                 'excluded': [{'alias': item.alias, 'term': item.term_resolved} for item in excluded],

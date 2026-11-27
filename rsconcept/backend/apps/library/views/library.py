@@ -13,7 +13,7 @@ from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from apps.oss.models import Layout, Operation, OperationSchema, PropagationFacade
+from apps.oss.models import Layout, Operation, OperationSchema, PropagationFacade, Relativization
 from apps.oss.propagation_batch import propagation_batch
 from apps.rsmodel.models import RSModel
 from apps.users.models import User
@@ -97,9 +97,9 @@ class LibraryViewSet(ConcurrencyMixin, viewsets.ModelViewSet):
         if not m.LibraryItem.objects.select_for_update().filter(pk=instance.pk).exists():
             return
         if instance.item_type == m.LibraryItemType.RSFORM:
-            if Operation.objects.filter(result=instance, relativization_source__isnull=False).exists():
+            if Relativization.objects.filter(operation__result=instance).exists():
                 raise ValidationError('Remove the relativization operation before deleting its result.')
-            if Operation.objects.filter(relativization_source=instance).exists():
+            if Relativization.objects.filter(source=instance).exists():
                 raise ValidationError('Remove or reconfigure dependent relativizations before deleting the source.')
             PropagationFacade().before_delete_schema(instance.pk)
             model_bindings = RSModel.objects.filter(schema=instance)

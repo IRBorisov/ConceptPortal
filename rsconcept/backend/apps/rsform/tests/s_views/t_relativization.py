@@ -8,7 +8,7 @@ from shared.EndpointTester import EndpointTester
 
 
 class TestStandaloneRelativization(EndpointTester):
-    ''' Exercise both save paths with the real projection calculator. '''
+    ''' Exercise saving with the real projection calculator. '''
 
     def setUp(self):
         super().setUp()
@@ -28,12 +28,12 @@ class TestStandaloneRelativization(EndpointTester):
         }
         self.result_data = {'alias': 'Relative', 'title': 'Relative vertices'}
 
-    def test_create_from_read_only_source_without_review(self):
+    def test_create_from_read_only_source(self):
         self.source.model.read_only = True
         self.source.model.save(update_fields=['read_only'])
         self.login2()
         response = self.client.post(f'{self.url}/create-relativization', self.parameters | {
-            'item_data': self.result_data, 'skip_review': True,
+            'item_data': self.result_data,
         }, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
         result_id = response.data['id']
@@ -49,40 +49,30 @@ class TestStandaloneRelativization(EndpointTester):
         self.source.model.refresh_from_db()
         self.assertEqual(self.source.model.time_update.isoformat(), self.parameters['source_time_update'])
 
-    def test_review_is_checked_against_the_current_projection(self):
-        response = self.client.post(f'{self.url}/preview-relativization', self.parameters, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.data)
-        draft = response.data
-        axis = next(item for item in draft['items'] if item['alias'] == 'S1')
-        self.assertEqual(axis['term_raw'], self.parameters['context_name'])
-        reviewed = [row['id'] for row in draft['proposals'] if row['inKernel'] and row['changed']]
-        request_data = self.parameters | {
-            'item_data': self.result_data,
-            'revision': draft['revision'],
-            'reviewed': reviewed,
-            'edits': [{
-                'id': axis['id'], 'term_raw': 'Reviewed family', 'definition_raw': axis['definition_raw'],
-                'convention': 'Reviewed context.',
-            }],
-        }
+    def test_create_checks_source_revision_and_rejects_preliminary_texts(self):
         url = f'{self.url}/create-relativization'
+        data = self.parameters | {'item_data': self.result_data}
         for overrides, expected in [
             ({'source_time_update': '2000-01-01T00:00:00Z'}, status.HTTP_409_CONFLICT),
-            ({'context_name': 'Different context'}, status.HTTP_409_CONFLICT),
-            ({'reviewed': []}, status.HTTP_400_BAD_REQUEST),
+            ({'edits': [{'term_raw': 'Different text'}]}, status.HTTP_400_BAD_REQUEST),
             ({'schema_data': {'items': []}}, status.HTTP_400_BAD_REQUEST),
         ]:
             with self.subTest(overrides=overrides):
-                response = self.client.post(url, request_data | overrides, format='json')
+                response = self.client.post(url, data | overrides, format='json')
                 self.assertEqual(response.status_code, expected, response.data)
         self.assertFalse(LibraryItem.objects.filter(alias=self.result_data['alias']).exists())
 
-        response = self.client.post(url, request_data, format='json')
+        response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
-        result_axis = Constituenta.objects.get(schema_id=response.data['id'], alias='S1')
-        self.assertEqual(result_axis.term_raw, 'Reviewed family')
-        self.assertEqual(result_axis.convention, 'Reviewed context.')
+        axis = Constituenta.objects.get(schema_id=response.data['id'], alias='S1')
+        self.assertEqual(axis.term_raw, self.parameters['context_name'])
         self.assertEqual(response.data['location'], LocationHead.PROJECTS)
+        edited = self.client.patch(f"/api/rsforms/{response.data['id']}/update-cst", {
+            'target': axis.pk, 'item_data': {'term_raw': 'Edited family'},
+        }, format='json')
+        self.assertEqual(edited.status_code, status.HTTP_200_OK, edited.data)
+        axis.refresh_from_db()
+        self.assertEqual(axis.term_raw, 'Edited family')
 
     def test_result_from_owned_shared_library_folder_goes_to_personal_location(self):
         self.toggle_admin()
@@ -93,18 +83,16 @@ class TestStandaloneRelativization(EndpointTester):
         self.toggle_admin(False)
 
         response = self.client.post(f'{self.url}/create-relativization', self.parameters | {
-            'item_data': self.result_data, 'skip_review': True,
+            'item_data': self.result_data,
         }, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
         self.assertEqual(response.data['location'], LocationHead.USER)
 
-    def test_requires_read_access_on_both_routes(self):
+    def test_requires_read_access(self):
         self.source.model.access_policy = AccessPolicy.PRIVATE
         self.source.model.save(update_fields=['access_policy'])
         self.login2()
-        preview = self.client.post(f'{self.url}/preview-relativization', self.parameters, format='json')
         create = self.client.post(f'{self.url}/create-relativization', self.parameters | {
-            'item_data': self.result_data, 'skip_review': True,
+            'item_data': self.result_data,
         }, format='json')
-        self.assertEqual(preview.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(create.status_code, status.HTTP_403_FORBIDDEN)

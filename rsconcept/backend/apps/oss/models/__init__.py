@@ -9,5 +9,6 @@ from .OperationSchema import OperationSchema
 from .OperationSchemaCached import OperationSchemaCached
 from .PropagationContext import PropagationContext
 from .PropagationFacade import PropagationFacade
+from .Relativization import Relativization, RelativizationRow
 from .Replica import Replica
 from .Substitution import Substitution

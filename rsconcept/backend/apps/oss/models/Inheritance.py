@@ -1,11 +1,11 @@
-''' Models: Synthesis Inheritance. '''
+''' Models: Constituent inheritance. '''
 from django.db.models import CASCADE, ForeignKey, Model
 
 from .Substitution import Substitution
 
 
 class Inheritance(Model):
-    ''' Inheritance links parent and child constituents in synthesis operation.'''
+    ''' Inheritance links parent and child constituents in derived schemas.'''
     operation = ForeignKey(
         verbose_name='Операция',
         to='oss.Operation',
@@ -38,10 +38,11 @@ class Inheritance(Model):
     @staticmethod
     def check_share_origin(cst1: int, cst2: int) -> bool:
         ''' Check if two constituents share origin. '''
-        inheritance1 = Inheritance.objects.filter(child_id=cst1).first()
+        synthesis = Inheritance.objects.exclude(operation__operation_type='relativization')
+        inheritance1 = synthesis.filter(child_id=cst1).first()
         if not inheritance1:
             return False
-        inheritance2 = Inheritance.objects.filter(child_id=cst2).first()
+        inheritance2 = synthesis.filter(child_id=cst2).first()
         if not inheritance2:
             return False
 
