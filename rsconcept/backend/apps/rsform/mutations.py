@@ -117,6 +117,28 @@ def create_constituenta(
     return new_cst
 
 
+def _validate_constituenta_update(
+    cst: m.Constituenta, data: dict, allow_inherited: bool,
+) -> tuple[RelativizationRow | None, set[str]]:
+    try:
+        cst.refresh_from_db()
+    except m.Constituenta.DoesNotExist as exc:
+        raise NotFound() from exc
+    managed_row = RelativizationRow.objects.filter(result_id=cst.pk).first()
+    if managed_row is None:
+        if not allow_inherited:
+            _require_own_constituents([cst.pk])
+        return None, set()
+
+    formal_fields = ('alias', 'cst_type', 'definition_formal', 'typification_manual', 'value_is_property')
+    if any(field in data and data[field] != getattr(cst, field) for field in formal_fields):
+        raise ValidationError('Edit managed definitions and types in the source or operation parameters.')
+    if 'crucial' in data and data['crucial'] != cst.crucial:
+        raise ValidationError({'crucial': 'Edit the managed crucial flag in the source schema.'})
+    overrides = {field for field in EDITABLE_TEXT_FIELDS if field in data and data[field] != getattr(cst, field)}
+    return managed_row, overrides
+
+
 @propagation_batch
 def update_constituenta(
     item: LibraryItem, cst: m.Constituenta, data: dict, request: Request | None = None,
@@ -125,26 +147,13 @@ def update_constituenta(
     ''' Update persistent attributes of a constituenta and propagate the change. '''
     with transaction.atomic():
         _lock_schema(item, request)
-        if request is not None:
-            try:
-                cst.refresh_from_db()
-            except m.Constituenta.DoesNotExist as exc:
-                raise NotFound() from exc
-            managed_row = RelativizationRow.objects.filter(result_id=cst.pk).first()
-            if not allow_inherited and managed_row is None:
-                _require_own_constituents([cst.pk])
-            overrides = {
-                field for field in EDITABLE_TEXT_FIELDS if field in data and data[field] != getattr(cst, field)
-            } if managed_row else set()
-            formal_fields = ('alias', 'cst_type', 'definition_formal', 'typification_manual', 'value_is_property')
-            if managed_row and any(field in data and data[field] != getattr(cst, field) for field in formal_fields):
-                raise ValidationError('Edit managed definitions and types in the source or operation parameters.')
-            if managed_row and 'crucial' in data and data['crucial'] != cst.crucial:
-                raise ValidationError({'crucial': 'Edit the managed crucial flag in the source schema.'})
+        managed_row, overrides = (
+            _validate_constituenta_update(cst, data, allow_inherited) if request is not None else (None, set())
+        )
         propagation = PropagationFacade()
         schema = propagation.get_schema(item.pk)
         old_data = schema.update_cst(cst.pk, data)
-        if request is not None and managed_row and overrides:
+        if managed_row is not None and overrides:
             if 'term_raw' in overrides:
                 overrides.add('term_forms')
             fields = sorted(set(managed_row.text_overrides) | overrides)
