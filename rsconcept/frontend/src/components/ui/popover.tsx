@@ -1,6 +1,9 @@
+import { createContext, useContext } from 'react';
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 
 import { cn } from '../utils';
+
+export const PopoverContainerContext = createContext<HTMLElement | null>(null);
 
 /** Root popover primitive; controls open state and anchor pairing. */
 function Popover(props: React.ComponentProps<typeof PopoverPrimitive.Root>) {
@@ -22,8 +25,9 @@ function PopoverContent({
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Popup> &
   Pick<React.ComponentProps<typeof PopoverPrimitive.Positioner>, 'align' | 'alignOffset' | 'side' | 'sideOffset'>) {
+  const container = useContext(PopoverContainerContext);
   return (
-    <PopoverPrimitive.Portal>
+    <PopoverPrimitive.Portal container={container ?? undefined}>
       <PopoverPrimitive.Positioner
         align={align}
         alignOffset={alignOffset}

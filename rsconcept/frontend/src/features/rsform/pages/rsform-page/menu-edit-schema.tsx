@@ -1,5 +1,7 @@
 'use client';
 
+import { useRef } from 'react';
+
 import { useTx } from '@/i18n';
 import { CstType } from '@rsconcept/domain/library';
 
@@ -32,6 +34,7 @@ import { useSchemaEdit } from './schema-edit-context';
 
 export function MenuEditSchema() {
   const tx = useTx();
+  const editButton = useRef<HTMLButtonElement>(null);
   const { isAnonymous } = useAuth();
   const isModified = useModificationStore(state => state.isModified);
   const router = useConceptNavigation();
@@ -43,7 +46,7 @@ export function MenuEditSchema() {
     handleBlur: handleMenuBlur,
     hide: hideMenu
   } = useDropdown();
-  const { schema, selectedCst, isArchive, isContentEditable, promptTemplate, deselectAll, isProcessing, createCst } =
+  const { schema, isArchive, isContentEditable, promptTemplate, deselectAll, isProcessing, createCst } =
     useSchemaEdit();
 
   const { resetAliases } = useResetAliases();
@@ -109,7 +112,10 @@ export function MenuEditSchema() {
   async function handleRelativize() {
     hideMenu();
     if (isModified && (await promptUnsaved()) === 'cancel') return;
-    showRelativize({ schemaID: schema.id, initialTarget: selectedCst.length === 1 ? selectedCst[0] : null });
+    showRelativize({
+      schemaID: schema.id,
+      returnFocusTo: editButton.current
+    });
   }
 
   if (isAnonymous) {
@@ -132,6 +138,8 @@ export function MenuEditSchema() {
   return (
     <div ref={menuRef} onBlur={handleMenuBlur} className='relative'>
       <MiniButton
+        ref={editButton}
+        tabIndex={0}
         noHover
         noPadding
         title={tx('tx.general.editing')}

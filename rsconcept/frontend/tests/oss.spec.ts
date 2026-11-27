@@ -1,7 +1,9 @@
 import { CstType, OperationType } from '@rsconcept/domain/library';
 
+import { type CreateRelativizationDTO } from '../src/features/oss/backend/types';
 import { authAdmin, authAnonymous, setupAuth } from './mocks/auth';
 import { createOssMock, createRSFormMock, dataOss, dataRSForms, resetConceptMocks } from './mocks/concepts';
+import { waitForApiResponse, waitForAppURL } from './navigation';
 import { expect, test } from './setup';
 
 test.describe.configure({ mode: 'serial' });
@@ -44,7 +46,7 @@ test('OSS page loads, switches tabs, and shows 404 for missing schema', async ({
   await expect(page.getByRole('link', { name: 'Библиотека' }).first()).toBeVisible();
 });
 
-test('OSS Add opens relativization and offers an editable title from the genitive term', async ({ page }) => {
+test('OSS Add offers an editable title and saves relativization without a preview', async ({ page }) => {
   const schema = createRSFormMock(402, 'Родственные отношения');
   schema.items.push({
     id: 1,
@@ -86,9 +88,11 @@ test('OSS Add opens relativization and offers an editable title from the genitiv
 
   await page.goto(`/oss/${oss.id}`, { waitUntil: 'domcontentloaded' });
   await page.getByRole('tab', { name: 'Граф' }).click();
-  await page.getByRole('button', { name: /^Добавить/ }).click();
+  const add = page.getByRole('button', { name: /^Добавить/ });
+  await add.click();
   await page.getByRole('button', { name: 'Релятивизация', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: 'Релятивизация' });
+  await expect(dialog.getByRole('combobox', { name: 'Исходная схема' })).toBeFocused();
   await expect(dialog.locator('#help-concept-relativization')).toBeVisible();
   await dialog.getByRole('button', { name: 'Открыть варианты справки' }).click();
   await dialog.getByRole('button', { name: 'Быстрый гид' }).click();
@@ -106,7 +110,7 @@ test('OSS Add opens relativization and offers an editable title from the genitiv
 
   await page.getByRole('combobox', { name: 'Исходная схема' }).click();
   await page.getByRole('button', { name: /^KS_402.*Родственные отношения/ }).click();
-  await page.getByRole('combobox', { name: 'Релятивизируемая конституента' }).click();
+  await page.getByRole('combobox', { name: 'Фокус релятивизации' }).click();
   await page.getByRole('button', { name: /^X1.*индивиды/ }).click();
 
   const title = dialog.getByRole('textbox', { name: 'Название' });
@@ -118,8 +122,9 @@ test('OSS Add opens relativization and offers an editable title from the genitiv
   await expect(dialog.getByRole('button', { name: 'Проверить тексты' })).toBeEnabled();
   await dialog.getByText('Отмена', { exact: true }).click();
   await expect(dialog).toHaveCount(0);
+  await expect(add).toBeFocused();
 
-  await page.getByRole('button', { name: /^Добавить/ }).click();
+  await add.click();
   await page.getByRole('button', { name: 'Релятивизация', exact: true }).click();
   await dialog.getByRole('button', { name: 'Открыть варианты справки' }).click();
   await setupAuth(page.context());
@@ -130,4 +135,56 @@ test('OSS Add opens relativization and offers an editable title from the genitiv
   await expect(manual.getByRole('heading', { name: 'Контексты и значения' })).toBeVisible();
   await manual.close();
   await expect(dialog).toBeVisible();
+
+  const result = createRSFormMock(404, 'Результат');
+  dataRSForms.set(result.id, result);
+  const created = {
+    ...oss.operations[0],
+    id: 2,
+    operation_type: OperationType.RELATIVIZATION,
+    alias: 'РО-р',
+    title: result.title,
+    result: result.id
+  };
+  const endpoint = `/api/oss/${oss.id}/create-relativization`;
+  await page.route(`**${endpoint}`, route =>
+    route.fulfill({
+      status: 201,
+      json: {
+        new_operation: created.id,
+        oss: {
+          ...oss,
+          operations: [...oss.operations, created],
+          layout: [...oss.layout, { nodeID: 'o2', x: 200, y: 0, width: 150, height: 40 }],
+          arguments: [{ operation: created.id, argument: oss.operations[0].id }]
+        }
+      }
+    })
+  );
+  await dialog.getByRole('combobox', { name: 'Исходная схема' }).click();
+  await page.getByRole('button', { name: /^KS_402.*Родственные отношения/ }).click();
+  const target = dialog.getByRole('combobox', { name: 'Фокус релятивизации' });
+  await expect(target).toHaveText('Фокус релятивизации');
+  const context = dialog.getByRole('textbox', { name: 'Имя семейства' });
+  await expect(context).toHaveValue('');
+  await context.fill('группа');
+  await dialog.getByRole('textbox', { name: 'Название' }).fill(result.title);
+  await dialog.getByRole('textbox', { name: 'Сокращение' }).fill('РО-р');
+  const create = dialog.getByRole('button', { name: 'Создать без проверки' });
+  const review = dialog.getByRole('button', { name: 'Проверить тексты' });
+  await expect(create).toBeDisabled();
+  await expect(review).toBeDisabled();
+  await target.click();
+  await page.getByRole('button', { name: /^X1.*индивиды/ }).click();
+  await expect(create).toBeEnabled();
+  await expect(review).toBeEnabled();
+
+  const saved = waitForApiResponse(page, { url: endpoint, method: 'POST' });
+  const opened = waitForAppURL(page, new RegExp(`/rsforms/${result.id}(?:[/?]|$)`));
+  await create.click();
+  const submission = (await saved).request().postDataJSON() as CreateRelativizationDTO;
+  await opened;
+  expect(submission).toMatchObject({ skip_review: true, context_name: 'группа', target: 1 });
+  expect(submission).not.toHaveProperty('revision');
+  await expect(dialog).toHaveCount(0);
 });

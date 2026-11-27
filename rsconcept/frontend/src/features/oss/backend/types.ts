@@ -278,14 +278,21 @@ export const schemaRelativizationDraft = z.strictObject({
   )
 });
 
-export const schemaCreateRelativization = schemaRelativizationInput.extend({
+const schemaRelativizationResult = schemaRelativizationInput.extend({
   layout: schemaOssLayout,
   item_data: schemaOperationData,
-  position: schemaPosition,
-  revision: z.string(),
-  reviewed: z.array(z.number()),
-  edits: z.array(schemaRelativizationText.extend({ id: z.number(), clarified: z.boolean() }))
+  position: schemaPosition
 });
+
+export const schemaCreateRelativization = z.union([
+  schemaRelativizationResult.extend({ skip_review: z.literal(true) }),
+  schemaRelativizationResult.extend({
+    skip_review: z.literal(false).optional(),
+    revision: z.string(),
+    reviewed: z.array(z.number()),
+    edits: z.array(schemaRelativizationText.extend({ id: z.number(), clarified: z.boolean() }))
+  })
+]);
 
 export const schemaCreateSynthesis = z.strictObject({
   layout: schemaOssLayout,

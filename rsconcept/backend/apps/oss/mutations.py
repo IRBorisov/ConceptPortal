@@ -28,6 +28,7 @@ from .propagation_batch import propagation_batch
 from .propagation_state import mark_schema
 from .relativization import (
     TEXT_FIELDS, calculate_projection, confirm_projection, correspondence, draft_revision, parameters_from,
+    require_valid_projection,
 )
 from .relativization_refresh import prior_texts, refresh_projection
 
@@ -275,20 +276,24 @@ def preview_relativization(item: LibraryItem, validated: dict, request: Request)
 
 @propagation_batch
 def create_relativization_operation(item: LibraryItem, validated: dict, request: Request) -> m.Operation:
-    ''' Calculate and persist the reviewed projection, provenance, and graph position atomically. '''
+    ''' Calculate and persist the projection, text provenance, and graph position atomically. '''
     with transaction.atomic():
         _lock_expected_update(item, request)
         source, source_schema = _relativization_source(item, validated, request)
         parameters = parameters_from(validated)
         draft = calculate_projection(source_schema.pk, parameters)
         existing = _locked_relativization(validated, source, source_schema)
-        prior = prior_texts(existing, draft) if existing else []
-        revision = draft_revision(source_schema.pk, source_schema.time_update, draft, parameters, prior)
-        if validated['revision'] != revision:
-            raise Conflict(detail=msg.concurrentModification())
         suggestions = {row['id']: {name: row[name] for name in TEXT_FIELDS} for row in draft['items']}
-        confirm_projection(draft, validated['edits'], validated['reviewed'])
-        checked = set(validated['reviewed']) | {row['id'] for row in validated['edits']}
+        checked: set[int] = set()
+        if validated['skip_review']:
+            require_valid_projection(draft)
+        else:
+            prior = prior_texts(existing, draft) if existing else []
+            revision = draft_revision(source_schema.pk, source_schema.time_update, draft, parameters, prior)
+            if validated['revision'] != revision:
+                raise Conflict(detail=msg.concurrentModification())
+            confirm_projection(draft, validated['edits'], validated['reviewed'])
+            checked = set(validated['reviewed']) | {row['id'] for row in validated['edits']}
 
         data = validated['item_data']
         if not data.get('title'):

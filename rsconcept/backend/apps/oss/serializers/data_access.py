@@ -267,7 +267,7 @@ class CreateSchemaSerializer(StrictSerializer):
             raise serializers.ValidationError({
                 'parent': msg.parentNotInOSS()
             })
-        return attrs
+        return super().validate(attrs)
 
 
 class CloneSchemaSerializer(StrictSerializer):
@@ -371,10 +371,22 @@ class RelativizationTextSerializer(StrictSerializer):
 
 
 class CreateRelativizationSerializer(CreateSchemaSerializer, RelativizationParametersSerializer):
-    ''' Create a projection after explicit review of its texts. '''
-    revision = serializers.CharField(min_length=64, max_length=64)
-    reviewed = serializers.ListField(child=serializers.IntegerField(min_value=1))
-    edits = RelativizationTextSerializer(many=True)
+    ''' Create a projection with generated or explicitly reviewed texts. '''
+    skip_review = serializers.BooleanField(default=False)
+    revision = serializers.CharField(min_length=64, max_length=64, required=False)
+    reviewed = serializers.ListField(child=serializers.IntegerField(min_value=1), required=False)
+    edits = RelativizationTextSerializer(many=True, required=False)
+
+    def validate(self, attrs):
+        validated = super().validate(attrs)
+        fields = ('revision', 'reviewed', 'edits')
+        if validated['skip_review']:
+            errors = {field: 'Omit this field when skipping text review.' for field in fields if field in validated}
+        else:
+            errors = {field: 'This field is required for text review.' for field in fields if field not in validated}
+        if errors:
+            raise serializers.ValidationError(errors)
+        return validated
 
 
 class CreateSynthesisSerializer(StrictSerializer):

@@ -37,7 +37,7 @@ function parseCssLengthToPx(value: string, fallback: number) {
  * Tracks whether a modal fits on screen and should use top-aligned placement.
  *
  * @param isEnabled - When false, always reports bottom-centered placement.
- * @returns `isTopPlaced` flag and `setElement` ref callback for the modal panel.
+ * @returns The modal panel, its ref callback and its placement flag.
  */
 export function useModalPlacement<TElement extends HTMLElement>(isEnabled = true) {
   const [element, setElement] = useState<TElement | null>(null);
@@ -104,5 +104,5 @@ export function useModalPlacement<TElement extends HTMLElement>(isEnabled = true
     [element, isEnabled]
   );
 
-  return { isTopPlaced, setElement };
+  return { element, isTopPlaced, setElement };
 }

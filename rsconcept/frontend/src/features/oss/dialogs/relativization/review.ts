@@ -80,6 +80,10 @@ export function hasReviewEdits(row: ReviewRow) {
   return row.clarified || textFields.some(field => row.fields[field] !== row.item[field]);
 }
 
+export function hasEditedReviewTexts(rows: ReviewRow[]) {
+  return rows.some(row => textFields.some(field => row.fields[field] !== (row.confirmed[field] ?? row.item[field])));
+}
+
 export function canConfirmReview(rows: ReviewRow[]) {
   return rows.every(
     row =>

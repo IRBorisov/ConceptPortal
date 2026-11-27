@@ -107,6 +107,7 @@ def correspondence(
         'result': id_map[row['id']],
         'confirmed': {name: items[row['id']][name] for name in TEXT_FIELDS} if row['id'] in reviewed else {},
         'suggested': suggestions[row['id']],
+        **({'needs_review': True} if row['id'] not in reviewed and row['inKernel'] and row['changed'] else {}),
     } for row in draft['proposals']]
 
 

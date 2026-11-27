@@ -5,10 +5,12 @@ import { type Constituenta, CstType } from '@rsconcept/domain/library';
 
 import { SelectConstituenta } from '@/features/rsform/components/select-constituenta';
 
-import { Label, TextArea, TextInput } from '@/components/input';
+import { Checkbox, Label, TextArea, TextInput } from '@/components/input';
+import { NoData } from '@/components/view';
 import { limits } from '@/utils/constants';
 
 const kernelTypes = new Set<CstType>([CstType.BASE, CstType.CONSTANT, CstType.STRUCTURED]);
+const fieldRowClassName = 'grid grid-cols-1 items-start gap-3 @lg/modal:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]';
 
 export function getRelativizationExclusions(items: readonly Constituenta[], target: Constituenta | null) {
   return items.filter(item => item.id !== target?.id && kernelTypes.has(item.cst_type));
@@ -17,7 +19,6 @@ export function getRelativizationExclusions(items: readonly Constituenta[], targ
 interface ParameterFieldsProps {
   targets: Constituenta[];
   target: Constituenta | null;
-  focusTarget?: boolean;
   onTargetChange: (target: Constituenta | null) => void;
   contextName: string;
   maxContextLength?: number;
@@ -30,7 +31,6 @@ interface ParameterFieldsProps {
 export function RelativizationParameterFields({
   targets,
   target,
-  focusTarget,
   onTargetChange,
   contextName,
   maxContextLength = limits.len_title,
@@ -41,31 +41,31 @@ export function RelativizationParameterFields({
 }: ParameterFieldsProps) {
   const tx = useTx();
   const fields = useRef<HTMLDivElement>(null);
-  useEffect(
-    function restoreTargetFocus() {
-      if (focusTarget) fields.current?.querySelector<HTMLButtonElement>('#relativization_target')?.focus();
-    },
-    [focusTarget]
-  );
+  useEffect(function focusTargetField() {
+    fields.current?.querySelector<HTMLButtonElement>('#relativization_target')?.focus();
+  }, []);
   const count = exclusions.filter(item => excludedIDs.includes(item.id)).length;
+  const targetLabel = tx('tx.oss.relativization.target.focus');
+  const contextLabel = tx('tx.oss.relativization.review.context.name');
+  if (!targets.length) {
+    return <NoData className='text-sm text-foreground/75'>{tx('tx.oss.relativization.target.empty')}</NoData>;
+  }
   return (
     <>
-      <div ref={fields} className='grid items-start gap-3 @lg/modal:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]'>
-        <div className='grid min-w-0 gap-2'>
-          <Label text={tx('tx.oss.relativization.target')} htmlFor='relativization_target' />
-          <SelectConstituenta
-            id='relativization_target'
-            className='h-9 text-left [&_svg]:size-4'
-            items={targets}
-            placeholder={tx('tx.oss.relativization.target.select')}
-            value={target}
-            onChange={onTargetChange}
-          />
-        </div>
+      <div ref={fields} className={fieldRowClassName}>
+        <Label text={targetLabel} htmlFor='relativization_target' className='sr-only' />
+        <SelectConstituenta
+          id='relativization_target'
+          className='h-9 w-full min-w-0 text-left [&_svg]:size-4'
+          items={targets}
+          placeholder={targetLabel}
+          value={target}
+          onChange={onTargetChange}
+        />
         <TextInput
           id='relativization_context'
-          label={tx('tx.oss.relativization.review.context.name')}
-          aria-required
+          aria-label={contextLabel}
+          placeholder={contextLabel}
           value={contextName}
           maxLength={maxContextLength}
           onChange={event => onContextNameChange(event.target.value)}
@@ -81,19 +81,20 @@ export function RelativizationParameterFields({
             className='grid max-h-40 gap-x-4 gap-y-1 overflow-y-auto border-t border-border px-3 py-2 @lg/modal:grid-cols-2'
             aria-label={tx('tx.oss.relativization.excluded')}
           >
-            {exclusions.map(item => (
-              <label key={item.id} className='flex cursor-pointer items-start gap-2 py-1 text-sm'>
-                <input
-                  type='checkbox'
-                  className='mt-0.5 size-4 shrink-0 accent-primary'
-                  checked={excludedIDs.includes(item.id)}
-                  onChange={event => onExcludedChange(item.id, event.target.checked)}
+            {exclusions.map(item => {
+              const checked = excludedIDs.includes(item.id);
+              return (
+                <Checkbox
+                  key={item.id}
+                  role='checkbox'
+                  aria-checked={checked}
+                  className='min-w-0 py-1 [&>div]:shrink-0 [&>span]:wrap-anywhere [&>span]:whitespace-normal'
+                  label={[item.alias, item.term_resolved].filter(Boolean).join(' — ')}
+                  value={checked}
+                  onChange={value => onExcludedChange(item.id, value)}
                 />
-                <span className='min-w-0 break-words'>
-                  {[item.alias, item.term_resolved].filter(Boolean).join(' — ')}
-                </span>
-              </label>
-            ))}
+              );
+            })}
           </fieldset>
         </details>
       ) : null}
@@ -126,7 +127,7 @@ export function RelativizationResultFields({
     <fieldset data-tour='relativization-result' className='min-w-0 border-t border-border pt-3'>
       <legend className='pr-2 text-sm font-semibold'>{tx('tx.oss.relativization.result')}</legend>
       <div className='grid gap-3'>
-        <div className='grid items-start gap-3 @lg/modal:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]'>
+        <div className={fieldRowClassName}>
           <TextInput
             id='relativization_title'
             aria-label={tx('tx.lib.title')}

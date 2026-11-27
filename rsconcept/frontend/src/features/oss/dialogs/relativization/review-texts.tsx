@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
-import { ArrowLeftIcon, ChevronDownIcon } from 'lucide-react';
+import { ChevronDownIcon } from 'lucide-react';
 
 import { type AppLocale, useTx } from '@/i18n';
 
 import { Button } from '@/components/control';
-import { Label, TextArea } from '@/components/input';
+import { Checkbox, Label, TextArea } from '@/components/input';
 import { cn } from '@/components/utils';
 
 import { isReviewed, type ReviewRow, type TextField, textFields } from './review';
@@ -18,12 +18,11 @@ const labels: Record<TextField, string> = {
 interface Props {
   rows: ReviewRow[];
   onChange: (row: ReviewRow) => void;
-  back: () => void;
   disabled: boolean;
   locale: AppLocale;
 }
 
-export function ReviewRelativizationTexts({ rows, onChange, back, disabled, locale }: Props) {
+export function ReviewRelativizationTexts({ rows, onChange, disabled, locale }: Props) {
   const tx = useTx();
   const heading = useRef<HTMLHeadingElement>(null);
   useEffect(function focusReviewHeading() {
@@ -34,21 +33,13 @@ export function ReviewRelativizationTexts({ rows, onChange, back, disabled, loca
   const completed = kernel.filter(isReviewed).length;
   return (
     <div className='grid gap-3 py-3'>
-      <div className='flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-border pb-3'>
-        <div>
-          <h2 ref={heading} tabIndex={-1} className='text-left text-base font-semibold focus:outline-hidden'>
-            {tx('tx.oss.relativization.review.heading')}
-          </h2>
-          <p className='text-sm text-foreground/75' aria-live='polite'>
-            {tx('tx.oss.relativization.review.progress', { completed, total: kernel.length })}
-          </p>
-        </div>
-        <Button
-          text={tx('tx.oss.relativization.review.back')}
-          icon={<ArrowLeftIcon size={16} />}
-          onClick={back}
-          disabled={disabled}
-        />
+      <div className='border-b border-border pb-3'>
+        <h2 ref={heading} tabIndex={-1} className='text-left text-base font-semibold focus:outline-hidden'>
+          {tx('tx.oss.relativization.review.heading')}
+        </h2>
+        <p className='text-sm text-foreground/75' aria-live='polite'>
+          {tx('tx.oss.relativization.review.progress', { completed, total: kernel.length })}
+        </p>
       </div>
       <fieldset disabled={disabled} className='grid min-w-0 gap-2'>
         {rows.map(row => {
@@ -73,7 +64,7 @@ export function ReviewRelativizationTexts({ rows, onChange, back, disabled, loca
                   {proposal.sourceAlias ? proposal.sourceAlias + ' → ' : ''}
                   {item.alias}
                 </span>
-                <span className='min-w-0 grow break-words' lang={fields.term_raw ? locale : undefined}>
+                <span className='min-w-0 grow wrap-anywhere' lang={fields.term_raw ? locale : undefined}>
                   {fields.term_raw || tx('tx.oss.relativization.review.empty')}
                 </span>
                 {status ? (
@@ -168,6 +159,9 @@ export function ReviewRelativizationTexts({ rows, onChange, back, disabled, loca
                             </p>
                           </div>
                           <div className='grid min-w-0 items-start gap-1'>
+                            <p className='text-xs text-foreground/75 @lg/modal:hidden'>
+                              {tx('tx.oss.relativization.review.after')}
+                            </p>
                             <TextArea
                               id={id}
                               lang={locale}
@@ -236,15 +230,14 @@ export function ReviewRelativizationTexts({ rows, onChange, back, disabled, loca
                   </p>
                 ) : null}
                 {proposal.missing.length || proposal.ambiguous.length ? (
-                  <label className='flex cursor-pointer items-start gap-2 text-sm'>
-                    <input
-                      type='checkbox'
-                      checked={row.clarified}
-                      className='mt-0.5 size-4 shrink-0 accent-primary'
-                      onChange={event => onChange({ ...row, clarified: event.target.checked })}
-                    />
-                    {tx('tx.oss.relativization.review.clarified')}
-                  </label>
+                  <Checkbox
+                    role='checkbox'
+                    aria-checked={row.clarified}
+                    className='min-w-0 justify-self-start [&>div]:shrink-0 [&>span]:whitespace-normal'
+                    label={tx('tx.oss.relativization.review.clarified')}
+                    value={row.clarified}
+                    onChange={clarified => onChange({ ...row, clarified })}
+                  />
                 ) : null}
               </div>
             </details>
