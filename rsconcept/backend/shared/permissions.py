@@ -168,6 +168,12 @@ class ItemAnyone(ItemEditor):
         return can_read_library_item(request.user, _extract_item(obj))
 
 
+class ItemReader(ItemAnyone):
+    ''' Authenticated user who can read the item. '''
+    def has_permission(self, request: Request, view: APIView) -> bool:
+        return request.user.is_authenticated
+
+
 class EditorMixin(APIView):
     ''' Editor permissions mixin for API views. '''
 

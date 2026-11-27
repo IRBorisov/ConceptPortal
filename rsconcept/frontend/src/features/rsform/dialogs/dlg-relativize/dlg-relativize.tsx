@@ -2,16 +2,15 @@
 
 import { useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 
 import { DEFAULT_LOCALE, useTx } from '@/i18n';
 import { Grammeme } from '@rsconcept/domain/cctext/language';
-import { type Constituenta, CstType, LocationHead } from '@rsconcept/domain/library';
-import { type RelativizationProjection } from '@rsconcept/domain/library/relativization';
+import { type Constituenta, CstType } from '@rsconcept/domain/library';
 
 import { useConceptNavigation } from '@/app';
-import { useAuth } from '@/features/auth/backend/use-auth';
-import { useCreateFromSandbox } from '@/features/library/backend/use-create-from-sandbox';
+import { notifyLibrarySync } from '@/features/library/backend/library-sync';
 import {
   getRelativizationExclusions,
   RelativizationParameterFields,
@@ -24,6 +23,8 @@ import {
 import {
   canConfirmReview,
   hasEditedReviewTexts,
+  hasReviewEdits,
+  isReviewed,
   prepareReview,
   type ReviewRow
 } from '@/features/oss/dialogs/relativization/review';
@@ -36,38 +37,32 @@ import { extractErrorMessage } from '@/utils/utils';
 
 import { rsformsApi } from '../../backend/api';
 import { cctextApi } from '../../backend/cctext/api';
+import { type RelativizationParametersDTO } from '../../backend/relativization';
 import { useRsformDialogsStore } from '../rsform-dialog-store';
-
-import { type RelativizationRequest } from './relativization.worker';
 
 export interface DlgRelativizeProps {
   schemaID: number;
   returnFocusTo: HTMLElement | null;
 }
 
-async function calculateDraft(request: RelativizationRequest): Promise<RelativizationProjection | null> {
-  const worker = new Worker(new URL('./relativization.worker.ts', import.meta.url), { type: 'module' });
-  try {
-    return await new Promise<RelativizationProjection | null>((resolve, reject) => {
-      worker.onmessage = ({ data }: MessageEvent<RelativizationProjection | null>) => resolve(data);
-      worker.onerror = reject;
-      worker.onmessageerror = reject;
-      worker.postMessage(request);
-    });
-  } finally {
-    worker.terminate();
-  }
-}
-
 export function DlgRelativize() {
   const tx = useTx();
   const intl = useIntl();
   const router = useConceptNavigation();
-  const { user } = useAuth();
-  const { createRSFormFromSandbox } = useCreateFromSandbox({ reportErrorInDialog: true });
+  const client = useQueryClient();
   const { schemaID, returnFocusTo } = useRsformDialogsStore(state => state.props as DlgRelativizeProps);
   const hideDialog = useRsformDialogsStore(state => state.hideDialog);
   const sourceQuery = useQuery(rsformsApi.getRSFormQueryOptions({ itemID: schemaID }));
+  const create = useMutation({
+    mutationKey: [rsformsApi.baseKey, 'create-relativization'],
+    networkMode: 'always',
+    retry: false,
+    mutationFn: rsformsApi.createRelativization,
+    onSuccess: () => {
+      notifyLibrarySync();
+      return client.invalidateQueries({ queryKey: [KEYS.library] });
+    }
+  });
   const source = sourceQuery.data?.raw;
   const schema = sourceQuery.data?.transformed;
 
@@ -77,7 +72,7 @@ export function DlgRelativize() {
   const [alias, setAlias] = useState('');
   const [description, setDescription] = useState('');
   const [contextName, setContextName] = useState('');
-  const [draft, setDraft] = useState<{ projection: RelativizationProjection; sourceTime: string } | null>(null);
+  const [draft, setDraft] = useState<{ parameters: RelativizationParametersDTO; revision: string } | null>(null);
   const [rows, setRows] = useState<ReviewRow[]>([]);
   const [reviewing, setReviewing] = useState(false);
   const [pending, setPending] = useState<RelativizationAction | null>(null);
@@ -110,7 +105,7 @@ export function DlgRelativize() {
   const title = manualTitle ?? defaultTitle;
   const canPrepare =
     !!source && !!target && !!alias.trim() && !!title.trim() && !(useInflection && formQuery.isLoading);
-  const sourceChanged = draft !== null && draft.sourceTime !== source?.time_update;
+  const sourceChanged = draft !== null && draft.parameters.source_time_update !== source?.time_update;
   const canConfirm = draft !== null && !sourceChanged && canConfirmReview(rows);
 
   function changeTarget(item: Constituenta | null) {
@@ -128,57 +123,44 @@ export function DlgRelativize() {
     setPending(action);
     setErrorMessage('');
     try {
-      const projection = reviewing
-        ? draft?.projection
-        : await calculateDraft({
-            source: { items: source.items, attribution: source.attribution },
-            options: {
-              target: target.id,
-              excluded: exclusionOptions.filter(item => excludedIDs.includes(item.id)).map(item => item.id),
-              locale,
-              contextName: contextName.trim() || defaultContextName
-            }
-          }).catch(() => null);
-      if (!projection) {
-        setErrorMessage(tx('tx.oss.relativization.compute.fail'));
-        return;
-      }
+      const reviewedDraft = reviewing ? draft : null;
+      const parameters = reviewedDraft?.parameters ?? {
+        source_time_update: source.time_update,
+        target: target.id,
+        excluded: exclusionOptions.filter(item => excludedIDs.includes(item.id)).map(item => item.id),
+        locale,
+        context_name: contextName.trim() || defaultContextName
+      };
       if (action === 'preview') {
-        setRows(prepareReview(projection, rows));
-        setDraft({ projection, sourceTime: source.time_update });
+        const projection = await rsformsApi.previewRelativization({ itemID: schemaID, data: parameters });
+        setRows(previous => prepareReview(projection, previous));
+        setDraft({ parameters, revision: projection.revision });
         setReviewing(true);
         return;
       }
-      if (projection.proposals.some(proposal => proposal.formalInvalid)) {
-        setErrorMessage(tx('tx.oss.relativization.review.invalid'));
-        return;
-      }
-      const reviewedFields = new Map(reviewing ? rows.map(row => [row.item.id, row.fields]) : []);
-      const result = await createRSFormFromSandbox({
-        item_data: {
-          title: title.trim(),
-          alias: alias.trim(),
-          description: description.trim(),
-          visible: true,
-          read_only: false,
-          access_policy: source.access_policy,
-          location:
-            user.id === source.owner && source.location !== LocationHead.LIBRARY ? source.location : LocationHead.USER
-        },
-        schema_data: {
-          items: projection.items.map(item => {
-            const fields = reviewedFields.get(item.id);
-            return fields
-              ? { ...item, ...fields, term_forms: fields.term_raw === item.term_raw ? item.term_forms : [] }
-              : item;
-          }),
-          attribution: projection.attribution
+      const result = await create.mutateAsync({
+        itemID: schemaID,
+        data: {
+          ...parameters,
+          ...(reviewedDraft
+            ? {
+                revision: reviewedDraft.revision,
+                reviewed: rows.filter(isReviewed).map(row => row.item.id),
+                edits: rows
+                  .filter(hasReviewEdits)
+                  .map(row => ({ id: row.item.id, clarified: row.clarified, ...row.fields }))
+              }
+            : { skip_review: true }),
+          item_data: { title: title.trim(), alias: alias.trim(), description: description.trim() }
         }
       });
       hideDialog();
       router.gotoCstList(result.id);
     } catch (error) {
       setErrorMessage(error instanceof Error ? extractErrorMessage(error) : tx('tx.oss.relativization.compute.fail'));
+      if (isAxiosError(error) && error.response?.status === 409) {
+        await sourceQuery.refetch();
+      }
     } finally {
       pendingRef.current = false;
       setPending(null);

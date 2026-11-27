@@ -26,7 +26,7 @@ export type CloneLibraryItemDTO = z.infer<typeof schemaCloneLibraryItem>;
 
 /** Represents data, used for creating {@link RSForm}. */
 export type CreateLibraryItemDTO = z.infer<typeof schemaCreateLibraryItem>;
-export type CreateRSFormFromSandboxDTO = z.infer<typeof schemaCreateRSFormFromSandbox>;
+export type CreateRSFormFromDataDTO = z.infer<typeof schemaCreateRSFormFromData>;
 export type CreateRSModelFromSandboxDTO = z.infer<typeof schemaCreateRSModelFromSandbox>;
 
 /** Represents update data for editing {@link LibraryItem}. */
@@ -100,7 +100,7 @@ export const schemaSandboxRSModelData = z.strictObject({
   items: z.array(z.any())
 });
 
-export const schemaCreateRSFormFromSandbox = z.strictObject({
+export const schemaCreateRSFormFromData = z.strictObject({
   item_data: schemaSandboxItemData,
   schema_data: schemaSandboxRSFormData
 });

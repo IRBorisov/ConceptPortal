@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { useTx } from '@/i18n';
 import { LocationHead } from '@rsconcept/domain/library';
 
-import { urls,useConceptNavigation } from '@/app';
+import { urls, useConceptNavigation } from '@/app';
 import { useAuth } from '@/features/auth/backend/use-auth';
 import { useCreateFromSandbox } from '@/features/library/backend/use-create-from-sandbox';
 import { emitOnboardingEvent } from '@/features/onboarding/models/events';
@@ -38,7 +38,7 @@ export function MenuMain() {
   const router = useConceptNavigation();
   const { isAnonymous } = useAuth();
   const { resetBundle, importBundle, exportBundle, engine, bundle } = useSandboxBundle();
-  const { createRSFormFromSandbox, createRSModelFromSandbox } = useCreateFromSandbox();
+  const { createRSFormFromData, createRSModelFromSandbox } = useCreateFromSandbox();
   const restartTour = useOnboardingStore(state => state.restartTour);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const {
@@ -70,7 +70,7 @@ export function MenuMain() {
   async function handleCreateRSForm() {
     hideMenu();
     try {
-      const created = await createRSFormFromSandbox({
+      const created = await createRSFormFromData({
         item_data: {
           title: bundle.schema.title,
           alias: bundle.schema.alias,

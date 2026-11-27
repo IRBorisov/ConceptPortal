@@ -7,7 +7,7 @@
 | Ссылка Portal → API, доступ и ключи, поиск, `/details`, импорт | [PORTAL-READ.md](PORTAL-READ.md)       |
 | Создать / заменить КС, версии, протокол публикации, лимиты     | [PORTAL-PUBLISH.md](PORTAL-PUBLISH.md) |
 | Интерпретации концептуальной модели                            | [PORTAL-MODELS.md](PORTAL-MODELS.md)   |
-| Граф ОСС: загрузки, синтезы, блоки                             | [PORTAL-OSS.md](PORTAL-OSS.md)         |
+| Релятивизация КС, граф ОСС, загрузки, синтезы, блоки           | [PORTAL-OSS.md](PORTAL-OSS.md)         |
 
 Хосты: UI `https://portal.acconcept.ru/`, REST `https://api.portal.acconcept.ru/`. OpenAPI — `GET https://api.portal.acconcept.ru/schema`.
 

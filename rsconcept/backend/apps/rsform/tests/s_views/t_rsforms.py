@@ -27,8 +27,8 @@ class TestRSFormViewset(EndpointTester):
         self.private_id = self.private.model.pk
 
 
-    @decl_endpoint('/api/rsforms/create-from-sandbox', method='post')
-    def test_create_rsform_from_sandbox(self):
+    @decl_endpoint('/api/rsforms/create-from-data', method='post')
+    def test_create_rsform_from_data(self):
         data = {
             'item_data': {
                 'title': 'Sandbox schema',
@@ -60,6 +60,7 @@ class TestRSFormViewset(EndpointTester):
                         'convention': '',
                         'crucial': True,
                         'cst_type': CstType.TERM,
+                        'typification_manual': '\u212c(X1)',
                         'definition_formal': 'X1',
                         'definition_raw': '',
                         'definition_resolved': '',
@@ -85,15 +86,17 @@ class TestRSFormViewset(EndpointTester):
         self.assertEqual(len(created_items), 2)
         self.assertEqual(created_items[0].alias, 'X1')
         self.assertEqual(created_items[0].term_resolved, 'человек')
+        self.assertEqual(created_items[0].typification_manual, '')
         self.assertEqual(created_items[1].alias, 'D1')
         self.assertEqual(created_items[1].definition_formal, 'X1')
+        self.assertEqual(created_items[1].typification_manual, '\u212c(X1)')
         self.assertTrue(created_items[1].crucial)
 
         Attribution = created.constituentsQ().model._meta.apps.get_model('rsform', 'Attribution')
         self.assertEqual(Attribution.objects.filter(container__schema_id=created.model.pk).count(), 1)
 
-    @decl_endpoint('/api/rsforms/create-from-sandbox', method='post')
-    def test_create_rsform_from_sandbox_rejects_invalid_alias(self):
+    @decl_endpoint('/api/rsforms/create-from-data', method='post')
+    def test_create_rsform_from_data_rejects_invalid_alias(self):
         data = {
             'item_data': {
                 'title': 'Sandbox schema',
@@ -119,8 +122,8 @@ class TestRSFormViewset(EndpointTester):
         }
         self.executeBadData(data)
 
-    @decl_endpoint('/api/rsforms/create-from-sandbox', method='post')
-    def test_create_rsform_from_sandbox_rejects_duplicate_alias(self):
+    @decl_endpoint('/api/rsforms/create-from-data', method='post')
+    def test_create_rsform_from_data_rejects_duplicate_alias(self):
         duplicate_alias = 'X1'
         base_item = {
             'convention': '',
@@ -159,8 +162,8 @@ class TestRSFormViewset(EndpointTester):
         self.executeBadData(data)
 
 
-    @decl_endpoint('/api/rsforms/create-from-sandbox', method='post')
-    def test_create_rsform_from_sandbox_rejects_shared_library_for_non_staff(self):
+    @decl_endpoint('/api/rsforms/create-from-data', method='post')
+    def test_create_rsform_from_data_rejects_shared_library_for_non_staff(self):
         data = {
             'item_data': {
                 'title': 'Sandbox',

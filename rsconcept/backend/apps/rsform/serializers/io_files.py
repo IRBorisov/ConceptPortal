@@ -252,11 +252,11 @@ class RSFormTRSSerializer(serializers.Serializer):
             cst.term_forms = []
 
 
-class RSFormSandboxImportSerializer(StrictSerializer):
-    ''' Import data from sandbox bundle into a new RSForm. '''
+class RSFormCreateFromDataSerializer(StrictSerializer):
+    ''' Validate the data for a new RSForm. '''
 
     class ItemDataSerializer(StrictSerializer):
-        ''' Serializer: Item data for RSForm sandbox import. '''
+        ''' Library metadata for a new RSForm. '''
         title = serializers.CharField()
         alias = serializers.CharField()
         description = serializers.CharField(required=False, allow_blank=True, default='')
@@ -274,16 +274,17 @@ class RSFormSandboxImportSerializer(StrictSerializer):
             return value
 
     class SchemaDataSerializer(StrictSerializer):
-        ''' Serializer: Schema data for RSForm sandbox import. '''
+        ''' Constituents and attributions for a new RSForm. '''
 
         class ItemSerializer(StrictSerializer):
-            ''' Serializer: Item data for RSForm sandbox import. '''
+            ''' Library metadata for a new RSForm. '''
             id = serializers.IntegerField()
             alias = serializers.CharField(max_length=8)
             convention = serializers.CharField(required=False, allow_blank=True, default='')
             crucial = serializers.BooleanField(required=False, default=False)
             cst_type = serializers.ChoiceField(choices=CstType.choices)
             value_is_property = serializers.BooleanField(required=False, default=False)
+            typification_manual = serializers.CharField(required=False, allow_blank=True, default='')
             definition_formal = serializers.CharField(required=False, allow_blank=True, default='')
             definition_raw = serializers.CharField(required=False, allow_blank=True, default='')
             definition_resolved = serializers.CharField(required=False, allow_blank=True, default='')
@@ -292,7 +293,7 @@ class RSFormSandboxImportSerializer(StrictSerializer):
             term_forms = serializers.ListField(required=False, default=list)
 
         class AttributionDataSerializer(StrictSerializer):
-            ''' Serializer: Attribution data for RSForm sandbox import. '''
+            ''' An attribution between two supplied constituent IDs. '''
             container = serializers.IntegerField()
             attribute = serializers.IntegerField()
 
@@ -306,7 +307,7 @@ class RSFormSandboxImportSerializer(StrictSerializer):
     schema_data = SchemaDataSerializer()
 
     def validate(self, attrs):
-        ''' Validate sandbox location access, item ids, count, and attributions. '''
+        ''' Validate location access, item IDs, count, and attributions. '''
         attrs = super().validate(attrs)
         request = self.context.get('request')
         location = attrs['item_data'].get('location', LocationHead.USER)
@@ -338,7 +339,7 @@ class RSFormSandboxImportSerializer(StrictSerializer):
 
     @transaction.atomic
     def create(self, validated_data: dict) -> RSFormCached:
-        instance, _ = create_rsform_from_sandbox_data(
+        instance, _ = create_rsform_from_data(
             item_data=validated_data['item_data'],
             schema_data=validated_data['schema_data'],
             owner=self.context.get('owner')
@@ -346,13 +347,13 @@ class RSFormSandboxImportSerializer(StrictSerializer):
         return instance
 
 
-def create_rsform_from_sandbox_data(
+def create_rsform_from_data(
     *,
     item_data: dict,
     schema_data: dict,
     owner=None
 ) -> tuple[RSFormCached, dict[int, int]]:
-    ''' Create a new RSForm from sandbox payload and return imported id mapping. '''
+    ''' Create a new RSForm and return the constituent ID mapping. '''
     instance = RSFormCached.create(
         owner=owner,
         title=item_data['title'],

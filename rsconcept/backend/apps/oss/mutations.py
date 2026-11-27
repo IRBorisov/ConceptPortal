@@ -17,7 +17,10 @@ from rest_framework.request import Request
 
 from apps.library.models import AccessPolicy, Editor, LibraryItem
 from apps.rsform.models import Constituenta
-from apps.rsform.serializers.io_files import create_rsform_from_sandbox_data
+from apps.rsform.relativization import (
+    TEXT_FIELDS, calculate_projection, confirm_projection, draft_revision, parameters_from, require_valid_projection,
+)
+from apps.rsform.serializers.io_files import create_rsform_from_data
 from apps.users.models import User
 from shared import messages as msg
 from shared import permissions
@@ -26,10 +29,7 @@ from shared.concurrency import Conflict, assert_expected_time_update_locked
 from . import models as m
 from .propagation_batch import propagation_batch
 from .propagation_state import mark_schema
-from .relativization import (
-    TEXT_FIELDS, calculate_projection, confirm_projection, correspondence, draft_revision, parameters_from,
-    require_valid_projection,
-)
+from .relativization import correspondence
 from .relativization_refresh import prior_texts, refresh_projection
 
 
@@ -322,7 +322,7 @@ def create_relativization_operation(item: LibraryItem, validated: dict, request:
             existing_result.save(update_fields=['alias', 'title', 'description', 'time_update'])
             item.save(update_fields=['time_update'])
             return existing
-        result, id_map = create_rsform_from_sandbox_data(
+        result, id_map = create_rsform_from_data(
             item_data={
                 'alias': data['alias'],
                 'title': data['title'],

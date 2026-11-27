@@ -13,6 +13,7 @@ from apps.library.models import LibraryItem, LibraryItemType
 from apps.library.serializers import LibraryItemDetailsSerializer
 from apps.rsform.models import Constituenta
 from apps.rsform.serializers import SubstitutionSerializerBase
+from apps.rsform.serializers.relativization import RelativizationInputSerializer, RelativizationReviewSerializer
 from shared import messages as msg
 from shared import permissions
 from shared.serializers import StrictModelSerializer, StrictSerializer
@@ -340,15 +341,10 @@ class ImportSchemaSerializer(StrictSerializer):
         return attrs
 
 
-class RelativizationParametersSerializer(StrictSerializer):
+class RelativizationParametersSerializer(RelativizationInputSerializer):
     ''' Parameters of a reviewed projection, expressed as persistent constituent ids. '''
     existing_operation = PKField(queryset=Operation.objects.all(), required=False)
     source_operation = PKField(queryset=Operation.objects.all())
-    source_time_update = serializers.DateTimeField()
-    target = serializers.IntegerField(min_value=1)
-    excluded = serializers.ListField(child=serializers.IntegerField(min_value=1))
-    locale = serializers.ChoiceField(choices=['en', 'ru', 'fr'])
-    context_name = serializers.CharField(max_length=255)
 
     def validate(self, attrs):
         oss = cast(LibraryItem, self.context['oss'])
@@ -358,35 +354,13 @@ class RelativizationParametersSerializer(StrictSerializer):
         existing = attrs.get('existing_operation')
         if existing and (existing.oss_id != oss.pk or existing.operation_type != OperationType.RELATIVIZATION):
             raise serializers.ValidationError({'existing_operation': msg.operationNotInOSS()})
-        return attrs
+        return super().validate(attrs)
 
 
-class RelativizationTextSerializer(StrictSerializer):
-    ''' The reviewed text of one projected row. '''
-    id = serializers.IntegerField(min_value=1)
-    clarified = serializers.BooleanField(default=False)
-    term_raw = serializers.CharField(allow_blank=True, trim_whitespace=False)
-    definition_raw = serializers.CharField(allow_blank=True, trim_whitespace=False)
-    convention = serializers.CharField(allow_blank=True, trim_whitespace=False)
-
-
-class CreateRelativizationSerializer(CreateSchemaSerializer, RelativizationParametersSerializer):
+class CreateRelativizationSerializer(
+    CreateSchemaSerializer, RelativizationParametersSerializer, RelativizationReviewSerializer,
+):
     ''' Create a projection with generated or explicitly reviewed texts. '''
-    skip_review = serializers.BooleanField(default=False)
-    revision = serializers.CharField(min_length=64, max_length=64, required=False)
-    reviewed = serializers.ListField(child=serializers.IntegerField(min_value=1), required=False)
-    edits = RelativizationTextSerializer(many=True, required=False)
-
-    def validate(self, attrs):
-        validated = super().validate(attrs)
-        fields = ('revision', 'reviewed', 'edits')
-        if validated['skip_review']:
-            errors = {field: 'Omit this field when skipping text review.' for field in fields if field in validated}
-        else:
-            errors = {field: 'This field is required for text review.' for field in fields if field not in validated}
-        if errors:
-            raise serializers.ValidationError(errors)
-        return validated
 
 
 class CreateSynthesisSerializer(StrictSerializer):

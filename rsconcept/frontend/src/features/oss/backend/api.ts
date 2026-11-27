@@ -5,6 +5,7 @@ import equal from 'fast-deep-equal';
 import { globalTx } from '@/i18n';
 import { type LibraryItem, type OssLayout } from '@rsconcept/domain/library';
 
+import { type RelativizationDraftDTO, schemaRelativizationDraft } from '@/features/rsform';
 import { notifySchemaSync } from '@/features/rsform/backend/schema-sync';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
@@ -31,7 +32,6 @@ import {
   type MoveItemsDTO,
   type OperationCreatedResponse,
   type OperationSchemaDTO,
-  type RelativizationDraftDTO,
   type RelativizationParametersDTO,
   type RelocateConstituentsDTO,
   schemaBlockCreatedResponse,
@@ -39,7 +39,6 @@ import {
   schemaInputCreatedResponse,
   schemaOperationCreatedResponse,
   schemaOperationSchema,
-  schemaRelativizationDraft,
   type TargetOperation,
   type UpdateBlockDTO,
   type UpdateInputDTO,

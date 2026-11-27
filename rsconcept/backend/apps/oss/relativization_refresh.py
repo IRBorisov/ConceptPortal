@@ -4,12 +4,13 @@ from rest_framework.exceptions import ValidationError
 from apps.library.models import LibraryItem
 from apps.rsform.models import Attribution, Constituenta, CstType, RSForm, RSFormCached
 from apps.rsform.models.api_RSLanguage import get_type_prefix
+from apps.rsform.relativization import TEXT_FIELDS, calculate_projection, require_valid_projection
 from apps.rsform.utils import extract_entities, replace_entities, replace_globals
 
 from .models.Operation import Operation
 from .models.PropagationFacade import PropagationFacade
 from .propagation_state import mark_schema
-from .relativization import TEXT_FIELDS, calculate_projection, correspondence_key, require_valid_projection
+from .relativization import correspondence_key
 
 Match = tuple[dict, dict, dict, Constituenta | None]
 MUTABLE_FIELDS = (
