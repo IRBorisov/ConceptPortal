@@ -5,7 +5,6 @@ import equal from 'fast-deep-equal';
 import { globalTx } from '@/i18n';
 import { type LibraryItem, type OssLayout } from '@rsconcept/domain/library';
 
-import { type RelativizationDraftDTO, schemaRelativizationDraft } from '@/features/relativization';
 import { notifySchemaSync } from '@/features/rsform/backend/schema-sync';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
@@ -32,7 +31,6 @@ import {
   type MoveItemsDTO,
   type OperationCreatedResponse,
   type OperationSchemaDTO,
-  type RelativizationParametersDTO,
   type RelocateConstituentsDTO,
   schemaBlockCreatedResponse,
   schemaConstituentaReference,
@@ -219,22 +217,6 @@ export const ossApi = {
           return globalTx('tx.operation.create.success', { alias: alias ?? '?' });
         }
       }
-    }),
-  previewRelativization: ({
-    itemID,
-    data,
-    expectedTimeUpdate
-  }: {
-    itemID: number;
-    data: RelativizationParametersDTO;
-    expectedTimeUpdate: string;
-  }) =>
-    axiosPost<RelativizationParametersDTO, RelativizationDraftDTO>({
-      schema: schemaRelativizationDraft,
-      notifyOnError: false,
-      expectedTimeUpdate,
-      endpoint: `/api/oss/${itemID}/preview-relativization`,
-      request: { data }
     }),
   createRelativization: ({
     itemID,

@@ -128,6 +128,7 @@ export const schemaRSForm = schemaLibraryItem.extend({
 
   items: z.array(schemaConstituentaBasics),
   attribution: z.array(schemaAttribution),
+  projected: z.array(z.number()).optional(),
   inheritance: z.array(
     z.strictObject({
       child: z.number(),

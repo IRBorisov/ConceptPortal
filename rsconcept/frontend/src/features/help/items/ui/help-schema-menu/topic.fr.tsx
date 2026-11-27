@@ -116,8 +116,8 @@ export function HelpSchemaMenuFr() {
         </li>
         <li>
           <IconRelativization size='1.25rem' className='inline-icon' />{' '}
-          <LinkTopic text='Relativiser ce schéma' topic={HelpTopic.CC_RELATIVIZATION} /> et vérifier les textes avant de
-          créer un résultat autonome
+          <LinkTopic text='Relativiser ce schéma' topic={HelpTopic.CC_RELATIVIZATION} /> et ouvrir le résultat pour le
+          vérifier.
         </li>
         <li>
           <IconCstType value={CstType.NOMINAL} size='1.25rem' className='inline-icon' /> Activer la forme d'attribution

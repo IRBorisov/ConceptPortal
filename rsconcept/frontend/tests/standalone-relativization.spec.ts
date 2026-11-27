@@ -1,8 +1,5 @@
-import { type Page } from '@playwright/test';
 import { CstType } from '@rsconcept/domain/library';
-import { projectRelativization } from '@rsconcept/domain/library/relativization';
 
-import { schemaRelativizationInput } from '../src/features/relativization';
 import {
   type CreateStandaloneRelativizationDTO,
   schemaCreateStandaloneRelativization
@@ -39,24 +36,6 @@ function createdSchema(result: RSFormDTO) {
     time_update: result.time_update,
     owner: result.owner
   };
-}
-
-const previewRevision = 'a'.repeat(64);
-
-async function mockPreview(page: Page, source: RSFormDTO) {
-  await page.route(`${BACKEND_URL}/api/rsforms/${source.id}/preview-relativization`, route => {
-    const params = schemaRelativizationInput.parse(route.request().postDataJSON());
-    const projection = projectRelativization(
-      { items: source.items, attribution: source.attribution },
-      {
-        target: params.target,
-        excluded: params.excluded,
-        locale: params.locale,
-        contextName: params.context_name
-      }
-    );
-    return route.fulfill({ json: { ...projection, revision: previewRevision, prior: [] } });
-  });
 }
 
 test('keeps the relativization fields in their columns with a long selected term', async ({ page }) => {
@@ -129,7 +108,7 @@ test('opens relativization help from the schema dialog and follows a term link',
   await expect(alias).toHaveValue('VerticesByContext');
 });
 
-test('offers French proposals for a French source in the Russian interface', async ({ page }) => {
+test('submits the source language for a French schema in the Russian interface', async ({ page }) => {
   const source = createRSFormMock(354, 'Граф');
   source.items = [
     {
@@ -140,7 +119,6 @@ test('offers French proposals for a French source in the Russian interface', asy
     }
   ];
   dataRSForms.set(source.id, source);
-  await mockPreview(page, source);
 
   await page.goto(`/rsforms/${source.id}`, { waitUntil: 'domcontentloaded' });
   await page.getByRole('button', { name: 'Редактирование' }).click();
@@ -154,27 +132,13 @@ test('offers French proposals for a French source in the Russian interface', asy
   await expect(context).toHaveAttribute('placeholder', 'Имя семейства');
   await context.fill('contexte');
   await dialog.getByRole('textbox', { name: 'Сокращение' }).fill('GrapheContexte');
-  await dialog.getByRole('button', { name: 'Проверить тексты' }).press('Enter');
-  await expect(dialog.getByRole('heading', { name: 'Проверка текстов' })).toBeFocused();
-
-  const axis = dialog.locator('details').filter({ hasText: 'X1 → S1' });
-  await axis.locator(':scope > summary').press('Enter');
-  const term = axis.getByRole('textbox', { name: 'Термин', exact: true });
-  await expect(term).toHaveValue('contexte');
-  await expect(term).toHaveAttribute('lang', 'fr');
-  await page.setViewportSize({ width: 360, height: 640 });
-  const original = axis.getByText('sommets', { exact: true });
-  await expect
-    .poll(async () => {
-      const before = await original.boundingBox();
-      const after = await term.boundingBox();
-      return before !== null && after !== null && after.y >= before.y + before.height;
-    })
-    .toBe(true);
-  await expect(dialog).toBeInViewport({ ratio: 1 });
-  await dialog.getByRole('button', { name: 'К параметрам' }).press('Enter');
+  const endpoint = BACKEND_URL + '/api/rsforms/' + source.id + '/create-relativization';
+  await page.route(endpoint, route => route.fulfill({ status: 400, json: { detail: 'Test validation.' } }));
+  const submitted = waitForApiResponse(page, { url: endpoint, method: 'POST', ok: false });
+  await dialog.getByRole('button', { name: 'Создать', exact: true }).click();
+  expect((await submitted).request().postDataJSON()).toMatchObject({ locale: 'fr', context_name: 'contexte' });
+  await expect(dialog.getByRole('alert')).toHaveText('Test validation.');
   const target = dialog.getByRole('combobox', { name: 'Фокус релятивизации' });
-  await expect(target).toBeFocused();
   await expect(dialog).toHaveAttribute('aria-modal', 'true');
   const cancel = dialog.getByRole('button', { name: 'Отмена' });
   await cancel.press('Tab');
@@ -219,29 +183,23 @@ test('uses the dialog focus when another constituent is selected in the schema',
   await page.getByRole('button', { name: 'Создать самостоятельную КС релятивизацией' }).click();
   const dialog = page.getByRole('dialog', { name: 'Релятивизация' });
   await page.setViewportSize({ width: 360, height: 640 });
-  const create = dialog.getByRole('button', { name: 'Создать без проверки' });
-  const review = dialog.getByRole('button', { name: 'Проверить тексты' });
+  const create = dialog.getByRole('button', { name: 'Создать', exact: true });
   const target = dialog.getByRole('combobox', { name: 'Фокус релятивизации' });
   await expect(target).toBeFocused();
   await expect(target).toHaveText('Фокус релятивизации');
   await dialog.getByRole('textbox', { name: 'Название' }).fill(result.title);
   await dialog.getByRole('textbox', { name: 'Сокращение' }).fill('Relative');
   await expect(create).toBeDisabled();
-  await expect(review).toBeDisabled();
   await target.press('Enter');
   await page.getByRole('button', { name: /^X1/ }).click();
   const context = dialog.getByRole('textbox', { name: 'Имя семейства' });
   await expect(context).toHaveValue('');
   await expect(create).toBeDisabled();
-  await expect(review).toBeDisabled();
   await context.fill('   ');
   await expect(create).toBeDisabled();
-  await expect(review).toBeDisabled();
   await context.fill('  группа  ');
   await expect(create).toBeEnabled();
-  await expect(review).toBeEnabled();
   await expect(create).toBeInViewport();
-  await expect(review).toBeInViewport();
   await expect(dialog.getByRole('button', { name: 'Отмена' })).toBeInViewport();
 
   const saved = waitForApiResponse(page, { url: endpoint, method: 'POST' });
@@ -253,13 +211,14 @@ test('uses the dialog focus when another constituent is selected in the schema',
   expect(submission).toMatchObject({
     target: 11,
     source_time_update: source.time_update,
-    context_name: 'группа',
-    skip_review: true
+    context_name: 'группа'
   });
   expect(submission).not.toHaveProperty('schema_data');
 });
 
-test('relativizes a schema from its editing menu and keeps reviewed text after a rejected save', async ({ page }) => {
+test('relativizes a schema from its editing menu and keeps operation parameters after a rejected save', async ({
+  page
+}) => {
   const source = createRSFormMock(351, 'Вершины');
   source.items = [
     {
@@ -273,7 +232,6 @@ test('relativizes a schema from its editing menu and keeps reviewed text after a
   const result = createRSFormMock(352, 'Релятивизированные вершины');
   dataRSForms.set(source.id, source);
   dataRSForms.set(result.id, result);
-  await mockPreview(page, source);
   await page.route('**/api/cctext/inflect', route => route.fulfill({ json: { result: 'вершин' } }));
   const endpoint = `${BACKEND_URL}/api/rsforms/${source.id}/create-relativization`;
   const submissions: CreateStandaloneRelativizationDTO[] = [];
@@ -294,37 +252,20 @@ test('relativizes a schema from its editing menu and keeps reviewed text after a
   await page.getByRole('button', { name: /^X1.*Вершины/ }).click();
   await dialog.getByRole('textbox', { name: 'Имя семейства' }).fill('группа');
   await dialog.getByLabel('Сокращение').fill('Relative');
-  await dialog.getByRole('button', { name: 'Проверить тексты' }).click();
-
-  const axis = dialog.locator('details').filter({ hasText: 'X1 → S1' });
-  const confirm = dialog.getByRole('button', { name: 'Подтвердить тексты и создать КС' });
-  await expect(confirm).toBeDisabled();
-  await dialog.locator('summary').filter({ hasText: 'X1 → X1' }).click();
-  await axis.locator(':scope > summary').click();
-  const edited = 'Согласованный текст контекста.';
-  const convention = axis.getByLabel('Конвенция');
-  await convention.fill(edited);
-  await expect(confirm).toBeEnabled();
-  await dialog.getByRole('button', { name: 'К параметрам' }).click();
-  await expect(dialog.getByText('Чтобы сохранить правки текстов, вернитесь к проверке.')).toBeVisible();
-  await dialog.getByRole('button', { name: 'Проверить тексты' }).click();
-  await axis.locator(':scope > summary').click();
-  await expect(convention).toHaveValue(edited);
+  const create = dialog.getByRole('button', { name: 'Создать', exact: true });
+  const context = dialog.getByRole('textbox', { name: 'Имя семейства' });
   const rejected = waitForApiResponse(page, { url: endpoint, method: 'POST', ok: false });
-  await confirm.click();
+  await create.click();
   expect((await rejected).status()).toBe(409);
   await expect(dialog).toBeVisible();
   await expect(dialog.getByRole('alert')).toHaveText('Повторите запись.');
-  await expect(convention).toHaveValue(edited);
+  await expect(context).toHaveValue('группа');
 
   const saved = waitForApiResponse(page, { url: endpoint, method: 'POST' });
   const opened = waitForAppURL(page, new RegExp(`/rsforms/${result.id}(?:[/?]|$)`));
-  await confirm.click();
+  await create.click();
   await Promise.all([saved, opened]);
   expect(submissions).toHaveLength(2);
-  expect(submissions[1]).toMatchObject({
-    revision: previewRevision,
-    edits: [expect.objectContaining({ convention: edited })]
-  });
+  expect(submissions[1]).toEqual(submissions[0]);
   expect(submissions[1]).not.toHaveProperty('schema_data');
 });

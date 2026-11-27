@@ -23,8 +23,8 @@ export const createRelativizationContentFr: Record<string, TourStepContent> = {
     title: 'Titre et résultat',
     body: (
       <p>
-        Vérifiez le titre et indiquez une abréviation. Choisissez « Créer sans vérification » pour utiliser les textes
-        proposés ou « Vérifier les textes » pour les modifier.
+        Vérifiez le titre et indiquez une abréviation. Cliquez sur « Créer ». Vérifiez les textes dans le schéma
+        résultant.
       </p>
     )
   }

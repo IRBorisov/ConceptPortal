@@ -5,11 +5,6 @@ import { globalTx } from '@/i18n';
 import { type Attribution, type LibraryItem, type RSForm } from '@rsconcept/domain/library';
 
 import { schemaLibraryItem } from '@/features/library';
-import {
-  type RelativizationDraftDTO,
-  type RelativizationParametersDTO,
-  schemaRelativizationDraft
-} from '@/features/relativization';
 
 import { axiosGet, axiosPatch, axiosPost } from '@/backend/api-transport';
 import { DELAYS, KEYS } from '@/backend/configuration';
@@ -85,14 +80,6 @@ export const rsformsApi = {
       enabled: !!itemID
     });
   },
-
-  previewRelativization: ({ itemID, data }: { itemID: number; data: RelativizationParametersDTO }) =>
-    axiosPost<RelativizationParametersDTO, RelativizationDraftDTO>({
-      schema: schemaRelativizationDraft,
-      endpoint: `/api/rsforms/${itemID}/preview-relativization`,
-      notifyOnError: false,
-      request: { data }
-    }),
 
   createRelativization: ({ itemID, data }: { itemID: number; data: CreateStandaloneRelativizationDTO }) =>
     axiosPost<CreateStandaloneRelativizationDTO, LibraryItem>({

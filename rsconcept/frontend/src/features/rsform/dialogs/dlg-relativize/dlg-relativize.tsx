@@ -11,25 +11,12 @@ import { type Constituenta, CstType } from '@rsconcept/domain/library';
 
 import { useConceptNavigation } from '@/app';
 import { notifyLibrarySync } from '@/features/library/backend/library-sync';
-import { type RelativizationParametersDTO } from '@/features/relativization';
 import {
   getRelativizationExclusions,
   RelativizationParameterFields,
   RelativizationResultFields
 } from '@/features/relativization/components/parameter-fields';
-import {
-  type RelativizationAction,
-  RelativizationDialog
-} from '@/features/relativization/components/relativization-dialog';
-import { ReviewRelativizationTexts } from '@/features/relativization/components/review-texts';
-import {
-  canConfirmReview,
-  hasEditedReviewTexts,
-  hasReviewEdits,
-  isReviewed,
-  prepareReview,
-  type ReviewRow
-} from '@/features/relativization/models/review';
+import { RelativizationDialog } from '@/features/relativization/components/relativization-dialog';
 import { getRelativizationLocale } from '@/features/relativization/models/source-locale';
 
 import { KEYS } from '@/backend/configuration';
@@ -72,10 +59,7 @@ export function DlgRelativize() {
   const [alias, setAlias] = useState('');
   const [description, setDescription] = useState('');
   const [contextName, setContextName] = useState('');
-  const [draft, setDraft] = useState<{ parameters: RelativizationParametersDTO; revision: string } | null>(null);
-  const [rows, setRows] = useState<ReviewRow[]>([]);
-  const [reviewing, setReviewing] = useState(false);
-  const [pending, setPending] = useState<RelativizationAction | null>(null);
+  const [pending, setPending] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const pendingRef = useRef(false);
 
@@ -105,8 +89,6 @@ export function DlgRelativize() {
   const title = manualTitle ?? defaultTitle;
   const canPrepare =
     !!source && !!target && !!familyName && !!alias.trim() && !!title.trim() && !(useInflection && formQuery.isLoading);
-  const sourceChanged = draft !== null && draft.parameters.source_time_update !== source?.time_update;
-  const canConfirm = draft !== null && !sourceChanged && canConfirmReview(rows);
 
   function changeTarget(item: Constituenta | null) {
     setTargetID(item?.id ?? null);
@@ -117,40 +99,23 @@ export function DlgRelativize() {
     setExcludedIDs(previous => (checked ? [...previous, id] : previous.filter(item => item !== id)));
   }
 
-  async function submit(action: RelativizationAction) {
-    if (pendingRef.current || !canPrepare || !source || !target || (reviewing && !canConfirm)) return;
+  async function submit() {
+    if (pendingRef.current || !canPrepare || !source || !target) return;
     pendingRef.current = true;
-    setPending(action);
+    setPending(true);
     setErrorMessage('');
     try {
-      const reviewedDraft = reviewing ? draft : null;
-      const parameters = reviewedDraft?.parameters ?? {
+      const parameters = {
         source_time_update: source.time_update,
         target: target.id,
         excluded: exclusionOptions.filter(item => excludedIDs.includes(item.id)).map(item => item.id),
         locale,
         context_name: familyName
       };
-      if (action === 'preview') {
-        const projection = await rsformsApi.previewRelativization({ itemID: schemaID, data: parameters });
-        setRows(previous => prepareReview(projection, previous));
-        setDraft({ parameters, revision: projection.revision });
-        setReviewing(true);
-        return;
-      }
       const result = await create.mutateAsync({
         itemID: schemaID,
         data: {
           ...parameters,
-          ...(reviewedDraft
-            ? {
-                revision: reviewedDraft.revision,
-                reviewed: rows.filter(isReviewed).map(row => row.item.id),
-                edits: rows
-                  .filter(hasReviewEdits)
-                  .map(row => ({ id: row.item.id, clarified: row.clarified, ...row.fields }))
-              }
-            : { skip_review: true }),
           item_data: { title: title.trim(), alias: alias.trim(), description: description.trim() }
         }
       });
@@ -163,31 +128,19 @@ export function DlgRelativize() {
       }
     } finally {
       pendingRef.current = false;
-      setPending(null);
-    }
-  }
-
-  function handleSecondaryAction() {
-    if (reviewing) {
-      setErrorMessage('');
-      setReviewing(false);
-    } else {
-      void submit('preview');
+      setPending(false);
     }
   }
 
   return (
     <RelativizationDialog
-      reviewing={reviewing}
       pending={pending}
-      canSubmit={canPrepare && (!reviewing || canConfirm)}
-      hasEditedTexts={hasEditedReviewTexts(rows)}
+      canSubmit={canPrepare}
       errorMessage={errorMessage}
       returnFocusTo={returnFocusTo}
       beforeCancel={() => !pendingRef.current}
       onHide={hideDialog}
-      onSubmit={() => void submit('save')}
-      onSecondaryAction={handleSecondaryAction}
+      onSubmit={() => void submit()}
     >
       {sourceQuery.isPending ? <Loader /> : null}
       {sourceQuery.isError && !source ? (
@@ -195,18 +148,8 @@ export function DlgRelativize() {
           {tx('tx.oss.relativization.source.fail')}
         </p>
       ) : null}
-      {reviewing ? (
-        <>
-          {sourceChanged ? <p role='alert'>{tx('tx.oss.relativization.review.stale')}</p> : null}
-          <ReviewRelativizationTexts
-            rows={rows}
-            onChange={row => setRows(current => current.map(item => (item.item.id === row.item.id ? row : item)))}
-            disabled={!!pending}
-            locale={locale}
-          />
-        </>
-      ) : schema ? (
-        <fieldset className='grid min-w-0 gap-4 py-3' disabled={!!pending}>
+      {schema ? (
+        <fieldset className='grid min-w-0 gap-4 py-3' disabled={pending}>
           <RelativizationParameterFields
             targets={targetOptions}
             target={target}

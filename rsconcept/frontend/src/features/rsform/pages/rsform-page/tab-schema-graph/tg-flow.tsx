@@ -352,7 +352,7 @@ export function TGFlow() {
     const sourceCst = schema.cstByID.get(sourceID)!;
     const targetCst = schema.cstByID.get(targetID)!;
     if (effectiveConnectionType === TGEdgeType.definition) {
-      if (targetCst.is_inherited) {
+      if (targetCst.is_inherited || targetCst.is_projected) {
         toast.error(tx('tx.concept.inherited.definition.readOnly'));
         return;
       }

@@ -17,6 +17,7 @@ export function loadRSForm(data: RSFormDTO) {
 /** Loads data into an {@link RSForm} based on {@link RSFormDTO}. */
 export class RSFormLoader {
   private schema: RSForm;
+  private projected: Set<number>;
   private graph: Graph = new Graph();
   private association_graph: Graph = new Graph();
   private cstByAlias = new Map<string, Constituenta>();
@@ -26,6 +27,7 @@ export class RSFormLoader {
   constructor(input: RSFormDTO) {
     this.schema = structuredClone(input) as unknown as RSForm;
     this.schema.version = input.version ?? 'latest';
+    this.projected = new Set(input.projected);
   }
 
   produceRSForm(): RSForm {
@@ -81,6 +83,7 @@ export class RSFormLoader {
       cst.parent_schema = schemaByCst.get(cst.id) ?? null;
       cst.parent_schema_index = cst.parent_schema ? parents.indexOf(cst.parent_schema) + 1 : 0;
       cst.is_inherited = inherit_children.has(cst.id);
+      cst.is_projected = this.projected.has(cst.id);
       cst.has_inherited_children = inherit_parents.has(cst.id);
     }
     for (const attrib of this.schema.attribution) {

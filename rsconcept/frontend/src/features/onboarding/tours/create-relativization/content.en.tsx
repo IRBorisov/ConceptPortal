@@ -21,11 +21,6 @@ export const createRelativizationContentEn: Record<string, TourStepContent> = {
   },
   result: {
     title: 'Title and result',
-    body: (
-      <p>
-        Check the title and enter an alias. Select “Create without review” to use the generated texts, or “Review texts”
-        to edit them first.
-      </p>
-    )
+    body: <p>Check the title and enter an alias. Select “Create”. Check the texts in the resulting schema.</p>
   }
 };

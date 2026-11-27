@@ -46,7 +46,7 @@ export function RelativizationParameterFields({
   }, []);
   const count = exclusions.filter(item => excludedIDs.includes(item.id)).length;
   const targetLabel = tx('tx.oss.relativization.target.focus');
-  const contextLabel = tx('tx.oss.relativization.review.context.name');
+  const contextLabel = tx('tx.oss.relativization.context.name');
   if (!targets.length) {
     return <NoData className='text-sm text-foreground/75'>{tx('tx.oss.relativization.target.empty')}</NoData>;
   }
