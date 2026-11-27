@@ -334,12 +334,12 @@ export function projectRelativization(
       beforeType !== afterType ||
       Object.entries(old).some(([field, value]) => proposed[field as keyof ProposalFields] !== value) ||
       (!!original && original.definition_formal !== pending.definition_formal);
+    const generatedCallable = row.role === 'accessor' || row.role === 'predicate';
     const losesComputability =
       computed.analysis.valueClass === null &&
-      (row.role === 'accessor' || (changedMeaning && original?.analysis.valueClass != null));
+      (generatedCallable || (changedMeaning && original?.analysis.valueClass != null));
     const failsAnalysis =
-      !computed.analysis.success &&
-      (row.role === 'accessor' || (changedMeaning && original?.analysis.success === true));
+      !computed.analysis.success && (generatedCallable || (changedMeaning && original?.analysis.success === true));
     return {
       id: pending.id,
       origin: row.origin,

@@ -2,7 +2,7 @@
 from .models.Inheritance import Inheritance
 from .models.Relativization import RelativizationRow
 
-ARTIFACT_ROLES = {'carrier', 'accessor'}
+ARTIFACT_ROLES = {'carrier', 'predicate', 'accessor'}
 TRANSFORMED_ROLES = {'preserved', 'family', 'callable', 'condition'}
 
 

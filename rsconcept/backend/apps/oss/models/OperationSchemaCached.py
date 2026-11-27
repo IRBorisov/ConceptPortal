@@ -8,7 +8,7 @@ from rest_framework.exceptions import ValidationError
 from apps.library.models import LibraryItem
 from apps.rsform.models import Attribution, Constituenta, CstType, OrderManager, RSFormCached
 
-from ..propagation_state import mark_schema
+from ..propagation_state import mark_schema, touch_schema
 from .Argument import Argument
 from .Inheritance import Inheritance
 from .Operation import Operation, OperationType
@@ -355,6 +355,7 @@ class OperationSchemaCached:
             original_cst = schema.cache.by_id[original_id]
             substitution_cst = schema.cache.by_id[substitution_id]
             cst_mapping.append((original_cst, substitution_cst))
+        touch_schema(schema.pk)
         self.before_substitute(schema.pk, cst_mapping)
         schema.substitute(cst_mapping)
         for sub in added:

@@ -323,7 +323,7 @@ class TestOssOperations(EndpointTester):
         self.assertEqual(new_operation.relativization.passport['target'], {'alias': 'X1', 'term': 'X1_1'})
         self.assertIn({'nodeID': f'o{new_operation.pk}', **data['position']}, response.data['oss']['layout'])
         axis_result = new_operation.relativization.rows.get(role='axis').result
-        self.assertEqual(axis_result.term_raw, data['context_name'])
+        self.assertEqual(axis_result.term_raw, 'X1_1 (context)')
         convention = 'A local convention.'
         definition = 'Local definition'
         edited = self.client.patch(f'/api/rsforms/{new_operation.result_id}/update-cst', {
@@ -365,7 +365,7 @@ class TestOssOperations(EndpointTester):
         new_operation.refresh_from_db()
         axis_result.refresh_from_db()
         self.assertEqual(new_operation.relativization.parameters['locale'], 'fr')
-        self.assertEqual(axis_result.term_raw, 'contexte')
+        self.assertEqual(axis_result.term_raw, 'X1_1 (contexte)')
         self.assertEqual(axis_result.convention, convention)
         self.assertEqual(axis_result.definition_raw, definition)
 
