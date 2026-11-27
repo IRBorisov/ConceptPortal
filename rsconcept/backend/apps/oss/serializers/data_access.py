@@ -41,9 +41,10 @@ class OperationSerializer(StrictModelSerializer):
         relativization = getattr(instance, 'relativization', None)
         if relativization is None:
             return None
+        passport: dict = relativization.passport
         if relativization.parameters:
-            return relativization.passport | {'parameters': relativization.parameters}
-        return relativization.passport or None
+            return passport | {'parameters': relativization.parameters}
+        return passport or None
 
     def to_representation(self, instance: Operation):
         data = super().to_representation(instance)
@@ -666,7 +667,9 @@ class OperationSchemaSerializer(StrictModelSerializer):
         result['arguments'] = []
         result['substitutions'] = []
         result['replicas'] = []
-        operations = list(Operation.objects.filter(oss=instance).select_related('result', 'relativization').order_by('pk'))
+        operations = list(
+            Operation.objects.filter(oss=instance).select_related('result', 'relativization').order_by('pk')
+        )
         request = self.context.get('request')
         reader = request.user if request is not None else AnonymousUser()
         blocked = permissions.unreadable_derived_schema_ids(reader)
