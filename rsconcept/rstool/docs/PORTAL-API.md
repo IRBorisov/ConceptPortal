@@ -1,6 +1,6 @@
 # Portal REST API
 
-Указатель. Portal — веб-приложение для КС, ОСС и моделей; `rstool` с REST не работает, агент получает JSON отдельно.
+ConceptPortal предоставляет REST API для КС, ОСС и моделей. В Node.js его можно вызвать через `PortalClient` из `@rsconcept/rstool/portal`. Данные КС или КМ загружаются в сессию отдельным вызовом `RSToolAgent.importData`. [Пример клиента](../README.md#read-portal-through-rest)
 
 | Задача                                                         | Файл                                   |
 | :------------------------------------------------------------- | :------------------------------------- |
@@ -13,19 +13,24 @@
 
 «Папки» библиотеки задаются полем `location` элементов. Создание КС сразу с нужным путём описано в [PORTAL-PUBLISH.md](PORTAL-PUBLISH.md) §«Новая КС»; отдельной операции создания папки не требуется.
 
-## Маршруты агентов (`/api/agents`, Bearer API-ключ)
+## Маршруты агентов (`/api/agents`)
+
+Доступ к публичным объектам проверяется анонимно. Для закрытого доступа REST-клиент использует API-ключ, а настроенный MCP-хост может действовать по отдельному полномочию Portal. [Правила доступа](PORTAL-READ.md#доступ)
 
 | Метод | Путь                                           | Назначение                                       |
 | ----- | ---------------------------------------------- | ------------------------------------------------ |
 | POST  | `/api/agents/rsforms/:id/description`           | Только описание с CAS по `expected_time_update`   |
-| GET   | `/api/agents/me`                               | Несекретные id и имя владельца ключа              |
-| POST  | `/api/agents/rsforms/:id/publish`               | Замена с проверкой версии базы и снимком, owner/staff |
+| GET   | `/api/agents/me`                               | ID и имя владельца, права и срок действия        |
+| GET   | `/api/agents/capabilities`                     | Поддержка серверных квитанций (`mutation_receipts: 1`) |
+| GET   | `/api/agents/library/:id/access`               | Метаданные доступного объекта, право правки и публикации |
+| GET   | `/api/agents/receipts/:operation`               | Квитанция по `Idempotency-Key` и текущим правам чтения |
+| POST  | `/api/agents/rsforms/:id/publish`               | Замена по редакции с атомарным снимком, owner/staff |
 | GET   | `/api/agents/library/active`                   | Метаданные доступных объектов                    |
 | GET   | `/api/agents/library/context-search`           | Поиск (те же query-параметры)                    |
 | GET   | `/api/agents/library/by-ids`                   | Метаданные по id                                 |
 | PATCH | `/api/agents/library/:id/set-location`         | Расположение (владелец или staff)                |
 | PATCH | `/api/agents/library/:id/set-access-policy`    | Политика доступа (владелец или staff)            |
-| POST  | `/api/agents/rsforms`                          | Создать пустую КС с `location`, затем загрузить содержимое |
+| POST  | `/api/agents/rsforms`                          | Создать КС с `location` и необязательным содержимым в `schema` |
 | GET   | `/api/agents/rsforms/:id/details`              | Полная КС                                        |
 | PATCH | `/api/agents/rsforms/:id/replace`              | Загрузить содержимое в собственную пустую КС |
 | POST  | `/api/agents/rsforms/:id/create-version`       | Снимок версии (owner/staff)                      |
@@ -45,4 +50,4 @@
 
 ## Репозиторий Portal
 
-Исходники: [github.com/IRBorisov/ConceptPortal](https://github.com/IRBorisov/ConceptPortal) — backend `rsconcept/backend` (`apps.agents` — ключи и маршруты `/api/agents`), frontend `rsconcept/frontend`.
+Маршруты реализованы в `rsconcept/backend/apps/agents`. Поля записи, значения `:operation` и формат квитанций описаны в [PORTAL-PUBLISH.md](PORTAL-PUBLISH.md).

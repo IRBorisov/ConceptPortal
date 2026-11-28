@@ -2,5 +2,9 @@
 
 from .AgentActionLog import AgentActionLog
 from .AgentLogCleanup import AgentLogCleanup
+from .AgentMcpGrant import AgentMcpGrant
+from .AgentMutationReceipt import AgentMutationReceipt
 from .AgentRateState import AgentRateState
 from .ApiKey import KEY_PREFIX, ApiKey, generate_api_key_token, hash_api_key
+
+AGENT_CREDENTIAL_TYPES = (ApiKey, AgentMcpGrant)

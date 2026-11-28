@@ -1,6 +1,6 @@
 # @rsconcept/rstool
 
-Agent-facing library for **incremental RSForm construction**, **RSLang expression analysis**, **diagnostics**, **modeling**, and **evaluation**. It wraps [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) with a deterministic session contract and a stdio JSON wrapper for LLM agents. MCP hosts can use it through [`@rsconcept/rstool-mcp`](https://www.npmjs.com/package/@rsconcept/rstool-mcp).
+Agent-facing library for **incremental RSForm construction**, **RSLang expression analysis**, **diagnostics**, **modeling**, and **evaluation**. It wraps [`@rsconcept/domain`](https://www.npmjs.com/package/@rsconcept/domain) with a deterministic session contract, available through the library, stdio and HTTP RPC. MCP clients use the separate [`@rsconcept/rstool-mcp`](https://www.npmjs.com/package/@rsconcept/rstool-mcp) adapter.
 
 **Contract version:** `4.1.0` — see [skills/rstool-runtime/REFERENCE.md](./skills/rstool-runtime/REFERENCE.md) for the full v4 API.
 
@@ -58,6 +58,42 @@ const session = await client.call<{ sessionId: string }>('createSession');
 await client.close();
 ```
 
+## HTTP and Portal REST
+
+### Start the rstool RPC service
+
+The `rstool-http` bin ships with rstool 3.3.0. From a project with the package installed, set `RSTOOL_RPC_TOKEN_FILE` to a private file containing a random bearer token of 32–4096 non-whitespace characters and `RSTOOL_RPC_PROJECT` to a project ID. The ID starts with an ASCII letter or digit and can contain up to 64 letters, digits, dots, underscores or hyphens. Then run `npx --no-install rstool-http`. It listens on `127.0.0.1:8788`, with the port configurable via `RSTOOL_RPC_PORT`.
+
+`GET /v1/contract` lists the operations and JSON envelope schemas. Send a session export with each CLI request that needs prior state. A shared deployment can use `createRSToolRpcServer` from `@rsconcept/rstool/http` with its own credential verifier and a private agent per authenticated subject and project. Computations run in-process. Use this service with trusted callers, and terminate TLS at the gateway for remote access. [HTTP RPC contract](skills/rstool-runtime/REFERENCE.md#http-api-rstool)
+
+This Python example sends `session.json` from the current directory to the default local port.
+
+```python
+import json
+import os
+from pathlib import Path
+from urllib.request import Request, urlopen
+
+token = Path(os.environ['RSTOOL_RPC_TOKEN_FILE']).read_text(encoding='utf-8').strip()
+data = json.dumps({'id': 1, 'method': 'listDiagnostics',
+                   'state': {'session': Path('session.json').read_text(encoding='utf-8')}}).encode()
+request = Request('http://127.0.0.1:8788/v1/rpc', data=data,
+                  headers={'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'})
+with urlopen(request, timeout=20) as response:
+    print(json.load(response))
+```
+
+### Read Portal through REST
+
+```ts
+import { PortalClient } from '@rsconcept/rstool/portal';
+
+const portal = new PortalClient('https://api.portal.acconcept.ru');
+const metadata = await portal.getAccess(856, { anonymous: true });
+```
+
+Supply a trusted `credential` callback for protected operations. `getDetails` loads full schema, model or OSS data for import. The REST API is provided by ConceptPortal, and the instance serves its OpenAPI document at `/schema`. [Portal REST map](docs/PORTAL-API.md)
+
 ## Scope
 
 - Session-based incremental editing of constituents.
@@ -79,7 +115,7 @@ On resume, an unsafe ID in an existing `_current.json` is treated as an absent p
 
 ## Publishing
 
-Maintainers: see [PUBLISHING.md](./PUBLISHING.md) for npm release steps.
+The npm release checklist lives in the repository. [PUBLISHING.md](https://github.com/IRBorisov/ConceptPortal/blob/main/rsconcept/rstool/PUBLISHING.md)
 
 ## Stdio protocol
 
@@ -192,4 +228,4 @@ Evaluation and recalculation now return `statusName` alongside numeric `status`.
 
 `@rsconcept/rstool/hosting` exports `HostedRSToolAgent` and `ExecutionSnapshot` for transport hosts. Capture only invocation source sessions, seed a transient in-memory agent, then commit its completed snapshot through the original authoritative agent. The commit compares all sources and the original selection before changing one session, preserving lifecycle, quota and atomic persistence rules. This is a trusted integration API, not an additional language method or a remote snapshot/filename input.
 
-The optional storage lifecycle hook `beforeWrite(sessionId, serializedBytes)` can reject a serialized envelope before persistence or cache publication. A rejected write preserves the previous model. Plain library/stdio usage has no default byte or computation cap. The HTTP host supplies those limits and owns child process cancellation; see its HTTP guide.
+The optional storage lifecycle hook `beforeWrite(sessionId, serializedBytes)` can reject a serialized envelope before persistence or cache publication. A rejected write preserves the previous model. The MCP Streamable HTTP host supplies storage and computation limits and owns child-process cancellation. The standalone rstool RPC service bounds its HTTP payloads and runs computations in-process. [MCP HTTP service](https://github.com/IRBorisov/ConceptPortal/blob/main/rsconcept/rstool-mcp/HTTP.md)

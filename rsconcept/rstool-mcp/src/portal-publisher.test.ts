@@ -6,7 +6,7 @@ import path from 'node:path';
 import { RSToolAgent } from '@rsconcept/rstool';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { PortalClient } from './portal-client';
+import { PortalClient } from '@rsconcept/rstool/portal';
 import { PortalPublisher } from './portal-publisher';
 import { PortalVault } from './portal-vault';
 

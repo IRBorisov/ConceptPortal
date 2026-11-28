@@ -5,9 +5,11 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic.base import TemplateView
 from drf_spectacular.views import SpectacularAPIView
+from apps.agents.views.oauth import authorization_metadata
 from project.docs_views import SafeRedocView, SafeSwaggerView
 
 urlpatterns = [
+    path('.well-known/oauth-authorization-server', authorization_metadata),
     path('admin', admin.site.urls),
     path('api/', include('apps.library.urls')),
     path('api/', include('apps.rsform.urls')),

@@ -11,7 +11,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from apps.library.models import LibraryItem, LibraryItemType, LocationHead
-from apps.library.serializers import LibraryItemCreateSerializer, VersionCreateSerializer
+from apps.library.serializers import LibraryItemBaseSerializer, LibraryItemCreateSerializer, VersionCreateSerializer
 from apps.rsform import models as rs_models
 from apps.rsform import serializers as rs_serializers
 from apps.rsform.mutations import (
@@ -19,10 +19,24 @@ from apps.rsform.mutations import (
     delete_constituents,
     import_empty_schema,
     move_constituents,
+    replace_schema_content,
     substitute_constituents,
     update_constituenta,
 )
-from .base import AgentItemView
+from .base import IDEMPOTENCY_PARAMETER, AgentItemView
+
+
+class AgentRsformCreateSerializer(LibraryItemBaseSerializer):
+    ''' Accept an optional full schema alongside new library metadata. '''
+    schema = rs_serializers.RSFormImportJsonSerializer(required=False, write_only=True)
+
+    class Meta(LibraryItemCreateSerializer.Meta):
+        ''' Preserve the library's owner and timestamp restrictions on creation. '''
+
+    def create(self, validated_data):
+        ''' Save library metadata, leaving nested schema contents to the caller. '''
+        validated_data.pop('schema', None)
+        return super().create(validated_data)
 
 
 class AgentRsformBase(AgentItemView):
@@ -44,30 +58,37 @@ class AgentRsformBase(AgentItemView):
 
 @extend_schema(
     tags=['Agents'],
-    summary='Create RSForm library item',
-    request=LibraryItemCreateSerializer,
+    summary='Create an empty or initialized RSForm library item',
+    request=AgentRsformCreateSerializer,
+    parameters=[IDEMPOTENCY_PARAMETER],
     responses={c.HTTP_201_CREATED: rs_serializers.RSFormParseSerializer},
 )
 class AgentRsformCreateView(AgentRsformBase):
-    ''' Agent: create empty RSForm. '''
+    ''' Agent: optionally initialize contents in the same transaction. '''
     agent_action = 'rsform.create'
     agent_heavy = True
 
     def post(self, request: Request) -> HttpResponse:
         data = dict(request.data)
         data['item_type'] = LibraryItemType.RSFORM
-        serializer = LibraryItemCreateSerializer(data=data)
+        serializer = AgentRsformCreateSerializer(data=data)
         serializer.is_valid(raise_exception=True)
 
         location = serializer.validated_data.get('location', '')
         if location.startswith(LocationHead.LIBRARY) and not request.user.is_staff:
             raise PermissionDenied()
 
-        item = serializer.save(owner=request.user)
-        self._log('rsform.create', c.HTTP_201_CREATED, summary=f'Created {item.alias}', item=item)
-        return Response(
-            status=c.HTTP_201_CREATED,
-            data=self._schema_data(item),
+        def create():
+            item = serializer.save(owner=request.user)
+            schema = serializer.validated_data.get('schema')
+            if schema is not None:
+                metadata = {field: getattr(item, field) for field in ('title', 'alias', 'description')}
+                replace_schema_content(item, {**schema, **metadata})
+                item.refresh_from_db()
+            return item
+
+        return self._create_with_receipt(
+            'rsform.create', LibraryItemType.RSFORM, create, self._schema_data,
         )
 
 

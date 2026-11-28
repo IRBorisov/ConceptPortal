@@ -72,6 +72,74 @@ class TestAgentPublication(EndpointTester):
         self.assertEqual(self.schema.model.title, 'Concurrent edit')
         self.assertFalse(Version.objects.exists())
 
+    def test_publish_receipt_replays_only_the_same_request_and_preserves_the_committed_revision(self):
+        header = {'HTTP_IDEMPOTENCY_KEY': 'publish-recovery'}
+        first = self.client.post(self.url, self.payload, **header)
+        self.assertEqual(first.status_code, 200, first.data)
+        self.schema.model.title = 'Following edit'
+        self.schema.model.save(update_fields=['title'])
+        receipt = self.client.get('/api/agents/receipts/rsform.publish', **header)
+        self.assertEqual(receipt.data, {'target_id': self.schema.model.pk, 'version_id': first.data['version'],
+                                       'revision': first.data['committed_time_update'],
+                                       'target_metadata': {'owner': self.user.pk, 'location': self.schema.model.location,
+                                                           'access_policy': self.schema.model.access_policy}})
+        replay = self.client.post(self.url, self.payload, **header)
+        self.assertEqual(replay.status_code, 200, replay.data)
+        self.assertEqual(replay.data['version'], first.data['version'])
+        self.assertEqual(replay.data['schema']['title'], 'Following edit')
+        self.payload['schema']['title'] = 'Other content'
+        self.assertEqual(self.client.post(self.url, self.payload, **header).status_code, 409)
+        self.assertEqual(Version.objects.count(), 1)
+
+    def test_approved_metadata_is_checked_even_when_the_content_revision_did_not_change(self):
+        item = self.schema.model
+        self.payload['expected_target'] = {'owner': item.owner_id, 'location': item.location,
+                                           'access_policy': item.access_policy}
+        type(item).objects.filter(pk=item.pk).update(location='/U/Changed')
+        self.assertEqual(self.client.post(self.url, self.payload).status_code, 409)
+        self.assertFalse(Version.objects.exists())
+
+    def test_create_with_content_and_recover_without_a_duplicate(self):
+        url = '/api/agents/rsforms'
+        header = {'HTTP_IDEMPOTENCY_KEY': 'create-recovery'}
+        payload = {'title': 'Created', 'alias': 'CREATED', 'location': '/U/Demo', 'access_policy': 'private', 'schema': {
+            **self.payload['schema'],
+            'items': [{'id': 1, 'alias': 'X1', 'cst_type': 'basic', 'convention': 'Objects', 'crucial': False,
+                       'definition_formal': '', 'definition_raw': '', 'definition_resolved': '', 'term_raw': '',
+                       'term_resolved': '', 'term_forms': []}],
+        }}
+        first = self.client.post(url, payload, **header)
+        self.assertEqual(first.status_code, 201, first.data)
+        receipt = self.client.get('/api/agents/receipts/rsform.create', **header)
+        self.assertEqual(receipt.status_code, 200, receipt.data)
+        target = receipt.data['target_id']
+        details = self.client.get(f'/api/agents/rsforms/{target}/details')
+        self.assertEqual(details.data['items'][0]['alias'], 'X1')
+        self.assertEqual(details.data['owner'], self.user.pk)
+        self.assertEqual(details.data['location'], '/U/Demo')
+        self.assertEqual(details.data['access_policy'], 'private')
+        self.assertEqual(details.data['time_update'], receipt.data['revision'])
+        self.assertEqual(self.client.post(url, payload, **header).data['id'], target)
+        self.assertEqual(self.client.post(url, {**payload, 'title': 'Other'}, **header).status_code, 409)
+        _, other_token = ApiKey.create_for_user(self.user2, 'Other account')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {other_token}')
+        self.assertEqual(self.client.get('/api/agents/receipts/rsform.create', **header).status_code, 404)
+
+    def test_access_probe_distinguishes_scope_and_object_capability(self):
+        url = f'/api/agents/library/{self.schema.model.pk}/access'
+        access = self.client.get(url)
+        self.assertEqual(access.data['can_publish_schema'], True)
+        self.assertEqual(access.data['time_update'], self.payload['expected_time_update'])
+        _, read_token = ApiKey.create_for_user(self.user, 'Read only', scopes=['read'])
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {read_token}')
+        self.assertEqual(self.client.get(url).data['can_write'], False)
+        self.assertEqual(self.client.post(self.url, self.payload).status_code, 403)
+        other = RSForm.create(title='Private', alias='P', owner=self.user2, access_policy='private', location='/U')
+        self.assertEqual(self.client.get(f'/api/agents/library/{other.model.pk}/access').status_code, 404)
+        public = RSForm.create(title='Public', alias='P', owner=self.user2, access_policy='public', location='/S')
+        self.client.credentials()
+        self.assertEqual(self.client.get(f'/api/agents/library/{public.model.pk}/access').data['can_write'], False)
+
     def test_stalled_clock_does_not_make_a_base_reusable(self):
         before = parse_datetime(self.payload['expected_time_update'])
         with patch('apps.agents.views.publication.timezone.now', return_value=before):

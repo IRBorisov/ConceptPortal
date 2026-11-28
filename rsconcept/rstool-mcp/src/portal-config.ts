@@ -5,7 +5,8 @@ import { dirname, isAbsolute, relative, resolve } from 'node:path';
 
 import { createBearerIdentityVerifier, createBearerTokenVerifier, type HttpCredential } from './http-auth';
 import type { RSToolHttpServerOptions } from './http-server';
-import { PortalClient } from './portal-client';
+import { createPortalMcpOAuth } from './mcp-oauth';
+import { PortalClient } from '@rsconcept/rstool/portal';
 import { PortalCreations } from './portal-creations';
 import { PortalPublisher, type ServicePortalCredential } from './portal-publisher';
 import { PortalVault } from './portal-vault';
@@ -26,14 +27,17 @@ export async function loadPortalConfiguration(
   if (
     !settings.some(Boolean) &&
     !environment.RSTOOL_PORTAL_SERVICE_KEY_FILE &&
-    !environment.RSTOOL_PORTAL_SERVICE_POLICY_FILE
+    !environment.RSTOOL_PORTAL_SERVICE_POLICY_FILE &&
+    !environment.RSTOOL_MCP_OAUTH_SERVICE_SECRET_FILE
   )
     return undefined;
   if (!settings.every(Boolean)) throw new Error('All five Portal configuration settings are required');
   try {
     createBearerIdentityVerifier(credentials);
     const [portalOrigin, publicOrigin, vaultDirectory, masterKeyFile, accountTokensFile] = settings as string[];
-    if ([vaultDirectory, masterKeyFile, accountTokensFile, persistenceDir].some((value) => !isAbsolute(value)))
+    const oauthFile = environment.RSTOOL_MCP_OAUTH_SERVICE_SECRET_FILE;
+    if ([vaultDirectory, masterKeyFile, accountTokensFile, persistenceDir, ...(oauthFile ? [oauthFile] : [])]
+      .some(value => !isAbsolute(value)))
       throw new Error('Absolute paths required');
     const publicUrl = new URL(publicOrigin);
     if (publicUrl.protocol !== 'https:' || publicUrl.origin !== publicOrigin)
@@ -85,8 +89,12 @@ export async function loadPortalConfiguration(
     const vault = new PortalVault(vaultDirectory, await protectedInput(masterKeyFile));
     const publisher = new PortalPublisher(vault, api, service, new PortalCreations(resolve(vaultDirectory, 'creations')));
     if (service?.subjects.some(subject => memberships.get(subject)?.size)) throw new Error('Service subjects cannot have project credentials');
+    const oauthSecret = oauthFile ? (await protectedInput(oauthFile)).toString('utf8').trim() : undefined;
+    if (oauthSecret !== undefined && (tokens.has(oauthSecret) || accountCredentials.some(credential => credential.token === oauthSecret) ||
+        service?.token === oauthSecret)) throw new Error('Use an independent OAuth service credential');
+    const oauth = oauthSecret === undefined ? undefined : createPortalMcpOAuth(portalOrigin, publicOrigin, oauthSecret);
     return { publicOrigin, verifyAccountToken, projectsForSubject: subject => [...(memberships.get(subject) ?? [])].sort(),
-      publisher };
+      publisher, ...(oauth ? { oauth } : {}) };
   } catch {
     throw new Error('Cannot initialize Portal credentials/configuration');
   }

@@ -1,5 +1,10 @@
+import type { AddressInfo } from 'node:net';
+import { fileURLToPath } from 'node:url';
+
 import { describe, expect, it, vi } from "vitest";
-import { RSToolAgent } from '@rsconcept/rstool';
+import { CstType, RSToolAgent } from '@rsconcept/rstool';
+import { createRSToolRpcServer, RSTOOL_RPC_CONTRACT } from '@rsconcept/rstool/http';
+import { RSToolWrapperClient } from '@rsconcept/rstool/wrapper';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { CallToolResultSchema } from '@modelcontextprotocol/sdk/types.js';
@@ -8,6 +13,81 @@ import { buildRSToolMcpServer } from "./server";
 import { TOOL_DEFINITIONS } from "./tools";
 
 describe("buildRSToolMcpServer", () => {
+  it('matches import, analysis, diagnostics, modeling and stable errors across the four interfaces', async () => {
+    const source = new RSToolAgent();
+    source.applySchemaPatch({ items: [{ alias: 'X1' }, { alias: 'D1', definitionFormal: 'X1' }] });
+    const payload = source.exportPortal({ kind: 'schema', format: 'object' });
+    const library = new RSToolAgent();
+    const imported = library.importData(payload, 'portal-schema');
+    const subject = { subject: 'tester', projectId: 'contract' };
+    const rpc = createRSToolRpcServer({ verifyToken: token => token === 'fixture' ? subject :
+      token === 'other-project' ? { ...subject, projectId: 'other' } : null, resolveProjectAgent: () => library });
+    await new Promise<void>(resolve => rpc.listen(0, '127.0.0.1', resolve));
+    const origin = `http://127.0.0.1:${(rpc.address() as AddressInfo).port}`;
+    const call = (body: object, token = 'fixture') => fetch(`${origin}/v1/rpc`, { method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const wrapperPath = fileURLToPath(new URL('./dist/wrapper/stdio-wrapper.js', import.meta.resolve('@rsconcept/rstool/package.json')));
+    const stdio = new RSToolWrapperClient({ command: process.execPath, args: [wrapperPath] });
+    const mcp = buildRSToolMcpServer();
+    const sdk = new Client({ name: 'contract-test', version: '1' });
+    const [client, server] = InMemoryTransport.createLinkedPair();
+    try {
+      const published = await (await fetch(`${origin}/v1/contract`)).json() as typeof RSTOOL_RPC_CONTRACT;
+      expect(published).toEqual(RSTOOL_RPC_CONTRACT);
+      expect(published.operations.every(({ mcpTool }: { mcpTool: string }) => TOOL_DEFINITIONS.some(tool => tool.name === mcpTool))).toBe(true);
+      expect(await call({ id: 1, method: 'ping' }, 'wrong')).toMatchObject({ status: 401 });
+      await mcp.connect(server);
+      await sdk.connect(client);
+      const rpcCall = async (method: string, params: object = {}, state?: object, returnSession = false) =>
+        await (await call({ id: 1, method, params, state, returnSession })).json() as {
+          ok: boolean; result?: unknown; session?: string; error?: { code: string };
+        };
+      const mcpCall = async (name: string, args: Record<string, unknown> = {}) => {
+        const response = await sdk.callTool({ name, arguments: args });
+        expect(response.isError).not.toBe(true);
+        return response.structuredContent ?? JSON.parse((response.content as Array<{ text: string }>)[0].text);
+      };
+      const error = { code: 'NO_CURRENT_SESSION' };
+      expect(() => new RSToolAgent().listDiagnostics()).toThrow(expect.objectContaining(error));
+      await expect(stdio.call('listDiagnostics')).rejects.toThrow('NO_CURRENT_SESSION');
+      expect(await rpcCall('listDiagnostics')).toMatchObject({ ok: false, error });
+      expect((await sdk.callTool({ name: 'list_diagnostics' })).structuredContent).toMatchObject({ error });
+
+      const importParams = { payload, kind: 'portal-schema' };
+      const expectedHandle = { sessionId: expect.any(String), contractVersion: imported.contractVersion };
+      expect(await stdio.call('importData', importParams)).toMatchObject(expectedHandle);
+      expect(await mcpCall('import_data', importParams)).toMatchObject(expectedHandle);
+      const httpImport = await rpcCall('importData', importParams, undefined, true);
+      expect(httpImport).toMatchObject({ ok: true, result: expectedHandle, session: expect.any(String) });
+      const inline = { session: httpImport.session! };
+      const project = { sessionId: imported.sessionId };
+      expect(await rpcCall('listDiagnostics', {}, project)).toMatchObject({ ok: true, result: library.listDiagnostics() });
+      expect(await call({ id: 1, method: 'listDiagnostics', state: project }, 'other-project')).toMatchObject({ status: 403 });
+
+      const expression = { expression: 'X1', cstType: CstType.TERM };
+      const analysis = library.analyzeExpression(expression);
+      expect(await stdio.call('analyzeExpression', expression)).toEqual(analysis);
+      expect(await rpcCall('analyzeExpression', expression, inline)).toEqual({ id: 1, ok: true, result: analysis });
+      expect(await mcpCall('analyze_expression', expression)).toEqual(analysis);
+      const model = { set: [{ target: 1, value: { 0: 'zero', 1: 'one' } }] };
+      const interpreted = await library.setModelValues(model);
+      expect(await stdio.call('setModelValues', model)).toEqual(interpreted);
+      expect(await mcpCall('set_model_values', model)).toEqual(interpreted);
+      const httpModel = await rpcCall('setModelValues', model, inline, true);
+      expect(httpModel).toMatchObject({ ok: true, result: interpreted, session: expect.any(String) });
+      const evaluation = library.evaluate({ constituentId: 2 });
+      expect(evaluation).toMatchObject({ success: true, value: [0, 1] });
+      expect(await stdio.call('evaluate', { constituentId: 2 })).toEqual(evaluation);
+      expect(await rpcCall('evaluate', { constituentId: 2 }, { session: httpModel.session! }))
+        .toEqual({ id: 1, ok: true, result: evaluation });
+      expect(await mcpCall('evaluate', { constituentId: 2 })).toEqual(evaluation);
+    } finally {
+      await sdk.close();
+      await mcp.close();
+      await stdio.close();
+      await new Promise<void>((resolve, reject) => rpc.close(error => error ? reject(error) : resolve()));
+    }
+  }, 15_000);
   it.each(['ENAMETOOLONG', 'EFBIG', 'EINVAL', 'EUNLISTED_FS'])('sanitizes hosted filesystem code %s, including aggregated failures', async code => {
     const tool = new RSToolAgent();
     const failure = Object.assign(new Error('Synthetic private path /private-state/model.json'),

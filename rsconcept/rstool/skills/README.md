@@ -1,6 +1,6 @@
 # Agent skills (`@rsconcept/rstool`)
 
-One registered entry (`rstool`, the router) and stage / tool skills read by path. Skill text is Russian. Plan — [`../plans/skills-rework.html`](../plans/skills-rework.html).
+One registered entry (`rstool`, the router) and stage / tool skills read by path. Skill text is Russian. [Original skills plan](https://github.com/IRBorisov/ConceptPortal/blob/main/rsconcept/rstool/plans/skills-rework.html)
 
 ## Layout
 
@@ -17,7 +17,7 @@ One registered entry (`rstool`, the router) and stage / tool skills read by path
 | [`rs-portal/`](rs-portal/SKILL.md)           | Tool: Portal REST, publish protocol                                 |
 | [`rstool-runtime/`](rstool-runtime/SKILL.md) | Tool: calling rstool; `REFERENCE.md` (contract), `EXAMPLES.md`      |
 | [`scripts/`](scripts/)                       | `check-brief.ts` (brief readiness), `rstool-skills.mjs` (install)   |
-| `rstool-helper/`                             | Deprecated stub → `rstool`; removed in the next minor release       |
+| `rstool-helper/`                             | Compatibility stub for projects migrating to `rstool`              |
 
 Only `rstool` is an entry point: a routing line in the project `AGENTS.md` and, where the host loads a project skills folder, a stub (name, description and the path; in the Portal workspace — `.agents/skills/rstool/` and `.claude/skills/rstool/`). Stage skills are not registered: the router and `check-brief` name the stage, the agent reads `skills/<name>/SKILL.md`. Paths inside skills are written from the package root `<rstool>` — `rsconcept/rstool/` in the Portal workspace, `node_modules/@rsconcept/rstool/` in an npm project.
 

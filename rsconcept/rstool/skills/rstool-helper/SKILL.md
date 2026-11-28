@@ -13,5 +13,3 @@ description: >-
 - в npm-проекте — `node_modules/@rsconcept/rstool/skills/rstool/SKILL.md`.
 
 Чтобы заменить эту заглушку в проекте, выполни `node_modules/@rsconcept/rstool/skills/INSTALL.md`, затем удали папку `rstool-helper/` из каталога скиллов проекта.
-
-Заглушка будет удалена в следующем минорном релизе.

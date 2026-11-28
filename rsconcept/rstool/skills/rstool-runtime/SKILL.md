@@ -1,7 +1,7 @@
 ---
 name: rstool-runtime
 description: >-
-  Как вызывать rstool: библиотека RSToolAgent, stdio-обёртка, MCP. Быстрый
+  Как вызывать rstool: библиотека RSToolAgent, stdio, HTTP RPC, MCP. Быстрый
   контракт, запуск скриптов вне пакета, сохранение сессий, кодировки Windows,
   словарь «API → текст для пользователя».
 ---
@@ -23,7 +23,8 @@ description: >-
 - Модель — `await setModelValues(...)`, `evaluate`, `recalculateModel`; `status` — число (`EvalStatus`). Для проверки смысла по брифу удобнее сценарии и `check-brief` (`docs/BRIEF.md`).
 - Синтез (встраивание) — `synthesize({ sourceSessionId, substitutions })`; имена источника перенумеровываются (`aliasMapping` в ответе).
 - Импорт / экспорт — `importData(payload, kind?)` (`auto` различает сессию и JSON Portal), `exportSession()`, `exportPortal({ kind: 'schema' })`.
-- Настроенный HTTP MCP может добавить `portal_publish_schema`, `portal_connection_status` и прежний `portal_prepare_publication`. Запись содержимого делает `portal_publish_schema` после явного согласия пользователя на показанную сводку. Кабинет нужен, чтобы сохранить личный ключ, и не подтверждает каждую схему. Секреты не передавать в чат или аргументы инструмента. Порядок и ограничения: `../rstool-mcp/PORTAL.md` относительно корня пакета, REST-протокол — `docs/PORTAL-PUBLISH.md`.
+- HTTP RPC rstool использует диспетчер stdio и доступен без Node.js на стороне клиента. В разовом запросе передай экспорт в `state.session`. Сессию проекта через `state.sessionId` может открыть программный хост с настроенным доступом. [HTTP API rstool](REFERENCE.md#http-api-rstool)
+- Для Portal проверь каталог MCP и начни с `portal_preflight`. Маршрут чтения и запись по согласованной сводке описаны в [rs-portal](../rs-portal/SKILL.md). Для диагностики расхождений зафиксируй `contractVersion` из `ping`, `adapterVersion` из `portal_preflight` и хеши прочитанных инструкций.
 - Stdio (`npx rstool-wrapper`) и MCP (`@rsconcept/rstool-mcp`, имена в `snake_case`): **плоские** `params` — поля метода и `sessionId` на одном уровне.
 - При прямом вызове библиотеки дожидайся каждой записи в одну сессию. `setModelValues` работает с копией; при пересекающейся правке отклоняет сохранение с `Session changed during model update`, сохраняя новую правку. Перечитай состояние и реши, нужен ли повтор. Stdio и MCP по умолчанию ставят вызовы в очередь.
 

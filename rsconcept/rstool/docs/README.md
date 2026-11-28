@@ -2,7 +2,7 @@
 
 Краткая справка для агентов.
 
-**Процесс работы** — скилл-маршрутизатор `../skills/rstool/SKILL.md`: он определяет сценарий и этап и называет скилл этапа. Здесь — метод, правила языка и предметной области.
+Начни с [маршрутизатора rstool](../skills/rstool/SKILL.md), чтобы выбрать сценарий, этап и нужную инструкцию.
 
 ## Какой файл читать
 
@@ -18,6 +18,6 @@
 - **TYPIFICATION.md** — типизация (`AnalysisResult.type`, `valueClass`).
 - **MODEL-TESTING.md** — проверка семантики определений на маленьких концептуальных моделях.
 - **DIAGNOSTICS.md** — диагностики анализа и способы исправления ошибок.
-- **PORTAL-API.md** — указатель REST Portal: **PORTAL-READ.md** (ссылка → API, доступ, поиск, импорт), **PORTAL-PUBLISH.md** (протокол публикации, лимиты), **PORTAL-MODELS.md** (интерпретации), **PORTAL-OSS.md** (граф ОСС).
+- [PORTAL-API.md](PORTAL-API.md) — карта REST Portal. [Чтение и доступ](PORTAL-READ.md) · [Публикация и квитанции](PORTAL-PUBLISH.md) · [Модели](PORTAL-MODELS.md) · [ОСС](PORTAL-OSS.md)
 
-Контракт агента `rstool` (library / stdio / MCP) и примеры — `../skills/rstool-runtime/REFERENCE.md`, `EXAMPLES.md` (на русском).
+[Контракт библиотеки, stdio, HTTP RPC и MCP](../skills/rstool-runtime/REFERENCE.md) · [Примеры вызовов](../skills/rstool-runtime/EXAMPLES.md)

@@ -3,15 +3,24 @@ from django.urls import path
 from rest_framework.routers import SimpleRouter
 
 from . import views
+from .views.access import AgentCapabilitiesView, AgentItemAccessView, AgentMutationReceiptView
 from .views.description import AgentRsformDescriptionView
+from .views import oauth
 from .views.publication import AgentIdentityView, AgentRsformPublishView
 
 router = SimpleRouter(trailing_slash=False)
 router.register('agents/keys', views.ApiKeyViewSet, basename='agent-keys')
 
 urlpatterns = [
+    path('agents/oauth/authorize', oauth.authorize),
+    path('agents/oauth/token', oauth.token),
+    path('agents/oauth/introspect', oauth.introspect),
+    path('agents/oauth/grants', oauth.manage),
     path('agents/rsforms/<int:pk>/description', AgentRsformDescriptionView.as_view()),
     path('agents/me', AgentIdentityView.as_view()),
+    path('agents/capabilities', AgentCapabilitiesView.as_view()),
+    path('agents/library/<int:pk>/access', AgentItemAccessView.as_view()),
+    path('agents/receipts/<str:operation>', AgentMutationReceiptView.as_view()),
     path('agents/rsforms/<int:pk>/publish', AgentRsformPublishView.as_view()),
     path('agents/logs', views.AgentActionLogListView.as_view()),
     path('agents/library/active', views.AgentLibraryActiveView.as_view()),

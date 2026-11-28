@@ -4,7 +4,7 @@ Rules for agents in `rsconcept/rstool`.
 
 ## Scope
 
-Applies to all files under `rsconcept/rstool`. Published as `@rsconcept/rstool` with stdio bin `rstool-wrapper`.
+Applies to all files under `rsconcept/rstool`. The `@rsconcept/rstool` package supplies `rstool-wrapper` for stdio and `rstool-http` for HTTP RPC.
 
 ## See also
 
@@ -13,7 +13,7 @@ Applies to all files under `rsconcept/rstool`. Published as `@rsconcept/rstool` 
 
 ## Agent docs (read before RS work)
 
-Start at `skills/rstool/SKILL.md` (router: scenario → stage skills `skills/rs-*/SKILL.md`), then only what the stage names — not all of `docs/`. Method — `docs/METHOD.md`; brief format and `check-brief` — `docs/BRIEF.md`. `skills/rstool-runtime/REFERENCE.md` is the contract (library / stdio / MCP); `skills/rstool-runtime/EXAMPLES.md` has snippets and anti-patterns. Workspace entry: the routing line in the root `AGENTS.md` and the stubs `.agents/skills/rstool/`, `.claude/skills/rstool/`.
+Start at `skills/rstool/SKILL.md` (router: scenario → stage skills `skills/rs-*/SKILL.md`), then read the files named by the stage. Method — `docs/METHOD.md`; brief format and `check-brief` — `docs/BRIEF.md`. `skills/rstool-runtime/REFERENCE.md` covers the library, stdio, HTTP RPC and MCP. `skills/rstool-runtime/EXAMPLES.md` has snippets and anti-patterns. Workspace entry: the routing line in the root `AGENTS.md` and the stubs `.agents/skills/rstool/`, `.claude/skills/rstool/`.
 
 ## Agents using rstool (task work, not package maintenance)
 
@@ -30,15 +30,15 @@ When the goal is a conceptual schema, Portal export, or analysis — **do not cr
 - Session integrity: synchronous mutations use `SessionStore.transaction`; async model updates use an isolated draft and `commitIfUnchanged`. Never restore an async snapshot over a live session.
 - Persistence uses a flushed temporary sibling and atomic replacement. Keep session data and `_current.json` individually atomic; no cross-process or multi-file transaction is implied.
 - `src/mappers/` — bridge to `@rsconcept/domain`: `schema-adapter.ts` (analysis), `model-adapter.ts` (evaluation/modeling)
-- `src/wrapper/` — stdio JSON-RPC (`stdio-handler.ts` holds `STDIO_METHODS`, must match contract; `stdio-wrapper.ts` is `RSToolWrapperClient`)
+- `src/wrapper/` — stdio dispatcher in `stdio-handler.ts`, executable in `stdio-wrapper.ts` and `RSToolWrapperClient` in `client.ts`
+- `src/http.ts`, `src/rpc-contract.ts`, `src/bin/http.ts` — authenticated HTTP RPC, envelope schema and CLI
+- `src/portal.ts` — fixed-origin Portal REST client exported as `@rsconcept/rstool/portal`
 - `src/index.ts` — package barrel
 - `examples/` — runnable workflows + sample session JSON; teaching examples with `brief.json` and anti-examples (`subordination/`, `kinship-subordination/`)
 - `docs/` — language reference, method (`METHOD.md`), brief (`BRIEF.md`, `brief.schema.json`)
 - `skills/` — agent skills in Russian: router `rstool/`, stage skills `rs-*/`, `rstool-runtime/` (`REFERENCE.md`, `EXAMPLES.md`), `scripts/` (`check-brief.ts`, `rstool-skills.mjs`); `rstool-helper/` is a deprecated stub
 - `evals/` — skill eval tasks, hidden references and results (not published)
-- `README.md` — setup, stdio protocol
-
-Transports: library API (`RSToolAgent`) and stdio wrapper.
+- `README.md` — package installation, transport entry points and stdio protocol
 
 ## Commands
 
@@ -57,11 +57,13 @@ Scripts: `package.json` / `examples/README.md`. Non-obvious: build `@rsconcept/d
 
 Update code and docs in the **same change set**. Internal refactors do not count.
 
-**Triggers:** `CONTRACT_VERSION` bump; method add/remove/rename (library or stdio); request/response shape changes; new `CstType` or agent-facing validation rules; new exported `RSErrorCode` agents must handle; stdio protocol changes.
+**Triggers:** `CONTRACT_VERSION` bump; method add/remove/rename; request/response shape changes; new `CstType` or agent-facing validation rules; new exported `RSErrorCode` agents must handle; stdio or HTTP RPC protocol changes.
 
 **Sync:** `src/models/` + `stdio-handler.ts` + `model-adapter.ts` (if modeling) + colocated tests; `README.md`; `skills/rstool-runtime/{SKILL,REFERENCE,EXAMPLES}.md` and the stage skills that call the method (+ `skills/INSTALL.md` if install flow changes); `examples/` when the happy path changes. Schema-design: `docs/CONCEPTUAL-SCHEMA.md` + `skills/rs-explicate`, `skills/rs-review` + EXAMPLES; method or brief changes: `docs/METHOD.md`, `docs/BRIEF.md`, `docs/brief.schema.json`, `skills/scripts/brief-check.ts`; keep `docs/README.md` index in sync. Router description change: regenerate the workspace stubs (`skills/README.md` «Editing»).
 
 **Language-only** (grammar, domain errors, help text): update skill only when agents need new guidance; point to `REFERENCE.md` «Help map» and `rsconcept/domain/src/rslang/error.ts` — do not duplicate grammar in the skill. Keep the router scenario table and EXAMPLES anti-patterns in sync when agent workflows change.
+
+When changing HTTP methods or state addressing, verify `src/http.ts`, the published contract in `src/rpc-contract.ts` and `REFERENCE.md` §«HTTP API rstool». When changing Portal routes or tools, verify the Django views, `src/portal.ts`, the MCP tool catalog and `docs/PORTAL-API.md` together.
 
 ## Versioning
 

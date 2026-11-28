@@ -3,7 +3,7 @@ from rest_framework.permissions import BasePermission, SAFE_METHODS
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
-from .models import ApiKey
+from .models import AGENT_CREDENTIAL_TYPES
 
 
 class AgentDataAccess(BasePermission):
@@ -12,7 +12,7 @@ class AgentDataAccess(BasePermission):
     def has_permission(self, request: Request, view: APIView) -> bool:
         user = request.user
         key = request.auth
-        if not isinstance(key, ApiKey):
+        if not isinstance(key, AGENT_CREDENTIAL_TYPES):
             return request.method in SAFE_METHODS and not getattr(view, 'agent_require_key', False)
         if not bool(user and user.is_authenticated) or not key.is_active:
             return False
@@ -27,4 +27,4 @@ class IsSessionUser(BasePermission):
         if not request.user or not request.user.is_authenticated:
             return False
         # Allow session (auth is None or not ApiKey). Block managing keys via API key.
-        return not isinstance(request.auth, ApiKey)
+        return not isinstance(request.auth, AGENT_CREDENTIAL_TYPES)

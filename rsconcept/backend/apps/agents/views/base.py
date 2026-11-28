@@ -1,7 +1,12 @@
 ''' Shared auth, quota and audit for agent library routes. '''
 from __future__ import annotations
 
+from collections.abc import Callable
+
+from drf_spectacular.utils import OpenApiParameter
+from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound, PermissionDenied
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.library.models import LibraryItem
@@ -10,7 +15,13 @@ from shared import permissions as shared_permissions
 from ..authentication import ApiKeyAuthentication
 from ..permissions import AgentDataAccess
 from ..services.audit import api_key_from_request, log_agent_action
+from ..services.mutation_receipts import complete_receipt, mutation_receipt
 from ..throttling import AgentReadThrottle, AgentWriteThrottle
+
+IDEMPOTENCY_PARAMETER = OpenApiParameter(
+    'Idempotency-Key', str, OpenApiParameter.HEADER,
+    description='Stable ASCII request key scoped to the account and operation.',
+)
 
 
 def exception_summary(exc: BaseException) -> str:
@@ -68,6 +79,27 @@ class AgentItemView(APIView):
         ''' Refuse the call when the key user cannot edit the item. '''
         if not shared_permissions.can_edit_item(self.request.user, item):
             raise PermissionDenied()
+
+    def _create_with_receipt(
+        self,
+        operation: str,
+        item_type: str,
+        create: Callable[[], LibraryItem],
+        serialize: Callable[[LibraryItem], dict],
+    ) -> Response:
+        ''' Create once, then enforce the current read ACL on any replay. '''
+        with mutation_receipt(self.request, operation) as receipt:
+            if receipt is not None and receipt.target_id is not None:
+                item = self._get_item(receipt.target_id, item_type)
+                self._require_read(item)
+            else:
+                item = create()
+                complete_receipt(receipt, item)
+                self._log(operation, status.HTTP_201_CREATED, summary=f'Created {item.alias}', item=item)
+            data = serialize(item)
+            if receipt is not None:
+                data['committed_time_update'] = serializers.DateTimeField().to_representation(receipt.revision)
+            return Response(data, status=status.HTTP_201_CREATED)
 
     def _log(
         self,

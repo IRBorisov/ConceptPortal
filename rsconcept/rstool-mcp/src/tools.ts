@@ -3,8 +3,8 @@
  */
 
 import { CstType, EvalStatus, type RSToolAgent } from "@rsconcept/rstool";
-import type { PortalOssAction } from './portal-client';
-import type { PortalItemKind } from './portal-creations';
+import type { PortalItemKind, PortalOssAction } from '@rsconcept/rstool/portal';
+import packageInfo from '../package.json' with { type: 'json' };
 import type { PortalPublisher } from './portal-publisher';
 import type { PortalOwner } from './portal-vault';
 import { SessionStorageError, type SessionPolicy } from './session-policy';
@@ -20,11 +20,42 @@ export function portalToolDefinitions(publisher: PortalPublisher, subject: Porta
       if (Object.keys(args).length !== 1) throw new Error('Only targetId is accepted');
       return publisher.publishSchema(subject, args.targetId as number, tool, validateSource);
     },
-  }, { name: 'portal_prepare_publication', description: 'Prepare replacement of an existing owned Portal schema, including schemas with diagnostic errors. Does not publish or certify correctness. Prefer portal_publish_schema after explicit user permission. This draft remains available for the separate account page.',
+  }, { name: 'portal_prepare_publication', description: 'Prepare a revision-bound summary of replacement for an owned Portal schema. Show this summary and get explicit agreement before calling portal_apply_publication with the returned publicationId and digest.',
     inputSchema: { type: 'object', properties: { targetId: { type: 'integer', minimum: 1 } }, required: ['targetId'], additionalProperties: false },
     invoke: (tool, args) => {
       if (Object.keys(args).length !== 1) throw new Error('Only targetId is accepted');
       return publisher.prepare(subject, workspace, args.targetId as number, tool, validateSource);
+    },
+  }, { name: 'portal_apply_publication', description: 'Apply a prepared publication after the user accepts its exact summary. The tool checks the source session and Portal uses the approved base revision. Recover a lost response with portal_get_publication_status.',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: true },
+    inputSchema: { type: 'object', properties: { publicationId: { type: 'string' }, digest: { type: 'string' } },
+      required: ['publicationId', 'digest'], additionalProperties: false },
+    invoke: (_tool, args) => {
+      if (Object.keys(args).length !== 2 || typeof args.publicationId !== 'string' || typeof args.digest !== 'string')
+        throw new Error('publicationId and digest are required');
+      return publisher.publishPrepared(subject, workspace, args.publicationId, args.digest);
+    },
+  }, { name: 'portal_get_publication_status', sessionActivity: 'none', description: 'Read the Portal receipt and target revision for a previous publication ID in the current project connection.',
+    annotations: { readOnlyHint: true, openWorldHint: true },
+    inputSchema: { type: 'object', properties: { publicationId: { type: 'string' } }, required: ['publicationId'], additionalProperties: false },
+    invoke: (_tool, args) => {
+      if (Object.keys(args).length !== 1) throw new Error('Only publicationId is accepted');
+      return publisher.publicationStatus(subject, args.publicationId as string);
+    },
+  }, { name: 'portal_preflight', sessionActivity: 'none', description: 'Check an item and the required read, edit or full publication capability, with safe connection diagnostics. Choose public for anonymous reads. Protected checks use the trusted binding of the current project.',
+    annotations: { readOnlyHint: true, openWorldHint: true },
+    inputSchema: { type: 'object', properties: { operation: { type: 'string', enum: ['read', 'write', 'publish'] },
+      audience: { type: 'string', enum: ['public', 'protected'] }, kind: { type: 'string', enum: ['schema', 'model', 'oss'] },
+      targetId: { type: 'integer', minimum: 1 } }, required: ['operation', 'audience', 'kind', 'targetId'], additionalProperties: false },
+    invoke: async (_tool, args) => {
+      const { operation, audience, kind, targetId } = args;
+      if (Object.keys(args).length !== 4 || !['read', 'write', 'publish'].includes(operation as string) ||
+          !['public', 'protected'].includes(audience as string)) throw new Error('Invalid Portal preflight arguments');
+      const status = await publisher.preflight(subject, operation as 'read' | 'write' | 'publish', kind as PortalItemKind,
+        targetId as number, audience as 'public' | 'protected');
+      return { ...status, adapterVersion: packageInfo.version, depth: 'target_metadata_and_permissions',
+        ...(status.nextAction === 'connect_portal' ? { connectionPage: `${publicOrigin}/portal/account${
+          typeof subject === 'string' ? '' : `?project=${encodeURIComponent(subject[1])}`}` } : {}) };
     },
   }, { name: 'portal_connection_status', sessionActivity: 'none', description: 'Get safe Portal connection status for the authenticated identity, without any credential.',
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
@@ -32,6 +63,7 @@ export function portalToolDefinitions(publisher: PortalPublisher, subject: Porta
       if (Object.keys(args).length) throw new Error('This tool accepts no arguments');
       const status = await publisher.verifyConnection(subject);
       if (typeof subject === 'string') return status;
+      if ('authentication' in status && status.authentication === 'oauth') return status;
       return { ...status, connectionPage: `${publicOrigin}/portal/account?project=${encodeURIComponent(subject[1])}` };
     } }, { name: 'portal_get_description', sessionActivity: 'none',
     description: 'Read an existing Portal schema description and time_update. Public data needs no Portal key; a bound key can authorize private schemas. Returns the revision needed by portal_update_description. Creates no local session and reveals no credential.',
@@ -61,7 +93,7 @@ function portalLibraryTools(publisher: PortalPublisher, subject: PortalOwner): T
   const itemKinds: PortalItemKind[] = ['schema', 'model', 'oss'];
   const tools: ToolDefinition[] = itemKinds.map(kind => ({
     name: `portal_create_${kind}`, sessionActivity: 'none',
-    description: `Create an empty Portal ${kind} using the bound personal key, with explicit location and accessPolicy. ${kind === 'model' ? 'Requires schemaId of a readable Portal schema. ' : ''}No folder object or local session is created. Durable requestId prevents replay after restart; an uncertain result requires status and library search. Does not replace existing content.`,
+    description: `Create an empty Portal ${kind} using the bound key, with explicit location and accessPolicy. ${kind === 'model' ? 'Requires schemaId of a readable Portal schema. ' : ''}Reuse the same requestId and arguments after an uncertain response.`,
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     inputSchema: { type: 'object', properties: {
       requestId, title: { type: 'string', minLength: 1 }, alias: { type: 'string' },
@@ -71,8 +103,13 @@ function portalLibraryTools(publisher: PortalPublisher, subject: PortalOwner): T
     }, required: ['requestId', 'title', 'alias', 'location', 'accessPolicy', ...(kind === 'model' ? ['schemaId'] : [])], additionalProperties: false },
     invoke: (_tool, args) => publisher.createItem(subject, kind, args),
   }));
+  const schemaCreation = tools[0];
+  tools.push({ ...schemaCreation, name: 'portal_create_schema_from_session', sessionActivity: undefined,
+    description: 'Create a new Portal schema with its contents in one transaction from the current session. Provide the same explicit library metadata as portal_create_schema. After an uncertain response read portal_get_creation_status using the original requestId.',
+    invoke: (tool, args) => publisher.createItem(subject, 'schema', args, tool),
+  });
   tools.push({ name: 'portal_get_creation_status', sessionActivity: 'none',
-    description: 'Read the durable receipt for a requestId, including a known created ID. Does not send a create request. uncertain means search the library before any new creation ID.',
+    description: 'Recover the committed creation receipt and its target ID, including after a lost response. This tool only reads.',
     annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
     inputSchema: { type: 'object', properties: { requestId }, required: ['requestId'], additionalProperties: false },
     invoke: (_tool, args) => {
@@ -86,12 +123,14 @@ function portalLibraryTools(publisher: PortalPublisher, subject: PortalOwner): T
       if (Object.keys(args).some(key => !['query', 'location'].includes(key))) throw new Error('Only query and location are accepted');
       return publisher.searchLibrary(subject, args.query as string, args.location as string | undefined);
     } }, { name: 'portal_get_details', sessionActivity: 'none',
-    description: 'Read full Portal schema, model or OSS details through the bound credential. Returns metadata and contents for readback verification. IDs must come from library search or creation results, never enumeration.',
+    description: 'Read full Portal schema, model or OSS details. Set audience to public for an anonymous read. Protected reads use the current binding.',
     annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
-    inputSchema: { type: 'object', properties: { kind: { type: 'string', enum: itemKinds }, targetId: { type: 'integer', minimum: 1 } }, required: ['kind', 'targetId'], additionalProperties: false },
+    inputSchema: { type: 'object', properties: { kind: { type: 'string', enum: itemKinds }, targetId: { type: 'integer', minimum: 1 },
+      audience: { type: 'string', enum: ['public', 'protected'] } }, required: ['kind', 'targetId'], additionalProperties: false },
     invoke: (_tool, args) => {
-      if (Object.keys(args).some(key => !['kind', 'targetId'].includes(key))) throw new Error('Only kind and targetId are accepted');
-      return publisher.getDetails(subject, args.kind as PortalItemKind, args.targetId as number);
+      if (Object.keys(args).some(key => !['kind', 'targetId', 'audience'].includes(key)) ||
+          (args.audience !== undefined && !['public', 'protected'].includes(args.audience as string))) throw new Error('Invalid read arguments');
+      return publisher.getDetails(subject, args.kind as PortalItemKind, args.targetId as number, args.audience === 'public');
     } });
   tools.push({ name: 'portal_set_model_values', sessionActivity: 'none',
     description: 'Set interpretation values on an existing Portal model, using its exact time_update from portal_get_details. Use constituent IDs from the linked Portal schema. Independently reads back and verifies all written values. Does not retry a failed or uncertain write.',

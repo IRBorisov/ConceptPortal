@@ -5,8 +5,8 @@ import path from 'node:path';
 
 import { afterEach, expect, it, vi } from 'vitest';
 
-import { PortalClient } from './portal-client';
-import { PortalCreations, type PortalItemKind } from './portal-creations';
+import { PortalClient, type PortalItemKind } from '@rsconcept/rstool/portal';
+import { PortalCreations } from './portal-creations';
 import { PortalPublisher } from './portal-publisher';
 import { PortalVault, type PortalKeyPolicy } from './portal-vault';
 import { portalToolDefinitions } from './tools';
@@ -79,21 +79,22 @@ it('does not duplicate a request arriving concurrently', async () => {
   expect(app.remote.mock.calls.filter(([, options]) => options?.method === 'POST')).toHaveLength(1);
 });
 
-it('records an uncertain POST and refuses to repeat it after restart', async () => {
+it('checks for a receipt and refuses to repeat an uncertain POST on an older Portal', async () => {
   const app = setup();
   app.remote.mockRejectedValueOnce(new Error(token));
   await expect(app.publisher.createItem('alice', 'schema', app.args)).rejects.toThrow('check Portal status');
   const restarted = new PortalPublisher(app.vault, app.api, undefined, new PortalCreations(path.join(app.directory, 'receipts')));
   await expect(restarted.creationStatus('alice', app.args.requestId)).resolves.toMatchObject({ state: 'uncertain' });
   await expect(restarted.createItem('alice', 'schema', app.args)).rejects.toThrow('uncertain');
-  expect(app.remote).toHaveBeenCalledTimes(1);
+  expect(app.remote.mock.calls.filter(([, options]) => options?.method === 'POST')).toHaveLength(1);
 });
 
 it('recovers a known ID after failed readback without sending POST again', async () => {
   const app = setup();
   app.remote.mockImplementationOnce(async () => {
-    app.stored.set(10, { ...app.args, access_policy: 'private', id: 10 });
-    return Response.json({ id: 10 }, { status: 201 });
+    const time_update = '2026-11-13T00:00:00Z';
+    app.stored.set(10, { ...app.args, access_policy: 'private', id: 10, owner: 7, time_update });
+    return Response.json({ id: 10, time_update }, { status: 201 });
   }).mockRejectedValueOnce(new Error('lost readback'));
   await expect(app.publisher.createItem('alice', 'schema', app.args)).rejects.toThrow('check Portal status');
   await expect(app.publisher.creationStatus('alice', app.args.requestId)).resolves.toMatchObject({ targetId: 10 });
@@ -106,7 +107,7 @@ it.each([400, 403, 429])('never loops on a refused POST (%s)', async status => {
   app.remote.mockResolvedValueOnce(Response.json({ secret: token }, { status }));
   await expect(app.publisher.createItem('alice', 'schema', app.args)).rejects.toThrow(`(${status})`);
   await expect(app.publisher.createItem('alice', 'schema', app.args)).rejects.toThrow('uncertain');
-  expect(app.remote).toHaveBeenCalledTimes(1);
+  expect(app.remote.mock.calls.filter(([, options]) => options?.method === 'POST')).toHaveLength(1);
 });
 
 it('does not retry POST when verification finds mismatched metadata', async () => {
