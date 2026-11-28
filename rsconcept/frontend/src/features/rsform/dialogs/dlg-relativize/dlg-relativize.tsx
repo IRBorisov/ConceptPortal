@@ -17,11 +17,11 @@ import {
   RelativizationResultFields
 } from '@/features/relativization/components/parameter-fields';
 import { RelativizationDialog } from '@/features/relativization/components/relativization-dialog';
+import { describeRelativizationRequestError } from '@/features/relativization/models/request-error';
 import { getRelativizationLocale } from '@/features/relativization/models/source-locale';
 
 import { KEYS } from '@/backend/configuration';
 import { Loader } from '@/components/loader';
-import { extractErrorMessage } from '@/utils/utils';
 
 import { rsformsApi } from '../../backend/api';
 import { cctextApi } from '../../backend/cctext/api';
@@ -122,7 +122,7 @@ export function DlgRelativize() {
       hideDialog();
       router.gotoCstList(result.id);
     } catch (error) {
-      setErrorMessage(error instanceof Error ? extractErrorMessage(error) : tx('tx.oss.relativization.compute.fail'));
+      setErrorMessage(describeRelativizationRequestError(error));
       if (isAxiosError(error) && error.response?.status === 409) {
         await sourceQuery.refetch();
       }

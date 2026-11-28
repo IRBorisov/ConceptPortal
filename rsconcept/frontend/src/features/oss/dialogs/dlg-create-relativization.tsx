@@ -17,6 +17,7 @@ import {
   RelativizationResultFields
 } from '@/features/relativization/components/parameter-fields';
 import { RelativizationDialog } from '@/features/relativization/components/relativization-dialog';
+import { describeRelativizationRequestError } from '@/features/relativization/models/request-error';
 import { getRelativizationLocale } from '@/features/relativization/models/source-locale';
 import { rsformsApi } from '@/features/rsform/backend/api';
 import { cctextApi } from '@/features/rsform/backend/cctext/api';
@@ -26,7 +27,6 @@ import { KEYS } from '@/backend/configuration';
 import { Label } from '@/components/input';
 import { Loader } from '@/components/loader';
 import { limits } from '@/utils/constants';
-import { extractErrorMessage } from '@/utils/utils';
 
 import { ossApi, updateOss } from '../backend/api';
 import { useOss } from '../backend/use-oss';
@@ -156,7 +156,7 @@ export function DlgCreateRelativization() {
   }
 
   async function handleRequestError(error: unknown) {
-    setErrorMessage(error instanceof Error ? extractErrorMessage(error) : tx('tx.oss.relativization.compute.fail'));
+    setErrorMessage(describeRelativizationRequestError(error));
     if (isAxiosError(error) && error.response?.status === 409) {
       await Promise.all([
         client.invalidateQueries({ queryKey: ossApi.getOssQueryOptions({ itemID: oss.id }).queryKey }),

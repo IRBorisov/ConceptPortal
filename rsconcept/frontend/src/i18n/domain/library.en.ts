@@ -467,6 +467,11 @@ export const txLibraryEn: Record<string, string> = {
   'tx.oss.relativization.title': '{source} – relativization of {term}',
   'tx.oss.relativization.source.fail': 'Could not load the source schema',
   'tx.oss.relativization.compute.fail': 'Could not relativize the selected constituent',
+  'tx.oss.relativization.access.audience':
+    'This operation schema is shared more widely than its source conceptual schemas. Restrict the operation schema or widen access to the source schemas.',
+  'tx.oss.relativization.access.source':
+    'There is no access to the source conceptual schema or to the schemas it comes from.',
+  'tx.oss.relativization.access.forbidden': 'You do not have permission to save this relativization.',
   'tx.oss.relativization.excluded': 'Excluded constituents',
   'tx.oss.relativization.excluded.none': 'No exclusions',
   'tx.oss.relativization.saving': 'Saving the relativization result…',

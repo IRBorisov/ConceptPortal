@@ -471,6 +471,11 @@ export const txLibraryFr: Record<string, string> = {
   'tx.oss.relativization.title': '{source} – relativisation de {term}',
   'tx.oss.relativization.source.fail': 'Impossible de charger le schéma source',
   'tx.oss.relativization.compute.fail': 'Impossible de relativiser le constituant sélectionné',
+  'tx.oss.relativization.access.audience':
+    'Ce schéma opérationnel est partagé plus largement que ses schémas conceptuels sources. Restreignez le schéma opérationnel ou élargissez l’accès aux schémas sources.',
+  'tx.oss.relativization.access.source':
+    'Accès refusé au schéma conceptuel source ou aux schémas dont il provient.',
+  'tx.oss.relativization.access.forbidden': 'Droits insuffisants pour enregistrer cette relativisation.',
   'tx.oss.relativization.excluded': 'Constituants exclus',
   'tx.oss.relativization.excluded.none': 'Aucune exclusion',
   'tx.oss.relativization.saving': 'Enregistrement du résultat de la relativisation…',

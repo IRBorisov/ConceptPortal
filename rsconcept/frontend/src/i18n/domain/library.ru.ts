@@ -473,6 +473,11 @@ export const txLibraryRu: Record<string, string> = {
   'tx.oss.relativization.title': '{source} – релятивизация {term}',
   'tx.oss.relativization.source.fail': 'Не удалось загрузить исходную схему',
   'tx.oss.relativization.compute.fail': 'Не удалось релятивизировать выбранную конституенту',
+  'tx.oss.relativization.access.audience':
+    'Операционная схема доступна более широкому кругу, чем исходные концептуальные схемы. Ограничьте доступ к операционной схеме или расширьте доступ к исходным схемам.',
+  'tx.oss.relativization.access.source':
+    'Нет доступа к исходной концептуальной схеме или к схемам, из которых она получена.',
+  'tx.oss.relativization.access.forbidden': 'Недостаточно прав, чтобы сохранить релятивизацию.',
   'tx.oss.relativization.excluded': 'Исключённые конституенты',
   'tx.oss.relativization.excluded.none': 'Без исключений',
   'tx.oss.relativization.saving': 'Сохраняем результат релятивизации…',
