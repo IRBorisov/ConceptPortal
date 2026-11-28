@@ -1,0 +1,403 @@
+{
+  "model": "gpt-6.2-sol",
+  "runtime": "codex-cli 0.171.0-alpha.13.2",
+  "reasoning_effort": "low",
+  "baseline_commit": "1cdff4ad20d14ca2cdee59f62dc7d0b716cf701e",
+  "mode": "local live tool transcripts replayed to the model; baseline full skills; candidate routed sections",
+  "summary": {
+    "baseline": {
+      "context_bytes": {
+        "p50": 12672,
+        "p95": 25223
+      },
+      "input": {
+        "p50": 22781,
+        "p95": 27025
+      },
+      "uncached": {
+        "p50": 7293,
+        "p95": 11537
+      },
+      "output": {
+        "p50": 37,
+        "p95": 41
+      },
+      "tool_calls": {
+        "p50": 0,
+        "p95": 0
+      },
+      "steps": {
+        "p50": 6,
+        "p95": 8
+      },
+      "toolOutputBytes": {
+        "p50": 3036,
+        "p95": 8322
+      },
+      "largestOutputBytes": {
+        "p50": 2169,
+        "p95": 4228
+      },
+      "portalRequests": {
+        "p50": 1,
+        "p95": 9
+      },
+      "repeatedRevisionReads": {
+        "p50": 0,
+        "p95": 2
+      },
+      "checks_passed": 22,
+      "checks_total": 22
+    },
+    "candidate": {
+      "context_bytes": {
+        "p50": 5820,
+        "p95": 6409
+      },
+      "input": {
+        "p50": 21328,
+        "p95": 23204
+      },
+      "uncached": {
+        "p50": 5840,
+        "p95": 7716
+      },
+      "output": {
+        "p50": 37,
+        "p95": 41
+      },
+      "tool_calls": {
+        "p50": 0,
+        "p95": 0
+      },
+      "steps": {
+        "p50": 3,
+        "p95": 8
+      },
+      "toolOutputBytes": {
+        "p50": 2651,
+        "p95": 7338
+      },
+      "largestOutputBytes": {
+        "p50": 2036,
+        "p95": 4228
+      },
+      "portalRequests": {
+        "p50": 1,
+        "p95": 5
+      },
+      "repeatedRevisionReads": {
+        "p50": 0,
+        "p95": 1
+      },
+      "checks_passed": 22,
+      "checks_total": 22
+    }
+  },
+  "samples": [
+    {
+      "version": "baseline",
+      "scenario": "public-metadata",
+      "repeat": 0,
+      "skills": {
+        "rs-portal": "2132c4161122dea977a05f63f94e2ce918c94225c041db105282df658676183f"
+      },
+      "context_bytes": 12672,
+      "input": 21066,
+      "uncached": 5578,
+      "output": 34,
+      "rubric": {
+        "anonymous": true,
+        "metadata_only": true,
+        "session_created": true
+      },
+      "tool_calls": 0,
+      "steps": 1,
+      "toolOutputBytes": 309,
+      "largestOutputBytes": 309,
+      "portalRequests": 1,
+      "repeatedRevisionReads": 0,
+      "toolTranscriptHash": "1ba6204bd1cc55007f2c9b67c5080611c7e419cd1c1fb929d277a7b86cc94069"
+    },
+    {
+      "version": "candidate",
+      "scenario": "public-metadata",
+      "repeat": 0,
+      "skills": {
+        "rs-portal": "8dca766c2801cfea5ccf117d7fd5dd8bb3116aa63370f01107c164cf5198068e"
+      },
+      "context_bytes": 2172,
+      "input": 19243,
+      "uncached": 3755,
+      "output": 34,
+      "rubric": {
+        "anonymous": true,
+        "metadata_only": true,
+        "session_created": true
+      },
+      "tool_calls": 0,
+      "steps": 1,
+      "toolOutputBytes": 492,
+      "largestOutputBytes": 492,
+      "portalRequests": 1,
+      "repeatedRevisionReads": 0,
+      "toolTranscriptHash": "1ec8f9131ba23458f7c3aa10be1ebd3ebe7c81d22edbfed12e167face0b53d61"
+    },
+    {
+      "version": "baseline",
+      "scenario": "evolve-schema",
+      "repeat": 0,
+      "skills": {
+        "rstool": "31e4196a5b8ae5328172fc41c85526ef68c366bea6530f1464306e5087f0bb1c",
+        "rs-explicate": "b85d4ae7967d209741c42d4025eff7b8bec1ca8a84d52725a8082d4beafecbde",
+        "rs-interpret": "586faa5bdd31bb7846eca1c86489eb47dd1aaa627ea5f392f52314320bb30ed7"
+      },
+      "context_bytes": 25223,
+      "input": 27023,
+      "uncached": 11535,
+      "output": 37,
+      "rubric": {
+        "keep_distinction": true,
+        "first_valid": true,
+        "second_valid": true,
+        "weaken_axiom": true
+      },
+      "tool_calls": 0,
+      "steps": 8,
+      "toolOutputBytes": 8322,
+      "largestOutputBytes": 4228,
+      "portalRequests": 1,
+      "repeatedRevisionReads": 0,
+      "toolTranscriptHash": "735a641632361ef8a6d43cdb3e71bece12ab20198d8c8d50b41f28c2b85247be"
+    },
+    {
+      "version": "candidate",
+      "scenario": "evolve-schema",
+      "repeat": 0,
+      "skills": {
+        "rstool": "7d46cb00e1969d50dc20d8e265bc3dca0ca0d5945f182afb85de5599ea3edaf9",
+        "rs-explicate": "00ed4a6124a1e62a61017189bf8e132ae398b2a1deb1c9ee7ba3401c6a727a74",
+        "rs-interpret": "2a1dafa0cb786d39bb0c18a0e2b6d1cdde60bd5ee1a345a4c4f6647387f5e05e"
+      },
+      "context_bytes": 6409,
+      "input": 23202,
+      "uncached": 7714,
+      "output": 37,
+      "rubric": {
+        "keep_distinction": true,
+        "first_valid": true,
+        "second_valid": true,
+        "weaken_axiom": true
+      },
+      "tool_calls": 0,
+      "steps": 8,
+      "toolOutputBytes": 7338,
+      "largestOutputBytes": 4228,
+      "portalRequests": 1,
+      "repeatedRevisionReads": 0,
+      "toolTranscriptHash": "c678ae53cf34ffc79ad9cffd48a91aacd3c57607f386643950930517dfe1d955"
+    },
+    {
+      "version": "baseline",
+      "scenario": "recover-publication",
+      "repeat": 0,
+      "skills": {
+        "rs-portal": "2132c4161122dea977a05f63f94e2ce918c94225c041db105282df658676183f"
+      },
+      "context_bytes": 12672,
+      "input": 22781,
+      "uncached": 7293,
+      "output": 41,
+      "rubric": {
+        "keep_request_id": true,
+        "check_receipt": true,
+        "independently_read_target": true,
+        "create_with_new_id": true
+      },
+      "tool_calls": 0,
+      "steps": 6,
+      "toolOutputBytes": 3036,
+      "largestOutputBytes": 2169,
+      "portalRequests": 9,
+      "repeatedRevisionReads": 2,
+      "toolTranscriptHash": "7b8d2f713a65ad5905ecad5e89efb06b50e212e1626a943c0682433ca070bd88"
+    },
+    {
+      "version": "candidate",
+      "scenario": "recover-publication",
+      "repeat": 0,
+      "skills": {
+        "rs-portal": "19ed7a5320165bf957634fb1ac2f708b8e0ea799e34bf1ad1b4ab7c8c5b38300"
+      },
+      "context_bytes": 5820,
+      "input": 21328,
+      "uncached": 5840,
+      "output": 41,
+      "rubric": {
+        "keep_request_id": true,
+        "check_receipt": true,
+        "independently_read_target": true,
+        "create_with_new_id": true
+      },
+      "tool_calls": 0,
+      "steps": 3,
+      "toolOutputBytes": 2651,
+      "largestOutputBytes": 2036,
+      "portalRequests": 5,
+      "repeatedRevisionReads": 1,
+      "toolTranscriptHash": "686ffa3221c1713141ece8117c6c7be386139aceb9e2a3beb0cdedcce618b058"
+    },
+    {
+      "version": "baseline",
+      "scenario": "public-metadata",
+      "repeat": 1,
+      "skills": {
+        "rs-portal": "2132c4161122dea977a05f63f94e2ce918c94225c041db105282df658676183f"
+      },
+      "context_bytes": 12672,
+      "input": 22068,
+      "uncached": 3252,
+      "output": 34,
+      "rubric": {
+        "anonymous": true,
+        "metadata_only": true,
+        "session_created": true
+      },
+      "tool_calls": 0,
+      "steps": 1,
+      "toolOutputBytes": 309,
+      "largestOutputBytes": 309,
+      "portalRequests": 1,
+      "repeatedRevisionReads": 0,
+      "toolTranscriptHash": "1ba6204bd1cc55007f2c9b67c5080611c7e419cd1c1fb929d277a7b86cc94069"
+    },
+    {
+      "version": "candidate",
+      "scenario": "public-metadata",
+      "repeat": 1,
+      "skills": {
+        "rs-portal": "8dca766c2801cfea5ccf117d7fd5dd8bb3116aa63370f01107c164cf5198068e"
+      },
+      "context_bytes": 2172,
+      "input": 20245,
+      "uncached": 1429,
+      "output": 34,
+      "rubric": {
+        "anonymous": true,
+        "metadata_only": true,
+        "session_created": true
+      },
+      "tool_calls": 0,
+      "steps": 1,
+      "toolOutputBytes": 492,
+      "largestOutputBytes": 492,
+      "portalRequests": 1,
+      "repeatedRevisionReads": 0,
+      "toolTranscriptHash": "1ec8f9131ba23458f7c3aa10be1ebd3ebe7c81d22edbfed12e167face0b53d61"
+    },
+    {
+      "version": "baseline",
+      "scenario": "evolve-schema",
+      "repeat": 1,
+      "skills": {
+        "rstool": "31e4196a5b8ae5328172fc41c85526ef68c366bea6530f1464306e5087f0bb1c",
+        "rs-explicate": "b85d4ae7967d209741c42d4025eff7b8bec1ca8a84d52725a8082d4beafecbde",
+        "rs-interpret": "586faa5bdd31bb7846eca1c86489eb47dd1aaa627ea5f392f52314320bb30ed7"
+      },
+      "context_bytes": 25223,
+      "input": 27025,
+      "uncached": 11537,
+      "output": 37,
+      "rubric": {
+        "keep_distinction": true,
+        "first_valid": true,
+        "second_valid": true,
+        "weaken_axiom": true
+      },
+      "tool_calls": 0,
+      "steps": 8,
+      "toolOutputBytes": 8322,
+      "largestOutputBytes": 4228,
+      "portalRequests": 1,
+      "repeatedRevisionReads": 0,
+      "toolTranscriptHash": "735a641632361ef8a6d43cdb3e71bece12ab20198d8c8d50b41f28c2b85247be"
+    },
+    {
+      "version": "candidate",
+      "scenario": "evolve-schema",
+      "repeat": 1,
+      "skills": {
+        "rstool": "7d46cb00e1969d50dc20d8e265bc3dca0ca0d5945f182afb85de5599ea3edaf9",
+        "rs-explicate": "00ed4a6124a1e62a61017189bf8e132ae398b2a1deb1c9ee7ba3401c6a727a74",
+        "rs-interpret": "2a1dafa0cb786d39bb0c18a0e2b6d1cdde60bd5ee1a345a4c4f6647387f5e05e"
+      },
+      "context_bytes": 6409,
+      "input": 23204,
+      "uncached": 7716,
+      "output": 37,
+      "rubric": {
+        "keep_distinction": true,
+        "first_valid": true,
+        "second_valid": true,
+        "weaken_axiom": true
+      },
+      "tool_calls": 0,
+      "steps": 8,
+      "toolOutputBytes": 7338,
+      "largestOutputBytes": 4228,
+      "portalRequests": 1,
+      "repeatedRevisionReads": 0,
+      "toolTranscriptHash": "c678ae53cf34ffc79ad9cffd48a91aacd3c57607f386643950930517dfe1d955"
+    },
+    {
+      "version": "baseline",
+      "scenario": "recover-publication",
+      "repeat": 1,
+      "skills": {
+        "rs-portal": "2132c4161122dea977a05f63f94e2ce918c94225c041db105282df658676183f"
+      },
+      "context_bytes": 12672,
+      "input": 22781,
+      "uncached": 7293,
+      "output": 41,
+      "rubric": {
+        "keep_request_id": true,
+        "check_receipt": true,
+        "independently_read_target": true,
+        "create_with_new_id": true
+      },
+      "tool_calls": 0,
+      "steps": 6,
+      "toolOutputBytes": 3036,
+      "largestOutputBytes": 2169,
+      "portalRequests": 9,
+      "repeatedRevisionReads": 2,
+      "toolTranscriptHash": "7b8d2f713a65ad5905ecad5e89efb06b50e212e1626a943c0682433ca070bd88"
+    },
+    {
+      "version": "candidate",
+      "scenario": "recover-publication",
+      "repeat": 1,
+      "skills": {
+        "rs-portal": "19ed7a5320165bf957634fb1ac2f708b8e0ea799e34bf1ad1b4ab7c8c5b38300"
+      },
+      "context_bytes": 5820,
+      "input": 21330,
+      "uncached": 5842,
+      "output": 41,
+      "rubric": {
+        "keep_request_id": true,
+        "check_receipt": true,
+        "independently_read_target": true,
+        "create_with_new_id": true
+      },
+      "tool_calls": 0,
+      "steps": 3,
+      "toolOutputBytes": 2651,
+      "largestOutputBytes": 2036,
+      "portalRequests": 5,
+      "repeatedRevisionReads": 1,
+      "toolTranscriptHash": "686ffa3221c1713141ece8117c6c7be386139aceb9e2a3beb0cdedcce618b058"
+    }
+  ]
+}
