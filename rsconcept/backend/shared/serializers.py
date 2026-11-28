@@ -1,3 +1,5 @@
+from collections.abc import Mapping
+
 from rest_framework import serializers
 
 import shared.messages as msg
@@ -6,6 +8,8 @@ from shared.portal_json import PORTAL_JSON_CONTRACT_VERSION
 
 class StrictSerializer(serializers.Serializer):
     def to_internal_value(self, data):
+        if not isinstance(data, Mapping):
+            return super().to_internal_value(data)
         extra_keys = set(data.keys()) - set(self.fields.keys())
         if extra_keys:
             raise serializers.ValidationError({
@@ -16,6 +20,8 @@ class StrictSerializer(serializers.Serializer):
 
 class StrictModelSerializer(serializers.ModelSerializer):
     def to_internal_value(self, data):
+        if not isinstance(data, Mapping):
+            return super().to_internal_value(data)
         extra_keys = set(data.keys()) - set(self.fields.keys())
         if extra_keys:
             raise serializers.ValidationError({

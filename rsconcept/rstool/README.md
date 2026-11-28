@@ -66,6 +66,8 @@ The `rstool-http` bin ships with rstool 3.3.0. From a project with the package i
 
 `GET /v1/contract` lists the operations and JSON envelope schemas. Send a session export with each CLI request that needs prior state. A shared deployment can use `createRSToolRpcServer` from `@rsconcept/rstool/http` with its own credential verifier and a private agent per authenticated subject and project. Computations run in-process. Use this service with trusted callers, and terminate TLS at the gateway for remote access. [HTTP RPC contract](skills/rstool-runtime/REFERENCE.md#http-api-rstool)
 
+The server gives `verifyToken` an abort signal and five seconds by default. A timeout returns `503 AUTH_TIMEOUT`, and the host can set `verifyTimeoutMs`. The response size limit applies to successful and failed `POST /v1/rpc` calls. A `413 RESPONSE_TOO_LARGE` response uses `id: null` if the original ID would put the error over the limit.
+
 This Python example sends `session.json` from the current directory to the default local port.
 
 ```python

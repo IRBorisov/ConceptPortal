@@ -14,6 +14,7 @@ from django.db import transaction
 from django.db.models import F
 from django.http import Http404, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
@@ -68,7 +69,7 @@ def _login(request):
             return _error('temporarily_unavailable', 429)
         if form.is_valid():
             login(request, form.get_user())
-            return HttpResponseRedirect(request.get_full_path())
+            return HttpResponseRedirect(reverse('agents-oauth-authorize', query=request.GET))
     return render(request, 'agents/mcp_oauth.html', {'login_form': form})
 
 
@@ -109,16 +110,17 @@ def authorize(request):
     client_id = query.get('client_id', '')
     client = config['clients'].get(client_id)
     redirect_uri = query.get('redirect_uri', '')
-    if not client or not safe_url(redirect_uri) or redirect_uri not in client.get('redirect_uris', []):
-        return _error('invalid_request')
     state = query.get('state', '')
+    if (not client or len(state) > 512 or len(client_id) > 128 or len(redirect_uri) > 512
+            or not safe_url(redirect_uri) or redirect_uri not in client.get('redirect_uris', [])):
+        return _error('invalid_request')
+    response_params = {'state': state, 'iss': config['issuer']}
     resource = query.get('resource', '')
     challenge = query.get('code_challenge', '')
     base = config['mcp_origin'] + '/mcp'
-    if (len(state) > 512 or len(client_id) > 128 or len(redirect_uri) > 512 or len(resource) > 256
+    if (len(resource) > 256
             or not (resource == base or re.fullmatch(re.escape(base) + '/' + PROJECT_PATTERN, resource))):
-        return _error('invalid_request')
-    response_params = {'state': state, 'iss': config['issuer']}
+        return _redirect(redirect_uri, error='invalid_target', **response_params)
     if query.get('response_type') != 'code':
         return _redirect(redirect_uri, error='unsupported_response_type', **response_params)
     if query.get('code_challenge_method') != 'S256' or not re.fullmatch(r'[A-Za-z0-9_-]{43}', challenge):
@@ -237,6 +239,6 @@ def manage(request):
             pending.update(
                 portal_revoked_at=timezone.now(),
             )
-        return HttpResponseRedirect(request.path)
+        return HttpResponseRedirect(reverse('agents-oauth-grants'))
     projects = grants.order_by('project_id').values_list('project_id', flat=True).distinct()
     return render(request, 'agents/mcp_oauth.html', {'manage_projects': projects, 'management': True})

@@ -116,8 +116,13 @@ export class PortalClient {
   }
 
   public async supportsMutationReceipts(token?: string): Promise<boolean> {
-    const result = await this.request(token ?? await this.#credential?.(), '/api/agents/capabilities');
-    return result.mutation_receipts === 1;
+    try {
+      const result = await this.request(token ?? await this.#credential?.(), '/api/agents/capabilities');
+      return result.mutation_receipts === 1;
+    } catch (error) {
+      if (error instanceof PortalHttpError && error.status === 404) return false;
+      throw error;
+    }
   }
 
   public async getDetails(kind: PortalItemKind, id: number, options: { token?: string; anonymous?: boolean } = {}): Promise<PortalItemDetails> {

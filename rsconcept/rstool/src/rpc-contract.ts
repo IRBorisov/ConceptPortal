@@ -31,7 +31,7 @@ export const RSTOOL_RPC_CONTRACT = {
     ],
     $defs: { error: { type: 'object', required: ['code', 'message'], additionalProperties: false, properties: {
       code: { enum: [...RSTOOL_ERROR_CODES, 'BAD_REQUEST', 'METHOD_NOT_FOUND', 'INTERNAL_ERROR', 'UNAUTHORIZED',
-        'NOT_FOUND', 'METHOD_NOT_ALLOWED', 'REQUEST_TOO_LARGE', 'RESPONSE_TOO_LARGE', 'BUSY', 'STATE_UNAVAILABLE'] },
+        'NOT_FOUND', 'METHOD_NOT_ALLOWED', 'REQUEST_TOO_LARGE', 'RESPONSE_TOO_LARGE', 'BUSY', 'AUTH_TIMEOUT', 'STATE_UNAVAILABLE'] },
       message: { type: 'string' },
     } } },
   },
