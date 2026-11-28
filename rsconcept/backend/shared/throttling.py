@@ -26,6 +26,11 @@ class SignupRateThrottle(EndpointRateThrottle):
     scope = 'signup'
 
 
+class OAuthClientMetadataRateThrottle(EndpointRateThrottle):
+    ''' Limit external OAuth client metadata lookups. '''
+    scope = 'oauth_client_metadata'
+
+
 class PasswordResetRateThrottle(EndpointRateThrottle):
     ''' Throttle password reset flows. '''
     scope = 'password_reset'

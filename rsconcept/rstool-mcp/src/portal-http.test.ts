@@ -145,8 +145,9 @@ it('keeps MCP sessions after OAuth delegation revocation and resumes after reaut
   const app = await start(true, { oauth });
   const challenge = await fetch(`${app.url}/mcp/oauth-chat`);
   expect(challenge.headers.get('WWW-Authenticate')).toContain('/.well-known/oauth-protected-resource/mcp/oauth-chat');
+  expect(challenge.headers.get('WWW-Authenticate')).toContain('scope="portal.read"');
   expect(await (await fetch(`${app.url}/.well-known/oauth-protected-resource/mcp/oauth-chat`)).json())
-    .toMatchObject({ resource: `${ORIGIN}/mcp/oauth-chat`, authorization_servers: [issuer] });
+    .toMatchObject({ resource: `${ORIGIN}/mcp/oauth-chat`, authorization_servers: [issuer], scopes_supported: ['portal.read'] });
   const { client } = await app.connect(mcpToken, 'oauth-chat');
   const args = { kind: 'schema', targetId: 1 };
   const opened = await client.callTool({ name: 'portal_get_details', arguments: args });

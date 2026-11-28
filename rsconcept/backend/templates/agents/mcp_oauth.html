@@ -29,11 +29,16 @@
         <p>{% translate 'No active MCP projects have access to Portal.' %}</p>
       {% endfor %}
     {% else %}
-      <p>{{ user.username }} · {{ client_id }}</p>
+      <p>{{ user.username }} ·
+        {% if client_name %}{{ client_name }} ({{ client_id }}){% else %}{{ client_id }}{% endif %}
+      </p>
       <p>{% if can_write %}{% translate 'Permission to read and edit library items available to your account.' %}
          {% else %}{% translate 'Permission to read library items available to your account.' %}{% endif %}</p>
       <form method="post">
         {% csrf_token %}
+        {% if client_metadata_digest %}
+          <input type="hidden" name="client_metadata_digest" value="{{ client_metadata_digest }}">
+        {% endif %}
         {% if projects %}
           <label for="project">{% translate 'Project' %}</label>
           <select id="project" name="project">{% for project in projects %}<option>{{ project }}</option>{% endfor %}</select>

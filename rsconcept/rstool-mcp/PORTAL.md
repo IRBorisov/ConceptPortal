@@ -134,26 +134,30 @@ Call `portal_prepare_publication(targetId)` and show its summary to the user. In
 
 If the source, target or credential changes, prepare and agree to a new summary. On timeout, call `portal_get_publication_status` from the same project and reread the target. A returned `state: published` confirms the committed write even when `verified: false` reports a difference from the current revision or metadata. A service grant can recover a receipt after restart if the target is still on its allowlist. Schema diagnostics do not block publishing. The account page uses the same receipt-backed publication on a compatible Portal. It can also approve drafts on older Portal versions, where receipt lookup is unavailable.
 
-## OAuth pilot
+## OAuth
 
-Portal is the authorization server for pre-registered public clients. It displays the approved project and scopes, checks exact registered redirect URIs, and requires S256 PKCE. Set `AGENT_MCP_OAUTH_CONFIG` to the path of a protected JSON file and `AGENT_MCP_OAUTH_SERVICE_SECRET` to the path of a protected file holding an independent random service secret with at least 32 characters.
+Portal is the authorization server for public clients using Client ID Metadata Documents (CIMD) or an explicitly registered client ID. It displays the client and the requested permissions, validates callbacks, and requires S256 PKCE. Set `AGENT_MCP_OAUTH_CONFIG` to a protected JSON file and `AGENT_MCP_OAUTH_SERVICE_SECRET` to a protected file holding an independent random service secret with at least 32 characters.
 
     {
       "issuer": "https://api.portal.example",
       "mcp_origin": "https://mcp.example",
-      "clients": {
-        "desktop-pilot": {
-          "redirect_uris": ["http://127.0.0.1:38737/callback"],
-          "projects": {"research": {"users": [7], "scopes": ["read", "write"]}}
-        }
+      "clients": {},
+      "cimd": {
+        "projects": {"research": {"users": "*", "scopes": ["read"]}}
       }
     }
 
-On the MCP host, point RSTOOL_MCP_OAUTH_SERVICE_SECRET_FILE to the same secret in a protected file. Route /.well-known/oauth-protected-resource and its /mcp variants to MCP. Route /.well-known/oauth-authorization-server to Portal. Register the client's actual callback. Every client bearer has the exact MCP workspace URL as its audience. Separate sessions require distinct workspace names for the same account and project. `/mcp` and `/mcp/default` have distinct OAuth audiences and select the same stored workspace. After 30 minutes the client starts authorization again using the existing Portal browser session. Existing REST keys and project API-key bindings remain available.
+Set `users` to `"*"` to let any active Portal account authorize a registered client in that project. Use a list of numeric account IDs for a restricted project. Each user signs in with their own Portal account. The active account, grant scopes and Portal object permissions govern each protected operation.
+
+A client supporting CIMD with authorization code and public authentication needs only the MCP URL in its setup. Portal retrieves the client's document over direct public HTTPS and validates the document ID and callback. The connection is pinned to validated public DNS answers. Portal rejects redirects and bounds the download. HTTPS callbacks match exactly. Loopback callbacks may use an ephemeral port with the published host and path. The `clients` map can still hold explicit client IDs with their `redirect_uris` and project policies. An explicit client entry takes precedence over CIMD for the same ID.
+
+Apply Portal migration `0008` before enabling CIMD. On the MCP host, run `rstool-mcp` 2.11.0 or later and point `RSTOOL_MCP_OAUTH_SERVICE_SECRET_FILE` to the same secret in a protected file. Route `/.well-known/oauth-protected-resource` and its `/mcp` variants to MCP. Route `/.well-known/oauth-authorization-server` to Portal. Once `cimd.projects` is configured, Portal advertises `client_id_metadata_document_supported: true`.
+
+Every client bearer has the exact MCP workspace URL as its audience. Separate sessions require distinct workspace names for the same account and project. `/mcp` and `/mcp/default` have distinct OAuth audiences and select the same stored workspace. The initial connection requests `portal.read`. Clients can explicitly request `portal.write` where their project policy grants it. After 30 minutes the client starts authorization again using the existing Portal browser session. Existing REST keys and project API-key bindings remain available.
 
 The MCP host introspects its bearer and receives a separate Portal-only credential. Portal enforces the current account, grant, scopes and object permissions on every protected operation. Revoke Portal access in /api/agents/oauth/grants. The MCP bearer remains valid for opening saved sessions until it expires. Removing project membership or deactivating the Portal account ends MCP authorization too. Use matching accounts of the form portal:<account ID> in static credentials only when intentionally sharing the same workspace.
 
-The pilot uses pre-registration and starts a new code flow on expiry. With several registered projects, a client that supports additional authorization parameters can send `project=<id>` to the Portal authorization endpoint. Portal checks membership and requested scopes, then reuses active consent for that project. Without the parameter the user chooses the project in Portal. [MCP OAuth discovery and resource requirements](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization)
+With several registered projects, a client that supports additional authorization parameters can send `project=<id>` to the Portal authorization endpoint. Portal checks membership and requested scopes, then reuses active consent for that project. Without the parameter the user chooses the project in Portal. [MCP OAuth discovery and resource requirements](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization)
 
 ## Explicit service identity
 
@@ -165,7 +169,7 @@ Optional `RSTOOL_PORTAL_SERVICE_KEY_FILE` points to a protected runtime credenti
 
 Replace the illustrative target with an authorized existing schema. Both settings are required together. Use a dedicated non-staff Portal account owning only the intended schemas. Listed subjects operate in service mode and are ineligible for personal or project key enrollment. Other subjects require personal keys for private reads and writes. Description editing and full publication need both `read` and `write` because the workflow verifies target details. Missing, revoked or invalid personal keys never fall back to the service key. Service identity is selected by trusted configuration, not tool arguments. Changes require restart and invalidate proposals.
 
-Portal data requests use a fixed HTTPS origin, normal certificate validation, deadlines and bounded response bodies. The client refuses redirects and sanitizes remote errors. For the OAuth pilot, the MCP token is sent to the issuer's introspection endpoint, and the Portal data API receives a separate delegated credential. Backend audit records the actor and target. Keep request-body debug logging disabled on account and OAuth credential routes.
+Portal data requests use a fixed HTTPS origin, normal certificate validation, deadlines and bounded response bodies. The client refuses redirects and sanitizes remote errors. For OAuth, MCP sends the client token to the issuer's introspection endpoint and uses a separate delegated credential for the Portal data API. Backend audit records the actor and target. Keep request-body debug logging disabled on account and OAuth credential routes.
 
 ## Verification before deployment
 
