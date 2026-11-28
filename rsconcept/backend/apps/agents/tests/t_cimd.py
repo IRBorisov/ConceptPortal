@@ -3,6 +3,7 @@ import base64
 import hashlib
 import io
 import json
+import ssl
 from http.client import HTTPMessage
 from unittest.mock import MagicMock, patch
 from urllib.parse import parse_qs, urlencode, urlsplit
@@ -91,6 +92,9 @@ class TestClientMetadata(SimpleTestCase):
                 connect.assert_not_called()
 
     def test_https_pins_dns_while_validating_tls_for_the_client_hostname(self):
+        self.assertGreaterEqual(cimd._TLS.minimum_version, ssl.TLSVersion.TLSv1_2)
+        self.assertTrue(cimd._TLS.check_hostname)
+        self.assertEqual(cimd._TLS.verify_mode, ssl.CERT_REQUIRED)
         records = [(0, 0, 0, '', ('8.8.8.8', 443))]
         with (patch.object(cimd.socket, 'getaddrinfo', return_value=records),
               patch.object(cimd.socket, 'socket') as create_socket, patch.object(cimd._TLS, 'wrap_socket') as tls,
