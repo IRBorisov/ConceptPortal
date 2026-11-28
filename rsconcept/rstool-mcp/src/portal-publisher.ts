@@ -1,10 +1,12 @@
+import { AsyncLocalStorage } from 'node:async_hooks';
 import { createHash, randomUUID } from 'node:crypto';
 import { isDeepStrictEqual } from 'node:util';
 
 import { RSToolError, type RSToolAgent } from '@rsconcept/rstool';
 
-import { PortalClient, PortalHttpError, type PortalOssAction } from './portal-client';
-import { PortalCreations, type PortalItemKind } from './portal-creations';
+import { PORTAL_CREATE_OPERATIONS, PORTAL_ITEM_TYPES, portalFailure, PortalClient, PortalHttpError,
+  type PortalItemKind, type PortalOssAction } from '@rsconcept/rstool/portal';
+import { PortalCreations } from './portal-creations';
 import { isPortalKeyScope, PortalVault, type PortalCredential, type PortalKeyPolicy, type PortalOwner } from './portal-vault';
 
 export interface ServicePortalCredential {
@@ -22,6 +24,7 @@ interface PreparedPublication {
   expiresAt: number;
   digest: string;
   session: string;
+  sourceId: string;
   tool: RSToolAgent;
   validateSource?: () => void;
   before: Record<string, any>;
@@ -33,6 +36,7 @@ interface PreparedPublication {
 /** Own the external publication lifecycle; RS validation and editing stay in rstool. */
 export class PortalPublisher {
   readonly #vault: PortalVault;
+  readonly #delegation = new AsyncLocalStorage<{ owner: string; credential: PortalCredential | null }>();
   readonly #api: PortalClient;
   readonly #service?: ServicePortalCredential;
   readonly #creations?: PortalCreations;
@@ -65,6 +69,20 @@ export class PortalPublisher {
       : undefined;
   }
 
+  public withDelegation<T>(subject: PortalOwner, credential: PortalCredential | null, action: () => T): T {
+    return this.#delegation.run({ owner: JSON.stringify(subject), credential }, action);
+  }
+
+  private delegated(subject: PortalOwner) {
+    const current = this.#delegation.getStore();
+    return current?.owner === JSON.stringify(subject) ? current : undefined;
+  }
+
+  private boundCredential(subject: PortalOwner) {
+    const delegation = this.delegated(subject);
+    return delegation ? delegation.credential : this.#vault.get(subject);
+  }
+
   /** Bind an entered key to the authenticated subject after verifying its Portal account. */
   public connect(subject: PortalOwner, token: string) {
     return this.exclusive(subject, async () => {
@@ -93,7 +111,7 @@ export class PortalPublisher {
   public connection(subject: PortalOwner) {
     if (this.isService(subject)) return { connected: true, mode: 'service' };
     const scope = typeof subject === 'string' ? { mode: 'personal' } : { mode: 'project', projectId: subject[1] };
-    const credential = this.#vault.get(subject);
+    const credential = this.boundCredential(subject);
     return credential
       ? { ...scope, connected: !expired(credential), account: credential.account,
           ...(credential.keyPolicy ? { keyPolicy: credential.keyPolicy, expired: expired(credential) } : {}) }
@@ -103,10 +121,11 @@ export class PortalPublisher {
   /** Project status checks the live key so revocation is visible in every chat. */
   public verifyConnection(subject: PortalOwner) {
     if (typeof subject === 'string') return this.connection(subject);
-    const project = { mode: 'project', projectId: subject[1] };
+    const delegated = !!this.delegated(subject);
+    const project = { mode: 'project', projectId: subject[1], ...(delegated ? { authentication: 'oauth' } : {}) };
     return this.exclusive(subject, async () => {
-      const credential = this.#vault.get(subject);
-      if (!credential) return { ...project, connected: false, reason: 'not_connected' };
+      const credential = this.boundCredential(subject);
+      if (!credential) return { ...project, connected: false, reason: delegated ? 'delegation_revoked' : 'not_connected' };
       const saved = { ...project, account: credential.account, keyPolicy: credential.keyPolicy };
       if (expired(credential)) return { ...saved, connected: false, reason: 'key_expired' };
       try {
@@ -124,8 +143,56 @@ export class PortalPublisher {
     });
   }
 
+  /** Resolve the binding and ask Portal for the observable capability of a readable target. */
+  public preflight(subject: PortalOwner, operation: 'read' | 'write' | 'publish', kind: PortalItemKind,
+    targetId: number, audience: 'public' | 'protected') {
+    return this.exclusive(subject, async () => {
+      const scope = audience === 'public' ? { mode: 'public' } : typeof subject === 'string'
+        ? { mode: this.isService(subject) ? 'service' : 'personal' }
+        : { mode: 'project', projectId: subject[1] };
+      const result = (stage: string, code: string, nextAction: string, extra: Record<string, unknown> = {}) =>
+        ({ stage, code, nextAction, scope, checkedAt: new Date().toISOString(), apiOrigin: this.#api.origin, ...extra });
+      if (audience === 'public' && operation !== 'read') throw new Error('Public access is available for reading only');
+      if (!Object.hasOwn(PORTAL_ITEM_TYPES, kind) || !Number.isSafeInteger(targetId) || targetId <= 0 ||
+          (operation === 'publish' && kind !== 'schema')) throw new Error('Invalid Portal preflight target');
+      let token: string | undefined, stage = 'account';
+      let account: { id: number; username: string } | undefined, keyPolicy: PortalKeyPolicy | undefined;
+      try {
+        if (audience === 'protected') {
+          const stored = this.boundCredential(subject);
+          if (!stored && !this.isService(subject)) return this.delegated(subject)
+            ? result('binding', 'PORTAL_DELEGATION_REVOKED', 'reauthorize_mcp')
+            : result('binding', 'PORTAL_NOT_CONNECTED', 'connect_portal');
+          if (stored && expired(stored)) return result('binding', 'PORTAL_KEY_EXPIRED', 'connect_portal');
+          const credential = this.credential(subject, targetId);
+          token = credential.token;
+          ({ account, keyPolicy } = await this.readIdentity(token));
+          if (!this.isService(subject) && account.id !== credential.account.id)
+            return result(stage, 'PORTAL_ACCOUNT_CHANGED', 'connect_portal');
+          if (keyPolicy && (!keyPolicy.scopes.includes('read') || (operation !== 'read' && !keyPolicy.scopes.includes('write'))))
+            return result(stage, 'PORTAL_KEY_SCOPE', this.delegated(subject) ? 'reauthorize_mcp' : 'connect_portal', { account, keyPolicy });
+        }
+        stage = 'target';
+        const target = await this.#api.getAccess(targetId, { token, anonymous: audience === 'public' });
+        if (target.id !== targetId || target.item_type !== PORTAL_ITEM_TYPES[kind])
+          return result(stage, 'PORTAL_NOT_FOUND', 'check_target_and_access');
+        if (typeof target.can_write !== 'boolean' || typeof target.can_publish_schema !== 'boolean' ||
+            typeof target.time_update !== 'string' || !Number.isFinite(Date.parse(target.time_update)))
+          return result(stage, 'PORTAL_INVALID_RESPONSE', 'check_portal_api');
+        const data = { target, ...(account ? { account, keyPolicy } : {}) };
+        if ((operation === 'write' && !target.can_write) || (operation === 'publish' && !target.can_publish_schema))
+          return result(stage, 'PORTAL_OBJECT_RESTRICTED', 'check_portal_permissions', data);
+        return result(stage, 'OK', 'continue', data);
+      } catch (error) {
+        const failure = portalFailure(error);
+        if (!failure) return result(stage, 'PORTAL_PREFLIGHT_FAILED', 'check_portal_configuration');
+        return result(stage, failure.code, failure.nextAction, failure);
+      }
+    });
+  }
+
   private async readIdentity(token: string) {
-    const result = await this.#api.request(token, '/api/agents/me');
+    const result = await this.#api.getAccount(token);
     if (!Number.isSafeInteger(result.id) || typeof result.username !== 'string')
       throw new Error('Portal returned invalid account metadata');
     const account = { id: result.id as number, username: result.username as string };
@@ -156,10 +223,10 @@ export class PortalPublisher {
     });
   }
 
-  public getDetails(subject: PortalOwner, kind: PortalItemKind, targetId: number) {
+  public getDetails(subject: PortalOwner, kind: PortalItemKind, targetId: number, anonymous = false) {
     return this.exclusive(subject, async () => {
-      const credential = this.credential(subject, targetId);
-      if (credential.keyPolicy && !credential.keyPolicy.scopes.includes('read')) throw new Error('Portal key does not allow read');
+      const credential = anonymous ? undefined : this.credential(subject, targetId);
+      if (credential?.keyPolicy && !credential.keyPolicy.scopes.includes('read')) throw new Error('Portal key does not allow read');
       return this.readItem(credential, kind, targetId);
     });
   }
@@ -286,7 +353,7 @@ export class PortalPublisher {
   }
 
   /** Create a new empty item only. Existing-content replacement retains its separate approval. */
-  public createItem(subject: PortalOwner, kind: PortalItemKind, args: Record<string, unknown>) {
+  public createItem(subject: PortalOwner, kind: PortalItemKind, args: Record<string, unknown>, source?: RSToolAgent) {
     return this.exclusive(subject, async () => {
       const credential = this.personalCredential(subject, 'write');
       if (!this.#creations) throw new Error('Portal creation receipts are not configured');
@@ -303,21 +370,31 @@ export class PortalPublisher {
       if (!['private', 'protected', 'public'].includes(args.accessPolicy as string)) throw new Error('An explicit accessPolicy is required');
       if (kind === 'model' && (!Number.isSafeInteger(args.schemaId) || Number(args.schemaId) <= 0))
         throw new Error('A positive schemaId is required for a model');
-      const payload = { title: args.title, alias: args.alias, description: args.description ?? '',
+      const metadata = { title: args.title, alias: args.alias, description: args.description ?? '' };
+      const schema = source ? { ...JSON.parse(source.exportPortal({ kind: 'schema', format: 'json' }) as string), ...metadata } : undefined;
+      if (source && kind !== 'schema') throw new Error('Only schema creation accepts a source session');
+      const payload = { ...metadata, ...(schema ? { schema } : {}),
         location: args.location, access_policy: args.accessPolicy, ...(kind === 'model' ? { schema: args.schemaId } : {}) };
       const digest = createHash('sha256').update(JSON.stringify({ kind, origin: this.#api.origin, accountId: credential.account.id, payload })).digest('hex');
       const requestId = args.requestId as string;
       let receipt = this.#creations.get(subject, requestId);
       if (receipt && (receipt.digest !== digest || receipt.accountId !== credential.account.id || receipt.origin !== this.#api.origin))
         throw new Error('requestId is already bound to a different creation request');
+      const replay = !!receipt;
       if (!receipt) {
-        receipt = { kind, digest, origin: this.#api.origin, accountId: credential.account.id, state: 'sending' };
+        const serverKey = operationKey(subject, 'creation', requestId);
+        receipt = { kind, digest, origin: this.#api.origin, accountId: credential.account.id, state: 'sending', serverKey };
         this.#creations.reserve(subject, requestId, receipt);
-        // A failure after reservation is uncertain. Neither this method nor a retry sends another POST.
-        const result = await this.#api.request(credential.token, `/api/agents/${itemRoute(kind)}`, payload);
+      }
+      if (!receipt.targetId && replay && receipt.serverKey) {
+        receipt = await this.recoverCreation(subject, requestId, credential, receipt);
+      }
+      if (!receipt.targetId && receipt.serverKey && (!replay ||
+          await this.#api.supportsMutationReceipts(credential.token).catch(() => false))) {
+        const result = await this.#api.createItem(kind, payload, receipt.serverKey, credential.token);
         if (!Number.isSafeInteger(result.id) || result.id <= 0)
           throw new Error('Portal returned an invalid created ID; inspect library before retrying');
-        receipt = { ...receipt, state: 'created', targetId: result.id };
+        receipt = { ...receipt, state: 'created', targetId: result.id, revision: result.committed_time_update ?? result.time_update };
         try { this.#creations.complete(subject, requestId, receipt); }
         catch { throw new Error(`Portal created item ${result.id}, but its receipt could not be saved; inspect Portal before retrying`); }
       }
@@ -325,18 +402,36 @@ export class PortalPublisher {
       const item = await this.readItem(credential, kind, receipt.targetId);
       if (item.title !== payload.title || item.alias !== payload.alias || item.description !== payload.description ||
           item.location !== payload.location || item.access_policy !== payload.access_policy ||
+          item.owner !== credential.account.id || (receipt.revision !== undefined && item.time_update !== receipt.revision) ||
+          (schema && !isDeepStrictEqual(content(item), content(schema))) ||
           (kind === 'model' && item.schema !== args.schemaId))
         throw new Error(`Created item ${receipt.targetId} verification failed; inspect Portal, do not create another item`);
       return { requestId, kind, portalOrigin: this.#api.origin, targetId: receipt.targetId, verified: true, item };
     });
   }
 
-  /** Read a durable receipt after restart or a lost response; never replays creation. */
+  private async recoverCreation(subject: PortalOwner, requestId: string, credential: PortalCredential,
+    receipt: NonNullable<ReturnType<PortalCreations['get']>>) {
+    if (!receipt.serverKey || !this.#creations) return receipt;
+    try {
+      const committed = await this.#api.getReceipt(PORTAL_CREATE_OPERATIONS[receipt.kind], receipt.serverKey, credential.token);
+      if (!Number.isSafeInteger(committed.target_id) || committed.target_id <= 0 || typeof committed.revision !== 'string' ||
+          !Number.isFinite(Date.parse(committed.revision))) throw new Error('Invalid Portal creation receipt');
+      const resolved = { ...receipt, state: 'created' as const, targetId: committed.target_id, revision: committed.revision };
+      this.#creations.complete(subject, requestId, resolved);
+      return resolved;
+    } catch (error) {
+      if (error instanceof PortalHttpError && error.status === 404) return receipt;
+      throw error;
+    }
+  }
+
+  /** Read a durable receipt after restart or a lost response; never sends a mutation. */
   public creationStatus(subject: PortalOwner, requestId: string) {
     return this.exclusive(subject, async () => {
       const credential = this.personalCredential(subject);
       if (!this.#creations) throw new Error('Portal creation receipts are not configured');
-      const receipt = this.#creations.get(subject, requestId);
+      let receipt = this.#creations.get(subject, requestId);
       if (!receipt || receipt.accountId !== credential.account.id) return { requestId, state: 'not_found' };
       if (receipt.origin !== this.#api.origin) throw new Error('Creation receipt belongs to a different Portal origin; check host configuration');
       if (typeof subject !== 'string') {
@@ -344,9 +439,13 @@ export class PortalPublisher {
         if (identity.account.id !== receipt.accountId) return { requestId, state: 'not_found' };
         if (identity.keyPolicy && !identity.keyPolicy.scopes.includes('read')) throw new Error('Portal key does not allow read');
       }
+      if (receipt.state === 'sending' && receipt.serverKey) receipt = await this.recoverCreation(subject, requestId, credential, receipt);
+      const item = receipt.targetId ? await this.readItem(credential, receipt.kind, receipt.targetId) : undefined;
       return { requestId, kind: receipt.kind, state: receipt.state === 'sending' ? 'uncertain' : 'created',
         portalOrigin: this.#api.origin,
-        ...(receipt.targetId ? { targetId: receipt.targetId } : {}) };
+        ...(item ? { targetId: receipt.targetId, committedTimeUpdate: receipt.revision, currentTimeUpdate: item.time_update,
+          verifiedRevision: receipt.revision !== undefined && receipt.revision === item.time_update,
+          target: { owner: item.owner, location: item.location, accessPolicy: item.access_policy } } : {}) };
     });
   }
 
@@ -357,9 +456,9 @@ export class PortalPublisher {
     return credential;
   }
 
-  private async readItem(credential: PortalCredential, kind: PortalItemKind, targetId: number) {
+  private async readItem(credential: PortalCredential | undefined, kind: PortalItemKind, targetId: number): Promise<Record<string, any>> {
     if (!Number.isSafeInteger(targetId) || targetId <= 0) throw new Error('A positive Portal item ID is required');
-    const item = await this.#api.request(credential.token, `/api/agents/${itemRoute(kind)}/${targetId}/details`);
+    const item = await this.#api.getDetails(kind, targetId, { token: credential?.token, anonymous: !credential });
     if (item.id !== targetId) throw new Error('Portal returned an unexpected item');
     return item;
   }
@@ -370,7 +469,7 @@ export class PortalPublisher {
       if (!Number.isSafeInteger(targetId) || targetId <= 0) throw new Error('A positive Portal schema ID is required');
       const credential = this.isService(subject)
         ? (this.#service!.targetIds.includes(targetId) ? this.credential(subject, targetId) : undefined)
-        : this.#vault.get(subject) ?? undefined;
+        : this.boundCredential(subject) ?? undefined;
       const path = `/api/agents/rsforms/${targetId}/details`;
       const mayRead = credential && !expired(credential) && (!credential.keyPolicy || credential.keyPolicy.scopes.includes('read'));
       const schema = typeof subject !== 'string' && credential
@@ -501,7 +600,8 @@ export class PortalPublisher {
       if (!Number.isSafeInteger(targetId) || targetId <= 0) throw new Error('A positive Portal schema ID is required');
       this.expire();
       const credential = this.credential(subject, targetId, 'write');
-      const sourceId = tool.getCurrentSession()!.sessionId;
+      const sourceId = tool.getCurrentSession()?.sessionId;
+      if (!sourceId) throw new RSToolError('NO_CURRENT_SESSION', 'No current session. Select the source session before preparing publication.');
       const session = tool.exportSession();
       const after = JSON.parse(tool.exportPortal({ kind: 'schema', format: 'json' }) as string);
       const before = await this.#api.request(credential.token, `/api/agents/rsforms/${targetId}/details`);
@@ -516,15 +616,17 @@ export class PortalPublisher {
       // One proposal per live workspace; bounded storage for all subjects.
       if (preparation.invalidated) throw new Error('Workspace was closed');
       this.clearWorkspaceDrafts(subject, workspace);
-      const bytes = Buffer.byteLength(JSON.stringify({ before, after }));
+      if (session !== tool.exportSession()) throw new Error('Local schema changed; prepare publication again');
+      const bytes = Buffer.byteLength(JSON.stringify({ before, after })) + Buffer.byteLength(session);
       const occupied = [...this.#drafts.values()].reduce(
-        (size, draft) => size + Buffer.byteLength(JSON.stringify({ before: draft.before, after: draft.after })),
+        (size, draft) => size + Buffer.byteLength(JSON.stringify({ before: draft.before, after: draft.after })) + Buffer.byteLength(draft.session),
         0
       );
       if (this.#drafts.size >= 32 || bytes + occupied > 16 * 1024 * 1024)
         throw new Error('Publication capacity reached');
       const id = randomUUID();
-      const digest = createHash('sha256').update(JSON.stringify({ targetId, before, after })).digest('hex');
+      const sourceDigest = createHash('sha256').update(session).digest('hex');
+      const digest = createHash('sha256').update(JSON.stringify({ targetId, sourceId, sourceDigest, before, after })).digest('hex');
       const draft: PreparedPublication = {
         id,
         subject: ownerKey,
@@ -534,6 +636,7 @@ export class PortalPublisher {
         expiresAt: Date.now() + 10 * 60_000,
         digest,
         session,
+        sourceId,
         tool,
         validateSource: validateSource ? () => validateSource(sourceId) : undefined,
         before,
@@ -541,18 +644,107 @@ export class PortalPublisher {
         state: 'prepared',
       };
       this.#drafts.set(id, draft);
+      const summary = changes(before, after);
       return {
         publicationId: id,
         digest,
         targetId,
+        expectedTimeUpdate: before.time_update,
+        sourceSessionId: sourceId,
+        sourceDigest,
+        target: { title: before.title, alias: before.alias, owner: before.owner,
+          location: before.location, accessPolicy: before.access_policy },
+        proposed: { title: after.title, alias: after.alias,
+          ...(summary.metadataChanged.includes('description') ? { description: previewDescription(after.description) } : {}) },
         expiresAt: new Date(draft.expiresAt).toISOString(),
         beforeCount: before.items.length,
         afterCount: after.items.length,
-        changes: changes(before, after),
+        changes: summary,
         confirmationPage: typeof subject === 'string' ? '/portal/account'
           : `/portal/account?project=${encodeURIComponent(subject[1])}`,
       };
     }).finally(() => this.#preparations.delete(preparation));
+  }
+
+  /** The caller supplies the prepared reference after the user accepts its summary. */
+  public publishPrepared(subject: PortalOwner, workspace: string, id: string, digest: string) {
+    return this.exclusive(subject, async () => {
+      const draft = this.#drafts.get(id);
+      if (!draft || draft.subject !== JSON.stringify(subject) || draft.workspace !== workspace || draft.digest !== digest)
+        throw new Error('Publication not found in this workspace');
+      const credential = this.credential(subject, draft.targetId, 'write');
+      if (credential.generation !== draft.generation) throw new Error('Portal connection changed; prepare publication again');
+      if (draft.state === 'published') return draft.result;
+      if (draft.state === 'uncertain') {
+        const recovered = await this.readPublicationReceipt(subject, id, credential);
+        if (recovered) return this.verifyPrepared(draft, recovered.receipt.version_id, recovered.item, recovered.receipt.revision);
+      }
+      if (draft.state === 'failed' || draft.state === 'sending') throw new Error('Prepare and agree to a new publication');
+      if (draft.expiresAt <= Date.now()) throw new Error('Publication expired; prepare publication again');
+      if (!await this.#api.supportsMutationReceipts(credential.token)) throw new Error('Portal publication receipts are unavailable');
+      draft.validateSource?.();
+      if (draft.tool.getCurrentSession()?.sessionId !== draft.sourceId || draft.session !== draft.tool.exportSession())
+        throw new Error('Local schema changed; prepare publication again');
+      const { owner, location, access_policy } = draft.before;
+      if ((owner !== null && !Number.isSafeInteger(owner)) || typeof location !== 'string' || typeof access_policy !== 'string')
+        throw new Error('Portal did not return target metadata; prepare publication again');
+      draft.state = 'sending';
+      let accepted = false;
+      try {
+        const result = await this.#api.publishSchema(draft.targetId, draft.before.time_update, draft.after,
+          operationKey(subject, 'publication', id), credential.token, { owner, location, access_policy });
+        accepted = true;
+        const verified = await this.readItem(credential, 'schema', draft.targetId);
+        return this.verifyPrepared(draft, result.version, verified, result.committed_time_update);
+      } catch (error) {
+        draft.state = !accepted && error instanceof PortalHttpError && [400, 403, 404, 409].includes(error.status) ? 'failed' : 'uncertain';
+        throw error;
+      }
+    });
+  }
+
+  /** Project-scoped recovery remains available after closing a chat or restarting the adapter. */
+  public publicationStatus(subject: PortalOwner, id: string) {
+    return this.exclusive(subject, async () => {
+      if (typeof id !== 'string' || !/^[0-9a-f-]{36}$/.test(id)) throw new Error('Invalid publicationId');
+      const draft = this.#drafts.get(id);
+      const targetId = draft?.subject === JSON.stringify(subject) ? draft.targetId : 0;
+      const credential = this.credential(subject, targetId);
+      const recovered = await this.readPublicationReceipt(subject, id, credential);
+      if (!recovered) return { publicationId: id, state: 'not_found' };
+      const { receipt, item } = recovered;
+      const metadata = { owner: item.owner, location: item.location, access_policy: item.access_policy };
+      return { publicationId: id, state: 'published', targetId: receipt.target_id, version: receipt.version_id,
+        committedTimeUpdate: receipt.revision, currentTimeUpdate: item.time_update,
+        verified: item.time_update === receipt.revision && isDeepStrictEqual(metadata, receipt.target_metadata),
+        target: { owner: item.owner, location: item.location, accessPolicy: item.access_policy } };
+    });
+  }
+
+  private async readPublicationReceipt(subject: PortalOwner, id: string, credential: PortalCredential) {
+    let receipt;
+    try {
+      receipt = await this.#api.getReceipt('rsform.publish', operationKey(subject, 'publication', id), credential.token);
+    } catch (error) {
+      if (error instanceof PortalHttpError && error.status === 404) return null;
+      throw error;
+    }
+    if (!Number.isSafeInteger(receipt.version_id) || !Number.isSafeInteger(receipt.target_id) ||
+        typeof receipt.revision !== 'string' || !Number.isFinite(Date.parse(receipt.revision)))
+      throw new Error('Invalid Portal publication receipt');
+    return { receipt, item: await this.readItem(credential, 'schema', receipt.target_id) };
+  }
+
+  private verifyPrepared(draft: PreparedPublication, version: number | null, item: Record<string, any>, revision: string) {
+    if (!Number.isSafeInteger(version) || Number(version) <= 0 || item.id !== draft.targetId ||
+        typeof revision !== 'string' || revision === draft.before.time_update || item.time_update !== revision ||
+        ['owner', 'location', 'access_policy'].some(field => item[field] !== draft.before[field]) ||
+        !isDeepStrictEqual(content(item), content(draft.after)))
+      throw new Error('Publication verification failed; inspect the receipt and current Portal schema');
+    const result = { publicationId: draft.id, targetId: draft.targetId, version, time_update: revision, verified: true };
+    draft.result = result;
+    draft.state = 'published';
+    return result;
   }
 
   /** The authenticated account page can inspect only this subject's proposals. */
@@ -646,7 +838,8 @@ export class PortalPublisher {
       if (!this.#service!.targetIds.includes(targetId)) throw new Error('Service publication target is not allowed');
       return { token: this.#service!.token, generation: 'service', account: { id: 0, username: 'service' } };
     }
-    const credential = this.#vault.get(subject);
+    const credential = this.boundCredential(subject);
+    if (!credential && this.delegated(subject)) throw new Error('Portal delegation was revoked; reauthorize the MCP connection');
     if (!credential) throw new Error(typeof subject === 'string' ? 'Connect a personal Portal key on the account page'
       : 'Connect this project to Portal using portal_connection_status and the account page');
     if (expired(credential)) throw new Error('Portal key expired; reconnect on the account page');
@@ -696,14 +889,18 @@ export class PortalPublisher {
   }
 }
 
+function previewDescription(value: string) {
+  if (value.length <= 360) return { text: value, truncated: false };
+  return { text: value.slice(0, 360), truncated: true, length: value.length,
+    digest: createHash('sha256').update(value).digest('hex') };
+}
+
 function isPublicationRefusal(error: unknown): boolean {
   return error instanceof PortalHttpError && [401, 403, 409].includes(error.status);
 }
 
-function itemRoute(kind: PortalItemKind): string {
-  const route = { schema: 'rsforms', model: 'models', oss: 'oss' }[kind];
-  if (!route) throw new Error('Invalid Portal item kind');
-  return route;
+function operationKey(subject: PortalOwner, action: 'creation' | 'publication', id: string): string {
+  return createHash('sha256').update(JSON.stringify([subject, action, id])).digest('hex');
 }
 
 function validateLocation(value: unknown): asserts value is string {

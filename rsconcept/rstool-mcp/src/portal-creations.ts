@@ -2,9 +2,10 @@ import { createHash, randomUUID } from 'node:crypto';
 import fs from 'node:fs';
 import { join } from 'node:path';
 
+import type { PortalItemKind } from '@rsconcept/rstool/portal';
+
 import type { PortalOwner } from './portal-vault';
 
-export type PortalItemKind = 'schema' | 'model' | 'oss';
 export interface CreationReceipt {
   origin: string;
   accountId: number;
@@ -12,6 +13,8 @@ export interface CreationReceipt {
   kind: PortalItemKind;
   state: 'sending' | 'created';
   targetId?: number;
+  revision?: string;
+  serverKey?: string;
 }
 
 /** Durable no-replay receipts. A lost POST response must never become a second POST. */
@@ -30,6 +33,8 @@ export class PortalCreations {
       if (typeof value.origin !== 'string' || new URL(value.origin).origin !== value.origin ||
           !value.origin.startsWith('https://') || !Number.isSafeInteger(value.accountId) || !/^[a-f0-9]{64}$/.test(value.digest) ||
           !['schema', 'model', 'oss'].includes(value.kind) || !['sending', 'created'].includes(value.state) ||
+          (value.serverKey !== undefined && !/^[a-f0-9]{64}$/.test(value.serverKey)) ||
+          (value.revision !== undefined && !Number.isFinite(Date.parse(value.revision))) ||
           (value.targetId !== undefined && (!Number.isSafeInteger(value.targetId) || value.targetId <= 0)) ||
           (value.state === 'created' && value.targetId === undefined)) throw new Error('Invalid receipt');
       return value;

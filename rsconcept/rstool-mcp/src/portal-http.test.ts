@@ -12,7 +12,8 @@ import { afterEach, expect, it, vi } from 'vitest';
 import packageInfo from '../package.json' with { type: 'json' };
 import { createBearerIdentityVerifier, createBearerTokenVerifier } from './http-auth';
 import { createRSToolHttpServer, type RSToolHttpServerOptions } from './http-server';
-import { PortalClient } from './portal-client';
+import { createPortalMcpOAuth } from './mcp-oauth';
+import { PortalClient } from '@rsconcept/rstool/portal';
 import { PortalCreations } from './portal-creations';
 import { PortalPublisher } from './portal-publisher';
 import { PortalVault } from './portal-vault';
@@ -81,6 +82,94 @@ it('prepares a schema with errors using only targetId and still requires indepen
 afterEach(async () => {
   for (const action of cleanup.splice(0).reverse()) await action();
 });
+
+it('checks access, refuses stale prepared source and recovers the committed publication in another chat', async () => {
+  const app = await start();
+  const chat = await app.connect(PROJECT_A, 'prepared-chat');
+  const other = await app.connect(PROJECT_A, 'recovery-chat');
+  const call = (name: string, args: Record<string, unknown>) => chat.client.callTool({ name, arguments: args });
+  const args = { operation: 'publish', kind: 'schema', targetId: 1, audience: 'protected' };
+  expect((await call('portal_preflight', args)).structuredContent).toMatchObject({ code: 'PORTAL_NOT_CONNECTED' });
+  await app.account('connection?project=research-a', 'PUT', { key: READ_KEY });
+  expect((await call('portal_preflight', args)).structuredContent).toMatchObject({ code: 'PORTAL_KEY_SCOPE' });
+  await app.account('connection?project=research-a', 'PUT', { key: KEY });
+  expect((await call('portal_preflight', args)).structuredContent).toMatchObject({ code: 'OK', stage: 'target' });
+  await call('apply_schema_patch', { items: [{ alias: 'X1' }] });
+  const prepare = async () => {
+    const reply = await call('portal_prepare_publication', { targetId: 1 });
+    expect(reply.structuredContent).toMatchObject({ expectedTimeUpdate: '2026-11-06T01:00:00Z', sourceDigest: expect.any(String) });
+    const { publicationId, digest } = reply.structuredContent as { publicationId: string; digest: string };
+    return { publicationId, digest };
+  };
+  const stale = await prepare();
+  await call('apply_schema_patch', { items: [{ alias: 'X2' }] });
+  expect((await call('portal_apply_publication', stale)).isError).toBe(true);
+  expect(app.remote.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(0);
+  const agreed = await prepare();
+  const original = app.remote.getMockImplementation()!;
+  app.remote.mockImplementation(async (input, init) => {
+    const response = await original(input, init);
+    if (String(input).endsWith('/publish')) throw new Error('Lost response');
+    return response;
+  });
+  expect((await call('portal_apply_publication', agreed)).isError).toBe(true);
+  await chat.transport.terminateSession();
+  const status = await other.client.callTool({ name: 'portal_get_publication_status', arguments: { publicationId: agreed.publicationId } });
+  expect(status.structuredContent).toMatchObject({ state: 'published', verified: true, targetId: 1, version: 1 });
+  const foreign = await app.connect(PROJECT_B, 'foreign-recovery');
+  expect((await foreign.client.callTool({ name: 'portal_get_publication_status', arguments: { publicationId: agreed.publicationId } })).isError).toBe(true);
+  expect(app.remote.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(1);
+}, 15_000);
+
+it('keeps MCP sessions after OAuth delegation revocation and resumes after reauthorization', async () => {
+  const issuer = 'https://portal-api.example';
+  const mcpToken = 'rcm_' + 't'.repeat(43);
+  const renewedToken = 'rcm_' + 'n'.repeat(43);
+  const portalToken = 'rcd_' + 'd'.repeat(32) + '_' + 'e'.repeat(64);
+  const renewedPortalToken = 'rcd_' + 'f'.repeat(32) + '_' + '9'.repeat(64);
+  const serviceSecret = 'service-test-only'.repeat(3);
+  let revoked = false;
+  let expired = false;
+  const oauth = createPortalMcpOAuth(issuer, ORIGIN, serviceSecret, (async (_url, init) => {
+    expect(new Headers(init?.headers).get('Authorization')).toBe(`Bearer ${serviceSecret}`);
+    const data = init?.body as URLSearchParams;
+    const token = data.get('token');
+    const isRenewed = token === renewedToken;
+    if ((!isRenewed && (token !== mcpToken || expired)) || data.get('resource') !== `${ORIGIN}/mcp/oauth-chat`)
+      return Response.json({ active: false });
+    return Response.json({ active: true, iss: issuer, aud: data.get('resource'), sub: 'portal:7', project_id: 'research-a',
+      exp: Math.ceil(Date.now() / 1000) + 300, scopes: ['read'],
+      grant_id: isRenewed ? 'bbbbbbbb-bbbb-cccc-dddd-eeeeeeeeeeee' : 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+      portal_account_id: 7, portal_username: 'Alice', portal_token: isRenewed ? renewedPortalToken : revoked ? null : portalToken });
+  }) as typeof fetch);
+  const app = await start(true, { oauth });
+  const challenge = await fetch(`${app.url}/mcp/oauth-chat`);
+  expect(challenge.headers.get('WWW-Authenticate')).toContain('/.well-known/oauth-protected-resource/mcp/oauth-chat');
+  expect(await (await fetch(`${app.url}/.well-known/oauth-protected-resource/mcp/oauth-chat`)).json())
+    .toMatchObject({ resource: `${ORIGIN}/mcp/oauth-chat`, authorization_servers: [issuer] });
+  const { client } = await app.connect(mcpToken, 'oauth-chat');
+  const args = { kind: 'schema', targetId: 1 };
+  const opened = await client.callTool({ name: 'portal_get_details', arguments: args });
+  expect(opened.structuredContent).toMatchObject({ id: 1 });
+  expect(JSON.stringify(opened)).not.toContain(portalToken);
+  await client.callTool({ name: 'apply_schema_patch', arguments: { items: [{ alias: 'X1' }] } });
+  revoked = true;
+  expect((await client.callTool({ name: 'portal_get_details', arguments: args })).isError).toBe(true);
+  const current = (await client.callTool({ name: 'get_current_session' })).structuredContent;
+  expect(current).toMatchObject({ sessionId: expect.any(String) });
+  const wrong = await fetch(`${app.url}/mcp/another-chat`, { headers: { Authorization: `Bearer ${mcpToken}` } });
+  expect(wrong.status).toBe(401);
+  expired = true;
+  const management = `${app.url}/mcp/oauth-chat/connection`;
+  expect((await fetch(management, { headers: { Authorization: `Bearer ${mcpToken}` } })).status).toBe(401);
+  const auth = { Authorization: `Bearer ${renewedToken}` };
+  const snapshot = await fetch(management, { headers: auth });
+  expect(await snapshot.json()).toMatchObject({ state: 'connected', busy: false });
+  expect((await fetch(management, { method: 'DELETE', headers: { ...auth, 'If-Match': snapshot.headers.get('ETag')! } })).status).toBe(204);
+  const resumed = await app.connect(renewedToken, 'oauth-chat');
+  expect((await resumed.client.callTool({ name: 'get_current_session' })).structuredContent).toEqual(current);
+  expect((await resumed.client.callTool({ name: 'portal_get_details', arguments: args })).structuredContent).toMatchObject({ id: 1 });
+}, 15_000);
 
 it('creates schema, model and OSS over authenticated MCP without allocating a local session', async () => {
   const app = await start();
@@ -285,7 +374,7 @@ it('builds and edits an OSS with the personal key, revision guards and operation
 });
 
 /** Exercise both protocols against a real loopback listener; only Portal itself is a stub. */
-async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions, 'sessionRetentionMs' | 'sessionCleanupIntervalMs' | 'requestTimeoutMs'> = {}) {
+async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions, 'sessionRetentionMs' | 'sessionCleanupIntervalMs' | 'requestTimeoutMs' | 'oauth'> = {}) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'portal-http-test-'));
   cleanup.push(() => {
     const relative = path.relative(path.resolve(os.tmpdir()), path.resolve(directory));
@@ -297,23 +386,34 @@ async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions,
     title: 'Before',
     alias: 'OLD',
     description: '',
+    owner: 7,
+    location: '/U/Project',
+    access_policy: 'private',
     items: [],
     attribution: [],
     time_update: '2026-11-06T01:00:00Z',
   };
   const created = new Map<number, Record<string, unknown>>();
+  const receipts = new Map<string, Record<string, unknown>>();
   const remote = vi.fn<typeof fetch>(async (input, options) => {
     const authorization = (options!.headers as Record<string, string>).Authorization;
     if (authorization === `Bearer ${READ_KEY}`) {
       if (String(input).endsWith('/me')) return Response.json({ id: 7, username: 'Alice', scopes: ['read'], expires_at: null });
       expect(options?.method).toBe('GET');
-    } else expect(authorization).toBe(`Bearer ${KEY}`);
+    } else if (authorization) expect(authorization === `Bearer ${KEY}` || authorization.startsWith('Bearer rcd_')).toBe(true);
     if (String(input).endsWith('/me')) return Response.json({ id: 7, username: 'Alice' });
     const route = new URL(String(input)).pathname;
+    const key = new Headers(options?.headers).get('Idempotency-Key');
+    if (route.endsWith('/capabilities')) return Response.json({ mutation_receipts: 1 });
+    if (route.includes('/receipts/')) return Response.json(receipts.get(key ?? '') ?? {}, { status: receipts.has(key ?? '') ? 200 : 404 });
+    if (route.endsWith('/access')) return Response.json({ id: 1, item_type: 'rsform', time_update: current.time_update,
+      can_write: authorization === `Bearer ${KEY}`, can_publish_schema: authorization === `Bearer ${KEY}` });
     if (options?.method === 'POST' && /^\/api\/agents\/(rsforms|models|oss)$/.test(route)) {
-      const item = { ...JSON.parse(String(options.body)), id: 100 + created.size,
-        owner: 7, time_update: '2026-11-13T00:00:00Z', items: [], operations: [], blocks: [] };
+      const body = JSON.parse(String(options.body));
+      const item = { ...body, id: 100 + created.size,
+        owner: 7, time_update: '2026-11-13T00:00:00Z', items: body.schema?.items ?? [], operations: [], blocks: [] };
       created.set(item.id, item);
+      if (key) receipts.set(key, { target_id: item.id, revision: item.time_update, version_id: null });
       return Response.json(item, { status: 201 });
     }
     if (route.endsWith('/context-search')) return Response.json({ ids: [...created.keys()] });
@@ -346,8 +446,12 @@ async function start(portalEnabled = true, policy: Pick<RSToolHttpServerOptions,
       return Response.json({ id: 1, description: current.description, time_update: current.time_update });
     }
     if (String(input).endsWith('/publish')) {
-      current = { ...JSON.parse(String(options!.body)).schema, id: 1, time_update: '2026-11-06T02:00:00Z' };
-      return Response.json({ version: 1, schema: current });
+      const body = JSON.parse(String(options!.body));
+      if (key && body.expected_time_update !== current.time_update) return Response.json({}, { status: 409 });
+      current = { ...current, ...body.schema, id: 1, time_update: '2026-11-06T02:00:00Z' };
+      if (key) receipts.set(key, { target_id: 1, version_id: 1, revision: current.time_update,
+        target_metadata: { owner: current.owner, location: current.location, access_policy: current.access_policy } });
+      return Response.json({ version: 1, schema: current, committed_time_update: current.time_update });
     }
     return Response.json(current);
   });

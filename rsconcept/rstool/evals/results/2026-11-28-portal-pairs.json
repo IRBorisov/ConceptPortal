@@ -1,0 +1,175 @@
+{
+  "model": "gpt-6.2-sol",
+  "runtime": "codex-cli 0.171.0-alpha.13.2",
+  "reasoning_effort": "low",
+  "baseline_commit": "1cdff4ad20d14ca2cdee59f62dc7d0b716cf701e",
+  "mode": "synthetic transcript; baseline full skills; candidate routed sections; no live tools",
+  "summary": {
+    "baseline": {
+      "context_bytes": {
+        "p50": 12672,
+        "p95": 25223
+      },
+      "input": {
+        "p50": 21946,
+        "p95": 24474
+      },
+      "uncached": {
+        "p50": 6458,
+        "p95": 8986
+      },
+      "output": {
+        "p50": 41,
+        "p95": 56
+      },
+      "tool_calls": {
+        "p50": 0,
+        "p95": 0
+      },
+      "checks_passed": 11,
+      "checks_total": 11
+    },
+    "candidate": {
+      "context_bytes": {
+        "p50": 5222,
+        "p95": 6409
+      },
+      "input": {
+        "p50": 20537,
+        "p95": 20929
+      },
+      "uncached": {
+        "p50": 5049,
+        "p95": 5441
+      },
+      "output": {
+        "p50": 41,
+        "p95": 55
+      },
+      "tool_calls": {
+        "p50": 0,
+        "p95": 0
+      },
+      "checks_passed": 11,
+      "checks_total": 11
+    }
+  },
+  "samples": [
+    {
+      "version": "baseline",
+      "scenario": "public-metadata",
+      "repeat": 0,
+      "skills": {
+        "rs-portal": "2132c4161122dea977a05f63f94e2ce918c94225c041db105282df658676183f"
+      },
+      "context_bytes": 12672,
+      "input": 21945,
+      "uncached": 6457,
+      "output": 56,
+      "rubric": {
+        "anonymous": true,
+        "metadata_only": true,
+        "session_created": true
+      },
+      "tool_calls": 0
+    },
+    {
+      "version": "candidate",
+      "scenario": "public-metadata",
+      "repeat": 0,
+      "skills": {
+        "rs-portal": "9b1813030e07f8d01fda03c6031ef7369b9ce73a1645b40da6e35334a08a2756"
+      },
+      "context_bytes": 2087,
+      "input": 20078,
+      "uncached": 4590,
+      "output": 55,
+      "rubric": {
+        "anonymous": true,
+        "metadata_only": true,
+        "session_created": true
+      },
+      "tool_calls": 0
+    },
+    {
+      "version": "baseline",
+      "scenario": "evolve-schema",
+      "repeat": 0,
+      "skills": {
+        "rstool": "31e4196a5b8ae5328172fc41c85526ef68c366bea6530f1464306e5087f0bb1c",
+        "rs-explicate": "b85d4ae7967d209741c42d4025eff7b8bec1ca8a84d52725a8082d4beafecbde",
+        "rs-interpret": "586faa5bdd31bb7846eca1c86489eb47dd1aaa627ea5f392f52314320bb30ed7"
+      },
+      "context_bytes": 25223,
+      "input": 24474,
+      "uncached": 8986,
+      "output": 37,
+      "rubric": {
+        "keep_distinction": true,
+        "first_valid": true,
+        "second_valid": true,
+        "weaken_axiom": true
+      },
+      "tool_calls": 0
+    },
+    {
+      "version": "candidate",
+      "scenario": "evolve-schema",
+      "repeat": 0,
+      "skills": {
+        "rstool": "7d46cb00e1969d50dc20d8e265bc3dca0ca0d5945f182afb85de5599ea3edaf9",
+        "rs-explicate": "00ed4a6124a1e62a61017189bf8e132ae398b2a1deb1c9ee7ba3401c6a727a74",
+        "rs-interpret": "2a1dafa0cb786d39bb0c18a0e2b6d1cdde60bd5ee1a345a4c4f6647387f5e05e"
+      },
+      "context_bytes": 6409,
+      "input": 20929,
+      "uncached": 5441,
+      "output": 37,
+      "rubric": {
+        "keep_distinction": true,
+        "first_valid": true,
+        "second_valid": true,
+        "weaken_axiom": true
+      },
+      "tool_calls": 0
+    },
+    {
+      "version": "baseline",
+      "scenario": "recover-publication",
+      "repeat": 0,
+      "skills": {
+        "rs-portal": "2132c4161122dea977a05f63f94e2ce918c94225c041db105282df658676183f"
+      },
+      "context_bytes": 12672,
+      "input": 21946,
+      "uncached": 6458,
+      "output": 41,
+      "rubric": {
+        "keep_request_id": true,
+        "check_receipt": true,
+        "independently_read_target": true,
+        "create_with_new_id": true
+      },
+      "tool_calls": 0
+    },
+    {
+      "version": "candidate",
+      "scenario": "recover-publication",
+      "repeat": 0,
+      "skills": {
+        "rs-portal": "ab46bb6820e65da08ddc9e484f717729c5ee625491d545b4112be40dd40a6664"
+      },
+      "context_bytes": 5222,
+      "input": 20537,
+      "uncached": 5049,
+      "output": 41,
+      "rubric": {
+        "keep_request_id": true,
+        "check_receipt": true,
+        "independently_read_target": true,
+        "create_with_new_id": true
+      },
+      "tool_calls": 0
+    }
+  ]
+}

@@ -5,6 +5,7 @@ from rest_framework import authentication, exceptions
 from rest_framework.request import Request
 
 from .models import ApiKey
+from .services.mcp_oauth import authenticate_delegation
 
 
 class ApiKeyAuthentication(authentication.BaseAuthentication):
@@ -25,7 +26,8 @@ class ApiKeyAuthentication(authentication.BaseAuthentication):
         if len(parts) != 2:
             raise exceptions.AuthenticationFailed('Invalid Authorization header for API key.')
 
-        key = ApiKey.authenticate_token(parts[1])
+        token = parts[1]
+        key = authenticate_delegation(token) if token.startswith('rcd_') else ApiKey.authenticate_token(token)
         if key is None:
             raise exceptions.AuthenticationFailed('Invalid or revoked API key.')
 

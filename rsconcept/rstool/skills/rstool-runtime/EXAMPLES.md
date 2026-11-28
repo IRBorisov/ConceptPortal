@@ -376,22 +376,9 @@ const evalResult = await client.call('evaluate', { constituentId: 2 });
 await client.close();
 ```
 
-## Записать схему через настроенный HTTP-хост
+## Публикация КС через MCP
 
-1. Вызвать `portal_connection_status` с `{}`. Если подключения нет, сотрудник самостоятельно
-   открывает `/portal/account` и сохраняет личный ключ. Не просить присылать секреты в чат.
-2. Прочитать целевую схему, её `time_update` и текущую сессию. Показать ID, название,
-   шифр, путь, редакцию, сессию, число конституент и все добавленные, удалённые и
-   изменённые обозначения. Для пустой цели тоже перечислить добавляемые обозначения.
-3. Дождаться явного согласия на эту сводку. Сразу перед вызовом снова сверить
-   `time_update` и сессию. Если что-то изменилось, показать новую сводку. Затем вызвать
-   `portal_publish_schema` с `{"targetId": 123}`. Флага согласия нет. После сверки ответа
-   не вызывать `replace`.
-4. Сверить ответ `verified`. При конфликте базы или неопределённом результате сначала
-   прочитать портал и не повторять запись вслепую.
-
-Контракт: [REFERENCE.md](REFERENCE.md#необязательная-публикация-через-http-хост) и
-[PORTAL-API.md](../../docs/PORTAL-API.md).
+Для существующей КС с ID `123` проверь `portal_preflight` с `{ "operation": "publish", "audience": "protected", "kind": "schema", "targetId": 123 }`. Затем вызови `portal_prepare_publication` с `{ "targetId": 123 }` и покажи его сводку. После согласия передай возвращённые `publicationId` и `digest` в `portal_apply_publication` из того же рабочего пространства. Если ответ потерян, передай `publicationId` в `portal_get_publication_status` и сверь объект. [Порядок подготовки и проверки](../rs-portal/SKILL.md#замена-существующей-кс)
 
 For hosted MCP storage errors, inspect `structuredContent.error.code` or the JSON text error. Never retry `create_session` under another workspace to bypass `SESSION_LIMIT_REACHED`: capacity belongs to the account. After `SESSION_EXPIRED`, require an explicit new session or saved import; do not silently substitute an empty model. See the runtime reference and the MCP HTTP storage policy.
 
@@ -416,3 +403,13 @@ For hosted MCP storage errors, inspect `structuredContent.error.code` or the JSO
 ## Превышен лимит хоста
 
 Если HTTP MCP вернул `COMPUTE_TIMEOUT`, не повторяй то же вычисление. Получи `get_session_storage_config`, проверь текущее состояние и сократи вход или раздели задачу на более короткие операции. При `SESSION_TOO_LARGE` уменьши импорт или модель; старую превышающую лимит сессию экспортирует администратор. Без проверенного полного экспорта очистку отложи; невозможность прочитать модель не доказывает ее ненужность. После сохранения результата агент сам проверяет соответствие экспорта удаляемой редакции и выполняет очистку.
+
+## HTTP RPC с локальной сессией
+
+Отправь JSON в `POST /v1/rpc` с заголовками `Authorization: Bearer …` и `Content-Type: application/json`. Возьми токен из доверенной конфигурации клиента. В поле `session` передай фактический результат `exportSession()`.
+
+```json
+{"id": 1, "method": "listDiagnostics", "state": {"session": "<экспорт сессии>"}}
+```
+
+Проверь `ok` в ответе и прочитай `result` или `error.code`. [Пример на Python](../../README.md#start-the-rstool-rpc-service)

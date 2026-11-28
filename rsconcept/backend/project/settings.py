@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 '''
 
+import json
 import logging
 import os
 import sys
@@ -317,6 +318,8 @@ AGENT_LOG_RETENTION_DAYS = _get_int('AGENT_LOG_RETENTION_DAYS', 30)
 AGENT_LOG_CLEANUP_INTERVAL_DAYS = _get_int('AGENT_LOG_CLEANUP_INTERVAL_DAYS', 7)
 # Stored request text is cut to this many characters. The API key stays in the header, not here.
 AGENT_LOG_REQUEST_MAX_LENGTH = 4000
+AGENT_MCP_OAUTH = json.loads(_get_secret('AGENT_MCP_OAUTH_CONFIG', 'null'))
+AGENT_MCP_OAUTH_SERVICE_SECRET = _get_secret('AGENT_MCP_OAUTH_SERVICE_SECRET', '')
 
 
 CORS_ALLOW_CREDENTIALS = True
@@ -326,6 +329,7 @@ CORS_ALLOW_HEADERS = (
     'sentry-trace',
     'baggage',
     'x-expected-time-update',
+    'idempotency-key',
 )
 CSRF_TRUSTED_ORIGINS = _get_list('CSRF_TRUSTED_ORIGINS', 'http://localhost:3000')
 CSRF_COOKIE_AGE = 365 * 24 * 60 * 60

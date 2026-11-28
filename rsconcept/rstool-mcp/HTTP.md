@@ -2,7 +2,7 @@
 
 `rstool-mcp-http` hosts the existing rstool tool catalog over Streamable HTTP. Use it when MCP clients on several machines need a centrally managed runtime. `rstool-mcp` remains the local stdio entry point.
 
-This is a single-process service with bearer credentials. Optional [Portal integration](PORTAL.md) adds encrypted personal and project connections and a separate account page.
+This single-process service uses bearer credentials. Optional Portal integration adds encrypted personal and project connections, an account page and OAuth authorization through Portal. [Portal integration](PORTAL.md)
 
 ## Configure the service
 
@@ -48,6 +48,8 @@ The hostname is illustrative. For local development, use `http://127.0.0.1:8093/
 
 `my-task` selects a durable workspace belonging to the authenticated subject and, when present, the authenticated project. Names are 1 to 64 ASCII letters, digits, dots, underscores or hyphens, beginning with a letter or digit. `/mcp` selects `default`. Use a different task name for each independently active agent. The server hashes the workspace identity to choose a directory. Project-scoped workspaces share the existing stored-session quota per account.
 
+For OAuth, choose an explicit workspace URL such as `/mcp/my-task`. Each workspace route has its own OAuth audience. `/mcp` and `/mcp/default` select the same stored workspace with distinct OAuth audiences. [OAuth pilot](PORTAL.md#oauth-pilot)
+
 After initialization, the client sends the returned `Mcp-Session-Id` on each subsequent POST/DELETE. Authentication is checked again on every request. A session ID from another subject, project or workspace returns 404. Referencing another workspace's rstool session, including as a synthesis source, cannot load its files.
 
 One workspace permits one live MCP connection. A second initialization returns 409, including two agents using the same person's credential. This prevents independently cached copies or current-session pointers from overwriting each other. Requests within that connection and tool invocations inside a JSON-RPC batch are serialized. A failed asynchronous operation completes its rollback before the next tool starts. This is exclusive ownership, not collaborative editing or optimistic merging.
@@ -62,7 +64,7 @@ When a client dies between requests and loses its MCP session ID, initialization
 2. After deciding to disconnect that client, send `DELETE /mcp/my-task/connection` with `If-Match` copied exactly from the ETag. No request body is accepted. Success is 204. A changed revision, missing precondition, busy or draining lease returns 409; an absent lease returns 404.
 3. Initialize a new MCP connection at the original workspace URL. Saved schemas remain available. This is transport recovery, never deletion of stored models or automatic retry of uncertain mutations.
 
-Use `/mcp/default/connection` for `/mcp`. Both routes use the same Host, Origin and subject/workspace checks as MCP. The opaque revision changes on every admitted MCP request and tool start/completion, even within one clock tick. A resumed client invalidates an earlier recovery snapshot. This API is an explicit disconnect by another caller with the same authenticated identity, not proof that the old process is dead. Coordinate with another live client before releasing it. It does not provide a force-release or takeover option.
+Use `/mcp/default/connection` for the default workspace. An OAuth bearer must be issued for `/mcp/default` to use that management route. Both routes use the same Host, Origin and subject/workspace checks as MCP. The opaque revision changes on every admitted MCP request and tool start/completion, even within one clock tick. A resumed client invalidates an earlier recovery snapshot. Confirm with the other client before explicitly releasing an idle connection. A lost transport ID alone does not indicate whether the original client is still active.
 
 The HTTP response deadline starts when the listener receives a request, including authentication, management and Portal account routes. An incomplete MCP request body, interrupted response or `requestTimeoutMs` deadline closes that lease to new work and closes its HTTP responses. Tools queued behind a running tool cannot start after draining begins. Every actual tool invocation, including Portal and storage/metadata tools, keeps ownership until it settles, independently of the HTTP handler. A lease with a non-cancellable asynchronous operation stays draining and consumes its session slot; it is never replaced by a second mutable agent. HTTP deadlines bound connections, not the duration of external side effects. Inspect Portal after an interrupted write.
 

@@ -37,7 +37,7 @@ Run from a clean `main` with a clean working tree.
    pnpm publish --dry-run --access public
    ```
 
-   Confirm the tarball only includes intended paths (`dist/`, `src/`, `skills/`, `docs/`, `examples/`, `README.md`, `LICENSE`, etc.).
+   Confirm the tarball includes both bins, `rstool-wrapper` and `rstool-http`, the `@rsconcept/rstool/http` and `@rsconcept/rstool/portal` exports, and the relevant skills, docs and examples.
 
 6. **Publish**:
 

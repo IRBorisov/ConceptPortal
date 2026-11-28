@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from apps.users.models import User
 from shared.throttling import EndpointRateThrottle
 
-from .models import ApiKey
+from .models import AGENT_CREDENTIAL_TYPES, ApiKey
 from .services.quota import blocked_for, consume, remember_block
 
 
@@ -31,7 +31,7 @@ class _AgentQuotaThrottle(BaseThrottle):
     def allow_request(self, request: Request, view: APIView) -> bool:
         api_key = getattr(request, 'auth', None)
         user = getattr(request, 'user', None)
-        if not isinstance(api_key, ApiKey) or not isinstance(user, User):
+        if not isinstance(api_key, AGENT_CREDENTIAL_TYPES) or not isinstance(user, User):
             if self.kind != 'read':
                 return True
             anonymous = AnonymousAgentReadThrottle()
@@ -53,7 +53,8 @@ class _AgentQuotaThrottle(BaseThrottle):
             remember_block(user.pk, reason or self.kind, self.retry_after)
             return False
 
-        api_key.touch_last_used()
+        if isinstance(api_key, ApiKey):
+            api_key.touch_last_used()
         return True
 
 

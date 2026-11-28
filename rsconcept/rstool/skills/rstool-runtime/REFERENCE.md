@@ -1,6 +1,6 @@
 # ЯРЭ и rstool — справочник
 
-Контракт library / stdio / MCP для агентов. Запуск и правила — [SKILL.md](SKILL.md); этапы работы — [../rstool/SKILL.md](../rstool/SKILL.md). Примеры — [EXAMPLES.md](EXAMPLES.md). Язык — `docs/*.md`.
+Контракт библиотеки, stdio, HTTP RPC и MCP для агентов. Запуск — [SKILL.md](SKILL.md), этапы работы — [маршрутизатор rstool](../rstool/SKILL.md), примеры — [EXAMPLES.md](EXAMPLES.md).
 
 ## Контракт rstool
 
@@ -306,19 +306,24 @@ JSON-строка сессии для последующего `importData(..., 
 
 Исходники кодов ошибок ЯРЭ: `@rsconcept/domain` (`RSErrorCode`, `error.ts`). Не дублируй грамматику в skill — правь domain и при необходимости этот help map.
 
-## Необязательная публикация через HTTP-хост
+## HTTP API rstool
 
-При включённой интеграции хост добавляет `portal_connection_status` (без аргументов),
-`portal_publish_schema` и `portal_prepare_publication` (оба принимают только `targetId`).
-Они не входят в базовый контракт rstool. `portal_publish_schema` сразу записывает текущую
-сессию в указанную схему и возвращает сверку. Перед вызовом агент показывает сводку изменений
-и ждёт явного согласия. `portal_prepare_publication` только готовит черновик для старой
-страницы кабинета и схему не меняет. Подробности: [PORTAL-API.md](../../docs/PORTAL-API.md),
-[настройка хоста](../../../rstool-mcp/PORTAL.md).
+`GET /v1/contract` доступен без токена. Он возвращает `apiVersion: 1`, версию базового контракта, JSON Schema оболочек и соответствие имён операций stdio и MCP. Параметры отдельных операций описаны выше в этом справочнике.
 
-Сотрудник открывает страницу отдельно, чтобы сохранить личный ключ портала. Ключ кабинета
-и ключ Portal запрещено передавать в чат, MCP-аргументы или сессию rstool. Согласие на
-замену схемы пользователь даёт в разговоре после сводки, а не кнопкой на странице кабинета.
+Для `POST /v1/rpc` отправь `Content-Type: application/json` и `Authorization: Bearer …`. Оболочка содержит `id`, `method` и плоские `params`. Состояние выбирает поле `state`:
+
+| Режим | Поле | Срок жизни |
+| --- | --- | --- |
+| Разовое выполнение | Без `state` или `state.session` с экспортом `exportSession()` в виде строки или объекта | Новый агент на каждый запрос. Для продолжения передавай экспорт из предыдущего ответа |
+| Сессия проекта | `state.sessionId` | Только на программном хосте с настроенным `resolveProjectAgent`. Хост разрешает ID в области подтверждённых пользователя и проекта |
+
+Идентификатор серверной сессии передавай в `state.sessionId`. `params.sessionId` допустим только у `setCurrentSession`, который не работает с `state.sessionId`. `returnSession: true` добавляет в успешный ответ строку `session`, если у операции есть доступная сессия. CLI поддерживает разовые запросы. Сохранённые сессии MCP обслуживает собственный хост.
+
+Ошибки диспетчера, в том числе `NO_CURRENT_SESSION` и `METHOD_NOT_FOUND`, приходят с HTTP `200` и `ok: false`. Проверяй `ok` и `error.code`. Ошибки аутентификации, запроса и лимитов имеют отдельный HTTP-статус. По умолчанию предел запроса — 1 МиБ, успешного ответа — 4 МиБ. При `RESPONSE_TOO_LARGE` операция могла уже изменить сохранённую сессию. Сначала прочитай состояние, затем реши, нужен ли повтор. [Настройка CLI и пример Python](../../README.md#start-the-rstool-rpc-service)
+
+## Portal через HTTP MCP
+
+Инструменты Portal появляются в каталоге Streamable HTTP MCP при включённой интеграции. Проверь `list_methods` и применяй маршрут из [rs-portal](../rs-portal/SKILL.md). Настройку проекта, OAuth и совместимость версий описывает [документация MCP-хоста](https://github.com/IRBorisov/ConceptPortal/blob/main/rsconcept/rstool-mcp/PORTAL.md).
 
 ### Trusted storage lifecycle hooks
 

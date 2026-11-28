@@ -5,6 +5,7 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 
 import { RSToolAgent, RSToolError } from "@rsconcept/rstool";
+import { portalFailure } from '@rsconcept/rstool/portal';
 
 import packageInfo from '../package.json' with { type: 'json' };
 import { TOOL_DEFINITIONS, type ToolDefinition } from "./tools";
@@ -134,6 +135,8 @@ function errorResult(error: Record<string, unknown>, text = JSON.stringify({ err
 function failureResult(error: unknown, name: string, sanitizeStorageErrors = false) {
   const storage = storageFailure(error, sanitizeStorageErrors);
   if (storage) return errorResult(storage);
+  const portal = portalFailure(error);
+  if (portal) return errorResult({ ...portal, tool: name });
   if (error instanceof RSToolError) return errorResult({ code: error.code, tool: name, message: error.message });
   const message = error instanceof Error ? error.message : String(error);
   return errorResult({ code: 'TOOL_EXECUTION_FAILED', tool: name, message }, `rstool error in ${name}: ${message}`);

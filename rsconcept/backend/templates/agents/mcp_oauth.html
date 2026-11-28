@@ -1,0 +1,48 @@
+{% load i18n %}
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="same-origin">
+  <title>{% translate 'ConceptPortal MCP access' %}</title>
+</head>
+<body>
+  <main>
+    <h1>{% translate 'ConceptPortal MCP access' %}</h1>
+    {% if login_form %}
+      <form method="post">
+        {% csrf_token %}
+        {{ login_form.as_p }}
+        <button type="submit">{% translate 'Sign in' %}</button>
+      </form>
+    {% elif management %}
+      {% for project in manage_projects %}
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="project" value="{{ project }}">
+          <p>{{ project }}</p>
+          <button type="submit">{% translate 'Revoke Portal access' %}</button>
+        </form>
+      {% empty %}
+        <p>{% translate 'No active MCP projects have access to Portal.' %}</p>
+      {% endfor %}
+    {% else %}
+      <p>{{ user.username }} · {{ client_id }}</p>
+      <p>{% if can_write %}{% translate 'Permission to read and edit library items available to your account.' %}
+         {% else %}{% translate 'Permission to read library items available to your account.' %}{% endif %}</p>
+      <form method="post">
+        {% csrf_token %}
+        {% if projects %}
+          <label for="project">{% translate 'Project' %}</label>
+          <select id="project" name="project">{% for project in projects %}<option>{{ project }}</option>{% endfor %}</select>
+          <button type="submit" name="decision" value="allow">{% translate 'Allow access for 30 minutes' %}</button>
+        {% else %}
+          <p>{% translate 'No projects are available for these permissions.' %}</p>
+        {% endif %}
+        <button type="submit" name="decision" value="deny">{% translate 'Decline' %}</button>
+      </form>
+    {% endif %}
+  </main>
+</body>
+</html>

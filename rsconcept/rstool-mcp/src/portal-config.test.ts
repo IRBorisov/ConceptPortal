@@ -56,6 +56,19 @@ it('uses the separate human audience and does not expose configured credentials'
   expect(JSON.stringify(options)).not.toContain(human[0].token);
 });
 
+it('requires an independent and separately stored OAuth introspection credential', async () => {
+  const app = setup();
+  const secretFile = path.join(app.directory, 'oauth-secret');
+  const secret = 'o'.repeat(40);
+  fs.writeFileSync(secretFile, secret, { mode: 0o600 });
+  const environment = { ...app.environment, RSTOOL_MCP_OAUTH_SERVICE_SECRET_FILE: secretFile };
+  const options = await loadPortalConfiguration(environment, mcp, app.workspace);
+  expect(options?.oauth?.resource('chat')).toBe('https://mcp.example/mcp/chat');
+  expect(JSON.stringify(options)).not.toContain(secret);
+  fs.writeFileSync(secretFile, mcp[0].token);
+  await expect(loadPortalConfiguration(environment, mcp, app.workspace)).rejects.toThrow('Cannot initialize');
+});
+
 it('derives manageable projects from the host configuration for each authenticated subject', async () => {
   const app = setup();
   const options = await loadPortalConfiguration(app.environment, [

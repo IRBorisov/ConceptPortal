@@ -34,7 +34,7 @@ from ..services.oss_layout import (
     default_operation_rect,
     operation_node_id
 )
-from .base import AgentItemView
+from .base import IDEMPOTENCY_PARAMETER, AgentItemView
 
 
 class AgentOssBase(AgentItemView):
@@ -121,6 +121,7 @@ def _parent_id(item_data: dict) -> int | None:
     tags=['Agents'],
     summary='Create operation schema library item',
     request=LibraryItemCreateSerializer,
+    parameters=[IDEMPOTENCY_PARAMETER],
     responses={c.HTTP_201_CREATED: oss_serializers.OperationSchemaSerializer},
 )
 class AgentOssCreateView(AgentOssBase):
@@ -140,11 +141,12 @@ class AgentOssCreateView(AgentOssBase):
         if location:
             assert_can_write_location(request.user, location)
 
-        with transaction.atomic():
+        def create():
             item = serializer.save(owner=request.user)
             oss_models.Layout.objects.create(oss=item, data=[])
-            self._log('oss.create', c.HTTP_201_CREATED, summary=f'Created {item.alias}', item=item)
-        return Response(status=c.HTTP_201_CREATED, data=self._details(item))
+            return item
+
+        return self._create_with_receipt('oss.create', LibraryItemType.OPERATION_SCHEMA, create, self._details)
 
 
 @extend_schema(

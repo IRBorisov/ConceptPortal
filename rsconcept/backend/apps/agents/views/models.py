@@ -23,7 +23,7 @@ from apps.rsmodel.mutations import (
     set_constituent_values,
 )
 
-from .base import AgentItemView
+from .base import IDEMPOTENCY_PARAMETER, AgentItemView
 
 
 class AgentModelBase(AgentItemView):
@@ -38,6 +38,7 @@ class AgentModelBase(AgentItemView):
     tags=['Agents'],
     summary='Create conceptual model bound to a readable schema',
     request=LibraryItemCreateSerializer,
+    parameters=[IDEMPOTENCY_PARAMETER],
     responses={c.HTTP_201_CREATED: model_serializers.RSModelSerializer},
 )
 class AgentModelCreateView(AgentModelBase):
@@ -59,14 +60,11 @@ class AgentModelCreateView(AgentModelBase):
         validated['location'] = validate_writable_location(
             request.user, validated.get('location', LocationHead.USER),
         )
-        with transaction.atomic():
-            model = RSModel.create(schema=schema, owner=request.user, **validated)
-            result = model_serializers.RSModelSerializer(model.model).data
-            self._log(
-                'model.create', c.HTTP_201_CREATED,
-                summary=f'Created {model.model.alias}', item=model.model,
-            )
-        return Response(result, status=c.HTTP_201_CREATED)
+        return self._create_with_receipt(
+            'model.create', LibraryItemType.RSMODEL,
+            lambda: RSModel.create(schema=schema, owner=request.user, **validated).model,
+            lambda item: model_serializers.RSModelSerializer(item).data,
+        )
 
 
 @extend_schema(

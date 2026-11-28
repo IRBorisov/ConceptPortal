@@ -2,7 +2,13 @@
 
 Optional integration for the HTTP host. The unconfigured HTTP service and stdio catalog are unchanged. Publication replaces an existing owned schema; it does not move objects or change access policies. Creation tools add empty objects as described in [Create and inspect library items](#create-and-inspect-library-items). Deploy the backend endpoints in this release before enabling it.
 
-This is the scope of this MCP integration, not a limitation of Portal REST. A library folder is represented by each item's `location` string; there is no separate folder object to create. Portal REST supports `POST /api/agents/rsforms` to create an empty schema with its target `location`, followed by an initial content upload. See [new schema creation](../rstool/docs/PORTAL-PUBLISH.md#новая-кс). `create_session` creates an rstool session, not a Portal library item. When this adapter lacks a needed operation, use an independently authorized REST client or report that specific access gap. Never extract the bound key. Schema content is written by `portal_publish_schema` after the user explicitly accepts the change summary in the conversation. The account page binds the personal key. It is not required to approve each schema write.
+Portal REST supports `POST /api/agents/rsforms` to create a schema at its target `location`, with optional contents in the same transaction. Use the prepared publication flow to replace an existing schema after the user accepts its change summary. Account credentials stay in the MCP host. A separately authorized REST client can call the Portal API directly. [New schema creation](../rstool/docs/PORTAL-PUBLISH.md#новая-кс)
+
+## Access and current publishing tools
+
+Use portal_preflight before a protected operation. It checks Portal identity and metadata access, and can ask Portal to confirm edit or publication rights. Choose audience public for anonymous reads. The protected binding belongs to the authenticated user and project. See [diagnostic codes](../rstool/docs/PORTAL-READ.md#проверка-доступа-до-записи).
+
+Roll out the Portal migrations and API first, followed by rstool 3.3 and the MCP 2.10 adapter. The prepared flow checks the API's `mutation_receipts` capability. MCP 2.10 deprecates `portal_publish_schema(targetId)` and retains it for 2.x callers. Remove it in MCP 3.0 after confirming that clients have migrated to the prepared flow. Portal retains committed receipts for the lifetime of the account and checks current read access on lookup. [Receipt protocol](../rstool/docs/PORTAL-PUBLISH.md#квитанции-и-повтор-запроса)
 
 ## Host configuration
 
@@ -43,7 +49,7 @@ Its authenticated subject determines whose settings you can manage. Each person 
 
 The encrypted key cannot be fetched back, selected by another subject or read by an MCP tool. The page uses no localStorage/cookies for credentials and clears input fields after reading them. Reload clears the human token held in memory. Disconnect removes the binding and outstanding approvals but does not revoke the original Portal key: revoke it in the Portal profile too. Replacing the key also invalidates approvals, including on an already-open MCP connection.
 
-Public data reads require no Portal key. In the Portal profile, choose **Read only** for inspection or **Read and write** for creating, editing, and publishing schemas with `portal_publish_schema`. Issued keys retain their `read` and `write` permissions and expiry. Expired or revoked keys cannot authenticate. The account page displays bound-key policy when the backend provides it. Portal enforces scopes, expiration and the owner’s object permissions on every request. Cached MCP metadata is an early hint. OAuth is not implemented.
+Public data reads require no Portal key. In the Portal profile, choose **Read only** for inspection or **Read and write** for creating, editing, and publishing schemas. The account page displays bound-key policy. Portal enforces scopes, expiration and object permissions on every request. The delegated alternative is documented below.
 
 ## Connect a project
 
@@ -63,15 +69,9 @@ Use `portal_search_library(query, location?)` before creation to find accessible
 
 Creation requires a personal key with read and write scopes. The backend determines ownership, checks readable schema binding and location rights, applies quotas and records the mutation. Existing target-ID-scoped service grants do not authorize creation or general library search. No key or owner override is accepted by the MCP tools. Supply title, alias and description without leading or trailing whitespace: noncanonical metadata is rejected before POST because library creation trims these fields.
 
-Choose a stable unique `requestId` of 8–128 letters, digits, underscores or hyphens. The active connection scope determines the receipt namespace. The host persists the receipt before POST and records the returned ID before independent readback. Repeating the same ID and arguments reads the known result instead of sending POST again, including after host restart. Reusing the ID with different arguments, another Portal account or another API origin is rejected. Status reads also reject receipts from another origin; use separate host storage for a different Portal. These receipts store only a request digest, API origin, account ID, kind, state and created ID, never credentials or document contents.
+Choose a stable requestId and preserve the local receipts in creations/ inside the vault. Portal commits the receipt with the item. Recover the target ID with portal_get_creation_status after a lost reply. If replaying a creation, reuse the same requestId and arguments. Legacy uncertain receipts may require a library search.
 
-After a timeout use `portal_get_creation_status(requestId)`. For project receipts the host verifies the bound key and Portal account before returning the receipt. `created` gives the known ID; inspect it with `portal_get_details`. `uncertain` means that the POST outcome is unknown: search the library and reconcile it before starting any new request ID. Do not bypass the no-replay guard by changing IDs. A refusal or failed verification is not retried automatically. Local receipts are not server-side exactly-once creation across different request IDs or lost host storage.
-
-Receipts live in `creations/` inside `RSTOOL_PORTAL_VAULT_DIR`. Preserve that directory across restarts and upgrades. Do not remove uncertain receipts to retry a POST. The HTTP timeout can end the caller's wait while the underlying operation is still completing; status and readback determine the result.
-
-Creation returns `{requestId, kind, portalOrigin, targetId, verified, item}` after checking metadata against an independent GET. It does not import local contents. For a new schema, load the local session, show the user the target and the change summary, and after an explicit yes call `portal_publish_schema` with the returned ID. Read the new object back from the tool result. Stored expression errors are not silently corrected by creation.
-
-Deploy the backend with `POST /api/agents/models` before using `portal_create_model`; older backends reject that route. Direct publication is part of `@rsconcept/rstool-mcp` 2.5.0 and requires updating and restarting the configured host. Merely updating these instructions does not update an installed service. The account page and `portal_prepare_publication` remain for key binding and old drafts.
+Use portal_create_schema_from_session to create and initialize a new schema. Review the intended title, alias, location, access policy and contents with the user first. To finish an existing empty item, use its saved ID in the publication workflow. Verify the revision, contents and library metadata by independent readback.
 
 ## Portal tools
 
@@ -96,8 +96,12 @@ Only configured HTTP hosts expose:
 | `portal_update_description` | Accepts `targetId`, `expectedTimeUpdate`, `description`; updates only the description with CAS and independent readback, without a local rstool session or approval page |
 | `portal_connection_status` | Safe account and status for the authenticated personal or project connection |
 | `portal_set_model_values` | Set interpretation values on an existing Portal model using a revision guard and independent readback |
-| `portal_publish_schema` | Accepts only `targetId`; replaces that schema with the current rstool session, then reads it back. Call it only after explicit user permission |
-| `portal_prepare_publication` | Accepts only `targetId`; captures a draft and an account-page path. It does not write. Agents use `portal_publish_schema` instead |
+| `portal_preflight` | Check account access and object capability using metadata |
+| `portal_create_schema_from_session` | Create and initialize a new schema in one transaction |
+| `portal_prepare_publication` | Capture target revision, source session and change summary |
+| `portal_apply_publication` | Apply the agreed `publicationId` and `digest` |
+| `portal_get_publication_status` | Read the committed receipt and independently check the target |
+| `portal_publish_schema` | Deprecated compatibility tool accepting `targetId` |
 
 ## Set model values
 
@@ -126,17 +130,30 @@ Text fields use Portal names such as `term_raw`, `definition_raw`, `definition_f
 
 ## Publish a schema
 
-No MCP tool enrolls keys or accepts an approval flag. Before `portal_publish_schema`, the agent shows the user the target ID, title, alias, location, `time_update`, the source session, constituent counts before and after, and every added, removed and changed alias, including a first load into an empty schema. The summary also names title, alias or description changes and states that every constituent is new when the target is empty. The agent waits for an explicit yes for that summary. A general request to upload files, without that summary, is not permission. Immediately before the call, the agent reads `portal_get_description` and checks that the current session is still the approved source. If `time_update` or the session differs from the accepted summary, the agent shows a new summary and waits for a new yes. The tool then writes immediately. Schema diagnostics, including errors, do not block the write. A successful readback does not certify the theory. The MCP path ends at that readback. It does not also call `create-version` or `replace`.
+Call `portal_prepare_publication(targetId)` and show its summary to the user. Include the target, source session, expected revision, metadata changes and constituent changes. If the description preview is truncated, inspect the source text before asking for approval. Pass `publicationId` and `digest` to `portal_apply_publication` in the preparing workspace within ten minutes. The adapter checks the live source export and credential. Portal checks the agreed revision and metadata while locking the item, saves one snapshot, and commits the change and receipt together.
 
-`portal_prepare_publication` remains for the account page. Its drafts expire after ten minutes and are invalidated by local session changes, key changes, workspace disposal and MCP disconnect. There is one prepared proposal per workspace. Agents do not send users through that page to publish schema content.
+If the source, target or credential changes, prepare and agree to a new summary. On timeout, call `portal_get_publication_status` from the same project and reread the target. A returned `state: published` confirms the committed write even when `verified: false` reports a difference from the current revision or metadata. For an explicit service grant, status lookup also requires the draft to remain in the host's memory so the adapter can verify the allowed target. Schema diagnostics do not block publishing. The account page can still approve drafts via the legacy flow during the compatibility window.
 
-The account page still binds and disconnects the personal Portal key. That binding is separate from schema publication.
+## OAuth pilot
 
-`portal_publish_schema` sends one `POST /api/agents/rsforms/:id/publish` for the current session. The host then reads the schema back and compares persisted fields, metadata and attribution with the requested replacement. Database-assigned IDs and resolved text are not compared literally with local IDs. A stale base returns 409 and does not write. A lost response or failed readback is uncertain: inspect Portal with `portal_get_details` before calling publish again. The tool does not retry. `POST /publish` requires the `write` scope and owner or staff edit access. In one transaction it claims `expected_time_update`, saves a version and replaces content.
+Portal is the authorization server for pre-registered public clients. It displays the approved project and scopes, checks exact registered redirect URIs, and requires S256 PKCE. Set `AGENT_MCP_OAUTH_CONFIG` to the path of a protected JSON file and `AGENT_MCP_OAUTH_SERVICE_SECRET` to the path of a protected file holding an independent random service secret with at least 32 characters.
 
-An old `portal_prepare_publication` draft can still be approved on the account page. That approval sends the stored payload for its digest and cannot override the target. It is not the agent path.
+    {
+      "issuer": "https://api.portal.example",
+      "mcp_origin": "https://mcp.example",
+      "clients": {
+        "desktop-pilot": {
+          "redirect_uris": ["http://127.0.0.1:38737/callback"],
+          "projects": {"research": {"users": [7], "scopes": ["read", "write"]}}
+        }
+      }
+    }
 
-Account APIs require the independent human bearer credential; an ordinary agent MCP token cannot access them even through raw HTTP. Writes additionally require the configured browser Origin. This is not MFA or proof of physical human presence: a stolen human token still grants its owner's settings/approval access. Protect and rotate that token separately; never send it to an agent.
+On the MCP host, point RSTOOL_MCP_OAUTH_SERVICE_SECRET_FILE to the same secret in a protected file. Route /.well-known/oauth-protected-resource and its /mcp variants to MCP. Route /.well-known/oauth-authorization-server to Portal. Register the client's actual callback. Every client bearer has the exact MCP workspace URL as its audience. Different workspace URLs have distinct sessions even when their Portal account and project are the same. After 30 minutes the client starts authorization again using the existing Portal browser session. Existing REST keys and project API-key bindings remain available.
+
+The MCP host introspects its bearer and receives a separate Portal-only credential. Portal enforces the current account, grant, scopes and object permissions on every protected operation. Revoke Portal access in /api/agents/oauth/grants. The MCP bearer remains valid for opening saved sessions until it expires. Removing project membership or deactivating the Portal account ends MCP authorization too. Use matching accounts of the form portal:<account ID> in static credentials only when intentionally sharing the same workspace.
+
+The pilot uses pre-registration and starts a new code flow on expiry. With several registered projects, a client that supports additional authorization parameters can send `project=<id>` to the Portal authorization endpoint. Portal checks membership and requested scopes, then reuses active consent for that project. Without the parameter the user chooses the project in Portal. [MCP OAuth discovery and resource requirements](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization)
 
 ## Explicit service identity
 
@@ -148,7 +165,7 @@ Optional `RSTOOL_PORTAL_SERVICE_KEY_FILE` points to a protected runtime credenti
 
 Replace the illustrative target with an authorized existing schema. Both settings are required together. Use a dedicated non-staff Portal account owning only the intended schemas. Listed subjects operate in service mode and are ineligible for personal or project key enrollment. Other subjects require personal keys for private reads and writes. Description editing and full publication need both `read` and `write` because the workflow verifies target details. Missing, revoked or invalid personal keys never fall back to the service key. Service identity is selected by trusted configuration, not tool arguments. Changes require restart and invalidate proposals.
 
-Outgoing requests use a fixed HTTPS origin, normal certificate validation, deadlines and bounded response bodies. Redirects are refused. Transport headers, remote error bodies and credentials are not reflected in responses/logs. Incoming MCP tokens are never forwarded to Portal. Backend audit records the Portal key owner and target. Do not enable request-body debug logging on account routes.
+Portal data requests use a fixed HTTPS origin, normal certificate validation, deadlines and bounded response bodies. The client refuses redirects and sanitizes remote errors. For the OAuth pilot, the MCP token is sent to the issuer's introspection endpoint, and the Portal data API receives a separate delegated credential. Backend audit records the actor and target. Keep request-body debug logging disabled on account and OAuth credential routes.
 
 ## Verification before deployment
 
@@ -157,7 +174,7 @@ Use isolated test accounts/schemas: verify cross-user isolation, missing-key beh
 
 ## Description-only edits
 
-`portal_update_description` uses the same trusted subject and encrypted bound key as publication. It accepts no key, identity, schema or confirmation field. Personal and service target restrictions apply, as do Portal edit permissions. Connecting a key authorizes description edits and `portal_publish_schema`. Full schema replacement does not use the account page. The agent still needs explicit permission in the conversation before calling `portal_publish_schema`.
+`portal_update_description` uses the authenticated subject and its trusted credential. Portal applies object edit permissions and the expected description revision. For full replacement, follow the prepared publication protocol after explicit user consent.
 
 Call `portal_get_description(targetId)` to read the current description and `time_update` with the bound key before updating. This read uses Portal read permissions and the same personal/service target grants, exposes no credential or constituent data, and creates no local model. Pass its `time_update` as `expectedTimeUpdate` to the update tool. The backend `POST /api/agents/rsforms/:id/description` accepts only `{expected_time_update, description}`. The description is a required string, may be empty, preserves whitespace, and is limited to 100000 characters. In one transaction it conditionally updates only description and a strictly advancing timestamp, rechecks edit permission and audits the action. It creates no version snapshot and uses ordinary write quotas. Title, alias, items, formulas, attribution and access policy are unchanged. A stale revision returns 409 without writing.
 

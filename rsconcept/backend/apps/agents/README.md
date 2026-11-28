@@ -11,16 +11,7 @@ replace constituents. The MCP host independently reads back the result.
 
 ## Approved MCP publication
 
-`GET /api/agents/me` resolves a bearer key to its account id/username without
-returning key material. `POST /api/agents/rsforms/:id/publish` accepts
-`{expected_time_update, schema}` and requires the `write` scope and owner/staff edit rights. Its
-transaction conditionally claims the observed timestamp, preserves a full
-version and replaces content. A stale timestamp returns 409; failed validation
-or replacement leaves no partial schema or version. RSForm mutation helpers
-take a library-row write lock before editing constituents. Existing routes keep
-their contracts. Public data reads need no key. Private reads and writes require a suitable key and object access. Any active key can resolve its own identity.
-Hosted MCP enrollment/approval and secret storage are documented in
-[rstool-mcp/PORTAL.md](../../../rstool-mcp/PORTAL.md).
+`GET /api/agents/me` resolves active credentials to account ID, username, scopes and expiry without returning credential material. Publication requires `write` and owner or staff edit rights. Its transaction locks the item, checks the approved revision and supplied metadata, creates a snapshot and commits the replacement and optional receipt together. A stale base returns `409`. RSForm mutation helpers take a library-row write lock before editing constituents. [Payloads and receipts](../../../rstool/docs/PORTAL-PUBLISH.md) · [Hosted MCP credentials and OAuth](../../../rstool-mcp/PORTAL.md)
 
 API keys contain a public prefix and a secret generated with
 `secrets.token_urlsafe(32)`, giving the secret 256 random bits. Store the full
@@ -56,6 +47,8 @@ MCP adapter. The migration removes the old `publish` permission and preserves
 each key's existing `read` and `write` permissions. A key with only the former
 `publish` permission is left with an empty scope list. Rolling back to code that
 requires `publish` again requires reissuing publishing keys with that scope.
+
+Apply migrations `0006` (mutation receipts) and `0007` (MCP grants) before enabling prepared publication and the OAuth pilot in the MCP adapter. [Portal rollout](../../../rstool-mcp/PORTAL.md#access-and-current-publishing-tools)
 
 Before rolling back to a backend without key policies, revoke every scoped or expiring key, including already expired keys. The earlier backend ignores scopes and expiry and would otherwise give those keys the owner's full permissions again. Identify and revoke them while the policy fields still exist; do not reverse the migration first. Reissue replacement credentials only after deciding the rollback access policy. Database compatibility alone does not preserve key restrictions.
 

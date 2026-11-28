@@ -7,6 +7,7 @@ import { HostedRSToolAgent } from '@rsconcept/rstool/hosting';
 import { ComputePool, COMPUTE_TOOLS } from './compute-pool';
 
 import { isProjectId, type HttpIdentity, type VerifyHttpToken } from './http-auth';
+import type { McpOAuth, McpOAuthIdentity } from './mcp-oauth';
 import { SessionPolicy, SessionStorageError, workspaceNamespace } from './session-policy';
 import { buildRSToolMcpServer } from './server';
 import { handlePortalAccount, servePortalAccount } from './portal-account';
@@ -44,11 +45,13 @@ export interface RSToolHttpServerOptions {
   requestTimeoutMs?: number;
   /** Deadline for an asynchronous credential verifier. */
   authenticationTimeoutMs?: number;
+  oauth?: McpOAuth;
   /** Optional fixed-origin integration; account APIs and Portal tools exist only when configured. */
   portal?: {
     publisher: PortalPublisher;
     publicOrigin: string;
     verifyAccountToken: VerifyHttpToken;
+    oauth?: McpOAuth;
     /** Authoritative project memberships available to the independently authenticated human. */
     projectsForSubject?: (subject: string) => readonly string[];
   };
@@ -83,6 +86,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
     throw new Error('HTTP requires persistenceDir and verifyToken');
   }
   const maxSessions = positiveInteger(options.maxSessions ?? 32, 'maxSessions');
+  const oauthConfiguration = options.oauth ?? options.portal?.oauth;
   const idleTimeoutMs = positiveInteger(options.idleTimeoutMs ?? 30 * 60_000, 'idleTimeoutMs');
   const maxRequestBodySize = positiveInteger(options.maxRequestBodySize ?? 4 * 1024 * 1024, 'maxRequestBodySize');
   const maxPendingRequests = positiveInteger(options.maxPendingRequests ?? 8, 'maxPendingRequests');
@@ -178,19 +182,30 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
       return reject(response, 403, 'Origin is not allowed');
     }
     if (options.portal && servePortalAccount(url.pathname, request, response)) return;
+    const metadata = /^\/\.well-known\/oauth-protected-resource(?:\/mcp(?:\/([A-Za-z0-9][A-Za-z0-9._-]{0,63}))?)?$/.exec(url.pathname);
+    if (oauthConfiguration && metadata && request.method === 'GET') {
+      response.writeHead(200, { 'Content-Type': 'application/json' });
+      response.end(JSON.stringify({ resource: oauthConfiguration.resource(metadata[1]),
+        authorization_servers: [oauthConfiguration.issuer], scopes_supported: ['portal.read', 'portal.write'], bearer_methods_supported: ['header'] }));
+      return;
+    }
     const accountRoute = options.portal && url.pathname.startsWith('/portal/api/');
     const management = /^\/mcp\/([A-Za-z0-9][A-Za-z0-9._-]{0,63})\/connection\/?$/.exec(url.pathname);
     const route = management ?? /^\/mcp(?:\/([A-Za-z0-9][A-Za-z0-9._-]{0,63}))?\/?$/.exec(url.pathname);
     if (!route && !accountRoute) return reject(response, 404, 'Not found');
     const token = /^Bearer ([^\s]+)$/i.exec(request.headers.authorization ?? '')?.[1];
-    const verifier = accountRoute && options.portal ? options.portal.verifyAccountToken : options.verifyToken;
+    const oauth = !accountRoute && oauthConfiguration && token?.startsWith('rcm_') ? oauthConfiguration : undefined;
+    const verifier = oauth ? (value: string, signal?: AbortSignal) => oauth.verify(value, route?.[1], signal) :
+      accountRoute && options.portal ? options.portal.verifyAccountToken : options.verifyToken;
     const identity = token ? await verifyWithDeadline(verifier, token, authenticationTimeoutMs) : null;
     if (identity === AUTHENTICATION_TIMEOUT) return reject(response, 503, 'Authentication timed out');
     const subject = typeof identity === 'string' ? identity : identity?.subject;
     const projectId = typeof identity === 'string' ? undefined : identity?.projectId;
     if (typeof subject !== 'string' || !subject.trim() || (typeof identity !== 'string' &&
         (accountRoute || !isProjectId(projectId)))) {
-      response.setHeader('WWW-Authenticate', 'Bearer realm="rstool-mcp"');
+      const discovery = !accountRoute && oauthConfiguration
+        ? `${new URL(oauthConfiguration.resource()).origin}/.well-known/oauth-protected-resource/mcp${route?.[1] ? `/${route[1]}` : ''}` : undefined;
+      response.setHeader('WWW-Authenticate', discovery ? `Bearer resource_metadata="${discovery}"` : 'Bearer realm="rstool-mcp"');
       return reject(response, 401, 'Bearer authentication required');
     }
     if (accountRoute && options.portal) {
@@ -330,7 +345,10 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
     // rstool has a mutable current session. Serialize calls within each workspace.
     const task = entry.tail.then(async () => {
       if (entry.closed) return reject(response, 404, 'Session not found');
-      await Promise.race([entry.transport.handleRequest(request, response), completion]);
+      const invoke = () => entry.transport.handleRequest(request, response);
+      const delegated = oauth && options.portal ? options.portal.publisher.withDelegation(portalOwner,
+        (identity as McpOAuthIdentity).delegation, invoke) : invoke();
+      await Promise.race([delegated, completion]);
     });
     entry.tail = task.catch(() => undefined);
     let handled = false;

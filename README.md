@@ -22,7 +22,7 @@
 | `rsconcept/frontend`   | Portal UI. Uses the workspace `@rsconcept/domain` package. |
 | `rsconcept/backend`    | Django API. Python dependencies are managed by `uv`. |
 | `rsconcept/domain`     | Shared TypeScript domain package.                    |
-| `rsconcept/rstool`     | Agent-facing library and stdio wrapper.              |
+| `rsconcept/rstool`     | Agent library, stdio, HTTP RPC and Portal REST client. |
 | `rsconcept/rstool-mcp` | MCP adapter over `rstool`.                           |
 | `scripts/dev`          | Local setup, sample data, and development helpers.   |
 | `scripts/prod`         | Production update helpers.                           |
