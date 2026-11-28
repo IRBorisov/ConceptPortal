@@ -3,7 +3,8 @@ import base64
 import hashlib
 import io
 import json
-from unittest.mock import patch
+from http.client import HTTPMessage
+from unittest.mock import MagicMock, patch
 from urllib.parse import parse_qs, urlencode, urlsplit
 
 from django.core.cache import caches
@@ -32,9 +33,11 @@ def document(**fields):
 
 
 def reply(metadata, cache_control='max-age=60'):
-    ''' Wire format emitted by curl with response headers. '''
-    head = f'HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nCache-Control: {cache_control}\r\n\r\n'
-    return head.encode() + json.dumps(metadata).encode()
+    ''' A JSON metadata response with standard HTTP cache headers. '''
+    headers = HTTPMessage()
+    headers['Content-Type'] = 'application/json'
+    headers['Cache-Control'] = cache_control
+    return json.dumps(metadata).encode(), headers
 
 
 class TestClientMetadata(SimpleTestCase):
@@ -48,7 +51,7 @@ class TestClientMetadata(SimpleTestCase):
         with patch.object(cimd, '_download', return_value=reply(document())) as download:
             metadata = cimd.discover(CLIENT_ID)
             self.assertEqual(cimd.discover(CLIENT_ID), metadata)
-            download.assert_called_once_with(CLIENT_ID, 'client.example', 443)
+            download.assert_called_once_with(CLIENT_ID, urlsplit(CLIENT_ID))
         self.assertTrue(metadata.accepts_redirect(REDIRECT))
         self.assertTrue(metadata.accepts_redirect('https://client.example/return'))
         self.assertFalse(metadata.accepts_redirect('https://client.example:8443/return'))
@@ -69,32 +72,56 @@ class TestClientMetadata(SimpleTestCase):
             cimd.discover(CLIENT_ID)
             self.assertEqual(download.call_count, 2)
 
+    def test_selected_client_authentication_cannot_be_downgraded_to_public(self):
+        methods = ['none', 'private_key_jwt']
+        confidential = document(token_endpoint_auth_method='private_key_jwt', token_endpoint_auth_methods_supported=methods)
+        public = document(token_endpoint_auth_method='none', token_endpoint_auth_methods_supported=methods)
+        with patch.object(cimd, '_download', side_effect=[reply(confidential), reply(public)]):
+            with self.assertRaises(cimd.InvalidMetadata):
+                cimd.discover(CLIENT_ID)
+            self.assertEqual(cimd.discover(CLIENT_ID).name, 'Document Client')
+
     def test_rejects_nonpublic_dns_answers_before_starting_the_http_client(self):
         for address in ('127.0.0.1', '10.0.0.1', '169.254.0.1', '224.0.0.1', '::1', '64:ff9b::7f00:1'):
             records = [(0, 0, 0, '', ('8.8.8.8', 443)), (0, 0, 0, '', (address, 443))]
             with (self.subTest(address=address), patch.object(cimd.socket, 'getaddrinfo', return_value=records),
-                  patch.object(cimd.subprocess, 'Popen') as transfer):
+                  patch.object(cimd, '_connect') as connect):
                 with self.assertRaises(cimd.InvalidMetadata):
                     cimd.discover(CLIENT_ID)
-                transfer.assert_not_called()
+                connect.assert_not_called()
 
-    def test_https_fetch_pins_dns_and_rejects_redirect_response_and_large_body(self):
+    def test_https_pins_dns_while_validating_tls_for_the_client_hostname(self):
         records = [(0, 0, 0, '', ('8.8.8.8', 443))]
         with (patch.object(cimd.socket, 'getaddrinfo', return_value=records),
-              patch.object(cimd.subprocess, 'Popen') as process):
-            transfer = process.return_value.__enter__.return_value
-            transfer.wait.return_value = 0
-            transfer.stdout = io.BytesIO(b'HTTP/1.1 302 Found\r\nLocation: https://client.example/next\r\n\r\n')
+              patch.object(cimd.socket, 'socket') as create_socket, patch.object(cimd._TLS, 'wrap_socket') as tls,
+              patch.object(cimd, 'HTTPConnection') as http):
+            socket = create_socket.return_value.__enter__.return_value
+            connection = http.return_value
+            response = connection.getresponse.return_value.__enter__.return_value
+            response.status = 302
             with self.assertRaises(cimd.InvalidMetadata):
                 cimd.discover(CLIENT_ID)
-            command = process.call_args.args[0]
-            self.assertIn('client.example:443:8.8.8.8', command)
-            self.assertNotIn('--location', command)
-            self.assertEqual(command[command.index('--noproxy') + 1], '*')
-            transfer.stdout = io.BytesIO(b'x' * (cimd.MAX_RESPONSE + 1))
-            with self.assertRaises(cimd.InvalidMetadata):
-                cimd.discover(CLIENT_ID)
-            transfer.kill.assert_called_once()
+            socket.connect.assert_called_once_with(('8.8.8.8', 443))
+            tls.assert_called_once_with(socket, server_hostname='client.example')
+            self.assertIs(connection.sock, tls.return_value.__enter__.return_value)
+            connection.request.assert_called_once_with('GET', urlsplit(CLIENT_ID).path, headers={
+                'Host': 'client.example', 'Accept': 'application/json', 'Connection': 'close',
+            })
+            response.read.assert_not_called()
+
+    def test_limits_http_headers_and_streamed_metadata_body(self):
+        peer = MagicMock()
+        peer.makefile.return_value = io.BytesIO(b'HTTP/1.1 200 OK\r\nX-Test: ' + b'x' * cimd.MAX_HEADERS + b'\r\n\r\n')
+        with cimd._MetadataResponse(peer) as response, self.assertRaises(cimd.InvalidMetadata):
+            response.begin()
+
+        connection = MagicMock()
+        response = connection.getresponse.return_value.__enter__.return_value
+        response.status, response.length = 200, None
+        response.read.return_value = b'x' * (cimd.MAX_DOCUMENT + 1)
+        with self.assertRaises(cimd.InvalidMetadata):
+            cimd._read_response(connection, '/client.json', 'client.example')
+        response.read.assert_called_once_with(cimd.MAX_DOCUMENT + 1)
 
 
 @override_settings(AGENT_MCP_OAUTH=CONFIG, AGENT_MCP_OAUTH_SERVICE_SECRET=SERVICE_SECRET)
