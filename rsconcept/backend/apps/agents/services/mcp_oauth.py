@@ -42,21 +42,32 @@ def configuration():
     return config
 
 
-def project_scopes(config, client_id, project_id, owner_id):
+def cimd_policy(config):
+    ''' Enable discovery only when the operator supplies an explicit project policy. '''
+    policy = config.get('cimd')
+    if isinstance(policy, dict) and isinstance(policy.get('projects'), dict) and policy['projects']:
+        return policy
+    return None
+
+
+def project_scopes(client, project_id, user):
     ''' Resolve membership and maximum scopes from server-side registration. '''
-    if not re.fullmatch(PROJECT_PATTERN, project_id):
+    if not client or not user.is_active or not re.fullmatch(PROJECT_PATTERN, project_id):
         return set()
-    client = config['clients'].get(client_id, {})
     project = client.get('projects', {}).get(project_id, {})
-    if owner_id not in project.get('users', []):
+    users = project.get('users', [])
+    if users != '*' and (not isinstance(users, list) or user.pk not in users):
         return set()
     return {'read', 'write'}.intersection(project.get('scopes', ['read']))
 
 
 def grant_is_allowed(config, grant):
     ''' Revalidate current registration on both MCP and Portal requests. '''
-    allowed = project_scopes(config, grant.client_id, grant.project_id, grant.owner_id)
-    return grant.owner.is_active and bool(allowed) and set(grant.scopes).issubset(allowed)
+    client = config['clients'].get(grant.client_id)
+    if grant.client_metadata_digest:
+        client = cimd_policy(config) if grant.client_id not in config['clients'] else None
+    allowed = project_scopes(client, grant.project_id, grant.owner)
+    return bool(allowed) and set(grant.scopes).issubset(allowed)
 
 
 def portal_token(grant):

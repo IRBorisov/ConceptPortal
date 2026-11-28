@@ -48,7 +48,9 @@ each key's existing `read` and `write` permissions. A key with only the former
 `publish` permission is left with an empty scope list. Rolling back to code that
 requires `publish` again requires reissuing publishing keys with that scope.
 
-Apply migrations `0006` (mutation receipts) and `0007` (MCP grants) before enabling prepared publication and the OAuth pilot in the MCP adapter. [Portal rollout](../../../rstool-mcp/PORTAL.md#access-and-current-publishing-tools)
+Apply migrations `0006` (mutation receipts) and `0007` (MCP grants) before enabling prepared publication and OAuth in the MCP adapter. [Portal rollout](../../../rstool-mcp/PORTAL.md#access-and-current-publishing-tools)
+
+Apply migration `0008` before advertising Client ID Metadata Documents. Enable discovery with `cimd.projects` in the OAuth configuration. Discovered public clients follow that project policy, and explicitly registered clients keep their own policies. Portal checks current policy and account status for every issued token. Removing the CIMD policy ends access for existing discovered-client grants. [OAuth configuration](../../../rstool-mcp/PORTAL.md#oauth)
 
 Before rolling back to a backend without key policies, revoke every scoped or expiring key, including already expired keys. The earlier backend ignores scopes and expiry and would otherwise give those keys the owner's full permissions again. Identify and revoke them while the policy fields still exist; do not reverse the migration first. Reissue replacement credentials only after deciding the rollback access policy. Database compatibility alone does not preserve key restrictions.
 

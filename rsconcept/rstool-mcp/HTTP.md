@@ -48,7 +48,7 @@ The hostname is illustrative. For local development, use `http://127.0.0.1:8093/
 
 `my-task` selects a durable workspace belonging to the authenticated subject and, when present, the authenticated project. Names are 1 to 64 ASCII letters, digits, dots, underscores or hyphens, beginning with a letter or digit. `/mcp` selects `default`. Use a different task name for each independently active agent. The server hashes the workspace identity to choose a directory. Project-scoped workspaces share the existing stored-session quota per account.
 
-For OAuth, choose an explicit workspace URL such as `/mcp/my-task`. Each workspace route has its own OAuth audience. `/mcp` and `/mcp/default` select the same stored workspace with distinct OAuth audiences. [OAuth pilot](PORTAL.md#oauth-pilot)
+For OAuth, choose an explicit workspace URL such as `/mcp/my-task`. Each workspace route has its own OAuth audience. `/mcp` and `/mcp/default` select the same stored workspace with distinct OAuth audiences. [OAuth configuration](PORTAL.md#oauth)
 
 After initialization, the client sends the returned `Mcp-Session-Id` on each subsequent POST/DELETE. Authentication is checked again on every request. A session ID from another subject, project or workspace returns 404. Referencing another workspace's rstool session, including as a synthesis source, cannot load its files.
 

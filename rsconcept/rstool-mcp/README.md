@@ -172,4 +172,4 @@ HTTP additionally exposes `get_session_storage_config`, `list_stored_sessions`, 
 
 Contract 4.0 stops read/analysis/evaluation calls from silently creating sessions. Call `ensure_session` first or supply an existing `sessionId`; `apply_schema_patch` retains its creation path. `NO_CURRENT_SESSION` is actionable and consumes no stored slot. Discovery lists constituent type enums, value-binding examples and evaluation statuses. Object results include `structuredContent` while preserving text responses. See the [library migration notes](../rstool/README.md#contract-4-migration).
 
-For optional Portal access, see the [Portal tool catalog, publication protocol and OAuth pilot configuration](PORTAL.md).
+For optional Portal access, see the [Portal tool catalog, publication protocol and OAuth configuration](PORTAL.md).

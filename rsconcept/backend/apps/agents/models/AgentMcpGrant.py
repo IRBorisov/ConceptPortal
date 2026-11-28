@@ -10,10 +10,11 @@ class AgentMcpGrant(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    client_id = models.CharField(max_length=128)
+    client_id = models.CharField(max_length=2048)
+    client_metadata_digest = models.CharField(max_length=64, blank=True, default='', db_default='')
     project_id = models.CharField(max_length=64)
     resource = models.URLField(max_length=256)
-    redirect_uri = models.CharField(max_length=512)
+    redirect_uri = models.CharField(max_length=2048)
     code_hash = models.CharField(max_length=64, unique=True)
     challenge = models.CharField(max_length=43)
     code_expires_at = models.DateTimeField()

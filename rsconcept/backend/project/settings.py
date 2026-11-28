@@ -276,6 +276,11 @@ CACHES = {
         'TIMEOUT': 300,
         'OPTIONS': {'MAX_ENTRIES': 128},
     },
+    'oauth_client_metadata': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'oauth-client-metadata',
+        'OPTIONS': {'MAX_ENTRIES': 128},
+    },
 }
 
 REST_FRAMEWORK = {
@@ -294,6 +299,7 @@ REST_FRAMEWORK = {
         'login': '5/minute',
         'signup': '3/hour',
         'password_reset': '5/hour',
+        'oauth_client_metadata': '30/minute',
         'oss_clone': '2/hour',
         'cctext': '30/minute',
     },

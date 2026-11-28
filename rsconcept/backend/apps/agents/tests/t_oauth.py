@@ -14,6 +14,55 @@ from apps.users.models import User
 class TestMcpOAuth(TestCase):
     ''' Exercise the browser and server endpoints using their ordinary HTTP contracts. '''
 
+    def test_open_registration_uses_each_active_accounts_own_permissions(self):
+        issuer, origin, service = 'https://portal.example', 'https://mcp.example', 'test-only' * 6
+        callback = 'http://127.0.0.1:38737/callback'
+        resource = f'{origin}/mcp/work'
+        verifier = 'v' * 43
+        challenge = base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest()).rstrip(b'=').decode()
+        config = {'issuer': issuer, 'mcp_origin': origin, 'clients': {'desktop': {
+            'redirect_uris': [callback], 'projects': {
+                'work': {'users': '*', 'scopes': ['read']},
+                'closed': {'scopes': ['read']},
+            },
+        }}}
+        query = {'client_id': 'desktop', 'redirect_uri': callback, 'resource': resource, 'response_type': 'code',
+                 'scope': 'portal.read', 'code_challenge': challenge, 'code_challenge_method': 'S256', 'project': 'work'}
+        authorize = '/api/agents/oauth/authorize'
+        browser, agent = Client(), Client()
+
+        with override_settings(AGENT_MCP_OAUTH=config, AGENT_MCP_OAUTH_SERVICE_SECRET=service):
+            reader = User.objects.create_user(username='OAuth reader')
+            other_owner = User.objects.create_user(username='Other owner')
+            own = RSForm.create(title='Own private', alias='O', owner=reader, access_policy='private', location='/U')
+            foreign = RSForm.create(title='Other private', alias='F', owner=other_owner, access_policy='private', location='/U')
+            browser.force_login(reader)
+            for refused_query in ({**query, 'project': 'closed'}, {**query, 'scope': 'portal.read portal.write'}):
+                response = browser.get(authorize, refused_query)
+                self.assertEqual(parse_qs(urlsplit(response.url).query)['error'], ['access_denied'])
+            consent = browser.post(f'{authorize}?{urlencode(query)}', {'project': 'work', 'decision': 'allow'})
+            code = parse_qs(urlsplit(consent.url).query)['code'][0]
+            response = agent.post('/api/agents/oauth/token', {
+                'grant_type': 'authorization_code', 'code': code, 'client_id': 'desktop',
+                'redirect_uri': callback, 'resource': resource, 'code_verifier': verifier,
+            })
+            self.assertEqual(response.status_code, 200, response.content)
+            introspect = '/api/agents/oauth/introspect'
+            args = {'token': response.json()['access_token'], 'resource': resource}
+            auth = {'HTTP_AUTHORIZATION': f'Bearer {service}'}
+            grant = agent.post(introspect, args, **auth).json()
+            self.assertEqual(grant['sub'], f'portal:{reader.pk}')
+            self.assertEqual(grant['scopes'], ['read'])
+            bearer = {'HTTP_AUTHORIZATION': f"Bearer {grant['portal_token']}"}
+            details = f'/api/agents/rsforms/{own.model.pk}/details'
+            self.assertEqual(agent.get(details, **bearer).status_code, 200)
+            self.assertEqual(agent.get(f'/api/agents/rsforms/{foreign.model.pk}/details', **bearer).status_code, 403)
+
+            reader.is_active = False
+            reader.save(update_fields=['is_active'])
+            self.assertEqual(agent.post(introspect, args, **auth).json(), {'active': False})
+            self.assertEqual(agent.get(details, **bearer).status_code, 401)
+
     def test_delegation_uses_one_time_codes_and_distinct_audiences(self):
         user = User.objects.create_user(username='OAuth test', password='local-fixture-password')  # nosec B106
         target = RSForm.create(title='Private', alias='P', owner=user, access_policy='private', location='/U')

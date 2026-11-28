@@ -186,7 +186,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
     if (oauthConfiguration && metadata && request.method === 'GET') {
       response.writeHead(200, { 'Content-Type': 'application/json' });
       response.end(JSON.stringify({ resource: oauthConfiguration.resource(metadata[1]),
-        authorization_servers: [oauthConfiguration.issuer], scopes_supported: ['portal.read', 'portal.write'], bearer_methods_supported: ['header'] }));
+        authorization_servers: [oauthConfiguration.issuer], scopes_supported: ['portal.read'], bearer_methods_supported: ['header'] }));
       return;
     }
     const accountRoute = options.portal && url.pathname.startsWith('/portal/api/');
@@ -205,7 +205,7 @@ export function createRSToolHttpServer(options: RSToolHttpServerOptions): RSTool
         (accountRoute || !isProjectId(projectId)))) {
       const discovery = !accountRoute && oauthConfiguration
         ? `${new URL(oauthConfiguration.resource()).origin}/.well-known/oauth-protected-resource/mcp${route?.[1] ? `/${route[1]}` : ''}` : undefined;
-      response.setHeader('WWW-Authenticate', discovery ? `Bearer resource_metadata="${discovery}"` : 'Bearer realm="rstool-mcp"');
+      response.setHeader('WWW-Authenticate', discovery ? `Bearer resource_metadata="${discovery}", scope="portal.read"` : 'Bearer realm="rstool-mcp"');
       return reject(response, 401, 'Bearer authentication required');
     }
     if (accountRoute && options.portal) {
