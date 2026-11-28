@@ -3,13 +3,16 @@ import hashlib
 import json
 import re
 import socket
-import subprocess
+import ssl
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import closing, suppress
 from dataclasses import dataclass
-from email.parser import BytesHeaderParser
+from http.client import HTTPConnection, HTTPException, HTTPMessage, HTTPResponse
+from io import BufferedIOBase
 from ipaddress import ip_address, ip_network
-from threading import BoundedSemaphore
-from urllib.parse import unquote, urlsplit
+from threading import BoundedSemaphore, Timer
+from time import monotonic
+from urllib.parse import SplitResult, unquote, urlsplit
 
 from django.core.cache import caches
 
@@ -17,10 +20,11 @@ from .mcp_oauth import safe_url
 
 MAX_CLIENT_URI = 2048
 MAX_DOCUMENT = 16 * 1024
-MAX_RESPONSE = MAX_DOCUMENT + 16 * 1024
+MAX_HEADERS = 16 * 1024
 MAX_CACHE_SECONDS = 300
 _DNS_WORKERS = ThreadPoolExecutor(max_workers=2, thread_name_prefix='cimd-dns')
 _DNS_SLOTS = BoundedSemaphore(2)
+_TLS = ssl.create_default_context()
 _DNS_LABEL = r'[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?'
 _DNS_NAME = re.compile(rf'(?:{_DNS_LABEL}\.)+[a-z](?:[a-z0-9-]{{0,61}}[a-z0-9])?')
 _LOOPBACK = re.compile(r'(http://(?:127\.0\.0\.1|localhost|\[::1\]))(?::[0-9]+)?([/?].*)?')
@@ -39,6 +43,35 @@ class InvalidMetadata(ValueError):
 
 class MetadataUnavailable(Exception):
     ''' The metadata origin could not be reached or did not complete the response. '''
+
+
+class _LimitedHeaders(BufferedIOBase):
+    ''' Count bytes consumed by the standard HTTP header parser. '''
+
+    def __init__(self, stream):
+        super().__init__()
+        self.stream = stream
+        self.remaining = MAX_HEADERS
+
+    def readline(self, size=-1):
+        limit = self.remaining + 1
+        line = self.stream.readline(limit if size < 0 else min(size, limit))
+        self.remaining -= len(line)
+        if self.remaining < 0:
+            raise InvalidMetadata()
+        return line
+
+
+class _MetadataResponse(HTTPResponse):
+    ''' Apply the header budget without affecting the separate body budget. '''
+
+    def begin(self):
+        stream = self.fp
+        self.fp = _LimitedHeaders(stream)
+        try:
+            super().begin()
+        finally:
+            self.fp = stream
 
 
 @dataclass(frozen=True)
@@ -70,7 +103,7 @@ def valid_redirect(uri) -> bool:
             and '#' not in uri and safe_url(uri))
 
 
-def client_identifier(value: str):
+def client_identifier(value: str) -> SplitResult:
     ''' Parse an RFC-style HTTPS identifier without accepting alternate host spellings. '''
     if len(value) > MAX_CLIENT_URI or not re.fullmatch(r'[!-~]+', value) or '#' in value or not safe_url(value):
         raise InvalidMetadata()
@@ -95,7 +128,7 @@ def _require_public(value: str) -> str:
             or (address.version == 6 and address not in _IPV6_UNICAST)
             or any(address in network for network in _SPECIAL_NETWORKS)):
         raise InvalidMetadata()
-    return f'[{address}]' if address.version == 6 else str(address)
+    return str(address)
 
 
 def _resolve(host: str, port: int) -> list[str]:
@@ -104,8 +137,7 @@ def _resolve(host: str, port: int) -> list[str]:
     except ValueError:
         pass
     else:
-        _require_public(host)
-        return []  # A literal IP requires no DNS override.
+        return [_require_public(host)]
     # The worker retains the slot even if the request times out waiting for it.
     if not _DNS_SLOTS.acquire(blocking=False):  # pylint: disable=consider-using-with
         raise MetadataUnavailable()
@@ -125,38 +157,72 @@ def _resolve(host: str, port: int) -> list[str]:
     return addresses
 
 
-def _download(client_id: str, host: str, port: int) -> bytes:
+def _remaining(deadline: float) -> float:
+    remaining = deadline - monotonic()
+    if remaining <= 0:
+        raise TimeoutError()
+    return remaining
+
+
+def _connect(host: str, port: int, addresses: list[str], deadline: float) -> ssl.SSLSocket:
+    for address in addresses:
+        family = socket.AF_INET6 if ':' in address else socket.AF_INET
+        try:
+            with socket.socket(family, socket.SOCK_STREAM) as peer:
+                peer.settimeout(min(2, _remaining(deadline)))
+                peer.connect((address, port))
+                peer.settimeout(min(2, _remaining(deadline)))
+                # Connect to the vetted address while authenticating the original hostname.
+                return _TLS.wrap_socket(peer, server_hostname=host)
+        except OSError:
+            continue
+    raise MetadataUnavailable()
+
+
+def _stop_socket(peer: ssl.SSLSocket) -> None:
+    with suppress(OSError):
+        socket.socket.shutdown(peer, socket.SHUT_RDWR)
+
+
+def _read_response(connection: HTTPConnection, target: str, authority: str) -> tuple[bytes, HTTPMessage]:
+    connection.request('GET', target, headers={'Host': authority, 'Accept': 'application/json', 'Connection': 'close'})
+    with connection.getresponse() as response:
+        if response.status == 429 or response.status >= 500:
+            raise MetadataUnavailable()
+        if response.status != 200 or (response.length is not None and response.length > MAX_DOCUMENT):
+            raise InvalidMetadata()
+        body = response.read(MAX_DOCUMENT + 1)
+        if len(body) > MAX_DOCUMENT:
+            raise InvalidMetadata()
+        if response.length:
+            raise MetadataUnavailable()
+        return body, response.headers
+
+
+def _download(client_id: str, url: SplitResult) -> tuple[bytes, HTTPMessage]:
+    host, port = url.hostname, url.port or 443
+    assert host is not None
     addresses = _resolve(host, port)
-    command = [
-        'curl', '--disable', '--silent', '--globoff', '--path-as-is', '--http1.1', '--noproxy', '*',
-        '--proto', '=https', '--connect-timeout', '2', '--max-time', '4', '--max-filesize', str(MAX_DOCUMENT),
-        '--header', 'Accept: application/json', '--include',
-    ]
-    if addresses:
-        # Pin the connection to vetted DNS answers while curl verifies TLS for the original hostname.
-        command.extend(('--resolve', f'{host}:{port}:{",".join(addresses)}'))
-    command.extend(('--url', client_id))
+    deadline = monotonic() + 4
+    target = client_id[len('https://') + len(url.netloc):]
     try:
-        with subprocess.Popen(
-            command, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
-        ) as transfer:
-            assert transfer.stdout is not None
-            response = transfer.stdout.read(MAX_RESPONSE + 1)
-            if len(response) > MAX_RESPONSE:
-                transfer.kill()
-                raise InvalidMetadata()
+        # The HTTP parser uses the established TLS socket for exactly one request.
+        with _connect(host, port, addresses, deadline) as peer, closing(HTTPConnection(host, port)) as connection:
+            connection.sock = peer
+            connection.response_class = _MetadataResponse
+            peer.settimeout(_remaining(deadline))
+            # An absolute deadline also bounds a response which sends occasional bytes.
+            timer = Timer(_remaining(deadline), _stop_socket, args=(peer,))
+            timer.daemon = True
+            timer.start()
             try:
-                status = transfer.wait(timeout=1)
-            except subprocess.TimeoutExpired:
-                transfer.kill()
-                raise
-    except (OSError, subprocess.TimeoutExpired) as error:
+                response = _read_response(connection, target, url.netloc)
+                _remaining(deadline)
+                return response
+            finally:
+                timer.cancel()
+    except (OSError, HTTPException) as error:
         raise MetadataUnavailable() from error
-    if status == 63:  # curl rejected the advertised file size.
-        raise InvalidMetadata()
-    if status:
-        raise MetadataUnavailable()
-    return response
 
 
 def _cache_seconds(headers) -> int:
@@ -169,17 +235,7 @@ def _cache_seconds(headers) -> int:
     return max(0, seconds - int(age)) if re.fullmatch(r'[0-9]{1,9}', age) else 0
 
 
-def _load_document(response: bytes) -> tuple[dict, int]:
-    head, separator, body = response.partition(b'\r\n\r\n')
-    status, line, header_fields = head.partition(b'\r\n')
-    match = re.fullmatch(rb'HTTP/1\.[01] ([0-9]{3})(?: .*)?', status)
-    if not separator or not line or not match or len(body) > MAX_DOCUMENT:
-        raise InvalidMetadata()
-    if match[1] in (b'429', b'503') or match[1].startswith(b'5'):
-        raise MetadataUnavailable()
-    if match[1] != b'200':
-        raise InvalidMetadata()
-    headers = BytesHeaderParser().parsebytes(header_fields + b'\r\n\r\n')
+def _load_document(body: bytes, headers: HTTPMessage) -> tuple[dict, int]:
     if len(headers.get_all('content-type', [])) != 1 or not re.fullmatch(
         r'application/(?:json|[^/]+\+json)', headers.get_content_type(),
     ):
@@ -206,15 +262,15 @@ def discover(client_id: str) -> ClientMetadata:
     cached = cache.get(key)
     if isinstance(cached, ClientMetadata):
         return cached
-    metadata, seconds = _load_document(_download(client_id, url.hostname, url.port or 443))
+    metadata, seconds = _load_document(*_download(client_id, url))
     name, redirects = metadata.get('client_name'), metadata.get('redirect_uris')
     if (metadata.get('client_id') != client_id or not isinstance(name, str) or len(name) > 256
             or not name.strip() or not name.isprintable() or not isinstance(redirects, list) or not redirects
             or not all(valid_redirect(uri) for uri in redirects)
             or not _accepts(metadata, 'grant_types', 'authorization_code', ['authorization_code'])
             or not _accepts(metadata, 'response_types', 'code', ['code'])
-            or not _accepts(metadata, 'token_endpoint_auth_methods_supported', 'none',
-                            [metadata.get('token_endpoint_auth_method', 'none')])):
+            or metadata.get('token_endpoint_auth_method', 'none') != 'none'
+            or not _accepts(metadata, 'token_endpoint_auth_methods_supported', 'none', ['none'])):
         raise InvalidMetadata()
     result = ClientMetadata(name.strip(), tuple(redirects))
     if seconds:
