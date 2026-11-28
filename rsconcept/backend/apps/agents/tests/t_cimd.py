@@ -92,12 +92,10 @@ class TestClientMetadata(SimpleTestCase):
                 connect.assert_not_called()
 
     def test_https_pins_dns_while_validating_tls_for_the_client_hostname(self):
-        self.assertGreaterEqual(cimd._TLS.minimum_version, ssl.TLSVersion.TLSv1_2)
-        self.assertTrue(cimd._TLS.check_hostname)
-        self.assertEqual(cimd._TLS.verify_mode, ssl.CERT_REQUIRED)
         records = [(0, 0, 0, '', ('8.8.8.8', 443))]
         with (patch.object(cimd.socket, 'getaddrinfo', return_value=records),
-              patch.object(cimd.socket, 'socket') as create_socket, patch.object(cimd._TLS, 'wrap_socket') as tls,
+              patch.object(cimd.socket, 'socket') as create_socket,
+              patch.object(ssl.SSLContext, 'wrap_socket', autospec=True) as tls,
               patch.object(cimd, 'HTTPConnection') as http):
             socket = create_socket.return_value.__enter__.return_value
             connection = http.return_value
@@ -106,7 +104,11 @@ class TestClientMetadata(SimpleTestCase):
             with self.assertRaises(cimd.InvalidMetadata):
                 cimd.discover(CLIENT_ID)
             socket.connect.assert_called_once_with(('8.8.8.8', 443))
-            tls.assert_called_once_with(socket, server_hostname='client.example')
+            context = tls.call_args.args[0]
+            self.assertGreaterEqual(context.minimum_version, ssl.TLSVersion.TLSv1_2)
+            self.assertTrue(context.check_hostname)
+            self.assertEqual(context.verify_mode, ssl.CERT_REQUIRED)
+            tls.assert_called_once_with(context, socket, server_hostname='client.example')
             self.assertIs(connection.sock, tls.return_value.__enter__.return_value)
             connection.request.assert_called_once_with('GET', urlsplit(CLIENT_ID).path, headers={
                 'Host': 'client.example', 'Accept': 'application/json', 'Connection': 'close',
