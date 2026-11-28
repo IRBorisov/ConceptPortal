@@ -27,8 +27,9 @@ export function HelpConceptRelativizationEn() {
       <p>
         The Portal rewrites the formulas of statements and derived concepts that depend on the focus or on relativized
         undefined concepts. These formulas use concept values from the current context. Dependent terms become families
-        of pairs “context, value”. Functions and predicates take the context as their first argument. Axioms and
-        statements are checked in all admissible contexts.
+        of pairs “context, value”. Functions and predicates take the context as their first argument. Relativized axioms
+        and statements are checked in all admissible contexts. If another relativized formula references such a
+        condition, the Portal creates a helper predicate that checks it in the current context.
       </p>
       <p>
         In <LinkTopic text='formal definitions' topic={HelpTopic.CC_CONSTITUENTA} />, the Portal uses a helper function
@@ -62,6 +63,11 @@ export function HelpConceptRelativizationEn() {
         are recalculated. To change formal expressions of inherited constituents or generated artifacts, edit the source
         schema or the relativization parameters. When the focus is a base set, the context structure inherits from it
         and the copy of the base set is a generated artifact.
+      </p>
+      <p>
+        The Portal rejects a source schema edit if it makes the focus invalid or introduces an error in the transformed
+        definitions or types. Before deleting the focus or changing its type, choose another focus in the operation
+        parameters.
       </p>
     </>
   );

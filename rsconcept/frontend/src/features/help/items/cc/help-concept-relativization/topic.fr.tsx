@@ -28,7 +28,9 @@ export function HelpConceptRelativizationFr() {
         Le Portail réécrit les formules des énoncés et des concepts dérivés qui dépendent de la cible ou de concepts non
         définis relativisés. Ces formules utilisent les valeurs des concepts dans le contexte courant. Les termes
         dépendants deviennent des familles de couples « contexte, valeur ». Les fonctions et les prédicats reçoivent le
-        contexte en premier argument. Les axiomes et les énoncés sont vérifiés dans tous les contextes admissibles.
+        contexte en premier argument. Les axiomes et les énoncés relativisés sont vérifiés dans tous les contextes
+        admissibles. Si une autre formule relativisée fait référence à une telle condition, le Portail crée un prédicat
+        auxiliaire pour la vérifier dans le contexte courant.
       </p>
       <p>
         Dans les <LinkTopic text='définitions formelles' topic={HelpTopic.CC_CONSTITUENTA} />, le Portail utilise une{' '}
@@ -67,6 +69,11 @@ export function HelpConceptRelativizationFr() {
         des constituants hérités ou des artefacts générés, modifiez le schéma source ou les paramètres de
         relativisation. Si la cible est un ensemble de base, la structure des contextes en hérite et la copie de
         l’ensemble est un artefact généré par l’opération.
+      </p>
+      <p>
+        Le Portail rejette une modification du schéma source si elle rend la cible invalide ou introduit une erreur dans
+        les définitions ou les types transformés. Avant de supprimer la cible ou de changer son type, choisissez une
+        autre cible dans les paramètres de l’opération.
       </p>
     </>
   );

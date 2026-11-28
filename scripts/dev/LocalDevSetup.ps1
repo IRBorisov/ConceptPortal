@@ -1,4 +1,4 @@
-# Create venv and install dependencies for each project independently
+# Install workspace dependencies, build the domain package and backend bundles, and recreate the backend virtual environment.
 
 $root = Resolve-Path -Path "$PSScriptRoot\..\.."
 $backend = Resolve-Path -Path "$PSScriptRoot\..\..\rsconcept\backend"

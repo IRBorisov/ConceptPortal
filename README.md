@@ -19,7 +19,7 @@
 
 | Path                   | Purpose                                              |
 | ---------------------- | ---------------------------------------------------- |
-| `rsconcept/frontend`   | Portal UI. Installs `@rsconcept/domain` from npm.    |
+| `rsconcept/frontend`   | Portal UI. Uses the workspace `@rsconcept/domain` package. |
 | `rsconcept/backend`    | Django API. Python dependencies are managed by `uv`. |
 | `rsconcept/domain`     | Shared TypeScript domain package.                    |
 | `rsconcept/rstool`     | Agent-facing library and stdio wrapper.              |
@@ -32,7 +32,7 @@ The npm packages in `domain`, `rstool`, and `rstool-mcp` are independently publi
 
 ## Local Development
 
-**Prerequisites:** Docker Desktop, Python 3.12, [uv](https://docs.astral.sh/uv/), Node.js 26 LTS, [pnpm](https://pnpm.io/) 12 (`npm install -g pnpm`; it switches to the version pinned in `packageManager` and runs scripts on the Node.js version from `devEngines.runtime`), PowerShell, and VS Code or another IDE that can use [`.vscode/launch.json`](.vscode/launch.json).
+**Prerequisites:** Docker Desktop, Python 3.12, [uv](https://docs.astral.sh/uv/), Node.js and [pnpm](https://pnpm.io/) as specified in [`package.json`](package.json), PowerShell, and VS Code or another IDE that can use [`.vscode/launch.json`](.vscode/launch.json).
 
 1. Install dependencies (repo root, pnpm workspace):
 
@@ -59,7 +59,7 @@ The npm packages in `domain`, `rstool`, and `rstool-mcp` are independently publi
 Use [`.vscode/launch.json`](.vscode/launch.json) to start app configurations, run tests, and attach debuggers. GitHub Actions run linting and CI builds on push.
 
 Without Docker (e.g. Cursor Cloud VMs): bare-metal ports, SQLite bootstrap, and related notes are in [`.agents/CURSOR-CLOUD.md`](.agents/CURSOR-CLOUD.md).
-The Django model-details endpoints use the RSLang analyzer bundle from `build:model-types`. Rebuild it after changing the domain analyzer.
+The Django model-details and relativization endpoints use the Node.js bundles from `build:model-types`. Rebuild them after changing the corresponding domain code.
 
 To update dependencies across all `rsconcept` projects in one shot:
 

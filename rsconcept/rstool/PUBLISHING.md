@@ -2,7 +2,7 @@
 
 This package is published **manually** from a local checkout. [RSTool CI](../../.github/workflows/rstool.yml) typechecks, tests, and builds on push; it does **not** publish to npm.
 
-**Prerequisite:** [`@rsconcept/domain`](../domain/PUBLISHING.md) is published when releasing to npm (local workspace uses `workspace:*`).
+**Prerequisite:** Publish the checked-out version of [`@rsconcept/domain`](../domain/PUBLISHING.md) to npm before releasing RSTool. When building the tarball, pnpm replaces the `workspace:*` dependency with that exact version.
 
 ## One-time setup
 
@@ -20,7 +20,7 @@ Run from a clean `main` with a clean working tree.
    pnpm --filter @rsconcept/domain run build && pnpm --filter @rsconcept/rstool run typecheck && pnpm --filter @rsconcept/rstool test && pnpm --filter @rsconcept/rstool run build
    ```
 
-   If you changed the agent contract, bump `CONTRACT_VERSION` in `src/models/tool-contract.ts` and update the [skill sync checklist](AGENTS.md#contract-changes--update-the-skill).
+   If you changed the agent contract, bump `CONTRACT_VERSION` in `src/models/tool-contract.ts` and update the [skill sync checklist](AGENTS.md#contract-changes).
 
 4. **Bump version** in `package.json` (semver):
    - **patch** — bug fixes / internal refactors
@@ -62,12 +62,10 @@ Run from a clean `main` with a clean working tree.
 ## When `@rsconcept/domain` changed
 
 1. Publish domain per [domain/PUBLISHING.md](../domain/PUBLISHING.md).
-2. Bump the published semver on `dependencies."@rsconcept/domain"` when cutting an npm release (`workspace:*` locally).
-3. `pnpm install --frozen-lockfile`, then run the release checklist above.
+2. Run the release checklist above from a checkout containing the published domain version.
 
 ## Downstream packages
 
 After an rstool release that consumers need:
 
-1. Bump `dependencies."@rsconcept/rstool"` in `rsconcept/rstool-mcp/package.json`.
-2. Publish MCP per [rstool-mcp/PUBLISHING.md](../rstool-mcp/PUBLISHING.md).
+Publish MCP from a checkout containing the published RSTool version. Follow the [RSTool MCP publishing guide](../rstool-mcp/PUBLISHING.md).

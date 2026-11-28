@@ -67,4 +67,4 @@ Update code and docs in the **same change set**. Internal refactors do not count
 
 - Agent-visible breaks: bump `CONTRACT_VERSION` in `src/models/tool-contract.ts`; mention in `REFERENCE.md`.
 - npm `package.json` `version`: per release (`PUBLISHING.md`; `prepublishOnly` runs build).
-- `@rsconcept/domain` `^` pin: re-test on bump; may require a contract bump.
+- Re-test when the workspace `@rsconcept/domain` version changes and check whether it affects the agent contract. See [PUBLISHING.md](PUBLISHING.md) for the packaged dependency version.

@@ -79,9 +79,6 @@ Run from a clean `main` with a clean working tree.
 
 After a domain release that external npm consumers need:
 
-1. Bump `dependencies."@rsconcept/domain"` semver in published packages when releasing them (workspace uses `workspace:*` locally).
-2. `pnpm install --frozen-lockfile` + test in each consumer, then publish those packages per their publishing guides:
-   - [RSTool](../rstool/PUBLISHING.md)
-   - [RSTool MCP](../rstool-mcp/PUBLISHING.md)
+Publish RSTool from a checkout containing the new domain version. Follow the [RSTool publishing guide](../rstool/PUBLISHING.md).
 
-You can stop if higher-level packages do not need the change.
+If RSTool MCP consumers also need the update, follow the [RSTool MCP publishing guide](../rstool-mcp/PUBLISHING.md) after publishing RSTool.

@@ -43,7 +43,7 @@
 редактора; чтение — права читателя. Необязательный заголовок `X-Expected-Time-Update`
 (значение `time_update` из предыдущего ответа) отклоняет устаревшую запись с `409`.
 
-```bash
+```bat
 curl.exe -s -H "Authorization: Bearer rcp_...." -H "Content-Type: application/json" ^
   -d "[{\"target\": 1201, \"type\": \"basic\", \"data\": {\"1\": \"a\"}}]" ^
   -X POST "https://api.portal.acconcept.ru/api/agents/models/900/set-value"

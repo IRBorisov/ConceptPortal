@@ -221,7 +221,7 @@ export function transformRelativization(
     if (CORE.has(cst_type) || cst_type === CstType.TERM) slices.add(alias);
     for (const local of locals.get(alias)!) used.add(local);
   }
-  // A reference inside another formula needs the condition in a single context.
+  // Give referenced axioms and statements a predicate for the current context.
   const localConditions = new Set<string>();
   for (const alias of affected) {
     const item = byAlias.get(alias)!;
@@ -265,7 +265,7 @@ export function transformRelativization(
     context,
     usesAccessor: false
   };
-  // Keep the source slice type where projection changes a domain reference.
+  // Preserve the source domain type when a referenced constituent changes during relativization.
   const changedDomains = new Set([target, ...generated.keys(), ...affected]);
   function stableDomain(alias: string, expression: string): string {
     if ([...extractGlobals(expression)].some(name => changedDomains.has(name)) && typed.has(alias)) {

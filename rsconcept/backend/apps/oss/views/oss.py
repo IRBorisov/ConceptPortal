@@ -307,7 +307,7 @@ class OssViewSet(ConcurrencyMixin, viewsets.GenericViewSet, generics.ListAPIView
     )
     @action(detail=True, methods=['post'], url_path='create-relativization')
     def create_relativization(self, request: Request, pk) -> Response:
-        ''' Create a unary operation with its generated schema. '''
+        ''' Create a relativization or reconfigure it in place with its result schema. '''
         item = self._get_item()
         serializer = s.CreateRelativizationSerializer(data=request.data, context={'oss': item})
         serializer.is_valid(raise_exception=True)

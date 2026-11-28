@@ -52,4 +52,4 @@ From repo root (pnpm workspace; `@rsconcept/rstool` links to `rsconcept/rstool`)
 
 - `CONTRACT_VERSION` lives in `@rsconcept/rstool`; bump there for contract changes.
 - This package's `package.json` `version` follows its own semver; bump on tool catalog changes or transport-level changes. Release steps: `PUBLISHING.md`.
-- `@rsconcept/rstool` is pinned with a `^` range — bumping the rstool version requires re-running tests and updating the smoke test if tool names changed.
+- Re-run tests when the workspace `@rsconcept/rstool` version changes and update the smoke test if tool names changed. See [PUBLISHING.md](PUBLISHING.md) for the packaged dependency version.

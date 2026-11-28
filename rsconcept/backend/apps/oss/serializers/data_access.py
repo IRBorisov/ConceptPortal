@@ -347,7 +347,7 @@ class ImportSchemaSerializer(StrictSerializer):
 
 
 class RelativizationParametersSerializer(RelativizationInputSerializer):
-    ''' Parameters of a reviewed projection, expressed as persistent constituent ids. '''
+    ''' Identify the source operation and, for reconfiguration, the operation to update. '''
     existing_operation = PKField(queryset=Operation.objects.all(), required=False)
     source_operation = PKField(queryset=Operation.objects.all())
 
@@ -365,7 +365,7 @@ class RelativizationParametersSerializer(RelativizationInputSerializer):
 class CreateRelativizationSerializer(
     CreateSchemaSerializer, RelativizationParametersSerializer,
 ):
-    ''' Create a projection with generated or explicitly reviewed texts. '''
+    ''' Accept calculation parameters and result metadata for creation or reconfiguration. '''
 
 
 class CreateSynthesisSerializer(StrictSerializer):

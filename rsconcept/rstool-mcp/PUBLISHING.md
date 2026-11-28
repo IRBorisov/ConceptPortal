@@ -2,7 +2,7 @@
 
 This package is published **manually** from a local checkout. [RSTool MCP CI](../../.github/workflows/rstool-mcp.yml) typechecks, tests, and builds on push; it does **not** publish to npm.
 
-**Prerequisite:** [`@rsconcept/rstool`](../rstool/PUBLISHING.md) is published at the version pinned in `package.json` (transitively pulls `@rsconcept/domain` from npm).
+**Prerequisite:** Publish the checked-out version of [`@rsconcept/rstool`](../rstool/PUBLISHING.md) to npm before releasing RSTool MCP. When building the tarball, pnpm replaces the `workspace:*` dependency with that exact version.
 
 ## One-time setup
 
@@ -62,8 +62,7 @@ Run from a clean `main` with a clean working tree.
 ## When `@rsconcept/rstool` changed
 
 1. Publish rstool per [rstool/PUBLISHING.md](../rstool/PUBLISHING.md) (and domain first if the chain changed).
-2. Bump the published semver on `dependencies."@rsconcept/rstool"` when cutting an npm release (`workspace:*` locally).
-3. `pnpm install --frozen-lockfile`, then run the release checklist above.
+2. Run the release checklist above from a checkout containing the published RSTool version.
 
 ## Release order (full chain)
 
