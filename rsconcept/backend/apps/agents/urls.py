@@ -12,10 +12,10 @@ router = SimpleRouter(trailing_slash=False)
 router.register('agents/keys', views.ApiKeyViewSet, basename='agent-keys')
 
 urlpatterns = [
-    path('agents/oauth/authorize', oauth.authorize),
+    path('agents/oauth/authorize', oauth.authorize, name='agents-oauth-authorize'),
     path('agents/oauth/token', oauth.token),
     path('agents/oauth/introspect', oauth.introspect),
-    path('agents/oauth/grants', oauth.manage),
+    path('agents/oauth/grants', oauth.manage, name='agents-oauth-grants'),
     path('agents/rsforms/<int:pk>/description', AgentRsformDescriptionView.as_view()),
     path('agents/me', AgentIdentityView.as_view()),
     path('agents/capabilities', AgentCapabilitiesView.as_view()),

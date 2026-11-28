@@ -99,6 +99,14 @@ class TestAgentPublication(EndpointTester):
         self.assertEqual(self.client.post(self.url, self.payload).status_code, 409)
         self.assertFalse(Version.objects.exists())
 
+    def test_invalid_expected_target_returns_a_validation_error(self):
+        for value in ([], {'unexpected': True}):
+            with self.subTest(expected_target=value):
+                response = self.client.post(self.url, {**self.payload, 'expected_target': value})
+                self.assertEqual(response.status_code, 400)
+                self.assertIn('expected_target', response.data)
+        self.assertFalse(Version.objects.exists())
+
     def test_create_with_content_and_recover_without_a_duplicate(self):
         url = '/api/agents/rsforms'
         header = {'HTTP_IDEMPOTENCY_KEY': 'create-recovery'}

@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
-import { mkdtemp, realpath, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, realpath, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { basename, dirname, join } from 'node:path';
+import { basename, dirname, join, resolve } from 'node:path';
 import readline from 'node:readline';
 import { fileURLToPath } from 'node:url';
 
@@ -15,6 +15,7 @@ import { createBearerIdentityVerifier, createRSToolHttpServer, PortalClient, Por
 const [python, output] = process.argv.slice(2);
 if (!python || !output) throw new Error('Usage: node rsconcept/rstool/evals/portal-live.mjs <backend-python> <result.json>');
 
+await mkdir(dirname(resolve(output)), { recursive: true });
 const temporary = await realpath(tmpdir());
 const directory = await realpath(await mkdtemp(join(temporary, 'rstool-portal-live-')));
 const fixturePath = fileURLToPath(new URL('./portal-live-fixture.py', import.meta.url));

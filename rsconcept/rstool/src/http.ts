@@ -13,9 +13,11 @@ export interface RSToolHttpIdentity {
 }
 
 export interface RSToolHttpOptions {
-  verifyToken(token: string): RSToolHttpIdentity | null | Promise<RSToolHttpIdentity | null>;
+  verifyToken(token: string, signal: AbortSignal): RSToolHttpIdentity | null | Promise<RSToolHttpIdentity | null>;
   /** Optional host-owned state. Return an agent private to this authenticated subject and project. */
   resolveProjectAgent?(identity: Readonly<RSToolHttpIdentity>): RSToolAgent | undefined;
+  /** Credential verification deadline in milliseconds. Defaults to 5000. */
+  verifyTimeoutMs?: number;
   maxBodyBytes?: number;
   maxResponseBytes?: number;
 }
@@ -26,9 +28,15 @@ interface HttpRequest extends StdioRequest {
   returnSession?: boolean;
 }
 
+type RpcEnvelope = { id: HttpRequest['id'] | null } & (
+  { ok: true; result: unknown; session?: string } | { ok: false; error: { code: string; message: string } }
+);
+
 const projectMethods = new Set(['applySchemaPatch', 'getSessionState', 'listDiagnostics', 'analyzeExpression',
   'previewStructure', 'commitStep', 'exportSession', 'exportPortal', 'setModelValues', 'getModelState',
   'evaluate', 'recalculateModel', 'restoreOrder', 'synthesize']);
+const responseTooLarge = { code: 'RESPONSE_TOO_LARGE', message: 'The response exceeds the HTTP size limit' };
+const uncorrelatedLimitError = JSON.stringify({ id: null, ok: false, error: responseTooLarge });
 
 class RequestError extends Error {
   readonly status: number;
@@ -45,6 +53,11 @@ class RequestError extends Error {
 export function createRSToolRpcServer(options: RSToolHttpOptions) {
   const maxBody = options.maxBodyBytes ?? 1024 * 1024;
   const maxResponse = options.maxResponseBytes ?? 4 * 1024 * 1024;
+  const verifyTimeout = options.verifyTimeoutMs ?? 5000;
+  if (!Number.isSafeInteger(maxResponse) || maxResponse < Buffer.byteLength(uncorrelatedLimitError))
+    throw new RangeError('maxResponseBytes must fit the minimum HTTP error response');
+  if (!Number.isSafeInteger(verifyTimeout) || verifyTimeout < 1 || verifyTimeout > 2_147_483_647)
+    throw new RangeError('verifyTimeoutMs must be a valid positive timer duration');
   const agentOwners = new WeakMap<RSToolAgent, string>();
   let active = 0;
   return createServer({ requestTimeout: 20_000, headersTimeout: 10_000 }, (request, response) => {
@@ -67,7 +80,7 @@ export function createRSToolRpcServer(options: RSToolHttpOptions) {
       active++;
       try {
         const bearer = /^Bearer (\S{1,4096})$/i.exec(request.headers.authorization ?? '');
-        const identity = bearer ? await options.verifyToken(bearer[1]) : null;
+        const identity = bearer ? await verifyBearer(bearer[1]) : null;
         if (!identity?.subject || !identity.projectId) {
           response.setHeader('WWW-Authenticate', 'Bearer');
           throw new RequestError(401, 'UNAUTHORIZED', 'The HTTP host rejected the credentials');
@@ -95,22 +108,46 @@ export function createRSToolRpcServer(options: RSToolHttpOptions) {
         const result = await handleStdioRequest(agent, { id, method: input.method, params });
         if (!result.ok) {
           const { code, message } = result.error!;
-          send(response, 200, { id, ok: false, error: { code, message: code === 'INTERNAL_ERROR' ? 'Operation failed' : message } });
+          sendRpc(response, 200, { id, ok: false, error: { code, message: code === 'INTERNAL_ERROR' ? 'Operation failed' : message } });
           return;
         }
         const canExport = sessionId || agent.getCurrentSession();
         const session = input.returnSession && canExport ? agent.exportSession(sessionId) : undefined;
-        const body = JSON.stringify({ id, ok: true, result: result.result, session });
-        if (Buffer.byteLength(body) > maxResponse) throw new RequestError(413, 'RESPONSE_TOO_LARGE', 'The result exceeds the HTTP size limit');
-        send(response, 200, body);
+        sendRpc(response, 200, { id, ok: true, result: result.result, session });
       } finally {
         active--;
       }
     } catch (error) {
       const failure = error instanceof RequestError ? error : error instanceof RSToolError
         ? new RequestError(400, error.code, error.message) : new RequestError(500, 'INTERNAL_ERROR', 'HTTP operation failed');
-      send(response, failure.status, { id, ok: false, error: { code: failure.code, message: failure.message } });
+      sendRpc(response, failure.status, { id, ok: false, error: { code: failure.code, message: failure.message } });
     }
+  }
+
+  async function verifyBearer(token: string) {
+    const controller = new AbortController();
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const deadline = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => {
+        reject(new RequestError(503, 'AUTH_TIMEOUT', 'Credential verification timed out'));
+        controller.abort();
+      }, verifyTimeout);
+    });
+    try {
+      return await Promise.race([options.verifyToken(token, controller.signal), deadline]);
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  function sendRpc(response: ServerResponse, status: number, envelope: RpcEnvelope) {
+    const body = JSON.stringify(envelope);
+    if (Buffer.byteLength(body) <= maxResponse) {
+      send(response, status, body);
+      return;
+    }
+    const fallback = JSON.stringify({ id: envelope.id, ok: false, error: responseTooLarge });
+    send(response, 413, Buffer.byteLength(fallback) <= maxResponse ? fallback : uncorrelatedLimitError);
   }
 }
 

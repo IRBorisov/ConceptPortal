@@ -53,7 +53,7 @@ afterEach(() => {
 });
 
 /** Real encrypted vault and rstool, with only the remote Portal boundary substituted. */
-function setup() {
+function setup(receiptSupport = false) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'portal-vault-test-'));
   directories.push(directory);
   const key = randomBytes(32);
@@ -66,10 +66,20 @@ function setup() {
     items: [],
     attribution: [],
     time_update: '2026-11-06T01:00:00Z',
+    owner: 10,
+    location: '/U/Test',
+    access_policy: 'private',
   };
+  const receipts = new Map<string, object>();
   const request = vi.fn<typeof fetch>(async (input, options) => {
     const url = String(input);
     if (url.endsWith('/me')) return Response.json({ id: 10, username: 'Alice', scopes: ['read', 'write'] });
+    if (url.endsWith('/capabilities')) return receiptSupport ? Response.json({ mutation_receipts: 1 }) : new Response(null, { status: 404 });
+    const idempotencyKey = new Headers(options?.headers).get('Idempotency-Key');
+    if (url.endsWith('/receipts/rsform.publish')) {
+      const receipt = idempotencyKey ? receipts.get(idempotencyKey) : undefined;
+      return receipt ? Response.json(receipt) : new Response(null, { status: 404 });
+    }
     if (url.endsWith('/description')) {
       const body = JSON.parse(String(options?.body));
       if (body.expected_time_update !== current.time_update) return Response.json({}, { status: 409 });
@@ -79,8 +89,13 @@ function setup() {
     if (url.endsWith('/publish')) {
       const body = JSON.parse(String(options?.body));
       if (body.expected_time_update !== current.time_update) return Response.json({}, { status: 409 });
-      current = { ...body.schema, id: 1, time_update: '2026-11-06T02:00:00Z' };
-      return Response.json({ version: 99, schema: current });
+      const { owner, location, access_policy } = current;
+      const metadata = { owner, location, access_policy };
+      current = { ...body.schema, ...metadata, id: 1, time_update: '2026-11-06T02:00:00Z' };
+      if (idempotencyKey && receiptSupport) receipts.set(idempotencyKey, {
+        target_id: 1, version_id: 99, revision: current.time_update, target_metadata: metadata,
+      });
+      return Response.json({ version: 99, schema: current, committed_time_update: current.time_update });
     }
     return Response.json(current);
   });
@@ -92,11 +107,12 @@ function setup() {
     directory,
     key,
     vault,
+    api,
     publisher,
     tool,
     request,
     setRemote: (schema: Record<string, any>) => {
-      current = { ...schema, id: 1, time_update: current.time_update };
+      current = { ...current, ...schema, id: 1, time_update: current.time_update };
     },
     changeRemote: () => {
       current.time_update = 'changed';
@@ -201,7 +217,8 @@ describe('Portal credential isolation and publication', () => {
     const app = setup();
     await app.publisher.connect('alice', token);
     const draft = await app.publisher.prepare('alice', 'workspace', 1, app.tool);
-    app.request.mockResolvedValueOnce(Response.json({ version: 99, schema: { id: 1, title: 'Ignored', items: [] } }));
+    app.request.mockImplementationOnce(app.request.getMockImplementation()!)
+      .mockResolvedValueOnce(Response.json({ version: 99, schema: { id: 1, title: 'Ignored', items: [] } }));
     await expect(app.publisher.approve('alice', draft.publicationId, draft.digest)).rejects.toThrow(
       'verification failed'
     );
@@ -224,7 +241,8 @@ describe('Portal credential isolation and publication', () => {
     const app = setup();
     await app.publisher.connect('alice', token);
     const draft = await app.publisher.prepare('alice', 'workspace', 1, app.tool);
-    app.request.mockResolvedValueOnce(Response.json({}, { status: 401 }));
+    app.request.mockImplementationOnce(app.request.getMockImplementation()!)
+      .mockResolvedValueOnce(Response.json({}, { status: 401 }));
     await expect(app.publisher.approve('alice', draft.publicationId, draft.digest)).rejects.toThrow('401');
     expect(app.request.mock.calls.at(-1)![1]?.headers).toMatchObject({ Authorization: `Bearer ${token}` });
     await expect(app.publisher.approve('alice', draft.publicationId, draft.digest)).rejects.toThrow(
@@ -343,6 +361,7 @@ it('marks a divergent independent readback uncertain and never repeats the write
   const normal = app.request.getMockImplementation()!;
   app.request
     .mockImplementationOnce(normal)
+    .mockImplementationOnce(normal)
     .mockResolvedValueOnce(Response.json({ id: 1, title: 'Divergent', items: [] }));
   await expect(app.publisher.approve('alice', draft.publicationId, draft.digest)).rejects.toThrow(
     'verification failed'
@@ -350,6 +369,44 @@ it('marks a divergent independent readback uncertain and never repeats the write
   expect(app.publisher.publications('alice')[0].state).toBe('uncertain');
   await expect(app.publisher.approve('alice', draft.publicationId, draft.digest)).rejects.toThrow('already attempted');
   expect(app.request.mock.calls.filter(([url]) => String(url).endsWith('/publish'))).toHaveLength(1);
+});
+
+it('recovers a lost account-page approval via the project receipt after adapter restart', async () => {
+  const app = setup(true);
+  const owner = ['alice', 'research'] as const;
+  await app.publisher.connect(owner, token);
+  const draft = await app.publisher.prepare(owner, 'chat', 1, app.tool);
+  const normal = app.request.getMockImplementation()!;
+  app.request.mockImplementationOnce(normal).mockImplementationOnce(async (input, options) => {
+    await normal(input, options);
+    throw new Error('Lost response');
+  });
+  await expect(app.publisher.approve(owner, draft.publicationId, draft.digest)).rejects.toThrow('Portal request failed');
+  const restarted = new PortalPublisher(app.vault, app.api);
+  await expect(restarted.publicationStatus(owner, draft.publicationId)).resolves.toMatchObject({
+    state: 'published', targetId: 1, version: 99, verified: true,
+  });
+  const writes = app.request.mock.calls.filter(([url]) => String(url).endsWith('/publish'));
+  expect(writes).toHaveLength(1);
+  expect(new Headers(writes[0][1]?.headers).get('Idempotency-Key')).toBeTruthy();
+});
+
+it('recovers service receipts after restart and checks the current allowlist before reading the target', async () => {
+  const app = setup(true);
+  const service = { token, subjects: ['robot'], targetIds: [1] };
+  const original = new PortalPublisher(app.vault, app.api, service);
+  const draft = await original.prepare('robot', 'chat', 1, app.tool);
+  await original.publishPrepared('robot', 'chat', draft.publicationId, draft.digest);
+  const restarted = new PortalPublisher(app.vault, app.api, service);
+  await expect(restarted.publicationStatus('robot', draft.publicationId)).resolves.toMatchObject({
+    state: 'published', targetId: 1, verified: true,
+  });
+  const before = app.request.mock.calls.length;
+  const restricted = new PortalPublisher(app.vault, app.api, { ...service, targetIds: [2] });
+  await expect(restricted.publicationStatus('robot', draft.publicationId)).rejects.toThrow('not allowed');
+  expect(app.request.mock.calls.slice(before).map(([url]) => String(url))).toEqual([
+    'https://api.portal.example/api/agents/receipts/rsform.publish',
+  ]);
 });
 
 
@@ -397,7 +454,8 @@ it('keeps a definitive Portal refusal distinct from an uncertain publication', a
   const owner = ['alice', 'research'] as const;
   await app.publisher.connect(owner, token);
   const draft = await app.publisher.prepare(owner, 'workspace', 1, app.tool);
-  app.request.mockResolvedValueOnce(new Response(token, { status: 401 }));
+  app.request.mockImplementationOnce(app.request.getMockImplementation()!)
+    .mockResolvedValueOnce(new Response(token, { status: 401 }));
   await expect(app.publisher.approve(owner, draft.publicationId, draft.digest)).rejects.toThrow('invalid or revoked');
   expect(app.publisher.publications(owner)[0].state).toBe('failed');
 

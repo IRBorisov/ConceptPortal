@@ -4,7 +4,7 @@ import hashlib
 from urllib.parse import parse_qs, urlencode, urlsplit
 
 from django.test import Client, TestCase, override_settings
-from django.utils import timezone
+from django.utils import timezone, translation
 
 from apps.agents.models import AgentMcpGrant
 from apps.rsform.models import RSForm
@@ -35,12 +35,21 @@ class TestMcpOAuth(TestCase):
         agent = Client()
         with override_settings(AGENT_MCP_OAUTH=config, AGENT_MCP_OAUTH_SERVICE_SECRET=service):
             self.assertEqual(agent.get('/.well-known/oauth-authorization-server').json()['issuer'], issuer)
-            self.assertContains(browser.get(endpoint), 'Sign in')
+            invalid_target = browser.get('/api/agents/oauth/authorize', {**query, 'resource': 'https://other.example/mcp'})
+            self.assertRedirects(invalid_target, callback + '?' + urlencode({
+                'error': 'invalid_target', 'state': query['state'], 'iss': issuer,
+            }), fetch_redirect_response=False)
+            invalid_callback = browser.get('/api/agents/oauth/authorize', {**query, 'redirect_uri': 'https://other.example'})
+            self.assertEqual(invalid_callback.status_code, 400)
+            with translation.override('ru'):
+                login_page = browser.get(endpoint)
+                self.assertContains(login_page, 'lang="ru"')
+                self.assertContains(login_page, 'name="password"')
             self.assertEqual(browser.post(endpoint, {'username': user.username, 'password': 'local-fixture-password'}).status_code, 403)
             response = browser.post(endpoint, {'username': user.username, 'password': 'local-fixture-password',
                                               'csrfmiddlewaretoken': browser.cookies['csrftoken'].value})
-            self.assertEqual(response.status_code, 302)
-            response = browser.get(endpoint)
+            self.assertRedirects(response, endpoint, fetch_redirect_response=False)
+            response = browser.get(response.url)
             self.assertContains(response, 'research')
             csrf = browser.cookies['csrftoken'].value
             refused = browser.post(endpoint, {'project': 'foreign', 'decision': 'allow', 'csrfmiddlewaretoken': csrf})
@@ -80,8 +89,8 @@ class TestMcpOAuth(TestCase):
             second_token = agent.post(token_url, {**token_data, 'code': second_code, 'resource': second_resource}).json()['access_token']
             second = {'token': second_token, 'resource': second_resource}
             self.assertEqual(agent.post(introspection, second, **auth).json()['project_id'], 'research')
-            self.assertEqual(browser.post('/api/agents/oauth/grants', {'project': 'research',
-                            'csrfmiddlewaretoken': csrf}).status_code, 302)
+            revoked = browser.post('/api/agents/oauth/grants', {'project': 'research', 'csrfmiddlewaretoken': csrf})
+            self.assertRedirects(revoked, '/api/agents/oauth/grants', fetch_redirect_response=False)
             self.assertEqual(agent.get(details, HTTP_AUTHORIZATION=f'Bearer {portal_token}').status_code, 401)
             self.assertIsNone(agent.post(introspection, args, **auth).json()['portal_token'])
             self.assertIsNone(agent.post(introspection, second, **auth).json()['portal_token'])

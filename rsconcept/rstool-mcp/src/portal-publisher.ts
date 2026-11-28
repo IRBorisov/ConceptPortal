@@ -676,31 +676,37 @@ export class PortalPublisher {
       if (credential.generation !== draft.generation) throw new Error('Portal connection changed; prepare publication again');
       if (draft.state === 'published') return draft.result;
       if (draft.state === 'uncertain') {
-        const recovered = await this.readPublicationReceipt(subject, id, credential);
+        const recovered = await this.readPublicationReceipt(subject, id, credential.token);
         if (recovered) return this.verifyPrepared(draft, recovered.receipt.version_id, recovered.item, recovered.receipt.revision);
       }
       if (draft.state === 'failed' || draft.state === 'sending') throw new Error('Prepare and agree to a new publication');
       if (draft.expiresAt <= Date.now()) throw new Error('Publication expired; prepare publication again');
       if (!await this.#api.supportsMutationReceipts(credential.token)) throw new Error('Portal publication receipts are unavailable');
-      draft.validateSource?.();
-      if (draft.tool.getCurrentSession()?.sessionId !== draft.sourceId || draft.session !== draft.tool.exportSession())
-        throw new Error('Local schema changed; prepare publication again');
-      const { owner, location, access_policy } = draft.before;
-      if ((owner !== null && !Number.isSafeInteger(owner)) || typeof location !== 'string' || typeof access_policy !== 'string')
-        throw new Error('Portal did not return target metadata; prepare publication again');
-      draft.state = 'sending';
-      let accepted = false;
-      try {
-        const result = await this.#api.publishSchema(draft.targetId, draft.before.time_update, draft.after,
-          operationKey(subject, 'publication', id), credential.token, { owner, location, access_policy });
-        accepted = true;
-        const verified = await this.readItem(credential, 'schema', draft.targetId);
-        return this.verifyPrepared(draft, result.version, verified, result.committed_time_update);
-      } catch (error) {
-        draft.state = !accepted && error instanceof PortalHttpError && [400, 403, 404, 409].includes(error.status) ? 'failed' : 'uncertain';
-        throw error;
-      }
+      return this.commitPrepared(subject, draft, credential);
     });
+  }
+
+  private async commitPrepared(subject: PortalOwner, draft: PreparedPublication, credential: PortalCredential) {
+    if (this.#drafts.get(draft.id) !== draft) throw new Error('Publication not found');
+    if (draft.expiresAt <= Date.now()) throw new Error('Publication expired; prepare publication again');
+    draft.validateSource?.();
+    if (draft.tool.getCurrentSession()?.sessionId !== draft.sourceId || draft.session !== draft.tool.exportSession())
+      throw new Error('Local schema changed; prepare publication again');
+    const { owner, location, access_policy } = draft.before;
+    if ((owner !== null && !Number.isSafeInteger(owner)) || typeof location !== 'string' || typeof access_policy !== 'string')
+      throw new Error('Portal did not return target metadata; prepare publication again');
+    draft.state = 'sending';
+    let accepted = false;
+    try {
+      const result = await this.#api.publishSchema(draft.targetId, draft.before.time_update, draft.after,
+        operationKey(subject, 'publication', draft.id), credential.token, { owner, location, access_policy });
+      accepted = true;
+      const verified = await this.readItem(credential, 'schema', draft.targetId);
+      return this.verifyPrepared(draft, result.version, verified, result.committed_time_update);
+    } catch (error) {
+      draft.state = !accepted && error instanceof PortalHttpError && [400, 403, 404, 409].includes(error.status) ? 'failed' : 'uncertain';
+      throw error;
+    }
   }
 
   /** Project-scoped recovery remains available after closing a chat or restarting the adapter. */
@@ -708,9 +714,10 @@ export class PortalPublisher {
     return this.exclusive(subject, async () => {
       if (typeof id !== 'string' || !/^[0-9a-f-]{36}$/.test(id)) throw new Error('Invalid publicationId');
       const draft = this.#drafts.get(id);
-      const targetId = draft?.subject === JSON.stringify(subject) ? draft.targetId : 0;
-      const credential = this.credential(subject, targetId);
-      const recovered = await this.readPublicationReceipt(subject, id, credential);
+      const ownedDraft = draft?.subject === JSON.stringify(subject) ? draft : undefined;
+      // Without a draft, the owner-scoped receipt resolves the target before the service allowlist check.
+      const token = !ownedDraft && this.isService(subject) ? this.#service!.token : this.credential(subject, ownedDraft?.targetId ?? 0).token;
+      const recovered = await this.readPublicationReceipt(subject, id, token);
       if (!recovered) return { publicationId: id, state: 'not_found' };
       const { receipt, item } = recovered;
       const metadata = { owner: item.owner, location: item.location, access_policy: item.access_policy };
@@ -721,17 +728,19 @@ export class PortalPublisher {
     });
   }
 
-  private async readPublicationReceipt(subject: PortalOwner, id: string, credential: PortalCredential) {
+  private async readPublicationReceipt(subject: PortalOwner, id: string, token: string) {
     let receipt;
     try {
-      receipt = await this.#api.getReceipt('rsform.publish', operationKey(subject, 'publication', id), credential.token);
+      receipt = await this.#api.getReceipt('rsform.publish', operationKey(subject, 'publication', id), token);
     } catch (error) {
       if (error instanceof PortalHttpError && error.status === 404) return null;
       throw error;
     }
-    if (!Number.isSafeInteger(receipt.version_id) || !Number.isSafeInteger(receipt.target_id) ||
+    if (!Number.isSafeInteger(receipt.version_id) || Number(receipt.version_id) <= 0 ||
+        !Number.isSafeInteger(receipt.target_id) || receipt.target_id <= 0 ||
         typeof receipt.revision !== 'string' || !Number.isFinite(Date.parse(receipt.revision)))
       throw new Error('Invalid Portal publication receipt');
+    const credential = this.credential(subject, receipt.target_id);
     return { receipt, item: await this.readItem(credential, 'schema', receipt.target_id) };
   }
 
@@ -783,7 +792,12 @@ export class PortalPublisher {
       const credential = this.credential(subject, draft.targetId, 'write');
       if (credential.generation !== draft.generation)
         throw new Error('Portal connection changed; prepare publication again');
+      if (await this.#api.supportsMutationReceipts(credential.token))
+        return this.commitPrepared(subject, draft, credential);
+      if (this.#drafts.get(id) !== draft) throw new Error('Publication not found');
+      if (draft.expiresAt <= Date.now()) throw new Error('Publication expired');
       draft.validateSource?.();
+      if (draft.session !== draft.tool.exportSession()) throw new Error('Local schema changed; prepare publication again');
       draft.state = 'sending';
       let accepted = false;
       try {
