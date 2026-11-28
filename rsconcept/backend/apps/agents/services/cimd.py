@@ -24,8 +24,6 @@ MAX_HEADERS = 16 * 1024
 MAX_CACHE_SECONDS = 300
 _DNS_WORKERS = ThreadPoolExecutor(max_workers=2, thread_name_prefix='cimd-dns')
 _DNS_SLOTS = BoundedSemaphore(2)
-_TLS = ssl.create_default_context()
-_TLS.minimum_version = ssl.TLSVersion.TLSv1_2
 _DNS_LABEL = r'[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?'
 _DNS_NAME = re.compile(rf'(?:{_DNS_LABEL}\.)+[a-z](?:[a-z0-9-]{{0,61}}[a-z0-9])?')
 _LOOPBACK = re.compile(r'(http://(?:127\.0\.0\.1|localhost|\[::1\]))(?::[0-9]+)?([/?].*)?')
@@ -166,6 +164,8 @@ def _remaining(deadline: float) -> float:
 
 
 def _connect(host: str, port: int, addresses: list[str], deadline: float) -> ssl.SSLSocket:
+    tls = ssl.create_default_context()
+    tls.minimum_version = ssl.TLSVersion.TLSv1_2
     for address in addresses:
         family = socket.AF_INET6 if ':' in address else socket.AF_INET
         try:
@@ -174,7 +174,7 @@ def _connect(host: str, port: int, addresses: list[str], deadline: float) -> ssl
                 peer.connect((address, port))
                 peer.settimeout(min(2, _remaining(deadline)))
                 # Connect to the vetted address while authenticating the original hostname.
-                return _TLS.wrap_socket(peer, server_hostname=host)
+                return tls.wrap_socket(peer, server_hostname=host)
         except OSError:
             continue
     raise MetadataUnavailable()
